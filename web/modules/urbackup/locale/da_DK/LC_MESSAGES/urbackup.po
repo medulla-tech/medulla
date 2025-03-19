@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 23:50+0100\n"
+"POT-Creation-Date: 2025-03-19 16:15+0100\n"
 "PO-Revision-Date: 2022-11-14 14:44+0000\n"
 "Language-Team: Danish (Denmark) (https://app.transifex.com/siveo/teams/72118/da_DK/)\n"
 "MIME-Version: 1.0\n"
@@ -27,7 +27,7 @@ msgstr ""
 
 #: modules/urbackup/urbackup/list_backups.php:178
 #: modules/urbackup/urbackup/index.php:267
-#: modules/urbackup/urbackup/checkMachine.php:99
+#: modules/urbackup/urbackup/checkMachine.php:100
 msgid "Computer name"
 msgstr ""
 
@@ -367,7 +367,7 @@ msgstr ""
 msgid "Assign profile to computer "
 msgstr ""
 
-#: modules/urbackup/urbackup/checkMachine.php:105
+#: modules/urbackup/urbackup/checkMachine.php:106
 msgid "Choose profile to computer"
 msgstr ""
 

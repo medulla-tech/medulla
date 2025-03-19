@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 23:50+0100\n"
+"POT-Creation-Date: 2025-03-19 16:15+0100\n"
 "PO-Revision-Date: 2023-12-12 11:56+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2025\n"
 "Language-Team: Ukrainian (https://app.transifex.com/siveo/teams/72118/uk/)\n"
@@ -23,17 +23,18 @@ msgstr ""
 
 #: modules/updates/updates/ajaxPendingUpdateByMachine.php:30
 #: modules/updates/updates/ajaxPendingUpdateByMachine.php:31
-#: modules/updates/infoPackage.inc.php:190
+#: modules/updates/infoPackage.inc.php:199
 msgid "Cancel Update"
 msgstr "Скасувати оновлення"
 
 #: modules/updates/updates/ajaxPendingUpdateByMachine.php:66
 #: modules/updates/updates/pendingUpdateByMachine.php:27
-#: modules/updates/updates/ajaxDetailsByMachines.php:125
-#: modules/updates/updates/ajaxDetailsByMachines.php:131
-#: modules/updates/updates/ajaxDetailsByMachines.php:157
-#: modules/updates/infoPackage.inc.php:176
-#: modules/updates/infoPackage.inc.php:179
+#: modules/updates/updates/ajaxDetailsByMachines.php:81
+#: modules/updates/updates/ajaxDetailsByMachines.php:129
+#: modules/updates/updates/ajaxDetailsByMachines.php:135
+#: modules/updates/updates/ajaxDetailsByMachines.php:161
+#: modules/updates/infoPackage.inc.php:185
+#: modules/updates/infoPackage.inc.php:188
 msgid "Pending Updates"
 msgstr "Оновлення у черзі"
 
@@ -113,26 +114,26 @@ msgstr "Сумісність із записами"
 
 #: modules/updates/updates/ajaxUpdatesListWinGray.php:35
 #: modules/updates/updates/ajaxUpdatesListWinGray.php:36
-#: modules/updates/infoPackage.inc.php:126
+#: modules/updates/infoPackage.inc.php:135
 msgid "Enable for manual update"
 msgstr "Увімкніть для оновлення вручну"
 
 #: modules/updates/updates/ajaxUpdatesListWinGray.php:37
 #: modules/updates/updates/ajaxUpdatesListWinGray.php:38
-#: modules/updates/infoPackage.inc.php:130
+#: modules/updates/infoPackage.inc.php:139
 msgid "Disable for manual update"
 msgstr "Вимкнути для оновлень вручну"
 
 #: modules/updates/updates/ajaxUpdatesListWinGray.php:39
 #: modules/updates/updates/whitelistUpdate.php:44
-#: modules/updates/infoPackage.inc.php:134
+#: modules/updates/infoPackage.inc.php:143
 msgid "Approve for automatic update"
 msgstr "Затвердити для автоматичного оновлення"
 
 #: modules/updates/updates/ajaxUpdatesListWinGray.php:40
 #: modules/updates/updates/ajaxUpdatesListWinWhite.php:34
-#: modules/updates/infoPackage.inc.php:138
-#: modules/updates/infoPackage.inc.php:163
+#: modules/updates/infoPackage.inc.php:147
+#: modules/updates/infoPackage.inc.php:172
 msgid "Ban update"
 msgstr "Заблокувати оновлення"
 
@@ -142,37 +143,70 @@ msgstr "Сірий список (оновлення вручну)"
 
 #: modules/updates/updates/deployUpdate.php:89
 #: modules/updates/updates/deployUpdate.php:122
+#: modules/updates/updates/deployUpdatemajor.php:89
+#: modules/updates/updates/deployUpdatemajor.php:122
 msgid "Wrong deployment intervals"
 msgstr "Помилкові інтервали розгортання"
 
 #: modules/updates/updates/deployUpdate.php:212
+#: modules/updates/updates/deployUpdatemajor.php:238
 msgid "Schedule update deployment on entity"
 msgstr "Запланувати розгортання оновлення для запису"
 
 #: modules/updates/updates/deployUpdate.php:215
+#: modules/updates/updates/deployUpdatemajor.php:241
 msgid "Schedule update deployment on group"
 msgstr "Запланувати розгортання оновлення для групи"
 
 #: modules/updates/updates/deployUpdate.php:218
+#: modules/updates/updates/deployUpdatemajor.php:244
 msgid "Schedule update deployment on machine"
 msgstr "Запланувати розгортання оновлення для машини"
 
 #: modules/updates/updates/deployUpdate.php:264
+#: modules/updates/updates/deployUpdatemajor.php:270
 msgid "The command must start after"
 msgstr "Команду має бути запущено після"
 
 #: modules/updates/updates/deployUpdate.php:276
+#: modules/updates/updates/deployUpdatemajor.php:282
 msgid "The command must stop before"
 msgstr "Виконання команди має припинитися до"
 
 #: modules/updates/updates/deployUpdate.php:286
+#: modules/updates/updates/deployUpdatemajor.php:292
 msgid "Example for lunch and night (24h format): 12-14,20-24,0-8"
 msgstr "Приклад запуску вночі (у 24-годинному форматі): 12-14,2024,0-8"
 
 #: modules/updates/updates/deployUpdate.php:296
+#: modules/updates/updates/deployUpdatemajor.php:302
 #: modules/updates/updates/ajaxDeployAllUpdates.php:52
 msgid "Deployment interval"
 msgstr "Інтервал розгортання"
+
+#: modules/updates/updates/ajaxMajorDetailsByMachines.php:44
+msgid "Entitie"
+msgstr "Уповноважити"
+
+#: modules/updates/updates/ajaxMajorDetailsByMachines.php:79
+#: modules/updates/updates/ajaxDetailsByMachines.php:228
+msgid "Machine name"
+msgstr "Назва комп'ютера"
+
+#: modules/updates/updates/ajaxMajorDetailsByMachines.php:81
+#: modules/updates/updates/ajaxDetailsSpecificUpdate.php:73
+#: modules/updates/updates/ajaxDetailsByMachines.php:230
+#: modules/updates/updates/ajaxDetailsSpecificUpdateWithout.php:46
+msgid "Platform"
+msgstr "Платформа"
+
+#: modules/updates/updates/ajaxMajorDetailsByMachines.php:82
+msgid "version"
+msgstr "версія"
+
+#: modules/updates/updates/ajaxMajorDetailsByMachines.php:83
+msgid "update"
+msgstr "оновлення"
 
 #: modules/updates/updates/pendingUpdateByMachine.php:27
 #, php-format
@@ -187,12 +221,6 @@ msgstr "Машини з оновленням"
 msgid "Machine Name"
 msgstr "Назва комп'ютера"
 
-#: modules/updates/updates/ajaxDetailsSpecificUpdate.php:73
-#: modules/updates/updates/ajaxDetailsByMachines.php:226
-#: modules/updates/updates/ajaxDetailsSpecificUpdateWithout.php:46
-msgid "Platform"
-msgstr "Платформа"
-
 #: modules/updates/updates/deploySpecificUpdate.php:47
 #: modules/updates/infoPackage.inc.php:28
 #: modules/updates/infoPackage.inc.php:33
@@ -200,7 +228,7 @@ msgid "Updates"
 msgstr "Оновлення"
 
 #: modules/updates/updates/ajaxUpdatesListWinWhite.php:33
-#: modules/updates/infoPackage.inc.php:142
+#: modules/updates/infoPackage.inc.php:151
 msgid "Unlist update"
 msgstr "Виключити оновлення зі списку"
 
@@ -242,6 +270,66 @@ msgstr "Оновлення %s (%s) не виключено зі списку"
 msgid "<b>Unlist</b> update %s (%s) ?"
 msgstr "<b>Виключити</b> зі списку оновлення %s (%s) ?"
 
+#: modules/updates/updates/ajaxMajorEntitiesList.php:39
+#: modules/updates/updates/ajaxMajorEntitiesList.php:43
+#: modules/updates/updates/updatesListMajorWin.php:26
+#: modules/updates/infoPackage.inc.php:52
+#: modules/updates/infoPackage.inc.php:209
+msgid "Manage Updates Major Lists"
+msgstr "Керування оновленнями основних списків"
+
+#: modules/updates/updates/ajaxMajorEntitiesList.php:56
+msgid "update mach"
+msgstr "оновити машину"
+
+#: modules/updates/updates/ajaxMajorEntitiesList.php:57
+#, php-format
+msgid "%s machines in the entity \"%s\" can benefit from a major update."
+msgstr "%s машин у записі «%s» можуть виграти від базового оновлення."
+
+#: modules/updates/updates/ajaxMajorEntitiesList.php:73
+#: modules/updates/updates/ajaxEntitiesList.php:145
+msgid "Entity name"
+msgstr "Назва запису"
+
+#: modules/updates/updates/ajaxMajorEntitiesList.php:75
+msgid "Conformite"
+msgstr "Погодитися"
+
+#: modules/updates/updates/ajaxMajorEntitiesList.php:76
+msgid "major update W10->W10"
+msgstr "базове оновлення W10->W10"
+
+#: modules/updates/updates/ajaxMajorEntitiesList.php:77
+msgid "major update W10->W11"
+msgstr "базове оновлення W10->W11"
+
+#: modules/updates/updates/ajaxMajorEntitiesList.php:78
+msgid "major update W11->W11"
+msgstr "базове оновлення W11->W11"
+
+#: modules/updates/updates/ajaxMajorEntitiesList.php:79
+msgid "total computer"
+msgstr "загалом комп'ютерів"
+
+#: modules/updates/updates/deployUpdatemajor.php:197
+msgid ""
+"An update to the latest version of Windows 11 is available for this machine."
+msgstr "Для ції машини доступне оновлення найсвіжішої версії Windows 11."
+
+#: modules/updates/updates/deployUpdatemajor.php:201
+msgid ""
+"An update to the latest release of Windows 10 is available for this machine."
+msgstr "Для ції машини доступне оновлення найсвіжішого випуску Windows 10."
+
+#: modules/updates/updates/deployUpdatemajor.php:205
+msgid ""
+"The version of Windows 10 allows upgrading to Windows 11 if the machine's "
+"hardware context is compatible with Windows 11."
+msgstr ""
+"Версія Windows 10 уможливлює оновлення до Windows 11, якщо контекст  "
+"обладнання машини є сумісним із Windows 11."
+
 #: modules/updates/updates/detailsByUpdates.php:28
 msgid "Details by Updates"
 msgstr "Подробиці за оновленнями"
@@ -261,9 +349,13 @@ msgstr "Оновлення %s (%s) не було затверджено"
 msgid "<b>Approve</b> update %s (%s) ?"
 msgstr "<b>Затвердити</b> оновлення %s (%s) ?"
 
+#: modules/updates/updates/majorDetailsByMachines.php:36
+msgid "Details Update Majeur by Machines view"
+msgstr "Панель подробиць щодо основного оновлення за машинами"
+
 #: modules/updates/updates/detailsByMachines.php:26
-#: modules/updates/infoPackage.inc.php:47
-#: modules/updates/infoPackage.inc.php:51
+#: modules/updates/infoPackage.inc.php:56
+#: modules/updates/infoPackage.inc.php:60
 msgid "Details by Machines"
 msgstr "Подробиці за машинами"
 
@@ -277,9 +369,9 @@ msgid "Details"
 msgstr "Подробиці"
 
 #: modules/updates/updates/ajaxDetailsByUpdatesGray.php:116
-#: modules/updates/updates/ajaxDetailsByMachines.php:227
+#: modules/updates/updates/ajaxDetailsByMachines.php:231
 #: modules/updates/updates/ajaxDetailsByUpdatesWhite.php:116
-#: modules/updates/updates/ajaxEntitiesList.php:124
+#: modules/updates/updates/ajaxEntitiesList.php:149
 msgid "Compliance rate"
 msgstr "Рівень сумісності"
 
@@ -304,11 +396,12 @@ msgid "Updates history for machine %s"
 msgstr "Журнал оновлень за машиною %s"
 
 #: modules/updates/updates/auditUpdateByMachine.php:27
-#: modules/updates/updates/ajaxDetailsByMachines.php:126
-#: modules/updates/updates/ajaxDetailsByMachines.php:132
-#: modules/updates/updates/ajaxDetailsByMachines.php:158
-#: modules/updates/infoPackage.inc.php:183
-#: modules/updates/infoPackage.inc.php:186
+#: modules/updates/updates/ajaxDetailsByMachines.php:83
+#: modules/updates/updates/ajaxDetailsByMachines.php:130
+#: modules/updates/updates/ajaxDetailsByMachines.php:136
+#: modules/updates/updates/ajaxDetailsByMachines.php:162
+#: modules/updates/infoPackage.inc.php:192
+#: modules/updates/infoPackage.inc.php:195
 msgid "Updates History"
 msgstr "Журнал оновлень"
 
@@ -335,44 +428,41 @@ msgstr "Оновлення %s (%s) не було вимкнено"
 msgid "<b>Disable</b> update %s (%s) ?"
 msgstr "<b>Вимкнути</b> оновлення %s (%s) ?"
 
-#: modules/updates/updates/ajaxDetailsByMachines.php:109
+#: modules/updates/updates/ajaxDetailsByMachines.php:82
+#: modules/updates/updates/ajaxDetailsByMachines.php:128
+#: modules/updates/updates/ajaxDetailsByMachines.php:134
+#: modules/updates/updates/ajaxDetailsByMachines.php:160
+msgid "View details"
+msgstr "Перегляд подробиць"
+
+#: modules/updates/updates/ajaxDetailsByMachines.php:113
 #, php-format
 msgid "Computers from group %s"
 msgstr "Комп'ютер з групи %s"
 
-#: modules/updates/updates/ajaxDetailsByMachines.php:115
+#: modules/updates/updates/ajaxDetailsByMachines.php:119
 #, php-format
 msgid "Computers from entity %s"
 msgstr "Комп'ютери з запису %s"
 
-#: modules/updates/updates/ajaxDetailsByMachines.php:124
-#: modules/updates/updates/ajaxDetailsByMachines.php:130
-#: modules/updates/updates/ajaxDetailsByMachines.php:156
-msgid "View details"
-msgstr "Перегляд подробиць"
-
-#: modules/updates/updates/ajaxDetailsByMachines.php:224
-msgid "Machine name"
-msgstr "Назва комп'ютера"
-
-#: modules/updates/updates/ajaxDetailsByMachines.php:228
-#: modules/updates/updates/ajaxEntitiesList.php:125
+#: modules/updates/updates/ajaxDetailsByMachines.php:232
+#: modules/updates/updates/ajaxEntitiesList.php:150
 msgid "Missing updates"
 msgstr "Пропущені оновлення"
 
-#: modules/updates/updates/ajaxDetailsByMachines.php:229
+#: modules/updates/updates/ajaxDetailsByMachines.php:233
 msgid "In progress"
 msgstr "Виконується"
 
-#: modules/updates/updates/ajaxDetailsByMachines.php:230
+#: modules/updates/updates/ajaxDetailsByMachines.php:234
 msgid "Installed updates"
 msgstr "Встановлені оновлення"
 
-#: modules/updates/updates/ajaxDetailsByMachines.php:231
+#: modules/updates/updates/ajaxDetailsByMachines.php:235
 msgid "Total updates"
 msgstr "Загалом оновлень"
 
-#: modules/updates/updates/ajaxDetailsByMachines.php:266
+#: modules/updates/updates/ajaxDetailsByMachines.php:270
 msgid "Actions are disabled for this machine (MISSING AGENT)"
 msgstr "Дії вимкнено для цієї машини (НЕМАЄ АГЕНТА)"
 
@@ -400,10 +490,10 @@ msgstr "<у ko>"
 
 #: modules/updates/updates/localSidebar.php:26
 #: modules/updates/updates/updatesListWin.php:26
-#: modules/updates/infoPackage.inc.php:107
-#: modules/updates/infoPackage.inc.php:111
 #: modules/updates/infoPackage.inc.php:116
-#: modules/updates/infoPackage.inc.php:121
+#: modules/updates/infoPackage.inc.php:120
+#: modules/updates/infoPackage.inc.php:125
+#: modules/updates/infoPackage.inc.php:130
 msgid "Manage Updates Lists"
 msgstr "Керування списками оновлень"
 
@@ -453,15 +543,16 @@ msgstr "Розгорнути усі оновлення"
 msgid "Deploy specific updates"
 msgstr "Розгорнути певні оновлення"
 
-#: modules/updates/updates/ajaxEntitiesList.php:120
-msgid "Entity name"
-msgstr "Назва запису"
+#: modules/updates/updates/ajaxEntitiesList.php:53
+#, php-format
+msgid "%s updates for %s machines in the %s entity"
+msgstr "%s оновлень для %s машин у записі %s"
 
-#: modules/updates/updates/ajaxEntitiesList.php:126
+#: modules/updates/updates/ajaxEntitiesList.php:151
 msgid "Non-compliant machines"
 msgstr "Несумісні машини"
 
-#: modules/updates/updates/ajaxEntitiesList.php:127
+#: modules/updates/updates/ajaxEntitiesList.php:152
 msgid "Total machines"
 msgstr "Загалом машин"
 
@@ -489,8 +580,8 @@ msgid "<b>Ban</b> update %s (%s) ?"
 msgstr "<b>Заблокувати</b> оновлення %s (%s) ?"
 
 #: modules/updates/updates/deployAllUpdates.php:27
-#: modules/updates/infoPackage.inc.php:56
-#: modules/updates/infoPackage.inc.php:60
+#: modules/updates/infoPackage.inc.php:65
+#: modules/updates/infoPackage.inc.php:69
 msgid "Deploy all Updates"
 msgstr "Розгорнути усі оновлення"
 
@@ -506,59 +597,76 @@ msgstr "Помилка під час спроби пересунути паку�
 msgid "Unlist Update"
 msgstr "Виключити оновлення зі списку"
 
-#: modules/updates/infoPackage.inc.php:65
+#: modules/updates/infoPackage.inc.php:47
+#: modules/updates/infoPackage.inc.php:204
+msgid "Entities Major Compliance"
+msgstr "Основна сумісність записів"
+
+#: modules/updates/infoPackage.inc.php:74
 msgid "Deploy Specific Updates On Entity"
 msgstr "Розгорнути для запису лише певні оновлення"
 
-#: modules/updates/infoPackage.inc.php:70
+#: modules/updates/infoPackage.inc.php:79
 msgid "Deploy specific update"
 msgstr "Розгорнути певне оновлення"
 
-#: modules/updates/infoPackage.inc.php:74
+#: modules/updates/infoPackage.inc.php:83
 msgid "List updates"
 msgstr "Список оновлень"
 
-#: modules/updates/infoPackage.inc.php:78
+#: modules/updates/infoPackage.inc.php:87
 msgid "Machine details for specific update"
 msgstr "Подробиці для машини для певного оновлення"
 
-#: modules/updates/infoPackage.inc.php:82
-#: modules/updates/infoPackage.inc.php:87
+#: modules/updates/infoPackage.inc.php:91
+#: modules/updates/infoPackage.inc.php:96
 msgid "Manage machine details for specific update"
 msgstr "Керувати подробицями машини для певного оновлення"
 
-#: modules/updates/infoPackage.inc.php:92
+#: modules/updates/infoPackage.inc.php:101
 msgid "Manage deploy specific update"
 msgstr "Керувати розгортанням певного оновлення"
 
-#: modules/updates/infoPackage.inc.php:97
+#: modules/updates/infoPackage.inc.php:106
 msgid "Manage Gray List Updates"
 msgstr "Керування оновленнями за сірим списком"
 
-#: modules/updates/infoPackage.inc.php:102
+#: modules/updates/infoPackage.inc.php:111
 msgid "Manage White List Updates"
 msgstr "Керувати оновленнями за білим списком"
 
-#: modules/updates/infoPackage.inc.php:146
+#: modules/updates/infoPackage.inc.php:155
 msgid "UnBan update"
 msgstr "Розблокувати оновлення"
 
-#: modules/updates/infoPackage.inc.php:150
+#: modules/updates/infoPackage.inc.php:159
 msgid "Gray Enable"
 msgstr "Увімкнути сіре"
 
-#: modules/updates/infoPackage.inc.php:154
+#: modules/updates/infoPackage.inc.php:163
 msgid "Grey Disable"
 msgstr "Вимкнути сіре"
 
-#: modules/updates/infoPackage.inc.php:158
+#: modules/updates/infoPackage.inc.php:167
 msgid "Grey Approve"
 msgstr "Затвердити сіре"
 
-#: modules/updates/infoPackage.inc.php:167
+#: modules/updates/infoPackage.inc.php:176
 msgid "White Unlist"
 msgstr "Виключити з білого списку"
 
-#: modules/updates/infoPackage.inc.php:172
+#: modules/updates/infoPackage.inc.php:181
 msgid "Black Unban"
 msgstr "Розблокувати чорне"
+
+#: modules/updates/infoPackage.inc.php:213
+msgid "Deploy Major Updates On Machine"
+msgstr "Розгорнути основні оновлення на машині"
+
+#: modules/updates/infoPackage.inc.php:218
+msgid "Details by Machines for major update"
+msgstr "Подробиці для основного оновлення за машинами"
+
+#: modules/updates/infoPackage.inc.php:223
+msgid "Machines major update"
+msgstr "Основне оновлення машин"

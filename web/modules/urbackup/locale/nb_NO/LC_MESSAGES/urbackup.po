@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 23:50+0100\n"
+"POT-Creation-Date: 2025-03-19 16:15+0100\n"
 "PO-Revision-Date: 2022-11-14 14:44+0000\n"
 "Last-Translator: Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2024\n"
 "Language-Team: Norwegian Bokmål (Norway) (https://app.transifex.com/siveo/teams/72118/nb_NO/)\n"
@@ -32,7 +32,7 @@ msgstr ""
 
 #: modules/urbackup/urbackup/list_backups.php:178
 #: modules/urbackup/urbackup/index.php:267
-#: modules/urbackup/urbackup/checkMachine.php:99
+#: modules/urbackup/urbackup/checkMachine.php:100
 msgid "Computer name"
 msgstr "Maskinnavn"
 
@@ -372,7 +372,7 @@ msgstr ""
 msgid "Assign profile to computer "
 msgstr ""
 
-#: modules/urbackup/urbackup/checkMachine.php:105
+#: modules/urbackup/urbackup/checkMachine.php:106
 msgid "Choose profile to computer"
 msgstr ""
 
