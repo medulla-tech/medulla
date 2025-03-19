@@ -34,6 +34,12 @@ define("DIR_SYS_PREP", "/var/lib/pulse2/imaging/postinst/sysprep");
 <?php
     class ajaxSelectItem extends Form
     {
+        protected $idElt;
+        protected $idselect;
+        protected $idform;
+        protected $idchoixform;
+        protected $select;
+
         public function __construct($idElt, $style = null)
         {
             $options = array();
@@ -70,13 +76,15 @@ define("DIR_SYS_PREP", "/var/lib/pulse2/imaging/postinst/sysprep");
 
         public function end()
         {
+            $parameters = (!empty($_SESSION['parameters'])) ? $_SESSION['parameters'] : [];
+            $parametersStr = json_encode($parameters);
             $str = parent::end();
             $str .= "
             <div id=\"$this->idchoixform\"> </div>
             <script type=\"text/javascript\">
                 loadpage".$this->idselect."=function(){
                     var selectval = jQuery( '#".$this->idselect."').val()
-                    jQuery( '#".$this->idchoixform."' ).load( selectval,
+                    jQuery( '#".$this->idchoixform."' ).load( selectval,  ".$parametersStr." ,
                         function( response, status, xhr ) {
                             if ( status == 'error' ) {
                                 var msg = '"._T("form not found", 'imaging').": ';
