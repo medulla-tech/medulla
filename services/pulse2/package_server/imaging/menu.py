@@ -1417,10 +1417,10 @@ INITRD ../davos/initrd.img"""
             )
 
         # Write new boot menu
-        if isinstance(content, str):
-            content = content.encode("utf-8")
+        if isinstance(content, bytes):
+            content = content.decode("utf-8")
         try:
-            fid = open(fichier, "w+b")
+            fid = open(fichier, "w+")
             fid.write(content)
             fid.close()
             self.logger.debug(

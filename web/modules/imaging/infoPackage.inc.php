@@ -3,10 +3,11 @@
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2009 Mandriva, http://www.mandriva.com/
+ * (c) 2025 Siveo, http://siveo.net/
  *
  * $Id$
  *
- * This file is part of Mandriva Management Console (MMC).
+ * This file is part of Management Console (MMC).
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -80,6 +81,38 @@ $submod->addPage($page);
 
 $page = new Page("ajaxcheckstatusmulticast");
 $page->setFile("modules/imaging/manage/ajaxcheckstatusmulticast.php");
+$page->setOptions(array("AJAX" => True, "visible" => False));
+$submod->addPage($page);
+
+$page = new Page("profilescript");
+$page->setFile("modules/imaging/manage/profilescript.php");
+$submod->addPage($page);
+
+$page = new Page("ajaxProfilescript");
+$page->setFile("modules/imaging/manage/ajaxProfilescript.php");
+$page->setOptions(array("AJAX" => True, "visible" => False));
+$submod->addPage($page);
+
+$page = new Page("editProfilescript");
+$page->setFile("modules/imaging/manage/editProfilescript.php");
+$submod->addPage($page);
+
+$page = new Page("ajaxEditProfilescript");
+$page->setFile("modules/imaging/manage/ajaxEditProfilescript.php");
+$page->setOptions(array("AJAX" => True, "visible" => False));
+$submod->addPage($page);
+
+$page = new Page("addProfilescript");
+$page->setFile("modules/imaging/manage/addProfilescript.php");
+$submod->addPage($page);
+
+$page = new Page("ajaxAddProfilescript");
+$page->setFile("modules/imaging/manage/ajaxEditProfilescript.php");
+$page->setOptions(array("AJAX" => True, "visible" => False));
+$submod->addPage($page);
+
+$page = new Page("deleteProfilescript");
+$page->setFile("modules/imaging/manage/deleteProfilescript.php");
 $page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);
 

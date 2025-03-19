@@ -3,7 +3,7 @@
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2009 Mandriva, http://www.mandriva.com
- * (c) 2015-2022 Siveo, http://http://www.siveo.net
+ * (c) 2015-2025 Siveo, http://http://www.siveo.net
  *
  * $Id$
  *
@@ -812,3 +812,45 @@ function xmlrpc_delete_multicast_from_db($infoparameters)
 {
     return xmlCall("imaging.delete_multicast_from_db", $infoparameters);
 }
+
+function xmlrpc_get_profiles_location($location, $start=0, $limit=-1, $filter=""){
+    return xmlCall("imaging.get_profiles_location", [$location, $start, $limit, $filter]);
+}
+
+function xmlrpc_get_all_postinstall_for_profile($location, $profileId, $start=0, $limit=-1, $filter=""){
+    return xmlCall("imaging.get_all_postinstall_for_profile", [$location, $profileId, $start, $limit, $filter]);
+}
+
+function xmlrpc_update_postinstalls_in_profile($profileId, $name, $description="", $orders=[]){
+    return xmlCall("imaging.update_postinstalls_in_profile", [$profileId, $name, $description, $orders]);
+}
+
+
+function xmlrpc_add_postinstalls_in_profile($location, $name, $description="", $orders=[]){
+    return xmlCall("imaging.add_postinstalls_in_profile", [$location, $name, $description, $orders]);
+}
+
+function xmlrpc_delete_profile($id){
+    return xmlCall("imaging.delete_profile", [$id]);
+}
+
+function xmlrpc_get_profile_in_menu($menuitem_id){
+    return xmlCall("imaging.get_profile_in_menu", [$menuitem_id]);
+}
+
+function xmlrpc_update_profiles_in_menu($menuitem_id, $profiles=[]){
+    return xmlCall("imaging.update_profiles_in_menu", [$menuitem_id, $profiles]);
+}
+
+function get_all_postinstall_for_menu($menuitem_id){
+    return xmlCall("imaging.get_all_postinstall_for_menu", [$menuitem_id]);
+}
+
+function xmlrpc_update_postinstalls_in_menu($itemid, $postinstalls=[]){
+    return xmlCall("imaging.update_postinstalls_in_menu", [$itemid, $postinstalls]);
+}
+
+function xmlrpc_getGroupLocation($gid){
+    return xmlCall("imaging.getGroupLocation", [$gid]);
+}
+?>

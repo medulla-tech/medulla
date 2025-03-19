@@ -35,7 +35,7 @@ from sqlalchemy import (
     ForeignKeyConstraint,
     not_,
 )
-from sqlalchemy.orm import create_session, mapper, relation
+from sqlalchemy.orm import create_session, mapper, relation,load_only
 from sqlalchemy.sql.expression import alias as sa_exp_alias
 from sqlalchemy.exc import InvalidRequestError
 from sqlalchemy.ext.automap import automap_base
@@ -216,6 +216,10 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         mapper(TargetType, self.target_type)
         mapper(User, self.user)
         mapper(Multicast, self.multicast)
+        mapper(Profile, self.profile)
+        mapper(PostInstallInMenu, self.postinstall_in_menu)
+        mapper(PostInstallInProfile, self.postinstall_in_profile)
+        mapper(ProfileInMenu, self.profile_in_menu)
 
     def initTables(self):
         """
@@ -436,6 +440,41 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             Column("target_uuid", Text, nullable=False),
             Column("image_uuid", Text, nullable=False),
             Column("image_name", Text, nullable=False),
+            autoload=True,
+        )
+
+        self.profile = Table(
+            "Profile",
+            self.metadata,
+            Column("id", Integer, primary_key=True),
+            Column("fk_imagingserver",Integer),
+            Column("name", Text, nullable=False),
+            Column("description", Text, nullable=True, default=""),
+            autoload=True,
+        )
+
+        self.profile_in_menu = Table(
+            "ProfileInMenu",
+            self.metadata,
+            Column("fk_profile", Integer, ForeignKey("Profile.id"), primary_key=True),
+            Column("fk_menuitem", Integer, primary_key=True),
+            autoload=True,
+        )
+
+        self.postinstall_in_menu = Table(
+            "PostInstallInMenu",
+            self.metadata,
+            Column("fk_post_install_script", Integer, primary_key=True),
+            Column("fk_menuitem", Integer, primary_key=True),
+            autoload=True,
+        )
+
+        self.postinstall_in_profile = Table(
+            "PostInstallInProfile",
+            self.metadata,
+            Column("fk_profile", Integer, ForeignKey("Profile.id"), primary_key=True),
+            Column("fk_post_install_script",Integer, primary_key=True),
+            Column("order", Integer, nullable=False, default=0),
             autoload=True,
         )
 
@@ -3095,6 +3134,9 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             # TODO : get all i18n to remove orphans!
 
             for iim in iims:
+                session.query(ProfileInMenu).filter(ProfileInMenu.fk_menuitem == iim.fk_menuitem).delete()
+                session.query(PostInstallInMenu).filter(PostInstallInMenu.fk_menuitem == iim.fk_menuitem).delete()
+
                 self.logger.debug(
                     "Remove ImageInMenu %s %s"
                     % (str(iim.fk_menuitem), str(iim.fk_image))
@@ -4220,6 +4262,22 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 iim.fk_menuitem = menu_item.id
                 iim.fk_image = default_iim.fk_image
                 session.add(iim)
+
+                # Copy Profiles for the new ImageInMenu
+                query = session.query(ProfileInMenu).filter(ProfileInMenu.fk_menuitem == default_iim.fk_menuitem).all()
+                for profile in query:
+                    tmp = ProfileInMenu()
+                    tmp.fk_menuitem = iim.fk_menuitem
+                    tmp.fk_profile = profile.fk_profile
+                    session.add(tmp)
+
+                # Copy PostInstallScript for the new ImageInMenu
+                query = session.query(PostInstallInMenu).filter(PostInstallInMenu.fk_menuitem == default_iim.fk_menuitem)
+                for postinstall in query:
+                    tmp = PostInstallInMenu()
+                    tmp.fk_menuitem = iim.fk_menuitem
+                    tmp.fk_post_install_script = postinstall.fk_post_install_script
+                    session.add(tmp)
         session.flush()
         return [ret, mi_out]
 
@@ -6177,6 +6235,372 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.flush()
         session.close()
 
+    def get_profiles_location(self, location, start=0, limit=-1, filter=""):
+        session = create_session(self.db)
+
+        query = session.query(Profile)\
+            .join(ImagingServer, ImagingServer.id == Profile.fk_imagingserver)\
+            .join(Entity, Entity.id == ImagingServer.fk_entity)\
+            .filter(Entity.uuid == location)
+
+        if filter != "":
+            query = query.filter(or_(
+                Profile.id.contains(filter),
+                Profile.name.contains(filter),
+                Profile.description.contains(filter)
+                ))
+        count = query.count()
+        query = query.offset(start)
+        if limit != -1:
+            query = query.limit(limit)
+
+        datas = query.all()
+        session.flush()
+        session.close()
+
+        result = {"total":count,"datas":[]}
+        for element in datas:
+            result["datas"].append({
+                "id":element.id,
+                "name": element.name if element.name is not None else "",
+                "description": element.description if element.description is not None else ""
+            })
+        return result
+
+    def getPostInstalls(self, master_uuid, target_uuid):
+        session = create_session(self.db)
+
+        result = []
+
+        sql="""select
+    pis.id,
+    pis.default_name,
+    pis.default_desc,
+    pis.value
+from PostInstallScript pis
+join PostInstallScriptInImage pisii on pisii.fk_post_install_script = pis.id
+join Image i on i.id = pisii.fk_image
+join ImageInMenu iim on iim.fk_image = pisii.fk_image
+join MenuItem mi on mi.id = iim.fk_menuitem
+join Menu m on mi.fk_menu = m.id
+join Target t on t.fk_menu = m.id
+where t.uuid = "%s" and i.uuid= "%s"
+order by pisii.order"""%(target_uuid, master_uuid)
+
+        try:
+            datas = session.execute(sql)
+        except Exception as e:
+            session.close()
+            return []
+
+        for row in datas:
+            result.append({
+                "id":row[0],
+                "name":row[1] if row[1] is not None else "",
+                "description": row[2] if row[2] is not None else "",
+                "value":row[3] if row[3] is not None else ""
+            })
+        session.close()
+        return result
+
+    def getPostInstall(self, postinstall_id):
+        session = create_session(self.db)
+        result = []
+        sql = """SELECT
+    pis.id,
+    pis.default_name,
+    pis.default_desc,
+    pis.value
+from PostInstallScript pis
+where pis.id = %s"""%postinstall_id
+
+        try:
+            datas = session.execute(sql)
+        except Exception as e:
+            session.close()
+            return []
+
+        for row in datas:
+            result.append({
+                "id":row[0],
+                "name":row[1] if row[1] is not None else "",
+                "description": row[2] if row[2] is not None else "",
+                "value":row[3] if row[3] is not None else ""
+            })
+        session.close()
+        return result
+
+    def getPostInstallsFromProfile(self, profile_id):
+        session = create_session(self.db)
+        result = []
+        sql = """SELECT
+    pis.id,
+    pis.default_name,
+    pis.default_desc,
+    pis.value,
+from PostInstallInProfile piip
+join PostInstallScript pis on piip.fk_post_install_script = pis.id
+where piip.fk_profile=%s
+order by piip.order"""%profile_id
+
+        try:
+            datas = session.execute(sql)
+        except Exception as e:
+            session.close()
+            return []
+
+        for row in datas:
+            result.append({
+                "id":row[0],
+                "name":row[1] if row[1] is not None else "",
+                "description": row[2] if row[2] is not None else "",
+                "value":row[3] if row[3] is not None else ""
+            })
+        session.close()
+        return result
+
+    def get_all_postinstall_for_profile(self, location, profile_id, start=0, limit=-1, filter = ""):
+        session = create_session(self.db)
+
+        result = []
+
+        if location == "":
+            return result
+        sql_all = """select
+    SQL_CALC_FOUND_ROWS
+    pis.id,
+    pis.default_name,
+    pis.default_desc
+from PostInstallScript pis
+
+left join PostInstallScriptOnImagingServer pisois on pisois.fk_post_install_script = pis.id
+where pisois.fk_imaging_server is NULL
+union
+select
+    pis.id,
+    pis.default_name,
+    pis.default_desc
+from PostInstallScriptOnImagingServer pisois
+join ImagingServer ims on ims.id = pisois.fk_imaging_server
+left join PostInstallScript pis on pisois.fk_post_install_script = pis.id
+join Entity e on ims.fk_entity = e.id
+where e.uuid = "%s";
+ """%(location)
+
+        sql_selected = """select
+    SQL_CALC_FOUND_ROWS
+    pis.id,
+    pisip.order
+from PostInstallInProfile pisip
+join PostInstallScript pis on pisip.fk_post_install_script = pis.id
+where pisip.fk_profile=%s"""%(profile_id)
+
+        datas = session.execute(sql_all)
+        selection = session.execute(sql_selected)
+
+        selected = {}
+
+        for element in selection:
+            selected["UUID%s"%element[0]] = element[1]
+
+        for element in datas:
+            result.append({
+                "id":element[0],
+                "name":element[1] if element[1] is not None else "",
+                "description":element[2] if element[2] is not None else "",
+                "order": selected["UUID%s"%element[0]] if "UUID%s"%element[0] in selected else -1
+            })
+
+        session.close()
+        return result
+
+    def update_postinstalls_in_profile(self, profileId, name, description, orders):
+        session = create_session(self.db)
+        _orders = {}
+
+        # Clean all the -1 values from the postinstalls orders list
+        for id in orders:
+            if int(orders[id]) != -1:
+                _orders[id] = int(orders[id])
+
+        session.query(Profile).filter(Profile.id == profileId).update({"name":name, "description":description})
+        session.query(PostInstallInProfile).filter(PostInstallInProfile.fk_profile == profileId).delete()
+        for script in _orders:
+            tmp = PostInstallInProfile()
+            tmp.fk_profile = profileId
+            tmp.fk_post_install_script = script
+            tmp.order = _orders[script]
+            session.add(tmp)
+
+        session.flush()
+        session.close()
+        return {"status": True, "msg": ""}
+
+    def add_postinstalls_in_profile(self, location, name, description, orders):
+        session = create_session(self.db)
+
+        # Clean all the -1 values from the postinstalls orders list
+        _orders = {}
+        for id in orders:
+            if int(orders[id]) != -1:
+                _orders[id] = int(orders[id])
+
+        query_location = session.query(ImagingServer)\
+            .join(Entity, Entity.id == ImagingServer.fk_entity)\
+            .filter(Entity.uuid == location).first()
+
+        if query_location is None:
+            return {"status": False, "msg": "No ImagingServer found for location %s"%location}
+
+        imaging_id = query_location.id
+
+        tmp = Profile()
+        tmp.fk_imagingserver = imaging_id
+        tmp.name = name
+        tmp.description = description
+
+        session.add(tmp)
+        session.flush()
+
+        if tmp.id == 0:
+            return {"status": False, "msg": "Error when inserting new profile"}
+
+        for script in _orders:
+            tmp2 = PostInstallInProfile()
+            tmp2.fk_profile = tmp.id
+            tmp2.fk_post_install_script = script
+            tmp2.order = _orders[script]
+            session.add(tmp2)
+        session.flush()
+        session.close()
+        return {"status": True, "msg": ""}
+
+    def delete_profile(self, id):
+        session = create_session(self.db)
+
+        # delete the profile
+        # ProfileInMenu and PostInstallInProfile elements are automatically deleted thanks to on delete cascade foreign key
+        session.query(Profile).filter(Profile.id == id).delete()
+        session.flush()
+
+        session.close()
+        return {"status":True, "msg": ""}
+
+    def get_profile_in_menu(self, menuitem_id):
+        session = create_session(self.db)
+        result = []
+        pim = []
+
+        menuitem_id = menuitem_id.replace("UUID", "") if menuitem_id.startswith("UUID") else menuitem_id
+
+        query = session.query(ImagingServer)\
+            .options(load_only(ImagingServer.id))\
+            .join(ImageOnImagingServer, ImageOnImagingServer.fk_imaging_server == ImagingServer.id)\
+            .join(Image, Image.id == ImageOnImagingServer.fk_image)\
+            .join(ImageInMenu, ImageInMenu.fk_image == Image.id)\
+            .join(MenuItem, MenuItem.id == ImageInMenu.fk_menuitem)\
+            .filter(MenuItem.id == menuitem_id).first()
+
+        # No ImagingServer found
+        if query is None:
+            return []
+        imagingserver_id = query.id
+
+        query = session.query(ProfileInMenu).options(load_only('fk_profile')).filter(ProfileInMenu.fk_menuitem == menuitem_id).all()
+        pim = [element.fk_profile for element in query]
+
+        query = session.query(Profile)\
+            .filter(Profile.fk_imagingserver == imagingserver_id).all()
+
+        result = []
+        for element in query:
+            result.append({
+                "id":element.id,
+                "fk_imagingserver": element.fk_imagingserver,
+                "name": element.name if element.name is not None else "",
+                "description": element.description if element.description is not None else "",
+                "in_menu": 1 if element.id in pim else 0
+            })
+
+        session.close()
+        return result
+
+    def update_profiles_in_menu(self, menuitem_id, profiles=[]):
+        session = create_session(self.db)
+
+        if menuitem_id.startswith("UUID"):
+            menuitem_id = menuitem_id.replace("UUID", "")
+
+        session.query(ProfileInMenu).filter(ProfileInMenu.fk_menuitem == menuitem_id).delete()
+
+        for id in profiles:
+            tmp = ProfileInMenu()
+            tmp.fk_menuitem = menuitem_id
+            tmp.fk_profile = id
+            session.add(tmp)
+        session.flush()
+        session.close()
+        return {"status":True, "msg":""}
+
+    def get_all_postinstall_for_menu(self, menuitem_id):
+        session = create_session(self.db)
+        datas = []
+        datas_in_menu = []
+        in_menu = []
+        result = []
+
+        menuitem_id = menuitem_id.replace("UUID", "") if menuitem_id.startswith("UUID") else menuitem_id
+        query = session.query(ImagingServer)\
+            .distinct(ImagingServer.id)\
+            .options(load_only(ImagingServer.id))\
+            .join(ImageOnImagingServer, ImageOnImagingServer.fk_imaging_server == ImagingServer.id)\
+            .join(Image, Image.id == ImageOnImagingServer.fk_image)\
+            .join(ImageInMenu, ImageInMenu.fk_image == Image.id)\
+            .join(MenuItem, MenuItem.id == ImageInMenu.fk_menuitem)\
+            .filter(MenuItem.id == menuitem_id).first()
+
+        # No ImagingServer found
+        if query is None:
+            return []
+        imagingserver_id = query.id
+
+        query = session.query(PostInstallInMenu)\
+            .options(load_only(PostInstallInMenu.fk_post_install_script))\
+            .filter(PostInstallInMenu.fk_menuitem == menuitem_id).all()
+
+        piim = [ element.fk_post_install_script for element in query]
+
+        query = session.query(PostInstallScript)\
+            .outerjoin(PostInstallScriptOnImagingServer, PostInstallScriptOnImagingServer.fk_post_install_script == PostInstallScript.id)\
+            .filter(or_(
+                PostInstallScriptOnImagingServer.fk_imaging_server == None,
+                PostInstallScriptOnImagingServer.fk_imaging_server == imagingserver_id,
+            ))
+
+        for element in query:
+            result.append({
+                "id":element.id,
+                "name": element.default_name if element.default_name is not None else "",
+                "description":element.default_desc if element.default_desc is not None else "",
+                "in_menu": 1 if element.id in piim else 0
+            })
+        return result
+
+    def update_postinstalls_in_menu(self, menuitem_id, postinstalls=[]):
+        session = create_session(self.db)
+
+        menuitem_id = menuitem_id.replace("UUID", "") if menuitem_id.startswith("UUID") else menuitem_id
+        session.query(PostInstallInMenu).filter(PostInstallInMenu.fk_menuitem == menuitem_id).delete()
+
+        for id in postinstalls:
+            tmp = PostInstallInMenu()
+            tmp.fk_menuitem = menuitem_id
+            tmp.fk_post_install_script =id
+            session.add(tmp)
+        session.flush()
+        session.close()
+
+        return {"status":True, "msg":""}
 
 def id2uuid(id):
     return "UUID%d" % id
@@ -6413,3 +6837,19 @@ class User(DBObject):
 
 class Multicast(DBObject):
     to_be_exported = ["id", "location", "target_uuid", "image_uuid", "image_name"]
+
+
+class PostInstallInMenu(DBObject):
+    to_be_exported = ["fk_menuitem", "fk_post_install_script"]
+
+
+class PostInstallInProfile(DBObject):
+    to_be_exported = ["fk_profile", "fk_post_install_script", "order"]
+
+
+class Profile(DBObject):
+    to_be_exported = ["id","fk_imagingserver", "name", "description"]
+
+
+class ProfileInMenu(DBObject):
+    to_be_exported = ["id", "fk_menuitem", "fk_profile"]
