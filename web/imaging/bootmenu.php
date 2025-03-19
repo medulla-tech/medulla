@@ -569,12 +569,8 @@ item --gap -- -------------------------------------
             $ipxe .= "item " .$encodedName. " ".$encodedName."
 ";
         } elseif ($item['type'] == 'image') {
-<<<<<<< HEAD
-            $ipxe .= "item " . str_replace(" ", "-", mb_convert_encoding($item["name"], 'UTF-8', 'UTF-8')) . " " . mb_convert_encoding($item['name'], 'UTF-8', 'UTF-8') . "
-=======
             $encodedName = str_replace(" ", "-", mb_convert_encoding($item["name"], 'UTF-8', 'UTF-8'));
             $ipxe .= "item " . $encodedName . " " . $encodedName . "
->>>>>>> kno-postinstall
 ";
             if(!empty($virtuals[$item['id']])){
                 foreach($virtuals[$item['id']] as $virtual){
