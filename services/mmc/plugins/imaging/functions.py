@@ -2948,7 +2948,7 @@ class ImagingRpcProxy(RpcProxyI):
             else:
                 f.close()
 
-    def getWindowsAnswerFileParameters(self, filename):
+    def getWindowsAnswerFileParameters(self, filename:str)->dict:
         """
         return the parameters list of sysprep answer file
         """
@@ -2983,9 +2983,11 @@ class ImagingRpcProxy(RpcProxyI):
             parameters = json.loads(parameters)
             parameters["Os"] = os
             parameters["Notes"] = description
+            parameters["Location"] = filename
+            parameters["Title"] = filename.replace(".xml", "")
         except Exception as e:
             logging.getLogger().exception(e)
-            return False
+            return {}
 
         else:
             f.close()
