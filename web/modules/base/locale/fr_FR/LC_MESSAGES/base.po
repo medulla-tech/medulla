@@ -6,17 +6,17 @@
 # Translators:
 # Guillaume <guillaume.lassarre@siveo.net>, 2018
 # tekmans <yvan.manon@siveo.net>, 2019
-# Nicolas Lécureuil <neoclust@mageia.org>, 2021
-# SPO <spointu@gmail.com>, 2024
+# Nicolas Lécureuil <neoclust@mageia.org>, 2025
+# SPO <spointu@gmail.com>, 2025
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-16 22:40+0200\n"
+"POT-Creation-Date: 2025-03-19 16:16+0100\n"
 "PO-Revision-Date: 2018-02-13 15:15+0000\n"
-"Last-Translator: SPO <spointu@gmail.com>, 2024\n"
+"Last-Translator: SPO <spointu@gmail.com>, 2025\n"
 "Language-Team: French (https://app.transifex.com/siveo/teams/72118/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,12 +24,12 @@ msgstr ""
 "Language: fr_FR\n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
-#: index.php:65 token.php:56
+#: index.php:69 token.php:56
 #, php-format
 msgid "The server %s does not exist"
 msgstr "Le serveur %s n'existe pas"
 
-#: index.php:75
+#: index.php:79
 msgid ""
 "Login failed. Please make sure that you entered the right username and "
 "password. Both fields are case sensitive."
@@ -38,7 +38,7 @@ msgstr ""
 "d'utilisateur et mot de passe ont été entrés. Les deux champs sont sensibles"
 " à la casse."
 
-#: index.php:84
+#: index.php:88
 msgid ""
 "You have been logged out because the session between the MMC web interface "
 "and the MMC agent expired."
@@ -46,33 +46,37 @@ msgstr ""
 "Vous avez été déconnecté parce que la session entre l'interface web MMC et "
 "l'agent MMC a expiré."
 
-#: index.php:199
+#: index.php:92
+msgid "You have been successfully logged out."
+msgstr "Vous avez été correctement déconnecté"
+
+#: index.php:209
 msgid "Forgot password ?"
 msgstr "Mot de passe oublié ?"
 
-#: index.php:208
+#: index.php:218
 msgid "Server"
 msgstr "Serveur"
 
-#: index.php:215
+#: index.php:225
 msgid "Language"
 msgstr "Langue"
 
-#: index.php:221 modules/base/includes/publicFunc.php:318
+#: index.php:231 modules/base/includes/publicFunc.php:318
 #: modules/base/users/ajaxFilter.php:117 modules/base/views/index.tpl.php:78
 msgid "Login"
 msgstr "Identifiant"
 
-#: index.php:227 modules/base/includes/publicFunc.php:333
+#: index.php:237 modules/base/includes/publicFunc.php:333
 #: modules/base/infoPackage.inc.php:433
 msgid "Password"
 msgstr "Mot de passe"
 
-#: index.php:240
+#: index.php:250
 msgid "Connect"
 msgstr "Connecter"
 
-#: index.php:263
+#: index.php:268
 msgid ""
 "Error reading authproviders.ini or authproviders.ini.local config file."
 msgstr ""
@@ -153,11 +157,11 @@ msgstr ""
 "L'agent MMC n'a pas fourni de numéro de session. Veuillez vérifier la "
 "version de l'agent MMC."
 
-#: includes/xmlrpc.inc.php:390
+#: includes/xmlrpc.inc.php:388
 msgid "unknown error"
 msgstr "erreur inconnue"
 
-#: includes/xmlrpc.inc.php:391
+#: includes/xmlrpc.inc.php:389
 msgid ""
 "This exception is unknown. Please contact us to add an error handling on "
 "this error."
@@ -335,7 +339,7 @@ msgstr "Valider"
 #: includes/PageGenerator.php:2912 includes/PageGenerator.php:2994
 #: modules/base/groups/delete.php:66 modules/base/groups/members.php:223
 #: modules/base/users/backup.php:91 modules/imaging/manage/master_iso.php:109
-#: modules/imaging/imaging/multicast.php:410
+#: modules/imaging/imaging/multicast.php:409
 #: modules/imaging/imaging/images_iso.php:112
 #: modules/dyngroup/includes/groups.inc.php:104
 #: modules/dyngroup/includes/groups.inc.php:311
@@ -532,11 +536,11 @@ msgstr ""
 "Cliquer ici pour avoir plus d'informations à propos de notre plan de "
 "maintenance et de souscription."
 
-#: logout/index.php:48 logout/index.php:55 graph/navbar.inc.php:83
+#: logout/index.php:54 logout/index.php:61 graph/navbar.inc.php:83
 msgid "Logout"
 msgstr "Déconnexion"
 
-#: logout/index.php:51
+#: logout/index.php:57
 msgid "Your session will be closed"
 msgstr "Votre session va être fermée"
 
@@ -638,16 +642,19 @@ msgstr "Prise en main à distance"
 #: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:50
 #: modules/xmppmaster/xmppmaster/ajaxstatusteamxmppscheduler.php:73
 #: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:45
+#: modules/xmppmaster/xmppmaster/ajaxteamconvergence.php:124
 #: modules/xmppmaster/xmppmaster/ajaxstatusteamxmpp.php:128
 #: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:92
 #: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:105
+#: modules/xmppmaster/xmppmaster/ajaxconvergence.php:111
+#: modules/xmppmaster/xmppmaster/ajaxconvergence.php:322
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:78
 #: modules/base/includes/computers_list.inc.php:109
 msgid "View deployment details"
 msgstr "Afficher les détails du déploiement"
 
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:125
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:701
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:719
 msgid "Restart deployment"
 msgstr "Redémarrer le déploiement"
 
@@ -682,27 +689,27 @@ msgstr "Ordinateurs hors ligne"
 msgid "Delete deploy"
 msgstr "Supprimer le déploiement"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:348
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:362
 msgid "cluster list"
 msgstr "Liste des clusters"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:349
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:363
 msgid "cluster nb ars"
 msgstr "nb d'ars du cluster"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:350
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:364
 msgid "machine"
 msgstr "machine"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:351
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:365
 msgid "progress"
 msgstr "en cours"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:352
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:366
 msgid "start"
 msgstr "début"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:353
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:367
 msgid "end"
 msgstr "fin"
 
@@ -826,6 +833,12 @@ msgstr "Acquitter"
 #: modules/dashboard/includes/panels/alerts.inc.php:49
 msgid "Detail"
 msgstr "Détails"
+
+#: modules/xmppmaster/xmppmaster/ajaxconvergence.php:150
+#: modules/xmppmaster/xmppmaster/ajaxconvergence.php:162
+#: modules/xmppmaster/xmppmaster/ajaxconvergence.php:368
+msgid "Reschedule Convergence"
+msgstr "Reproduire une convergence"
 
 #: modules/glpi/glpi/ajaxMachinesList.php:165
 #: modules/glpi/glpi/ajaxMachinesList.php:168
@@ -2387,6 +2400,14 @@ msgstr "Uptime"
 #: modules/dashboard/includes/panels/clients_updates.inc.php:30
 msgid "Clients Update"
 msgstr "Mise à jour du client"
+
+#: modules/imaging/manage/ajaxProfilescript.php:57
+msgid "Edit Profile"
+msgstr "Éditer un profil"
+
+#: modules/imaging/manage/ajaxProfilescript.php:58
+msgid "Delete Profile"
+msgstr "Supprimer profil"
 
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:149
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:173

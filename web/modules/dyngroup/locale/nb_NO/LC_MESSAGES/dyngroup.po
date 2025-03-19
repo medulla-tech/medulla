@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-16 22:40+0200\n"
+"POT-Creation-Date: 2025-03-19 16:15+0100\n"
 "PO-Revision-Date: 2017-09-12 13:25+0000\n"
 "Last-Translator: Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2022\n"
 "Language-Team: Norwegian Bokmål (Norway) (https://app.transifex.com/siveo/teams/72118/nb_NO/)\n"
@@ -39,13 +39,13 @@ msgstr "Bekreft"
 #: modules/dyngroup/includes/groups.inc.php:311
 #: modules/dyngroup/dyngroup/remove_machine.php:58
 #: modules/dyngroup/dyngroup/delete_group.php:67
-#: modules/dyngroup/dyngroup/delete_group.php:111
+#: modules/dyngroup/dyngroup/delete_group.php:133
 msgid "Cancel"
 msgstr "Avbryt"
 
 #: modules/dyngroup/includes/groups.inc.php:137
 #: modules/dyngroup/includes/groups.inc.php:141
-#: modules/dyngroup/dyngroup/import_from_file.php:74
+#: modules/dyngroup/dyngroup/import_from_file.php:81
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:111
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:113
 msgid "Group name"
@@ -65,7 +65,7 @@ msgstr "Gruppemedlemmer"
 #: modules/dyngroup/includes/groups.inc.php:187
 #: modules/dyngroup/dyngroup/creator.php:310
 #: modules/dyngroup/dyngroup/creator.php:316
-#: modules/dyngroup/dyngroup/import_from_file.php:77
+#: modules/dyngroup/dyngroup/import_from_file.php:84
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:93
 #: modules/dyngroup/dyngroup/save.php:84
 msgid "Yes"
@@ -73,7 +73,7 @@ msgstr "Ja"
 
 #: modules/dyngroup/includes/groups.inc.php:190
 #: modules/dyngroup/dyngroup/creator.php:311
-#: modules/dyngroup/dyngroup/import_from_file.php:77
+#: modules/dyngroup/dyngroup/import_from_file.php:84
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:93
 #: modules/dyngroup/dyngroup/save.php:84
 msgid "No"
@@ -160,11 +160,11 @@ msgstr "%s) Søk%s %s (%s) i modul %s"
 msgid "%s) Search %s %s %s in module %s"
 msgstr "%s) Søk%s %s %s i modul %s"
 
-#: modules/dyngroup/includes/dyngroup.php:800
+#: modules/dyngroup/includes/dyngroup.php:805
 msgid "Failed to load some pkgs module"
 msgstr "Mislyktes i å laste noen pakkemoduler"
 
-#: modules/dyngroup/includes/dyngroup.php:806
+#: modules/dyngroup/includes/dyngroup.php:811
 msgid "Failed to load some msc module"
 msgstr "Mislyktes i å laste noen msc moduler"
 
@@ -514,8 +514,8 @@ msgstr "Midlertidig resultatvisning for '%s'"
 msgid "back"
 msgstr "forrige"
 
-#: modules/dyngroup/dyngroup/add_groups.php:84
-#: modules/dyngroup/dyngroup/add_groups.php:309
+#: modules/dyngroup/dyngroup/add_groups.php:92
+#: modules/dyngroup/dyngroup/add_groups.php:323
 #, php-format
 msgid ""
 "Computers list has been truncated at %d computers. Use the filter to find "
@@ -524,11 +524,11 @@ msgstr ""
 "Datamaskinlisten er avkortet ved %ddatamaskiner. Bruk filteret til å finne "
 "spesifikke maskiner."
 
-#: modules/dyngroup/dyngroup/add_groups.php:164
+#: modules/dyngroup/dyngroup/add_groups.php:172
 msgid "Group successfully modified"
 msgstr "Gruppen ble endret"
 
-#: modules/dyngroup/dyngroup/add_groups.php:178
+#: modules/dyngroup/dyngroup/add_groups.php:186
 msgid ""
 "The bootmenus cannot be generated as a multicast deployment is currently "
 "running."
@@ -536,7 +536,7 @@ msgstr ""
 "Oppstartsmenyene kan ikke genereres ettersom det en multicast-distribusjon "
 "rulles ut for øyeblikket."
 
-#: modules/dyngroup/dyngroup/add_groups.php:192
+#: modules/dyngroup/dyngroup/add_groups.php:200
 msgid ""
 "Imaging group modified, but some machines were not added to existing imaging"
 " group, because they have more than one ethernet card:"
@@ -544,46 +544,46 @@ msgstr ""
 "Speilbildegruppen er endret, men noen maskiner ble ikke lagt til "
 "eksisterende speilbildegruppe, fordi de har mer enn ett Ethernet-kort:"
 
-#: modules/dyngroup/dyngroup/add_groups.php:208
+#: modules/dyngroup/dyngroup/add_groups.php:216
 msgid "Imaging group successfully modified"
 msgstr "Speilbildegruppen ble endret"
 
-#: modules/dyngroup/dyngroup/add_groups.php:213
-#: modules/dyngroup/dyngroup/import_from_file.php:64
+#: modules/dyngroup/dyngroup/add_groups.php:221
+#: modules/dyngroup/dyngroup/import_from_file.php:70
 msgid "Group successfully created"
 msgstr "Gruppen ble opprettet"
 
-#: modules/dyngroup/dyngroup/add_groups.php:249
+#: modules/dyngroup/dyngroup/add_groups.php:257
 msgid "Group failed to modify"
 msgstr "Gruppen ble ikke endret"
 
-#: modules/dyngroup/dyngroup/add_groups.php:252
+#: modules/dyngroup/dyngroup/add_groups.php:260
 #, php-format
 msgid "Imaging group failed to modify.<br/>Can't add %s"
 msgstr "Speilbildegruppen kunne ikke endres. <br/> Kan ikke legge til%s"
 
-#: modules/dyngroup/dyngroup/add_groups.php:254
+#: modules/dyngroup/dyngroup/add_groups.php:262
 msgid "Imaging group failed to modify"
 msgstr "Speilbildegruppen kunne ikke endres."
 
-#: modules/dyngroup/dyngroup/add_groups.php:260
+#: modules/dyngroup/dyngroup/add_groups.php:268
 #: modules/dyngroup/dyngroup/save.php:100
 #: modules/dyngroup/dyngroup/save.php:102
 msgid "You must specify a group name"
 msgstr "Du må angi et gruppenavn"
 
-#: modules/dyngroup/dyngroup/add_groups.php:262
+#: modules/dyngroup/dyngroup/add_groups.php:270
 msgid "You must specify an imaging group name"
 msgstr "Du må angi en speilbildegruppenavn"
 
-#: modules/dyngroup/dyngroup/add_groups.php:265
-#: modules/dyngroup/dyngroup/import_from_file.php:68
+#: modules/dyngroup/dyngroup/add_groups.php:273
+#: modules/dyngroup/dyngroup/import_from_file.php:39
 #: modules/dyngroup/dyngroup/save.php:98
 #, php-format
 msgid "A group already exists with name '%s'"
 msgstr "Det eksisterer en gruppe allerede med navnet '%s'"
 
-#: modules/dyngroup/dyngroup/add_groups.php:267
+#: modules/dyngroup/dyngroup/add_groups.php:275
 #, php-format
 msgid "An imaging group already exists with name '%s'"
 msgstr "En speilbildegruppe eksisterer allerede med navnet '%s'"
@@ -622,15 +622,19 @@ msgstr "Alle gupper"
 msgid "Add a group"
 msgstr "Legg til en gruppe"
 
-#: modules/dyngroup/dyngroup/import_from_file.php:80
+#: modules/dyngroup/dyngroup/import_from_file.php:42
+msgid "Error: Unloaded file or invalid temporary path."
+msgstr ""
+
+#: modules/dyngroup/dyngroup/import_from_file.php:87
 msgid "Add shortcut"
 msgstr "Legg til snarvei"
 
-#: modules/dyngroup/dyngroup/import_from_file.php:82
+#: modules/dyngroup/dyngroup/import_from_file.php:89
 msgid "Select the file you want to import"
 msgstr "Velg filen du vil importere"
 
-#: modules/dyngroup/dyngroup/import_from_file.php:92
+#: modules/dyngroup/dyngroup/import_from_file.php:99
 msgid "Select what is inside the file"
 msgstr "Velg hva som filen skal inneholde"
 
@@ -814,12 +818,20 @@ msgid ""
 "The group cannot be deleted as a multicast deployment is currently running."
 msgstr "Gruppen kan ikke slettes da en multicast-distribusjon kjører."
 
-#: modules/dyngroup/dyngroup/delete_group.php:92
+#: modules/dyngroup/dyngroup/delete_group.php:80
+msgid "Deletion forbidden for Group:"
+msgstr ""
+
+#: modules/dyngroup/dyngroup/delete_group.php:81
+msgid "Delete before the groups:"
+msgstr ""
+
+#: modules/dyngroup/dyngroup/delete_group.php:114
 #, php-format
 msgid "Imaging group %s was successfully deleted"
 msgstr "Speilbildegruppen %s ble slettet"
 
-#: modules/dyngroup/dyngroup/delete_group.php:95
+#: modules/dyngroup/dyngroup/delete_group.php:117
 #, php-format
 msgid "Group %s was successfully deleted"
 msgstr "Gruppe %s ble slettet"

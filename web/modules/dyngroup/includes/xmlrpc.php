@@ -99,4 +99,8 @@ function xmlrpc_setfromdyngrouplogxmpp(   $text,
 function getInfosNameGroup($arrayuuid) {
     return xmlCall("dyngroup.getInfosNameGroup",array($arrayuuid));
 }
+
+function getDisplayGroupName($arrayuuid) {
+    return xmlCall("dyngroup.getDisplayGroupName",array($arrayuuid));
+}
 ?>

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-16 22:40+0200\n"
+"POT-Creation-Date: 2025-03-19 16:15+0100\n"
 "PO-Revision-Date: 2017-09-12 13:25+0000\n"
 "Language-Team: Danish (Denmark) (https://app.transifex.com/siveo/teams/72118/da_DK/)\n"
 "MIME-Version: 1.0\n"
@@ -34,13 +34,13 @@ msgstr ""
 #: modules/dyngroup/includes/groups.inc.php:311
 #: modules/dyngroup/dyngroup/remove_machine.php:58
 #: modules/dyngroup/dyngroup/delete_group.php:67
-#: modules/dyngroup/dyngroup/delete_group.php:111
+#: modules/dyngroup/dyngroup/delete_group.php:133
 msgid "Cancel"
 msgstr ""
 
 #: modules/dyngroup/includes/groups.inc.php:137
 #: modules/dyngroup/includes/groups.inc.php:141
-#: modules/dyngroup/dyngroup/import_from_file.php:74
+#: modules/dyngroup/dyngroup/import_from_file.php:81
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:111
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:113
 msgid "Group name"
@@ -60,7 +60,7 @@ msgstr ""
 #: modules/dyngroup/includes/groups.inc.php:187
 #: modules/dyngroup/dyngroup/creator.php:310
 #: modules/dyngroup/dyngroup/creator.php:316
-#: modules/dyngroup/dyngroup/import_from_file.php:77
+#: modules/dyngroup/dyngroup/import_from_file.php:84
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:93
 #: modules/dyngroup/dyngroup/save.php:84
 msgid "Yes"
@@ -68,7 +68,7 @@ msgstr ""
 
 #: modules/dyngroup/includes/groups.inc.php:190
 #: modules/dyngroup/dyngroup/creator.php:311
-#: modules/dyngroup/dyngroup/import_from_file.php:77
+#: modules/dyngroup/dyngroup/import_from_file.php:84
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:93
 #: modules/dyngroup/dyngroup/save.php:84
 msgid "No"
@@ -147,11 +147,11 @@ msgstr ""
 msgid "%s) Search %s %s %s in module %s"
 msgstr ""
 
-#: modules/dyngroup/includes/dyngroup.php:800
+#: modules/dyngroup/includes/dyngroup.php:805
 msgid "Failed to load some pkgs module"
 msgstr ""
 
-#: modules/dyngroup/includes/dyngroup.php:806
+#: modules/dyngroup/includes/dyngroup.php:811
 msgid "Failed to load some msc module"
 msgstr ""
 
@@ -500,70 +500,70 @@ msgstr ""
 msgid "back"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/add_groups.php:84
-#: modules/dyngroup/dyngroup/add_groups.php:309
+#: modules/dyngroup/dyngroup/add_groups.php:92
+#: modules/dyngroup/dyngroup/add_groups.php:323
 #, php-format
 msgid ""
 "Computers list has been truncated at %d computers. Use the filter to find "
 "specific machines."
 msgstr ""
 
-#: modules/dyngroup/dyngroup/add_groups.php:164
+#: modules/dyngroup/dyngroup/add_groups.php:172
 msgid "Group successfully modified"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/add_groups.php:178
+#: modules/dyngroup/dyngroup/add_groups.php:186
 msgid ""
 "The bootmenus cannot be generated as a multicast deployment is currently "
 "running."
 msgstr ""
 
-#: modules/dyngroup/dyngroup/add_groups.php:192
+#: modules/dyngroup/dyngroup/add_groups.php:200
 msgid ""
 "Imaging group modified, but some machines were not added to existing imaging"
 " group, because they have more than one ethernet card:"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/add_groups.php:208
+#: modules/dyngroup/dyngroup/add_groups.php:216
 msgid "Imaging group successfully modified"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/add_groups.php:213
-#: modules/dyngroup/dyngroup/import_from_file.php:64
+#: modules/dyngroup/dyngroup/add_groups.php:221
+#: modules/dyngroup/dyngroup/import_from_file.php:70
 msgid "Group successfully created"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/add_groups.php:249
+#: modules/dyngroup/dyngroup/add_groups.php:257
 msgid "Group failed to modify"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/add_groups.php:252
+#: modules/dyngroup/dyngroup/add_groups.php:260
 #, php-format
 msgid "Imaging group failed to modify.<br/>Can't add %s"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/add_groups.php:254
+#: modules/dyngroup/dyngroup/add_groups.php:262
 msgid "Imaging group failed to modify"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/add_groups.php:260
+#: modules/dyngroup/dyngroup/add_groups.php:268
 #: modules/dyngroup/dyngroup/save.php:100
 #: modules/dyngroup/dyngroup/save.php:102
 msgid "You must specify a group name"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/add_groups.php:262
+#: modules/dyngroup/dyngroup/add_groups.php:270
 msgid "You must specify an imaging group name"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/add_groups.php:265
-#: modules/dyngroup/dyngroup/import_from_file.php:68
+#: modules/dyngroup/dyngroup/add_groups.php:273
+#: modules/dyngroup/dyngroup/import_from_file.php:39
 #: modules/dyngroup/dyngroup/save.php:98
 #, php-format
 msgid "A group already exists with name '%s'"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/add_groups.php:267
+#: modules/dyngroup/dyngroup/add_groups.php:275
 #, php-format
 msgid "An imaging group already exists with name '%s'"
 msgstr ""
@@ -602,15 +602,19 @@ msgstr ""
 msgid "Add a group"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/import_from_file.php:80
+#: modules/dyngroup/dyngroup/import_from_file.php:42
+msgid "Error: Unloaded file or invalid temporary path."
+msgstr ""
+
+#: modules/dyngroup/dyngroup/import_from_file.php:87
 msgid "Add shortcut"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/import_from_file.php:82
+#: modules/dyngroup/dyngroup/import_from_file.php:89
 msgid "Select the file you want to import"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/import_from_file.php:92
+#: modules/dyngroup/dyngroup/import_from_file.php:99
 msgid "Select what is inside the file"
 msgstr ""
 
@@ -792,12 +796,20 @@ msgid ""
 "The group cannot be deleted as a multicast deployment is currently running."
 msgstr ""
 
-#: modules/dyngroup/dyngroup/delete_group.php:92
+#: modules/dyngroup/dyngroup/delete_group.php:80
+msgid "Deletion forbidden for Group:"
+msgstr ""
+
+#: modules/dyngroup/dyngroup/delete_group.php:81
+msgid "Delete before the groups:"
+msgstr ""
+
+#: modules/dyngroup/dyngroup/delete_group.php:114
 #, php-format
 msgid "Imaging group %s was successfully deleted"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/delete_group.php:95
+#: modules/dyngroup/dyngroup/delete_group.php:117
 #, php-format
 msgid "Group %s was successfully deleted"
 msgstr ""

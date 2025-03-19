@@ -86,6 +86,26 @@ function xmlrpc_get_count_machine_with_update($kb, $uuid, $list)
     return xmlCall("updates.get_count_machine_with_update", [$kb, $uuid, $list]);
 }
 
+function xmlrpc_get_os_update_major_stats()
+{
+    return xmlCall("updates.get_os_update_major_stats", []);
+}
+
+function xmlrpc_get_os_xmpp_update_major_stats()
+{
+    return xmlCall("updates.get_os_xmpp_update_major_stats", []);
+}
+
+function xmlrpc_get_os_update_major_details($entity_id, $filter="", $start=0, $limit=-1)
+{
+    return xmlCall("updates.get_os_update_major_details", [$entity_id, $filter, $start, $limit]);
+}
+
+function xmlrpc_get_os_xmpp_update_major_details($entity_id, $filter="",$start=0, $limit=-1, )
+{
+    return xmlCall("updates.get_os_xmpp_update_major_details", [$entity_id, $filter, $start, $limit]);
+}
+
 function xmlrpc_get_count_machine_as_not_upd($updateid)
 {
     return xmlCall("updates.get_count_machine_as_not_upd", [$updateid]);

@@ -33,7 +33,7 @@ from pulse2.database.updates.schema import Tests
 import logging
 import json
 import time
-
+import traceback
 # Session = sessionmaker()
 
 logger = logging.getLogger()
@@ -124,37 +124,75 @@ class UpdatesDatabase(DatabaseHelper):
 
         return lines
 
+
     @DatabaseHelper._sessionm
     def test_xmppmaster(self, session):
-        sql = """SELECT update_data.product,
-                        update_data.title
-        FROM xmppmaster.update_data
-        WHERE revisionid = '32268448';"""
+        """
+        Test function to retrieve product and title information for a specific revision ID.
 
-        result = session.execute(sql)
-        session.commit()
-        session.flush()
+        Args:
+            session: Database session object for executing queries.
 
-        resultat = [x for x in result]
-        print(resultat)
-        if len(resultat) == 0:
-            return -1
-        else:
-            return [x for x in result]
-            # return resultat[0][1]
+        Returns:
+            - List of results (product and title) if data is found.
+            - -1 if no data matches the query.
+        """
+        try:
+            # SQL query to retrieve product and title for the given revision ID
+            sql = """SELECT update_data.product,
+                            update_data.title
+                    FROM xmppmaster.update_data
+                    WHERE revisionid = '32268448';"""
+
+            # Execute the query
+            result = session.execute(sql)
+            session.commit()
+            session.flush()
+
+            # Convert query result to a list
+            resultat = [x for x in result]
+            print(resultat)
+
+            # Check if the result is empty
+            if len(resultat) == 0:
+                return -1
+            else:
+                # Return the results
+                return [x for x in result]
+        except Exception as e:
+            logger.error(f"Error in function test_xmppmaster: {e}")
 
     @DatabaseHelper._sessionm
     def get_black_list(self, session, start, limit, filter=""):
+        """
+        Retrieve the black list of updates with optional filtering, sorting, and pagination.
+
+        Args:
+            session: Database session object for executing queries.
+            start (int): Starting index for pagination.
+            limit (int): Maximum number of results to retrieve.
+            filter (str): Optional filter to apply to the query (title, kb, severity, or updateid_or_kb).
+
+        Returns:
+            dict: A dictionary containing:
+                - nb_element_total (int): Total number of elements matching the query.
+                - id (list): List of record IDs.
+                - updateid_or_kb (list): List of update IDs or KBs.
+                - title (list): List of update titles.
+                - severity (list): List of severity levels for each update.
+        """
         try:
+            # Ensure start and limit are integers
             start = int(start)
-        except:
+        except ValueError:
             start = -1
         try:
             limit = int(limit)
-        except:
+        except ValueError:
             limit = -1
 
         try:
+            # Initialize the result structure
             black_list = {
                 "nb_element_total": 0,
                 "id": [],
@@ -163,77 +201,112 @@ class UpdatesDatabase(DatabaseHelper):
                 "severity": [],
             }
 
-            sql = """SELECT SQL_CALC_FOUND_ROWS
-                        xmppmaster.up_black_list.updateid_or_kb,
-                        xmppmaster.update_data.title,
-                        xmppmaster.up_black_list.id,
-                        coalesce(NULLIF(xmppmaster.update_data.msrcseverity, ""), "Corrective") as msrcseverity
-                    FROM
-                        xmppmaster.up_black_list
-                    INNER JOIN
-                        xmppmaster.update_data
-                    ON
-                        up_black_list.updateid_or_kb = update_data.kb
-                    OR
-                        up_black_list.updateid_or_kb = update_data.updateid """
+            # SQL query combining results from different sources using UNION
+            sql = """SELECT SQL_CALC_FOUND_ROWS *
+                    FROM (
+                        SELECT
+                            up_black_list.id,
+                            up_black_list.updateid_or_kb,
+                            update_data.title,
+                            COALESCE(NULLIF(update_data.msrcseverity, ""), "Corrective") AS severity
+                        FROM xmppmaster.up_black_list
+                        INNER JOIN xmppmaster.update_data
+                        ON up_black_list.updateid_or_kb = update_data.kb
+                        OR up_black_list.updateid_or_kb = update_data.updateid
 
-            filterlimit = ""
-            if limit != -1 and start != -1:
-                filterlimit = "LIMIT %s, %s" % (start, limit)
+                        UNION
 
+                        SELECT
+                            up_black_list.id,
+                            up_black_list.updateid_or_kb,
+                            up_black_list.updateid_or_kb AS title,
+                            "major update" AS severity
+                        FROM xmppmaster.up_black_list
+                        WHERE up_black_list.updateid_or_kb LIKE '%%win10upd_%%'
+                            OR up_black_list.updateid_or_kb LIKE '%%win11upd_%%'
+                    ) AS combined_results
+                """
+
+            # Add a filter condition if the filter is not empty
             if filter:
-                ffilterwhere = """WHERE
-                    (update_data.title LIKE '%%%s%%' OR
-                    concat("KB", update_data.kb) LIKE '%%%s%%' OR
-                    update_data.description LIKE '%%%s%%' OR
-                    update_data.updateid LIKE '%%%s%%' OR
-                    coalesce(NULLIF(xmppmaster.update_data.msrcseverity, ""), "Corrective") LIKE '%%%s%%') """ % (
-                    filter,
-                    filter,
-                    filter,
-                    filter,
-                    filter,
-                )
-                sql += filterwhere
+                sql += """
+                    WHERE
+                        (title LIKE :filter OR
+                        CONCAT("KB", updateid_or_kb) LIKE :filter OR
+                        severity LIKE :filter OR
+                        updateid_or_kb LIKE :filter)
+                """
 
-            sql += ' ORDER BY FIELD(msrcseverity, "Critical", "Important", "") '
-            sql += filterlimit
-            sql += ";"
+            # Add ordering and pagination
+            sql += """
+                ORDER BY FIELD(severity, "major update", "Critical", "Important", "Corrective")
+                LIMIT :start, :limit;
+            """
+            logger.debug(f"Executing SQL: {sql}")
 
-            result = session.execute(sql)
+            # Execute the query with bind parameters
+            result = session.execute(
+                sql,
+                {
+                    "filter": f"%{filter}%" if filter else None,
+                    "start": start,
+                    "limit": limit,
+                },
+            )
 
+            # Count the total number of matching elements
             sql_count = "SELECT FOUND_ROWS();"
             ret_count = session.execute(sql_count)
-            nb_element_total = ret_count.first()[0]
-
-            black_list["nb_element_total"] = nb_element_total
+            black_list["nb_element_total"] = ret_count.first()[0]
 
             session.commit()
             session.flush()
 
-            if result is not None:
+            # Process query results
+            if result:
                 for list_b in result:
+                    black_list["id"].append(list_b.id)
                     black_list["updateid_or_kb"].append(list_b.updateid_or_kb)
                     black_list["title"].append(list_b.title)
-                    black_list["id"].append(list_b.id)
-                    black_list["severity"].append(list_b.msrcseverity)
+                    black_list["severity"].append(list_b.severity)
 
         except Exception as e:
-            logger.error("error function get_black_list : %s" % e)
+            # Log any errors encountered
+            logger.error(f"Error in function get_black_list: {e}")
         return black_list
 
     @DatabaseHelper._sessionm
     def get_grey_list(self, session, start, limit, filter=""):
+        """
+        Retrieve the grey list of updates with optional filtering, sorting, and pagination.
+
+        Args:
+            session: Database session object for executing queries.
+            start (int): Starting index for pagination.
+            limit (int): Maximum number of results to retrieve.
+            filter (str): Optional filter to apply to the query (title, kb, severity, or updateid).
+
+        Returns:
+            dict: A dictionary containing:
+                - nb_element_total (int): Total number of elements matching the query.
+                - updateid (list): List of update IDs.
+                - title (list): List of update titles.
+                - kb (list): List of knowledge base IDs.
+                - valided (list): List of validation statuses.
+                - severity (list): List of severity levels for each update.
+        """
         try:
+            # Ensure start and limit are integers
             start = int(start)
-        except:
+        except ValueError:
             start = -1
         try:
             limit = int(limit)
-        except:
+        except ValueError:
             limit = -1
 
         try:
+            # Initialize the result structure
             grey_list = {
                 "nb_element_total": 0,
                 "updateid": [],
@@ -243,71 +316,114 @@ class UpdatesDatabase(DatabaseHelper):
                 "severity": [],
             }
 
-            sql = """SELECT SQL_CALC_FOUND_ROWS
-                        xmppmaster.up_gray_list.*,
-                        coalesce(NULLIF(xmppmaster.update_data.msrcseverity, ""), "Corrective") as msrcseverity
-                    FROM
-                        xmppmaster.up_gray_list
-                    JOIN xmppmaster.update_data on xmppmaster.update_data.updateid = xmppmaster.up_gray_list.updateid """
+            # Base SQL query
+            sql_base = """SELECT SQL_CALC_FOUND_ROWS *
+                        FROM (
+                            SELECT
+                                up_gray_list.updateid,
+                                up_gray_list.title,
+                                up_gray_list.kb,
+                                up_gray_list.valided,
+                                COALESCE(NULLIF(update_data.msrcseverity, ""), "Corrective") AS severity
+                            FROM xmppmaster.up_gray_list
+                            JOIN xmppmaster.update_data
+                            ON xmppmaster.update_data.updateid = up_gray_list.updateid
 
-            filterlimit = ""
-            if start != -1 and limit != -1:
-                filterlimit = "LIMIT %s, %s" % (start, limit)
-            if filter != "":
-                filterwhere = """WHERE
-                    (update_data.title LIKE '%%%s%%' OR
-                    concat("KB", update_data.kb) LIKE '%%%s%%' OR
-                    update_data.description LIKE '%%%s%%' OR
-                    update_data.updateid LIKE '%%%s%%' OR
-                    coalesce(NULLIF(xmppmaster.update_data.msrcseverity, ""), "Corrective") LIKE '%%%s%%') """ % (
-                    filter,
-                    filter,
-                    filter,
-                    filter,
-                    filter,
-                )
-                sql += filterwhere
+                            UNION
 
-            sql += ' ORDER BY FIELD(msrcseverity, "Critical", "Important", "") '
-            sql += filterlimit
-            sql += ";"
+                            SELECT
+                                up_gray_list.updateid,
+                                up_gray_list.title,
+                                up_gray_list.kb,
+                                up_gray_list.valided,
+                                "major update" AS severity
+                            FROM xmppmaster.up_gray_list
+                            WHERE up_gray_list.title LIKE '%%win10upd_%%'
+                                OR up_gray_list.title LIKE '%%win11upd_%%'
+                        ) AS combined_results
+                    """
 
-            result = session.execute(sql)
+            # Add filter clause if filter is provided
+            if filter:
+                filter_clause = """
+                    WHERE (title LIKE :filter OR
+                        CONCAT("KB", kb) LIKE :filter OR
+                        severity LIKE :filter OR
+                        updateid LIKE :filter)
+                """
+                sql_base += filter_clause
 
+            # Add ordering and pagination
+            sql = f"""{sql_base}
+                    ORDER BY FIELD(severity, "major update", "Critical", "Important", "Corrective")
+                    LIMIT :start, :limit;
+                """
+
+            logger.debug(f"Executing SQL: {sql}")
+
+            # Execute the query
+            result = session.execute(
+                sql,
+                {
+                    "filter": f"%{filter}%" if filter else None,
+                    "start": start,
+                    "limit": limit,
+                },
+            )
+
+            # Count the total number of matching elements
             sql_count = "SELECT FOUND_ROWS();"
             ret_count = session.execute(sql_count)
-            nb_element_total = ret_count.first()[0]
-
-            grey_list["nb_element_total"] = nb_element_total
+            grey_list["nb_element_total"] = ret_count.first()[0]
 
             session.commit()
             session.flush()
 
+            # Process query results
             if result:
-                for list_b in result:
-                    grey_list["updateid"].append(list_b.updateid)
-                    grey_list["title"].append(list_b.title)
-                    grey_list["kb"].append(list_b.kb)
-                    grey_list["valided"].append(list_b.valided)
-                    grey_list["severity"].append(list_b.msrcseverity)
+                for list_g in result:
+                    grey_list["updateid"].append(list_g.updateid)
+                    grey_list["title"].append(list_g.title)
+                    grey_list["kb"].append(list_g.kb)
+                    grey_list["valided"].append(list_g.valided)
+                    grey_list["severity"].append(list_g.severity)
 
         except Exception as e:
-            logger.error("error function get_grey_list")
-
+            # Log any errors encountered
+            logger.error(f"Error in function get_grey_list: {e}")
         return grey_list
 
     @DatabaseHelper._sessionm
     def get_white_list(self, session, start=0, limit=-1, filter=""):
+        """
+        Retrieve the white list of updates with optional filtering, sorting, and pagination.
+
+        Args:
+            session: Database session object for executing queries.
+            start (int): Starting index for pagination. Default is 0.
+            limit (int): Maximum number of results to retrieve. Default is -1 (no limit).
+            filter (str): Optional filter to apply to the query (title, kb, severity, or updateid).
+
+        Returns:
+            dict: A dictionary containing:
+                - nb_element_total (int): Total number of elements matching the query.
+                - updateid (list): List of update IDs.
+                - title (list): List of update titles.
+                - kb (list): List of knowledge base IDs.
+                - severity (list): List of severity levels for each update.
+        """
         try:
+            # Ensure 'start' and 'limit' are integers; default to -1 if invalid
             start = int(start)
-        except:
+        except ValueError:
             start = -1
         try:
             limit = int(limit)
-        except:
+        except ValueError:
             limit = -1
 
         try:
+            # Initialize the result structure
             white_list = {
                 "nb_element_total": 0,
                 "updateid": [],
@@ -316,52 +432,85 @@ class UpdatesDatabase(DatabaseHelper):
                 "severity": [],
             }
 
-            sql = """SELECT SQL_CALC_FOUND_ROWS
-                        xmppmaster.up_white_list.*,
-                        coalesce(NULLIF(xmppmaster.update_data.msrcseverity, ""), "Corrective") as msrcseverity
-                    FROM xmppmaster.up_white_list
-                    JOIN xmppmaster.update_data on xmppmaster.update_data.updateid = xmppmaster.up_white_list.updateid """
+            # Base query without the filter
+            sql_base = """SELECT SQL_CALC_FOUND_ROWS *
+                        FROM (
+                            SELECT
+                                up_white_list.updateid,
+                                up_white_list.title,
+                                up_white_list.kb,
+                                COALESCE(NULLIF(update_data.msrcseverity, ""), "Corrective") AS severity
+                            FROM xmppmaster.up_white_list
+                            JOIN xmppmaster.update_data
+                            ON xmppmaster.update_data.updateid = xmppmaster.up_white_list.updateid
 
+                            UNION
+
+                            SELECT
+                                up_white_list.updateid,
+                                up_white_list.title,
+                                up_white_list.kb,
+                                "major update" AS severity
+                            FROM xmppmaster.up_white_list
+                            WHERE up_white_list.title LIKE '%%win10upd_%%'
+                                OR up_white_list.title LIKE '%%win11upd_%%'
+                        ) AS combined_results
+                    """
+
+            # Add the filter condition only if a valid filter is provided
             if filter:
-                filterwhere = """WHERE
-                    (update_data.title LIKE '%%%s%%' OR
-                    concat("KB", update_data.kb) LIKE '%%%s%%' OR
-                    update_data.description LIKE '%%%s%%' OR
-                    update_data.updateid LIKE '%%%s%%' OR
-                    coalesce(NULLIF(xmppmaster.update_data.msrcseverity, ""), "Corrective") LIKE '%%%s%%') """ % (
-                    filter,
-                    filter,
-                    filter,
-                    filter,
-                    filter,
-                )
-                sql += filterwhere
+                filter_clause = """
+                    WHERE
+                    (title LIKE :filter OR
+                    CONCAT("KB", kb) LIKE :filter OR
+                    severity LIKE :filter OR
+                    updateid LIKE :filter)
+                """
+            else:
+                filter_clause = ""
 
-            sql += ' ORDER BY FIELD(msrcseverity, "Critical", "Important", "") '
-            filterlimit = ""
-            if start != -1 and limit != -1:
-                filterlimit = "LIMIT %s, %s" % (start, limit)
-            sql += filterlimit
-            sql += ";"
-            result = session.execute(sql)
+            # Add ordering and pagination
+            sql = f"""{sql_base}
+                    {filter_clause}
+                    ORDER BY FIELD(severity, "major update", "Critical", "Important", "Corrective")
+                    LIMIT :start, :limit;
+                """
 
+            # Log the query for debugging purposes
+            logger.debug(f"Executing SQL: {sql}")
+
+            # Execute the query with bind parameters
+            result = session.execute(
+                sql,
+                {
+                    "filter": f"%{filter}%" if filter else None,
+                    "start": start,
+                    "limit": limit
+                }
+            )
+
+            # Retrieve the total count of matching elements
             sql_count = "SELECT FOUND_ROWS();"
             ret_count = session.execute(sql_count)
             nb_element_total = ret_count.first()[0]
-
             white_list["nb_element_total"] = nb_element_total
 
+            # Process query results and populate the white_list dictionary
             if result:
                 for list_w in result:
                     white_list["updateid"].append(list_w.updateid)
                     white_list["title"].append(list_w.title)
                     white_list["kb"].append(list_w.kb)
-                    white_list["severity"].append(list_w.msrcseverity)
+                    white_list["severity"].append(list_w.severity)
 
         except Exception as e:
-            logger.error("error function get_white_list")
+            # Log any errors encountered during execution
+            logger.error("Error in function get_white_list: %s", e)
+            logger.error("\n%s" % (traceback.format_exc()))
 
+        # Return the resulting white list
         return white_list
+
 
     @DatabaseHelper._sessionm
     def get_enabled_updates_list(
@@ -374,7 +523,33 @@ class UpdatesDatabase(DatabaseHelper):
         filter="",
         config=None,
     ):
+        """
+        Récupère la liste des mises à jour activées pour une entité donnée.
+
+        Args:
+            session: Objet de session SQLAlchemy utilisé pour exécuter les requêtes.
+            entity (str): L'entité UUID pour laquelle récupérer les mises à jour.
+            upd_list (str, optional): Le type de liste de mise à jour ("gray" par défaut).
+            start (int, optional): Index de départ pour la pagination (par défaut 0).
+            limit (int, optional): Nombre maximal de résultats pour la pagination (par défaut -1 pour aucun).
+            filter (str, optional): Chaîne de filtre pour rechercher dans les résultats (par défaut vide).
+            config (obj, optional): Configuration additionnelle contenant des filtres dynamiques.
+
+        Returns:
+            dict: Un dictionnaire contenant :
+                - nb_element_total (int): Le nombre total d'éléments correspondant.
+                - updateid (list): Liste des identifiants des mises à jour.
+                - title (list): Liste des titres des mises à jour.
+                - kb (list): Liste des identifiants KB.
+                - missing (list): Nombre de machines manquant les mises à jour.
+                - installed (list): Nombre de machines ayant les mises à jour installées.
+                - history_list (list): Historique des mises à jour par machine.
+
+        Raises:
+            Exception: Si une erreur survient pendant l'exécution des requêtes SQL.
+        """
         try:
+            # Convertir les paramètres `start` et `limit` en entiers avec gestion d'erreurs
             start = int(start)
         except:
             start = -1
@@ -382,26 +557,20 @@ class UpdatesDatabase(DatabaseHelper):
             limit = int(limit)
         except:
             limit = -1
+
+        # Construire le filtre dynamique en fonction des paramètres de configuration
         filter_on = ""
         if config.filter_on is not None:
             for key in config.filter_on:
                 if key == "state":
-                    filter_on = "%s AND lgf.states_id in (%s)" % (
-                        filter_on,
-                        ",".join(config.filter_on[key]),
-                    )
-                if key == "type":
-                    filter_on = "%s AND lgf.computertypes_id in (%s)" % (
-                        filter_on,
-                        ",".join(config.filter_on[key]),
-                    )
-                if key == "entity":
-                    filter_on = "%s AND lgf.entities_id in (%s)" % (
-                        filter_on,
-                        ",".join(config.filter_on[key]),
-                    )
+                    filter_on += f" AND lgf.states_id in ({','.join(config.filter_on[key])})"
+                elif key == "type":
+                    filter_on += f" AND lgf.computertypes_id in ({','.join(config.filter_on[key])})"
+                elif key == "entity":
+                    filter_on += f" AND lgf.entities_id in ({','.join(config.filter_on[key])})"
 
         try:
+            # Initialisation du dictionnaire de résultat
             enabled_updates_list = {
                 "nb_element_total": 0,
                 "updateid": [],
@@ -412,86 +581,85 @@ class UpdatesDatabase(DatabaseHelper):
                 "history_list": [],
             }
 
-            sql = """SELECT SQL_CALC_FOUND_ROWS
-            uma.update_id as updateid,
-    ud.kb AS kb,
-    ud.title AS title,
-    ud.description AS description,
-    ud.creationdate AS creationdate,
-    ud.title_short AS title_short,
-    count(uma.update_id) as missing
-FROM
-    xmppmaster.up_machine_activated uma
-    JOIN xmppmaster.update_data ud ON uma.update_id = ud.updateid
-    JOIN xmppmaster.local_glpi_machines lgm on lgm.id = uma.glpi_id
-    join xmppmaster.local_glpi_filters lgf on lgf.id = lgm.id
-WHERE
-    uma.entities_id = %s
-    and list = "%s"
-    %s""" % (
-                entity.replace("UUID", ""),
-                upd_list,
-                filter_on,
-            )
+            # Construire la requête SQL principale pour récupérer les mises à jour
+            sql = f"""
+                SELECT SQL_CALC_FOUND_ROWS
+                    uma.update_id as updateid,
+                    ud.kb AS kb,
+                    ud.title AS title,
+                    ud.description AS description,
+                    ud.creationdate AS creationdate,
+                    ud.title_short AS title_short,
+                    count(uma.update_id) as missing
+                FROM xmppmaster.up_machine_activated uma
+                JOIN xmppmaster.update_data ud ON uma.update_id = ud.updateid
+                JOIN xmppmaster.local_glpi_machines lgm ON lgm.id = uma.glpi_id
+                JOIN xmppmaster.local_glpi_filters lgf ON lgf.id = lgm.id
+                WHERE uma.entities_id = '{entity.replace("UUID", "")}'
+                AND list = "{upd_list}"
+                {filter_on}
+            """
 
-            if filter != "":
-                filterwhere = """AND
-                        (ud.title LIKE '%%%s%%'
-                        OR ud.updateid LIKE '%%%s%%'
-                        OR ud.kb LIKE '%%%s%%'
-                        OR ud.description LIKE '%%%s%%'
-                        OR ud.creationdate LIKE '%%%s%%'
-                        OR ud.title_short LIKE '%%%s%%')""" % tuple(
-                    filter for x in range(0, 6)
-                )
+            # Ajouter des filtres dynamiques si le paramètre `filter` est défini
+            if filter:
+                filterwhere = f"""AND
+                    (ud.title LIKE '%%{filter}%%'
+                    OR ud.updateid LIKE '%%{filter}%%'
+                    OR ud.kb LIKE '%%{filter}%%'
+                    OR ud.description LIKE '%%{filter}%%'
+                    OR ud.creationdate LIKE '%%{filter}%%'
+                    OR ud.title_short LIKE '%%{filter}%%')"""
                 sql += filterwhere
 
-            sql += "group by uma.update_id "
-            filterlimit = ""
+            # Ajouter la clause GROUP BY et LIMIT pour la pagination
+            sql += " GROUP BY uma.update_id"
             if start != -1 and limit != -1:
-                filterlimit = "LIMIT %s, %s" % (start, limit)
-            sql += filterlimit
+                sql += f" LIMIT {start}, {limit}"
             sql += ";"
 
+            # Exécuter la requête SQL principale
             result = session.execute(sql)
 
+            # Récupérer le nombre total d'éléments correspondant
             sql_count = "SELECT FOUND_ROWS();"
             try:
                 ret_count = session.execute(sql_count)
             except Exception as e:
                 logging.getLogger().error(e)
             nb_element_total = ret_count.first()[0]
-
             enabled_updates_list["nb_element_total"] = nb_element_total
 
             session.commit()
             session.flush()
 
+            # Traiter les résultats de la requête principale
             if result:
                 for list_b in result:
-                    sql2 = """select 
-                    count(ma.id) as count,
-                    coalesce(group_concat(lgm.id), NULL, "") as list
-        from xmppmaster.machines ma
-        join xmppmaster.local_glpi_machines lgm on concat("UUID",lgm.id) = ma.uuid_inventorymachine
-        join xmppmaster.up_history uh on uh.id_machine = ma.id
-        join xmppmaster.local_glpi_entities lge on lgm.entities_id = lge.id
-    where uh.update_id='%s' and lge.id=%s and uh.delete_date is not NULL
-    %s""" % (
-                        list_b.updateid,
-                        entity.replace("UUID", ""),
-                        filter_on,
-                    )
+                    # Requête SQL secondaire pour obtenir les données d'installation
+                    sql2 = f"""
+                        SELECT
+                            count(ma.id) as count,
+                            COALESCE(group_concat(lgm.id), NULL, "") as list
+                        FROM xmppmaster.machines ma
+                        JOIN xmppmaster.local_glpi_machines lgm ON concat("UUID", lgm.id) = ma.uuid_inventorymachine
+                        JOIN xmppmaster.up_history uh ON uh.id_machine = ma.id
+                        JOIN xmppmaster.local_glpi_entities lge ON lgm.entities_id = lge.id
+                        WHERE uh.update_id = '{list_b.updateid}'
+                        AND lge.id = {entity.replace("UUID", "")}
+                        AND uh.delete_date IS NOT NULL
+                        {filter_on}
+                    """
                     try:
                         res = session.execute(sql2)
                     except Exception as e:
                         logger.error(e)
                     installed = 0
                     history_list = ""
-                    if res is not None:
+                    if res:
                         for _res in res:
                             installed = _res.count
                             history_list = _res.list
+                    # Ajouter les résultats au dictionnaire de sortie
                     enabled_updates_list["updateid"].append(list_b.updateid)
                     enabled_updates_list["title"].append(list_b.title)
                     enabled_updates_list["kb"].append(list_b.kb)
@@ -499,9 +667,11 @@ WHERE
                     enabled_updates_list["installed"].append(installed)
 
         except Exception as e:
+            # Gérer les exceptions et enregistrer l'erreur
             logger.error("error function get_enabled_updates_list %s" % e)
 
         return enabled_updates_list
+
 
     @DatabaseHelper._sessionm
     def approve_update(self, session, updateid):

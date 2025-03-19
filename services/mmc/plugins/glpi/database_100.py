@@ -33,8 +33,12 @@ from sqlalchemy import (
     desc,
     func,
     distinct,
+    text,
+    inspect,
 )
-from sqlalchemy.orm import create_session, mapper, relationship
+from sqlalchemy.orm import create_session, mapper, relationship, class_mapper
+from sqlalchemy.exc import NoSuchTableError, NoInspectionAvailable
+
 
 try:
     from sqlalchemy.sql.expression import ColumnOperators
@@ -695,17 +699,14 @@ class Glpi100(DyngroupDatabaseHelper):
                 Column("entities_id", Integer, ForeignKey("glpi_entities.id")),
                 autoload=True,
             )
-            mapper(Collects, self.collects)
-        except:
+        except NoSuchTableError:
             self.collects = Table(
                 "glpi_plugin_glpiinventory_collects",
                 self.metadata,
-                Column("entities_id", Integer, ForeignKey("glpi_entities.id")),
                 autoload=True,
             )
-            mapper(Collects, self.collects)
+        mapper(Collects, self.collects)
 
-        # registries
         try:
             self.registries = Table(
                 "glpi_plugin_fusioninventory_collects_registries",
@@ -717,19 +718,13 @@ class Glpi100(DyngroupDatabaseHelper):
                 ),
                 autoload=True,
             )
-            mapper(Registries, self.registries)
-        except:
+        except NoSuchTableError:
             self.registries = Table(
                 "glpi_plugin_glpiinventory_collects_registries",
                 self.metadata,
-                Column(
-                    "plugin_fusioninventory_collects_id",
-                    Integer,
-                    ForeignKey("glpi_plugin_fusioninventory_collects.id"),
-                ),
                 autoload=True,
             )
-            mapper(Registries, self.registries)
+        mapper(Registries, self.registries)
 
         # registries contents
         try:
@@ -744,8 +739,7 @@ class Glpi100(DyngroupDatabaseHelper):
                 ),
                 autoload=True,
             )
-            mapper(RegContents, self.regcontents)
-        except:
+        except NoSuchTableError:
             self.regcontents = Table(
                 "glpi_plugin_glpiinventory_collects_registries_contents",
                 self.metadata,
@@ -757,7 +751,7 @@ class Glpi100(DyngroupDatabaseHelper):
                 ),
                 autoload=True,
             )
-            mapper(RegContents, self.regcontents)
+        mapper(RegContents, self.regcontents)
 
         # items contents
         self.computersitems = Table(
@@ -3470,16 +3464,35 @@ class Glpi100(DyngroupDatabaseHelper):
         @param value: The new value
         @param value: string
         """
-
+        if self.config.dbreadonly:
+            self.logger.debug(
+                "Impossible d'exécuter GLPI  en mode lecture seule. setGlpiEditableValue"
+            )
+            return True
         self.logger.debug("Update an editable field")
         self.logger.debug("%s: Set %s as new value for %s" % (uuid, value, name))
         try:
             session = create_session()
 
+            # table plugin
+            tables_with_prefix = [
+                table
+                for table in self.metadata.tables
+                if table.startswith("glpi_plugin_glpiinventory")
+            ]
+
+            # inspector = inspect(session.bind)
             # Get SQL field who will be updated
             table, field = self.__getTableAndFieldFromName(name)
             session.query(table).filter_by(id=fromUUID(uuid)).update({field: value})
 
+            if tables_with_prefix:
+                # plugin glpiinventory ne prends pas en charge FusionLocks
+                self.logger.warning(
+                    "During a GLPI re-enrollment, the customized computer name or description will not be protected."
+                )
+                session.close()
+                return True
             # Set updated field as a locked field so it won't be updated
             # at next inventory
             query = session.query(FusionLocks).filter(
@@ -3503,10 +3516,10 @@ class Glpi100(DyngroupDatabaseHelper):
                         }
                     )
                 )
-
             session.close()
             return True
         except Exception as e:
+            self.logger.error("\n%s" % (traceback.format_exc()))
             self.logger.error(e)
             return False
 
@@ -6019,6 +6032,11 @@ class Glpi100(DyngroupDatabaseHelper):
 
     @DatabaseHelper._sessionm
     def addUser(self, session, username, password, entity_rights=None):
+        if self.config.dbreadonly:
+            self.logger.debug(
+                "Impossible d'exécuter GLPI  en mode lecture seule. addUser"
+            )
+            return True
         # Check if the user exits or not
         try:
             user = session.query(User).filter_by(name=username).one()
@@ -6045,6 +6063,11 @@ class Glpi100(DyngroupDatabaseHelper):
 
     @DatabaseHelper._sessionm
     def setUserPassword(self, session, username, password):
+        if self.config.dbreadonly:
+            self.logger.debug(
+                "Impossible d'exécuter GLPI  en mode lecture seule. setUserPassword"
+            )
+            return True
         try:
             user = session.query(User).filter_by(name=username).one()
         except NoResultFound:
@@ -6062,6 +6085,11 @@ class Glpi100(DyngroupDatabaseHelper):
 
     @DatabaseHelper._sessionm
     def addEntity(self, session, entity_name, parent_id, comment):
+        if self.config.dbreadonly:
+            self.logger.debug(
+                "Impossible d'exécuter GLPI  en mode lecture seule. addEntity"
+            )
+            return True
         entity = Entities()
         entity.id = session.query(func.max(Entities.id)).scalar() + 1
         entity.entities_id = parent_id  # parent
@@ -6085,6 +6113,11 @@ class Glpi100(DyngroupDatabaseHelper):
 
     @DatabaseHelper._sessionm
     def editEntity(self, session, id, entity_name, parent_id, comment):
+        if self.config.dbreadonly:
+            self.logger.debug(
+                "Impossible d'exécuter GLPI  en mode lecture seule. addEntityRule"
+            )
+            return True
         entity = session.query(Entities).filter_by(id=id).one()
         entity.entities_id = parent_id  # parent
         entity.name = entity_name
@@ -6119,6 +6152,11 @@ class Glpi100(DyngroupDatabaseHelper):
 
     @DatabaseHelper._sessionm
     def addLocation(self, session, name, parent_id, comment):
+        if self.config.dbreadonly:
+            self.logger.debug(
+                "Impossible d'exécuter GLPI  en mode lecture seule. addLocation"
+            )
+            return True
         location = Locations()
         location.entities_id = 0  # entity is root
         location.name = name
@@ -6147,6 +6185,11 @@ class Glpi100(DyngroupDatabaseHelper):
 
     @DatabaseHelper._sessionm
     def editLocation(self, session, id, name, parent_id, comment):
+        if self.config.dbreadonly:
+            self.logger.debug(
+                "Impossible d'exécuter GLPI  en mode lecture seule. editLocation"
+            )
+            return True
         location = session.query(Locations).filter_by(id=id).one()
         location.locations_id = parent_id  # parent
         location.name = name
@@ -6194,6 +6237,11 @@ class Glpi100(DyngroupDatabaseHelper):
 
     @DatabaseHelper._sessionm
     def addEntityRule(self, session, rule_data):
+        if self.config.dbreadonly:
+            self.logger.debug(
+                "Impossible d'exécuter GLPI  en mode lecture seule. addEntityRule"
+            )
+            return True
         rule = Rule()
         # root entity (this means that rule is appliable on root entity and all subentities)
         rule.entities_id = 0
@@ -6284,6 +6332,11 @@ class Glpi100(DyngroupDatabaseHelper):
 
     @DatabaseHelper._sessionm
     def moveEntityRuleUp(self, session, id):
+        if self.config.dbreadonly:
+            self.logger.debug(
+                "Impossible d'exécuter GLPI  en mode lecture seule. moveEntityRuleUp"
+            )
+            return True
         rule = session.query(Rule).filter_by(id=id).one()
         # get previous rule
         previous = (
@@ -6307,6 +6360,11 @@ class Glpi100(DyngroupDatabaseHelper):
 
     @DatabaseHelper._sessionm
     def moveEntityRuleDown(self, session, id):
+        if self.config.dbreadonly:
+            self.logger.debug(
+                "Impossible d'exécuter GLPI  en mode lecture seule. moveEntityRuleDown"
+            )
+            return True
         rule = session.query(Rule).filter_by(id=id).one()
         # get next rule
         next_ = (
@@ -6330,6 +6388,11 @@ class Glpi100(DyngroupDatabaseHelper):
 
     @DatabaseHelper._sessionm
     def editEntityRule(self, session, id, rule_data):
+        if self.config.dbreadonly:
+            self.logger.debug(
+                "Impossible d'exécuter GLPI  en mode lecture seule. editEntityRule"
+            )
+            return True
         rule = session.query(Rule).filter_by(id=id).one()
         # Delete associated criteria and actions
         session.query(RuleCriterion).filter_by(rules_id=id).delete()
@@ -6417,6 +6480,11 @@ class Glpi100(DyngroupDatabaseHelper):
 
     @DatabaseHelper._sessionm
     def deleteEntityRule(self, session, id):
+        if self.config.dbreadonly:
+            self.logger.debug(
+                "Impossible d'exécuter GLPI  en mode lecture seule. deleteEntityRule"
+            )
+            return True
         # Delete rule
         session.query(Rule).filter_by(id=id).delete()
         # Delete associated criteria and actions
@@ -6449,6 +6517,11 @@ class Glpi100(DyngroupDatabaseHelper):
 
     @DatabaseHelper._sessionm
     def setLocationsForUser(self, session, username, profiles):
+        if self.config.dbreadonly:
+            self.logger.debug(
+                "Impossible d'exécuter GLPI  en mode lecture seule. setLocationsForUser"
+            )
+            return True
         user_id = session.query(User).filter_by(name=username).one().id
         # Delete all user entity profiles
         session.query(UserProfile).filter_by(users_id=user_id).delete()
@@ -6477,11 +6550,18 @@ class Glpi100(DyngroupDatabaseHelper):
         @return: id of the registry collect
         @rtype: int
         """
+        if self.config.dbreadonly:
+            self.logger.debug(
+                "Impossible d'exécuter GLPI  en mode lecture seule. getRegistryCollect"
+            )
+            return False
+        parts = full_key.split("\\")
 
-        # Split into hive / path / key
-        hive = full_key.split("\\")[0]
-        key = full_key.split("\\")[-1]
+        hive = parts[0]
+        key = parts[-1]
+
         path = full_key.replace(hive + "\\", "").replace("\\" + key, "")
+
         path = "/" + path + "/"
         # Get registry_id
         try:
@@ -6510,15 +6590,24 @@ class Glpi100(DyngroupDatabaseHelper):
         @return: success of the operation
         @rtype: bool
         """
-
+        if self.config.dbreadonly:
+            self.logger.debug(
+                "Impossible d'exécuter GLPI  en mode lecture seule. addRegistryCollect"
+            )
+            return True
         # Split into hive / path / key
-        hive = full_key.split("\\")[0]
-        key = full_key.split("\\")[-1]
+        parts = full_key.split("\\")
+
+        hive = parts[0]
+        key = parts[-1]
+
         path = full_key.replace(hive + "\\", "").replace("\\" + key, "")
+
         path = "/" + path + "/"
         # Insert in database
         registry = Registries()
         registry.name = key_name
+
         # Get collects_id
         try:
             collects_id = (
@@ -6529,7 +6618,16 @@ class Glpi100(DyngroupDatabaseHelper):
             )
         except:
             return False
-        registry.plugin_fusioninventory_collects_id = collects_id
+
+        # Determine the correct field to use
+        if hasattr(registry, "plugin_fusioninventory_collects_id"):
+            registry.plugin_fusioninventory_collects_id = collects_id
+        elif hasattr(registry, "plugin_glpiinventory_collects_id"):
+            registry.plugin_glpiinventory_collects_id = collects_id
+        else:
+            self.logger.error("No valid collects_id field found in Registries table.")
+            return False
+
         registry.hive = hive
         registry.path = path
         registry.key = key
@@ -6586,7 +6684,7 @@ class Glpi100(DyngroupDatabaseHelper):
         @param computers_id: the computer_id from glpi_computers_pulse
         @type computers_id: str
 
-        @param registry_id: the registry_id from plugin_fusioninventory_collects_registries
+        @param registry_id: the registry_id from plugin_fusioninventory_collects_registries or plugin_glpiinventory_collects_registries
         @type registry_id: str
 
         @param key: the registry key name
@@ -6598,32 +6696,47 @@ class Glpi100(DyngroupDatabaseHelper):
         @return: success of the operation
         @rtype: bool
         """
-
-        # Check if already present
-        try:
-            contents_id = (
-                session.query(RegContents)
-                .filter_by(
-                    computers_id=computers_id,
-                    plugin_fusioninventory_collects_registries_id=registry_id,
-                    key=key,
-                )
-                .first()
-                .id
+        if self.config.dbreadonly:
+            self.logger.warning(
+                "Impossible d'exécuter, GLPI  en mode lecture seule. (RegistryCollectContent)"
             )
-            if contents_id:
-                # Update database
-                session.query(RegContents).filter_by(id=contents_id).update(
-                    {"value": str(value)}
-                )
-                session.commit()
-                session.flush()
-                return True
-        except AttributeError:
-            # Insert in database
+            return True
+        # Déterminer le bon champ selon le plugin actif
+        fusioninventory_field = "plugin_fusioninventory_collects_registries_id"
+        glpiinventory_field = "plugin_glpiinventory_collects_registries_id"
+
+        if hasattr(RegContents, fusioninventory_field):
+            registry_field = fusioninventory_field
+        elif hasattr(RegContents, glpiinventory_field):
+            registry_field = glpiinventory_field
+        else:
+            self.logger.error(
+                "Aucun champ valide trouvé pour les registres GLPI/FusionInventory."
+            )
+            return False  # Échec car aucun champ valide
+
+        # Vérifier si l'entrée existe déjà
+        query = session.query(RegContents).filter_by(computers_id=computers_id, key=key)
+        query = query.filter_by(**{registry_field: registry_id})
+
+        contents = query.first()  # Récupérer l'entrée existante (s'il y en a une)
+
+        if contents:
+            # Mettre à jour la valeur existante
+            session.query(RegContents).filter_by(id=contents.id).update(
+                {"value": str(value)}
+            )
+            session.commit()
+            session.flush()
+            return True
+        else:
+            # Insérer une nouvelle entrée
             regcontents = RegContents()
             regcontents.computers_id = int(computers_id)
-            regcontents.plugin_fusioninventory_collects_registries_id = int(registry_id)
+            # selon le plugin actif
+            setattr(
+                regcontents, registry_field, int(registry_id)
+            )  # Définir dynamiquement le bon champ
             regcontents.key = str(key)
             regcontents.value = str(value)
             session.add(regcontents)
@@ -7233,11 +7346,146 @@ and glpi_computers.id in %s group by glpi_computers.id;""" % (
         return result
 
     @DatabaseHelper._sessionm
+    def get_os_update_major_stats(self, session):
+        """
+        Récupère les statistiques de mise à jour majeure des systèmes d'exploitation Windows 10 et Windows 11.
+
+        Cette fonction retourne un dictionnaire contenant le nombre total de machines Windows 10 et Windows 11, ainsi que des statistiques
+        par entité pour les mises à jour nécessaires. Les résultats incluent également un calcul de conformité pour chaque entité.
+
+        Args:
+            session (sqlalchemy.orm.session.Session): La session de base de données utilisée pour exécuter les requêtes SQL.
+
+        Returns:
+            dict: Un dictionnaire contenant les statistiques de mise à jour des systèmes d'exploitation. La structure du dictionnaire est :
+                {
+                    "entity": {
+                        "<complete_name>": {
+                            "name": "<entity_name>",
+                            "count": <total_count>,
+                            "W10to10": <count_windows_10_not_22H2>,
+                            "W10to11": <count_windows_10_22H2>,
+                            "W11to11": <count_windows_11_not_24H2>,
+                            "conformite": <conformity_percentage>
+                        }
+                    }
+                }
+
+        Raises:
+            Exception: En cas d'erreur lors de l'exécution des requêtes SQL.
+        """
+        try:
+            # Dictionnaire final des résultats
+            cols = ["W10to10", "W10to11", "W11to11"]
+            results = {"entity": {}}
+            total_os_sql = f"""
+                        SELECT
+                                e.name AS entity_name,
+                                e.completename AS complete_name,
+                                COUNT(*) AS count
+                            FROM
+                                glpi.glpi_computers AS c
+                                    INNER JOIN
+                                glpi.glpi_items_operatingsystems AS io ON c.id = io.items_id
+                                    INNER JOIN
+                                glpi.glpi_entities AS e ON e.id = c.entities_id
+                                    INNER JOIN
+                                glpi.glpi_operatingsystems AS os ON os.id = io.operatingsystems_id
+                                    INNER JOIN
+                                glpi.glpi_operatingsystemversions AS v ON v.id = io.operatingsystemversions_id
+                            WHERE
+                                os.name LIKE '%Windows%'
+                            GROUP BY e.id
+                            ORDER BY e.name;
+            """
+            total_os_result = session.execute(total_os_sql).fetchall()
+            for row in total_os_result:
+                results["entity"].setdefault(
+                    row.complete_name, {"count": int(row.count)}
+                )
+                # results["entity"][row.complete_name]["count"] = int(row.count)
+
+            # Requête pour les statistiques par entité
+            entity_sql = """
+                        SELECT
+                        e.name AS entity_name,
+                        e.completename AS complete_name,
+                        COUNT(*) AS nbwin,
+                        v.name as ver,
+                        os.name as namewin,
+                        CASE
+                            WHEN
+                                os.name LIKE '%Windows 10%'
+                                    AND v.name != '22H2'
+                            THEN
+                                'W10to10'
+                            WHEN
+                                os.name LIKE '%Windows 10%'
+                                    AND v.name = '22H2'
+                            THEN
+                                'W10to11'
+                            WHEN
+                                os.name LIKE '%Windows 11%'
+                                    AND v.name != '24H2'
+                            THEN
+                                'W11to11'
+                            ELSE 'not_win'
+                        END AS os
+                    FROM
+                        glpi.glpi_computers AS c
+                            INNER JOIN
+                        glpi.glpi_items_operatingsystems AS io ON c.id = io.items_id
+                            INNER JOIN
+                        glpi.glpi_entities AS e ON e.id = c.entities_id
+                            INNER JOIN
+                        glpi.glpi_operatingsystems AS os ON os.id = io.operatingsystems_id
+                            INNER JOIN
+                        glpi.glpi_operatingsystemversions AS v ON v.id = io.operatingsystemversions_id
+                    WHERE
+                        os.name LIKE '%Windows%'
+                    GROUP BY e.name, os
+                    ORDER BY e.name;
+            """
+            entity_result = session.execute(entity_sql).fetchall()
+
+            for row in entity_result:
+                # initialisation
+                results["entity"].setdefault(row.complete_name, {})
+                results["entity"][row.complete_name]["name"] = row.entity_name
+                results["entity"][row.complete_name][row.os] = int(row.nbwin)
+
+            # Calcul de la conformité
+            for entity, data in results["entity"].items():
+                total = results["entity"][entity]["count"]
+                non_conforme = sum(data.get(key, 0) for key in cols)
+                results["entity"][entity]["conformite"] = round(
+                    ((non_conforme - total) / total * 100) if non_conforme > 0 else 0, 2
+                )
+            # Copier les clés existantes avant d'itérer
+            existing_entities = list(results["entity"].keys())
+
+            for entity in existing_entities:  # Itérer sur la copie des clés
+                for col in cols:
+                    if col not in results["entity"][entity]:
+                        results["entity"][entity][col] = 0
+
+            return results
+
+        except Exception as e:
+            logger.error(
+                f"Erreur lors de la récupération des statistiques de mise à jour des OS : {str(e)}"
+            )
+            logger.error(f"Traceback : {traceback.format_exc()}")
+            return {}
+
+    @DatabaseHelper._sessionm
     def get_plugin_inventory_state(self, session, plugin_name=""):
         where_clause = ""
         if plugin_name != "":
-            where_clause = "where directory = '%s'"%plugin_name
-        query = session.execute("""select id, directory, name, state from glpi_plugins %s"""%where_clause)
+            where_clause = "where directory = '%s'" % plugin_name
+        query = session.execute(
+            """select id, directory, name, state from glpi_plugins %s""" % where_clause
+        )
 
         result = {}
 
@@ -7246,8 +7494,291 @@ and glpi_computers.id in %s group by glpi_computers.id;""" % (
                 "id": element[0],
                 "directory": element[1],
                 "name": element[2],
-                "state": "enabled" if element[3] == 1 else "disabled"
+                "state": "enabled" if element[3] == 1 else "disabled",
             }
+        return result
+
+    @DatabaseHelper._sessionm
+    def get_os_update_major_stats(self, session):
+        """
+        Récupère les statistiques de mise à jour majeure des systèmes d'exploitation Windows 10 et Windows 11.
+
+        Cette fonction retourne un dictionnaire contenant le nombre total de machines Windows 10 et Windows 11, ainsi que des statistiques
+        par entité pour les mises à jour nécessaires. Les résultats incluent également un calcul de conformité pour chaque entité.
+
+        Args:
+            session (sqlalchemy.orm.session.Session): La session de base de données utilisée pour exécuter les requêtes SQL.
+
+        Returns:
+            dict: Un dictionnaire contenant les statistiques de mise à jour des systèmes d'exploitation. La structure du dictionnaire est :
+                {
+                    "entity": {
+                        "<complete_name>": {
+                            "name": "<entity_name>",
+                            "count": <total_count>,
+                            "W10to10": <count_windows_10_not_22H2>,
+                            "W10to11": <count_windows_10_22H2>,
+                            "W11to11": <count_windows_11_not_24H2>,
+                            "conformite": <conformity_percentage>
+                        }
+                    }
+                }
+
+        Raises:
+            Exception: En cas d'erreur lors de l'exécution des requêtes SQL.
+        """
+        try:
+            # Dictionnaire final des résultats
+            cols = ["W10to10", "W10to11", "W11to11"]
+            results = {"entity": {}}
+            total_os_sql = f"""
+                        SELECT
+                                e.name AS entity_name,
+                                e.completename AS complete_name,
+                                COUNT(*) AS count
+                            FROM
+                                glpi.glpi_computers AS c
+                                    INNER JOIN
+                                glpi.glpi_items_operatingsystems AS io ON c.id = io.items_id
+                                    INNER JOIN
+                                glpi.glpi_entities AS e ON e.id = c.entities_id
+                                    INNER JOIN
+                                glpi.glpi_operatingsystems AS os ON os.id = io.operatingsystems_id
+                                    INNER JOIN
+                                glpi.glpi_operatingsystemversions AS v ON v.id = io.operatingsystemversions_id
+                            WHERE
+                                os.name LIKE '%Windows%'
+                            GROUP BY e.id
+                            ORDER BY e.name;
+            """
+            total_os_result = session.execute(total_os_sql).fetchall()
+            for row in total_os_result:
+                results["entity"].setdefault(
+                    row.complete_name, {"count": int(row.count)}
+                )
+                # results["entity"][row.complete_name]["count"] = int(row.count)
+
+            # Requête pour les statistiques par entité
+            entity_sql = """
+                    SELECT
+                        e.id AS entity_id,
+                        e.name AS entity_name,
+                        e.completename AS complete_name,
+                        COUNT(*) AS nbwin,
+                        v.name as ver,
+                        os.name as namewin,
+                        CASE
+                            WHEN
+                                os.name LIKE '%Windows 10%'
+                                    AND v.name != '22H2'
+                            THEN
+                                'W10to10'
+                            WHEN
+                                os.name LIKE '%Windows 10%'
+                                    AND v.name = '22H2'
+                            THEN
+                                'W10to11'
+                            WHEN
+                                os.name LIKE '%Windows 11%'
+                                    AND v.name != '24H2'
+                            THEN
+                                'W11to11'
+                            ELSE 'not_win'
+                        END AS os
+                    FROM
+                        glpi.glpi_computers AS c
+                            INNER JOIN
+                        glpi.glpi_items_operatingsystems AS io ON c.id = io.items_id
+                            INNER JOIN
+                        glpi.glpi_entities AS e ON e.id = c.entities_id
+                            INNER JOIN
+                        glpi.glpi_operatingsystems AS os ON os.id = io.operatingsystems_id
+                            INNER JOIN
+                        glpi.glpi_operatingsystemversions AS v ON v.id = io.operatingsystemversions_id
+                    WHERE
+                        os.name LIKE '%Windows%'
+                    GROUP BY e.name, os
+                    ORDER BY e.name;
+            """
+            entity_result = session.execute(entity_sql).fetchall()
+
+            for row in entity_result:
+                # initialisation
+                results["entity"].setdefault(row.complete_name, {})
+                results["entity"][row.complete_name]["name"] = row.entity_name
+                results["entity"][row.complete_name][row.os] = int(row.nbwin)
+                results["entity"][row.complete_name]["entity_id"] = int(row.entity_id)
+            # Calcul de la conformiténbwin
+            for entity, data in results["entity"].items():
+                total = results["entity"][entity]["count"]
+                non_conforme = sum(data.get(key, 0) for key in cols)
+                results["entity"][entity]["conformite"] = round(
+                    ((non_conforme - total) / total * 100) if non_conforme > 0 else 0, 2
+                )
+            # Copier les clés existantes avant d'itérer
+            existing_entities = list(results["entity"].keys())
+
+            for entity in existing_entities:  # Itérer sur la copie des clés
+                for col in cols:
+                    if col not in results["entity"][entity]:
+                        results["entity"][entity][col] = 0
+
+            return results
+
+        except Exception as e:
+            logger.error(
+                f"Erreur lors de la récupération des statistiques de mise à jour des OS : {str(e)}"
+            )
+            logger.error(f"Traceback : {traceback.format_exc()}")
+            return {}
+
+    @DatabaseHelper._sessionm
+    def get_os_update_major_details(
+        self, session, entity_id, filter="", start=0, limit=-1, colonne=True
+    ):
+        """
+        Récupère les détails des machines avec des systèmes d'exploitation Windows à partir de la base de données GLPI.
+
+        Cette fonction exécute une requête SQL pour récupérer des informations sur les machines
+        avec des systèmes d'exploitation Windows, y compris une colonne calculée 'os' qui
+        catégorise la version du système d'exploitation et indique les mises à jour majeures
+        nécessaires entre la version actuelle et la prochaine mise à jour majeure. Les résultats
+        peuvent être retournés soit dans un format détaillé ligne par ligne, soit dans un format
+        en colonnes, selon le paramètre 'colonne'.
+
+        Paramètres :
+            session (Session) : Objet de session SQLAlchemy pour l'interaction avec la base de données.
+            entity_id (int) : L'ID de l'entité pour filtrer les résultats.
+            filter (str) : Critères de filtrage supplémentaires pour filtrer par nom de machine.
+            start (int) : Le décalage pour commencer à retourner les lignes.
+            limit (int) : Le nombre maximum de lignes à retourner. Si -1, pas de limitation.
+            colonne (bool) : Si True, retourne les résultats dans un format en colonnes. La valeur par défaut est True.
+
+        Retourne :
+            dict : Un dictionnaire contenant le nombre de lignes correspondantes et soit
+                   des résultats détaillés ligne par ligne, soit des résultats en colonnes,
+                   selon le paramètre 'colonne'. La colonne 'os' indique les mises à jour majeures
+                   nécessaires, telles que 'W10to10' pour une mise à jour entre versions de Windows 10,
+                   'W10to11' pour une mise à jour de Windows 10 vers Windows 11, et 'W11to11' pour une
+                   mise à jour entre versions de Windows 11.
+        """
+
+        # Base SQL query
+        total_os_sql = """
+            SELECT
+                SQL_CALC_FOUND_ROWS
+                c.id as id_machine,
+                c.name AS machine,
+                os.name AS platform,
+                v.name AS version,
+                -- e.id AS entity_id,
+                -- e.name AS entity_name,
+                -- e.completename AS complete_name,
+                CASE
+                    WHEN os.name LIKE '%Windows 10%' AND v.name != '22H2' THEN 'W10to10'
+                    WHEN os.name LIKE '%Windows 10%' AND v.name = '22H2' THEN 'W10to11'
+                    WHEN os.name LIKE '%Windows 11%' AND v.name != '24H2' THEN 'W11to11'
+                    ELSE 'not_win'
+                END AS 'update'
+            FROM
+                glpi.glpi_computers AS c
+                INNER JOIN glpi.glpi_items_operatingsystems AS io ON c.id = io.items_id
+                INNER JOIN glpi.glpi_entities AS e ON e.id = c.entities_id
+                INNER JOIN glpi.glpi_operatingsystems AS os ON os.id = io.operatingsystems_id
+                INNER JOIN glpi.glpi_operatingsystemversions AS v ON v.id = io.operatingsystemversions_id
+            WHERE
+                os.name LIKE '%Windows%' AND e.id = :entity_id
+        """
+
+        # Add filter condition if filter is not empty
+        if filter:
+            total_os_sql += " AND c.name LIKE :filter"
+
+        # Add ORDER BY and LIMIT/OFFSET if limit is not -1
+        total_os_sql += " ORDER BY  c.name"
+        if limit != -1:
+            total_os_sql += " LIMIT :limit OFFSET :start"
+
+        # Convert to text for parameter binding
+        total_os_sql = text(total_os_sql)
+
+        # Log the SQL query with parameters
+        logger.debug("Executing SQL query: %s", total_os_sql)
+        logger.debug(
+            "With parameters: entity_id=%s, filter=%s, limit=%s, start=%s",
+            entity_id,
+            f"%{filter}%",
+            limit,
+            start,
+        )
+
+        # Execute the SQL query with parameters
+        entity_result = session.execute(
+            total_os_sql,
+            {
+                "entity_id": entity_id,
+                "filter": f"%{filter}%",
+                "limit": limit,
+                "start": start,
+            },
+        ).fetchall()
+
+        # Count the total number of matching elements using FOUND_ROWS()
+        sql_count = text("SELECT FOUND_ROWS();")
+        ret_count = session.execute(sql_count).scalar()
+
+        # Extract common fields from the first row
+        # common_entity_id = entity_result[0].entity_id if entity_result else ""
+        # common_entity_name = entity_result[0].entity_name if entity_result else ""
+        # common_complete_name = entity_result[0].complete_name if entity_result else ""
+
+        # Prepare the result dictionary with the count of matching rows and common fields
+        result = {
+            "nb_machine": ret_count,
+            # 'entity_id': common_entity_id,
+            # 'entity_name': common_entity_name,
+            # 'complete_name': common_complete_name
+        }
+
+        if colonne:
+            # If colonne is True, return results in columnar format
+            result.update(
+                {
+                    "id_machine": [
+                        row.id_machine if row.id_machine is not None else ""
+                        for row in entity_result
+                    ],
+                    "machine": [
+                        row.machine if row.machine is not None else ""
+                        for row in entity_result
+                    ],
+                    "platform": [
+                        row.platform if row.platform is not None else ""
+                        for row in entity_result
+                    ],
+                    "version": [
+                        row.version if row.version is not None else ""
+                        for row in entity_result
+                    ],
+                    "update": [
+                        row.update if row.update is not None else ""
+                        for row in entity_result
+                    ],
+                }
+            )
+        else:
+            # If colonne is False, return detailed results in row-wise format
+            result["details"] = [
+                {
+                    "id_machine": row.id_machine if row.id_machine is not None else "",
+                    "machine": row.machine if row.machine is not None else "",
+                    "platform": row.platform if row.platform is not None else "",
+                    "version": row.version if row.version is not None else "",
+                    "update": row.update if row.update is not None else "",
+                }
+                for row in entity_result
+            ]
+
         return result
 
 

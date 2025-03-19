@@ -787,6 +787,7 @@ class MscDatabase(DatabaseHelper):
                 phase ON commands_on_host.id = phase.fk_commands_on_host
             WHERE
             commands.start_date > '%s'
+            AND commands.title NOT LIKE 'Convergence%%'
             AND
             """
             % datenow
@@ -2706,7 +2707,7 @@ class MscDatabase(DatabaseHelper):
                 pass
         return result
 
-    @DatabaseHelper._session
+    @DatabaseHelper._sessionm
     def getCommands(self, session, ctx, cmd_id):
         if cmd_id == "0" or cmd_id is None or cmd_id == "":
             return False

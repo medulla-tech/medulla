@@ -63,6 +63,11 @@ $params = ["source" => $dataSource];
 $ajax = new AjaxFilter(urlStrRedirect("updates/updates/ajaxEntitiesList"), "container", $params);
 $ajax->display();
 $ajax->displayDivToUpdate();
+
+$ajaxmajor = new AjaxFilter(urlStrRedirect("updates/updates/ajaxMajorEntitiesList"),
+                            "container-Major", $params, 'formMajor');
+$ajaxmajor->display();
+$ajaxmajor->displayDivToUpdate();
 ?>
 
 <style>

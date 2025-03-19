@@ -4106,6 +4106,61 @@ class ImagingRpcProxy(RpcProxyI):
     def delete_multicast_from_db(self, infoparameters):
         return ImagingDatabase().remove_multicast(infoparameters)
 
+    def get_profiles_location(self, location, start=0, limit=-1, filter=""):
+        return ImagingDatabase().get_profiles_location(location, start, limit, filter)
+
+    def get_all_postinstall_for_profile(
+        self, location, profile_id, start=0, limit=-1, filter=""
+    ):
+        return ImagingDatabase().get_all_postinstall_for_profile(
+            location, profile_id, start, limit, filter
+        )
+
+    def getPostInstalls(self, master_uuid, target_uuid):
+        return ImagingDatabase().getPostInstalls(master_uuid, target_uuid)
+
+    def getPostInstall(self, postinstall_id):
+        return ImagingDatabase().getPostInstall(postinstall_id)
+
+    def getPostInstallsFromProfile(self, profile_id):
+        return ImagingDatabase().getPostInstallsFromProfile(profile_id)
+
+    def update_postinstalls_in_profile(
+        self, profileId, name, description="", orders=[]
+    ):
+        return ImagingDatabase().update_postinstalls_in_profile(
+            profileId, name, description, orders
+        )
+
+    def add_postinstalls_in_profile(self, location, name, description="", orders=[]):
+        return ImagingDatabase().add_postinstalls_in_profile(
+            location, name, description, orders
+        )
+
+    def delete_profile(self, id):
+        return ImagingDatabase().delete_profile(id)
+
+    def get_profile_in_menu(self, menuitem_id):
+        return ImagingDatabase().get_profile_in_menu(menuitem_id)
+
+    def update_profiles_in_menu(self, menuitem_id, profiles=[]):
+        return ImagingDatabase().update_profiles_in_menu(menuitem_id, profiles)
+
+    def get_all_postinstall_for_menu(self, menuitem_id):
+        return ImagingDatabase().get_all_postinstall_for_menu(menuitem_id)
+
+    def update_postinstalls_in_menu(self, menuitem_id, postinstalls=[]):
+        return ImagingDatabase().update_postinstalls_in_menu(menuitem_id, postinstalls)
+
+    def getGroupLocation(self, gid):
+        if not isinstance(gid, list):
+            gid = [gid]
+        entities = ImagingDatabase().getTargetsEntity(gid)
+        entity = "UUID0"
+        if entities is not None or entities != []:
+            entity = entities[0][0].uuid
+        return entity
+
 
     def get_profiles_location(self, location, start=0, limit=-1, filter=""):
         return ImagingDatabase().get_profiles_location(location, start, limit, filter)

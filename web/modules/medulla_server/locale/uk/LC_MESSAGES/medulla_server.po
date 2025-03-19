@@ -5,16 +5,16 @@
 # 
 # Translators:
 # Nicolas Lécureuil <neoclust@mageia.org>, 2018
-# Yuri Chornoivan <yurchor@ukr.net>, 2023
+# Yuri Chornoivan <yurchor@ukr.net>, 2025
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-16 22:40+0200\n"
+"POT-Creation-Date: 2025-02-10 23:50+0100\n"
 "PO-Revision-Date: 2017-10-11 08:13+0000\n"
-"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2023\n"
+"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2025\n"
 "Language-Team: Ukrainian (https://app.transifex.com/siveo/teams/72118/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -154,7 +154,7 @@ msgstr "Встановлюємо оновлення…"
 
 #: modules/medulla_server/infoPackage.inc.php:34
 msgid "Medulla"
-msgstr ""
+msgstr "Medulla"
 
 #: modules/medulla_server/infoPackage.inc.php:45
 msgid "Computers list"

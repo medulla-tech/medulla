@@ -246,6 +246,60 @@ function xmlrpc_addlogincommand(
                                                         $params));
 }
 
+function xmlrpc_update_login_command(
+    $login,
+    $commandid,
+    $grpid = '',
+    $nb_machine_in_grp = '',
+    $instructions_nb_machine_for_exec = '',
+    $instructions_datetime_for_exec = '',
+    $parameterspackage = '',
+    $rebootrequired = 0,
+    $shutdownrequired = 0,
+    $limit_rate_ko = 0,
+    $syncthing = 0,
+    $params = array()
+) {
+
+    if($rebootrequired != "0") {
+        $rebootrequired = 1;
+    } else {
+        $rebootrequired = 0;
+    }
+    if($shutdownrequired != "0") {
+        $shutdownrequired = 1;
+    } else {
+        $shutdownrequired = 0;
+    }
+    return xmlCall("xmppmaster.update_login_command", array( $login,
+                                                        $commandid,
+                                                        $grpid,
+                                                        $nb_machine_in_grp,
+                                                        $instructions_nb_machine_for_exec,
+                                                        $instructions_datetime_for_exec,
+                                                        $parameterspackage,
+                                                        $rebootrequired,
+                                                        $shutdownrequired,
+                                                        $limit_rate_ko,
+                                                        $syncthing,
+                                                        $params));
+}
+
+function xmlrpc_update_msc_command(
+    $login,
+    $commandid,
+    $bandwidth = 0,
+    $params = array()
+) {
+    return xmlCall("msc.update_msc_command", array(
+        $login,
+        $commandid,
+        $bandwidth,
+        $params
+    ));
+}
+
+
 function xmlrpc_loginbycommand($commandid)
 {
     return xmlCall("xmppmaster.loginbycommand", array( $commandid));
@@ -254,6 +308,11 @@ function xmlrpc_loginbycommand($commandid)
 function xmlrpc_getdeployfromcommandid($command_id, $uuid = "UUID_NONE")
 {
     return xmlCall("xmppmaster.getdeployfromcommandid", array($command_id, $uuid));
+}
+
+function xmlrpc_getdeployfromcommandid_for_convergence($command_id, $uuid = "UUID_NONE")
+{
+    return xmlCall("xmppmaster.getdeployfromcommandid_for_convergence", array($command_id, $uuid));
 }
 
 function xmlrpc_getdeployment_cmd_and_title($command_id, $title, $filter = "", $start, $limit)
@@ -265,9 +324,24 @@ function xmlrpc_getdeployment_cmd_and_title($command_id, $title, $filter = "", $
                                                                     $limit));
 }
 
+function xmlrpc_getdeployment_cmd_and_title_for_convergence($command_id, $title, $filter = "", $start, $limit)
+{
+    return xmlCall("xmppmaster.getdeployment_cmd_and_title_for_convergence", array( $command_id,
+                                                                    $title,
+                                                                    $filter,
+                                                                    $start,
+                                                                    $limit));
+}
+
 function xmlrpc_getstatdeploy_from_command_id_and_title($command_id, $title)
 {
     return xmlCall("xmppmaster.getstatdeploy_from_command_id_and_title", array($command_id,
+                                                                        $title));
+}
+
+function xmlrpc_getstatdeploy_from_command_id_and_title_for_convergence($command_id, $title)
+{
+    return xmlCall("xmppmaster.getstatdeploy_from_command_id_and_title_for_convergence", array($command_id,
                                                                         $title));
 }
 
@@ -361,6 +435,30 @@ function xmlrpc_getdeploybyteamuserrecent(
                                                                 $filt,
                                                                 $typedeploy));
 }
+
+function xmlrpc_getdeploybyteamuserrecent_for_convergence(
+    $login,
+    $state,
+    $duree,
+    $min = null,
+    $max = null,
+    $filt = null,
+    $typedeploy = "command"
+) {
+    return xmlCall("xmppmaster.get_deploy_by_team_member_for_convergence", array($login,
+                                                                $state,
+                                                                $duree,
+                                                                $min,
+                                                                $max,
+                                                                $filt,
+                                                                $typedeploy));
+
+}
+
+function xmlrpc_convergence_reschedule($cmd_id) {
+    return xmlCall("msc.convergence_reschedule_one", array($cmd_id));
+}
+
 function xmlrpc_getnotdeploybyteamuserrecent(
     $login,
     $duree,
@@ -416,6 +514,23 @@ function xmlrpc_get_deploy_by_user_with_interval(
     return xmlCall("xmppmaster.get_deploy_by_user_with_interval", array($login, $state, $duree,
                                                                         $min, $max, $filt,
                                                                         $typedeploy));
+}
+
+function xmlrpc_get_deploy_convergence(
+    $login,
+    $duree,
+    $min = null,
+    $max = null,
+    $filt = null,
+    $typedeploy = "command",
+) {
+    return xmlCall("xmppmaster.get_deploy_convergence", array(
+        $login,
+        $duree,
+        $min,
+        $max,
+        $filt,
+        $typedeploy));
 }
 
 function xmlrpc_get_deploy_by_user_finished(
@@ -673,6 +788,11 @@ function xmlrpc_xmpp_get_info_synchro_packageid($pid_ppackage)
 function xmlrpc_xmppGetAllPackages($filter, $start, $end)
 {
     return xmlCall("xmppmaster.xmppGetAllPackages", array($_SESSION['login'], $filter, $start, $end));
+}
+
+function xmlrpc_get_pkg_path($pkgName)
+{
+    return xmlCall("xmppmaster.get_pkg_path", array($_SESSION['login'], $pkgName));
 }
 
 function xmpp_getPackageDetail($pid)
