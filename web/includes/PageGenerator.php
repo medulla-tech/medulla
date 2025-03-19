@@ -2810,7 +2810,7 @@ class Form extends HtmlContainer
 
     public function end()
     {
-        $str = "";
+        $str = '<input type="hidden" name="auth_token" value="' . $_SESSION['auth_token'] . '">'."\n";
         foreach ($this->buttons as $button) {
             $str .= "\n$button\n";
         }
