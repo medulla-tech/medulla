@@ -335,6 +335,9 @@ if(isset($_SESSION['parameters']))
 {//If this session exists : editing file, else creating file
     $parameters = $_SESSION['parameters'];
 }
+else if(isset($_POST["Location"])){
+    $parameters = $_POST;
+}
 
 $f = new ValidatingForm(array("id" => "formxml"));
 $f->add(new HiddenTpl("codeToCopy"), array("value" => "", "hide" => True));
