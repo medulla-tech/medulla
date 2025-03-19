@@ -296,6 +296,9 @@ require("../includes/class_form.php");
 if(isset($_SESSION['parameters'])) {
     $parameters = $_SESSION['parameters'];
 }
+else if(isset($_POST["Location"])){
+    $parameters = $_POST;
+}
 $f = new ValidatingForm();
 $f->add(new HiddenTpl("codeToCopy"), array("value" => "", "hide" => true));
 
