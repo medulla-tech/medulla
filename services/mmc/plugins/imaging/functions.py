@@ -2439,6 +2439,7 @@ class ImagingRpcProxy(RpcProxyI):
 
     def synchroComputer(self, uuid, mac=False, wol=False):
         """see __synchroTargets"""
+        return True
         logging.getLogger().debug(
             "I'm going to synchronize computer %s bootmenu, Wake-on-lan is %s"
             % (uuid, wol and "on" or "off")
