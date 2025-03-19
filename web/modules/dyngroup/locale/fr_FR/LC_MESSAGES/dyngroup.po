@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 23:50+0100\n"
+"POT-Creation-Date: 2025-03-19 16:15+0100\n"
 "PO-Revision-Date: 2017-09-12 13:25+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2025\n"
 "Language-Team: French (https://app.transifex.com/siveo/teams/72118/fr/)\n"
@@ -41,7 +41,7 @@ msgstr "Confirmer"
 #: modules/dyngroup/includes/groups.inc.php:311
 #: modules/dyngroup/dyngroup/remove_machine.php:58
 #: modules/dyngroup/dyngroup/delete_group.php:67
-#: modules/dyngroup/dyngroup/delete_group.php:111
+#: modules/dyngroup/dyngroup/delete_group.php:133
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -159,11 +159,11 @@ msgstr "%s) Recherche %s %s (%s) dans le module %s"
 msgid "%s) Search %s %s %s in module %s"
 msgstr "%s) Recherche %s %s %s dans le module %s"
 
-#: modules/dyngroup/includes/dyngroup.php:800
+#: modules/dyngroup/includes/dyngroup.php:805
 msgid "Failed to load some pkgs module"
 msgstr "Impossible de charger le module pkgs"
 
-#: modules/dyngroup/includes/dyngroup.php:806
+#: modules/dyngroup/includes/dyngroup.php:811
 msgid "Failed to load some msc module"
 msgstr "Impossible de charger le module msc"
 
@@ -515,8 +515,8 @@ msgstr "Affichage temporaire du résultat pour '%s'"
 msgid "back"
 msgstr "retour"
 
-#: modules/dyngroup/dyngroup/add_groups.php:84
-#: modules/dyngroup/dyngroup/add_groups.php:309
+#: modules/dyngroup/dyngroup/add_groups.php:92
+#: modules/dyngroup/dyngroup/add_groups.php:323
 #, php-format
 msgid ""
 "Computers list has been truncated at %d computers. Use the filter to find "
@@ -525,11 +525,11 @@ msgstr ""
 "La liste des ordinateurs a été réduite à %d ordinateurs. Veuillez utiliser "
 "un filtre afin de trouver des machines précise."
 
-#: modules/dyngroup/dyngroup/add_groups.php:164
+#: modules/dyngroup/dyngroup/add_groups.php:172
 msgid "Group successfully modified"
 msgstr "Groupe modifié avec succès"
 
-#: modules/dyngroup/dyngroup/add_groups.php:178
+#: modules/dyngroup/dyngroup/add_groups.php:186
 msgid ""
 "The bootmenus cannot be generated as a multicast deployment is currently "
 "running."
@@ -537,7 +537,7 @@ msgstr ""
 "Le menu de démarrage ne peut pas être généré car un déploiement en multicast"
 " est en cours."
 
-#: modules/dyngroup/dyngroup/add_groups.php:192
+#: modules/dyngroup/dyngroup/add_groups.php:200
 msgid ""
 "Imaging group modified, but some machines were not added to existing imaging"
 " group, because they have more than one ethernet card:"
@@ -545,47 +545,47 @@ msgstr ""
 "Le groupe d'imaging a été modifié, mais certaines machines n'ont pas été "
 "ajoutés, car elles ont plus d'une carte réseau:"
 
-#: modules/dyngroup/dyngroup/add_groups.php:208
+#: modules/dyngroup/dyngroup/add_groups.php:216
 msgid "Imaging group successfully modified"
 msgstr "Le groupe d'imaging a été modifié avec succès"
 
-#: modules/dyngroup/dyngroup/add_groups.php:213
+#: modules/dyngroup/dyngroup/add_groups.php:221
 #: modules/dyngroup/dyngroup/import_from_file.php:70
 msgid "Group successfully created"
 msgstr "Groupe créé avec succès"
 
-#: modules/dyngroup/dyngroup/add_groups.php:249
+#: modules/dyngroup/dyngroup/add_groups.php:257
 msgid "Group failed to modify"
 msgstr "Erreur  la modification du groupe"
 
-#: modules/dyngroup/dyngroup/add_groups.php:252
+#: modules/dyngroup/dyngroup/add_groups.php:260
 #, php-format
 msgid "Imaging group failed to modify.<br/>Can't add %s"
 msgstr ""
 "La modification du groupe d'imaging a échoué.<br/>Impossible d'ajouter %s"
 
-#: modules/dyngroup/dyngroup/add_groups.php:254
+#: modules/dyngroup/dyngroup/add_groups.php:262
 msgid "Imaging group failed to modify"
 msgstr "La modification du groupe d'imaging a échoué"
 
-#: modules/dyngroup/dyngroup/add_groups.php:260
+#: modules/dyngroup/dyngroup/add_groups.php:268
 #: modules/dyngroup/dyngroup/save.php:100
 #: modules/dyngroup/dyngroup/save.php:102
 msgid "You must specify a group name"
 msgstr "Le nom du groupe est obligatoire"
 
-#: modules/dyngroup/dyngroup/add_groups.php:262
+#: modules/dyngroup/dyngroup/add_groups.php:270
 msgid "You must specify an imaging group name"
 msgstr "Vous devez spécifier le nom du groupe d'imaging"
 
-#: modules/dyngroup/dyngroup/add_groups.php:265
+#: modules/dyngroup/dyngroup/add_groups.php:273
 #: modules/dyngroup/dyngroup/import_from_file.php:39
 #: modules/dyngroup/dyngroup/save.php:98
 #, php-format
 msgid "A group already exists with name '%s'"
 msgstr "Un groupe portant le nom '%s' existe déjà"
 
-#: modules/dyngroup/dyngroup/add_groups.php:267
+#: modules/dyngroup/dyngroup/add_groups.php:275
 #, php-format
 msgid "An imaging group already exists with name '%s'"
 msgstr "Un groupe d'imaging '%s' existe déjà"
@@ -823,12 +823,20 @@ msgstr ""
 "Ce groupe ne peut pas être supprimé car un déploiement en multicast est en "
 "cours."
 
-#: modules/dyngroup/dyngroup/delete_group.php:92
+#: modules/dyngroup/dyngroup/delete_group.php:80
+msgid "Deletion forbidden for Group:"
+msgstr ""
+
+#: modules/dyngroup/dyngroup/delete_group.php:81
+msgid "Delete before the groups:"
+msgstr ""
+
+#: modules/dyngroup/dyngroup/delete_group.php:114
 #, php-format
 msgid "Imaging group %s was successfully deleted"
 msgstr "Le groupe d'imaging %s a été supprimé avec succès"
 
-#: modules/dyngroup/dyngroup/delete_group.php:95
+#: modules/dyngroup/dyngroup/delete_group.php:117
 #, php-format
 msgid "Group %s was successfully deleted"
 msgstr "Le groupe %s a été supprimé avec succès"

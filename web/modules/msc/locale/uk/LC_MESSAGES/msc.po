@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 23:50+0100\n"
+"POT-Creation-Date: 2025-03-19 16:15+0100\n"
 "PO-Revision-Date: 2017-10-11 08:12+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2025\n"
 "Language-Team: Ukrainian (https://app.transifex.com/siveo/teams/72118/uk/)\n"
@@ -102,7 +102,7 @@ msgstr "Пробудження з LAN"
 msgid "Start the script"
 msgstr "Запустити скрипт"
 
-#: modules/msc/includes/bundle_widgets.php:352 modules/msc/msc/launch.php:614
+#: modules/msc/includes/bundle_widgets.php:352 modules/msc/msc/launch.php:623
 msgid "Delete files after a successful execution"
 msgstr "Вилучити файли після успішного виконання"
 
@@ -127,28 +127,28 @@ msgid "End of validity"
 msgstr "Завершення чинності"
 
 #: modules/msc/includes/bundle_widgets.php:363
-#: modules/msc/includes/command_history.php:38 modules/msc/msc/launch.php:725
+#: modules/msc/includes/command_history.php:38 modules/msc/msc/launch.php:740
 #: modules/msc/logs/ajaxConsultLogsFilter.php:226
 msgid "Deployment interval"
 msgstr "Інтервал розгортання"
 
-#: modules/msc/includes/bundle_widgets.php:364 modules/msc/msc/launch.php:830
+#: modules/msc/includes/bundle_widgets.php:364 modules/msc/msc/launch.php:847
 msgid "Max bandwidth (kbits/s)"
 msgstr "Макс. ширина каналу (кбіт/с)"
 
-#: modules/msc/includes/bundle_widgets.php:370 modules/msc/msc/launch.php:843
+#: modules/msc/includes/bundle_widgets.php:370 modules/msc/msc/launch.php:860
 msgid "push"
 msgstr "надіслати"
 
-#: modules/msc/includes/bundle_widgets.php:370 modules/msc/msc/launch.php:843
+#: modules/msc/includes/bundle_widgets.php:370 modules/msc/msc/launch.php:860
 msgid "push / pull"
 msgstr "надсилання / отримання"
 
-#: modules/msc/includes/bundle_widgets.php:373 modules/msc/msc/launch.php:846
+#: modules/msc/includes/bundle_widgets.php:373 modules/msc/msc/launch.php:863
 msgid "Copy Mode"
 msgstr "Режим копіювання"
 
-#: modules/msc/includes/bundle_widgets.php:378 modules/msc/msc/launch.php:850
+#: modules/msc/includes/bundle_widgets.php:378 modules/msc/msc/launch.php:867
 msgid "Deploy using a local proxy"
 msgstr "Розгорнути за допомогою локального проксі"
 
@@ -350,9 +350,9 @@ msgid "Running"
 msgstr "Виконання"
 
 #: modules/msc/includes/command_history.php:34
-#: modules/msc/includes/command_history.php:180 modules/msc/msc/launch.php:583
-#: modules/msc/msc/launch.php:589 modules/msc/msc/launch.php:642
-#: modules/msc/msc/launch.php:648
+#: modules/msc/includes/command_history.php:180 modules/msc/msc/launch.php:592
+#: modules/msc/msc/launch.php:598 modules/msc/msc/launch.php:651
+#: modules/msc/msc/launch.php:657
 msgid "Command name"
 msgstr "Назва команди"
 
@@ -448,7 +448,7 @@ msgstr "Запустити виконання файла"
 msgid "Start inventory agent"
 msgstr "Запустити агент обліку"
 
-#: modules/msc/includes/command_history.php:189 modules/msc/msc/launch.php:602
+#: modules/msc/includes/command_history.php:189 modules/msc/msc/launch.php:611
 msgid "Start \"Wake On Lan\" query if connection fails"
 msgstr ""
 "Виконувати запит «Пробудження за допомогою LAN», якщо з'єднання не "
@@ -1038,7 +1038,7 @@ msgstr "Доступний"
 msgid "Active"
 msgstr "Активний"
 
-#: modules/msc/msc/ajaxPackageFilter.php:79
+#: modules/msc/msc/ajaxPackageFilter.php:79 modules/msc/msc/launch.php:687
 msgid "Inactive"
 msgstr "Неактивний"
 
@@ -1047,8 +1047,8 @@ msgid "Not available"
 msgstr "Недоступний"
 
 #: modules/msc/msc/ajaxPackageFilter.php:91
-#: modules/msc/msc/ajaxPackageFilter.php:219 modules/msc/msc/launch.php:670
-#: modules/msc/msc/launch.php:677
+#: modules/msc/msc/ajaxPackageFilter.php:219 modules/msc/msc/launch.php:679
+#: modules/msc/msc/launch.php:686 modules/msc/msc/launch.php:692
 msgid "Convergence"
 msgstr "Збіжність"
 
@@ -1771,7 +1771,7 @@ msgstr "Успішна перевірка луна-імпульсом, не вд
 msgid "No probe performed"
 msgstr "Зондування не виконано"
 
-#: modules/msc/msc/convergence.php:117
+#: modules/msc/msc/convergence.php:104
 msgid "Convergence on "
 msgstr "Збіжність на "
 
@@ -1884,150 +1884,150 @@ msgstr ""
 "Вами вказано некоректні дати початку і завершення. Будь ласка, виправте "
 "їх.<br/>"
 
-#: modules/msc/msc/launch.php:168 modules/msc/msc/launch.php:378
+#: modules/msc/msc/launch.php:168 modules/msc/msc/launch.php:387
 msgid "now"
 msgstr "зараз"
 
-#: modules/msc/msc/launch.php:170 modules/msc/msc/launch.php:381
+#: modules/msc/msc/launch.php:170 modules/msc/msc/launch.php:390
 msgid "never"
 msgstr "ніколи"
 
-#: modules/msc/msc/launch.php:500
+#: modules/msc/msc/launch.php:509
 #, php-format
 msgid "Single advanced launch : action \"%s\" on \"%s\""
 msgstr "Одинарний розширений запуск: дія «%s» на «%s»"
 
-#: modules/msc/msc/launch.php:511
+#: modules/msc/msc/launch.php:520
 #, php-format
 msgid "Software Convergence: action \"%s\" on \"%s\""
 msgstr "Збіжність програмного забезпечення: дія «%s» на «%s»"
 
-#: modules/msc/msc/launch.php:514
+#: modules/msc/msc/launch.php:523
 #, php-format
 msgid "Group Advanced launch : action \"%s\" on \"%s\""
 msgstr "Розширений запуск у групі: дія «%s» на «%s»"
 
-#: modules/msc/msc/launch.php:548 modules/msc/msc/launch.php:692
+#: modules/msc/msc/launch.php:557 modules/msc/msc/launch.php:707
 msgid "The command must start after"
 msgstr "Команду має бути запущено після"
 
-#: modules/msc/msc/launch.php:560 modules/msc/msc/launch.php:701
+#: modules/msc/msc/launch.php:569 modules/msc/msc/launch.php:716
 msgid "The command must stop before"
 msgstr "Виконання команди має припинитися до"
 
-#: modules/msc/msc/launch.php:596
+#: modules/msc/msc/launch.php:605
 msgid "Script parameters"
 msgstr "Параметри скрипту"
 
-#: modules/msc/msc/launch.php:608
+#: modules/msc/msc/launch.php:617
 msgid "Start script"
 msgstr "Запустити скрипт"
 
-#: modules/msc/msc/launch.php:620
+#: modules/msc/msc/launch.php:629
 msgid "Do an inventory after a successful execution"
 msgstr "Виконувати облік після успішного виконання"
 
-#: modules/msc/msc/launch.php:626
+#: modules/msc/msc/launch.php:635
 msgid "Reboot client"
 msgstr "Перезавантажити клієнт"
 
-#: modules/msc/msc/launch.php:632
+#: modules/msc/msc/launch.php:641
 msgid "Halt client"
 msgstr "Перервати клієнт"
 
-#: modules/msc/msc/launch.php:671
+#: modules/msc/msc/launch.php:680
 msgid "ACTIVE"
 msgstr "АКТИВНИЙ"
 
-#: modules/msc/msc/launch.php:678
+#: modules/msc/msc/launch.php:693
 msgid "AVAILABLE"
 msgstr "ДОСТУПНИЙ"
 
-#: modules/msc/msc/launch.php:715
+#: modules/msc/msc/launch.php:730
 msgid "Example for lunch and night (24h format): 12-14,20-24,0-8"
 msgstr "Приклад запуску вночі (у 24-годинному форматі): 12-14,2024,0-8"
 
-#: modules/msc/msc/launch.php:732
+#: modules/msc/msc/launch.php:747
 msgid "bandwidth throttling (ko)"
 msgstr "звуження каналу (кілооктети)"
 
-#: modules/msc/msc/launch.php:732
+#: modules/msc/msc/launch.php:747
 msgid "<in ko>"
 msgstr "<у ko>"
 
-#: modules/msc/msc/launch.php:736
+#: modules/msc/msc/launch.php:751
 msgid "Dynamic parameters Packages"
 msgstr "Пакунки динамічних параметрів"
 
-#: modules/msc/msc/launch.php:741
+#: modules/msc/msc/launch.php:757
 msgid "Reboot required"
 msgstr "Потрібне перезавантаження"
 
-#: modules/msc/msc/launch.php:746
+#: modules/msc/msc/launch.php:762
 msgid "Shutdown required"
 msgstr "Потрібне вимикання"
 
-#: modules/msc/msc/launch.php:751
+#: modules/msc/msc/launch.php:767
 msgid "Delay install"
 msgstr "Затримати встановлення"
 
-#: modules/msc/msc/launch.php:756 modules/msc/msc/launch.php:762
+#: modules/msc/msc/launch.php:773 modules/msc/msc/launch.php:779
 msgid "Time constraint"
 msgstr "Обмеження за часом"
 
-#: modules/msc/msc/launch.php:756
+#: modules/msc/msc/launch.php:773
 msgid "Successful transfer rate"
 msgstr "Швидкість успішного передавання"
 
-#: modules/msc/msc/launch.php:768
+#: modules/msc/msc/launch.php:785
 msgid "Install constraint"
 msgstr "Встановити обмеження"
 
-#: modules/msc/msc/launch.php:775
+#: modules/msc/msc/launch.php:792
 msgid "Run the deployment at the specific time"
 msgstr "Виконати розгортання у вказаний момент часу"
 
-#: modules/msc/msc/launch.php:785
+#: modules/msc/msc/launch.php:802
 msgid "Spooling priority"
 msgstr "Пріоритетність буферизації"
 
-#: modules/msc/msc/launch.php:791
+#: modules/msc/msc/launch.php:808
 msgid "high priority"
 msgstr "висока пріоритетність"
 
-#: modules/msc/msc/launch.php:791
+#: modules/msc/msc/launch.php:808
 msgid "ordinary priority"
 msgstr "звичайна пріоритетність"
 
-#: modules/msc/msc/launch.php:796
+#: modules/msc/msc/launch.php:813
 msgid "Install Spooling"
 msgstr "Буферизація встановлення"
 
-#: modules/msc/msc/launch.php:803
+#: modules/msc/msc/launch.php:820
 msgid "Syncthing deployment"
 msgstr "Розгортання Syncthing"
 
-#: modules/msc/msc/launch.php:856
+#: modules/msc/msc/launch.php:873
 msgid "Reconfigure"
 msgstr "Переналаштувати"
 
-#: modules/msc/msc/launch.php:857
+#: modules/msc/msc/launch.php:874
 msgid "Disable"
 msgstr "Вимкнути"
 
-#: modules/msc/msc/launch.php:859
+#: modules/msc/msc/launch.php:876
 msgid "Enable"
 msgstr "Увімкнути"
 
-#: modules/msc/msc/launch.php:879
+#: modules/msc/msc/launch.php:896
 msgid "Probe status"
 msgstr "Стан зондування"
 
-#: modules/msc/msc/launch.php:986
+#: modules/msc/msc/launch.php:1003
 msgid "wrong deployment intervals"
 msgstr "помилкові інтервали розгортання"
 
-#: modules/msc/msc/launch.php:1084
+#: modules/msc/msc/launch.php:1101
 msgid "Wrong deployment intervals"
 msgstr "Помилкові інтервали розгортання"
 
