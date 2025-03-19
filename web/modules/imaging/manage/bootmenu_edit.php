@@ -3,10 +3,11 @@
 /*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2009 Mandriva, http://www.mandriva.com
+ * (c) 2025 Siveo, http://siveo.net
  *
  * $Id$
  *
- * This file is part of Mandriva Management Console (MMC).
+ * This file is part of Management Console (MMC).
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -98,6 +99,33 @@ if(safeCount($_POST) == 0) {
         array("value" => $is_wol_displayed)
     );
     $f->pop();
+    $profiles = xmlrpc_get_profile_in_menu($item_uuid);
+    $f->push(new Table());
+    $f->push(new TitleElement(_T("Associate profiles to image", "imaging"), 2));
+
+    foreach($profiles as $profile){
+
+        $f->add(
+            new TrFormElement(sprintf(_T("Profile <b>%s</b>", "imaging"), $profile['name']),
+            new CheckboxTpl("profile_".$profile["id"])),
+            array("value" => ($profile["in_menu"] == 1) ? "checked" : "")
+        );
+    }
+
+    $f->pop();
+
+    $f->push(new Table());
+    $f->push(new TitleElement(_T("Associate PostInstalls to image", "imaging"), 2));
+
+    $postinstalls = get_all_postinstall_for_menu($item_uuid);
+
+    foreach($postinstalls as $script){
+        $f->add(
+            new TrFormElement(sprintf(_T("Post Install Script <b>%s</b>", "imaging"), $script['name']),
+            new CheckboxTpl("postinstall_".$script["id"])),
+            array("value" => ($script["in_menu"] == 1) ? "checked" : "")
+        );
+    }
     $f->addButton("bvalid", _T("Validate"));
     $f->pop();
     $f->display();
@@ -116,8 +144,25 @@ if(safeCount($_POST) == 0) {
     $params['hidden_WOL'] = ($_POST['displayed_WOL'] == 'on'?False:True);
     $params['default_name'] = $_POST['default_name'];
 
+    $profiles = [];
+    $postinstalls = [];
+    foreach($_POST as $key =>$value){
+        if(str_starts_with($key, 'profile_')){
+            $id = substr($key, 8);
+            if($value == 'on')
+                $profiles[] = $id;
+        }
+        if(str_starts_with($key, 'postinstall_')){
+            $id = substr($key, 12);
+            if($value == 'on')
+                $postinstalls[] = $id;
+        }
+    }
+
     if ($is_image) {
         $ret = xmlrpc_editImageToLocation($item['imaging_uuid'], $location, $params);
+        $status = xmlrpc_update_profiles_in_menu($item_uuid, $profiles);
+        $status2 = xmlrpc_update_postinstalls_in_menu($item_uuid, $postinstalls);
     } else {
         $ret = xmlrpc_editServiceToLocation($item['imaging_uuid'], $location, $params);
     }

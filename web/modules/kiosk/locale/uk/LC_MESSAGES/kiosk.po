@@ -4,16 +4,16 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Yuri Chornoivan <yurchor@ukr.net>, 2023
+# Yuri Chornoivan <yurchor@ukr.net>, 2025
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-16 22:40+0200\n"
+"POT-Creation-Date: 2025-02-10 23:50+0100\n"
 "PO-Revision-Date: 2019-10-02 12:32+0000\n"
-"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2023\n"
+"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2025\n"
 "Language-Team: Ukrainian (https://app.transifex.com/siveo/teams/72118/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,73 +25,73 @@ msgstr ""
 msgid "List of profils"
 msgstr "Список профілів"
 
-#: modules/kiosk/kiosk/editProfile.php:97
+#: modules/kiosk/kiosk/editProfile.php:98
 #: modules/kiosk/kiosk/ajaxProfilesList.php:39
 #: modules/kiosk/infoPackage.inc.php:76
 msgid "Edit Profile"
 msgstr "Змінити профіль"
 
-#: modules/kiosk/kiosk/editProfile.php:121
+#: modules/kiosk/kiosk/editProfile.php:122
 #: modules/kiosk/kiosk/ajaxProfilesList.php:66
 #: modules/kiosk/kiosk/ajaxAcknowledges.php:75 modules/kiosk/kiosk/add.php:84
 msgid "Profile Name"
 msgstr "Назва профілю"
 
-#: modules/kiosk/kiosk/editProfile.php:122 modules/kiosk/kiosk/add.php:85
+#: modules/kiosk/kiosk/editProfile.php:123 modules/kiosk/kiosk/add.php:85
 msgid "Name"
 msgstr "Назва"
 
-#: modules/kiosk/kiosk/editProfile.php:128 modules/kiosk/kiosk/add.php:91
+#: modules/kiosk/kiosk/editProfile.php:129 modules/kiosk/kiosk/add.php:91
 msgid "Set the profile to active / inactive state"
 msgstr "Встановити профіль у активний або неактивний стан"
 
-#: modules/kiosk/kiosk/editProfile.php:129
+#: modules/kiosk/kiosk/editProfile.php:130
 #: modules/kiosk/kiosk/ajaxProfilesList.php:53 modules/kiosk/kiosk/add.php:92
 msgid "Active"
 msgstr "Активний"
 
-#: modules/kiosk/kiosk/editProfile.php:129
+#: modules/kiosk/kiosk/editProfile.php:130
 #: modules/kiosk/kiosk/ajaxProfilesList.php:53 modules/kiosk/kiosk/add.php:92
 msgid "Inactive"
 msgstr "Неактивний"
 
-#: modules/kiosk/kiosk/editProfile.php:132
+#: modules/kiosk/kiosk/editProfile.php:133
 #: modules/kiosk/kiosk/ajaxProfilesList.php:69 modules/kiosk/kiosk/add.php:95
 msgid "Profile Status"
 msgstr "Стан профілю"
 
-#: modules/kiosk/kiosk/editProfile.php:142 modules/kiosk/kiosk/add.php:103
+#: modules/kiosk/kiosk/editProfile.php:143 modules/kiosk/kiosk/add.php:103
 msgid "Manage packages"
 msgstr "Керування пакунками"
 
-#: modules/kiosk/kiosk/editProfile.php:146
-#: modules/kiosk/kiosk/editProfile.php:151 modules/kiosk/kiosk/add.php:116
+#: modules/kiosk/kiosk/editProfile.php:147
+#: modules/kiosk/kiosk/editProfile.php:152 modules/kiosk/kiosk/add.php:118
 msgid "Restricted packages"
 msgstr "Заборонені пакунки"
 
-#: modules/kiosk/kiosk/editProfile.php:162 modules/kiosk/kiosk/add.php:124
+#: modules/kiosk/kiosk/editProfile.php:163 modules/kiosk/kiosk/add.php:126
 msgid "Available packages"
 msgstr "Доступні пакунки"
 
-#: modules/kiosk/kiosk/editProfile.php:163
-#: modules/kiosk/kiosk/editProfile.php:167 modules/kiosk/kiosk/add.php:125
-#: modules/kiosk/kiosk/add.php:129
+#: modules/kiosk/kiosk/editProfile.php:164
+#: modules/kiosk/kiosk/editProfile.php:168 modules/kiosk/kiosk/add.php:127
+#: modules/kiosk/kiosk/add.php:131
 msgid "Search by name ..."
-msgstr ""
+msgstr "Шукати за назвою…"
 
-#: modules/kiosk/kiosk/editProfile.php:166 modules/kiosk/kiosk/add.php:128
+#: modules/kiosk/kiosk/editProfile.php:167 modules/kiosk/kiosk/add.php:130
 msgid "Allowed packages"
 msgstr "Дозволені пакунки"
 
-#: modules/kiosk/kiosk/editProfile.php:182 modules/kiosk/kiosk/add.php:143
+#: modules/kiosk/kiosk/editProfile.php:183 modules/kiosk/kiosk/add.php:145
 msgid "Source"
-msgstr ""
+msgstr "Джерело"
 
-#: modules/kiosk/kiosk/editProfile.php:201
+#: modules/kiosk/kiosk/editProfile.php:202
 msgid "modify"
 msgstr "змінити"
 
-#: modules/kiosk/kiosk/editProfile.php:201
+#: modules/kiosk/kiosk/editProfile.php:202
 msgid "Modify the profile"
 msgstr "Змінити профіль"
 
@@ -104,7 +104,7 @@ msgstr "Вилучити профіль"
 #: modules/kiosk/kiosk/modifyAcknowledge.php:69
 #: modules/kiosk/infoPackage.inc.php:94
 msgid "Modify Installation Authorisations"
-msgstr ""
+msgstr "Змінити уповноваження встановлення"
 
 #: modules/kiosk/kiosk/ajaxAcknowledges.php:73
 msgid "Package Name"
@@ -112,19 +112,19 @@ msgstr "Назва пакунка"
 
 #: modules/kiosk/kiosk/ajaxAcknowledges.php:77
 msgid "Asked by User"
-msgstr ""
+msgstr "На запит користувача"
 
 #: modules/kiosk/kiosk/ajaxAcknowledges.php:78
 msgid "Asked On"
-msgstr ""
+msgstr "Запит"
 
 #: modules/kiosk/kiosk/ajaxAcknowledges.php:79
 msgid "Starts On"
-msgstr ""
+msgstr "Початок"
 
 #: modules/kiosk/kiosk/ajaxAcknowledges.php:80
 msgid "Ends On"
-msgstr ""
+msgstr "Кінець"
 
 #: modules/kiosk/kiosk/ajaxAcknowledges.php:81
 #: modules/kiosk/kiosk/modifyAcknowledge.php:95
@@ -145,7 +145,7 @@ msgstr "Додати профіль"
 #: modules/kiosk/kiosk/acknowledges.php:7 modules/kiosk/infoPackage.inc.php:85
 #: modules/kiosk/infoPackage.inc.php:89
 msgid "Installation Requests"
-msgstr ""
+msgstr "Запити щодо встановлення"
 
 #: modules/kiosk/kiosk/ajaxEditProfile.php:37
 #, php-format
@@ -154,7 +154,7 @@ msgstr "Оновлено профіль %s"
 
 #: modules/kiosk/kiosk/ajaxEditProfile.php:40
 msgid "Unable to update the profile"
-msgstr ""
+msgstr "Не вдалося оновити профіль"
 
 #: modules/kiosk/kiosk/ajaxAddProfile.php:47
 #, php-format
@@ -170,54 +170,56 @@ msgstr "Не вдалося створити профіль %s"
 msgid "Add New Profile"
 msgstr "Додати новий профіль"
 
-#: modules/kiosk/kiosk/add.php:165
+#: modules/kiosk/kiosk/add.php:167
 msgid "Create"
 msgstr "Створити"
 
-#: modules/kiosk/kiosk/add.php:165
+#: modules/kiosk/kiosk/add.php:167
 msgid "Create the profile"
 msgstr "Створити профіль"
 
-#: modules/kiosk/kiosk/add.php:174
+#: modules/kiosk/kiosk/add.php:176
 msgid "The LDAP is not configured correctly. Please check your configuration."
 msgstr ""
 "LDAP не налаштовано належним чином. Будь ласка, перевірте налаштування."
 
 #: modules/kiosk/kiosk/deleteProfile.php:34
 msgid "Missing parameter name"
-msgstr ""
+msgstr "Не вказано назви параметра"
 
 #: modules/kiosk/kiosk/deleteProfile.php:43
 msgid "Missing parameter id"
-msgstr ""
+msgstr "Не вказано ідентифікатора параметр"
 
 #: modules/kiosk/kiosk/deleteProfile.php:53
 #, php-format
 msgid "Profile %s successfully deleted"
-msgstr ""
+msgstr "Профіль %s успішно вилучено"
 
 #: modules/kiosk/kiosk/deleteProfile.php:58
 #, php-format
 msgid "Impossible to delete profile %s"
-msgstr ""
+msgstr "Не вдалося вилучити профіль %s"
 
 #: modules/kiosk/kiosk/modifyAcknowledge.php:43
 #, php-format
 msgid "%s has been granted the rights %s on package %s (%s) from %s to %s."
-msgstr ""
+msgstr "%s було надано права %s щодо пакунка %s (%s) з %s до %s."
 
 #: modules/kiosk/kiosk/modifyAcknowledge.php:47
 msgid "Error while changing the authorisations"
-msgstr ""
+msgstr "Помилка під час спроби змінити уповноваження"
 
 #: modules/kiosk/kiosk/modifyAcknowledge.php:70
 msgid "This authorisation can't be edited (missing parameter)"
-msgstr ""
+msgstr "Це уповноваження не можна редагувати (пропущено параметр)"
 
 #: modules/kiosk/kiosk/modifyAcknowledge.php:75
 #, php-format
 msgid "%s requested installation authorisation for package %s (profile %s)"
 msgstr ""
+"%s надіслано запит щодо уповноваження на встановлення для пакунка %s "
+"(профіль %s)"
 
 #: modules/kiosk/kiosk/modifyAcknowledge.php:82
 msgid "Start Date"

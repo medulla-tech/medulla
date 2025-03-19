@@ -72,7 +72,29 @@ if ($type == 1) { // Imaging group
     }
 
 if (quickGet('valid')) {
-    $group->delete();
+    $result = $group->delete();
+    if (!isset($result[0]) || $result[0] ==0) {
+        $errorMessage = $result[1];
+        preg_match("/Deletion forbidden for Group:(.*?)\)/",
+                $errorMessage, $matches);
+        $msg  = _T("Deletion forbidden for Group:", "dyngroup");
+        $msg1 = _T("Delete before the groups:", "dyngroup");
+        echo "<pre>";
+        print_r($matches[1]);
+        echo "</pre>";
+        if (isset($matches[1])) {
+            $extractedMessage = trim($matches[1], " '\n\r");
+            if ($type == 0) { // simple group
+            $strpart = sprintf("%s %s", $msg, $extractedMessage);
+            $msgnew = str_replace("Delete before the groups:" , $msg1 , $strpart);
+
+            header("Location: " . urlStrRedirect("base/computers/list$stype"));
+            new NotifyWidgetFailure(sprintf($msgnew, $group->getName()));
+                exit;
+            }
+        }
+    }
+
     if (in_array("xmppmaster", $_SESSION["modulesList"])) {
         xmlrpc_delDeploybygroup($gid);
         $array_command_id = get_commands_by_group($gid);

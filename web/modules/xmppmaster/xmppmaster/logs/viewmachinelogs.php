@@ -78,9 +78,14 @@ include_once('modules/medulla_server/includes/menu_actionaudit.php');
 include_once('modules/glpi/includes/xmlrpc.php');
 include_once('modules/pkgs/includes/xmlrpc.php');
 
-// Retrieve information deploy. For cmn_id
 
-$info = xmlrpc_getdeployfromcommandid($cmd_id, $uuid);
+// Retrieve information deploy. For cmn_id
+$isconvergence = is_commands_convergence_type($cmd_id);
+if($isconvergence != 0) {
+    $info = xmlrpc_getdeployfromcommandid_for_convergence($cmd_id, $uuid);
+} else {
+    $info = xmlrpc_getdeployfromcommandid($cmd_id, $uuid);
+}
 
 if($info["len"] == 0) {?>
     <script>
@@ -454,20 +459,41 @@ if ($info['len'] != 0) {
         }
     }
     $state = $info['objectdeploy'][0]['state'];
-    $start = get_object_vars($info['objectdeploy'][0]['start'])['timestamp'];
+    $startData = $info['objectdeploy'][0]['start'];
+
+    if (is_array($startData)) {
+        $timestamp  = isset($startData['timestamp']) ? $startData['timestamp'] : null;
+        $scalarDate = isset($startData['scalar'])    ? $startData['scalar']    : null;
+    } elseif (is_object($startData)) {
+        $temp       = get_object_vars($startData);
+        $timestamp  = isset($temp['timestamp']) ? $temp['timestamp'] : null;
+        $scalarDate = isset($temp['scalar'])    ? $temp['scalar']    : null;
+    }
+    $start = $timestamp;
     $host = $info['objectdeploy'][0]['host'];
     $jidmachine = $info['objectdeploy'][0]['jidmachine'];
     $jid_relay = $info['objectdeploy'][0]['jid_relay'];
-    $datestart =  date("Y-m-d H:i:s", $start);
-    $scalardate = get_object_vars($info['objectdeploy'][0]['start'])['scalar'];
-    $formateddate = substr($scalardate, 0, 4).'-'.substr($scalardate, 4, 2).'-'.substr($scalardate, 6, 2).' '.substr($scalardate, 9);
+    $datestart = $start ? date("Y-m-d H:i:s", $start) : '';
+    if (!empty($scalarDate) && strlen($scalarDate) >= 11) {
+        $formateddate = substr($scalarDate, 0, 4) . '-' .
+                        substr($scalarDate, 4, 2) . '-' .
+                        substr($scalarDate, 6, 2) . ' ' .
+                        substr($scalarDate, 9);
+    } else {
+        $formateddate = $datestart;
+    }
+
     echo "<div>";
-    echo '<H2 style="align=center;">'._T("Start deployment : ", "xmppmaster").$formateddate.'</H2>';
+    echo '<h2 style="align=center;">'._T("Start deployment : ", "xmppmaster").$formateddate.'</h2>';
     echo "</div>";
-    if (isset($infoslist)) {
+    if (!empty($infoslist) || empty($deploymachine)) {
         if ($info['len'] != 0) {
             $jidmachine = $info['objectdeploy'][0]['jidmachine'];
             $jid_relay = $info['objectdeploy'][0]['jid_relay'];
+            $infomachine = xmlrpc_getMachinefromjid($jidmachine);
+            $ipmachine = $infomachine['ip_xmpp'];
+            $inforalay = xmlrpc_getMachinefromjid($jid_relay);
+            $iprelay = !empty($otherinfos[0]->iprelay) ? $otherinfos[0]->iprelay : $inforalay['ip_xmpp'];
             echo "<br>";
             echo '<h2 class="replytab" id="xmppinfo">'.$hideText.' '._T("XMPP Information", "xmppmaster").'</h2>';
             echo "<div id='titlexmppinfo'>";
@@ -486,9 +512,11 @@ if ($info['len'] != 0) {
             echo '<td style="text-align: center";>';
             echo '<span>'._T("Relay Server IP", "xmppmaster").'</span>';
             echo '</td>';
-            echo '<td style="text-align: center";>';
-            echo '<span>'._T("Master IP", "xmppmaster").'</span>';
-            echo '</td>';
+            if(!empty($otherinfos[0]->ipmaster)) {
+                echo '<td style="text-align: center";>';
+                echo '<span>'._T("Master IP", "xmppmaster").'</span>';
+                echo '</td>';
+            }
             echo "</tr>";
             echo "</thead>";
 
@@ -498,7 +526,9 @@ if ($info['len'] != 0) {
             echo '<td style="text-align: center";>' . $jid_relay . '</td>';
             echo '<td style="text-align: center";>' . $ipmachine . '</td>';
             echo '<td style="text-align: center";>' . $iprelay . '</td>';
-            echo '<td style="text-align: center";>' . $ipmaster . '</td>';
+            if(!empty($otherinfos[0]->ipmaster)) {
+                echo '<td style="text-align: center";>' . $ipmaster . '</td>';
+            }
             echo "</tr>";
             echo "</tbody>";
             echo "</table>";
@@ -525,22 +555,25 @@ if ($info['len'] != 0) {
         echo "</tr>";
         echo "</thead>";
         echo "<tbody>";
-        foreach (range(0, safeCount($infoslist) - 1) as $index) {
-            $inf = $infoslist[$index];
+        $infoPkg = (!empty($deploymachine) && !empty($deploymachine['package_id'])) 
+                    ? $deploymachine['package_id']
+                    : pkgsGetDetails($info['objectdeploy'][0]['pathpackage']);
+        if (empty($infoslist)) {
             echo "<tr>";
-            echo '<td style="text-align: center";>';
-            echo $inf->name;
-            echo "</td>";
-            echo '<td style="text-align: center";>';
-            echo $inf->software;
-            echo "</td>";
-            echo '<td style="text-align: center";>';
-            echo $inf->version;
-            echo "</td>";
-            echo '<td style="text-align: center";>';
-            echo $inf->description;
-            echo "</td>";
+            echo '<td style="text-align: center;">' . htmlspecialchars($infoPkg['label']) . "</td>";
+            echo '<td style="text-align: center;">' . htmlspecialchars($infoPkg['label']) . "</td>";
+            echo '<td style="text-align: center;">' . htmlspecialchars($infoPkg['version']) . "</td>";
+            echo '<td style="text-align: center;">' . htmlspecialchars($infoPkg['description']) . "</td>";
             echo "</tr>";
+        } else {
+            foreach ($infoslist as $inf) {
+                echo "<tr>";
+                echo '<td style="text-align: center;">' . htmlspecialchars($inf->name) . "</td>";
+                echo '<td style="text-align: center;">' . htmlspecialchars($inf->software) . "</td>";
+                echo '<td style="text-align: center;">' . htmlspecialchars($inf->version) . "</td>";
+                echo '<td style="text-align: center;">' . htmlspecialchars($inf->description) . "</td>";
+                echo "</tr>";
+            }
         }
         echo "</tbody>";
         echo "</table>";

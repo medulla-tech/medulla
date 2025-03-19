@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-16 22:40+0200\n"
+"POT-Creation-Date: 2025-03-19 16:16+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,50 +18,54 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: index.php:65 token.php:56
+#: index.php:69 token.php:56
 #, php-format
 msgid "The server %s does not exist"
 msgstr ""
 
-#: index.php:75
+#: index.php:79
 msgid ""
 "Login failed. Please make sure that you entered the right username and "
 "password. Both fields are case sensitive."
 msgstr ""
 
-#: index.php:84
+#: index.php:88
 msgid ""
 "You have been logged out because the session between the MMC web interface "
 "and the MMC agent expired."
 msgstr ""
 
-#: index.php:199
+#: index.php:92
+msgid "You have been successfully logged out."
+msgstr ""
+
+#: index.php:209
 msgid "Forgot password ?"
 msgstr ""
 
-#: index.php:208
+#: index.php:218
 msgid "Server"
 msgstr ""
 
-#: index.php:215
+#: index.php:225
 msgid "Language"
 msgstr ""
 
-#: index.php:221 modules/base/includes/publicFunc.php:318
+#: index.php:231 modules/base/includes/publicFunc.php:318
 #: modules/base/users/ajaxFilter.php:117 modules/base/views/index.tpl.php:78
 msgid "Login"
 msgstr ""
 
-#: index.php:227 modules/base/includes/publicFunc.php:333
+#: index.php:237 modules/base/includes/publicFunc.php:333
 #: modules/base/infoPackage.inc.php:433
 msgid "Password"
 msgstr ""
 
-#: index.php:240
+#: index.php:250
 msgid "Connect"
 msgstr ""
 
-#: index.php:263
+#: index.php:268
 msgid "Error reading authproviders.ini or authproviders.ini.local config file."
 msgstr ""
 
@@ -132,11 +136,11 @@ msgid ""
 "version."
 msgstr ""
 
-#: includes/xmlrpc.inc.php:390
+#: includes/xmlrpc.inc.php:388
 msgid "unknown error"
 msgstr ""
 
-#: includes/xmlrpc.inc.php:391
+#: includes/xmlrpc.inc.php:389
 msgid ""
 "This exception is unknown. Please contact us to add an error handling on "
 "this error."
@@ -300,7 +304,7 @@ msgstr ""
 #: includes/PageGenerator.php:2912 includes/PageGenerator.php:2994
 #: modules/base/groups/delete.php:66 modules/base/groups/members.php:223
 #: modules/base/users/backup.php:91 modules/imaging/manage/master_iso.php:109
-#: modules/imaging/imaging/multicast.php:410
+#: modules/imaging/imaging/multicast.php:409
 #: modules/imaging/imaging/images_iso.php:112
 #: modules/dyngroup/includes/groups.inc.php:104
 #: modules/dyngroup/includes/groups.inc.php:311
@@ -493,11 +497,11 @@ msgid ""
 "subscription plan."
 msgstr ""
 
-#: logout/index.php:48 logout/index.php:55 graph/navbar.inc.php:83
+#: logout/index.php:54 logout/index.php:61 graph/navbar.inc.php:83
 msgid "Logout"
 msgstr ""
 
-#: logout/index.php:51
+#: logout/index.php:57
 msgid "Your session will be closed"
 msgstr ""
 
@@ -597,16 +601,19 @@ msgstr ""
 #: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:50
 #: modules/xmppmaster/xmppmaster/ajaxstatusteamxmppscheduler.php:73
 #: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:45
+#: modules/xmppmaster/xmppmaster/ajaxteamconvergence.php:124
 #: modules/xmppmaster/xmppmaster/ajaxstatusteamxmpp.php:128
 #: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:92
 #: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:105
+#: modules/xmppmaster/xmppmaster/ajaxconvergence.php:111
+#: modules/xmppmaster/xmppmaster/ajaxconvergence.php:322
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:78
 #: modules/base/includes/computers_list.inc.php:109
 msgid "View deployment details"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:125
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:701
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:719
 msgid "Restart deployment"
 msgstr ""
 
@@ -641,27 +648,27 @@ msgstr ""
 msgid "Delete deploy"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:348
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:362
 msgid "cluster list"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:349
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:363
 msgid "cluster nb ars"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:350
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:364
 msgid "machine"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:351
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:365
 msgid "progress"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:352
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:366
 msgid "start"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:353
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:367
 msgid "end"
 msgstr ""
 
@@ -772,6 +779,12 @@ msgstr ""
 #: modules/dashboard/includes/panels/alertsentity.inc.php:50
 #: modules/dashboard/includes/panels/alerts.inc.php:49
 msgid "Detail"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxconvergence.php:150
+#: modules/xmppmaster/xmppmaster/ajaxconvergence.php:162
+#: modules/xmppmaster/xmppmaster/ajaxconvergence.php:368
+msgid "Reschedule Convergence"
 msgstr ""
 
 #: modules/glpi/glpi/ajaxMachinesList.php:165
@@ -2270,6 +2283,14 @@ msgstr ""
 
 #: modules/dashboard/includes/panels/clients_updates.inc.php:30
 msgid "Clients Update"
+msgstr ""
+
+#: modules/imaging/manage/ajaxProfilescript.php:57
+msgid "Edit Profile"
+msgstr ""
+
+#: modules/imaging/manage/ajaxProfilescript.php:58
+msgid "Delete Profile"
 msgstr ""
 
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:149

@@ -29,4 +29,7 @@ $sidemenu->addSideMenuItem(new SideMenuItem(_T("My teams tasks", 'xmppmaster'), 
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("My past tasks", 'xmppmaster'), "xmppmaster", "xmppmaster", "auditmypastdeploys"));
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("All users past tasks", 'xmppmaster'), "xmppmaster", "xmppmaster", "auditpastdeploys"));
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("My teams past tasks", 'xmppmaster'), "xmppmaster", "xmppmaster","auditmypastdeploysteam" ));
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("My Convergence", 'xmppmaster'), "xmppmaster", "xmppmaster","convergence" ));
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("All users convergence", 'xmppmaster'), "xmppmaster", "xmppmaster", "auditconvergence"));
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("My teams convergence", 'xmppmaster'), "xmppmaster", "xmppmaster", "auditteamconvergence"));
 ?>

@@ -25,6 +25,10 @@
 ob_start();
 session_name("PULSESESSION");
 session_start();
+if(isset($_SESSION['sessiontimeout']) || isset($_SESSION['expire'])){
+    session_unset();
+    session_destroy();
+}
 
 if (isset($_POST['lang'])) {
     $_SESSION['lang'] = $_POST['lang'];

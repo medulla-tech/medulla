@@ -160,16 +160,26 @@ if($isconvergence != 0) {
 }
 
 
-// Get uuid, hostname and status of the deployed machines from xmppmaster.deploy
-$getdeployment = xmlrpc_getdeployment_cmd_and_title(
-    $cmd_id,
-    $title,
-    $filter,
-    $start,
-    $maxperpage
-);
-$status = array_combine($getdeployment["datas"]["uuid"], $getdeployment["datas"]["status"]);
+if($isconvergence != 0) {
+    $getdeployment = xmlrpc_getdeployment_cmd_and_title_for_convergence(
+        $cmd_id,
+        $title,
+        $filter,
+        $start,
+        $maxperpage
+    );
+} else {
+    // Get uuid, hostname and status of the deployed machines from xmppmaster.deploy
+    $getdeployment = xmlrpc_getdeployment_cmd_and_title(
+        $cmd_id,
+        $title,
+        $filter,
+        $start,
+        $maxperpage
+    );
+}
 
+$status = array_combine($getdeployment["datas"]["uuid"], $getdeployment["datas"]["status"]);
 // Get the same machines from glpi
 $re = xmlrpc_get_machine_for_id(
     $getdeployment['datas']['id'],
@@ -179,8 +189,12 @@ $re = xmlrpc_get_machine_for_id(
 );
 
 
-// STATS FROM XMPPMASTER DEPLOY
-$statsfromdeploy = xmlrpc_getstatdeploy_from_command_id_and_title($cmd_id, $title);
+if($isconvergence != 0) {
+    $statsfromdeploy = xmlrpc_getstatdeploy_from_command_id_and_title_for_convergence($cmd_id, $title);
+} else {
+    // STATS FROM XMPPMASTER DEPLOY
+    $statsfromdeploy = xmlrpc_getstatdeploy_from_command_id_and_title($cmd_id, $title);
+}
 // get some info from msc for this deployment
 $info = xmlrpc_getdeployfromcommandid($cmd_id, "UUID_NONE");
 
@@ -657,7 +671,11 @@ if ($count != 0) {
     $info_from_machines[] = []; // Add 9th index
 
     foreach($info_from_machines[0] as $key => $value) {
-        $infomachine = xmlrpc_getdeployfromcommandid($cmd_id, 'UUID'.$value);
+        if($isconvergence != 0) {
+            $infomachine = xmlrpc_getdeployfromcommandid_for_convergence($cmd_id, 'UUID'.$value);
+        } else {
+            $infomachine = xmlrpc_getdeployfromcommandid($cmd_id, 'UUID'.$value);
+        }
         $sessionid = $infomachine['objectdeploy'][0]['sessionid'];
 
         if(isset($status['UUID'.$value])) {

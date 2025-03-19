@@ -1,6 +1,7 @@
 <?php
 /*
  * (c) 2007-2008 Mandriva, http://www.mandriva.com
+ * (c) 2025 Siveo, http://siveo.net
  *
  * $Id$
  *
@@ -39,6 +40,15 @@ $sidemenu->addSideMenuItem(
 $sidemenu->addSideMenuItem(
     new SideMenuItem(_T("Post-imaging scripts","imaging"), "imaging", "manage", "postinstall")
 );
+
+$sidemenu->addSideMenuItem(
+    new SideMenuItem(_T("List Profile scripts","imaging"), "imaging", "manage", "profilescript")
+);
+
+$sidemenu->addSideMenuItem(
+    new SideMenuItem(_T("Add Profile scripts","imaging"), "imaging", "manage", "addProfilescript")
+);
+
 $sidemenu->addSideMenuItem(
     new SideMenuItem(_T("Imaging Configuration","imaging"), "imaging", "manage", "configuration")
 );

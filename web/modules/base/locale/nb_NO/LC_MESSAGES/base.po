@@ -5,16 +5,16 @@
 # 
 # Translators:
 # Nicolas Lécureuil <neoclust@mageia.org>, 2018
-# Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2022
+# Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2025
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-16 22:40+0200\n"
+"POT-Creation-Date: 2025-03-19 16:16+0100\n"
 "PO-Revision-Date: 2018-02-13 15:15+0000\n"
-"Last-Translator: Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2022\n"
+"Last-Translator: Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2025\n"
 "Language-Team: Norwegian Bokmål (Norway) (https://app.transifex.com/siveo/teams/72118/nb_NO/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,18 +22,18 @@ msgstr ""
 "Language: nb_NO\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: index.php:65 token.php:56
+#: index.php:69 token.php:56
 #, php-format
 msgid "The server %s does not exist"
 msgstr "Serveren %s eksisterer ikke"
 
-#: index.php:75
+#: index.php:79
 msgid ""
 "Login failed. Please make sure that you entered the right username and "
 "password. Both fields are case sensitive."
 msgstr ""
 
-#: index.php:84
+#: index.php:88
 msgid ""
 "You have been logged out because the session between the MMC web interface "
 "and the MMC agent expired."
@@ -41,33 +41,37 @@ msgstr ""
 "Du er logget av fordi økten mellom MMC-webgrensesnittet og MMC-agenten "
 "utløp."
 
-#: index.php:199
+#: index.php:92
+msgid "You have been successfully logged out."
+msgstr ""
+
+#: index.php:209
 msgid "Forgot password ?"
 msgstr "Glemt passord ?"
 
-#: index.php:208
+#: index.php:218
 msgid "Server"
 msgstr "Server"
 
-#: index.php:215
+#: index.php:225
 msgid "Language"
 msgstr "Språk"
 
-#: index.php:221 modules/base/includes/publicFunc.php:318
+#: index.php:231 modules/base/includes/publicFunc.php:318
 #: modules/base/users/ajaxFilter.php:117 modules/base/views/index.tpl.php:78
 msgid "Login"
 msgstr "Brukernavn"
 
-#: index.php:227 modules/base/includes/publicFunc.php:333
+#: index.php:237 modules/base/includes/publicFunc.php:333
 #: modules/base/infoPackage.inc.php:433
 msgid "Password"
 msgstr "Passord"
 
-#: index.php:240
+#: index.php:250
 msgid "Connect"
 msgstr "Koble til"
 
-#: index.php:263
+#: index.php:268
 msgid ""
 "Error reading authproviders.ini or authproviders.ini.local config file."
 msgstr ""
@@ -145,11 +149,11 @@ msgstr ""
 "MMC-agenten ga oss ikke et sesjonsnummer. Vennligst sjekk MMC-"
 "agentversjonen."
 
-#: includes/xmlrpc.inc.php:390
+#: includes/xmlrpc.inc.php:388
 msgid "unknown error"
 msgstr "ukjent feil"
 
-#: includes/xmlrpc.inc.php:391
+#: includes/xmlrpc.inc.php:389
 msgid ""
 "This exception is unknown. Please contact us to add an error handling on "
 "this error."
@@ -333,7 +337,7 @@ msgstr "Bekreft"
 #: includes/PageGenerator.php:2912 includes/PageGenerator.php:2994
 #: modules/base/groups/delete.php:66 modules/base/groups/members.php:223
 #: modules/base/users/backup.php:91 modules/imaging/manage/master_iso.php:109
-#: modules/imaging/imaging/multicast.php:410
+#: modules/imaging/imaging/multicast.php:409
 #: modules/imaging/imaging/images_iso.php:112
 #: modules/dyngroup/includes/groups.inc.php:104
 #: modules/dyngroup/includes/groups.inc.php:311
@@ -534,11 +538,11 @@ msgstr ""
 "Klikk her for å få mer informasjon om vår support- og "
 "vedlikeholdsabonnementsplan."
 
-#: logout/index.php:48 logout/index.php:55 graph/navbar.inc.php:83
+#: logout/index.php:54 logout/index.php:61 graph/navbar.inc.php:83
 msgid "Logout"
 msgstr "Logg ut"
 
-#: logout/index.php:51
+#: logout/index.php:57
 msgid "Your session will be closed"
 msgstr "Sesjonen din vil bli avsluttet"
 
@@ -638,16 +642,19 @@ msgstr "Fjernkontroll"
 #: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:50
 #: modules/xmppmaster/xmppmaster/ajaxstatusteamxmppscheduler.php:73
 #: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:45
+#: modules/xmppmaster/xmppmaster/ajaxteamconvergence.php:124
 #: modules/xmppmaster/xmppmaster/ajaxstatusteamxmpp.php:128
 #: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:92
 #: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:105
+#: modules/xmppmaster/xmppmaster/ajaxconvergence.php:111
+#: modules/xmppmaster/xmppmaster/ajaxconvergence.php:322
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:78
 #: modules/base/includes/computers_list.inc.php:109
 msgid "View deployment details"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:125
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:701
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:719
 msgid "Restart deployment"
 msgstr ""
 
@@ -682,27 +689,27 @@ msgstr "Frakoblede datamaskiner"
 msgid "Delete deploy"
 msgstr "Slett utrulling"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:348
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:362
 msgid "cluster list"
 msgstr "cluster liste"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:349
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:363
 msgid "cluster nb ars"
 msgstr "cluster nb ars"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:350
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:364
 msgid "machine"
 msgstr "maskin"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:351
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:365
 msgid "progress"
 msgstr "framdrift"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:352
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:366
 msgid "start"
 msgstr "start"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:353
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:367
 msgid "end"
 msgstr "slutt"
 
@@ -826,6 +833,12 @@ msgstr "Anerkjenne"
 #: modules/dashboard/includes/panels/alerts.inc.php:49
 msgid "Detail"
 msgstr "Detalj"
+
+#: modules/xmppmaster/xmppmaster/ajaxconvergence.php:150
+#: modules/xmppmaster/xmppmaster/ajaxconvergence.php:162
+#: modules/xmppmaster/xmppmaster/ajaxconvergence.php:368
+msgid "Reschedule Convergence"
+msgstr ""
 
 #: modules/glpi/glpi/ajaxMachinesList.php:165
 #: modules/glpi/glpi/ajaxMachinesList.php:168
@@ -2364,6 +2377,14 @@ msgstr "Oppetid"
 #: modules/dashboard/includes/panels/clients_updates.inc.php:30
 msgid "Clients Update"
 msgstr "Klientoppdatering"
+
+#: modules/imaging/manage/ajaxProfilescript.php:57
+msgid "Edit Profile"
+msgstr "Rediger profil"
+
+#: modules/imaging/manage/ajaxProfilescript.php:58
+msgid "Delete Profile"
+msgstr "Slett profil"
 
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:149
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:173

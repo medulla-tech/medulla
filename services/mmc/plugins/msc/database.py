@@ -14,6 +14,7 @@ Needed to access all the msc database information
 import re
 import time
 import datetime
+import logging
 
 # SqlAlchemy
 from sqlalchemy import and_, not_
@@ -681,6 +682,69 @@ class MscDatabase(msc.MscDatabase):
         end_date = (datetime.datetime.now() + datetime.timedelta(days=1)).strftime(fmt)
         return self.extendCommand(cmd_id, start_date, end_date)
 
+    @DatabaseHelper._sessionm
+    def update_msc_command(
+        self,
+        session,
+        login,
+        commandid,
+        bandwidth,
+        params,
+    ):
+        """
+        Updates only the Start_date, End_date, Deployment_interval and Do_reBoot fields
+        in the MSC.Commands table.
+
+        Args:
+        Session (session): SQLALCHEMY session managed by the decorator.
+        Login (Str): (optional) user login, for example for the 'Creator' field.
+        Commandid (int): order identifier in MSC.Commands.
+        Bandwidth (int or Str): value for the 'Maxbw' field.If empty, will be treated like 0.
+        Params (dict): must contain, if necessary, the following keys:
+        -'Start_date': (Ex. "2025-02-12 09:27:37")
+        -'End_date': (Ex. "2025-02-13 09:27:37")
+        - 'Deployment_intervals': (eg "12-16")
+        - 'do_reboot': (expected "enable" or "disable")
+        - 'state': (expected "active" or "disabled")
+
+        Returns:
+        INT: The Updated Order Identifier, or NO in case of error.
+        """
+        try:
+            command = session.query(Commands).filter_by(id=commandid).first()
+            if not command:
+                logging.getLogger().error(f"No order found for ID {commandid}.")
+                return None
+
+            if isinstance(params, dict):
+                if 'start_date' in params:
+                    command.start_date = params['start_date']
+                if 'end_date' in params:
+                    command.end_date = params['end_date']
+                if 'deployment_intervals' in params:
+                    command.deployment_intervals = params['deployment_intervals']
+                if 'do_reboot' in params:
+                    command.do_reboot = params['do_reboot']  # Ex: "enable" ou "disable"
+                if 'state' in params:
+                    command.state = params['state']  # Ex: "active" ou "disabled"
+
+            if not str(bandwidth).strip():
+                command.maxbw = 0
+            else:
+                command.maxbw = int(bandwidth)
+
+            if login:
+                command.creator = login
+
+            session.commit()
+            session.flush()
+            return command.id
+        except Exception as e:
+            logging.getLogger().error(f"Error when updating the order: {e}")
+            session.rollback()
+            return None
+
+
     def _get_machines_in_command(self, session, cmd_id):
         """
         For a given cmd_id, return machines who are part of this command, except these who are
@@ -733,14 +797,13 @@ class MscDatabase(msc.MscDatabase):
         Args:
             ctx: Context
             cmd_id: Id of the command in SQL
-            group_id: If of the group we dploy in
+            group_id: If of the group we deploy in
             root:
             mode:
             proxies:
             phases:
         Return:
             It returns the updated list of machines
-
         """
         cmd = self.getCommands(ctx, cmd_id)
         if root is None:
