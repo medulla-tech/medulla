@@ -34,6 +34,10 @@ function pkgs_get_infos_details($puuidpackage) {
     return xmlCall("pkgs.pkgs_get_infos_details", array($puuidpackage));
 }
 
+function pkgsGetDetails($uuidpackage) {
+  return xmlCall("pkgs.pkgsGetDetails", array($uuidpackage));
+}
+
 function xmlrpc_pkgs_search_share($objectsearch){
     return xmlCall("pkgs.pkgs_search_share", array($objectsearch));
 }

@@ -57,6 +57,15 @@ $submod->addPage($page);
 $page = new Page("auditteam", _T('XMPP My teams tasks', 'xmppmaster'));
 $submod->addPage($page);
 
+$page = new Page("convergence", _T('XMPP My Convergence', 'xmppmaster'));
+$submod->addPage($page);
+
+$page = new Page("auditconvergence", _T('XMPP All users convergence', 'xmppmaster'));
+$submod->addPage($page);
+
+$page = new Page("auditteamconvergence", _T('XMPP My teams convergence', 'xmppmaster'));
+$submod->addPage($page);
+
 $page = new Page("consolexmpp", _T('XMPP Console', 'xmppmaster'));
 $submod->addPage($page);
 
@@ -318,6 +327,16 @@ $page->setFile("modules/xmppmaster/xmppmaster/ajaxstatusteamxmpp.php");
 $page->setOptions(array("visible" => false, "AJAX" => true));
 $submod->addPage($page);
 
+$page = new Page("ajaxconvergence", _T("All users convergence", "xmppmaster"));
+$page->setFile("modules/xmppmaster/xmppmaster/ajaxconvergence.php");
+$page->setOptions(array("visible" => false, "AJAX" => true));
+$submod->addPage($page);
+
+$page = new Page("ajaxteamconvergence", _T("My teams convergence", "xmppmaster"));
+$page->setFile("modules/xmppmaster/xmppmaster/ajaxteamconvergence.php");
+$page->setOptions(array("visible" => false, "AJAX" => true));
+$submod->addPage($page);
+
 $page = new Page("ajaxviewgrpdeploy", _T("ajax view grp deploy", "xmppmaster"));
 $page->setFile("modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php");
 $page->setOptions(array("visible" => false, "AJAX" => true));
@@ -405,6 +424,10 @@ $submod->addPage($page);
 $page = new Page("popupReloadDeploy", _T("Reload Deploy", "xmppmaster"));
 $page->setFile("modules/xmppmaster/xmppmaster/popupReloadDeploy.php");
 $page->setOptions(array("visible" => false, "noHeader" => true));
+$submod->addPage($page);
+
+$page = new Page("rescheduleconvergence", _T("Reschedule Convergence", "xmppmaster"));
+$page->setFile("modules/xmppmaster/xmppmaster/rescheduleconvergence.php");
 $submod->addPage($page);
 
 $page = new Page("reloaddeploy", _T('Reload Deploy', 'xmppmaster'));

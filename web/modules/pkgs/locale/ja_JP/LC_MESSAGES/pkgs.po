@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-16 22:40+0200\n"
+"POT-Creation-Date: 2025-02-10 23:50+0100\n"
 "PO-Revision-Date: 2017-10-11 08:13+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2023\n"
 "Language-Team: Japanese (Japan) (https://app.transifex.com/siveo/teams/72118/ja_JP/)\n"
@@ -26,7 +26,7 @@ msgid "Remove uploaded files"
 msgstr ""
 
 #: modules/pkgs/includes/actions/actioncleaning.php:48
-#: modules/pkgs/includes/actions/actionsuccescompletedend.php:46
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:53
 #: modules/pkgs/includes/actions/action_set_config_file.php:53
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:43
 #: modules/pkgs/includes/actions/actionrestart.php:72
@@ -40,13 +40,13 @@ msgstr ""
 
 #: modules/pkgs/includes/actions/actioncleaning.php:62
 #: modules/pkgs/includes/actions/action_loop_question.php:302
-#: modules/pkgs/includes/actions/actionprocessscript.php:346
+#: modules/pkgs/includes/actions/actionprocessscript.php:348
 #: modules/pkgs/includes/actions/action_set_config_file.php:84
 #: modules/pkgs/includes/actions/action_section_update.php:49
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:243
 #: modules/pkgs/includes/actions/actionrestart.php:96
 #: modules/pkgs/includes/actions/action_section_uninstall.php:50
-#: modules/pkgs/includes/actions/actionprocessscriptfile.php:510
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:512
 #: modules/pkgs/includes/actions/action_download.php:138
 #: modules/pkgs/includes/actions/action_unzip_file.php:372
 #: modules/pkgs/includes/actions/action_question.php:294
@@ -62,11 +62,11 @@ msgstr "削除"
 
 #: modules/pkgs/includes/actions/actioncleaning.php:63
 #: modules/pkgs/includes/actions/action_loop_question.php:306
-#: modules/pkgs/includes/actions/actionsuccescompletedend.php:140
-#: modules/pkgs/includes/actions/actionprocessscript.php:347
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:146
+#: modules/pkgs/includes/actions/actionprocessscript.php:349
 #: modules/pkgs/includes/actions/action_set_config_file.php:89
 #: modules/pkgs/includes/actions/actionrestart.php:97
-#: modules/pkgs/includes/actions/actionprocessscriptfile.php:511
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:513
 #: modules/pkgs/includes/actions/action_download.php:139
 #: modules/pkgs/includes/actions/action_unzip_file.php:373
 #: modules/pkgs/includes/actions/actionerrorcompletedend.php:58
@@ -248,34 +248,34 @@ msgstr ""
 msgid "Show additional options for this step"
 msgstr ""
 
-#: modules/pkgs/includes/actions/actionsuccescompletedend.php:32
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:39
 msgid "End Success"
 msgstr ""
 
-#: modules/pkgs/includes/actions/actionsuccescompletedend.php:66
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:74
 msgid "Delete package"
 msgstr ""
 
-#: modules/pkgs/includes/actions/actionsuccescompletedend.php:108
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:114
 #: modules/pkgs/pkgs/detail.php:230
 msgid "Inventory"
 msgstr "在庫"
 
-#: modules/pkgs/includes/actions/actionsuccescompletedend.php:116
-#: modules/pkgs/includes/actions/actionsuccescompletedend.php:121
-#: modules/pkgs/includes/actions/actionsuccescompletedend.php:126
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:122
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:127
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:132
 msgid "Forced inventory"
 msgstr ""
 
-#: modules/pkgs/includes/actions/actionsuccescompletedend.php:117
-#: modules/pkgs/includes/actions/actionsuccescompletedend.php:122
-#: modules/pkgs/includes/actions/actionsuccescompletedend.php:127
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:123
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:128
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:133
 msgid "No inventory"
 msgstr ""
 
-#: modules/pkgs/includes/actions/actionsuccescompletedend.php:118
-#: modules/pkgs/includes/actions/actionsuccescompletedend.php:123
-#: modules/pkgs/includes/actions/actionsuccescompletedend.php:128
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:124
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:129
+#: modules/pkgs/includes/actions/actionsuccescompletedend.php:134
 msgid "Inventory on change"
 msgstr ""
 
@@ -325,7 +325,7 @@ msgstr ""
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:94
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:322
 #: modules/pkgs/includes/actions/action_unzip_file.php:148
-msgid "Complete results"
+msgid "Complete results (limited to 10000 last characters)"
 msgstr ""
 
 #: modules/pkgs/includes/actions/actionprocessscript.php:160
@@ -360,23 +360,23 @@ msgstr ""
 msgid "The last line of result"
 msgstr ""
 
-#: modules/pkgs/includes/actions/actionprocessscript.php:210
-#: modules/pkgs/includes/actions/actionprocessscript.php:225
+#: modules/pkgs/includes/actions/actionprocessscript.php:212
+#: modules/pkgs/includes/actions/actionprocessscript.php:227
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:145
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:160
-#: modules/pkgs/includes/actions/actionprocessscriptfile.php:373
-#: modules/pkgs/includes/actions/actionprocessscriptfile.php:388
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:375
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:390
 #: modules/pkgs/includes/actions/action_unzip_file.php:199
 msgid "Return result"
 msgstr ""
 
-#: modules/pkgs/includes/actions/actionprocessscript.php:323
-#: modules/pkgs/includes/actions/actionprocessscriptfile.php:487
+#: modules/pkgs/includes/actions/actionprocessscript.php:325
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:489
 msgid "On return code, goto "
 msgstr ""
 
-#: modules/pkgs/includes/actions/actionprocessscript.php:324
-#: modules/pkgs/includes/actions/actionprocessscriptfile.php:488
+#: modules/pkgs/includes/actions/actionprocessscript.php:326
+#: modules/pkgs/includes/actions/actionprocessscriptfile.php:490
 msgid "Add goto"
 msgstr ""
 
@@ -659,10 +659,10 @@ msgstr "ベンダー"
 msgid "Software"
 msgstr "ソフトウェア"
 
-#: modules/pkgs/includes/query.php:88 modules/pkgs/pkgs/add.php:231
+#: modules/pkgs/includes/query.php:88 modules/pkgs/pkgs/add.php:232
 #: modules/pkgs/pkgs/ajaxPackageList.php:292
 #: modules/pkgs/pkgs/ajaxPackageList.php:431 modules/pkgs/pkgs/detail.php:209
-#: modules/pkgs/pkgs/ajaxPendingPackageList.php:70
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:73
 msgid "Version"
 msgstr "バージョン"
 
@@ -714,11 +714,11 @@ msgid "Upload selected files"
 msgstr "選択されたファイルをアップロード"
 
 #: modules/pkgs/pkgs/rsync.php:74
-msgid "Relay servers not yet synchronized : "
+msgid "Relay servers not yet synchronized: "
 msgstr ""
 
 #: modules/pkgs/pkgs/rsync.php:93
-msgid "Relay servers already synchronized : "
+msgid "Relay servers already synchronized: "
 msgstr ""
 
 #: modules/pkgs/pkgs/index.php:30 modules/pkgs/pkgs/localSidebar.php:38
@@ -761,10 +761,10 @@ msgid "Rule Name"
 msgstr ""
 
 #: modules/pkgs/pkgs/addRule.php:60 modules/pkgs/pkgs/editRule.php:65
-#: modules/pkgs/pkgs/edit.php:257 modules/pkgs/pkgs/add.php:232
+#: modules/pkgs/pkgs/edit.php:257 modules/pkgs/pkgs/add.php:233
 #: modules/pkgs/pkgs/ajaxPackageList.php:291
 #: modules/pkgs/pkgs/ajaxPackageList.php:430 modules/pkgs/pkgs/detail.php:208
-#: modules/pkgs/pkgs/ajaxPendingPackageList.php:69
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:72
 msgid "Description"
 msgstr "内容"
 
@@ -809,7 +809,7 @@ msgid "Element in Strings Result"
 msgstr ""
 
 #: modules/pkgs/pkgs/addRule.php:75 modules/pkgs/pkgs/editRule.php:80
-#: modules/pkgs/pkgs/add.php:386
+#: modules/pkgs/pkgs/add.php:387
 msgid "Add"
 msgstr "追加"
 
@@ -829,7 +829,7 @@ msgstr ""
 msgid "The relays <b>"
 msgstr ""
 
-#: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:101
+#: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:109
 msgid "Package API temporary directory is empty"
 msgstr " API "
 
@@ -837,7 +837,7 @@ msgstr " API "
 #: modules/pkgs/pkgs/ajaxAppstreamActivatedPackageList.php:63
 #: modules/pkgs/pkgs/ajaxPackageList.php:285
 #: modules/pkgs/pkgs/ajaxPackageList.php:427
-#: modules/pkgs/pkgs/ajaxPendingPackageList.php:66
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:68
 msgid "Package name"
 msgstr "パッケージ名"
 
@@ -1026,7 +1026,7 @@ msgstr "パッケージラベル"
 msgid "Package version"
 msgstr "パッケージバージョン"
 
-#: modules/pkgs/pkgs/edit.php:264 modules/pkgs/pkgs/add.php:247
+#: modules/pkgs/pkgs/edit.php:264 modules/pkgs/pkgs/add.php:248
 msgid "Command's name : "
 msgstr " : "
 
@@ -1034,76 +1034,76 @@ msgstr " : "
 msgid "Command : "
 msgstr " : "
 
-#: modules/pkgs/pkgs/edit.php:268 modules/pkgs/pkgs/add.php:251
+#: modules/pkgs/pkgs/edit.php:268 modules/pkgs/pkgs/add.php:252
 msgid "Need a reboot ?"
 msgstr "再起動が必要ですか？"
 
-#: modules/pkgs/pkgs/edit.php:275 modules/pkgs/pkgs/add.php:256
+#: modules/pkgs/pkgs/edit.php:275 modules/pkgs/pkgs/add.php:257
 msgid "Windows"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:275 modules/pkgs/pkgs/add.php:256
+#: modules/pkgs/pkgs/edit.php:275 modules/pkgs/pkgs/add.php:257
 msgid "Linux"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:275 modules/pkgs/pkgs/add.php:256
+#: modules/pkgs/pkgs/edit.php:275 modules/pkgs/pkgs/add.php:257
 msgid "Mac OS"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:316 modules/pkgs/pkgs/add.php:224
+#: modules/pkgs/pkgs/edit.php:316 modules/pkgs/pkgs/add.php:225
 #: modules/pkgs/pkgs/ajaxPackageList.php:288
 msgid "Share"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:346 modules/pkgs/pkgs/add.php:275
+#: modules/pkgs/pkgs/edit.php:346 modules/pkgs/pkgs/add.php:276
 msgid "Operating System"
 msgstr "オペレーティングシステム"
 
-#: modules/pkgs/pkgs/edit.php:371 modules/pkgs/pkgs/add.php:295
+#: modules/pkgs/pkgs/edit.php:371 modules/pkgs/pkgs/add.php:296
 #: modules/pkgs/pkgs/detail.php:223
 msgid "Transfer method"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:381 modules/pkgs/pkgs/add.php:301
+#: modules/pkgs/pkgs/edit.php:381 modules/pkgs/pkgs/add.php:302
 #: modules/pkgs/pkgs/detail.php:227
 msgid "bandwidth throttling (ko)"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:382 modules/pkgs/pkgs/add.php:302
+#: modules/pkgs/pkgs/edit.php:382 modules/pkgs/pkgs/add.php:303
 msgid "<in ko>"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:391 modules/pkgs/pkgs/add.php:306
+#: modules/pkgs/pkgs/edit.php:391 modules/pkgs/pkgs/add.php:307
 msgid "high priority"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:391 modules/pkgs/pkgs/add.php:306
+#: modules/pkgs/pkgs/edit.php:391 modules/pkgs/pkgs/add.php:307
 msgid "ordinary priority"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:394 modules/pkgs/pkgs/add.php:309
+#: modules/pkgs/pkgs/edit.php:394 modules/pkgs/pkgs/add.php:310
 #: modules/pkgs/pkgs/detail.php:229
 msgid "Spooling"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:402 modules/pkgs/pkgs/add.php:312
+#: modules/pkgs/pkgs/edit.php:402 modules/pkgs/pkgs/add.php:313
 msgid "Launcher (kiosk)"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:448 modules/pkgs/pkgs/add.php:321
+#: modules/pkgs/pkgs/edit.php:448 modules/pkgs/pkgs/add.php:322
 #: modules/pkgs/pkgs/detail.php:290
 msgid "Dependencies"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:458 modules/pkgs/pkgs/add.php:331
+#: modules/pkgs/pkgs/edit.php:458 modules/pkgs/pkgs/add.php:332
 msgid "Added dependencies"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:474 modules/pkgs/pkgs/add.php:347
+#: modules/pkgs/pkgs/edit.php:474 modules/pkgs/pkgs/add.php:348
 msgid "Available dependencies"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:475 modules/pkgs/pkgs/add.php:348
+#: modules/pkgs/pkgs/edit.php:475 modules/pkgs/pkgs/add.php:349
 msgid "search by name ..."
 msgstr ""
 
@@ -1120,7 +1120,7 @@ msgstr "ファイルを削除"
 msgid "Are you sure you want to delete this file?"
 msgstr "本当にこのファイルを削除しますか？"
 
-#: modules/pkgs/pkgs/edit.php:628 modules/pkgs/pkgs/add.php:448
+#: modules/pkgs/pkgs/edit.php:628 modules/pkgs/pkgs/add.php:505
 msgid "Accentuated and special chars are not allowed"
 msgstr ""
 
@@ -1148,31 +1148,31 @@ msgstr " Web "
 msgid "Make an empty package"
 msgstr "空のパッケージを作成"
 
-#: modules/pkgs/pkgs/add.php:186
+#: modules/pkgs/pkgs/add.php:187
 msgid "Package source"
 msgstr "パッケージソース"
 
-#: modules/pkgs/pkgs/add.php:187 modules/pkgs/pkgs/add.php:527
+#: modules/pkgs/pkgs/add.php:188 modules/pkgs/pkgs/add.php:527
 msgid "Files directory"
 msgstr "ファイルディレクトリ\t"
 
-#: modules/pkgs/pkgs/add.php:190
+#: modules/pkgs/pkgs/add.php:191
 msgid "Package Creation"
 msgstr "パッケージ作成"
 
-#: modules/pkgs/pkgs/add.php:230
+#: modules/pkgs/pkgs/add.php:231
 msgid "Name"
 msgstr "名前"
 
-#: modules/pkgs/pkgs/add.php:230
+#: modules/pkgs/pkgs/add.php:231
 msgid "<fill_package_name>"
 msgstr "<fill_package_name>"
 
-#: modules/pkgs/pkgs/add.php:239
+#: modules/pkgs/pkgs/add.php:240
 msgid "Command:"
 msgstr ":"
 
-#: modules/pkgs/pkgs/add.php:240
+#: modules/pkgs/pkgs/add.php:241
 msgid ""
 "Pulse will try to figure out how to install the uploaded files.\\n\\n\n"
 "        If the detection fails, it doesn't mean that the application cannot be installed using Pulse but that you'll have to figure out the proper command.\\n\\n\n"
@@ -1246,7 +1246,7 @@ msgstr "ライセンス"
 
 #: modules/pkgs/pkgs/ajaxPackageList.php:294
 #: modules/pkgs/pkgs/ajaxPackageList.php:433
-#: modules/pkgs/pkgs/ajaxPendingPackageList.php:71
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:74
 msgid "Os"
 msgstr ""
 
@@ -1485,15 +1485,15 @@ msgstr ""
 msgid "Associate package"
 msgstr "パッケージの関連付け"
 
-#: modules/pkgs/pkgs/ajaxPendingPackageList.php:79
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:82
 msgid "Remove all packages from pending"
 msgstr ""
 
-#: modules/pkgs/pkgs/ajaxPendingPackageList.php:80
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:83
 msgid "Show mirrors"
 msgstr "ミラーを表示"
 
-#: modules/pkgs/pkgs/ajaxPendingPackageList.php:81
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:84
 msgid "Remove packages from pending"
 msgstr ""
 

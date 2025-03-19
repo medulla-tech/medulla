@@ -4,16 +4,16 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Yuri Chornoivan <yurchor@ukr.net>, 2024
+# Yuri Chornoivan <yurchor@ukr.net>, 2025
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-16 22:40+0200\n"
+"POT-Creation-Date: 2025-03-19 16:15+0100\n"
 "PO-Revision-Date: 2022-11-14 14:44+0000\n"
-"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2024\n"
+"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2025\n"
 "Language-Team: Ukrainian (https://app.transifex.com/siveo/teams/72118/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,15 +23,15 @@ msgstr ""
 
 #: modules/urbackup/urbackup/list_backups.php:31
 msgid "Backups List "
-msgstr ""
+msgstr "Список резервних копій"
 
 #: modules/urbackup/urbackup/list_backups.php:173
 msgid "Statistics by client"
-msgstr ""
+msgstr "Статистика за клієнтами"
 
 #: modules/urbackup/urbackup/list_backups.php:178
 #: modules/urbackup/urbackup/index.php:267
-#: modules/urbackup/urbackup/checkMachine.php:99
+#: modules/urbackup/urbackup/checkMachine.php:100
 msgid "Computer name"
 msgstr "Назва комп'ютера"
 
@@ -41,35 +41,40 @@ msgstr "Розмір файла"
 
 #: modules/urbackup/urbackup/list_backups.php:207
 msgid "Start incremental backup"
-msgstr ""
+msgstr "Почати нарощувальне резервне копіювання"
 
 #: modules/urbackup/urbackup/list_backups.php:208
 msgid "Start full backup"
-msgstr ""
+msgstr "Почати повне резервне копіювання"
 
 #: modules/urbackup/urbackup/list_backups.php:214
 msgid "Enable backup for this client"
-msgstr ""
+msgstr "Увімкнути резервне копіювання для цього клієнта"
 
 #: modules/urbackup/urbackup/list_backups.php:221
 msgid "Disable backup for this client"
-msgstr ""
+msgstr "Вимкнути резервне копіювання для цього клієнта"
 
 #: modules/urbackup/urbackup/list_backups.php:228
 msgid "Profile name: "
-msgstr ""
+msgstr "Назва профілю:"
 
 #: modules/urbackup/urbackup/list_backups.php:238
 msgid ""
 "Incremental backup failed, be sure client urbackup is installed on computer "
 "or is online."
 msgstr ""
+"Не вдалося виконати нарощувальне резервне копіювання. Переконайтеся, що на "
+"комп'ютері встановлено urbackup, і що комп'ютер перебуває у мережі."
 
 #: modules/urbackup/urbackup/list_backups.php:244
 msgid ""
 "Full backup failed, be sure client urbackup is installed on computer or is "
 "online."
 msgstr ""
+"Не вдалося виконати повне резервне копіювання. Переконайтеся, що на "
+"клієнтському комп'ютері встановлено urbackup, і що комп'ютер перебуває у "
+"мережі."
 
 #: modules/urbackup/urbackup/list_backups.php:250
 msgid ""
@@ -78,33 +83,40 @@ msgid ""
 "and enable the backups. After that, fully backup will be automatically "
 "created."
 msgstr ""
+"Встановлення і налаштовування клієнта urbackup може тривати аж до 10 хвилин."
+" Воно потрібне для користування повноцінним клієнтом та увімкнути резервне "
+"копіювання. Після цього буде автоматично створено резервну копію."
 
 #: modules/urbackup/urbackup/list_backups.php:256
 msgid "This client has been successfully disabled."
-msgstr ""
+msgstr "Цей клієнт було успішно вимкнено."
 
 #: modules/urbackup/urbackup/list_backups.php:261
 msgid "This client has been successfully enabled."
-msgstr ""
+msgstr "Цей клієнт було успішно увімкнено."
 
 #: modules/urbackup/urbackup/list_backups.php:267
 msgid "This client was offline, please wait until it is online and try again."
 msgstr ""
+"Цей клієнт перебував поза мережею. Будь ласка, зачекайте, доки він знову "
+"опиниться у мережі, і повторіть спробу."
 
 #: modules/urbackup/urbackup/list_backups.php:273
 msgid ""
 "Restart can take up to 5 seconds, please wait before taking any action."
 msgstr ""
+"Перезапуск може тривати до 5 секунд. Будь ласка, зачекайте, перш ніж щось "
+"робити."
 
 #: modules/urbackup/urbackup/list_backups.php:278
 msgid "File save"
-msgstr ""
+msgstr "Зберігання файла"
 
 #: modules/urbackup/urbackup/list_backups.php:283
 #: modules/urbackup/urbackup/index.php:302
 #: modules/urbackup/urbackup/logs.php:51
 msgid "Id"
-msgstr ""
+msgstr "Ід."
 
 #: modules/urbackup/urbackup/list_backups.php:284
 msgid "Type"
@@ -112,7 +124,7 @@ msgstr "Тип"
 
 #: modules/urbackup/urbackup/list_backups.php:285
 msgid "Archived ?"
-msgstr ""
+msgstr "Архівовано?"
 
 #: modules/urbackup/urbackup/list_backups.php:286
 #: modules/urbackup/urbackup/index.php:419
@@ -137,7 +149,7 @@ msgstr "Дія"
 
 #: modules/urbackup/urbackup/list_backups.php:297
 msgid "No backup"
-msgstr ""
+msgstr "Немає резервних копій"
 
 #: modules/urbackup/urbackup/list_backups.php:320
 msgid "Full backup"
@@ -171,7 +183,7 @@ msgstr "Вилучити"
 
 #: modules/urbackup/urbackup/list_backups.php:372
 msgid "Client disabled"
-msgstr ""
+msgstr "Клієнт вимкнено"
 
 #: modules/urbackup/urbackup/deleting_group.php:29
 #: modules/urbackup/infoPackage.inc.php:90
@@ -180,75 +192,77 @@ msgstr "Вилучити групу"
 
 #: modules/urbackup/urbackup/add_member_togroup_aftercheck.php:37
 msgid "Assign member to profile"
-msgstr ""
+msgstr "Пов'язати учасника з профілем"
 
 #: modules/urbackup/urbackup/all_files_backup.php:60
 msgid "Backups list for "
-msgstr ""
+msgstr "Список резервних копій для"
 
 #: modules/urbackup/urbackup/all_files_backup.php:84
 msgid "Restoring request successfully asked to client."
-msgstr ""
+msgstr "Запит щодо відновлення успішно подано до клієнта."
 
 #: modules/urbackup/urbackup/all_files_backup.php:90
 msgid "Restoring error, please try again, check if client exist or is online."
 msgstr ""
+"Помилка під час відновлення. Будь ласка, повторіть спробу, перевірте, чи "
+"існує клієнт, і чи перебуває він у мережі."
 
 #: modules/urbackup/urbackup/all_files_backup.php:97
 msgid " Path: "
-msgstr ""
+msgstr "Шлях:"
 
 #: modules/urbackup/urbackup/all_files_backup.php:102
 msgid "Back to previous path"
-msgstr ""
+msgstr "Резервне копіювання за попереднім шляхом"
 
 #: modules/urbackup/urbackup/all_files_backup.php:106
 msgid "Back to backup list"
-msgstr ""
+msgstr "Повернутися до списку резервних копій"
 
 #: modules/urbackup/urbackup/all_files_backup.php:117
 msgid "File/Folder"
-msgstr ""
+msgstr "Файл/Тека"
 
 #: modules/urbackup/urbackup/all_files_backup.php:119
 msgid "Create date"
-msgstr ""
+msgstr "Дата створення"
 
 #: modules/urbackup/urbackup/all_files_backup.php:120
 msgid "Last modification"
-msgstr ""
+msgstr "Остання зміна"
 
 #: modules/urbackup/urbackup/all_files_backup.php:121
 msgid "Last access"
-msgstr ""
+msgstr "Останній доступ"
 
 #: modules/urbackup/urbackup/all_files_backup.php:131
 msgid "No file"
-msgstr ""
+msgstr "Немає файла"
 
 #: modules/urbackup/urbackup/all_files_backup.php:189
 #: modules/urbackup/urbackup/result_search_file.php:124
 #: modules/urbackup/urbackup/result_search_file.php:152
 msgid "DOWNLOAD"
-msgstr ""
+msgstr "ОТРИМАТИ"
 
 #: modules/urbackup/urbackup/all_files_backup.php:190
 #: modules/urbackup/urbackup/result_search_file.php:125
 #: modules/urbackup/urbackup/result_search_file.php:153
 msgid "RESTORE"
-msgstr ""
+msgstr "ВІДНОВИТИ"
 
 #: modules/urbackup/urbackup/index.php:27
 msgid "Reviews"
-msgstr ""
+msgstr "Огляди"
 
 #: modules/urbackup/urbackup/index.php:152
 msgid "Global statistics"
-msgstr ""
+msgstr "Загальна статистика"
 
 #: modules/urbackup/urbackup/index.php:160
 msgid "Space on disk used by all client"
-msgstr ""
+msgstr "Місце на диску, яке використано усіма клієнтами"
 
 #: modules/urbackup/urbackup/index.php:189
 #: modules/urbackup/urbackup/index.php:270
@@ -262,19 +276,19 @@ msgstr "Подробиці"
 
 #: modules/urbackup/urbackup/index.php:271
 msgid "ETA (approximation)"
-msgstr ""
+msgstr "Час, що лишився (приблизно)"
 
 #: modules/urbackup/urbackup/index.php:272
 msgid "Speed (bpms)"
-msgstr ""
+msgstr "Швидкість (біт/мс)"
 
 #: modules/urbackup/urbackup/index.php:273
 msgid "File in queue"
-msgstr ""
+msgstr "Файл у черзі"
 
 #: modules/urbackup/urbackup/index.php:295
 msgid "Last activities"
-msgstr ""
+msgstr "Останні дії"
 
 #: modules/urbackup/urbackup/index.php:303
 #: modules/urbackup/urbackup/usersgroups.php:77
@@ -283,7 +297,7 @@ msgstr "Назва"
 
 #: modules/urbackup/urbackup/index.php:304
 msgid "Date of backup"
-msgstr ""
+msgstr "Дата резервного копіювання"
 
 #: modules/urbackup/urbackup/index.php:305
 msgid "Status"
@@ -291,32 +305,32 @@ msgstr "Стан"
 
 #: modules/urbackup/urbackup/index.php:307
 msgid "Duration H:M:S"
-msgstr ""
+msgstr "Тривалість Г:Х:С"
 
 #: modules/urbackup/urbackup/index.php:319
 msgid "Delete of incremental backup"
-msgstr ""
+msgstr "Вилучення нарощувальної резервної копії"
 
 #: modules/urbackup/urbackup/index.php:325
 msgid "Delete of full backup"
-msgstr ""
+msgstr "Вилучити повну резервну копію"
 
 #: modules/urbackup/urbackup/index.php:337
 #: modules/urbackup/urbackup/index.php:345
 msgid "Restoration of file"
-msgstr ""
+msgstr "Відновлення файла"
 
 #: modules/urbackup/urbackup/index.php:356
 msgid "Incremental image"
-msgstr ""
+msgstr "Нарощувальний образ"
 
 #: modules/urbackup/urbackup/index.php:362
 msgid "Full files backup"
-msgstr ""
+msgstr "Поврна резервна копія файлів"
 
 #: modules/urbackup/urbackup/index.php:364
 msgid "Full files image"
-msgstr ""
+msgstr "Повний резервний образ файлів"
 
 #: modules/urbackup/urbackup/index.php:418
 #: modules/urbackup/urbackup/logs.php:52
@@ -329,6 +343,8 @@ msgid ""
 "Backup failed because of disk problems, no space left on disk (see previous "
 "messages)"
 msgstr ""
+"Резервне копіювання зазнало невдачі через проблеми з диском, нестачу місця "
+"на диску (див. попередні повідомлення)"
 
 #: modules/urbackup/urbackup/logs.php:27
 #: modules/urbackup/infoPackage.inc.php:114
@@ -337,23 +353,25 @@ msgstr "Журнали"
 
 #: modules/urbackup/urbackup/edit_group_settings.php:31
 msgid "Settings for "
-msgstr ""
+msgstr "Параметри для"
 
 #: modules/urbackup/urbackup/edit_group_settings.php:134
 msgid "You have error with your input informations."
-msgstr ""
+msgstr "Маємо помилку з введеними вами даними."
 
 #: modules/urbackup/urbackup/edit_group_settings.php:142
 msgid "Info : Separate path with ';', you can put '*' to every character"
 msgstr ""
+"Відомості: шляхи слід відокремлювати символом «;», «*» замінює довільний "
+"символ"
 
 #: modules/urbackup/urbackup/edit_group_settings.php:147
 msgid "Interval for incremental file backups (hour)"
-msgstr ""
+msgstr "Інтервал для нарощувальних резервних копій (у годинах)"
 
 #: modules/urbackup/urbackup/edit_group_settings.php:148
 msgid "Interval for full file backups (day)"
-msgstr ""
+msgstr "Інтервал для повних резервних копій (у годинах)"
 
 #: modules/urbackup/urbackup/edit_group_settings.php:149
 msgid "Excluded files"
@@ -361,23 +379,23 @@ msgstr "Виключені файли"
 
 #: modules/urbackup/urbackup/edit_group_settings.php:150
 msgid "Included files "
-msgstr ""
+msgstr "Включені файли"
 
 #: modules/urbackup/urbackup/edit_group_settings.php:151
 msgid "Default directories to backup"
-msgstr ""
+msgstr "Типові каталоги для резервного копіювання"
 
 #: modules/urbackup/urbackup/checkMachine.php:30
 msgid "Assign profile to computer "
-msgstr ""
+msgstr "Призначити профіль до комп'ютера"
 
-#: modules/urbackup/urbackup/checkMachine.php:105
+#: modules/urbackup/urbackup/checkMachine.php:106
 msgid "Choose profile to computer"
-msgstr ""
+msgstr "Виберіть профіль для комп'ютера"
 
 #: modules/urbackup/urbackup/validate_edit_group.php:30
 msgid "Settings saved for "
-msgstr ""
+msgstr "Параметри збережено для"
 
 #: modules/urbackup/urbackup/usersgroups.php:27
 #: modules/urbackup/urbackup/localSidebar.php:25
@@ -387,11 +405,11 @@ msgstr "Профілі"
 
 #: modules/urbackup/urbackup/usersgroups.php:61
 msgid "Profile name :"
-msgstr ""
+msgstr "Назва профілю:"
 
 #: modules/urbackup/urbackup/usersgroups.php:72
 msgid "Profile list :"
-msgstr ""
+msgstr "Список профілів:"
 
 #: modules/urbackup/urbackup/usersgroups.php:78
 msgid "Actions"
@@ -403,23 +421,23 @@ msgstr "Змінити"
 
 #: modules/urbackup/urbackup/add_member_togroup.php:37
 msgid "Assign member to profil"
-msgstr ""
+msgstr "Пов'язати учасника з профілем"
 
 #: modules/urbackup/urbackup/list_computers_ongroup.php:30
 msgid "List user on profil "
-msgstr ""
+msgstr "Додати користувача до списку профілю"
 
 #: modules/urbackup/urbackup/list_computers_ongroup.php:120
 msgid "Add member to this profile"
-msgstr ""
+msgstr "Додати учасника до цього профілю"
 
 #: modules/urbackup/urbackup/list_computers_ongroup.php:139
 msgid "Computer <b>outside</b> the profile"
-msgstr ""
+msgstr "Комп'ютер <b>поза</b> профілем"
 
 #: modules/urbackup/urbackup/list_computers_ongroup.php:140
 msgid "Computer <b>inside</b> the profile"
-msgstr ""
+msgstr "Комп'ютер <b>у</b> профілі"
 
 #: modules/urbackup/urbackup/restart_service.php:32
 msgid "Restart service"
@@ -432,31 +450,31 @@ msgstr "Отримати файл"
 
 #: modules/urbackup/urbackup/start_backup.php:33
 msgid "Start "
-msgstr ""
+msgstr "Запустити"
 
 #: modules/urbackup/urbackup/localSidebar.php:24
 #: modules/urbackup/infoPackage.inc.php:38
 msgid "Review"
-msgstr ""
+msgstr "Переглянути"
 
 #: modules/urbackup/urbackup/restore_file.php:27
 #: modules/urbackup/infoPackage.inc.php:102
 msgid "Restore file"
-msgstr ""
+msgstr "Відновити файл"
 
 #: modules/urbackup/urbackup/deleting_client.php:14
 msgid "Enable or disable client"
-msgstr ""
+msgstr "Увімкнути або вимкнути клієнт"
 
 #: modules/urbackup/urbackup/deleting_backup.php:30
 #: modules/urbackup/infoPackage.inc.php:86
 msgid "Delete backup"
-msgstr ""
+msgstr "Вилучити резервну копію"
 
 #: modules/urbackup/urbackup/result_search_file.php:27
 #: modules/urbackup/infoPackage.inc.php:74
 msgid "File research by name"
-msgstr ""
+msgstr "Пошук файлів за назвою"
 
 #: modules/urbackup/urbackup/result_search_file.php:45
 msgid "File"
@@ -464,11 +482,11 @@ msgstr "Файл"
 
 #: modules/urbackup/urbackup/result_search_file.php:46
 msgid "Path"
-msgstr ""
+msgstr "Шлях"
 
 #: modules/urbackup/urbackup/result_search_file.php:47
 msgid "Creation date"
-msgstr ""
+msgstr "Дата створення"
 
 #: modules/urbackup/urbackup/create_group.php:27
 msgid "Group creation"
@@ -481,7 +499,7 @@ msgstr "Резервування"
 
 #: modules/urbackup/infoPackage.inc.php:42
 msgid "List Backups by Client"
-msgstr ""
+msgstr "Список резервних копію за клієнтом"
 
 #: modules/urbackup/infoPackage.inc.php:46
 msgid "Start backup"
@@ -489,19 +507,19 @@ msgstr "Розпочати копіювання"
 
 #: modules/urbackup/infoPackage.inc.php:50
 msgid "Check machine if exist"
-msgstr ""
+msgstr "Перевіряти машину на наявність"
 
 #: modules/urbackup/infoPackage.inc.php:54
 msgid "Create group"
-msgstr ""
+msgstr "Створити групу"
 
 #: modules/urbackup/infoPackage.inc.php:58
 msgid "Assign member to group"
-msgstr ""
+msgstr "Пов'язати учасника з групою"
 
 #: modules/urbackup/infoPackage.inc.php:62
 msgid "Assign member to group after add client"
-msgstr ""
+msgstr "Пов'язати учасника з групою після додавання клієнта"
 
 #: modules/urbackup/infoPackage.inc.php:66
 msgid "Edit group"
@@ -509,20 +527,20 @@ msgstr "Редагувати групу"
 
 #: modules/urbackup/infoPackage.inc.php:70
 msgid "List computer on group"
-msgstr ""
+msgstr "Додати комп'ютер до групи"
 
 #: modules/urbackup/infoPackage.inc.php:78
 msgid "Restart Service"
-msgstr ""
+msgstr "Перезапустити службу"
 
 #: modules/urbackup/infoPackage.inc.php:82
 msgid "Validate save settings"
-msgstr ""
+msgstr "Перевірити збережені параметри"
 
 #: modules/urbackup/infoPackage.inc.php:94
 msgid "Delete client"
-msgstr ""
+msgstr "Вилучити клієнт"
 
 #: modules/urbackup/infoPackage.inc.php:98
 msgid "List of files from on backup"
-msgstr ""
+msgstr "Вивести файли з резервної копії"

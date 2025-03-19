@@ -48,6 +48,7 @@ $groupid = "";
 $groupname = "";
 
 $clientExist = "";
+$name_user = "";
 
 if (count($clients) != 0)
 {

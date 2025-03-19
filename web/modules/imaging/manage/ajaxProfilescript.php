@@ -84,7 +84,6 @@ else{
     $n->setNavBar(new AjaxNavBar($total, $filter));
     $n->display();
 
-    echo 'total : '.$total.'<br>';
 }
 
 ?>
