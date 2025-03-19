@@ -7277,6 +7277,24 @@ ORDER BY
             result["UUID%i"%element.id] = {"uuid": uuid, "hostname": name}
         return result
 
+    def get_plugin_inventory_state(self, session, plugin_name=""):
+        where_clause = ""
+        if plugin_name != "":
+            where_clause = "where directory = '%s'"%plugin_name
+        query = session.execute("""select id, directory, name, state from glpi_plugins %s"""%where_clause)
+
+        result = {}
+
+        for element in query:
+            result[element[1]] = {
+                "id": element[0],
+                "directory": element[1],
+                "name": element[2],
+                "state": "enabled" if element[3] == 1 else "disabled"
+            }
+        return result
+
+
 # Class for SQLalchemy mapping
 class Machine(object):
     __tablename__ = "glpi_computers_pulse"

@@ -49,6 +49,9 @@ NOAUTHNEEDED = [
     "synchroComputer",
     "getDefaultMenuItem",
     "getClonezillaParamsForTarget",
+    "getPostInstalls",
+    "getPostInstall",
+    "getPostInstallsFromProfile"
 ]
 
 

@@ -3,10 +3,11 @@
 /*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2009 Mandriva, http://www.mandriva.com
+ * (c) 2025 Siveo, http://siveo.net
  *
  * $Id$
  *
- * This file is part of Mandriva Management Console (MMC).
+ * This file is part of Management Console (MMC).
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -211,7 +212,7 @@ function item_edit() {
 
     if(safeCount($_POST) == 0) {
 
-        $name = (isset($item['boot_service']) ? $item['boot_service']['default_name'] : $item['image']['default_name']);
+        $name = (isset($item['boot_service']) ? $item['boot_service']['default_name'] : $item['image']['name']);
         printf("<h3>"._T("Edition of item", "imaging")." : <em>%s</em></h3>", $name);
 
         $is_selected = '';
@@ -257,6 +258,38 @@ function item_edit() {
             array("value" => $is_wol_displayed)
         );
         $f->pop();
+
+        if(!empty($_GET['kind']) && $_GET['kind'] == "IM"){
+
+            $profiles = xmlrpc_get_profile_in_menu($item_uuid);
+            $f->push(new Table());
+            $f->push(new TitleElement(_T("Associate profiles to image", "imaging"), 2));
+
+            foreach($profiles as $profile){
+
+                $f->add(
+                    new TrFormElement(sprintf(_T("Profile <b>%s</b>", "imaging"), $profile['name']),
+                    new CheckboxTpl("profile_".$profile["id"])),
+                    array("value" => ($profile["in_menu"] == 1) ? "checked" : "")
+                );
+            }
+
+            $f->pop();
+
+            $f->push(new Table());
+            $f->push(new TitleElement(_T("Associate PostInstalls to image", "imaging"), 2));
+
+            $postinstalls = get_all_postinstall_for_menu($item_uuid);
+
+            foreach($postinstalls as $script){
+                $f->add(
+                    new TrFormElement(sprintf(_T("Post Install Script <b>%s</b>", "imaging"), $script['name']),
+                    new CheckboxTpl("postinstall_".$script["id"])),
+                    array("value" => ($script["in_menu"] == 1) ? "checked" : "")
+                );
+            }
+        }
+
         $f->addButton("bvalid", _T("Validate"));
         $f->pop();
         $f->display();
@@ -302,8 +335,30 @@ function item_edit() {
                                     "session user ".$_SESSION["login"],
                                     'Imaging | Image | Menu | server | Manual');
         } else {
+
+            $profiles = [];
+            $itemid = htmlentities($_POST['itemid']);
+            $postinstalls = [];
+            foreach($_POST as $key =>$value){
+                if(str_starts_with($key, 'profile_')){
+                    $id = substr($key, 8);
+                    if($value == 'on')
+                        $profiles[] = $id;
+                }
+                if(str_starts_with($key, 'postinstall_')){
+                    $id = substr($key, 12);
+                    if($value == 'on')
+                        $postinstalls[] = $id;
+                }
+
+            }
+
+
             $str = sprintf(_T("Edit item <strong>%s</strong> in the boot Menu [ %s ]", "imaging"), urldecode($label), $target_name);
             $ret = xmlrpc_editImageToTarget($im_uuid, $target_uuid, $params, $type);
+
+            $status = xmlrpc_update_profiles_in_menu($itemid, $profiles);
+            $status2 = xmlrpc_update_postinstalls_in_menu($itemid, $postinstalls);
             xmlrpc_setfromxmppmasterlogxmpp($str,
                                     "IMG",
                                     '',
@@ -340,7 +395,6 @@ function item_edit() {
 }
 
 function item_list() {
-
     if(isset($_GET['gid'])) {
         $type = 'group';
         list($count, $menu) = xmlrpc_getProfileBootMenu($_GET['gid']);
@@ -411,6 +465,7 @@ function item_list() {
             }
         }
 
+        $params["kind"] = $kind;
         $list_params[$i] = $params;
         $list_params[$i]["itemid"] = $entry['imaging_uuid'];
         $list_params[$i]["itemlabel"] = urlencode($entry['default_name']);
