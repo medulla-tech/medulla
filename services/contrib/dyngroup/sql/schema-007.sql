@@ -129,7 +129,7 @@ DROP TRIGGER IF EXISTS `dyngroup`.`Groups_BEFORE_DELETE`;
 
 DELIMITER $$
 USE `dyngroup`$$
-CREATE DEFINER=`root`@`localhost` TRIGGER `dyngroup`.`Groups_BEFORE_DELETE` BEFORE DELETE ON `Groups` FOR EACH ROW
+CREATE TRIGGER `dyngroup`.`Groups_BEFORE_DELETE` BEFORE DELETE ON `Groups` FOR EACH ROW
 BEGIN
     -- Déclaration des variables
     DECLARE done INT DEFAULT 0; -- Indicateur pour la fin du curseur
@@ -206,7 +206,7 @@ DROP procedure IF EXISTS `dyngroup`.`create_groups_major_update_win`;
 
 DELIMITER $$
 USE `dyngroup`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `create_groups_major_update_win`()
+CREATE PROCEDURE `create_groups_major_update_win`()
 BEGIN
     -- Déclaration des variables
     DECLARE done INT DEFAULT 0; -- Indicateur de fin de boucle
