@@ -6366,7 +6366,7 @@ where pis.id = %s"""
     pis.id,
     pis.default_name,
     pis.default_desc,
-    pis.value,
+    pis.value
 from PostInstallInProfile piip
 join PostInstallScript pis on piip.fk_post_install_script = pis.id
 where piip.fk_profile=%s
