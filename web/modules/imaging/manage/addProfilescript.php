@@ -16,6 +16,9 @@ if(!empty($_POST)){
         
 
         $location = htmlentities($_POST['location']);
+	if(!empty($_SESSION['location']) && $_SESSION['location'] != $location){
+		$_SESSION['location'] = $location;
+	}
         $name = htmlentities($_POST['name']);
         $description = htmlentities($_POST['description']);
         $orders = [];
