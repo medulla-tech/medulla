@@ -58,19 +58,19 @@ $f = new ValidatingForm(array("action" => urlStrRedirect("imaging/manage/editPro
 $f->push(new Table());
 $f->add(new HiddenTpl("profileId"), array("value" => $profileId, "hide" => true));
 $f->add(new HiddenTpl("location"), array("value" => $location, "hide" => true));
-$f->push(new TitleElement(_T("Profile Info"), 3));
+$f->push(new TitleElement(_T("Profile Info", "imaging"), 3));
 $f->add(
-    new TrFormElement(_T("Profile Name"), new InputTpl('name')),
+    new TrFormElement(_T("Profile Name", "imaging"), new InputTpl('name')),
     array("value" => $name)
 );
 $f->add(
-    new TrFormElement(_T("Profile Description"), new InputTpl('description')),
+    new TrFormElement(_T("Profile Description", "imaging"), new InputTpl('description')),
     array("value" => $description)
 );
 $f->pop();
 
 $f->push(new Table());
-$f->push(new TitleElement(_T("PostInstall Order"), 3));
+$f->push(new TitleElement(_T("PostInstall Order", "imaging"), 3));
 $count = safeCount($postinstalls);
 foreach($postinstalls as $postinst){
 
@@ -93,7 +93,7 @@ foreach($postinstalls as $postinst){
     $f->add(new TrFormElement($label, $select));
 }
 $f->pop();
-$f->addButton("edit", _T("Validate"));
+$f->addButton("edit", _T("Validate", "imaging"));
 $f->pop();
 $f->display();
 
@@ -113,7 +113,7 @@ let getSelected = ()=>{
         
         assoc.forEach((elem)=>{
             if (elem == v && v != -1){
-                alert(v+"<?php echo _T(" order is already used","imaging");?>")
+                alert("<?php echo _T("This value is already used.","imaging");?>")
                 jQuery(e).val(-1)
             }
         })
