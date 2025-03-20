@@ -12,17 +12,13 @@ $profileName = !empty($_GET["name"]) ? htmlentities($_GET["name"]) : "";
 $profileDescription = !empty($_GET["description"]) ? htmlentities($_GET['description']) : "";
 $locationUuid = !empty($_GET["location"]) ? htmlentities($_GET["location"]) : "";
 
-$p = new PageGenerator(_T(sprintf("Edit Profile %s", $profileName), "imaging"));
+$p = new PageGenerator(sprintf(_T("Edit Profile %s", "imaging"), $profileName));
 $p->setSideMenu($sidemenu);
 $p->display();
 
 // Here the associations are sent after edit
 if(!empty($_POST)){
     if(!empty($_POST['edit'])){
-        echo '<pre>';
-        print_r($_POST);
-        echo '</pre>';
-
         $profileId = htmlentities($_POST["profileId"]);
         $location = htmlentities($_POST['location']);
         $name = htmlentities($_POST['name']);
