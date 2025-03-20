@@ -37,7 +37,9 @@ $filter = !empty($_GET['filter']) ? htmlentities($_GET['filter']) : "";
 $start = !empty($_GET["start"]) ? htmlentities($_GET["start"]) : 0;
 $maxperpage = !empty($_GET["maxperpage"]) ? htmlentities($_GET["maxperpage"]) : $conf["global"]["maxperpage"];
 $location = !empty($_GET["location"]) ? htmlentities($_GET["location"]) : "";
-
+if(!empty($_SESSION['location']) && $_SESSION['location'] != $location){
+	$_SESSION['location'] = $location;
+}
 $total = 0;
 $datas = [];
 $params = [];
