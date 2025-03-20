@@ -20,7 +20,11 @@
 -- Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 -- MA 02110-1301, USA.
 
-start transaction;
+use imaging;
+SET SESSION character_set_server=UTF8;
+SET NAMES 'utf8';
+
+START TRANSACTION;
 
 CREATE TABLE if not exists `Profile` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -36,6 +40,7 @@ CREATE TABLE if not exists  `ProfileInMenu` (
   `fk_profile` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 );
+
 CREATE TABLE if not exists  `PostInstallInProfile` (
   `fk_profile` int(11) NOT NULL,
   `fk_post_install_script` int(11) NOT NULL,
@@ -57,5 +62,5 @@ ADD FOREIGN KEY (fk_profile) REFERENCES Profile(id) on delete cascade ;
 ALTER TABLE PostInstallInProfile
 ADD FOREIGN KEY (fk_profile) REFERENCES Profile(id) on delete cascade ;
 
-update version set Number=28 where Number=27;
-commit;
+UPDATE version set Number = 28;
+COMMIT;
