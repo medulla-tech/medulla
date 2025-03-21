@@ -24,10 +24,10 @@ setup(
     ],
     keywords="pulse2",
     name="pulse2",
-    version='5.2.0',  # fmt: skip
+    version='5.2.1',  # fmt: skip
     debian_distro='stretch',  # fmt: skip
     description="pulse2",
-    url="https://www.siveo.net/",
+    url="https://medulla-tech.io/",
     packages=["pulse2"],
     test_suite="",
     package_data={},
