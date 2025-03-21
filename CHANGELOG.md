@@ -1,11 +1,16 @@
 # Change Log
 
+## [5.2.1](https://github.com/medulla-tech/medulla/releases/tag/5.2.1) (unreleased)
 - [FEATURE] Add new sections in Audit page for the convergences
+- [FEATURE] Add the possibility to use profiles to imaging
+- [FEATURE] Add Convergence sections in the Audit page
 - [BUGFIX]  Add several fixes in the OIDC support
 - [BUGFIX]  Fix the pulse2-synch-masters script
 - [BUGFIX]  Fix deploying masters by stop using datas from uuid-cache.txt
 - [BUGFIX]  Fix deploying masters by using the full path of the pulse2-synch-masters script
 - [BUGFIX]  Fix Glpi 9.3 support
+- [BUGFIX]  Fix multicast ( broken due to python 3 migration )
+- [BUGFIX]  Remove pieces not needed in the imaging, now we use SQL storage for IPXE instead of files
 
 ## [5.2.0](https://github.com/medulla-tech/medulla/releases/tag/5.2.0) (unreleased)
 - [FEATURE] Use SQL to manage imaging menus.
