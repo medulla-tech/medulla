@@ -22,15 +22,24 @@
 
 $MMCApp =& MMCApp::getInstance();
 $MMCApp->render();
-
 ?>
-            <div class="clearer"></div>
+        <div class="clearer"></div>
         </div><!-- section -->
     </div><!-- content -->
-    <div id="footer">
-    <a href="http://www.siveo.net"target="blank"><img src="graph/mandriva-logo.png" alt ="[x]"/></a>
-        &nbsp;|&nbsp;&nbsp;MMC Agent <a href="#" onclick="showPopupUp(event,'version.php'); return false;"><?php  echo $_SESSION["modListVersion"]['ver'] ?></a>
-    </div>
+
+    <footer id="footer">
+        <div class="footer-content">
+            <span>MMC Agent
+                <a href="#" onclick="showPopupUp(event,'version.php'); return false;">
+                    <?php echo $_SESSION["modListVersion"]['ver'] ?>
+                </a>
+            </span>
+            <span> - </span>
+            <span>
+                <a href="https://medulla-tech.io/" target="_blank">Medulla</a>
+            </span>
+        </div>
+    </footer>
 </div><!-- wrapper -->
 </body>
 </html>
