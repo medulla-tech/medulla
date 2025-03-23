@@ -1059,6 +1059,11 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 .order_by(self.menu_item.c.order)
                 .all()
             )
+            for mi, img, menu in q2:
+                setattr(mi, "profile", [])
+                setattr(mi, "postinstall", [])
+                mi.profile = self.get_profile_in_menu('UUID%s'%mi.id)
+                mi.postinstall = self.get_all_postinstall_for_menu('UUID%s'%mi.id)
             q2 = self.__mergeImageInMenuItem(q2)
             q.extend(q2)
         if session_need_close:
@@ -2596,11 +2601,11 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.flush()
 
         self.__addMenuDefaults(session, menu, mi, params)
-        self.__addImageInMenu(session, mi.id, item_uuid)
+        iim = self.__addImageInMenu(session, mi.id, item_uuid)
 
         self.__sortMenuItems(menu.id, session)
         session.close()
-        return None
+        return iim
 
     def addImageToTarget(self, item_uuid, target_uuid, params):
         session = create_session()
