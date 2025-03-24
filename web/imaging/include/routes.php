@@ -14,7 +14,7 @@
  *
  *
  */
-// Default route if no route found
+// Default route if no route found but limited mode
 new \Core\Route("GET", [], [\Controllers\DefaultCtrl::class, "noParam"]);
 
 ?>

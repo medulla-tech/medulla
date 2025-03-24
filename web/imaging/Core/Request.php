@@ -36,6 +36,7 @@ class Request{
         $this->_config = [
             "method" => (!empty($_SERVER['REQUEST_METHOD'])) ? htmlentities($_SERVER['REQUEST_METHOD']) : "GET",
             "protocol"=>(!empty($_SERVER["REQUEST_SCHEME"])) ? htmlentities($_SERVER["REQUEST_SCHEME"]) : "http",
+            "ip"=>(!empty($_SERVER['SERVER_ADDR'])) ? htmlentities($_SERVER['SERVER_ADDR']) : '',
             "dns"=>(!empty($_SERVER["HTTP_HOST"])) ? htmlentities($_SERVER["HTTP_HOST"]) : "",
             "port"=>(!empty($_SERVER["SERVER_PORT"])) ? htmlentities($_SERVER["SERVER_PORT"]) : 80,
             "prefix"=>!empty($_SERVER["CONTEXT_PREFIX"]) ? htmlentities($_SERVER["CONTEXT_PREFIX"]) : "",

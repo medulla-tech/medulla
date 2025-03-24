@@ -35,7 +35,7 @@ class Config{
     static protected function read(){
         foreach (static::$conffiles as $module => $conffile) {
             static::$config[$module] = static::read_conf($conffile);
-            static::$config[$module] = array_replace(static::$config[$module],static::read_conf($conffile . '.local'));
+            static::$config[$module] = array_replace(static::$config[$module], static::read_conf($conffile . '.local'));
 
             if (!empty(static::$config[$module]['dbhost'])) {
                 $host = (!empty(static::$config[$module]['dbhost'])) ? htmlentities(static::$config[$module]['dbhost'], ENT_QUOTES, 'UTF-8') : static::$default["dbhost"];
