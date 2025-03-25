@@ -4166,6 +4166,12 @@ class ImagingRpcProxy(RpcProxyI):
         if entities is not None or entities != []:
             entity = entities[0][0].uuid
         return entity
+
+    def getImagingServerByEntityUUID(self, location):
+        result = ImagingDatabase().getImagingServerByEntityUUID(location)
+        return result.id
+
+
 def chooseMacAddress(ctx, uuid, macs):
     # should pass uuids and the list of uuids
     nets = getComputersNetwork_filtered(ctx, {"uuid": uuid})
