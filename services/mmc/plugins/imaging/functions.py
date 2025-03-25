@@ -4176,6 +4176,10 @@ class ImagingRpcProxy(RpcProxyI):
             entity = entities[0][0].uuid
         return entity
 
+    def getImagingServerByEntityUUID(self, location):
+        result = ImagingDatabase().getImagingServerByEntityUUID(location)
+        return result.id
+
 
     def get_profiles_location(self, location, start=0, limit=-1, filter=""):
         return ImagingDatabase().get_profiles_location(location, start, limit, filter)
