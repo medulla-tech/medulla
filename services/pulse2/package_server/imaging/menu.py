@@ -1454,7 +1454,7 @@ INITRD ../davos/initrd.img"""
         # generation command line in tmp
         multicast_file = os.path.join("/tmp", "multicast.sh")
         try:
-            fid = open(multicast_file, "w+b")
+            fid = open(multicast_file, "w")
             fid.write(self.templatecmdline)
             fid.close()
             os.chmod(multicast_file, stat.S_IXUSR | stat.S_IWUSR | stat.S_IRUSR)
