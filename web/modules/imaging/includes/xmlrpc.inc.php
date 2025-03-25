@@ -853,4 +853,9 @@ function xmlrpc_update_postinstalls_in_menu($itemid, $postinstalls=[]){
 function xmlrpc_getGroupLocation($gid){
     return xmlCall("imaging.getGroupLocation", [$gid]);
 }
+
+function xmlrpc_getImagingServerByEntityUUID($location){
+    return xmlCall("imaging.getImagingServerByEntityUUID", [$location]);
+}
+
 ?>

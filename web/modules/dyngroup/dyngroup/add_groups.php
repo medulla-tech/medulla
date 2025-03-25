@@ -159,7 +159,11 @@ if (isset($_POST["bdelmachine_x"])) {
     } else {
         $group->create($name, ($visibility == 'show'));
         if ($type == 1) {
-            $group->setImagingServer($imaging_server);
+            // There is a confusion on $imaging_server value, actually here it contains its entity uuid
+            // Get the imaging_server id from its entity
+            $ims = xmlrpc_getImagingServerByEntityUUID($imaging_server);
+            $group->setImagingServer($ims);
+            $group->setEntity($imaging_server);
         }
     }
 
