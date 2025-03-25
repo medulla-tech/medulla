@@ -1,10 +1,8 @@
 # Medulla RMM
 
-[![Build Status](https://travis-ci.org/pulse-project/pulse2.svg?branch=master)](https://travis-ci.org/pulse-project/pulse2/branches)
-
 Medulla RMM is a radically simple IT automation and lifecycle management tool that offers the ability to handle repetitive tasks, quickly deploy applications, operating system and proactively manage them all where ever they are. 
 
-Pulse provides a real-time management solution for complex and distributed environments.
+Medulla provides a real-time management solution for complex and distributed environments.
 
 ## Main feature :
 
@@ -26,16 +24,13 @@ Pulse provides a real-time management solution for complex and distributed envir
 
 Quick deployment, just [download](https://medulla-tech.io/telecharger-medulla/)
 
-[Easy install process](https://github.com/pulse-project/tools/tree/master/install)
-
-
 ## Supported clients
 
-Pulse manage either windows (from 7 to lastest CBB and LTSB), linux and Mac OSX 
+ manage either windows (from 7 to lastest CBB and LTSB), linux and Mac OSX 
 
 ## Documentation
 
-Read [documentation](http://pulse-user-manual.readthedocs.org/) 
+Read [documentation](https://medulla-doc.readthedocs.io/fr/latest/) 
 
 ## Community
 
