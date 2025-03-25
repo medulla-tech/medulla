@@ -84,7 +84,7 @@ $page->setFile("modules/imaging/manage/ajaxcheckstatusmulticast.php");
 $page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);
 
-$page = new Page("profilescript");
+$page = new Page("profilescript", _T("List Post Install Profile", "imaging"));
 $page->setFile("modules/imaging/manage/profilescript.php");
 $submod->addPage($page);
 
@@ -93,7 +93,7 @@ $page->setFile("modules/imaging/manage/ajaxProfilescript.php");
 $page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);
 
-$page = new Page("editProfilescript");
+$page = new Page("editProfilescript", _T("Edit Post Install Profile", "imaging"));
 $page->setFile("modules/imaging/manage/editProfilescript.php");
 $submod->addPage($page);
 
@@ -102,7 +102,7 @@ $page->setFile("modules/imaging/manage/ajaxEditProfilescript.php");
 $page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);
 
-$page = new Page("addProfilescript");
+$page = new Page("addProfilescript", _T("New Post Install Profile", "imaging"));
 $page->setFile("modules/imaging/manage/addProfilescript.php");
 $submod->addPage($page);
 
@@ -111,7 +111,7 @@ $page->setFile("modules/imaging/manage/ajaxEditProfilescript.php");
 $page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);
 
-$page = new Page("deleteProfilescript");
+$page = new Page("deleteProfilescript", _T("Delete Post Install Profile", "imaging"));
 $page->setFile("modules/imaging/manage/deleteProfilescript.php");
 $page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);
