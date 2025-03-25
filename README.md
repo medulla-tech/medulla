@@ -24,13 +24,7 @@ Pulse provides a real-time management solution for complex and distributed envir
 
 ## Installation
 
-* Stable branch and previous tagged version
-
-Read INSTALL files of each project (first mmc-core and pulse2) 
-
-* Devel branch
-
-Installation process had been simplified to easily install all differents components from one command line.
+Quick deployment, just [download](https://medulla-tech.io/telecharger-medulla/)
 
 [Easy install process](https://github.com/pulse-project/tools/tree/master/install)
 
