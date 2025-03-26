@@ -1467,13 +1467,16 @@ class Imaging(object, metaclass=SingletonN):
             ]
             if lineinformation[0] != "-1" and len(lineinformation) >= 3:
                 result["indexpartition"] = int(lineinformation[0])
-                result["bytesend"] = int(lineinformation[1])
-                if len(result["partitionlist"]) == int(lineinformation[2]):
-                    result["complete"] = True
-                if int(result["indexpartition"]) != -1:
-                    result["partionname"] = result["partitionlist"][
-                        result["indexpartition"]
-                    ]
+                try:
+                    result["bytesend"] = int(lineinformation[1])
+                    if len(result["partitionlist"]) == int(lineinformation[2]):
+                        result["complete"] = True
+                    if int(result["indexpartition"]) != -1:
+                        result["partionname"] = result["partitionlist"][
+                            result["indexpartition"]
+                        ]
+                except:
+                    result['complete'] = False
         result["finish"] = (
             os.path.exists("/tmp/processmulticast")
             and not self._checkProcessDrblClonezilla()
