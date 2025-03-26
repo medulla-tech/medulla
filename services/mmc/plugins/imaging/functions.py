@@ -258,14 +258,24 @@ class ImagingRpcProxy(RpcProxyI):
                 iim = self.addImageToTarget(entry["image"]["db_uuid"], uuid, params, "")
                 iim = iim[1]
 
-                profiles = ImagingDatabase().get_profile_in_menu('UUID%s'%entry['id'])
-                profiles_id = [element['id'] for element in profiles if element['in_menu'] == 1]
+                profiles = ImagingDatabase().get_profile_in_menu("UUID%s" % entry["id"])
+                profiles_id = [
+                    element["id"] for element in profiles if element["in_menu"] == 1
+                ]
                 # Update profiles for menuitem
-                ImagingDatabase().update_profiles_in_menu('UUID%s'%iim.id, profiles_id)
+                ImagingDatabase().update_profiles_in_menu(
+                    "UUID%s" % iim.id, profiles_id
+                )
 
-                postinstalls = ImagingDatabase().get_all_postinstall_for_menu('UUID%s'%entry['id'])
-                postinstalls_id = [element['id'] for element in postinstalls if element['in_menu'] == 1]
-                ImagingDatabase().update_postinstalls_in_menu('UUID%s'%iim.id, postinstalls_id)
+                postinstalls = ImagingDatabase().get_all_postinstall_for_menu(
+                    "UUID%s" % entry["id"]
+                )
+                postinstalls_id = [
+                    element["id"] for element in postinstalls if element["in_menu"] == 1
+                ]
+                ImagingDatabase().update_postinstalls_in_menu(
+                    "UUID%s" % iim.id, postinstalls_id
+                )
         #
 
         # Clear old bootMenu entries
@@ -275,8 +285,10 @@ class ImagingRpcProxy(RpcProxyI):
                 self.delServiceToTarget(entry["boot_service"]["db_uuid"], uuid, "")
             elif "image" in entry:
                 # It's an image
-                ImagingDatabase().update_profiles_in_menu('UUID%s'%entry['id'], [])
-                ImagingDatabase().update_postinstalls_in_menu('UUID%s'%entry['id'], [])
+                ImagingDatabase().update_profiles_in_menu("UUID%s" % entry["id"], [])
+                ImagingDatabase().update_postinstalls_in_menu(
+                    "UUID%s" % entry["id"], []
+                )
 
                 self.delImageToTarget(entry["image"]["db_uuid"], uuid, "")
 
@@ -2961,7 +2973,7 @@ class ImagingRpcProxy(RpcProxyI):
             else:
                 f.close()
 
-    def getWindowsAnswerFileParameters(self, filename:str)->dict:
+    def getWindowsAnswerFileParameters(self, filename: str) -> dict:
         """
         return the parameters list of sysprep answer file
         """
