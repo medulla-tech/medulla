@@ -122,8 +122,8 @@ $page = new Page("download_file", _T('Download file', 'urbackup'));
 $page->setFile("modules/urbackup/urbackup/download_file.php");
 $submod->addPage($page);
 
-$page = new Page("usersgroups", _T('Profiles', 'urbackup'));
-$page->setFile("modules/urbackup/urbackup/usersgroups.php");
+$page = new Page("profileslist", _T('Profiles', 'urbackup'));
+$page->setFile("modules/urbackup/urbackup/profileslist.php");
 $submod->addPage($page);
 
 $page = new Page("logs", _T('Logs', 'urbackup'));
