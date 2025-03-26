@@ -1476,7 +1476,7 @@ class Imaging(object, metaclass=SingletonN):
                             result["indexpartition"]
                         ]
                 except:
-                    result['complete'] = False
+                    result["complete"] = False
         result["finish"] = (
             os.path.exists("/tmp/processmulticast")
             and not self._checkProcessDrblClonezilla()
