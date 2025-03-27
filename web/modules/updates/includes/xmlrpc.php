@@ -101,7 +101,7 @@ function xmlrpc_get_os_update_major_details($entity_id, $filter="", $start=0, $l
     return xmlCall("updates.get_os_update_major_details", [$entity_id, $filter, $start, $limit]);
 }
 
-function xmlrpc_get_os_xmpp_update_major_details($entity_id, $filter="",$start=0, $limit=-1, )
+function xmlrpc_get_os_xmpp_update_major_details($entity_id, $filter="",$start=0, $limit=-1)
 {
     return xmlCall("updates.get_os_xmpp_update_major_details", [$entity_id, $filter, $start, $limit]);
 }

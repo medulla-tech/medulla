@@ -606,7 +606,7 @@ function xmlrpc_get_deploy_convergence(
     $min = null,
     $max = null,
     $filt = null,
-    $typedeploy = "command",
+    $typedeploy = "command"
 ) {
     return xmlCall("xmppmaster.get_deploy_convergence", array(
         $login,
