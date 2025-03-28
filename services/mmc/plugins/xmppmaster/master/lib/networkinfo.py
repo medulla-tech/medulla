@@ -3,6 +3,8 @@
 # SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+# FILE : pulse_xmpp_agent/lib/networkinfo.py
+
 import netifaces
 import subprocess
 import sys
@@ -11,10 +13,99 @@ from . import utils
 import socket
 import psutil
 
+import ipaddress
+
 if sys.platform.startswith("win"):
     import wmi
     import pythoncom
 
+
+def find_common_addresses(list1, list2):
+    """
+    Trouve les adresses IP communes entre deux listes de réseaux CIDR.
+
+    Cette fonction prend deux listes de chaînes de caractères représentant des réseaux CIDR,
+    les convertit en objets IPv4Network, et recherche les adresses IP communes dans les deux listes.
+
+    Args:
+        list1 (list of str): Une liste de chaînes de caractères représentant des réseaux CIDR.
+        list2 (list of str): Une autre liste de chaînes de caractères représentant des réseaux CIDR.
+
+    Returns:
+        list of str: Une liste d'adresses IP communes entre les deux listes de réseaux CIDR.
+    """
+    # Convertir les chaînes de CIDR en objets IPv4Network
+    cidr_list1 = [ipaddress.ip_network(cidr) for cidr in list1]
+    cidr_list2 = [ipaddress.ip_network(cidr) for cidr in list2]
+
+    # Chercher des adresses IP communes dans les deux listes
+    common_addresses = []
+    for net1 in cidr_list1:
+        for net2 in cidr_list2:
+            # Vérifier si les réseaux se chevauchent
+            if net1.overlaps(net2):
+                # Ajouter l'IP commune à la liste
+                common_addresses.append(str(net1.network_address))
+
+    return common_addresses
+
+def get_CIDR_ipv4_addresses(exclude_localhost=True):
+    """
+    Récupère les adresses IPv4 au format CIDR pour chaque interface réseau de la machine.
+
+    Cette fonction utilise des commandes spécifiques au système d'exploitation pour obtenir les informations
+    sur les interfaces réseau et les adresses IPv4. Elle retourne une liste d'adresses IPv4 au format CIDR.
+
+    Args:
+        exclude_localhost (bool): Si True, exclut les interfaces locales (localhost ou 127.0.0.1).
+
+    Returns:
+        list: Une liste d'adresses IPv4 au format CIDR (par exemple, '192.168.1.0/24').
+    """
+    ipv4_addresses = []
+    # Vérifier le système d'exploitation
+    system = platform.system()
+    if system == "Windows":
+        # Commande pour obtenir les interfaces réseau sous Windows
+        output = subprocess.check_output("ipconfig", shell=True).decode()
+        ip, mask = None, None
+        for line in output.splitlines():
+            if "IPv4 Address" in line or "IPv4" in line:
+                ip = line.split(":")[-1].strip()
+            if "Subnet Mask" in line:
+                mask = line.split(":")[-1].strip()
+                if ip and mask:
+                    if exclude_localhost and ip == "127.0.0.1":
+                        continue
+                    cidr = ipaddress.IPv4Network(f'{ip}/{mask}', strict=False).with_prefixlen
+                    ipv4_addresses.append(cidr)
+                    ip, mask = None, None
+    elif system == "Linux":
+        # Commande pour obtenir les interfaces réseau sous Linux
+        output = subprocess.check_output("ip addr show", shell=True).decode()
+        for line in output.splitlines():
+            line = line.strip()
+            if line.startswith("inet "):
+                parts = line.split()
+                ip_mask = parts[1]  # Exemple : 192.168.1.100/24
+                if exclude_localhost and ip_mask.startswith("127.0.0.1/"):
+                    continue
+                ipv4_addresses.append(ip_mask)
+    elif system == "Darwin":  # macOS est identifié par 'Darwin'
+        # Commande pour obtenir les interfaces réseau sous macOS
+        output = subprocess.check_output("ifconfig", shell=True).decode()
+        current_ip = None
+        for line in output.splitlines():
+            line = line.strip()
+            if line.startswith("inet ") and "127.0.0.1" not in line:  # Éviter localhost
+                parts = line.split()
+                ip = parts[1]  # L'adresse IP est le second champ
+                mask = parts[3]  # Le masque est généralement le quatrième champ
+                if exclude_localhost and ip == "127.0.0.1":
+                    continue
+                cidr = ipaddress.IPv4Network(f'{ip}/{mask}', strict=False).with_prefixlen
+                ipv4_addresses.append(cidr)
+    return ipv4_addresses
 
 class networkagentinfo:
     def __init__(self, sessionid, action="resultgetinfo", param=[]):
@@ -166,7 +257,7 @@ class networkagentinfo:
         elif system == "systemd":
             # p = subprocess.Popen('systemctl status network | grep -i "dhclient\["',
             p = subprocess.Popen(
-                'journalctl | grep "dhclient\["',
+                'journalctl | grep "dhclient["',
                 shell=True,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
