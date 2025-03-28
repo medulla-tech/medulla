@@ -45,7 +45,7 @@ if (! isset($params) ) {
 }
 
 $location = getCurrentLocation();
-$ajax = new AjaxFilterLocation("modules/imaging/manage/ajaxAddProfilescript.php");
+$ajax = new AjaxFilterLocation("modules/imaging/manage/ajaxAddProfilescript.php", 'container', 'location', $_GET);
 list($list, $values) = getEntitiesSelectableElements();
 $ajax->setElements($list);
 $ajax->setElementsVal($values);
