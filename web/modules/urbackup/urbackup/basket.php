@@ -1,6 +1,6 @@
 <?php
 /*
- * (c) 2024 Siveo, http://www.siveo.net/
+ * (c) 2024-2025 Siveo, http://www.siveo.net/
  *
  * $Id$
  *
@@ -31,11 +31,6 @@ echo '<h1>'._T("Basket", "urbackup").'</h1>';
 $machines = xmlrpc_get_machines_summary_list();?>
 <form id="basket-sender" method="POST" action="#">
     <div class="field">
-        <label for="toggle-path">Select Dest Path</label>
-        <input type="checkbox" id="toggle-path">
-        <input type="text" placeholder="<?php echo _T("Destination Path", "urbackup");?>" name="destpath" id="basket-path" disabled >
-    </div>
-    <div class="field">
         <label for="machinedest-search">Select dest machine</label>
         <input type="text" id="machinedest-search" value="">
         <select name="machinedest" id="machinedest">
@@ -49,7 +44,9 @@ $machines = xmlrpc_get_machines_summary_list();?>
     <div class="field">
         <input type="submit" name="basket" value="<?php echo _T("Validate Basket", "urbackup");?>" >
     </div>
-
+    <?php
+// Display only the list on
+if(isset($_SESSION["urbackup"]["files"]) && count($_SESSION["urbackup"]["files"]) > 0){?>
 <div class="field">
     <h2>List of Selected Files</h2>
     <table class="listinfos" border="1" cellspacing="0" cellspanning="5">
@@ -66,7 +63,13 @@ $machines = xmlrpc_get_machines_summary_list();?>
     }?>
     </tbody></table>
 </div>
+<?php
+}
+else{
+    echo '<input type="hidden" name="files[]" value="">';
+}
 
+if(isset($_SESSION["urbackup"]["folders"]) && count($_SESSION["urbackup"]["folders"]) > 0){?>
 <div class="field">
     <h2>List of Selected Folders</h2>
     <table class="listinfos" border="1" cellspacing="0" cellspanning="5">
@@ -83,6 +86,11 @@ $machines = xmlrpc_get_machines_summary_list();?>
     }?>
     </tbody></table>
 </div>
+<?php }
+else{
+    echo '<input type="hidden" name="folders[]" value="">';
+}
+?>
 <input type="hidden" name="machinesource" value="<?php echo $jidmachine;?>" >
 <input type="hidden" name="base_path" value="<?php echo $_GET["base_path"];?>" >
 <input type="hidden" name="basename" value="<?php echo $_GET["basename"];?>" >
@@ -96,20 +104,29 @@ $machines = xmlrpc_get_machines_summary_list();?>
 </style>
 
 <script>
-function togglePath(){
-    if(jQuery("#toggle-path").is(":checked")){
-        jQuery("#basket-path").prop("disabled",false)
-    }
-    else{
-        jQuery("#basket-path").prop("disabled",true)
-    }
+/**
+ * Disable the validate button on basket popup
+ */
+function disableValidate(){
+    jQuery("input[name='basket']").prop("disabled", true);
+    jQuery("input[name='basket']").attr("title", "<?php echo _T("You must choose a destination machine", "urbackup");?>");
+}
+
+/**
+ * enable the validate button on basket popup
+ */
+function enableValidate(){
+    jQuery("input[name='basket']").prop("disabled", false);
+    jQuery("input[name='basket']").attr("title", "");
 }
 
 jQuery(document).ready(function(){
+    // By default when the popup opens:
     jQuery("#popup").css("overflow", "scroll");
     jQuery("#popup").css("max-height", "650px");
-    jQuery("#toggle-path").on("change", togglePath);
-    
+    disableValidate();
+
+    // search machines by name corresponding to the input value
     jQuery("#machinedest-search").on("keyup", function(){
         let name = jQuery(this).val()
 
@@ -124,12 +141,25 @@ jQuery(document).ready(function(){
             let count = jQuery("#machinedest .option-machine[value*='"+name+"']").length
 
             if(count == 0){
+                // No match: disable the validate button, the user must select manually the machine
                 jQuery("#machinedest .option-machine").show();
                 jQuery("#machinedest .option-header").prop("selected", true)
+                disableValidate();
             }
             else{
-                jQuery(".option-machine[value*='"+name+"']").first().prop("selected", true) 
+                // A valid machine name has been matched. Use it as selected name
+                jQuery(".option-machine[value*='"+name+"']").first().prop("selected", true);
+                enableValidate();
             }
+        }
+    })
+
+    jQuery("#machinedest").on("change", function(){
+        if(jQuery(this).val() == "undefined"){
+            disableValidate();
+        }
+        else{
+            enableValidate();
         }
     })
 });
