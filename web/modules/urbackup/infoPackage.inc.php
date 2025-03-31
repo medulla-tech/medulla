@@ -68,8 +68,8 @@ $page = new Page("add_member_togroup_aftercheck", _T('Assign member to group aft
 $page->setFile("modules/urbackup/urbackup/add_member_togroup_aftercheck.php");
 $submod->addPage($page);
 
-$page = new Page("edit_group_settings", _T('Edit group', 'urbackup'));
-$page->setFile("modules/urbackup/urbackup/edit_group_settings.php");
+$page = new Page("edit_profile_settings", _T('Edit profile', 'urbackup'));
+$page->setFile("modules/urbackup/urbackup/edit_profile_settings.php");
 $submod->addPage($page);
 
 $page = new Page("list_computers_onprofile", _T('List computer on profile', 'urbackup'));
