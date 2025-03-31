@@ -85,12 +85,12 @@ foreach ($group_array as $group) {
 ?>
         <tr>
             <td style='padding-left: 5px;'>
-                <a title=<?php echo _T("Browse", 'urbackup'); ?> href="main.php?module=urbackup&amp;submod=urbackup&amp;action=list_computers_ongroup&amp;groupid=<?php echo $group['id']; ?>&amp;groupname=<?php echo $group['name']; ?>"><?php echo $group['name']; ?></a>
+                <a title=<?php echo _T("Browse", 'urbackup'); ?> href="main.php?module=urbackup&amp;submod=urbackup&amp;action=list_computers_onprofile&amp;groupid=<?php echo $group['id']; ?>&amp;groupname=<?php echo $group['name']; ?>"><?php echo $group['name']; ?></a>
             </td>
             <td>
             <ul class="action">
                 <li class="display">
-                    <a title=<?php echo _T("Browse", 'urbackup'); ?> href="main.php?module=urbackup&amp;submod=urbackup&amp;action=list_computers_ongroup&amp;groupid=<?php echo $group['id']; ?>&amp;groupname=<?php echo $group['name']; ?>">&nbsp;</a>
+                    <a title=<?php echo _T("Browse", 'urbackup'); ?> href="main.php?module=urbackup&amp;submod=urbackup&amp;action=list_computers_onprofile&amp;groupid=<?php echo $group['id']; ?>&amp;groupname=<?php echo $group['name']; ?>">&nbsp;</a>
                 </li>
                 <li class="edit">
                     <a title=<?php echo _T("Edit", 'urbackup'); ?> href="main.php?module=urbackup&amp;submod=urbackup&amp;action=edit_group_settings&amp;groupid=<?php echo $group['id']; ?>&amp;groupname=<?php echo $group['name']; ?>">&nbsp;</a>
