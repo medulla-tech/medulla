@@ -28,45 +28,46 @@ $p = new PageGenerator(_T("Profiles", 'urbackup'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
-$groupname = htmlspecialchars($_GET["groupname"]);
-$need_name = htmlspecialchars($_GET["needname"]);
-
+$groupname = htmlspecialchars($_GET["groupname"] ?? "");
+$need_name = htmlspecialchars($_GET["needname"] ?? "");
+$groupe_already_exist = isset($_GET["groupalreadyexist"]) ? htmlspecialchars($_GET["groupalreadyexist"]) : null;
 
 $users_group_array = xmlrpc_get_clients();
 
-$groupe_already_exist = htmlspecialchars($_GET["groupalreadyexist"]);
-
-if ($need_name == "True")
-{
-    ?>
-    <script>
-        alert("Profile need name");
-    </script>
-    <?php
+if ($need_name === "True") {
+    echo '<script>alert("Profile need name");</script>';
 }
 
-if ($groupe_already_exist == "True")
-{
-    ?>
-    <script>
-        alert("Profile already exist with this name");
-    </script>
-    <?php
+if ($groupe_already_exist === "True") {
+    echo '<script>alert("Profile already exists with this name");</script>';
 }
 ?>
 
 <br>
 <br>
 <form name="form" action="main.php?module=urbackup&amp;submod=urbackup&amp;action=create_group" method="post">
-    <label><?php echo _T("Profile name :", 'urbackup'); ?></label><input type="text" name="groupname" id="groupname"/>
-    <input type="submit" name="subcreate" id="subcreate" value="Create profile">
+    <label><?php echo _T("Profile name :", 'urbackup'); ?></label>
+    <input type="text" name="groupname" id="groupname" value="<?php echo $groupname; ?>"/>
+    <input type="submit" name="subcreate" id="subcreate" value="Create profile" disabled>
 </form>
 
-<br>
-<br>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const input = document.getElementById("groupname");
+    const submitButton = document.getElementById("subcreate");
+    
+    submitButton.disabled = input.value.trim() === "";
+    
+    input.addEventListener("input", function() {
+        submitButton.disabled = input.value.trim() === "";
+    });
+});
+</script>
 
+<br>
+<br>
 <?php
-$group_array = $users_group_array['navitems']['groups'];
+$group_array = $users_group_array['navitems']['groups'] ?? [];
 ?>
 
 <h1> <?php echo _T("Profile list :", 'urbackup'); ?> </h1>
@@ -81,22 +82,22 @@ $group_array = $users_group_array['navitems']['groups'];
     <tbody>
 <?php
 foreach ($group_array as $group) {
-    if ($group['name'] != "") {
+    if (!empty($group['name'])) {
 ?>
         <tr>
             <td style='padding-left: 5px;'>
-                <a title=<?php echo _T("Browse", 'urbackup'); ?> href="main.php?module=urbackup&amp;submod=urbackup&amp;action=list_computers_onprofile&amp;groupid=<?php echo $group['id']; ?>&amp;groupname=<?php echo $group['name']; ?>"><?php echo $group['name']; ?></a>
+                <a title="<?php echo _T("Browse", 'urbackup'); ?>" href="main.php?module=urbackup&amp;submod=urbackup&amp;action=list_computers_onprofile&amp;groupid=<?php echo $group['id']; ?>&amp;groupname=<?php echo $group['name']; ?>"><?php echo $group['name']; ?></a>
             </td>
             <td>
             <ul class="action">
                 <li class="display">
-                    <a title=<?php echo _T("Browse", 'urbackup'); ?> href="main.php?module=urbackup&amp;submod=urbackup&amp;action=list_computers_onprofile&amp;groupid=<?php echo $group['id']; ?>&amp;groupname=<?php echo $group['name']; ?>">&nbsp;</a>
+                    <a title="<?php echo _T("Browse", 'urbackup'); ?>" href="main.php?module=urbackup&amp;submod=urbackup&amp;action=list_computers_onprofile&amp;groupid=<?php echo $group['id']; ?>&amp;groupname=<?php echo $group['name']; ?>">&nbsp;</a>
                 </li>
                 <li class="edit">
-                    <a title=<?php echo _T("Edit", 'urbackup'); ?> href="main.php?module=urbackup&amp;submod=urbackup&amp;action=edit_profile_settings&amp;groupid=<?php echo $group['id']; ?>&amp;groupname=<?php echo $group['name']; ?>">&nbsp;</a>
+                    <a title="<?php echo _T("Edit", 'urbackup'); ?>" href="main.php?module=urbackup&amp;submod=urbackup&amp;action=edit_profile_settings&amp;groupid=<?php echo $group['id']; ?>&amp;groupname=<?php echo $group['name']; ?>">&nbsp;</a>
                 </li>
                 <li class="delete">
-                    <a title=<?php echo _T("Delete", 'urbackup'); ?> href="main.php?module=urbackup&amp;submod=urbackup&amp;action=deleting_group&amp;groupid=<?php echo $group['id']; ?>">&nbsp;</a>
+                    <a title="<?php echo _T("Delete", 'urbackup'); ?>" href="main.php?module=urbackup&amp;submod=urbackup&amp;action=deleting_group&amp;groupid=<?php echo $group['id']; ?>">&nbsp;</a>
                 </li>
             </ul>
             </td>
@@ -107,3 +108,4 @@ foreach ($group_array as $group) {
 ?>
     </tbody>
 </table>
+
