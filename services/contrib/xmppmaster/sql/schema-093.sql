@@ -84,7 +84,7 @@ DELIMITER ;
 --
 
 DROP TABLE IF EXISTS `up_packages_major_Lang_code`;
-CREATE TABLE IF EXISTS  `up_packages_major_Lang_code` (
+CREATE TABLE `up_packages_major_Lang_code` (
   `major` int(11) NOT NULL DEFAULT 11,
   `lang_code` varchar(10) NOT NULL,
   `num_code` varchar(6) NOT NULL,
