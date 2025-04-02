@@ -152,7 +152,7 @@ DROP procedure IF EXISTS `up_init_table_major_win_complet`;
 
 DELIMITER $$
 USE `xmppmaster`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `up_init_table_major_win_complet`()
+CREATE PROCEDURE `up_init_table_major_win_complet`()
 BEGIN
     -- Variable pour indiquer la fin de la boucle de lecture du curseur
     DECLARE done INT DEFAULT FALSE;
@@ -329,7 +329,7 @@ DROP TRIGGER IF EXISTS `xmppmaster`.`machines_BEFORE_UPDATE`;
 
 DELIMITER $$
 USE `xmppmaster`$$
-CREATE DEFINER=`root`@`localhost` TRIGGER `xmppmaster`.`machines_BEFORE_UPDATE` BEFORE UPDATE ON `machines` FOR EACH ROW
+CREATE TRIGGER `xmppmaster`.`machines_BEFORE_UPDATE` BEFORE UPDATE ON `machines` FOR EACH ROW
 BEGIN
 IF NEW.enabled <> OLD.enabled THEN
         UPDATE xmppmaster.up_machine_major_windows
