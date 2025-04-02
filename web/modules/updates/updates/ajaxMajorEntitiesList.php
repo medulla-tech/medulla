@@ -62,12 +62,12 @@ $source = isset($_GET['source']) ? $_GET['source'] : "xmppmaster";
 if ($_GET['source'] == "xmppmaster" || $_GET['source'] == "glpi" ){
 
     if ($_GET['source'] == "xmppmaster" ){
-        $p = new PageGenerator(_T("Manage Updates Major Lists", 'updates'));
+        $p = new PageGenerator(_T("OS Upgrades", 'updates'));
         $p->display();
         // $statglpiversion = xmlrpc_get_os_xmpp_update_major_stats();
         $statglpiversion=xmlrpc_get_os_update_major_stats();
     }else{
-        $p = new PageGenerator(_T("Manage Updates Major Lists", 'updates'));
+        $p = new PageGenerator(_T("OS Upgrades", 'updates'));
         $p->display();
         $statglpiversion=xmlrpc_get_os_update_major_stats();
     };
@@ -147,7 +147,7 @@ $emptydeployAll = new EmptyActionItem1(_T("There are no major updates to deploy 
                                             "updates");
 
 
-$title = _T("update mach", "updates");
+$title = _T("OS Upgrades", "updates");
 $texte_help = _T("%s machines in the entity \"%s\" can benefit from a major update.", "updates");
 foreach ($mergedArray as  $index=>$datacolonne) {
 
@@ -202,15 +202,15 @@ foreach ($mergedArray as  $index=>$datacolonne) {
 $count = count($complete_name_major);
 $n = new OptimizedListInfos($complete_name_major, _T("Entity name", "updates"));
 $n->disableFirstColumnActionLink();
-$n->addExtraInfo($comformite_name_major, _T("Conformite", "updates"));
-$n->addExtraInfo($win10towin10_major, _T("major update W10->W10", "updates"));
-$n->addExtraInfo($win10towin11_major, _T("major update W10->W11", "updates"));
-$n->addExtraInfo($win11towin11_major, _T("major update W11->W11", "updates"));
+$n->addExtraInfo($comformite_name_major, _T("Compliance rate", "updates"));
+$n->addExtraInfo($win10towin10_major, _T("Upgrade W10->W10", "updates"));
+$n->addExtraInfo($win10towin11_major, _T("Upgrade W10->W11", "updates"));
+$n->addExtraInfo($win11towin11_major, _T("Upgrade W11->W11", "updates"));
 
-$n->addExtraInfo($updated_major, _T("updated", "updates"));
-$n->addExtraInfo($missing_information_major, _T("missing information", "updates"));
+$n->addExtraInfo($updated_major, _T("Up to date", "updates"));
+$n->addExtraInfo($missing_information_major, _T("Missing information", "updates"));
 
-$n->addExtraInfo($total_win, _T("total computer", "updates"));
+$n->addExtraInfo($total_win, _T("Total machines", "updates"));
 
 $n->addActionItemArray($actionupdateByentity);
 $n->addActionItemArray($actiondetailsByMachs);
