@@ -302,7 +302,7 @@ foreach($array_progress as $progress)
           <th> <?php echo _T("Id", 'urbackup'); ?> </th>
           <th> <?php echo _T("Name", 'urbackup'); ?> </th>
           <th> <?php echo _T("Date of backup", 'urbackup'); ?> </th>
-          <th> <?php echo _T("Status", 'urbackup'); ?> </th>
+          <th> <?php echo _T("Type of backup", 'urbackup'); ?> </th>
           <th> <?php echo _T("Details", 'urbackup'); ?> </th>
           <th> <?php echo _T("Duration H:M:S", 'urbackup'); ?> </th>
           <th> <?php echo _T("Size", 'urbackup'); ?> </th>
