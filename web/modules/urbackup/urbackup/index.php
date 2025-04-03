@@ -170,7 +170,7 @@ $files_size = 0;
     }
     ?>
         <tr>
-            <td style='padding-left: 5px;'>All computers</td>
+            <td style='padding-left: 5px;'><?php echo _T("All computers", "urbackup");?></td>
             <td><?php echo $files_size; ?></td>
         </tr>
     </tbody>
@@ -186,7 +186,7 @@ foreach($array_progress as $progress)
 {
     if (!empty($progress))
     {
-        echo '<h2>'._T("Progress", 'urackup').'</h2>';
+        echo '<h2>'._T("Progress", 'urbackup').'</h2>';
         echo '<br>';
         $eta = $progress['eta_ms'];
         $eta = $eta/1000;
@@ -302,7 +302,7 @@ foreach($array_progress as $progress)
           <th> <?php echo _T("Id", 'urbackup'); ?> </th>
           <th> <?php echo _T("Name", 'urbackup'); ?> </th>
           <th> <?php echo _T("Date of backup", 'urbackup'); ?> </th>
-          <th> <?php echo _T("Status", 'urbackup'); ?> </th>
+          <th> <?php echo _T("Type of backup", 'urbackup'); ?> </th>
           <th> <?php echo _T("Details", 'urbackup'); ?> </th>
           <th> <?php echo _T("Duration H:M:S", 'urbackup'); ?> </th>
           <th> <?php echo _T("Size", 'urbackup'); ?> </th>

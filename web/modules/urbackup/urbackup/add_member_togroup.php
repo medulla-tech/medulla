@@ -132,7 +132,7 @@ $array_progress = json_decode(json_encode($addgroup), true);
 <br>
 <?php
 
-$url = 'main.php?module=urbackup&submod=urbackup&action=list_computers_ongroup&groupid='.$group_id.'&groupname='.$group_name;
+$url = 'main.php?module=urbackup&submod=urbackup&action=list_computers_onprofile&groupid='.$group_id.'&groupname='.$group_name;
 
 header("Location: ".$url);
 ?>

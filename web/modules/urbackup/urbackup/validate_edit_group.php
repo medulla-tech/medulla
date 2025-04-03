@@ -65,7 +65,7 @@ if ($default_dirs == "")
 
 if ($errorFormat == "true")
 {
-    $url = "main.php?module=urbackup&submod=urbackup&action=edit_group_settings&groupid=".$group_id."&groupname=".$group_name."&error=true";
+    $url = "main.php?module=urbackup&submod=urbackup&action=edit_profile_settings&groupid=".$group_id."&groupname=".$group_name."&error=true";
     header("Location: ".$url);
 }
 
@@ -168,7 +168,7 @@ foreach ($settings_saver as $value => $item) {
 
 //-----------------------------------END SAVE SETTINGS
 
-$url = "main.php?module=urbackup&submod=urbackup&action=edit_group_settings&groupid=".$group_id."&groupname=".$group_name;
+$url = "main.php?module=urbackup&submod=urbackup&action=edit_profile_settings&groupid=".$group_id."&groupname=".$group_name;
 
 header("Location: ".$url);
 

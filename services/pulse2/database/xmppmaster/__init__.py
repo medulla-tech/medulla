@@ -22,7 +22,7 @@ from sqlalchemy.orm import sessionmaker, load_only
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 from sqlalchemy.exc import DBAPIError
 from datetime import datetime, timedelta  # date,
-
+from sqlalchemy import text
 # PULSE2 modules
 from mmc.database.database_helper import DatabaseHelper
 from pulse2.database.msc import MscDatabase
@@ -16517,6 +16517,132 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             .first()
         )
         return query
+
+    @DatabaseHelper._sessionm
+    def search_machine(self, session, search_term):
+        """
+        Recherche une machine qui correspond à un id, uuid_inventorymachine, jid ou serialnumber.
+
+        Paramètres :
+        session (Session) : La session SQLAlchemy.
+        search_term (str) : Le terme de recherche.
+
+        Retourne :
+        dict : Les informations de la machine trouvée.
+        """
+        if not search_term:
+            return {}
+        # Requête SQL
+        query = text("""
+        SELECT
+            id,
+            uuid_inventorymachine,
+            SUBSTRING_INDEX(jid, '/', 1) AS jid,
+            uuid_serial_machine,
+            hostname,
+            enabled
+        FROM
+            xmppmaster.machines
+        WHERE
+            uuid_serial_machine = :search_term
+            OR hostname = SUBSTRING_INDEX(SUBSTRING_INDEX(:search_term, '@', 1), '.', 1)
+            OR uuid_inventorymachine = :search_term
+            OR id = :search_term
+            OR jid =:search_term
+        LIMIT 1;
+        """)
+        logger.error("search_machine query %s" % query)
+        logger.error("search_machine search_term %s" % search_term)
+        # Exécution de la requête
+        result = session.execute(query, {'search_term': search_term}).fetchone()
+
+        # Si aucun résultat n'est trouvé, retourner un dictionnaire vide
+        if result is None:
+            return {}
+
+        # Construire le dictionnaire de résultats
+        result_machines = {
+            'hostname': result['hostname'],
+            'jid': result['jid'],
+            'uuid_inventorymachine': result['uuid_inventorymachine'],
+            'uuid_serial_machine': result['uuid_serial_machine'],
+            'id': int(result['id']),
+            'enabled': int(result['enabled'])
+        }
+
+        return result_machines
+
+    @DatabaseHelper._sessionm
+    def network_list_machine(self, session, id_machine):
+        """
+        Renvoie la liste des réseaux associés à une machine spécifique.
+
+        Paramètres :
+        session (Session) : La session SQLAlchemy.
+        id_machine (int) : L'identifiant de la machine.
+
+        Retourne :
+        list : La liste des informations de réseau associées à la machine.
+        """
+        if not id_machine:
+            return []
+
+        # Requête SQL
+        query = text("""
+        SELECT
+            id,
+            macaddress,
+            ipaddress,
+            broadcast,
+            gateway,
+            mask,
+            mac,
+            machines_id
+        FROM
+            xmppmaster.network
+        WHERE
+            machines_id = :id_machine;
+        """)
+
+        # Exécution de la requête
+        result = session.execute(query, {'id_machine': id_machine}).fetchall()
+
+        # Si aucun résultat n'est trouvé, retourner une liste vide
+        if not result:
+            return []
+
+        # Construire la liste de résultats
+        network_list = []
+        for row in result:
+            network_info = {
+                'id': row['id'],
+                'macaddress': row['macaddress'],
+                'ipaddress': row['ipaddress'],
+                'broadcast': row['broadcast'],
+                'gateway': row['gateway'],
+                'mask': row['mask'],
+                'mac': row['mac'],
+                'machines_id': row['machines_id']
+            }
+            network_list.append(network_info)
+
+        return network_list
+
+    @DatabaseHelper._sessionm
+    def get_machines_summary_list(self, session, filter=""):
+        sql = """SELECT jid, hostname from machines WHERE agenttype = 'machine'"""
+        if filter != "":
+            sql += " AND hostname like '%%%s%%' "%filter
+
+        sql += " ORDER BY hostname asc"
+        query = session.execute(sql)
+        datas = query.all()
+
+        result = []
+        for machine in datas:
+            result.append({"jid":machine[0], "hostname": machine[1]})
+
+        return result
 
     @DatabaseHelper._sessionm
     def get_os_xmpp_update_major_stats(self, session, presence=False):

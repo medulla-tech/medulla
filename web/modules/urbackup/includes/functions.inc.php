@@ -1,8 +1,10 @@
-<?
-/**
- * (c) 2020 Siveo, http://siveo.net
+<?php
+/*
+ * (c) 2024 Siveo, http://www.siveo.net/
  *
- * This file is part of Pulse
+ * $Id$
+ *
+ * This file is part of Pulse.
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,8 +21,24 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-$sidemenu= new SideMenu();
-$sidemenu->setClass("urbackup");
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Review", 'urbackup'), "urbackup", "urbackup", "index"));
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Profiles", 'urbackup'), "urbackup", "urbackup", "profileslist"));
+function secs2date($secs)
+{
+    $date = new DateTime("@$secs");
+    return $date->format('Y-m-d H:i:s');
+}
+
+
+function formatBytes($bytes, $precision = 2) 
+{ 
+    $units = array('B', 'KB', 'MB', 'GB', 'TB'); 
+
+    $bytes = max($bytes, 0); 
+    $pow = floor(($bytes ? log($bytes) : 0) / log(1024)); 
+    $pow = min($pow, safeCount($units) - 1); 
+
+    $bytes /= pow(1024, $pow);
+
+    return round($bytes, $precision) . ' ' . $units[$pow]; 
+}
+
 ?>

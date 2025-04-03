@@ -2,6 +2,7 @@
 # SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+# File : mmc/plugins/xmppmaster/__init__.py
 """
 Plugin to manage the interface with xmppmaster
 """
@@ -14,7 +15,10 @@ from .master.lib.managepackage import apimanagepackagemsc
 from pulse2.version import getVersion, getRevision  # pyflakes.ignore
 import hashlib
 import json
-
+import socket
+import psutil
+import ipaddress
+import platform
 # Database
 from pulse2.database.xmppmaster import XmppMasterDatabase
 from mmc.plugins.msc.database import MscDatabase
@@ -23,7 +27,9 @@ from pulse2.utils import xmlrpcCleanup
 
 import zlib
 import base64
-from .master.lib.utils import name_random, file_get_contents
+from .master.lib.utils import name_random, file_get_contents, FileManager
+from .master.lib.networkinfo import find_common_addresses, get_CIDR_ipv4_addresses
+
 from .xmppmaster import *
 from mmc.plugins.xmppmaster.master.agentmaster import (
     XmppSimpleCommand,
@@ -46,6 +52,7 @@ from mmc.plugins.xmppmaster.master.agentmaster import (
     callremoteXmppMonitoring,
 )
 from .master.lib.manage_grafana import manage_grafana
+import platform
 
 VERSION = "1.0.0"
 APIVERSION = "4:1:3"
@@ -1191,6 +1198,568 @@ def get_pkg_path(login, pkgName):
 def xmpp_getPackageDetail(pid_package):
     return apimanagepackagemsc.getPackageDetail(pid_package)
 
+def extract_path(full_path):
+        """
+        Extrait le chemin jusqu'au répertoire correspondant au format yyyymm-hhmm.
+
+        Paramètres :
+        full_path (str) : Le chemin complet.
+
+        Retourne :
+        str : Le chemin extrait.
+
+        Lève :
+        ValueError : Si le format yyyymm-hhmm n'est pas trouvé dans le chemin.
+        """
+        # Définir le motif de recherche pour le format yyyymm-hhmm
+        pattern = re.compile(r'/(\d{6}-\d{4})/')
+
+        # Rechercher le motif dans le chemin complet
+        match = pattern.search(full_path)
+
+        if match:
+            # Extraire la partie du chemin jusqu'au répertoire correspondant au motif
+            extracted_path = full_path[:match.end()]
+            return extracted_path
+        else:
+            raise ValueError("Le format yyyymm-hhmm n'a pas été trouvé dans le chemin.")
+
+def my_path(nomdufichierbinaire, namefile, para_encoding='utf-8'):
+    """
+    Extrait un chemin spécifique à partir d'un fichier binaire en suivant les spécifications fournies.
+
+    Paramètres :
+    nomdufichierbinaire (str) : Le chemin du fichier binaire à lire.
+    namefile (str) : Le nom du fichier à rechercher dans le fichier binaire.
+    para_encoding (str) : L'encodage à utiliser pour décoder les bytes (par défaut 'utf-8').
+
+    Retourne :
+    str : Le chemin extrait.
+
+    exception :
+    leve ValueError : Si le fichier contient des caractères non-ASCII qui ne peuvent pas être ignorés ou si le nom du fichier n'est pas trouvé.
+    """
+    # Convertir le nom du fichier en bytes
+    filename_bytes = namefile.encode(para_encoding)
+    # Lire le fichier binaire
+    with open(nomdufichierbinaire, 'rb') as f:
+        binary_data = f.read()
+    # Supprimer les caractères non-ASCII
+    try:
+        clean_data = binary_data.decode(para_encoding, errors='ignore').encode(para_encoding)
+    except UnicodeDecodeError:
+        raise ValueError("Le fichier contient des caractères non-ASCII qui ne peuvent pas être ignorés.")
+    # Inverser le contenu du fichier
+    reversed_binary_data = clean_data[::-1]
+    # Inverser le nom du fichier
+    reversed_filename_bytes = filename_bytes[::-1]
+    # Rechercher le nom du fichier inversé
+    start_index = reversed_binary_data.find(reversed_filename_bytes)
+    if start_index == -1:
+        raise ValueError(f"Le nom du fichier '{namefile}' n'a pas été trouvé.")
+    # Rechercher la séquence 00 00 00 inversée
+    end_sequence = b'\x00\x00\x00'[::-1]
+    end_index = reversed_binary_data.find(end_sequence, start_index)
+    if end_index == -1:
+        raise ValueError("La séquence de fin 00 00 00 n'a pas été trouvée.")
+    # Extraire le chemin inversé
+    reversed_path_bytes = reversed_binary_data[start_index:end_index]
+    # Inverser le chemin extrait pour obtenir le chemin original
+    path_bytes = reversed_path_bytes[::-1]
+    # Convertir les bytes en string en ignorant les bytes non-ASCII
+    path = path_bytes.decode(para_encoding, errors='ignore')
+
+    return path
+
+
+def trouver_premier_fichier(repertoire_racine, chemin_relatif):
+    """
+    Cette fonction prend en paramètre un répertoire racine et un chemin relatif à ce répertoire,
+    et retourne le chemin du premier fichier trouvé dans la hiérarchie relativement au répertoire racine.
+
+    :param repertoire_racine: Le chemin absolu du répertoire racine.
+    :param chemin_relatif: Le chemin relatif au répertoire racine où commencer la recherche.
+    :return: Le chemin relatif du premier fichier trouvé par rapport au répertoire racine, ou None si aucun fichier n'est trouvé.
+    """
+    chemin_absolu = os.path.join(repertoire_racine, chemin_relatif)
+    for root, dirs, files in os.walk(chemin_absolu):
+        if files:
+            premier_fichier = files[0]
+            chemin_relatif_fichier = os.path.relpath(os.path.join(root, premier_fichier), repertoire_racine)
+            return chemin_relatif_fichier
+
+    return None  # Retourne None si aucun fichier n'est trouvé
+
+def retirer_repertoire(chemin_complet, sous_chemin_a_retirer):
+    """
+    Supprime la partie d'un chemin complet correspondant à un sous-chemin spécifié.
+
+    Cette fonction prend un chemin complet et un sous-chemin à retirer. Elle supprime le
+    sous-chemin spécifié du chemin complet, normalise les séparateurs, et retourne le
+    chemin restant. Si le sous-chemin ne fait pas partie du chemin complet, elle renvoie None.
+
+    Arguments:
+        chemin_complet (str): Le chemin complet initial.
+        sous_chemin_a_retirer (str): Le sous-chemin à retirer du chemin complet.
+
+    Retour:
+        str: Le chemin complet sans le sous-chemin spécifié. Renvoie None en cas d'erreur.
+    """
+    # Normaliser les chemins pour gérer les différences de séparateurs de répertoires
+    chemin_normalise_complet = [x for x in re.split(r'[/\\]', os.path.normpath(chemin_complet)) if x.strip() != ""]
+    sous_chemin_normalise = [x for x in re.split(r'[/\\]', os.path.normpath(sous_chemin_a_retirer)) if x.strip() != ""]
+    try:
+        # Vérifier si le sous-chemin fait partie du chemin complet
+        longueur_sous_chemin = len(sous_chemin_normalise)
+        # Si le début du chemin complet correspond au sous-chemin, on le retire
+        pathreduit =  os.path.join(*chemin_normalise_complet[:longueur_sous_chemin])
+        if pathreduit[-1] == ":":
+            pathreduit = pathreduit + "\\"
+        return pathreduit
+    except Exception as e:
+        return None
+
+def backup_restore(src_machine, dest_machine, base_path, directorylist, filelist):
+    """
+    Cette fonction est utilise pour restorer des fichier d'un backups vers 1 machine autre.
+
+    Cette fonction a 2 comportement different suivant ou se trouve la machine de destination.
+
+    1er cas:
+    la machine est dans le meme LAN.
+
+    on fait faire 1 scp a la machine distante sur les fichier ou repertoire demande.
+
+    par mmc qui lui fournie les informations pour 1 scp, Elle appelle un plugin distant "plugin_backup_restore" pour effectuer la restauration.
+    la machine tire les backup.
+
+    Tous les logs associés à cette restauration incluront un meme numéro de session (sessionid) pour faciliter le suivi cet restauration.
+    De plus, la restauration distante loguera également les informations concernant cette restauration.
+
+    Important :
+    La machine de destination, qui doit restaurer ces fichiers, doit être allumée, sinon la demande de restauration échouera. 1 machine eteinte ne pourra pas faire cet action.
+
+    Remarques :
+    - Les fichiers à restaurer sont stockés sur le serveur UrBackup. La machine qui a fait son backup peut etre éteinte, la machine qui demande les fichiers le fera sur le serveur de bacups et pas sur la machine source.
+    - De même, pour le serveur UrBackup, il n'est pas nécessaire qu'il soit allumé pendant la restauration, car UrBackup expose un système de fichiers dédié à cette tâche.
+    - L'API d'UrBackup n'est pas utilisée pour la restauration, ce qui permet la restauration même si le serveur est hors ligne.
+    - Il est possible que la machine source et la machine de destination soient identiques (cas où l'utilisateur souhaite restaurer un fichier sauvegardé de sa propre machine). Dans ce cas, la restauration fonctionne normalement car les fichiers sont toujours récupérés depuis le serveur UrBackup. Mais la condition de machine allume est toujour d'actualie.
+
+    2 eme cas.
+    la machine est sur le WAN
+
+    dans ce cas scp ne pourrait pas tirer des fichiers car pas d'acces reseau.
+    alors on utilise 1 mecanisme de restauration par message xmpp.
+    la fonction demande au plugin backup_restore_substitut de preparer le backup. par des archives zip compresser et decouper en troncons.
+    1 fois ces fichiers preparer 1 autre substitut fait oeuvre d'estafette pour ces messages vers la machine distantes. le plugin load_send_Segment_file fait se travail.
+    la machine distante a 1 plugin pour recombiner les messages recu, les decompresse et les installe.
+
+    Paramètres :
+    src_machine (str) : La machine source  (ID, JID, UUID, or hostname) depuis laquelle les fichiers et répertoires doivent être restaurés.
+                        UUID est l'id de la machine glpi. prefixe de UUID ex UUID456
+    dest_machine (str) : La machine de destination  (ID, JID, UUID, or hostname) où les fichiers et répertoires doivent être restaurés. (ID, JID, UUID, or hostname)
+    base_path (str) : Le chemin de base où les fichiers et répertoires sont stockés. Les listes de fichiers et de répertoires passées à cette fonction ont tous la même racine dans le système de fichiers, et cette racine est passée dans ce paramètre.
+    directorylist (str ou list de str) : Une liste de répertoires à restaurer. Si c'est une chaîne de caractères, elle sera convertie en liste.
+    filelist (str ou list de str) : Une liste de fichiers à restaurer. Si c'est une chaîne de caractères, elle sera convertie en liste.
+
+    Retourne :
+    dict : Un dictionnaire contenant un statut et un message :
+        - "status": -1 si aucune restauration n'est possible (ex. fichiers/répertoires non valides).
+        - "status": 0 si la restauration est exécutée avec succès.
+        - "status": 2 ou 10 si des avertissements sont rencontrés (ex. machine destination non enregistrée ou désactivée).
+        - "msg": un message décrivant l'état de l'opération (succès ou erreur).
+
+    Cas d'erreurs possibles :
+    - Si aucune machine source ou destination valide n'est trouvée dans la base de données, un message d'erreur est retourné.
+    - Si les fichiers ou répertoires à restaurer ne sont pas trouvés sur le serveur, une erreur est enregistrée dans le journal.
+    - Si la machine de destination est désactivée, la restauration peut échouer (status = 10).
+    - Si la machine de destination n'est pas enregistrée mais possède un JID valide, la restauration est tentée, mais peut échouer (status = 2).
+    """
+
+    # reponse vers appel web { status , msg }
+    status = 0
+    msg = ""
+
+    def get_ip_and_netmask_linux(exclude_local=True):
+        ip_netmask_list = []
+        # Parcours de toutes les interfaces réseau
+        for interface, addrs in psutil.net_if_addrs().items():
+            for addr in addrs:
+                if addr.family == socket.AF_INET:  # Ne prend que les adresses IPv4
+                    ip = addr.address
+                    netmask = addr.netmask
+
+                    # Exclure les adresses locales si exclude_local est True
+                    if exclude_local:
+                        ip_obj = ipaddress.ip_address(ip)
+                        if ip_obj.is_loopback or ip_obj.is_link_local:
+                            continue  # On passe à l'itération suivante si c'est une adresse locale
+                    ip_netmask_list.append((ip, netmask))
+        return ip_netmask_list
+
+    def decode_and_decompress_key(encoded_key):
+        # Décoder la clé en base64
+        compressed_key = base64.b64decode(encoded_key)
+        # Décompresser la clé avec zlib
+        key_content = zlib.decompress(compressed_key).decode('utf-8')
+        return key_content
+
+    def compress_and_encode_key(key_content):
+        # Compresser la clé avec zlib
+        compressed_key = zlib.compress(key_content.encode('utf-8'))
+        # Encoder en base64
+        encoded_key = base64.b64encode(compressed_key).decode('utf-8')
+        return encoded_key
+
+    def get_ssh_key_content(user_profile_path, key_name="pulseuser_backup_id_rsa"):
+        # Construire le chemin complet de la clé privée
+        key_private = os.path.join(user_profile_path, ".ssh", key_name)
+
+        # Vérifier si la clé existe
+        if os.path.exists(key_private):
+            try:
+                # Ouvrir et lire le contenu de la clé privée
+                with open(key_private, 'r') as file:
+                    key_content = file.read()
+                return key_content
+            except Exception as e:
+                logger.error(f"Erreur lors de la lecture de la clé privée : {e}")
+                return None
+        else:
+            logger.error(f"Clé privée {key_name} non trouvée.")
+            logger.error(f"Vérifiez l'installation des clés {key_name}.")
+            return None
+
+    def get_home_directory(username="reversessh"):
+        if platform.system() in ['Linux', 'Darwin']:  # Pour Linux et macOS
+            try:
+                import pwd
+                user_info = pwd.getpwnam(username)
+                return user_info.pw_dir  # Récupère le répertoire personnel
+            except KeyError:
+                return None  # L'utilisateur n'existe pas
+        elif platform.system() == 'Windows':
+            user_profile_path = os.path.join('C:', 'Users', username)
+            if not os.path.exists(user_profile_path):
+                return None
+        else:
+            return None  # Système d'exploitation non supporté
+
+    def get_server_networks():
+        """
+        Récupère les adresses IP et les réseaux associés sur le serveur.
+        """
+        server_networks = []
+        # Utilise psutil pour récupérer toutes les interfaces réseau sur le serveur
+        for interface, addrs in psutil.net_if_addrs().items():
+            for addr in addrs:
+                if addr.family == socket.AF_INET:  # Nous voulons seulement les adresses IPv4
+                    ip = addr.address
+                    netmask = addr.netmask
+                    # Convertit IP et masque en réseau
+                    cidr = ipaddress.IPv4Network(f"{ip}/{netmask}", strict=False)
+                    server_networks.append(str(cidr))
+        return server_networks
+
+    def is_machine_local_to_server(reseau_machine_dest, ip_list_server):
+        """
+        Vérifie si la machine est en local par rapport au serveur.
+
+        Paramètres :
+        reseau_machine_dest (list) : Liste des interfaces réseau de la machine.
+        ip_list_server (list) : Liste des adresses IP et masques de sous-réseau du serveur.
+
+        Retourne :
+        bool : True si la machine est en local par rapport au serveur, False sinon.
+        """
+        # Convertir les adresses IP et masques de sous-réseau du serveur en objets ipaddress.IPv4Network
+        server_networks = [ipaddress.IPv4Network(f"{ip}/{mask}", strict=False) for ip, mask in ip_list_server]
+
+        # Vérifier chaque interface réseau de la machine
+        for interface in reseau_machine_dest:
+            machine_ip = ipaddress.IPv4Address(interface['ipaddress'])
+            for server_network in server_networks:
+                if machine_ip in server_network:
+                    return True
+        return False
+
+
+    compte="reversessh"
+    user_profile_path = get_home_directory(username=compte)
+    if not user_profile_path:
+        compte = "urbackup"
+        user_profile_path = get_home_directory(username="urbackup")
+        if not user_profile_path:
+            logger.warning("Pas trouvé le compte %s" % compte)
+            logger.error("Medulla Serveur MMC et UrBackup doivent être sur le même serveur.")
+            return {"status": -3, "msg": "Medulla Serveur MMC et UrBackup doivent être sur le même serveur pour cette fonctionnalité. verifier les cle reversessh ou urbackup"}
+
+    key_name="id_rsa"
+    key_private = get_ssh_key_content(user_profile_path, key_name=key_name)
+    if not key_private:
+        logger.warning("key name  %s no exist" % key_name)
+        # c'est error que la cle soit nomme pulseuser_backup_id_rsa
+        key_name="pulseuser_backup_id_rsa"
+        key_private = get_ssh_key_content(user_profile_path, key_name="pulseuser_backup_id_rsa")
+
+    if not key_private:
+        logger.error("key name  %s no exist" % key_name)
+        logger.error("pas trouver key %s" % key_name)
+        logger.error("voir l'installation des clef id_rsa  revesessh ou pulseuser_backup_id_rsa reverse_ssh")
+        return { "status": -4, "msg": "key reversessh [%s] est manquante " % key_private }
+
+
+    if not os.path.isdir(base_path):
+        return {"status": -1, "msg": "la base fichier n'est pas bonne"}
+
+    base_path_hache = os.path.join(base_path,".hashes")
+    if not os.path.isdir(base_path_hache):
+        return {"status": -1, "msg": "la base hashes fichier n'est pas bonne"}
+
+    sessionid = name_random(8, "backup_restore")
+    # Vérification de la présence de répertoires ou fichiers à restaurer
+    if not (directorylist or filelist):
+        logging.getLogger().error("%s : Aucun fichier ou répertoire sélectionné pour le backup %s %s" % (sessionid, src_machine, dest_machine))
+        logging.getLogger().error("%s : Opération de backup abandonnée" % sessionid)
+        return {"status": -1, "msg": "Aucun fichier ou répertoire sélectionné\nOpération de backup abandonnée"}
+
+    # Expression régulière pour vérifier si les machines sont des JID (Jabber IDs)
+    jid_pattern = re.compile(r'^[^@/\s]+(\.[^@/\s]+)*@[^@/\s]+(/[^@/\s]+)?$')
+
+    jid_to = None
+    jid_from = None
+
+    # Vérification de la validité des machines source et destination
+    if bool(jid_pattern.match(dest_machine)):
+        jid_to = dest_machine
+    if bool(jid_pattern.match(src_machine)):
+        jid_from = src_machine
+
+    # Conversion des répertoires et fichiers en listes si nécessaire
+    if isinstance(directorylist, str):
+        directorylist = [directorylist]
+    if isinstance(filelist, str):
+        filelist = [filelist]
+    # Recherche des machines dans la base de données XMPP
+    machine_src = XmppMasterDatabase().search_machine(src_machine)
+    machine_dest = XmppMasterDatabase().search_machine(dest_machine)
+    reaux_machine_dest=[]
+    if machine_dest:
+        reseau_machine_dest = XmppMasterDatabase().network_list_machine( machine_dest['id'])
+        logging.getLogger().info("reseau_machine_dest : %s" % reseau_machine_dest)
+    # Gestion des erreurs liées à la machine source
+    if not machine_src:
+        if jid_from is None:
+            msg += "Machine source non trouvée :[%s]" % src_machine
+        else:
+            logging.getLogger().warning("%s : Machine source non enregistrée" % sessionid)
+            msg += "Machine source non enregistrée\n"
+    else:
+        if machine_src['enabled'] == 0:
+            logging.getLogger().warning("%s : Machine source désactivée" % sessionid)
+            msg += "Machine source désactivée [%s]\n" % src_machine
+
+    # Gestion des erreurs liées à la machine de destination
+    if not machine_dest:
+        if jid_to is None:
+            logging.getLogger().error("%s : Machine destination non trouvée :[%s]" % (sessionid,dest_machine))
+            return {"status": -2, "msg": "Machine destination inexistante :[%s]\nOpération de backup abandonnée" % dest_machine}
+        else:
+            logging.getLogger().warning("%s : Machine destination non enregistrée" % sessionid)
+            status = 2
+            msg += "Machine destination non enregistrée\nLe backup pourrait échouer\n"
+    else:
+
+        jid_to = machine_dest['jid']
+        if machine_dest['enabled'] == 0:
+            status = 10
+            logging.getLogger().warning("%s : Machine destination désactivée [%s]" % ( sessionid,dest_machine))
+            msg += "Machine destination désactivée [%s]\nLe backup pourrait échouer\n" % dest_machine
+
+    # Vérification de l'existence des fichiers et répertoires sur la machine source
+    error_file_directory_exist = []
+    valid_files = []
+    valid_directories = []
+
+    # Vérification des fichiers
+    for file in filelist:
+        if os.path.isfile(os.path.join(base_path, file)):
+            valid_files.append(file)
+        else:
+            error_file_directory_exist.append(f"{sessionid} : Fichier introuvable : {file}")
+
+    # Vérification des répertoires
+    for directory in directorylist:
+        if os.path.isdir(os.path.join(base_path, directory)):
+            valid_directories.append(directory)
+        else:
+            error_file_directory_exist.append(f"{sessionid} : Répertoire introuvable : {directory}")
+
+    # Mise à jour des listes de fichiers et répertoires valides
+    filelist[:] = list(set(valid_files))
+    directorylist[:] = list(set(valid_directories))
+
+    # Si aucune des listes n'est valide, abandonner le backup
+    if not (directorylist or filelist):
+        logging.getLogger().error("%s : Corruption du backup, rien à restaurer" % sessionid)
+        return {"status": -1, "msg": "Aucun fichier ou répertoire valide à restaurer"}
+
+    # Affichage des erreurs de fichiers ou répertoires manquants
+    for error in error_file_directory_exist:
+        logging.getLogger().error(error)
+    if error_file_directory_exist:
+        msg += "\nIl y a %s fichiers ou répertoires manquants\n" % len(error_file_directory_exist)
+    # pas de jid pour la machine source.
+    # normalement la sauvegarde est sur le serveur urbackup.
+    # cela n'est pas fatal pour la restoration
+    if jid_from is None and machine_dest_backup is None:
+        jid_from =""
+    # Création du message XMPP au format JSON pour déclencher la restauration
+
+    # on cree les listes de couples source,  dest
+    send_file =[]
+    send_dir=[]
+    for dirsrc in directorylist:
+        try:
+            filesearch = trouver_premier_fichier(base_path, dirsrc)
+            cheminapresreellechemin = filesearch.replace(dirsrc, "")
+            cheminapresreellechemin = cheminapresreellechemin.replace("\\","/")
+            filesearchpath = my_path(os.path.join(base_path_hache, filesearch),  os.path.basename(os.path.normpath(filesearch)))
+            filesearchpath = filesearchpath.replace("\\","/")
+            dirdest = filesearchpath.replace(cheminapresreellechemin, "")
+            # dirdest=retirer_repertoire(filesearchpath, cheminapresreellechemin)
+            send_dir.append([dirsrc, dirdest])
+        except Exception as e:
+            logging.getLogger().error("pas trouver dir dest pour dir src : %s %s" % (os.path.join(base_path_hache, dirsrc), e))
+
+    for filesrc in filelist:
+        try:
+            filedest = my_path(os.path.join(base_path_hache, filesrc), os.path.basename(os.path.normpath(filesrc)))
+            send_file.append([filesrc, filedest])
+        except Exception:
+            logging.getLogger().error("pas trouver emplacement file dest pour file src : %s" % (dirsrc))
+    logging.getLogger().info("machine_dest : %s" % machine_dest)
+    logging.getLogger().info("machine_src : %s" % machine_src)
+
+    ip_list = get_ip_and_netmask_linux()
+    machine_local_reseau = is_machine_local_to_server(reseau_machine_dest, ip_list)
+    list_backup_file_system = {
+        "action": "backup_restore",
+        "sessionid" :  sessionid,
+        "data": {
+            "key_private" : key_private,
+            "ip_list_reseau" : get_server_networks(),
+            "ip_list" : ip_list,
+            "machine_source_backup": machine_src if machine_src is not None else jid_from,
+            "machine_dest_backup": machine_dest if machine_dest is not None else jid_to,
+            "base_path" : base_path,
+            "directorylist": send_dir,
+            "filelist": send_file,
+            "machine_local_reseau" : machine_local_reseau,
+        },
+    }
+    if machine_local_reseau :
+        logging.getLogger().info("Appel du plugin de restauration avec la configuration : %s" % (list_backup_file_system))
+        # Envoi du message JSON au plugin distant pour exécuter la restauration
+        send_message_json(jid_to, list_backup_file_system)
+        return {"status": status, "msg": msg}
+    else:
+        logging.getLogger().info("La machine ne peut pas pas dans le reseau local. on passe les transfert en xmpp")
+        logging.getLogger().info("La clef est inutile")
+
+        del list_backup_file_system['data']['key_private']
+        list_backup_file_system["action"] = "backup_restore_substitut"
+        # appel plugin master sur substitut master
+        callXmppPlugin("backup_restore_substitut", list_backup_file_system)
+        return {"status": status, "msg": msg}
+
+
+def send_file_xmpp(machine_dest,
+                   path_fichier,
+                   install_machine_dest,
+                   contenttype="file"):
+    """
+    Sends a file to a specified machine via XMPP.
+
+    Parameters:
+    machine_dest (str): machine_dest (str): Destination machine address (ID, JID, UUID, or hostname).
+                        UUID est l'id de la machine glpi. prefixe de UUID ex UUID456
+    path_fichier (str): Path to the file that will be sent.
+    install_machine_dest (str): The destination path on the receiving machine.
+    contenttype (str, optional): The type of content being sent. Defaults to "file".
+
+    Returns:
+    None
+    """
+    sessionid = name_random(8, "send_file_xmpp")
+    file = {
+            "machine_dest": machine_dest,
+            "path_fichier" : path_fichier,
+            "install_machine_dest" : install_machine_dest,
+            "contenttype": "file",
+            "sessionid" :  sessionid
+        }
+    callXmppPlugin("send_file_xmpp", file)
+
+
+def send_directory_xmpp(machine_dest,
+                        path_directory,
+                        directory_dest,
+                        contenttype="directory",
+                        sesssion_prefixe="send_dir_xmpp"):
+    """
+    Sends a directory to a specified machine via XMPP.
+
+    Parameters:
+    machine_dest (str): Destination machine address.(ID, JID, UUID, or hostname)
+                        UUID est l'id de la machine glpi. prefixe de UUID ex UUID456
+    path_directory (str): Path to the directory that will be sent.
+    directory_dest (str): The destination directory path on the receiving machine.
+    contenttype (str, optional): The type of content being sent. Defaults to "directory".
+    session_prefixe (str, optional): Prefix for the session ID. Defaults to "send_dir_xmpp".
+
+    Returns:
+    None
+    """
+    sessionid = name_random(8, "send_dir_xmpp")
+    directory = {
+            "machine_dest": machine_dest,
+            "path_fichier" : path_directory,
+            "install_machine_dest" : directory_dest,
+            "contenttype": contenttype,
+            "sessionid" :  sessionid
+        }
+    callXmppPlugin("send_file_xmpp", directory)
+
+
+def send_list_packages_xmpp(machine_dest,
+                            liste_package_name):
+    """
+    Sends a list of packages to a specified machine via XMPP.
+
+    Parameters:
+    machine_dest (str): Destination machine address.(ID, JID, UUID, or hostname)
+                        UUID est l'id de la machine glpi. prefixe de UUID ex UUID456
+    liste_package_name (str or list): The package name(s) to be sent. Can be a string or a list of package names.
+
+    Returns:
+    None
+    """
+    if isinstance(liste_package_name, str):
+        # Transformer la chaîne de caractères en une liste avec un seul élément
+        liste_package_name = [liste_package_name]
+    for package in liste_package_name:
+        sessionid = name_random(8, "send_package")
+        directory = {
+                "machine_dest": machine_dest,
+                "path_fichier" : os.path.join("/var/lib/pulse2/packages", package),
+                "install_machine_dest" : package,
+                "contenttype": "package",
+                "sessionid" :  sessionid,
+                "type" : "package"
+            }
+    callXmppPlugin("send_file_xmpp", directory)
+
 
 def runXmppWolforuuidsarray(uuids):
     """
@@ -2085,3 +2654,6 @@ def get_update_kb(updateid):
 
 def cancel_update(machineid, updateid):
     return XmppMasterDatabase().cancel_update(machineid, updateid)
+
+def get_machines_summary_list(filter=""):
+    return XmppMasterDatabase().get_machines_summary_list(filter="")

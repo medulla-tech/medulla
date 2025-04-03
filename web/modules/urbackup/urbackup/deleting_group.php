@@ -35,7 +35,7 @@ $group_deleted = xmlrpc_remove_group($group_id);
 <br>
 <?php
 
-$url = 'main.php?module=urbackup&submod=urbackup&action=usersgroups';
+$url = 'main.php?module=urbackup&submod=urbackup&action=profileslist';
 
 header("Location: ".$url);
 ?>
