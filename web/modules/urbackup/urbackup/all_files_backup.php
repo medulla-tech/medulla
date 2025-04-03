@@ -61,7 +61,8 @@ if(isset($_POST['basket']) ){
         new NotifyWidgetFailure($result["msg"]);
     }
     else{
-        new NotifyWidgetSuccess($result["msg"]);
+        $msg = !empty($result["msg"]) ? htmlentities($result["msg"]) : sprintf(_T("The restoration request has been correctly sent to %s"), $dest_machine);
+        new NotifyWidgetSuccess($msg);
     }
 
     // Dump the basket
