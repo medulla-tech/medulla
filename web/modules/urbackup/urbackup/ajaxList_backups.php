@@ -231,7 +231,7 @@ if (!empty($backups) && $client_enable == 1)
     $n->setcssIds($ids);
     $n->disableFirstColumnActionLink();
     $n->addExtraInfo($archives, _T("Archived ?", "urbackup"));
-    $n->addExtraInfo($dts, _T("Time", "urbackup"));
+    $n->addExtraInfo($dts, _T("Date", "urbackup"));
     $n->addExtraInfo($sizes, _T("Size", "urbackup"));
     $n->setParamInfo($params);
     $n->addActionItemArray($detailActions);
