@@ -95,7 +95,7 @@ CREATE TABLE `up_packages_major_Lang_code` (
   PRIMARY KEY (`lang_code`,`major`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 --
--- Dumping data for table `up_packages_major_Lang_code`
+-- Dumping data for table `up_packages_major_Lang_code` for windows 11
 --
 
 INSERT INTO `up_packages_major_Lang_code` VALUES
@@ -133,7 +133,44 @@ INSERT INTO `up_packages_major_Lang_code` VALUES
 (11,'uk-UA','0422','Ukrainian',0,'Win11_24H2_Ukrainian_x64.iso','Win11upd_24H2_Ukrainian_x64_pbqbowfj'),
 (11,'zh-CHT','7C04','Chinese - Traditional',0,'Win11_24H2_Chinese_Traditional_x64.iso','Win11upd_24H2_Chinese_Traditionalx64'),
 (11,'zh-CN','0804','Chinese (Simplified) - China',0,'Win11_24H2_Chinese_Simplified_x64.iso','Win11upd_24H2_Chinese_Simplifiedx64_');
-
+--
+-- Dumping data for table `up_packages_major_Lang_code` for windows 10
+--
+INSERT INTO up_packages_major_Lang_code (major, lang_code, num_code, country, enabled, iso_filename, package_uuid) VALUES
+(10, 'ar-SA', '0401', 'Arabic', 0, 'Win10_24H2_Arabic_x64.iso', 'Win10upd_24H2_Arabicx64_pbqbowfj6h9l'),
+(10, 'bg-BG', '0402', 'Bulgarian', 0, 'Win10_24H2_Bulgarian_x64.iso', 'Win10upd_24H2_Bulgarianx64_pbqbowfj6'),
+(10, 'cs-CZ', '0405', 'Czech', 0, 'Win10_24H2_Czech_x64.iso', 'Win10upd_24H2_Czechx64_pbqbowfj6h9lo'),
+(10, 'da-DK', '0406', 'Danish', 0, 'Win10_24H2_Danish_x64.iso', 'Win10upd_24H2_Danishx64_pbqbowfj6h9l'),
+(10, 'de-DE', '0407', 'German', 0, 'Win10_24H2_German_x64.iso', 'Win10upd_24H2_Germanx64_pbqbowfj6h9l'),
+(10, 'el-GR', '0408', 'Greek', 0, 'Win10_24H2_Greek_x64.iso', 'Win10upd_24H2_Greekx64_pbqbowfj6h9lo'),
+(10, 'en-GB', '0809', 'English - United Kingdom', 1, 'Win10_24H2_English_x64.iso', 'Win10upd_24H2_Englishx64_pbqbowfj6h9'),
+(10, 'en-US', '0409', 'English', 1, 'Win10_24H2_EnglishInternational_x64.iso', 'Win10upd_24H2_EnglishInternationalx6'),
+(10, 'es-ES', '040A', 'Spanish', 0, 'Win10_24H2_Spanish_x64.iso', 'Win10upd_24H2_Spanishx64_pbqbowfj6h9'),
+(10, 'es-MX', '080A', 'Spanish - Mexico', 0, 'Win10_24H2_Spanish_Mexico_x64.iso', 'Win10upd_24H2_Spanish_Mexicox64_pbqb'),
+(10, 'et-EE', '0425', 'Estonian - Estonia', 0, 'Win10_24H2_Estonian_x64.iso', 'Win10upd_24H2_Estonianx64_pbqbowfj6h'),
+(10, 'fi-FI', '040E', 'Finnish', 0, 'Win10_24H2_Finnish_x64.iso', 'Win10upd_24H2_Finnishx64_pbqbowfj6h9'),
+(10, 'fr-CA', '0C0C', 'French - Canada', 0, 'Win10_24H2_FrenchCanadian_x64.iso', 'Win10upd_24H2_FrenchCanadianx64_pbqb'),
+(10, 'fr-FR', '040C', 'French', 1, 'Win10_24H2_French_x64.iso', 'Win10upd_24H2_Frenchx64_pbqbowfj6h9l'),
+(10, 'he-IL', '040D', 'Hebrew', 0, 'Win10_24H2_Hebrew_x64.iso', 'Win10upd_24H2_Hebrewx64_pbqbowfj6h9l'),
+(10, 'hi-IN', '0439', 'Hindi', 0, 'Win10_24H2_Hindi_x64.iso', 'Win10upd_24H2_Hindix64_pbqbowfj6h9lo'),
+(10, 'hr-HR', '041A', 'Croatian', 0, 'Win10_24H2_Croatian_x64.iso', 'Win10upd_24H2_Croatianx64_pbqbowfj6h'),
+(10, 'hu-HU', '040E', 'Hungarian', 0, 'Win10_24H2_Hungarian_x64.iso', 'Win10upd_24H2_Hungarianx64_pbqbowfj6'),
+(10, 'it-IT', '0410', 'Italian', 0, 'Win10_24H2_Italian_x64.iso', 'Win10upd_24H2_Italianx64_pbqbowfj6h9'),
+(10, 'ja-JP', '0411', 'Japanese', 0, 'Win10_24H2_Japanese_x64.iso', 'Win10upd_24H2_Japanesex64_pbqbowfj6h'),
+(10, 'ko-KR', '0412', 'Korean', 0, 'Win10_24H2_Korean_x64.iso', 'Win10upd_24H2_Koreanx64_pbqbowfj6h9l'),
+(10, 'lt-LT', '0427', 'Lithuanian', 0, 'Win10_24H2_Lithuanian_x64.iso', 'Win10upd_24H2_Lithuanianx64_pbqbowfj'),
+(10, 'lv-LV', '0426', 'Latvian', 0, 'Win10_24H2_Latvian_x64.iso', 'Win10upd_24H2_Latvianx64_pbqbowfj6h9'),
+(10, 'nb-NO', '0414', 'Norwegian', 0, 'Win10_24H2_Norwegian_x64.iso', 'Win10upd_24H2_Norwegianx64_pbqbowfj6'),
+(10, 'nl-NL', '0413', 'Dutch', 0, 'Win10_24H2_Dutch_x64.iso', 'Win10upd_24H2_Dutchx64_pbqbowfj6h9lo'),
+(10, 'pl-PL', '0415', 'Polish', 0, 'Win10_24H2_Polish_x64.iso', 'Win10upd_24H2_Polishx64_pbqbowfj6h9l'),
+(10, 'pt-PT', '0416', 'Portuguese - Portugal', 0, 'Win10_24H2_Portuguese_x64.iso', 'Win10upd_24H2_Portuguesex64_pbqbowfj'),
+(10, 'ru-RU', '0419', 'Russian', 0, 'Win10_24H2_Russian_x64.iso', 'Win10upd_24H2_Russianx64_pbqbowfj6h9'),
+(10, 'sv-SE', '041D', 'Swedish', 0, 'Win10_24H2_Swedish_x64.iso', 'Win10upd_24H2_Swedishx64_pbqbowfj6h9'),
+(10, 'th-TH', '041E', 'Thai', 0, 'Win10_24H2_Thai_x64.iso', 'Win10upd_24H2_Thaix64_pbqbowfj6h9lom'),
+(10, 'tr-TR', '041F', 'Turkish', 0, 'Win10_24H2_Turkish_x64.iso', 'Win10upd_24H2_Turkishx64_pbqbowfj6h9'),
+(10, 'uk-UA', '0422', 'Ukrainian', 0, 'Win10_24H2_Ukrainian_x64.iso', 'Win10upd_24H2_Ukrainian_x64_pbqbowfj'),
+(10, 'zh-CHT', '7C04', 'Chinese - Traditional', 0, 'Win10_24H2_Chinese_Traditional_x64.iso', 'Win10upd_24H2_Chinese_Traditionalx64'),
+(10, 'zh-CN', '0804', 'Chinese (Simplified) - China', 0, 'Win10_24H2_Chinese_Simplified_x64.iso', 'Win10upd_24H2_Chinese_Simplifiedx64_');
 
 -- -----------------------------------------------------
 --
