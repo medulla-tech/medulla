@@ -52,6 +52,32 @@ function xmlrpc_getMachinefromjid($jid)
     return xmlCall("xmppmaster.getMachinefromjid", array($jid));
 }
 
+function xmlrpc_get_machines_infos_additif($arraykey, $arrayval, $array_include = null)
+{
+    // Si $array_include est null, définir une liste par défaut de clés à inclure
+    if (is_null($array_include)) {
+        $array_include = [
+            "hostname",
+            "platform",
+            "jid",
+            "uuid_serial_machine",
+            "uuid_inventorymachine",
+            "model",
+            "manufacturer",
+            "enabled"
+        ];
+    }
+
+    // Appeler la fonction xmlCall avec les paramètres spécifiés
+    return xmlCall("xmppmaster.get_machines_infos_additif", array($arraykey, $arrayval, $array_include));
+}
+
+function xmlrpc_get_machines_infos_generic($arraykey, $arrayval, $array_include=null, $start=0, $limit=-1, $colonne = true)
+{
+    // Appeler la fonction xmlCall avec les paramètres spécifiés
+    return xmlCall("xmppmaster.get_machines_infos_generic", array($arraykey, $arrayval, $array_include, $start, $limit, $colonne));
+}
+
 function xmlrpc_getMachinefromuuid($uuid)
 {
     return xmlCall("xmppmaster.getMachinefromuuid", array($uuid));
