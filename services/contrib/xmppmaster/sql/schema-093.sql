@@ -325,7 +325,8 @@ BEGIN
         IF NOT EXISTS (
             SELECT 1
             FROM up_machine_major_windows
-            WHERE id_machine = id_machine AND update_id = update_id
+            WHERE up_machine_major_windows.id_machine = id_machine AND
+                  up_machine_major_windows.update_id = update_id
         ) THEN
             -- Insérer le nouvel enregistrement dans `up_machine_major_windows`
             INSERT INTO up_machine_major_windows (
