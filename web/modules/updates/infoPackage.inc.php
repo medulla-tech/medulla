@@ -106,6 +106,10 @@ $page->setFile("modules/updates/updates/ajaxDetailsByUpdatesWhite.php");
 $page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
 $submod->addPage($page);
 
+$page = new Page("MajorEntitiesList", _T('os updates', 'updates'));
+$page->setFile("modules/updates/updates/MajorEntitiesList.php");
+$submod->addPage($page);
+
 $page = new Page("updatesListWin", _T('Manage Updates Lists', 'updates'));
 $page->setFile("modules/updates/updates/updatesListWin.php");
 $submod->addPage($page);

@@ -24,3 +24,5 @@ $sidemenu->setClass("updates");
 
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Entities Compliance", 'updates'), "updates", "updates", "index"));
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Manage Updates Lists", 'updates'), "updates", "updates", "updatesListWin"));
+
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("Manage Update Os", 'updates'), "updates", "updates", "MajorEntitiesList"));

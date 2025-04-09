@@ -29,6 +29,7 @@ require_once("modules/base/includes/computers.inc.php");
 require_once("modules/updates/includes/html.inc.php");
 
 
+$actiondetailsByMachslog  = array();
 $location = (isset($_GET['location'])) ? htmlentities($_GET['location']) : "";
 $gid = (isset($_GET['gid'])) ? htmlentities($_GET['gid']) : "";
 $groupname = (isset($_GET['groupname'])) ? htmlentities($_GET['groupname']) : "";
@@ -91,6 +92,15 @@ $idmachinefrom_xmpp_or_glpi='machineidmajor'; // id xmppmaster
     }
 
 foreach($statglpiversion['id_machine'] as $key=>$valeur){
+
+    $actiondetailsByMachslog[]=new ActionItem(_T("Updates History",
+                                                 "updates"),
+                                              "auditUpdateByMachine",
+                                                "history",
+                                                "",
+                                                "updates",
+                                                "updates");
+
     $actionspeclistUpds[] = new ActionPopupItem(_T(sprintf("Deploy this update on machine %s", $statglpiversion['machine'][$key]), "updates"),
                                                 "deployUpdatemajor",
                                                 "updateone",
@@ -123,7 +133,7 @@ $n->addExtraInfo($statglpiversion["platform"], _T("Platform", "updates"));
 $n->addExtraInfo($statglpiversion["version"], _T("version", "updates"));
 $n->addExtraInfo($statglpiversion["update"], _T("update", "updates"));
 $n->addActionItemArray($actionspeclistUpds);
-
+$n->addActionItemArray($actiondetailsByMachslog);
 $n->start = 0;
 $n->end = $statglpiversion["nb_machine"];
 $n->setItemCount($statglpiversion["nb_machine"]);
