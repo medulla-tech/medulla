@@ -65,10 +65,10 @@ $ajax = new AjaxFilter(urlStrRedirect("updates/updates/ajaxEntitiesList"),
 $ajax->display();
 $ajax->displayDivToUpdate();
 
-$ajaxmajor = new AjaxFilter(urlStrRedirect("updates/updates/ajaxMajorEntitiesList"),
-                            "container-Major", $params, 'formMajor');
-$ajaxmajor->display();
-$ajaxmajor->displayDivToUpdate();
+// $ajaxmajor = new AjaxFilter(urlStrRedirect("updates/updates/ajaxMajorEntitiesList"),
+//                             "container-Major", $params, 'formMajor');
+// $ajaxmajor->display();
+// $ajaxmajor->displayDivToUpdate();
 ?>
 
 <style>

@@ -295,7 +295,9 @@ BEGIN
     JOIN xmppmaster.local_glpi_softwares s ON sv.softwares_id = s.id
     JOIN xmppmaster.local_glpi_entities e ON e.id = m.entities_id
     JOIN xmppmaster.machines mx ON NULLIF(REPLACE(mx.uuid_inventorymachine, 'UUID', ''),'') = si.items_id
-    JOIN xmppmaster.up_packages_major_Lang_code lc ON lc.lang_code = SUBSTRING_INDEX(SUBSTRING_INDEX(s.name, '@', 3), '@', -1)
+    JOIN xmppmaster.up_packages_major_Lang_code lc ON
+        lc.lang_code = SUBSTRING_INDEX(SUBSTRING_INDEX(s.name, '@', 3), '@', -1)
+        AND lc.major = SUBSTRING(s.name, LENGTH(s.name) - LOCATE('-', REVERSE(s.name)) + 2)
     WHERE s.name LIKE 'Medulla\_%'
     AND (
         SUBSTRING(s.name, LOCATE('_', s.name) + 1, LOCATE('@', s.name) - LOCATE('_', s.name) - 1)
