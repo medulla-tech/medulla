@@ -21,10 +21,11 @@
  */
 
 global $maxperpage;
+
 $machineidglpi =  (!empty($_GET['uuid_inventorymachine'])) ? htmlentities($_GET['uuid_inventorymachine']) : 0;
 $machineidmajor =  (!empty($_GET['machineidmajor'])) ? htmlentities($_GET['machineidmajor']) : 0;
 $hostname = (!empty($_GET['cn'])) ? htmlentities($_GET['cn']) : "";
-$machineid = (!empty($_GET['machineid'])) ? htmlentities($_GET['machineid']) : 0;
+$machineid = (!empty($_GET['machineid'])) ? htmlentities($_GET['machineid']) : $machineidmajor;
 $start = (!empty($_GET['start'])) ? htmlentities($_GET['start']) : 0;
 $end = (!empty($_GET['end'])) ? htmlentities($_GET['end']) : $maxperpage;
 $filter = (!empty($_GET['filter'])) ? htmlentities($_GET['filter']) : "";
