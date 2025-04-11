@@ -268,49 +268,50 @@ BEGIN
         new_version, oldcode,
         newcode, isolang
     )
-    SELECT
-        mx.id AS xmpp_id,
-        m.id AS glpi_id,
-        e.id AS ent_id,
-        mx.hostname,
-        mx.enabled,
-        mx.jid,
-        mx.uuid_serial_machine AS serial,
-        mx.platform as platform,
-        s.name,
-        s.comment,
-        e.completename AS entity,
-        lc.lang_code,
-        lc.iso_filename,
-        lc.package_uuid,
-        -- Extraction des versions et codes depuis le nom du logiciel
-        SUBSTRING(s.name, LOCATE('_', s.name) + 1, LOCATE('@', s.name) - LOCATE('_', s.name) - 1) AS old_version,
-        SUBSTRING_INDEX(s.name, '-', -1) AS new_version,
-        SUBSTRING_INDEX(SUBSTRING_INDEX(s.name, '@', 2), '@', -1) AS oldcode,
-        SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(s.name, '@', 5), '@', -1), '_', 2), '_', -1) AS newcode,
-        SUBSTRING_INDEX(SUBSTRING_INDEX(s.name, '@', 3), '@', -1) AS isolang
-    FROM xmppmaster.local_glpi_items_softwareversions si
-    JOIN xmppmaster.local_glpi_softwareversions sv ON si.softwareversions_id = sv.id
-    JOIN xmppmaster.local_glpi_machines m ON si.items_id = m.id
-    JOIN xmppmaster.local_glpi_softwares s ON sv.softwares_id = s.id
-    JOIN xmppmaster.local_glpi_entities e ON e.id = m.entities_id
-    JOIN xmppmaster.machines mx ON NULLIF(REPLACE(mx.uuid_inventorymachine, 'UUID', ''),'') = si.items_id
-    JOIN xmppmaster.up_packages_major_Lang_code lc ON
-        lc.lang_code = SUBSTRING_INDEX(SUBSTRING_INDEX(s.name, '@', 3), '@', -1)
-        AND lc.major = SUBSTRING(s.name, LENGTH(s.name) - LOCATE('-', REVERSE(s.name)) + 2)
-    WHERE s.name LIKE 'Medulla\_%'
-    AND (
-        SUBSTRING(s.name, LOCATE('_', s.name) + 1, LOCATE('@', s.name) - LOCATE('_', s.name) - 1)
-            != SUBSTRING_INDEX(s.name, '@', -1)
-        OR
-        SUBSTRING_INDEX(SUBSTRING_INDEX(s.name, '@', 2), '@', -1)
-            != SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(s.name, '@', 5), '@', -1), '_', 2), '_', -1)
-    )
-    AND (
-        s.name NOT LIKE '%False%'
-        AND SUBSTRING(s.name,
-        LOCATE('_', s.name) + 1,
-        LOCATE('@', s.name) - LOCATE('_', s.name) - 1) = '10' );
+        SELECT
+            mx.id AS xmpp_id,
+            m.id AS glpi_id,
+            e.id AS ent_id,
+            mx.hostname,
+            mx.enabled,
+            mx.jid,
+            mx.uuid_serial_machine AS serial,
+            mx.platform as platform,
+            s.name,
+            s.comment,
+            e.completename AS entity,
+            lc.lang_code,
+            lc.iso_filename,
+            lc.package_uuid,
+            SUBSTRING(s.name, LOCATE('_', s.name) + 1, LOCATE('@', s.name) - LOCATE('_', s.name) - 1) AS old_version,
+            SUBSTRING_INDEX(s.name, '-', -1) AS new_version,
+            SUBSTRING_INDEX(SUBSTRING_INDEX(s.name, '@', 2), '@', -1) AS oldcode,
+            SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(s.name, '@', 5), '@', -1), '_', 2), '_', -1) AS newcode,
+            SUBSTRING_INDEX(SUBSTRING_INDEX(s.name, '@', 3), '@', -1) AS isolang
+        FROM xmppmaster.local_glpi_items_softwareversions si
+        JOIN xmppmaster.local_glpi_softwareversions sv ON si.softwareversions_id = sv.id
+        JOIN xmppmaster.local_glpi_machines m ON si.items_id = m.id
+        JOIN xmppmaster.local_glpi_softwares s ON sv.softwares_id = s.id
+        JOIN xmppmaster.local_glpi_entities e ON e.id = m.entities_id
+        JOIN xmppmaster.machines mx ON NULLIF(REPLACE(mx.uuid_inventorymachine, 'UUID', ''),'') = si.items_id
+        JOIN xmppmaster.up_packages_major_Lang_code lc
+            ON lc.lang_code = SUBSTRING_INDEX(SUBSTRING_INDEX(s.name, '@', 3), '@', -1)
+            AND lc.major = SUBSTRING(s.name, LENGTH(s.name) - LOCATE('-', REVERSE(s.name)) + 2)
+        WHERE s.name LIKE 'Medulla\_%'
+        AND (
+            SUBSTRING(s.name, LOCATE('_', s.name) + 1, LOCATE('@', s.name) - LOCATE('_', s.name) - 1)
+                != SUBSTRING_INDEX(s.name, '@', -1)
+            OR
+            SUBSTRING_INDEX(SUBSTRING_INDEX(s.name, '@', 2), '@', -1)
+                != SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(s.name, '@', 5), '@', -1), '_', 2), '_', -1)
+        )
+        AND (
+            s.name NOT LIKE '%False%'
+            OR NOT (
+                SUBSTRING(s.name, LOCATE('_', s.name) + 1, LOCATE('@', s.name) - LOCATE('_', s.name) - 1) = '10'
+                AND SUBSTRING_INDEX(s.name, '-', -1) = '11'
+            )
+        );
 
     -- Valider la transaction pour enregistrer les modifications
     COMMIT;
