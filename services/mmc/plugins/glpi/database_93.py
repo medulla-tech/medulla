@@ -51,7 +51,7 @@ from sqlalchemy import (
     distinct,
 )
 from sqlalchemy.orm import create_session, mapper, relationship
-
+from sqlalchemy.engine.row import Row
 try:
     from sqlalchemy.sql.expression import ColumnOperators
 except ImportError:
@@ -2408,6 +2408,8 @@ class Glpi93(DyngroupDatabaseHelper):
                     oslocal = l.pop()
 
                 m = l.pop()
+            if isinstance(m, (tuple, Row)):
+                m = m[0]
             owner_login, owner_firstname, owner_realname = self.getMachineOwner(m)
             datas = {
                 "cn": m.name not in ["", None] and [m.name] or ["(%s)" % m.id],
