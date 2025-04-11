@@ -305,7 +305,12 @@ BEGIN
         OR
         SUBSTRING_INDEX(SUBSTRING_INDEX(s.name, '@', 2), '@', -1)
             != SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(s.name, '@', 5), '@', -1), '_', 2), '_', -1)
-    );
+    )
+    AND (
+        s.name NOT LIKE '%False%'
+        AND SUBSTRING(s.name,
+        LOCATE('_', s.name) + 1,
+        LOCATE('@', s.name) - LOCATE('_', s.name) - 1) = '10' );
 
     -- Valider la transaction pour enregistrer les modifications
     COMMIT;
