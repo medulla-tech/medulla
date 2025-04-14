@@ -16754,7 +16754,6 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         Returns:
             dict: Un dictionnaire contenant les statistiques de mise à jour des systèmes d'exploitation.
         """
-        logger.error("OOOOOOOOOO")
         try:
             # Dictionnaire final des résultats
             cols = ["W10to10", "W10to11", "W11to11", "UPDATED", "undefined"]
