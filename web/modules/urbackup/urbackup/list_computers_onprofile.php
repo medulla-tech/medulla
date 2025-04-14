@@ -75,7 +75,7 @@ $result = (array)json_decode($response);
 }
 
 curl_close($curlid);
-
+$session = "";
 if(isset($result['session'], $result['success']) && $result['success'] == 1){
     $session = $result['session'];
 }
@@ -112,7 +112,7 @@ curl_close($curlid);
 $settings = $result;
 $array = json_decode(json_encode($settings), true);
 
-$clients = $array['navitems']['clients'];
+$clients = (!empty($array['navitems']['clients'])) ? $array['navitems']['clients'] : [];
 //-----------------------------------END SAVE SETTINGS
 
 ?>

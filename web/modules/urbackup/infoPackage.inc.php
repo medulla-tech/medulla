@@ -1,6 +1,6 @@
 <?php
 /*
- * (c) 2022 Siveo, http://www.siveo.net/
+ * (c) 2022-2024 Siveo, http://www.siveo.net/
  *
  * $Id$
  *
@@ -43,6 +43,11 @@ $page = new Page("list_backups", _T('List Backups by Client', 'urbackup'));
 $page->setFile("modules/urbackup/urbackup/list_backups.php");
 $submod->addPage($page);
 
+$page = new Page("ajaxList_backups", _T('List Backups by Client', 'urbackup'));
+$page->setFile("modules/urbackup/urbackup/ajaxList_backups.php");
+$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader"=>true));
+$submod->addPage($page);
+
 $page = new Page("start_backup", _T('Start backup', 'urbackup'));
 $page->setFile("modules/urbackup/urbackup/start_backup.php");
 $submod->addPage($page);
@@ -63,12 +68,12 @@ $page = new Page("add_member_togroup_aftercheck", _T('Assign member to group aft
 $page->setFile("modules/urbackup/urbackup/add_member_togroup_aftercheck.php");
 $submod->addPage($page);
 
-$page = new Page("edit_group_settings", _T('Edit group', 'urbackup'));
-$page->setFile("modules/urbackup/urbackup/edit_group_settings.php");
+$page = new Page("edit_profile_settings", _T('Edit profile', 'urbackup'));
+$page->setFile("modules/urbackup/urbackup/edit_profile_settings.php");
 $submod->addPage($page);
 
-$page = new Page("list_computers_ongroup", _T('List computer on group', 'urbackup'));
-$page->setFile("modules/urbackup/urbackup/list_computers_ongroup.php");
+$page = new Page("list_computers_onprofile", _T('List computer on profile', 'urbackup'));
+$page->setFile("modules/urbackup/urbackup/list_computers_onprofile.php");
 $submod->addPage($page);
 
 $page = new Page("result_search_file", _T('File research by name', 'urbackup'));
@@ -99,6 +104,16 @@ $page = new Page("all_files_backup", _T('List of files from on backup', 'urbacku
 $page->setFile("modules/urbackup/urbackup/all_files_backup.php");
 $submod->addPage($page);
 
+$page = new Page("ajaxAll_files_backup", _T('List of files from on backup', 'urbackup'));
+$page->setFile("modules/urbackup/urbackup/ajaxAll_files_backup.php");
+$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader"=>true));
+$submod->addPage($page);
+
+$page = new Page("basket", _T('List of Elements in Basket', 'urbackup'));
+$page->setFile("modules/urbackup/urbackup/basket.php");
+$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader"=>true));
+$submod->addPage($page);
+
 $page = new Page("restore_file", _T('Restore file', 'urbackup'));
 $page->setFile("modules/urbackup/urbackup/restore_file.php");
 $submod->addPage($page);
@@ -107,8 +122,8 @@ $page = new Page("download_file", _T('Download file', 'urbackup'));
 $page->setFile("modules/urbackup/urbackup/download_file.php");
 $submod->addPage($page);
 
-$page = new Page("usersgroups", _T('Profiles', 'urbackup'));
-$page->setFile("modules/urbackup/urbackup/usersgroups.php");
+$page = new Page("profileslist", _T('Profiles', 'urbackup'));
+$page->setFile("modules/urbackup/urbackup/profileslist.php");
 $submod->addPage($page);
 
 $page = new Page("logs", _T('Logs', 'urbackup'));

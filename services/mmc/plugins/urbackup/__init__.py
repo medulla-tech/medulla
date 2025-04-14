@@ -16,6 +16,7 @@ from mmc.plugins.xmppmaster.master.agentmaster import callremotecommandshell
 from mmc.plugins.xmppmaster.master.agentmaster import send_message_json
 from mmc.plugins.xmppmaster.master.lib.utils import name_random
 from mmc.plugins.urbackup.urwrapper import UrApiWrapper
+from pulse2.database.urbackup.sqlite import BackupServer, BackupSettings
 
 VERSION = "1.0.0"
 APIVERSION = "1:0:0"
@@ -623,3 +624,9 @@ def create_backup_full_file(client_id):
         return backup["content"]
 
     return "No DATA full backup file"
+
+def get_backups(clientid, start=0, limit=-1, filter=""):
+    return BackupServer().get_backups(clientid, start, limit, filter)
+
+def get_setting(key=""):
+    return BackupSettings().get_setting(key)

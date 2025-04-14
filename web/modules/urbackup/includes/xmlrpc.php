@@ -1,6 +1,6 @@
 <?php
 /*
- * (c) 2022 Siveo, http://www.siveo.net/
+ * (c) 2022-2024 Siveo, http://www.siveo.net/
  *
  * $Id$
  *
@@ -169,5 +169,13 @@ function xmlrpc_create_backup_full_file($client_id){
 function xmlrpc_get_status_client($clientname){
     // Return status
     return xmlCall("urbackup.get_status_client", [$clientname]);
+}
+
+function xmlrpc_get_backups($clientid, $start=0, $limit=-1, $filter=""){
+    return xmlCall("urbackup.get_backups",[$clientid, $start, $limit, $filter]);
+}
+
+function xmlrpc_get_setting($key){
+    return xmlCall("urbackup.get_setting",[$key]);
 }
 ?>
