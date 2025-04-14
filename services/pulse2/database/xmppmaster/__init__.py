@@ -17455,8 +17455,8 @@ class WhereClauseGenerator:
     def __init__(self, data, correspondance):
         self.data = data
         self.correspondance = {k.lower(): v for k, v in correspondance.items()}  # Convertir les clés en minuscules
-        logger.error(f"WhereClauseGenerator data : {data['query']}")
-        logger.error(f"WhereClauseGenerator correspondance: {correspondance}")
+        # logger.error(f"WhereClauseGenerator data : {data['query']}")
+        # logger.error(f"WhereClauseGenerator correspondance: {correspondance}")
 
     def generate(self):
         if 'query' in self.data:
