@@ -33,7 +33,7 @@ $dataSource = isset($_GET['source']) && in_array($_GET['source'], $allowedSource
 $nameview = ($dataSource == "xmppmaster") ? "MEDULLA" : "GLPI";
 
 $titre = sprintf("%s",
-                 _T("OS Upgrade details by Machines", 'updates'))
+                 _T("OS Upgrade details by Machines", 'updates'));
 $p = new PageGenerator($titre);
 $p->setSideMenu($sidemenu);
 $p->display();
