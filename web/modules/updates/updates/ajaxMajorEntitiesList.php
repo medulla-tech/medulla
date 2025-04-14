@@ -180,10 +180,9 @@ foreach ($mergedArray as  $index=>$datacolonne) {
     $missing_information_major[]=$nb_machine_manque_info;
     $total_win[]=$datacolonne['count'];
 
-    $formattedText_bar = sprintf("(%s)",$datacolonne['definie']);
     $formattedText_help = sprintf($texte_help, $nbupdate, $datacolonne['name']);
     $comformite_name_major[]=(string) new medulla_progressbar_static($datacolonne['conformite'],
-                                                                     $formattedText_bar,
+                                                                     "",
                                                                      $formattedText_help);
     // pour chaque action on passe les parametres
     $params[] = array(

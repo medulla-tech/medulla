@@ -27,7 +27,7 @@ $sidemenu->addSideMenuItem(new SideMenuItem(_T("Entities Compliance", 'updates')
 
 
 
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Manage Update Os",
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("OS Upgrades",
                                                'updates'),
                                             "updates",
                                             "updates",
