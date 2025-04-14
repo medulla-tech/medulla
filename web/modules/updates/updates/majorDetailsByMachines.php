@@ -32,10 +32,9 @@ $allowedSources = ["xmppmaster", "glpi"];
 $dataSource = isset($_GET['source']) && in_array($_GET['source'], $allowedSources) ? $_GET['source'] : "xmppmaster";
 $nameview = ($dataSource == "xmppmaster") ? "MEDULLA" : "GLPI";
 
-$titre = sprintf("%s (<span id=%s><strong><em>%s</em></strong></span>)",
-                 _T("Details Update Majeur by Machines view", 'updates'),
-                 "myidtitre",
-                 $nameview);
+$titre = sprintf("%s",
+                 _T("OS Upgrade details by Machines", 'updates'),
+                 "myidtitre")
 $p = new PageGenerator($titre);
 $p->setSideMenu($sidemenu);
 $p->display();
