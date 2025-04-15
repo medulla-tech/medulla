@@ -130,6 +130,13 @@ def get_os_xmpp_update_major_stats():
     return XmppMasterDatabase().get_os_xmpp_update_major_stats()
 
 
+def get_os_update_major_stats_list_grp( namegrp, idlistmachine, presence=False):
+    return XmppMasterDatabase().get_os_update_major_stats_list_grp(namegrp,
+                                                                   idlistmachine,
+                                                                   presence)
+
+
+
 def get_os_update_major_details(entity_id,
                                      filter="",
                                      start=0,
