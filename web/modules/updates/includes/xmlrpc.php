@@ -126,15 +126,6 @@ function xmlrpc_get_os_xmpp_update_major_stats()
     return xmlCall("updates.get_os_xmpp_update_major_stats", []);
 }
 
-function xmlrpc_get_os_update_major_stats_list_grp($namegrp,
-                                                   $idlistmachine,
-                                                   $presence=false)
-{
-    return xmlCall("updates.get_os_update_major_stats_list_grp", [$namegrp,
-                                                                  $idlistmachine,
-                                                                  $presence]);
-}
-
 function xmlrpc_get_os_update_major_details($entity_id, $filter="", $start=0, $limit=-1)
 {
     return xmlCall("updates.get_os_update_major_details", [$entity_id, $filter, $start, $limit]);

@@ -21,7 +21,6 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-
 require_once("modules/medulla_server/version.php");
 
 $mod = new Module("updates");
@@ -107,17 +106,12 @@ $page->setFile("modules/updates/updates/ajaxDetailsByUpdatesWhite.php");
 $page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
 $submod->addPage($page);
 
+$page = new Page("MajorEntitiesList", _T('os updates', 'updates'));
+$page->setFile("modules/updates/updates/MajorEntitiesList.php");
+$submod->addPage($page);
 
 $page = new Page("updatesListWin", _T('Manage Updates Lists', 'updates'));
 $page->setFile("modules/updates/updates/updatesListWin.php");
-$submod->addPage($page);
-
-$page = new Page("testarbre", _T('test arbre', 'updates'));
-$page->setFile("modules/updates/updates/testarbre.php");
-$submod->addPage($page);
-
-$page = new Page("testarbre1", _T('test arbre', 'updates'));
-$page->setFile("modules/updates/updates/testarbre1.php");
 $submod->addPage($page);
 
 $page = new Page("ajaxUpdatesListWinWhite", _T("Manage Updates Lists", "updates"));
@@ -203,30 +197,14 @@ $page = new Page("cancelUpdate", _T('Cancel Update', 'updates'));
 $page->setFile("modules/updates/updates/cancelUpdate.php", array("noHeader" => true,"visible" => false, "AJAX" => true));
 $submod->addPage($page);
 
-
-// ********************************** Major update *************************************************
-
-$page = new Page("MajorEntitiesListbygrp", _T('Entity major update', 'updates'));
-$page->setFile("modules/updates/updates/MajorEntitiesListbygrp.php");
+// Major update
+$page = new Page("ajaxMajorEntitiesList", _T("Entities Major Compliance", "updates"));
+$page->setFile("modules/updates/updates/ajaxMajorEntitiesList.php");
+$page->setOptions(array("AJAX" => true, "visible" => false, "noHeader" => true));
 $submod->addPage($page);
 
-$page = new Page("ajaxMajorEntitiesListbygrp", _T("Detail deploy on Entity", "updates"));
-$page->setFile("modules/updates/updates/ajaxMajorEntitiesListbygrp.php");
-$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
-$submod->addPage($page);
-
-$page = new Page("ajaxMajorDetailsByMachines", _T("Details by Machines for major update", "updates"));
-$page->setFile("modules/updates/updates/ajaxMajorDetailsByMachines.php");
-$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
-$submod->addPage($page);
-
-$page = new Page("ajaxMajorDetailsByMachinesgrp", _T("Details by Machines for major update", "updates"));
-$page->setFile("modules/updates/updates/ajaxMajorDetailsByMachinesgrp.php");
-$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
-$submod->addPage($page);
-
-$page = new Page("MajorEntitiesList", _T('os updates', 'updates'));
-$page->setFile("modules/updates/updates/MajorEntitiesList.php");
+$page = new Page("updatesListMajorWin", _T('Manage Updates Major Lists', 'updates'));
+$page->setFile("modules/updates/updates/updatesListMajorWin.php");
 $submod->addPage($page);
 
 $page = new Page("deployUpdatemajor", _T('Deploy Major Updates On Machine', 'updates'));
@@ -239,21 +217,14 @@ $page->setFile("modules/updates/updates/grpDeployUpdatemajor.php");
 $page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
 $submod->addPage($page);
 
+
+$page = new Page("ajaxMajorDetailsByMachines", _T("Details by Machines for major update", "updates"));
+$page->setFile("modules/updates/updates/ajaxMajorDetailsByMachines.php");
+$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
+$submod->addPage($page);
+
 $page = new Page("majorDetailsByMachines", _T('Machines major update', 'updates'));
 $page->setFile("modules/updates/updates/majorDetailsByMachines.php");
-$submod->addPage($page);
-
-$page = new Page("majorDetailsByMachinesgrp", _T('Group major update', 'updates'));
-$page->setFile("modules/updates/updates/majorDetailsByMachinesgrp.php");
-$submod->addPage($page);
-
-$page = new Page("updatesListMajorWin", _T('Manage Updates Major Lists', 'updates'));
-$page->setFile("modules/updates/updates/updatesListMajorWin.php");
-$submod->addPage($page);
-
-$page = new Page("ajaxMajorEntitiesList", _T("Entities Major Compliance", "updates"));
-$page->setFile("modules/updates/updates/ajaxMajorEntitiesList.php");
-$page->setOptions(array("AJAX" => true, "visible" => false, "noHeader" => true));
 $submod->addPage($page);
 
 $page = new Page("ajaxgroupUpdateMajorEntity", _T("Detail deploy on group entity", "updates"));
@@ -261,9 +232,12 @@ $page->setFile("modules/updates/updates/ajaxgroupUpdateMajorEntity.php");
 $page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
 $submod->addPage($page);
 
+
 $page = new Page("groupUpdateMajorEntity", _T('Machines major update', 'updates'));
 $page->setFile("modules/updates/updates/groupUpdateMajorEntity.php");
 $submod->addPage($page);
+
+
 $mod->addSubmod($submod);
 
 $MMCApp = &MMCApp::getInstance();
