@@ -97,7 +97,7 @@ import uuid
 import random
 import copy
 from sqlalchemy.ext.automap import automap_base
-
+import re
 Session = sessionmaker()
 
 logger = logging.getLogger()
@@ -7903,6 +7903,7 @@ class XmppMasterDatabase(DatabaseHelper):
             "glpi_owner_firstname",
             "glpi_owner_realname",
             "glpi_owner",
+            "glpi_entity_id",
             "glpi_location_id",
             "model",
             "manufacturer",
@@ -7966,6 +7967,7 @@ class XmppMasterDatabase(DatabaseHelper):
                         recherchefild = " AND %s IS NULL " % ctx["field"]
                     elif ctx["field"] in [
                         "mach.id",
+                        "mach.glpi_entity_id",
                         "mach.glpi_location_id",
                         "ent.id",
                         "loc.glpi_id",
@@ -7992,7 +7994,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 ]
                 if entitylist:
                     entitystrlist = ",".join(entitylist)
-                    entity = " AND ent.id in (%s) " % entitystrlist
+                    entity = " AND ent.glpi_id in (%s) " % entitystrlist
 
         ordered = ""
         if self.config.ordered == 1:
@@ -8029,6 +8031,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     mach.glpi_owner_firstname,
                     mach.glpi_owner_realname,
                     mach.glpi_owner,
+                    mach.glpi_entity_id,
                     mach.glpi_location_id,
                     mach.model,
                     mach.manufacturer,
@@ -8038,7 +8041,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     loc.complete_name AS locationpath,
                     loc.glpi_id AS locationid,
                     ent.name AS entityname,
-                    ent.completename AS entitypath,
+                    ent.complete_name AS entitypath,
                     ent.id AS entityid,
                     GROUP_CONCAT(DISTINCT IF( netw.ipaddress='', null,netw.ipaddress) SEPARATOR ',') AS listipadress,
                     GROUP_CONCAT(DISTINCT IF( netw.broadcast='', null,netw.broadcast) SEPARATOR ',') AS broadcast,
@@ -8051,7 +8054,7 @@ class XmppMasterDatabase(DatabaseHelper):
                         LEFT OUTER JOIN
                     glpi_location loc ON loc.id = mach.glpi_location_id
                         LEFT OUTER JOIN
-                    local_glpi_entities ent ON ent.id = lgf.entities_id
+                    glpi_entity ent ON ent.id = mach.glpi_entity_id
                         LEFT OUTER JOIN
                     glpi_register_keys reg ON reg.machines_id = mach.id
                         LEFT OUTER JOIN
@@ -8071,6 +8074,7 @@ class XmppMasterDatabase(DatabaseHelper):
 
         if debugfunction:
             logger.info("SQL request :  %s" % sql)
+
         result = session.execute(sql)
         sql_count = "SELECT FOUND_ROWS();"
         ret_count = session.execute(sql_count)
@@ -15847,6 +15851,70 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             return {}
 
     @DatabaseHelper._sessionm
+    def get_os_update_major_stats_list_grp(self, session, namegrp, idlistmachine, presence=False):
+        """
+        Récupère les statistiques de mise à jour des systèmes d'exploitation Windows 10 et Windows 11.
+
+        Args:
+            session (sqlalchemy.orm.session.Session): La session de base de données.
+            namegrp (str): Le nom du groupe pour lequel les statistiques sont récupérées.
+            idlistmachine (list): La liste des identifiants des machines à inclure dans les statistiques.
+            presence (bool, optional): Filtrer uniquement les machines activées si True. Par défaut, False.
+
+        Returns:
+            dict: Un dictionnaire contenant les statistiques de mise à jour des systèmes d'exploitation.
+        """
+        # JFKJFK
+        try:
+            cols = ["W10to10", "W10to11", "W11to11", "UPDATED", "undefined"]
+            results = {"Group": namegrp, "nbtotal": len(idlistmachine)}
+            for col in cols:
+                results[col] = 0
+
+            if not idlistmachine:
+                return results
+
+            machineGlpiId = ','.join(["'%s'" % x for x in idlistmachine if x != ""])
+
+            # Utilisez machineGlpiId pour créer la chaîne finale
+            listmachineGlpiId = "(%s)" % machineGlpiId
+
+            # Condition de filtre sur la présence des machines
+            presence_filter = "AND enabled = 1" if presence else ""
+
+            sql = f'''
+                SELECT
+                    CASE
+                        WHEN old_version = 10 AND new_version = 10 AND oldcode NOT LIKE '22H2' THEN 'W10to10'
+                        WHEN old_version = 10 AND new_version = 11 THEN 'W10to11'
+                        WHEN old_version = 11 AND oldcode NOT LIKE '24H2' THEN 'W11to11'
+                        WHEN old_version = new_version AND oldcode = newcode THEN 'UPDATED'
+                        ELSE 'undefined'
+                    END AS os,
+                    COUNT(*) AS count
+                FROM
+                    xmppmaster.up_machine_major_windows
+                WHERE
+                    old_version IS NOT NULL AND new_version IS NOT NULL
+                    AND glpi_id IN {listmachineGlpiId}
+                    {presence_filter}
+                GROUP BY os;
+            '''
+            result = session.execute(sql).fetchall()
+
+            for row in result:
+                os_category = row["os"]
+                if os_category in results:
+                    results[os_category] = row["count"]
+
+            return results
+
+        except Exception as e:
+            logger.error(f"Erreur lors de la récupération des statistiques grp de mise à jour des OS : {str(e)}")
+            logger.error(f"Traceback : {traceback.format_exc()}")
+            return {}
+
+    @DatabaseHelper._sessionm
     def get_os_xmpp_update_major_details(
         self, session, entity_id, filter="", start=0, limit=-1, colonne=True
     ):
@@ -16562,6 +16630,120 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             # Requête pour les statistiques par entité
             entity_sql = f"""
                         SELECT
+                            xe.glpi_id as entity_id,
+                            xe.name AS entity_name,
+                            xe.complete_name AS complete_name,
+                            COUNT(*) AS nbwin,
+                            CASE
+                                WHEN
+                                    xma.platform LIKE '%Windows 10%'
+                                        AND xma.platform NOT LIKE '%[22H2]'
+                                THEN
+                                    'W10to10'
+                                WHEN
+                                    xma.platform LIKE '%Windows 10%'
+                                        AND xma.platform LIKE '%[22H2]'
+                                THEN
+                                    'W10to11'
+                                WHEN
+                                    xma.platform LIKE '%Windows 11%'
+                                        AND xma.platform NOT LIKE '%[24H2]'
+                                THEN
+                                    'W11to11'
+                                WHEN
+                                    xma.platform LIKE '%Windows%'
+                                        AND xma.platform NOT REGEXP '\[[0-9]{2}H[0-9]\]$'
+                                THEN
+                                    'winVers_missing'
+                                ELSE 'not_win'
+                            END AS os
+                        FROM
+                            xmppmaster.machines xma
+                                INNER JOIN
+                            xmppmaster.glpi_entity xe ON xe.id = xma.glpi_entity_id
+                        WHERE
+                            xma.platform LIKE '%Windows%'
+                            {presence_filter}
+                        GROUP BY xe.id , os
+                        ORDER BY xe.complete_name , os;
+            """
+
+            entity_result = session.execute(entity_sql).fetchall()
+            for row in entity_result:
+                # initialisation
+                results["entity"].setdefault(row.complete_name, {})
+                results["entity"][row.complete_name]["name"]=row.entity_name
+                results["entity"][row.complete_name][row.os ]=int(row.nbwin)
+                results["entity"][row.complete_name]['entity_id']=int(row.entity_id)
+              # Calcul de la conformité
+            for entity, data in results["entity"].items():
+                total = results["entity"][entity]["count"]
+                non_conforme = sum(data.get(key, 0) for key in cols)
+                results["entity"][entity]["conformite"] = round(
+                    ((non_conforme - total) / total * 100) if non_conforme > 0 else 0, 2
+                )
+
+            # Copier les clés existantes avant d'itérer
+            existing_entities = list(results["entity"].keys())
+            for entity in existing_entities:  # Itérer sur la copie des clés
+                for col in cols:
+                    if col not in results["entity"][entity]:
+                        results["entity"][entity][col] = 0
+            return results
+
+        except Exception as e:
+            logger.error(
+                f"Erreur lors de la récupération des statistiques de mise à jour des OS : {str(e)}"
+            )
+            logger.error(f"Traceback : {traceback.format_exc()}")
+            return {}
+
+
+    @DatabaseHelper._sessionm
+    def get_os_xmpp_update_major_stats(self, session, presence=False):
+        """
+        Récupère les statistiques de mise à jour majeure des systèmes d'exploitation Windows 10 et Windows 11.
+
+        Args:
+            session (sqlalchemy.orm.session.Session): La session de base de données.
+            presence (bool, optional): Filtrer uniquement les machines activées si True. Par défaut, True.
+
+        Returns:
+            dict: Un dictionnaire contenant les statistiques de mise à jour des systèmes d'exploitation.
+        """
+        try:
+            # Dictionnaire final des résultats
+            cols = ["W10to10", "W10to11", "W11to11"]
+            results = {"entity": {}}
+
+            # Condition de filtre sur xma.enabled
+            presence_filter = "AND xma.enabled = 1" if presence else ""
+
+            # Requête pour le nombre total de machines par entité
+            total_os_sql = f"""
+                SELECT
+                    xe.name AS entity_name,
+                    xe.complete_name AS complete_name,
+                    COUNT(*) AS count
+                FROM
+                    xmppmaster.machines xma
+                INNER JOIN xmppmaster.glpi_entity xe ON xe.id = xma.glpi_entity_id
+                WHERE
+                    xma.platform LIKE '%Windows%'
+                    {presence_filter}
+                GROUP BY xe.id;
+            """
+
+            total_os_result = session.execute(total_os_sql).fetchall()
+            for row in total_os_result:
+                results["entity"].setdefault(
+                    row.complete_name, {"count": int(row.count)}
+                )
+
+            # Requête pour les statistiques par entité
+            entity_sql = f"""
+                        SELECT
+                            xe.glpi_id as entity_id,
                             xe.name AS entity_name,
                             xe.complete_name AS complete_name,
                             COUNT(*) AS nbwin,
@@ -16605,6 +16787,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                 results["entity"].setdefault(row.complete_name, {})
                 results["entity"][row.complete_name]["name"] = row.entity_name
                 results["entity"][row.complete_name][row.os] = int(row.nbwin)
+                results["entity"][row.complete_name]['entity_id'] = int(row.entity_id)
             # Calcul de la conformité
             for entity, data in results["entity"].items():
                 total = results["entity"][entity]["count"]
@@ -16627,3 +16810,773 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             )
             logger.error(f"Traceback : {traceback.format_exc()}")
             return {}
+
+    @DatabaseHelper._sessionm
+    def get_os_update_major_stats(self, session, presence=False):
+        """
+        Récupère les statistiques de mise à jour des systèmes d'exploitation Windows 10 et Windows 11.
+
+        Args:
+            session (sqlalchemy.orm.session.Session): La session de base de données.
+            presence (bool, optional): Filtrer uniquement les machines activées si True. Par défaut, True.
+
+        Returns:
+            dict: Un dictionnaire contenant les statistiques de mise à jour des systèmes d'exploitation.
+        """
+        try:
+            # Dictionnaire final des résultats
+            cols = ["W10to10", "W10to11", "W11to11", "UPDATED", "undefined"]
+            results = {"entity": {}}
+
+            # Condition de filtre sur la présence des machines
+            presence_filter = "AND enabled = 1" if presence else ""
+
+            # Requête pour le nombre total de machines par entité
+            total_os_sql = f'''
+                SELECT
+                    xe.name AS entity_name,
+                    xe.complete_name AS complete_name,
+                    COUNT(*) AS count
+                FROM
+                    xmppmaster.machines xma
+                INNER JOIN xmppmaster.glpi_entity xe ON xe.id = xma.glpi_entity_id
+                WHERE
+                    xma.platform LIKE '%Windows%'
+                    {presence_filter}
+                GROUP BY xe.id;
+            '''
+
+            total_os_result = session.execute(total_os_sql).fetchall()
+            for row in total_os_result:
+                results["entity"].setdefault(row.complete_name, {"count": int(row.count)})
+
+            # Requête pour les statistiques par entité
+            entity_sql = f'''
+                SELECT
+                    ent_id,
+                    entity AS entity_name,
+                    entity AS complete_name,
+                    COUNT(*) AS nbwin,
+                    CASE
+                        WHEN old_version = 10 AND new_version = 10 and oldcode NOT LIKE '22H2' THEN 'W10to10'
+                        WHEN old_version = 10 AND new_version = 11 THEN 'W10to11'
+                        WHEN old_version = 11 AND oldcode NOT LIKE '24H2' THEN 'W11to11'
+                        WHEN old_version = new_version AND oldcode = newcode THEN 'UPDATED'
+                        ELSE 'undefined'
+                    END AS os
+                FROM
+                    xmppmaster.up_machine_major_windows
+                WHERE
+                    old_version IS NOT NULL AND new_version IS NOT NULL
+                    {presence_filter}
+                GROUP BY ent_id, os
+                ORDER BY complete_name, os;
+            '''
+
+            entity_result = session.execute(entity_sql).fetchall()
+            for row in entity_result:
+                # Initialisation
+                results["entity"].setdefault(row.complete_name, {})
+                results["entity"][row.complete_name]["name"] = row.entity_name
+                results["entity"][row.complete_name][row.os] = int(row.nbwin)
+                results["entity"][row.complete_name]['entity_id'] = int(row.ent_id)
+                logger.error(f"{row.os}")
+
+
+            logger.error(f"result {results}")
+            # Calcul de la conformité
+            for entity, data in results["entity"].items():
+                total = data["count"]
+                non_conforme = sum(data.get(key, 0) for key in cols if  key != "undefined" and  key != "UPDATED")#
+                definie = sum(data.get(key, 0) for key in cols if  key != "undefined" )#
+                undefined = total - definie
+                results["entity"][entity]["definie"]=definie
+                results["entity"][entity]["undefined"]=undefined
+                if definie == 0:
+                    results["entity"][entity]["conformite"] = 0.0
+                else:
+                    results["entity"][entity]["conformite"] = round(((definie-non_conforme ) / definie * 100) if non_conforme > 0 else 0, 2)
+
+            # Copier les clés existantes avant d'itérer
+            existing_entities = list(results["entity"].keys())
+            for entity in existing_entities:  # Itérer sur la copie des clés
+                for col in cols:
+                    if col not in results["entity"][entity]:
+                        results["entity"][entity][col] = 0
+
+            return results
+
+        except Exception as e:
+            logger.error(f"Erreur lors de la récupération des statistiques de mise à jour des OS : {str(e)}")
+            logger.error(f"Traceback : {traceback.format_exc()}")
+            return {}
+
+    @DatabaseHelper._sessionm
+    def get_os_xmpp_update_major_details(self,
+                                         session,
+                                         entity_id,
+                                         filter="",
+                                         start=0,
+                                         limit=-1,
+                                         colonne=True):
+        """
+        Récupère les détails des machines avec des systèmes d'exploitation Windows à partir de la base de données XMPPMaster.
+
+        Cette fonction exécute une requête SQL pour récupérer des informations sur les machines
+        avec des systèmes d'exploitation Windows, y compris une colonne calculée 'os' qui
+        catégorise la version du système d'exploitation et indique les mises à jour majeures
+        nécessaires entre la version actuelle et la prochaine mise à jour majeure. Les résultats
+        peuvent être retournés soit dans un format détaillé ligne par ligne, soit dans un format
+        en colonnes, selon le paramètre 'colonne'.
+
+        Paramètres :
+            session (Session) : Objet de session SQLAlchemy pour l'interaction avec la base de données.
+            entity_id (int) : L'ID de l'entité pour filtrer les résultats.
+            filter (str) : Critères de filtrage supplémentaires pour filtrer par nom de machine.
+            start (int) : Le décalage pour commencer à retourner les lignes.
+            limit (int) : Le nombre maximum de lignes à retourner. Si -1, pas de limitation.
+            colonne (bool) : Si True, retourne les résultats dans un format en colonnes. La valeur par défaut est True.
+
+        Retourne :
+            dict : Un dictionnaire contenant le nombre de lignes correspondantes et soit
+                   des résultats détaillés ligne par ligne, soit des résultats en colonnes,
+                   selon le paramètre 'colonne'. La colonne 'update' indique les mises à jour majeures
+                   nécessaires, telles que 'W10to10' pour une mise à jour entre versions de Windows 10,
+                   'W10to11' pour une mise à jour de Windows 10 vers Windows 11, et 'W11to11' pour une
+                   mise à jour entre versions de Windows 11.
+        """
+
+        # Base SQL query
+        total_os_sql = '''
+            SELECT
+                SQL_CALC_FOUND_ROWS
+                xma.id AS id_machine,
+                xma.hostname AS machine,
+                xma.platform AS platform,
+                -- xe.glpi_id AS entity_id,
+                -- xe.name AS entity_name,
+                -- xe.complete_name AS complete_name,
+                CASE
+                    WHEN xma.platform REGEXP '\\\\[([0-9]{2}H[0-9])\\\\]$' THEN
+                        SUBSTRING_INDEX(SUBSTRING_INDEX(xma.platform, '[', -1), ']', 1)
+                    ELSE NULL
+                END AS version,
+                CASE
+                    WHEN xma.platform LIKE '%Windows 10%' AND xma.platform NOT LIKE '%[22H2]' THEN 'W10to10'
+                    WHEN xma.platform LIKE '%Windows 10%' AND xma.platform LIKE '%[22H2]' THEN 'W10to11'
+                    WHEN xma.platform LIKE '%Windows 11%' AND xma.platform NOT LIKE '%[24H2]' THEN 'W11to11'
+                    WHEN xma.platform LIKE '%Windows%' AND xma.platform NOT REGEXP '[[0-9]{2}H[0-9]]$' THEN 'winVers_missing'
+                    ELSE 'not_win'
+                END AS 'update'
+            FROM
+                xmppmaster.machines xma
+                INNER JOIN xmppmaster.glpi_entity xe ON xe.id = xma.glpi_entity_id
+            WHERE
+                xma.platform LIKE '%Windows%' AND xe.glpi_id = :entity_id
+        '''
+        # Add filter condition if filter is not empty
+        if filter:
+            total_os_sql += " AND xma.hostname LIKE :filter"
+
+        # Add ORDER BY and LIMIT/OFFSET if limit is not -1
+        total_os_sql += " ORDER BY xma.hostname "
+        if limit != -1:
+            logger.error("limit %s "%limit)
+            total_os_sql += " LIMIT :limit OFFSET :start"
+
+        # Convert to text for parameter binding
+        total_os_sql = text(total_os_sql)
+
+        # Log the SQL query with parameters
+        logger.debug("Executing SQL query: %s", total_os_sql)
+        logger.debug("With parameters: entity_id=%s, filter=%s, limit=%s, start=%s", entity_id, f"%{filter}%", limit, start)
+
+        # Execute the SQL query with parameters
+        entity_result = session.execute(total_os_sql, {
+            'entity_id': entity_id,
+            'filter': f"%{filter}%",
+            'limit': limit,
+            'start': start
+        }).fetchall()
+
+        # Count the total number of matching elements using FOUND_ROWS()
+        sql_count = text("SELECT FOUND_ROWS();")
+        ret_count = session.execute(sql_count).scalar()
+
+        # Extract common fields from the first row
+        # common_entity_id = entity_result[0].entity_id if entity_result else ""
+        # common_entity_name = entity_result[0].entity_name if entity_result else ""
+        # common_complete_name = entity_result[0].complete_name if entity_result else ""
+
+        # Prepare the result dictionary with the count of matching rows and common fields
+        result = {
+            'nb_machine': ret_count,
+            # 'entity_id': common_entity_id,
+            # 'entity_name': common_entity_name,
+            # 'complete_name': common_complete_name
+        }
+
+        if colonne:
+            # If colonne is True, return results in columnar format
+            result.update({
+                'id_machine': [row.id_machine if row.id_machine is not None else "" for row in entity_result],
+                'machine': [row.machine if row.machine is not None else "" for row in entity_result],
+                'platform': [row.platform if row.platform is not None else "" for row in entity_result],
+                'version': [row.version if row.version is not None else "" for row in entity_result],
+                'update': [row.update  if row.update is not None else "" for row in entity_result]
+            })
+        else:
+            # If colonne is False, return detailed results in row-wise format
+            result['details'] = [
+                {
+                    'id_machine': row.id_machine if row.id_machine is not None else "",
+                    'machine': row.machine if row.machine is not None else "",
+                    'platform': row.platform if row.platform is not None else "",
+                    'version':  row.version if row.version is not None else "",
+                    'update': row.update if row.update is not None else ""
+                }
+                for row in entity_result
+            ]
+
+        return result
+
+    @DatabaseHelper._sessionm
+    def get_os_update_major_details(self,
+                                        session,
+                                        entity_id,
+                                        filter="",
+                                        start=0,
+                                        limit=-1,
+                                        colonne=True):
+        """
+        Récupère les détails des machines avec des systèmes d'exploitation Windows à partir de la base de données XMPPMaster.
+
+        Cette fonction exécute une requête SQL pour récupérer des informations sur les machines
+        avec des systèmes d'exploitation Windows, y compris une colonne calculée 'os' qui
+        catégorise la version du système d'exploitation et indique les mises à jour majeures
+        nécessaires entre la version actuelle et la prochaine mise à jour majeure. Les résultats
+        peuvent être retournés soit dans un format détaillé ligne par ligne, soit dans un format
+        en colonnes, selon le paramètre 'colonne'.
+
+        Paramètres :
+            session (Session) : Objet de session SQLAlchemy pour l'interaction avec la base de données.
+            entity_id (int) : L'ID de l'entité pour filtrer les résultats.
+            filter (str) : Critères de filtrage supplémentaires pour filtrer par nom de machine.
+            start (int) : Le décalage pour commencer à retourner les lignes.
+            limit (int) : Le nombre maximum de lignes à retourner. Si -1, pas de limitation.
+            colonne (bool) : Si True, retourne les résultats dans un format en colonnes. La valeur par défaut est True.
+
+        Retourne :
+            dict : Un dictionnaire contenant le nombre de lignes correspondantes et soit
+                des résultats détaillés ligne par ligne, soit des résultats en colonnes,
+                selon le paramètre 'colonne'. La colonne 'update' indique les mises à jour majeures
+                nécessaires, telles que 'W10to10' pour une mise à jour entre versions de Windows 10,
+                'W10to11' pour une mise à jour de Windows 10 vers Windows 11, et 'W11to11' pour une
+                mise à jour entre versions de Windows 11.
+        """
+        logger.error("DEDEDEDE")
+        # Nouvelle requête SQL
+        total_os_sql = '''
+            SELECT
+                SQL_CALC_FOUND_ROWS
+                up_mach.id_machine AS id_machine,
+                up_mach.glpi_id AS uuid_inventorymachine,
+                up_mach.hostname AS machine,
+                up_mach.update_id AS package_id,
+                up_mach.platform AS platform,
+                up_mach.entity AS entity,
+                up_mach.ent_id AS entity_id,
+                up_mach.kb AS installeur,
+                up_mach.oldcode AS version,
+                CASE
+                    WHEN old_version = 10 AND new_version = 10 THEN 'W10to10'
+                    WHEN old_version = 10 AND new_version = 11 THEN 'W10to11'
+                    WHEN old_version = 11 AND oldcode NOT LIKE '24H2' THEN 'W11to11'
+                    ELSE 'not update'
+                END AS 'update'
+            FROM
+                xmppmaster.up_machine_major_windows up_mach
+            WHERE
+                ent_id = :entity_id
+        '''
+
+        # Ajouter la condition de filtre si le filtre n'est pas vide
+        if filter:
+            total_os_sql += " AND up_mach.hostname LIKE :filter"
+
+        # Ajouter ORDER BY et LIMIT/OFFSET si limit n'est pas -1
+        total_os_sql += " ORDER BY up_mach.hostname "
+        if limit != -1:
+            logger.error("limit %s ", limit)
+            total_os_sql += " LIMIT :limit OFFSET :start"
+
+        # Convertir en texte pour la liaison des paramètres
+        total_os_sql = text(total_os_sql)
+
+        # Journaliser la requête SQL avec les paramètres
+        logger.debug("Executing SQL query: %s", total_os_sql)
+        logger.debug("With parameters: entity_id=%s, filter=%s, limit=%s, start=%s", entity_id, f"%{filter}%", limit, start)
+
+        # Exécuter la requête SQL avec les paramètres
+        entity_result = session.execute(total_os_sql, {
+            'entity_id': entity_id,
+            'filter': f"%{filter}%",
+            'limit': limit,
+            'start': start
+        }).fetchall()
+
+        # Compter le nombre total d'éléments correspondants en utilisant FOUND_ROWS()
+        sql_count = text("SELECT FOUND_ROWS();")
+        ret_count = session.execute(sql_count).scalar()
+        logger.error(ret_count)
+        # Préparer le dictionnaire de résultats avec le nombre de lignes correspondantes
+        result = {
+            'nb_machine': ret_count,
+        }
+
+        if colonne:
+            # Si colonne est True, retourner les résultats au format colonne
+            result.update({
+                'id_machine': [row.id_machine if row.id_machine is not None else "" for row in entity_result],
+                'uuid_inventorymachine': [row.uuid_inventorymachine if row.uuid_inventorymachine is not None else "" for row in entity_result],
+                'entity': [row.entity if row.entity is not None else "" for row in entity_result],
+                'entity_id': [row.entity_id if row.entity_id is not None else "" for row in entity_result],
+
+                'machine': [row.machine if row.machine is not None else "" for row in entity_result],
+                'platform': [row.platform if row.platform is not None else "" for row in entity_result],
+                'package_id': [row.package_id if row.package_id is not None else "" for row in entity_result],
+                'installeur': [row.installeur if row.installeur is not None else "" for row in entity_result],
+                'version': [row.version if row.version is not None else "" for row in entity_result],
+                'update': [row.update if row.update is not None else "" for row in entity_result]
+            })
+        else:
+            # Si colonne est False, retourner les résultats détaillés au format ligne
+            result['details'] = [
+                {
+                    'id_machine': row.id_machine if row.id_machine is not None else "",
+                    'entity': row.entity if row.entity is not None else "",
+                    'entity_id': row.entity_id if row.entity_id is not None else "",
+                    'uuid_inventorymachine': row.uuid_inventorymachine if row.uuid_inventorymachine is not None else "",
+                    'machine': row.machine if row.machine is not None else "",
+                    'platform': row.platform if row.platform is not None else "",
+                    'package_id': row.package_id if row.package_id is not None else "",
+                    'installeur': row.installeur if row.installeur is not None else "",
+                    'version': row.version if row.version is not None else "",
+                    'update': row.update if row.update is not None else ""
+                }
+                for row in entity_result
+            ]
+
+        return result
+
+
+
+    @DatabaseHelper._sessionm
+    def getAlldistinctvaluetable(self, session, ctx, key: str, value: str) -> list:
+        pass
+
+    @DatabaseHelper._sessionm
+    def getMachinesByCriteria(self, session, key: str, value: str) -> list:
+        """
+        Retrieve a list of hostnames based on the provided key and pattern.
+
+        Args:
+            session (Session): The SQLAlchemy session to use for the query.
+            key (str): The column name to search in (e.g., 'oldcode', 'oldversion').
+            value (str): The pattern to match.
+
+        Returns:
+            list: A list of hostnames that match the pattern.
+                  Returns an empty list if an error occurs.
+        """
+        try:
+            # Construct the SQL query
+            sql = f"""
+                SELECT distinct hostname AS name
+                FROM xmppmaster.up_major_win
+                WHERE {key} REGEXP :pattern
+            """
+
+            # Log the SQL query for debugging
+            logger.error(f"Executing SQL query: {sql} with pattern: {value}")
+
+            # Execute the query with the provided value
+            result = session.execute(sql, {'pattern': value})
+
+            # Fetch all matching hostnames
+            hostnames = [row['name'] for row in result.fetchall()]
+            return hostnames
+
+        except Exception as e:
+            # Log the exception (optional)
+            print(f"An error occurred: {e}")
+            # Return an empty list in case of an error
+            return []
+
+
+    @DatabaseHelper._sessionm
+    def getAllMachineByVersion(self, session, ctx, value: str) -> list:
+        """
+        Retrieve a list of hostnames based on the provided version pattern.
+
+        Args:
+            session (Session): The SQLAlchemy session to use for the query.
+            value (str): The version pattern to match (e.g., '24H2', '21H2').
+
+        Returns:
+            list: A list of hostnames that match the version pattern.
+                Returns an empty list if an error occurs.
+        """
+        try:
+            # Construct the SQL query
+            sql = """
+                SELECT distinct oldcode AS oldcode
+                FROM xmppmaster.up_major_win
+                WHERE oldcode REGEXP :pattern
+            """
+
+            # Log the SQL query for debugging
+            logger.error(f"Executing SQL query: {sql} with pattern: {value}")
+
+            # Execute the query with the provided value
+            result = session.execute(sql, {'pattern': value})
+
+            # Fetch all matching hostnames
+            hostnames = [row['oldcode'] for row in result.fetchall()]
+            return hostnames
+
+        except Exception as e:
+            # Log the exception as an error
+            logger.error(f"An error occurred: {e}")
+            # Return an empty list in case of an error
+            return []
+
+    @DatabaseHelper._sessionm
+    def getMachineByversion(self, session, ctx, value: str) -> list:
+        """
+        Retrieve a list of hostnames based on the provided version pattern.
+
+        Args:
+            session (Session): The SQLAlchemy session to use for the query.
+            value (str): The version pattern to match (e.g., '24H2', '21H2').
+
+        Returns:
+            list: A list of hostnames that match the version pattern.
+                  Returns an empty list if an error occurs.
+        """
+        try:
+            # Construct the SQL query
+            sql = """
+                SELECT hostname AS name
+                FROM xmppmaster.up_major_win
+                WHERE oldcode REGEXP :pattern
+            """
+            # Execute the query with the provided value
+            result = session.execute(sql, {'pattern': value})
+
+            # Fetch all matching hostnames
+            hostnames = [row['name'] for row in result.fetchall()]
+            return hostnames
+
+        except Exception as e:
+            # Log the exception (optional)
+            logger.error(f"An error occurred: {e}")
+            # Return an empty list in case of an error
+            return []
+
+    @DatabaseHelper._sessionm
+    def getAllMachineByOsType(self, session, ctx, value: str) -> list:
+        """
+        Retrieve a list of hostnames based on the provided OS type pattern.
+
+        Args:
+            session (Session): The SQLAlchemy session to use for the query.
+            value (str): The OS type pattern to match (e.g., 'W10', 'W11').
+
+        Returns:
+            list: A list of hostnames that match the OS type pattern.
+                Returns an empty list if an error occurs.
+        """
+        try:
+            # Construct the SQL query
+            sql = """
+                SELECT distinct oldversion
+                FROM xmppmaster.up_major_win
+                WHERE oldversion REGEXP :pattern
+            """
+            # Execute the query with the provided value
+            result = session.execute(sql, {'pattern': value})
+
+            # Fetch all matching hostnames
+            hostnames = [row['oldversion'] for row in result.fetchall()]
+            return hostnames
+
+        except Exception as e:
+            # Log the exception (optional)
+            logger.error(f"An error occurred: {e}")
+            # Return an empty list in case of an error
+            return []
+
+
+    @DatabaseHelper._sessionm
+    def getMachineByOsType(self, session, ctx, value: str) -> list:
+        """
+        Retrieve a list of hostnames based on the provided OS type pattern.
+
+        Args:
+            session (Session): The SQLAlchemy session to use for the query.
+            value (str): The OS type pattern to match (e.g., 'W10', 'W11').
+
+        Returns:
+            list: A list of hostnames that match the OS type pattern.
+                Returns an empty list if an error occurs.
+        """
+        try:
+            # Construct the SQL query
+            sql = """
+                SELECT hostname AS name
+                FROM xmppmaster.up_major_win
+                WHERE oldversion REGEXP :pattern
+            """
+            # Execute the query with the provided value
+            result = session.execute(sql, {'pattern': value})
+
+            # Fetch all matching hostnames
+            hostnames = [row['name'] for row in result.fetchall()]
+            return hostnames
+
+        except Exception as e:
+            # Log the exception (optional)
+            logger.error(f"An error occurred: {e}")
+            # Return an empty list in case of an error
+            return []
+
+
+
+    @DatabaseHelper._sessionm
+    def test_update_major_deployment_in_progress(self,
+                                                 session,
+                                                 title):
+        """
+        Test if there are any major deployments in progress that match the specified title,
+        are in the 'DEPLOYMENT START' state, and have an endcmd time before the current time.
+        Returns True if a deployment in progress is found, otherwise returns False.
+        """
+        # Define the SQL query to check for existence
+        sql_query = text("""
+        SELECT EXISTS (
+            SELECT 1
+            FROM xmppmaster.deploy
+            WHERE title LIKE :title
+                AND state = 'DEPLOYMENT START'
+                AND endcmd < NOW()
+        ) AS deployment_exists;
+        """)
+        # Execute the query using the session
+        result = session.execute(sql_query, {'title': f'{title}%'})
+        # Fetch the result
+        deployment_exists = result.fetchone()[0]
+        # Return True if deployment exists, otherwise False
+        return deployment_exists
+
+    #
+    #
+    # @DatabaseHelper._sessionm
+    # def getRestrictedComputersList(self,
+    #                             session,
+    #                             ctx,
+    #                             min=0,
+    #                             max=-1,
+    #                             filt=None,
+    #                             advanced=True,
+    #                             justid=False,
+    #                             top=None):
+    #     """
+    #     Récupère une liste restreinte d'ordinateurs à partir de la base de données en fonction des filtres fournis.
+    #
+    #     Args:
+    #         session: La session de base de données active.
+    #         ctx: Le contexte d'exécution contenant des informations supplémentaires.
+    #         min: L'index de départ pour la pagination des résultats.
+    #         max: L'index de fin pour la pagination des résultats.
+    #         filt: Un dictionnaire de filtres à appliquer à la requête.
+    #         advanced: Indique si des fonctionnalités avancées doivent être utilisées.
+    #         justid: Indique si seuls les identifiants doivent être retournés.
+    #         top: Limite supérieure pour le nombre de résultats.
+    #
+    #     Returns:
+    #         Un dictionnaire contenant les ordinateurs filtrés, structuré par UUID.
+    #     """
+    #     try:
+    #         # Importation locale pour éviter l'importation circulaire
+    #         from mmc.plugins.xmppmaster.config import xmppMasterConfig
+    #         summary = xmppMasterConfig().summary
+    #
+    #         # Liste de correspondance avec summary glpi
+    #         correspondance_summary = {
+    #             "cn": "machines.hostname as cn",
+    #             "type": "machines.model as type",
+    #             "os": "machines.platform as os",
+    #             "description": "machines.glpi_description as description",
+    #             "user": "machines.lastuser as user",
+    #             "entity": "glpi_entity.complete_name as entity",
+    #             "owner_firstnam": "machines.glpi_owner_firstname as owner_firstname",
+    #             "owner_realname": "machines.glpi_owner_realname as owner_realname",
+    #             "location": "glpi_location.complete_name as location",
+    #             "manufacturer": "machines.manufacturer as manufacturer",
+    #         }
+    #
+    #         # Génération de la liste des entités
+    #         entity_list = ""
+    #         if 'ctxlocation' in filt and 'entityid' in filt['ctxlocation'] and filt['ctxlocation']['entityid']:
+    #             logger.error(f"Entity IDs in filter: {filt['ctxlocation']['entityid']}")
+    #             entity_list = ",".join(f"'{x}'" for x in filt['ctxlocation']['entityid'])
+    #             logger.error(f"Generated entity list: {entity_list}")
+    #             if entity_list:
+    #                 entity_list = f"AND glpi_entity.glpi_id IN ({entity_list})"
+    #
+    #         # Construction de la requête SQL de base
+    #         columns = ",\n\t".join(correspondance_summary[x] for x in correspondance_summary if x in summary)
+    #         querybase = f"""
+    #         SELECT
+    #             SQL_CALC_FOUND_ROWS
+    #             xmppmaster.machines.uuid_inventorymachine,
+    #             {columns}
+    #         FROM
+    #             xmppmaster.machines
+    #             LEFT JOIN xmppmaster.up_machine_major_windows
+    #                 ON xmppmaster.up_machine_major_windows.id_machine = xmppmaster.machines.id
+    #             LEFT JOIN xmppmaster.glpi_entity
+    #                 ON xmppmaster.glpi_entity.id = xmppmaster.machines.glpi_entity_id
+    #             LEFT JOIN xmppmaster.glpi_location
+    #                 ON xmppmaster.glpi_location.id = xmppmaster.machines.glpi_location_id
+    #             LEFT JOIN xmppmaster.organization_ad
+    #                 ON xmppmaster.organization_ad.id_inventory = xmppmaster.machines.id_glpi
+    #         WHERE
+    #             agenttype LIKE 'm%%'
+    #             {entity_list}
+    #         """
+    #
+    #         # Correspondance pour les clauses WHERE
+    #         correspondance = {
+    #             "Entity": "glpi_entity.complete_name",
+    #         }
+    #
+    #         # Génération de la clause WHERE si un filtre est présent
+    #         if filt and 'query' in filt:
+    #             logger.error(f"Filter query: {filt['query']}")
+    #             where_clause = ""
+    #             generator = WhereClauseGenerator(filt, correspondance)
+    #             where_clause = generator.generate()
+    #             logger.error(f"Generated WHERE clause: {where_clause}")
+    #             query = querybase + (" AND " + where_clause if where_clause else "") + ";"
+    #         else:
+    #             query = querybase + ";"
+    #
+    #         logger.error(f"Final query: {query}")
+    #
+    #         # Exécution de la requête (à implémenter)
+    #         # Supposons que `session.execute(query)` retourne les résultats sous forme de liste de dictionnaires
+    #         results = session.execute(query).fetchall()
+    #
+    #         # Récupération du nombre total d'éléments
+    #         sql_count = "SELECT FOUND_ROWS();"
+    #         ret_count = session.execute(sql_count)
+    #         count = ret_count.first()[0]
+    #
+    #         # Transformation des résultats
+    #         data = {}
+    #         nb_element = 0  # Compteur pour le nombre d'éléments
+    #         for row in results:
+    #             row_dict = dict(row)
+    #             uuid = row_dict['uuid_inventorymachine']
+    #             data[uuid] = [
+    #                 None,
+    #                 {
+    #                     'cn': [row_dict['cn']],
+    #                     'displayName': [row_dict.get('displayName', None)],
+    #                     'objectUUID': [uuid],
+    #                     'user': [row_dict['user']],
+    #                     'owner': [row_dict.get('owner', None)],
+    #                     'owner_realname': [row_dict.get('owner_realname', None)],
+    #                     'owner_firstname': [row_dict.get('owner_firstname', None)],
+    #                     'entity': row_dict['entity'],
+    #                     'type': row_dict['type'],
+    #                     'os': row_dict['os']
+    #                 }
+    #             ]
+    #             nb_element += 1
+    #         # data['nb_element'] = nb_element
+    #         # data['count'] = count
+    #         logger.error(f"Number of elements returned: {nb_element}")
+    #         logger.error(f"Number of elements returned: {data}")
+    #         return data
+    #
+    #     except Exception as e:
+    #         # Log the exception
+    #         logger.error(f"An error occurred: {e}")
+    #         logger.error("\n%s" % (traceback.format_exc()))
+    #         # Retourne une liste vide en cas d'erreur
+    #         return {}
+
+
+class WhereClauseGenerator:
+    def __init__(self, data, correspondance):
+        self.data = data
+        self.correspondance = {k.lower(): v for k, v in correspondance.items()}  # Convertir les clés en minuscules
+        # logger.error(f"WhereClauseGenerator data : {data['query']}")
+        # logger.error(f"WhereClauseGenerator correspondance: {correspondance}")
+
+    def generate(self):
+        if 'query' in self.data:
+         return self._parse_condition(self.data['query'])
+        else:
+            return ""
+
+    def _parse_condition(self, condition):
+        if not isinstance(condition, list) or len(condition) < 2:
+            return ""
+
+        operator = condition[0]
+        clauses = condition[1]
+
+        if operator == 'AND':
+            joiner = ' AND '
+        elif operator == 'OR':
+            joiner = ' OR '
+        elif operator == 'NOT':
+            if isinstance(clauses, list) and len(clauses) == 4:
+                _, source, key, value = clauses
+                return f"NOT ({self._format_condition(key, value)})"
+            return f"NOT ({self._parse_condition(clauses)})"
+        else:
+            return ""
+
+        parsed_clauses = set()  # Utiliser un ensemble pour éliminer les doublons
+
+        for clause in clauses:
+            if isinstance(clause, list) and len(clause) == 4:
+                _, source, key, value = clause
+                parsed_clauses.add(self._format_condition(key, value))
+            elif isinstance(clause, list):
+                parsed_clauses.add(f"({self._parse_condition(clause)})")
+
+        return f"({joiner.join(sorted(parsed_clauses))})"
+
+    def _format_condition(self, key, value):
+        if isinstance(value, list) and len(value) > 0:
+            value = value[0]  # Prendre uniquement le premier élément pour cette version
+
+        match = re.match(r'^(=|>|<|<>)\s*(.*)$', value)
+        if match:
+            operator, clean_value = match.groups()
+        else:
+            operator, clean_value = 'REGEXP', value
+
+        # Appliquer la correspondance insensible à la casse juste avant le retour
+        key_lower = key.lower()
+        if key_lower in self.correspondance:
+            key = self.correspondance[key_lower]
+
+        return f"{key} {operator} '{clean_value}'"
+

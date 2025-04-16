@@ -86,26 +86,6 @@ function xmlrpc_get_count_machine_with_update($kb, $uuid, $list)
     return xmlCall("updates.get_count_machine_with_update", [$kb, $uuid, $list]);
 }
 
-function xmlrpc_get_os_update_major_stats()
-{
-    return xmlCall("updates.get_os_update_major_stats", []);
-}
-
-function xmlrpc_get_os_xmpp_update_major_stats()
-{
-    return xmlCall("updates.get_os_xmpp_update_major_stats", []);
-}
-
-function xmlrpc_get_os_update_major_details($entity_id, $filter="", $start=0, $limit=-1)
-{
-    return xmlCall("updates.get_os_update_major_details", [$entity_id, $filter, $start, $limit]);
-}
-
-function xmlrpc_get_os_xmpp_update_major_details($entity_id, $filter="",$start=0, $limit=-1)
-{
-    return xmlCall("updates.get_os_xmpp_update_major_details", [$entity_id, $filter, $start, $limit]);
-}
-
 function xmlrpc_get_count_machine_as_not_upd($updateid)
 {
     return xmlCall("updates.get_count_machine_as_not_upd", [$updateid]);
@@ -134,4 +114,56 @@ function xmlrpc_get_machine_in_both_sources($glpi_uuids)
 function xmlrpc_get_conformity_update_by_machines($ids = [])
 {
     return xmlCall("updates.get_conformity_update_by_machines", [$ids]);
+}
+
+function xmlrpc_get_os_update_major_stats()
+{
+    return xmlCall("updates.get_os_update_major_stats", []);
+}
+
+function xmlrpc_get_os_xmpp_update_major_stats()
+{
+    return xmlCall("updates.get_os_xmpp_update_major_stats", []);
+}
+
+function xmlrpc_get_os_update_major_stats_list_grp($namegrp,
+                                                   $idlistmachine,
+                                                   $presence=false)
+{
+    return xmlCall("updates.get_os_update_major_stats_list_grp", [$namegrp,
+                                                                  $idlistmachine,
+                                                                  $presence]);
+}
+
+function xmlrpc_get_os_update_major_details($entity_id, $filter="", $start=0, $limit=-1)
+{
+    return xmlCall("updates.get_os_update_major_details", [$entity_id, $filter, $start, $limit]);
+}
+
+function xmlrpc_get_os_xmpp_update_major_details($entity_id, $filter="",$start=0, $limit=-1, )
+{
+    return xmlCall("updates.get_os_xmpp_update_major_details", [$entity_id, $filter, $start, $limit]);
+}
+
+function xmlrpc_deploy_update_major($package_id,
+                                    $uuid_inventorymachine,
+                                    $hostname,
+                                    $title_deployement=null,
+                                    $start_date = null,
+                                    $end_date = null,
+                                    $deployment_intervals="",
+                                    $userconnect="root",
+                                    $usercreator="root",
+                                    $list_file="fileslistpackage")
+{
+    return xmlCall("updates.deploy_update_major", [ $package_id,
+                                                    $uuid_inventorymachine,
+                                                    $hostname,
+                                                    $title_deployement,
+                                                    $start_date,
+                                                    $end_date,
+                                                    $deployment_intervals,
+                                                    $userconnect,
+                                                    $usercreator,
+                                                    $list_file]);
 }

@@ -11,7 +11,7 @@ Provides access to MSC database
 # standard modules
 import time
 import re
-
+import traceback
 # SqlAlchemy
 from sqlalchemy import (
     and_,
@@ -28,7 +28,7 @@ from sqlalchemy import (
     desc,
     func,
     not_,
-    distinct,
+    distinct,text
 )
 from sqlalchemy.orm import create_session, mapper, relation
 from sqlalchemy.exc import NoSuchTableError, TimeoutError
@@ -54,7 +54,7 @@ from pulse2.managers.location import ComputerLocationManager
 
 # Imported last
 import logging
-
+logger=logging.getLogger()
 NB_DB_CONN_TRY = 2
 
 # TODO need to check for useless function (there should be many unused one...)
@@ -487,6 +487,42 @@ class MscDatabase(DatabaseHelper):
         session.flush()
         session.close()
         return commandsOnHostPhase
+
+    def test_msc_process(self, title_argument_function):
+        """
+        Check if there is at least one record that matches the given conditions.
+
+        Parameters:
+        - session: An existing SQLAlchemy session.
+        - title_argument_function: The string to check within the 'title' column.
+
+        Returns:
+        - True if a matching record exists, False otherwise.
+        """
+        session = create_session()
+        try:
+            # Define the query
+            query = text("""
+            SELECT EXISTS (
+                SELECT 1
+                FROM msc_commands
+                JOIN msc_commands_on_host ON msc_commands_on_host.fk_commands = msc_commands.id
+                JOIN msc_phase ON msc_phase.fk_commands_on_host = msc_commands_on_host.id
+                WHERE msc_commands.title LIKE :title
+                AND msc_phase.name = 'upload'
+                AND msc_phase.state = 'ready'
+            )
+            """)
+
+            # Execute the query with the parameter
+            result = session.execute(query, {'title': f'{title_argument_function}%'}).scalar()
+
+            # Return True if exists, otherwise False
+            return result == 1
+
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            return False
 
     def get_counta(self, q):
         count_q = q.statement.with_only_columns([func.count()]).order_by(None)
@@ -3768,3 +3804,229 @@ class MscDatabase(DatabaseHelper):
             self.db.pool.dispose()
             self.db.pool = self.db.pool.recreate()
         return reason
+
+    def deploy_package_msc(self,
+                            package_id,
+                            uuid_inventorymachine,
+                            hostname,
+                            title_deployement=None,
+                            start_date = None,
+                            end_date = None,
+                            deployment_intervals="",
+                            deploy_package_msc="",
+                            userconnect="root",
+                            usercreator="root",
+                            list_file="fileslistpackage"):
+        try:
+            logger.error("DEDEDEDE1 %s"%hostname)
+            logger.error(hostname)
+            if isinstance(uuid_inventorymachine, int):
+                uuid_inventorymachine = str(uuid_inventorymachine)
+            if not uuid_inventorymachine.startswith("UUID"):
+                uuid_inventorymachine = "UUID" + uuid_inventorymachine
+            logger.error("DEDEDEDE1 %s"%hostname)
+
+            # Vérifier si list_file est une liste
+            if isinstance(list_file, list):
+                # Concaténer les éléments de la liste en une seule chaîne de caractères
+                files = '##'.join(list_file)
+            else:
+                # Si list_file n'est pas une liste, retourner tel quel
+                files = list_file
+
+            # Vérifier si start_date est None ou n'est pas un objet datetime
+            if start_date is None or not isinstance(start_date, datetime.datetime):
+                start_date = datetime.datetime.now()
+            # Vérifier si end_date est None ou n'est pas un objet datetime
+            if end_date is None or not isinstance(end_date,  datetime.datetime):
+                end_date = start_date + datetime.timedelta(hours=1)
+
+            # Si start_date est égal à end_date, incrémenter end_date d'une heure
+            if start_date == end_date:
+                end_date = start_date + timedelta(hours=1)
+
+            section = '"section":"update"'
+
+
+            # creation d'un object command
+            command = MscDatabase().createcommanddirectxmpp(
+                        package_id,
+                        "",
+                        section, #parameters
+                        files, # list file
+                        "enable",
+                        "enable",
+                        start_date,
+                        end_date,
+                        userconnect,
+                        usercreator,
+                        title_deployement,
+                        60,
+                        4,
+                        0,
+                        deployment_intervals,
+                        None,
+                        None,
+                        None,
+                        "none",
+                        "active",
+                        "1",
+                        cmd_type=0,
+                    )
+            commandid = command.id
+            commandstart = command.start_date
+            commandstop = command.end_date
+            logger.error("DEDEDEDE1 %s"%hostname)
+            logger.error("uuid_inventorymachine %s"%uuid_inventorymachine)
+            logger.error("hostname %s"%hostname)
+
+            target= MscDatabase().xmpp_create_Target(uuid_inventorymachine, hostname)
+            logger.error("target id  %s"%target["id"])
+            logger.error("commandid id  %s"%commandid)
+            logger.error("hostname %s"%hostname)
+            logger.error("commandstop %s"%commandstop)
+            logger.error("commandstart %s"%commandstart)
+            com_on_host = MscDatabase().xmpp_create_CommandsOnHost( commandid,
+                                                                    target["id"],
+                                                                    hostname,
+                                                                    commandstop,
+                                                                    commandstart)
+            if com_on_host is not None or com_on_host is not False:
+                MscDatabase().xmpp_create_CommandsOnHostPhasedeploykiosk(com_on_host.id)
+        except Exception as e:
+            logger.error("\n%s" % (traceback.format_exc()))
+            return {"success" : False,
+                    "commandid": "-1",
+                    "msg" : str(e)}
+        return {"success" : True,
+                "commandid" : commandid,
+                "msg" : "success_creation"}
+
+    def update_msc_actif_deploy(self, deployment_intervals,
+                                startdate, enddate, title):
+        """
+        Met à jour les colonnes startdate et stopdate dans les tables commands et commands_on_host.
+
+        :param deployment_intervals: Intervalles de déploiement.
+        :param startdate: Nouvelle valeur pour startdate.
+        :param enddate: Nouvelle valeur pour stopdate.
+        :param title: Titre à utiliser dans la condition WHERE.
+        :return: True si des mises à jour ont été effectuées, False sinon.
+        """
+        # pass
+        # session = create_session()
+        # logger.error("fonction update_msc_actif_deploy")
+        # try:
+        #     titre = title[:-18]
+        #
+        #     # Requête SQL pour mettre à jour les tables avec des paramètres
+        #     sql_commands = f"""
+        #     UPDATE msc.commands
+        #     JOIN msc.commands_on_host ON msc.commands_on_host.fk_commands = msc.commands.id
+        #     JOIN msc.phase ON msc.phase.fk_commands_on_host = msc.commands_on_host.id
+        #     SET msc.commands.start_date = '{startdate}',
+        #         msc.commands.end_date = '{enddate}',
+        #         msc.commands.deployment_intervals = '{deployment_intervals}'
+        #     WHERE LEFT(msc.commands.title, LENGTH(msc.commands.title) - 18) = '{title}'
+        #       AND msc.phase.name = 'execute'
+        #       AND msc.phase.state = 'ready';
+        #     """
+        #
+        #     sql_commands_on_host = f"""
+        #     UPDATE msc.commands_on_host
+        #     JOIN msc.commands ON msc.commands_on_host.fk_commands = msc.commands.id
+        #     JOIN msc.phase ON msc.phase.fk_commands_on_host = msc.commands_on_host.id
+        #     SET msc.commands_on_host.start_date = '{startdate}',
+        #         msc.commands_on_host.end_date = '{enddate}'
+        #     WHERE LEFT(msc.commands.title, LENGTH(msc.commands.title) - 18) = '{title}'
+        #       AND msc.phase.name = 'execute'
+        #       AND msc.phase.state = 'ready';
+        #     """
+        #      # Enregistrer les requêtes SQL dans le fichier de log
+        #     logger.error(sql_commands)
+        #     logger.error(sql_commands_on_host)
+        #     result_commands = session.execute(sql_commands)
+        #
+        #     result_commands_on_host = session.execute(sql_commands_on_host)
+        #
+        #
+        #
+        #     # Vérifier si des lignes ont été mises à jour
+        #     if result_commands.rowcount > 0 or result_commands_on_host.rowcount > 0:
+        #         logger.error("changement")
+        #         return True
+        #     else:
+        #         logger.error("non changement")
+        #         return False
+        #
+        # except Exception as e:
+        #     logger.error("\n%s" % (traceback.format_exc()))
+        #     logger.error(f"Erreur lors de la mise à jour : {e}")
+        #     return False
+
+
+
+    # def update_msc_actif_deploy(self, deployment_intervals, startdate, enddate, title):
+    #     """
+    #     Met à jour les colonnes startdate et stopdate dans les tables commands et commands_on_host.
+    #
+    #     :param deployment_intervals: Intervalles de déploiement.
+    #     :param startdate: Nouvelle valeur pour startdate.
+    #     :param enddate: Nouvelle valeur pour stopdate.
+    #     :param title: Titre à utiliser dans la condition WHERE.
+    #     :return: True si des mises à jour ont été effectuées, False sinon.
+    #     """
+    #     logger.error("fonction update_msc_actif_deploy")
+    #     session = create_session()
+    #     try:
+    #         titre = title[:-18]
+    #
+    #         # Obtenir les IDs des lignes à mettre à jour
+    #         command_ids_subquery = (
+    #             session.query(Commands.id)
+    #             .join(CommandsOnHost, CommandsOnHost.fk_commands == Commands.id)
+    #             .join(CommandsOnHostPhase, CommandsOnHostPhase.fk_commands_on_host == CommandsOnHost.id)
+    #             .filter(Commands.title.like(f'{titre}%'))
+    #             .filter(CommandsOnHostPhase.name == 'execute')
+    #             .filter(CommandsOnHostPhase.state == 'ready')
+    #             .subquery()
+    #         )
+    #
+    #         # Mettre à jour la table commands
+    #         commands_updated = (
+    #             session.query(Commands)
+    #             .filter(Commands.id.in_(command_ids_subquery))
+    #             .update({
+    #                 "start_date": startdate,
+    #                 "end_date": enddate,
+    #                 "deployment_intervals": deployment_intervals
+    #             }, synchronize_session=False)
+    #         )
+    #
+    #         # Mettre à jour la table commands_on_host
+    #         commands_on_host_updated = (
+    #             session.query(CommandsOnHost)
+    #             .filter(CommandsOnHost.fk_commands.in_(command_ids_subquery))
+    #             .update({
+    #                 "start_date": startdate,
+    #                 "end_date": enddate
+    #             }, synchronize_session=False)
+    #         )
+    #
+    #         session.commit()
+    #
+    #         # Vérifier si des lignes ont été mises à jour
+    #         if commands_updated > 0 or commands_on_host_updated > 0:
+    #             logger.error("changement")
+    #             return True
+    #         else:
+    #             logger.error("non changement")
+    #             return False
+    #
+    #     except Exception as e:
+    #         session.rollback()
+    #         logger.error(f"Erreur lors de la mise à jour : {e}")
+    #         return False
+    #
+    #     finally:
+    #         session.close()

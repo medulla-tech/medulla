@@ -20,13 +20,19 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-// file : modules/updates/updates/ajaxMajorDetailsByMachines.php
+// file : modules/updates/updates/ajaxMajorDetailsByMachinesgrp.php
 
 require_once("modules/updates/includes/xmlrpc.php");
 require_once("modules/glpi/includes/xmlrpc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 require_once("modules/base/includes/computers.inc.php");
 require_once("modules/updates/includes/html.inc.php");
+
+echo "modules/updates/updates/ajaxMajorDetailsByMachinesgrp.php";
+
+echo "<pre>";
+print_r($_GET);
+echo "</pre>";
 
 
 $actiondetailsByMachslog  = array();
@@ -44,19 +50,19 @@ $entity = !empty($_GET['entity']) ? htmlspecialchars($_GET['entity']) : "";
 $entityName = !empty($_GET['name']) ? htmlentities($_GET['name']) : "";
 $entityCompleteName = !empty($_GET['completename']) ? htmlentities($_GET['completename']) : "";
 
-$n = new ListInfos(array( $_GET['W10to10']), _T("Upgrade W10->W10", "updates"));
-$n->addExtraInfo(array( $_GET['W10to11']), _T("Upgrade W10->W11", "updates"));
-$n->addExtraInfo(array( $_GET['W11to11']), _T("Upgrade W11->W11", "updates"));
-$n->addExtraInfo(array( $_GET['UPDATED']), _T("Up to date", "updates"));
-$n->addExtraInfo(array( $_GET['nb_missing']), _T("Missing information", "updates"));
-$n->addExtraInfo(array( $_GET['totalmachineentity']), _T("Total machines", "updates"));
+$n = new ListInfos(array( $_GET['W10to10']), _T("update Win 10 to Win 10", "updates"));
+$n->addExtraInfo(array( $_GET['W10to11']), _T("update  Win 10 to Win 11", "updates"));
+$n->addExtraInfo(array( $_GET['W11to11']), _T("update Win 11 to 11", "updates"));
+$n->addExtraInfo(array( $_GET['UPDATED']), _T("Machine à Jour", "updates"));
+$n->addExtraInfo(array( $_GET['nb_missing']), _T("Machine sans information", "updates"));
+$n->addExtraInfo(array( $_GET['totalmachineentity']), _T("total Machines dans entitées", "updates"));
 $n->setNavBar ="";
 $n->start = 0;
 $n->end =1;
 $converter = new ConvertCouleur();
 
-$n->setCaptionText(sprintf("%s %s",
-                           _T("Summary of OS Upgrades on entity", 'updates'),
+$n->setCaptionText(sprintf("%s [%s]",
+                           _T("Répartition des mises à jours majeures sur l'entité", 'updates'),
                             $entityName));
 
 $n->setCssCaption(  $border = 1,
@@ -82,6 +88,7 @@ $n->setCssCaption(  $border = 1,
 
     };
 
+
 // Nom machine	Système d'exploitation	Mises à jour Major
 
 $params = [];
@@ -92,7 +99,7 @@ $idmachinefrom_xmpp_or_glpi='machineidmajor'; // id xmppmaster
     }
 
 foreach($statglpiversion['id_machine'] as $key=>$valeur){
-
+// JFK
     $actiondetailsByMachslog[]=new ActionItem(_T("Updates History",
                                                  "updates"),
                                               "auditUpdateByMachine",
@@ -100,6 +107,8 @@ foreach($statglpiversion['id_machine'] as $key=>$valeur){
                                                 "",
                                                 "updates",
                                                 "updates");
+
+
 
     $actionspeclistUpds[] = new ActionPopupItem(_T(sprintf("Deploy this update on machine %s", $statglpiversion['machine'][$key]), "updates"),
                                                 "deployUpdatemajor",
@@ -118,6 +127,7 @@ foreach($statglpiversion['id_machine'] as $key=>$valeur){
             'source' => $source,
             $idmachinefrom_xmpp_or_glpi => $valeur,
             'cn'=> $statglpiversion['machine'][$key],
+            'machineaaaaaa'=> $machineidmajor,
             'platform'=> $statglpiversion['platform'][$key],
             'version'=> $statglpiversion['version'][$key],
             'update'=> $statglpiversion['update'][$key],
@@ -131,7 +141,7 @@ $n = new OptimizedListInfos($statglpiversion["machine"], _T("Machine name", "upd
 $n->disableFirstColumnActionLink();
 $n->addExtraInfo($statglpiversion["platform"], _T("Platform", "updates"));
 $n->addExtraInfo($statglpiversion["version"], _T("version", "updates"));
-$n->addExtraInfo($statglpiversion["update"], _T("Upgrade", "updates"));
+$n->addExtraInfo($statglpiversion["update"], _T("update", "updates"));
 $n->addActionItemArray($actionspeclistUpds);
 $n->addActionItemArray($actiondetailsByMachslog);
 $n->start = 0;

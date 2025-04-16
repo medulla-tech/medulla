@@ -81,7 +81,7 @@ function logCSRFError($message) {
 
 function verifyCSRFToken($postData) {
     // Vérification du jeton CSRF
-    if (!isset($postData['auth_token']) || $postData['auth_token'] === $_SESSION['auth_token']) {
+    if (!isset($postData['auth_token']) || $postData['auth_token'] !== $_SESSION['auth_token']) {
         // Log de l'erreur CSRF
         logCSRFError("Erreur CSRF détectée : tentative de soumission de formulaire non autorisée.");
 

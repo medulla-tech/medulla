@@ -26,14 +26,21 @@ require("graph/navbar.inc.php");
 
 
 require_once("modules/updates/includes/xmlrpc.php");
+echo "fish://root@dev.siveo.net:22/usr/share/mmc/modules/updates/updates/majorDetailsByMachinesgrp.php";
+echo "<pre>";
+print_r($_GET);
+echo "</pre>";
+
 
 unset($_GET['action']);
 $allowedSources = ["xmppmaster", "glpi"];
 $dataSource = isset($_GET['source']) && in_array($_GET['source'], $allowedSources) ? $_GET['source'] : "xmppmaster";
 $nameview = ($dataSource == "xmppmaster") ? "MEDULLA" : "GLPI";
 
-$titre = sprintf("%s",
-                 _T("OS Upgrade details by Machines", 'updates'));
+$titre = sprintf("%s (<span id=%s><strong><em>%s</em></strong></span>)",
+                 _T("Details Update Majeur by Machines view", 'updates'),
+                 "myidtitre",
+                 $nameview);
 $p = new PageGenerator($titre);
 $p->setSideMenu($sidemenu);
 $p->display();
@@ -63,7 +70,7 @@ foreach ($allowedSources as $source) {
 </script>
 
 <?php
-$ajax = new AjaxFilter(urlStrRedirect("updates/updates/ajaxMajorDetailsByMachines"),
+$ajax = new AjaxFilter(urlStrRedirect("updates/updates/ajaxMajorDetailsByMachinesgrp"),
                        "container",
                        $_GET);
 $ajax->display();

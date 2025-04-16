@@ -12,6 +12,10 @@ from mmc.plugins.updates.config import UpdatesConfig
 from pulse2.database.updates import UpdatesDatabase
 
 from pulse2.database.xmppmaster import XmppMasterDatabase
+
+from pulse2.database.pkgs import PkgsDatabase
+from pulse2.database.msc import MscDatabase
+
 from mmc.plugins.glpi.database import Glpi
 import logging
 
@@ -119,30 +123,98 @@ def get_count_machine_with_update(kb, uuid, list):
 
 
 def get_os_update_major_stats():
-    return Glpi().get_os_update_major_stats()
+    return XmppMasterDatabase().get_os_update_major_stats()
 
 
 def get_os_xmpp_update_major_stats():
     return XmppMasterDatabase().get_os_xmpp_update_major_stats()
 
-def get_os_update_major_stats():
-    return Glpi().get_os_update_major_stats()
+
+def get_os_update_major_stats_list_grp( namegrp, idlistmachine, presence=False):
+    return XmppMasterDatabase().get_os_update_major_stats_list_grp(namegrp,
+                                                                   idlistmachine,
+                                                                   presence)
+
 
 
 def get_os_update_major_details(entity_id,
-                                filter="",
-                                start=0,
-                                limit=-1,
-                                colonne=True):
-    return Glpi().get_os_update_major_details(entity_id,
-                                              filter="",
-                                              start=0,
-                                              limit=-1,
-                                              colonne=True)
+                                     filter="",
+                                     start=0,
+                                     limit=-1,
+                                     colonne=True):
+    return XmppMasterDatabase().get_os_update_major_details( entity_id,
+                                                                 filter,
+                                                                 start,
+                                                                 limit,
+                                                                 colonne)
 
 
-def get_os_xmpp_update_major_stats():
-    return XmppMasterDatabase().get_os_xmpp_update_major_stats()
+def deploy_update_major( package_id,
+                         uuid_inventorymachine,
+                         hostname,
+                         title_deployement=None,
+                         start_date = None,
+                         end_date = None,
+                         deployment_intervals="",
+                         userconnect="root",
+                         usercreator="root",
+                         list_file="fileslistpackage"):
+    result = {"success" : False,
+              "commandid": "-1",
+              "msg" : f"Deployment not rescheduled for {package_id} is already scheduled for machine {hostname}"}
+
+    try:
+        title_deployementnew = title_deployement[:-(len(title_deployement.split("_")[-1]))]
+    except:
+        # le nom n'a pas la bonne convention pour les updates
+        result["msg"] = f"Naming convention for Deployment {package_id} on machine {hostname}"
+        result["success"] = False
+        return result
+
+    # on ne lance pas le deployement car il existe deja.
+    if MscDatabase().test_msc_process(title_deployementnew):
+        logger.warning(f"Deployment not rescheduled for {package_id} is already scheduled for machine {hostname}")
+        result["msg"] = f"Deployment not rescheduled for {package_id} is already scheduled for machine {hostname}"
+        result["success"] = False
+        return result
+
+    if XmppMasterDatabase().test_update_major_deployment_in_progress(title_deployementnew):
+        logger.warning(f"Deployment {package_id} exists for machine {hostname}")
+        result["msg"] = f"Deployment not rescheduled for {package_id} as it is already in progress on machine {hostname}"
+        result["success"] = False
+        return result
+
+    try:
+        if title_deployement:
+            pkgsinfos = PkgsDatabase().pkgs_get_infos_details(package_id)
+            if not pkgsinfos or pkgsinfos.get('label') == "":
+                logger.error(f"Deployment not rescheduled for mach {hostname} because the package {package_id} does not exist")
+                result["msg"] = f"Deployment not rescheduled for mach {hostname} because the package {package_id} does not exist"
+                result["success"] = False
+                return result
+
+        result=MscDatabase().deploy_package_msc(package_id,
+                                        uuid_inventorymachine,
+                                        hostname,
+                                        title_deployement=title_deployement,
+                                        start_date=start_date,
+                                        end_date=end_date,
+                                        deployment_intervals=deployment_intervals,
+                                        userconnect=userconnect,
+                                        usercreator=usercreator,
+                                        list_file=list_file)
+        if result["success"]:
+             XmppMasterDatabase().addlogincommand("root",
+                                                  result["commandid"],
+                                                  "", "", "", "", "",
+                                                  0, 0, 0, 0, {})
+
+    except Exception as e:
+        logger.error("\n%s" % (traceback.format_exc()))
+        result["msg"] = str(e)
+        result["success"] = False
+        result["commandid"] = "-1"
+    return result
 
 
 def get_os_xmpp_update_major_details(entity_id,
@@ -155,6 +227,11 @@ def get_os_xmpp_update_major_details(entity_id,
                                                                  start,
                                                                  limit,
                                                                  colonne)
+
+
+def get_os_update_major_stats():
+    return XmppMasterDatabase().get_os_update_major_stats()
+
 
 def get_machines_needing_update(updateid, entity, start=0, limit=-1, filter=""):
     return UpdatesDatabase().get_machines_needing_update(
@@ -274,11 +351,14 @@ def get_conformity_update_by_entity(entities=[], source="xmppmaster"):
 
     return resultarray
 
+
 def get_machines_xmppmaster(start, end, filter=""):
     return XmppMasterDatabase().get_machines_xmppmaster(start, end, filter)
 
+
 def get_machine_in_both_sources(glpi_ids):
     return XmppMasterDatabase().get_machine_in_both_sources(glpi_ids)
+
 
 def get_conformity_update_by_machines(ids=[]):
     """ids is formated as :

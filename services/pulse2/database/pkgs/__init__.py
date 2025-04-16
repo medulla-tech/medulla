@@ -22,7 +22,7 @@ from sqlalchemy import (
     distinct,
 )
 from sqlalchemy.orm import create_session, mapper
-from sqlalchemy.exc import NoSuchTableError
+from sqlalchemy.exc import NoSuchTableError, SQLAlchemyError
 from sqlalchemy.ext.automap import automap_base
 
 import datetime
@@ -1710,11 +1710,17 @@ class PkgsDatabase(DatabaseHelper):
             self.logger.error("\n%s" % (traceback.format_exc()))
 
     def _return_dict_from_dataset_mysql(self, resultproxy):
+        """
+        Convertit un ensemble de résultats de requête en une liste de dictionnaires.
+
+        Args:
+            resultproxy: L'objet résultat de la requête SQLAlchemy.
+
+        Returns:
+            list: Une liste de dictionnaires où chaque dictionnaire représente une ligne de résultat.
+        """
         return [
-            {
-                column: value if value is not None else ""
-                for column, value in rowproxy.items()
-            }
+            {column: rowproxy[column] if column in rowproxy.keys() and rowproxy[column] is not None else "" for column in resultproxy.keys()}
             for rowproxy in resultproxy
         ]
 

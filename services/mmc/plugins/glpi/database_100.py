@@ -2251,18 +2251,19 @@ class Glpi100(DyngroupDatabaseHelper):
             session.close()
             return listentitymachine
 
-    def getRestrictedComputersList(
-        self,
-        ctx,
-        min=0,
-        max=-1,
-        filt=None,
-        advanced=True,
-        justId=False,
-        toH=False,
-        displayList=None,
-        empty_macs=False,
-    ):
+
+
+    def getRestrictedComputersList( self,
+                                    ctx,
+                                    min=0,
+                                    max=-1,
+                                    filt=None,
+                                    advanced=True,
+                                    justId=False,
+                                    toH=False,
+                                    displayList=None,
+                                    empty_macs=False,
+                                ):
         """
         Get the computer list that match filters parameters between min and max
 
@@ -5136,6 +5137,9 @@ class Glpi100(DyngroupDatabaseHelper):
         )
         if filter != "":
             query = query.filter(self.group.c.name.like("%" + filt + "%"))
+        # Exclude groups where the name starts with "_@Grp_Major_update_win_"
+        query = query.filter(~self.group.c.name.startswith("_@Grp_Major_update_win_"))
+
         ret = query.group_by(self.group.c.name).all()
         session.close()
         return ret
