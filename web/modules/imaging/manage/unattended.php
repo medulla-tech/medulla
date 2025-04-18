@@ -142,7 +142,8 @@ $list_val=[ 'modules/imaging/manage/ajaxFormWin7.php',
             'modules/imaging/manage/ajaxFormWin10.php',
             'modules/imaging/manage/ajaxFormWin10-uefi.php',
             'modules/imaging/manage/ajaxFormWin11.php',
-            'modules/imaging/manage/ajaxFormWin11-uefi.php'];
+            'modules/imaging/manage/ajaxFormWin11-uefi2.php', // Using a new file for Windows 11 UEFI to be able to switch easily with the old one if needed
+];
 
 $combine = array_combine($List, $list_val);
 

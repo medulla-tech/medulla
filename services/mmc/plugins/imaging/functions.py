@@ -2916,6 +2916,14 @@ class ImagingRpcProxy(RpcProxyI):
         filexml = "/var/lib/pulse2/imaging/postinst/sysprep/"
         filetmp = "/tmp/"
 
+        # Replace chars
+        xmlWAFG = xmlWAFG.replace("&amp;", "&")
+        xmlWAFG = xmlWAFG.replace("&lt;", "<")
+        xmlWAFG = xmlWAFG.replace("&gt;", ">")
+        xmlWAFG = xmlWAFG.replace("&#x2026;", '…')
+        xmlWAFG = xmlWAFG.replace("&#xBB;", '»')
+        xmlWAFG = xmlWAFG.replace("&#xAB;", '«')
+        xmlWAFG = xmlWAFG.replace("&#x2019;", '’')
         if not path.exists(filexml):
             makedirs(filexml, 0o722)
 
@@ -3010,6 +3018,7 @@ class ImagingRpcProxy(RpcProxyI):
             parameters["Notes"] = description
             parameters["Location"] = filename
             parameters["Title"] = filename.replace(".xml", "")
+
         except Exception as e:
             logging.getLogger().exception(e)
             return {}
