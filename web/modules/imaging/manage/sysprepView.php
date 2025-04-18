@@ -1,6 +1,6 @@
 <?php
 /*
- * (c) 2015-2016 Siveo, http://www.siveo.net
+ * (c) 2015-2025 Siveo, http://www.siveo.net
  *
  * $Id$
  *
@@ -40,7 +40,6 @@ if(isset($_GET['display']))
 		$file = array();
 	}
 	echo '<pre>';
-print_r($parameters);
 	foreach($file as $line)
 	{
 		echo htmlentities($line);

@@ -22,7 +22,15 @@
  */
 
     class  TrFormElementcollapse extends TrFormElement{
+        public $id;
+        public $options = [];
+        public $extraInfo = [];
+        public $name;
+        public $value;
+        public $title;
+
         function __construct( $tpl, $extraInfo = array()){
+            $desc = "";
             parent::__construct($desc, $tpl, $extraInfo);
         }
 
@@ -67,6 +75,7 @@
 
     function add_attribut($attribut){
         $valattribut="";
+        $id="";
         if (isset($attribut)) {
             if (is_array($attribut)){
                 foreach ($attribut as $k => $v) {
@@ -84,8 +93,8 @@
         return $valattribut;
     }
 
-    function add_element($element,$name="",$id="",$attribut="",$value="",$stylebalise="xhtml"){
-        $elementhtml.="<".$element;
+    function add_element($element, $name="",$id="",$attribut="",$value="",$stylebalise="xhtml"){
+        $elementhtml = "<".$element;
         if (isset($name) && $name!="") {
             $elementhtml.=' name="'. $name . '"';
         }
@@ -114,9 +123,14 @@
  * simple input template
  */
 class InputTplTitle extends InputTpl {
-    var $title;
-    function __construct($name,$title=null,$regexp = '/.+/'){
+    public $title;
+    public $fieldType;
+    public $size;
+    public $regexp;
+
+    function __construct($name, $title=null, $regexp = '/.+/'){
         $this->title=$title;
+
         parent::__construct($name,$regexp);
     }
 
@@ -134,6 +148,7 @@ class InputTplTitle extends InputTpl {
         if (!isset($arrParam['placeholder'])) {
             $arrParam['placeholder'] = '';
         }
+        $arrParam['maxlength'] = isset($arrParam['maxlength']) ? $arrParam['maxlength'] : "";
 
         $attrs = array(
             attribut('type',$this->fieldType),
@@ -232,10 +247,26 @@ class Iconereply extends IconeElement {
 }
 
 class buttonTpl extends HtmlElement {
-    var $class = '';
-    var $cssClass = 'btn btn-small';
+    public $cssClass;
+    public $id;
+    public $value;
+    public $class;
+    public $infobulle;
+    public $params;
+    public $style;
 
+    /**
+     * constructor
+     * @param string $id id of the button
+     * @param string $value value of the button
+     * @param string $class class of the button
+     * @param string $infobulle infobulle of the button
+     * @param array $params params of the button
+     */
     function __construct($id, $value, $class='', $infobulle='', $params = array()) {
+
+        parent::__construct();
+        $this->cssClass = 'btn btn-small';
         $this->id = $id;
         $this->value = $value;
         $this->class = $class;
@@ -264,8 +295,23 @@ class buttonTpl extends HtmlElement {
 }
 
 class SpanElementtitle extends HtmlElement {
+    public $name;
+    public $content;
+    public $class;
+    public $title;
+    public $id;
+    public $params;
+    public $style;
 
+    /**
+     * constructor
+     * @param string $content content of the span
+     * @param string $class class of the span
+     * @param string $title title of the span
+     * @param string $id id of the span
+     */
     function __construct($content, $class = Null,$title=Null,$id=null) {
+        parent::__construct();
         $this->name = $class;
         $this->content = $content;
         $this->class = $class;
