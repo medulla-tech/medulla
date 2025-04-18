@@ -643,7 +643,7 @@ else if(isset($_POST)) {
     $parameters = $_POST;
 }
 else {
-    $parameters = array();
+    $parameters = NULL;
 }
 
 $f = new ValidatingForm();
@@ -660,10 +660,10 @@ $f->push(new Table());
 //_____________
 $f->add(
     new TrFormElement(_T('Title', 'imaging'), new InputTplTitle('Location', "name file xml")),
-    array("required" => true,'value'=>(isset($parameters)) ? $parameters['Title'] : '')
+    array("required" => true,'value'=>(isset($parameters['Title'])) ? $parameters['Title'] : '')
 );
 //_____________
-$f->add(new TrFormElement("Notes".":", new OptTextareaTpl(array('name'=>'Comments','value'=>(isset($parameters)) ? $parameters['Notes'] : _T('Enter your comments here...', 'imaging')))));
+$f->add(new TrFormElement("Notes".":", new OptTextareaTpl(array('name'=>'Comments','value'=>(isset($parameters['Notes'])) ? $parameters['Notes'] : _T('Enter your comments here...', 'imaging')))));
 
 $f->pop();
 $f->add(new SepTpl());
@@ -695,11 +695,11 @@ $fields =   array(
     $key5
 );
 $values = array(
-    (isset($parameters)) ? $parameters['ProductKey1'] : "W269N","",
-    (isset($parameters)) ? $parameters['ProductKey2'] : "WFGWX","",
-    (isset($parameters)) ? $parameters['ProductKey3'] : "YVC9B","",
-    (isset($parameters)) ? $parameters['ProductKey4'] : "4J6C9","",
-    (isset($parameters)) ? $parameters['ProductKey5'] : "T83GX"
+    (isset($parameters['ProductKey1'])) ? $parameters['ProductKey1'] : "W269N","",
+    (isset($parameters['ProductKey2'])) ? $parameters['ProductKey2'] : "WFGWX","",
+    (isset($parameters['ProductKey3'])) ? $parameters['ProductKey3'] : "YVC9B","",
+    (isset($parameters['ProductKey4'])) ? $parameters['ProductKey4'] : "4J6C9","",
+    (isset($parameters['ProductKey5'])) ? $parameters['ProductKey5'] : "T83GX"
 );
 //_____________
 $f->add(
@@ -709,7 +709,7 @@ $f->add(
 //_____________
 $f->add(
     new TrFormElement(_T('Organization Name', 'imaging').":", new InputTplTitle('OrginazationName', $InfoBule_OrginazationName)),
-    array('value' => (isset($parameters)) ? $parameters['OrginazationName'] : 'Siveo', "required" => true)
+    array('value' => (isset($parameters['OrginazationName'])) ? $parameters['OrginazationName'] : 'Siveo', "required" => true)
 );
 //_____________
 $EULA = new SelectItemtitle("AcceptEULA", $InfoBule_AcceptEULA);
@@ -717,7 +717,7 @@ $EULA->setElements($yes_no);
 $EULA->setElementsVal(array('true', 'false'));
 $f->add(
     new TrFormElement(_T('Accept EULA', 'imaging').":", $EULA),
-    array("value" => (isset($parameters)) ? $parameters['AcceptEULA'] : "true","required" => true)
+    array("value" => (isset($parameters['AcceptEULA'])) ? $parameters['AcceptEULA'] : "true","required" => true)
 );
 //_____________
 $Skipactivation = new SelectItemtitle("SkipAutoActivation", $InfoBule_SkipAutoActivation);
@@ -725,7 +725,7 @@ $Skipactivation->setElements($yes_no);
 $Skipactivation->setElementsVal(array('true', 'false'));
 $f->add(
     new TrFormElement(_T('Skip automatic activation', 'imaging').":", $Skipactivation),
-    array("value" => (isset($parameters)) ? $parameters['SkipAutoActivation'] : "true","required" => true)
+    array("value" => (isset($parameters['SkipAutoActivation'])) ? $parameters['SkipAutoActivation'] : "true","required" => true)
 );
 //_____________
 $SkipLicense = new SelectItemtitle("SkipRearm", $InfoBule_SkipRearm);
@@ -733,7 +733,7 @@ $SkipLicense->setElements($yes_no);
 $SkipLicense->setElementsVal(array('1', '0'));
 $f->add(
     new TrFormElement(_T('Skip License Rearm', 'imaging').":", $SkipLicense),
-    array("value" => (isset($parameters)) ? $parameters['SkipRearm'] : "1","required" => true)
+    array("value" => (isset($parameters['SkipRearm'])) ? $parameters['SkipRearm'] : "1","required" => true)
 );
 //_____________
 $SetupUILanguage = new SelectItemtitle("SetupUILanguage", $InfoBule_SetupUILanguage);
@@ -742,12 +742,12 @@ $SetupUILanguage->setElementsVal($valUILanguage);
 //_____________
 $f->add(
     new TrFormElement(_T('Setup Language', 'imaging').":", $SetupUILanguage),
-    array("value" => (isset($parameters)) ? $parameters['SetupUILanguage'] : "fr-FR","required" => true)
+    array("value" => (isset($parameters['SetupUILanguage'])) ? $parameters['SetupUILanguage'] : "fr-FR","required" => true)
 );
 //_____________
 $f->add(
     new TrFormElement(_T('Computer Name', 'imaging').":", new InputTplTitle('ComputerName', $Infobule_ComputerName)),
-    array("required" => true,"value" =>(isset($parameters)) ? $parameters['ComputerName'] : 'windows10-PC')
+    array("required" => true,"value" =>(isset($parameters['ComputerName'])) ? $parameters['ComputerName'] : 'windows10-PC')
 );
 //_____________
 $InputLocale = new SelectItemtitle("InputLocale", $Infobule_InputLocale);
@@ -755,7 +755,7 @@ $InputLocale->setElements($elementInputarray);
 $InputLocale->setElementsVal($valeurInputarray);
 $f->add(
     new TrFormElement(_T('Keyboard or input method', 'imaging').":", $InputLocale),
-    array("value" => (isset($parameters)) ? $parameters['InputLocale'] : '1036:0000040c',"required" => true)
+    array("value" => (isset($parameters['InputLocale'])) ? $parameters['InputLocale'] : '1036:0000040c',"required" => true)
 );
 //_____________
 $UserLocale = new SelectItemtitle("UserLocale", $InfoBule_UserLocale);
@@ -763,7 +763,7 @@ $UserLocale->setElements($eleUILanguage);
 $UserLocale->setElementsVal($valUILanguage);
 $f->add(
     new TrFormElement(_T('Currency and Date format', 'imaging').":", $UserLocale),
-    array("value" =>(isset($parameters)) ? $parameters['UserLocale'] : "fr-FR","required" => true)
+    array("value" =>(isset($parameters['UserLocale'])) ? $parameters['UserLocale'] : "fr-FR","required" => true)
 );
 //_____________
 $TimeZone = new SelectItemtitle("TimeZone", $InfoBule_TimeZone);
@@ -771,7 +771,7 @@ $TimeZone->setElements($element_timezone);
 $TimeZone->setElementsVal($val_timezone);
 $f->add(
     new TrFormElement(_T('Time Zone', 'imaging').":", $TimeZone),
-    array("value" =>  (isset($parameters)) ? $parameters['TimeZone'] : "Romance Standard Time","required" => true)
+    array("value" =>  (isset($parameters['TimeZone'])) ? $parameters['TimeZone'] : "Romance Standard Time","required" => true)
 );
 //_____________
 $UILanguage = new SelectItemtitle("UILanguage", $InfoBule_UILanguage);
@@ -779,7 +779,7 @@ $UILanguage->setElements($eleUILanguage);
 $UILanguage->setElementsVal($valUILanguage);
 $f->add(
     new TrFormElement(_T('UI Language', 'imaging').":", $UILanguage),
-    array("value" => (isset($parameters)) ? $parameters['UILanguage'] : 'fr-FR' ,"required" => true)
+    array("value" => (isset($parameters['UILanguage'])) ? $parameters['UILanguage'] : 'fr-FR' ,"required" => true)
 );
 
 $f->pop();
@@ -799,7 +799,7 @@ $WipeDisk->setElements($yes_no);
 $WipeDisk->setElementsVal($truefalse);
 $f->add(
     new TrFormElement(_T('Wipe Disk', 'imaging').":", $WipeDisk),
-    array("value" => (isset($parameters)) ? $parameters['WipeDisk'] : "false","required" => true)
+    array("value" => (isset($parameters['WipeDisk'])) ? $parameters['WipeDisk'] : "false","required" => true)
 );
 //_____________
 $InstallDisk = new SelectItemtitle("InstallDisk", $InfoBule_InstallDisk);
@@ -807,7 +807,7 @@ $InstallDisk->setElements($suite0_5);
 $InstallDisk->setElementsVal($suite0_5);
 $f->add(
     new TrFormElement(_T('Install to disk', 'imaging').":", $InstallDisk),
-    array("value" => (isset($parameters)) ? $parameters['InstallDisk'] : "0","required" => true)
+    array("value" => (isset($parameters['InstallDisk'])) ? $parameters['InstallDisk'] : "0","required" => true)
 );
 //_____________
 $PartitionOrder = new SelectItemtitle("PartitionOrder", $InfoBule_PartitionOrder);
@@ -815,7 +815,7 @@ $PartitionOrder->setElements($suite4_7);
 $PartitionOrder->setElementsVal($suite4_7);
 $f->add(
     new TrFormElement(_T('Partition Order', 'imaging').":", $PartitionOrder),
-    array("value" => (isset($parameters)) ? $parameters['PartitionOrder'] : "2","required" => true)
+    array("value" => (isset($parameters['PartitionOrder'])) ? $parameters['PartitionOrder'] : "2","required" => true)
 );
 //_____________
 $ExtendOSPartition = new SelectItemtitle("ExtendOSPartition", $InfoBule_ExtendOSPartition);
@@ -823,7 +823,7 @@ $ExtendOSPartition->setElements($yes_no);
 $ExtendOSPartition->setElementsVal($truefalse);
 $f->add(
     new TrFormElement(_T('Extend OS Partition', 'imaging').":", $ExtendOSPartition),
-    array("value" => (isset($parameters)) ? $parameters['ExtendOSPartition'] : "true","required" => true)
+    array("value" => (isset($parameters['ExtendOSPartition'])) ? $parameters['ExtendOSPartition'] : "true","required" => true)
 );
 //_____________
 $Format = new SelectItemtitle("Format", $InfoBule_Format);
@@ -831,12 +831,12 @@ $Format->setElements(array('NTFS','FAT32'));
 $Format->setElementsVal(array('NTFS','FAT32'));
 $f->add(
     new TrFormElement(_T('Main Partition Format', 'imaging').":", $Format),
-    array("value" => (isset($parameters)) ? $parameters['Format'] : "NTFS","required" => true)
+    array("value" => (isset($parameters['Format'])) ? $parameters['Format'] : "NTFS","required" => true)
 );
 //_____________
 $f->add(
     new TrFormElement($InfoBule_Label, new InputTplTitle('Label', $InfoBule_Label)),
-    array("required" => true,'value' => (isset($parameters)) ? $parameters['Label'] : 'OS')
+    array("required" => true,'value' => (isset($parameters['Label'])) ? $parameters['Label'] : 'OS')
 );
 //_____________
 $DriveLetter = new SelectItemtitle("DriveLetter", $InfoBule_DriveLetter);
@@ -844,7 +844,7 @@ $DriveLetter->setElements($DriveLetterTabElement);
 $DriveLetter->setElementsVal($DriveLetterTabElement);
 $f->add(
     new TrFormElement(_T('Main Partition Letter', 'imaging').":", $DriveLetter),
-    array("value" => (isset($parameters)) ? $parameters['DriveLetter'] : "C","required" => true)
+    array("value" => (isset($parameters['DriveLetter'])) ? $parameters['DriveLetter'] : "C","required" => true)
 );
 
 $f->pop();
@@ -896,7 +896,7 @@ $ProtectComputer->setElements($ProtectComputerTabElement);
 $ProtectComputer->setElementsVal(array('1','2','3'));
 $f->add(
     new TrFormElement(_T('Protect Your Computer', 'imaging').":", $ProtectComputer),
-    array("value" => (isset($parameters)) ? $parameters['ProtectComputer'] : "1","required" => true)
+    array("value" => (isset($parameters['ProtectComputer'])) ? $parameters['ProtectComputer'] : "1","required" => true)
 );
 //_____________
 /*$Updates = new SelectItemtitle("Updates",$InfoBule_Updates);
@@ -912,7 +912,7 @@ $NetworkLocation->setElements(array('Home','Work','Other'));
 $NetworkLocation->setElementsVal(array('Home','Work','Other'));
 $f->add(
     new TrFormElement(_T('Network Location', 'imaging').":", $NetworkLocation),
-    array("value" => (isset($parameters)) ? $parameters['NetworkLocation'] : "Work","required" => true)
+    array("value" => (isset($parameters['NetworkLocation'])) ? $parameters['NetworkLocation'] : "Work","required" => true)
 );
 //_____________
 $HideEULA = new SelectItemtitle("HideEULA", $InfoBule_HideEULA);
@@ -920,7 +920,7 @@ $HideEULA->setElements($yes_no);
 $HideEULA->setElementsVal($truefalse);
 $f->add(
     new TrFormElement(_T('Hide EULA page', 'imaging').":", $HideEULA),
-    array("value" => (isset($parameters)) ? $parameters['HideEULA'] : "true","required" => true)
+    array("value" => (isset($parameters['HideEULA'])) ? $parameters['HideEULA'] : "true","required" => true)
 );
 //_____________
 $EnableFirewall = new SelectItemtitle("EnableFirewall", $InfoBule_EnableFirewall);
@@ -928,7 +928,7 @@ $EnableFirewall->setElements($EnableDisabled);
 $EnableFirewall->setElementsVal($truefalse);
 $f->add(
     new TrFormElement(_T('Enable Firewall', 'imaging').":", $EnableFirewall),
-    array("value" => (isset($parameters)) ? $parameters['EnableFirewall'] : "true","required" => true)
+    array("value" => (isset($parameters['EnableFirewall'])) ? $parameters['EnableFirewall'] : "true","required" => true)
 );
 //_____________
 $DaylightSettings = new SelectItemtitle("DaylightSettings", $InfoBule_DaylightSettings);
@@ -936,7 +936,7 @@ $DaylightSettings->setElements($yes_no);
 $DaylightSettings->setElementsVal($truefalse);
 $f->add(
     new TrFormElement(_T('Disable auto daylight timeset', 'imaging').":", $DaylightSettings),
-    array("value" => (isset($parameters)) ? $parameters['DaylightSettings'] : "true","required" => true)
+    array("value" => (isset($parameters['DaylightSettings'])) ? $parameters['DaylightSettings'] : "true","required" => true)
 );
 //_____________
 $HideWireless = new SelectItemtitle("HideWireless", $Infobule_HideWireless);
@@ -944,7 +944,7 @@ $HideWireless->setElements($yes_no);
 $HideWireless->setElementsVal($truefalse);
 $f->add(
     new TrFormElement(_T('Hide wireless setup in OOBE', 'imaging').":", $HideWireless),
-    array("value" => (isset($parameters)) ? $parameters['HideWireless'] : "true","required" => true)
+    array("value" => (isset($parameters['HideWireless'])) ? $parameters['HideWireless'] : "true","required" => true)
 );
 //_____________
 $ControlPanelView = new SelectItemtitle("ControlPanelView", $InfoBule_ControlPanelView);
@@ -952,7 +952,7 @@ $ControlPanelView->setElements(array(_T('Category View', "imaging"),_T('Classic 
 $ControlPanelView->setElementsVal(array('0','1'));
 $f->add(
     new TrFormElement(_T('Control Panel View', 'imaging').":", $ControlPanelView),
-    array("value" => (isset($parameters)) ? $parameters['ControlPanelView'] : "1","required" => true)
+    array("value" => (isset($parameters['ControlPanelView'])) ? $parameters['ControlPanelView'] : "1","required" => true)
 );
 //_____________
 $ControlPanelIconSize = new SelectItemtitle("ControlPanelIconSize", $InfoBule_ControlPanelIconSize);
@@ -960,7 +960,7 @@ $ControlPanelIconSize->setElements(array(_T('Large', "imaging"),_T('Small', "ima
 $ControlPanelIconSize->setElementsVal(array('0','1'));
 $f->add(
     new TrFormElement(_T('Control Panel Icon Size', 'imaging').":", $ControlPanelIconSize),
-    array("value" => (isset($parameters)) ? $parameters['ControlPanelIconSize'] : "0","required" => true)
+    array("value" => (isset($parameters['ControlPanelIconSize'])) ? $parameters['ControlPanelIconSize'] : "0","required" => true)
 );
 
 $f->pop();
@@ -974,23 +974,23 @@ $f->push(new Table());
 
 $f->add(
     new TrFormElement(_T('Domain', 'imaging').":", new InputTplTitle('Domain', $InfoBule_Domain)),
-    array("required" => true,"value" =>(isset($parameters)) ? $parameters['Domain'] : '')
+    array("required" => true,"value" =>(isset($parameters['Domain'])) ? $parameters['Domain'] : '')
 );
 $f->add(
     new TrFormElement(_T('Domain User', 'imaging').":", new InputTplTitle('DomainUser', $InfoBule_DomainUser)),
-    array("required" => true,"value" =>(isset($parameters)) ? $parameters['DomainUser'] : '')
+    array("required" => true,"value" =>(isset($parameters['DomainUser'])) ? $parameters['DomainUser'] : '')
 );
 $f->add(
     new TrFormElement(_T('Domain Password', 'imaging').":", new InputTplTitle('DomainPassword', $InfoBule_DomainPassword)),
-    array("required" => true,"value" =>(isset($parameters)) ? $parameters['DomainPassword'] : '')
+    array("required" => true,"value" =>(isset($parameters['DomainPassword'])) ? $parameters['DomainPassword'] : '')
 );
 $f->add(
     new TrFormElement(_T('Join Domain', 'imaging').":", new InputTplTitle('JoinDomain', $InfoBule_JoinDomain)),
-    array("required" => true,"value" =>(isset($parameters)) ? $parameters['JoinDomain'] : '')
+    array("required" => true,"value" =>(isset($parameters['JoinDomain'])) ? $parameters['JoinDomain'] : '')
 );
 $f->add(
     new TrFormElement(_T('MachineObjectOU', 'imaging').":", new InputTplTitle('MachineObjectOU', $InfoBule_MachineObjectOU)),
-    array("required" => true,"value" =>(isset($parameters)) ? $parameters['MachineObjectOU'] : '')
+    array("required" => true,"value" =>(isset($parameters['MachineObjectOU'])) ? $parameters['MachineObjectOU'] : '')
 );
 
 $f->pop();
@@ -1007,7 +1007,7 @@ $f->push(new Table());
 $f->add(
     new TrFormElement(_T('Password', 'imaging'), new InputTplTitle('PasswordAdmin', $InfoBule_PasswordAdmin)),
     array(  "required" => true,
-            "value" => (isset($parameters)) ? $parameters['PasswordAdmin'] : "")
+            "value" => (isset($parameters['PasswordAdmin'])) ? $parameters['PasswordAdmin'] : "")
 );
 
 $f->pop();
@@ -1027,7 +1027,7 @@ $CEIPEnabled->setElements($EnableDisabled);
 $CEIPEnabled->setElementsVal(array('1','0'));
 $f->add(
     new TrFormElement(_T('Customer Experience Improvement Program (CEIP)', 'imaging').":", $CEIPEnabled),
-    array("value" => (isset($parameters)) ? $parameters['CEIPEnabled'] : "0","required" => true)
+    array("value" => (isset($parameters['CEIPEnabled'])) ? $parameters['CEIPEnabled'] : "0","required" => true)
 );
 //_____________
 $CopyProfile = new SelectItemtitle("CopyProfile", $InfoBule_CopyProfile);
@@ -1035,12 +1035,12 @@ $CopyProfile->setElements($yes_no);
 $CopyProfile->setElementsVal($truefalse);
 $f->add(
     new TrFormElement(_T('Copy Profile', 'imaging').":", $CopyProfile),
-    array("value" => (isset($parameters)) ? $parameters['CopyProfile'] : "true","required" => true)
+    array("value" => (isset($parameters['CopyProfile'])) ? $parameters['CopyProfile'] : "true","required" => true)
 );
 //_____________
 $f->add(
     new TrFormElement(_T('User Name', 'imaging'), new InputTplTitle('FullName', $InfoBule_FullName)),
-    array("value" => (isset($parameters)) ? $parameters['FullName'] : "Temp","required" => true)
+    array("value" => (isset($parameters['FullName'])) ? $parameters['FullName'] : "Temp","required" => true)
 );
 //_____________
 $Group = new SelectItemtitle("Group", $InfoBule_Group);
@@ -1048,17 +1048,17 @@ $Group->setElements($GroupTabElement);
 $Group->setElementsVal($GroupTabValue);
 $f->add(
     new TrFormElement(_T('Group', 'imaging').":", $Group),
-    array("value" => (isset($parameters)) ? $parameters['Group'] : "Users","required" => true)
+    array("value" => (isset($parameters['Group'])) ? $parameters['Group'] : "Users","required" => true)
 );
 //_____________
 $f->add(
     new TrFormElement(_T('Description', 'imaging'), new InputTplTitle('Description', $InfoBule_Description)),
-    array("value" => (isset($parameters)) ? $parameters['Description'] : "Temp","required" => true)
+    array("value" => (isset($parameters['Description'])) ? $parameters['Description'] : "Temp","required" => true)
 );
 //_____________
 $f->add(
     new TrFormElement(_T('Password: (Optional)', 'imaging'), new InputTplTitle('Password', $InfoBule_Password)),
-    array("value" => (isset($parameters)) ? $parameters['Password'] : "")
+    array("value" => (isset($parameters['Password'])) ? $parameters['Password'] : "")
 );
 //_____________
 $EnableUAC = new SelectItemtitle("EnableUAC", $InfoBule_EnableUAC);
@@ -1066,7 +1066,7 @@ $EnableUAC->setElements($EnableDisabled);
 $EnableUAC->setElementsVal($truefalse);
 $f->add(
     new TrFormElement(_T('UAC', 'imaging').":", $EnableUAC),
-    array("value" => (isset($parameters)) ? $parameters['EnableUAC'] : "false","required" => true)
+    array("value" => (isset($parameters['EnableUAC'])) ? $parameters['EnableUAC'] : "false","required" => true)
 );
 
 //=============
