@@ -1,6 +1,6 @@
 <?php
 /*
- * (c) 2020-2021 Siveo, http://www.siveo.net
+ * (c) 2025 Siveo, http://www.siveo.net
  *
  * $Id$
  *
@@ -19,7 +19,6 @@
  * You should have received a copy of the GNU General Public License
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * file : xmppmaster/xmppmaster/monitoring/acquit.php
  */
 
 require_once("modules/imaging/includes/xmlrpc.inc.php");
@@ -28,10 +27,8 @@ $name = htmlentities($_GET["name"]);
 $id = htmlentities($_GET["id"]);
 $location = htmlentities($_GET["location"]);
 
-if (isset($_POST["bconfirm"])) {  
-    echo '<pre>';
-    print_r($_POST);
-    echo '</pre>';
+if (isset($_POST["bconfirm"])) {
+
     $result = xmlrpc_delete_profile($id);
 
     if($result["status"] == true){
@@ -46,7 +43,7 @@ if (isset($_POST["bconfirm"])) {
 }
 else{
 
-    $f = new PopupForm(sprintf(_T("Are you sure to delete profile <b>%s</b> ?"), "dede"));
+    $f = new PopupForm(sprintf(_T("Are you sure to delete profile <b>%s</b> ?", "imaging"), $name));
 
     $hidden = new HiddenTpl("id");
     $f->add($hidden, array("value" => $id, "hide" => True));
