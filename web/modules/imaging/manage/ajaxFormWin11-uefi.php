@@ -1,10 +1,10 @@
 <?php
 /*
- * (c) 2018 Siveo, http://www.siveo.net
+ * (c) 2025 Siveo, http://www.siveo.net
  *
  * $Id$
  *
- * This file is part of Management Console (MMC).
+ * This file is part of MMC, http://www.siveo.net
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+
 $strin='<?';
 $strou='?>';
 ?>
