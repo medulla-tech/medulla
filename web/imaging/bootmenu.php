@@ -150,7 +150,7 @@ cpair --background 0 1 ||
 cpair --background 1 2 ||
 goto \${loaded-menu}
 :get_console
-console --picture http://\${next-server}/downloads/davos/ipxe.png --left 100 --right 80 && goto console_set || goto alt_console
+console --w 1024 --h 768 --picture http://\${next-server}/downloads/davos/ipxe.png --left 100 --right 80 && goto console_set || goto alt_console
 :MENU
 menu
 colour --rgb 0xff0000 0 ||
@@ -225,7 +225,7 @@ if ($uuid != "") {
     FROM glpi_networkports gnp
     JOIN glpi_computers gc ON gc.id = gnp.items_id AND gnp.itemtype='Computer'
     JOIN glpi_entities ge ON gc.entities_id = ge.id
-    where uuid = LOWER(?)
+    where uuid = LOWER(?) and gc.is_deleted=0 and gc.is_template=0
     ORDER BY  gc.id LIMIT 1
     ");
 
@@ -243,7 +243,7 @@ if ($uuid != "") {
     FROM glpi_networkports gnp
     JOIN glpi_computers gc ON gc.id = gnp.items_id AND gnp.itemtype='Computer'
     JOIN glpi_entities ge ON gc.entities_id = ge.id
-    where mac is not NULL and mac = ?
+    where mac is not NULL and mac = ? and gc.is_deleted=0 and gc.is_template=0
     ORDER BY  gc.id LIMIT 1
     ");
 
