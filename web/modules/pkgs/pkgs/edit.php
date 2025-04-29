@@ -625,6 +625,20 @@ jQuery(function(){
 
 
   jQuery("input[name='label']").attr("maxlength", 60);
-  jQuery("#container_input_description").prepend("<div style='color:red;'><?php echo _T("Accentuated and special chars are not allowed", "pkgs");?></div>");
+  jQuery("#description").on("change", function(){
+            description = jQuery(this).val();
+            if(description.match(RegExp(/^[A-Za-z0-9\.\-\!\?\ \.\#%$&@\*\+_\/]*$/))){
+                console.log("OK")
+                if(typeof(jQuery("#description-warning")) != "undefined"){
+                    jQuery("#description-warning").remove()
+                }
+            }
+            else{
+                if(typeof(jQuery("#description-warning").val()) == "undefined"){
+                    jQuery("#container_input_description").prepend("<div id='description-warning' style='color:red;'><?php echo _T("Accentuated and special chars are not allowed", "pkgs");?></div>");
+                }
+            }
+        })
+//   jQuery("#container_input_description").prepend("<div style='color:red;'><?php echo _T("Accentuated and special chars are not allowed", "pkgs");?></div>");
 })
 </script>

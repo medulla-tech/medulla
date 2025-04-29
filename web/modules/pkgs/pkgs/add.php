@@ -500,9 +500,24 @@ if (isset($_POST['bconfirm'])){
         }
       })
 
+      jQuery("#description").on("change", function(){
+            description = jQuery(this).val();
+            if(description.match(RegExp(/^[A-Za-z0-9\.\-\!\?\ \.\#%$&@\*\+_\/]*$/))){
+                console.log("OK")
+                if(typeof(jQuery("#description-warning")) != "undefined"){
+                    jQuery("#description-warning").remove()
+                }
+            }
+            else{
+                if(typeof(jQuery("#description-warning").val()) == "undefined"){
+                    jQuery("#container_input_description").prepend("<div id='description-warning' style='color:red;'><?php echo _T("Accentuated and special chars are not allowed", "pkgs");?></div>");
+                }
+            }
+        })
+
         // Limit the text length for label
         jQuery("input[name='label']").attr("maxlength", 60);
-        jQuery("#container_input_description").prepend("<div style='color:red;'><?php echo _T("Accentuated and special chars are not allowed", "pkgs");?></div>");
+        // jQuery("#container_input_description").prepend("<div id='description-warning' style='color:red;'><?php echo _T("Accentuated and special chars are not allowed", "pkgs");?></div>");
         jQuery('.label span a').each(function() {
             jQuery(this).attr('href', 'http://www.google.com/#q=file.exe+silent+install');
             jQuery(this).attr('target', '_blank');
