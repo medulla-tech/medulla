@@ -137,7 +137,7 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
                 }
             // === END ASSOCIATING FILES ==========================
             } else {
-                header("Location: " . urlStrRedirect("pkgs/pkgs/edit", array('pid' => $_GET['pid'], 'packageUuid' => $_GET['packageUuid'])));
+                header("Location: " . urlStrRedirect("pkgs/pkgs/index", array('location' => base64_encode($p_api_id))));
                 exit;
             }
         } else {
