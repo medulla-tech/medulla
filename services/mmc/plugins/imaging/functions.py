@@ -264,7 +264,7 @@ class ImagingRpcProxy(RpcProxyI):
                 ]
                 # Update profiles for menuitem
                 ImagingDatabase().update_profiles_in_menu(
-                    "UUID%s" % iim.id, profiles_id
+                    "UUID%s" % iim['menuitem'], profiles_id
                 )
 
                 postinstalls = ImagingDatabase().get_all_postinstall_for_menu(
@@ -274,7 +274,7 @@ class ImagingRpcProxy(RpcProxyI):
                     element["id"] for element in postinstalls if element["in_menu"] == 1
                 ]
                 ImagingDatabase().update_postinstalls_in_menu(
-                    "UUID%s" % iim.id, postinstalls_id
+                    "UUID%s" % iim['menuitem'], postinstalls_id
                 )
         #
 

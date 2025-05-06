@@ -2605,7 +2605,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
         self.__sortMenuItems(menu.id, session)
         session.close()
-        return iim
+        return {"menuitem": mi.id, "image": iim.fk_image}
 
     def addImageToTarget(self, item_uuid, target_uuid, params):
         session = create_session()
