@@ -395,7 +395,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
             return user
         return False
 
-    @DatabaseHelper._session
+    @DatabaseHelper._sessionm
     def get_group(self, session, ctx, id, ro=False):
         """
         get the group defined by it's id only if you can have access!
@@ -415,12 +415,12 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
             return group
         return False
 
-    @DatabaseHelper._session
+    @DatabaseHelper._sessionm
     def _get_parent_group_name(self, session, gid):
         query = session.query(Groups).filter_by(id=gid)
         return query.first().name
 
-    @DatabaseHelper._session
+    @DatabaseHelper._sessionm
     def delete_package_convergence(self, session, packageUUID):
         """
         Delete deploy and done groups for a given packageUUID
@@ -439,7 +439,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
             session.query(Convergence).filter_by(packageUUID=packageUUID).delete()
         return True
 
-    @DatabaseHelper._session
+    @DatabaseHelper._sessionm
     def delete_convergence_groups(self, session, parent_id):
         """
         Delete deploy and done groups, for a given parent_group_id
@@ -453,7 +453,8 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         session.query(Groups).filter_by(parent_id=parent_id).delete()
         session.query(Convergence).filter_by(parentGroupId=parent_id).delete()
         return True
-    @DatabaseHelper._session
+
+    @DatabaseHelper._sessionm
     def delete_group(self, session, ctx, id):
         """
         Delete a group defined by its ID.
@@ -1029,7 +1030,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         trans.commit()
         return True
 
-    @DatabaseHelper._session
+    @DatabaseHelper._sessionm
     def get_deploy_group_id(self, session, gid, package_id):
         query = (
             session.query(Convergence)
@@ -1045,7 +1046,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
             return False
         return ret.deployGroupId
 
-    @DatabaseHelper._session
+    @DatabaseHelper._sessionm
     def get_convergence_group_parent_id(self, session, gid):
         query = session.query(Groups).filter_by(id=gid)
         try:
@@ -1201,7 +1202,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
 
         return {mountpoint: {row.packageUUID: row.active}}
 
-    @DatabaseHelper._session
+    @DatabaseHelper._sessionm
     def get_active_convergence_commands(self, session, package_id):
         ret = []
         query = session.query(Convergence)
@@ -1215,7 +1216,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
             ret.append({"gid": line.parentGroupId, "cmd_id": line.commandId})
         return ret
 
-    @DatabaseHelper._session
+    @DatabaseHelper._sessionm
     def get_active_convergences(self, session):
         query = session.query(
             Convergence.deployGroupId, Convergence.papi, Convergence.packageUUID
@@ -1224,7 +1225,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
 
         return [{"gid": x[0], "papi": pickle.loads(x[1]), "pid": x[2]} for x in query]
 
-    @DatabaseHelper._session
+    @DatabaseHelper._sessionm
     def get_convergence_groups_to_update(self, session, package_id):
         # if mountpoint.startswith('UUID/'):
         ## mountpoint param is normally package API UUID
@@ -1242,7 +1243,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
             ret += [line.deployGroupId, line.doneGroupId]
         return ret
 
-    @DatabaseHelper._session
+    @DatabaseHelper._sessionm
     def get_convergence_command_id(self, session, gid, package_id):
         query = (
             session.query(Convergence)
@@ -1289,7 +1290,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
             return {}
 
 
-    @DatabaseHelper._session
+    @DatabaseHelper._sessionm
     def is_convergence_active(self, session, gid, package_id):
         query = session.query(Convergence).filter_by(
             parentGroupId=gid, packageUUID=package_id
@@ -1305,7 +1306,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
             )
             return None
 
-    @DatabaseHelper._session
+    @DatabaseHelper._sessionm
     def _get_group_user(self, session, gid):
         """
         Return User of a group
@@ -1317,7 +1318,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
             self.logger.warn("Error while fetching user for group %s: %s" % (gid, e))
             return None
 
-    @DatabaseHelper._session
+    @DatabaseHelper._sessionm
     def _get_convergence_deploy_group_id_and_user(self, session, command_id):
         query = session.query(Convergence).filter_by(commandId=command_id)
         try:
@@ -1340,7 +1341,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
             return None
         return deploy_group_id, user
 
-    @DatabaseHelper._session
+    @DatabaseHelper._sessionm
     def _get_convergence_active_commands_ids(self, session, cmd_ids=[]):
         """
         Get all convergence command ids

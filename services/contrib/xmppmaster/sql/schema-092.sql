@@ -28,7 +28,7 @@ DROP procedure IF EXISTS `xmppmaster`.`up_init_packages_Win11_X64`;
 
 DELIMITER $$
 USE `xmppmaster`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `up_init_packages_Win11_X64`()
+CREATE PROCEDURE `up_init_packages_Win11_X64`()
 BEGIN
 DROP TABLE IF EXISTS up_packages_Win11_X64;
 CREATE TABLE up_packages_Win11_X64 AS
@@ -80,7 +80,7 @@ DROP procedure IF EXISTS `up_init_packages_Win11_X64_21H2`;
 
 DELIMITER $$
 USE `xmppmaster`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `up_init_packages_Win11_X64_21H2`()
+CREATE PROCEDURE `up_init_packages_Win11_X64_21H2`()
 BEGIN
 DROP TABLE IF EXISTS up_packages_Win11_X64_21H2;
 CREATE TABLE up_packages_Win11_X64_21H2 AS
@@ -132,7 +132,7 @@ DROP procedure IF EXISTS `xmppmaster`.`up_init_packages_Win11_X64_22H2`;
 
 DELIMITER $$
 USE `xmppmaster`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `up_init_packages_Win11_X64_22H2`()
+CREATE PROCEDURE `up_init_packages_Win11_X64_22H2`()
 BEGIN
 DROP TABLE IF EXISTS up_packages_Win11_X64_22H2;
 CREATE TABLE up_packages_Win11_X64_22H2 AS
@@ -185,7 +185,7 @@ DROP procedure IF EXISTS `xmppmaster`.`up_init_packages_Win11_X64_23H2`;
 
 DELIMITER $$
 USE `xmppmaster`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `up_init_packages_Win11_X64_23H2`()
+CREATE PROCEDURE `up_init_packages_Win11_X64_23H2`()
 BEGIN
 DROP TABLE IF EXISTS up_packages_Win11_X64_23H2;
 CREATE TABLE up_packages_Win11_X64_23H2 AS
@@ -238,7 +238,7 @@ DROP procedure IF EXISTS `xmppmaster`.`up_init_packages_Win11_X64_24H2`;
 
 DELIMITER $$
 USE `xmppmaster`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `up_init_packages_Win11_X64_24H2`()
+CREATE PROCEDURE `up_init_packages_Win11_X64_24H2`()
 BEGIN
 DROP TABLE IF EXISTS up_packages_Win11_X64_24H2;
 CREATE TABLE up_packages_Win11_X64_24H2 AS
@@ -291,7 +291,7 @@ DROP procedure IF EXISTS `xmppmaster`.`up_create_product_tables`;
 
 DELIMITER $$
 USE `xmppmaster`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `up_create_product_tables`()
+CREATE PROCEDURE `up_create_product_tables`()
 BEGIN
 
 	call up_init_packages_Win10_X64_1903();

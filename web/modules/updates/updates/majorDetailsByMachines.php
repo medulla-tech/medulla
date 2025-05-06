@@ -18,6 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
+ * file updates/majorDetailsByMachines
  */
 
 require("localSidebar.php");
@@ -27,15 +28,12 @@ require("graph/navbar.inc.php");
 require_once("modules/updates/includes/xmlrpc.php");
 
 unset($_GET['action']);
-
 $allowedSources = ["xmppmaster", "glpi"];
 $dataSource = isset($_GET['source']) && in_array($_GET['source'], $allowedSources) ? $_GET['source'] : "xmppmaster";
 $nameview = ($dataSource == "xmppmaster") ? "MEDULLA" : "GLPI";
 
-$titre = sprintf("%s (<span id=%s><strong><em>%s</em></strong></span>)",
-                 _T("Details Update Majeur by Machines view", 'updates'),
-                 "myidtitre",
-                 $nameview);
+$titre = sprintf("%s",
+                 _T("OS Upgrade details by Machines", 'updates'));
 $p = new PageGenerator($titre);
 $p->setSideMenu($sidemenu);
 $p->display();
@@ -65,9 +63,9 @@ foreach ($allowedSources as $source) {
 </script>
 
 <?php
-
-$ajax = new AjaxFilter(urlStrRedirect("updates/updates/ajaxMajorDetailsByMachines"), "container", $_GET);
+$ajax = new AjaxFilter(urlStrRedirect("updates/updates/ajaxMajorDetailsByMachines"),
+                       "container",
+                       $_GET);
 $ajax->display();
 $ajax->displayDivToUpdate();
-
 ?>

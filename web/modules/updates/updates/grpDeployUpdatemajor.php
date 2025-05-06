@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * file : updates/updates/deployUpdatemajor.php
+ *  file updates/updates/grpDeployUpdatemajor.php
  */
 require_once("modules/updates/includes/xmlrpc.php");
 require_once("modules/dyngroup/includes/dyngroup.php");
@@ -141,7 +141,6 @@ jQuery(".btnPrimary").hover(function(){
 });
 
 
-
 function toTimestamp(strDate){
     var datum = Date.parse(strDate);
     return datum/1000;
@@ -184,54 +183,16 @@ function quick_get($param, $is_checkbox = false){
         return (isset($_GET[$param])) ? $_GET[$param] : '';
     }
 }
-
 $maxperpage = $conf["global"]["maxperpage"];
 $filter  = isset($_GET['filter']) ? htmlentities($_GET['filter']) : "";
 $start = isset($_GET['start']) ? htmlentities($_GET['start']) : 0;
 $end   = (isset($_GET['end']) ? $start+$maxperpage : $maxperpage);
 $title   = (isset($_GET['title']) ? htmlentities($_GET['title']) : "");
 $updateid   = (isset($_GET['pid']) ? htmlentities($_GET['pid']) : "");
-$kb   = (isset($_GET['kb']) ? htmlentities($_GET['kb']) : "");
-$cn   = (isset($_GET['cn']) ? htmlentities($_GET['cn']) : "");
-$id_machine_xmpp   = (isset($_GET['machineidmajor']) ? htmlentities($_GET['machineidmajor']) : "");
-$id_machine_glpi   = (isset($_GET['inventoryidmajor']) ? "UUID".htmlentities($_GET['inventoryidmajor']) : "");
-
-$updatedef= (isset($_GET['update']) ? htmlentities($_GET['update']) : "");
 $message_update = "";
 $platform=(isset($_GET['platform']) ? htmlentities($_GET['platform']) : "");
-switch($updatedef)
-{
-    case  "W11to11":
-        $message_update = _T("An update to the latest version of Windows 11 is available for this machine.");
-        $label="latest version of Windows 11 ISO";
-     break;
-     case  "W10to10":
-        $message_update = _T("An update to the latest release of Windows 10 is available for this machine.");
-        $label="latest version of Windows 10 ISO";
-     break;
-     case  "W10to11":
-        $message_update = _T("The version of Windows 10 allows upgrading to Windows 11 if the machine's hardware context is compatible with Windows 11.");
-        $label="latest version of Windows 11 ISO";
-     break;
-    default:
-        echo "Aucune correspondance trouvée.";
-        break;
-}
+$result =  xmlrpc_get_machines_infos_generic(["id", "platform"], [$id_machine_xmpp, "%Windows%"],"",0,1);
 
-if ($id_machine_xmpp != ""){
-    $result =  xmlrpc_get_machines_infos_generic(["id", "platform"],
-                                                 [$id_machine_xmpp, "%Windows%"],
-                                                 "",
-                                                 0,
-                                                 1);
-}
-elseif ($id_machine_glpi != ""){
-    $result =  xmlrpc_get_machines_infos_generic(["uuid_inventorymachine", "platform"],
-                                                 [$id_machine_glpi, "%Windows%"],
-                                                 "",
-                                                 0,
-                                                 1);
-}
 
 $version = htmlentities($_GET['version']);
 
@@ -242,90 +203,97 @@ $_end_date = strtotime("+7day", $current);
 $end_date = date("Y-m-d H:i:s", $_end_date);
 
 if(isset($_POST['bconfirm'],
-        $_POST['package_id'],
-        $_POST['start_date'], $_POST['end_date'],
-        $_POST['deployment_intervals'])) {
+         $_POST['entity_id'],
+         $_POST['start_date'],
+         $_POST['end_date'],
+         $_POST['deployment_intervals'])) {
+          verifyCSRFToken($_POST);
 
-    verifyCSRFToken($_POST);
-    $segments = explode('_', $_POST['package_id']);
 
+$res=xmlrpc_get_os_update_major_details($_POST['entity_id']);
+
+$start_date = $_POST['start_date'] ?? null;
+$end_date = $_POST['end_date'] ?? null;
+$deployment_intervals = $_POST['deployment_intervals'];
+
+if (empty($start_date)) {
+    header("location:". urlStrRedirect("updates/updates/index"));
+    new NotifyWidgetFailure(_T('slot start date missings', 'msc'));
+    exit;
+}
+
+if (empty($end_date)) {
+    header("location:". urlStrRedirect("updates/updates/index"));
+    new NotifyWidgetFailure(_T('slot end date missings', 'msc'));
+    exit;
+}
+
+$nbmachineidsuccess = 0;
+$nbmachineidfail = 0;
+
+$arraymessage="";
+foreach ($res['machine'] as $indexarray => $value)
+{
+    // creation du nom du deployement
+    $segments = explode('_', $res['package_id'][$indexarray]); // on utilise pas tout le nom pour
     $title_deployement = sprintf("%s--@upd@--%s_%s_%s_%s" ,
-                                 htmlentities($_POST['cn']),
-                                 htmlentities($_POST['update']),
+                                 htmlentities($value),
+                                 htmlentities($res['update'][$indexarray]),
                                  htmlentities($_SESSION['login']),
                                  htmlentities($segments[2]),
-                                 htmlentities(date("Ymd_H_i_s")));
+                                 htmlentities(date("Ymd")));
+    // lancement du deployement
+    $result = xmlrpc_deploy_update_major(htmlentities($res['package_id'][$indexarray]),
+                                         htmlentities($res['uuid_inventorymachine'][$indexarray]),
+                                         htmlentities($value),
+                                         htmlentities($title_deployement),
+                                         htmlentities($start_date),
+                                         htmlentities($end_date),
+                                         htmlentities($deployment_intervals),
+                                         htmlentities($_SESSION['login']));
 
-    $start_date = $_POST['start_date'];
-    $end_date = $_POST['$end_date'];
-    $result = xmlrpc_deploy_update_major(   htmlentities($_POST['package_id']),
-                                        htmlentities($_POST['uuid_inventorymachine']),
-                                        htmlentities($_POST['cn']),
-                                        htmlentities($title_deployement),
-                                        htmlentities($_POST['start_date']),
-                                        htmlentities($_POST['$end_date']),
-                                        htmlentities($_POST['deployment_intervals']),
-                                        htmlentities($_SESSION['login']));
 
-    $mesg = (!empty($result["msg"])) ? htmlentities($result["msg"]) : "";
+    if ( $result['success'] == false)
+    {
+        $nbmachineidfail+=1;
+        $mesg = (!empty($result["msg"])) ? htmlentities($result["msg"]) : "";
+        $arraymessage .= $result['msg'] . "<br> ffff <br>";
+    }else
+    {   // lancement success
+        $nbmachineidsuccess += 1;
+    };
+} // end foreach
 
-    header("location:". urlStrRedirect("updates/updates/index"));
-    if(!empty($result["success"]) && $result["success"] == 1) {
-        $mesg = sprintf("%s %s done",
-                        _T("Deployement update Major ","msc"),
-                        $title_deployement);
+// $res['nb_machine']
+$mesg = sprintf("%d lancement deployement success<br>%d lancement deployement fail<br>",$nbmachineidsuccess,
+                        $nbmachineidfail);
+$mesg.=$arraymessage;
+//exit(0);
+    // $mesg = (!empty($result["msg"])) ? htmlentities($result["msg"]) : "";
+// $res['nb_machine']="";
+
+header("location:". urlStrRedirect("updates/updates/index"));
+ if($nbmachineidfail == 0) {
         new NotifyWidgetSuccess($mesg);
     } else {
-
         new NotifyWidgetFailure($mesg);
     }
     exit;
+
 } else {
     $f = new PopupForm($formtitle);
     $mach = sprintf("%s [%s %s]",$message_update, $cn, $platform);
     $f->add(new TitleElement($mach,1));
     $f->push(new Table());
 
-
-    $hiddenpidpackage = new HiddenTpl("package_id");
-    $f->add($hiddenpidpackage, array("value" => $sanitized_get['package_id'], "hide" => true));
-
-
-    $hiddenuuid_inventorymachine = new HiddenTpl("uuid_inventorymachine");
-    $f->add($hiddenuuid_inventorymachine, array("value" => $sanitized_get['uuid_inventorymachine'], "hide" => true));
-
     $hiddenentity_id = new HiddenTpl("entity_id");
-    $f->add($hiddenentity_id, array("value" => $sanitized_get['entity_id'], "hide" => true));
+    $f->add($hiddenentity_id, array("value" => $sanitized_get['entity'], "hide" => true));
 
     $hiddenentity_name = new HiddenTpl("entity_name");
-    $f->add($hiddenentity_name, array("value" => $sanitized_get['entity_name'], "hide" => true));
+    $f->add($hiddenentity_name, array("value" => $sanitized_get['name'], "hide" => true));
 
-    $hiddencomplete_name = new HiddenTpl("complete_name");
-    $f->add($hiddencomplete_name, array("value" => $sanitized_get['complete_name'], "hide" => true));
-
-    $hiddenmachineidmajor = new HiddenTpl("machineidmajor");
-    $f->add($hiddenmachineidmajor, array("value" => $sanitized_get['machineidmajor'], "hide" => true));
-
-
-    $hiddencn = new HiddenTpl("cn");
-    $f->add($hiddencn, array("value" => $sanitized_get['cn'], "hide" => true));
-
-    $hiddenplatform = new HiddenTpl("platform");
-    $f->add($hiddenplatform, array("value" => $sanitized_get['platform'], "hide" => true));
-
-
-    $hiddenplatform = new HiddenTpl("version");
-    $f->add($hiddenplatform, array("value" => $sanitized_get['platform'], "hide" => true));
-
-    $hiddenversion = new HiddenTpl("platform");
-    $f->add($hiddenversion, array("value" => $sanitized_get['version'], "hide" => true));
-
-    $hiddenupdate = new HiddenTpl("update");
-    $f->add($hiddenupdate, array("value" => $sanitized_get['update'], "hide" => true));
-
-     $hiddeninstalleur = new HiddenTpl("installeur");
-    $f->add($hiddeninstalleur, array("value" => $sanitized_get['installeur'], "hide" => true));
-
+    $hiddencomplete_name = new HiddenTpl("completename");
+    $f->add($hiddencomplete_name, array("value" => $sanitized_get['completename'], "hide" => true));
 
     $hiddenaction = new HiddenTpl("action");
     $f->add($hiddenaction, array("value" => $sanitized_get['action'], "hide" => true));

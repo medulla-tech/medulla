@@ -35,7 +35,7 @@ class EmptyActionItem1 extends ActionItem
 
     public function display($param = null, $extraParams = array())
     {
-        echo "<li class=\"" . $this->classCss . "\">";
+        echo "<li class=\"" . $this->classCss . "\" style=\"opacity: 0.5;\">";
         echo "<a title=\"" . $this->desc . "\" href=\"#\" ";
         echo "onclick=\"return false;\">&nbsp;</a>";
         print "</li>";

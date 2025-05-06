@@ -26,14 +26,6 @@ require("graph/navbar.inc.php");
 $p = new PageGenerator(_T("Manage Updates Major Lists", 'updates'));
 $p->setSideMenu($sidemenu);
 $p->display();
-echo "kkkk";
-
 $ajaxG = new AjaxFilter(urlStrRedirect("updates/updates/ajaxMajorEntitiesList"), "containeMajorEntitiesList", [], "forma");$ajaxG->display();$ajaxG->displayDivToUpdate();
-/*
-require_once("modules/updates/includes/xmlrpc.php");
 
-
-
-print "<br/><br/><br/>";
-*/
 ?>

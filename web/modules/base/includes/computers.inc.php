@@ -32,8 +32,13 @@ function getRestrictedComputersListLen($filt = null) {
     return xmlCall("base.getRestrictedComputersListLen", array($filt));
 }
 
-function getRestrictedComputersList($min = 0, $max = -1, $filt = null, $adv = True) {
-    return xmlCall("base.getRestrictedComputersList", array($min, $max, $filt, $adv));
+
+function getRestrictedComputersList($min = 0, $max = -1, $filt = null, $adv = True , $justId=False) {
+    return xmlCall("base.getRestrictedComputersList", array($min, $max, $filt, $adv, $justId));
+}
+
+function getRestrictedComputersListuuid($min = 0, $max = -1, $filt = null, $adv = True , $justId=False) {
+    return xmlCall("base.getRestrictedComputersList", array($min, $max, $filt, $adv, $justId));
 }
 
 function getComputerCount($filter = null) {

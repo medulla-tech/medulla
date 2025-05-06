@@ -1,6 +1,8 @@
 <?php
 $_SESSION["login"] = $login;
-$_SESSION["pass"] = $pass;
+// $_SESSION["pass"] = $pass;
+// pour 1 verification de jeton CSRF
+$_SESSION['auth_token'] = bin2hex(random_bytes(16));
 /* Set session expiration time */
 $_SESSION["sessiontimeout"] = intval($conf["global"]["sessiontimeout"]);
 $_SESSION["expire"] = time() + $_SESSION["sessiontimeout"];

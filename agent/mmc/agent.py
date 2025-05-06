@@ -78,7 +78,7 @@ sys.path.append("plugins")
 
 Fault = xmlrpc.client.Fault
 ctx = None
-VERSION = "5.2.0"
+VERSION = "5.2.1"
 
 PYTHON_VERSION = sys.version_info.major
 
@@ -1407,7 +1407,7 @@ sys.path.append("plugins")
 
 Fault = xmlrpc.client.Fault
 ctx = None
-VERSION = "5.2.0"
+VERSION = "5.2.1"
 
 
 class IncludeStartsWithFilter(logging.Filter):

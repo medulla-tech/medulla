@@ -71,6 +71,17 @@ def __convert(loc):
     return loc
 
 
+# Fonction pour afficher les attributs des objets
+def log_object_attributes(obj):
+    try:
+        # Utiliser vars() pour obtenir les attributs de l'objet
+        attributes = vars(obj)
+        return attributes
+    except TypeError:
+        # Si l'objet n'a pas de __dict__, retourner une chaîne vide
+        return "No attributes"
+
+
 def complete_ctx(ctx):
     """
     Set GLPI user locations and profile in current security context.

@@ -89,7 +89,7 @@ $rescheduleAction = new ActionPopupItem(_T("Reschedule", "xmppmaster"),
 $arraytitlename=array();
 $delete=array();
 $logs=array();
-$replanifie=array()
+$replanifie=array();
 $params=array();
 $arraytargetname=array();
 $index = 0;
@@ -142,7 +142,7 @@ foreach($arraydeploy['tabdeploy']['journee'] as $key => $value){
 
     $arraydeploy['tabdeploy']['title'][$key]= sprintf('<span %s title="%s " > %s </span>',
                                                         $style,
-                                                  $deployment_intervals = _T("No deployment intervals contraint", "xmppmaster");
+                                                  $deployment_intervals = _T("No deployment intervals contraint", "xmppmaster"));
 
 
     $arraydeploy['tabdeploy']['title'][$key]= sprintf('<span %s title="%s " > %s </span>',

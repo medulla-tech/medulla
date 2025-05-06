@@ -985,8 +985,16 @@ class ImagingBootServiceItem(ImagingItem):
 
         # Create and write sh file
         try:
-            script_file[0] = script_file[0].decode("utf-8") if isinstance(script_file[0], bytes) else script_file[0]
-            script_file[1] = script_file[1].decode("utf-8") if isinstance(script_file[1], bytes) else script_file[1]
+            script_file[0] = (
+                script_file[0].decode("utf-8")
+                if isinstance(script_file[0], bytes)
+                else script_file[0]
+            )
+            script_file[1] = (
+                script_file[1].decode("utf-8")
+                if isinstance(script_file[1], bytes)
+                else script_file[1]
+            )
             f = open(os.path.join(postinst_scripts_folder, script_file[0]), "w")
             f.write("#!/bin/bash\n")
             f.write("\n")

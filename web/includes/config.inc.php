@@ -32,15 +32,26 @@ global $conf;
 
 fetchIniFile();
 
+function affichedebugJFKJFK($a, $title = "") {
+    // Example usage
+    // $data = array("key" => "value");
+    // affichedebugJFKJFK($data, "Debug Title");
 
-function affichedebugJFKJFK($a, $title="", $file=""){
-    if ($title != ""){
-        printf("<h2>%s -> ".$file."</h2> " , $title);
+    // Get the backtrace
+    $backtrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 1);
+
+    // Extract the file name from the first frame of the backtrace
+    $file = isset($backtrace[0]['file']) ? basename($backtrace[0]['file']) : 'Unknown File';
+
+    if ($title != "") {
+        printf("<h2>%s -> %s</h2>", $title, $file);
     }
-    echo"<pre>";
+
+    echo "<pre>";
     print_r($a);
-    echo"</pre>";
+    echo "</pre>";
 }
+
 
 
 function affichefile($a){
