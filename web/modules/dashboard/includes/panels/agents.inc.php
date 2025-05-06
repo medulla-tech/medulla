@@ -49,7 +49,7 @@ class AgentsPanel extends Panel {
     }
 
     $_json = json_encode($json);
-    echo '<h1>'._T("Machines in Pulse from ".$months[0]." to ".end($months), 'xmppmaster').'</h1>';
+    echo '<h1>'._T("Machines in Medulla from ".$months[0]." to ".end($months), 'xmppmaster').'</h1>';
     echo <<< RATE
     <div id="agents-graphs"></div>
     <script>
