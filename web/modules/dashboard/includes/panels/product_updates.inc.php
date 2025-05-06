@@ -27,7 +27,7 @@ $options = array(
     "class" => "UpdatePanel",
     "id" => "update",
     "refresh" => 14400,
-    "title" => _("Pulse Updates"),
+    "title" => _("Medulla Updates"),
     "enable" => TRUE
 );
 
