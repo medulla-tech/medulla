@@ -493,8 +493,9 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
     $p_api = new ServerAPI();
     $p_api->fromURI(quick_get("papi"));
     $name = quick_get('ltitle');
+
     if (!isset($name) || $name == '') {
-        $name = getPackageLabel($p_api, quick_get('pid'));
+        $name = getPackageLabel($p_api->export(), quick_get('pid'));
     }
     // form design
     $f = new ValidatingForm();

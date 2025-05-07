@@ -108,6 +108,14 @@ class ServerAPI {
         $this->mountpoint = $uri[2];
         $this->protocol = $uri[3];
     }
+    public function export(){
+        return [
+            "server" => $this->server,
+            "port" => $this->port,
+            "mountpoint" =>$this->mountpoint,
+            "protocol"=>$this->protocol
+        ];
+    }
 }
 
 class Package {
