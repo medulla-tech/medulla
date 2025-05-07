@@ -7913,7 +7913,7 @@ class XmppMasterDatabase(DatabaseHelper):
         # fiel for table ent and alias
         entityfield = {
             "entityname": "name",
-            "entitypath": "completename",
+            "entitypath": "complete_name",
             "entityid": "id",
         }
         # fiel for table location and alias
