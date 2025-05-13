@@ -39,7 +39,17 @@
     // recupère toutes les machines du groupe.
     $uuid = array();
     $list = getRestrictedComputersList(0, -1, array('gid' => $_GET['gid']), False);
-
+    xmlrpc_setfromxmppmasterlogxmpp("QA : user ".$_SESSION['login']." requests command [ ".$customqa['customcmd']." ] on Group : ".$_GET['groupname'],
+                                    "QA",
+                                    '' ,
+                                    0,
+                                    'Grp : '.$_GET['groupname'],
+                                    'Manuel',
+                                    '',
+                                    '',
+                                    '',
+                                    "session user ".$_SESSION["login"],
+                                    'QuickAction | Command');
     // pour chaque machine on envoyer qa
     $cn = array();
     foreach($list as $key =>$value){
@@ -61,6 +71,17 @@
                     unset($machineinfos['mod']);
                     unset($machineinfos['actionqa']);
                     xmlrpc_runXmppAsyncCommand( trim($customqa['customcmd']) , $machineinfos );
+                    xmlrpc_setfromxmppmasterlogxmpp("QA : user ".$_SESSION['login']." requests command [ ".$customqa['customcmd']." ] on machine : ".$value[1]['cn'][0],
+                                                "QA",
+                                                '',
+                                                0,
+                                                $value[1]['cn'][0] ,
+                                                'Manuel',
+                                                '',
+                                                '',
+                                                '',
+                                                "session user ".$_SESSION["login"],
+                                                'QuickAction | Command');
                 }
                 else{
                     xmlrpc_setCommand_action( $key, $COMMANDID, "consoleweb",  _T("Sorry the operating system of the machine is", "xmppmaster")."  [".$machinegroup['platform']."]<br>".  _T("The custom QA is defined for operating system", "xmppmaster")." [".$OS."]", "warning");

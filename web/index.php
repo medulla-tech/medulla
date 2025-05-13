@@ -317,6 +317,9 @@ if (safeCount($servDescList) == 1) {
 if (isCommunityVersion() && is_file("license.php")) {
     require("license.php");
 }
+if ($conf["global"]["demo"]) {
+    require("demobanner.php");
+}
 if ($error) {
     print '<script type="text/javascript">$("#alert").effect("shake");</script>';
 }
