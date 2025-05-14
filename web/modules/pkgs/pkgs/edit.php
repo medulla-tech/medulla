@@ -508,7 +508,7 @@ $params = array();
 $pserver_base_url = '';
 
 foreach ($package['files'] as $file) {
-    if ($file['name'] == "MD5SUMS" || $file['name'] == "xmppdeploy.json") {
+    if ($file['name'] == "MD5SUMS" || $file['name'] == "xmppdeploy.json" || $file['name'] == "conf.json") {
         continue;
     }
     $names[] = $file['name'];
