@@ -2774,25 +2774,27 @@ class MscDatabase(DatabaseHelper):
                     )
                 return command
 
-            command, coh = (
-                session.query(Commands)
-                .filter_by(id=cmd_id)
-                .add_entity(CommandsOnHost)
-                .outerjoin((CommandsOnHost, Commands.id == CommandsOnHost.fk_commands))
-                .first()
-            )
-            if coh is not None:
-                phases = (
-                    session.query(CommandsOnHostPhase)
-                    .filter_by(fk_commands_on_host=coh.id)
-                    .all()
+            try:
+                command, coh = (
+                    session.query(Commands)
+                    .filter_by(id=cmd_id)
+                    .add_entity(CommandsOnHost)
+                    .outerjoin((CommandsOnHost, Commands.id == CommandsOnHost.fk_commands))
+                    .first()
                 )
-                phases = [phase.toDict()["name"] for phase in phases]
-                # _update_command call for missing statuses
-                return _update_command(command, phases)
-            else:
-                return command
-
+                if coh is not None:
+                    phases = (
+                        session.query(CommandsOnHostPhase)
+                        .filter_by(fk_commands_on_host=coh.id)
+                        .all()
+                    )
+                    phases = [phase.toDict()["name"] for phase in phases]
+                    # _update_command call for missing statuses
+                    return _update_command(command, phases)
+                else:
+                    return command
+            except:
+                return False
         self.logger.warn(
             "User %s does not have good permissions to access command '%s'"
             % (ctx.userid, str(cmd_id))
