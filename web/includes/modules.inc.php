@@ -115,6 +115,9 @@ function fetchIniFile() {
     if (!isset($conf["global"]["community"])) {
         $conf["global"]["community"] = True;
     }
+    if (!isset($conf["global"]["demo"])) {
+        $conf["global"]["demo"] = False;
+    }
     /* Set default option for MMC agent access */
     foreach ($conf as $key => $value) {
         if (strstr($key, "server_")) {

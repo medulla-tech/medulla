@@ -17010,7 +17010,6 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                 'W10to11' pour une mise à jour de Windows 10 vers Windows 11, et 'W11to11' pour une
                 mise à jour entre versions de Windows 11.
         """
-        logger.error("DEDEDEDE")
         # Nouvelle requête SQL
         total_os_sql = '''
             SELECT
@@ -17064,7 +17063,6 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         # Compter le nombre total d'éléments correspondants en utilisant FOUND_ROWS()
         sql_count = text("SELECT FOUND_ROWS();")
         ret_count = session.execute(sql_count).scalar()
-        logger.error(ret_count)
         # Préparer le dictionnaire de résultats avec le nombre de lignes correspondantes
         result = {
             'nb_machine': ret_count,
@@ -17515,4 +17513,3 @@ class WhereClauseGenerator:
             key = self.correspondance[key_lower]
 
         return f"{key} {operator} '{clean_value}'"
-

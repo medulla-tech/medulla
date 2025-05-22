@@ -26,6 +26,10 @@ maxperpage = 10
 ; community can be yes or no
 community = yes
 
+; Declare if this installation is a demo version or not
+; demo can be yes or no
+demo = no
+
 ; If we want to change glpi displayed name in the interface,
 ; we just have to change this value
 glpidisplayname = glpi

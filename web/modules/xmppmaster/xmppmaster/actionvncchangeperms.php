@@ -40,6 +40,17 @@ switch($_GET['action']){
     case "deployquick":
         // work for one machine
         echo xmlrpc_callvncchangeperms($_GET['objectUUID'], $_GET['askpermission']);
+        xmlrpc_setfromxmppmasterlogxmpp("QA : user ".$_SESSION['login']." requests VNC permissions change on machine : ".$_GET['cn'],
+                                    "QA",
+                                    '',
+                                    0,
+                                    $_GET['cn'],
+                                    'Manuel',
+                                    '',
+                                    '',
+                                    '',
+                                    "session user ".$_SESSION["login"],
+                                    'QuickAction | VNC permissions change');
         $result = $_GET;
         echo json_encode($result);
         break;
@@ -53,6 +64,17 @@ switch($_GET['action']){
         $machine_not_present     = array();
         $result = array();
         $list = getRestrictedComputersList(0, -1, array('gid' => $_GET['gid']), False);
+        xmlrpc_setfromxmppmasterlogxmpp("QA : user ".$_SESSION['login']." requests VNC permissions change on Group : ".$_GET['groupname'],
+                                        "QA",
+                                        '' ,
+                                        0,
+                                        'Grp : '.$_GET['groupname'],
+                                        'Manuel',
+                                        '',
+                                        '',
+                                        '',
+                                        "session user ".$_SESSION["login"],
+                                        'QuickAction | VNC permissions change');
         foreach($list as $key =>$value){
             $cn[] = $value[1]['cn'][0];
             $uuid[] = $key;
@@ -64,6 +86,17 @@ switch($_GET['action']){
                 $presence[] = 1;
                 $machine_already_present[] =  $value[1]['cn'][0];
                 xmlrpc_callvncchangeperms($key, $_GET['askpermission']);
+                xmlrpc_setfromxmppmasterlogxmpp("QA : user ".$_SESSION['login']." requests VNC permissions change on machine : ".$value[1]['cn'][0],
+                                            "QA",
+                                            '',
+                                            0,
+                                            $value[1]['cn'][0] ,
+                                            'Manuel',
+                                            '',
+                                            '',
+                                            '',
+                                            "session user ".$_SESSION["login"],
+                                            'QuickAction | VNC permissions change');
             };
             $result = array($uuid, $cn, $presence,$machine_already_present, $machine_not_present );
         }

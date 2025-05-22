@@ -64,6 +64,17 @@ if (safeCount($machinegroup) != 0) {
         $result['cmdid'] =  $COMMANDID;
         $machineinfos = array_merge($_GET, $machinegroup, $customqa, $result);
         xmlrpc_runXmppAsyncCommand(trim($customqa['customcmd']), $machineinfos);
+        xmlrpc_setfromxmppmasterlogxmpp("QA : user ".$_SESSION['login']." requests command [ ".$customqa['customcmd']." ] on machine : ".$machineinfos['cn'],
+                                    "QA",
+                                    '',
+                                    0,
+                                    $machineinfos['cn'] ,
+                                    'Manuel',
+                                    '',
+                                    '',
+                                    '',
+                                    "session user ".$_SESSION["login"],
+                                    'QuickAction | Command');
         echo "send";
     } else {
         $msg = sprintf(_T("Sorry the operating system of the machine %s is [%s].<br>The custom QA is defined for operating system [%s]", "xmppmaster"), $machine, $machinegroup['platform'], $os);

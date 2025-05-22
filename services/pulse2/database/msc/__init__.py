@@ -3820,13 +3820,10 @@ class MscDatabase(DatabaseHelper):
                             usercreator="root",
                             list_file="fileslistpackage"):
         try:
-            logger.error("DEDEDEDE1 %s"%hostname)
-            logger.error(hostname)
             if isinstance(uuid_inventorymachine, int):
                 uuid_inventorymachine = str(uuid_inventorymachine)
             if not uuid_inventorymachine.startswith("UUID"):
                 uuid_inventorymachine = "UUID" + uuid_inventorymachine
-            logger.error("DEDEDEDE1 %s"%hostname)
 
             # Vérifier si list_file est une liste
             if isinstance(list_file, list):
@@ -3878,16 +3875,8 @@ class MscDatabase(DatabaseHelper):
             commandid = command.id
             commandstart = command.start_date
             commandstop = command.end_date
-            logger.error("DEDEDEDE1 %s"%hostname)
-            logger.error("uuid_inventorymachine %s"%uuid_inventorymachine)
-            logger.error("hostname %s"%hostname)
 
             target= MscDatabase().xmpp_create_Target(uuid_inventorymachine, hostname)
-            logger.error("target id  %s"%target["id"])
-            logger.error("commandid id  %s"%commandid)
-            logger.error("hostname %s"%hostname)
-            logger.error("commandstop %s"%commandstop)
-            logger.error("commandstart %s"%commandstart)
             com_on_host = MscDatabase().xmpp_create_CommandsOnHost( commandid,
                                                                     target["id"],
                                                                     hostname,
