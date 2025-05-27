@@ -127,7 +127,7 @@ $n->addExtraInfo($show, _T('Favourite', 'dyngroup'));
 $n->setParamInfo($ids);
 
 if ($is_gp != 1) { // Simple group
-    $n->addActionItem(new ActionItem(_T("Display this group's content", 'dyngroup'), "display", "display", "id", "base", "computers"));
+    $n->addActionItem(new ActionItem(_T("Display this group's content", 'dyngroup'), "display", "displaygroup", "id", "base", "computers"));
     if (in_array("inventory", $_SESSION["supportModList"])) {
         $n->addActionItem(new ActionItem(_T("Inventory on this group", "dyngroup"), "groupinvtabs", "inventory", "inventory", "base", "computers"));
     } else {
@@ -150,7 +150,7 @@ if ($is_gp != 1) { // Simple group
     //$n->addActionItem(new ActionItem(_("Deploy all update on this group"),"deployAllUpdates", "updateall","updates", "updates", "updates") );
     $n->addActionItem(new ActionItem(_("Deploy specific update on this group"), "deploySpecificUpdate", "updateone", "updates", "updates", "updates"));
 } else { // Imaging group
-    $n->addActionItem(new ActionItem(_T("Display this imaging group's content", 'dyngroup'), "display", "display", "id", "imaging", "manage"));
+    $n->addActionItem(new ActionItem(_T("Display this imaging group's content", 'dyngroup'), "display", "displaygroup", "id", "imaging", "manage"));
     if (in_array("inventory", $_SESSION["supportModList"])) {
         $n->addActionItem(new ActionItem(_T("Inventory on this imaging group", "dyngroup"), "groupinvtabs", "inventory", "inventory", "imaging", "manage"));
     } else {
