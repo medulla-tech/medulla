@@ -1,18 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 26.5.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <svg version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 141.7 141.7" style="enable-background:new 0 0 141.7 141.7;" xml:space="preserve">
-<path d="M68.9433 26H23V116H86.2635V47.5354H68.9518V26H68.9433Z" fill="white" stroke="#25607E" stroke-width="4.4403" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M68.9434 26V47.5354H86.2635L69.0199 26H68.9434Z" fill="#8CB63C" stroke="#25607E" stroke-width="4.4403" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M73.847 59.1189H35.4164Z" fill="black"/>
-<path d="M73.847 59.1189H35.4164" stroke="#25607E" stroke-width="4.4403" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M73.847 67.6686H35.4164Z" fill="black"/>
-<path d="M73.847 67.6686H35.4164" stroke="#25607E" stroke-width="4.4403" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M73.847 76.2096H35.4164Z" fill="black"/>
-<path d="M73.847 76.2096H35.4164" stroke="#25607E" stroke-width="4.4403" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M73.847 84.7593H35.4164Z" fill="black"/>
-<path d="M73.847 84.7593H35.4164" stroke="#25607E" stroke-width="4.4403" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M73.847 93.3003H35.4164Z" fill="black"/>
-<path d="M73.847 93.3003H35.4164" stroke="#25607E" stroke-width="4.4403" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M73.847 101.85H35.4164Z" fill="black"/>
-<path d="M73.847 101.85H35.4164" stroke="#25607E" stroke-width="4.4403" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M81.601 92.8075C81.601 92.8536 81.601 92.8998 81.601 92.946L83.6134 90.9611C84.7834 89.8071 86.7021 89.8071 87.8721 90.9611C89.0421 92.1151 89.0421 94.0076 87.8721 95.1616L81.0394 101.947C79.8694 103.101 78.0443 103.101 76.8275 101.993L69.8544 95.9463C68.6845 94.7923 68.7313 92.8998 69.9012 91.7458C70.9776 90.7303 72.6156 90.638 73.7856 91.515L75.5639 93.0844C75.3299 88.2377 76.5935 83.4371 79.1675 79.3289C81.7414 75.2207 85.4853 72.0357 89.9781 70.1432C91.5692 69.4508 93.2072 68.9431 94.9388 68.5738C106.171 66.0812 117.543 71.8973 121.942 82.3755C122.644 83.9449 123.159 85.5604 123.486 87.2683C124.329 91.2381 124.141 95.3462 122.878 99.2236C121.614 103.055 119.368 106.517 116.326 109.286C113.424 111.964 109.961 113.948 106.171 115.102C99.9931 116.903 93.3476 115.979 87.9657 112.471C86.5617 111.594 86.1873 109.748 87.0765 108.363C87.9657 106.978 89.8377 106.609 91.2416 107.486C92.0372 107.994 92.8796 108.456 93.722 108.825C94.5644 109.194 95.4068 109.471 96.2959 109.656C99.0103 110.302 101.818 110.21 104.486 109.425C107.387 108.548 110.055 107.025 112.254 104.947C114.548 102.87 116.232 100.285 117.168 97.3773C118.104 94.5154 118.245 91.4227 117.636 88.4685C117.356 87.176 116.934 85.9297 116.42 84.6834C113.144 76.8363 104.579 72.4973 96.2023 74.3899C94.892 74.6668 93.5816 75.0823 92.3648 75.59C88.9953 76.9748 86.1873 79.3751 84.2686 82.4216C82.3966 85.5604 81.4138 89.1609 81.601 92.8075ZM96.1555 83.114C96.1555 81.6369 97.3723 80.3906 98.9167 80.3906C100.461 80.3906 101.678 81.5907 101.678 83.114V91.5612L108.37 95.2078C109.68 95.9463 110.148 97.5619 109.447 98.9005C108.698 100.193 107.06 100.655 105.703 99.9622L97.7935 95.6232C96.8107 95.2078 96.1555 94.2384 96.1555 93.1306V83.114Z" fill="#8BB53C" stroke="#24607E" stroke-width="3.8477" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+	 viewBox="0 0 141.73 141.73" style="enable-background:new 0 0 141.73 141.73;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#8CB63C;stroke:#25607E;stroke-width:3.9851;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st1{fill:#FFFFFF;stroke:#25607E;stroke-width:3.9851;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st2{fill:none;stroke:#25607E;stroke-width:3.9851;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+</style>
+<g>
+	<g>
+		<polygon class="st0" points="87.4,66.75 67.11,42.87 67.11,66.75 		"/>
+		<polygon class="st1" points="67.11,66.75 67.11,42.87 22.81,42.87 22.81,130.39 87.4,130.39 87.4,66.75 		"/>
+		<line class="st2" x1="34.73" y1="87.25" x2="75.86" y2="87.25"/>
+		<line class="st2" x1="34.73" y1="95.12" x2="52.85" y2="95.12"/>
+		<line class="st2" x1="75.86" y1="102.99" x2="34.73" y2="102.99"/>
+		<line class="st2" x1="34.73" y1="111.24" x2="75.86" y2="111.24"/>
+		<line class="st2" x1="34.73" y1="119.5" x2="52.85" y2="119.5"/>
+		<line class="st2" x1="34.73" y1="79.38" x2="75.86" y2="79.38"/>
+		<rect x="35.02" y="53.76" class="st0" width="17.26" height="17.69"/>
+	</g>
+	<g>
+		<polygon class="st0" points="103.16,50.99 82.87,27.11 82.87,50.99 		"/>
+		<polygon class="st1" points="82.87,50.99 82.87,27.11 38.57,27.11 38.57,114.62 103.16,114.62 103.16,50.99 		"/>
+		<line class="st2" x1="50.49" y1="71.49" x2="91.63" y2="71.49"/>
+		<line class="st2" x1="50.49" y1="79.36" x2="68.61" y2="79.36"/>
+		<line class="st2" x1="91.63" y1="87.23" x2="50.49" y2="87.23"/>
+		<line class="st2" x1="50.49" y1="95.48" x2="91.63" y2="95.48"/>
+		<line class="st2" x1="50.49" y1="103.73" x2="68.61" y2="103.73"/>
+		<line class="st2" x1="50.49" y1="63.62" x2="91.63" y2="63.62"/>
+		<rect x="50.78" y="38" class="st0" width="17.26" height="17.69"/>
+	</g>
+	<g>
+		<polygon class="st0" points="118.93,35.23 98.64,11.35 98.64,35.23 		"/>
+		<polygon class="st1" points="98.64,35.23 98.64,11.35 54.33,11.35 54.33,98.86 118.93,98.86 118.93,35.23 		"/>
+		<line class="st2" x1="66.25" y1="55.72" x2="107.39" y2="55.72"/>
+		<line class="st2" x1="66.25" y1="63.59" x2="84.38" y2="63.59"/>
+		<line class="st2" x1="107.39" y1="71.46" x2="66.25" y2="71.46"/>
+		<line class="st2" x1="66.25" y1="79.72" x2="107.39" y2="79.72"/>
+		<line class="st2" x1="66.25" y1="87.97" x2="84.38" y2="87.97"/>
+		<line class="st2" x1="66.25" y1="47.85" x2="107.39" y2="47.85"/>
+		<rect x="66.54" y="22.24" class="st0" width="17.26" height="17.69"/>
+	</g>
+</g>
 </svg>
