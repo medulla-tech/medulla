@@ -557,6 +557,8 @@ def notify_kiosks():
     machines_list = XmppMasterDatabase().get_machines_with_kiosk()
 
     for machine in machines_list:
+        if machine["uuid_inventorymachine"] == "":
+            continue
         structuredatakiosk = get_packages_for_machine(machine)
         datas = {
             "subaction": "profiles_updated",
