@@ -311,6 +311,41 @@ class Group
         );
     }
 
+     public function createNegativeConvergenceGroups($package)
+    {
+        $deployGroup = new ConvergenceGroup();
+        $doneGroup = new ConvergenceGroup();
+
+        $deployGroup->setPackage($package);
+        $doneGroup->setPackage($package);
+
+        $doneGroup->setDoneGroup();
+
+        $deployGroup->setParentGroup($this);
+        $doneGroup->setParentGroup($this);
+
+        $deployGroup->create();
+        $doneGroup->create();
+
+        $deployGroup->setRequestAndBool();
+        $doneGroup->setRequestAndBool();
+
+        $deploybool = $deployGroup->bool;
+        $donebool = $doneGroup->bool;
+        $deployGroup->bool = $donebool;
+        $doneGroup->bool = $deploybool;
+
+        __xmlrpc_setbool_group($deployGroup->id, $donebool, $deployGroup->type, $deployGroup->parent_id);
+        __xmlrpc_setbool_group($doneGroup->id, $deploybool, $doneGroup->type, $doneGroup->parent_id);
+
+        return array(
+            'done_group_id' => $doneGroup->id,
+            'deploy_group_id' => $deployGroup->id,
+        );
+    }
+
+
+
     public function getDeployGroupId($package)
     {
         return xmlrpc_getDeployGroupId($this->id, $package->id);

@@ -1179,12 +1179,18 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         """
         query = session.query(Convergence).filter_by(parentGroupId=gid).all()
         ret = {}
+        ret2 = {}
         for line in query:
+            query2 = session.query(Groups.bool).filter(Groups.id == line.deployGroupId).first()
             mountpoint = "/package_api_get1"
             if mountpoint not in ret:
                 ret[mountpoint] = {}
+            if mountpoint not in ret2:
+                ret2[mountpoint] = {}
+            ret2[mountpoint][line.packageUUID] = "positive" if query2.bool == "AND(2, NOT(AND(1)))" else "negative"
             ret[mountpoint][line.packageUUID] = line.active
-        return ret
+
+        return ret, ret2
 
     @DatabaseHelper._sessionm
     def getConvergenceStatusByCommandId(self, session, commandId):

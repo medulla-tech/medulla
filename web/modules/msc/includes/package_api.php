@@ -119,6 +119,18 @@ class ServerAPI {
 }
 
 class Package {
+    public $label;
+    public $description;
+    public $version;
+    public $size;
+    public $id;
+    public $Qsoftware;
+    public $Qversion;
+    public $Qvendor;
+    public $associateinventory;
+    public $targetos;
+    public $uninstall_section;
+
     function __construct($h_pkg) {
         $this->label = $h_pkg['label'];
         $this->description = $h_pkg['description'];
@@ -130,6 +142,11 @@ class Package {
         $this->Qvendor = $h_pkg['Qvendor'];
         $this->associateinventory = $h_pkg['associateinventory'];
         $this->targetos = $h_pkg['targetos'];
+
+        $this->uninstall_section = true;
+        foreach($h_pkg['uninstall_section'] as $os=>$bool){
+            $this->uninstall_section &= $bool;
+        }
     }
 }
 

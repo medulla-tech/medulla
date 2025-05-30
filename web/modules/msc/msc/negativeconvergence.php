@@ -32,8 +32,7 @@ require('modules/msc/includes/launch_functions.php');
 require_once('modules/dyngroup/includes/dyngroup.php');
 
 
-
-
+echo $_GET['action'];
 $from = getParam('from');
 $path = explode('|', $from);
 $module  = isset($path[0]) ? $path[0] : '';
@@ -50,11 +49,9 @@ if (getParam('gid')) {
     $cible = $group->getName();
 }
 
-// polarity is used to know if the current convergence is set as positive or negative convergence
 $polarity = getParam('polarity', "");
 $action = getParam('action');
-// switch polarity is used to know if we need to change the convergence polarity.
-// This is important because of fixed params such as deploy and done groups bool or has_login_command title or params
+
 $switchPolarity = false;
 if($switchPolarity != '' && ($polarity == 'negative' && $action == 'convergence') || ($polarity == 'positive' && $action == 'negativeconvergence')){
     $switchPolarity = true;
@@ -73,8 +70,9 @@ $params = array(
     "create_directory"       => 'on',
     "next_connection_delay"  => web_def_delay(),
     "max_connection_attempt" => web_def_attempts(),
-    "polarity"               => getParam('polarity', ""),
-    "switch_polarity"        => $switchPolarity,
+    "parameterspacquage"     => '{"section":"uninstall"}',
+    "polarity"               => $polarity,
+    'switch_polarity'        => $switchPolarity,
 );
 
 if (getParam('editConvergence')) {
@@ -84,9 +82,7 @@ if (getParam('editConvergence')) {
     $cmd_id          = xmlrpc_get_convergence_command_id(getParam('gid', null), getParam('pid'));
     $command_details = command_detail($cmd_id);
     $command_phases  = xmlrpc_get_convergence_phases(getParam('gid', null), getParam('pid'));
-    if(substr($command_details['title'], 0, 11) != "Convergence"){
-        $command_details['title'] = ltrim(substr($command_details['title'], 8));
-    }
+
     $params["ltitle"]               = $command_details['title'];
     $params["maxbw"]                = $command_details['maxbw'] / 1024;
     $params["copy_mode"]            = $command_details['copy_mode'];
@@ -115,7 +111,7 @@ if (getParam('editConvergence')) {
     }
 }
 else {
-    $params["ltitle"]               = _T('Convergence on ') . getParam('name');
+    $params["ltitle"]               = _T('Negative Convergence on ') . getParam('name');
     $params["start_script"]         = 'on';
     $params["clean_on_success"]     = 'on';
     $params["do_reboot"]            = '';
@@ -125,6 +121,7 @@ else {
     $params["copy_mode"]            = web_def_mode();
     $params["deployment_intervals"] = web_def_deployment_intervals();
     $params["active"]               = 'off';
+    $params["parameterspacquage"]   = '{"section":"uninstall"}';
 
     $halt = web_def_issue_halt_to();
     foreach ($halt as $h) {

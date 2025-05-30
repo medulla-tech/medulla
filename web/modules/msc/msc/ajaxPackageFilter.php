@@ -83,12 +83,22 @@ function prettyConvergenceStatusDisplay($status)
     }
 }
 $a_convergence_status = array();
+
+// polarities is used to determine if the current convergence is set as positive or negative convergence
+$convergences_polarities = [];
+$polarities = [];
 if ($group != null) {
-    $group_convergence_status = xmlrpc_getConvergenceStatus($group->id);
+    $convergences = xmlrpc_getConvergenceStatus($group->id);
+    $group_convergence_status = $convergences[0];
+    $convergences_polarities = $convergences[1];
     $group_convergence_status1 = $group_convergence_status['/package_api_get1'] ?? [];
+    $polarities = $convergences_polarities['/package_api_get1'] ?? [];
 }
+
 $emptyAction = new EmptyActionItem();
 $convergenceAction = new ActionItem(_T("Convergence", "msc"), "convergence", "convergence", "msc", "base", "computers");
+$negativeConvergenceAction = new ActionItem(_T("Negative Convergence", "msc"), "negativeconvergence", "convergence", "msc", "base", "computers");
+$a_negativeconvergence_action = array();
 $a_convergence_action = array();
 $a_packages = array();
 $a_description = array();
@@ -99,7 +109,6 @@ $params = array();
 
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
-
 if (isset($_GET["start"])) {
     $start = $_GET["start"];
 } else {
@@ -127,7 +136,6 @@ if (isset($_GET['uuid'])) {
     }
 };
 list($count, $packages) =  get_all_packages_deploy($_SESSION['login'], $start, $start + $maxperpage, $filter);
-
 // list($count, $packages) =  xmlrpc_xmppGetAllPackages($filter, $start, $start + $maxperpage);
 $packages[0][1] = 0;
 $packages[0][2] = array();
@@ -162,11 +170,32 @@ foreach ($packages as $c_package) {
                     $group_convergence_status1,
                     $package->associateinventory
                 ) : null;
+
                 // set param_convergence_edit to True if convergence status is active or inactive
                 $param_convergence_edit = (in_array($current_convergence_status, array(1, 2))) ? true : false;
                 $elt_convergence_status = prettyConvergenceStatusDisplay($current_convergence_status);
                 $a_convergence_status[] = $elt_convergence_status;
-                $a_convergence_action[] = (isset($package->associateinventory) && $package->associateinventory == 1) ? $convergenceAction : $emptyAction;
+
+                // Handle the convergence and negative convergence actions
+                if(isset($package->associateinventory) && $package->associateinventory == 1){
+                    $a_convergence_action[] = $convergenceAction;
+                    if($package->uninstall_section == true && ($current_convergence_status == 0 || $current_convergence_status == 2)){
+                        // negative convergence available : 0
+                        // negative convergence inactive : 2
+                        $a_negativeConvergence_action[] = $negativeConvergenceAction;
+                    }
+                    else{
+                        // convergence active
+                        $a_negativeConvergence_action[] = $emptyAction;
+                    }
+                }
+                else{
+                    // No inventory association
+                    $a_convergence_action[] = $emptyAction;
+                    $a_negativeConvergence_action[] = $emptyAction;
+                }
+                // $a_convergence_action[] = (isset($package->associateinventory) && $package->associateinventory == 1) ? $convergenceAction : $emptyAction;
+                // $a_negativeConvergence_action[] = (isset($package->associateinventory) && $package->associateinventory == 1) ? $negativeConvergenceAction : $emptyAction;
             }
         }
 
@@ -174,15 +203,16 @@ foreach ($packages as $c_package) {
 
         } elseif (!empty($_GET['uuid'])) {
             $params[] = array('name' => $package->label,
-                              'version' => $package->version,
-                              'pid' => $package->id,
-                              'uuid' => $_GET['uuid'],
-                              'hostname' => $_GET['hostname'],
-                              'from' => 'base|computers|msctabs|tablogs',
-                              'papi' => $p_api->toURI(),
-                              'actionconvergence' => $elt_convergence_status,
-                              'actionconvergenceint' => $current_convergence_status);
+            'version' => $package->version,
+            'pid' => $package->id,
+            'uuid' => $_GET['uuid'],
+            'hostname' => $_GET['hostname'],
+            'from' => 'base|computers|msctabs|tablogs',
+            'papi' => $p_api->toURI(),
+            'actionconvergence' => $elt_convergence_status,
+            'actionconvergenceint' => $current_convergence_status);
         } else {
+            $polarity = isset($polarities[$package->id]) ? $polarities[$package->id] : "";
             $params[] = array('name' => $package->label,
                               'version' => $package->version,
                               'pid' => $package->id,
@@ -191,7 +221,10 @@ foreach ($packages as $c_package) {
                               'papi' => $p_api->toURI(),
                               'editConvergence' => $param_convergence_edit,
                               'actionconvergence' => $elt_convergence_status,
-                              'actionconvergenceint' => $current_convergence_status);
+                              'actionconvergenceint' => $current_convergence_status,
+                              'polarity' => $polarity
+                            );
+
         }
         if ($type == 0) {
             $a_css[] = 'primary_list';
@@ -199,7 +232,9 @@ foreach ($packages as $c_package) {
             $a_css[] = 'secondary_list';
         }
     }
-}
+} // end of foreach
+
+
 if ($err) {
     new NotifyWidgetFailure(implode('<br/>', array_merge($err, array(_T("Please contact your administrator.", "msc")))));
 }
@@ -240,6 +275,7 @@ if(!in_array("xmppmaster", $_SESSION["modulesList"])) {
 }
 
 if ($group != null) {
+    $n->addActionItem($a_negativeConvergence_action);
     $n->addActionItem($a_convergence_action);
 }
 
