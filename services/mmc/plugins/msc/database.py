@@ -329,6 +329,10 @@ class MscDatabase(msc.MscDatabase):
             # Convergence command (type 2) can have no targets
             # so return command_id if no targets
             if not targets and cmd_type == 2:
+                try:
+                    session.commit()
+                except:
+                    pass
                 return cmd.getId()
             for atarget, target_name, ascheduler in targets_to_insert:
                 target = Target()
@@ -371,6 +375,10 @@ class MscDatabase(msc.MscDatabase):
                         max_clients_per_proxy,
                     )
                 )
+                try:
+                    session.commit()
+                except:
+                    pass
 
             def _getCohIds(session, cmd_id, target_uuids=[]):
                 """
@@ -411,7 +419,6 @@ class MscDatabase(msc.MscDatabase):
             )
             cmd.type = cmd_type
             cmd.ready = True
-            session.commit()
             return cmd.getId()
 
         return cbCreateTargets()
@@ -727,6 +734,8 @@ class MscDatabase(msc.MscDatabase):
                     command.do_reboot = params['do_reboot']  # Ex: "enable" ou "disable"
                 if 'state' in params:
                     command.state = params['state']  # Ex: "active" ou "disabled"
+                if 'title' in params:
+                    command.title = params['title']
 
             if not str(bandwidth).strip():
                 command.maxbw = 0

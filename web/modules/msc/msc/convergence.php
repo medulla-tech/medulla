@@ -51,12 +51,11 @@ if (getParam('gid')) {
 }
 
 // polarity is used to know if the current convergence is set as positive or negative convergence
-$polarity = getParam('polarity', "");
-$action = getParam('action');
+$polarity = (isset($_GET['polarity'])) ? $_GET["polarity"] : "";
 // switch polarity is used to know if we need to change the convergence polarity.
 // This is important because of fixed params such as deploy and done groups bool or has_login_command title or params
 $switchPolarity = false;
-if($switchPolarity != '' && ($polarity == 'negative' && $action == 'convergence') || ($polarity == 'positive' && $action == 'negativeconvergence')){
+if($polarity != '' && ($polarity == 'negative' && $_GET['action'] == 'convergence') || ($polarity == 'positive' && $_GET['action'] == 'negativeconvergence')){
     $switchPolarity = true;
 }
 
@@ -75,7 +74,9 @@ $params = array(
     "max_connection_attempt" => web_def_attempts(),
     "polarity"               => getParam('polarity', ""),
     "switch_polarity"        => $switchPolarity,
+    "parameterspacquage"     => "",
 );
+
 
 if (getParam('editConvergence')) {
     $ServerAPI = new ServerAPI();
@@ -84,8 +85,8 @@ if (getParam('editConvergence')) {
     $cmd_id          = xmlrpc_get_convergence_command_id(getParam('gid', null), getParam('pid'));
     $command_details = command_detail($cmd_id);
     $command_phases  = xmlrpc_get_convergence_phases(getParam('gid', null), getParam('pid'));
-    if(substr($command_details['title'], 0, 11) != "Convergence"){
-        $command_details['title'] = ltrim(substr($command_details['title'], 8));
+    if(substr($command_details['title'], 0, 8) == "Negative"){
+        $command_details['title'] = substr($command_details['title'], 9);
     }
     $params["ltitle"]               = $command_details['title'];
     $params["maxbw"]                = $command_details['maxbw'] / 1024;
@@ -97,6 +98,7 @@ if (getParam('editConvergence')) {
     $params["actionconvergence"]    = getParam('actionconvergence');
     $params["previous"]             = getParam('previous');
     $params["active"]               = xmlrpc_is_convergence_active(getParam('gid', null), getParam('pid')) ? 'on' : 'inactive';
+    $params["parameterspacquage"]   = '';
 
     foreach (array('start_script', 'clean_on_success', 'do_reboot', 'do_wol', 'do_inventory', 'do_halt') as $key) {
         if ($command_phases) {

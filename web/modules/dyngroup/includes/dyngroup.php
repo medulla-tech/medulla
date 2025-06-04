@@ -3,10 +3,11 @@
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2009 Mandriva, http://www.mandriva.com
  * (c) 2023 Siveo, http://siveo.net
+ * (c) 2025 Medulla, https://medulla-tech.io
  *
  * $Id$
  *
- * This file is part of Mandriva Management Console (MMC).
+ * This file is part of Management Console (MMC).
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -265,6 +266,7 @@ class Group
     public $all_params;
     public $type;
     public $parent_id;
+    public $bool;
 
     public function __construct($id = null, $load = false, $ro = false, $root_context = false)
     {
@@ -916,6 +918,11 @@ function xmlrpc_is_convergence_active($gid, $pid)
 function xmlrpc_get_deploy_group_id($gid, $pid)
 {
     return xmlCall("dyngroup.get_deploy_group_id", array($gid, $pid));
+}
+
+function xmlrpc_get_done_group_id($gid, $pid)
+{
+    return xmlCall("dyngroup.get_done_group_id", array($gid, $pid));
 }
 
 function xmlrpc_getDeployGroupId($gid, $package_id)

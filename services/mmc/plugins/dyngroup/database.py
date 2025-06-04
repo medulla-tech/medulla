@@ -1047,6 +1047,22 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         return ret.deployGroupId
 
     @DatabaseHelper._sessionm
+    def get_done_group_id(self, session, gid, package_id):
+        query = (
+            session.query(Convergence)
+            .filter_by(parentGroupId=gid, packageUUID=package_id)
+            .order_by(Convergence.id.desc())
+        )
+        ret = query.first()
+        if ret is None:
+            self.logger.error(
+                "Error while fetching deploy group for group %s (package %s): No record found"
+                % (gid, package_id)
+            )
+            return False
+        return ret.doneGroupId
+
+    @DatabaseHelper._sessionm
     def get_convergence_group_parent_id(self, session, gid):
         query = session.query(Groups).filter_by(id=gid)
         try:

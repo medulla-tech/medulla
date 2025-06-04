@@ -1,11 +1,10 @@
 <?php
 /**
- * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
- * (c) 2007 Mandriva, http://www.mandriva.com/
+ * (c) 2025 Medulla, http://medulla-tech.io
  *
  * $Id$
  *
- * This file is part of Mandriva Management Console (MMC).
+ * This file is part of Management Console (MMC).
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,8 +30,6 @@ require('modules/msc/includes/mscoptions_xmlrpc.php');
 require('modules/msc/includes/launch_functions.php');
 require_once('modules/dyngroup/includes/dyngroup.php');
 
-
-echo $_GET['action'];
 $from = getParam('from');
 $path = explode('|', $from);
 $module  = isset($path[0]) ? $path[0] : '';
@@ -53,7 +50,7 @@ $polarity = getParam('polarity', "");
 $action = getParam('action');
 
 $switchPolarity = false;
-if($switchPolarity != '' && ($polarity == 'negative' && $action == 'convergence') || ($polarity == 'positive' && $action == 'negativeconvergence')){
+if($polarity != '' && ($polarity == 'negative' && $action == 'convergence') || ($polarity == 'positive' && $action == 'negativeconvergence')){
     $switchPolarity = true;
 }
 
@@ -75,6 +72,7 @@ $params = array(
     'switch_polarity'        => $switchPolarity,
 );
 
+// convergence exists
 if (getParam('editConvergence')) {
     $ServerAPI = new ServerAPI();
     $ServerAPI->fromURI(getParam('papi'));
@@ -83,7 +81,8 @@ if (getParam('editConvergence')) {
     $command_details = command_detail($cmd_id);
     $command_phases  = xmlrpc_get_convergence_phases(getParam('gid', null), getParam('pid'));
 
-    $params["ltitle"]               = $command_details['title'];
+    $params["ltitle"]               = (substr($command_details['title'], 0,8) != "Negative") ? "Negative ".$command_details['title'] : $command_details['title'];
+    $params["title"]                = $params["ltitle"];
     $params["maxbw"]                = $command_details['maxbw'] / 1024;
     $params["copy_mode"]            = $command_details['copy_mode'];
     $params["deployment_intervals"] = $command_details['deployment_intervals'];
@@ -122,7 +121,7 @@ else {
     $params["deployment_intervals"] = web_def_deployment_intervals();
     $params["active"]               = 'off';
     $params["parameterspacquage"]   = '{"section":"uninstall"}';
-
+    $params['polarity']             = 'negative';
     $halt = web_def_issue_halt_to();
     foreach ($halt as $h) {
         $params["issue_halt_to_" . $h] = 'on';

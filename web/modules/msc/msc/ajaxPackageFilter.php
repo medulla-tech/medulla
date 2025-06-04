@@ -123,8 +123,6 @@ if (!empty($_GET['uuid'])) {
     $filter['group'] = $group->id;
 }
 
-# TODO : decide what we want to do with groups : do we only get the first machine local packages
-//list($count, $packages) = advGetAllPackages($filter, $start, $start + $maxperpage);
 if (isset($_GET['uuid'])) {
     $platform = xmlrpc_getMachinefromuuid($_GET['uuid'])['platform'];
     if (stripos($platform, "win") !== false) {
@@ -149,6 +147,7 @@ foreach ($packages as $c_package) {
     $elt_convergence_status = "";
     $current_convergence_status = 0;
     $package = isset($c_package[0]) ? to_package($c_package[0]) : null;
+    $polarity = isset($polarities[$package->id]) ? $polarities[$package->id] : "";
 
     $type = isset($c_package[1]) ? $c_package[1] : 0;
 
@@ -156,6 +155,7 @@ foreach ($packages as $c_package) {
     if (isset($c_package[0]['ERR']) && $c_package[0]['ERR'] == 'PULSE2ERROR_GETALLPACKAGE') {
         $err[] = sprintf(_T("MMC failed to contact package server %s.", "msc"), $c_package[0]['mirror']);
     } else {
+
         if($package != null) {
             $a_packages[] = $package->label;
             $a_description[] = $package->description ;
@@ -178,24 +178,33 @@ foreach ($packages as $c_package) {
 
                 // Handle the convergence and negative convergence actions
                 if(isset($package->associateinventory) && $package->associateinventory == 1){
-                    $a_convergence_action[] = $convergenceAction;
-                    if($package->uninstall_section == true && ($current_convergence_status == 0 || $current_convergence_status == 2)){
-                        // negative convergence available : 0
-                        // negative convergence inactive : 2
-                        $a_negativeConvergence_action[] = $negativeConvergenceAction;
+                    if($current_convergence_status == 1){
+                        if($polarity == "negative"){
+                            $a_negativeConvergence_action[] = $negativeConvergenceAction;
+                            $a_convergence_action[] = $emptyAction;
+                        }
+                        else{
+
+                            $a_convergence_action[] = $convergenceAction;
+                            $a_negativeConvergence_action[] = $emptyAction;
+                        }
                     }
                     else{
-                        // convergence active
-                        $a_negativeConvergence_action[] = $emptyAction;
+                        if($package->uninstall_section == true){
+                            $a_negativeConvergence_action[] = $negativeConvergenceAction;
+                        }
+                        else{
+                            $a_negativeConvergence_action[] = $emptyAction;
+
+                        }
+
+                        $a_convergence_action[] = $convergenceAction;
                     }
                 }
                 else{
-                    // No inventory association
-                    $a_convergence_action[] = $emptyAction;
                     $a_negativeConvergence_action[] = $emptyAction;
+                    $a_convergence_action[] = $emptyAction;
                 }
-                // $a_convergence_action[] = (isset($package->associateinventory) && $package->associateinventory == 1) ? $convergenceAction : $emptyAction;
-                // $a_negativeConvergence_action[] = (isset($package->associateinventory) && $package->associateinventory == 1) ? $negativeConvergenceAction : $emptyAction;
             }
         }
 
@@ -212,7 +221,6 @@ foreach ($packages as $c_package) {
             'actionconvergence' => $elt_convergence_status,
             'actionconvergenceint' => $current_convergence_status);
         } else {
-            $polarity = isset($polarities[$package->id]) ? $polarities[$package->id] : "";
             $params[] = array('name' => $package->label,
                               'version' => $package->version,
                               'pid' => $package->id,
@@ -222,7 +230,7 @@ foreach ($packages as $c_package) {
                               'editConvergence' => $param_convergence_edit,
                               'actionconvergence' => $elt_convergence_status,
                               'actionconvergenceint' => $current_convergence_status,
-                              'polarity' => $polarity
+                              'polarity'=>$polarity,
                             );
 
         }
@@ -233,7 +241,6 @@ foreach ($packages as $c_package) {
         }
     }
 } // end of foreach
-
 
 if ($err) {
     new NotifyWidgetFailure(implode('<br/>', array_merge($err, array(_T("Please contact your administrator.", "msc")))));

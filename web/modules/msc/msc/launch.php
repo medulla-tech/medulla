@@ -52,8 +52,7 @@ if ($_GET['actionconvergenceint'] != 1){
 // when we ask to disable the convergence
 // the remainings needed params (i.e. gid, commandid ...) are stored in $_POST datas and are handled by start_a_command
 if (isset($_POST["bpdesactiver"])) {
-    $_GET['active'] = 'off';
-    start_a_command(1);
+    stop_convergence();
 }
 
 /* Validation on local proxies selection page */
@@ -108,7 +107,7 @@ if (isset($_POST['local_proxy'])) {
 /* Advanced Action Post Handling */
 if (isset($_GET['badvanced']) and isset($_POST['bconfirm']) and !isset($_POST['local_proxy'])) {
     // active convergence. et start command
-    start_a_command();
+    start_convergence();
 }
 
 /* Advanced action: form display */
@@ -141,6 +140,17 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
     } else {
         $gid = $_GET['gid'];
         $group = new Group($gid, true);
+
+        if(isset($_GET['switch_polarity']) && $_GET["switch_polarity"] == true){
+            if($_GET['polarity'] == "positive"){
+                if(substr($name, 0, 11) == "Convergence")
+                    $name = "Negative ".$name;
+            }
+            else{
+                if(substr($name, 0, 9) == "Negative")
+                    $name = substr($name, 9);
+            }
+        }
         if ($group->exists != False) {
             $namegroup = $group->getName();
             if (quick_get('convergence')) {

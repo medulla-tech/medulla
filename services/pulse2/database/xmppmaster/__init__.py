@@ -4876,7 +4876,9 @@ class XmppMasterDatabase(DatabaseHelper):
                 login_command.nb_machine_for_deploy = nb_machine_in_grp
             if instructions_nb_machine_for_exec != "":
                 login_command.start_exec_on_nb_deploy = instructions_nb_machine_for_exec
-            if parameterspackage != "":
+            if parameterspackage is False:
+                login_command.parameters_deploy = None
+            elif parameterspackage != "":
                 login_command.parameters_deploy = parameterspackage
 
             login_command.rebootrequired = bool(rebootrequired)
@@ -6400,7 +6402,13 @@ class XmppMasterDatabase(DatabaseHelper):
         typedeploy="command",
     ):
         query_base = session.query(Deploy).filter(
-            Deploy.sessionid.like(f"{typedeploy}%"), Deploy.title.like("Convergence%")
+            and_(
+                Deploy.sessionid.like(f"{typedeploy}%"),
+                or_(
+                    Deploy.title.like("Convergence%"),
+                    Deploy.title.like("Negative Convergence%")
+                )
+            )
         )
         if login:
             query_base = query_base.filter(Deploy.login.like(login))
