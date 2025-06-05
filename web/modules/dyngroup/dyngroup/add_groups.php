@@ -174,6 +174,8 @@ if (isset($_POST["bdelmachine_x"])) {
         if ($already_exists) {
             if ($type == 0) { // Simple group
                 new NotifyWidgetSuccess(_T("Group successfully modified", "dyngroup"));
+                header("Location: ". urlStrRedirect("base/computers/list"));
+                exit;
             } else { // Imaging group
                 // Synchro Profile
                 // Synchro Profile
