@@ -39,12 +39,13 @@ if ($group->isRequest()) { // request save
     $r = new Request();
     $r->parse($request);
     $r->displayReqListInfos(false, array('gid'=>$id));
-    print sprintf(_T("This request has been saved as %s (id=%s)", "dyngroup"), $name, $id);
+    new NotifyWidgetSuccess(sprintf(_T("This request has been saved as %s (id=%s)", "dyngroup"), $name, $id));
 } else { // result save
-    print sprintf(_T("This result has been saved as %s (id=%s)", "dyngroup"), $name, $id);
     displayStatic($group, 0, 10, '', $id);
+    new NotifyWidgetSuccess(sprintf(_T("This result has been saved as %s (id=%s)", "dyngroup"), $name, $id));
 }
-
+header("Location: ". urlStrRedirect("base/computers/list"));
+exit;
 
 function displayStatic($group, $start, $end, $filter, $gid) {
     $_GET['gid'] = $gid;
