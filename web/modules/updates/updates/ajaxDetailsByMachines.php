@@ -55,6 +55,19 @@ if ($entity == '') {
     $typeOfDetail = "group";
     $filterOn = array('gid' => $gid);
     $ctx['gid'] = $gid;
+
+    $source = isset($_GET['source']) ? $_GET['source'] : "xmppmaster";
+
+    if ($source == "glpi") {
+        $detailsByMachDefault = new EmptyActionItem1(_T("View details", "updates"), "deploySpecificUpdate", "displayg", "", "updates", "updates");
+        $pendingByMachDefault = new EmptyActionItem1(_T("Pending Updates", "updates"), "pendingUpdateByMachine", "pendingg", "", "updates", "updates");
+        $doneByMachDefault = new EmptyActionItem1(_T("Updates History", "updates"), "auditUpdateByMachine", "historyg", "", "updates", "updates");
+    } else {
+        $detailsByMachDefault = new ActionItem(_T("View details", "updates"), "deploySpecificUpdate", "display", "", "updates", "updates");
+        $pendingByMachDefault = new ActionItem(_T("Pending Updates", "updates"), "pendingUpdateByMachine", "pending", "", "updates", "updates");
+        $doneByMachDefault = new ActionItem(_T("Updates History", "updates"), "auditUpdateByMachine", "history", "", "updates", "updates");
+    }
+
     // Needed all machines of the group to calculate the compliance rate
     $_machines = getRestrictedComputersList($start, $start+$maxperpage, $ctx, true);
 
@@ -75,10 +88,9 @@ if ($entity == '') {
         $machines["uuid"][] = $uuid;
         $machines["cn"][] = $mach[1]["cn"][0];
         $machines["os"][] = $mach[1]["os"];
-
-        $machines["actionPendingByMachines"][] = $pendingByMach;
-        $machines["actionDetailByMachines"][] = $detailsByMach;
-        $machines["actionDoneByMachines"][] = $doneByMach;
+        $machines["actionPendingByMachines"][] = $pendingByMachDefault;
+        $machines["actionDetailByMachines"][] = $detailsByMachDefault;
+        $machines["actionDoneByMachines"][] = $doneByMachDefault;
 
         //FUNCTION TO GET ID
         $xmppdatas = xmlrpc_get_idmachine_from_name($mach[1]["cn"][0]);
@@ -87,6 +99,7 @@ if ($entity == '') {
         $compliance = round($compliance_computer[$uuid]['compliance']);
         $missing = !empty($compliance_computer[$uuid]['missing']) ? $compliance_computer[$uuid]['missing'] : 0;
         $installed = !empty($compliance_computer[$uuid]['installed']) ? $compliance_computer[$uuid]['installed'] : 0;
+        $inprogress = !empty($compliance_computer[$uuid]) ? $compliance_computer[$uuid]["inprogress"] : 0;
         $total = !empty($compliance_computer[$uuid]['total']) ? $compliance_computer[$uuid]['total'] : 0;
 
         $color = colorconf($compliance);
@@ -94,12 +107,12 @@ if ($entity == '') {
         $complRate = "<div class='progress' style='width: ".$compliance."%; background : ".$color."; font-weight: bold; color : black; text-align: right;'> ".$compliance."% </div>";
         $params[] = [
             "machineid" => $id_machine,
-            "inventoryid" => $k,
-            "cn" => $v[1]['cn'][0]
+            "inventoryid" => $uuid,
+            "cn" => $mach[1]['cn'][0]
         ];
         $machines["installed"][] = $installed;
         $machines["missing"][] = $missing;
-        $machines["inprogress"] = [];
+        $machines["inprogress"][] = $inprogress;
         $machines["total"][] = $total;
         $machines["compliance"][] = ($missing == 0) && ($installed == 0) ? 0 : $compliance;
         $machines["complianceRate"][] = ($missing == 0) && ($installed == 0) ? "-" : $complRate;
