@@ -154,7 +154,7 @@ class GlpiComputers(ComputerI):
             else:
                 self.logger.warn(
                     "the user '%s' try to filter on an entity he shouldn't access '%s'"
-                    % (ctx.userid, filt["entity_uuid"])
+                    % (ctx.userid, filt["imaging_entities"])
                 )
                 return [False, 0]
         return [True, filt]
