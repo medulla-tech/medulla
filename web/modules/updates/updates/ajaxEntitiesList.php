@@ -1,6 +1,6 @@
 <?php
 /**
- * (c) 2022-2024 Siveo, http://siveo.net/
+ * (c) 2022-2025 Siveo, http://siveo.net/
  *
  * $Id$
  *
@@ -33,6 +33,7 @@ $actiondetailsByMachs = [];
 $actiondetailsByUpds = [];
 $actiondeployAlls = [];
 $actiondeploySpecifics = [];
+$actionHistories = [];
 $entityNames = [];
 $complRates = [];
 $conformite = [];
@@ -48,6 +49,7 @@ $deployAll = new ActionItem(_T("Deploy all updates", "updates"), "deployAllUpdat
 $emptyDeployAll = new EmptyActionItem1(_T("Deploy all updates", "updates"), "deployAllUpdates", "updateallg", "", "updates", "updates");
 $deploySpecific = new ActionItem(_T("Deploy specific updates", "updates"), "deploySpecificUpdate", "updateone", "", "updates", "updates");
 $emptyDeploySpecific = new EmptyActionItem1(_T("Deploy specific updates", "updates"), "deploySpecificUpdate", "updateoneg", "", "updates", "updates");
+$actionHistory = new ActionItem(_T("History by Entity", "updates"), "historyByEntity", "history", "", "updates", "updates");
 $texte_help = _T("%s updates for %s machines in the %s entity" , "updates");
 
 
@@ -132,6 +134,7 @@ foreach ($merged_array as $index_tab => $entitycompliance) {
             $actiondeploySpecifics[] = $deploySpecific;
         }
 
+        $actionHistories[] = $actionHistory;
     // pour chaque action on passe les parametres
     $params[] = array(
         'entity' => $entitycompliance['uuid'],// $transformed_uuid, //
@@ -153,6 +156,7 @@ $n->setItemCount($count);
 $n->setNavBar(new AjaxNavBar($count, $filter));
 $n->setParamInfo($params);
 
+$n->addActionItemArray($actionHistories);
 $n->addActionItemArray($actiondetailsByMachs);
 $n->addActionItemArray($actiondetailsByUpds);
 //$n->addActionItemArray($actiondeployAlls);
