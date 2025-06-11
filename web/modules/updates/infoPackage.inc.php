@@ -1,6 +1,6 @@
 <?php
 /**
- * (c) 2022-2023 Siveo, http://siveo.net/
+ * (c) 2022-2025 Siveo, http://siveo.net/
  *
  * $Id$
  *
@@ -93,6 +93,11 @@ $submod->addPage($page);
 
 $page = new Page("ajaxDeploySpecificUpdate", _T("Manage deploy specific update", "updates"));
 $page->setFile("modules/updates/updates/ajaxDeploySpecificUpdate.php");
+$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
+$submod->addPage($page);
+
+$page = new Page("ajaxDetailsByUpdates", _T("List Updates", "updates"));
+$page->setFile("modules/updates/updates/ajaxDetailsByUpdates.php");
 $page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
 $submod->addPage($page);
 
