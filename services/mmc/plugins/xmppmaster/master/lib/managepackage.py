@@ -237,9 +237,12 @@ class apimanagepackagemsc:
                 # check if the package has uninstall section
                 obj["uninstall_section"] = {}
                 for _os in data_file_sequence_json["metaparameter"]["os"]:
-                    if _os in data_file_sequence_json["metaparameter"] and "label_section_uninstall" in data_file_sequence_json["metaparameter"][_os]["label"]:
-                        obj["uninstall_section"][_os] = True
-
+                    if _os in data_file_sequence_json["metaparameter"]:
+                        obj["uninstall_section"][_os] = False
+                        for label in data_file_sequence_json["metaparameter"][_os]["label"]:
+                            if label.startswith("Uninst_"):
+                                obj["uninstall_section"][_os] = True
+                                break
                     else:
                         obj["uninstall_section"][_os] = False
                 obj["files"] = []
