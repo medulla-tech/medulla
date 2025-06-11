@@ -97,7 +97,7 @@ if ($group != null) {
 
 $emptyAction = new EmptyActionItem();
 $convergenceAction = new ActionItem(_T("Convergence", "msc"), "convergence", "convergence", "msc", "base", "computers");
-$negativeConvergenceAction = new ActionItem(_T("Negative Convergence", "msc"), "negativeconvergence", "convergence", "msc", "base", "computers");
+$negativeConvergenceAction = new ActionItem(_T("Negative Convergence", "msc"), "negativeconvergence", "convergenceneg", "msc", "base", "computers");
 $a_negativeconvergence_action = array();
 $a_convergence_action = array();
 $a_packages = array();
