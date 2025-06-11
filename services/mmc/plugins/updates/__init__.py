@@ -72,7 +72,7 @@ def get_black_list(start, end, filter=""):
 
 
 def get_enabled_updates_list(entity, upd_list="gray", start=0, end=-1, filter=""):
-    if upd_list not in ["gray", "white"]:
+    if upd_list not in ["gray", "white", "gray|white"]:
         upd_list = "gray"
     # The glpi config is sent to updatedatabase to get the filter_on param
     datas = UpdatesDatabase().get_enabled_updates_list(

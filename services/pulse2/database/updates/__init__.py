@@ -582,6 +582,11 @@ class UpdatesDatabase(DatabaseHelper):
             }
 
             # Construire la requête SQL principale pour récupérer les mises à jour
+            if upd_list == "gray|white":
+                list_filter = ""
+            else:
+                list_filter = f""" AND list = "{upd_list}" """
+
             sql = f"""
                 SELECT SQL_CALC_FOUND_ROWS
                     uma.update_id as updateid,
@@ -596,7 +601,7 @@ class UpdatesDatabase(DatabaseHelper):
                 JOIN xmppmaster.local_glpi_machines lgm ON lgm.id = uma.glpi_id
                 JOIN xmppmaster.local_glpi_filters lgf ON lgf.id = lgm.id
                 WHERE uma.entities_id = '{entity.replace("UUID", "")}'
-                AND list = "{upd_list}"
+                {list_filter}
                 {filter_on}
             """
 

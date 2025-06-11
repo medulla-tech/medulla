@@ -1,6 +1,6 @@
 <?php
 /*
- * (c) 2022 Siveo, http://www.siveo.net
+ * (c) 2025 Siveo, http://www.siveo.net
  *
  * $Id$
  *
@@ -28,13 +28,20 @@ require_once("modules/updates/includes/xmlrpc.php");
 $p = new PageGenerator(_T("Details by Updates", 'updates'));
 $p->setSideMenu($sidemenu);
 
+// Merged list
 $p->display();
-
 $params = ['entity' => $_GET['entity'], 'completename' => $_GET['completename']];
-$ajaxGray = new AjaxFilter(urlStrRedirect("updates/updates/ajaxDetailsByUpdatesGray"), "container-gray", $params, 'formGray');
-$ajaxGray->display();
-$ajaxGray->displayDivToUpdate();
+$ajax = new AjaxFilter(urlStrRedirect("updates/updates/ajaxDetailsByUpdates"), "container", $params, 'form');
+$ajax->display();
+$ajax->displayDivToUpdate();
 
-$ajaxWhite = new AjaxFilter(urlStrRedirect("updates/updates/ajaxDetailsByUpdatesWhite"), "container-white", $params, 'formWhite');
-$ajaxWhite->display();
-$ajaxWhite->displayDivToUpdate();
+// To have the gray and white list unmerged, comment the "merged list" section and uncomment below.
+
+// $params = ['entity' => $_GET['entity'], 'completename' => $_GET['completename']];
+// $ajaxGray = new AjaxFilter(urlStrRedirect("updates/updates/ajaxDetailsByUpdatesGray"), "container-gray", $params, 'formGray');
+// $ajaxGray->display();
+// $ajaxGray->displayDivToUpdate();
+
+// $ajaxWhite = new AjaxFilter(urlStrRedirect("updates/updates/ajaxDetailsByUpdatesWhite"), "container-white", $params, 'formWhite');
+// $ajaxWhite->display();
+// $ajaxWhite->displayDivToUpdate();
