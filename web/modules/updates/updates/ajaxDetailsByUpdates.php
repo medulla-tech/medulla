@@ -79,6 +79,7 @@ if ($uuid == '') {
 }
 
 $detailsUpd = new ActionItem(_T("Details", "updates"), "detailsSpecificUpdate", "auditbymachine", "", "updates", "updates");
+$actionHistory = new ActionItem(_T("History by Update", "updates"), "auditByUpdate", "history", "", "updates", "updates");
 
 $kbs_gray = [];
 $updateids_gray = [];
@@ -87,6 +88,8 @@ $complRates = [];
 $machineWithUpd = [];
 $machineWithoutUpd = [];
 $actionDetails = [];
+$actionHistories = [];
+
 $total = [];
 $machineWithoutUpd = $enabled_updates_list['missing'];
 $i = 0;
@@ -100,7 +103,7 @@ foreach($enabled_updates_list['kb'] as $kb) {
     $total[] = $enabled_updates_list["total"];
     $titles[] = $enabled_updates_list['title'][$i];
     $actionDetails[] = $detailsUpd;
-
+    $actionHistories[] = $actionHistory;
     $machineWithUpd[] = $with_Upd['nb_machines'] + $enabled_updates_list['installed'][$i];
     $totalMachines = $enabled_updates_list["total"];
     $compliance_rate = ($totalMachines > 0) ? round((($totalMachines-$machineWithoutUpd[$i]) / $totalMachines) * 100) : 100;
@@ -123,6 +126,7 @@ $n->setNavBar(new AjaxNavBar($count_enabled_updates, $filter, 'updateSearchParam
 $n->setParamInfo($params);
 $n->start = 0;
 $n->end = $count_enabled_updates;
+$n->addActionItemArray($actionHistories);
 $n->addActionItemArray($actionDetails);
 
 $n->display();

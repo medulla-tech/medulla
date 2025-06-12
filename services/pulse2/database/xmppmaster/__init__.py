@@ -17383,6 +17383,74 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             result["datas"].append(tmp)
         return result
 
+    @DatabaseHelper._sessionm
+    def get_audit_summary_updates_by_update(self, session, updateid, start, limit, filter):
+        try:
+            start = int(start)
+        except:
+            start = 0
+
+        try:
+            limit = int(limit)
+        except:
+            end = -1
+
+        query = (
+            session.query(Deploy)
+            .join(Machines, Machines.jid == Deploy.jidmachine)
+            .filter(
+                and_(
+                    Deploy.sessionid.contains("update"),
+                    func.json_extract(Deploy.result, "$.infoslist[0].packageUuid") == f'{updateid}',
+                )
+            )
+            .order_by(desc(Deploy.start))
+        )
+
+        if filter != "":
+            query = query.filter(
+                or_(
+                    Deploy.title.contains(filter),
+                    Deploy.state.contains(filter),
+                    Deploy.start.contains(filter),
+                    Deploy.startcmd.contains(filter),
+                    Deploy.endcmd.contains(filter),
+                )
+            )
+        if start != 0:
+            query = query.offset(start)
+        if limit != -1:
+            query = query.limit(limit)
+
+        count = query.count()
+        query = query.all()
+
+        result = {"count": count, "datas": []}
+
+        for deploy in query:
+            tmp = {
+                "id": deploy.id,
+                "title": deploy.title,
+                "jidmachine": deploy.jidmachine,
+                "jid_relay": deploy.jid_relay,
+                "pathpackage": deploy.pathpackage,
+                "state": deploy.state,
+                "sessionid": deploy.sessionid,
+                "start": datetime_handler(deploy.start),
+                "startcmd": datetime_handler(deploy.startcmd),
+                "endcmd": datetime_handler(deploy.endcmd),
+                "uuid": deploy.inventoryuuid,
+                "hostname": deploy.host,
+                "user": deploy.user,
+                "cmd_id": deploy.command,
+                "grp_id": deploy.group_uuid,
+                "login": deploy.login,
+                "macadress": deploy.macadress,
+                "syncthing": deploy.syncthing,
+            }
+            result["datas"].append(tmp)
+        return result
+
     #
     #
     # @DatabaseHelper._sessionm

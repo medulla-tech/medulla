@@ -252,6 +252,16 @@ $page->setFile("modules/updates/updates/ajaxAuditByEntity.php");
 $page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
 $submod->addPage($page);
 
+$page = new Page("auditByUpdate", _T('History by Update', 'updates'));
+$page->setFile("modules/updates/updates/auditByUpdate.php");
+$submod->addPage($page);
+$mod->addSubmod($submod);
+
+$page = new Page("ajaxAuditByUpdate", _T("History by Update", "updates"));
+$page->setFile("modules/updates/updates/ajaxAuditByUpdate.php");
+$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
+$submod->addPage($page);
+
 $mod->addSubmod($submod);
 
 $MMCApp = &MMCApp::getInstance();
