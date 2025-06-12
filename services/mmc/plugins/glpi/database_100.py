@@ -5357,7 +5357,7 @@ class Glpi100(DyngroupDatabaseHelper):
     def getMachineByUuidSetup(self, uuidsetupmachine):
         """@return: all computers that have this uuid setup machine"""
         session = create_session()
-        ret = session.query(Machine).filter(and_(Machine.uuid.like(uuidsetupmachine), Machine.is_deleted == 0, Machine is_template == 0) ).first()
+        ret = session.query(Machine).filter(and_(Machine.uuid.like(uuidsetupmachine), Machine.is_deleted == 0, Machine.is_template == 0)).first()
         session.close()
         return self._machineobject(ret)
 
