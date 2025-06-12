@@ -1344,7 +1344,7 @@ class XmppMasterDatabase(DatabaseHelper):
                         LEFT OUTER JOIN
                     cluster_ars ON cluster_ars.id = has_cluster_ars.id_cluster
                         LEFT OUTER JOIN
-                    machines ON machines.hostname = relayserver.nameserver 
+                    machines ON machines.hostname = relayserver.nameserver
                 WHERE
                     relayserver.moderelayserver = 'static' %s
                     AND relayserver.id in(       SELECT
@@ -10108,7 +10108,7 @@ class XmppMasterDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def algoloadbalancerforcluster(self, session):
         sql = """
-            SELECT 
+            SELECT
                 COUNT(*) - 1 AS nb, `machines`.`groupdeploy`
             FROM
                 xmppmaster.machines
@@ -17293,8 +17293,6 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             # Return an empty list in case of an error
             return []
 
-
-
     @DatabaseHelper._sessionm
     def test_update_major_deployment_in_progress(self,
                                                  session,
@@ -17320,6 +17318,78 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         deployment_exists = result.fetchone()[0]
         # Return True if deployment exists, otherwise False
         return deployment_exists
+
+    @DatabaseHelper._sessionm
+    def get_audit_summary_updates_by_entity(self, session, entity_uuid, start, limit, filter):
+        if type(entity_uuid) is str and entity_uuid.startswith("UUID"):
+            entity_uuid = entity_uuid.replace("UUID", "")
+
+        try:
+            start = int(start)
+        except:
+            start = 0
+
+        try:
+            limit = int(limit)
+        except:
+            end = -1
+
+        query = (
+            session.query(Deploy)
+            .join(Machines, Machines.jid == Deploy.jidmachine)
+            .join(Glpi_entity, Glpi_entity.id == Machines.glpi_entity_id)
+            .filter(
+                and_(
+                    Deploy.sessionid.contains("update"),
+                    Glpi_entity.glpi_id == entity_uuid
+                )
+            )
+            .order_by(desc(Deploy.start))
+        )
+
+        if filter != "":
+            query = query.filter(
+                or_(
+                    Deploy.title.contains(filter),
+                    Deploy.state.contains(filter),
+                    Deploy.start.contains(filter),
+                    Deploy.startcmd.contains(filter),
+                    Deploy.endcmd.contains(filter),
+                )
+            )
+        if start != 0:
+            query = query.offset(start)
+        if limit != -1:
+            query = query.limit(limit)
+
+        count = query.count()
+        query = query.all()
+
+        result = {"count": count, "datas": []}
+
+        for deploy in query:
+            tmp = {
+                "id": deploy.id,
+                "title": deploy.title,
+                "jidmachine": deploy.jidmachine,
+                "jid_relay": deploy.jid_relay,
+                "pathpackage": deploy.pathpackage,
+                "state": deploy.state,
+                "sessionid": deploy.sessionid,
+                "start": datetime_handler(deploy.start),
+                "startcmd": datetime_handler(deploy.startcmd),
+                "endcmd": datetime_handler(deploy.endcmd),
+                "uuid": deploy.inventoryuuid,
+                "hostname": deploy.host,
+                "user": deploy.user,
+                "cmd_id": deploy.command,
+                "grp_id": deploy.group_uuid,
+                "login": deploy.login,
+                "macadress": deploy.macadress,
+                "syncthing": deploy.syncthing,
+            }
+            result["datas"].append(tmp)
+        return result
 
     #
     #
