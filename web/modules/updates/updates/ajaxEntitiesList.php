@@ -49,7 +49,7 @@ $deployAll = new ActionItem(_T("Deploy all updates", "updates"), "deployAllUpdat
 $emptyDeployAll = new EmptyActionItem1(_T("Deploy all updates", "updates"), "deployAllUpdates", "updateallg", "", "updates", "updates");
 $deploySpecific = new ActionItem(_T("Deploy specific updates", "updates"), "deploySpecificUpdate", "updateone", "", "updates", "updates");
 $emptyDeploySpecific = new EmptyActionItem1(_T("Deploy specific updates", "updates"), "deploySpecificUpdate", "updateoneg", "", "updates", "updates");
-$actionHistory = new ActionItem(_T("History by Entity", "updates"), "historyByEntity", "history", "", "updates", "updates");
+$actionHistory = new ActionItem(_T("History by Entity", "updates"), "auditByEntity", "history", "", "updates", "updates");
 $texte_help = _T("%s updates for %s machines in the %s entity" , "updates");
 
 

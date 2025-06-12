@@ -242,14 +242,13 @@ $page = new Page("groupUpdateMajorEntity", _T('Machines major update', 'updates'
 $page->setFile("modules/updates/updates/groupUpdateMajorEntity.php");
 $submod->addPage($page);
 
-
-$page = new Page("historyByEntity", _T('History by Entity', 'updates'));
-$page->setFile("modules/updates/updates/historyByEntity.php");
+$page = new Page("auditByEntity", _T('History by Entity', 'updates'));
+$page->setFile("modules/updates/updates/auditByEntity.php");
 $submod->addPage($page);
 $mod->addSubmod($submod);
 
-$page = new Page("ajaxHistoryByEntity", _T("Detail deploy on group entity", "updates"));
-$page->setFile("modules/updates/updates/ajaxHistoryByEntity.php");
+$page = new Page("ajaxAuditByEntity", _T("History by Entity", "updates"));
+$page->setFile("modules/updates/updates/ajaxAuditByEntity.php");
 $page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
 $submod->addPage($page);
 
