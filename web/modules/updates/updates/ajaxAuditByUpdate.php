@@ -9,10 +9,6 @@ $start = (isset($_GET['start'])) ? htmlentities($_GET['start']) : 0;
 $end = (isset($_GET['end'])) ? htmlentities($_GET['end']) : $maxperpage;
 $filter = (isset($_GET['filter'])) ? htmlentities($_GET['filter']) : "";
 
-
-echo '<pre>';
-print_r($_GET);
-echo '</pre>';
 $result = xmlrpc_get_audit_summary_updates_by_update($updateid, $start, $maxperpage, $filter);
 
 $datas = $result["datas"];
