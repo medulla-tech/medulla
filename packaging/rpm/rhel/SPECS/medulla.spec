@@ -673,7 +673,6 @@ This package contains Pulse 2 common files like documentation.
 %{_sbindir}/pulse2-load-defaults
 %{_sbindir}/pulse2-dbupdate
 %{_sbindir}/pulse2-debug
-%{_sbindir}/pulse2-collect-info
 %{_sbindir}/restart-pulse-services
 %{_sbindir}/pulse2-packageparser.py
 %{_sbindir}/pulse2-inscription_packages_in_base.py

@@ -6,11 +6,6 @@
 
 from mmc.plugins.dashboard.panel import Panel
 
-
-class RemoteSupportPanel(Panel):
-    pass
-
-
 class LicensePanel(Panel):
     data = None
 

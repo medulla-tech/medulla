@@ -37,7 +37,6 @@ usr/sbin/pulse2-create-group
 usr/sbin/restart-pulse-services
 usr/sbin/pulse2-debug
 usr/sbin/pulse2-dbupdate
-usr/sbin/pulse2-collect-info
 usr/sbin/pulse2-packageparser.py
 usr/sbin/pulse2-inscription_packages_in_base.py
 usr/sbin/pulse2-generation_package.py
