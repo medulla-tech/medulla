@@ -1,4 +1,4 @@
-medulla (5.2.1) stable; urgency=medium
+medulla (5.2.1-1) stable; urgency=medium
 
   * Add new sections in Audit page for the convergences.
   * Add the possibility to use profiles to imaging.
