@@ -1,17 +1,14 @@
-medulla (5.1.0-1) unstable; urgency=low
+medulla (5.2.1) stable; urgency=medium
 
- * New version for 5.1.0
+  * Add new sections in Audit page for the convergences.
+  * Add the possibility to use profiles to imaging.
+  * Add Convergence sections in the Audit page.
+  * Add several fixes in the OIDC support.
+  * Fix the pulse2-synch-masters script.
+  * Fix deploying masters by stop using datas from uuid-cache.txt.
+  * Fix deploying masters by using the full path of the pulse2-synch-masters script.
+  * Fix Glpi 9.3 support.
+  * Fix multicast ( broken due to python 3 migration ).
+  * Remove pieces not needed in the imaging, now we use SQL storage for IPXE instead of files.
 
- -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 13 Dec 2023 22:00:11 +0100
-
-medulla (5.0.0-1) unstable; urgency=low
-
- * New preversion for 5.0.0
-
- -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 12 Apr 2023 22:00:11 +0100
-
-medulla (4.6.11-1) unstable; urgency=low
-
- * Adapt to new name
-
- -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Mon, 01 Mar 2023 22:00:11 +0100
+ -- Medulla Support <support@medulla-tech.io>  Mon, 16 Jun 2025 09:15:00 +0100
