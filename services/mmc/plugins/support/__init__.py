@@ -12,7 +12,7 @@ from mmc.support.mmctools import SingletonN
 
 from mmc.plugins.dashboard.manager import DashboardManager
 from mmc.plugins.support.config import SupportConfig
-from mmc.plugins.support.panel import RemoteSupportPanel, LicensePanel
+from mmc.plugins.support.panel import LicensePanel
 from mmc.plugins.support.process import TunnelBuilder, Forker
 from mmc.plugins.support.jsonquery import Query
 
@@ -31,7 +31,6 @@ def activate():
         return False
 
     DM = DashboardManager()
-    DM.register_panel(RemoteSupportPanel("remotesupport"))
     DM.register_panel(license_panel)
 
     # TaskManager().addTask("support.get_license_info",

@@ -37,9 +37,6 @@ class SupportConfig(PluginConfig):
         self.license_tmp_file = "/var/lib/mmc/pulse_license_info"
         self.country = "FR"
 
-        self.collector_script_path = "/usr/sbin/pulse2-collect-info"
-        self.collector_archive_path = "/tmp/pulse2-collect-info.7z"
-
     def readConf(self):
         PluginConfig.readConf(self)
 
