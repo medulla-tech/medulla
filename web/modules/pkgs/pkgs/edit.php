@@ -107,6 +107,8 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
             } else {//ICI
                 $str = _T("Package successfully edited", "pkgs");
                 new NotifyWidgetSuccess($str);
+                header("Location: " . urlStrRedirect("pkgs/pkgs/index"));
+                exit;
                 $package = $ret[3];
             }
             $pid = $package['id'];

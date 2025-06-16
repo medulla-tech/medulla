@@ -37,6 +37,8 @@ if(isset($_POST['bconfirm'])){
 
   if($result['state'] == 'success'){
     new NotifyWidgetSuccess(_T("The cluster <b>$cluster_name</b> has been created", "admin"));
+    header("Location: " . urlStrRedirect("admin/admin/clustersList"));
+    exit;
   }
   else{
     new NotifyWidgetFailure(_T("Error during creation of <b>$cluster_name</b>", "admin"));

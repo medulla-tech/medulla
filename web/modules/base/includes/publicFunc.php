@@ -288,7 +288,9 @@ function _base_changeUser($FH, $mode)
     }
 
     if ($mode == "edit" && $update) {
-        $result .= _("User attributes updated") . "<br />";
+        new NotifyWidgetSuccess(sprintf(_T('User attributes updated', 'users')));
+        header("Location: " . urlStrRedirect("base/users/index"));
+        exit;
     }
 
     $error .= $base_errors;
