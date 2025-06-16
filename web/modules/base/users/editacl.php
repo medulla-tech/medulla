@@ -153,6 +153,8 @@ if (isset($_POST["buser"])) {
     setAcl($_GET["user"], createAclString($acl, $acltab, $aclattr));
     if (!isXMLRPCError()) {
         new NotifyWidgetSuccess(_("User ACLs successfully modified."));
+        header("Location: " . urlStrRedirect("base/users/index"));
+        exit;
     }
     $aclString = getAcl($_GET["user"]);
     $aclattr2 = $aclattr;

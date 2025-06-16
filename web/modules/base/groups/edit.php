@@ -49,6 +49,8 @@ if (isset($_POST["badd"])) {
     }
     if (!$error && !isXMLRPCError()) {
         new NotifyWidgetSuccess(sprintf(_("Group %s successfully modified"), $groupname));
+        header("Location: " . urlStrRedirect("base/groups/index"));
+        exit;
     }
     redirectTo(urlStrRedirect("base/groups/edit", array("group" => $groupname)));
 }

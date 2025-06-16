@@ -38,7 +38,9 @@ if(isset($_POST['bconfirm']))
       $_POST[$key] = addslashes($value);
   }
   add_extension($_POST);
-  new NotifyWidgetSuccess(sprintf(_T("The rule %s has been created", "pkgs"),$_POST['rule_name']));
+    new NotifyWidgetSuccess(sprintf(_T("The rule %s has been created", "pkgs"),$_POST['rule_name']));
+    header("Location: " . urlStrRedirect("pkgs/pkgs/rulesList"));
+    exit;
 }
 
 

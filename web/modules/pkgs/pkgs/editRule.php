@@ -39,6 +39,8 @@ if(isset($_POST['bconfirm']))
   }
   add_extension($_POST);
   new NotifyWidgetSuccess(sprintf(_T("The rule %s has been modified", "pkgs"),$_POST['rule_name']));
+  header("Location: " . urlStrRedirect("pkgs/pkgs/rulesList"));
+  exit;
 }
 
 if(isset($_GET['id']))
