@@ -5782,8 +5782,6 @@ class Glpi100(DyngroupDatabaseHelper):
         return ret_gw
 
     def getMachineListByState(self, ctx, groupName):
-        """ """
-
         # Read config from ini file
         orange = self.config.orange
         red = self.config.red
@@ -5797,20 +5795,32 @@ class Glpi100(DyngroupDatabaseHelper):
         red = now - datetime.timedelta(red)
 
         date_mod = self.machine.c.date_mod
-        if self.fusionagents is not None:
-            date_mod = FusionAgents.last_contact
-
         query = self.__getRestrictedComputersListQuery(ctx, filt, session)
 
         # Limit list according to max_elements_for_static_list param in dyngroup.ini
         limit = DGConfig().maxElementsForStaticList
 
-        if groupName == "green":
-            result = query.filter(date_mod > orange).limit(limit)
-        elif groupName == "orange":
-            result = query.filter(and_(date_mod < orange, date_mod > red)).limit(limit)
-        elif groupName == "red":
-            result = query.filter(date_mod < red).limit(limit)
+        if self.fusionagents is not None:
+            if groupName == "green":
+                subquery = session.query(self.fusionagents.c.items_id).filter(
+                    self.fusionagents.c.last_contact > orange
+                ).subquery()
+            elif groupName == "orange":
+                subquery = session.query(self.fusionagents.c.items_id).filter(
+                    and_(self.fusionagents.c.last_contact < orange, self.fusionagents.c.last_contact > red)
+                ).subquery()
+            elif groupName == "red":
+                subquery = session.query(self.fusionagents.c.items_id).filter(
+                    self.fusionagents.c.last_contact < red
+                ).subquery()
+            result = query.filter(self.machine.c.id.in_(subquery)).limit(limit)
+        else:
+            if groupName == "green":
+                result = query.filter(date_mod > orange).limit(limit)
+            elif groupName == "orange":
+                result = query.filter(and_(date_mod < orange, date_mod > red)).limit(limit)
+            elif groupName == "red":
+                result = query.filter(date_mod < red).limit(limit)
 
         ret = {}
         for machine in result.all():
