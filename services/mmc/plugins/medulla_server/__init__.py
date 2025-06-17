@@ -253,7 +253,7 @@ class RpcProxy(RpcProxyI):
     def getProductUpdates(self):
         @deferred
         def _getProductUpdates():
-            updMgrPath = "/usr/share/pulse-update-manager/pulse-update-manager"
+            updMgrPath = "/usr/lib/python3/dist-packages/mmc/plugins/medulla_server/pulse-update-manager/pulse-update-manager"
 
             if not os.path.exists(updMgrPath):
                 return False
@@ -309,7 +309,7 @@ class RpcProxy(RpcProxyI):
         global last_update_check_ts, available_updates
         last_update_check_ts = None
         available_updates = []
-        updMgrPath = "/usr/share/pulse-update-manager/pulse-update-manager"
+        updMgrPath = "/usr/lib/python3/dist-packages/mmc/plugins/medulla_server/pulse-update-manager/pulse-update-manager"
 
         pulse_packages_filter = "|grep -e '^python-mmc' -e '^python-pulse2' -e '^mmc-web' -e '^pulse' -e '^mmc-agent$' -e '^pulse-xmpp-agent$'"
         install_cmd = (

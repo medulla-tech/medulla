@@ -34,43 +34,37 @@ $options = array(
 class UpdatePanel extends Panel {
 
     function display_content() {
-        $updates = getProductUpdates();
-        $update_count = safeCount($updates);
+        echo '<div class="product_updates_wrapper"></div>';
+//         if ($updates === FALSE){
+//             // Update error occured
+//             $msg = _T('An error occured while fetching updates', "dashboard");
+//             echo '<center style="color:red;font-weight:bold">'.$msg.'</center>';
+//         }
+//         else{
+//             $view_updates_text = _T('View updates', 'dashboard');
+//             $install_updates_text = _T('Install updates', 'dashboard');
+//             print '<center>';
+//             if ($update_count == 0){
+//                 $mgr = _T('No updates available.', 'dashboard');
+//                 echo '<p><strong>'.$mgr.'</strong></p>';
+//             }
+//             else{
+//                 $mgr = _T('Updates available.', 'dashboard');
+//                 echo '<p><strong>'.$mgr.'</strong></p>';
 
-        if ($updates === FALSE){
-
-        // Update error occured
-        $msg = _T('An error occured while fetching updates', "dashboard");
-        echo '<center style="color:red;font-weight:bold">'.$msg.'</center>';
-    }
-    else{
-            $view_updates_text = _T('View updates', 'dashboard');
-            $install_updates_text = _T('Install updates', 'dashboard');
-            print '<center>';
-	    if ($update_count == 0)
-            {
-                $mgr = _T('No updates available.', 'dashboard');
-                echo '<p><strong>'.$mgr.'</strong></p>';
-            }
-	    else{
-                $mgr = _T('Updates available.', 'dashboard');
-                echo '<p><strong>'.$mgr.'</strong></p>';
-
-                print <<<EOS
-                <a title="View updates" class="btnSecondary"
-                    href="javascript:;"
-                    onclick="PopupWindow(event,'main.php?module=medulla_server&amp;submod=update&amp;action=viewProductUpdates', 300); return false;"
-                    >$view_updates_text</a>
-                    <br/><br/>
-                    <a title="Install updates" class="btnSecondary"
-                    href="main.php?module=medulla_server&amp;submod=update&amp;action=installProductUpdates"
-                    >$install_updates_text</a>
-                </center>
-EOS;
-            }
-
-	}
-
+//                 print <<<EOS
+//                 <a title="View updates" class="btnSecondary"
+//                     href="javascript:;"
+//                     onclick="PopupWindow(event,'main.php?module=medulla_server&amp;submod=update&amp;action=viewProductUpdates', 300); return false;"
+//                     >$view_updates_text</a>
+//                     <br/><br/>
+//                     <a title="Install updates" class="btnSecondary"
+//                     href="main.php?module=medulla_server&amp;submod=update&amp;action=installProductUpdates"
+//                     >$install_updates_text</a>
+//                 </center>
+// EOS;
+//             }
+// 	    }
     }
 
     function display_licence($type, $title) {
@@ -84,3 +78,8 @@ EOS;
         }
     }
 }
+
+?>
+<script>
+jQuery(".product_updates_wrapper").load("/mmc/modules/dashboard/includes/panels/ajaxProduct_updates.php");
+</script>
