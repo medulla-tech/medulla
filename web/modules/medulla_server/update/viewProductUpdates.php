@@ -31,6 +31,7 @@ $updates = (isset($_GET['updates'])) ? json_decode(base64_decode($_GET['updates'
 $update_titles = array();
 
 foreach ($updates as $update){
+    $update = (array)$update;
     $update_titles[] = $update['title'];
 }
 
