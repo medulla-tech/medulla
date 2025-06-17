@@ -439,7 +439,6 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
             session.query(Convergence).filter_by(packageUUID=packageUUID).delete()
         return True
 
-    @DatabaseHelper._sessionm
     def delete_convergence_groups(self, session, parent_id):
         """
         Delete deploy and done groups, for a given parent_group_id
@@ -470,8 +469,6 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
                 resultKlass = Results
 
             self.__getOrCreateUser(ctx)
-            connection = self.getDbConnection()
-            trans = connection.begin()
 
             # Get machines to possibly delete
             to_delete = [
@@ -488,23 +485,23 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
             self.__deleteShares(id, session)
 
             # Update the Machines table to remove ghost records
-            self.__updateMachinesTable(connection, to_delete)
+            self.__updateMachinesTable(session.connection(), to_delete)
 
             # Delete the group from the Groups table
             session.query(ProfilesData).filter_by(FK_groups=id).delete()
             session.query(Groups).filter_by(id=id).delete()
 
             # Delete convergence groups for this id
-            self.delete_convergence_groups(id)
+            self.delete_convergence_groups(session, id)
 
             session.flush()
-            trans.commit()
+            session.commit()
             return [True, "succes delete group"]
 
         except Exception as e:
             # Log the warning message and rollback the transaction
             self.logger.warning(f"Failed to delete group {id}: {str(e)}")
-            trans.rollback()
+            session.rollback()
             return [False, f"Failed to delete group {id}: {str(e)}"]
 
     def create_group(self, ctx, name, visibility, type=0, parent_id=None):
