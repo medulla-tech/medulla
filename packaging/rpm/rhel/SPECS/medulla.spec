@@ -1197,6 +1197,8 @@ Requires:       php-xmlrpc
 Requires:       php-iconv
 Requires:   	mmc-web-dashboard >= %{version}
 Requires:       node-d3
+Requires:       openid-connect-php
+Requires:       php-phpseclib3
 
 %description -n mmc-web-base
 Console web interface.
