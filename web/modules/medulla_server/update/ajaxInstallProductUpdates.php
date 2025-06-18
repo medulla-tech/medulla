@@ -26,13 +26,15 @@
 // Prevent any error message to corrupt this output
 ob_clean();
 //print rand(10,5000);
-$command = "bash -c \"ps aux|grep 'pulse-update-manager'|grep -v 'grep'\"";
+$command = "bash -c \"ps aux|grep 'medulla-update-manager -I'|grep -v 'grep'\"";
 //$return = 0;
 
 exec($command, $output, $return);
 
-if ($return != 0)
-    print '<script type="text/javascript">window.location.href=\'index.php\'</script>';
+if ($return != 0){
+    $url = urlStrRedirect("base/main/index");
+    print '<script type="text/javascript">window.location.href=\''.$url.'\'</script>';
+}
 else
     print '<img src="modules/medulla_server/graph/loader.gif" alt="" />';
 

@@ -4,11 +4,27 @@ require_once("../../../../includes/xmlrpc.inc.php");
 require_once("../../../../includes/i18n.inc.php");
 require_once("../../../../modules/medulla_server/includes/xmlrpc.inc.php");
 
+
+function update_running(){
+    $output = NULL;
+    $return = NULL;
+
+    $command = "ps aux|grep 'medulla-update-manager -I'|grep -v 'grep'";
+    exec($command, $output, $return);
+    $result = ( is_array($output) && count($output) >0 ) ? true : false;
+}
+
+$isRunning = update_running();
 $updates = [];
 $updates = getProductUpdates();
 $update_count = (is_array($updates) == true) ? count($updates) : 0;
 $updates_b64 = base64_encode(json_encode($updates));
-if ($updates === FALSE){
+
+if($isRunning){
+    $msg = _T('A process for updates is running', "dashboard");
+    echo '<center style="color:green;font-weight:bold">'.$msg.'</center>';
+}
+else if ($updates === FALSE){
     // Update error occured
     $msg = _T('An error occured while fetching updates', "dashboard");
     echo '<center style="color:red;font-weight:bold">'.$msg.'</center>';

@@ -65,6 +65,7 @@ if __name__ == '__main__':
         print("  --offline : List mode, list cached updates (offline mode)")
         print("  --json : List mode, output in JSON format")
         print("  -i, --install : Install specified updates (uuid or kb_number)")
+        print("  -I : Install all updates")
         print("")
         print("")
         print("Examples:")
@@ -86,6 +87,9 @@ if __name__ == '__main__':
     # Update install switches
     if '-i' in args or '--install' in args:
         updateHandler.installUpdates(args[1:])
+    # Update install switches
+    if '-I' in args:
+        updateHandler.installUpdates(None)
     
     # Update listing switches
     if '--list' in args or '-l' in args:

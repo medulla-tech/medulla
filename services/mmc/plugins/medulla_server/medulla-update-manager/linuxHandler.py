@@ -37,6 +37,8 @@ class linuxUpdateHandler(object):
         
         # Check if errors or not
         if fatal and process.returncode != 0:
+            if isinstance(out, bytes):
+                out = out.decode("utf-8")
             sys.stdout.write(out)
             sys.stderr.write(out)
             sys.exit(process.returncode)

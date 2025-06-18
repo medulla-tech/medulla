@@ -251,88 +251,111 @@ class RpcProxy(RpcProxyI):
         return out.strip(), err.strip(), process.returncode
 
     def getProductUpdates(self):
-        @deferred
-        def _getProductUpdates():
-            updMgrPath = "/usr/lib/python3/dist-packages/mmc/plugins/medulla_server/pulse-update-manager/pulse-update-manager"
 
-            if not os.path.exists(updMgrPath):
-                return False
+        self.runinshell("""apt -o Dir::Etc::sourcelist="/etc/apt/sources.list.d/medulla.sources" update""")
+        out, err, ec = self.runinshell("apt list --upgradable")
+        new_packages = []
+        if out:
+            if isinstance(out, bytes):
+                out = out.decode("utf-8")
+            out = out.replace("Listing...\n", "")
+            new_packages = [element.split(" [")[0].split(" ") for element in out.split("\n") if element != ""]
 
-            global last_update_check_ts, available_updates
-            o, e, ec = self.runinshell("%s -l --json" % updMgrPath)
+        result = []
+        for e in new_packages:
+            result.append({
+                "name": e[0],
+                "title" : e[0].split("/")[0]
+            })
 
-            o = o.decode("utf-8")
-            # Check json part existence
-            if not "===JSON_BEGIN===" in o or not "===JSON_END===" in o:
-                available_updates = False
+        return result
 
-            # Get json output
-            json_output = (
-                o.split("===JSON_BEGIN===")[1].split("===JSON_END===")[0].strip()
-            )
-            packages = json.loads(json_output)["content"]
+        # @deferred
+        # def _getProductUpdates():
 
-            result = []
 
-            for pkg in packages:
-                pulse_filters = (
-                    "python-mmc",
-                    "python-pulse2",
-                    "mmc-web",
-                    "pulse",
-                    "mmc-agent",
-                )
+        #     updMgrPath = "/usr/share/medulla-update-manager/medulla-update-manager"
 
-                # Skip non-Pulse packages
-                if not pkg[2].startswith(pulse_filters):
-                    continue
+        #     if not os.path.exists(updMgrPath):
+        #         return False
 
-                result.append({"name": pkg[2], "title": pkg[1]})
+        #     global last_update_check_ts, available_updates
+        #     o, e, ec = self.runinshell("%s -l --json" % updMgrPath)
 
-            # Caching last result
-            available_updates = result
-            last_update_check_ts = time()
+        #     o = o.decode("utf-8")
+        #     # Check json part existence
+        #     if not "===JSON_BEGIN===" in o or not "===JSON_END===" in o:
+        #         available_updates = False
 
-        global last_update_check_ts, available_updates
-        # If last checking is least than 4 hours, return cached value
-        if not last_update_check_ts or (time() - last_update_check_ts) > 14400:
-            _getProductUpdates()
+        #     # Get json output
+        #     json_output = (
+        #         o.split("===JSON_BEGIN===")[1].split("===JSON_END===")[0].strip()
+        #     )
+        #     packages = json.loads(json_output)["content"]
+        #     result = []
 
-        return available_updates
+        #     for pkg in packages:
+        #         pulse_filters = (
+        #             "python-mmc",
+        #             "python-pulse2",
+        #             "mmc-web",
+        #             "pulse",
+        #             "mmc-agent",
+        #         )
+
+        #         # Skip non-Pulse packages
+        #         if not pkg[2].startswith(pulse_filters):
+        #             continue
+
+        #         result.append({"name": pkg[2], "title": pkg[1]})
+
+        #     # Caching last result
+        #     available_updates = result
+        #     last_update_check_ts = time()
+
+        # global last_update_check_ts, available_updates
+        # # If last checking is least than 4 hours, return cached value
+        # if not last_update_check_ts or (time() - last_update_check_ts) > 14400:
+        #     _getProductUpdates()
+
+        # return available_updates
 
     def installProductUpdates(self):
         """
         This function update packages used for pulse ( pulse, mmc, etc.)
         """
 
-        # Reset update cache
-        global last_update_check_ts, available_updates
-        last_update_check_ts = None
-        available_updates = []
-        updMgrPath = "/usr/lib/python3/dist-packages/mmc/plugins/medulla_server/pulse-update-manager/pulse-update-manager"
-
-        pulse_packages_filter = "|grep -e '^python-mmc' -e '^python-pulse2' -e '^mmc-web' -e '^pulse' -e '^mmc-agent$' -e '^pulse-xmpp-agent$'"
-        install_cmd = (
-            "LANG=C dpkg -l|awk '{print $2}' %s|xargs apt-get -y install"
-            % pulse_packages_filter
-        )
-        install_cmd = "%s -l|awk '{print $1}' %s|xargs %s -i" % (
-            updMgrPath,
-            pulse_packages_filter,
-            updMgrPath,
-        )
+        # # Reset update cache
+        # global last_update_check_ts, available_updates
+        # last_update_check_ts = None
+        # available_updates = []
+        updMgrPath = "/usr/share/medulla-update-manager/medulla-update-manager"
+        install_command = "%s -I"
+        # pulse_packages_filter = "|grep -e '^python-mmc' -e '^python-pulse2' -e '^mmc-web' -e '^pulse' -e '^mmc-agent$' -e '^pulse-xmpp-agent$'"
+        # install_cmd = (
+        #     "LANG=C dpkg -l|awk '{print $2}' %s|xargs apt-get -y install"
+        #     % pulse_packages_filter
+        # )
+        # install_cmd = "%s -l|awk '{print $1}' %s|xargs %s -i" % (
+        #     updMgrPath,
+        #     pulse_packages_filter,
+        #     updMgrPath,
+        # )
 
         @deferred
         def _runInstall():
-            try:
-                os.utime("/tmp/pulse-update-manager", None)
-            except Exception:
-                open("/tmp/pulse-update-manager", "a").close()
+            # cmd = """apt -o Dir::Etc::sourcelist="/etc/apt/sources.list.d/medulla.sources" update && DEBIAN_FRONTEND=noninteractive UCF_FORCE_CONFFOLD=yes apt -y --force-yes -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" upgrade"""
+            subprocess.call(install_cmd)
 
-            # Running install command with no pipe
-            subprocess.call(install_cmd, shell=True)
+            # try:
+            #     os.utime("/tmp/medulla-update-manager", None)
+            # except Exception:
+            #     open("/tmp/medulla-update-manager", "a").close()
 
-            os.remove("/tmp/pulse-update-manager", None)
+            # # Running install command with no pipe
+            # subprocess.call(install_cmd, shell=True)
+
+            # os.remove("/tmp/medulla-update-manager", None)
 
         _runInstall()
 
