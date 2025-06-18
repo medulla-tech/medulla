@@ -1,4 +1,6 @@
 <?php
+$path = '/usr/share';
+set_include_path(get_include_path() . PATH_SEPARATOR . $path);
 require('phpseclib3/autoload.php');
 require_once "oidc/OpenIDConnectClient.php";
 require("includes/PageGenerator.php");
