@@ -43,8 +43,8 @@ if(isset($_POST['bconfirm'])){
   else{
     new NotifyWidgetFailure(_T("Error during creation of <b>$cluster_name</b>", "admin"));
   }
-header("Location: " . urlStrRedirect("admin/admin/index", array()));
-exit;
+  header("Location: " . urlStrRedirect("admin/admin/clustersList", array()));
+  exit;
 }
 
 $p = new PageGenerator(_T("New Cluster", 'admin'));

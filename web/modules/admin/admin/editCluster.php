@@ -47,8 +47,8 @@ if(isset($_POST['bconfirm'])){
   else{
     new NotifyWidgetFailure(_T("Error during <b>$cluster_name</b> edition", "admin"));
   }
-header("Location: " . urlStrRedirect("admin/admin/index", array()));
-exit;
+  header("Location: " . urlStrRedirect("admin/admin/clustersList", array()));
+  exit;
 }
 
 $p = new PageGenerator(_T("Edit Cluster [$name]", 'admin'));
