@@ -994,6 +994,11 @@ function xmlrpc_update_cluster($id, $name, $description, $relay_ids)
     return xmlCall("xmppmaster.update_cluster", [$id, $name, $description, $relay_ids]);
 }
 
+function xmlrpc_delete_cluster($id)
+{
+    return xmlCall("xmppmaster.delete_cluster", [$id]);
+}
+
 function xmlrpc_create_cluster($name, $description, $relay_ids)
 {
     return xmlCall("xmppmaster.create_cluster", [$name, $description, $relay_ids]);

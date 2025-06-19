@@ -12943,6 +12943,26 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         return {"state": "success"}
 
     @DatabaseHelper._sessionm
+    def delete_cluster(self, session, id):
+        try:
+            id = int(id)
+
+            session.query(Has_cluster_ars).filter(Has_cluster_ars.id_cluster == id).delete(
+                synchronize_session="fetch"
+            )
+
+            session.query(Cluster_ars).filter(Cluster_ars.id == id).delete()
+
+            session.commit()
+            session.flush()
+
+        except Exception as err:
+            session.rollback()
+            return {"state": "failure", "msg": f"Could not delete cluster: {err}"}
+
+        return {"state": "success"}
+
+    @DatabaseHelper._sessionm
     def create_cluster(self, session, name, description, relay_ids):
         relay_ids = relay_ids.split(",")
 

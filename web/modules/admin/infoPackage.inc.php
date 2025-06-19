@@ -146,6 +146,10 @@ $page = new Page("editCluster", _T("Edit Cluster", "admin"));
 $page->setFile("modules/admin/admin/editCluster.php");
 $submod->addPage($page);
 
+$page = new Page("delete",_T("Delete a Cluster", 'admin'));
+$page->setFile("modules/admin/admin/deleteCluster.php", array("noHeader"=>True,"visible"=>False));
+$submod->addPage($page);
+
 $page = new Page("newCluster", _T("New Cluster", "admin"));
 $page->setFile("modules/admin/admin/newCluster.php");
 $submod->addPage($page);
