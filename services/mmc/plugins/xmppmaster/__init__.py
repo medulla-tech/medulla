@@ -1873,9 +1873,6 @@ def update_cluster(id, name, description, relay_ids):
     result = XmppMasterDatabase().update_cluster(id, name, description, relay_ids)
     return result
 
-def delete_cluster(id):
-    result = XmppMasterDatabase().delete_cluster(id)
-    return result
 
 def create_cluster(name, description, relay_ids):
     result = XmppMasterDatabase().create_cluster(name, description, relay_ids)
@@ -2096,3 +2093,8 @@ def get_update_kb(updateid):
 def cancel_update(machineid, updateid):
     return XmppMasterDatabase().cancel_update(machineid, updateid)
 
+def get_audit_summary_updates_by_entity(entity_uuid, start=0, limit=-1, filter=""):
+    return XmppMasterDatabase().get_audit_summary_updates_by_entity(entity_uuid, start, limit, filter)
+
+def get_audit_summary_updates_by_update(updateid, start=0, limit=-1, filter=""):
+    return XmppMasterDatabase().get_audit_summary_updates_by_update(updateid, start, limit, filter)
