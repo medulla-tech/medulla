@@ -32,14 +32,17 @@ $end   = (isset($_GET['end'])?$_GET['start']+$maxperpage:$maxperpage);
 $clusters = xmlrpc_get_clusters_list($start, $maxperpage, $filter);
 
 $editcluster = new ActionItem(_("Edit Cluster"),"editCluster","edit","", "admin", "admin");
+$deletecluster = new ActionPopupItem(_("Delete Cluster"),"delete","delete","", "admin", "admin");
 
 $row = 0;
 $params = [];
 $actionEditClusters = [];
+$actionDeleteClusters = [];
 
 if($clusters['total'] > 0){
   foreach($clusters['datas']['name'] as $key=>$array){
     $actionEditClusters[] = $editcluster;
+    $actionDeleteClusters[] = $deletecluster;
     $params[] = [
       'id' => $clusters['datas']['id'][$row],
       'name'=> $clusters['datas']['name'][$row],
@@ -67,6 +70,7 @@ if($clusters['total'] > 0){
   $n->addExtraInfo( $clusters['datas']['description'], _T("Description", "xmppmaster"));
   $n->addExtraInfo( $clusters['datas']['nb_ars'], _T("Associated relays", "xmppmaster"));
   $n->addActionItemArray($actionEditClusters);
+  $n->addActionItemArray($actionDeleteClusters);
   $n->setTableHeaderPadding(0);
   $n->setItemCount($clusters['total']);
   $n->setNavBar(new AjaxNavBar($clusters['total'], $filter, "updateSearchParamformRunning"));
