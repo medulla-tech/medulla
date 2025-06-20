@@ -35,6 +35,20 @@ require_once('modules/msc/includes/mscoptions_xmlrpc.php');
 require_once('modules/msc/includes/launch_functions.php');
 
 
+// Give alias for convergences status
+if(!defined("CONVERGENCE_AVAILABLE_NOT_SET"))
+    define("CONVERGENCE_AVAILABLE_NOT_SET", 0);
+
+if(!defined("CONVERGENCE_ENABLED"))
+    define ("CONVERGENCE_ENABLED", 1);
+
+if(!defined("CONVERGENCE_AVAILABLE_SET"))
+    define ("CONVERGENCE_AVAILABLE_SET", 2);
+
+if(!defined("CONVERGENCE_NONE"))
+    define ("CONVERGENCE_NONE", 3);
+
+
 // Nothing in specific, convergence is set as available
 if(!isset($_GET['actionconvergenceint']))
   $_GET['actionconvergenceint'] = 0;
