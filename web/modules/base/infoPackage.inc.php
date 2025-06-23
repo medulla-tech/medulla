@@ -135,8 +135,8 @@ if(in_array("xmppmaster", $_SESSION["modulesList"])) {
     $page->setFile("modules/base/logview/logsinventory.php");
     $submod->addPage($page);
 
-    $page = new Page("logsbackuppc", _T("logs backuppc", "base"));
-    $page->setFile("modules/base/logview/logsbackuppc.php");
+    $page = new Page("logsbackup", _T("logs backup", "base"));
+    $page->setFile("modules/base/logview/logsbackup.php");
     $submod->addPage($page);
 
     $page = new Page("logsdeployment", _T("logs deployment", "base"));
