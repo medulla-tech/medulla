@@ -4788,7 +4788,9 @@ class XmppMasterDatabase(DatabaseHelper):
                     existing_logincommand.start_exec_on_nb_deploy = (
                         instructions_nb_machine_for_exec
                     )
-                if parameterspackage != "":
+                if parameterspackage is False:
+                    existing_logincommand.parameters_deploy = None
+                elif parameterspackage != "":
                     existing_logincommand.parameters_deploy = parameterspackage
                 existing_logincommand.rebootrequired = bool(rebootrequired)
                 existing_logincommand.shutdownrequired = bool(shutdownrequired)
