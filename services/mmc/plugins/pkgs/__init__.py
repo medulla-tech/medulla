@@ -524,12 +524,12 @@ def generate_hash(path, package_id):
 
         try:
             with open((os.path.join(dest, file_package)) + ".hash", "wb") as _file:
-                _file.write(file_hash.hexdigest())
+                _file.write(file_hash.hexdigest().encode('utf-8'))
         except:
             logger.debug("The 'docs' directory does not exist")
 
     # FOREACH FILES IN DEST IN ALPHA ORDER AND ADD KEY AES32, CONCAT AND HASH
-    content = ""
+    content = b""
     if PkgsConfig("pkgs").keyAES32:
         salt = PkgsConfig("pkgs").keyAES32
     filelist = os.listdir(dest)
@@ -537,7 +537,7 @@ def generate_hash(path, package_id):
         with open(dest + "/" + file_package, "rb") as infile:
             content += infile.read()
 
-    content += salt
+    content += salt.encode('utf-8')
     try:
         file_hash = hashlib.new(hash_type)
     except:
@@ -546,7 +546,7 @@ def generate_hash(path, package_id):
     content = file_hash.hexdigest()
 
     with open(dest + ".hash", "wb") as outfile:
-        outfile.write(content)
+        outfile.write(content.encode('utf-8'))
 
 
 def pkgs_get_infos_details(uuidpackage):
