@@ -327,10 +327,13 @@ def add_group(groupname):
     api = UrApiWrapper()
     newgroup = api.add_group(groupname)
     newgroup = api.response(newgroup)
-    if "content" in newgroup:
-        return newgroup["content"]
-
-    return "No DATA in newclient"
+    if "content" in newgroup and newgroup["content"].get("add_ok"):
+        content = newgroup["content"]
+        return {
+            "add_ok": content["add_ok"],
+            "groupname": content.get("added_group", {}).get("name", "")
+        }
+    return {"add_ok": False, "groupname": ""}
 
 
 def remove_group(groupid):

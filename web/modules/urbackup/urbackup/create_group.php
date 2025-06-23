@@ -49,9 +49,17 @@ if ($group_already_exist == "False")
     if(strlen(trim($_POST['groupname']))<=0){
         $need_name = "True";
     }
-    else
-    {
+    else {
         $create_group = xmlrpc_add_group($groupname);
+        if (!empty($create_group['add_ok'])) {
+            $str = _T("The group '" . $groupname . "' has been successfully created.", "urbackup");
+            new NotifyWidgetSuccess($str);
+        } else {
+            $str = _T("Failed to create the group '" . $groupname, "urbackup");
+            new NotifyWidgetFailure($str);
+        }
+        header("Location: " . urlStrRedirect("urbackup/urbackup/usersgroups", array()));
+        exit;
     }
 }
 
