@@ -293,7 +293,6 @@ function start_a_command($proxy = array(), $activate = true) {
 
                 $parameterspacquage = '';
                 if(in_array("xmppmaster", $_SESSION["modulesList"])) {
-                    $countmachine = getRestrictedComputersListLen( array('gid' => $deploy_group_id));
                     $syncthing = (isset($post['syncthing']) && $post['syncthing']) ? 1: 0;
                     if(isset($_GET['polarity'], $_GET['switch_polarity']) ){
                         if($_GET['switch_polarity'] == true){
@@ -308,6 +307,7 @@ function start_a_command($proxy = array(), $activate = true) {
                             __xmlrpc_setbool_group($doneGroup->id, $deploybool, $doneGroup->type, $doneGroup->parent_id);
                         }
                     }
+                    $countmachine = getRestrictedComputersListLen( array('gid' => $deploy_group_id));
 
                     xmlrpc_update_login_command($_SESSION['login'], $cmd_id, $deploy_group_id ,$countmachine, '', '', $parameterspacquage, 0, 0, 0, $syncthing, $params);
                     xmlrpc_update_msc_command($_SESSION['login'], $cmd_id, $limit_rate_ko, $params);
@@ -330,9 +330,7 @@ function start_a_command($proxy = array(), $activate = true) {
                 $group = new Group($gid, True);
                 //$package = to_package(getPackageDetails($p_api, $pid));
                 $package = to_package(xmpp_getPackageDetail($pid));
-                echo '<pre>';
-                print_r($_GET);
-                echo '</pre>';
+
                 if(isset($_GET['polarity']) && $_GET['polarity'] =='positive' || $_GET['polarity'] == ''){
                     $convergence_groups = $group->createConvergenceGroups($package);
                 }
