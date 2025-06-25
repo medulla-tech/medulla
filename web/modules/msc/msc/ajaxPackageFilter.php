@@ -42,22 +42,6 @@ if (!empty($_GET['gid'])) {
 }
 
 require_once("modules/msc/includes/package_api.php");
-
-
-// Give alias for convergences status
-if(!defined("CONVERGENCE_AVAILABLE_NOT_SET"))
-    define("CONVERGENCE_AVAILABLE_NOT_SET", 0);
-
-if(!defined("CONVERGENCE_ENABLED"))
-    define ("CONVERGENCE_ENABLED", 1);
-
-if(!defined("CONVERGENCE_AVAILABLE_SET"))
-    define ("CONVERGENCE_AVAILABLE_SET", 2);
-
-if(!defined("CONVERGENCE_NONE"))
-    define ("CONVERGENCE_NONE", 3);
-
-
 if (!in_array("xmppmaster", $_SESSION["supportModList"])) {
     if ($_GET['uuid']) {
         $label = new RenderedLabel(3, sprintf(_T('These packages can be installed on computer "%s"', 'msc'), $_GET['hostname']));
@@ -193,25 +177,33 @@ foreach ($packages as $c_package) {
                 $a_convergence_status[] = $elt_convergence_status;
 
                 // Handle the convergence and negative convergence actions
-                switch($current_convergence_status){
-                    case CONVERGENCE_AVAILABLE_NOT_SET:
-                    case CONVERGENCE_AVAILABLE_SET:
-                        $a_negativeConvergence_action[] = ($package->uninstall_section == true) ? $negativeConvergenceAction : $emptyAction;
-                        $a_convergence_action[] = $convergenceAction;
-                        break;
-                    case CONVERGENCE_ENABLED:
-                        $a_negativeConvergence_action[] = ($polarity == "negative") ? $negativeConvergenceAction : $emptyAction;
-                        $a_convergence_action[] = ($polarity == "negative") ? $emptyAction : $convergenceAction;
-                        break;
+                if(isset($package->associateinventory) && $package->associateinventory == 1){
+                    if($current_convergence_status == 1){
+                        if($polarity == "negative"){
+                            $a_negativeConvergence_action[] = $negativeConvergenceAction;
+                            $a_convergence_action[] = $emptyAction;
+                        }
+                        else{
 
-                    case CONVERGENCE_NONE:
-                        $a_convergence_action[] = $emptyAction;
-                        $a_negativeConvergence_action[] = $emptyAction;
-                        break;
-                    default: // should never be here but who know ...
-                        $a_convergence_action[] = $emptyAction;
-                        $a_negativeConvergence_action[] = $emptyAction;
-                        break;
+                            $a_convergence_action[] = $convergenceAction;
+                            $a_negativeConvergence_action[] = $emptyAction;
+                        }
+                    }
+                    else{
+                        if($package->uninstall_section == true){
+                            $a_negativeConvergence_action[] = $negativeConvergenceAction;
+                        }
+                        else{
+                            $a_negativeConvergence_action[] = $emptyAction;
+
+                        }
+
+                        $a_convergence_action[] = $convergenceAction;
+                    }
+                }
+                else{
+                    $a_negativeConvergence_action[] = $emptyAction;
+                    $a_convergence_action[] = $emptyAction;
                 }
             }
         }

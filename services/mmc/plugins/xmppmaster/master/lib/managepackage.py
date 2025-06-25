@@ -240,7 +240,7 @@ class apimanagepackagemsc:
                     if _os in data_file_sequence_json["metaparameter"]:
                         obj["uninstall_section"][_os] = False
                         for label in data_file_sequence_json["metaparameter"][_os]["label"]:
-                            if label.startswith("Uninst_") or label == "label_section_uninstall":
+                            if label.startswith("Uninst_"):
                                 obj["uninstall_section"][_os] = True
                                 break
                     else:
