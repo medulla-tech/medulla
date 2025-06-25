@@ -263,20 +263,6 @@ function start_a_command($proxy = array(), $activate = true) {
             $active = ($_POST['active'] == 'on') ? 1 : 0;
             $cmd_type = 2; // Convergence command type
 
-            $parameterspacquage = '';
-            if($_GET['polarity'] == 'positive' && $_GET['switch_polarity'] == true){
-                $parameterspacquage = '{"section":"uninstall"}';
-            }
-            else if($_GET['polarity'] == 'negative' && $_GET['switch_polarity'] == true){
-                $parameterspacquage = false;
-            }
-            else if($_GET['polarity'] == 'positive' && $_GET['switch_polarity'] == false){
-                $parameterspacquage = false;
-            }
-            else{
-                $parameterspacquage = '{"section":"uninstall"}';
-            }
-
             if (quick_get('editConvergence') || (isset($_POST['actionconvergenceint']) && $_POST['actionconvergenceint'] == 2)) {
                 /* Stop command */
                 $cmd_id = xmlrpc_get_convergence_command_id($gid, $pid);
@@ -307,6 +293,19 @@ function start_a_command($proxy = array(), $activate = true) {
                             __xmlrpc_setbool_group($deployGroup->id, $donebool, $deployGroup->type, $deployGroup->parent_id);
                             __xmlrpc_setbool_group($doneGroup->id, $deploybool, $doneGroup->type, $doneGroup->parent_id);
                         }
+                    }
+                    if($_GET['polarity'] == 'positive' && $_GET['switch_polarity'] == true){
+                        $parameterspacquage = '{"section":"uninstall"}';
+                    }
+                    else if($_GET['polarity'] == 'negative' && $_GET['switch_polarity'] == true){
+                        $parameterspacquage = false;
+                    }
+                    else if($_GET['polarity'] == 'positive' && $_GET['switch_polarity'] == false){
+                        $parameterspacquage = false;
+                    }
+                    else{
+                        $parameterspacquage = '{"section":"uninstall"}';
+
                     }
 
                     xmlrpc_update_login_command($_SESSION['login'], $cmd_id, $deploy_group_id ,$countmachine, '', '', $parameterspacquage, 0, 0, 0, $syncthing, $params);
@@ -347,7 +346,7 @@ function start_a_command($proxy = array(), $activate = true) {
                 $command_id = add_command_api($pid, NULL, $params, $mode, $deploy_group_id, $ordered_proxies, $cmd_type);
                 if(in_array("xmppmaster", $_SESSION["modulesList"])) {
                     $countmachine = getRestrictedComputersListLen( array('gid' => $deploy_group_id));
-                    xmlrpc_addlogincommand($_SESSION['login'], $command_id, $deploy_group_id, $countmachine, "", "", $parameterspacquage,);
+                    xmlrpc_addlogincommand($_SESSION['login'], $command_id, $deploy_group_id, $countmachine );
                 }
                     // If this convergence is not active, expire this command
                 if (!$active && $_POST['bconfirm'] != 'Reconfigurer') {
