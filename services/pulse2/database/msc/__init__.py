@@ -823,7 +823,7 @@ class MscDatabase(DatabaseHelper):
                 phase ON commands_on_host.id = phase.fk_commands_on_host
             WHERE
             commands.start_date > '%s'
-            AND commands.title NOT LIKE 'Convergence%%'
+            AND commands.title NOT LIKE '%%Convergence%%'
             AND
             """
             % datenow

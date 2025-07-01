@@ -313,7 +313,7 @@ class Group
         );
     }
 
-     public function createNegativeConvergenceGroups($package)
+     public function createConvergenceUninstallGroups($package)
     {
         $deployGroup = new ConvergenceGroup();
         $doneGroup = new ConvergenceGroup();

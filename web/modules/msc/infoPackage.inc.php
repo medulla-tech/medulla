@@ -218,9 +218,9 @@ if (!empty($submod)) {
     $page->setOptions(array("visible" => False, "noHeader" => True));
     $submod->addPage($page);
 
-        /* Software convergence configuration for a group */
-    $page = new Page("negativeconvergence", _T("Software negative convergence configuration", "msc"));
-    $page->setFile("modules/msc/msc/negativeconvergence.php");
+    /* Software convergence configuration for a group */
+    $page = new Page("convergenceuninstall", _T("Software convergence Uninstall configuration", "msc"));
+    $page->setFile("modules/msc/msc/convergenceuninstall.php");
     $page->setOptions(array("visible" => False, "noHeader" => True));
     $submod->addPage($page);
 

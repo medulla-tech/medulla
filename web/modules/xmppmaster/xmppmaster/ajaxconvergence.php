@@ -127,7 +127,7 @@ foreach ($arraydeploy['tabdeploy']['command'] as $index => $command_id) {
 
     // Title cleaning to obtain the name of the package
     $line = $arraydeploy['tabdeploy']['title'][$index] ?? '';
-    $lineWithoutPrefix = preg_replace('/^Convergence on\s*/i', '', $line);
+    $lineWithoutPrefix = preg_replace('/^(Uninstall )?Convergence on\s*/i', '', $line);
     // Delete date and time
     $lineWithoutDateTime = preg_replace('/\s*\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2}\s*/', ' ', $lineWithoutPrefix);
     $titleClean = trim($lineWithoutDateTime);

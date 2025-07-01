@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * file msc/convergence.php
+ * file msc/convergenceuninstall.php
  */
 
 require('modules/msc/includes/utilities.php');
@@ -50,7 +50,7 @@ $polarity = getParam('polarity', "");
 $action = getParam('action');
 
 $switchPolarity = false;
-if($polarity != '' && ($polarity == 'negative' && $action == 'convergence') || ($polarity == 'positive' && $action == 'negativeconvergence')){
+if($polarity != '' && ($polarity == 'uninstall' && $action == 'convergence') || ($polarity == 'positive' && $action == 'convergenceuninstall')){
     $switchPolarity = true;
 }
 
@@ -81,7 +81,7 @@ if (getParam('editConvergence')) {
     $command_details = command_detail($cmd_id);
     $command_phases  = xmlrpc_get_convergence_phases(getParam('gid', null), getParam('pid'));
 
-    $params["ltitle"]               = (substr($command_details['title'], 0,8) != "Negative") ? "Negative ".$command_details['title'] : $command_details['title'];
+    $params["ltitle"]               = (substr($command_details['title'], 0,8) != "Uninstall") ? "Uninstall ".$command_details['title'] : $command_details['title'];
     $params["title"]                = $params["ltitle"];
     $params["maxbw"]                = $command_details['maxbw'] / 1024;
     $params["copy_mode"]            = $command_details['copy_mode'];
@@ -110,7 +110,7 @@ if (getParam('editConvergence')) {
     }
 }
 else {
-    $params["ltitle"]               = _T('Negative Convergence on ') . getParam('name');
+    $params["ltitle"]               = _T('Uninstall Convergence on ') . getParam('name');
     $params["start_script"]         = 'on';
     $params["clean_on_success"]     = 'on';
     $params["do_reboot"]            = '';
@@ -121,7 +121,7 @@ else {
     $params["deployment_intervals"] = web_def_deployment_intervals();
     $params["active"]               = 'off';
     $params["parameterspacquage"]   = '{"section":"uninstall"}';
-    $params['polarity']             = 'negative';
+    $params['polarity']             = 'uninstall';
     $halt = web_def_issue_halt_to();
     foreach ($halt as $h) {
         $params["issue_halt_to_" . $h] = 'on';

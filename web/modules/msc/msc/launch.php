@@ -155,16 +155,17 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
         $gid = $_GET['gid'];
         $group = new Group($gid, true);
 
-        if(isset($_GET['switch_polarity']) && $_GET["switch_polarity"] == true){
-            if($_GET['polarity'] == "positive"){
-                if(substr($name, 0, 11) == "Convergence")
-                    $name = "Negative ".$name;
+    if (isset($_GET['switch_polarity']) && $_GET["switch_polarity"] == true) {
+        if ($_GET['polarity'] == "positive") {
+            if (strpos($name, "Uninstall") !== 0 && strpos($name, "Convergence") === 0) {
+                $name = "Uninstall " . $name;
             }
-            else{
-                if(substr($name, 0, 9) == "Negative")
-                    $name = substr($name, 9);
+        } else {
+            if (strpos($name, "Uninstall") === 0) {
+                $name = substr($name, 10);
             }
         }
+    }
         if ($group->exists != False) {
             $namegroup = $group->getName();
             if (quick_get('convergence')) {

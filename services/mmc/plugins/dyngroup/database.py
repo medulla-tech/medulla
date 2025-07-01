@@ -1200,7 +1200,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
                 ret[mountpoint] = {}
             if mountpoint not in ret2:
                 ret2[mountpoint] = {}
-            ret2[mountpoint][line.packageUUID] = "positive" if query2.bool == "AND(2, NOT(AND(1)))" else "negative"
+            ret2[mountpoint][line.packageUUID] = "positive" if query2.bool == "AND(2, NOT(AND(1)))" else "uninstall"
             ret[mountpoint][line.packageUUID] = line.active
 
         return ret, ret2

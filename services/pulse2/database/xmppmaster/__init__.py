@@ -5707,7 +5707,7 @@ class XmppMasterDatabase(DatabaseHelper):
         deploylog = session.query(Deploy).filter(
             Deploy.sessionid.like("%s%%" % typedeploy)
         )
-        deploylog = deploylog.filter(~Deploy.title.like("Convergence%"))
+        deploylog = deploylog.filter(~Deploy.title.like("%Convergence%"))
 
         if not pulse_usersid or len(pulse_usersid) == 1 and pulse_usersid[0] == "root":
             return self.get_deploy_by_user_with_interval(
@@ -5893,7 +5893,7 @@ class XmppMasterDatabase(DatabaseHelper):
             Dictionary with deployment details filtered by user and "Convergence".
         """
         deploylog = session.query(Deploy)
-        deploylog = deploylog.filter(Deploy.title.like("Convergence%"))
+        deploylog = deploylog.filter(Deploy.title.like("%Convergence%"))
         deploylog = deploylog.filter(Deploy.sessionid.like(f"{typedeploy}%"))
 
         if login:
@@ -6041,7 +6041,7 @@ class XmppMasterDatabase(DatabaseHelper):
             )
 
         query_base = session.query(Deploy).filter(
-            Deploy.sessionid.like(f"{typedeploy}%"), Deploy.title.like("Convergence%")
+            Deploy.sessionid.like(f"{typedeploy}%"), Deploy.title.like("%Convergence%")
         )
         if intervalsearch:
             since_date = datetime.now() - timedelta(seconds=intervalsearch)
@@ -6224,7 +6224,7 @@ class XmppMasterDatabase(DatabaseHelper):
         """
         deploylog = session.query(Deploy)
         # Do not show convergence deploy
-        deploylog = deploylog.filter(~Deploy.title.like("Convergence%"))
+        deploylog = deploylog.filter(~Deploy.title.like("%Convergence%"))
         deploylog = deploylog.filter(Deploy.sessionid.like("%s%%" % typedeploy))
         if login:
             deploylog = deploylog.filter(Deploy.login == login)
@@ -6407,8 +6407,7 @@ class XmppMasterDatabase(DatabaseHelper):
             and_(
                 Deploy.sessionid.like(f"{typedeploy}%"),
                 or_(
-                    Deploy.title.like("Convergence%"),
-                    Deploy.title.like("Negative Convergence%")
+                    Deploy.title.like("%Convergence%"),
                 )
             )
         )
@@ -6591,7 +6590,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 If login is a list, this returns all the past deploys for the group this user belong to.
         """
         deploylog = session.query(Deploy)
-        deploylog = deploylog.filter(~Deploy.title.like("Convergence%"))
+        deploylog = deploylog.filter(~Deploy.title.like("%Convergence%"))
         deploylog = deploylog.filter(Deploy.sessionid.like("%s%%" % typedeploy))
         if login:
             if isinstance(login, list):

@@ -1315,10 +1315,10 @@ li.convergence a {
         color: #FFF;
 }
 
-li.convergenceneg a {
+li.convergenceunin a {
         padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
-        background-image: url("../img/actions/convergenceneg.svg");
+        background-image: url("../img/actions/convergenceunin.svg");
         background-repeat: no-repeat;
         background-position: left top;
         background-size: 25px 25px;

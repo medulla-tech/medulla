@@ -100,7 +100,7 @@ function prettyConvergenceStatusDisplay($status)
 }
 $a_convergence_status = array();
 
-// polarities is used to determine if the current convergence is set as positive or negative convergence
+// polarities is used to determine if the current convergence is set as positive or convergence uninstall
 $convergences_polarities = [];
 $polarities = [];
 if ($group != null) {
@@ -113,8 +113,8 @@ if ($group != null) {
 
 $emptyAction = new EmptyActionItem();
 $convergenceAction = new ActionItem(_T("Convergence", "msc"), "convergence", "convergence", "msc", "base", "computers");
-$negativeConvergenceAction = new ActionItem(_T("Negative Convergence", "msc"), "negativeconvergence", "convergenceneg", "msc", "base", "computers");
-$a_negativeconvergence_action = array();
+$convergenceUninstallAction = new ActionItem(_T("Convergence Uninstall", "msc"), "convergenceuninstall", "convergenceunin", "msc", "base", "computers");
+$a_convergence_uninstall_action = array();
 $a_convergence_action = array();
 $a_packages = array();
 $a_description = array();
@@ -192,25 +192,25 @@ foreach ($packages as $c_package) {
                 $elt_convergence_status = prettyConvergenceStatusDisplay($current_convergence_status);
                 $a_convergence_status[] = $elt_convergence_status;
 
-                // Handle the convergence and negative convergence actions
+                // Handle the convergence and convergence uninstall actions
                 switch($current_convergence_status){
                     case CONVERGENCE_AVAILABLE_NOT_SET:
                     case CONVERGENCE_AVAILABLE_SET:
-                        $a_negativeConvergence_action[] = ($package->uninstall_section == true) ? $negativeConvergenceAction : $emptyAction;
+                        $a_convergence_uninstall_action[] = ($package->uninstall_section == true) ? $convergenceUninstallAction : $emptyAction;
                         $a_convergence_action[] = $convergenceAction;
                         break;
                     case CONVERGENCE_ENABLED:
-                        $a_negativeConvergence_action[] = ($polarity == "negative") ? $negativeConvergenceAction : $emptyAction;
-                        $a_convergence_action[] = ($polarity == "negative") ? $emptyAction : $convergenceAction;
+                        $a_convergence_uninstall_action[] = ($polarity == "uninstall") ? $convergenceUninstallAction : $emptyAction;
+                        $a_convergence_action[] = ($polarity == "uninstall") ? $emptyAction : $convergenceAction;
                         break;
 
                     case CONVERGENCE_NONE:
                         $a_convergence_action[] = $emptyAction;
-                        $a_negativeConvergence_action[] = $emptyAction;
+                        $a_convergence_uninstall_action[] = $emptyAction;
                         break;
                     default: // should never be here but who know ...
                         $a_convergence_action[] = $emptyAction;
-                        $a_negativeConvergence_action[] = $emptyAction;
+                        $a_convergence_uninstall_action[] = $emptyAction;
                         break;
                 }
             }
@@ -290,7 +290,7 @@ if(!in_array("xmppmaster", $_SESSION["modulesList"])) {
 }
 
 if ($group != null) {
-    $n->addActionItem($a_negativeConvergence_action);
+    $n->addActionItem($a_convergence_uninstall_action);
     $n->addActionItem($a_convergence_action);
 }
 

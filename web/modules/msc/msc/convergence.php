@@ -55,7 +55,10 @@ $polarity = (isset($_GET['polarity'])) ? $_GET["polarity"] : "";
 // switch polarity is used to know if we need to change the convergence polarity.
 // This is important because of fixed params such as deploy and done groups bool or has_login_command title or params
 $switchPolarity = false;
-if($polarity != '' && ($polarity == 'negative' && $_GET['action'] == 'convergence') || ($polarity == 'positive' && $_GET['action'] == 'negativeconvergence')){
+if (
+    ($polarity === 'uninstall' && $action === 'convergence') ||
+    ($polarity === 'positive' && $action === 'convergenceuninstall')
+) {
     $switchPolarity = true;
 }
 

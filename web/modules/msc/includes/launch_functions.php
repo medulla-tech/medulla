@@ -267,7 +267,7 @@ function start_a_command($proxy = array(), $activate = true) {
             if($_GET['polarity'] == 'positive' && $_GET['switch_polarity'] == true){
                 $parameterspacquage = '{"section":"uninstall"}';
             }
-            else if($_GET['polarity'] == 'negative' && $_GET['switch_polarity'] == true){
+            else if($_GET['polarity'] == 'uninstall' && $_GET['switch_polarity'] == true){
                 $parameterspacquage = false;
             }
             else if($_GET['polarity'] == 'positive' && $_GET['switch_polarity'] == false){
@@ -331,11 +331,11 @@ function start_a_command($proxy = array(), $activate = true) {
                 //$package = to_package(getPackageDetails($p_api, $pid));
                 $package = to_package(xmpp_getPackageDetail($pid));
 
-                if(isset($_GET['polarity']) && $_GET['polarity'] =='positive' || $_GET['polarity'] == ''){
+                if(isset($_GET['polarity']) && $_GET['polarity'] == ''){
                     $convergence_groups = $group->createConvergenceGroups($package);
                 }
                 else{
-                    $convergence_groups = $group->createNegativeConvergenceGroups($package);
+                    $convergence_groups = $group->createConvergenceUninstallGroups($package);
                 }
 
                 $deploy_group_id = $convergence_groups['deploy_group_id'];
