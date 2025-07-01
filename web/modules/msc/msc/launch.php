@@ -398,11 +398,15 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
             $f->add(
                     new TrFormElement(_T("bandwidth throttling (ko)",'pkgs'), $bandwidth), array_merge(array("value" => ''), array('placeholder' => _T('<in ko>', 'pkgs')))
             );
-            $f->add(
+            if (empty($_GET['convergence']) || $_GET['convergence'] != 1) {
+                $f->add(
                     new TrFormElement(
-                        _T('Dynamic parameters Packages', 'msc'), new InputTpl('parameterspacquage')
-                    ), array("value" => htmlspecialchars(quick_get('parameterspacquage')))
-            );
+                        _T('Dynamic parameters Packages', 'msc'),
+                        new InputTpl('parameterspacquage')
+                    ),
+                    array("value" => htmlspecialchars(quick_get('parameterspacquage')))
+                );
+            }
             if(!isset($_GET['convergence']) && $_GET['convergence'] != 1) {
                 $f->add(
                     new TrFormElement(
