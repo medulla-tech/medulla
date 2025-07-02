@@ -88,7 +88,7 @@ if (getParam('editConvergence')) {
     $cmd_id          = xmlrpc_get_convergence_command_id(getParam('gid', null), getParam('pid'));
     $command_details = command_detail($cmd_id);
     $command_phases  = xmlrpc_get_convergence_phases(getParam('gid', null), getParam('pid'));
-    if(substr($command_details['title'], 0, 8) == "Negative"){
+    if(substr($command_details['title'], 0, 8) == "Uninstall"){
         $command_details['title'] = substr($command_details['title'], 9);
     }
     $params["ltitle"]               = $command_details['title'];

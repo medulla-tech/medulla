@@ -80,8 +80,7 @@ if (getParam('editConvergence')) {
     $cmd_id          = xmlrpc_get_convergence_command_id(getParam('gid', null), getParam('pid'));
     $command_details = command_detail($cmd_id);
     $command_phases  = xmlrpc_get_convergence_phases(getParam('gid', null), getParam('pid'));
-
-    $params["ltitle"]               = (substr($command_details['title'], 0,8) != "Uninstall") ? "Uninstall ".$command_details['title'] : $command_details['title'];
+    $params["ltitle"]               = (stripos($command_details['title'], "Uninstall") !== 0) ? "Uninstall " . $command_details['title'] : $command_details['title'];
     $params["title"]                = $params["ltitle"];
     $params["maxbw"]                = $command_details['maxbw'] / 1024;
     $params["copy_mode"]            = $command_details['copy_mode'];
