@@ -63,7 +63,7 @@ $root = $conf["global"]["root"];
             // Avoid prototype <> jQuery conflicts
             jQuery.noConflict();
         </script>
-        <script src="jsframework/lib/prototype.js" type="text/javascript"></script>
+        <!-- <script src="jsframework/lib/prototype.js" type="text/javascript"></script> -->
         <script src="jsframework/src/scriptaculous.js" type="text/javascript"></script>
         <script src="jsframework/common.js" type="text/javascript"></script>
         <?php
