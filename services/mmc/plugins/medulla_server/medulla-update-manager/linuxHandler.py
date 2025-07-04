@@ -1,4 +1,4 @@
-#! /usr/bin/python
+#!/usr/bin/python
 # -*- coding: utf-8; -*-
 #
 # (c) 2011-2012 Mandriva, http://www.mandriva.com/
@@ -18,52 +18,40 @@
 # You should have received a copy of the GNU General Public License
 # along with Pulse 2.  If not, see <http://www.gnu.org/licenses/>.
 
-#linuxHandler.py
 import sys
 import subprocess
 from abc import ABCMeta, abstractmethod
 
-class linuxUpdateHandler(object):
-    __metaclass__ = ABCMeta
-    
+class linuxUpdateHandler(object, metaclass=ABCMeta):
     platform = None
-    
-    def __init__(self, platform):
-        self.platform = platform
-    
+    distro_infos = None
+    def __init__(self, distro_infos):
+        self.distro_id = distro_infos["id"]
+        self.distro_version = distro_infos["version"]
+        self.distro_name = distro_infos["name"]
+
     def runinshell(self, cmd, fatal=True, out_when_error=None):
         process = subprocess.Popen([cmd], stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
         out, err = process.communicate()
-        
-        # Check if errors or not
+        # Décodage ici — une bonne fois pour toutes
+        out = out.decode("utf-8").strip()
+        err = err.decode("utf-8").strip()
         if fatal and process.returncode != 0:
-            if isinstance(out, bytes):
-                out = out.decode("utf-8")
             sys.stdout.write(out)
-            sys.stderr.write(out)
+            sys.stderr.write(err)
             sys.exit(process.returncode)
-            
-        # If out_when_error is defined, return it in case of error
         if out_when_error is not None and process.returncode != 0:
             out = out_when_error
-            
-        out = out.strip()
         return out, err, process.returncode
-    
     @abstractmethod
     def disableNativeUpdates(self):
         pass
-    
     @abstractmethod
     def showUpdateInfo(self, uuid, online=True):
         pass
-    
     @abstractmethod
     def getAvailableUpdates(self, online=True, returnResultList=False):
         pass
-    
     @abstractmethod
     def installUpdates(self, uuid_list):
         pass
-    
-
