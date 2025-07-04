@@ -33,9 +33,11 @@ from pulse2.version import getVersion, getRevision  # pyflakes.ignore
 import logging
 import subprocess
 import json
+import re
 from time import time
 from twisted.internet.threads import deferToThread
 
+logger = logging.getLogger()
 deferred = deferToThread.__get__  # Create an alias for deferred functions
 
 
@@ -248,27 +250,7 @@ class RpcProxy(RpcProxyI):
             [cmd], stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True
         )
         out, err = process.communicate()
-        return out.strip(), err.strip(), process.returncode
-
-    def getProductUpdates(self):
-
-        self.runinshell("""apt -o Dir::Etc::sourcelist="/etc/apt/sources.list.d/medulla.sources" update""")
-        out, err, ec = self.runinshell("apt list --upgradable")
-        new_packages = []
-        if out:
-            if isinstance(out, bytes):
-                out = out.decode("utf-8")
-            out = out.replace("Listing...\n", "")
-            new_packages = [element.split(" [")[0].split(" ") for element in out.split("\n") if element != ""]
-
-        result = []
-        for e in new_packages:
-            result.append({
-                "name": e[0],
-                "title" : e[0].split("/")[0]
-            })
-
-        return result
+        return out.decode('utf-8').strip(), err.decode('utf-8').strip(), process.returncode
 
         # @deferred
         # def _getProductUpdates():
@@ -320,47 +302,53 @@ class RpcProxy(RpcProxyI):
 
         # return available_updates
 
-    def installProductUpdates(self):
-        """
-        This function update packages used for pulse ( pulse, mmc, etc.)
-        """
+    def getProductUpdates(self):
+        updMgrPath = "/usr/share/medulla-update-manager/medulla-update-manager.py"
+        install_command = f"{updMgrPath} --list --json"
 
-        # # Reset update cache
-        # global last_update_check_ts, available_updates
-        # last_update_check_ts = None
-        # available_updates = []
-        updMgrPath = "/usr/share/medulla-update-manager/medulla-update-manager"
-        install_command = "%s -I"
-        # pulse_packages_filter = "|grep -e '^python-mmc' -e '^python-pulse2' -e '^mmc-web' -e '^pulse' -e '^mmc-agent$' -e '^pulse-xmpp-agent$'"
-        # install_cmd = (
-        #     "LANG=C dpkg -l|awk '{print $2}' %s|xargs apt-get -y install"
-        #     % pulse_packages_filter
-        # )
-        # install_cmd = "%s -l|awk '{print $1}' %s|xargs %s -i" % (
-        #     updMgrPath,
-        #     pulse_packages_filter,
-        #     updMgrPath,
-        # )
+        @deferred
+        def _getProductUpdates():
+            stdout, stderr, code = self.runinshell(install_command)
+
+            logger.debug(f"Sortie standard du script enfant (stdout) :\n{stdout}")
+            logger.debug(f"Sortie erreur du script enfant (stderr) :\n{stderr}")
+
+            if code == 0:
+                # Extraction du JSON entre les marqueurs
+                match = re.search(r"===JSON_BEGIN===(.*?)===JSON_END===", stdout, re.DOTALL)
+                if match:
+                    try:
+                        data = json.loads(match.group(1))
+                        return {"success": True, "data": data}
+                    except json.JSONDecodeError as e:
+                        logger.error(f"Erreur lors du décodage JSON : {e}")
+                        return {"success": False, "error": "invalid_json"}
+                else:
+                    logger.warning("Bloc JSON non trouvé dans la sortie")
+                    return {"success": False, "error": "no_json_found"}
+            else:
+                logger.error(f"Échec de la commande (code {code})")
+                return {"success": False, "code": code, "stderr": stderr}
+
+        return _getProductUpdates()
+
+    def installProductUpdates(self):
+        updMgrPath = "/usr/share/medulla-update-manager/medulla-update-manager.py"
+        # install_command = f"{updMgrPath} -I" # option -I pour installer
+        install_command = f"{updMgrPath} --install bash --dry-run"
 
         @deferred
         def _runInstall():
-            # cmd = """apt -o Dir::Etc::sourcelist="/etc/apt/sources.list.d/medulla.sources" update && DEBIAN_FRONTEND=noninteractive UCF_FORCE_CONFFOLD=yes apt -y --force-yes -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" upgrade"""
-            subprocess.call(install_cmd)
+            stdout, stderr, code = self.runinshell(install_command)
 
-            # try:
-            #     os.utime("/tmp/medulla-update-manager", None)
-            # except Exception:
-            #     open("/tmp/medulla-update-manager", "a").close()
+            if code == 0:
+                logger.info("Commande exécutée avec succès")
+                return {"success": True, "output": stdout}
+            else:
+                logger.error(f"Échec de la commande (code {code})")
+                return {"success": False, "code": code, "stderr": stderr}
 
-            # # Running install command with no pipe
-            # subprocess.call(install_cmd, shell=True)
-
-            # os.remove("/tmp/medulla-update-manager", None)
-
-        _runInstall()
-
-        return True
-
+        return _runInstall()
 
 def displayLocalisationBar():
     return xmlrpcCleanup(ComputerLocationManager().displayLocalisationBar())

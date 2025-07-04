@@ -1,4 +1,4 @@
-#! /usr/bin/python3
+#!/usr/bin/env python3
 # -*- coding: utf-8; -*-
 #
 # (c) 2011-2012 Mandriva, http://www.mandriva.com/
@@ -18,34 +18,32 @@
 # You should have received a copy of the GNU General Public License
 # along with Pulse 2.  If not, see <http://www.gnu.org/licenses/>.
 
-# pulse-update-manager.py
+# medulla-update-manager.py
 import json
 import sys
-from platform import platform, version
+from platform import platform
+import distro
 from utils import pprinttable
 from collections import namedtuple
 
 if __name__ == '__main__':
-    
     # Get System Platform
     platform = platform().lower()
-    
-    # Init updateHandler according to system platform
-    if 'linux' in platform:
-        if "debian" in version().lower():
-            platform = "debian"
-            from debianHandler import debianUpdateHandler
-            updateHandler = debianUpdateHandler(platform)
-        else:
-            print('Unsupported operating system')
-            sys.exit(1)
-    elif 'window' in platform:
-        from windowsHandler import windowsUpdateHandler
-        updateHandler = windowsUpdateHandler(platform)
+    distro_infos = {
+       "id": distro.id(),
+        "version": distro.version(),
+        "name": distro.name()
+    }
+
+    # print(f"111 - Voila ma platform {platform}")
+    # print(f"222 - Voila ma distro infos {distro_infos}")
+
+    if 'debian' in distro_infos['id']:
+        from debianHandler import debianUpdateHandler
+        updateHandler = debianUpdateHandler(distro_infos)
     else:
         print('Unsupported operating system')
         sys.exit(1)
-    
     # Disabling native update service
     # ugly try, except, but not really important to continue
     try:
@@ -53,9 +51,7 @@ if __name__ == '__main__':
             print("Cannot disable Windows Update Service")
     except:
         print("Cannot disable Windows Update Service")
-    
     args = sys.argv
-    
     if len(args) < 2:
         print("pulse-update-manager 1.0.1")
         print("Usage : \tpulse-update-manager [options] [update_list]")
@@ -72,39 +68,32 @@ if __name__ == '__main__':
         print("  pulse-update-manager -l --offline --json")
         print("  pulse-update-manager --install 2791765 2741517")
         sys.exit(0)
-    
     command = args[1]
 
-    
+    dry_run = '--dry-run' in args
     # Specific update info
     if command == '-d' or command == '--detail':
         if (len(args) < 3):
-            print ("You must specify update UUID")
+            print("You must specify update UUID")
             sys.exit(0)
         online = not ('--offline' in args)
         updateHandler.showUpdateInfo(args[2], online)
-    
     # Update install switches
     if '-i' in args or '--install' in args:
-        updateHandler.installUpdates(args[1:])
-    # Update install switches
-    if '-I' in args:
-        updateHandler.installUpdates(None)
-    
+        # updateHandler.installUpdates(args[1:])
+        updateHandler.installUpdates(args[1:], dry_run=dry_run)
     # Update listing switches
     if '--list' in args or '-l' in args:
         # Search all available updates
-        print ("Searching for updates ...")
+        print("Searching for updates ...")
         #
         online = not ('--offline' in args)
-    
         (result, result_verbose) = updateHandler.getAvailableUpdates(online)
-    
         if '--json' in args:
             # Printing JSON
-            print ("===JSON_BEGIN===")
-            print (json.dumps(result_verbose))
-            print ("===JSON_END===")
+            print("===JSON_BEGIN===")
+            print(json.dumps(result_verbose))
+            print("===JSON_END===")
         elif '--otherformat' in args:
             pass
         else:
@@ -112,4 +101,3 @@ if __name__ == '__main__':
             Row = namedtuple('Row', result['header'])
             pprinttable([Row(*item) for item in result['content']])
     sys.exit(0)
-

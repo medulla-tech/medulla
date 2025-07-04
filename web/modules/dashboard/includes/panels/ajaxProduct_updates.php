@@ -17,7 +17,7 @@ function update_running(){
 $isRunning = update_running();
 $updates = [];
 $updates = getProductUpdates();
-$update_count = (is_array($updates) == true) ? count($updates) : 0;
+$update_count = (is_array($updates) && isset($updates['data']['content']) && is_array($updates['data']['content'])) ? count($updates['data']['content']) : 0;
 $updates_b64 = base64_encode(json_encode($updates));
 
 if($isRunning){
@@ -35,16 +35,16 @@ else{
     print '<center>';
     if ($update_count == 0){
         $mgr = _T('No updates available.', 'dashboard');
-        echo '<p><strong>'.$mgr.'</strong></p>';
+        echo '<p><strong>'.$mgr.'</strong></p><br>';
     }
     else{
         $mgr = sprintf(_T('%s Updates available.', 'dashboard'), $update_count);
-        echo '<p><strong>'.$mgr.'</strong></p>';
+        echo '<p style="color: green;"><strong>'.$mgr.'</strong></p><br>';
 
         print <<<EOS
         <a title="View updates" class="btnSecondary" href="javascript:;" onclick="PopupWindow(event,'main.php?module=medulla_server&amp;submod=update&amp;action=viewProductUpdates&amp;updates=$updates_b64', 300); return false;">$view_updates_text</a>
             <br/><br/>
-        <a title="Install updates" class="btnSecondary" href="main.php?module=medulla_server&amp;submod=update&amp;action=installProductUpdates">$install_updates_text</a>
+        <a style="color: black;" title="Install updates" class="btnSecondary" href="main.php?module=medulla_server&amp;submod=update&amp;action=installProductUpdates">$install_updates_text</a>
         </center>
 EOS;
     }

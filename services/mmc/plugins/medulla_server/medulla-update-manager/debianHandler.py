@@ -1,4 +1,4 @@
-#! /usr/bin/python
+#!/usr/bin/python
 # -*- coding: utf-8; -*-
 #
 # (c) 2011-2012 Mandriva, http://www.mandriva.com/
@@ -18,181 +18,141 @@
 # You should have received a copy of the GNU General Public License
 # along with Pulse 2.  If not, see <http://www.gnu.org/licenses/>.
 
-# debianHandler.py
 from linuxHandler import linuxUpdateHandler
 
 class debianUpdateHandler(linuxUpdateHandler):
-    
+    def __init__(self, distro_infos):
+        super().__init__(distro_infos)
+        self.distro_infos = distro_infos
     def disableNativeUpdates(self):
         # No need to disable
         return True
-    
     def showUpdateInfo(self, uuid, online=True):
         # uuid is pkgname/version
         pkg_name = uuid.split('/')[0]
         out, err, ec = self.runinshell("apt-cache show %s" % pkg_name)
-        print (out)
-   
+        print(out)
     def getCandidateVersion(self, pkg):
-        cmd = "LANG=C apt-cache policy %s|awk '/Candidate/ { print $2 }'" % pkg
+        cmd = "LANG=C apt-cache policy %s | awk '/Candidate/ { print $2 }'" % pkg
         version, err, ec = self.runinshell(cmd)
+        if isinstance(version, bytes):
+            version = version.strip()
         return version
-        
     def getAvailableUpdates(self, online=True, returnResultList=False):
-
         # Init updates dict
         header = 'uuid,KB_Number,type,is_installed'.split(',')
-        header_verbose = 'uuid,title,KB_Number,type,need_reboot,request_user_input,info_url,is_installed'.split(',')
+        header_verbose = ['package_name', 'description', 'new_version', 'needs_reboot']
         content = []
         content_verbose = []
         result = {'header' : header, 'content' : content}
         result_verbose = {'header' : header_verbose, 'content' : content_verbose}
-    
         # Return OS class (debian based)
         # cat /etc/*-release|grep 'Debian\|debian' to check
-        if 'debian' in self.platform:
+        if 'debian' in self.distro_infos['id']:
             result_verbose['os_class'] = 4 # 4 = DEBIAN, 5 = UBUNTU ...
         elif 'ubuntu' in self.platform:
             result_verbose['os_class'] = 5 # 4 = DEBIAN, 5 = UBUNTU ...
         # TODO: Implement all debian derivatives
-    
         # ===============================================================================
         # Running apt-get update
-        self.runinshell("""apt -o Dir::Etc::sourcelist="/etc/apt/sources.list.d/medulla.sources" update""")
+        self.runinshell("apt-get update")
         # ===============================================================================
-        
         # Running Update searching command
-        # cmd = "LANG=C apt-get -s dist-upgrade | awk '/^Inst/ { print $2 }'"
-        cmd = "apt list --upgradable"
+        cmd = "LANG=C apt-get -s dist-upgrade | awk '/^Inst/ { print $2 }'"
         out, err, ec = self.runinshell(cmd)
 
         if out:
-            if isinstance(out, bytes):
-                out = out.decode("utf-8")
-                out= out.replace("Listing...\n", "")
-            new_packages = [element.split(" [")[0].split(" ") for element in out.split("\n") if element != ""]
+            new_packages = out.strip().split('\n')
         else:
             new_packages = []
-        
         if returnResultList:
             return new_packages
 
-        # # Formatting output dict
-        # for pkg in new_packages:
-            
-        #     # Get repository package version
-        #     version = self.getCandidateVersion(pkg)
-                
-        #     # If no version got, skipping
-        #     if not version:
-        #         continue
-    
-        #     # Setting package infos
-        #     if isinstance(pkg, bytes):
-        #         pkg = pkg.decode("utf-8")
-        #     if isinstance(version, bytes):
-        #         version = version.decode("utf-8")
-        #     update_uuid = pkg + "/" + version
-            
-        #     _item = []
-        #     _item_verbose = []
-    
-        #     # UUID (for debian based distros it is pkg_name/version)
-        #     _item.append(update_uuid)
-        #     _item_verbose.append(update_uuid)
-    
-        #     # Title
-        #     cmd = "apt-cache show %s|awk '/^Description/ {first = $1; $1 = \"\"; print $0;}' | sed 's/^[[:space:]]*//'" % pkg
-        #     title, err, ec = self.runinshell(cmd, False, pkg)
+        # Formatting output dict
+        for pkg in new_packages:
+            # Check if the package candidate version is from the medulla repository
+            policy_cmd = f"apt-cache policy {pkg} | awk '/Candidate:/,/\\*\\*\\*/' | grep -i medulla || true"
+            repo_check_out, _, _ = self.runinshell(policy_cmd)
+            if not repo_check_out.strip():
+                continue
 
-        #     if isinstance(title, bytes):
-        #         title = title.decode("utf-8")
-        #     _item_verbose.append('%s (update %s)' % (title.split('\n')[0], version)) #.encode('utf-8').decode('ascii', 'ignore')
-    
-        #     # Description
-        #     #_item.append(update.Description) #.encode('utf-8').decode('ascii', 'ignore')
-        #     #_item_verbose.append(update.Description) #.encode('utf-8').decode('ascii', 'ignore')
-    
-        #     #_item.append(update.EulaText)
-        #     #_item_verbose.append(update.EulaText)
-    
-        #     # Kb_number (package name)
-        #     _item.append(pkg)
-        #     _item_verbose.append(pkg)
-    
-        #     # Type (type = 1)
-        #     _item.append(1)
-        #     _item_verbose.append(1)
-    
-        #     # Need reboot (doesnt need reboot)
-        #     _item_verbose.append(False)
-    
-        #     # Request user input (False)
-        #     _item_verbose.append(False)
-    
-        #     # Info URL
-        #     #_item.append(fetchW32ComArray(update.MoreInfoUrls)[0])
-        #     cmd = "apt-cache show %s|awk '/^Homepage/ {first = $1; $1 = \"\"; print $0;}' | sed 's/^[[:space:]]*//'" % pkg
-        #     url, err, ec = self.runinshell(cmd, False, "")
-        #     if isinstance(url, bytes):
-        #         url = url.decode("utf-8")
-        #     _item_verbose.append(url.split('\n')[0])
-    
-        #     # Is_installed
-        #     _item.append(False)
-        #     _item_verbose.append(False)
-    
-        #     content.append(_item)
-        #     content_verbose.append(_item_verbose)
+            # Get repository package version
+            version = self.getCandidateVersion(pkg)
 
-        for e in new_packages:
-            tmp = {
-                "name": e[0],
-                "version" : e[1],
-                "title" : e[0].split("/")[0]
-            }
-            content_verbose.append(tmp)
-            content.append(tmp)
+            # If no version got, skipping
+            if not version:
+                continue
+
+            # Setting package infos
+            update_uuid = pkg + "/" + version
+
+            _item = []
+
+            # UUID (for debian based distros it is pkg_name/version)
+            _item.append(update_uuid)
+
+            # Kb_number (package name)
+            _item.append(pkg)
+
+            # Type (type = 1)
+            _item.append(1)
+
+            # Is_installed
+            _item.append(False)
+
+            _item_verbose = []
+
+            # Package name
+            _item_verbose.append(pkg)
+
+            # Short description
+            cmd = "apt-cache show %s|awk '/^Description/ {first = $1; $1 = \"\"; print $0;}' | sed 's/^[[:space:]]*//'" % pkg
+            description, err, ec = self.runinshell(cmd, False, pkg)
+            _item_verbose.append(description.split('\n')[0])
+
+            # Version
+            _item_verbose.append(version)
+
+            # Needs reboot (simple heuristic: kernel/glibc/systemd)
+            needs_reboot = any(key in pkg for key in ['linux-image', 'systemd', 'glibc'])
+            _item_verbose.append(needs_reboot)
+
+            content.append(_item)
+            content_verbose.append(_item_verbose)
 
         return (result, result_verbose)
-    
-    
-    def installUpdates(self, uuid_list):
-        print("installUpdates with %s"%uuid_list)
-        if uuid_list is None:
-            install_cmd = """apt -o Dir::Etc::sourcelist="/etc/apt/sources.list.d/medulla.sources" update && DEBIAN_FRONTEND=noninteractive UCF_FORCE_CONFFOLD=yes apt -y --force-yes -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" upgrade"""
-        else:
-            # Building package list
-            pkg_list = [x.split('/') for x in uuid_list if '/' in x]
-            print (pkg_list)
-            packages_to_install = []
-        
-            for pkg, version in pkg_list:
-                
-                # Checking if package version (in repo) is the same
-                if self.getCandidateVersion(pkg) != version:
-                    print ("Skipping %s, candidate version doesn't match" % pkg)
-                    continue
-                
-                # Adding update to updatesToInstall list
-                print ('Adding "%s/%s" to install list' % (pkg, version))
-                packages_to_install.append(pkg)
-        
-            if not packages_to_install:
-                print ("No updates to install, leaving.")
-                return
-            
-            print( "Installing updates ...")
-            
-            # Running apt-get install
-            install_cmd = "DEBIAN_FRONTEND=noninteractive UCF_FORCE_CONFFOLD=yes apt-get -y --force-yes -o Dpkg::Options::=\"--force-confdef\" -o Dpkg::Options::=\"--force-confold\" install %s" % ' '.join(packages_to_install)
-        print (install_cmd)
 
+    def installUpdates(self, uuid_list, dry_run=False):
+        # Building package list
+        pkg_list = [x.split('/') for x in uuid_list if '/' in x]
+        print(pkg_list)
+        packages_to_install = []
+
+        for pkg, version in pkg_list:
+            # Checking if package version (in repo) is the same
+            if self.getCandidateVersion(pkg) != version:
+                print("Skipping %s, candidate version doesn't match" % pkg)
+                continue
+
+            # Adding update to updatesToInstall list
+            print('Adding "%s/%s" to install list' % (pkg, version))
+            packages_to_install.append(pkg)
+
+        if not packages_to_install:
+            print("No updates to install, leaving.")
+            return
+
+        if dry_run:
+            print("Dry run enabled - skipping actual installation.")
+            print("Simulated command: apt-get install %s" % ' '.join(packages_to_install))
+            return
+
+        print("Installing updates ...")
+
+        # Running apt-get install
+        install_cmd = "DEBIAN_FRONTEND=noninteractive UCF_FORCE_CONFFOLD=yes apt-get -y --force-yes -o Dpkg::Options::=\"--force-confdef\" -o Dpkg::Options::=\"--force-confold\" install %s" % ' '.join(packages_to_install)
+        print(install_cmd)
         out, err, ec = self.runinshell(install_cmd)
-        print("=== RESULT FOR INSTALL ===")
-        print (out)
-        print (err)
-        print (ec)
+        print(out)
 
         return 0
-
