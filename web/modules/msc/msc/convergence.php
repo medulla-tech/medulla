@@ -31,8 +31,9 @@ require('modules/msc/includes/mscoptions_xmlrpc.php');
 require('modules/msc/includes/launch_functions.php');
 require_once('modules/dyngroup/includes/dyngroup.php');
 
-
-
+function reset_title($title) {
+    return preg_replace('/^Uninstall\s+/i', '', $title);
+}
 
 $from = getParam('from');
 $path = explode('|', $from);
@@ -50,16 +51,18 @@ if (getParam('gid')) {
     $cible = $group->getName();
 }
 
-// polarity is used to know if the current convergence is set as positive or negative convergence
-$polarity = (isset($_GET['polarity'])) ? $_GET["polarity"] : "";
-// switch polarity is used to know if we need to change the convergence polarity.
-// This is important because of fixed params such as deploy and done groups bool or has_login_command title or params
+
+$polarity = 'install';
 $switchPolarity = false;
-if (
-    ($polarity === 'uninstall' && $action === 'convergence') ||
-    ($polarity === 'positive' && $action === 'convergenceuninstall')
-) {
-    $switchPolarity = true;
+
+// If we publish and the title contains 'uninstall' → we are in rocking
+if (getParam('editConvergence')) {
+    $cmd_id = xmlrpc_get_convergence_command_id(getParam('gid', null), getParam('pid'));
+    $command_details = command_detail($cmd_id);
+
+    if (stripos($command_details['title'], 'Uninstall') === 0) {
+        $switchPolarity = true;
+    }
 }
 
 $params = array(
@@ -75,7 +78,7 @@ $params = array(
     "create_directory"       => 'on',
     "next_connection_delay"  => web_def_delay(),
     "max_connection_attempt" => web_def_attempts(),
-    "polarity"               => getParam('polarity', ""),
+    "polarity"               => $polarity,
     "switch_polarity"        => $switchPolarity,
     "parameterspacquage"     => "",
 );
@@ -85,13 +88,10 @@ if (getParam('editConvergence')) {
     $ServerAPI = new ServerAPI();
     $ServerAPI->fromURI(getParam('papi'));
 
-    $cmd_id          = xmlrpc_get_convergence_command_id(getParam('gid', null), getParam('pid'));
-    $command_details = command_detail($cmd_id);
-    $command_phases  = xmlrpc_get_convergence_phases(getParam('gid', null), getParam('pid'));
-    if(substr($command_details['title'], 0, 8) == "Uninstall"){
-        $command_details['title'] = substr($command_details['title'], 9);
-    }
-    $params["ltitle"]               = $command_details['title'];
+    $cmd_id                         = xmlrpc_get_convergence_command_id(getParam('gid', null), getParam('pid'));
+    $command_details                = command_detail($cmd_id);
+    $command_phases                 = xmlrpc_get_convergence_phases(getParam('gid', null), getParam('pid'));
+    $params["ltitle"]               = reset_title($command_details['title']);
     $params["maxbw"]                = $command_details['maxbw'] / 1024;
     $params["copy_mode"]            = $command_details['copy_mode'];
     $params["deployment_intervals"] = $command_details['deployment_intervals'];
@@ -120,7 +120,7 @@ if (getParam('editConvergence')) {
     }
 }
 else {
-    $params["ltitle"]               = _T('Convergence on ') . getParam('name');
+    $params["ltitle"]               = reset_title(_T('Convergence on ') . getParam('name'));
     $params["start_script"]         = 'on';
     $params["clean_on_success"]     = 'on';
     $params["do_reboot"]            = '';

@@ -30,6 +30,10 @@ require('modules/msc/includes/mscoptions_xmlrpc.php');
 require('modules/msc/includes/launch_functions.php');
 require_once('modules/dyngroup/includes/dyngroup.php');
 
+function prefix_uninstall($title) {
+    return (stripos($title, 'Uninstall') === 0) ? $title : "Uninstall " . $title;
+}
+
 $from = getParam('from');
 $path = explode('|', $from);
 $module  = isset($path[0]) ? $path[0] : '';
@@ -46,12 +50,17 @@ if (getParam('gid')) {
     $cible = $group->getName();
 }
 
-$polarity = getParam('polarity', "");
-$action = getParam('action');
-
+$polarity = 'uninstall';
 $switchPolarity = false;
-if($polarity != '' && ($polarity == 'uninstall' && $action == 'convergence') || ($polarity == 'positive' && $action == 'convergenceuninstall')){
-    $switchPolarity = true;
+
+if (getParam('editConvergence')) {
+    $cmd_id = xmlrpc_get_convergence_command_id(getParam('gid', null), getParam('pid'));
+    $command_details = command_detail($cmd_id);
+
+    // If there is not "uninstall" → we switch from an install
+    if (stripos($command_details['title'], 'Uninstall') !== 0) {
+        $switchPolarity = true;
+    }
 }
 
 $params = array(
@@ -77,10 +86,10 @@ if (getParam('editConvergence')) {
     $ServerAPI = new ServerAPI();
     $ServerAPI->fromURI(getParam('papi'));
 
-    $cmd_id          = xmlrpc_get_convergence_command_id(getParam('gid', null), getParam('pid'));
-    $command_details = command_detail($cmd_id);
-    $command_phases  = xmlrpc_get_convergence_phases(getParam('gid', null), getParam('pid'));
-    $params["ltitle"]               = (stripos($command_details['title'], "Uninstall") !== 0) ? "Uninstall " . $command_details['title'] : $command_details['title'];
+    $cmd_id                         = xmlrpc_get_convergence_command_id(getParam('gid', null), getParam('pid'));
+    $command_details                = command_detail($cmd_id);
+    $command_phases                 = xmlrpc_get_convergence_phases(getParam('gid', null), getParam('pid'));
+    $params["ltitle"]               = prefix_uninstall($command_details['title']);
     $params["title"]                = $params["ltitle"];
     $params["maxbw"]                = $command_details['maxbw'] / 1024;
     $params["copy_mode"]            = $command_details['copy_mode'];
@@ -109,7 +118,7 @@ if (getParam('editConvergence')) {
     }
 }
 else {
-    $params["ltitle"]               = _T('Uninstall Convergence on ') . getParam('name');
+    $params["ltitle"]               = prefix_uninstall(_T('Uninstall Convergence on') . getParam('name'));
     $params["start_script"]         = 'on';
     $params["clean_on_success"]     = 'on';
     $params["do_reboot"]            = '';
