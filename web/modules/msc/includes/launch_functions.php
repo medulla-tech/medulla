@@ -299,6 +299,7 @@ function start_a_command($proxy = array(), $activate = true) {
                     $syncthing = (isset($post['syncthing']) && $post['syncthing']) ? 1: 0;
                     if(isset($_GET['polarity'], $_GET['switch_polarity']) ){
                         if($_GET['switch_polarity'] == true){
+                            $params['ltitle'] = $_GET['ltitle'];
                             // reverse the deploy and done group bool
                             $deployGroup = new Group($deploy_group_id, true);
                             $doneGroup = new Group($done_group_id, true);
@@ -314,6 +315,8 @@ function start_a_command($proxy = array(), $activate = true) {
 
                     xmlrpc_update_login_command($_SESSION['login'], $cmd_id, $deploy_group_id ,$countmachine, '', '', $parameterspacquage, 0, 0, 0, $syncthing, $params);
                     xmlrpc_update_msc_command($_SESSION['login'], $cmd_id, $limit_rate_ko, $params);
+                    // We relaunch the deployment immediately after having published to be able to see it in the audit page
+                    xmlrpc_convergence_reschedule($cmd_id);
                 }
                 // If this convergence is not active, expire this command
                 if (!$active && $_POST['bconfirm'] != 'Reconfigurer') {
@@ -334,7 +337,7 @@ function start_a_command($proxy = array(), $activate = true) {
                 //$package = to_package(getPackageDetails($p_api, $pid));
                 $package = to_package(xmpp_getPackageDetail($pid));
 
-                if(isset($_GET['polarity']) && $_GET['polarity'] == ''){
+                if(isset($_GET['polarity']) && $_GET['polarity'] == 'install'){
                     $convergence_groups = $group->createConvergenceGroups($package);
                 }
                 else{

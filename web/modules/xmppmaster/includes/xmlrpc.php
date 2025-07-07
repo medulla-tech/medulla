@@ -469,7 +469,7 @@ function xmlrpc_getdeploybyteamuserrecent_for_convergence(
     $min = null,
     $max = null,
     $filt = null,
-    $typedeploy = "command"
+    $typedeploy = "convergence"
 ) {
     return xmlCall("xmppmaster.get_deploy_by_team_member_for_convergence", array($login,
                                                                 $state,
@@ -548,7 +548,7 @@ function xmlrpc_get_deploy_convergence(
     $min = null,
     $max = null,
     $filt = null,
-    $typedeploy = "command"
+    $typedeploy = "convergence"
 ) {
     return xmlCall("xmppmaster.get_deploy_convergence", array(
         $login,
