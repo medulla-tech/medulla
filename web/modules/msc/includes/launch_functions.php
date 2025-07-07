@@ -259,6 +259,9 @@ function start_a_command($proxy = array(), $activate = true) {
         }
 
         if (quick_get('convergence')) {
+            if (isset($params['ltitle']) && !str_contains($params['ltitle'], '-@convergence@-')) {
+                $params['ltitle'] .= ' -@convergence@-';
+            }
             // Recovery of the current state of convergence
             $active = ($_POST['active'] == 'on') ? 1 : 0;
             $cmd_type = 2; // Convergence command type
