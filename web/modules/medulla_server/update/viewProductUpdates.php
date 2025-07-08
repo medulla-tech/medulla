@@ -1,82 +1,90 @@
 <style>
-#__popup_container {
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    max-width: 100%;
-    overflow-x: auto;
-}
+    p.listinfos,
+    table.listinfos {
+        width: 100% !important;
+    }
 
-#popup {
-  max-height: 90vh;
-  max-width: 90vw;
-  min-width: 45vw;
-  overflow: auto;
-  padding: 10px;
-  box-sizing: border-box;
-}
+    .listinfos th,
+    .listinfos td {
+        padding: 8px !important;
+        vertical-align: middle;
+    }
 
-table.listinfos {
-    margin: 0 auto;
-    width: 100%;
-    margin-bottom: 5px;
-}
+    .listinfos thead th:first-child span {
+        padding-left: 0 !important;
+    }
 
-table.listinfos td,
-table.listinfos th {
-    white-space: normal;
-    word-break: break-word;
-}
+    .listinfos th:nth-child(4),
+    .listinfos td:nth-child(4) {
+        text-align: center !important;
+        width: 120px;
+    }
 
-table.listinfos span {
-    padding-left: 0 !important;
-}
-
-table.listinfos tbody td:nth-child(4) {
-    text-align: center;
-}
+    .listinfos thead th:nth-child(4) span {
+        display: inline-block;
+        width: 100%;
+        text-align: center;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+    .listinfos thead tr td:first-child span {
+        padding-left: 0 !important;
+        margin: 0 !important;
+        display: inline-block;
+        text-align: left;
+    }
 </style>
 <?php
-
 require_once("includes/xmlrpc.inc.php");
 require_once("modules/medulla_server/includes/xmlrpc.inc.php");
 
-print "<h1>"._T('Available updates','update')."</h1>";
-
-$updates_raw = (isset($_GET['updates'])) ? json_decode(base64_decode($_GET['updates']), true) : getProductUpdates();
-
-if (!isset($updates_raw['data']['content']) || !isset($updates_raw['data']['header'])) {
-    echo "<p style='color:red; font-weight:bold'>"._T('No updates data available', 'update')."</p>";
+$updates_raw = (isset($_GET['updates'])) ? json_decode(base64_decode($_GET['updates'])) : getProductUpdates();
+?>
+<h1><?= _T('Available updates', 'update') ?></h1>
+<?php
+if (
+    !isset($updates_raw->data->header) ||
+    !isset($updates_raw->data->content) ||
+    !is_array($updates_raw->data->header) ||
+    !is_array($updates_raw->data->content)
+) {
+    echo "<p style='color:red; font-weight:bold'>" . _T('No updates data available', 'update') . "</p>";
     return;
 }
 
-$header = $updates_raw['data']['header'];
-$content = $updates_raw['data']['content'];
+$headers = $updates_raw->data->header;
+$rows = $updates_raw->data->content;
 
-$pkg_names = [];
-$description = [];
-$versions = [];
-$reboots = [];
-$urls = [];
-
-foreach ($content as $line) {
-    $pkg_names[] = $line[1];
-    $description[] = $line[0];
-    $versions[] = $line[2];
-    $reboots[] = $line[4] ? '<span style="color:red">Yes</span>' : 'No';
-    $urls[] = $line[6] ? htmlspecialchars($line[6]) : '-';
+$columns = array_fill_keys($headers, []);
+foreach ($rows as $row) {
+    foreach ($headers as $i => $col) {
+        $columns[$col][] = $row[$i] ?? '';
+    }
 }
 
-$n = new OptimizedListInfos($pkg_names, _T("Package name", "update"));
-$n->setCssClass("package");
+$n = new OptimizedListInfos($columns['package'], _T("Package name", "update"));
 $n->disableFirstColumnActionLink();
-$n->addExtraInfo($description, _T("Description", "update"));
-$n->addExtraInfo($versions, _T("Version", "update"));
-$n->addExtraInfo($reboots, _T("Reboot required", "update"));
+$n->setCssClass("updates-table");
 
-$n->setItemCount(count($pkg_names));
+if (isset($columns['description'])) {
+    $n->addExtraInfo($columns['description'], _T("Description", "update"));
+}
 
-$nav = new AjaxNavBar(count($pkg_names), "");
-$n->setNavBar($nav);
+if (isset($columns['version'])) {
+    $n->addExtraInfo($columns['version'], _T("Version", "update"));
+}
+
+if (isset($columns['needs_reboot'])) {
+    $n->addExtraInfo(
+        array_map(fn($val) => $val ? _("Yes") : _("No"), $columns['needs_reboot']),
+        _T("Reboot", "update")
+    );
+}
+
+$n->setItemCount(count($columns['package']));
+$n->setNavBar(new AjaxNavBar($n->getItemCount(), ""));
+$n->start = 0;
+$n->end = 50;
 
 $n->display();
+?>

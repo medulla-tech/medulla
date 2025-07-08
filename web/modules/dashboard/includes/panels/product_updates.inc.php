@@ -18,6 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ * product_updates.php
  */
 
 include_once("modules/dashboard/includes/panel.class.php");
@@ -32,54 +33,50 @@ $options = array(
 );
 
 class UpdatePanel extends Panel {
-
     function display_content() {
-        echo '<div class="product_updates_wrapper"></div>';
-//         if ($updates === FALSE){
-//             // Update error occured
-//             $msg = _T('An error occured while fetching updates', "dashboard");
-//             echo '<center style="color:red;font-weight:bold">'.$msg.'</center>';
-//         }
-//         else{
-//             $view_updates_text = _T('View updates', 'dashboard');
-//             $install_updates_text = _T('Install updates', 'dashboard');
-//             print '<center>';
-//             if ($update_count == 0){
-//                 $mgr = _T('No updates available.', 'dashboard');
-//                 echo '<p><strong>'.$mgr.'</strong></p>';
-//             }
-//             else{
-//                 $mgr = _T('Updates available.', 'dashboard');
-//                 echo '<p><strong>'.$mgr.'</strong></p>';
+        echo <<<HTML
+        <div id="loader" class="custom-loader-wrapper">
+            <div class="spinner"></div>
+                <p style="margin-top: 1em;">Chargement des mises à jour...</p>
+            </div>
+            <div class="product_updates_wrapper"></div>
+        <style>
+        .custom-loader-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100px;
+            font-weight: bold;
+            color: #444;
+        }
 
-//                 print <<<EOS
-//                 <a title="View updates" class="btnSecondary"
-//                     href="javascript:;"
-//                     onclick="PopupWindow(event,'main.php?module=medulla_server&amp;submod=update&amp;action=viewProductUpdates', 300); return false;"
-//                     >$view_updates_text</a>
-//                     <br/><br/>
-//                     <a title="Install updates" class="btnSecondary"
-//                     href="main.php?module=medulla_server&amp;submod=update&amp;action=installProductUpdates"
-//                     >$install_updates_text</a>
-//                 </center>
-// EOS;
-//             }
-// 	    }
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        </style>
+        <script>
+        jQuery(".product_updates_wrapper").load("/mmc/modules/dashboard/includes/panels/ajaxProduct_updates.php", function() {
+            document.getElementById("loader").style.display = "none";
+        });
+        </script>
+HTML;
     }
 
     function display_licence($type, $title) {
         if ($this->data[$type] > 0) {
-            if ($this->data['too_much_' . $type])
-                echo '<p class="alert alert-error">';
-            else
-                echo '<p class="alert alert-success">';
-            echo $title . ' <strong>' . $this->data['installed_' . $type] . ' / ' . $this->data[$type];
-            echo '</strong></p>';
+            echo $title . ' <strong>' . $this->data['installed_' . $type] . ' / ' . $this->data[$type] . '</strong></p>';
         }
     }
 }
-
 ?>
-<script>
-jQuery(".product_updates_wrapper").load("/mmc/modules/dashboard/includes/panels/ajaxProduct_updates.php");
-</script>
