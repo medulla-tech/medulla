@@ -453,17 +453,18 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
             );
         }
         // parameter avanced spooling priority
-        $f->add(
+        if (!isset($_GET['polarity']) || $_GET['polarity'] !== 'uninstall') {
+            $f->add(
                 new TrFormElement(
                     _T('Spooling priority', 'msc'), new CheckboxTpl('Spoolingselect'),
                     array('trid' => 'tr_spooling')
                 ), array("value" => quick_get('Spoolingselect', True) == 'on' ? 'checked' : '')
             );
 
-                $rb = new RadioTpl("spooling");
-                $rb->setChoices(array(_T('high priority', 'msc'), _T('ordinary priority', 'msc')));
-                $rb->setvalues(array('high', 'ordinary'));
-                $rb->setSelected('high');
+            $rb = new RadioTpl("spooling");
+            $rb->setChoices(array(_T('high priority', 'msc'), _T('ordinary priority', 'msc')));
+            $rb->setvalues(array('high', 'ordinary'));
+            $rb->setSelected('high');
             $f->add(
                 new TrFormElement(
                     _T('Install Spooling', 'msc'), $rb,array("trid"=>"choixspooling")
@@ -471,11 +472,12 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
             );
             // parameter syncthing deployment for groups ONLY
             if($_GET['action'] == 'groupmsctabs')
-              $f->add(
-                      new TrFormElement(
-                          _T('Syncthing deployment', 'msc'), new CheckboxTpl('syncthing')
-                      ), array("value" => quick_get('syncthing', True) == 'on' ? 'checked' : '')
-                  );
+            $f->add(
+                new TrFormElement(
+                    _T('Syncthing deployment', 'msc'), new CheckboxTpl('syncthing')
+                    ), array("value" => quick_get('syncthing', True) == 'on' ? 'checked' : '')
+            );
+        }
         if (isExpertMode()){
             if( isset($gid)){
                 $nbmachineforexec = array(
