@@ -17,6 +17,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with Pulse 2.  If not, see <http://www.gnu.org/licenses/>.
+# debianHandler.py
 
 from linuxHandler import linuxUpdateHandler
 
@@ -41,7 +42,7 @@ class debianUpdateHandler(linuxUpdateHandler):
     def getAvailableUpdates(self, online=True, returnResultList=False):
         # Init updates dict
         header = 'uuid,KB_Number,type,is_installed'.split(',')
-        header_verbose = ['package_name', 'description', 'new_version', 'needs_reboot']
+        header_verbose = ['package', 'description', 'version', 'needs_reboot']
         content = []
         content_verbose = []
         result = {'header' : header, 'content' : content}

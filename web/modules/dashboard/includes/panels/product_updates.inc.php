@@ -18,6 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ * product_updates.php
  */
 
 include_once("modules/dashboard/includes/panel.class.php");
@@ -32,7 +33,6 @@ $options = array(
 );
 
 class UpdatePanel extends Panel {
-
     function display_content() {
         echo <<<HTML
         <center>
