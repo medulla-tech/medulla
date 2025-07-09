@@ -8,19 +8,20 @@ require_once("../../../../includes/i18n.inc.php");
 require_once("../../../../modules/medulla_server/includes/xmlrpc.inc.php");
 
 // Simulates data
-// $updates = [
-//     'success' => true,
-//     'data' => [
-//         'header' => ['package', 'description', 'version', 'needs_reboot'],
-//         'content' => [
-//             ['vim', 'Vim text editor', '9.0.1234-1', false],
-//             ['curl', 'Command line tool for transferring data', '7.88.1-1', false],
-//             ['bash', 'GNU Bourne Again SHell', '5.1.16-2', true]
-//         ]
-//     ]
-// ];
+$updates = [
+    'success' => true,
+    'data' => [
+        'header' => ['package', 'description', 'version', 'needs_reboot'],
+        'content' => [
+            ['vim', 'Vim text editor', '9.0.1234-1', false],
+            ['curl', 'Command line tool for transferring data', '7.88.1-1', false],
+            ['bash', 'GNU Bourne Again SHell', '5.1.16-2', true]
+        ]
+    ]
+];
 
-$updates = getProductUpdates();
+// $updates = getProductUpdates();
+
 $update_count = count($updates['data']['content']);
 $updates_b64 = base64_encode(json_encode($updates));
 
@@ -99,6 +100,10 @@ echo '</center>';
 }
 </style>
 
+<?php
+$installing_updates_title = _T('Installing updates in progress…', 'dashboard');
+$installing_updates_msg = _T('Please stay on this page until the update process is finished.<br>You will be notified once the process is done.', 'dashboard');
+?>
 <script>
 jQuery(function($){
     $(document).on('click', '.btnInstallUpdates', function(e){
@@ -106,10 +111,8 @@ jQuery(function($){
         $('#updates_zone').html(
             '<div class="custom-loader-wrapper">' +
                 '<div class="custom-spinner"></div>' +
-                '<div class="custom-loader-title">Installation of current updates ...</div>' +
-                '<div class="custom-loader-msg">' +
-                  'Thank you for staying on this page until the end of the update process.<br>You will be notified once finished.' +
-                '</div>' +
+                '<div class="custom-loader-title"><?= addslashes($installing_updates_title) ?></div>' +
+                '<div class="custom-loader-msg"><?= addslashes($installing_updates_msg) ?></div>' +
             '</div>'
         );
         setTimeout(function() {
