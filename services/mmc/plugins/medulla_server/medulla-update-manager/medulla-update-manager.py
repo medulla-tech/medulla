@@ -34,8 +34,6 @@ if __name__ == '__main__':
         "name": distro.name()
     }
 
-    # print(f"111 - Voila ma platform {platform}")
-    # print(f"222 - Voila ma distro infos {distro_infos}")
 
     if 'debian' in distro_infos['id']:
         from debianHandler import debianUpdateHandler
@@ -69,7 +67,6 @@ if __name__ == '__main__':
         sys.exit(0)
     command = args[1]
 
-    dry_run = '--dry-run' in args
     # Specific update info
     if command == '-d' or command == '--detail':
         if (len(args) < 3):
@@ -79,8 +76,15 @@ if __name__ == '__main__':
         updateHandler.showUpdateInfo(args[2], online)
     # Update install switches
     if '-i' in args or '--install' in args:
-        # updateHandler.installUpdates(args[1:])
-        updateHandler.installUpdates(args[1:], dry_run=dry_run)
+        # TO DO - Here we are waiting for a list of packets in argument, ex: -install pkg1/version1 pkg2/version2 ...
+        updateHandler.installUpdates(args[2:])  # args[1] == --install
+    elif '-I' in args:
+        # We're going to get the updates available
+        (result, result_verbose) = updateHandler.getAvailableUpdates(True)
+        # We make the list of Uuids from Result ['Content']
+        uuid_list = [item[0] for item in result['content']]
+        updateHandler.installUpdates(uuid_list)
+
     # Update listing switches
     if '--list' in args or '-l' in args:
         # Search all available updates

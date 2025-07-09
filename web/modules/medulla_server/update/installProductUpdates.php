@@ -21,33 +21,19 @@
  * You should have received a copy of the GNU General Public License
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ * installProductUpdates.php
  */
-?>
-<?php
-//ici jfk
-
-
 require_once("modules/medulla_server/includes/xmlrpc.inc.php");
-require_once("modules/medulla_server/includes/html.inc.php");
-require_once("graph/navbar.inc.php");
+$return = installProductUpdates();
 
 
-installProductUpdates();
-
-// ============================================================
-
-$MMCApp = & MMCApp::getInstance();
-
-$p = new PageGenerator(_T("Installing updates ...", 'update'));
-$p->display();
-
+if (is_array($return) && isset($return['success']) && $return['success'] === true) {
+    new NotifyWidgetSuccess(_T('Successful updated updates!'));
+    header("Location: " . urlStrRedirect("base/main/default"));
+    exit;
+} else {
+    new NotifyWidgetFailure("Error during installation.");
+    header("Location: " . urlStrRedirect("base/main/default"));
+    exit;
+}
 ?>
-<div id="update_status"></div>
-<script type="text/javascript">
-    var update_status = function(){
-	jQuery('#update_status').load('<?php print urlStrRedirect("medulla_server/update/ajaxInstallProductUpdates"); ?>');
-	setTimeout(update_status, 500);
-    };
-    update_status();
-
-</script>

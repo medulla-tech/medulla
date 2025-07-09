@@ -252,60 +252,8 @@ class RpcProxy(RpcProxyI):
         out, err = process.communicate()
         return out.decode('utf-8').strip(), err.decode('utf-8').strip(), process.returncode
 
-        # @deferred
-        # def _getProductUpdates():
-
-
-        #     updMgrPath = "/usr/share/medulla-update-manager/medulla-update-manager"
-
-        #     if not os.path.exists(updMgrPath):
-        #         return False
-
-        #     global last_update_check_ts, available_updates
-        #     o, e, ec = self.runinshell("%s -l --json" % updMgrPath)
-
-        #     o = o.decode("utf-8")
-        #     # Check json part existence
-        #     if not "===JSON_BEGIN===" in o or not "===JSON_END===" in o:
-        #         available_updates = False
-
-        #     # Get json output
-        #     json_output = (
-        #         o.split("===JSON_BEGIN===")[1].split("===JSON_END===")[0].strip()
-        #     )
-        #     packages = json.loads(json_output)["content"]
-        #     result = []
-
-        #     for pkg in packages:
-        #         pulse_filters = (
-        #             "python-mmc",
-        #             "python-pulse2",
-        #             "mmc-web",
-        #             "pulse",
-        #             "mmc-agent",
-        #         )
-
-        #         # Skip non-Pulse packages
-        #         if not pkg[2].startswith(pulse_filters):
-        #             continue
-
-        #         result.append({"name": pkg[2], "title": pkg[1]})
-
-        #     # Caching last result
-        #     available_updates = result
-        #     last_update_check_ts = time()
-
-        # global last_update_check_ts, available_updates
-        # # If last checking is least than 4 hours, return cached value
-        # if not last_update_check_ts or (time() - last_update_check_ts) > 14400:
-        #     _getProductUpdates()
-
-        # return available_updates
 
     def getProductUpdates(self):
-        # import time
-        # time.sleep(10)
-        # return get_fake_product_updates()
         mup_path = "/usr/share/medulla-update-manager/medulla-update-manager.py"
         install_command = f"{mup_path} --list --json"
 
@@ -317,7 +265,7 @@ class RpcProxy(RpcProxyI):
             logger.debug(f"Sortie erreur du script enfant (stderr) :\n{stderr}")
 
             if code == 0:
-                # Extraction du JSON entre les marqueurs
+                # JSON extraction between markers
                 match = re.search(r"===JSON_BEGIN===(.*?)===JSON_END===", stdout, re.DOTALL)
                 if match:
                     try:
@@ -337,8 +285,7 @@ class RpcProxy(RpcProxyI):
 
     def installProductUpdates(self):
         mup_path = "/usr/share/medulla-update-manager/medulla-update-manager.py"
-        # install_command = f"{updMgrPath} -I" # option -I pour installer
-        install_command = f"{mup_path} --install bash --dry-run"
+        install_command = f"{mup_path} -I" # Option -i to install everything
 
         @deferred
         def _runInstall():
@@ -353,18 +300,6 @@ class RpcProxy(RpcProxyI):
 
         return _runInstall()
 
-def get_fake_product_updates():
-    return {
-        "success": True,
-        "data": {
-            "header": ["package", "description", "version", "needs_reboot"],
-            "content": [
-                ["vim", "Vim text editor", "9.0.1234-1", False],
-                ["curl", "Command line tool for transferring data", "7.88.1-1", False],
-                ["bash", "GNU Bourne Again SHell", "5.1.16-2", True]
-            ]
-        }
-    }
 
 def displayLocalisationBar():
     return xmlrpcCleanup(ComputerLocationManager().displayLocalisationBar())
