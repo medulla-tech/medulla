@@ -1,10 +1,13 @@
 <?php
+/**
+ * ajaxproduct_updates.php
+ */
 require_once("../../../../includes/session.inc.php");
 require_once("../../../../includes/xmlrpc.inc.php");
 require_once("../../../../includes/i18n.inc.php");
 require_once("../../../../modules/medulla_server/includes/xmlrpc.inc.php");
 
-// Simulation de données
+// Simulates data
 // $updates = [
 //     'success' => true,
 //     'data' => [
@@ -34,8 +37,8 @@ if ($update_count === 0) {
 
     echo <<<EOS
     <a title="View updates" class="btnSecondary"
-       href="javascript:;"
-       onclick="PopupWindow(event,'main.php?module=medulla_server&amp;submod=update&amp;action=viewProductUpdates&amp;updates=$updates_b64', 300); return false;">
+    href="javascript:;"
+    onclick="PopupWindow(event,'main.php?module=medulla_server&amp;submod=update&amp;action=viewProductUpdates&amp;updates=$updates_b64&amp;start=0&amp;end=9&amp;filter=none', 300); return false;">
         $view_updates_text
     </a><br/><br/>
     <a style="color: black;" title="Install updates" class="btnSecondary"

@@ -303,8 +303,11 @@ class RpcProxy(RpcProxyI):
         # return available_updates
 
     def getProductUpdates(self):
-        updMgrPath = "/usr/share/medulla-update-manager/medulla-update-manager.py"
-        install_command = f"{updMgrPath} --list --json"
+        # import time
+        # time.sleep(10)
+        # return get_fake_product_updates()
+        mup_path = "/usr/share/medulla-update-manager/medulla-update-manager.py"
+        install_command = f"{mup_path} --list --json"
 
         @deferred
         def _getProductUpdates():
@@ -333,9 +336,9 @@ class RpcProxy(RpcProxyI):
         return _getProductUpdates()
 
     def installProductUpdates(self):
-        updMgrPath = "/usr/share/medulla-update-manager/medulla-update-manager.py"
+        mup_path = "/usr/share/medulla-update-manager/medulla-update-manager.py"
         # install_command = f"{updMgrPath} -I" # option -I pour installer
-        install_command = f"{updMgrPath} --install bash --dry-run"
+        install_command = f"{mup_path} --install bash --dry-run"
 
         @deferred
         def _runInstall():
@@ -349,6 +352,19 @@ class RpcProxy(RpcProxyI):
                 return {"success": False, "code": code, "stderr": stderr}
 
         return _runInstall()
+
+def get_fake_product_updates():
+    return {
+        "success": True,
+        "data": {
+            "header": ["package", "description", "version", "needs_reboot"],
+            "content": [
+                ["vim", "Vim text editor", "9.0.1234-1", False],
+                ["curl", "Command line tool for transferring data", "7.88.1-1", False],
+                ["bash", "GNU Bourne Again SHell", "5.1.16-2", True]
+            ]
+        }
+    }
 
 def displayLocalisationBar():
     return xmlrpcCleanup(ComputerLocationManager().displayLocalisationBar())
