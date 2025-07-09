@@ -4,10 +4,20 @@ require_once("../../../../includes/xmlrpc.inc.php");
 require_once("../../../../includes/i18n.inc.php");
 require_once("../../../../modules/medulla_server/includes/xmlrpc.inc.php");
 
+// Simulates data
+// $updates = [
+//     'success' => true,
+//     'data' => [
+//         'header' => ['package', 'description', 'version', 'needs_reboot'],
+//         'content' => [
+//             ['vim', 'Vim text editor', '9.0.1234-1', false],
+//             ['curl', 'Command line tool for transferring data', '7.88.1-1', false],
+//             ['bash', 'GNU Bourne Again SHell', '5.1.16-2', true]
+//         ]
+//     ]
+// ];
 
-function update_running(){
-    $output = NULL;
-    $return = NULL;
+$updates = getProductUpdates();
 
     $command = "ps aux|grep 'medulla-update-manager -I'|grep -v 'grep'";
     exec($command, $output, $return);
