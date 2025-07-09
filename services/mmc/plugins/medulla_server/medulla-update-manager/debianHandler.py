@@ -122,10 +122,9 @@ class debianUpdateHandler(linuxUpdateHandler):
 
         return (result, result_verbose)
 
-    def installUpdates(self, uuid_list, dry_run=False):
+    def installUpdates(self, uuid_list):
         # Building package list
         pkg_list = [x.split('/') for x in uuid_list if '/' in x]
-        print(pkg_list)
         packages_to_install = []
 
         for pkg, version in pkg_list:
@@ -140,11 +139,6 @@ class debianUpdateHandler(linuxUpdateHandler):
 
         if not packages_to_install:
             print("No updates to install, leaving.")
-            return
-
-        if dry_run:
-            print("Dry run enabled - skipping actual installation.")
-            print("Simulated command: apt-get install %s" % ' '.join(packages_to_install))
             return
 
         print("Installing updates ...")
