@@ -207,7 +207,7 @@ $n->addExtraInfo($win10towin11_major, _T("Upgrade W10->W11", "updates"));
 $n->addExtraInfo($win11towin11_major, _T("Upgrade W11->W11", "updates"));
 
 $n->addExtraInfo($updated_major, _T("Up to date", "updates"));
-$n->addExtraInfo($missing_information_major, _T("Missing information", "updates"));
+$n->addExtraInfo($missing_information_major, _T("Upgrade Not recommended", "updates"));
 
 $n->addExtraInfo($total_win, _T("Total machines", "updates"));
 
