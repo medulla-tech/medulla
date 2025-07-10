@@ -10,6 +10,7 @@
     display: block !important;
     max-height: 40vh !important;
     overflow-y: auto !important;
+    height: auto !important;
     width: 100% !important;
     margin-bottom: 8px !important;
     border: 1px solid #ccc !important;
@@ -40,19 +41,28 @@
 }
 
 #popup .total-count {
-    color: #999;
-    font-size: 9px;
-    height: 22px;
-    line-height: 22px;
-    margin: 0px  0 5px  0;
-    padding: 0;
+  display: flex !important;
+  align-items: center !important;
+  width: 100% !important;
+  height: auto !important;
+  line-height: normal !important;
+  margin: 0 0 5px !important;
+  padding: 0 !important;
+  color: #999 !important;
+  font-size: 9px !important;
 }
 
 #popup .total-count strong {
-    font-weight: bold;
-    font-size: 11px;
-    color: #999;
-    margin-left: 4px;
+  font-weight: bold !important;
+  font-size: 11px !important;
+  color: #999 !important;
+}
+
+#popup .total-count a {
+  margin-left: auto !important;
+  font-size: 9px !important;
+  color: #888 !important;
+  text-decoration: underline !important;
 }
 </style>
 
@@ -89,7 +99,13 @@ foreach ($rows as $row) {
 
 <h1><?= _T('Available updates', 'update') ?></h1>
 <div class="total-count">
-  <?= _T('Total updates : ', 'update') ?> <strong><?= count($columns['package']) ?></strong>
+  <span class="total-info">
+    <?= _T('Total updates : ', 'update') ?>
+    <strong><?= count($columns['package']) ?></strong>
+  </span>
+  <a href="https://github.com/medulla-tech/medulla/blob/master/README.md" target="_blank">
+    <?= _T('For more details, see the README.', 'update') ?>
+  </a>
 </div>
 
 <?php
