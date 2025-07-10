@@ -709,7 +709,7 @@ $f->add(
 //_____________
 $f->add(
     new TrFormElement(_T('Organization Name', 'imaging').":", new InputTplTitle('OrginazationName', $InfoBule_OrginazationName)),
-    array('value' => (isset($parameters['OrginazationName'])) ? $parameters['OrginazationName'] : 'Siveo', "required" => true)
+    array('value' => (isset($parameters['OrginazationName'])) ? $parameters['OrginazationName'] : 'Medulla', "required" => true)
 );
 //_____________
 $EULA = new SelectItemtitle("AcceptEULA", $InfoBule_AcceptEULA);
