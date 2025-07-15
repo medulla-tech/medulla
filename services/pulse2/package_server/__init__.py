@@ -54,7 +54,8 @@ class ThreadPackageDetect(ThreadPackageHelper):
             logging.getLogger().debug("###############< ThreadPackageDetect end\n")
         except Exception as e:
             logging.getLogger().error(
-                "an Exception happened when trying to detect packages:" + str(e)
+                "an Exception happened when trying to detect packages:" +
+                str(e)
             )
         self.working = False
 
@@ -124,7 +125,8 @@ class ThreadPackageGlobalMirror(ThreadPackageHelper):
                 l_args = args[:]
                 l_args.append("%s:%s%s.." % (target, root, os.path.sep))
                 self.logger.debug(
-                    "ThreadPackageGlobalMirror execute : %s %s" % (exe, str(l_args))
+                    "ThreadPackageGlobalMirror execute : %s %s" % (
+                        exe, str(l_args))
                 )
                 dlist.append(createDeferred(exe, l_args, target, root))
 
@@ -166,7 +168,8 @@ class ThreadPackageMirror(ThreadPackageHelper):
             Common().removePackagesFromRsyncList(pid, target)
         else:
             self.logger.error(
-                "ThreadPackageMirror mirroring command failed %s" % (str(result))
+                "ThreadPackageMirror mirroring command failed %s" % (
+                    str(result))
             )
 
     def _runSub(self):
@@ -180,7 +183,8 @@ class ThreadPackageMirror(ThreadPackageHelper):
                     os.rmdir(pkg.root)
                     exe = self.config.package_mirror_command
                     args = []
-                    args.extend(self.config.package_mirror_level0_command_options)
+                    args.extend(
+                        self.config.package_mirror_level0_command_options)
                     if isinstance(
                         self.config.package_mirror_command_options_ssh_options, list
                     ):
@@ -195,7 +199,8 @@ class ThreadPackageMirror(ThreadPackageHelper):
                                 ),
                             ]
                         )
-                    args.append(str("%s%s" % (os.path.dirname(pkg.root), os.path.sep)))
+                    args.append(
+                        str("%s%s" % (os.path.dirname(pkg.root), os.path.sep)))
                     args.append("%s:%s" % (target, os.path.dirname(pkg.root)))
                     self.logger.debug(
                         "ThreadPackageMirror execute mirror level0 : %s %s"
@@ -208,7 +213,8 @@ class ThreadPackageMirror(ThreadPackageHelper):
                         % (pid, str(e))
                     )
             else:
-                self.logger.debug("ThreadPackageMirror failed %s" % (str(result)))
+                self.logger.debug(
+                    "ThreadPackageMirror failed %s" % (str(result)))
 
         def createDeferred(exe, args, pid, target, is_deletion=False):
             d = utils.getProcessOutputAndValue(exe, args)
@@ -223,14 +229,16 @@ class ThreadPackageMirror(ThreadPackageHelper):
             if result == []:
                 self.logger.debug("ThreadPackageMirror end mirroring")
             else:
-                self.logger.debug("ThreadPackageMirror end mirroring: %s" % str(result))
+                self.logger.debug(
+                    "ThreadPackageMirror end mirroring: %s" % str(result))
             self.working = False
 
         if self.working:
             self.logger.debug("already running")
             return
         self.working = True
-        self.logger.debug("ThreadPackageMirror is looking for new things to mirror")
+        self.logger.debug(
+            "ThreadPackageMirror is looking for new things to mirror")
         dlist = []
         for pid, targets, pkg in Common().getPackagesThatNeedRsync():
             exe = self.config.package_mirror_command
@@ -248,7 +256,8 @@ class ThreadPackageMirror(ThreadPackageHelper):
                     continue
                 try:
                     self.logger.debug(
-                        "ThreadPackageMirror will mirror %s on %s" % (pid, target)
+                        "ThreadPackageMirror will mirror %s on %s" % (
+                            pid, target)
                     )
                     args = []
                     args.extend(self.config.package_mirror_command_options)
@@ -269,12 +278,15 @@ class ThreadPackageMirror(ThreadPackageHelper):
                     args.append(str(p_dir))
                     args.append("%s:%s" % (target, os.path.dirname(pkg.root)))
                     self.logger.debug(
-                        "ThreadPackageMirror execute : %s %s" % (exe, str(args))
+                        "ThreadPackageMirror execute : %s %s" % (
+                            exe, str(args))
                     )
-                    dlist.append(createDeferred(exe, args, pid, target, is_deletion))
+                    dlist.append(createDeferred(
+                        exe, args, pid, target, is_deletion))
                 except Exception as e:
                     self.logger.error(
-                        "ThreadPackageMirror failed to mirror %s : %s" % (pid, str(e))
+                        "ThreadPackageMirror failed to mirror %s : %s" % (
+                            pid, str(e))
                     )
 
         dl = defer.DeferredList(dlist)
@@ -299,38 +311,38 @@ class ThreadLauncher(pulse2.utils.Singleton):
         self.config = config
         config_addons(config)
         Common().init(config)
-        sync_status = PkgsRsyncStateSerializer().init(Common())
-
-        if self.config.package_detect_activate:
-            self.logger.info("Package detection activated")
-            if self.config.package_detect_tmp_activate:
-                self.logger.info("Package detection activated for temporary folder")
-            if self.config.package_detect_smart:
-                self.logger.info(
-                    "Package detection mechanism will be '%s' (%s)"
-                    % (
-                        self.config.packageDetectSmartMethod(),
-                        str(self.config.package_detect_smart_time),
-                    )
-                )
-
-            self.logger.info("Starting package detection thread")
-            threadpd = ThreadPackageDetect(config)
-            threadpd.setDaemon(True)
-            threadpd.start()
-            self.logger.info("Package detection thread started")
-
-        if self.config.package_mirror_activate:
-            self.logger.info("Starting package mirror thread")
-            self.threadpm = ThreadPackageMirror(config, sync_status)
-            self.threadpm.setDaemon(True)
-            self.logger.info("Package mirror thread started")
-
-            if self.config.package_global_mirror_activate:
-                self.logger.info("Starting global package mirror thread")
-                self.threadgp = ThreadPackageGlobalMirror(config)
-                self.threadgp.setDaemon(True)
-                self.logger.info("Global package mirror thread started")
+        # sync_status = PkgsRsyncStateSerializer().init(Common())
+        #
+        # if self.config.package_detect_activate:
+        #     self.logger.info("Package detection activated")
+        #     if self.config.package_detect_tmp_activate:
+        #         self.logger.info("Package detection activated for temporary folder")
+        #     if self.config.package_detect_smart:
+        #         self.logger.info(
+        #             "Package detection mechanism will be '%s' (%s)"
+        #             % (
+        #                 self.config.packageDetectSmartMethod(),
+        #                 str(self.config.package_detect_smart_time),
+        #             )
+        #         )
+        #
+        #     self.logger.info("Starting package detection thread")
+        #     threadpd = ThreadPackageDetect(config)
+        #     threadpd.setDaemon(True)
+        #     threadpd.start()
+        #     self.logger.info("Package detection thread started")
+        #
+        # if self.config.package_mirror_activate:
+        #     self.logger.info("Starting package mirror thread")
+        #     self.threadpm = ThreadPackageMirror(config, sync_status)
+        #     self.threadpm.setDaemon(True)
+        #     self.logger.info("Package mirror thread started")
+        #
+        #     if self.config.package_global_mirror_activate:
+        #         self.logger.info("Starting global package mirror thread")
+        #         self.threadgp = ThreadPackageGlobalMirror(config)
+        #         self.threadgp.setDaemon(True)
+        #         self.logger.info("Global package mirror thread started")
 
         self.logger.info("Starting TFTPServer thread")
 
@@ -346,12 +358,13 @@ class ThreadLauncher(pulse2.utils.Singleton):
         time.sleep(5)
 
     def runThreads(self):
-        if self.config.package_mirror_activate:
-            self.logger.info("Package mirror thread start")
-            self.threadpm.start()
-            if self.config.package_global_mirror_activate:
-                self.logger.info("Global package mirror thread start")
-                self.threadgp.start()
+        pass
+        # if self.config.package_mirror_activate:
+        #     self.logger.info("Package mirror thread start")
+        #     self.threadpm.start()
+        #     if self.config.package_global_mirror_activate:
+        #         self.logger.info("Global package mirror thread start")
+        #         self.threadgp.start()
 
 
 def init_logger_debug():
