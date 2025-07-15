@@ -1,12 +1,12 @@
 <?php
 /**
- * Medulla Management Console (MMC)
+ * Mandriva Management Console (MMC)
  *
  * @copyright Medulla - 2024-2027  <https://medulla-tech.io/>
  * @license   GNU General Public License v2 or later (GPL-2.0+)
  * @link      https://www.gnu.org/licenses/gpl-2.0.html
  *
- * This file is part of Medulla Management Console (MMC).
+ * This file is part of Mandriva Management Console (MMC).
  *
  * MMC is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by
