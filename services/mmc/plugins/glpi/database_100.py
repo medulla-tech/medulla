@@ -4024,6 +4024,101 @@ class Glpi100(DyngroupDatabaseHelper):
                     ret.append(l)
         return ret
 
+    def getMachineInfoImaging(self, uuid):
+        """
+        Récupère les informations d'inventaire détaillées pour une ou plusieurs machines.
+
+        Paramètre :
+        -----------
+        uuid : int ou list[int]
+            UUID unique ou liste d'UUIDs à interroger.
+
+        Retour :
+        --------
+        list[dict] ou dict
+            Liste de dictionnaires contenant les données d'inventaire formatées,
+            ou un seul dictionnaire si un seul UUID est fourni.
+        """
+
+        # Normalisation de l'entrée
+        if isinstance(uuid, int):
+            uuids = [uuid]
+            return_single = True
+        elif isinstance(uuid, list):
+            uuids = [int(u) for u in uuid]
+            return_single = False
+        else:
+            raise ValueError("uuid doit être un int ou une liste d'int")
+
+        session = create_session()
+
+        # Requête SQLAlchemy avec jointures
+        query = (
+            session.query(Machine)
+            .add_columns(
+                self.glpi_operatingsystems.c.name.label("os"),
+                self.glpi_operatingsystemservicepacks.c.name.label("os_sp"),
+                self.glpi_operatingsystemversions.c.name.label("os_version"),
+                self.glpi_domains.c.name.label("domain"),
+                self.locations.c.name.label("location"),
+                self.glpi_computermodels.c.name.label("model"),
+                self.glpi_computertypes.c.name.label("type"),
+                self.glpi_networks.c.name.label("network"),
+                self.entities.c.completename.label("entity"),
+                self.glpi_operatingsystemarchitectures.c.name.label("os_arch")
+            )
+            .select_from(
+                self.machine
+                .outerjoin(self.glpi_operatingsystems)
+                .outerjoin(self.glpi_operatingsystemservicepacks)
+                .outerjoin(self.glpi_operatingsystemversions)
+                .outerjoin(self.glpi_operatingsystemarchitectures)
+                .outerjoin(self.glpi_computertypes)
+                .outerjoin(self.glpi_domains)
+                .outerjoin(self.locations)
+                .outerjoin(self.glpi_computermodels)
+                .outerjoin(self.glpi_networks)
+                .join(self.entities)
+            )
+        )
+
+        # Filtrage sur l'UUID
+        query = self.filterOnUUID(query, uuids)
+        rows = query.all()
+
+        result = []
+        for row in rows:
+            machine = row[0]
+            extra_values = row[1:]  # colonnes ajoutées
+            extra_keys = [
+                "os", "os_sp", "os_version", "domain", "location",
+                "model", "type", "network", "entity", "os_arch"
+            ]
+
+            extra_data = dict(zip(extra_keys, extra_values))
+
+            formatted_result_dict = {
+                "id_machine": machine.id,
+                "entities": machine.entities_id,
+                "realname": machine.name,
+                "creationEntity": extra_data.get("entity"),
+                "newlocation": extra_data.get("location"),
+                "Domain": extra_data.get("domain"),
+                "Model": extra_data.get("model"),
+                "type": extra_data.get("type"),
+                "OperatingSystem": extra_data.get("os"),
+                "OperatingSystemSP": extra_data.get("os_sp"),
+                "OperatingSystemVersion": extra_data.get("os_version"),
+                "OperatingSystemArchitecture": extra_data.get("os_arch"),
+                "Network": extra_data.get("network"),
+            }
+
+            result.append(formatted_result_dict)
+
+        session.close()
+
+        return result[0] if return_single and result else result
+
     def getLastMachineInventoryPart(
         self, uuid, part, minbound=0, maxbound=-1, filt=None, options=None, count=False
     ):
