@@ -56,7 +56,7 @@ $response = xmlrpc_topology_pulse();
 </style>
 
 <?
-    $p = new PageGenerator(sprintf (_T("Topology Pulse", 'xmppmaster')));
+    $p = new PageGenerator(sprintf (_T("Topology Medulla", 'xmppmaster')));
     $p->setSideMenu($sidemenu);
     $p->display();
     echo '<div id="body"></div>';

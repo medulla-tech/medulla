@@ -108,7 +108,7 @@ if (isset($_GET["signout"])) {
 <!DOCTYPE html>
 <html>
 <head>
-        <title>Siveo / Management Console</title>
+        <title>Medulla / Management Console</title>
         <link href="graph/login/index.css" rel="stylesheet" media="screen" type="text/css" />
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <link rel="icon" href="img/common/favicon.ico" />

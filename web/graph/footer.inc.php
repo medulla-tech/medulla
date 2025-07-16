@@ -36,7 +36,7 @@ $MMCApp->render();
             </span>
             <span> - </span>
             <span>
-                <a href="https://medulla-tech.io/" target="_blank">Medulla</a>
+                <a href="https://docs.medulla-tech.io/books/medulla-guide-dutilisation-pas-a-pas/" target="_blank">Medulla</a>
             </span>
         </div>
     </footer>

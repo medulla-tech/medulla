@@ -67,7 +67,6 @@
 </style>
 
 <?php
-
 require_once("includes/xmlrpc.inc.php");
 require_once("modules/medulla_server/includes/xmlrpc.inc.php");
 

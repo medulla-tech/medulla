@@ -4093,6 +4093,7 @@ class XmppMasterDatabase(DatabaseHelper):
             ret = {
                 "totalmachinedeploy": 0,
                 "deploymentsuccess": 0,
+                "uninstallsuccess": 0,
                 "abortontimeout": 0,
                 "abortmissingagent": 0,
                 "abortinconsistentglpiinformation": 0,
@@ -4138,6 +4139,8 @@ class XmppMasterDatabase(DatabaseHelper):
 
                 if t == "DEPLOYMENT SUCCESS":
                     ret["deploymentsuccess"] = liststatus[t]
+                elif t == "UNINSTALL SUCCESS":
+                    ret["uninstallsuccess"] = liststatus[t]
                 elif t == "ABORT ON TIMEOUT":
                     ret["abortontimeout"] = liststatus[t]
                 elif t == "ABORT MISSING AGENT":
@@ -4257,6 +4260,7 @@ class XmppMasterDatabase(DatabaseHelper):
             ret = {
                 "totalmachinedeploy": 0,
                 "deploymentsuccess": 0,
+                "uninstallsuccess": 0,
                 "abortontimeout": 0,
                 "abortmissingagent": 0,
                 "abortinconsistentglpiinformation": 0,
@@ -4306,6 +4310,8 @@ class XmppMasterDatabase(DatabaseHelper):
 
                 if status == "DEPLOYMENT SUCCESS":
                     ret["deploymentsuccess"] = count
+                elif status == "UNINSTALL SUCCESS":
+                    ret["uninstallsuccess"] = count
                 elif status == "ABORT ON TIMEOUT":
                     ret["abortontimeout"] = count
                 elif status == "ABORT MISSING AGENT":

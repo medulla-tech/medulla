@@ -42,7 +42,7 @@ if(isset($_GET['cn'])) {
 ?>
     <HTML>
         <head>
-            <title>Siveo Pulse</title>
+            <title>Medulla</title>
             <link href='/mmc/graph/master.css' rel='stylesheet' media='screen' type='text/css' />
         </head>
         <BODY style='background-color: #FFFFFF;'>
