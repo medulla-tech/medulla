@@ -50,6 +50,10 @@ function getLastMachineGlpiPart($uuid, $part, $start, $end, $filter, $options) {
     return xmlCall("glpi.getLastMachineInventoryPart", array($uuid, $part, $start, $end, $filter, $options));
 }
 
+function  getMachineInfoImaging($uuid) {
+    return xmlCall("glpi.getMachineInfoImaging", array($uuid));
+}
+
 function countLastMachineGlpiPart($uuid, $part, $filter, $options) {
     return xmlCall("glpi.countLastMachineInventoryPart", array($uuid, $part, $filter, $options));
 }

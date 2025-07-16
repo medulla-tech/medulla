@@ -21,68 +21,8 @@
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* common ajax includes */
-require("../includes/ajaxcommon.inc.php");
+?>
 
-if (in_array("glpi", $_SESSION['supportModList'])) {
-    require_once("../../glpi/includes/xmlrpc.php");
-}
-
-
-
-$t = new TitleElement(_T("Status", "imaging"), 3);
-$t->display();
-
-$customMenu_count = xmlrpc_getCustomMenuCount($location);
-//$customMenu_count = xmlrpc_getCustomMenuCountdashboard($location);
-
-$namelocation = xmlrpc_getLocationName(getCurrentLocation());
-$gg = xmlrpc_getCustomMenubylocation($location);
-
-if (in_array("glpi", $_SESSION['supportModList'])) {
-    foreach ($gg as &$entry) {
-        $computersummary = getLastMachineGlpiPart($entry[0], 'Summary', 0, -1, "", []);
-        foreach ($computersummary[0] as $val) {
-            switch($val[0]) {
-                case "Computer Name":
-                    $entry['realname'] = $val[1][2];
-                    break;
-                case "Entity (Location)":
-                    $entry['newlocation'] = $val[1];
-                    break;
-                case "os image":
-                    $entry['OS'] = $val[1];
-                    break;
-                case "Domain":
-                    $entry['Domain']  = $val[1];
-                    break;
-
-                case " Service Pack":
-                    $entry['ServicePack']  = $val[1];
-                    break;
-                case "Model / Type":
-                    $part = explode("/", $val[1]);
-                    $entry['Model']  = $part[0];
-                    $entry['type']  = $part[0];
-                    break;
-            }
-            $entry['creationEntity'] =  $namelocation;
-        }
-    }
-}
-
-
-$dede = xmlrpc_getComputersWithImageInEntity(getCurrentLocation());
-
-
-//$ffffff = xmlrpc_getMyMenuProfile(58);
-//imaging.getMyMenuProfile('58',)
-$global_status = xmlrpc_getGlobalStatus($location);
-if (!empty($global_status)) {
-    $disk_info = format_disk_info($global_status['disk_info']);
-    $health = format_health($global_status['uptime'], $global_status['mem_info']);
-    $short_status = $global_status['short_status'];
-    ?>
 <style>
 a.info{
 position:relative;
@@ -112,6 +52,66 @@ font-weight:none;
 padding:5px;
 }
 </style>
+
+<?php
+
+/* common ajax includes */
+require("../includes/ajaxcommon.inc.php");
+
+if (in_array("glpi", $_SESSION['supportModList'])) {
+    require_once("../../glpi/includes/xmlrpc.php");
+}
+
+
+$t = new TitleElement(_T("Status", "imaging"), 3);
+$t->display();
+
+$customMenu_count = xmlrpc_getCustomMenuCount($location);
+$CurrentLocation = getCurrentLocation();
+
+
+//$customMenu_count = xmlrpc_getCustomMenuCountdashboard($location);
+
+$namelocation = xmlrpc_getLocationName($CurrentLocation);
+$machine_menu = xmlrpc_getCustomMenubylocation($location);
+
+$arrayuuid=array();
+foreach ($machine_menu as $entry) {
+    // Add the modified UUID to the array
+    $arrayuuid[] = trim(str_ireplace('uuid', '', $entry[0]));
+}
+
+$info= getMachineInfoImaging($arrayuuid);
+
+
+// Merge the structures
+foreach ($machine_menu as $item) {
+    $idMachine = str_ireplace("uuid", "", $item[0]); // Assuming this corresponds to the id_machine in structure1
+    $name = $item[1];
+    $nicUuid = $item[2];
+
+    // Find the corresponding machine in structure1
+    foreach ($info as &$machine) {
+        if ($machine['id_machine'] == $idMachine) {
+            // Update the machine with new keys and values
+            $machine['name'] = $name;
+            $machine['nic_uuid'] = $nicUuid;
+            break;
+        }
+    }
+}
+
+$dede = xmlrpc_getComputersWithImageInEntity($CurrentLocation);
+
+
+//$ffffff = xmlrpc_getMyMenuProfile(58);
+//imaging.getMyMenuProfile('58',)
+$global_status = xmlrpc_getGlobalStatus($location);
+if (!empty($global_status)) {
+    $disk_info = format_disk_info($global_status['disk_info']);
+    $health = format_health($global_status['uptime'], $global_status['mem_info']);
+    $short_status = $global_status['short_status'];
+    ?>
 
     <div class="status">
         <div class="status_block">
@@ -151,15 +151,15 @@ padding:5px;
                     echo '
                         <span>Computer list with custom menu for entity '. $namelocation.'<br>';
                     $i = 0;
-                    foreach ($gg as $entry) {
+                    foreach ($info as $entry) {
                         if (in_array("glpi", $_SESSION['supportModList'])) {
-                            if ($entry[1] != $entry['realname']) {
-                                echo "[ ". $entry[1]."(".$entry['realname'].") ]";
+                            if (entry['name'] != $entry['realname']) {
+                                echo "[ ". entry['name']."(".$entry['realname'].") ]";
                             } else {
-                                echo "[". $entry[1]."]";
+                                echo "[". entry['name']."]";
                             }
                         } else {
-                            echo "[". $entry[1]."]";
+                            echo "[". entry['name']."]";
                         }
                         if ($i == 5) {
                             echo "<br>";
@@ -181,14 +181,14 @@ padding:5px;
 
                     echo '<div id="popupinformation1" title="Custom Menu">';
                     echo '<p>';
-                    foreach ($gg as $entry) {
+                    foreach ($info as $entry) {
                         if (in_array("glpi", $_SESSION['supportModList'])) {
                             $param  = array();
                             $param['tab'] = 'tabbootmenu';
                             $param['hostname'] = $entry['realname'];
-                            $param['uuid'] = $entry[0];
+                            $param['uuid'] = $entry['id_machine'];
                             $param['type'] = '';
-                            $param['target_uuid'] = $entry[0];
+                            $param['target_uuid'] = $entry['id_machine'];
                             $param['target_name'] = $entry['realname'];
 
                             $urlRedirect = urlStrRedirect("base/computers/imgtabs", $param);
@@ -200,11 +200,11 @@ padding:5px;
                         } else {
                             $param  = array();
                             $param['tab'] = 'tabbootmenu';
-                            $param['hostname'] = $entry[1];
-                            $param['uuid'] = $entry[0];
+                            $param['hostname'] = entry['name'];
+                            $param['uuid'] = $entry['id_machine'];
                             $param['type'] = '';
-                            $param['target_uuid'] = $entry[0];
-                            $param['target_name'] = $entry[1];
+                            $param['target_uuid'] = $entry['id_machine'];
+                            $param['target_name'] = entry['name'];
                             $urlRedirect = urlStrRedirect("base/computers/imgtabs", $param);
                             echo '<a href="'.$urlRedirect.'">'.'Boot menu '.$entry['realname'].'</a>';
                         }

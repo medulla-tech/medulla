@@ -172,6 +172,10 @@ def getReport(uuid, lang):
     return xmlrpcCleanup(xsl.path)
 
 
+def getMachineInfoImaging(uuid):
+    return xmlrpcCleanup(Glpi().getMachineInfoImaging(uuid))
+
+
 def getLastMachineInventoryPart(
     uuid, part, minbound=0, maxbound=-1, filt=None, options={}
 ):
@@ -324,7 +328,7 @@ def getMachinesMac(uuid):
         return ""
 
 
-def get_os_xmpp_update_major_stats( presence=False):
+def get_os_xmpp_update_major_stats(presence=False):
     return xmlrpcCleanup(Glpi().get_os_xmpp_update_major_stats(presence))
 
 
