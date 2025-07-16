@@ -1,6 +1,8 @@
+# -*- coding:Utf-8; -*
 # SPDX-FileCopyrightText: 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
-# SPDX-FileCopyrightText: 2007-2009 Mandriva, http://www.mandriva.com/
-# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net>
+# SPDX-FileCopyrightText: 2007 Mandriva, http://www.mandriva.com
+# SPDX-FileCopyrightText: 2016-2023 Siveo, http://www.siveo.net
+# SPDX-FileCopyrightText: 2024-2025 Medulla, http://www.medulla-tech.io
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import logging
@@ -843,6 +845,16 @@ def putPackageDetail(package, need_assign=True):
             package["label"]
         )  # create uuid package
         Bcreatepackage = True
+
+    if not Bcreatepackage and "random_dir" in package and package["random_dir"]:
+        tmp_dir = os.path.join("/var/lib/pulse2/package-server-tmpdir", package["random_dir"])
+        package_dir = os.path.join("/var/lib/pulse2/packages", package["id"])
+        if os.path.exists(tmp_dir):
+            for filename in os.listdir(tmp_dir):
+                src_file = os.path.join(tmp_dir, filename)
+                dst_file = os.path.join(package_dir, filename)
+                shutil.move(src_file, dst_file)
+            logging.getLogger().debug(f"Moved files from {tmp_dir} to {package_dir} successfully.")
 
     if len(package["id"]) != 36:
         return False

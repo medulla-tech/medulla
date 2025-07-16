@@ -1,5 +1,28 @@
 <?php
-
+/*
+ * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+ * (c) 2007 Mandriva, http://www.mandriva.com
+ * (c) 2016-2023 Siveo, http://www.siveo.net
+ * (c) 2024-2025 Medulla, http://www.medulla-tech.io
+ *
+ * $Id$
+ *
+ * This file is part of MMC, http://www.medulla-tech.io
+ *
+ * MMC is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * any later version.
+ *
+ * MMC is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MMC; If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
 /****************************************
 Example of how to use this uploader class...
 You can uncomment the following lines (minus the require) to use these as your defaults.
@@ -214,7 +237,9 @@ class qqFileUploader {
 
         $this->uploadName = $filename . $ext;
 
-        if ($this->file->save($uploadDirectory . $filename . $ext)){
+        $result = $this->file->save($uploadDirectory . $filename . $ext);
+
+        if ($result){
             // If file pushed to temp directory, push it to MMC agent
             $filename = $filename . $ext;
             $upload_tmp_dir = sys_get_temp_dir();
@@ -235,11 +260,8 @@ class qqFileUploader {
             delete_directory($upload_tmp_dir . '/' . $random_dir);
 
             if ($push_package_result) {
-                return array(
-                    'success' => true,
-                );
-            }
-            else {
+                return array('success' => true);
+            } else {
                 return array('error'=> 'Could not save uploaded file.' .
                     'The upload was cancelled, or server error encountered');
             }
