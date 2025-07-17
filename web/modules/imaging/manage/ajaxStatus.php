@@ -24,6 +24,9 @@
 ?>
 
 <style>
+#LocationTitleStatus {
+    margin-left: 15px;
+}
 a.info{
 position:relative;
 z-index:24;
@@ -51,6 +54,13 @@ text-align: justify;
 font-weight:none;
 padding:5px;
 }
+#container_logs ul.navList {
+    position: static !important;
+    display: flex;
+    gap: 1em;
+    margin: 0;
+    padding: 0;
+}
 </style>
 
 
@@ -63,11 +73,6 @@ padding:5px;
         if (in_array("glpi", $_SESSION['supportModList'])) {
             require_once("../../glpi/includes/xmlrpc.php");
         }
-
-
-        $t = new TitleElement(_T("Status", "imaging"), 3);
-        $t->display();
-
 
         $customMenu_count = xmlrpc_getCustomMenuCount($location);
         $CurrentLocation = getCurrentLocation();
@@ -416,6 +421,7 @@ padding:5px;
  // 1) start /tmp/multicast.sh
 
  // progress bar script ajaxcheckstatusmulticast appel toutes les 5 secondes xmlrpc_check_process_multicast_finish
+ -->
 <?php
  $resultdisplay1 = array();
     $scriptmulticast = 'multicast.sh';
@@ -596,7 +602,7 @@ var interval = setInterval(barprogress,6000);
 ?>
     <div class="spacer"></div>
 
-    <h3 class="activity"><?php echo _T('Recent activity', 'imaging') ?></h3>
+    <h2 class="activity"><?php echo _T('Recent activity', 'imaging') ?></h2>
 
 <?php
         $ajax = new AjaxFilter("modules/imaging/manage/ajaxLogs.php", "container_logs", array(), "Logs");

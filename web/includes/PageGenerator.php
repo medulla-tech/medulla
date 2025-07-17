@@ -3384,17 +3384,22 @@ class ModuleTitleElement extends HtmlElement
 
 class TitleElement extends HtmlElement
 {
-    public function __construct($title, $level = 2)
+    public function __construct($title, $level = 2, $attributes = [])
     {
         $this->title = $title;
         $this->level = $level;
+        $this->attributes = $attributes;
     }
 
     public function display($arrParam = array())
     {
-        print '<br/><h' . $this->level . '>' . $this->title . '</h' . $this->level . '>';
+        $attrs = array_merge($this->attributes, $arrParam);
+        $attr_str = '';
+        foreach ($attrs as $k => $v) {
+            $attr_str .= ' ' . htmlspecialchars($k) . '="' . htmlspecialchars($v) . '"';
+        }
+        print '<br/><h' . $this->level . $attr_str . '>' . $this->title . '</h' . $this->level . '>';
     }
-
 }
 
 class SpanElement extends HtmlElement
