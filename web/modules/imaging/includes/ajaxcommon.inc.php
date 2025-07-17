@@ -82,8 +82,8 @@ if ($hasImaging) {
     require("ajaxcommon_bottom.inc.php");
     exit();
 }
-
-$t = new TitleElement(sprintf(_T("Imaging server of entity %s", "imaging"), $location_name), 2);
+echo "<br>";
+$t = new TitleElement(sprintf(_T("Imaging server of entity %s", "imaging"), $location_name), 2, ['id' => 'LocationTitleStatus']);
 $t->display();
 
 $ret = xmlrpc_getLocationSynchroState($location);
