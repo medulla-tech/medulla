@@ -154,7 +154,7 @@ if (!empty($global_status)) {
                     foreach ($info as $entry) {
                         if (in_array("glpi", $_SESSION['supportModList'])) {
                             if ($entry['name'] != $entry['realname']) {
-                                echo "[ ". entry['name']."(".$entry['realname'].") ]";
+                                echo "[ ". $entry['name']."(".$entry['realname'].") ]";
                             } else {
                                 echo "[". $entry['name']."]";
                             }
@@ -200,11 +200,11 @@ if (!empty($global_status)) {
                         } else {
                             $param  = array();
                             $param['tab'] = 'tabbootmenu';
-                            $param['hostname'] = entry['name'];
+                            $param['hostname'] = $entry['name'];
                             $param['uuid'] = $entry['id_machine'];
                             $param['type'] = '';
                             $param['target_uuid'] = $entry['id_machine'];
-                            $param['target_name'] = entry['name'];
+                            $param['target_name'] = $entry['name'];
                             $urlRedirect = urlStrRedirect("base/computers/imgtabs", $param);
                             echo '<a href="'.$urlRedirect.'">'.'Boot menu '.$entry['realname'].'</a>';
                         }
