@@ -1,17 +1,18 @@
 <?php
-
 /*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
- * (c) 2007-2009 Mandriva, http://www.mandriva.com
+ * (c) 2007 Mandriva, http://www.mandriva.com
+ * (c) 2016-2023 Siveo, http://www.siveo.net
+ * (c) 2024-2025 Medulla, http://www.medulla-tech.io
  *
  * $Id$
  *
- * This file is part of Mandriva Management Console (MMC).
+ * This file is part of MMC, http://www.medulla-tech.io
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ * the Free Software Foundation; either version 3 of the License, or
+ * any later version.
  *
  * MMC is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -19,8 +20,8 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with MMC; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ * along with MMC; If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 /* Get MMC includes */
@@ -68,49 +69,38 @@ $logStates = array(
 );
 
 $a_desc = array();
-$a_states = array();
 $a_level = array();
 $a_date = array();
 $a_target = array();
 
 foreach ($db_logs as $log) {
-    $params = array();
-    $params["itemid"] = $log['imaging_uuid'];
-    $params["uuid"] = $log['target']['uuid'];
-    $params["hostname"] = $log['target']['name'];
-
+    $params = array(
+        "itemid"   => $log['imaging_uuid'],
+        "uuid"     => $log['target']['uuid'],
+        "hostname" => $log['target']['name']
+    );
     $list_params[] = $params;
 
-    $status = $log['imaging_log_state'];
-    $date = _toDate($log['timestamp']);
-    /*if(ereg('backup', $status)) {
-        $date = '<img src="modules/imaging/graph/images/backup.png" style="vertical-align: bottom"/>&nbsp;'.$date;
-    } elseif (ereg('restore', $status)) {
-        $date = '<img src="modules/imaging/graph/images/restore.png" style="vertical-align: bottom"/>&nbsp;'.$date;
-    }*/
+    $date   = _toDate($log['timestamp']);
+    $level  = isset($log['imaging_log_level']) ? $log['imaging_log_level'] : "";
+    $target = $log['target']['name'];
 
-    // get status
-    if(!array_key_exists($status, $logStates)) {
-        $status = 'unknow';
+    $detail = trim($log['detail']);
+    if ($detail === '') {
+        $desc = 'No Detail';
+    } else {
+        $desc = $detail;
     }
 
-    // complete status display
-    $led = new LedElement($logStates[$status][1]);
-    $status = $logStates[$status][0];
-    //$status = $led->value.'&nbsp;'.$logStates[$status][0];
-    $log['imaging_log_level'] = isset($log['imaging_log_level']) ?$log['imaging_log_level'] : "";
-    $a_level[] = $log['imaging_log_level'];
-    $a_date[] = $date;
-    $a_target[] = $log['target']['name'];
-    $a_desc[] = $status . ' - ' . $log['detail'];
-    $a_states[]= $status;
+    $a_level[]  = $level;
+    $a_date[]   = $date;
+    $a_target[] = $target;
+    $a_desc[]   = $desc;
 }
 
 $l = new OptimizedListInfos($a_date, _T("Timestamp", "imaging"));
-// $l->addExtraInfo($a_level, _T("Log level", "imaging"));
 $l->addExtraInfo($a_target, _T("Target", "imaging"));
 $l->addExtraInfo($a_desc, _T("Message", "imaging"));
-//$l->addExtraInfo($a_states, _T("State", "imaging"));
 
 $l->setParamInfo($list_params);
 $l->setItemCount($count);
@@ -121,5 +111,4 @@ $l->start = 0;
 $l->end = $maxperpage;
 
 $l->display();
-
 ?>
