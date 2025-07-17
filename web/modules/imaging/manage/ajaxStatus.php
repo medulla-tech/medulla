@@ -53,87 +53,70 @@ padding:5px;
 }
 </style>
 
-<?php
-
-/* common ajax includes */
-require("../includes/ajaxcommon.inc.php");
-
-if (in_array("glpi", $_SESSION['supportModList'])) {
-    require_once("../../glpi/includes/xmlrpc.php");
-}
 
 
-$t = new TitleElement(_T("Status", "imaging"), 3);
-$t->display();
+    <?php
 
-$customMenu_count = xmlrpc_getCustomMenuCount($location);
-$CurrentLocation = getCurrentLocation();
+        /* common ajax includes */
+        require("../includes/ajaxcommon.inc.php");
 
-
-//$customMenu_count = xmlrpc_getCustomMenuCountdashboard($location);
-
-$namelocation = xmlrpc_getLocationName($CurrentLocation);
-$machine_menu = xmlrpc_getCustomMenubylocation($location);
-
-$arrayuuid=array();
-foreach ($machine_menu as $entry) {
-    // Add the modified UUID to the array
-    $arrayuuid[] = trim(str_ireplace('uuid', '', $entry[0]));
-}
-
-$info= getMachineInfoImaging($arrayuuid);
-
-
-// Merge the structures
-foreach ($machine_menu as $item) {
-    $idMachine = str_ireplace("uuid", "", $item[0]); // Assuming this corresponds to the id_machine in structure1
-    $name = $item[1];
-    $nicUuid = $item[2];
-
-    // Find the corresponding machine in structure1
-    foreach ($info as &$machine) {
-        if ($machine['id_machine'] == $idMachine) {
-            // Update the machine with new keys and values
-            $machine['name'] = $name;
-            $machine['nic_uuid'] = $nicUuid;
-            break;
+        if (in_array("glpi", $_SESSION['supportModList'])) {
+            require_once("../../glpi/includes/xmlrpc.php");
         }
-    }
-}
-
-$dede = xmlrpc_getComputersWithImageInEntity($CurrentLocation);
 
 
-//$ffffff = xmlrpc_getMyMenuProfile(58);
-//imaging.getMyMenuProfile('58',)
-$global_status = xmlrpc_getGlobalStatus($location);
-if (!empty($global_status)) {
-    $disk_info = format_disk_info($global_status['disk_info']);
-    $health = format_health($global_status['uptime'], $global_status['mem_info']);
-    $short_status = $global_status['short_status'];
+        $t = new TitleElement(_T("Status", "imaging"), 3);
+        $t->display();
+
+
+        $customMenu_count = xmlrpc_getCustomMenuCount($location);
+        $CurrentLocation = getCurrentLocation();
+
+
+        //$customMenu_count = xmlrpc_getCustomMenuCountdashboard($location);
+
+        $namelocation = xmlrpc_getLocationName($CurrentLocation);
+        $machine_menu = xmlrpc_getCustomMenubylocation($location);
+
+        $arrayuuid=array();
+        foreach ($machine_menu as $entry) {
+            // Add the modified UUID to the array
+            $arrayuuid[] = trim(str_ireplace('uuid', '', $entry[0]));
+        }
+
+        $info= getMachineInfoImaging($arrayuuid);
+
+
+        // Merge the structures
+        foreach ($machine_menu as $item) {
+            $idMachine = str_ireplace("uuid", "", $item[0]); // Assuming this corresponds to the id_machine in structure1
+            $name = $item[1];
+            $nicUuid = $item[2];
+
+            // Find the corresponding machine in structure1
+            foreach ($info as &$machine) {
+                if ($machine['id_machine'] == $idMachine) {
+                    // Update the machine with new keys and values
+                    $machine['name'] = $name;
+                    $machine['nic_uuid'] = $nicUuid;
+                    break;
+                }
+            }
+        }
+
+        $dede = xmlrpc_getComputersWithImageInEntity($CurrentLocation);
     ?>
 
-    <div class="status">
-        <div class="status_block">
-            <h3><?php echo _T('Space available on server', 'imaging') ?></h3>
-            <?php echo $disk_info; ?>
-        </div>
-        <div class="status_block">
-            <h3><?php echo _T('Load on server', 'imaging') ?></h3>
-            <?php echo $health; ?>
-        </div>
-    </div>
-
-    <div class="status">
-        <!--<div class="status_block">
-            <h3 style="display: inline"><?php echo _T('Synchronization state', 'imaging') ?> : </h3>
-        <?php
-        $led = new LedElement('green');
-    $led->display();
-    echo "&nbsp;" . _T("Up-to-date", "imaging");
+    <?php
+        //$ffffff = xmlrpc_getMyMenuProfile(58);
+        //imaging.getMyMenuProfile('58',)
+        $global_status = xmlrpc_getGlobalStatus($location);
+        if (!empty($global_status)) {
+            $disk_info = format_disk_info($global_status['disk_info']);
+            $health = format_health($global_status['uptime'], $global_status['mem_info']);
+            $short_status = $global_status['short_status'];
     ?>
 
-        </div>-->
         <div class="status_block">
             <?php //<a href=" echo urlStrRedirect("imaging/imaging/createCustomMenuStaticGroup"); &location=UUID1">ZZZ</a>?>
             <h3><?php echo _T('Stats', 'imaging') ?> <?php echo _T('Entity', 'imaging') ?> <?php echo $namelocation; ?>  </h3>
@@ -142,8 +125,8 @@ if (!empty($global_status)) {
             <?php $urlRedirect = urlStrRedirect("imaging/manage/creategroupcustonmenu")."&location=".$location; ?>
             <?php $urlRedirectgroupimaging = urlStrRedirect("imaging/manage/creategroupcustonmenuimaging")."&location=".$location; ?>
                 <img src="img/other/machine_down.svg" width="25" height="25" /> <strong>
-                <?php echo $short_status['total']; ?></strong> <?php echo _T("client(s) registered", "imaging") ?>
-                <?php
+                <?php $short_status['total']; ?></strong> <?php echo _T("client(s) registered", "imaging") ?>
+    <?php
                 if (intval($customMenu_count) > 0) {
                     echo "(".$customMenu_count;
                     echo' <a class="info" href="#" id="boutoninformation1" class="lienstylebouton">';
@@ -217,12 +200,14 @@ if (!empty($global_status)) {
                     echo '</p>';
                 }
     ?>
+
+
             <p class="stat">
                 <img src="img/other/machine_down.svg" width="25" height="25" />
                 <strong>
                     <?php echo $short_status['rescue']; ?>
                 </strong>/<?php echo $short_status['total']; ?>
-                    <?php
+   <?php
                 if (intval($short_status['rescue']) <= 0) {
                     $text = _T("client have rescue image", "imaging");
                     echo $text;
@@ -241,6 +226,7 @@ if (!empty($global_status)) {
                 }
     ?>
             </p>
+
             <p class="stat">
                 <img src="img/other/diskimage.svg" width="25" height="25" />
                 <?php echo '<a href="'.'main.php?module=imaging&submod=manage&action=master'.'"'; ?>
@@ -256,32 +242,33 @@ if (!empty($global_status)) {
                     </div>
                 -->
                 <div id="popupinformation" title="client(s) have rescue image(s)">
-                <p>
 
-                <?php
-    foreach ($dede as $val) {
-        if (intval($val[3]) == 0) {
-            $parm = array();
-            $parm['tab'] = 'tabimages';
-            $parm['hostname'] = $val[1];
-            $parm['uuid'] = $val[0];
-            $parm['type'] = "";
-            $parm['target_uuid'] = $val[0];
-            $parm['target_name'] = $val[1];
-            $parm['namee'] = "llllllllll";
-            $urlRedirect = urlStrRedirect("base/computers/imgtabs", $parm);
-            echo '<a href="'.$urlRedirect.'">'.'Client : ['.$val[1]."] has rescue Image : [". $val[2].'] '."</a><br>";
+   <?php
+        foreach ($dede as $val) {
+            if (intval($val[3]) == 0) {
+                $parm = array();
+                $parm['tab'] = 'tabimages';
+                $parm['hostname'] = $val[1];
+                $parm['uuid'] = $val[0];
+                $parm['type'] = "";
+                $parm['target_uuid'] = $val[0];
+                $parm['target_name'] = $val[1];
+                $parm['namee'] = "llllllllll";
+                $urlRedirect = urlStrRedirect("base/computers/imgtabs", $parm);
+                echo '<a href="'.$urlRedirect.'">'.'Client : ['.$val[1]."] has rescue Image : [". $val[2].'] '."</a><br>";
+            }
         }
-    }
     ?>
-                </p>
                 </div>
             </p>
             <?php $url = urlStrRedirect("imaging/manage/groupimgtabs", ["location" => $location, "reset_defaultMenu" => 1, "target" => "all"]);?>
-            <p><a href="<?php echo $url ;?>"><?php echo _T("Reset all menu imaging from this entity", "imaging");?></a></p>
+            <p>
+                <a href="<?php echo $url; ?>" style="color: #007bff; text-decoration: none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">
+                    <?php echo _T("Reset all menu imaging from this entity", "imaging"); ?>
+                </a>
+            </p>
         </div>
-    </div>
-
+  <!--termine cadre stat-->
     <script type="text/javascript">
 
     jQuery(function () {
@@ -429,8 +416,7 @@ if (!empty($global_status)) {
  // 1) start /tmp/multicast.sh
 
  // progress bar script ajaxcheckstatusmulticast appel toutes les 5 secondes xmlrpc_check_process_multicast_finish
- -->
- <?php
+<?php
  $resultdisplay1 = array();
     $scriptmulticast = 'multicast.sh';
     $path = "/tmp/";
@@ -607,21 +593,22 @@ var interval = setInterval(barprogress,6000);
             xmlrpc_clear_script_multicast($objprocess);
         }
     }
-    ?>
+?>
     <div class="spacer"></div>
 
     <h3 class="activity"><?php echo _T('Recent activity', 'imaging') ?></h3>
 
-    <?php
+<?php
         $ajax = new AjaxFilter("modules/imaging/manage/ajaxLogs.php", "container_logs", array(), "Logs");
-    //$ajax->setRefresh(10000);
-    $ajax->display();
-    echo "<br/><br/><br/>";
-    $ajax->displayDivToUpdate();
-} else {
-    $e = new ErrorMessage(_T("Can't connect to the imaging server linked to the selected entity.", "imaging"));
-    print $e->display();
-}
+        //$ajax->setRefresh(10000);
+        $ajax->display();
+        echo "<br/><br/><br/>";
+        $ajax->displayDivToUpdate();
+    } else {
+        $e = new ErrorMessage(_T("Can't connect to the imaging server linked to the selected entity.", "imaging"));
+        print $e->display();
+    }
 
-require("../includes/ajaxcommon_bottom.inc.php");
-?>
+    require("../includes/ajaxcommon_bottom.inc.php");
+  ?>
+
