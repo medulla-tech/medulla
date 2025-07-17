@@ -1,7 +1,8 @@
-# -*- coding: utf-8; -*-
+# -*- coding:Utf-8; -*
 # SPDX-FileCopyrightText: 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
-# SPDX-FileCopyrightText: 2007-2010 Mandriva, http://www.mandriva.com/
-# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net>
+# SPDX-FileCopyrightText: 2007 Mandriva, http://www.mandriva.com
+# SPDX-FileCopyrightText: 2016-2023 Siveo, http://www.siveo.net
+# SPDX-FileCopyrightText: 2024-2025 Medulla, http://www.medulla-tech.io
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 """
@@ -1157,7 +1158,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     def getImagingLogs4Location(self, location_uuid, start, end, filter):
         session = create_session()
         n = self.__ImagingLogs4Location(session, location_uuid, filter)
-        n = n.order_by(desc(self.imaging_log.c.timestamp))
+        n = n.order_by(desc(self.imaging_log.c.id))
         if end != -1:
             n = n.offset(int(start)).limit(int(end) - int(start))
         else:
@@ -2131,6 +2132,12 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             .filter(self.menu_item.c.id == uuid2id(mi_uuid))
             .first()
         )
+
+        if ims is None:
+            if session_need_close:
+                session.close()
+            return None
+
         lang = ims.fk_language
         I18n1 = sa_exp_alias(self.internationalization)
         I18n2 = sa_exp_alias(self.internationalization)
@@ -2341,10 +2348,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         il = ImagingLog()
         il.timestamp = datetime.datetime.fromtimestamp(time.mktime(time.localtime()))
         il.fk_imaging_log_level = P2ILL.LOG_INFO
-        il.detail = "Image %s has been removed from Imaging Server by %s" % (
-            image_uuid,
-            "",
-        )
+        il.detail = f"Image {image_uuid} has been removed from Imaging Server"
         il.fk_imaging_log_state = 8
 
         q = (
