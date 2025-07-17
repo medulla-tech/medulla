@@ -7735,9 +7735,7 @@ and glpi_computers.id in %s group by glpi_computers.id;""" % (
             return results
 
         except Exception as e:
-            logger.error(
-                f"Erreur lors de la récupération des statistiques de mise à jour des OS : {str(e)}"
-            )
+            logger.error(f"Error while getting OS updates stats : {str(e)}")
             logger.error(f"Traceback : {traceback.format_exc()}")
             return {}
 
