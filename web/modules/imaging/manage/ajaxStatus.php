@@ -153,13 +153,13 @@ if (!empty($global_status)) {
                     $i = 0;
                     foreach ($info as $entry) {
                         if (in_array("glpi", $_SESSION['supportModList'])) {
-                            if (entry['name'] != $entry['realname']) {
+                            if ($entry['name'] != $entry['realname']) {
                                 echo "[ ". entry['name']."(".$entry['realname'].") ]";
                             } else {
-                                echo "[". entry['name']."]";
+                                echo "[". $entry['name']."]";
                             }
                         } else {
-                            echo "[". entry['name']."]";
+                            echo "[". $entry['name']."]";
                         }
                         if ($i == 5) {
                             echo "<br>";
