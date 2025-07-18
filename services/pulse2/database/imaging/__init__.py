@@ -3029,7 +3029,31 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
         if need_to_be_save:
             session.add(im)
-        session.flush()
+            session.flush()
+
+        log = (
+            session.query(ImagingLog)
+            .join(MasteredOn, ImagingLog.id == MasteredOn.fk_imaging_log)
+            .filter(MasteredOn.fk_image == im.id)
+            .order_by(ImagingLog.id.desc())
+            .first()
+        )
+
+        if log:
+            log.detail = params.get("state", "unknown")
+            if "state" in params:
+                if params["state"] in self.r_nomenclatures["ImageState"]:
+                    log.fk_imaging_log_state = self.r_nomenclatures["ImageState"][params["state"]]
+                elif params["state"] in self.nomenclatures["ImageState"]:
+                    log.fk_imaging_log_state = params["state"]
+                else:
+                    self.logger.warn(
+                        "don't know that imaging log state %s" % (params["state"])
+                    )
+                    log.fk_imaging_log_state = 1  # UNKNOWN
+            session.add(log)
+            session.flush()
+
         session.close()
         return im.id
 

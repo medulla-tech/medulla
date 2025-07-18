@@ -1,6 +1,8 @@
-# -*- coding: utf-8; -*-
-# SPDX-FileCopyrightText: 2007-2010 Mandriva, http://www.mandriva.com/
-# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net>
+# -*- coding:Utf-8; -*
+# SPDX-FileCopyrightText: 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+# SPDX-FileCopyrightText: 2007 Mandriva, http://www.mandriva.com
+# SPDX-FileCopyrightText: 2016-2023 Siveo, http://www.siveo.net
+# SPDX-FileCopyrightText: 2024-2025 Medulla, http://www.medulla-tech.io
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 """
@@ -1047,7 +1049,9 @@ class Imaging(object, metaclass=SingletonN):
                 size = 0
                 creationDate = tuple(gmtime())
                 name = "Backup of %s" % result["shortname"]
-                desc = "In Progress"
+                desc = "Image Creation in progress for %s (%s)" % (
+                    result["shortname"], mac
+                )
                 creator = ""
                 state = "EMPTY"  # FIXME : define and use consts
 
@@ -1294,12 +1298,12 @@ class Imaging(object, metaclass=SingletonN):
                     name = "Failed backup of %s" % result["shortname"]
                     desc = "%s, %s" % (rfc3339Time(), humanReadable(size))
                 elif image.has_error:
-                    state = "FAILED"
+                    state = "Image Creation Failed"
                     size = image.size
                     name = "Backup of %s" % result["shortname"]
                     desc = "%s, %s" % (rfc3339Time(), humanReadable(size))
                 else:
-                    state = "DONE"
+                    state = "Image Creation Successful"
                     size = image.size
                     name = "Backup of %s" % result["shortname"]
                     desc = "%s, %s" % (rfc3339Time(), humanReadable(size))
