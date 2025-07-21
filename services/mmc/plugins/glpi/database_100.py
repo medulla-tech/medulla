@@ -2474,19 +2474,55 @@ class Glpi100(DyngroupDatabaseHelper):
         session.close()
         return ret
 
-    def filterOnUUID(self, query, uuid):
+    def filterOnUUID(self, query, uuid_input):
         """
-        Modify the given query to filter on the machine UUID
+        Modifie la requête SQLAlchemy pour filtrer sur des UUIDs machines (ID internes).
+
+        Paramètres :
+        ------------
+        query : sqlalchemy.orm.Query
+            Requête SQLAlchemy construite.
+        uuid_input : int, str ou list
+            Entrées variées : entiers, chaînes (ex. 'UUID12', 'DELETED 3600'), ou liste mixte.
+
+        Retour :
+        --------
+        sqlalchemy.orm.Query
+            Requête filtrée par les UUIDs valides extraits.
         """
-        if type(uuid) == list:
-            return query.filter(
-                self.machine.c.id.in_(
-                    [int(str(a).split("UUID")[-1]) for a in uuid])
-            )
-        else:
-            if uuid is None:
-                uuid = ""
-            return query.filter(self.machine.c.id == int(str(uuid).split("UUID")[-1]))
+
+        def extract_id(value):
+            """Extrait le premier groupe de chiffres trouvé dans une chaîne ou un entier."""
+            if value is None:
+                return None
+            s = str(value).strip()
+            if not s:
+                return None
+            match = re.search(r"\d+", s)
+            if match:
+                return int(match.group())
+            return None
+
+        # Regrouper les UUID extraits dans un set (élimine les doublons automatiquement)
+        ids = set()
+
+        if isinstance(uuid_input, (int, str)):
+            result = extract_id(uuid_input)
+            if result is not None:
+                ids.add(result)
+
+        elif isinstance(uuid_input, list):
+            for val in uuid_input:
+                result = extract_id(val)
+                if result is not None:
+                    ids.add(result)
+
+        # Appliquer le filtre
+        if not ids:
+            self.logger.warning("Aucun UUID valide détecté pour le filtrage.")
+            return query.filter(False)  # Retourne requête vide, aucun résultat
+
+        return query.filter(self.machine.c.id.in_(list(ids)))
 
     # Machine output format (for ldap compatibility)
     def __getAttr(self, machine, get):
@@ -4154,8 +4190,10 @@ class Glpi100(DyngroupDatabaseHelper):
 
         Paramètre :
         -----------
-        uuid : int ou list[int]
-            UUID unique ou liste d'UUIDs à interroger.
+        uuid : int, str ou list
+            UUID unique (int ou str) ou liste d'UUIDs (int ou str) à interroger.
+            Les chaînes peuvent être préfixées par "uuid" (insensible à la casse) ou contenir d'autres mots,
+            seuls les chiffres extraits seront conservés.
 
         Retour :
         --------
@@ -4164,19 +4202,64 @@ class Glpi100(DyngroupDatabaseHelper):
             ou un seul dictionnaire si un seul UUID est fourni.
         """
 
-        # Normalisation de l'entrée
+        def extract_id(value):
+            """
+            Extrait un entier à partir d'une chaîne ou d'un entier.
+            Ignore les préfixes 'uuid' insensibles à la casse, supprime tout sauf chiffres.
+            Renvoie None si impossible.
+            """
+            if value is None:
+                return None
+            s = str(value).strip()
+            if not s:
+                return None
+            # Retirer le préfixe 'uuid' si présent
+            s = re.sub(r"(?i)^uuid", "", s).strip()
+            # Extraire la première séquence de chiffres dans la chaîne
+            match = re.search(r"\d+", s)
+            if match:
+                return int(match.group())
+            else:
+                return None
+
+        uuids_set = set()
+        return_single = False
+
         if isinstance(uuid, int):
-            uuids = [uuid]
+            uuids_set.add(uuid)
             return_single = True
+
+        elif isinstance(uuid, str):
+            extracted = extract_id(uuid)
+            if extracted is not None:
+                uuids_set.add(extracted)
+                return_single = True
+            else:
+                self.logger.warning(f"UUID invalide ou vide ignoré : '{uuid}'")
+                return []
+
         elif isinstance(uuid, list):
-            uuids = [int(u) for u in uuid]
+            for element in uuid:
+                extracted = extract_id(element)
+                if extracted is not None:
+                    uuids_set.add(extracted)
+                else:
+                    self.logger.warning(f"UUID mal formé ignoré : '{element}'")
+            if not uuids_set:
+                self.logger.warning(
+                    "Aucun UUID valide trouvé dans la liste fournie.")
+                return []
             return_single = False
+
         else:
-            raise ValueError("uuid doit être un int ou une liste d'int")
+            self.logger.error(
+                f"uuid doit être un int, str ou liste : reçu {type(uuid)}")
+            return []
+
+        uuids = list(uuids_set)
 
         session = create_session()
 
-        # Requête SQLAlchemy avec jointures
         query = (
             session.query(Machine)
             .add_columns(
@@ -4206,14 +4289,13 @@ class Glpi100(DyngroupDatabaseHelper):
             )
         )
 
-        # Filtrage sur l'UUID
         query = self.filterOnUUID(query, uuids)
         rows = query.all()
 
         result = []
         for row in rows:
             machine = row[0]
-            extra_values = row[1:]  # colonnes ajoutées
+            extra_values = row[1:]
             extra_keys = [
                 "os", "os_sp", "os_version", "domain", "location",
                 "model", "type", "network", "entity", "os_arch"
