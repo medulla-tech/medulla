@@ -38,7 +38,7 @@ class UpdatePanel extends Panel {
         <center>
             <div id="updates_zone">
                 <button class="btnSecondary" id="fetch_updates_btn" style="margin-top: 24px; margin-bottom: 18px;">
-                    Search updates
+                    Check updates
                 </button>
             </div>
         </center>
