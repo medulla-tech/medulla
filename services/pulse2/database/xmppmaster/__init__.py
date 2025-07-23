@@ -241,7 +241,8 @@ class XmppMasterDatabase(DatabaseHelper):
         """
         del organization name
         """
-        session.query(Agentsubscription).filter(Agentsubscription.name == name).delete()
+        session.query(Agentsubscription).filter(
+            Agentsubscription.name == name).delete()
         session.commit()
         session.flush()
 
@@ -470,6 +471,106 @@ class XmppMasterDatabase(DatabaseHelper):
         result = session.execute(sql)
         session.commit()
         session.flush()
+
+    @DatabaseHelper._sessionm
+    def get_auto_approve_rules(self, session, colonne=True):
+        """
+        Récupère les enregistrements de la table 'up_auto_approve_rules' et renvoie les résultats sous forme de colonnes ou de lignes.
+        Les valeurs None ou NULL sont remplacées par des chaînes de caractères vides ("").
+
+        Paramètres :
+        - colonne (bool) : Si True, les résultats sont retournés sous forme de colonnes. Sinon, sous forme de lignes.
+
+        Retourne :
+        - dict/list : Un dictionnaire ou une liste contenant les informations des règles d'approbation automatique trouvées.
+        """
+        try:
+            # Utiliser une requête paramétrée pour éviter les injections SQL
+            result = session.execute(
+                text("SELECT * FROM xmppmaster.up_auto_approve_rules"))
+            rules = result.fetchall()
+
+            if rules:
+                if colonne:
+                    # Retourner les résultats sous forme de colonnes
+                    rules_info = {
+                        "id": [rule[0] if rule[0] is not None else "" for rule in rules],
+                        "msrcseverity": [rule[1] if rule[1] is not None else "" for rule in rules],
+                        "updateclassification": [rule[2] if rule[2] is not None else "" for rule in rules],
+                        "active_rule": [rule[3] if rule[3] is not None else "" for rule in rules]
+                    }
+                else:
+                    # Retourner les résultats sous forme de lignes
+                    rules_info = [
+                        {
+                            "id": rule[0] if rule[0] is not None else "",
+                            "msrcseverity": rule[1] if rule[1] is not None else "",
+                            "updateclassification": rule[2] if rule[2] is not None else "",
+                            "active_rule": rule[3] if rule[3] is not None else ""
+                        }
+                        for rule in rules
+                    ]
+                return rules_info
+            else:
+                logger.info("No rules found in the table.")
+                return []
+
+        except Exception as e:
+            logger.error(f"An error occurred: {str(e)}")
+            return {}
+
+    @DatabaseHelper._sessionm
+    def update_auto_approve_rules(self, session, updates):
+        """
+        Met à jour la colonne 'active_rule' dans la table 'up_auto_approve_rules' pour les IDs spécifiés.
+
+        Paramètres :
+        - updates (list of tuples or lists) : Une liste de tuples ou de listes où chaque élément contient (id, active_rule).
+
+        Exemples :
+        1. Utilisation avec une liste de tuples :
+        ```python
+        updates = [
+            (1, 1),  # Mettre à jour l'ID 1 avec active_rule = 1
+            (2, 0),  # Mettre à jour l'ID 2 avec active_rule = 0
+            (3, 1),  # Mettre à jour l'ID 3 avec active_rule = 1
+        ]
+        ```
+
+        2. Utilisation avec une liste de listes :
+        ```python
+        updates = [
+            [1, 1],  # Mettre à jour l'ID 1 avec active_rule = 1
+            [2, 0],  # Mettre à jour l'ID 2 avec active_rule = 0
+            [3, 1],  # Mettre à jour l'ID 3 avec active_rule = 1
+        ]
+        ```
+
+        Retourne :
+        - dict : Un dictionnaire indiquant si la mise à jour a réussi ou non, avec un message correspondant.
+        """
+        try:
+            # Normaliser les entrées pour s'assurer qu'elles sont sous forme de tuples
+            normalized_updates = [tuple(update) if isinstance(
+                update, list) else update for update in updates]
+
+            for id, active_rule in normalized_updates:
+                # Exécuter une requête de mise à jour pour chaque ID
+                result = session.execute(
+                    text(
+                        "UPDATE xmppmaster.up_auto_approve_rules SET active_rule = :active_rule WHERE id = :id"),
+                    {"active_rule": active_rule, "id": id}
+                )
+                session.commit()
+
+            logger.info(
+                "Mise à jour réussie des règles d'approbation automatique.")
+            return {"success": True, "message": "Update successful"}
+
+        except Exception as e:
+            session.rollback()
+            logger.error(f"An error occurred during update: {str(e)}")
+            return {"success": False, "message": str(e)}
 
     @DatabaseHelper._sessionm
     def get_ars_for_pausing_syncthing(self, session, nbtransfert=2):
@@ -755,7 +856,8 @@ class XmppMasterDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def stat_syncthing_transfert(self, session, idgrp, idcmd):
         ddistribution = self.stat_syncthing_distributon(idgrp, idcmd)
-        distibution = {"nbvalue": len(ddistribution), "data_dist": ddistribution}
+        distibution = {"nbvalue": len(
+            ddistribution), "data_dist": ddistribution}
 
         sql = """SELECT
                     pathpackage,
@@ -978,7 +1080,8 @@ class XmppMasterDatabase(DatabaseHelper):
             ids = [ids]
 
         try:
-            relayservers = session.query(RelayServer).filter(RelayServer.id.in_(ids))
+            relayservers = session.query(
+                RelayServer).filter(RelayServer.id.in_(ids))
             relayservers = relayservers.all()
             session.commit()
             session.flush()
@@ -1477,7 +1580,8 @@ class XmppMasterDatabase(DatabaseHelper):
             # exclude local package server
             if jid[0].startswith("rspulse@pulse/"):
                 continue
-            self.setSyncthingsync(uuidpackage, jid[0], typesynchro, watching="yes")
+            self.setSyncthingsync(
+                uuidpackage, jid[0], typesynchro, watching="yes")
 
     # =====================================================================
     # xmppmaster FUNCTIONS
@@ -1593,8 +1697,8 @@ class XmppMasterDatabase(DatabaseHelper):
                 Command_action.target.label("target"),
                 Command_qa.jid_machine.label("jid_machine"),
             ).outerjoin(Command_action, Command_qa.id == Command_action.command_id)
-            ##si on veut passer par les groupe avant d'aller sur les machine.
-            ## command_qa = command_qa.group_by(Command_qa.id)
+            # si on veut passer par les groupe avant d'aller sur les machine.
+            # command_qa = command_qa.group_by(Command_qa.id)
             command_qa = command_qa.order_by(desc(Command_qa.id))
             if during_the_last_seconds:
                 command_qa = command_qa.filter(
@@ -1606,7 +1710,8 @@ class XmppMasterDatabase(DatabaseHelper):
 
             nbtotal = self.get_count(command_qa)
             if start != "" and stop != "":
-                command_qa = command_qa.offset(int(start)).limit(int(stop) - int(start))
+                command_qa = command_qa.offset(
+                    int(start)).limit(int(stop) - int(start))
             command_qa = command_qa.all()
             session.commit()
             session.flush()
@@ -1679,7 +1784,8 @@ class XmppMasterDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def getCommand_qa_by_cmdid(self, session, cmdid):
         try:
-            command_qa = session.query(Command_qa).filter(Command_qa.id == cmdid)
+            command_qa = session.query(
+                Command_qa).filter(Command_qa.id == cmdid)
             command_qa = command_qa.first()
             session.commit()
             session.flush()
@@ -1866,7 +1972,8 @@ class XmppMasterDatabase(DatabaseHelper):
             return result_organization.id
         except Exception as e:
             logger.error(str(e))
-            logger.debug("organization name : %s does not exists" % name_organization)
+            logger.debug("organization name : %s does not exists" %
+                         name_organization)
             return -1
 
     @DatabaseHelper._sessionm
@@ -2243,7 +2350,8 @@ class XmppMasterDatabase(DatabaseHelper):
         update Machine table with information retrieved from GLPI
         """
         try:
-            entity_id_xmpp = None if entity_id_xmpp in ["NULL", ""] else entity_id_xmpp
+            entity_id_xmpp = None if entity_id_xmpp in [
+                "NULL", ""] else entity_id_xmpp
             location_id_xmpp = (
                 None if location_id_xmpp in ["NULL", ""] else location_id_xmpp
             )
@@ -2476,7 +2584,7 @@ class XmppMasterDatabase(DatabaseHelper):
         else:
             return para
 
-    ##########gestion packages###############
+    ########## gestion packages###############
 
     ################################
 
@@ -2670,11 +2778,14 @@ class XmppMasterDatabase(DatabaseHelper):
             pe = machineforupdate["id"]
         if pe != -1:
             # update
-            maxlenhostname = max([len(machineforupdate["hostname"]), len(hostname)])
+            maxlenhostname = max(
+                [len(machineforupdate["hostname"]), len(hostname)])
             maxlenjid = max([len(machineforupdate["jid"]), len(jid)])
-            maxmacadress = max([len(machineforupdate["macaddress"]), len(macaddress)])
+            maxmacadress = max(
+                [len(machineforupdate["macaddress"]), len(macaddress)])
             maxip_xmpp = max(
-                [len(machineforupdate["ip_xmpp"]), len(ip_xmpp), len("ip_xmpp")]
+                [len(machineforupdate["ip_xmpp"]),
+                 len(ip_xmpp), len("ip_xmpp")]
             )
             maxsubnetxmpp = max(
                 [
@@ -2963,7 +3074,8 @@ class XmppMasterDatabase(DatabaseHelper):
         """
         query = session.query(Organization_ad)
         if filter != "":
-            query = query.filter(Organization_ad.oumachine.like("%" + filt + "%"))
+            query = query.filter(
+                Organization_ad.oumachine.like("%" + filt + "%"))
         ret = query.all()
         session.close()
         return ret
@@ -3204,7 +3316,8 @@ class XmppMasterDatabase(DatabaseHelper):
         )
 
         if not bool(result):
-            logger.error("An error occured while checking the broadcast address.")
+            logger.error(
+                "An error occured while checking the broadcast address.")
             logger.error(
                 "Please check that the broadcast information exists for the following mac addresses: %s"
                 % listmacaddress
@@ -3340,7 +3453,7 @@ class XmppMasterDatabase(DatabaseHelper):
         # syncthing and set stat to 2
         self.chang_status_deploy_syncthing(datenow)
         cluster = self.clusterlistars()
-        ###### keysyncthing  = getMachinefromjid(jid)
+        # keysyncthing  = getMachinefromjid(jid)
         cluster_pris_encharge = []
         gr_pris_en_charge = -1
         command_pris_en_charge = -1
@@ -3452,7 +3565,8 @@ class XmppMasterDatabase(DatabaseHelper):
         listars = session.execute(sql)
         session.commit()
         session.flush()
-        cluster = {"ars": [], "numcluster": -1, "namecluster": "", "choose": ""}
+        cluster = {"ars": [], "numcluster": -
+                   1, "namecluster": "", "choose": ""}
         n = 0
         for z in listars:
             cluster["ars"].append(z[0])
@@ -3537,7 +3651,8 @@ class XmppMasterDatabase(DatabaseHelper):
         result = (
             session.query(Deploy)
             .filter(
-                and_(Deploy.endcmd < datenow, Deploy.state.like("DEPLOYMENT START%%"))
+                and_(Deploy.endcmd < datenow,
+                     Deploy.state.like("DEPLOYMENT START%%"))
             )
             .all()
         )
@@ -3560,7 +3675,8 @@ class XmppMasterDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def sessionidforidcommand(self, session, idcommand):
         result = (
-            session.query(Deploy.sessionid).filter(Deploy.command == idcommand).all()
+            session.query(Deploy.sessionid).filter(
+                Deploy.command == idcommand).all()
         )
         if result:
             a = [m[0] for m in result]
@@ -3612,7 +3728,8 @@ class XmppMasterDatabase(DatabaseHelper):
                     if "spooling" in params_json:
                         obj["spooling"] = params_json["spooling"]
                 except Exception as e:
-                    logger.error("[the avanced parameters from msc] : " + str(e))
+                    logger.error(
+                        "[the avanced parameters from msc] : " + str(e))
 
             if result.parameters_deploy is not None:
                 try:
@@ -3664,7 +3781,8 @@ class XmppMasterDatabase(DatabaseHelper):
         try:
             start = int(startcmd)
             end = int(endcmd)
-            startcmd = datetime.fromtimestamp(start).strftime("%Y-%m-%d %H:%M:%S")
+            startcmd = datetime.fromtimestamp(
+                start).strftime("%Y-%m-%d %H:%M:%S")
             endcmd = datetime.fromtimestamp(end).strftime("%Y-%m-%d %H:%M:%S")
         except Exception as e:
             # logger.error(str(e))
@@ -3855,7 +3973,8 @@ class XmppMasterDatabase(DatabaseHelper):
         machine = {}
         try:
             query = session.query(Deploy).filter(
-                and_(Deploy.inventoryuuid == inventoryuuid, Deploy.command == cmdid)
+                and_(Deploy.inventoryuuid == inventoryuuid,
+                     Deploy.command == cmdid)
             )
             query = query.one()
             session.commit()
@@ -3950,7 +4069,8 @@ class XmppMasterDatabase(DatabaseHelper):
             machinedeploy = (
                 session.query(Deploy.state, func.count(Deploy.state))
                 .filter(
-                    and_(Deploy.command == command_id, Deploy.startcmd == datestart)
+                    and_(Deploy.command == command_id,
+                         Deploy.startcmd == datestart)
                 )
                 .group_by(Deploy.state)
             )
@@ -4419,7 +4539,8 @@ class XmppMasterDatabase(DatabaseHelper):
             )
 
         if filter == "relays" and criterion != "":
-            query = query.join(Machines, Machines.groupdeploy == Deploy.jid_relay)
+            query = query.join(
+                Machines, Machines.groupdeploy == Deploy.jid_relay)
 
             query = query.filter(
                 and_(
@@ -4579,7 +4700,8 @@ class XmppMasterDatabase(DatabaseHelper):
             # ,Deploy.result .isnot(None)
         else:
             relayserver = session.query(Deploy).filter(
-                and_(Deploy.inventoryuuid == uuid, Deploy.command == command_id)
+                and_(Deploy.inventoryuuid == uuid,
+                     Deploy.command == command_id)
             )
             # , Deploy.result .isnot(None)
         # print relayserver
@@ -4617,7 +4739,8 @@ class XmppMasterDatabase(DatabaseHelper):
                 global_deploy = (
                     session.query(Deploy)
                     .filter(
-                        Deploy.command == command_id, Deploy.title.like("%Convergence%")
+                        Deploy.command == command_id, Deploy.title.like(
+                            "%Convergence%")
                     )
                     .order_by(Deploy.start.desc())
                     .first()
@@ -4661,7 +4784,8 @@ class XmppMasterDatabase(DatabaseHelper):
                 latest_start = (
                     session.query(func.max(Deploy.start))
                     .filter(
-                        and_(Deploy.inventoryuuid == uuid, Deploy.command == command_id)
+                        and_(Deploy.inventoryuuid == uuid,
+                             Deploy.command == command_id)
                     )
                     .scalar()
                 )
@@ -4680,7 +4804,8 @@ class XmppMasterDatabase(DatabaseHelper):
             ret = {"len": len(relayserver), "objectdeploy": []}
 
             for t in relayserver:
-                start_obj = {"timestamp": int(t.start.timestamp())} if t.start else None
+                start_obj = {"timestamp": int(
+                    t.start.timestamp())} if t.start else None
 
                 obj = {
                     "pathpackage": t.pathpackage,
@@ -4774,7 +4899,8 @@ class XmppMasterDatabase(DatabaseHelper):
         try:
             # Check if an entry with the same commandid already exists
             existing_logincommand = (
-                session.query(Has_login_command).filter_by(command=commandid).first()
+                session.query(Has_login_command).filter_by(
+                    command=commandid).first()
             )
 
             if existing_logincommand:
@@ -4867,10 +4993,12 @@ class XmppMasterDatabase(DatabaseHelper):
     ):
         try:
             login_command = (
-                session.query(Has_login_command).filter_by(command=commandid).first()
+                session.query(Has_login_command).filter_by(
+                    command=commandid).first()
             )
             if not login_command:
-                logger.error(f"Aucune commande trouvée pour command id {commandid}.")
+                logger.error(
+                    f"Aucune commande trouvée pour command id {commandid}.")
                 return None
 
             login_command.login = login
@@ -4894,7 +5022,8 @@ class XmppMasterDatabase(DatabaseHelper):
             login_command.syncthing = bool(syncthing)
 
             if isinstance(params, dict):
-                logging.getLogger().error(f"111 - Voila ma variable params {params}")
+                logging.getLogger().error(
+                    f"111 - Voila ma variable params {params}")
                 if "do_reboot" in params:
                     login_command.do_reboot = params["do_reboot"]
                 if "deployment_intervals" in params:
@@ -5046,7 +5175,8 @@ class XmppMasterDatabase(DatabaseHelper):
         """
         try:
             deploysession = (
-                session.query(Deploy).filter(Deploy.sessionid == sessionid).one()
+                session.query(Deploy).filter(
+                    Deploy.sessionid == sessionid).one()
             )
             if deploysession:
                 # les status commençant par error, success, abort ne peuvent
@@ -5252,7 +5382,8 @@ class XmppMasterDatabase(DatabaseHelper):
         else:
             try:
                 session.query(Users).filter(
-                    and_(Users.namesession == namesession, Users.hostname == hostname)
+                    and_(Users.namesession == namesession,
+                         Users.hostname == hostname)
                 ).update(
                     {
                         Users.city: city,
@@ -5300,7 +5431,8 @@ class XmppMasterDatabase(DatabaseHelper):
             Syncthing_machine.endcmd,
             Syncthing_machine.cluster,
         ).filter(
-            and_(Syncthing_machine.group_uuid == grp, Syncthing_machine.command == cmd)
+            and_(Syncthing_machine.group_uuid == grp,
+                 Syncthing_machine.command == cmd)
         )
         result = mach.all()
         session.commit()
@@ -5316,7 +5448,7 @@ class XmppMasterDatabase(DatabaseHelper):
             try:
                 cluster = json.loads(linemach.cluster)
                 ars = [x.split("@")[0] for x in cluster["listarscluster"]]
-                ###clusterlist = ",".join(cluster["listarscluster"])
+                # clusterlist = ",".join(cluster["listarscluster"])
                 clusterlist = ",".join(ars)
                 nbclustermachine = str(cluster["numcluster"])
             except BaseException:
@@ -5350,7 +5482,7 @@ class XmppMasterDatabase(DatabaseHelper):
         why,
         headercolumn,
     ):
-        ##labelheader = [x.strip() for x in headercolumn.split("|") if x.strip() != "" and x is not "None"]
+        # labelheader = [x.strip() for x in headercolumn.split("|") if x.strip() != "" and x is not "None"]
         logs = session.query(Logs)
         if headercolumn == "":
             headercolumn = "date@fromuser@who@text"
@@ -5372,7 +5504,8 @@ class XmppMasterDatabase(DatabaseHelper):
                 stringsearchinmodule = "%" + x + "%"
                 logs = logs.filter(Logs.module.like(stringsearchinmodule))
         if not (user == "None" or user == ""):
-            logs = logs.filter(func.lower(Logs.fromuser).like(func.lower(user)))
+            logs = logs.filter(func.lower(
+                Logs.fromuser).like(func.lower(user)))
         if not (how == "None" or how == ""):
             logs = logs.filter(Logs.how == how)
         if not (who == "None" or who == ""):
@@ -5461,7 +5594,8 @@ class XmppMasterDatabase(DatabaseHelper):
             deploylog = deploylog.filter(Deploy.group_uuid == group_uuid)
         if intervalsearch:
             deploylog = deploylog.filter(
-                Deploy.start >= (datetime.now() - timedelta(seconds=intervalsearch))
+                Deploy.start >= (datetime.now() -
+                                 timedelta(seconds=intervalsearch))
             )
         if state:
             deploylog = deploylog.filter(Deploy.state == state)
@@ -5568,7 +5702,8 @@ class XmppMasterDatabase(DatabaseHelper):
             deploylog = deploylog.filter(Deploy.inventoryuuid == uuidinventory)
         if intervalsearch:
             deploylog = deploylog.filter(
-                Deploy.start >= (datetime.now() - timedelta(seconds=intervalsearch))
+                Deploy.start >= (datetime.now() -
+                                 timedelta(seconds=intervalsearch))
             )
         if state:
             deploylog = deploylog.filter(Deploy.state == state)
@@ -5738,7 +5873,8 @@ class XmppMasterDatabase(DatabaseHelper):
         if preposition_comparaisons_count:
             preposition_sql_string = (
                 "and ("
-                + " or ".join(["%s" % x for x in preposition_comparaisons_count])
+                + " or ".join(["%s" %
+                              x for x in preposition_comparaisons_count])
                 + ")"
             )
 
@@ -5747,7 +5883,8 @@ class XmppMasterDatabase(DatabaseHelper):
 
         if intervalsearch:
             deploylog = deploylog.filter(
-                Deploy.start >= (datetime.now() - timedelta(seconds=intervalsearch))
+                Deploy.start >= (datetime.now() -
+                                 timedelta(seconds=intervalsearch))
             )
 
         if filt:
@@ -5910,7 +6047,8 @@ class XmppMasterDatabase(DatabaseHelper):
 
         if intervalsearch:
             deploylog = deploylog.filter(
-                Deploy.start >= (datetime.now() - timedelta(seconds=intervalsearch))
+                Deploy.start >= (datetime.now() -
+                                 timedelta(seconds=intervalsearch))
             )
 
         if filt:
@@ -6047,7 +6185,8 @@ class XmppMasterDatabase(DatabaseHelper):
             )
 
         query_base = session.query(Deploy).filter(
-            Deploy.sessionid.like(f"{typedeploy}%"), Deploy.title.like("%Convergence%")
+            Deploy.sessionid.like(
+                f"{typedeploy}%"), Deploy.title.like("%Convergence%")
         )
         if intervalsearch:
             since_date = datetime.now() - timedelta(seconds=intervalsearch)
@@ -6063,7 +6202,8 @@ class XmppMasterDatabase(DatabaseHelper):
                 )
             )
 
-        team_filter = or_(*[Deploy.login.op("regexp")(uid) for uid in pulse_usersid])
+        team_filter = or_(*[Deploy.login.op("regexp")(uid)
+                          for uid in pulse_usersid])
         query_base = query_base.filter(team_filter)
 
         if state:
@@ -6178,7 +6318,7 @@ class XmppMasterDatabase(DatabaseHelper):
             aggregated_list.append(aggregated)
 
         if minimum is not None and maximum is not None:
-            aggregated_list = aggregated_list[int(minimum) : int(maximum)]
+            aggregated_list = aggregated_list[int(minimum): int(maximum)]
         lentotal = len(aggregated_list)
 
         ret = {
@@ -6231,7 +6371,8 @@ class XmppMasterDatabase(DatabaseHelper):
         deploylog = session.query(Deploy)
         # Do not show convergence deploy
         deploylog = deploylog.filter(~Deploy.title.like("%Convergence%"))
-        deploylog = deploylog.filter(Deploy.sessionid.like("%s%%" % typedeploy))
+        deploylog = deploylog.filter(
+            Deploy.sessionid.like("%s%%" % typedeploy))
         if login:
             deploylog = deploylog.filter(Deploy.login == login)
         if state:
@@ -6239,7 +6380,8 @@ class XmppMasterDatabase(DatabaseHelper):
 
         if intervalsearch:
             deploylog = deploylog.filter(
-                Deploy.start >= (datetime.now() - timedelta(seconds=intervalsearch))
+                Deploy.start >= (datetime.now() -
+                                 timedelta(seconds=intervalsearch))
             )
 
         if filt:
@@ -6336,7 +6478,7 @@ class XmppMasterDatabase(DatabaseHelper):
 
         deploylog = deploylog.order_by(desc(Deploy.id))
 
-        ##deploylog = deploylog.add_column(func.count(Deploy.title))
+        # deploylog = deploylog.add_column(func.count(Deploy.title))
         if minimum and maximum:
             deploylog = deploylog.offset(int(minimum)).limit(
                 int(maximum) - int(minimum)
@@ -6544,7 +6686,7 @@ class XmppMasterDatabase(DatabaseHelper):
             aggregated_list.append(aggregated)
 
         if minimum is not None and maximum is not None:
-            aggregated_list = aggregated_list[int(minimum) : int(maximum)]
+            aggregated_list = aggregated_list[int(minimum): int(maximum)]
         lentotal = len(aggregated_list)
 
         ret = {
@@ -6597,16 +6739,19 @@ class XmppMasterDatabase(DatabaseHelper):
         """
         deploylog = session.query(Deploy)
         deploylog = deploylog.filter(~Deploy.title.like("%Convergence%"))
-        deploylog = deploylog.filter(Deploy.sessionid.like("%s%%" % typedeploy))
+        deploylog = deploylog.filter(
+            Deploy.sessionid.like("%s%%" % typedeploy))
         if login:
             if isinstance(login, list):
-                deploylog = deploylog.filter(Deploy.login.op("regexp")("|".join(login)))
+                deploylog = deploylog.filter(
+                    Deploy.login.op("regexp")("|".join(login)))
             else:
                 deploylog = deploylog.filter(Deploy.login.like(login))
 
         if intervalsearch:
             deploylog = deploylog.filter(
-                Deploy.endcmd >= (datetime.now() - timedelta(seconds=intervalsearch))
+                Deploy.endcmd >= (
+                    datetime.now() - timedelta(seconds=intervalsearch))
             )
         filter_filt = ""
         if filt:
@@ -6800,7 +6945,8 @@ class XmppMasterDatabase(DatabaseHelper):
             ret["tabdeploy"]["sessionid"].append(linedeploy.sessionid)
             ret["tabdeploy"]["inventoryuuid"].append(linedeploy.inventoryuuid)
             ret["tabdeploy"]["command"].append(linedeploy.command)
-            starttime_formated = str(linedeploy.start.strftime("%Y-%m-%d %H:%M"))
+            starttime_formated = str(
+                linedeploy.start.strftime("%Y-%m-%d %H:%M"))
             ret["tabdeploy"]["start"].append(starttime_formated)
             ret["tabdeploy"]["login"].append(linedeploy.login)
             ret["tabdeploy"]["host"].append(linedeploy.host.split("/")[-1])
@@ -7079,7 +7225,8 @@ class XmppMasterDatabase(DatabaseHelper):
             It returns the UUID based on the jid, False otherwise
         """
         uuid_inventorymachine = (
-            session.query(Machines).filter_by(jid=jid).first().uuid_inventorymachine
+            session.query(Machines).filter_by(
+                jid=jid).first().uuid_inventorymachine
         )
         if uuid_inventorymachine:
             return uuid_inventorymachine.strip("UUID")
@@ -7851,7 +7998,8 @@ class XmppMasterDatabase(DatabaseHelper):
                             if value is None:
                                 dictresult[key] = ""
                             elif isinstance(value, datetime):
-                                dictresult[key] = value.strftime("%Y-%m-%d %H:%M:%S")
+                                dictresult[key] = value.strftime(
+                                    "%Y-%m-%d %H:%M:%S")
                                 if timestmp:
                                     dictresult["%s_stmp" % key] = (
                                         self.datetimetotimestamp(value)
@@ -7959,7 +8107,7 @@ class XmppMasterDatabase(DatabaseHelper):
                         elt = "loc.%s" % locationfield[indexchamp]
                         tabelt.append("COALESCE(%s, '')" % elt)
                     tabelt = ",'~',".join(tabelt)
-                    ## logger.warning("tabelt %s" % tabelt)
+                    # logger.warning("tabelt %s" % tabelt)
                     recherchefild = " AND ( concat(%s) like '%%%s%%')" % (
                         tabelt,
                         ctx["filter"],
@@ -7987,9 +8135,11 @@ class XmppMasterDatabase(DatabaseHelper):
                         "ent.id",
                         "loc.glpi_id",
                     ]:
-                        recherchefild = " AND %s = '%s'" % (ctx["field"], ctx["filter"])
+                        recherchefild = " AND %s = '%s'" % (
+                            ctx["field"], ctx["filter"])
                     else:
-                        recherchefild = _likecriterium(ctx["field"], ctx["filter"])
+                        recherchefild = _likecriterium(
+                            ctx["field"], ctx["filter"])
         r = re.compile(r"reg_key_.*")
         regs = list(filter(r.search, self.config.summary))
         list_reg_columns_name = [
@@ -8119,7 +8269,8 @@ class XmppMasterDatabase(DatabaseHelper):
                         couplekeyvalue = strkeyvalue.split("|")
                         if len(couplekeyvalue) == 2:
                             if couplekeyvalue[0] == columkeyreg:
-                                ret["data"][columkeyreg].append(couplekeyvalue[1])
+                                ret["data"][columkeyreg].append(
+                                    couplekeyvalue[1])
         ret["total"] = count
         return ret
 
@@ -8138,7 +8289,8 @@ class XmppMasterDatabase(DatabaseHelper):
         machinespresente = (
             session.query(Machines.uuid_inventorymachine)
             .filter(
-                and_(Machines.uuid_inventorymachine == uuid, Machines.enabled == "1")
+                and_(Machines.uuid_inventorymachine ==
+                     uuid, Machines.enabled == "1")
             )
             .first()
         )
@@ -8158,7 +8310,8 @@ class XmppMasterDatabase(DatabaseHelper):
         machinespresente = (
             session.query(Machines.uuid_inventorymachine)
             .filter(
-                and_(Machines.uuid_inventorymachine.in_(uuids), Machines.enabled == "1")
+                and_(Machines.uuid_inventorymachine.in_(
+                    uuids), Machines.enabled == "1")
             )
             .all()
         )
@@ -8277,7 +8430,8 @@ class XmppMasterDatabase(DatabaseHelper):
 
     # topology
     def write_topologyfile(self, topology):
-        directoryjson = os.path.join("/", "usr", "share", "mmc", "datatopology")
+        directoryjson = os.path.join(
+            "/", "usr", "share", "mmc", "datatopology")
         if not os.path.isdir(directoryjson):
             # creation repertoire de json topology
             os.makedirs(directoryjson)
@@ -8288,7 +8442,8 @@ class XmppMasterDatabase(DatabaseHelper):
         # creation topology file.
         filename = "topology.json"
         pathfile = os.path.join(directoryjson, filename)
-        builddatajson = {"name": "Pulse", "type": "AMR", "parent": None, "children": []}
+        builddatajson = {"name": "Pulse", "type": "AMR",
+                         "parent": None, "children": []}
         for i in topology:
             listmachines = topology[i]
 
@@ -8407,7 +8562,8 @@ class XmppMasterDatabase(DatabaseHelper):
             session.flush()
             return [x[0] for x in presencelist]
         except Exception as e:
-            logger.error("Error debug for the getidlistPresenceMachine function!")
+            logger.error(
+                "Error debug for the getidlistPresenceMachine function!")
             logger.error("The presence of the machine is:  %s" % presence)
             logger.error("The sql error is: %s" % sql)
             logger.error("the Exception catched is %s" % str(e))
@@ -8431,7 +8587,8 @@ class XmppMasterDatabase(DatabaseHelper):
                 Machines.uuid_inventorymachine.isnot(None)
             )
             if Regexpression:
-                machineid = machineid.filter(Machines.ad_ou_user.op("regexp")(fl))
+                machineid = machineid.filter(
+                    Machines.ad_ou_user.op("regexp")(fl))
             else:
                 machineid = machineid.filter(Machines.ad_ou_user.like(fl))
         elif listqueryxmppmaster[2] == "ou machine":
@@ -8439,7 +8596,8 @@ class XmppMasterDatabase(DatabaseHelper):
                 Machines.uuid_inventorymachine.isnot(None)
             )
             if Regexpression:
-                machineid = machineid.filter(Machines.ad_ou_machine.op("regexp")(fl))
+                machineid = machineid.filter(
+                    Machines.ad_ou_machine.op("regexp")(fl))
             else:
                 machineid = machineid.filter(Machines.ad_ou_machine.like(fl))
 
@@ -8450,7 +8608,8 @@ class XmppMasterDatabase(DatabaseHelper):
         machineid = machineid.all()
         session.commit()
         session.flush()
-        ret = [str(m.uuid_inventorymachine).replace("UUID", "") for m in machineid]
+        ret = [str(m.uuid_inventorymachine).replace("UUID", "")
+               for m in machineid]
         return ret
 
     @DatabaseHelper._sessionm
@@ -8519,7 +8678,8 @@ class XmppMasterDatabase(DatabaseHelper):
         """
         try:
             user = "%s%%" % str(jid).split("@")[0]
-            machine = session.query(Machines).filter(Machines.jid.like(user)).first()
+            machine = session.query(Machines).filter(
+                Machines.jid.like(user)).first()
             if machine:
                 machine.enabled = "%s" % enable
                 session.commit()
@@ -8529,7 +8689,8 @@ class XmppMasterDatabase(DatabaseHelper):
                     "xmpp signal changement status on machine no exist %s" % jid
                 )
         except Exception:
-            logger.warning("xmpp signal changement status on machine no exist %s" % jid)
+            logger.warning(
+                "xmpp signal changement status on machine no exist %s" % jid)
 
     @DatabaseHelper._sessionm
     def delMachineXmppPresence(self, session, uuidinventory):
@@ -8730,7 +8891,8 @@ class XmppMasterDatabase(DatabaseHelper):
         # DEPLOYMENT START
         try:
             deploysession = (
-                session.query(Deploy).filter(Deploy.sessionid == sessionid).one()
+                session.query(Deploy).filter(
+                    Deploy.sessionid == sessionid).one()
             )
             if deploysession:
                 if (
@@ -8753,7 +8915,8 @@ class XmppMasterDatabase(DatabaseHelper):
                     }
                 else:
                     jsonbase = json.loads(deploysession.result)
-                    jsonbase["infoslist"].append(jsonresult["descriptor"]["info"])
+                    jsonbase["infoslist"].append(
+                        jsonresult["descriptor"]["info"])
                     jsonbase["descriptorslist"].append(
                         jsonresult["descriptor"]["sequence"]
                     )
@@ -8985,7 +9148,8 @@ class XmppMasterDatabase(DatabaseHelper):
             logger.error(
                 "Function : update_Presence_Relay, we got the error: " % str(e)
             )
-            logger.error("We encountered the backtrace: \n%s" % traceback.format_exc())
+            logger.error("We encountered the backtrace: \n%s" %
+                         traceback.format_exc())
 
     @DatabaseHelper._sessionm
     def update_reconf_mach_of_Relay_down(self, session, jid, reconf=1):
@@ -9204,7 +9368,8 @@ class XmppMasterDatabase(DatabaseHelper):
                 "We failed to find/select machines on a stalled deploiement for more than 60 seconds"
             )
             logger.error("We got the error %s" % stalled_error)
-            logger.error("We hit the backtrace: \n %s" % (traceback.format_exc()))
+            logger.error("We hit the backtrace: \n %s" %
+                         (traceback.format_exc()))
 
     @DatabaseHelper._sessionm
     def search_machines_from_state(self, session, state, subdep_user=None):
@@ -9625,7 +9790,8 @@ class XmppMasterDatabase(DatabaseHelper):
             session.commit()
             session.flush()
         except Exception as e:
-            logger.error("We failed to search the computers having %s as uuid" % uuid)
+            logger.error(
+                "We failed to search the computers having %s as uuid" % uuid)
             logger.error("The backtrace we trapped is: \n %s" % str(e))
         return resultdata
 
@@ -9701,7 +9867,8 @@ class XmppMasterDatabase(DatabaseHelper):
         except MultipleResultsFound as e:
             result["error"] = "MultipleResultsFound"
             if enable is None:
-                logger.error("We found multiple machines with the UUID %s" % uuid)
+                logger.error(
+                    "We found multiple machines with the UUID %s" % uuid)
             else:
                 logger.error(
                     "We found multiple machines with the UUID %s, and with enabled: %s"
@@ -9714,7 +9881,8 @@ class XmppMasterDatabase(DatabaseHelper):
         except Exception as e:
             result["error"] = str(e)
             if enable is None:
-                logger.error("We were searching for machines with the UUID %s" % uuid)
+                logger.error(
+                    "We were searching for machines with the UUID %s" % uuid)
             else:
                 logger.error(
                     "We were searching for machines with the UUID %s, and with enabled: %s"
@@ -9737,7 +9905,8 @@ class XmppMasterDatabase(DatabaseHelper):
         """
         if existtest is None:
             ret = (
-                session.query(Has_guacamole.idguacamole, Has_guacamole.protocol)
+                session.query(Has_guacamole.idguacamole,
+                              Has_guacamole.protocol)
                 .filter(
                     and_(
                         Has_guacamole.idinventory == uuid.replace("UUID", ""),
@@ -9810,7 +9979,8 @@ class XmppMasterDatabase(DatabaseHelper):
             It returns True if the machines exists in pulse machine database and is online
             It returns False if the machines exists in pulse machine database and is offline
         """
-        machine = session.query(Machines).filter(and_(Machines.jid == jid)).first()
+        machine = session.query(Machines).filter(
+            and_(Machines.jid == jid)).first()
         if machine:
             if machine.enabled == "0":
                 return False
@@ -9889,7 +10059,8 @@ class XmppMasterDatabase(DatabaseHelper):
         """information machine"""
         user = str(jid).split("@")[0]
         machine = (
-            session.query(Machines).filter(Machines.jid.like("%s%%" % user)).first()
+            session.query(Machines).filter(
+                Machines.jid.like("%s%%" % user)).first()
         )
         session.commit()
         session.flush()
@@ -10058,9 +10229,11 @@ class XmppMasterDatabase(DatabaseHelper):
                     .join(Has_cluster_ars, Has_cluster_ars.id_ars == RelayServer.id)
                     .join(Cluster_ars, Has_cluster_ars.id_cluster == Cluster_ars.id)
                 )
-                ars = ars.filter(Has_cluster_ars.id_cluster.in_(listcluster_id))
+                ars = ars.filter(
+                    Has_cluster_ars.id_cluster.in_(listcluster_id))
                 if moderelayserver is not None:
-                    ars = ars.filter(RelayServer.moderelayserver == moderelayserver)
+                    ars = ars.filter(
+                        RelayServer.moderelayserver == moderelayserver)
                 if enablears is not None:
                     ars = ars.filter(RelayServer.enabled == enablears)
                 ars = ars.all()
@@ -10105,7 +10278,8 @@ class XmppMasterDatabase(DatabaseHelper):
                     return result2
             else:
                 # there are no clusters configured for this ARS.
-                logger.warning("Cluster ARS [%s] no configured" % relayserver.jid)
+                logger.warning(
+                    "Cluster ARS [%s] no configured" % relayserver.jid)
                 return notconfars
         else:
             logger.warning("Relay server no present")
@@ -10188,7 +10362,8 @@ class XmppMasterDatabase(DatabaseHelper):
         if ret is None:
             ret = []
         else:
-            ret = [{"uuid": machine[0], "macaddress": machine[1]} for machine in ret]
+            ret = [{"uuid": machine[0], "macaddress": machine[1]}
+                   for machine in ret]
         return ret
 
     @DatabaseHelper._sessionm
@@ -10482,7 +10657,8 @@ class XmppMasterDatabase(DatabaseHelper):
                 if machine.cluster_description is None:
                     result["cluster_description"].append("NULL")
                 else:
-                    result["cluster_description"].append(machine.cluster_description)
+                    result["cluster_description"].append(
+                        machine.cluster_description)
         return {"total": count, "datas": result}
 
     @DatabaseHelper._sessionm
@@ -10774,7 +10950,8 @@ class XmppMasterDatabase(DatabaseHelper):
                         flag = True
                         break
                 if flag == True:
-                    result["total_machines"].append(count_ars["total_machines"])
+                    result["total_machines"].append(
+                        count_ars["total_machines"])
                     result["uninventoried_offline"].append(
                         count_ars["uninventoried_offline"]
                     )
@@ -10784,8 +10961,10 @@ class XmppMasterDatabase(DatabaseHelper):
                     result["inventoried_offline"].append(
                         count_ars["inventoried_offline"]
                     )
-                    result["inventoried_online"].append(count_ars["inventoried_online"])
-                    result["nblinuxmachine"].append(count_ars["nblinuxmachine"])
+                    result["inventoried_online"].append(
+                        count_ars["inventoried_online"])
+                    result["nblinuxmachine"].append(
+                        count_ars["nblinuxmachine"])
                     result["nbwindows"].append(count_ars["nbwindows"])
                     result["nbAMD64"].append(count_ars["nbAMD64"])
                     result["nbARM64"].append(count_ars["nbARM64"])
@@ -10794,7 +10973,8 @@ class XmppMasterDatabase(DatabaseHelper):
                     result["inventoried"].append(count_ars["inventoried"])
                     result["mach_on"].append(count_ars["mach_on"])
                     result["mach_off"].append(count_ars["mach_off"])
-                    result["with_uuid_serial"].append(count_ars["with_uuid_serial"])
+                    result["with_uuid_serial"].append(
+                        count_ars["with_uuid_serial"])
                     result["bothclass"].append(count_ars["bothclass"])
                     result["publicclass"].append(count_ars["publicclass"])
                     result["privateclass"].append(count_ars["privateclass"])
@@ -10802,7 +10982,8 @@ class XmppMasterDatabase(DatabaseHelper):
                     result["nb_OU_mach"].append(count_ars["nb_OU_mach"])
                     result["kioskon"].append(count_ars["kioskon"])
                     result["kioskoff"].append(count_ars["kioskoff"])
-                    result["nbmachinereconf"].append(count_ars["nbmachinereconf"])
+                    result["nbmachinereconf"].append(
+                        count_ars["nbmachinereconf"])
                 else:
                     result["total_machines"].append(0)
                     result["uninventoried_offline"].append(0)
@@ -10829,7 +11010,8 @@ class XmppMasterDatabase(DatabaseHelper):
                     result["nbmachinereconf"].append(0)
                 result["id"].append(machine.id)
                 result["jid"].append(machine.jid)
-                result["jid_from_relayserver"].append(machine.jid_from_relayserver)
+                result["jid_from_relayserver"].append(
+                    machine.jid_from_relayserver)
                 if machine.enabled == 1:
                     result["enabled"].append(True)
                     result["enabled_css"].append("machineNamepresente")
@@ -10847,7 +11029,8 @@ class XmppMasterDatabase(DatabaseHelper):
                 if machine.cluster_description is None:
                     result["cluster_description"].append("NULL")
                 else:
-                    result["cluster_description"].append(machine.cluster_description)
+                    result["cluster_description"].append(
+                        machine.cluster_description)
                 result["mandatory"].append(machine.mandatory)
                 result["switchonoff"].append(machine.switchonoff)
         return {"total": count, "datas": result}
@@ -10858,7 +11041,8 @@ class XmppMasterDatabase(DatabaseHelper):
         if propagate is True:
             session.query(RelayServer).filter(
                 and_(
-                    func.substring_index(RelayServer.jid, "/", 1) == jid.split("/")[0],
+                    func.substring_index(
+                        RelayServer.jid, "/", 1) == jid.split("/")[0],
                     RelayServer.mandatory == 0,
                 )
             ).update({RelayServer.switchonoff: switch})
@@ -10976,7 +11160,8 @@ where agenttype="machine" and groupdeploy in (
             query = (
                 session.query(RelayServer.enabled)
                 .filter(
-                    func.substring_index(RelayServer.jid, "/", 1) == jid.split("/")[0]
+                    func.substring_index(
+                        RelayServer.jid, "/", 1) == jid.split("/")[0]
                 )
                 .one()
             )
@@ -11012,7 +11197,8 @@ where agenttype="machine" and groupdeploy in (
             )
 
         result = []
-        tmp = {"id": 0, "user": "", "namecmd": "", "customcmd": "", "description": ""}
+        tmp = {"id": 0, "user": "", "namecmd": "",
+               "customcmd": "", "description": ""}
         if query is not None:
             for command in query:
                 result.append(
@@ -11067,7 +11253,8 @@ where agenttype="machine" and groupdeploy in (
         }
 
         query = (
-            session.query(Qa_relay_result).filter(Qa_relay_result.id == result_id).one()
+            session.query(Qa_relay_result).filter(
+                Qa_relay_result.id == result_id).one()
         )
         if query is not None:
             result["id"] = query.id
@@ -11093,7 +11280,8 @@ where agenttype="machine" and groupdeploy in (
                             query.command_result = content
                             session.commit()
                             result["command_result"] = content
-                            os.remove(os.path.join("/", "tmp", result["session_id"]))
+                            os.remove(os.path.join(
+                                "/", "tmp", result["session_id"]))
                             tmp_file.close()
 
                     # do nothing if the tmp file is not readable for any
@@ -11248,7 +11436,8 @@ where agenttype="machine" and groupdeploy in (
                 if launched.command_cluster is None:
                     result["datas"]["command_cluster"].append("")
                 else:
-                    result["datas"]["command_cluster"].append(launched.command_cluster)
+                    result["datas"]["command_cluster"].append(
+                        launched.command_cluster)
 
                 result["datas"]["command_relay"].append(launched.command_relay)
                 result["datas"]["user_command"].append(launched.user_command)
@@ -11807,7 +11996,9 @@ where agenttype="machine" and groupdeploy in (
 
             return pickle.dumps(python_dict)
         elif outformat == "cgi_string":
-            import urllib.request, urllib.parse, urllib.error
+            import urllib.request
+            import urllib.parse
+            import urllib.error
 
             return urllib.parse.urlencode(python_dict)
         elif outformat == "bash_string":
@@ -12082,7 +12273,8 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                 else:
                     # cas pas encore prevu
                     self.logger.warning(
-                        "No treatment on" "missing on def binding action%s " % (z)
+                        "No treatment on" "missing on def binding action%s " % (
+                            z)
                     )
                     continue
 
@@ -12108,7 +12300,8 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                 namescript = "%s_%s_%s_%s" % (
                     id_device,
                     z["type_event"],
-                    getRandomName(5, pref=datetime.now().strftime("%a_%d%b%Y_%Hh%M")),
+                    getRandomName(
+                        5, pref=datetime.now().strftime("%a_%d%b%Y_%Hh%M")),
                     bindingcmd,
                 )
                 dest_script = os.path.join(tmpprocessmonitoring, namescript)
@@ -12143,7 +12336,8 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                             serializeinformation,
                         )
                         self.replace_in_file_exist_template(
-                            dest_script, dest_script, "@@@@@msgfrom@@@@@", str(msg_from)
+                            dest_script, dest_script, "@@@@@msgfrom@@@@@", str(
+                                msg_from)
                         )
                         self.replace_in_file_exist_template(
                             dest_script,
@@ -12158,7 +12352,8 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                             stderr=None,
                         ).pid
                         self.logger.debug(
-                            "call script python pid %s : %s " % (pid, dest_script)
+                            "call script python pid %s : %s " % (
+                                pid, dest_script)
                         )
                         self.update_status_event(idevent)
 
@@ -12189,7 +12384,8 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                             z["user"],
                         )
                         self.replace_in_file_exist_template(
-                            dest_script, dest_script, "@@@@@msgfrom@@@@@", str(msg_from)
+                            dest_script, dest_script, "@@@@@msgfrom@@@@@", str(
+                                msg_from)
                         )
                         self.replace_in_file_exist_template(
                             dest_script,
@@ -12197,7 +12393,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                             "@@@@@binding@@@@@",
                             str(bindingcmd),
                         )
-                        ##pid =subprocess.Popen(["python", dest_script]).pid
+                        # pid =subprocess.Popen(["python", dest_script]).pid
                         pid = subprocess.Popen(
                             ["python", dest_script],
                             stdin=None,
@@ -12222,7 +12418,8 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                             serializeinformation_json,
                         )
                         self.replace_in_file_exist_template(
-                            dest_script, dest_script, "@@@@@msgfrom@@@@@", str(msg_from)
+                            dest_script, dest_script, "@@@@@msgfrom@@@@@", str(
+                                msg_from)
                         )
                         self.replace_in_file_exist_template(
                             dest_script,
@@ -12235,7 +12432,8 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                             dest_script, stdin=None, stdout=None, stderr=None
                         ).pid
                         self.logger.debug(
-                            "call script python pid %s : %s " % (pid, dest_script)
+                            "call script python pid %s : %s " % (
+                                pid, dest_script)
                         )
                     elif z["type_event"] == "xmppmsg":
                         # send message user a jid reception
@@ -12254,7 +12452,8 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                             )
                             datal = pickle.loads(serializeinformation)
                             datal["mon_rules_comment"] = ""
-                            serializeinformation_json = json.dumps(datal, indent=4)
+                            serializeinformation_json = json.dumps(
+                                datal, indent=4)
                             z["comment"] = z["comment"].replace(
                                 "@@@@@event@@@@@", serializeinformation_json
                             )
@@ -12518,7 +12717,8 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                     .all()
                 )
             else:
-                result_panels_template = session.query(Mon_panels_template).all()
+                result_panels_template = session.query(
+                    Mon_panels_template).all()
             session.commit()
             session.flush()
             for graphe_template in result_panels_template:
@@ -12570,13 +12770,15 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         event_types = ["log", "ack"]
         count = 0
         query = (
-            session.query(Mon_event, Mon_devices, Mon_rules, Mon_machine, Machines)
+            session.query(Mon_event, Mon_devices,
+                          Mon_rules, Mon_machine, Machines)
             .outerjoin(Mon_devices, Mon_event.id_device == Mon_devices.id)
             .outerjoin(Mon_rules, Mon_event.id_rule == Mon_rules.id)
             .outerjoin(Mon_machine, Mon_event.machines_id == Mon_machine.id)
             .outerjoin(Machines, Mon_machine.machines_id == Machines.id)
             .filter(
-                and_(Mon_event.status_event == 1, Mon_event.type_event.in_(event_types))
+                and_(Mon_event.status_event == 1,
+                     Mon_event.type_event.in_(event_types))
             )
         )
 
@@ -12709,13 +12911,15 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         event_types = ["log", "ack"]
         count = 0
         query = (
-            session.query(Mon_event, Mon_devices, Mon_rules, Mon_machine, Machines)
+            session.query(Mon_event, Mon_devices,
+                          Mon_rules, Mon_machine, Machines)
             .outerjoin(Mon_devices, Mon_event.id_device == Mon_devices.id)
             .outerjoin(Mon_rules, Mon_event.id_rule == Mon_rules.id)
             .outerjoin(Mon_machine, Mon_event.machines_id == Mon_machine.id)
             .outerjoin(Machines, Mon_machine.machines_id == Machines.id)
             .filter(
-                and_(Mon_event.status_event == 0, Mon_event.type_event.in_(event_types))
+                and_(Mon_event.status_event == 0,
+                     Mon_event.type_event.in_(event_types))
             )
         )
 
@@ -12861,7 +13065,8 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         session.execute(
             "call countSuccessRateLastSixWeeks(@week1, @week2, @week3, @week4, @week5, @week6)"
         )
-        query = session.execute("select @week1, @week2, @week3, @week4, @week5, @week6")
+        query = session.execute(
+            "select @week1, @week2, @week3, @week4, @week5, @week6")
         query = query.fetchall()[0]
 
         return list(query)
@@ -13641,7 +13846,8 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
 
         if query is not None:
             for element in query:
-                result["datas"].append({"jid": element.jid, "name": element.hostname})
+                result["datas"].append(
+                    {"jid": element.jid, "name": element.hostname})
 
         return result
 
@@ -13764,7 +13970,8 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
 
         if query is not None:
             for element in query:
-                result["datas"].append({"jid": element.jid, "name": element.hostname})
+                result["datas"].append(
+                    {"jid": element.jid, "name": element.hostname})
 
         return result
 
@@ -13908,9 +14115,11 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             session.flush()
             return self.__updatemachine(query)
         except Exception as e:
-            logger.error("We failed to update the informations on the SQL Table")
+            logger.error(
+                "We failed to update the informations on the SQL Table")
             logger.error("We got the error %s " % str(e))
-            self.logger.error("We hit the backtrace \n%s" % (traceback.format_exc()))
+            self.logger.error("We hit the backtrace \n%s" %
+                              (traceback.format_exc()))
             return None
 
     @DatabaseHelper._sessionm
@@ -14112,13 +14321,16 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                     continue
                 if key == "entity":
                     column = "ge.glpi_id"
-                    filter_on += f" AND {column} IN ({','.join(map(str, config.filter_on[key]))})"
+                    filter_on += f" AND {
+                        column} IN ({','.join(map(str, config.filter_on[key]))})"
                 elif key == "state":
                     column = "lgf.states_id"
-                    filter_on_noncompliant += f" AND {column} IN ({','.join(map(str, config.filter_on[key]))})"
+                    filter_on_noncompliant += f" AND {
+                        column} IN ({','.join(map(str, config.filter_on[key]))})"
                 elif key == "type":
                     column = "lgf.computertypes_id"
-                    filter_on_noncompliant += f" AND {column} IN ({','.join(map(str, config.filter_on[key]))})"
+                    filter_on_noncompliant += f" AND {
+                        column} IN ({','.join(map(str, config.filter_on[key]))})"
 
         sql_machine_details = f"""
         SELECT m.id AS machine_id, m.hostname, ge.glpi_id AS entity_id
@@ -14230,7 +14442,8 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         """
 
         if criterion != "":
-            sql_query += f" AND (m.hostname LIKE '%{criterion}%' OR ge.complete_name LIKE '%{criterion}%')"
+            sql_query += f" AND (m.hostname LIKE '%{
+                criterion}%' OR ge.complete_name LIKE '%{criterion}%')"
 
         sql_query += f" LIMIT {start}, {end}"
 
@@ -14255,8 +14468,10 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             result_data["data"]["uuid"].append(
                 row["uuid"].replace("UUID", "") if row["uuid"] else ""
             )
-            result_data["data"]["cn"].append(row["cn"] if row["cn"] is not None else "")
-            result_data["data"]["os"].append(row["os"] if row["os"] is not None else "")
+            result_data["data"]["cn"].append(
+                row["cn"] if row["cn"] is not None else "")
+            result_data["data"]["os"].append(
+                row["os"] if row["os"] is not None else "")
             result_data["data"]["description"].append(
                 row["description"] if row["description"] is not None else ""
             )
@@ -14276,7 +14491,8 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             uuids.append("UUID%s" % id)
 
         result_data["xmppdata"] = []
-        result_data["xmppdata"] = XmppMasterDatabase().getmachinesbyuuids(uuids)
+        result_data["xmppdata"] = XmppMasterDatabase(
+        ).getmachinesbyuuids(uuids)
 
         return result_data
 
@@ -14559,7 +14775,8 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         Returns list: all unique OUs found in the table
         """
         query = (
-            session.query(Machines.ad_ou_machine).group_by(Machines.ad_ou_machine).all()
+            session.query(Machines.ad_ou_machine).group_by(
+                Machines.ad_ou_machine).all()
         )
         result = []
         if query is not None:
@@ -14574,7 +14791,8 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         """Get all ous listed in machines table (in ad_ou_machine and ad_ou_user fields)
         Returns list: all unique OUs found in the table
         """
-        query = session.query(Machines.ad_ou_user).group_by(Machines.ad_ou_user).all()
+        query = session.query(Machines.ad_ou_user).group_by(
+            Machines.ad_ou_user).all()
         result = []
         if query is not None:
             for ou in query:
@@ -14696,7 +14914,8 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                 session.commit()
                 session.flush()
         except Exception as e:
-            logger.error("An error occured on update_Up_machine_windows function.")
+            logger.error(
+                "An error occured on update_Up_machine_windows function.")
             logger.error("We obtained the error: \n %s" % str(e))
             return False
         return True
@@ -14744,7 +14963,8 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                     session.commit()
                     session.flush()
         except Exception as e:
-            logger.error("An error occured on update_Up_machine_windows function.")
+            logger.error(
+                "An error occured on update_Up_machine_windows function.")
             logger.error("We obtained the error: \n %s" % str(e))
             return False
         return True
@@ -15007,7 +15227,8 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                         Up_machine_activated.required_deploy == None,
                         Up_machine_activated.required_deploy == 0,
                     ),
-                    Up_machine_activated.entities_id == entity.replace("UUID", ""),
+                    Up_machine_activated.entities_id == entity.replace(
+                        "UUID", ""),
                     # Up_machine_activated.id_machine.in_(sub),
                 )
             )
@@ -15477,7 +15698,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                     filters.append(column.like(value))
                 elif isinstance(value, str) and value.startswith("regex:"):
                     # Cas où la valeur est une expression régulière
-                    regex = value[len("regex:") :]
+                    regex = value[len("regex:"):]
                     filters.append(column.op("REGEXP")(regex))
                 else:
                     # Cas par défaut : égalité stricte
@@ -15628,7 +15849,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                     filters.append(column.like(value))
                 elif isinstance(value, str) and value.startswith("regex:"):
                     # Cas où la valeur est une expression régulière
-                    regex = value[len("regex:") :]
+                    regex = value[len("regex:"):]
                     filters.append(column.op("REGEXP")(regex))
                 else:
                     # Cas par défaut : égalité stricte
@@ -15744,7 +15965,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                     filters.append(column.like(value))
                 elif isinstance(value, str) and value.startswith("regex:"):
                     # Cas où la valeur est une expression régulière
-                    regex = value[len("regex:") :]
+                    regex = value[len("regex:"):]
                     filters.append(column.op("REGEXP")(regex))
                 else:
                     # Cas par défaut : égalité stricte
@@ -15764,7 +15985,8 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                 # Convertir les objets en dictionnaires
                 machines_info = []
                 for machine in machines:
-                    machine_info = {key: getattr(machine, key) for key in include_keys}
+                    machine_info = {key: getattr(machine, key)
+                                    for key in include_keys}
                     machines_info.append(machine_info)
                 return machines_info
             else:
@@ -15861,13 +16083,15 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                 results["entity"].setdefault(row.complete_name, {})
                 results["entity"][row.complete_name]["name"] = row.entity_name
                 results["entity"][row.complete_name][row.os] = int(row.nbwin)
-                results["entity"][row.complete_name]["entity_id"] = int(row.entity_id)
+                results["entity"][row.complete_name]["entity_id"] = int(
+                    row.entity_id)
             # Calcul de la conformité
             for entity, data in results["entity"].items():
                 total = results["entity"][entity]["count"]
                 non_conforme = sum(data.get(key, 0) for key in cols)
                 results["entity"][entity]["conformite"] = round(
-                    ((non_conforme - total) / total * 100) if non_conforme > 0 else 0, 2
+                    ((non_conforme - total) / total *
+                     100) if non_conforme > 0 else 0, 2
                 )
 
             # Copier les clés existantes avant d'itérer
@@ -15880,7 +16104,8 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
 
         except Exception as e:
             logger.error(
-                f"Erreur lors de la récupération des statistiques de mise à jour des OS : {str(e)}"
+                f"Erreur lors de la récupération des statistiques de mise à jour des OS : {
+                    str(e)}"
             )
             logger.error(f"Traceback : {traceback.format_exc()}")
             return {}
@@ -16106,7 +16331,8 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             history.id_machine = query.id_machine
             history.jid = machine.jid
             history.update_list = "gray"
-            history.required_date = datetime.strftime(start_date, "%Y-%m-%d %H:%M:%S")
+            history.required_date = datetime.strftime(
+                start_date, "%Y-%m-%d %H:%M:%S")
             history.deploy_title = deployName
             session.add(history)
 
@@ -16320,7 +16546,8 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
     @DatabaseHelper._sessionm
     def get_update_kb(self, session, updateid):
         try:
-            query = session.query(Update_data).filter(Update_data.updateid == updateid)
+            query = session.query(Update_data).filter(
+                Update_data.updateid == updateid)
 
             result = query.first()
             if query is not None:
@@ -16446,7 +16673,8 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                 and_(
                     Up_history.id_machine.in_(idmachines),
                     Deploy.state == "DEPLOYMENT SUCCESS",
-                    or_(Up_history.delete_date != None, Up_history.delete_date != 0),
+                    or_(Up_history.delete_date != None,
+                        Up_history.delete_date != 0),
                 )
             )
             .join(Update_data, Up_history.update_id == Update_data.updateid)
@@ -16509,7 +16737,8 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
     @DatabaseHelper._sessionm
     def get_ad_group_for_lastuser(self, session, login):
         query = (
-            session.query(Users_adgroups).filter(Users_adgroups.lastuser == login).all()
+            session.query(Users_adgroups).filter(
+                Users_adgroups.lastuser == login).all()
         )
 
         result = [element.adname for element in query] if query != None else []
@@ -16517,7 +16746,8 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
 
     @DatabaseHelper._sessionm
     def get_all_ad_groups(self, session):
-        query = session.query(Users_adgroups).group_by(Users_adgroups.adname).all()
+        query = session.query(Users_adgroups).group_by(
+            Users_adgroups.adname).all()
 
         result = [element.adname for element in query] if query != None else []
         return result
@@ -16643,15 +16873,17 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             for row in entity_result:
                 # initialisation
                 results["entity"].setdefault(row.complete_name, {})
-                results["entity"][row.complete_name]["name"]=row.entity_name
-                results["entity"][row.complete_name][row.os ]=int(row.nbwin)
-                results["entity"][row.complete_name]['entity_id']=int(row.entity_id)
+                results["entity"][row.complete_name]["name"] = row.entity_name
+                results["entity"][row.complete_name][row.os] = int(row.nbwin)
+                results["entity"][row.complete_name]['entity_id'] = int(
+                    row.entity_id)
               # Calcul de la conformité
             for entity, data in results["entity"].items():
                 total = results["entity"][entity]["count"]
                 non_conforme = sum(data.get(key, 0) for key in cols)
                 results["entity"][entity]["conformite"] = round(
-                    ((non_conforme - total) / total * 100) if non_conforme > 0 else 0, 2
+                    ((non_conforme - total) / total *
+                     100) if non_conforme > 0 else 0, 2
                 )
 
             # Copier les clés existantes avant d'itérer
@@ -16664,11 +16896,11 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
 
         except Exception as e:
             logger.error(
-                f"Erreur lors de la récupération des statistiques de mise à jour des OS : {str(e)}"
+                f"Erreur lors de la récupération des statistiques de mise à jour des OS : {
+                    str(e)}"
             )
             logger.error(f"Traceback : {traceback.format_exc()}")
             return {}
-
 
     @DatabaseHelper._sessionm
     def get_os_xmpp_update_major_stats(self, session, presence=False):
@@ -16758,13 +16990,15 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                 results["entity"].setdefault(row.complete_name, {})
                 results["entity"][row.complete_name]["name"] = row.entity_name
                 results["entity"][row.complete_name][row.os] = int(row.nbwin)
-                results["entity"][row.complete_name]['entity_id'] = int(row.entity_id)
+                results["entity"][row.complete_name]['entity_id'] = int(
+                    row.entity_id)
             # Calcul de la conformité
             for entity, data in results["entity"].items():
                 total = results["entity"][entity]["count"]
                 non_conforme = sum(data.get(key, 0) for key in cols)
                 results["entity"][entity]["conformite"] = round(
-                    ((non_conforme - total) / total * 100) if non_conforme > 0 else 0, 2
+                    ((non_conforme - total) / total *
+                     100) if non_conforme > 0 else 0, 2
                 )
 
             # Copier les clés existantes avant d'itérer
@@ -16777,7 +17011,8 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
 
         except Exception as e:
             logger.error(
-                f"Erreur lors de la récupération des statistiques de mise à jour des OS : {str(e)}"
+                f"Erreur lors de la récupération des statistiques de mise à jour des OS : {
+                    str(e)}"
             )
             logger.error(f"Traceback : {traceback.format_exc()}")
             return {}
@@ -16819,7 +17054,8 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
 
             total_os_result = session.execute(total_os_sql).fetchall()
             for row in total_os_result:
-                results["entity"].setdefault(row.complete_name, {"count": int(row.count)})
+                results["entity"].setdefault(
+                    row.complete_name, {"count": int(row.count)})
 
             # Requête pour les statistiques par entité
             entity_sql = f'''
@@ -16850,23 +17086,26 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                 results["entity"].setdefault(row.complete_name, {})
                 results["entity"][row.complete_name]["name"] = row.entity_name
                 results["entity"][row.complete_name][row.os] = int(row.nbwin)
-                results["entity"][row.complete_name]['entity_id'] = int(row.ent_id)
+                results["entity"][row.complete_name]['entity_id'] = int(
+                    row.ent_id)
                 logger.error(f"{row.os}")
-
 
             logger.error(f"result {results}")
             # Calcul de la conformité
             for entity, data in results["entity"].items():
                 total = data["count"]
-                non_conforme = sum(data.get(key, 0) for key in cols if  key != "undefined" and  key != "UPDATED")#
-                definie = sum(data.get(key, 0) for key in cols if  key != "undefined" )#
+                non_conforme = sum(
+                    data.get(key, 0) for key in cols if key != "undefined" and key != "UPDATED")
+                definie = sum(data.get(key, 0)
+                              for key in cols if key != "undefined")
                 undefined = total - definie
-                results["entity"][entity]["definie"]=definie
-                results["entity"][entity]["undefined"]=undefined
+                results["entity"][entity]["definie"] = definie
+                results["entity"][entity]["undefined"] = undefined
                 if definie == 0:
                     results["entity"][entity]["conformite"] = 0.0
                 else:
-                    results["entity"][entity]["conformite"] = round(((definie-non_conforme ) / definie * 100) if non_conforme > 0 else 0, 2)
+                    results["entity"][entity]["conformite"] = round(
+                        ((definie-non_conforme) / definie * 100) if non_conforme > 0 else 0, 2)
 
             # Copier les clés existantes avant d'itérer
             existing_entities = list(results["entity"].keys())
@@ -16878,7 +17117,8 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             return results
 
         except Exception as e:
-            logger.error(f"Erreur lors de la récupération des statistiques de mise à jour des OS : {str(e)}")
+            logger.error(
+                f"Erreur lors de la récupération des statistiques de mise à jour des OS : {str(e)}")
             logger.error(f"Traceback : {traceback.format_exc()}")
             return {}
 
@@ -16952,7 +17192,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         # Add ORDER BY and LIMIT/OFFSET if limit is not -1
         total_os_sql += " ORDER BY xma.hostname "
         if limit != -1:
-            logger.error("limit %s "%limit)
+            logger.error("limit %s " % limit)
             total_os_sql += " LIMIT :limit OFFSET :start"
 
         # Convert to text for parameter binding
@@ -16960,7 +17200,8 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
 
         # Log the SQL query with parameters
         logger.debug("Executing SQL query: %s", total_os_sql)
-        logger.debug("With parameters: entity_id=%s, filter=%s, limit=%s, start=%s", entity_id, f"%{filter}%", limit, start)
+        logger.debug("With parameters: entity_id=%s, filter=%s, limit=%s, start=%s",
+                     entity_id, f"%{filter}%", limit, start)
 
         # Execute the SQL query with parameters
         entity_result = session.execute(total_os_sql, {
@@ -16994,7 +17235,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                 'machine': [row.machine if row.machine is not None else "" for row in entity_result],
                 'platform': [row.platform if row.platform is not None else "" for row in entity_result],
                 'version': [row.version if row.version is not None else "" for row in entity_result],
-                'update': [row.update  if row.update is not None else "" for row in entity_result]
+                'update': [row.update if row.update is not None else "" for row in entity_result]
             })
         else:
             # If colonne is False, return detailed results in row-wise format
@@ -17013,12 +17254,12 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
 
     @DatabaseHelper._sessionm
     def get_os_update_major_details(self,
-                                        session,
-                                        entity_id,
-                                        filter="",
-                                        start=0,
-                                        limit=-1,
-                                        colonne=True):
+                                    session,
+                                    entity_id,
+                                    filter="",
+                                    start=0,
+                                    limit=-1,
+                                    colonne=True):
         """
         Récupère les détails des machines avec des systèmes d'exploitation Windows à partir de la base de données XMPPMaster.
 
@@ -17085,7 +17326,8 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
 
         # Journaliser la requête SQL avec les paramètres
         logger.debug("Executing SQL query: %s", total_os_sql)
-        logger.debug("With parameters: entity_id=%s, filter=%s, limit=%s, start=%s", entity_id, f"%{filter}%", limit, start)
+        logger.debug("With parameters: entity_id=%s, filter=%s, limit=%s, start=%s",
+                     entity_id, f"%{filter}%", limit, start)
 
         # Exécuter la requête SQL avec les paramètres
         entity_result = session.execute(total_os_sql, {
@@ -17138,8 +17380,6 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
 
         return result
 
-
-
     @DatabaseHelper._sessionm
     def getAlldistinctvaluetable(self, session, ctx, key: str, value: str) -> list:
         pass
@@ -17181,7 +17421,6 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             print(f"An error occurred: {e}")
             # Return an empty list in case of an error
             return []
-
 
     @DatabaseHelper._sessionm
     def getAllMachineByVersion(self, session, ctx, value: str) -> list:
@@ -17285,7 +17524,6 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             logger.error(f"An error occurred: {e}")
             # Return an empty list in case of an error
             return []
-
 
     @DatabaseHelper._sessionm
     def getMachineByOsType(self, session, ctx, value: str) -> list:
@@ -17436,7 +17674,8 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             .filter(
                 and_(
                     Deploy.sessionid.contains("update"),
-                    func.json_extract(Deploy.result, "$.infoslist[0].packageUuid") == f'{updateid}',
+                    func.json_extract(Deploy.result, "$.infoslist[0].packageUuid") == f'{
+                        updateid}',
                 )
             )
             .order_by(desc(Deploy.start))
@@ -17630,13 +17869,14 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
 class WhereClauseGenerator:
     def __init__(self, data, correspondance):
         self.data = data
-        self.correspondance = {k.lower(): v for k, v in correspondance.items()}  # Convertir les clés en minuscules
+        # Convertir les clés en minuscules
+        self.correspondance = {k.lower(): v for k, v in correspondance.items()}
         # logger.error(f"WhereClauseGenerator data : {data['query']}")
         # logger.error(f"WhereClauseGenerator correspondance: {correspondance}")
 
     def generate(self):
         if 'query' in self.data:
-         return self._parse_condition(self.data['query'])
+            return self._parse_condition(self.data['query'])
         else:
             return ""
 
@@ -17672,7 +17912,8 @@ class WhereClauseGenerator:
 
     def _format_condition(self, key, value):
         if isinstance(value, list) and len(value) > 0:
-            value = value[0]  # Prendre uniquement le premier élément pour cette version
+            # Prendre uniquement le premier élément pour cette version
+            value = value[0]
 
         match = re.match(r'^(=|>|<|<>)\s*(.*)$', value)
         if match:

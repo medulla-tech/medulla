@@ -101,7 +101,8 @@ def getListPackages():
     ]
     for package in FichList:
         with open(
-            os.path.join("/var/lib/pulse2/packages/", package, "xmppdeploy.json"), "r"
+            os.path.join("/var/lib/pulse2/packages/",
+                         package, "xmppdeploy.json"), "r"
         ) as fichier:
             session = json.load(fichier)
             resultnamepackage.append(session["info"]["name"])
@@ -379,6 +380,7 @@ def addlogincommand(
         params,
     )
 
+
 def update_login_command(
     login,
     commandid,
@@ -408,6 +410,7 @@ def update_login_command(
         params,
     )
 
+
 def loginbycommand(commandid):
     return XmppMasterDatabase().loginbycommand(commandid)
 
@@ -415,8 +418,10 @@ def loginbycommand(commandid):
 def getdeployfromcommandid(command_id, uuid):
     return XmppMasterDatabase().getdeployfromcommandid(command_id, uuid)
 
+
 def getdeployfromcommandid_for_convergence(command_id, uuid):
     return XmppMasterDatabase().getdeployfromcommandid_for_convergence(command_id, uuid)
+
 
 def getdeployment_cmd_and_title(command_id, title, search_filter="", start=0, limit=-1):
     """
@@ -437,6 +442,7 @@ def getdeployment_cmd_and_title(command_id, title, search_filter="", start=0, li
     return XmppMasterDatabase().getdeployment_cmd_and_title(
         command_id, title, search_filter, start, limit
     )
+
 
 def getdeployment_cmd_and_title_for_convergence(command_id, title, search_filter="", start=0, limit=-1):
     """
@@ -472,6 +478,7 @@ def getstatdeploy_from_command_id_and_title(command_id, title):
     return XmppMasterDatabase().getstatdeploy_from_command_id_and_title(
         command_id, title
     )
+
 
 def getstatdeploy_from_command_id_and_title_for_convergence(command_id, title):
     """
@@ -512,7 +519,8 @@ def get_machine_stop_deploy(cmdid, uuid):
             "ret": 0,
             "base64": False,
         }
-        updatedeploystate(result["sessionid"], "ABORT DEPLOYMENT CANCELLED BY USER")
+        updatedeploystate(result["sessionid"],
+                          "ABORT DEPLOYMENT CANCELLED BY USER")
         if "jid_relay" in result and result["jid_relay"] != "fake_jidrelay":
             send_message_json(result["jid_relay"], msg_stop_deploy)
         if "jidmachine" in result and result["jidmachine"] != "fake_jidmachine":
@@ -532,7 +540,8 @@ def get_group_stop_deploy(grpid, cmdid):
     }
     for machine in result["objectdeploy"]:
         msg_stop_deploy["sessionid"] = machine["sessionid"]
-        updatedeploystate1(machine["sessionid"], "ABORT DEPLOYMENT CANCELLED BY USER")
+        updatedeploystate1(machine["sessionid"],
+                           "ABORT DEPLOYMENT CANCELLED BY USER")
         if "jidmachine" in machine and machine["jidmachine"] != "fake_jidmachine":
             send_message_json(machine["jidmachine"], msg_stop_deploy)
         if "jid_relay" in machine and machine["jid_relay"] != "fake_jidrelay":
@@ -634,6 +643,7 @@ def get_deploy_by_team_member(
     return XmppMasterDatabase().get_deploy_by_team_member(
         login, state, intervalsearch, minimum, maximum, filt, typedeploy
     )
+
 
 def get_deploy_by_team_member_for_convergence(
     login,
@@ -786,6 +796,7 @@ def get_deploy_by_user_with_interval(
         login, state, intervalsearch, minimum, maximum, filt, typedeploy
     )
 
+
 def get_deploy_convergence(
     login,
     intervalsearch,
@@ -801,6 +812,7 @@ def get_deploy_convergence(
     return XmppMasterDatabase().get_deploy_convergence(
         login, intervalsearch, minimum, maximum, filt, typedeploy
     )
+
 
 def get_deploy_by_user_finished(
     login, intervalsearch, minimum=None, maximum=None, filt=None, typedeploy="command"
@@ -1184,6 +1196,7 @@ def getCountOnlineMachine():
 def xmppGetAllPackages(login, filter, start, end):
     return apimanagepackagemsc.loadpackagelistmsc(login, filter, start, end)
 
+
 def get_pkg_path(login, pkgName):
     return apimanagepackagemsc.get_path_from_title(login, pkgName)
 
@@ -1197,7 +1210,8 @@ def runXmppWolforuuidsarray(uuids):
     renvoi les informations wol network
     """
     if isinstance(uuids, dict) and "jid" in uuids:
-        mach_infos = XmppMasterDatabase().getMacsMachinefromjid(str(uuids["jid"]))
+        mach_infos = XmppMasterDatabase(
+        ).getMacsMachinefromjid(str(uuids["jid"]))
     elif isinstance(uuids, list):
         mach_infos = XmppMasterDatabase().getMacsMachinefromjid(uuids)
     else:
@@ -1256,7 +1270,8 @@ def get_agent_descriptor_base():
         resultdata_str = resultdata.decode("utf-8")
         resultdata = json.loads(resultdata_str)
 
-        logger.debug("get_agent_descriptor_base resultdata: %s" % str(resultdata))
+        logger.debug("get_agent_descriptor_base resultdata: %s" %
+                     str(resultdata))
 
         agent_descriptor = resultdata.get("agentdescriptor", "{}")
         pathagent = resultdata.get("pathagent", "")
@@ -1294,7 +1309,8 @@ def get_agent_descriptor_base():
 
 
 def get_plugin_lists():
-    base_plugin_path = os.path.join("/", "var", "lib", "pulse2", "xmpp_baseplugin")
+    base_plugin_path = os.path.join(
+        "/", "var", "lib", "pulse2", "xmpp_baseplugin")
     files = []
     _files = []
     plugins = {}
@@ -1358,7 +1374,8 @@ def get_plugin_lists():
     sorted_base_plugins = {
         k: plugins[k] for k in sorted(plugins, key=lambda x: (x.startswith("__"), x))
     }
-    sorted_pluginsscheduled = {k: pluginsscheduled[k] for k in sorted(pluginsscheduled)}
+    sorted_pluginsscheduled = {
+        k: pluginsscheduled[k] for k in sorted(pluginsscheduled)}
 
     return [sorted_base_plugins, sorted_pluginsscheduled, base_plugin_path]
 
@@ -1376,6 +1393,14 @@ def get_conf_master_agent():
 
 def get_list_of_users_for_shared_qa(namecmd):
     return XmppMasterDatabase().get_list_of_users_for_shared_qa(namecmd)
+
+
+def get_auto_approve_rules(colonne=True):
+    return XmppMasterDatabase().get_auto_approve_rules()
+
+
+def update_auto_approve_rules(updates):
+    return XmppMasterDatabase().update_auto_approve_rules(updates)
 
 
 def delcomputer(uuid, hostname=""):
@@ -1423,7 +1448,8 @@ def get_list_ars_from_sharing(sharings, start, limit, userlogin, filter):
         res = {"total": 0, "datas": {}, "partielcount": 0}
         return res
 
-    stat_ars_machine = XmppMasterDatabase().get_stat_ars_machine(ars_list["jid"])
+    stat_ars_machine = XmppMasterDatabase(
+    ).get_stat_ars_machine(ars_list["jid"])
     ars_list["total_machines"] = []
     ars_list["uninventoried"] = []
     ars_list["publicclass"] = []
@@ -1447,10 +1473,14 @@ def get_list_ars_from_sharing(sharings, start, limit, userlogin, filter):
     ars_list["nb_ou_user"] = []
     for jid in ars_list["jid"]:
         if jid in stat_ars_machine:
-            ars_list["total_machines"].append(stat_ars_machine[jid]["nbmachine"])
-            ars_list["uninventoried"].append(stat_ars_machine[jid]["uninventoried"])
-            ars_list["publicclass"].append(stat_ars_machine[jid]["publicclass"])
-            ars_list["nblinuxmachine"].append(stat_ars_machine[jid]["nblinuxmachine"])
+            ars_list["total_machines"].append(
+                stat_ars_machine[jid]["nbmachine"])
+            ars_list["uninventoried"].append(
+                stat_ars_machine[jid]["uninventoried"])
+            ars_list["publicclass"].append(
+                stat_ars_machine[jid]["publicclass"])
+            ars_list["nblinuxmachine"].append(
+                stat_ars_machine[jid]["nblinuxmachine"])
             ars_list["inventoried_online"].append(
                 stat_ars_machine[jid]["inventoried_online"]
             )
@@ -1458,13 +1488,16 @@ def get_list_ars_from_sharing(sharings, start, limit, userlogin, filter):
             ars_list["uninventoried_online"].append(
                 stat_ars_machine[jid]["uninventoried_online"]
             )
-            ars_list["nbmachinereconf"].append(stat_ars_machine[jid]["nbmachinereconf"])
+            ars_list["nbmachinereconf"].append(
+                stat_ars_machine[jid]["nbmachinereconf"])
             ars_list["kioskon"].append(stat_ars_machine[jid]["kioskon"])
-            ars_list["inventoried"].append(stat_ars_machine[jid]["inventoried"])
+            ars_list["inventoried"].append(
+                stat_ars_machine[jid]["inventoried"])
             ars_list["nbdarwin"].append(stat_ars_machine[jid]["nbdarwin"])
             ars_list["kioskoff"].append(stat_ars_machine[jid]["kioskoff"])
             ars_list["bothclass"].append(stat_ars_machine[jid]["bothclass"])
-            ars_list["privateclass"].append(stat_ars_machine[jid]["privateclass"])
+            ars_list["privateclass"].append(
+                stat_ars_machine[jid]["privateclass"])
             ars_list["mach_off"].append(stat_ars_machine[jid]["mach_off"])
             ars_list["inventoried_offline"].append(
                 stat_ars_machine[jid]["inventoried_offline"]
@@ -1695,7 +1728,8 @@ def get_packages_list(jid, CGIGET=""):
 
     timeout = 15
     result = ObjectXmpp().iqsendpulse(
-        jid, {"action": "packageslist", "data": "/var/lib/pulse2/packages"}, timeout
+        jid, {"action": "packageslist",
+              "data": "/var/lib/pulse2/packages"}, timeout
     )
 
     _result = {
@@ -1747,7 +1781,8 @@ def get_packages_list(jid, CGIGET=""):
             _result["datas"]["os"].append(package["targetos"])
             _result["datas"]["size"].append(str(package["size"]))
             _result["datas"]["version"].append(package["version"])
-            _result["datas"]["methodtransfer"].append(package["methodtransfer"])
+            _result["datas"]["methodtransfer"].append(
+                package["methodtransfer"])
             _result["datas"]["metagenerator"].append(package["metagenerator"])
             _result["datas"]["count_files"].append(package["count_files"])
         _result["total"] = len(pp)
@@ -1873,9 +1908,11 @@ def update_cluster(id, name, description, relay_ids):
     result = XmppMasterDatabase().update_cluster(id, name, description, relay_ids)
     return result
 
+
 def delete_cluster(id):
     result = XmppMasterDatabase().delete_cluster(id)
     return result
+
 
 def create_cluster(name, description, relay_ids):
     result = XmppMasterDatabase().create_cluster(name, description, relay_ids)
@@ -2044,13 +2081,16 @@ def pending_entity_update_by_pid(entity, pid, startdate="", enddate="", interval
 def pending_group_update_by_pid(gid, pid, startdate="", enddate=""):
     pass
 
+
 def get_machines_infos_additif(id, l_value_id, include_keys=None):
     if include_keys is None:
         return XmppMasterDatabase().get_machines_infos_additif(id, l_value_id)
     return XmppMasterDatabase().get_machines_infos_additif(id, l_value_id, include_keys=include_keys)
 
+
 def get_machines_infos_generic(mom_keys_for_search, data_search, include_keys=None, offset=0, limit=-1, colonne=True):
     return XmppMasterDatabase().get_machines_infos_generic(mom_keys_for_search, data_search, include_keys, offset, limit, colonne)
+
 
 def pending_machine_update_by_pid(
     machineid,
@@ -2096,8 +2136,10 @@ def get_update_kb(updateid):
 def cancel_update(machineid, updateid):
     return XmppMasterDatabase().cancel_update(machineid, updateid)
 
+
 def get_audit_summary_updates_by_entity(entity_uuid, start=0, limit=-1, filter=""):
     return XmppMasterDatabase().get_audit_summary_updates_by_entity(entity_uuid, start, limit, filter)
+
 
 def get_audit_summary_updates_by_update(updateid, start=0, limit=-1, filter=""):
     return XmppMasterDatabase().get_audit_summary_updates_by_update(updateid, start, limit, filter)
