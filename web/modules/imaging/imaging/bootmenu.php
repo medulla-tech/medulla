@@ -1,18 +1,18 @@
 <?php
-
 /*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
- * (c) 2007-2009 Mandriva, http://www.mandriva.com
- * (c) 2025 Siveo, http://siveo.net
+ * (c) 2007 Mandriva, http://www.mandriva.com
+ * (c) 2016-2023 Siveo, http://www.siveo.net
+ * (c) 2024-2025 Medulla, http://www.medulla-tech.io
  *
  * $Id$
  *
- * This file is part of Management Console (MMC).
+ * This file is part of MMC, http://www.medulla-tech.io
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ * the Free Software Foundation; either version 3 of the License, or
+ * any later version.
  *
  * MMC is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -20,14 +20,16 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with MMC; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ * along with MMC; If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 require_once('modules/imaging/includes/includes.php');
 require_once('modules/imaging/includes/xmlrpc.inc.php');
 require_once("modules/xmppmaster/includes/xmlrpc.php");
+
 $params = getParams();
+
 if (isset($_GET['gid']) && $_GET['gid'] != '') {
     $type = 'group';
     $target_uuid = isset($_GET['gid']) ? $_GET['gid'] : "";
@@ -98,6 +100,8 @@ function item_up() {
         } else {
             $ret = xmlrpc_synchroComputer($params['uuid']);
         }
+        $str = sprintf(_T("Success to up item <strong>%s</strong> in the boot menu [ %s ]", "imaging"), urldecode($label), $target_name);
+        new NotifyWidgetSuccess($str);
     } else {
         $str = sprintf(_T("Failed to move item <strong>%s</strong> in the boot menu", "imaging"), urldecode($label));
         new NotifyWidgetFailure($str);
@@ -157,6 +161,7 @@ function item_down() {
     }
     if ($ret) {
         $str = sprintf(_T("Success to move item <strong>%s</strong> in the boot menu [ %s ]", "imaging"), urldecode($label), $target_name);
+        new NotifyWidgetSuccess($str);
         xmlrpc_setfromxmppmasterlogxmpp($str,
                                     "IMG",
                                     '',

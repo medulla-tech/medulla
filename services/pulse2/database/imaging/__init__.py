@@ -1069,7 +1069,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             q.extend(q2)
         if session_need_close:
             session.close()
-        # q.sort(lambda x, y: cmp(x.order, y.order))
+        q = sorted(q, key=lambda mi: int(mi.order))
         return q
 
     def getLastMenuItemOrder(self, menu_id):
@@ -3811,33 +3811,37 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         count_items = self.countMenuContent(menu.id, P2IM.ALL, filter)
         return count_items
 
-    ######################
     def __moveItemInMenu(self, menu, mi_uuid, reverse=False):
-        session = create_session()
-        mis = self.getMenuContent(menu.id, P2IM.ALL, 0, -1, "", session)
-        # if reverse:
-        #     mis.sort(lambda x, y: cmp(y.order, x.order))
-        move = False
-        mod_mi = [None, None]
-        for mi in mis:
-            if move:
-                move = False
-                mod_mi[1] = mi
-            if str(mi.id) == str(uuid2id(mi_uuid)):
-                move = True
-                mod_mi[0] = mi
-        if mod_mi[0] is not None and mod_mi[1] is not None:
-            ord = mod_mi[0].order
-            mod_mi[0].order = mod_mi[1].order
-            mod_mi[1].order = ord
-            session.add(mod_mi[0])
-            session.add(mod_mi[1])
-            session.flush()
+        session = create_session(autocommit=False)
+        try:
+            mis = self.getMenuContent(menu.id, P2IM.ALL, 0, -1, "", session)
+            mis = sorted(mis, key=lambda mi: mi.order)
+            visibles = [mi for mi in mis if not mi.hidden]
+            idx = next((i for i, mi in enumerate(visibles) if str(mi.id) == str(uuid2id(mi_uuid))), None)
+            if idx is None:
+                return False
+            if reverse:
+                if idx == 0:
+                    return False
+                target = visibles[idx-1]
+            else:
+                if idx == len(visibles)-1:
+                    return False
+                target = visibles[idx+1]
+            current = visibles[idx]
+            current_order = current.order
+            target_order = target.order
+            current.order = target_order
+            target.order = current_order
+            session.add(current)
+            session.add(target)
+            session.commit()
+            return True
+        except Exception as e:
+            session.rollback()
+            raise
+        finally:
             session.close()
-        else:
-            session.close()
-            return False
-        return True
 
     def moveItemUpInMenu(self, target_uuid, mi_uuid):
         menu = self.getTargetsMenuTUUID(target_uuid)
