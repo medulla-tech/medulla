@@ -1,19 +1,18 @@
 <?php
-session_name("PULSESESSION");
-session_start();
-?>
-<?php
 /*
- * (c) 2015 Siveo, http://http://www.siveo.net
+ * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+ * (c) 2007 Mandriva, http://www.mandriva.com
+ * (c) 2016-2023 Siveo, http://www.siveo.net
+ * (c) 2024-2025 Medulla, http://www.medulla-tech.io
  *
  * $Id$
  *
- * This file is part of Mandriva Management Console (MMC).
+ * This file is part of MMC, http://www.medulla-tech.io
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ * the Free Software Foundation; either version 3 of the License, or
+ * any later version.
  *
  * MMC is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -21,8 +20,11 @@ session_start();
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
+ * along with MMC; If not, see <http://www.gnu.org/licenses/>.
+ *
  */
+session_name("PULSESESSION");
+session_start();
 
 require_once("../../base/includes/computers.inc.php");
 require_once("../../base/includes/computers.inc.php");
@@ -31,15 +33,12 @@ require_once("../../../includes/i18n.inc.php");
 require_once("../../../includes/acl.inc.php");
 require_once("../../../includes/session.inc.php");
 require_once("../../../includes/PageGenerator.php");
-
 require_once('../includes/xmlrpc.php');
-
 require_once("../../medulla_server/includes/locations_xmlrpc.inc.php");
-
 
 switch($_GET['action']){
     case "deployquick":
-        //work for one machine
+        header('Content-type: application/json');
         $jid = xmlrpc_callInventoryinterface($_GET['objectUUID']);
         xmlrpc_setfromxmppmasterlogxmpp("QA : user \"".$_SESSION["login"]."\" ask a inventory to [ machine : \"".$_GET['cn']."\"] [jid : \"".$jid."\"]",
                                                 "QA",
@@ -52,10 +51,18 @@ switch($_GET['action']){
                                                 '',
                                                 "session user ".$_SESSION["login"],
                                                 'QuickAction | Inventory | Inventory requested');
+        $notif = new NotifyWidgetSuccess(
+            "Inventory request <strong>sent</strong> for " . htmlspecialchars($_GET['cn']) 
+            . (!empty($_GET['entity']) ? " in entity [" . htmlspecialchars($_GET['entity']) . "]" : "")
+        );
+        echo json_encode([
+            'status' => 'ok',
+            'notif' => $notif,
+            'result' => $result
+        ]);
 
     break;
     case "deployquickgroup":
-    //work for all machines on group
         header('Content-type: application/json');
         $uuid = array();
         $cn = array();
@@ -102,8 +109,14 @@ switch($_GET['action']){
             };
             $result = array($uuid, $cn, $presence,$machine_already_present, $machine_not_present );
         }
-        echo json_encode($result);
+        $notif = new NotifyWidgetSuccess(
+            "Inventory request <strong>sent</strong> for group [" . htmlspecialchars($_GET['groupname']) . "] (" . count($list) . " machines)"
+        );
+        echo json_encode([
+            'status' => 'ok',
+            'notif' => $notif,
+            'result' => $result
+        ]);
     break;
 }
-
 ?>
