@@ -1,7 +1,8 @@
 # -*- coding:Utf-8; -*
 # SPDX-FileCopyrightText: 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
-# SPDX-FileCopyrightText: 2007 Mandriva, http://www.mandriva.com/
-# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net>
+# SPDX-FileCopyrightText: 2007 Mandriva, http://www.mandriva.com
+# SPDX-FileCopyrightText: 2016-2023 Siveo, http://www.siveo.net
+# SPDX-FileCopyrightText: 2024-2025 Medulla, http://www.medulla-tech.io
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 """
@@ -1329,12 +1330,11 @@ class ImagingRpcProxy(RpcProxyI):
                     logger.error("The package server failed to delete the image")
                     return [False, "The package server failed to delete the image"]
 
-                try:
-                    # remove all the remaining from the database
-                    ret = db.imagingServerImageDelete(image_uuid)
-                    return xmlrpcCleanup([True, ret])
-                except Exception as e:
-                    return xmlrpcCleanup([False, e])
+            try:
+                ret = db.imagingServerImageDelete(image_uuid)
+                return ret
+            except Exception as e:
+                return [False, f"Error deleting image {image_uuid}: {str(e)}"]
 
             d = i.imagingServerImageDelete(im.uuid)
             d.addCallback(treatDel, image_uuid, db, logger)

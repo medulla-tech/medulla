@@ -1209,7 +1209,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     def getImagingLogsOnTargetByIdAndType(self, target_id, _type, start, end, filter):
         session = create_session()
         q = self.__ImagingLogsOnTargetByIdAndType(session, target_id, _type, filter)
-        q = q.order_by(desc(self.imaging_log.c.timestamp))
+        q = q.order_by(desc(self.imaging_log.c.id))
         if end != -1:
             q = q.offset(int(start)).limit(int(end) - int(start))
         else:
@@ -2340,10 +2340,26 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.close()
         return True
 
+    def __image_has_dependencies(self, session, image_id):
+        """
+        Check if an image is still used in a menu.
+        @param image_id: Image id to check
+        @type image_id: int
+        @return: True if the image is used in a menu, False otherwise
+        """
+        exists = session.query(ImageInMenu).filter(ImageInMenu.fk_image == image_id).first()
+        if exists:
+            return True
+        return False
+
     def imagingServerImageDelete(self, image_uuid):
         session = create_session()
-
         image_id = uuid2id(image_uuid)
+
+        if self.__image_has_dependencies(session, image_id):
+            msg = f"Deletion prohibited: the image {image_id} is still used in a menu."
+            logging.getLogger().debug(msg)
+            return [False, msg]
 
         il = ImagingLog()
         il.timestamp = datetime.datetime.fromtimestamp(time.mktime(time.localtime()))
@@ -2418,11 +2434,9 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.delete(image)
         session.flush()
 
-        return True
-
-    #        mo = session.query(MasteredOn).filter(self.mastered_on.c.fk_image == image_id).first()
-    #        iois = session.query(ImageOnImagingServer).filter(self.image_on_imaging_server.c.fk_image == image_id).first()
-    #        image = session.query(Image).filter(self.image.c.id == image_id).first()
+        msg = f"Deletion of image {image_uuid} successful."
+        logging.getLogger().debug(msg)
+        return [True, msg]
 
     def countPossibleImagesOrMaster(self, target_uuid, _type, filt):
         session = create_session()
