@@ -92,10 +92,16 @@ foreach ($db_logs as $log) {
         $desc = $detail;
     }
 
+    $color = getColorForDetail($desc);
+    if ($color) {
+        $a_desc[] = "<span style='color: $color; font-weight:bold'>" . htmlspecialchars($desc) . "</span>";
+    } else {
+        $a_desc[] = htmlspecialchars($desc);
+    }
+
     $a_level[]  = $level;
     $a_date[]   = $date;
     $a_target[] = $target;
-    $a_desc[]   = $desc;
 }
 
 $l = new OptimizedListInfos($a_date, _T("Timestamp", "imaging"));

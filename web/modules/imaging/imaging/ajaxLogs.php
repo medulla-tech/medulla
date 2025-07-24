@@ -46,8 +46,7 @@ if(isset($_GET['gid'])) {
     list($nbLogs, $db_logs) = xmlrpc_getProfileLogs($_GET['gid'], $start, $end, $filter);
 } else {
     $type = '';
-    // list($nbLogs, $db_logs) = xmlrpc_getComputerLogs($_GET['uuid'], $start, $end, $filter);
-    list($nbLogs, $db_logs) = xmlrpc_getComputerLogs("UUID3", $start, $end, $filter);
+    list($nbLogs, $db_logs) = xmlrpc_getComputerLogs($_GET['uuid'], $start, $end, $filter);
 }
 
 $a_level = array();

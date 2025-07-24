@@ -23,8 +23,6 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-//require_once('modules/imaging/includes/includes.php');
-//require_once('modules/imaging/includes/xmlrpc.inc.php');
 require("../../../includes/config.inc.php");
 require("../../../includes/i18n.inc.php");
 require("../../../includes/acl.inc.php");
