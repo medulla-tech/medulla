@@ -33,81 +33,96 @@ $p = new PageGenerator(_T("Approve rule gray_list to white_list", 'admin'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
-$f = xmlrpc_get_auto_approve_rules();
-
-$htmlelementcheck = [];
-$params = [];
-$submittedCheckValues = $_POST['check'] ?? []; // Récupérer les valeurs cochées si formulaire soumis
-
-foreach ($f['id'] as $key => $valeur) {
-    $params[] = array(
-        'id' => $f['id'][$key],
-        'active_rule' => $f['active_rule'][$valeur],
-        'msrcseverity' => $f['msrcseverity'][$valeur],
-        'updateclassification' => $f['updateclassification'][$valeur]
-    );
-
-    // Prendre les valeurs du formulaire si soumises, sinon garder les valeurs initiales
-    $isChecked = isset($submittedCheckValues[$valeur]) ? $submittedCheckValues[$valeur] : $f['active_rule'][$valeur];
-    $checked = ($isChecked == 1) ? 'checked' : '';
-
-    $hiddenInput = sprintf('<input type="hidden" name="check[%s]" value="0">', $valeur);
-    $checkboxInput = sprintf(
-        '<input type="checkbox" id="check%s" name="check[%s]" value="1" %s>',
-        $f['id'][$key],
-        $f['id'][$key],
-        $checked
-    );
-    $htmlelementcheck[] = $hiddenInput . $checkboxInput;
-}
-
-
-
-echo "\n";
-echo '<form method="post" action="" name="montableau">';
-echo "\n";
-$n = new ListInfos( $f['msrcseverity'], _T("Update Severity", "updates"));
-$n->addExtraInfo($f['updateclassification'], _T("Update Classification", "updates"));
-$n->addExtraInfo($htmlelementcheck, _T("validate rule", "updates"));
-
-
-$n->setParamInfo($params);
-$n->setNavBar ="";
-$n->start = 0;
-$n->end =count($f['msrcseverity']);
-
-$converter = new ConvertCouleur();
-
-$n->setCaptionText(sprintf(_T("Auto-approval rules: automatic whitelisting based on update severity and classification.", 'updates'),
-                            ));
-
-$n->setCssCaption(  $border = 1,
-                    $bold = 0,
-                    $bgColor = "lightgray",
-                    $textColor = "black",
-                    $padding = "10px 0",
-                    $size = "20",
-                    $emboss = 1,
-                    $rowColor = $converter->convert("lightgray"));
-
-        $n->disableFirstColumnActionLink();
-        //$n->setParamInfo($params);
-        //$n->addActionItemArray($actionEdit);
-        $n->display($navbar = 0, $header = 0);
-        echo'<input type="hidden" name="form_name" value="montableau">';
-echo '<input type="submit" value="Submit">';
-echo "\n</form>";
+// Traitement du formulaire
 if (
     $_SERVER['REQUEST_METHOD'] === 'POST' &&
     isset($_POST['form_name']) &&
     $_POST['form_name'] === 'montableau'
 ) {
+    $submittedCheckValues = $_POST['check'] ?? []; // Valeurs cochées ou non
+
     $result = [];
     foreach ($submittedCheckValues as $key => $value) {
-        $result[] = [$key, $value];
+        $result[] = [$key, $value]; // Clé = ID de la règle
     }
-    // mise a jour de la table
+
+    // Mise à jour de la table avec les données reçues
     xmlrpc_update_auto_approve_rules($result);
 }
+
+// Récupération des données à afficher
+$f = xmlrpc_get_auto_approve_rules();
+
+// Initialisation
+$htmlelementcheck = [];
+$params = [];
+$submittedCheckValues = $_POST['check'] ?? [];
+
+foreach ($f['id'] as $indextableau => $id) {
+    // Construction des paramètres pour le tableau
+    $params[] = array(
+        'id' => $id,
+        'active_rule' => $f['active_rule'][$indextableau],
+        'msrcseverity' => $f['msrcseverity'][$indextableau],
+        'updateclassification' => $f['updateclassification'][$indextableau]
+    );
+
+    // Détermination si la case doit être cochée
+    $isChecked = isset($submittedCheckValues[$id]) ? $submittedCheckValues[$id] : $f['active_rule'][$indextableau];
+    $checked = ($isChecked == 1) ? 'checked' : '';
+
+    // Génération des champs input (hidden + checkbox)
+    $hiddenInput = sprintf('<input type="hidden" name="check[%s]" value="0">', $id);
+    $checkboxInput = sprintf(
+        '<input type="checkbox" id="check%s" name="check[%s]" value="1" %s>',
+        $id,
+        $id,
+        $checked
+    );
+
+    $htmlelementcheck[] = $hiddenInput . $checkboxInput;
+}
+
+
+// Début du formulaire HTML
+echo '<form method="post" action="" name="montableau">';
+echo "\n";
+
+// Construction du tableau avec ListInfos
+$n = new ListInfos($f['msrcseverity'], _T("Update Severity", "updates"));
+$n->addExtraInfo($f['updateclassification'], _T("Update Classification", "updates"));
+$n->addExtraInfo($htmlelementcheck, _T("validate rule", "updates"));
+
+$n->setParamInfo($params);
+$n->setNavBar = "";
+$n->start = 0;
+$n->end = count($f['msrcseverity']);
+
+$converter = new ConvertCouleur();
+
+$n->setCaptionText(sprintf(
+    _T("Auto-approval rules: automatic whitelisting based on update severity and classification.", 'updates')
+));
+
+$n->setCssCaption(
+    $border = 1,
+    $bold = 0,
+    $bgColor = "lightgray",
+    $textColor = "black",
+    $padding = "10px 0",
+    $size = "20",
+    $emboss = 1,
+    $rowColor = $converter->convert("lightgray")
+);
+
+// Affichage du tableau
+$n->disableFirstColumnActionLink();
+$n->display($navbar = 0, $header = 0);
+
+// Bouton de validation
+echo '<input type="hidden" name="form_name" value="montableau">';
+echo '<input class="btn btn-primary" type="submit" value="' . _T("Apply", "updates") . '">';
+echo "\n</form>";
+
 ?>
 
