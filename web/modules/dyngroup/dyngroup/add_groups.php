@@ -299,10 +299,9 @@ if (isset($_POST["bdelmachine_x"])) {
     if (isset($imss) && safeCount($imss) == 1) {
         foreach ($imss as $key => $value) {
             $entitieval = $value['fk_entity'];
-            $imaging_server = $key;
+            $imaging_server = $value['entity_uuid'];
         }
     } else {
-        $entitieval = -1;
         foreach ($imss as $key => $value) {
             if ($value['imaging_uuid'] == $imaging_server) {
                 $entitieval = $value['fk_entity'];
@@ -311,20 +310,42 @@ if (isset($_POST["bdelmachine_x"])) {
         }
     }
 
-    if ($type == 0) {
-        $listOfMachines = getRestrictedComputersList(0, -1, array('get' => array('cn', 'objectUUID'), 'imaging_server' => $imaging_server), False);
-        $count = getRestrictedComputersListLen(array('imaging_server' => $imaging_server));
-    } else {
-        $listOfMachines = getRestrictedComputersList(0, -1, array('get' => array('cn', 'objectUUID'), 'imaging_entities' => $imaging_server), False);
-        $count = getRestrictedComputersListLen(array('imaging_entities' => $imaging_server));
+    $filter = "";
+    if (isset($_POST['filter'])) {
+        $filter = $_POST['filter'];
     }
 
-    if ($truncate_limit < $count) {
-        new NotifyWidgetWarning(sprintf(_T("Computers list has been truncated at %d computers. Use the filter to find specific machines.", "dyngroup"), $truncate_limit));
+    if ($type == 0) {
+        $listOfMachines = getRestrictedComputersList(0, -1, [
+            'get' => ['cn', 'objectUUID'],
+            'imaging_server' => $imaging_server,
+            'filter' => $filter
+        ], False);
+        $count = getRestrictedComputersListLen([
+            'imaging_server' => $imaging_server,
+            'filter' => $filter
+        ]);
+    } else {
+        $listOfMachines = getRestrictedComputersList(0, -1, [
+            'get' => ['cn', 'objectUUID'],
+            'imaging_entities' => $imaging_server,
+            'filter' => $filter
+        ], False);
+        $count = getRestrictedComputersListLen([
+            'imaging_entities' => $imaging_server,
+            'filter' => $filter
+        ]);
     }
     $machines = array();
     foreach ($listOfMachines as $machine) {
         $machines[$machine['cn'] . "##" . $machine['objectUUID']] = $machine['cn'];
+    }
+    $truncate_limit = getMaxElementsForStaticList();
+    if (empty($filter)) {
+        if (count($machines) > $truncate_limit) {
+            $machines = array_slice($machines, 0, $truncate_limit, true);
+            new NotifyWidgetWarning(sprintf(_T("Computers list has been truncated at %d computers. Use the filter to find specific machines.", "dyngroup"), $truncate_limit));
+        }
     }
 }
 ksort($members);
