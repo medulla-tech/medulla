@@ -17253,6 +17253,104 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         return result
 
     @DatabaseHelper._sessionm
+    def get_outdated_major_os_updates_by_entity(self,
+                                                session,
+                                                entity_id,
+                                                start=0,
+                                                limit=-1,
+                                                filter="",
+                                                colonne=True):
+        """
+        Récupère les informations des machines dont les mises à jour majeures du système d'exploitation sont obsolètes ou déconseillées,
+        avec la possibilité de filtrer par entité ou nom d'hôte, et de paginer les résultats.
+
+        :param session: session SQLAlchemy (injectée automatiquement par le décorateur)
+        :param entity_id: ID de l'entité, ou None/-1 pour toutes les entités
+        :param filter: filtre sur le hostname (optionnel)
+        :param start: index de départ pour la pagination
+        :param limit: nombre de lignes à retourner (-1 = pas de limite)
+        :param colonne: si True, retourne les données par colonne, sinon par ligne
+        :return: dict contenant les résultats, avec nb_total_element, nb_element et les données
+        """
+        sql = '''
+            SELECT SQL_CALC_FOUND_ROWS
+                mx.id AS xmpp_id,
+                m.id AS glpi_id,
+                e.id AS ent_id,
+                mx.hostname,
+                mx.enabled,
+                mx.jid,
+                mx.uuid_serial_machine AS serial,
+                mx.platform AS platform,
+                s.name,
+                s.comment,
+                e.completename AS entity,
+                lc.lang_code,
+                lc.iso_filename,
+                lc.package_uuid,
+                SUBSTRING(s.name, LOCATE('_', s.name) + 1, LOCATE('@', s.name) - LOCATE('_', s.name) - 1) AS old_version,
+                SUBSTRING_INDEX(s.name, '-', -1) AS new_version,
+                SUBSTRING_INDEX(SUBSTRING_INDEX(s.name, '@', 2), '@', -1) AS oldcode,
+                SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(s.name, '@', 5), '@', -1), '_', 2), '_', -1) AS newcode,
+                SUBSTRING_INDEX(SUBSTRING_INDEX(s.name, '@', 3), '@', -1) AS isolang
+            FROM xmppmaster.local_glpi_items_softwareversions si
+            JOIN xmppmaster.local_glpi_softwareversions sv ON si.softwareversions_id = sv.id
+            JOIN xmppmaster.local_glpi_machines m ON si.items_id = m.id
+            JOIN xmppmaster.local_glpi_softwares s ON sv.softwares_id = s.id
+            JOIN xmppmaster.local_glpi_entities e ON e.id = m.entities_id
+            JOIN xmppmaster.machines mx ON NULLIF(REPLACE(mx.uuid_inventorymachine, 'UUID', ''),'') = si.items_id
+            JOIN xmppmaster.up_packages_major_Lang_code lc
+                ON lc.lang_code = SUBSTRING_INDEX(SUBSTRING_INDEX(s.name, '@', 3), '@', -1)
+                AND lc.major = SUBSTRING(s.name, LENGTH(s.name) - LOCATE('-', REVERSE(s.name)) + 2)
+            WHERE
+                SUBSTRING_INDEX(s.name, '-', -1) > 10
+                AND (:entity_id IS NULL OR :entity_id = -1 OR e.id = :entity_id)
+                AND s.name LIKE 'Medulla\_%'
+                AND (
+                    SUBSTRING(s.name, LOCATE('_', s.name) + 1, LOCATE('@', s.name) - LOCATE('_', s.name) - 1) != SUBSTRING_INDEX(s.name, '@', -1)
+                    OR SUBSTRING_INDEX(SUBSTRING_INDEX(s.name, '@', 2), '@', -1) != SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(s.name, '@', 5), '@', -1), '_', 2), '_', -1)
+                )
+                AND (
+                    s.name NOT LIKE '%False%'
+                    OR NOT SUBSTRING_INDEX(s.name, '-', -1) != '11'
+                )
+            ORDER BY mx.hostname
+        '''
+
+        if limit != -1:
+            sql += " LIMIT :limit OFFSET :start"
+
+        sql_text = text(sql)
+        params = {
+            'entity_id': entity_id if entity_id is not None else -1,
+            'filter': f"%{filter}%",
+            'limit': int(limit),
+            'start': int(start)
+        }
+
+        logger.debug(
+            "Executing SQL query for outdated major OS updates: %s", sql)
+        logger.debug("Parameters: %s", params)
+
+        rows = session.execute(sql_text, params).fetchall()
+
+        count_sql = text("SELECT FOUND_ROWS();")
+        total = session.execute(count_sql).scalar()
+
+        result = {
+            'nb_total_element': total,
+            'nb_element': len(rows)
+        }
+
+        if colonne:
+            result.update({key: [row[key] if row[key] is not None else "" for row in rows]
+                          for key in rows[0].keys()} if rows else {})
+        else:
+            result['details'] = [dict(row._mapping) for row in rows]
+
+        return result
+
+    @DatabaseHelper._sessionm
     def get_os_update_major_details(self,
                                     session,
                                     entity_id,

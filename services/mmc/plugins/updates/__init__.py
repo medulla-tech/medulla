@@ -130,50 +130,69 @@ def get_os_xmpp_update_major_stats():
     return XmppMasterDatabase().get_os_xmpp_update_major_stats()
 
 
+def get_outdated_major_os_updates_by_entity(entity_id,
+                                            start=0,
+                                            limit=-1,
+                                            filter="",
+                                            colonne=True):
+    return XmppMasterDatabase().get_outdated_major_os_updates_by_entity(entity_id,
+                                                                        start,
+                                                                        limit,
+                                                                        filter,
+                                                                        colonne)
+
+
 def get_os_update_major_details(entity_id,
-                                     filter="",
-                                     start=0,
-                                     limit=-1,
-                                     colonne=True):
-    return XmppMasterDatabase().get_os_update_major_details( entity_id,
-                                                                 filter,
-                                                                 start,
-                                                                 limit,
-                                                                 colonne)
+                                filter="",
+                                start=0,
+                                limit=-1,
+                                colonne=True):
+    return XmppMasterDatabase().get_os_update_major_details(entity_id,
+                                                            filter,
+                                                            start,
+                                                            limit,
+                                                            colonne)
 
 
-def deploy_update_major( package_id,
-                         uuid_inventorymachine,
-                         hostname,
-                         title_deployement=None,
-                         start_date = None,
-                         end_date = None,
-                         deployment_intervals="",
-                         userconnect="root",
-                         usercreator="root",
-                         list_file="fileslistpackage"):
-    result = {"success" : False,
+def deploy_update_major(package_id,
+                        uuid_inventorymachine,
+                        hostname,
+                        title_deployement=None,
+                        start_date=None,
+                        end_date=None,
+                        deployment_intervals="",
+                        userconnect="root",
+                        usercreator="root",
+
+                        list_file="fileslistpackage"):
+    result = {"success": False,
               "commandid": "-1",
-              "msg" : f"Deployment not rescheduled for {package_id} is already scheduled for machine {hostname}"}
+              "msg": f"Deployment not rescheduled for {package_id} is already scheduled for machine {hostname}"}
 
     try:
-        title_deployementnew = title_deployement[:-(len(title_deployement.split("_")[-1]))]
+        title_deployementnew = title_deployement[:-
+                                                 (len(title_deployement.split("_")[-1]))]
     except:
         # le nom n'a pas la bonne convention pour les updates
-        result["msg"] = f"Naming convention for Deployment {package_id} on machine {hostname}"
+        result["msg"] = f"Naming convention for Deployment {
+            package_id} on machine {hostname}"
         result["success"] = False
         return result
 
     # on ne lance pas le deployement car il existe deja.
     if MscDatabase().test_msc_process(title_deployementnew):
-        logger.warning(f"Deployment not rescheduled for {package_id} is already scheduled for machine {hostname}")
-        result["msg"] = f"Deployment not rescheduled for {package_id} is already scheduled for machine {hostname}"
+        logger.warning(f"Deployment not rescheduled for {
+                       package_id} is already scheduled for machine {hostname}")
+        result["msg"] = f"Deployment not rescheduled for {
+            package_id} is already scheduled for machine {hostname}"
         result["success"] = False
         return result
 
     if XmppMasterDatabase().test_update_major_deployment_in_progress(title_deployementnew):
-        logger.warning(f"Deployment {package_id} exists for machine {hostname}")
-        result["msg"] = f"Deployment not rescheduled for {package_id} as it is already in progress on machine {hostname}"
+        logger.warning(
+            f"Deployment {package_id} exists for machine {hostname}")
+        result["msg"] = f"Deployment not rescheduled for {
+            package_id} as it is already in progress on machine {hostname}"
         result["success"] = False
         return result
 
@@ -181,26 +200,28 @@ def deploy_update_major( package_id,
         if title_deployement:
             pkgsinfos = PkgsDatabase().pkgs_get_infos_details(package_id)
             if not pkgsinfos or pkgsinfos.get('label') == "":
-                logger.error(f"Deployment not rescheduled for mach {hostname} because the package {package_id} does not exist")
-                result["msg"] = f"Deployment not rescheduled for mach {hostname} because the package {package_id} does not exist"
+                logger.error(f"Deployment not rescheduled for mach {
+                             hostname} because the package {package_id} does not exist")
+                result["msg"] = f"Deployment not rescheduled for mach {
+                    hostname} because the package {package_id} does not exist"
                 result["success"] = False
                 return result
 
-        result=MscDatabase().deploy_package_msc(package_id,
-                                        uuid_inventorymachine,
-                                        hostname,
-                                        title_deployement=title_deployement,
-                                        start_date=start_date,
-                                        end_date=end_date,
-                                        deployment_intervals=deployment_intervals,
-                                        userconnect=userconnect,
-                                        usercreator=usercreator,
-                                        list_file=list_file)
+        result = MscDatabase().deploy_package_msc(package_id,
+                                                  uuid_inventorymachine,
+                                                  hostname,
+                                                  title_deployement=title_deployement,
+                                                  start_date=start_date,
+                                                  end_date=end_date,
+                                                  deployment_intervals=deployment_intervals,
+                                                  userconnect=userconnect,
+                                                  usercreator=usercreator,
+                                                  list_file=list_file)
         if result["success"]:
-             XmppMasterDatabase().addlogincommand("root",
-                                                  result["commandid"],
-                                                  "", "", "", "", "",
-                                                  0, 0, 0, 0, {})
+            XmppMasterDatabase().addlogincommand("root",
+                                                 result["commandid"],
+                                                 "", "", "", "", "",
+                                                 0, 0, 0, 0, {})
 
     except Exception as e:
         logger.error("\n%s" % (traceback.format_exc()))
@@ -215,7 +236,7 @@ def get_os_xmpp_update_major_details(entity_id,
                                      start=0,
                                      limit=-1,
                                      colonne=True):
-    return XmppMasterDatabase().get_os_xmpp_update_major_details( entity_id,
+    return XmppMasterDatabase().get_os_xmpp_update_major_details(entity_id,
                                                                  filter,
                                                                  start,
                                                                  limit,
@@ -252,7 +273,8 @@ def get_conformity_update_by_entity(entities=[], source="xmppmaster"):
 
     if source == "xmppmaster":
         result = XmppMasterDatabase().get_conformity_update_by_entity(
-            entities=[entity["uuid"].replace("UUID", "") for entity in entities],
+            entities=[entity["uuid"].replace("UUID", "")
+                      for entity in entities],
             config=config,
         )
 
@@ -265,7 +287,8 @@ def get_conformity_update_by_entity(entities=[], source="xmppmaster"):
 
                 if resultarray[euid]["totalmach"] > 0:
                     resultarray[euid]["conformite"] = int(
-                        (1 - (resultarray[euid]["nbmachines"] / resultarray[euid]["totalmach"])) * 100
+                        (1 - (resultarray[euid]["nbmachines"] /
+                         resultarray[euid]["totalmach"])) * 100
                     )
                 else:
                     resultarray[euid]["conformite"] = 100
@@ -292,16 +315,19 @@ def get_conformity_update_by_entity(entities=[], source="xmppmaster"):
             })
 
         # Identify the machines common to GLPI and XMPPMaster
-        all_glpi_machines = [machine["uuid"] for result in glpi_results for machine in result["machines"]]
+        all_glpi_machines = [machine["uuid"]
+                             for result in glpi_results for machine in result["machines"]]
         machines_in_both = XmppMasterDatabase().get_machine_in_both_sources(all_glpi_machines)
 
         result = []
         for glpi_result in glpi_results:
             entity_id = glpi_result["entity"]
             total_machines_glpi = glpi_result["totalmach"]
-            glpi_machine_ids = [machine["uuid"] for machine in glpi_result["machines"]]
+            glpi_machine_ids = [machine["uuid"]
+                                for machine in glpi_result["machines"]]
 
-            machines_common = [uuid for uuid in glpi_machine_ids if machines_in_both.get(uuid, False)]
+            machines_common = [
+                uuid for uuid in glpi_machine_ids if machines_in_both.get(uuid, False)]
 
             conformity_data = XmppMasterDatabase().get_conformity_update_by_entity(
                 entities=[entity_id],
@@ -313,7 +339,8 @@ def get_conformity_update_by_entity(entities=[], source="xmppmaster"):
             else:
                 total_non_conform = 0
 
-            total_updates = sum(item.get("nbupdates", 0) for item in conformity_data)
+            total_updates = sum(item.get("nbupdates", 0)
+                                for item in conformity_data)
 
             result.append({
                 "entity": entity_id,
@@ -334,7 +361,8 @@ def get_conformity_update_by_entity(entities=[], source="xmppmaster"):
                 common_count = counters.get("common_machines_count", 0)
                 if common_count > 0:
                     resultarray[euid]["conformite"] = int(
-                        (1 - (resultarray[euid]["nbmachines"] / common_count)) * 100
+                        (1 - (resultarray[euid]
+                         ["nbmachines"] / common_count)) * 100
                     )
                 else:
                     resultarray[euid]["conformite"] = 100
@@ -379,17 +407,17 @@ def get_conformity_update_by_machines(ids=[]):
         result[ids["uuids"][count]]["id"] = ids["ids"][count]
         count += 1
 
-
     if ids["uuids"] == "" or ids["uuids"] == []:
         installed = {}
     else:
-        installed = Glpi().get_count_installed_updates_by_machines(ids["uuids"])
+        installed = Glpi().get_count_installed_updates_by_machines(
+            ids["uuids"])
 
     if ids["ids"] == "" or ids["ids"] == []:
         missing = {}
     else:
-        missing = XmppMasterDatabase().get_count_missing_updates_by_machines(ids["ids"])
-
+        missing = XmppMasterDatabase(
+        ).get_count_missing_updates_by_machines(ids["ids"])
 
     for uuid in installed:
         result[uuid]["installed"] = installed[uuid]["installed"]
@@ -399,7 +427,8 @@ def get_conformity_update_by_machines(ids=[]):
         result[uuid]["inprogress"] = missing[uuid]["inprogress"]
 
     for uuid in result:
-        result[uuid]["total"] = result[uuid]["installed"] + result[uuid]["missing"] + result[uuid]["inprogress"]
+        result[uuid]["total"] = result[uuid]["installed"] + \
+            result[uuid]["missing"] + result[uuid]["inprogress"]
         result[uuid]["compliance"] = (
             (result[uuid]["installed"] / result[uuid]["total"]) * 100
             if result[uuid]["total"] > 0
