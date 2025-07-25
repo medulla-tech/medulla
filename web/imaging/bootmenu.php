@@ -510,6 +510,11 @@ $default_item = "continue";
 //
 // SINGLECAST MODE
 //
+if (!empty($target['target_name'])) {
+    $statusLine = "Registered on $srv";
+} else {
+    $statusLine = "Not registered on $srv";
+}
 if (!$multicast) {
 
     $pxeLogin = $ims["pxe_login"];
@@ -548,7 +553,8 @@ colour --rgb 0xff0000 0 ||
 cpair --foreground 1 1 ||
 cpair --foreground 0 3 ||
 cpair --foreground 4 4 ||\n";
-    $ipxe .= "item --gap $title\n";
+    $ipxe .= "item --gap Host $computerName\n";
+    $ipxe .= "item --gap $statusLine\n";
     $ipxe .= "item --gap -- -------------------------------------
 ";
     $ipxe .= "item continue Continue Usual Startup
@@ -560,7 +566,8 @@ colour --rgb 0xff0000 0 ||
 cpair --foreground 1 1 ||
 cpair --foreground 0 3 ||
 cpair --foreground 4 4 ||\n";
-    $ipxe .= "item --gap $title
+    $ipxe .= "item --gap Host $computerName\n";
+    $ipxe .= "item --gap $statusLine\n
 item --gap -- -------------------------------------
 ";
     $itemValues = "";
