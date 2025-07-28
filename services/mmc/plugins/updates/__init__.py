@@ -18,6 +18,7 @@ from pulse2.database.msc import MscDatabase
 
 from mmc.plugins.glpi.database import Glpi
 import logging
+import traceback
 
 VERSION = "1.0.0"
 APIVERSION = "1:0:0"
@@ -174,25 +175,20 @@ def deploy_update_major(package_id,
                                                  (len(title_deployement.split("_")[-1]))]
     except:
         # le nom n'a pas la bonne convention pour les updates
-        result["msg"] = f"Naming convention for Deployment {
-            package_id} on machine {hostname}"
+        result["msg"] = f"Naming convention for Deployment {package_id} on machine {hostname}"
         result["success"] = False
         return result
 
     # on ne lance pas le deployement car il existe deja.
     if MscDatabase().test_msc_process(title_deployementnew):
-        logger.warning(f"Deployment not rescheduled for {
-                       package_id} is already scheduled for machine {hostname}")
-        result["msg"] = f"Deployment not rescheduled for {
-            package_id} is already scheduled for machine {hostname}"
+        logger.warning(f"Deployment not rescheduled for {package_id} is already scheduled for machine {hostname}")
+        result["msg"] = f"Deployment not rescheduled for {package_id} is already scheduled for machine {hostname}"
         result["success"] = False
         return result
 
     if XmppMasterDatabase().test_update_major_deployment_in_progress(title_deployementnew):
-        logger.warning(
-            f"Deployment {package_id} exists for machine {hostname}")
-        result["msg"] = f"Deployment not rescheduled for {
-            package_id} as it is already in progress on machine {hostname}"
+        logger.warning(f"Deployment {package_id} exists for machine {hostname}")
+        result["msg"] = f"Deployment not rescheduled for {package_id} as it is already in progress on machine {hostname}"
         result["success"] = False
         return result
 
@@ -200,10 +196,8 @@ def deploy_update_major(package_id,
         if title_deployement:
             pkgsinfos = PkgsDatabase().pkgs_get_infos_details(package_id)
             if not pkgsinfos or pkgsinfos.get('label') == "":
-                logger.error(f"Deployment not rescheduled for mach {
-                             hostname} because the package {package_id} does not exist")
-                result["msg"] = f"Deployment not rescheduled for mach {
-                    hostname} because the package {package_id} does not exist"
+                logger.error(f"Deployment not rescheduled for mach {hostname} because the package {package_id} does not exist")
+                result["msg"] = f"Deployment not rescheduled for mach {hostname} because the package {package_id} does not exist"
                 result["success"] = False
                 return result
 
