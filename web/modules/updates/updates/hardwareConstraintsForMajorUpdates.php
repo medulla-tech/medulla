@@ -41,16 +41,17 @@ $end = isset($_GET['end']) ? $start + $maxperpage : $maxperpage;
 $filter = filter_input(INPUT_GET, 'filter', FILTER_SANITIZE_STRING) ?? "";
 $entityname = filter_input(INPUT_GET, 'completename', FILTER_SANITIZE_STRING) ?? "";
 $entityid = filter_input(INPUT_GET, 'entity', FILTER_VALIDATE_INT) ?? 0;
+
+$titlepage = sprintf(_T("List Machines do not perform the update for now [ Entity %s ]"), htmlspecialchars($entityname));
+$p = new PageGenerator($titlepage);
+$p->setSideMenu($sidemenu);
+$p->display();
 echo '
 <form id="myForm">
     <input type="hidden" name="entityid" value="'.htmlspecialchars($entityid).'">
     <button class="btn btn-primary" type="submit">Creation Group</button>
 </form>';
 
-$titlepage = sprintf(_T("List Machines do not perform the update for now [ Entity %s ]"), htmlspecialchars($entityname));
-$p = new PageGenerator($titlepage);
-$p->setSideMenu($sidemenu);
-$p->display();
 $list_Machine_outdated_major_update = xmlrpc_get_outdated_major_os_updates_by_entity($entityid, $start, $end, $filter);
 $n = new ListInfos($list_Machine_outdated_major_update['hostname'], _T("Computer", "updates"));
 $n->addExtraInfo($list_Machine_outdated_major_update['platform'], _T("Platform", "updates"));
