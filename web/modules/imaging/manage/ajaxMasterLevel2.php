@@ -100,10 +100,6 @@ $l->addExtraInfo($a_size, _T("Size (compressed)", "imaging"));
 $l->addExtraInfo($a_is_in_menu, _T("In default boot menu", "imaging"));
 $l->addActionItemArray($addActions);
 $l->addActionItem(
-    new ActionPopupItem(_T("Create bootable iso", "imaging"),
-    "master_iso", "backup", "master", "imaging", "manage")
-);
-$l->addActionItem(
     new ActionItem(_T("Edit image", "imaging"),
     "master_edit", "edit", "master", "imaging", "manage")
 );

@@ -151,9 +151,6 @@ $submod->addPage($page);
 $page = new Page("master_add", _T("Add master", "imaging"));
 $page->setOptions(array("visible" => False, "noHeader" => True));
 $submod->addPage($page);
-$page = new Page("master_iso", _T("Create iso from master", "imaging"));
-$page->setOptions(array("visible" => False, "noHeader" => True));
-$submod->addPage($page);
 
 $page = new Page("service", _T("Manage boot services", "imaging"));
 $submod->addPage($page);
@@ -469,10 +466,6 @@ if (!empty($submod)) {
     $submod->addPage($page);
     $page = new Page("images_delete", _T("Delete image", "imaging"));
     $page->setFile("modules/imaging/imaging/images_delete.php");
-    $page->setOptions(array("visible" => False, "noHeader" => True));
-    $submod->addPage($page);
-    $page = new Page("images_iso", _T("Create iso image", "imaging"));
-    $page->setFile("modules/imaging/imaging/images_iso.php");
     $page->setOptions(array("visible" => False, "noHeader" => True));
     $submod->addPage($page);
     $page = new Page("multicast", _T("init multicast", "imaging"));

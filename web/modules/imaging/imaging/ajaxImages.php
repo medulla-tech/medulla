@@ -175,11 +175,6 @@ if ($is_in_profile) {
 }
 $l->addActionItemArray($addActions);
 
-$l->addActionItem(
-        new ActionPopupItem(_T("Create bootable iso", "imaging"),
-        "images_iso", "backup", "image", "base", "computers")
-);
-
 // if not in boot menu
 if ($type == 'group') {
  $location = getCurrentLocation();
