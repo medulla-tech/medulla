@@ -29,7 +29,7 @@ require("graph/navbar.inc.php");
 require_once("modules/admin/includes/xmlrpc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 
-$p = new PageGenerator(_T("Approve rule gray_list to white_list", 'admin'));
+$p = new PageGenerator(_T("Automatic approval rules", 'admin'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
@@ -91,7 +91,7 @@ echo "\n";
 // Construction du tableau avec ListInfos
 $n = new ListInfos($f['msrcseverity'], _T("Update Severity", "updates"));
 $n->addExtraInfo($f['updateclassification'], _T("Update Classification", "updates"));
-$n->addExtraInfo($htmlelementcheck, _T("validate rule", "updates"));
+$n->addExtraInfo($htmlelementcheck, _T("Automatic approval", "updates"));
 
 $n->setParamInfo($params);
 $n->setNavBar = "";
