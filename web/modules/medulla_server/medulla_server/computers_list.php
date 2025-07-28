@@ -1,18 +1,18 @@
 <?php
-
-/**
+/*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
- * (c) 2007 Mandriva, http://www.mandriva.com/
- * (c) 2015-2017 Siveo, http://http://www.siveo.net
+ * (c) 2007 Mandriva, http://www.mandriva.com
+ * (c) 2016-2023 Siveo, http://www.siveo.net
+ * (c) 2024-2025 Medulla, http://www.medulla-tech.io
  *
  * $Id$
  *
- * This file is part of Mandriva Management Console (MMC).
+ * This file is part of MMC, http://www.medulla-tech.io
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ * the Free Software Foundation; either version 3 of the License, or
+ * any later version.
  *
  * MMC is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -20,18 +20,16 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with MMC; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ * along with MMC; If not, see <http://www.gnu.org/licenses/>.
  *
- * File : computers_list.php
  */
+
 require("modules/medulla_server/includes/xmlrpc.inc.php");
 require_once("modules/medulla_server/includes/utilities.php");
 
 $param = array();
-if (isset($_SESSION['computerpresence'])  && $_SESSION['computerpresence'] != "all_computer" )
+if (isset($_SESSION['computerpresence'])  && $_SESSION['computerpresence'] != "all_computer")
     $param['computerpresence'] = $_SESSION['computerpresence'];
-    
 
 if (isset($_GET['gid'])) {
     $param['gid'] = urlencode($_GET['gid']);
@@ -50,31 +48,31 @@ if (isset($_GET['imaging_server'])) {
     $param['imaging_server'] = urlencode($_GET['imaging_server']);
 }
 
-if( in_array("xmppmaster", $_SESSION["supportModList"])){
-    if (isset($_GET['cmd_id'])){
+if (in_array("xmppmaster", $_SESSION["supportModList"])) {
+    if (isset($_GET['cmd_id'])) {
         $param['cmd_id'] = urlencode($_GET['cmd_id']);
     }
-    if( isset($_GET['login'])){
+    if (isset($_GET['login'])) {
         $param['login'] = urlencode($_GET['login']);
     }
 
-    if( isset($_GET['id'])){
+    if (isset($_GET['id'])) {
         $param['id'] = urlencode($_GET['id']);
     }
 
-    if( isset($_GET['ses'])){
+    if (isset($_GET['ses'])) {
         $param['ses'] = urlencode($_GET['ses']);
     }
 
-    if( isset($_GET['hos'])){
+    if (isset($_GET['hos'])) {
         $param['hos'] = urlencode($_GET['hos']);
     }
 
-    if( isset($_GET['sta'])){
+    if (isset($_GET['sta'])) {
         $param['sta'] = urlencode($_GET['sta']);
     }
 
-    if( isset($_GET['action'])){
+    if (isset($_GET['action'])) {
         $param['logview'] = urlencode($_GET['action']);
     }
 }
@@ -97,7 +95,6 @@ if (displayLocalisationBar() && (isset($_GET['imaging_server']) && $_GET['imagin
     $ajax = new AjaxFilter(urlStrRedirect("base/computers/ajaxComputersList"), "container", $param);
 }
 
-right_top_shortcuts_display();
 $ajax->display();
 echo "<br /><br /><br /><br />";
 $ajax->displayDivToUpdate();
