@@ -28,7 +28,7 @@ $return = installProductUpdates();
 
 
 if (is_array($return) && isset($return['success']) && $return['success'] === true) {
-    new NotifyWidgetSuccess(_T('Successful updated updates!'));
+    new NotifyWidgetSuccess(_T('Successfully updated Medulla!'));
     header("Location: " . urlStrRedirect("base/main/default"));
     exit;
 } else {
