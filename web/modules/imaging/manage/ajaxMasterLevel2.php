@@ -117,7 +117,7 @@ if (safeCount($process) > 0){
 {
     $l->addActionItem(
     new ActionItem(_T("Master Clone", "imaging"),
-    "master_clone", "start", "master", "imaging", "manage")
+    "master_clone", "duplicatemaster", "master", "imaging", "manage")
 );
 }
 $l->addActionItemArray($a_destroy);
