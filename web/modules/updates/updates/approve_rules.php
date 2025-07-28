@@ -91,29 +91,12 @@ echo "\n";
 // Construction du tableau avec ListInfos
 $n = new ListInfos($f['msrcseverity'], _T("Update Severity", "updates"));
 $n->addExtraInfo($f['updateclassification'], _T("Update Classification", "updates"));
-$n->addExtraInfo($htmlelementcheck, _T("Automatic approval", "updates"));
+$n->addExtraInfo($htmlelementcheck, _T("Automatic approval (White list)", "updates"));
 
 $n->setParamInfo($params);
 $n->setNavBar = "";
 $n->start = 0;
 $n->end = count($f['msrcseverity']);
-
-$converter = new ConvertCouleur();
-
-$n->setCaptionText(sprintf(
-    _T("Auto-approval rules: automatic whitelisting based on update severity and classification.", 'updates')
-));
-
-$n->setCssCaption(
-    $border = 1,
-    $bold = 0,
-    $bgColor = "lightgray",
-    $textColor = "black",
-    $padding = "10px 0",
-    $size = "20",
-    $emboss = 1,
-    $rowColor = $converter->convert("lightgray")
-);
 
 // Affichage du tableau
 $n->disableFirstColumnActionLink();

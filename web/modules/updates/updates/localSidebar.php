@@ -38,3 +38,9 @@ $sidemenu->addSideMenuItem(new SideMenuItem(_T("Manage Updates Lists",
                                             "updates",
                                             "updates",
                                             "updatesListWin"));
+
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("Automatic Approval Rules",
+                                               'updates'),
+                                            "updates",
+                                            "updates",
+                                            "approve_rules"));
