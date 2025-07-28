@@ -169,7 +169,7 @@ if (!empty($global_status)) {
                 echo '</a>)';
 
                 echo '<div id="popupinformation1" title="Custom Menu">';
-                echo '<p class="test">';
+                echo '<p>';
                 foreach ($info as $entry) {
                     if (in_array("glpi", $_SESSION['supportModList'])) {
                         $param  = array();
@@ -201,7 +201,7 @@ if (!empty($global_status)) {
                 echo '</p>';
                 echo '</div>';
                 echo '<div id="popupconfirmationgroup" title="Attention !">
-                        <p class="test">The creation of an imaging group will reset the boot menus of all the machines in the group?</p>
+                        <p>The creation of an imaging group will reset the boot menus of all the machines in the group?</p>
                     </div>  ';
                 echo '</p>';
             }
@@ -512,7 +512,7 @@ var interval = setInterval(barprogress,6000);
         }
         $index = 0;
         foreach ($resultdisplay['partitionlist'] as $partition) {
-            echo "<p class='test'>";
+            echo "<p>";
             $tailledisk = intval($resultdisplay1[$partition][1]) * 512;
             $taillediskfMo =  round($tailledisk / (1024 * 1024), 2);
             echo '<strong>' . $resultdisplay1[$partition][0] . '</strong>' .
