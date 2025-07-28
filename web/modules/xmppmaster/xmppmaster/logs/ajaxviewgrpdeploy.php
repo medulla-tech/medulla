@@ -445,6 +445,7 @@ if(!$terminate) {
     echo "<table class='listinfos deployment' cellspacing='0' cellpadding='5' border='1'><thead><tr>";
     echo '<td>'._T('Graph', 'xmppmaster').'</td>';
     echo (isset($deploymentsuccess) && $deploymentsuccess) ? "<td>"._T("Deployment Success", "xmppmaster")."</td>" : "";
+    echo (isset($uninstallsuccess) && $uninstallsuccess) ? "<td>"._T("Uninstall Success", "xmppmaster")."</td>" : "";
     echo (isset($deploymenterror) && $deploymenterror) ? "<td>"._T("Deployment Error", "xmppmaster")."</td>" : "";
     echo (isset($abortmissingagent) && $abortmissingagent) ? "<td>"._T("Abort Missing Agent", "xmppmaster")."</td>" : "";
     echo (isset($abortinconsistentglpiinformation) && $abortinconsistentglpiinformation) ? "<td>"._T("Abort inconsistent GLPI Information", "xmppmaster")."</td>" : "";
@@ -477,6 +478,7 @@ if(!$terminate) {
     echo "<tbody><tr>";
     echo '<td style="width:500px"><div id="holder"></div>';
     echo (isset($deploymentsuccess) && $deploymentsuccess) ? "<td>".$deploymentsuccess."</td>" : "";
+    echo (isset($uninstallsuccess) && $uninstallsuccess) ? "<td>"._T("Uninstall Success", "xmppmaster")."</td>" : "";
     echo (isset($deploymenterror) && $deploymenterror) ? "<td>".$deploymenterror."</td>" : "";
     echo (isset($abortmissingagent) && $abortmissingagent) ? "<td>".$abortmissingagent."</td>" : "";
     echo (isset($abortinconsistentglpiinformation) && $abortinconsistentglpiinformation) ? "<td>".$abortinconsistentglpiinformation."</td>" : "";
@@ -525,6 +527,7 @@ if(!$terminate) {
     echo "<table class='listinfos deployment' cellspacing='0' cellpadding='5' border='1'><thead><tr>";
     echo '<td>'._T('Detailed Graph', 'xmppmaster').'</td>';
     echo (isset($deploymentsuccess) && $deploymentsuccess) ? "<td>"._T("Deployment Success", "xmppmaster")."</td>" : "";
+    echo (isset($uninstallsuccess) && $uninstallsuccess) ? "<td>"._T("Uninstall Success", "xmppmaster")."</td>" : "";
     echo (isset($deploymenterror) && $deploymenterror) ? "<td>"._T("Deployment Error", "xmppmaster")."</td>" : "";
     echo (isset($abortmissingagent) && $abortmissingagent) ? "<td>"._T("Abort Missing Agent", "xmppmaster")."</td>" : "";
     echo (isset($abortinconsistentglpiinformation) && $abortinconsistentglpiinformation) ? "<td>"._T("Abort Inconsistent GLPI Information", "xmppmaster")."</td>" : "";
@@ -557,6 +560,7 @@ if(!$terminate) {
     echo "<tbody><tr>";
     echo '<td style="width:500px"><div id="holder2"></div>';
     echo (isset($deploymentsuccess) && $deploymentsuccess) ? "<td>".$deploymentsuccess."</td>" : "";
+    echo (isset($uninstallsuccess) && $uninstallsuccess) ? "<td>"._T("Uninstall Success", "xmppmaster")."</td>" : "";
     echo (isset($deploymenterror) && $deploymenterror) ? "<td>".$deploymenterror."</td>" : "";
     echo (isset($abortmissingagent) && $abortmissingagent) ? "<td>".$abortmissingagent."</td>" : "";
     echo (isset($abortinconsistentglpiinformation) && $abortinconsistentglpiinformation) ? "<td>".$abortinconsistentglpiinformation."</td>" : "";
@@ -815,6 +819,9 @@ function fillSearch(content){
         if ($deploymentsuccess > 0) {
             echo 'datas.push({"label":"Deployment Success", "value":parseInt('.$deploymentsuccess.'), "color": "#2EFE2E", "href":"'.urlredirect_group_for_deploy("deploymentsuccess", $_GET['gid'], $_GET['login'], $cmd_id).'"});';
         }
+        if ($uninstallsuccess > 0) {
+            echo 'datas.push({"label":"Uninstall Success", "value":parseInt('.$uninstallsuccess.'), "color": "#2EFE2E", "href":"'.urlredirect_group_for_deploy("uninstallsuccess", $_GET['gid'], $_GET['login'], $cmd_id).'"});';
+        }
         if ($wol1 > 0) {
             echo 'datas.push({"label":"WOL 1", "value":parseInt('.$wol1.'), "color": "#202020", "href":"'.urlredirect_group_for_deploy("wol1", $_GET['gid'], $_GET['login'], $cmd_id).'"});';
         }
@@ -904,12 +911,16 @@ function fillSearch(content){
     var r = "";
     var datas = new Array();';
         echo 'datas.push({"label":"Deployment Success", "value":'.$deploymentsuccess.', "color": "#2EFE2E", "href":"'.urlredirect_group_for_deploy("deploymentsuccess", $_GET['gid'], $_GET['login'], $cmd_id).'"});';
+        echo 'datas.push({"label":"Uninstall Success", "value":'.$uninstallsuccess.', "color": "#2EFE2E", "href":"'.urlredirect_group_for_deploy("uninstallsuccess", $_GET['gid'], $_GET['login'], $cmd_id).'"});';
         echo 'datas.push({"label":"Deployment Aborted", "value":'.$aborted.', "color": "orange", "href":"'.urlredirect_group_for_deploy("abort", $_GET['gid'], $_GET['login'], $cmd_id).'"});';
         echo 'datas.push({"label":"Deployment Error", "value":'.$errors.', "color": "red", "href":"'.urlredirect_group_for_deploy("error", $_GET['gid'], $_GET['login'], $cmd_id).'"});';
 
         echo 'var datas2 = new Array();';
         if ($deploymentsuccess > 0) {
             echo 'datas2.push({"label":"Deployment Success", "value":parseInt('.$deploymentsuccess.'), "color": "#2EFE2E", "onclick":"fillSearch", "href":"'.urlredirect_group_for_deploy("deploymentsuccess", $_GET['gid'], $_GET['login'], $cmd_id).'"});';
+        }
+        if ($uninstallsuccess > 0) {
+            echo 'datas2.push({"label":"Uninstall Success", "value":parseInt('.$uninstallsuccess.'), "color": "#2EFE2E", "onclick":"fillSearch", "href":"'.urlredirect_group_for_deploy("uninstallsuccess", $_GET['gid'], $_GET['login'], $cmd_id).'"});';
         }
         if ($wol1 > 0) {
             echo 'datas2.push({"label":"WOL 1", "value":parseInt('.$wol1.'), "color": "#202020", "onclick":"fillSearch", "href":"'.urlredirect_group_for_deploy("wol1", $_GET['gid'], $_GET['login'], $cmd_id).'"});';

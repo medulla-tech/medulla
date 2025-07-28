@@ -208,15 +208,16 @@ class apimanagepackagemsc:
         ]
 
         result = []
-        for packagefiles in [
-            os.path.join(folderpackages, x, "conf.json") for x in listuuidpackag["uuid"]
+        for packagefiles, sequencefile in [
+            (os.path.join(folderpackages, x, "conf.json"), os.path.join(folderpackages, x, "xmppdeploy.json") )for x in listuuidpackag["uuid"]
         ]:
-            if not os.path.exists(packagefiles):
-                logger.error("package %s conf.json missing" % packagefiles)
+            if not os.path.exists(packagefiles) or not os.path.exists(sequencefile):
+                logger.error("package %s conf.json or xmppdeploy.json missing" % packagefiles)
                 continue
             obj = {}
             try:
                 data_file_conf_json = apimanagepackagemsc.readjsonfile(packagefiles)
+                data_file_sequence_json = apimanagepackagemsc.readjsonfile(sequencefile)
                 for key in data_file_conf_json:
                     if key in tab:
                         obj[str(key)] = str(data_file_conf_json[key])
@@ -232,6 +233,18 @@ class apimanagepackagemsc:
                                     )
                             else:
                                 obj[str(z)] = str(data_file_conf_json["inventory"][z])
+
+                # check if the package has uninstall section
+                obj["uninstall_section"] = {}
+                for _os in data_file_sequence_json["metaparameter"]["os"]:
+                    if _os in data_file_sequence_json["metaparameter"]:
+                        obj["uninstall_section"][_os] = False
+                        for label in data_file_sequence_json["metaparameter"][_os]["label"]:
+                            if label.startswith("Uninst_") or label == "label_section_uninstall":
+                                obj["uninstall_section"][_os] = True
+                                break
+                    else:
+                        obj["uninstall_section"][_os] = False
                 obj["files"] = []
                 obj["basepath"] = os.path.dirname(packagefiles)
                 obj["size"] = str(apimanagepackagemsc.sizedirectory(obj["basepath"]))

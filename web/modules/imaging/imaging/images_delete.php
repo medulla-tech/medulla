@@ -38,26 +38,27 @@ else
 if ($_POST) {
     $id = $_POST['itemid'];
     $ret = xmlrpc_imagingServerImageDelete($id);
-    if ($ret[0] and !isXMLRPCError()) {
-        /* insert notification code here if needed */
+    if ($ret[0] && !isXMLRPCError()) {
+        new NotifyWidgetSuccess($ret[1]);
         header("Location: " . urlStrRedirect("base/computers/imgtabs/" . $type . "tabimages", $params));
         exit;
     } elseif ($ret[0]) {
+        new NotifyWidgetSuccess($ret[1]);
         header("Location: " . urlStrRedirect("base/computers/imgtabs/" . $type . "tabimages", $params));
         exit;
     } else {
         new NotifyWidgetFailure($ret[1]);
         xmlrpc_setfromxmppmasterlogxmpp($ret[1],
-                                    "Group",
-                                    '',
-                                    0,
-                                    $label ,
-                                    'Manuel',
-                                    '',
-                                    '',
-                                    '',
-                                    "session user ".$_SESSION["login"],
-                                    'Imaging | Image | delete | server | Manual');
+            "Group",
+            '',
+            0,
+            $label ,
+            'Manuel',
+            '',
+            '',
+            '',
+            "session user ".$_SESSION["login"],
+            'Imaging | Image | delete | server | Manual');
         header("Location: " . urlStrRedirect("base/computers/imgtabs/" . $type . "tabimages", $params));
         exit;
     }

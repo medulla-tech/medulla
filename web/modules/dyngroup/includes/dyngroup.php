@@ -3,10 +3,11 @@
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2009 Mandriva, http://www.mandriva.com
  * (c) 2023 Siveo, http://siveo.net
+ * (c) 2025 Medulla, https://medulla-tech.io
  *
  * $Id$
  *
- * This file is part of Mandriva Management Console (MMC).
+ * This file is part of Management Console (MMC).
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -265,6 +266,7 @@ class Group
     public $all_params;
     public $type;
     public $parent_id;
+    public $bool;
 
     public function __construct($id = null, $load = false, $ro = false, $root_context = false)
     {
@@ -310,6 +312,41 @@ class Group
             'deploy_group_id' => $deployGroup->id,
         );
     }
+
+     public function createConvergenceUninstallGroups($package)
+    {
+        $deployGroup = new ConvergenceGroup();
+        $doneGroup = new ConvergenceGroup();
+
+        $deployGroup->setPackage($package);
+        $doneGroup->setPackage($package);
+
+        $doneGroup->setDoneGroup();
+
+        $deployGroup->setParentGroup($this);
+        $doneGroup->setParentGroup($this);
+
+        $deployGroup->create();
+        $doneGroup->create();
+
+        $deployGroup->setRequestAndBool();
+        $doneGroup->setRequestAndBool();
+
+        $deploybool = $deployGroup->bool;
+        $donebool = $doneGroup->bool;
+        $deployGroup->bool = $donebool;
+        $doneGroup->bool = $deploybool;
+
+        __xmlrpc_setbool_group($deployGroup->id, $donebool, $deployGroup->type, $deployGroup->parent_id);
+        __xmlrpc_setbool_group($doneGroup->id, $deploybool, $doneGroup->type, $doneGroup->parent_id);
+
+        return array(
+            'done_group_id' => $doneGroup->id,
+            'deploy_group_id' => $deployGroup->id,
+        );
+    }
+
+
 
     public function getDeployGroupId($package)
     {
@@ -881,6 +918,11 @@ function xmlrpc_is_convergence_active($gid, $pid)
 function xmlrpc_get_deploy_group_id($gid, $pid)
 {
     return xmlCall("dyngroup.get_deploy_group_id", array($gid, $pid));
+}
+
+function xmlrpc_get_done_group_id($gid, $pid)
+{
+    return xmlCall("dyngroup.get_done_group_id", array($gid, $pid));
 }
 
 function xmlrpc_getDeployGroupId($gid, $package_id)

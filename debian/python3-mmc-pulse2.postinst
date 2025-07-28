@@ -1,0 +1,12 @@
+#!/bin/sh
+set -e
+
+chmod 644 /usr/share/medulla-update-manager/*
+chmod 755 /usr/share/medulla-update-manager/medulla-update-manager.py
+if [ ! -L "/usr/share/medulla-update-manager/medulla-update-manager" ]; then
+    ln -s /usr/share/medulla-update-manager/medulla-update-manager.py /usr/share/medulla-update-manager/medulla-update-manager 
+fi
+
+#DEBHELPER#
+
+exit 0

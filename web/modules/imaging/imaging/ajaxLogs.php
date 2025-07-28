@@ -2,16 +2,18 @@
 
 /*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
- * (c) 2007-2009 Mandriva, http://www.mandriva.com
+ * (c) 2007 Mandriva, http://www.mandriva.com
+ * (c) 2016-2023 Siveo, http://www.siveo.net
+ * (c) 2024-2025 Medulla, http://www.medulla-tech.io
  *
  * $Id$
  *
- * This file is part of Mandriva Management Console (MMC).
+ * This file is part of MMC, http://www.medulla-tech.io
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ * the Free Software Foundation; either version 3 of the License, or
+ * any later version.
  *
  * MMC is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -19,11 +21,10 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with MMC; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ * along with MMC; If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-/* Get MMC includes */
 require("../../../includes/config.inc.php");
 require("../../../includes/i18n.inc.php");
 require("../../../includes/acl.inc.php");
@@ -52,36 +53,32 @@ $a_level = array();
 $a_date = array();
 $a_target = array();
 $a_desc = array();
-$a_states = array();
 $list_params = array();
 foreach ($db_logs as $log) {
     $param = $params;
 
     $status = $log['imaging_log_state'];
-    // add image to description
     $date = _toDate($log['timestamp']);
-    /*if(ereg('backup', $status)) {
-        $date = '<img src="modules/imaging/graph/images/backup.png" style="vertical-align: bottom"/>&nbsp;'.$date;
-    } elseif (ereg('restore', $status)) {
-        $date = '<img src="modules/imaging/graph/images/restore.png" style="vertical-align: bottom"/>&nbsp;'.$date;
-    }*/
 
-    // get status
     if(!array_key_exists($status, $logStates)) {
         $status = 'unknown';
     }
 
-    // complete status display
     $led = new LedElement($logStates[$status][1]);
     $status = $logStates[$status][0];
-    //$status = $led->value.'&nbsp;'.$logStates[$status][0];
 
     $details = translate_details($log['detail']);
 
     $a_date[] = $date;
     $a_target[] = $log['target']['name'];
-    $a_desc[]= "<span class='" . $log['imaging_log_level'] . "'>" . $status . ' - ' . $details . "</span>";
-    $a_states[]= $status;
+
+    $color = getColorForDetail($details);
+    if ($color) {
+        $a_desc[] = "<span style='color: $color; font-weight:bold'>" . $details . "</span>";
+    } else {
+        $a_desc[] = "<span class='" . $log['imaging_log_level'] . "'>" . $details . "</span>";
+    }
+
     $param["uuid"] = $log['target']['uuid'];
     $param["hostname"] = $log['target']['name'];
 
@@ -93,7 +90,6 @@ $l->setNavBar(new AjaxNavBar($nbLogs, $filter));
 $l->setParamInfo($list_params);
 $l->addExtraInfo($a_target, _T("Target", "imaging"));
 $l->addExtraInfo($a_desc, _T("Message", "imaging"));
-$l->addExtraInfo($a_states, _T("State", "imaging"));
 $l->disableFirstColumnActionLink();
 $l->setTableHeaderPadding(1);
 $l->start = 0;

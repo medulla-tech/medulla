@@ -37,6 +37,10 @@ function getRestrictedComputersList($min = 0, $max = -1, $filt = null, $adv = Tr
     return xmlCall("base.getRestrictedComputersList", array($min, $max, $filt, $adv, $justId));
 }
 
+function xmlrpc_getMachineByUUID($uuid) {
+    return xmlCall("xmppmaster.getMachinefromuuid", array($uuid));
+}
+
 function getRestrictedComputersListuuid($min = 0, $max = -1, $filt = null, $adv = True , $justId=False) {
     return xmlCall("base.getRestrictedComputersList", array($min, $max, $filt, $adv, $justId));
 }

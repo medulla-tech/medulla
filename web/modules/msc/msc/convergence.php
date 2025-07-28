@@ -28,10 +28,11 @@ require('modules/msc/includes/commands_xmlrpc.inc.php');
 require('modules/msc/includes/package_api.php');
 require('modules/msc/includes/scheduler_xmlrpc.php');
 require('modules/msc/includes/mscoptions_xmlrpc.php');
+require('modules/msc/includes/launch_functions.php');
 require_once('modules/dyngroup/includes/dyngroup.php');
 
-function getParam($key, $default = '') {
-    return isset($_GET[$key]) ? $_GET[$key] : $default;
+function reset_title($title) {
+    return preg_replace('/^Uninstall\s+/i', '', $title);
 }
 
 $from = getParam('from');
@@ -50,6 +51,20 @@ if (getParam('gid')) {
     $cible = $group->getName();
 }
 
+
+$polarity = 'install';
+$switchPolarity = false;
+
+// If we publish and the title contains 'uninstall' → we are in rocking
+if (getParam('editConvergence')) {
+    $cmd_id = xmlrpc_get_convergence_command_id(getParam('gid', null), getParam('pid'));
+    $command_details = command_detail($cmd_id);
+
+    if (stripos($command_details['title'], 'Uninstall') === 0) {
+        $switchPolarity = true;
+    }
+}
+
 $params = array(
     "actionconvergenceint"   => getParam('actionconvergenceint'),
     "actionconvergence"      => getParam('actionconvergence'),
@@ -63,17 +78,20 @@ $params = array(
     "create_directory"       => 'on',
     "next_connection_delay"  => web_def_delay(),
     "max_connection_attempt" => web_def_attempts(),
+    "polarity"               => $polarity,
+    "switch_polarity"        => $switchPolarity,
+    "parameterspacquage"     => "",
 );
+
 
 if (getParam('editConvergence')) {
     $ServerAPI = new ServerAPI();
     $ServerAPI->fromURI(getParam('papi'));
 
-    $cmd_id          = xmlrpc_get_convergence_command_id(getParam('gid', null), getParam('pid'));
-    $command_details = command_detail($cmd_id);
-    $command_phases  = xmlrpc_get_convergence_phases(getParam('gid', null), getParam('pid'));
-
-    $params["ltitle"]               = $command_details['title'];
+    $cmd_id                         = xmlrpc_get_convergence_command_id(getParam('gid', null), getParam('pid'));
+    $command_details                = command_detail($cmd_id);
+    $command_phases                 = xmlrpc_get_convergence_phases(getParam('gid', null), getParam('pid'));
+    $params["ltitle"]               = reset_title($command_details['title']);
     $params["maxbw"]                = $command_details['maxbw'] / 1024;
     $params["copy_mode"]            = $command_details['copy_mode'];
     $params["deployment_intervals"] = $command_details['deployment_intervals'];
@@ -83,6 +101,7 @@ if (getParam('editConvergence')) {
     $params["actionconvergence"]    = getParam('actionconvergence');
     $params["previous"]             = getParam('previous');
     $params["active"]               = xmlrpc_is_convergence_active(getParam('gid', null), getParam('pid')) ? 'on' : 'inactive';
+    $params["parameterspacquage"]   = '';
 
     foreach (array('start_script', 'clean_on_success', 'do_reboot', 'do_wol', 'do_inventory', 'do_halt') as $key) {
         if ($command_phases) {
@@ -101,7 +120,7 @@ if (getParam('editConvergence')) {
     }
 }
 else {
-    $params["ltitle"]               = _T('Convergence on ') . getParam('name');
+    $params["ltitle"]               = reset_title(_T('Convergence on ') . getParam('name'));
     $params["start_script"]         = 'on';
     $params["clean_on_success"]     = 'on';
     $params["do_reboot"]            = '';

@@ -42,6 +42,22 @@ if (!empty($_GET['gid'])) {
 }
 
 require_once("modules/msc/includes/package_api.php");
+
+
+// Give alias for convergences status
+if(!defined("CONVERGENCE_AVAILABLE_NOT_SET"))
+    define("CONVERGENCE_AVAILABLE_NOT_SET", 0);
+
+if(!defined("CONVERGENCE_ENABLED"))
+    define ("CONVERGENCE_ENABLED", 1);
+
+if(!defined("CONVERGENCE_AVAILABLE_SET"))
+    define ("CONVERGENCE_AVAILABLE_SET", 2);
+
+if(!defined("CONVERGENCE_NONE"))
+    define ("CONVERGENCE_NONE", 3);
+
+
 if (!in_array("xmppmaster", $_SESSION["supportModList"])) {
     if ($_GET['uuid']) {
         $label = new RenderedLabel(3, sprintf(_T('These packages can be installed on computer "%s"', 'msc'), $_GET['hostname']));
@@ -83,12 +99,22 @@ function prettyConvergenceStatusDisplay($status)
     }
 }
 $a_convergence_status = array();
+
+// polarities is used to determine if the current convergence is set as positive or convergence uninstall
+$convergences_polarities = [];
+$polarities = [];
 if ($group != null) {
-    $group_convergence_status = xmlrpc_getConvergenceStatus($group->id);
+    $convergences = xmlrpc_getConvergenceStatus($group->id);
+    $group_convergence_status = $convergences[0];
+    $convergences_polarities = $convergences[1];
     $group_convergence_status1 = $group_convergence_status['/package_api_get1'] ?? [];
+    $polarities = $convergences_polarities['/package_api_get1'] ?? [];
 }
+
 $emptyAction = new EmptyActionItem();
 $convergenceAction = new ActionItem(_T("Convergence", "msc"), "convergence", "convergence", "msc", "base", "computers");
+$convergenceUninstallAction = new ActionItem(_T("Convergence Uninstall", "msc"), "convergenceuninstall", "convergenceunin", "msc", "base", "computers");
+$a_convergence_uninstall_action = array();
 $a_convergence_action = array();
 $a_packages = array();
 $a_description = array();
@@ -99,7 +125,6 @@ $params = array();
 
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
-
 if (isset($_GET["start"])) {
     $start = $_GET["start"];
 } else {
@@ -114,8 +139,6 @@ if (!empty($_GET['uuid'])) {
     $filter['group'] = $group->id;
 }
 
-# TODO : decide what we want to do with groups : do we only get the first machine local packages
-//list($count, $packages) = advGetAllPackages($filter, $start, $start + $maxperpage);
 if (isset($_GET['uuid'])) {
     $platform = xmlrpc_getMachinefromuuid($_GET['uuid'])['platform'];
     if (stripos($platform, "win") !== false) {
@@ -127,7 +150,6 @@ if (isset($_GET['uuid'])) {
     }
 };
 list($count, $packages) =  get_all_packages_deploy($_SESSION['login'], $start, $start + $maxperpage, $filter);
-
 // list($count, $packages) =  xmlrpc_xmppGetAllPackages($filter, $start, $start + $maxperpage);
 $packages[0][1] = 0;
 $packages[0][2] = array();
@@ -141,6 +163,7 @@ foreach ($packages as $c_package) {
     $elt_convergence_status = "";
     $current_convergence_status = 0;
     $package = isset($c_package[0]) ? to_package($c_package[0]) : null;
+    $polarity = isset($polarities[$package->id]) ? $polarities[$package->id] : "";
 
     $type = isset($c_package[1]) ? $c_package[1] : 0;
 
@@ -148,6 +171,7 @@ foreach ($packages as $c_package) {
     if (isset($c_package[0]['ERR']) && $c_package[0]['ERR'] == 'PULSE2ERROR_GETALLPACKAGE') {
         $err[] = sprintf(_T("MMC failed to contact package server %s.", "msc"), $c_package[0]['mirror']);
     } else {
+
         if($package != null) {
             $a_packages[] = $package->label;
             $a_description[] = $package->description ;
@@ -162,11 +186,33 @@ foreach ($packages as $c_package) {
                     $group_convergence_status1,
                     $package->associateinventory
                 ) : null;
+
                 // set param_convergence_edit to True if convergence status is active or inactive
                 $param_convergence_edit = (in_array($current_convergence_status, array(1, 2))) ? true : false;
                 $elt_convergence_status = prettyConvergenceStatusDisplay($current_convergence_status);
                 $a_convergence_status[] = $elt_convergence_status;
-                $a_convergence_action[] = (isset($package->associateinventory) && $package->associateinventory == 1) ? $convergenceAction : $emptyAction;
+
+                // Handle the convergence and convergence uninstall actions
+                switch($current_convergence_status){
+                    case CONVERGENCE_AVAILABLE_NOT_SET:
+                    case CONVERGENCE_AVAILABLE_SET:
+                        $a_convergence_uninstall_action[] = ($package->uninstall_section == true) ? $convergenceUninstallAction : $emptyAction;
+                        $a_convergence_action[] = $convergenceAction;
+                        break;
+                    case CONVERGENCE_ENABLED:
+                        $a_convergence_uninstall_action[] = ($polarity == "uninstall") ? $convergenceUninstallAction : $emptyAction;
+                        $a_convergence_action[] = ($polarity == "uninstall") ? $emptyAction : $convergenceAction;
+                        break;
+
+                    case CONVERGENCE_NONE:
+                        $a_convergence_action[] = $emptyAction;
+                        $a_convergence_uninstall_action[] = $emptyAction;
+                        break;
+                    default: // should never be here but who know ...
+                        $a_convergence_action[] = $emptyAction;
+                        $a_convergence_uninstall_action[] = $emptyAction;
+                        break;
+                }
             }
         }
 
@@ -174,14 +220,14 @@ foreach ($packages as $c_package) {
 
         } elseif (!empty($_GET['uuid'])) {
             $params[] = array('name' => $package->label,
-                              'version' => $package->version,
-                              'pid' => $package->id,
-                              'uuid' => $_GET['uuid'],
-                              'hostname' => $_GET['hostname'],
-                              'from' => 'base|computers|msctabs|tablogs',
-                              'papi' => $p_api->toURI(),
-                              'actionconvergence' => $elt_convergence_status,
-                              'actionconvergenceint' => $current_convergence_status);
+            'version' => $package->version,
+            'pid' => $package->id,
+            'uuid' => $_GET['uuid'],
+            'hostname' => $_GET['hostname'],
+            'from' => 'base|computers|msctabs|tablogs',
+            'papi' => $p_api->toURI(),
+            'actionconvergence' => $elt_convergence_status,
+            'actionconvergenceint' => $current_convergence_status);
         } else {
             $params[] = array('name' => $package->label,
                               'version' => $package->version,
@@ -191,7 +237,10 @@ foreach ($packages as $c_package) {
                               'papi' => $p_api->toURI(),
                               'editConvergence' => $param_convergence_edit,
                               'actionconvergence' => $elt_convergence_status,
-                              'actionconvergenceint' => $current_convergence_status);
+                              'actionconvergenceint' => $current_convergence_status,
+                              'polarity'=>$polarity,
+                            );
+
         }
         if ($type == 0) {
             $a_css[] = 'primary_list';
@@ -199,7 +248,8 @@ foreach ($packages as $c_package) {
             $a_css[] = 'secondary_list';
         }
     }
-}
+} // end of foreach
+
 if ($err) {
     new NotifyWidgetFailure(implode('<br/>', array_merge($err, array(_T("Please contact your administrator.", "msc")))));
 }
@@ -240,6 +290,7 @@ if(!in_array("xmppmaster", $_SESSION["modulesList"])) {
 }
 
 if ($group != null) {
+    $n->addActionItem($a_convergence_uninstall_action);
     $n->addActionItem($a_convergence_action);
 }
 

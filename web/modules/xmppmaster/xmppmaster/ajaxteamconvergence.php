@@ -105,13 +105,25 @@ foreach ($arraydeploy['tabdeploy']['start'] as $ss) {
 $arraydeploy['tabdeploy']['start'] = $startdeploy;
 
 foreach ($arraydeploy['tabdeploy']['endcmd'] as $ss) {
-    $ee = is_array($ss) ? $ss : get_object_vars($ss);
+    if (is_array($ss)) {
+        $ee = $ss;
+    } elseif (is_object($ss)) {
+        $ee = get_object_vars($ss);
+    } else {
+        continue;
+    }
     $endcmd[] = gmdate("Y-m-d H:i:s", $ee['timestamp']);
 }
 $arraydeploy['tabdeploy']['endcmd'] = $endcmd;
 
 foreach ($arraydeploy['tabdeploy']['start'] as $ss) {
-    $ee = is_array($ss) ? $ss : get_object_vars($ss);
+    if (is_array($ss)) {
+        $ee = $ss;
+    } elseif (is_object($ss)) {
+        $ee = get_object_vars($ss);
+    } else {
+        continue;
+    }
     $startcmd[] = gmdate("Y-m-d H:i:s", $ee['timestamp']);
 }
 $arraydeploy['tabdeploy']['startcmd'] = $startcmd;
@@ -269,7 +281,8 @@ if(isset($arraynotdeploy))
 
 $newArrayTitleName = array();
 foreach ($arraytitlename as $line) {
-    $lineWithoutDateTime = preg_replace('/\s*\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2}\s*/', ' ', $line);
+    $lineWithoutTag = preg_replace('/\s*-@convergence@-\s*/i', '', $line);
+    $lineWithoutDateTime = preg_replace('/\s*\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2}\s*/', ' ', $lineWithoutTag);
     $newArrayTitleName[] = trim($lineWithoutDateTime);
 }
 $n = new OptimizedListInfos( $newArrayTitleName, _T("Deployment", "xmppmaster"));

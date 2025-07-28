@@ -71,7 +71,7 @@ class DoubleAutocomplete {
     <!--
         function addSlave(id) {
             //var autocomplete = document.getElementById(id);
-            var value = jQuery('#'+id).val();
+            var value = encodeURIComponent(jQuery('#'+id).val());
             jQuery('#'+id).attr('readonly', true);
 
             jQuery('#autocomplete2').jqEasySuggest({

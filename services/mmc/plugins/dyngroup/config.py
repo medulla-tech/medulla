@@ -10,7 +10,7 @@ from pulse2.database.dyngroup.config import DyngroupDatabaseConfig
 class DGConfig(DyngroupDatabaseConfig):
     dyngroup_activate = True
     defaultModule = ""
-    maxElementsForStaticList = 2000
+    maxElementsForStaticList = 500
     profilesEnable = True
     check_db_enable = False
     check_db_interval = 300

@@ -116,6 +116,8 @@ function xmlrpc_get_conformity_update_by_machines($ids = [])
     return xmlCall("updates.get_conformity_update_by_machines", [$ids]);
 }
 
+
+
 function xmlrpc_get_os_update_major_stats()
 {
     return xmlCall("updates.get_os_update_major_stats", []);
@@ -124,6 +126,12 @@ function xmlrpc_get_os_update_major_stats()
 function xmlrpc_get_os_xmpp_update_major_stats()
 {
     return xmlCall("updates.get_os_xmpp_update_major_stats", []);
+}
+
+
+function xmlrpc_get_outdated_major_os_updates_by_entity($entity_id,  $start=0, $limit=-1,$filter="",$colonne=True)
+{
+    return xmlCall("updates.get_outdated_major_os_updates_by_entity", [$entity_id, $start, $limit,$filter,$colonne]);
 }
 
 function xmlrpc_get_os_update_major_details($entity_id, $filter="", $start=0, $limit=-1)

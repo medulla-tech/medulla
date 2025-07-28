@@ -33,9 +33,11 @@ from pulse2.version import getVersion, getRevision  # pyflakes.ignore
 import logging
 import subprocess
 import json
+import re
 from time import time
 from twisted.internet.threads import deferToThread
 
+logger = logging.getLogger()
 deferred = deferToThread.__get__  # Create an alias for deferred functions
 
 
@@ -248,95 +250,55 @@ class RpcProxy(RpcProxyI):
             [cmd], stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True
         )
         out, err = process.communicate()
-        return out.strip(), err.strip(), process.returncode
+        return out.decode('utf-8').strip(), err.decode('utf-8').strip(), process.returncode
+
 
     def getProductUpdates(self):
+        mup_path = "/usr/share/medulla-update-manager/medulla-update-manager.py"
+        install_command = f"{mup_path} --list --json"
+
         @deferred
         def _getProductUpdates():
-            updMgrPath = "/usr/share/pulse-update-manager/pulse-update-manager"
+            stdout, stderr, code = self.runinshell(install_command)
 
-            if not os.path.exists(updMgrPath):
-                return False
+            logger.debug(f"Sortie standard du script enfant (stdout) :\n{stdout}")
+            logger.debug(f"Sortie erreur du script enfant (stderr) :\n{stderr}")
 
-            global last_update_check_ts, available_updates
-            o, e, ec = self.runinshell("%s -l --json" % updMgrPath)
+            if code == 0:
+                # JSON extraction between markers
+                match = re.search(r"===JSON_BEGIN===(.*?)===JSON_END===", stdout, re.DOTALL)
+                if match:
+                    try:
+                        data = json.loads(match.group(1))
+                        return {"success": True, "data": data}
+                    except json.JSONDecodeError as e:
+                        logger.error(f"Erreur lors du décodage JSON : {e}")
+                        return {"success": False, "error": "invalid_json"}
+                else:
+                    logger.warning("Bloc JSON non trouvé dans la sortie")
+                    return {"success": False, "error": "no_json_found"}
+            else:
+                logger.error(f"Échec de la commande (code {code})")
+                return {"success": False, "code": code, "stderr": stderr}
 
-            o = o.decode("utf-8")
-            # Check json part existence
-            if not "===JSON_BEGIN===" in o or not "===JSON_END===" in o:
-                available_updates = False
-
-            # Get json output
-            json_output = (
-                o.split("===JSON_BEGIN===")[1].split("===JSON_END===")[0].strip()
-            )
-            packages = json.loads(json_output)["content"]
-
-            result = []
-
-            for pkg in packages:
-                pulse_filters = (
-                    "python-mmc",
-                    "python-pulse2",
-                    "mmc-web",
-                    "pulse",
-                    "mmc-agent",
-                )
-
-                # Skip non-Pulse packages
-                if not pkg[2].startswith(pulse_filters):
-                    continue
-
-                result.append({"name": pkg[2], "title": pkg[1]})
-
-            # Caching last result
-            available_updates = result
-            last_update_check_ts = time()
-
-        global last_update_check_ts, available_updates
-        # If last checking is least than 4 hours, return cached value
-        if not last_update_check_ts or (time() - last_update_check_ts) > 14400:
-            _getProductUpdates()
-
-        return available_updates
+        return _getProductUpdates()
 
     def installProductUpdates(self):
-        """
-        This function update packages used for pulse ( pulse, mmc, etc.)
-        """
-
-        # Reset update cache
-        global last_update_check_ts, available_updates
-        last_update_check_ts = None
-        available_updates = []
-        updMgrPath = "/usr/share/pulse-update-manager/pulse-update-manager"
-
-        pulse_packages_filter = "|grep -e '^python-mmc' -e '^python-pulse2' -e '^mmc-web' -e '^pulse' -e '^mmc-agent$' -e '^pulse-xmpp-agent$'"
-        install_cmd = (
-            "LANG=C dpkg -l|awk '{print $2}' %s|xargs apt-get -y install"
-            % pulse_packages_filter
-        )
-        install_cmd = "%s -l|awk '{print $1}' %s|xargs %s -i" % (
-            updMgrPath,
-            pulse_packages_filter,
-            updMgrPath,
-        )
+        mup_path = "/usr/share/medulla-update-manager/medulla-update-manager.py"
+        install_command = f"{mup_path} -I" # Option -i to install everything
 
         @deferred
         def _runInstall():
-            try:
-                os.utime("/tmp/pulse-update-manager", None)
-            except Exception:
-                open("/tmp/pulse-update-manager", "a").close()
+            stdout, stderr, code = self.runinshell(install_command)
 
-            # Running install command with no pipe
-            subprocess.call(install_cmd, shell=True)
+            if code == 0:
+                logger.info("Commande exécutée avec succès")
+                return {"success": True, "output": stdout}
+            else:
+                logger.error(f"Échec de la commande (code {code})")
+                return {"success": False, "code": code, "stderr": stderr}
 
-            os.remove("/tmp/pulse-update-manager", None)
-
-        _runInstall()
-
-        return True
+        return _runInstall()
 
 
 def displayLocalisationBar():

@@ -1,15 +1,18 @@
 <?php
 /*
- * (c) 2015-2021 siveo, http://www.siveo.net/
+ * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+ * (c) 2007 Mandriva, http://www.mandriva.com
+ * (c) 2016-2023 Siveo, http://www.siveo.net
+ * (c) 2024-2025 Medulla, http://www.medulla-tech.io
  *
  * $Id$
  *
- * This file is part of Mandriva Management Console (MMC).
+ * This file is part of MMC, http://www.medulla-tech.io
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ * the Free Software Foundation; either version 3 of the License, or
+ * any later version.
  *
  * MMC is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -17,15 +20,11 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with MMC; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ * along with MMC; If not, see <http://www.gnu.org/licenses/>.
  *
- * file : xmppmaster/deployquickgroup.php
-*/
+ */
 
 ?>
-
-
 
 <style type="text/css">
 .popup{
@@ -63,7 +62,6 @@ input[type="text"] {
             echo "<h1>Quick Actions group</h1>";
             echo "<h2>groupName ".$grouptype." : ".$_GET['groupname']."</h2>";
             echo "<h3>".$count." machine in group ".$_GET['groupname']."</h3>";
-//             echo '<canvas id="myChart" width="100" height="100"></canvas>';
             if ($nbr_presense == 0){
                 echo '<h3>There is no machine "turned ON" in this group.</h3>';
             }
@@ -78,27 +76,6 @@ input[type="text"] {
             }
         ?>
         <script type="text/javascript">
-
-//         var ctx = document.getElementById("myChart").getContext('2d');
-//         data = {
-//             datasets: [{
-//                 data: [10, 20, 30]
-//             }],
-//
-//             // These labels appear in the legend and in the tooltips when hovering different arcs
-//             labels: [
-//                 'Red',
-//                 'Yellow',
-//                 'Blue'
-//             ]
-//         };
-        /*
-        var myPieChart = new Chart(ctx,{
-                                        type: 'pie',
-                                        data: data,
-                                        options: options
-                                    });*/
-
         </script>
             <table style="width : 500px;">
                 <tr>
@@ -226,7 +203,6 @@ input[type="text"] {
         jQuery('#checkboxshutdown').click(function() {
             jQuery("#shutdowninfo").toggle();
         })
-    //console.log(groupinfo);
 
     function wol(data){
         uuid = data[0];
@@ -247,21 +223,15 @@ input[type="text"] {
     }
 
     function inventory(data){
-        uuid = data[0];
-        cn = data[1];
-        presence = data[2];
-        machine_already_present = data[3];
-        machine_not_present = data[4];
+        var uuid = data.result[0];
+        var cn = data.result[1];
+        var presence = data.result[2];
+        var machine_already_present = data.result[3];
+        var machine_not_present = data.result[4];
 
-        if (machine_already_present.length == 0){
-            alert("All machines are off\nInventory possible only on running machines")
-        }
-        else{
-                text = "";
-                for(var i = 0; i < machine_already_present.length; i++){
-                    text = text +  machine_already_present[i] + ", ";
-                }
-            alert("Inventory on the following machines in progress\n"+text , "" , "alert-info")
+        if (data.notif && data.notif.strings && data.notif.strings[0]) {
+            jQuery('#notif').html(data.notif.strings[0]);
+            window.location.reload();
         }
     }
 

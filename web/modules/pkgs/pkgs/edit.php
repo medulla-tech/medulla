@@ -1,17 +1,18 @@
 <?php
-/**
+/*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
- * (c) 2007-2008 Mandriva, http://www.mandriva.com
- * (c) 2018-2021 Siveo, http://www.siveo.net/
+ * (c) 2007 Mandriva, http://www.mandriva.com
+ * (c) 2016-2023 Siveo, http://www.siveo.net
+ * (c) 2024-2025 Medulla, http://www.medulla-tech.io
  *
  * $Id$
  *
- * This file is part of Management Console (MMC).
+ * This file is part of MMC, http://www.medulla-tech.io
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ * the Free Software Foundation; either version 3 of the License, or
+ * any later version.
  *
  * MMC is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -19,8 +20,8 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with MMC; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ * along with MMC; If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 require("localSidebar.php");
 require("graph/navbar.inc.php");
@@ -73,6 +74,9 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
     $package['command'] = array('name' => $_POST['commandname'], 'command' => $_POST['commandcmd']);
     // Simple package: not a bundle
     $package['sub_packages'] = array();
+
+    $package['random_dir'] = $_POST['random_dir'] ?? '';
+    $package['uploaded_files'] = $list_of_files;
 
     // Send Package Infos via XMLRPC
     $ret = putPackageDetail($package, $need_assign);
@@ -139,7 +143,7 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
                 }
             // === END ASSOCIATING FILES ==========================
             } else {
-                header("Location: " . urlStrRedirect("pkgs/pkgs/edit", array('pid' => $_GET['pid'], 'packageUuid' => $_GET['packageUuid'])));
+                header("Location: " . urlStrRedirect("pkgs/pkgs/index", array('location' => base64_encode($p_api_id))));
                 exit;
             }
         } else {
@@ -510,7 +514,7 @@ $params = array();
 $pserver_base_url = '';
 
 foreach ($package['files'] as $file) {
-    if ($file['name'] == "MD5SUMS" || $file['name'] == "xmppdeploy.json") {
+    if ($file['name'] == "MD5SUMS" || $file['name'] == "xmppdeploy.json" || $file['name'] == "conf.json") {
         continue;
     }
     $names[] = $file['name'];
@@ -627,6 +631,20 @@ jQuery(function(){
 
 
   jQuery("input[name='label']").attr("maxlength", 60);
-  jQuery("#container_input_description").prepend("<div style='color:red;'><?php echo _T("Accentuated and special chars are not allowed", "pkgs");?></div>");
+  jQuery("#description").on("change", function(){
+            description = jQuery(this).val();
+            if(description.match(RegExp(/^[A-Za-z0-9\.\-\!\?\ \.\#%$&@\*\+_\/]*$/))){
+                console.log("OK")
+                if(typeof(jQuery("#description-warning")) != "undefined"){
+                    jQuery("#description-warning").remove()
+                }
+            }
+            else{
+                if(typeof(jQuery("#description-warning").val()) == "undefined"){
+                    jQuery("#container_input_description").prepend("<div id='description-warning' style='color:red;'><?php echo _T("Accentuated and special chars are not allowed", "pkgs");?></div>");
+                }
+            }
+        })
+//   jQuery("#container_input_description").prepend("<div style='color:red;'><?php echo _T("Accentuated and special chars are not allowed", "pkgs");?></div>");
 })
 </script>

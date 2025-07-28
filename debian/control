@@ -149,6 +149,7 @@ Package: python3-mmc-pulse2
 Architecture: all
 Section: python
 Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python3-mmc-base (>= 3.1.1-1), python3-mmc-msc (= ${binary:Version}), python3-mmc-inventory (= ${binary:Version}) | python3-mmc-glpi (= ${binary:Version}), python3-mmc-dyngroup (= ${binary:Version}), python3-mmc-pkgs (= ${binary:Version}), python3-pulse2-common (= ${binary:Version}), python3-sqlalchemy (>= 0.4)
+Conflicts: medulla-update-manager
 Recommends: python3-mmc-imaging
 Description: Pulse 2 MMC agent plugins
  Pulse 2 is Open Source computer system management for medium and large

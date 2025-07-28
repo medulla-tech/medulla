@@ -1,2 +1,3 @@
-usr/lib/python3/*-packages/mmc/plugins/medulla_server
+usr/lib/python3/*-packages/mmc/plugins/medulla_server/medulla-update-manager/*	/usr/share/medulla-update-manager/
+usr/lib/python3/*-packages/mmc/plugins/medulla_server/*.py
 etc/mmc/plugins/medulla_server.ini

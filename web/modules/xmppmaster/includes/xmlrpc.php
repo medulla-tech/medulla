@@ -26,6 +26,15 @@
 //======================================================================
 //require_once("modules/xmppmaster/includes/xmlrpc.php");
 
+function xmlrpc_get_auto_approve_rules()
+{
+    return xmlCall("xmppmaster.get_auto_approve_rules", array());
+}
+
+function xmlrpc_update_auto_approve_rules($updates)
+{
+    return xmlCall("xmppmaster.update_auto_approve_rules", array($updates));
+}
 //topology
 function xmlrpc_topology_pulse()
 {
@@ -469,7 +478,7 @@ function xmlrpc_getdeploybyteamuserrecent_for_convergence(
     $min = null,
     $max = null,
     $filt = null,
-    $typedeploy = "command"
+    $typedeploy = "convergence"
 ) {
     return xmlCall("xmppmaster.get_deploy_by_team_member_for_convergence", array($login,
                                                                 $state,
@@ -548,7 +557,7 @@ function xmlrpc_get_deploy_convergence(
     $min = null,
     $max = null,
     $filt = null,
-    $typedeploy = "command"
+    $typedeploy = "convergence"
 ) {
     return xmlCall("xmppmaster.get_deploy_convergence", array(
         $login,

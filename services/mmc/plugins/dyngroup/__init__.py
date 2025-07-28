@@ -642,6 +642,10 @@ class RpcProxy(RpcProxyI):
         ret = DyngroupDatabase().get_deploy_group_id(gid, package_id)
         return xmlrpcCleanup(ret)
 
+    def get_done_group_id(self, gid, package_id):
+        ret = DyngroupDatabase().get_done_group_id(gid, package_id)
+        return xmlrpcCleanup(ret)
+
     def get_convergence_group_parent_id(self, gid):
         ret = DyngroupDatabase().get_convergence_group_parent_id(gid)
         return xmlrpcCleanup(ret)

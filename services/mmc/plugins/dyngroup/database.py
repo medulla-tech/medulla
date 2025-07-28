@@ -1044,6 +1044,22 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         return ret.deployGroupId
 
     @DatabaseHelper._sessionm
+    def get_done_group_id(self, session, gid, package_id):
+        query = (
+            session.query(Convergence)
+            .filter_by(parentGroupId=gid, packageUUID=package_id)
+            .order_by(Convergence.id.desc())
+        )
+        ret = query.first()
+        if ret is None:
+            self.logger.error(
+                "Error while fetching deploy group for group %s (package %s): No record found"
+                % (gid, package_id)
+            )
+            return False
+        return ret.doneGroupId
+
+    @DatabaseHelper._sessionm
     def get_convergence_group_parent_id(self, session, gid):
         query = session.query(Groups).filter_by(id=gid)
         try:
@@ -1176,12 +1192,18 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         """
         query = session.query(Convergence).filter_by(parentGroupId=gid).all()
         ret = {}
+        ret2 = {}
         for line in query:
+            query2 = session.query(Groups.bool).filter(Groups.id == line.deployGroupId).first()
             mountpoint = "/package_api_get1"
             if mountpoint not in ret:
                 ret[mountpoint] = {}
+            if mountpoint not in ret2:
+                ret2[mountpoint] = {}
+            ret2[mountpoint][line.packageUUID] = "positive" if query2.bool == "AND(2, NOT(AND(1)))" else "uninstall"
             ret[mountpoint][line.packageUUID] = line.active
-        return ret
+
+        return ret, ret2
 
     @DatabaseHelper._sessionm
     def getConvergenceStatusByCommandId(self, session, commandId):

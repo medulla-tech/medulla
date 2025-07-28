@@ -35,7 +35,7 @@ if(isset($_GET['establishproxy']) and $_GET['establishproxy'] == "yes") {
         echo "
             <HTML>
             <head>
-                <title>Siveo Pulse</title>
+                <title>Medulla</title>
                 <link href='/mmc/graph/master.css' rel='stylesheet' media='screen' type='text/css' />
             </head>
             <BODY style='background-color: #FFFFFF;'>
@@ -60,7 +60,7 @@ if(isset($_GET['establishproxy']) and $_GET['establishproxy'] == "yes") {
         echo "
             <HTML>
             <head>
-                <title>Siveo Pulse</title>
+                <title>Medulla Pulse</title>
                 <link href='/mmc/graph/master.css' rel='stylesheet' media='screen' type='text/css' />
             </head>
             <BODY style='background-color: #FFFFFF;'>

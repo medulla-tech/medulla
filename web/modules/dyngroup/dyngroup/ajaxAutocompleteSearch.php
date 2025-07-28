@@ -27,10 +27,10 @@ ob_end_clean();
 
 $module = quickGet("modulename");
 $criterion = quickGet("criterion");
-$search = quickGet("data");
+$search = quickGet("data", false, false);
 if (!$search) { $search = '' ; }
 
-$value1 = quickGet("value1");
+$value1 = quickGet("value1", false, false);
 $res = array();
 if (strlen($search) > 2) {
     if (strlen($value1)) {

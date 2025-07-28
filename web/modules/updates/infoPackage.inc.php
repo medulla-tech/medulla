@@ -77,6 +77,10 @@ $page = new Page("detailsByUpdates", _T('List updates', 'updates'));
 $page->setFile("modules/updates/updates/detailsByUpdates.php");
 $submod->addPage($page);
 
+$page = new Page("hardwareConstraintsForMajorUpdates", _T('do not perform the update for now, as long as certain essential hardware constraints are not met', 'updates'));
+$page->setFile("modules/updates/updates/hardwareConstraintsForMajorUpdates.php");
+$submod->addPage($page);
+
 $page = new Page("detailsSpecificUpdate", _T('Machine details for specific update', 'updates'));
 $page->setFile("modules/updates/updates/detailsSpecificUpdate.php");
 $submod->addPage($page);
@@ -84,6 +88,12 @@ $submod->addPage($page);
 $page = new Page("ajaxDetailsSpecificUpdate", _T("Manage machine details for specific update", "updates"));
 $page->setFile("modules/updates/updates/ajaxDetailsSpecificUpdate.php");
 $page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
+$submod->addPage($page);
+
+
+$page = new Page("AjaxcreateGrouplistglpiid", 'create Group List');
+$page->setFile("modules/updates/updates/AjaxcreateGrouplistglpiid.php");
+$page->setOptions(array("AJAX" => True, "visible" => False, "noHeader"=>True));
 $submod->addPage($page);
 
 $page = new Page("ajaxDetailsSpecificUpdateWithout", _T("Manage machine details for specific update", "updates"));

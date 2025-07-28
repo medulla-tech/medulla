@@ -1,15 +1,18 @@
 <?php
-/**
- * (c) 2023-2024 Siveo, http://siveo.net/
+/*
+ * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+ * (c) 2007 Mandriva, http://www.mandriva.com
+ * (c) 2016-2023 Siveo, http://www.siveo.net
+ * (c) 2024-2025 Medulla, http://www.medulla-tech.io
  *
  * $Id$
  *
- * This file is part of Management Console (MMC).
+ * This file is part of MMC, http://www.medulla-tech.io
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ * the Free Software Foundation; either version 3 of the License, or
+ * any later version.
  *
  * MMC is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -17,8 +20,8 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with MMC; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ * along with MMC; If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 /**
@@ -150,7 +153,7 @@ cpair --background 0 1 ||
 cpair --background 1 2 ||
 goto \${loaded-menu}
 :get_console
-console --picture http://\${next-server}/downloads/davos/ipxe.png --left 100 --right 80 && goto console_set || goto alt_console
+console --w 1024 --h 768 --picture http://\${next-server}/downloads/davos/ipxe.png --left 100 --right 80 && goto console_set || goto alt_console
 :MENU
 menu
 colour --rgb 0xff0000 0 ||
@@ -225,7 +228,7 @@ if ($uuid != "") {
     FROM glpi_networkports gnp
     JOIN glpi_computers gc ON gc.id = gnp.items_id AND gnp.itemtype='Computer'
     JOIN glpi_entities ge ON gc.entities_id = ge.id
-    where uuid = LOWER(?)
+    where uuid = LOWER(?) and gc.is_deleted=0 and gc.is_template=0
     ORDER BY  gc.id LIMIT 1
     ");
 
@@ -243,7 +246,7 @@ if ($uuid != "") {
     FROM glpi_networkports gnp
     JOIN glpi_computers gc ON gc.id = gnp.items_id AND gnp.itemtype='Computer'
     JOIN glpi_entities ge ON gc.entities_id = ge.id
-    where mac is not NULL and mac = ?
+    where mac is not NULL and mac = ? and gc.is_deleted=0 and gc.is_template=0
     ORDER BY  gc.id LIMIT 1
     ");
 
@@ -346,7 +349,9 @@ WHERE GroupType.value = ? AND Machines.uuid = ? ");
     $menuId = (!empty($target['fk_menu'])) ? $target['fk_menu'] : $menuId;
 
     $computerName = $computer['name'];
-    $title = (!empty($target['target_name'])) ? "Host $computerName registered on $srv" : "Host $computerName not registered on $srv";
+    $title = (!empty($target['target_name']))
+        ? "$computerName registered on $srv"
+        : "$computerName not registered on $srv";
     $multicast_image_uuid = (!empty($target['multicast_image_uuid'])) ? $target['multicast_image_uuid'] : null;
     $multicast_image_name = (!empty($target['multicast_image_name'])) ? $target['multicast_image_name'] : null;
     $multicast = ($multicast_image_uuid != null && $multicast_image_name != null) ? true : false;
@@ -505,6 +510,11 @@ $default_item = "continue";
 //
 // SINGLECAST MODE
 //
+if (!empty($target['target_name'])) {
+    $statusLine = "Registered on $srv";
+} else {
+    $statusLine = "Not registered on $srv";
+}
 if (!$multicast) {
 
     $pxeLogin = $ims["pxe_login"];
@@ -543,7 +553,8 @@ colour --rgb 0xff0000 0 ||
 cpair --foreground 1 1 ||
 cpair --foreground 0 3 ||
 cpair --foreground 4 4 ||\n";
-    $ipxe .= "item --gap $title\n";
+    $ipxe .= "item --gap Host $computerName\n";
+    $ipxe .= "item --gap $statusLine\n";
     $ipxe .= "item --gap -- -------------------------------------
 ";
     $ipxe .= "item continue Continue Usual Startup
@@ -555,7 +566,8 @@ colour --rgb 0xff0000 0 ||
 cpair --foreground 1 1 ||
 cpair --foreground 0 3 ||
 cpair --foreground 4 4 ||\n";
-    $ipxe .= "item --gap $title
+    $ipxe .= "item --gap Host $computerName\n";
+    $ipxe .= "item --gap $statusLine\n
 item --gap -- -------------------------------------
 ";
     $itemValues = "";

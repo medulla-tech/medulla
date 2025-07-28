@@ -1,7 +1,8 @@
 # -*- coding:Utf-8; -*
 # SPDX-FileCopyrightText: 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
-# SPDX-FileCopyrightText: 2007 Mandriva, http://www.mandriva.com/
-# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net>
+# SPDX-FileCopyrightText: 2007 Mandriva, http://www.mandriva.com
+# SPDX-FileCopyrightText: 2016-2023 Siveo, http://www.siveo.net
+# SPDX-FileCopyrightText: 2024-2025 Medulla, http://www.medulla-tech.io
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 """
@@ -264,7 +265,7 @@ class ImagingRpcProxy(RpcProxyI):
                 ]
                 # Update profiles for menuitem
                 ImagingDatabase().update_profiles_in_menu(
-                    "UUID%s" % iim.id, profiles_id
+                    "UUID%s" % iim['menuitem'], profiles_id
                 )
 
                 postinstalls = ImagingDatabase().get_all_postinstall_for_menu(
@@ -274,7 +275,7 @@ class ImagingRpcProxy(RpcProxyI):
                     element["id"] for element in postinstalls if element["in_menu"] == 1
                 ]
                 ImagingDatabase().update_postinstalls_in_menu(
-                    "UUID%s" % iim.id, postinstalls_id
+                    "UUID%s" % iim['menuitem'], postinstalls_id
                 )
         #
 
@@ -1329,12 +1330,11 @@ class ImagingRpcProxy(RpcProxyI):
                     logger.error("The package server failed to delete the image")
                     return [False, "The package server failed to delete the image"]
 
-                try:
-                    # remove all the remaining from the database
-                    ret = db.imagingServerImageDelete(image_uuid)
-                    return xmlrpcCleanup([True, ret])
-                except Exception as e:
-                    return xmlrpcCleanup([False, e])
+            try:
+                ret = db.imagingServerImageDelete(image_uuid)
+                return ret
+            except Exception as e:
+                return [False, f"Error deleting image {image_uuid}: {str(e)}"]
 
             d = i.imagingServerImageDelete(im.uuid)
             d.addCallback(treatDel, image_uuid, db, logger)
@@ -2916,6 +2916,14 @@ class ImagingRpcProxy(RpcProxyI):
         filexml = "/var/lib/pulse2/imaging/postinst/sysprep/"
         filetmp = "/tmp/"
 
+        # Replace chars
+        xmlWAFG = xmlWAFG.replace("&amp;", "&")
+        xmlWAFG = xmlWAFG.replace("&lt;", "<")
+        xmlWAFG = xmlWAFG.replace("&gt;", ">")
+        xmlWAFG = xmlWAFG.replace("&#x2026;", '…')
+        xmlWAFG = xmlWAFG.replace("&#xBB;", '»')
+        xmlWAFG = xmlWAFG.replace("&#xAB;", '«')
+        xmlWAFG = xmlWAFG.replace("&#x2019;", '’')
         if not path.exists(filexml):
             makedirs(filexml, 0o722)
 
@@ -3010,6 +3018,7 @@ class ImagingRpcProxy(RpcProxyI):
             parameters["Notes"] = description
             parameters["Location"] = filename
             parameters["Title"] = filename.replace(".xml", "")
+
         except Exception as e:
             logging.getLogger().exception(e)
             return {}

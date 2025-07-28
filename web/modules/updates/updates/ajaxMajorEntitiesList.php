@@ -104,6 +104,7 @@ foreach ($entities as $entity) {
 $params =  array();
 $actiondetailsByMachs  = array();
 $actionupdateByentity  = array();
+$actionHardwareConstraintsForMajorUpdatesByEntity  = array();
 $complete_name_major  = array();
 $comformite_name_major  = array();
 $win10towin10_major = array();
@@ -128,7 +129,26 @@ $emptydetailsByMach = new EmptyActionItem1(_T("no major updates for this entity"
                                             "updates",
                                             "updates");
 
+// Please do not perform the update for now, as long as certain essential hardware constraints are not met.
+// Veuillez ne pas effectuer la mise à jour pour le moment, tant que certaines contraintes matérielles essentielles ne sont pas respectées.
 
+
+
+$details_hardware_constraints_for_major_updates = new ActionItem(_T("Please do not perform the update for now, as long as certain essential hardware constraints are not met.", "updates"),
+                                "hardwareConstraintsForMajorUpdates",
+                                "auditbymachine",
+                                "",
+                                "updates",
+                                "updates");
+
+// No machines are affected by hardware constraints for major updates.
+// Aucune machine n’est concernée par des contraintes matérielles pour les mises à jour majeures.
+$empty_hardware_constraints_for_major_updates = new EmptyActionItem1(_T("No machines are affected by hardware constraints for major updates.", "updates"),
+                                            "hardwareConstraintsForMajorUpdates",
+                                            "auditbymachine",
+                                            "",
+                                            "updates",
+                                            "updates");
 
 $deployAll = new ActionPopupItem(_T("Deploy all updates major on entity", "updates"),
                                     "grpDeployUpdatemajor",
@@ -180,6 +200,11 @@ foreach ($mergedArray as  $index=>$datacolonne) {
     $missing_information_major[]=$nb_machine_manque_info;
     $total_win[]=$datacolonne['count'];
 
+    // Add hardware constraint details only if some machines are missing information
+    $actionHardwareConstraintsForMajorUpdatesByEntity[] = ($nb_machine_manque_info > 0)
+    ? $details_hardware_constraints_for_major_updates  // Some machines are missing info
+    : $empty_hardware_constraints_for_major_updates;   // All machines are compliant
+
     $formattedText_help = sprintf($texte_help, $nbupdate, $datacolonne['name']);
     $comformite_name_major[]=(string) new medulla_progressbar_static($datacolonne['conformite'],
                                                                      "",
@@ -207,7 +232,7 @@ $n->addExtraInfo($win10towin11_major, _T("Upgrade W10->W11", "updates"));
 $n->addExtraInfo($win11towin11_major, _T("Upgrade W11->W11", "updates"));
 
 $n->addExtraInfo($updated_major, _T("Up to date", "updates"));
-$n->addExtraInfo($missing_information_major, _T("Missing information", "updates"));
+$n->addExtraInfo($missing_information_major, _T("Upgrade Not recommended", "updates"));
 
 $n->addExtraInfo($total_win, _T("Total machines", "updates"));
 

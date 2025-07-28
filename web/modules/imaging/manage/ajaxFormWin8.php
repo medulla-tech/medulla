@@ -478,7 +478,7 @@ $f->push(new Table());
     //_____________
     $f->add(
         new TrFormElement(_T('Organization Name','imaging').":", new InputTplTitle('OrginazationName',$InfoBule_OrginazationName)),
-        array('value' => (isset($parameters)) ? $parameters['OrginazationName'] : 'Siveo',"required" => True)
+        array('value' => (isset($parameters)) ? $parameters['OrginazationName'] : 'Medulla',"required" => True)
     );
     //_____________
     $EULA = new SelectItemtitle("AcceptEULA",$InfoBule_AcceptEULA);

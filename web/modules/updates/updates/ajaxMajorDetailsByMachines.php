@@ -48,7 +48,7 @@ $n = new ListInfos(array( $_GET['W10to10']), _T("Upgrade W10->W10", "updates"));
 $n->addExtraInfo(array( $_GET['W10to11']), _T("Upgrade W10->W11", "updates"));
 $n->addExtraInfo(array( $_GET['W11to11']), _T("Upgrade W11->W11", "updates"));
 $n->addExtraInfo(array( $_GET['UPDATED']), _T("Up to date", "updates"));
-$n->addExtraInfo(array( $_GET['nb_missing']), _T("Missing information", "updates"));
+$n->addExtraInfo(array( $_GET['nb_missing']), _T("Upgrade Not recommended", "updates"));
 $n->addExtraInfo(array( $_GET['totalmachineentity']), _T("Total machines", "updates"));
 $n->setNavBar ="";
 $n->start = 0;

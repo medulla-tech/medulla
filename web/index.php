@@ -60,6 +60,15 @@ if (isset($_POST["bConnect"])) {
     session_name("PULSESESSION");
     session_start();
 
+    $_SESSION["timezone_offset"] = isset($_POST["timezone_offset"]) ? $_POST["timezone_offset"] : "";
+    $_SESSION["connection_local"] = isset($_POST["connection_local"]) ? $_POST["connection_local"] : "";
+    $_SESSION["connection_utc"] = isset($_POST["connection_utc"]) ? $_POST["connection_utc"] : "";
+
+    $utc_timezone = new DateTimeZone('UTC');
+    $current_time_utc = new DateTime('now', $utc_timezone);
+    $_SESSION["connection_serveur_web_utc"] =   $current_time_utc->format('Y-m-d H:i:s');
+    $_SESSION["connection_serveur_web_local"] =  date('Y-m-d H:i:s', time());
+
     $_SESSION["ip_addr"] = $_SERVER["REMOTE_ADDR"];
     if (isset($conf[$_POST["server"]])) {
         $_SESSION["XMLRPC_agent"] = parse_url($conf[$_POST["server"]]["url"]);
@@ -99,7 +108,7 @@ if (isset($_GET["signout"])) {
 <!DOCTYPE html>
 <html>
 <head>
-        <title>Siveo / Management Console</title>
+        <title>Medulla / Management Console</title>
         <link href="graph/login/index.css" rel="stylesheet" media="screen" type="text/css" />
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <link rel="icon" href="img/common/favicon.ico" />
@@ -140,7 +149,10 @@ if ($error) {
 <!--Login content -->
 
 		<form class="form-inline" action="index.php" method="post" name="loginForm" id="loginForm">
-
+            <!-- Champ caché pour le décalage horaire -->
+            <input type="hidden" id="timezone_offset" name="timezone_offset">
+            <input type="hidden" id="connection_local" name="connection_local">
+            <input type="hidden" id="connection_utc" name="connection_utc">
             		<?php
 
             $servLabelList = array();
@@ -324,6 +336,44 @@ if ($error) {
     print '<script type="text/javascript">$("#alert").effect("shake");</script>';
 }
 ?>
+
+<script type="text/javascript">
+
+function NOW(offset) {
+
+    var date = new Date();
+    var aaaa = date.getUTCFullYear();
+    var gg = date.getUTCDate();
+    var mm = (date.getUTCMonth() + 1);
+    if (gg < 10)
+        gg = "0" + gg;
+    if (mm < 10)
+        mm = "0" + mm;
+    var cur_day = aaaa + "-" + mm + "-" + gg;
+    var hours = date.getUTCHours() - offset
+    var minutes = date.getUTCMinutes()
+    var seconds = date.getUTCSeconds();
+    if (hours < 10)
+        hours = "0" + hours;
+    if (minutes < 10)
+        minutes = "0" + minutes;
+    if (seconds < 10)
+        seconds = "0" + seconds;
+    return cur_day + " " + hours + ":" + minutes + ":" + seconds;
+}
+
+    jQuery(document).ready(function() {
+        // Détecter le décalage horaire par rapport à UTC
+        const offset = -new Date().getTimezoneOffset() / 60;
+        // Insérer le décalage horaire dans le champ caché
+        jQuery('#timezone_offset').val(offset);
+        // Obtenir l'heure actuelle en local
+        jQuery('#connection_local').val(NOW(-offset));
+        // Obtenir l'heure actuelle en UTC
+        jQuery('#connection_utc').val(NOW(0));
+
+    });
+</script>
 </body>
 </html>
 <?php

@@ -1,10 +1,10 @@
 <?php
 /**
- * (c) 2015-2016 Siveo, http://siveo.net
+ * (c) 2015-2025 Siveo, http://siveo.net
  *
  * $Id$
  *
- * This file is part of Mandriva Management Console (MMC).
+ * This file is part of Management Console (MMC).
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,9 +20,330 @@
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.var title = $( "em" ).attr( "title" );
  */
 
+ // Windows 11 bloats
+$bloats = [
+    _T("3D Viewer", "imaging") => [
+        "id"=>"viewer3d",
+        "name" => "bloats[]",
+        "removepackages" =>["'Microsoft.Microsoft3DViewer'"]
+    ],
+    _T("Bing Search", "imaging") =>[
+        "id"=>"bingsearch",
+        "name" => "bloats[]",
+        "removepackages" => ["'Microsoft.BingSearch'"],
+    ],
+    _T("Calculator", "imaging") =>[
+        "id"=>"calculator",
+        "name" => "bloats[]",
+        "removepackages"=>["'Microsoft.WindowsCalculator'"],
+    ],
+    _T("Camera", "imaging") =>[
+        "id"=>"camera",
+        "name" => "bloats[]",
+        "removepackages"=>["'Microsoft.WindowsCamera'"],
+    ],
+    _T("Clipchamp", "imaging")=>[
+        "id"=>"clipchamp",
+        "name" => "bloats[]",
+        "removepackages" =>["'Clipchamp.Clipchamp'"]
+    ],
+    _T("Clock", "imaging")=>[
+        "id"=>"clock",
+        "name" => "bloats[]",
+        "removepackages" =>["'Microsoft.WindowsAlarms'"]
+    ],
+    _T("Copilot", "imaging")=>[
+        "id"=>"copilot",
+        "name" => "bloats[]",
+        "useronce" => ['{
+    Get-AppxPackage -Name \'Microsoft.Windows.Ai.Copilot.Provider\' | Remove-AppxPackage;
+    }'],
+        "defaultuser" => ['{
+    reg.exe add "HKU\DefaultUser\Software\Policies\Microsoft\Windows\WindowsCopilot" /v TurnOffWindowsCopilot /t REG_DWORD /d 1 /f;
+    }']
+    ],
+    _T("Cortana", "imaging")=>[
+        "id"=>"cortana",
+        "name" => "bloats[]",
+        "removepackages" =>["'Microsoft.549981C3F5F10'"]
+    ],
+    _T("Dev Home", "imaging")=>[
+        "id"=>"devhome",
+        "name" => "bloats[]",
+        "removepackages" =>["'Microsoft.Windows.DevHome'"],
+        "specialize"=>['{
+        Remove-Item -LiteralPath \'Registry::HKLM\\Software\\Microsoft\\WindowsUpdate\\Orchestrator\\UScheduler_Oobe\\DevHomeUpdate\' -Force -ErrorAction \'SilentlyContinue\';
+        }']
+    ],
+    _T("Family", "imaging")=>[
+        "id"=>"family",
+        "name" => "bloats[]",
+        "removepackages" =>["'MicrosoftCorporationII.MicrosoftFamily'"]
+    ],
+    _T("Feedback Hub", "imaging")=>[
+        "id"=>"feedbackhub",
+        "name" => "bloats[]",
+        "removepackages" =>["'Microsoft.WindowsFeedbackHub'"]
+    ],
+    _T("Get Help", "imaging")=>[
+        "id"=>"gethelp",
+        "name" => "bloats[]",
+        "removepackages" =>["'Microsoft.GetHelp'"]
+    ],
+    _T("Handwriting (all languages)", "imaging")=>[
+        "name" => "bloats[]",
+        "id"=>"handwriting",
+        "removecapabilities" =>["'Language.Handwriting'"]
+    ],
+    _T("Internet Explorer", "imaging")=>[
+        "name" => "bloats[]",
+        "id"=>"internetexplorer",
+        "removecapabilities" =>["'Browser.InternetExplorer'"]
+    ],
+    _T("Mail and Calendar", "imaging")=>[
+        "name" => "bloats[]",
+        "id"=>"mailandcalendar",
+        "removepackages" =>["'microsoft.windowscommunicationsapps'"]
+    ],
+    _T("Maps", "imaging")=>[
+        "name" => "bloats[]",
+        "id"=>"maps",
+        "removepackages" =>["'Microsoft.WindowsMaps'"]
+    ],
+    _T("Math Input Panel", "imaging")=>[
+        "name" => "bloats[]",
+        "id"=>"mathinputpanel",
+        "removecapabilities" =>["'MathRecognizer'"]
+    ],
+    _T("Media Features", "imaging")=>[
+        "name" => "bloats[]",
+        "id"=>"mediafeatures",
+        "removefeatures" =>["'MediaPlayback'"]
+    ],
+    _T("Mixed Reality", "imaging")=>[
+        "name" => "bloats[]",
+        "id"=>"mixedreality",
+        "removepackages" =>["'Microsoft.MixedReality.Portal'"]
+    ],
+    _T("Movies & TV", "imaging")=>[
+        "name" => "bloats[]",
+        "id"=>"moviesandtv",
+        "removepackages" =>["'Microsoft.ZuneVideo'"]
+    ],
+    _T("News", "imaging")=>[
+        "name" => "bloats[]",
+        "id"=>"news",
+        "removepackages" =>["'Microsoft.BingNews'"]
+    ],
+    _T("Notepad (modern)", "imaging")=>[
+        "name" => "bloats[]",
+        "id"=>"notepadmodern",
+        "removepackages" =>["'Microsoft.WindowsNotepad'"],
+        "defaultuser" =>['{
+    reg.exe add "HKU\DefaultUser\Software\Microsoft\Notepad" /v ShowStoreBanner /t REG_DWORD /d 0 /f;
+}']
+    ],
+    _T("Office 365", "imaging")=>[
+        "name" => "bloats[]",
+        "id"=>"office365",
+        "removepackages" =>["'Microsoft.MicrosoftOfficeHub'"]
+    ],
+    _T("OneDrive", "imaging")=>[
+        "name" => "bloats[]",
+        "id"=>"onedrive",
+        "specialize" =>["Remove-Item -LiteralPath 'C:\Users\Default\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\OneDrive.lnk', 'C:\Windows\System32\OneDriveSetup.exe', 'C:\Windows\SysWOW64\OneDriveSetup.exe' -ErrorAction 'Continue'"],
+        "defaultuser" => ["Remove-ItemProperty -LiteralPath 'Registry::HKU\DefaultUser\Software\Microsoft\Windows\CurrentVersion\Run' -Name 'OneDriveSetup' -Force -ErrorAction 'Continue'"]
+    ],
+    _T("OneNote", "imaging")=>[
+        "name" => "bloats[]",
+        "id"=>"onenote",
+        "removepackages" =>["'Microsoft.Office.OneNote'"]
+    ],
+    _T("OnSync", "imaging")=>[
+        "name" => "bloats[]",
+        "id"=>"onsync",
+        "removecapabilities" =>["'OneCoreUAP.OneSync'"]
+    ],
+    _T("OpenSSH Client", "imaging")=>[
+        "name" => "bloats[]",
+        "id"=>"openssh",
+        "removecapabilities" =>["'OpenSSH.Client'"]
+    ],
+    _T("Outlook for Windows", "imaging")=>[
+        "name" => "bloats[]",
+        "id"=>"outlook",
+        "specialize" =>["Remove-Item -LiteralPath 'Registry::HKLM\Software\Microsoft\WindowsUpdate\Orchestrator\UScheduler_Oobe\OutlookUpdate' -Force -ErrorAction "],
+        "removepackages" =>["'Microsoft.OutlookForWindows'"],
+    ],
+    _T("Paint", "imaging")=>[
+        "name" => "bloats[]",
+        "id"=>"paint",
+        "removepackages" =>["'Microsoft.Paint'", "'Microsoft.MSPaint'"],
+        "removecapabilities" =>["'Microsoft.MSPaint'"]
+    ],
+    _T("Paint 3D", "imaging")=>[
+        "name" => "bloats[]",
+        "id"=>"paint3d",
+        "removepackages" =>["'Microsoft.MSPaint'"]
+    ],
+    _T("People", "imaging")=>[
+        "name" => "bloats[]",
+        "id"=>"people",
+        "removepackages" =>["'Microsoft.People'"]
+    ],
+    _T("Photos", "imaging")=>[
+        "name" => "bloats[]",
+        "id"=>"photos",
+        "removepackages" =>["'Microsoft.Windows.Photos'"]
+    ],
+    _T("Power Automate", "imaging")=>[
+        "name" => "bloats[]",
+        "id"=>"powerautomate",
+        "removepackages" =>["'Microsoft.PowerAutomateDesktop'"]
+    ],
+    _T("PowerShell 2.0", "imaging")=>[
+        "name" => "bloats[]",
+        "id"=>"powershell2",
+        "removefeatures" =>["'MicrosoftWindowsPowerShellV2Root'"]
+    ],
+    _T("PowerShell ISE", "imaging")=>[
+        "name" => "bloats[]",
+        "id"=>"powershellise",
+        "removecapabilities" =>["'Microsoft.Windows.PowerShell.ISE'"]
+    ],
+    _T("Quick Assist", "imaging")=>[
+        "name" => "bloats[]",
+        "id"=>"quickassist",
+        "removecapabilities" =>["'App.Support.QuickAssist'"]
+    ],
+    _T("Recall", "imaging")=>[
+        "name" => "bloats[]",
+        "id"=>"recall",
+        "removefeatures" =>["'Recall'"]
+    ],
+    _T("Remote Desktop Client", "imaging")=>[
+        "name" => "bloats[]",
+        "id"=>"remotedesktop",
+        "removefeatures" =>["'Microsoft-RemoteDesktopConnection'"]
+    ],
+    _T("Skype", "imaging")=>[
+        "name" => "bloats[]",
+        "id"=>"skype",
+        "removepackages" =>["'Microsoft.SkypeApp'"]
+    ],
+    _T("Snipping Tool", "imaging")=>[
+        "name" => "bloats[]",
+        "id"=>"snippingtools",
+        "removepackages" =>["'Microsoft.ScreenSketch'"],
+        "removecapabilities" =>["'Microsoft.Windows.SnippingTool'"],
+        "removefeatures" =>["'Microsoft-SnippingTool'"],
+    ],
+    _T("Solitaire Collection", "imaging")=>[
+        "name" => "bloats[]",
+        "id"=>"solitairecollection",
+        "removepackages" =>["'Microsoft.MicrosoftSolitaireCollection'"]
+    ],
+    _T("Speech (all languages)", "imaging")=>[
+        "name" => "bloats[]",
+        "id"=>"speech",
+        "removecapabilities" =>["'Language.Speech'"]
+    ],
+    _T("Text To Speech", "imaging")=>[
+        "name" => "bloats[]",
+        "id"=>"texttospeech",
+        "removepackages" =>[],
+        "removecapavilities"=>["'Language.TextToSpeech'"]
+    ],
+    _T("Steps Recorder", "imaging")=>[
+        "name" => "bloats[]",
+        "id"=>"stepsrecorder",
+        "removecapabilities" =>["'App.StepsRecorder'"]
+    ],
+    _T("Sticky Notes", "imaging")=>[
+        "name" => "bloats[]",
+        "id"=>"stickynotes",
+        "removepackages" =>["'Microsoft.MicrosoftStickyNotes'"]
+    ],
+    _T("Teams", "imaging")=>[
+        "name" => "bloats[]",
+        "id"=>"teams",
+        "removepackages" =>["'MicrosoftTeams'", "'MSTeams'"],
+        "specialize"=>['reg.exe add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Communications" /v ConfigureChatAutoInstall /t REG_DWORD'],
+    ],
+    _T("Tips", "imaging")=>[
+        "name" => "bloats[]",
+        "id"=>"tips",
+        "specialize" =>["Get-Content -LiteralPath 'C:\Windows\Setup\Scripts\RemovePackages.ps1' -Raw | Invoke-Expression"]
+    ],
+    _T("To Do", "imaging")=>[
+        "name" => "bloats[]",
+        "id"=>"todo",
+        "removepackages" =>["'Microsoft.Todos'"]
+    ],
+    _T("Voice Recorder", "imaging")=>[
+        "name" => "bloats[]",
+        "id"=>"voicerecorder",
+        "removepackages" =>["'Microsoft.WindowsSoundRecorder'"]
+    ],
+    _T("Wallet", "imaging")=>[
+        "name" => "bloats[]",
+        "id"=>"wallet",
+        "removepackages" =>["'Microsoft.Wallet'"]
+    ],
+    _T("Weather", "imaging")=>[
+        "name" => "bloats[]",
+        "id"=>"weather",
+        "removepackages" =>["'Microsoft.BingWeather'"]
+    ],
+    _T("Windows Fax and Scan", "imaging")=>[
+        "name" => "bloats[]",
+        "id"=>"windowsfaxandscan",
+        "removecapabilities" =>["'Print.Fax.Scan'"],
+        "specialize"=>["Get-Content -LiteralPath 'C:\Windows\Setup\Scripts\RemoveCapabilities.ps1' -Raw | Invoke-Expression;"]
+    ],
+    _T("Windows Hello", "imaging")=>[
+        "name" => "bloats[]",
+        "id"=>"windowshello",
+        "removecapabilities" =>["'Hello.Face.18967'","'Hello.Face.Migration.18967'","Hello.Face.20134"],
+    ],
+    _T("Windows Media Player (classic)", "imaging")=>[
+        "name" => "bloats[]",
+        "id"=>"mediaplayerclassic",
+        "removecapabilities" =>["'Media.WindowsMediaPlayer'"]
+    ],
+    _T("Windows Media Player (modern)", "imaging")=>[
+        "name" => "bloats[]",
+        "id"=>"mediaplayermodern",
+        "removepackages" =>["'Microsoft.ZuneMusic'"]
+    ],
+    _T("Windows Terminal", "imaging")=>[
+        "name" => "bloats[]",
+        "id"=>"windowsterminal",
+        "removepackages" =>["'Microsoft.WindowsTerminal'"]
+    ],
+    _T("WordPad", "imaging")=>[
+        "name" => "bloats[]",
+        "id"=>"wordpad",
+        "removecapabilities" =>["'Microsoft.Windows.WordPad'"]
+    ],
+    _T("Xbox Apps", "imaging")=>[
+        "name" => "bloats[]",
+        "id"=>"xboxapps",
+        "removepackages" =>["'Microsoft.Xbox.TCUI'", "'Microsoft.XboxApp'", "Microsoft.XboxGameOverlay", "Microsoft.XboxGamingOverlay", "Microsoft.XboxIdentityProvider", "Microsoft.XboxSpeechToTextOverlay", "Microsoft.GamingApp"],
+        "defaultuser" =>['reg.exe add "HKU\DefaultUser\Software\Microsoft\Windows\CurrentVersion\GameDVR" /v AppCaptureEnabled /t REG_DWORD /d 0 /f;'],
+    ],
+    _T("Your Phone/Phone Link", "imaging")=>[
+        "name" => "bloats[]",
+        "id"=>"phonelink",
+        "removepackages" =>["'Microsoft.YourPhone'"]
+    ]
+];
+
+$bloatsStr = json_encode($bloats);
  ?>
 <script type="text/javascript">
 
+bloats = <?php echo $bloatsStr;?>;
 function getExtension(filename){
         var parts = filename.split(".");
         return (parts[(parts.length-1)]);
@@ -116,10 +437,12 @@ jQuery(function () {
 	jQuery( '#DomainUser' ).on('change', function () { update(); });
 	jQuery( '#JoinDomain' ).on('change', function () { update(); });
 	jQuery( '#MachineObjectOU' ).on('change', function () { update(); });
+	jQuery( 'input[name="bloats[]' ).on('change', function () { update(); });
     update();
 });
 
 function update() {
+
     Msgxml  = "To have the Windows Answer File Generator on \n" +
               "smb://" + window.location.host + "/postinst/sysprep/" + jQuery('#Location').val() + "\n" +
               "click on Validation" ;
@@ -147,6 +470,11 @@ function update() {
 
     da=new Date()
     var dateval = da.getFullYear()+ '-'+(da.getMonth()+1) + '-' + da.getDate()
+
+    // Get the selected bloats
+    _bloats = [];
+    jQuery("input[name='bloats[]']:checked").each(function(i,e){_bloats.push( jQuery(e).val() ) });
+
     var variables = {
         'Location': jQuery('#Location').val(),
         'Comments': jQuery('#Comments').val(),
@@ -200,13 +528,29 @@ function update() {
 		'DomainUser' : jQuery('#DomainUser').val(),
 		'JoinDomain' : jQuery('#JoinDomain').val(),
 		'MachineObjectOU' : jQuery('#MachineObjectOU').val(),
+        'Bloats': _bloats,
     };
         listParameters={}
+        listParameters["Bloats"] = variables["Bloats"];
 
         var newXml = template.replace(/<\?(\w+)\?>/g,
         function(match, name) {
-            if(!((name == "dateval") || (name == "Location") || (name == "Comments"))) listParameters[name]=variables[name]
-        return variables[name];
+            if(name == "BloatsRemovePackages" || name == "BloatsRemoveCapabilities" || name == "BloatsRemoveFeatures" || name =="BloatsUserOnce" || name == "BloatsDefaultUser" || name == "BloatsSpecialize"){
+                key = name.toLowerCase();
+                key = key.replace("bloats", "");
+                removebloats = [];
+
+                variables["Bloats"].forEach((bloat) =>{
+                    if(typeof(bloats[bloat]) != "undefined" && typeof(bloats[bloat][key]) != "undefined")
+                    removebloats.push(bloats[bloat][key]+";");
+                })
+                return removebloats.join("\r\n");
+            }
+
+            if(!((name == "dateval") || (name == "Location") || (name == "Comments")))
+                listParameters[name]=variables[name];
+
+            return variables[name];
         });
 
         var myJsonString = JSON.stringify(listParameters);
@@ -367,12 +711,26 @@ function update() {
         }
     };
 
+    fn_Bloatwares=function(){
+        jQuery('input[name="bloats[]"').parents("tr").toggle();
+
+        if (jQuery('input[name="bloats[]"').is(":visible")){
+            jQuery('#Bloatwares').css( 'cursor', 'n-resize' ).attr('src', 'img/other/expanded.svg');
+        }
+        else{
+            jQuery('#Bloatwares').css( 'cursor', 's-resize' ).attr('src', 'img/other/expand.svg');
+        }
+    }
+
+
+
     fn_Specialize_Settings()
     fn_General_Settings()
     fn_User_Account()
     fn_Regional_Settings()
     fn_Out_Of_Box_Experience()
     fn_Partition_Settings()
+    fn_Bloatwares()
     fn_Installation_Notes()
     fn_awfg_show()
 </script>
@@ -1779,4 +2137,6 @@ function update() {
 		$InfoBule_JoinDomain = _T("Domain to join","imaging");
 
 		$InfoBule_MachineObjectOU = _T("MachineObjectOU is an optional setting. It specifies the Lightweight Directory Access Protocol (LDAP) X 500-distinguished name of the organizational unit (OU) in which the computer account is created. This account is in Active Directory on a domain controller in the domain to which the computer is being joined.","imaging");
+
+        $InfoBule_Bloatware = _T("Remove Bloatwares from the install", "imaging");
 ?>

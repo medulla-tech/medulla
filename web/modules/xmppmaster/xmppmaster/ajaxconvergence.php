@@ -38,7 +38,7 @@ if (isset($_GET['currenttasks']) && $_GET['currenttasks'] == '1') {
     $status = "";
     $convergence = True;
     $LastdeployINsecond = 3600 * 24;
-    $arraydeploy = xmlrpc_get_deploy_convergence($_GET['login'], $LastdeployINsecond, $start, $end, $filter, "command");
+    $arraydeploy = xmlrpc_get_deploy_convergence($_GET['login'], $LastdeployINsecond, $start, $end, $filter, "convergence");
 
     $arraynotdeploy = xmlrpc_get_deploy_inprogress_by_team_member($_GET['login'], $LastdeployINsecond, $start, $end, $filter);
 } else {
@@ -127,9 +127,12 @@ foreach ($arraydeploy['tabdeploy']['command'] as $index => $command_id) {
 
     // Title cleaning to obtain the name of the package
     $line = $arraydeploy['tabdeploy']['title'][$index] ?? '';
-    $lineWithoutPrefix = preg_replace('/^Convergence on\s*/i', '', $line);
-    // Delete date and time
-    $lineWithoutDateTime = preg_replace('/\s*\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2}\s*/', ' ', $lineWithoutPrefix);
+    $lineWithoutPrefix = preg_replace('/^(Uninstall )?Convergence on\s*/i', '', $line);
+    // Remove tag -@convergence@-
+    $lineWithoutTag = preg_replace('/\s*-@convergence@-\s*/i', '', $lineWithoutPrefix);
+    // Remove date and time
+    $lineWithoutDateTime = preg_replace('/\s*\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2}\s*/', ' ', $lineWithoutTag);
+
     $titleClean = trim($lineWithoutDateTime);
 
     // PID recovery corresponding to the title cleaned
@@ -378,7 +381,8 @@ if (isset($arraynotdeploy)) {
 
 $newArrayTitleName = array();
 foreach ($arraytitlename as $line) {
-    $lineWithoutDateTime = preg_replace('/\s*\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2}\s*/', ' ', $line);
+    $lineWithoutTag = preg_replace('/\s*-@convergence@-\s*/i', '', $line);
+    $lineWithoutDateTime = preg_replace('/\s*\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2}\s*/', ' ', $lineWithoutTag);
     $newArrayTitleName[] = trim($lineWithoutDateTime);
 }
 

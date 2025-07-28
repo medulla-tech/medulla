@@ -581,8 +581,11 @@ class DateTpl extends InputTpl
  */
 class DynamicDateTpl extends InputTpl
 {
+    public $readonly;
+
     public function __construct($name)
     {
+        parent::__construct($name);
         $this->name = $name;
         $this->size = "";
         $this->fieldType = "text";
@@ -750,8 +753,14 @@ class DateTimeTpl extends AbstractTpl {
 
 class MultipleInputTpl extends AbstractTpl
 {
+    public $desc;
+    public $regexp;
+    public $new;
+    public $tooltip;
+    public $formId;
     public function __construct($name, $desc = '', $new = false, $formId = "Form")
     {
+        parent::__construct();
         $this->name = $name;
         /*
           stripslashes is needed, because some characters may be backslashed
@@ -866,8 +875,14 @@ class MultipleInputTpl extends AbstractTpl
 
 class MembersTpl extends AbstractTpl
 {
+    public $titleLeft;
+    public $titleRight;
+    public $member;
+    public $available;
+
     public function __construct($name)
     {
+        parent::__construct();
         $this->name = $name;
         $this->titleLeft = "";
         $this->titleRight = "";
@@ -1159,6 +1174,7 @@ class FormElement extends HtmlElement
 
     public function __construct($desc, $tpl, $extraInfo = array())
     {
+        parent::__construct();
         $this->desc = $desc;
         $this->template = &$tpl;
         foreach ($extraInfo as $key => $value) {
@@ -1230,9 +1246,13 @@ class DeletableTrFormElement extends FormElement
     public $template;
     public $desc;
     public $cssErrorName;
-
+    public $formId;
+    public $new;
+    public $key;
+    public $name;
     public function __construct($desc, $tpl, $extraInfo = array(), $formId)
     {
+        parent::__construct($desc, $tpl, $extraInfo);
         $this->desc = $desc;
         $this->template = &$tpl;
         foreach ($extraInfo as $key => $value) {
@@ -1337,9 +1357,16 @@ class TrFormElement extends FormElement
     public $template;
     public $desc;
     public $cssErrorName;
+    public $firstColWidth;
+    public $style;
+    public $class;
+    public $trid;
+    public $tooltip;
+
 
     public function __construct($desc, $tpl, $extraInfo = array())
     {
+        parent::__construct($desc, $tpl, $extraInfo);
         $this->desc = $desc;
         $this->template = &$tpl;
         $this->tooltip = false;
@@ -1465,3 +1492,5 @@ class TrFormElement extends FormElement
     }
 
 }
+
+?>

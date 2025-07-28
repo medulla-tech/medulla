@@ -1,12 +1,11 @@
 <?php
 
 /*
- * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
- * (c) 2007-2009 Mandriva, http://www.mandriva.com
+ * (c) 2025 Siveo, http://www.siveo.net
  *
  * $Id$
  *
- * This file is part of Mandriva Management Console (MMC).
+ * This file is part of MMC, http://www.siveo.net
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -112,10 +111,10 @@ let getSelected = ()=>{
     let assoc = [];
     jQuery("#Form select").each(function(i,e){
         v = jQuery(e).val();
-        
+
         assoc.forEach((elem)=>{
             if (elem == v && v != -1){
-                alert("<?php echo _T("This value is already used.","imaging");?>")
+                alert(v+"<?php echo _T(" order is already used", "imaging");?>")
                 jQuery(e).val(-1)
             }
         })

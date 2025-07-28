@@ -32,76 +32,75 @@ define("DIR_SYS_PREP", "/var/lib/pulse2/imaging/postinst/sysprep");
 ?>
 
 <?php
-    class ajaxSelectItem extends Form
+class ajaxSelectItem extends Form
+{
+    protected $idElt;
+    protected $idselect;
+    protected $idform;
+    protected $idchoixform;
+    protected $select;
+
+    public function __construct($idElt, $style = null)
     {
-        protected $idElt;
-        protected $idselect;
-        protected $idform;
-        protected $idchoixform;
-        protected $select;
-
-        public function __construct($idElt, $style = null)
-        {
-            $options = array();
-            $this->idElt=$idElt;
-            $this->idselect="select_$idElt";
-            $this->idform="form_$idElt";
-            $this->idchoixform="afficheform_$idElt";
-            $options["id"]=$this->idform;
-            $options["method"] = "";
-            parent::__construct($options);
-            $this->select = new SelectItem($this->idselect, "change".$idElt, $style);
-        }
-
-        public function setElements($List)
-        {
-            $this->select->setElements($List);
-        }
-
-        public function setElementsVal($list_val)
-        {
-            $this->select->setElementsVal($list_val);
-        }
-
-        public function setJsFuncParams($arrayparam)
-        {
-            $this->select->setJsFuncParams($arrayparam);
-        }
-
-        public function display()
-        {
-            $this->push($this->select);
-            parent::display();
-        }
-
-        public function end()
-        {
-            $parameters = (!empty($_SESSION['parameters'])) ? $_SESSION['parameters'] : [];
-            $parametersStr = json_encode($parameters);
-            $str = parent::end();
-            $str .= "
-            <div id=\"$this->idchoixform\"> </div>
-            <script type=\"text/javascript\">
-                loadpage".$this->idselect."=function(){
-                    var selectval = jQuery( '#".$this->idselect."').val()
-                    jQuery( '#".$this->idchoixform."' ).load( selectval,  ".$parametersStr." ,
-                        function( response, status, xhr ) {
-                            if ( status == 'error' ) {
-                                var msg = '"._T("form not found", 'imaging').": ';
-                                alert( msg + xhr.status + ' ' + xhr.statusText );
-                            }
-                        });
-                }
-                loadpage".$this->idselect."()
-                change".$this->idElt."=function(val){
-                    loadpage".$this->idselect."()
-                }
-            </script>\n";
-            return $str;
-        }
+        $options = array();
+        $this->idElt=$idElt;
+        $this->idselect="select_$idElt";
+        $this->idform="form_$idElt";
+        $this->idchoixform="afficheform_$idElt";
+        $options["id"]=$this->idform;
+        $options["method"] = "";
+        parent::__construct($options);
+        $this->select = new SelectItem($this->idselect, "change".$idElt, $style);
     }
-    $p = new PageGenerator(_T("Windows Answer File Generator", 'imaging'));
-$p->setSideMenu($sidemenu);
+
+    public function setElements($List)
+    {
+        $this->select->setElements($List);
+    }
+
+    public function setElementsVal($list_val)
+    {
+        $this->select->setElementsVal($list_val);
+    }
+
+    public function setJsFuncParams($arrayparam)
+    {
+        $this->select->setJsFuncParams($arrayparam);
+    }
+
+    public function display()
+    {
+        $this->push($this->select);
+        parent::display();
+    }
+
+    public function end()
+    {
+        $parameters = (!empty($_SESSION['parameters'])) ? $_SESSION['parameters'] : [];
+        $parametersStr = json_encode($parameters);
+        $str = parent::end();
+        $str .= "
+        <div id=\"$this->idchoixform\"> </div>
+        <script type=\"text/javascript\">
+            loadpage".$this->idselect."=function(){
+                var selectval = jQuery( '#".$this->idselect."').val()
+                jQuery( '#".$this->idchoixform."' ).load( selectval,  ".$parametersStr." ,
+                    function( response, status, xhr ) {
+                        if ( status == 'error' ) {
+                            var msg = '"._T("form not found", 'imaging').": ';
+                            alert( msg + xhr.status + ' ' + xhr.statusText );
+                        }
+                    });
+            }
+            loadpage".$this->idselect."()
+            change".$this->idElt."=function(val){
+                loadpage".$this->idselect."()
+            }
+        </script>\n";
+        return $str;
+    }
+}
+$p = new PageGenerator(_T("Windows Answer File Generator", 'imaging'));
 $p->display();
 if (isset($_POST['bvalid'])) {
     $gg = $_POST['codeToCopy'];
@@ -142,7 +141,8 @@ $list_val=[ 'modules/imaging/manage/ajaxFormWin7.php',
             'modules/imaging/manage/ajaxFormWin10.php',
             'modules/imaging/manage/ajaxFormWin10-uefi.php',
             'modules/imaging/manage/ajaxFormWin11.php',
-            'modules/imaging/manage/ajaxFormWin11-uefi.php'];
+            'modules/imaging/manage/ajaxFormWin11-uefi2.php', // Using a new file for Windows 11 UEFI to be able to switch easily with the old one if needed
+];
 
 $combine = array_combine($List, $list_val);
 

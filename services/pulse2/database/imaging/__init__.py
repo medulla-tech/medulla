@@ -1069,7 +1069,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             q.extend(q2)
         if session_need_close:
             session.close()
-        # q.sort(lambda x, y: cmp(x.order, y.order))
+        q = sorted(q, key=lambda mi: int(mi.order))
         return q
 
     def getLastMenuItemOrder(self, menu_id):
@@ -1209,7 +1209,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     def getImagingLogsOnTargetByIdAndType(self, target_id, _type, start, end, filter):
         session = create_session()
         q = self.__ImagingLogsOnTargetByIdAndType(session, target_id, _type, filter)
-        q = q.order_by(desc(self.imaging_log.c.timestamp))
+        q = q.order_by(desc(self.imaging_log.c.id))
         if end != -1:
             q = q.offset(int(start)).limit(int(end) - int(start))
         else:
@@ -2340,10 +2340,26 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.close()
         return True
 
+    def __image_has_dependencies(self, session, image_id):
+        """
+        Check if an image is still used in a menu.
+        @param image_id: Image id to check
+        @type image_id: int
+        @return: True if the image is used in a menu, False otherwise
+        """
+        exists = session.query(ImageInMenu).filter(ImageInMenu.fk_image == image_id).first()
+        if exists:
+            return True
+        return False
+
     def imagingServerImageDelete(self, image_uuid):
         session = create_session()
-
         image_id = uuid2id(image_uuid)
+
+        if self.__image_has_dependencies(session, image_id):
+            msg = f"Deletion prohibited: the image {image_id} is still used in a menu."
+            logging.getLogger().debug(msg)
+            return [False, msg]
 
         il = ImagingLog()
         il.timestamp = datetime.datetime.fromtimestamp(time.mktime(time.localtime()))
@@ -2418,11 +2434,9 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.delete(image)
         session.flush()
 
-        return True
-
-    #        mo = session.query(MasteredOn).filter(self.mastered_on.c.fk_image == image_id).first()
-    #        iois = session.query(ImageOnImagingServer).filter(self.image_on_imaging_server.c.fk_image == image_id).first()
-    #        image = session.query(Image).filter(self.image.c.id == image_id).first()
+        msg = f"Deletion of image {image_uuid} successful."
+        logging.getLogger().debug(msg)
+        return [True, msg]
 
     def countPossibleImagesOrMaster(self, target_uuid, _type, filt):
         session = create_session()
@@ -2609,7 +2623,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
         self.__sortMenuItems(menu.id, session)
         session.close()
-        return iim
+        return {"menuitem": mi.id, "image": iim.fk_image}
 
     def addImageToTarget(self, item_uuid, target_uuid, params):
         session = create_session()
@@ -3029,7 +3043,31 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
         if need_to_be_save:
             session.add(im)
-        session.flush()
+            session.flush()
+
+        log = (
+            session.query(ImagingLog)
+            .join(MasteredOn, ImagingLog.id == MasteredOn.fk_imaging_log)
+            .filter(MasteredOn.fk_image == im.id)
+            .order_by(ImagingLog.id.desc())
+            .first()
+        )
+
+        if log:
+            log.detail = params.get("state", "unknown")
+            if "state" in params:
+                if params["state"] in self.r_nomenclatures["ImageState"]:
+                    log.fk_imaging_log_state = self.r_nomenclatures["ImageState"][params["state"]]
+                elif params["state"] in self.nomenclatures["ImageState"]:
+                    log.fk_imaging_log_state = params["state"]
+                else:
+                    self.logger.warn(
+                        "don't know that imaging log state %s" % (params["state"])
+                    )
+                    log.fk_imaging_log_state = 1  # UNKNOWN
+            session.add(log)
+            session.flush()
+
         session.close()
         return im.id
 
@@ -3773,33 +3811,37 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         count_items = self.countMenuContent(menu.id, P2IM.ALL, filter)
         return count_items
 
-    ######################
     def __moveItemInMenu(self, menu, mi_uuid, reverse=False):
-        session = create_session()
-        mis = self.getMenuContent(menu.id, P2IM.ALL, 0, -1, "", session)
-        # if reverse:
-        #     mis.sort(lambda x, y: cmp(y.order, x.order))
-        move = False
-        mod_mi = [None, None]
-        for mi in mis:
-            if move:
-                move = False
-                mod_mi[1] = mi
-            if str(mi.id) == str(uuid2id(mi_uuid)):
-                move = True
-                mod_mi[0] = mi
-        if mod_mi[0] is not None and mod_mi[1] is not None:
-            ord = mod_mi[0].order
-            mod_mi[0].order = mod_mi[1].order
-            mod_mi[1].order = ord
-            session.add(mod_mi[0])
-            session.add(mod_mi[1])
-            session.flush()
+        session = create_session(autocommit=False)
+        try:
+            mis = self.getMenuContent(menu.id, P2IM.ALL, 0, -1, "", session)
+            mis = sorted(mis, key=lambda mi: mi.order)
+            visibles = [mi for mi in mis if not mi.hidden]
+            idx = next((i for i, mi in enumerate(visibles) if str(mi.id) == str(uuid2id(mi_uuid))), None)
+            if idx is None:
+                return False
+            if reverse:
+                if idx == 0:
+                    return False
+                target = visibles[idx-1]
+            else:
+                if idx == len(visibles)-1:
+                    return False
+                target = visibles[idx+1]
+            current = visibles[idx]
+            current_order = current.order
+            target_order = target.order
+            current.order = target_order
+            target.order = current_order
+            session.add(current)
+            session.add(target)
+            session.commit()
+            return True
+        except Exception as e:
+            session.rollback()
+            raise
+        finally:
             session.close()
-        else:
-            session.close()
-            return False
-        return True
 
     def moveItemUpInMenu(self, target_uuid, mi_uuid):
         menu = self.getTargetsMenuTUUID(target_uuid)
