@@ -366,6 +366,88 @@ DO
 
 
 
+-- ============================================================================
+-- Procédure : xmppmaster.up_windows_malicious_software_tool
+-- ----------------------------------------------------------------------------
+
+
+USE `xmppmaster`;
+DROP procedure IF EXISTS `xmppmaster`.`up_windows_malicious_software_tool`;
+;
+
+DELIMITER $$
+
+/*
+  Procédure : up_windows_malicious_software_tool
+
+  Description :
+    Recherche une mise à jour "Windows Malicious Software Removal Tool" dans la table `update_data`.
+    Si une mise à jour avec un titre correspondant à l'architecture et la version spécifiée existe,
+    la procédure termine silencieusement.
+    Sinon, elle retourne la mise à jour la plus récente non remplacée correspondant au produit et à l'architecture.
+
+  Paramètres :
+    - PRODUCTtable (VARCHAR(80)) : Chaîne à rechercher dans le champ `product`. Si vide ou NULL, valeur par défaut = "%Windows%".
+    - ARCHItable (VARCHAR(20))   : Chaîne à rechercher dans le champ `title` pour l'architecture. Si vide ou NULL, valeur par défaut = "%x64%".
+    - major (VARCHAR(10))        : Numéro de version majeure. Si vide ou NULL, valeur par défaut = '0'.
+    - minor (VARCHAR(10))        : Numéro de version mineure. Si vide ou NULL, valeur par défaut = '0'.
+*/
+
+
+CREATE PROCEDURE `up_windows_malicious_software_tool`(
+    IN PRODUCTtable VARCHAR(80),
+    IN ARCHItable VARCHAR(20),
+    IN major VARCHAR(10),
+    IN minor VARCHAR(10)
+)
+proc_Exit: BEGIN
+    DECLARE produc_windows VARCHAR(80) DEFAULT '%Windows%';
+    DECLARE archi VARCHAR(20) DEFAULT '%x64%';
+    DECLARE title_search VARCHAR(200);
+
+    -- Si les paramètres ne sont pas vides ou NULL, les utiliser
+    IF PRODUCTtable IS NOT NULL AND PRODUCTtable != '' THEN
+        SET produc_windows = CONCAT('%', PRODUCTtable, '%');
+    END IF;
+
+    IF ARCHItable IS NOT NULL AND ARCHItable != '' THEN
+        SET archi = CONCAT('%', ARCHItable, '%');
+    END IF;
+
+    IF major IS NULL OR major = '' THEN
+        SET major = '0';
+    END IF;
+
+    IF minor IS NULL OR minor = '' THEN
+        SET minor = '0';
+    END IF;
+
+    SET title_search = CONCAT('Windows Malicious Software Removal Tool ', ARCHItable, ' - v', major, '.', minor, '%');
+
+    -- Vérifie s'il existe au moins une ligne correspondant à la recherche
+    IF EXISTS (
+        SELECT 1
+        FROM xmppmaster.update_data
+        WHERE title LIKE title_search
+        AND product LIKE produc_windows
+    ) THEN
+        LEAVE proc_Exit;
+    ELSE
+        -- Sinon, retourne une ligne alternative
+        SELECT *
+        FROM xmppmaster.update_data
+        WHERE title LIKE '%Windows Malicious Software Removal Tool%'
+        AND title LIKE archi
+        AND product LIKE produc_windows
+        AND supersededby = ''
+        ORDER BY revisionid DESC
+        LIMIT 1;
+    END IF;
+END$$
+
+DELIMITER ;
+;
+
 -- ----------------------------------------------------------------------
 -- Database version
 -- ----------------------------------------------------------------------
