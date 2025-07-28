@@ -1,5 +1,6 @@
-# -*- coding: utf-8; -*-
-# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net>
+# -*- coding:Utf-8; -*
+# SPDX-FileCopyrightText: 2016-2023 Siveo, http://www.siveo.net
+# SPDX-FileCopyrightText: 2024-2025 Medulla, http://www.medulla-tech.io
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 """
@@ -10094,14 +10095,18 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def getMachinefromuuid(self, session, uuid):
-        """information machine"""
+        """
+        This function is used to retrieve a machine from its UUID.
+        Args:
+            uuid: The UUID of the machine we are looking for
+        Returns:
+            It returns a dictionary with the machine information.
+        """
         machine = (
             session.query(Machines)
             .filter(Machines.uuid_inventorymachine == uuid)
             .first()
         )
-        session.commit()
-        session.flush()
         result = {}
         if machine:
             result = {
@@ -10127,6 +10132,19 @@ class XmppMasterDatabase(DatabaseHelper):
                 "enabled": machine.enabled,
                 "uuid_serial_machine": machine.uuid_serial_machine,
             }
+
+            # Recover the networks of the machine
+            network = session.query(Network).filter(Network.machines_id == machine.id).first()
+            if network:
+                result.update({
+                    "ipaddress": network.ipaddress,
+                    "mac": network.mac,
+                    "broadcast": network.broadcast,
+                    "gateway": network.gateway,
+                    "mask": network.mask,
+                })
+
+        session.commit()
         return result
 
     @DatabaseHelper._sessionm

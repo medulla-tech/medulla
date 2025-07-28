@@ -1,16 +1,18 @@
 <?php
 /*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
- * (c) 2007-2008 Mandriva, http://www.mandriva.com/
- * (c) 2015-2018 Siveo, http://http://www.siveo.net
+ * (c) 2007 Mandriva, http://www.mandriva.com
+ * (c) 2016-2023 Siveo, http://www.siveo.net
+ * (c) 2024-2025 Medulla, http://www.medulla-tech.io
+ *
  * $Id$
  *
- * This file is part of Mandriva Management Console (MMC).
+ * This file is part of MMC, http://www.medulla-tech.io
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ * the Free Software Foundation; either version 3 of the License, or
+ * any later version.
  *
  * MMC is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -18,11 +20,53 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with MMC; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ * along with MMC; If not, see <http://www.gnu.org/licenses/>.
  *
- * file: ajaxComputersList.php
  */
+?>
+<style>
+    .tooltip {
+        font-size: 20px;
+    }
+
+    .ui-tooltip {
+        padding: 6px 4px 8px 4px;
+        max-width: 600px;
+        color: #ffffff;
+        background-color: #000000;
+        box-shadow: 4px 4px 6px #888;
+        border-radius: 15px;
+    }
+
+    .ttable tr td {
+        margin-left: 10px;
+        padding: 2px;
+        background: none;
+        border: none;
+        border-collapse: collapse;
+        border-spacing: 0;
+        font-size: .9em;
+    }
+</style>
+
+<script>
+    jQuery(function() {
+        jQuery(".infomach").tooltip({
+            position: {
+                my: "left+15 center",
+                at: "right center"
+            },
+            items: "[mydata]",
+            content: function() {
+                var element = jQuery(this);
+                if (element.is("[mydata]")) {
+                    return element.attr("mydata");
+                }
+            }
+        });
+    });
+</script>
+<?php
 require_once("modules/base/includes/computers.inc.php");
 require_once("modules/base/includes/computers_list.inc.php");
 
@@ -38,7 +82,7 @@ if (isset($_GET["start"])) {
 } else {
     $start = 0;
 }
-if (isset($_SESSION['computerpresence'])  && $_SESSION['computerpresence'] != "all_computer" )
+if (isset($_SESSION['computerpresence'])  && $_SESSION['computerpresence'] != "all_computer")
     $filter['computerpresence'] = $_SESSION['computerpresence'];
 
 if (isset($_GET['location'])) {
@@ -80,7 +124,8 @@ foreach ($cl as $k => $v) {
 }
 $names = array();
 
-function my_cmp($a, $b) {
+function my_cmp($a, $b)
+{
     return strcmp(strtolower($a), strtolower($b));
 }
 
@@ -106,32 +151,33 @@ if (in_array("msc", $_SESSION["supportModList"]) || in_array("xmppmaster", $_SES
     $msc_vnc_show_icon = web_vnc_show_icon();
 }
 
-if (isset($_GET["id"]) && isset($_GET["cmd_id"])){
-    $result=list_computers( $names,
-                    $filter,
-                    $count,
-                    $canbedeleted,
-                    $canbedeletedfromgroup,
-                    $is_group,
-                    $msc_can_download_file,
-                    $msc_vnc_show_icon,
-                    $_GET["cmd_id"],
-                    $_GET["login"],
-                    $_GET["id"],
-                    $_GET["hos"],
-                    $_GET["ses"],
-                    $_GET["sta"]);
-
-}else{
-    if (isset($_GET["cmd_id"])){
-        list_computers($names, $filter, $count, $canbedeleted, $canbedeletedfromgroup, $is_group, $msc_can_download_file, $msc_vnc_show_icon,$_GET["cmd_id"],$_GET["login"]);
-    }
-    else{
+if (isset($_GET["id"]) && isset($_GET["cmd_id"])) {
+    $result = list_computers(
+        $names,
+        $filter,
+        $count,
+        $canbedeleted,
+        $canbedeletedfromgroup,
+        $is_group,
+        $msc_can_download_file,
+        $msc_vnc_show_icon,
+        $_GET["cmd_id"],
+        $_GET["login"],
+        $_GET["id"],
+        $_GET["hos"],
+        $_GET["ses"],
+        $_GET["sta"]
+    );
+} else {
+    if (isset($_GET["cmd_id"])) {
+        list_computers($names, $filter, $count, $canbedeleted, $canbedeletedfromgroup, $is_group, $msc_can_download_file, $msc_vnc_show_icon, $_GET["cmd_id"], $_GET["login"]);
+    } else {
         list_computers($names, $filter, $count, $canbedeleted, $canbedeletedfromgroup, $is_group, $msc_can_download_file, $msc_vnc_show_icon);
     }
 }
 
-function join_value($n) {
+function join_value($n)
+{
     $ret = array();
     foreach ($n[1] as $k => $v) {
         if (is_array($v)) {
@@ -142,15 +188,14 @@ function join_value($n) {
     }
     return $ret;
 }
-$_GET['groupname'] = isset($_GET['groupname'])?$_GET['groupname'] : null;
+$_GET['groupname'] = isset($_GET['groupname']) ? $_GET['groupname'] : null;
 if (in_array("dyngroup", $_SESSION["modulesList"]) and isset($_GET['gid'])) {
-    ?><a href='<?php echo urlStr("base/computers/csv", array('gid' => $_GET['gid'], 'location' => $_GET['location'], 'groupname' => $_GET['groupname'])) ?>'><img src='img/actions/csvexport.svg' alt='export csv' width='25' height='25'/></a><?php
-}
-?>
+?><a href='<?php echo urlStr("base/computers/csv", array('gid' => $_GET['gid'], 'location' => $_GET['location'], 'groupname' => $_GET['groupname'])) ?>'><img src='img/actions/csvexport.svg' alt='export csv' width='25' height='25' /></a>
+<?php } ?>
 
 <style type="text/css">
     td:hover {
-        cursor:pointer;
+        cursor: pointer;
     }
 </style>
 <script type="text/javascript">

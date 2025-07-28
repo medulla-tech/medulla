@@ -1,16 +1,18 @@
 <?php
 /*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
- * (c) 2007-2008 Mandriva, http://www.mandriva.com/
- * (c) 2015-2023 Siveo, http://http://www.siveo.net
+ * (c) 2007 Mandriva, http://www.mandriva.com
+ * (c) 2016-2023 Siveo, http://www.siveo.net
+ * (c) 2024-2025 Medulla, http://www.medulla-tech.io
+ *
  * $Id$
  *
- * This file is part of Management Console (MMC).
+ * This file is part of MMC, http://www.medulla-tech.io
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ * the Free Software Foundation; either version 3 of the License, or
+ * any later version.
  *
  * MMC is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -18,11 +20,10 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with MMC; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ * along with MMC; If not, see <http://www.gnu.org/licenses/>.
  *
- * File : computers_list.inc.php
  */
+
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 require_once("includes/xmlrpc.inc.php");
 
@@ -87,7 +88,7 @@ function list_computers(
         $indexarray = array_flip($array_host_machinedeploy);
 
         foreach ($names as &$dd) {
-            foreach($array_id_machine_deploy as $key => $val) {
+            foreach ($array_id_machine_deploy as $key => $val) {
                 if (isset($dd['objectUUID']) &&  $val == $dd['objectUUID']) {
                     $dd['status'] = $array_state_machine_deploy[$key];
                 }
@@ -161,8 +162,8 @@ function list_computers(
         $headers1 = array();
         $i = 0;
         foreach ($headers as $header) {
-            if($i == 3) {
-                $headers1[] = array('status','status');
+            if ($i == 3) {
+                $headers1[] = array('status', 'status');
             }
             $headers1[] = $header;
             $i++;
@@ -183,7 +184,7 @@ function list_computers(
     $uuids = array_map("getUUID", $names);
     $presencemachinexmpplist = xmlrpc_getPresenceuuids($uuids);
     $countmachine = 0;
-    foreach($names as $value) {
+    foreach ($names as $value) {
         $presencemachinexmpp = $presencemachinexmpplist[$uuids[$countmachine]];
         $countmachine++;
         $presencemachinexmpp ? $value['presencemachinexmpp'] = "1" : $value['presencemachinexmpp'] = "0";
@@ -256,7 +257,7 @@ function list_computers(
         if (in_array("guacamole", $_SESSION["supportModList"]) && in_array("xmppmaster", $_SESSION["supportModList"])) {
             if ($presencemachinexmpp) {
                 $actionVncClient[] = $vncClientAction;
-            } else {//show icone vnc griser
+            } else { //show icone vnc griser
                 $actionVncClient[] = $vncClientActiongriser;
             }
         } elseif ($msc_vnc_show_icon) {
@@ -271,7 +272,35 @@ function list_computers(
         $params[] = $value;
     }
 
-    foreach($params as &$element) {
+    if (isset($names)) {
+        foreach ($names as $i => $info) {
+            $machine = xmlrpc_getMachineByUUID($info['objectUUID']);
+
+            $fields = [
+                'hostname'      => 'Nom de machine',
+                'platform'      => 'OS',
+                'archi'         => 'Version',
+                'ip_xmpp'       => 'IP',
+                'subnetxmpp'    => 'Subnet',
+                'gateway'       => 'Passerelle',
+                'mask'          => 'Masque',
+                'macaddress'    => 'Adresse MAC',
+                'jid'           => 'JID'
+            ];
+
+            $tooltip = "<table class='ttable'>";
+            foreach ($fields as $key => $label) {
+                if (!empty($machine[$key])) {
+                    $tooltip .= "<tr><td>$label</td><td> : " . htmlspecialchars($machine[$key]) . "</td></tr>";
+                }
+            }
+            $tooltip .= "</table>";
+
+            $columns['cn'][$i] = '<span class="infomach" mydata="' . htmlentities($tooltip) . '">' . htmlspecialchars($info['cn']) . '</span>';
+        }
+    }
+
+    foreach ($params as &$element) {
 
         if ($groupinfodeploy != -1) {
             $element['gr_cmd_id'] = $groupinfodeploy;
@@ -291,7 +320,7 @@ function list_computers(
         }
     }
     if (isset($filter['location'])) {
-        $filter = $filter['hostname'] . '##'. $filter['location'];
+        $filter = $filter['hostname'] . '##' . $filter['location'];
     } else {
         $filter = $filter['hostname'] . '##';
     }
@@ -336,7 +365,7 @@ function list_computers(
     //$n->setCssClass("machineName");
     $n->setMainActionClasses($cssClasses);
 
-    if(in_array("xmppmaster", $_SESSION['supportModList'])) {
+    if (in_array("xmppmaster", $_SESSION['supportModList'])) {
         if ($groupinfodeploy == -1) {
             $n->addActionItemArray($actionInventory);
         }
