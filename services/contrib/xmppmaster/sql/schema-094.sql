@@ -305,7 +305,7 @@ CREATE TABLE `up_auto_approve_rules` (
   `active_rule` int(11) DEFAULT 0 COMMENT '0 = inactif, 1 = actif. Si actif, la règle est utilisée pour valider automatiquement une mise à jour.',
   PRIMARY KEY (`id`),
   UNIQUE KEY `rule_unique` (`msrcseverity`,`updateclassification`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='Définit les règles d’auto-approbation des mises à jour en fonction de leur criticité et classification.';
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='Définit les règles d’auto-approbation des mises à jour en fonction de leur criticité et classification.';
 
 --
 -- Dumping data for table `up_auto_approve_rules`
@@ -314,16 +314,15 @@ CREATE TABLE `up_auto_approve_rules` (
 LOCK TABLES `up_auto_approve_rules` WRITE;
 
 INSERT INTO `up_auto_approve_rules` VALUES
-(1,'Important','Security Updates',0),
-(2,'Critical','Security Updates',1),
+(1,'Critical','Security Updates',0),
+(2,'Important','Security Updates',0),
 (3,'Moderate','Security Updates',0),
 (4,'Low','Security Updates',0),
 (5,NULL,'Update Rollups',0),
 (6,NULL,'Service Packs',0),
 (7,NULL,'Security Updates',0),
 (8,NULL,'Critical Updates',0),
-(9,NULL,'Updates',0),
-(10,NULL,NULL,0);
+(9,NULL,'Updates',0);
 
 UNLOCK TABLES;
 

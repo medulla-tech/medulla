@@ -272,6 +272,10 @@ $page->setFile("modules/updates/updates/ajaxAuditByUpdate.php");
 $page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
 $submod->addPage($page);
 
+$page = new Page("approve_rules", _T('Automatic approval rules', 'updates'));
+$page->setFile("modules/updates/updates/approve_rules.php");
+$submod->addPage($page);
+
 $mod->addSubmod($submod);
 
 $MMCApp = &MMCApp::getInstance();
