@@ -51,16 +51,17 @@ switch($_GET['action']){
                                                 '',
                                                 "session user ".$_SESSION["login"],
                                                 'QuickAction | Inventory | Inventory requested');
+        xmlrpc_setCommand_qa("Run Inventory", "Run Inventory", $_SESSION["login"], "", $_GET['UUID'], $_GET['os'], $_GET['jid']);
         $notif = new NotifyWidgetSuccess(
             "Inventory request <strong>sent</strong> for " . htmlspecialchars($_GET['cn']) 
             . (!empty($_GET['entity']) ? " in entity [" . htmlspecialchars($_GET['entity']) . "]" : "")
         );
+        $result = $_GET;
         echo json_encode([
             'status' => 'ok',
             'notif' => $notif,
             'result' => $result
         ]);
-
     break;
     case "deployquickgroup":
         header('Content-type: application/json');
@@ -109,6 +110,7 @@ switch($_GET['action']){
             };
             $result = array($uuid, $cn, $presence,$machine_already_present, $machine_not_present );
         }
+        xmlrpc_setCommand_qa("Run Inventory", "Run Inventory", $_SESSION["login"], $_GET['gid'], "", "", $_GET['groupname']);
         $notif = new NotifyWidgetSuccess(
             "Inventory request <strong>sent</strong> for group [" . htmlspecialchars($_GET['groupname']) . "] (" . count($list) . " machines)"
         );
