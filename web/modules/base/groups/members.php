@@ -44,28 +44,125 @@ function transform_users($users)
 }
 ?>
 
-<style type="text/css">
+<style>
+    #grouplist {
+        color: #444;
+        background: #F7FAFD;
+        border: 1px solid #b4c7d4;
+        border-radius: 10px;
+        padding: 26px 28px 20px 28px;
+        margin: 22px 0 32px 0;
+        width: 750px;
+        max-width: 980px;
+    }
 
-#grouplist
-{
-        color: #666;
-        background-color: #F0F4F7;
-        border: solid 1px #CCC;
-        padding: 10px 5px 5px 10px;
-        margin: 0 5px 20px 0;
-        width: 632px;
-}
+    .grouplist-flex {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 22px;
+    }
 
-#grouplist div.list
-{
-        float: left;
-}
+    .grouplist-col {
+        display: flex;
+        flex-direction: column;
+        min-width: 260px;
+        max-width: 320px;
+        flex: 1;
+    }
 
-select.list
-{
-        width: 250px;
-}
+    .grouplist-col .list-title {
+        font-size: 1.08em;
+        color: #2061a6;
+        font-weight: 600;
+        margin-bottom: 8px;
+    }
 
+    .grouplist-buttons-wrapper {
+        display: flex;
+        align-items: center;
+        height: 340px;
+    }
+
+    .grouplist-buttons {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-width: 60px;
+        gap: 18px;
+        width: 54px;
+    }
+
+    .grouplist-buttons input[type="image"] {
+        background: #fff;
+        border: 1px solid #b7d0e6;
+        border-radius: 5px;
+        width: 32px;
+        height: 32px;
+        padding: 3px;
+    }
+
+    .grouplist-buttons input[type="image"]:hover {
+        border-color: #4096d7;
+        background: #f3faff;
+    }
+
+    .grouplist-col select.list {
+        width: 100%;
+        min-width: 210px;
+        height: 300px;
+        font-size: 1.07em;
+        line-height: 1.35;
+        font-weight: 500;
+        padding: 5px 0;
+        border-radius: 4px;
+        border: 1px solid #b7d0e6;
+        background: #fff;
+    }
+
+    select.list option {
+        font-size: 1em;
+        padding: 4px 10px;
+        font-weight: 500;
+    }
+
+    .grouplist-footer {
+        display: flex;
+        gap: 12px;
+        justify-content: flex-start;
+        width: 750px;
+        max-width: 980px;
+        margin-top: 12px;
+    }
+
+    /* Hide the scrollbar */
+    /* Chrome, Edge, Safari */
+    select.list::-webkit-scrollbar {
+        width: 0px;
+        background: transparent;
+    }
+
+    /* Firefox */
+    select.list {
+        scrollbar-width: none;
+    }
+
+    @media (max-width: 900px) {
+        #grouplist {
+            min-width: unset;
+            width: 99%;
+        }
+
+        .grouplist-flex {
+            flex-direction: column;
+        }
+
+        .grouplist-col {
+            min-width: unset;
+            max-width: 100%;
+        }
+    }
 </style>
 
 <?php
@@ -80,7 +177,7 @@ if (isset($_GET["group"])) {
 }
 
 if (isset($_POST)) {
-    if(isset($_POST['lmembers'], $_POST['lusers'])) {
+    if (isset($_POST['lmembers'], $_POST['lusers'])) {
         $members = unserialize(base64_decode($_POST["lmembers"]));
         $users = unserialize(base64_decode($_POST["lusers"]));
     } else {
@@ -171,60 +268,46 @@ $p->display();
 ?>
 
 <form action="<?php echo $_SERVER["REQUEST_URI"]; ?>" method="post">
-
-<div id="grouplist">
-<table style="border: none;" cellspacing="0">
-<tr><td style="border: none;">
-  <div class="list">
-        <h3><?php echo  _("All users"); ?></h3>
-    <select multiple size="15" class="list" name="users[]">
-<?php
-foreach ($diff as $user) {
-    $name = formatUsername($user);
-    echo "<option value=\"". $user['uid'] ."\">". $name ."</option>\n";
-}
-?>
-    </select>
-
-    <br>
-
-  </div>
-  </td><td style="border: none;">
-  <div>
-  <input type="image" name="badduser" style="padding: 5px;" src="img/other/right.svg" width="25" height="25" value = "-->"/><br/>
-  <input type="image" name="bdeluser" style="padding: 5px;" src="img/other/left.svg" width="25" height="25" value="<--" />
-  </div>
-  </td><td style="border: none;">
-
-  <div class="list" style="padding-left: 10px;">
-      <h3><?php echo  _("Group members"); ?></h3>
-    <select multiple size="15" class="list" name="members[]">
-<?php
-foreach ($members as $member) {
-    foreach ($users as $user) {
-        if ($user['uid'] == $member) {
-            $name = formatUsername($user);
-            break;
-        }
-    }
-    echo "<option value=\"".$member."\">". $name ."</option>\n";
-}
-?>
-    </select>
-
-    <br>
-
-  </div>
-  <div class="clearer"></div>
-  </td></tr>
-</table>
-</div>
-
-<input type="hidden" name="lusers" value="<?php echo base64_encode(serialize($users)); ?>" />
-<input type="hidden" name="lmembers" value="<?php echo base64_encode(serialize($members)); ?>" />
-<input type="hidden" name="group" value="<?php echo $group; ?>" />
-<input type="submit" name="bconfirm" class="btnPrimary" value="<?php echo  _("Confirm"); ?>" />
-<input type="submit" name="breset" class="btnSecondary" value="<?php echo  _("Cancel"); ?>" />
+    <div id="grouplist">
+        <div class="grouplist-flex">
+            <div class="grouplist-col">
+                <div class="list-title"><?php echo _("All users"); ?></div>
+                <select multiple size="15" class="list" name="users[]">
+                    <?php foreach ($diff as $user) {
+                        $name = formatUsername($user);
+                        echo "<option value=\"" . $user['uid'] . "\">" . $name . "</option>\n";
+                    } ?>
+                </select>
+            </div>
+            <div class="grouplist-buttons-wrapper">
+                <div class="grouplist-buttons">
+                    <input type="image" name="badduser" src="img/other/right.svg" width="25" height="25" alt="Ajouter" title="Ajouter" /><br />
+                    <input type="image" name="bdeluser" src="img/other/left.svg" width="25" height="25" alt="Retirer" title="Retirer" />
+                </div>
+            </div>
+            <div class="grouplist-col">
+                <div class="list-title"><?php echo _("Group members"); ?></div>
+                <select multiple size="15" class="list" name="members[]">
+                    <?php foreach ($members as $member) {
+                        foreach ($users as $user) {
+                            if ($user['uid'] == $member) {
+                                $name = formatUsername($user);
+                                break;
+                            }
+                        }
+                        echo "<option value=\"" . $member . "\">" . $name . "</option>\n";
+                    } ?>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="grouplist-footer">
+        <input type="hidden" name="lusers" value="<?php echo base64_encode(serialize($users)); ?>" />
+        <input type="hidden" name="lmembers" value="<?php echo base64_encode(serialize($members)); ?>" />
+        <input type="hidden" name="group" value="<?php echo $group; ?>" />
+        <input type="submit" name="bconfirm" class="btnPrimary" value="<?php echo  _("Confirm"); ?>" />
+        <input type="submit" name="breset" class="btnSecondary" value="<?php echo  _("Cancel"); ?>" />
+    </div>
 </form>
 
 <?php
