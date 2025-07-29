@@ -1,8 +1,8 @@
-#!/usr/bin/python3
-# -*- coding: utf-8; -*-
+# -*- coding:Utf-8; -*
 # SPDX-FileCopyrightText: 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
-# SPDX-FileCopyrightText: 2007-2010 Mandriva, http://www.mandriva.com/
-# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net>
+# SPDX-FileCopyrightText: 2007 Mandriva, http://www.mandriva.com
+# SPDX-FileCopyrightText: 2016-2023 Siveo, http://www.siveo.net
+# SPDX-FileCopyrightText: 2024-2025 Medulla, http://www.medulla-tech.io
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 """
@@ -333,7 +333,9 @@ def getPrefs(uid):
         return ""
 
 
-def changeGroupDescription(cn, desc):
+def changeGroupDescription(cn, desc=""):
+    if desc is None or str(desc).strip().lower() == "none":
+        desc = ""
     ldapObj = ldapUserGroupControl()
     ldapObj.changeGroupAttributes(cn, "description", desc)
     return 0
@@ -1575,13 +1577,15 @@ class LdapUserGroupControl:
             # Convert attrVal to bytes if it's not already
             if isinstance(attrVal, str):
                 attrVal = attrVal.encode("utf-8")
-
             self.l.modify_s(groupdn, [(ldap.MOD_REPLACE, attr, attrVal)])
             if log:
                 r.commit()
         else:
-            self.l.modify_s(groupdn, [(ldap.MOD_REPLACE, attr, b"none")])
-            self.l.modify_s(groupdn, [(ldap.MOD_DELETE, attr)])
+            try:
+                self.l.modify_s(groupdn, [(ldap.MOD_DELETE, attr, None)])
+            except ldap.NO_SUCH_ATTRIBUTE:
+                pass
+
         return 0
 
     def changeUserPasswd(self, uid, passwd, oldpasswd=None, bind=False):
