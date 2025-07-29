@@ -1,8 +1,5 @@
 <?php
 /*
- * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
- * (c) 2007 Mandriva, http://www.mandriva.com
- * (c) 2016-2023 Siveo, http://www.siveo.net
  * (c) 2024-2025 Medulla, http://www.medulla-tech.io
  *
  * $Id$
@@ -47,7 +44,17 @@ if (
     }
 
     // Mise à jour de la table avec les données reçues
-    xmlrpc_update_auto_approve_rules($result);
+    $success = xmlrpc_update_auto_approve_rules($result);
+
+    if ($success) {
+        new NotifyWidgetSuccess(_T("Rules updated successfully.", "updates"));
+        header("Location: " . urlStrRedirect("updates/updates/index"));
+        exit;
+    } else {
+        new NotifyWidgetFailure(_T("Failed to update rules.", "updates"));
+        header("Location: " . urlStrRedirect("updates/updates/index"));
+        exit;
+    }
 }
 
 // Récupération des données à afficher
