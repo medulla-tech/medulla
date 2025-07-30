@@ -107,9 +107,9 @@ if (isset($_GET["signout"])) {
 
 if (isset($_GET["update"])) {
     if ($_GET["update"] === "success") {
-        $error = _("La mise à jour a été effectuée avec succès. Veuillez vous re-connecter.");
+        $error = _("Update successful. Please reconnect.");
     } elseif ($_GET["update"] === "fail") {
-        $error = _("La mise à jour a échoué. Vous avez été déconnecté pour des raisons de sécurité.");
+        $error = _("Error updating. You have been disconnected for security reasons.");
     }
     $_SESSION = array();
     session_destroy();

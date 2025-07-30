@@ -150,7 +150,7 @@ $empty_hardware_constraints_for_major_updates = new EmptyActionItem1(_T("No mach
                                             "updates",
                                             "updates");
 
-$deployAll = new ActionPopupItem(_T("Deploy all updates major on entity", "updates"),
+$deployAll = new ActionPopupItem(_T("Deploy all major updates on entity", "updates"),
                                     "grpDeployUpdatemajor",
                                     "updateone",
                                     "",

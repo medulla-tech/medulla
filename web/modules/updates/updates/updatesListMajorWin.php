@@ -23,7 +23,7 @@
 require("localSidebar.php");
 require("graph/navbar.inc.php");
 
-$p = new PageGenerator(_T("Manage Updates Major Lists", 'updates'));
+$p = new PageGenerator(_T("Manage Major Updates Lists", 'updates'));
 $p->setSideMenu($sidemenu);
 $p->display();
 $ajaxG = new AjaxFilter(urlStrRedirect("updates/updates/ajaxMajorEntitiesList"), "containeMajorEntitiesList", [], "forma");$ajaxG->display();$ajaxG->displayDivToUpdate();

@@ -42,7 +42,7 @@ $filter = filter_input(INPUT_GET, 'filter', FILTER_SANITIZE_STRING) ?? "";
 $entityname = filter_input(INPUT_GET, 'completename', FILTER_SANITIZE_STRING) ?? "";
 $entityid = filter_input(INPUT_GET, 'entity', FILTER_VALIDATE_INT) ?? 0;
 
-$titlepage = sprintf(_T("List Machines do not perform the update for now [ Entity %s ]"), htmlspecialchars($entityname));
+$titlepage = sprintf(_T("List of machines that should not be updated [ Entity %s ]"), htmlspecialchars($entityname));
 $p = new PageGenerator($titlepage);
 $p->setSideMenu($sidemenu);
 $p->display();
@@ -55,8 +55,8 @@ echo '
 $list_Machine_outdated_major_update = xmlrpc_get_outdated_major_os_updates_by_entity($entityid, $start, $end, $filter);
 $n = new ListInfos($list_Machine_outdated_major_update['hostname'], _T("Computer", "updates"));
 $n->addExtraInfo($list_Machine_outdated_major_update['platform'], _T("Platform", "updates"));
-$n->addExtraInfo($list_Machine_outdated_major_update['oldcode'], _T("Code Version", "updates"));
-$n->addExtraInfo($list_Machine_outdated_major_update['lang_code'], _T("Langue Code", "updates"));
+$n->addExtraInfo($list_Machine_outdated_major_update['oldcode'], _T("Version Code", "updates"));
+$n->addExtraInfo($list_Machine_outdated_major_update['lang_code'], _T("Language Code", "updates"));
 $n->setNavBar(new AjaxNavBar($list_Machine_outdated_major_update['nb_element'], $filter, 'search_computer'));
 $n->start = $start;
 $n->end = isset($_GET['end']) ? $_GET['end'] : $maxperpage;
