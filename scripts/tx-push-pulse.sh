@@ -33,5 +33,5 @@ TOKEN_API=""
 
 for mod in "${modules[@]}"
 do
-    tx --token "$TOKEN_API" push --source --translation -r o:medulla:p:medulla:r:$mod
+    tx --token "$TOKEN_API" push --source --translation -r medulla.$mod
 done

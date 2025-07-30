@@ -36,7 +36,7 @@ TOKEN_API=""
 
 for mod in "${modules[@]}"
 do
-    tx --token "$TOKEN_API" pull -r medulla.$mod -a -f $lang $args || echo "Ressource $mod non trouvée, on continue"
+    tx --token "$TOKEN_API" pull -r medulla.$mod -a -f $lang $args || echo "Resource $mod not found, we continue"
 
     if [ -d "web/modules/$mod/locale/fr/LC_MESSAGES" ]; then
         mkdir -p "web/modules/$mod/locale/fr_FR/LC_MESSAGES"
