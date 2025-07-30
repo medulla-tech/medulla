@@ -45,14 +45,13 @@ for module in "${modules[@]}"; do
   rm -f "$pot"
   touch "$pot"
 
-  find "$fpath" -iname "*.php" -exec xgettext \
-    --from-code=UTF-8 \
-    --language=PHP \
-    --keyword="$keyword" \
-    --output="$pot" \
-    --join-existing \
-    --add-comments \
-    {} +
+find "$fpath" -iname "*.php" -exec xgettext \
+  --from-code=UTF-8 \
+  --language=PHP \
+  --keyword="$keyword" \
+  --output="$pot" \
+  --join-existing \
+  {} +
 
 done
 
