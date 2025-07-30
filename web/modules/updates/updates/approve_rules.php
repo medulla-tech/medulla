@@ -48,11 +48,11 @@ if (
 
     if ($success) {
         new NotifyWidgetSuccess(_T("Rules updated successfully.", "updates"));
-        header("Location: " . urlStrRedirect("updates/updates/index"));
+        header("Location: " . urlStrRedirect("updates/updates/updatesListWin"));
         exit;
     } else {
         new NotifyWidgetFailure(_T("Failed to update rules.", "updates"));
-        header("Location: " . urlStrRedirect("updates/updates/index"));
+        header("Location: " . urlStrRedirect("updates/updates/updatesListWin"));
         exit;
     }
 }
