@@ -218,13 +218,13 @@ $deployment_intervals = $_POST['deployment_intervals'];
 
 if (empty($start_date)) {
     header("location:". urlStrRedirect("updates/updates/index"));
-    new NotifyWidgetFailure(_T('slot start date missings', 'msc'));
+    new NotifyWidgetFailure(_T('Slot start date missing', 'msc'));
     exit;
 }
 
 if (empty($end_date)) {
     header("location:". urlStrRedirect("updates/updates/index"));
-    new NotifyWidgetFailure(_T('slot end date missings', 'msc'));
+    new NotifyWidgetFailure(_T('Slot end date missing', 'msc'));
     exit;
 }
 
