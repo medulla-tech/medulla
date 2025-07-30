@@ -12,419 +12,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 23:50+0100\n"
+"POT-Creation-Date: 2025-07-30 15:09+0200\n"
 "PO-Revision-Date: 2017-09-12 13:51+0000\n"
 "Last-Translator: Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2022\n"
-"Language-Team: Norwegian Bokmål (Norway) (https://app.transifex.com/siveo/teams/72118/nb_NO/)\n"
+"Language-Team: Norwegian Bokmål (Norway) (https://app.transifex.com/medulla/teams/72118/nb_NO/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: nb_NO\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#: modules/glpi/includes/html.php:50 modules/glpi/includes/html.php:421
-msgid "Hide Windows Updates"
-msgstr "Skjul Windows-oppdateringer"
-
-#: modules/glpi/includes/html.php:58 modules/glpi/glpi/ajaxViewPart.php:257
-msgid "Today"
-msgstr "I dag"
-
-#: modules/glpi/includes/html.php:59 modules/glpi/glpi/ajaxViewPart.php:258
-msgid "Last 7 days"
-msgstr "Siste 7 dager"
-
-#: modules/glpi/includes/html.php:60 modules/glpi/glpi/ajaxViewPart.php:259
-msgid "Last 30 days"
-msgstr "Siste 30 dager"
-
-#: modules/glpi/includes/html.php:61 modules/glpi/glpi/ajaxViewPart.php:260
-msgid "All"
-msgstr "Alle"
-
-#: modules/glpi/includes/html.php:268 modules/glpi/includes/html.php:485
-msgid "Search"
-msgstr "Søk"
-
-#: modules/glpi/includes/panels/os_repartition.inc.php:36
-msgid "Operating systems"
-msgstr "Operativ system"
-
-#: modules/glpi/includes/panels/os_repartition.inc.php:44
-#: modules/glpi/includes/panels/antivirus.inc.php:41
-msgid "Uninventoried Machines"
-msgstr "Maskiner som ikke er i inventaret"
-
-#: modules/glpi/includes/panels/inventory.inc.php:31
-msgid "Inventories"
-msgstr "Inventarier"
-
-#: modules/glpi/includes/panels/inventory.inc.php:47
-#: modules/glpi/includes/panels/antivirus.inc.php:45
-msgid "Create a group"
-msgstr "Lag gruppe"
-
-#: modules/glpi/includes/panels/inventory.inc.php:48
-msgid "< %s days: %percent% (%d)"
-msgstr "< %s dager: %prosent% (%d)"
-
-#: modules/glpi/includes/panels/inventory.inc.php:49
-msgid "> %s days: %percent% (%d)"
-msgstr "> %s dager: %prosent% (%d)"
-
-#: modules/glpi/includes/panels/inventory.inc.php:50
-msgid "Uninventoried machines"
-msgstr "Uinnventerte maskiner"
-
-#: modules/glpi/includes/panels/antivirus.inc.php:32
-#: modules/glpi/glpi/tabs.php:93
-msgid "Antivirus"
-msgstr "Antivirus"
-
-#: modules/glpi/includes/panels/antivirus.inc.php:46
-msgid "OK: %percent% (%d)"
-msgstr "OK: %prosent% (%d)"
-
-#: modules/glpi/includes/panels/antivirus.inc.php:47
-msgid "Not running or not up-to-date: %percent% (%d)"
-msgstr "Kjører ikke eller er ikke oppdatert: %prosent% (%d)"
-
-#: modules/glpi/includes/panels/antivirus.inc.php:48
-msgid "No antivirus found: %percent% (%d)"
-msgstr "Ingen antivirus funnet: %prosent% (%d)"
-
-#: modules/glpi/includes/publicFunc.php:86
-msgid "Entity attributes"
-msgstr "Enhetsattributter"
-
-#: modules/glpi/includes/publicFunc.php:130
-msgid "Dynamic"
-msgstr "Dynamisk"
-
-#: modules/glpi/includes/publicFunc.php:130
-msgid "Static"
-msgstr "Statisk"
-
-#: modules/glpi/includes/publicFunc.php:142
-#: modules/glpi/glpi/addEntityRule.php:138
-msgid "Remove"
-msgstr "Fjern"
-
-#: modules/glpi/includes/publicFunc.php:154
-msgid "Entity right"
-msgstr "Enhetsrettigheter"
-
-#: modules/glpi/includes/publicFunc.php:160
-msgid "Add entity right"
-msgstr "Legg til Enhetsrettigheter"
-
-#: modules/glpi/glpi/addLocation.php:34
-msgid "The location has been added successfully."
-msgstr "Plasseringen er lagt til."
-
-#: modules/glpi/glpi/addLocation.php:38
-msgid "The location has been edited successfully."
-msgstr "Plasseringen er redigert."
-
-#: modules/glpi/glpi/addLocation.php:43
-msgid "Add location"
-msgstr "Legg til plassering"
-
-#: modules/glpi/glpi/addLocation.php:52
-#: modules/glpi/glpi/ajaxLocationList.php:70
-msgid "Edit location"
-msgstr "Rediger plassering"
-
-#: modules/glpi/glpi/addLocation.php:77 modules/glpi/glpi/addEntityRule.php:72
-#: modules/glpi/glpi/ajaxViewPart.php:214
-#: modules/glpi/glpi/ajaxViewPart.php:231 modules/glpi/glpi/addEntity.php:78
-msgid "Name"
-msgstr "Navn"
-
-#: modules/glpi/glpi/addLocation.php:96
-msgid "Parent location"
-msgstr "Overordnet plassering"
-
-#: modules/glpi/glpi/addLocation.php:101
-#: modules/glpi/glpi/ajaxMachinesList.php:406
-#: modules/glpi/glpi/addEntityRule.php:77
-#: modules/glpi/glpi/ajaxViewPart.php:234 modules/glpi/glpi/addEntity.php:100
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:248
-msgid "Description"
-msgstr "Beskrivelse"
-
-#: modules/glpi/glpi/createAntivirusStaticGroup.php:31
-#, php-format
-msgid "Antivirus status is OK at %s"
-msgstr "Antivirus status er OK ved %s"
-
-#: modules/glpi/glpi/createAntivirusStaticGroup.php:34
-#, php-format
-msgid "Antivirus is not running or not up-to-date at %s"
-msgstr "Antivirus kjører ikke eller er ikke oppdatert på %s"
-
-#: modules/glpi/glpi/createAntivirusStaticGroup.php:37
-#, php-format
-msgid "No antivirus found at %s"
-msgstr "Ingen antivirus funnet på %s"
-
-#: modules/glpi/glpi/createAntivirusStaticGroup.php:47
-#: modules/glpi/glpi/createBackupStaticGroup.php:69
-#: modules/glpi/glpi/createMachinesStaticGroup.php:75
-#: modules/glpi/glpi/createOSStaticGroup.php:54
-#, php-format
-msgid "Computers list has been truncated at %d computers"
-msgstr "Datamaskinlisten er avkortet ved %d datamaskiner"
-
-#: modules/glpi/glpi/deleteEntityRule.php:31
-msgid "The entity rule has been deleted successfully."
-msgstr "Enhetsregelen er slettet."
-
-#: modules/glpi/glpi/deleteEntityRule.php:36
-msgid "Delete this rule?"
-msgstr "Slett denne regelen?"
-
-#: modules/glpi/glpi/entityList.php:28
-msgid "Entity list"
-msgstr "Enhetsliste"
-
-#: modules/glpi/glpi/entityList.php:36
-msgid "All entities"
-msgstr "Alle enheter"
-
-#: modules/glpi/glpi/machinesList.php:28
-msgid "Machines List view xmpp"
-msgstr "Maskiners Listevisnings xmpp"
-
-#: modules/glpi/glpi/machinesList.php:39
-#: modules/glpi/glpi/machinesListglpi.php:40
-msgid "All computers"
-msgstr "Alle datamaskiner"
-
-#: modules/glpi/glpi/machinesList.php:43
-#: modules/glpi/glpi/machinesListglpi.php:44
-msgid "Online computers"
-msgstr "Online datamaskiner"
-
-#: modules/glpi/glpi/machinesList.php:47
-#: modules/glpi/glpi/machinesListglpi.php:48
-msgid "Offline computers"
-msgstr "Frakoblede datamaskiner"
-
-#: modules/glpi/glpi/machinesList.php:55
-#: modules/glpi/glpi/ajaxMachinesList.php:239
-msgid "Machine ID"
-msgstr "Maskin-ID"
-
-#: modules/glpi/glpi/machinesList.php:56
-#: modules/glpi/glpi/ajaxMachinesList.php:220
-msgid "Jabber ID"
-msgstr "Jabber ID"
-
-#: modules/glpi/glpi/machinesList.php:57
-#: modules/glpi/glpi/ajaxMachinesList.php:223
-msgid "Machine UUID"
-msgstr "Maskin UUID"
-
-#: modules/glpi/glpi/machinesList.php:58
-#: modules/glpi/glpi/ajaxMachinesList.php:224
-msgid "Reconf. requested"
-msgstr "Rekonf. Forespurt"
-
-#: modules/glpi/glpi/machinesList.php:59
-#: modules/glpi/glpi/ajaxMachinesList.php:225
-msgid "Online"
-msgstr "Online"
-
-#: modules/glpi/glpi/machinesList.php:60
-#: modules/glpi/glpi/ajaxMachinesList.php:221
-msgid "Platform"
-msgstr "Plattform"
-
-#: modules/glpi/glpi/machinesList.php:61
-#: modules/glpi/glpi/ajaxMachinesList.php:222
-#: modules/glpi/glpi/ajaxViewPart.php:262
-msgid "Architecture"
-msgstr "Arkitektur"
-
-#: modules/glpi/glpi/machinesList.php:62
-#: modules/glpi/glpi/ajaxMachinesList.php:219
-#: modules/glpi/glpi/addEntityRule.php:99
-msgid "Hostname"
-msgstr "Vertsnavn"
-
-#: modules/glpi/glpi/machinesList.php:63
-#: modules/glpi/glpi/ajaxMachinesList.php:240
-msgid "GLPI ID"
-msgstr "GLPI ID"
-
-#: modules/glpi/glpi/machinesList.php:64
-#: modules/glpi/glpi/ajaxMachinesList.php:226
-msgid "IP address"
-msgstr "IP adresse"
-
-#: modules/glpi/glpi/machinesList.php:65
-#: modules/glpi/glpi/ajaxMachinesList.php:227
-#: modules/glpi/glpi/addEntityRule.php:102
-msgid "Subnet"
-msgstr "Subnet"
-
-#: modules/glpi/glpi/machinesList.php:66
-#: modules/glpi/glpi/ajaxMachinesList.php:229
-msgid "Mac address"
-msgstr "Mac adresse"
-
-#: modules/glpi/glpi/machinesList.php:67
-#: modules/glpi/glpi/ajaxMachinesList.php:228
-msgid "Public IP"
-msgstr "Offentlig IP"
-
-#: modules/glpi/glpi/machinesList.php:68
-#: modules/glpi/glpi/ajaxMachinesList.php:230
-msgid "Agent type"
-msgstr "Agent type"
-
-#: modules/glpi/glpi/machinesList.php:69
-#: modules/glpi/glpi/ajaxMachinesList.php:231
-msgid "Usage class"
-msgstr "Bruksklasse"
-
-#: modules/glpi/glpi/machinesList.php:70
-#: modules/glpi/glpi/ajaxMachinesList.php:232
-msgid "Relay JID"
-msgstr "Relé JID"
-
-#: modules/glpi/glpi/machinesList.php:71
-#: modules/glpi/glpi/ajaxMachinesList.php:233
-msgid "AD machine OU"
-msgstr "AD maskin OU"
-
-#: modules/glpi/glpi/machinesList.php:72
-#: modules/glpi/glpi/ajaxMachinesList.php:234
-msgid "AD user OU"
-msgstr "AD bruker OU"
-
-#: modules/glpi/glpi/machinesList.php:73
-#: modules/glpi/glpi/ajaxMachinesList.php:235
-msgid "Kiosk enabled"
-msgstr "Kiosk aktivert"
-
-#: modules/glpi/glpi/machinesList.php:74
-#: modules/glpi/glpi/ajaxMachinesList.php:236
-msgid "Last user connected"
-msgstr "Siste tilkoblede bruker"
-
-#: modules/glpi/glpi/machinesList.php:75
-#: modules/glpi/glpi/ajaxMachinesList.php:237
-msgid "Syncthing ID"
-msgstr "Synkroniserings-ID"
-
-#: modules/glpi/glpi/machinesList.php:76
-#: modules/glpi/glpi/ajaxMachinesList.php:238
-msgid "Registry keys"
-msgstr "Registernøkler"
-
-#: modules/glpi/glpi/machinesList.php:77
-#: modules/glpi/glpi/ajaxMachinesList.php:241
-msgid "GLPI description"
-msgstr "GLPI beskrivelse"
-
-#: modules/glpi/glpi/machinesList.php:78
-#: modules/glpi/glpi/ajaxMachinesList.php:242
-msgid "Owner firstname"
-msgstr "Owner firstname"
-
-#: modules/glpi/glpi/machinesList.php:79
-#: modules/glpi/glpi/ajaxMachinesList.php:243
-msgid "Owner lastname"
-msgstr "Eiers etternavn"
-
-#: modules/glpi/glpi/machinesList.php:80
-#: modules/glpi/glpi/ajaxMachinesList.php:244
-#: modules/glpi/glpi/ajaxMachinesList.php:418
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:260
-msgid "Owner"
-msgstr "Eier"
-
-#: modules/glpi/glpi/machinesList.php:81
-#: modules/glpi/glpi/ajaxMachinesList.php:245
-#: modules/glpi/glpi/ajaxViewPart.php:243
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:275
-msgid "Model"
-msgstr "Modell"
-
-#: modules/glpi/glpi/machinesList.php:82
-#: modules/glpi/glpi/ajaxMachinesList.php:246
-#: modules/glpi/glpi/ajaxMachinesList.php:433
-#: modules/glpi/glpi/ajaxViewPart.php:244
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:278
-msgid "Manufacturer"
-msgstr "Produsent"
-
-#: modules/glpi/glpi/machinesList.php:83
-#: modules/glpi/glpi/ajaxMachinesList.php:247
-msgid "Short entity name"
-msgstr "Kort enhetsnavn"
-
-#: modules/glpi/glpi/machinesList.php:84
-#: modules/glpi/glpi/ajaxMachinesList.php:248
-msgid "Full entity name"
-msgstr "Fullt enhetsnavn"
-
-#: modules/glpi/glpi/machinesList.php:85
-#: modules/glpi/glpi/ajaxMachinesList.php:249
-msgid "Entity ID"
-msgstr "Enhets-ID"
-
-#: modules/glpi/glpi/machinesList.php:86
-#: modules/glpi/glpi/ajaxMachinesList.php:250
-msgid "Short location name"
-msgstr "Kort stedsnavn"
-
-#: modules/glpi/glpi/machinesList.php:87
-#: modules/glpi/glpi/ajaxMachinesList.php:251
-msgid "Full location name"
-msgstr "Fullt stedsnavn"
-
-#: modules/glpi/glpi/machinesList.php:88
-#: modules/glpi/glpi/ajaxMachinesList.php:252
-msgid "Location ID"
-msgstr "Steds-ID"
-
-#: modules/glpi/glpi/machinesList.php:89
-#: modules/glpi/glpi/ajaxMachinesList.php:253
-msgid "IP addresses"
-msgstr "IP adresser"
-
-#: modules/glpi/glpi/machinesList.php:90
-#: modules/glpi/glpi/ajaxMachinesList.php:254
-msgid "Network mask"
-msgstr "Nettverksmaske"
-
-#: modules/glpi/glpi/machinesList.php:91
-#: modules/glpi/glpi/ajaxMachinesList.php:255
-msgid "Broadcast address"
-msgstr "Kringkastingsadresse"
-
-#: modules/glpi/glpi/machinesList.php:92
-#: modules/glpi/glpi/ajaxMachinesList.php:256
-msgid "Gateway address"
-msgstr "Gateway-adresse"
-
-#: modules/glpi/glpi/machinesList.php:99
-#: modules/glpi/glpi/machinesListglpi.php:53
-msgid "All my entities"
-msgstr "Alle mine enheter"
-
-#: modules/glpi/glpi/createBackupStaticGroup.php:55
-#, php-format
-msgid "Machines backup configured at %s"
-msgstr "Maskinens sikkerhetskopiering er konfigurert på %s"
-
-#: modules/glpi/glpi/createBackupStaticGroup.php:60
-#, php-format
-msgid "Machines backup not configured at %s"
-msgstr "Maskinens sikkerhetskopiering er ikke konfigurert på %s"
 
 #: modules/glpi/glpi/tabs.php:65 modules/glpi/glpi/tabs.php:73
 msgid "This client has been registered in pull mode"
@@ -467,6 +63,11 @@ msgstr "Administrativ"
 msgid "History"
 msgstr "Historikk"
 
+#: modules/glpi/glpi/tabs.php:93
+#: modules/glpi/includes/panels/antivirus.inc.php:32
+msgid "Antivirus"
+msgstr "Antivirus"
+
 #: modules/glpi/glpi/tabs.php:98
 msgid "Registry"
 msgstr "Register"
@@ -475,34 +76,47 @@ msgstr "Register"
 msgid "Get XLS Report"
 msgstr "Hent XLS Rapport"
 
-#: modules/glpi/glpi/ajaxLocationList.php:51
-#: modules/glpi/glpi/ajaxEntityRules.php:51
-#: modules/glpi/glpi/ajaxEntityList.php:51
-msgid "No entry found"
-msgstr "Ingen oppføring funnet"
-
-#: modules/glpi/glpi/ajaxLocationList.php:66
-msgid "Location name"
-msgstr "Lokasjonsnavn"
-
-#: modules/glpi/glpi/ajaxLocationList.php:68
-#: modules/glpi/glpi/ajaxViewPart.php:252
-#: modules/glpi/glpi/ajaxEntityList.php:68
-msgid "Comment"
-msgstr "Kommentar"
-
-#: modules/glpi/glpi/locationList.php:28
-msgid "Location list"
-msgstr "Lokasjonsliste"
-
-#: modules/glpi/glpi/locationList.php:36
-msgid "All locations"
-msgstr "Alle lokasjoner"
-
-#: modules/glpi/glpi/machinesListglpi.php:29
+#: modules/glpi/glpi/createAntivirusStaticGroup.php:31
 #, php-format
-msgid "Machines List view %s"
+msgid "Antivirus status is OK at %s"
+msgstr "Antivirus status er OK ved %s"
+
+#: modules/glpi/glpi/createAntivirusStaticGroup.php:34
+#, php-format
+msgid "Antivirus is not running or not up-to-date at %s"
+msgstr "Antivirus kjører ikke eller er ikke oppdatert på %s"
+
+#: modules/glpi/glpi/createAntivirusStaticGroup.php:37
+#, php-format
+msgid "No antivirus found at %s"
+msgstr "Ingen antivirus funnet på %s"
+
+#: modules/glpi/glpi/createAntivirusStaticGroup.php:47
+#: modules/glpi/glpi/createBackupStaticGroup.php:69
+#: modules/glpi/glpi/createOSStaticGroup.php:54
+#: modules/glpi/glpi/createMachinesStaticGroup.php:75
+#, php-format
+msgid "Computers list has been truncated at %d computers"
+msgstr "Datamaskinlisten er avkortet ved %d datamaskiner"
+
+#: modules/glpi/glpi/createStaticGroup.php:31
+#, php-format
+msgid "Latest inventory is less than %s days at %s"
+msgstr "Siste inventeringsdato er yngre enn %s dager på %s"
+
+#: modules/glpi/glpi/createStaticGroup.php:34
+#, php-format
+msgid "Latest inventory is more than %s days at %s"
+msgstr "Siste inventeringsdato er eldre enn %s dager på  %s"
+
+#: modules/glpi/glpi/createStaticGroup.php:44
+#, php-format
+msgid ""
+"Computers list has been truncated at %d computers. Use the filter to find "
+"specific machines."
 msgstr ""
+"Datamaskinlisten er avkortet ved %ddatamaskiner. Bruk filteret til å finne "
+"spesifikke maskiner."
 
 #: modules/glpi/glpi/ajaxMachinesList.php:165
 #: modules/glpi/glpi/ajaxMachinesList.php:168
@@ -563,11 +177,220 @@ msgstr "extTicket-problem"
 msgid "Quick action"
 msgstr "Hurtighandling"
 
+#: modules/glpi/glpi/ajaxMachinesList.php:219
+#: modules/glpi/glpi/machinesList.php:62
+#: modules/glpi/glpi/addEntityRule.php:99
+msgid "Hostname"
+msgstr "Vertsnavn"
+
+#: modules/glpi/glpi/ajaxMachinesList.php:220
+#: modules/glpi/glpi/machinesList.php:56
+msgid "Jabber ID"
+msgstr "Jabber ID"
+
+#: modules/glpi/glpi/ajaxMachinesList.php:221
+#: modules/glpi/glpi/machinesList.php:60
+msgid "Platform"
+msgstr "Plattform"
+
+#: modules/glpi/glpi/ajaxMachinesList.php:222
+#: modules/glpi/glpi/machinesList.php:61
+#: modules/glpi/glpi/ajaxViewPart.php:262
+msgid "Architecture"
+msgstr "Arkitektur"
+
+#: modules/glpi/glpi/ajaxMachinesList.php:223
+#: modules/glpi/glpi/machinesList.php:57
+msgid "Machine UUID"
+msgstr "Maskin UUID"
+
+#: modules/glpi/glpi/ajaxMachinesList.php:224
+#: modules/glpi/glpi/machinesList.php:58
+msgid "Reconf. requested"
+msgstr "Rekonf. Forespurt"
+
+#: modules/glpi/glpi/ajaxMachinesList.php:225
+#: modules/glpi/glpi/machinesList.php:59
+msgid "Online"
+msgstr "Online"
+
+#: modules/glpi/glpi/ajaxMachinesList.php:226
+#: modules/glpi/glpi/machinesList.php:64
+msgid "IP address"
+msgstr "IP adresse"
+
+#: modules/glpi/glpi/ajaxMachinesList.php:227
+#: modules/glpi/glpi/machinesList.php:65
+#: modules/glpi/glpi/addEntityRule.php:102
+msgid "Subnet"
+msgstr "Subnet"
+
+#: modules/glpi/glpi/ajaxMachinesList.php:228
+#: modules/glpi/glpi/machinesList.php:67
+msgid "Public IP"
+msgstr "Offentlig IP"
+
+#: modules/glpi/glpi/ajaxMachinesList.php:229
+#: modules/glpi/glpi/machinesList.php:66
+msgid "Mac address"
+msgstr "Mac adresse"
+
+#: modules/glpi/glpi/ajaxMachinesList.php:230
+#: modules/glpi/glpi/machinesList.php:68
+msgid "Agent type"
+msgstr "Agent type"
+
+#: modules/glpi/glpi/ajaxMachinesList.php:231
+#: modules/glpi/glpi/machinesList.php:69
+msgid "Usage class"
+msgstr "Bruksklasse"
+
+#: modules/glpi/glpi/ajaxMachinesList.php:232
+#: modules/glpi/glpi/machinesList.php:70
+msgid "Relay JID"
+msgstr "Relé JID"
+
+#: modules/glpi/glpi/ajaxMachinesList.php:233
+#: modules/glpi/glpi/machinesList.php:71
+msgid "AD machine OU"
+msgstr "AD maskin OU"
+
+#: modules/glpi/glpi/ajaxMachinesList.php:234
+#: modules/glpi/glpi/machinesList.php:72
+msgid "AD user OU"
+msgstr "AD bruker OU"
+
+#: modules/glpi/glpi/ajaxMachinesList.php:235
+#: modules/glpi/glpi/machinesList.php:73
+msgid "Kiosk enabled"
+msgstr "Kiosk aktivert"
+
+#: modules/glpi/glpi/ajaxMachinesList.php:236
+#: modules/glpi/glpi/machinesList.php:74
+msgid "Last user connected"
+msgstr "Siste tilkoblede bruker"
+
+#: modules/glpi/glpi/ajaxMachinesList.php:237
+#: modules/glpi/glpi/machinesList.php:75
+msgid "Syncthing ID"
+msgstr "Synkroniserings-ID"
+
+#: modules/glpi/glpi/ajaxMachinesList.php:238
+#: modules/glpi/glpi/machinesList.php:76
+msgid "Registry keys"
+msgstr "Registernøkler"
+
+#: modules/glpi/glpi/ajaxMachinesList.php:239
+#: modules/glpi/glpi/machinesList.php:55
+msgid "Machine ID"
+msgstr "Maskin-ID"
+
+#: modules/glpi/glpi/ajaxMachinesList.php:240
+#: modules/glpi/glpi/machinesList.php:63
+msgid "GLPI ID"
+msgstr "GLPI ID"
+
+#: modules/glpi/glpi/ajaxMachinesList.php:241
+#: modules/glpi/glpi/machinesList.php:77
+msgid "GLPI description"
+msgstr "GLPI beskrivelse"
+
+#: modules/glpi/glpi/ajaxMachinesList.php:242
+#: modules/glpi/glpi/machinesList.php:78
+msgid "Owner firstname"
+msgstr "Owner firstname"
+
+#: modules/glpi/glpi/ajaxMachinesList.php:243
+#: modules/glpi/glpi/machinesList.php:79
+msgid "Owner lastname"
+msgstr "Eiers etternavn"
+
+#: modules/glpi/glpi/ajaxMachinesList.php:244
+#: modules/glpi/glpi/ajaxMachinesList.php:418
+#: modules/glpi/glpi/machinesList.php:80
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:260
+msgid "Owner"
+msgstr "Eier"
+
+#: modules/glpi/glpi/ajaxMachinesList.php:245
+#: modules/glpi/glpi/machinesList.php:81
+#: modules/glpi/glpi/ajaxViewPart.php:243
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:275
+msgid "Model"
+msgstr "Modell"
+
+#: modules/glpi/glpi/ajaxMachinesList.php:246
+#: modules/glpi/glpi/ajaxMachinesList.php:433
+#: modules/glpi/glpi/machinesList.php:82
+#: modules/glpi/glpi/ajaxViewPart.php:244
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:278
+msgid "Manufacturer"
+msgstr "Produsent"
+
+#: modules/glpi/glpi/ajaxMachinesList.php:247
+#: modules/glpi/glpi/machinesList.php:83
+msgid "Short entity name"
+msgstr "Kort enhetsnavn"
+
+#: modules/glpi/glpi/ajaxMachinesList.php:248
+#: modules/glpi/glpi/machinesList.php:84
+msgid "Full entity name"
+msgstr "Fullt enhetsnavn"
+
+#: modules/glpi/glpi/ajaxMachinesList.php:249
+#: modules/glpi/glpi/machinesList.php:85
+msgid "Entity ID"
+msgstr "Enhets-ID"
+
+#: modules/glpi/glpi/ajaxMachinesList.php:250
+#: modules/glpi/glpi/machinesList.php:86
+msgid "Short location name"
+msgstr "Kort stedsnavn"
+
+#: modules/glpi/glpi/ajaxMachinesList.php:251
+#: modules/glpi/glpi/machinesList.php:87
+msgid "Full location name"
+msgstr "Fullt stedsnavn"
+
+#: modules/glpi/glpi/ajaxMachinesList.php:252
+#: modules/glpi/glpi/machinesList.php:88
+msgid "Location ID"
+msgstr "Steds-ID"
+
+#: modules/glpi/glpi/ajaxMachinesList.php:253
+#: modules/glpi/glpi/machinesList.php:89
+msgid "IP addresses"
+msgstr "IP adresser"
+
+#: modules/glpi/glpi/ajaxMachinesList.php:254
+#: modules/glpi/glpi/machinesList.php:90
+msgid "Network mask"
+msgstr "Nettverksmaske"
+
+#: modules/glpi/glpi/ajaxMachinesList.php:255
+#: modules/glpi/glpi/machinesList.php:91
+msgid "Broadcast address"
+msgstr "Kringkastingsadresse"
+
+#: modules/glpi/glpi/ajaxMachinesList.php:256
+#: modules/glpi/glpi/machinesList.php:92
+msgid "Gateway address"
+msgstr "Gateway-adresse"
+
 #: modules/glpi/glpi/ajaxMachinesList.php:401
 #: modules/glpi/glpi/ajaxViewPart.php:233
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:244
 msgid "Computer Name"
 msgstr "Maskinnavn"
+
+#: modules/glpi/glpi/ajaxMachinesList.php:406
+#: modules/glpi/glpi/ajaxViewPart.php:234
+#: modules/glpi/glpi/addEntityRule.php:77
+#: modules/glpi/glpi/addLocation.php:101
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:248
+#: modules/glpi/glpi/addEntity.php:100
+msgid "Description"
+msgstr "Beskrivelse"
 
 #: modules/glpi/glpi/ajaxMachinesList.php:409
 #: modules/glpi/glpi/ajaxViewPart.php:240
@@ -623,139 +446,63 @@ msgstr ""
 msgid "Delete computer"
 msgstr "Slett datamaskin"
 
-#: modules/glpi/glpi/createMachinesStaticGroup.php:61
+#: modules/glpi/glpi/createBackupStaticGroup.php:55
 #, php-format
-msgid "Machines online at %s"
-msgstr "Maskiner er online på%s"
+msgid "Machines backup configured at %s"
+msgstr "Maskinens sikkerhetskopiering er konfigurert på %s"
 
-#: modules/glpi/glpi/createMachinesStaticGroup.php:66
+#: modules/glpi/glpi/createBackupStaticGroup.php:60
 #, php-format
-msgid "Machines offline at %s"
-msgstr "Maskiner er offline på %s"
+msgid "Machines backup not configured at %s"
+msgstr "Maskinens sikkerhetskopiering er ikke konfigurert på %s"
 
-#: modules/glpi/glpi/ajaxEntityRules.php:66
-msgid "Rule name"
-msgstr "Regelnavn"
+#: modules/glpi/glpi/entityRules.php:28 modules/glpi/infoPackage.inc.php:156
+msgid "Entity rules"
+msgstr "Enhetsregler"
 
-#: modules/glpi/glpi/ajaxEntityRules.php:69
-msgid "Edit rule"
-msgstr "Rediger regel"
+#: modules/glpi/glpi/entityRules.php:36
+msgid "All rules"
+msgstr "Alle regler"
 
-#: modules/glpi/glpi/ajaxEntityRules.php:70
-msgid "Move rule up"
-msgstr "Flytt regel opp"
+#: modules/glpi/glpi/machinesList.php:28
+msgid "Machines List view xmpp"
+msgstr "Maskiners Listevisnings xmpp"
 
-#: modules/glpi/glpi/ajaxEntityRules.php:71
-msgid "Move rule down"
-msgstr "Flytt regel ned"
+#: modules/glpi/glpi/machinesList.php:39
+#: modules/glpi/glpi/machinesListglpi.php:40
+msgid "All computers"
+msgstr "Alle datamaskiner"
 
-#: modules/glpi/glpi/ajaxEntityRules.php:72
-msgid "Delete rule"
-msgstr "Slett regel"
+#: modules/glpi/glpi/machinesList.php:43
+#: modules/glpi/glpi/machinesListglpi.php:44
+msgid "Online computers"
+msgstr "Online datamaskiner"
 
-#: modules/glpi/glpi/createOSStaticGroup.php:40
-#, php-format
-msgid "Machine with %s %s installed at %s"
-msgstr "Maskine med  %s %s er installert på %s"
+#: modules/glpi/glpi/machinesList.php:47
+#: modules/glpi/glpi/machinesListglpi.php:48
+msgid "Offline computers"
+msgstr "Frakoblede datamaskiner"
 
-#: modules/glpi/glpi/addEntityRule.php:31
-msgid "The entity rule has been added successfully."
-msgstr "Enhetsregelen er lagt til."
+#: modules/glpi/glpi/machinesList.php:99
+#: modules/glpi/glpi/machinesListglpi.php:53
+msgid "All my entities"
+msgstr "Alle mine enheter"
 
-#: modules/glpi/glpi/addEntityRule.php:35
-msgid "The entity rule has been edited successfully."
-msgstr "Enhetsregelen er redigert."
+#: modules/glpi/glpi/entityList.php:28
+msgid "Entity list"
+msgstr "Enhetsliste"
 
-#: modules/glpi/glpi/addEntityRule.php:59 modules/glpi/infoPackage.inc.php:165
-msgid "Add entity rule"
-msgstr "Legg til Enhetsregel"
+#: modules/glpi/glpi/entityList.php:36
+msgid "All entities"
+msgstr "Alle enheter"
 
-#: modules/glpi/glpi/addEntityRule.php:67
-msgid "Active"
-msgstr "Aktive"
+#: modules/glpi/glpi/locationList.php:28
+msgid "Location list"
+msgstr "Lokasjonsliste"
 
-#: modules/glpi/glpi/addEntityRule.php:86
-msgid "Aggregator"
-msgstr "Aggregator"
-
-#: modules/glpi/glpi/addEntityRule.php:98
-msgid "IP Address"
-msgstr "IP Adresse"
-
-#: modules/glpi/glpi/addEntityRule.php:100
-#: modules/glpi/glpi/ajaxViewPart.php:264
-msgid "Domain"
-msgstr "Domene"
-
-#: modules/glpi/glpi/addEntityRule.php:101
-msgid "Computer serial"
-msgstr "Datamaskinens serienummer"
-
-#: modules/glpi/glpi/addEntityRule.php:103
-msgid "Inventory Tag"
-msgstr "Inventaretikett"
-
-#: modules/glpi/glpi/addEntityRule.php:113
-msgid "equal to"
-msgstr "lik"
-
-#: modules/glpi/glpi/addEntityRule.php:114
-msgid "different from"
-msgstr "skiller seg fra"
-
-#: modules/glpi/glpi/addEntityRule.php:115
-msgid "contains"
-msgstr "inneholder"
-
-#: modules/glpi/glpi/addEntityRule.php:116
-msgid "does not contain"
-msgstr "inneholder ikke"
-
-#: modules/glpi/glpi/addEntityRule.php:117
-msgid "starts with"
-msgstr "starter med"
-
-#: modules/glpi/glpi/addEntityRule.php:118
-#: modules/glpi/glpi/addEntityRule.php:119
-msgid "finishes by"
-msgstr "slutter med"
-
-#: modules/glpi/glpi/addEntityRule.php:120
-msgid "matches (regex)"
-msgstr "matcher (regex)"
-
-#: modules/glpi/glpi/addEntityRule.php:121
-msgid "does not match (regex)"
-msgstr "matcher ikke (regex)"
-
-#: modules/glpi/glpi/addEntityRule.php:122
-msgid "exists"
-msgstr "eksisterer"
-
-#: modules/glpi/glpi/addEntityRule.php:123
-msgid "does not exist"
-msgstr "eksisterer ikke"
-
-#: modules/glpi/glpi/addEntityRule.php:149
-msgid "Criterion"
-msgstr "Kriteria"
-
-#: modules/glpi/glpi/addEntityRule.php:155
-msgid "Add criterion"
-msgstr "legg til kriteria"
-
-#: modules/glpi/glpi/addEntityRule.php:168
-#: modules/glpi/glpi/addEntityRule.php:190
-msgid "Do not assign"
-msgstr "Ikke tildel"
-
-#: modules/glpi/glpi/addEntityRule.php:180
-msgid "Target entity"
-msgstr "Målenhet"
-
-#: modules/glpi/glpi/addEntityRule.php:200
-msgid "Target location"
-msgstr "Mållokasjon"
+#: modules/glpi/glpi/locationList.php:36
+msgid "All locations"
+msgstr "Alle lokasjoner"
 
 #: modules/glpi/glpi/ajaxViewPart.php:85
 msgid " (Not an antivirus)"
@@ -837,6 +584,13 @@ msgstr "Ja"
 #: modules/glpi/glpi/ajaxViewPart.php:213
 msgid "No"
 msgstr "Nei"
+
+#: modules/glpi/glpi/ajaxViewPart.php:214
+#: modules/glpi/glpi/ajaxViewPart.php:231
+#: modules/glpi/glpi/addEntityRule.php:72 modules/glpi/glpi/addLocation.php:77
+#: modules/glpi/glpi/addEntity.php:78
+msgid "Name"
+msgstr "Navn"
 
 #: modules/glpi/glpi/ajaxViewPart.php:215
 msgid "Network Type"
@@ -943,6 +697,12 @@ msgstr "Båndbredde"
 msgid "Writer"
 msgstr "Writer"
 
+#: modules/glpi/glpi/ajaxViewPart.php:252
+#: modules/glpi/glpi/ajaxLocationList.php:68
+#: modules/glpi/glpi/ajaxEntityList.php:68
+msgid "Comment"
+msgstr "Kommentar"
+
 #: modules/glpi/glpi/ajaxViewPart.php:253
 msgid "Date"
 msgstr "Dato"
@@ -959,6 +719,22 @@ msgstr "Kategori"
 msgid "Action"
 msgstr "Handling"
 
+#: modules/glpi/glpi/ajaxViewPart.php:257 modules/glpi/includes/html.php:58
+msgid "Today"
+msgstr "I dag"
+
+#: modules/glpi/glpi/ajaxViewPart.php:258 modules/glpi/includes/html.php:59
+msgid "Last 7 days"
+msgstr "Siste 7 dager"
+
+#: modules/glpi/glpi/ajaxViewPart.php:259 modules/glpi/includes/html.php:60
+msgid "Last 30 days"
+msgstr "Siste 30 dager"
+
+#: modules/glpi/glpi/ajaxViewPart.php:260 modules/glpi/includes/html.php:61
+msgid "All"
+msgstr "Alle"
+
 #: modules/glpi/glpi/ajaxViewPart.php:261
 msgid "Service Pack"
 msgstr "Service Pakke"
@@ -966,6 +742,11 @@ msgstr "Service Pakke"
 #: modules/glpi/glpi/ajaxViewPart.php:263
 msgid "Windows Key"
 msgstr "Windows Nøkkel"
+
+#: modules/glpi/glpi/ajaxViewPart.php:264
+#: modules/glpi/glpi/addEntityRule.php:100
+msgid "Domain"
+msgstr "Domene"
 
 #: modules/glpi/glpi/ajaxViewPart.php:265
 msgid "State"
@@ -991,17 +772,179 @@ msgstr "Oppdatert"
 msgid "Invalid hostname"
 msgstr "Ugyldig vertsnavn"
 
-#: modules/glpi/glpi/ajaxEntityList.php:66
-msgid "Entity name"
-msgstr "Navn på enhet"
+#: modules/glpi/glpi/deleteEntityRule.php:31
+msgid "The entity rule has been deleted successfully."
+msgstr "Enhetsregelen er slettet."
 
-#: modules/glpi/glpi/ajaxEntityList.php:70 modules/glpi/glpi/addEntity.php:52
-msgid "Edit entity"
-msgstr "Rediger enhet"
+#: modules/glpi/glpi/deleteEntityRule.php:36
+msgid "Delete this rule?"
+msgstr "Slett denne regelen?"
+
+#: modules/glpi/glpi/addEntityRule.php:31
+msgid "The entity rule has been added successfully."
+msgstr "Enhetsregelen er lagt til."
+
+#: modules/glpi/glpi/addEntityRule.php:35
+msgid "The entity rule has been edited successfully."
+msgstr "Enhetsregelen er redigert."
+
+#: modules/glpi/glpi/addEntityRule.php:59 modules/glpi/infoPackage.inc.php:165
+msgid "Add entity rule"
+msgstr "Legg til Enhetsregel"
+
+#: modules/glpi/glpi/addEntityRule.php:67
+msgid "Active"
+msgstr "Aktive"
+
+#: modules/glpi/glpi/addEntityRule.php:86
+msgid "Aggregator"
+msgstr "Aggregator"
+
+#: modules/glpi/glpi/addEntityRule.php:98
+msgid "IP Address"
+msgstr "IP Adresse"
+
+#: modules/glpi/glpi/addEntityRule.php:101
+msgid "Computer serial"
+msgstr "Datamaskinens serienummer"
+
+#: modules/glpi/glpi/addEntityRule.php:103
+msgid "Inventory Tag"
+msgstr "Inventaretikett"
+
+#: modules/glpi/glpi/addEntityRule.php:113
+msgid "equal to"
+msgstr "lik"
+
+#: modules/glpi/glpi/addEntityRule.php:114
+msgid "different from"
+msgstr "skiller seg fra"
+
+#: modules/glpi/glpi/addEntityRule.php:115
+msgid "contains"
+msgstr "inneholder"
+
+#: modules/glpi/glpi/addEntityRule.php:116
+msgid "does not contain"
+msgstr "inneholder ikke"
+
+#: modules/glpi/glpi/addEntityRule.php:117
+msgid "starts with"
+msgstr "starter med"
+
+#: modules/glpi/glpi/addEntityRule.php:118
+#: modules/glpi/glpi/addEntityRule.php:119
+msgid "finishes by"
+msgstr "slutter med"
+
+#: modules/glpi/glpi/addEntityRule.php:120
+msgid "matches (regex)"
+msgstr "matcher (regex)"
+
+#: modules/glpi/glpi/addEntityRule.php:121
+msgid "does not match (regex)"
+msgstr "matcher ikke (regex)"
+
+#: modules/glpi/glpi/addEntityRule.php:122
+msgid "exists"
+msgstr "eksisterer"
+
+#: modules/glpi/glpi/addEntityRule.php:123
+msgid "does not exist"
+msgstr "eksisterer ikke"
+
+#: modules/glpi/glpi/addEntityRule.php:138
+#: modules/glpi/includes/publicFunc.php:142
+msgid "Remove"
+msgstr "Fjern"
+
+#: modules/glpi/glpi/addEntityRule.php:149
+msgid "Criterion"
+msgstr "Kriteria"
+
+#: modules/glpi/glpi/addEntityRule.php:155
+msgid "Add criterion"
+msgstr "legg til kriteria"
+
+#: modules/glpi/glpi/addEntityRule.php:168
+#: modules/glpi/glpi/addEntityRule.php:190
+msgid "Do not assign"
+msgstr "Ikke tildel"
+
+#: modules/glpi/glpi/addEntityRule.php:180
+msgid "Target entity"
+msgstr "Målenhet"
+
+#: modules/glpi/glpi/addEntityRule.php:200
+msgid "Target location"
+msgstr "Mållokasjon"
+
+#: modules/glpi/glpi/ajaxLocationList.php:51
+#: modules/glpi/glpi/ajaxEntityList.php:51
+#: modules/glpi/glpi/ajaxEntityRules.php:51
+msgid "No entry found"
+msgstr "Ingen oppføring funnet"
+
+#: modules/glpi/glpi/ajaxLocationList.php:66
+msgid "Location name"
+msgstr "Lokasjonsnavn"
+
+#: modules/glpi/glpi/ajaxLocationList.php:70
+#: modules/glpi/glpi/addLocation.php:52
+msgid "Edit location"
+msgstr "Rediger plassering"
+
+#: modules/glpi/glpi/addLocation.php:34
+msgid "The location has been added successfully."
+msgstr "Plasseringen er lagt til."
+
+#: modules/glpi/glpi/addLocation.php:38
+msgid "The location has been edited successfully."
+msgstr "Plasseringen er redigert."
+
+#: modules/glpi/glpi/addLocation.php:43
+msgid "Add location"
+msgstr "Legg til plassering"
+
+#: modules/glpi/glpi/addLocation.php:96
+msgid "Parent location"
+msgstr "Overordnet plassering"
+
+#: modules/glpi/glpi/machinesListglpi.php:29
+#, php-format
+msgid "Machines List view %s"
+msgstr ""
+
+#: modules/glpi/glpi/createOSStaticGroup.php:40
+#, php-format
+msgid "Machine with %s %s installed at %s"
+msgstr "Maskine med  %s %s er installert på %s"
+
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:76
+msgid "Inventory"
+msgstr "Inventar"
+
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:78
+msgid "View deployment details"
+msgstr ""
+
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:97
+msgid "Show Profile"
+msgstr "Vis profil"
 
 #: modules/glpi/glpi/createMachinesStaticGroupdeploy.php:31
 msgid "Machines "
 msgstr "Maskiner"
+
+#: modules/glpi/glpi/createMachinesStaticGroup.php:61
+#, php-format
+msgid "Machines online at %s"
+msgstr "Maskiner er online på%s"
+
+#: modules/glpi/glpi/createMachinesStaticGroup.php:66
+#, php-format
+msgid "Machines offline at %s"
+msgstr "Maskiner er offline på %s"
 
 #: modules/glpi/glpi/addEntity.php:34
 msgid "The entity has been added successfully."
@@ -1016,48 +959,107 @@ msgstr "Enheten er redigert."
 msgid "Add entity"
 msgstr "Legg til enhet"
 
+#: modules/glpi/glpi/addEntity.php:52 modules/glpi/glpi/ajaxEntityList.php:70
+msgid "Edit entity"
+msgstr "Rediger enhet"
+
 #: modules/glpi/glpi/addEntity.php:95
 msgid "Parent entity"
 msgstr "Overordnet enhet"
 
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:76
-msgid "Inventory"
-msgstr "Inventar"
+#: modules/glpi/glpi/ajaxEntityList.php:66
+msgid "Entity name"
+msgstr "Navn på enhet"
 
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:78
-msgid "View deployment details"
-msgstr ""
+#: modules/glpi/glpi/ajaxEntityRules.php:66
+msgid "Rule name"
+msgstr "Regelnavn"
 
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:97
-msgid "Show Profile"
-msgstr "Vis profil"
+#: modules/glpi/glpi/ajaxEntityRules.php:69
+msgid "Edit rule"
+msgstr "Rediger regel"
 
-#: modules/glpi/glpi/entityRules.php:28 modules/glpi/infoPackage.inc.php:156
-msgid "Entity rules"
-msgstr "Enhetsregler"
+#: modules/glpi/glpi/ajaxEntityRules.php:70
+msgid "Move rule up"
+msgstr "Flytt regel opp"
 
-#: modules/glpi/glpi/entityRules.php:36
-msgid "All rules"
-msgstr "Alle regler"
+#: modules/glpi/glpi/ajaxEntityRules.php:71
+msgid "Move rule down"
+msgstr "Flytt regel ned"
 
-#: modules/glpi/glpi/createStaticGroup.php:31
-#, php-format
-msgid "Latest inventory is less than %s days at %s"
-msgstr "Siste inventeringsdato er yngre enn %s dager på %s"
+#: modules/glpi/glpi/ajaxEntityRules.php:72
+msgid "Delete rule"
+msgstr "Slett regel"
 
-#: modules/glpi/glpi/createStaticGroup.php:34
-#, php-format
-msgid "Latest inventory is more than %s days at %s"
-msgstr "Siste inventeringsdato er eldre enn %s dager på  %s"
+#: modules/glpi/includes/panels/inventory.inc.php:31
+msgid "Inventories"
+msgstr "Inventarier"
 
-#: modules/glpi/glpi/createStaticGroup.php:44
-#, php-format
-msgid ""
-"Computers list has been truncated at %d computers. Use the filter to find "
-"specific machines."
-msgstr ""
-"Datamaskinlisten er avkortet ved %ddatamaskiner. Bruk filteret til å finne "
-"spesifikke maskiner."
+#: modules/glpi/includes/panels/inventory.inc.php:47
+#: modules/glpi/includes/panels/antivirus.inc.php:45
+msgid "Create a group"
+msgstr "Lag gruppe"
+
+#: modules/glpi/includes/panels/inventory.inc.php:48
+msgid "< %s days: %percent% (%d)"
+msgstr "< %s dager: %prosent% (%d)"
+
+#: modules/glpi/includes/panels/inventory.inc.php:49
+msgid "> %s days: %percent% (%d)"
+msgstr "> %s dager: %prosent% (%d)"
+
+#: modules/glpi/includes/panels/inventory.inc.php:50
+msgid "Uninventoried machines"
+msgstr "Uinnventerte maskiner"
+
+#: modules/glpi/includes/panels/antivirus.inc.php:41
+#: modules/glpi/includes/panels/os_repartition.inc.php:44
+msgid "Uninventoried Machines"
+msgstr "Maskiner som ikke er i inventaret"
+
+#: modules/glpi/includes/panels/antivirus.inc.php:46
+msgid "OK: %percent% (%d)"
+msgstr "OK: %prosent% (%d)"
+
+#: modules/glpi/includes/panels/antivirus.inc.php:47
+msgid "Not running or not up-to-date: %percent% (%d)"
+msgstr "Kjører ikke eller er ikke oppdatert: %prosent% (%d)"
+
+#: modules/glpi/includes/panels/antivirus.inc.php:48
+msgid "No antivirus found: %percent% (%d)"
+msgstr "Ingen antivirus funnet: %prosent% (%d)"
+
+#: modules/glpi/includes/panels/os_repartition.inc.php:36
+msgid "Operating systems"
+msgstr "Operativ system"
+
+#: modules/glpi/includes/html.php:50 modules/glpi/includes/html.php:421
+msgid "Hide Windows Updates"
+msgstr "Skjul Windows-oppdateringer"
+
+#: modules/glpi/includes/html.php:268 modules/glpi/includes/html.php:485
+msgid "Search"
+msgstr "Søk"
+
+#: modules/glpi/includes/publicFunc.php:86
+msgid "Entity attributes"
+msgstr "Enhetsattributter"
+
+#: modules/glpi/includes/publicFunc.php:130
+msgid "Dynamic"
+msgstr "Dynamisk"
+
+#: modules/glpi/includes/publicFunc.php:130
+msgid "Static"
+msgstr "Statisk"
+
+#: modules/glpi/includes/publicFunc.php:154
+msgid "Entity right"
+msgstr "Enhetsrettigheter"
+
+#: modules/glpi/includes/publicFunc.php:160
+msgid "Add entity right"
+msgstr "Legg til Enhetsrettigheter"
 
 #: modules/glpi/infoPackage.inc.php:41
 msgid "Glpi"

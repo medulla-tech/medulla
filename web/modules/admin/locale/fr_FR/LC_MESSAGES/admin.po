@@ -1,0 +1,533 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+# Translators:
+# Nicolas Lécureuil <neoclust@mageia.org>, 2025
+# SPO, 2025
+# 
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-06-19 20:41+0200\n"
+"PO-Revision-Date: 2025-07-30 09:10+0000\n"
+"Last-Translator: SPO, 2025\n"
+"Language-Team: French (https://app.transifex.com/medulla/teams/72118/fr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: fr_FR\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#: modules/admin/admin/qaresult.php:29
+msgid "Relay Quick Result Action"
+msgstr "Résultat des actions rapides"
+
+#: modules/admin/admin/deleteCluster.php:17
+msgid "Delete "
+msgstr "Supprimer"
+
+#: modules/admin/admin/rules.php:36 modules/admin/admin/rules_tabs.php:41
+#: modules/admin/infoPackage.inc.php:115
+msgid "Rules List"
+msgstr "Liste des règles"
+
+#: modules/admin/admin/qalaunched.php:47
+msgid "Relay Quick Leunched Action"
+msgstr "Action rapide lancée"
+
+#: modules/admin/admin/qalaunched.php:74
+#: modules/admin/admin/ajaxRelaysList.php:65
+msgid "QA Launched"
+msgstr "QA lancées"
+
+#: modules/admin/admin/editCluster.php:62
+#: modules/admin/admin/ajaxRelaysList.php:158
+#: modules/admin/admin/newCluster.php:58
+msgid "Cluster Name"
+msgstr "Nom du cluster"
+
+#: modules/admin/admin/editCluster.php:63
+#: modules/admin/admin/ajaxRelaysList.php:159
+#: modules/admin/admin/newCluster.php:59
+msgid "Cluster Description"
+msgstr "Description du cluster"
+
+#: modules/admin/admin/editCluster.php:81
+#: modules/admin/admin/newCluster.php:72
+msgid "Cluster List"
+msgstr "Liste des clusters"
+
+#: modules/admin/admin/editCluster.php:83
+#: modules/admin/admin/newCluster.php:74
+msgid "Relays <b>outside</b> the cluster"
+msgstr "Relais <b>en dehors</b> du cluster"
+
+#: modules/admin/admin/editCluster.php:89
+#: modules/admin/admin/newCluster.php:80
+msgid "Relays <b>inside</b> the cluster"
+msgstr "Relais <b>à l'intérieur</b> du cluster"
+
+#: modules/admin/admin/editCluster.php:104
+#: modules/admin/admin/editRelayRule.php:116
+#: modules/admin/admin/newRelayRule.php:107
+#: modules/admin/admin/newCluster.php:91
+msgid "Edit"
+msgstr "Édition"
+
+#: modules/admin/admin/relaysList.php:45
+msgid "The unban command has been sent to "
+msgstr "La commande de débannissement a été envoyée à"
+
+#: modules/admin/admin/relaysList.php:56
+msgid "The ban command has been sent to "
+msgstr "La commande de bannissement a été envoyée à"
+
+#: modules/admin/admin/relaysList.php:60
+msgid "XMPP Relays list"
+msgstr "Liste des relais XMPP"
+
+#: modules/admin/admin/switchrelay.php:25
+msgid ""
+"You have to check the box <b>\"I am aware that this disable/enable a relay "
+"forcing a <em><b>reconfiguration of all the machines</b></em> managed by the"
+" cluster."
+msgstr ""
+"Veuillez cocher la case <b>\"Je suis conscient que cette "
+"désactivation/activation du relais va forcer une <em><b>reconfiguration de "
+"toutes les machines</b></em> gérées pas le cluster."
+
+#: modules/admin/admin/switchrelay.php:32
+msgid "The relay "
+msgstr "Le relais"
+
+#: modules/admin/admin/switchrelay.php:39
+msgid "Switch Off the relay"
+msgstr "Eteindre le relais"
+
+#: modules/admin/admin/switchrelay.php:39
+msgid "Switch On the relay"
+msgstr "Allumer le relais"
+
+#: modules/admin/admin/switchrelay.php:51
+msgid ""
+"I am aware that this disable/enable a relay forcing a <em><b>reconfiguration"
+" of all the machines</b></em> managed by the cluster.<br />Check this box if"
+" it is what you want."
+msgstr ""
+"Je suis conscient que cette désactivation/activation du relais va forcer une"
+" <em><b>reconfiguration de toutes les machines</b></em> gérées pas le "
+"cluster.<br />Cochez cette case si c'est bien ce que vous souhaitez."
+
+#: modules/admin/admin/ban.php:31
+msgid "Ban machines on relay"
+msgstr "Bannir les machines du relais"
+
+#: modules/admin/admin/editRelayRule.php:41
+msgid "Rule edited to relay "
+msgstr "Règle éditée"
+
+#: modules/admin/admin/editRelayRule.php:44
+msgid "The rule has not been edited to relay "
+msgstr "La règle n'a pas été éditée"
+
+#: modules/admin/admin/editRelayRule.php:91
+#: modules/admin/admin/ajaxRelayRules.php:74
+#: modules/admin/admin/ajaxRelayRules.php:93
+#: modules/admin/admin/newRelayRule.php:83
+#: modules/admin/admin/ajaxRules.php:99 modules/admin/admin/ajaxRules.php:122
+msgid "Rule"
+msgstr "Règle"
+
+#: modules/admin/admin/editRelayRule.php:99
+#: modules/admin/admin/newRelayRule.php:92
+msgid "Relays"
+msgstr "Relais"
+
+#: modules/admin/admin/editRelayRule.php:112
+#: modules/admin/admin/ajaxRelayRules.php:78
+#: modules/admin/admin/newRelayRule.php:103
+#: modules/admin/admin/ajaxRulesDetail.php:60
+msgid "Subject"
+msgstr "Sujet"
+
+#: modules/admin/admin/editRelayRule.php:113
+#: modules/admin/admin/newRelayRule.php:104
+msgid "Check regex"
+msgstr "Vérifier regex"
+
+#: modules/admin/admin/editRelayRule.php:114
+#: modules/admin/admin/newRelayRule.php:105
+msgid "Matching Result"
+msgstr "Résultat correspondant"
+
+#: modules/admin/admin/deleteRelayRule.php:28
+msgid "Rule deleted"
+msgstr "Règle supprimée"
+
+#: modules/admin/admin/deleteRelayRule.php:32
+msgid "Error during rule deletion"
+msgstr "Echec de suppression de règle"
+
+#: modules/admin/admin/ajaxClustersList.php:34
+#: modules/admin/infoPackage.inc.php:145
+msgid "Edit Cluster"
+msgstr "Édition d'un cluster"
+
+#: modules/admin/admin/ajaxClustersList.php:35
+msgid "Delete Cluster"
+msgstr "Supprimer le cluster"
+
+#: modules/admin/admin/ajaxClustersList.php:66
+msgid "Clusters"
+msgstr "Clusters"
+
+#: modules/admin/admin/ajaxClustersList.php:70
+#: modules/admin/admin/ajaxpackageslist.php:78
+#: modules/admin/admin/ajaxqalaunched.php:54
+#: modules/admin/admin/ajaxqalaunched.php:55
+#: modules/admin/admin/ajaxRelayRules.php:94
+#: modules/admin/admin/ajaxRules.php:102 modules/admin/admin/ajaxRules.php:123
+msgid "Description"
+msgstr "Description"
+
+#: modules/admin/admin/ajaxClustersList.php:71
+msgid "Associated relays"
+msgstr "Relais associés"
+
+#: modules/admin/admin/ajaxunban.php:62 modules/admin/admin/ajaxunban.php:87
+#: modules/admin/admin/ajaxban.php:62 modules/admin/admin/ajaxban.php:87
+msgid "Selection"
+msgstr "Sélection"
+
+#: modules/admin/admin/ajaxunban.php:65 modules/admin/admin/ajaxunban.php:88
+#: modules/admin/admin/ajaxban.php:65 modules/admin/admin/ajaxban.php:88
+msgid "Name"
+msgstr "Nom"
+
+#: modules/admin/admin/ajaxunban.php:80 modules/admin/infoPackage.inc.php:179
+#: modules/admin/infoPackage.inc.php:184
+msgid "Unban Machines"
+msgstr "Débannir les machines"
+
+#: modules/admin/admin/reconfiguremachines.php:25
+msgid ""
+"You have to check the box <b>\"I am aware that this action is forcing a "
+"<em><b>reconfiguration of all the machines</b></em> managed by the "
+"relayserver."
+msgstr ""
+"Veuillez cocher la case <b>\"Je suis conscient que cette action va forcer "
+"une <em><b>reconfiguration de toutes les machines</b></em> gérées pas le "
+"serveur relais."
+
+#: modules/admin/admin/reconfiguremachines.php:32
+msgid "The machines of the relay "
+msgstr "Les machines du relais"
+
+#: modules/admin/admin/reconfiguremachines.php:39
+msgid "Reconfigure all the machines of the relay"
+msgstr "Reconfigurer toutes les machines du relais"
+
+#: modules/admin/admin/reconfiguremachines.php:51
+msgid ""
+"I am aware that this action is forcing a <em><b>reconfiguration of all the "
+"machines</b></em> managed by the relayserver.<br />Check this box if it is "
+"what you want."
+msgstr ""
+"Je suis conscient que cette action va forcer une <em><b>reconfiguration de "
+"toutes les machines</b></em> gérées pas le serveur relais.<br />Cochez cette"
+" case si c'est bien ce que vous souhaitez."
+
+#: modules/admin/admin/clustersList.php:28
+msgid "Clusters list"
+msgstr "Liste des clusters"
+
+#: modules/admin/admin/ajaxpackageslist.php:77
+msgid "Package name"
+msgstr "Nom du package"
+
+#: modules/admin/admin/ajaxpackageslist.php:79
+msgid "Version"
+msgstr "Version"
+
+#: modules/admin/admin/ajaxpackageslist.php:80
+msgid "Licenses"
+msgstr "Licences"
+
+#: modules/admin/admin/ajaxpackageslist.php:81
+msgid "Os"
+msgstr "OS"
+
+#: modules/admin/admin/ajaxpackageslist.php:82
+msgid "Package size"
+msgstr "Taille du package"
+
+#: modules/admin/admin/ajaxpackageslist.php:83
+msgid "Transfer Method"
+msgstr "Méthode de transfert"
+
+#: modules/admin/admin/ajaxqalaunched.php:35
+msgid "Show Result"
+msgstr "Afficher le résultat"
+
+#: modules/admin/admin/ajaxqalaunched.php:53
+msgid "Quick Action"
+msgstr "Action rapide"
+
+#: modules/admin/admin/unban.php:33
+msgid "Unban machines on relay"
+msgstr "Débannir les machines du relais"
+
+#: modules/admin/admin/moveRelayRule.php:37
+msgid " on relay "
+msgstr "sur le relais"
+
+#: modules/admin/admin/moveRelayRule.php:41
+msgid "Error during the rule move"
+msgstr "Echec de déplacement de règle"
+
+#: modules/admin/admin/moveRelayRule.php:45
+msgid "Can't move the rule"
+msgstr "Impossible de déplacer la règle"
+
+#: modules/admin/admin/rules_tabs.php:42 modules/admin/admin/ajaxRules.php:59
+msgid "New Rule"
+msgstr "Nouvelle règle"
+
+#: modules/admin/admin/rules_tabs.php:48
+msgid "for Relay ["
+msgstr "pour le relais ["
+
+#: modules/admin/admin/ajaxRelayRules.php:39
+msgid "Edit Rule"
+msgstr "Editer la règle"
+
+#: modules/admin/admin/ajaxRelayRules.php:40
+#: modules/admin/admin/ajaxRulesDetail.php:33
+#: modules/admin/admin/ajaxRules.php:56
+msgid "Raise Rule"
+msgstr "Remonter la règle"
+
+#: modules/admin/admin/ajaxRelayRules.php:41
+#: modules/admin/admin/ajaxRulesDetail.php:34
+#: modules/admin/admin/ajaxRules.php:57
+msgid "Lower Rule"
+msgstr "Redescendre la règle"
+
+#: modules/admin/admin/ajaxRelayRules.php:42
+#: modules/admin/admin/ajaxRulesDetail.php:35
+msgid "Delete Rule"
+msgstr "Supprimer la rgle"
+
+#: modules/admin/admin/ajaxRelayRules.php:77
+#: modules/admin/admin/ajaxRulesDetail.php:59
+msgid "Order"
+msgstr "Ordre"
+
+#: modules/admin/admin/ajaxRelayRules.php:95
+#: modules/admin/admin/ajaxRules.php:103 modules/admin/admin/ajaxRules.php:124
+msgid "Level"
+msgstr "Niveau"
+
+#: modules/admin/admin/newRelayRule.php:40
+msgid "Rule added to relay "
+msgstr "Règle ajoutée"
+
+#: modules/admin/admin/newRelayRule.php:43
+msgid "The rule has not been added to relay "
+msgstr "La règle n'a pas été ajoutée"
+
+#: modules/admin/admin/ajaxRelaysList.php:46
+#: modules/admin/admin/ajaxRelaysList.php:48
+#: modules/admin/infoPackage.inc.php:65
+msgid "Edit config files"
+msgstr "Éditer les fichiers de configuration"
+
+#: modules/admin/admin/ajaxRelaysList.php:50
+#: modules/admin/admin/ajaxRelaysList.php:51
+msgid "Relay Detail"
+msgstr "Infos relais"
+
+#: modules/admin/admin/ajaxRelaysList.php:53
+#: modules/admin/admin/ajaxRelaysList.php:54
+msgid "Detail actions"
+msgstr "Actions"
+
+#: modules/admin/admin/ajaxRelaysList.php:56
+#: modules/admin/admin/ajaxRelaysList.php:57
+msgid "Console Relay"
+msgstr "Console XMPP"
+
+#: modules/admin/admin/ajaxRelaysList.php:58
+#: modules/admin/admin/ajaxRelaysList.php:59
+#: modules/admin/admin/ajaxRelaysList.php:60
+msgid "Switch"
+msgstr "Switch"
+
+#: modules/admin/admin/ajaxRelaysList.php:62
+#: modules/admin/admin/ajaxRelaysList.php:63
+#: modules/admin/infoPackage.inc.php:55
+msgid "Reconfigure Machines"
+msgstr "Reconfigurer les machines"
+
+#: modules/admin/admin/ajaxRelaysList.php:67
+#: modules/admin/admin/ajaxRelaysList.php:68
+msgid "Remote control"
+msgstr "Prise en main à distance"
+
+#: modules/admin/admin/ajaxRelaysList.php:70
+#: modules/admin/admin/ajaxRelaysList.php:71
+#: modules/admin/infoPackage.inc.php:46 modules/admin/infoPackage.inc.php:50
+msgid "Packages List"
+msgstr "Liste de packages"
+
+#: modules/admin/admin/ajaxRelaysList.php:73
+#: modules/admin/infoPackage.inc.php:92 modules/admin/infoPackage.inc.php:97
+#: modules/admin/infoPackage.inc.php:110
+msgid "Relay Rules"
+msgstr "Règles des relais"
+
+#: modules/admin/admin/ajaxRelaysList.php:75
+#: modules/admin/admin/ajaxRelaysList.php:76
+msgid "Ban"
+msgstr "Bannir"
+
+#: modules/admin/admin/ajaxRelaysList.php:78
+#: modules/admin/admin/ajaxRelaysList.php:79
+msgid "Unban"
+msgstr "Débannir"
+
+#: modules/admin/admin/ajaxRelaysList.php:153
+msgid "Relays Xmpp"
+msgstr "Relais XMPP"
+
+#: modules/admin/admin/ajaxRelaysList.php:157
+msgid "Jid"
+msgstr "JID"
+
+#: modules/admin/admin/ajaxRelaysList.php:160
+msgid "Total Machines"
+msgstr "Nb de machines total"
+
+#: modules/admin/admin/ajaxRelaysList.php:161
+msgid "Uninventoried Online"
+msgstr "Non-inventoriées en ligne"
+
+#: modules/admin/admin/ajaxRelaysList.php:162
+msgid "Class Util"
+msgstr "Classe"
+
+#: modules/admin/admin/ajaxRelaysList.php:163
+msgid "Mac Address"
+msgstr "Adresse MAC"
+
+#: modules/admin/admin/ajaxRelaysList.php:164
+msgid "Xmpp IP"
+msgstr "IP XMPP"
+
+#: modules/admin/admin/ajaxRulesDetail.php:32
+msgid "Edit rule"
+msgstr "Editer la règle"
+
+#: modules/admin/admin/ajaxRulesDetail.php:56
+msgid "Relay Server"
+msgstr "Serveur relais"
+
+#: modules/admin/admin/ajaxRules.php:39 modules/admin/admin/moveRule.php:35
+msgid "The rule "
+msgstr "La règle"
+
+#: modules/admin/admin/ajaxRules.php:46
+msgid "Unknown action"
+msgstr "Action inconnue"
+
+#: modules/admin/admin/ajaxRules.php:58
+msgid "Rule Detail"
+msgstr "Infos règle"
+
+#: modules/admin/admin/ajaxRules.php:104
+msgid "Associated rules"
+msgstr "Règles associés"
+
+#: modules/admin/admin/localSidebar.php:25
+msgid "List of Relays"
+msgstr "Liste des relais"
+
+#: modules/admin/admin/localSidebar.php:27
+#: modules/admin/infoPackage.inc.php:136 modules/admin/infoPackage.inc.php:140
+msgid "Clusters List"
+msgstr "Liste des clusters"
+
+#: modules/admin/admin/localSidebar.php:28
+#: modules/admin/admin/newCluster.php:50 modules/admin/infoPackage.inc.php:153
+msgid "New Cluster"
+msgstr "Nouveau cluster"
+
+#: modules/admin/admin/localSidebar.php:30
+#: modules/admin/infoPackage.inc.php:119
+msgid "Rules"
+msgstr "Règles"
+
+#: modules/admin/admin/ajaxban.php:80 modules/admin/infoPackage.inc.php:169
+#: modules/admin/infoPackage.inc.php:174
+msgid "Ban Machines"
+msgstr "Bannir les machines"
+
+#: modules/admin/admin/detailactions.php:28
+msgid "Detail Actions"
+msgstr "Actions"
+
+#: modules/admin/infoPackage.inc.php:26 modules/admin/infoPackage.inc.php:31
+msgid "Admin"
+msgstr "Admin"
+
+#: modules/admin/infoPackage.inc.php:37 modules/admin/infoPackage.inc.php:41
+msgid "Relays List"
+msgstr "Liste de relais XMPP"
+
+#: modules/admin/infoPackage.inc.php:60
+msgid "Switch Relay"
+msgstr "Switcher le relais"
+
+#: modules/admin/infoPackage.inc.php:70
+msgid "Launch Quick Action on Relays"
+msgstr "Lancer une action rapide sur les relais"
+
+#: modules/admin/infoPackage.inc.php:75 modules/admin/infoPackage.inc.php:80
+msgid "Qa launched on Relays"
+msgstr "QA lancées sur les relais"
+
+#: modules/admin/infoPackage.inc.php:86
+msgid "Qa result on Relays"
+msgstr "Résultat de QA des relais"
+
+#: modules/admin/infoPackage.inc.php:101 modules/admin/infoPackage.inc.php:105
+msgid "New Relay Rule"
+msgstr "Nouvelle règle de relais"
+
+#: modules/admin/infoPackage.inc.php:124 modules/admin/infoPackage.inc.php:128
+msgid "Rules Detail"
+msgstr "Infos règles"
+
+#: modules/admin/infoPackage.inc.php:132
+msgid "Move Rule"
+msgstr "Déplacer la règle"
+
+#: modules/admin/infoPackage.inc.php:149
+msgid "Delete a Cluster"
+msgstr "Supprimer un cluster"
+
+#: modules/admin/infoPackage.inc.php:157
+msgid "Delete Relay Rules"
+msgstr "Supprimer des règles de relais"
+
+#: modules/admin/infoPackage.inc.php:161
+msgid "Edit Relay Rule"
+msgstr "Éditer une règle de relais"
+
+#: modules/admin/infoPackage.inc.php:165
+msgid "Move Relay Rule"
+msgstr "Déplacer la règle de relais"

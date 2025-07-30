@@ -11,419 +11,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 23:50+0100\n"
+"POT-Creation-Date: 2025-07-30 15:09+0200\n"
 "PO-Revision-Date: 2017-09-12 13:51+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2021\n"
-"Language-Team: Chinese (Taiwan) (https://app.transifex.com/siveo/teams/72118/zh_TW/)\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/medulla/teams/72118/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-
-#: modules/glpi/includes/html.php:50 modules/glpi/includes/html.php:421
-msgid "Hide Windows Updates"
-msgstr " Windows "
-
-#: modules/glpi/includes/html.php:58 modules/glpi/glpi/ajaxViewPart.php:257
-msgid "Today"
-msgstr "今天"
-
-#: modules/glpi/includes/html.php:59 modules/glpi/glpi/ajaxViewPart.php:258
-msgid "Last 7 days"
-msgstr " 7 "
-
-#: modules/glpi/includes/html.php:60 modules/glpi/glpi/ajaxViewPart.php:259
-msgid "Last 30 days"
-msgstr " 30 "
-
-#: modules/glpi/includes/html.php:61 modules/glpi/glpi/ajaxViewPart.php:260
-msgid "All"
-msgstr "全部"
-
-#: modules/glpi/includes/html.php:268 modules/glpi/includes/html.php:485
-msgid "Search"
-msgstr "搜尋"
-
-#: modules/glpi/includes/panels/os_repartition.inc.php:36
-msgid "Operating systems"
-msgstr "作業系統"
-
-#: modules/glpi/includes/panels/os_repartition.inc.php:44
-#: modules/glpi/includes/panels/antivirus.inc.php:41
-msgid "Uninventoried Machines"
-msgstr ""
-
-#: modules/glpi/includes/panels/inventory.inc.php:31
-msgid "Inventories"
-msgstr ""
-
-#: modules/glpi/includes/panels/inventory.inc.php:47
-#: modules/glpi/includes/panels/antivirus.inc.php:45
-msgid "Create a group"
-msgstr "建立一個群組"
-
-#: modules/glpi/includes/panels/inventory.inc.php:48
-msgid "< %s days: %percent% (%d)"
-msgstr "< %s %percent% (%d)"
-
-#: modules/glpi/includes/panels/inventory.inc.php:49
-msgid "> %s days: %percent% (%d)"
-msgstr "> %s %percent% (%d)"
-
-#: modules/glpi/includes/panels/inventory.inc.php:50
-msgid "Uninventoried machines"
-msgstr ""
-
-#: modules/glpi/includes/panels/antivirus.inc.php:32
-#: modules/glpi/glpi/tabs.php:93
-msgid "Antivirus"
-msgstr "防病毒程式"
-
-#: modules/glpi/includes/panels/antivirus.inc.php:46
-msgid "OK: %percent% (%d)"
-msgstr "%percent% (%d)"
-
-#: modules/glpi/includes/panels/antivirus.inc.php:47
-msgid "Not running or not up-to-date: %percent% (%d)"
-msgstr " %percent% (%d)"
-
-#: modules/glpi/includes/panels/antivirus.inc.php:48
-msgid "No antivirus found: %percent% (%d)"
-msgstr " %percent% (%d)"
-
-#: modules/glpi/includes/publicFunc.php:86
-msgid "Entity attributes"
-msgstr ""
-
-#: modules/glpi/includes/publicFunc.php:130
-msgid "Dynamic"
-msgstr ""
-
-#: modules/glpi/includes/publicFunc.php:130
-msgid "Static"
-msgstr ""
-
-#: modules/glpi/includes/publicFunc.php:142
-#: modules/glpi/glpi/addEntityRule.php:138
-msgid "Remove"
-msgstr "移除"
-
-#: modules/glpi/includes/publicFunc.php:154
-msgid "Entity right"
-msgstr ""
-
-#: modules/glpi/includes/publicFunc.php:160
-msgid "Add entity right"
-msgstr ""
-
-#: modules/glpi/glpi/addLocation.php:34
-msgid "The location has been added successfully."
-msgstr ""
-
-#: modules/glpi/glpi/addLocation.php:38
-msgid "The location has been edited successfully."
-msgstr ""
-
-#: modules/glpi/glpi/addLocation.php:43
-msgid "Add location"
-msgstr ""
-
-#: modules/glpi/glpi/addLocation.php:52
-#: modules/glpi/glpi/ajaxLocationList.php:70
-msgid "Edit location"
-msgstr ""
-
-#: modules/glpi/glpi/addLocation.php:77 modules/glpi/glpi/addEntityRule.php:72
-#: modules/glpi/glpi/ajaxViewPart.php:214
-#: modules/glpi/glpi/ajaxViewPart.php:231 modules/glpi/glpi/addEntity.php:78
-msgid "Name"
-msgstr "名稱"
-
-#: modules/glpi/glpi/addLocation.php:96
-msgid "Parent location"
-msgstr ""
-
-#: modules/glpi/glpi/addLocation.php:101
-#: modules/glpi/glpi/ajaxMachinesList.php:406
-#: modules/glpi/glpi/addEntityRule.php:77
-#: modules/glpi/glpi/ajaxViewPart.php:234 modules/glpi/glpi/addEntity.php:100
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:248
-msgid "Description"
-msgstr "說明"
-
-#: modules/glpi/glpi/createAntivirusStaticGroup.php:31
-#, php-format
-msgid "Antivirus status is OK at %s"
-msgstr " %s "
-
-#: modules/glpi/glpi/createAntivirusStaticGroup.php:34
-#, php-format
-msgid "Antivirus is not running or not up-to-date at %s"
-msgstr " %s "
-
-#: modules/glpi/glpi/createAntivirusStaticGroup.php:37
-#, php-format
-msgid "No antivirus found at %s"
-msgstr " %s "
-
-#: modules/glpi/glpi/createAntivirusStaticGroup.php:47
-#: modules/glpi/glpi/createBackupStaticGroup.php:69
-#: modules/glpi/glpi/createMachinesStaticGroup.php:75
-#: modules/glpi/glpi/createOSStaticGroup.php:54
-#, php-format
-msgid "Computers list has been truncated at %d computers"
-msgstr " %d "
-
-#: modules/glpi/glpi/deleteEntityRule.php:31
-msgid "The entity rule has been deleted successfully."
-msgstr ""
-
-#: modules/glpi/glpi/deleteEntityRule.php:36
-msgid "Delete this rule?"
-msgstr ""
-
-#: modules/glpi/glpi/entityList.php:28
-msgid "Entity list"
-msgstr ""
-
-#: modules/glpi/glpi/entityList.php:36
-msgid "All entities"
-msgstr ""
-
-#: modules/glpi/glpi/machinesList.php:28
-msgid "Machines List view xmpp"
-msgstr ""
-
-#: modules/glpi/glpi/machinesList.php:39
-#: modules/glpi/glpi/machinesListglpi.php:40
-msgid "All computers"
-msgstr "所有電腦"
-
-#: modules/glpi/glpi/machinesList.php:43
-#: modules/glpi/glpi/machinesListglpi.php:44
-msgid "Online computers"
-msgstr ""
-
-#: modules/glpi/glpi/machinesList.php:47
-#: modules/glpi/glpi/machinesListglpi.php:48
-msgid "Offline computers"
-msgstr ""
-
-#: modules/glpi/glpi/machinesList.php:55
-#: modules/glpi/glpi/ajaxMachinesList.php:239
-msgid "Machine ID"
-msgstr ""
-
-#: modules/glpi/glpi/machinesList.php:56
-#: modules/glpi/glpi/ajaxMachinesList.php:220
-msgid "Jabber ID"
-msgstr ""
-
-#: modules/glpi/glpi/machinesList.php:57
-#: modules/glpi/glpi/ajaxMachinesList.php:223
-msgid "Machine UUID"
-msgstr ""
-
-#: modules/glpi/glpi/machinesList.php:58
-#: modules/glpi/glpi/ajaxMachinesList.php:224
-msgid "Reconf. requested"
-msgstr ""
-
-#: modules/glpi/glpi/machinesList.php:59
-#: modules/glpi/glpi/ajaxMachinesList.php:225
-msgid "Online"
-msgstr ""
-
-#: modules/glpi/glpi/machinesList.php:60
-#: modules/glpi/glpi/ajaxMachinesList.php:221
-msgid "Platform"
-msgstr ""
-
-#: modules/glpi/glpi/machinesList.php:61
-#: modules/glpi/glpi/ajaxMachinesList.php:222
-#: modules/glpi/glpi/ajaxViewPart.php:262
-msgid "Architecture"
-msgstr ""
-
-#: modules/glpi/glpi/machinesList.php:62
-#: modules/glpi/glpi/ajaxMachinesList.php:219
-#: modules/glpi/glpi/addEntityRule.php:99
-msgid "Hostname"
-msgstr ""
-
-#: modules/glpi/glpi/machinesList.php:63
-#: modules/glpi/glpi/ajaxMachinesList.php:240
-msgid "GLPI ID"
-msgstr ""
-
-#: modules/glpi/glpi/machinesList.php:64
-#: modules/glpi/glpi/ajaxMachinesList.php:226
-msgid "IP address"
-msgstr ""
-
-#: modules/glpi/glpi/machinesList.php:65
-#: modules/glpi/glpi/ajaxMachinesList.php:227
-#: modules/glpi/glpi/addEntityRule.php:102
-msgid "Subnet"
-msgstr ""
-
-#: modules/glpi/glpi/machinesList.php:66
-#: modules/glpi/glpi/ajaxMachinesList.php:229
-msgid "Mac address"
-msgstr ""
-
-#: modules/glpi/glpi/machinesList.php:67
-#: modules/glpi/glpi/ajaxMachinesList.php:228
-msgid "Public IP"
-msgstr ""
-
-#: modules/glpi/glpi/machinesList.php:68
-#: modules/glpi/glpi/ajaxMachinesList.php:230
-msgid "Agent type"
-msgstr ""
-
-#: modules/glpi/glpi/machinesList.php:69
-#: modules/glpi/glpi/ajaxMachinesList.php:231
-msgid "Usage class"
-msgstr ""
-
-#: modules/glpi/glpi/machinesList.php:70
-#: modules/glpi/glpi/ajaxMachinesList.php:232
-msgid "Relay JID"
-msgstr ""
-
-#: modules/glpi/glpi/machinesList.php:71
-#: modules/glpi/glpi/ajaxMachinesList.php:233
-msgid "AD machine OU"
-msgstr ""
-
-#: modules/glpi/glpi/machinesList.php:72
-#: modules/glpi/glpi/ajaxMachinesList.php:234
-msgid "AD user OU"
-msgstr ""
-
-#: modules/glpi/glpi/machinesList.php:73
-#: modules/glpi/glpi/ajaxMachinesList.php:235
-msgid "Kiosk enabled"
-msgstr ""
-
-#: modules/glpi/glpi/machinesList.php:74
-#: modules/glpi/glpi/ajaxMachinesList.php:236
-msgid "Last user connected"
-msgstr ""
-
-#: modules/glpi/glpi/machinesList.php:75
-#: modules/glpi/glpi/ajaxMachinesList.php:237
-msgid "Syncthing ID"
-msgstr ""
-
-#: modules/glpi/glpi/machinesList.php:76
-#: modules/glpi/glpi/ajaxMachinesList.php:238
-msgid "Registry keys"
-msgstr ""
-
-#: modules/glpi/glpi/machinesList.php:77
-#: modules/glpi/glpi/ajaxMachinesList.php:241
-msgid "GLPI description"
-msgstr ""
-
-#: modules/glpi/glpi/machinesList.php:78
-#: modules/glpi/glpi/ajaxMachinesList.php:242
-msgid "Owner firstname"
-msgstr ""
-
-#: modules/glpi/glpi/machinesList.php:79
-#: modules/glpi/glpi/ajaxMachinesList.php:243
-msgid "Owner lastname"
-msgstr ""
-
-#: modules/glpi/glpi/machinesList.php:80
-#: modules/glpi/glpi/ajaxMachinesList.php:244
-#: modules/glpi/glpi/ajaxMachinesList.php:418
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:260
-msgid "Owner"
-msgstr ""
-
-#: modules/glpi/glpi/machinesList.php:81
-#: modules/glpi/glpi/ajaxMachinesList.php:245
-#: modules/glpi/glpi/ajaxViewPart.php:243
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:275
-msgid "Model"
-msgstr "型號"
-
-#: modules/glpi/glpi/machinesList.php:82
-#: modules/glpi/glpi/ajaxMachinesList.php:246
-#: modules/glpi/glpi/ajaxMachinesList.php:433
-#: modules/glpi/glpi/ajaxViewPart.php:244
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:278
-msgid "Manufacturer"
-msgstr "製造商"
-
-#: modules/glpi/glpi/machinesList.php:83
-#: modules/glpi/glpi/ajaxMachinesList.php:247
-msgid "Short entity name"
-msgstr ""
-
-#: modules/glpi/glpi/machinesList.php:84
-#: modules/glpi/glpi/ajaxMachinesList.php:248
-msgid "Full entity name"
-msgstr ""
-
-#: modules/glpi/glpi/machinesList.php:85
-#: modules/glpi/glpi/ajaxMachinesList.php:249
-msgid "Entity ID"
-msgstr ""
-
-#: modules/glpi/glpi/machinesList.php:86
-#: modules/glpi/glpi/ajaxMachinesList.php:250
-msgid "Short location name"
-msgstr ""
-
-#: modules/glpi/glpi/machinesList.php:87
-#: modules/glpi/glpi/ajaxMachinesList.php:251
-msgid "Full location name"
-msgstr ""
-
-#: modules/glpi/glpi/machinesList.php:88
-#: modules/glpi/glpi/ajaxMachinesList.php:252
-msgid "Location ID"
-msgstr ""
-
-#: modules/glpi/glpi/machinesList.php:89
-#: modules/glpi/glpi/ajaxMachinesList.php:253
-msgid "IP addresses"
-msgstr ""
-
-#: modules/glpi/glpi/machinesList.php:90
-#: modules/glpi/glpi/ajaxMachinesList.php:254
-msgid "Network mask"
-msgstr ""
-
-#: modules/glpi/glpi/machinesList.php:91
-#: modules/glpi/glpi/ajaxMachinesList.php:255
-msgid "Broadcast address"
-msgstr ""
-
-#: modules/glpi/glpi/machinesList.php:92
-#: modules/glpi/glpi/ajaxMachinesList.php:256
-msgid "Gateway address"
-msgstr ""
-
-#: modules/glpi/glpi/machinesList.php:99
-#: modules/glpi/glpi/machinesListglpi.php:53
-msgid "All my entities"
-msgstr "所有我的實體"
-
-#: modules/glpi/glpi/createBackupStaticGroup.php:55
-#, php-format
-msgid "Machines backup configured at %s"
-msgstr ""
-
-#: modules/glpi/glpi/createBackupStaticGroup.php:60
-#, php-format
-msgid "Machines backup not configured at %s"
-msgstr ""
 
 #: modules/glpi/glpi/tabs.php:65 modules/glpi/glpi/tabs.php:73
 msgid "This client has been registered in pull mode"
@@ -466,6 +62,11 @@ msgstr "管理"
 msgid "History"
 msgstr "歷史記錄"
 
+#: modules/glpi/glpi/tabs.php:93
+#: modules/glpi/includes/panels/antivirus.inc.php:32
+msgid "Antivirus"
+msgstr "防病毒程式"
+
 #: modules/glpi/glpi/tabs.php:98
 msgid "Registry"
 msgstr "登錄"
@@ -474,33 +75,44 @@ msgstr "登錄"
 msgid "Get XLS Report"
 msgstr "取得 XLS 報告"
 
-#: modules/glpi/glpi/ajaxLocationList.php:51
-#: modules/glpi/glpi/ajaxEntityRules.php:51
-#: modules/glpi/glpi/ajaxEntityList.php:51
-msgid "No entry found"
-msgstr "找不到任何項目"
-
-#: modules/glpi/glpi/ajaxLocationList.php:66
-msgid "Location name"
-msgstr ""
-
-#: modules/glpi/glpi/ajaxLocationList.php:68
-#: modules/glpi/glpi/ajaxViewPart.php:252
-#: modules/glpi/glpi/ajaxEntityList.php:68
-msgid "Comment"
-msgstr "註解"
-
-#: modules/glpi/glpi/locationList.php:28
-msgid "Location list"
-msgstr ""
-
-#: modules/glpi/glpi/locationList.php:36
-msgid "All locations"
-msgstr ""
-
-#: modules/glpi/glpi/machinesListglpi.php:29
+#: modules/glpi/glpi/createAntivirusStaticGroup.php:31
 #, php-format
-msgid "Machines List view %s"
+msgid "Antivirus status is OK at %s"
+msgstr " %s "
+
+#: modules/glpi/glpi/createAntivirusStaticGroup.php:34
+#, php-format
+msgid "Antivirus is not running or not up-to-date at %s"
+msgstr " %s "
+
+#: modules/glpi/glpi/createAntivirusStaticGroup.php:37
+#, php-format
+msgid "No antivirus found at %s"
+msgstr " %s "
+
+#: modules/glpi/glpi/createAntivirusStaticGroup.php:47
+#: modules/glpi/glpi/createBackupStaticGroup.php:69
+#: modules/glpi/glpi/createOSStaticGroup.php:54
+#: modules/glpi/glpi/createMachinesStaticGroup.php:75
+#, php-format
+msgid "Computers list has been truncated at %d computers"
+msgstr " %d "
+
+#: modules/glpi/glpi/createStaticGroup.php:31
+#, php-format
+msgid "Latest inventory is less than %s days at %s"
+msgstr " %s  %s "
+
+#: modules/glpi/glpi/createStaticGroup.php:34
+#, php-format
+msgid "Latest inventory is more than %s days at %s"
+msgstr " %s  %s "
+
+#: modules/glpi/glpi/createStaticGroup.php:44
+#, php-format
+msgid ""
+"Computers list has been truncated at %d computers. Use the filter to find "
+"specific machines."
 msgstr ""
 
 #: modules/glpi/glpi/ajaxMachinesList.php:165
@@ -562,11 +174,220 @@ msgstr ""
 msgid "Quick action"
 msgstr ""
 
+#: modules/glpi/glpi/ajaxMachinesList.php:219
+#: modules/glpi/glpi/machinesList.php:62
+#: modules/glpi/glpi/addEntityRule.php:99
+msgid "Hostname"
+msgstr ""
+
+#: modules/glpi/glpi/ajaxMachinesList.php:220
+#: modules/glpi/glpi/machinesList.php:56
+msgid "Jabber ID"
+msgstr ""
+
+#: modules/glpi/glpi/ajaxMachinesList.php:221
+#: modules/glpi/glpi/machinesList.php:60
+msgid "Platform"
+msgstr ""
+
+#: modules/glpi/glpi/ajaxMachinesList.php:222
+#: modules/glpi/glpi/machinesList.php:61
+#: modules/glpi/glpi/ajaxViewPart.php:262
+msgid "Architecture"
+msgstr ""
+
+#: modules/glpi/glpi/ajaxMachinesList.php:223
+#: modules/glpi/glpi/machinesList.php:57
+msgid "Machine UUID"
+msgstr ""
+
+#: modules/glpi/glpi/ajaxMachinesList.php:224
+#: modules/glpi/glpi/machinesList.php:58
+msgid "Reconf. requested"
+msgstr ""
+
+#: modules/glpi/glpi/ajaxMachinesList.php:225
+#: modules/glpi/glpi/machinesList.php:59
+msgid "Online"
+msgstr ""
+
+#: modules/glpi/glpi/ajaxMachinesList.php:226
+#: modules/glpi/glpi/machinesList.php:64
+msgid "IP address"
+msgstr ""
+
+#: modules/glpi/glpi/ajaxMachinesList.php:227
+#: modules/glpi/glpi/machinesList.php:65
+#: modules/glpi/glpi/addEntityRule.php:102
+msgid "Subnet"
+msgstr ""
+
+#: modules/glpi/glpi/ajaxMachinesList.php:228
+#: modules/glpi/glpi/machinesList.php:67
+msgid "Public IP"
+msgstr ""
+
+#: modules/glpi/glpi/ajaxMachinesList.php:229
+#: modules/glpi/glpi/machinesList.php:66
+msgid "Mac address"
+msgstr ""
+
+#: modules/glpi/glpi/ajaxMachinesList.php:230
+#: modules/glpi/glpi/machinesList.php:68
+msgid "Agent type"
+msgstr ""
+
+#: modules/glpi/glpi/ajaxMachinesList.php:231
+#: modules/glpi/glpi/machinesList.php:69
+msgid "Usage class"
+msgstr ""
+
+#: modules/glpi/glpi/ajaxMachinesList.php:232
+#: modules/glpi/glpi/machinesList.php:70
+msgid "Relay JID"
+msgstr ""
+
+#: modules/glpi/glpi/ajaxMachinesList.php:233
+#: modules/glpi/glpi/machinesList.php:71
+msgid "AD machine OU"
+msgstr ""
+
+#: modules/glpi/glpi/ajaxMachinesList.php:234
+#: modules/glpi/glpi/machinesList.php:72
+msgid "AD user OU"
+msgstr ""
+
+#: modules/glpi/glpi/ajaxMachinesList.php:235
+#: modules/glpi/glpi/machinesList.php:73
+msgid "Kiosk enabled"
+msgstr ""
+
+#: modules/glpi/glpi/ajaxMachinesList.php:236
+#: modules/glpi/glpi/machinesList.php:74
+msgid "Last user connected"
+msgstr ""
+
+#: modules/glpi/glpi/ajaxMachinesList.php:237
+#: modules/glpi/glpi/machinesList.php:75
+msgid "Syncthing ID"
+msgstr ""
+
+#: modules/glpi/glpi/ajaxMachinesList.php:238
+#: modules/glpi/glpi/machinesList.php:76
+msgid "Registry keys"
+msgstr ""
+
+#: modules/glpi/glpi/ajaxMachinesList.php:239
+#: modules/glpi/glpi/machinesList.php:55
+msgid "Machine ID"
+msgstr ""
+
+#: modules/glpi/glpi/ajaxMachinesList.php:240
+#: modules/glpi/glpi/machinesList.php:63
+msgid "GLPI ID"
+msgstr ""
+
+#: modules/glpi/glpi/ajaxMachinesList.php:241
+#: modules/glpi/glpi/machinesList.php:77
+msgid "GLPI description"
+msgstr ""
+
+#: modules/glpi/glpi/ajaxMachinesList.php:242
+#: modules/glpi/glpi/machinesList.php:78
+msgid "Owner firstname"
+msgstr ""
+
+#: modules/glpi/glpi/ajaxMachinesList.php:243
+#: modules/glpi/glpi/machinesList.php:79
+msgid "Owner lastname"
+msgstr ""
+
+#: modules/glpi/glpi/ajaxMachinesList.php:244
+#: modules/glpi/glpi/ajaxMachinesList.php:418
+#: modules/glpi/glpi/machinesList.php:80
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:260
+msgid "Owner"
+msgstr ""
+
+#: modules/glpi/glpi/ajaxMachinesList.php:245
+#: modules/glpi/glpi/machinesList.php:81
+#: modules/glpi/glpi/ajaxViewPart.php:243
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:275
+msgid "Model"
+msgstr "型號"
+
+#: modules/glpi/glpi/ajaxMachinesList.php:246
+#: modules/glpi/glpi/ajaxMachinesList.php:433
+#: modules/glpi/glpi/machinesList.php:82
+#: modules/glpi/glpi/ajaxViewPart.php:244
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:278
+msgid "Manufacturer"
+msgstr "製造商"
+
+#: modules/glpi/glpi/ajaxMachinesList.php:247
+#: modules/glpi/glpi/machinesList.php:83
+msgid "Short entity name"
+msgstr ""
+
+#: modules/glpi/glpi/ajaxMachinesList.php:248
+#: modules/glpi/glpi/machinesList.php:84
+msgid "Full entity name"
+msgstr ""
+
+#: modules/glpi/glpi/ajaxMachinesList.php:249
+#: modules/glpi/glpi/machinesList.php:85
+msgid "Entity ID"
+msgstr ""
+
+#: modules/glpi/glpi/ajaxMachinesList.php:250
+#: modules/glpi/glpi/machinesList.php:86
+msgid "Short location name"
+msgstr ""
+
+#: modules/glpi/glpi/ajaxMachinesList.php:251
+#: modules/glpi/glpi/machinesList.php:87
+msgid "Full location name"
+msgstr ""
+
+#: modules/glpi/glpi/ajaxMachinesList.php:252
+#: modules/glpi/glpi/machinesList.php:88
+msgid "Location ID"
+msgstr ""
+
+#: modules/glpi/glpi/ajaxMachinesList.php:253
+#: modules/glpi/glpi/machinesList.php:89
+msgid "IP addresses"
+msgstr ""
+
+#: modules/glpi/glpi/ajaxMachinesList.php:254
+#: modules/glpi/glpi/machinesList.php:90
+msgid "Network mask"
+msgstr ""
+
+#: modules/glpi/glpi/ajaxMachinesList.php:255
+#: modules/glpi/glpi/machinesList.php:91
+msgid "Broadcast address"
+msgstr ""
+
+#: modules/glpi/glpi/ajaxMachinesList.php:256
+#: modules/glpi/glpi/machinesList.php:92
+msgid "Gateway address"
+msgstr ""
+
 #: modules/glpi/glpi/ajaxMachinesList.php:401
 #: modules/glpi/glpi/ajaxViewPart.php:233
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:244
 msgid "Computer Name"
 msgstr "電腦名稱"
+
+#: modules/glpi/glpi/ajaxMachinesList.php:406
+#: modules/glpi/glpi/ajaxViewPart.php:234
+#: modules/glpi/glpi/addEntityRule.php:77
+#: modules/glpi/glpi/addLocation.php:101
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:248
+#: modules/glpi/glpi/addEntity.php:100
+msgid "Description"
+msgstr "說明"
 
 #: modules/glpi/glpi/ajaxMachinesList.php:409
 #: modules/glpi/glpi/ajaxViewPart.php:240
@@ -622,138 +443,62 @@ msgstr ""
 msgid "Delete computer"
 msgstr "刪除電腦"
 
-#: modules/glpi/glpi/createMachinesStaticGroup.php:61
+#: modules/glpi/glpi/createBackupStaticGroup.php:55
 #, php-format
-msgid "Machines online at %s"
+msgid "Machines backup configured at %s"
 msgstr ""
 
-#: modules/glpi/glpi/createMachinesStaticGroup.php:66
+#: modules/glpi/glpi/createBackupStaticGroup.php:60
 #, php-format
-msgid "Machines offline at %s"
+msgid "Machines backup not configured at %s"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxEntityRules.php:66
-msgid "Rule name"
+#: modules/glpi/glpi/entityRules.php:28 modules/glpi/infoPackage.inc.php:156
+msgid "Entity rules"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxEntityRules.php:69
-msgid "Edit rule"
+#: modules/glpi/glpi/entityRules.php:36
+msgid "All rules"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxEntityRules.php:70
-msgid "Move rule up"
+#: modules/glpi/glpi/machinesList.php:28
+msgid "Machines List view xmpp"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxEntityRules.php:71
-msgid "Move rule down"
+#: modules/glpi/glpi/machinesList.php:39
+#: modules/glpi/glpi/machinesListglpi.php:40
+msgid "All computers"
+msgstr "所有電腦"
+
+#: modules/glpi/glpi/machinesList.php:43
+#: modules/glpi/glpi/machinesListglpi.php:44
+msgid "Online computers"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxEntityRules.php:72
-msgid "Delete rule"
+#: modules/glpi/glpi/machinesList.php:47
+#: modules/glpi/glpi/machinesListglpi.php:48
+msgid "Offline computers"
 msgstr ""
 
-#: modules/glpi/glpi/createOSStaticGroup.php:40
-#, php-format
-msgid "Machine with %s %s installed at %s"
+#: modules/glpi/glpi/machinesList.php:99
+#: modules/glpi/glpi/machinesListglpi.php:53
+msgid "All my entities"
+msgstr "所有我的實體"
+
+#: modules/glpi/glpi/entityList.php:28
+msgid "Entity list"
 msgstr ""
 
-#: modules/glpi/glpi/addEntityRule.php:31
-msgid "The entity rule has been added successfully."
+#: modules/glpi/glpi/entityList.php:36
+msgid "All entities"
 msgstr ""
 
-#: modules/glpi/glpi/addEntityRule.php:35
-msgid "The entity rule has been edited successfully."
+#: modules/glpi/glpi/locationList.php:28
+msgid "Location list"
 msgstr ""
 
-#: modules/glpi/glpi/addEntityRule.php:59 modules/glpi/infoPackage.inc.php:165
-msgid "Add entity rule"
-msgstr ""
-
-#: modules/glpi/glpi/addEntityRule.php:67
-msgid "Active"
-msgstr "作用中"
-
-#: modules/glpi/glpi/addEntityRule.php:86
-msgid "Aggregator"
-msgstr ""
-
-#: modules/glpi/glpi/addEntityRule.php:98
-msgid "IP Address"
-msgstr ""
-
-#: modules/glpi/glpi/addEntityRule.php:100
-#: modules/glpi/glpi/ajaxViewPart.php:264
-msgid "Domain"
-msgstr "網域"
-
-#: modules/glpi/glpi/addEntityRule.php:101
-msgid "Computer serial"
-msgstr ""
-
-#: modules/glpi/glpi/addEntityRule.php:103
-msgid "Inventory Tag"
-msgstr ""
-
-#: modules/glpi/glpi/addEntityRule.php:113
-msgid "equal to"
-msgstr ""
-
-#: modules/glpi/glpi/addEntityRule.php:114
-msgid "different from"
-msgstr ""
-
-#: modules/glpi/glpi/addEntityRule.php:115
-msgid "contains"
-msgstr ""
-
-#: modules/glpi/glpi/addEntityRule.php:116
-msgid "does not contain"
-msgstr ""
-
-#: modules/glpi/glpi/addEntityRule.php:117
-msgid "starts with"
-msgstr ""
-
-#: modules/glpi/glpi/addEntityRule.php:118
-#: modules/glpi/glpi/addEntityRule.php:119
-msgid "finishes by"
-msgstr ""
-
-#: modules/glpi/glpi/addEntityRule.php:120
-msgid "matches (regex)"
-msgstr ""
-
-#: modules/glpi/glpi/addEntityRule.php:121
-msgid "does not match (regex)"
-msgstr ""
-
-#: modules/glpi/glpi/addEntityRule.php:122
-msgid "exists"
-msgstr ""
-
-#: modules/glpi/glpi/addEntityRule.php:123
-msgid "does not exist"
-msgstr ""
-
-#: modules/glpi/glpi/addEntityRule.php:149
-msgid "Criterion"
-msgstr ""
-
-#: modules/glpi/glpi/addEntityRule.php:155
-msgid "Add criterion"
-msgstr ""
-
-#: modules/glpi/glpi/addEntityRule.php:168
-#: modules/glpi/glpi/addEntityRule.php:190
-msgid "Do not assign"
-msgstr ""
-
-#: modules/glpi/glpi/addEntityRule.php:180
-msgid "Target entity"
-msgstr ""
-
-#: modules/glpi/glpi/addEntityRule.php:200
-msgid "Target location"
+#: modules/glpi/glpi/locationList.php:36
+msgid "All locations"
 msgstr ""
 
 #: modules/glpi/glpi/ajaxViewPart.php:85
@@ -834,6 +579,13 @@ msgstr "是"
 #: modules/glpi/glpi/ajaxViewPart.php:213
 msgid "No"
 msgstr "否"
+
+#: modules/glpi/glpi/ajaxViewPart.php:214
+#: modules/glpi/glpi/ajaxViewPart.php:231
+#: modules/glpi/glpi/addEntityRule.php:72 modules/glpi/glpi/addLocation.php:77
+#: modules/glpi/glpi/addEntity.php:78
+msgid "Name"
+msgstr "名稱"
 
 #: modules/glpi/glpi/ajaxViewPart.php:215
 msgid "Network Type"
@@ -940,6 +692,12 @@ msgstr "頻寬"
 msgid "Writer"
 msgstr "寫入器"
 
+#: modules/glpi/glpi/ajaxViewPart.php:252
+#: modules/glpi/glpi/ajaxLocationList.php:68
+#: modules/glpi/glpi/ajaxEntityList.php:68
+msgid "Comment"
+msgstr "註解"
+
 #: modules/glpi/glpi/ajaxViewPart.php:253
 msgid "Date"
 msgstr "日期"
@@ -956,6 +714,22 @@ msgstr "類別"
 msgid "Action"
 msgstr "動作"
 
+#: modules/glpi/glpi/ajaxViewPart.php:257 modules/glpi/includes/html.php:58
+msgid "Today"
+msgstr "今天"
+
+#: modules/glpi/glpi/ajaxViewPart.php:258 modules/glpi/includes/html.php:59
+msgid "Last 7 days"
+msgstr " 7 "
+
+#: modules/glpi/glpi/ajaxViewPart.php:259 modules/glpi/includes/html.php:60
+msgid "Last 30 days"
+msgstr " 30 "
+
+#: modules/glpi/glpi/ajaxViewPart.php:260 modules/glpi/includes/html.php:61
+msgid "All"
+msgstr "全部"
+
 #: modules/glpi/glpi/ajaxViewPart.php:261
 msgid "Service Pack"
 msgstr "Service Pack"
@@ -963,6 +737,11 @@ msgstr "Service Pack"
 #: modules/glpi/glpi/ajaxViewPart.php:263
 msgid "Windows Key"
 msgstr "Windows "
+
+#: modules/glpi/glpi/ajaxViewPart.php:264
+#: modules/glpi/glpi/addEntityRule.php:100
+msgid "Domain"
+msgstr "網域"
 
 #: modules/glpi/glpi/ajaxViewPart.php:265
 msgid "State"
@@ -988,16 +767,178 @@ msgstr "最新"
 msgid "Invalid hostname"
 msgstr "無效的主機名稱"
 
-#: modules/glpi/glpi/ajaxEntityList.php:66
-msgid "Entity name"
+#: modules/glpi/glpi/deleteEntityRule.php:31
+msgid "The entity rule has been deleted successfully."
 msgstr ""
 
-#: modules/glpi/glpi/ajaxEntityList.php:70 modules/glpi/glpi/addEntity.php:52
-msgid "Edit entity"
+#: modules/glpi/glpi/deleteEntityRule.php:36
+msgid "Delete this rule?"
 msgstr ""
+
+#: modules/glpi/glpi/addEntityRule.php:31
+msgid "The entity rule has been added successfully."
+msgstr ""
+
+#: modules/glpi/glpi/addEntityRule.php:35
+msgid "The entity rule has been edited successfully."
+msgstr ""
+
+#: modules/glpi/glpi/addEntityRule.php:59 modules/glpi/infoPackage.inc.php:165
+msgid "Add entity rule"
+msgstr ""
+
+#: modules/glpi/glpi/addEntityRule.php:67
+msgid "Active"
+msgstr "作用中"
+
+#: modules/glpi/glpi/addEntityRule.php:86
+msgid "Aggregator"
+msgstr ""
+
+#: modules/glpi/glpi/addEntityRule.php:98
+msgid "IP Address"
+msgstr ""
+
+#: modules/glpi/glpi/addEntityRule.php:101
+msgid "Computer serial"
+msgstr ""
+
+#: modules/glpi/glpi/addEntityRule.php:103
+msgid "Inventory Tag"
+msgstr ""
+
+#: modules/glpi/glpi/addEntityRule.php:113
+msgid "equal to"
+msgstr ""
+
+#: modules/glpi/glpi/addEntityRule.php:114
+msgid "different from"
+msgstr ""
+
+#: modules/glpi/glpi/addEntityRule.php:115
+msgid "contains"
+msgstr ""
+
+#: modules/glpi/glpi/addEntityRule.php:116
+msgid "does not contain"
+msgstr ""
+
+#: modules/glpi/glpi/addEntityRule.php:117
+msgid "starts with"
+msgstr ""
+
+#: modules/glpi/glpi/addEntityRule.php:118
+#: modules/glpi/glpi/addEntityRule.php:119
+msgid "finishes by"
+msgstr ""
+
+#: modules/glpi/glpi/addEntityRule.php:120
+msgid "matches (regex)"
+msgstr ""
+
+#: modules/glpi/glpi/addEntityRule.php:121
+msgid "does not match (regex)"
+msgstr ""
+
+#: modules/glpi/glpi/addEntityRule.php:122
+msgid "exists"
+msgstr ""
+
+#: modules/glpi/glpi/addEntityRule.php:123
+msgid "does not exist"
+msgstr ""
+
+#: modules/glpi/glpi/addEntityRule.php:138
+#: modules/glpi/includes/publicFunc.php:142
+msgid "Remove"
+msgstr "移除"
+
+#: modules/glpi/glpi/addEntityRule.php:149
+msgid "Criterion"
+msgstr ""
+
+#: modules/glpi/glpi/addEntityRule.php:155
+msgid "Add criterion"
+msgstr ""
+
+#: modules/glpi/glpi/addEntityRule.php:168
+#: modules/glpi/glpi/addEntityRule.php:190
+msgid "Do not assign"
+msgstr ""
+
+#: modules/glpi/glpi/addEntityRule.php:180
+msgid "Target entity"
+msgstr ""
+
+#: modules/glpi/glpi/addEntityRule.php:200
+msgid "Target location"
+msgstr ""
+
+#: modules/glpi/glpi/ajaxLocationList.php:51
+#: modules/glpi/glpi/ajaxEntityList.php:51
+#: modules/glpi/glpi/ajaxEntityRules.php:51
+msgid "No entry found"
+msgstr "找不到任何項目"
+
+#: modules/glpi/glpi/ajaxLocationList.php:66
+msgid "Location name"
+msgstr ""
+
+#: modules/glpi/glpi/ajaxLocationList.php:70
+#: modules/glpi/glpi/addLocation.php:52
+msgid "Edit location"
+msgstr ""
+
+#: modules/glpi/glpi/addLocation.php:34
+msgid "The location has been added successfully."
+msgstr ""
+
+#: modules/glpi/glpi/addLocation.php:38
+msgid "The location has been edited successfully."
+msgstr ""
+
+#: modules/glpi/glpi/addLocation.php:43
+msgid "Add location"
+msgstr ""
+
+#: modules/glpi/glpi/addLocation.php:96
+msgid "Parent location"
+msgstr ""
+
+#: modules/glpi/glpi/machinesListglpi.php:29
+#, php-format
+msgid "Machines List view %s"
+msgstr ""
+
+#: modules/glpi/glpi/createOSStaticGroup.php:40
+#, php-format
+msgid "Machine with %s %s installed at %s"
+msgstr ""
+
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:76
+msgid "Inventory"
+msgstr "清查"
+
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:78
+msgid "View deployment details"
+msgstr ""
+
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:97
+msgid "Show Profile"
+msgstr "顯示設定檔"
 
 #: modules/glpi/glpi/createMachinesStaticGroupdeploy.php:31
 msgid "Machines "
+msgstr ""
+
+#: modules/glpi/glpi/createMachinesStaticGroup.php:61
+#, php-format
+msgid "Machines online at %s"
+msgstr ""
+
+#: modules/glpi/glpi/createMachinesStaticGroup.php:66
+#, php-format
+msgid "Machines offline at %s"
 msgstr ""
 
 #: modules/glpi/glpi/addEntity.php:34
@@ -1013,45 +954,106 @@ msgstr ""
 msgid "Add entity"
 msgstr ""
 
+#: modules/glpi/glpi/addEntity.php:52 modules/glpi/glpi/ajaxEntityList.php:70
+msgid "Edit entity"
+msgstr ""
+
 #: modules/glpi/glpi/addEntity.php:95
 msgid "Parent entity"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:76
-msgid "Inventory"
-msgstr "清查"
-
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:78
-msgid "View deployment details"
+#: modules/glpi/glpi/ajaxEntityList.php:66
+msgid "Entity name"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:97
-msgid "Show Profile"
-msgstr "顯示設定檔"
-
-#: modules/glpi/glpi/entityRules.php:28 modules/glpi/infoPackage.inc.php:156
-msgid "Entity rules"
+#: modules/glpi/glpi/ajaxEntityRules.php:66
+msgid "Rule name"
 msgstr ""
 
-#: modules/glpi/glpi/entityRules.php:36
-msgid "All rules"
+#: modules/glpi/glpi/ajaxEntityRules.php:69
+msgid "Edit rule"
 msgstr ""
 
-#: modules/glpi/glpi/createStaticGroup.php:31
-#, php-format
-msgid "Latest inventory is less than %s days at %s"
-msgstr " %s  %s "
+#: modules/glpi/glpi/ajaxEntityRules.php:70
+msgid "Move rule up"
+msgstr ""
 
-#: modules/glpi/glpi/createStaticGroup.php:34
-#, php-format
-msgid "Latest inventory is more than %s days at %s"
-msgstr " %s  %s "
+#: modules/glpi/glpi/ajaxEntityRules.php:71
+msgid "Move rule down"
+msgstr ""
 
-#: modules/glpi/glpi/createStaticGroup.php:44
-#, php-format
-msgid ""
-"Computers list has been truncated at %d computers. Use the filter to find "
-"specific machines."
+#: modules/glpi/glpi/ajaxEntityRules.php:72
+msgid "Delete rule"
+msgstr ""
+
+#: modules/glpi/includes/panels/inventory.inc.php:31
+msgid "Inventories"
+msgstr ""
+
+#: modules/glpi/includes/panels/inventory.inc.php:47
+#: modules/glpi/includes/panels/antivirus.inc.php:45
+msgid "Create a group"
+msgstr "建立一個群組"
+
+#: modules/glpi/includes/panels/inventory.inc.php:48
+msgid "< %s days: %percent% (%d)"
+msgstr "< %s %percent% (%d)"
+
+#: modules/glpi/includes/panels/inventory.inc.php:49
+msgid "> %s days: %percent% (%d)"
+msgstr "> %s %percent% (%d)"
+
+#: modules/glpi/includes/panels/inventory.inc.php:50
+msgid "Uninventoried machines"
+msgstr ""
+
+#: modules/glpi/includes/panels/antivirus.inc.php:41
+#: modules/glpi/includes/panels/os_repartition.inc.php:44
+msgid "Uninventoried Machines"
+msgstr ""
+
+#: modules/glpi/includes/panels/antivirus.inc.php:46
+msgid "OK: %percent% (%d)"
+msgstr "%percent% (%d)"
+
+#: modules/glpi/includes/panels/antivirus.inc.php:47
+msgid "Not running or not up-to-date: %percent% (%d)"
+msgstr " %percent% (%d)"
+
+#: modules/glpi/includes/panels/antivirus.inc.php:48
+msgid "No antivirus found: %percent% (%d)"
+msgstr " %percent% (%d)"
+
+#: modules/glpi/includes/panels/os_repartition.inc.php:36
+msgid "Operating systems"
+msgstr "作業系統"
+
+#: modules/glpi/includes/html.php:50 modules/glpi/includes/html.php:421
+msgid "Hide Windows Updates"
+msgstr " Windows "
+
+#: modules/glpi/includes/html.php:268 modules/glpi/includes/html.php:485
+msgid "Search"
+msgstr "搜尋"
+
+#: modules/glpi/includes/publicFunc.php:86
+msgid "Entity attributes"
+msgstr ""
+
+#: modules/glpi/includes/publicFunc.php:130
+msgid "Dynamic"
+msgstr ""
+
+#: modules/glpi/includes/publicFunc.php:130
+msgid "Static"
+msgstr ""
+
+#: modules/glpi/includes/publicFunc.php:154
+msgid "Entity right"
+msgstr ""
+
+#: modules/glpi/includes/publicFunc.php:160
+msgid "Add entity right"
 msgstr ""
 
 #: modules/glpi/infoPackage.inc.php:41

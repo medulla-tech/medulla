@@ -12,42 +12,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 23:51+0100\n"
+"POT-Creation-Date: 2025-07-30 15:09+0200\n"
 "PO-Revision-Date: 2018-02-13 15:15+0000\n"
 "Last-Translator: tekmans <yvan.manon@siveo.net>, 2019\n"
-"Language-Team: French (https://app.transifex.com/siveo/teams/72118/fr/)\n"
+"Language-Team: French (https://app.transifex.com/medulla/teams/72118/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: fr\n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
-
-#: modules/ppolicy/includes/auditCodes.php:4
-#: modules/ppolicy/includes/auditCodes.php:9
-msgid "Change ppolicy attribute"
-msgstr "Changer les attributs ppolicy"
-
-#: modules/ppolicy/includes/auditCodes.php:5
-#: modules/ppolicy/includes/auditCodes.php:10
-msgid "Delete ppolicy attribute"
-msgstr "Suppression de l'attribut ppolicy"
-
-#: modules/ppolicy/includes/auditCodes.php:6
-msgid "Add ppolicy to user"
-msgstr "Ajout d'une politique des mots de passe à un utilisateur"
-
-#: modules/ppolicy/includes/auditCodes.php:7
-msgid "Update ppolicy for user"
-msgstr "Changement d'une politique des mots de passe d'un utilisateur"
-
-#: modules/ppolicy/includes/auditCodes.php:8
-msgid "Delete ppolicy on user"
-msgstr "Suppression d'une politique des mots de passe d'un utilisateur"
-
-#: modules/ppolicy/includes/auditCodes.php:11
-#: modules/ppolicy/includes/auditCodes.php:12
-msgid "ppolicy"
-msgstr "ppolicy"
 
 #: modules/ppolicy/includes/ppolicy.inc.php:37
 #: modules/ppolicy/default/edit.php:138
@@ -225,6 +198,33 @@ msgstr ""
 "serveur vérifiera sa qualité, et si le serveur ne peut pas le vérifier, il "
 "renverra une erreur et refusera le mot de passe."
 
+#: modules/ppolicy/includes/auditCodes.php:4
+#: modules/ppolicy/includes/auditCodes.php:9
+msgid "Change ppolicy attribute"
+msgstr "Changer les attributs ppolicy"
+
+#: modules/ppolicy/includes/auditCodes.php:5
+#: modules/ppolicy/includes/auditCodes.php:10
+msgid "Delete ppolicy attribute"
+msgstr "Suppression de l'attribut ppolicy"
+
+#: modules/ppolicy/includes/auditCodes.php:6
+msgid "Add ppolicy to user"
+msgstr "Ajout d'une politique des mots de passe à un utilisateur"
+
+#: modules/ppolicy/includes/auditCodes.php:7
+msgid "Update ppolicy for user"
+msgstr "Changement d'une politique des mots de passe d'un utilisateur"
+
+#: modules/ppolicy/includes/auditCodes.php:8
+msgid "Delete ppolicy on user"
+msgstr "Suppression d'une politique des mots de passe d'un utilisateur"
+
+#: modules/ppolicy/includes/auditCodes.php:11
+#: modules/ppolicy/includes/auditCodes.php:12
+msgid "ppolicy"
+msgstr "ppolicy"
+
 #: modules/ppolicy/includes/localSidebar.php:27
 #: modules/ppolicy/default/ajaxPPoliciesFilter.php:53
 #: modules/ppolicy/infoPackage.inc.php:46
@@ -322,6 +322,40 @@ msgid "Apply a password policy for all group users"
 msgstr ""
 "Appliquer une politique des mots de passe à tous les membres du groupe"
 
+#: modules/ppolicy/default/ajaxPPoliciesFilter.php:44
+#: modules/ppolicy/default/ajaxPPoliciesFilter.php:47
+#: modules/ppolicy/default/edit.php:48
+msgid "Edit password policy"
+msgstr "Éditer la politique des mots de passe"
+
+#: modules/ppolicy/default/ajaxPPoliciesFilter.php:48
+msgid "Delete password policy"
+msgstr "Supprimer la politique des mots de passe"
+
+#: modules/ppolicy/default/index.php:31
+msgid "Password policies list"
+msgstr "Liste des politiques de mot de passe"
+
+#: modules/ppolicy/default/warnuser.php:35
+msgid ""
+"Warning: you have been logged using grace login mode. Please change your "
+"password as soon as possible using the password change page, else your "
+"account will be locked."
+msgstr ""
+"Attention: vous avez été connecté avec un mot de passe expiré. Veuillez "
+"modifier votre mot de passe dès que possible à l'aide de la page de "
+"modification du mot de passe, sinon votre compte sera verrouillé."
+
+#: modules/ppolicy/default/warnuser.php:40
+msgid ""
+"Warning: your password has been reset by an administrator. Your LDAP account"
+" is restricted. Please change your password as soon as possible using the "
+"password change page."
+msgstr ""
+"Attention: votre mot de passe a été réinitialisé par un administrateur. "
+"Votre compte LDAP est restreint. Veuillez changer votre mot de passe dès que"
+" possible en utilisant la page de changement de mot de passe."
+
 #: modules/ppolicy/default/delete.php:29
 msgid "The password policy has been deleted."
 msgstr "La politique des mots de passe a été supprimée"
@@ -342,16 +376,6 @@ msgstr "Supprimer"
 #: modules/ppolicy/default/delete.php:46
 msgid "Cancel"
 msgstr "Annuler"
-
-#: modules/ppolicy/default/index.php:31
-msgid "Password policies list"
-msgstr "Liste des politiques de mot de passe"
-
-#: modules/ppolicy/default/edit.php:48
-#: modules/ppolicy/default/ajaxPPoliciesFilter.php:44
-#: modules/ppolicy/default/ajaxPPoliciesFilter.php:47
-msgid "Edit password policy"
-msgstr "Éditer la politique des mots de passe"
 
 #: modules/ppolicy/default/edit.php:62
 msgid "\"Maximum age\" must be greater than \"Minimum age\"."
@@ -398,30 +422,6 @@ msgstr "Nombre d'échec maximum"
 #: modules/ppolicy/default/edit.php:222
 msgid "Lockout duration (seconds)"
 msgstr "Période de blocage (secondes)"
-
-#: modules/ppolicy/default/warnuser.php:35
-msgid ""
-"Warning: you have been logged using grace login mode. Please change your "
-"password as soon as possible using the password change page, else your "
-"account will be locked."
-msgstr ""
-"Attention: vous avez été connecté avec un mot de passe expiré. Veuillez "
-"modifier votre mot de passe dès que possible à l'aide de la page de "
-"modification du mot de passe, sinon votre compte sera verrouillé."
-
-#: modules/ppolicy/default/warnuser.php:40
-msgid ""
-"Warning: your password has been reset by an administrator. Your LDAP account"
-" is restricted. Please change your password as soon as possible using the "
-"password change page."
-msgstr ""
-"Attention: votre mot de passe a été réinitialisé par un administrateur. "
-"Votre compte LDAP est restreint. Veuillez changer votre mot de passe dès que"
-" possible en utilisant la page de changement de mot de passe."
-
-#: modules/ppolicy/default/ajaxPPoliciesFilter.php:48
-msgid "Delete password policy"
-msgstr "Supprimer la politique des mots de passe"
 
 #: modules/ppolicy/infoPackage.inc.php:36
 msgid "Password Policy"
