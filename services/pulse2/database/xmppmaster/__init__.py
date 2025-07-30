@@ -474,6 +474,86 @@ class XmppMasterDatabase(DatabaseHelper):
         session.flush()
 
     @DatabaseHelper._sessionm
+    def get_approve_products(self, session, colonne=True):
+        """
+        Récupère les enregistrements de la table 'up_list_produit' et renvoie les résultats sous forme de colonnes ou de lignes.
+        Les valeurs NULL sont remplacées par des chaînes vides.
+
+        Paramètres :
+        - colonne (bool) : Si True, les résultats sont retournés sous forme de colonnes. Sinon, sous forme de lignes.
+
+        Retourne :
+        - dict/list : Un dictionnaire ou une liste contenant les informations des produits trouvés.
+        """
+        try:
+            result = session.execute(
+                text("SELECT * FROM xmppmaster.up_list_produit"))
+            produits = result.fetchall()
+
+            if produits:
+                if colonne:
+                    produits_info = {
+                        "id": [p[0] if p[0] is not None else "" for p in produits],
+                        "name_procedure": [p[1] if p[1] is not None else "" for p in produits],
+                        "enable": [p[2] if p[2] is not None else "" for p in produits],
+                    }
+                else:
+                    produits_info = [
+                        {
+                            "id": p[0] if p[0] is not None else "",
+                            "name_procedure": p[1] if p[1] is not None else "",
+                            "enable": p[2] if p[2] is not None else ""
+                        }
+                        for p in produits
+                    ]
+                return produits_info
+            else:
+                logger.info("No products found in the table.")
+                return []
+
+        except Exception as e:
+            logger.error(f"An error occurred: {str(e)}")
+            return {}
+
+    @DatabaseHelper._sessionm
+    def update_approve_products(self, session, updates):
+        """
+        Met à jour la colonne 'enable' dans la table 'up_list_produit' pour les IDs spécifiés.
+
+        Paramètres :
+        - updates (list of tuples or lists) : Une liste de tuples ou de listes où chaque élément contient (id, enable).
+
+        Exemples :
+        updates = [
+            (1, 1),
+            (2, 0),
+            (3, 1),
+        ]
+
+        Retourne :
+        - dict : Un dictionnaire indiquant si la mise à jour a réussi ou non.
+        """
+        try:
+            normalized_updates = [tuple(update) if isinstance(
+                update, list) else update for update in updates]
+
+            for id, enable in normalized_updates:
+                session.execute(
+                    text(
+                        "UPDATE xmppmaster.up_list_produit SET enable = :enable WHERE id = :id"),
+                    {"enable": enable, "id": id}
+                )
+            session.commit()
+
+            logger.info("Mise à jour réussie des produits.")
+            return {"success": True, "message": "Update successful"}
+
+        except Exception as e:
+            session.rollback()
+            logger.error(f"An error occurred during update: {str(e)}")
+            return {"success": False, "message": str(e)}
+
+    @DatabaseHelper._sessionm
     def get_auto_approve_rules(self, session, colonne=True):
         """
         Récupère les enregistrements de la table 'up_auto_approve_rules' et renvoie les résultats sous forme de colonnes ou de lignes.
@@ -10134,7 +10214,8 @@ class XmppMasterDatabase(DatabaseHelper):
             }
 
             # Recover the networks of the machine
-            network = session.query(Network).filter(Network.machines_id == machine.id).first()
+            network = session.query(Network).filter(
+                Network.machines_id == machine.id).first()
             if network:
                 result.update({
                     "ipaddress": network.ipaddress,
@@ -14339,13 +14420,16 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                     continue
                 if key == "entity":
                     column = "ge.glpi_id"
-                    filter_on += f" AND {column} IN ({','.join(map(str, config.filter_on[key]))})"
+                    filter_on += f" AND {
+                        column} IN ({','.join(map(str, config.filter_on[key]))})"
                 elif key == "state":
                     column = "lgf.states_id"
-                    filter_on_noncompliant += f" AND {column} IN ({','.join(map(str, config.filter_on[key]))})"
+                    filter_on_noncompliant += f" AND {
+                        column} IN ({','.join(map(str, config.filter_on[key]))})"
                 elif key == "type":
                     column = "lgf.computertypes_id"
-                    filter_on_noncompliant += f" AND {column} IN ({','.join(map(str, config.filter_on[key]))})"
+                    filter_on_noncompliant += f" AND {
+                        column} IN ({','.join(map(str, config.filter_on[key]))})"
 
         sql_machine_details = f"""
         SELECT m.id AS machine_id, m.hostname, ge.glpi_id AS entity_id
@@ -14457,7 +14541,8 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         """
 
         if criterion != "":
-            sql_query += f" AND (m.hostname LIKE '%{criterion}%' OR ge.complete_name LIKE '%{criterion}%')"
+            sql_query += f" AND (m.hostname LIKE '%{
+                criterion}%' OR ge.complete_name LIKE '%{criterion}%')"
 
         sql_query += f" LIMIT {start}, {end}"
 
@@ -16118,7 +16203,8 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
 
         except Exception as e:
             logger.error(
-                f"Erreur lors de la récupération des statistiques de mise à jour des OS : {str(e)}"
+                f"Erreur lors de la récupération des statistiques de mise à jour des OS : {
+                    str(e)}"
             )
             logger.error(f"Traceback : {traceback.format_exc()}")
             return {}
@@ -16909,7 +16995,8 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
 
         except Exception as e:
             logger.error(
-                f"Erreur lors de la récupération des statistiques de mise à jour des OS : {str(e)}"
+                f"Erreur lors de la récupération des statistiques de mise à jour des OS : {
+                    str(e)}"
             )
             logger.error(f"Traceback : {traceback.format_exc()}")
             return {}
@@ -17023,7 +17110,8 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
 
         except Exception as e:
             logger.error(
-                f"Erreur lors de la récupération des statistiques de mise à jour des OS : {str(e)}"
+                f"Erreur lors de la récupération des statistiques de mise à jour des OS : {
+                    str(e)}"
             )
             logger.error(f"Traceback : {traceback.format_exc()}")
             return {}
@@ -17783,7 +17871,8 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             .filter(
                 and_(
                     Deploy.sessionid.contains("update"),
-                    func.json_extract(Deploy.result, "$.infoslist[0].packageUuid") == f'{updateid}',
+                    func.json_extract(Deploy.result, "$.infoslist[0].packageUuid") == f'{
+                        updateid}',
                 )
             )
             .order_by(desc(Deploy.start))

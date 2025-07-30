@@ -1395,6 +1395,14 @@ def get_list_of_users_for_shared_qa(namecmd):
     return XmppMasterDatabase().get_list_of_users_for_shared_qa(namecmd)
 
 
+def get_approve_products(colonne=True):
+    return XmppMasterDatabase().get_approve_products()
+
+
+def update_approve_products(products):
+    return XmppMasterDatabase().update_approve_products(products)
+
+
 def get_auto_approve_rules(colonne=True):
     return XmppMasterDatabase().get_auto_approve_rules()
 
@@ -1908,9 +1916,11 @@ def update_cluster(id, name, description, relay_ids):
     result = XmppMasterDatabase().update_cluster(id, name, description, relay_ids)
     return result
 
+
 def delete_cluster(id):
     result = XmppMasterDatabase().delete_cluster(id)
     return result
+
 
 def delete_cluster(id):
     result = XmppMasterDatabase().delete_cluster(id)
