@@ -12,42 +12,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 23:51+0100\n"
+"POT-Creation-Date: 2025-07-30 15:09+0200\n"
 "PO-Revision-Date: 2018-02-13 15:15+0000\n"
 "Last-Translator: Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2019\n"
-"Language-Team: Norwegian Bokmål (Norway) (https://app.transifex.com/siveo/teams/72118/nb_NO/)\n"
+"Language-Team: Norwegian Bokmål (Norway) (https://app.transifex.com/medulla/teams/72118/nb_NO/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: nb_NO\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#: modules/ppolicy/includes/auditCodes.php:4
-#: modules/ppolicy/includes/auditCodes.php:9
-msgid "Change ppolicy attribute"
-msgstr "Endre ppolicy attributt"
-
-#: modules/ppolicy/includes/auditCodes.php:5
-#: modules/ppolicy/includes/auditCodes.php:10
-msgid "Delete ppolicy attribute"
-msgstr "Slett ppolicy attributt"
-
-#: modules/ppolicy/includes/auditCodes.php:6
-msgid "Add ppolicy to user"
-msgstr "Legg til ppolicy for en bruker"
-
-#: modules/ppolicy/includes/auditCodes.php:7
-msgid "Update ppolicy for user"
-msgstr "Oppdater ppolicy for en bruker"
-
-#: modules/ppolicy/includes/auditCodes.php:8
-msgid "Delete ppolicy on user"
-msgstr "Slett ppolicy for en bruker"
-
-#: modules/ppolicy/includes/auditCodes.php:11
-#: modules/ppolicy/includes/auditCodes.php:12
-msgid "ppolicy"
-msgstr "ppolicy"
 
 #: modules/ppolicy/includes/ppolicy.inc.php:37
 #: modules/ppolicy/default/edit.php:138
@@ -224,6 +197,33 @@ msgstr ""
 "sjekke kvaliteten, og hvis serveren ikke kan bekrefte den, vil den returnere"
 " en feil ved å nekte passordet."
 
+#: modules/ppolicy/includes/auditCodes.php:4
+#: modules/ppolicy/includes/auditCodes.php:9
+msgid "Change ppolicy attribute"
+msgstr "Endre ppolicy attributt"
+
+#: modules/ppolicy/includes/auditCodes.php:5
+#: modules/ppolicy/includes/auditCodes.php:10
+msgid "Delete ppolicy attribute"
+msgstr "Slett ppolicy attributt"
+
+#: modules/ppolicy/includes/auditCodes.php:6
+msgid "Add ppolicy to user"
+msgstr "Legg til ppolicy for en bruker"
+
+#: modules/ppolicy/includes/auditCodes.php:7
+msgid "Update ppolicy for user"
+msgstr "Oppdater ppolicy for en bruker"
+
+#: modules/ppolicy/includes/auditCodes.php:8
+msgid "Delete ppolicy on user"
+msgstr "Slett ppolicy for en bruker"
+
+#: modules/ppolicy/includes/auditCodes.php:11
+#: modules/ppolicy/includes/auditCodes.php:12
+msgid "ppolicy"
+msgstr "ppolicy"
+
 #: modules/ppolicy/includes/localSidebar.php:27
 #: modules/ppolicy/default/ajaxPPoliciesFilter.php:53
 #: modules/ppolicy/infoPackage.inc.php:46
@@ -319,6 +319,40 @@ msgstr "Attributter for passordpolitikken er oppdatert."
 msgid "Apply a password policy for all group users"
 msgstr "Bruk en passordpolicy for alle gruppebrukere"
 
+#: modules/ppolicy/default/ajaxPPoliciesFilter.php:44
+#: modules/ppolicy/default/ajaxPPoliciesFilter.php:47
+#: modules/ppolicy/default/edit.php:48
+msgid "Edit password policy"
+msgstr "Rediger passordpolicy"
+
+#: modules/ppolicy/default/ajaxPPoliciesFilter.php:48
+msgid "Delete password policy"
+msgstr "Slett passordpolicy"
+
+#: modules/ppolicy/default/index.php:31
+msgid "Password policies list"
+msgstr "Liste over Passordpolicier."
+
+#: modules/ppolicy/default/warnuser.php:35
+msgid ""
+"Warning: you have been logged using grace login mode. Please change your "
+"password as soon as possible using the password change page, else your "
+"account will be locked."
+msgstr ""
+"Advarsel: du er logget inn ved hjelp av en spesiell innloggingsmodus. Endre "
+"passordet ditt så raskt som mulig ved å bruke siden for endring av passord, "
+"ellers blir kontoen din låst."
+
+#: modules/ppolicy/default/warnuser.php:40
+msgid ""
+"Warning: your password has been reset by an administrator. Your LDAP account"
+" is restricted. Please change your password as soon as possible using the "
+"password change page."
+msgstr ""
+"Advarsel: passordet ditt er tilbakestilt av en administrator. LDAP-kontoen "
+"din er begrenset. Endre passordet ditt så raskt som mulig ved å bruke siden "
+"for endring av passord."
+
 #: modules/ppolicy/default/delete.php:29
 msgid "The password policy has been deleted."
 msgstr "Passordpolicyen er slettet."
@@ -339,16 +373,6 @@ msgstr "Slett"
 #: modules/ppolicy/default/delete.php:46
 msgid "Cancel"
 msgstr "Avbryt"
-
-#: modules/ppolicy/default/index.php:31
-msgid "Password policies list"
-msgstr "Liste over Passordpolicier."
-
-#: modules/ppolicy/default/edit.php:48
-#: modules/ppolicy/default/ajaxPPoliciesFilter.php:44
-#: modules/ppolicy/default/ajaxPPoliciesFilter.php:47
-msgid "Edit password policy"
-msgstr "Rediger passordpolicy"
 
 #: modules/ppolicy/default/edit.php:62
 msgid "\"Maximum age\" must be greater than \"Minimum age\"."
@@ -393,30 +417,6 @@ msgstr "Maksimal feil for passord"
 #: modules/ppolicy/default/edit.php:222
 msgid "Lockout duration (seconds)"
 msgstr "Lock-outvarighet (sekunder)"
-
-#: modules/ppolicy/default/warnuser.php:35
-msgid ""
-"Warning: you have been logged using grace login mode. Please change your "
-"password as soon as possible using the password change page, else your "
-"account will be locked."
-msgstr ""
-"Advarsel: du er logget inn ved hjelp av en spesiell innloggingsmodus. Endre "
-"passordet ditt så raskt som mulig ved å bruke siden for endring av passord, "
-"ellers blir kontoen din låst."
-
-#: modules/ppolicy/default/warnuser.php:40
-msgid ""
-"Warning: your password has been reset by an administrator. Your LDAP account"
-" is restricted. Please change your password as soon as possible using the "
-"password change page."
-msgstr ""
-"Advarsel: passordet ditt er tilbakestilt av en administrator. LDAP-kontoen "
-"din er begrenset. Endre passordet ditt så raskt som mulig ved å bruke siden "
-"for endring av passord."
-
-#: modules/ppolicy/default/ajaxPPoliciesFilter.php:48
-msgid "Delete password policy"
-msgstr "Slett passordpolicy"
 
 #: modules/ppolicy/infoPackage.inc.php:36
 msgid "Password Policy"

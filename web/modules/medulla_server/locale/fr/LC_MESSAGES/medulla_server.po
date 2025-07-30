@@ -4,23 +4,112 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Nicolas Lécureuil <neoclust@mageia.org>, 2018
-# SPO <spointu@gmail.com>, 2023
+# Nicolas Lécureuil <neoclust@mageia.org>, 2025
+# SPO, 2025
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 23:50+0100\n"
+"POT-Creation-Date: 2025-07-30 15:09+0200\n"
 "PO-Revision-Date: 2017-10-11 08:13+0000\n"
-"Last-Translator: SPO <spointu@gmail.com>, 2023\n"
-"Language-Team: French (https://app.transifex.com/siveo/teams/72118/fr/)\n"
+"Last-Translator: SPO, 2025\n"
+"Language-Team: French (https://app.transifex.com/medulla/teams/72118/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: fr\n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#: modules/medulla_server/update/viewProductUpdates.php:84
+msgid "No updates data available"
+msgstr "Aucune donnée de mise à jour disponible"
+
+#: modules/medulla_server/update/viewProductUpdates.php:100
+msgid "Available updates"
+msgstr "Mise à jour disponibles"
+
+#: modules/medulla_server/update/viewProductUpdates.php:103
+msgid "Total updates : "
+msgstr "Total :"
+
+#: modules/medulla_server/update/viewProductUpdates.php:107
+msgid "For more details, see the README."
+msgstr "Pour plus d'informations, voir le README."
+
+#: modules/medulla_server/update/viewProductUpdates.php:112
+msgid "Package name"
+msgstr "Nom du package"
+
+#: modules/medulla_server/update/viewProductUpdates.php:115
+msgid "Description"
+msgstr "Description"
+
+#: modules/medulla_server/update/viewProductUpdates.php:118
+msgid "Version"
+msgstr "Version"
+
+#: modules/medulla_server/update/viewProductUpdates.php:122
+msgid "Yes"
+msgstr "Oui"
+
+#: modules/medulla_server/update/viewProductUpdates.php:122
+msgid "No"
+msgstr "Non"
+
+#: modules/medulla_server/update/viewProductUpdates.php:123
+msgid "Reboot required"
+msgstr "Redémarrage nécessaire"
+
+#: modules/medulla_server/includes/menu_actionaudit.php:72
+#: modules/medulla_server/includes/menu_action.php:60
+msgid "Inventory"
+msgstr "Inventaire"
+
+#: modules/medulla_server/includes/menu_actionaudit.php:74
+#: modules/medulla_server/includes/menu_action.php:62
+msgid "Backup status"
+msgstr "Statut de la sauvegarde"
+
+#: modules/medulla_server/includes/menu_actionaudit.php:75
+#: modules/medulla_server/includes/menu_action.php:63
+msgid "Urbackup"
+msgstr "Urbackup"
+
+#: modules/medulla_server/includes/menu_actionaudit.php:76
+#: modules/medulla_server/includes/menu_group_action.php:76
+#: modules/medulla_server/includes/menu_action.php:64
+msgid "Imaging management"
+msgstr "Gestion de l'imaging"
+
+#: modules/medulla_server/includes/menu_actionaudit.php:77
+#: modules/medulla_server/includes/menu_action.php:75
+msgid "Quick action"
+msgstr "Action rapide"
+
+#: modules/medulla_server/includes/menu_actionaudit.php:80
+#: modules/medulla_server/includes/menu_actionaudit.php:84
+#: modules/medulla_server/includes/menu_action.php:79
+#: modules/medulla_server/includes/menu_action.php:81
+#: modules/medulla_server/includes/menu_action.php:84
+msgid "Software deployment"
+msgstr "Déploiement logiciel"
+
+#: modules/medulla_server/includes/menu_actionaudit.php:83
+#: modules/medulla_server/includes/menu_action.php:67
+#: modules/medulla_server/includes/menu_action.php:69
+msgid "Remote control"
+msgstr "Prise en main à distance"
+
+#: modules/medulla_server/includes/menu_actionaudit.php:86
+#: modules/medulla_server/includes/menu_action.php:74
+msgid "xmppconsole"
+msgstr "Console XMPP"
+
+#: modules/medulla_server/includes/menu_actionaudit.php:87
+msgid "Edit config files"
+msgstr "Éditer les fichiers de configuration"
 
 #: modules/medulla_server/includes/menu_group_action.php:47
 msgid "Delete this group"
@@ -70,12 +159,6 @@ msgstr "Partager ce groupe d'imaging"
 msgid "Software deployment on this imaging group"
 msgstr "Déploiement sur ce groupe d'imaging"
 
-#: modules/medulla_server/includes/menu_group_action.php:76
-#: modules/medulla_server/includes/menu_action.php:64
-#: modules/medulla_server/includes/menu_actionaudit.php:76
-msgid "Imaging management"
-msgstr "Gestion de l'imaging"
-
 #: modules/medulla_server/includes/menu_group_action.php:82
 msgid "Group Quick action"
 msgstr "Groupe Action rapide"
@@ -92,65 +175,9 @@ msgstr "Toutes mes entités"
 msgid "Root entity"
 msgstr "Entité racine"
 
-#: modules/medulla_server/includes/menu_action.php:60
-#: modules/medulla_server/includes/menu_actionaudit.php:72
-msgid "Inventory"
-msgstr "Inventaire"
-
 #: modules/medulla_server/includes/menu_action.php:61
 msgid "extTicket issue"
 msgstr "question extTicket"
-
-#: modules/medulla_server/includes/menu_action.php:62
-#: modules/medulla_server/includes/menu_actionaudit.php:74
-msgid "Backup status"
-msgstr "Statut de la sauvegarde"
-
-#: modules/medulla_server/includes/menu_action.php:63
-#: modules/medulla_server/includes/menu_actionaudit.php:75
-msgid "Urbackup"
-msgstr "Urbackup"
-
-#: modules/medulla_server/includes/menu_action.php:67
-#: modules/medulla_server/includes/menu_action.php:69
-#: modules/medulla_server/includes/menu_actionaudit.php:83
-msgid "Remote control"
-msgstr "Prise en main à distance"
-
-#: modules/medulla_server/includes/menu_action.php:74
-#: modules/medulla_server/includes/menu_actionaudit.php:86
-msgid "xmppconsole"
-msgstr "Console XMPP"
-
-#: modules/medulla_server/includes/menu_action.php:75
-#: modules/medulla_server/includes/menu_actionaudit.php:77
-msgid "Quick action"
-msgstr "Action rapide"
-
-#: modules/medulla_server/includes/menu_action.php:79
-#: modules/medulla_server/includes/menu_action.php:81
-#: modules/medulla_server/includes/menu_action.php:84
-#: modules/medulla_server/includes/menu_actionaudit.php:80
-#: modules/medulla_server/includes/menu_actionaudit.php:84
-msgid "Software deployment"
-msgstr "Déploiement logiciel"
-
-#: modules/medulla_server/includes/menu_actionaudit.php:87
-msgid "Edit config files"
-msgstr "Éditer les fichiers de configuration"
-
-#: modules/medulla_server/update/viewProductUpdates.php:25
-#: modules/medulla_server/update/viewProductUpdates.php:51
-msgid "Available updates"
-msgstr "Mise à jour disponibles"
-
-#: modules/medulla_server/update/viewProductUpdates.php:38
-msgid "Update"
-msgstr "Mise à jour"
-
-#: modules/medulla_server/update/installProductUpdates.php:41
-msgid "Installing updates ..."
-msgstr "Mise à jour en cours d'installation"
 
 #: modules/medulla_server/infoPackage.inc.php:34
 msgid "Medulla"

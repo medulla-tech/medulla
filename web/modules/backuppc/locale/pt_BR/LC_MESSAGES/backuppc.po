@@ -11,279 +11,23 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 23:50+0100\n"
+"POT-Creation-Date: 2025-07-30 15:09+0200\n"
 "PO-Revision-Date: 2017-09-12 12:18+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
-"Language-Team: Portuguese (Brazil) (https://app.transifex.com/siveo/teams/72118/pt_BR/)\n"
+"Language-Team: Portuguese (Brazil) (https://app.transifex.com/medulla/teams/72118/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: pt_BR\n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
-#: modules/backuppc/infoPackage.inc.php:33
-#: modules/backuppc/infoPackage.inc.php:38
-msgid "Backup"
-msgstr "Backup"
-
-#: modules/backuppc/infoPackage.inc.php:42
-#: modules/backuppc/backuppc/index.php:62
-msgid "Backup status"
-msgstr "Status do Backup"
-
-#: modules/backuppc/infoPackage.inc.php:45
-msgid "Host backup status"
-msgstr "Status de bakcup da mquina"
-
-#: modules/backuppc/infoPackage.inc.php:48
-msgid "Host summary"
-msgstr "Resumo da mquina"
-
-#: modules/backuppc/infoPackage.inc.php:51
-msgid "Edit host config"
-msgstr "Editar configurao mquina"
-
-#: modules/backuppc/infoPackage.inc.php:54
-#: modules/backuppc/backuppc/hostStatus.php:221
-msgid "Advanced scripts"
-msgstr "Scripts avanados"
-
-#: modules/backuppc/infoPackage.inc.php:57
-#: modules/backuppc/backuppc/hostStatus.php:222
-msgid "File search"
-msgstr "Busca de arquivos"
-
-#: modules/backuppc/infoPackage.inc.php:62
-msgid "Edit Backup Profile"
-msgstr "Editar Perfil de Backup"
-
-#: modules/backuppc/infoPackage.inc.php:66
-msgid "Edit Backup period Profile"
-msgstr "Editar Perfil de Perodo de Backup"
-
-#: modules/backuppc/infoPackage.inc.php:70
-msgid "See pending packages"
-msgstr "Ver pacotes pendentes"
-
-#: modules/backuppc/infoPackage.inc.php:73
-msgid "Restore points"
-msgstr "Pontos de restaurao"
-
-#: modules/backuppc/infoPackage.inc.php:76
-msgid "Share names"
-msgstr "Compartilhar nomes"
-
-#: modules/backuppc/infoPackage.inc.php:79
-#: modules/backuppc/backuppc/BrowseFiles.php:32
-msgid "Browse files"
-msgstr "Localizar arquivos"
-
-#: modules/backuppc/infoPackage.inc.php:82
-msgid "Backup Profiles"
-msgstr "Perfil de Backup"
-
-#: modules/backuppc/infoPackage.inc.php:85
-#: modules/backuppc/backuppc/ViewProfiles.php:40
-#: modules/backuppc/backuppc/ViewProfiles.php:90
-msgid "Delete profile"
-msgstr "Excluir perfil"
-
-#: modules/backuppc/infoPackage.inc.php:91
-msgid "Download files/ZIP from backup"
-msgstr "Download arquivos/ZIP do backup"
-
-#: modules/backuppc/backuppc/hostStatus.php:45
-msgid "Notify Error : Backup configuration Computer"
-msgstr ""
-
-#: modules/backuppc/backuppc/hostStatus.php:59
-#: modules/backuppc/backuppc/hostStatus.php:188
-msgid "Notify Computer :"
-msgstr ""
-
-#: modules/backuppc/backuppc/hostStatus.php:59
-msgid "has been added to backup system successfully."
-msgstr ""
-
-#: modules/backuppc/backuppc/hostStatus.php:70
-#, php-format
-msgid ""
-"Computer %s has been added to backup system successfully.<br />You can now "
-"configure its filesets and scheduling."
-msgstr ""
-"O computador %s foi adicionado no sistema de backups com sucesso. <br />Voc "
-"pode configurar agora seus arquivos de configurao e agendamentos."
-
-#: modules/backuppc/backuppc/hostStatus.php:188
-msgid "Save configure host "
-msgstr ""
-
-#: modules/backuppc/backuppc/hostStatus.php:199
-#: modules/backuppc/backuppc/advScripts.php:40
-msgid "Configuration saved"
-msgstr "Configurao salva"
-
-#: modules/backuppc/backuppc/hostStatus.php:213
-#, php-format
-msgid "%s's backup status"
-msgstr "%s backup concludo"
-
-#: modules/backuppc/backuppc/hostStatus.php:216
-msgid "Summary"
-msgstr "Resumo"
-
-#: modules/backuppc/backuppc/hostStatus.php:220
-msgid "Configuration"
-msgstr "Configurao"
-
-#: modules/backuppc/backuppc/ajaxDownloadsTable.php:43
-msgid "Requested restores"
-msgstr "Restauraes executadas"
-
-#: modules/backuppc/backuppc/ajaxDownloadsTable.php:63
-msgid "Download"
-msgstr "Download"
-
-#: modules/backuppc/backuppc/ajaxDownloadsTable.php:91
-msgid "Latest direct restore to host"
-msgstr "ltimas restauraes diretas para o computador"
-
-#: modules/backuppc/backuppc/ajaxDownloadsTable.php:91
-#: modules/backuppc/backuppc/EditPeriodProfile.php:144
-#: modules/backuppc/backuppc/edit.php:211
-msgid "to"
-msgstr "para"
-
-#: modules/backuppc/backuppc/ajaxDownloadsTable.php:111
-msgid "Destination"
-msgstr "Destino"
-
-#: modules/backuppc/backuppc/ajaxDownloadsTable.php:112
-msgid "Restore time"
-msgstr "Tempo de recuperao"
-
-#: modules/backuppc/backuppc/ajaxDownloadsTable.php:113
-#: modules/backuppc/backuppc/localSidebar.php:27
-msgid "Status"
-msgstr "Status"
-
-#: modules/backuppc/backuppc/index.php:58
-msgid "The computer has been removed from the backup system."
-msgstr "O computador foi removido do sistema de backup."
-
-#: modules/backuppc/backuppc/BrowseShareNames.php:34
-msgid "Browse backup"
-msgstr "Localizar backup"
-
-#: modules/backuppc/backuppc/BrowseShareNames.php:60
-#: modules/backuppc/backuppc/edit.php:142
-#: modules/backuppc/backuppc/EditBackupProfile.php:149
-#: modules/backuppc/backuppc/fileSearch.php:127
-msgid "Folder"
-msgstr "Diretrios"
-
-#: modules/backuppc/backuppc/BrowseShareNames.php:68
-#: modules/backuppc/backuppc/hostSummary.php:262
-msgid "Browse"
-msgstr "Localizar"
-
-#: modules/backuppc/backuppc/startBackup.php:74
-msgid "Choose the backup type."
-msgstr "Escolher tipo de backup."
-
-#: modules/backuppc/backuppc/startBackup.php:78
-msgid "Full backup"
-msgstr "Backup completo"
-
-#: modules/backuppc/backuppc/startBackup.php:79
-msgid "Incremental backup"
-msgstr "Backup incremental"
-
-#: modules/backuppc/backuppc/restorePopup.php:25
-msgid "Restore files"
-msgstr "Restaurar arquivos"
-
-#: modules/backuppc/backuppc/restorePopup.php:26
-msgid "Host"
-msgstr "Host"
-
-#: modules/backuppc/backuppc/restorePopup.php:35
-msgid "Destination Folder"
-msgstr ""
-
-#: modules/backuppc/backuppc/restorePopup.php:37
-msgid "Restore"
-msgstr ""
-
-#: modules/backuppc/backuppc/viewFileVersions.php:25
-#: modules/backuppc/backuppc/ajaxBrowseFiles.php:132
-msgid "View all versions"
-msgstr "Ver todas as verses"
-
-#: modules/backuppc/backuppc/viewFileVersions.php:37
-msgid "No other version."
-msgstr "No existe outra verso."
-
-#: modules/backuppc/backuppc/viewFileVersions.php:49
-msgid "Restore from "
-msgstr "Restaurando de "
-
-#: modules/backuppc/backuppc/ajaxGetStatus.php:39
-msgid "Error while retrieving status."
-msgstr "Erro ao recuperar o estado."
-
-#: modules/backuppc/backuppc/ajaxGetStatus.php:43
-#: modules/backuppc/backuppc/hostSummary.php:173
-msgid "No ping response"
-msgstr "Sem resposta"
-
-#: modules/backuppc/backuppc/ajaxGetStatus.php:44
-#: modules/backuppc/backuppc/hostSummary.php:174
-msgid "Backup failed"
-msgstr "Backup falhou"
-
-#: modules/backuppc/backuppc/ajaxGetStatus.php:45
-#: modules/backuppc/backuppc/hostSummary.php:175
-msgid "Restore failed"
-msgstr "Recuperao falhou"
-
-#: modules/backuppc/backuppc/ajaxGetStatus.php:46
-#: modules/backuppc/backuppc/hostSummary.php:176
-msgid "Backup up to date"
-msgstr "Backup atualizado"
-
-#: modules/backuppc/backuppc/ajaxGetStatus.php:47
-#: modules/backuppc/backuppc/hostSummary.php:177
-msgid "Restore done"
-msgstr "Recuperao realizada"
-
-#: modules/backuppc/backuppc/ajaxGetStatus.php:48
-#: modules/backuppc/backuppc/hostSummary.php:178
-msgid "This computer has never been backed up"
-msgstr "Este computador nunca teve backup"
-
-#: modules/backuppc/backuppc/ajaxGetStatus.php:49
-#: modules/backuppc/backuppc/hostSummary.php:179
-msgid "Idle"
-msgstr "Ocioso"
-
-#: modules/backuppc/backuppc/ajaxGetStatus.php:50
-#: modules/backuppc/backuppc/hostSummary.php:180
-msgid "Cancelled by user"
-msgstr "Cancelado pelo usurio"
-
-#: modules/backuppc/backuppc/ajaxGetStatus.php:51
-#: modules/backuppc/backuppc/hostSummary.php:181
-msgid "Backup in progress"
-msgstr "Backup em execuo"
-
 #: modules/backuppc/backuppc/EditPeriodProfile.php:77
 msgid "Edit schedule"
 msgstr "Editar agenda"
 
 #: modules/backuppc/backuppc/EditPeriodProfile.php:79
-#: modules/backuppc/backuppc/localSidebar.php:30
 #: modules/backuppc/backuppc/edit.php:232
+#: modules/backuppc/backuppc/localSidebar.php:30
 msgid "Add schedule"
 msgstr "Adicionar agendamento"
 
@@ -346,6 +90,12 @@ msgstr "Sbado"
 msgid "Sunday"
 msgstr "Domingo"
 
+#: modules/backuppc/backuppc/EditPeriodProfile.php:144
+#: modules/backuppc/backuppc/ajaxDownloadsTable.php:91
+#: modules/backuppc/backuppc/edit.php:211
+msgid "to"
+msgstr "para"
+
 #: modules/backuppc/backuppc/EditPeriodProfile.php:146
 #: modules/backuppc/backuppc/edit.php:213
 msgid "on"
@@ -376,13 +126,426 @@ msgstr "Adicionar excluso"
 msgid "Select days"
 msgstr "Selecionar dias"
 
-#: modules/backuppc/backuppc/viewXferLog.php:25
-msgid "XferLog"
-msgstr "XferLog"
+#: modules/backuppc/backuppc/ajaxGetStatus.php:39
+msgid "Error while retrieving status."
+msgstr "Erro ao recuperar o estado."
 
-#: modules/backuppc/backuppc/viewXferLog.php:35
-msgid "Error log"
-msgstr "Log de erro"
+#: modules/backuppc/backuppc/ajaxGetStatus.php:43
+#: modules/backuppc/backuppc/hostSummary.php:173
+msgid "No ping response"
+msgstr "Sem resposta"
+
+#: modules/backuppc/backuppc/ajaxGetStatus.php:44
+#: modules/backuppc/backuppc/hostSummary.php:174
+msgid "Backup failed"
+msgstr "Backup falhou"
+
+#: modules/backuppc/backuppc/ajaxGetStatus.php:45
+#: modules/backuppc/backuppc/hostSummary.php:175
+msgid "Restore failed"
+msgstr "Recuperao falhou"
+
+#: modules/backuppc/backuppc/ajaxGetStatus.php:46
+#: modules/backuppc/backuppc/hostSummary.php:176
+msgid "Backup up to date"
+msgstr "Backup atualizado"
+
+#: modules/backuppc/backuppc/ajaxGetStatus.php:47
+#: modules/backuppc/backuppc/hostSummary.php:177
+msgid "Restore done"
+msgstr "Recuperao realizada"
+
+#: modules/backuppc/backuppc/ajaxGetStatus.php:48
+#: modules/backuppc/backuppc/hostSummary.php:178
+msgid "This computer has never been backed up"
+msgstr "Este computador nunca teve backup"
+
+#: modules/backuppc/backuppc/ajaxGetStatus.php:49
+#: modules/backuppc/backuppc/hostSummary.php:179
+msgid "Idle"
+msgstr "Ocioso"
+
+#: modules/backuppc/backuppc/ajaxGetStatus.php:50
+#: modules/backuppc/backuppc/hostSummary.php:180
+msgid "Cancelled by user"
+msgstr "Cancelado pelo usurio"
+
+#: modules/backuppc/backuppc/ajaxGetStatus.php:51
+#: modules/backuppc/backuppc/hostSummary.php:181
+msgid "Backup in progress"
+msgstr "Backup em execuo"
+
+#: modules/backuppc/backuppc/ajaxBrowseFiles.php:28
+#: modules/backuppc/backuppc/ajaxFileSearch.php:28
+msgid "GB"
+msgstr "GB"
+
+#: modules/backuppc/backuppc/ajaxBrowseFiles.php:30
+#: modules/backuppc/backuppc/ajaxFileSearch.php:30
+msgid "MB"
+msgstr "MB"
+
+#: modules/backuppc/backuppc/ajaxBrowseFiles.php:32
+#: modules/backuppc/backuppc/ajaxFileSearch.php:32
+msgid "KB"
+msgstr "KB"
+
+#: modules/backuppc/backuppc/ajaxBrowseFiles.php:34
+#: modules/backuppc/backuppc/ajaxFileSearch.php:34
+msgid "Bytes"
+msgstr "Bytes"
+
+#: modules/backuppc/backuppc/ajaxBrowseFiles.php:106
+msgid "Current directory :  "
+msgstr "Diretrio atual :  "
+
+#: modules/backuppc/backuppc/ajaxBrowseFiles.php:132
+#: modules/backuppc/backuppc/viewFileVersions.php:25
+msgid "View all versions"
+msgstr "Ver todas as verses"
+
+#: modules/backuppc/backuppc/ajaxBrowseFiles.php:170
+#: modules/backuppc/backuppc/ajaxFileSearch.php:118
+msgid "Size"
+msgstr "Tamanho"
+
+#: modules/backuppc/backuppc/ajaxBrowseFiles.php:191
+msgid "Download selected (ZIP)"
+msgstr "Baixar selecionados (ZIP)"
+
+#: modules/backuppc/backuppc/ajaxBrowseFiles.php:192
+msgid "Restore to host (overwrite)"
+msgstr ""
+
+#: modules/backuppc/backuppc/ajaxBrowseFiles.php:193
+msgid "Restore to host (subfolder)"
+msgstr ""
+
+#: modules/backuppc/backuppc/ajaxBrowseFiles.php:194
+msgid "Advanced restore"
+msgstr ""
+
+#: modules/backuppc/backuppc/index.php:58
+msgid "The computer has been removed from the backup system."
+msgstr "O computador foi removido do sistema de backup."
+
+#: modules/backuppc/backuppc/index.php:62
+#: modules/backuppc/infoPackage.inc.php:42
+msgid "Backup status"
+msgstr "Status do Backup"
+
+#: modules/backuppc/backuppc/fileSearch.php:53
+msgid "There is no backup for this machine yet."
+msgstr "Ainda no h backup para esta mquina."
+
+#: modules/backuppc/backuppc/fileSearch.php:83
+msgid "File name"
+msgstr "Nome do arquivo"
+
+#: modules/backuppc/backuppc/fileSearch.php:92
+#: modules/backuppc/backuppc/fileSearch.php:114
+msgid "All"
+msgstr "Todos"
+
+#: modules/backuppc/backuppc/fileSearch.php:95
+#: modules/backuppc/backuppc/BrowseBackups.php:59
+msgid "Backup#"
+msgstr "Backup#"
+
+#: modules/backuppc/backuppc/fileSearch.php:105
+msgid "Date"
+msgstr "Data"
+
+#: modules/backuppc/backuppc/fileSearch.php:127
+#: modules/backuppc/backuppc/BrowseShareNames.php:60
+#: modules/backuppc/backuppc/edit.php:142
+#: modules/backuppc/backuppc/EditBackupProfile.php:149
+msgid "Folder"
+msgstr "Diretrios"
+
+#: modules/backuppc/backuppc/fileSearch.php:149
+msgid "Any size"
+msgstr "Qualquer tamanho"
+
+#: modules/backuppc/backuppc/fileSearch.php:150
+msgid "Less than 1 Mb"
+msgstr "Menor que 1 MB"
+
+#: modules/backuppc/backuppc/fileSearch.php:151
+msgid "1 Mb to 10 Mb"
+msgstr "de 1 MB a 10 MB"
+
+#: modules/backuppc/backuppc/fileSearch.php:152
+msgid "10 Mb to 100 Mb"
+msgstr "de 10 MB a 100 MB"
+
+#: modules/backuppc/backuppc/fileSearch.php:153
+msgid "Greater than 100 Mb"
+msgstr "Maior que 100 MB"
+
+#: modules/backuppc/backuppc/fileSearch.php:164
+msgid "File size"
+msgstr "Tamanho do arquivo"
+
+#: modules/backuppc/backuppc/fileSearch.php:181
+msgid "Search"
+msgstr "Procurar"
+
+#: modules/backuppc/backuppc/advScripts.php:40
+#: modules/backuppc/backuppc/hostStatus.php:199
+msgid "Configuration saved"
+msgstr "Configurao salva"
+
+#: modules/backuppc/backuppc/advScripts.php:64
+msgid "Pre-backup script"
+msgstr "Script Pr-backup"
+
+#: modules/backuppc/backuppc/advScripts.php:68
+msgid "Post-backup script"
+msgstr "Script Ps-backup"
+
+#: modules/backuppc/backuppc/advScripts.php:72
+msgid "Pre-restore script"
+msgstr "Script Pr-restaurao"
+
+#: modules/backuppc/backuppc/advScripts.php:76
+msgid "Post-restore script"
+msgstr "Script Ps-restaurao"
+
+#: modules/backuppc/backuppc/hostStatus.php:45
+msgid "Notify Error : Backup configuration Computer"
+msgstr ""
+
+#: modules/backuppc/backuppc/hostStatus.php:59
+#: modules/backuppc/backuppc/hostStatus.php:188
+msgid "Notify Computer :"
+msgstr ""
+
+#: modules/backuppc/backuppc/hostStatus.php:59
+msgid "has been added to backup system successfully."
+msgstr ""
+
+#: modules/backuppc/backuppc/hostStatus.php:70
+#, php-format
+msgid ""
+"Computer %s has been added to backup system successfully.<br />You can now "
+"configure its filesets and scheduling."
+msgstr ""
+"O computador %s foi adicionado no sistema de backups com sucesso. <br />Voc "
+"pode configurar agora seus arquivos de configurao e agendamentos."
+
+#: modules/backuppc/backuppc/hostStatus.php:188
+msgid "Save configure host "
+msgstr ""
+
+#: modules/backuppc/backuppc/hostStatus.php:213
+#, php-format
+msgid "%s's backup status"
+msgstr "%s backup concludo"
+
+#: modules/backuppc/backuppc/hostStatus.php:216
+msgid "Summary"
+msgstr "Resumo"
+
+#: modules/backuppc/backuppc/hostStatus.php:220
+msgid "Configuration"
+msgstr "Configurao"
+
+#: modules/backuppc/backuppc/hostStatus.php:221
+#: modules/backuppc/infoPackage.inc.php:54
+msgid "Advanced scripts"
+msgstr "Scripts avanados"
+
+#: modules/backuppc/backuppc/hostStatus.php:222
+#: modules/backuppc/infoPackage.inc.php:57
+msgid "File search"
+msgstr "Busca de arquivos"
+
+#: modules/backuppc/backuppc/BrowseBackups.php:28
+msgid "View restore points"
+msgstr "Ver pontos de recuperao"
+
+#: modules/backuppc/backuppc/BrowseBackups.php:68
+#: modules/backuppc/backuppc/ajaxHostsList.php:64
+msgid "View"
+msgstr "Ver"
+
+#: modules/backuppc/backuppc/startBackup.php:74
+msgid "Choose the backup type."
+msgstr "Escolher tipo de backup."
+
+#: modules/backuppc/backuppc/startBackup.php:78
+msgid "Full backup"
+msgstr "Backup completo"
+
+#: modules/backuppc/backuppc/startBackup.php:79
+msgid "Incremental backup"
+msgstr "Backup incremental"
+
+#: modules/backuppc/backuppc/ajaxHostsList.php:57
+#: modules/backuppc/backuppc/ajaxBackupStatus.php:91
+msgid "Host name"
+msgstr "Nome da mquina"
+
+#: modules/backuppc/backuppc/ajaxHostsList.php:65
+msgid "Edit config"
+msgstr "Editar configurao"
+
+#: modules/backuppc/backuppc/BrowseFiles.php:32
+#: modules/backuppc/infoPackage.inc.php:79
+msgid "Browse files"
+msgstr "Localizar arquivos"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:27
+msgid "Filesets"
+msgstr "Configurao de arquivos"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:39
+#: modules/backuppc/backuppc/ViewProfiles.php:89
+msgid "Edit profile"
+msgstr "Editar perfil"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:40
+#: modules/backuppc/backuppc/ViewProfiles.php:90
+#: modules/backuppc/infoPackage.inc.php:85
+msgid "Delete profile"
+msgstr "Excluir perfil"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:68
+#: modules/backuppc/backuppc/edit.php:81
+msgid "Fileset"
+msgstr "Configurao de arquivo"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:85
+msgid "Schedules"
+msgstr "Agendamentos"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:118
+#: modules/backuppc/backuppc/edit.php:166
+msgid "Schedule"
+msgstr "Agenda"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:133
+msgid "Linux (User files)"
+msgstr "Linux (Arquivos dos usurios)"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:134
+msgid "Linux (Whole drive)"
+msgstr "Linux (drive inteiro)"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:135
+msgid "macOS (User files)"
+msgstr "macOS (Arquivos dos usurios)"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:136
+msgid "macOS (Whole drive)"
+msgstr "macOS (drive inteiro)"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:137
+msgid "Windows 7/Vista (User files)"
+msgstr "Windows 7/Vista (Arquivos dos usurios)"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:138
+msgid "Windows 7/Vista (Whole C: Drive)"
+msgstr "Windows 7/Vista (Disco C: completo)"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:139
+msgid "Windows XP (User files)"
+msgstr "Windows XP (Arquivos dos usurios)"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:140
+msgid "Windows XP (Whole C: Drive)"
+msgstr "Windows XP (Disco C: completo)"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:141
+msgid "Daytime"
+msgstr "Diurno"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:142
+msgid "Nightly"
+msgstr "Noturno"
+
+#: modules/backuppc/backuppc/ajaxBackupStatus.php:53
+msgid "No entry found."
+msgstr "Nenhuma entrada encontrada."
+
+#: modules/backuppc/backuppc/ajaxBackupStatus.php:92
+msgid "Full number"
+msgstr "Nmero de backups completados"
+
+#: modules/backuppc/backuppc/ajaxBackupStatus.php:93
+msgid "Full size (GB)"
+msgstr "Tamanho (GB)"
+
+#: modules/backuppc/backuppc/ajaxBackupStatus.php:94
+msgid "incr. number"
+msgstr "nmero incremental"
+
+#: modules/backuppc/backuppc/ajaxBackupStatus.php:95
+msgid "Last backup (days)"
+msgstr "ltimo backup (dias)"
+
+#: modules/backuppc/backuppc/ajaxBackupStatus.php:96
+msgid "Current state"
+msgstr "Estado atual"
+
+#: modules/backuppc/backuppc/ajaxBackupStatus.php:97
+msgid "Last message"
+msgstr "ltima mensagem"
+
+#: modules/backuppc/backuppc/ajaxBackupStatus.php:99
+msgid "Start backup"
+msgstr "Iniciar backup"
+
+#: modules/backuppc/backuppc/ajaxBackupStatus.php:100
+msgid "Stop backup"
+msgstr ""
+
+#: modules/backuppc/backuppc/ajaxBackupStatus.php:101
+#: modules/backuppc/backuppc/hostSummary.php:263
+msgid "View errors"
+msgstr "Visualizar erros"
+
+#: modules/backuppc/backuppc/ajaxBackupStatus.php:102
+msgid "Unset backup"
+msgstr "Backup no configurado"
+
+#: modules/backuppc/backuppc/ajaxBackupStatus.php:102
+msgid "Are you sure you want to unset backup for this computer?"
+msgstr "Deseja realmente desabilitar o backup para este computador?"
+
+#: modules/backuppc/backuppc/viewFileVersions.php:37
+msgid "No other version."
+msgstr "No existe outra verso."
+
+#: modules/backuppc/backuppc/viewFileVersions.php:49
+msgid "Restore from "
+msgstr "Restaurando de "
+
+#: modules/backuppc/backuppc/ajaxDownloadsTable.php:43
+msgid "Requested restores"
+msgstr "Restauraes executadas"
+
+#: modules/backuppc/backuppc/ajaxDownloadsTable.php:63
+msgid "Download"
+msgstr "Download"
+
+#: modules/backuppc/backuppc/ajaxDownloadsTable.php:91
+msgid "Latest direct restore to host"
+msgstr "ltimas restauraes diretas para o computador"
+
+#: modules/backuppc/backuppc/ajaxDownloadsTable.php:111
+msgid "Destination"
+msgstr "Destino"
+
+#: modules/backuppc/backuppc/ajaxDownloadsTable.php:112
+msgid "Restore time"
+msgstr "Tempo de recuperao"
+
+#: modules/backuppc/backuppc/ajaxDownloadsTable.php:113
+#: modules/backuppc/backuppc/localSidebar.php:27
+msgid "Status"
+msgstr "Status"
 
 #: modules/backuppc/backuppc/viewHostLog.php:25
 msgid "backup Log"
@@ -392,45 +555,50 @@ msgstr "Log de backup"
 msgid "backup log"
 msgstr "log de backup"
 
-#: modules/backuppc/backuppc/restoreToHost.php:51
-msgid "No file selected."
-msgstr "Nenhum arquivo selecionado."
+#: modules/backuppc/backuppc/deleteProfile.php:43
+msgid "The profile has been deleted successfully."
+msgstr "O perfil foi excludo com sucesso."
 
-#: modules/backuppc/backuppc/restoreToHost.php:58
-msgid "The selected files are going to be restored to"
-msgstr "Os arquivos selecionados esto sendo restaurados"
+#: modules/backuppc/backuppc/deleteProfile.php:46
+msgid "Failed to delete the selected profile"
+msgstr "Falha ao excluir o perfil selecionado"
 
-#: modules/backuppc/backuppc/ajaxHostsList.php:57
-#: modules/backuppc/backuppc/ajaxBackupStatus.php:91
-msgid "Host name"
-msgstr "Nome da mquina"
+#: modules/backuppc/backuppc/deleteProfile.php:58
+msgid "Error : Default profiles cannot be deleted"
+msgstr "Erro: Perfis padres no podem ser apagados"
 
-#: modules/backuppc/backuppc/ajaxHostsList.php:64
-#: modules/backuppc/backuppc/BrowseBackups.php:68
-msgid "View"
-msgstr "Ver"
+#: modules/backuppc/backuppc/deleteProfile.php:60
+msgid "Delete this profile"
+msgstr "Excluir esse perfil"
 
-#: modules/backuppc/backuppc/ajaxHostsList.php:65
-msgid "Edit config"
-msgstr "Editar configurao"
+#: modules/backuppc/backuppc/BrowseShareNames.php:34
+msgid "Browse backup"
+msgstr "Localizar backup"
 
-#: modules/backuppc/backuppc/localSidebar.php:28
-msgid "Profiles"
-msgstr "Perfil"
+#: modules/backuppc/backuppc/BrowseShareNames.php:68
+#: modules/backuppc/backuppc/hostSummary.php:262
+msgid "Browse"
+msgstr "Localizar"
 
-#: modules/backuppc/backuppc/localSidebar.php:29
-#: modules/backuppc/backuppc/EditBackupProfile.php:72
-msgid "Add fileset"
-msgstr "Adicionar arquivo de configurao"
+#: modules/backuppc/backuppc/ajaxRestoreFile.php:30
+msgid "Your file is being prepared, please wait."
+msgstr "Seu arquivo est sendo preparado, por favor aguarde."
 
-#: modules/backuppc/backuppc/BrowseBackups.php:28
-msgid "View restore points"
-msgstr "Ver pontos de recuperao"
+#: modules/backuppc/backuppc/restorePopup.php:25
+msgid "Restore files"
+msgstr "Restaurar arquivos"
 
-#: modules/backuppc/backuppc/BrowseBackups.php:59
-#: modules/backuppc/backuppc/fileSearch.php:95
-msgid "Backup#"
-msgstr "Backup#"
+#: modules/backuppc/backuppc/restorePopup.php:26
+msgid "Host"
+msgstr "Host"
+
+#: modules/backuppc/backuppc/restorePopup.php:35
+msgid "Destination Folder"
+msgstr ""
+
+#: modules/backuppc/backuppc/restorePopup.php:37
+msgid "Restore"
+msgstr ""
 
 #: modules/backuppc/backuppc/edit.php:43
 msgid "Host backup is not set."
@@ -444,11 +612,6 @@ msgstr "Habilitado"
 #: modules/backuppc/backuppc/edit.php:158
 msgid "Custom"
 msgstr "Personalizar"
-
-#: modules/backuppc/backuppc/edit.php:81
-#: modules/backuppc/backuppc/ViewProfiles.php:68
-msgid "Fileset"
-msgstr "Configurao de arquivo"
 
 #: modules/backuppc/backuppc/edit.php:89
 #: modules/backuppc/backuppc/EditBackupProfile.php:97
@@ -535,140 +698,14 @@ msgstr "Arquivos removidos"
 msgid "Add folder"
 msgstr "Adicionar pasta"
 
-#: modules/backuppc/backuppc/edit.php:166
-#: modules/backuppc/backuppc/ViewProfiles.php:118
-msgid "Schedule"
-msgstr "Agenda"
-
 #: modules/backuppc/backuppc/EditBackupProfile.php:70
 msgid "Edit fileset"
 msgstr "Editar arquivo de configurao"
 
-#: modules/backuppc/backuppc/ajaxBrowseFiles.php:28
-#: modules/backuppc/backuppc/ajaxFileSearch.php:28
-msgid "GB"
-msgstr "GB"
-
-#: modules/backuppc/backuppc/ajaxBrowseFiles.php:30
-#: modules/backuppc/backuppc/ajaxFileSearch.php:30
-msgid "MB"
-msgstr "MB"
-
-#: modules/backuppc/backuppc/ajaxBrowseFiles.php:32
-#: modules/backuppc/backuppc/ajaxFileSearch.php:32
-msgid "KB"
-msgstr "KB"
-
-#: modules/backuppc/backuppc/ajaxBrowseFiles.php:34
-#: modules/backuppc/backuppc/ajaxFileSearch.php:34
-msgid "Bytes"
-msgstr "Bytes"
-
-#: modules/backuppc/backuppc/ajaxBrowseFiles.php:106
-msgid "Current directory :  "
-msgstr "Diretrio atual :  "
-
-#: modules/backuppc/backuppc/ajaxBrowseFiles.php:170
-#: modules/backuppc/backuppc/ajaxFileSearch.php:118
-msgid "Size"
-msgstr "Tamanho"
-
-#: modules/backuppc/backuppc/ajaxBrowseFiles.php:191
-msgid "Download selected (ZIP)"
-msgstr "Baixar selecionados (ZIP)"
-
-#: modules/backuppc/backuppc/ajaxBrowseFiles.php:192
-msgid "Restore to host (overwrite)"
-msgstr ""
-
-#: modules/backuppc/backuppc/ajaxBrowseFiles.php:193
-msgid "Restore to host (subfolder)"
-msgstr ""
-
-#: modules/backuppc/backuppc/ajaxBrowseFiles.php:194
-msgid "Advanced restore"
-msgstr ""
-
-#: modules/backuppc/backuppc/ajaxFileSearch.php:116
-msgid "File"
-msgstr "Arquivo"
-
-#: modules/backuppc/backuppc/deleteProfile.php:43
-msgid "The profile has been deleted successfully."
-msgstr "O perfil foi excludo com sucesso."
-
-#: modules/backuppc/backuppc/deleteProfile.php:46
-msgid "Failed to delete the selected profile"
-msgstr "Falha ao excluir o perfil selecionado"
-
-#: modules/backuppc/backuppc/deleteProfile.php:58
-msgid "Error : Default profiles cannot be deleted"
-msgstr "Erro: Perfis padres no podem ser apagados"
-
-#: modules/backuppc/backuppc/deleteProfile.php:60
-msgid "Delete this profile"
-msgstr "Excluir esse perfil"
-
-#: modules/backuppc/backuppc/advScripts.php:64
-msgid "Pre-backup script"
-msgstr "Script Pr-backup"
-
-#: modules/backuppc/backuppc/advScripts.php:68
-msgid "Post-backup script"
-msgstr "Script Ps-backup"
-
-#: modules/backuppc/backuppc/advScripts.php:72
-msgid "Pre-restore script"
-msgstr "Script Pr-restaurao"
-
-#: modules/backuppc/backuppc/advScripts.php:76
-msgid "Post-restore script"
-msgstr "Script Ps-restaurao"
-
-#: modules/backuppc/backuppc/fileSearch.php:53
-msgid "There is no backup for this machine yet."
-msgstr "Ainda no h backup para esta mquina."
-
-#: modules/backuppc/backuppc/fileSearch.php:83
-msgid "File name"
-msgstr "Nome do arquivo"
-
-#: modules/backuppc/backuppc/fileSearch.php:92
-#: modules/backuppc/backuppc/fileSearch.php:114
-msgid "All"
-msgstr "Todos"
-
-#: modules/backuppc/backuppc/fileSearch.php:105
-msgid "Date"
-msgstr "Data"
-
-#: modules/backuppc/backuppc/fileSearch.php:149
-msgid "Any size"
-msgstr "Qualquer tamanho"
-
-#: modules/backuppc/backuppc/fileSearch.php:150
-msgid "Less than 1 Mb"
-msgstr "Menor que 1 MB"
-
-#: modules/backuppc/backuppc/fileSearch.php:151
-msgid "1 Mb to 10 Mb"
-msgstr "de 1 MB a 10 MB"
-
-#: modules/backuppc/backuppc/fileSearch.php:152
-msgid "10 Mb to 100 Mb"
-msgstr "de 10 MB a 100 MB"
-
-#: modules/backuppc/backuppc/fileSearch.php:153
-msgid "Greater than 100 Mb"
-msgstr "Maior que 100 MB"
-
-#: modules/backuppc/backuppc/fileSearch.php:164
-msgid "File size"
-msgstr "Tamanho do arquivo"
-
-#: modules/backuppc/backuppc/fileSearch.php:181
-msgid "Search"
-msgstr "Procurar"
+#: modules/backuppc/backuppc/EditBackupProfile.php:72
+#: modules/backuppc/backuppc/localSidebar.php:29
+msgid "Add fileset"
+msgstr "Adicionar arquivo de configurao"
 
 #: modules/backuppc/backuppc/hostSummary.php:94
 msgid "Action requested successfully"
@@ -731,112 +768,6 @@ msgstr "Nmero de arquivos (novo)"
 msgid "Backup size (new) [Mb]"
 msgstr "Tamanho do backup (novo) [Mb]"
 
-#: modules/backuppc/backuppc/hostSummary.php:263
-#: modules/backuppc/backuppc/ajaxBackupStatus.php:101
-msgid "View errors"
-msgstr "Visualizar erros"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:27
-msgid "Filesets"
-msgstr "Configurao de arquivos"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:39
-#: modules/backuppc/backuppc/ViewProfiles.php:89
-msgid "Edit profile"
-msgstr "Editar perfil"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:85
-msgid "Schedules"
-msgstr "Agendamentos"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:133
-msgid "Linux (User files)"
-msgstr "Linux (Arquivos dos usurios)"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:134
-msgid "Linux (Whole drive)"
-msgstr "Linux (drive inteiro)"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:135
-msgid "macOS (User files)"
-msgstr "macOS (Arquivos dos usurios)"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:136
-msgid "macOS (Whole drive)"
-msgstr "macOS (drive inteiro)"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:137
-msgid "Windows 7/Vista (User files)"
-msgstr "Windows 7/Vista (Arquivos dos usurios)"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:138
-msgid "Windows 7/Vista (Whole C: Drive)"
-msgstr "Windows 7/Vista (Disco C: completo)"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:139
-msgid "Windows XP (User files)"
-msgstr "Windows XP (Arquivos dos usurios)"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:140
-msgid "Windows XP (Whole C: Drive)"
-msgstr "Windows XP (Disco C: completo)"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:141
-msgid "Daytime"
-msgstr "Diurno"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:142
-msgid "Nightly"
-msgstr "Noturno"
-
-#: modules/backuppc/backuppc/ajaxBackupStatus.php:53
-msgid "No entry found."
-msgstr "Nenhuma entrada encontrada."
-
-#: modules/backuppc/backuppc/ajaxBackupStatus.php:92
-msgid "Full number"
-msgstr "Nmero de backups completados"
-
-#: modules/backuppc/backuppc/ajaxBackupStatus.php:93
-msgid "Full size (GB)"
-msgstr "Tamanho (GB)"
-
-#: modules/backuppc/backuppc/ajaxBackupStatus.php:94
-msgid "incr. number"
-msgstr "nmero incremental"
-
-#: modules/backuppc/backuppc/ajaxBackupStatus.php:95
-msgid "Last backup (days)"
-msgstr "ltimo backup (dias)"
-
-#: modules/backuppc/backuppc/ajaxBackupStatus.php:96
-msgid "Current state"
-msgstr "Estado atual"
-
-#: modules/backuppc/backuppc/ajaxBackupStatus.php:97
-msgid "Last message"
-msgstr "ltima mensagem"
-
-#: modules/backuppc/backuppc/ajaxBackupStatus.php:99
-msgid "Start backup"
-msgstr "Iniciar backup"
-
-#: modules/backuppc/backuppc/ajaxBackupStatus.php:100
-msgid "Stop backup"
-msgstr ""
-
-#: modules/backuppc/backuppc/ajaxBackupStatus.php:102
-msgid "Unset backup"
-msgstr "Backup no configurado"
-
-#: modules/backuppc/backuppc/ajaxBackupStatus.php:102
-msgid "Are you sure you want to unset backup for this computer?"
-msgstr "Deseja realmente desabilitar o backup para este computador?"
-
-#: modules/backuppc/backuppc/ajaxRestoreFile.php:30
-msgid "Your file is being prepared, please wait."
-msgstr "Seu arquivo est sendo preparado, por favor aguarde."
-
 #: modules/backuppc/backuppc/restoreZip.php:52
 msgid ""
 "Your ZIP file is being prepared, please wait.<br/>Please use 7zip to open "
@@ -844,3 +775,72 @@ msgid ""
 msgstr ""
 "Gerando o seu arquivo ZIP, por favor aguarde.<br/>Use o 7zip para abrir este"
 " arquivo (adequado para manuseio de caracteres especiais)."
+
+#: modules/backuppc/backuppc/restoreToHost.php:51
+msgid "No file selected."
+msgstr "Nenhum arquivo selecionado."
+
+#: modules/backuppc/backuppc/restoreToHost.php:58
+msgid "The selected files are going to be restored to"
+msgstr "Os arquivos selecionados esto sendo restaurados"
+
+#: modules/backuppc/backuppc/ajaxFileSearch.php:116
+msgid "File"
+msgstr "Arquivo"
+
+#: modules/backuppc/backuppc/localSidebar.php:28
+msgid "Profiles"
+msgstr "Perfil"
+
+#: modules/backuppc/backuppc/viewXferLog.php:25
+msgid "XferLog"
+msgstr "XferLog"
+
+#: modules/backuppc/backuppc/viewXferLog.php:35
+msgid "Error log"
+msgstr "Log de erro"
+
+#: modules/backuppc/infoPackage.inc.php:33
+#: modules/backuppc/infoPackage.inc.php:38
+msgid "Backup"
+msgstr "Backup"
+
+#: modules/backuppc/infoPackage.inc.php:45
+msgid "Host backup status"
+msgstr "Status de bakcup da mquina"
+
+#: modules/backuppc/infoPackage.inc.php:48
+msgid "Host summary"
+msgstr "Resumo da mquina"
+
+#: modules/backuppc/infoPackage.inc.php:51
+msgid "Edit host config"
+msgstr "Editar configurao mquina"
+
+#: modules/backuppc/infoPackage.inc.php:62
+msgid "Edit Backup Profile"
+msgstr "Editar Perfil de Backup"
+
+#: modules/backuppc/infoPackage.inc.php:66
+msgid "Edit Backup period Profile"
+msgstr "Editar Perfil de Perodo de Backup"
+
+#: modules/backuppc/infoPackage.inc.php:70
+msgid "See pending packages"
+msgstr "Ver pacotes pendentes"
+
+#: modules/backuppc/infoPackage.inc.php:73
+msgid "Restore points"
+msgstr "Pontos de restaurao"
+
+#: modules/backuppc/infoPackage.inc.php:76
+msgid "Share names"
+msgstr "Compartilhar nomes"
+
+#: modules/backuppc/infoPackage.inc.php:82
+msgid "Backup Profiles"
+msgstr "Perfil de Backup"
+
+#: modules/backuppc/infoPackage.inc.php:91
+msgid "Download files/ZIP from backup"
+msgstr "Download arquivos/ZIP do backup"

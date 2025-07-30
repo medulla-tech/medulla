@@ -11,34 +11,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 23:50+0100\n"
+"POT-Creation-Date: 2025-07-30 15:09+0200\n"
 "PO-Revision-Date: 2017-10-11 08:07+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2019\n"
-"Language-Team: Ukrainian (https://app.transifex.com/siveo/teams/72118/uk/)\n"
+"Language-Team: Ukrainian (https://app.transifex.com/medulla/teams/72118/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: uk\n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
-
-#: modules/inventory/includes/html.php:65
-#: modules/inventory/inventory/i18n_labels.php:53
-#: modules/inventory/inventory/ajaxViewPart.php:188
-#: modules/inventory/inventory/ajaxViewPart.php:609
-msgid "Date"
-msgstr "Дата"
-
-#: modules/inventory/includes/html.php:98
-msgid "Filter software"
-msgstr "Програмне забезпечення для фільтрування"
-
-#: modules/inventory/includes/html.php:103
-msgid "Hide Windows Updates"
-msgstr "Приховати оновлення Windows"
-
-#: modules/inventory/includes/html.php:117
-msgid "Refresh"
-msgstr "Оновити"
 
 #: modules/inventory/includes/panels/inventory.inc.php:30
 msgid "Computers"
@@ -59,6 +40,25 @@ msgstr "> %s днів: %percent% (%d)"
 #: modules/inventory/includes/panels/inventory.inc.php:48
 msgid "Latest Inventory Date"
 msgstr "Найсвіжіша дата обліку"
+
+#: modules/inventory/includes/html.php:65
+#: modules/inventory/inventory/i18n_labels.php:53
+#: modules/inventory/inventory/ajaxViewPart.php:188
+#: modules/inventory/inventory/ajaxViewPart.php:609
+msgid "Date"
+msgstr "Дата"
+
+#: modules/inventory/includes/html.php:98
+msgid "Filter software"
+msgstr "Програмне забезпечення для фільтрування"
+
+#: modules/inventory/includes/html.php:103
+msgid "Hide Windows Updates"
+msgstr "Приховати оновлення Windows"
+
+#: modules/inventory/includes/html.php:117
+msgid "Refresh"
+msgstr "Оновити"
 
 #: modules/inventory/includes/publicFunc.php:57
 #: modules/inventory/includes/publicFunc.php:90
@@ -334,6 +334,161 @@ msgstr "Змінити порядок правил записів (вище)"
 msgid "Change entity rule order (down)"
 msgstr "Змінити порядок правил записів (нижче)"
 
+#: modules/inventory/inventory/tabs.php:63
+#: modules/inventory/inventory/tabs.php:71
+msgid "This client has been registered in pull mode"
+msgstr "Клієнт зареєстровано у режимі отримання"
+
+#: modules/inventory/inventory/tabs.php:65
+msgid "Leave pull mode"
+msgstr "Полишити режим отримання"
+
+#: modules/inventory/inventory/tabs.php:77
+#, php-format
+msgid "%s's inventory"
+msgstr "Облік %s"
+
+#: modules/inventory/inventory/tabs.php:79
+#, php-format
+msgid "%s's content inventory"
+msgstr "Облік вмісту %s"
+
+#: modules/inventory/inventory/tabs.php:106
+msgid "History"
+msgstr "Журнал"
+
+#: modules/inventory/inventory/tabs.php:117
+msgid "Get XLS Report"
+msgstr "Отримати звіт у XLS"
+
+#: modules/inventory/inventory/EditEntity.php:45
+msgid "The entity has not been updated."
+msgstr "Запис не було оновлено."
+
+#: modules/inventory/inventory/EditEntity.php:49
+msgid "Edit entity"
+msgstr "Редагувати запис"
+
+#: modules/inventory/inventory/EditEntity.php:55
+#: modules/inventory/inventory/deleteEntity.php:64
+#: modules/inventory/inventory/i18n_labels.php:106
+#: modules/inventory/inventory/ajaxViewPart.php:571
+#: modules/inventory/inventory/ajaxViewPart.php:587
+#: modules/inventory/inventory/addEntity.php:50
+msgid "Name"
+msgstr "Назва"
+
+#: modules/inventory/inventory/incoming.php:46
+msgid "Incoming Inventories"
+msgstr "Вхідні обліки"
+
+#: modules/inventory/inventory/incoming.php:56
+msgid "Last week"
+msgstr "Попереднього тижня"
+
+#: modules/inventory/inventory/incoming.php:56
+msgid "Last month"
+msgstr "Попередній місяць"
+
+#: modules/inventory/inventory/incoming.php:56
+msgid "Last quarter"
+msgstr "Попередній квартал"
+
+#: modules/inventory/inventory/incoming.php:56
+msgid "Last semester"
+msgstr "Попередній семестр"
+
+#: modules/inventory/inventory/incoming.php:56
+msgid "Last year"
+msgstr "Попередній рік"
+
+#: modules/inventory/inventory/incoming.php:67
+msgid "Period"
+msgstr "Період"
+
+#: modules/inventory/inventory/incoming.php:72
+msgid "Only new computers"
+msgstr "Лише нові комп'ютери"
+
+#: modules/inventory/inventory/incoming.php:73
+msgid "Load only the computers which were new when the inventory was made"
+msgstr ""
+"Завантажити дані лише для тих комп'ютерів, які були новими на час проведення"
+" обліку"
+
+#: modules/inventory/inventory/deleteEntity.php:46
+msgid "The entity has not been deleted."
+msgstr "Запис не було вилучено."
+
+#: modules/inventory/inventory/deleteEntity.php:52
+msgid "Delete entity"
+msgstr "Вилучити запис"
+
+#: modules/inventory/inventory/createStaticGroup.php:30
+#, php-format
+msgid "Latest inventory is less than %s days at %s"
+msgstr "Останній облік було здійснено менше за %s днів тому на %s"
+
+#: modules/inventory/inventory/createStaticGroup.php:33
+#, php-format
+msgid "Latest inventory is more than %s days at %s"
+msgstr "Останній облік було здійснено більше за %s днів тому на %s"
+
+#: modules/inventory/inventory/createStaticGroup.php:43
+#, php-format
+msgid ""
+"Computers list has been truncated at %d computers. Use the filter to find "
+"specific machines."
+msgstr ""
+"Список комп'ютерів обрізано до %d записів. Скористайтеся фільтром для пошуку"
+" потрібних вам комп'ютерів."
+
+#: modules/inventory/inventory/ajaxIncoming.php:78
+msgid "Computer name"
+msgstr "Назва комп'ютера"
+
+#: modules/inventory/inventory/ajaxIncoming.php:80
+msgid "Inventory date"
+msgstr "Дата обліку"
+
+#: modules/inventory/inventory/ajaxIncoming.php:82
+msgid "New computer"
+msgstr "Новий комп'ютер"
+
+#: modules/inventory/inventory/ajaxIncoming.php:91
+msgid "Elements"
+msgstr "Елементи"
+
+#: modules/inventory/inventory/pci.php:27
+#: modules/inventory/inventory/i18n_labels.php:115
+msgid "Pci"
+msgstr "PCI"
+
+#: modules/inventory/inventory/inventory_diff.php:48
+msgid "Inventory changes"
+msgstr "Зміни у обліку"
+
+#: modules/inventory/inventory/inventory_diff.php:75
+#: modules/inventory/inventory/inventory_diff.php:100
+msgid "Element"
+msgstr "Елемент"
+
+#: modules/inventory/inventory/inventory_diff.php:76
+#: modules/inventory/inventory/inventory_diff.php:101
+#: modules/inventory/inventory/i18n_labels.php:161
+#: modules/inventory/inventory/ajaxViewPart.php:122
+#: modules/inventory/inventory/view.php:75
+msgid "Value"
+msgstr "Значення"
+
+#: modules/inventory/inventory/inventory_diff.php:114
+msgid "Added elements"
+msgstr "Додано елементи"
+
+#: modules/inventory/inventory/inventory_diff.php:123
+msgid "Removed elements"
+msgstr "Вилучено елементи"
+
 #: modules/inventory/inventory/body.php:40
 msgid "Bios list"
 msgstr "Список BIOS"
@@ -394,208 +549,14 @@ msgstr "Список носіїв даних"
 msgid "Video card list"
 msgstr "Список відеокарток"
 
-#: modules/inventory/inventory/pci.php:27
-#: modules/inventory/inventory/i18n_labels.php:115
-msgid "Pci"
-msgstr "PCI"
+#: modules/inventory/inventory/entityRules.php:28
+#: modules/inventory/inventory/localComputersSidebar.php:29
+msgid "Entity rules"
+msgstr "Правила записів"
 
-#: modules/inventory/inventory/EditEntity.php:45
-msgid "The entity has not been updated."
-msgstr "Запис не було оновлено."
-
-#: modules/inventory/inventory/EditEntity.php:49
-msgid "Edit entity"
-msgstr "Редагувати запис"
-
-#: modules/inventory/inventory/EditEntity.php:55
-#: modules/inventory/inventory/i18n_labels.php:106
-#: modules/inventory/inventory/ajaxViewPart.php:571
-#: modules/inventory/inventory/ajaxViewPart.php:587
-#: modules/inventory/inventory/addEntity.php:50
-#: modules/inventory/inventory/deleteEntity.php:64
-msgid "Name"
-msgstr "Назва"
-
-#: modules/inventory/inventory/ajaxIncoming.php:78
-msgid "Computer name"
-msgstr "Назва комп'ютера"
-
-#: modules/inventory/inventory/ajaxIncoming.php:80
-msgid "Inventory date"
-msgstr "Дата обліку"
-
-#: modules/inventory/inventory/ajaxIncoming.php:82
-msgid "New computer"
-msgstr "Новий комп'ютер"
-
-#: modules/inventory/inventory/ajaxIncoming.php:91
-msgid "Elements"
-msgstr "Елементи"
-
-#: modules/inventory/inventory/deleteEntityRule.php:30
-msgid "The entity rule has been deleted successfully."
-msgstr "Правило записів було успішно вилучено."
-
-#: modules/inventory/inventory/deleteEntityRule.php:33
-msgid "Delete this rule?"
-msgstr "Вилучити це правило?"
-
-#: modules/inventory/inventory/entityList.php:27
-msgid "Entity list"
-msgstr "Список записів"
-
-#: modules/inventory/inventory/entityList.php:33
-msgid "All entities"
-msgstr "Усі записи"
-
-#: modules/inventory/inventory/view.php:44
-#, php-format
-msgid "Inventory of %s"
-msgstr "Облік %s"
-
-#: modules/inventory/inventory/view.php:74
-#: modules/inventory/inventory/ajaxViewPart.php:121
-msgid "Properties"
-msgstr "Властивості"
-
-#: modules/inventory/inventory/view.php:75
-#: modules/inventory/inventory/i18n_labels.php:161
-#: modules/inventory/inventory/ajaxViewPart.php:122
-#: modules/inventory/inventory/inventory_diff.php:76
-#: modules/inventory/inventory/inventory_diff.php:101
-msgid "Value"
-msgstr "Значення"
-
-#: modules/inventory/inventory/tabs.php:63
-#: modules/inventory/inventory/tabs.php:71
-msgid "This client has been registered in pull mode"
-msgstr "Клієнт зареєстровано у режимі отримання"
-
-#: modules/inventory/inventory/tabs.php:65
-msgid "Leave pull mode"
-msgstr "Полишити режим отримання"
-
-#: modules/inventory/inventory/tabs.php:77
-#, php-format
-msgid "%s's inventory"
-msgstr "Облік %s"
-
-#: modules/inventory/inventory/tabs.php:79
-#, php-format
-msgid "%s's content inventory"
-msgstr "Облік вмісту %s"
-
-#: modules/inventory/inventory/tabs.php:106
-msgid "History"
-msgstr "Журнал"
-
-#: modules/inventory/inventory/tabs.php:117
-msgid "Get XLS Report"
-msgstr "Отримати звіт у XLS"
-
-#: modules/inventory/inventory/slot.php:27
-#: modules/inventory/inventory/i18n_labels.php:134
-msgid "Slot"
-msgstr "Слот"
-
-#: modules/inventory/inventory/graphs.php:47
-msgid "back"
-msgstr "назад"
-
-#: modules/inventory/inventory/history.php:66
-msgid "View differences since previous inventory"
-msgstr "Переглянути відмінності з часу попереднього обліку"
-
-#: modules/inventory/inventory/history.php:75
-msgid "Inventory Date"
-msgstr "Дата обліку"
-
-#: modules/inventory/inventory/incoming.php:46
-msgid "Incoming Inventories"
-msgstr "Вхідні обліки"
-
-#: modules/inventory/inventory/incoming.php:56
-msgid "Last week"
-msgstr "Попереднього тижня"
-
-#: modules/inventory/inventory/incoming.php:56
-msgid "Last month"
-msgstr "Попередній місяць"
-
-#: modules/inventory/inventory/incoming.php:56
-msgid "Last quarter"
-msgstr "Попередній квартал"
-
-#: modules/inventory/inventory/incoming.php:56
-msgid "Last semester"
-msgstr "Попередній семестр"
-
-#: modules/inventory/inventory/incoming.php:56
-msgid "Last year"
-msgstr "Попередній рік"
-
-#: modules/inventory/inventory/incoming.php:67
-msgid "Period"
-msgstr "Період"
-
-#: modules/inventory/inventory/incoming.php:72
-msgid "Only new computers"
-msgstr "Лише нові комп'ютери"
-
-#: modules/inventory/inventory/incoming.php:73
-msgid "Load only the computers which were new when the inventory was made"
-msgstr ""
-"Завантажити дані лише для тих комп'ютерів, які були новими на час проведення"
-" обліку"
-
-#: modules/inventory/inventory/ajaxEntityRules.php:52
-#: modules/inventory/inventory/ajaxEntityList.php:51
-msgid "No entry found"
-msgstr "Записів не знайдено"
-
-#: modules/inventory/inventory/ajaxEntityRules.php:63
-msgid "Rule"
-msgstr "Правило"
-
-#: modules/inventory/inventory/ajaxEntityRules.php:64
-msgid "actif"
-msgstr "actif"
-
-#: modules/inventory/inventory/ajaxEntityRules.php:65
-msgid "entitie"
-msgstr "entitie"
-
-#: modules/inventory/inventory/ajaxEntityRules.php:66
-msgid "aggregator"
-msgstr "агрегатор"
-
-#: modules/inventory/inventory/ajaxEntityRules.php:67
-msgid "lvalue"
-msgstr "lvalue"
-
-#: modules/inventory/inventory/ajaxEntityRules.php:68
-msgid "operator"
-msgstr "оператор"
-
-#: modules/inventory/inventory/ajaxEntityRules.php:69
-msgid "rvalue"
-msgstr "rvalue"
-
-#: modules/inventory/inventory/ajaxEntityRules.php:72
-msgid "Edit rule"
-msgstr "Редагувати правило"
-
-#: modules/inventory/inventory/ajaxEntityRules.php:73
-msgid "Move rule up"
-msgstr "Пересунути правило вище"
-
-#: modules/inventory/inventory/ajaxEntityRules.php:74
-msgid "Move rule down"
-msgstr "Пересунути правило нижче"
-
-#: modules/inventory/inventory/ajaxEntityRules.php:75
-msgid "Delete rule"
-msgstr "Вилучити правило"
+#: modules/inventory/inventory/entityRules.php:35
+msgid "All rules"
+msgstr "Усі правила"
 
 #: modules/inventory/inventory/i18n_labels.php:26
 msgid "Application"
@@ -984,6 +945,11 @@ msgstr "Послідовний"
 msgid "Size"
 msgstr "Розмір"
 
+#: modules/inventory/inventory/i18n_labels.php:134
+#: modules/inventory/inventory/slot.php:27
+msgid "Slot"
+msgstr "Слот"
+
 #: modules/inventory/inventory/i18n_labels.php:135
 msgid "Slot Count"
 msgstr "Кількість слотів"
@@ -1105,149 +1071,13 @@ msgstr "Робоча група"
 msgid "WorkingDate"
 msgstr "Робоча дата"
 
-#: modules/inventory/inventory/addEntityRule.php:64
-msgid "The entity rule has been added successfully."
-msgstr "Правило записів було успішно додано."
+#: modules/inventory/inventory/entityList.php:27
+msgid "Entity list"
+msgstr "Список записів"
 
-#: modules/inventory/inventory/addEntityRule.php:103
-msgid "Add rule"
-msgstr "Додати правило"
-
-#: modules/inventory/inventory/addEntityRule.php:110
-msgid "Active"
-msgstr "Активний"
-
-#: modules/inventory/inventory/addEntityRule.php:113
-msgid "selection from this item"
-msgstr "позначене з цього пункту"
-
-#: modules/inventory/inventory/addEntityRule.php:117
-msgid "aggregator a rule"
-msgstr "агрегатор правила"
-
-#: modules/inventory/inventory/addEntityRule.php:118
-msgid "AND all rules TRUE select entitie"
-msgstr "AND усі правила TRUE select запис"
-
-#: modules/inventory/inventory/addEntityRule.php:119
-msgid "OR one rule TRUE select entitie"
-msgstr "OR одне правило TRUE select запис"
-
-#: modules/inventory/inventory/addEntityRule.php:120
-msgid "NONE rule TRUE select entitie"
-msgstr "NONE правило TRUE select запис"
-
-#: modules/inventory/inventory/addEntityRule.php:124
-msgid "Aggregator"
-msgstr "Агрегатор"
-
-#: modules/inventory/inventory/addEntityRule.php:131
-msgid "Match"
-msgstr "Відповідність"
-
-#: modules/inventory/inventory/addEntityRule.php:132
-msgid " regular expression"
-msgstr " формальний вираз"
-
-#: modules/inventory/inventory/addEntityRule.php:133
-msgid " special characters must be escaped in regular expressions"
-msgstr " спеціальні символи у формальних виразах слід екранувати"
-
-#: modules/inventory/inventory/addEntityRule.php:134
-msgid " .^$*+?()[{\\|"
-msgstr " .^$*+?()[{\\|"
-
-#: modules/inventory/inventory/addEntityRule.php:135
-msgid " not start with word   /^(?!my string).*$/"
-msgstr " не починається словом /^(?!мій рядок).*$/"
-
-#: modules/inventory/inventory/addEntityRule.php:136
-msgid " start with my string /^my string.*$/"
-msgstr " починається на «мій рядок» /^мій рядок.*$/"
-
-#: modules/inventory/inventory/addEntityRule.php:137
-msgid " does not contain /^((?!my string).)*$/"
-msgstr " не містить /^((?!мій рядок).)*$/"
-
-#: modules/inventory/inventory/addEntityRule.php:138
-msgid " equal to or contains"
-msgstr " дорівнює або містить"
-
-#: modules/inventory/inventory/addEntityRule.php:139
-msgid " finishes by  /.*(my string)$/"
-msgstr " завершується на  /.*(мій рядок)$/"
-
-#: modules/inventory/inventory/addEntityRule.php:140
-msgid "Equal or noequal"
-msgstr "Дорівнює або не дорівнює"
-
-#: modules/inventory/inventory/addEntityRule.php:141
-msgid " strictly equal or inequality"
-msgstr " строго рівне або не рівне"
-
-#: modules/inventory/inventory/addEntityRule.php:142
-msgid "Contains or NoContains"
-msgstr "Містить або не містить"
-
-#: modules/inventory/inventory/addEntityRule.php:143
-msgid " has value or not"
-msgstr " має значення або не"
-
-#: modules/inventory/inventory/addEntityRule.php:144
-msgid "Starts by or Finishes"
-msgstr "Починається або завершується"
-
-#: modules/inventory/inventory/addEntityRule.php:145
-msgid " begins or ends with value"
-msgstr " починається або завершується значенням"
-
-#: modules/inventory/inventory/addEntityRule.php:146
-msgid "matches (regex)"
-msgstr "відповідає (формальному виразу)"
-
-#: modules/inventory/inventory/addEntityRule.php:147
-msgid "equal"
-msgstr "дорівнює"
-
-#: modules/inventory/inventory/addEntityRule.php:148
-msgid "not equal"
-msgstr "не дорівнює"
-
-#: modules/inventory/inventory/addEntityRule.php:149
-msgid "contains"
-msgstr "містить"
-
-#: modules/inventory/inventory/addEntityRule.php:150
-msgid "not contains"
-msgstr "не містить"
-
-#: modules/inventory/inventory/addEntityRule.php:151
-msgid "starts by"
-msgstr "починається з"
-
-#: modules/inventory/inventory/addEntityRule.php:152
-msgid "finishes by"
-msgstr "завершується на"
-
-#: modules/inventory/inventory/addEntityRule.php:157
-msgid "entities list"
-msgstr "список записів"
-
-#: modules/inventory/inventory/addEntityRule.php:165
-msgid "regular expression or value"
-msgstr "формальний вираз або значення"
-
-#: modules/inventory/inventory/addEntityRule.php:166
-msgid "must not contain space character"
-msgstr "має не містити символу пробілу"
-
-#: modules/inventory/inventory/addEntityRule.php:194
-msgid "Criterion"
-msgstr "Критерій"
-
-#: modules/inventory/inventory/addEntityRule.php:200
-msgid "Add criterion"
-msgstr "Додати критерій"
+#: modules/inventory/inventory/entityList.php:33
+msgid "All entities"
+msgstr "Усі записи"
 
 #: modules/inventory/inventory/localComputersSidebar.php:27
 msgid "Entities"
@@ -1257,14 +1087,17 @@ msgstr "Записи"
 msgid "Add an entity"
 msgstr "Додати запис"
 
-#: modules/inventory/inventory/localComputersSidebar.php:29
-#: modules/inventory/inventory/entityRules.php:28
-msgid "Entity rules"
-msgstr "Правила записів"
-
 #: modules/inventory/inventory/localComputersSidebar.php:30
 msgid "Add entity rule"
 msgstr "Додати правило записів"
+
+#: modules/inventory/inventory/history.php:66
+msgid "View differences since previous inventory"
+msgstr "Переглянути відмінності з часу попереднього обліку"
+
+#: modules/inventory/inventory/history.php:75
+msgid "Inventory Date"
+msgstr "Дата обліку"
 
 #: modules/inventory/inventory/ajaxViewPart.php:83
 msgid " (Not an antivirus)"
@@ -1274,6 +1107,11 @@ msgstr " (не є антивірусом)"
 msgid "Click here to see this computer on manufacturer website"
 msgstr ""
 "Натисніть тут, щоб переглянути сторінку цього комп'ютера або його виробника"
+
+#: modules/inventory/inventory/ajaxViewPart.php:121
+#: modules/inventory/inventory/view.php:74
+msgid "Properties"
+msgstr "Властивості"
 
 #: modules/inventory/inventory/ajaxViewPart.php:140
 msgid "No record found for this period."
@@ -1461,14 +1299,166 @@ msgstr "Увімкнено"
 msgid "Up-to-date"
 msgstr "Найновіший"
 
-#: modules/inventory/inventory/ajaxEntityList.php:56
-msgid "Entity name"
-msgstr "Назва запису"
+#: modules/inventory/inventory/deleteEntityRule.php:30
+msgid "The entity rule has been deleted successfully."
+msgstr "Правило записів було успішно вилучено."
 
-#: modules/inventory/inventory/ajaxEntityList.php:63
-#: modules/inventory/inventory/ajaxEntityList.php:64
-msgid "Edit Entity"
-msgstr "Редагувати запис"
+#: modules/inventory/inventory/deleteEntityRule.php:33
+msgid "Delete this rule?"
+msgstr "Вилучити це правило?"
+
+#: modules/inventory/inventory/addEntityRule.php:64
+msgid "The entity rule has been added successfully."
+msgstr "Правило записів було успішно додано."
+
+#: modules/inventory/inventory/addEntityRule.php:103
+msgid "Add rule"
+msgstr "Додати правило"
+
+#: modules/inventory/inventory/addEntityRule.php:110
+msgid "Active"
+msgstr "Активний"
+
+#: modules/inventory/inventory/addEntityRule.php:113
+msgid "selection from this item"
+msgstr "позначене з цього пункту"
+
+#: modules/inventory/inventory/addEntityRule.php:117
+msgid "aggregator a rule"
+msgstr "агрегатор правила"
+
+#: modules/inventory/inventory/addEntityRule.php:118
+msgid "AND all rules TRUE select entitie"
+msgstr "AND усі правила TRUE select запис"
+
+#: modules/inventory/inventory/addEntityRule.php:119
+msgid "OR one rule TRUE select entitie"
+msgstr "OR одне правило TRUE select запис"
+
+#: modules/inventory/inventory/addEntityRule.php:120
+msgid "NONE rule TRUE select entitie"
+msgstr "NONE правило TRUE select запис"
+
+#: modules/inventory/inventory/addEntityRule.php:124
+msgid "Aggregator"
+msgstr "Агрегатор"
+
+#: modules/inventory/inventory/addEntityRule.php:131
+msgid "Match"
+msgstr "Відповідність"
+
+#: modules/inventory/inventory/addEntityRule.php:132
+msgid " regular expression"
+msgstr " формальний вираз"
+
+#: modules/inventory/inventory/addEntityRule.php:133
+msgid " special characters must be escaped in regular expressions"
+msgstr " спеціальні символи у формальних виразах слід екранувати"
+
+#: modules/inventory/inventory/addEntityRule.php:134
+msgid " .^$*+?()[{\\|"
+msgstr " .^$*+?()[{\\|"
+
+#: modules/inventory/inventory/addEntityRule.php:135
+msgid " not start with word   /^(?!my string).*$/"
+msgstr " не починається словом /^(?!мій рядок).*$/"
+
+#: modules/inventory/inventory/addEntityRule.php:136
+msgid " start with my string /^my string.*$/"
+msgstr " починається на «мій рядок» /^мій рядок.*$/"
+
+#: modules/inventory/inventory/addEntityRule.php:137
+msgid " does not contain /^((?!my string).)*$/"
+msgstr " не містить /^((?!мій рядок).)*$/"
+
+#: modules/inventory/inventory/addEntityRule.php:138
+msgid " equal to or contains"
+msgstr " дорівнює або містить"
+
+#: modules/inventory/inventory/addEntityRule.php:139
+msgid " finishes by  /.*(my string)$/"
+msgstr " завершується на  /.*(мій рядок)$/"
+
+#: modules/inventory/inventory/addEntityRule.php:140
+msgid "Equal or noequal"
+msgstr "Дорівнює або не дорівнює"
+
+#: modules/inventory/inventory/addEntityRule.php:141
+msgid " strictly equal or inequality"
+msgstr " строго рівне або не рівне"
+
+#: modules/inventory/inventory/addEntityRule.php:142
+msgid "Contains or NoContains"
+msgstr "Містить або не містить"
+
+#: modules/inventory/inventory/addEntityRule.php:143
+msgid " has value or not"
+msgstr " має значення або не"
+
+#: modules/inventory/inventory/addEntityRule.php:144
+msgid "Starts by or Finishes"
+msgstr "Починається або завершується"
+
+#: modules/inventory/inventory/addEntityRule.php:145
+msgid " begins or ends with value"
+msgstr " починається або завершується значенням"
+
+#: modules/inventory/inventory/addEntityRule.php:146
+msgid "matches (regex)"
+msgstr "відповідає (формальному виразу)"
+
+#: modules/inventory/inventory/addEntityRule.php:147
+msgid "equal"
+msgstr "дорівнює"
+
+#: modules/inventory/inventory/addEntityRule.php:148
+msgid "not equal"
+msgstr "не дорівнює"
+
+#: modules/inventory/inventory/addEntityRule.php:149
+msgid "contains"
+msgstr "містить"
+
+#: modules/inventory/inventory/addEntityRule.php:150
+msgid "not contains"
+msgstr "не містить"
+
+#: modules/inventory/inventory/addEntityRule.php:151
+msgid "starts by"
+msgstr "починається з"
+
+#: modules/inventory/inventory/addEntityRule.php:152
+msgid "finishes by"
+msgstr "завершується на"
+
+#: modules/inventory/inventory/addEntityRule.php:157
+msgid "entities list"
+msgstr "список записів"
+
+#: modules/inventory/inventory/addEntityRule.php:165
+msgid "regular expression or value"
+msgstr "формальний вираз або значення"
+
+#: modules/inventory/inventory/addEntityRule.php:166
+msgid "must not contain space character"
+msgstr "має не містити символу пробілу"
+
+#: modules/inventory/inventory/addEntityRule.php:194
+msgid "Criterion"
+msgstr "Критерій"
+
+#: modules/inventory/inventory/addEntityRule.php:200
+msgid "Add criterion"
+msgstr "Додати критерій"
+
+#: modules/inventory/inventory/graphs.php:47
+msgid "back"
+msgstr "назад"
+
+#: modules/inventory/inventory/view.php:44
+#, php-format
+msgid "Inventory of %s"
+msgstr "Облік %s"
 
 #: modules/inventory/inventory/infos.php:33
 msgid "Additionnal informations"
@@ -1486,50 +1476,60 @@ msgstr "Додати запис"
 msgid "Parent entity"
 msgstr "Батьківський запис"
 
-#: modules/inventory/inventory/entityRules.php:35
-msgid "All rules"
-msgstr "Усі правила"
+#: modules/inventory/inventory/ajaxEntityList.php:51
+#: modules/inventory/inventory/ajaxEntityRules.php:52
+msgid "No entry found"
+msgstr "Записів не знайдено"
 
-#: modules/inventory/inventory/createStaticGroup.php:30
-#, php-format
-msgid "Latest inventory is less than %s days at %s"
-msgstr "Останній облік було здійснено менше за %s днів тому на %s"
+#: modules/inventory/inventory/ajaxEntityList.php:56
+msgid "Entity name"
+msgstr "Назва запису"
 
-#: modules/inventory/inventory/createStaticGroup.php:33
-#, php-format
-msgid "Latest inventory is more than %s days at %s"
-msgstr "Останній облік було здійснено більше за %s днів тому на %s"
+#: modules/inventory/inventory/ajaxEntityList.php:63
+#: modules/inventory/inventory/ajaxEntityList.php:64
+msgid "Edit Entity"
+msgstr "Редагувати запис"
 
-#: modules/inventory/inventory/createStaticGroup.php:43
-#, php-format
-msgid ""
-"Computers list has been truncated at %d computers. Use the filter to find "
-"specific machines."
-msgstr ""
-"Список комп'ютерів обрізано до %d записів. Скористайтеся фільтром для пошуку"
-" потрібних вам комп'ютерів."
+#: modules/inventory/inventory/ajaxEntityRules.php:63
+msgid "Rule"
+msgstr "Правило"
 
-#: modules/inventory/inventory/inventory_diff.php:48
-msgid "Inventory changes"
-msgstr "Зміни у обліку"
+#: modules/inventory/inventory/ajaxEntityRules.php:64
+msgid "actif"
+msgstr "actif"
 
-#: modules/inventory/inventory/inventory_diff.php:75
-#: modules/inventory/inventory/inventory_diff.php:100
-msgid "Element"
-msgstr "Елемент"
+#: modules/inventory/inventory/ajaxEntityRules.php:65
+msgid "entitie"
+msgstr "entitie"
 
-#: modules/inventory/inventory/inventory_diff.php:114
-msgid "Added elements"
-msgstr "Додано елементи"
+#: modules/inventory/inventory/ajaxEntityRules.php:66
+msgid "aggregator"
+msgstr "агрегатор"
 
-#: modules/inventory/inventory/inventory_diff.php:123
-msgid "Removed elements"
-msgstr "Вилучено елементи"
+#: modules/inventory/inventory/ajaxEntityRules.php:67
+msgid "lvalue"
+msgstr "lvalue"
 
-#: modules/inventory/inventory/deleteEntity.php:46
-msgid "The entity has not been deleted."
-msgstr "Запис не було вилучено."
+#: modules/inventory/inventory/ajaxEntityRules.php:68
+msgid "operator"
+msgstr "оператор"
 
-#: modules/inventory/inventory/deleteEntity.php:52
-msgid "Delete entity"
-msgstr "Вилучити запис"
+#: modules/inventory/inventory/ajaxEntityRules.php:69
+msgid "rvalue"
+msgstr "rvalue"
+
+#: modules/inventory/inventory/ajaxEntityRules.php:72
+msgid "Edit rule"
+msgstr "Редагувати правило"
+
+#: modules/inventory/inventory/ajaxEntityRules.php:73
+msgid "Move rule up"
+msgstr "Пересунути правило вище"
+
+#: modules/inventory/inventory/ajaxEntityRules.php:74
+msgid "Move rule down"
+msgstr "Пересунути правило нижче"
+
+#: modules/inventory/inventory/ajaxEntityRules.php:75
+msgid "Delete rule"
+msgstr "Вилучити правило"
