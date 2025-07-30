@@ -1,35 +1,49 @@
 #!/bin/bash
 
-# This script maps PO and POT files to transifex ressources
-# on https://www.transifex.com
-# tx script can be downloaded on https://developers.transifex.com/docs/cli
-#
-SCRIPT_PROJECT=`pwd`
-
 which tx > /dev/null
 if [ $? -ne 0 ]; then
-	echo "Install the transifex client v0.4 (pip install transifex-client==0.4)"
-	exit 1
+    echo "Install the Transifex client CLI (https://github.com/transifex/cli/releases)"
+    exit 1
 fi
 
-test -d .tx || tx init --host=https://www.transifex.com
-
-[ ! x$1 == x ] && lang="-l $1" && shift 1
+[ ! -z "$1" ] && lang="-l $1" && shift 1
 args=$@
 
-modules="base ppolicy services dashboard report xmppmaster dyngroup glpi imaging inventory kiosk msc pkgs medulla_server backuppc support guacamole updates urbackup"
-for mod in $modules
+modules=(
+  admin
+  backuppc
+  base
+  dashboard
+  dyngroup
+  glpi
+  guacamole
+  imaging
+  inventory
+  kiosk
+  medulla_server
+  msc
+  pkgs
+  ppolicy
+  report
+  services
+  support
+  updates
+  urbackup
+  xmppmaster
+)
+
+TOKEN_API=""
+
+for mod in "${modules[@]}"
 do
-    if [ "$mod" == "dashboard" ]; then
-        cd $SCRIPT_PROJECT/../web/modules/$mod/locale/
-        tx pull -a -f -r pulse-1.p${mod} ${lang} ${args}
-        cp  -fv $SCRIPT_PROJECT/../web/modules/$mod/locale/fr/LC_MESSAGES/* $SCRIPT_PROJECT/../web/modules/$mod/locale/fr_FR/LC_MESSAGES
-        sed -i 's/Language: fr\\n/Language: fr_FR\\n/' $SCRIPT_PROJECT/../web/modules/$mod/locale/fr_FR/LC_MESSAGES/$mod.po
-    else
-	cd $SCRIPT_PROJECT/../web/modules/$mod/locale/
-	tx pull -a -f -r pulse-1.${mod} ${lang} ${args}
-	cp  -fv $SCRIPT_PROJECT/../web/modules/$mod/locale/fr/LC_MESSAGES/* $SCRIPT_PROJECT/../web/modules/$mod/locale/fr_FR/LC_MESSAGES
-        sed -i 's/Language: fr\\n/Language: fr_FR\\n/' $SCRIPT_PROJECT/../web/modules/$mod/locale/fr_FR/LC_MESSAGES/$mod.po
+    tx --token "$TOKEN_API" pull -r medulla.$mod -a -f $lang $args || echo "Ressource $mod non trouvée, on continue"
+
+    if [ -d "web/modules/$mod/locale/fr/LC_MESSAGES" ]; then
+        mkdir -p "web/modules/$mod/locale/fr_FR/LC_MESSAGES"
+        cp -fv web/modules/$mod/locale/fr/LC_MESSAGES/* web/modules/$mod/locale/fr_FR/LC_MESSAGES/
+
+        if [ -f "web/modules/$mod/locale/fr_FR/LC_MESSAGES/$mod.po" ]; then
+            sed -i '' 's/Language: fr\\n/Language: fr_FR\\n/' "web/modules/$mod/locale/fr_FR/LC_MESSAGES/$mod.po"
+        fi
     fi
 done
-
