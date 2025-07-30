@@ -29,5 +29,12 @@ $sidemenu->addSideMenuItem(new SideMenuItem(_T("New Cluster", 'admin'), "admin",
 $sidemenu->addSideMenuItem(
     new SideMenuItem(_T("Rules","admin"), "admin", "admin", "rules")
 );
-
+// ------------------------------------------
+$sidemenu->addSideMenuItem(
+    new SideMenuItem(_T("Management of Organizational Entities","admin"), "admin", "admin", "manage_entity_organisation")
+);
+$sidemenu->addSideMenuItem(
+    new SideMenuItem(_T("Client Entities Management","admin"), "admin", "admin", "manage_user_entity")
+);
+// ------------------------------------------
 ?>
