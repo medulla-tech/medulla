@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-30 15:09+0200\n"
+"POT-Creation-Date: 2025-07-30 17:47+0200\n"
 "PO-Revision-Date: 2023-12-12 11:56+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2025\n"
 "Language-Team: Ukrainian (https://app.transifex.com/medulla/teams/72118/uk/)\n"
@@ -119,10 +119,6 @@ msgstr "Журнал оновлень"
 #: modules/updates/infoPackage.inc.php:42
 msgid "Entities Compliance"
 msgstr "Сумісність із записами"
-
-#: modules/updates/updates/index.php:29
-msgid "test Transifex"
-msgstr ""
 
 #: modules/updates/updates/ajaxDeploySpecificUpdate.php:112
 #: modules/updates/updates/ajaxDetailsByUpdatesWhite.php:113
@@ -260,7 +256,7 @@ msgstr "Сірий список (оновлення вручну)"
 
 #: modules/updates/updates/hardwareConstraintsForMajorUpdates.php:45
 #, php-format
-msgid "List Machines do not perform the update for now [ Entity %s ]"
+msgid "List of machines that should not be updated [ Entity %s ]"
 msgstr ""
 
 #: modules/updates/updates/hardwareConstraintsForMajorUpdates.php:56
@@ -268,11 +264,11 @@ msgid "Computer"
 msgstr "Комп'ютер"
 
 #: modules/updates/updates/hardwareConstraintsForMajorUpdates.php:58
-msgid "Code Version"
+msgid "Version Code"
 msgstr ""
 
 #: modules/updates/updates/hardwareConstraintsForMajorUpdates.php:59
-msgid "Langue Code"
+msgid "Language Code"
 msgstr ""
 
 #: modules/updates/updates/ajaxDetailsByMachines.php:62
@@ -484,7 +480,7 @@ msgstr ""
 "обладнання машини є сумісним із Windows 11."
 
 #: modules/updates/updates/deployUpdatemajor.php:275
-msgid "Deployement update Major "
+msgid "Deployment major update "
 msgstr ""
 
 #: modules/updates/updates/deploySpecificUpdate.php:46
@@ -544,8 +540,8 @@ msgstr "Помилка під час спроби пересунути паку�
 
 #: modules/updates/updates/updatesListMajorWin.php:26
 #: modules/updates/infoPackage.inc.php:221
-msgid "Manage Updates Major Lists"
-msgstr "Керування оновленнями основних списків"
+msgid "Manage Major Updates Lists"
+msgstr ""
 
 #: modules/updates/updates/majorDetailsByMachines.php:36
 msgid "OS Upgrade details by Machines"
@@ -633,11 +629,11 @@ msgid "<b>Approve</b> update %s (%s) ?"
 msgstr "<b>Затвердити</b> оновлення %s (%s) ?"
 
 #: modules/updates/updates/grpDeployUpdatemajor.php:221
-msgid "slot start date missings"
+msgid "Slot start date missing"
 msgstr ""
 
 #: modules/updates/updates/grpDeployUpdatemajor.php:227
-msgid "slot end date missings"
+msgid "Slot end date missing"
 msgstr ""
 
 #: modules/updates/updates/ajaxUpdatesListWinWhite.php:33
@@ -674,7 +670,7 @@ msgid "No machines are affected by hardware constraints for major updates."
 msgstr ""
 
 #: modules/updates/updates/ajaxMajorEntitiesList.php:153
-msgid "Deploy all updates major on entity"
+msgid "Deploy all major updates on entity"
 msgstr ""
 
 #: modules/updates/updates/ajaxMajorEntitiesList.php:162
@@ -829,5 +825,5 @@ msgid "Machines major update"
 msgstr "Основне оновлення машин"
 
 #: modules/updates/infoPackage.inc.php:245
-msgid "Detail deploy on group entity"
+msgid "Deployment details on group entity"
 msgstr ""

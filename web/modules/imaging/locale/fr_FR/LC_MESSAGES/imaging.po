@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-30 15:09+0200\n"
+"POT-Creation-Date: 2025-07-30 17:47+0200\n"
 "PO-Revision-Date: 2017-09-12 14:00+0000\n"
 "Last-Translator: SPO, 2025\n"
 "Language-Team: French (https://app.transifex.com/medulla/teams/72118/fr/)\n"
@@ -24,39 +24,39 @@ msgstr ""
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:25
 msgid "3D Viewer"
-msgstr ""
+msgstr "Visionneuse 3D"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:30
 msgid "Bing Search"
-msgstr ""
+msgstr "Recherche Web de Microsoft Bing"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:35
 msgid "Calculator"
-msgstr ""
+msgstr "Calculatrice Windows"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:40
 msgid "Camera"
-msgstr ""
+msgstr "Caméra Windows"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:45
 msgid "Clipchamp"
-msgstr ""
+msgstr "Microsoft Clipchamp"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:50
 msgid "Clock"
-msgstr ""
+msgstr "Alarmes et horloge Windows"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:55
 msgid "Copilot"
-msgstr ""
+msgstr "Copilot"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:65
 msgid "Cortana"
-msgstr ""
+msgstr "Cortana"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:70
 msgid "Dev Home"
-msgstr ""
+msgstr "Dev Home"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:78
 msgid "Family"
@@ -64,23 +64,23 @@ msgstr ""
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:83
 msgid "Feedback Hub"
-msgstr ""
+msgstr "Hub de commentaires"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:88
 msgid "Get Help"
-msgstr ""
+msgstr "Obtenir de l'aide"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:93
 msgid "Handwriting (all languages)"
-msgstr ""
+msgstr "Ecriture manuscrite"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:98
 msgid "Internet Explorer"
-msgstr ""
+msgstr "Internet Explorer"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:103
 msgid "Mail and Calendar"
-msgstr ""
+msgstr "Courrier & calendrier"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:108
 msgid "Maps"
@@ -96,31 +96,31 @@ msgstr ""
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:123
 msgid "Mixed Reality"
-msgstr ""
+msgstr "Mixed Reality"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:128
 msgid "Movies & TV"
-msgstr ""
+msgstr "Films et TV"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:133
 msgid "News"
-msgstr ""
+msgstr "Actualités"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:138
 msgid "Notepad (modern)"
-msgstr ""
+msgstr "Windows Notepad"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:146
 msgid "Office 365"
-msgstr ""
+msgstr "Office 365"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:151
 msgid "OneDrive"
-msgstr ""
+msgstr "OneDrive"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:157
 msgid "OneNote"
-msgstr ""
+msgstr "OneNote"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:162
 msgid "OnSync"
@@ -128,19 +128,19 @@ msgstr ""
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:167
 msgid "OpenSSH Client"
-msgstr ""
+msgstr "OpenSSH Client"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:172
 msgid "Outlook for Windows"
-msgstr ""
+msgstr "Outlook pour Windows"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:178
 msgid "Paint"
-msgstr ""
+msgstr "Paint"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:184
 msgid "Paint 3D"
-msgstr ""
+msgstr "Paint 3D"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:189
 msgid "People"
@@ -148,11 +148,11 @@ msgstr ""
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:194
 msgid "Photos"
-msgstr ""
+msgstr "Photos Microsoft"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:199
 msgid "Power Automate"
-msgstr ""
+msgstr "Power Automate"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:204
 msgid "PowerShell 2.0"
@@ -160,27 +160,27 @@ msgstr ""
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:209
 msgid "PowerShell ISE"
-msgstr ""
+msgstr "PowerShell ISE"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:214
 msgid "Quick Assist"
-msgstr ""
+msgstr "Assistance rapide"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:219
 msgid "Recall"
-msgstr ""
+msgstr "Retrouver"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:224
 msgid "Remote Desktop Client"
-msgstr ""
+msgstr "Connexion bureau à distance"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:229
 msgid "Skype"
-msgstr ""
+msgstr "Skype"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:234
 msgid "Snipping Tool"
-msgstr ""
+msgstr "Capture et croquis"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:241
 msgid "Solitaire Collection"
@@ -188,23 +188,23 @@ msgstr ""
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:246
 msgid "Speech (all languages)"
-msgstr ""
+msgstr "Synthèse vocale"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:251
 msgid "Text To Speech"
-msgstr ""
+msgstr "Texte vers synthèse vocale"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:257
 msgid "Steps Recorder"
-msgstr ""
+msgstr "Enregistreur d'étapes"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:262
 msgid "Sticky Notes"
-msgstr ""
+msgstr "Pense bête"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:267
 msgid "Teams"
-msgstr ""
+msgstr "Microsoft Teams"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:273
 msgid "Tips"
@@ -212,51 +212,51 @@ msgstr ""
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:278
 msgid "To Do"
-msgstr ""
+msgstr "Microsoft To Do"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:283
 msgid "Voice Recorder"
-msgstr ""
+msgstr "Enregistreur vocal Windows"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:288
 msgid "Wallet"
-msgstr ""
+msgstr "Portefeuille"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:293
 msgid "Weather"
-msgstr ""
+msgstr "Météo"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:298
 msgid "Windows Fax and Scan"
-msgstr ""
+msgstr "Windows fax et numériser"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:304
 msgid "Windows Hello"
-msgstr ""
+msgstr "Windows Hello"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:309
 msgid "Windows Media Player (classic)"
-msgstr ""
+msgstr "Lecteur Multimédia Windows (classic)"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:314
 msgid "Windows Media Player (modern)"
-msgstr ""
+msgstr "Lecteur Multimédia Windows (modern)"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:319
 msgid "Windows Terminal"
-msgstr ""
+msgstr "Windows Terminal"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:324
 msgid "WordPad"
-msgstr ""
+msgstr "WordPad"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:329
 msgid "Xbox Apps"
-msgstr ""
+msgstr "Xbox"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:335
 msgid "Your Phone/Phone Link"
-msgstr ""
+msgstr "Mobile connecté"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:370
 msgid "File"
@@ -2602,7 +2602,7 @@ msgid "Edit Post Install Profile"
 msgstr "Editer profil de post-installation"
 
 #: modules/imaging/infoPackage.inc.php:105
-#: modules/imaging/manage/addProfilescript.php:30
+#: modules/imaging/manage/addProfilescript.php:43
 msgid "New Post Install Profile"
 msgstr "Nouveau profil de Post-Installation"
 
@@ -4026,7 +4026,7 @@ msgstr "Êtes-vous sûr de vouloir supprimer ce fichier de réponse sysprep ?"
 msgid "Remove the boot service <b>%s</b> from the default boot menu"
 msgstr "Supprimer le service <b>%s</b> du menu de démarrage par défaut"
 
-#: modules/imaging/manage/profilescript.php:32
+#: modules/imaging/manage/profilescript.php:110
 msgid "Available Post-Imaging Profiles"
 msgstr "Profils de post-installation disponible"
 
@@ -4223,12 +4223,12 @@ msgstr "Créer une iso de <strong>%s</strong>"
 msgid "Launch backup"
 msgstr "Lancer la sauvegarde"
 
-#: modules/imaging/manage/addProfilescript.php:53
+#: modules/imaging/manage/addProfilescript.php:66
 #, php-format
 msgid "The profile %s has been created"
 msgstr "Le profil %s a été créé"
 
-#: modules/imaging/manage/addProfilescript.php:56
+#: modules/imaging/manage/addProfilescript.php:69
 #, php-format
 msgid "The profile %s hasn't been correctly created : %s"
 msgstr "Le profil %s a été correctement créé : %s"
