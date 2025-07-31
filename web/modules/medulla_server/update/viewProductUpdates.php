@@ -1,68 +1,72 @@
 <style>
+.popup {
+    width: 650px !important;
+}
 /* Hide meter and nav */
 #popup p.listInfos,
 #popup ul.navList {
-    display: none !important;
+  display: none !important;
 }
 
-/* Scrollable table and frame */
-#popup .listinfos {
-    display: block !important;
-    max-height: 40vh !important;
-    overflow-y: auto !important;
-    height: auto !important;
-    width: 100% !important;
-    margin-bottom: 8px !important;
-    border: 1px solid #ccc !important;
-    border-radius: 4px !important;
-    background-color: #fff !important;
-    box-sizing: border-box;
+/* Wrapper scrollable around the table */
+#popup .listinfos-wrapper {
+  max-height: 40vh;
+  overflow-y: auto;
+  margin-bottom: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: #fff;
+  box-sizing: border-box;
 }
 
-#popup .listinfos thead td,
-#popup .listinfos tbody td {
-    padding: 8px !important;
-    vertical-align: middle !important;
-    text-align: left !important;
-    white-space: normal !important;
-    overflow-wrap: break-word !important;
+#popup .listinfos-wrapper table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
 }
 
-#popup .listinfos thead td span {
-    padding: 0 !important;
-    margin: 0 !important;
-    display: block;
-    width: 100%;
+#popup .listinfos-wrapper colgroup col:nth-child(1) { width: 25%; }
+#popup .listinfos-wrapper colgroup col:nth-child(2) { width: 40%; }
+#popup .listinfos-wrapper colgroup col:nth-child(3) { width: 20%; }
+#popup .listinfos-wrapper colgroup col:nth-child(4) { width: 15%; }
+
+#popup .listinfos-wrapper thead th {
+  background: #f5f5f5;
+  padding: 8px;
+  text-align: left;
+  font-weight: bold;
+  border-bottom: 1px solid #ddd;
 }
 
-/* Center the 4ᵉ column be reboot required */
-#popup .listinfos tbody td:nth-child(4) {
-    text-align: center !important;
+#popup .listinfos-wrapper tbody td {
+  padding: 8px;
+  vertical-align: middle;
+  text-align: left;
+  white-space: normal;
+  overflow-wrap: break-word;
+  border-top: 1px solid #ddd;
+}
+
+#popup .listinfos-wrapper tbody td:nth-child(4) {
+  text-align: center;
 }
 
 #popup .total-count {
-  display: flex !important;
-  align-items: center !important;
-  width: 100% !important;
-  height: auto !important;
-  line-height: normal !important;
-  margin: 0 0 5px !important;
-  padding: 0 !important;
-  color: #999 !important;
-  font-size: 9px !important;
+  display: flex;
+  align-items: center;
+  margin: 0 0 5px;
+  color: #999;
+  font-size: 9px;
 }
-
 #popup .total-count strong {
-  font-weight: bold !important;
-  font-size: 11px !important;
-  color: #999 !important;
+  font-weight: bold;
+  font-size: 11px;
 }
-
 #popup .total-count a {
-  margin-left: auto !important;
-  font-size: 9px !important;
-  color: #888 !important;
-  text-decoration: underline !important;
+  margin-left: auto;
+  font-size: 9px;
+  color: #888;
+  text-decoration: underline;
 }
 </style>
 
@@ -88,46 +92,46 @@ if (
 
 $headers = $updates_raw->data->header;
 $rows    = $updates_raw->data->content;
-
-$columns = array_fill_keys($headers, []);
-foreach ($rows as $row) {
-    foreach ($headers as $i => $col) {
-        $columns[$col][] = $row[$i] ?? '';
-    }
-}
 ?>
 
-<h1><?= _T('Available updates', 'update') ?></h1>
+<h1><?= _T('Available updates', 'medulla_server') ?></h1>
 <div class="total-count">
   <span class="total-info">
-    <?= _T('Total updates : ', 'update') ?>
-    <strong><?= count($columns['package']) ?></strong>
+    <?= _T('Total updates', 'medulla_server') ?> :
+    <strong><?= count($rows) ?></strong>
   </span>
   <a href="https://github.com/medulla-tech/medulla/blob/master/README.md" target="_blank">
     <?= _T('For more details, see the README.', 'update') ?>
   </a>
 </div>
 
-<?php
-$n = new OptimizedListInfos($columns['package'], _T("Package name", "update"));
-
-if (isset($columns['description'])) {
-    $n->addExtraInfo($columns['description'], _T("Description", "update"));
-}
-if (isset($columns['version'])) {
-    $n->addExtraInfo($columns['version'], _T("Version", "update"));
-}
-if (isset($columns['needs_reboot'])) {
-    $n->addExtraInfo(
-        array_map(fn($val) => $val ? _("Yes") : _("No"), $columns['needs_reboot']),
-        _T("Reboot required", "update")
-    );
-}
-
-$n->setItemCount(count($columns['package']));
-$n->setNavBar(new AjaxNavBar($n->getItemCount(), ""));
-$n->start = 0;
-$n->end = 50;
-
-$n->display();
-?>
+<div class="listinfos-wrapper">
+  <table>
+    <colgroup>
+      <col />
+      <col />
+      <col />
+      <col />
+    </colgroup>
+    <thead>
+      <tr>
+        <th><?= _T('Package name',      'medulla_server') ?></th>
+        <th><?= _T('Description',       'medulla_server') ?></th>
+        <th><?= _T('Version',           'medulla_server') ?></th>
+        <th><?= _T('Reboot required',   'medulla_server') ?></th>
+      </tr>
+    </thead>
+    <tbody>
+      <?php foreach ($rows as $row): ?>
+        <tr>
+          <td><?= htmlspecialchars($row[0]) ?></td>
+          <td><?= htmlspecialchars($row[1] ?? '') ?></td>
+          <td><?= htmlspecialchars($row[2] ?? '') ?></td>
+          <td>
+            <?= ($row[3] ? _T('Yes','medulla_server') : _T('No','medulla_server')) ?>
+          </td>
+        </tr>
+      <?php endforeach; ?>
+    </tbody>
+  </table>
+</div>
