@@ -2961,6 +2961,145 @@ class Glpi93(DyngroupDatabaseHelper):
         """
         return self.doesUserHaveAccessToMachines(ctx, [machine_uuid])
 
+    def getMachineInfoImaging(self, uuid):
+        """
+        Récupère les informations d'inventaire détaillées pour une ou plusieurs machines.
+
+        Paramètre :
+        -----------
+        uuid : int, str ou list
+            UUID unique (int ou str) ou liste d'UUIDs (int ou str) à interroger.
+            Les chaînes peuvent être préfixées par "uuid" (insensible à la casse) ou contenir d'autres mots,
+            seuls les chiffres extraits seront conservés.
+
+        Retour :
+        --------
+        list[dict] ou dict
+            Liste de dictionnaires contenant les données d'inventaire formatées,
+            ou un seul dictionnaire si un seul UUID est fourni.
+        """
+
+        def extract_id(value):
+            """
+            Extrait un entier à partir d'une chaîne ou d'un entier.
+            Ignore les préfixes 'uuid' insensibles à la casse, supprime tout sauf chiffres.
+            Renvoie None si impossible.
+            """
+            if value is None:
+                return None
+            s = str(value).strip()
+            if not s:
+                return None
+            # Retirer le préfixe 'uuid' si présent
+            s = re.sub(r"(?i)^uuid", "", s).strip()
+            # Extraire la première séquence de chiffres dans la chaîne
+            match = re.search(r"\d+", s)
+            if match:
+                return int(match.group())
+            else:
+                return None
+
+        uuids_set = set()
+        return_single = False
+
+        if isinstance(uuid, int):
+            uuids_set.add(uuid)
+            return_single = True
+
+        elif isinstance(uuid, str):
+            extracted = extract_id(uuid)
+            if extracted is not None:
+                uuids_set.add(extracted)
+                return_single = True
+            else:
+                self.logger.warning(f"UUID invalide ou vide ignoré : '{uuid}'")
+                return []
+
+        elif isinstance(uuid, list):
+            for element in uuid:
+                extracted = extract_id(element)
+                if extracted is not None:
+                    uuids_set.add(extracted)
+                else:
+                    self.logger.warning(f"UUID mal formé ignoré : '{element}'")
+            if not uuids_set:
+                self.logger.warning("Aucun UUID valide trouvé dans la liste fournie.")
+                return []
+            return_single = False
+
+        else:
+            self.logger.error(f"uuid doit être un int, str ou liste : reçu {type(uuid)}")
+            return []
+
+        uuids = list(uuids_set)
+
+        session = create_session()
+
+        query = (
+            session.query(Machine)
+            .add_columns(
+                self.glpi_operatingsystems.c.name.label("os"),
+                self.glpi_operatingsystemservicepacks.c.name.label("os_sp"),
+                self.glpi_operatingsystemversions.c.name.label("os_version"),
+                self.glpi_domains.c.name.label("domain"),
+                self.locations.c.name.label("location"),
+                self.glpi_computermodels.c.name.label("model"),
+                self.glpi_computertypes.c.name.label("type"),
+                self.glpi_networks.c.name.label("network"),
+                self.entities.c.completename.label("entity"),
+                self.glpi_operatingsystemarchitectures.c.name.label("os_arch")
+            )
+            .select_from(
+                self.machine
+                .outerjoin(self.glpi_operatingsystems)
+                .outerjoin(self.glpi_operatingsystemservicepacks)
+                .outerjoin(self.glpi_operatingsystemversions)
+                .outerjoin(self.glpi_operatingsystemarchitectures)
+                .outerjoin(self.glpi_computertypes)
+                .outerjoin(self.glpi_domains)
+                .outerjoin(self.locations)
+                .outerjoin(self.glpi_computermodels)
+                .outerjoin(self.glpi_networks)
+                .join(self.entities)
+            )
+        )
+
+        query = self.filterOnUUID(query, uuids)
+        rows = query.all()
+
+        result = []
+        for row in rows:
+            machine = row[0]
+            extra_values = row[1:]
+            extra_keys = [
+                "os", "os_sp", "os_version", "domain", "location",
+                "model", "type", "network", "entity", "os_arch"
+            ]
+
+            extra_data = dict(zip(extra_keys, extra_values))
+
+            formatted_result_dict = {
+                "id_machine": machine.id,
+                "entities": machine.entities_id,
+                "realname": machine.name,
+                "creationEntity": extra_data.get("entity"),
+                "newlocation": extra_data.get("location"),
+                "Domain": extra_data.get("domain"),
+                "Model": extra_data.get("model"),
+                "type": extra_data.get("type"),
+                "OperatingSystem": extra_data.get("os"),
+                "OperatingSystemSP": extra_data.get("os_sp"),
+                "OperatingSystemVersion": extra_data.get("os_version"),
+                "OperatingSystemArchitecture": extra_data.get("os_arch"),
+                "Network": extra_data.get("network"),
+            }
+
+            result.append(formatted_result_dict)
+
+        session.close()
+
+        return result[0] if return_single and result else result
+
     ##################### for inventory purpose (use the same API than OCSinventory to keep the same GUI)
     def getLastMachineInventoryFull(self, uuid):
         session = create_session()
