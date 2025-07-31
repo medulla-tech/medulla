@@ -162,10 +162,10 @@ if (!empty($global_status)) {
                         </span>
                     </a>';
                 echo '<a  href="' . $urlRedirect . '">';
-                echo '<img src="img/other/machine_down.svg" title="create group" width="25" height="25" />';
+                echo '<img src="img/other/machinegroup.svg" title="create group" width="25" height="25" />';
                 echo '</a>';
                 echo '<a href="' . $urlRedirectgroupimaging . '"  class="lienstylebouton boutoncreation">';
-                echo '<img src="img/other/machine_down.svg" title="create group imaging" width="25" height="25" />';
+                echo '<img src="img/other/machinegroup.svg" title="create group imaging" width="25" height="25" />';
                 echo '</a>)';
 
                 echo '<div id="popupinformation1" title="Custom Menu">';
