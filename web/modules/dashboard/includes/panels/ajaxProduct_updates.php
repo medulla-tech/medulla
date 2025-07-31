@@ -54,7 +54,7 @@ if ($update_count === 0) {
     echo '<br><p><strong>' . _T('No updates available.', 'dashboard') . '</strong></p><br>';
     echo '</div>';
 } else {
-    $updates_available_txt = sprintf(_T('%s Updates available.', 'dashboard'), $update_count);
+    $updates_available_txt = $update_count . ' ' . _T('Updates availables', 'dashboard');
     echo <<<EOS
     <div id="updates_zone">
         <div class="custom-updates-info">

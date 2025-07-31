@@ -34,11 +34,14 @@ $options = array(
 
 class UpdatePanel extends Panel {
     function display_content() {
+        $btnLabel = _T("Check updates", 'dashboard');
+        $searchLabel = _T("Search for updates…", 'dashboard');
+        $errorLabel  = _T("Error when retrieving updates.", 'dashboard');
         echo <<<HTML
         <center>
             <div id="updates_zone">
                 <button class="btnSecondary" id="fetch_updates_btn" style="margin-top: 24px; margin-bottom: 18px;">
-                    Check updates
+                    {$btnLabel}
                 </button>
             </div>
         </center>
@@ -93,7 +96,7 @@ class UpdatePanel extends Panel {
                 $('#updates_zone').html(
                     '<div class="custom-loader-wrapper">' +
                         '<div class="custom-spinner"></div>' +
-                        '<div class="custom-loader-title">Search for updates…</div>' +
+                        '<div class="custom-loader-title">{$searchLabel}</div>' +
                     '</div>'
                 );
                 $.ajax({
@@ -104,7 +107,7 @@ class UpdatePanel extends Panel {
                     error: function(){
                         $('#updates_zone').html(
                             '<div class="custom-loader-wrapper">' +
-                                '<div class="custom-loader-title" style="color:#c00;">Error when retrieving updates.</div>' +
+                                '<div class="custom-loader-title" style="color:#c00;">{$errorLabel}</div>' +
                             '</div>'
                         );
                     }
