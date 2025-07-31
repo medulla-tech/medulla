@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-30 15:09+0200\n"
+"POT-Creation-Date: 2025-07-30 17:47+0200\n"
 "PO-Revision-Date: 2017-09-12 14:00+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/medulla/teams/72118/pt_BR/)\n"
@@ -2408,7 +2408,7 @@ msgid "Edit Post Install Profile"
 msgstr ""
 
 #: modules/imaging/infoPackage.inc.php:105
-#: modules/imaging/manage/addProfilescript.php:30
+#: modules/imaging/manage/addProfilescript.php:43
 msgid "New Post Install Profile"
 msgstr ""
 
@@ -3812,7 +3812,7 @@ msgstr ""
 msgid "Remove the boot service <b>%s</b> from the default boot menu"
 msgstr "Remover o servio <b>%s</b> do menu de boot padro"
 
-#: modules/imaging/manage/profilescript.php:32
+#: modules/imaging/manage/profilescript.php:110
 msgid "Available Post-Imaging Profiles"
 msgstr ""
 
@@ -3998,12 +3998,12 @@ msgstr "Criar iso de <strong>%s</strong>"
 msgid "Launch backup"
 msgstr "Lanar backup"
 
-#: modules/imaging/manage/addProfilescript.php:53
+#: modules/imaging/manage/addProfilescript.php:66
 #, php-format
 msgid "The profile %s has been created"
 msgstr ""
 
-#: modules/imaging/manage/addProfilescript.php:56
+#: modules/imaging/manage/addProfilescript.php:69
 #, php-format
 msgid "The profile %s hasn't been correctly created : %s"
 msgstr ""

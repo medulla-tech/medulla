@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-30 15:09+0200\n"
+"POT-Creation-Date: 2025-07-30 17:47+0200\n"
 "PO-Revision-Date: 2023-12-12 11:56+0000\n"
 "Last-Translator: SPO, 2025\n"
 "Language-Team: French (https://app.transifex.com/medulla/teams/72118/fr/)\n"
@@ -121,10 +121,6 @@ msgstr "Historique des mises à jour"
 #: modules/updates/infoPackage.inc.php:42
 msgid "Entities Compliance"
 msgstr "Conformité des entités"
-
-#: modules/updates/updates/index.php:29
-msgid "test Transifex"
-msgstr ""
 
 #: modules/updates/updates/ajaxDeploySpecificUpdate.php:112
 #: modules/updates/updates/ajaxDetailsByUpdatesWhite.php:113
@@ -262,20 +258,20 @@ msgstr "Liste grise (mises à jour manuelles)"
 
 #: modules/updates/updates/hardwareConstraintsForMajorUpdates.php:45
 #, php-format
-msgid "List Machines do not perform the update for now [ Entity %s ]"
-msgstr ""
+msgid "List of machines that should not be updated [ Entity %s ]"
+msgstr "Liste de machines qui ne doivent pas être mises à jour [ Entité %s ]"
 
 #: modules/updates/updates/hardwareConstraintsForMajorUpdates.php:56
 msgid "Computer"
 msgstr "Machine"
 
 #: modules/updates/updates/hardwareConstraintsForMajorUpdates.php:58
-msgid "Code Version"
-msgstr ""
+msgid "Version Code"
+msgstr "Code version"
 
 #: modules/updates/updates/hardwareConstraintsForMajorUpdates.php:59
-msgid "Langue Code"
-msgstr ""
+msgid "Language Code"
+msgstr "Code langue"
 
 #: modules/updates/updates/ajaxDetailsByMachines.php:62
 #: modules/updates/updates/ajaxDetailsByMachines.php:66
@@ -491,8 +487,8 @@ msgstr ""
 "l'environnement matériel est compatible avec Windows 11"
 
 #: modules/updates/updates/deployUpdatemajor.php:275
-msgid "Deployement update Major "
-msgstr ""
+msgid "Deployment major update "
+msgstr "Déploiement de mise à jour majeure"
 
 #: modules/updates/updates/deploySpecificUpdate.php:46
 #: modules/updates/infoPackage.inc.php:28
@@ -551,7 +547,7 @@ msgstr "Erreur de déplacement de package vers la liste blanche"
 
 #: modules/updates/updates/updatesListMajorWin.php:26
 #: modules/updates/infoPackage.inc.php:221
-msgid "Manage Updates Major Lists"
+msgid "Manage Major Updates Lists"
 msgstr "Gérer les listes de mises à jour majeures"
 
 #: modules/updates/updates/majorDetailsByMachines.php:36
@@ -640,12 +636,12 @@ msgid "<b>Approve</b> update %s (%s) ?"
 msgstr "<b>Approuver</b> la mise à jour %s (%s) ?"
 
 #: modules/updates/updates/grpDeployUpdatemajor.php:221
-msgid "slot start date missings"
-msgstr ""
+msgid "Slot start date missing"
+msgstr "Date de début manquant"
 
 #: modules/updates/updates/grpDeployUpdatemajor.php:227
-msgid "slot end date missings"
-msgstr ""
+msgid "Slot end date missing"
+msgstr "Date de fin manquant"
 
 #: modules/updates/updates/ajaxUpdatesListWinWhite.php:33
 #: modules/updates/infoPackage.inc.php:163
@@ -683,8 +679,8 @@ msgid "No machines are affected by hardware constraints for major updates."
 msgstr "Aucune machine n'est affectée par les contrantes matérielles"
 
 #: modules/updates/updates/ajaxMajorEntitiesList.php:153
-msgid "Deploy all updates major on entity"
-msgstr ""
+msgid "Deploy all major updates on entity"
+msgstr "Déployer toutes les mises à jour majeures sur l'entité"
 
 #: modules/updates/updates/ajaxMajorEntitiesList.php:162
 msgid "There are no major updates to deploy for the entity."
@@ -840,5 +836,5 @@ msgid "Machines major update"
 msgstr "Mises à jour majeures "
 
 #: modules/updates/infoPackage.inc.php:245
-msgid "Detail deploy on group entity"
-msgstr ""
+msgid "Deployment details on group entity"
+msgstr "Détails de déploiement sur groupe entité"
