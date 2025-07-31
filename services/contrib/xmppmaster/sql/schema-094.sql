@@ -354,9 +354,6 @@ END$$
 DELIMITER ;
 
 
--- Activer le planificateur d'événements
-SET GLOBAL event_scheduler = ON;
-
 DROP EVENT IF EXISTS xmppmaster.ev_process_pending_events;
 -- Créer l’événement
 CREATE EVENT IF NOT EXISTS xmppmaster.ev_process_pending_events
