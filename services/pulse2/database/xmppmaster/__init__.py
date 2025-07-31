@@ -14435,37 +14435,43 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         if "contains" in ctx and ctx["contains"] != "":
             contains = ctx["contains"]
 
-        sql_query = f"""
-        SELECT
-            m.uuid_inventorymachine AS uuid,
-            m.hostname AS cn,
-            m.platform AS os,
-            m.model AS description,
-            m.manufacturer AS type,
-            m.lastuser AS user,
-            ge.complete_name AS entity
-        FROM
-            machines m
-        JOIN
-            glpi_entity ge ON m.glpi_entity_id = ge.id
-        WHERE
-            m.agenttype = 'machine'
-        AND
-            m.glpi_entity_id = (
-                SELECT id FROM glpi_entity WHERE glpi_id = {location}
+        where_clauses = [
+            "m.agenttype = 'machine'",
+            f"m.glpi_entity_id = (SELECT id FROM glpi_entity WHERE glpi_id = {location})"
+        ]
+        if criterion:
+            where_clauses.append(
+                f"(m.hostname LIKE '%{criterion}%' OR ge.complete_name LIKE '%{criterion}%')"
             )
+        where_sql = " AND ".join(where_clauses)
+
+        count_sql = f"""
+            SELECT COUNT(*) AS total
+            FROM machines m
+            JOIN glpi_entity ge ON m.glpi_entity_id = ge.id
+            WHERE {where_sql}
         """
+        total = session.execute(count_sql).scalar() or 0
 
-        if criterion != "":
-            sql_query += f" AND (m.hostname LIKE '%{criterion}%' OR ge.complete_name LIKE '%{criterion}%')"
-
-        sql_query += f" LIMIT {start}, {end}"
-
+        sql_query = f"""
+            SELECT
+                m.uuid_inventorymachine AS uuid,
+                m.hostname             AS cn,
+                m.platform             AS os,
+                m.model                AS description,
+                m.manufacturer         AS type,
+                m.lastuser             AS user,
+                ge.complete_name       AS entity
+            FROM machines m
+            JOIN glpi_entity ge ON m.glpi_entity_id = ge.id
+            WHERE {where_sql}
+            LIMIT {start}, {end}
+        """
         result = session.execute(sql_query)
         machines = result.fetchall()
 
         result_data = {
-            "count": len(machines),
+            "count": total,
             "data": {
                 "uuid": [],
                 "cn": [],
@@ -14479,34 +14485,18 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         }
 
         for row in machines:
-            result_data["data"]["uuid"].append(
-                row["uuid"].replace("UUID", "") if row["uuid"] else ""
-            )
-            result_data["data"]["cn"].append(
-                row["cn"] if row["cn"] is not None else "")
-            result_data["data"]["os"].append(
-                row["os"] if row["os"] is not None else "")
-            result_data["data"]["description"].append(
-                row["description"] if row["description"] is not None else ""
-            )
-            result_data["data"]["type"].append(
-                row["type"] if row["type"] is not None else ""
-            )
-            result_data["data"]["user"].append(
-                row["user"] if row["user"] is not None else ""
-            )
-            result_data["data"]["entity"].append(
-                row["entity"] if row["entity"] is not None else ""
-            )
+            uid = row["uuid"].replace("UUID", "") if row["uuid"] else ""
+            result_data["data"]["uuid"].append(uid)
+            result_data["data"]["cn"].append(row["cn"] or "")
+            result_data["data"]["os"].append(row["os"] or "")
+            result_data["data"]["description"].append(row["description"] or "")
+            result_data["data"]["type"].append(row["type"] or "")
+            result_data["data"]["user"].append(row["user"] or "")
+            result_data["data"]["entity"].append(row["entity"] or "")
             result_data["data"]["presence"].append(1)
 
-        uuids = []
-        for id in result_data["data"]["uuid"]:
-            uuids.append("UUID%s" % id)
-
-        result_data["xmppdata"] = []
-        result_data["xmppdata"] = XmppMasterDatabase(
-        ).getmachinesbyuuids(uuids)
+        uuids = [f"UUID{u}" for u in result_data["data"]["uuid"]]
+        result_data["xmppdata"] = XmppMasterDatabase().getmachinesbyuuids(uuids)
 
         return result_data
 
