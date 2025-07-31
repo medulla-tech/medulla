@@ -26,7 +26,7 @@ require("graph/navbar.inc.php");
 require_once("modules/admin/includes/xmlrpc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 
-$p = new PageGenerator(_T("Automatic approval rules", 'admin'));
+$p = new PageGenerator(_T("Automatic approval rules", 'updates'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
