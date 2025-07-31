@@ -1,9 +1,0 @@
-[main]
-host = https://www.transifex.com
-
-[o:siveo:p:pulse-1:r:xmppmaster]
-file_filter = <lang>/LC_MESSAGES/xmppmaster.po
-source_file = xmppmaster.pot
-source_lang = en_US
-type        = PO
-

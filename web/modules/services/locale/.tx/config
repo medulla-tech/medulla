@@ -1,9 +1,0 @@
-[main]
-host = https://www.transifex.com
-
-[o:siveo:p:pulse-1:r:services]
-file_filter = <lang>/LC_MESSAGES/services.po
-source_file = services.pot
-source_lang = en_US
-type        = PO
-
