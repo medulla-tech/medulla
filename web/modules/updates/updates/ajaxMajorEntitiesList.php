@@ -136,7 +136,7 @@ $emptydetailsByMach = new EmptyActionItem1(_T("no major updates for this entity"
 
 $details_hardware_constraints_for_major_updates = new ActionItem(_T("Please do not perform the update for now, as long as certain essential hardware constraints are not met.", "updates"),
                                 "hardwareConstraintsForMajorUpdates",
-                                "auditbymachine",
+                                "donotupdate",
                                 "",
                                 "updates",
                                 "updates");
@@ -145,14 +145,14 @@ $details_hardware_constraints_for_major_updates = new ActionItem(_T("Please do n
 // Aucune machine n’est concernée par des contraintes matérielles pour les mises à jour majeures.
 $empty_hardware_constraints_for_major_updates = new EmptyActionItem1(_T("No machines are affected by hardware constraints for major updates.", "updates"),
                                             "hardwareConstraintsForMajorUpdates",
-                                            "auditbymachine",
+                                            "donotupdate",
                                             "",
                                             "updates",
                                             "updates");
 
 $deployAll = new ActionPopupItem(_T("Deploy all major updates on entity", "updates"),
                                     "grpDeployUpdatemajor",
-                                    "updateone",
+                                    "updateall",
                                     "",
                                     "updates",
                                     "updates",
@@ -161,7 +161,7 @@ $deployAll = new ActionPopupItem(_T("Deploy all major updates on entity", "updat
 
 $emptydeployAll = new EmptyActionItem1(_T("There are no major updates to deploy for the entity.", "updates"),
                                             "grpDeployUpdatemajor",
-                                            "auditbymachine",
+                                            "updateall",
                                             "",
                                             "updates",
                                             "updates");
