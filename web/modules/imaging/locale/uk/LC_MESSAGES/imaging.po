@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-30 15:09+0200\n"
+"POT-Creation-Date: 2025-07-30 17:47+0200\n"
 "PO-Revision-Date: 2017-09-12 14:00+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2025\n"
 "Language-Team: Ukrainian (https://app.transifex.com/medulla/teams/72118/uk/)\n"
@@ -2559,7 +2559,7 @@ msgid "Edit Post Install Profile"
 msgstr ""
 
 #: modules/imaging/infoPackage.inc.php:105
-#: modules/imaging/manage/addProfilescript.php:30
+#: modules/imaging/manage/addProfilescript.php:43
 msgid "New Post Install Profile"
 msgstr "Новий профіль після встановлення"
 
@@ -3970,7 +3970,7 @@ msgstr "Ви справді хочете вимкнути цей файл від
 msgid "Remove the boot service <b>%s</b> from the default boot menu"
 msgstr "Вилучити службу завантаження <b>%s</b> з типового меню завантаження"
 
-#: modules/imaging/manage/profilescript.php:32
+#: modules/imaging/manage/profilescript.php:110
 msgid "Available Post-Imaging Profiles"
 msgstr "Доступні профілі після створення образу"
 
@@ -4165,12 +4165,12 @@ msgstr "Створити ISO з <strong>%s</strong>"
 msgid "Launch backup"
 msgstr "Запустити резервне копіювання"
 
-#: modules/imaging/manage/addProfilescript.php:53
+#: modules/imaging/manage/addProfilescript.php:66
 #, php-format
 msgid "The profile %s has been created"
 msgstr "Було створено профіль %s"
 
-#: modules/imaging/manage/addProfilescript.php:56
+#: modules/imaging/manage/addProfilescript.php:69
 #, php-format
 msgid "The profile %s hasn't been correctly created : %s"
 msgstr "Профіль %s не було створено правильно: %s"
