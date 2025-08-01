@@ -378,10 +378,23 @@ class apimanagepackagemsc:
     def get_path_from_title(login, title):
         nb, packages = apimanagepackagemsc.loadpackagelistmsc(login, filter={}, start=0, end=100)
 
-        # PID search from the title
+        # Normalizes the title by removing all the '+'
+        norm_title = title.replace('+', '').strip().lower()
+
         for group in packages:
             for pkg in group:
-                if pkg.get("name") == title or pkg.get("label") == title:
+                name  = pkg.get("name", "")
+                label = pkg.get("label", "")
+
+                # Identical normalization on the PKG side
+                norm_name  = name.replace('+', '').strip().lower()
+                norm_label = label.replace('+', '').strip().lower()
+
+                # We match either a name or label, raw or standardized
+                if (name.lower() == title.lower()
+                    or label.lower() == title.lower()
+                    or norm_name == norm_title
+                    or norm_label == norm_title):
                     files = pkg.get("files", [])
                     if files:
                         return files[0].get("path")
