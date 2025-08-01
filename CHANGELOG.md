@@ -1,5 +1,18 @@
 # Change Log
 
+## [5.3.0](https://github.com/medulla-tech/medulla/releases/tag/5.3.0) (2025-07-31)
+- [FEATURE] Optimisation of SQL queries regarding imaging server status
+- [FEATURE] Allow automatic whitelisting of Windows updates based on severity and classification
+- [FEATURE] Improve management of major OS updates
+- [FEATURE] Uninstallation convergences allows user to make sure a package is not installed
+- [FEATURE] Improve user experience on various modules
+- [FEATURE] Imaging profiles allow user to dissociate post-imaging scripts from master images
+- [FEATURE] New user documentation (https://docs.medulla-tech.io)
+- [BUGFIX]  Fix duplicates when adding a master to imaging boot menu
+- [BUGFIX]  Fix traceback in imaging when resetting menus
+- [BUGFIX]  Fix Windows updates for product families that are not displayed
+- [BUGFIX]  Fix updating Medulla from the dashboard
+
 ## [5.2.1](https://github.com/medulla-tech/medulla/releases/tag/5.2.1) (unreleased)
 - [FEATURE] Add new sections in Audit page for the convergences
 - [FEATURE] Add the possibility to use profiles to imaging
