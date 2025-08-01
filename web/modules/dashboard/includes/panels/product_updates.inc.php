@@ -114,7 +114,7 @@ class UpdatePanel extends Panel {
                 });
             });
 
-            // Lorsqu'on clique sur "Installer les mises à jour"
+            // when click on "Install updates"
             $(document).on('click', '.btnInstallUpdates', function(e){
                 e.preventDefault();
                 setTimeout(function() {
