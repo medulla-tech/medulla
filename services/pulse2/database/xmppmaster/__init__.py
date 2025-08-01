@@ -10107,81 +10107,94 @@ class XmppMasterDatabase(DatabaseHelper):
             .filter(Machines.uuid_inventorymachine == uuid)
             .first()
         )
-        result = {}
+
+        # Initializes everything, including the network, with an empty chain by default
+        result = {
+            "id": "",
+            "jid": "",
+            "platform": "",
+            "archi": "",
+            "hostname": "",
+            "uuid_inventorymachine": "",
+            "ip_xmpp": "",
+            "ippublic": "",
+            "macaddress": "",
+            "subnetxmpp": "",
+            "agenttype": "",
+            "classutil": "",
+            "groupdeploy": "",
+            "urlguacamole": "",
+            "picklekeypublic": "",
+            "ad_ou_user": "",
+            "ad_ou_machine": "",
+            "kiosk_presence": "",
+            "lastuser": "",
+            "enabled": "",
+            "uuid_serial_machine": "",
+            "ipaddress": "",
+            "mac": "",
+            "broadcast": "",
+            "gateway": "",
+            "mask": ""
+        }
+
         if machine:
-            result = {
+            # Update machine info
+            result.update({
                 "id": machine.id,
                 "jid": machine.jid,
                 "platform": machine.platform,
                 "archi": machine.archi,
                 "hostname": machine.hostname,
                 "uuid_inventorymachine": machine.uuid_inventorymachine,
-                "ip_xmpp": machine.ip_xmpp,
-                "ippublic": machine.ippublic,
-                "macaddress": machine.macaddress,
-                "subnetxmpp": machine.subnetxmpp,
-                "agenttype": machine.agenttype,
-                "classutil": machine.classutil,
-                "groupdeploy": machine.groupdeploy,
-                "urlguacamole": machine.urlguacamole,
-                "picklekeypublic": machine.picklekeypublic,
-                "ad_ou_user": machine.ad_ou_user,
-                "ad_ou_machine": machine.ad_ou_machine,
-                "kiosk_presence": machine.kiosk_presence,
-                "lastuser": machine.lastuser,
-                "enabled": machine.enabled,
-                "uuid_serial_machine": machine.uuid_serial_machine,
-            }
+                "ip_xmpp": machine.ip_xmpp or "",
+                "ippublic": machine.ippublic or "",
+                "macaddress": machine.macaddress or "",
+                "subnetxmpp": machine.subnetxmpp or "",
+                "agenttype": machine.agenttype or "",
+                "classutil": machine.classutil or "",
+                "groupdeploy": machine.groupdeploy or "",
+                "urlguacamole": machine.urlguacamole or "",
+                "picklekeypublic": machine.picklekeypublic or "",
+                "ad_ou_user": machine.ad_ou_user or "",
+                "ad_ou_machine": machine.ad_ou_machine or "",
+                "kiosk_presence": str(machine.kiosk_presence),
+                "lastuser": machine.lastuser or "",
+                "enabled": str(machine.enabled),
+                "uuid_serial_machine": machine.uuid_serial_machine or "",
+            })
 
-            # Recover the networks of the machine
-            network = session.query(Network).filter(Network.machines_id == machine.id).first()
-            if network:
+            # search for the "perfect" network line
+            complete_net = (
+                session.query(Network)
+                .filter(
+                    Network.machines_id == machine.id,
+                    Network.ipaddress.isnot(None), Network.ipaddress != "",
+                    Network.broadcast.isnot(None), Network.broadcast != "",
+                    Network.gateway.isnot(None),   Network.gateway   != "",
+                    Network.mask.isnot(None),      Network.mask      != ""
+                )
+                .first()
+            )
+            # Fallback on the first if no "perfect"
+            if not complete_net:
+                complete_net = (
+                    session.query(Network)
+                    .filter(Network.machines_id == machine.id)
+                    .first()
+                )
+
+            # update, or leave the initial gaps
+            if complete_net:
                 result.update({
-                    "ipaddress": network.ipaddress,
-                    "mac": network.mac,
-                    "broadcast": network.broadcast,
-                    "gateway": network.gateway,
-                    "mask": network.mask,
+                    "ipaddress": complete_net.ipaddress or "",
+                    "mac":       complete_net.mac         or "",
+                    "broadcast": complete_net.broadcast   or "",
+                    "gateway":   complete_net.gateway     or "",
+                    "mask":      complete_net.mask        or "",
                 })
 
         session.commit()
-        return result
-
-    @DatabaseHelper._sessionm
-    def getRelayServerfromjid(self, session, jid):
-        relayserver = session.query(RelayServer).filter(
-            RelayServer.jid.like("%s%%" % jid)
-        )
-        relayserver = relayserver.first()
-        session.commit()
-        session.flush()
-        try:
-            result = {
-                "id": relayserver.id,
-                "urlguacamole": relayserver.urlguacamole,
-                "subnet": relayserver.subnet,
-                "nameserver": relayserver.nameserver,
-                "ipserver": relayserver.ipserver,
-                "ipconnection": relayserver.ipconnection,
-                "port": relayserver.port,
-                "portconnection": relayserver.portconnection,
-                "mask": relayserver.mask,
-                "jid": relayserver.jid,
-                "longitude": relayserver.longitude,
-                "latitude": relayserver.latitude,
-                "enabled": relayserver.enabled,
-                "switchonoff": relayserver.switchonoff,
-                "mandatory": relayserver.mandatory,
-                "classutil": relayserver.classutil,
-                "groupdeploy": relayserver.groupdeploy,
-                "package_server_ip": relayserver.package_server_ip,
-                "package_server_port": relayserver.package_server_port,
-                "moderelayserver": relayserver.moderelayserver,
-                "keysyncthing": relayserver.keysyncthing,
-                "syncthing_port": relayserver.syncthing_port,
-            }
-        except Exception:
-            result = {}
         return result
 
     @DatabaseHelper._sessionm
