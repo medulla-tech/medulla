@@ -22,7 +22,7 @@ AC_PREREQ(2.59)
 
 dnl autoconf initialization
 define([project], [medulla])
-AC_INIT(project, [5.2.1], [http://www.siveo.net])
+AC_INIT(project, [5.3.0], [http://www.medulla-tech.io])
 define([gitversion], esyscmd([sh -c "which git > /dev/null && git describe 2> /dev/null | sed -e 's/]project[-\([^-]\+\)//' | tr -d '\n' || true"]))dnl
 AC_DEFINE(GITVERSION, "gitversion", [Git version])
 
