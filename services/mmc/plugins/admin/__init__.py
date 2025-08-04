@@ -1,5 +1,6 @@
-# -*- coding: utf-8; -*-
-# SPDX-FileCopyrightText: 2020-2023 Siveo <support@siveo.net>
+# -*- coding:Utf-8; -*
+# SPDX-FileCopyrightText: 2016-2023 Siveo, http://www.siveo.net
+# SPDX-FileCopyrightText: 2024-2025 Medulla, http://www.medulla-tech.io
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from pulse2.version import getVersion, getRevision  # pyflakes.ignore
@@ -390,8 +391,7 @@ class GLPIClient:
         )
 
         if response.status_code > 300:
-            logger.error(f"error{response.status_code} creation entity'{
-                         response.text}'")
+            logger.error(f"error{response.status_code} creation entity'{response.text}'")
             response.raise_for_status()
 
         new_id = response.json().get('id')
@@ -472,8 +472,7 @@ class GLPIClient:
         )
 
         if response.status_code > 300 or "ERROR_GLPI_ADD" in response.text:
-            logger.error(f"error{response.status_code} creation '{
-                         response.text}'")
+            logger.error(f"error{response.status_code} creation '{response.text}'")
             response.raise_for_status()
             logger.error("[!] Échec de la création de l'utilisateur")
             raise Exception("[!] Échec de la création de l'utilisateur")
@@ -544,8 +543,7 @@ class GLPIClient:
         )
 
         if response.status_code >= 300:
-            logger.error(f"error{response.status_code} update_profile_user '{
-                         response.text}'")
+            logger.error(f"error{response.status_code} update_profile_user '{response.text}'")
 
         logger.debug(json.dumps(response.json(), indent=4))
 
@@ -598,8 +596,7 @@ class GLPIClient:
         )
         logger.debug(response.text)
         if not response.ok or "ERROR" in response.text:
-            logger.error(f"[!] Échec de la mise à jour de l'utilisateur {
-                         user_id} (HTTP {response.status_code})")
+            logger.error(f"[!] Échec de la mise à jour de l'utilisateur {user_id} (HTTP {response.status_code})")
             try:
                 logger.debug(json.dumps(response.json(), indent=4))
             except Exception:
@@ -864,10 +861,8 @@ def create_organization(parent_entity_id,
                     # Création d'une nouvelle entité sous un parent personnalisé
                     id_create_new_entity = client.create_entity_under_custom_parent(
                         parent_entity_id, name_new_entity, tag_value)
-                    logger.debug(f"Nouvelle entité créée avec l'ID : {
-                                 id_create_new_entity}")
-                    logger.debug(f"{name_user}, {pwd}, {id_create_new_entity}, {
-                                 realname}, {firstname}")
+                    logger.debug(f"Nouvelle entité créée avec l'ID : {id_create_new_entity}")
+                    logger.debug(f"{name_user}, {pwd}, {id_create_new_entity}, {realname}, {firstname}")
                     # Création d'un nouvel utilisateur
 
                     logger.debug(f"CREATION UTILISATEUR : {name_user}")
@@ -886,8 +881,7 @@ def create_organization(parent_entity_id,
                     # logger.info(f"Profil de l'utilisateur {id_new_user} changé avec succès.")
                     #
 
-                    logger.debug(f"CREATION PROFIL USER {
-                                 name_user} :id  {profiles_id}")
+                    logger.debug(f"CREATION PROFIL USER {name_user} :id  {profiles_id}")
                     client.add_profile_to_user(
                         id_new_user, 3, id_create_new_entity)
 
