@@ -1,5 +1,6 @@
-# -*- coding: utf-8; -*-
-# SPDX-FileCopyrightText: 2020-2023 Siveo <support@siveo.net>uuuuuuu
+# -*- coding:Utf-8; -*
+# SPDX-FileCopyrightText: 2016-2023 Siveo, http://www.siveo.net
+# SPDX-FileCopyrightText: 2024-2025 Medulla, http://www.medulla-tech.io
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import traceback
@@ -89,13 +90,11 @@ class AdminDatabase(DatabaseHelper):
             if table_name in exclude_table:
                 continue
             if table_name.startswith("saas_"):
-                logger.debug(f"Mapping table by automap: {
-                             table_name.capitalize()}")
+                logger.debug(f"Mapping table by automap: {table_name.capitalize()}")
                 # Set the mapped class as an attribute of this instance
                 setattr(self, table_name.capitalize(), mapped_class)
             if table_name in include_table:
-                logger.debug(f"Mapping table by automap by list include: {
-                             table_name.capitalize()}")
+                logger.debug(f"Mapping table by automap by list include: {table_name.capitalize()}")
                 setattr(self, table_name.capitalize(), mapped_class)
 
         if not self.initMappersCatchException():
