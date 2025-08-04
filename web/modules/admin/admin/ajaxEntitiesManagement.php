@@ -1,24 +1,44 @@
 <?php
-
-// modules/admin/admin/manage_entity.php
-require("localSidebar.php");
-require("graph/navbar.inc.php");
-require_once("modules/admin/includes/xmlrpc.php");
-$p = new PageGenerator(_T("Management of Organizational Entities", 'admin'));
-$p->setSideMenu($sidemenu);
-$p->display();
-
-$profilelistinfo=xmlrpc_get_CONNECT_API();
-
-
 /*
-$params = ["source" => "xmppmaster"];
+ * (c) 2024-2025 Medulla, http://www.medulla-tech.io
+ *
+ * $Id$
+ *
+ * This file is part of MMC, http://www.medulla-tech.io
+ *
+ * MMC is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * any later version.
+ *
+ * MMC is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MMC; If not, see <http://www.gnu.org/licenses/>.
+ * ajaxEntitiesManagement.php
+ */
 
-$ajaxmajor = new AjaxFilter(urlStrRedirect("admin/admin/ajax_entity_organisation_admin"),
-                            "container-ajax_entity_organisation_admin", $params, 'root_organisation');
-$ajaxmajor->display();
-$ajaxmajor->displayDivToUpdate();
-*/
+require_once("modules/admin/includes/xmlrpc.php");
+
+// "Management of Organizational Entities"
+echo "modules/admin/admin/ajax_entity_organisation_admin.php";
+$profilelistinfo=xmlrpc_get_CONNECT_API();
+// echo "<pre>";
+// print_r($_GET);
+// echo "</pre>";
+// echo "<br>";
+// echo "<pre>";
+// print_r($_POST);
+// echo "</pre>";
+// echo "<br>";
+// echo "<pre>";
+// print_r($profilelistinfo);
+// echo "</pre>";
+
+
 
 $listdefprofil = $profilelistinfo['get_list_profiles'];
 $infodefprofil = $profilelistinfo['get_user_info'];
@@ -27,7 +47,6 @@ $MessageFailure = _T("Failed to create the organization: The provided parameters
 
 if (isset($_POST["bcreate"])) {
     verifyCSRFToken($_POST); // on fait verif sur auth_token
-
     // on verifie si on a des variables de bien definie $POST
     // !!! attention si parametre ajouter dans formulaire ils faut ajouter dans la list suivante "$required_keys"
 
@@ -69,10 +88,8 @@ if (isset($_POST["bcreate"])) {
                 exit;
             }else
             {
-                // on verify les password
-
                 // Création de profil organisation
-                $create_entitytag = ($create_entitytag != "" ? $create_entitytag : "");
+                $tag_value = ($create_entitytag != "" ? $create_entitytag : "");
                 $realname = (isset($realname) ? $realname : "");
                 $firstname = (isset($firstname) ? $firstname : "");
 
@@ -82,7 +99,7 @@ if (isset($_POST["bcreate"])) {
                     $create_userlogin,
                     $create_userpassword,
                     $create_profil,
-                    $create_entitytag,
+                    $tag_value,
                     $realname,
                     $firstname
                 );
@@ -223,4 +240,3 @@ $f->display();
 
 
 ?>
-
