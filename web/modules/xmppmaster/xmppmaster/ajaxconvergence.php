@@ -38,7 +38,7 @@ if (isset($_GET['currenttasks']) && $_GET['currenttasks'] == '1') {
     $status = "";
     $convergence = True;
     $LastdeployINsecond = 3600 * 24;
-    $arraydeploy = xmlrpc_get_deploy_convergence($_GET['login'], $LastdeployINsecond, $start, $end, $filter, "convergence");
+    $arraydeploy = xmlrpc_get_deploy_convergence($_GET['login'], "", $start, $end, $filter, "convergence");
 
     $arraynotdeploy = xmlrpc_get_deploy_inprogress_by_team_member($_GET['login'], $LastdeployINsecond, $start, $end, $filter);
 } else {
