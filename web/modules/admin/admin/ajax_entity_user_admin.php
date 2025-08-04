@@ -18,32 +18,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with MMC; If not, see <http://www.gnu.org/licenses/>.
- *
+ * ajax_entity_user_admin.php
  */
 
-function xmlrpc_get_CONNECT_API()
-{
-    return xmlCall("admin.get_CONNECT_API", []);
-}
-
-function xmlrpc_create_organization(
-    $parent_entity_id,
-    $name_new_entity,
-    $name_user,
-    $pwd,
-    $profiles_id,
-    $tag_value = "",
-    $realname = null,
-    $firstname = null
-) {
-    return xmlCall("admin.create_organization", [
-        $parent_entity_id,
-        $name_new_entity,
-        $name_user,
-        $pwd,
-        $profiles_id,
-        $tag_value,
-        $realname,
-        $firstname
-    ]);
-}
+echo "/modules/admin/admin/ajax_entity_user_admin.php";
+?>

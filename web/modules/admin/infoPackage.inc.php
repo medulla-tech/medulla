@@ -1,13 +1,16 @@
 <?php
-/**
- * (c) 2020-2021 Siveo, http://siveo.net
+/*
+ * (c) 2016-2023 Siveo, http://www.siveo.net
+ * (c) 2024-2025 Medulla, http://www.medulla-tech.io
  *
- * This file is part of Management Console (MMC).
+ * $Id$
+ *
+ * This file is part of MMC, http://www.medulla-tech.io
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ * the Free Software Foundation; either version 3 of the License, or
+ * any later version.
  *
  * MMC is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -15,8 +18,8 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with MMC; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ * along with MMC; If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 require_once("modules/medulla_server/version.php");
 
@@ -146,10 +149,6 @@ $page = new Page("editCluster", _T("Edit Cluster", "admin"));
 $page->setFile("modules/admin/admin/editCluster.php");
 $submod->addPage($page);
 
-$page = new Page("delete",_T("Delete a Cluster", 'admin'));
-$page->setFile("modules/admin/admin/deleteCluster.php", array("noHeader"=>True,"visible"=>False));
-$submod->addPage($page);
-
 $page = new Page("newCluster", _T("New Cluster", "admin"));
 $page->setFile("modules/admin/admin/newCluster.php");
 $submod->addPage($page);
@@ -186,6 +185,30 @@ $page->setFile("modules/admin/admin/ajaxunban.php");
 $page->setOptions(array("AJAX" => true, "visible" => false));
 $submod->addPage($page);
 
+//---------------------entity manageur ----------------
+// CRUD - Entity User Organisation
+// The Admin client can create entity and users and provide them with profiles
+$page = new Page("entitiesManagement", _T('Manage user client', 'admin'));
+$page->setFile("modules/admin/admin/entitiesManagement.php");
+$submod->addPage($page);
+
+// CRUD - organization of customers who will be in profile admin
+// managing user organization profile of the client of an organization
+// Assignment of an organizational tag
+$page = new Page("ajax_entity_organisation_admin", _T("entity organisation", "admin"));
+$page->setFile("modules/admin/admin/ajax_entity_organisation_admin.php");
+$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
+$submod->addPage($page);
+
+$page = new Page("ajax_entity_user_admin", _T("Grub entity users d'une organisation", "admin"));
+$page->setFile("modules/admin/admin/ajax_entity_user_admin.php");
+$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
+$submod->addPage($page);
+
+$page = new Page("ajax_entity_user_user", _T("Grub users client", "admin"));
+$page->setFile("modules/admin/admin/ajax_entity_user_user.php");
+$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
+$submod->addPage($page);
 
 $mod->addSubmod($submod);
 
