@@ -1,44 +1,27 @@
 <?php
-/*
- * (c) 2024-2025 Medulla, http://www.medulla-tech.io
- *
- * $Id$
- *
- * This file is part of MMC, http://www.medulla-tech.io
- *
- * MMC is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * any later version.
- *
- * MMC is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with MMC; If not, see <http://www.gnu.org/licenses/>.
- * ajaxEntitiesManagement.php
- */
 
+require("localSidebar.php");
+require("graph/navbar.inc.php");
 require_once("modules/admin/includes/xmlrpc.php");
+$title = (isset($_GET['mode']) && $_GET['mode'] === 'edit')
+    ? _T("Edit Entities", 'admin')
+    : _T("Add Entities", 'admin');
+$p = new PageGenerator($title);
+$p->setSideMenu($sidemenu);
+$p->display();
 
-// "Management of Organizational Entities"
-echo "modules/admin/admin/ajax_entity_organisation_admin.php";
+/* DEBUG */
+echo "<pre>";
+print_r($_GET);
+echo "</pre>";
+// exit;
+
 $profilelistinfo=xmlrpc_get_CONNECT_API();
-// echo "<pre>";
-// print_r($_GET);
-// echo "</pre>";
-// echo "<br>";
-// echo "<pre>";
-// print_r($_POST);
-// echo "</pre>";
-// echo "<br>";
-// echo "<pre>";
-// print_r($profilelistinfo);
-// echo "</pre>";
 
-
+if (
+    $profilelistinfo['get_user_info']['profil_entity_id'] == 0 &&
+    strtolower($profilelistinfo['get_user_info']['profil_entity_name']) == 'siveo medulla'
+) {
 
 $listdefprofil = $profilelistinfo['get_list_profiles'];
 $infodefprofil = $profilelistinfo['get_user_info'];
@@ -47,6 +30,23 @@ $MessageFailure = _T("Failed to create the organization: The provided parameters
 
 if (isset($_POST["bcreate"])) {
     verifyCSRFToken($_POST); // on fait verif sur auth_token
+    /* DEBUG */
+    echo "<pre>";
+    print_r($_POST);
+    echo "</pre>";
+    exit;
+
+    $result = xmlrpc_create_organization(
+        $create_profil_entity_id,
+        $create_organization,
+        $create_userlogin,
+        $create_userpassword,
+        $create_profil,
+        $create_entitytag,
+        $realname,
+        $firstname
+    );
+
     // on verifie si on a des variables de bien definie $POST
     // !!! attention si parametre ajouter dans formulaire ils faut ajouter dans la list suivante "$required_keys"
 
@@ -86,10 +86,11 @@ if (isset($_POST["bcreate"])) {
                 new NotifyWidgetFailure($MessageFailure);
                 header("Location: " . urlStrRedirect("admin/admin/manage_entity_organisation", array()));
                 exit;
-            }else
-            {
+            } else {
+                // on verify les password
+
                 // Création de profil organisation
-                $tag_value = ($create_entitytag != "" ? $create_entitytag : "");
+                $create_entitytag = ($create_entitytag != "" ? $create_entitytag : "");
                 $realname = (isset($realname) ? $realname : "");
                 $firstname = (isset($firstname) ? $firstname : "");
 
@@ -99,7 +100,7 @@ if (isset($_POST["bcreate"])) {
                     $create_userlogin,
                     $create_userpassword,
                     $create_profil,
-                    $tag_value,
+                    $create_entitytag,
                     $realname,
                     $firstname
                 );
@@ -115,19 +116,21 @@ if (isset($_POST["bcreate"])) {
                                             $create_userlogin,
                                             $resul[2]);
                     new NotifyWidgetSuccess($MessageSuccess);
-                    header("Location: " . urlStrRedirect("admin/admin/manage_entity_organisation", array()));
+                    header("Location: " . urlStrRedirect("admin/admin/entitiesManagement", array()));
                     exit;
                 } else {
                     $MessageTemplate = _T("The organization %s could not be created for user %s with profile %s", 'admin');
                     $MessageFailure = sprintf($MessageTemplate, $create_organization, $create_userlogin, $create_profil_id);
                     new NotifyWidgetFailure($MessageFailure);
-                    header("Location: " . urlStrRedirect("admin/admin/manage_entity_organisation", array()));
+                    header("Location: " . urlStrRedirect("admin/admin/entitiesManagement", array()));
                     exit;
                 }
             }
     }
 }
-$f = new ValidatingForm(array("action" => urlStrRedirect("admin/admin/ajax_entity_organisation_admin"),));
+// $f = new ValidatingForm(array("action" => urlStrRedirect("admin/admin/ajaxEntityManagement")));
+$f = new ValidatingForm(array('method' => 'POST'));
+$f->addValidateButtonWithLabel("bcreate", "Create new Organization");
 
 $id_profile = array();
 $name_profile = array();
@@ -139,47 +142,6 @@ foreach ($listdefprofil as $profile_id_name) {
         $id_profile[] = $profile_id_name['id'];
         $name_profile[]=$profile_id_name['name'];
     }
-</style>
-
-<?php
-list($list, $values) = getEntitiesSelectableElements();
-$titles = array_values($list);
-
-$types = [
-    "École",
-    "Entreprise",
-    "Collectivité"
-];
-
-$usersCount = [
-    "5 utilisateurs",
-    "12 utilisateurs",
-    "3 utilisateurs"
-];
-
-$created = [
-    "2024-01-15",
-    "2023-11-03",
-    "2025-02-28"
-];
-
-$edit = new ActionItem(_("Edit"), "editEntities", "edit", "", "admin", "admin");
-$add = new ActionItem(_("Add"), "editEntities", "add", "", "admin", "admin");
-$view = new ActionItem(_("View"), "manageentity", "display", "", "admin", "admin");
-$download = new ActionItem(_("Download"), "manageentity", "down", "", "admin", "admin");
-
-$params = [];
-
-for ($i = 0; $i < count($titles); $i++) {
-    $editAction[] = $edit;
-    $addAction[] = $add;
-    $viewAction[] = $view;
-    $downloadAction[] = $download;
-
-    $params[] = [
-        'entity_id' => array_keys($values)[$i],
-        'entity_name' => $titles[$i],
-    ];
 }
 
 $f->add(new HiddenTpl("profil_entity_id"),
@@ -191,33 +153,92 @@ $f->add(new HiddenTpl("profil_name"),
 $f->add(new HiddenTpl("profil_id"),
         array("value" => $profilelistinfo['get_user_info']['profil_id'], "hide" => true));
 
-$n->addActionItemArray($editAction);
-$n->addActionItemArray($addAction);
-$n->addActionItemArray($viewAction);
-$n->addActionItemArray($downloadAction);
-$n->setParamInfo($params);
-$n->display();
+$f->add(new HiddenTpl("profil_entity_id"),
+        array("value" => $profilelistinfo['get_user_info']['profil_entity_id'], "hide" => true));
+
+$f->add(new HiddenTpl("profil_entity_name"),
+        array("value" => $profilelistinfo['get_user_info']['profil_entity_name'], "hide" => true));
+
+
+$profileSelect = new SelectItem("profil");
+$profileSelect->setElements($name_profile);
+$profileSelect->setElementsVal($id_profile);
+$profileSelect->setSelected("3");
+$f->push(new Table());
+$f->add(
+    new TrFormElement(_T("User Profile", "admin"), $profileSelect)
+);
+
+
+$organization_name_creation = array(
+        new InputTpl('organization'),
+        new TextTpl(sprintf('<i style="color: #999999">%s</i>', _T('Head Organization', 'admin')))
+    );
+
+$organization_tag_entity = array(
+        new InputTpl('entitytag'),
+        new TextTpl(sprintf('<i style="color: #999999">%s</i>', _T('Tag Entity Organization', 'admin')))
+    );
+
+$organization_user_entity_profile = array(
+        new InputTpl('userlogin'),
+        new TextTpl(sprintf('<i style="color: #999999">%s</i>', _T('Organization\'s User', 'admin')))
+    );
+
+ $organization_user_password = array(
+        new PasswordTpl('userpassword'),
+        new TextTpl(sprintf('<i style="color: #999999">%s</i>', _T('Organization\'s password user', 'admin')))
+    );
+
+ $organization_user_passwordconfirm = array(
+        new PasswordTpl('userpasswordconfirm'),
+        new TextTpl(sprintf('<i style="color: #999999">%s</i>', _T('Organization\'s password user confirm', 'admin')))
+    );
+
+ $f->add(
+        new TrFormElement(
+            _T('organization', 'admin'),
+            new multifieldTpl($organization_name_creation)
+        ),
+        "organizationSection"
+    );
+
+ $f->add(
+        new TrFormElement(
+            _T('Tag Entity', 'admin'),
+            new multifieldTpl($organization_tag_entity)
+        ),
+        "entitytagSection"
+    );
+//  $f->add(
+//         new TrFormElement(
+//             _T('user', 'admin'),
+//             new multifieldTpl($organization_user_entity_profile)
+//         ),
+//         "userprofilentitySection"
+//     );
+
+//  $f->add(
+//         new TrFormElement(
+//             _T('password', 'admin'),
+//             new multifieldTpl($organization_user_password)
+//         ),
+//         "passwordSection"
+//     );
+
+//   $f->add(
+//         new TrFormElement(
+//             _T('password confirm', 'admin'),
+//             new multifieldTpl($organization_user_passwordconfirm)
+//         ),
+//         "passwordconfirmSection"
+//     );
+
+
+// $f->addButton("bcreate", _T("Create new Organization", "admin"));
+
+$f->pop();
+$f->display();
+}
+
 ?>
-<script>
-jQuery(document).ready(function($) {
-    $('li.edit a, li.add a').on('click', function(e) {
-        const $link = $(this);
-        let href = $link.attr('href');
-
-        if (href.includes('mode=')) return;
-
-        let mode = '';
-        if ($link.closest('li').hasClass('edit')) {
-            mode = 'edit';
-        } else if ($link.closest('li').hasClass('add')) {
-            mode = 'add';
-        }
-
-        const separator = href.includes('?') ? '&' : '?';
-        href += separator + 'mode=' + mode;
-
-        window.location.href = href;
-        e.preventDefault();
-    });
-});
-</script>
