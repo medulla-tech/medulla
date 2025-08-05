@@ -39,11 +39,8 @@ require_once("modules/xmppmaster/includes/html.inc.php");
 </style>
 
 <?php
-$titles = [
-    "Entité 1",
-    "Entité 2",
-    "Entité 3"
-];
+list($list, $values) = getEntitiesSelectableElements();
+$titles = array_values($list);
 
 $types = [
     "École",
@@ -63,16 +60,23 @@ $created = [
     "2025-02-28"
 ];
 
-$edit = new ActionItem("Editer", "manageentity", "edit", "", "admin", "admin");
-$add = new ActionItem("Ajouter", "manageentity", "add", "", "admin", "admin");
-$view = new ActionItem("Voir", "manageentity", "display", "", "admin", "admin");
-$download = new ActionItem("Télécharger", "manageentity", "down", "", "admin", "admin");
+$edit = new ActionItem(_("Edit"), "editEntities", "edit", "", "admin", "admin");
+$add = new ActionItem(_("Add"), "editEntities", "add", "", "admin", "admin");
+$view = new ActionItem(_("View"), "manageentity", "display", "", "admin", "admin");
+$download = new ActionItem(_("Download"), "manageentity", "down", "", "admin", "admin");
+
+$params = [];
 
 for ($i = 0; $i < count($titles); $i++) {
     $editAction[] = $edit;
     $addAction[] = $add;
     $viewAction[] = $view;
     $downloadAction[] = $download;
+
+    $params[] = [
+        'entity_id' => array_keys($values)[$i],
+        'entity_name' => $titles[$i],
+    ];
 }
 
 $filter = "";
@@ -90,5 +94,29 @@ $n->addActionItemArray($editAction);
 $n->addActionItemArray($addAction);
 $n->addActionItemArray($viewAction);
 $n->addActionItemArray($downloadAction);
+$n->setParamInfo($params);
 $n->display();
 ?>
+<script>
+jQuery(document).ready(function($) {
+    $('li.edit a, li.add a').on('click', function(e) {
+        const $link = $(this);
+        let href = $link.attr('href');
+
+        if (href.includes('mode=')) return;
+
+        let mode = '';
+        if ($link.closest('li').hasClass('edit')) {
+            mode = 'edit';
+        } else if ($link.closest('li').hasClass('add')) {
+            mode = 'add';
+        }
+
+        const separator = href.includes('?') ? '&' : '?';
+        href += separator + 'mode=' + mode;
+
+        window.location.href = href;
+        e.preventDefault();
+    });
+});
+</script>
