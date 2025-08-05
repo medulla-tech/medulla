@@ -24,15 +24,10 @@
 
 $sidemenu = new SideMenu();
 $sidemenu->setClass("admin");
-$sidemenu->addSideMenuItem(
-    new SideMenuItem(_T("List of Relays", "admin"), "admin", "admin", "relaysList")
-);
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("List of Relays", "admin"), "admin", "admin", "relaysList"));
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Clusters List", 'admin'), "admin", "admin", "clustersList"));
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("New Cluster", 'admin'), "admin", "admin", "newCluster"));
-$sidemenu->addSideMenuItem(
-    new SideMenuItem(_T("Rules", "admin"), "admin", "admin", "rules")
-);
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("Rules", "admin"), "admin", "admin", "rules"));
 
-$sidemenu->addSideMenuItem(
-    new SideMenuItem(_T("Entities Management", "admin"), "admin", "admin", "entitiesManagement")
-);
+//--------------------- Entity Manager ----------------
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("Entities Management", "admin"), "admin", "admin", "entitiesManagement"));

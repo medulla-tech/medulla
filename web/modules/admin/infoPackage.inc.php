@@ -185,18 +185,13 @@ $page->setFile("modules/admin/admin/ajaxunban.php");
 $page->setOptions(array("AJAX" => true, "visible" => false));
 $submod->addPage($page);
 
-//---------------------entity manageur ----------------
-// CRUD - Entity User Organisation
-// The Admin client can create entity and users and provide them with profiles
-$page = new Page("entitiesManagement", _T('Manage user client', 'admin'));
+//--------------------- Entity Manager ----------------
+$page = new Page("entitiesManagement", _T('Management Entities', 'admin'));
 $page->setFile("modules/admin/admin/entitiesManagement.php");
 $submod->addPage($page);
 
-// CRUD - organization of customers who will be in profile admin
-// managing user organization profile of the client of an organization
-// Assignment of an organizational tag
-$page = new Page("ajax_entity_organisation_admin", _T("entity organisation", "admin"));
-$page->setFile("modules/admin/admin/ajax_entity_organisation_admin.php");
+$page = new Page("ajaxEntitiesManagement", _T("Management Entities", "admin"));
+$page->setFile("modules/admin/admin/ajaxEntitiesManagement.php");
 $page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
 $submod->addPage($page);
 
@@ -205,12 +200,8 @@ $page->setFile("modules/admin/admin/ajax_entity_user_admin.php");
 $page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
 $submod->addPage($page);
 
-$page = new Page("ajax_entity_user_user", _T("Grub users client", "admin"));
-$page->setFile("modules/admin/admin/ajax_entity_user_user.php");
-$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
-$submod->addPage($page);
 
 $mod->addSubmod($submod);
 
-$MMCApp = & MMCApp::getInstance();
+$MMCApp = &MMCApp::getInstance();
 $MMCApp->addModule($mod);
