@@ -139,47 +139,6 @@ foreach ($listdefprofil as $profile_id_name) {
         $id_profile[] = $profile_id_name['id'];
         $name_profile[]=$profile_id_name['name'];
     }
-</style>
-
-<?php
-list($list, $values) = getEntitiesSelectableElements();
-$titles = array_values($list);
-
-$types = [
-    "École",
-    "Entreprise",
-    "Collectivité"
-];
-
-$usersCount = [
-    "5 utilisateurs",
-    "12 utilisateurs",
-    "3 utilisateurs"
-];
-
-$created = [
-    "2024-01-15",
-    "2023-11-03",
-    "2025-02-28"
-];
-
-$edit = new ActionItem(_("Edit"), "editEntities", "edit", "", "admin", "admin");
-$add = new ActionItem(_("Add"), "editEntities", "add", "", "admin", "admin");
-$view = new ActionItem(_("View"), "manageentity", "display", "", "admin", "admin");
-$download = new ActionItem(_("Download"), "manageentity", "down", "", "admin", "admin");
-
-$params = [];
-
-for ($i = 0; $i < count($titles); $i++) {
-    $editAction[] = $edit;
-    $addAction[] = $add;
-    $viewAction[] = $view;
-    $downloadAction[] = $download;
-
-    $params[] = [
-        'entity_id' => array_keys($values)[$i],
-        'entity_name' => $titles[$i],
-    ];
 }
 
 $f->add(new HiddenTpl("profil_entity_id"),
@@ -191,33 +150,93 @@ $f->add(new HiddenTpl("profil_name"),
 $f->add(new HiddenTpl("profil_id"),
         array("value" => $profilelistinfo['get_user_info']['profil_id'], "hide" => true));
 
-$n->addActionItemArray($editAction);
-$n->addActionItemArray($addAction);
-$n->addActionItemArray($viewAction);
-$n->addActionItemArray($downloadAction);
-$n->setParamInfo($params);
-$n->display();
+$f->add(new HiddenTpl("profil_entity_id"),
+        array("value" => $profilelistinfo['get_user_info']['profil_entity_id'], "hide" => true));
+$f->add(new HiddenTpl("profil_entity_name"),
+        array("value" => $profilelistinfo['get_user_info']['profil_entity_name'], "hide" => true));
+
+
+$profileSelect = new SelectItem("profil");
+$profileSelect->setElements($name_profile);
+$profileSelect->setElementsVal($id_profile);
+$profileSelect->setSelected("3");
+$f->push(new Table());
+$f->add(
+    new TrFormElement(_T("User Profile", "admin"), $profileSelect)
+);
+
+
+ $organization_name_creation = array(
+        new InputTpl('organization'),
+        new TextTpl(sprintf('<i style="color: #999999">%s</i>', _T('Head Organization', 'admin')))
+    );
+
+
+
+ $organization_tag_entity = array(
+        new InputTpl('entitytag'),
+        new TextTpl(sprintf('<i style="color: #999999">%s</i>', _T('Tag Entity Organization', 'admin')))
+    );
+
+ $organization_user_entity_profile = array(
+        new InputTpl('userlogin'),
+        new TextTpl(sprintf('<i style="color: #999999">%s</i>', _T('Organization\'s User', 'admin')))
+    );
+
+ $organization_user_password = array(
+        new PasswordTpl('userpassword'),
+        new TextTpl(sprintf('<i style="color: #999999">%s</i>', _T('Organization\'s password user', 'admin')))
+    );
+
+ $organization_user_passwordconfirm = array(
+        new PasswordTpl('userpasswordconfirm'),
+        new TextTpl(sprintf('<i style="color: #999999">%s</i>', _T('Organization\'s password user confirm', 'admin')))
+    );
+
+ $f->add(
+        new TrFormElement(
+            _T('organization', 'admin'),
+            new multifieldTpl($organization_name_creation)
+        ),
+        "organizationSection"
+    );
+
+ $f->add(
+        new TrFormElement(
+            _T('Tag Entity', 'admin'),
+            new multifieldTpl($organization_tag_entity)
+        ),
+        "entitytagSection"
+    );
+ $f->add(
+        new TrFormElement(
+            _T('user', 'admin'),
+            new multifieldTpl($organization_user_entity_profile)
+        ),
+        "userprofilentitySection"
+    );
+
+ $f->add(
+        new TrFormElement(
+            _T('password', 'admin'),
+            new multifieldTpl($organization_user_password)
+        ),
+        "passwordSection"
+    );
+
+  $f->add(
+        new TrFormElement(
+            _T('password confirm', 'admin'),
+            new multifieldTpl($organization_user_passwordconfirm)
+        ),
+        "passwordconfirmSection"
+    );
+
+
+$f->addButton("bcreate", _T("Create new Organization", "admin"));
+
+$f->pop();
+$f->display();
+
+
 ?>
-<script>
-jQuery(document).ready(function($) {
-    $('li.edit a, li.add a').on('click', function(e) {
-        const $link = $(this);
-        let href = $link.attr('href');
-
-        if (href.includes('mode=')) return;
-
-        let mode = '';
-        if ($link.closest('li').hasClass('edit')) {
-            mode = 'edit';
-        } else if ($link.closest('li').hasClass('add')) {
-            mode = 'add';
-        }
-
-        const separator = href.includes('?') ? '&' : '?';
-        href += separator + 'mode=' + mode;
-
-        window.location.href = href;
-        e.preventDefault();
-    });
-});
-</script>

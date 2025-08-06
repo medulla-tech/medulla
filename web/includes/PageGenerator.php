@@ -3092,12 +3092,6 @@ class Form extends HtmlContainer
         $this->buttons[] = $b->getValidateButtonString($name);
     }
 
-    public function addValidateButtonWithLabel($name, $value)
-    {
-        $b = new Button();
-        $this->buttons[] = $b->getButtonString($name, $value);
-    }
-
     public function addCancelButton($name)
     {
         $b = new Button();
