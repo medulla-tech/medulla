@@ -28,7 +28,7 @@
 -- ----------------------------------------------------------------------
 -- Database
 -- ----------------------------------------------------------------------
-CREATE TABLE IF NOT EXISTS `admin`.`saas_organizations` (
+CREATE TABLE IF NOT EXISTS `admin`.`saas_organisations` (
   `organization_id` INT NOT NULL,
   `organization_name` VARCHAR(45) NOT NULL,
   `entity_id` VARCHAR(45) NOT NULL,

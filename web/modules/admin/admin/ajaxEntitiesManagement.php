@@ -21,6 +21,7 @@
  *
  */
 require_once("modules/xmppmaster/includes/html.inc.php");
+require_once("modules/admin/includes/xmlrpc.php");
 ?>
 
 <style>
@@ -39,8 +40,8 @@ require_once("modules/xmppmaster/includes/html.inc.php");
 </style>
 
 <?php
-list($list, $values) = getEntitiesSelectableElements();
-$titles = array_values($list);
+// Recovers its entity and children and small children ...
+$myEntitiesTree = xmlrpc_get_list("entities", True);
 
 $types = [
     "École",
@@ -67,15 +68,21 @@ $download = new ActionItem(_("Download"), "manageentity", "down", "", "admin", "
 
 $params = [];
 
-for ($i = 0; $i < count($titles); $i++) {
+// sort entities by increasing id
+usort($myEntitiesTree['myentities'], function($a, $b) {
+    return $a['id'] <=> $b['id'];
+});
+
+foreach ($myEntitiesTree['myentities'] as $entity) {
     $editAction[] = $edit;
     $addAction[] = $add;
     $viewAction[] = $view;
     $downloadAction[] = $download;
 
+    $titles[] = $entity['name'];
     $params[] = [
-        'entity_id' => array_keys($values)[$i],
-        'entity_name' => $titles[$i],
+        'entity_id' => $entity['id'],
+        'entity_name' => $entity['name'],
     ];
 }
 
