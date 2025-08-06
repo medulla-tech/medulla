@@ -192,7 +192,7 @@ class AdminDatabase(DatabaseHelper):
         Returns:
             organization_id: l'id de l'org créée dans la base
         """
-        org = self.Saas_organisations(
+        org = self.Saas_organizations(
             organization_name=name,
             entity_id=str(entity_id),
             entity_name=name,
