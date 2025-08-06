@@ -10,6 +10,13 @@ from mmc.plugins.admin.config import AdminConfig
 # import pour la database
 from pulse2.database.admin import AdminDatabase
 import logging
+import requests
+import json
+import traceback
+import base64
+import random
+import string
+import uuid
 
 VERSION = "1.0.0"
 APIVERSION = "4:1:3"
@@ -803,6 +810,36 @@ def get_CONNECT_API():
         logger.info(
             "Type d'API non supporté ou non spécifié. Cette section peut être étendue pour d'autres types d'API.")
         return []
+
+def get_list(type, is_recursive=False):
+    initparametre = AdminDatabase().get_CONNECT_API()
+    client = GLPIClient(
+        app_token=initparametre["glpi_mmc_app_token"],
+        url_base=initparametre["glpi_url_base_api"],
+        user_token=initparametre["glpi_root_user_token"]
+    )
+
+    client.init_session()
+
+    entities_data = client.get_list(type, is_recursive)
+
+    return entities_data
+
+def create_entity_under_custom_parent(parent_entity_id, name):
+    initparametre = AdminDatabase().get_CONNECT_API()
+    client = GLPIClient(
+        app_token=initparametre["glpi_mmc_app_token"],
+        url_base=initparametre["glpi_url_base_api"],
+        user_token=initparametre["glpi_root_user_token"]
+    )
+    client.init_session()
+
+    tag_value = str(uuid.uuid4())
+    create_entities_in_glpi = client.create_entity_under_custom_parent(parent_entity_id, name, tag_value)
+
+    AdminDatabase().create_entity_under_custom_parent(create_entities_in_glpi, name, tag_value)
+
+    return create_entities_in_glpi
 
 
 def create_organization(parent_entity_id,

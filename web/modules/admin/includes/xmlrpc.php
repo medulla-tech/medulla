@@ -26,24 +26,35 @@ function xmlrpc_get_CONNECT_API()
     return xmlCall("admin.get_CONNECT_API", []);
 }
 
-function xmlrpc_create_organization(
-    $parent_entity_id,
-    $name_new_entity,
-    $name_user,
-    $pwd,
-    $profiles_id,
-    $tag_value = "",
-    $realname = null,
-    $firstname = null
-) {
-    return xmlCall("admin.create_organization", [
-        $parent_entity_id,
-        $name_new_entity,
-        $name_user,
-        $pwd,
-        $profiles_id,
-        $tag_value,
-        $realname,
-        $firstname
-    ]);
+function xmlrpc_get_list($entities, $is_recursive = False)
+{
+    return xmlCall("admin.get_list", array($entities, $is_recursive));
 }
+
+function xmlrpc_create_entity_under_custom_parent($parent_entity_id, $name)
+{
+    return xmlCall("admin.create_entity_under_custom_parent", array($parent_entity_id, $name));
+}
+
+
+function xmlrpc_create_organization($parent_entity_id,
+                                    $name_new_entity,
+                                    $name_user,
+                                    $pwd,
+                                    $profiles_id,
+                                    $tag_value="",
+                                    $realname=null,
+                                    $firstname=null)
+{
+    return xmlCall("admin.create_organization", [$parent_entity_id,
+                                                 $name_new_entity,
+                                                 $name_user,
+                                                 $pwd,
+                                                 $profiles_id,
+                                                 $tag_value,
+                                                 $realname,
+                                                 $firstname]);
+}
+
+
+?>
