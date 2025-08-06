@@ -19,6 +19,7 @@ import logging
 
 logger = logging.getLogger()
 
+
 class AdminDatabase(DatabaseHelper):
     """
     A class to handle database operations specific to the admin module.
@@ -170,37 +171,14 @@ class AdminDatabase(DatabaseHelper):
 
             # Construct the configuration dictionary
             for param_connect in api_admin:
-                config_api[param_connect.setting_name] = param_connect.setting_value.strip()
+                config_api[param_connect.setting_name] = param_connect.setting_value.strip(
+                )
             return config_api
         except Exception as e:
             logger.error(f"An error occurred: {str(e)}")
             logger.error("\n%s", traceback.format_exc())
             return config_api
 
-    @DatabaseHelper._sessionm
-    def create_entity_under_custom_parent(self, session, entity_id, name, tag_value):
-        """
-        Insère une nouvelle entité dans la table saas_organizations
-        après création dans GLPI, en utilisant l'UUID/tag généré côté Python.
-
-        Args:
-            session (Session): session SQLAlchemy ouverte
-            parent_entity_id (int|str): ID GLPI du parent
-            name (str): Nom de l'entité
-            tag_value (str): UUID utilisé aussi pour GLPI
-
-        Returns:
-            organization_id: l'id de l'org créée dans la base
-        """
-        org = self.Saas_organizations(
-            organization_name=name,
-            entity_id=str(entity_id),
-            entity_name=name,
-            tag_name=tag_value,
-        )
-        session.add(org)
-        session.commit()
-        return org.organization_id
     # =====================================================================
     # admin FUNCTIONS
     # =====================================================================
