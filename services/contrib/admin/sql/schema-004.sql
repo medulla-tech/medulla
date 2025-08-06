@@ -29,8 +29,8 @@
 -- Database
 -- ----------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `admin`.`saas_organisations` (
-  `organization_id` INT NOT NULL,
-  `organization_name` VARCHAR(45) NOT NULL,
+  `organisation_id` INT NOT NULL,
+  `organisation_name` VARCHAR(45) NOT NULL,
   `entity_id` VARCHAR(45) NOT NULL,
   `entity_name` VARCHAR(400) NOT NULL,
   `user_id` VARCHAR(45) NULL,
@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS `admin`.`saas_organisations` (
   `is_active` TINYINT NULL DEFAULT 1,
   `user_token` VARCHAR(45) NOT NULL,
   `tag_name` CHAR(36) NOT NULL DEFAULT (UUID()),
-  PRIMARY KEY (`organization_id`, `entity_id`)
+  PRIMARY KEY (`organisation_id`, `entity_id`)
 );
 
 -- Création de la table `saas_application` pour stocker les configurations essentielles de l'application SaaS

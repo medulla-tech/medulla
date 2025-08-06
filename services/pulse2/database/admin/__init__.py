@@ -193,14 +193,14 @@ class AdminDatabase(DatabaseHelper):
             organization_id: l'id de l'org créée dans la base
         """
         org = self.Saas_organisations(
-            organization_name=name,
+            organisation_name=name,
             entity_id=str(entity_id),
             entity_name=name,
             tag_name=tag_value,
         )
         session.add(org)
         session.commit()
-        return org.organization_id
+        return org.organisation_id
     # =====================================================================
     # admin FUNCTIONS
     # =====================================================================
