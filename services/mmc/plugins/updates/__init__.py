@@ -1,5 +1,6 @@
-# -*- coding: utf-8; -*-
-# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net>
+# -*- coding:Utf-8; -*
+# SPDX-FileCopyrightText: 2016-2023 Siveo, http://www.siveo.net
+# SPDX-FileCopyrightText: 2024-2025 Medulla, http://www.medulla-tech.io
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from pulse2.version import getVersion, getRevision  # pyflakes.ignore
@@ -365,6 +366,32 @@ def get_conformity_update_by_entity(entities=[], source="xmppmaster"):
         raise ValueError(f"Source inconnue : {source}")
 
     return resultarray
+
+def get_machine_count_by_entity(entities):
+    """
+    Returns the total number of machines per entity from the GLPI base.
+
+    Args:
+        ENTITIES (List): List of dictates with at least the 'ID' key.
+
+    Returns:
+        Dict: {entity_id: number_de_machines}
+    """
+    result = {}
+    glpi = Glpi()
+    for entity in entities:
+        params = {
+            "location": str(entity["id"]),
+            "filter": "",
+            "field": "",
+            "contains": "",
+            "start": 0,
+            "end": 1,
+            "maxperpage": 1,
+        }
+        glpi_data = glpi.get_machines_list1(0, 1, params)
+        result[str(entity["id"])] = glpi_data.get("count", 0)
+    return result
 
 
 def get_machines_xmppmaster(start, end, filter=""):

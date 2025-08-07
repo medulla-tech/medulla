@@ -51,6 +51,11 @@ function xmlrpc_update_entity($entityId, $itemName, $newEntityName, $parentId)
     return xmlCall("admin.update_entity", array($entityId, $itemName, $newEntityName, $parentId));
 }
 
+function xmlrpc_get_machine_count_by_entity($entities = [])
+{
+    return xmlCall("updates.get_machine_count_by_entity", [$entities]);
+}
+
 function xmlrpc_create_organization($parent_entity_id,
                                     $name_new_entity,
                                     $name_user,
