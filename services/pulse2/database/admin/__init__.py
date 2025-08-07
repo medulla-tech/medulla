@@ -180,17 +180,17 @@ class AdminDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def create_entity_under_custom_parent(self, session, entity_id, name, tag_value):
         """
-        Insère une nouvelle entité dans la table saas_organizations
+        Insère une nouvelle entité dans la table saas_organisations
         après création dans GLPI, en utilisant l'UUID/tag généré côté Python.
 
         Args:
             session (Session): session SQLAlchemy ouverte
-            parent_entity_id (int|str): ID GLPI du parent
+            entity_id (int|str): ID GLPI de l'entité (enfant créée)
             name (str): Nom de l'entité
             tag_value (str): UUID utilisé aussi pour GLPI
 
         Returns:
-            organization_id: l'id de l'org créée dans la base
+            organisation_id: l'id de l'org créée dans la base
         """
         org = self.Saas_organisations(
             organisation_name=name,
@@ -199,8 +199,33 @@ class AdminDatabase(DatabaseHelper):
             tag_name=tag_value,
         )
         session.add(org)
+        session.flush()
+        org_id = org.organisation_id
         session.commit()
-        return org.organisation_id
+        return org_id
+
+    @DatabaseHelper._sessionm
+    def update_entity(self, session, entity_id, old_name, new_name):
+        """
+        Updates the name of the entity in the Saas_organizations table.
+
+        Args:
+            session (session):SessionSqlAlchemyOuverte
+            entity_id (int | str): id glpi of the entity to update
+            Old_name (Str): old name (useful for logging, or double security)
+            NEW_NAME (STR): New name
+
+        Returns:
+            Bool: True Si Maj, False otherwise
+        """
+        org = session.query(self.Saas_organisations).filter_by(entity_id=str(entity_id)).first()
+        if not org:
+            return False
+
+        org.organisation_name = new_name
+        org.entity_name = new_name
+        session.commit()
+        return True
     # =====================================================================
     # admin FUNCTIONS
     # =====================================================================

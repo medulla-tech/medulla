@@ -31,7 +31,6 @@ require_once("modules/admin/includes/xmlrpc.php");
         padding-left: 0 !important;
         margin-left: 0 !important;
     }
-
     #container>form>table>thead td:last-child span {
         display: block;
         text-align: right;
@@ -40,50 +39,91 @@ require_once("modules/admin/includes/xmlrpc.php");
 </style>
 
 <?php
-// Recovers its entity and children and small children ...
-$myEntitiesTree = xmlrpc_get_list("entities", True);
+// Recover the entities tree and the list of users
+$entitiesList = xmlrpc_get_list("entities", True);
+$usersList = xmlrpc_get_list("users", True);
 
-$types = [
-    "École",
-    "Entreprise",
-    "Collectivité"
-];
+// User counting by entity
+$userCountsPerEntity = [];
+foreach ($usersList as $user) {
+    $entityId = $user['entities_id'];
+    if (!isset($userCountsPerEntity[$entityId])) {
+        $userCountsPerEntity[$entityId] = 0;
+    }
+    $userCountsPerEntity[$entityId]++;
+}
 
-$usersCount = [
-    "5 utilisateurs",
-    "12 utilisateurs",
-    "3 utilisateurs"
-];
+// Initialization of tables for the list
+$editAction = [];
+$addAction = [];
+$manageusersAction = [];
+$downloadAction = [];
+$usersCount = [];
+$titles = [];
+$params = [];
 
-$created = [
-    "2024-01-15",
-    "2023-11-03",
-    "2025-02-28"
+// (demo: to be replaced with a real date then)
+$machinesCount = [
+    "5 machines",
+    "2 machines",
+    "0 machines",
 ];
 
 $edit = new ActionItem(_("Edit"), "editEntities", "edit", "", "admin", "admin");
 $add = new ActionItem(_("Add"), "editEntities", "add", "", "admin", "admin");
-$view = new ActionItem(_("View"), "manageentity", "display", "", "admin", "admin");
-$download = new ActionItem(_("Download"), "manageentity", "down", "", "admin", "admin");
+$manageusers = new ActionItem(_("manageusers"), "listUsersofEntity", "manageusers", "", "admin", "admin");
+$download = new ActionItem(_("download"), "downloadAgent", "download", "", "admin", "admin");
 
-$params = [];
-
-// sort entities by increasing id
-usort($myEntitiesTree['myentities'], function($a, $b) {
+// sort of entities by increasing id
+usort($entitiesList, function($a, $b) {
     return $a['id'] <=> $b['id'];
 });
 
-foreach ($myEntitiesTree['myentities'] as $entity) {
-    $editAction[] = $edit;
-    $addAction[] = $add;
-    $viewAction[] = $view;
+// Recovers the GLPI ID from the current user from the session login ($ _Ssession ['Login'])
+// CAUTION: to review if the MMC/LDAP ≠ GLPI logins (case possible OIDC)
+$userId = null;
+$usersByName = array_column($usersList, 'id', 'name');
+if (isset($_SESSION['login']) && isset($usersByName[$_SESSION['login']])) {
+    $userId = $usersByName[$_SESSION['login']];
+}
+
+// Construction of the list for each entity
+foreach ($entitiesList as $entity) {
+    $id = $entity['id'];
+
+    // Default actions
+    $editToAdd = $edit;
+    $addToAdd = $add;
+        $deleteToAdd = new ActionConfirmItem(
+        _("delete"),
+        "deleteEntity",
+        "delete",
+        "",
+        "admin",
+        "admin",
+        _T("Are you sure you want to delete this entity [" . $entity['name'] . "] ?" , 'admin')
+    );
+
+    // If it's the root entity (id == 0), we don't want the "Edit" button
+    if ($id == 0) {
+        $editToAdd = new EmptyActionItem1(_("Editing not allowed"), "", "editg", "", "admin", "admin");
+        $deleteToAdd = new EmptyActionItem1(_("Deleting not allowed"), "", "deleteg", "", "admin", "admin");
+    }
+
+    $editAction[] = $editToAdd;
+    $addAction[] = $addToAdd;
+    $manageusersAction[] = $manageusers;
     $downloadAction[] = $download;
+    $deleteAction[] = $deleteToAdd;
 
     $titles[] = $entity['name'];
     $params[] = [
-        'entity_id' => $entity['id'],
-        'entity_name' => $entity['name'],
+        'userId' => $userId,
+        'entityId' => $entity['id'],
+        'entityName' => $entity['name'],
     ];
+    $count = isset($userCountsPerEntity[$id]) ? $userCountsPerEntity[$id] : 0;
+    $usersCount[] = $count . " utilisateur" . ($count > 1 ? "s" : "");
 }
 
 $filter = "";
@@ -93,17 +133,17 @@ $n->setNavBar(new AjaxNavBar("10", $filter));
 $n->setCssClass("package");
 $n->disableFirstColumnActionLink();
 
-$n->addExtraInfo($types, "Type");
 $n->addExtraInfo($usersCount, "Utilisateurs");
-$n->addExtraInfo($created, "Créée le");
-
+$n->addExtraInfo($machinesCount, "Machines");
 $n->addActionItemArray($editAction);
 $n->addActionItemArray($addAction);
-$n->addActionItemArray($viewAction);
+$n->addActionItemArray($manageusersAction);
 $n->addActionItemArray($downloadAction);
+$n->addActionItemArray($deleteAction);
 $n->setParamInfo($params);
 $n->display();
 ?>
+
 <script>
 jQuery(document).ready(function($) {
     $('li.edit a, li.add a').on('click', function(e) {

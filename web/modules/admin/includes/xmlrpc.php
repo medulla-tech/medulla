@@ -36,6 +36,20 @@ function xmlrpc_create_entity_under_custom_parent($parent_entity_id, $name)
     return xmlCall("admin.create_entity_under_custom_parent", array($parent_entity_id, $name));
 }
 
+function xmlrpc_get_user_info($userId = '')
+{
+    return xmlCall("admin.get_user_info", array($userId));
+}
+
+function xmlrpc_get_entity_info($entityId)
+{
+    return xmlCall("admin.get_entity_info", array($entityId));
+}
+
+function xmlrpc_update_entity($entityId, $itemName, $newEntityName, $parentId)
+{
+    return xmlCall("admin.update_entity", array($entityId, $itemName, $newEntityName, $parentId));
+}
 
 function xmlrpc_create_organization($parent_entity_id,
                                     $name_new_entity,

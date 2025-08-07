@@ -1,18 +1,18 @@
 <?php
-
 /*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
- * (c) 2007-2008 Mandriva, http://www.mandriva.com
- * (c) 2016-2022 siveo, http://www.siveo.net
+ * (c) 2007 Mandriva, http://www.mandriva.com
+ * (c) 2016-2023 Siveo, http://www.siveo.net
+ * (c) 2024-2025 Medulla, http://www.medulla-tech.io
  *
  * $Id$
  *
- * This file is part of Management Console (MMC).
+ * This file is part of MMC, http://www.medulla-tech.io
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ * the Free Software Foundation; either version 3 of the License, or
+ * any later version.
  *
  * MMC is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -20,15 +20,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with MMC; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- *
+ * along with MMC; If not, see <http://www.gnu.org/licenses/>.
  * File : FormGenerator.php
  */
-/* * *********************************************************************
- *  Form generator class
- * ********************************************************************* */
-
 function setFormError($name)
 {
     global $formErrorArray;
@@ -343,13 +337,14 @@ class CheckboxTpl extends AbstractTpl
  */
 class InputTpl extends AbstractTpl
 {
-    public function __construct($name, $regexp = '/.+/')
+    public function __construct($name, $regexp = '/.+/', $defaultValue = '')
     {
         $this->name = $name;
         $this->regexp = $regexp;
         $this->fieldType = "text";
         $this->size = '23';
         $this->attributcustom = '';
+        $this->defaultValue = $defaultValue;
     }
 
     public function setSize($size)
@@ -382,14 +377,14 @@ class InputTpl extends AbstractTpl
         if (!isset($arrParam['placeholder'])) {
             $arrParam['placeholder'] = '';
         }
-        if(!isset($arrParam['value'])) {
-            $arrParam['value'] = "";
+        if(!isset($arrParam['value']) || $arrParam['value'] === '') {
+            $arrParam['value'] = $this->defaultValue;
         }
         $required_attr = isset($arrParam["required"]) ? ' rel="required"' : '';
         $regexp_attr = isset($this->regexp) ? ' data-regexp="' . $this->regexp . '"' : '';
-        $valparm = isset($arrParam["value"]) ? $arrParam["value"] : "";
+        $valparm = $arrParam["value"];
         print '<span id="container_input_' . $this->name . '"><input name="' . $this->name . '" id="' . $this->name . '" type="' . $this->fieldType . '" size="' . $this->size . '" '.
-        $this->attributcustom . ' value="' . $arrParam["value"] . '" placeholder="' . $arrParam["placeholder"] . '" ' . $arrParam["disabled"] . $required_attr . $regexp_attr . ' autocomplete="off" /></span>';
+        $this->attributcustom . ' value="' . $valparm . '" placeholder="' . $arrParam["placeholder"] . '" ' . $arrParam["disabled"] . $required_attr . $regexp_attr . ' autocomplete="off" /></span>';
         if (isset($arrParam["onchange"])) {
             print '<script type="text/javascript">';
             print 'jQuery(\'#' . $this->name . '\').change( function() {' . $arrParam["onchange"] . '});';
