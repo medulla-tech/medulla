@@ -43,6 +43,9 @@ require_once("modules/admin/includes/xmlrpc.php");
 $entitiesList = xmlrpc_get_list("entities", True);
 $usersList = xmlrpc_get_list("users", True);
 
+// Number of machine per entity
+$countMachines = xmlrpc_get_machine_count_by_entity($entitiesList);
+
 // User counting by entity
 $userCountsPerEntity = [];
 foreach ($usersList as $user) {
@@ -61,13 +64,6 @@ $downloadAction = [];
 $usersCount = [];
 $titles = [];
 $params = [];
-
-// (demo: to be replaced with a real date then)
-$machinesCount = [
-    "5 machines",
-    "2 machines",
-    "0 machines",
-];
 
 $edit = new ActionItem(_("Edit"), "editEntities", "edit", "", "admin", "admin");
 $add = new ActionItem(_("Add"), "editEntities", "add", "", "admin", "admin");
@@ -122,8 +118,11 @@ foreach ($entitiesList as $entity) {
         'entityId' => $entity['id'],
         'entityName' => $entity['name'],
     ];
-    $count = isset($userCountsPerEntity[$id]) ? $userCountsPerEntity[$id] : 0;
-    $usersCount[] = $count . " utilisateur" . ($count > 1 ? "s" : "");
+    $nbUsers = isset($userCountsPerEntity[$id]) ? $userCountsPerEntity[$id] : 0;
+    $usersCount[] = $nbUsers . " utilisateur" . ($nbUsers > 1 ? "s" : "");
+
+    $nbMachines = isset($countMachines[$id]) ? $countMachines[$id] : 0;
+    $machinesCount[] = $nbMachines . " machine" . ($nbMachines > 1 ? "s" : "");
 }
 
 $filter = "";
