@@ -1,5 +1,5 @@
-- [English](README.md)
-- [Français](README.fr.md)
+[English](README.md)
+[Français](README.fr.md)
 
 
 # Medulla RMM
