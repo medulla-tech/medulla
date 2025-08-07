@@ -29,7 +29,7 @@ $root = $conf["global"]["root"];
 
 
  <head>
-        <title>SIVEO Console</title>
+        <title>Medulla Console</title>
         <link href="graph/master.css" rel="stylesheet" media="screen" type="text/css" />
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta http-equiv="imagetoolbar" content="false" />
