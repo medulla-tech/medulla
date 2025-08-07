@@ -203,7 +203,7 @@ class GLPIClient:
         elif type == "profiles":
             endpoint = "Profile"
         elif type == "entities":
-            endpoint = f"getMyEntities?is_recursive={is_recursive}"
+            endpoint = f"getMyEntities?is_recursive={str(is_recursive).lower()}"
         else:
             logger.error(
                 "Type invalide. Utilisez 'users', 'profiles', ou 'entities'.")
@@ -215,12 +215,36 @@ class GLPIClient:
         if response.status_code == 200:
             data = response.json()
             if type == "users":
-                self.users = data
+                users_list = data if isinstance(data, list) else data.get('users', [])
+                filtered = []
+                for user in users_list:
+                    name = user.get("name", "")
+                    if (
+                        name == "glpi-system"
+                        or name.startswith("Plugin_")
+                    ):
+                        continue
+
+                    entity_info = self.get_entity_info(user.get("entities_id"))
+                    entity_name = entity_info.get("name", "") if entity_info and isinstance(entity_info, dict) else ""
+                    filtered.append({
+                        "id": user.get("id"),
+                        "name": user.get("name") or "",
+                        "realname": user.get("realname") or "",
+                        "is_active": user.get("is_active"),
+                        "profiles_id": user.get("profiles_id"),
+                        "last_login": user.get("last_login") or "",
+                        "date_mod": user.get("date_mod") or "",
+                        "date_creation": user.get("date_creation") or "",
+                        "entities_id": user.get("entities_id"),
+                        "entities_name": entity_name
+                    })
+                return filtered
             elif type == "profiles":
                 self.profiles = data
+                return data
             elif type == "entities":
-                self.entities = data.get('myentities', [])
-            return data
+                return data.get('myentities', [])
         else:
             response.raise_for_status()
 
@@ -260,26 +284,21 @@ class GLPIClient:
 
         if response.status_code == 200:
             data = response.json()
-
             if user_id is not None:
+                if isinstance(data, list):
+                    data = data[0] if data else {}
                 # Extract user-specific information
                 user_name = data.get('name', '')
                 user_id = data.get('id', '')
-                user_entity_name = data.get('entities', [{}])[0].get(
-                    'name', '') if data.get('entities') else ''
-                user_entity_id = data.get('entities', [{}])[0].get(
-                    'id', '') if data.get('entities') else ''
-                user_entity_recursif = data.get('entities', [{}])[0].get(
-                    'is_recursive', False) if data.get('entities') else False
+                user_entity_name = data.get('entities', [{}])[0].get('name', '') if data.get('entities') else ''
+                user_entity_id = data.get('entities', [{}])[0].get('id', '') if data.get('entities') else ''
+                user_entity_recursif = data.get('entities', [{}])[0].get('is_recursive', False) if data.get('entities') else False
 
-                logger.info(
-                    "******************************************************")
+                logger.info("******************************************************")
                 logger.info(type(data))
                 logger.debug(json.dumps(data, indent=4))
-
                 logger.info(type(data))
-                logger.info(
-                    "******************************************************")
+                logger.info("******************************************************")
 
                 return {
                     "user_name": user_name,
@@ -309,6 +328,33 @@ class GLPIClient:
                     "profil_entity_id": profil_entity_id,
                     "profil_entity_recursif": profil_entity_recursif
                 }
+        else:
+            response.raise_for_status()
+
+    def get_entity_info(self, entity_id):
+        """
+        Recovers the info from a GLPI entity by his ID.
+
+        Args:
+            Entity_ID (int | str): the ID of the entity.
+
+        Returns:
+            Dict: Info of the entity (name, parent, etc.) or {} if not found.
+        """
+        if not self.SESSION_TOKEN:
+            logger.error("Session non initialisée.")
+            raise Exception("Session non initialisée. Veuillez initialiser la session.")
+
+        headers = {
+            "App-Token": self.APP_TOKEN,
+            "Session-Token": self.SESSION_TOKEN
+        }
+        response = requests.get(f"{self.URL_BASE}/Entity/{entity_id}", headers=headers)
+        if response.status_code == 200:
+            return response.json()
+        elif response.status_code == 404:
+            logger.warning(f"Entité {entity_id} introuvable.")
+            return {}
         else:
             response.raise_for_status()
 
@@ -508,7 +554,7 @@ class GLPIClient:
 
         return user_id
 
-    def update_entity(self, entity_id, item_name, new_value):
+    def update_entity(self, entity_id, item_name, new_value, parent_id):
         """
         Updates an entity with new values.
 
@@ -539,7 +585,8 @@ class GLPIClient:
         data = {
             "input": {
                 item_name: new_value,
-                "id": entity_id
+                "id": entity_id,
+                "entities_id": parent_id
             }
         }
 
@@ -842,6 +889,54 @@ def create_entity_under_custom_parent(parent_entity_id, name):
     return create_entities_in_glpi
 
 
+def get_user_info(user_id=None):
+    initparametre = AdminDatabase().get_CONNECT_API()
+    client = GLPIClient(
+        app_token=initparametre["glpi_mmc_app_token"],
+        url_base=initparametre["glpi_url_base_api"],
+        user_token=initparametre["glpi_root_user_token"]
+    )
+    client.init_session()
+
+    user_info = client.get_user_info(user_id)
+
+    return user_info
+
+
+def update_entity(entity_id, item_name, new_entity_name, parent_id):
+    initparametre = AdminDatabase().get_CONNECT_API()
+    client = GLPIClient(
+        app_token=initparametre["glpi_mmc_app_token"],
+        url_base=initparametre["glpi_url_base_api"],
+        user_token=initparametre["glpi_root_user_token"]
+    )
+    client.init_session()
+
+    update_entity = client.update_entity(entity_id, item_name, new_entity_name, parent_id)
+
+    AdminDatabase().update_entity(entity_id, item_name, new_entity_name)
+
+    return update_entity
+
+def get_entity_info(entity_id):
+    initparametre = AdminDatabase().get_CONNECT_API()
+    client = GLPIClient(
+        app_token=initparametre["glpi_mmc_app_token"],
+        url_base=initparametre["glpi_url_base_api"],
+        user_token=initparametre["glpi_root_user_token"]
+    )
+    client.init_session()
+
+    entity_info = client.get_entity_info(entity_id)
+
+    entity = entity_info if isinstance(entity_info, dict) else entity_info[0]
+    return {
+        "id": entity.get("id"),
+        "name": entity.get("name"),
+        "entities_id": entity.get("entities_id"),
+        "completename": entity.get("completename")
+    }
+
 def create_organization(parent_entity_id,
                         name_new_entity,
                         name_user,
@@ -926,7 +1021,7 @@ def create_organization(parent_entity_id,
                     logger.debug(f"$$$$$$$$$$$$$$$$$$$$$$ zzz {zzz} ")
                     # client.update_profile_user( id_new_user, "profiles_id", profiles_id)
 
-# logger.error(f"profiles_id id. {profiles_id}")
+                    # logger.error(f"profiles_id id. {profiles_id}")
                     result = client.update_user(
                         id_new_user, "_reset_api_token", True)
                     logger.debug(

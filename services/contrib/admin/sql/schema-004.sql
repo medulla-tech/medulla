@@ -36,9 +36,9 @@ CREATE TABLE IF NOT EXISTS `admin`.`saas_organisations` (
   `user_id` VARCHAR(45) NULL,
   `user_name` VARCHAR(45) NULL,
   `profile_id` VARCHAR(45) NULL DEFAULT '0',
-  `profile_name` VARCHAR(400) NOT NULL,
+  `profile_name` VARCHAR(400) NULL,
   `is_active` TINYINT NULL DEFAULT 1,
-  `user_token` VARCHAR(45) NOT NULL,
+  `user_token` VARCHAR(45) NULL,
   `tag_name` CHAR(36) NOT NULL DEFAULT (UUID()),
   PRIMARY KEY (`organisation_id`, `entity_id`)
 );
@@ -65,7 +65,6 @@ CREATE TABLE IF NOT EXISTS `admin`.`saas_organisations` (
 --
 -- Dumping data for table `version`
 --
-
 UPDATE version SET Number = 4;
 
 COMMIT;
