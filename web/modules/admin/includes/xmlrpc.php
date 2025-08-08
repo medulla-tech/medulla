@@ -67,6 +67,11 @@ function xmlrpc_update_entity($entityId, $itemName, $newEntityName, $parentId)
     return xmlCall("admin.update_entity", array($entityId, $itemName, $newEntityName, $parentId));
 }
 
+function xmlrpc_delete_entity($entityId)
+{
+    return xmlCall("admin.delete_entity", array($entityId));
+}
+
 function xmlrpc_create_organization(
     $parent_entity_id,
     $name_new_entity,

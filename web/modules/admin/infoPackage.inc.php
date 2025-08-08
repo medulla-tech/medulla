@@ -195,8 +195,12 @@ $page->setFile("modules/admin/admin/ajaxEntitiesManagement.php");
 $page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
 $submod->addPage($page);
 
-$page = new Page("editEntities", _T('Edit Entities', 'admin'));
-$page->setFile("modules/admin/admin/editEntities.php");
+$page = new Page("editEntity", _T('Edit Entity', 'admin'));
+$page->setFile("modules/admin/admin/editEntity.php");
+$submod->addPage($page);
+
+$page = new Page("deleteEntity", _T('Edit Entitiy', 'admin'));
+$page->setFile("modules/admin/admin/deleteEntity.php");
 $submod->addPage($page);
 
 $page = new Page("listUsersofEntity", _T('List users of Entity', 'admin'));
