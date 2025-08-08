@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-30 17:47+0200\n"
+"POT-Creation-Date: 2025-08-08 12:28+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -44,8 +44,7 @@ msgid "No updates available."
 msgstr ""
 
 #: modules/dashboard/includes/panels/ajaxProduct_updates.php:57
-#, php-format
-msgid "%s Updates available."
+msgid "Updates available"
 msgstr ""
 
 #: modules/dashboard/includes/panels/ajaxProduct_updates.php:147
@@ -201,6 +200,18 @@ msgstr ""
 
 #: modules/dashboard/includes/panels/product_updates.inc.php:31
 msgid "Medulla Updates"
+msgstr ""
+
+#: modules/dashboard/includes/panels/product_updates.inc.php:37
+msgid "Check updates"
+msgstr ""
+
+#: modules/dashboard/includes/panels/product_updates.inc.php:38
+msgid "Search for updates…"
+msgstr ""
+
+#: modules/dashboard/includes/panels/product_updates.inc.php:39
+msgid "Error when retrieving updates."
 msgstr ""
 
 #: modules/dashboard/includes/panels/successRate.inc.php:30

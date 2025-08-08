@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-30 15:09+0200\n"
+"POT-Creation-Date: 2025-07-31 17:28+0200\n"
 "PO-Revision-Date: 2017-10-11 08:13+0000\n"
 "Last-Translator: Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2025\n"
 "Language-Team: Norwegian Bokmål (Norway) (https://app.transifex.com/medulla/teams/72118/nb_NO/)\n"
@@ -22,45 +22,45 @@ msgstr ""
 "Language: nb_NO\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: modules/medulla_server/update/viewProductUpdates.php:84
+#: modules/medulla_server/update/viewProductUpdates.php:88
 msgid "No updates data available"
 msgstr ""
 
-#: modules/medulla_server/update/viewProductUpdates.php:100
+#: modules/medulla_server/update/viewProductUpdates.php:97
 msgid "Available updates"
 msgstr "Tilgjengelige oppdateringer"
 
-#: modules/medulla_server/update/viewProductUpdates.php:103
-msgid "Total updates : "
+#: modules/medulla_server/update/viewProductUpdates.php:100
+msgid "Total updates"
 msgstr ""
 
-#: modules/medulla_server/update/viewProductUpdates.php:107
+#: modules/medulla_server/update/viewProductUpdates.php:104
 msgid "For more details, see the README."
 msgstr ""
 
-#: modules/medulla_server/update/viewProductUpdates.php:112
+#: modules/medulla_server/update/viewProductUpdates.php:118
 msgid "Package name"
 msgstr "Pakkenavn"
 
-#: modules/medulla_server/update/viewProductUpdates.php:115
+#: modules/medulla_server/update/viewProductUpdates.php:119
 msgid "Description"
 msgstr "Beskrivelse"
 
-#: modules/medulla_server/update/viewProductUpdates.php:118
+#: modules/medulla_server/update/viewProductUpdates.php:120
 msgid "Version"
 msgstr "Versjon"
 
-#: modules/medulla_server/update/viewProductUpdates.php:122
+#: modules/medulla_server/update/viewProductUpdates.php:121
+msgid "Reboot required"
+msgstr "Omstart kreves"
+
+#: modules/medulla_server/update/viewProductUpdates.php:131
 msgid "Yes"
 msgstr "Ja"
 
-#: modules/medulla_server/update/viewProductUpdates.php:122
+#: modules/medulla_server/update/viewProductUpdates.php:131
 msgid "No"
 msgstr "Nei"
-
-#: modules/medulla_server/update/viewProductUpdates.php:123
-msgid "Reboot required"
-msgstr "Omstart kreves"
 
 #: modules/medulla_server/includes/menu_actionaudit.php:72
 #: modules/medulla_server/includes/menu_action.php:60
