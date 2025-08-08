@@ -208,12 +208,6 @@ $page->setFile("modules/admin/admin/ajaxListUsersofEntity.php");
 $page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
 $submod->addPage($page);
 
-$page = new Page("ajax_entity_user_admin", _T("Grub entity users d'une organisation", "admin"));
-$page->setFile("modules/admin/admin/ajax_entity_user_admin.php");
-$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
-$submod->addPage($page);
-
-
 $mod->addSubmod($submod);
 
 $MMCApp = &MMCApp::getInstance();
