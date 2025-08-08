@@ -56,8 +56,8 @@ $params = [];
 
 $edit = new ActionItem(_("Edit"), "editEntities", "edit", "", "admin", "admin");
 $add = new ActionItem(_("Add"), "editEntities", "add", "", "admin", "admin");
-$manageusers = new ActionItem(_("manageusers"), "listUsersofEntity", "manageusers", "", "admin", "admin");
-$download = new ActionItem(_("download"), "downloadAgent", "download", "", "admin", "admin");
+$manageusers = new ActionItem(_("Manage users"), "listUsersofEntity", "manageusers", "", "admin", "admin");
+$download = new ActionItem(_("Download"), "downloadAgent", "download", "", "admin", "admin");
 
 // sort of entities by increasing id
 usort($entitiesList, function($a, $b) {
@@ -80,7 +80,7 @@ foreach ($entitiesList as $entity) {
     $editToAdd = $edit;
     $addToAdd = $add;
         $deleteToAdd = new ActionConfirmItem(
-        _("delete"),
+        _("Delete"),
         "deleteEntity",
         "delete",
         "",

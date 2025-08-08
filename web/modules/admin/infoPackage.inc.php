@@ -186,16 +186,16 @@ $page->setOptions(array("AJAX" => true, "visible" => false));
 $submod->addPage($page);
 
 //--------------------- Entity Manager ----------------
-$page = new Page("entitiesManagement", _T('Management Entities', 'admin'));
+$page = new Page("entitiesManagement", _T('Entities Management', 'admin'));
 $page->setFile("modules/admin/admin/entitiesManagement.php");
 $submod->addPage($page);
 
-$page = new Page("ajaxEntitiesManagement", _T("Management Entities", "admin"));
+$page = new Page("ajaxEntitiesManagement", _T("Entities Management", "admin"));
 $page->setFile("modules/admin/admin/ajaxEntitiesManagement.php");
 $page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
 $submod->addPage($page);
 
-$page = new Page("editEntities", _T('EditEntities', 'admin'));
+$page = new Page("editEntities", _T('Edit Entities', 'admin'));
 $page->setFile("modules/admin/admin/editEntities.php");
 $submod->addPage($page);
 
