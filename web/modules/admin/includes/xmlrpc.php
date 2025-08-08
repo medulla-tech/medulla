@@ -72,6 +72,18 @@ function xmlrpc_delete_entity($entityId)
     return xmlCall("admin.delete_entity", array($entityId));
 }
 
+function xmlrpc_update_user($userId, $itemName, $newValue) {
+    return xmlCall("admin.update_user", array($userId, $itemName, $newValue));
+}
+
+function xmlrpc_switch_user_profile($userId, $profileId, $entityId, $isRecursive = 0, $isDynamic = 0, $isDefaultProfile = 1) {
+    return xmlCall("admin.switch_user_profile", array($userId, $profileId, $entityId, $isRecursive, $isDynamic, $isDefaultProfile));
+}
+
+function xmlrpc_add_profile_to_user($userId, $profileId, $entityId, $isRecursive = 0, $isDynamic = 0, $isDefaultProfile = 1) {
+    return xmlCall("admin.add_profile_to_user", array($userId, $profileId, $entityId, $isRecursive, $isDynamic, $isDefaultProfile));
+}
+
 function xmlrpc_create_organization(
     $parent_entity_id,
     $name_new_entity,
