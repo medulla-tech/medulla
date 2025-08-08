@@ -43,8 +43,7 @@ require_once("modules/admin/includes/xmlrpc.php");
 $entitiesList = xmlrpc_get_list("entities", True);
 $usersList = xmlrpc_get_list("users", True);
 
-// Number of machine per entity
-$countMachines = xmlrpc_get_machine_count_by_entity($entitiesList);
+$countsByEntity = xmlrpc_get_counts_by_entity($entitiesList);
 
 // Initialization of tables for the list
 $editAction = [];
@@ -109,12 +108,11 @@ foreach ($entitiesList as $entity) {
         'entityName' => $entity['name'],
     ];
 
-    // Number of user per entity
-    $usersOfEntity = xmlrpc_get_users_count_by_entity($id);
-    $nbUsers = count($usersOfEntity);
-    $usersCount[] = $nbUsers . " utilisateur" . ($nbUsers > 1 ? "s" : "");
+    $id = (string)$entity['id'];
+    $nbUsers    = $countsByEntity[$id]['users'] ?? 0;
+    $nbMachines = $countsByEntity[$id]['machines'] ?? 0;
 
-    $nbMachines = isset($countMachines[$id]) ? $countMachines[$id] : 0;
+    $usersCount[]    = $nbUsers . " utilisateur" . ($nbUsers > 1 ? "s" : "");
     $machinesCount[] = $nbMachines . " machine" . ($nbMachines > 1 ? "s" : "");
 }
 

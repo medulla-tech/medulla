@@ -9,6 +9,7 @@ from mmc.plugins.admin.config import AdminConfig
 
 # import pour la database
 from pulse2.database.admin import AdminDatabase
+from mmc.plugins.updates import get_machine_count_by_entity
 import logging
 import requests
 import json
@@ -943,6 +944,45 @@ def get_users_count_by_entity(entity_id):
     client = get_glpi_client()
 
     result = client.get_users_count_by_entity(entity_id)
+
+    return result
+
+def get_counts_by_entity(entities):
+    """
+    Retourne pour chaque entité le nombre de machines et d'utilisateurs.
+    Args:
+        entities (list[dict]): chaque dict contient au moins 'id'
+    Returns:
+        dict: { "<entity_id>": {"machines": int, "users": int}, ... }
+    """
+    result = {}
+    # Compte machines : on réutilise ta logique existante
+    machines_by_entity = get_machine_count_by_entity(entities)  # { "id": count }
+
+    client = get_glpi_client()
+    try:
+        for e in entities:
+            eid = str(e["id"])
+            # Si tu as une méthode dédiée "count only", utilise-la.
+            # Sinon on réutilise ta fonction existante et on prend la longueur.
+            try:
+                users_list = client.get_users_count_by_entity(eid)
+                users_count = len(users_list)
+            except Exception:
+                logger.exception("Failed to get users for entity %s", eid)
+                users_count = 0
+
+            machines_count = int(machines_by_entity.get(eid) or machines_by_entity.get(e["id"], 0))
+
+            result[eid] = {
+                "users": users_count,
+                "machines": machines_count,
+            }
+    finally:
+        try:
+            client.kill_session()
+        except Exception:
+            logger.warning("Failed to kill GLPI session", exc_info=True)
 
     return result
 

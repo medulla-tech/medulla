@@ -38,7 +38,7 @@ require_once("modules/admin/includes/xmlrpc.php");
 </style>
 <?php
 
-$usersList = xmlrpc_get_users_by_entity($_GET['entityId']);
+$usersList = xmlrpc_get_users_count_by_entity($_GET['entityId']);
 $userDetails  = [];
 $profilesCache = [];
 
