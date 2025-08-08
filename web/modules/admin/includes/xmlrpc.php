@@ -41,6 +41,10 @@ function xmlrpc_get_users_count_by_entity($entityId)
     return xmlCall("admin.get_users_count_by_entity", [$entityId]);
 }
 
+function xmlrpc_get_counts_by_entity($entities = []) {
+    return xmlCall("admin.get_counts_by_entity", [$entities]);
+}
+
 function xmlrpc_get_entity_info($entityId)
 {
     return xmlCall("admin.get_entity_info", array($entityId));
@@ -60,11 +64,6 @@ function xmlrpc_create_entity_under_custom_parent($parent_entity_id, $name)
 function xmlrpc_update_entity($entityId, $itemName, $newEntityName, $parentId)
 {
     return xmlCall("admin.update_entity", array($entityId, $itemName, $newEntityName, $parentId));
-}
-
-function xmlrpc_get_machine_count_by_entity($entities = [])
-{
-    return xmlCall("updates.get_machine_count_by_entity", [$entities]);
 }
 
 function xmlrpc_create_organization(
