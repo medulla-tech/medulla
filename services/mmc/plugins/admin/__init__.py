@@ -221,7 +221,8 @@ class GLPIClient:
                 for user in users_list:
                     name = user.get("name", "")
                     if (
-                        name == "glpi-system"
+                        name == "root"
+                        or name == "glpi-system"
                         or name.startswith("Plugin_")
                     ):
                         continue
@@ -372,7 +373,7 @@ class GLPIClient:
         result = []
         for user in users:
             name = user.get('1', '')
-            if not name or name == 'glpi-system' or name.startswith('Plugin_'):
+            if not name or name == "root" or name == 'glpi-system' or name.startswith('Plugin_'):
                 continue
             result.append({
                 'id': user.get('2', ''),
