@@ -41,7 +41,8 @@ function xmlrpc_get_users_count_by_entity($entityId)
     return xmlCall("admin.get_users_count_by_entity", [$entityId]);
 }
 
-function xmlrpc_get_counts_by_entity($entities = []) {
+function xmlrpc_get_counts_by_entity($entities = [])
+{
     return xmlCall("admin.get_counts_by_entity", [$entities]);
 }
 

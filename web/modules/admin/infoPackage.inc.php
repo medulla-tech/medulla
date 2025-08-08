@@ -208,6 +208,10 @@ $page->setFile("modules/admin/admin/ajaxListUsersofEntity.php");
 $page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
 $submod->addPage($page);
 
+$page = new Page("editUser", _T('Edit User', 'admin'));
+$page->setFile("modules/admin/admin/editUser.php");
+$submod->addPage($page);
+
 $mod->addSubmod($submod);
 
 $MMCApp = &MMCApp::getInstance();
