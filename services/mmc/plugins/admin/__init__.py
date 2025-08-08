@@ -41,7 +41,7 @@ class GLPIClient:
     - get_user_info(self): Retrieves information about the active user profile.
     - ## change_user_profile todo delete et recreate profile pour user voir delete_profile_from_user et add_profile_to_user
     - create_entity_under_custom_parent(self, parent_entity_id, name): Creates an entity under a specified parent.
-    - create_user(self, name_user, pwd, entities_id=None, realname=None, firstname=None): Creates a new user.
+    - create_user(self, name_user, pwd, entities_id=None, lastname=None, firstname=None): Creates a new user.
     - update_entity(self, entity_id, item_name, new_value): Updates an entity with new values.
     - update_user(self, user_id, item_name, new_value): Updates a user with new values.
     - add_profile_to_user(self, user_id, profile_id, entities_id, is_recursive=0, is_dynamic=0, is_default_profile=0): Adds a profile to a user.
@@ -232,7 +232,7 @@ class GLPIClient:
                     filtered.append({
                         "id": user.get("id"),
                         "name": user.get("name") or "",
-                        "realname": user.get("realname") or "",
+                        "lastname": user.get("realname") or "",
                         "is_active": user.get("is_active"),
                         "profiles_id": user.get("profiles_id"),
                         "last_login": user.get("last_login") or "",
@@ -296,8 +296,27 @@ class GLPIClient:
                 user_entity_id = data.get('entities', [{}])[0].get('id', '') if data.get('entities') else ''
                 user_entity_recursif = data.get('entities', [{}])[0].get('is_recursive', False) if data.get('entities') else False
 
+                email = ''
+                try:
+                    r_email = requests.get(f"{self.URL_BASE}/User/{user_id}/UserEmail/", headers=headers)
+                    if r_email.status_code == 200:
+                        emails_data = r_email.json()
+
+                        if isinstance(emails_data, list):
+                            emails_list = emails_data
+                        elif isinstance(emails_data, dict) and "data" in emails_data:
+                            emails_list = emails_data["data"]
+                        else:
+                            emails_list = []
+
+                        if emails_list:
+                            default_email = next((e for e in emails_list if str(e.get("is_default")) == "1"), emails_list[0])
+                            email = default_email.get("email", "")
+                except Exception as e:
+                    logger.warning(f"Impossible de récupérer l'email pour l'utilisateur {user_id} : {e}")
+
                 # logger.info("******************************************************")
-                # logger.info(type(data))a
+                # logger.info(type(data))
                 # logger.debug(json.dumps(data, indent=4))
                 # logger.info(type(data))
                 # logger.info("******************************************************")
@@ -305,9 +324,9 @@ class GLPIClient:
                 return {
                     "user_id": data.get('id') or '',
                     "name": data.get('name') or '',
-                    "realname": data.get('realname') or '',
+                    "lastname": data.get('realname') or '',
                     "firstname": data.get('firstname') or '',
-                    "email": data.get('email') or '',
+                    "email": email,
                     "is_active": data.get('is_active') if data.get('is_active') is not None else '',
                     "profiles_id": data.get('profiles_id') if data.get('profiles_id') is not None else '',
                     "last_login": data.get('last_login') or '',
@@ -450,6 +469,7 @@ class GLPIClient:
     #         }
     #     else:
     #         response.raise_for_status()
+
     def get_profile_name(self, profile_id):
         headers = {
             "App-Token": self.APP_TOKEN,
@@ -522,7 +542,7 @@ class GLPIClient:
                     name_user,
                     pwd,
                     entities_id=None,
-                    realname=None,
+                    lastname=None,
                     firstname=None,
                     profiles_id=None):
         """
@@ -532,7 +552,7 @@ class GLPIClient:
             name_user (str): The username.
             pwd (str): The password.
             entities_id (int, optional): The ID of the entity.
-            realname (str, optional): The real name of the user.
+            lastname (str, optional): The real name of the user.
             firstname (str, optional): The first name of the user.
 
         Returns:
@@ -550,7 +570,7 @@ class GLPIClient:
         logger.info("Veuillez confirmer les informations suivantes :")
         logger.info(f"Nom d'utilisateur : {name_user}")
         logger.info("Mot de passe : ******")
-        logger.info(f"Nom réel : {realname}")
+        logger.info(f"Nom réel : {lastname}")
         logger.info(f"Prénom : {firstname}")
         logger.info(f"ID de l'entité : {entities_id}")
 
@@ -565,7 +585,7 @@ class GLPIClient:
                 "name": name_user,
                 "password": pwd,
                 "password2": pwd,
-                "realname": realname,
+                "lastname": lastname,
                 "firstname": firstname,
                 "language": "fr_FR",
                 "is_active": 1,
@@ -814,6 +834,65 @@ class GLPIClient:
         logger.info(
             f"[+] Profil ajouté avec succès à l'utilisateur ID : {user_id}")
         return response.json()
+
+    def switch_user_profile(self, user_id, new_profile_id, entities_id, is_recursive=0, is_dynamic=0, is_default_profile=1):
+        """
+        Changes the active profile of a GLPI user by deleting the old profiles,
+        By adding the new one, then updating the active profile in the user sheet.
+
+        Args:
+            user_id (int): User ID
+            new_profile_id (int): ID of the new profile
+            entities_id (int): ID of the entity
+            is_recursive (int): Apply to sub-entities (0/1)
+            is_dynamic (int): Dynamic profile (0/1)
+            is_default_profile (int): Default profile (0/1)
+
+        Returns:
+            dict: Operation result
+        """
+        client = get_glpi_client()
+
+        client.init_session()
+
+        headers = {
+            "App-Token": client.APP_TOKEN,
+            "Session-Token": client.SESSION_TOKEN
+        }
+
+        resp = requests.get(f"{client.URL_BASE}/User/{user_id}/Profile_User/", headers=headers)
+        if resp.status_code == 200:
+            profiles_list = resp.json()
+            for prof in profiles_list:
+                prof_id = prof.get('id')
+                if prof_id:
+                    requests.delete(f"{client.URL_BASE}/User/{user_id}/Profile_User/{prof_id}", headers=headers)
+
+        payload = {
+            "input": {
+                "users_id": user_id,
+                "profiles_id": new_profile_id,
+                "entities_id": entities_id,
+                "is_recursive": is_recursive,
+                "is_dynamic": is_dynamic,
+                "is_default_profile": is_default_profile
+            }
+        }
+
+        requests.post(f"{client.URL_BASE}/User/{user_id}/Profile_User/", headers=headers, json=payload)
+
+        payload_update = {
+            "input": {
+                "id": user_id,
+                "profiles_id": new_profile_id
+            }
+        }
+
+        requests.put(f"{client.URL_BASE}/User/{user_id}", headers=headers, json=payload_update)
+
+        client.kill_session()
+
+        return {"success": True, "message": "Profil changé et mis à jour avec succès"}
 
     def delete_profile_from_user(self, user_id, profile_id):
         """
@@ -1079,13 +1158,41 @@ def delete_entity(entity_id):
 
     return result
 
+def update_user(user_id, item_name, new_value):
+    client = get_glpi_client()
+
+    result = client.update_user(user_id, item_name, new_value)
+
+    return result
+
+def add_profile_to_user(user_id, profile_id, entities_id, is_recursive=0, is_dynamic=0, is_default_profile=0):
+    client = get_glpi_client()
+
+    result = client.add_profile_to_user(user_id, profile_id, entities_id, is_recursive, is_dynamic, is_default_profile)
+
+    return result
+
+def switch_user_profile(user_id, new_profile_id, entities_id, is_recursive=0, is_dynamic=0, is_default_profile=1):
+    client = get_glpi_client()
+
+    result = client.switch_user_profile(
+        user_id,
+        new_profile_id,
+        entities_id,
+        is_recursive,
+        is_dynamic,
+        is_default_profile
+    )
+
+    return result
+
 def create_organization(parent_entity_id,
                         name_new_entity,
                         name_user,
                         pwd,
                         profiles_id,
                         tag_value,
-                        realname="",
+                        lastname="",
                         firstname=""):
     # Initialisation des variables
     client = None
@@ -1097,7 +1204,7 @@ def create_organization(parent_entity_id,
     logger.debug("Paramètres  pwd: *******")
     logger.debug(f"Paramètres  profiles_id: {profiles_id}")
     logger.debug(f"Paramètres  tag_value: {tag_value}")
-    logger.debug(f"Paramètres  realname: {realname}")
+    logger.debug(f"Paramètres  lastname: {lastname}")
     logger.debug(f"Paramètres  firstname: {firstname}")
 
     # Récupération des paramètres de connexion à l'API
@@ -1136,14 +1243,14 @@ def create_organization(parent_entity_id,
                     id_create_new_entity = client.create_entity_under_custom_parent(
                         parent_entity_id, name_new_entity, tag_value)
                     logger.debug(f"Nouvelle entité créée avec l'ID : {id_create_new_entity}")
-                    logger.debug(f"{name_user}, {pwd}, {id_create_new_entity}, {realname}, {firstname}")
+                    logger.debug(f"{name_user}, {pwd}, {id_create_new_entity}, {lastname}, {firstname}")
                     # Création d'un nouvel utilisateur
 
                     logger.debug(f"CREATION UTILISATEUR : {name_user}")
                     id_new_user = client.create_user(name_user,
                                                      pwd,
                                                      entities_id=id_create_new_entity,
-                                                     realname=realname,
+                                                     lastname=lastname,
                                                      firstname=firstname,
                                                      profiles_id=profiles_id)
 

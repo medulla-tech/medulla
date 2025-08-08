@@ -54,8 +54,8 @@ $usersCount = [];
 $titles = [];
 $params = [];
 
-$edit = new ActionItem(_("Edit"), "editEntities", "edit", "", "admin", "admin");
-$add = new ActionItem(_("Add"), "editEntities", "add", "", "admin", "admin");
+$edit = new ActionItem(_("Edit"), "editEntity", "edit", "", "admin", "admin");
+$add = new ActionItem(_("Add"), "editEntity", "add", "", "admin", "admin");
 $manageusers = new ActionItem(_("Manage users"), "listUsersofEntity", "manageusers", "", "admin", "admin");
 $download = new ActionItem(_("Download"), "downloadAgent", "download", "", "admin", "admin");
 
@@ -80,7 +80,7 @@ foreach ($entitiesList as $entity) {
     $editToAdd = $edit;
     $addToAdd = $add;
         $deleteToAdd = new ActionConfirmItem(
-        _("Delete"),
+        _T("Delete"),
         "deleteEntity",
         "delete",
         "",
