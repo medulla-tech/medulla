@@ -31,20 +31,31 @@ function xmlrpc_get_list($entities, $is_recursive = False)
     return xmlCall("admin.get_list", array($entities, $is_recursive));
 }
 
-function xmlrpc_create_entity_under_custom_parent($parent_entity_id, $name)
-{
-    return xmlCall("admin.create_entity_under_custom_parent", array($parent_entity_id, $name));
-}
-
 function xmlrpc_get_user_info($userId = '')
 {
     return xmlCall("admin.get_user_info", array($userId));
+}
+
+function xmlrpc_get_users_count_by_entity($entityId)
+{
+    return xmlCall("admin.get_users_count_by_entity", [$entityId]);
 }
 
 function xmlrpc_get_entity_info($entityId)
 {
     return xmlCall("admin.get_entity_info", array($entityId));
 }
+
+function xmlrpc_get_profile_name($profilId)
+{
+    return xmlCall("admin.get_profile_name", array($profilId));
+}
+
+function xmlrpc_create_entity_under_custom_parent($parent_entity_id, $name)
+{
+    return xmlCall("admin.create_entity_under_custom_parent", array($parent_entity_id, $name));
+}
+
 
 function xmlrpc_update_entity($entityId, $itemName, $newEntityName, $parentId)
 {
@@ -56,24 +67,24 @@ function xmlrpc_get_machine_count_by_entity($entities = [])
     return xmlCall("updates.get_machine_count_by_entity", [$entities]);
 }
 
-function xmlrpc_create_organization($parent_entity_id,
-                                    $name_new_entity,
-                                    $name_user,
-                                    $pwd,
-                                    $profiles_id,
-                                    $tag_value="",
-                                    $realname=null,
-                                    $firstname=null)
-{
-    return xmlCall("admin.create_organization", [$parent_entity_id,
-                                                 $name_new_entity,
-                                                 $name_user,
-                                                 $pwd,
-                                                 $profiles_id,
-                                                 $tag_value,
-                                                 $realname,
-                                                 $firstname]);
+function xmlrpc_create_organization(
+    $parent_entity_id,
+    $name_new_entity,
+    $name_user,
+    $pwd,
+    $profiles_id,
+    $tag_value = "",
+    $realname = null,
+    $firstname = null
+) {
+    return xmlCall("admin.create_organization", [
+        $parent_entity_id,
+        $name_new_entity,
+        $name_user,
+        $pwd,
+        $profiles_id,
+        $tag_value,
+        $realname,
+        $firstname
+    ]);
 }
-
-
-?>

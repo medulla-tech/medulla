@@ -46,16 +46,6 @@ $usersList = xmlrpc_get_list("users", True);
 // Number of machine per entity
 $countMachines = xmlrpc_get_machine_count_by_entity($entitiesList);
 
-// User counting by entity
-$userCountsPerEntity = [];
-foreach ($usersList as $user) {
-    $entityId = $user['entities_id'];
-    if (!isset($userCountsPerEntity[$entityId])) {
-        $userCountsPerEntity[$entityId] = 0;
-    }
-    $userCountsPerEntity[$entityId]++;
-}
-
 // Initialization of tables for the list
 $editAction = [];
 $addAction = [];
@@ -118,7 +108,10 @@ foreach ($entitiesList as $entity) {
         'entityId' => $entity['id'],
         'entityName' => $entity['name'],
     ];
-    $nbUsers = isset($userCountsPerEntity[$id]) ? $userCountsPerEntity[$id] : 0;
+
+    // Number of user per entity
+    $usersOfEntity = xmlrpc_get_users_count_by_entity($id);
+    $nbUsers = count($usersOfEntity);
     $usersCount[] = $nbUsers . " utilisateur" . ($nbUsers > 1 ? "s" : "");
 
     $nbMachines = isset($countMachines[$id]) ? $countMachines[$id] : 0;
@@ -127,13 +120,12 @@ foreach ($entitiesList as $entity) {
 
 $filter = "";
 
-$n = new OptimizedListInfos($titles, "Liste des entités");
+$n = new OptimizedListInfos($titles, _T("Name of Entity", "admin"));
 $n->setNavBar(new AjaxNavBar("10", $filter));
-$n->setCssClass("package");
 $n->disableFirstColumnActionLink();
 
-$n->addExtraInfo($usersCount, "Utilisateurs");
-$n->addExtraInfo($machinesCount, "Machines");
+$n->addExtraInfo($usersCount, _T("Users", "admin"));
+$n->addExtraInfo($machinesCount, _T("Computers", "admin"));
 $n->addActionItemArray($editAction);
 $n->addActionItemArray($addAction);
 $n->addActionItemArray($manageusersAction);

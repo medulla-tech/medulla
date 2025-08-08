@@ -294,18 +294,25 @@ class GLPIClient:
                 user_entity_id = data.get('entities', [{}])[0].get('id', '') if data.get('entities') else ''
                 user_entity_recursif = data.get('entities', [{}])[0].get('is_recursive', False) if data.get('entities') else False
 
-                logger.info("******************************************************")
-                logger.info(type(data))
-                logger.debug(json.dumps(data, indent=4))
-                logger.info(type(data))
-                logger.info("******************************************************")
+                # logger.info("******************************************************")
+                # logger.info(type(data))a
+                # logger.debug(json.dumps(data, indent=4))
+                # logger.info(type(data))
+                # logger.info("******************************************************")
 
                 return {
-                    "user_name": user_name,
-                    "user_id": user_id,
-                    "user_entity_name": user_entity_name,
-                    "user_entity_id": user_entity_id,
-                    "user_entity_recursif": user_entity_recursif
+                    "user_id": data.get('id') or '',
+                    "name": data.get('name') or '',
+                    "realname": data.get('realname') or '',
+                    "firstname": data.get('firstname') or '',
+                    "email": data.get('email') or '',
+                    "is_active": data.get('is_active') if data.get('is_active') is not None else '',
+                    "profiles_id": data.get('profiles_id') if data.get('profiles_id') is not None else '',
+                    "last_login": data.get('last_login') or '',
+                    "date_mod": data.get('date_mod') or '',
+                    "date_creation": data.get('date_creation') or '',
+                    "phone": data.get('phone') or '',
+                    "entities": data.get('entities') if data.get('entities') is not None else [],
                 }
             else:
                 # Extract active profile information
@@ -330,6 +337,47 @@ class GLPIClient:
                 }
         else:
             response.raise_for_status()
+
+    def get_users_count_by_entity(self, entity_id):
+        """
+        Retourne uniquement les id et noms des utilisateurs d'une entité (hors glpi-system et Plugin_).
+        """
+        if not self.SESSION_TOKEN:
+            logger.error("Session non initialisée. Veuillez initialiser la session.")
+            raise Exception("Session non initialisée. Veuillez initialiser la session.")
+
+        headers = {
+            "App-Token": self.APP_TOKEN,
+            "Session-Token": self.SESSION_TOKEN
+        }
+
+        params = {
+            'criteria[0][field]': 80,
+            'criteria[0][searchtype]': 'equals',
+            'criteria[0][value]': entity_id,
+            'range': '0-999',
+            'forcedisplay[0]': '2',
+            'forcedisplay[1]': '1'
+        }
+
+        response = requests.get(
+            f"{self.URL_BASE}/search/User",
+            headers=headers,
+            params=params
+        )
+        response.raise_for_status()
+        users = response.json().get('data', [])
+
+        result = []
+        for user in users:
+            name = user.get('1', '')
+            if not name or name == 'glpi-system' or name.startswith('Plugin_'):
+                continue
+            result.append({
+                'id': user.get('2', ''),
+                'name': name
+            })
+        return result
 
     def get_entity_info(self, entity_id):
         """
@@ -400,6 +448,16 @@ class GLPIClient:
     #         }
     #     else:
     #         response.raise_for_status()
+    def get_profile_name(self, profile_id):
+        headers = {
+            "App-Token": self.APP_TOKEN,
+            "Session-Token": self.SESSION_TOKEN
+        }
+        response = requests.get(
+            f"{self.URL_BASE}/Profile/{profile_id}", headers=headers)
+        response.raise_for_status()
+        data = response.json()
+        return data.get("name", "")
 
     def create_entity_under_custom_parent(self, parent_entity_id, name, tagvalue=None):
         """
@@ -769,11 +827,8 @@ def verifier_parametres(dictctrl, cles_requises):
 # #############################################################
 # PLUGIN GENERAL FUNCTIONS
 # #############################################################
-
-
 def getApiVersion():
     return APIVERSION
-
 
 def activate():
     logger = logging.getLogger()
@@ -789,7 +844,6 @@ def activate():
         )
         return False
     return True
-
 
 def get_CONNECT_API():
     out_result = {"get_user_info": {}, "get_list_profiles": {}}
@@ -858,74 +912,42 @@ def get_CONNECT_API():
             "Type d'API non supporté ou non spécifié. Cette section peut être étendue pour d'autres types d'API.")
         return []
 
+def get_glpi_client():
+    initparametre = AdminDatabase().get_CONNECT_API()
+    verifier_parametres(initparametre, [
+        "glpi_mmc_app_token", "glpi_url_base_api", "glpi_root_user_token"
+    ])
+    client = GLPIClient(
+        app_token=initparametre["glpi_mmc_app_token"],
+        url_base=initparametre["glpi_url_base_api"],
+        user_token=initparametre["glpi_root_user_token"],
+    )
+    client.init_session()
+    return client
+
 def get_list(type, is_recursive=False):
-    initparametre = AdminDatabase().get_CONNECT_API()
-    client = GLPIClient(
-        app_token=initparametre["glpi_mmc_app_token"],
-        url_base=initparametre["glpi_url_base_api"],
-        user_token=initparametre["glpi_root_user_token"]
-    )
+    client = get_glpi_client()
 
-    client.init_session()
+    results = client.get_list(type, is_recursive)
 
-    entities_data = client.get_list(type, is_recursive)
-
-    return entities_data
-
-def create_entity_under_custom_parent(parent_entity_id, name):
-    initparametre = AdminDatabase().get_CONNECT_API()
-    client = GLPIClient(
-        app_token=initparametre["glpi_mmc_app_token"],
-        url_base=initparametre["glpi_url_base_api"],
-        user_token=initparametre["glpi_root_user_token"]
-    )
-    client.init_session()
-
-    tag_value = str(uuid.uuid4())
-    create_entities_in_glpi = client.create_entity_under_custom_parent(parent_entity_id, name, tag_value)
-
-    AdminDatabase().create_entity_under_custom_parent(create_entities_in_glpi, name, tag_value)
-
-    return create_entities_in_glpi
-
+    return results
 
 def get_user_info(user_id=None):
-    initparametre = AdminDatabase().get_CONNECT_API()
-    client = GLPIClient(
-        app_token=initparametre["glpi_mmc_app_token"],
-        url_base=initparametre["glpi_url_base_api"],
-        user_token=initparametre["glpi_root_user_token"]
-    )
-    client.init_session()
+    client = get_glpi_client()
 
     user_info = client.get_user_info(user_id)
 
     return user_info
 
+def get_users_count_by_entity(entity_id):
+    client = get_glpi_client()
 
-def update_entity(entity_id, item_name, new_entity_name, parent_id):
-    initparametre = AdminDatabase().get_CONNECT_API()
-    client = GLPIClient(
-        app_token=initparametre["glpi_mmc_app_token"],
-        url_base=initparametre["glpi_url_base_api"],
-        user_token=initparametre["glpi_root_user_token"]
-    )
-    client.init_session()
+    result = client.get_users_count_by_entity(entity_id)
 
-    update_entity = client.update_entity(entity_id, item_name, new_entity_name, parent_id)
-
-    AdminDatabase().update_entity(entity_id, item_name, new_entity_name)
-
-    return update_entity
+    return result
 
 def get_entity_info(entity_id):
-    initparametre = AdminDatabase().get_CONNECT_API()
-    client = GLPIClient(
-        app_token=initparametre["glpi_mmc_app_token"],
-        url_base=initparametre["glpi_url_base_api"],
-        user_token=initparametre["glpi_root_user_token"]
-    )
-    client.init_session()
+    client = get_glpi_client()
 
     entity_info = client.get_entity_info(entity_id)
 
@@ -936,6 +958,31 @@ def get_entity_info(entity_id):
         "entities_id": entity.get("entities_id"),
         "completename": entity.get("completename")
     }
+
+def get_profile_name(profile_id):
+    client = get_glpi_client()
+
+    profil_name = client.get_profile_name(profile_id)
+    return profil_name
+
+def create_entity_under_custom_parent(parent_entity_id, name):
+    client = get_glpi_client()
+
+    tag_value = str(uuid.uuid4())
+    create_entities_in_glpi = client.create_entity_under_custom_parent(parent_entity_id, name, tag_value)
+
+    AdminDatabase().create_entity_under_custom_parent(create_entities_in_glpi, name, tag_value)
+
+    return create_entities_in_glpi
+
+def update_entity(entity_id, item_name, new_entity_name, parent_id):
+    client = get_glpi_client()
+
+    update_entity = client.update_entity(entity_id, item_name, new_entity_name, parent_id)
+
+    AdminDatabase().update_entity(entity_id, item_name, new_entity_name)
+
+    return update_entity
 
 def create_organization(parent_entity_id,
                         name_new_entity,
