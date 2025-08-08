@@ -62,7 +62,7 @@ foreach ($usersList as $user) {
 // Preparation of the columns of the table
 $userNames          = [];
 $userFirstnames     = [];
-$userRealnames      = [];
+$userLastName      = [];
 $userEmails         = [];
 $userStatus         = [];
 $userLastLogin      = [];
@@ -74,7 +74,7 @@ $userParams         = [];
 foreach ($userDetails as $user) {
     $userNames[]        = $user['name'];
     $userFirstnames[]   = $user['firstname'];
-    $userRealnames[]    = $user['realname'];
+    $userLastName[]    = $user['lastname'];
     $userEmails[]       = $user['email'];
     $userStatus[]       = $user['is_active'] ? _("Enabled") : _("Disabled");
     $userLastLogin[]    = $user['last_login'];
@@ -82,7 +82,7 @@ foreach ($userDetails as $user) {
 
     // Addition of actions
     $userEditActions[] = new ActionItem(
-        _("Edit"),
+        _T("Edit"),
         "editUser",
         "edit",
         "",
@@ -90,7 +90,7 @@ foreach ($userDetails as $user) {
         "admin"
     );
     $userDeleteActions[] = new ActionConfirmItem(
-        _("Delete"),
+        _T("Delete"),
         "deleteUser",
         "delete",
         "",
@@ -101,20 +101,25 @@ foreach ($userDetails as $user) {
     $userParams[] = [
         'userId'   => $user['user_id'],
         'userName' => $user['name'],
+        'firstname' => $user['firstname'],
+        'lastname' => $user['lastname'],
+        'email' => $user['email'],
+        'profil_name' => $user['profile_name'],
+        'mode'     => 'edit',
     ];
 }
 
 // Creation of the table
-$n = new OptimizedListInfos($userNames, _T("Identifier", "admin"));
+$n = new OptimizedListInfos($userNames, _T("User Name", "admin"));
 $n->setNavBar(new AjaxNavBar("10", ''));
 $n->disableFirstColumnActionLink();
 
 $n->addExtraInfo($userFirstnames,   _T("First name", "admin"));
-$n->addExtraInfo($userRealnames,    _T("Real name", "admin"));
+$n->addExtraInfo($userLastName,    _T("Last Name", "admin"));
 $n->addExtraInfo($userEmails,       _T("eMail", "admin"));
 $n->addExtraInfo($userStatus,       _T("Status", "admin"));
 $n->addExtraInfo($userLastLogin,    _T("Last connection", "admin"));
-$n->addExtraInfo($userProfileNames, _T("Profile", "admin"));
+$n->addExtraInfo($userProfileNames, _T("Profil", "admin"));
 
 $n->addActionItemArray($userEditActions);
 $n->addActionItemArray($userDeleteActions);
