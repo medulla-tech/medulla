@@ -667,6 +667,49 @@ class GLPIClient:
             logger.info("[+] Entité mise à jour avec succès")
             return 1
 
+    def delete_entity(self, entity_id):
+        """
+        Supprime une entité par son ID.
+
+        Args:
+            entity_id (int): L'ID de l'entité à supprimer.
+
+        Returns:
+            dict: { "success": bool, "message": str }
+        """
+        if not self.SESSION_TOKEN:
+            msg = "Session non initialisée. Veuillez initialiser la session."
+            logger.error(msg)
+            return {"success": False, "message": msg}
+
+        if not entity_id:
+            msg = "[!] Usage: delete_entity <entity_id>"
+            logger.error(msg)
+            return {"success": False, "message": msg}
+
+        headers = {
+            "App-Token": self.APP_TOKEN,
+            "Session-Token": self.SESSION_TOKEN
+        }
+
+        response = requests.delete(
+            f"{self.URL_BASE}/Entity/{entity_id}",
+            headers=headers
+        )
+
+        if response.status_code >= 300:
+            try:
+                error_data = response.json()
+                if isinstance(error_data, list) and len(error_data) >= 2:
+                    return {"success": False, "message": error_data[1]}
+                else:
+                    return {"success": False, "message": response.text}
+            except ValueError:
+                return {"success": False, "message": response.text}
+
+        logger.info(f"[+] Entité {entity_id} supprimée avec succès")
+        return {"success": True, "message": f"Entité {entity_id} supprimée avec succès"}
+
     def update_user(self, user_id, item_name, new_value):
         """
         Updates a user with new values.
@@ -1018,11 +1061,22 @@ def create_entity_under_custom_parent(parent_entity_id, name):
 def update_entity(entity_id, item_name, new_entity_name, parent_id):
     client = get_glpi_client()
 
-    update_entity = client.update_entity(entity_id, item_name, new_entity_name, parent_id)
+    result = client.update_entity(entity_id, item_name, new_entity_name, parent_id)
 
-    AdminDatabase().update_entity(entity_id, item_name, new_entity_name)
+    if result:
+        AdminDatabase().update_entity(entity_id, new_entity_name)
 
-    return update_entity
+    return result
+
+def delete_entity(entity_id):
+    client = get_glpi_client()
+
+    result = client.delete_entity(entity_id)
+
+    if result["success"]:
+        AdminDatabase().delete_entity(entity_id)
+
+    return result
 
 def create_organization(parent_entity_id,
                         name_new_entity,

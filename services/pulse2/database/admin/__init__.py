@@ -205,15 +205,14 @@ class AdminDatabase(DatabaseHelper):
         return org_id
 
     @DatabaseHelper._sessionm
-    def update_entity(self, session, entity_id, old_name, new_name):
+    def update_entity(self, session, entity_id, new_name):
         """
         Updates the name of the entity in the Saas_organizations table.
 
         Args:
             session (session):SessionSqlAlchemyOuverte
             entity_id (int | str): id glpi of the entity to update
-            Old_name (Str): old name (useful for logging, or double security)
-            NEW_NAME (STR): New name
+            new_name (STR): new name
 
         Returns:
             Bool: True Si Maj, False otherwise
@@ -226,6 +225,22 @@ class AdminDatabase(DatabaseHelper):
         org.entity_name = new_name
         session.commit()
         return True
+
+    @DatabaseHelper._sessionm
+    def delete_entity(self, session, entity_id):
+        """
+        Deletes the entity
+
+        Args:
+            entity_id: ID GLPI of the entity to be deleted
+        """
+        rows = (
+            session.query(self.Saas_organisations)
+            .filter_by(entity_id=str(entity_id))
+            .delete(synchronize_session=False)
+        )
+        session.commit()
+        return rows
     # =====================================================================
     # admin FUNCTIONS
     # =====================================================================
