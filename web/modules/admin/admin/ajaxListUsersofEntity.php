@@ -76,7 +76,7 @@ foreach ($userDetails as $user) {
     $userFirstnames[]   = $user['firstname'];
     $userRealnames[]    = $user['realname'];
     $userEmails[]       = $user['email'];
-    $userStatus[]       = $user['is_active'] ? _("Actif") : _("Inactif");
+    $userStatus[]       = $user['is_active'] ? _("Enabled") : _("Disabled");
     $userLastLogin[]    = $user['last_login'];
     $userProfileNames[] = $user['profile_name'];
 
