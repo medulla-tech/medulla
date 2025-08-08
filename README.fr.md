@@ -24,11 +24,10 @@ Medulla est la solution RMM open source qui vous redonne la maîtrise complète 
 ## Installation
 
 Vous souhaitez tester Medulla ?
+Nous proposons une version installable de Medulla pour évaluer la solution directement dans votre environnement.
 
-Nous proposons une version installable de Medulla vous permettant d’évaluer la solution directement dans votre environnement.
-
-Pour obtenir le fichier d’installation et recevoir les instructions de déploiement, contactez-nous à l’adresse suivante :
-contact@medulla-tech.io
+Pour obtenir le fichier d’installation et recevoir les instructions de déploiement, faites votre demande ici :
+https://medulla-tech.io/?ff_landing=11
 
 Notre équipe est à votre disposition pour toute question ou demande de démonstration.
 

@@ -25,14 +25,13 @@ Medulla provides a real-time management solution for complex and distributed env
 
 ## Installation
 
-Interested in testing Medulla?
+Want to test Medulla?
+We offer an installable version of Medulla, allowing you to evaluate the solution directly in your own environment.
 
-We offer an installable version of Medulla that allows you to evaluate the solution directly in your own environment.
+To obtain the installation file and receive deployment instructions, submit your request here:
+https://medulla-tech.io/?ff_landing=11
 
-To receive the installation package and deployment instructions, please contact us at:
-contact@medulla-tech.io
-
-Our team is available to answer any questions or to schedule a live demonstration.
+Our team is available for any questions or demonstration requests.
 
 ## Supported clients
 
