@@ -9,7 +9,7 @@ from mmc.plugins.admin.config import AdminConfig
 
 # import pour la database
 from pulse2.database.admin import AdminDatabase
-from mmc.plugins.updates import get_machine_count_by_entity
+from mmc.plugins.glpi.database import Glpi
 import logging
 import requests
 import json
@@ -39,6 +39,7 @@ class GLPIClient:
     - kill_session(self): Terminates the current session.
     - get_list(self, type, is_recursive=False): Retrieves a list of users, profiles, or entities.
     - get_user_info(self): Retrieves information about the active user profile.
+    - get_entity_info(self, entity_id): Recovers the info from a GLPI entity by its ID.
     - ## change_user_profile todo delete et recreate profile pour user voir delete_profile_from_user et add_profile_to_user
     - create_entity_under_custom_parent(self, parent_entity_id, name): Creates an entity under a specified parent.
     - create_user(self, name_user, pwd, entities_id=None, lastname=None, firstname=None): Creates a new user.
@@ -938,6 +939,32 @@ class GLPIClient:
             f"[+] Profil supprimé avec succès de l'utilisateur ID : {user_id}")
         return response.json()
 
+
+def get_machine_count_by_entity(entities):
+    """
+    Returns the total number of machines per entity from the GLPI base.
+
+    Args:
+        ENTITIES (List): List of dictates with at least the 'ID' key.
+
+    Returns:
+        Dict: {entity_id: number_de_machines}
+    """
+    result = {}
+    glpi = Glpi()
+    for entity in entities:
+        params = {
+            "location": str(entity["id"]),
+            "filter": "",
+            "field": "",
+            "contains": "",
+            "start": 0,
+            "end": 1,
+            "maxperpage": 1,
+        }
+        glpi_data = glpi.get_machines_list1(0, 1, params)
+        result[str(entity["id"])] = glpi_data.get("count", 0)
+    return result
 
 def verifier_parametres(dictctrl, cles_requises):
     # Vérifier chaque clé
