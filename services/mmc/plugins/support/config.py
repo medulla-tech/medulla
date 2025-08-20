@@ -37,6 +37,9 @@ class SupportConfig(PluginConfig):
         self.license_tmp_file = "/var/lib/mmc/pulse_license_info"
         self.country = "FR"
 
+        self.collector_script_path=""
+        self.collector_archive_path=""
+
     def readConf(self):
         PluginConfig.readConf(self)
 
