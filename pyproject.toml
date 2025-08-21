@@ -1,0 +1,17 @@
+[project]
+name = "medulla_plugins"
+version = "0.1.0"
+description = "Plugin Medulla de détection et remédiation CVE"
+authors = [{ name = "Ton Nom", email = "ton@email.com" }]
+dependencies = [
+    "requests",
+    "lxml",  # utile pour certains XML
+    # ajoute d'autres libs ici si besoin
+]
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["core", "utils", "tests"]
