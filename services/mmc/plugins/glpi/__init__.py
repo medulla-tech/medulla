@@ -338,6 +338,25 @@ def get_machine_for_hostname(strlisthostnale, filter="", start=0, end=0):
     )
 
 
+def get_user_by_name(name):
+     return xmlrpcCleanup(Glpi().get_user_by_name(name))
+
+def get_entities_with_counts( colonne: bool = True,
+                              entities: list[int] = None):
+    return xmlrpcCleanup(Glpi().get_entities_with_counts(colonne = colonne,
+                                        entities=entities))
+
+def get_entities_with_counts_root( filter: str = None,
+                                   start: int = -1,
+                                   end: int = -1,
+                                   colonne: bool = True,
+                                   entities: list[int] = None):
+    return xmlrpcCleanup(Glpi().get_entities_with_counts_root( filter=filter,
+                                                               start=-1,
+                                                               end=-1,
+                                                               colonne=colonne,
+                                                               entities=entities))
+
 def get_machine_for_id(strlistuuid, filter="", start=0, end=0):
     return xmlrpcCleanup(Glpi().get_machine_for_id(strlistuuid, filter, start, end))
 

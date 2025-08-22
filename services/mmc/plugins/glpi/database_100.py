@@ -17,7 +17,7 @@ import hashlib
 import time
 from configobj import ConfigObj
 from xmlrpc.client import ProtocolError
-
+from decimal import Decimal
 from sqlalchemy import (
     and_,
     create_engine,
@@ -7278,6 +7278,378 @@ class Glpi100(DyngroupDatabaseHelper):
         result.append(contact)
         result.append(entity)
         return result
+
+    @DatabaseHelper._sessionm
+    def get_user_by_name(self,
+                        session,
+                        name: str) -> dict:
+        """
+        Récupère les informations complètes d’un utilisateur GLPI à partir de son nom.
+        Comme il n’y a qu’un seul résultat attendu, retourne directement un dict.
+
+        Paramètres :
+        -----------
+        session : SQLAlchemy session
+            La session active.
+        name : str
+            Le nom de l'utilisateur recherché (utilisé avec LIKE).
+
+        Retour :
+        -------
+        dict :
+            {
+                "id": ...,
+                "nameuser": ...,
+                "realname": ...,
+                "firstname": ...,
+                "api_token": ...,
+                "is_activeuser": ...,
+                "locations_id": ...,
+                "profiles_id": ...,
+                "users_id_supervisor": ...,
+                "nameprofil": ...,
+                "nameentity": ...,
+                "nameentitycomplete": ...
+            }
+            Les valeurs NULL sont remplacées par une chaîne vide "".
+            Si aucun utilisateur trouvé, retourne un dict vide.
+        """
+
+        sqlrequest = """
+            SELECT
+                gu.id,
+                gu.name as nameuser,
+                gu.realname,
+                gu.firstname,
+                gu.api_token,
+                gu.is_active as is_activeuser,
+                gu.locations_id,
+                gu.profiles_id,
+                gu.users_id_supervisor,
+                gp.name as nameprofil,
+                ge.name as nameentity,
+                ge.completename as nameentitycomplete,
+                ge.entities_id as parent_id_entity,
+                ge.level as level_entity
+            FROM glpi.glpi_users gu
+            INNER JOIN glpi.glpi_profiles gp ON gp.id = gu.profiles_id
+            INNER JOIN glpi.glpi_entities ge ON ge.id = gu.entities_id
+            WHERE gu.name LIKE :name
+            LIMIT 1
+        """
+
+        row = session.execute(sqlrequest, {"name": name}).fetchone()
+
+        def safe(v):
+            if v is None:
+                return ""
+            if isinstance(v, Decimal):
+                return int(v)
+            return v
+
+        if row:
+            return {
+                "id": safe(row.id),
+                "nameuser": safe(row.nameuser),
+                "realname": safe(row.realname),
+                "firstname": safe(row.firstname),
+                "api_token": safe(row.api_token),
+                "is_activeuser": safe(row.is_activeuser),
+                "locations_id": safe(row.locations_id),
+                "profiles_id": safe(row.profiles_id),
+                "users_id_supervisor": safe(row.users_id_supervisor),
+                "nameprofil": safe(row.nameprofil),
+                "nameentity": safe(row.nameentity),
+                "nameentitycomplete": safe(row.nameentitycomplete),
+                "parent_id_entity": safe(row.parent_id_entity),
+                "level_entity": safe(row.level_entity)
+            }
+        else:
+            return {}
+
+    @DatabaseHelper._sessionm
+    def get_entities_with_counts_root(self,
+                                      session,
+                                      filter: str = None,
+                                      start: int = -1,
+                                      end: int = -1,
+                                      colonne: bool = True,
+                                      entities: list[int] = None):
+        """
+        Récupère la liste des entités GLPI avec nb machines, nb users et userIds,
+        avec filtrage, pagination et comptage global/filtré.
+
+        Paramètres :
+        -----------
+        session : SQLAlchemy session
+            La session active.
+        filter : str, optionnel
+            Chaîne de filtrage appliquée sur `completename` (LIKE %filter%).
+            Si None ou "", pas de filtre.
+        start : int, défaut -1
+            Index de départ (OFFSET). Si -1, pas de pagination.
+        end : int, défaut -1
+            Index de fin (inclus). Si -1, pas de pagination.
+        colonne : bool, défaut True
+            Si True, retourne le résultat par colonnes.
+            Sinon, retourne par lignes.
+        entities : list[int], optionnel
+            Liste d’IDs d’entités à filtrer. Si None, toutes.
+
+        Retour :
+        -------
+        dict :
+            {
+            "total_count": int,
+            "filtered_count": int,
+            "data": ...
+            }
+        """
+        self.logger.error("JFKJFK1 (%s)"% (entities))
+        # Base query
+        sql_base = """
+            SELECT
+                ge.id,
+                ge.name,
+                ge.completename,
+                COALESCE(c.nb_machines, 0) AS nb_machines,
+                COALESCE(u.nb_users, 0) AS nb_users,
+                COALESCE(u.userIds, '') AS userIds
+            FROM glpi.glpi_entities ge
+            LEFT JOIN (
+                SELECT entities_id, COUNT(*) AS nb_machines
+                FROM glpi.glpi_computers
+                GROUP BY entities_id
+            ) c ON ge.id = c.entities_id
+            LEFT JOIN (
+                SELECT
+                    entities_id,
+                    GROUP_CONCAT(id ORDER BY id ASC) AS userIds,
+                    SUM(
+                        CASE
+                            WHEN entities_id = 0 AND name = 'root' THEN 1
+                            WHEN entities_id != 0 THEN 1
+                            ELSE 0
+                        END
+                    ) AS nb_users
+                FROM glpi.glpi_users
+                GROUP BY entities_id
+            ) u ON ge.id = u.entities_id
+            WHERE (
+                ge.id != 0
+                OR EXISTS (
+                    SELECT 1
+                    FROM glpi.glpi_users gu
+                    WHERE gu.entities_id = ge.id
+                    AND gu.name = 'root'
+                )
+            )
+        """
+
+        # Conditions dynamiques
+        conditions = []
+
+        if entities is not None and len(entities) > 0:
+            placeholders = ",".join(str(e) for e in entities)
+            conditions.append(f"ge.id IN ({placeholders})")
+
+        if filter is not None and filter.strip() != "":
+            conditions.append(f"ge.completename LIKE :filter")
+
+        if conditions:
+            sql_base += " AND " + " AND ".join(conditions)
+
+        # --- Count total ---
+        sql_count = f"SELECT COUNT(*) AS total FROM ({sql_base}) t"
+        total_count = session.execute(sql_count, {"filter": f"%{filter}%"} if filter else {}).scalar()
+
+        # --- Pagination ---
+        sql_request = sql_base
+        params = {"filter": f"%{filter}%"} if filter else {}
+
+        if start >= 0 and end >= 0 and end >= start:
+            limit = end - start + 1
+            sql_request += f" LIMIT {limit} OFFSET {start}"
+
+        # --- Execution ---
+        res = session.execute(sql_request, params)
+
+        # Fonction safe
+        def safe(v):
+            if v is None:
+                return ""
+            if isinstance(v, Decimal):
+                return int(v)
+            return v
+
+        # Organisation résultat
+        if colonne:
+            data = {
+                "id": [],
+                "name": [],
+                "completename": [],
+                "nb_machines": [],
+                "nb_users": [],
+                "userIds": []
+            }
+            for row in res:
+                data["id"].append(safe(row.id))
+                data["name"].append(safe(row.name))
+                data["completename"].append(safe(row.completename))
+                data["nb_machines"].append(safe(row.nb_machines))
+                data["nb_users"].append(safe(row.nb_users))
+                data["userIds"].append(safe(row.userIds))
+        else:
+            data = []
+            for row in res:
+                data.append({
+                    "id": safe(row.id),
+                    "name": safe(row.name),
+                    "completename": safe(row.completename),
+                    "nb_machines": safe(row.nb_machines),
+                    "nb_users": safe(row.nb_users),
+                    "userIds": safe(row.userIds)
+                })
+
+        # --- Count filtré après offset ---
+        filtered_count = len(data) if isinstance(data, list) else len(data["id"])
+
+        return {
+            "total_count": total_count,
+            "filtered_count": filtered_count,
+            "data": data
+        }
+
+    @DatabaseHelper._sessionm
+    def get_entities_with_counts(self,
+                                 session,
+                                 colonne: bool = True,
+                                 entities: list[int] = None):
+        """
+        Récupère la liste des entités GLPI avec le nombre d'utilisateurs, de machines
+        et la liste des IDs utilisateurs.
+
+        Cette fonction retourne soit :
+        - un dictionnaire de colonnes si `colonne=True`
+        {
+            "id": [...],
+            "name": [...],
+            "completename": [...],
+            "nb_machines": [...],
+            "nb_users": [...],
+            "userIds": [...]
+        }
+        - une liste de dictionnaires par ligne si `colonne=False`
+        [
+            {"id": ..., "name": ..., "completename": ..., "nb_machines": ..., "nb_users": ..., "userIds": "..."},
+            ...
+        ]
+
+        Paramètres :
+        -----------
+        session : SQLAlchemy session
+            La session active pour exécuter la requête.
+        colonne : bool, optionnel, défaut True
+            Si True, retourne le résultat par colonnes.
+            Si False, retourne le résultat par lignes.
+        entities : list[int] ou None, optionnel
+            Liste des IDs d'entités à filtrer. Si None, toutes les entités sont traitées.
+
+        Retour :
+        -------
+        dict ou list
+            Selon le paramètre `colonne`, les données sont regroupées par colonnes ou par lignes.
+            Les valeurs NULL sont remplacées par une chaîne vide "".
+        """
+
+        # Requête principale avec gestion spéciale pour les utilisateurs "root" sur l'entité 0
+        sqlrequest = """
+            SELECT
+                ge.id,
+                ge.name,
+                ge.completename,
+                COALESCE(c.nb_machines, 0) AS nb_machines,
+                COALESCE(u.nb_users, 0) AS nb_users,
+                COALESCE(u.userIds, '') AS userIds
+            FROM glpi.glpi_entities ge
+            LEFT JOIN (
+                SELECT entities_id, COUNT(*) AS nb_machines
+                FROM glpi.glpi_computers
+                GROUP BY entities_id
+            ) c ON ge.id = c.entities_id
+            LEFT JOIN (
+                SELECT
+                    entities_id,
+                    GROUP_CONCAT(id ORDER BY id ASC) AS userIds,
+                    SUM(
+                        CASE
+                            WHEN entities_id = 0 AND name = 'root' THEN 1
+                            WHEN entities_id != 0 THEN 1
+                            ELSE 0
+                        END
+                    ) AS nb_users
+                FROM glpi.glpi_users
+                GROUP BY entities_id
+            ) u ON ge.id = u.entities_id
+            WHERE (
+                ge.id != 0
+                OR EXISTS (
+                    SELECT 1
+                    FROM glpi.glpi_users gu
+                    WHERE gu.entities_id = ge.id
+                    AND gu.name = 'root'
+                )
+            )
+        """
+
+        # Filtrage optionnel sur une liste d’entités
+        if entities is not None and len(entities) > 0:
+            placeholders = ",".join(str(e) for e in entities)
+            sqlrequest += f" AND ge.id IN ({placeholders})"
+
+        # Exécution de la requête SQL
+        res = session.execute(sqlrequest)
+
+        # Fonction utilitaire pour remplacer None par ""
+        def safe(v):
+            if v is None:
+                return ""
+            if isinstance(v, Decimal):
+                return int(v)
+            return v
+
+        if colonne:
+            # Regroupement par colonnes
+            result = {
+                "id": [],
+                "name": [],
+                "completename": [],
+                "nb_machines": [],
+                "nb_users": [],
+                "userIds": []
+            }
+            for row in res:
+                result["id"].append(safe(row.id))
+                result["name"].append(safe(row.name))
+                result["completename"].append(safe(row.completename))
+                result["nb_machines"].append(safe(row.nb_machines))
+                result["nb_users"].append(safe(row.nb_users))
+                result["userIds"].append(safe(row.userIds))
+        else:
+            # Regroupement par lignes
+            result = []
+            for row in res:
+                result.append({
+                    "id": safe(row.id),
+                    "name": safe(row.name),
+                    "completename": safe(row.completename),
+                    "nb_machines": safe(row.nb_machines),
+                    "nb_users": safe(row.nb_users),
+                    "userIds": safe(row.userIds)
+                })
+
+        return result
+
 
     @DatabaseHelper._sessionm
     def get_machine_with_update(self, session, kb):
