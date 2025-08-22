@@ -37,21 +37,29 @@ require_once("modules/admin/includes/xmlrpc.php");
 }
 </style>
 <?php
+// il n'y a pas ACL la avec API REST
+// pour eviter les requettes [Parameter Tampering] ajouter, modifier ou dupliquer des paramètres dans une requête
+// Récupération des informations de l'utilisateur connecté via GLPI
+$loginglpi = xmlrpc_get_user_by_name($_SESSION['login']);
 
-$usersList = xmlrpc_get_users_count_by_entity($_GET['entityId']);
-$entityId = $_GET['entityId'];
-$entityName = $_GET['entityName'];
+if (empty($loginglpi['api_token'])) {
+    // aficher erreur ou redirection
+    header("Location: " . urlStrRedirect("admin/admin/entitiesManagement", []));
+}
+
+$usersList = xmlrpc_get_users_count_by_entity($_GET['entityId'], $loginglpi['api_token']);
 $userDetails  = [];
 $profilesCache = [];
 
 foreach ($usersList as $user) {
+    // penser a mettre cela dans le backend
     if (!empty($user['id'])) {
-        $info = xmlrpc_get_user_info($user['id']);
+        $info = xmlrpc_get_user_info($user['id'], $loginglpi['api_token'] );
         // Addition of the real profile name
         $profileId = $info['profiles_id'] ?? '';
         if (!empty($profileId)) {
             if (!isset($profilesCache[$profileId])) {
-                $profilesCache[$profileId] = xmlrpc_get_profile_name($profileId);
+                $profilesCache[$profileId] = xmlrpc_get_profile_name($profileId, $loginglpi['api_token'] );
             }
             $info['profile_name'] = $profilesCache[$profileId];
         } else {
@@ -107,28 +115,55 @@ foreach ($userDetails as $user) {
         'lastname' => $user['lastname'],
         'email' => $user['email'],
         'profil_name' => $user['profile_name'],
-        'entityid'      => $entityId,
-        'entityName'      => $entityName,
         'mode'     => 'edit',
     ];
 }
 
 // Creation of the table
-$n = new OptimizedListInfos($userNames, _T("User Name", "admin"));
-$n->setNavBar(new AjaxNavBar("10", ''));
-$n->disableFirstColumnActionLink();
 
-$n->addExtraInfo($userFirstnames,   _T("First name", "admin"));
-$n->addExtraInfo($userLastName,    _T("Last Name", "admin"));
-$n->addExtraInfo($userEmails,       _T("eMail", "admin"));
-$n->addExtraInfo($userStatus,       _T("Status", "admin"));
-$n->addExtraInfo($userLastLogin,    _T("Last connection", "admin"));
-$n->addExtraInfo($userProfileNames, _T("Profil", "admin"));
+if (count($userNames) == 0)
+{
+    $messageHtml = '
+    <div style="
+        width: 50%;
+        margin: 0 auto;
+        background-color: #e0e0e0;
+        padding: 10px;
+        text-align: center;
+        font-size: 14px;
+        border-radius: 5px;
+        border: 1px solid #b0b0b0;
+    ">
+        ' . htmlspecialchars(_T(sprintf("This entity [%s] has no associated user.",$_GET['entitycompletename'] ), "admin"), ENT_QUOTES, 'UTF-8') . '
+        <br>
+    </div>
+';
 
-$n->addActionItemArray($userEditActions);
-$n->addActionItemArray($userDeleteActions);
 
-$n->setParamInfo($userParams);
+echo $messageHtml;
+        $f = new ValidatingForm(array("action" => urlStrRedirect("admin/admin/entitiesManagement", [])));
+        // $f->addCancelButton("bback");
+        $f->addValidateButtonWithValue("cancel", "return");
+        $f->pop();
+        $f->display();
+}else
+{
+    $n = new OptimizedListInfos($userNames, _T("User Name", "admin"));
+    $n->setNavBar(new AjaxNavBar("10", ''));
+    $n->disableFirstColumnActionLink();
 
-$n->display();
+    $n->addExtraInfo($userFirstnames,   _T("First name", "admin"));
+    $n->addExtraInfo($userLastName,    _T("Last Name", "admin"));
+    $n->addExtraInfo($userEmails,       _T("eMail", "admin"));
+    $n->addExtraInfo($userStatus,       _T("Status", "admin"));
+    $n->addExtraInfo($userLastLogin,    _T("Last connection", "admin"));
+    $n->addExtraInfo($userProfileNames, _T("Profil", "admin"));
+
+    $n->addActionItemArray($userEditActions);
+    $n->addActionItemArray($userDeleteActions);
+
+    $n->setParamInfo($userParams);
+
+    $n->display();
+}
 ?>

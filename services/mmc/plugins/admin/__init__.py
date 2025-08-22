@@ -9,7 +9,11 @@ from mmc.plugins.admin.config import AdminConfig
 
 # import pour la database
 from pulse2.database.admin import AdminDatabase
-from mmc.plugins.glpi.database import Glpi
+# from mmc.plugins.updates import get_machine_count_by_entity
+
+from mmc.plugins.glpi import get_entities_with_counts, get_entities_with_counts_root
+
+
 import logging
 import requests
 import json
@@ -39,10 +43,9 @@ class GLPIClient:
     - kill_session(self): Terminates the current session.
     - get_list(self, type, is_recursive=False): Retrieves a list of users, profiles, or entities.
     - get_user_info(self): Retrieves information about the active user profile.
-    - get_entity_info(self, entity_id): Recovers the info from a GLPI entity by its ID.
     - ## change_user_profile todo delete et recreate profile pour user voir delete_profile_from_user et add_profile_to_user
     - create_entity_under_custom_parent(self, parent_entity_id, name): Creates an entity under a specified parent.
-    - create_user(self, name_user, pwd, entities_id=None, lastname=None, firstname=None): Creates a new user.
+    - create_user(self, name_user, pwd, entities_id=None, realname=None, firstname=None): Creates a new user.
     - update_entity(self, entity_id, item_name, new_value): Updates an entity with new values.
     - update_user(self, user_id, item_name, new_value): Updates a user with new values.
     - add_profile_to_user(self, user_id, profile_id, entities_id, is_recursive=0, is_dynamic=0, is_default_profile=0): Adds a profile to a user.
@@ -106,67 +109,81 @@ class GLPIClient:
         else:
             response.raise_for_status()
 
+    def __clean_none_values(self, obj):
+        """
+        Remplace récursivement toutes les occurrences de None/null par une chaîne vide ("")
+        dans un objet JSON de type dict ou list.
+
+        Args:
+            obj (dict | list | any): L'objet JSON ou une valeur à traiter.
+
+        Returns:
+            dict | list | str | any: L'objet avec tous les None remplacés par "".
+        """
+        # Si c'est un dictionnaire, on applique la fonction à chaque valeur
+        if isinstance(obj, dict):
+            return {k: self.__clean_none_values(v) for k, v in obj.items()}
+        # Si c'est une liste, on applique la fonction à chaque élément
+        elif isinstance(obj, list):
+            return [self.__clean_none_values(v) for v in obj]
+        # Si la valeur est None, on la remplace par une chaîne vide
+        elif obj is None:
+            return ""
+        # Sinon, on retourne la valeur telle quelle
+        else:
+            return obj
+
     def generate_token(self, length=32):
+        """
+        Génère un jeton (token) aléatoire composé de lettres et de chiffres.
+
+        Le jeton est généré en utilisant un ensemble de caractères alphanumériques
+        (lettres majuscules, lettres minuscules et chiffres). La longueur par défaut
+        du jeton est de 32 caractères, mais elle peut être personnalisée.
+
+        Args:
+            length (int, optional): Longueur souhaitée pour le jeton généré. Par défaut, 32.
+
+        Returns:
+            str: Une chaîne de caractères alphanumériques aléatoires de la longueur spécifiée.
+
+        Example:
+            >>> token = generate_token()
+            >>> print(token)  # Exemple de sortie : "aB3x9KpL2qR7vY4zW1sT5uV8nM6"
+            >>> custom_token = generate_token(16)
+            >>> print(custom_token)  # Exemple de sortie : "fG7hJ9kL2mN4"
+        """
         characters = string.ascii_letters + string.digits
         return ''.join(random.choice(characters) for _ in range(length))
 
-    # def __init__(self, app_token, url_base, user_token):
-    #     """
-    #     Initializes the GLPI client with the necessary tokens and base URL.
-    #
-    #     Args:
-    #         app_token (str): The application token for API authentication.
-    #         url_base (str): The base URL for the GLPI API.
-    #         user_token (str): The user token for API authentication.
-    #     """
-    #     self.APP_TOKEN = app_token
-    #     self.URL_BASE = url_base
-    #     self.USER_TOKEN = user_token
-    #     self.SESSION_TOKEN = None
-    #     self.users = []
-    #     self.profiles = []
-    #     self.entities = []
-    #
-    # def init_session(self):
-    #     """
-    #     Initializes a session with the GLPI API.
-    #
-    #     Raises:
-    #         Exception: If session initialization fails.
-    #     """
-    #     logger.info("[*] Initialisation de la session...")
-    #     headers = {
-    #         "App-Token": self.APP_TOKEN,
-    #         "Authorization": f"user_token {self.USER_TOKEN}"
-    #     }
-    #     response = requests.get(f"{self.URL_BASE}/initSession", headers=headers)
-    #
-    #     if response.status_code == 200:
-    #         data = response.json()
-    #         self.SESSION_TOKEN = data.get('session_token')
-    #         if not self.SESSION_TOKEN:
-    #             logger.error("[!] Échec de l'initialisation de la session")
-    #             raise Exception("[!] Échec de l'initialisation de la session")
-    #         logger.info(f"[+] Session initialisée (token : {self.SESSION_TOKEN})")
-    #         logger.debug(json.dumps(data, indent=4))
-    #     else:
-    #         response.raise_for_status()
 
     def kill_session(self):
         """
-        Terminates the current session.
+        Termine la session courante en envoyant une requête au serveur pour invalider le jeton de session.
+
+        Cette méthode envoie une requête GET à l'endpoint `/killSession` de l'API,
+        en utilisant les jetons d'application et de session pour authentification.
+        Si la requête réussit (code HTTP 200), le jeton de session est réinitialisé à `None`.
+
+        Raises:
+            requests.exceptions.HTTPError: Si la requête échoue (code HTTP différent de 200),
+                une exception est levée avec les détails de l'erreur.
+
+        Notes:
+            - Si aucun jeton de session (`SESSION_TOKEN`) n'est défini, un avertissement est logged
+            et la méthode retourne immédiatement.
+            - En cas de succès, un message de confirmation est logged, ainsi que la réponse JSON
+            du serveur (en mode debug).
         """
         if not self.SESSION_TOKEN:
             logger.warning("Aucune session active à terminer.")
             return
-
         headers = {
             "App-Token": self.APP_TOKEN,
             "Session-Token": self.SESSION_TOKEN
         }
         response = requests.get(
             f"{self.URL_BASE}/killSession", headers=headers)
-
         if response.status_code == 200:
             logger.info("[*] Session terminée")
             self.SESSION_TOKEN = None
@@ -174,26 +191,58 @@ class GLPIClient:
         else:
             response.raise_for_status()
 
-    def get_list(self, type, is_recursive=False):
+
+    def get_list(self, type: str, is_recursive: bool = False):
         """
-        Retrieves a list of users, profiles, or entities.
+        Récupère une liste d'objets GLPI (utilisateurs, profils ou entités).
 
-        Args:
-            type (str): The type of list to retrieve ('users', 'profiles', or 'entities').
-            is_recursive (bool): Whether to retrieve entities recursively.
+        Cette méthode interroge l'API GLPI en fonction du `type` demandé et retourne
+        la liste correspondante. Pour les entités, il est possible d'activer
+        la récupération récursive via `is_recursive`.
 
-        Returns:
-            list: The list of items retrieved.
+        Paramètres
+        ----------
+        type : str
+            Le type de liste à récupérer. Valeurs permises :
+            - "users"      : liste des utilisateurs
+            - "profiles"   : liste des profils
+            - "entities"   : liste des entités
+            - "myentities" : liste des entités accessibles à l'utilisateur courant
+                            (respecte `is_recursive`)
+        is_recursive : bool, optionnel (défaut = False)
+            Indique si les entités doivent être récupérées de manière récursive
+            (applicable uniquement si `type="myentities"`).
 
-        Raises:
-            ValueError: If the type is invalid.
-            Exception: If the session is not initialized.
+        Retour
+        ------
+        list :
+            - Si `type="users"`, retourne une liste d'utilisateurs.
+            - Si `type="profiles"`, retourne une liste de profils (et met à jour self.profiles).
+            - Si `type="entities"`, retourne une liste d'entités.
+            - Si `type="myentities"`, retourne une liste d'entités accessibles via la clé `myentities`.
+
+        Exceptions
+        ----------
+        Exception
+            Levée si la session n'est pas initialisée (`SESSION_TOKEN` absent).
+        ValueError
+            Levée si le paramètre `type` est invalide (non inclus dans la liste des valeurs permises).
+
+        Notes
+        -----
+        - La méthode supprime automatiquement les valeurs `None` dans la réponse JSON.
+        - En cas d'erreur HTTP (code != 200), une exception `requests.HTTPError` est levée.
         """
+
         if not self.SESSION_TOKEN:
-            logger.error(
-                "Session non initialisée. Veuillez initialiser la session.")
-            raise Exception(
-                "Session non initialisée. Veuillez initialiser la session.")
+            logger.error("Session non initialisée. Veuillez initialiser la session.")
+            raise Exception("Session non initialisée. Veuillez initialiser la session.")
+
+        # Vérification stricte des valeurs permises
+        allowed_types = {"users", "profiles", "entities", "myentities"}
+        if type not in allowed_types:
+            logger.error("Type invalide fourni : %s", type)
+            raise ValueError(f"Type invalide '{type}'. Valeurs permises : {allowed_types}")
 
         headers = {
             "App-Token": self.APP_TOKEN,
@@ -205,51 +254,126 @@ class GLPIClient:
         elif type == "profiles":
             endpoint = "Profile"
         elif type == "entities":
+            endpoint = "Entity"
+        elif type == "myentities":
             endpoint = f"getMyEntities?is_recursive={str(is_recursive).lower()}"
-        else:
-            logger.error(
-                "Type invalide. Utilisez 'users', 'profiles', ou 'entities'.")
-            raise ValueError(
-                "Type invalide. Utilisez 'users', 'profiles', ou 'entities'.")
 
         response = requests.get(f"{self.URL_BASE}/{endpoint}", headers=headers)
 
-        if response.status_code == 200:
-            data = response.json()
-            if type == "users":
-                users_list = data if isinstance(data, list) else data.get('users', [])
-                filtered = []
-                for user in users_list:
-                    name = user.get("name", "")
-                    if (
-                        name == "root"
-                        or name == "glpi-system"
-                        or name.startswith("Plugin_")
-                    ):
-                        continue
-
-                    entity_info = self.get_entity_info(user.get("entities_id"))
-                    entity_name = entity_info.get("name", "") if entity_info and isinstance(entity_info, dict) else ""
-                    filtered.append({
-                        "id": user.get("id"),
-                        "name": user.get("name") or "",
-                        "lastname": user.get("realname") or "",
-                        "is_active": user.get("is_active"),
-                        "profiles_id": user.get("profiles_id"),
-                        "last_login": user.get("last_login") or "",
-                        "date_mod": user.get("date_mod") or "",
-                        "date_creation": user.get("date_creation") or "",
-                        "entities_id": user.get("entities_id"),
-                        "entities_name": entity_name
-                    })
-                return filtered
-            elif type == "profiles":
-                self.profiles = data
-                return data
-            elif type == "entities":
-                return data.get('myentities', [])
-        else:
+        if response.status_code != 200:
             response.raise_for_status()
+
+        data = self.__clean_none_values(response.json())
+
+        if type == "users":
+            return data
+        elif type == "profiles":
+            self.profiles = data
+            return data
+        elif type == "entities":
+            return data
+        elif type == "myentities":
+            return data.get("myentities", [])
+
+    def get_list_users(self):
+        """
+        Récupère la liste des utilisateurs GLPI avec leurs informations principales.
+
+        La fonction s'appuie sur `get_list('users', True)` pour extraire
+        l'ensemble des utilisateurs, puis formate les résultats dans une
+        structure simplifiée contenant uniquement les champs pertinents.
+
+        ⚠️ Remarque :
+        -------------
+        - Les informations retournées dépendent des privilèges associés au token utilisé
+        lors de l'initialisation du client GLPI (root ou utilisateur).
+        - Certains champs peuvent être vides ou non présents selon la configuration GLPI.
+
+        Retour :
+        --------
+        list[dict] :
+            Liste d'utilisateurs, chaque élément contient :
+            {
+                "id": int,                # ID de l'utilisateur
+                "name": str,              # Identifiant (login) de l'utilisateur
+                "lastname": str,          # Nom réel (realname)
+                "is_active": int | bool,  # Statut actif/inactif
+                "profiles_id": int,       # ID du profil principal
+                "last_login": str,        # Date de dernière connexion
+                "date_mod": str,          # Date de dernière modification
+                "date_creation": str,     # Date de création du compte
+                "entities_id": int,       # ID de l'entité associée
+                "locations_id": int,      # ID de la localisation associée
+                "groups_id": int          # ID du groupe associé
+            }
+        """
+        results = self.get_list('users', True)
+        # logger.error("get_list_users %s" %json.dumps(results,indent=4))
+        users_data = []
+        for t in results:
+            users_data.append({
+                "id": t.get("id"),
+                "name": t.get("name") or "",
+                "lastname": t.get("realname") or "",
+                "is_active": t.get("is_active"),
+                "profiles_id": t.get("profiles_id"),
+                "last_login": t.get("last_login") or "",
+                "date_mod": t.get("date_mod") or "",
+                "date_creation": t.get("date_creation") or "",
+                "entities_id": t.get("entities_id"),
+                "locations_id":t.get("locations_id"),
+                "groups_id":t.get("groups_id"),
+            })
+        return users_data
+
+    def get_list_entities(self):
+        """
+        Récupère la liste des entités disponibles et les organise dans un dictionnaire.
+
+        Cette méthode appelle `get_list` pour obtenir la liste complète des entités,
+        puis reformate les résultats en un dictionnaire où chaque clé est l'identifiant
+        de l'entité et la valeur est un dictionnaire contenant les informations principales
+        de l'entité (nom, nom complet, date de modification et niveau).
+
+        Returns:
+            dict: Un dictionnaire associant les identifiants des entités à leurs informations.
+                Chaque entrée du dictionnaire a la structure suivante :
+                {
+                    'name': (str) Nom court de l'entité,
+                    'completename': (str) Nom complet de l'entité,
+                    'date_mod': (str) Date de dernière modification,
+                    'level': (int) Niveau de l'entité
+                }
+
+        Example:
+            >>> entities = client.get_list_entities()
+            >>> print(entities)
+            {
+                '1': {
+                    'name': 'Root Entity',
+                    'completename': 'Root Entity',
+                    'date_mod': '2025-08-22 12:00:00',
+                    'level': 0
+                },
+                '2': {
+                    'name': 'Sub Entity',
+                    'completename': 'Root Entity > Sub Entity',
+                    'date_mod': '2025-08-21 10:30:00',
+                    'level': 1
+                }
+            }
+        """
+        results = self.get_list('entities', True)
+        entity_data = {}
+        for t in results:
+            entity_id = t['id']
+            entity_data[entity_id] = {
+                'name': t['name'],
+                'completename': t['completename'],
+                'date_mod': t['date_mod'],
+                'level': t['level']
+            }
+        return entity_data
 
     def get_user_info(self, user_id=None):
         """
@@ -297,37 +421,12 @@ class GLPIClient:
                 user_entity_id = data.get('entities', [{}])[0].get('id', '') if data.get('entities') else ''
                 user_entity_recursif = data.get('entities', [{}])[0].get('is_recursive', False) if data.get('entities') else False
 
-                email = ''
-                try:
-                    r_email = requests.get(f"{self.URL_BASE}/User/{user_id}/UserEmail/", headers=headers)
-                    if r_email.status_code == 200:
-                        emails_data = r_email.json()
-
-                        if isinstance(emails_data, list):
-                            emails_list = emails_data
-                        elif isinstance(emails_data, dict) and "data" in emails_data:
-                            emails_list = emails_data["data"]
-                        else:
-                            emails_list = []
-
-                        if emails_list:
-                            default_email = next((e for e in emails_list if str(e.get("is_default")) == "1"), emails_list[0])
-                            email = default_email.get("email", "")
-                except Exception as e:
-                    logger.warning(f"Impossible de récupérer l'email pour l'utilisateur {user_id} : {e}")
-
-                # logger.info("******************************************************")
-                # logger.info(type(data))
-                # logger.debug(json.dumps(data, indent=4))
-                # logger.info(type(data))
-                # logger.info("******************************************************")
-
                 return {
                     "user_id": data.get('id') or '',
                     "name": data.get('name') or '',
-                    "lastname": data.get('realname') or '',
+                    "realname": data.get('realname') or '',
                     "firstname": data.get('firstname') or '',
-                    "email": email,
+                    "email": data.get('email') or '',
                     "is_active": data.get('is_active') if data.get('is_active') is not None else '',
                     "profiles_id": data.get('profiles_id') if data.get('profiles_id') is not None else '',
                     "last_login": data.get('last_login') or '',
@@ -344,12 +443,6 @@ class GLPIClient:
                 profil_entity_id = data['active_profile']['entities'][0]['id']
                 profil_entity_recursif = data['active_profile']['entities'][0]['is_recursive']
 
-                logger.info(
-                    "******************************************************")
-                logger.debug(json.dumps(data, indent=4))
-                logger.info(
-                    "******************************************************")
-
                 return {
                     "profil_name": profil_name,
                     "profil_id": profil_id,
@@ -362,7 +455,29 @@ class GLPIClient:
 
     def get_users_count_by_entity(self, entity_id):
         """
-        Retourne uniquement les id et noms des utilisateurs d'une entité (hors glpi-system et Plugin_).
+        Récupère les identifiants et noms des utilisateurs appartenant à une entité GLPI spécifique,
+        en excluant les utilisateurs système (comme "glpi-system" ou ceux commençant par "Plugin_").
+
+        Cette méthode effectue une requête à l'API GLPI pour obtenir la liste des utilisateurs
+        d'une entité donnée, puis filtre les résultats pour ne retourner que les utilisateurs valides.
+
+        Args:
+            entity_id (int): L'identifiant de l'entité GLPI pour laquelle récupérer les utilisateurs.
+
+        Returns:
+            list[dict]: Une liste de dictionnaires, chaque dictionnaire contenant :
+                - 'id' (str): L'identifiant de l'utilisateur.
+                - 'name' (str): Le nom de l'utilisateur.
+                    Les utilisateurs système ("root", "glpi-system", ou commençant par "Plugin_") sont exclus.
+
+        Raises:
+            Exception: Si la session n'est pas initialisée (SESSION_TOKEN manquant).
+            requests.exceptions.HTTPError: Si la requête à l'API GLPI échoue (statut HTTP non valide).
+
+        Example:
+            >>> users = glpi_client.get_users_count_by_entity(42)
+            >>> print(users)
+            [{'id': '123', 'name': 'Jean Dupont'}, {'id': '456', 'name': 'Marie Martin'}]
         """
         if not self.SESSION_TOKEN:
             logger.error("Session non initialisée. Veuillez initialiser la session.")
@@ -427,49 +542,6 @@ class GLPIClient:
             return {}
         else:
             response.raise_for_status()
-
-    # def get_user_info(self):
-    #     """
-    #     Retrieves information about the active user profile.
-    #
-    #     Returns:
-    #         dict: Information about the active profile.
-    #
-    #     Raises:
-    #         Exception: If the session is not initialized.
-    #     """
-    #     if not self.SESSION_TOKEN:
-    #         logger.error("Session non initialisée. Veuillez initialiser la session.")
-    #         raise Exception("Session non initialisée. Veuillez initialiser la session.")
-    #
-    #     headers = {
-    #         "App-Token": self.APP_TOKEN,
-    #         "Session-Token": self.SESSION_TOKEN
-    #     }
-    #
-    #     response = requests.get(f"{self.URL_BASE}/getActiveProfile", headers=headers)
-    #
-    #     if response.status_code == 200:
-    #         data = response.json()
-    #         profil_name = data['active_profile']['name']
-    #         profil_id = data['active_profile']['id']
-    #         profil_entity_name = data['active_profile']['entities'][0]['name']
-    #         profil_entity_id = data['active_profile']['entities'][0]['id']
-    #         profil_entity_recursif = data['active_profile']['entities'][0]['is_recursive']
-    #
-    #         logger.info("******************************************************")
-    #         logger.debug(json.dumps(data, indent=4))
-    #         logger.info("******************************************************")
-    #
-    #         return {
-    #             "profil_name": profil_name,
-    #             "profil_id": profil_id,
-    #             "profil_entity_name": profil_entity_name,
-    #             "profil_entity_id": profil_entity_id,
-    #             "profil_entity_recursif": profil_entity_recursif
-    #         }
-    #     else:
-    #         response.raise_for_status()
 
     def get_profile_name(self, profile_id):
         headers = {
@@ -543,7 +615,7 @@ class GLPIClient:
                     name_user,
                     pwd,
                     entities_id=None,
-                    lastname=None,
+                    realname=None,
                     firstname=None,
                     profiles_id=None):
         """
@@ -553,7 +625,7 @@ class GLPIClient:
             name_user (str): The username.
             pwd (str): The password.
             entities_id (int, optional): The ID of the entity.
-            lastname (str, optional): The real name of the user.
+            realname (str, optional): The real name of the user.
             firstname (str, optional): The first name of the user.
 
         Returns:
@@ -571,7 +643,7 @@ class GLPIClient:
         logger.info("Veuillez confirmer les informations suivantes :")
         logger.info(f"Nom d'utilisateur : {name_user}")
         logger.info("Mot de passe : ******")
-        logger.info(f"Nom réel : {lastname}")
+        logger.info(f"Nom réel : {realname}")
         logger.info(f"Prénom : {firstname}")
         logger.info(f"ID de l'entité : {entities_id}")
 
@@ -586,7 +658,7 @@ class GLPIClient:
                 "name": name_user,
                 "password": pwd,
                 "password2": pwd,
-                "lastname": lastname,
+                "realname": realname,
                 "firstname": firstname,
                 "language": "fr_FR",
                 "is_active": 1,
@@ -614,25 +686,6 @@ class GLPIClient:
         user_id = response.json().get('id')
         logger.info(
             f"[+] Utilisateur créé avec succès. ID de l'utilisateur : {user_id}")
-
-        #
-        #
-        # # Réinitialisation du token personnel
-        # response_token = requests.post(
-        #     f"{self.URL_BASE}/User/{user_id}/_reset_personal_token/1",
-        #     headers=headers
-        # )
-        # if response_token.status_code >= 300:
-        #     logger.warning("[!] Échec de la réinitialisation du token personnel.")
-        #
-        # # Réinitialisation du token API
-        # response_api = requests.post(
-        #     f"{self.URL_BASE}/User/{user_id}/_reset_api_token/1",
-        #     headers=headers
-        # )
-        # if response_api.status_code >= 300:
-        #     logger.warning("[!] Échec de la réinitialisation du token API.")
-
         return user_id
 
     def update_entity(self, entity_id, item_name, new_value, parent_id):
@@ -784,7 +837,12 @@ class GLPIClient:
             logger.info(f"[+] Utilisateur {user_id} mis à jour avec succès")
             return 1
 
-    def add_profile_to_user(self, user_id, profile_id, entities_id, is_recursive=0, is_dynamic=0, is_default_profile=0):
+    def add_profile_to_user(self, user_id,
+                            profile_id,
+                            entities_id,
+                            is_recursive=0,
+                            is_dynamic=0,
+                            is_default_profile=0):
         """
         Adds a profile to a user.
 
@@ -836,7 +894,15 @@ class GLPIClient:
             f"[+] Profil ajouté avec succès à l'utilisateur ID : {user_id}")
         return response.json()
 
-    def switch_user_profile(self, user_id, new_profile_id, entities_id, is_recursive=0, is_dynamic=0, is_default_profile=1):
+
+    def switch_user_profile(self,
+                            user_id,
+                            new_profile_id,
+                            entities_id,
+                            is_recursive=0,
+                            is_dynamic=0,
+                            is_default_profile=1,
+                            tokenuser=None):
         """
         Changes the active profile of a GLPI user by deleting the old profiles,
         By adding the new one, then updating the active profile in the user sheet.
@@ -852,7 +918,7 @@ class GLPIClient:
         Returns:
             dict: Operation result
         """
-        client = get_glpi_client()
+        client = get_glpi_client(tokenuser=tokenuser)
 
         client.init_session()
 
@@ -894,6 +960,7 @@ class GLPIClient:
         client.kill_session()
 
         return {"success": True, "message": "Profil changé et mis à jour avec succès"}
+
 
     def delete_profile_from_user(self, user_id, profile_id):
         """
@@ -940,32 +1007,6 @@ class GLPIClient:
         return response.json()
 
 
-def get_machine_count_by_entity(entities):
-    """
-    Returns the total number of machines per entity from the GLPI base.
-
-    Args:
-        ENTITIES (List): List of dictates with at least the 'ID' key.
-
-    Returns:
-        Dict: {entity_id: number_de_machines}
-    """
-    result = {}
-    glpi = Glpi()
-    for entity in entities:
-        params = {
-            "location": str(entity["id"]),
-            "filter": "",
-            "field": "",
-            "contains": "",
-            "start": 0,
-            "end": 1,
-            "maxperpage": 1,
-        }
-        glpi_data = glpi.get_machines_list1(0, 1, params)
-        result[str(entity["id"])] = glpi_data.get("count", 0)
-    return result
-
 def verifier_parametres(dictctrl, cles_requises):
     # Vérifier chaque clé
     for cle in cles_requises:
@@ -996,102 +1037,140 @@ def activate():
         return False
     return True
 
-def get_CONNECT_API():
+def get_CONNECT_API(tokenuser=None):
+    """
+    Initialise une connexion à l'API GLPI et récupère des informations
+    sur l'utilisateur et ses profils.
+
+    Args:
+        tokenuser (str, optional): Jeton utilisateur GLPI.
+                                   Si None (par défaut), le token root sera utilisé.
+
+    Returns:
+        dict:
+            {
+                "get_user_info": <infos utilisateur>,
+                "get_list_profiles": [ { "id": <id>, "name": <nom> }, ... ]
+            }
+            Retourne {} si la récupération échoue.
+    """
     out_result = {"get_user_info": {}, "get_list_profiles": {}}
-    client = None
 
-    # Récupération des paramètres de connexion à l'API
-    initparametre = AdminDatabase().get_CONNECT_API()
-    logger.info(f"Paramètres de connexion à l'API : {initparametre}")
+    try:
+        client = get_glpi_client(tokenuser=tokenuser)
+        if not client:
+            logger.error("Impossible d'initialiser le client GLPI.")
+            return {}
 
-    # Vérification de la présence et de la validité du type d'API dans les paramètres
-    if "type_api" in initparametre and initparametre["type_api"] is not None:
-        # Vérification des paramètres nécessaires pour l'API REST GLPI
-        try:
-            verifier_parametres(initparametre, ["glpi_mmc_app_token",
-                                                "glpi_url_base_api",
-                                                "glpi_root_user_token"])
-        except Exception as e:
-            logger.error("Paramètres manquants ou invalides : %s",
-                         traceback.format_exc())
-            return []
+        # Récupération des informations utilisateur
+        get_user_info = client.get_user_info()
+        logger.info("Informations utilisateur récupérées avec succès.")
 
-        # Traitement spécifique pour l'API REST GLPI
-        if initparametre["type_api"] == "glpi_rest":
-            try:
-                # Initialisation du client GLPI avec les tokens et l'URL de base
-                client = GLPIClient(
-                    app_token=initparametre["glpi_mmc_app_token"],
-                    url_base=initparametre["glpi_url_base_api"],
-                    user_token=initparametre["glpi_root_user_token"])
+        # Récupération de la liste des profils
+        get_profiles_info = client.get_list("profiles", is_recursive=True)
+        profilslist = [{"id": x["id"], "name": x["name"]}
+                       for x in get_profiles_info]
+        logger.info("Liste des profils récupérée avec succès.")
 
-                # Initialisation de la session du client
-                client.init_session()
+        # Mise à jour du résultat
+        out_result = {
+            "get_user_info": get_user_info,
+            "get_list_profiles": profilslist
+        }
 
-                # Vérification de l'initialisation de la session
-                if client and client.SESSION_TOKEN:
-                    logger.info("Session GLPI initialisée avec succès.")
-                    # Récupération des informations utilisateur
-                    get_user_info = client.get_user_info()
-                    logger.info(
-                        "Informations utilisateur récupérées avec succès.")
+        # Fermeture propre de la session
+        client.kill_session()
 
-                    # Récupération de la liste des profils
-                    get_profiles_info = client.get_list(
-                        "profiles", is_recursive=True)
-                    profilslist = [{"id": x["id"], "name": x["name"]}
-                                   for x in get_profiles_info]
-                    logger.info("Liste des profils récupérée avec succès.")
+    except Exception as e:
+        logger.error("Erreur lors de la récupération des informations : %s", traceback.format_exc())
 
-                    # Mise à jour du résultat avec les informations récupérées
-                    out_result = {"get_user_info": get_user_info,
-                                  "get_list_profiles": profilslist}
+    return out_result
 
-                    client.kill_session()
-                    return out_result
-                else:
-                    logger.error(
-                        "Échec de l'initialisation de la session GLPI.")
-                    return []
-            except Exception as e:
-                logger.error(
-                    "Erreur lors de la récupération des informations : %s", traceback.format_exc())
-                return []
-    else:
-        # Gestion d'autres types d'API (non implémenté)
-        logger.info(
-            "Type d'API non supporté ou non spécifié. Cette section peut être étendue pour d'autres types d'API.")
-        return []
+def get_glpi_client(tokenuser=None, app_token=None, url_base=None):
+    """
+    Initialise et retourne un client GLPI avec une session active.
 
-def get_glpi_client():
+    Cette fonction permet de créer un client GLPI de manière flexible :
+    - Si `tokenuser`, `app_token` ou `url_base` sont fournis, ils seront utilisés
+      pour initialiser le client.
+    - Sinon, les valeurs par défaut sont chargées depuis la base de données
+      (via `AdminDatabase().get_CONNECT_API()`).
+
+    Args:
+        tokenuser (str, optional): Jeton d'accès de l'utilisateur GLPI.
+                                   Si None, le token root configuré sera utilisé.
+        app_token (str, optional): Jeton d'application GLPI.
+                                   Si None, la valeur configurée en base sera utilisée.
+        url_base (str, optional): URL de l'API GLPI.
+                                  Si None, la valeur configurée en base sera utilisée.
+
+    Returns:
+        GLPIClient | None:
+            - Une instance de `GLPIClient` initialisée et authentifiée si la session est valide.
+            - None si l'initialisation ou l'ouverture de session échoue.
+    """
     initparametre = AdminDatabase().get_CONNECT_API()
     verifier_parametres(initparametre, [
         "glpi_mmc_app_token", "glpi_url_base_api", "glpi_root_user_token"
     ])
+
+    # Choix des paramètres : valeurs fournies > valeurs en base
+    app_token = app_token if app_token else initparametre["glpi_mmc_app_token"]
+    url_base = url_base if url_base else initparametre["glpi_url_base_api"]
+    user_token = tokenuser if tokenuser else initparametre["glpi_root_user_token"]
+
     client = GLPIClient(
-        app_token=initparametre["glpi_mmc_app_token"],
-        url_base=initparametre["glpi_url_base_api"],
-        user_token=initparametre["glpi_root_user_token"],
+        app_token=app_token,
+        url_base=url_base,
+        user_token=user_token,
     )
     client.init_session()
+
+    # Vérifie que le client est bien initialisé et qu'une session est active
+    if not client or not hasattr(client, 'SESSION_TOKEN') or not client.SESSION_TOKEN:
+        logger.error("Session GLPI non initialisée : impossible d'obtenir un client valide")
+        return None
+
     return client
 
-def get_list(type, is_recursive=False):
-    client = get_glpi_client()
+def get_list(type, is_recursive=False, tokenuser=None):
+    client = get_glpi_client(tokenuser=tokenuser)
 
     results = client.get_list(type, is_recursive)
 
     return results
 
-def get_user_info(user_id=None):
-    client = get_glpi_client()
+
+def get_list_entity_users(tokenuser=None):
+    client = get_glpi_client(tokenuser=tokenuser)
+    users=[]
+    users = client.get_list_users()
+    entity_data = client.get_list_entities()
+    # logger.error("users %s", json.dumps(users, indent=4))
+    # logger.error("entity_data %s", json.dumps(entity_data, indent=4))
+
+    for user in users:
+        entity_id = user.get("entities_id")
+        if entity_id is not None:
+            user.update({
+                "entity_name": entity_data[entity_id].get("name"),
+                "entity_completename": entity_data[entity_id].get("completename"),
+                "entity_date_mod": entity_data[entity_id].get("date_mod"),
+                "entity_level": entity_data[entity_id].get("level")
+            })
+
+    # logger.error("result users %s", json.dumps(users, indent=4))
+    return users
+
+def get_user_info(user_id=None, tokenuser=None):
+    client = get_glpi_client(tokenuser=tokenuser)
 
     user_info = client.get_user_info(user_id)
 
     return user_info
 
-def get_users_count_by_entity(entity_id):
-    client = get_glpi_client()
+def get_users_count_by_entity(entity_id, tokenuser=None):
+    client = get_glpi_client(tokenuser=tokenuser)
 
     result = client.get_users_count_by_entity(entity_id)
 
@@ -1105,40 +1184,153 @@ def get_counts_by_entity(entities):
     Returns:
         dict: { "<entity_id>": {"machines": int, "users": int}, ... }
     """
-    result = {}
-    # Compte machines : on réutilise ta logique existante
-    machines_by_entity = get_machine_count_by_entity(entities)  # { "id": count }
+    # get_counts_by_entity [{'id': 0, 'name': 'Medulla'}]
 
-    client = get_glpi_client()
-    try:
-        for e in entities:
-            eid = str(e["id"])
-            # Si tu as une méthode dédiée "count only", utilise-la.
-            # Sinon on réutilise ta fonction existante et on prend la longueur.
-            try:
-                users_list = client.get_users_count_by_entity(eid)
-                users_count = len(users_list)
-            except Exception:
-                logger.exception("Failed to get users for entity %s", eid)
-                users_count = 0
+    logger.error("get_counts_by_entity %s" %entities )
+    listid=[]
+    for t in entities:
+        listid.append(int(t['id']))
 
-            machines_count = int(machines_by_entity.get(eid) or machines_by_entity.get(e["id"], 0))
-
-            result[eid] = {
-                "users": users_count,
-                "machines": machines_count,
-            }
-    finally:
-        try:
-            client.kill_session()
-        except Exception:
-            logger.warning("Failed to kill GLPI session", exc_info=True)
-
+    result  = get_entities_with_counts(entities=listid)
     return result
 
-def get_entity_info(entity_id):
-    client = get_glpi_client()
 
+def get_counts_by_entity_root( filter, start, end,  entities=None):
+    """
+    Récupère les statistiques des entités GLPI (nombre de machines,
+    nombre d'utilisateurs et IDs des utilisateurs), avec options
+    de filtrage, pagination et restriction sur une liste d'entités.
+
+    Cette fonction est un raccourci simplifié de `get_entities_with_counts_root`,
+    qui utilise la configuration par défaut et ne nécessite pas de session SQLAlchemy
+    ni le paramètre `colonne`.
+
+    Paramètres :
+    -----------
+    filter : str
+        Chaîne de filtrage appliquée sur `completename` (LIKE %filter%).
+        Si None ou "", pas de filtre.
+    start : int
+        Index de départ (OFFSET). Si -1, pas de pagination.
+    end : int
+        Index de fin (inclus). Si -1, pas de pagination.
+    entities : list[int], optionnel
+        Liste d’IDs d’entités à filtrer. Si None, toutes.
+
+    Retour :
+    -------
+    dict :
+        {
+        "total_count": int,     # Nombre total d'entités
+        "filtered_count": int,  # Nombre d'entités après filtrage
+        "data": ...             # Données des entités avec leurs compteurs
+        }
+    """
+    result  = get_entities_with_counts_root( filter=filter, start=start, end=end,  entities=entities)
+    return result
+
+
+def get_list_user_token(tokenuser=None):
+    """
+    Récupère la liste des IDs des entités accessibles par un utilisateur via l'API GLPI.
+
+    Args:
+        token (str, optional):
+            Le token d'authentification de l'utilisateur GLPI.
+            Si None (par défaut), le token root sera utilisé.
+
+    Returns:
+        list: Une liste d'IDs d'entités accessibles par l'utilisateur.
+              Retourne une liste vide si aucune entité n'est trouvée ou en cas d'erreur.
+    """
+    logger.debug("Début de la récupération des entités pour l'utilisateur")
+
+    client = get_glpi_client(tokenuser=tokenuser)
+    if not client:
+        return []
+
+    try:
+        # Récupère la liste des entités accessibles par l'utilisateur
+        listid = client.get_list("myentities", True)
+
+        # Vérifie que la réponse n'est pas vide
+        if not listid:
+            logger.warning("Aucune entité trouvée pour cet utilisateur")
+            return []
+
+        # Extrait les IDs des entités
+        result = [x['id'] for x in listid if 'id' in x]
+        logger.debug(f"IDs des entités récupérées : {result}")
+        return result
+
+    except Exception as e:
+        logger.error(f"Erreur lors de la récupération des entités : {e}")
+        return []
+
+
+    #
+    # result = {}
+    # # Compte machines : on réutilise ta logique existante
+    # machines_by_entity = get_machine_count_by_entity(entities)  # { "id": count }
+    # # logger.error("machines_by_entity %s" %machines_by_entity )
+    # client = get_glpi_client()
+    # try:
+    #     for e in entities:
+    #         eid = str(e["id"])
+    #         # Si tu as une méthode dédiée "count only", utilise-la.
+    #         # Sinon on réutilise ta fonction existante et on prend la longueur.
+    #         try:
+    #             users_list = client.get_users_count_by_entity(eid)
+    #             users_count = len(users_list)
+    #         except Exception:
+    #             logger.exception("Failed to get users for entity %s", eid)
+    #             users_count = 0
+    #
+    #         machines_count = int(machines_by_entity.get(eid) or machines_by_entity.get(e["id"], 0))
+    #
+    #         result[eid] = {
+    #             "users": users_count,
+    #             "machines": machines_count,
+    #         }
+    # finally:
+    #     try:
+    #         client.kill_session()
+    #     except Exception:
+    #         logger.warning("Failed to kill GLPI session", exc_info=True)
+    #
+    # return result
+
+def get_entity_info(entity_id, tokenuser=None):
+    """
+    Récupère les informations d'une entité GLPI par son ID.
+
+    ⚠️ Remarque :
+    -------------
+    - Si `tokenuser` est None, les informations sont récupérées avec le token root
+      (accès complet).
+    - Si `tokenuser` est défini, seules les informations accessibles à cet utilisateur
+      seront retournées, selon ses privilèges et droits sur l'entité.
+
+    Paramètres :
+    ------------
+    entity_id : int
+        ID de l'entité à récupérer.
+    tokenuser : str, optionnel
+        Jeton utilisateur GLPI.
+        Si None (par défaut), le token root sera utilisé.
+
+    Retour :
+    --------
+    dict :
+        {
+            "id": <ID de l'entité>,
+            "name": <Nom de l'entité>,
+            "entities_id": <ID de l'entité parente>,
+            "completename": <Nom complet hiérarchique>
+        }
+        Le contenu peut varier selon les privilèges de l'utilisateur.
+    """
+    client = get_glpi_client(tokenuser=tokenuser)
     entity_info = client.get_entity_info(entity_id)
 
     entity = entity_info if isinstance(entity_info, dict) else entity_info[0]
@@ -1149,14 +1341,64 @@ def get_entity_info(entity_id):
         "completename": entity.get("completename")
     }
 
-def get_profile_name(profile_id):
-    client = get_glpi_client()
+def get_profile_name(profile_id, tokenuser=None):
+    """
+    Récupère le nom d'un profil GLPI par son ID.
+
+    ⚠️ Remarque :
+    -------------
+    - Si `tokenuser` est None, la récupération se fait avec le token root
+      (accès complet).
+    - Si `tokenuser` est défini, l'accès dépend des privilèges de l'utilisateur.
+
+    Paramètres :
+    ------------
+    profile_id : int
+        ID du profil à récupérer.
+    tokenuser : str, optionnel
+        Jeton utilisateur GLPI.
+        Si None (par défaut), le token root sera utilisé.
+
+    Retour :
+    --------
+    str :
+        Nom du profil associé à l'ID.
+    """
+    client = get_glpi_client(tokenuser=tokenuser)
 
     profil_name = client.get_profile_name(profile_id)
     return profil_name
 
-def create_entity_under_custom_parent(parent_entity_id, name):
-    client = get_glpi_client()
+def create_entity_under_custom_parent(parent_entity_id, name, tokenuser=None):
+
+    """
+    Crée une nouvelle entité GLPI sous un parent personnalisé,
+    et l'enregistre également dans la base interne.
+
+    ⚠️ Remarque :
+    -------------
+    - Si `tokenuser` est None, la création se fait avec le token root
+      (accès complet).
+    - Si `tokenuser` est défini, l'utilisateur doit disposer des droits
+      suffisants pour créer une entité sous le parent spécifié.
+
+    Paramètres :
+    ------------
+    parent_entity_id : int
+        ID de l'entité parente sous laquelle créer la nouvelle entité.
+    name : str
+        Nom de la nouvelle entité à créer.
+    tokenuser : str, optionnel
+        Jeton utilisateur GLPI.
+        Si None (par défaut), le token root sera utilisé.
+
+    Retour :
+    --------
+    int :
+        ID de la nouvelle entité créée dans GLPI.
+    """
+
+    client = get_glpi_client(tokenuser=tokenuser)
 
     tag_value = str(uuid.uuid4())
     create_entities_in_glpi = client.create_entity_under_custom_parent(parent_entity_id, name, tag_value)
@@ -1165,8 +1407,40 @@ def create_entity_under_custom_parent(parent_entity_id, name):
 
     return create_entities_in_glpi
 
-def update_entity(entity_id, item_name, new_entity_name, parent_id):
-    client = get_glpi_client()
+def update_entity(entity_id, item_name, new_entity_name, parent_id, tokenuser=None):
+    """
+    Met à jour une entité GLPI et synchronise la mise à jour
+    dans la base interne.
+
+    ⚠️ Remarque :
+    -------------
+    - Si `tokenuser` est None, la mise à jour se fait avec le token root
+      (accès complet).
+    - Si `tokenuser` est défini, l'utilisateur doit avoir les privilèges
+      nécessaires pour modifier cette entité.
+
+    Paramètres :
+    ------------
+    entity_id : int
+        ID de l'entité à mettre à jour.
+    item_name : str
+        Champ de l'entité à modifier (par ex. "name").
+    new_entity_name : str
+        Nouvelle valeur pour le champ.
+    parent_id : int
+        ID de l'entité parente.
+    tokenuser : str, optionnel
+        Jeton utilisateur GLPI.
+        Si None (par défaut), le token root sera utilisé.
+
+    Retour :
+    --------
+    dict | bool :
+        Résultat de l'opération renvoyé par l'API GLPI.
+        False en cas d'échec ou si l'utilisateur n'a pas les droits.
+    """
+
+    client = get_glpi_client(tokenuser=tokenuser)
 
     result = client.update_entity(entity_id, item_name, new_entity_name, parent_id)
 
@@ -1175,41 +1449,37 @@ def update_entity(entity_id, item_name, new_entity_name, parent_id):
 
     return result
 
-def delete_entity(entity_id):
-    client = get_glpi_client()
+def delete_entity(entity_id, tokenuser=None):
+    """
+    Supprime une entité GLPI et la supprime également de la base interne.
+
+    ⚠️ Remarque :
+    -------------
+    - Si `tokenuser` est None, la suppression se fait avec le token root
+      (accès complet).
+    - Si `tokenuser` est défini, l'utilisateur doit disposer des droits
+      nécessaires pour supprimer l'entité.
+
+    Paramètres :
+    ------------
+    entity_id : int
+        ID de l'entité à supprimer.
+    tokenuser : str, optionnel
+        Jeton utilisateur GLPI.
+        Si None (par défaut), le token root sera utilisé.
+
+    Retour :
+    --------
+    dict :
+        Réponse de l'API GLPI contenant au minimum une clé "success".
+        Exemple : {"success": True}
+    """
+    client = get_glpi_client(tokenuser=tokenuser)
 
     result = client.delete_entity(entity_id)
 
     if result["success"]:
         AdminDatabase().delete_entity(entity_id)
-
-    return result
-
-def update_user(user_id, item_name, new_value):
-    client = get_glpi_client()
-
-    result = client.update_user(user_id, item_name, new_value)
-
-    return result
-
-def add_profile_to_user(user_id, profile_id, entities_id, is_recursive=0, is_dynamic=0, is_default_profile=0):
-    client = get_glpi_client()
-
-    result = client.add_profile_to_user(user_id, profile_id, entities_id, is_recursive, is_dynamic, is_default_profile)
-
-    return result
-
-def switch_user_profile(user_id, new_profile_id, entities_id, is_recursive=0, is_dynamic=0, is_default_profile=1):
-    client = get_glpi_client()
-
-    result = client.switch_user_profile(
-        user_id,
-        new_profile_id,
-        entities_id,
-        is_recursive,
-        is_dynamic,
-        is_default_profile
-    )
 
     return result
 
@@ -1219,112 +1489,95 @@ def create_organization(parent_entity_id,
                         pwd,
                         profiles_id,
                         tag_value,
-                        lastname="",
-                        firstname=""):
-    # Initialisation des variables
-    client = None
-    id_create_entity = None
+                        realname="",
+                        firstname="",
+                        tokenuser=None):
+    """
+    Crée une nouvelle organisation (entité GLPI) sous un parent donné,
+    ainsi qu'un utilisateur associé avec un profil défini.
 
-    logger.debug(f"Paramètres dparent_entity_id: {parent_entity_id}")
-    logger.debug(f"Paramètres name_new_entity : {name_new_entity}")
-    logger.debug(f"Paramètres name_user : {name_user}")
-    logger.debug("Paramètres  pwd: *******")
-    logger.debug(f"Paramètres  profiles_id: {profiles_id}")
-    logger.debug(f"Paramètres  tag_value: {tag_value}")
-    logger.debug(f"Paramètres  lastname: {lastname}")
-    logger.debug(f"Paramètres  firstname: {firstname}")
+    Étapes effectuées :
+    -------------------
+    1. Connexion à l'API GLPI (via `get_glpi_client` avec le token root par défaut
+       ou le `tokenuser` fourni).
+    2. Création d'une nouvelle entité sous l'entité parente spécifiée.
+    3. Création d'un utilisateur rattaché à cette nouvelle entité.
+    4. Attribution d'un profil à l'utilisateur.
+    5. Réinitialisation des tokens API et personnel de l'utilisateur.
 
-    # Récupération des paramètres de connexion à l'API
-    initparametre = AdminDatabase().get_CONNECT_API()
-    logger.debug(f"Paramètres de connexion à l'API : {initparametre}")
+    Paramètres :
+    ------------
+    parent_entity_id : int
+        ID de l'entité parente sous laquelle créer la nouvelle entité.
+    name_new_entity : str
+        Nom de la nouvelle entité à créer.
+    name_user : str
+        Nom du nouvel utilisateur à créer.
+    pwd : str
+        Mot de passe du nouvel utilisateur.
+    profiles_id : int
+        ID du profil à assigner à l'utilisateur.
+    tag_value : str
+        Valeur du tag à appliquer à l'entité.
+    realname : str, optionnel
+        Nom de famille de l'utilisateur.
+    firstname : str, optionnel
+        Prénom de l'utilisateur.
+    tokenuser : str, optionnel
+        Jeton utilisateur GLPI.
+        Si None (par défaut), le token root sera utilisé.
 
-    # Vérification de la présence et de la validité du type d'API dans les paramètres
-    if "type_api" in initparametre and initparametre["type_api"] is not None:
-        # Vérification des paramètres nécessaires pour l'API REST GLPI
-        try:
-            verifier_parametres(initparametre, ["glpi_mmc_app_token",
-                                                "glpi_url_base_api",
-                                                "glpi_root_user_token"])
-        except Exception as e:
-            logger.error("Paramètres manquants ou invalides : %s",
-                         traceback.format_exc())
-            return []
+    Retour :
+    --------
+    list :
+        [ id_create_new_entity, id_new_user, profiles_id, result_update_user ]
+        - id_create_new_entity : ID de l'entité créée
+        - id_new_user : ID du nouvel utilisateur
+        - profiles_id : Profil attribué
+        - result_update_user : Résultat de la mise à jour de l'utilisateur (reset tokens)
 
-        # Traitement spécifique pour l'API REST GLPI
-        if initparametre["type_api"] == "glpi_rest":
-            try:
-                # Initialisation du client GLPI avec les tokens et l'URL de base
-                client = GLPIClient(
-                    app_token=initparametre["glpi_mmc_app_token"],
-                    url_base=initparametre["glpi_url_base_api"],
-                    user_token=initparametre["glpi_root_user_token"])
-
-                # Initialisation de la session du client
-                client.init_session()
-
-                # Vérification de l'initialisation de la session
-                if client and client.SESSION_TOKEN:
-                    logger.debug("Session GLPI initialisée avec succès.")
-                    logger.debug(f"CREATION ENTITY  {name_new_entity}")
-                    # Création d'une nouvelle entité sous un parent personnalisé
-                    id_create_new_entity = client.create_entity_under_custom_parent(
-                        parent_entity_id, name_new_entity, tag_value)
-                    logger.debug(f"Nouvelle entité créée avec l'ID : {id_create_new_entity}")
-                    logger.debug(f"{name_user}, {pwd}, {id_create_new_entity}, {lastname}, {firstname}")
-                    # Création d'un nouvel utilisateur
-
-                    logger.debug(f"CREATION UTILISATEUR : {name_user}")
-                    id_new_user = client.create_user(name_user,
-                                                     pwd,
-                                                     entities_id=id_create_new_entity,
-                                                     lastname=lastname,
-                                                     firstname=firstname,
-                                                     profiles_id=profiles_id)
-
-                    logger.info(
-                        f"Nouvel utilisateur créé avec l'ID : {id_new_user}")
-
-                    # # Changement du profil de l'utilisateur
-                    # client.change_user_profile(id_new_user, profiles_id, id_create_new_entity)
-                    # logger.info(f"Profil de l'utilisateur {id_new_user} changé avec succès.")
-                    #
-
-                    logger.debug(f"CREATION PROFIL USER {name_user} :id  {profiles_id}")
-                    client.add_profile_to_user(
-                        id_new_user, 3, id_create_new_entity)
-
-                    zzz = client.get_user_info(id_new_user)
-                    logger.debug(f"$$$$$$$$$$$$$$$$$$$$$$ zzz {zzz} ")
-                    # client.update_profile_user( id_new_user, "profiles_id", profiles_id)
-
-                    # logger.error(f"profiles_id id. {profiles_id}")
-                    result = client.update_user(
-                        id_new_user, "_reset_api_token", True)
-                    logger.debug(
-                        f"$$$$$$$$$$$$$$$$$$$$$$ _reset_api_token {result} ")
-
-                    #
-                    # logger.error(f"profiles_id id. {profiles_id}")
-                    result = client.update_user(
-                        id_new_user, "_reset_personal_token", True)
-                    logger.debug(
-                        f"$$$$$$$$$$$$$$$$$$$$$$ _reset_personal_token {result} ")
-                    # logger.info(f"APPLIQUE TAG ENTITY  {name_new_entity} :tag {tag_value}")
-                    # result = client.update_entity(id_create_new_entity, "tag", tag_value)
-
-                    # Retourne les identifiants de la nouvelle entité, de l'utilisateur et le profil
-                    return [id_create_new_entity, id_new_user, profiles_id, result]
-                else:
-                    logger.error(
-                        "Échec de l'initialisation de la session GLPI.")
-                    return []
-            except Exception as e:
-                client.kill_session()
-                logger.error(
-                    "Erreur lors de la création de l'organisation : %s", traceback.format_exc())
-                return []
-    else:
-        # Gestion d'autres types d'API (non implémenté)
-        logger.info(
-            "Type d'API non supporté ou non spécifié. Cette section peut être étendue pour d'autres types d'API.")
+        Retourne [] en cas d'erreur.
+    """
+    client = get_glpi_client(tokenuser=tokenuser)
+    if not client:
+        logger.error("Impossible d'initialiser le client GLPI.")
         return []
+
+    try:
+        logger.debug(f"CREATION ENTITY : {name_new_entity}")
+        id_create_new_entity = client.create_entity_under_custom_parent(
+            parent_entity_id, name_new_entity, tag_value
+        )
+        logger.debug(f"Nouvelle entité créée avec l'ID : {id_create_new_entity}")
+
+        logger.debug(f"CREATION UTILISATEUR : {name_user}")
+        id_new_user = client.create_user(
+            name_user,
+            pwd,
+            entities_id=id_create_new_entity,
+            realname=realname,
+            firstname=firstname,
+            profiles_id=profiles_id
+        )
+        logger.info(f"Nouvel utilisateur créé avec l'ID : {id_new_user}")
+
+        # Attribution d’un profil à l’utilisateur
+        logger.debug(f"AFFECTATION PROFIL {profiles_id} à l’utilisateur {id_new_user}")
+        client.add_profile_to_user(id_new_user, 3, id_create_new_entity)
+
+        # Réinitialisation des tokens de l’utilisateur
+        result = client.update_user(id_new_user, "_reset_api_token", True)
+        logger.debug(f"Reset API token : {result}")
+
+        result = client.update_user(id_new_user, "_reset_personal_token", True)
+        logger.debug(f"Reset personal token : {result}")
+
+        return [id_create_new_entity, id_new_user, profiles_id, result]
+
+    except Exception as e:
+        logger.error("Erreur lors de la création de l'organisation : %s", traceback.format_exc())
+        return []
+    finally:
+        if client:
+            client.kill_session()
+

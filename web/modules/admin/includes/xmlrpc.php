@@ -21,67 +21,76 @@
  *
  */
 
-function xmlrpc_get_CONNECT_API()
+function xmlrpc_get_CONNECT_API($tokenuser=null)
 {
-    return xmlCall("admin.get_CONNECT_API", []);
+    return xmlCall("admin.get_CONNECT_API", [$tokenuser]);
 }
 
-function xmlrpc_get_list($entities, $is_recursive = False)
+function xmlrpc_get_list($entities, $is_recursive = False, $tokenuser=null)
 {
-    return xmlCall("admin.get_list", array($entities, $is_recursive));
+    return xmlCall("admin.get_list", array($entities, $is_recursive,$tokenuser));
 }
 
-function xmlrpc_get_user_info($userId = '')
+function xmlrpc_get_list_user_token($tokenuser = null)
 {
-    return xmlCall("admin.get_user_info", array($userId));
+    return xmlCall("admin.get_list_user_token", array($tokenuser));
 }
 
-function xmlrpc_get_users_count_by_entity($entityId)
+function xmlrpc_get_user_info($userId = '', $tokenuser=null)
 {
-    return xmlCall("admin.get_users_count_by_entity", [$entityId]);
+    return xmlCall("admin.get_user_info", array($userId, $tokenuser));
 }
+
+function xmlrpc_get_users_count_by_entity($entityId, $tokenuser=null)
+{
+    return xmlCall("admin.get_users_count_by_entity", [$entityId, $tokenuser]);
+}
+
+function xmlrpc_get_counts_by_entity_root($filter="", $start=-1, $end=-1, $entities=null)
+{
+    // Récupère les statistiques des entités GLPI (nombre de machines,
+    // nombre d'utilisateurs et IDs des utilisateurs), avec options
+    // de filtrage, pagination et restriction sur une liste d'entités.
+    // attention on doit limiter les entite pour les l'utilisateur non root
+    return xmlCall("admin.get_counts_by_entity_root", [$filter, $start, $end, $entities]);
+}
+
 
 function xmlrpc_get_counts_by_entity($entities = [])
 {
     return xmlCall("admin.get_counts_by_entity", [$entities]);
 }
 
-function xmlrpc_get_entity_info($entityId)
+function xmlrpc_get_entity_info($entityId, $tokenuser=null)
 {
-    return xmlCall("admin.get_entity_info", array($entityId));
+    return xmlCall("admin.get_entity_info", array($entityId, $tokenuser));
 }
 
-function xmlrpc_get_profile_name($profilId)
+function xmlrpc_get_profile_name($profilId, $tokenuser=null)
 {
-    return xmlCall("admin.get_profile_name", array($profilId));
+    return xmlCall("admin.get_profile_name", array($profilId, $tokenuser));
 }
 
-function xmlrpc_create_entity_under_custom_parent($parent_entity_id, $name)
+function xmlrpc_create_entity_under_custom_parent($parent_entity_id, $name, $tokenuser=null)
 {
-    return xmlCall("admin.create_entity_under_custom_parent", array($parent_entity_id, $name));
+    return xmlCall("admin.create_entity_under_custom_parent", array($parent_entity_id,
+                                                                    $name,
+                                                                    $tokenuser));
 }
 
 
-function xmlrpc_update_entity($entityId, $itemName, $newEntityName, $parentId)
+function xmlrpc_update_entity($entityId, $itemName, $newEntityName, $parentId, $tokenuser=null)
 {
-    return xmlCall("admin.update_entity", array($entityId, $itemName, $newEntityName, $parentId));
+    return xmlCall("admin.update_entity", array($entityId,
+                                                $itemName,
+                                                $newEntityName,
+                                                $parentId,
+                                                $tokenuser));
 }
 
-function xmlrpc_delete_entity($entityId)
+function xmlrpc_delete_entity($entityId, $tokenuser=null)
 {
-    return xmlCall("admin.delete_entity", array($entityId));
-}
-
-function xmlrpc_update_user($userId, $itemName, $newValue) {
-    return xmlCall("admin.update_user", array($userId, $itemName, $newValue));
-}
-
-function xmlrpc_switch_user_profile($userId, $profileId, $entityId, $isRecursive = 0, $isDynamic = 0, $isDefaultProfile = 1) {
-    return xmlCall("admin.switch_user_profile", array($userId, $profileId, $entityId, $isRecursive, $isDynamic, $isDefaultProfile));
-}
-
-function xmlrpc_add_profile_to_user($userId, $profileId, $entityId, $isRecursive = 0, $isDynamic = 0, $isDefaultProfile = 1) {
-    return xmlCall("admin.add_profile_to_user", array($userId, $profileId, $entityId, $isRecursive, $isDynamic, $isDefaultProfile));
+    return xmlCall("admin.delete_entity", array($entityId, $tokenuser));
 }
 
 function xmlrpc_create_organization(
@@ -92,7 +101,8 @@ function xmlrpc_create_organization(
     $profiles_id,
     $tag_value = "",
     $realname = null,
-    $firstname = null
+    $firstname = null,
+    $tokenuser=null
 ) {
     return xmlCall("admin.create_organization", [
         $parent_entity_id,
@@ -102,6 +112,7 @@ function xmlrpc_create_organization(
         $profiles_id,
         $tag_value,
         $realname,
-        $firstname
+        $firstname,
+        $tokenuser
     ]);
 }

@@ -29,7 +29,8 @@
  function xmlrpc_get_machines_list1($start, $end, $ctx){
      return xmlCall("glpi.get_machines_list1", [$start, $end, $ctx]);
  }
-
+// $array_list_user_for_entity = explode(",", entitiesListseach['data']['userIds'][$i]);
+//     if (in_array($loginglpi['id'], $array_list_user_for_entity))
 function glpiExists($uuid) {
     return xmlCall("glpi.inventoryExists", array($uuid));
 }
@@ -216,4 +217,8 @@ function  xmlrpc_get_machine_for_id($str_list_uuid, $filter, $start, $end){
 }
 
 
+function xmlrpc_get_user_by_name($name)
+{
+    return xmlCall("glpi.get_user_by_name", [$name]);
+}
 ?>

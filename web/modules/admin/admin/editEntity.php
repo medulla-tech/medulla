@@ -39,6 +39,11 @@ require_once("modules/admin/includes/xmlrpc.php");
 </style>
 
 <?php
+
+# information user loger dans glpi
+// test
+// $loginglpi = xmlrpc_get_user_by_name($_SESSION['login']);
+
 // We recover the info of the entity except for the Racine 0 entity
 if ($_GET['entityId'] != 0) {
     $parentId = xmlrpc_get_entity_info($_GET['entityId']);
@@ -46,15 +51,17 @@ if ($_GET['entityId'] != 0) {
 
 // Clean decoding of the entity name from the URL
 $entityName = isset($_GET['entityName']) ? urldecode(html_entity_decode($_GET['entityName'])) : '';
+$entitycompletename= isset($_GET['entitycompletename']) ? urldecode(html_entity_decode($_GET['entitycompletename'])) : '';
 // Recovers the burst chain on the real rafters
 $chevrons = array_map('trim', explode('>', $entityName));
 // For the edition, we just recover the last segment
 $editName = ($entityName && isset($_GET['mode']) && $_GET['mode'] === 'edit') ? end($chevrons) : '';
 
 // Dynamic title
+$entitycompl  = str_replace(" >","->", $entitycompletename);
 $title = (isset($_GET['mode']) && $_GET['mode'] === 'edit')
-    ? _T("Edit Entity [", 'admin') . ($entityName ? $entityName . "]" : '[]')
-    : _T("Add Sub-Entity to [", 'admin') . ($entityName ? $entityName . "]" : '[]');
+    ? _T("Edit Entity [", 'admin') . ($entitycompl ? $entitycompl . "]" : '[]')
+    : _T("Add Sub-Entity to [", 'admin') . ($entitycompl ? $entitycompl . "]" : '[]');
 
 $page = new PageGenerator($title);
 $page->setSideMenu($sidemenu);
@@ -74,11 +81,11 @@ if (isset($_POST["bcreate"])) {
 
     if ($result) {
         new NotifyWidgetSuccess(_T("The entity " . $entityName . " was created successfully.", "admin"));
-        header("Location: " . urlStrRedirect("admin/admin/entitiesManagement", array()));
+        header("Location: " . urlStrRedirect("admin/admin/entitiesManagement", []));
         exit;
     } else {
         new NotifyWidgetFailure(_T("Failed to create the entity " . $entityName . ".", "admin"));
-        header("Location: " . urlStrRedirect("admin/admin/entitiesManagement", array()));
+        header("Location: " . urlStrRedirect("admin/admin/entitiesManagement",  []));
         exit;
     }
 }
@@ -97,11 +104,11 @@ if (isset($_POST["bupdate"])) {
 
     if ($result) {
         new NotifyWidgetSuccess(_T("The entity " . $newEntityName . " was updated successfully.", "admin"));
-        header("Location: " . urlStrRedirect("admin/admin/entitiesManagement", array()));
+        header("Location: " . urlStrRedirect("admin/admin/entitiesManagement", []));
         exit;
     } else {
         new NotifyWidgetFailure(_T("Failed to update the entity " . $newEntityName . ".", "admin"));
-        header("Location: " . urlStrRedirect("admin/admin/entitiesManagement", array()));
+        header("Location: " . urlStrRedirect("admin/admin/entitiesManagement", []));
         exit;
     }
 }
