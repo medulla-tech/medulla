@@ -144,7 +144,7 @@ function handleProviderSelection($providersConfig)
         exit;
     }
 
-    return strtoupper($provider);
+    return $provider;
 }
 
 function getAclString($userInfo, $providersConfig, $providerKey)
@@ -212,6 +212,8 @@ function handleAuthentication($providerKey, $providersConfig)
 
         // We redirect the user to the authentication page
         if (!isset($_GET['code'])) {
+            // Forcing re-authentication otherwise connects with the last user
+            // $oidc->addAuthParam(['prompt' => 'login']);
             $oidc->authenticate();
         } else {
             $code = $_GET['code'];
@@ -250,7 +252,10 @@ function handleAuthentication($providerKey, $providersConfig)
             $auth  = fetchBaseIni('authentication_baseldap', 'authonly', $GLOBALS['configPaths']);
             $login = explode(' ', $auth)[0];
             $pass  = fetchBaseIni('ldap', 'password', $GLOBALS['configPaths']);
+            $_SESSION["pass"]  = $pass;
             include("includes/createSession.inc.php");
+            unset($_SESSION["pass"]);
+            $pass = null;
 
             // Recovers the list of current users
             $res = get_users_detailed($error, '', 0, 20);
@@ -398,7 +403,9 @@ function handleSignout()
 
             // Disconnects the user from the OIDC provider
             $idToken     = $_SESSION['id_token'];
-            $redirectUri = 'https://' . gethostname() . '/mmc/index.php?signout=1';
+            global $conf;
+            $hostname = $conf["server_01"]["description"];
+            $redirectUri = 'https://' . $hostname . '/mmc/index.php?signout=1';
             $oidc->signOut($idToken, $redirectUri);
 
         } catch (Exception $e) {
