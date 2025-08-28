@@ -14432,16 +14432,13 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                     continue
                 if key == "entity":
                     column = "ge.glpi_id"
-                    filter_on += f" AND {
-                        column} IN ({','.join(map(str, config.filter_on[key]))})"
+                    filter_on += f" AND {column} IN ({','.join(map(str, config.filter_on[key]))})"
                 elif key == "state":
                     column = "lgf.states_id"
-                    filter_on_noncompliant += f" AND {
-                        column} IN ({','.join(map(str, config.filter_on[key]))})"
+                    filter_on_noncompliant += f" AND {column} IN ({','.join(map(str, config.filter_on[key]))})"
                 elif key == "type":
                     column = "lgf.computertypes_id"
-                    filter_on_noncompliant += f" AND {
-                        column} IN ({','.join(map(str, config.filter_on[key]))})"
+                    filter_on_noncompliant += f" AND {column} IN ({','.join(map(str, config.filter_on[key]))})"
 
         sql_machine_details = f"""
         SELECT m.id AS machine_id, m.hostname, ge.glpi_id AS entity_id
