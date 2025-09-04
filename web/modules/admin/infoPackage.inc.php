@@ -19,7 +19,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with MMC; If not, see <http://www.gnu.org/licenses/>.
- *
+ * file: admin/infoPackage.inc.php
  */
 require_once("modules/medulla_server/version.php");
 
@@ -214,6 +214,10 @@ $submod->addPage($page);
 
 $page = new Page("editUser", _T('Edit User', 'admin'));
 $page->setFile("modules/admin/admin/editUser.php");
+$submod->addPage($page);
+
+$page = new Page("downloadAgent", _T('Download Agent', 'admin'));
+$page->setFile("modules/admin/admin/downloadAgent.php");
 $submod->addPage($page);
 
 $mod->addSubmod($submod);

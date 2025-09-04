@@ -19,7 +19,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with MMC; If not, see <http://www.gnu.org/licenses/>.
- *
+ * file: admin/localSidebar.php
  */
 
 $sidemenu = new SideMenu();
@@ -31,3 +31,4 @@ $sidemenu->addSideMenuItem(new SideMenuItem(_T("Rules", "admin"), "admin", "admi
 
 //--------------------- Entity Manager ----------------
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Entities Management", "admin"), "admin", "admin", "entitiesManagement"));
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("Add User", "admin"), "admin", "admin", "editUser"));

@@ -425,6 +425,7 @@ def createUser(
     createHomeDir=True,
     ownHomeDir=False,
     primaryGroup=None,
+    organisation=None,
 ):
     return ldapUserGroupControl().addUser(
         login,
@@ -435,6 +436,7 @@ def createUser(
         createHomeDir,
         ownHomeDir,
         primaryGroup,
+        organisation,
     )
 
 
@@ -1070,6 +1072,7 @@ class LdapUserGroupControl:
         createHomeDir=True,
         ownHomeDir=False,
         primaryGroup=None,
+        organisation=None,
     ):
         """
         Add an user in ldap directory
@@ -1102,10 +1105,13 @@ class LdapUserGroupControl:
         r = AF().log(PLUGIN_NAME, AA.BASE_ADD_USER, [(ident, AT.USER)])
 
         # Get the homeDir path
-        if ownHomeDir:
-            homeDir = self.getHomeDir(uid, homeDir, False)
-        else:
-            homeDir = self.getHomeDir(uid, homeDir)
+        try:
+            if ownHomeDir:
+                homeDir = self.getHomeDir(uid, homeDir, False)
+            else:
+                homeDir = self.getHomeDir(uid, homeDir)  # 
+        except Exception as e:
+            return {"success": False, "message": str(e)}
 
         uidNumber = self.freeUID()
 
@@ -1169,6 +1175,7 @@ class LdapUserGroupControl:
             "shadowMax": "99999",
             "shadowFlag": "134538308",
             "shadowLastChange": "11192",
+            "o": organisation if organisation else "",
         }
 
         user_info = self._applyUserDefault(user_info, self.userDefault["base"])

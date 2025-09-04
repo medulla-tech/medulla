@@ -29,36 +29,34 @@ $_SESSION["login"] = $login;
 // pour 1 verification de jeton CSRF
 $_SESSION['auth_token'] = bin2hex(random_bytes(16));
 
-if($login != 'root') {
-    $loginglpi = xmlrpc_get_user_by_name($_SESSION['login']);
-    $user = null;
-    if (is_array($loginglpi)) {
-        if (isset($loginglpi['id'])) {
-            $user = $loginglpi;
-        } elseif (isset($loginglpi[0]) && is_array($loginglpi[0])) {
-            $user = $loginglpi[0];
-        }
-    } elseif (is_object($loginglpi)) {
-        $user = (array)$loginglpi;
+$loginglpi = xmlrpc_get_user_by_name($_SESSION['login']);
+$user = null;
+if (is_array($loginglpi)) {
+    if (isset($loginglpi['id'])) {
+        $user = $loginglpi;
+    } elseif (isset($loginglpi[0]) && is_array($loginglpi[0])) {
+        $user = $loginglpi[0];
     }
-
-    $_SESSION['glpi_user'] = [
-        'id'             => (int)($user['id'] ?? 0),
-        'login'          => $user['nameuser'] ?? $_SESSION['login'],
-        'firstname'      => $user['firstname'] ?? null,
-        'lastname'       => $user['realname'] ?? null,
-        'email'          => $user['nameuser'] ?? null,
-        'api_token'      => $user['api_token'] ?? null,
-        'active'         => isset($user['is_activeuser']) ? $user['is_activeuser'] === '1' : null,
-        'profile_id'     => isset($user['profiles_id']) ? (int)$user['profiles_id'] : null,
-        'profile_name'   => $user['nameprofil'] ?? null,
-        'entity'         => $user['nameentity'] ?? null,
-        'entity_path'    => $user['nameentitycomplete'] ?? null,
-        'entity_parent'  => ($user['parent_id_entity'] ?? '') !== '' ? (int)$user['parent_id_entity'] : null,
-        'location_id'    => isset($user['locations_id']) ? (int)$user['locations_id'] : null,
-        'supervisor_id'  => isset($user['users_id_supervisor']) ? (int)$user['users_id_supervisor'] : null,
-    ];
+} elseif (is_object($loginglpi)) {
+    $user = (array)$loginglpi;
 }
+
+$_SESSION['glpi_user'] = [
+    'id'             => (int)($user['id'] ?? 0),
+    'login'          => $user['nameuser'] ?? $_SESSION['login'],
+    'firstname'      => $user['firstname'] ?? null,
+    'lastname'       => $user['realname'] ?? null,
+    'email'          => $user['nameuser'] ?? null,
+    'api_token'      => $user['api_token'] ?? null,
+    'active'         => isset($user['is_activeuser']) ? $user['is_activeuser'] === '1' : null,
+    'profile_id'     => isset($user['profiles_id']) ? (int)$user['profiles_id'] : null,
+    'profile_name'   => $user['nameprofil'] ?? null,
+    'entity'         => $user['nameentity'] ?? null,
+    'entity_path'    => $user['nameentitycomplete'] ?? null,
+    'entity_parent'  => ($user['parent_id_entity'] ?? '') !== '' ? (int)$user['parent_id_entity'] : null,
+    'location_id'    => isset($user['locations_id']) ? (int)$user['locations_id'] : null,
+    'supervisor_id'  => isset($user['users_id_supervisor']) ? (int)$user['users_id_supervisor'] : null,
+];
 
 /* Set session expiration time */
 $_SESSION["sessiontimeout"] = intval($conf["global"]["sessiontimeout"]);

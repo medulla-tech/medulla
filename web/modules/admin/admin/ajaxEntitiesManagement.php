@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with MMC; If not, see <http://www.gnu.org/licenses/>.
- *
+ * file ajaxEntitiesManagement.php
  */
 require_once("modules/xmppmaster/includes/html.inc.php");
 require_once("modules/admin/includes/xmlrpc.php");
@@ -41,130 +41,123 @@ require_once("modules/glpi/includes/xmlrpc.php");
 </style>
 
 <?php
+$u = isset($_SESSION['glpi_user']) && is_array($_SESSION['glpi_user']) ? $_SESSION['glpi_user'] : [];
 
-// Récupération de la configuration globale
-global $conf;
-$maxperpage = $conf["global"]["maxperpage"];
-$maxperpage = 1;
-// Récupération des paramètres GET pour le filtrage et la pagination
-$filter = (isset($_GET["filter"])) ? htmlentities($_GET["filter"]) : "";
-$start = isset($_GET['start'])?$_GET['start']:0;
-$end   = (isset($_GET['end'])?$_GET['start']+$maxperpage:$maxperpage);
-
-
-// Récupération des informations de l'utilisateur connecté via GLPI
-$loginglpi = xmlrpc_get_user_by_name($_SESSION['login']);
-
-$facilitylevel = 0; // tout va bien
-$profil = !empty($loginglpi['nameprofil']) ? $loginglpi['nameprofil'] : _T("non definie", 'admin');
-
-// Vérification des permissions de l'utilisateur
-if (!in_array($loginglpi['nameprofil'], ['Admin', 'Super-Admin']))
-{
-   $message = sprintf(
-    _T("Profile [%s]: you do not have permissions (read-only access)", 'admin'),
-    $profil
-);
-   $facilitylevel = 1;
+if (empty($u)) {
+    echo '<div style="background:#fce4e4;color:#900;padding:10px;text-align:center">'
+       . htmlspecialchars(_T("No GLPI session found. Please sign in again.", "admin"), ENT_QUOTES, 'UTF-8')
+       . '</div>';
+    return;
 }
-if (empty($loginglpi['api_token'])) {
+
+global $conf;
+$maxperpage = isset($conf["global"]["maxperpage"]) ? (int)$conf["global"]["maxperpage"] : 10;
+$maxperpage = 1;
+
+$filter = isset($_GET["filter"]) ? htmlentities($_GET["filter"]) : "";
+$start  = isset($_GET['start']) ? (int)$_GET['start'] : 0;
+$end    = isset($_GET['end']) ? (int)$_GET['start'] + $maxperpage : $maxperpage;
+
+$facilitylevel = 0;
+$profil = !empty($u['profile_name']) ? $u['profile_name'] : _T("non definie", 'admin');
+
+if (empty($u['api_token'])) {
     $message = sprintf(
         _T("Your account with profile [%s] is not provisioned to consult the entities", 'admin'),
         $profil
     );
     $facilitylevel = 2;
 }
-// Récupération de la liste des entités accessibles par l'utilisateur
-$entitiesList = xmlrpc_get_list_user_token($loginglpi['api_token']);
-if (count($entitiesList) == 0) {
+
+$entitiesList = [];
+if (!empty($u['api_token'])) {
+    $entitiesList = xmlrpc_get_list_user_token($u['api_token']);
+}
+
+if (is_array($entitiesList) && count($entitiesList) === 0) {
     $message = sprintf(
         _T("Your account with profile [%s] has no reference entities.", 'admin'),
         $profil
     );
     $facilitylevel = 3;
 }
-// Affichage des messages d'erreur ou d'information selon le niveau de permission
-if ( $facilitylevel > 0) // message
-{
-    if ($facilitylevel != 3){
-    // Affichage des informations de l'utilisateur si le niveau de permission est 1 ou 2
-    $n = new ListInfos(array($loginglpi['nameuser']), _T("User", "admin"));
-    $n->addExtraInfo(array($loginglpi['realname']), _T("real name", "admin"));
-    $n->addExtraInfo(array($loginglpi['firstname']), _T("first name", "admin"));
-    $n->addExtraInfo(array($profil), _T("profil", "admin"));
-    $n->addExtraInfo(array($loginglpi['nameentity']), _T("entity", "admin"));
-    $n->addExtraInfo(array($loginglpi['nameentitycomplete']), _T("complete_entity", "admin"));
-    $n->setNavBar ="frfr";
-    $n->start = 0;
-    $n->end =1;
-    $converter = new ConvertCouleur();
-    $n->setCaptionText($message);
-    $n->setCssCaption(  $border = 1,
-                        $bold = 0,
-                        $bgColor = "lightgray",
-                        $textColor = "black",
-                        $padding = "10px 0",
-                        $size = "20",
-                        $emboss = 1,
-                        $rowColor = $converter->convert("lightgray"));
+
+if ($facilitylevel > 0) {
+    if ($facilitylevel != 3) {
+        $n = new ListInfos(array(!empty($u['email']) ? $u['email'] : $u['login']), _T("User", "admin"));
+        $n->addExtraInfo(array(isset($u['lastname']) ? $u['lastname'] : ''), _T("real name", "admin"));                 // map -> realname
+        $n->addExtraInfo(array(isset($u['firstname']) ? $u['firstname'] : ''), _T("first name", "admin"));
+        $n->addExtraInfo(array($profil), _T("profil", "admin"));
+        $n->addExtraInfo(array(isset($u['entity']) ? $u['entity'] : ''), _T("entity", "admin"));
+        $n->addExtraInfo(array(isset($u['entity_path']) ? $u['entity_path'] : ''), _T("complete_entity", "admin"));
+        $n->start = 0;
+        $n->end = 1;
+        $converter = new ConvertCouleur();
+        $n->setCaptionText($message);
+        $n->setCssCaption(
+            $border = 1,
+            $bold = 0,
+            $bgColor = "lightgray",
+            $textColor = "black",
+            $padding = "10px 0",
+            $size = "20",
+            $emboss = 1,
+            $rowColor = $converter->convert("lightgray")
+        );
         $n->disableFirstColumnActionLink();
         $n->display($navbar = 0, $header = 0);
-    }else{
-        // Affichage d'un message simple si le niveau de permission est 3
-        echo'
-      <div style="background-color: #ddd; padding: 10px; text-align: center; font-size: 14px;">';
-        echo htmlspecialchars($message, ENT_QUOTES, 'UTF-8');
-      echo '</div>';
+    } else {
+        echo '<div style="background-color:#ddd;padding:10px;text-align:center;font-size:14px;">'
+           . htmlspecialchars($message, ENT_QUOTES, 'UTF-8')
+           . '</div>';
     }
 }
 
-// Si le niveau de permission est acceptable (0 ou 1), on affiche la liste des entités
-if ( $facilitylevel <= 1)
-{
-    // Récupération des entités avec leurs informations
+if ($facilitylevel <= 1) {
+    // Paginated search + filtered of accessible root entities
     $entitiesListseach = xmlrpc_get_counts_by_entity_root(
         filter: $filter,
-        start: $start,
-        end: $end,
+        start:  $start,
+        end:    $end,
         entities: $entitiesList
     );
-    // Définition des actions possibles sur les entités
-    $action_edit = new ActionItem(_("Modifier"), "editEntity", "edit", "", "admin", "admin");
-    $action_add = new ActionItem(_("Ajouter"), "editEntity", "add", "", "admin", "admin");
-    $action_manageusers = new ActionItem(_("Gérer les utilisateurs"), "listUsersofEntity", "manageusers", "", "admin", "admin");
-    $action_download = new ActionItem(_("Télécharger"), "downloadAgent", "download", "", "admin", "admin");
-    $action_non_edit = new EmptyActionItem1(_("Modification non autorisée"), "", "editg", "", "admin", "admin");
-    $action_non_delete = new EmptyActionItem1(_("Suppression non autorisée"), "", "deleteg", "", "admin", "admin");
 
-    // Initialisation des tableaux pour les actions et les informations
-    $editAction = $addAction = $manageusersAction = $downloadAction = $usersCount = $titles = $params = [];
-    $entitiesList = $entitiesListseach['data'];
+    //Actions
+    $action_edit         = new ActionItem(_("Modifier"), "editEntity", "edit", "", "admin", "admin");
+    $action_add          = new ActionItem(_("Ajouter"), "editEntity", "add", "", "admin", "admin");
+    $action_manageusers  = new ActionItem(_("Gérer les utilisateurs"), "listUsersofEntity", "manageusers", "", "admin", "admin");
+    $action_download     = new ActionItem(_("Télécharger"), "downloadAgent", "download", "", "admin", "admin");
+    $action_non_edit     = new EmptyActionItem1(_("Modification non autorisée"), "", "editg", "", "admin", "admin");
+    $action_non_delete   = new EmptyActionItem1(_("Suppression non autorisée"), "", "deleteg", "", "admin", "admin");
 
-    $count = count($entitiesList['id']); // nombre d'entités
-    // Boucle sur les entités pour préparer les données et les actions
+    $editAction = $addAction = $manageusersAction = $downloadAction = $deleteAction = $params = [];
+    $data = $entitiesListseach['data'];
+
+    $count = isset($data['id']) ? count($data['id']) : 0;
+
     for ($i = 0; $i < $count; $i++) {
-        // 'api_token' ne peux pas etre 1 parametre CGI get ou post pour la securite
-        // $_SESSION['api_token']=$loginglpi['api_token']
         $params[] = [
-            'userIds'    => $entitiesList['userIds'][$i],
-            'entityId'   => $entitiesList['id'][$i],
-            'entityName' => $entitiesList['name'][$i],
-            'nbusers'    => $entitiesList['nb_users'][$i],
-            'nbcomputer'    => $entitiesList['nb_machines'][$i],
-            'entitycompletename' => $entitiesList['completename'][$i],
-            'userId' => $loginglpi['id'],
-            'realname' => $loginglpi['realname'],
-            'firstname' => $loginglpi['firstname'],
-            'is_activeuser'=> $loginglpi['is_activeuser'],
-            'locations_id'=> $loginglpi['locations_id'],
-            'profiles_id'=> $loginglpi['profiles_id'],
-            'users_id_supervisor'=> $loginglpi['users_id_supervisor'],
-            'nameprofil'=> $loginglpi['nameprofil'],
-            'nameentity'=> $loginglpi['nameentity'],
-            'nameentitycomplete'=> $loginglpi['nameentitycomplete'],
+            'userIds'              => $data['userIds'][$i],
+            'entityId'             => $data['id'][$i],
+            'entityName'           => $data['name'][$i],
+            'nbusers'              => $data['nb_users'][$i],
+            'nbcomputer'           => $data['nb_machines'][$i],
+            'entitycompletename'   => $data['completename'][$i],
+
+            // ---- mapping from the session ----
+            'userId'               => (int)$u['id'],
+            'realname'             => isset($u['lastname']) ? $u['lastname'] : null,            // ex- realname
+            'firstname'            => isset($u['firstname']) ? $u['firstname'] : null,
+            'is_activeuser'        => isset($u['active']) ? (int)$u['active'] : null,
+            'locations_id'         => isset($u['location_id']) ? (int)$u['location_id'] : null,
+            'profiles_id'          => isset($u['profile_id']) ? (int)$u['profile_id'] : null,
+            'users_id_supervisor'  => isset($u['supervisor_id']) ? (int)$u['supervisor_id'] : null,
+            'nameprofil'           => isset($u['profile_name']) ? $u['profile_name'] : null,
+            'nameentity'           => isset($u['entity']) ? $u['entity'] : null,
+            'nameentitycomplete'   => isset($u['entity_path']) ? $u['entity_path'] : null,
         ];
 
-        // Définition des actions en fonction des permissions
+        // Action rights according to belonging
         $deleteToAdd = new ActionConfirmItem(
             _("Delete"),
             "deleteEntity",
@@ -172,35 +165,46 @@ if ( $facilitylevel <= 1)
             "",
             "admin",
             "admin",
-            _T("Are you sure you want to delete this entity [" . $entitiesList['name'][$i] . "] ?" , 'admin')
+            _T("Are you sure you want to delete this entity [" . $data['name'][$i] . "] ?", 'admin')
         );
-        // Vérification si l'utilisateur est propriétaire de l'entité
-        $array_list_user_for_entity = explode(",", $entitiesList['userIds'][$i]);
-        if (in_array($loginglpi['id'], $array_list_user_for_entity))
-        {
-            // Actions limitées si l'utilisateur est propriétaire de l'entité
-            $editAction[] = new EmptyActionItem1(_("Modification non autorisée"), "", "editg", "", "admin", "admin");
-            $addAction[] = $action_add;
+
+        // ---- strict deactivation on the root entity (id = 0) ----
+    $entityIdCurrent = isset($data['id'][$i]) ? (int)$data['id'][$i] : null;
+    if ($entityIdCurrent === 0) {
+        // we gray edit and delete for the root
+        $editAction[]        = new EmptyActionItem1(_("Modification non autorisée"), "", "editg", "", "admin", "admin");
+        $addAction[]         = $action_add;
+        $manageusersAction[] = $action_manageusers;
+        $downloadAction[]    = $action_download;
+        $deleteAction[]      = new EmptyActionItem1(_("Suppression non autorisée"), "", "deleteg", "", "admin", "admin");
+
+        continue;
+    }
+
+        $array_list_user_for_entity = array_filter(array_map('trim', explode(",", $data['userIds'][$i])));
+        if (in_array((string)$u['id'], $array_list_user_for_entity, true) || in_array((int)$u['id'], $array_list_user_for_entity, true)) {
+            // Owner: Limited actions
+            $editAction[]        = $action_non_edit;
+            $addAction[]         = $action_add;
             $manageusersAction[] = $action_manageusers;
-            $downloadAction[] = $action_download;
-            $deleteAction[] = new EmptyActionItem1(_("Suppression non autorisée"), "", "deleteg", "", "admin", "admin");
-        }else
-        {
-            // Actions complètes si l'utilisateur n'est pas propriétaire de l'entité
-            $editAction[] =  $action_edit;
-            $addAction[] = $action_add;
+            $downloadAction[]    = $action_download;
+            $deleteAction[]      = $action_non_delete;
+        } else {
+            // Non owner: Complete actions
+            $editAction[]        = $action_edit;
+            $addAction[]         = $action_add;
             $manageusersAction[] = $action_manageusers;
-            $downloadAction[] = $action_download;
-            $deleteAction[] = $deleteToAdd;
+            $downloadAction[]    = $action_download;
+            $deleteAction[]      = $deleteToAdd;
         }
     }
-    // Affichage de la liste des entités avec leurs informations et actions
-    $n = new OptimizedListInfos($entitiesList['id'], _T("ID Entity", "admin"));
-    $n->addExtraInfo($entitiesList['name'], _T("Name of Entity", "admin"));
-    $n->addExtraInfo($entitiesList['completename'], _T("completename Name of Entity", "admin"));
-    $n->addExtraInfo($entitiesList['nb_users'], _T("Users", "admin"));
-    $n->addExtraInfo($entitiesList['nb_machines'], _T("Computers", "admin"));
-    $n->addExtraInfo($entitiesList['userIds'], _T("users attribut", "admin"));
+
+    // Rendered list
+    $n = new OptimizedListInfos($data['id'], _T("ID Entity", "admin"));
+    $n->addExtraInfo($data['name'], _T("Name of Entity", "admin"));
+    // $n->addExtraInfo($data['completename'], _T("Complete Name", "admin"));
+    $n->addExtraInfo($data['nb_users'], _T("Users", "admin"));
+    $n->addExtraInfo($data['nb_machines'], _T("Computers", "admin"));
 
     $n->addActionItemArray($editAction);
     $n->addActionItemArray($addAction);
@@ -208,34 +212,28 @@ if ( $facilitylevel <= 1)
     $n->addActionItemArray($downloadAction);
     $n->addActionItemArray($deleteAction);
     $n->setParamInfo($params);
-    $n->start=$start;
-    $n->end = $entitiesListseach['total_count'];
+    $n->start = $start;
+    $n->end   = $entitiesListseach['total_count'];
     $n->setNavBar(new AjaxNavBar("10", $filter));
     $n->disableFirstColumnActionLink();
     $n->display();
-}//  Fin de la condition sur le niveau de permissionend facility
+}
 ?>
 
 <script>
 jQuery(document).ready(function($) {
-    // Gestion des clics sur les liens d'édition et d'ajout
+    // Click management on publishing and addition links
     $('li.edit a, li.add a').on('click', function(e) {
         const $link = $(this);
         let href = $link.attr('href');
-
         if (href.includes('mode=')) return;
 
-        let mode = '';
-        if ($link.closest('li').hasClass('edit')) {
-            mode = 'edit';
-        } else if ($link.closest('li').hasClass('add')) {
-            mode = 'add';
-        }
+        let mode = $link.closest('li').hasClass('edit') ? 'edit'
+                 : $link.closest('li').hasClass('add')  ? 'add'
+                 : '';
 
         const separator = href.includes('?') ? '&' : '?';
-        href += separator + 'mode=' + mode;
-
-        window.location.href = href;
+        window.location.href = href + separator + 'mode=' + mode;
         e.preventDefault();
     });
 });
