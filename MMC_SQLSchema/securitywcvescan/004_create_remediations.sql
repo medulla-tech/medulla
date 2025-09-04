@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS remediations (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    machine_id TEXT NOT NULL,
+    cve_id TEXT NOT NULL,
+    action TEXT NOT NULL,
+    status TEXT DEFAULT 'pending',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
