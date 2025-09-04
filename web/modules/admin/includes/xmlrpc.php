@@ -18,17 +18,82 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with MMC; If not, see <http://www.gnu.org/licenses/>.
- *
+ * file: admin/includes/xmlrpc.php
  */
 
-function xmlrpc_get_CONNECT_API($tokenuser=null)
+function xmlrpc_get_CONNECT_API($tokenuser = null)
 {
     return xmlCall("admin.get_CONNECT_API", [$tokenuser]);
 }
 
-function xmlrpc_get_list($entities, $is_recursive = False, $tokenuser=null)
+function xmlrpc_get_list(
+    string $type,
+    bool $is_recursive = false,
+    ?string $tokenuser = null
+    ) {
+    return xmlCall("admin.get_list", [
+        $type,
+        $is_recursive,
+        $tokenuser]);
+}
+
+function xmlrpc_create_user(
+    string $name_user,
+    string $pwd,
+    ?int $entities_id = null,
+    ?int $profiles_id = null,
+    ?string $realname = null,
+    ?string $firstname = null,
+    ?string $email = null,
+    ?bool $is_recursive = false,
+    ?bool $is_default = true,
+    ?string $tokenuser = null
+) {
+    return xmlCall("admin.create_user", [
+        $name_user,
+        $pwd,
+        $entities_id,
+        $profiles_id,
+        $realname,
+        $firstname,
+        $email,
+        $is_recursive,
+        $is_default,
+        $tokenuser
+    ]);
+}
+
+function xmlrpc_delete_and_purge_user(int $userId)
 {
-    return xmlCall("admin.get_list", array($entities, $is_recursive,$tokenuser));
+    return xmlCall("admin.delete_and_purge_user", [$userId]);
+}
+
+function xmlrpc_update_user(
+    int $userId,
+    ?string $name_user = null,
+    ?string $pwd = null,
+    ?int $entities_id = null,
+    ?int $profiles_id = null,
+    ?string $realname = null,
+    ?string $firstname = null,
+    ?string $email = null,
+    ?bool $is_recursive = null,
+    ?bool $is_default = null,
+    ?string $tokenuser = null
+) {
+    return xmlCall("admin.update_user", [
+        $userId,
+        $name_user,
+        $pwd,
+        $entities_id,
+        $profiles_id,
+        $realname,
+        $firstname,
+        $email,
+        $is_recursive,
+        $is_default,
+        $tokenuser
+    ]);
 }
 
 function xmlrpc_get_list_user_token($tokenuser = null)
@@ -36,17 +101,17 @@ function xmlrpc_get_list_user_token($tokenuser = null)
     return xmlCall("admin.get_list_user_token", array($tokenuser));
 }
 
-function xmlrpc_get_user_info($userId = '', $tokenuser=null)
+function xmlrpc_get_user_info($userId = '', $profileId = '')
 {
-    return xmlCall("admin.get_user_info", array($userId, $tokenuser));
+    return xmlCall("admin.get_user_info", array($userId, $profileId));
 }
 
-function xmlrpc_get_users_count_by_entity($entityId, $tokenuser=null)
+function xmlrpc_get_users_count_by_entity($entityId, $tokenuser = null)
 {
     return xmlCall("admin.get_users_count_by_entity", [$entityId, $tokenuser]);
 }
 
-function xmlrpc_get_counts_by_entity_root($filter="", $start=-1, $end=-1, $entities=null)
+function xmlrpc_get_counts_by_entity_root($filter = "", $start = -1, $end = -1, $entities = null)
 {
     // Récupère les statistiques des entités GLPI (nombre de machines,
     // nombre d'utilisateurs et IDs des utilisateurs), avec options
@@ -61,34 +126,38 @@ function xmlrpc_get_counts_by_entity($entities = [])
     return xmlCall("admin.get_counts_by_entity", [$entities]);
 }
 
-function xmlrpc_get_entity_info($entityId, $tokenuser=null)
+function xmlrpc_get_entity_info($entityId, $tokenuser = null)
 {
     return xmlCall("admin.get_entity_info", array($entityId, $tokenuser));
 }
 
-function xmlrpc_get_profile_name($profilId, $tokenuser=null)
+function xmlrpc_get_profile_name($profilId, $tokenuser = null)
 {
     return xmlCall("admin.get_profile_name", array($profilId, $tokenuser));
 }
 
-function xmlrpc_create_entity_under_custom_parent($parent_entity_id, $name, $tokenuser=null)
+function xmlrpc_create_entity_under_custom_parent($parent_entity_id, $name, $tokenuser = null)
 {
-    return xmlCall("admin.create_entity_under_custom_parent", array($parent_entity_id,
-                                                                    $name,
-                                                                    $tokenuser));
+    return xmlCall("admin.create_entity_under_custom_parent", array(
+        $parent_entity_id,
+        $name,
+        $tokenuser
+    ));
 }
 
 
-function xmlrpc_update_entity($entityId, $itemName, $newEntityName, $parentId, $tokenuser=null)
+function xmlrpc_update_entity($entityId, $itemName, $newEntityName, $parentId, $tokenuser = null)
 {
-    return xmlCall("admin.update_entity", array($entityId,
-                                                $itemName,
-                                                $newEntityName,
-                                                $parentId,
-                                                $tokenuser));
+    return xmlCall("admin.update_entity", array(
+        $entityId,
+        $itemName,
+        $newEntityName,
+        $parentId,
+        $tokenuser
+    ));
 }
 
-function xmlrpc_delete_entity($entityId, $tokenuser=null)
+function xmlrpc_delete_entity($entityId, $tokenuser = null)
 {
     return xmlCall("admin.delete_entity", array($entityId, $tokenuser));
 }
@@ -102,7 +171,7 @@ function xmlrpc_create_organization(
     $tag_value = "",
     $realname = null,
     $firstname = null,
-    $tokenuser=null
+    $tokenuser = null
 ) {
     return xmlCall("admin.create_organization", [
         $parent_entity_id,

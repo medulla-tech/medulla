@@ -1,5 +1,7 @@
+# -*- coding:Utf-8; -*
 # SPDX-FileCopyrightText: 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
-# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net>
+# SPDX-FileCopyrightText: 2016-2023 Siveo, http://www.siveo.net
+# SPDX-FileCopyrightText: 2024-2025 Medulla, http://www.medulla-tech.io
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 """
@@ -356,6 +358,12 @@ def get_entities_with_counts_root( filter: str = None,
                                                                end=-1,
                                                                colonne=colonne,
                                                                entities=entities))
+
+def set_user_api_token(user_id, api_token):
+    return xmlrpcCleanup(Glpi().set_user_api_token(user_id, api_token))
+
+def get_user_profile_email(id_user, id_profile):
+    return xmlrpcCleanup(Glpi().get_user_profile_email(id_user, id_profile))
 
 def get_machine_for_id(strlistuuid, filter="", start=0, end=0):
     return xmlrpcCleanup(Glpi().get_machine_for_id(strlistuuid, filter, start, end))

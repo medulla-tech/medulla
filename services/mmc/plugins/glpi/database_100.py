@@ -1,7 +1,8 @@
-# -*- coding: utf-8; -*-
+# -*- coding:Utf-8; -*
 # SPDX-FileCopyrightText: 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
-# SPDX-FileCopyrightText:2007-2014 Mandriva, http://www.mandriva.com
-# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net>
+# SPDX-FileCopyrightText: 2007 Mandriva, http://www.mandriva.com
+# SPDX-FileCopyrightText: 2016-2023 Siveo, http://www.siveo.net
+# SPDX-FileCopyrightText: 2024-2025 Medulla, http://www.medulla-tech.io
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 """
@@ -6629,7 +6630,6 @@ class Glpi100(DyngroupDatabaseHelper):
         ).update({"ranking": rule.ranking + 1}, synchronize_session=False)
 
         # Adding rule criteria
-
         for i in range(len(rule_data["criteria"])):
             cr = RuleCriterion()
             cr.rules_id = rule.id
@@ -7318,23 +7318,33 @@ class Glpi100(DyngroupDatabaseHelper):
         sqlrequest = """
             SELECT
                 gu.id,
-                gu.name as nameuser,
+                gu.name AS nameuser,
                 gu.realname,
                 gu.firstname,
                 gu.api_token,
-                gu.is_active as is_activeuser,
+                gu.is_active AS is_activeuser,
                 gu.locations_id,
-                gu.profiles_id,
                 gu.users_id_supervisor,
-                gp.name as nameprofil,
-                ge.name as nameentity,
-                ge.completename as nameentitycomplete,
-                ge.entities_id as parent_id_entity,
-                ge.level as level_entity
+                gpu.profiles_id,
+                gp.name AS nameprofil,
+                ge.name AS nameentity,
+                ge.completename AS nameentitycomplete,
+                ge.entities_id AS parent_id_entity,
+                ge.level AS level_entity
             FROM glpi.glpi_users gu
-            INNER JOIN glpi.glpi_profiles gp ON gp.id = gu.profiles_id
-            INNER JOIN glpi.glpi_entities ge ON ge.id = gu.entities_id
-            WHERE gu.name LIKE :name
+            LEFT JOIN glpi.glpi_profiles_users gpu
+            ON gpu.id = (
+                    SELECT gpu2.id
+                    FROM glpi.glpi_profiles_users gpu2
+                    WHERE gpu2.users_id = gu.id
+                    ORDER BY (gpu2.entities_id = gu.entities_id) DESC, gpu2.id DESC
+                    LIMIT 1
+                )
+            LEFT JOIN glpi.glpi_profiles gp
+            ON gp.id = gpu.profiles_id
+            LEFT JOIN glpi.glpi_entities ge
+            ON ge.id = COALESCE(gpu.entities_id, gu.entities_id)
+            WHERE gu.name = :name
             LIMIT 1
         """
 
@@ -7405,7 +7415,6 @@ class Glpi100(DyngroupDatabaseHelper):
             "data": ...
             }
         """
-        self.logger.error("JFKJFK1 (%s)"% (entities))
         # Base query
         sql_base = """
             SELECT
@@ -7413,8 +7422,8 @@ class Glpi100(DyngroupDatabaseHelper):
                 ge.name,
                 ge.completename,
                 COALESCE(c.nb_machines, 0) AS nb_machines,
-                COALESCE(u.nb_users, 0) AS nb_users,
-                COALESCE(u.userIds, '') AS userIds
+                COALESCE(u.nb_users, 0)    AS nb_users,
+                COALESCE(u.userIds, '')    AS userIds
             FROM glpi.glpi_entities ge
             LEFT JOIN (
                 SELECT entities_id, COUNT(*) AS nb_machines
@@ -7423,25 +7432,22 @@ class Glpi100(DyngroupDatabaseHelper):
             ) c ON ge.id = c.entities_id
             LEFT JOIN (
                 SELECT
-                    entities_id,
-                    GROUP_CONCAT(id ORDER BY id ASC) AS userIds,
-                    SUM(
-                        CASE
-                            WHEN entities_id = 0 AND name = 'root' THEN 1
-                            WHEN entities_id != 0 THEN 1
-                            ELSE 0
-                        END
-                    ) AS nb_users
-                FROM glpi.glpi_users
-                GROUP BY entities_id
+                    gpu.entities_id,
+                    GROUP_CONCAT(DISTINCT gpu.users_id ORDER BY gpu.users_id ASC) AS userIds,
+                    COUNT(DISTINCT gpu.users_id) AS nb_users
+                FROM glpi.glpi_profiles_users gpu
+                JOIN glpi.glpi_users gu ON gu.id = gpu.users_id
+                WHERE gu.name <> 'root'
+                AND gu.name NOT LIKE 'Plugin\\_%'
+                GROUP BY gpu.entities_id
             ) u ON ge.id = u.entities_id
             WHERE (
-                ge.id != 0
+                ge.id <> 0
                 OR EXISTS (
                     SELECT 1
-                    FROM glpi.glpi_users gu
-                    WHERE gu.entities_id = ge.id
-                    AND gu.name = 'root'
+                    FROM glpi.glpi_users gu2
+                    WHERE gu2.entities_id = ge.id
+                    AND gu2.name = 'root'
                 )
             )
         """
@@ -7518,6 +7524,121 @@ class Glpi100(DyngroupDatabaseHelper):
             "total_count": total_count,
             "filtered_count": filtered_count,
             "data": data
+        }
+
+
+    @DatabaseHelper._sessionm
+    def set_user_api_token(self, session, user_id, token):
+        sql = (
+        """
+            UPDATE glpi.glpi_users
+            SET api_token = :tok,
+                api_token_date = NOW()
+            WHERE id = :uid
+        """)
+        res = session.execute(sql, {"tok": token, "uid": int(user_id)})
+        if res.rowcount != 1:
+            raise RuntimeError(f"Echec MAJ api_token pour user #{user_id}")
+        session.commit()
+        return token
+
+    @DatabaseHelper._sessionm
+    def get_user_profile_email(self,
+                            session,
+                            id_user: int,
+                            id_profile: int,
+                            is_active: int | None = 1) -> dict:
+        """
+        Récupère les infos d’un utilisateur + le lien profil/entité demandé.
+        Le "default" est calculé en comparant le lien aux champs par défaut du user
+        (gu.profiles_id / gu.entities_id).
+
+        Retourne {} si rien trouvé.
+        """
+
+        sqlrequest = """
+            SELECT
+                gu.id           AS user_id,
+                gu.name,
+                gu.realname,
+                gu.firstname,
+                gu.is_active,
+                gu.last_login,
+                gu.date_mod,
+                gu.date_creation,
+                gu.phone,
+
+                gpu.profiles_id AS profiles_id,
+                gp.name         AS profile_name,
+
+                gpu.entities_id AS entity_id,
+                ge.name         AS entity_name,
+                ge.completename AS entity_completename,
+                ge.entities_id  AS parent_id_entity,
+                ge.level        AS level_entity,
+
+                gm.email,
+
+                gpu.is_recursive AS link_is_recursive,
+
+                (gpu.profiles_id = gu.profiles_id AND gpu.entities_id = gu.entities_id)
+                AS link_is_default
+            FROM glpi.glpi_users gu
+            LEFT JOIN glpi.glpi_useremails gm
+                ON gm.users_id = gu.id AND gm.is_default = 1
+            INNER JOIN glpi.glpi_profiles_users gpu
+                    ON gpu.users_id = gu.id
+                AND gpu.profiles_id = :id_profile
+            INNER JOIN glpi.glpi_profiles gp
+                    ON gp.id = gpu.profiles_id
+            INNER JOIN glpi.glpi_entities ge
+                    ON ge.id = gpu.entities_id
+            WHERE gu.id = :id_user
+        """
+
+        if is_active is not None:
+            sqlrequest += " AND gu.is_active = :is_active "
+
+       # We want in priority the line corresponding to the "default" link (if this is this one)
+        sqlrequest += " ORDER BY link_is_default DESC LIMIT 1"
+
+        params = {"id_user": id_user, "id_profile": id_profile}
+        if is_active is not None:
+            params["is_active"] = is_active
+
+        row = session.execute(sqlrequest, params).fetchone()
+
+        def safe(v):
+            return "" if v is None else v
+
+        if not row:
+            return {}
+
+        user_raw = dict(row._mapping)
+        user_exp = {}   # Extensible if fusion LDAP/GLPI later
+
+        return {
+            "user_id":           safe(user_raw.get("user_id")),
+            "name":              user_exp.get("name")       or safe(user_raw.get("name")),
+            "realname":          user_exp.get("realname")   or safe(user_raw.get("realname")),
+            "firstname":         user_exp.get("firstname")  or safe(user_raw.get("firstname")),
+            "email":             safe(user_raw.get("email")),
+            "is_active":         (safe(user_raw.get("is_active"))
+                                if user_raw.get("is_active") is not None
+                                else (user_exp.get("is_active") or "")),
+            "profiles_id":       safe(user_raw.get("profiles_id")),
+            "profile_name":      safe(user_raw.get("profile_name")),
+            "last_login":        user_exp.get("last_login") or safe(user_raw.get("last_login")),
+            "date_mod":          user_exp.get("date_mod")   or safe(user_raw.get("date_mod")),
+            "date_creation":     user_exp.get("date_creation") or safe(user_raw.get("date_creation")),
+            "phone":             user_exp.get("phone")      or safe(user_raw.get("phone")),
+            "entity_id":         safe(user_raw.get("entity_id")),
+            "entity_name":       safe(user_raw.get("entity_name")),
+            "entity_completename": safe(user_raw.get("entity_completename")),
+            "parent_id_entity":  safe(user_raw.get("parent_id_entity")),
+            "level_entity":      safe(user_raw.get("level_entity")),
+            "link_is_recursive": int(user_raw.get("link_is_recursive") or 0),
+            "link_is_default":   int(user_raw.get("link_is_default") or 0),
         }
 
     @DatabaseHelper._sessionm
