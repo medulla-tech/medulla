@@ -21,9 +21,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with MMC; If not, see <http://www.gnu.org/licenses/>.
- *
+ * file: users-xmlrpc.inc.php
  */
-
 include_once('common.inc.php');
 
 function check_auth($login, $pass)
@@ -111,9 +110,9 @@ function get_users_detailed(&$error, $filter = null, $start = null, $end = null)
  * @param $name user's name
  * @param $homedir user home directory
  */
-function add_user($login, $pass, $firstname, $name, $homedir, $createhomedir, $ownHomeDir, $primaryGroup = "")
+function add_user($login, $pass, $firstname, $name, $homedir, $createhomedir, $ownHomeDir, $primaryGroup = "", $organisation = "")
 {
-    $param = array($login, prepare_string($pass), $firstname, $name, $homedir, $createhomedir, $ownHomeDir, $primaryGroup);
+    $param = array($login, prepare_string($pass), $firstname, $name, $homedir, $createhomedir, $ownHomeDir, $primaryGroup, $organisation);
     $ret = xmlCall("base.createUser", $param);
     if ($ret == 5) {
         $msg = sprintf(_("User %s created but password is not valid regarding your password policies.<br/><strong>You must change the user password.</strong>"), $login) . "<br />";
