@@ -13,12 +13,21 @@ import sqlalchemy.orm.query
 import os
 import logging
 from mmc.support.config import PluginConfig
+
 from mmc.support.mmctools import (
+    xmlrpcCleanup,
     RpcProxyI,
     ContextMakerI,
     SecurityContext,
-    xmlrpcCleanup,
+    EnhancedSecurityContext
 )
+from mmc.plugins.base import (with_xmpp_context,
+                              with_optional_xmpp_context,)
+
+
+import subprocess
+
+
 from mmc.agent import PluginManager
 from pulse2.managers.group import ComputerGroupManager
 from pulse2.managers.location import ComputerLocationManager
@@ -156,14 +165,42 @@ class Pulse2Config(PluginConfig, Pulse2DatabaseConfig):
             self.location = self.get("main", "location")
 
 
+
 class ContextMaker(ContextMakerI):
+    """
+    Fabrique de contextes personnalisés pour XMPP, héritée de ContextMakerI.
+    Sert à créer et initialiser un objet de type `EnhancedSecurityContext`.
+
+    appeler sur chaque module a l'initialiasation'
+
+    Méthodes
+    --------
+    getContext() :
+        Crée et retourne un contexte sécurisé enrichi contenant les informations
+        de l'utilisateur et de la requête courante.
+    """
+
     def getContext(self):
-        s = SecurityContext()
+        """
+        Crée un contexte de type `EnhancedSecurityContext` pour l'utilisateur courant.
+
+        Retourne
+        --------
+        EnhancedSecurityContext
+            Contexte initialisé avec :
+              - `userid` : l'identifiant de l'utilisateur courant
+              - `request` : la requête associée
+              - `session` : la session courante
+
+        Effets de bord
+        --------------
+        - Écrit des logs de niveau `error` lors de la création du contexte.
+        """
+        s = EnhancedSecurityContext()
         s.userid = self.userid
+        s.request = self.request
+        s.session = self.session
         return s
-
-
-import subprocess
 
 
 def simplecommand(cmd):
@@ -238,11 +275,11 @@ class RpcProxy(RpcProxyI):
         # maybe we can add something in the configuration of dyngroup to say if we want or not profiles
         return PluginManager().isEnabled("imaging")
 
-    def getAllImagingServersForProfiles(self, associated=False):
+    @with_optional_xmpp_context
+    def getAllImagingServersForProfiles(self, associated=False, ctx=None):
         """
         get all the imaging server that this user can access
         """
-        ctx = self.currentContext
         return ComputerImagingManager().getAllImagingServers(ctx.userid, associated)
 
     def runinshell(self, cmd):

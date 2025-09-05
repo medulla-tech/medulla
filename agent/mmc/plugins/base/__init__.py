@@ -35,6 +35,7 @@ from mmc.support.mmctools import (
     RpcProxyI,
     ContextMakerI,
     SecurityContext,
+    EnhancedSecurityContext,
 )
 from mmc.site import mmcconfdir, localstatedir
 from mmc.core.version import scmRevision
@@ -75,6 +76,8 @@ import gc
 import datetime
 from memory_profiler import *
 
+
+logger = logging.getLogger()
 mesuref = 0.0
 countseconde = 0
 mesure = ""
@@ -119,6 +122,151 @@ def getRevision():
 
 def listEvent():
     return mmctools.ProcessScheduler().listEvent()
+
+
+def with_xmpp_context(func):
+    """
+    Décorateur pour injecter automatiquement un contexte XMPP (Contexte_XmlRpc_Glpi).
+
+    Utilisation :
+    -------------
+    Deux approches sont possibles pour travailler avec le contexte :
+
+    1. **Appel manuel**
+       Vous pouvez créer le contexte vous-même dans chaque méthode :
+
+       >>> def get_list(self, sharings):
+       ...     ctx = Contexte_XmlRpc_Glpi(self)
+       ...     print(ctx.mondict)
+
+    2. **Appel via décorateur**
+       Si vous décorez votre méthode avec `@with_xmpp_context`,
+       alors le décorateur crée et initialise `ctx` automatiquement
+       et l’ajoute comme premier argument après `self`.
+
+       >>> @with_xmpp_context
+       ... def get_list(self, ctx, sharings):
+       ...     print(ctx.mondict)
+
+    Notes :
+    -------
+    - Avec la méthode **manuelle**, vous gardez un contrôle total.
+    - Avec le **décorateur**, vous devez ajouter un paramètre `ctx`
+      à votre fonction (juste après `self`), sinon Python lèvera une erreur.
+    """
+    def wrapper(self, *args, **kwargs):
+        ctx = Contexte_XmlRpc_Glpi(self)  # prépare le contexte une fois
+        return func(self, ctx, *args, **kwargs)
+    return wrapper
+
+
+def with_optional_xmpp_context(func):
+    """
+    Décorateur intelligent pour gérer le contexte XMPP.
+
+    Fonctionnement :
+    ----------------
+    - Si la méthode décorée définit un paramètre nommé `ctx` avec une valeur
+      par défaut (par ex. `ctx=None`), alors le décorateur injecte automatiquement
+      un objet `Contexte_XmlRpc_Glpi` si aucun contexte n’est fourni à l’appel.
+
+      >>> @with_optional_xmpp_context
+      ... def get_list(self, sharings, ctx=None):
+      ...     print(ctx.mondict)   # ctx est créé automatiquement
+
+      >>> obj.get_list(sharings)   # ctx est injecté
+      >>> obj.get_list(sharings, ctx=mon_ctx)  # ctx manuel, décorateur ne fait rien
+
+    - Si la méthode ne définit pas de paramètre `ctx`, le décorateur n’a
+      aucun effet et la fonction est appelée normalement.
+
+      >>> @with_optional_xmpp_context
+      ... def ping(self, value):
+      ...     print(value)   # aucun ctx ici
+
+    Avantages :
+    -----------
+    - Permet à l’utilisateur de choisir librement :
+      * Soit **gérer manuellement** son contexte (`ctx = Contexte_XmlRpc_surcharge_info_Glpi(self)`).
+      * Soit **laisser le décorateur l’injecter** automatiquement.
+    - Compatible avec les deux approches, sans erreur si `ctx` n’est pas prévu.
+    """
+    sig = inspect.signature(func)
+
+    def wrapper(self, *args, **kwargs):
+        bound = sig.bind_partial(self, *args, **kwargs)
+        # Si 'ctx' est dans la signature ET non fourni => on injecte
+        if "ctx" in sig.parameters and bound.arguments.get("ctx", None) is None:
+            kwargs["ctx"] = Contexte_XmlRpc_surcharge_info_Glpi(self)
+        return func(self, *args, **kwargs)
+
+    return wrapper
+
+class Contexte_XmlRpc_surcharge_info_Glpi:
+    """
+    Wrapper autour du contexte XMPP pour gérer automatiquement les informations
+    utilisateur et recharger les données uniquement lorsque l'UUID change.
+    recuperation des informations depuis glpi
+
+    Paramètres
+    ----------
+    session_xmlrpc_xmpp : objet
+        Objet de session contenant un attribut `currentContext`.
+
+    Attributs
+    ---------
+    ctx : objet
+        Contexte courant issu de `session_xmlrpc_xmpp.currentContext`.
+    session_info : dict
+        Informations de session récupérées via `ctx.get_session_info()`.
+        Doit contenir au minimum une clé 'uuid' et 'userid'.
+
+    Notes
+    -----
+    - Lors de l'initialisation, si l'UUID du contexte a changé ou si aucune
+      donnée n'a encore été enregistrée, les informations utilisateur sont
+      chargées via `Glpi().infouser(userid)` et stockées dans `ctx.mondict`.
+    - L'attribut `last_uuid` est ajouté au contexte afin de mémoriser
+      l'UUID courant et éviter des rechargements inutiles.
+    """
+
+    def __init__(self, session_xmlrpc_xmpp):
+        # ----------------------------
+        # IMPORT LOCAL POUR EVITER LES CIRCULAR IMPORT
+        # ----------------------------
+        # Dans ce projet, les modules mmc.plugins.base, glpi et dyngroup s'importent
+        # mutuellement. Si nous importons Glpi en haut du fichier, Python déclenche
+        # une erreur de type "partially initialized module" car le module courant
+        # n'est pas encore complètement chargé.
+        # En déplaçant l'import ici, il est exécuté uniquement au moment de la création
+        # de l'objet, après que tous les modules aient été initialisés.
+        from mmc.plugins.glpi.database import Glpi
+        self.ctx = session_xmlrpc_xmpp.currentContext
+        self.session_info = self.ctx.get_session_info()
+        # On garde l'UUID en mémoire (dans le contexte ou une variable statique)
+        if not hasattr(self.ctx, "last_uuid") or self.session_info["uuid"] != self.ctx.last_uuid:
+            # Nouveau contexte ou changement d'utilisateur
+            self.ctx._mondict = Glpi().get_user_default_details(self.session_info["userid"])
+            self.ctx.last_uuid = self.session_info["uuid"]
+            logger.debug("context evaluation %s" % self.ctx._mondict)
+
+    def __getattr__(self, name):
+        """
+        Délègue automatiquement l'accès aux attributs non définis de Contexte_XmlRpc_Glpi
+        vers l'objet `self.ctx`.
+
+        Paramètres
+        ----------
+        name : str
+            Nom de l'attribut à rechercher.
+
+        Retourne
+        --------
+        objet
+            L'attribut correspondant dans `self.ctx`.
+        """
+        return getattr(self.ctx, name)
+
 
 
 def activate():
@@ -425,7 +573,6 @@ def createUser(
     createHomeDir=True,
     ownHomeDir=False,
     primaryGroup=None,
-    organisation=None,
 ):
     return ldapUserGroupControl().addUser(
         login,
@@ -436,7 +583,6 @@ def createUser(
         createHomeDir,
         ownHomeDir,
         primaryGroup,
-        organisation,
     )
 
 
@@ -1072,7 +1218,6 @@ class LdapUserGroupControl:
         createHomeDir=True,
         ownHomeDir=False,
         primaryGroup=None,
-        organisation=None,
     ):
         """
         Add an user in ldap directory
@@ -1105,13 +1250,10 @@ class LdapUserGroupControl:
         r = AF().log(PLUGIN_NAME, AA.BASE_ADD_USER, [(ident, AT.USER)])
 
         # Get the homeDir path
-        try:
-            if ownHomeDir:
-                homeDir = self.getHomeDir(uid, homeDir, False)
-            else:
-                homeDir = self.getHomeDir(uid, homeDir)  # 
-        except Exception as e:
-            return {"success": False, "message": str(e)}
+        if ownHomeDir:
+            homeDir = self.getHomeDir(uid, homeDir, False)
+        else:
+            homeDir = self.getHomeDir(uid, homeDir)
 
         uidNumber = self.freeUID()
 
@@ -1175,7 +1317,6 @@ class LdapUserGroupControl:
             "shadowMax": "99999",
             "shadowFlag": "134538308",
             "shadowLastChange": "11192",
-            "o": organisation if organisation else "",
         }
 
         user_info = self._applyUserDefault(user_info, self.userDefault["base"])
@@ -2793,17 +2934,51 @@ class Computers(ldapUserGroupControl, ComputerI):
         """
         dn = f"objectUUID={uuid},{self.baseComputersDN}"
         return self.l.delete_s(dn)
-
+#
+#
+# class ContextMaker(ContextMakerI):
+#     """
+#     Create security context for the base plugin.
+#     """
+#
+#     def getContext(self):
+#         s = SecurityContext()
+#         s.userid = self.userid
+#         s.userdn = LdapUserGroupControl().searchUserDN(self.userid)
+#         return s
 
 class ContextMaker(ContextMakerI):
     """
-    Create security context for the base plugin.
+    Fabrique de contextes personnalisés pour XMPP, héritée de ContextMakerI.
+    Sert à créer et initialiser un objet de type `EnhancedSecurityContext`.
+
+    Méthodes
+    --------
+    getContext() :
+        Crée et retourne un contexte sécurisé enrichi contenant les informations
+        de l'utilisateur et de la requête courante.
     """
 
     def getContext(self):
-        s = SecurityContext()
+        """
+        Crée un contexte de type `EnhancedSecurityContext` pour l'utilisateur courant.
+
+        Retourne
+        --------
+        EnhancedSecurityContext
+            Contexte initialisé avec :
+              - `userid` : l'identifiant de l'utilisateur courant
+              - `request` : la requête associée
+              - `session` : la session courante
+
+        Effets de bord
+        --------------
+        - Écrit des logs de niveau `error` lors de la création du contexte.
+        """
+        s = EnhancedSecurityContext()
         s.userid = self.userid
-        s.userdn = LdapUserGroupControl().searchUserDN(self.userid)
+        s.request = self.request
+        s.session = self.session
         return s
 
 

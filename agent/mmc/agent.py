@@ -82,7 +82,6 @@ VERSION = "5.3.0"
 
 PYTHON_VERSION = sys.version_info.major
 
-
 class xmppbrowsing:
     """ """
 
@@ -326,70 +325,111 @@ class DateTimebytesEncoderjson(json.JSONEncoder):
 
 class convert:
     """
-    les packages suivant son obligatoire.
-    python3-xmltodict python3-dicttoxml python3-yaml json2xml
-    pip3 install dict2xml
-    Cette class presente des methodes pour convertir simplement des objects.
-    elle expose les fonction suivante
-        convert_dict_to_yaml(input_dict)
-        convert_yaml_to_dict(yaml_data)
-        yaml_string_to_dict(yaml_string)
-        check_yaml_conformance(yaml_data)
-        compare_yaml(yaml_string1, yaml_string2)
-        convert_dict_to_json(input_dict_json, indent=None, sort_keys=False)
-        check_json_conformance(json_data)
-        convert_json_to_dict(json_str)
-        xml_to_dict(xml_string)
-        compare_xml(xml_file1, xml_file2)
-        convert_xml_to_dict(xml_str)
-        convert_json_to_xml(input_json)
-        convert_xml_to_json(input_xml)
-        convert_dict_to_xml(data_dict)
-        convert_bytes_datetime_to_string(data)
-        compare_dicts(dict1, dict2)
-        compare_json(json1, json2)
-        convert_to_bytes(input_data)
-        compress_and_encode(string)
-        decompress_and_encode(string)
-        convert_datetime_to_string(input_date)
-        encode_to_string_base64(input_data)
-        decode_base64_to_string_(input_data)
-        check_base64_encoding(input_string)
-        taille_string_in_base64(string)
-        string_to_int(s)
-        int_to_string(n)
-        string_to_float(s)
-        float_to_string(f)
-        list_to_string(lst, separator=', ')
-        string_to_list(s, separator=', ')
-        list_to_set(lst)
-        set_to_list(s)
-        dict_to_list(d)
-        list_to_dict(lst)
-        char_to_ascii(c)
-        ascii_to_char(n)
-        convert_rows_to_columns(data)
-        convert_columns_to_rows(data)
-        convert_to_ordered_dict(dictionary)
-        generate_random_text(num_words)
-        capitalize_words(text)
-        compress_data_to_bytes(data)
-        decompress_data_to_bytes(data_bytes_compress
-        compress_dict_to_dictbytes(dict_data)
-        decompress_dictbytes_to_dict(data_bytes_compress)
-        unserialized_compressdictbytes_to_dict(serialized_dict_bytes_compress)
-        is_multiple_of(s, multiple=4)
-        is_base64(s)
-        header_body(xml_string)
-        format_xml(xml_string)
-        check_keys_in( dictdata, array_keys)
+        Cette classe fournit des méthodes utilitaires pour convertir et manipuler des objets entre différents formats :
+        YAML, JSON, XML, dictionnaires, listes, chaînes de caractères, etc.
+        Elle inclut également des fonctions pour la compression, l'encodage, la validation et la comparaison de données.
+
+        ---
+        ### Catalogue des fonctions disponibles :
+
+        #### 1. YAML
+        - `convert_dict_to_yaml(input_dict)` : Convertit un dictionnaire en chaîne YAML.
+        - `convert_yaml_to_dict(yaml_string)` : Convertit une chaîne YAML en dictionnaire.
+        - `yaml_string_to_dict(yaml_string)` : Convertit une chaîne YAML en dictionnaire (version détaillée).
+        - `check_yaml_conformance(yaml_data)` : Vérifie si une chaîne YAML est valide.
+        - `compare_yaml(yaml_string1, yaml_string2)` : Compare deux chaînes YAML pour vérifier leur équivalence.
+
+        #### 2. JSON
+        - `convert_dict_to_json(input_dict_json, indent=None, sort_keys=False)` : Convertit un dictionnaire en chaîne JSON.
+        - `check_json_conformance(json_data)` : Vérifie si une chaîne JSON est valide.
+        - `convert_json_to_dict(json_str)` : Convertit une chaîne JSON en dictionnaire.
+        - `compare_json(json1, json2)` : Compare deux chaînes JSON pour vérifier leur équivalence.
+
+        #### 3. XML
+        - `xml_to_dict(xml_string)` : Convertit une chaîne XML en dictionnaire.
+        - `compare_xml(xml_file1, xml_file2)` : Compare deux chaînes XML pour vérifier leur équivalence.
+        - `convert_xml_to_dict(xml_string)` : Convertit une chaîne XML en dictionnaire (version alternative).
+        - `convert_json_to_xml(json_data, root_name="root")` : Convertit une chaîne JSON en chaîne XML.
+        - `convert_xml_to_json(input_xml)` : Convertit une chaîne XML en chaîne JSON.
+        - `convert_dict_to_xml(data_dict)` : Convertit un dictionnaire en chaîne XML.
+        - `header_body(xml_string)` : Sépare l'en-tête et le corps d'une chaîne XML.
+        - `format_xml(xml_string)` : Formate une chaîne XML pour une meilleure lisibilité.
+
+        #### 4. Conversions de types et structures
+        - `convert_bytes_datetime_to_string(data)` : Convertit récursivement les objets `bytes` et `datetime` en chaînes.
+        - `compare_dicts(dict1, dict2)` : Compare deux dictionnaires récursivement.
+        - `convert_to_bytes(input_data)` : Convertit une chaîne ou des `bytes` en `bytes`.
+        - `string_to_int(s)` : Convertit une chaîne en entier.
+        - `int_to_string(n)` : Convertit un entier en chaîne.
+        - `string_to_float(s)` : Convertit une chaîne en nombre flottant.
+        - `float_to_string(f)` : Convertit un nombre flottant en chaîne.
+        - `list_to_string(lst, separator=", ")` : Convertit une liste en chaîne avec un séparateur.
+        - `string_to_list(s, separator=", ")` : Convertit une chaîne en liste avec un séparateur.
+        - `list_to_set(lst)` : Convertit une liste en ensemble (élimine les doublons).
+        - `set_to_list(s)` : Convertit un ensemble en liste.
+        - `dict_to_list(d)` : Convertit un dictionnaire en liste de tuples `(clé, valeur)`.
+        - `list_to_dict(lst)` : Convertit une liste de tuples `(clé, valeur)` en dictionnaire.
+        - `char_to_ascii(c)` : Convertit un caractère en code ASCII.
+        - `ascii_to_char(n)` : Convertit un code ASCII en caractère.
+        - `convert_rows_to_columns(data)` : Convertit une liste de dictionnaires (lignes) en liste de dictionnaires (colonnes).
+        - `convert_columns_to_rows(data)` : Convertit une liste de dictionnaires (colonnes) en liste de dictionnaires (lignes).
+        - `convert_to_ordered_dict(dictionary)` : Convertit un dictionnaire en `OrderedDict`.
+
+        #### 5. Compression et encodage
+        - `compress_and_encode(string)` : Compresse une chaîne et l'encode en base64.
+        - `decompress_and_encode(string)` : Décompresse une chaîne encodée en base64.
+        - `compress_data_to_bytes(data_string_or_bytes)` : Compresse une chaîne ou des `bytes` avec gzip.
+        - `decompress_data_to_bytes(data_bytes_compress)` : Décompresse des `bytes` avec gzip.
+        - `serialized_dict_to_compressdictbytes(dict_data)` : Sérialise un dictionnaire en `bytes` compressés.
+        - `unserialized_compressdictbytes_to_dict(serialized_dict_bytes_compress)` : Désérialise des `bytes` compressés en dictionnaire.
+
+        #### 6. Base64
+        - `encode_to_string_base64(input_data)` : Encode une chaîne ou des `bytes` en base64.
+        - `decode_base64_to_string_(input_data)` : Décode une chaîne base64 en chaîne de caractères.
+        - `check_base64_encoding(input_string)` : Vérifie si une chaîne est encodée en base64 valide.
+        - `taille_string_in_base64(string)` : Calcule la taille d'une chaîne une fois encodée en base64.
+        - `is_base64(s)` : Vérifie si une chaîne est un base64 valide (version avancée).
+
+        #### 7. Datetime
+        - `convert_datetime_to_string(input_date)` : Convertit un objet `datetime` en chaîne de caractères.
+
+        #### 8. Utilitaires divers
+        - `generate_random_text(num_words)` : Génère un texte aléatoire de `num_words` mots.
+        - `capitalize_words(text)` : Met en majuscule la première lettre de chaque mot dans une chaîne.
+        - `is_multiple_of(s, multiple=4)` : Vérifie si la longueur d'une chaîne est un multiple de `multiple`.
+        - `check_keys_in(dictdata, array_keys)` : Vérifie si toutes les clés d'un tableau sont présentes dans un dictionnaire.
+
+        ---
+        ### Remarques :
+        - Toutes les fonctions sont **statiques** : utilisez-les directement via `convert.nom_de_la_fonction()`.
+        - Certaines fonctions nécessitent des **packages externes** (ex: `yaml`, `xmltodict`, `base64`, etc.).
+        - Pour les conversions entre formats (YAML/JSON/XML), les fonctions gèrent les **types complexes** (dates, bytes, etc.).
     """
 
+    # ======================
     # YAML
+    # ======================
+
     @staticmethod
     def convert_dict_to_yaml(input_dict):
         """
-        la fonction suivante Python convertit 1 dict python en json.
+        Convertit un dictionnaire Python en chaîne YAML.
+
+        Args:
+            input_dict (dict): Dictionnaire à convertir.
+
+        Returns:
+            str: Chaîne YAML représentant le dictionnaire.
+
+        Raises:
+            TypeError: Si l'entrée n'est pas un dictionnaire.
+
+        Exemple:
+            >>> data = {"name": "Alice", "age": 30}
+            >>> yaml_str = convert.convert_dict_to_yaml(data)
+            >>> print(yaml_str)
+            name: Alice
+            age: 30
         """
         if isinstance(input_dict, dict):
             return yaml.dump(convert.convert_bytes_datetime_to_string(input_dict))
@@ -398,10 +438,44 @@ class convert:
 
     @staticmethod
     def convert_yaml_to_dict(yaml_string):
+        """
+        Convertit une chaîne YAML en dictionnaire Python.
+        Utilise `yaml_string_to_dict` pour la conversion.
+
+        Args:
+            yaml_string (str): Chaîne YAML à convertir.
+
+        Returns:
+            dict: Dictionnaire résultant.
+
+        Exemple:
+            >>> yaml_str = "name: Alice\nage: 30"
+            >>> data = convert.convert_yaml_to_dict(yaml_str)
+            >>> print(data)
+            {'name': 'Alice', 'age': 30}
+        """
         return convert.yaml_string_to_dict(yaml_string)
 
     @staticmethod
     def yaml_string_to_dict(yaml_string):
+        """
+        Convertit une chaîne YAML en dictionnaire Python.
+
+        Args:
+            yaml_string (str): Chaîne YAML à convertir.
+
+        Returns:
+            dict: Dictionnaire résultant.
+
+        Raises:
+            ValueError: Si la conversion échoue.
+
+        Exemple:
+            >>> yaml_str = "name: Alice\nage: 30"
+            >>> data = convert.yaml_string_to_dict(yaml_str)
+            >>> print(data)
+            {'name': 'Alice', 'age': 30}
+        """
         try:
             yaml_data = yaml.safe_load(
                 convert.convert_bytes_datetime_to_string(yaml_string)
@@ -419,8 +493,22 @@ class convert:
 
     @staticmethod
     def check_yaml_conformance(yaml_data):
+        """
+        Vérifie si une chaîne YAML est valide.
+
+        Args:
+            yaml_data (str): Chaîne YAML à vérifier.
+
+        Returns:
+            bool: True si la chaîne est valide, False sinon.
+
+        Exemple:
+            >>> yaml_str = "name: Alice\nage: 30"
+            >>> is_valid = convert.check_yaml_conformance(yaml_str)
+            >>> print(is_valid)
+            True
+        """
         try:
-            # Chargement du YAML pour vérifier la conformité
             yaml.safe_load(convert.convert_bytes_datetime_to_string(yaml_data))
             return True
         except yaml.YAMLError:
@@ -429,10 +517,21 @@ class convert:
     @staticmethod
     def compare_yaml(yaml_string1, yaml_string2):
         """
-        Dans cette fonction compare_yaml, nous appelons la fonction yaml_string_to_dict pour convertir chaque chaîne YAML en dictionnaire.
-        Si une exception ValueError est levée lors de la conversion, nous affichons l'erreur et retournons False.
-        nous utilisons la fonction compare_dicts pour comparer les dictionnaires obtenus.
-        Si les dictionnaires sont égaux, la fonction compare_yaml retourne True, sinon elle retourne False.
+        Compare deux chaînes YAML pour vérifier si elles sont équivalentes.
+
+        Args:
+            yaml_string1 (str): Première chaîne YAML.
+            yaml_string2 (str): Deuxième chaîne YAML.
+
+        Returns:
+            bool: True si les chaînes sont équivalentes, False sinon.
+
+        Exemple:
+            >>> yaml1 = "name: Alice\nage: 30"
+            >>> yaml2 = "name: Alice\nage: 30"
+            >>> is_equal = convert.compare_yaml(yaml1, yaml2)
+            >>> print(is_equal)
+            True
         """
         try:
             dict1 = convert.yaml_string_to_dict(yaml_string1)
@@ -442,11 +541,34 @@ class convert:
             print(f"Erreur: {str(e)}")
             return False
 
+    # ======================
     # JSON
+    # ======================
+
     @staticmethod
     def convert_dict_to_json(input_dict_json, indent=None, sort_keys=False):
         """
-        la fonction suivante Python convertit 1 dict python en json.
+        Convertit un dictionnaire Python en chaîne JSON.
+
+        Args:
+            input_dict_json (dict): Dictionnaire à convertir.
+            indent (int, optional): Indentation pour le JSON. Par défaut None.
+            sort_keys (bool, optional): Trier les clés. Par défaut False.
+
+        Returns:
+            str: Chaîne JSON représentant le dictionnaire.
+
+        Raises:
+            TypeError: Si l'entrée n'est pas un dictionnaire.
+
+        Exemple:
+            >>> data = {"name": "Alice", "age": 30}
+            >>> json_str = convert.convert_dict_to_json(data, indent=2)
+            >>> print(json_str)
+            {
+              "name": "Alice",
+              "age": 30
+            }
         """
         if isinstance(input_dict_json, dict):
             return json.dumps(
@@ -457,16 +579,47 @@ class convert:
 
     @staticmethod
     def check_json_conformance(json_data):
+        """
+        Vérifie si une chaîne JSON est valide.
+
+        Args:
+            json_data (str): Chaîne JSON à vérifier.
+
+        Returns:
+            bool: True si la chaîne est valide, False sinon.
+
+        Exemple:
+            >>> json_str = '{"name": "Alice", "age": 30}'
+            >>> is_valid = convert.check_json_conformance(json_str)
+            >>> print(is_valid)
+            True
+        """
         try:
             json.loads(json_data)
             return True
         except json.JSONDecodeError:
             return False
 
-    # json_bytes = json.dumps(dict_data, indent = 4, cls=DateTimebytesEncoderjson).encode('utf-8')
-
     @staticmethod
     def convert_json_to_dict(json_str):
+        """
+        Convertit une chaîne JSON en dictionnaire Python.
+
+        Args:
+            json_str (str): Chaîne JSON à convertir.
+
+        Returns:
+            dict: Dictionnaire résultant.
+
+        Raises:
+            json.JSONDecodeError: Si la conversion échoue.
+
+        Exemple:
+            >>> json_str = '{"name": "Alice", "age": 30}'
+            >>> data = convert.convert_json_to_dict(json_str)
+            >>> print(data)
+            {'name': 'Alice', 'age': 30}
+        """
         if isinstance(json_str, (dict)):
             return json_str
         stringdata = convert.convert_bytes_datetime_to_string(json_str)
@@ -476,12 +629,32 @@ class convert:
             except json.decoder.JSONDecodeError as e:
                 raise
             except Exception as e:
-                # Code de gestion d'autres types d'exceptions
-                logger.error("convert_json_to_dict %s" % (e))
                 raise
+
+    # ======================
+    # XML
+    # ======================
 
     @staticmethod
     def xml_to_dict(xml_string):
+        """
+        Convertit une chaîne XML en dictionnaire Python.
+
+        Args:
+            xml_string (str): Chaîne XML à convertir.
+
+        Returns:
+            dict: Dictionnaire résultant.
+
+        Raises:
+            ValueError: Si la conversion échoue.
+
+        Exemple:
+            >>> xml_str = "<root><name>Alice</name><age>30</age></root>"
+            >>> data = convert.xml_to_dict(xml_str)
+            >>> print(data)
+            {'name': 'Alice', 'age': '30'}
+        """
         def xml_element_to_dict(element):
             if len(element) == 0:
                 return element.text
@@ -495,7 +668,6 @@ class convert:
                 else:
                     result[child.tag] = child_dict
             return result
-
         try:
             tree = ET.ElementTree(
                 ET.fromstring(convert.convert_bytes_datetime_to_string(xml_string))
@@ -507,6 +679,23 @@ class convert:
 
     @staticmethod
     def compare_xml(xml_file1, xml_file2):
+        """
+        Compare deux chaînes XML pour vérifier si elles sont équivalentes.
+
+        Args:
+            xml_file1 (str): Première chaîne XML.
+            xml_file2 (str): Deuxième chaîne XML.
+
+        Returns:
+            bool: True si les chaînes sont équivalentes, False sinon.
+
+        Exemple:
+            >>> xml1 = "<root><name>Alice</name><age>30</age></root>"
+            >>> xml2 = "<root><name>Alice</name><age>30</age></root>"
+            >>> is_equal = convert.compare_xml(xml1, xml2)
+            >>> print(is_equal)
+            True
+        """
         try:
             dict1 = convert.xml_to_dict(xml_file1)
             dict2 = convert.xml_to_dict(xml_file2)
@@ -517,6 +706,21 @@ class convert:
 
     @staticmethod
     def convert_xml_to_dict(xml_string):
+        """
+        Convertit une chaîne XML en dictionnaire Python (version alternative).
+
+        Args:
+            xml_string (str): Chaîne XML à convertir.
+
+        Returns:
+            dict: Dictionnaire résultant.
+
+        Exemple:
+            >>> xml_str = "<root><name>Alice</name><age>30</age></root>"
+            >>> data = convert.convert_xml_to_dict(xml_str)
+            >>> print(data)
+            {'root': {'name': ['Alice'], 'age': ['30']}}
+        """
         def _element_to_dict(element):
             result = {}
             for child in element:
@@ -526,12 +730,27 @@ class convert:
             if not result:
                 return element.text
             return result
-
         root = ET.fromstring(convert.convert_bytes_datetime_to_string(xml_string))
         return _element_to_dict(root)
 
     @staticmethod
     def convert_json_to_xml(json_data, root_name="root"):
+        """
+        Convertit une chaîne JSON en chaîne XML.
+
+        Args:
+            json_data (str): Chaîne JSON à convertir.
+            root_name (str, optional): Nom de la racine XML. Par défaut "root".
+
+        Returns:
+            str: Chaîne XML résultante.
+
+        Exemple:
+            >>> json_str = '{"name": "Alice", "age": 30}'
+            >>> xml_str = convert.convert_json_to_xml(json_str)
+            >>> print(xml_str)
+            <root><name>Alice</name><age>30</age></root>
+        """
         def _convert(element, parent):
             if isinstance(element, dict):
                 for key, value in element.items():
@@ -545,38 +764,83 @@ class convert:
                 for item in element:
                     sub_element = ET.SubElement(parent, parent.tag[:-1])
                     _convert(item, sub_element)
-
         root = ET.Element(root_name)
         _convert(json.loads(json_data), root)
-
         xml_data = ET.tostring(root, encoding="unicode", method="xml")
         return xml_data
 
-    # xml
     @staticmethod
     def convert_xml_to_json(input_xml):
+        """
+        Convertit une chaîne XML en chaîne JSON.
+
+        Args:
+            input_xml (str): Chaîne XML à convertir.
+
+        Returns:
+            str: Chaîne JSON résultante.
+
+        Exemple:
+            >>> xml_str = "<root><name>Alice</name><age>30</age></root>"
+            >>> json_str = convert.convert_xml_to_json(xml_str)
+            >>> print(json_str)
+            {
+                "root": {
+                    "name": "Alice",
+                    "age": "30"
+                }
+            }
+        """
         return json.dumps(xmltodict.parse(input_xml), indent=4)
 
     @staticmethod
     def convert_dict_to_xml(data_dict):
+        """
+        Convertit un dictionnaire Python en chaîne XML.
+
+        Args:
+            data_dict (dict): Dictionnaire à convertir.
+
+        Returns:
+            str: Chaîne XML résultante.
+
+        Exemple:
+            >>> data = {"name": "Alice", "age": 30}
+            >>> xml_str = convert.convert_dict_to_xml(data)
+            >>> print(xml_str)
+            <?xml version="1.0" ?>
+            <root>
+                <name>Alice</name>
+                <age>30</age>
+            </root>
+        """
         xml_str = xmltodict.unparse({"root": data_dict}, pretty=True)
         return xml_str
+
+    # ======================
+    # Utilitaires de conversion
+    # ======================
 
     @staticmethod
     def convert_bytes_datetime_to_string(data):
         """
-        la fonction suivante Python parcourt récursivement un dictionnaire,
-        convertit les types bytes en str,
-        les objets datetime en chaînes de caractères au format "année-mois-jour heure:minute:seconde"
-        si les clés sont de type bytes elles sont convertit en str :
-        encodage ('utf-8') est utilise pour le decode des bytes.
-        Si 1 chaine est utilisée pour definir FALSE ou True alors c'est convertit en boolean True/false
-        Si 1 valeur est None, elle est convertit a ""
-        Si key ou valeur ne peut pas etre convertit en str alors 1 exception est leve
-        renvoi le dictionnaire serializable
+        Convertit récursivement les objets bytes et datetime en chaînes de caractères.
+        Gère aussi les booléens et les valeurs None.
+
+        Args:
+            data: Donnée à convertir (dict, list, bytes, datetime, etc.).
+
+        Returns:
+            Donnée convertie en chaînes si nécessaire.
+
+        Exemple:
+            >>> data = {"name": b"Alice", "date": datetime(2023, 1, 1)}
+            >>> clean_data = convert.convert_bytes_datetime_to_string(data)
+            >>> print(clean_data)
+            {'name': 'Alice', 'date': '2023-01-01 00:00:00'}
         """
         if isinstance(data, (str)):
-            compa = data.lower
+            compa = data.lower()
             if compa == "true":
                 return True
             elif compa == "false":
@@ -588,9 +852,7 @@ class convert:
             return data
         elif isinstance(data, dict):
             return {
-                convert.convert_bytes_datetime_to_string(
-                    key
-                ): convert.convert_bytes_datetime_to_string(value)
+                convert.convert_bytes_datetime_to_string(key): convert.convert_bytes_datetime_to_string(value)
                 for key, value in data.items()
             }
         elif isinstance(data, list):
@@ -606,42 +868,61 @@ class convert:
                 str(data)
                 return data
             except Exception as e:
-                raise ValueError(
-                    "Type %s impossible de convertir en string " % type(data)
-                )
-        return data
+                raise ValueError(f"Type {type(data)} impossible de convertir en string")
 
     @staticmethod
     def compare_dicts(dict1, dict2):
         """
-        Dans cette fonction, nous commençons par comparer les ensembles des clés des deux dictionnaires (dict1.keys() et dict2.keys()). Si les ensembles des clés sont différents, nous retournons False immédiatement car les dictionnaires ne peuvent pas être égaux.
+        Compare deux dictionnaires récursivement.
 
-        Ensuite, nous itérons sur les clés du premier dictionnaire (dict1.keys()) et comparons les valeurs correspondantes dans les deux dictionnaires (value1 et value2).
+        Args:
+            dict1 (dict): Premier dictionnaire.
+            dict2 (dict): Deuxième dictionnaire.
 
-        Si une valeur est un autre dictionnaire, nous effectuons un appel récursif à la fonction compare_dicts pour comparer les sous-dictionnaires. Si le résultat de l'appel récursif est False, nous retournons False immédiatement.
+        Returns:
+            bool: True si les dictionnaires sont égaux, False sinon.
 
-        Si les valeurs ne sont pas égales et ne sont pas des dictionnaires, nous retournons également False.
-
-        Si toutes les clés et les valeurs correspondent dans les deux dictionnaires, nous retournons True à la fin de la fonction.
+        Exemple:
+            >>> d1 = {"name": "Alice", "age": 30}
+            >>> d2 = {"name": "Alice", "age": 30}
+            >>> is_equal = convert.compare_dicts(d1, d2)
+            >>> print(is_equal)
+            True
         """
         if dict1.keys() != dict2.keys():
             return False
-
         for key in dict1.keys():
             value1 = dict1[key]
             value2 = dict2[key]
-
             if isinstance(value1, dict) and isinstance(value2, dict):
-                # Si la valeur est un dictionnaire, appel récursif
                 if not convert.compare_dicts(value1, value2):
                     return False
             elif value1 != value2:
-                # Si les valeurs ne sont pas égales, retourne False
                 return False
         return True
 
     @staticmethod
     def compare_json(json1, json2):
+        """
+        Compare deux chaînes JSON pour vérifier si elles sont équivalentes.
+
+        Args:
+            json1 (str): Première chaîne JSON.
+            json2 (str): Deuxième chaîne JSON.
+
+        Returns:
+            bool: True si les chaînes sont équivalentes, False sinon.
+
+        Raises:
+            ValueError: Si la conversion JSON échoue.
+
+        Exemple:
+            >>> j1 = '{"name": "Alice", "age": 30}'
+            >>> j2 = '{"name": "Alice", "age": 30}'
+            >>> is_equal = convert.compare_json(j1, j2)
+            >>> print(is_equal)
+            True
+        """
         try:
             dict1 = json.loads(json1)
             dict2 = json.loads(json2)
@@ -649,47 +930,107 @@ class convert:
             raise ValueError("Erreur lors de la conversion JSON en dictionnaire.")
         return convert.compare_dicts(dict1, dict2)
 
-    @staticmethod
-    def convert_to_bytes(input_data):
-        if isinstance(input_data, bytes):
-            return input_data
-        elif isinstance(input_data, str):
-            return input_data.encode("utf-8")
-        else:
-            raise TypeError("L'entrée doit être de type bytes ou string.")
+    # ======================
+    # Compression et encodage
+    # ======================
 
-    # COMPRESS
     @staticmethod
     def compress_and_encode(string):
-        # Convert string to bytes
+        """
+        Compresse une chaîne en base64.
+
+        Args:
+            string (str): Chaîne à compresser.
+
+        Returns:
+            str: Chaîne compressée et encodée en base64.
+
+        Exemple:
+            >>> s = "Hello, world!"
+            >>> encoded = convert.compress_and_encode(s)
+            >>> print(encoded)
+            eJwLKkksSizJL0pJT8lMyUxOLMnMS0zJT8lQSgGAAJmBwk=
+        """
         data = convert.convert_to_bytes(string)
-        # Compress the data using zlib
         compressed_data = zlib.compress(data, 9)
-        # Encode the compressed data in base64
         encoded_data = base64.b64encode(compressed_data)
         return encoded_data.decode("utf-8")
 
     @staticmethod
     def decompress_and_encode(string):
-        # Convert string to bytes
+        """
+        Décompresse une chaîne encodée en base64.
+
+        Args:
+            string (str): Chaîne compressée et encodée en base64.
+
+        Returns:
+            str: Chaîne décompressée.
+
+        Exemple:
+            >>> encoded = "eJwLKkksSizJL0pJT8lMyUxOLMnMS0zJT8lQSgGAAJmBwk="
+            >>> decoded = convert.decompress_and_encode(encoded)
+            >>> print(decoded)
+            Hello, world!
+        """
         data = convert.convert_to_bytes(string)
         decoded_data = base64.b64decode(data)
-        # Decompress the data using zlib
         decompressed_data = zlib.decompress(decoded_data)
-        # Encode the decompressed data in base64
         return decompressed_data.decode("utf-8")
 
-    # datetime
+    # ======================
+    # Datetime
+    # ======================
+
     @staticmethod
     def convert_datetime_to_string(input_date: datetime):
+        """
+        Convertit un objet datetime en chaîne de caractères.
+
+        Args:
+            input_date (datetime): Objet datetime à convertir.
+
+        Returns:
+            str: Chaîne au format "YYYY-MM-DD HH:MM:SS".
+
+        Raises:
+            TypeError: Si l'entrée n'est pas un datetime.
+
+        Exemple:
+            >>> dt = datetime(2023, 1, 1, 12, 0, 0)
+            >>> s = convert.convert_datetime_to_string(dt)
+            >>> print(s)
+            2023-01-01 12:00:00
+        """
         if isinstance(input_date, datetime):
             return input_date.strftime("%Y-%m-%d %H:%M:%S")
         else:
             raise TypeError("L'entrée doit être de type datetime.")
 
-    # base64
+    # ======================
+    # Base64
+    # ======================
+
     @staticmethod
     def encode_to_string_base64(input_data):
+        """
+        Encode une chaîne ou des bytes en base64.
+
+        Args:
+            input_data (str/bytes): Donnée à encoder.
+
+        Returns:
+            str: Chaîne encodée en base64.
+
+        Raises:
+            TypeError: Si l'entrée n'est ni une chaîne ni des bytes.
+
+        Exemple:
+            >>> s = "Hello, world!"
+            >>> encoded = convert.encode_to_string_base64(s)
+            >>> print(encoded)
+            SGVsbG8sIHdvcmxkIQ==
+        """
         if isinstance(input_data, str):
             input_data_bytes = input_data.encode("utf-8")
         elif isinstance(input_data, bytes):
@@ -697,22 +1038,52 @@ class convert:
         else:
             raise TypeError("L'entrée doit être une chaîne ou un objet bytes.")
         encoded_bytes = base64.b64encode(input_data_bytes)
-        encoded_string = encoded_bytes.decode("utf-8")
-        return encoded_string
+        return encoded_bytes.decode("utf-8")
 
     @staticmethod
     def decode_base64_to_string_(input_data):
+        """
+        Décode une chaîne base64 en chaîne de caractères.
+
+        Args:
+            input_data (str): Chaîne base64 à décoder.
+
+        Returns:
+            str: Chaîne décodée.
+
+        Raises:
+            ValueError: Si l'entrée n'est pas un base64 valide.
+
+        Exemple:
+            >>> encoded = "SGVsbG8sIHdvcmxkIQ=="
+            >>> decoded = convert.decode_base64_to_string_(encoded)
+            >>> print(decoded)
+            Hello, world!
+        """
         try:
             decoded_bytes = base64.b64decode(input_data)
-            decoded_string = decoded_bytes.decode("utf-8")
-            return decoded_string
+            return decoded_bytes.decode("utf-8")
         except base64.binascii.Error:
             raise ValueError("L'entrée n'est pas encodée en base64 valide.")
 
     @staticmethod
     def check_base64_encoding(input_string):
+        """
+        Vérifie si une chaîne est encodée en base64 valide.
+
+        Args:
+            input_string (str): Chaîne à vérifier.
+
+        Returns:
+            bool: True si la chaîne est un base64 valide, False sinon.
+
+        Exemple:
+            >>> s = "SGVsbG8sIHdvcmxkIQ=="
+            >>> is_valid = convert.check_base64_encoding(s)
+            >>> print(is_valid)
+            True
+        """
         try:
-            # Décode la chaîne en base64 et vérifie si cela génère une erreur
             base64.b64decode(input_string)
             return True
         except base64.binascii.Error:
@@ -721,15 +1092,43 @@ class convert:
     @staticmethod
     def taille_string_in_base64(string):
         """
-        renvoie la taille que prend 1 string en encode en base64.
+        Calcule la taille d'une chaîne une fois encodée en base64.
+
+        Args:
+            string (str): Chaîne dont on veut calculer la taille.
+
+        Returns:
+            float: Taille estimée en base64.
+
+        Exemple:
+            >>> s = "Hello, world!"
+            >>> size = convert.taille_string_in_base64(s)
+            >>> print(size)
+            20.0
         """
         taille = len(string)
         return (taille + 2 - ((taille + 2) % 3)) * 4 / 3
 
+    # ======================
+    # Conversions de types
+    # ======================
+
     @staticmethod
     def string_to_int(s):
         """
-        Conversion de chaînes en entiers
+        Convertit une chaîne en entier.
+
+        Args:
+            s (str): Chaîne à convertir.
+
+        Returns:
+            int: Entier résultant, ou None si la conversion échoue.
+
+        Exemple:
+            >>> s = "42"
+            >>> i = convert.string_to_int(s)
+            >>> print(i)
+            42
         """
         try:
             return int(s)
@@ -739,14 +1138,38 @@ class convert:
     @staticmethod
     def int_to_string(n):
         """
-        Conversion d'entiers en chaînes
+        Convertit un entier en chaîne.
+
+        Args:
+            n (int): Entier à convertir.
+
+        Returns:
+            str: Chaîne résultante.
+
+        Exemple:
+            >>> i = 42
+            >>> s = convert.int_to_string(i)
+            >>> print(s)
+            '42'
         """
         return str(n)
 
     @staticmethod
     def string_to_float(s):
         """
-        Conversion de chaînes en nombres à virgule flottante
+        Convertit une chaîne en nombre à virgule flottante.
+
+        Args:
+            s (str): Chaîne à convertir.
+
+        Returns:
+            float: Nombre flottant résultant, ou None si la conversion échoue.
+
+        Exemple:
+            >>> s = "3.14"
+            >>> f = convert.string_to_float(s)
+            >>> print(f)
+            3.14
         """
         try:
             return float(s)
@@ -756,103 +1179,223 @@ class convert:
     @staticmethod
     def float_to_string(f):
         """
-        Conversion de nombres à virgule flottante en chaînes
+        Convertit un nombre à virgule flottante en chaîne.
+
+        Args:
+            f (float): Nombre flottant à convertir.
+
+        Returns:
+            str: Chaîne résultante.
+
+        Exemple:
+            >>> f = 3.14
+            >>> s = convert.float_to_string(f)
+            >>> print(s)
+            '3.14'
         """
         return str(f)
 
     @staticmethod
     def list_to_string(lst, separator=", "):
         """
-        Conversion d'une liste de chaînes en une seule chaîne avec un séparateur
+        Convertit une liste en chaîne avec un séparateur.
+
+        Args:
+            lst (list): Liste à convertir.
+            separator (str, optional): Séparateur. Par défaut ", ".
+
+        Returns:
+            str: Chaîne résultante.
+
+        Exemple:
+            >>> lst = ["Alice", "Bob", "Charlie"]
+            >>> s = convert.list_to_string(lst)
+            >>> print(s)
+            'Alice, Bob, Charlie'
         """
         return separator.join(lst)
 
     @staticmethod
     def string_to_list(s, separator=", "):
         """
-        Conversion d'une chaîne en une liste en utilisant un séparateur
+        Convertit une chaîne en liste avec un séparateur.
+
+        Args:
+            s (str): Chaîne à convertir.
+            separator (str, optional): Séparateur. Par défaut ", ".
+
+        Returns:
+            list: Liste résultante.
+
+        Exemple:
+            >>> s = "Alice, Bob, Charlie"
+            >>> lst = convert.string_to_list(s)
+            >>> print(lst)
+            ['Alice', 'Bob', 'Charlie']
         """
         return s.split(separator)
 
     @staticmethod
     def list_to_set(lst):
         """
-        Conversion d'une liste en un ensemble (élimine les doublons)
+        Convertit une liste en ensemble (élimine les doublons).
+
+        Args:
+            lst (list): Liste à convertir.
+
+        Returns:
+            set: Ensemble résultant.
+
+        Exemple:
+            >>> lst = [1, 2, 2, 3]
+            >>> s = convert.list_to_set(lst)
+            >>> print(s)
+            {1, 2, 3}
         """
         return set(lst)
 
     @staticmethod
     def set_to_list(s):
         """
-        Conversion d'un ensemble en une liste en conservant l'ordre
+        Convertit un ensemble en liste.
+
+        Args:
+            s (set): Ensemble à convertir.
+
+        Returns:
+            list: Liste résultante.
+
+        Exemple:
+            >>> s = {1, 2, 3}
+            >>> lst = convert.set_to_list(s)
+            >>> print(lst)
+            [1, 2, 3]
         """
         return [item for item in s]
 
     @staticmethod
     def dict_to_list(d):
         """
-        Conversion d'un dictionnaire en une liste de tuples clé-valeur
+        Convertit un dictionnaire en liste de tuples (clé, valeur).
+
+        Args:
+            d (dict): Dictionnaire à convertir.
+
+        Returns:
+            list: Liste de tuples résultante.
+
+        Exemple:
+            >>> d = {"name": "Alice", "age": 30}
+            >>> lst = convert.dict_to_list(d)
+            >>> print(lst)
+            [('name', 'Alice'), ('age', 30)]
         """
         return list(d.items())
 
     @staticmethod
     def list_to_dict(lst):
         """
-        Conversion d'une liste de tuples clé-valeur en un dictionnaire
+        Convertit une liste de tuples (clé, valeur) en dictionnaire.
+
+        Args:
+            lst (list): Liste de tuples à convertir.
+
+        Returns:
+            dict: Dictionnaire résultant.
+
+        Exemple:
+            >>> lst = [('name', 'Alice'), ('age', 30)]
+            >>> d = convert.list_to_dict(lst)
+            >>> print(d)
+            {'name': 'Alice', 'age': 30}
         """
         return dict(lst)
 
     @staticmethod
     def char_to_ascii(c):
         """
-        Conversion de caractères en code ASCII
+        Convertit un caractère en code ASCII.
+
+        Args:
+            c (str): Caractère à convertir.
+
+        Returns:
+            int: Code ASCII résultant.
+
+        Exemple:
+            >>> c = 'A'
+            >>> code = convert.char_to_ascii(c)
+            >>> print(code)
+            65
         """
         return ord(c)
 
     @staticmethod
     def ascii_to_char(n):
         """
-        Conversion de code ASCII en caractère :
+        Convertit un code ASCII en caractère.
+
+        Args:
+            n (int): Code ASCII à convertir.
+
+        Returns:
+            str: Caractère résultant.
+
+        Exemple:
+            >>> n = 65
+            >>> c = convert.ascii_to_char(n)
+            >>> print(c)
+            'A'
         """
         return chr(n)
+
+    # ======================
+    # Conversions de structures
+    # ======================
 
     @staticmethod
     def convert_rows_to_columns(data):
         """
-        cette fonction fait la convertion depuis 1 list de dict representant des lignes
-        en
-        1 list de colonne
+        Convertit une liste de dictionnaires (lignes) en une liste de dictionnaires (colonnes).
 
-        data = [{"id": 1, "name": "dede", "age": 30},
-                {"id": 2, "name": "dada", "age": 25}]
-        to
-        [{'age': [30, 25]}, {'name': ['dede', 'dada']}, {'id': [1, 2]}]
+        Args:
+            data (list): Liste de dictionnaires représentant des lignes.
+
+        Returns:
+            list: Liste de dictionnaires représentant des colonnes.
+
+        Exemple:
+            >>> data = [{"id": 1, "name": "Alice"}, {"id": 2, "name": "Bob"}]
+            >>> columns = convert.convert_rows_to_columns(data)
+            >>> print(columns)
+            [{'id': [1, 2]}, {'name': ['Alice', 'Bob']}]
         """
-        # Obtenez les noms de colonnes
         column_names = set()
         for row in data:
             column_names.update(row.keys())
-        # Créez un dictionnaire vide pour chaque colonne
         columns = {name: [] for name in column_names}
-        # Remplissez les colonnes avec les valeurs correspondantes
         for row in data:
             for column, value in row.items():
                 columns[column].append(value)
-        # Convertissez les dictionnaires de colonnes en une liste de colonnes
-        columns_list = [{name: values} for name, values in columns.items()]
-        return columns_list
+        return [{name: values} for name, values in columns.items()]
 
     @staticmethod
     def convert_columns_to_rows(data):
         """
-        Cette fonction fait l'inverse de la conversion réalisée par la fonction convert_rows_to_columns.
+        Convertit une liste de dictionnaires (colonnes) en une liste de dictionnaires (lignes).
 
-        data = [{'age': [30, 25]}, {'name': ['dede', 'dada']}, {'id': [1, 2]}]
-        to
-        [{"id": 1, "name": "dede", "age": 30},
-        {"id": 2, "name": "dada", "age": 25}]
+        Args:
+            data (list): Liste de dictionnaires représentant des colonnes.
+
+        Returns:
+            list: Liste de dictionnaires représentant des lignes.
+
+        Exemple:
+            >>> data = [{'id': [1, 2]}, {'name': ['Alice', 'Bob']}]
+            >>> rows = convert.convert_columns_to_rows(data)
+            >>> print(rows)
+            [{'id': 1, 'name': 'Alice'}, {'id': 2, 'name': 'Bob'}]
         """
-        # Obtenez tous les noms de colonnes
         rows = []
         s = [list(x.keys())[0] for x in data]
         nbligne = len(data[0][s[0]])
@@ -865,13 +1408,43 @@ class convert:
 
     @staticmethod
     def convert_to_ordered_dict(dictionary):
-        ordered_dict = OrderedDict()
-        for key, value in dictionary.items():
-            ordered_dict[key] = value
-        return ordered_dict
+        """
+        Convertit un dictionnaire en OrderedDict.
+
+        Args:
+            dictionary (dict): Dictionnaire à convertir.
+
+        Returns:
+            OrderedDict: OrderedDict résultant.
+
+        Exemple:
+            >>> d = {"name": "Alice", "age": 30}
+            >>> od = convert.convert_to_ordered_dict(d)
+            >>> print(od)
+            OrderedDict([('name', 'Alice'), ('age', 30)])
+        """
+        return OrderedDict(dictionary.items())
+
+    # ======================
+    # Génération aléatoire
+    # ======================
 
     @staticmethod
     def generate_random_text(num_words):
+        """
+        Génère un texte aléatoire de `num_words` mots.
+
+        Args:
+            num_words (int): Nombre de mots à générer.
+
+        Returns:
+            str: Texte aléatoire généré.
+
+        Exemple:
+            >>> text = convert.generate_random_text(5)
+            >>> print(text)
+            "abcde fghij klmno pqrst uvwxy"
+        """
         words = []
         for _ in range(num_words):
             word = "".join(
@@ -883,82 +1456,291 @@ class convert:
     @staticmethod
     def capitalize_words(text):
         """
-        renvoi la chaine avec chaque mot commencant par une majuscule et les autres lettres sont en minuscules
+        Met en majuscule la première lettre de chaque mot dans une chaîne.
+
+        Args:
+            text (str): Chaîne à transformer.
+
+        Returns:
+            str: Chaîne transformée.
+
+        Exemple:
+            >>> text = "hello world"
+            >>> capitalized = convert.capitalize_words(text)
+            >>> print(capitalized)
+            "Hello World"
         """
         words = text.split()
-        capitalized_words = [word.capitalize() for word in words]
-        capitalized_text = " ".join(capitalized_words)
-        return capitalized_text
+        return " ".join(word.capitalize() for word in words)
 
-    # Fonction de compression gzip
+    # ======================
+    # Compression Gzip
+    # ======================
+
     @staticmethod
     def compress_data_to_bytes(data_string_or_bytes):
+        """
+        Compresse une chaîne ou des bytes avec gzip.
+
+        Args:
+            data_string_or_bytes (str/bytes): Donnée à compresser.
+
+        Returns:
+            bytes: Donnée compressée.
+
+        Exemple:
+            >>> s = "Hello, world!"
+            >>> compressed = convert.compress_data_to_bytes(s)
+            >>> print(compressed)
+            b'\x1f\x8b\x08\x00...'
+        """
         return gzip.compress(convert.convert_to_bytes(data_string_or_bytes))
 
-    # Fonction de décompression gzip
     @staticmethod
     def decompress_data_to_bytes(data_bytes_compress):
+        """
+        Décompresse des bytes avec gzip.
+
+        Args:
+            data_bytes_compress (bytes): Donnée compressée.
+
+        Returns:
+            bytes: Donnée décompressée.
+
+        Exemple:
+            >>> compressed = b'\x1f\x8b\x08\x00...'
+            >>> decompressed = convert.decompress_data_to_bytes(compressed)
+            >>> print(decompressed)
+            b'Hello, world!'
+        """
         return convert.convert_to_bytes(gzip.decompress(data_bytes_compress))
+
+    # ======================
+    # Sérialisation avancée
+    # ======================
 
     @staticmethod
     def serialized_dict_to_compressdictbytes(dict_data):
-        json_bytes = json.dumps(
-            dict_data, indent=4, cls=DateTimebytesEncoderjson
-        ).encode("utf-8")
+        """
+        Sérialise un dictionnaire en bytes compressés.
+
+        Args:
+            dict_data (dict): Dictionnaire à sérialiser.
+
+        Returns:
+            bytes: Bytes compressés.
+
+        Exemple:
+            >>> d = {"name": "Alice", "age": 30}
+            >>> compressed = convert.serialized_dict_to_compressdictbytes(d)
+            >>> print(compressed)
+            b'\x1f\x8b\x08\x00...'
+        """
+        json_bytes = json.dumps(dict_data, indent=4).encode("utf-8")
         return convert.compress_data_to_bytes(json_bytes)
 
     @staticmethod
     def unserialized_compressdictbytes_to_dict(serialized_dict_bytes_compress):
+        """
+        Désérialise des bytes compressés en dictionnaire.
+
+        Args:
+            serialized_dict_bytes_compress (bytes): Bytes compressés.
+
+        Returns:
+            dict: Dictionnaire résultant.
+
+        Exemple:
+            >>> compressed = b'\x1f\x8b\x08\x00...'
+            >>> d = convert.unserialized_compressdictbytes_to_dict(compressed)
+            >>> print(d)
+            {'name': 'Alice', 'age': 30}
+        """
         json_bytes = gzip.decompress(
             convert.convert_to_bytes(serialized_dict_bytes_compress)
         )
         return json.loads(json_bytes)
 
+    # ======================
+    # Utilitaires divers
+    # ======================
+
     @staticmethod
     def is_multiple_of(s, multiple=4):
+        """
+        Vérifie si la longueur d'une chaîne est un multiple de `multiple`.
+
+        Args:
+            s (str): Chaîne à vérifier.
+            multiple (int, optional): Multiple à vérifier. Par défaut 4.
+
+        Returns:
+            bool: True si la longueur est un multiple, False sinon.
+
+        Exemple:
+            >>> s = "abcd"
+            >>> is_multiple = convert.is_multiple_of(s)
+            >>> print(is_multiple)
+            True
+        """
         return len(s) % multiple == 0
 
     @staticmethod
     def is_base64(s):
+        """
+        Vérifie si une chaîne est encodée en base64 valide.
+
+        Args:
+            s (str): Chaîne à vérifier.
+
+        Returns:
+            bool: True si la chaîne est un base64 valide, False sinon.
+
+        Exemple:
+            >>> s = "SGVsbG8="
+            >>> is_valid = convert.is_base64(s)
+            >>> print(is_valid)
+            True
+        """
         if not convert.is_multiple_of(s, multiple=4):
             return False
-        decoded = None
         try:
-            # Tente de décoder la chaîne en base64
             decoded = base64.b64decode(s)
-            # Vérifie si la chaîne d'origine est égale à la chaîne encodée puis décodée
-            if base64.b64encode(decoded) == s.encode():
-                return decoded
-            else:
-                return False
+            return base64.b64encode(decoded) == s.encode()
         except:
             return False
 
     @staticmethod
     def header_body(xml_string):
         """
-        on supprime l'entete xml
+        Sépare l'en-tête et le corps d'une chaîne XML.
+
+        Args:
+            xml_string (str): Chaîne XML à séparer.
+
+        Returns:
+            tuple: (header, body)
+
+        Exemple:
+            >>> xml_str = '<?xml version="1.0"?><root>...</root>'
+            >>> header, body = convert.header_body(xml_str)
+            >>> print(header)
+            '<?xml version="1.0"?>'
         """
         body = header = ""
         index = xml_string.find("?>")
         if index != -1:
-            # Supprimer l'en-tête XML
-            body = xml_string[index + 2 :]
             header = xml_string[: index + 2]
+            body = xml_string[index + 2 :]
         return header, body
 
     @staticmethod
     def format_xml(xml_string):
+        """
+        Formate une chaîne XML pour une meilleure lisibilité.
+
+        Args:
+            xml_string (str): Chaîne XML à formater.
+
+        Returns:
+            str: Chaîne XML formatée.
+
+        Exemple:
+            >>> xml_str = "<root><name>Alice</name></root>"
+            >>> formatted = convert.format_xml(xml_str)
+            >>> print(formatted)
+            <?xml version="1.0" ?>
+            <root>
+                <name>Alice</name>
+            </root>
+        """
         dom = parseString(xml_string)
-        formatted_xml = dom.toprettyxml(indent="  ")
-        return formatted_xml
+        return dom.toprettyxml(indent="  ")
 
     @staticmethod
     def check_keys_in(dictdata, array_keys):
-        if all(key in dictdata for key in array_keys):
-            return True
-        return False
+        """
+        Vérifie si toutes les clés d'un tableau sont présentes dans un dictionnaire.
 
+        Args:
+            dictdata (dict): Dictionnaire à vérifier.
+            array_keys (list): Liste de clés à vérifier.
+
+        Returns:
+            bool: True si toutes les clés sont présentes, False sinon.
+
+        Exemple:
+            >>> d = {"name": "Alice", "age": 30}
+            >>> keys = ["name", "age"]
+            >>> has_keys = convert.check_keys_in(d, keys)
+            >>> print(has_keys)
+            True
+        """
+        return all(key in dictdata for key in array_keys)
+
+    @staticmethod
+    def auto_convert(data: str):
+        """
+        Détecte automatiquement le format (JSON, YAML, XML) d'une chaîne
+        et la convertit en dict/list Python.
+
+        :param data: chaîne en entrée
+        :return: dict ou list
+        :raises ValueError: si le format est inconnu
+        """
+        import yaml
+
+        # Essai JSON
+        try:
+            return Convert.json_to_dict(data)
+        except Exception:
+            pass
+
+        # Essai YAML
+        try:
+            return Convert.yaml_to_dict(data)
+        except Exception:
+            pass
+
+        # Essai XML
+        try:
+            return Convert.xml_to_dict(data)
+        except Exception:
+            pass
+
+        raise ValueError("Format non reconnu (ni JSON, ni YAML, ni XML)")
+
+    @staticmethod
+    def dict_diff(d1: dict, d2: dict) -> dict:
+        """
+        Compare deux dictionnaires et retourne les différences.
+
+        :param d1: premier dict
+        :param d2: second dict
+        :return: dict avec "added", "removed", "changed"
+        """
+        diff = {"added": {}, "removed": {}, "changed": {}}
+
+        # Clés ajoutées
+        for key in d2.keys() - d1.keys():
+            diff["added"][key] = d2[key]
+
+        # Clés supprimées
+        for key in d1.keys() - d2.keys():
+            diff["removed"][key] = d1[key]
+
+        # Clés modifiées
+        for key in d1.keys() & d2.keys():
+            if d1[key] != d2[key]:
+                # Si sous-dict → comparaison récursive
+                if isinstance(d1[key], dict) and isinstance(d2[key], dict):
+                    sub_diff = Convert.dict_diff(d1[key], d2[key])
+                    if any(sub_diff.values()):
+                        diff["changed"][key] = sub_diff
+                else:
+                    diff["changed"][key] = {"old": d1[key], "new": d2[key]}
+
+        return diff
 
 class messagefilexmpp:
     """
@@ -1346,8 +2128,13 @@ class messagefilexmpp:
 
 class TimedCompressedRotatingFileHandler(TimedRotatingFileHandler):
     """
-    Extended version of TimedRotatingFileHandler that compress logs on rollover.
-    the rotation file is compress in zip
+    Extended version of TimedRotatingFileHandler that compresses logs on rollover.
+
+    This handler rotates logs based on a time interval and compresses the rotated
+    log files into ZIP format. It manages the number of backup files to keep.
+
+    Attributes:
+        backupCountlocal (int): The number of backup files to keep.
     """
 
     def __init__(
@@ -1361,44 +2148,82 @@ class TimedCompressedRotatingFileHandler(TimedRotatingFileHandler):
         utc=False,
         compress="zip",
     ):
+        """
+        Initializes the TimedCompressedRotatingFileHandler with the specified parameters.
+
+        Args:
+            filename (str): The base filename for the log files.
+            when (str): The time interval for rotation (default: "h" for hours).
+            interval (int): The number of units for the rotation interval (default: 1).
+            backupCount (int): The maximum number of backup files to keep (default: 0).
+            encoding (str): The encoding used for the log files (default: None).
+            delay (bool): If True, the log file will not be opened until the first write (default: False).
+            utc (bool): If True, uses UTC time for rotations (default: False).
+            compress (str): The compression format (default: "zip").
+        """
+        # Call the superclass initializer for basic log file handling
         super(TimedCompressedRotatingFileHandler, self).__init__(
             filename, when, interval, backupCount, encoding, delay, utc
         )
-        self.backupCountlocal = backupCount
+        self.backupCountlocal = backupCount  # Store the backup count locally
 
     def get_files_by_date(self):
-        dir_name, base_name = os.path.split(self.baseFilename)
-        file_names = os.listdir(dir_name)
-        result = []
-        result1 = []
-        prefix = "{}".format(base_name)
+        """
+        Retrieves log files and their creation timestamps, sorting them into
+        compressed and uncompressed lists. Deletes old compressed files
+        beyond the backup count limit.
+
+        Returns:
+            str: The filename of the log file to keep after rotation.
+        """
+        dir_name, base_name = os.path.split(self.baseFilename)  # Split the path to get directory and base name
+        file_names = os.listdir(dir_name)  # List all files in the directory
+        result = []  # To hold uncompressed files
+        result1 = []  # To hold compressed files
+        prefix = "{}".format(base_name)  # Create a prefix based on the base name
+
+        # Loop through files to categorize them as compressed or uncompressed
         for file_name in file_names:
             if file_name.startswith(prefix) and not file_name.endswith(".zip"):
                 f = os.path.join(dir_name, file_name)
-                result.append((os.stat(f).st_ctime, f))
+                result.append((os.stat(f).st_ctime, f))  # Store creation time and file path
             if file_name.startswith(prefix) and file_name.endswith(".zip"):
                 f = os.path.join(dir_name, file_name)
-                result1.append((os.stat(f).st_ctime, f))
-        result1.sort()
-        result.sort()
+                result1.append((os.stat(f).st_ctime, f))  # Store creation time and compressed file path
+
+        result1.sort()  # Sort compressed files by creation time
+        result.sort()  # Sort uncompressed files by creation time
+
+        # Remove old compressed files beyond the defined backup count
         while result1 and len(result1) >= self.backupCountlocal:
-            el = result1.pop(0)
+            el = result1.pop(0)  # Get the oldest compressed file
             if os.path.exists(el[1]):
-                os.remove(el[1])
+                os.remove(el[1])  # Remove it from the filesystem
+
+        # Return the most recent uncompressed log file to keep
         return result[1][1]
 
     def doRollover(self):
-        super(TimedCompressedRotatingFileHandler, self).doRollover()
+        """
+        Handles the log file rollover by calling the superclass's rollover method
+        and compressing the old log file into a ZIP format.
+        """
+        super(TimedCompressedRotatingFileHandler, self).doRollover()  # Perform regular rollover
         try:
-            dfn = self.get_files_by_date()
+            dfn = self.get_files_by_date()  # Get the most recent log file to work with
         except:
-            return
+            return  # If an error occurs, simply return
+
+        # Prepare the name for the compressed ZIP file
         dfn_zipped = "{}.zip".format(dfn)
         if os.path.exists(dfn_zipped):
-            os.remove(dfn_zipped)
+            os.remove(dfn_zipped)  # Remove the ZIP file if it exists
+
+        # Create a new ZIP file and add the uncompressed log file to it
         with zipfile.ZipFile(dfn_zipped, "w") as f:
-            f.write(dfn, dfn_zipped, zipfile.ZIP_DEFLATED)
-        os.remove(dfn)
+            f.write(dfn, os.path.basename(dfn), zipfile.ZIP_DEFLATED)
+
+        os.remove(dfn)  # Remove the uncompressed log file after compression
 
 
 logger = logging.getLogger()
@@ -1561,26 +2386,44 @@ class ExcludeEndsWithFilter(logging.Filter):
         """
         return not record.getMessage().endswith(self.criterion)
 
-
 class MmcServer(XMLRPC, object):
     """
-    MMC Server implemented as a XML-RPC server.
-
-    config file : @sysconfdir@/agent/config.ini
-
-    Create a twisted XMLRPC server, load plugins in
-    "plugins/" directory
+    Serveur MMC implémenté comme un serveur XML-RPC avec Twisted.
+    Ce serveur permet de :
+    - Charger des plugins depuis le répertoire "plugins/"
+    - Gérer l'authentification des utilisateurs via HTTP Basic Auth
+    - Gérer les sessions utilisateur (avec expiration)
+    - Supporter l'exécution multithread des requêtes
+    - Fournir des méthodes d'introspection XML-RPC standard
+    - Permettre le rechargement des configurations des plugins
+    Fichier de configuration : @sysconfdir@/agent/config.ini
     """
 
-    # Attribute to keep traces of all running sessions
+    # Ensemble pour suivre toutes les sessions actives
     sessions = set()
 
     def __init__(self, modules, config):
+        """
+        Initialise le serveur MMC.
+
+        Args:
+            modules (dict): Modules de plugins chargés.
+            config (object): Objet de configuration du serveur.
+        """
         XMLRPC.__init__(self)
         self.modules = modules
         self.config = config
 
     def _splitFunctionPath(self, functionPath):
+        """
+        Sépare un chemin de fonction en module et nom de fonction.
+
+        Args:
+            functionPath (str): Chemin de la fonction, par exemple "module.fonction".
+
+        Returns:
+            tuple: (module, function_name) ou (None, function_name) si pas de module.
+        """
         if "." in functionPath:
             mod, func = functionPath.split(".", 1)
         else:
@@ -1589,35 +2432,55 @@ class MmcServer(XMLRPC, object):
         return mod, func
 
     def _getFunction(self, functionPath, request=""):
-        """Overrided to use functions from our plugins"""
-        mod, func = self._splitFunctionPath(functionPath)
+        """
+        Résout un chemin de fonction en un objet appelable.
 
+        Args:
+            functionPath (str): Chemin de la fonction, par exemple "module.fonction".
+            request (Request): Objet de requête actuel.
+
+        Returns:
+            callable: Fonction à exécuter.
+
+        Raises:
+            Fault: Si la fonction n'existe pas.
+        """
+        mod, func = self._splitFunctionPath(functionPath)
         try:
             if mod and mod != "system":
                 try:
+                    # Récupère directement la fonction depuis le module
                     ret = getattr(self.modules[mod], func)
                 except AttributeError:
+                    # Si la fonction n'est pas trouvée, essaie le wrapper RpcProxy
                     rpcProxy = getattr(self.modules[mod], "RpcProxy")
                     ret = rpcProxy(request, mod).getFunction(func)
             else:
+                # Fonctions appartenant au serveur lui-même
                 ret = getattr(self, func)
         except AttributeError:
-            logger.error(functionPath + " not found")
-            raise Fault("NO_SUCH_FUNCTION", "No such function " + functionPath)
+            logger.error(f"{functionPath} non trouvé")
+            raise Fault("NO_SUCH_FUNCTION", f"No such function {functionPath}")
         return ret
 
     def _needAuth(self, functionPath):
         """
-        @returns: True if the specified function requires a user authentication
-        @rtype: boolean
+        Vérifie si une fonction nécessite une authentification.
+
+        Args:
+            functionPath (str): Chemin de la fonction.
+
+        Returns:
+            bool: True si une authentification est nécessaire.
         """
         mod, func = self._splitFunctionPath(functionPath)
-        # Special case: reload mehod
+        # Cas spécial : la fonction de rechargement ne nécessite pas d'authentification
         if (mod, func) == ("system", "reloadModulesConfiguration"):
             return False
         ret = True
         if mod:
             try:
+                # Liste NOAUTHNEEDED est définie par le plugin
                 nanl = self.modules[mod].NOAUTHNEEDED
                 ret = func not in nanl
             except (KeyError, AttributeError):
@@ -1625,6 +2488,9 @@ class MmcServer(XMLRPC, object):
         return ret
 
     def render_OPTIONS(self, request):
+        """
+        Gère les requêtes CORS preflight OPTIONS.
+        """
         request.setHeader(
             "Access-Control-Allow-Origin",
             request.requestHeaders.getRawHeaders("Origin"),
@@ -1634,18 +2500,20 @@ class MmcServer(XMLRPC, object):
         request.setHeader("Access-Control-Allow-Headers", "content-type, authorization")
         request.setHeader("Access-Control-Max-Age", "1728000")
         request.setHeader("Content-Type", "text/plain")
-
         return ""
 
     def render_POST(self, request):
         """
-        override method of xmlrpc python twisted framework
+        Surcharge de la méthode POST du framework XML-RPC Twisted.
+        Gère l'authentification, les sessions, et l'exécution des fonctions RPC.
 
-        @param request: raw request xmlrpc
-        @type request: xml str
+        Args:
+            request: Requête XML-RPC brute.
 
-        @return: interpreted request
+        Returns:
+            server.NOT_DONE_YET: Indique que la réponse sera envoyée plus tard.
         """
+        # Gestion des headers CORS
         if request.requestHeaders.hasHeader("Origin"):
             request.setHeader(
                 "Access-Control-Allow-Origin",
@@ -1656,9 +2524,13 @@ class MmcServer(XMLRPC, object):
         request.setHeader("Access-Control-Allow-Headers", "content-type,authorization")
         request.setHeader("Access-Control-Expose-Headers", "content-type,cookie")
         request.setHeader("Access-Control-Max-Age", "1728000")
+
+        # Lecture de la requête XML
         requestxml = request.content.read()
         args, functionPath = xmlrpc.client.loads(requestxml)
         s = request.getSession()
+
+        # Initialisation des attributs de session si absents
         if not hasattr(s, "loggedin"):
             s.loggedin = False
         if not hasattr(s, "lastModified"):
@@ -1666,82 +2538,66 @@ class MmcServer(XMLRPC, object):
         if not hasattr(s, "sessionTimeout"):
             s.sessionTimeout = self.config.sessiontimeout
 
+        # Vérification de l'expiration de la session
         try:
-            # Check if session is expired
             current_time = reactor.seconds()
             if (
                 self.config.sessiontimeout
                 and (current_time - s.lastModified) > self.config.sessiontimeout
             ):
-                # # Session has expired
-                logger.debug("Session expired !")
-                s.loggedin = False  # Mark session as expired
-                # Define the HTTP 401 response code
+                logger.debug("Session expirée !")
+                s.loggedin = False
                 request.setResponseCode(http.UNAUTHORIZED)
                 request.setHeader(b"content-type", b"text/html")
                 request.setHeader(b"content-length", b"0")
-
                 request.finish()
                 return server.NOT_DONE_YET
-
-            # Update session timeout for the current session
             s.lastModified = current_time
-
         except AttributeError as e:
-            # Initialize session attributes if AttributeError occurs
-            logger.error(f"Attribute error: {e}")
+            logger.error(f"Erreur d'attribut : {e}")
             s.loggedin = False
-            # Set session expire timeout
             s.sessionTimeout = self.config.sessiontimeout
             return server.NOT_DONE_YET
 
-        # Check authorization using HTTP Basic
-        cleartext_token = self.config.login + ":" + self.config.password
+        # Authentification HTTP Basic
+        cleartext_token = f"{self.config.login}:{self.config.password}"
         user = str(request.getUser(), "utf-8")
         password = str(request.getPassword(), "utf-8")
-
-        token = user + ":" + password
+        token = f"{user}:{password}"
         if token != cleartext_token:
-            logger.error("Invalid login / password for HTTP basic authentication")
+            logger.error("Identifiants invalides pour l'authentification HTTP Basic")
             request.setResponseCode(http.UNAUTHORIZED)
             self._cbRender(
                 Fault(
                     http.UNAUTHORIZED,
-                    "Unauthorized: invalid credentials to connect to the MMC agent, basic HTTP authentication is required",
+                    "Non autorisé : identifiants invalides pour se connecter à l'agent MMC, authentification HTTP Basic requise",
                 ),
                 request,
             )
             return server.NOT_DONE_YET
 
+        # Log des appels RPC
         if not s.loggedin:
-            logger.debug(
-                "RPC method call from unauthenticated user: %s" % functionPath
-                + str(args)
-            )
-            # Save the first sent HTTP headers, as they contain some
-            # informations
+            logger.debug(f"Appel RPC depuis un utilisateur non authentifié : {functionPath}{str(args)}")
             s.http_headers = request.requestHeaders.copy()
         else:
-            logger.debug(
-                "RPC method call from user %s: %s"
-                % (s.userid, functionPath + str(args))
-            )
+            logger.debug(f"Appel RPC depuis l'utilisateur {s.userid} : {functionPath}{str(args)}")
+
+        # Vérification de l'authentification et exécution de la fonction
         try:
             if not s.loggedin and self._needAuth(functionPath):
-                msg = "Authentication needed: %s" % functionPath
+                msg = f"Authentification nécessaire : {functionPath}"
                 logger.error(msg)
                 raise Fault(8003, msg)
             else:
                 if not s.loggedin and not self._needAuth(functionPath):
-                    # Provide a security context when a method which doesn't
-                    # require a user authentication is called
                     s.userid = "root"
                     try:
                         self._associateContext(request, s, s.userid)
                     except Exception as e:
                         s.loggedin = False
                         logger.exception(e)
-                        f = Fault(8004, "MMC agent can't provide a security context")
+                        f = Fault(8004, "L'agent MMC ne peut pas fournir de contexte de sécurité")
                         self._cbRender(f, request)
                         return server.NOT_DONE_YET
                 function = self._getFunction(functionPath, request)
@@ -1750,10 +2606,7 @@ class MmcServer(XMLRPC, object):
         else:
             if self.config.multithreading:
                 oldargs = args
-                args = (
-                    function,
-                    s,
-                ) + args
+                args = (function, s,) + args
                 defer.maybeDeferred(self._runInThread, *args).addErrback(
                     self._ebRender, functionPath, oldargs, request
                 ).addCallback(self._cbRender, request, functionPath, oldargs)
@@ -1765,12 +2618,11 @@ class MmcServer(XMLRPC, object):
 
     def _runInThread(self, *args, **kwargs):
         """
-        Very similar to deferToThread, but also handles function that results
-        to a Deferred object.
+        Exécute une fonction dans un thread séparé, en gérant les Deferred.
+        Permet de ne pas bloquer le réacteur Twisted.
         """
-
         def _printExecutionTime(start):
-            logger.debug("Execution time: %f" % (time.time() - start))
+            logger.debug(f"Temps d'exécution : {time.time() - start}")
 
         def _cbSuccess(result, deferred, start):
             _printExecutionTime(start)
@@ -1782,10 +2634,8 @@ class MmcServer(XMLRPC, object):
 
         def _putResult(deferred, f, session, args, kwargs):
             logger.debug(
-                "Using thread #%s for %s"
-                % (threading.currentThread().getName().split("-")[2], f.__name__)
+                f"Utilisation du thread #{threading.currentThread().getName().split('-')[2]} pour {f.__name__}"
             )
-            # Attach current user session to the thread
             threading.currentThread().session = session
             start = time.time()
             try:
@@ -1795,8 +2645,6 @@ class MmcServer(XMLRPC, object):
                 reactor.callFromThread(deferred.errback, f)
             else:
                 if isinstance(result, defer.Deferred):
-                    # If the result is a Deferred object, attach callback and
-                    # errback (we are not allowed to result to a Deferred)
                     result.addCallback(_cbSuccess, deferred, start)
                     result.addErrback(_cbFailure, deferred, start)
                 else:
@@ -1811,10 +2659,13 @@ class MmcServer(XMLRPC, object):
         return d
 
     def _cbRender(self, result, request, functionPath=None, args=None):
+        """
+        Callback pour rendre le résultat d'une requête RPC.
+        Gère la sérialisation XML, les logs et les headers HTTP.
+        """
         s = request.getSession()
         auth_funcs = ["base.ldapAuth", "base.tokenAuthenticate", "base.authenticate"]
         if functionPath in auth_funcs and not isinstance(result, Fault):
-            # if we are logging on and there was no error
             if result:
                 s = request.getSession()
                 s.loggedin = True
@@ -1824,52 +2675,35 @@ class MmcServer(XMLRPC, object):
                 except Exception as e:
                     s.loggedin = False
                     logger.exception(e)
-                    f = Fault(
-                        8004,
-                        "MMC agent can't provide a security context for this account",
-                    )
+                    f = Fault(8004, "L'agent MMC ne peut pas fournir de contexte de sécurité pour ce compte")
                     self._cbRender(f, request)
                     return
+
         if result is None:
             result = 0
         if isinstance(result, Handler):
             result = result.result
-
         if not isinstance(result, xmlrpc.client.Fault):
             result = (result,)
+
+        # Hack pour gérer les données binaires (ex: jpegPhoto)
         try:
-            if type(result[0]) == dict:
-                # FIXME
-                # Evil hack ! We need this to transport some data as binary instead of string
-                if "jpegPhoto" in result[0]:
-                    result[0]["jpegPhoto"] = [
-                        xmlrpc.client.Binary(result[0]["jpegPhoto"][0])
-                    ]
-        except IndexError:
+            if isinstance(result[0], dict) and "jpegPhoto" in result[0]:
+                result[0]["jpegPhoto"] = [xmlrpc.client.Binary(result[0]["jpegPhoto"][0])]
+        except (IndexError, Exception):
             pass
-        except Exception:
-            pass
+
+        # Log du résultat
         try:
             if s.loggedin:
-                logger.debug(
-                    "Result for "
-                    + s.userid
-                    + ", "
-                    + str(functionPath)
-                    + ": "
-                    + str(result)
-                )
+                logger.debug(f"Résultat pour {s.userid}, {functionPath}: {result}")
             else:
-                logger.debug(
-                    "Result for unauthenticated user, "
-                    + str(functionPath)
-                    + ": "
-                    + str(result)
-                )
+                logger.debug(f"Résultat pour utilisateur non authentifié, {functionPath}: {result}")
             s = xmlrpc.client.dumps(result, methodresponse=1)
         except Exception as e:
-            f = Fault(self.FAILURE, "can't serialize output: " + str(e))
+            f = Fault(self.FAILURE, f"Impossible de sérialiser la sortie : {e}")
             s = xmlrpc.client.dumps(f, methodresponse=1)
+
         s = bytes(s, encoding="utf-8")
         request.setHeader("content-length", str(len(s)))
         request.setHeader("content-type", "application/xml")
@@ -1877,144 +2711,171 @@ class MmcServer(XMLRPC, object):
         request.finish()
 
     def _ebRender(self, failure, functionPath, args, request):
-        logger.error(
-            "Error during render " + functionPath + ": " + failure.getTraceback()
-        )
-        # Prepare a Fault result to return
-        result = {}
-        result["faultString"] = functionPath + " " + str(args)
-        result["faultCode"] = str(failure.type) + ": " + str(failure.value) + " "
-        result["faultTraceback"] = failure.getTraceback()
+        """
+        Callback en cas d'erreur lors du rendu d'une requête RPC.
+        """
+        logger.error(f"Erreur lors du rendu {functionPath} : {failure.getTraceback()}")
+        result = {
+            "faultString": f"{functionPath} {str(args)}",
+            "faultCode": f"{failure.type}: {failure.value}",
+            "faultTraceback": failure.getTraceback(),
+        }
         return result
 
     def _associateContext(self, request, session, userid):
         """
-        Ask to each activated Python plugin a context to attach to the user
-        session.
+        Demande à chaque plugin Python activé un contexte à attacher à la session utilisateur.
 
-        @param request: the current XML-RPC request
-        @param session: the current session object
-        @param userid: the user login
+        Args:
+            request: Requête XML-RPC actuelle.
+            session: Objet de session actuel.
+            userid: Identifiant de l'utilisateur.
         """
         session.contexts = {}
         for mod in self.modules:
             try:
                 contextMaker = getattr(self.modules[mod], "ContextMaker")
             except AttributeError:
-                # No context provided
                 continue
             cm = contextMaker(request, session, userid)
             context = cm.getContext()
             if context:
-                logger.debug("Attaching module '%s' context to user session" % mod)
+                logger.debug(f"Attachement du contexte du module '{mod}' à la session utilisateur")
                 session.contexts[mod] = context
-
-        # Add associated context session to sessions set
         if session not in self.sessions:
             self.sessions.add(session)
 
-    # ======== Reload method ================
-
+    # ===== Méthode de rechargement =====
     def reloadModulesConfiguration(self):
+        """
+        Recharge la configuration de tous les plugins.
+        Expire toutes les sessions actives.
+        """
         import gc
         from mmc.support.config import PluginConfig
-
         for obj in gc.get_objects():
             if isinstance(obj, PluginConfig):
                 try:
-                    # Reloading configuration file
-                    fid = open(obj.conffile, "r")
-                    obj.readfp(fid, obj.conffile)
+                    with open(obj.conffile, "r") as fid:
+                        obj.readfp(fid, obj.conffile)
                     if os.path.isfile(obj.conffile + ".local"):
-                        fid = open(obj.conffile + ".local", "r")
-                        obj.readfp(fid, obj.conffile + ".local")
-                    # Refresh config attributes
+                        with open(obj.conffile + ".local", "r") as fid:
+                            obj.readfp(fid, obj.conffile + ".local")
                     obj.readConf()
                 except Exception as e:
-                    logger.error(
-                        "Error while reloading configuration file %s", obj.conffile
-                    )
+                    logger.error(f"Erreur lors du rechargement du fichier {obj.conffile}")
                     logger.error(str(e))
                     return "Failed"
-
-        # Manually expiring all logged sessions
         for session in self.sessions:
             session.expire()
         self.sessions = set()
         return "Done"
 
-    # ======== XMLRPC Standard Introspection methods ================
-
+    # ===== Méthodes d'introspection XML-RPC standard =====
     def listMethods(self):
+        """
+        Liste toutes les méthodes RPC disponibles.
+        """
         method_list = []
-
         for mod in self.modules:
             instance = self.modules[mod]
-            # Fetching module root methods
             for m in dir(instance):
                 r = getattr(instance, m)
-                # If attr is callable, we add it to method_list
                 if hasattr(r, "__call__"):
-                    method_list.append(mod + "." + m)
-            # Doing same thing for module.RPCProxy if exists
+                    method_list.append(f"{mod}.{m}")
             if hasattr(instance, "RpcProxy"):
                 for m in dir(instance.RpcProxy):
                     r = getattr(instance.RpcProxy, m)
-                    # If attr is callable, we add it to method_list
                     if hasattr(r, "__call__"):
-                        method_list.append(mod + "." + m)
-
+                        method_list.append(f"{mod}.{m}")
         return method_list
 
     def __getClassMethod(self, name):
+        """
+        Récupère une méthode de classe à partir de son nom.
+
+        Args:
+            name (str): Nom de la méthode.
+
+        Returns:
+            callable: Méthode ou None si non trouvée.
+        """
         mod, func = self._splitFunctionPath(name)
-
-        if not mod in self.modules:
+        if mod not in self.modules:
             return None
-
         instance = self.modules[mod]
         if hasattr(instance, "RpcProxy"):
             if hasattr(instance.RpcProxy, func):
                 return getattr(instance.RpcProxy, func)
             elif hasattr(instance, func):
                 return getattr(instance, func)
-            else:
-                return None
-        else:
-            return None
+        return None
 
     def methodSignature(self, name):
-        method = self.__getClassMethod(name)
+        """
+        Retourne la signature d'une méthode RPC.
 
+        Args:
+            name (str): Nom de la méthode.
+
+        Returns:
+            list: Liste des arguments de la méthode.
+        """
+        method = self.__getClassMethod(name)
         if method is None:
             return []
-        else:
-            return getfullargspec(method)[0]
+        return getfullargspec(method)[0]
 
     def methodHelp(self, name):
-        method = self.__getClassMethod(name)
+        """
+        Retourne la documentation d'une méthode RPC.
 
+        Args:
+            name (str): Nom de la méthode.
+
+        Returns:
+            str: Documentation de la méthode.
+        """
+        method = self.__getClassMethod(name)
         if method is None:
             return ""
-        else:
-            return method.__doc__
+        return method.__doc__
 
-    # ===============================================================
-
+    # ===== Méthodes utilitaires =====
     def getRevision(self):
+        """Retourne la révision SCM du serveur."""
         return scmRevision("$Rev$")
 
     def getVersion(self):
+        """Retourne la version du serveur."""
         return VERSION
 
     def log(self, fileprefix, content):
         """
-        @param fileprefix: Write log file in @localstatedir@/log/mmc/mmc-fileprefix.log
-        @param content: string to record in log file
+        Écrit un message dans un fichier de log.
+
+        Args:
+            fileprefix (str): Préfixe du fichier de log.
+            content (str): Contenu à enregistrer.
         """
-        f = open(localstatedir + "/log/mmc/mmc-" + fileprefix + ".log", "a")
-        f.write(time.asctime() + ": " + content + "\n")
-        f.close()
+        with open(f"{localstatedir}/log/mmc/mmc-{fileprefix}.log", "a") as f:
+            f.write(f"{time.asctime()}: {content}\n")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 class MMCApp(object):
