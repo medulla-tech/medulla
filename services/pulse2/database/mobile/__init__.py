@@ -163,6 +163,7 @@ class MobileDatabase(DatabaseHelper):
         la base de donnée mobile étant donnée j'ai opté pour la récupération depuis L'api rest de headwind 
     """
     @DatabaseHelper._sessionm
+    # function acces to database retravillé les injections plustard 
     def devices(self, session):
         ret = session.query(
             self.Devices.id,
