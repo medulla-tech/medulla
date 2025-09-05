@@ -19,7 +19,7 @@ from mmc.support.mmctools import (RpcProxyI,
                                   ContextMakerI,
                                   SecurityContext,
                                   EnhancedSecurityContext,
-                                  _update_filter)
+                                  update_filter)
 from mmc.plugins.glpi import (with_xmpp_context,
                               with_optional_xmpp_context,
                               Contexte_XmlRpc_Glpi)
@@ -63,7 +63,7 @@ import inspect
 from datetime import datetime
 from datetime import datetime  # Ajoutez cette ligne en haut du fichier
 from .master.lib.manage_grafana import manage_grafana
-from mmc.plugins import with_request
+
 
 VERSION = "1.0.0"
 APIVERSION = "4:1:3"
@@ -445,59 +445,59 @@ class RpcProxy(RpcProxyI):
             start_date, end_date, typelog, action, module, user, how, who, why, headercolumn
         )
 
-    def _update_filter(self, filter_dict, allowed_entities):
-        """
-        Met à jour le filtre 'location' pour ne contenir que les UUID correspondant
-        aux entités autorisées.
-
-        Exemple :
-            allowed_entities = [1,2]
-
-            {'location': 'UUID3'}  -> {'location': 'UUID1,UUID2'}
-            {'location': ''}       -> {'location': 'UUID1,UUID2'}
-            {}                     -> {'location': 'UUID1,UUID2'}
-            {'location': 'UUID3,UUID1'} -> {'location': 'UUID1'}
-
-        Args:
-            filter_dict (dict): dictionnaire du filtre.
-            allowed_entities (list[int]): liste d'entiers représentant les entités autorisées.
-
-        Returns:
-            dict: dictionnaire avec 'location' corrigé en fonction des droits utilisateur.
-        """
-
-        # Chaîne par défaut = toutes les entités permises
-        default_location = ",".join(f"UUID{e}" for e in allowed_entities)
-
-        # Cas 1 & 2 : pas de location ou location vide
-        if 'location' not in filter_dict or not filter_dict['location']:
-            filter_dict['location'] = default_location
-            return filter_dict
-
-        # Cas 3 : filtrer les UUID existants selon allowed_entities
-        uuids = [u.strip() for u in filter_dict['location'].split(",") if u.strip()]
-        valid_uuids = []
-
-        for u in uuids:
-            if u.startswith("UUID"):
-                try:
-                    idx = int(u[4:])  # récupérer l'index après "UUID"
-                    if idx in allowed_entities:
-                        valid_uuids.append(u)
-                except ValueError:
-                    continue
-
-        # si rien n'est valide → on applique la valeur par défaut
-        if valid_uuids:
-            filter_dict['location'] = ",".join(valid_uuids)
-        else:
-            filter_dict['location'] = default_location
-
-        return filter_dict
+    # def update_filter(self, filter_dict, allowed_entities):
+    #     """
+    #     Met à jour le filtre 'location' pour ne contenir que les UUID correspondant
+    #     aux entités autorisées.
+    #
+    #     Exemple :
+    #         allowed_entities = [1,2]
+    #
+    #         {'location': 'UUID3'}  -> {'location': 'UUID1,UUID2'}
+    #         {'location': ''}       -> {'location': 'UUID1,UUID2'}
+    #         {}                     -> {'location': 'UUID1,UUID2'}
+    #         {'location': 'UUID3,UUID1'} -> {'location': 'UUID1'}
+    #
+    #     Args:
+    #         filter_dict (dict): dictionnaire du filtre.
+    #         allowed_entities (list[int]): liste d'entiers représentant les entités autorisées.
+    #
+    #     Returns:
+    #         dict: dictionnaire avec 'location' corrigé en fonction des droits utilisateur.
+    #     """
+    #
+    #     # Chaîne par défaut = toutes les entités permises
+    #     default_location = ",".join(f"UUID{e}" for e in allowed_entities)
+    #
+    #     # Cas 1 & 2 : pas de location ou location vide
+    #     if 'location' not in filter_dict or not filter_dict['location']:
+    #         filter_dict['location'] = default_location
+    #         return filter_dict
+    #
+    #     # Cas 3 : filtrer les UUID existants selon allowed_entities
+    #     uuids = [u.strip() for u in filter_dict['location'].split(",") if u.strip()]
+    #     valid_uuids = []
+    #
+    #     for u in uuids:
+    #         if u.startswith("UUID"):
+    #             try:
+    #                 idx = int(u[4:])  # récupérer l'index après "UUID"
+    #                 if idx in allowed_entities:
+    #                     valid_uuids.append(u)
+    #             except ValueError:
+    #                 continue
+    #
+    #     # si rien n'est valide → on applique la valeur par défaut
+    #     if valid_uuids:
+    #         filter_dict['location'] = ",".join(valid_uuids)
+    #     else:
+    #         filter_dict['location'] = default_location
+    #
+    #     return filter_dict
 
     @with_optional_xmpp_context
     def get_machines_list(self, start, end, filter, ctx=None):
-        filter = _update_filter(filter, ctx.get_session_info()['mondict']['liste_entities_user'])
+        filter = update_filter(filter, ctx.get_session_info()['mondict']['liste_entities_user'])
         logger.debug("filter: %s " % filter)
         return XmppMasterDatabase().get_machines_list(start,
                                                       end, filter)
@@ -1694,131 +1694,6 @@ def get_xmppmachines_list(start, limit, filter, presence):
 
 def get_xmpprelays_list(start, limit, filter, presence):
     return XmppMasterDatabase().get_xmpprelays_list(start, limit, filter, presence)
-#
-# @with_request
-# def get_list_ars_from_sharing(sharings, start, limit, userlogin, filter, request=None):
-#     # threading.currentThread().session
-#     # user = session.userid
-#     ctx = self.currentContext
-#
-#     # logger.debug(f"get_list_ars_from_sharing() called by aaa {user}")
-#     logger.debug(f"get_list_ars_from_sharing() called by {userlogin}, request={request}")
-#     listidars = []
-#     arslistextend = []
-#     objsearch = {}
-#     if userlogin != "":
-#         objsearch["login"] = userlogin
-#         arslistextend = PkgsDatabase().pkgs_search_ars_list_from_cluster_rules(
-#             objsearch
-#         )
-#         # on utilise la table rules global pour etendre ou diminuer les droits d'admins sur les ars.
-#
-#     for share in sharings:
-#         if "r" in share["permission"]:
-#             listidars.append(share["ars_id"])
-#     if arslistextend:
-#         listidars.extend([x[0] for x in arslistextend])
-#     ars_list = {}
-#     ars_list = XmppMasterDatabase().get_ars_list_belongs_cluster(
-#         listidars, start, limit, filter
-#     )
-#     if not ars_list or ars_list["count"] == 0:
-#         res = {"total": 0, "datas": {}, "partielcount": 0}
-#         return res
-#
-#     stat_ars_machine = XmppMasterDatabase(
-#     ).get_stat_ars_machine(ars_list["jid"])
-#     ars_list["total_machines"] = []
-#     ars_list["uninventoried"] = []
-#     ars_list["publicclass"] = []
-#     ars_list["nblinuxmachine"] = []
-#     ars_list["inventoried_online"] = []
-#     ars_list["mach_on"] = []
-#     ars_list["uninventoried_online"] = []
-#     ars_list["nbmachinereconf"] = []
-#     ars_list["kioskon"] = []
-#     ars_list["inventoried"] = []
-#     ars_list["nbdarwin"] = []
-#     ars_list["kioskoff"] = []
-#     ars_list["bothclass"] = []
-#     ars_list["privateclass"] = []
-#     ars_list["mach_off"] = []
-#     ars_list["inventoried_offline"] = []
-#     ars_list["with_uuid_serial"] = []
-#     ars_list["nb_OU_mach"] = []
-#     ars_list["uninventoried_offline"] = []
-#     ars_list["nbwindows"] = []
-#     ars_list["nb_ou_user"] = []
-#     for jid in ars_list["jid"]:
-#         if jid in stat_ars_machine:
-#             ars_list["total_machines"].append(
-#                 stat_ars_machine[jid]["nbmachine"])
-#             ars_list["uninventoried"].append(
-#                 stat_ars_machine[jid]["uninventoried"])
-#             ars_list["publicclass"].append(
-#                 stat_ars_machine[jid]["publicclass"])
-#             ars_list["nblinuxmachine"].append(
-#                 stat_ars_machine[jid]["nblinuxmachine"])
-#             ars_list["inventoried_online"].append(
-#                 stat_ars_machine[jid]["inventoried_online"]
-#             )
-#             ars_list["mach_on"].append(stat_ars_machine[jid]["mach_on"])
-#             ars_list["uninventoried_online"].append(
-#                 stat_ars_machine[jid]["uninventoried_online"]
-#             )
-#             ars_list["nbmachinereconf"].append(
-#                 stat_ars_machine[jid]["nbmachinereconf"])
-#             ars_list["kioskon"].append(stat_ars_machine[jid]["kioskon"])
-#             ars_list["inventoried"].append(
-#                 stat_ars_machine[jid]["inventoried"])
-#             ars_list["nbdarwin"].append(stat_ars_machine[jid]["nbdarwin"])
-#             ars_list["kioskoff"].append(stat_ars_machine[jid]["kioskoff"])
-#             ars_list["bothclass"].append(stat_ars_machine[jid]["bothclass"])
-#             ars_list["privateclass"].append(
-#                 stat_ars_machine[jid]["privateclass"])
-#             ars_list["mach_off"].append(stat_ars_machine[jid]["mach_off"])
-#             ars_list["inventoried_offline"].append(
-#                 stat_ars_machine[jid]["inventoried_offline"]
-#             )
-#             ars_list["with_uuid_serial"].append(
-#                 stat_ars_machine[jid]["with_uuid_serial"]
-#             )
-#             ars_list["nb_OU_mach"].append(stat_ars_machine[jid]["nb_OU_mach"])
-#             ars_list["uninventoried_offline"].append(
-#                 stat_ars_machine[jid]["uninventoried_offline"]
-#             )
-#             ars_list["nbwindows"].append(stat_ars_machine[jid]["nbwindows"])
-#             ars_list["nb_ou_user"].append(stat_ars_machine[jid]["nb_ou_user"])
-#         else:
-#             ars_list["total_machines"].append(0)
-#             ars_list["uninventoried"].append(0)
-#             ars_list["publicclass"].append(0)
-#             ars_list["nblinuxmachine"].append(0)
-#             ars_list["inventoried_online"].append(0)
-#             ars_list["mach_on"].append(0)
-#             ars_list["uninventoried_online"].append(0)
-#             ars_list["nbmachinereconf"].append(0)
-#             ars_list["kioskon"].append(0)
-#             ars_list["inventoried"].append(0)
-#             ars_list["nbdarwin"].append(0)
-#             ars_list["kioskoff"].append(0)
-#             ars_list["bothclass"].append(0)
-#             ars_list["privateclass"].append(0)
-#             ars_list["mach_off"].append(0)
-#             ars_list["inventoried_offline"].append(0)
-#             ars_list["with_uuid_serial"].append(0)
-#             ars_list["nb_OU_mach"].append(0)
-#             ars_list["uninventoried_offline"].append(0)
-#             ars_list["nbwindows"].append(0)
-#             ars_list["nb_ou_user"].append(0)
-#
-#     res = {
-#         "total": ars_list["count"],
-#         "datas": ars_list,
-#         "partielcount": len(ars_list["jid"]),
-#     }
-#     return res
-
 
 def get_clusters_list(start, limit, filter):
     return XmppMasterDatabase().get_clusters_list(start, limit, filter)

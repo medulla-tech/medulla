@@ -19,6 +19,14 @@ from mmc.plugins.base.config import BasePluginConfig
 from mmc.plugins.xmppmaster.master.lib.utils import name_random
 
 
+from mmc.support.mmctools import (
+    RpcProxyI,
+    ContextMakerI,
+    SecurityContext,
+    EnhancedSecurityContext
+)
+from mmc.plugins.base import (with_xmpp_context,
+                              with_optional_xmpp_context,)
 # Database
 from pulse2.database.kiosk import KioskDatabase
 from pulse2.database.xmppmaster import XmppMasterDatabase
@@ -64,47 +72,93 @@ def activate():
     return True
 
 
+class ContextMaker(ContextMakerI):
+    """
+    Fabrique de contextes personnalisés pour XMPP, héritée de ContextMakerI.
+    Sert à créer et initialiser un objet de type `EnhancedSecurityContext`.
+
+    appeler sur chaque module a l'initialiasation'
+
+    Méthodes
+    --------
+    getContext() :
+        Crée et retourne un contexte sécurisé enrichi contenant les informations
+        de l'utilisateur et de la requête courante.
+    """
+
+    def getContext(self):
+        """
+        Crée un contexte de type `EnhancedSecurityContext` pour l'utilisateur courant.
+
+        Retourne
+        --------
+        EnhancedSecurityContext
+            Contexte initialisé avec :
+              - `userid` : l'identifiant de l'utilisateur courant
+              - `request` : la requête associée
+              - `session` : la session courante
+
+        Effets de bord
+        --------------
+        - Écrit des logs de niveau `error` lors de la création du contexte.
+        """
+        s = EnhancedSecurityContext()
+        s.userid = self.userid
+        s.request = self.request
+        s.session = self.session
+        return s
+
+
+
+class RpcProxy(RpcProxyI):
+
+    @with_optional_xmpp_context
+    def create_profile(self,
+                       name,
+                       login,
+                       ous,
+                       active,
+                       packages,
+                       source,
+                       ctx=None):
+        result = KioskDatabase().create_profile(name, login, ous, active, packages, source)
+        notify_kiosks()
+        return result
 # #############################################################
 # KIOSK DATABASE FUNCTIONS
 # #############################################################
 
+    @with_optional_xmpp_context
+    def get_profiles_list(self, login, start=0, limit=-1, filter="", ctx=None):
+        teammates = XmppMasterDatabase().get_teammembers_from_login(login)
+        if login == "root":
+            return KioskDatabase().get_profiles_list(start, limit, filter)
+        else:
+            if teammates == []:
+                teammates.append(login)
+            return KioskDatabase().get_profiles_list_team(teammates, start, limit, filter)
 
-def get_profiles_list(login, start=0, limit=-1, filter=""):
-    teammates = XmppMasterDatabase().get_teammembers_from_login(login)
-    if login == "root":
-        return KioskDatabase().get_profiles_list(start, limit, filter)
-    else:
-        if teammates == []:
-            teammates.append(login)
-        return KioskDatabase().get_profiles_list_team(teammates, start, limit, filter)
+    @with_optional_xmpp_context
+    def get_profiles_name_list(self, ctx=None):
+        return KioskDatabase().get_profiles_name_list()
 
+    @with_optional_xmpp_context
+    def delete_profile(self, id, ctx=None):
+        result = KioskDatabase().delete_profile(id)
+        notify_kiosks()
+        return result
 
-def get_profiles_name_list():
-    return KioskDatabase().get_profiles_name_list()
+    @with_optional_xmpp_context
+    def get_profile_by_id(self, id, ctx=None):
+        return KioskDatabase().get_profile_by_id(id)
 
-
-def create_profile(name, login, ous, active, packages, source):
-    result = KioskDatabase().create_profile(name, login, ous, active, packages, source)
-    notify_kiosks()
-    return result
-
-
-def delete_profile(id):
-    result = KioskDatabase().delete_profile(id)
-    notify_kiosks()
-    return result
-
-
-def get_profile_by_id(id):
-    return KioskDatabase().get_profile_by_id(id)
-
-
-def update_profile(login, id, name, ous, active, packages, source):
-    result = KioskDatabase().update_profile(
-        login, id, name, ous, active, packages, source
-    )
-    notify_kiosks()
-    return result
+    @with_optional_xmpp_context
+    def update_profile(self, login, id, name, ous, active, packages, source, ctx=None):
+        result = KioskDatabase().update_profile(
+            login, id, name, ous, active, packages, source
+        )
+        notify_kiosks()
+        return result
 
 
 # #############################################################

@@ -16,6 +16,8 @@ from mmc.support.mmctools import (
     SecurityContext,
     EnhancedSecurityContext
 )
+from mmc.plugins.base import (with_xmpp_context,
+                              with_optional_xmpp_context,)
 from mmc.plugins.base.computers import ComputerManager
 from mmc.plugins.base.provisioning import ProvisioningManager
 from mmc.plugins.base.output import XLSGenerator
@@ -69,12 +71,6 @@ def activate():
 
     return True
 
-#
-# class ContextMaker(ContextMakerI):
-#     def getContext(self):
-#         s = SecurityContext()
-#         s.userid = self.userid
-#         return s
 
 class ContextMaker(ContextMakerI):
     """
@@ -112,147 +108,11 @@ class ContextMaker(ContextMakerI):
         s.session = self.session
         return s
 
-
-def with_xmpp_context(func):
-    """
-    Décorateur pour injecter automatiquement un contexte XMPP (Contexte_XmlRpc_Glpi).
-
-    Utilisation :
-    -------------
-    Deux approches sont possibles pour travailler avec le contexte :
-
-    1. **Appel manuel**
-       Vous pouvez créer le contexte vous-même dans chaque méthode :
-
-       >>> def get_list(self, sharings):
-       ...     ctx = Contexte_XmlRpc_Glpi(self)
-       ...     print(ctx.mondict)
-
-    2. **Appel via décorateur**
-       Si vous décorez votre méthode avec `@with_xmpp_context`,
-       alors le décorateur crée et initialise `ctx` automatiquement
-       et l’ajoute comme premier argument après `self`.
-
-       >>> @with_xmpp_context
-       ... def get_list(self, ctx, sharings):
-       ...     print(ctx.mondict)
-
-    Notes :
-    -------
-    - Avec la méthode **manuelle**, vous gardez un contrôle total.
-    - Avec le **décorateur**, vous devez ajouter un paramètre `ctx`
-      à votre fonction (juste après `self`), sinon Python lèvera une erreur.
-    """
-    def wrapper(self, *args, **kwargs):
-        ctx = Contexte_XmlRpc_Glpi(self)  # prépare le contexte une fois
-        return func(self, ctx, *args, **kwargs)
-    return wrapper
-
-
-def with_optional_xmpp_context(func):
-    """
-    Décorateur intelligent pour gérer le contexte XMPP.
-
-    Fonctionnement :
-    ----------------
-    - Si la méthode décorée définit un paramètre nommé `ctx` avec une valeur
-      par défaut (par ex. `ctx=None`), alors le décorateur injecte automatiquement
-      un objet `Contexte_XmlRpc_Glpi` si aucun contexte n’est fourni à l’appel.
-
-      >>> @with_optional_xmpp_context
-      ... def get_list(self, sharings, ctx=None):
-      ...     print(ctx.mondict)   # ctx est créé automatiquement
-
-      >>> obj.get_list(sharings)   # ctx est injecté
-      >>> obj.get_list(sharings, ctx=mon_ctx)  # ctx manuel, décorateur ne fait rien
-
-    - Si la méthode ne définit pas de paramètre `ctx`, le décorateur n’a
-      aucun effet et la fonction est appelée normalement.
-
-      >>> @with_optional_xmpp_context
-      ... def ping(self, value):
-      ...     print(value)   # aucun ctx ici
-
-    Avantages :
-    -----------
-    - Permet à l’utilisateur de choisir librement :
-      * Soit **gérer manuellement** son contexte (`ctx = Contexte_XmlRpc_Glpi(self)`).
-      * Soit **laisser le décorateur l’injecter** automatiquement.
-    - Compatible avec les deux approches, sans erreur si `ctx` n’est pas prévu.
-    """
-    sig = inspect.signature(func)
-
-    def wrapper(self, *args, **kwargs):
-        bound = sig.bind_partial(self, *args, **kwargs)
-        # Si 'ctx' est dans la signature ET non fourni => on injecte
-        if "ctx" in sig.parameters and bound.arguments.get("ctx", None) is None:
-            kwargs["ctx"] = Contexte_XmlRpc_Glpi(self)
-        return func(self, *args, **kwargs)
-
-    return wrapper
-
-class Contexte_XmlRpc_Glpi:
-    """
-    Wrapper autour du contexte XMPP pour gérer automatiquement les informations
-    utilisateur et recharger les données uniquement lorsque l'UUID change.
-
-    Paramètres
-    ----------
-    session_xmlrpc_xmpp : objet
-        Objet de session contenant un attribut `currentContext`.
-
-    Attributs
-    ---------
-    ctx : objet
-        Contexte courant issu de `session_xmlrpc_xmpp.currentContext`.
-    session_info : dict
-        Informations de session récupérées via `ctx.get_session_info()`.
-        Doit contenir au minimum une clé 'uuid' et 'userid'.
-
-    Notes
-    -----
-    - Lors de l'initialisation, si l'UUID du contexte a changé ou si aucune
-      donnée n'a encore été enregistrée, les informations utilisateur sont
-      chargées via `Glpi().infouser(userid)` et stockées dans `ctx.mondict`.
-    - L'attribut `last_uuid` est ajouté au contexte afin de mémoriser
-      l'UUID courant et éviter des rechargements inutiles.
-    """
-
-    def __init__(self, session_xmlrpc_xmpp):
-        self.ctx = session_xmlrpc_xmpp.currentContext
-        self.session_info = self.ctx.get_session_info()
-        # On garde l'UUID en mémoire (dans le contexte ou une variable statique)
-        if not hasattr(self.ctx, "last_uuid") or self.session_info["uuid"] != self.ctx.last_uuid:
-            # Nouveau contexte ou changement d'utilisateur
-            self.ctx._mondict = Glpi().get_user_default_details(self.session_info["userid"])
-            self.ctx.last_uuid = self.session_info["uuid"]
-            logger.error("context evaluation %s" % self.ctx._mondict)
-
-    def __getattr__(self, name):
-        """
-        Délègue automatiquement l'accès aux attributs non définis de Contexte_XmlRpc_Glpi
-        vers l'objet `self.ctx`.
-
-        Paramètres
-        ----------
-        name : str
-            Nom de l'attribut à rechercher.
-
-        Retourne
-        --------
-        objet
-            L'attribut correspondant dans `self.ctx`.
-        """
-        return getattr(self.ctx, name)
-
-
 class RpcProxy(RpcProxyI):
 
     @with_optional_xmpp_context
     def get_machines_list(self, start, end, filter, ctx=None):
-        logger.debug("entity user possible: %s " %  ctx.get_session_info())
-        logger.debug("filter: %s " % filter)
-
+        filter = update_filter(filter, ctx.get_session_info()['mondict']['liste_entities_user'])
         return xmlrpcCleanup(Glpi().get_machines_list(start, end, filter))
 
     @with_optional_xmpp_context
