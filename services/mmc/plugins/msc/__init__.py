@@ -18,8 +18,17 @@ import os
 from twisted.internet import defer
 
 # Helpers
-from mmc.support.mmctools import xmlrpcCleanup
-from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
+
+from mmc.support.mmctools import (
+    xmlrpcCleanup,
+    RpcProxyI,
+    ContextMakerI,
+    SecurityContext,
+    EnhancedSecurityContext
+)
+from mmc.plugins.base import (with_xmpp_context,
+                              with_optional_xmpp_context,)
+
 from mmc.plugins.base import LdapUserGroupControl
 from mmc.core.tasks import TaskManager
 from mmc.plugins.base.computers import ComputerManager
@@ -100,11 +109,52 @@ def activate_2():
     conf.init("msc")
     return True
 
+#
+# class ContextMaker(ContextMakerI):
+#     def getContext(self):
+#         s = SecurityContext()
+#         s.userid = self.userid
+#         s.locationsCount = ComputerLocationManager().getLocationsCount()
+#         s.userids = ComputerLocationManager().getUsersInSameLocations(self.userid)
+#         s.filterType = "mine"
+#         return s
+
+
 
 class ContextMaker(ContextMakerI):
+    """
+    Fabrique de contextes personnalisés pour XMPP, héritée de ContextMakerI.
+    Sert à créer et initialiser un objet de type `EnhancedSecurityContext`.
+
+    appeler sur chaque module a l'initialiasation'
+
+    Méthodes
+    --------
+    getContext() :
+        Crée et retourne un contexte sécurisé enrichi contenant les informations
+        de l'utilisateur et de la requête courante.
+    """
+
     def getContext(self):
-        s = SecurityContext()
+        """
+        Crée un contexte de type `EnhancedSecurityContext` pour l'utilisateur courant.
+
+        Retourne
+        --------
+        EnhancedSecurityContext
+            Contexte initialisé avec :
+              - `userid` : l'identifiant de l'utilisateur courant
+              - `request` : la requête associée
+              - `session` : la session courante
+
+        Effets de bord
+        --------------
+        - Écrit des logs de niveau `error` lors de la création du contexte.
+        """
+        s = EnhancedSecurityContext()
         s.userid = self.userid
+        s.request = self.request
+        s.session = self.session
         s.locationsCount = ComputerLocationManager().getLocationsCount()
         s.userids = ComputerLocationManager().getUsersInSameLocations(self.userid)
         s.filterType = "mine"
@@ -122,8 +172,8 @@ class RpcProxy(RpcProxyI):
     ##
     # machines
     ##
-    def getMachine(self, params):
-        ctx = self.currentContext
+    @with_optional_xmpp_context
+    def getMachine(self, params,ctx=None):
         return xmlrpcCleanup2(Machines().getMachine(ctx, params))
 
     def scheduler_choose_client_ip(self, scheduler, uuid):

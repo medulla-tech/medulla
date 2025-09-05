@@ -14,15 +14,12 @@ Session = sessionmaker()
 from sqlalchemy.exc import DBAPIError
 from sqlalchemy import update
 from datetime import date, datetime, timedelta
-
 # PULSE2 modules
 from mmc.database.database_helper import DatabaseHelper
 from mmc.plugins.pkgs import (
     get_xmpp_package,
     xmpp_packages_list,
     package_exists,
-    get_all_packages,
-    pkgs_search_share,
 )
 from pulse2.database.kiosk.schema import (
     Profiles,
@@ -37,6 +34,8 @@ import logging
 import json
 import time
 from datetime import datetime
+
+from pulse2.database.pkgs import PkgsDatabase
 
 
 class KioskDatabase(DatabaseHelper):
@@ -645,8 +644,8 @@ AND kiosk.profiles.active = 1
         current_packages = {pkg[0] for pkg in session.execute(sql).fetchall()}
 
         # Retrieve the packages visible to the user
-        sharing = pkgs_search_share({"login": login})
-        visible_packages = get_all_packages(
+        sharing = PkgsDatabase().pkgs_search_share({"login": login})
+        visible_packages = PkgsDatabase().get_all_packages(
             login, sharing["config"]["centralizedmultiplesharing"]
         )
         visible_uuids = {pkg for pkg in visible_packages["datas"]["uuid"]}

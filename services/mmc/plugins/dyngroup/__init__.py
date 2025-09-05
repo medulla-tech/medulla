@@ -7,7 +7,16 @@ It provide an API to work with the informations in the Dyngroup database.
 It also provide access to the QueryManager API
 """
 from mmc.support.mmctools import xmlrpcCleanup
-from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
+
+from mmc.support.mmctools import (
+    xmlrpcCleanup,
+    RpcProxyI,
+    ContextMakerI,
+    SecurityContext,
+    EnhancedSecurityContext
+)
+from mmc.plugins.base import (with_xmpp_context,
+                              with_optional_xmpp_context,)
 
 import logging
 import re
@@ -75,6 +84,42 @@ def activate_2():
     return True
 
 
+class ContextMaker(ContextMakerI):
+    """
+    Fabrique de contextes personnalisés pour XMPP, héritée de ContextMakerI.
+    Sert à créer et initialiser un objet de type `EnhancedSecurityContext`.
+
+    appeler sur chaque module a l'initialiasation'
+
+    Méthodes
+    --------
+    getContext() :
+        Crée et retourne un contexte sécurisé enrichi contenant les informations
+        de l'utilisateur et de la requête courante.
+    """
+
+    def getContext(self):
+        """
+        Crée un contexte de type `EnhancedSecurityContext` pour l'utilisateur courant.
+
+        Retourne
+        --------
+        EnhancedSecurityContext
+            Contexte initialisé avec :
+              - `userid` : l'identifiant de l'utilisateur courant
+              - `request` : la requête associée
+              - `session` : la session courante
+
+        Effets de bord
+        --------------
+        - Écrit des logs de niveau `error` lors de la création du contexte.
+        """
+        s = EnhancedSecurityContext()
+        s.userid = self.userid
+        s.request = self.request
+        s.session = self.session
+        return s
+
 def calldb(func, *args, **kw):
     return getattr(DyngroupDatabase(), func).__call__(*args, **kw)
 
@@ -96,8 +141,8 @@ def isProfilesEnable():  # NEW
 
 class RpcProxy(RpcProxyI):
     # new groups implementations
-    def arePartOfAProfile(self, uuids):
-        ctx = self.currentContext
+    @with_optional_xmpp_context
+    def arePartOfAProfile(self, uuids, ctx=None):
         return DyngroupDatabase().arePartOfAProfile(ctx, uuids)
 
     def hasMoreThanOneEthCard(self, uuids):

@@ -19,7 +19,7 @@ from mmc.support.mmctools import (RpcProxyI,
                                   ContextMakerI,
                                   SecurityContext,
                                   EnhancedSecurityContext,
-                                  _update_filter)
+                                  update_filter)
 from mmc.plugins.glpi import (with_xmpp_context,
                               with_optional_xmpp_context,
                               Contexte_XmlRpc_Glpi)
@@ -445,59 +445,59 @@ class RpcProxy(RpcProxyI):
             start_date, end_date, typelog, action, module, user, how, who, why, headercolumn
         )
 
-    def _update_filter(self, filter_dict, allowed_entities):
-        """
-        Met à jour le filtre 'location' pour ne contenir que les UUID correspondant
-        aux entités autorisées.
-
-        Exemple :
-            allowed_entities = [1,2]
-
-            {'location': 'UUID3'}  -> {'location': 'UUID1,UUID2'}
-            {'location': ''}       -> {'location': 'UUID1,UUID2'}
-            {}                     -> {'location': 'UUID1,UUID2'}
-            {'location': 'UUID3,UUID1'} -> {'location': 'UUID1'}
-
-        Args:
-            filter_dict (dict): dictionnaire du filtre.
-            allowed_entities (list[int]): liste d'entiers représentant les entités autorisées.
-
-        Returns:
-            dict: dictionnaire avec 'location' corrigé en fonction des droits utilisateur.
-        """
-
-        # Chaîne par défaut = toutes les entités permises
-        default_location = ",".join(f"UUID{e}" for e in allowed_entities)
-
-        # Cas 1 & 2 : pas de location ou location vide
-        if 'location' not in filter_dict or not filter_dict['location']:
-            filter_dict['location'] = default_location
-            return filter_dict
-
-        # Cas 3 : filtrer les UUID existants selon allowed_entities
-        uuids = [u.strip() for u in filter_dict['location'].split(",") if u.strip()]
-        valid_uuids = []
-
-        for u in uuids:
-            if u.startswith("UUID"):
-                try:
-                    idx = int(u[4:])  # récupérer l'index après "UUID"
-                    if idx in allowed_entities:
-                        valid_uuids.append(u)
-                except ValueError:
-                    continue
-
-        # si rien n'est valide → on applique la valeur par défaut
-        if valid_uuids:
-            filter_dict['location'] = ",".join(valid_uuids)
-        else:
-            filter_dict['location'] = default_location
-
-        return filter_dict
+    # def update_filter(self, filter_dict, allowed_entities):
+    #     """
+    #     Met à jour le filtre 'location' pour ne contenir que les UUID correspondant
+    #     aux entités autorisées.
+    #
+    #     Exemple :
+    #         allowed_entities = [1,2]
+    #
+    #         {'location': 'UUID3'}  -> {'location': 'UUID1,UUID2'}
+    #         {'location': ''}       -> {'location': 'UUID1,UUID2'}
+    #         {}                     -> {'location': 'UUID1,UUID2'}
+    #         {'location': 'UUID3,UUID1'} -> {'location': 'UUID1'}
+    #
+    #     Args:
+    #         filter_dict (dict): dictionnaire du filtre.
+    #         allowed_entities (list[int]): liste d'entiers représentant les entités autorisées.
+    #
+    #     Returns:
+    #         dict: dictionnaire avec 'location' corrigé en fonction des droits utilisateur.
+    #     """
+    #
+    #     # Chaîne par défaut = toutes les entités permises
+    #     default_location = ",".join(f"UUID{e}" for e in allowed_entities)
+    #
+    #     # Cas 1 & 2 : pas de location ou location vide
+    #     if 'location' not in filter_dict or not filter_dict['location']:
+    #         filter_dict['location'] = default_location
+    #         return filter_dict
+    #
+    #     # Cas 3 : filtrer les UUID existants selon allowed_entities
+    #     uuids = [u.strip() for u in filter_dict['location'].split(",") if u.strip()]
+    #     valid_uuids = []
+    #
+    #     for u in uuids:
+    #         if u.startswith("UUID"):
+    #             try:
+    #                 idx = int(u[4:])  # récupérer l'index après "UUID"
+    #                 if idx in allowed_entities:
+    #                     valid_uuids.append(u)
+    #             except ValueError:
+    #                 continue
+    #
+    #     # si rien n'est valide → on applique la valeur par défaut
+    #     if valid_uuids:
+    #         filter_dict['location'] = ",".join(valid_uuids)
+    #     else:
+    #         filter_dict['location'] = default_location
+    #
+    #     return filter_dict
 
     @with_optional_xmpp_context
     def get_machines_list(self, start, end, filter, ctx=None):
-        filter = _update_filter(filter, ctx.get_session_info()['mondict']['liste_entities_user'])
+        filter = update_filter(filter, ctx.get_session_info()['mondict']['liste_entities_user'])
         logger.debug("filter: %s " % filter)
         return XmppMasterDatabase().get_machines_list(start,
                                                       end, filter)
