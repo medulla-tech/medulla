@@ -122,13 +122,13 @@ class ContextMaker(ContextMakerI):
 
 def calldb(func, *args, **kw):
     return getattr(DyngroupDatabase(), func).__call__(*args, **kw)
-
-
-class ContextMaker(ContextMakerI):
-    def getContext(self):
-        s = SecurityContext()
-        s.userid = self.userid
-        return s
+#
+#
+# class ContextMaker(ContextMakerI):
+#     def getContext(self):
+#         s = SecurityContext()
+#         s.userid = self.userid
+#         return s
 
 
 def isDynamicEnable():

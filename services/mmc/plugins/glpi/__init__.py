@@ -14,7 +14,8 @@ from mmc.support.mmctools import (
     RpcProxyI,
     ContextMakerI,
     SecurityContext,
-    EnhancedSecurityContext
+    EnhancedSecurityContext,
+    update_filter
 )
 from mmc.plugins.base import (with_xmpp_context,
                               with_optional_xmpp_context,)
@@ -113,14 +114,14 @@ class RpcProxy(RpcProxyI):
     @with_optional_xmpp_context
     def get_machines_list(self, start, end, filter, ctx=None):
         filter = update_filter(filter, ctx.get_session_info()['mondict']['liste_entities_user'])
+        logger.debug("filter : %s " % filter)
         return xmlrpcCleanup(Glpi().get_machines_list(start, end, filter))
 
     @with_optional_xmpp_context
     def get_machines_list1(self, start, end, filter, ctx=None):
-        logger.debug("entity user possible: %s " %  ctx.get_session_info()['mondict']['liste_entities_user'])
-        logger.debug("filter: %s " % filter)
+        filter = update_filter(filter, ctx.get_session_info()['mondict']['liste_entities_user'])
+        logger.debug("filter : %s " % filter)
         return xmlrpcCleanup(Glpi().get_machines_list1(start, end, filter))
-
 
     def getMachineNumberByState(self):
         ctx = self.currentContext
