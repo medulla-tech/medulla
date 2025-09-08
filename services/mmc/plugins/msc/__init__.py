@@ -109,17 +109,6 @@ def activate_2():
     conf.init("msc")
     return True
 
-#
-# class ContextMaker(ContextMakerI):
-#     def getContext(self):
-#         s = SecurityContext()
-#         s.userid = self.userid
-#         s.locationsCount = ComputerLocationManager().getLocationsCount()
-#         s.userids = ComputerLocationManager().getUsersInSameLocations(self.userid)
-#         s.filterType = "mine"
-#         return s
-
-
 
 class ContextMaker(ContextMakerI):
     """
