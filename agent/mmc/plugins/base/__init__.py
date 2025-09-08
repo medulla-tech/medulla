@@ -573,6 +573,7 @@ def createUser(
     createHomeDir=True,
     ownHomeDir=False,
     primaryGroup=None,
+    organisation=None,
 ):
     return ldapUserGroupControl().addUser(
         login,
@@ -583,6 +584,7 @@ def createUser(
         createHomeDir,
         ownHomeDir,
         primaryGroup,
+        organisation,
     )
 
 
@@ -1218,6 +1220,7 @@ class LdapUserGroupControl:
         createHomeDir=True,
         ownHomeDir=False,
         primaryGroup=None,
+        organisation=None,
     ):
         """
         Add an user in ldap directory
@@ -1250,10 +1253,18 @@ class LdapUserGroupControl:
         r = AF().log(PLUGIN_NAME, AA.BASE_ADD_USER, [(ident, AT.USER)])
 
         # Get the homeDir path
-        if ownHomeDir:
-            homeDir = self.getHomeDir(uid, homeDir, False)
-        else:
-            homeDir = self.getHomeDir(uid, homeDir)
+        # if ownHomeDir:
+        #     homeDir = self.getHomeDir(uid, homeDir, False)
+        # else:
+        #     homeDir = self.getHomeDir(uid, homeDir)
+
+        try:
+            if ownHomeDir:
+                homeDir = self.getHomeDir(uid, homeDir, False)
+            else:
+                homeDir = self.getHomeDir(uid, homeDir)  # checkExists=True par défaut
+        except Exception as e:
+            return {"success": False, "message": str(e)}
 
         uidNumber = self.freeUID()
 
@@ -1317,6 +1328,7 @@ class LdapUserGroupControl:
             "shadowMax": "99999",
             "shadowFlag": "134538308",
             "shadowLastChange": "11192",
+            "o": organisation if organisation else "",
         }
 
         user_info = self._applyUserDefault(user_info, self.userDefault["base"])
@@ -1792,22 +1804,29 @@ class LdapUserGroupControl:
 
     def delUser(self, uid, home):
         """
-        Delete an user
-        @param uid: uid of the user.
-        @type  uid: str
-
-        @param home: if =1 delete home directory
-        @type  home: int
+        Delete an LDAP user and (optionally) their home directory if it exists.
         """
         userdn = self.searchUserDN(uid)
         r = AF().log(PLUGIN_NAME, AA.BASE_DEL_USER, [(userdn, AT.USER)])
-        # Run delUser hook
         self.runHook("base.deluser", uid)
 
         if home and self.userHomeAction:
-            homedir = self.getDetailedUser(uid)["homeDirectory"][0]
-            if os.path.exists(homedir):
-                shutil.rmtree(homedir)
+            details  = self.getDetailedUser(uid) or {}
+            values   = details.get("homeDirectory") or []
+            homedir  = values[0] if values else None
+
+            if homedir and os.path.isdir(homedir):
+                try:
+                    # optionnel mais prudent : éviter les chemins inattendus
+                    SAFE_ROOT = "/home"
+                    real = os.path.realpath(homedir)
+                    if real.startswith(os.path.realpath(SAFE_ROOT) + os.sep):
+                        shutil.rmtree(real)
+                    else:
+                        logger.warning("Home en dehors de %s (%s) — suppression ignorée", SAFE_ROOT, real)
+                except Exception as e:
+                    logger.warning("Suppression du home échouée pour %s: %s", homedir, e)
+            # sinon: rien à faire (home absent)
 
         self.delRecursiveEntry(userdn)
         r.commit()

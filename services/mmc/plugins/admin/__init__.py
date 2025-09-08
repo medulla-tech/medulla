@@ -888,15 +888,26 @@ class GLPIClient:
         self._raise_glpi("Add Profile_User", r1 if r1.status_code >= 300 else r2)
 
     # DELETE
+    def _find_selfservice_profile_id(self) -> int | None:
+        try:
+            profs = self.get_list("profiles", False) or []
+            def norm(s): return (s or "").lower().replace(" ", "").replace("-", "")
+            for p in profs:
+                if norm(p.get("name")) in ("selfservice", "self_service"):
+                    return int(p["id"])
+        except Exception:
+            pass
+        return None
+
     def delete_entity(self, entity_id):
         """
-        Supprime une entité par son ID.
+        Supprime une entité puis assigne Self-Service sur l’entité parente
+        aux utilisateurs qui y ont été migrés par GLPI.
         """
         if not self.SESSION_TOKEN:
             msg = "Session non initialisée. Veuillez initialiser la session."
             logger.error(msg)
             return {"success": False, "message": msg}
-
         if not entity_id:
             msg = "[!] Usage: delete_entity <entity_id>"
             logger.error(msg)
@@ -906,13 +917,25 @@ class GLPIClient:
             headers = self._headers()
         except Exception as e:
             logger.error(f"Session/headers error: {e}")
-            return 0
+            return {"success": False, "message": str(e)}
 
-        response = requests.delete(
-            f"{self.URL_BASE}/Entity/{entity_id}",
-            headers=headers
-        )
+        eid = int(entity_id)
 
+        parent_id = 0
+        try:
+            info = self.get_entity_info(eid) or {}
+            parent_id = int(info.get("entities_id") or 0)
+        except Exception:
+            pass
+
+        try:
+            users_rows = self.get_users_count_by_entity(eid) or []
+            user_ids = [int(u.get("id") or 0) for u in users_rows if u.get("id")]
+        except Exception:
+            user_ids = []
+
+        # delete entity
+        response = requests.delete(f"{self.URL_BASE}/Entity/{eid}", headers=headers)
         if response.status_code >= 300:
             try:
                 error_data = response.json()
@@ -923,8 +946,36 @@ class GLPIClient:
             except ValueError:
                 return {"success": False, "message": response.text}
 
-        logger.info(f"[+] Entité {entity_id} supprimée avec succès")
-        return {"success": True, "message": f"Entité {entity_id} supprimée avec succès"}
+        # poser Self-Service sur le parent
+        ss_pid = self._find_selfservice_profile_id()
+        if ss_pid and parent_id and user_ids:
+            for uid in user_ids:
+                try:
+                    payload = {"input": {
+                        "users_id": uid, "profiles_id": ss_pid, "entities_id": parent_id,
+                        "is_recursive": 0, "is_dynamic": 0, "is_default": 1
+                    }}
+                    r1 = requests.post(f"{self.URL_BASE}/User/{uid}/Profile_User",
+                                    headers=headers, json=payload, timeout=15)
+                    if r1.status_code >= 300:
+                        r2 = requests.post(f"{self.URL_BASE}/Profile_User",
+                                        headers=headers, json=payload, timeout=15)
+                        if r2.status_code >= 300:
+                            if "already" not in (r2.text or "").lower():
+                                logger.warning(f"Profile_User add failed for user {uid}: {r2.text}")
+
+                    requests.put(
+                        f"{self.URL_BASE}/User/{uid}",
+                        headers=headers,
+                        json={"input": {"id": uid, "profiles_id": ss_pid}},
+                        timeout=10
+                    ).raise_for_status()
+
+                except Exception as e:
+                    logger.warning(f"Self-Service assign failed for user {uid} on parent {parent_id}: {e}")
+
+        logger.info(f"[+] Entité {eid} supprimée avec succès")
+        return {"success": True, "message": f"Entité {eid} supprimée avec succès"}
 
     def delete_and_purge_user(self, user_id: int) -> dict:
         h = self._headers()
