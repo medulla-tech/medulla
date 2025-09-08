@@ -216,6 +216,10 @@ $page = new Page("editUser", _T('Edit User', 'admin'));
 $page->setFile("modules/admin/admin/editUser.php");
 $submod->addPage($page);
 
+$page = new Page("deleteUser", _T('Delete User', 'admin'));
+$page->setFile("modules/admin/admin/deleteUser.php");
+$submod->addPage($page);
+
 $page = new Page("downloadAgent", _T('Download Agent', 'admin'));
 $page->setFile("modules/admin/admin/downloadAgent.php");
 $submod->addPage($page);
