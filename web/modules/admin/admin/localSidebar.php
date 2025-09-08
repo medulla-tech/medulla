@@ -31,4 +31,8 @@ $sidemenu->addSideMenuItem(new SideMenuItem(_T("Rules", "admin"), "admin", "admi
 
 //--------------------- Entity Manager ----------------
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Entities Management", "admin"), "admin", "admin", "entitiesManagement"));
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Add User", "admin"), "admin", "admin", "editUser"));
+if($_GET['mode'] == 'edit') {
+    $sidemenu->addSideMenuItem(new SideMenuItem(_T("Edit User", "admin"), "admin", "admin", "editUser"));
+} else {
+    $sidemenu->addSideMenuItem(new SideMenuItem(_T("Add User", "admin"), "admin", "admin", "editUser"));
+}

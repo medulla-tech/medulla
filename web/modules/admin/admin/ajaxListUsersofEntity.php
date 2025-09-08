@@ -107,6 +107,10 @@ foreach ($userDetails as $user) {
         'lastname'   => $user['realname'],
         'email'      => $user['email'],
         'profil_name'=> $user['profile_name'],
+        'profile_id' => $user['profiles_id'],
+        'entities_id'=> $user['entity_id'] ?? 0,
+        'is_recursive'=> $user['link_is_recursive'] ?? 0,
+        'is_default'  => $user['link_is_default'] ?? 1,
         'mode'       => 'edit',
     ];
 }
