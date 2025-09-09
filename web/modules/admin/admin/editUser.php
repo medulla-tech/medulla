@@ -206,10 +206,49 @@ foreach ($profiles as $p) {
     }
 }
 $entityIdToName = [];
+$entityIdToComplete = [];
 foreach ($entities as $e) {
     $id   = isset($e['id']) ? (string)$e['id'] : '';
     $name = (string)($e['name'] ?? ($e['completename'] ?? ''));
     if ($id !== '' && $name !== '') $entityIdToName[$id] = $name;
+
+    $complete = (string)($e['completename'] ?? $name);
+    if ($id !== '' && $complete !== '') $entityIdToComplete[$id] = $complete;
+}
+
+// detect the label of the global root (eg "medulla")
+function detectGlobalRootLabel(array $entityIdToComplete, array $u): string {
+    $path = trim((string)($u['entity_path'] ?? ''));
+    if ($path !== '') {
+        $parts = preg_split('/\s*>\s*/', $path);
+        $first = trim($parts[0] ?? '');
+        if ($first !== '') return $first;
+    }
+    $freq = [];
+    foreach ($entityIdToComplete as $cn) {
+        $parts = preg_split('/\s*>\s*/', (string)$cn);
+        $first = trim($parts[0] ?? '');
+        if ($first === '') continue;
+        $freq[$first] = ($freq[$first] ?? 0) + 1;
+    }
+    arsort($freq);
+    return (string)(array_key_first($freq) ?? '');
+}
+
+$globalRootLabel = detectGlobalRootLabel($entityIdToComplete, $u);
+
+function resolveClientRootName(string $selectedEntityId, array $entityIdToComplete, string $globalRootLabel=''): string {
+    $cn = $entityIdToComplete[$selectedEntityId] ?? '';
+    if ($cn === '') return '';
+
+    $parts = preg_split('/\s*>\s*/', $cn);
+    $parts = array_values(array_filter(array_map('trim', $parts), fn($p) => $p !== ''));
+    if (empty($parts)) return '';
+
+    if ($globalRootLabel !== '' && strcasecmp($parts[0], $globalRootLabel) === 0 && count($parts) > 1) {
+        return $parts[1];
+    }
+    return $parts[0];
 }
 
 // Default selection - User profile
@@ -313,8 +352,16 @@ if (isset($_POST["bcreate"])) {
 
     // LAd creation, if failure => GLPI purge + LDAP error
     try {
-        // doesn't create a directory /home
-        $add = add_user($postedUsername, $pwd, $postedFirstName, $postedLastName, null, false, false, null, $u['entity']);
+        $clientRoot = '';
+        if (isset($postedEntityId) && $postedEntityId !== null) {
+            $clientRoot = resolveClientRootName((string)$postedEntityId, $entityIdToComplete, $globalRootLabel);
+        }
+
+        if ($clientRoot === '') {
+            $clientRoot = $entityIdToName[(string)$postedEntityId] ?? ($u['entity'] ?? '');
+        }
+
+        $add = add_user($postedUsername, $pwd, $postedFirstName, $postedLastName, null, false, false, null, $clientRoot);
 
         $sysOk  = false;
         $msgSys = '';
@@ -468,7 +515,9 @@ if (isset($_POST["bupdate"])) {
 
         try {
             $res = xmlrpc_switch_user_profile($userId, $profileIdToUse, $entityIdToUse, $postedIsRecursive, 0, 1, $tokenuser);
-            $ok  = is_array($res) ? (!empty($res['ok']) || !empty($res['success']) || (isset($res['code']) && (int)$res['code'] === 0)) : (bool)$res;
+            $ok  = is_array($res)
+                ? (!empty($res['ok']) || !empty($res['success']) || (isset($res['code']) && (int)$res['code'] === 0))
+                : (bool)$res;
             $okAll = $okAll && $ok;
         } catch (Throwable $e) {
             error_log('[editUser] switch profile/entity/recursive failed: '.$e->getMessage());
@@ -626,9 +675,6 @@ $addInput($form, 'newPassword2', 'Confirm password', '');
 $addInput($form, 'newFirstName', 'First name', $_POST['newFirstName'] ?? $prefill['firstname']);
 $addInput($form, 'newLastName',  'Last name',  $_POST['newLastName']  ?? $prefill['lastname']);
 $addInput($form, 'newEmail',     'Email',      $_POST['newEmail']     ?? $prefill['email']);
-
-$form->add(new HiddenTpl('userId', array("value" => $userId, "hide" => true)));
-$form->add(new HiddenTpl('mode',   (string)$mode));
 
 $form->add(new HiddenTpl('userId'), array('value' => (string)$userId, 'hide' => true));
 $form->add(new HiddenTpl('mode'),   array('value' => (string)$mode,   'hide' => true));

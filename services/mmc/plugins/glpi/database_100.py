@@ -7578,31 +7578,43 @@ class Glpi100(DyngroupDatabaseHelper):
                 ge.level        AS level_entity,
 
                 gm.email,
-
                 gpu.is_recursive AS link_is_recursive,
 
-                (gpu.profiles_id = gu.profiles_id AND gpu.entities_id = gu.entities_id)
-                AS link_is_default
+                (gpu.profiles_id = gu.profiles_id AND gpu.entities_id = gu.entities_id) AS link_is_default,
+
+                CASE WHEN EXISTS (
+                    SELECT 1
+                    FROM glpi.glpi_profiles_users gpu2
+                    WHERE gpu2.users_id   = gu.id
+                    AND gpu2.profiles_id = :id_profile
+                    AND gpu2.entities_id = gpu.entities_id
+                ) THEN 1 ELSE 0 END AS in_target_entity,
+
+                CASE
+                WHEN gp.name IN ('Super-Admin','Super Admin','Super-Administrator','Super administrateur','Super-Administrateur') THEN 50
+                WHEN gp.name IN ('Administrateur','Administrator','Admin') THEN 40
+                WHEN gp.name LIKE '%Technicien%' OR gp.name LIKE '%Technician%' THEN 30
+                WHEN gp.name LIKE '%Observateur%' OR gp.name LIKE '%Read%' OR gp.name LIKE '%Observer%' THEN 20
+                WHEN gp.name IN ('Self-Service','Self Service','Demandeur','Self-Service') THEN 10
+                ELSE 0
+                END AS profile_power
             FROM glpi.glpi_users gu
             LEFT JOIN glpi.glpi_useremails gm
                 ON gm.users_id = gu.id AND gm.is_default = 1
             INNER JOIN glpi.glpi_profiles_users gpu
                     ON gpu.users_id = gu.id
-                AND gpu.profiles_id = :id_profile
             INNER JOIN glpi.glpi_profiles gp
                     ON gp.id = gpu.profiles_id
             INNER JOIN glpi.glpi_entities ge
                     ON ge.id = gpu.entities_id
             WHERE gu.id = :id_user
         """
-
         if is_active is not None:
             sqlrequest += " AND gu.is_active = :is_active "
 
-       # We want in priority the line corresponding to the "default" link (if this is this one)
-        sqlrequest += " ORDER BY link_is_default DESC LIMIT 1"
+        sqlrequest += " ORDER BY in_target_entity DESC, profile_power DESC, link_is_default DESC, gpu.is_recursive DESC, gp.id DESC LIMIT 1"
 
-        params = {"id_user": id_user, "id_profile": id_profile}
+        params = {"id_user": id_user, "id_profile": id_profile or 0}
         if is_active is not None:
             params["is_active"] = is_active
 
@@ -7614,31 +7626,31 @@ class Glpi100(DyngroupDatabaseHelper):
         if not row:
             return {}
 
-        user_raw = dict(row._mapping)
-        user_exp = {}   # Extensible if fusion LDAP/GLPI later
-
+        m = dict(row._mapping)
         return {
-            "user_id":           safe(user_raw.get("user_id")),
-            "name":              user_exp.get("name")       or safe(user_raw.get("name")),
-            "realname":          user_exp.get("realname")   or safe(user_raw.get("realname")),
-            "firstname":         user_exp.get("firstname")  or safe(user_raw.get("firstname")),
-            "email":             safe(user_raw.get("email")),
-            "is_active":         (safe(user_raw.get("is_active"))
-                                if user_raw.get("is_active") is not None
-                                else (user_exp.get("is_active") or "")),
-            "profiles_id":       safe(user_raw.get("profiles_id")),
-            "profile_name":      safe(user_raw.get("profile_name")),
-            "last_login":        user_exp.get("last_login") or safe(user_raw.get("last_login")),
-            "date_mod":          user_exp.get("date_mod")   or safe(user_raw.get("date_mod")),
-            "date_creation":     user_exp.get("date_creation") or safe(user_raw.get("date_creation")),
-            "phone":             user_exp.get("phone")      or safe(user_raw.get("phone")),
-            "entity_id":         safe(user_raw.get("entity_id")),
-            "entity_name":       safe(user_raw.get("entity_name")),
-            "entity_completename": safe(user_raw.get("entity_completename")),
-            "parent_id_entity":  safe(user_raw.get("parent_id_entity")),
-            "level_entity":      safe(user_raw.get("level_entity")),
-            "link_is_recursive": int(user_raw.get("link_is_recursive") or 0),
-            "link_is_default":   int(user_raw.get("link_is_default") or 0),
+            "user_id":             safe(m.get("user_id")),
+            "name":                safe(m.get("name")),
+            "realname":            safe(m.get("realname")),
+            "firstname":           safe(m.get("firstname")),
+            "email":               safe(m.get("email")),
+            "is_active":           int(m.get("is_active") or 0),
+
+            "profiles_id":         safe(m.get("profiles_id")),
+            "profile_name":        safe(m.get("profile_name")),
+
+            "last_login":          safe(m.get("last_login")),
+            "date_mod":            safe(m.get("date_mod")),
+            "date_creation":       safe(m.get("date_creation")),
+            "phone":               safe(m.get("phone")),
+
+            "entity_id":           safe(m.get("entity_id")),
+            "entity_name":         safe(m.get("entity_name")),
+            "entity_completename": safe(m.get("entity_completename")),
+            "parent_id_entity":    safe(m.get("parent_id_entity")),
+            "level_entity":        safe(m.get("level_entity")),
+
+            "link_is_recursive":   int(m.get("link_is_recursive") or 0),
+            "link_is_default":     int(m.get("link_is_default") or 0),
         }
 
     @DatabaseHelper._sessionm
