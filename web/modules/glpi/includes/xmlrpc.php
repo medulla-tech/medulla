@@ -96,6 +96,11 @@ function getLocationsForUser($username){
     return xmlCall("glpi.getLocationsForUser", array($username));
 }
 
+
+function getLocationsForUsersName($username){
+    return xmlCall("glpi.getLocationsForUsersName", array($username));
+}
+
 function setLocationsForUser($username, $attr){
     return xmlCall("glpi.setLocationsForUser", array($username, $attr));
 }

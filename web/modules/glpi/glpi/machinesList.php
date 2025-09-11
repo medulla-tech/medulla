@@ -25,6 +25,9 @@
 require("graph/navbar.inc.php");
 require("modules/base/computers/localSidebar.php");
 require("modules/glpi/includes/html.php");
+global $conf;
+
+
 $p = new PageGenerator(_T("Machines List view xmpp", 'glpi'));
 $p->setSideMenu($sidemenu);
 $p->display();
@@ -46,10 +49,7 @@ if ($computerpresence == "no_presence") echo "checked";
 echo ' id="namepresence3" name="namepresence" value="no_presence"/> ';
 echo '<label for="namepresence3" style="display:initial;">'._('Offline computers').'</label>';
 
-
-
 $ajax = new AjaxFilterParamssearch(urlStrRedirect("base/computers/ajaxMachinesList"));
-
 
         $chaine = array(
         'id'                    => _T("Machine ID", 'xmppmaster'),
@@ -96,7 +96,6 @@ $ajax->setfieldsearch(array_flip ($chaine ));
 
 list($list, $values) = getEntitiesSelectableElements();
 
-$listWithAll = array_merge([_T("All my entities", "glpi")], $list);
 
 # FIXME: This variable should be added as a parameter.
 $root_sees_all_machines = 0;//  1 The root user sees all the machines, even those with neither entity nor uuid_inventory.
@@ -107,11 +106,12 @@ if ($root_sees_all_machines == 1)
         $valuesWithAll = array_merge([-1], $values);
     else
         $valuesWithAll = array_merge([implode(',',$values)], $values);
+        $listWithAll = array_merge([_T("All my entities", "glpi")], $list);
 }
 else{
     $valuesWithAll = array_merge([implode(',',$values)], $values);
+    $listWithAll = array_merge([_T("All my entities", "glpi")], $list);
 }
-
 
 $ajax->setElements($listWithAll);
 $ajax->setElementsVal($valuesWithAll);
@@ -119,41 +119,25 @@ $ajax->display();
 echo '<br /><br /><br /><br />';
 $ajax->displayDivToUpdate();
 ?>
+
+
 <script type="text/javascript">
-//jQuery('#location option[value=""]').prop('selected', true);
+// Fonction utilitaire : récupère un paramètre GET avec une valeur par défaut
+function getQueryParam(key, defaultValue = "") {
+    const params = new URLSearchParams(window.location.search);
+    return params.has(key) ? params.get(key) : defaultValue;
+}
 
-    function getQuerystringDef(key, default_) {
-        if (default_==null) default_="";
-        key = key.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
-        var regex = new RegExp("[\\?&]"+key+"=([^&#]*)");
-        var qs = regex.exec(window.location.href);
+// Gestion du changement sur les boutons radio
+jQuery('input[type=radio][name=namepresence]').change(function () {
+    const valselect = this.value;
 
-        if(qs == null)
-            return default_;
+    // Utilisation de l'API URL
+    const url = new URL(window.location.href);
+    url.searchParams.set("computerpresence", valselect);
 
-        else
-            return qs[1];
-    }
-    //Radiobox Mode
-    jQuery('input[type=radio][name=namepresence]').change(function(){
-
-        var valselect  = this.value;
-        var url = window.location.href;
-
-        if( !getQuerystringDef("computerpresence", false)){
-            var url = window.location.href + "&" + "computerpresence"  + "=" + valselect;
-            window.location = url;
-        }
-        else{
-            var array_url = url.split("?");
-            var adress = array_url[0];
-            var parameters = array_url[1];
-            var parameterlist = parameters.split("&");
-            parameterlist.pop();
-            parameterstring = parameterlist.join('&');
-            var url = adress + "?" + parameterstring + "&" + "computerpresence"  + "=" + valselect;
-            window.location = url;
-        }
-
-    });
+    // Recharge la page avec le nouveau paramètre
+    window.location.href = url.toString();
+});
 </script>
+

@@ -276,6 +276,8 @@ def hasKnownOS(uuid):
 def getLocationsForUser(*args, **kwargs):
     return xmlrpcCleanup(Glpi().getLocationsForUser(*args, **kwargs))
 
+def getLocationsForUsersName(*args, **kwargs):
+    return xmlrpcCleanup(Glpi().getLocationsForUsersName(*args, **kwargs))
 
 def setLocationsForUser(*args, **kwargs):
     return xmlrpcCleanup(Glpi().setLocationsForUser(*args, **kwargs))

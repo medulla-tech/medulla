@@ -21,67 +21,84 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with MMC; If not, see <http://www.gnu.org/licenses/>.
- *
+ * file modules/medulla_server/medulla_server/computers_list.php
  */
 
 require("modules/medulla_server/includes/xmlrpc.inc.php");
 require_once("modules/medulla_server/includes/utilities.php");
 
-$param = array();
-if (isset($_SESSION['computerpresence'])  && $_SESSION['computerpresence'] != "all_computer")
+/**
+ * Construction d’un tableau $param à partir de variables de session et de paramètres GET.
+ * On filtre et encode les données pour éviter toute injection.
+ */
+
+// Initialisation
+$param = [];
+
+/**
+ * 1. Gestion des paramètres liés à la présence des ordinateurs
+ */
+if (isset($_SESSION['computerpresence']) && $_SESSION['computerpresence'] !== "all_computer") {
     $param['computerpresence'] = $_SESSION['computerpresence'];
-
-if (isset($_GET['gid'])) {
-    $param['gid'] = urlencode($_GET['gid']);
-}
-if (isset($_GET['groupname'])) {
-    $param['groupname'] = urlencode($_GET['groupname']);
-}
-//if (isset($_GET['request'])) { $param['request'] = $_SESSION['request'];}
-/* if (isset($_GET['request'])) {
-  $_SESSION['request'] = $_GET['request'];
-  } */
-if (isset($_GET['equ_bool'])) {
-    $param['equ_bool'] = urlencode($_GET['equ_bool']);
-}
-if (isset($_GET['imaging_server'])) {
-    $param['imaging_server'] = urlencode($_GET['imaging_server']);
 }
 
+/**
+ * 2. Paramètres GET classiques
+ */
+$directParams = ['gid', 'groupname', 'equ_bool', 'imaging_server'];
+
+foreach ($directParams as $key) {
+    if (isset($_GET[$key])) {
+        $param[$key] = urlencode($_GET[$key]);
+    }
+}
+
+/**
+ * 3. Paramètres spécifiques si le module "xmppmaster" est activé
+ */
 if (in_array("xmppmaster", $_SESSION["supportModList"])) {
-    if (isset($_GET['cmd_id'])) {
-        $param['cmd_id'] = urlencode($_GET['cmd_id']);
-    }
-    if (isset($_GET['login'])) {
-        $param['login'] = urlencode($_GET['login']);
+    // Liste des paramètres autorisés pour xmppmaster
+    $allowedParams = ['cmd_id', 'login', 'id', 'ses', 'hos', 'sta'];
+
+    foreach ($allowedParams as $key) {
+        if (isset($_GET[$key])) {
+            $param[$key] = urlencode($_GET[$key]);
+        }
     }
 
-    if (isset($_GET['id'])) {
-        $param['id'] = urlencode($_GET['id']);
-    }
-
-    if (isset($_GET['ses'])) {
-        $param['ses'] = urlencode($_GET['ses']);
-    }
-
-    if (isset($_GET['hos'])) {
-        $param['hos'] = urlencode($_GET['hos']);
-    }
-
-    if (isset($_GET['sta'])) {
-        $param['sta'] = urlencode($_GET['sta']);
-    }
-
+    // Cas particulier : "action" est mappé sur "logview"
     if (isset($_GET['action'])) {
         $param['logview'] = urlencode($_GET['action']);
     }
 }
 
+/**
+ * 4. Nouveaux paramètres optionnels à prendre depuis $_GET
+ */
+$extraParams = ['type', 'owner', 'idowner', 'exist', 'is_owner','entity_name','entity_id', 'entity_completename','profile','is_recursive', 'is_dynamic'];
+
+foreach ($extraParams as $key) {
+    if (isset($_GET[$key])) {
+        $param[$key] = urlencode($_GET[$key]);
+    }
+}
+
+/**
+ * 5. $param est maintenant construit avec toutes les conditions possibles
+ */
+
 
 if (displayLocalisationBar() && (isset($_GET['imaging_server']) && $_GET['imaging_server'] == '' || !isset($_GET['imaging_server']))) {
+    $restreint = isset($_GET["restreint"]) ? 1 : 0;
     $ajax = new AjaxFilterLocation(urlStrRedirect("base/computers/ajaxComputersList"), "container", 'location', $param);
+    if (! $restreint){
+        list($list, $values) = getEntitiesSelectableElements(True);
+    }else
+    {
+        $list = ["UUID".$_GET['entity_id'] =>$_GET['entity_completename']];
+        $values = ["UUID".$_GET['entity_id'] =>"UUID".$_GET['entity_id']];
+    }
 
-    list($list, $values) = getEntitiesSelectableElements(True);
     $ajax->setElements($list);
     $ajax->setElementsVal($values);
     if (!empty($param['gid'])) {
