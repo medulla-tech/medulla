@@ -3140,7 +3140,7 @@ class RpcProxy(RpcProxyI):
 
     def simple_computer_count(self):
         return ComputerManager().simple_computer_count()
-
+#JFKJFK
     def getComputersListHeaders(self):
         ctx = self.currentContext
         return ComputerManager().getComputersListHeaders(ctx)

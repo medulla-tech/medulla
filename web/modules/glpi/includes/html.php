@@ -380,31 +380,26 @@ if ($this->refresh) {
 }
 
 
-
-
-
-
 class AjaxFilterParamssearch extends AjaxFilterLocation {
-   /*
-   Like AjaxFilterGlpi, this object create a search bar with this fileds:
-    - entities selectbox
-    - peripherals field selectbox
-    - value field
-   */
-   function __construct($url, $divid = "container", $paramname = 'dede', $params = array()) {
+
+
+      function __construct($url, $divid = "container", $paramname = 'entity_search', $params = array()) {
        parent::__construct($url, $divid, $params);
-       $this->location = new SelectItem($paramname, 'pushSearch', 'searchfieldreal noborder');
+
        $this->paramname = $paramname;
-       $this->checkbox=array();
-       $this->onchange="pushSearch(); return false;";
+       $this->checkbox = array();
+       $this->onchange = "pushSearch(); return false;";
        $this->fields = array();
+
+       // initialisation de location avec SelectItem vide
+       $this->location = new SelectItem($paramname, 'pushSearch', 'searchfieldreal noborder');
    }
 
-   function addCheckbox($checkbox)
-   {
-       $checkbox->onchange=$this->onchange;
-       $this->checkbox[]=$checkbox;
+   function addCheckbox($checkbox) {
+       $checkbox->onchange = $this->onchange;
+       $this->checkbox[] = $checkbox;
    }
+
    function setElements($elt) {
        if (safeCount($elt) == 0) {
            $this->location = new NoLocationTpl($this->paramname);
@@ -413,7 +408,29 @@ class AjaxFilterParamssearch extends AjaxFilterLocation {
            $this->location = new SingleLocationTpl($this->paramname, $loc[0]);
        } else {
            $this->location->setElements($elt);
+
+           // si aucun élément sélectionné n'a été défini, on prend le premier
+           if (!isset($this->location->selected)) {
+               $keys = array_keys($elt);
+               $this->location->setSelected($keys[0]);
+           }
        }
+   }
+
+   function setElementsVal($values) {
+       if (safeCount($values) >= 1) {
+           $this->location->setElementsVal($values);
+
+           // si aucune sélection définie, utiliser la première valeur
+           if (!isset($this->location->selected)) {
+               $firstVal = reset($values);
+               $this->location->setSelected($firstVal);
+           }
+       }
+   }
+
+   function setSelected($elemnt) {
+       $this->location->setSelected($elemnt);
    }
 
     function setfieldsearch($elt){
@@ -424,16 +441,6 @@ class AjaxFilterParamssearch extends AjaxFilterLocation {
                 $this->fields = $elt;
             }
     }
-
-    function setElementsVal($elt) {
-       if (safeCount($elt) >= 1) {
-           $this->location->setElementsVal($elt);
-       }
-   }
-
-   function setSelected($elemnt) {
-       $this->location->setSelected($elemnt);
-   }
 
    function display($arrParam = array()) {
        global $conf;
@@ -504,83 +511,116 @@ class AjaxFilterParamssearch extends AjaxFilterLocation {
                if (jQuery('#maxperpage').length)
                    maxperpage = jQuery('#maxperpage').val();
 
-
-                      /**
-                * provide navigation in ajax for user
+                /**
+                * Fournit la navigation AJAX (pagination) en conservant filtres et cases à cocher.
+                *
+                * @param {string} filt   Chaîne contenant "filter##location" ou uniquement location
+                * @param {number} start  Index de début pour la pagination
+                * @param {number} end    Index de fin pour la pagination
                 */
+                function updateSearchParam(filt, start, end) {
+                    // 1. Construction de la chaîne de requête pour les cases à cocher sélectionnées
+                    let strCheckbox = "";
+                    jQuery(".checkboxsearch").each(function() {
+                        if (jQuery(this).is(":checked")) {
+                            strCheckbox += '&' + jQuery(this).attr('id') + "=true";
+                        }
+                    });
 
-               function updateSearchParam(filt, start, end) {
-                   /*add checkbox param*/
-                   var strCheckbox ="";
-                   jQuery(".checkboxsearch").each(function() {
-                       if (jQuery(this).is(":checked")) {
-                           strCheckbox+='&'+jQuery(this).attr('id')+"=true";
-                       }
-                   });
-                   var reg = new RegExp("##", "g");
-                   var tableau = filt.split(reg);
-                   var location = "";
-                   var filter = "";
-                   var field = jQuery("#field").val();
-                   var reg1 = new RegExp(tableau[0] + "##", "g");
-                   if (filt.match(reg1)) {
-                       if (tableau[0] != undefined) {
-                           filter = tableau[0];
-                       }
-                       if (tableau[1] != undefined) {
-                           location = tableau[1];
-                       }
-                   } else if (tableau.length == 1) {
-                       if (tableau[0] != undefined) {
-                           location = tableau[0];
-                       }
-                   }
-                   if (jQuery('#maxperpage').length)
-                       maxperpage = jQuery('#maxperpage').val();
-                   if (!location)
-                       location = document.Form.<?php echo $this->paramname ?>.value;
-                   if (!filter)
-                       filter = document.Form.param.value;
+                    // 2. Découpage du paramètre filt
+                    let filter   = "";
+                    let location = "";
+                    const tableau = filt.split(/##/g);
 
-                   jQuery.ajax({
-                       'url': '<?php echo $this->url; ?>filter=' + encodeURIComponent(filter) + '<?php echo $this->params ?>&field='+field+'&<?php echo $this->paramname ?>=' + location + '&start=' + start + '&end=' + end + '&maxperpage=' + maxperpage +strCheckbox,
-                       type: 'get',
-                       success: function(data) {
-                           jQuery("#<?php echo $this->divid; ?>").html(data);
-                       }
-                   });
+                    if (tableau.length >= 2) {
+                        filter   = tableau[0] || "";
+                        location = tableau[1] || "";
+                    } else if (tableau.length === 1) {
+                        location = tableau[0] || "";
+                    }
 
-               }
+                    // 3. Valeurs par défaut si vides
+                    if (jQuery('#maxperpage').length) {
+                        maxperpage = jQuery('#maxperpage').val();
+                    }
+                    if (!location) {
+                        location = jQuery('#<?php echo $this->paramname ?>').val();
+                    }
+                    if (!filter) {
+                        filter = document.Form.param.value;
+                    }
 
-               /**
-                * update div with user
+                    // 4. Récupération du champ de recherche
+                    const field    = jQuery("#field").val();
+                    let contains   = "";
+                    if (typeof jQuery("#contains").val() !== "undefined") {
+                        contains = jQuery("#contains").val();
+                    }
+
+                    // 5. Appel AJAX pour mettre à jour les résultats
+                    jQuery.ajax({
+                        url: '<?php echo $this->url; ?>filter=' +
+                            encodeURIComponent(filter) +
+                            '<?php echo $this->params ?>' +
+                            '&field=' + encodeURIComponent(field) +
+                            '&contains=' + encodeURIComponent(contains) +
+                            '&location=' + encodeURIComponent(location) +
+                            '&start=' + start +
+                            '&end=' + end +
+                            '&maxperpage=' + encodeURIComponent(maxperpage) +
+                            strCheckbox,
+                        type: 'GET',
+                        success: function(data) {
+                            jQuery("#<?php echo $this->divid; ?>").html(data);
+                        },
+                        error: function(xhr, status, error) {
+                            console.error("Erreur AJAX:", status, error);
+                        }
+                    });
+                }
+
+
+                /**
+                * Met à jour la recherche en fonction des paramètres sélectionnés,
+                * y compris les cases à cocher et les champs de formulaire.
                 */
-               function updateSearch() {
-                   /*add checkbox param*/
-                   var strCheckbox ="";
-                   jQuery(".checkboxsearch").each(function() {
-                       if (jQuery(this).is(":checked")) {
-                           strCheckbox+='&'+jQuery(this).attr('id')+"=true";
-                       }
-                   });
-                   launch--;
-                   if (launch == 0) {
-                     var field = "";
-                     field = jQuery("#field").val();
-                     var contains = "";
-                     if(typeof(jQuery("#contains").val())!= "undefined")
-                      contains = jQuery("#contains").val();
+                function updateSearch() {
+                    // 1. Construction de la chaîne de requête pour les cases à cocher sélectionnées
+                    let strCheckbox = "";
+                    jQuery(".checkboxsearch").each(function() {
+                        if (jQuery(this).is(":checked")) {
+                            strCheckbox += '&' + jQuery(this).attr('id') + "=true";
+                        }
+                    });
 
-                       jQuery.ajax({
-                           'url': '<?php echo $this->url; ?>filter=' + encodeURIComponent(document.Form.param.value) + '<?php echo $this->params ?>&field='+field+'&contains='+contains+'&<?php echo $this->paramname ?>=' + document.Form.<?php echo $this->paramname ?>.value + '&maxperpage=' + maxperpage +strCheckbox,
-                           type: 'get',
-                           success: function(data) {
-                               jQuery("#<?php echo $this->divid; ?>").html(data);
-                           }
-                       });
-                   }
-               }
-
+                    // 2. Décrémentation du compteur de lancement (si utilisé pour gérer plusieurs appels)
+                    launch--;
+                    entity = jQuery('#<?php echo $this->paramname ?>').val();
+                    // 3. Exécution de la requête AJAX uniquement si le compteur atteint zéro
+                    if (launch === 0) {
+                        // Récupération des valeurs des champs de formulaire
+                        const field = jQuery("#field").val();
+                        let contains = "";
+                        if (typeof jQuery("#contains").val() !== "undefined") {
+                            contains = jQuery("#contains").val();
+                        }
+                        // 4. Appel AJAX pour mettre à jour les résultats
+                        jQuery.ajax({
+                    url: '<?php echo $this->url; ?>filter=' +
+                        encodeURIComponent(document.Form.param.value) +
+                        '<?php echo $this->params ?>' +
+                        '&field=' + encodeURIComponent(field) +
+                        '&contains=' + encodeURIComponent(contains) +
+                        '&location=' + encodeURIComponent(entity) +
+                        '&maxperpage=' + encodeURIComponent(maxperpage) +
+                        strCheckbox,
+                    type: 'GET',
+                    success: function(data) {
+                        jQuery("#<?php echo $this->divid; ?>").html(data);
+                    }
+                });
+                    }
+                }
 
                /**
                 * wait 500ms and update search
@@ -601,5 +641,4 @@ class AjaxFilterParamssearch extends AjaxFilterLocation {
    }
 
 }
-
 ?>

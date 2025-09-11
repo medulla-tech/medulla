@@ -1009,7 +1009,13 @@ class Groups(object):
             ret["is_owner"] = self.is_owner
         if hasattr(self, "ro"):
             ret["ro"] = self.ro
-        #        if DyngroupDatabase().getGroupType(self.type): ret['type_label'] = DyngroupDatabase().getGroupType(self.type).value
+
+        # ➕ Ajout du propriétaire (prioritaire) si présent
+        if hasattr(self, "owner_id"):
+            ret["owner_id"] = self.owner_id
+        if hasattr(self, "owner_login"):
+            ret["owner_login"] = self.owner_login
+
         return ret
 
 

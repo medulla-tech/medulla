@@ -11,6 +11,7 @@ import logging
 
 # SqlAlchemy
 from sqlalchemy import and_, or_, asc, select
+from sqlalchemy.orm import aliased
 from sqlalchemy.orm import create_session
 from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 
@@ -237,74 +238,116 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         group = group.filter(self.groups.c.id == id).first()
         return group
 
+    # jfkjfk
     def __allgroups_query(self, ctx, params, session=None, type=0):
         """
-        return a query on group
-        filtered by several flags like canShow, dynamic, static, type (0 = group, 1 = profile)
-        and filters like filter (on the group name with wildcards) and name (on the group name without wildcards)
+        Construit une requête SQLAlchemy pour lister les groupes filtrés.
+        - Prend en compte les droits utilisateur via __get_group_permissions_request_first
+        - Applique les filtres passés dans params (canShow, dynamic, static, filter, name, owner...)
+        - Ajoute en résultat :
+            * le login de l'utilisateur lié aux permissions (m[1])
+            * l'id du propriétaire (m[2])
+            * le login du propriétaire / prioritaire (m[3])
         """
-        (select_from, filter_on) = self.__get_group_permissions_request_first(
-            ctx, session
-        )
+        (select_from, filter_on) = self.__get_group_permissions_request_first(ctx, session)
+
+        # Alias pour joindre le propriétaire du groupe
+        owner_alias = aliased(self.users)
+
         groups = (
             session.query(Groups)
-            .add_column(self.users.c.login)
+            .add_column(self.users.c.login)          # login de l'utilisateur courant (via jointure permissions)
+            .add_column(self.groups.c.FK_users)      # id du propriétaire
+            .add_column(owner_alias.c.login.label("owner_login"))  # login du propriétaire
             .select_from(select_from)
+            .join(owner_alias, owner_alias.c.id == self.groups.c.FK_users)  # jointure explicite sur le propriétaire
             .filter(self.groups.c.type == type)
         )
+
         root_user = self.__getUser("root")
         if filter_on is not None:
             groups = groups.filter(filter_on)
 
+        # Filtre spécial pour root + sidebar
         if (
             ctx.userid == "root"
-            and "localSidebar" in params
-            and params["localSidebar"]
+            and params.get("localSidebar")
             and root_user
         ):
             groups = groups.filter(self.groups.c.FK_users == root_user.id)
 
+        # Application des différents filtres
         if "canShow" in params:
             if params["canShow"]:
                 groups = groups.filter(self.shareGroup.c.display_in_menu == 1)
             else:
                 groups = groups.filter(self.shareGroup.c.display_in_menu == 0)
 
-        try:
-            if params["owner"]:
-                groups = groups.filter(self.users.c.login == params["owner"])
-        except KeyError:
-            pass
+        if "owner" in params:
+            groups = groups.filter(self.users.c.login == params["owner"])
 
-        try:
-            if params["dynamic"]:
-                groups = groups.filter(self.groups.c.query != None)
-        except KeyError:
-            pass
+        if "dynamic" in params:
+            groups = groups.filter(self.groups.c.query != None)
 
-        try:
-            if params["static"]:
-                groups = groups.filter(self.groups.c.query == None)
-        except KeyError:
-            pass
+        if "static" in params:
+            groups = groups.filter(self.groups.c.query == None)
 
-        try:
-            if params["filter"]:
-                groups = groups.filter(
-                    self.groups.c.name.like("%" + params["filter"] + "%")
-                )
-        except KeyError:
-            pass
+        if "filter" in params:
+            groups = groups.filter(self.groups.c.name.like("%" + params["filter"] + "%"))
 
-        try:
-            if params["name"] != None:
-                groups = groups.filter(
-                    self.groups.c.name == params["name"].encode("utf-8")
-                )
-        except KeyError:
-            pass
+        if "name" in params and params["name"] is not None:
+            groups = groups.filter(self.groups.c.name == params["name"].encode("utf-8"))
 
         return groups.group_by(self.groups.c.id)
+
+
+    def getallgroups(self, ctx, params, type=0):
+        """
+        Récupère tous les groupes filtrés par params.
+        - Ajoute une pagination avec min/max
+        - Exclut les groupes techniques commençant par "_@med_Grp_Major_update_win_"
+        - Marque si l'utilisateur courant est le créateur (is_owner)
+        - Ajoute le login et l'id du propriétaire (owner_login / owner_id)
+        Retourne une liste d'objets Groups (compatibles avec g.toH()).
+        """
+        session = create_session()
+        groups = self.__allgroups_query(ctx, params, session, type)
+        groups = groups.order_by(self.groups.c.name)
+
+        # Exclure certains groupes techniques
+        groups = groups.filter(~self.groups.c.name.startswith("_@med_Grp_Major_update_win_"))
+
+        # Pagination
+        min_idx = int(params.get("min", 0))
+        if min_idx:
+            groups = groups.offset(min_idx)
+
+        if "max" in params and params["max"] != -1:
+            max_idx = int(params["max"]) - min_idx
+            groups = groups.limit(max_idx)
+
+        result = groups.all()
+        ret = []
+        for m in result:
+            group_obj = m[0]            # objet Groups
+            creator_login = m[1]        # login utilisateur (permissions)
+            owner_id = m[2]             # id du propriétaire
+            owner_login = m[3]          # login propriétaire
+
+            # Marquer si l'utilisateur courant est le créateur
+            if creator_login == ctx.userid:
+                group_obj.is_owner = True
+
+            # Ajouter propriétaire
+            group_obj.owner_id = owner_id
+            group_obj.owner_login = owner_login
+
+            # On retourne bien l'objet ORM (avec .toH())
+            ret.append(group_obj)
+
+        session.close()
+        return ret
+
 
     def countallgroups(self, ctx, params, type=0):
         """
@@ -318,46 +361,6 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         session.close()
         return ret
 
-    def getallgroups(self, ctx, params, type=0):
-        """
-        get all group filtered by the params dict
-        flags can be canShow, dynamic, static, type (0 = group, 1 = profile)
-        and filters can be filter (on the group name with wildcards) and name (on the group name without wildcards)
-        it's also possible to use min and max to only have a page of the results
-        """
-        session = create_session()
-        groups = self.__allgroups_query(ctx, params, session, type)
-        groups = groups.order_by(self.groups.c.name)
-
-        # Exclude groups where the name starts with "_@Grp_Major_update_win_"
-        groups = groups.filter(~self.groups.c.name.startswith("_@med_Grp_Major_update_win_"))
-
-        min = 0
-        try:
-            if params["min"]:
-                min = int(params["min"])
-                groups = groups.offset(int(min))
-        except KeyError:
-            pass
-
-        try:
-            if params["max"] != -1:
-                max = int(params["max"]) - min
-                groups = groups.limit(max)
-        except KeyError:
-            pass
-
-        result = groups.all()
-        ret = []
-        # For each group check if the user is the owner of the group
-        # (ie; the user that has created the group)
-        for m in result:
-            if m[1] == ctx.userid:
-                m[0].is_owner = True
-            ret.append(m[0])
-
-        session.close()
-        return ret
 
     def groupNameExists(self, ctx, name, id=None, isProfile=False):
         """
