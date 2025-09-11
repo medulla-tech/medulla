@@ -156,7 +156,7 @@ function list_computers(
     $cssClasses = array();
     $actioneditremoteconfiguration = array();
 
-    $headers = getComputersListHeaders();
+    $headers = getComputersListHeaders();# correspond a $_SESSION["getComputersListHeaders"]
 
     if ($listidmachinedeploy != "") {
         $headers1 = array();

@@ -6871,6 +6871,65 @@ class Glpi100(DyngroupDatabaseHelper):
         return entities
 
     @DatabaseHelper._sessionm
+    def getLocationsForUsersName(self, session, usernames):
+        """
+        Récupère les entités (locations) associées à un ou plusieurs utilisateurs,
+        incluant le nom et le nom complet des entités.
+
+        Args:
+            session (sqlalchemy.orm.session.Session): Session SQLAlchemy pour interagir avec la base de données.
+            usernames (str ou list[str]): Un nom d'utilisateur (str) ou une liste de noms d'utilisateurs (list[str]).
+
+        Returns:
+            dict ou list[dict]:
+                - Si `usernames` est une liste : un dictionnaire où chaque clé est un username et la valeur est la liste de ses entités.
+                Exemple : {"jfk1": [{"entity_id": 1, "entity_name": "...", "entity_completename": "...", ...}, ...], ...}
+                - Si `usernames` est une chaîne : une liste d'entités pour cet utilisateur.
+                Exemple : [{"entity_id": 1, "entity_name": "...", "entity_completename": "...", ...}, ...]
+                - Si un utilisateur n'est pas trouvé, sa clé aura une liste vide comme valeur.
+        """
+        # Si usernames est une chaîne, on le transforme en liste pour uniformiser le traitement
+        if isinstance(usernames, str):
+            usernames = [usernames]
+
+        result = {}  # Dictionnaire pour stocker les résultats par username
+
+        for username in usernames:
+            try:
+                # Récupère l'ID de l'utilisateur depuis la base de données
+                user_id = session.query(User).filter_by(name=username).one().id
+                entities = []
+
+                # Jointure entre UserProfile et Entities pour récupérer les informations des entités
+                profiles = session.query(UserProfile, Entities).\
+                    join(Entities, UserProfile.entities_id == Entities.id).\
+                    filter(UserProfile.users_id == user_id).\
+                    all()
+
+                for profile, entity in profiles:
+                    entities.append({
+                        "entity_id": profile.entities_id,
+                        "entity_name": entity.name,
+                        "entity_completename": entity.completename,
+                        "profile": profile.profiles_id,
+                        "is_recursive": profile.is_recursive,
+                        "is_dynamic": profile.is_dynamic,
+                    })
+
+                result[username] = entities  # Ajoute les entités au résultat
+
+            except NoResultFound:
+                # Si l'utilisateur n'existe pas, retourne une liste vide pour ce username
+                result[username] = []
+
+        # Si un seul username était fourni en entrée, retourne directement la liste d'entités
+        if len(usernames) == 1:
+            return result[usernames[0]]
+        else:
+            return result
+
+
+    @DatabaseHelper._sessionm
     def setLocationsForUser(self, session, username, profiles):
         if self.config.dbreadonly:
             self.logger.debug(

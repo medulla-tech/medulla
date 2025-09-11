@@ -448,7 +448,6 @@ class RpcProxy(RpcProxyI):
     @with_optional_xmpp_context
     def get_machines_list(self, start, end, filter, ctx=None):
         filter = update_filter(filter, ctx.get_session_info()['mondict']['liste_entities_user'])
-        logger.debug("filter: %s " % filter)
         return XmppMasterDatabase().get_machines_list(start,
                                                       end, filter)
 
@@ -1162,7 +1161,7 @@ def runXmppApplicationDeployment(self, *args, **kwargs):
 
 
 
-    ##################### JFKJFK
+####################
     def CallXmppPlugin(self, *args, **kwargs):
         return callXmppPlugin(*args, **kwargs)
 

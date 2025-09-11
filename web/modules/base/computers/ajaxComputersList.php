@@ -21,7 +21,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with MMC; If not, see <http://www.gnu.org/licenses/>.
- *
+ * file /modules/base/computers/ajaxComputersList.php
  */
 ?>
 <style>
@@ -67,6 +67,8 @@
     });
 </script>
 <?php
+
+
 require_once("modules/base/includes/computers.inc.php");
 require_once("modules/base/includes/computers_list.inc.php");
 
@@ -77,11 +79,7 @@ $canbedeleted = true;
 $is_group = false;
 
 $filter = array('hostname' => $_GET["filter"]);
-if (isset($_GET["start"])) {
-    $start = $_GET["start"];
-} else {
-    $start = 0;
-}
+$start = $_GET["start"] ?? 0;
 if (isset($_SESSION['computerpresence'])  && $_SESSION['computerpresence'] != "all_computer")
     $filter['computerpresence'] = $_SESSION['computerpresence'];
 
