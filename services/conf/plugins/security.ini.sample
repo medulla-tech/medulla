@@ -1,0 +1,12 @@
+[main]
+disable = 0
+tempdir = /tmp/mmc-security
+
+[database]
+dbdriver = mysql
+dbhost = localhost
+dbport = 3306
+dbname = security
+dbuser = mmc
+dbpasswd = mmc
+
