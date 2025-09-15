@@ -7606,15 +7606,11 @@ class Glpi100(DyngroupDatabaseHelper):
                             session,
                             id_user: int,
                             id_profile: int,
-                            is_active: int | None = 1) -> dict:
+                            is_active: int | None = None) -> dict:
         """
-        Récupère les infos d’un utilisateur + le lien profil/entité demandé.
-        Le "default" est calculé en comparant le lien aux champs par défaut du user
-        (gu.profiles_id / gu.entities_id).
-
+        Recovers all the information from a user (even deactivated) + the profile/entity link.
         Retourne {} si rien trouvé.
         """
-
         sqlrequest = """
             SELECT
                 gu.id           AS user_id,
@@ -7626,21 +7622,16 @@ class Glpi100(DyngroupDatabaseHelper):
                 gu.date_mod,
                 gu.date_creation,
                 gu.phone,
-
                 gpu.profiles_id AS profiles_id,
                 gp.name         AS profile_name,
-
                 gpu.entities_id AS entity_id,
                 ge.name         AS entity_name,
                 ge.completename AS entity_completename,
                 ge.entities_id  AS parent_id_entity,
                 ge.level        AS level_entity,
-
                 gm.email,
                 gpu.is_recursive AS link_is_recursive,
-
                 (gpu.profiles_id = gu.profiles_id AND gpu.entities_id = gu.entities_id) AS link_is_default,
-
                 CASE WHEN EXISTS (
                     SELECT 1
                     FROM glpi.glpi_profiles_users gpu2
@@ -7648,9 +7639,8 @@ class Glpi100(DyngroupDatabaseHelper):
                     AND gpu2.profiles_id = :id_profile
                     AND gpu2.entities_id = gpu.entities_id
                 ) THEN 1 ELSE 0 END AS in_target_entity,
-
                 CASE
-                WHEN gp.name IN ('Super-Admin','Super Admin','Super-Administrator','Super administrateur','Super-Administrateur') THEN 50
+                WHEN gp.name IN ('Super-Admin','Super Admin','Super-Administrateur','Super administrateur','Super-Administrateur') THEN 50
                 WHEN gp.name IN ('Administrateur','Administrator','Admin') THEN 40
                 WHEN gp.name LIKE '%Technicien%' OR gp.name LIKE '%Technician%' THEN 30
                 WHEN gp.name LIKE '%Observateur%' OR gp.name LIKE '%Read%' OR gp.name LIKE '%Observer%' THEN 20
@@ -7668,23 +7658,13 @@ class Glpi100(DyngroupDatabaseHelper):
                     ON ge.id = gpu.entities_id
             WHERE gu.id = :id_user
         """
-        if is_active is not None:
-            sqlrequest += " AND gu.is_active = :is_active "
-
         sqlrequest += " ORDER BY in_target_entity DESC, profile_power DESC, link_is_default DESC, gpu.is_recursive DESC, gp.id DESC LIMIT 1"
-
         params = {"id_user": id_user, "id_profile": id_profile or 0}
-        if is_active is not None:
-            params["is_active"] = is_active
-
         row = session.execute(sqlrequest, params).fetchone()
-
         def safe(v):
             return "" if v is None else v
-
         if not row:
             return {}
-
         m = dict(row._mapping)
         return {
             "user_id":             safe(m.get("user_id")),
@@ -7693,21 +7673,18 @@ class Glpi100(DyngroupDatabaseHelper):
             "firstname":           safe(m.get("firstname")),
             "email":               safe(m.get("email")),
             "is_active":           int(m.get("is_active") or 0),
-
+            "is_disabled":         not bool(m.get("is_active")),
             "profiles_id":         safe(m.get("profiles_id")),
             "profile_name":        safe(m.get("profile_name")),
-
             "last_login":          safe(m.get("last_login")),
             "date_mod":            safe(m.get("date_mod")),
             "date_creation":       safe(m.get("date_creation")),
             "phone":               safe(m.get("phone")),
-
             "entity_id":           safe(m.get("entity_id")),
             "entity_name":         safe(m.get("entity_name")),
             "entity_completename": safe(m.get("entity_completename")),
             "parent_id_entity":    safe(m.get("parent_id_entity")),
             "level_entity":        safe(m.get("level_entity")),
-
             "link_is_recursive":   int(m.get("link_is_recursive") or 0),
             "link_is_default":     int(m.get("link_is_default") or 0),
         }

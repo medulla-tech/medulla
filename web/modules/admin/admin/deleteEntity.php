@@ -18,28 +18,46 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with MMC; If not, see <http://www.gnu.org/licenses/>.
- *
+ * file: deleteEntity.php
  */
-
 require_once("modules/admin/includes/xmlrpc.php");
 
 if (isset($_GET['entityId'])) {
-    $entityId   = $_GET['entityId'];
-    $entityName = $_GET['entityName'];
+    $entityId   = (int)$_GET['entityId'];
+    $entityName = htmlspecialchars($_GET['entityName'] ?? _T("Unknown", "admin"), ENT_QUOTES, 'UTF-8');
 
     $result = xmlrpc_delete_entity($entityId);
 
-    if (is_array($result) && isset($result['success']) && !$result['success']) {
-        new NotifyWidgetFailure(
-            _T("Failed to delete the entity ", "admin") . $entityName . ".<br> " . $result['message']
-        );
-    } elseif (is_array($result) && isset($result['success']) && $result['success']) {
-        new NotifyWidgetSuccess(
-            _T("The entity " . $entityName . " was deleted successfully.", "admin")
-        );
+    if (is_array($result)) {
+        if (isset($result['success']) && $result['success']) {
+            new NotifyWidgetSuccess(
+                sprintf(
+                    _T("Entity <strong>%s</strong> deleted successfully.", "admin"),
+                    $entityName
+                )
+            );
+        } elseif (isset($result['success']) && !$result['success']) {
+            new NotifyWidgetFailure(
+                sprintf(
+                    _T("Failed to delete entity <strong>%s</strong>.<br>Reason: %s", "admin"),
+                    $entityName,
+                    htmlspecialchars($result['message'] ?? _T("Unknown error", "admin"), ENT_QUOTES, 'UTF-8')
+                )
+            );
+        } else {
+            new NotifyWidgetFailure(
+                sprintf(
+                    _T("Unexpected response while deleting entity <strong>%s</strong>.", "admin"),
+                    $entityName
+                )
+            );
+        }
     } else {
         new NotifyWidgetFailure(
-            _T("Unexpected error while deleting the entity ", "admin") . $entityName
+            sprintf(
+                _T("Failed to delete entity <strong>%s</strong>. Invalid server response.", "admin"),
+                $entityName
+            )
         );
     }
 

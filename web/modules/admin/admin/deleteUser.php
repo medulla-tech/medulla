@@ -25,29 +25,56 @@ require_once("modules/admin/includes/xmlrpc.php");
 
 if (isset($_GET['action'], $_GET['userId'], $_GET['userName']) && $_GET['action'] === 'deleteUser') {
     $userId     = (int) $_GET['userId'];
-    $login      = (string) $_GET['userName'];
+    $login      = htmlspecialchars((string) $_GET['userName'], ENT_QUOTES);
     $entityId   = isset($_GET['entities_id']) ? (int) $_GET['entities_id'] : 0;
-    $entityName = isset($_GET['entity_name']) ? (string) $_GET['entity_name'] : '';
+    $entityName = isset($_GET['entity_name']) ? htmlspecialchars((string) $_GET['entity_name'], ENT_QUOTES) : _T("Unknown", "admin");
 
     try {
+        // Deletion in GLPI
         $res = xmlrpc_delete_and_purge_user($userId);
 
         $ok = is_array($res) && (
             (!empty($res['ok']) && $res['ok'] === true) ||
-            (isset($res['message']) && in_array($res['message'], ['purged','already absent'], true))
+            (isset($res['message']) && in_array($res['message'], ['purged', 'already absent'], true))
         );
 
         if ($ok) {
+            // Deletion in the system (LDAP)
             del_user($login, "on");
-            new NotifyWidgetSuccess(_T("The user ", "admin") . $login . " " . _T("deleted successfully.", "admin"));
+
+            new NotifyWidgetSuccess(
+                sprintf(
+                    _T("User <strong>%s</strong> deleted successfully from entity <strong>%s</strong>.", "admin"),
+                    $login,
+                    $entityName
+                )
+            );
         } else {
-            $msg = is_array($res) ? ($res['error'] ?? $res['message'] ?? 'DELETE_FAILED') : 'DELETE_FAILED';
-            new NotifyWidgetFailure(_T("Deletion failed: ", "admin") . $msg);
+            $msg = is_array($res)
+                ? ($res['error'] ?? $res['message'] ?? _T("Unknown error", "admin"))
+                : _T("Unknown error", "admin");
+
+            new NotifyWidgetFailure(
+                sprintf(
+                    _T("Failed to delete user <strong>%s</strong> from entity <strong>%s</strong>: %s", "admin"),
+                    $login,
+                    $entityName,
+                    $msg
+                )
+            );
         }
     } catch (Throwable $e) {
-        new NotifyWidgetFailure(_T("Deletion failed: ", "admin") . $e->getMessage());
+        new NotifyWidgetFailure(
+            sprintf(
+                _T("Failed to delete user <strong>%s</strong> from entity <strong>%s</strong>: %s", "admin"),
+                $login,
+                $entityName,
+                $e->getMessage()
+            )
+        );
     }
 
+    // redirection to the list of entity users
     header("Location: " . urlStrRedirect(
         "admin/admin/listUsersofEntity",
         ['entityId' => $entityId, 'entityName' => $entityName]

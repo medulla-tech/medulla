@@ -1817,15 +1817,14 @@ class LdapUserGroupControl:
 
             if homedir and os.path.isdir(homedir):
                 try:
-                    # optionnel mais prudent : éviter les chemins inattendus
                     SAFE_ROOT = "/home"
                     real = os.path.realpath(homedir)
                     if real.startswith(os.path.realpath(SAFE_ROOT) + os.sep):
                         shutil.rmtree(real)
                     else:
-                        logger.warning("Home en dehors de %s (%s) — suppression ignorée", SAFE_ROOT, real)
+                        self.logger.warning("Home en dehors de %s (%s) — suppression ignorée", SAFE_ROOT, real)
                 except Exception as e:
-                    logger.warning("Suppression du home échouée pour %s: %s", homedir, e)
+                    self.logger.warning("Suppression du home échouée pour %s: %s", homedir, e)
             # sinon: rien à faire (home absent)
 
         self.delRecursiveEntry(userdn)
@@ -3140,7 +3139,7 @@ class RpcProxy(RpcProxyI):
 
     def simple_computer_count(self):
         return ComputerManager().simple_computer_count()
-#JFKJFK
+
     def getComputersListHeaders(self):
         ctx = self.currentContext
         return ComputerManager().getComputersListHeaders(ctx)

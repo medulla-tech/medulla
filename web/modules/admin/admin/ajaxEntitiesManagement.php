@@ -165,10 +165,12 @@ if ($facilitylevel <= 1) {
             "",
             "admin",
             "admin",
-            _T("Are you sure you want to delete this entity [" . $data['name'][$i] . "] ?", 'admin')
+            sprintf(
+                _T("Are you sure you want to delete the entity <strong>%s</strong>?", "admin"), htmlspecialchars($data['name'][$i]
+            ))
         );
 
-        // ---- strict deactivation on the root entity (id = 0) ----
+    // ---- strict deactivation on the root entity (id = 0) ----
     $entityIdCurrent = isset($data['id'][$i]) ? (int)$data['id'][$i] : null;
     if ($entityIdCurrent === 0) {
         // we gray edit and delete for the root
@@ -199,12 +201,28 @@ if ($facilitylevel <= 1) {
         }
     }
 
-    // Rendered list
-    $n = new OptimizedListInfos($data['id'], _T("ID Entity", "admin"));
-    $n->addExtraInfo($data['name'], _T("Name of Entity", "admin"));
-    // $n->addExtraInfo($data['completename'], _T("Complete Name", "admin"));
-    $n->addExtraInfo($data['nb_users'], _T("Users", "admin"));
-    $n->addExtraInfo($data['nb_machines'], _T("Computers", "admin"));
+
+$cn = array_values((array)($data['completename'] ?? []));
+
+// Do not treat the first element (index 0)
+$displayArray = array_map(function ($s, $i) {
+    $s = trim((string)$s);
+    if ($i === 0) {
+        return $s;// we leave the root as it is
+    }
+    $parts = array_map('trim', explode('>', $s));
+    if (count($parts) > 1) {
+        array_shift($parts);// we remove the 1st part
+        return implode(' > ', $parts);
+    }
+    return $s;
+}, $cn, array_keys($cn));
+
+// Rendered list
+$n = new OptimizedListInfos($data['name'], _T("Name of Entity", "admin"));
+$n->addExtraInfo($displayArray, _T("Complete Name", "admin"));
+$n->addExtraInfo($data['nb_users'], _T("Users", "admin"));
+$n->addExtraInfo($data['nb_machines'], _T("Computers", "admin"));
 
     $n->addActionItemArray($editAction);
     $n->addActionItemArray($addAction);
