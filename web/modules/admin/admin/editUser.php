@@ -285,37 +285,42 @@ if (isset($_POST['entities_id']) && $_POST['entities_id'] !== '') {
 if (isset($_POST["bcreate"])) {
     verifyCSRFToken($_POST);
 
-    $postedUsername    = trim($_POST['newUsername']  ?? '');
-    $postedFirstName   = trim($_POST['newFirstName'] ?? '');
-    $postedLastName    = trim($_POST['newLastName']  ?? '');
-    $postedEmail       = trim($_POST['newEmail']     ?? '');
-    $postedProfileId   = $normId($_POST['profiles_id']  ?? null);
-    $postedEntityId    = $normId($_POST['entities_id']  ?? null);
-    $postedIsRecursive = (isset($_POST['is_recursive']) && $_POST['is_recursive'] === '1');
-    $postedIsDefault   = true;
-    $pwd  = $_POST['newPassword']  ?? '';
-    $pwd2 = $_POST['newPassword2'] ?? '';
+    // Data recovery and cleaning
+    $postedUsername     = trim($_POST['newUsername']  ?? '');
+    $postedFirstName    = trim($_POST['newFirstName'] ?? '');
+    $postedLastName     = trim($_POST['newLastName']  ?? '');
+    $postedEmail        = trim($_POST['newEmail']     ?? '');
+    $postedProfileId    = $normId($_POST['profiles_id']  ?? null);
+    $postedEntityId     = $normId($_POST['entities_id']  ?? null);
+    $postedIsRecursive  = (isset($_POST['is_recursive']) && $_POST['is_recursive'] === '1');
+    $postedIsDefault    = true;
+    $pwd                = $_POST['newPassword']  ?? '';
+    $pwd2               = $_POST['newPassword2'] ?? '';
 
     $fail = function(string $origin, string $msg) use ($postedUsername) {
         new NotifyWidgetFailure(
-            _T("Failed to create user ", "admin") . $postedUsername . " — " . $origin . " — " . $msg
+            _T("Failed to create user ", "admin") . "<strong>$postedUsername</strong> — " .
+            _T("Error in ", "admin") . "$origin: $msg"
         );
         header("Location: " . urlStrRedirect("admin/admin/entitiesManagement", []));
         exit;
     };
 
-// Validations
-    if ($postedUsername === '' || $pwd === '' || $pwd !== $pwd2) {
+    //Validations
+    if ($postedUsername === '') {
+        $fail("Form", _T("Username is required.", "admin"));
+    }
+    if ($pwd === '' || $pwd !== $pwd2) {
         $fail("Form", _T("Passwords are empty or do not match.", "admin"));
     }
     if ($postedProfileId === null || $postedEntityId === null) {
-        $fail("Form", _T("Please select both a profile and an entity.", "admin"));
+        $fail("Form", _T("Profile and entity are required.", "admin"));
     }
     if ($postedEmail !== '' && !filter_var($postedEmail, FILTER_VALIDATE_EMAIL)) {
         $fail("Form", _T("Invalid email address.", "admin"));
     }
 
-    // GLPI Creation
+    // Creation of the user in GLPI
     try {
         $glpiRes = xmlrpc_create_user(
             $postedUsername,
@@ -330,89 +335,113 @@ if (isset($_POST["bcreate"])) {
             $tokenuser
         );
     } catch (Throwable $e) {
-        error_log('[editUser] GLPI create exception: ' . $e->getMessage());
-        $fail("GLPI", $e->getMessage());
+        error_log('[createUser] GLPI creation exception: ' . $e->getMessage());
+        $fail("GLPI", _T("Internal error.", "admin"));
     }
 
-    $glpiOk = false; $new_id = 0; $apiTok = null; $errMsg = null;
+    // Verification of the GLPI result
+    $glpiOk = false;
+    $new_id = 0;
+    $apiTok = null;
+    $errMsg = null;
+
     if (is_array($glpiRes)) {
-        $glpiOk = (!empty($glpiRes['ok'])) || (isset($glpiRes['id']) && (int)$glpiRes['id'] > 0);
+        $glpiOk = !empty($glpiRes['ok']) || (isset($glpiRes['id']) && (int)$glpiRes['id'] > 0);
         $new_id = (int)($glpiRes['id'] ?? 0);
         $apiTok = $glpiRes['api_token'] ?? null;
-        $errMsg = $glpiRes['error'] ?? null;
+        $errMsg = $glpiRes['error'] ?? _T("Unknown error.", "admin");
     } else {
         $glpiOk = is_numeric($glpiRes) && (int)$glpiRes > 0;
         $new_id = $glpiOk ? (int)$glpiRes : 0;
-    }
-    if (!$glpiOk || $new_id <= 0) {
-        $msg = $errMsg ?: _T("Unknown error", "admin");
-        error_log('[editUser] GLPI create failed: ' . var_export($glpiRes, true));
-        $fail("GLPI", $msg);
+        $errMsg = _T("Unknown error.", "admin");
     }
 
-    // LAd creation, if failure => GLPI purge + LDAP error
+    if (!$glpiOk || $new_id <= 0) {
+        error_log('[createUser] GLPI creation failed: ' . var_export($glpiRes, true));
+        $fail("GLPI", $errMsg);
+    }
+
+    // Creation of the user in the system (LDAP)
     try {
+        // Resolution of the name of the customer entity
         $clientRoot = '';
         if (isset($postedEntityId) && $postedEntityId !== null) {
             $clientRoot = resolveClientRootName((string)$postedEntityId, $entityIdToComplete, $globalRootLabel);
         }
-
         if ($clientRoot === '') {
             $clientRoot = $entityIdToName[(string)$postedEntityId] ?? ($u['entity'] ?? '');
         }
 
+        // Creation of the user in the system
         $add = add_user($postedUsername, $pwd, $postedFirstName, $postedLastName, null, false, false, null, $clientRoot);
 
-        $sysOk  = false;
-        $msgSys = '';
+        // Verification of the result
+        $sysOk = false;
+        $msgSys = _T("Unknown error.", "admin");
 
         if (is_array($add)) {
             if (isset($add['code']) && is_array($add['code'])) {
                 $sysOk  = !empty($add['code']['success']);
-                $msgSys = trim((string)($add['code']['message'] ?? ''));
+                $msgSys = trim((string)($add['code']['message'] ?? $msgSys));
             } elseif (isset($add['code']) && is_numeric($add['code'])) {
                 $sysOk  = ((int)$add['code'] === 0);
-                $msgSys = trim((string)($add['message'] ?? ''));
+                $msgSys = trim((string)($add['message'] ?? $msgSys));
             } else {
                 $sysOk  = !empty($add['success']);
-                $msgSys = trim((string)($add['message'] ?? ''));
+                $msgSys = trim((string)($add['message'] ?? $msgSys));
             }
         } else {
             $sysOk = ($add === 0 || $add === true);
         }
 
         if (!$sysOk) {
-            try { xmlrpc_delete_and_purge_user($new_id); } catch (Throwable $e2) {
-                error_log('[editUser] GLPI rollback exception: ' . $e2->getMessage());
+            // Rollback GLPi in case of LDAP
+            try {
+                xmlrpc_delete_and_purge_user($new_id);
+            } catch (Throwable $e2) {
+                error_log('[createUser] GLPI rollback exception: ' . $e2->getMessage());
             }
-            $fail("LDAP", $msgSys !== '' ? $msgSys : _T("Unknown error", "admin"));
+            $fail("LDAP", $msgSys);
         }
 
-        // AclLmc
+        //ConfigurationDesAcl
         $postedProfileName = '';
         if (!empty($postedProfileId)) {
             $key = (string)$postedProfileId;
             $postedProfileName = $profileIdToName[$key] ?? (xmlrpc_get_profile_name($postedProfileId, $tokenuser) ?: '');
         }
-        $aclString = getGlpiAclForProfile($postedProfileName, $configPaths);
-        if ($aclString !== '') {
-            setAcl($postedUsername, $aclString);
+        if ($postedProfileName !== '') {
+            $aclString = getGlpiAclForProfile($postedProfileName, $configPaths);
+            if ($aclString !== '') {
+                setAcl($postedUsername, $aclString);
+            }
         }
 
-        //MailLdap
+        // Email update in LDAP
         if ($postedEmail !== '') {
             changeUserAttributes($postedUsername, "mail", $postedEmail);
         }
+
     } catch (Throwable $e) {
-        try { xmlrpc_delete_and_purge_user($new_id); } catch (Throwable $e2) {
-            error_log('[editUser] GLPI rollback exception: ' . $e2->getMessage());
+        // Rollback GLPI in case of exception LDAP
+        try {
+            xmlrpc_delete_and_purge_user($new_id);
+        } catch (Throwable $e2) {
+            error_log('[createUser] GLPI rollback exception: ' . $e2->getMessage());
         }
-        error_log('[editUser] LDAP add_user exception: ' . $e->getMessage());
-        $fail("LDAP", $e->getMessage());
+        error_log('[createUser] LDAP add_user exception: ' . $e->getMessage());
+        $fail("LDAP", _T("Internal error.", "admin"));
     }
 
-    // Global success
-    new NotifyWidgetSuccess(_T("The user ", "admin") . $postedUsername . " " . _T("created successfully.", "admin"));
+    new NotifyWidgetSuccess(
+        sprintf(
+            _T("User <strong>%s</strong> created successfully in entity <strong>%s</strong>.", "admin"),
+            htmlspecialchars($postedUsername),
+            htmlspecialchars($entityIdToName[(string)$postedEntityId] ?? _T("Unknown", "admin"))
+        )
+    );
+
+
     header("Location: " . urlStrRedirect(
         "admin/admin/listUsersofEntity",
         ['entityId' => $postedEntityId, 'entityName' => $entityIdToName[$postedEntityId] ?? '']
@@ -423,151 +452,184 @@ if (isset($_POST["bcreate"])) {
 if (isset($_POST["bupdate"])) {
     verifyCSRFToken($_POST);
 
+    // Data recovery and validation
     $userId = (int)($_POST['userId'] ?? $_GET['userId'] ?? 0);
     if ($userId <= 0) {
         new NotifyWidgetFailure(_T("Invalid user ID.", "admin"));
-        header("Location: " . urlStrRedirect("admin/admin/entitiesManagement", [])); exit;
+        header("Location: " . urlStrRedirect("admin/admin/entitiesManagement", []));
+        exit;
     }
 
-    $origUsername  = (string)($prefill['username']  ?? '');
-    $origFirstName = (string)($prefill['firstname'] ?? '');
-    $origLastName  = (string)($prefill['lastname']  ?? '');
-    $origEmail     = (string)($prefill['email']     ?? '');
+    // Recovery of original values
+    $origUsername   = (string)($prefill['username'] ?? '');
+    $origFirstName  = (string)($prefill['firstname'] ?? '');
+    $origLastName   = (string)($prefill['lastname'] ?? '');
+    $origEmail      = (string)($prefill['email'] ?? '');
+    $origProfileId  = !empty($prefill['profile_id'])
+                    ? (int)$prefill['profile_id']
+                    : (!empty($prefill['profile_name']) && isset($profileNameToId[$prefill['profile_name']])
+                        ? (int)$profileNameToId[$prefill['profile_name']]
+                        : (!empty($u['profile_id']) ? (int)$u['profile_id'] : null));
+    $origEntityId   = !empty($prefill['entities_id']) ? (int)$prefill['entities_id'] : (!empty($defaultEntityId) ? (int)$defaultEntityId : null);
+    $origRecursive  = isset($prefill['is_recursive']) ? (int)$prefill['is_recursive']
+                    : (isset($_GET['is_recursive']) ? (int)($_GET['is_recursive'] === '1') : null);
 
-    $origProfileId = !empty($prefill['profile_id']) ? (int)$prefill['profile_id']
-                   : ((!empty($prefill['profile_name']) && isset($profileNameToId[$prefill['profile_name']])) ? (int)$profileNameToId[$prefill['profile_name']]
-                   : (!empty($u['profile_id']) ? (int)$u['profile_id'] : null));
-
-    $origEntityId  = !empty($prefill['entities_id']) ? (int)$prefill['entities_id']
-                   : (!empty($defaultEntityId) ? (int)$defaultEntityId : null);
-
-    $postedUsername   = trim($_POST['newUsername']  ?? '');
+    // Recovery of new values
+    $postedUsername   = trim($_POST['newUsername'] ?? '');
     $postedFirstName  = trim($_POST['newFirstName'] ?? '');
-    $postedLastName   = trim($_POST['newLastName']  ?? '');
-    $postedEmail      = trim($_POST['newEmail']     ?? '');
-    $pwd              = $_POST['newPassword']  ?? '';
+    $postedLastName   = trim($_POST['newLastName'] ?? '');
+    $postedEmail      = trim($_POST['newEmail'] ?? '');
+    $pwd              = $_POST['newPassword'] ?? '';
     $pwd2             = $_POST['newPassword2'] ?? '';
     $changePwd        = ($pwd !== '' || $pwd2 !== '');
-
-    $postedProfileId   = $normId($_POST['profiles_id'] ?? null);
-    $postedEntityId    = $normId($_POST['entities_id'] ?? null);
+    $postedProfileId  = $normId($_POST['profiles_id'] ?? null);
+    $postedEntityId   = $normId($_POST['entities_id'] ?? null);
     $postedIsRecursive = ((string)($_POST['is_recursive'] ?? '1') === '1') ? 1 : 0;
 
-    $origRecursive = isset($prefill['is_recursive']) ? (int)$prefill['is_recursive']
-                   : ((isset($_GET['is_recursive']) && $_GET['is_recursive'] !== '') ? (int)($_GET['is_recursive'] === '1') : null);
-
+    // Data validation
     if ($changePwd && $pwd !== $pwd2) {
-        new NotifyWidgetFailure(_T("Invalid data or passwords do not match.", "admin"));
-        $backEntity = (string)($postedEntityId ?? $origEntityId ?? $defaultEntityId);
+        new NotifyWidgetFailure(_T("Passwords do not match.", "admin"));
         header("Location: " . urlStrRedirect("admin/admin/listuserofEntity", [
-            'entityId' => $backEntity, 'entityName' => $entityIdToName[$backEntity] ?? ''
-        ])); exit;
+            'entityId' => (string)($postedEntityId ?? $origEntityId ?? $defaultEntityId),
+            'entityName' => $entityIdToName[$postedEntityId ?? $origEntityId ?? $defaultEntityId] ?? ''
+        ]));
+        exit;
     }
+
     if ($postedEmail !== '' && !filter_var($postedEmail, FILTER_VALIDATE_EMAIL)) {
         new NotifyWidgetFailure(_T("Invalid email address.", "admin"));
-        $backEntity = (string)($postedEntityId ?? $origEntityId ?? $defaultEntityId);
         header("Location: " . urlStrRedirect("admin/admin/listuserofEntity", [
-            'entityId' => $backEntity, 'entityName' => $entityIdToName[$backEntity] ?? ''
-        ])); exit;
-    }
-    if ($postedProfileId !== null && !isset($profileIdToName[(string)$postedProfileId])) {
-        new NotifyWidgetFailure(_T("Selected profile is not allowed.", "admin"));
-        header("Location: " . urlStrRedirect("admin/admin/entitiesManagement", [])); exit;
-    }
-    if ($postedEntityId !== null && !isset($entityIdToName[(string)$postedEntityId])) {
-        new NotifyWidgetFailure(_T("Selected entity is not allowed.", "admin"));
-        header("Location: " . urlStrRedirect("admin/admin/entitiesManagement", [])); exit;
+            'entityId' => (string)($postedEntityId ?? $origEntityId ?? $defaultEntityId),
+            'entityName' => $entityIdToName[$postedEntityId ?? $origEntityId ?? $defaultEntityId] ?? ''
+        ]));
+        exit;
     }
 
+    if ($postedProfileId !== null && !isset($profileIdToName[(string)$postedProfileId])) {
+        new NotifyWidgetFailure(_T("The selected profile is invalid or not allowed.", "admin"));
+        header("Location: " . urlStrRedirect("admin/admin/entitiesManagement", []));
+        exit;
+    }
+
+    if ($postedEntityId !== null && !isset($entityIdToName[(string)$postedEntityId])) {
+        new NotifyWidgetFailure(_T("The selected entity is invalid or not allowed.", "admin"));
+        header("Location: " . urlStrRedirect("admin/admin/entitiesManagement", []));
+        exit;
+    }
+
+    // Detection of changes
     $wantUsername   = ($postedUsername  !== '' && $postedUsername  !== $origUsername)  ? $postedUsername  : null;
     $wantFirstName  = ($postedFirstName !== '' && $postedFirstName !== $origFirstName) ? $postedFirstName : null;
     $wantLastName   = ($postedLastName  !== '' && $postedLastName  !== $origLastName)  ? $postedLastName  : null;
     $wantEmail      = ($postedEmail     !== '' && $postedEmail     !== $origEmail)     ? $postedEmail     : null;
     $pwdChanged     = $changePwd;
-
-    $profileChanged   = ($postedProfileId !== null && (string)$postedProfileId !== (string)($origProfileId ?? ''));
-    $entityChanged    = ($postedEntityId  !== null && (string)$postedEntityId  !== (string)($origEntityId  ?? ''));
+    $profileChanged = ($postedProfileId !== null && (string)$postedProfileId !== (string)($origProfileId ?? ''));
+    $entityChanged  = ($postedEntityId  !== null && (string)$postedEntityId  !== (string)($origEntityId  ?? ''));
     $recursiveChanged = ($origRecursive === null) ? true : ((int)$postedIsRecursive !== (int)$origRecursive);
 
-    $okAll = true; $didSomething = false;
-
+    // Update of single fields (name, first name, email, password)
+    $okAll = true;
+    $didSomething = false;
     try {
-        $okAll = ($wantUsername  !== null ? (bool)xmlrpc_update_user($userId, 'name',      $wantUsername,  $tokenuser) : true) && $okAll; $didSomething = $didSomething || ($wantUsername  !== null);
-        $okAll = ($wantFirstName !== null ? (bool)xmlrpc_update_user($userId, 'firstname', $wantFirstName, $tokenuser) : true) && $okAll; $didSomething = $didSomething || ($wantFirstName !== null);
-        $okAll = ($wantLastName  !== null ? (bool)xmlrpc_update_user($userId, 'realname',  $wantLastName,  $tokenuser) : true) && $okAll; $didSomething = $didSomething || ($wantLastName  !== null);
-        $okAll = ($wantEmail     !== null ? (bool)xmlrpc_set_user_email($userId, $wantEmail, $tokenuser) : true) && $okAll;         $didSomething = $didSomething || ($wantEmail     !== null);
-        $okAll = ($pwdChanged           ? (bool)xmlrpc_update_user($userId, 'password',  $pwd,           $tokenuser) : true) && $okAll;     $didSomething = $didSomething || $pwdChanged;
+        if ($wantUsername !== null) {
+            $okAll = (bool)xmlrpc_update_user($userId, 'name', $wantUsername, $tokenuser) && $okAll;
+            $didSomething = true;
+        }
+        if ($wantFirstName !== null) {
+            $okAll = (bool)xmlrpc_update_user($userId, 'firstname', $wantFirstName, $tokenuser) && $okAll;
+            $didSomething = true;
+        }
+        if ($wantLastName !== null) {
+            $okAll = (bool)xmlrpc_update_user($userId, 'realname', $wantLastName, $tokenuser) && $okAll;
+            $didSomething = true;
+        }
+        if ($wantEmail !== null) {
+            $okAll = (bool)xmlrpc_set_user_email($userId, $wantEmail, $tokenuser) && $okAll;
+            $didSomething = true;
+        }
+        if ($pwdChanged) {
+            $okAll = (bool)xmlrpc_update_user($userId, 'password', $pwd, $tokenuser) && $okAll;
+            $didSomething = true;
+        }
     } catch (Throwable $e) {
-        error_log('[editUser] simple fields update failed: '.$e->getMessage());
+        error_log('[editUser] Simple fields update failed: ' . $e->getMessage());
         $okAll = false;
     }
 
+    // Update of the profile, entity and recursion
     if ($profileChanged || $entityChanged || $recursiveChanged) {
         $didSomething = true;
-
         $profileIdToUse = (int)($profileChanged ? $postedProfileId : ($origProfileId ?? 0));
         $entityIdToUse  = (int)($entityChanged ? $postedEntityId  : ($origEntityId  ?? $defaultEntityId ?? 0));
 
         if ($profileIdToUse <= 0 || $entityIdToUse <= 0) {
-            new NotifyWidgetFailure(_T("Unable to resolve profile/entity for update.", "admin"));
-            header("Location: " . urlStrRedirect("admin/admin/entitiesManagement", [])); exit;
+            new NotifyWidgetFailure(_T("Unable to update profile or entity: invalid ID.", "admin"));
+            header("Location: " . urlStrRedirect("admin/admin/entitiesManagement", []));
+            exit;
         }
 
         try {
             $res = xmlrpc_switch_user_profile($userId, $profileIdToUse, $entityIdToUse, $postedIsRecursive, 0, 1, $tokenuser);
-            $ok  = is_array($res)
+            $ok = is_array($res)
                 ? (!empty($res['ok']) || !empty($res['success']) || (isset($res['code']) && (int)$res['code'] === 0))
                 : (bool)$res;
             $okAll = $okAll && $ok;
         } catch (Throwable $e) {
-            error_log('[editUser] switch profile/entity/recursive failed: '.$e->getMessage());
+            error_log('[editUser] Switch profile/entity/recursive failed: ' . $e->getMessage());
             $okAll = false;
         }
     }
 
+    // LDAP update
     if ($okAll) {
-        $ldapOk = true; $ldapErrors = [];
-
+        $ldapOk = true;
+        $ldapErrors = [];
         $oldUid = $origUsername ?: ($u['login'] ?? '');
         $newUid = $wantUsername ?? $oldUid;
 
+        // Uid and Homedirectory update (if necessary)
         if ($wantUsername !== null) {
             $res = @changeUserAttributes($oldUid, 'uid', $newUid);
             if ($res === false || $res === null) { $ldapOk = false; $ldapErrors[] = 'uid'; }
-
-            $res = @changeUserAttributes($newUid, 'homeDirectory', '/home/'.$newUid);
+            $res = @changeUserAttributes($newUid, 'homeDirectory', '/home/' . $newUid);
             if ($res === false || $res === null) { $ldapOk = false; $ldapErrors[] = 'homeDirectory'; }
         }
 
+        // Update of the first name, last name and associated attributes
         $uidForAttrs = $newUid;
-
         $finalFirst = $wantFirstName ?? $origFirstName;
         $finalLast  = $wantLastName  ?? $origLastName;
-        $fullName   = trim($finalFirst.' '.$finalLast);
+        $fullName   = trim($finalFirst . ' ' . $finalLast);
 
-        if ($wantFirstName !== null) { $res = @changeUserAttributes($uidForAttrs, 'givenName', $finalFirst); if ($res === false || $res === null) { $ldapOk = false; $ldapErrors[] = 'givenName'; } }
-        if ($wantLastName  !== null) { $res = @changeUserAttributes($uidForAttrs, 'sn',        $finalLast);  if ($res === false || $res === null) { $ldapOk = false; $ldapErrors[] = 'sn'; } }
+        if ($wantFirstName !== null) {
+            $res = @changeUserAttributes($uidForAttrs, 'givenName', $finalFirst);
+            if ($res === false || $res === null) { $ldapOk = false; $ldapErrors[] = 'givenName'; }
+        }
+        if ($wantLastName !== null) {
+            $res = @changeUserAttributes($uidForAttrs, 'sn', $finalLast);
+            if ($res === false || $res === null) { $ldapOk = false; $ldapErrors[] = 'sn'; }
+        }
         if ($wantFirstName !== null || $wantLastName !== null) {
-            $res = @changeUserAttributes($uidForAttrs, 'cn',          $fullName); if ($res === false || $res === null) { $ldapOk = false; $ldapErrors[] = 'cn'; }
-            $res = @changeUserAttributes($uidForAttrs, 'displayName', $fullName); if ($res === false || $res === null) { $ldapOk = false; $ldapErrors[] = 'displayName'; }
-            $res = @changeUserAttributes($uidForAttrs, 'gecos',       $fullName); if ($res === false || $res === null) { $ldapOk = false; $ldapErrors[] = 'gecos'; }
+            $res = @changeUserAttributes($uidForAttrs, 'cn', $fullName);
+            if ($res === false || $res === null) { $ldapOk = false; $ldapErrors[] = 'cn'; }
+            $res = @changeUserAttributes($uidForAttrs, 'displayName', $fullName);
+            if ($res === false || $res === null) { $ldapOk = false; $ldapErrors[] = 'displayName'; }
+            $res = @changeUserAttributes($uidForAttrs, 'gecos', $fullName);
+            if ($res === false || $res === null) { $ldapOk = false; $ldapErrors[] = 'gecos'; }
         }
 
-        // 3.3 mail — toujours depuis le formulaire (ou valeur initiale si formulaire vide)
-        // - postedEmail non vide : on applique cette valeur
-        // - sinon : on conserve l'ancienne (origEmail) si elle existe
-        // - sinon : on supprime l'attribut (null)
+        // Email update
         $ldapMail = ($postedEmail !== '') ? $postedEmail : (($origEmail !== '') ? $origEmail : null);
         $res = @changeUserAttributes($uidForAttrs, 'mail', $ldapMail);
         if ($res === false || $res === null) { $ldapOk = false; $ldapErrors[] = 'mail'; }
 
-        // UserPassword
+        // Password update
         if ($pwdChanged) {
             $res = @changeUserAttributes($uidForAttrs, 'userPassword', $pwd);
             if ($res === false || $res === null) { $ldapOk = false; $ldapErrors[] = 'userPassword'; }
         }
 
-        // lmcacl if profile changed
+        // ACL update if the profile has changed
         if ($profileChanged) {
             $newProfileName = $profileIdToName[(string)$profileIdToUse] ?? (xmlrpc_get_profile_name($profileIdToUse, $tokenuser) ?: '');
             if ($newProfileName !== '') {
@@ -580,32 +642,28 @@ if (isset($_POST["bupdate"])) {
         }
 
         if (!$ldapOk) {
-            new NotifyWidgetFailure(_T("LDAP update failed for user.", "admin").' '.implode(' | ', $ldapErrors));
-            $targetEntity = (int)($postedEntityId ?? $origEntityId ?? $defaultEntityId);
-            header("Location: " . urlStrRedirect(
-                "admin/admin/listUsersofEntity",
-                ['entityId' => $postedEntityId, 'entityName' => $entityIdToName[$postedEntityId] ?? '']
-            ));
-            exit;
+            new NotifyWidgetFailure(_T("LDAP update failed for the following attributes: ", "admin") . implode(', ', $ldapErrors));
         }
     }
 
     if (!$didSomething) {
-        new NotifyWidgetSuccess(_T("No changes to apply.", "admin"));
+        new NotifyWidgetSuccess(_T("No changes were made.", "admin"));
     } elseif ($okAll) {
-        new NotifyWidgetSuccess(
-            ($profileChanged || $entityChanged || $recursiveChanged)
-            ? _T("User settings updated successfully.", "admin")
-            : _T("User updated successfully.", "admin")
-        );
+        $message = ($profileChanged || $entityChanged || $recursiveChanged)
+            ? _T("User profile and settings updated successfully.", "admin")
+            : _T("User updated successfully.", "admin");
+        new NotifyWidgetSuccess($message);
     } else {
-        new NotifyWidgetFailure(_T("Failed to update user.", "admin"));
+        new NotifyWidgetFailure(_T("Failed to update user. Some changes may not have been applied.", "admin"));
     }
 
     $targetEntity = (int)($postedEntityId ?? $origEntityId ?? $defaultEntityId);
     header("Location: " . urlStrRedirect(
         "admin/admin/listUsersofEntity",
-        ['entityId' => $postedEntityId, 'entityName' => $entityIdToName[$postedEntityId] ?? '']
+        [
+            'entityId' => $targetEntity,
+            'entityName' => $entityIdToName[$targetEntity] ?? ''
+        ]
     ));
     exit;
 }
@@ -681,3 +739,202 @@ $form->add(new HiddenTpl('mode'),   array('value' => (string)$mode,   'hide' => 
 
 $form->pop();
 $form->display();
+?>
+
+<style>
+  /* Eye icon, anchored in the span du field */
+  .pw-wrap{ position:relative; display:inline-block; vertical-align:middle; }
+  .pw-wrap > .pw-toggle{
+    position:absolute; right:1.6rem; top:50%; transform:translateY(-50%);
+    border:0; background:transparent; cursor:pointer; padding:0;
+    width:1.2rem; height:1.2rem; line-height:1; z-index:2;
+  }
+  .pw-toggle img{ width:100%; height:100%; display:block; pointer-events:none; }
+
+  /* Message under the 2nd field */
+  .pw-feedback{ font-size:.9em; margin-top:.25rem; color:#e33; }
+
+  /* Force the red contour of the input even in focus */
+  .pw-wrap input.pw-error,
+  .pw-wrap input.pw-error:focus{
+    border-color:#e33 !important;
+    outline:none !important;
+    box-shadow:none !important;
+  }
+
+  /* Popup Criteria (placed next to #NewPassWord) */
+  #pw-hints{
+    position:fixed; left:0; top:0;
+    width:280px; max-width:85vw; background:#fff;
+    border:1px solid #d9d9d9; border-radius:8px;
+    box-shadow:0 8px 24px rgba(0,0,0,.12);
+    z-index:2147483647; padding:12px 14px; display:none;
+    font-size:.9em; color:#333;
+  }
+  #pw-hints h4{ margin:0 0 8px; font-size:1em; font-weight:600; }
+  .crit{ display:flex; align-items:center; gap:.5rem; margin:.35rem 0; }
+  .crit .dot{ width:8px; height:8px; border-radius:50%; background:#b71c1c; flex:0 0 8px; }
+  .crit.ok .dot{ background:#2e7d32; }
+  .muted{ color:#666; font-size:.85em; margin-top:6px; }
+  #pw-hints::after{
+    content:""; position:absolute; left:-6px; top:50%; transform:translateY(-50%);
+    border:8px solid transparent; border-right-color:#fff;
+    filter: drop-shadow(-1px 0 0 rgba(0,0,0,.15));
+  }
+  #pw-hints.flip::after{ left:auto; right:-6px; transform:translateY(-50%) rotate(180deg); }
+</style>
+
+<script>
+jQuery(function($){
+  const ID1 = 'newPassword', ID2 = 'newPassword2';
+  const $p1 = wireField(ID1);
+  const $p2 = wireField(ID2);
+  if (!$p1?.length || !$p2?.length) return;
+
+  const $hints = ensureHints();
+  const $crit  = $hints.find('.crit');
+  let currentAnchor = null, rafId = null;
+
+  function wireField(id){
+    const $input = $('#'+id);
+    if (!$input.length) return null;
+
+    let $wrap = $('#container_input_'+id);
+    if (!$wrap.length) $wrap = $input.closest('span');
+    $wrap.addClass('pw-wrap');
+
+    $input.attr({ type:'password', autocomplete:'new-password' });
+
+    let $btn = $wrap.find('.pw-toggle[data-for="'+id+'"]');
+    if (!$btn.length) $btn = $input.closest('td').find('.pw-toggle[data-for="'+id+'"]').first();
+    if (!$btn.length){
+      $btn = $(`
+        <button type="button" class="pw-toggle" data-for="${id}"
+                aria-label="Afficher le mot de passe" aria-pressed="false"
+                data-open="img/login/open.svg" data-close="img/login/close.svg">
+          <img class="pw-icon" alt="">
+        </button>
+      `);
+    } else {
+      if(!$btn.attr('data-open'))  $btn.attr('data-open','img/login/open.svg');
+      if(!$btn.attr('data-close')) $btn.attr('data-close','img/login/close.svg');
+      if(!$btn.find('img.pw-icon').length) $btn.append('<img class="pw-icon" alt="">');
+    }
+
+    const hiddenInit = ($input.attr('type') === 'password');
+    $btn.find('img.pw-icon').attr('src', hiddenInit ? $btn.data('close') : $btn.data('open'));
+    $btn.attr('aria-label', hiddenInit ? 'Afficher le mot de passe' : 'Masquer le mot de passe')
+        .attr('aria-pressed', !hiddenInit);
+
+    // Toggle visibility
+    $btn.appendTo($wrap).off('click').on('click', function(){
+      const wasHidden = ($input.attr('type') === 'password');
+      const newType   = wasHidden ? 'text' : 'password';
+      $input.attr('type', newType);
+
+      const nowHidden = (newType === 'password');
+      $(this).find('img.pw-icon').attr('src', nowHidden ? $(this).data('close') : $(this).data('open'));
+      $(this)
+        .attr('aria-label', nowHidden ? 'Afficher le mot de passe' : 'Masquer le mot de passe')
+        .attr('aria-pressed', !nowHidden);
+    });
+
+    //ZoneFeedback (sousLeChamp)
+    const $td = $wrap.closest('td');
+    if (!$td.find('.pw-feedback').length){
+      $('<div class="pw-feedback" aria-live="polite"></div>').appendTo($td);
+    }
+    return $input;
+  }
+
+  function ensureHints(){
+    let $box = $('#pw-hints');
+    if (!$box.length){
+      $box = $(`
+        <div id="pw-hints" role="status" aria-live="polite">
+          <h4>Critères du mot de passe</h4>
+          <div class="crit" data-key="len"><span class="dot"></span><span>≥ 12 caractères</span></div>
+          <div class="crit" data-key="up"><span class="dot"></span><span>Au moins 1 majuscule</span></div>
+          <div class="crit" data-key="low"><span class="dot"></span><span>Au moins 1 minuscule</span></div>
+          <div class="crit" data-key="num"><span class="dot"></span><span>Au moins 1 chiffre</span></div>
+          <div class="crit" data-key="spec"><span class="dot"></span><span>Au moins 1 caractère spécial</span></div>
+          <div class="muted">Le mot de passe doit respecter tous les critères.</div>
+        </div>
+      `);
+      $('body').append($box);
+    }
+    return $box;
+  }
+
+  // PLOPP CRITERIA PLACE
+  function positionHints($anchor){
+    if (!$anchor?.length) return;
+    const rect = $anchor[0].getBoundingClientRect();
+    const vw = innerWidth, vh = innerHeight, gap = 12;
+
+    if ($hints.css('display') === 'none') $hints.css({visibility:'hidden', display:'block'});
+    const boxW = $hints.outerWidth(), boxH = $hints.outerHeight();
+    $hints.css({visibility:''});
+
+    let left = rect.right + gap;
+    let top  = rect.top + rect.height/2 - boxH/2;
+    top = Math.max(8, Math.min(top, vh - boxH - 8));
+
+    let flip = false;
+    if (left + boxW + 8 > vw) { left = Math.max(8, rect.left - gap - boxW); flip = true; }
+
+    $hints.toggleClass('flip', flip).css({left, top});
+  }
+  const showHintsFor = ($a)=>{ currentAnchor=$a; positionHints($a); $hints.stop(true,true).fadeIn(90); };
+  const hideHintsIfNoFocus = ()=> setTimeout(()=>{
+    if (!$(document.activeElement).is('#'+ID1)) { $hints.stop(true,true).fadeOut(90); currentAnchor=null; }
+  },0);
+
+  // Criteria
+  function pwUpdateDots(v){
+    const p = { len:v.length>=12, up:/[A-Z]/.test(v), low:/[a-z]/.test(v), num:/\d/.test(v), spec:/[^A-Za-z0-9\s]/.test(v) };
+    $crit.each(function(){ $(this).toggleClass('ok', !!p[$(this).data('key')]); });
+    return p.len && p.up && p.low && p.num && p.spec;
+  }
+
+  function setMatch(ok, msg, forceMsg=false){
+    if ($p2[0]?.setCustomValidity) $p2[0].setCustomValidity(ok ? '' : 'Passwords do not match');
+    $p2.toggleClass('pw-error', !ok);
+    $p2.closest('td').find('.pw-feedback').text(forceMsg ? (msg||'') : (ok ? '' : (msg||'Les mots de passe ne correspondent pas.')));
+  }
+
+  function matchPw(){
+    const v1 = ($p1.val()||'').trim();
+    const v2 = ($p2.val()||'').trim();
+
+    const policyOK = pwUpdateDots(v1);
+    if ($p1[0]?.setCustomValidity) $p1[0].setCustomValidity((v1===''||policyOK)?'':'Password does not meet requirements');
+    $p1.toggleClass('pw-error', v1!=='' && !policyOK);
+
+    // Correspondence (2nd field)
+    if (v1==='' && v2==='') return setMatch(true,'');
+    if (v1==='' && v2!=='') return setMatch(false,"Saisissez d'abord le mot de passe.");
+    if (v1!=='' && v2==='') return setMatch(false,'Veuillez confirmer le mot de passe.');
+    if (v1 !== v2)          return setMatch(false,'Les mots de passe ne correspondent pas.');
+    if (!policyOK)          return setMatch(true,'Le mot de passe ne respecte pas les critères.', true);
+    return setMatch(true,'');
+  }
+
+  $('#'+ID1).on('focus', function(){
+    let $anchor = $('#container_input_'+this.id); if(!$anchor.length) $anchor=$(this).closest('span');
+    showHintsFor($anchor); pwUpdateDots($p1.val()||''); matchPw();
+  });
+  $('#'+ID2).on('focus', function(){ $hints.stop(true,true).fadeOut(90); currentAnchor=null; matchPw(); });
+  $('#'+ID1+', #'+ID2).on('blur', hideHintsIfNoFocus);
+
+  $(window).on('scroll resize', function(){
+    if (!currentAnchor) return;
+    cancelAnimationFrame(rafId);
+    rafId = requestAnimationFrame(()=> positionHints(currentAnchor));
+  });
+
+  $p1.on('input', matchPw);
+  $p2.on('input', matchPw);
+  $p1.closest('form').on('submit', matchPw);
+});
+</script>

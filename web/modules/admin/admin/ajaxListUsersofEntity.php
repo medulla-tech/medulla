@@ -74,45 +74,92 @@ $fmtDate = function($v) {
 };
 
 // Preparation of columns
-$userNames        = [];
-$userFirstnames   = [];
-$userLastName     = [];
-$userEmails       = [];
-$userStatus       = [];
-$userLastLogin    = [];
-$userProfileNames = [];
-$userEditActions  = [];
-$userDeleteActions= [];
-$userParams       = [];
+$userNames                  = [];
+$userFirstnames             = [];
+$userLastName               = [];
+$userEmails                 = [];
+$userStatus                 = [];
+$userLastLogin              = [];
+$userProfileNames           = [];
+$userEditActions            = [];
+$userDeleteActions          = [];
+$userDeleteProfileActions   = [];
+$userDesactivateActions     = [];
+$userParams                 = [];
 
 foreach ($userDetails as $user) {
+    $isActive = !empty($user['is_active']);
+
     $userNames[]        = $user['name'];
     $userFirstnames[]   = $user['firstname'];
     $userLastName[]     = $user['realname'];
     $userEmails[]       = $user['email'];
-    $userStatus[]       = !empty($user['is_active']) ? _("Enabled") : _("Disabled");
-    $userLastLogin[] = $fmtDate($user['last_login'] ?? null);
+    $userStatus[]       = $isActive ? _("Enabled") : _("Disabled");
+    $userLastLogin[]    = $fmtDate($user['last_login'] ?? null);
     $userProfileNames[] = $user['profile_name'];
 
-    $userEditActions[] = new ActionItem(_T("Edit"), "editUser", "edit", "", "admin", "admin");
+    $userEditActions[]   = new ActionItem(
+        _T("Edit"), "editUser", "edit", "", "admin", "admin"
+    );
+
     $userDeleteActions[] = new ActionConfirmItem(
-        _T("Delete"), "deleteUser", "delete", "", "admin", "admin",
-        _T("Delete the user [" . $user['name'] . "] ?", 'admin')
+        _T("Delete user", "admin"),
+        "deleteUser",
+        "delete",
+        "",
+        "admin",
+        "admin",
+        sprintf(_T("Are you sure you want to delete this user <strong>%s</strong>?", "admin"), $user['name'])
+    );
+
+    // determines the icon according to the status (active/deactivated)
+    $iconKey = $isActive ? 'deleteprofile' : 'deleteprofileg';
+    $userDeleteProfileActions[] = new ActionConfirmItem(
+        _T("Delete user profile", "admin"),
+        "deleteProfileUser",
+        $iconKey,
+        "",
+        "admin",
+        "admin",
+        sprintf(
+            _T("Are you sure you want to delete the <strong>%s</strong> profile for the user <strong>%s</strong>?", "admin"),
+            $user['profile_name'],
+            $user['name']
+        )
+    );
+
+    // determines the icon according to the status (active/deactivated)
+    $iconKeyToggle = $isActive ? 'donotupdate' : 'donotupdateg';
+
+    $userDesactivateActions[] = new ActionConfirmItem(
+        $isActive ? _T("Deactivate User", "admin") : _T("Reactivate User", "admin"),
+        "desactivateUser",
+        $iconKeyToggle,
+        "",
+        "admin",
+        "admin",
+        sprintf(
+            $isActive
+                ? _T("Are you sure you want to deactivate this user <strong>%s</strong>?", "admin")
+                : _T("Are you sure you want to reactivate this user <strong>%s</strong>?", "admin"),
+            htmlspecialchars($user['name'])
+        )
     );
 
     $userParams[] = [
-        'userId'     => $user['user_id'],
-        'userName'   => $user['name'],
-        'firstname'  => $user['firstname'],
-        'lastname'   => $user['realname'],
-        'email'      => $user['email'],
-        'profil_name'=> $user['profile_name'],
-        'profile_id' => $user['profiles_id'],
-        'entities_id'=> $user['entity_id'] ?? 0,
-        'entity_name' => $user['entity_name'],
-        'is_recursive'=> $user['link_is_recursive'] ?? 0,
-        'is_default'  => $user['link_is_default'] ?? 1,
-        'mode'       => 'edit',
+        'userId'       => $user['user_id'],
+        'userName'     => $user['name'],
+        'firstname'    => $user['firstname'],
+        'lastname'     => $user['realname'],
+        'email'        => $user['email'],
+        'profil_name'  => $user['profile_name'],
+        'profile_id'   => $user['profiles_id'],
+        'entities_id'  => $user['entity_id'] ?? 0,
+        'entity_name'  => $user['entity_name'],
+        'is_recursive' => $user['link_is_recursive'] ?? 0,
+        'is_default'   => $user['link_is_default'] ?? 1,
+        'is_active'    => $user['is_active'] ?? 0,
+        'mode'         => 'edit',
     ];
 }
 
@@ -143,6 +190,8 @@ if (count($userNames) === 0) {
 
     $n->addActionItemArray($userEditActions);
     $n->addActionItemArray($userDeleteActions);
+    $n->addActionItemArray($userDeleteProfileActions);
+    $n->addActionItemArray($userDesactivateActions);
     $n->setParamInfo($userParams);
     $n->display();
 }
