@@ -10816,335 +10816,493 @@ class XmppMasterDatabase(DatabaseHelper):
             result["nb_ars"].append(count_ars if count_ars is not None else 0)
 
         return {"total": count, "datas": result}
+    #
+    # @DatabaseHelper._sessionm
+    # def get_xmpprelays_list(self, session, start, limit, filter, presence):
+    #     # jfkjfk
+    #     logger.error("JFKJFK %s %s filter %s precision %s" %(start, limit, filter, presence))
+    #     #
+    #     try:
+    #         start = int(start)
+    #     except BaseException:
+    #         start = -1
+    #     try:
+    #         limit = int(limit)
+    #     except BaseException:
+    #         limit = -1
+    #     logger.error("JFKJFK 11")
+    #     query = (
+    #         session.query(
+    #             RelayServer.id,
+    #             RelayServer.ipserver,
+    #             RelayServer.nameserver,
+    #             RelayServer.moderelayserver,
+    #             RelayServer.jid.label("jid_from_relayserver"),
+    #             RelayServer.classutil,
+    #             RelayServer.enabled,
+    #             RelayServer.switchonoff,
+    #             RelayServer.mandatory,
+    #         )
+    #         .add_column(Machines.jid)
+    #         .add_column(Cluster_ars.name.label("cluster_name"))
+    #         .add_column(Cluster_ars.description.label("cluster_description"))
+    #         .add_column(Machines.macaddress.label("macaddress"))
+    #         .outerjoin(Has_cluster_ars, Has_cluster_ars.id_ars == RelayServer.id)
+    #         .outerjoin(Cluster_ars, Cluster_ars.id == Has_cluster_ars.id_cluster)
+    #         .outerjoin(Machines, Machines.hostname == RelayServer.nameserver)
+    #         .filter(RelayServer.moderelayserver == "static")
+    #         .filter(Machines.agenttype == "relayserver")
+    #     )
+    #     if presence == "nopresence":
+    #         query = query.filter(RelayServer.enabled != 1)
+    #     elif presence == "presence":
+    #         query = query.filter(RelayServer.enabled == 1)
+    #     else:
+    #         #all
+    #         pass
+    #     if filter != "":
+    #         query = query.filter(
+    #             or_(
+    #                 RelayServer.nameserver.contains(filter),
+    #                 Machines.jid.contains(filter),
+    #                 Cluster_ars.name.contains(filter),
+    #                 Cluster_ars.description.contains(filter),
+    #                 RelayServer.classutil.contains(filter),
+    #                 Machines.macaddress.contains(filter),
+    #                 RelayServer.ipserver.contains(filter),
+    #             )
+    #         )
+    #     count = query.count()
+    #     if start != -1 and limit != -1:
+    #         query = query.offset(start).limit(limit)
+    #     query = query.all()
+    #     result = {
+    #         "nbuninventoried": [],
+    #         "inventoried": [],
+    #         "uninventoried": [],
+    #         "publicclass": [],
+    #         "mach_on": [],
+    #         "nbmachinereconf": [],
+    #         "kioskon": [],
+    #         "nbdarwin": [],
+    #         "kioskoff": [],
+    #         "bothclass": [],
+    #         "privateclass": [],
+    #         "mach_off": [],
+    #         "with_uuid_serial": [],
+    #         "nb_OU_mach": [],
+    #         "nbwindows": [],
+    #         "nb_ou_user": [],
+    #         "id": [],
+    #         "hostname": [],
+    #         "jid": [],
+    #         "jid_from_relayserver": [],
+    #         "cluster_name": [],
+    #         "cluster_description": [],
+    #         "classutil": [],
+    #         "macaddress": [],
+    #         "ip_xmpp": [],
+    #         "enabled": [],
+    #         "enabled_css": [],
+    #         "mandatory": [],
+    #         "switchonoff": [],
+    #         "uninventoried_offline": [],
+    #         "uninventoried_online": [],
+    #         "inventoried_offline": [],
+    #         "inventoried_online": [],
+    #         "nblinuxmachine": [],
+    #         "nbAMD64": [],
+    #         "nbARM64": [],
+    #         "total_machines": [],
+    #     }
+    #
+    #     result1 = []
+    #     if query is not None:
+    #         for machine in query:
+    #             result1.append(machine.jid)
+    #         if result1:
+    #             filtregroupeselect = (
+    #                 "and groupdeploy in ("
+    #                 + ",".join(['"%s"' % x for x in result1])
+    #                 + ")"
+    #             )
+    #         else:
+    #             filtregroupeselect = ""
+    #
+    #     sql_counts = (
+    #         """SELECT
+    #        SUM(1) AS total_machines,
+    #         SUM(CASE
+    #             WHEN (SUBSTRING(uuid_inventorymachine,1,1) = "U" ) THEN 0
+    #             ELSE 1
+    #         END) AS `uninventoried`,
+    #         SUM(CASE
+    #             WHEN (SUBSTRING(uuid_inventorymachine,1,1) = "U" ) THEN 1
+    #             ELSE 0
+    #         END) AS `inventoried`,
+    #         SUM(CASE
+    #             WHEN (SUBSTRING(uuid_inventorymachine,1,1) != "U" and enabled = 0) THEN 1
+    #             ELSE 0
+    #         END) AS `uninventoried_offline`,
+    #         SUM(CASE
+    #             WHEN (SUBSTRING(uuid_inventorymachine,1,1) != "U" and enabled = 1) THEN 1
+    #             ELSE 0
+    #         END) AS `uninventoried_online`,
+    #         SUM(CASE
+    #             WHEN (SUBSTRING(uuid_inventorymachine,1,1) = "U" and enabled = 0) THEN 1
+    #             ELSE 0
+    #         END) AS `inventoried_offline`,
+    #         SUM(CASE
+    #             WHEN (SUBSTRING(uuid_inventorymachine,1,1) = "U" and enabled = 1) THEN 1
+    #             ELSE 0
+    #         END) AS `inventoried_online`,
+    #         SUM(CASE
+    #                 WHEN (enabled = '1') THEN 1
+    #                 ELSE 0
+    #         END) AS mach_on,
+    #         SUM(CASE
+    #                 WHEN (enabled = '0') THEN 1
+    #                 ELSE 0
+    #         END) AS mach_off,
+    #         SUM(CASE
+    #             WHEN (platform regexp  '^linux.*') THEN 1
+    #             ELSE 0
+    #         END) AS `nblinuxmachine`,
+    #         SUM(CASE
+    #             WHEN (platform regexp  '^Microsoft.*') THEN 1
+    #             ELSE 0
+    #         END) AS `nbwindows`,
+    #         SUM(CASE
+    #                 WHEN (LOCATE('darwin', platform)) THEN 1
+    #                 ELSE 0
+    #             END) AS 'nbdarwin',
+    #         SUM(CASE
+    #             WHEN (archi regexp  '^x86_64|^AMD64') THEN 1
+    #             ELSE 0
+    #         END) AS `nbAMD64`,
+    #         SUM(CASE
+    #             WHEN (archi regexp  '^ARM64') THEN 1
+    #             ELSE 0
+    #         END) AS `nbARM64`,
+    #         SUM(CASE
+    #                 WHEN (COALESCE(uuid_serial_machine, '') != '') THEN 1
+    #                 ELSE 0
+    #             END) AS with_uuid_serial,
+    #         SUM(CASE
+    #             WHEN (classutil = 'both') THEN 1
+    #             ELSE 0
+    #         END) AS bothclass,
+    #         SUM(CASE
+    #             WHEN (classutil = 'public') THEN 1
+    #             ELSE 0
+    #         END) AS publicclass,
+    #         SUM(CASE
+    #             WHEN (classutil = 'private') THEN 1
+    #             ELSE 0
+    #         END) AS privateclass,
+    #         SUM(CASE
+    #             WHEN (COALESCE(ad_ou_user, '') != '') THEN 1
+    #             ELSE 0
+    #         END) AS nb_ou_user,
+    #         SUM(CASE
+    #             WHEN (COALESCE(ad_ou_machine, '') != '') THEN 1
+    #             ELSE 0
+    #         END) AS nb_OU_mach,
+    #         SUM(CASE
+    #             WHEN (kiosk_presence = 'True') THEN 1
+    #             ELSE 0
+    #         END) AS kioskon,
+    #         SUM(CASE
+    #             WHEN (kiosk_presence = 'FALSE') THEN 1
+    #             ELSE 0
+    #         END) AS kioskoff,
+    #         SUM(CASE
+    #             WHEN need_reconf THEN 1
+    #             ELSE 0
+    #         END) AS nbmachinereconf,
+    #         groupdeploy as jid
+    #     from machines where agenttype="machine" %s  group by groupdeploy;"""
+    #         % filtregroupeselect
+    #     )
+    #
+    #     counts_result = session.execute(sql_counts)
+    #
+    #     counts = [
+    #         {
+    #             "nbdarwin": int(count_ars[11]),
+    #             "uninventoried_online": int(count_ars[4]),
+    #             "inventoried_offline": int(count_ars[5]),
+    #             "inventoried_online": int(count_ars[6]),
+    #             "nblinuxmachine": int(count_ars[9]),
+    #             "nbAMD64": int(count_ars[12]),
+    #             "nbARM64": int(count_ars[13]),
+    #             "total_machines": int(count_ars[0]),
+    #             "uninventoried": int(count_ars[1]),
+    #             "inventoried": int(count_ars[2]),
+    #             "uninventoried_offline": int(count_ars[3]),
+    #             "mach_on": int(count_ars[7]),
+    #             "mach_off": int(count_ars[8]),
+    #             "nbwindows": int(count_ars[10]),
+    #             "with_uuid_serial": int(count_ars[14]),
+    #             "bothclass": int(count_ars[15]),
+    #             "publicclass": int(count_ars[16]),
+    #             "privateclass": int(count_ars[17]),
+    #             "nb_ou_user": int(count_ars[18]),
+    #             "nb_OU_mach": int(count_ars[19]),
+    #             "kioskon": int(count_ars[20]),
+    #             "kioskoff": int(count_ars[21]),
+    #             "nbmachinereconf": int(count_ars[22]),
+    #             "jid": count_ars[23],
+    #         }
+    #         for count_ars in counts_result
+    #     ]
+    #
+    #     if query is not None:
+    #         for machine in query:
+    #             flag = False
+    #             for count_ars in counts:
+    #                 if machine.jid == count_ars["jid"]:
+    #                     flag = True
+    #                     break
+    #             if flag == True:
+    #                 result["total_machines"].append(
+    #                     count_ars["total_machines"])
+    #                 result["uninventoried_offline"].append(
+    #                     count_ars["uninventoried_offline"]
+    #                 )
+    #                 result["uninventoried_online"].append(
+    #                     count_ars["uninventoried_online"]
+    #                 )
+    #                 result["inventoried_offline"].append(
+    #                     count_ars["inventoried_offline"]
+    #                 )
+    #                 result["inventoried_online"].append(
+    #                     count_ars["inventoried_online"])
+    #                 result["nblinuxmachine"].append(
+    #                     count_ars["nblinuxmachine"])
+    #                 result["nbwindows"].append(count_ars["nbwindows"])
+    #                 result["nbAMD64"].append(count_ars["nbAMD64"])
+    #                 result["nbARM64"].append(count_ars["nbARM64"])
+    #                 result["nbdarwin"].append(count_ars["nbdarwin"])
+    #                 result["uninventoried"].append(count_ars["uninventoried"])
+    #                 result["inventoried"].append(count_ars["inventoried"])
+    #                 result["mach_on"].append(count_ars["mach_on"])
+    #                 result["mach_off"].append(count_ars["mach_off"])
+    #                 result["with_uuid_serial"].append(
+    #                     count_ars["with_uuid_serial"])
+    #                 result["bothclass"].append(count_ars["bothclass"])
+    #                 result["publicclass"].append(count_ars["publicclass"])
+    #                 result["privateclass"].append(count_ars["privateclass"])
+    #                 result["nb_ou_user"].append(count_ars["nb_ou_user"])
+    #                 result["nb_OU_mach"].append(count_ars["nb_OU_mach"])
+    #                 result["kioskon"].append(count_ars["kioskon"])
+    #                 result["kioskoff"].append(count_ars["kioskoff"])
+    #                 result["nbmachinereconf"].append(
+    #                     count_ars["nbmachinereconf"])
+    #             else:
+    #                 result["total_machines"].append(0)
+    #                 result["uninventoried_offline"].append(0)
+    #                 result["uninventoried_online"].append(0)
+    #                 result["inventoried_offline"].append(0)
+    #                 result["inventoried_online"].append(0)
+    #                 result["nblinuxmachine"].append(0)
+    #                 result["nbwindows"].append(0)
+    #                 result["nbAMD64"].append(0)
+    #                 result["nbARM64"].append(0)
+    #                 result["nbdarwin"].append(0)
+    #                 result["uninventoried"].append(0)
+    #                 result["inventoried"].append(0)
+    #                 result["mach_on"].append(0)
+    #                 result["mach_off"].append(0)
+    #                 result["with_uuid_serial"].append(0)
+    #                 result["bothclass"].append(0)
+    #                 result["publicclass"].append(0)
+    #                 result["privateclass"].append(0)
+    #                 result["nb_ou_user"].append(0)
+    #                 result["nb_OU_mach"].append(0)
+    #                 result["kioskon"].append(0)
+    #                 result["kioskoff"].append(0)
+    #                 result["nbmachinereconf"].append(0)
+    #             result["id"].append(machine.id)
+    #             result["jid"].append(machine.jid)
+    #             result["jid_from_relayserver"].append(
+    #                 machine.jid_from_relayserver)
+    #             if machine.enabled == 1:
+    #                 result["enabled"].append(True)
+    #                 result["enabled_css"].append("machineNamepresente")
+    #             else:
+    #                 result["enabled"].append(False)
+    #                 result["enabled_css"].append("machineName")
+    #             result["hostname"].append(machine.nameserver)
+    #             result["ip_xmpp"].append(machine.ipserver)
+    #             result["macaddress"].append(machine.macaddress)
+    #             result["classutil"].append(machine.classutil)
+    #             if machine.cluster_name is None:
+    #                 result["cluster_name"].append("NULL")
+    #             else:
+    #                 result["cluster_name"].append(machine.cluster_name)
+    #             if machine.cluster_description is None:
+    #                 result["cluster_description"].append("NULL")
+    #             else:
+    #                 result["cluster_description"].append(
+    #                     machine.cluster_description)
+    #             result["mandatory"].append(machine.mandatory)
+    #             result["switchonoff"].append(machine.switchonoff)
+    #     return {"total": count, "datas": result}
+
 
     @DatabaseHelper._sessionm
     def get_xmpprelays_list(self, session, start, limit, filter, presence):
-        try:
-            start = int(start)
-        except BaseException:
-            start = -1
-        try:
-            limit = int(limit)
-        except BaseException:
-            limit = -1
-        query = (
-            session.query(
-                RelayServer.id,
-                RelayServer.ipserver,
-                RelayServer.nameserver,
-                RelayServer.moderelayserver,
-                RelayServer.jid.label("jid_from_relayserver"),
-                RelayServer.classutil,
-                RelayServer.enabled,
-                RelayServer.switchonoff,
-                RelayServer.mandatory,
-            )
-            .add_column(Machines.jid)
-            .add_column(Cluster_ars.name.label("cluster_name"))
-            .add_column(Cluster_ars.description.label("cluster_description"))
-            .add_column(Machines.macaddress.label("macaddress"))
-            .outerjoin(Has_cluster_ars, Has_cluster_ars.id_ars == RelayServer.id)
-            .outerjoin(Cluster_ars, Cluster_ars.id == Has_cluster_ars.id_cluster)
-            .outerjoin(Machines, Machines.hostname == RelayServer.nameserver)
-            .filter(RelayServer.moderelayserver == "static")
-            .filter(Machines.agenttype == "relayserver")
-        )
+        """
+        Retourne la liste des relais XMPP avec les informations machines et des compteurs agrégés.
+
+        Optimisation :
+        - Une seule requête SQL avec agrégations et GROUP BY.
+        - Initialisation dynamique des listes via dict comprehension (évite d’écrire toutes les clés à la main).
+
+        Paramètres
+        ----------
+        session : sqlalchemy.orm.Session
+            Session SQLAlchemy.
+        start : int
+            Offset pagination (ou -1 si désactivé).
+        limit : int
+            Limite pagination (ou -1 si désactivé).
+        filter : str
+            Filtre texte appliqué sur plusieurs colonnes.
+        presence : str
+            "presence"   → enabled = 1
+            "nopresence" → enabled != 1
+            "all"        → aucun filtre
+
+        Retour
+        ------
+        dict :
+            {
+                "total": <nombre total>,
+                "datas": {clé -> liste de valeurs}
+            }
+        """
+
+        # Clauses WHERE
+        where_clauses = ["rs.moderelayserver = 'static'", "m.agenttype = 'relayserver'"]
 
         if presence == "nopresence":
-            query = query.filter(RelayServer.enabled != 1)
+            where_clauses.append("rs.enabled != 1")
         elif presence == "presence":
-            query = query.filter(RelayServer.enabled == 1)
+            where_clauses.append("rs.enabled = 1")
 
-        if filter != "":
-            query = query.filter(
-                or_(
-                    RelayServer.nameserver.contains(filter),
-                    Machines.jid.contains(filter),
-                    Cluster_ars.name.contains(filter),
-                    Cluster_ars.description.contains(filter),
-                    RelayServer.classutil.contains(filter),
-                    Machines.macaddress.contains(filter),
-                    RelayServer.ipserver.contains(filter),
-                )
+        if filter:
+            filter_like = f"'%{filter}%'"
+            where_clauses.append(
+                f"""(
+                    rs.nameserver LIKE {filter_like}
+                    OR m.jid LIKE {filter_like}
+                    OR c.name LIKE {filter_like}
+                    OR c.description LIKE {filter_like}
+                    OR rs.classutil LIKE {filter_like}
+                    OR m.macaddress LIKE {filter_like}
+                    OR rs.ipserver LIKE {filter_like}
+                )"""
             )
-        count = query.count()
+
+        where_sql = " AND ".join(where_clauses)
+
+        # Requête principale
+        sql = f"""
+            SELECT
+                rs.id,
+                rs.nameserver AS hostname,
+                rs.ipserver   AS ip_xmpp,
+                rs.jid        AS jid_from_relayserver,
+                rs.classutil,
+                rs.enabled,
+                rs.switchonoff,
+                rs.mandatory,
+                m.jid,
+                m.macaddress,
+                c.name        AS cluster_name,
+                c.description AS cluster_description,
+
+                -- Compteurs
+                COUNT(m.id) AS total_machines,
+                SUM(CASE WHEN SUBSTRING(m.uuid_inventorymachine,1,1) = 'U' THEN 1 ELSE 0 END) AS inventoried,
+                SUM(CASE WHEN SUBSTRING(m.uuid_inventorymachine,1,1) != 'U' THEN 1 ELSE 0 END) AS uninventoried,
+                SUM(CASE WHEN SUBSTRING(m.uuid_inventorymachine,1,1) != 'U' AND m.enabled = 0 THEN 1 ELSE 0 END) AS uninventoried_offline,
+                SUM(CASE WHEN SUBSTRING(m.uuid_inventorymachine,1,1) != 'U' AND m.enabled = 1 THEN 1 ELSE 0 END) AS uninventoried_online,
+                SUM(CASE WHEN SUBSTRING(m.uuid_inventorymachine,1,1) = 'U' AND m.enabled = 0 THEN 1 ELSE 0 END) AS inventoried_offline,
+                SUM(CASE WHEN SUBSTRING(m.uuid_inventorymachine,1,1) = 'U' AND m.enabled = 1 THEN 1 ELSE 0 END) AS inventoried_online,
+                SUM(CASE WHEN m.enabled = 1 THEN 1 ELSE 0 END) AS mach_on,
+                SUM(CASE WHEN m.enabled = 0 THEN 1 ELSE 0 END) AS mach_off,
+                SUM(CASE WHEN m.platform REGEXP '^linux.*' THEN 1 ELSE 0 END) AS nblinuxmachine,
+                SUM(CASE WHEN m.platform REGEXP '^Microsoft.*' THEN 1 ELSE 0 END) AS nbwindows,
+                SUM(CASE WHEN LOCATE('darwin', m.platform) > 0 THEN 1 ELSE 0 END) AS nbdarwin,
+                SUM(CASE WHEN m.archi REGEXP '^x86_64|^AMD64' THEN 1 ELSE 0 END) AS nbAMD64,
+                SUM(CASE WHEN m.archi REGEXP '^ARM64' THEN 1 ELSE 0 END) AS nbARM64,
+                SUM(CASE WHEN COALESCE(m.uuid_serial_machine,'') != '' THEN 1 ELSE 0 END) AS with_uuid_serial,
+                SUM(CASE WHEN rs.classutil = 'both' THEN 1 ELSE 0 END) AS bothclass,
+                SUM(CASE WHEN rs.classutil = 'public' THEN 1 ELSE 0 END) AS publicclass,
+                SUM(CASE WHEN rs.classutil = 'private' THEN 1 ELSE 0 END) AS privateclass,
+                SUM(CASE WHEN COALESCE(m.ad_ou_user,'') != '' THEN 1 ELSE 0 END) AS nb_ou_user,
+                SUM(CASE WHEN COALESCE(m.ad_ou_machine,'') != '' THEN 1 ELSE 0 END) AS nb_OU_mach,
+                SUM(CASE WHEN m.kiosk_presence = 'True' THEN 1 ELSE 0 END) AS kioskon,
+                SUM(CASE WHEN m.kiosk_presence = 'FALSE' THEN 1 ELSE 0 END) AS kioskoff,
+                SUM(CASE WHEN m.need_reconf THEN 1 ELSE 0 END) AS nbmachinereconf
+            FROM relayserver rs
+            LEFT JOIN has_cluster_ars hca ON hca.id_ars = rs.id
+            LEFT JOIN cluster_ars c       ON c.id = hca.id_cluster
+            LEFT JOIN machines m          ON m.hostname = rs.nameserver
+            WHERE {where_sql}
+            GROUP BY rs.id
+        """
+
         if start != -1 and limit != -1:
-            query = query.offset(start).limit(limit)
+            sql += f" LIMIT {limit} OFFSET {start}"
 
-        query = query.all()
-        result = {
-            "nbuninventoried": [],
-            "inventoried": [],
-            "uninventoried": [],
-            "publicclass": [],
-            "mach_on": [],
-            "nbmachinereconf": [],
-            "kioskon": [],
-            "nbdarwin": [],
-            "kioskoff": [],
-            "bothclass": [],
-            "privateclass": [],
-            "mach_off": [],
-            "with_uuid_serial": [],
-            "nb_OU_mach": [],
-            "nbwindows": [],
-            "nb_ou_user": [],
-            "id": [],
-            "hostname": [],
-            "jid": [],
-            "jid_from_relayserver": [],
-            "cluster_name": [],
-            "cluster_description": [],
-            "classutil": [],
-            "macaddress": [],
-            "ip_xmpp": [],
-            "enabled": [],
-            "enabled_css": [],
-            "mandatory": [],
-            "switchonoff": [],
-            "uninventoried_offline": [],
-            "uninventoried_online": [],
-            "inventoried_offline": [],
-            "inventoried_online": [],
-            "nblinuxmachine": [],
-            "nbAMD64": [],
-            "nbARM64": [],
-            "total_machines": [],
-        }
+        rows = session.execute(sql).fetchall()
 
-        result1 = []
-        if query is not None:
-            for machine in query:
-                result1.append(machine.jid)
-            if result1:
-                filtregroupeselect = (
-                    "and groupdeploy in ("
-                    + ",".join(['"%s"' % x for x in result1])
-                    + ")"
-                )
-            else:
-                filtregroupeselect = ""
+        # Compter le total (sans pagination)
+        sql_count = f"""
+            SELECT COUNT(DISTINCT rs.id)
+            FROM relayserver rs
+            LEFT JOIN machines m ON m.hostname = rs.nameserver
+            WHERE {where_sql}
+        """
+        total = session.execute(sql_count).scalar()
 
-        sql_counts = (
-            """SELECT
-           SUM(1) AS total_machines,
-            SUM(CASE
-                WHEN (SUBSTRING(uuid_inventorymachine,1,1) = "U" ) THEN 0
-                ELSE 1
-            END) AS `uninventoried`,
-            SUM(CASE
-                WHEN (SUBSTRING(uuid_inventorymachine,1,1) = "U" ) THEN 1
-                ELSE 0
-            END) AS `inventoried`,
-            SUM(CASE
-                WHEN (SUBSTRING(uuid_inventorymachine,1,1) != "U" and enabled = 0) THEN 1
-                ELSE 0
-            END) AS `uninventoried_offline`,
-            SUM(CASE
-                WHEN (SUBSTRING(uuid_inventorymachine,1,1) != "U" and enabled = 1) THEN 1
-                ELSE 0
-            END) AS `uninventoried_online`,
-            SUM(CASE
-                WHEN (SUBSTRING(uuid_inventorymachine,1,1) = "U" and enabled = 0) THEN 1
-                ELSE 0
-            END) AS `inventoried_offline`,
-            SUM(CASE
-                WHEN (SUBSTRING(uuid_inventorymachine,1,1) = "U" and enabled = 1) THEN 1
-                ELSE 0
-            END) AS `inventoried_online`,
-            SUM(CASE
-                    WHEN (enabled = '1') THEN 1
-                    ELSE 0
-            END) AS mach_on,
-            SUM(CASE
-                    WHEN (enabled = '0') THEN 1
-                    ELSE 0
-            END) AS mach_off,
-            SUM(CASE
-                WHEN (platform regexp  '^linux.*') THEN 1
-                ELSE 0
-            END) AS `nblinuxmachine`,
-            SUM(CASE
-                WHEN (platform regexp  '^Microsoft.*') THEN 1
-                ELSE 0
-            END) AS `nbwindows`,
-            SUM(CASE
-                    WHEN (LOCATE('darwin', platform)) THEN 1
-                    ELSE 0
-                END) AS 'nbdarwin',
-            SUM(CASE
-                WHEN (archi regexp  '^x86_64|^AMD64') THEN 1
-                ELSE 0
-            END) AS `nbAMD64`,
-            SUM(CASE
-                WHEN (archi regexp  '^ARM64') THEN 1
-                ELSE 0
-            END) AS `nbARM64`,
-            SUM(CASE
-                    WHEN (COALESCE(uuid_serial_machine, '') != '') THEN 1
-                    ELSE 0
-                END) AS with_uuid_serial,
-            SUM(CASE
-                WHEN (classutil = 'both') THEN 1
-                ELSE 0
-            END) AS bothclass,
-            SUM(CASE
-                WHEN (classutil = 'public') THEN 1
-                ELSE 0
-            END) AS publicclass,
-            SUM(CASE
-                WHEN (classutil = 'private') THEN 1
-                ELSE 0
-            END) AS privateclass,
-            SUM(CASE
-                WHEN (COALESCE(ad_ou_user, '') != '') THEN 1
-                ELSE 0
-            END) AS nb_ou_user,
-            SUM(CASE
-                WHEN (COALESCE(ad_ou_machine, '') != '') THEN 1
-                ELSE 0
-            END) AS nb_OU_mach,
-            SUM(CASE
-                WHEN (kiosk_presence = 'True') THEN 1
-                ELSE 0
-            END) AS kioskon,
-            SUM(CASE
-                WHEN (kiosk_presence = 'FALSE') THEN 1
-                ELSE 0
-            END) AS kioskoff,
-            SUM(CASE
-                WHEN need_reconf THEN 1
-                ELSE 0
-            END) AS nbmachinereconf,
-            groupdeploy as jid
-        from machines where agenttype="machine" %s  group by groupdeploy;"""
-            % filtregroupeselect
-        )
-
-        counts_result = session.execute(sql_counts)
-
-        counts = [
-            {
-                "nbdarwin": int(count_ars[11]),
-                "uninventoried_online": int(count_ars[4]),
-                "inventoried_offline": int(count_ars[5]),
-                "inventoried_online": int(count_ars[6]),
-                "nblinuxmachine": int(count_ars[9]),
-                "nbAMD64": int(count_ars[12]),
-                "nbARM64": int(count_ars[13]),
-                "total_machines": int(count_ars[0]),
-                "uninventoried": int(count_ars[1]),
-                "inventoried": int(count_ars[2]),
-                "uninventoried_offline": int(count_ars[3]),
-                "mach_on": int(count_ars[7]),
-                "mach_off": int(count_ars[8]),
-                "nbwindows": int(count_ars[10]),
-                "with_uuid_serial": int(count_ars[14]),
-                "bothclass": int(count_ars[15]),
-                "publicclass": int(count_ars[16]),
-                "privateclass": int(count_ars[17]),
-                "nb_ou_user": int(count_ars[18]),
-                "nb_OU_mach": int(count_ars[19]),
-                "kioskon": int(count_ars[20]),
-                "kioskoff": int(count_ars[21]),
-                "nbmachinereconf": int(count_ars[22]),
-                "jid": count_ars[23],
-            }
-            for count_ars in counts_result
+        # Colonnes à exporter en listes
+        columns = [
+            "id", "hostname", "jid", "jid_from_relayserver", "cluster_name", "cluster_description",
+            "classutil", "macaddress", "ip_xmpp", "mandatory", "switchonoff", "enabled",
+            "total_machines", "inventoried", "uninventoried", "uninventoried_offline",
+            "uninventoried_online", "inventoried_offline", "inventoried_online", "mach_on",
+            "mach_off", "nblinuxmachine", "nbwindows", "nbdarwin", "nbAMD64", "nbARM64",
+            "with_uuid_serial", "bothclass", "publicclass", "privateclass", "nb_ou_user",
+            "nb_OU_mach", "kioskon", "kioskoff", "nbmachinereconf"
         ]
 
-        if query is not None:
-            for machine in query:
-                flag = False
-                for count_ars in counts:
-                    if machine.jid == count_ars["jid"]:
-                        flag = True
-                        break
-                if flag == True:
-                    result["total_machines"].append(
-                        count_ars["total_machines"])
-                    result["uninventoried_offline"].append(
-                        count_ars["uninventoried_offline"]
-                    )
-                    result["uninventoried_online"].append(
-                        count_ars["uninventoried_online"]
-                    )
-                    result["inventoried_offline"].append(
-                        count_ars["inventoried_offline"]
-                    )
-                    result["inventoried_online"].append(
-                        count_ars["inventoried_online"])
-                    result["nblinuxmachine"].append(
-                        count_ars["nblinuxmachine"])
-                    result["nbwindows"].append(count_ars["nbwindows"])
-                    result["nbAMD64"].append(count_ars["nbAMD64"])
-                    result["nbARM64"].append(count_ars["nbARM64"])
-                    result["nbdarwin"].append(count_ars["nbdarwin"])
-                    result["uninventoried"].append(count_ars["uninventoried"])
-                    result["inventoried"].append(count_ars["inventoried"])
-                    result["mach_on"].append(count_ars["mach_on"])
-                    result["mach_off"].append(count_ars["mach_off"])
-                    result["with_uuid_serial"].append(
-                        count_ars["with_uuid_serial"])
-                    result["bothclass"].append(count_ars["bothclass"])
-                    result["publicclass"].append(count_ars["publicclass"])
-                    result["privateclass"].append(count_ars["privateclass"])
-                    result["nb_ou_user"].append(count_ars["nb_ou_user"])
-                    result["nb_OU_mach"].append(count_ars["nb_OU_mach"])
-                    result["kioskon"].append(count_ars["kioskon"])
-                    result["kioskoff"].append(count_ars["kioskoff"])
-                    result["nbmachinereconf"].append(
-                        count_ars["nbmachinereconf"])
+        # Init dictionnaire vide avec listes
+        result = {col: [] for col in columns}
+        result["enabled_css"] = []  # calculé à part
+
+        # Remplissage
+        for r in rows:
+            for col in columns:
+                value = getattr(r, col)
+                # Eviter None → mettre "NULL" pour cluster_xxx, ou 0 pour compteurs
+                if col in ["cluster_name", "cluster_description"] and value is None:
+                    result[col].append("NULL")
+                elif isinstance(value, int) or isinstance(value, float):
+                    result[col].append(value or 0)
                 else:
-                    result["total_machines"].append(0)
-                    result["uninventoried_offline"].append(0)
-                    result["uninventoried_online"].append(0)
-                    result["inventoried_offline"].append(0)
-                    result["inventoried_online"].append(0)
-                    result["nblinuxmachine"].append(0)
-                    result["nbwindows"].append(0)
-                    result["nbAMD64"].append(0)
-                    result["nbARM64"].append(0)
-                    result["nbdarwin"].append(0)
-                    result["uninventoried"].append(0)
-                    result["inventoried"].append(0)
-                    result["mach_on"].append(0)
-                    result["mach_off"].append(0)
-                    result["with_uuid_serial"].append(0)
-                    result["bothclass"].append(0)
-                    result["publicclass"].append(0)
-                    result["privateclass"].append(0)
-                    result["nb_ou_user"].append(0)
-                    result["nb_OU_mach"].append(0)
-                    result["kioskon"].append(0)
-                    result["kioskoff"].append(0)
-                    result["nbmachinereconf"].append(0)
-                result["id"].append(machine.id)
-                result["jid"].append(machine.jid)
-                result["jid_from_relayserver"].append(
-                    machine.jid_from_relayserver)
-                if machine.enabled == 1:
-                    result["enabled"].append(True)
-                    result["enabled_css"].append("machineNamepresente")
-                else:
-                    result["enabled"].append(False)
-                    result["enabled_css"].append("machineName")
-                result["hostname"].append(machine.nameserver)
-                result["ip_xmpp"].append(machine.ipserver)
-                result["macaddress"].append(machine.macaddress)
-                result["classutil"].append(machine.classutil)
-                if machine.cluster_name is None:
-                    result["cluster_name"].append("NULL")
-                else:
-                    result["cluster_name"].append(machine.cluster_name)
-                if machine.cluster_description is None:
-                    result["cluster_description"].append("NULL")
-                else:
-                    result["cluster_description"].append(
-                        machine.cluster_description)
-                result["mandatory"].append(machine.mandatory)
-                result["switchonoff"].append(machine.switchonoff)
-        return {"total": count, "datas": result}
+                    result[col].append(value)
+
+            # enabled_css dépend de enabled
+            result["enabled_css"].append(
+                "machineNamepresente" if r.enabled == 1 else "machineName"
+            )
+
+        return {"total": total, "datas": result}
 
     @DatabaseHelper._sessionm
     def change_relay_switch(self, session, jid, switch, propagate):
