@@ -78,6 +78,7 @@ $userNames                  = [];
 $userFirstnames             = [];
 $userLastName               = [];
 $userEmails                 = [];
+$userPhones                 = [];
 $userStatus                 = [];
 $userLastLogin              = [];
 $userProfileNames           = [];
@@ -94,22 +95,13 @@ foreach ($userDetails as $user) {
     $userFirstnames[]   = $user['firstname'];
     $userLastName[]     = $user['realname'];
     $userEmails[]       = $user['email'];
+    $userPhones[]       = $user['phone'];
     $userStatus[]       = $isActive ? _("Enabled") : _("Disabled");
     $userLastLogin[]    = $fmtDate($user['last_login'] ?? null);
     $userProfileNames[] = $user['profile_name'];
 
     $userEditActions[]   = new ActionItem(
         _T("Edit"), "editUser", "edit", "", "admin", "admin"
-    );
-
-    $userDeleteActions[] = new ActionConfirmItem(
-        _T("Delete user", "admin"),
-        "deleteUser",
-        "delete",
-        "",
-        "admin",
-        "admin",
-        sprintf(_T("Are you sure you want to delete this user <strong>%s</strong>?", "admin"), $user['name'])
     );
 
     // determines the icon according to the status (active/deactivated)
@@ -146,12 +138,23 @@ foreach ($userDetails as $user) {
         )
     );
 
+    $userDeleteActions[] = new ActionConfirmItem(
+        _T("Delete user", "admin"),
+        "deleteUser",
+        "delete",
+        "",
+        "admin",
+        "admin",
+        sprintf(_T("Are you sure you want to delete this user <strong>%s</strong>?", "admin"), $user['name'])
+    );
+
     $userParams[] = [
         'userId'       => $user['user_id'],
         'userName'     => $user['name'],
         'firstname'    => $user['firstname'],
         'lastname'     => $user['realname'],
         'email'        => $user['email'],
+        'phone'        => $user['phone'],
         'profil_name'  => $user['profile_name'],
         'profile_id'   => $user['profiles_id'],
         'entities_id'  => $user['entity_id'] ?? 0,
@@ -184,14 +187,15 @@ if (count($userNames) === 0) {
     $n->addExtraInfo($userFirstnames,   _T("First name", "admin"));
     $n->addExtraInfo($userLastName,     _T("Last Name", "admin"));
     $n->addExtraInfo($userEmails,       _T("eMail", "admin"));
+    $n->addExtraInfo($userPhones,       _T("Phone", "admin"));
     $n->addExtraInfo($userStatus,       _T("Status", "admin"));
     $n->addExtraInfo($userLastLogin,    _T("Last connection", "admin"));
     $n->addExtraInfo($userProfileNames, _T("Profil", "admin"));
 
     $n->addActionItemArray($userEditActions);
-    $n->addActionItemArray($userDeleteActions);
     $n->addActionItemArray($userDeleteProfileActions);
     $n->addActionItemArray($userDesactivateActions);
+    $n->addActionItemArray($userDeleteActions);
     $n->setParamInfo($userParams);
     $n->display();
 }

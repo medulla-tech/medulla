@@ -473,7 +473,7 @@ class GLPIClient:
         return data.get("name", "")
 
     # CREATE
-    def create_user_basic(self, name_user, pwd, realname=None, firstname=None):
+    def create_user_basic(self, name_user, pwd, realname=None, firstname=None, phone=None):
         try:
             headers = self._headers()
         except Exception as e:
@@ -490,6 +490,7 @@ class GLPIClient:
                 "password2": pwd,
                 "realname": realname,
                 "firstname": firstname,
+                "phone": phone,
                 "language": "fr_FR",
                 "is_active": 1,
 
@@ -514,6 +515,7 @@ class GLPIClient:
                     realname=None,
                     firstname=None,
                     email=None,
+                    phone=None,
                     is_recursive=False,
                     is_default=True,
                     unique_entity=True,
@@ -524,7 +526,8 @@ class GLPIClient:
                 name_user,
                 pwd,
                 realname=realname,
-                firstname=firstname
+                firstname=firstname,
+                phone=phone
             )
 
             self.switch_user_entity(
@@ -1379,14 +1382,14 @@ def get_profile_name(profile_id, tokenuser=None):
 
 # CREATE
 def create_user(name_user, pwd, entities_id=None, profiles_id=None,
-                realname=None, firstname=None, email=None,
+                realname=None, firstname=None, email=None, phone=None,
                 is_recursive=False, is_default=True,
                 tokenuser=None, return_token=True):
     try:
         client = get_glpi_client(tokenuser=tokenuser)
         user_id = client.create_user(
             name_user=name_user, pwd=pwd, entities_id=entities_id, profiles_id=profiles_id,
-            realname=realname, firstname=firstname, email=email,
+            realname=realname, firstname=firstname, email=email, phone=phone,
             is_recursive=is_recursive, is_default=is_default
         )
 

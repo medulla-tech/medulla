@@ -21,7 +21,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with MMC; If not, see <http://www.gnu.org/licenses/>.
- *
+ * file: createSession.php
  */
 
 $_SESSION["login"] = $login;
@@ -46,7 +46,8 @@ $_SESSION['glpi_user'] = [
     'login'          => $user['nameuser'] ?? $_SESSION['login'],
     'firstname'      => $user['firstname'] ?? null,
     'lastname'       => $user['realname'] ?? null,
-    'email'          => $user['nameuser'] ?? null,
+    'mail'           => $user['mail'] ?? null,
+    'phone'          => $user['phone'] ?? null,
     'api_token'      => $user['api_token'] ?? null,
     'active'         => isset($user['is_activeuser']) ? $user['is_activeuser'] === '1' : null,
     'profile_id'     => isset($user['profiles_id']) ? (int)$user['profiles_id'] : null,
