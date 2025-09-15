@@ -10868,6 +10868,15 @@ class XmppMasterDatabase(DatabaseHelper):
             "nb_OU_mach", "kioskon", "kioskoff", "nbmachinereconf"
         ]
 
+        # Sous-ensemble des colonnes qui sont des compteurs -> doivent être forcées en int
+        counters = [
+            "total_machines", "inventoried", "uninventoried", "uninventoried_offline",
+            "uninventoried_online", "inventoried_offline", "inventoried_online",
+            "mach_on", "mach_off", "nblinuxmachine", "nbwindows", "nbdarwin",
+            "nbAMD64", "nbARM64", "with_uuid_serial", "bothclass", "publicclass",
+            "privateclass", "nb_ou_user", "nb_OU_mach", "kioskon", "kioskoff",
+            "nbmachinereconf"
+        ]
         # Init dictionnaire vide avec listes
         result = {col: [] for col in columns}
         result["enabled_css"] = []  # calculé à part
@@ -10879,8 +10888,8 @@ class XmppMasterDatabase(DatabaseHelper):
                 # Eviter None → mettre "NULL" pour cluster_xxx, ou 0 pour compteurs
                 if col in ["cluster_name", "cluster_description"] and value is None:
                     result[col].append("NULL")
-                elif isinstance(value, int) or isinstance(value, float):
-                    result[col].append(value or 0)
+                elif col in counters:
+                    result[col].append(int(value or 0))  # <-- force int ici
                 else:
                     result[col].append(value)
 
