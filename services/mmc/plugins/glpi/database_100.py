@@ -7361,6 +7361,8 @@ class Glpi100(DyngroupDatabaseHelper):
                 "nameuser": ...,
                 "realname": ...,
                 "firstname": ...,
+                "mail": ...,
+                "phone": ...,
                 "api_token": ...,
                 "is_activeuser": ...,
                 "locations_id": ...,
@@ -7380,6 +7382,8 @@ class Glpi100(DyngroupDatabaseHelper):
                 gu.name AS nameuser,
                 gu.realname,
                 gu.firstname,
+                gm.email AS mail,
+                gu.phone,
                 gu.api_token,
                 gu.is_active AS is_activeuser,
                 gu.locations_id,
@@ -7391,6 +7395,8 @@ class Glpi100(DyngroupDatabaseHelper):
                 ge.entities_id AS parent_id_entity,
                 ge.level AS level_entity
             FROM glpi.glpi_users gu
+            LEFT JOIN glpi.glpi_useremails gm
+            ON gm.users_id = gu.id AND gm.is_default = 1
             LEFT JOIN glpi.glpi_profiles_users gpu
             ON gpu.id = (
                     SELECT gpu2.id
@@ -7422,6 +7428,8 @@ class Glpi100(DyngroupDatabaseHelper):
                 "nameuser": safe(row.nameuser),
                 "realname": safe(row.realname),
                 "firstname": safe(row.firstname),
+                "mail": safe(row.mail),
+                "phone": safe(row.phone),
                 "api_token": safe(row.api_token),
                 "is_activeuser": safe(row.is_activeuser),
                 "locations_id": safe(row.locations_id),

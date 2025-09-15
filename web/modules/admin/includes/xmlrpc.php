@@ -120,6 +120,7 @@ function xmlrpc_create_user(
     ?string $realname = null,
     ?string $firstname = null,
     ?string $email = null,
+    ?string $phone = null,
     ?bool $is_recursive = false,
     ?bool $is_default = true,
     ?string $tokenuser = null
@@ -132,6 +133,7 @@ function xmlrpc_create_user(
         $realname,
         $firstname,
         $email,
+        $phone,
         $is_recursive,
         $is_default,
         $tokenuser

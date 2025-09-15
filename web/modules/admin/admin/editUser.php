@@ -59,6 +59,46 @@ function parseIniSection($filePath, $section)
     return $sectionData;
 }
 
+function validatePasswords(string $pwd, string $pwd2, bool $isUpdate = false): array
+{
+    if ($pwd === '' || $pwd2 === '') {
+        return [false, $isUpdate
+            ? _T("The password and its confirmation cannot be empty.", "admin")
+            : _T("Veuillez remplir le mot de passe et sa confirmation.", "admin")
+        ];
+    }
+
+    if ($pwd !== $pwd2) {
+        return [false, _T("Passwords do not match.", "admin")];
+    }
+
+    // Verification of complexity
+    $errors = [];
+    if (strlen($pwd) < 12) {
+        $errors[] = _T("The password must contain at least 12 characters.", "admin");
+    }
+    if (!preg_match('/[A-Z]/', $pwd)) {
+        $errors[] = _T("The password must contain at least one capital letter.", "admin");
+    }
+    if (!preg_match('/[a-z]/', $pwd)) {
+        $errors[] = _T("The password must contain at least a tiny.", "admin");
+    }
+    if (!preg_match('/\d/', $pwd)) {
+        $errors[] = _T("The password must contain at least one figure.", "admin");
+    }
+    if (!preg_match('/[^A-Za-z0-9\s]/', $pwd)) {
+        $errors[] = _T("The password must contain at least a special character.", "admin");
+    }
+
+    if (!empty($errors)) {
+        return [false, implode("<br>", $errors)];
+    }
+
+    return [true, ""];
+}
+
+
+
 if (!isset($configPaths) || !is_array($configPaths)) {
     $configPaths = [];
 }
@@ -133,6 +173,7 @@ $prefill = [
     'firstname'    => '',
     'lastname'     => '',
     'email'        => '',
+    'phone'        => '',
     'profile_id'   => null,
     'profile_name' => '',
     'entities_id'  => null,
@@ -145,6 +186,7 @@ if ($mode === 'edit') {
     $prefill['firstname']    = $_GET['firstname']    ?? $prefill['firstname'];
     $prefill['lastname']     = $_GET['realname']     ?? ($_GET['lastname'] ?? $prefill['lastname']);
     $prefill['email']        = $_GET['email']        ?? $prefill['email'];
+    $prefill['phone']        = $_GET['phone']        ?? $prefill['phone'];
     $prefill['profile_name'] = $_GET['profil_name']  ?? $prefill['profile_name'];
     if (isset($_GET['entities_id']) && $_GET['entities_id'] !== '') {
         $prefill['entities_id'] = (int)$_GET['entities_id'];
@@ -160,19 +202,21 @@ if ($mode === 'edit') {
         $prefill['username']     = $u['login']        ?? $prefill['username'];
         $prefill['firstname']    = $u['firstname']    ?? $prefill['firstname'];
         $prefill['lastname']     = $u['lastname']     ?? $prefill['lastname'];
-        $prefill['email']        = $u['email']        ?? $prefill['email'];
+        $prefill['email']        = $_GET['email']     ?? $prefill['email'];
+        $prefill['phone']        = $_GET['phone']     ?? $prefill['phone'];
         $prefill['profile_id']   = $u['profile_id']   ?? $prefill['profile_id'];
         $prefill['profile_name'] = $u['profile_name'] ?? $prefill['profile_name'];
     } else {
         try {
-            $info = xmlrpc_get_user_info($userId, $tokenuser);
+            $info = xmlrpc_get_user_info($userId, $_GET['profile_id']);
             if (is_array($info)) {
                 $prefill['username']     = $info['login']      ?? $prefill['username'];
                 $prefill['firstname']    = $info['firstname']  ?? $prefill['firstname'];
                 $prefill['lastname']     = $info['lastname']   ?? ($info['realname'] ?? $prefill['lastname']);
                 $prefill['email']        = $info['email']      ?? $prefill['email'];
+                $prefill['phone']        = $info['phone']      ?? $prefill['phone'];
                 $prefill['profile_id']   = isset($info['profile_id']) ? (int)$info['profile_id'] : $prefill['profile_id'];
-                $prefill['profile_name'] = $info['profile_name'] ?? $prefill['profile_name'];
+                $prefill['profile_name'] = $_GET['profil_name'] ?? ($info['profile_name'] ?? $prefill['profile_name']);
 
                 if (isset($info['entities_id']) && $info['entities_id'] !== '') {
                     $prefill['entities_id'] = (int)$info['entities_id'];
@@ -290,6 +334,7 @@ if (isset($_POST["bcreate"])) {
     $postedFirstName    = trim($_POST['newFirstName'] ?? '');
     $postedLastName     = trim($_POST['newLastName']  ?? '');
     $postedEmail        = trim($_POST['newEmail']     ?? '');
+    $postedPhone        = trim($_POST['newPhone']     ?? '');
     $postedProfileId    = $normId($_POST['profiles_id']  ?? null);
     $postedEntityId     = $normId($_POST['entities_id']  ?? null);
     $postedIsRecursive  = (isset($_POST['is_recursive']) && $_POST['is_recursive'] === '1');
@@ -310,14 +355,35 @@ if (isset($_POST["bcreate"])) {
     if ($postedUsername === '') {
         $fail("Form", _T("Username is required.", "admin"));
     }
-    if ($pwd === '' || $pwd !== $pwd2) {
-        $fail("Form", _T("Passwords are empty or do not match.", "admin"));
+    [$isValid, $errorMessage] = validatePasswords($pwd, $pwd2);
+    if (!$isValid) {
+        new NotifyWidgetFailure($errorMessage);
+        header("Location: " . urlStrRedirect("admin/admin/listUsersofEntity", [
+            'entityId' => (string)($postedEntityId ?? $origEntityId ?? $defaultEntityId),
+            'entityName' => $entityIdToName[$postedEntityId ?? $origEntityId ?? $defaultEntityId] ?? ''
+        ]));
+        exit;
     }
     if ($postedProfileId === null || $postedEntityId === null) {
         $fail("Form", _T("Profile and entity are required.", "admin"));
     }
+
     if ($postedEmail !== '' && !filter_var($postedEmail, FILTER_VALIDATE_EMAIL)) {
-        $fail("Form", _T("Invalid email address.", "admin"));
+        new NotifyWidgetFailure(_T("Invalid email address.", "admin"));
+        header("Location: " . urlStrRedirect("admin/admin/listUsersofEntity", [
+            'entityId' => (string)($postedEntityId ?? $origEntityId ?? $defaultEntityId),
+            'entityName' => $entityIdToName[$postedEntityId ?? $origEntityId ?? $defaultEntityId] ?? ''
+        ]));
+        exit;
+    }
+
+    if ($postedPhone !== '' && !preg_match('/^\+?[0-9\s\-\(\)]{6,}$/', $postedPhone)) {
+        new NotifyWidgetFailure(_T("Invalid phone number.", "admin"));
+        header("Location: " . urlStrRedirect("admin/admin/listUsersofEntity", [
+            'entityId' => (string)($postedEntityId ?? $origEntityId ?? $defaultEntityId),
+            'entityName' => $entityIdToName[$postedEntityId ?? $origEntityId ?? $defaultEntityId] ?? ''
+        ]));
+        exit;
     }
 
     // Creation of the user in GLPI
@@ -330,6 +396,7 @@ if (isset($_POST["bcreate"])) {
             $postedLastName,
             $postedFirstName,
             $postedEmail ?: null,
+            $postedPhone ?: null,
             $postedIsRecursive,
             $postedIsDefault,
             $tokenuser
@@ -421,6 +488,9 @@ if (isset($_POST["bcreate"])) {
         if ($postedEmail !== '') {
             changeUserAttributes($postedUsername, "mail", $postedEmail);
         }
+        if ($postedPhone !== '') {
+            changeUserAttributes($postedUsername, "telephoneNumber", $postedPhone);
+        }
 
     } catch (Throwable $e) {
         // Rollback GLPI in case of exception LDAP
@@ -465,6 +535,7 @@ if (isset($_POST["bupdate"])) {
     $origFirstName  = (string)($prefill['firstname'] ?? '');
     $origLastName   = (string)($prefill['lastname'] ?? '');
     $origEmail      = (string)($prefill['email'] ?? '');
+    $origPhone      = (string)($prefill['phone'] ?? '');
     $origProfileId  = !empty($prefill['profile_id'])
                     ? (int)$prefill['profile_id']
                     : (!empty($prefill['profile_name']) && isset($profileNameToId[$prefill['profile_name']])
@@ -479,6 +550,7 @@ if (isset($_POST["bupdate"])) {
     $postedFirstName  = trim($_POST['newFirstName'] ?? '');
     $postedLastName   = trim($_POST['newLastName'] ?? '');
     $postedEmail      = trim($_POST['newEmail'] ?? '');
+    $postedPhone      = trim($_POST['newPhone'] ?? '');
     $pwd              = $_POST['newPassword'] ?? '';
     $pwd2             = $_POST['newPassword2'] ?? '';
     $changePwd        = ($pwd !== '' || $pwd2 !== '');
@@ -487,18 +559,31 @@ if (isset($_POST["bupdate"])) {
     $postedIsRecursive = ((string)($_POST['is_recursive'] ?? '1') === '1') ? 1 : 0;
 
     // Data validation
-    if ($changePwd && $pwd !== $pwd2) {
-        new NotifyWidgetFailure(_T("Passwords do not match.", "admin"));
-        header("Location: " . urlStrRedirect("admin/admin/listuserofEntity", [
+    $changePwd = ($pwd !== '' || $pwd2 !== ''); // Déjà défini plus haut
+    if ($changePwd) {
+        [$isValid, $errorMessage] = validatePasswords($pwd, $pwd2, true);
+        if (!$isValid) {
+            new NotifyWidgetFailure($errorMessage);
+            header("Location: " . urlStrRedirect("admin/admin/listUsersofEntity", [
+                'entityId' => (string)($postedEntityId ?? $origEntityId ?? $defaultEntityId),
+                'entityName' => $entityIdToName[$postedEntityId ?? $origEntityId ?? $defaultEntityId] ?? ''
+            ]));
+            exit;
+        }
+    }
+
+    if ($postedEmail !== '' && !filter_var($postedEmail, FILTER_VALIDATE_EMAIL)) {
+        new NotifyWidgetFailure(_T("Invalid email address.", "admin"));
+        header("Location: " . urlStrRedirect("admin/admin/listUsersofEntity", [
             'entityId' => (string)($postedEntityId ?? $origEntityId ?? $defaultEntityId),
             'entityName' => $entityIdToName[$postedEntityId ?? $origEntityId ?? $defaultEntityId] ?? ''
         ]));
         exit;
     }
 
-    if ($postedEmail !== '' && !filter_var($postedEmail, FILTER_VALIDATE_EMAIL)) {
-        new NotifyWidgetFailure(_T("Invalid email address.", "admin"));
-        header("Location: " . urlStrRedirect("admin/admin/listuserofEntity", [
+    if ($postedPhone !== '' && !preg_match('/^\+?[0-9\s\-\(\)]{6,}$/', $postedPhone)) {
+        new NotifyWidgetFailure(_T("Invalid phone number.", "admin"));
+        header("Location: " . urlStrRedirect("admin/admin/listUsersofEntity", [
             'entityId' => (string)($postedEntityId ?? $origEntityId ?? $defaultEntityId),
             'entityName' => $entityIdToName[$postedEntityId ?? $origEntityId ?? $defaultEntityId] ?? ''
         ]));
@@ -518,10 +603,11 @@ if (isset($_POST["bupdate"])) {
     }
 
     // Detection of changes
-    $wantUsername   = ($postedUsername  !== '' && $postedUsername  !== $origUsername)  ? $postedUsername  : null;
-    $wantFirstName  = ($postedFirstName !== '' && $postedFirstName !== $origFirstName) ? $postedFirstName : null;
-    $wantLastName   = ($postedLastName  !== '' && $postedLastName  !== $origLastName)  ? $postedLastName  : null;
-    $wantEmail      = ($postedEmail     !== '' && $postedEmail     !== $origEmail)     ? $postedEmail     : null;
+    $wantUsername   = ($postedUsername  !== $origUsername)  ? $postedUsername  : null;
+    $wantFirstName  = ($postedFirstName !== $origFirstName) ? $postedFirstName : null;
+    $wantLastName   = ($postedLastName  !== $origLastName)  ? $postedLastName  : null;
+    $wantEmail      = ($postedEmail     !== $origEmail)     ? $postedEmail     : null;
+    $wantPhone      = ($postedPhone     !== $origPhone)     ? $postedPhone     : null;
     $pwdChanged     = $changePwd;
     $profileChanged = ($postedProfileId !== null && (string)$postedProfileId !== (string)($origProfileId ?? ''));
     $entityChanged  = ($postedEntityId  !== null && (string)$postedEntityId  !== (string)($origEntityId  ?? ''));
@@ -545,6 +631,10 @@ if (isset($_POST["bupdate"])) {
         }
         if ($wantEmail !== null) {
             $okAll = (bool)xmlrpc_set_user_email($userId, $wantEmail, $tokenuser) && $okAll;
+            $didSomething = true;
+        }
+        if ($wantPhone !== null) {
+            $okAll = (bool)xmlrpc_update_user($userId, 'phone', $wantPhone, $tokenuser) && $okAll;
             $didSomething = true;
         }
         if ($pwdChanged) {
@@ -619,9 +709,14 @@ if (isset($_POST["bupdate"])) {
         }
 
         // Email update
-        $ldapMail = ($postedEmail !== '') ? $postedEmail : (($origEmail !== '') ? $origEmail : null);
+        $ldapMail = ($wantEmail !== null) ? $wantEmail : (($origEmail !== '') ? $origEmail : null);
         $res = @changeUserAttributes($uidForAttrs, 'mail', $ldapMail);
         if ($res === false || $res === null) { $ldapOk = false; $ldapErrors[] = 'mail'; }
+
+        // Phone update
+        $ldapPhone = ($wantPhone !== null) ? $wantPhone : (($origPhone !== '') ? $origPhone : null);
+        $res = @changeUserAttributes($uidForAttrs, 'telephoneNumber', $ldapPhone);
+        if ($res === false || $res === null) { $ldapOk = false; $ldapErrors[] = 'telephoneNumber'; }
 
         // Password update
         if ($pwdChanged) {
@@ -733,6 +828,7 @@ $addInput($form, 'newPassword2', 'Confirm password', '');
 $addInput($form, 'newFirstName', 'First name', $_POST['newFirstName'] ?? $prefill['firstname']);
 $addInput($form, 'newLastName',  'Last name',  $_POST['newLastName']  ?? $prefill['lastname']);
 $addInput($form, 'newEmail',     'Email',      $_POST['newEmail']     ?? $prefill['email']);
+$addInput($form, 'newPhone',     'Phone',      $_POST['newPhone']     ?? $prefill['phone']);
 
 $form->add(new HiddenTpl('userId'), array('value' => (string)$userId, 'hide' => true));
 $form->add(new HiddenTpl('mode'),   array('value' => (string)$mode,   'hide' => true));
@@ -782,6 +878,22 @@ $form->display();
     filter: drop-shadow(-1px 0 0 rgba(0,0,0,.15));
   }
   #pw-hints.flip::after{ left:auto; right:-6px; transform:translateY(-50%) rotate(180deg); }
+
+  /* Feedback for email and phone */
+    .email-wrap, .phone-wrap { position: relative; display: inline-block; vertical-align: middle; }
+    .email-wrap input.email-error,
+    .phone-wrap input.phone-error,
+    .email-wrap input.email-error:focus,
+    .phone-wrap input.phone-error:focus {
+        border-color: #e33 !important;
+        outline: none !important;
+        box-shadow: none !important;
+    }
+    .email-feedback, .phone-feedback {
+        font-size: 0.9em;
+        margin-top: 0.25rem;
+        color: #e33;
+    }
 </style>
 
 <script>
@@ -790,7 +902,6 @@ jQuery(function($){
   const $p1 = wireField(ID1);
   const $p2 = wireField(ID2);
   if (!$p1?.length || !$p2?.length) return;
-
   const $hints = ensureHints();
   const $crit  = $hints.find('.crit');
   let currentAnchor = null, rafId = null;
@@ -798,13 +909,10 @@ jQuery(function($){
   function wireField(id){
     const $input = $('#'+id);
     if (!$input.length) return null;
-
     let $wrap = $('#container_input_'+id);
     if (!$wrap.length) $wrap = $input.closest('span');
     $wrap.addClass('pw-wrap');
-
     $input.attr({ type:'password', autocomplete:'new-password' });
-
     let $btn = $wrap.find('.pw-toggle[data-for="'+id+'"]');
     if (!$btn.length) $btn = $input.closest('td').find('.pw-toggle[data-for="'+id+'"]').first();
     if (!$btn.length){
@@ -820,25 +928,21 @@ jQuery(function($){
       if(!$btn.attr('data-close')) $btn.attr('data-close','img/login/close.svg');
       if(!$btn.find('img.pw-icon').length) $btn.append('<img class="pw-icon" alt="">');
     }
-
     const hiddenInit = ($input.attr('type') === 'password');
     $btn.find('img.pw-icon').attr('src', hiddenInit ? $btn.data('close') : $btn.data('open'));
     $btn.attr('aria-label', hiddenInit ? 'Afficher le mot de passe' : 'Masquer le mot de passe')
         .attr('aria-pressed', !hiddenInit);
-
     // Toggle visibility
     $btn.appendTo($wrap).off('click').on('click', function(){
       const wasHidden = ($input.attr('type') === 'password');
       const newType   = wasHidden ? 'text' : 'password';
       $input.attr('type', newType);
-
       const nowHidden = (newType === 'password');
       $(this).find('img.pw-icon').attr('src', nowHidden ? $(this).data('close') : $(this).data('open'));
       $(this)
         .attr('aria-label', nowHidden ? 'Afficher le mot de passe' : 'Masquer le mot de passe')
         .attr('aria-pressed', !nowHidden);
     });
-
     //ZoneFeedback (sousLeChamp)
     const $td = $wrap.closest('td');
     if (!$td.find('.pw-feedback').length){
@@ -866,23 +970,18 @@ jQuery(function($){
     return $box;
   }
 
-  // PLOPP CRITERIA PLACE
   function positionHints($anchor){
     if (!$anchor?.length) return;
     const rect = $anchor[0].getBoundingClientRect();
     const vw = innerWidth, vh = innerHeight, gap = 12;
-
     if ($hints.css('display') === 'none') $hints.css({visibility:'hidden', display:'block'});
     const boxW = $hints.outerWidth(), boxH = $hints.outerHeight();
     $hints.css({visibility:''});
-
     let left = rect.right + gap;
     let top  = rect.top + rect.height/2 - boxH/2;
     top = Math.max(8, Math.min(top, vh - boxH - 8));
-
     let flip = false;
     if (left + boxW + 8 > vw) { left = Math.max(8, rect.left - gap - boxW); flip = true; }
-
     $hints.toggleClass('flip', flip).css({left, top});
   }
   const showHintsFor = ($a)=>{ currentAnchor=$a; positionHints($a); $hints.stop(true,true).fadeIn(90); };
@@ -890,7 +989,6 @@ jQuery(function($){
     if (!$(document.activeElement).is('#'+ID1)) { $hints.stop(true,true).fadeOut(90); currentAnchor=null; }
   },0);
 
-  // Criteria
   function pwUpdateDots(v){
     const p = { len:v.length>=12, up:/[A-Z]/.test(v), low:/[a-z]/.test(v), num:/\d/.test(v), spec:/[^A-Za-z0-9\s]/.test(v) };
     $crit.each(function(){ $(this).toggleClass('ok', !!p[$(this).data('key')]); });
@@ -906,11 +1004,9 @@ jQuery(function($){
   function matchPw(){
     const v1 = ($p1.val()||'').trim();
     const v2 = ($p2.val()||'').trim();
-
     const policyOK = pwUpdateDots(v1);
     if ($p1[0]?.setCustomValidity) $p1[0].setCustomValidity((v1===''||policyOK)?'':'Password does not meet requirements');
     $p1.toggleClass('pw-error', v1!=='' && !policyOK);
-
     // Correspondence (2nd field)
     if (v1==='' && v2==='') return setMatch(true,'');
     if (v1==='' && v2!=='') return setMatch(false,"Saisissez d'abord le mot de passe.");
@@ -926,15 +1022,101 @@ jQuery(function($){
   });
   $('#'+ID2).on('focus', function(){ $hints.stop(true,true).fadeOut(90); currentAnchor=null; matchPw(); });
   $('#'+ID1+', #'+ID2).on('blur', hideHintsIfNoFocus);
-
   $(window).on('scroll resize', function(){
     if (!currentAnchor) return;
     cancelAnimationFrame(rafId);
     rafId = requestAnimationFrame(()=> positionHints(currentAnchor));
   });
-
   $p1.on('input', matchPw);
   $p2.on('input', matchPw);
   $p1.closest('form').on('submit', matchPw);
+
+  // Gestion de l'email
+  const $email = $('#newEmail');
+  if ($email.length) {
+      const $emailWrap = $email.closest('span').addClass('email-wrap');
+      if (!$emailWrap.find('.email-feedback').length) {
+          $('<div class="email-feedback" aria-live="polite"></div>').appendTo($emailWrap.closest('td'));
+      }
+      const $emailFeedback = $emailWrap.closest('td').find('.email-feedback');
+
+      function validateEmail(email) {
+          const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+          return re.test(String(email).toLowerCase());
+      }
+
+      function checkEmail() {
+          const email = $email.val().trim();
+          if (email === '') {
+              $email.removeClass('email-error');
+              $emailFeedback.text('');
+              return true;
+          }
+          const isValid = validateEmail(email);
+          $email.toggleClass('email-error', !isValid);
+          $emailFeedback.text(isValid ? '' : 'Adresse email invalide.');
+          return isValid;
+      }
+
+      $email.on('input', checkEmail);
+      $email.on('blur', checkEmail);
+  }
+
+  // Telephone management
+  const $phone = $('#newPhone');
+  if ($phone.length) {
+      const $phoneWrap = $phone.closest('span').addClass('phone-wrap');
+      if (!$phoneWrap.find('.phone-feedback').length) {
+          $('<div class="phone-feedback" aria-live="polite"></div>').appendTo($phoneWrap.closest('td'));
+      }
+      const $phoneFeedback = $phoneWrap.closest('td').find('.phone-feedback');
+
+      function validatePhone(phone) {
+          const re = /^\+?[0-9\s\-\(\)]{6,}$/;
+          return re.test(String(phone));
+      }
+
+      function checkPhone() {
+          const phone = $phone.val().trim();
+          if (phone === '') {
+              $phone.removeClass('phone-error');
+              $phoneFeedback.text('');
+              return true;
+          }
+          const isValid = validatePhone(phone);
+          $phone.toggleClass('phone-error', !isValid);
+          $phoneFeedback.text(isValid ? '' : 'Numéro de téléphone invalide.');
+          return isValid;
+      }
+
+      $phone.on('input', checkPhone);
+      $phone.on('blur', checkPhone);
+  }
+
+  // Global validation before submission of the form
+  $('form').on('submit', function(e) {
+      let isValid = true;
+
+      // Email verification
+      if ($email.length) {
+          const isEmailValid = checkEmail();
+          if (!isEmailValid) {
+              isValid = false;
+          }
+      }
+
+      // Telephone verification
+      if ($phone.length) {
+          const isPhoneValid = checkPhone();
+          if (!isPhoneValid) {
+              isValid = false;
+          }
+      }
+
+      // prevent submission if the fields are not valid
+      if (!isValid) {
+          e.preventDefault();
+      }
+  });
 });
 </script>
