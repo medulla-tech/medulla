@@ -43,6 +43,7 @@ from mmc.core.log import ColoredFormatter
 
 # from mmc.plugins.xmppmaster.master.lib import convert
 
+from decimal import Decimal
 import importlib
 import logging
 import logging.config
@@ -2658,16 +2659,63 @@ class MmcServer(XMLRPC, object):
         reactor.callInThread(_putResult, d, function, context, args, kwargs)
         return d
 
+
     def _cbRender(self, result, request, functionPath=None, args=None):
         """
-        Callback pour rendre le résultat d'une requête RPC.
-        Gère la sérialisation XML, les logs et les headers HTTP.
+        Callback pour rendre le résultat d'une requête XML-RPC.
+
+        - Appelée automatiquement par Twisted après l'exécution d'une méthode
+        XML-RPC exposée.
+        - Sérialise le résultat Python en XML-RPC et écrit la réponse HTTP.
+
+        🔹 Transformations appliquées avant sérialisation :
+        -----------------------------------------------
+        1. `result = sanitize_for_xmlrpc(result)` :
+        - Remplace `None` par '' pour compatibilité maximale.
+        - Convertit `decimal.Decimal` en `float`.
+        - Transforme récursivement les dicts et listes.
+        - Possibilité d'ajouter d'autres types exotiques (datetime, UUID, etc.).
+        2. `xmlrpc.client.dumps((result,), methodresponse=True, allow_none=True)` :
+        - Enveloppe le résultat dans un tuple comme l'exige xmlrpc.client.
+        - `allow_none=True` permet de générer `<nil/>` pour les valeurs `None`.
+
+        ⚠️ Points importants :
+        ----------------------
+        - XML-RPC standard ne supporte pas `None`. Sans `allow_none=True`, une
+        exception "cannot marshal objects" est levée.
+        - Les clients XML-RPC doivent accepter `<nil/>` pour que cela fonctionne
+        correctement. Exemple en PHP : `$GLOBALS['xmlrpc_null_extension'] = true;`
+        avec phpxmlrpc.
+        - Tout type Python non supporté par XML-RPC (Decimal, datetime, UUID, etc.)
+        doit être transformé avant le dump pour éviter une exception.
+
+        Avantages :
+        ----------
+        - Permet d'envoyer des résultats contenant des `None` et d'autres types
+        Python non-XML-RPC sans planter le serveur.
+
+        Inconvénients :
+        --------------
+        - `<nil/>` n'est pas standard XML-RPC : certains clients stricts peuvent
+        ne pas savoir le décoder. Dans ce cas, il faudra prévoir un fallback
+        (ex : remplacer `None` par '').
+
+        Parameters
+        ----------
+        result : any
+            Résultat de la méthode XML-RPC (dict, list, etc.)
+        request : twisted.web.http.Request
+            Objet HTTP Twisted pour la réponse
+        functionPath : str, optional
+            Nom de la méthode appelée
+        args : tuple, optional
+            Arguments passés à la méthode
         """
         s = request.getSession()
         auth_funcs = ["base.ldapAuth", "base.tokenAuthenticate", "base.authenticate"]
+
         if functionPath in auth_funcs and not isinstance(result, Fault):
             if result:
-                s = request.getSession()
                 s.loggedin = True
                 s.userid = args[0]
                 try:
@@ -2679,36 +2727,71 @@ class MmcServer(XMLRPC, object):
                     self._cbRender(f, request)
                     return
 
-        if result is None:
-            result = 0
-        if isinstance(result, Handler):
-            result = result.result
-        if not isinstance(result, xmlrpc.client.Fault):
-            result = (result,)
-
-        # Hack pour gérer les données binaires (ex: jpegPhoto)
         try:
-            if isinstance(result[0], dict) and "jpegPhoto" in result[0]:
-                result[0]["jpegPhoto"] = [xmlrpc.client.Binary(result[0]["jpegPhoto"][0])]
-        except (IndexError, Exception):
-            pass
-
-        # Log du résultat
-        try:
-            if s.loggedin:
-                logger.debug(f"Résultat pour {s.userid}, {functionPath}: {result}")
-            else:
-                logger.debug(f"Résultat pour utilisateur non authentifié, {functionPath}: {result}")
-            s = xmlrpc.client.dumps(result, methodresponse=1)
+            # 🔹 Fix: autoriser la sérialisation de None via <nil/>
+            # Toujours envelopper le résultat dans un tuple
+            result = sanitize_for_xmlrpc(result)
+            xml = xmlrpc.client.dumps((result,), methodresponse=True, allow_none=True)
         except Exception as e:
-            f = Fault(self.FAILURE, f"Impossible de sérialiser la sortie : {e}")
-            s = xmlrpc.client.dumps(f, methodresponse=1)
-
-        s = bytes(s, encoding="utf-8")
-        request.setHeader("content-length", str(len(s)))
-        request.setHeader("content-type", "application/xml")
-        request.write(s)
+            logger.exception("Erreur de sérialisation XML-RPC: %s", e)
+            fault = Fault(8005, f"Impossible de sérialiser la sortie : {e}")
+            xml = xmlrpc.client.dumps((fault,), methodresponse=True, allow_none=True)
+        request.setHeader(b"content-type", b"text/xml")
+        request.write(xml.encode("utf-8"))
         request.finish()
+    #
+    # a supprimer apres test
+    # def _cbRender(self, result, request, functionPath=None, args=None):
+    #     """
+    #     Callback pour rendre le résultat d'une requête RPC.
+    #     Gère la sérialisation XML, les logs et les headers HTTP.
+    #     """
+    #     s = request.getSession()
+    #     auth_funcs = ["base.ldapAuth", "base.tokenAuthenticate", "base.authenticate"]
+    #     if functionPath in auth_funcs and not isinstance(result, Fault):
+    #         if result:
+    #             s = request.getSession()
+    #             s.loggedin = True
+    #             s.userid = args[0]
+    #             try:
+    #                 self._associateContext(request, s, s.userid)
+    #             except Exception as e:
+    #                 s.loggedin = False
+    #                 logger.exception(e)
+    #                 f = Fault(8004, "L'agent MMC ne peut pas fournir de contexte de sécurité pour ce compte")
+    #                 self._cbRender(f, request)
+    #                 return
+    #
+    #     if result is None:
+    #         result = 0
+    #     if isinstance(result, Handler):
+    #         result = result.result
+    #     if not isinstance(result, xmlrpc.client.Fault):
+    #         result = (result,)
+    #
+    #     # Hack pour gérer les données binaires (ex: jpegPhoto)
+    #     try:
+    #         if isinstance(result[0], dict) and "jpegPhoto" in result[0]:
+    #             result[0]["jpegPhoto"] = [xmlrpc.client.Binary(result[0]["jpegPhoto"][0])]
+    #     except (IndexError, Exception):
+    #         pass
+    #
+    #     # Log du résultat
+    #     try:
+    #         if s.loggedin:
+    #             logger.debug(f"Résultat pour {s.userid}, {functionPath}: {result}")
+    #         else:
+    #             logger.debug(f"Résultat pour utilisateur non authentifié, {functionPath}: {result}")
+    #         s = xmlrpc.client.dumps(result, methodresponse=1)
+    #     except Exception as e:
+    #         f = Fault(self.FAILURE, f"Impossible de sérialiser la sortie : {e}")
+    #         s = xmlrpc.client.dumps(f, methodresponse=1)
+    #
+    #     s = bytes(s, encoding="utf-8")
+    #     request.setHeader("content-length", str(len(s)))
+    #     request.setHeader("content-type", "application/xml")
+    #     request.write(s)
+    #     request.finish()
 
     def _ebRender(self, failure, functionPath, args, request):
         """
