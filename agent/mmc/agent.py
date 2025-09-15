@@ -2731,6 +2731,12 @@ class MmcServer(XMLRPC, object):
             # 🔹 Fix: autoriser la sérialisation de None via <nil/>
             # Toujours envelopper le résultat dans un tuple
             result = sanitize_for_xmlrpc(result)
+            # Log du résultat
+            if s.loggedin:
+                logger.debug(f"Résultat pour {s.userid}, {functionPath}: {result}")
+            else:
+                logger.debug(f"Résultat pour utilisateur non authentifié, {functionPath}: {result}")
+
             xml = xmlrpc.client.dumps((result,), methodresponse=True, allow_none=True)
         except Exception as e:
             logger.exception("Erreur de sérialisation XML-RPC: %s", e)
