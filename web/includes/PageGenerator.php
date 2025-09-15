@@ -27,7 +27,9 @@ require("FormGenerator.php");
 require_once("utils.inc.php");
 
 /**
- * return an uniqId (use full for javascript auto generation
+ * Generates a unique ID for auto-generation in JavaScript or other similar contexts.
+ * The ID is incremented each time the function is called, ensuring uniqueness.
+ * This ID can be used to generate dynamic HTML elements, such as form fields, with unique IDs.
  */
 function getUniqId()
 {
@@ -37,19 +39,18 @@ function getUniqId()
 }
 
 /**
- * can echo obj and string with the same function
- * similar to "echo" in PHP5
+ * This function allows for echoing objects and strings using the same function, similar to "echo" in PHP5.
  */
-function echo_obj($obj)
-{
-
+function echo_obj($obj) {
+    // Check if the variable is an object and convert it to a string
     if (is_object($obj)) {
-        echo nl2br($obj->__toString());
+        // Convert the object to a string and replace new lines with <br> tags for formatting purposes
+        echo nl2br(strval($obj));
     } elseif (is_bool($obj)) {
-        if ($obj) {
-            echo '<img src="img/other/yes.svg" alt="yes" width="25" height="25" />';
-        }
+        // Display an image of 'yes.svg' if the boolean is true, otherwise leave the output blank
+        echo $obj ? '<img src="img/other/yes.svg" alt="yes" width="25" height="25" />' : '';
     } else {
+        // Print the given string with new lines replaced by <br> tags for formatting purposes
         echo nl2br($obj);
     }
 }
@@ -59,13 +60,21 @@ function echo_obj($obj)
  */
 function debug($obj, $return = false)
 {
-
+    // Define a string to hold the output in a preformatted style with Courier font and bold text
     $s = '<pre style="font-family:Courier, monospace; font-weight:bold ">';
+
+    // Print the given object in a readable format using print_r()
     $s .= print_r($obj, true);
+
+    // Close the preformatted string and output it
     $s .= '</pre>';
+
+    // If the return variable is set to true, return the debug output instead of printing it
     if ($return) {
+        // Return the generated debug output as a string
         return $s;
     } else {
+        // Otherwise, print the debug output directly to the screen
         print $s;
     }
 }
