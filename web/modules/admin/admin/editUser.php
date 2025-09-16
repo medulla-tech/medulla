@@ -177,6 +177,8 @@ $prefill = [
     'profile_id'   => null,
     'profile_name' => '',
     'entities_id'  => null,
+    'is_recursive' => null,
+    'is_default'   => null,
 ];
 
 $isSelfEdit = ($mode === 'edit' && !empty($u['id']) && (int)$u['id'] === $userId);
@@ -338,7 +340,7 @@ if (isset($_POST["bcreate"])) {
     $postedProfileId    = $normId($_POST['profiles_id']  ?? null);
     $postedEntityId     = $normId($_POST['entities_id']  ?? null);
     $postedIsRecursive  = (isset($_POST['is_recursive']) && $_POST['is_recursive'] === '1');
-    $postedIsDefault    = true;
+    $postedIsDefault    = '1'; // Always 1 on creation
     $pwd                = $_POST['newPassword']  ?? '';
     $pwd2               = $_POST['newPassword2'] ?? '';
 
@@ -557,6 +559,7 @@ if (isset($_POST["bupdate"])) {
     $postedProfileId  = $normId($_POST['profiles_id'] ?? null);
     $postedEntityId   = $normId($_POST['entities_id'] ?? null);
     $postedIsRecursive = ((string)($_POST['is_recursive'] ?? '1') === '1') ? 1 : 0;
+    $postedIsDefault = ((string)($_POST['is_default'] ?? ($prefill['is_default'] ?? '1')) === '1') ? 1 : 0;
 
     // Data validation
     $changePwd = ($pwd !== '' || $pwd2 !== ''); // Déjà défini plus haut
@@ -612,6 +615,7 @@ if (isset($_POST["bupdate"])) {
     $profileChanged = ($postedProfileId !== null && (string)$postedProfileId !== (string)($origProfileId ?? ''));
     $entityChanged  = ($postedEntityId  !== null && (string)$postedEntityId  !== (string)($origEntityId  ?? ''));
     $recursiveChanged = ($origRecursive === null) ? true : ((int)$postedIsRecursive !== (int)$origRecursive);
+    $defaultChanged   = ($postedIsDefault !== (int)($prefill['is_default'] ?? 1));
 
     // Update of single fields (name, first name, email, password)
     $okAll = true;
@@ -647,23 +651,34 @@ if (isset($_POST["bupdate"])) {
     }
 
     // Update of the profile, entity and recursion
-    if ($profileChanged || $entityChanged || $recursiveChanged) {
+    if ($profileChanged || $entityChanged || $recursiveChanged || $defaultChanged) {
         $didSomething = true;
         $profileIdToUse = (int)($profileChanged ? $postedProfileId : ($origProfileId ?? 0));
         $entityIdToUse  = (int)($entityChanged ? $postedEntityId  : ($origEntityId  ?? $defaultEntityId ?? 0));
 
-        if ($profileIdToUse <= 0 || $entityIdToUse <= 0) {
-            new NotifyWidgetFailure(_T("Unable to update profile or entity: invalid ID.", "admin"));
-            header("Location: " . urlStrRedirect("admin/admin/entitiesManagement", []));
-            exit;
-        }
+        $conflictNoAltDefault = false;
 
         try {
-            $res = xmlrpc_switch_user_profile($userId, $profileIdToUse, $entityIdToUse, $postedIsRecursive, 0, 1, $tokenuser);
-            $ok = is_array($res)
-                ? (!empty($res['ok']) || !empty($res['success']) || (isset($res['code']) && (int)$res['code'] === 0))
-                : (bool)$res;
+            $res = xmlrpc_switch_user_profile(
+                $userId, $profileIdToUse, $entityIdToUse,
+                $postedIsRecursive, 0, $postedIsDefault, $tokenuser
+            );
+
+            if (is_array($res)) {
+                $ok = !empty($res['ok']) || !empty($res['success']) || (isset($res['code']) && (int)$res['code'] === 0);
+
+                // conflict "impossible to remove the defect" → non-observing for the rest
+                if (!$ok && isset($res['code']) && (int)$res['code'] === 409) {
+                    $conflictNoAltDefault = true;
+                    $ok = true; // We don't break Okall, to let LDAP turn
+                }
+            } else {
+                $ok = (bool)$res;
+            }
+
             $okAll = $okAll && $ok;
+            $didSomething = true;
+
         } catch (Throwable $e) {
             error_log('[editUser] Switch profile/entity/recursive failed: ' . $e->getMessage());
             $okAll = false;
@@ -742,14 +757,20 @@ if (isset($_POST["bupdate"])) {
     }
 
     if (!$didSomething) {
-        new NotifyWidgetSuccess(_T("No changes were made.", "admin"));
+        new NotifyWidgetSuccess(_T("No changes.", "admin"));
+
+    } elseif ($okAll && !empty($conflictNoAltDefault) && $defaultChanged && !$postedIsDefault) {
+        if (class_exists('NotifyWidgetWarning')) {
+            new NotifyWidgetWarning(_T("Cannot unset the default profile: the user has no other profile.", "admin"));
+        } else {
+            new NotifyWidgetFailure(_T("Cannot unset the default profile: the user has no other profile.", "admin"));
+        }
+
     } elseif ($okAll) {
-        $message = ($profileChanged || $entityChanged || $recursiveChanged)
-            ? _T("User profile and settings updated successfully.", "admin")
-            : _T("User updated successfully.", "admin");
-        new NotifyWidgetSuccess($message);
+        new NotifyWidgetSuccess(_T("Changes saved.", "admin"));
+
     } else {
-        new NotifyWidgetFailure(_T("Failed to update user. Some changes may not have been applied.", "admin"));
+        new NotifyWidgetFailure(_T("Update failed.", "admin"));
     }
 
     $targetEntity = (int)($postedEntityId ?? $origEntityId ?? $defaultEntityId);
@@ -784,7 +805,7 @@ if ($defaultEntityId !== null) $entitySelect->setSelected((string)$defaultEntity
 
 // Default = "yes"
 $isRecursiveDefault = (string)(
-    $_POST['is_recursive'] 
+    $_POST['is_recursive']
         ?? ($prefill['is_recursive'] !== null ? (int)$prefill['is_recursive'] : 1)
 );
 
@@ -792,6 +813,18 @@ $recSelect = new SelectItem('is_recursive');
 $recSelect->setElements([_T("No", "admin"), _T("Yes", "admin")]);
 $recSelect->setElementsVal(['0','1']); // No->0, Yes->1
 $recSelect->setSelected($isRecursiveDefault);
+
+if($mode === 'edit') {
+    $isDefaultDefault = (string)(
+        $_POST['is_default']
+            ?? ($prefill['is_default'] !== null ? (int)$prefill['is_default'] : 1) // Oui par défaut en création
+    );
+
+    $defSelect = new SelectItem('is_default');
+    $defSelect->setElements([_T("No", "admin"), _T("Yes", "admin")]);
+    $defSelect->setElementsVal(['0','1']);
+    $defSelect->setSelected($isDefaultDefault);
+}
 
 $addInput = function(ValidatingForm $form, string $name, string $label, string $value = '') use ($safe) {
     $form->add(
@@ -818,6 +851,9 @@ $form->push(new Table());
 $form->add(new TrFormElement(_T("User Profile", "admin"), $profileSelect));
 $form->add(new TrFormElement(_T("Entity", "admin"), $entitySelect));
 $form->add(new TrFormElement(_T("Apply to sub-entities (recursive)", "admin"), $recSelect));
+if($mode === 'edit') {
+    $form->add(new TrFormElement(_T("Default profile for this entity", "admin"), $defSelect)); // NEW
+}
 
 $addInput($form, 'newUsername',  'Username',   $_POST['newUsername'] ?? $prefill['username']);
 
