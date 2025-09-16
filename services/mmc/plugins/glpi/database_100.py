@@ -7613,64 +7613,98 @@ class Glpi100(DyngroupDatabaseHelper):
     def get_user_profile_email(self,
                             session,
                             id_user: int,
-                            id_profile: int,
+                            id_profile: int | None = None,
+                            id_entity: int | None = None,
                             is_active: int | None = None) -> dict:
         """
-        Recovers all the information from a user (even deactivated) + the profile/entity link.
-        Retourne {} si rien trouvé.
+        User information + most relevant profile/entity link.
+        If Id_Profile and Id_entity are provided, we favor the exact match.
+        Return {} if nothing found.
         """
         sqlrequest = """
-            SELECT
-                gu.id           AS user_id,
-                gu.name,
-                gu.realname,
-                gu.firstname,
-                gu.is_active,
-                gu.last_login,
-                gu.date_mod,
-                gu.date_creation,
-                gu.phone,
-                gpu.profiles_id AS profiles_id,
-                gp.name         AS profile_name,
-                gpu.entities_id AS entity_id,
-                ge.name         AS entity_name,
-                ge.completename AS entity_completename,
-                ge.entities_id  AS parent_id_entity,
-                ge.level        AS level_entity,
-                gm.email,
-                gpu.is_recursive AS link_is_recursive,
-                (gpu.profiles_id = gu.profiles_id AND gpu.entities_id = gu.entities_id) AS link_is_default,
-                CASE WHEN EXISTS (
+        SELECT
+            gu.id             AS user_id,
+            gu.name,
+            gu.realname,
+            gu.firstname,
+            gu.is_active,
+            gu.last_login,
+            gu.date_mod,
+            gu.date_creation,
+            gu.phone,
+            gpu.profiles_id   AS profiles_id,
+            gp.name           AS profile_name,
+            gpu.entities_id   AS entity_id,
+            ge.name           AS entity_name,
+            ge.completename   AS entity_completename,
+            ge.entities_id    AS parent_id_entity,
+            ge.level          AS level_entity,
+            gm.email,
+            gpu.is_recursive  AS link_is_recursive,
+            (gpu.profiles_id = gu.profiles_id AND gpu.entities_id = gu.entities_id) AS link_is_default,
+            (gpu.profiles_id = gu.profiles_id AND gpu.entities_id = gu.entities_id) AS is_user_global_default,
+
+            CASE
+                WHEN (:id_profile IS NOT NULL AND :id_entity IS NOT NULL
+                    AND gpu.profiles_id = :id_profile AND gpu.entities_id = :id_entity)
+                THEN 1 ELSE 0
+            END AS exact_match,
+
+            CASE WHEN (:id_entity  IS NOT NULL AND gpu.entities_id  = :id_entity)  THEN 1 ELSE 0 END AS match_entity,
+            CASE WHEN (:id_profile IS NOT NULL AND gpu.profiles_id  = :id_profile) THEN 1 ELSE 0 END AS match_profile,
+
+            CASE
+                WHEN :id_profile IS NOT NULL AND EXISTS (
                     SELECT 1
                     FROM glpi.glpi_profiles_users gpu2
                     WHERE gpu2.users_id   = gu.id
                     AND gpu2.profiles_id = :id_profile
                     AND gpu2.entities_id = gpu.entities_id
-                ) THEN 1 ELSE 0 END AS in_target_entity,
-                CASE
+                ) THEN 1 ELSE 0
+            END AS in_target_entity,
+
+            CASE
                 WHEN gp.name IN ('Super-Admin','Super Admin','Super-Administrateur','Super administrateur','Super-Administrateur') THEN 50
                 WHEN gp.name IN ('Administrateur','Administrator','Admin') THEN 40
                 WHEN gp.name LIKE '%Technicien%' OR gp.name LIKE '%Technician%' THEN 30
                 WHEN gp.name LIKE '%Observateur%' OR gp.name LIKE '%Read%' OR gp.name LIKE '%Observer%' THEN 20
                 WHEN gp.name IN ('Self-Service','Self Service','Demandeur','Self-Service') THEN 10
                 ELSE 0
-                END AS profile_power
-            FROM glpi.glpi_users gu
-            LEFT JOIN glpi.glpi_useremails gm
-                ON gm.users_id = gu.id AND gm.is_default = 1
-            INNER JOIN glpi.glpi_profiles_users gpu
-                    ON gpu.users_id = gu.id
-            INNER JOIN glpi.glpi_profiles gp
-                    ON gp.id = gpu.profiles_id
-            INNER JOIN glpi.glpi_entities ge
-                    ON ge.id = gpu.entities_id
-            WHERE gu.id = :id_user
+            END AS profile_power
+
+        FROM glpi.glpi_users gu
+        LEFT JOIN glpi.glpi_useremails gm
+            ON gm.users_id = gu.id AND gm.is_default = 1
+        INNER JOIN glpi.glpi_profiles_users gpu
+                ON gpu.users_id = gu.id
+        INNER JOIN glpi.glpi_profiles gp
+                ON gp.id = gpu.profiles_id
+        INNER JOIN glpi.glpi_entities ge
+                ON ge.id = gpu.entities_id
+
+        WHERE gu.id = :id_user
+        AND (:id_profile IS NULL OR gpu.profiles_id = :id_profile)
+        AND (:id_entity  IS NULL OR gpu.entities_id  = :id_entity)
+
+        ORDER BY
+            exact_match            DESC,
+            match_entity           DESC,
+            match_profile          DESC,
+            link_is_default        DESC,  -- dérivé ci-dessus
+            is_user_global_default DESC,
+            in_target_entity       DESC,
+            profile_power          DESC,
+            gpu.is_recursive       DESC,
+            gp.id                  DESC
+        LIMIT 1
         """
-        sqlrequest += " ORDER BY in_target_entity DESC, profile_power DESC, link_is_default DESC, gpu.is_recursive DESC, gp.id DESC LIMIT 1"
-        params = {"id_user": id_user, "id_profile": id_profile or 0}
+        params = {
+            "id_user": id_user,
+            "id_profile": id_profile,
+            "id_entity": id_entity
+        }
         row = session.execute(sqlrequest, params).fetchone()
-        def safe(v):
-            return "" if v is None else v
+        def safe(v): return "" if v is None else v
         if not row:
             return {}
         m = dict(row._mapping)

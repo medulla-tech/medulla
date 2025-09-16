@@ -59,7 +59,7 @@ $userDetails = [];
 foreach ($usersList as $user) {
     if (empty($user['id'])) continue;
 
-    $info = xmlrpc_get_user_info($user['id'], $user['profile_id']);
+    $info = xmlrpc_get_user_info($user['id'], $user['profile_id'], $_GET['entityId']);
 
     $userDetails[] = $info;
 }
@@ -74,19 +74,20 @@ $fmtDate = function($v) {
 };
 
 // Preparation of columns
-$userNames                  = [];
-$userFirstnames             = [];
-$userLastName               = [];
-$userEmails                 = [];
-$userPhones                 = [];
-$userStatus                 = [];
-$userLastLogin              = [];
-$userProfileNames           = [];
-$userEditActions            = [];
-$userDeleteActions          = [];
-$userDeleteProfileActions   = [];
-$userDesactivateActions     = [];
-$userParams                 = [];
+$userNames                      = [];
+$userFirstnames                 = [];
+$userLastName                   = [];
+$userEmails                     = [];
+$userPhones                     = [];
+$userStatus                     = [];
+$userLastLogin                  = [];
+$userProfileNames               = [];
+$isDefaults                     = [];
+$userEditActions                = [];
+$userDeleteActions              = [];
+$userDeleteProfileActions       = [];
+$userDesactivateActions         = [];
+$userParams                     = [];
 
 foreach ($userDetails as $user) {
     $isActive = !empty($user['is_active']);
@@ -99,6 +100,7 @@ foreach ($userDetails as $user) {
     $userStatus[]       = $isActive ? _("Enabled") : _("Disabled");
     $userLastLogin[]    = $fmtDate($user['last_login'] ?? null);
     $userProfileNames[] = $user['profile_name'];
+    $isDefaults[]       = !empty($user['link_is_default']) ? _("Yes") : _("No");
 
     $userEditActions[]   = new ActionItem(
         _T("Edit"), "editUser", "edit", "", "admin", "admin"
@@ -191,6 +193,7 @@ if (count($userNames) === 0) {
     $n->addExtraInfo($userStatus,       _T("Status", "admin"));
     $n->addExtraInfo($userLastLogin,    _T("Last connection", "admin"));
     $n->addExtraInfo($userProfileNames, _T("Profil", "admin"));
+    $n->addExtraInfo($isDefaults,       _T("Default profile", "admin"));
 
     $n->addActionItemArray($userEditActions);
     $n->addActionItemArray($userDeleteProfileActions);

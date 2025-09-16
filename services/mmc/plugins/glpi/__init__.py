@@ -406,8 +406,8 @@ def get_entities_with_counts_root( filter: str = None,
 def set_user_api_token(user_id, api_token):
     return xmlrpcCleanup(Glpi().set_user_api_token(user_id, api_token))
 
-def get_user_profile_email(id_user, id_profile):
-    return xmlrpcCleanup(Glpi().get_user_profile_email(id_user, id_profile))
+def get_user_profile_email(id_user, id_profile, id_entity):
+    return xmlrpcCleanup(Glpi().get_user_profile_email(id_user, id_profile, id_entity))
 
 def get_machine_for_id(strlistuuid, filter="", start=0, end=0):
     return xmlrpcCleanup(Glpi().get_machine_for_id(strlistuuid, filter, start, end))
