@@ -40,7 +40,6 @@ CREATE TABLE IF NOT EXISTS `admin`.`saas_organisations` (
   `is_active` TINYINT NULL DEFAULT 1,
   `user_token` VARCHAR(45) NULL,
   `tag_name` CHAR(36) NOT NULL DEFAULT (UUID()),
-  `dl_name` CHAR(36) NOT NULL DEFAULT (UUID()),
   PRIMARY KEY (`organisation_id`, `entity_id`)
 );
 
