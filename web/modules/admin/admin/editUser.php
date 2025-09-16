@@ -357,6 +357,13 @@ if (isset($_POST["bcreate"])) {
     if ($postedUsername === '') {
         $fail("Form", _T("Username is required.", "admin"));
     }
+    if (!preg_match('/^[A-Za-z0-9._-]{3,32}$/', $postedUsername)) {
+        $fail(
+            "Form",
+            _T("Username must be 3–32 characters and only contain letters, digits, dot (.), dash (-) or underscore (_). No spaces or accents.", "admin")
+        );
+    }
+
     [$isValid, $errorMessage] = validatePasswords($pwd, $pwd2);
     if (!$isValid) {
         new NotifyWidgetFailure($errorMessage);
@@ -411,28 +418,44 @@ if (isset($_POST["bcreate"])) {
     // Verification of the GLPI result
     $glpiOk = false;
     $new_id = 0;
-    $apiTok = null;
-    $errMsg = null;
-
+    $errMsg = _T("Unknown error.", "admin");
     if (is_array($glpiRes)) {
         $glpiOk = !empty($glpiRes['ok']) || (isset($glpiRes['id']) && (int)$glpiRes['id'] > 0);
         $new_id = (int)($glpiRes['id'] ?? 0);
-        $apiTok = $glpiRes['api_token'] ?? null;
-        $errMsg = $glpiRes['error'] ?? _T("Unknown error.", "admin");
+        $errMsg = $glpiRes['error'] ?? $errMsg;
     } else {
         $glpiOk = is_numeric($glpiRes) && (int)$glpiRes > 0;
         $new_id = $glpiOk ? (int)$glpiRes : 0;
-        $errMsg = _T("Unknown error.", "admin");
     }
-
     if (!$glpiOk || $new_id <= 0) {
         error_log('[createUser] GLPI creation failed: ' . var_export($glpiRes, true));
         $fail("GLPI", $errMsg);
     }
 
-    // Creation of the user in the system (LDAP)
+    // --- Helper rollback GLPI (purge + fallback disable)
+    $rollbackGlpi = function(int $uid, string $why) use ($tokenuser) : array {
+        $okPurge = false; $okDisable = false; $err = null;
+        try {
+            $res = xmlrpc_delete_and_purge_user($uid, $tokenuser);
+            $okPurge = (is_array($res) ? (!empty($res['ok']) || !empty($res['success'])) : (bool)$res);
+        } catch (Throwable $e) {
+            $err = $e->getMessage();
+            error_log("[createUser] GLPI purge exception ($why): ".$err);
+        }
+        if (!$okPurge) {
+            // Fold: Disable the user to avoid a "zombie"
+            try {
+                $res2 = xmlrpc_update_user($uid, 'is_active', '0', $tokenuser);
+                $okDisable = (is_array($res2) ? (!empty($res2['ok']) || !empty($res2['success'])) : (bool)$res2);
+            } catch (Throwable $e2) {
+                error_log("[createUser] GLPI disable-on-rollback exception ($why): ".$e2->getMessage());
+            }
+        }
+        return ['purge'=>$okPurge, 'disable'=>$okDisable, 'error'=>$err];
+    };
+
+    // LDAP
     try {
-        // Resolution of the name of the customer entity
         $clientRoot = '';
         if (isset($postedEntityId) && $postedEntityId !== null) {
             $clientRoot = resolveClientRootName((string)$postedEntityId, $entityIdToComplete, $globalRootLabel);
@@ -440,14 +463,10 @@ if (isset($_POST["bcreate"])) {
         if ($clientRoot === '') {
             $clientRoot = $entityIdToName[(string)$postedEntityId] ?? ($u['entity'] ?? '');
         }
-
-        // Creation of the user in the system
+        // Creation of the user in the LDAP Local
         $add = add_user($postedUsername, $pwd, $postedFirstName, $postedLastName, null, false, false, null, $clientRoot);
 
-        // Verification of the result
-        $sysOk = false;
-        $msgSys = _T("Unknown error.", "admin");
-
+        $sysOk = false; $msgSys = _T("Unknown error.", "admin");
         if (is_array($add)) {
             if (isset($add['code']) && is_array($add['code'])) {
                 $sysOk  = !empty($add['code']['success']);
@@ -464,16 +483,16 @@ if (isset($_POST["bcreate"])) {
         }
 
         if (!$sysOk) {
-            // Rollback GLPi in case of LDAP
-            try {
-                xmlrpc_delete_and_purge_user($new_id);
-            } catch (Throwable $e2) {
-                error_log('[createUser] GLPI rollback exception: ' . $e2->getMessage());
+            // Rollback GLPI if add ldd fails
+            $rb = $rollbackGlpi($new_id, 'ldap.add_user');
+            if (!$rb['purge'] && !$rb['disable']) {
+                error_log('[createUser] GLPI rollback failed (neither purge nor disable succeeded).');
             }
             $fail("LDAP", $msgSys);
         }
 
-        //ConfigurationDesAcl
+        $warnings = [];
+
         $postedProfileName = '';
         if (!empty($postedProfileId)) {
             $key = (string)$postedProfileId;
@@ -482,37 +501,47 @@ if (isset($_POST["bcreate"])) {
         if ($postedProfileName !== '') {
             $aclString = getGlpiAclForProfile($postedProfileName, $configPaths);
             if ($aclString !== '') {
-                setAcl($postedUsername, $aclString);
+                $okAcl = @setAcl($postedUsername, $aclString);
+                if ($okAcl === false || $okAcl === null) {
+                    $warnings[] = 'ACL';
+                }
             }
         }
 
-        // Email update in LDAP
+        // Mail / Phone update in LDAP
         if ($postedEmail !== '') {
-            changeUserAttributes($postedUsername, "mail", $postedEmail);
+            $okMail = @changeUserAttributes($postedUsername, "mail", $postedEmail);
+            if ($okMail === false || $okMail === null) { $warnings[] = 'mail'; }
         }
         if ($postedPhone !== '') {
-            changeUserAttributes($postedUsername, "telephoneNumber", $postedPhone);
+            $okTel = @changeUserAttributes($postedUsername, "telephoneNumber", $postedPhone);
+            if ($okTel === false || $okTel === null) { $warnings[] = 'telephoneNumber'; }
+        }
+
+        $entityLabel = htmlspecialchars($entityIdToName[(string)$postedEntityId] ?? _T("Unknown", "admin"));
+        $uLabel = htmlspecialchars($postedUsername);
+
+        if (!empty($warnings)) {
+            new NotifyWidgetSuccess(
+                sprintf(_T("User <strong>%s</strong> created in entity <strong>%s</strong>.", "admin"), $uLabel, $entityLabel)
+            );
+            new NotifyWidgetWarning(
+                _T("Some LDAP attributes could not be set: ", "admin") . implode(', ', $warnings)
+            );
+        } else {
+            new NotifyWidgetSuccess(
+                sprintf(_T("User <strong>%s</strong> created successfully in entity <strong>%s</strong>.", "admin"), $uLabel, $entityLabel)
+            );
         }
 
     } catch (Throwable $e) {
-        // Rollback GLPI in case of exception LDAP
-        try {
-            xmlrpc_delete_and_purge_user($new_id);
-        } catch (Throwable $e2) {
-            error_log('[createUser] GLPI rollback exception: ' . $e2->getMessage());
+        $rb = $rollbackGlpi($new_id, 'ldap.exception');
+        if (!$rb['purge'] && !$rb['disable']) {
+            error_log('[createUser] GLPI rollback failed on exception.');
         }
         error_log('[createUser] LDAP add_user exception: ' . $e->getMessage());
         $fail("LDAP", _T("Internal error.", "admin"));
     }
-
-    new NotifyWidgetSuccess(
-        sprintf(
-            _T("User <strong>%s</strong> created successfully in entity <strong>%s</strong>.", "admin"),
-            htmlspecialchars($postedUsername),
-            htmlspecialchars($entityIdToName[(string)$postedEntityId] ?? _T("Unknown", "admin"))
-        )
-    );
-
 
     header("Location: " . urlStrRedirect(
         "admin/admin/listUsersofEntity",
@@ -839,7 +868,6 @@ $addInput = function(ValidatingForm $form, string $name, string $label, string $
     );
 };
 
-// Button
 $buttonName  = ($mode === 'edit') ? 'bupdate' : 'bcreate';
 $buttonValue = ($mode === 'edit') ? _T("Save changes", "admin") : _T("Create new User", "admin");
 
@@ -851,30 +879,46 @@ $form->push(new Table());
 $form->add(new TrFormElement(_T("User Profile", "admin"), $profileSelect));
 $form->add(new TrFormElement(_T("Entity", "admin"), $entitySelect));
 $form->add(new TrFormElement(_T("Apply to sub-entities (recursive)", "admin"), $recSelect));
-if($mode === 'edit') {
+if ($mode === 'edit') {
     $form->add(new TrFormElement(_T("Default profile for this entity", "admin"), $defSelect)); // NEW
 }
 
-$addInput($form, 'newUsername',  'Username',   $_POST['newUsername'] ?? $prefill['username']);
+// Username doesn't change in edit mode
+if ($mode === 'edit') {
+    $displayUsername = (string)($prefill['username'] ?? '');
+    $form->add(new TrFormElement(
+        _T('Username','admin'),
+        new TextTpl($safe ? $safe($displayUsername) : htmlspecialchars($displayUsername, ENT_QUOTES, 'UTF-8'))
+    ));
+    // Important: send the value to the post anyway
+    $form->add(new HiddenTpl('newUsername'), [
+        'value' => $displayUsername,
+        'hide'  => true
+    ]);
+} else {
+    $usernameTpl = new InputTpl('newUsername', '/^(?!root)[a-zA-Z0-9][A-Za-z0-9_.\-]*$/');
+    $form->add(
+        new TrFormElement(_T('Username','admin') . '*', $usernameTpl),
+        ['value' => $_POST['newUsername'] ?? '']
+    );
+}
 
-// MDP: required in creation, optional in edition (not pre-replided)
 $addInput($form, 'newPassword',  'Password',         '');
 $addInput($form, 'newPassword2', 'Confirm password', '');
 
-$addInput($form, 'newFirstName', 'First name', $_POST['newFirstName'] ?? $prefill['firstname']);
-$addInput($form, 'newLastName',  'Last name',  $_POST['newLastName']  ?? $prefill['lastname']);
-$addInput($form, 'newEmail',     'Email',      $_POST['newEmail']     ?? $prefill['email']);
-$addInput($form, 'newPhone',     'Phone',      $_POST['newPhone']     ?? $prefill['phone']);
+$addInput($form, 'newFirstName', 'First name', $_POST['newFirstName'] ?? ($prefill['firstname'] ?? ''));
+$addInput($form, 'newLastName',  'Last name',  $_POST['newLastName']  ?? ($prefill['lastname']  ?? ''));
+$addInput($form, 'newEmail',     'Email',      $_POST['newEmail']     ?? ($prefill['email']     ?? ''));
+$addInput($form, 'newPhone',     'Phone',      $_POST['newPhone']     ?? ($prefill['phone']     ?? ''));
 
-$form->add(new HiddenTpl('userId'), array('value' => (string)$userId, 'hide' => true));
-$form->add(new HiddenTpl('mode'),   array('value' => (string)$mode,   'hide' => true));
+$form->add(new HiddenTpl('userId'), ['value' => (string)$userId, 'hide' => true]);
+$form->add(new HiddenTpl('mode'),   ['value' => (string)$mode,   'hide' => true]);
 
 $form->pop();
 $form->display();
 ?>
 
 <style>
-  /* Eye icon, anchored in the span du field */
   .pw-wrap{ position:relative; display:inline-block; vertical-align:middle; }
   .pw-wrap > .pw-toggle{
     position:absolute; right:1.6rem; top:50%; transform:translateY(-50%);
@@ -883,10 +927,8 @@ $form->display();
   }
   .pw-toggle img{ width:100%; height:100%; display:block; pointer-events:none; }
 
-  /* Message under the 2nd field */
   .pw-feedback{ font-size:.9em; margin-top:.25rem; color:#e33; }
 
-  /* Force the red contour of the input even in focus */
   .pw-wrap input.pw-error,
   .pw-wrap input.pw-error:focus{
     border-color:#e33 !important;
@@ -894,55 +936,94 @@ $form->display();
     box-shadow:none !important;
   }
 
-  /* Popup Criteria (placed next to #NewPassWord) */
-  #pw-hints{
+  #pw-hints, #uname-hints{
     position:fixed; left:0; top:0;
-    width:280px; max-width:85vw; background:#fff;
+    width:320px; max-width:85vw; background:#fff;
     border:1px solid #d9d9d9; border-radius:8px;
     box-shadow:0 8px 24px rgba(0,0,0,.12);
     z-index:2147483647; padding:12px 14px; display:none;
     font-size:.9em; color:#333;
   }
-  #pw-hints h4{ margin:0 0 8px; font-size:1em; font-weight:600; }
-  .crit{ display:flex; align-items:center; gap:.5rem; margin:.35rem 0; }
-  .crit .dot{ width:8px; height:8px; border-radius:50%; background:#b71c1c; flex:0 0 8px; }
-  .crit.ok .dot{ background:#2e7d32; }
-  .muted{ color:#666; font-size:.85em; margin-top:6px; }
-  #pw-hints::after{
+  #pw-hints::after, #uname-hints::after{
     content:""; position:absolute; left:-6px; top:50%; transform:translateY(-50%);
     border:8px solid transparent; border-right-color:#fff;
     filter: drop-shadow(-1px 0 0 rgba(0,0,0,.15));
   }
-  #pw-hints.flip::after{ left:auto; right:-6px; transform:translateY(-50%) rotate(180deg); }
+  #pw-hints.flip::after, #uname-hints.flip::after{
+    left:auto; right:-6px; transform:translateY(-50%) rotate(180deg);
+  }
 
-  /* Feedback for email and phone */
-    .email-wrap, .phone-wrap { position: relative; display: inline-block; vertical-align: middle; }
-    .email-wrap input.email-error,
-    .phone-wrap input.phone-error,
-    .email-wrap input.email-error:focus,
-    .phone-wrap input.phone-error:focus {
-        border-color: #e33 !important;
-        outline: none !important;
-        box-shadow: none !important;
-    }
-    .email-feedback, .phone-feedback {
-        font-size: 0.9em;
-        margin-top: 0.25rem;
-        color: #e33;
-    }
+  #pw-hints h4{ margin:0 0 8px; font-size:1em; font-weight:600; }
+  #pw-hints .crit{ display:flex; align-items:center; gap:.5rem; margin:.35rem 0; }
+  #pw-hints .crit .dot{ width:8px; height:8px; border-radius:50%; background:#b71c1c; flex:0 0 8px; }
+  #pw-hints .crit.ok .dot{ background:#2e7d32; }
+  #pw-hints .muted{ color:#666; font-size:.85em; margin-top:6px; }
+
+  /* Username-specific content */
+  #uname-hints h4{ margin:0 0 6px; font-size:1em; font-weight:600; }
+  #uname-hints p{ margin:0; color:#555; line-height:1.35; }
+
+  .email-wrap, .phone-wrap { position: relative; display: inline-block; vertical-align: middle; }
+  .email-wrap input.email-error,
+  .phone-wrap input.phone-error,
+  .email-wrap input.email-error:focus,
+  .phone-wrap input.phone-error:focus {
+    border-color: #e33 !important;
+    outline: none !important;
+    box-shadow: none !important;
+  }
+  .email-feedback, .phone-feedback {
+    font-size: 0.9em;
+    margin-top: 0.25rem;
+    color: #e33;
+  }
+
+  .username-wrap { position: relative; display: inline-block; vertical-align: middle; }
+  .username-wrap input.username-error,
+  .username-wrap input.username-error:focus {
+    border-color:#e33 !important; outline:none !important; box-shadow:none !important;
+  }
+  .username-feedback { font-size:.9em; margin-top:.25rem; color:#e33; }
 </style>
 
 <script>
 jQuery(function($){
-  const ID1 = 'newPassword', ID2 = 'newPassword2';
-  const $p1 = wireField(ID1);
-  const $p2 = wireField(ID2);
-  if (!$p1?.length || !$p2?.length) return;
-  const $hints = ensureHints();
-  const $crit  = $hints.find('.crit');
-  let currentAnchor = null, rafId = null;
+  /* ===========================================================
+     PASSWORD POPUP (IDs: newPassword / newPassword2)
+     =========================================================== */
 
-  function wireField(id){
+  const PW_ID1 = 'newPassword', PW_ID2 = 'newPassword2';
+  const $pw1 = wirePwField(PW_ID1);
+  const $pw2 = wirePwField(PW_ID2);
+  const hasPw = ($pw1?.length && $pw2?.length);
+
+  // Create password popup only if fields exist
+  let $pwHints = null, pwAnchor = null, pwRaf = null, $pwCrit = null;
+  if (hasPw) {
+    $pwHints = ensurePwHints();
+    $pwCrit  = $pwHints.find('.crit');
+
+    $('#'+PW_ID1).on('focus', function(){
+      let $anchor = $('#container_input_'+this.id); if(!$anchor.length) $anchor=$(this).closest('span');
+      showPwHintsFor($anchor); pwUpdateDots($pw1.val()||''); matchPw();
+    });
+    $('#'+PW_ID2).on('focus', function(){
+      hidePwHints();
+      matchPw();
+    });
+    $('#'+PW_ID1+', #'+PW_ID2).on('blur', hidePwHintsIfNoFocus);
+    $(window).on('scroll resize', function(){
+      if (!pwAnchor) return;
+      cancelAnimationFrame(pwRaf);
+      pwRaf = requestAnimationFrame(()=> positionPwHints(pwAnchor));
+    });
+
+    $pw1.on('input', matchPw);
+    $pw2.on('input', matchPw);
+    $pw1.closest('form').on('submit', matchPw);
+  }
+
+  function wirePwField(id){
     const $input = $('#'+id);
     if (!$input.length) return null;
     let $wrap = $('#container_input_'+id);
@@ -968,7 +1049,6 @@ jQuery(function($){
     $btn.find('img.pw-icon').attr('src', hiddenInit ? $btn.data('close') : $btn.data('open'));
     $btn.attr('aria-label', hiddenInit ? 'Afficher le mot de passe' : 'Masquer le mot de passe')
         .attr('aria-pressed', !hiddenInit);
-    // Toggle visibility
     $btn.appendTo($wrap).off('click').on('click', function(){
       const wasHidden = ($input.attr('type') === 'password');
       const newType   = wasHidden ? 'text' : 'password';
@@ -979,7 +1059,6 @@ jQuery(function($){
         .attr('aria-label', nowHidden ? 'Afficher le mot de passe' : 'Masquer le mot de passe')
         .attr('aria-pressed', !nowHidden);
     });
-    //ZoneFeedback (sousLeChamp)
     const $td = $wrap.closest('td');
     if (!$td.find('.pw-feedback').length){
       $('<div class="pw-feedback" aria-live="polite"></div>').appendTo($td);
@@ -987,7 +1066,7 @@ jQuery(function($){
     return $input;
   }
 
-  function ensureHints(){
+  function ensurePwHints(){
     let $box = $('#pw-hints');
     if (!$box.length){
       $box = $(`
@@ -1006,153 +1085,241 @@ jQuery(function($){
     return $box;
   }
 
-  function positionHints($anchor){
+  function positionPwHints($anchor){
     if (!$anchor?.length) return;
     const rect = $anchor[0].getBoundingClientRect();
     const vw = innerWidth, vh = innerHeight, gap = 12;
-    if ($hints.css('display') === 'none') $hints.css({visibility:'hidden', display:'block'});
-    const boxW = $hints.outerWidth(), boxH = $hints.outerHeight();
-    $hints.css({visibility:''});
+    if ($pwHints.css('display') === 'none') $pwHints.css({visibility:'hidden', display:'block'});
+    const boxW = $pwHints.outerWidth(), boxH = $pwHints.outerHeight();
+    $pwHints.css({visibility:''});
     let left = rect.right + gap;
     let top  = rect.top + rect.height/2 - boxH/2;
     top = Math.max(8, Math.min(top, vh - boxH - 8));
     let flip = false;
     if (left + boxW + 8 > vw) { left = Math.max(8, rect.left - gap - boxW); flip = true; }
-    $hints.toggleClass('flip', flip).css({left, top});
+    $pwHints.toggleClass('flip', flip).css({left, top});
   }
-  const showHintsFor = ($a)=>{ currentAnchor=$a; positionHints($a); $hints.stop(true,true).fadeIn(90); };
-  const hideHintsIfNoFocus = ()=> setTimeout(()=>{
-    if (!$(document.activeElement).is('#'+ID1)) { $hints.stop(true,true).fadeOut(90); currentAnchor=null; }
-  },0);
+  function showPwHintsFor($a){
+    // Hide username popup if visible
+    $('#uname-hints').stop(true,true).hide();
+    pwAnchor = $a; positionPwHints($a); $pwHints.stop(true,true).fadeIn(90);
+  }
+  function hidePwHints(){ $pwHints.stop(true,true).fadeOut(90); pwAnchor=null; }
+  function hidePwHintsIfNoFocus(){ setTimeout(()=>{ if (!$(document.activeElement).is('#'+PW_ID1)) hidePwHints(); },0); }
 
   function pwUpdateDots(v){
     const p = { len:v.length>=12, up:/[A-Z]/.test(v), low:/[a-z]/.test(v), num:/\d/.test(v), spec:/[^A-Za-z0-9\s]/.test(v) };
-    $crit.each(function(){ $(this).toggleClass('ok', !!p[$(this).data('key')]); });
+    $pwCrit.each(function(){ $(this).toggleClass('ok', !!p[$(this).data('key')]); });
     return p.len && p.up && p.low && p.num && p.spec;
   }
 
-  function setMatch(ok, msg, forceMsg=false){
-    if ($p2[0]?.setCustomValidity) $p2[0].setCustomValidity(ok ? '' : 'Passwords do not match');
-    $p2.toggleClass('pw-error', !ok);
-    $p2.closest('td').find('.pw-feedback').text(forceMsg ? (msg||'') : (ok ? '' : (msg||'Les mots de passe ne correspondent pas.')));
+  function setPwMatch(ok, msg, forceMsg=false){
+    if ($pw2[0]?.setCustomValidity) $pw2[0].setCustomValidity(ok ? '' : 'Passwords do not match');
+    $pw2.toggleClass('pw-error', !ok);
+    $pw2.closest('td').find('.pw-feedback').text(forceMsg ? (msg||'') : (ok ? '' : (msg||'Les mots de passe ne correspondent pas.')));
   }
 
   function matchPw(){
-    const v1 = ($p1.val()||'').trim();
-    const v2 = ($p2.val()||'').trim();
+    if (!hasPw) return true;
+    const v1 = ($pw1.val()||'').trim();
+    const v2 = ($pw2.val()||'').trim();
     const policyOK = pwUpdateDots(v1);
-    if ($p1[0]?.setCustomValidity) $p1[0].setCustomValidity((v1===''||policyOK)?'':'Password does not meet requirements');
-    $p1.toggleClass('pw-error', v1!=='' && !policyOK);
-    // Correspondence (2nd field)
-    if (v1==='' && v2==='') return setMatch(true,'');
-    if (v1==='' && v2!=='') return setMatch(false,"Saisissez d'abord le mot de passe.");
-    if (v1!=='' && v2==='') return setMatch(false,'Veuillez confirmer le mot de passe.');
-    if (v1 !== v2)          return setMatch(false,'Les mots de passe ne correspondent pas.');
-    if (!policyOK)          return setMatch(true,'Le mot de passe ne respecte pas les critères.', true);
-    return setMatch(true,'');
+    if ($pw1[0]?.setCustomValidity) $pw1[0].setCustomValidity((v1===''||policyOK)?'':'Password does not meet requirements');
+    $pw1.toggleClass('pw-error', v1!=='' && !policyOK);
+
+    if (v1==='' && v2==='') return setPwMatch(true,'');
+    if (v1==='' && v2!=='') return setPwMatch(false,"Saisissez d'abord le mot de passe.");
+    if (v1!=='' && v2==='') return setPwMatch(false,'Veuillez confirmer le mot de passe.');
+    if (v1 !== v2)          return setPwMatch(false,'Les mots de passe ne correspondent pas.');
+    if (!policyOK)          return setPwMatch(true,'Le mot de passe ne respecte pas les critères.', true);
+    return setPwMatch(true,'');
   }
 
-  $('#'+ID1).on('focus', function(){
-    let $anchor = $('#container_input_'+this.id); if(!$anchor.length) $anchor=$(this).closest('span');
-    showHintsFor($anchor); pwUpdateDots($p1.val()||''); matchPw();
-  });
-  $('#'+ID2).on('focus', function(){ $hints.stop(true,true).fadeOut(90); currentAnchor=null; matchPw(); });
-  $('#'+ID1+', #'+ID2).on('blur', hideHintsIfNoFocus);
-  $(window).on('scroll resize', function(){
-    if (!currentAnchor) return;
-    cancelAnimationFrame(rafId);
-    rafId = requestAnimationFrame(()=> positionHints(currentAnchor));
-  });
-  $p1.on('input', matchPw);
-  $p2.on('input', matchPw);
-  $p1.closest('form').on('submit', matchPw);
+  /* ===========================================================
+     EMAIL + PHONE VALIDATIONS (inline)
+     =========================================================== */
 
-  // Gestion de l'email
   const $email = $('#newEmail');
   if ($email.length) {
-      const $emailWrap = $email.closest('span').addClass('email-wrap');
-      if (!$emailWrap.find('.email-feedback').length) {
-          $('<div class="email-feedback" aria-live="polite"></div>').appendTo($emailWrap.closest('td'));
-      }
-      const $emailFeedback = $emailWrap.closest('td').find('.email-feedback');
+    const $emailWrap = $email.closest('span').addClass('email-wrap');
+    if (!$emailWrap.closest('td').find('.email-feedback').length) {
+      $('<div class="email-feedback" aria-live="polite"></div>').appendTo($emailWrap.closest('td'));
+    }
+    const $emailFeedback = $emailWrap.closest('td').find('.email-feedback');
+    const EMAIL_RE = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-      function validateEmail(email) {
-          const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-          return re.test(String(email).toLowerCase());
-      }
-
-      function checkEmail() {
-          const email = $email.val().trim();
-          if (email === '') {
-              $email.removeClass('email-error');
-              $emailFeedback.text('');
-              return true;
-          }
-          const isValid = validateEmail(email);
-          $email.toggleClass('email-error', !isValid);
-          $emailFeedback.text(isValid ? '' : 'Adresse email invalide.');
-          return isValid;
-      }
-
-      $email.on('input', checkEmail);
-      $email.on('blur', checkEmail);
+    function checkEmail() {
+      const v = ($email.val()||'').trim();
+      const ok = (v==='') || EMAIL_RE.test(v.toLowerCase());
+      $email.toggleClass('email-error', !ok);
+      $emailFeedback.text(ok ? '' : 'Adresse email invalide.');
+      return ok;
+    }
+    $email.on('input blur', checkEmail);
   }
 
-  // Telephone management
   const $phone = $('#newPhone');
   if ($phone.length) {
-      const $phoneWrap = $phone.closest('span').addClass('phone-wrap');
-      if (!$phoneWrap.find('.phone-feedback').length) {
-          $('<div class="phone-feedback" aria-live="polite"></div>').appendTo($phoneWrap.closest('td'));
-      }
-      const $phoneFeedback = $phoneWrap.closest('td').find('.phone-feedback');
+    const $phoneWrap = $phone.closest('span').addClass('phone-wrap');
+    if (!$phoneWrap.closest('td').find('.phone-feedback').length) {
+      $('<div class="phone-feedback" aria-live="polite"></div>').appendTo($phoneWrap.closest('td'));
+    }
+    const $phoneFeedback = $phoneWrap.closest('td').find('.phone-feedback');
+    const PHONE_RE = /^\+?[0-9\s\-\(\)]{6,}$/;
 
-      function validatePhone(phone) {
-          const re = /^\+?[0-9\s\-\(\)]{6,}$/;
-          return re.test(String(phone));
-      }
-
-      function checkPhone() {
-          const phone = $phone.val().trim();
-          if (phone === '') {
-              $phone.removeClass('phone-error');
-              $phoneFeedback.text('');
-              return true;
-          }
-          const isValid = validatePhone(phone);
-          $phone.toggleClass('phone-error', !isValid);
-          $phoneFeedback.text(isValid ? '' : 'Numéro de téléphone invalide.');
-          return isValid;
-      }
-
-      $phone.on('input', checkPhone);
-      $phone.on('blur', checkPhone);
+    function checkPhone() {
+      const v = ($phone.val()||'').trim();
+      const ok = (v==='') || PHONE_RE.test(v);
+      $phone.toggleClass('phone-error', !ok);
+      $phoneFeedback.text(ok ? '' : 'Numéro de téléphone invalide.');
+      return ok;
+    }
+    $phone.on('input blur', checkPhone);
   }
 
-  // Global validation before submission of the form
-  $('form').on('submit', function(e) {
-      let isValid = true;
+  /* ===========================================================
+     USERNAME POPUP (only when illegal char is typed) + validation
+     =========================================================== */
 
-      // Email verification
-      if ($email.length) {
-          const isEmailValid = checkEmail();
-          if (!isEmailValid) {
-              isValid = false;
-          }
-      }
+  const $uname = $('#newUsername');
+  let $uHints = null, uAnchor = null, uRaf = null;
 
-      // Telephone verification
-      if ($phone.length) {
-          const isPhoneValid = checkPhone();
-          if (!isPhoneValid) {
-              isValid = false;
-          }
-      }
+  if ($uname.length) {
+    // HTML constraints
+    $uname.attr({
+      pattern: '[A-Za-z0-9._-]{3,32}',
+      maxlength: 32,
+      autocomplete: 'off',
+      autocapitalize: 'none',
+      spellcheck: 'false',
+      title: 'Only letters/digits, dot (.), dash (-), underscore (_); 3–32 chars; no spaces or accents.'
+    });
 
-      // prevent submission if the fields are not valid
-      if (!isValid) {
-          e.preventDefault();
+    // Inline feedback container (kept minimal)
+    const $uWrap = $uname.closest('span').addClass('username-wrap');
+    if (!$uWrap.closest('td').find('.username-feedback').length) {
+      $('<div class="username-feedback" aria-live="polite"></div>').appendTo($uWrap.closest('td'));
+    }
+    const $uFb = $uWrap.closest('td').find('.username-feedback');
+
+    // Popup
+    $uHints = ensureUnameHints();
+
+    const ILLEGAL_RE = /[^A-Za-z0-9._-]/;
+
+    function ensureUnameHints(){
+      let $box = $('#uname-hints');
+      if (!$box.length){
+        $box = $(`
+          <div id="uname-hints" role="status" aria-live="polite">
+            <h4>Username rules</h4>
+            <p>Allowed: letters, digits, dot (.), dash (-), underscore (_).</p>
+            <p>No spaces or accents. Length: 3–32 characters.</p>
+          </div>
+        `);
+        $('body').append($box);
       }
+      return $box;
+    }
+
+    function positionUnameHints($anchor){
+      if (!$anchor?.length) return;
+      const rect = $anchor[0].getBoundingClientRect();
+      const vw = innerWidth, vh = innerHeight, gap = 12;
+      if ($uHints.css('display') === 'none') $uHints.css({visibility:'hidden', display:'block'});
+      const w = $uHints.outerWidth(), h = $uHints.outerHeight();
+      $uHints.css({visibility:''});
+      let left = rect.right + gap;
+      let top  = rect.top + rect.height/2 - h/2;
+      top = Math.max(8, Math.min(top, vh - h - 8));
+      let flip = false;
+      if (left + w + 8 > vw) { left = Math.max(8, rect.left - gap - w); flip = true; }
+      $uHints.toggleClass('flip', flip).css({left, top});
+    }
+    function showUnameHints(){
+      // Hide password popup if visible
+      $('#pw-hints').stop(true,true).hide();
+      let $anchor = $('#container_input_newUsername');
+      if (!$anchor.length) $anchor = $uname.closest('span');
+      uAnchor = $anchor;
+      positionUnameHints(uAnchor);
+      $uHints.stop(true,true).fadeIn(90);
+    }
+    function hideUnameHints(){ $uHints.stop(true,true).fadeOut(90); }
+
+    function showUErr(msg){
+      $uname.addClass('username-error').attr('aria-invalid', 'true');
+      if ($uname[0]?.setCustomValidity) $uname[0].setCustomValidity(msg||'Invalid username');
+      $uFb.text(msg||'');
+    }
+    function clearUErr(){
+      $uname.removeClass('username-error').attr('aria-invalid', 'false');
+      if ($uname[0]?.setCustomValidity) $uname[0].setCustomValidity('');
+      $uFb.text('');
+    }
+
+    // During typing: only react to illegal chars (popup)
+    $uname.on('input', function(){
+      const v = ($uname.val()||'');
+      if (ILLEGAL_RE.test(v)) { showUnameHints(); }
+      else { hideUnameHints(); }
+      clearUErr();
+    });
+
+    // On focus: n’affiche pas par défaut; seulement si déjà illégal
+    $uname.on('focus', function(){
+      if (ILLEGAL_RE.test($uname.val()||'')) showUnameHints();
+    });
+
+    $uname.on('blur', function(){
+        hideUnameHints();
+        const v = ($uname.val()||'').trim();
+        if (v==='') { clearUErr(); return; }
+        if (ILLEGAL_RE.test(v)) { showUErr(); return; }   // <- pas de texte, juste le contour
+        if (v.length < 3 || v.length > 32) { showUErr(); return; }
+        clearUErr();
+    });
+
+    $(window).on('scroll resize', function(){
+      if (!$uHints.is(':visible') || !uAnchor) return;
+      cancelAnimationFrame(uRaf);
+      uRaf = requestAnimationFrame(()=> positionUnameHints(uAnchor));
+    });
+
+    // Expose a strict check for submit
+    window.__checkUsername = function(){
+      const v = ($uname.val()||'').trim();
+      if (v==='') { clearUErr(); return true; } // autoriser vide -> côté serveur décidera
+      if (ILLEGAL_RE.test(v)) { showUErr('Only letters/digits, dot (.), dash (-), underscore (_); no spaces or accents.'); return false; }
+      if (v.length < 3 || v.length > 32) { showUErr('3–32 characters required.'); return false; }
+      clearUErr();
+      return true;
+    }
+  }
+
+  /* ===========================================================
+     GLOBAL SUBMIT GUARD
+     =========================================================== */
+  $('form').on('submit', function(e){
+    let ok = true;
+
+    if ($email.length && typeof checkEmail === 'function') {
+      ok = checkEmail() && ok;
+    }
+    if ($phone.length && typeof checkPhone === 'function') {
+      ok = checkPhone() && ok;
+    }
+    if ($uname.length && typeof window.__checkUsername === 'function') {
+      ok = window.__checkUsername() && ok;
+    }
+    if (hasPw) {
+      ok = (matchPw() !== false) && ok;
+    }
+
+    if (!ok) {
+      e.preventDefault();
+      ($('.username-error, .email-error, .phone-error, .pw-error').get(0) || this).focus();
+    }
   });
 });
 </script>
