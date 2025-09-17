@@ -204,15 +204,22 @@ if ($facilitylevel <= 1) {
 
 $cn = array_values((array)($data['completename'] ?? []));
 
-// Do not treat the first element (index 0)
-$displayArray = array_map(function ($s, $i) {
+// entities_id = 0  => We do not touch the 1st element
+// sinon            => We treat all the elements
+$entitiesId  = (int)($u['entities_id'] ?? 0);
+$processAll  = ($entitiesId !== 0);
+
+$displayArray = array_map(function ($s, $i) use ($processAll) {
     $s = trim((string)$s);
-    if ($i === 0) {
-        return $s;// we leave the root as it is
+
+    // If we should not treat the 1st, we return it as it is
+    if (!$processAll && $i === 0) {
+        return $s;
     }
+
     $parts = array_map('trim', explode('>', $s));
     if (count($parts) > 1) {
-        array_shift($parts);// we remove the 1st part
+        array_shift($parts); // remove the 1st part
         return implode(' > ', $parts);
     }
     return $s;

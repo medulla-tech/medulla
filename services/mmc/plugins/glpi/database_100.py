@@ -7390,6 +7390,7 @@ class Glpi100(DyngroupDatabaseHelper):
                 gu.users_id_supervisor,
                 gpu.profiles_id,
                 gp.name AS nameprofil,
+                ge.id AS entities_id,
                 ge.name AS nameentity,
                 ge.completename AS nameentitycomplete,
                 ge.entities_id AS parent_id_entity,
@@ -7415,6 +7416,8 @@ class Glpi100(DyngroupDatabaseHelper):
 
         row = session.execute(sqlrequest, {"name": name}).fetchone()
 
+        logging.getLogger().error(f"111 - Voila ma variable row {row}")
+
         def safe(v):
             if v is None:
                 return ""
@@ -7436,6 +7439,7 @@ class Glpi100(DyngroupDatabaseHelper):
                 "profiles_id": safe(row.profiles_id),
                 "users_id_supervisor": safe(row.users_id_supervisor),
                 "nameprofil": safe(row.nameprofil),
+                "entities_id": safe(row.entities_id),
                 "nameentity": safe(row.nameentity),
                 "nameentitycomplete": safe(row.nameentitycomplete),
                 "parent_id_entity": safe(row.parent_id_entity),
