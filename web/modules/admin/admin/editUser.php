@@ -331,11 +331,10 @@ if (isset($_POST['entities_id']) && $_POST['entities_id'] !== '') {
 if (isset($_POST["bcreate"])) {
     verifyCSRFToken($_POST);
 
-    // Data recovery and cleaning
-    $postedUsername     = trim($_POST['newUsername']  ?? '');
+    // Recovery and standardization
+    $postedUsername     = trim($_POST['newUsername']  ?? '');  // = email
     $postedFirstName    = trim($_POST['newFirstName'] ?? '');
     $postedLastName     = trim($_POST['newLastName']  ?? '');
-    $postedEmail        = trim($_POST['newEmail']     ?? '');
     $postedPhone        = trim($_POST['newPhone']     ?? '');
     $postedProfileId    = $normId($_POST['profiles_id']  ?? null);
     $postedEntityId     = $normId($_POST['entities_id']  ?? null);
@@ -355,20 +354,17 @@ if (isset($_POST["bcreate"])) {
 
     //Validations
     if ($postedUsername === '') {
-        $fail("Form", _T("Username is required.", "admin"));
+        $fail("Form", _T("Username (email) is required.", "admin"));
     }
-    if (!preg_match('/^[A-Za-z0-9._-]{3,32}$/', $postedUsername)) {
-        $fail(
-            "Form",
-            _T("Username must be 3–32 characters and only contain letters, digits, dot (.), dash (-) or underscore (_). No spaces or accents.", "admin")
-        );
+    if (!preg_match('/^[A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}$/', $postedUsername)) {
+        $fail("Form", _T("Invalid email address", "admin"));
     }
 
     [$isValid, $errorMessage] = validatePasswords($pwd, $pwd2);
     if (!$isValid) {
         new NotifyWidgetFailure($errorMessage);
         header("Location: " . urlStrRedirect("admin/admin/listUsersofEntity", [
-            'entityId' => (string)($postedEntityId ?? $origEntityId ?? $defaultEntityId),
+            'entityId'   => (string)($postedEntityId ?? $origEntityId ?? $defaultEntityId),
             'entityName' => $entityIdToName[$postedEntityId ?? $origEntityId ?? $defaultEntityId] ?? ''
         ]));
         exit;
@@ -377,19 +373,10 @@ if (isset($_POST["bcreate"])) {
         $fail("Form", _T("Profile and entity are required.", "admin"));
     }
 
-    if ($postedEmail !== '' && !filter_var($postedEmail, FILTER_VALIDATE_EMAIL)) {
-        new NotifyWidgetFailure(_T("Invalid email address.", "admin"));
-        header("Location: " . urlStrRedirect("admin/admin/listUsersofEntity", [
-            'entityId' => (string)($postedEntityId ?? $origEntityId ?? $defaultEntityId),
-            'entityName' => $entityIdToName[$postedEntityId ?? $origEntityId ?? $defaultEntityId] ?? ''
-        ]));
-        exit;
-    }
-
     if ($postedPhone !== '' && !preg_match('/^\+?[0-9\s\-\(\)]{6,}$/', $postedPhone)) {
         new NotifyWidgetFailure(_T("Invalid phone number.", "admin"));
         header("Location: " . urlStrRedirect("admin/admin/listUsersofEntity", [
-            'entityId' => (string)($postedEntityId ?? $origEntityId ?? $defaultEntityId),
+            'entityId'   => (string)($postedEntityId ?? $origEntityId ?? $defaultEntityId),
             'entityName' => $entityIdToName[$postedEntityId ?? $origEntityId ?? $defaultEntityId] ?? ''
         ]));
         exit;
@@ -398,13 +385,12 @@ if (isset($_POST["bcreate"])) {
     // Creation of the user in GLPI
     try {
         $glpiRes = xmlrpc_create_user(
-            $postedUsername,
+            $postedUsername,           // login (email)
             $pwd,
             $postedEntityId,
             $postedProfileId,
             $postedLastName,
             $postedFirstName,
-            $postedEmail ?: null,
             $postedPhone ?: null,
             $postedIsRecursive,
             $postedIsDefault,
@@ -443,7 +429,6 @@ if (isset($_POST["bcreate"])) {
             error_log("[createUser] GLPI purge exception ($why): ".$err);
         }
         if (!$okPurge) {
-            // Fold: Disable the user to avoid a "zombie"
             try {
                 $res2 = xmlrpc_update_user($uid, 'is_active', '0', $tokenuser);
                 $okDisable = (is_array($res2) ? (!empty($res2['ok']) || !empty($res2['success'])) : (bool)$res2);
@@ -483,7 +468,6 @@ if (isset($_POST["bcreate"])) {
         }
 
         if (!$sysOk) {
-            // Rollback GLPI if add ldd fails
             $rb = $rollbackGlpi($new_id, 'ldap.add_user');
             if (!$rb['purge'] && !$rb['disable']) {
                 error_log('[createUser] GLPI rollback failed (neither purge nor disable succeeded).');
@@ -508,11 +492,7 @@ if (isset($_POST["bcreate"])) {
             }
         }
 
-        // Mail / Phone update in LDAP
-        if ($postedEmail !== '') {
-            $okMail = @changeUserAttributes($postedUsername, "mail", $postedEmail);
-            if ($okMail === false || $okMail === null) { $warnings[] = 'mail'; }
-        }
+        // MAJ attributs LDAP (phone optionnel)
         if ($postedPhone !== '') {
             $okTel = @changeUserAttributes($postedUsername, "telephoneNumber", $postedPhone);
             if ($okTel === false || $okTel === null) { $warnings[] = 'telephoneNumber'; }
@@ -553,7 +533,6 @@ if (isset($_POST["bcreate"])) {
 if (isset($_POST["bupdate"])) {
     verifyCSRFToken($_POST);
 
-    // Data recovery and validation
     $userId = (int)($_POST['userId'] ?? $_GET['userId'] ?? 0);
     if ($userId <= 0) {
         new NotifyWidgetFailure(_T("Invalid user ID.", "admin"));
@@ -561,17 +540,15 @@ if (isset($_POST["bupdate"])) {
         exit;
     }
 
-    // Recovery of original values
-    $origUsername   = (string)($prefill['username'] ?? '');
+    $origUsername   = (string)($prefill['username']  ?? '');
     $origFirstName  = (string)($prefill['firstname'] ?? '');
-    $origLastName   = (string)($prefill['lastname'] ?? '');
-    $origEmail      = (string)($prefill['email'] ?? '');
-    $origPhone      = (string)($prefill['phone'] ?? '');
+    $origLastName   = (string)($prefill['lastname']  ?? '');
+    $origPhone      = (string)($prefill['phone']     ?? '');
     $origProfileId  = !empty($prefill['profile_id'])
-                    ? (int)$prefill['profile_id']
-                    : (!empty($prefill['profile_name']) && isset($profileNameToId[$prefill['profile_name']])
-                        ? (int)$profileNameToId[$prefill['profile_name']]
-                        : (!empty($u['profile_id']) ? (int)$u['profile_id'] : null));
+        ? (int)$prefill['profile_id']
+        : (!empty($prefill['profile_name']) && isset($profileNameToId[$prefill['profile_name']])
+            ? (int)$profileNameToId[$prefill['profile_name']]
+            : (!empty($u['profile_id']) ? (int)$u['profile_id'] : null));
     $origEntityId   = !empty($prefill['entities_id']) ? (int)$prefill['entities_id'] : (!empty($defaultEntityId) ? (int)$defaultEntityId : null);
     $origRecursive  = isset($prefill['is_recursive']) ? (int)$prefill['is_recursive']
                     : (isset($_GET['is_recursive']) ? (int)($_GET['is_recursive'] === '1') : null);
@@ -579,44 +556,39 @@ if (isset($_POST["bupdate"])) {
     // Recovery of new values
     $postedUsername   = trim($_POST['newUsername'] ?? '');
     $postedFirstName  = trim($_POST['newFirstName'] ?? '');
-    $postedLastName   = trim($_POST['newLastName'] ?? '');
-    $postedEmail      = trim($_POST['newEmail'] ?? '');
-    $postedPhone      = trim($_POST['newPhone'] ?? '');
-    $pwd              = $_POST['newPassword'] ?? '';
+    $postedLastName   = trim($_POST['newLastName']  ?? '');
+    $postedPhone      = trim($_POST['newPhone']     ?? '');
+    $pwd              = $_POST['newPassword']  ?? '';
     $pwd2             = $_POST['newPassword2'] ?? '';
     $changePwd        = ($pwd !== '' || $pwd2 !== '');
-    $postedProfileId  = $normId($_POST['profiles_id'] ?? null);
-    $postedEntityId   = $normId($_POST['entities_id'] ?? null);
+    $postedProfileId  = $normId($_POST['profiles_id']  ?? null);
+    $postedEntityId   = $normId($_POST['entities_id']  ?? null);
     $postedIsRecursive = ((string)($_POST['is_recursive'] ?? '1') === '1') ? 1 : 0;
-    $postedIsDefault = ((string)($_POST['is_default'] ?? ($prefill['is_default'] ?? '1')) === '1') ? 1 : 0;
+    $postedIsDefault   = ((string)($_POST['is_default']   ?? ($prefill['is_default'] ?? '1')) === '1') ? 1 : 0;
 
-    // Data validation
-    $changePwd = ($pwd !== '' || $pwd2 !== ''); // Déjà défini plus haut
+    // Immutable username: if attempted change, we do not know and we log
+    if ($postedUsername !== '' && strcasecmp($postedUsername, $origUsername) !== 0) {
+        error_log('[editUser] Username change attempt ignored: '.$origUsername.' -> '.$postedUsername);
+        $postedUsername = $origUsername;
+    }
+
+    // Validations
     if ($changePwd) {
         [$isValid, $errorMessage] = validatePasswords($pwd, $pwd2, true);
         if (!$isValid) {
             new NotifyWidgetFailure($errorMessage);
             header("Location: " . urlStrRedirect("admin/admin/listUsersofEntity", [
-                'entityId' => (string)($postedEntityId ?? $origEntityId ?? $defaultEntityId),
+                'entityId'   => (string)($postedEntityId ?? $origEntityId ?? $defaultEntityId),
                 'entityName' => $entityIdToName[$postedEntityId ?? $origEntityId ?? $defaultEntityId] ?? ''
             ]));
             exit;
         }
     }
 
-    if ($postedEmail !== '' && !filter_var($postedEmail, FILTER_VALIDATE_EMAIL)) {
-        new NotifyWidgetFailure(_T("Invalid email address.", "admin"));
-        header("Location: " . urlStrRedirect("admin/admin/listUsersofEntity", [
-            'entityId' => (string)($postedEntityId ?? $origEntityId ?? $defaultEntityId),
-            'entityName' => $entityIdToName[$postedEntityId ?? $origEntityId ?? $defaultEntityId] ?? ''
-        ]));
-        exit;
-    }
-
     if ($postedPhone !== '' && !preg_match('/^\+?[0-9\s\-\(\)]{6,}$/', $postedPhone)) {
         new NotifyWidgetFailure(_T("Invalid phone number.", "admin"));
         header("Location: " . urlStrRedirect("admin/admin/listUsersofEntity", [
-            'entityId' => (string)($postedEntityId ?? $origEntityId ?? $defaultEntityId),
+            'entityId'   => (string)($postedEntityId ?? $origEntityId ?? $defaultEntityId),
             'entityName' => $entityIdToName[$postedEntityId ?? $origEntityId ?? $defaultEntityId] ?? ''
         ]));
         exit;
@@ -635,43 +607,33 @@ if (isset($_POST["bupdate"])) {
     }
 
     // Detection of changes
-    $wantUsername   = ($postedUsername  !== $origUsername)  ? $postedUsername  : null;
-    $wantFirstName  = ($postedFirstName !== $origFirstName) ? $postedFirstName : null;
-    $wantLastName   = ($postedLastName  !== $origLastName)  ? $postedLastName  : null;
-    $wantEmail      = ($postedEmail     !== $origEmail)     ? $postedEmail     : null;
-    $wantPhone      = ($postedPhone     !== $origPhone)     ? $postedPhone     : null;
-    $pwdChanged     = $changePwd;
-    $profileChanged = ($postedProfileId !== null && (string)$postedProfileId !== (string)($origProfileId ?? ''));
-    $entityChanged  = ($postedEntityId  !== null && (string)$postedEntityId  !== (string)($origEntityId  ?? ''));
+    $wantUsername    = null; // immuable
+    $wantFirstName   = ($postedFirstName !== $origFirstName) ? $postedFirstName : null;
+    $wantLastName    = ($postedLastName  !== $origLastName)  ? $postedLastName  : null;
+    $wantPhone       = ($postedPhone     !== $origPhone)     ? $postedPhone     : null;
+    $pwdChanged      = $changePwd;
+    $profileChanged  = ($postedProfileId !== null && (string)$postedProfileId !== (string)($origProfileId ?? ''));
+    $entityChanged   = ($postedEntityId  !== null && (string)$postedEntityId  !== (string)($origEntityId  ?? ''));
     $recursiveChanged = ($origRecursive === null) ? true : ((int)$postedIsRecursive !== (int)$origRecursive);
     $defaultChanged   = ($postedIsDefault !== (int)($prefill['is_default'] ?? 1));
 
-    // Update of single fields (name, first name, email, password)
-    $okAll = true;
-    $didSomething = false;
+    // MAJ Simple Champs
+    $okAll = true; $didSomething = false;
     try {
-        if ($wantUsername !== null) {
-            $okAll = (bool)xmlrpc_update_user($userId, 'name', $wantUsername, $tokenuser) && $okAll;
-            $didSomething = true;
-        }
         if ($wantFirstName !== null) {
             $okAll = (bool)xmlrpc_update_user($userId, 'firstname', $wantFirstName, $tokenuser) && $okAll;
             $didSomething = true;
         }
         if ($wantLastName !== null) {
-            $okAll = (bool)xmlrpc_update_user($userId, 'realname', $wantLastName, $tokenuser) && $okAll;
-            $didSomething = true;
-        }
-        if ($wantEmail !== null) {
-            $okAll = (bool)xmlrpc_set_user_email($userId, $wantEmail, $tokenuser) && $okAll;
+            $okAll = (bool)xmlrpc_update_user($userId, 'realname',  $wantLastName,  $tokenuser) && $okAll;
             $didSomething = true;
         }
         if ($wantPhone !== null) {
-            $okAll = (bool)xmlrpc_update_user($userId, 'phone', $wantPhone, $tokenuser) && $okAll;
+            $okAll = (bool)xmlrpc_update_user($userId, 'phone',     $wantPhone,     $tokenuser) && $okAll;
             $didSomething = true;
         }
         if ($pwdChanged) {
-            $okAll = (bool)xmlrpc_update_user($userId, 'password', $pwd, $tokenuser) && $okAll;
+            $okAll = (bool)xmlrpc_update_user($userId, 'password',  $pwd,           $tokenuser) && $okAll;
             $didSomething = true;
         }
     } catch (Throwable $e) {
@@ -679,7 +641,7 @@ if (isset($_POST["bupdate"])) {
         $okAll = false;
     }
 
-    // Update of the profile, entity and recursion
+    // MAJ profile / entity / recursion / defect
     if ($profileChanged || $entityChanged || $recursiveChanged || $defaultChanged) {
         $didSomething = true;
         $profileIdToUse = (int)($profileChanged ? $postedProfileId : ($origProfileId ?? 0));
@@ -695,18 +657,15 @@ if (isset($_POST["bupdate"])) {
 
             if (is_array($res)) {
                 $ok = !empty($res['ok']) || !empty($res['success']) || (isset($res['code']) && (int)$res['code'] === 0);
-
-                // conflict "impossible to remove the defect" → non-observing for the rest
                 if (!$ok && isset($res['code']) && (int)$res['code'] === 409) {
                     $conflictNoAltDefault = true;
-                    $ok = true; // We don't break Okall, to let LDAP turn
+                    $ok = true;
                 }
             } else {
                 $ok = (bool)$res;
             }
 
             $okAll = $okAll && $ok;
-            $didSomething = true;
 
         } catch (Throwable $e) {
             error_log('[editUser] Switch profile/entity/recursive failed: ' . $e->getMessage());
@@ -714,23 +673,11 @@ if (isset($_POST["bupdate"])) {
         }
     }
 
-    // LDAP update
+    // MAJ LDAP
     if ($okAll) {
-        $ldapOk = true;
-        $ldapErrors = [];
-        $oldUid = $origUsername ?: ($u['login'] ?? '');
-        $newUid = $wantUsername ?? $oldUid;
+        $ldapOk = true; $ldapErrors = [];
+        $uidForAttrs = $origUsername; // username immuable
 
-        // Uid and Homedirectory update (if necessary)
-        if ($wantUsername !== null) {
-            $res = @changeUserAttributes($oldUid, 'uid', $newUid);
-            if ($res === false || $res === null) { $ldapOk = false; $ldapErrors[] = 'uid'; }
-            $res = @changeUserAttributes($newUid, 'homeDirectory', '/home/' . $newUid);
-            if ($res === false || $res === null) { $ldapOk = false; $ldapErrors[] = 'homeDirectory'; }
-        }
-
-        // Update of the first name, last name and associated attributes
-        $uidForAttrs = $newUid;
         $finalFirst = $wantFirstName ?? $origFirstName;
         $finalLast  = $wantLastName  ?? $origLastName;
         $fullName   = trim($finalFirst . ' ' . $finalLast);
@@ -744,40 +691,22 @@ if (isset($_POST["bupdate"])) {
             if ($res === false || $res === null) { $ldapOk = false; $ldapErrors[] = 'sn'; }
         }
         if ($wantFirstName !== null || $wantLastName !== null) {
-            $res = @changeUserAttributes($uidForAttrs, 'cn', $fullName);
-            if ($res === false || $res === null) { $ldapOk = false; $ldapErrors[] = 'cn'; }
-            $res = @changeUserAttributes($uidForAttrs, 'displayName', $fullName);
-            if ($res === false || $res === null) { $ldapOk = false; $ldapErrors[] = 'displayName'; }
-            $res = @changeUserAttributes($uidForAttrs, 'gecos', $fullName);
-            if ($res === false || $res === null) { $ldapOk = false; $ldapErrors[] = 'gecos'; }
+            foreach (['cn','displayName','gecos'] as $attr) {
+                $res = @changeUserAttributes($uidForAttrs, $attr, $fullName);
+                if ($res === false || $res === null) { $ldapOk = false; $ldapErrors[] = $attr; }
+            }
         }
 
-        // Email update
-        $ldapMail = ($wantEmail !== null) ? $wantEmail : (($origEmail !== '') ? $origEmail : null);
-        $res = @changeUserAttributes($uidForAttrs, 'mail', $ldapMail);
-        if ($res === false || $res === null) { $ldapOk = false; $ldapErrors[] = 'mail'; }
+        // Phone
+        if ($wantPhone !== null) {
+            $res = @changeUserAttributes($uidForAttrs, 'telephoneNumber', $wantPhone);
+            if ($res === false || $res === null) { $ldapOk = false; $ldapErrors[] = 'telephoneNumber'; }
+        }
 
-        // Phone update
-        $ldapPhone = ($wantPhone !== null) ? $wantPhone : (($origPhone !== '') ? $origPhone : null);
-        $res = @changeUserAttributes($uidForAttrs, 'telephoneNumber', $ldapPhone);
-        if ($res === false || $res === null) { $ldapOk = false; $ldapErrors[] = 'telephoneNumber'; }
-
-        // Password update
+        // Password
         if ($pwdChanged) {
             $res = @changeUserAttributes($uidForAttrs, 'userPassword', $pwd);
             if ($res === false || $res === null) { $ldapOk = false; $ldapErrors[] = 'userPassword'; }
-        }
-
-        // ACL update if the profile has changed
-        if ($profileChanged) {
-            $newProfileName = $profileIdToName[(string)$profileIdToUse] ?? (xmlrpc_get_profile_name($profileIdToUse, $tokenuser) ?: '');
-            if ($newProfileName !== '') {
-                $aclString = getGlpiAclForProfile($newProfileName, $configPaths);
-                if ($aclString !== '') {
-                    $res = @changeUserAttributes($uidForAttrs, 'lmcACL', $aclString);
-                    if ($res === false || $res === null) { $ldapOk = false; $ldapErrors[] = 'lmcACL'; }
-                }
-            }
         }
 
         if (!$ldapOk) {
@@ -785,19 +714,17 @@ if (isset($_POST["bupdate"])) {
         }
     }
 
+    // Feedback
     if (!$didSomething) {
         new NotifyWidgetSuccess(_T("No changes.", "admin"));
-
     } elseif ($okAll && !empty($conflictNoAltDefault) && $defaultChanged && !$postedIsDefault) {
         if (class_exists('NotifyWidgetWarning')) {
             new NotifyWidgetWarning(_T("Cannot unset the default profile: the user has no other profile.", "admin"));
         } else {
             new NotifyWidgetFailure(_T("Cannot unset the default profile: the user has no other profile.", "admin"));
         }
-
     } elseif ($okAll) {
         new NotifyWidgetSuccess(_T("Changes saved.", "admin"));
-
     } else {
         new NotifyWidgetFailure(_T("Update failed.", "admin"));
     }
@@ -805,10 +732,7 @@ if (isset($_POST["bupdate"])) {
     $targetEntity = (int)($postedEntityId ?? $origEntityId ?? $defaultEntityId);
     header("Location: " . urlStrRedirect(
         "admin/admin/listUsersofEntity",
-        [
-            'entityId' => $targetEntity,
-            'entityName' => $entityIdToName[$targetEntity] ?? ''
-        ]
+        ['entityId' => $targetEntity, 'entityName' => $entityIdToName[$targetEntity] ?? '']
     ));
     exit;
 }
@@ -883,22 +807,20 @@ if ($mode === 'edit') {
     $form->add(new TrFormElement(_T("Default profile for this entity", "admin"), $defSelect)); // NEW
 }
 
-// Username doesn't change in edit mode
 if ($mode === 'edit') {
-    $displayUsername = (string)($prefill['username'] ?? '');
+    $displayEmail = (string)($prefill['username'] ?? '');
     $form->add(new TrFormElement(
-        _T('Username','admin'),
-        new TextTpl($safe ? $safe($displayUsername) : htmlspecialchars($displayUsername, ENT_QUOTES, 'UTF-8'))
+        _T('Mail','admin'),
+        new TextTpl($safe ? $safe($displayEmail) : htmlspecialchars($displayEmail, ENT_QUOTES, 'UTF-8'))
     ));
-    // Important: send the value to the post anyway
     $form->add(new HiddenTpl('newUsername'), [
-        'value' => $displayUsername,
+        'value' => $displayEmail,
         'hide'  => true
     ]);
 } else {
-    $usernameTpl = new InputTpl('newUsername', '/^(?!root)[a-zA-Z0-9][A-Za-z0-9_.\-]*$/');
+    $emailTpl = new InputTpl('newUsername', '/^[A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}$/');
     $form->add(
-        new TrFormElement(_T('Username','admin') . '*', $usernameTpl),
+        new TrFormElement(_T('Mail','admin') . '*', $emailTpl),
         ['value' => $_POST['newUsername'] ?? '']
     );
 }
@@ -908,7 +830,6 @@ $addInput($form, 'newPassword2', 'Confirm password', '');
 
 $addInput($form, 'newFirstName', 'First name', $_POST['newFirstName'] ?? ($prefill['firstname'] ?? ''));
 $addInput($form, 'newLastName',  'Last name',  $_POST['newLastName']  ?? ($prefill['lastname']  ?? ''));
-$addInput($form, 'newEmail',     'Email',      $_POST['newEmail']     ?? ($prefill['email']     ?? ''));
 $addInput($form, 'newPhone',     'Phone',      $_POST['newPhone']     ?? ($prefill['phone']     ?? ''));
 
 $form->add(new HiddenTpl('userId'), ['value' => (string)$userId, 'hide' => true]);
@@ -926,150 +847,102 @@ $form->display();
     width:1.2rem; height:1.2rem; line-height:1; z-index:2;
   }
   .pw-toggle img{ width:100%; height:100%; display:block; pointer-events:none; }
-
   .pw-feedback{ font-size:.9em; margin-top:.25rem; color:#e33; }
-
   .pw-wrap input.pw-error,
   .pw-wrap input.pw-error:focus{
-    border-color:#e33 !important;
-    outline:none !important;
-    box-shadow:none !important;
+    border-color:#e33 !important; outline:none !important; box-shadow:none !important;
   }
 
-  #pw-hints, #uname-hints{
-    position:fixed; left:0; top:0;
-    width:320px; max-width:85vw; background:#fff;
-    border:1px solid #d9d9d9; border-radius:8px;
-    box-shadow:0 8px 24px rgba(0,0,0,.12);
-    z-index:2147483647; padding:12px 14px; display:none;
-    font-size:.9em; color:#333;
+  #pw-hints{
+    position:fixed; left:0; top:0; width:320px; max-width:85vw; background:#fff;
+    border:1px solid #d9d9d9; border-radius:8px; box-shadow:0 8px 24px rgba(0,0,0,.12);
+    z-index:2147483647; padding:12px 14px; display:none; font-size:.9em; color:#333;
   }
-  #pw-hints::after, #uname-hints::after{
+  #pw-hints::after{
     content:""; position:absolute; left:-6px; top:50%; transform:translateY(-50%);
     border:8px solid transparent; border-right-color:#fff;
     filter: drop-shadow(-1px 0 0 rgba(0,0,0,.15));
   }
-  #pw-hints.flip::after, #uname-hints.flip::after{
-    left:auto; right:-6px; transform:translateY(-50%) rotate(180deg);
-  }
-
+  #pw-hints.flip::after{ left:auto; right:-6px; transform:translateY(-50%) rotate(180deg); }
   #pw-hints h4{ margin:0 0 8px; font-size:1em; font-weight:600; }
   #pw-hints .crit{ display:flex; align-items:center; gap:.5rem; margin:.35rem 0; }
   #pw-hints .crit .dot{ width:8px; height:8px; border-radius:50%; background:#b71c1c; flex:0 0 8px; }
   #pw-hints .crit.ok .dot{ background:#2e7d32; }
   #pw-hints .muted{ color:#666; font-size:.85em; margin-top:6px; }
 
-  /* Username-specific content */
-  #uname-hints h4{ margin:0 0 6px; font-size:1em; font-weight:600; }
-  #uname-hints p{ margin:0; color:#555; line-height:1.35; }
-
+  /* Feedbacks Inline */
   .email-wrap, .phone-wrap { position: relative; display: inline-block; vertical-align: middle; }
   .email-wrap input.email-error,
   .phone-wrap input.phone-error,
   .email-wrap input.email-error:focus,
   .phone-wrap input.phone-error:focus {
-    border-color: #e33 !important;
-    outline: none !important;
-    box-shadow: none !important;
-  }
-  .email-feedback, .phone-feedback {
-    font-size: 0.9em;
-    margin-top: 0.25rem;
-    color: #e33;
-  }
-
-  .username-wrap { position: relative; display: inline-block; vertical-align: middle; }
-  .username-wrap input.username-error,
-  .username-wrap input.username-error:focus {
     border-color:#e33 !important; outline:none !important; box-shadow:none !important;
   }
-  .username-feedback { font-size:.9em; margin-top:.25rem; color:#e33; }
+  .email-feedback, .phone-feedback { font-size:.9em; margin-top:.25rem; color:#e33; }
 </style>
 
 <script>
 jQuery(function($){
-  /* ===========================================================
-     PASSWORD POPUP (IDs: newPassword / newPassword2)
-     =========================================================== */
-
-  const PW_ID1 = 'newPassword', PW_ID2 = 'newPassword2';
-  const $pw1 = wirePwField(PW_ID1);
-  const $pw2 = wirePwField(PW_ID2);
+  // Password popup
+  const PW_ID1='newPassword', PW_ID2='newPassword2';
+  const $pw1=wirePwField(PW_ID1), $pw2=wirePwField(PW_ID2);
   const hasPw = ($pw1?.length && $pw2?.length);
+  let $pwHints=null, pwAnchor=null, pwRaf=null, $pwCrit=null;
 
-  // Create password popup only if fields exist
-  let $pwHints = null, pwAnchor = null, pwRaf = null, $pwCrit = null;
-  if (hasPw) {
-    $pwHints = ensurePwHints();
-    $pwCrit  = $pwHints.find('.crit');
-
+  if (hasPw){
+    $pwHints=ensurePwHints(); $pwCrit=$pwHints.find('.crit');
     $('#'+PW_ID1).on('focus', function(){
-      let $anchor = $('#container_input_'+this.id); if(!$anchor.length) $anchor=$(this).closest('span');
-      showPwHintsFor($anchor); pwUpdateDots($pw1.val()||''); matchPw();
+      let $a=$('#container_input_'+this.id); if(!$a.length) $a=$(this).closest('span');
+      showPwHintsFor($a); pwUpdateDots($pw1.val()||''); matchPw();
     });
-    $('#'+PW_ID2).on('focus', function(){
-      hidePwHints();
-      matchPw();
-    });
+    $('#'+PW_ID2).on('focus', function(){ hidePwHints(); matchPw(); });
     $('#'+PW_ID1+', #'+PW_ID2).on('blur', hidePwHintsIfNoFocus);
     $(window).on('scroll resize', function(){
-      if (!pwAnchor) return;
-      cancelAnimationFrame(pwRaf);
-      pwRaf = requestAnimationFrame(()=> positionPwHints(pwAnchor));
+      if(!pwAnchor) return; cancelAnimationFrame(pwRaf);
+      pwRaf=requestAnimationFrame(()=>positionPwHints(pwAnchor));
     });
-
-    $pw1.on('input', matchPw);
-    $pw2.on('input', matchPw);
+    $pw1.on('input', matchPw); $pw2.on('input', matchPw);
     $pw1.closest('form').on('submit', matchPw);
   }
 
   function wirePwField(id){
-    const $input = $('#'+id);
-    if (!$input.length) return null;
-    let $wrap = $('#container_input_'+id);
-    if (!$wrap.length) $wrap = $input.closest('span');
-    $wrap.addClass('pw-wrap');
-    $input.attr({ type:'password', autocomplete:'new-password' });
-    let $btn = $wrap.find('.pw-toggle[data-for="'+id+'"]');
-    if (!$btn.length) $btn = $input.closest('td').find('.pw-toggle[data-for="'+id+'"]').first();
-    if (!$btn.length){
-      $btn = $(`
+    const $input=$('#'+id); if(!$input.length) return null;
+    let $wrap=$('#container_input_'+id); if(!$wrap.length) $wrap=$input.closest('span');
+    $wrap.addClass('pw-wrap'); $input.attr({type:'password', autocomplete:'new-password'});
+    let $btn=$wrap.find('.pw-toggle[data-for="'+id+'"]');
+    if(!$btn.length) $btn=$input.closest('td').find('.pw-toggle[data-for="'+id+'"]').first();
+    if(!$btn.length){
+      $btn=$(`
         <button type="button" class="pw-toggle" data-for="${id}"
                 aria-label="Afficher le mot de passe" aria-pressed="false"
                 data-open="img/login/open.svg" data-close="img/login/close.svg">
           <img class="pw-icon" alt="">
-        </button>
-      `);
-    } else {
+        </button>`);
+    }else{
       if(!$btn.attr('data-open'))  $btn.attr('data-open','img/login/open.svg');
       if(!$btn.attr('data-close')) $btn.attr('data-close','img/login/close.svg');
       if(!$btn.find('img.pw-icon').length) $btn.append('<img class="pw-icon" alt="">');
     }
-    const hiddenInit = ($input.attr('type') === 'password');
+    const hiddenInit=($input.attr('type')==='password');
     $btn.find('img.pw-icon').attr('src', hiddenInit ? $btn.data('close') : $btn.data('open'));
     $btn.attr('aria-label', hiddenInit ? 'Afficher le mot de passe' : 'Masquer le mot de passe')
         .attr('aria-pressed', !hiddenInit);
     $btn.appendTo($wrap).off('click').on('click', function(){
-      const wasHidden = ($input.attr('type') === 'password');
-      const newType   = wasHidden ? 'text' : 'password';
-      $input.attr('type', newType);
-      const nowHidden = (newType === 'password');
+      const wasHidden=($input.attr('type')==='password');
+      const newType=wasHidden?'text':'password'; $input.attr('type', newType);
+      const nowHidden=(newType==='password');
       $(this).find('img.pw-icon').attr('src', nowHidden ? $(this).data('close') : $(this).data('open'));
-      $(this)
-        .attr('aria-label', nowHidden ? 'Afficher le mot de passe' : 'Masquer le mot de passe')
-        .attr('aria-pressed', !nowHidden);
+      $(this).attr('aria-label', nowHidden ? 'Afficher le mot de passe' : 'Masquer le mot de passe')
+             .attr('aria-pressed', !nowHidden);
     });
-    const $td = $wrap.closest('td');
-    if (!$td.find('.pw-feedback').length){
-      $('<div class="pw-feedback" aria-live="polite"></div>').appendTo($td);
-    }
+    const $td=$wrap.closest('td');
+    if(!$td.find('.pw-feedback').length){ $('<div class="pw-feedback" aria-live="polite"></div>').appendTo($td); }
     return $input;
   }
-
   function ensurePwHints(){
-    let $box = $('#pw-hints');
-    if (!$box.length){
-      $box = $(`
+    let $b=$('#pw-hints');
+    if(!$b.length){
+      $b=$(`
         <div id="pw-hints" role="status" aria-live="polite">
           <h4>Critères du mot de passe</h4>
           <div class="crit" data-key="len"><span class="dot"></span><span>≥ 12 caractères</span></div>
@@ -1078,248 +951,96 @@ jQuery(function($){
           <div class="crit" data-key="num"><span class="dot"></span><span>Au moins 1 chiffre</span></div>
           <div class="crit" data-key="spec"><span class="dot"></span><span>Au moins 1 caractère spécial</span></div>
           <div class="muted">Le mot de passe doit respecter tous les critères.</div>
-        </div>
-      `);
-      $('body').append($box);
+        </div>`);
+      $('body').append($b);
     }
-    return $box;
+    return $b;
   }
-
-  function positionPwHints($anchor){
-    if (!$anchor?.length) return;
-    const rect = $anchor[0].getBoundingClientRect();
-    const vw = innerWidth, vh = innerHeight, gap = 12;
-    if ($pwHints.css('display') === 'none') $pwHints.css({visibility:'hidden', display:'block'});
-    const boxW = $pwHints.outerWidth(), boxH = $pwHints.outerHeight();
-    $pwHints.css({visibility:''});
-    let left = rect.right + gap;
-    let top  = rect.top + rect.height/2 - boxH/2;
-    top = Math.max(8, Math.min(top, vh - boxH - 8));
-    let flip = false;
-    if (left + boxW + 8 > vw) { left = Math.max(8, rect.left - gap - boxW); flip = true; }
-    $pwHints.toggleClass('flip', flip).css({left, top});
+  function positionPwHints($a){
+    if(!$a?.length) return;
+    const r=$a[0].getBoundingClientRect(), gap=12, vw=innerWidth, vh=innerHeight;
+    if($('#pw-hints').css('display')==='none') $('#pw-hints').css({visibility:'hidden', display:'block'});
+    const w=$('#pw-hints').outerWidth(), h=$('#pw-hints').outerHeight();
+    $('#pw-hints').css({visibility:''});
+    let left=r.right+gap, top=r.top+r.height/2-h/2; top=Math.max(8, Math.min(top, vh-h-8));
+    let flip=false; if(left+w+8>vw){ left=Math.max(8, r.left-gap-w); flip=true; }
+    $('#pw-hints').toggleClass('flip', flip).css({left, top});
   }
-  function showPwHintsFor($a){
-    // Hide username popup if visible
-    $('#uname-hints').stop(true,true).hide();
-    pwAnchor = $a; positionPwHints($a); $pwHints.stop(true,true).fadeIn(90);
-  }
-  function hidePwHints(){ $pwHints.stop(true,true).fadeOut(90); pwAnchor=null; }
-  function hidePwHintsIfNoFocus(){ setTimeout(()=>{ if (!$(document.activeElement).is('#'+PW_ID1)) hidePwHints(); },0); }
-
+  function showPwHintsFor($a){ pwAnchor=$a; positionPwHints($a); $('#pw-hints').stop(true,true).fadeIn(90); }
+  function hidePwHints(){ $('#pw-hints').stop(true,true).fadeOut(90); pwAnchor=null; }
+  function hidePwHintsIfNoFocus(){ setTimeout(()=>{ if(!$(document.activeElement).is('#'+PW_ID1)) hidePwHints(); },0); }
   function pwUpdateDots(v){
-    const p = { len:v.length>=12, up:/[A-Z]/.test(v), low:/[a-z]/.test(v), num:/\d/.test(v), spec:/[^A-Za-z0-9\s]/.test(v) };
+    const p={len:v.length>=12, up:/[A-Z]/.test(v), low:/[a-z]/.test(v), num:/\d/.test(v), spec:/[^A-Za-z0-9\s]/.test(v)};
     $pwCrit.each(function(){ $(this).toggleClass('ok', !!p[$(this).data('key')]); });
     return p.len && p.up && p.low && p.num && p.spec;
   }
-
-  function setPwMatch(ok, msg, forceMsg=false){
-    if ($pw2[0]?.setCustomValidity) $pw2[0].setCustomValidity(ok ? '' : 'Passwords do not match');
+  function setPwMatch(ok,msg,forceMsg=false){
+    if($pw2[0]?.setCustomValidity) $pw2[0].setCustomValidity(ok?'':'Passwords do not match');
     $pw2.toggleClass('pw-error', !ok);
     $pw2.closest('td').find('.pw-feedback').text(forceMsg ? (msg||'') : (ok ? '' : (msg||'Les mots de passe ne correspondent pas.')));
   }
-
   function matchPw(){
-    if (!hasPw) return true;
-    const v1 = ($pw1.val()||'').trim();
-    const v2 = ($pw2.val()||'').trim();
-    const policyOK = pwUpdateDots(v1);
-    if ($pw1[0]?.setCustomValidity) $pw1[0].setCustomValidity((v1===''||policyOK)?'':'Password does not meet requirements');
+    if(!hasPw) return true;
+    const v1=($pw1.val()||'').trim(), v2=($pw2.val()||'').trim();
+    const policyOK=pwUpdateDots(v1);
+    if($pw1[0]?.setCustomValidity) $pw1[0].setCustomValidity((v1===''||policyOK)?'':'Password does not meet requirements');
     $pw1.toggleClass('pw-error', v1!=='' && !policyOK);
-
-    if (v1==='' && v2==='') return setPwMatch(true,'');
-    if (v1==='' && v2!=='') return setPwMatch(false,"Saisissez d'abord le mot de passe.");
-    if (v1!=='' && v2==='') return setPwMatch(false,'Veuillez confirmer le mot de passe.');
-    if (v1 !== v2)          return setPwMatch(false,'Les mots de passe ne correspondent pas.');
-    if (!policyOK)          return setPwMatch(true,'Le mot de passe ne respecte pas les critères.', true);
+    if(v1==='' && v2==='') return setPwMatch(true,'');
+    if(v1==='' && v2!=='') return setPwMatch(false,"Saisissez d'abord le mot de passe.");
+    if(v1!=='' && v2==='') return setPwMatch(false,'Veuillez confirmer le mot de passe.');
+    if(v1 !== v2)          return setPwMatch(false,'Les mots de passe ne correspondent pas.');
+    if(!policyOK)          return setPwMatch(true,'Le mot de passe ne respecte pas les critères.', true);
     return setPwMatch(true,'');
   }
 
-  /* ===========================================================
-     EMAIL + PHONE VALIDATIONS (inline)
-     =========================================================== */
+  // Email-as-username: inline message only (no popup)
+  const $uname=$('#newUsername');
+  if($uname.length){
+    const $wrap=$uname.closest('span').addClass('email-wrap');
+    const $cell=$wrap.closest('td');
+    if(!$cell.find('.email-feedback').length){ $('<div class="email-feedback" aria-live="polite"></div>').appendTo($cell); }
+    const $fb=$cell.find('.email-feedback');
+    const EMAIL_RE=/^[A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}$/;
 
-  const $email = $('#newEmail');
-  if ($email.length) {
-    const $emailWrap = $email.closest('span').addClass('email-wrap');
-    if (!$emailWrap.closest('td').find('.email-feedback').length) {
-      $('<div class="email-feedback" aria-live="polite"></div>').appendTo($emailWrap.closest('td'));
-    }
-    const $emailFeedback = $emailWrap.closest('td').find('.email-feedback');
-    const EMAIL_RE = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    function showErr(msg){ $uname.addClass('email-error').attr('aria-invalid','true'); if($uname[0]?.setCustomValidity) $uname[0].setCustomValidity('Invalid email'); $fb.text(msg||'Adresse email invalide.'); }
+    function clearErr(){ $uname.removeClass('email-error').attr('aria-invalid','false'); if($uname[0]?.setCustomValidity) $uname[0].setCustomValidity(''); $fb.text(''); }
 
-    function checkEmail() {
-      const v = ($email.val()||'').trim();
-      const ok = (v==='') || EMAIL_RE.test(v.toLowerCase());
-      $email.toggleClass('email-error', !ok);
-      $emailFeedback.text(ok ? '' : 'Adresse email invalide.');
+    $uname.attr({ inputmode:'email', autocapitalize:'none', spellcheck:'false', title:'Enter a valid email address' });
+
+    $uname.on('input', function(){ clearErr(); }); // clear on input
+    $uname.on('blur', function(){
+      const v=($uname.val()||'').trim();
+      if(v===''){ showErr(); return; } 
+      if(!EMAIL_RE.test(v)){ showErr(); return; }
+      clearErr();
+    });
+
+    window.__checkEmailUsername=function(){
+      const v=($uname.val()||'').trim();
+      const ok=(v!=='' && EMAIL_RE.test(v));
+      if(!ok) showErr(); else clearErr();
       return ok;
-    }
-    $email.on('input blur', checkEmail);
+    };
   }
 
-  const $phone = $('#newPhone');
-  if ($phone.length) {
-    const $phoneWrap = $phone.closest('span').addClass('phone-wrap');
-    if (!$phoneWrap.closest('td').find('.phone-feedback').length) {
-      $('<div class="phone-feedback" aria-live="polite"></div>').appendTo($phoneWrap.closest('td'));
-    }
-    const $phoneFeedback = $phoneWrap.closest('td').find('.phone-feedback');
-    const PHONE_RE = /^\+?[0-9\s\-\(\)]{6,}$/;
-
-    function checkPhone() {
-      const v = ($phone.val()||'').trim();
-      const ok = (v==='') || PHONE_RE.test(v);
-      $phone.toggleClass('phone-error', !ok);
-      $phoneFeedback.text(ok ? '' : 'Numéro de téléphone invalide.');
-      return ok;
-    }
+  // Phone validation (inline)
+  const $phone=$('#newPhone');
+  if($phone.length){
+    const $wrap=$phone.closest('span').addClass('phone-wrap');
+    if(!$wrap.closest('td').find('.phone-feedback').length){ $('<div class="phone-feedback" aria-live="polite"></div>').appendTo($wrap.closest('td')); }
+    const $fb=$wrap.closest('td').find('.phone-feedback');
+    const PHONE_RE=/^\+?[0-9\s\-\(\)]{6,}$/;
+    function checkPhone(){ const v=($phone.val()||'').trim(); const ok=(v==='' || PHONE_RE.test(v)); $phone.toggleClass('phone-error', !ok); $fb.text(ok?'':'Numéro de téléphone invalide.'); return ok; }
     $phone.on('input blur', checkPhone);
   }
 
-  /* ===========================================================
-     USERNAME POPUP (only when illegal char is typed) + validation
-     =========================================================== */
-
-  const $uname = $('#newUsername');
-  let $uHints = null, uAnchor = null, uRaf = null;
-
-  if ($uname.length) {
-    // HTML constraints
-    $uname.attr({
-      pattern: '[A-Za-z0-9._-]{3,32}',
-      maxlength: 32,
-      autocomplete: 'off',
-      autocapitalize: 'none',
-      spellcheck: 'false',
-      title: 'Only letters/digits, dot (.), dash (-), underscore (_); 3–32 chars; no spaces or accents.'
-    });
-
-    // Inline feedback container (kept minimal)
-    const $uWrap = $uname.closest('span').addClass('username-wrap');
-    if (!$uWrap.closest('td').find('.username-feedback').length) {
-      $('<div class="username-feedback" aria-live="polite"></div>').appendTo($uWrap.closest('td'));
-    }
-    const $uFb = $uWrap.closest('td').find('.username-feedback');
-
-    // Popup
-    $uHints = ensureUnameHints();
-
-    const ILLEGAL_RE = /[^A-Za-z0-9._-]/;
-
-    function ensureUnameHints(){
-      let $box = $('#uname-hints');
-      if (!$box.length){
-        $box = $(`
-          <div id="uname-hints" role="status" aria-live="polite">
-            <h4>Username rules</h4>
-            <p>Allowed: letters, digits, dot (.), dash (-), underscore (_).</p>
-            <p>No spaces or accents. Length: 3–32 characters.</p>
-          </div>
-        `);
-        $('body').append($box);
-      }
-      return $box;
-    }
-
-    function positionUnameHints($anchor){
-      if (!$anchor?.length) return;
-      const rect = $anchor[0].getBoundingClientRect();
-      const vw = innerWidth, vh = innerHeight, gap = 12;
-      if ($uHints.css('display') === 'none') $uHints.css({visibility:'hidden', display:'block'});
-      const w = $uHints.outerWidth(), h = $uHints.outerHeight();
-      $uHints.css({visibility:''});
-      let left = rect.right + gap;
-      let top  = rect.top + rect.height/2 - h/2;
-      top = Math.max(8, Math.min(top, vh - h - 8));
-      let flip = false;
-      if (left + w + 8 > vw) { left = Math.max(8, rect.left - gap - w); flip = true; }
-      $uHints.toggleClass('flip', flip).css({left, top});
-    }
-    function showUnameHints(){
-      // Hide password popup if visible
-      $('#pw-hints').stop(true,true).hide();
-      let $anchor = $('#container_input_newUsername');
-      if (!$anchor.length) $anchor = $uname.closest('span');
-      uAnchor = $anchor;
-      positionUnameHints(uAnchor);
-      $uHints.stop(true,true).fadeIn(90);
-    }
-    function hideUnameHints(){ $uHints.stop(true,true).fadeOut(90); }
-
-    function showUErr(msg){
-      $uname.addClass('username-error').attr('aria-invalid', 'true');
-      if ($uname[0]?.setCustomValidity) $uname[0].setCustomValidity(msg||'Invalid username');
-      $uFb.text(msg||'');
-    }
-    function clearUErr(){
-      $uname.removeClass('username-error').attr('aria-invalid', 'false');
-      if ($uname[0]?.setCustomValidity) $uname[0].setCustomValidity('');
-      $uFb.text('');
-    }
-
-    // During typing: only react to illegal chars (popup)
-    $uname.on('input', function(){
-      const v = ($uname.val()||'');
-      if (ILLEGAL_RE.test(v)) { showUnameHints(); }
-      else { hideUnameHints(); }
-      clearUErr();
-    });
-
-    // On focus: n’affiche pas par défaut; seulement si déjà illégal
-    $uname.on('focus', function(){
-      if (ILLEGAL_RE.test($uname.val()||'')) showUnameHints();
-    });
-
-    $uname.on('blur', function(){
-        hideUnameHints();
-        const v = ($uname.val()||'').trim();
-        if (v==='') { clearUErr(); return; }
-        if (ILLEGAL_RE.test(v)) { showUErr(); return; }   // <- pas de texte, juste le contour
-        if (v.length < 3 || v.length > 32) { showUErr(); return; }
-        clearUErr();
-    });
-
-    $(window).on('scroll resize', function(){
-      if (!$uHints.is(':visible') || !uAnchor) return;
-      cancelAnimationFrame(uRaf);
-      uRaf = requestAnimationFrame(()=> positionUnameHints(uAnchor));
-    });
-
-    // Expose a strict check for submit
-    window.__checkUsername = function(){
-      const v = ($uname.val()||'').trim();
-      if (v==='') { clearUErr(); return true; } // autoriser vide -> côté serveur décidera
-      if (ILLEGAL_RE.test(v)) { showUErr('Only letters/digits, dot (.), dash (-), underscore (_); no spaces or accents.'); return false; }
-      if (v.length < 3 || v.length > 32) { showUErr('3–32 characters required.'); return false; }
-      clearUErr();
-      return true;
-    }
-  }
-
-  /* ===========================================================
-     GLOBAL SUBMIT GUARD
-     =========================================================== */
+  // Global submit guard 
   $('form').on('submit', function(e){
-    let ok = true;
-
-    if ($email.length && typeof checkEmail === 'function') {
-      ok = checkEmail() && ok;
-    }
-    if ($phone.length && typeof checkPhone === 'function') {
-      ok = checkPhone() && ok;
-    }
-    if ($uname.length && typeof window.__checkUsername === 'function') {
-      ok = window.__checkUsername() && ok;
-    }
-    if (hasPw) {
-      ok = (matchPw() !== false) && ok;
-    }
-
-    if (!ok) {
-      e.preventDefault();
-      ($('.username-error, .email-error, .phone-error, .pw-error').get(0) || this).focus();
-    }
+    let ok=true;
+    if(typeof window.__checkEmailUsername==='function') ok=window.__checkEmailUsername() && ok;
+    if($phone.length) ok=(typeof checkPhone==='function' ? checkPhone() : true) && ok;
+    if(hasPw) ok=(matchPw() !== false) && ok;
+    if(!ok){ e.preventDefault(); ($('.email-error, .phone-error, .pw-error').get(0) || this).focus(); }
   });
 });
 </script>
