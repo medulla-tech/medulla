@@ -3,3 +3,4 @@
 # SPDX-FileCopyrightText: 2007-2009 Mandriva, http://www.mandriva.com/
 # SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-3.0-or-later
+from .utils import convert
