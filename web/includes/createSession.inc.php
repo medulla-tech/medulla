@@ -52,6 +52,7 @@ $_SESSION['glpi_user'] = [
     'active'         => isset($user['is_activeuser']) ? $user['is_activeuser'] === '1' : null,
     'profile_id'     => isset($user['profiles_id']) ? (int)$user['profiles_id'] : null,
     'profile_name'   => $user['nameprofil'] ?? null,
+    'entities_id'    => isset($user['entities_id']) ? (int)$user['entities_id'] : null,
     'entity'         => $user['nameentity'] ?? null,
     'entity_path'    => $user['nameentitycomplete'] ?? null,
     'entity_parent'  => ($user['parent_id_entity'] ?? '') !== '' ? (int)$user['parent_id_entity'] : null,
