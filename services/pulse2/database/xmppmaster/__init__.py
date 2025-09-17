@@ -15954,13 +15954,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             return results
 
         except Exception as e:
-<<<<<<< HEAD
-            logger.error(
-                f"Erreur lors de la récupération des statistiques de mise à jour des OS : {str(e)}"
-            )
-=======
             logger.error(f"Erreur lors de la récupération des statistiques de mise à jour des OS : {str(e)}")
->>>>>>> localdev
             logger.error(f"Traceback : {traceback.format_exc()}")
             return {}
 
