@@ -979,6 +979,7 @@ This is the underlying service used by the MMC web interface.
 %doc %{_mandir}/man1/mmc-stats.1.*
 %dir %{python3_sitelib}/mmc
 %{python3_sitelib}/mmc/agent.py*
+%{python3_sitelib}/mmc/utils.py*
 %{_docdir}/pulse2/contrib/monit/mmc-agent
 %{_datadir}/mmc/providers.php
 
