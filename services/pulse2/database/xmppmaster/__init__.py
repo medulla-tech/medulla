@@ -16035,8 +16035,8 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
 
         except Exception as e:
             logger.error(
-                (f"Erreur lors de la récupération des statistiques de mise à jour des OS : "
-                f"{str(e)}")
+                f"Erreur lors de la récupération des statistiques de mise à jour des OS : {
+                    str(e)}"
             )
             logger.error(f"Traceback : {traceback.format_exc()}")
             return {}
@@ -16826,7 +16826,10 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             return results
 
         except Exception as e:
-            logger.error(f"Erreur lors de la récupération des statistiques de mise à jour des OS : {str(e)}")
+            logger.error(
+                f"Erreur lors de la récupération des statistiques de mise à jour des OS : {
+                    str(e)}"
+            )
             logger.error(f"Traceback : {traceback.format_exc()}")
             return {}
 
@@ -16938,7 +16941,10 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             return results
 
         except Exception as e:
-            logger.error(f"Erreur lors de la récupération des statistiques de mise à jour des OS : {str(e)}")
+            logger.error(
+                f"Erreur lors de la récupération des statistiques de mise à jour des OS : {
+                    str(e)}"
+            )
             logger.error(f"Traceback : {traceback.format_exc()}")
             return {}
 
@@ -17043,7 +17049,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
 
         except Exception as e:
             logger.error(
-                (f"Erreur lors de la récupération des statistiques de mise à jour des OS : {str(e)}"))
+                f"Erreur lors de la récupération des statistiques de mise à jour des OS : {str(e)}")
             logger.error(f"Traceback : {traceback.format_exc()}")
             return {}
 
@@ -17697,7 +17703,8 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             .filter(
                 and_(
                     Deploy.sessionid.contains("update"),
-                    func.json_extract(Deploy.result, "$.infoslist[0].packageUuid") == f'{updateid}',
+                    func.json_extract(Deploy.result, "$.infoslist[0].packageUuid") == f'{
+                        updateid}',
                 )
             )
             .order_by(desc(Deploy.start))
