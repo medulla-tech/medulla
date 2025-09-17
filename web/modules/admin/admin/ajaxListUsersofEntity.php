@@ -77,7 +77,6 @@ $fmtDate = function($v) {
 $userNames                      = [];
 $userFirstnames                 = [];
 $userLastName                   = [];
-$userEmails                     = [];
 $userPhones                     = [];
 $userStatus                     = [];
 $userLastLogin                  = [];
@@ -95,7 +94,6 @@ foreach ($userDetails as $user) {
     $userNames[]        = $user['name'];
     $userFirstnames[]   = $user['firstname'];
     $userLastName[]     = $user['realname'];
-    $userEmails[]       = $user['email'];
     $userPhones[]       = $user['phone'];
     $userStatus[]       = $isActive ? _("Enabled") : _("Disabled");
     $userLastLogin[]    = $fmtDate($user['last_login'] ?? null);
@@ -188,7 +186,6 @@ if (count($userNames) === 0) {
 
     $n->addExtraInfo($userFirstnames,   _T("First name", "admin"));
     $n->addExtraInfo($userLastName,     _T("Last Name", "admin"));
-    $n->addExtraInfo($userEmails,       _T("eMail", "admin"));
     $n->addExtraInfo($userPhones,       _T("Phone", "admin"));
     $n->addExtraInfo($userStatus,       _T("Status", "admin"));
     $n->addExtraInfo($userLastLogin,    _T("Last connection", "admin"));

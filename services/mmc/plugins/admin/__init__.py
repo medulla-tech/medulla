@@ -514,7 +514,6 @@ class GLPIClient:
                     profiles_id,
                     realname=None,
                     firstname=None,
-                    email=None,
                     phone=None,
                     is_recursive=False,
                     is_default=True,
@@ -543,9 +542,6 @@ class GLPIClient:
                 is_recursive=1 if is_recursive else 0,
                 is_default=1 if is_default else 0
             )
-
-            if email:
-                self.set_user_email(user_id, email, exclusive=False)
 
             return user_id
 
@@ -1383,14 +1379,14 @@ def get_profile_name(profile_id, tokenuser=None):
 
 # CREATE
 def create_user(name_user, pwd, entities_id=None, profiles_id=None,
-                realname=None, firstname=None, email=None, phone=None,
+                realname=None, firstname=None, phone=None,
                 is_recursive=False, is_default=True,
                 tokenuser=None, return_token=True):
     try:
         client = get_glpi_client(tokenuser=tokenuser)
         user_id = client.create_user(
             name_user=name_user, pwd=pwd, entities_id=entities_id, profiles_id=profiles_id,
-            realname=realname, firstname=firstname, email=email, phone=phone,
+            realname=realname, firstname=firstname, phone=phone,
             is_recursive=is_recursive, is_default=is_default
         )
 
