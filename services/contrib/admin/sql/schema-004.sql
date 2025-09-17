@@ -46,10 +46,10 @@ CREATE TABLE IF NOT EXISTS `admin`.`saas_organisations` (
 
 -- Création de la table `saas_application` pour stocker les configurations essentielles de l'application SaaS
 -- Cette table contient des paramètres critiques nécessaires au fonctionnement de l'application.
- CREATE TABLE `saas_application` (
+ CREATE TABLE IF NOT EXISTS `saas_application` (
   `setting_name` varchar(45) NOT NULL,
-  `setting_value` varchar(45) DEFAULT NULL,
-  `setting_description` varchar(45) DEFAULT NULL,
+  `setting_value` varchar(400) DEFAULT NULL,
+  `setting_description` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`setting_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -62,6 +62,24 @@ CREATE TABLE IF NOT EXISTS `admin`.`saas_organisations` (
 -- | glpi_url_base_api    | http://jfk.medulla.lan/glpi/apirest.php  | url REST API           |
 -- | API_REST             | GLPI                                     | quel api est utiliser  |
 -- +----------------------+------------------------------------------+------------------------+
+
+-- Création de la table `providers`
+CREATE TABLE IF NOT EXISTS `providers` (
+  `id`               INT AUTO_INCREMENT PRIMARY KEY,
+  `client_name`      VARCHAR(64)  NOT NULL,
+  `name`             VARCHAR(64)  NOT NULL,            -- ex: Keycloak
+  `logo_url`         VARCHAR(400) NULL,
+  `url_provider`     VARCHAR(400) NOT NULL,
+  `client_secret`    VARBINARY(1024) NOT NULL,
+  `lmc_acl`          VARCHAR(400) NULL,
+  `ldap_uid`         VARCHAR(64)  NULL,
+  `ldap_givenName`   VARCHAR(64)  NULL,
+  `ldap_sn`          VARCHAR(64)  NULL,
+  `ldap_mail`        VARCHAR(64)  NULL,
+  `profiles_order`   VARCHAR(400) NULL,
+  `acls_json`        LONGTEXT     NULL,
+  UNIQUE KEY `uk_client_provider` (`client_name`, `name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `version`
