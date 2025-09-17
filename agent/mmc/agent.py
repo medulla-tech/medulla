@@ -2387,6 +2387,62 @@ class ExcludeEndsWithFilter(logging.Filter):
         """
         return not record.getMessage().endswith(self.criterion)
 
+def sanitize_for_xmlrpc(value):
+    """
+    Transforme récursivement les types non supportés par XML-RPC en types sérialisables.
+
+    Types supportés nativement par XML-RPC:
+        - int, float
+        - bool
+        - str
+        - list, dict
+        - None (si allow_none=True)
+
+    Transformation appliquée:
+        - None -> '' (pour compatibilité maximum avec tous les clients)
+        - Decimal -> float
+        - dict/list -> récursivement
+        - Pour tout autre type exotique: ajouter un `elif` spécifique ici
+          ou convertir en str pour la sérialisation.
+
+    Exemple pour gérer un datetime:
+        from datetime import datetime
+        if isinstance(value, datetime):
+            return xmlrpc.client.DateTime(value)
+
+    Exemple pour gérer un UUID:
+        import uuid
+        if isinstance(value, uuid.UUID):
+            return str(value)
+
+    Parameters
+    ----------
+    value : any
+        Valeur Python à transformer
+
+    Returns
+    -------
+    value : any
+        Valeur transformée, uniquement avec des types XML-RPC valides
+    """
+    if value is None:
+        return ""
+    elif isinstance(value, Decimal):
+        return float(value)
+    elif isinstance(value, dict):
+        return {k: sanitize_for_xmlrpc(v) for k, v in value.items()}
+    elif isinstance(value, list):
+        return [sanitize_for_xmlrpc(v) for v in value]
+    # Exemple pour ajouter d'autres types:
+    # elif isinstance(value, datetime):
+    #     return xmlrpc.client.DateTime(value)
+    # elif isinstance(value, uuid.UUID):
+    #     return str(value)
+    else:
+        # Par défaut: laisser tel quel (doit être int, float, str, bool)
+        return value
+
+
 class MmcServer(XMLRPC, object):
     """
     Serveur MMC implémenté comme un serveur XML-RPC avec Twisted.
