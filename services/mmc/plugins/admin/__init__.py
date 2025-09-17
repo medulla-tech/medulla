@@ -790,25 +790,19 @@ class GLPIClient:
         is_recursive: int = 0,
         is_dynamic: int = 0,
         is_default: int = 1,
-        tokenuser: str = None
+        tokenuser: str = None,
+        selfservice_profile_id: int | None = None
     ) -> dict:
         """
         Switch a user's GLPI profile on a given entity.
 
         Rules:
-        - One profile per entity: remove other profile links on the same entity.
-        - If is_default=1: set (entity, profile) as the user's global default,
-        set User.entities_id/profiles_id, drop root (entity 0) link if present,
-        and remove the same profile on other entities.
-        - If is_default=0: ensure the link exists but do not change the global default.
-        If you try to unset the current global default and no alternative exists,
-        return code=409 and keep the current default.
-        - Update is_recursive when it changes. is_dynamic is only applied on creation
-        (API limitation).
-
-        Returns:
-        dict: {"success": bool, "code": int, "user_id": int,
-                "entities_id": int, "profiles_id": int}
+        - 1 profile per entity (no duplicate on the same entity).
+        - We authorize the same profile (ex: Technician) on several different entities.
+        - if is_default = 1: we define the global defect and delete the Root link (entity 0) if present.
+        - We do not delete the same profiles on other entities.
+        - We only purge dynamic self-service links (is_dynamic = 1).
+        If we ask for self-service as a target, we leave it
         """
         try:
             headers = self._headers()
@@ -816,7 +810,44 @@ class GLPIClient:
             want_rec = 1 if int(is_recursive) == 1 else 0
             want_def = 1 if int(is_default)  == 1 else 0
 
-            # 1) Read current global defect
+            def _list_links():
+                r = requests.get(f"{self.URL_BASE}/User/{uid}/Profile_User", headers=headers, timeout=10)
+                r.raise_for_status()
+                data = r.json() or []
+                return [data] if isinstance(data, dict) else data
+
+            def _is_self_service_pid(prof_id: int) -> bool:
+                if selfservice_profile_id is not None and int(prof_id) == int(selfservice_profile_id):
+                    return True
+                ss_attr = getattr(self, "SELF_SERVICE_PROFILE_ID", None)
+                if ss_attr is not None and int(prof_id) == int(ss_attr):
+                    return True
+                try:
+                    r = requests.get(f"{self.URL_BASE}/Profile/{int(prof_id)}", headers=headers, timeout=10)
+                    r.raise_for_status()
+                    name = str((r.json() or {}).get("name", "")).strip().lower()
+                    return name in {"self-service", "self service", "libre-service", "libre service"}
+                except Exception as e:
+                    logger.warning(f"Failed to resolve profile name for id={prof_id}: {e}")
+                    return False
+
+            def _purge_dynamic_self_service_links(target_link_id: int | None):
+                # Only deletes self-service dynamic links
+                rowsx = _list_links()
+                for lk in rowsx:
+                    lid = int(lk.get("id", 0) or 0)
+                    if not lid or (target_link_id and lid == target_link_id):
+                        continue
+                    if int(lk.get("is_dynamic", 0) or 0) != 1:
+                        continue
+                    lk_pid = int(lk.get("profiles_id", 0) or 0)
+                    if _is_self_service_pid(lk_pid):
+                        try:
+                            requests.delete(f"{self.URL_BASE}/Profile_User/{lid}", headers=headers, timeout=10).raise_for_status()
+                        except requests.HTTPError as e:
+                            if getattr(e.response, "status_code", None) != 404:
+                                logger.warning(f"Failed to delete dynamic Self-Service link {lid}: {e}")
+
             r_user = requests.get(f"{self.URL_BASE}/User/{uid}", headers=headers, timeout=10)
             r_user.raise_for_status()
             u = r_user.json() or {}
@@ -824,13 +855,8 @@ class GLPIClient:
             cur_eid = int(u.get("entities_id") or 0)
             target_is_current_default = (cur_pid == pid and cur_eid == eid)
 
-            #2)ListerLiens
-            resp = requests.get(f"{self.URL_BASE}/User/{uid}/Profile_User", headers=headers, timeout=10)
-            resp.raise_for_status()
-            rows = resp.json() or []
-            if isinstance(rows, dict): rows = [rows]
+            rows = _list_links()
 
-            # 3) Find/Create Target link
             target_link = None
             for link in rows:
                 if int(link.get("profiles_id", 0)) == pid and int(link.get("entities_id", 0)) == eid:
@@ -843,14 +869,10 @@ class GLPIClient:
                     profile_id=pid,
                     entities_id=eid,
                     is_recursive=want_rec,
-                    is_dynamic=int(is_dynamic) if is_dynamic is not None else 0,
+                    is_dynamic=0,
                     is_default=want_def
                 )
-
-                resp = requests.get(f"{self.URL_BASE}/User/{uid}/Profile_User", headers=headers, timeout=10)
-                resp.raise_for_status()
-                rows = resp.json() or []
-                if isinstance(rows, dict): rows = [rows]
+                rows = _list_links()
                 for link in rows:
                     if int(link.get("profiles_id", 0)) == pid and int(link.get("entities_id", 0)) == eid:
                         target_link = link
@@ -862,7 +884,7 @@ class GLPIClient:
             target_link_id = int(target_link.get("id", 0) or 0)
             cur_rec = int(target_link.get("is_recursive", 0) or 0)
 
-            # 4) Update is_recursive if necessary
+            # Maj is_recursive if necessary
             if target_link_id and cur_rec != want_rec:
                 requests.put(
                     f"{self.URL_BASE}/Profile_User/{target_link_id}",
@@ -871,10 +893,10 @@ class GLPIClient:
                     timeout=10
                 ).raise_for_status()
 
-            # Business rule 1 Profile by entity: purge Other links of the same entity
+            # 1 Profile per entity: purge of other links on the same entity
             for link in rows:
                 lid = int(link.get("id", 0) or 0)
-                if not lid or lid == target_link_id: 
+                if not lid or lid == target_link_id:
                     continue
                 if int(link.get("entities_id", 0)) == eid:
                     try:
@@ -892,41 +914,36 @@ class GLPIClient:
                     timeout=10
                 ).raise_for_status()
 
-                # Purge root links only if the defect is not the root
-                if eid != 0:
-                    resp2 = requests.get(f"{self.URL_BASE}/User/{uid}/Profile_User", headers=headers, timeout=10)
-                    resp2.raise_for_status()
-                    rows2 = resp2.json() or []
-                    if isinstance(rows2, dict): rows2 = [rows2]
+                rows2 = _list_links()
+                for link in rows2:
+                    lid = int(link.get("id", 0) or 0)
+                    if not lid:
+                        continue
+                    le = int(link.get("entities_id", 0) or 0)
 
-                    for link in rows2:
-                        lid = int(link.get("id", 0) or 0)
-                        if not lid:
-                            continue
-                        if int(link.get("entities_id", 0)) == 0:
-                            try:
-                                requests.delete(
-                                    f"{self.URL_BASE}/Profile_User/{lid}",
-                                    headers=headers,
-                                    timeout=10
-                                ).raise_for_status()
-                            except requests.HTTPError as e:
-                                if getattr(e.response, "status_code", None) != 404:
-                                    logger.warning(f"Failed to delete root link {lid}: {e}")
+                    if eid != 0 and le == 0:
+                        try:
+                            requests.delete(f"{self.URL_BASE}/Profile_User/{lid}", headers=headers, timeout=10).raise_for_status()
+                        except requests.HTTPError as e:
+                            if getattr(e.response, "status_code", None) != 404:
+                                logger.warning(f"Failed to delete root link {lid}: {e}")
 
+                _purge_dynamic_self_service_links(target_link_id)
                 return {"success": True, "code": 0, "user_id": uid, "entities_id": eid, "profiles_id": pid}
 
-            # is_default == 0 → Do not touch the overall defect unless the target was fault
+            # 7) Pas défaut global: on ne change pas le défaut
             if not target_is_current_default:
+                _purge_dynamic_self_service_links(target_link_id)
                 return {"success": True, "code": 0, "user_id": uid, "entities_id": cur_eid, "profiles_id": cur_pid}
 
-            # Fallback Global fault if we uncheck the current defect
+            # 8) Fallback si on décoche le défaut courant (inchangé)
             candidates = []
             for link in rows:
                 lp = int(link.get("profiles_id", 0)); le = int(link.get("entities_id", 0)); lid = int(link.get("id", 0) or 0)
                 if lid and not (lp == pid and le == eid):
                     candidates.append((lp, le))
             if not candidates:
+                _purge_dynamic_self_service_links(target_link_id)
                 return {"success": False, "code": 409, "error": "Impossible de retirer le profil par défaut: aucun autre lien disponible."}
 
             fb_pid, fb_eid = candidates[0]
@@ -937,6 +954,7 @@ class GLPIClient:
                 timeout=10
             ).raise_for_status()
 
+            _purge_dynamic_self_service_links(target_link_id)
             return {"success": True, "code": 0, "user_id": uid, "entities_id": fb_eid, "profiles_id": fb_pid}
 
         except requests.HTTPError as e:
