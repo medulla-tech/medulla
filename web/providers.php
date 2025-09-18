@@ -13,191 +13,96 @@ require_once("includes/modules.inc.php");
 
 session_name("PULSESESSION");
 session_start();
+$client = !empty($_SESSION['o']) ? preg_replace('/[^a-zA-Z0-9._-]/','',$_SESSION['o']) : 'MMC';
 
 use Jumbojett\OpenIDConnectClient;
 
-// Path configuration to Ini files
-$configPaths = [
-    'LOCAL_INI_PATH'             => __sysconfdir__ . "/mmc/plugins/base.ini.local",
-    'INI_PATH'                   => __sysconfdir__ . "/mmc/plugins/base.ini",
-    'PROVIDERS_INI_PATH'         => __sysconfdir__ . "/mmc/authproviders.ini",
-    'PROVIDERS_LOCAL_INI_PATH'   => __sysconfdir__ . "/mmc/authproviders.ini.local",
-];
-
-function parseIniSection($filePath, $section)
-{
-    if (!is_readable($filePath)) {
-        return [];
+function generate_password(int $length = 32): string {
+    if ($length < 4) {
+        throw new InvalidArgumentException('Length must be >= 4');
     }
 
-    $sectionData  = [];
-    $insideSection = false;
-    $lines         = file($filePath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    $upper  = 'ABCDEFGHJKLMNPQRSTUVWXYZ';   // no I/O
+    $lower  = 'abcdefghijkmnopqrstuvwxyz';  // no l
+    $digit  = '23456789';                   // no 0/1
+    $symbol = '!@#%+=-_.?,';                // symbols “safe”
 
-    foreach ($lines as $line) {
-        if (preg_match('/^\s*[;#]/', $line)) {
-            continue;
-        }
-        if (preg_match('/^\s*\[(.+?)\]\s*$/', $line, $matches)) {
-            if ($matches[1] === $section) {
-                $insideSection = true;
-            } else {
-                if ($insideSection) {
-                    break;
-                }
-            }
-            continue;
-        }
+    // 1 char from each required set
+    $pwd = [
+        $upper[random_int(0, strlen($upper) - 1)],
+        $lower[random_int(0, strlen($lower) - 1)],
+        $digit[random_int(0, strlen($digit) - 1)],
+        $symbol[random_int(0, strlen($symbol) - 1)],
+    ];
 
-        if ($insideSection && preg_match('/^\s*(\S+)\s*=\s*(.*?)\s*$/', $line, $matches)) {
-            $sectionData[$matches[1]] = $matches[2];
-        }
+    $all = $upper . $lower . $digit . $symbol;
+    for ($i = 4; $i < $length; $i++) {
+        $pwd[] = $all[random_int(0, strlen($all) - 1)];
     }
 
-    return $sectionData;
+    for ($i = count($pwd) - 1; $i > 0; $i--) {
+        $j = random_int(0, $i);
+        if ($i !== $j) { [$pwd[$i], $pwd[$j]] = [$pwd[$j], $pwd[$i]]; }
+    }
+
+    return implode('', $pwd);
 }
 
-function fetchBaseIni($section, $key, $configPaths)
-{
-    $localData = parseIniSection($configPaths['LOCAL_INI_PATH'], $section);
-    if (array_key_exists($key, $localData)) {
-        return $localData[$key];
-    }
-
-    $iniData = parseIniSection($configPaths['INI_PATH'], $section);
-    return $iniData[$key] ?? null;
-}
-
-function fetchProvidersConfig($configPaths)
-{
-    $config = @parse_ini_file($configPaths['PROVIDERS_INI_PATH'], true);
-    if ($config === false || empty($config)) {
-        error_log(sprintf('Error loading providers config file %s: File is invalid or empty', $configPaths['PROVIDERS_INI_PATH']));
-        $config = [];
-    }
-
-    $localConfig = @parse_ini_file($configPaths['PROVIDERS_LOCAL_INI_PATH'], true);
-    if ($localConfig === false || empty($localConfig)) {
-        error_log("Notice : Le fichier " . $configPaths['PROVIDERS_LOCAL_INI_PATH'] . " est vide ou invalide.");
-        $localConfig = [];
-    }
-
-    // Merge configurations with priority to the .local file
-    return array_replace_recursive($config, $localConfig);
-}
-
-// Recover the LDAP mapping (keys starting with ldap_)
-function getLdapMapping($providerConfig)
-{
-    $ldapMapping = [];
-    foreach ($providerConfig as $key => $value) {
-        if (str_starts_with($key, 'ldap_')) {
-            $ldapMapping[str_replace('ldap_', '', $key)] = $value;
-        }
-    }
-    return $ldapMapping;
-}
-
-function generateStr($length = 50)
-{
-    $base = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    return substr(str_shuffle(str_repeat($base, ceil($length / strlen($base)))), 1, $length);
-}
-
-function handleSession()
-{
+function handleSession() {
     if (isset($_POST['lang'])) {
-        $lang = htmlspecialchars($_POST['lang'], ENT_QUOTES, 'UTF-8');
-        $_SESSION['lang'] = $_POST['lang'];
+        $_SESSION['lang'] = htmlspecialchars($_POST['lang'], ENT_QUOTES, 'UTF-8');
     }
 }
 
-function updateUserMail($uid, $mail)
-{
+function updateUserMail($uid, $mail) {
     if (!$uid) {
-        new NotifyWidgetFailure(
-            "An error occurred while updating the user's email.",
-            "Email Update Error"
-        );
+        new NotifyWidgetFailure("An error occurred while updating the user's email.", "Email Update Error");
         header("Location: /mmc/index.php");
         exit;
     }
     return changeUserAttributes($uid, "mail", $mail);
 }
 
-// manages the supplier selection
-function handleProviderSelection($providersConfig)
-{
-    if (isset($_POST['selectedProvider']) && !empty($_POST['selectedProvider'])) {
-        $provider = filter_var($_POST['selectedProvider'], FILTER_SANITIZE_STRING);
+// Sanitize and store selected provider in session
+function handleProviderSelection(): string {
+    if (!empty($_POST['selectedProvider'])) {
+        $provider = preg_replace('/[^a-zA-Z0-9._-]/', '', (string)$_POST['selectedProvider']);
         $_SESSION['selectedProvider'] = $provider;
-    } elseif (isset($_GET['code'])) {
+        return $provider;
+    }
+    if (isset($_GET['code'])) {
         if (empty($_SESSION['selectedProvider'])) {
             new NotifyWidgetFailure("No provider selected. Please select a provider.");
-            header("Location: /mmc/index.php");
-            exit;
+            header("Location: /mmc/index.php"); exit;
         }
-        $provider = $_SESSION['selectedProvider'];
-    } else {
-        new NotifyWidgetFailure("No provider selected. Please select a provider.");
-        header("Location: /mmc/index.php");
-        exit;
+        return $_SESSION['selectedProvider'];
     }
-
-    return $provider;
+    new NotifyWidgetFailure("No provider selected. Please select a provider.");
+    header("Location: /mmc/index.php"); exit;
 }
 
-function getAclString($userInfo, $providersConfig, $providerKey)
-{
-    $userRoles = $userInfo->realm_access->roles ?? [];
+// Authent OIDC
+function handleAuthentication($providerKey) {
+    global $client;
 
-    $profileOrder = explode(' ', $providersConfig[$providerKey]['profiles_order'] ?? '');
-
-    $aclMappings = [];
-    foreach ($providersConfig[$providerKey] as $key => $value) {
-        if (str_starts_with($key, 'acl_')) {
-            $role = substr($key, 4);
-            $aclMappings[$role] = $value;
-        }
+    $prov = get_provider_details($client, $providerKey);
+    if (!$prov) {
+        new NotifyWidgetFailure("Configuration manquante pour '$providerKey' ($client).");
+        header("Location: /mmc/index.php"); exit;
     }
 
-    foreach ($profileOrder as $role) {
-        if (in_array($role, $userRoles)) {
-            return $aclMappings[$role] ?? '';
-        }
-    }
-
-    return $providersConfig[$providerKey]['lmcACL'] ?? '';
-}
-
-// manages the Openid Connect authentication process (Auth + Return phase)
-function handleAuthentication($providerKey, $providersConfig)
-{
-    if (!array_key_exists($providerKey, $providersConfig)) {
-        new NotifyWidgetFailure("The selected supplier is not supported or its configuration is missing. Please check the configuration settings for this supplier.");
-        header("Location: /mmc/index.php");
-        exit;
-    }
-
-    $clientUrl    = $providersConfig[$providerKey]['urlProvider'];
-    $clientId     = $providersConfig[$providerKey]['clientId'];
-    $clientSecret = $providersConfig[$providerKey]['clientSecret'];
+    $clientUrl    = $prov['urlProvider'];
+    $clientId     = $prov['clientId'];
+    $clientSecret = $prov['clientSecret'];
 
     if (empty($clientUrl)) {
-        new NotifyWidgetFailure("Supplier $providerKey selected is not properly configured. Please check the supplier URL in the configuration settings.");
-        header("Location: /mmc/index.php");
-        exit;
+        new NotifyWidgetFailure("URL du fournisseur absente.");
+        header("Location: /mmc/index.php"); exit;
     }
 
-    // derived class to expose the RequesttoKens () method and manipulate
-    // The various tokens necessary according to the callbacks of the OIDC supplier
-    class MyOpenIDConnectClient extends OpenIDConnectClient
-    {
-        public function getTokens($code, $redirectUri)
-        {
-            $headers = [
-                'Content-Type' => 'application/x-www-form-urlencoded'
-            ];
+    class MyOpenIDConnectClient extends OpenIDConnectClient {
+        public function getTokens($code, $redirectUri) {
+            $headers = ['Content-Type' => 'application/x-www-form-urlencoded'];
             return $this->requestTokens($code, $headers);
         }
     }
@@ -206,221 +111,171 @@ function handleAuthentication($providerKey, $providersConfig)
         $oidc = new MyOpenIDConnectClient($clientUrl, $clientId, $clientSecret);
         global $conf;
         $hostname = $conf["server_01"]["description"];
-        $redirectUri = 'https://' . $hostname . '/mmc/providers.php';
+        $redirectUri = 'http://' . $hostname . '/mmc/providers.php';
         $oidc->setRedirectURL($redirectUri);
         $oidc->addScope(['email']);
 
-        // We redirect the user to the authentication page
         if (!isset($_GET['code'])) {
-            // Forcing re-authentication otherwise connects with the last user
-            // $oidc->addAuthParam(['prompt' => 'login']);
+            // $oidc->addAuthParam(['prompt' => 'login']); // optionnel
             $oidc->authenticate();
         } else {
             $code = $_GET['code'];
-            if (preg_match('/^[a-zA-Z0-9_.-]+$/', $code)) {
-                try {
-                    $tokens = $oidc->getTokens($code, $redirectUri);
-
-                } catch (Exception $e) {
-                    error_log("Erreur OAuth : " . $e->getMessage());
-                    die("Une erreur est survenue lors de l'authentification.");
-                }
-            } else {
+            if (!preg_match('/^[a-zA-Z0-9_.-]+$/', $code)) {
                 die("Code OAuth non valide.");
             }
 
-            // Definition of access token, USERINFO recovery
+            try {
+                $tokens = $oidc->getTokens($code, $redirectUri);
+            } catch (Exception $e) {
+                error_log("Erreur OAuth : " . $e->getMessage());
+                die("Une erreur est survenue lors de l'authentification.");
+            }
+
+            // USERINFO
             $oidc->setAccessToken($tokens->access_token);
             $userInfo = $oidc->requestUserInfo();
 
-            // Creation of local MMC session
-            $error = "";
-            $login = "";
-
+            // Création session locale MMC
+            $error = ""; $login = "";
             $ip         = preg_replace('@\.@', '', $_SERVER["REMOTE_ADDR"]);
             $sessionid  = md5(time() . $ip . mt_rand());
             session_id($sessionid);
             session_name("PULSESESSION");
             session_start();
 
-            $_SESSION["ip_addr"]                  = $_SERVER["REMOTE_ADDR"];
-            $_SESSION["XMLRPC_agent"]             = parse_url($conf["server_01"]["url"]);
-            $_SESSION["agent"]                    = "server_01";
+            $_SESSION["ip_addr"]                   = $_SERVER["REMOTE_ADDR"];
+            $_SESSION["XMLRPC_agent"]              = parse_url($conf["server_01"]["url"]);
+            $_SESSION["agent"]                     = "server_01";
             $_SESSION["XMLRPC_server_description"] = $conf["server_01"]["description"];
-            $_SESSION['lang']                     = htmlspecialchars($_SESSION['lang'] ?? 'en', ENT_QUOTES, 'UTF-8');
+            $_SESSION['lang']                      = $_SESSION['lang'] ?? 'en';
 
-            $auth  = fetchBaseIni('authentication_baseldap', 'authonly', $GLOBALS['configPaths']);
+            $auth  = base_get('authentication_baseldap', 'authonly', '');
+            $pass  = base_get('ldap', 'password', '');
+
             $login = explode(' ', $auth)[0];
-            $pass  = fetchBaseIni('ldap', 'password', $GLOBALS['configPaths']);
-            $_SESSION["pass"]  = $pass;
+            $_SESSION["pass"] = $pass;
             include("includes/createSession.inc.php");
-            unset($_SESSION["pass"]);
-            $pass = null;
+            unset($_SESSION["pass"]); $pass = null;
 
-            // Recovers the list of current users
+            // Users list for checking existing user
             $res = get_users_detailed($error, '', 0, 20);
 
-            // Mapping treatment LDAP => OIDC
-            $ldapMapping   = getLdapMapping($providersConfig[$providerKey]);
+            // Mapping LDAP <= OIDC (since BDD)
+            $ldapMapping    = get_ldap_mapping($prov);
             $userMappedData = [];
             foreach ($ldapMapping as $ldapField => $oidcField) {
-                if (isset($userInfo->$oidcField)) {
-                    $userMappedData[$ldapField] = htmlspecialchars($userInfo->$oidcField, ENT_QUOTES, 'UTF-8');
-                } else {
-                    $userMappedData[$ldapField] = null;
-                }
+                $userMappedData[$ldapField] = isset($userInfo->$oidcField)
+                    ? htmlspecialchars($userInfo->$oidcField, ENT_QUOTES, 'UTF-8')
+                    : null;
             }
 
-            $newUser       = $userMappedData['uid'] ?? $userInfo->preferred_username;
-            $newPassUser   = generateStr(50); // Mot de passe aléatoire
-            $userExists    = false;
+            $newUser     = $userMappedData['uid'] ?? $userInfo->preferred_username;
+            $newPassUser = generate_password(50);
+            $userExists  = false;
 
-            // travels from existing users
             foreach ($res[1] as $user) {
-                if ($user['uid']->scalar === $newUser) {
-                    $userExists = true;
-                    break;
-                }
+                if ($user['uid']->scalar === $newUser) { $userExists = true; break; }
             }
+
+            $organisation = 'Ma petite Entreprise';
 
             if (!$userExists) {
                 $add = add_user(
-                    $newUser,                                               // uid
-                    prepare_string($newPassUser),                           // password
-                    $userMappedData['givenName'] ?? $userInfo->given_name,  // firstN
-                    $userMappedData['sn'] ?? $userInfo->family_name,        // lastN
-                    null,                                                   // homeDir
-                    true,                                                   // createHomeDir
-                    false,                                                  // ownHomeDir
-                    null                                                    // primaryGroup
+                    $newUser,
+                    prepare_string($newPassUser),
+                    $userMappedData['givenName'] ?? $userInfo->given_name,
+                    $userMappedData['sn']        ?? $userInfo->family_name,
+                    null, false, false, null,
+                    $organisation
                 );
 
                 $mail = updateUserMail($newUser, $userMappedData['mail'] ?? $userInfo->email);
 
                 if ($add['code'] == 0) {
-                    $aclString = getAclString($userInfo, $providersConfig, $providerKey);
+                    $aclString = get_acl_string($userInfo, $prov);
                     $setlmcACL = setAcl($newUser, $aclString);
 
-                    // Session opening under the new user
-                    $newPassUser = generateStr(50);
-                    callPluginFunction("changeUserPasswd", [
-                        [$newUser, prepare_string($newPassUser)]
-                    ]);
+                    $newPassUser = generate_password(50);
+                    callPluginFunction("changeUserPasswd", [[ $newUser, prepare_string($newPassUser) ]]);
 
                     if (auth_user($newUser, $newPassUser, true)) {
-                        $login = $newUser;
-                        $pass  = $newPassUser;
+                        $login = $newUser; $pass = $newPassUser;
                         include("includes/createSession.inc.php");
-
                         $_SESSION['selectedProvider'] = $providerKey;
                         $_SESSION['id_token']         = $tokens->id_token;
-                        header("Location: main.php");
-                        exit;
+                        header("Location: main.php"); exit;
                     } else {
-                        new NotifyWidgetFailure(
-                            "Authentication failed for the newly created user $newUser.",
-                            "Authentication Error"
-                        );
-                        header("Location: /mmc/index.php");
-                        exit;
+                        new NotifyWidgetFailure("Authentication failed for the newly created user $newUser.","Authentication Error");
+                        header("Location: /mmc/index.php"); exit;
                     }
                 } else {
-                    new NotifyWidgetFailure("Impossible to set up acls for the user $newUser", "Erreur acl");
-                    header("Location: /mmc/index.php");
-                    exit;
+                    new NotifyWidgetFailure("Impossible to set up acls for the user $newUser","Erreur acl");
+                    header("Location: /mmc/index.php"); exit;
                 }
             } else {
-                $newPassUser = generateStr(50);
-                callPluginFunction("changeUserPasswd", [
-                    [$newUser, prepare_string($newPassUser)]
-                ]);
-                $aclString = getAclString($userInfo, $providersConfig, $providerKey);
+                $newPassUser = generate_password(50);
+                callPluginFunction("changeUserPasswd", [[ $newUser, prepare_string($newPassUser) ]]);
+                $aclString = get_acl_string($userInfo, $prov);
                 $setlmcACL = setAcl($newUser, $aclString);
 
                 if (auth_user($newUser, $newPassUser, true)) {
-                    $login = $newUser;
-                    $pass  = $newPassUser;
+                    $login = $newUser; $pass = $newPassUser;
                     include("includes/createSession.inc.php");
-
                     $_SESSION['selectedProvider'] = $providerKey;
-                    $_SESSION['id_token']        = $tokens->id_token;
-                    header("Location: main.php");
-                    exit;
+                    $_SESSION['id_token']         = $tokens->id_token;
+                    header("Location: main.php"); exit;
                 } else {
                     new NotifyWidgetFailure(
                         "Your account doesn't have access rights to Medulla. Contact the administrator of your entity to provide this access.",
                         "Erreur d'authentification"
                     );
-                    header("Location: /mmc/index.php");
-                    exit;
+                    header("Location: /mmc/index.php"); exit;
                 }
             }
         }
     } catch (Jumbojett\OpenIDConnectClientException $e) {
         error_log("OpenIDConnectClientException: " . $e->getMessage());
         new NotifyWidgetFailure("An error occurred while processing the authentication request. Please check the configuration settings for the provider.");
-        header("Location: /mmc/index.php");
-        exit;
+        header("Location: /mmc/index.php"); exit;
     } catch (Exception $e) {
         error_log("Exception: " . $e->getMessage());
         new NotifyWidgetFailure("An unexpected error occurred. Please try again later.");
-        header("Location: /mmc/index.php");
-        exit;
+        header("Location: /mmc/index.php"); exit;
     }
 }
 
-// manages the disconnection of the OIDC supplier (signout) and destroys the local session
-function handleSignout()
-{
+// Handle signout if requested and destroy session
+function handleSignout() {
     if (isset($_GET['signout']) && strtolower($_GET['signout']) === '1') {
         try {
-            if (!isset($_SESSION['id_token'])) {
-                new NotifyWidgetFailure("No ID token available for signout.");
-                header("Location: /mmc/index.php");
-                exit;
+            if (empty($_SESSION['id_token']) || empty($_SESSION['selectedProvider'])) {
+                new NotifyWidgetFailure("No provider/token for signout.");
+                header("Location: /mmc/index.php"); exit;
+            }
+            $client      = !empty($_SESSION['o']) ? preg_replace('/[^a-zA-Z0-9._-]/','',$_SESSION['o']) : 'MMC';
+            $providerKey = $_SESSION['selectedProvider'];
+            $prov        = get_provider_details($client, $providerKey);
+            if (!$prov) {
+                new NotifyWidgetFailure("Invalid provider for signout.");
+                header("Location: /mmc/index.php"); exit;
             }
 
-            if (!isset($_SESSION['selectedProvider'])) {
-                new NotifyWidgetFailure("No provider selected. Please select a provider.");
-                header("Location: /mmc/index.php");
-                exit;
-            }
+            $oidc = new OpenIDConnectClient($prov['urlProvider'], $prov['clientId'], $prov['clientSecret']);
 
-            $providersConfig = fetchProvidersConfig($GLOBALS['configPaths']);
-            $providerKey     = $_SESSION['selectedProvider'];
-
-            if (!array_key_exists($providerKey, $providersConfig)) {
-                new NotifyWidgetFailure("Invalid provider selected for signout.");
-                header("Location: /mmc/index.php");
-                exit;
-            }
-
-            $clientUrl    = $providersConfig[$providerKey]['urlProvider'];
-            $clientId     = $providersConfig[$providerKey]['clientId'];
-            $clientSecret = $providersConfig[$providerKey]['clientSecret'];
-
-            $oidc = new OpenIDConnectClient($clientUrl, $clientId, $clientSecret);
-
-            // Disconnects the user from the OIDC provider
-            $idToken     = $_SESSION['id_token'];
+            $idToken = $_SESSION['id_token'];
             global $conf;
             $hostname = $conf["server_01"]["description"];
-            $redirectUri = 'https://' . $hostname . '/mmc/index.php?signout=1';
+            $redirectUri = 'http://' . $hostname . '/mmc/index.php?signout=1';
             $oidc->signOut($idToken, $redirectUri);
-
         } catch (Exception $e) {
             error_log("SignOut Exception: " . $e->getMessage());
             new NotifyWidgetFailure("An error occurred during signout.");
-            header("Location: /mmc/index.php");
-            exit;
+            header("Location: /mmc/index.php"); exit;
         }
     }
 }
 
 handleSignout();
 handleSession();
-$providersConfig = fetchProvidersConfig($configPaths);
-$providerKey     = handleProviderSelection($providersConfig);
-handleAuthentication($providerKey, $providersConfig);
-
-?>
+$providerKey = handleProviderSelection();
+handleAuthentication($providerKey);

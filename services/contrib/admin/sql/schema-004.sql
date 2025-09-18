@@ -69,6 +69,7 @@ CREATE TABLE IF NOT EXISTS `providers` (
   `client_name`      VARCHAR(64)  NOT NULL,
   `name`             VARCHAR(64)  NOT NULL,            -- ex: Keycloak
   `logo_url`         VARCHAR(400) NULL,
+  `client_id`        VARCHAR(400) NOT NULL,
   `url_provider`     VARCHAR(400) NOT NULL,
   `client_secret`    VARBINARY(1024) NOT NULL,
   `lmc_acl`          VARCHAR(400) NULL,
