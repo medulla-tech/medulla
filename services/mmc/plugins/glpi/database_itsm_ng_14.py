@@ -8,15 +8,17 @@
 This module declare all the necessary stuff to connect to a itsm-ng database in it's
 version 1.4
 """
+
 import os
 import logging
 import re
 import datetime
-import calendar, hashlib
+import calendar
+import hashlib
 import time
 from configobj import ConfigObj
 from xmlrpc.client import ProtocolError
-
+from decimal import Decimal
 from sqlalchemy import (
     and_,
     create_engine,
@@ -33,13 +35,17 @@ from sqlalchemy import (
     desc,
     func,
     distinct,
+    text,
+    inspect,
 )
-from sqlalchemy.orm import create_session, mapper, relationship
+
+from sqlalchemy.orm import create_session, mapper, relationship, class_mapper
 
 try:
     from sqlalchemy.sql.expression import ColumnOperators
 except ImportError:
     from sqlalchemy.sql.operators import ColumnOperators
+
 from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 from sqlalchemy.exc import OperationalError
 from sqlalchemy.ext.automap import automap_base
@@ -7166,6 +7172,85 @@ and glpi_computers.id in %s group by glpi_computers.id;""" % (
 
         return result
 
+
+    @DatabaseHelper._sessionm
+    def get_user_default_details(self, session, user_name: str, active: bool | None = True):
+        """
+        Récupère les informations détaillées d'un utilisateur GLPI,
+        incluant la liste concaténée des entités accessibles,
+        ainsi que le token applicatif "MMC".
+
+        Paramètres :
+            session (Session) : Objet de session SQLAlchemy.
+            user_name (str)   : Le login de l'utilisateur GLPI.
+            active (bool|None): Filtre sur la colonne gu.is_active.
+                                - True (par défaut) => user actif = 1
+                                - False             => user non actif = 0
+                                - None              => actif ou pas actif
+
+        Retourne :
+            dict : Dictionnaire unique avec les alias définis dans le SQL.
+        """
+
+        sql = """
+              SELECT gu.id as user_id,
+                gu.entities_id as entity_id,
+                gu.locations_id as location_id,
+                gu.profiles_id as profile_id,
+                gu.name as user_name,
+                gu.realname as real_name,
+                gu.firstname as first_name,
+                gu.api_token,
+                gu.is_active,
+                gi.completename as complet_entity_name_,
+                gi.name as entity_name_,
+                gp.name AS profile_name,
+                (SELECT GROUP_CONCAT(gi2.id ORDER BY gi2.id SEPARATOR ',')
+                    FROM glpi.glpi_entities gi2
+                    WHERE gi2.completename LIKE CONCAT(gi.completename, '%')
+                ) AS liste_entities_user,
+                COALESCE(
+                    (SELECT ga.app_token
+                        FROM glpi.glpi_apiclients ga
+                        WHERE ga.app_token IS NOT NULL
+                        AND ga.name = 'MMC'
+                        LIMIT 1),
+                    ''
+                ) AS app_token
+            FROM glpi.glpi_users gu
+            LEFT JOIN glpi.glpi_entities gi ON gi.id = gu.entities_id
+            LEFT JOIN glpi.glpi_profiles gp ON gp.id = gu.profiles_id
+            WHERE gu.name = :user_name
+        """
+
+
+        # Ajout dynamique du filtre actif/inactif
+        if active is True:
+            sql += " AND gu.is_active = 1"
+        elif active is False:
+            sql += " AND gu.is_active = 0"
+
+        sql += " LIMIT 1"
+
+        sql = text(sql)
+
+        # logger.debug("Executing SQL query: %s", sql)
+        logger.debug("With parameters: user_name=%s, active=%s", user_name, active)
+
+        row = session.execute(sql, {"user_name": user_name}).fetchone()
+
+        if not row:
+            return {}
+
+        # Transforme la ligne en dict directement avec les clés alias
+        result = dict(row._mapping)
+        # Conversion de "1,2,3" → [1, 2, 3]
+        liste_raw = result.get("liste_entities_user")
+        if liste_raw:
+            result["liste_entities_user"] = [int(x) for x in liste_raw.split(",") if x.isdigit()]
+        else:
+            result["liste_entities_user"] = []
+        return result
 
 # Class for SQLalchemy mapping
 class Machine(object):
