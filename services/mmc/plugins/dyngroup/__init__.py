@@ -16,7 +16,8 @@ from mmc.support.mmctools import (
     EnhancedSecurityContext
 )
 from mmc.plugins.base import (with_xmpp_context,
-                              with_optional_xmpp_context,)
+                              with_optional_xmpp_context,
+                              Contexte_XmlRpc_surcharge_info_Glpi)
 
 import logging
 import re

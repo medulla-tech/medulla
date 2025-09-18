@@ -18,7 +18,8 @@ from mmc.support.mmctools import (
     update_filter
 )
 from mmc.plugins.base import (with_xmpp_context,
-                              with_optional_xmpp_context,)
+                              with_optional_xmpp_context,
+                              Contexte_XmlRpc_surcharge_info_Glpi)
 from mmc.plugins.base.computers import ComputerManager
 from mmc.plugins.base.provisioning import ProvisioningManager
 from mmc.plugins.base.output import XLSGenerator
