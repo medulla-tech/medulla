@@ -111,7 +111,7 @@ function handleAuthentication($providerKey) {
         $oidc = new MyOpenIDConnectClient($clientUrl, $clientId, $clientSecret);
         global $conf;
         $hostname = $conf["server_01"]["description"];
-        $redirectUri = 'http://' . $hostname . '/mmc/providers.php';
+        $redirectUri = 'https://' . $hostname . '/mmc/providers.php';
         $oidc->setRedirectURL($redirectUri);
         $oidc->addScope(['email']);
 
@@ -265,7 +265,7 @@ function handleSignout() {
             $idToken = $_SESSION['id_token'];
             global $conf;
             $hostname = $conf["server_01"]["description"];
-            $redirectUri = 'http://' . $hostname . '/mmc/index.php?signout=1';
+            $redirectUri = 'https://' . $hostname . '/mmc/index.php?signout=1';
             $oidc->signOut($idToken, $redirectUri);
         } catch (Exception $e) {
             error_log("SignOut Exception: " . $e->getMessage());
