@@ -21,8 +21,7 @@ from mmc.support.mmctools import (RpcProxyI,
                                   EnhancedSecurityContext,
                                   update_filter)
 from mmc.plugins.glpi import (with_xmpp_context,
-                              with_optional_xmpp_context,
-                              Contexte_XmlRpc_Glpi)
+                              with_optional_xmpp_context)
 
 # Database
 from pulse2.database.xmppmaster import XmppMasterDatabase
