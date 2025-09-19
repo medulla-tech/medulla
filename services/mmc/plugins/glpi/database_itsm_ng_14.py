@@ -75,7 +75,7 @@ from mmc.plugins.glpi.database_utils import (
 from mmc.plugins.glpi.database_utils import DbTOA  # pyflakes.ignore
 from mmc.plugins.dyngroup.config import DGConfig
 from distutils.version import LooseVersion, StrictVersion
-#from mmc.plugins.xmppmaster.config import xmppMasterConfig
+from mmc.plugins.xmppmaster.config import xmppMasterConfig
 
 from pulse2.database.xmppmaster import XmppMasterDatabase
 
@@ -167,7 +167,7 @@ class Itsm_ng14(DyngroupDatabaseHelper):
             self.db.execute('SELECT "\xe9"')
             setattr(Itsm_ng14, "decode", decode_utf8)
             setattr(Itsm_ng14, "encode", encode_utf8)
-        except:
+        except Exception:
             self.logger.warn("Your database is not in utf8, will fallback in latin1")
             setattr(Itsm_ng14, "decode", decode_latin1)
             setattr(Itsm_ng14, "encode", encode_latin1)
@@ -407,7 +407,7 @@ class Itsm_ng14(DyngroupDatabaseHelper):
             )
             mapper(FusionAntivirus, self.fusionantivirus)
             self.logger.debug("... Success !!")
-        except:
+        except Exception:
             self.logger.warn("Load of fusion antivirus table failed")
             self.logger.warn(
                 "This means you can not know antivirus statuses of your machines."
@@ -883,10 +883,6 @@ class Itsm_ng14(DyngroupDatabaseHelper):
 
     @DatabaseHelper._sessionm
     def get_machines_list1(self, session, start, end, ctx):
-        # ----------------------------
-        # IMPORT LOCAL POUR EVITER LES CIRCULAR IMPORT
-        # ----------------------------
-        from mmc.plugins.xmppmaster.config import xmppMasterConfig
         debugfunction = False
         if "filter" in ctx and "@@@DEBUG@@@" in ctx["filter"]:
             debugfunction = True
@@ -1582,7 +1578,7 @@ class Itsm_ng14(DyngroupDatabaseHelper):
                             clauses.append(
                                 self.machine.c.id == fromUUID(filt["hostname"])
                             )
-                        except:
+                        except Exception:
                             pass
                     if "cn" in self.config.summary:
                         clauses.append(
@@ -2095,7 +2091,7 @@ class Itsm_ng14(DyngroupDatabaseHelper):
             for i in ["location", "ctxlocation"]:
                 try:
                     filt.pop(i)
-                except:
+                except Exception:
                     pass
             ret = self.getRestrictedComputersList(
                 ctx, 0, 10, filt, displayList=False, empty_macs=empty_macs
@@ -3983,7 +3979,7 @@ class Itsm_ng14(DyngroupDatabaseHelper):
     def getSearchOptionValue(self, log):
         try:
             return self.searchOptions["en_US"][str(log.id_search_option)]
-        except:
+        except Exception:
             if log.id_search_option != 0:
                 logging.getLogger().warn(
                     "I can't get a search option for id %s" % log.id_search_option
@@ -4103,7 +4099,7 @@ class Itsm_ng14(DyngroupDatabaseHelper):
         field = self.getLinkedActions()
         try:
             return field[itemtype]
-        except:
+        except Exception:
             return itemtype
 
     def getUnknownPXEOSId(self, unknownOsString):
@@ -5149,7 +5145,7 @@ class Itsm_ng14(DyngroupDatabaseHelper):
                                         resultrecord[keynameresult] = str(
                                             getattr(ret, keynameresult)
                                         )
-                                except:
+                                except Exception:
                                     self.logger.warning(
                                         "type class %s no used for key %s"
                                         % (typestr, keynameresult)
@@ -6386,7 +6382,7 @@ class Itsm_ng14(DyngroupDatabaseHelper):
             )
             if registry_id:
                 return registry_id
-        except:
+        except Exception as e:
             return False
 
     @DatabaseHelper._sessionm
@@ -6420,7 +6416,7 @@ class Itsm_ng14(DyngroupDatabaseHelper):
                 .first()
                 .id
             )
-        except:
+        except Exception as e:
             return False
         registry.plugin_fusioninventory_collects_id = collects_id
         registry.hive = hive
@@ -7517,14 +7513,6 @@ class Printers(DbTOA):
 
 
 class Peripherals(DbTOA):
-    pass
-
-
-class Computersviewitemsprinter(DbTOA):
-    pass
-
-
-class Computersviewitemsperipheral(DbTOA):
     pass
 
 
