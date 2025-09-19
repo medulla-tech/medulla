@@ -232,6 +232,23 @@ $page = new Page("downloadAgent", _T('Download Agent', 'admin'));
 $page->setFile("modules/admin/admin/downloadAgent.php");
 $submod->addPage($page);
 
+$page = new Page("manageproviders", _T('Manage Providers', 'admin'));
+$page->setFile("modules/admin/admin/manageproviders.php");
+$submod->addPage($page);
+
+$page = new Page("ajaxManageProviders", _T("Manage Providers", "admin"));
+$page->setFile("modules/admin/admin/ajaxManageProviders.php");
+$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
+$submod->addPage($page);
+
+$page = new Page("editProvider", _T('Edit Provider', 'admin'));
+$page->setFile("modules/admin/admin/editProvider.php");
+$submod->addPage($page);
+
+$page = new Page("deleteProvider", _T('Delete Provider', 'admin'));
+$page->setFile("modules/admin/admin/deleteProvider.php");
+$submod->addPage($page);
+
 $mod->addSubmod($submod);
 
 $MMCApp = &MMCApp::getInstance();

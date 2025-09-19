@@ -60,6 +60,17 @@ $_SESSION['glpi_user'] = [
     'supervisor_id'  => isset($user['users_id_supervisor']) ? (int)$user['users_id_supervisor'] : null,
 ];
 
+$entitiesId = $_SESSION['glpi_user']['entities_id'] ?? null;
+$entityName = trim((string)($_SESSION['glpi_user']['entity'] ?? ''));
+
+if ($entitiesId === 0) {
+    $_SESSION['o'] = 'MMC';
+} elseif ($entityName !== '') {
+    $_SESSION['o'] = $entityName;
+} elseif (empty($_SESSION['o'])) {
+    $_SESSION['o'] = 'MMC';
+}
+
 /* Set session expiration time */
 $_SESSION["sessiontimeout"] = intval($conf["global"]["sessiontimeout"]);
 $_SESSION["expire"] = time() + $_SESSION["sessiontimeout"];

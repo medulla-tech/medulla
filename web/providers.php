@@ -13,7 +13,7 @@ require_once("includes/modules.inc.php");
 
 session_name("PULSESESSION");
 session_start();
-$client = !empty($_SESSION['o']) ? preg_replace('/[^a-zA-Z0-9._-]/','',$_SESSION['o']) : 'MMC';
+$client = !empty($_SESSION['o']) ? $_SESSION['o'] : 'MMC';
 
 use Jumbojett\OpenIDConnectClient;
 
@@ -177,7 +177,7 @@ function handleAuthentication($providerKey) {
                 if ($user['uid']->scalar === $newUser) { $userExists = true; break; }
             }
 
-            $organisation = 'Ma petite Entreprise';
+            $organisation = $client ? $client : 'MMC';
 
             if (!$userExists) {
                 $add = add_user(

@@ -31,8 +31,21 @@ $sidemenu->addSideMenuItem(new SideMenuItem(_T("Rules", "admin"), "admin", "admi
 
 //--------------------- Entity Manager ----------------
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Entities Management", "admin"), "admin", "admin", "entitiesManagement"));
-if($_GET['mode'] == 'edit') {
-    $sidemenu->addSideMenuItem(new SideMenuItem(_T("Edit User", "admin"), "admin", "admin", "editUser"));
-} else {
-    $sidemenu->addSideMenuItem(new SideMenuItem(_T("Add User", "admin"), "admin", "admin", "editUser"));
-}
+
+$action = strtolower($_GET['action'] ?? '');
+$mode   = (strtolower($_GET['mode'] ?? '') === 'edit') ? 'edit' : 'add';
+
+$userLabel = ($action === 'edituser')
+? (($mode === 'edit') ? _T("Edit User", "admin") : _T("Add User", "admin"))
+: _T("Add User", "admin");
+
+$providerLabel = ($action === 'editprovider')
+? (($mode === 'edit') ? _T("Edit Provider", "admin") : _T("Add Provider", "admin"))
+: _T("Add Provider", "admin");
+
+// Side menu
+$sidemenu->addSideMenuItem(new SideMenuItem($userLabel,     "admin", "admin", "editUser"));
+
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("Manage Providers", "admin"), "admin", "admin", "manageproviders"));
+
+$sidemenu->addSideMenuItem(new SideMenuItem($providerLabel, "admin", "admin", "editProvider"));

@@ -50,7 +50,12 @@ $error = "";
 $login = "";
 
 if (array_key_exists('o', $_GET)) {
-    $o = preg_replace('/[^a-zA-Z0-9._-]/', '', (string)$_GET['o']);
+    $o = (string)$_GET['o'];
+    $o = preg_replace('/[^a-zA-Z0-9._\-]/', '', $o);
+    // replace the dashes with spaces
+    $o = str_replace('-', ' ', $o);
+    $o = preg_replace('/\s+/', ' ', trim($o));
+
     if ($o === '') { unset($_SESSION['o']); } else { $_SESSION['o'] = $o; }
 } else {
     unset($_SESSION['o']);
@@ -90,6 +95,8 @@ if (isset($_POST["bConnect"])) {
     } else {
         $error = sprintf(_("The server %s does not exist"), $_POST["server"]);
     }
+
+    $_SESSION['o'] = $client;
 
     if (empty($error) && auth_user($login, $pass)) {
         include("includes/createSession.inc.php");
