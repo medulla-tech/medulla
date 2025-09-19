@@ -6,7 +6,7 @@
 import traceback
 
 # SqlAlchemy
-from sqlalchemy import create_engine, MetaData
+from sqlalchemy import create_engine, MetaData, select
 from sqlalchemy.exc import DBAPIError
 from sqlalchemy.ext.automap import automap_base
 
@@ -15,7 +15,10 @@ from sqlalchemy.ext.automap import automap_base
 from mmc.database.database_helper import DatabaseHelper
 
 # Imported last
+from typing import List, Dict, Any
 import logging
+import json
+import re
 
 logger = logging.getLogger()
 
@@ -82,7 +85,7 @@ class AdminDatabase(DatabaseHelper):
 
         # Lists to exclude or include specific tables for mapping
         exclude_table = []
-        include_table = []
+        include_table = ['providers']
 
         # Dynamically add attributes to the object for each mapped class
         for table_name, mapped_class in Base.classes.items():
@@ -241,9 +244,240 @@ class AdminDatabase(DatabaseHelper):
         )
         session.commit()
         return rows
-    # =====================================================================
-    # admin FUNCTIONS
-    # =====================================================================
-    # =====================================================================
-    # API REST GLPI
-    # =====================================================================
+
+    # ---- PROVIDER MANAGEMENT ----
+    # READ
+    @DatabaseHelper._sessionm
+    def get_providers_all(self, session) -> List[Dict[str, Any]]:
+        stmt = select(
+            self.Providers.id,
+            self.Providers.client_name,
+            self.Providers.name,
+            self.Providers.logo_url,
+            self.Providers.url_provider,
+            self.Providers.client_id,
+            self.Providers.client_secret,
+            self.Providers.lmc_acl,
+            self.Providers.ldap_uid,
+            self.Providers.ldap_givenName,
+            self.Providers.ldap_sn,
+            self.Providers.ldap_mail,
+            self.Providers.profiles_order,
+            self.Providers.acls_json,
+        ).order_by(self.Providers.client_name, self.Providers.name)
+
+        rows = session.execute(stmt).mappings().all()
+        out: List[Dict[str, Any]] = []
+        for r in rows:
+            out.append({
+                "id":             int(r["id"] or 0),
+                "client_name":    r["client_name"]    or "",
+                "name":           r["name"]           or "",
+                "logo_url":       r["logo_url"]       or "",
+                "url_provider":   r["url_provider"]   or "",
+                "client_id":      r["client_id"]      or "",
+                "client_secret":  r["client_secret"]  or "",
+                "lmc_acl":        r["lmc_acl"]        or "",
+                "ldap_uid":       r["ldap_uid"]       or "",
+                "ldap_givenName": r["ldap_givenName"] or "",
+                "ldap_sn":        r["ldap_sn"]        or "",
+                "ldap_mail":      r["ldap_mail"]      or "",
+                "profiles_order": r["profiles_order"] or "",
+                "acls_json":      r["acls_json"]      or "",
+            })
+        return out
+
+    @DatabaseHelper._sessionm
+    def get_providers_by_client(self, session, client_name: str) -> List[Dict[str, Any]]:
+        client = (client_name or "MMC").strip()
+        stmt = select(
+            self.Providers.id,
+            self.Providers.client_name,
+            self.Providers.name,
+            self.Providers.logo_url,
+            self.Providers.url_provider,
+            self.Providers.client_id,
+            self.Providers.client_secret,
+            self.Providers.lmc_acl,
+            self.Providers.ldap_uid,
+            self.Providers.ldap_givenName,
+            self.Providers.ldap_sn,
+            self.Providers.ldap_mail,
+            self.Providers.profiles_order,
+            self.Providers.acls_json,
+        ).where(self.Providers.client_name == client
+        ).order_by(self.Providers.name)
+
+        rows = session.execute(stmt).mappings().all()
+        out: List[Dict[str, Any]] = []
+        for r in rows:
+            out.append({
+                "id":             int(r["id"] or 0),
+                "client_name":    r["client_name"]    or "",
+                "name":           r["name"]           or "",
+                "logo_url":       r["logo_url"]       or "",
+                "url_provider":   r["url_provider"]   or "",
+                "client_id":      r["client_id"]      or "",
+                "client_secret":  r["client_secret"]  or "",
+                "lmc_acl":        r["lmc_acl"]        or "",
+                "ldap_uid":       r["ldap_uid"]       or "",
+                "ldap_givenName": r["ldap_givenName"] or "",
+                "ldap_sn":        r["ldap_sn"]        or "",
+                "ldap_mail":      r["ldap_mail"]      or "",
+                "profiles_order": r["profiles_order"] or "",
+                "acls_json":      r["acls_json"]      or "",
+            })
+        return out
+
+    # CREATE
+    @DatabaseHelper._sessionm
+    def create_provider(self, session, payload: dict) -> dict:
+        norm = lambda s: (s or "").strip()
+
+        client_name   = norm(payload.get("client_name"))
+        name          = norm(payload.get("name"))
+        url_provider  = norm(payload.get("url_provider"))
+        client_id     = norm(payload.get("client_id"))
+        client_secret = payload.get("client_secret")
+
+        if not all([client_name, name, url_provider, client_id, client_secret]):
+            return {"ok": False, "error": "Missing required fields (client_name, name, url_provider, client_id, client_secret)."}
+
+        exists = session.execute(
+            select(self.Providers.id).where(
+                (self.Providers.client_name == client_name) &
+                (self.Providers.name == name)
+            ).limit(1)
+        ).first()
+        if exists:
+            return {"ok": False, "error": f"Provider '{name}' already exists for client '{client_name}'."}
+
+        # acls_json souple
+        acls_json = payload.get("acls_json")
+        if isinstance(acls_json, dict):
+            acls_json = json.dumps(acls_json, ensure_ascii=False)
+        elif isinstance(acls_json, str) and acls_json.strip():
+            try:
+                json.loads(acls_json)
+            except Exception as e:
+                return {"ok": False, "error": f"Invalid acls_json: {e}"}
+        else:
+            acls_json = None
+
+        # We don't put lmc_acl here to let the default sql play if there is nothing
+        data = {
+            "client_name":   client_name,
+            "name":          name,
+            "logo_url":      norm(payload.get("logo_url")) or None,
+            "url_provider":  url_provider,
+            "client_id":     client_id,
+            "client_secret": str(client_secret),
+            "profiles_order": norm(payload.get("profiles_order")) or None,
+            "acls_json":     acls_json,
+        }
+
+        v_acl = norm(payload.get("lmc_acl"))
+        if v_acl != "":
+            data["lmc_acl"] = v_acl
+
+        # ldap_*: add only if provided (otherwise default sql)
+        for k in ("ldap_uid", "ldap_givenName", "ldap_sn", "ldap_mail"):
+            v = norm(payload.get(k))
+            if v:
+                data[k] = v
+
+        row = self.Providers(**data)
+        session.add(row)
+        session.flush()
+        new_id = int(row.id)
+        session.commit()
+        return {"ok": True, "id": new_id}
+
+    # UPDATE
+    @DatabaseHelper._sessionm
+    def update_provider(self, session, payload: dict) -> dict:
+        norm = lambda s: (s or "").strip()
+
+        pid = int(payload.get("id") or 0)
+        if pid <= 0:
+            return {"ok": False, "error": "Missing or invalid id"}
+
+        row = session.get(self.Providers, pid)
+        if not row:
+            return {"ok": False, "error": "Provider not found"}
+
+        if "client_name" in payload:
+            new_cn = norm(payload["client_name"])
+            if new_cn:  # si fourni et non vide, on le traite
+                if len(new_cn) > 64 or not re.match(r'^[A-Za-z0-9._\- ]+$', new_cn):
+                    return {"ok": False, "error": "Invalid client_name"}
+                # unicité (client_name, name)
+                conflict = session.execute(
+                    select(self.Providers.id).where(
+                        (self.Providers.client_name == new_cn) &
+                        (self.Providers.name == row.name) &
+                        (self.Providers.id != row.id)
+                    ).limit(1)
+                ).first()
+                if conflict:
+                    return {"ok": False, "error": "(client_name, name) already exists"}
+                row.client_name = new_cn
+
+        if "name" in payload:
+            payload.pop("name", None)
+
+        nullable = {"logo_url", "lmc_acl", "ldap_uid", "ldap_givenName",
+                    "ldap_sn", "ldap_mail", "profiles_order"}
+
+        for key in list(nullable):
+            if key in payload:
+                v = norm(payload[key])
+                setattr(row, key, None if v == "" else v)
+
+        for key in ("url_provider", "client_id", "client_secret"):
+            if key in payload:
+                v = norm(payload[key])
+                if v != "":
+                    setattr(row, key, v)
+
+        if "acls_json" in payload:
+            aj = payload["acls_json"]
+            if aj is None or (isinstance(aj, str) and aj.strip() == ""):
+                row.acls_json = None
+            elif isinstance(aj, dict):
+                row.acls_json = json.dumps(aj, ensure_ascii=False)
+            elif isinstance(aj, str):
+                try:
+                    json.loads(aj)
+                except Exception as e:
+                    return {"ok": False, "error": f"Invalid acls_json: {e}"}
+                row.acls_json = aj
+            else:
+                return {"ok": False, "error": "Invalid acls_json type"}
+
+        session.flush()
+        session.commit()
+        return {"ok": True, "id": pid}
+
+    # DELETE
+    @DatabaseHelper._sessionm
+    def delete_provider(self, session, provider_id: int) -> Dict[str, object]:
+        """
+        Delete a provider by ID
+        """
+        pid = int(provider_id or 0)
+        if pid <= 0:
+            return {"ok": False, "deleted": 0, "id": 0, "error": "invalid id"}
+
+        row = session.get(self.Providers, pid)
+        if not row:
+            return {"ok": False, "deleted": 0, "id": pid, "error": "not found"}
+
+        try:
+            session.delete(row)
+            session.flush()
+            session.commit()
+            return {"ok": True, "deleted": 1, "id": pid, "error": ""}
+        except SQLAlchemyError as e:
+            session.rollback()
+            return {"ok": False, "deleted": 0, "id": pid, "error": str(e)}

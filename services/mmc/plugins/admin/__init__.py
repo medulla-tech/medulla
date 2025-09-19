@@ -788,10 +788,10 @@ class GLPIClient:
         new_profile_id: int,
         entities_id: int,
         is_recursive: int = 0,
-        is_dynamic: int = 0,
+        is_dynamic: int = 0,   # ignoré: on force 0 à la création
         is_default: int = 1,
         tokenuser: str = None,
-        selfservice_profile_id: int | None = None
+        selfservice_profile_id: int | None = None  # <- ID du profil Self-Service si dispo
     ) -> dict:
         """
         Switch a user's GLPI profile on a given entity.
@@ -801,8 +801,8 @@ class GLPIClient:
         - We authorize the same profile (ex: Technician) on several different entities.
         - if is_default = 1: we define the global defect and delete the Root link (entity 0) if present.
         - We do not delete the same profiles on other entities.
-        - We only purge dynamic self-service links (is_dynamic = 1).
-        If we ask for self-service as a target, we leave it
+        - NEW: We only purge dynamic self-service links (is_dynamic = 1).
+        If we ask for self-service as a target, we leave it (created in non-dynamics).
         """
         try:
             headers = self._headers()
@@ -884,7 +884,6 @@ class GLPIClient:
             target_link_id = int(target_link.get("id", 0) or 0)
             cur_rec = int(target_link.get("is_recursive", 0) or 0)
 
-            # Maj is_recursive if necessary
             if target_link_id and cur_rec != want_rec:
                 requests.put(
                     f"{self.URL_BASE}/Profile_User/{target_link_id}",
@@ -1586,3 +1585,43 @@ def get_counts_by_entity_root(filter, start, end, entities=None):
     """
     result  = get_entities_with_counts_root(filter=filter, start=start, end=end, entities=entities)
     return result
+
+
+# ---- PROVIDER MANAGEMENT ----
+# READ
+def get_providers(login: str, client: str | None = None) -> list[dict]:
+    try:
+        db = AdminDatabase()
+        return db.get_providers_all() if (login or "").strip() == "root" else db.get_providers_by_client((client or "MMC").strip())
+    except Exception as e:
+        logger.error(f"Erreur lors de la récupération des fournisseurs : {e}")
+        return []
+
+# CREATE
+def create_provider(data: dict) -> dict:
+    try:
+        db = AdminDatabase()
+        return db.create_provider(data)
+    except Exception as e:
+        logger.error(f"Erreur lors de la création du fournisseur : {e}")
+        return {"ok": False, "error": str(e)}
+
+# UPDATE
+def update_provider(data: dict) -> dict:
+    try:
+        db = AdminDatabase()
+        return db.update_provider(data)
+    except Exception as e:
+        logger.error(f"Erreur lors de la mise à jour du fournisseur : {e}")
+        return {"ok": False, "error": str(e)}
+
+# DELETE
+def delete_provider(provider_id: int) -> dict:
+    try:
+        pid = int(provider_id or 0)
+        if pid <= 0:
+            return {"ok": False, "deleted": 0, "id": 0, "error": "invalid id"}
+        db = AdminDatabase()
+        return db.delete_provider(pid)
+    except Exception as e:
+        return {"ok": False, "deleted": 0, "id": 0, "error": str(e)}

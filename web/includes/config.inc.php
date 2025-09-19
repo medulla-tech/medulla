@@ -121,7 +121,7 @@ function pdo_ini($module, $section = 'database') {
 }
 
 function id_clean($val) {
-    return preg_replace('/[^a-zA-Z0-9._-]/', '', (string)$val);
+    return preg_replace('/[^a-zA-Z0-9._\- ]/', '', (string)$val);
 }
 
 // Providers (OIDC)

@@ -214,3 +214,21 @@ function xmlrpc_toggle_user_active($user_id, $tokenuser = null)
 {
     return xmlCall("admin.toggle_user_active", [$user_id, $tokenuser]);
 }
+
+// PROVIDERS MANAGEMENT
+// READ
+function xmlrpc_get_providers($login, $client) {
+    return xmlCall("admin.get_providers", [$login, $client]);
+}
+// CREATE
+function xmlrpc_create_provider($data) {
+    return xmlCall("admin.create_provider", [$data]);
+}
+// UPDATE
+function xmlrpc_update_provider(array $data) {
+    return xmlCall("admin.update_provider", [$data]);
+}
+// DELETE
+function xmlrpc_delete_provider(int $id) {
+    return xmlCall("admin.delete_provider", [$id]);
+}
