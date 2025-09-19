@@ -8796,7 +8796,7 @@ and glpi_computers.id in %s group by glpi_computers.id;""" % (
 
         sql = text(sql)
 
-        logger.debug("Executing SQL query: %s", sql)
+        # logger.debug("Executing SQL query: %s", sql)
         logger.debug("With parameters: user_name=%s, active=%s", user_name, active)
 
         row = session.execute(sql, {"user_name": user_name}).fetchone()
