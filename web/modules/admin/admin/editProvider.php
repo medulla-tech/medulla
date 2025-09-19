@@ -23,7 +23,63 @@
 require("localSidebar.php");
 require("graph/navbar.inc.php");
 require_once("modules/admin/includes/xmlrpc.php");
+?>
+<style>
+#Form > table{
+  width:100% !important;
+  margin:0 auto !important;
+  border-collapse:separate;
+  border-spacing:0;
+  margin-top:1.5rem !important;
+}
 
+#Form tr > td.label{
+  width:28% !important;
+  text-align:right;
+  padding-right:0;
+}
+
+#Form tr > td.label + td{
+  padding-left:3rem !important;
+  vertical-align:middle;
+}
+
+#Form tr > td.label + td span[id^="container_input_"]{
+  display:inline-block;
+  position:relative;
+  width:32rem;
+  max-width:100%;
+}
+
+#Form tr > td.label + td span[id^="container_input_"] > input[type="text"],
+#Form tr > td.label + td span[id^="container_input_"] > input[type="password"],
+#Form tr > td.label + td span[id^="container_input_"] > input:not([type]){
+  width:100%;
+  box-sizing:border-box;
+}
+
+#Form tr > td.label + td .pw-wrap{
+  position:relative; display:inline-block; width:100%;
+}
+#Form tr > td.label + td .pw-wrap > input{
+  padding-right:2.2rem;
+}
+#Form tr > td.label + td .pw-toggle{
+  position:absolute; right:.6rem; top:50%; transform:translateY(-50%);
+  width:1.1rem; height:1.1rem; border:0; background:transparent; padding:0; cursor:pointer;
+  line-height:1; z-index:2;
+}
+#Form tr > td.label + td .pw-toggle img{
+  width:100%; height:100%; display:block; pointer-events:none;
+}
+
+#Form .btn, #Form .btnPrimary,
+#Form input[type="submit"], #Form input[type="button"], #Form input[type="reset"]{
+  width:auto !important;
+}
+</style>
+
+<?php
 $safe   = fn($v) => htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8');
 $isRoot = (strcasecmp($_SESSION['login'] ?? '', 'root') === 0);
 
@@ -39,6 +95,7 @@ $prefill = [
     'logo_url'       => '',
     'url_provider'   => '',
     'client_id'      => '',
+    'client_secret'  => '',
     'ldap_uid'       => '',
     'ldap_givenName' => '',
     'ldap_sn'        => '',
@@ -172,10 +229,18 @@ $form->add(new TrFormElement(_T("Logo URL", "admin"),    new InputTpl('logo_url'
 $form->add(new TrFormElement(_T("Issuer URL", "admin"),  new InputTpl('url_provider', '/^.{1,400}$/')), ['value' => $prefill['url_provider']]);
 $form->add(new TrFormElement(_T("Client ID", "admin"),   new InputTpl('client_id', '/^.{1,400}$/')),    ['value' => $prefill['client_id']]);
 
-// secret: empty => keep current
+// secret: if not modify keep current
+$secretInput = ($mode === 'edit')
+  ? new InputTpl('client_secret', '/^.{0,1024}$/', $prefill['client_secret'])
+  : new InputTpl('client_secret', '/^.{0,1024}$/');
+
+$widgets = [ $secretInput ];
+if ($mode === 'edit') {
+    $widgets[] = new TextTpl('<i style="color:#999999">' . _T('(leave blank to keep current)', 'admin') . '</i>');
+}
+
 $form->add(
-    new TrFormElement(_T("Client secret (leave blank to keep current)", "admin"), new InputTpl('client_secret', '/^.{0,1024}$/')),
-    ['value' => '']
+    new TrFormElement(_T("Client secret", "admin"), new multifieldTpl($widgets))
 );
 
 $form->add(new TrFormElement(_T("LDAP uid", "admin"),       new InputTpl('ldap_uid', '/^.{0,64}$/')),       ['value' => $prefill['ldap_uid']]);
@@ -195,3 +260,67 @@ $form->add(new HiddenTpl('id'),   ['value' => (string)$prefill['id'], 'hide' => 
 
 $form->pop();
 $form->display();
+?>
+
+<script>
+jQuery(function($){
+  const ID = 'client_secret';
+  const OPEN_ICON  = 'img/login/open.svg';
+  const CLOSE_ICON = 'img/login/close.svg';
+
+  const $inp = $('#'+ID);
+  if (!$inp.length) return;
+
+  let $wrap = $('#container_input_'+ID);
+  if (!$wrap.length) {
+    $inp.wrap('<span class="pw-wrap"></span>');
+    $wrap = $inp.parent();
+  } else {
+    $wrap.addClass('pw-wrap');
+  }
+
+  let $btn = $wrap.find('.pw-toggle[data-for="'+ID+'"]');
+  if (!$btn.length) {
+    $btn = $(`
+      <button type="button" class="pw-toggle" data-for="${ID}"
+              aria-label="Afficher" aria-pressed="false"
+              data-open="${OPEN_ICON}" data-close="${CLOSE_ICON}">
+        <img class="pw-icon" alt="">
+      </button>
+    `).appendTo($wrap);
+  }
+  if (!$btn.find('img.pw-icon').length) {
+    $btn.append('<img class="pw-icon" alt="">');
+  }
+  const $icon = $btn.find('.pw-icon');
+
+  function applyState(){
+    const isEmpty = ($inp.val() === '');
+    const hidden  = !isEmpty;
+    $inp.attr('type', hidden ? 'password' : 'text');
+    $icon.attr('src', hidden ? $btn.data('close') : $btn.data('open'));
+    $btn.attr({
+      'aria-label': hidden ? 'Afficher le secret' : 'Masquer le secret',
+      'aria-pressed': !hidden
+    });
+  }
+
+  $btn.on('click', function(){
+    if ($inp.val() !== '') {
+      const isPwd = ($inp.attr('type') === 'password');
+      $inp.attr('type', isPwd ? 'text' : 'password');
+      const nowHidden = !isPwd;
+      $icon.attr('src', nowHidden ? $btn.data('close') : $btn.data('open'));
+      $btn.attr({
+        'aria-label': nowHidden ? 'Afficher le secret' : 'Masquer le secret',
+        'aria-pressed': !nowHidden
+      });
+    }
+    $inp.trigger('focus');
+  });
+
+  $inp.on('input', applyState);
+
+  applyState();
+});
+</script>
