@@ -22,6 +22,32 @@
 -- Database xmppmaster
 -- ----------------------------------------------------------------------
 
+
+
+-- Supprime toutes les lignes de la table "up_machine_windows" et réinitialise
+-- les compteurs AUTO_INCREMENT (si présents).
+-- on va modifier la clef primaire
+TRUNCATE xmppmaster.up_machine_windows;
+
+-- Modifie la structure de la table "up_machine_windows" :
+-- 1. Ajoute une nouvelle colonne "entity_id" (type INT, obligatoire).
+-- 2. Supprime la clé primaire existante.
+-- 3. Définit une nouvelle clé primaire composée de (id_machine, update_id, entity_id).
+ALTER TABLE `xmppmaster`.`up_machine_windows`
+  ADD COLUMN `entity_id` INT(11) NOT NULL AFTER `update_id`,
+  DROP PRIMARY KEY,
+  ADD PRIMARY KEY (`id_machine`, `update_id`, `entity_id`);
+
+-- Ajoute une contrainte de clé étrangère :
+-- "entity_id" dans "up_machine_windows" doit correspondre à "id" dans "glpi_entity".
+-- Si une entité est supprimée dans "glpi_entity", toutes les lignes associées
+-- dans "up_machine_windows" seront automatiquement supprimées (ON DELETE CASCADE).
+ALTER TABLE up_machine_windows
+  ADD CONSTRAINT fk_up_machine_windows_entity
+  FOREIGN KEY (entity_id) REFERENCES glpi_entity(id)
+  ON DELETE CASCADE;
+
+
 START TRANSACTION;
 USE `xmppmaster`;
 -- ----------------------------------------------------------------------
