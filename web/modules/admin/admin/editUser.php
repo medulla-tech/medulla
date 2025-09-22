@@ -230,7 +230,9 @@ if ($mode === 'edit') {
     }
 }
 
-$profiles = xmlrpc_get_list('profiles', false, $tokenuser) ?? [];
+$profileUser = $u['profile_name'];
+$profiles = xmlrpc_get_profiles_in_conf($profileUser, $tokenuser);
+
 // List the Entities Available by the Current User
 $entities = xmlrpc_get_list('entities', true,  $tokenuser) ?? [];
 
@@ -313,12 +315,9 @@ if (isset($_POST['profiles_id']) && $_POST['profiles_id'] !== '') {
 
 // Default selection - Entity
 $defaultEntityId = null;
-if (isset($_POST['entities_id']) && $_POST['entities_id'] !== '') {
-    $defaultEntityId = (string)$_POST['entities_id'];
-} elseif (!empty($prefill['entities_id'])) {
+if (!empty($prefill['entities_id'])) {
     $defaultEntityId = (string)$prefill['entities_id'];
 } else {
-    // tenter une résolution depuis la session
     $fromSession = $resolveEntityIdFromSession($entityIdToName, $u);
     if ($fromSession !== null) {
         $defaultEntityId = $fromSession;
@@ -332,14 +331,13 @@ if (isset($_POST["bcreate"])) {
     verifyCSRFToken($_POST);
 
     // Recovery and standardization
-    $postedUsername     = trim($_POST['newUsername']  ?? '');  // = email
+    $postedUsername     = trim($_POST['newUsername']  ?? '');  // = email / identifier
     $postedFirstName    = trim($_POST['newFirstName'] ?? '');
     $postedLastName     = trim($_POST['newLastName']  ?? '');
     $postedPhone        = trim($_POST['newPhone']     ?? '');
     $postedProfileId    = $normId($_POST['profiles_id']  ?? null);
     $postedEntityId     = $normId($_POST['entities_id']  ?? null);
     $postedIsRecursive  = (isset($_POST['is_recursive']) && $_POST['is_recursive'] === '1');
-    $postedIsDefault    = '1'; // Always 1 on creation
     $pwd                = $_POST['newPassword']  ?? '';
     $pwd2               = $_POST['newPassword2'] ?? '';
 
@@ -352,7 +350,7 @@ if (isset($_POST["bcreate"])) {
         exit;
     };
 
-    //Validations
+    // Validations
     if ($postedUsername === '') {
         $fail("Form", _T("Username (email) is required.", "admin"));
     }
@@ -384,17 +382,19 @@ if (isset($_POST["bcreate"])) {
 
     // Creation of the user in GLPI
     try {
+
+        $callerProfile = $u['profile_name'];
         $glpiRes = xmlrpc_create_user(
-            $postedUsername,           // login (email)
-            $pwd,
-            $postedEntityId,
-            $postedProfileId,
-            $postedLastName,
-            $postedFirstName,
-            $postedPhone ?: null,
-            $postedIsRecursive,
-            $postedIsDefault,
-            $tokenuser
+            $postedUsername,                 // identifier
+            $postedLastName ?: null,         // lastname
+            $postedFirstName ?: null,        // firstname
+            $pwd,                            // password
+            $postedPhone ?: null,            // phone
+            (int)$postedEntityId,            // id_entity
+            (int)$postedProfileId,           // id_profile
+            (bool)$postedIsRecursive,        // is_recursive
+            $callerProfile,
+            $tokenuser                       // tokenuser
         );
     } catch (Throwable $e) {
         error_log('[createUser] GLPI creation exception: ' . $e->getMessage());
@@ -448,7 +448,6 @@ if (isset($_POST["bcreate"])) {
         if ($clientRoot === '') {
             $clientRoot = $entityIdToName[(string)$postedEntityId] ?? ($u['entity'] ?? '');
         }
-        // Creation of the user in the LDAP Local
         $add = add_user($postedUsername, $pwd, $postedFirstName, $postedLastName, null, false, false, null, $clientRoot);
 
         $sysOk = false; $msgSys = _T("Unknown error.", "admin");
@@ -492,7 +491,6 @@ if (isset($_POST["bcreate"])) {
             }
         }
 
-        // MAJ attributs LDAP (phone optionnel)
         if ($postedPhone !== '') {
             $okTel = @changeUserAttributes($postedUsername, "telephoneNumber", $postedPhone);
             if ($okTel === false || $okTel === null) { $warnings[] = 'telephoneNumber'; }
@@ -549,7 +547,9 @@ if (isset($_POST["bupdate"])) {
         : (!empty($prefill['profile_name']) && isset($profileNameToId[$prefill['profile_name']])
             ? (int)$profileNameToId[$prefill['profile_name']]
             : (!empty($u['profile_id']) ? (int)$u['profile_id'] : null));
-    $origEntityId   = !empty($prefill['entities_id']) ? (int)$prefill['entities_id'] : (!empty($defaultEntityId) ? (int)$defaultEntityId : null);
+    $origEntityId = isset($prefill['entities_id'])
+    ? (int)$prefill['entities_id']
+    : (isset($u['entities_id']) ? (int)$u['entities_id'] : null);
     $origRecursive  = isset($prefill['is_recursive']) ? (int)$prefill['is_recursive']
                     : (isset($_GET['is_recursive']) ? (int)($_GET['is_recursive'] === '1') : null);
 
@@ -564,7 +564,6 @@ if (isset($_POST["bupdate"])) {
     $postedProfileId  = $normId($_POST['profiles_id']  ?? null);
     $postedEntityId   = $normId($_POST['entities_id']  ?? null);
     $postedIsRecursive = ((string)($_POST['is_recursive'] ?? '1') === '1') ? 1 : 0;
-    $postedIsDefault   = ((string)($_POST['is_default']   ?? ($prefill['is_default'] ?? '1')) === '1') ? 1 : 0;
 
     // Immutable username: if attempted change, we do not know and we log
     if ($postedUsername !== '' && strcasecmp($postedUsername, $origUsername) !== 0) {
@@ -607,7 +606,6 @@ if (isset($_POST["bupdate"])) {
     }
 
     // Detection of changes
-    $wantUsername    = null; // immuable
     $wantFirstName   = ($postedFirstName !== $origFirstName) ? $postedFirstName : null;
     $wantLastName    = ($postedLastName  !== $origLastName)  ? $postedLastName  : null;
     $wantPhone       = ($postedPhone     !== $origPhone)     ? $postedPhone     : null;
@@ -615,7 +613,6 @@ if (isset($_POST["bupdate"])) {
     $profileChanged  = ($postedProfileId !== null && (string)$postedProfileId !== (string)($origProfileId ?? ''));
     $entityChanged   = ($postedEntityId  !== null && (string)$postedEntityId  !== (string)($origEntityId  ?? ''));
     $recursiveChanged = ($origRecursive === null) ? true : ((int)$postedIsRecursive !== (int)$origRecursive);
-    $defaultChanged   = ($postedIsDefault !== (int)($prefill['is_default'] ?? 1));
 
     // MAJ Simple Champs
     $okAll = true; $didSomething = false;
@@ -641,34 +638,30 @@ if (isset($_POST["bupdate"])) {
         $okAll = false;
     }
 
-    // MAJ profile / entity / recursion / defect
-    if ($profileChanged || $entityChanged || $recursiveChanged || $defaultChanged) {
+    if ($profileChanged || $entityChanged || $recursiveChanged) {
         $didSomething = true;
         $profileIdToUse = (int)($profileChanged ? $postedProfileId : ($origProfileId ?? 0));
-        $entityIdToUse  = (int)($entityChanged ? $postedEntityId  : ($origEntityId  ?? $defaultEntityId ?? 0));
-
-        $conflictNoAltDefault = false;
+        $entityIdToUse = (int)($entityChanged ? $postedEntityId : ($origEntityId ?? (int)$defaultEntityId ?? 0));
+        $callerProfile  = (string)($u['profile_name'] ?? '');
 
         try {
             $res = xmlrpc_switch_user_profile(
-                $userId, $profileIdToUse, $entityIdToUse,
-                $postedIsRecursive, 0, $postedIsDefault, $tokenuser
+                (int)$userId,
+                $profileIdToUse,
+                $entityIdToUse,
+                (int)$postedIsRecursive,
+                $callerProfile,
+                (string)$tokenuser
             );
 
-            if (is_array($res)) {
-                $ok = !empty($res['ok']) || !empty($res['success']) || (isset($res['code']) && (int)$res['code'] === 0);
-                if (!$ok && isset($res['code']) && (int)$res['code'] === 409) {
-                    $conflictNoAltDefault = true;
-                    $ok = true;
-                }
-            } else {
-                $ok = (bool)$res;
-            }
+            $ok = is_array($res)
+                ? (!empty($res['success']) || (isset($res['code']) && (int)$res['code'] === 0))
+                : (bool)$res;
 
             $okAll = $okAll && $ok;
 
         } catch (Throwable $e) {
-            error_log('[editUser] Switch profile/entity/recursive failed: ' . $e->getMessage());
+            error_log('[editUser] switch_user_profile failed: ' . $e->getMessage());
             $okAll = false;
         }
     }
@@ -717,12 +710,6 @@ if (isset($_POST["bupdate"])) {
     // Feedback
     if (!$didSomething) {
         new NotifyWidgetSuccess(_T("No changes.", "admin"));
-    } elseif ($okAll && !empty($conflictNoAltDefault) && $defaultChanged && !$postedIsDefault) {
-        if (class_exists('NotifyWidgetWarning')) {
-            new NotifyWidgetWarning(_T("Cannot unset the default profile: the user has no other profile.", "admin"));
-        } else {
-            new NotifyWidgetFailure(_T("Cannot unset the default profile: the user has no other profile.", "admin"));
-        }
     } elseif ($okAll) {
         new NotifyWidgetSuccess(_T("Changes saved.", "admin"));
     } else {
@@ -767,18 +754,6 @@ $recSelect->setElements([_T("No", "admin"), _T("Yes", "admin")]);
 $recSelect->setElementsVal(['0','1']); // No->0, Yes->1
 $recSelect->setSelected($isRecursiveDefault);
 
-if($mode === 'edit') {
-    $isDefaultDefault = (string)(
-        $_POST['is_default']
-            ?? ($prefill['is_default'] !== null ? (int)$prefill['is_default'] : 1) // Oui par défaut en création
-    );
-
-    $defSelect = new SelectItem('is_default');
-    $defSelect->setElements([_T("No", "admin"), _T("Yes", "admin")]);
-    $defSelect->setElementsVal(['0','1']);
-    $defSelect->setSelected($isDefaultDefault);
-}
-
 $addInput = function(ValidatingForm $form, string $name, string $label, string $value = '') use ($safe) {
     $form->add(
         new TrFormElement(
@@ -803,9 +778,6 @@ $form->push(new Table());
 $form->add(new TrFormElement(_T("User Profile", "admin"), $profileSelect));
 $form->add(new TrFormElement(_T("Entity", "admin"), $entitySelect));
 $form->add(new TrFormElement(_T("Apply to sub-entities (recursive)", "admin"), $recSelect));
-if ($mode === 'edit') {
-    $form->add(new TrFormElement(_T("Default profile for this entity", "admin"), $defSelect)); // NEW
-}
 
 if ($mode === 'edit') {
     $displayEmail = (string)($prefill['username'] ?? '');
@@ -1034,7 +1006,7 @@ jQuery(function($){
     $phone.on('input blur', checkPhone);
   }
 
-  // Global submit guard 
+  // Global submit guard
   $('form').on('submit', function(e){
     let ok=true;
     if(typeof window.__checkEmailUsername==='function') ok=window.__checkEmailUsername() && ok;

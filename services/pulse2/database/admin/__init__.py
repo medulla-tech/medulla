@@ -481,3 +481,11 @@ class AdminDatabase(DatabaseHelper):
         except SQLAlchemyError as e:
             session.rollback()
             return {"ok": False, "deleted": 0, "id": pid, "error": str(e)}
+
+    @DatabaseHelper._sessionm
+    def get_root_token(self, session):
+        token = (session.query(self.Saas_application.setting_value)
+            .filter(self.Saas_application.setting_name == 'glpi_root_user_token')
+            .scalar())
+
+        return token

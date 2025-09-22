@@ -11,6 +11,7 @@ from mmc.plugins.admin.config import AdminConfig
 from pulse2.database.admin import AdminDatabase
 from mmc.plugins.glpi import get_entities_with_counts, get_entities_with_counts_root, set_user_api_token, get_user_profile_email
 
+from configparser import ConfigParser
 import traceback
 import requests
 import logging
@@ -19,14 +20,13 @@ import random
 import string
 import json
 import uuid
+import os
 import re
 
 VERSION = "1.0.0"
 APIVERSION = "4:1:3"
 
-
 logger = logging.getLogger()
-
 
 class GLPIClient:
     """
@@ -473,81 +473,92 @@ class GLPIClient:
         return data.get("name", "")
 
     # CREATE
-    def create_user_basic(self, name_user, pwd, realname=None, firstname=None, phone=None):
-        try:
-            headers = self._headers()
-        except Exception as e:
-            logger.error(f"Session/headers error: {e}")
-            return 0
-
-        if not name_user or not pwd:
-            raise ValueError("name_user et pwd requis")
+    def create_user_basic(
+        self,
+        identifier: str,               # login (email)
+        password: str,
+        lastname: str | None = None,   # GLPI: realname
+        firstname: str | None = None,
+        phone: str | None = None,
+        language: str = "fr_FR",
+        active: bool = True,
+    ) -> int:
+        """
+        Create a basic GLPI user (without managing profile/entity).
+        - `Identify` => User.Name
+        - `Password` => User.Password/Password2
+        - Return an exception in case of error
+        """
+        headers = self._headers()
 
         payload = {
             "input": {
-                "name": name_user,
-                "password": pwd,
-                "password2": pwd,
-                "realname": realname,
-                "firstname": firstname,
-                "phone": phone,
-                "language": "fr_FR",
-                "is_active": 1,
-
+                "name": identifier,
+                "password": password,
+                "password2": password,
+                "language": language,
+                "is_active": 1 if active else 0,
             }
         }
+        if lastname is not None:
+            payload["input"]["realname"] = lastname
+        if firstname is not None:
+            payload["input"]["firstname"] = firstname
+        if phone is not None:
+            payload["input"]["phone"] = phone
 
         r = requests.post(f"{self.URL_BASE}/User", headers=headers, json=payload, timeout=15)
         if r.status_code >= 300:
             self._raise_glpi("Create User", r)
 
         data = r.json() if "application/json" in (r.headers.get("Content-Type") or "") else {}
-        user_id = int(data.get("id") or 0)
+        user_id = int((data or {}).get("id") or 0)
         if user_id <= 0:
-            raise RuntimeError(f"Create User failed: HTTP {r.status_code} — réponse inattendue: {data}")
+            raise RuntimeError(f"Create User failed: HTTP {r.status_code} — unexpected response: {data}")
         return user_id
 
-    def create_user(self,
-                    name_user,
-                    pwd,
-                    entities_id,
-                    profiles_id,
-                    realname=None,
-                    firstname=None,
-                    phone=None,
-                    is_recursive=False,
-                    is_default=True,
-                    unique_entity=True,
-                    do_rollback_on_error=True) -> int:
+    def create_user(
+        self,
+        identifier: str,
+        lastname: str | None = None,
+        firstname: str | None = None,
+        password: str | None = None,
+        phone: str | None = None,
+        id_entity: int | None = None,
+        id_profile: int | None = None,
+        is_recursive: bool = False,
+        do_rollback_on_error: bool = True,
+    ) -> int:
+        """
+        Create the user and then apply the strict switch:
+        - 1 only link (profile, entity), defect posed
+        - purge of other links
+        """
         user_id = None
         try:
             user_id = self.create_user_basic(
-                name_user,
-                pwd,
-                realname=realname,
+                identifier=identifier,
+                password=password,
+                lastname=lastname,
                 firstname=firstname,
-                phone=phone
+                phone=phone,
             )
 
-            self.switch_user_entity(
-                user_id=user_id,
-                new_entity_id=entities_id
-            )
-
-            # plutot switch de profile que add comme par defaut ca assigne un Self-Service de le entite racine vu dans la config GLPI
             self.switch_user_profile(
                 user_id=user_id,
-                new_profile_id=profiles_id,
-                entities_id=entities_id,
+                new_profile_id=int(id_profile),
+                entities_id=int(id_entity),
                 is_recursive=1 if is_recursive else 0,
-                is_default=1 if is_default else 0
             )
 
             return user_id
 
         except Exception as e:
             if do_rollback_on_error and user_id:
-                self.delete_and_purge_user(user_id)
+                try:
+                    self.delete_and_purge_user(user_id)
+                except Exception:
+                    pass
             raise RuntimeError(f"Echec création utilisateur GLPI: {e}") from e
 
     def create_entity_under_custom_parent(self, parent_entity_id, name, tagvalue=None):
@@ -788,173 +799,104 @@ class GLPIClient:
         new_profile_id: int,
         entities_id: int,
         is_recursive: int = 0,
-        is_dynamic: int = 0,   # ignoré: on force 0 à la création
-        is_default: int = 1,
-        tokenuser: str = None,
-        selfservice_profile_id: int | None = None  # <- ID du profil Self-Service si dispo
     ) -> dict:
         """
-        Switch a user's GLPI profile on a given entity.
-
-        Rules:
-        - 1 profile per entity (no duplicate on the same entity).
-        - We authorize the same profile (ex: Technician) on several different entities.
-        - if is_default = 1: we define the global defect and delete the Root link (entity 0) if present.
-        - We do not delete the same profiles on other entities.
-        - NEW: We only purge dynamic self-service links (is_dynamic = 1).
-        If we ask for self-service as a target, we leave it (created in non-dynamics).
+        1 only profile_user link for the user.
+        - Create/up the link (profile, entity)
+        - Updates is_recursive if necessary
+        - Deletes all other links
+        - Position the defect (is_default = 1) on the target
+        - purge afterwards any dynamic self-service possibly reinjected by GLPI
         """
-        try:
-            headers = self._headers()
-            uid = int(user_id); pid = int(new_profile_id); eid = int(entities_id)
-            want_rec = 1 if int(is_recursive) == 1 else 0
-            want_def = 1 if int(is_default)  == 1 else 0
+        headers = self._headers()
+        uid = int(user_id); pid = int(new_profile_id); eid = int(entities_id)
+        want_rec = 1 if int(is_recursive) == 1 else 0
 
-            def _list_links():
-                r = requests.get(f"{self.URL_BASE}/User/{uid}/Profile_User", headers=headers, timeout=10)
+        def _list_links():
+            r = requests.get(f"{self.URL_BASE}/User/{uid}/Profile_User", headers=headers, timeout=10)
+            r.raise_for_status()
+            data = r.json() or []
+            return [data] if isinstance(data, dict) else data
+
+        _ss_cache: dict[int, bool] = {}
+
+        def _is_self_service_profile_id(prof_id: int) -> bool:
+            prof_id = int(prof_id or 0)
+            if prof_id in _ss_cache:
+                return _ss_cache[prof_id]
+            try:
+                r = requests.get(f"{self.URL_BASE}/Profile/{prof_id}", headers=headers, timeout=10)
                 r.raise_for_status()
-                data = r.json() or []
-                return [data] if isinstance(data, dict) else data
+                name = str((r.json() or {}).get("name", "")).strip().lower()
+                is_ss = (name == "self-service")
+                _ss_cache[prof_id] = is_ss
+                return is_ss
+            except Exception:
+                _ss_cache[prof_id] = False
+                return False
 
-            def _is_self_service_pid(prof_id: int) -> bool:
-                if selfservice_profile_id is not None and int(prof_id) == int(selfservice_profile_id):
-                    return True
-                ss_attr = getattr(self, "SELF_SERVICE_PROFILE_ID", None)
-                if ss_attr is not None and int(prof_id) == int(ss_attr):
-                    return True
+        try:
+            rows = _list_links()
+            target = next((lk for lk in rows
+                        if int(lk.get("profiles_id", 0)) == pid and int(lk.get("entities_id", 0)) == eid), None)
+
+            if not target:
+                self.add_profile_to_user(
+                    user_id=uid, profile_id=pid, entities_id=eid,
+                    is_recursive=want_rec, is_dynamic=0, is_default=1
+                )
+                rows = _list_links()
+                target = next((lk for lk in rows
+                            if int(lk.get("profiles_id", 0)) == pid and int(lk.get("entities_id", 0)) == eid), None)
+
+            if not target:
+                return {"success": False, "code": 500, "error": "target link not found after creation"}
+
+            tlid = int(target.get("id", 0) or 0)
+            cur_rec = int(target.get("is_recursive", 0) or 0)
+            if tlid and cur_rec != want_rec:
+                requests.put(
+                    f"{self.URL_BASE}/Profile_User/{tlid}",
+                    headers=headers,
+                    json={"input": {"id": tlid, "is_recursive": want_rec}},
+                    timeout=10
+                ).raise_for_status()
+
+            # Purge of all other links
+            rows = _list_links()
+            for lk in rows:
+                lid = int(lk.get("id", 0) or 0)
+                if not lid or lid == tlid:
+                    continue
                 try:
-                    r = requests.get(f"{self.URL_BASE}/Profile/{int(prof_id)}", headers=headers, timeout=10)
-                    r.raise_for_status()
-                    name = str((r.json() or {}).get("name", "")).strip().lower()
-                    return name in {"self-service", "self service", "libre-service", "libre service"}
-                except Exception as e:
-                    logger.warning(f"Failed to resolve profile name for id={prof_id}: {e}")
-                    return False
+                    requests.delete(f"{self.URL_BASE}/Profile_User/{lid}", headers=headers, timeout=10).raise_for_status()
+                except requests.HTTPError as e:
+                    if getattr(e.response, "status_code", None) != 404:
+                        logger.warning(f"Failed to delete link {lid}: {e}")
 
-            def _purge_dynamic_self_service_links(target_link_id: int | None):
-                # Only deletes self-service dynamic links
-                rowsx = _list_links()
-                for lk in rowsx:
-                    lid = int(lk.get("id", 0) or 0)
-                    if not lid or (target_link_id and lid == target_link_id):
-                        continue
-                    if int(lk.get("is_dynamic", 0) or 0) != 1:
-                        continue
-                    lk_pid = int(lk.get("profiles_id", 0) or 0)
-                    if _is_self_service_pid(lk_pid):
+            # Place the defect on the target
+            requests.put(
+                f"{self.URL_BASE}/User/{uid}",
+                headers=headers,
+                json={"input": {"id": uid, "entities_id": eid, "profiles_id": pid}},
+                timeout=10
+            ).raise_for_status()
+
+            rows2 = _list_links()
+            for lk in rows2:
+                lid = int(lk.get("id", 0) or 0)
+                if not lid or lid == tlid:
+                    continue
+                if int(lk.get("is_dynamic", 0) or 0) == 1:
+                    lpid = int(lk.get("profiles_id", 0) or 0)
+                    if _is_self_service_profile_id(lpid):
                         try:
                             requests.delete(f"{self.URL_BASE}/Profile_User/{lid}", headers=headers, timeout=10).raise_for_status()
                         except requests.HTTPError as e:
                             if getattr(e.response, "status_code", None) != 404:
                                 logger.warning(f"Failed to delete dynamic Self-Service link {lid}: {e}")
 
-            r_user = requests.get(f"{self.URL_BASE}/User/{uid}", headers=headers, timeout=10)
-            r_user.raise_for_status()
-            u = r_user.json() or {}
-            cur_pid = int(u.get("profiles_id") or 0)
-            cur_eid = int(u.get("entities_id") or 0)
-            target_is_current_default = (cur_pid == pid and cur_eid == eid)
-
-            rows = _list_links()
-
-            target_link = None
-            for link in rows:
-                if int(link.get("profiles_id", 0)) == pid and int(link.get("entities_id", 0)) == eid:
-                    target_link = link
-                    break
-
-            if not target_link:
-                self.add_profile_to_user(
-                    user_id=uid,
-                    profile_id=pid,
-                    entities_id=eid,
-                    is_recursive=want_rec,
-                    is_dynamic=0,
-                    is_default=want_def
-                )
-                rows = _list_links()
-                for link in rows:
-                    if int(link.get("profiles_id", 0)) == pid and int(link.get("entities_id", 0)) == eid:
-                        target_link = link
-                        break
-
-            if not target_link:
-                return {"success": False, "code": 500, "error": "Lien profil/entité introuvable après création."}
-
-            target_link_id = int(target_link.get("id", 0) or 0)
-            cur_rec = int(target_link.get("is_recursive", 0) or 0)
-
-            if target_link_id and cur_rec != want_rec:
-                requests.put(
-                    f"{self.URL_BASE}/Profile_User/{target_link_id}",
-                    headers=headers,
-                    json={"input": {"id": target_link_id, "is_recursive": want_rec}},
-                    timeout=10
-                ).raise_for_status()
-
-            # 1 Profile per entity: purge of other links on the same entity
-            for link in rows:
-                lid = int(link.get("id", 0) or 0)
-                if not lid or lid == target_link_id:
-                    continue
-                if int(link.get("entities_id", 0)) == eid:
-                    try:
-                        requests.delete(f"{self.URL_BASE}/Profile_User/{lid}", headers=headers, timeout=10).raise_for_status()
-                    except requests.HTTPError as e:
-                        if getattr(e.response, "status_code", None) != 404:
-                            logger.warning(f"Failed to delete competing link {lid}: {e}")
-
-            # is_default == 1 → Place this torque as a global defect
-            if want_def == 1:
-                requests.put(
-                    f"{self.URL_BASE}/User/{uid}",
-                    headers=headers,
-                    json={"input": {"id": uid, "entities_id": eid, "profiles_id": pid}},
-                    timeout=10
-                ).raise_for_status()
-
-                rows2 = _list_links()
-                for link in rows2:
-                    lid = int(link.get("id", 0) or 0)
-                    if not lid:
-                        continue
-                    le = int(link.get("entities_id", 0) or 0)
-
-                    if eid != 0 and le == 0:
-                        try:
-                            requests.delete(f"{self.URL_BASE}/Profile_User/{lid}", headers=headers, timeout=10).raise_for_status()
-                        except requests.HTTPError as e:
-                            if getattr(e.response, "status_code", None) != 404:
-                                logger.warning(f"Failed to delete root link {lid}: {e}")
-
-                _purge_dynamic_self_service_links(target_link_id)
-                return {"success": True, "code": 0, "user_id": uid, "entities_id": eid, "profiles_id": pid}
-
-            # 7) Pas défaut global: on ne change pas le défaut
-            if not target_is_current_default:
-                _purge_dynamic_self_service_links(target_link_id)
-                return {"success": True, "code": 0, "user_id": uid, "entities_id": cur_eid, "profiles_id": cur_pid}
-
-            # 8) Fallback si on décoche le défaut courant (inchangé)
-            candidates = []
-            for link in rows:
-                lp = int(link.get("profiles_id", 0)); le = int(link.get("entities_id", 0)); lid = int(link.get("id", 0) or 0)
-                if lid and not (lp == pid and le == eid):
-                    candidates.append((lp, le))
-            if not candidates:
-                _purge_dynamic_self_service_links(target_link_id)
-                return {"success": False, "code": 409, "error": "Impossible de retirer le profil par défaut: aucun autre lien disponible."}
-
-            fb_pid, fb_eid = candidates[0]
-            requests.put(
-                f"{self.URL_BASE}/User/{uid}",
-                headers=headers,
-                json={"input": {"id": uid, "entities_id": fb_eid, "profiles_id": fb_pid}},
-                timeout=10
-            ).raise_for_status()
-
-            _purge_dynamic_self_service_links(target_link_id)
-            return {"success": True, "code": 0, "user_id": uid, "entities_id": fb_eid, "profiles_id": fb_pid}
+            return {"success": True, "code": 0, "user_id": uid, "entities_id": eid, "profiles_id": pid}
 
         except requests.HTTPError as e:
             status = getattr(e.response, "status_code", None)
@@ -1394,22 +1336,91 @@ def get_profile_name(profile_id, tokenuser=None):
     profil_name = client.get_profile_name(profile_id)
     return profil_name
 
-# CREATE
-def create_user(name_user, pwd, entities_id=None, profiles_id=None,
-                realname=None, firstname=None, phone=None,
-                is_recursive=False, is_default=True,
-                tokenuser=None, return_token=True):
+def get_profiles_in_conf(profil_user, tokenuser):
+    """
+    Lit l'ordre des profils (ini + .local), mappe vers les IDs GLPI,
+    puis filtre selon le profil appelant :
+      - Super-Admin : voit tout
+      - Admin       : ne voit pas Super-Admin
+    """
+    cfg = ConfigParser(interpolation=None)
+    cfg.read([p for p in ('/etc/mmc/plugins/glpi.ini','/etc/mmc/plugins/glpi.ini.local') if os.path.isfile(p)], encoding='utf-8')
+    if not cfg.has_section('provisioning_glpi'):
+        return []
+
+    raw = cfg.get('provisioning_glpi', 'profiles_order',
+                  fallback=cfg.get('provisioning_glpi', 'profiles_oder', fallback=''))
+    if not raw:
+        return []
+
+    profils = [s.strip("'\" ") for s in re.split(r'[,\s;]+', raw) if s.strip()]
+
+    client = get_glpi_client(tokenuser=tokenuser)
     try:
-        client = get_glpi_client(tokenuser=tokenuser)
-        user_id = client.create_user(
-            name_user=name_user, pwd=pwd, entities_id=entities_id, profiles_id=profiles_id,
-            realname=realname, firstname=firstname, phone=phone,
-            is_recursive=is_recursive, is_default=is_default
+        glpi = client.get_list('profiles', False) or []
+    except Exception:
+        glpi = []
+
+    norm = lambda s: re.sub(r'[\s_-]+', '', s or '').lower()
+    index = {norm(p.get('name','')): p.get('id') for p in glpi}
+
+    result = [{'name': n, 'id': index.get(norm(n))} for n in profils]
+
+    # --- Filtrage selon le profil appelant ---
+    caller = norm(profil_user) if profil_user else ''
+    if caller == 'admin':
+        result = [r for r in result if norm(r['name']) not in ('superadmin',)]
+
+    missing = [d['name'] for d in result if d['id'] is None]
+    if missing:
+        logging.getLogger().warning("Profils absents côté GLPI: %s", missing)
+
+    return result
+
+def get_root_token():
+    db = AdminDatabase()
+    token = db.get_root_token()
+    return token
+
+# CREATE
+def create_user(
+        identifier,     # login (email)
+        lastname        = None,
+        firstname       = None,
+        password        = None,
+        phone           = None,
+        id_entity       = None,
+        id_profile      = None,
+        is_recursive    = False,
+        caller_profile  = None,
+        tokenuser       = None
+    ):
+    try:
+        caller = (caller_profile or "").lower()
+        if caller == "admin":
+            token_to_use = get_root_token()
+            if not token_to_use:
+                return {"success": False, "code": -1, "error": "root token unavailable"}
+        else:
+            token_to_use = tokenuser
+            if not token_to_use:
+                return {"success": False, "code": -1, "error": "no user token provided"}
+
+        client = get_glpi_client(tokenuser=token_to_use)
+        id_user = client.create_user(
+            identifier      = identifier,
+            lastname        = lastname,
+            firstname       = firstname,
+            password        = password,
+            phone           = phone,
+            id_entity       = id_entity,
+            id_profile      = id_profile,
+            is_recursive    = is_recursive
         )
 
         api_token = client.generate_token()
-        set_user_api_token(int(user_id), api_token)
-        return {"ok": True, "id": int(user_id), "api_token": api_token}
+        set_user_api_token(int(id_user), api_token)
+        return {"ok": True, "id": int(id_user), "api_token": api_token}
 
     except Exception as e:
         raw = str(e)
@@ -1510,18 +1521,31 @@ def update_entity(entity_id, item_name, new_entity_name, parent_id, tokenuser=No
 
     return result
 
-def switch_user_profile(user_id: int, new_profile_id: int, entities_id: int,
-                        is_recursive: int = 0, is_dynamic: int = 0, is_default: int = 1,
-                        tokenuser: str | None = None) -> dict:
-    client = get_glpi_client(tokenuser=tokenuser)
+def switch_user_profile(
+    user_id: int,
+    new_profile_id: int,
+    entities_id: int,
+    is_recursive: int = 0,
+    caller_profile: str | None = None,
+    tokenuser: str | None = None,
+) -> dict:
+    caller = (caller_profile or "").lower()
+    if caller == "admin":
+        token_to_use = get_root_token()
+        if not token_to_use:
+            return {"success": False, "code": -1, "error": "root token unavailable"}
+    else:
+        token_to_use = tokenuser
+        if not token_to_use:
+            return {"success": False, "code": -1, "error": "no user token provided"}
+
+    client = get_glpi_client(tokenuser=token_to_use)
+
     return client.switch_user_profile(
         user_id=int(user_id),
         new_profile_id=int(new_profile_id),
         entities_id=int(entities_id),
         is_recursive=int(is_recursive),
-        is_dynamic=int(is_dynamic),
-        is_default=int(is_default),
-        tokenuser=tokenuser
     )
 
 def switch_user_entity(user_id: int, new_entity_id: int, tokenuser=None) -> dict:
