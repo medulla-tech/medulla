@@ -450,6 +450,26 @@ class RpcProxy(RpcProxyI):
         return XmppMasterDatabase().get_machines_list(start,
                                                       end, filter)
 
+
+
+    @with_optional_xmpp_context
+    def callInventoryinterface(self, uuid, ctx=None):
+        jid = XmppMasterDatabase().getjidMachinefromuuid(uuid)
+        if jid != "":
+            callInventory(jid)
+            return jid
+        else:
+            logging.getLogger().error("for machine %s : jid xmpp missing" % uuid)
+            return "jid missing"
+
+
+    def getCommand_action_time(self, during_the_last_seconds, start, stop, filt):
+        return XmppMasterDatabase().getCommand_action_time(
+            during_the_last_seconds, start, stop, filt
+        )
+
+
+
     def getPresenceuuid(self, uuid):
         return XmppMasterDatabase().getPresenceuuid(uuid)
 
@@ -1117,46 +1137,41 @@ class RpcProxy(RpcProxyI):
         )
 
 
-def getCommand_action_time(self, during_the_last_seconds, start, stop, filt):
-    return XmppMasterDatabase().getCommand_action_time(
-        during_the_last_seconds, start, stop, filt
-    )
+
+    def setCommand_action(self,
+        target, command_id, sessionid, command_result, typemessage, jid=""
+    ):
+        return XmppMasterDatabase().setCommand_action(
+            target, command_id, sessionid, command_result, typemessage, jid
+        )
 
 
-def setCommand_action(self,
-    target, command_id, sessionid, command_result, typemessage, jid=""
-):
-    return XmppMasterDatabase().setCommand_action(
-        target, command_id, sessionid, command_result, typemessage, jid
-    )
+    def getCommand_qa_by_cmdid(self, cmdid):
+        return XmppMasterDatabase().getCommand_qa_by_cmdid(cmdid)
 
 
-def getCommand_qa_by_cmdid(self, cmdid):
-    return XmppMasterDatabase().getCommand_qa_by_cmdid(cmdid)
+    def getQAforMachine(self, cmd_id, uuidmachine):
+        resultdata = XmppMasterDatabase().getQAforMachine(cmd_id, uuidmachine)
+        if resultdata[0][3] == "result":
+            # encode 64 str? to transfer xmlrpc if string with sequence escape
+            resultdata[0][4] = base64.b64encode(resultdata[0][4].encode("utf-8"))
+        return resultdata
 
 
-def getQAforMachine(self, cmd_id, uuidmachine):
-    resultdata = XmppMasterDatabase().getQAforMachine(cmd_id, uuidmachine)
-    if resultdata[0][3] == "result":
-        # encode 64 str? to transfer xmlrpc if string with sequence escape
-        resultdata[0][4] = base64.b64encode(resultdata[0][4].encode("utf-8"))
-    return resultdata
+    def getQAforMachineByJid(self, cmd_id, jid):
+        resultdata = XmppMasterDatabase().getQAforMachineByJid(cmd_id, jid)
+        if resultdata[0][3] == "result":
+            # encode 64 str? to transfer xmlrpc if string with sequence escape
+            resultdata[0][4] = base64.b64encode(resultdata[0][4])
+        return resultdata
 
 
-def getQAforMachineByJid(self, cmd_id, jid):
-    resultdata = XmppMasterDatabase().getQAforMachineByJid(cmd_id, jid)
-    if resultdata[0][3] == "result":
-        # encode 64 str? to transfer xmlrpc if string with sequence escape
-        resultdata[0][4] = base64.b64encode(resultdata[0][4])
-    return resultdata
-
-
-def runXmppApplicationDeployment(self, *args, **kwargs):
-    for count, thing in enumerate(args):
-        print("{0}. {1}".format(count, thing))
-    for name, value in list(kwargs.items()):
-        print("{0} = {1}".format(name, value))
-    return callXmppFunction(*args, **kwargs)
+    def runXmppApplicationDeployment(self, *args, **kwargs):
+        for count, thing in enumerate(args):
+            print("{0}. {1}".format(count, thing))
+        for name, value in list(kwargs.items()):
+            print("{0} = {1}".format(name, value))
+        return callXmppFunction(*args, **kwargs)
 
 
 
@@ -1165,53 +1180,43 @@ def runXmppApplicationDeployment(self, *args, **kwargs):
         return callXmppPlugin(*args, **kwargs)
 
 
-def callInventoryinterface(self, uuid):
-    jid = XmppMasterDatabase().getjidMachinefromuuid(uuid)
-    if jid != "":
-        callInventory(jid)
-        return jid
-    else:
-        logging.getLogger().error("for machine %s : jid xmpp missing" % uuid)
-        return "jid missing"
-
-
-def callrestartbot(self, uuid):
-    jid = XmppMasterDatabase().getjidMachinefromuuid(uuid)
-    if jid != "":
-        callrestartbotbymaster(jid)
-        return jid
-    else:
-        logging.getLogger().error(
-            "call restart bot for machine %s : jid xmpp missing" % uuid
-        )
-        return "jid missing"
-
-
-def callrestartbothostname(self, hostname):
-    """
-    This function is used to restart a computer based on the hostname.
-    Args:
-        hostname: The hostname of the machine we want to restart.
-    """
-    machine = XmppMasterDatabase().get_machine_from_hostname(hostname)
-    if machine:
-        if len(machine) > 1:
-            logging.getLogger().warning(
-                "Several Machine have the same hostname %s in the xmppmaster SQL database"
-                % hostname
-            )
+    def callrestartbot(self, uuid):
+        jid = XmppMasterDatabase().getjidMachinefromuuid(uuid)
+        if jid != "":
+            callrestartbotbymaster(jid)
+            return jid
         else:
-            if machine[0]["jid"]:
-                logging.getLogger().debug(
-                    "Restarting the agent for the machine %s" % hostname
-                )
-                callrestartbotbymaster(machine[0]["jid"])
-            else:
-                logging.getLogger().error(
-                    "The machine %s has not been found in the xmppmaster SQL database."
+            logging.getLogger().error(
+                "call restart bot for machine %s : jid xmpp missing" % uuid
+            )
+            return "jid missing"
+
+
+    def callrestartbothostname(self, hostname):
+        """
+        This function is used to restart a computer based on the hostname.
+        Args:
+            hostname: The hostname of the machine we want to restart.
+        """
+        machine = XmppMasterDatabase().get_machine_from_hostname(hostname)
+        if machine:
+            if len(machine) > 1:
+                logging.getLogger().warning(
+                    "Several Machine have the same hostname %s in the xmppmaster SQL database"
                     % hostname
                 )
-                logging.getLogger().error("Please check the logs in the client machine")
+            else:
+                if machine[0]["jid"]:
+                    logging.getLogger().debug(
+                        "Restarting the agent for the machine %s" % hostname
+                    )
+                    callrestartbotbymaster(machine[0]["jid"])
+                else:
+                    logging.getLogger().error(
+                        "The machine %s has not been found in the xmppmaster SQL database."
+                        % hostname
+                    )
+                    logging.getLogger().error("Please check the logs in the client machine")
 
 #############JFKJFK
 def createdirectoryuser(directory):
