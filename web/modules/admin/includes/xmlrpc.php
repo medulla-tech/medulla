@@ -77,6 +77,10 @@ function xmlrpc_get_users_count_by_entity($entityId, $tokenuser = null)
     return xmlCall("admin.get_users_count_by_entity", [$entityId, $tokenuser]);
 }
 
+function xmlrpc_get_profiles_in_conf($profilUser, $tokenuser) {
+    return xmlCall("admin.get_profiles_in_conf", [$profilUser, $tokenuser]);
+}
+
 // CREATE
 function xmlrpc_create_entity_under_custom_parent($parent_entity_id, $name, $tokenuser = null)
 {
@@ -112,27 +116,27 @@ function xmlrpc_create_organization(
 }
 
 function xmlrpc_create_user(
-    string $name_user,
-    string $pwd,
-    ?int $entities_id = null,
-    ?int $profiles_id = null,
-    ?string $realname = null,
-    ?string $firstname = null,
-    ?string $phone = null,
-    ?bool $is_recursive = false,
-    ?bool $is_default = true,
-    ?string $tokenuser = null
+    string  $identifier,
+    ?string $lastname     = null,
+    ?string $firstname    = null,
+    string  $password,
+    ?string $phone        = null,
+    ?int    $id_entity    = null,
+    ?int    $id_profile   = null,
+    bool    $is_recursive = false,
+    string  $callerProfile = null,
+    ?string $tokenuser    = null
 ) {
-    return xmlCall("admin.create_user", [
-        $name_user,
-        $pwd,
-        $entities_id,
-        $profiles_id,
-        $realname,
+    return xmlCall('admin.create_user', [
+        $identifier,
+        $lastname,
         $firstname,
+        $password,
         $phone,
-        $is_recursive,
-        $is_default,
+        $id_entity,
+        $id_profile,
+        $is_recursive ? 1 : 0,
+        $callerProfile,
         $tokenuser
     ]);
 }
@@ -168,18 +172,16 @@ function xmlrpc_switch_user_profile(
     int $new_profile_id,
     int $entities_id,
     int $is_recursive = 0,
-    int $is_dynamic  = 0,
-    int $is_default  = 1,
-    $tokenuser = null
+    string $callerProfile = '',
+    ?string $tokenuser = null
 ) {
     return xmlCall("admin.switch_user_profile", [
         $user_id,
         $new_profile_id,
         $entities_id,
         $is_recursive,
-        $is_dynamic,
-        $is_default,
-        $tokenuser
+        $callerProfile,
+        $tokenuser,
     ]);
 }
 

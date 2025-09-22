@@ -199,7 +199,7 @@ $page = new Page("editEntity", _T('Edit Entity', 'admin'));
 $page->setFile("modules/admin/admin/editEntity.php");
 $submod->addPage($page);
 
-$page = new Page("deleteEntity", _T('Edit Entitiy', 'admin'));
+$page = new Page("deleteEntity", _T('Delete Entitiy', 'admin'));
 $page->setFile("modules/admin/admin/deleteEntity.php");
 $submod->addPage($page);
 
