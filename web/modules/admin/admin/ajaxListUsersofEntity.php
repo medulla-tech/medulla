@@ -81,7 +81,6 @@ $userPhones                     = [];
 $userStatus                     = [];
 $userLastLogin                  = [];
 $userProfileNames               = [];
-$isDefaults                     = [];
 $userEditActions                = [];
 $userDeleteActions              = [];
 $userDesactivateActions         = [];
@@ -97,12 +96,10 @@ foreach ($userDetails as $user) {
     $userStatus[]       = $isActive ? _("Enabled") : _("Disabled");
     $userLastLogin[]    = $fmtDate($user['last_login'] ?? null);
     $userProfileNames[] = $user['profile_name'];
-    $isDefaults[]       = !empty($user['link_is_default']) ? _("Yes") : _("No");
 
     $userEditActions[]   = new ActionItem(
         _T("Edit"), "editUser", "edit", "", "admin", "admin"
     );
-
 
     // determines the icon according to the status (active/deactivated)
     $iconKeyToggle = $isActive ? 'donotupdate' : 'donotupdateg';
@@ -174,7 +171,6 @@ if (count($userNames) === 0) {
     $n->addExtraInfo($userStatus,       _T("Status", "admin"));
     $n->addExtraInfo($userLastLogin,    _T("Last connection", "admin"));
     $n->addExtraInfo($userProfileNames, _T("Profil", "admin"));
-    $n->addExtraInfo($isDefaults,       _T("Default profile", "admin"));
 
     $n->addActionItemArray($userEditActions);
     $n->addActionItemArray($userDesactivateActions);
