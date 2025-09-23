@@ -143,6 +143,7 @@ if ($facilitylevel <= 1) {
             'nbusers'              => $data['nb_users'][$i],
             'nbcomputer'           => $data['nb_machines'][$i],
             'entitycompletename'   => $data['completename'][$i],
+            'tag'                  => $data['tag'][$i],
 
             // ---- mapping from the session ----
             'userId'               => (int)$u['id'],

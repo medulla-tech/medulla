@@ -1336,6 +1336,11 @@ def get_profile_name(profile_id, tokenuser=None):
     profil_name = client.get_profile_name(profile_id)
     return profil_name
 
+def get_dl_tag(tag):
+    dl_tag = AdminDatabase().get_dl_tag(tag)
+
+    return dl_tag
+
 def get_profiles_in_conf(profil_user, tokenuser):
     """
     Lit l'ordre des profils (ini + .local), mappe vers les IDs GLPI,

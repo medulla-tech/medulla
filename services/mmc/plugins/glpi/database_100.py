@@ -7496,6 +7496,7 @@ class Glpi100(DyngroupDatabaseHelper):
                 ge.id,
                 ge.name,
                 ge.completename,
+                ge.tag,
                 COALESCE(c.nb_machines, 0) AS nb_machines,
                 COALESCE(u.nb_users, 0)    AS nb_users,
                 COALESCE(u.userIds, '')    AS userIds
@@ -7569,6 +7570,7 @@ class Glpi100(DyngroupDatabaseHelper):
                 "id": [],
                 "name": [],
                 "completename": [],
+                "tag": [],
                 "nb_machines": [],
                 "nb_users": [],
                 "userIds": []
@@ -7577,6 +7579,7 @@ class Glpi100(DyngroupDatabaseHelper):
                 data["id"].append(safe(row.id))
                 data["name"].append(safe(row.name))
                 data["completename"].append(safe(row.completename))
+                data["tag"].append(safe(row.tag))
                 data["nb_machines"].append(safe(row.nb_machines))
                 data["nb_users"].append(safe(row.nb_users))
                 data["userIds"].append(safe(row.userIds))
@@ -7587,6 +7590,7 @@ class Glpi100(DyngroupDatabaseHelper):
                     "id": safe(row.id),
                     "name": safe(row.name),
                     "completename": safe(row.completename),
+                    "tag": safe(row.tag),
                     "nb_machines": safe(row.nb_machines),
                     "nb_users": safe(row.nb_users),
                     "userIds": safe(row.userIds)
