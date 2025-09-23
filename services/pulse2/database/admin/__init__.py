@@ -208,6 +208,19 @@ class AdminDatabase(DatabaseHelper):
         return org_id
 
     @DatabaseHelper._sessionm
+    def get_dl_tag(self, session, tag: str) -> str | None:
+        t = (tag or "").strip()
+        if not t:
+            return None
+
+        row = (
+            session.query(self.Saas_organisations.dl_tag)
+            .filter(self.Saas_organisations.tag_name == t)
+            .first()
+        )
+        return row[0] if row else None
+
+    @DatabaseHelper._sessionm
     def update_entity(self, session, entity_id, new_name):
         """
         Updates the name of the entity in the Saas_organizations table.

@@ -77,8 +77,8 @@ function xmlrpc_get_users_count_by_entity($entityId, $tokenuser = null)
     return xmlCall("admin.get_users_count_by_entity", [$entityId, $tokenuser]);
 }
 
-function xmlrpc_get_profiles_in_conf($profilUser, $tokenuser) {
-    return xmlCall("admin.get_profiles_in_conf", [$profilUser, $tokenuser]);
+function xmlrpc_get_dl_tag($tag = '') {
+    return xmlCall("admin.get_dl_tag", [$tag]);
 }
 
 // CREATE
