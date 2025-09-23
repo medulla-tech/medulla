@@ -220,10 +220,6 @@ $page = new Page("deleteUser", _T('Delete User', 'admin'));
 $page->setFile("modules/admin/admin/deleteUser.php");
 $submod->addPage($page);
 
-$page = new Page("deleteProfileUser", _T('Delete Profil User', 'admin'));
-$page->setFile("modules/admin/admin/deleteProfileUser.php");
-$submod->addPage($page);
-
 $page = new Page("desactivateUser", _T('Desactivate User', 'admin'));
 $page->setFile("modules/admin/admin/desactivateUser.php");
 $submod->addPage($page);
