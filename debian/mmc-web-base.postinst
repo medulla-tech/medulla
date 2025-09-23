@@ -33,8 +33,6 @@ case "$1" in
 
         chown www-data:root /etc/mmc/mmc.ini
         chmod 660 /etc/mmc/mmc.ini
-        chown www-data:root /etc/mmc/authproviders.ini
-        chmod 660 /etc/mmc/authproviders.ini
 
         # We create the d3 folder for the dashboard
         if [ ! -L "/usr/share/mmc/jsframework/d3" ]; then
