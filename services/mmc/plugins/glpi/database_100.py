@@ -7420,8 +7420,6 @@ class Glpi100(DyngroupDatabaseHelper):
 
         row = session.execute(sqlrequest, {"name": name}).fetchone()
 
-        logging.getLogger().error(f"111 - Voila ma variable row {row}")
-
         def safe(v):
             if v is None:
                 return ""
