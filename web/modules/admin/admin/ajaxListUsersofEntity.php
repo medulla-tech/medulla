@@ -84,7 +84,6 @@ $userProfileNames               = [];
 $isDefaults                     = [];
 $userEditActions                = [];
 $userDeleteActions              = [];
-$userDeleteProfileActions       = [];
 $userDesactivateActions         = [];
 $userParams                     = [];
 
@@ -104,21 +103,6 @@ foreach ($userDetails as $user) {
         _T("Edit"), "editUser", "edit", "", "admin", "admin"
     );
 
-    // determines the icon according to the status (active/deactivated)
-    $iconKey = $isActive ? 'deleteprofile' : 'deleteprofileg';
-    $userDeleteProfileActions[] = new ActionConfirmItem(
-        _T("Delete user profile", "admin"),
-        "deleteProfileUser",
-        $iconKey,
-        "",
-        "admin",
-        "admin",
-        sprintf(
-            _T("Are you sure you want to delete the <strong>%s</strong> profile for the user <strong>%s</strong>?", "admin"),
-            $user['profile_name'],
-            $user['name']
-        )
-    );
 
     // determines the icon according to the status (active/deactivated)
     $iconKeyToggle = $isActive ? 'donotupdate' : 'donotupdateg';
@@ -193,7 +177,6 @@ if (count($userNames) === 0) {
     $n->addExtraInfo($isDefaults,       _T("Default profile", "admin"));
 
     $n->addActionItemArray($userEditActions);
-    $n->addActionItemArray($userDeleteProfileActions);
     $n->addActionItemArray($userDesactivateActions);
     $n->addActionItemArray($userDeleteActions);
     $n->setParamInfo($userParams);
