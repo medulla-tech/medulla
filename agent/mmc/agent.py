@@ -1225,7 +1225,7 @@ class MmcServer(XMLRPC, object):
         try:
             if not s.loggedin and self._needAuth(functionPath):
                 msg = f"Authentification nécessaire : {functionPath}"
-                logger.error(msg)
+                logger.debug(msg)
                 raise Fault(8003, msg)
             else:
                 if not s.loggedin and not self._needAuth(functionPath):
