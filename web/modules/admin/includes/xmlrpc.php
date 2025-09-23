@@ -81,6 +81,10 @@ function xmlrpc_get_dl_tag($tag = '') {
     return xmlCall("admin.get_dl_tag", [$tag]);
 }
 
+function xmlrpc_get_profiles_in_conf($profileuser = '', $tokenuser) {
+    return xmlCall("admin.get_profiles_in_conf", [$profileuser, $tokenuser]);
+}
+
 // CREATE
 function xmlrpc_create_entity_under_custom_parent($parent_entity_id, $name, $tokenuser = null)
 {
