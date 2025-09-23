@@ -5023,8 +5023,6 @@ class XmppMasterDatabase(DatabaseHelper):
             login_command.syncthing = bool(syncthing)
 
             if isinstance(params, dict):
-                logging.getLogger().error(
-                    f"111 - Voila ma variable params {params}")
                 if "do_reboot" in params:
                     login_command.do_reboot = params["do_reboot"]
                 if "deployment_intervals" in params:
