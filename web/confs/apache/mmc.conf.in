@@ -6,6 +6,19 @@ Alias /mmc @datadir@/mmc
     AllowOverride None
     Order allow,deny
     allow from all
+
+    # --- URL rewriting for /mmc/ORG -> index.php?o=ORG ---
+    <IfModule mod_rewrite.c>
+        RewriteEngine On
+
+        # Laisse passer fichiers/répertoires existants
+        RewriteCond %{REQUEST_FILENAME} -f [OR]
+        RewriteCond %{REQUEST_FILENAME} -d
+        RewriteRule ^ - [L]
+
+        # /mmc/TEST -> index.php?o=TEST  (contexte <Directory>, pas de slash initial)
+        RewriteRule ^([A-Za-z0-9._-]+)/?$ index.php?o=$1 [QSA,L]
+    </IfModule>
 </Directory>
 
 ### Redirect / to /mmc
