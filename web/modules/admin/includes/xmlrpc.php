@@ -86,11 +86,12 @@ function xmlrpc_get_profiles_in_conf($profileuser = '', $tokenuser) {
 }
 
 // CREATE
-function xmlrpc_create_entity_under_custom_parent($parent_entity_id, $name, $tokenuser = null)
+function xmlrpc_create_entity_under_custom_parent($parent_entity_id, $name, $user, $tokenuser = null)
 {
     return xmlCall("admin.create_entity_under_custom_parent", array(
         $parent_entity_id,
         $name,
+        $user,
         $tokenuser
     ));
 }

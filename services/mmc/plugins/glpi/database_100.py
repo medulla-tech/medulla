@@ -7750,6 +7750,36 @@ class Glpi100(DyngroupDatabaseHelper):
         }
 
     @DatabaseHelper._sessionm
+    def get_complete_name(self, session, id_entity):
+        """
+        Récupérer le complete_name
+        """
+        sqlrequest = """
+            SELECT 
+                name,
+                completename,
+                tag
+            FROM glpi_entities
+            WHERE id = :id_entity
+        """
+
+        params = {
+            "id_entity": id_entity
+        }
+
+        row = session.execute(sqlrequest, params).fetchone()
+
+        if not row:
+            return {}
+
+        m = dict(row._mapping)
+        return {
+            "name":                     m.get("name"),
+            "completename":             m.get("completename"),
+            "tag":                      m.get("tag"),
+        }
+
+    @DatabaseHelper._sessionm
     def get_entities_with_counts(self,
                                  session,
                                  colonne: bool = True,

@@ -9,7 +9,8 @@ from mmc.plugins.admin.config import AdminConfig
 
 # Import for Database
 from pulse2.database.admin import AdminDatabase
-from mmc.plugins.glpi import get_entities_with_counts, get_entities_with_counts_root, set_user_api_token, get_user_profile_email
+from pulse2.database.pkgs import PkgsDatabase
+from mmc.plugins.glpi import get_entities_with_counts, get_entities_with_counts_root, set_user_api_token, get_user_profile_email, get_complete_name
 
 from configparser import ConfigParser
 import traceback
@@ -17,6 +18,7 @@ import requests
 import logging
 import base64
 import random
+import shutil
 import string
 import json
 import uuid
@@ -1251,6 +1253,44 @@ def get_CONNECT_API(tokenuser=None):
 
     return out_result
 
+def create_share_dir(tag: str, mode: int = 0o755) -> tuple[str, bool]:
+    """
+    Crée le dossier /var/lib/pulse2/packages/sharing/<tag>.
+    """
+    BASE_SHARE = "/var/lib/pulse2/packages/sharing"
+
+    if not re.fullmatch(r"[A-Za-z0-9._-]{1,128}", tag):
+        raise ValueError("tag invalide")
+
+    target = os.path.realpath(os.path.join(BASE_SHARE, tag))
+    base_real = os.path.realpath(BASE_SHARE)
+
+    if not target.startswith(base_real + os.sep):
+        raise ValueError("Path is not authorized")
+
+    existed = os.path.isdir(target)
+    os.makedirs(target, mode=mode, exist_ok=True)
+    os.chmod(target, mode)
+
+    return target, not existed
+
+def delete_share_dir(tag: str) -> tuple[str, bool]:
+    """Supprime récursivement /var/lib/pulse2/packages/sharing/<tag>."""
+    if not tag:                    # <-- garde anti-None pour éviter le TypeError
+        return None, False
+    if not re.fullmatch(r"[A-Za-z0-9._-]{1,128}", tag):
+        raise ValueError("tag invalide")
+
+    target = os.path.realpath(os.path.join(BASE_SHARE, tag))
+    base_real = os.path.realpath(BASE_SHARE)
+    if not target.startswith(base_real + os.sep):
+        raise ValueError("Path is not authorized")
+    if not os.path.exists(target):
+        return target, False
+
+    shutil.rmtree(target)
+    return target, True
+
 # READ
 def get_list(type, is_recursive=False, tokenuser=None):
     client = get_glpi_client(tokenuser=tokenuser)
@@ -1337,6 +1377,16 @@ def get_profile_name(profile_id, tokenuser=None):
     return profil_name
 
 def get_dl_tag(tag):
+    dl_tag = AdminDatabase().get_dl_tag(tag)
+
+    return dl_tag
+
+def get_dl_tag_by_entity_id(entity_id):
+    """
+    Retourne le dl_tag associé à une entité GLPI via son ID.
+    """
+    meta = get_complete_name(entity_id)
+    tag = meta.get("tag")
     dl_tag = AdminDatabase().get_dl_tag(tag)
 
     return dl_tag
@@ -1432,19 +1482,44 @@ def create_user(
         nice = client.extract_glpi_error_message(raw) or raw
         return {"ok": False, "error": nice}
 
-def create_entity_under_custom_parent(parent_entity_id, name, tokenuser=None):
+def create_entity_under_custom_parent(parent_entity_id, display_name, user, tokenuser=None):
     """
-    Crée une nouvelle entité GLPI sous un parent personnalisé,
-    et l'enregistre également dans la base interne.
+    Crée l’entité GLPI, le dossier /sharing/<dl_tag>, puis pkgs_shares + règles.
+    Retourne l'id GLPI créé.
     """
-    client = get_glpi_client(tokenuser=tokenuser)
+    try:
+        client = get_glpi_client(tokenuser=tokenuser)
 
-    tag_value = str(uuid.uuid4())
-    create_entities_in_glpi = client.create_entity_under_custom_parent(parent_entity_id, name, tag_value)
+        # Création de l’entité GLPI
+        tag_uuid = str(uuid.uuid4())
+        entity_id = client.create_entity_under_custom_parent(parent_entity_id, display_name, tag_uuid)
 
-    AdminDatabase().create_entity_under_custom_parent(create_entities_in_glpi, name, tag_value)
+        # Création dans saas_organisations
+        AdminDatabase().create_entity_under_custom_parent(entity_id, display_name, tag_uuid)
 
-    return create_entities_in_glpi
+        # Récup méta (nom + nom complet + tag GLPI) et dl_tag interne
+        meta = get_complete_name(entity_id) or {}
+        name          = meta.get("name", display_name)
+        complete_name = meta.get("completename", display_name)
+        tag           = meta.get("tag")
+        dl_tag        = AdminDatabase().get_dl_tag(tag)
+
+        # Création du dossier /sharing/<dl_tag>
+        share_path, _ = create_share_dir(dl_tag)
+
+        # Insert pkgs_shares + règles locales
+        pkdb = PkgsDatabase()
+        share_id = pkdb.add_pkgs_shares(name, complete_name, dl_tag)
+        if user and user != "root":
+            pkdb.add_pkgs_rules_local(user, share_id)
+        pkdb.add_pkgs_rules_local("root", share_id)
+
+        logger.debug(f"Creation Successful: entity_id={entity_id} share_id={share_id} path={share_path}")
+
+        return entity_id
+    except Exception as e:
+        logger.error(f"Failed to create Entity : {e}")
+        return False
 
 def create_organization(parent_entity_id,
                         name_new_entity,
@@ -1512,19 +1587,41 @@ def set_user_email(user_id, email, tokenuser=None):
     client = get_glpi_client(tokenuser=tokenuser)
     return client.set_user_email(user_id, email)
 
-def update_entity(entity_id, item_name, new_entity_name, parent_id, tokenuser=None):
+def update_entity(entity_id, field_name, new_name, parent_id, tokenuser=None):
     """
-    Met à jour une entité GLPI et synchronise la mise à jour
-    dans la base interne.
+    Met à jour l'entité GLPI, puis synchronise AdminDB et pkgs_shares (name/comments)
+    en ciblant pkgs_shares via le dl_tag.
     """
     client = get_glpi_client(tokenuser=tokenuser)
 
-    result = client.update_entity(entity_id, item_name, new_entity_name, parent_id)
+    try:
+        # Récupération du dl_tag
+        dl_tag = get_dl_tag_by_entity_id(entity_id)
 
-    if result:
-        AdminDatabase().update_entity(entity_id, new_entity_name)
+        # Màj GLPI
+        ok = client.update_entity(entity_id, field_name, new_name, parent_id)
+        if not ok:
+            return ok
 
-    return result
+        # MàJ AdminDB
+        AdminDatabase().update_entity(entity_id, new_name)
+
+        # Comments = completename à jour
+        meta = get_complete_name(entity_id) or {}
+        complete_name = meta.get("completename") or new_name
+
+        # Màj pkgs_shares via dl_tag
+        if dl_tag:
+            PkgsDatabase().update_pkgs_shares_names_by_dl_tag(dl_tag, new_name, complete_name)
+        else:
+            logger.debug(f"Skipped pkgs_shares update: no dl_tag for entity_id={entity_id}")
+
+        logger.debug(f"Update Successful: entity_id={entity_id} new_name={new_name}")
+        return ok
+
+    except Exception as e:
+        logger.error(f"Failed to update Entity: {e!r}")
+        return False
 
 def switch_user_profile(
     user_id: int,
@@ -1568,18 +1665,46 @@ def delete_and_purge_user(user_id):
         nice = client.extract_glpi_error_message(raw) or raw
         return {"ok": False, "error": nice}
 
-def delete_entity(entity_id, tokenuser=None):
+def delete_entity(entity_id: int, tokenuser=None):
     """
-    Supprime une entité GLPI et la supprime également de la base interne.
+    Supprime le dossier /sharing/<dl_tag>, les lignes pkgs_* liées,
+    puis l'entité GLPI et l'entrée AdminDB. Logs courts.
     """
     client = get_glpi_client(tokenuser=tokenuser)
 
-    result = client.delete_entity(entity_id)
+    try:
+        # Récupération du dl_tag
+        dl_tag = get_dl_tag_by_entity_id(entity_id)
 
-    if result["success"]:
-        AdminDatabase().delete_entity(entity_id)
+        # Suppression du repertoire /sharing/<dl_tag>
+        if dl_tag:
+            delete_share_dir(dl_tag)
+        else:
+            logger.debug(f"Skipped FS delete: no dl_tag for entity_id={entity_id}")
 
-    return result
+        # Suppression pkgs_shares + rules_local via dl_tag
+        if dl_tag:
+            share_id = PkgsDatabase().get_pkgs_share_id_by_dl_tag(dl_tag) if hasattr(PkgsDatabase, "get_pkgs_share_id_by_dl_tag") else None
+            if share_id is None:
+                meta = get_complete_name(entity_id) or {}
+                share = PkgsDatabase().find_share_by_entity_names(meta.get("name",""), meta.get("completename",""))
+                share_id = share["id"] if share else None
+
+            if share_id is not None:
+                PkgsDatabase().delete_rules_by_share_ids([share_id])
+                PkgsDatabase().delete_shares_by_ids([share_id])
+
+        # Suprression GLPI + AdminDB
+        result = client.delete_entity(entity_id)
+        if result.get("success"):
+            AdminDatabase().delete_entity(entity_id)
+
+        logger.debug(f"Delete Successful: entity_id={entity_id} dl_tag={dl_tag}")
+        return result
+
+    except Exception as e:
+        logger.error(f"Failed to delete Entity: {e!r}")
+        return {"success": False, "message": str(e)}
 
 def delete_user_profile_on_entity(user_id, profile_id, entities_id, tokenuser=None):
     client = get_glpi_client(tokenuser=tokenuser)
