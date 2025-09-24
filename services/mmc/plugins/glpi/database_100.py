@@ -1229,6 +1229,10 @@ class Glpi100(DyngroupDatabaseHelper):
         Returns:
             It returns the list of the machines.
         """
+        # ----------------------------
+        # IMPORT LOCAL POUR EVITER LES CIRCULAR IMPORT
+        # ----------------------------
+        from mmc.plugins.xmppmaster.config import xmppMasterConfig
         # start and end are used to set the limit parameter in the query
         start = int(start)
         end = int(end)
@@ -2545,6 +2549,10 @@ class Glpi100(DyngroupDatabaseHelper):
         """
         Give an LDAP like version of machines
         """
+        # ----------------------------
+        # IMPORT LOCAL POUR EVITER LES CIRCULAR IMPORT
+        # ----------------------------
+        from mmc.plugins.xmppmaster.config import xmppMasterConfig
         ret = {}
         if get != None:
             for m in machines:
