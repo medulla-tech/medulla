@@ -4,16 +4,16 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Nicolas Lécureuil <neoclust@mageia.org>, 2020
+# Nicolas Lécureuil <neoclust@mageia.org>, 2025
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-30 17:46+0200\n"
+"POT-Creation-Date: 2025-08-08 11:49+0200\n"
 "PO-Revision-Date: 2018-02-13 15:15+0000\n"
-"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2020\n"
+"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/medulla/teams/72118/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -90,17 +90,15 @@ msgid ""
 msgstr ""
 
 #: graph/header.inc.php:213 graph/header.inc.php:249
-#: modules/medulla_server/update/viewProductUpdates.php:122
 msgid "Yes"
 msgstr "是"
 
 #: graph/header.inc.php:216 graph/header.inc.php:218
-#: modules/medulla_server/update/viewProductUpdates.php:122
 msgid "No"
 msgstr "否"
 
-#: graph/header.inc.php:251 includes/FormGenerator.php:718
-#: includes/PageGenerator.php:2731
+#: graph/header.inc.php:251 includes/FormGenerator.php:713
+#: includes/PageGenerator.php:2734
 msgid "Close"
 msgstr "關閉"
 
@@ -309,209 +307,213 @@ msgstr "精靈停止"
 msgid "MMC agent"
 msgstr "MMC 代理程式"
 
-#: includes/FormGenerator.php:79 includes/FormGenerator.php:326
-#: includes/FormGenerator.php:849 includes/FormGenerator.php:997
+#: includes/FormGenerator.php:73 includes/FormGenerator.php:320
+#: includes/FormGenerator.php:844 includes/FormGenerator.php:992
 msgid "unavailable"
 msgstr "不可用"
 
-#: includes/FormGenerator.php:257
+#: includes/FormGenerator.php:251
 msgid "Delete photo"
 msgstr "刪除相片"
 
-#: includes/FormGenerator.php:311
+#: includes/FormGenerator.php:305
 msgid "yes"
 msgstr "是"
 
-#: includes/FormGenerator.php:314
+#: includes/FormGenerator.php:308
 msgid "no"
 msgstr "否"
 
-#: includes/FormGenerator.php:546
+#: includes/FormGenerator.php:541
 msgid "Year: "
 msgstr "年："
 
-#: includes/FormGenerator.php:546
+#: includes/FormGenerator.php:541
 msgid "Month: "
 msgstr "月："
 
-#: includes/FormGenerator.php:546
+#: includes/FormGenerator.php:541
 msgid "Day: "
 msgstr "日："
 
-#: includes/FormGenerator.php:547
+#: includes/FormGenerator.php:542
 msgid "Hour: "
 msgstr "時："
 
-#: includes/FormGenerator.php:547
+#: includes/FormGenerator.php:542
 msgid "Min.: "
 msgstr "分："
 
-#: includes/FormGenerator.php:547
+#: includes/FormGenerator.php:542
 msgid "Sec.: "
 msgstr "秒："
 
-#: includes/FormGenerator.php:633 includes/FormGenerator.php:639
+#: includes/FormGenerator.php:628 includes/FormGenerator.php:634
 #: modules/base/includes/AjaxFilterLog.inc.php:168
 #: modules/base/includes/AjaxFilterLog.inc.php:172
 msgid "or <a href='#'"
 msgstr "或 <a href='#'"
 
-#: includes/FormGenerator.php:635
+#: includes/FormGenerator.php:630
 #: modules/base/includes/AjaxFilterLog.inc.php:170
 msgid "value=\"now\";'>now</a>"
 msgstr "value=\"現在\";'>現在</a>"
 
-#: includes/FormGenerator.php:641
+#: includes/FormGenerator.php:636
 #: modules/base/includes/AjaxFilterLog.inc.php:174
 msgid "value=\"never\";'>never</a>"
 msgstr "value=\"永不\";'>永不</a>"
 
-#: includes/FormGenerator.php:694
+#: includes/FormGenerator.php:689
 msgid "January"
 msgstr "一月"
 
-#: includes/FormGenerator.php:694
+#: includes/FormGenerator.php:689
 msgid "February"
 msgstr "二月"
 
-#: includes/FormGenerator.php:694
+#: includes/FormGenerator.php:689
 msgid "March"
 msgstr "三月"
 
-#: includes/FormGenerator.php:694
+#: includes/FormGenerator.php:689
 msgid "April"
 msgstr "四月"
 
-#: includes/FormGenerator.php:695
+#: includes/FormGenerator.php:690
 msgid "May"
 msgstr "五月"
 
-#: includes/FormGenerator.php:695
+#: includes/FormGenerator.php:690
 msgid "June"
 msgstr "六月"
 
-#: includes/FormGenerator.php:695
+#: includes/FormGenerator.php:690
 msgid "July"
 msgstr "七月"
 
-#: includes/FormGenerator.php:695
+#: includes/FormGenerator.php:690
 msgid "August"
 msgstr "八月"
 
-#: includes/FormGenerator.php:696
+#: includes/FormGenerator.php:691
 msgid "September"
 msgstr "九月"
 
-#: includes/FormGenerator.php:696
+#: includes/FormGenerator.php:691
 msgid "October"
 msgstr "十月"
 
-#: includes/FormGenerator.php:696
+#: includes/FormGenerator.php:691
 msgid "November"
 msgstr "十一月"
 
-#: includes/FormGenerator.php:696
+#: includes/FormGenerator.php:691
 msgid "December"
 msgstr "十二月"
 
-#: includes/FormGenerator.php:706
+#: includes/FormGenerator.php:701
 msgid "Sunday"
 msgstr "星期日"
 
-#: includes/FormGenerator.php:706
+#: includes/FormGenerator.php:701
 msgid "Monday"
 msgstr "星期一"
 
-#: includes/FormGenerator.php:706
+#: includes/FormGenerator.php:701
 msgid "Tuesday"
 msgstr "星期二"
 
-#: includes/FormGenerator.php:706
+#: includes/FormGenerator.php:701
 msgid "Wednesday"
 msgstr "星期三"
 
-#: includes/FormGenerator.php:707
+#: includes/FormGenerator.php:702
 msgid "Thursday"
 msgstr "星期四"
 
-#: includes/FormGenerator.php:707
+#: includes/FormGenerator.php:702
 msgid "Friday"
 msgstr "星期五"
 
-#: includes/FormGenerator.php:707
+#: includes/FormGenerator.php:702
 msgid "Saturday"
 msgstr "星期六"
 
-#: includes/FormGenerator.php:719 includes/PageGenerator.php:1237
-#: includes/PageGenerator.php:1495 includes/ajaxTools.php:63
+#: includes/FormGenerator.php:714 includes/PageGenerator.php:1240
+#: includes/PageGenerator.php:1498 includes/ajaxTools.php:63
 #: includes/ajaxTools.php:69 modules/base/includes/AjaxFilterLog.inc.php:96
 #: modules/base/includes/AjaxFilterLog.inc.php:100
 msgid "Previous"
 msgstr "上一步"
 
-#: includes/FormGenerator.php:720 includes/PageGenerator.php:1251
-#: includes/PageGenerator.php:1505 includes/ajaxTools.php:74
+#: includes/FormGenerator.php:715 includes/PageGenerator.php:1254
+#: includes/PageGenerator.php:1508 includes/ajaxTools.php:74
 #: includes/ajaxTools.php:82 modules/base/includes/AjaxFilterLog.inc.php:107
 #: modules/base/includes/AjaxFilterLog.inc.php:111
 msgid "Next"
 msgstr "下一步"
 
-#: includes/FormGenerator.php:721
+#: includes/FormGenerator.php:716
 msgid "Now"
 msgstr "現在"
 
-#: includes/FormGenerator.php:809 modules/base/groups/localSidebar.php:28
+#: includes/FormGenerator.php:804
+#: modules/admin/admin/ajaxEntitiesManagement.php:58
+#: modules/base/groups/localSidebar.php:28
 msgid "Add"
 msgstr "新增"
 
-#: includes/FormGenerator.php:1158
+#: includes/FormGenerator.php:1153
 msgid "Toggle selection"
 msgstr "切換選取範圍"
 
-#: includes/FormGenerator.php:1314 modules/ppolicy/default/delete.php:45
-#: modules/base/groups/ajaxFilter.php:68 modules/base/users/ajaxFilter.php:140
-#: modules/base/views/index.tpl.php:92
+#: includes/FormGenerator.php:1309
+#: modules/admin/admin/ajaxEntitiesManagement.php:83
+#: modules/admin/admin/ajaxListUsersofEntity.php:93
+#: modules/ppolicy/default/delete.php:45 modules/base/groups/ajaxFilter.php:68
+#: modules/base/users/ajaxFilter.php:140 modules/base/views/index.tpl.php:92
 msgid "Delete"
 msgstr "刪除"
 
-#: includes/PageGenerator.php:904 includes/PageGenerator.php:1152
+#: includes/PageGenerator.php:907 includes/PageGenerator.php:1155
 msgid "to"
 msgstr "至"
 
-#: includes/PageGenerator.php:906 includes/PageGenerator.php:1154
+#: includes/PageGenerator.php:909 includes/PageGenerator.php:1157
 #, php-format
 msgid " - Total <b>%s </b>"
 msgstr " - 總計 <b>%s</b>"
 
-#: includes/PageGenerator.php:909 includes/PageGenerator.php:1157
+#: includes/PageGenerator.php:912 includes/PageGenerator.php:1160
 msgid "page"
 msgstr "頁碼"
 
-#: includes/PageGenerator.php:1272
+#: includes/PageGenerator.php:1275
 msgid "Pagination"
 msgstr "分頁"
 
-#: includes/PageGenerator.php:1348
+#: includes/PageGenerator.php:1351
 msgid "Go to page"
 msgstr "移至頁面"
 
-#: includes/PageGenerator.php:1809
+#: includes/PageGenerator.php:1812
 msgid "No item available"
 msgstr "無可用項目"
 
-#: includes/PageGenerator.php:2038
+#: includes/PageGenerator.php:2041
 msgid "Select entity"
 msgstr "選擇實體"
 
-#: includes/PageGenerator.php:3169 includes/PageGenerator.php:3251
-#: includes/PageGenerator.php:3280
+#: includes/PageGenerator.php:3178 includes/PageGenerator.php:3260
+#: includes/PageGenerator.php:3289
 #: modules/dyngroup/includes/groups.inc.php:364
 #: modules/dyngroup/includes/groups.inc.php:427
 #: modules/base/groups/members.php:308 modules/base/groups/edit.php:128
 msgid "Confirm"
 msgstr "確認"
 
-#: includes/PageGenerator.php:3174 includes/PageGenerator.php:3256
+#: includes/PageGenerator.php:3183 includes/PageGenerator.php:3265
 #: modules/imaging/imaging/images_iso.php:112
 #: modules/imaging/imaging/multicast.php:409
 #: modules/imaging/manage/master_iso.php:109
@@ -522,11 +524,11 @@ msgstr "確認"
 msgid "Cancel"
 msgstr "取消"
 
-#: includes/PageGenerator.php:3456
+#: includes/PageGenerator.php:3465
 msgid "Select all"
 msgstr "全選"
 
-#: includes/PageGenerator.php:3456
+#: includes/PageGenerator.php:3465
 msgid "Unselect all"
 msgstr "取消全選"
 
@@ -673,7 +675,7 @@ msgstr ""
 #: modules/medulla_server/includes/menu_actionaudit.php:87
 #: modules/admin/admin/ajaxRelaysList.php:46
 #: modules/admin/admin/ajaxRelaysList.php:48
-#: modules/admin/infoPackage.inc.php:65
+#: modules/admin/infoPackage.inc.php:68
 #: modules/base/includes/computers_list.inc.php:124
 #: modules/base/includes/computers_list.inc.php:126
 msgid "Edit config files"
@@ -940,6 +942,28 @@ msgstr ""
 msgid "Delete Cluster"
 msgstr ""
 
+#: modules/admin/admin/ajaxEntitiesManagement.php:57
+#: modules/admin/admin/ajaxListUsersofEntity.php:85
+#: modules/base/users/ajaxFilter.php:135 modules/base/views/index.tpl.php:89
+msgid "Edit"
+msgstr "編輯"
+
+#: modules/admin/admin/ajaxEntitiesManagement.php:59
+msgid "Manage users"
+msgstr ""
+
+#: modules/admin/admin/ajaxEntitiesManagement.php:60
+msgid "Download"
+msgstr "下載"
+
+#: modules/admin/admin/ajaxEntitiesManagement.php:94
+msgid "Editing not allowed"
+msgstr ""
+
+#: modules/admin/admin/ajaxEntitiesManagement.php:95
+msgid "Deleting not allowed"
+msgstr ""
+
 #: modules/admin/admin/ajaxRelaysList.php:73
 msgid "Relay Rules"
 msgstr ""
@@ -957,6 +981,14 @@ msgstr ""
 #: modules/admin/admin/ajaxRulesDetail.php:32
 msgid "Edit rule"
 msgstr ""
+
+#: modules/admin/admin/ajaxListUsersofEntity.php:79
+msgid "Enabled"
+msgstr "已啟用"
+
+#: modules/admin/admin/ajaxListUsersofEntity.php:79
+msgid "Disabled"
+msgstr "已停用"
 
 #: modules/imaging/includes/includes.php:211 modules/base/status/index.php:101
 msgid "Uptime: "
@@ -2127,10 +2159,6 @@ msgstr "名稱"
 #: modules/base/users/ajaxFilter.php:133
 msgid "Telephone"
 msgstr "電話"
-
-#: modules/base/users/ajaxFilter.php:135 modules/base/views/index.tpl.php:89
-msgid "Edit"
-msgstr "編輯"
 
 #: modules/base/users/ajaxFilter.php:139 modules/base/views/index.tpl.php:91
 msgid "MMC rights"

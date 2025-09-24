@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-19 20:41+0200\n"
+"POT-Creation-Date: 2025-08-08 11:48+0200\n"
 "PO-Revision-Date: 2025-07-30 09:10+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2025\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/medulla/teams/72118/zh_CN/)\n"
@@ -30,7 +30,7 @@ msgid "Delete "
 msgstr ""
 
 #: modules/admin/admin/rules.php:36 modules/admin/admin/rules_tabs.php:41
-#: modules/admin/infoPackage.inc.php:115
+#: modules/admin/infoPackage.inc.php:118
 msgid "Rules List"
 msgstr ""
 
@@ -72,7 +72,9 @@ msgstr ""
 
 #: modules/admin/admin/editCluster.php:104
 #: modules/admin/admin/editRelayRule.php:116
+#: modules/admin/admin/ajaxEntitiesManagement.php:57
 #: modules/admin/admin/newRelayRule.php:107
+#: modules/admin/admin/ajaxListUsersofEntity.php:85
 #: modules/admin/admin/newCluster.php:91
 msgid "Edit"
 msgstr "编辑"
@@ -166,7 +168,7 @@ msgid "Error during rule deletion"
 msgstr ""
 
 #: modules/admin/admin/ajaxClustersList.php:34
-#: modules/admin/infoPackage.inc.php:145
+#: modules/admin/infoPackage.inc.php:148
 msgid "Edit Cluster"
 msgstr ""
 
@@ -201,10 +203,51 @@ msgstr ""
 msgid "Name"
 msgstr "名称"
 
-#: modules/admin/admin/ajaxunban.php:80 modules/admin/infoPackage.inc.php:179
-#: modules/admin/infoPackage.inc.php:184
+#: modules/admin/admin/ajaxunban.php:80 modules/admin/infoPackage.inc.php:178
+#: modules/admin/infoPackage.inc.php:183
 msgid "Unban Machines"
 msgstr ""
+
+#: modules/admin/admin/ajaxEntitiesManagement.php:58
+msgid "Add"
+msgstr "新增"
+
+#: modules/admin/admin/ajaxEntitiesManagement.php:59
+msgid "Manage users"
+msgstr ""
+
+#: modules/admin/admin/ajaxEntitiesManagement.php:60
+msgid "Download"
+msgstr "下载"
+
+#: modules/admin/admin/ajaxEntitiesManagement.php:83
+#: modules/admin/admin/ajaxListUsersofEntity.php:93
+msgid "Delete"
+msgstr "删除"
+
+#: modules/admin/admin/ajaxEntitiesManagement.php:89
+msgid "Are you sure you want to delete this entity ["
+msgstr ""
+
+#: modules/admin/admin/ajaxEntitiesManagement.php:94
+msgid "Editing not allowed"
+msgstr ""
+
+#: modules/admin/admin/ajaxEntitiesManagement.php:95
+msgid "Deleting not allowed"
+msgstr ""
+
+#: modules/admin/admin/ajaxEntitiesManagement.php:121
+msgid "Name of Entity"
+msgstr ""
+
+#: modules/admin/admin/ajaxEntitiesManagement.php:125
+msgid "Users"
+msgstr "使用者"
+
+#: modules/admin/admin/ajaxEntitiesManagement.php:126
+msgid "Computers"
+msgstr "电脑"
 
 #: modules/admin/admin/reconfiguremachines.php:25
 msgid ""
@@ -256,6 +299,10 @@ msgstr "封装大小"
 msgid "Transfer Method"
 msgstr ""
 
+#: modules/admin/admin/listUsersofEntity.php:28
+msgid "List users of Entity ["
+msgstr ""
+
 #: modules/admin/admin/ajaxqalaunched.php:35
 msgid "Show Result"
 msgstr ""
@@ -287,6 +334,50 @@ msgstr ""
 #: modules/admin/admin/rules_tabs.php:48
 msgid "for Relay ["
 msgstr ""
+
+#: modules/admin/admin/editEntities.php:56
+msgid "Edit Entity ["
+msgstr ""
+
+#: modules/admin/admin/editEntities.php:57
+msgid "Add Sub-Entity to ["
+msgstr ""
+
+#: modules/admin/admin/editEntities.php:65
+#: modules/admin/admin/editEntities.php:88
+msgid ""
+"Failed to create the organization: The provided parameters are not valid. "
+"Please check the information and try again."
+msgstr ""
+
+#: modules/admin/admin/editEntities.php:76
+#: modules/admin/admin/editEntities.php:99
+msgid "The entity "
+msgstr ""
+
+#: modules/admin/admin/editEntities.php:80
+msgid "Failed to create the entity "
+msgstr ""
+
+#: modules/admin/admin/editEntities.php:103
+msgid "Failed to update the entity "
+msgstr ""
+
+#: modules/admin/admin/editEntities.php:112
+msgid "Save changes"
+msgstr ""
+
+#: modules/admin/admin/editEntities.php:112
+msgid "Create new Entity"
+msgstr ""
+
+#: modules/admin/admin/editEntities.php:122
+msgid "Head Entity"
+msgstr ""
+
+#: modules/admin/admin/editEntities.php:127
+msgid "Entity"
+msgstr "实体"
 
 #: modules/admin/admin/ajaxRelayRules.php:39
 msgid "Edit Rule"
@@ -329,7 +420,7 @@ msgstr ""
 
 #: modules/admin/admin/ajaxRelaysList.php:46
 #: modules/admin/admin/ajaxRelaysList.php:48
-#: modules/admin/infoPackage.inc.php:65
+#: modules/admin/infoPackage.inc.php:68
 msgid "Edit config files"
 msgstr ""
 
@@ -356,7 +447,7 @@ msgstr ""
 
 #: modules/admin/admin/ajaxRelaysList.php:62
 #: modules/admin/admin/ajaxRelaysList.php:63
-#: modules/admin/infoPackage.inc.php:55
+#: modules/admin/infoPackage.inc.php:58
 msgid "Reconfigure Machines"
 msgstr ""
 
@@ -367,13 +458,13 @@ msgstr "远端控制"
 
 #: modules/admin/admin/ajaxRelaysList.php:70
 #: modules/admin/admin/ajaxRelaysList.php:71
-#: modules/admin/infoPackage.inc.php:46 modules/admin/infoPackage.inc.php:50
+#: modules/admin/infoPackage.inc.php:49 modules/admin/infoPackage.inc.php:53
 msgid "Packages List"
 msgstr ""
 
 #: modules/admin/admin/ajaxRelaysList.php:73
-#: modules/admin/infoPackage.inc.php:92 modules/admin/infoPackage.inc.php:97
-#: modules/admin/infoPackage.inc.php:110
+#: modules/admin/infoPackage.inc.php:95 modules/admin/infoPackage.inc.php:100
+#: modules/admin/infoPackage.inc.php:113
 msgid "Relay Rules"
 msgstr ""
 
@@ -415,6 +506,12 @@ msgstr ""
 msgid "Xmpp IP"
 msgstr ""
 
+#: modules/admin/admin/entitiesManagement.php:28
+#: modules/admin/admin/localSidebar.php:33
+#: modules/admin/infoPackage.inc.php:189 modules/admin/infoPackage.inc.php:193
+msgid "Entities Management"
+msgstr ""
+
 #: modules/admin/admin/ajaxRulesDetail.php:32
 msgid "Edit rule"
 msgstr ""
@@ -439,82 +536,130 @@ msgstr ""
 msgid "Associated rules"
 msgstr ""
 
-#: modules/admin/admin/localSidebar.php:25
+#: modules/admin/admin/localSidebar.php:27
 msgid "List of Relays"
 msgstr ""
 
-#: modules/admin/admin/localSidebar.php:27
-#: modules/admin/infoPackage.inc.php:136 modules/admin/infoPackage.inc.php:140
+#: modules/admin/admin/localSidebar.php:28
+#: modules/admin/infoPackage.inc.php:139 modules/admin/infoPackage.inc.php:143
 msgid "Clusters List"
 msgstr ""
 
-#: modules/admin/admin/localSidebar.php:28
-#: modules/admin/admin/newCluster.php:50 modules/admin/infoPackage.inc.php:153
+#: modules/admin/admin/localSidebar.php:29
+#: modules/admin/admin/newCluster.php:50 modules/admin/infoPackage.inc.php:152
 msgid "New Cluster"
 msgstr ""
 
 #: modules/admin/admin/localSidebar.php:30
-#: modules/admin/infoPackage.inc.php:119
+#: modules/admin/infoPackage.inc.php:122
 msgid "Rules"
 msgstr ""
 
-#: modules/admin/admin/ajaxban.php:80 modules/admin/infoPackage.inc.php:169
-#: modules/admin/infoPackage.inc.php:174
+#: modules/admin/admin/ajaxban.php:80 modules/admin/infoPackage.inc.php:168
+#: modules/admin/infoPackage.inc.php:173
 msgid "Ban Machines"
 msgstr ""
+
+#: modules/admin/admin/ajaxListUsersofEntity.php:79
+msgid "Enabled"
+msgstr "已启用"
+
+#: modules/admin/admin/ajaxListUsersofEntity.php:79
+msgid "Disabled"
+msgstr "已停用"
+
+#: modules/admin/admin/ajaxListUsersofEntity.php:99
+msgid "Delete the user ["
+msgstr ""
+
+#: modules/admin/admin/ajaxListUsersofEntity.php:108
+msgid "Identifier"
+msgstr "识别码"
+
+#: modules/admin/admin/ajaxListUsersofEntity.php:112
+msgid "First name"
+msgstr "名字"
+
+#: modules/admin/admin/ajaxListUsersofEntity.php:113
+msgid "Real name"
+msgstr ""
+
+#: modules/admin/admin/ajaxListUsersofEntity.php:114
+msgid "eMail"
+msgstr ""
+
+#: modules/admin/admin/ajaxListUsersofEntity.php:115
+msgid "Status"
+msgstr "状态"
+
+#: modules/admin/admin/ajaxListUsersofEntity.php:116
+msgid "Last connection"
+msgstr ""
+
+#: modules/admin/admin/ajaxListUsersofEntity.php:117
+msgid "Profile"
+msgstr "设定档"
 
 #: modules/admin/admin/detailactions.php:28
 msgid "Detail Actions"
 msgstr ""
 
-#: modules/admin/infoPackage.inc.php:26 modules/admin/infoPackage.inc.php:31
+#: modules/admin/infoPackage.inc.php:29 modules/admin/infoPackage.inc.php:34
 msgid "Admin"
 msgstr ""
 
-#: modules/admin/infoPackage.inc.php:37 modules/admin/infoPackage.inc.php:41
+#: modules/admin/infoPackage.inc.php:40 modules/admin/infoPackage.inc.php:44
 msgid "Relays List"
 msgstr ""
 
-#: modules/admin/infoPackage.inc.php:60
+#: modules/admin/infoPackage.inc.php:63
 msgid "Switch Relay"
 msgstr ""
 
-#: modules/admin/infoPackage.inc.php:70
+#: modules/admin/infoPackage.inc.php:73
 msgid "Launch Quick Action on Relays"
 msgstr ""
 
-#: modules/admin/infoPackage.inc.php:75 modules/admin/infoPackage.inc.php:80
+#: modules/admin/infoPackage.inc.php:78 modules/admin/infoPackage.inc.php:83
 msgid "Qa launched on Relays"
 msgstr ""
 
-#: modules/admin/infoPackage.inc.php:86
+#: modules/admin/infoPackage.inc.php:89
 msgid "Qa result on Relays"
 msgstr ""
 
-#: modules/admin/infoPackage.inc.php:101 modules/admin/infoPackage.inc.php:105
+#: modules/admin/infoPackage.inc.php:104 modules/admin/infoPackage.inc.php:108
 msgid "New Relay Rule"
 msgstr ""
 
-#: modules/admin/infoPackage.inc.php:124 modules/admin/infoPackage.inc.php:128
+#: modules/admin/infoPackage.inc.php:127 modules/admin/infoPackage.inc.php:131
 msgid "Rules Detail"
 msgstr ""
 
-#: modules/admin/infoPackage.inc.php:132
+#: modules/admin/infoPackage.inc.php:135
 msgid "Move Rule"
 msgstr ""
 
-#: modules/admin/infoPackage.inc.php:149
-msgid "Delete a Cluster"
-msgstr ""
-
-#: modules/admin/infoPackage.inc.php:157
+#: modules/admin/infoPackage.inc.php:156
 msgid "Delete Relay Rules"
 msgstr ""
 
-#: modules/admin/infoPackage.inc.php:161
+#: modules/admin/infoPackage.inc.php:160
 msgid "Edit Relay Rule"
 msgstr ""
 
-#: modules/admin/infoPackage.inc.php:165
+#: modules/admin/infoPackage.inc.php:164
 msgid "Move Relay Rule"
+msgstr ""
+
+#: modules/admin/infoPackage.inc.php:198
+msgid "Edit Entities"
+msgstr ""
+
+#: modules/admin/infoPackage.inc.php:202 modules/admin/infoPackage.inc.php:206
+msgid "List users of Entity"
+msgstr ""
+
+#: modules/admin/infoPackage.inc.php:211
+msgid "Grub entity users d'une organisation"
 msgstr ""
