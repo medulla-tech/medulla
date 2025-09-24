@@ -26,6 +26,16 @@
 //======================================================================
 //require_once("modules/xmppmaster/includes/xmlrpc.php");
 
+function xmlrpc_update_approve_products($products)
+{
+    return xmlCall("xmppmaster.update_approve_products", array($products));
+}
+
+function xmlrpc_get_approve_products()
+{
+    return xmlCall("xmppmaster.get_approve_products", array());
+}
+
 function xmlrpc_get_auto_approve_rules()
 {
     return xmlCall("xmppmaster.get_auto_approve_rules", array());

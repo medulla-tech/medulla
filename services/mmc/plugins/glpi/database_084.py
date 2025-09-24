@@ -2295,6 +2295,10 @@ class Glpi084(DyngroupDatabaseHelper):
         """
         Give an LDAP like version of machines
         """
+        # ----------------------------
+        # IMPORT LOCAL POUR EVITER LES CIRCULAR IMPORT
+        # ----------------------------
+        from mmc.plugins.xmppmaster.config import xmppMasterConfig
         ret = {}
         if get != None:
             for m in machines:

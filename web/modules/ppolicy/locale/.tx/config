@@ -1,9 +1,0 @@
-[main]
-host = https://www.transifex.com
-
-[o:siveo:p:pulse-1:r:ppolicy]
-file_filter = <lang>/LC_MESSAGES/ppolicy.po
-source_file = ppolicy.pot
-source_lang = en_US
-type        = PO
-

@@ -86,3 +86,5 @@ agent/conf/plugins/services.ini
 config.h
 config.h.in
 stamp-h1
+.tx/config
+tx/*.sh
