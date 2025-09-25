@@ -10,7 +10,10 @@ from mmc.plugins.admin.config import AdminConfig
 # Import for Database
 from pulse2.database.admin import AdminDatabase
 from pulse2.database.pkgs import PkgsDatabase
+
 from mmc.plugins.glpi import get_entities_with_counts, get_entities_with_counts_root, set_user_api_token, get_user_profile_email, get_complete_name, get_user_identifier
+from mmc.support.apirest.glpi import GLPIClient
+from mmc.support.apirest.glpi import verifier_parametres
 from configparser import ConfigParser
 import subprocess
 import traceback
@@ -29,14 +32,14 @@ VERSION = "1.0.0"
 APIVERSION = "4:1:3"
 
 logger = logging.getLogger()
-
-def verifier_parametres(dictctrl, cles_requises):
-    # Vérifier chaque clé
-    for cle in cles_requises:
-        if cle not in dictctrl or dictctrl[cle] is None:
-            # Lever une exception si une clé est manquante ou None
-            raise ValueError(
-                f"La clé '{cle}' est manquante ou None dans le dictionnaire initparametre.")
+#
+# def verifier_parametres(dictctrl, cles_requises):
+#     # Vérifier chaque clé
+#     for cle in cles_requises:
+#         if cle not in dictctrl or dictctrl[cle] is None:
+#             # Lever une exception si une clé est manquante ou None
+#             raise ValueError(
+#                 f"La clé '{cle}' est manquante ou None dans le dictionnaire initparametre.")
 
 
 # #############################################################

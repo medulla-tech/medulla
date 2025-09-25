@@ -17,6 +17,17 @@ from typing import Optional, Union, Dict, List, Any
 import uuid
 import os
 
+logger = logging.getLogger()
+
+
+def verifier_parametres(dictctrl, cles_requises):
+    # Vérifier chaque clé
+    for cle in cles_requises:
+        if cle not in dictctrl or dictctrl[cle] is None:
+            # Lever une exception si une clé est manquante ou None
+            raise ValueError(
+                f"La clé '{cle}' est manquante ou None dans le dictionnaire initparametre.")
+
 class GLPIClient:
     """
     REST customer for the GLPI API.
@@ -61,6 +72,7 @@ class GLPIClient:
     - delete_entity (entity_id)
     - delete_and_purge_user (user_id)
     - delete_profile_from_user (user_id, profile_id)
+    - delete_computer(computer_id, force_purge=True)
 
     # Utilities
     - Generate_Token (Length = 40): generates an alphanumeric token.
@@ -1144,3 +1156,59 @@ class GLPIClient:
         except Exception as e:
             logger.error(f"Erreur inattendue lors de l'update user {user_id}: {e}")
             return None
+
+    def delete_computer(self, computer_id, force_purge=True):
+        """
+        Supprime un ordinateur dans GLPI via l'API REST.
+
+        Args:
+            computer_id (int|str): ID du Computer à supprimer.
+            force_purge (bool): True pour forcer la suppression définitive, sinon False.
+
+        Returns:
+            dict: {"success": bool, "message": str}
+        """
+        if not self.SESSION_TOKEN:
+            msg = "Session non initialisée. Veuillez initialiser la session."
+            logger.error(msg)
+            return {"success": False, "message": msg}
+
+        if not computer_id:
+            msg = "[!] Usage: delete_computer <computer_id>"
+            logger.error(msg)
+            return {"success": False, "message": msg}
+
+        try:
+            headers = self._headers()
+        except Exception as e:
+            logger.error(f"Session/headers error: {e}")
+            return {"success": False, "message": str(e)}
+
+        uuid = int(computer_id)
+        url = f"{self.URL_BASE}/Computer/{uuid}?force_purge={'true' if force_purge else 'false'}"
+
+        try:
+            response = requests.delete(url, headers=headers, timeout=15)
+
+            if response.status_code in (200, 204):
+                logger.info(f"[+] Computer {uuid} supprimé avec succès")
+                return {"success": True, "message": f"Computer {uuid} supprimé avec succès"}
+
+            elif response.status_code == 207:  # Multi-Status
+                try:
+                    details = response.json()
+                    logger.warning(f"Suppression partielle: {details}")
+                    return {"success": False, "message": f"Suppression partielle: {details}"}
+                except Exception:
+                    return {"success": False, "message": "Suppression partielle (207) mais réponse illisible"}
+
+            else:
+                try:
+                    error_data = response.json()
+                    return {"success": False, "message": error_data}
+                except ValueError:
+                    return {"success": False, "message": response.text}
+
+        except requests.RequestException as e:
+            logger.error(f"Erreur de communication avec l'API: {e}")
+            return {"success": False, "message": str(e)}

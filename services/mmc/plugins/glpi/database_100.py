@@ -40,7 +40,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import create_session, mapper, relationship, class_mapper
 from sqlalchemy.exc import NoSuchTableError, NoInspectionAvailable
-
+from mmc.support.apirest.glpi import GLPIClient
 
 try:
     from sqlalchemy.sql.expression import ColumnOperators
@@ -59,9 +59,10 @@ from mmc.database.database_helper import DatabaseHelper
 # TODO rename location into entity (and locations in location)
 from pulse2.utils import same_network, unique, noNone
 from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
+from pulse2.database.admin import AdminDatabase
 from pulse2.managers.group import ComputerGroupManager
 from mmc.plugins.glpi.config import GlpiConfig
-from mmc.plugins.glpi.GLPIClient import XMLRPCClient
+# from mmc.plugins.glpi.GLPIClient import XMLRPCClient
 from mmc.plugins.glpi.utilities import complete_ctx, literalquery
 from mmc.plugins.glpi.database_utils import (
     decode_latin1,
@@ -6353,47 +6354,41 @@ class Glpi100(DyngroupDatabaseHelper):
         @return: True if the machine successfully deleted
         @rtype: bool
         """
-        authtoken = base64.b64encode(
-            bytes(
-                "%s:%s"
-                % (
-                    GlpiConfig.webservices["glpi_username"],
-                    GlpiConfig.webservices["glpi_password"],
-                ),
-                "utf-8",
-            )
-        )
 
-        headers = {
-            "content-type": "application/json",
-            "Authorization": "Basic " + authtoken.decode("utf-8"),
-        }
-        url = GlpiConfig.webservices["glpi_base_url"] + "initSession"
-        self.logger.debug("Create session REST")
-        r = requests.get(url, headers=headers)
-        if r.status_code == 200:
-            sessionwebservice = str(json.loads(r.text)["session_token"])
-            self.logger.debug("session %s" % sessionwebservice)
-            url = (
-                GlpiConfig.webservices["glpi_base_url"]
-                + "Computer/"
-                + str(fromUUID(uuid))
-            )
-            headers = {
-                "content-type": "application/json",
-                "Session-Token": sessionwebservice,
-            }
-            if GlpiConfig.webservices["purge_machine"]:
-                parameters = {"force_purge": "1"}
-            else:
-                parameters = {"force_purge": "0"}
-            r = requests.delete(url, headers=headers, params=parameters)
-            if r.status_code == 200:
-                self.logger.debug("Machine %s deleted" % str(fromUUID(uuid)))
-                self._killsession(sessionwebservice)
-                return True
-        self._killsession(sessionwebservice)
-        return False
+        # GLPIClient
+        # recupere les information de connection
+        initparametre = AdminDatabase().get_CONNECT_API()
+        # Liste des clés à vérifier
+        cles_requises = ["glpi_mmc_app_token", "glpi_url_base_api", "glpi_root_user_token"]
+
+        # Vérification
+        valide = True
+        for cle in cles_requises:
+            if cle not in initparametre:
+                logger.error(f"❌ La clé '{cle}' est manquante dans initparametre.voir parametres saas_application")
+                valide = False
+            elif not initparametre[cle]:
+                logger.error(f"❌ La clé '{cle}' est vide ou None. voir parametres saas_application")
+                valide = False
+        if not valide:
+            logger.error("\n❌ Certaines clés sont manquantes ou invalides. voir parametres saas_application")
+            return None
+
+        client = GLPIClient(
+            app_token=initparametre.get('glpi_mmc_app_token'),
+            url_base=initparametre.get('glpi_url_base_api'),
+            user_token=initparametre.get('glpi_root_user_token'),
+        )
+        client.init_session()
+
+        # Vérifie que le client est bien initialisé et qu'une session est active
+        if not client or not hasattr(client, 'SESSION_TOKEN') or not client.SESSION_TOKEN:
+            logger.error("Session GLPI non initialisée : impossible d'obtenir un client valide")
+            return None
+
+        computer_id =fromUUID(uuid)
+        result = client.delete_computer(computer_id, force_purge=True)
+        return result
 
     @DatabaseHelper._sessionm
     def addUser(self, session, username, password, entity_rights=None):
