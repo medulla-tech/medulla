@@ -1276,7 +1276,8 @@ def create_share_dir(tag: str, mode: int = 0o755) -> tuple[str, bool]:
 
 def delete_share_dir(tag: str) -> tuple[str, bool]:
     """Supprime récursivement /var/lib/pulse2/packages/sharing/<tag>."""
-    if not tag:                    # <-- garde anti-None pour éviter le TypeError
+    BASE_SHARE = "/var/lib/pulse2/packages/sharing"
+    if not tag:
         return None, False
     if not re.fullmatch(r"[A-Za-z0-9._-]{1,128}", tag):
         raise ValueError("tag invalide")
@@ -1475,6 +1476,16 @@ def create_user(
 
         api_token = client.generate_token()
         set_user_api_token(int(id_user), api_token)
+
+        # Creation of the sharing rule for the user who has just been created
+        entity_info = get_entity_info(id_entity)
+        entity_name             = entity_info.get('name')
+        entity_completename     = entity_info.get('completename')
+
+        pkdb = PkgsDatabase()
+        id_shares = pkdb.find_share_by_entity_names(entity_name, entity_completename).get('id')
+        pkdb.add_pkgs_rules_local(identifier, id_shares)
+
         return {"ok": True, "id": int(id_user), "api_token": api_token}
 
     except Exception as e:
