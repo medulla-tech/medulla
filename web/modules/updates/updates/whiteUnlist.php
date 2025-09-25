@@ -25,8 +25,10 @@ require_once("modules/updates/includes/xmlrpc.php");
 $updateid = htmlentities($_GET['updateid']);
 $title = htmlentities($_GET['title']);
 
+
+$paramquit = $_GET;
 if(isset($_POST['bconfirm'])){
-    $result = xmlrpc_white_unlist_update($updateid);
+    $result = xmlrpc_white_unlist_update($updateid, $_GET['entityid'] );
     if($result){
         $str = sprintf(_T("The update %s (%s) has been unlisted.", "updates"), $title, $updateid);
         new NotifyWidgetSuccess($str);
@@ -35,7 +37,8 @@ if(isset($_POST['bconfirm'])){
         $str = sprintf(_T("The update %s (%s) hasn't been unlisted", "updates"), $title, $updateid);
         new NotifyWidgetFailure($str);
     }
-    header('location: '.urlStrRedirect("updates/updates/updatesListWin"));
+
+    header('location: '.urlStrRedirect("updates/updates/updatesListWin", getFilteredGetParams()));
     exit;
 }
 else{

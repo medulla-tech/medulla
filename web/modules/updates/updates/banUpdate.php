@@ -26,7 +26,7 @@ $id = htmlentities($_GET['updateid']);
 $title = htmlentities($_GET['title']);
 
 if(isset($_POST['bconfirm'])){
-    $result = xmlrpc_exclude_update($id);
+    $result = xmlrpc_exclude_update($id, $_GET['entityid']);
     if($result){
         $str = sprintf(_T("The package %s (%s) has been banned.", "updates"), $title, $id);
         new NotifyWidgetSuccess($str);
@@ -35,7 +35,7 @@ if(isset($_POST['bconfirm'])){
         $str = sprintf(_T("The package %s (%s) failed to move", "updates"), $title, $id);
         new NotifyWidgetFailure($str);
     }
-    header('location: '.urlStrRedirect("updates/updates/updatesListWin"));
+    header('location: '.urlStrRedirect("updates/updates/updatesListWin", getFilteredGetParams()));
     exit;
 }
 else{

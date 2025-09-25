@@ -25,8 +25,36 @@
 function machineExists($h_params) { $machine = getMachine($h_params); return ($machine->hostname != ''); }
 function getMachine($h_params, $ping = False) { return new Machine(rpcGetMachine($h_params), $ping); }
 
+
+
 // Machine object
 class Machine {
+function __construct($h_params, $ping = false) {
+    $this->ping = false;
+    $this->hostname = isset($h_params['hostname'][0]) ? $h_params['hostname'][0] : '';
+    $this->uuid = isset($h_params['uuid']) ? $h_params['uuid'] : '';
+    $this->displayName = isset($h_params['displayName']) ? $h_params['displayName'] : '';
+
+    // Vérification des cookies
+    if (!empty($_COOKIE["session"][$this->hostname]["platform"])) {
+        $this->platform = $_COOKIE["session"][$this->hostname]["platform"];
+    } else {
+        $this->platform = "";
+    }
+
+    if ($ping) {
+        $platform = rpcGetPlatform($h_params);
+        if ($platform !== false && $platform !== null) {
+            $this->platform = $platform;
+        }
+        $this->ping = rpcPingMachine($h_params);
+        if ($this->hostname) {
+            setcookie("session[".$this->hostname."][platform]", $this->platform, time()+60*60);
+        }
+    }
+}
+/*
+
     function __construct($h_params, $ping = False) {
         $this->ping = false;
         $this->hostname = $h_params['hostname'][0];
@@ -42,7 +70,7 @@ class Machine {
             $this->ping = rpcPingMachine($h_params);
             setcookie("session[".$this->hostname."][platform]", $this->platform, time()+60*60);
         }
-    }
+    }*/
 }
 
 // XMLRPC Calls

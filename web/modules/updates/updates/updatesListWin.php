@@ -1,15 +1,15 @@
 <?php
 /*
- * (c) 2022 Siveo, http://www.siveo.net
+ * (c) 2024-2025 Medulla, http://www.medulla-tech.io
  *
  * $Id$
  *
- * This file is part of Management Console (MMC).
+ * This file is part of MMC, http://www.medulla-tech.io
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ * the Free Software Foundation; either version 3 of the License, or
+ * any later version.
  *
  * MMC is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -17,35 +17,19 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
+ * along with MMC; If not, see <http://www.gnu.org/licenses/>.
+ *
  */
-
+// modules/admin/admin/manage_entity.php
 require("localSidebar.php");
 require("graph/navbar.inc.php");
-
-$p = new PageGenerator(_T("Manage Updates Lists", 'updates'));
-$p->setSideMenu($sidemenu);
-$p->display();
-
-require_once("modules/updates/includes/xmlrpc.php");
-
-$ajaxG = new AjaxFilter(urlStrRedirect("updates/updates/ajaxUpdatesListWinGray"), "containerGray", [], "formGray");
-$ajaxG->display();
-print "<br/><br/><br/>";
-$ajaxG->displayDivToUpdate();
+require_once("modules/admin/includes/xmlrpc.php");
+require_once("modules/xmppmaster/includes/xmlrpc.php");
+require_once("modules/updates/includes/updates.inc.php");
 
 
-print "<br/><br/><br/>";
-$ajaxW = new AjaxFilter(urlStrRedirect("updates/updates/ajaxUpdatesListWinWhite"), "containerWhite", [], "formWhite");
-$ajaxW->display();
-print "<br/><br/><br/>";
-$ajaxW->displayDivToUpdate();
-
-print "<br/><br/><br/>";
-
-$ajaxB = new AjaxFilter(urlStrRedirect("updates/updates/ajaxUpdatesListWinBlack"), "containerBlack", [], "formBlack");
-$ajaxB->display();
-print "<br/><br/><br/>";
-$ajaxB->displayDivToUpdate();
+generateEntityPage(_T("Manage Updates Lists", 'updates'),
+                            "ajaxUpdatesListWin",
+                            $sidemenu);
 ?>
 

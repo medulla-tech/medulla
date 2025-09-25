@@ -1079,6 +1079,7 @@ class Glpi100(DyngroupDatabaseHelper):
 
         if "entity" in self.config.summary:
             query = query.add_column(Entities.name.label("entity"))
+            query = query.add_column(Entities.id.label("entityid"))
 
         if "location" in self.config.summary:
             query = query.add_column(self.locations.c.name.label("location"))
@@ -6891,7 +6892,7 @@ class Glpi100(DyngroupDatabaseHelper):
         Returns:
             dict ou list[dict]:
                 - Si `usernames` est une liste : un dictionnaire où chaque clé est un username et la valeur est la liste de ses entités.
-                Exemple : {"jfk1": [{"entity_id": 1, "entity_name": "...", "entity_completename": "...", ...}, ...], ...}
+                Exemple : {"jfk": [{"entity_id": 1, "entity_name": "...", "entity_completename": "...", ...}, ...], ...}
                 - Si `usernames` est une chaîne : une liste d'entités pour cet utilisateur.
                 Exemple : [{"entity_id": 1, "entity_name": "...", "entity_completename": "...", ...}, ...]
                 - Si un utilisateur n'est pas trouvé, sa clé aura une liste vide comme valeur.

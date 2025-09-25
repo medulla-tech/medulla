@@ -27,7 +27,9 @@ $maxperpage = $conf["global"]["maxperpage"];
 $filter  = isset($_GET['filter']) ? $_GET['filter'] : "";
 $start = isset($_GET['start']) ? $_GET['start'] : 0;
 $end   = (isset($_GET['end']) ? $_GET['start'] + $maxperpage : $maxperpage);
-$black_list = xmlrpc_get_black_list($start, $maxperpage, $filter);
+$entityid   = (isset($_GET['uuid']) ? $_GET['uuid']  : -1 );
+
+$black_list = xmlrpc_get_black_list( $start, $maxperpage, $filter, $entityid);
 
 // BlackList Actions
 $blackUnbanAction = new ActionItem(_T("Unban update", "updates"), "blackUnban", "unlist", "", "updates", "updates");
@@ -50,7 +52,13 @@ for($i = 0; $i < $count; $i++) {
         'updateid' => $black_list['updateid_or_kb'][$i],
         'title' => $black_list['title'][$i],
         'id' => $black_list['id'][$i],
-        "severity" => $black_list['severity'][$i]
+        "severity" => $black_list['severity'][$i],
+        'entityid' => $entityid,
+        'name' => $_GET['name'],
+        'completename' => $_GET['completename'],
+        'comments' => $_GET['comments'],
+        'level' => $_GET['level'],
+        'altname' => $_GET['altname']
     );
 
     if(strlen($black_list['updateid_or_kb'][$i]) < 10) {
@@ -58,7 +66,7 @@ for($i = 0; $i < $count; $i++) {
         $updateids_black[] = "";
     } else {
         $kbs_black[] = "";
-        $updateids_black[] = "<a href=\"https://www.catalog.update.microsoft.com/Search.aspx?q='" . $black_list['updateid_or_kb'][$i] . "'\">" . $black_list['updateid_or_kb'][$i] . "</a>";
+        $updateids_black[] = "<a href=\"https://www.catalog.update.microsoft.com/Search.aspx?q='" . $black_list['updateid_or_kb'][$i] .'" target="_blank">' . $black_list['updateid_or_kb'][$i] . "</a>";
     }
 }
 
@@ -78,7 +86,46 @@ $b->setItemCount($count_black);
 $b->start = 0;
 $b->end = $count_black;
 $b->setParamInfo($params_black);
-echo '</br></br>';
-echo '<h2>'._T("Black list (banned updates)", "updates").'</h2>';
+
+// affichage titre tableau
+$converter = new ConvertCouleur();
+
+if ($black_list['nb_element_total'] == "0")
+{
+$titretableau = _T("No updates are currently available in the Black list (banned updates)", 'updates');
+}else{
+$titretableau = _T("Black list (banned updates)", 'updates');
+}
+
+// $completename = $_GET['completename'];
+$completename = $_GET['altname'];
+
+// Remplace les "+" par un espace
+$completename_cleaned = str_replace('+', ' ', $completename);
+// Remplace ">" par " → "
+$completename_cleaned = str_replace('>', ' → ', $completename_cleaned);
+// Remplace les "&nbsp;" par un espace
+$completename_cleaned = str_replace('&nbsp;', ' ', $completename_cleaned);
+// Supprime les espaces multiples
+$completename_cleaned = preg_replace('/\s+/', ' ', $completename_cleaned);
+// Supprime les espaces en début et fin de chaîne
+$completename_cleaned = trim($completename_cleaned);
+$ide = $_GET['uuid'];
+$b->setCaptionText(sprintf("%s [%s] (%s)",
+                           $titretableau ,
+                           $completename_cleaned,
+                           $ide));
+
+$b->setCssCaption(
+    $border = 1,
+    $bold = 0,
+    $bgColor = "lightgray",
+    $textColor = "black",
+    $padding = "10px 0",
+    $size = "20",
+    $emboss = 1,
+    $rowColor = $converter->convert("lightgray")
+);
+
 $b->addActionItemArray($blackActions["unban"]);
 $b->display();

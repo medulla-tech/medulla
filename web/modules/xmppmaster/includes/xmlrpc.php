@@ -26,24 +26,24 @@
 //======================================================================
 //require_once("modules/xmppmaster/includes/xmlrpc.php");
 
-function xmlrpc_update_approve_products($products)
+function xmlrpc_update_approve_products($products, $entity_id="")
 {
-    return xmlCall("xmppmaster.update_approve_products", array($products));
+    return xmlCall("xmppmaster.update_approve_products", array($products, $entity_id));
 }
 
-function xmlrpc_get_approve_products()
+function xmlrpc_get_approve_products($identity)
 {
-    return xmlCall("xmppmaster.get_approve_products", array());
+    return xmlCall("xmppmaster.get_approve_products", array($identity));
 }
 
-function xmlrpc_get_auto_approve_rules()
+function xmlrpc_get_auto_approve_rules($identity)
 {
-    return xmlCall("xmppmaster.get_auto_approve_rules", array());
+    return xmlCall("xmppmaster.get_auto_approve_rules", array($identity));
 }
 
-function xmlrpc_update_auto_approve_rules($updates)
+function xmlrpc_update_auto_approve_rules($updates, $entity_id)
 {
-    return xmlCall("xmppmaster.update_auto_approve_rules", array($updates));
+    return xmlCall("xmppmaster.update_auto_approve_rules", array($updates, $entity_id));
 }
 //topology
 function xmlrpc_topology_pulse()

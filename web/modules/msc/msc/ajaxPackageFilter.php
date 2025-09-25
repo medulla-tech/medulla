@@ -44,6 +44,7 @@ if (!empty($_GET['gid'])) {
 require_once("modules/msc/includes/package_api.php");
 
 
+
 // Give alias for convergences status
 if(!defined("CONVERGENCE_AVAILABLE_NOT_SET"))
     define("CONVERGENCE_AVAILABLE_NOT_SET", 0);
@@ -57,15 +58,18 @@ if(!defined("CONVERGENCE_AVAILABLE_SET"))
 if(!defined("CONVERGENCE_NONE"))
     define ("CONVERGENCE_NONE", 3);
 
-
+/*
 if (!in_array("xmppmaster", $_SESSION["supportModList"])) {
     if ($_GET['uuid']) {
+
+
+
         $label = new RenderedLabel(3, sprintf(_T('These packages can be installed on computer "%s"', 'msc'), $_GET['hostname']));
     } else {
         $label = new RenderedLabel(3, sprintf(_T('These packages can be installed on group "%s"', 'msc'), $group->getName()));
     }
     $label->display();
-}
+}*/
 
 function getConvergenceStatus($mountpoint, $pid, $group_convergence_status, $associateinventory)
 {
@@ -131,6 +135,9 @@ if (isset($_GET["start"])) {
     $start = 0;
 }
 
+
+$filter['xmppmaster']=getFilteredGetParams();
+
 $filter['filter'] = $_GET["filter"];
 if (!empty($_GET['uuid'])) {
     $filter['machine'] = $_GET['hostname'];
@@ -149,6 +156,10 @@ if (isset($_GET['uuid'])) {
         $filter['filter1'] = "darwin";
     }
 };
+
+$filter['id'] = "darwin";
+
+
 list($count, $packages) =  get_all_packages_deploy($_SESSION['login'], $start, $start + $maxperpage, $filter);
 // list($count, $packages) =  xmlrpc_xmppGetAllPackages($filter, $start, $start + $maxperpage);
 $packages[0][1] = 0;

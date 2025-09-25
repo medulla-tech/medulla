@@ -43,11 +43,14 @@ $_GET['uuid'] = isset($_GET['uuid']) ? $_GET['uuid'] : (isset($_GET['objectUUID'
  */
 right_top_shortcuts_display();
 if ($_GET['uuid']) {
+
+
     $machine = getMachine(array('uuid' => $_GET['uuid']));
     if ($machine->uuid != $_GET['uuid']) {
         $p = new PageGenerator(sprintf(_T("%s's computer secure control", 'msc'), $_GET['hostname']));
         $p->setSideMenu($sidemenu);
         $p->display();
+        // affiche page vide header.php
         include('modules/msc/msc/header.php');
     } else {
         if (empty($_GET['hostname'])) {
@@ -55,9 +58,11 @@ if ($_GET['uuid']) {
         }
         $p = new TabbedPageGenerator();
         $p->setSideMenu($sidemenu);
-        $p->addTop(sprintf(_T("%s's computer secure control", 'msc'), $machine->hostname), "modules/msc/msc/header.php");
+        $p->addTop(sprintf(_T("%s's computer secure controlaaa", 'msc'), $machine->hostname), "modules/msc/msc/header.php");
+       $dataparams=getFilteredGetParams() ;
+        $dataparams['uuid'] = $machine->uuid;
         //show list packages
-        $p->addTab("tablaunch", _T("Launch Actions", 'msc'), "", "modules/msc/msc/launch.php", array('uuid' => $machine->uuid, 'hostname' => $machine->hostname));
+        $p->addTab("tablaunch", _T("Launch Actions", 'msc'), "", "modules/msc/msc/launch.php", $dataparams);
         $p->display();
     }
 } elseif ($_GET['gid']) {
@@ -69,12 +74,9 @@ if ($_GET['uuid']) {
         $msc_host = new RenderedMSCGroupDontExists($_GET['gid']);
         $msc_host->headerDisplay();
     } else {
-        $p->addTop(sprintf(_T("%s's group secure control", 'msc'), $group->getName()), "modules/msc/msc/header.php");
+        $p->addTop(sprintf(_T("%s's group secure controlmmm", 'msc'), $group->getName()), "modules/msc/msc/header.php");
         if (!$group->all_params['ro'] || strtolower($group->all_params['ro']) === "false") {
             $p->addTab("grouptablaunch", _T("Launch Actions", 'msc'), "", "modules/msc/msc/launch.php", array('gid' => $_GET['gid']));
-            //             if(!in_array("xmppmaster", $_SESSION["modulesList"])) {
-            //                 $p->addTab("grouptabbundle", _T("Launch Bundle", 'msc'), "", "modules/msc/msc/launch_bundle.php", array('gid' => $_GET['gid']));
-            //             }
         }
     }
     $p->display();

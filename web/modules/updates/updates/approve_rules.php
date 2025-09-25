@@ -44,7 +44,7 @@ if (
     }
 
     // Mise à jour de la table avec les données reçues
-    $success = xmlrpc_update_auto_approve_rules($result);
+    $success = xmlrpc_update_auto_approve_rules($result, $_POST['entityid']);
 
     if ($success) {
         new NotifyWidgetSuccess(_T("Rules updated successfully.", "updates"));
@@ -57,62 +57,51 @@ if (
     }
 }
 
-// Récupération des données à afficher
-$f = xmlrpc_get_auto_approve_rules();
+$_entities = getUserLocations();
 
-// Initialisation
-$htmlelementcheck = [];
-$params = [];
-$submittedCheckValues = $_POST['check'] ?? [];
 
-foreach ($f['id'] as $indextableau => $id) {
-    // Construction des paramètres pour le tableau
-    $params[] = array(
-        'id' => $id,
-        'active_rule' => $f['active_rule'][$indextableau],
-        'msrcseverity' => $f['msrcseverity'][$indextableau],
-        'updateclassification' => $f['updateclassification'][$indextableau]
-    );
-
-    // Détermination si la case doit être cochée
-    $isChecked = isset($submittedCheckValues[$id]) ? $submittedCheckValues[$id] : $f['active_rule'][$indextableau];
-    $checked = ($isChecked == 1) ? 'checked' : '';
-
-    // Génération des champs input (hidden + checkbox)
-    $hiddenInput = sprintf('<input type="hidden" name="check[%s]" value="0">', $id);
-    $checkboxInput = sprintf(
-        '<input type="checkbox" id="check%s" name="check[%s]" value="1" %s>',
-        $id,
-        $id,
-        $checked
-    );
-
-    $htmlelementcheck[] = $hiddenInput . $checkboxInput;
+$parametresCGI=[];
+foreach ($_entities as $value) {
+    $completename[] = $value['completename'];
+    $uuidNumber = str_replace('UUID', '', $value['uuid']);
+    $newElement =  [
+        'name' => $value['name'],
+        'uuid' => $uuidNumber,
+        'completename' => $value['completename'],
+        'comments' => $value['comments'],
+        'level' => $value['level'],
+        'altname' => $value['altname'],
+    ];
+    // Transformation en paramètres CGI GET
+    $parametresCGI[]=http_build_query( $newElement);
 }
 
 
-// Début du formulaire HTML
-echo '<form method="post" action="" name="montableau">';
-echo "\n";
 
-// Construction du tableau avec ListInfos
-$n = new ListInfos($f['msrcseverity'], _T("Update Severity", "updates"));
-$n->addExtraInfo($f['updateclassification'], _T("Update Classification", "updates"));
-$n->addExtraInfo($htmlelementcheck, _T("Automatic approval (White list)", "updates"));
+if (
+    $_SERVER['REQUEST_METHOD'] === 'POST' &&
+    isset($_POST['form_name']) &&
+    $_POST['form_name'] === 'montableau'
+)
+{
+    $choix = $parametresCGI[$_POST['entityid']];
+}else{
+    $choix = $parametresCGI[0];
+}
 
-$n->setParamInfo($params);
-$n->setNavBar = "";
-$n->start = 0;
-$n->end = count($f['msrcseverity']);
+$ajax = new AjaxLocation(
+     urlStrRedirect("updates/updates/ajaxApproveRules"),
+      "mondivlocation",           // div qui affiche la liste des produits
+      "selected_location",      // paramètre : $_GET['selected_location']
+          $_POST
+  );
 
-// Affichage du tableau
-$n->disableFirstColumnActionLink();
-$n->display($navbar = 0, $header = 0);
+$ajax->setElements($completename);
+$ajax->setElementsVal($parametresCGI);
+$ajax->setSelected($choix);
+$ajax->display();
+$ajax->displayDivToUpdate();
 
-// Bouton de validation
-echo '<input type="hidden" name="form_name" value="montableau">';
-echo '<input class="btn btn-primary" type="submit" value="' . _T("Apply", "updates") . '">';
-echo "\n</form>";
 
 ?>
 

@@ -21,15 +21,75 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 require_once("modules/updates/includes/xmlrpc.php");
-
+/**
+ * Affiche une barre grise centrée avec le texte donné
+ *
+ * @param string $texte  Le texte à afficher
+ */
+function afficherBarreGrisehtmlspecialchars($texte) {
+    echo '
+    <div style="
+        background-color: #d3d3d3;
+        padding: 8px;
+        text-align: center;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+    ">
+        ' . htmlspecialchars($texte) . '
+    </div>';
+}
+function afficherBarreGrise($texte) {
+    echo '
+    <div style="
+        background-color: #d3d3d3;
+        padding: 8px;
+        text-align: center;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+    ">
+        '.$texte.'
+    </div>';
+}
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
 $filter  = isset($_GET['filter']) ? $_GET['filter'] : "";
 $start = isset($_GET['start']) ? $_GET['start'] : 0;
 $end   = (isset($_GET['end']) ? $_GET['start'] + $maxperpage : $maxperpage);
-
+$entityid   = (isset($_GET['uuid']) ? $_GET['uuid']  : -1 );
 // Get Datas
-$grey_list = xmlrpc_get_grey_list($start, $maxperpage, $filter);
+$grey_list = xmlrpc_get_grey_list($start, $maxperpage, $filter, $entityid);
+
+$converter = new ConvertCouleur();
+$titretableau = _T("Grey list (manual updates)", 'updates');
+$titrenotableau=  _T("No updates are currently available in the Grey List  (manual updates) for the entity", 'updates');
+
+// $completename = $_GET['completename'];
+$completename = $_GET['altname'];
+
+// Remplace les "+" par un espace
+$completename_cleaned = str_replace('+', ' ', $completename);
+// Remplace ">" par " → "
+$completename_cleaned = str_replace('>', ' → ', $completename_cleaned);
+// Remplace les "&nbsp;" par un espace
+$completename_cleaned = str_replace('&nbsp;', ' ', $completename_cleaned);
+// Supprime les espaces multiples
+$completename_cleaned = preg_replace('/\s+/', ' ', $completename_cleaned);
+// Supprime les espaces en début et fin de chaîne
+$completename_cleaned = trim($completename_cleaned);
+$ide = $_GET['uuid'];
+if ($grey_list['nb_element_total'] == "0")
+{
+    $message_tableau= sprintf("%s [%s] (%s)",
+                                    $titrenotableau ,
+                                    $completename_cleaned,
+                                    $ide);
+} else
+{
+    $message_tableau= sprintf("%s [%s] (%s)",
+                            $titretableau ,
+                            $completename_cleaned,
+                            $ide);
+}
 
 // GrayList Actions
 $grayEnableAction = new ActionItem(_T("Enable for manual update", "updates"), "grayEnable", "enableupdate", "", "updates", "updates");
@@ -65,14 +125,20 @@ for($i = 0; $i < $count_partial; $i++) {
     $params_grey[] = array(
         'updateid' => $grey_list['updateid'][$i],
         'title' => $grey_list['title'][$i],
-        'severity' => $grey_list['severity'][$i]
+        'severity' => $grey_list['severity'][$i],
+        'entityid' => $entityid,
+        'name' => $_GET['name'],
+        'completename' => $_GET['completename'],
+        'comments' => $_GET['comments'],
+        'level' => $_GET['level'],
+        'altname' => $_GET['altname']
     );
     if(strlen($grey_list['updateid'][$i]) < 10) {
         $kbs_gray[] = 'KB'.strtoupper($grey_list['updateid'][$i]);
         $updateids_gray[] = "";
     } else {
         $kbs_gray[] = "";
-        $updateids_gray[] = "<a href=\"https://www.catalog.update.microsoft.com/Search.aspx?q='" . $grey_list['updateid'][$i] . "'\">" . $grey_list['updateid'][$i] . "</a>";
+        $updateids_gray[] = "<a href=\"https://www.catalog.update.microsoft.com/Search.aspx?q='" . $grey_list['updateid'][$i] .'" target="_blank">' . $grey_list['updateid'][$i] . "</a>";
     }
 }
 
@@ -90,7 +156,20 @@ $g->addExtraInfo($grey_list['severity'], _T("Severity", "updates"));
 $g->setItemCount($count_grey);
 $g->setNavBar(new AjaxNavBar($count_grey, $filter, 'updateSearchParamformGray'));
 $g->setParamInfo($params_grey);
-echo '<h2>'._T("Grey list (manual updates)", "updates").'</h2>';
+
+// sprintf("%s [%s] (%s)", $titretableau , $completename_cleaned, $ide)
+// affichage titre tableau
+$g->setCaptionText($message_tableau);
+$g->setCssCaption(
+    $border = 1,
+    $bold = 0,
+    $bgColor = "lightgray",
+    $textColor = "black",
+    $padding = "10px 0",
+    $size = "20",
+    $emboss = 1,
+    $rowColor = $converter->convert("lightgray")
+);
 $g->addActionItemArray($grayActions['enable']);
 $g->addActionItemArray($grayActions['disable']);
 $g->addActionItemArray($grayActions['approve']);

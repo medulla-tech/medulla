@@ -107,7 +107,6 @@ jQuery(function()
 </script>
 
 <?php
-
 $location = (isset($_GET['location'])) ? $_GET['location'] : "";
 $filter = (isset($_GET['filter'])) ? $_GET['filter'] : "";
 $field = (isset($_GET['field'])) ? $_GET['field'] : "";
@@ -138,7 +137,6 @@ try {
 } catch(Exception $e) {
     echo 'error';
 }
-
 
 $count = (!empty($machines1["count"])) ? $machines1["count"] : 0;
 $total = $machines1["total"];
@@ -383,6 +381,7 @@ foreach($datas['enabled'] as $valeue) {
         'type' => $datas['model'][$index],
         'presencemachinexmpp' => $datas['enabled'][$index],
         'entity' => $datas['entityname'][$index],
+        'entityid' => $datas['entityid'][$index],
         'user' => $datas['glpi_owner'][$index],
                     'jid' => $datas['jid'][$index],
     'vnctype' => (in_array("guacamole", $_SESSION["supportModList"])) ? "guacamole" : ((web_def_use_no_vnc() == 1) ? "novnc" : "appletjava"),
