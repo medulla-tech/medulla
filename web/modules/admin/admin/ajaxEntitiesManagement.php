@@ -167,7 +167,7 @@ if ($facilitylevel <= 1) {
             "admin",
             "admin",
             sprintf(
-                _T("Are you sure you want to delete the entity <strong>%s</strong>?", "admin"), htmlspecialchars($data['name'][$i]
+                _T("Are you sure you want to delete the entity <strong>%s</strong> ? All packages linked to this entity will also be deleted.", "admin"), htmlspecialchars($data['name'][$i]
             ))
         );
 
