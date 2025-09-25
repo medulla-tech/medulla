@@ -7628,6 +7628,14 @@ class Glpi100(DyngroupDatabaseHelper):
         return token
 
     @DatabaseHelper._sessionm
+    def get_user_identifier(self, session, id_user: int) -> str | None:
+        row = session.execute(
+            text("SELECT name FROM glpi_users WHERE id = :id_user"),
+            {"id_user": id_user}
+        ).fetchone()
+        return row[0].strip() if row and row[0] else None
+
+    @DatabaseHelper._sessionm
     def get_user_profile_email(self,
                             session,
                             id_user: int,

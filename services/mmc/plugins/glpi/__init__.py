@@ -410,6 +410,9 @@ def set_user_api_token(user_id, api_token):
 def get_user_profile_email(id_user, id_profile, id_entity):
     return xmlrpcCleanup(Glpi().get_user_profile_email(id_user, id_profile, id_entity))
 
+def get_user_identifier(id_user):
+    return xmlrpcCleanup(Glpi().get_user_identifier(id_user))
+
 def get_complete_name(id_entity):
     return xmlrpcCleanup(Glpi().get_complete_name(id_entity))
 

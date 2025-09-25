@@ -1,7 +1,8 @@
 # -*- coding: utf-8; -*-
 # SPDX-FileCopyrightText: 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 # SPDX-FileCopyrightText: 2007-2009 Mandriva, http://www.mandriva.com/
-# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net>
+# SPDX-FileCopyrightText: 2016-2023 Siveo, http://www.siveo.net
+# SPDX-FileCopyrightText: 2024-2025 Medulla, http://www.medulla-tech.io
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 """
@@ -2057,5 +2058,25 @@ class PkgsDatabase(DatabaseHelper):
             SET name = :n, comments = :c
             WHERE share_path = :p
         """), {"n": name, "c": complete_name, "p": share_path})
+        session.commit()
+        return res.rowcount
+
+    @DatabaseHelper._sessionm
+    def update_pkgs_rules_local(self, session, user, id_share):
+        res = session.execute(text("""
+            UPDATE pkgs_rules_local
+            SET pkgs_shares_id = :id_share
+            WHERE subject = :user
+        """), {"id_share" : id_share, "user" : user})
+        session.commit()
+        return res.rowcount
+
+    @DatabaseHelper._sessionm
+    def delete_pkgs_rules_local_by_name(self, session, user):
+        res = session.execute(text("""
+            DELETE FROM
+                pkgs_rules_local
+            WHERE subject = :user
+        """), {"user": user})
         session.commit()
         return res.rowcount

@@ -10,7 +10,7 @@ from mmc.plugins.admin.config import AdminConfig
 # Import for Database
 from pulse2.database.admin import AdminDatabase
 from pulse2.database.pkgs import PkgsDatabase
-from mmc.plugins.glpi import get_entities_with_counts, get_entities_with_counts_root, set_user_api_token, get_user_profile_email, get_complete_name
+from mmc.plugins.glpi import get_entities_with_counts, get_entities_with_counts_root, set_user_api_token, get_user_profile_email, get_complete_name, get_user_identifier
 from mmc.support.apirest.glpi import GLPIClient
 from configparser import ConfigParser
 import traceback
@@ -526,6 +526,17 @@ def switch_user_profile(
 
     client = get_glpi_client(tokenuser=token_to_use)
 
+    # Update of sharing ID for this user
+    identifier = get_user_identifier(user_id)
+    entity_info = get_entity_info(entities_id)
+    entity_name             = entity_info.get('name')
+    entity_completename     = entity_info.get('completename')
+
+    pkdb = PkgsDatabase()
+    id_shares = pkdb.find_share_by_entity_names(entity_name, entity_completename).get('id')
+
+    pkgs_rules = pkdb.update_pkgs_rules_local(identifier, id_shares)
+
     return client.switch_user_profile(
         user_id=int(user_id),
         new_profile_id=int(new_profile_id),
@@ -540,6 +551,12 @@ def switch_user_entity(user_id: int, new_entity_id: int, tokenuser=None) -> dict
 # DELETE
 def delete_and_purge_user(user_id):
     try:
+        # Deletion of sharing for this user
+        identifier = get_user_identifier(user_id)
+
+        pkdb = PkgsDatabase()
+        pkgs_rules_delete = pkdb.delete_pkgs_rules_local_by_name(identifier)
+
         client = get_glpi_client()
         result = client.delete_and_purge_user(user_id)
         return result
