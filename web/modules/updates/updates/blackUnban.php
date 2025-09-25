@@ -27,7 +27,7 @@ $id = htmlentities($_GET['id']);
 $title = htmlentities($_GET['title']);
 
 
-$result = xmlrpc_delete_rule($id);
+$result = xmlrpc_delete_rule($id, $_GET['entityid']);
 if($result){
     $str = sprintf(_T("The package %s (%s) has been unbanned.", "updates"), $title, $updateid);
     new NotifyWidgetSuccess($str);
@@ -36,7 +36,7 @@ else{
     $str = sprintf(_T("The package %s (%s) hasn't been unbanned.", "updates"), $title, $updateid);
     new NotifyWidgetFailure($str);
 }
-header('location: '.urlStrRedirect("updates/updates/updatesListWin"));
+header('location: '.urlStrRedirect("updates/updates/updatesListWin", getFilteredGetParams()));
 exit;
 
 ?>

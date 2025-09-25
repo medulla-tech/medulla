@@ -73,6 +73,9 @@ require_once("modules/base/includes/computers.inc.php");
 require_once("modules/base/includes/computers_list.inc.php");
 
 global $conf;
+
+
+
 $maxperpage = $conf["global"]["maxperpage"];
 $canbedeletedfromgroup = null;
 $canbedeleted = true;

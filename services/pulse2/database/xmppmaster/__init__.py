@@ -99,10 +99,16 @@ import random
 import copy
 from sqlalchemy.ext.automap import automap_base
 import re
+
+class ProcedureError(Exception):
+    """Exception levée en cas d'erreur lors de l'appel d'une procédure stockée."""
+    pass
 Session = sessionmaker()
 
 logger = logging.getLogger()
 
+# sql debug mode
+# logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
 
 class Error(Exception):
     """Base class for exceptions in this module."""
@@ -474,77 +480,131 @@ class XmppMasterDatabase(DatabaseHelper):
         session.flush()
 
     @DatabaseHelper._sessionm
-    def get_approve_products(self, session, colonne=True):
+    def get_approve_products(self, session, identity, colonne=True):
         """
-        Récupère les enregistrements de la table 'up_list_produit' et renvoie les résultats sous forme de colonnes ou de lignes.
-        Les valeurs NULL sont remplacées par des chaînes vides.
+        Récupère les enregistrements de la table 'up_list_produit' pour une entité spécifique
+        et renvoie les résultats sous forme de colonnes ou de lignes.
+        La colonne 'entity_id' est exclue. Les valeurs NULL sont remplacées par des chaînes vides.
 
         Paramètres :
+        - identity : identifiant de l'entité à filtrer (entity_id)
         - colonne (bool) : Si True, les résultats sont retournés sous forme de colonnes. Sinon, sous forme de lignes.
 
         Retourne :
-        - dict/list : Un dictionnaire ou une liste contenant les informations des produits trouvés.
+        - dict/list : dictionnaire ou liste contenant les informations des produits trouvés
         """
+        if identity:
+            try:
+                resultat = self._call_procedure(session,"up_genere_list_produit_entity",[identity])
+                session.commit()
+            except Exception as e:
+                logger.error(f"Erreur call procedure Rollback {e}")
+                session.rollback()
+
+        #  up_regenere_list_produit_entity
         try:
-            result = session.execute(
-                text("SELECT * FROM xmppmaster.up_list_produit"))
+            # Sélectionne toutes les colonnes sauf entity_id
+            query = text("""
+                SELECT id, name_procedure, enable
+                FROM xmppmaster.up_list_produit
+                WHERE entity_id = :identity
+            """)
+            result = session.execute(query, {"identity": identity})
             produits = result.fetchall()
 
-            if produits:
-                if colonne:
-                    produits_info = {
-                        "id": [p[0] if p[0] is not None else "" for p in produits],
-                        "name_procedure": [p[1] if p[1] is not None else "" for p in produits],
-                        "enable": [p[2] if p[2] is not None else "" for p in produits],
-                    }
-                else:
-                    produits_info = [
-                        {
-                            "id": p[0] if p[0] is not None else "",
-                            "name_procedure": p[1] if p[1] is not None else "",
-                            "enable": p[2] if p[2] is not None else ""
-                        }
-                        for p in produits
-                    ]
-                return produits_info
+            if not produits:
+                logger.info(f"No products found for entity_id={identity}.")
+                return [] if not colonne else {"id": [], "name_procedure": [], "enable": []}
+
+            if colonne:
+                produits_info = {
+                    "id": [p[0] if p[0] is not None else "" for p in produits],
+                    "name_procedure": [p[1] if p[1] is not None else "" for p in produits],
+                    "enable": [p[2] if p[2] is not None else "" for p in produits],
+                }
             else:
-                logger.info("No products found in the table.")
-                return []
+                produits_info = [
+                    {
+                        "id": p[0] if p[0] is not None else "",
+                        "name_procedure": p[1] if p[1] is not None else "",
+                        "enable": p[2] if p[2] is not None else "",
+                    }
+                    for p in produits
+                ]
+
+            return produits_info
 
         except Exception as e:
-            logger.error(f"An error occurred: {str(e)}")
-            return {}
+            logger.error(f"An error occurred while fetching products for entity_id={identity}: {str(e)}")
+            return {} if colonne else []
 
     @DatabaseHelper._sessionm
-    def update_approve_products(self, session, updates):
+    def update_approve_products(self, session, updatesproduct, entity_id=None):
         """
-        Met à jour la colonne 'enable' dans la table 'up_list_produit' pour les IDs spécifiés.
+        Met à jour la colonne 'enable' dans la table 'up_list_produit'
+        pour les IDs spécifiés, en tenant compte de l'entité si précisée.
 
         Paramètres :
-        - updates (list of tuples or lists) : Une liste de tuples ou de listes où chaque élément contient (id, enable).
+        - updatesproduct (list of tuples or lists) : Chaque élément doit contenir (id, enable).
+        - entity_id (int|None) : ID de l'entité. Si None, pas de filtre par entité.
 
-        Exemples :
-        updates = [
+        Exemples d'utilisation :
+        1. Sans filtre d'entité :
+        ```python
+        updatesproduct = [
             (1, 1),
             (2, 0),
-            (3, 1),
         ]
+        result = obj.update_approve_products(updates=updates)
+        ```
+
+        2. Avec filtre sur une entité (entity_id=5) :
+        ```python
+        updatesproduct = [
+            [4, 0],
+            [7, 1],
+        ]
+        result = obj.update_approve_products(updatesproduct=updatesproduct, entity_id=5)
+        ```
 
         Retourne :
         - dict : Un dictionnaire indiquant si la mise à jour a réussi ou non.
+
+        Exemple de retour en cas de succès :
+        ```python
+        {"success": True, "message": "Update successful"}
+        ```
+
+        Exemple de retour en cas d'erreur :
+        ```python
+        {"success": False, "message": "An error occurred during update: <details>"}
+        ```
         """
         try:
-            normalized_updates = [tuple(update) if isinstance(
-                update, list) else update for update in updates]
+            entity_id = int(entity_id)
+        except (TypeError, ValueError):
+            msgerror = f"Invalid entity_id value: {entity_id!r}"
+            logger.error(msgerror)
+            return {"success": False, "message": msgerror}
+
+        try:
+            normalized_updates = [tuple(update) if isinstance(update, list) else update for update in updatesproduct]
 
             for id, enable in normalized_updates:
-                session.execute(
-                    text(
-                        "UPDATE xmppmaster.up_list_produit SET enable = :enable WHERE id = :id"),
-                    {"enable": enable, "id": id}
-                )
-            session.commit()
+                query = """
+                    UPDATE xmppmaster.up_list_produit
+                    SET enable = :enable
+                    WHERE id = :id
+                """
+                params = {"enable": enable, "id": id}
 
+                if entity_id is not None:
+                    query += " AND entity_id = :entity_id"
+                    params["entity_id"] = entity_id
+                logger.error(f"Exécutant la requête: {query} avec les paramètres: {params}")
+                session.execute(text(query), params)
+
+            session.commit()
             logger.info("Mise à jour réussie des produits.")
             return {"success": True, "message": "Update successful"}
 
@@ -554,40 +614,57 @@ class XmppMasterDatabase(DatabaseHelper):
             return {"success": False, "message": str(e)}
 
     @DatabaseHelper._sessionm
-    def get_auto_approve_rules(self, session, colonne=True):
+    def get_auto_approve_rules(self, session, entityid=None, colonne=True ):
         """
-        Récupère les enregistrements de la table 'up_auto_approve_rules' et renvoie les résultats sous forme de colonnes ou de lignes.
-        Les valeurs None ou NULL sont remplacées par des chaînes de caractères vides ("").
+        Récupère les enregistrements de la table 'up_auto_approve_rules' et renvoie
+        les résultats sous forme de colonnes ou de lignes.
+        Si entityid est spécifié, on ne prend que les enregistrements correspondants.
 
         Paramètres :
-        - colonne (bool) : Si True, les résultats sont retournés sous forme de colonnes. Sinon, sous forme de lignes.
+        - entityid (int|None) : ID de l'entité à filtrer. Si None, on prend toutes les entités.
+        - colonne (bool) : Si True, retour en colonnes, sinon en lignes.
 
         Retourne :
-        - dict/list : Un dictionnaire ou une liste contenant les informations des règles d'approbation automatique trouvées.
+        - dict/list : Résultats sous forme de colonnes (dict) ou de lignes (list).
         """
+        if entityid:
+            try:
+                resultat = self._call_procedure(session,
+                            "up_genere_list_rule_entity",
+                            [entityid])
+                session.commit()
+            except Exception as e:
+                logger.error(f"Erreur call procedure Rollback {e}")
+                session.rollback()
         try:
-            # Utiliser une requête paramétrée pour éviter les injections SQL
-            result = session.execute(
-                text("SELECT * FROM xmppmaster.up_auto_approve_rules"))
+            # Construction dynamique de la requête
+            query = "SELECT id, entityid, msrcseverity, updateclassification, active_rule FROM xmppmaster.up_auto_approve_rules"
+            params = {}
+
+            if entityid is not None:
+                query += " WHERE entityid = :entityid"
+                params["entityid"] = entityid
+
+            result = session.execute(text(query), params)
             rules = result.fetchall()
 
             if rules:
                 if colonne:
-                    # Retourner les résultats sous forme de colonnes
                     rules_info = {
-                        "id": [rule[0] if rule[0] is not None else "" for rule in rules],
-                        "msrcseverity": [rule[1] if rule[1] is not None else "" for rule in rules],
-                        "updateclassification": [rule[2] if rule[2] is not None else "" for rule in rules],
-                        "active_rule": [rule[3] if rule[3] is not None else "" for rule in rules]
+                        "id": [rule[0] or "" for rule in rules],
+                        "entityid": [rule[1] or 0 for rule in rules],
+                        "msrcseverity": [rule[2] or "" for rule in rules],
+                        "updateclassification": [rule[3] or "" for rule in rules],
+                        "active_rule": [rule[4] or 0 for rule in rules],
                     }
                 else:
-                    # Retourner les résultats sous forme de lignes
                     rules_info = [
                         {
-                            "id": rule[0] if rule[0] is not None else "",
-                            "msrcseverity": rule[1] if rule[1] is not None else "",
-                            "updateclassification": rule[2] if rule[2] is not None else "",
-                            "active_rule": rule[3] if rule[3] is not None else ""
+                            "id": rule[0] or "",
+                            "entityid": rule[1] or "",
+                            "msrcseverity": rule[2] or "",
+                            "updateclassification": rule[3] or "",
+                            "active_rule": rule[4] or 0
                         }
                         for rule in rules
                     ]
@@ -601,51 +678,72 @@ class XmppMasterDatabase(DatabaseHelper):
             return {}
 
     @DatabaseHelper._sessionm
-    def update_auto_approve_rules(self, session, updates):
+    def update_auto_approve_rules(self, session, updates, entity_id=None):
         """
-        Met à jour la colonne 'active_rule' dans la table 'up_auto_approve_rules' pour les IDs spécifiés.
+        Met à jour la colonne 'active_rule' dans la table 'up_auto_approve_rules'
+        pour les IDs spécifiés. Peut être restreint à une entité via entityid.
 
         Paramètres :
-        - updates (list of tuples or lists) : Une liste de tuples ou de listes où chaque élément contient (id, active_rule).
+        - updates (list of (id, active_rule))
+        - entity_id (int|None) : ID de l'entité à filtrer. Si None, pas de filtre.
 
-        Exemples :
-        1. Utilisation avec une liste de tuples :
+        Exemples d'utilisation :
+        1. Avec une liste de tuples (sans filtre d'entité) :
         ```python
         updates = [
-            (1, 1),  # Mettre à jour l'ID 1 avec active_rule = 1
-            (2, 0),  # Mettre à jour l'ID 2 avec active_rule = 0
-            (3, 1),  # Mettre à jour l'ID 3 avec active_rule = 1
+            (1, 1),  # ID 1 -> active_rule = 1
+            (2, 0),  # ID 2 -> active_rule = 0
+            (3, 1),  # ID 3 -> active_rule = 1
         ]
+        result = obj.update_auto_approve_rules(updates=updates)
         ```
 
-        2. Utilisation avec une liste de listes :
+        2. Avec une liste de listes (filtré sur entityid=5) :
         ```python
         updates = [
-            [1, 1],  # Mettre à jour l'ID 1 avec active_rule = 1
-            [2, 0],  # Mettre à jour l'ID 2 avec active_rule = 0
-            [3, 1],  # Mettre à jour l'ID 3 avec active_rule = 1
+            [4, 0],  # ID 4 -> active_rule = 0 (dans l'entité 5)
+            [7, 1],  # ID 7 -> active_rule = 1 (dans l'entité 5)
         ]
+        result = obj.update_auto_approve_rules(updates=updates, entity_id=5)
         ```
-
         Retourne :
-        - dict : Un dictionnaire indiquant si la mise à jour a réussi ou non, avec un message correspondant.
+            - dict : Un dictionnaire indiquant si la mise à jour a réussi ou non,
+                avec un message correspondant.
+            Exemple de retour :
+                ```python
+                {"success": True, "message": "Update successful"}
+                ```
+
+                En cas d'erreur :
+                ```python
+                {"success": False, "message": "An error occurred during update: <details>"}
+                ```
         """
         try:
-            # Normaliser les entrées pour s'assurer qu'elles sont sous forme de tuples
-            normalized_updates = [tuple(update) if isinstance(
-                update, list) else update for update in updates]
+            entity_id = int(entity_id)
+        except (TypeError, ValueError):
+            msgerror = f"Invalid entity_id value: {entity_id!r}"
+            logger.error(msgerror)
+            return {"success": False, "message": msgerror}
+
+        try:
+            normalized_updates = [tuple(update) if isinstance(update, list) else update for update in updates]
 
             for id, active_rule in normalized_updates:
-                # Exécuter une requête de mise à jour pour chaque ID
-                result = session.execute(
-                    text(
-                        "UPDATE xmppmaster.up_auto_approve_rules SET active_rule = :active_rule WHERE id = :id"),
-                    {"active_rule": active_rule, "id": id}
-                )
-                session.commit()
+                query = text("""
+                    UPDATE xmppmaster.up_auto_approve_rules
+                    SET active_rule = :active_rule
+                    WHERE id = :id AND entityid = :entityid
+                """)
+                params = {
+                    "active_rule": int(active_rule),
+                    "id": int(id),
+                    "entityid": int(entity_id)
+                }
+                session.execute(query, params)
 
-            logger.info(
-                "Mise à jour réussie des règles d'approbation automatique.")
+            session.commit()
+            logger.info("Mise à jour réussie des règles d'approbation automatique.")
             return {"success": True, "message": "Update successful"}
 
         except Exception as e:
@@ -2659,7 +2757,59 @@ class XmppMasterDatabase(DatabaseHelper):
             )
             return -1
 
-    def __returntextisNone__(para, text=""):
+    @DatabaseHelper._sessionm
+    def call_procedure(self, session, name_procedure, params=None):
+        """
+        Appelle une procédure stockée MySQL avec une liste de paramètres.
+        Args:
+            session: Une session SQLAlchemy active.
+            name_procedure (str): Nom de la procédure stockée à appeler.
+            params (list, tuple, dict ou int): Paramètres à passer à la procédure.
+        Returns:
+            Le résultat de l'exécution de la procédure (si applicable).
+        Raises:
+            ProcedureError: Si une erreur survient lors de l'appel de la procédure.
+        """
+        try:
+            resultat = self._call_procedure(session, name_procedure, params)
+            session.commit()
+            return resultat
+        except Exception as e:
+            logger.error(
+                f"Erreur lors de l'appel de la procédure {name_procedure} avec les paramètres {params}: {e}",
+                exc_info=True
+            )
+            session.rollback()
+            raise ProcedureError(f"Erreur lors de l'appel de la procédure {name_procedure}: {e}") from e
+
+    def _call_procedure(self, session, name_procedure, params=None):
+        """
+        Appelle une procédure stockée MySQL avec une liste de paramètres.
+        Args:
+            session: Une session SQLAlchemy active.
+            name_procedure (str): Nom de la procédure stockée à appeler.
+            params (list, tuple, dict ou int): Paramètres à passer à la procédure.
+        Returns:
+            Le résultat de l'exécution de la procédure (si applicable).
+        """
+        logger.debug(f"Appel de la procédure {name_procedure} avec les paramètres {params}")
+        if params is None:
+            params = ()
+        elif not isinstance(params, (list, tuple)):
+            params = (params,)
+        # Créer des placeholders nommés dynamiques
+        placeholders = []
+        bind_params = {}
+        for i, val in enumerate(params):
+            key = f"p{i}"
+            placeholders.append(f":{key}")
+            bind_params[key] = val
+        query = text(f"CALL {name_procedure}({', '.join(placeholders)})")
+        resultat = session.execute(query, bind_params)
+        return resultat
+
+
+    def __returntextisNone__(self, para, text=""):
         if para is None:
             return text
         else:
@@ -14248,20 +14398,200 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         result = [rowproxy._asdict() for rowproxy in resultquery]
         return result
 
+    #
+    #
+    # @DatabaseHelper._sessionm
+    # def get_conformity_update_by_entity(self, session, entities: list = [], config=None):
+    #     """
+    #     Récupère les statistiques de conformité des mises à jour par entité.
+    #
+    #     Cette fonction calcule, pour chaque entité spécifiée, le nombre total de machines,
+    #     le nombre de machines non conformes (ayant des mises à jour manquantes)
+    #     et le nombre total de mises à jour concernées, en se basant uniquement sur les
+    #     mises à jour activées dans la "gray list".
+    #
+    #     Args:
+    #         session (Session): Session SQLAlchemy active.
+    #         entities (list): Liste des ID d'entités à analyser.
+    #         config (object, optional): Objet de configuration contenant éventuellement
+    #             un attribut `filter_on`, dictionnaire de filtres possibles :
+    #             - "entity" : liste des IDs d'entités à inclure
+    #             - "state" : liste des IDs d'états des machines
+    #             - "type" : liste des IDs de types d’ordinateurs
+    #
+    #     Returns:
+    #         list[dict]: Liste de dictionnaires contenant pour chaque entité :
+    #             - entity (str): ID de l'entité
+    #             - nbmachines (int): Nombre de machines non conformes
+    #             - nbupdates (int): Nombre de mises à jour manquantes
+    #             - totalmach (int): Nombre total de machines dans l'entité
+    #     """
+    #
+    #     # ─────────────────────────────────────────────
+    #     # 0️⃣ Préparation des filtres
+    #     # ─────────────────────────────────────────────
+    #     filters_entity = []
+    #     filters_noncompliant = []
+    #     params = {"entities": entities or [0]}  # éviter une clause IN vide
+    #
+    #     if config is not None and getattr(config, "filter_on", None) is not None:
+    #         for key, values in config.filter_on.items():
+    #             if not values or key not in ["entity", "state", "type"]:
+    #                 continue
+    #
+    #             # Filtrage des entités
+    #             if key == "entity":
+    #                 filters_entity.append("ge.glpi_id IN :entity_list")
+    #                 params["entity_list"] = tuple(values)
+    #
+    #             # Filtrage sur les états
+    #             elif key == "state":
+    #                 filters_noncompliant.append("lgf.states_id IN :state_list")
+    #                 params["state_list"] = tuple(values)
+    #
+    #             # Filtrage sur les types de machine
+    #             elif key == "type":
+    #                 filters_noncompliant.append("lgf.computertypes_id IN :type_list")
+    #                 params["type_list"] = tuple(values)
+    #
+    #     # Construction des WHERE dynamiques
+    #     where_entity = ""
+    #     if filters_entity:
+    #         where_entity = " AND " + " AND ".join(filters_entity)
+    #
+    #     where_noncompliant = ""
+    #     if filters_noncompliant:
+    #         where_noncompliant = " AND " + " AND ".join(filters_noncompliant)
+    #
+    #     # ─────────────────────────────────────────────
+    #     # 1️⃣  Récupération de la liste des machines par entité
+    #     # ─────────────────────────────────────────────
+    #     sql_machine_details = f"""
+    #         SELECT
+    #             m.id AS machine_id,
+    #             m.hostname,
+    #             ge.glpi_id AS entity_id
+    #         FROM
+    #             machines m
+    #             JOIN glpi_entity ge ON m.glpi_entity_id = ge.id
+    #         WHERE
+    #             m.agenttype = 'machine'
+    #             {where_entity};
+    #     """
+    #     machine_details = session.execute(sql_machine_details, params).fetchall()
+    #
+    #     # Organisation des machines par entité
+    #     machine_by_entity = {}
+    #     for row in machine_details:
+    #         entity_id = row.entity_id
+    #         machine_by_entity.setdefault(entity_id, []).append({
+    #             "id": row.machine_id,
+    #             "hostname": row.hostname,
+    #             "valid": row.machine_id != 0,
+    #         })
+    #
+    #     # ─────────────────────────────────────────────
+    #     # 2️⃣  Récupération du total de machines par entité
+    #     # ─────────────────────────────────────────────
+    #     sql_total_machines = f"""
+    #         SELECT
+    #             ge.glpi_id AS id,
+    #             COUNT(m.hostname) AS totalmach
+    #         FROM
+    #             machines m
+    #             JOIN glpi_entity ge ON m.glpi_entity_id = ge.id
+    #         WHERE
+    #             m.agenttype = 'machine'
+    #             {where_entity}
+    #         GROUP BY
+    #             ge.glpi_id;
+    #     """
+    #     total_machines = {
+    #         row.id: row.totalmach for row in session.execute(sql_total_machines, params)
+    #     }
+    #
+    #     # ─────────────────────────────────────────────
+    #     # 3️⃣  Récupération des données de non-conformité
+    #     # ─────────────────────────────────────────────
+    #     sql_noncompliant = f"""
+    #         SELECT
+    #             uma.entities_id AS id,
+    #             COUNT(DISTINCT uma.id_machine) AS noncompliant,
+    #             COUNT(DISTINCT uma.update_id) AS missing
+    #         FROM
+    #             up_machine_activated uma
+    #             JOIN local_glpi_filters lgf ON lgf.id = uma.glpi_id
+    #         WHERE
+    #             uma.entities_id IN :entities
+    #             {where_noncompliant}
+    #         GROUP BY
+    #             uma.entities_id;
+    #     """
+    #     noncompliant_data = {
+    #         row.id: (row.noncompliant, row.missing)
+    #         for row in session.execute(sql_noncompliant, params)
+    #     }
+    #
+    #     # ─────────────────────────────────────────────
+    #     # 4️⃣  Construction du résultat final
+    #     # ─────────────────────────────────────────────
+    #     result = []
+    #     for entity_id in entities:
+    #         entity_id = int(entity_id)
+    #
+    #         machines = machine_by_entity.get(entity_id, [])
+    #         noncompliant, missing = noncompliant_data.get(entity_id, (0, 0))
+    #         total = total_machines.get(entity_id, len(machines))
+    #
+    #         result.append({
+    #             "entity": str(entity_id),
+    #             "nbmachines": noncompliant,
+    #             "nbupdates": missing,
+    #             "totalmach": total,
+    #         })
+    #
+    #     return result
+    #
+
+
+
     @DatabaseHelper._sessionm
-    def get_conformity_update_by_entity(
-        self, session, entities: list = [], config=None
-    ):
+    def get_conformity_update_by_entity(self, session, entities: list = [], config=None):
         """
-        This function returns the total number of machines to update in an entity considering only the updates enabled in gray list
+        Récupère les statistiques de conformité des mises à jour par entité.
+
+        Cette fonction calcule, pour chaque entité spécifiée, le nombre total de machines,
+        le nombre de machines non conformes (ayant des mises à jour manquantes)
+        et le nombre total de mises à jour concernées, en se basant uniquement sur les
+        mises à jour activées dans la "gray list".
+
+        Args:
+            session (Session): Session SQLAlchemy active.
+            entities (list): Liste des ID d'entités à analyser.
+            config (object, optional): Objet de configuration contenant éventuellement
+                un attribut `filter_on`, dictionnaire de filtres possibles :
+                - "entity" : liste des IDs d'entités à inclure
+                - "state" : liste des IDs d'états des machines
+                - "type" : liste des IDs de types d’ordinateurs
+
+        Returns:
+            list[dict]: Liste de dictionnaires contenant pour chaque entité :
+                - entity (str): ID de l'entité
+                - nbmachines (int): Nombre de machines non conformes
+                - nbupdates (int): Nombre de mises à jour manquantes
+                - totalmach (int): Nombre total de machines dans l'entité
         """
+
+        # Initialisation des filtres SQL
         filter_on = ""
         filter_on_noncompliant = ""
-        if config is not None and config.filter_on is not None:
+
+        # Application des filtres depuis la configuration (si fournie)
+        if config is not None and getattr(config, "filter_on", None) is not None:
             for key in config.filter_on:
-                column = ""
                 if key not in ["entity", "state", "type"]:
                     continue
+
                 if key == "entity":
                     column = "ge.glpi_id"
                     filter_on += f" AND {column} IN ({','.join(map(str, config.filter_on[key]))})"
@@ -14272,53 +14602,78 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                     column = "lgf.computertypes_id"
                     filter_on_noncompliant += f" AND {column} IN ({','.join(map(str, config.filter_on[key]))})"
 
+        # ─────────────────────────────────────────────
+        # 1️⃣  Récupération de la liste des machines par entité
+        # ─────────────────────────────────────────────
         sql_machine_details = f"""
-        SELECT m.id AS machine_id, m.hostname, ge.glpi_id AS entity_id
-        FROM machines m
-        JOIN glpi_entity ge ON m.glpi_entity_id = ge.id
-        WHERE m.agenttype = "machine"
-        {filter_on};
+            SELECT
+                m.id AS machine_id,
+                m.hostname,
+                ge.glpi_id AS entity_id
+            FROM
+                machines m
+                JOIN glpi_entity ge ON m.glpi_entity_id = ge.id
+            WHERE
+                m.agenttype = 'machine'
+                {filter_on};
         """
         machine_details = session.execute(sql_machine_details).fetchall()
 
+        # Organisation des machines par entité
         machine_by_entity = {}
         for row in machine_details:
             entity_id = row.entity_id
-            if entity_id not in machine_by_entity:
-                machine_by_entity[entity_id] = []
-            machine_by_entity[entity_id].append(
-                {
-                    "id": row.machine_id,
-                    "hostname": row.hostname,
-                    "valid": row.machine_id != 0,
-                }
-            )
-
+            machine_by_entity.setdefault(entity_id, []).append({
+                "id": row.machine_id,
+                "hostname": row.hostname,
+                "valid": row.machine_id != 0,
+            })
+        logger.debug("Récupération de la liste des machines par entité [%s] " % (machine_by_entity))
+        # ─────────────────────────────────────────────
+        # 2️⃣  Récupération du total de machines par entité
+        # ─────────────────────────────────────────────
         sql_total_machines = f"""
-        SELECT ge.glpi_id AS id, COUNT(m.hostname) AS totalmach
-        FROM machines m
-        JOIN glpi_entity ge ON m.glpi_entity_id = ge.id
-        WHERE m.agenttype = "machine"
-        {filter_on}
-        GROUP BY ge.glpi_id;
+            SELECT
+                ge.glpi_id AS id,
+                COUNT(m.hostname) AS totalmach
+            FROM
+                machines m
+                JOIN glpi_entity ge ON m.glpi_entity_id = ge.id
+            WHERE
+                m.agenttype = 'machine'
+                {filter_on}
+            GROUP BY
+                ge.glpi_id;
         """
         total_machines = {
             row.id: row.totalmach for row in session.execute(sql_total_machines)
         }
-
+        logger.debug("Récupération du total de machines par entité [%s] " % (total_machines))
+        # ─────────────────────────────────────────────
+        # 3️⃣  Récupération des données de non-conformité
+        # ─────────────────────────────────────────────
         sql_noncompliant = f"""
-        SELECT uma.entities_id AS id, COUNT(DISTINCT uma.id_machine) AS noncompliant, COUNT(DISTINCT uma.update_id) AS missing
-        FROM up_machine_activated uma
-        JOIN local_glpi_filters lgf ON lgf.id = uma.glpi_id
-        WHERE uma.entities_id IN ({",".join(map(str, entities))})
-        {filter_on_noncompliant}
-        GROUP BY uma.entities_id;
+            SELECT
+                uma.entities_id AS id,
+                COUNT(DISTINCT uma.id_machine) AS noncompliant,
+                COUNT(DISTINCT uma.update_id) AS missing
+            FROM
+                up_machine_activated uma
+                JOIN local_glpi_filters lgf ON lgf.id = uma.glpi_id
+            WHERE
+                uma.entities_id IN ({",".join(map(str, entities))})
+                {filter_on_noncompliant}
+            GROUP BY
+                uma.entities_id;
         """
         noncompliant_data = {
             row.id: (row.noncompliant, row.missing)
             for row in session.execute(sql_noncompliant)
         }
 
+        # ─────────────────────────────────────────────
+        # 4️⃣  Construction du résultat final
+        # ─────────────────────────────────────────────
         result = []
         for entity_id in entities:
             entity_id = int(entity_id)
@@ -14327,16 +14682,104 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             noncompliant, missing = noncompliant_data.get(entity_id, (0, 0))
             total = total_machines.get(entity_id, len(machines))
 
-            result.append(
-                {
-                    "entity": str(entity_id),
-                    "nbmachines": noncompliant,
-                    "nbupdates": missing,
-                    "totalmach": total,
-                }
-            )
+            result.append({
+                "entity": str(entity_id),
+                "nbmachines": noncompliant,
+                "nbupdates": missing,
+                "totalmach": total,
+            })
 
         return result
+
+    # @DatabaseHelper._sessionm
+    # def get_conformity_update_by_entity(
+    #     self, session, entities: list = [], config=None
+    # ):
+    #     """
+    #     This function returns the total number of machines to update in an entity considering only the updates enabled in gray list
+    #     """
+    #     filter_on = ""
+    #     filter_on_noncompliant = ""
+    #     if config is not None and config.filter_on is not None:
+    #         for key in config.filter_on:
+    #             column = ""
+    #             if key not in ["entity", "state", "type"]:
+    #                 continue
+    #             if key == "entity":
+    #                 column = "ge.glpi_id"
+    #                 filter_on += f" AND {column} IN ({','.join(map(str, config.filter_on[key]))})"
+    #             elif key == "state":
+    #                 column = "lgf.states_id"
+    #                 filter_on_noncompliant += f" AND {column} IN ({','.join(map(str, config.filter_on[key]))})"
+    #             elif key == "type":
+    #                 column = "lgf.computertypes_id"
+    #                 filter_on_noncompliant += f" AND {column} IN ({','.join(map(str, config.filter_on[key]))})"
+    #
+    #     sql_machine_details = f"""
+    #     SELECT m.id AS machine_id, m.hostname, ge.glpi_id AS entity_id
+    #     FROM machines m
+    #     JOIN glpi_entity ge ON m.glpi_entity_id = ge.id
+    #     WHERE m.agenttype = "machine"
+    #     {filter_on};
+    #     """
+    #     machine_details = session.execute(sql_machine_details).fetchall()
+    #
+    #     machine_by_entity = {}
+    #     for row in machine_details:
+    #         entity_id = row.entity_id
+    #         if entity_id not in machine_by_entity:
+    #             machine_by_entity[entity_id] = []
+    #         machine_by_entity[entity_id].append(
+    #             {
+    #                 "id": row.machine_id,
+    #                 "hostname": row.hostname,
+    #                 "valid": row.machine_id != 0,
+    #             }
+    #         )
+    #
+    #     sql_total_machines = f"""
+    #     SELECT ge.glpi_id AS id, COUNT(m.hostname) AS totalmach
+    #     FROM machines m
+    #     JOIN glpi_entity ge ON m.glpi_entity_id = ge.id
+    #     WHERE m.agenttype = "machine"
+    #     {filter_on}
+    #     GROUP BY ge.glpi_id;
+    #     """
+    #     total_machines = {
+    #         row.id: row.totalmach for row in session.execute(sql_total_machines)
+    #     }
+    #
+    #     sql_noncompliant = f"""
+    #     SELECT uma.entities_id AS id, COUNT(DISTINCT uma.id_machine) AS noncompliant, COUNT(DISTINCT uma.update_id) AS missing
+    #     FROM up_machine_activated uma
+    #     JOIN local_glpi_filters lgf ON lgf.id = uma.glpi_id
+    #     WHERE uma.entities_id IN ({",".join(map(str, entities))})
+    #     {filter_on_noncompliant}
+    #     GROUP BY uma.entities_id;
+    #     """
+    #     noncompliant_data = {
+    #         row.id: (row.noncompliant, row.missing)
+    #         for row in session.execute(sql_noncompliant)
+    #     }
+    #
+    #     result = []
+    #     for entity_id in entities:
+    #         entity_id = int(entity_id)
+    #
+    #         machines = machine_by_entity.get(entity_id, [])
+    #         noncompliant, missing = noncompliant_data.get(entity_id, (0, 0))
+    #         total = total_machines.get(entity_id, len(machines))
+    #
+    #         result.append(
+    #             {
+    #                 "entity": str(entity_id),
+    #                 "nbmachines": noncompliant,
+    #                 "nbupdates": missing,
+    #                 "totalmach": total,
+    #             }
+    #         )
+    #
+    #     return result
 
     @DatabaseHelper._sessionm
     def get_machines_xmppmaster(self, session, start, end, ctx):

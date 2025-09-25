@@ -144,6 +144,82 @@ class RpcProxy(RpcProxyI):
     def getlinelogssession(self, sessionxmpp):
         return XmppMasterDatabase().getlinelogssession(sessionxmpp)
 
+    @with_optional_xmpp_context
+    def get_approve_products(self, identity, colonne=True, ctx=None):
+        infos = ctx.get_session_info()['mondict']
+        try:
+            identity = int(identity)
+        except (TypeError, ValueError):
+            msgerror = f"Invalid identity value: {identity!r}"
+            logger.error(msgerror)
+            return {"success": False, "message": msgerror}
+        if identity not in infos['liste_entities_user']:
+            msgerror = f"missing privilege for user {infos['user_name']}: Entity name:{infos['complet_entity_name_']}"
+            logger.error(msgerror)
+            return {"success": False, "message": msgerror}
+        return XmppMasterDatabase().get_approve_products(identity,
+                                                         colonne=True)
+
+
+    @with_optional_xmpp_context
+    def get_auto_approve_rules(self, identity, colonne=True, ctx=None):
+        infos = ctx.get_session_info()['mondict']
+        try:
+            identity = int(identity)
+        except (TypeError, ValueError):
+            msgerror = f"Invalid identity value: {identity!r}"
+            logger.error(msgerror)
+            return {"success": False, "message": msgerror}
+        if identity not in infos['liste_entities_user']:
+            msgerror = f"missing privilege for user {infos['user_name']}: Entity name:{infos['complet_entity_name_']}"
+            logger.error(msgerror)
+            return {"success": False, "message": msgerror}
+        return XmppMasterDatabase().get_auto_approve_rules(identity,
+                                                         colonne=True)
+
+
+    @with_optional_xmpp_context
+    def update_approve_products(self,
+                                updatesproduct,
+                                entity_id,
+                                ctx=None):
+        infos = ctx.get_session_info()['mondict']
+        try:
+            entity_id = int(entity_id)
+        except (TypeError, ValueError):
+            msgerror = f"Invalid entity_id value: {entity_id!r}"
+            logger.error(msgerror)
+            return {"success": False, "message": msgerror}
+        # on vérifit que user peut disposer des informations
+        # de cette entite depuis son context.
+        if entity_id not in infos['liste_entities_user']:
+            msgerror = f"missing privilege for user {infos['user_name']}: Entity name:{infos['complet_entity_name_']}"
+            logger.error(msgerror)
+            return {"success": False, "message": msgerror}
+        return XmppMasterDatabase().update_approve_products(updatesproduct,
+                                                            entity_id=entity_id)
+
+    @with_optional_xmpp_context
+    def update_auto_approve_rules(self,
+                                updatesrules,
+                                entity_id,
+                                ctx=None):
+        infos = ctx.get_session_info()['mondict']
+        try:
+            entity_id = int(entity_id)
+        except (TypeError, ValueError):
+            msgerror = f"Invalid entity_id value: {entity_id!r}"
+            logger.error(msgerror)
+            return {"success": False, "message": msgerror}
+        # on vérifit que user peut disposer des informations
+        # de cette entite depuis son context.
+        if entity_id not in infos['liste_entities_user']:
+            msgerror = f"missing privilege for user {infos['user_name']}: Entity name:{infos['complet_entity_name_']}"
+            logger.error(msgerror)
+            return {"success": False, "message": msgerror}
+        return XmppMasterDatabase().update_auto_approve_rules(updatesrules,
+                                                              entity_id=entity_id)
+
 
     def getListPackages(self,):
         resultnamepackage = []
@@ -213,8 +289,10 @@ class RpcProxy(RpcProxyI):
             macadress,
         )
 
+
+
     @with_optional_xmpp_context
-    def get_list_ars_from_sharing(self, sharings, start, limit, userlogin, filter, ctx=None):
+    def get_list_ars_from_sharing(self, sharings, start, limit, userlogin, filter,ctx=None):
         """
         Récupère la liste des ARS (Administrations Régionales/Serveurs) accessibles
         à partir des droits de partage et des règles de cluster pour un utilisateur donné.
@@ -1229,7 +1307,7 @@ class RpcProxy(RpcProxyI):
 
 
 
-#############JFKJFK
+#############
 def createdirectoryuser(directory):
     if not os.path.exists(directory):
         os.makedirs(directory)
@@ -1629,13 +1707,6 @@ def get_conf_master_agent():
 def get_list_of_users_for_shared_qa(namecmd):
     return XmppMasterDatabase().get_list_of_users_for_shared_qa(namecmd)
 
-
-def get_auto_approve_rules(colonne=True):
-    return XmppMasterDatabase().get_auto_approve_rules()
-
-
-def update_auto_approve_rules(updates):
-    return XmppMasterDatabase().update_auto_approve_rules(updates)
 
 
 

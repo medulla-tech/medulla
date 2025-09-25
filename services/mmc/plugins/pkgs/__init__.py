@@ -1355,6 +1355,7 @@ class ConfigReader(object):
 
 
 class RpcProxy(RpcProxyI):
+
     def getPApiDetail(self, pp_api_id):
         def _getPApiDetail(result, pp_api_id=pp_api_id):
             for upa in result:
@@ -1378,7 +1379,39 @@ class RpcProxy(RpcProxyI):
                          end=-1,
                          filter="",
                          ctx=None):
+        # on recuperer les entity du login permit
         return PkgsDatabase().get_all_packages(login, sharing_activated, start, end, filter)
+
+
+    @with_optional_xmpp_context
+    def get_all_packages_deploy(self,
+                                login,
+                                start=-1,
+                                end=-1,
+                                filter="",
+                                ctx=None):
+        """
+        Only the packages with share permissions can deploy
+        """
+        # ctx = self.currentContext
+        mondict = ctx.get_session_info()['mondict']
+
+        objsearch = {"login": login, "permission": "r"}
+        logger.error(f"The removal of {ctx.get_session_info()}")
+
+        objsearch["liste_entities_user"] = mondict['liste_entities_user']
+        if 'entity_id' in mondict:
+            objsearch['entity_user_id'] = mondict['entity_id']
+
+        objsearch["list_sharing"] = list_sharing_id(objsearch)
+
+        if 'xmppmaster' in filter:
+            objsearch['xmppmaster'] = filter['xmppmaster']
+        listuuidpackag = PkgsDatabase().get_list_packages_deploy_view(
+            objsearch, start, end, filter
+        )
+        return apimanagepackagemsc.loadpackagelistmsc_on_select_package(listuuidpackag)
+
 
 class DownloadAppstreamPackageList(object):
     """
@@ -2349,26 +2382,12 @@ esac""" % (
                 % (self.file, file_data[self.file])
             )
 
-
-
-
 def list_sharing_id(objsearch):
     list_id_sharing = []
     for sharing in pkgs_search_share(objsearch)["datas"]:
         list_id_sharing.append(sharing["id_sharing"])
     return list_id_sharing
 
-
-def get_all_packages_deploy(login, start=-1, end=-1, filter=""):
-    """
-    Only the packages with share permissions can deploy
-    """
-    objsearch = {"login": login, "permission": "r"}
-    objsearch["list_sharing"] = list_sharing_id(objsearch)
-    listuuidpackag = PkgsDatabase().get_list_packages_deploy_view(
-        objsearch, start, end, filter
-    )
-    return apimanagepackagemsc.loadpackagelistmsc_on_select_package(listuuidpackag)
 
 
 def get_dependencies_list_from_permissions(login):

@@ -65,45 +65,81 @@ def literalquery(statement):
 
 # ################# display sql literal from sqlalchemy ############################
 
-
 def __convert(loc):
+    """
+    Convertit le nom d'une localisation en utilisant le décodage GLPI.
+
+    Args:
+        loc (object): Un objet représentant une localisation, avec au moins un attribut `name`.
+
+    Returns:
+        object: L'objet `loc` modifié, avec `loc.name` décodé selon la méthode GLPI.
+    """
+    # Décode le nom de la localisation via l'API GLPI
     loc.name = mmc.plugins.glpi.database.Glpi().decode(loc.name)
     return loc
 
 
-# Fonction pour afficher les attributs des objets
 def log_object_attributes(obj):
+    """
+    Affiche les attributs d'un objet sous forme de dictionnaire.
+
+    Args:
+        obj (object): L'objet dont on veut inspecter les attributs.
+
+    Returns:
+        dict or str: Un dictionnaire des attributs de l'objet si possible, sinon une chaîne indiquant l'absence d'attributs.
+    """
     try:
-        # Utiliser vars() pour obtenir les attributs de l'objet
+        # Utilise vars() pour récupérer les attributs de l'objet sous forme de dictionnaire
         attributes = vars(obj)
         return attributes
     except TypeError:
-        # Si l'objet n'a pas de __dict__, retourner une chaîne vide
+        # Si l'objet n'a pas de __dict__ (ex: objet natif Python), retourne un message par défaut
         return "No attributes"
 
 
 def complete_ctx(ctx):
     """
-    Set GLPI user locations and profile in current security context.
+    Complète le contexte utilisateur avec les localisations GLPI et le profil utilisateur.
+
+    Cette fonction ajoute deux informations au contexte (`ctx`) :
+    - `locations`: Liste des localisations GLPI associées à l'utilisateur.
+    - `profile`: Profil utilisateur récupéré via `ComputerLocationManager`.
+
+    Args:
+        ctx (object): Le contexte utilisateur actuel, doit avoir un attribut `userid` et éventuellement `locations` et `profile`.
+
+    Side Effects:
+        - Ajoute ou met à jour `ctx.locations` et `ctx.locationsid` si nécessaire.
+        - Ajoute ou met à jour `ctx.profile` si nécessaire.
     """
-    if not hasattr(ctx, "locations") or ctx.locations == None:
+    # Ajoute les localisations GLPI au contexte si elles ne sont pas déjà présentes
+    if not hasattr(ctx, "locations") or ctx.locations is None:
         logging.getLogger().debug(
-            "adding locations in context for user %s" % (ctx.userid)
+            "Ajout des localisations au contexte pour l'utilisateur %s" % (ctx.userid)
         )
+        # Récupère les localisations de l'utilisateur et les convertit via __convert
         ctx.locations = list(
             map(
                 __convert, mmc.plugins.glpi.database.Glpi().getUserLocations(ctx.userid)
             )
         )
+
+        # Si des localisations sont trouvées, extrait les IDs selon la version de GLPI
         if isinstance(ctx.locations, list) and len(ctx.locations) > 0:
-            if hasattr(ctx.locations[0], "id"):  # GLPI 0.8
+            if hasattr(ctx.locations[0], "id"):  # Cas GLPI 0.8+
                 ctx.locationsid = [e.id for e in ctx.locations]
-            elif hasattr(ctx.locations[0], "ID"):  # GLPI 0.7x
+            elif hasattr(ctx.locations[0], "ID"):  # Cas GLPI 0.7x
                 ctx.locationsid = [e.ID for e in ctx.locations]
+            else:
+                ctx.locationsid = []  # Aucun ID trouvé
         else:
-            ctx.locationsid = []
+            ctx.locationsid = []  # Aucune localisation trouvée
+
+    # Ajoute le profil utilisateur au contexte s'il n'est pas déjà présent
     if not hasattr(ctx, "profile"):
         logging.getLogger().debug(
-            "adding profiles in context for user %s" % (ctx.userid)
+            "Ajout du profil au contexte pour l'utilisateur %s" % (ctx.userid)
         )
         ctx.profile = ComputerLocationManager().getUserProfile(ctx.userid)

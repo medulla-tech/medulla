@@ -27,7 +27,7 @@ from sqlalchemy import (
 from sqlalchemy.orm import create_session, mapper
 from sqlalchemy.exc import NoSuchTableError, SQLAlchemyError
 from sqlalchemy.ext.automap import automap_base
-
+import pprint
 import datetime
 import magic
 import base64
@@ -306,137 +306,180 @@ class PkgsDatabase(DatabaseHelper):
         session.flush()
 
     @DatabaseHelper._sessionm
-    def get_list_packages_deploy_view(
-        self, session, objsearch, start=-1, end=-1, ctx={}
-    ):
+    def get_list_packages_deploy_view(self,
+                                    session,
+                                    objsearch,
+                                    start=-1,
+                                    end=-1,
+                                    ctx={}):
         """
-        Get the list of all the packages uuid for deploy.
-        Params:
-            session: The SQLAlchemy session
-            login: The user login. (str)
-            sharing_activated: True, if the sharing system is activated
-            start: int of the starting offset
-            end: int of the limit
+        Retrieve a list of deployable package UUIDs with flexible filtering and pagination.
+
+        Logic overview:
+        ----------------
+        1️⃣  **Base selection**
+            - Selects from `pkgs.packages`, only if the package is not already synchronized
+            (not in `pkgs.syncthingsync`), and the associated share is enabled.
+
+        2️⃣  **Gray list rules (`xmppmaster.up_gray_list`):**
+            - If the package is **not** listed in `up_gray_list` → it's always included.
+            - If the package **is** listed in `up_gray_list` → it is included **only if**:
+                * `valided = 1`
+                * `entityid` belongs to `liste_entities_user`
+                * (optional) if `xmpp_cn_id` and `glpi_entityid` are given:
+                the machine must appear in `xmppmaster.up_machine_windows`
+                matching both:
+                    - `update_id = up_gray_list.updateid`
+                    - `id_machine = xmpp_cn_id`
+                    - `entityid = glpi_entityid`
+                    - and both `curent_deploy` and `required_deploy` are NULL.
+
+        3️⃣  **Filtering**
+            - Text filter (`ctx["filter"]`) on multiple textual fields.
+            - OS filter (`ctx["filter1"]`).
+            - Package sharing restriction (`pkgs_share_id`).
+
+        4️⃣  **Pagination**
+            - Uses `LIMIT` and `OFFSET`.
+
+        5️⃣  **Special rule**
+            - If `liste_entities_user` is empty → returns no results (empty dict).
+
         Returns:
-            It returns the list of the packages.
+            dict: {
+                "count": int,   # total number of rows (ignoring LIMIT)
+                "uuid": list[str]  # list of selected package UUIDs
+            }
         """
+
         result = {"count": 0, "uuid": []}
-        if "list_sharing" in objsearch and not objsearch["list_sharing"]:
+
+        # --- Extract input parameters ---
+        liste_entities_user = objsearch.get("liste_entities_user", [])
+        list_sharing = objsearch.get("list_sharing", [])
+        xmpp_cn_id = objsearch.get("xmppmaster", {}).get("id") if "xmppmaster" in objsearch else None
+        if 'entity_user_id' in objsearch:
+            entity_user_id = objsearch['entity_user_id']
+        glpi_entityid = objsearch.get("xmppmaster", {}).get("entityid") if "xmppmaster" in objsearch else None
+
+        # --- SECURITY GUARD ---
+        # If user has no entities, no packages should be returned.
+        if not liste_entities_user:
+            logger.warning("No entity list provided → returning empty result.")
             return result
 
-        if "filter1" in ctx:
-            filter1 = ctx["filter1"]
-        else:
-            filter1 = ""
+        # --- Early exit if no allowed shares ---
+        if not list_sharing:
+            logger.warning("No sharing list provided → returning empty result.")
+            return result
 
-        if "filter1" in ctx:
-            filter1 = ctx["filter1"]
-        else:
-            filter1 = ""
+        # --- Context filters ---
+        filter_text = ctx.get("filter", "")
+        filter_os = ctx.get("filter1", "")
 
-        if "filter" in ctx:
-            filter = ctx["filter"]
-        else:
-            filter = ""
-
+        # --- Pagination safety ---
         try:
             start = int(start)
-        except BaseException:
+        except Exception:
             start = -1
         try:
             end = int(end)
-        except BaseException:
+        except Exception:
             end = -1
 
-        if filter == "":
-            _filter = ""
-        else:
-            _filter = """AND ( pkgs_shares.name LIKE '%%%s%%'
-            OR
-                pkgs_shares.type LIKE '%%%s%%'
-            OR
-                packages.label LIKE '%%%s%%'
-            OR
-                packages.description LIKE '%%%s%%'
-            OR
-                packages.version LIKE '%%%s%%'
-            OR
-                packages.uuid LIKE '%%%s%%'
-            OR
-                packages.metagenerator LIKE '%%%s%%'
-            OR
-                packages.Qversion LIKE '%%%s%%'
-            OR
-                packages.Qvendor LIKE '%%%s%%'
-            OR
-                packages.Qsoftware LIKE '%%%s%%'
-            )""" % (
-                filter,
-                filter,
-                filter,
-                filter,
-                filter,
-                filter,
-                filter,
-                filter,
-                filter,
-                filter,
-            )
+        # --- Text filter ---
+        _filter = ""
+        if filter_text:
+            _filter = f"""AND (
+                pkgs_shares.name LIKE '%%{filter_text}%%' OR
+                pkgs_shares.type LIKE '%%{filter_text}%%' OR
+                packages.label LIKE '%%{filter_text}%%' OR
+                packages.description LIKE '%%{filter_text}%%' OR
+                packages.version LIKE '%%{filter_text}%%' OR
+                packages.uuid LIKE '%%{filter_text}%%' OR
+                packages.metagenerator LIKE '%%{filter_text}%%' OR
+                packages.Qversion LIKE '%%{filter_text}%%' OR
+                packages.Qvendor LIKE '%%{filter_text}%%' OR
+                packages.Qsoftware LIKE '%%{filter_text}%%'
+            )"""
 
-        if filter1 == "":
-            _filter1 = ""
-        else:
-            _filter1 = """ AND
-            packages.os LIKE '%%%s%%' """ % (
-                filter1
-            )
+        # --- OS filter ---
+        _filter1 = f"AND packages.os LIKE '%%{filter_os}%%'" if filter_os else ""
 
-        if start >= 0:
-            limit = "LIMIT %s" % start
-        else:
-            limit = " "
+        # --- Restrict to allowed sharing IDs ---
+        sharing_ids = ",".join(str(int(x)) for x in list_sharing)
+        where_clause = f"AND packages.pkgs_share_id IN ({sharing_ids})"
 
-        if end > 0:
-            offset = ", %s" % end
-        else:
-            offset = " "
-        where_clause = ""
-        if objsearch["list_sharing"]:
-            strlist = ",".join([str(x) for x in objsearch["list_sharing"]])
-            where_clause = (
-                where_clause + " AND packages.`pkgs_share_id` IN (%s) " % strlist
-            )
+        # --- Entity filtering ---
+        entity_ids = ",".join(str(int(e)) for e in liste_entities_user)
+        entity_condition = f"AND xmppmaster.up_gray_list.entityid IN ({entity_ids})"
 
-        where_clause = (
-            where_clause
-            + "AND pkgs_shares.enabled = 1  ORDER BY packages.pkgs_share_id ASC, packages.label ASC, packages.version ASC  "
-        )
+        # --- Machine-specific filtering (via EXISTS to avoid duplicates) ---
+        xmpp_machine_condition = ""
+        if xmpp_cn_id is not None and glpi_entityid is not None:
+            xmpp_machine_condition = f"""
+                AND EXISTS (
+                    SELECT 1
+                    FROM xmppmaster.up_machine_windows
+                    WHERE xmppmaster.up_machine_windows.update_id = xmppmaster.up_gray_list.updateid
+                    AND xmppmaster.up_machine_windows.id_machine = {int(xmpp_cn_id)}
+                    AND xmppmaster.up_machine_windows.entityid = {int(glpi_entityid)}
+                    AND xmppmaster.up_machine_windows.curent_deploy IS NULL
+                    AND xmppmaster.up_machine_windows.required_deploy IS NULL
+                )
+            """
 
-        sql = """SELECT SQL_CALC_FOUND_ROWS
-                    packages.uuid
-                FROM
-                    packages
-                        LEFT JOIN
-                    pkgs_shares ON pkgs_shares.id = packages.pkgs_share_id
-                WHERE
-                    packages.uuid NOT IN (SELECT
-                            syncthingsync.uuidpackage
-                        FROM
-                            pkgs.syncthingsync)
-                %s %s %s %s %s
-                    ;""" % (
-            _filter,
-            _filter1,
-            where_clause,
-            limit,
-            offset,
-        )
+        # --- Pagination clause ---
+        limit_clause = ""
+        if start >= 0 and end > 0:
+            limit_clause = f"LIMIT {start}, {end}"
+        elif end > 0:
+            limit_clause = f"LIMIT {end}"
+        elif start >= 0:
+            limit_clause = f"LIMIT {start}, 20"
+
+        # --- Final SQL ---
+        sql = f"""
+            SELECT SQL_CALC_FOUND_ROWS DISTINCT
+                packages.uuid
+            FROM
+                pkgs.packages
+            LEFT JOIN
+                pkgs.pkgs_shares ON pkgs_shares.id = packages.pkgs_share_id
+            LEFT JOIN
+                xmppmaster.up_gray_list ON xmppmaster.up_gray_list.updateid = packages.uuid
+            WHERE
+                packages.uuid NOT IN (
+                    SELECT syncthingsync.uuidpackage
+                    FROM pkgs.syncthingsync
+                )
+                AND (
+                    xmppmaster.up_gray_list.updateid IS NULL
+                    OR (
+                        xmppmaster.up_gray_list.valided = 1
+                        {entity_condition}
+                        {xmpp_machine_condition}
+                    )
+                )
+                {_filter}
+                {_filter1}
+                {where_clause}
+                AND pkgs_shares.enabled = 1
+            ORDER BY
+                packages.pkgs_share_id ASC,
+                packages.label ASC,
+                packages.version ASC
+            {limit_clause}
+            ;
+        """
+        # --- Execute SQL ---
         ret = session.execute(sql)
-        sql_count = "SELECT FOUND_ROWS();"
-        ret_count = session.execute(sql_count)
+        ret_count = session.execute("SELECT FOUND_ROWS();")
+
+        # --- Prepare result ---
         result["count"] = ret_count.first()[0]
-        for package in ret:
-            result["uuid"].append(package[0])
+        result["uuid"] = [row[0] for row in ret]
+
         return result
 
     @DatabaseHelper._sessionm
@@ -1385,6 +1428,74 @@ class PkgsDatabase(DatabaseHelper):
         return resultrecord
 
     @DatabaseHelper._sessionm
+    def pkgs_sharing_count_packages(self, session):
+        """
+        Retourne un dictionnaire comptant le nombre de paquets par identifiant de partage.
+
+        Cette fonction effectue un comptage des enregistrements dans `pkgs.packages`
+        groupés par `pkgs_share_id`. Si certaines lignes ont `pkgs_share_id = NULL`,
+        elles sont incluses dans la clé spéciale `"null"`.
+        Si aucun enregistrement NULL n'existe, `"null": 0` est tout de même présent.
+
+        Exemple de retour :
+            {
+                1: 25,
+                2: 14,
+                "null": 3
+            }
+
+        En cas d'erreur, un dictionnaire vide `{}` est retourné.
+        """
+        ret = {}
+        try:
+            # ─────────────────────────────────────────────
+            # Requête SQL principale (plus lisible)
+            # ─────────────────────────────────────────────
+            sql = """
+                SELECT
+                    pkgs_share_id, COUNT(*) AS total
+                FROM
+                    pkgs.packages
+                GROUP BY
+                    pkgs_share_id;
+            """
+
+            # ─────────────────────────────────────────────
+            # Exécution de la requête
+            # ─────────────────────────────────────────────
+            result = session.execute(sql)
+            session.flush()
+
+            # ─────────────────────────────────────────────
+            # Conversion en liste de dictionnaires
+            # ─────────────────────────────────────────────
+            rows = self._return_dict_from_dataset_mysql(result)
+
+            # ─────────────────────────────────────────────
+            # Formatage du résultat final
+            # ─────────────────────────────────────────────
+            has_null = False
+            for row in rows:
+                key = "null" if row.get("pkgs_share_id") is None else row.get("pkgs_share_id")
+                if key == "null":
+                    has_null = True
+                ret[key] = row.get("total", 0)
+
+            # Si aucun "null" n’a été rencontré, on le force à 0
+            if not has_null:
+                ret["null"] = 0
+
+            return ret
+
+        except Exception:
+            # ─────────────────────────────────────────────
+            # Gestion des erreurs et rollback
+            # ─────────────────────────────────────────────
+            session.rollback()
+            self.logger.error("\n%s" % (traceback.format_exc()))
+            return {}
+
+    @DatabaseHelper._sessionm
     def pkgs_sharing_rule_search(
         self,
         session,
@@ -1394,85 +1505,123 @@ class PkgsDatabase(DatabaseHelper):
         share_type=None,
         permission=None,
     ):
-        sql = """SELECT
-                    pkgs.pkgs_shares.id AS id_sharing,
-                    pkgs.pkgs_shares.name AS name,
-                    pkgs.pkgs_shares.comments AS comments,
-                    pkgs.pkgs_shares.enabled AS enabled,
-                    pkgs.pkgs_shares.type AS type,
-                    pkgs.pkgs_shares.uri AS uri,
-                    pkgs.pkgs_shares.ars_name AS ars_name,
-                    pkgs.pkgs_shares.ars_id AS ars_id,
-                    pkgs.pkgs_shares.share_path AS share_path,
-                    pkgs.pkgs_rules_local.id AS id_rule,
-                    pkgs.pkgs_rules_local.pkgs_rules_algos_id AS algos_id,
-                    pkgs.pkgs_rules_local.order AS order_rule,
-                    pkgs.pkgs_rules_local.subject AS subject,
-                    pkgs.pkgs_rules_local.permission AS permission,
-                    pkgs.pkgs_shares.quotas AS quotas,
-                    pkgs.pkgs_shares.usedquotas AS usedquotas
-                FROM
-                    pkgs.pkgs_shares
-                        INNER JOIN
-                    pkgs.pkgs_rules_local ON pkgs.pkgs_rules_local.pkgs_shares_id = pkgs.pkgs_shares.id
-                WHERE"""
+        """
+        Recherche les règles de partage associées à un utilisateur, un algorithme et un état donné.
 
-        whereclause = """'%s' REGEXP (pkgs.pkgs_rules_local.subject)
+        Cette fonction récupère les partages (`pkgs_shares`) et leurs règles (`pkgs_rules_local`)
+        correspondant aux critères fournis.
+        Elle enrichit le résultat avec le nombre de paquets associés à chaque partage,
+        obtenu en une seule requête via `pkgs_sharing_count_packages()`.
+
+        Args:
+            user_information (str): Expression ou motif utilisé dans la clause REGEXP.
+            algoid (int): Identifiant de l’algorithme de règle.
+            enabled (int, optional): Statut du partage (1 = actif). Par défaut : 1.
+            share_type (str, optional): Type de partage à filtrer.
+            permission (str, optional): Permission à filtrer.
+
+        Returns:
+            list[dict]: Liste de partages enrichis avec leurs règles et le nombre de paquets associés.
+        """
+
+        try:
+            # ─────────────────────────────────────────────
+            # Construction de la requête SQL principale
+            # ─────────────────────────────────────────────
+            sql = """SELECT
+                        pkgs.pkgs_shares.id AS id_sharing,
+                        pkgs.pkgs_shares.name AS name,
+                        pkgs.pkgs_shares.comments AS comments,
+                        pkgs.pkgs_shares.enabled AS enabled,
+                        pkgs.pkgs_shares.type AS type,
+                        pkgs.pkgs_shares.uri AS uri,
+                        pkgs.pkgs_shares.ars_name AS ars_name,
+                        pkgs.pkgs_shares.ars_id AS ars_id,
+                        pkgs.pkgs_shares.share_path AS share_path,
+                        pkgs.pkgs_rules_local.id AS id_rule,
+                        pkgs.pkgs_rules_local.pkgs_rules_algos_id AS algos_id,
+                        pkgs.pkgs_rules_local.order AS order_rule,
+                        pkgs.pkgs_rules_local.subject AS subject,
+                        pkgs.pkgs_rules_local.permission AS permission,
+                        pkgs.pkgs_shares.quotas AS quotas,
+                        pkgs.pkgs_shares.usedquotas AS usedquotas
+                    FROM
+                        pkgs.pkgs_shares
+                        INNER JOIN pkgs.pkgs_rules_local
+                            ON pkgs.pkgs_rules_local.pkgs_shares_id = pkgs.pkgs_shares.id
+                    WHERE
+                        '%s' REGEXP pkgs.pkgs_rules_local.subject
                         AND pkgs.pkgs_shares.enabled = %s
-                        AND pkgs.pkgs_rules_local.pkgs_rules_algos_id = %s""" % (
-            user_information,
-            enabled,
-            algoid,
-        )
-        typeclause = ""
-        if share_type is not None:
-            typeclause = """ AND pkgs.pkgs_shares.type = '%s' """ % (share_type)
-
-        permitionclause = ""
-        if permission is not None:
-            permitionclause = (
-                """ AND pkgs.pkgs_rules_local.permission like '%%%s%%' """
-                % (permission)
+                        AND pkgs.pkgs_rules_local.pkgs_rules_algos_id = %s
+            """ % (
+                user_information,
+                enabled,
+                algoid,
             )
-        sql = """ %s
-                  %s %s %s
-                  ORDER BY pkgs.pkgs_rules_local.order;""" % (
-            sql,
-            whereclause,
-            typeclause,
-            permitionclause,
-        )
-        result = session.execute(sql)
-        session.commit()
-        session.flush()
-        ret = []
-        if result:
-            # create dict partage
-            for y in result:
-                resuldict = {}
-                resuldict["id_sharing"] = y[0] if y[0] is not None else ""
-                resuldict["name"] = y[1] if y[1] is not None else ""
-                resuldict["comments"] = y[2] if y[2] is not None else ""
-                resuldict["type"] = y[4] if y[4] is not None else ""
-                resuldict["uri"] = y[5] if y[5] is not None else ""
-                resuldict["ars_name"] = y[6] if y[6] is not None else ""
-                resuldict["ars_id"] = y[7] if y[7] is not None else ""
-                resuldict["share_path"] = y[8] if y[8] is not None else ""
-                resuldict["id_rule"] = y[9] if y[9] is not None else ""
-                resuldict["algos_id"] = y[10] if y[10] is not None else ""
-                resuldict["order_rule"] = y[11] if y[11] is not None else ""
-                resuldict["regexp"] = y[12] if y[12] is not None else ""
-                resuldict["permission"] = y[13] if y[13] is not None else ""
-                resuldict["quotas"] = str(y[14]) if y[14] is not None else ""
-                resuldict["usedquotas"] = str(y[15]) if y[15] is not None else ""
-                if resuldict["type"] == "global":
-                    resuldict["nbpackage"] = self.nb_package_in_sharing(share_id=None)
-                else:
-                    resuldict["nbpackage"] = self.nb_package_in_sharing(
-                        share_id=resuldict["id_sharing"]
-                    )
-                ret.append(resuldict)
-        return ret
+
+            # ─────────────────────────────────────────────
+            # Clauses optionnelles
+            # ─────────────────────────────────────────────
+            if share_type is not None:
+                sql += " AND pkgs.pkgs_shares.type = '%s'" % share_type
+            if permission is not None:
+                sql += " AND pkgs.pkgs_rules_local.permission LIKE '%%%s%%'" % permission
+
+            # Tri final
+            sql += " ORDER BY pkgs.pkgs_rules_local.order;"
+
+            # ─────────────────────────────────────────────
+            # Exécution de la requête
+            # ─────────────────────────────────────────────
+            result = session.execute(sql)
+            session.flush()
+
+            # ─────────────────────────────────────────────
+            # Récupération du nombre de paquets par partage
+            # ─────────────────────────────────────────────
+            pkg_counts = self.pkgs_sharing_count_packages()
+            # Exemple : {1: 25, 2: 14, "null": 3}
+
+            ret = []
+            if result:
+                for y in result:
+                    resuldict = {
+                        "id_sharing": y[0] if y[0] is not None else "",
+                        "name": y[1] if y[1] is not None else "",
+                        "comments": y[2] if y[2] is not None else "",
+                        "enabled": y[3] if y[3] is not None else "",
+                        "type": y[4] if y[4] is not None else "",
+                        "uri": y[5] if y[5] is not None else "",
+                        "ars_name": y[6] if y[6] is not None else "",
+                        "ars_id": y[7] if y[7] is not None else "",
+                        "share_path": y[8] if y[8] is not None else "",
+                        "id_rule": y[9] if y[9] is not None else "",
+                        "algos_id": y[10] if y[10] is not None else "",
+                        "order_rule": y[11] if y[11] is not None else "",
+                        "regexp": y[12] if y[12] is not None else "",
+                        "permission": y[13] if y[13] is not None else "",
+                        "quotas": str(y[14]) if y[14] is not None else "",
+                        "usedquotas": str(y[15]) if y[15] is not None else "",
+                    }
+
+                    # ─────────────────────────────────────────────
+                    # Ajout du nombre de paquets associés
+                    # ─────────────────────────────────────────────
+                    share_id = resuldict["id_sharing"]
+                    if resuldict["type"] == "global":
+                        resuldict["nbpackage"] = pkg_counts.get("null", 0)
+                    else:
+                        resuldict["nbpackage"] = pkg_counts.get(share_id, 0)
+
+                    ret.append(resuldict)
+
+            return ret
+
+        except Exception:
+            session.rollback()
+            self.logger.error("\n%s" % (traceback.format_exc()))
+            return []
+
 
     @DatabaseHelper._sessionm
     def get_Cluster_list_rule(self, session, objsearch):
@@ -1597,15 +1746,23 @@ class PkgsDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def pkgs_sharing_admin_profil(self, session):
         """
-            This function is used to obtain packages list
-            from the admin profile
-        Args:
-            session: The SQLAlchemy session
+        Retrieve the list of active shares for the admin profile,
+        including the number of packages per share.
+
+        This function executes a single query to get all shares,
+        and uses pkgs_sharing_count_packages() to efficiently
+        retrieve the package counts without looping multiple SQL queries.
 
         Returns:
-            It returns the list of the actual shares for the admin profile.
+            list[dict]: List of active shares (enabled = 1),
+                        each enriched with nbpackage (number of packages).
         """
-        sql = """SELECT
+        try:
+            # ─────────────────────────────────────────────
+            # Requête principale pour les partages actifs
+            # ─────────────────────────────────────────────
+            sql = """
+                SELECT
                     pkgs.pkgs_shares.id AS id_sharing,
                     pkgs.pkgs_shares.name AS name,
                     pkgs.pkgs_shares.comments AS comments,
@@ -1620,57 +1777,102 @@ class PkgsDatabase(DatabaseHelper):
                 FROM
                     pkgs.pkgs_shares
                 WHERE
-                     pkgs.pkgs_shares.enabled = 1;"""
-        result = session.execute(sql)
-        session.commit()
-        session.flush()
-        ret = []
-        if result:
-            # create dict partage
-            for y in result:
-                resuldict = {}
-                resuldict["id_sharing"] = y[0] if y[0] is not None else ""
-                resuldict["name"] = y[1] if y[1] is not None else ""
-                resuldict["comments"] = y[2] if y[2] is not None else ""
-                resuldict["type"] = y[4] if y[4] is not None else ""
-                resuldict["uri"] = y[5] if y[5] is not None else ""
-                resuldict["ars_name"] = y[6] if y[6] is not None else ""
-                resuldict["ars_id"] = y[7] if y[7] is not None else ""
-                resuldict["share_path"] = y[8] if y[8] is not None else ""
-                resuldict["permission"] = "rw"
-                resuldict["quotas"] = str(y[9]) if y[9] is not None else ""
-                resuldict["usedquotas"] = str(y[10]) if y[10] is not None else ""
-                ret.append(resuldict)
-                if resuldict["type"] == "global":
-                    resuldict["nbpackage"] = self.nb_package_in_sharing(share_id=None)
-                else:
-                    resuldict["nbpackage"] = self.nb_package_in_sharing(
-                        share_id=resuldict["id_sharing"]
-                    )
-        return ret
+                    pkgs.pkgs_shares.enabled = 1;
+            """
+
+            result = session.execute(sql)
+            session.flush()
+
+            # ─────────────────────────────────────────────
+            # Récupération des compteurs de paquets
+            # ─────────────────────────────────────────────
+            pkg_counts = self.pkgs_sharing_count_packages()
+            # Exemple : {1: 25, 2: 14, "null": 3}
+
+            ret = []
+            if result:
+                for y in result:
+                    resuldict = {
+                        "id_sharing": y[0] if y[0] is not None else "",
+                        "name": y[1] if y[1] is not None else "",
+                        "comments": y[2] if y[2] is not None else "",
+                        "enabled": y[3] if y[3] is not None else "",
+                        "type": y[4] if y[4] is not None else "",
+                        "uri": y[5] if y[5] is not None else "",
+                        "ars_name": y[6] if y[6] is not None else "",
+                        "ars_id": y[7] if y[7] is not None else "",
+                        "share_path": y[8] if y[8] is not None else "",
+                        "permission": "rw",
+                        "quotas": str(y[9]) if y[9] is not None else "",
+                        "usedquotas": str(y[10]) if y[10] is not None else "",
+                    }
+
+                    # ─────────────────────────────────────────────
+                    # Attribution du nombre de paquets
+                    # ─────────────────────────────────────────────
+                    share_id = resuldict["id_sharing"]
+                    if resuldict["type"] == "global":
+                        resuldict["nbpackage"] = pkg_counts.get("null", 0)
+                    else:
+                        resuldict["nbpackage"] = pkg_counts.get(share_id, 0)
+
+                    ret.append(resuldict)
+
+            return ret
+
+        except Exception:
+            session.rollback()
+            self.logger.error("\n%s" % (traceback.format_exc()))
+            return []
 
     @DatabaseHelper._sessionm
     def nb_package_in_sharing(self, session, share_id=None):
-        sql = """SELECT
-                    COUNT(*)
-                FROM
-                    pkgs.packages
-                WHERE
-                    packages.pkgs_share_id is NULL;"""
-        logging.getLogger().debug(str(sql))
-        if share_id is not None:
-            sql = """SELECT
-                        COUNT(*)
-                    FROM
-                        pkgs.packages
-                    WHERE
-                        packages.pkgs_share_id = %s;""" % (
-                share_id
-            )
-        result = session.execute(sql)
-        session.commit()
-        session.flush()
-        return [x for x in result][0][0]
+        """
+        Retourne le nombre de paquets associés à un partage spécifique,
+        ou le nombre de paquets sans partage (NULL) si aucun ID n’est fourni.
+
+        Args:
+            session: Session SQLAlchemy active.
+            share_id (int | None): Identifiant du partage à vérifier.
+                                   Si None, compte les paquets non associés à un partage.
+
+        Returns:
+            int: Nombre de paquets trouvés.
+        """
+        try:
+            # Construction sécurisée de la requête
+            if share_id is None:
+                sql = """
+                    SELECT COUNT(*) AS nb
+                    FROM pkgs.packages
+                    WHERE packages.pkgs_share_id IS NULL;
+                """
+                params = {}
+            else:
+                sql = """
+                    SELECT COUNT(*) AS nb
+                    FROM pkgs.packages
+                    WHERE packages.pkgs_share_id = :share_id;
+                """
+                params = {"share_id": share_id}
+
+            logging.getLogger().debug(f"Executing nb_package_in_sharing with {params}")
+
+            # Exécution SQL
+            result = session.execute(sql, params).fetchone()
+
+            # Commit après lecture (flush suffirait, mais on garde cohérence avec ton code)
+            session.flush()
+            session.commit()
+
+            # Extraction sécurisée du résultat
+            count = result[0] if result and result[0] is not None else 0
+            return int(count)
+
+        except Exception:
+            session.rollback()
+            logging.getLogger().error("\n%s" % traceback.format_exc())
+            return 0
 
     @DatabaseHelper._sessionm
     def pkgs_get_infos_details(self, session, uuid):

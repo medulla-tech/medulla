@@ -26,7 +26,7 @@ $updateid = htmlentities($_GET['updateid']);
 $title = htmlentities($_GET['title']);
 
 if(isset($_POST['bconfirm'])){
-    $result = xmlrpc_approve_update($updateid);
+    $result = xmlrpc_approve_update($updateid, $_GET['entityid']);
     if($result){
         $str = sprintf(_T("The update %s (%s) has been approved.", "updates"), $title, $updateid);
         new NotifyWidgetSuccess($str);
@@ -35,11 +35,12 @@ if(isset($_POST['bconfirm'])){
         $str = sprintf(_T("The update %s (%s) hasn't been approved", "updates"), $title, $updateid);
         new NotifyWidgetFailure($str);
     }
-    header('location: '.urlStrRedirect("updates/updates/updatesListWin"));
+    header('location: '.urlStrRedirect("updates/updates/updatesListWin", getFilteredGetParams()));
     exit;
 }
 else{
-    $f = new PopupForm(sprintf(_T("<b>Approve</b> update %s (%s) ?", "update"), $title, $updateid));
+    $f = new PopupForm(sprintf(_T("<b>Approve update</b><br>%s<br>(package: %s) ?", "update"), $title,
+    $updateid));
     $hidden = new HiddenTpl("updateid");
     $f->add($hidden, array("value" =>$updateid, "hide" => True));
     $f->add(new HiddenTpl("from"), array("value" => $from, "hide" => True));
@@ -47,5 +48,4 @@ else{
     $f->addCancelButton("bback");
     $f->display();
 }
-
 ?>

@@ -37,7 +37,7 @@ if(isset($_POST['bconfirm'])) {
         new NotifyWidgetFailure(_T("Error moving package to white list", "updates"));
     }
     // Je redirige vers ma page
-    header('location: '.urlStrRedirect("updates/updates/updatesListWin"));
+    header('location: '.urlStrRedirect("updates/updates/updatesListWin", getFilteredGetParams()));
 } else {
     $updateid = $_GET['updateid'];
     // Creation et affichage de la modal

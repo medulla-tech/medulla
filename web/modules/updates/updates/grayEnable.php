@@ -24,8 +24,9 @@
 require_once("modules/updates/includes/xmlrpc.php");
 $updateid = htmlentities($_GET['updateid']);
 $title = htmlentities($_GET['title']);
+$identity = isset($_GET['entityid']) ? $_GET['entityid'] : -1;
 
-$result = xmlrpc_grey_update($updateid, 1);
+$result = xmlrpc_grey_update($updateid, $identity, 1);
 if($result){
     $str = sprintf(_T("The update %s (%s) has been enabled.", "updates"), $title, $updateid);
     new NotifyWidgetSuccess($str);
@@ -34,6 +35,6 @@ else{
     $str = sprintf(_T("The update %s (%s) hasn't been enabled.", "updates"), $title, $updateid);
     new NotifyWidgetFailure($str);
 }
-header('location: '.urlStrRedirect("updates/updates/updatesListWin"));
+header('location: '.urlStrRedirect("updates/updates/updatesListWin", getFilteredGetParams()));
 exit;
 ?>
