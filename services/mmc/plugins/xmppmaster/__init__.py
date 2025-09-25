@@ -1218,6 +1218,17 @@ class RpcProxy(RpcProxyI):
                     )
                     logging.getLogger().error("Please check the logs in the client machine")
 
+
+    def delcomputer(self, uuid, hostname=""):
+        if uuid not in [None, ""]:
+            self.callrestartbot(uuid)
+            return XmppMasterDatabase().delMachineXmppPresence(uuid)
+        else:
+            self.callrestartbothostname(hostname)
+            return XmppMasterDatabase().delMachineXmppPresenceHostname(hostname)
+
+
+
 #############JFKJFK
 def createdirectoryuser(directory):
     if not os.path.exists(directory):
@@ -1288,7 +1299,6 @@ def remotefile(currentdir, jidmachine):
 def listremotefileedit(jidmachine):
     aa = calllistremotefileedit(jidmachine)
     objout = json.loads(aa)
-    print(objout["data"]["result"])
     return objout["data"]["result"]
 
 
@@ -1627,14 +1637,6 @@ def get_auto_approve_rules(colonne=True):
 def update_auto_approve_rules(updates):
     return XmppMasterDatabase().update_auto_approve_rules(updates)
 
-
-def delcomputer(uuid, hostname=""):
-    if uuid not in [None, ""]:
-        callrestartbot(uuid)
-        return XmppMasterDatabase().delMachineXmppPresence(uuid)
-    else:
-        callrestartbothostname(hostname)
-        return XmppMasterDatabase().delMachineXmppPresenceHostname(hostname)
 
 
 def get_log_status():
