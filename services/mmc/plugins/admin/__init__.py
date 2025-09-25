@@ -11,8 +11,8 @@ from mmc.plugins.admin.config import AdminConfig
 from pulse2.database.admin import AdminDatabase
 from pulse2.database.pkgs import PkgsDatabase
 from mmc.plugins.glpi import get_entities_with_counts, get_entities_with_counts_root, set_user_api_token, get_user_profile_email, get_complete_name, get_user_identifier
-from mmc.support.apirest.glpi import GLPIClient
 from configparser import ConfigParser
+import subprocess
 import traceback
 import requests
 import logging
@@ -156,6 +156,24 @@ def delete_share_dir(tag: str) -> tuple[str, bool]:
 
     target = os.path.realpath(os.path.join(BASE_SHARE, tag))
     base_real = os.path.realpath(BASE_SHARE)
+    if not target.startswith(base_real + os.sep):
+        raise ValueError("Path is not authorized")
+    if not os.path.exists(target):
+        return target, False
+
+    shutil.rmtree(target)
+    return target, True
+
+def delete_agent_dir(tag: str) -> tuple[str, bool]:
+    """Supprime le repertoire de l'agent /var/lib/pulse2/medulla_agent/<dl_tag>."""
+    BASE_AGENT = "/var/lib/pulse2/medulla_agent"
+    if not tag:
+        return None, False
+    if not re.fullmatch(r"[A-Za-z0-9._-]{1,128}", tag):
+        raise ValueError("tag invalide")
+
+    target = os.path.realpath(os.path.join(BASE_AGENT, tag))
+    base_real = os.path.realpath(BASE_AGENT)
     if not target.startswith(base_real + os.sep):
         raise ValueError("Path is not authorized")
     if not os.path.exists(target):
@@ -310,6 +328,30 @@ def get_root_token():
     token = db.get_root_token()
     return token
 
+def run_generate_medulla_agent_async(tag):
+    """
+    Lance le script avec le tag
+    Retourne le PID si démarré, sinon None.
+    """
+    script_path = "/usr/sbin/generate_medulla_agent.sh"
+    if not tag or not re.match(r'^[A-Za-z0-9._:-]+$', tag):
+        return None
+    if not (os.path.exists(script_path) and os.access(script_path, os.X_OK)):
+        return None
+
+    try:
+        proc = subprocess.Popen(
+            [script_path, tag],
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            start_new_session=True,
+            close_fds=True,
+            env=os.environ.copy(),
+        )
+        return proc.pid
+    except Exception:
+        return None
 # CREATE
 def create_user(
         identifier,     # login (email)
@@ -396,6 +438,9 @@ def create_entity_under_custom_parent(parent_entity_id, display_name, user, toke
         if user and user != "root":
             pkdb.add_pkgs_rules_local(user, share_id)
         pkdb.add_pkgs_rules_local("root", share_id)
+
+        # Generation Agent
+        agent = run_generate_medulla_agent_async(tag)
 
         logger.debug(f"Creation Successful: entity_id={entity_id} share_id={share_id} path={share_path}")
 
@@ -598,6 +643,9 @@ def delete_entity(entity_id: int, tokenuser=None):
         result = client.delete_entity(entity_id)
         if result.get("success"):
             AdminDatabase().delete_entity(entity_id)
+
+        # Suppression Agent
+        del_agent = delete_agent_dir(dl_tag)
 
         logger.debug(f"Delete Successful: entity_id={entity_id} dl_tag={dl_tag}")
         return result
