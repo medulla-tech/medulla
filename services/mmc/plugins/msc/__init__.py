@@ -18,8 +18,18 @@ import os
 from twisted.internet import defer
 
 # Helpers
-from mmc.support.mmctools import xmlrpcCleanup
-from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
+
+from mmc.support.mmctools import (
+    xmlrpcCleanup,
+    RpcProxyI,
+    ContextMakerI,
+    SecurityContext,
+    EnhancedSecurityContext
+)
+from mmc.plugins.base import (with_xmpp_context,
+                              with_optional_xmpp_context,
+                              Contexte_XmlRpc_surcharge_info_Glpi)
+
 from mmc.plugins.base import LdapUserGroupControl
 from mmc.core.tasks import TaskManager
 from mmc.plugins.base.computers import ComputerManager
@@ -102,9 +112,39 @@ def activate_2():
 
 
 class ContextMaker(ContextMakerI):
+    """
+    Fabrique de contextes personnalisés pour XMPP, héritée de ContextMakerI.
+    Sert à créer et initialiser un objet de type `EnhancedSecurityContext`.
+
+    appeler sur chaque module a l'initialiasation'
+
+    Méthodes
+    --------
+    getContext() :
+        Crée et retourne un contexte sécurisé enrichi contenant les informations
+        de l'utilisateur et de la requête courante.
+    """
+
     def getContext(self):
-        s = SecurityContext()
+        """
+        Crée un contexte de type `EnhancedSecurityContext` pour l'utilisateur courant.
+
+        Retourne
+        --------
+        EnhancedSecurityContext
+            Contexte initialisé avec :
+              - `userid` : l'identifiant de l'utilisateur courant
+              - `request` : la requête associée
+              - `session` : la session courante
+
+        Effets de bord
+        --------------
+        - Écrit des logs de niveau `error` lors de la création du contexte.
+        """
+        s = EnhancedSecurityContext()
         s.userid = self.userid
+        s.request = self.request
+        s.session = self.session
         s.locationsCount = ComputerLocationManager().getLocationsCount()
         s.userids = ComputerLocationManager().getUsersInSameLocations(self.userid)
         s.filterType = "mine"
@@ -117,16 +157,43 @@ class ContextMaker(ContextMakerI):
 def getRepositoryPath():
     return xmlrpcCleanup(MscConfig().repopath)
 
-
 class RpcProxy(RpcProxyI):
+    """
+    Proxy RPC pour la gestion des machines, du scheduler et des transferts de fichiers.
+
+    Cette classe fournit une interface de haut niveau entre le backend et les plugins
+    du module `msc` de MMC. Elle encapsule la logique pour :
+
+    - La gestion des machines (extraction des informations via `ComputerManager`)
+    - Le pilotage du scheduler (ping, probe, exécution de commandes, choix d’adresse IP)
+    - La gestion des téléchargements (démarrage, liste, suppression)
+    - L’établissement de proxys VNC
+
+    La plupart des méthodes s’appuient sur des appels au plugin `mmc.plugins.msc.client.scheduler`.
+    """
+
     ##
     # machines
     ##
-    def getMachine(self, params):
-        ctx = self.currentContext
+    @with_optional_xmpp_context
+    def getMachine(self, params, ctx=None):
+        """
+        Récupère les informations d’une machine.
+
+        :param dict params: Paramètres de recherche (ex: {"uuid": <uuid>}).
+        :param ctx: Contexte de la requête (optionnel).
+        :return: Données de la machine nettoyées pour l’export XML-RPC.
+        """
         return xmlrpcCleanup2(Machines().getMachine(ctx, params))
 
     def scheduler_choose_client_ip(self, scheduler, uuid):
+        """
+        Choisit la meilleure adresse IP pour un client donné.
+
+        :param scheduler: Scheduler concerné.
+        :param str uuid: Identifiant unique de la machine.
+        :return: Adresse IP choisie par le scheduler.
+        """
         ctx = self.currentContext
         computer = ComputerManager().getComputer(ctx, {"uuid": uuid}, True)
         network = computer[1]
@@ -139,9 +206,6 @@ class RpcProxy(RpcProxyI):
             "macs": noNoneList(network["macAddress"]),
             "netmasks": noNoneList(network["subnetMask"]),
         }
-        result = xmlrpcCleanup2(
-            mmc.plugins.msc.client.scheduler.choose_client_ip(scheduler, interfaces)
-        )
         return xmlrpcCleanup2(
             mmc.plugins.msc.client.scheduler.choose_client_ip(scheduler, interfaces)
         )
@@ -150,58 +214,101 @@ class RpcProxy(RpcProxyI):
     # commands
     ##
 
-    # Scheduler driving
     def scheduler_start_all_commands(self, scheduler):
+        """
+        Lance toutes les commandes en attente sur le scheduler.
+
+        :param scheduler: Scheduler concerné.
+        :return: Résultat du démarrage des commandes.
+        """
         return xmlrpcCleanup(
             mmc.plugins.msc.client.scheduler.start_all_commands(scheduler)
         )
 
     def scheduler_start_these_commands(self, scheduler, commands):
+        """
+        Lance une liste spécifique de commandes sur le scheduler.
+
+        :param scheduler: Scheduler concerné.
+        :param list commands: Liste des commandes à exécuter.
+        :return: Résultat du démarrage des commandes.
+        """
         return xmlrpcCleanup(
             mmc.plugins.msc.client.scheduler.start_these_commands(scheduler, commands)
         )
 
     def scheduler_ping_and_probe_client(self, scheduler, uuid):
+        """
+        Ping et probe une machine via le scheduler.
+
+        :param scheduler: Scheduler concerné.
+        :param str uuid: Identifiant unique de la machine.
+        :return: Résultat du ping et du probe.
+        """
         ctx = self.currentContext
         computer = ComputerManager().getComputer(ctx, {"uuid": uuid}, True)
-        if not "fullname" in computer[1]:
+        if "fullname" not in computer[1]:
             computer[1]["fullname"] = computer[1]["cn"][0]
         return mmc.plugins.msc.client.scheduler.ping_and_probe_client(
             scheduler, computer
         )
 
     def scheduler_ping_client(self, scheduler, uuid):
+        """
+        Ping une machine via le scheduler.
+
+        :param scheduler: Scheduler concerné.
+        :param str uuid: Identifiant unique de la machine.
+        :return: Résultat du ping.
+        """
         ctx = self.currentContext
         computer = ComputerManager().getComputer(ctx, {"uuid": uuid}, True)
-        if not "fullname" in computer[1]:
+        if "fullname" not in computer[1]:
             computer[1]["fullname"] = computer[1]["cn"][0]
         return xmlrpcCleanup(
             mmc.plugins.msc.client.scheduler.ping_client(scheduler, computer)
         )
 
     def scheduler_probe_client(self, scheduler, uuid):
+        """
+        Probe une machine via le scheduler.
+
+        :param scheduler: Scheduler concerné.
+        :param str uuid: Identifiant unique de la machine.
+        :return: Résultat du probe.
+        """
         ctx = self.currentContext
         computer = ComputerManager().getComputer(ctx, {"uuid": uuid}, True)
-        if not "fullname" in computer[1]:
+        if "fullname" not in computer[1]:
             computer[1]["fullname"] = computer[1]["cn"][0]
         return xmlrpcCleanup(
             mmc.plugins.msc.client.scheduler.probe_client(scheduler, computer)
         )
 
     def can_download_file(self):
+        """
+        Vérifie si le téléchargement de fichiers est possible.
+
+        :return: ``True`` si un chemin de téléchargement est défini et valide, sinon ``False``.
+        """
         path = MscConfig().web_dlpath
         return (len(path) > 0) and os.path.exists(MscConfig().download_directory_path)
 
     def download_file(self, uuid):
+        """
+        Démarre un téléchargement de fichier pour une machine donnée.
+
+        :param str uuid: Identifiant unique de la machine.
+        :return: Résultat du démarrage du téléchargement (booléen).
+        """
         path = MscConfig().web_dlpath
         ctx = self.currentContext
         if not path:
             ret = False
         else:
             bwlimit = MscConfig().web_def_dlmaxbw
-            ctx = self.currentContext
             computer = ComputerManager().getComputer(ctx, {"uuid": uuid}, True)
-            try:  # FIXME: dirty bugfix, should be factorized upstream
+            try:
                 computer[1]["fullname"]
             except KeyError:
                 computer[1]["fullname"] = computer[1]["cn"][0]
@@ -210,21 +317,45 @@ class RpcProxy(RpcProxyI):
         return ret
 
     def get_downloaded_files_list(self):
+        """
+        Récupère la liste des fichiers téléchargés.
+
+        :return: Liste des fichiers disponibles pour l’utilisateur courant.
+        """
         mscdlfiles = MscDownloadedFiles(self.currentContext.userid)
         return mscdlfiles.getFilesList()
 
     def get_downloaded_file(self, node):
+        """
+        Récupère un fichier téléchargé.
+
+        :param node: Identifiant du fichier.
+        :return: Contenu ou métadonnées du fichier.
+        """
         mscdlfiles = MscDownloadedFiles(self.currentContext.userid)
         return mscdlfiles.getFile(node)
 
     def remove_downloaded_files(self, ids):
+        """
+        Supprime des fichiers téléchargés.
+
+        :param list ids: Liste d’identifiants de fichiers à supprimer.
+        """
         mscdlfiles = MscDownloadedFiles(self.currentContext.userid)
         mscdlfiles.removeFiles(ids)
 
     def establish_vnc_proxy(self, scheduler, uuid, requestor_ip):
+        """
+        Établit un proxy TCP pour accéder en VNC à une machine distante.
+
+        :param scheduler: Scheduler concerné.
+        :param str uuid: Identifiant unique de la machine.
+        :param str requestor_ip: Adresse IP du demandeur.
+        :return: Résultat de l’établissement du proxy VNC.
+        """
         ctx = self.currentContext
         computer = ComputerManager().getComputer(ctx, {"uuid": uuid}, True)
-        try:  # FIXME: dirty bugfix, should be factorized upstream
+        try:
             computer[1]["fullname"]
         except KeyError:
             computer[1]["fullname"] = computer[1]["cn"][0]
@@ -233,7 +364,6 @@ class RpcProxy(RpcProxyI):
                 scheduler, computer, requestor_ip, MscConfig().web_vnc_port
             )
         )
-
     ##
     # commands management
     ##

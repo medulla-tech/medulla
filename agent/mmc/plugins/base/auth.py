@@ -86,7 +86,7 @@ class AuthenticationManager(Singleton):
 
             if instance.config.authonly:
                 if "oidc" in methods:
-                    logging.getLogger().error("'OIDC' is present, we bypass Authonly control.")
+                    logging.getLogger().debug("'OIDC' is present, we bypass Authonly control.")
                 elif user.lower() not in instance.config.authonly:
                     self.logger.debug(
                         f"User {user} is not in authonly list for authenticator {name}, skipping."

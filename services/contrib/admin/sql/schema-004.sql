@@ -28,26 +28,28 @@
 -- ----------------------------------------------------------------------
 -- Database
 -- ----------------------------------------------------------------------
-CREATE TABLE IF NOT EXISTS `admin`.`saas_organizations` (
-  `organization_id` INT NOT NULL,
-  `organization_name` VARCHAR(45) NOT NULL,
+CREATE TABLE IF NOT EXISTS `admin`.`saas_organisations` (
+  `organisation_id` INT NOT NULL,
+  `organisation_name` VARCHAR(45) NOT NULL,
   `entity_id` VARCHAR(45) NOT NULL,
   `entity_name` VARCHAR(400) NOT NULL,
   `user_id` VARCHAR(45) NULL,
   `user_name` VARCHAR(45) NULL,
   `profile_id` VARCHAR(45) NULL DEFAULT '0',
-  `profile_name` VARCHAR(400) NOT NULL,
+  `profile_name` VARCHAR(400) NULL,
   `is_active` TINYINT NULL DEFAULT 1,
-  `user_token` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`organization_id`, `entity_id`)
+  `user_token` VARCHAR(45) NULL,
+  `tag_name` CHAR(36) NOT NULL DEFAULT (UUID()),
+  `dl_tag` CHAR(36) NOT NULL DEFAULT (UUID()),
+  PRIMARY KEY (`organisation_id`, `entity_id`)
 );
 
 -- Création de la table `saas_application` pour stocker les configurations essentielles de l'application SaaS
 -- Cette table contient des paramètres critiques nécessaires au fonctionnement de l'application.
- CREATE TABLE `saas_application` (
+ CREATE TABLE IF NOT EXISTS `saas_application` (
   `setting_name` varchar(45) NOT NULL,
-  `setting_value` varchar(45) DEFAULT NULL,
-  `setting_description` varchar(45) DEFAULT NULL,
+  `setting_value` varchar(400) DEFAULT NULL,
+  `setting_description` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`setting_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -61,10 +63,28 @@ CREATE TABLE IF NOT EXISTS `admin`.`saas_organizations` (
 -- | API_REST             | GLPI                                     | quel api est utiliser  |
 -- +----------------------+------------------------------------------+------------------------+
 
+-- Création de la table `providers`
+CREATE TABLE IF NOT EXISTS `providers` (
+  `id`               INT AUTO_INCREMENT PRIMARY KEY,
+  `client_name`      VARCHAR(64)  NOT NULL,
+  `name`             VARCHAR(64)  NOT NULL,            -- ex: Keycloak
+  `logo_url`         VARCHAR(400) NULL,
+  `client_id`        VARCHAR(400) NOT NULL,
+  `url_provider`     VARCHAR(400) NOT NULL,
+  `client_secret`    VARCHAR(1024) NOT NULL,
+  `lmc_acl`          LONGTEXT     NULL DEFAULT ':base#main#default/',
+  `ldap_uid`         VARCHAR(64)  NULL DEFAULT 'email',
+  `ldap_givenName`   VARCHAR(64)  NULL DEFAULT 'given_name',
+  `ldap_sn`          VARCHAR(64)  NULL DEFAULT 'family_name',
+  `ldap_mail`        VARCHAR(64)  NULL DEFAULT 'email',
+  `profiles_order`   VARCHAR(400) NULL,
+  `acls_json`        LONGTEXT     NULL,
+  UNIQUE KEY `uk_client_provider` (`client_name`, `name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 --
 -- Dumping data for table `version`
 --
-
 UPDATE version SET Number = 4;
 
 COMMIT;

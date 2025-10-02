@@ -28,8 +28,8 @@ nobase_dist_mmcconf_DATA = plugins/ppolicy.ini plugins/dashboard.ini plugins/rep
 	plugins/report/img/pulse.png plugins/report/css/style.css plugins/report/css/graph.css
 nobase_nodist_mmcconf_DATA = agent/config.ini plugins/base.ini plugins/services.ini
 
-EXTRA_DIST = agent/config.ini.in plugins/base.ini.in plugins/services.ini.in agent/authproviders.ini.in
-CLEANFILES = agent/config.ini plugins/base.ini plugins/services.ini agent/authproviders.ini
+EXTRA_DIST = agent/config.ini.in plugins/base.ini.in plugins/services.ini.in
+CLEANFILES = agent/config.ini plugins/base.ini plugins/services.ini
 
 if ENABLE_CONF_BACKUP
 INSTALL += --backup=numbered
@@ -40,7 +40,7 @@ edit = sed \
         -e 's|@localstatedir[@]|$(localstatedir)|g' \
         -e 's|@libdir[@]|$(libdir)|g'
 
-plugins/base.ini plugins/services.ini agent/config.ini agent/authproviders.ini: Makefile
+plugins/base.ini plugins/services.ini agent/config.ini: Makefile
 	rm -f $@ $@.tmp
 	$(MKDIR_P) $(@D)
 	srcdir=''; \

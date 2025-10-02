@@ -1,9 +1,0 @@
-[main]
-host = https://www.transifex.com
-
-[o:siveo:p:pulse-1:r:urbackup]
-file_filter = <lang>/LC_MESSAGES/urbackup.po
-source_file = urbackup.pot
-source_lang = en_US
-type        = PO
-

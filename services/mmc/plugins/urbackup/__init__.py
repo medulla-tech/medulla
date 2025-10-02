@@ -17,6 +17,17 @@ from mmc.plugins.xmppmaster.master.agentmaster import send_message_json
 from mmc.plugins.xmppmaster.master.lib.utils import name_random
 from mmc.plugins.urbackup.urwrapper import UrApiWrapper
 
+from mmc.support.mmctools import (
+    xmlrpcCleanup,
+    RpcProxyI,
+    ContextMakerI,
+    SecurityContext,
+    EnhancedSecurityContext
+)
+from mmc.plugins.base import (with_xmpp_context,
+                              with_optional_xmpp_context,
+                              Contexte_XmlRpc_surcharge_info_Glpi)
+
 VERSION = "1.0.0"
 APIVERSION = "1:0:0"
 
@@ -45,6 +56,43 @@ def activate():
     return True
 
 
+
+class ContextMaker(ContextMakerI):
+    """
+    Fabrique de contextes personnalisés pour XMPP, héritée de ContextMakerI.
+    Sert à créer et initialiser un objet de type `EnhancedSecurityContext`.
+
+    appeler sur chaque module a l'initialiasation'
+
+    Méthodes
+    --------
+    getContext() :
+        Crée et retourne un contexte sécurisé enrichi contenant les informations
+        de l'utilisateur et de la requête courante.
+    """
+
+    def getContext(self):
+        """
+        Crée un contexte de type `EnhancedSecurityContext` pour l'utilisateur courant.
+
+        Retourne
+        --------
+        EnhancedSecurityContext
+            Contexte initialisé avec :
+              - `userid` : l'identifiant de l'utilisateur courant
+              - `request` : la requête associée
+              - `session` : la session courante
+
+        Effets de bord
+        --------------
+        - Écrit des logs de niveau `error` lors de la création du contexte.
+        """
+        s = EnhancedSecurityContext()
+        s.userid = self.userid
+        s.request = self.request
+        s.session = self.session
+        return s
+
 def tests():
     return UrbackupDatabase().tests()
 
@@ -66,6 +114,21 @@ def login():
 
     return False
 
+
+class RpcProxy(RpcProxyI):
+    # groups
+    @with_optional_xmpp_context
+    def getAllLogs(self, ctx=None):
+        """
+        Get all logs from urbackup database
+
+        Args:
+            None
+
+        Returns:
+            Dict Logs in database
+        """
+        return UrbackupDatabase().getAllLogs()
 
 def enable_client(jidmachine, clientid, authkey):
     """
@@ -176,17 +239,6 @@ def get_client_status(client_id):
     return UrbackupDatabase().getClientStatus(client_id)
 
 
-def getAllLogs():
-    """
-    Get all logs from urbackup database
-
-    Args:
-        None
-
-    Returns:
-        Dict Logs in database
-    """
-    return UrbackupDatabase().getAllLogs()
 
 
 def insertNewClient(client_id, authkey):

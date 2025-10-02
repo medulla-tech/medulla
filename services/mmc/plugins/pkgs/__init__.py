@@ -24,7 +24,17 @@ import subprocess
 from twisted.internet.threads import deferToThread
 
 from mmc.site import mmcconfdir
-from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
+
+from mmc.support.mmctools import (
+    RpcProxyI,
+    ContextMakerI,
+    SecurityContext,
+    EnhancedSecurityContext
+)
+from mmc.plugins.base import (with_xmpp_context,
+                              with_optional_xmpp_context,
+                              Contexte_XmlRpc_surcharge_info_Glpi)
+
 from mmc.plugins.dashboard.manager import DashboardManager
 from mmc.plugins.dashboard.panel import Panel
 from mmc.plugins.medulla_server.utils import notificationManager
@@ -1269,11 +1279,40 @@ def activate():
 
 
 class ContextMaker(ContextMakerI):
-    def getContext(self):
-        s = SecurityContext()
-        s.userid = self.userid
-        return s
+    """
+    Fabrique de contextes personnalisés pour XMPP, héritée de ContextMakerI.
+    Sert à créer et initialiser un objet de type `EnhancedSecurityContext`.
 
+    appeler sur chaque module a l'initialiasation'
+
+    Méthodes
+    --------
+    getContext() :
+        Crée et retourne un contexte sécurisé enrichi contenant les informations
+        de l'utilisateur et de la requête courante.
+    """
+
+    def getContext(self):
+        """
+        Crée un contexte de type `EnhancedSecurityContext` pour l'utilisateur courant.
+
+        Retourne
+        --------
+        EnhancedSecurityContext
+            Contexte initialisé avec :
+              - `userid` : l'identifiant de l'utilisateur courant
+              - `request` : la requête associée
+              - `session` : la session courante
+
+        Effets de bord
+        --------------
+        - Écrit des logs de niveau `error` lors de la création du contexte.
+        """
+        s = EnhancedSecurityContext()
+        s.userid = self.userid
+        s.request = self.request
+        s.session = self.session
+        return s
 
 class ConfigReader(object):
     """Read and parse config files"""
@@ -1327,176 +1366,19 @@ class RpcProxy(RpcProxyI):
         d.addCallback(_getPApiDetail)
         return d
 
-    # PackagePutA
-    # def ppa_getPackageDetail(self, pp_api_id, pid):
-    # def _ppa_getPackageDetail(result, pp_api_id = pp_api_id, pid = pid):
-    # for upa in result:
-    # if upa['uuid'] == pp_api_id:
-    # return PackageGetA(upa).getPackageDetail(pid)
-    # return False
-    # d = self.upaa_getUserPackageApi()
-    # d.addCallback(_ppa_getPackageDetail)
-    # return d
-
-    # def ppa_pushPackage(self, pp_api_id, random_dir, files, local_mmc):
-    # def _ppa_pushPackage(result, pp_api_id = pp_api_id, random_dir = random_dir, files = files, local_mmc = local_mmc):
-    # def _encodeFiles(random_dir, files):
-    # encoded_files = []
-    # for file in files:
-    # logging.getLogger().debug("Encoding file %s" % file['filename'])
-    # tmp_dir = file['tmp_dir']
-    # f = open(os.path.join(tmp_dir, random_dir, file['filename']), 'r')
-    # encoded_files.append({
-    #'filename': file['filename'],
-    #'filebinary': b64encode(f.read()),
-    # })
-    # f.close()
-    # return encoded_files
-
-    # def _decodeFiles(random_dir, files):
-    # pkgs_tmp_dir = self.getPServerTmpDir()
-    # if not os.path.exists(os.path.join(pkgs_tmp_dir, random_dir)):
-    # os.makedirs(os.path.join(pkgs_tmp_dir, random_dir))
-    # filepath = os.path.join(pkgs_tmp_dir, random_dir)
-    # for file in files:
-    # logging.getLogger().debug("Decoding file %s" % file['filename'])
-    # f = open(os.path.join(filepath, file['filename']), 'w')
-    # f.write(b64decode(file['filebinary']))
-    # f.close()
-    # file['filebinary'] = False
-    # file['tmp_dir'] = pkgs_tmp_dir
-    # return files
-
-    # for upa in result:
-    # if upa['uuid'] == pp_api_id:
-    # local_pserver = self.getPServerIP() in ['localhost', '127.0.0.1'] and True or False
-    # if local_mmc:
-    # logging.getLogger().info("Push package from local mmc-agent...")
-    # if local_pserver:
-    # logging.getLogger().info("... to local package server")
-    # return PackagePutA(upa).pushPackage(random_dir, files, local_pserver)
-    # else:
-    # logging.getLogger().info("... to external package server")
-    ## Encode files (base64) and send them with XMLRPC
-    # encoded_files = _encodeFiles(random_dir, files)
-    # return PackagePutA(upa).pushPackage(random_dir, encoded_files, local_pserver)
-    # else:
-    # logging.getLogger().info("Push package from external mmc-agent...")
-    # if local_pserver:
-    # logging.getLogger().info("... to local package server")
-    ## decode files
-    # decoded_files = _decodeFiles(random_dir, files)
-    # return PackagePutA(upa).pushPackage(random_dir, decoded_files, local_pserver)
-    # else:
-    # logging.getLogger().info("... to external package server")
-    # return PackagePutA(upa).pushPackage(random_dir, files, local_pserver)
-    # logging.getLogger().warn("Failed to push package on %s"%(pp_api_id))
-    # return False
-    # d = self.upaa_getUserPackageApi()
-    # d.addCallback(_ppa_pushPackage)
-    # return d
-
-    # def ppa_putPackageDetail(self, pp_api_id, package, need_assign = True):
-    # print json.dumps(package, indent=4)
-    ## Patching package with entity_id
-    # ctx = self.currentContext
-    # locations = ComputerLocationManager().getUserLocations(ctx.userid)
-    ## Get root location for the user
-    # root_location_id = locations[0]['uuid'].replace('UUID', '')
-    # package['entity_id'] = root_location_id
-    # logging.getLogger().fatal(locations)
-    # def _ppa_putPackageDetail(result, pp_api_id = pp_api_id, package = package, need_assign = need_assign):
-    # for upa in result:
-    # if upa['uuid'] == pp_api_id:
-    # return PackagePutA(upa).putPackageDetail(package, need_assign)
-    # logging.getLogger().warn("Failed to put package details on %s"%(pp_api_id))
-    # return False
-    # d = self.upaa_getUserPackageApi()
-    # d.addCallback(_ppa_putPackageDetail)
-    # return d
-
-    # def ppa_dropPackage(self, pp_api_id, pid):
-    # logging.getLogger().info('I will drop package %s/%s' % (pp_api_id, pid))
-    # def _ppa_dropPackage(result, pp_api_id = pp_api_id, pid = pid):
-    # for upa in result:
-    # if upa['uuid'] == pp_api_id:
-    # return PackagePutA(upa).dropPackage(pid)
-    # return False
-    # d = self.upaa_getUserPackageApi()
-    # d.addCallback(_ppa_dropPackage)
-    # return d
-
-    # def ppa_getTemporaryFiles(self, pp_api_id):
-    # def _ppa_getTemporaryFiles(result, pp_api_id = pp_api_id):
-    # for upa in result:
-    # if upa['uuid'] == pp_api_id:
-    # return PackagePutA(upa).getTemporaryFiles()
-    # return []
-    # d = self.upaa_getUserPackageApi()
-    # d.addCallback(_ppa_getTemporaryFiles)
-    # return d
-
-    # def ppa_getTemporaryFileSuggestedCommand(self, pp_api_id, tempdir):
-    # def _ppa_getTemporaryFilesSuggestedCommand(result, pp_api_id = pp_api_id, tempdir = tempdir):
-    # for upa in result:
-    # if upa['uuid'] == pp_api_id:
-    # return PackagePutA(upa).getTemporaryFilesSuggestedCommand(tempdir)
-    # return []
-    # d = self.upaa_getUserPackageApi()
-    # d.addCallback(_ppa_getTemporaryFilesSuggestedCommand)
-    # return d
-
-    # def ppa_associatePackages(self, pp_api_id, pid, files, level = 0):
-    # def _ppa_associatePackages(result, pp_api_id = pp_api_id, pid = pid, files = files, level = level):
-    # for upa in result:
-    # if upa['uuid'] == pp_api_id:
-    # return PackagePutA(upa).associatePackages(pid, files, level)
-    # return []
-    # d = self.upaa_getUserPackageApi()
-    # d.addCallback(_ppa_associatePackages)
-    # return d
-
-    # def ppa_removeFilesFromPackage(self, pp_api_id, pid, files):
-    # def _ppa_removeFilesFromPackage(result, pp_api_id = pp_api_id, pid = pid, files = files):
-    # for upa in result:
-    # if upa['uuid'] == pp_api_id:
-    # return PackagePutA(upa).removeFilesFromPackage(pid, files)
-    # return []
-    # d = self.upaa_getUserPackageApi()
-    # d.addCallback(_ppa_removeFilesFromPackage)
-    # return d
-
-    # def ppa_getRsyncStatus(self, pp_api_id, pid):
-    # def _ppa_getRsyncStatus(result, pp_api_id = pp_api_id, pid = pid):
-    # for upa in result:
-    # if upa['uuid'] == pp_api_id:
-    # return PackagePutA(upa).getRsyncStatus(pid)
-    # return []
-    # d = self.upaa_getUserPackageApi()
-    # d.addCallback(_ppa_getRsyncStatus)
-    # return d
-
-    # UserPackageApiApi
-    def upaa_getUserPackageApi(self):
-        # cf class UserPackageApi package_server/user_package_api/__init__.py
-        ctx = self.currentContext
+    @with_optional_xmpp_context
+    def upaa_getUserPackageApi(self, ctx=None):
         return UserPackageApiApi().getUserPackageApi(ctx.userid)
 
-    # def getMMCIP(self):
-    # config = ConfigReader()
-
-    # self.agent_config = config.agent_config
-
-    # return self.agent_config.get("main", "host")
-
-    # def getPServerIP(self):
-    # config = PkgsConfig("pkgs")
-    # return config.upaa_server
-
-    # def getPServerTmpDir(self):
-    # config = PkgsConfig("pkgs")
-    # return config.tmp_dir
-
+    @with_optional_xmpp_context
+    def get_all_packages(self,
+                         login,
+                         sharing_activated=False,
+                         start=-1,
+                         end=-1,
+                         filter="",
+                         ctx=None):
+        return PkgsDatabase().get_all_packages(login, sharing_activated, start, end, filter)
 
 class DownloadAppstreamPackageList(object):
     """
@@ -2468,8 +2350,6 @@ esac""" % (
             )
 
 
-def get_all_packages(login, sharing_activated=False, start=-1, end=-1, filter=""):
-    return PkgsDatabase().get_all_packages(login, sharing_activated, start, end, filter)
 
 
 def list_sharing_id(objsearch):

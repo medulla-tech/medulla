@@ -28,6 +28,7 @@ from twisted.web.xmlrpc import XMLRPC, Handler
 from twisted.internet import reactor, defer
 from twisted.python import failure
 import json
+from mmc.utils import convert
 
 try:
     from twisted.web import http
@@ -43,6 +44,7 @@ from mmc.core.log import ColoredFormatter
 
 # from mmc.plugins.xmppmaster.master.lib import convert
 
+from decimal import Decimal
 import importlib
 import logging
 import logging.config
@@ -78,10 +80,9 @@ sys.path.append("plugins")
 
 Fault = xmlrpc.client.Fault
 ctx = None
-VERSION = "5.3.0"
+VERSION = "5.4.0"
 
 PYTHON_VERSION = sys.version_info.major
-
 
 class xmppbrowsing:
     """ """
@@ -322,643 +323,6 @@ class DateTimebytesEncoderjson(json.JSONEncoder):
         else:
             encoded_object = json.JSONEncoder.default(self, obj)
         return encoded_object
-
-
-class convert:
-    """
-    les packages suivant son obligatoire.
-    python3-xmltodict python3-dicttoxml python3-yaml json2xml
-    pip3 install dict2xml
-    Cette class presente des methodes pour convertir simplement des objects.
-    elle expose les fonction suivante
-        convert_dict_to_yaml(input_dict)
-        convert_yaml_to_dict(yaml_data)
-        yaml_string_to_dict(yaml_string)
-        check_yaml_conformance(yaml_data)
-        compare_yaml(yaml_string1, yaml_string2)
-        convert_dict_to_json(input_dict_json, indent=None, sort_keys=False)
-        check_json_conformance(json_data)
-        convert_json_to_dict(json_str)
-        xml_to_dict(xml_string)
-        compare_xml(xml_file1, xml_file2)
-        convert_xml_to_dict(xml_str)
-        convert_json_to_xml(input_json)
-        convert_xml_to_json(input_xml)
-        convert_dict_to_xml(data_dict)
-        convert_bytes_datetime_to_string(data)
-        compare_dicts(dict1, dict2)
-        compare_json(json1, json2)
-        convert_to_bytes(input_data)
-        compress_and_encode(string)
-        decompress_and_encode(string)
-        convert_datetime_to_string(input_date)
-        encode_to_string_base64(input_data)
-        decode_base64_to_string_(input_data)
-        check_base64_encoding(input_string)
-        taille_string_in_base64(string)
-        string_to_int(s)
-        int_to_string(n)
-        string_to_float(s)
-        float_to_string(f)
-        list_to_string(lst, separator=', ')
-        string_to_list(s, separator=', ')
-        list_to_set(lst)
-        set_to_list(s)
-        dict_to_list(d)
-        list_to_dict(lst)
-        char_to_ascii(c)
-        ascii_to_char(n)
-        convert_rows_to_columns(data)
-        convert_columns_to_rows(data)
-        convert_to_ordered_dict(dictionary)
-        generate_random_text(num_words)
-        capitalize_words(text)
-        compress_data_to_bytes(data)
-        decompress_data_to_bytes(data_bytes_compress
-        compress_dict_to_dictbytes(dict_data)
-        decompress_dictbytes_to_dict(data_bytes_compress)
-        unserialized_compressdictbytes_to_dict(serialized_dict_bytes_compress)
-        is_multiple_of(s, multiple=4)
-        is_base64(s)
-        header_body(xml_string)
-        format_xml(xml_string)
-        check_keys_in( dictdata, array_keys)
-    """
-
-    # YAML
-    @staticmethod
-    def convert_dict_to_yaml(input_dict):
-        """
-        la fonction suivante Python convertit 1 dict python en json.
-        """
-        if isinstance(input_dict, dict):
-            return yaml.dump(convert.convert_bytes_datetime_to_string(input_dict))
-        else:
-            raise TypeError("L'entrée doit être de type dict.")
-
-    @staticmethod
-    def convert_yaml_to_dict(yaml_string):
-        return convert.yaml_string_to_dict(yaml_string)
-
-    @staticmethod
-    def yaml_string_to_dict(yaml_string):
-        try:
-            yaml_data = yaml.safe_load(
-                convert.convert_bytes_datetime_to_string(yaml_string)
-            )
-            if isinstance(yaml_data, (dict, list)):
-                return yaml_data
-            else:
-                raise yaml.YAMLError(
-                    "Erreur lors de la conversion de la chaîne YAML en dictionnaire."
-                )
-        except yaml.YAMLError as e:
-            raise ValueError(
-                "Erreur lors de la conversion de la chaîne YAML en dictionnaire."
-            )
-
-    @staticmethod
-    def check_yaml_conformance(yaml_data):
-        try:
-            # Chargement du YAML pour vérifier la conformité
-            yaml.safe_load(convert.convert_bytes_datetime_to_string(yaml_data))
-            return True
-        except yaml.YAMLError:
-            return False
-
-    @staticmethod
-    def compare_yaml(yaml_string1, yaml_string2):
-        """
-        Dans cette fonction compare_yaml, nous appelons la fonction yaml_string_to_dict pour convertir chaque chaîne YAML en dictionnaire.
-        Si une exception ValueError est levée lors de la conversion, nous affichons l'erreur et retournons False.
-        nous utilisons la fonction compare_dicts pour comparer les dictionnaires obtenus.
-        Si les dictionnaires sont égaux, la fonction compare_yaml retourne True, sinon elle retourne False.
-        """
-        try:
-            dict1 = convert.yaml_string_to_dict(yaml_string1)
-            dict2 = convert.yaml_string_to_dict(yaml_string2)
-            return convert.compare_dicts(dict1, dict2)
-        except ValueError as e:
-            print(f"Erreur: {str(e)}")
-            return False
-
-    # JSON
-    @staticmethod
-    def convert_dict_to_json(input_dict_json, indent=None, sort_keys=False):
-        """
-        la fonction suivante Python convertit 1 dict python en json.
-        """
-        if isinstance(input_dict_json, dict):
-            return json.dumps(
-                convert.convert_bytes_datetime_to_string(input_dict_json), indent=indent
-            )
-        else:
-            raise TypeError("L'entrée doit être de type dict.")
-
-    @staticmethod
-    def check_json_conformance(json_data):
-        try:
-            json.loads(json_data)
-            return True
-        except json.JSONDecodeError:
-            return False
-
-    # json_bytes = json.dumps(dict_data, indent = 4, cls=DateTimebytesEncoderjson).encode('utf-8')
-
-    @staticmethod
-    def convert_json_to_dict(json_str):
-        if isinstance(json_str, (dict)):
-            return json_str
-        stringdata = convert.convert_bytes_datetime_to_string(json_str)
-        if isinstance(stringdata, (str)):
-            try:
-                return json.loads(stringdata)
-            except json.decoder.JSONDecodeError as e:
-                raise
-            except Exception as e:
-                # Code de gestion d'autres types d'exceptions
-                logger.error("convert_json_to_dict %s" % (e))
-                raise
-
-    @staticmethod
-    def xml_to_dict(xml_string):
-        def xml_element_to_dict(element):
-            if len(element) == 0:
-                return element.text
-            result = {}
-            for child in element:
-                child_dict = xml_element_to_dict(child)
-                if child.tag in result:
-                    if not isinstance(result[child.tag], list):
-                        result[child.tag] = [result[child.tag]]
-                    result[child.tag].append(child_dict)
-                else:
-                    result[child.tag] = child_dict
-            return result
-
-        try:
-            tree = ET.ElementTree(
-                ET.fromstring(convert.convert_bytes_datetime_to_string(xml_string))
-            )
-            root = tree.getroot()
-            return xml_element_to_dict(root)
-        except ET.ParseError:
-            raise ValueError("Erreur lors de la conversion XML en dictionnaire.")
-
-    @staticmethod
-    def compare_xml(xml_file1, xml_file2):
-        try:
-            dict1 = convert.xml_to_dict(xml_file1)
-            dict2 = convert.xml_to_dict(xml_file2)
-            return convert.compare_dicts(dict1, dict2)
-        except ValueError as e:
-            print(f"Erreur: {str(e)}")
-            return False
-
-    @staticmethod
-    def convert_xml_to_dict(xml_string):
-        def _element_to_dict(element):
-            result = {}
-            for child in element:
-                if child.tag not in result:
-                    result[child.tag] = []
-                result[child.tag].append(_element_to_dict(child))
-            if not result:
-                return element.text
-            return result
-
-        root = ET.fromstring(convert.convert_bytes_datetime_to_string(xml_string))
-        return _element_to_dict(root)
-
-    @staticmethod
-    def convert_json_to_xml(json_data, root_name="root"):
-        def _convert(element, parent):
-            if isinstance(element, dict):
-                for key, value in element.items():
-                    if isinstance(value, (dict, list)):
-                        sub_element = ET.SubElement(parent, key)
-                        _convert(value, sub_element)
-                    else:
-                        child = ET.SubElement(parent, key)
-                        child.text = str(value)
-            elif isinstance(element, list):
-                for item in element:
-                    sub_element = ET.SubElement(parent, parent.tag[:-1])
-                    _convert(item, sub_element)
-
-        root = ET.Element(root_name)
-        _convert(json.loads(json_data), root)
-
-        xml_data = ET.tostring(root, encoding="unicode", method="xml")
-        return xml_data
-
-    # xml
-    @staticmethod
-    def convert_xml_to_json(input_xml):
-        return json.dumps(xmltodict.parse(input_xml), indent=4)
-
-    @staticmethod
-    def convert_dict_to_xml(data_dict):
-        xml_str = xmltodict.unparse({"root": data_dict}, pretty=True)
-        return xml_str
-
-    @staticmethod
-    def convert_bytes_datetime_to_string(data):
-        """
-        la fonction suivante Python parcourt récursivement un dictionnaire,
-        convertit les types bytes en str,
-        les objets datetime en chaînes de caractères au format "année-mois-jour heure:minute:seconde"
-        si les clés sont de type bytes elles sont convertit en str :
-        encodage ('utf-8') est utilise pour le decode des bytes.
-        Si 1 chaine est utilisée pour definir FALSE ou True alors c'est convertit en boolean True/false
-        Si 1 valeur est None, elle est convertit a ""
-        Si key ou valeur ne peut pas etre convertit en str alors 1 exception est leve
-        renvoi le dictionnaire serializable
-        """
-        if isinstance(data, (str)):
-            compa = data.lower
-            if compa == "true":
-                return True
-            elif compa == "false":
-                return False
-            elif compa == "none":
-                return ""
-            return data
-        if isinstance(data, (int, float, bool)):
-            return data
-        elif isinstance(data, dict):
-            return {
-                convert.convert_bytes_datetime_to_string(
-                    key
-                ): convert.convert_bytes_datetime_to_string(value)
-                for key, value in data.items()
-            }
-        elif isinstance(data, list):
-            return [convert.convert_bytes_datetime_to_string(item) for item in data]
-        elif isinstance(data, bytes):
-            return data.decode("utf-8")
-        elif isinstance(data, datetime):
-            return data.strftime("%Y-%m-%d %H:%M:%S")
-        elif data is None:
-            return ""
-        else:
-            try:
-                str(data)
-                return data
-            except Exception as e:
-                raise ValueError(
-                    "Type %s impossible de convertir en string " % type(data)
-                )
-        return data
-
-    @staticmethod
-    def compare_dicts(dict1, dict2):
-        """
-        Dans cette fonction, nous commençons par comparer les ensembles des clés des deux dictionnaires (dict1.keys() et dict2.keys()). Si les ensembles des clés sont différents, nous retournons False immédiatement car les dictionnaires ne peuvent pas être égaux.
-
-        Ensuite, nous itérons sur les clés du premier dictionnaire (dict1.keys()) et comparons les valeurs correspondantes dans les deux dictionnaires (value1 et value2).
-
-        Si une valeur est un autre dictionnaire, nous effectuons un appel récursif à la fonction compare_dicts pour comparer les sous-dictionnaires. Si le résultat de l'appel récursif est False, nous retournons False immédiatement.
-
-        Si les valeurs ne sont pas égales et ne sont pas des dictionnaires, nous retournons également False.
-
-        Si toutes les clés et les valeurs correspondent dans les deux dictionnaires, nous retournons True à la fin de la fonction.
-        """
-        if dict1.keys() != dict2.keys():
-            return False
-
-        for key in dict1.keys():
-            value1 = dict1[key]
-            value2 = dict2[key]
-
-            if isinstance(value1, dict) and isinstance(value2, dict):
-                # Si la valeur est un dictionnaire, appel récursif
-                if not convert.compare_dicts(value1, value2):
-                    return False
-            elif value1 != value2:
-                # Si les valeurs ne sont pas égales, retourne False
-                return False
-        return True
-
-    @staticmethod
-    def compare_json(json1, json2):
-        try:
-            dict1 = json.loads(json1)
-            dict2 = json.loads(json2)
-        except json.JSONDecodeError:
-            raise ValueError("Erreur lors de la conversion JSON en dictionnaire.")
-        return convert.compare_dicts(dict1, dict2)
-
-    @staticmethod
-    def convert_to_bytes(input_data):
-        if isinstance(input_data, bytes):
-            return input_data
-        elif isinstance(input_data, str):
-            return input_data.encode("utf-8")
-        else:
-            raise TypeError("L'entrée doit être de type bytes ou string.")
-
-    # COMPRESS
-    @staticmethod
-    def compress_and_encode(string):
-        # Convert string to bytes
-        data = convert.convert_to_bytes(string)
-        # Compress the data using zlib
-        compressed_data = zlib.compress(data, 9)
-        # Encode the compressed data in base64
-        encoded_data = base64.b64encode(compressed_data)
-        return encoded_data.decode("utf-8")
-
-    @staticmethod
-    def decompress_and_encode(string):
-        # Convert string to bytes
-        data = convert.convert_to_bytes(string)
-        decoded_data = base64.b64decode(data)
-        # Decompress the data using zlib
-        decompressed_data = zlib.decompress(decoded_data)
-        # Encode the decompressed data in base64
-        return decompressed_data.decode("utf-8")
-
-    # datetime
-    @staticmethod
-    def convert_datetime_to_string(input_date: datetime):
-        if isinstance(input_date, datetime):
-            return input_date.strftime("%Y-%m-%d %H:%M:%S")
-        else:
-            raise TypeError("L'entrée doit être de type datetime.")
-
-    # base64
-    @staticmethod
-    def encode_to_string_base64(input_data):
-        if isinstance(input_data, str):
-            input_data_bytes = input_data.encode("utf-8")
-        elif isinstance(input_data, bytes):
-            input_data_bytes = input_data
-        else:
-            raise TypeError("L'entrée doit être une chaîne ou un objet bytes.")
-        encoded_bytes = base64.b64encode(input_data_bytes)
-        encoded_string = encoded_bytes.decode("utf-8")
-        return encoded_string
-
-    @staticmethod
-    def decode_base64_to_string_(input_data):
-        try:
-            decoded_bytes = base64.b64decode(input_data)
-            decoded_string = decoded_bytes.decode("utf-8")
-            return decoded_string
-        except base64.binascii.Error:
-            raise ValueError("L'entrée n'est pas encodée en base64 valide.")
-
-    @staticmethod
-    def check_base64_encoding(input_string):
-        try:
-            # Décode la chaîne en base64 et vérifie si cela génère une erreur
-            base64.b64decode(input_string)
-            return True
-        except base64.binascii.Error:
-            return False
-
-    @staticmethod
-    def taille_string_in_base64(string):
-        """
-        renvoie la taille que prend 1 string en encode en base64.
-        """
-        taille = len(string)
-        return (taille + 2 - ((taille + 2) % 3)) * 4 / 3
-
-    @staticmethod
-    def string_to_int(s):
-        """
-        Conversion de chaînes en entiers
-        """
-        try:
-            return int(s)
-        except ValueError:
-            return None
-
-    @staticmethod
-    def int_to_string(n):
-        """
-        Conversion d'entiers en chaînes
-        """
-        return str(n)
-
-    @staticmethod
-    def string_to_float(s):
-        """
-        Conversion de chaînes en nombres à virgule flottante
-        """
-        try:
-            return float(s)
-        except ValueError:
-            return None
-
-    @staticmethod
-    def float_to_string(f):
-        """
-        Conversion de nombres à virgule flottante en chaînes
-        """
-        return str(f)
-
-    @staticmethod
-    def list_to_string(lst, separator=", "):
-        """
-        Conversion d'une liste de chaînes en une seule chaîne avec un séparateur
-        """
-        return separator.join(lst)
-
-    @staticmethod
-    def string_to_list(s, separator=", "):
-        """
-        Conversion d'une chaîne en une liste en utilisant un séparateur
-        """
-        return s.split(separator)
-
-    @staticmethod
-    def list_to_set(lst):
-        """
-        Conversion d'une liste en un ensemble (élimine les doublons)
-        """
-        return set(lst)
-
-    @staticmethod
-    def set_to_list(s):
-        """
-        Conversion d'un ensemble en une liste en conservant l'ordre
-        """
-        return [item for item in s]
-
-    @staticmethod
-    def dict_to_list(d):
-        """
-        Conversion d'un dictionnaire en une liste de tuples clé-valeur
-        """
-        return list(d.items())
-
-    @staticmethod
-    def list_to_dict(lst):
-        """
-        Conversion d'une liste de tuples clé-valeur en un dictionnaire
-        """
-        return dict(lst)
-
-    @staticmethod
-    def char_to_ascii(c):
-        """
-        Conversion de caractères en code ASCII
-        """
-        return ord(c)
-
-    @staticmethod
-    def ascii_to_char(n):
-        """
-        Conversion de code ASCII en caractère :
-        """
-        return chr(n)
-
-    @staticmethod
-    def convert_rows_to_columns(data):
-        """
-        cette fonction fait la convertion depuis 1 list de dict representant des lignes
-        en
-        1 list de colonne
-
-        data = [{"id": 1, "name": "dede", "age": 30},
-                {"id": 2, "name": "dada", "age": 25}]
-        to
-        [{'age': [30, 25]}, {'name': ['dede', 'dada']}, {'id': [1, 2]}]
-        """
-        # Obtenez les noms de colonnes
-        column_names = set()
-        for row in data:
-            column_names.update(row.keys())
-        # Créez un dictionnaire vide pour chaque colonne
-        columns = {name: [] for name in column_names}
-        # Remplissez les colonnes avec les valeurs correspondantes
-        for row in data:
-            for column, value in row.items():
-                columns[column].append(value)
-        # Convertissez les dictionnaires de colonnes en une liste de colonnes
-        columns_list = [{name: values} for name, values in columns.items()]
-        return columns_list
-
-    @staticmethod
-    def convert_columns_to_rows(data):
-        """
-        Cette fonction fait l'inverse de la conversion réalisée par la fonction convert_rows_to_columns.
-
-        data = [{'age': [30, 25]}, {'name': ['dede', 'dada']}, {'id': [1, 2]}]
-        to
-        [{"id": 1, "name": "dede", "age": 30},
-        {"id": 2, "name": "dada", "age": 25}]
-        """
-        # Obtenez tous les noms de colonnes
-        rows = []
-        s = [list(x.keys())[0] for x in data]
-        nbligne = len(data[0][s[0]])
-        for t in range(nbligne):
-            result = {}
-            for z in range(len(s)):
-                result[s[z]] = data[z][s[z]][t]
-            rows.append(result)
-        return rows
-
-    @staticmethod
-    def convert_to_ordered_dict(dictionary):
-        ordered_dict = OrderedDict()
-        for key, value in dictionary.items():
-            ordered_dict[key] = value
-        return ordered_dict
-
-    @staticmethod
-    def generate_random_text(num_words):
-        words = []
-        for _ in range(num_words):
-            word = "".join(
-                random.choice(string.ascii_letters) for _ in range(random.randint(3, 8))
-            )
-            words.append(word)
-        return " ".join(words)
-
-    @staticmethod
-    def capitalize_words(text):
-        """
-        renvoi la chaine avec chaque mot commencant par une majuscule et les autres lettres sont en minuscules
-        """
-        words = text.split()
-        capitalized_words = [word.capitalize() for word in words]
-        capitalized_text = " ".join(capitalized_words)
-        return capitalized_text
-
-    # Fonction de compression gzip
-    @staticmethod
-    def compress_data_to_bytes(data_string_or_bytes):
-        return gzip.compress(convert.convert_to_bytes(data_string_or_bytes))
-
-    # Fonction de décompression gzip
-    @staticmethod
-    def decompress_data_to_bytes(data_bytes_compress):
-        return convert.convert_to_bytes(gzip.decompress(data_bytes_compress))
-
-    @staticmethod
-    def serialized_dict_to_compressdictbytes(dict_data):
-        json_bytes = json.dumps(
-            dict_data, indent=4, cls=DateTimebytesEncoderjson
-        ).encode("utf-8")
-        return convert.compress_data_to_bytes(json_bytes)
-
-    @staticmethod
-    def unserialized_compressdictbytes_to_dict(serialized_dict_bytes_compress):
-        json_bytes = gzip.decompress(
-            convert.convert_to_bytes(serialized_dict_bytes_compress)
-        )
-        return json.loads(json_bytes)
-
-    @staticmethod
-    def is_multiple_of(s, multiple=4):
-        return len(s) % multiple == 0
-
-    @staticmethod
-    def is_base64(s):
-        if not convert.is_multiple_of(s, multiple=4):
-            return False
-        decoded = None
-        try:
-            # Tente de décoder la chaîne en base64
-            decoded = base64.b64decode(s)
-            # Vérifie si la chaîne d'origine est égale à la chaîne encodée puis décodée
-            if base64.b64encode(decoded) == s.encode():
-                return decoded
-            else:
-                return False
-        except:
-            return False
-
-    @staticmethod
-    def header_body(xml_string):
-        """
-        on supprime l'entete xml
-        """
-        body = header = ""
-        index = xml_string.find("?>")
-        if index != -1:
-            # Supprimer l'en-tête XML
-            body = xml_string[index + 2 :]
-            header = xml_string[: index + 2]
-        return header, body
-
-    @staticmethod
-    def format_xml(xml_string):
-        dom = parseString(xml_string)
-        formatted_xml = dom.toprettyxml(indent="  ")
-        return formatted_xml
-
-    @staticmethod
-    def check_keys_in(dictdata, array_keys):
-        if all(key in dictdata for key in array_keys):
-            return True
-        return False
-
 
 class messagefilexmpp:
     """
@@ -1346,8 +710,13 @@ class messagefilexmpp:
 
 class TimedCompressedRotatingFileHandler(TimedRotatingFileHandler):
     """
-    Extended version of TimedRotatingFileHandler that compress logs on rollover.
-    the rotation file is compress in zip
+    Extended version of TimedRotatingFileHandler that compresses logs on rollover.
+
+    This handler rotates logs based on a time interval and compresses the rotated
+    log files into ZIP format. It manages the number of backup files to keep.
+
+    Attributes:
+        backupCountlocal (int): The number of backup files to keep.
     """
 
     def __init__(
@@ -1361,44 +730,82 @@ class TimedCompressedRotatingFileHandler(TimedRotatingFileHandler):
         utc=False,
         compress="zip",
     ):
+        """
+        Initializes the TimedCompressedRotatingFileHandler with the specified parameters.
+
+        Args:
+            filename (str): The base filename for the log files.
+            when (str): The time interval for rotation (default: "h" for hours).
+            interval (int): The number of units for the rotation interval (default: 1).
+            backupCount (int): The maximum number of backup files to keep (default: 0).
+            encoding (str): The encoding used for the log files (default: None).
+            delay (bool): If True, the log file will not be opened until the first write (default: False).
+            utc (bool): If True, uses UTC time for rotations (default: False).
+            compress (str): The compression format (default: "zip").
+        """
+        # Call the superclass initializer for basic log file handling
         super(TimedCompressedRotatingFileHandler, self).__init__(
             filename, when, interval, backupCount, encoding, delay, utc
         )
-        self.backupCountlocal = backupCount
+        self.backupCountlocal = backupCount  # Store the backup count locally
 
     def get_files_by_date(self):
-        dir_name, base_name = os.path.split(self.baseFilename)
-        file_names = os.listdir(dir_name)
-        result = []
-        result1 = []
-        prefix = "{}".format(base_name)
+        """
+        Retrieves log files and their creation timestamps, sorting them into
+        compressed and uncompressed lists. Deletes old compressed files
+        beyond the backup count limit.
+
+        Returns:
+            str: The filename of the log file to keep after rotation.
+        """
+        dir_name, base_name = os.path.split(self.baseFilename)  # Split the path to get directory and base name
+        file_names = os.listdir(dir_name)  # List all files in the directory
+        result = []  # To hold uncompressed files
+        result1 = []  # To hold compressed files
+        prefix = "{}".format(base_name)  # Create a prefix based on the base name
+
+        # Loop through files to categorize them as compressed or uncompressed
         for file_name in file_names:
             if file_name.startswith(prefix) and not file_name.endswith(".zip"):
                 f = os.path.join(dir_name, file_name)
-                result.append((os.stat(f).st_ctime, f))
+                result.append((os.stat(f).st_ctime, f))  # Store creation time and file path
             if file_name.startswith(prefix) and file_name.endswith(".zip"):
                 f = os.path.join(dir_name, file_name)
-                result1.append((os.stat(f).st_ctime, f))
-        result1.sort()
-        result.sort()
+                result1.append((os.stat(f).st_ctime, f))  # Store creation time and compressed file path
+
+        result1.sort()  # Sort compressed files by creation time
+        result.sort()  # Sort uncompressed files by creation time
+
+        # Remove old compressed files beyond the defined backup count
         while result1 and len(result1) >= self.backupCountlocal:
-            el = result1.pop(0)
+            el = result1.pop(0)  # Get the oldest compressed file
             if os.path.exists(el[1]):
-                os.remove(el[1])
+                os.remove(el[1])  # Remove it from the filesystem
+
+        # Return the most recent uncompressed log file to keep
         return result[1][1]
 
     def doRollover(self):
-        super(TimedCompressedRotatingFileHandler, self).doRollover()
+        """
+        Handles the log file rollover by calling the superclass's rollover method
+        and compressing the old log file into a ZIP format.
+        """
+        super(TimedCompressedRotatingFileHandler, self).doRollover()  # Perform regular rollover
         try:
-            dfn = self.get_files_by_date()
+            dfn = self.get_files_by_date()  # Get the most recent log file to work with
         except:
-            return
+            return  # If an error occurs, simply return
+
+        # Prepare the name for the compressed ZIP file
         dfn_zipped = "{}.zip".format(dfn)
         if os.path.exists(dfn_zipped):
-            os.remove(dfn_zipped)
+            os.remove(dfn_zipped)  # Remove the ZIP file if it exists
+
+        # Create a new ZIP file and add the uncompressed log file to it
         with zipfile.ZipFile(dfn_zipped, "w") as f:
-            f.write(dfn, dfn_zipped, zipfile.ZIP_DEFLATED)
-        os.remove(dfn)
+            f.write(dfn, os.path.basename(dfn), zipfile.ZIP_DEFLATED)
+
+        os.remove(dfn)  # Remove the uncompressed log file after compression
 
 
 logger = logging.getLogger()
@@ -1407,7 +814,7 @@ sys.path.append("plugins")
 
 Fault = xmlrpc.client.Fault
 ctx = None
-VERSION = "5.3.0"
+VERSION = "5.4.0"
 
 
 class IncludeStartsWithFilter(logging.Filter):
@@ -1561,26 +968,100 @@ class ExcludeEndsWithFilter(logging.Filter):
         """
         return not record.getMessage().endswith(self.criterion)
 
+def sanitize_for_xmlrpc(value):
+    """
+    Transforme récursivement les types non supportés par XML-RPC en types sérialisables.
+
+    Types supportés nativement par XML-RPC:
+        - int, float
+        - bool
+        - str
+        - list, dict
+        - None (si allow_none=True)
+
+    Transformation appliquée:
+        - None -> '' (pour compatibilité maximum avec tous les clients)
+        - Decimal -> float
+        - dict/list -> récursivement
+        - Pour tout autre type exotique: ajouter un `elif` spécifique ici
+          ou convertir en str pour la sérialisation.
+
+    Exemple pour gérer un datetime:
+        from datetime import datetime
+        if isinstance(value, datetime):
+            return xmlrpc.client.DateTime(value)
+
+    Exemple pour gérer un UUID:
+        import uuid
+        if isinstance(value, uuid.UUID):
+            return str(value)
+
+    Parameters
+    ----------
+    value : any
+        Valeur Python à transformer
+
+    Returns
+    -------
+    value : any
+        Valeur transformée, uniquement avec des types XML-RPC valides
+    """
+    if value is None:
+        return ""
+    elif isinstance(value, Decimal):
+        return float(value)
+    elif isinstance(value, dict):
+        return {k: sanitize_for_xmlrpc(v) for k, v in value.items()}
+    elif isinstance(value, list):
+        return [sanitize_for_xmlrpc(v) for v in value]
+    # Exemple pour ajouter d'autres types:
+    # elif isinstance(value, datetime):
+    #     return xmlrpc.client.DateTime(value)
+    # elif isinstance(value, uuid.UUID):
+    #     return str(value)
+    else:
+        # Par défaut: laisser tel quel (doit être int, float, str, bool)
+        return value
+
 
 class MmcServer(XMLRPC, object):
     """
-    MMC Server implemented as a XML-RPC server.
-
-    config file : @sysconfdir@/agent/config.ini
-
-    Create a twisted XMLRPC server, load plugins in
-    "plugins/" directory
+    Serveur MMC implémenté comme un serveur XML-RPC avec Twisted.
+    Ce serveur permet de :
+    - Charger des plugins depuis le répertoire "plugins/"
+    - Gérer l'authentification des utilisateurs via HTTP Basic Auth
+    - Gérer les sessions utilisateur (avec expiration)
+    - Supporter l'exécution multithread des requêtes
+    - Fournir des méthodes d'introspection XML-RPC standard
+    - Permettre le rechargement des configurations des plugins
+    Fichier de configuration : @sysconfdir@/agent/config.ini
     """
 
-    # Attribute to keep traces of all running sessions
+    # Ensemble pour suivre toutes les sessions actives
     sessions = set()
 
     def __init__(self, modules, config):
+        """
+        Initialise le serveur MMC.
+
+        Args:
+            modules (dict): Modules de plugins chargés.
+            config (object): Objet de configuration du serveur.
+        """
         XMLRPC.__init__(self)
         self.modules = modules
         self.config = config
 
     def _splitFunctionPath(self, functionPath):
+        """
+        Sépare un chemin de fonction en module et nom de fonction.
+
+        Args:
+            functionPath (str): Chemin de la fonction, par exemple "module.fonction".
+
+        Returns:
+            tuple: (module, function_name) ou (None, function_name) si pas de module.
+        """
         if "." in functionPath:
             mod, func = functionPath.split(".", 1)
         else:
@@ -1589,35 +1070,55 @@ class MmcServer(XMLRPC, object):
         return mod, func
 
     def _getFunction(self, functionPath, request=""):
-        """Overrided to use functions from our plugins"""
-        mod, func = self._splitFunctionPath(functionPath)
+        """
+        Résout un chemin de fonction en un objet appelable.
 
+        Args:
+            functionPath (str): Chemin de la fonction, par exemple "module.fonction".
+            request (Request): Objet de requête actuel.
+
+        Returns:
+            callable: Fonction à exécuter.
+
+        Raises:
+            Fault: Si la fonction n'existe pas.
+        """
+        mod, func = self._splitFunctionPath(functionPath)
         try:
             if mod and mod != "system":
                 try:
+                    # Récupère directement la fonction depuis le module
                     ret = getattr(self.modules[mod], func)
                 except AttributeError:
+                    # Si la fonction n'est pas trouvée, essaie le wrapper RpcProxy
                     rpcProxy = getattr(self.modules[mod], "RpcProxy")
                     ret = rpcProxy(request, mod).getFunction(func)
             else:
+                # Fonctions appartenant au serveur lui-même
                 ret = getattr(self, func)
         except AttributeError:
-            logger.error(functionPath + " not found")
-            raise Fault("NO_SUCH_FUNCTION", "No such function " + functionPath)
+            logger.error(f"{functionPath} non trouvé")
+            raise Fault("NO_SUCH_FUNCTION", f"No such function {functionPath}")
         return ret
 
     def _needAuth(self, functionPath):
         """
-        @returns: True if the specified function requires a user authentication
-        @rtype: boolean
+        Vérifie si une fonction nécessite une authentification.
+
+        Args:
+            functionPath (str): Chemin de la fonction.
+
+        Returns:
+            bool: True si une authentification est nécessaire.
         """
         mod, func = self._splitFunctionPath(functionPath)
-        # Special case: reload mehod
+        # Cas spécial : la fonction de rechargement ne nécessite pas d'authentification
         if (mod, func) == ("system", "reloadModulesConfiguration"):
             return False
         ret = True
         if mod:
             try:
+                # Liste NOAUTHNEEDED est définie par le plugin
                 nanl = self.modules[mod].NOAUTHNEEDED
                 ret = func not in nanl
             except (KeyError, AttributeError):
@@ -1625,6 +1126,9 @@ class MmcServer(XMLRPC, object):
         return ret
 
     def render_OPTIONS(self, request):
+        """
+        Gère les requêtes CORS preflight OPTIONS.
+        """
         request.setHeader(
             "Access-Control-Allow-Origin",
             request.requestHeaders.getRawHeaders("Origin"),
@@ -1634,18 +1138,20 @@ class MmcServer(XMLRPC, object):
         request.setHeader("Access-Control-Allow-Headers", "content-type, authorization")
         request.setHeader("Access-Control-Max-Age", "1728000")
         request.setHeader("Content-Type", "text/plain")
-
         return ""
 
     def render_POST(self, request):
         """
-        override method of xmlrpc python twisted framework
+        Surcharge de la méthode POST du framework XML-RPC Twisted.
+        Gère l'authentification, les sessions, et l'exécution des fonctions RPC.
 
-        @param request: raw request xmlrpc
-        @type request: xml str
+        Args:
+            request: Requête XML-RPC brute.
 
-        @return: interpreted request
+        Returns:
+            server.NOT_DONE_YET: Indique que la réponse sera envoyée plus tard.
         """
+        # Gestion des headers CORS
         if request.requestHeaders.hasHeader("Origin"):
             request.setHeader(
                 "Access-Control-Allow-Origin",
@@ -1656,9 +1162,13 @@ class MmcServer(XMLRPC, object):
         request.setHeader("Access-Control-Allow-Headers", "content-type,authorization")
         request.setHeader("Access-Control-Expose-Headers", "content-type,cookie")
         request.setHeader("Access-Control-Max-Age", "1728000")
+
+        # Lecture de la requête XML
         requestxml = request.content.read()
         args, functionPath = xmlrpc.client.loads(requestxml)
         s = request.getSession()
+
+        # Initialisation des attributs de session si absents
         if not hasattr(s, "loggedin"):
             s.loggedin = False
         if not hasattr(s, "lastModified"):
@@ -1666,82 +1176,66 @@ class MmcServer(XMLRPC, object):
         if not hasattr(s, "sessionTimeout"):
             s.sessionTimeout = self.config.sessiontimeout
 
+        # Vérification de l'expiration de la session
         try:
-            # Check if session is expired
             current_time = reactor.seconds()
             if (
                 self.config.sessiontimeout
                 and (current_time - s.lastModified) > self.config.sessiontimeout
             ):
-                # # Session has expired
-                logger.debug("Session expired !")
-                s.loggedin = False  # Mark session as expired
-                # Define the HTTP 401 response code
+                logger.debug("Session expirée !")
+                s.loggedin = False
                 request.setResponseCode(http.UNAUTHORIZED)
                 request.setHeader(b"content-type", b"text/html")
                 request.setHeader(b"content-length", b"0")
-
                 request.finish()
                 return server.NOT_DONE_YET
-
-            # Update session timeout for the current session
             s.lastModified = current_time
-
         except AttributeError as e:
-            # Initialize session attributes if AttributeError occurs
-            logger.error(f"Attribute error: {e}")
+            logger.error(f"Erreur d'attribut : {e}")
             s.loggedin = False
-            # Set session expire timeout
             s.sessionTimeout = self.config.sessiontimeout
             return server.NOT_DONE_YET
 
-        # Check authorization using HTTP Basic
-        cleartext_token = self.config.login + ":" + self.config.password
+        # Authentification HTTP Basic
+        cleartext_token = f"{self.config.login}:{self.config.password}"
         user = str(request.getUser(), "utf-8")
         password = str(request.getPassword(), "utf-8")
-
-        token = user + ":" + password
+        token = f"{user}:{password}"
         if token != cleartext_token:
-            logger.error("Invalid login / password for HTTP basic authentication")
+            logger.error("Identifiants invalides pour l'authentification HTTP Basic")
             request.setResponseCode(http.UNAUTHORIZED)
             self._cbRender(
                 Fault(
                     http.UNAUTHORIZED,
-                    "Unauthorized: invalid credentials to connect to the MMC agent, basic HTTP authentication is required",
+                    "Non autorisé : identifiants invalides pour se connecter à l'agent MMC, authentification HTTP Basic requise",
                 ),
                 request,
             )
             return server.NOT_DONE_YET
 
+        # Log des appels RPC
         if not s.loggedin:
-            logger.debug(
-                "RPC method call from unauthenticated user: %s" % functionPath
-                + str(args)
-            )
-            # Save the first sent HTTP headers, as they contain some
-            # informations
+            logger.debug(f"Appel RPC depuis un utilisateur non authentifié : {functionPath}{str(args)}")
             s.http_headers = request.requestHeaders.copy()
         else:
-            logger.debug(
-                "RPC method call from user %s: %s"
-                % (s.userid, functionPath + str(args))
-            )
+            logger.debug(f"Appel RPC depuis l'utilisateur {s.userid} : {functionPath}{str(args)}")
+
+        # Vérification de l'authentification et exécution de la fonction
         try:
             if not s.loggedin and self._needAuth(functionPath):
-                msg = "Authentication needed: %s" % functionPath
-                logger.error(msg)
+                msg = f"Authentification nécessaire : {functionPath}"
+                logger.debug(msg)
                 raise Fault(8003, msg)
             else:
                 if not s.loggedin and not self._needAuth(functionPath):
-                    # Provide a security context when a method which doesn't
-                    # require a user authentication is called
                     s.userid = "root"
                     try:
                         self._associateContext(request, s, s.userid)
                     except Exception as e:
                         s.loggedin = False
                         logger.exception(e)
-                        f = Fault(8004, "MMC agent can't provide a security context")
+                        f = Fault(8004, "L'agent MMC ne peut pas fournir de contexte de sécurité")
                         self._cbRender(f, request)
                         return server.NOT_DONE_YET
                 function = self._getFunction(functionPath, request)
@@ -1750,10 +1244,7 @@ class MmcServer(XMLRPC, object):
         else:
             if self.config.multithreading:
                 oldargs = args
-                args = (
-                    function,
-                    s,
-                ) + args
+                args = (function, s,) + args
                 defer.maybeDeferred(self._runInThread, *args).addErrback(
                     self._ebRender, functionPath, oldargs, request
                 ).addCallback(self._cbRender, request, functionPath, oldargs)
@@ -1765,12 +1256,11 @@ class MmcServer(XMLRPC, object):
 
     def _runInThread(self, *args, **kwargs):
         """
-        Very similar to deferToThread, but also handles function that results
-        to a Deferred object.
+        Exécute une fonction dans un thread séparé, en gérant les Deferred.
+        Permet de ne pas bloquer le réacteur Twisted.
         """
-
         def _printExecutionTime(start):
-            logger.debug("Execution time: %f" % (time.time() - start))
+            logger.debug(f"Temps d'exécution : {time.time() - start}")
 
         def _cbSuccess(result, deferred, start):
             _printExecutionTime(start)
@@ -1782,10 +1272,8 @@ class MmcServer(XMLRPC, object):
 
         def _putResult(deferred, f, session, args, kwargs):
             logger.debug(
-                "Using thread #%s for %s"
-                % (threading.currentThread().getName().split("-")[2], f.__name__)
+                f"Utilisation du thread #{threading.currentThread().getName().split('-')[2]} pour {f.__name__}"
             )
-            # Attach current user session to the thread
             threading.currentThread().session = session
             start = time.time()
             try:
@@ -1795,8 +1283,6 @@ class MmcServer(XMLRPC, object):
                 reactor.callFromThread(deferred.errback, f)
             else:
                 if isinstance(result, defer.Deferred):
-                    # If the result is a Deferred object, attach callback and
-                    # errback (we are not allowed to result to a Deferred)
                     result.addCallback(_cbSuccess, deferred, start)
                     result.addErrback(_cbFailure, deferred, start)
                 else:
@@ -1810,13 +1296,63 @@ class MmcServer(XMLRPC, object):
         reactor.callInThread(_putResult, d, function, context, args, kwargs)
         return d
 
+
     def _cbRender(self, result, request, functionPath=None, args=None):
+        """
+        Callback pour rendre le résultat d'une requête XML-RPC.
+
+        - Appelée automatiquement par Twisted après l'exécution d'une méthode
+        XML-RPC exposée.
+        - Sérialise le résultat Python en XML-RPC et écrit la réponse HTTP.
+
+        🔹 Transformations appliquées avant sérialisation :
+        -----------------------------------------------
+        1. `result = sanitize_for_xmlrpc(result)` :
+        - Remplace `None` par '' pour compatibilité maximale.
+        - Convertit `decimal.Decimal` en `float`.
+        - Transforme récursivement les dicts et listes.
+        - Possibilité d'ajouter d'autres types exotiques (datetime, UUID, etc.).
+        2. `xmlrpc.client.dumps((result,), methodresponse=True, allow_none=True)` :
+        - Enveloppe le résultat dans un tuple comme l'exige xmlrpc.client.
+        - `allow_none=True` permet de générer `<nil/>` pour les valeurs `None`.
+
+        ⚠️ Points importants :
+        ----------------------
+        - XML-RPC standard ne supporte pas `None`. Sans `allow_none=True`, une
+        exception "cannot marshal objects" est levée.
+        - Les clients XML-RPC doivent accepter `<nil/>` pour que cela fonctionne
+        correctement. Exemple en PHP : `$GLOBALS['xmlrpc_null_extension'] = true;`
+        avec phpxmlrpc.
+        - Tout type Python non supporté par XML-RPC (Decimal, datetime, UUID, etc.)
+        doit être transformé avant le dump pour éviter une exception.
+
+        Avantages :
+        ----------
+        - Permet d'envoyer des résultats contenant des `None` et d'autres types
+        Python non-XML-RPC sans planter le serveur.
+
+        Inconvénients :
+        --------------
+        - `<nil/>` n'est pas standard XML-RPC : certains clients stricts peuvent
+        ne pas savoir le décoder. Dans ce cas, il faudra prévoir un fallback
+        (ex : remplacer `None` par '').
+
+        Parameters
+        ----------
+        result : any
+            Résultat de la méthode XML-RPC (dict, list, etc.)
+        request : twisted.web.http.Request
+            Objet HTTP Twisted pour la réponse
+        functionPath : str, optional
+            Nom de la méthode appelée
+        args : tuple, optional
+            Arguments passés à la méthode
+        """
         s = request.getSession()
         auth_funcs = ["base.ldapAuth", "base.tokenAuthenticate", "base.authenticate"]
+
         if functionPath in auth_funcs and not isinstance(result, Fault):
-            # if we are logging on and there was no error
             if result:
-                s = request.getSession()
                 s.loggedin = True
                 s.userid = args[0]
                 try:
@@ -1824,197 +1360,248 @@ class MmcServer(XMLRPC, object):
                 except Exception as e:
                     s.loggedin = False
                     logger.exception(e)
-                    f = Fault(
-                        8004,
-                        "MMC agent can't provide a security context for this account",
-                    )
+                    f = Fault(8004, "L'agent MMC ne peut pas fournir de contexte de sécurité pour ce compte")
                     self._cbRender(f, request)
                     return
-        if result is None:
-            result = 0
-        if isinstance(result, Handler):
-            result = result.result
 
-        if not isinstance(result, xmlrpc.client.Fault):
-            result = (result,)
         try:
-            if type(result[0]) == dict:
-                # FIXME
-                # Evil hack ! We need this to transport some data as binary instead of string
-                if "jpegPhoto" in result[0]:
-                    result[0]["jpegPhoto"] = [
-                        xmlrpc.client.Binary(result[0]["jpegPhoto"][0])
-                    ]
-        except IndexError:
-            pass
-        except Exception:
-            pass
-        try:
+            # 🔹 Fix: autoriser la sérialisation de None via <nil/>
+            # Toujours envelopper le résultat dans un tuple
+            result = sanitize_for_xmlrpc(result)
+            # Log du résultat
             if s.loggedin:
-                logger.debug(
-                    "Result for "
-                    + s.userid
-                    + ", "
-                    + str(functionPath)
-                    + ": "
-                    + str(result)
-                )
+                logger.debug(f"Résultat pour {s.userid}, {functionPath}: {result}")
             else:
-                logger.debug(
-                    "Result for unauthenticated user, "
-                    + str(functionPath)
-                    + ": "
-                    + str(result)
-                )
-            s = xmlrpc.client.dumps(result, methodresponse=1)
+                logger.debug(f"Résultat pour utilisateur non authentifié, {functionPath}: {result}")
+
+            xml = xmlrpc.client.dumps((result,), methodresponse=True, allow_none=True)
         except Exception as e:
-            f = Fault(self.FAILURE, "can't serialize output: " + str(e))
-            s = xmlrpc.client.dumps(f, methodresponse=1)
-        s = bytes(s, encoding="utf-8")
-        request.setHeader("content-length", str(len(s)))
-        request.setHeader("content-type", "application/xml")
-        request.write(s)
+            logger.exception("Erreur de sérialisation XML-RPC: %s", e)
+            fault = Fault(8005, f"Impossible de sérialiser la sortie : {e}")
+            xml = xmlrpc.client.dumps((fault,), methodresponse=True, allow_none=True)
+        request.setHeader(b"content-type", b"text/xml")
+        request.write(xml.encode("utf-8"))
         request.finish()
+    #
+    # a supprimer apres test
+    # def _cbRender(self, result, request, functionPath=None, args=None):
+    #     """
+    #     Callback pour rendre le résultat d'une requête RPC.
+    #     Gère la sérialisation XML, les logs et les headers HTTP.
+    #     """
+    #     s = request.getSession()
+    #     auth_funcs = ["base.ldapAuth", "base.tokenAuthenticate", "base.authenticate"]
+    #     if functionPath in auth_funcs and not isinstance(result, Fault):
+    #         if result:
+    #             s = request.getSession()
+    #             s.loggedin = True
+    #             s.userid = args[0]
+    #             try:
+    #                 self._associateContext(request, s, s.userid)
+    #             except Exception as e:
+    #                 s.loggedin = False
+    #                 logger.exception(e)
+    #                 f = Fault(8004, "L'agent MMC ne peut pas fournir de contexte de sécurité pour ce compte")
+    #                 self._cbRender(f, request)
+    #                 return
+    #
+    #     if result is None:
+    #         result = 0
+    #     if isinstance(result, Handler):
+    #         result = result.result
+    #     if not isinstance(result, xmlrpc.client.Fault):
+    #         result = (result,)
+    #
+    #     # Hack pour gérer les données binaires (ex: jpegPhoto)
+    #     try:
+    #         if isinstance(result[0], dict) and "jpegPhoto" in result[0]:
+    #             result[0]["jpegPhoto"] = [xmlrpc.client.Binary(result[0]["jpegPhoto"][0])]
+    #     except (IndexError, Exception):
+    #         pass
+    #
+    #     # Log du résultat
+    #     try:
+    #         if s.loggedin:
+    #             logger.debug(f"Résultat pour {s.userid}, {functionPath}: {result}")
+    #         else:
+    #             logger.debug(f"Résultat pour utilisateur non authentifié, {functionPath}: {result}")
+    #         s = xmlrpc.client.dumps(result, methodresponse=1)
+    #     except Exception as e:
+    #         f = Fault(self.FAILURE, f"Impossible de sérialiser la sortie : {e}")
+    #         s = xmlrpc.client.dumps(f, methodresponse=1)
+    #
+    #     s = bytes(s, encoding="utf-8")
+    #     request.setHeader("content-length", str(len(s)))
+    #     request.setHeader("content-type", "application/xml")
+    #     request.write(s)
+    #     request.finish()
 
     def _ebRender(self, failure, functionPath, args, request):
-        logger.error(
-            "Error during render " + functionPath + ": " + failure.getTraceback()
-        )
-        # Prepare a Fault result to return
-        result = {}
-        result["faultString"] = functionPath + " " + str(args)
-        result["faultCode"] = str(failure.type) + ": " + str(failure.value) + " "
-        result["faultTraceback"] = failure.getTraceback()
+        """
+        Callback en cas d'erreur lors du rendu d'une requête RPC.
+        """
+        logger.error(f"Erreur lors du rendu {functionPath} : {failure.getTraceback()}")
+        result = {
+            "faultString": f"{functionPath} {str(args)}",
+            "faultCode": f"{failure.type}: {failure.value}",
+            "faultTraceback": failure.getTraceback(),
+        }
         return result
 
     def _associateContext(self, request, session, userid):
         """
-        Ask to each activated Python plugin a context to attach to the user
-        session.
+        Demande à chaque plugin Python activé un contexte à attacher à la session utilisateur.
 
-        @param request: the current XML-RPC request
-        @param session: the current session object
-        @param userid: the user login
+        Args:
+            request: Requête XML-RPC actuelle.
+            session: Objet de session actuel.
+            userid: Identifiant de l'utilisateur.
         """
         session.contexts = {}
         for mod in self.modules:
             try:
                 contextMaker = getattr(self.modules[mod], "ContextMaker")
             except AttributeError:
-                # No context provided
                 continue
             cm = contextMaker(request, session, userid)
             context = cm.getContext()
             if context:
-                logger.debug("Attaching module '%s' context to user session" % mod)
+                logger.debug(f"Attachement du contexte du module '{mod}' à la session utilisateur")
                 session.contexts[mod] = context
-
-        # Add associated context session to sessions set
         if session not in self.sessions:
             self.sessions.add(session)
 
-    # ======== Reload method ================
-
+    # ===== Méthode de rechargement =====
     def reloadModulesConfiguration(self):
+        """
+        Recharge la configuration de tous les plugins.
+        Expire toutes les sessions actives.
+        """
         import gc
         from mmc.support.config import PluginConfig
-
         for obj in gc.get_objects():
             if isinstance(obj, PluginConfig):
                 try:
-                    # Reloading configuration file
-                    fid = open(obj.conffile, "r")
-                    obj.readfp(fid, obj.conffile)
+                    with open(obj.conffile, "r") as fid:
+                        obj.readfp(fid, obj.conffile)
                     if os.path.isfile(obj.conffile + ".local"):
-                        fid = open(obj.conffile + ".local", "r")
-                        obj.readfp(fid, obj.conffile + ".local")
-                    # Refresh config attributes
+                        with open(obj.conffile + ".local", "r") as fid:
+                            obj.readfp(fid, obj.conffile + ".local")
                     obj.readConf()
                 except Exception as e:
-                    logger.error(
-                        "Error while reloading configuration file %s", obj.conffile
-                    )
+                    logger.error(f"Erreur lors du rechargement du fichier {obj.conffile}")
                     logger.error(str(e))
                     return "Failed"
-
-        # Manually expiring all logged sessions
         for session in self.sessions:
             session.expire()
         self.sessions = set()
         return "Done"
 
-    # ======== XMLRPC Standard Introspection methods ================
-
+    # ===== Méthodes d'introspection XML-RPC standard =====
     def listMethods(self):
+        """
+        Liste toutes les méthodes RPC disponibles.
+        """
         method_list = []
-
         for mod in self.modules:
             instance = self.modules[mod]
-            # Fetching module root methods
             for m in dir(instance):
                 r = getattr(instance, m)
-                # If attr is callable, we add it to method_list
                 if hasattr(r, "__call__"):
-                    method_list.append(mod + "." + m)
-            # Doing same thing for module.RPCProxy if exists
+                    method_list.append(f"{mod}.{m}")
             if hasattr(instance, "RpcProxy"):
                 for m in dir(instance.RpcProxy):
                     r = getattr(instance.RpcProxy, m)
-                    # If attr is callable, we add it to method_list
                     if hasattr(r, "__call__"):
-                        method_list.append(mod + "." + m)
-
+                        method_list.append(f"{mod}.{m}")
         return method_list
 
     def __getClassMethod(self, name):
+        """
+        Récupère une méthode de classe à partir de son nom.
+
+        Args:
+            name (str): Nom de la méthode.
+
+        Returns:
+            callable: Méthode ou None si non trouvée.
+        """
         mod, func = self._splitFunctionPath(name)
-
-        if not mod in self.modules:
+        if mod not in self.modules:
             return None
-
         instance = self.modules[mod]
         if hasattr(instance, "RpcProxy"):
             if hasattr(instance.RpcProxy, func):
                 return getattr(instance.RpcProxy, func)
             elif hasattr(instance, func):
                 return getattr(instance, func)
-            else:
-                return None
-        else:
-            return None
+        return None
 
     def methodSignature(self, name):
-        method = self.__getClassMethod(name)
+        """
+        Retourne la signature d'une méthode RPC.
 
+        Args:
+            name (str): Nom de la méthode.
+
+        Returns:
+            list: Liste des arguments de la méthode.
+        """
+        method = self.__getClassMethod(name)
         if method is None:
             return []
-        else:
-            return getfullargspec(method)[0]
+        return getfullargspec(method)[0]
 
     def methodHelp(self, name):
-        method = self.__getClassMethod(name)
+        """
+        Retourne la documentation d'une méthode RPC.
 
+        Args:
+            name (str): Nom de la méthode.
+
+        Returns:
+            str: Documentation de la méthode.
+        """
+        method = self.__getClassMethod(name)
         if method is None:
             return ""
-        else:
-            return method.__doc__
+        return method.__doc__
 
-    # ===============================================================
-
+    # ===== Méthodes utilitaires =====
     def getRevision(self):
+        """Retourne la révision SCM du serveur."""
         return scmRevision("$Rev$")
 
     def getVersion(self):
+        """Retourne la version du serveur."""
         return VERSION
 
     def log(self, fileprefix, content):
         """
-        @param fileprefix: Write log file in @localstatedir@/log/mmc/mmc-fileprefix.log
-        @param content: string to record in log file
+        Écrit un message dans un fichier de log.
+
+        Args:
+            fileprefix (str): Préfixe du fichier de log.
+            content (str): Contenu à enregistrer.
         """
-        f = open(localstatedir + "/log/mmc/mmc-" + fileprefix + ".log", "a")
-        f.write(time.asctime() + ": " + content + "\n")
-        f.close()
+        with open(f"{localstatedir}/log/mmc/mmc-{fileprefix}.log", "a") as f:
+            f.write(f"{time.asctime()}: {content}\n")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 class MMCApp(object):

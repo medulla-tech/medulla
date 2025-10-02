@@ -64,7 +64,7 @@ from mmc.plugins.glpi.database_utils import (
 from mmc.plugins.glpi.database_utils import DbTOA  # pyflakes.ignore
 from mmc.plugins.dyngroup.config import DGConfig
 from distutils.version import LooseVersion
-from mmc.plugins.xmppmaster.config import xmppMasterConfig
+#from mmc.plugins.xmppmaster.config import xmppMasterConfig
 
 from pulse2.database.xmppmaster import XmppMasterDatabase
 
@@ -874,6 +874,10 @@ class Glpi92(DyngroupDatabaseHelper):
 
     @DatabaseHelper._sessionm
     def get_machines_list1(self, session, start, end, ctx):
+        # ----------------------------
+        # IMPORT LOCAL POUR EVITER LES CIRCULAR IMPORT
+        # ----------------------------
+        from mmc.plugins.xmppmaster.config import xmppMasterConfig
         # start and end are used to set the limit parameter in the query
 
         debugfunction = False
@@ -1116,6 +1120,10 @@ class Glpi92(DyngroupDatabaseHelper):
         Returns:
             It returns the list of the machines.
         """
+        # ----------------------------
+        # IMPORT LOCAL POUR EVITER LES CIRCULAR IMPORT
+        # ----------------------------
+        from mmc.plugins.xmppmaster.config import xmppMasterConfig
         # start and end are used to set the limit parameter in the query
         start = int(start)
         end = int(end)
@@ -2357,6 +2365,10 @@ class Glpi92(DyngroupDatabaseHelper):
         """
         Give an LDAP like version of machines
         """
+        # ----------------------------
+        # IMPORT LOCAL POUR EVITER LES CIRCULAR IMPORT
+        # ----------------------------
+        from mmc.plugins.xmppmaster.config import xmppMasterConfig
         ret = {}
         if get != None:
             for m in machines:

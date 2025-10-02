@@ -26,6 +26,7 @@ import array
 import struct
 import socket
 import platform
+import inspect
 
 # python 2.3 fallback for set() in xmlrpcleanup
 # also try sqlalchemy.util Sets
@@ -211,21 +212,72 @@ def localifs():
 
 
 class Singleton(object):
+    """
+    Une classe Singleton utilisant la méthode `__new__` pour garantir qu'une seule instance
+    de la classe est créée.
+
+    Cette implémentation utilise une variable de classe `_the_instance` pour stocker
+    l'instance unique de la classe. Chaque appel à la création d'une nouvelle instance
+    retourne cette instance unique.
+
+    Attributes:
+        _the_instance: L'instance unique de la classe.
+    """
+
     def __new__(cls, *args):
+        """
+        Crée une nouvelle instance de la classe si elle n'existe pas déjà.
+
+        Args:
+            *args: Arguments passés au constructeur de la classe.
+
+        Returns:
+            Singleton: L'instance unique de la classe.
+        """
         if "_the_instance" not in cls.__dict__:
             cls._the_instance = object.__new__(cls)
         return cls._the_instance
 
 
 class SingletonN(type):
+    """
+    Une métaclasse Singleton pour garantir qu'une seule instance de toute classe
+    utilisant cette métaclasse est créée.
+
+    Cette métaclasse surcharge la méthode `__call__` pour s'assurer qu'une seule instance
+    de la classe est créée et retournée à chaque appel.
+
+    Attributes:
+        instance: L'instance unique de la classe utilisant cette métaclasse.
+    """
+
     def __init__(self, name, bases, dict):
+        """
+        Initialise la métaclasse Singleton.
+
+        Args:
+            name (str): Nom de la classe.
+            bases (tuple): Classes de base de la classe.
+            dict (dict): Espace de noms de la classe.
+        """
         super(SingletonN, self).__init__(name, bases, dict)
         self.instance = None
 
     def __call__(self, *args, **kw):
+        """
+        Crée une nouvelle instance de la classe si elle n'existe pas déjà.
+
+        Args:
+            *args: Arguments positionnels passés au constructeur de la classe.
+            **kw: Arguments nommés passés au constructeur de la classe.
+
+        Returns:
+            object: L'instance unique de la classe.
+        """
         if self.instance is None:
             self.instance = super(SingletonN, self).__call__(*args, **kw)
         return self.instance
+
 
 
 class ProcessScheduler(Singleton):
@@ -652,3 +704,346 @@ class SecurityContext:
     """
 
     pass
+
+
+
+class EnhancedSecurityContext:
+    """
+    Une classe améliorée pour gérer le contexte de sécurité, incluant les informations
+    de session, de requête et un dictionnaire personnalisé pour stocker des données supplémentaires.
+
+    Cette classe encapsule les accès aux attributs de session et de requête,
+    et fournit des méthodes pour manipuler ces informations de manière sécurisée.
+
+    Attributes:
+        _userid (str): Nom d'utilisateur connecté.
+        _request (twisted.web.server.Request): Objet de requête HTTP.
+        _session (twisted.web.server.Session): Objet de session Twisted.
+        _mondict (dict): Dictionnaire pour stocker des données supplémentaires.
+    """
+
+    def __init__(self, userid=None, request=None, session=None):
+        """
+        Initialise une nouvelle instance de EnhancedSecurityContext.
+
+        Args:
+            userid (str, optional): Nom d'utilisateur connecté. Defaults to None.
+            request (twisted.web.server.Request, optional): Objet de requête HTTP. Defaults to None.
+            session (twisted.web.server.Session, optional): Objet de session Twisted. Defaults to None.
+        """
+        self._userid = userid
+        self._request = request
+        self._session = session
+        self._mondict = {}  # Dictionnaire pour stocker des données supplémentaires
+
+    @property
+    def userid(self):
+        """
+        Retourne le nom d'utilisateur connecté.
+
+        Returns:
+            str: Nom d'utilisateur.
+        """
+        return self._userid
+
+    @userid.setter
+    def userid(self, value):
+        """
+        Définit le nom d'utilisateur connecté.
+
+        Args:
+            value (str): Nom d'utilisateur.
+        """
+        self._userid = value
+
+    @property
+    def request(self):
+        """
+        Retourne l'objet de requête HTTP.
+
+        Returns:
+            twisted.web.server.Request: Objet de requête HTTP.
+        """
+        return self._request
+
+    @request.setter
+    def request(self, value):
+        """
+        Définit l'objet de requête HTTP.
+
+        Args:
+            value (twisted.web.server.Request): Objet de requête HTTP.
+        """
+        self._request = value
+
+    def get_request_headers(self):
+        """
+        Retourne les headers de la requête sous forme de dictionnaire.
+
+        Returns:
+            dict: Dictionnaire des headers de la requête.
+        """
+        if self._request is not None:
+            headers = {}
+            for key, values in self._request.getAllHeaders().items():
+                headers[key] = values[0] if isinstance(values, list) else values
+            return headers
+        return {}
+
+    def get_request_header(self, header_name):
+        """
+        Retourne la valeur d'un header spécifique de la requête.
+
+        Args:
+            header_name (str): Nom du header.
+
+        Returns:
+            str: Valeur du header, ou None si le header n'existe pas.
+        """
+        if self._request is not None:
+            return self._request.getHeader(header_name)
+        return None
+
+    def get_client_ip(self):
+        """
+        Retourne l'adresse IP du client.
+
+        Returns:
+            str: Adresse IP du client, ou None si non disponible.
+        """
+        if self._request is not None:
+            return self._request.getClientIP()
+        return None
+
+    @property
+    def session(self):
+        """
+        Retourne l'objet de session Twisted.
+
+        Returns:
+            twisted.web.server.Session: Objet de session Twisted.
+        """
+        return self._session
+
+    @session.setter
+    def session(self, value):
+        """
+        Définit l'objet de session Twisted.
+
+        Args:
+            value (twisted.web.server.Session): Objet de session Twisted.
+        """
+        self._session = value
+
+    def get_session_id(self):
+        """
+        Retourne l'ID de la session.
+
+        Returns:
+            str: ID de la session, ou None si non disponible.
+        """
+        if self._session is not None:
+            return getattr(self._session, 'uid', None)
+        return None
+
+    def get_session_expires(self):
+        """
+        Retourne la date d'expiration de la session.
+
+        Returns:
+            int: Timestamp de la date d'expiration, ou None si non disponible.
+        """
+        if self._session is not None:
+            return getattr(self._session, 'expires', None)
+        return None
+
+    def get_session_last_modified(self):
+        """
+        Retourne la dernière activité de la session.
+
+        Returns:
+            int: Timestamp de la dernière activité, ou None si non disponible.
+        """
+        if self._session is not None:
+            return getattr(self._session, 'lastModified', None)
+        return None
+
+    def get_session_timeout(self):
+        """
+        Retourne le délai d'expiration de la session.
+
+        Returns:
+            int: Délai d'expiration en secondes, ou None si non disponible.
+        """
+        if self._session is not None:
+            return getattr(self._session, 'sessionTimeout', None)
+        return None
+
+    def is_logged_in(self):
+        """
+        Indique si l'utilisateur est connecté.
+
+        Returns:
+            bool: True si l'utilisateur est connecté, False sinon.
+        """
+        if self._session is not None:
+            return getattr(self._session, 'loggedin', False)
+        return False
+
+    def get_session_userid(self):
+        """
+        Retourne le nom d'utilisateur connecté depuis la session.
+
+        Returns:
+            str: Nom d'utilisateur, ou None si non disponible.
+        """
+        if self._session is not None:
+            return getattr(self._session, 'userid', None)
+        return None
+
+    def get_session_http_headers(self):
+        """
+        Retourne les en-têtes HTTP de la requête initiale.
+
+        Returns:
+            dict: Dictionnaire des en-têtes HTTP, ou un dictionnaire vide si non disponible.
+        """
+        if self._session is not None:
+            return getattr(self._session, 'http_headers', {})
+        return {}
+
+    def get_session_contexts(self):
+        """
+        Retourne le contexte spécifique aux modules.
+
+        Returns:
+            dict: Dictionnaire des contextes spécifiques aux modules, ou un dictionnaire vide si non disponible.
+        """
+        if self._session is not None:
+            return getattr(self._session, 'contexts', {})
+        return {}
+
+    def set_session_attribute(self, attr_name, value):
+        """
+        Définit un attribut spécifique de la session.
+
+        Args:
+            attr_name (str): Nom de l'attribut.
+            value: Valeur de l'attribut.
+        """
+        if self._session is not None:
+            setattr(self._session, attr_name, value)
+
+    def get_mondict(self, key=None):
+        """
+        Retourne une valeur ou tout le dictionnaire mondict.
+
+        Args:
+            key (str, optional): Clé pour récupérer une valeur spécifique. Defaults to None.
+
+        Returns:
+            dict ou any: Si key est spécifié, retourne la valeur associée.
+                         Sinon, retourne le dictionnaire mondict complet.
+        """
+        if key is not None:
+            return self._mondict.get(key)
+        return self._mondict
+
+    def set_mondict(self, key, value):
+        """
+        Définit une valeur dans mondict.
+
+        Args:
+            key (str): Clé pour stocker la valeur.
+            value (any): Valeur à stocker.
+        """
+        self._mondict[key] = value
+
+    def update_mondict(self, new_dict):
+        """
+        Met à jour mondict avec un nouveau dictionnaire.
+
+        Args:
+            new_dict (dict): Dictionnaire de clés/valeurs à ajouter ou mettre à jour.
+        """
+        self._mondict.update(new_dict)
+
+    def clear_mondict(self):
+        """
+        Efface mondict.
+        """
+        self._mondict.clear()
+
+    def get_session_info(self):
+        """
+        Retourne un dictionnaire avec toutes les informations de la session.
+
+        Returns:
+            dict: Dictionnaire contenant toutes les informations de la session.
+        """
+        if self._session is None:
+            return {}
+
+        session_info = {
+            'uuid': self.get_session_id(),
+            'expires': self.get_session_expires(),
+            'lastModified': self.get_session_last_modified(),
+            'sessionTimeout': self.get_session_timeout(),
+            'loggedin': self.is_logged_in(),
+            'userid': self.get_session_userid(),
+            'http_headers': self.get_session_http_headers(),
+            'contexts': self.get_session_contexts(),
+            'mondict': self._mondict,
+        }
+        return session_info
+
+
+def update_filter(filter_dict, allowed_entities):
+    """
+    Met à jour le filtre 'location' pour ne contenir que les UUID correspondant
+    aux entités autorisées.
+
+    Exemple :
+        allowed_entities = [1,2]
+
+        {'location': 'UUID3'}  -> {'location': 'UUID1,UUID2'}
+        {'location': ''}       -> {'location': 'UUID1,UUID2'}
+        {}                     -> {'location': 'UUID1,UUID2'}
+        {'location': 'UUID3,UUID1'} -> {'location': 'UUID1'}
+
+    Args:
+        filter_dict (dict): dictionnaire du filtre.
+        allowed_entities (list[int]): liste d'entiers représentant les entités autorisées.
+
+    Returns:
+        dict: dictionnaire avec 'location' corrigé en fonction des droits utilisateur.
+    """
+
+    # Chaîne par défaut = toutes les entités permises
+    default_location = ",".join(f"UUID{e}" for e in allowed_entities)
+
+    # Cas 1 & 2 : pas de location ou location vide
+    if 'location' not in filter_dict or not filter_dict['location']:
+        filter_dict['location'] = default_location
+        return filter_dict
+
+    # Cas 3 : filtrer les UUID existants selon allowed_entities
+    uuids = [u.strip() for u in filter_dict['location'].split(",") if u.strip()]
+    valid_uuids = []
+
+    for u in uuids:
+        if u.startswith("UUID"):
+            try:
+                idx = int(u[4:])  # récupérer l'index après "UUID"
+                if idx in allowed_entities:
+                    valid_uuids.append(u)
+            except ValueError:
+                continue
+
+    # si rien n'est valide → on applique la valeur par défaut
+    if valid_uuids:
+        filter_dict['location'] = ",".join(valid_uuids)
+    else:
+        filter_dict['location'] = default_location
+
+    return filter_dict

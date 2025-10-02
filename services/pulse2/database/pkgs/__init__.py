@@ -1,7 +1,8 @@
 # -*- coding: utf-8; -*-
 # SPDX-FileCopyrightText: 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 # SPDX-FileCopyrightText: 2007-2009 Mandriva, http://www.mandriva.com/
-# SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net>
+# SPDX-FileCopyrightText: 2016-2023 Siveo, http://www.siveo.net
+# SPDX-FileCopyrightText: 2024-2025 Medulla, http://www.medulla-tech.io
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 """
@@ -20,6 +21,8 @@ from sqlalchemy import (
     desc,
     func,
     distinct,
+    text,
+    bindparam,
 )
 from sqlalchemy.orm import create_session, mapper
 from sqlalchemy.exc import NoSuchTableError, SQLAlchemyError
@@ -1962,3 +1965,118 @@ class PkgsDatabase(DatabaseHelper):
         else:
             result["valid_path"] = False
         return result
+
+    @DatabaseHelper._sessionm
+    def find_share_by_entity_names(self, session, name: str, complete_name: str):
+        """
+        Tente d'identifier la ligne pkgs_shares liée via name/comments.
+        Retourne un dict {id, name, comments, share_path} ou None.
+        """
+        row = session.execute(text("""
+            SELECT id, name, comments, share_path
+            FROM pkgs_shares
+            WHERE name = :n OR comments = :c
+            ORDER BY id DESC
+            LIMIT 1
+        """), {"n": name, "c": complete_name}).mappings().first()
+        return dict(row) if row else None
+
+    @DatabaseHelper._sessionm
+    def add_pkgs_shares(self, session, name, complete_name, dl_tag):
+        share_path = f"/var/lib/pulse2/packages/sharing/{dl_tag}"
+
+        sql = text("""
+            INSERT INTO pkgs_shares
+                (name, comments, type, uri, ars_id, share_path)
+            VALUES
+                (:name, :comments, :type, :uri, :ars_id, :share_path)
+            RETURNING id, name, comments, type, uri, ars_id, share_path
+        """)
+
+        params = {
+            "name": name,
+            "comments": complete_name,
+            "type": "local",
+            "uri": "local",
+            "ars_id": 1,
+            "share_path": share_path,
+        }
+
+        result = session.execute(sql, params)
+        row = result.mappings().one()
+        session.commit()
+
+        return row.get("id")
+
+    @DatabaseHelper._sessionm
+    def add_pkgs_rules_local(self, session, user, id_pkgs_shares):
+        sql = text("""
+            INSERT INTO pkgs_rules_local
+                (pkgs_rules_algos_id, `order`, subject, permission, pkgs_shares_id)
+            VALUES
+                (:algo_id, :order, :subject, :permission, :pkgs_shares_id)
+            RETURNING id, pkgs_rules_algos_id, `order`, subject, permission, pkgs_shares_id
+        """)
+
+        params = {
+            "algo_id": 1,
+            "order": 10,
+            "subject": user,
+            "permission": 'rw',
+            "pkgs_shares_id": id_pkgs_shares,
+        }
+
+        result = session.execute(sql, params)
+        row = result.mappings().one()
+        session.commit()
+
+        return dict(row)
+
+    @DatabaseHelper._sessionm
+    def delete_rules_by_share_ids(self, session, ids: list[int]) -> int:
+        if not ids: return 0
+        res = session.execute(text("DELETE FROM pkgs_rules_local WHERE pkgs_shares_id IN :ids")
+                              .bindparams(bindparam("ids", expanding=True)),
+                              {"ids": ids})
+        session.commit()
+        return res.rowcount
+
+    @DatabaseHelper._sessionm
+    def delete_shares_by_ids(self, session, ids: list[int]) -> int:
+        if not ids: return 0
+        res = session.execute(text("DELETE FROM pkgs_shares WHERE id IN :ids")
+                              .bindparams(bindparam("ids", expanding=True)),
+                              {"ids": ids})
+        session.commit()
+        return res.rowcount
+
+    @DatabaseHelper._sessionm
+    def update_pkgs_shares_names_by_dl_tag(self, session, dl_tag: str, name: str, complete_name: str) -> int:
+        share_path = f"/var/lib/pulse2/packages/sharing/{dl_tag}"
+        res = session.execute(text("""
+            UPDATE pkgs_shares
+            SET name = :n, comments = :c
+            WHERE share_path = :p
+        """), {"n": name, "c": complete_name, "p": share_path})
+        session.commit()
+        return res.rowcount
+
+    @DatabaseHelper._sessionm
+    def update_pkgs_rules_local(self, session, user, id_share):
+        res = session.execute(text("""
+            UPDATE pkgs_rules_local
+            SET pkgs_shares_id = :id_share
+            WHERE subject = :user
+        """), {"id_share" : id_share, "user" : user})
+        session.commit()
+        return res.rowcount
+
+    @DatabaseHelper._sessionm
+    def delete_pkgs_rules_local_by_name(self, session, user):
+        res = session.execute(text("""
+            DELETE FROM
+                pkgs_rules_local
+            WHERE subject = :user
+        """), {"user": user})
+        session.commit()
+        return res.rowcount

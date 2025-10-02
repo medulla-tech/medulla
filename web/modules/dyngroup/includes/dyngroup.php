@@ -32,20 +32,27 @@ function countAllGroups($params = array())
 }
 
 function getAllGroups($params = array()) # canShow
-{# xmlrpc call to get all groups
+{
+    # xmlrpc call to get all groups
     $params['I_REALLY_WANT_TO_BE_A_HASH'] = true;
     $groups = __xmlrpc_getallgroups($params);
 
-    # foreach to convert into Group
     $ret = array();
+
     foreach ($groups as $group) {
         $g = new Group($group['id']);
-        $g->name = $group['name'];
-        $g->is_owner = (isset($group['is_owner'])) ? $group['is_owner'] : 0;
+
+        # Boucle sur toutes les clés pour assigner à l'objet
+        foreach ($group as $key => $value) {
+            $g->$key = $value;
+        }
+
         $ret[] = $g;
     }
+
     return $ret;
 }
+
 
 function countAllProfiles($params = array())
 {

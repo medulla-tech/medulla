@@ -1,5 +1,7 @@
+# -*- coding:Utf-8; -*
 # SPDX-FileCopyrightText: 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
-# SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net>
+# SPDX-FileCopyrightText: 2016-2023 Siveo, http://www.siveo.net
+# SPDX-FileCopyrightText: 2024-2025 Medulla, http://www.medulla-tech.io
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 """
@@ -12,7 +14,12 @@ from mmc.support.mmctools import (
     RpcProxyI,
     ContextMakerI,
     SecurityContext,
+    EnhancedSecurityContext,
+    update_filter
 )
+from mmc.plugins.base import (with_xmpp_context,
+                              with_optional_xmpp_context,
+                              Contexte_XmlRpc_surcharge_info_Glpi)
 from mmc.plugins.base.computers import ComputerManager
 from mmc.plugins.base.provisioning import ProvisioningManager
 from mmc.plugins.base.output import XLSGenerator
@@ -22,6 +29,7 @@ from mmc.plugins.glpi.computers import GlpiComputers
 from mmc.plugins.glpi.provisioning import GlpiProvisioner
 from pulse2.managers.location import ComputerLocationManager
 from mmc.plugins.glpi.location import GlpiLocation
+import inspect
 
 from pulse2.version import getVersion, getRevision  # pyflakes.ignore
 
@@ -31,6 +39,7 @@ from mmc.plugins.glpi.health import scheduleCheckStatus
 import logging
 
 APIVERSION = "0:0:0"
+logger = logging.getLogger()
 
 NOAUTHNEEDED = [
     "getMachineUUIDByMacAddress",
@@ -66,18 +75,54 @@ def activate():
 
 
 class ContextMaker(ContextMakerI):
+    """
+    Fabrique de contextes personnalisés pour XMPP, héritée de ContextMakerI.
+    Sert à créer et initialiser un objet de type `EnhancedSecurityContext`.
+
+    appeler sur chaque module a l'initialiasation'
+
+    Méthodes
+    --------
+    getContext() :
+        Crée et retourne un contexte sécurisé enrichi contenant les informations
+        de l'utilisateur et de la requête courante.
+    """
+
     def getContext(self):
-        s = SecurityContext()
+        """
+        Crée un contexte de type `EnhancedSecurityContext` pour l'utilisateur courant.
+
+        Retourne
+        --------
+        EnhancedSecurityContext
+            Contexte initialisé avec :
+              - `userid` : l'identifiant de l'utilisateur courant
+              - `request` : la requête associée
+              - `session` : la session courante
+
+        Effets de bord
+        --------------
+        - Écrit des logs de niveau `error` lors de la création du contexte.
+        """
+        s = EnhancedSecurityContext()
         s.userid = self.userid
+        s.request = self.request
+        s.session = self.session
         return s
 
-
 class RpcProxy(RpcProxyI):
-    def get_machines_list(self, start, end, ctx):
-        return xmlrpcCleanup(Glpi().get_machines_list(start, end, ctx))
 
-    def get_machines_list1(self, start, end, ctx):
-        return xmlrpcCleanup(Glpi().get_machines_list1(start, end, ctx))
+    @with_optional_xmpp_context
+    def get_machines_list(self, start, end, filter, ctx=None):
+        filter = update_filter(filter, ctx.get_session_info()['mondict']['liste_entities_user'])
+        logger.debug("filter : %s " % filter)
+        return xmlrpcCleanup(Glpi().get_machines_list(start, end, filter))
+
+    @with_optional_xmpp_context
+    def get_machines_list1(self, start, end, filter, ctx=None):
+        filter = update_filter(filter, ctx.get_session_info()['mondict']['liste_entities_user'])
+        logger.debug("filter : %s " % filter)
+        return xmlrpcCleanup(Glpi().get_machines_list1(start, end, filter))
 
     def getMachineNumberByState(self):
         ctx = self.currentContext
@@ -232,6 +277,8 @@ def hasKnownOS(uuid):
 def getLocationsForUser(*args, **kwargs):
     return xmlrpcCleanup(Glpi().getLocationsForUser(*args, **kwargs))
 
+def getLocationsForUsersName(*args, **kwargs):
+    return xmlrpcCleanup(Glpi().getLocationsForUsersName(*args, **kwargs))
 
 def setLocationsForUser(*args, **kwargs):
     return xmlrpcCleanup(Glpi().setLocationsForUser(*args, **kwargs))
@@ -337,6 +384,37 @@ def get_machine_for_hostname(strlisthostnale, filter="", start=0, end=0):
         Glpi().get_machine_for_hostname(strlisthostnale, filter, start, end)
     )
 
+
+def get_user_by_name(name):
+     return xmlrpcCleanup(Glpi().get_user_by_name(name))
+
+def get_entities_with_counts( colonne: bool = True,
+                              entities: list[int] = None):
+    return xmlrpcCleanup(Glpi().get_entities_with_counts(colonne = colonne,
+                                        entities=entities))
+
+def get_entities_with_counts_root( filter: str = None,
+                                   start: int = -1,
+                                   end: int = -1,
+                                   colonne: bool = True,
+                                   entities: list[int] = None):
+    return xmlrpcCleanup(Glpi().get_entities_with_counts_root( filter=filter,
+                                                               start=-1,
+                                                               end=-1,
+                                                               colonne=colonne,
+                                                               entities=entities))
+
+def set_user_api_token(user_id, api_token):
+    return xmlrpcCleanup(Glpi().set_user_api_token(user_id, api_token))
+
+def get_user_profile_email(id_user, id_profile, id_entity):
+    return xmlrpcCleanup(Glpi().get_user_profile_email(id_user, id_profile, id_entity))
+
+def get_user_identifier(id_user):
+    return xmlrpcCleanup(Glpi().get_user_identifier(id_user))
+
+def get_complete_name(id_entity):
+    return xmlrpcCleanup(Glpi().get_complete_name(id_entity))
 
 def get_machine_for_id(strlistuuid, filter="", start=0, end=0):
     return xmlrpcCleanup(Glpi().get_machine_for_id(strlistuuid, filter, start, end))

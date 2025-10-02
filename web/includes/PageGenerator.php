@@ -1,16 +1,18 @@
 <?php
 /*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
- * (c) 2007-2010 Mandriva, http://www.mandriva.com
- * (c) 2021-2022 Siveo, http://siveo.net
+ * (c) 2007 Mandriva, http://www.mandriva.com
+ * (c) 2016-2023 Siveo, http://www.siveo.net
+ * (c) 2024-2025 Medulla, http://www.medulla-tech.io
+ *
  * $Id$
  *
- * This file is part of Management Console (MMC).
+ * This file is part of MMC, http://www.medulla-tech.io
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ * the Free Software Foundation; either version 3 of the License, or
+ * any later version.
  *
  * MMC is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -18,13 +20,16 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
+ * along with MMC; If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 require("FormGenerator.php");
 require_once("utils.inc.php");
 
 /**
- * return an uniqId (use full for javascript auto generation
+ * Generates a unique ID for auto-generation in JavaScript or other similar contexts.
+ * The ID is incremented each time the function is called, ensuring uniqueness.
+ * This ID can be used to generate dynamic HTML elements, such as form fields, with unique IDs.
  */
 function getUniqId()
 {
@@ -34,19 +39,18 @@ function getUniqId()
 }
 
 /**
- * can echo obj and string with the same function
- * similar to "echo" in PHP5
+ * This function allows for echoing objects and strings using the same function, similar to "echo" in PHP5.
  */
-function echo_obj($obj)
-{
-
+function echo_obj($obj) {
+    // Check if the variable is an object and convert it to a string
     if (is_object($obj)) {
-        echo nl2br($obj->__toString());
+        // Convert the object to a string and replace new lines with <br> tags for formatting purposes
+        echo nl2br(strval($obj));
     } elseif (is_bool($obj)) {
-        if ($obj) {
-            echo '<img src="img/other/yes.svg" alt="yes" width="25" height="25" />';
-        }
+        // Display an image of 'yes.svg' if the boolean is true, otherwise leave the output blank
+        echo $obj ? '<img src="img/other/yes.svg" alt="yes" width="25" height="25" />' : '';
     } else {
+        // Print the given string with new lines replaced by <br> tags for formatting purposes
         echo nl2br($obj);
     }
 }
@@ -56,13 +60,21 @@ function echo_obj($obj)
  */
 function debug($obj, $return = false)
 {
-
+    // Define a string to hold the output in a preformatted style with Courier font and bold text
     $s = '<pre style="font-family:Courier, monospace; font-weight:bold ">';
+
+    // Print the given object in a readable format using print_r()
     $s .= print_r($obj, true);
+
+    // Close the preformatted string and output it
     $s .= '</pre>';
+
+    // If the return variable is set to true, return the debug output instead of printing it
     if ($return) {
+        // Return the generated debug output as a string
         return $s;
     } else {
+        // Otherwise, print the debug output directly to the screen
         print $s;
     }
 }
@@ -144,6 +156,18 @@ class EditInPlace extends ActionEncapsulator
  */
 class ActionItem
 {
+    /**
+    *  Constructor
+    * @param $desc         description
+    * @param $action       string include in the url
+    * @param $classCss     class for CSS like "supprimer" or other class define in the CSS global.css
+    * @param $paramString  add "&$param=" at the very end of the url
+    * @param $module       module name
+    * @param $submod       submodule name
+    * @param $tab          optional tab
+    * @param $mod          optional mod flag
+    * @param $staticParams tableau associatif de paramètres GET statiques ajoutés à l'URL
+    */
     public $desc;
     public $action;
     public $classCss;
@@ -153,6 +177,7 @@ class ActionItem
     public $mod;
     public $path;
     public $tab;
+    public $staticParams; // pour les paramètres fixes ajoutés
 
     /**
      *  Constructor
@@ -162,28 +187,30 @@ class ActionItem
      *    in the CSS global.css
      * @param $paramString add "&$param=" at the very end of the url
      */
-    public function __construct($desc, $action, $classCss, $paramString, $module = null, $submod = null, $tab = null, $mod = false)
-    {
-        $this->desc = $desc;
-        $this->action = $action;
-        $this->classCss = $classCss;
+    public function __construct(
+        $desc,
+        $action,
+        $classCss,
+        $paramString,
+        $module = null,
+        $submod = null,
+        $tab = null,
+        $mod = false,
+        $staticParams = null
+    ) {
+        $this->desc        = $desc;
+        $this->action      = $action;
+        $this->classCss    = $classCss;
         $this->paramString = $paramString;
-        if ($module == null) {
-            $this->module = $_GET["module"];
-        } else {
-            $this->module = $module;
-        }
-        if ($submod == null) {
-            $this->submod = $_GET["submod"];
-        } else {
-            $this->submod = $submod;
-        }
-        $this->tab = $tab;
-        $this->mod = $mod;
-        $this->path = $this->module . "/" . $this->submod . "/" . $this->action;
+        $this->module      = $module ?? $_GET["module"];
+        $this->submod      = $submod ?? $_GET["submod"];
+        $this->tab         = $tab;
+        $this->mod         = $mod;
+        $this->path        = $this->module . "/" . $this->submod . "/" . $this->action;
         if ($this->tab != null) {
             $this->path .= "/" . $this->tab;
         }
+        $this->staticParams = is_array($staticParams) ? $staticParams : array();
     }
 
     /**
@@ -253,16 +280,46 @@ class ActionItem
     }
 
     /**
-     * Build an URL chunk using a array of option => value
-     */
+    * Construit une chaîne de paramètres GET à partir d'un tableau associatif.
+    * ------------------------------------------------------------------------
+    * - Les paramètres "statiques" définis dans $this->staticParams sont
+    *   fusionnés avec les paramètres passés en argument ($arr).
+    * - En cas de clé en doublon, ce sont les valeurs de $arr (dynamiques)
+    *   qui prennent le dessus.
+    * - Chaque clé/valeur est automatiquement encodée pour être conforme à l'URL.
+    *
+    * @param array $arr Tableau associatif de paramètres dynamiques
+    *                   (clé => valeur) à ajouter à l'URL.
+    *
+    * @return string Chaîne formatée de type "&amp;key=value&amp;key2=value2"
+    *
+    * Exemple :
+    *   $this->staticParams = array('entity' => 1, 'restreint' => 1);
+    *   $arr = array('login' => 'root', 'restreint' => 2);
+    *
+    *   Résultat :
+    *   "&amp;entity=1&amp;restreint=2&amp;login=root"
+    */
     public function buildUrlChunk($arr)
     {
+        // S'assurer que $arr est bien un tableau
+        if (!is_array($arr)) {
+            $arr = [];
+        }
+
+        // S'assurer que staticParams est bien un tableau
+        $static = is_array($this->staticParams) ? $this->staticParams : [];
+
+        // Fusion des paramètres fixes + dynamiques
+        $merged = array_merge($static, $arr);
+
         $urlChunk = "";
-        foreach ($arr as $option => $value) {
+        foreach ($merged as $option => $value) {
             $urlChunk .= "&amp;" . $option . "=" . urlencode($value);
         }
         return $urlChunk;
     }
+
 
     /**
      * display help (not use for the moment)
@@ -275,7 +332,53 @@ class ActionItem
         $str .= " </a>" . $this->desc . "</li>";
         return $str;
     }
+    /**
+    * Génère plusieurs liens pour la même action, à partir d'une liste de valeurs
+    *
+    * @param array $paramsList  tableau de valeurs pour le paramètre principal
+    *                           Exemple : ['root', 'jfk', 'admin']
+    * @param array $extraParams tableau associatif commun de paramètres supplémentaires
+    *                           Exemple : ['restreint' => 1, 'entity' => 1]
+    */
+    public function displayMulti($paramsList, $extraParams = array())
+    {
+        if (!is_array($paramsList)) {
+            return; // sécurité : on attend bien un tableau
+        }
 
+        foreach ($paramsList as $param) {
+            // On appelle simplement display() pour chaque valeur
+            $this->display($param, $extraParams);
+        }
+    }
+    /**
+    * Variante de displayWithRight qui ajoute toujours le paramètre principal
+    * et préserve les paramètres additionnels (restreint, entity, etc.)
+    * Sans modifier la méthode d'origine.
+    */
+    public function displayWithRightFull($param, $extraParams = array())
+    {
+        // On force $extraParams à être un tableau
+        if (!is_array($extraParams)) {
+            $extraParams = array();
+        }
+
+        // Ajouter 'mod' seulement s'il n'existe pas déjà
+        if (!array_key_exists('mod', $extraParams)) {
+            $extraParams['mod'] = $this->mod;
+        }
+
+        // Toujours inclure le paramètre principal (id, login, etc.)
+        $extraParams[$this->paramString] = $param;
+
+        // Construction de l'URL
+        $urlChunk = $this->buildUrlChunk($extraParams);
+
+        // Affichage du lien
+        echo "<li class=\"" . $this->classCss . "\">";
+        echo "<a title=\"" . $this->desc . "\" href=\"" . urlStr($this->path) . $urlChunk . "\">&nbsp;</a>";
+        echo "</li>";
+    }
 }
 
 /**
@@ -3090,6 +3193,12 @@ class Form extends HtmlContainer
     {
         $b = new Button();
         $this->buttons[] = $b->getValidateButtonString($name);
+    }
+
+    public function addValidateButtonWithValue($name, $value)
+    {
+        $b = new Button();
+        $this->buttons[] = $b->getButtonString($name, $value);
     }
 
     public function addCancelButton($name)

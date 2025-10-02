@@ -276,6 +276,12 @@ $page = new Page("approve_rules", _T('Automatic approval rules', 'updates'));
 $page->setFile("modules/updates/updates/approve_rules.php");
 $submod->addPage($page);
 
+/// choose produit
+$page = new Page("approve_products", _T('Approve produit Microsoft pour mise a jour', 'updates'));
+$page->setFile("modules/updates/updates/approve_products.php");
+$submod->addPage($page);
+
+
 $mod->addSubmod($submod);
 
 $MMCApp = &MMCApp::getInstance();

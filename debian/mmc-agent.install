@@ -1,4 +1,5 @@
 usr/lib/python3/*-packages/mmc/agent.py
+usr/lib/python3/*-packages/mmc/utils.py
 usr/sbin/mmc-agent
 usr/sbin/mmc-add-schema
 usr/sbin/mds-report

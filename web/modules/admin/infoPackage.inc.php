@@ -1,13 +1,16 @@
 <?php
-/**
- * (c) 2020-2021 Siveo, http://siveo.net
+/*
+ * (c) 2016-2023 Siveo, http://www.siveo.net
+ * (c) 2024-2025 Medulla, http://www.medulla-tech.io
  *
- * This file is part of Management Console (MMC).
+ * $Id$
+ *
+ * This file is part of MMC, http://www.medulla-tech.io
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ * the Free Software Foundation; either version 3 of the License, or
+ * any later version.
  *
  * MMC is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -15,13 +18,13 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with MMC; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ * along with MMC; If not, see <http://www.gnu.org/licenses/>.
+ * file: admin/infoPackage.inc.php
  */
 require_once("modules/medulla_server/version.php");
 
 $mod = new Module("admin");
-$mod->setVersion("5.3.0");
+$mod->setVersion("5.4.0");
 //$mod->setRevision('');
 $mod->setDescription(_T("Admin", "admin"));
 $mod->setAPIVersion("1:0:0");
@@ -146,10 +149,6 @@ $page = new Page("editCluster", _T("Edit Cluster", "admin"));
 $page->setFile("modules/admin/admin/editCluster.php");
 $submod->addPage($page);
 
-$page = new Page("delete",_T("Delete a Cluster", 'admin'));
-$page->setFile("modules/admin/admin/deleteCluster.php", array("noHeader"=>True,"visible"=>False));
-$submod->addPage($page);
-
 $page = new Page("newCluster", _T("New Cluster", "admin"));
 $page->setFile("modules/admin/admin/newCluster.php");
 $submod->addPage($page);
@@ -186,8 +185,67 @@ $page->setFile("modules/admin/admin/ajaxunban.php");
 $page->setOptions(array("AJAX" => true, "visible" => false));
 $submod->addPage($page);
 
+//--------------------- Entity Manager ----------------
+$page = new Page("entitiesManagement", _T('Entities Management', 'admin'));
+$page->setFile("modules/admin/admin/entitiesManagement.php");
+$submod->addPage($page);
+
+$page = new Page("ajaxEntitiesManagement", _T("Entities Management", "admin"));
+$page->setFile("modules/admin/admin/ajaxEntitiesManagement.php");
+$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
+$submod->addPage($page);
+
+$page = new Page("editEntity", _T('Edit Entity', 'admin'));
+$page->setFile("modules/admin/admin/editEntity.php");
+$submod->addPage($page);
+
+$page = new Page("deleteEntity", _T('Delete Entitiy', 'admin'));
+$page->setFile("modules/admin/admin/deleteEntity.php");
+$submod->addPage($page);
+
+$page = new Page("listUsersofEntity", _T('List users of Entity', 'admin'));
+$page->setFile("modules/admin/admin/listUsersofEntity.php");
+$submod->addPage($page);
+
+$page = new Page("ajaxListUsersofEntity", _T("List users of Entity", "admin"));
+$page->setFile("modules/admin/admin/ajaxListUsersofEntity.php");
+$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
+$submod->addPage($page);
+
+$page = new Page("editUser", _T('Edit User', 'admin'));
+$page->setFile("modules/admin/admin/editUser.php");
+$submod->addPage($page);
+
+$page = new Page("deleteUser", _T('Delete User', 'admin'));
+$page->setFile("modules/admin/admin/deleteUser.php");
+$submod->addPage($page);
+
+$page = new Page("desactivateUser", _T('Desactivate User', 'admin'));
+$page->setFile("modules/admin/admin/desactivateUser.php");
+$submod->addPage($page);
+
+$page = new Page("downloadAgent", _T('Download Agent', 'admin'));
+$page->setFile("modules/admin/admin/downloadAgent.php");
+$submod->addPage($page);
+
+$page = new Page("manageproviders", _T('Manage Providers', 'admin'));
+$page->setFile("modules/admin/admin/manageproviders.php");
+$submod->addPage($page);
+
+$page = new Page("ajaxManageProviders", _T("Manage Providers", "admin"));
+$page->setFile("modules/admin/admin/ajaxManageProviders.php");
+$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
+$submod->addPage($page);
+
+$page = new Page("editProvider", _T('Edit Provider', 'admin'));
+$page->setFile("modules/admin/admin/editProvider.php");
+$submod->addPage($page);
+
+$page = new Page("deleteProvider", _T('Delete Provider', 'admin'));
+$page->setFile("modules/admin/admin/deleteProvider.php");
+$submod->addPage($page);
 
 $mod->addSubmod($submod);
 
-$MMCApp = & MMCApp::getInstance();
+$MMCApp = &MMCApp::getInstance();
 $MMCApp->addModule($mod);

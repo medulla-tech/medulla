@@ -21,7 +21,7 @@
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
 pythonmodules = core core.audit core.signals core.tasks \
-				support client database \
+				support support.apirest support.apirest.glpi client database \
 				plugins plugins.base plugins.ppolicy plugins.dashboard \
 				plugins.services plugins.dashboard.panels plugins.report
 

@@ -27,8 +27,8 @@
 
 %define use_git                1
 %define git                    SHA
-%define real_version           5.3.0
-%define mmc_version            5.3.0
+%define real_version           5.4.0
+%define mmc_version            5.4.0
 
 Summary:	Management Console
 Name:		medulla
@@ -979,6 +979,7 @@ This is the underlying service used by the MMC web interface.
 %doc %{_mandir}/man1/mmc-stats.1.*
 %dir %{python3_sitelib}/mmc
 %{python3_sitelib}/mmc/agent.py*
+%{python3_sitelib}/mmc/utils.py*
 %{_docdir}/pulse2/contrib/monit/mmc-agent
 %{_datadir}/mmc/providers.php
 
@@ -1215,7 +1216,6 @@ fi
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/apache/mmc.conf
 %attr(0640,root,root) %config(noreplace) %_webappconfdir/mmc.conf
 %attr(0640,root,apache) %config(noreplace) %{_sysconfdir}/mmc/mmc.ini
-%attr(0640,root,apache) %config(noreplace) %{_sysconfdir}/mmc/authproviders.ini
 %dir %{_datadir}/mmc
 %{_datadir}/mmc/forgotpassword.php
 %{_datadir}/mmc/license.php
@@ -1406,8 +1406,6 @@ cp %{buildroot}%{_sysconfdir}/mmc/apache/mmc.conf %{buildroot}%_webappconfdir/mm
 
 mkdir -p %buildroot%_prefix/lib/systemd/system/
 cp services/systemd/mmc-agent.service %buildroot%_prefix/lib/systemd/system/
-
-cp ./agent/conf/agent/authproviders.ini.in %buildroot%_sysconfdir/mmc/authproviders.ini
 
 # Cleanup
 find '%{buildroot}' -name '*.pyc' -o -name '*.pyo' | xargs rm -fv

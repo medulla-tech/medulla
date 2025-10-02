@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-30 17:46+0200\n"
+"POT-Creation-Date: 2025-08-08 11:49+0200\n"
 "PO-Revision-Date: 2018-02-13 15:15+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Polish (Poland) (https://app.transifex.com/medulla/teams/72118/pl_PL/)\n"
@@ -90,17 +90,15 @@ msgid ""
 msgstr ""
 
 #: graph/header.inc.php:213 graph/header.inc.php:249
-#: modules/medulla_server/update/viewProductUpdates.php:122
 msgid "Yes"
 msgstr ""
 
 #: graph/header.inc.php:216 graph/header.inc.php:218
-#: modules/medulla_server/update/viewProductUpdates.php:122
 msgid "No"
 msgstr ""
 
-#: graph/header.inc.php:251 includes/FormGenerator.php:718
-#: includes/PageGenerator.php:2731
+#: graph/header.inc.php:251 includes/FormGenerator.php:713
+#: includes/PageGenerator.php:2734
 msgid "Close"
 msgstr ""
 
@@ -309,209 +307,213 @@ msgstr ""
 msgid "MMC agent"
 msgstr ""
 
-#: includes/FormGenerator.php:79 includes/FormGenerator.php:326
-#: includes/FormGenerator.php:849 includes/FormGenerator.php:997
+#: includes/FormGenerator.php:73 includes/FormGenerator.php:320
+#: includes/FormGenerator.php:844 includes/FormGenerator.php:992
 msgid "unavailable"
 msgstr "niedostępne"
 
-#: includes/FormGenerator.php:257
+#: includes/FormGenerator.php:251
 msgid "Delete photo"
 msgstr "Usuń zdjęcie"
 
-#: includes/FormGenerator.php:311
+#: includes/FormGenerator.php:305
 msgid "yes"
 msgstr "tak"
 
-#: includes/FormGenerator.php:314
+#: includes/FormGenerator.php:308
 msgid "no"
 msgstr "nie"
 
-#: includes/FormGenerator.php:546
+#: includes/FormGenerator.php:541
 msgid "Year: "
 msgstr "Rok: "
 
-#: includes/FormGenerator.php:546
+#: includes/FormGenerator.php:541
 msgid "Month: "
 msgstr "Miesiąc: "
 
-#: includes/FormGenerator.php:546
+#: includes/FormGenerator.php:541
 msgid "Day: "
 msgstr "Dzień: "
 
-#: includes/FormGenerator.php:547
+#: includes/FormGenerator.php:542
 msgid "Hour: "
 msgstr "Godzina: "
 
-#: includes/FormGenerator.php:547
+#: includes/FormGenerator.php:542
 msgid "Min.: "
 msgstr "Minuta: "
 
-#: includes/FormGenerator.php:547
+#: includes/FormGenerator.php:542
 msgid "Sec.: "
 msgstr "Sek.:"
 
-#: includes/FormGenerator.php:633 includes/FormGenerator.php:639
+#: includes/FormGenerator.php:628 includes/FormGenerator.php:634
 #: modules/base/includes/AjaxFilterLog.inc.php:168
 #: modules/base/includes/AjaxFilterLog.inc.php:172
 msgid "or <a href='#'"
 msgstr "lub <a href='#'"
 
-#: includes/FormGenerator.php:635
+#: includes/FormGenerator.php:630
 #: modules/base/includes/AjaxFilterLog.inc.php:170
 msgid "value=\"now\";'>now</a>"
 msgstr "value=\"now\";'>teraz</a>"
 
-#: includes/FormGenerator.php:641
+#: includes/FormGenerator.php:636
 #: modules/base/includes/AjaxFilterLog.inc.php:174
 msgid "value=\"never\";'>never</a>"
 msgstr "value=\"never\";'>nigdy</a>"
 
-#: includes/FormGenerator.php:694
+#: includes/FormGenerator.php:689
 msgid "January"
 msgstr ""
 
-#: includes/FormGenerator.php:694
+#: includes/FormGenerator.php:689
 msgid "February"
 msgstr ""
 
-#: includes/FormGenerator.php:694
+#: includes/FormGenerator.php:689
 msgid "March"
 msgstr ""
 
-#: includes/FormGenerator.php:694
+#: includes/FormGenerator.php:689
 msgid "April"
 msgstr ""
 
-#: includes/FormGenerator.php:695
+#: includes/FormGenerator.php:690
 msgid "May"
 msgstr ""
 
-#: includes/FormGenerator.php:695
+#: includes/FormGenerator.php:690
 msgid "June"
 msgstr ""
 
-#: includes/FormGenerator.php:695
+#: includes/FormGenerator.php:690
 msgid "July"
 msgstr ""
 
-#: includes/FormGenerator.php:695
+#: includes/FormGenerator.php:690
 msgid "August"
 msgstr ""
 
-#: includes/FormGenerator.php:696
+#: includes/FormGenerator.php:691
 msgid "September"
 msgstr ""
 
-#: includes/FormGenerator.php:696
+#: includes/FormGenerator.php:691
 msgid "October"
 msgstr ""
 
-#: includes/FormGenerator.php:696
+#: includes/FormGenerator.php:691
 msgid "November"
 msgstr ""
 
-#: includes/FormGenerator.php:696
+#: includes/FormGenerator.php:691
 msgid "December"
 msgstr ""
 
-#: includes/FormGenerator.php:706
+#: includes/FormGenerator.php:701
 msgid "Sunday"
 msgstr ""
 
-#: includes/FormGenerator.php:706
+#: includes/FormGenerator.php:701
 msgid "Monday"
 msgstr ""
 
-#: includes/FormGenerator.php:706
+#: includes/FormGenerator.php:701
 msgid "Tuesday"
 msgstr ""
 
-#: includes/FormGenerator.php:706
+#: includes/FormGenerator.php:701
 msgid "Wednesday"
 msgstr ""
 
-#: includes/FormGenerator.php:707
+#: includes/FormGenerator.php:702
 msgid "Thursday"
 msgstr ""
 
-#: includes/FormGenerator.php:707
+#: includes/FormGenerator.php:702
 msgid "Friday"
 msgstr ""
 
-#: includes/FormGenerator.php:707
+#: includes/FormGenerator.php:702
 msgid "Saturday"
 msgstr ""
 
-#: includes/FormGenerator.php:719 includes/PageGenerator.php:1237
-#: includes/PageGenerator.php:1495 includes/ajaxTools.php:63
+#: includes/FormGenerator.php:714 includes/PageGenerator.php:1240
+#: includes/PageGenerator.php:1498 includes/ajaxTools.php:63
 #: includes/ajaxTools.php:69 modules/base/includes/AjaxFilterLog.inc.php:96
 #: modules/base/includes/AjaxFilterLog.inc.php:100
 msgid "Previous"
 msgstr "Poprzednia"
 
-#: includes/FormGenerator.php:720 includes/PageGenerator.php:1251
-#: includes/PageGenerator.php:1505 includes/ajaxTools.php:74
+#: includes/FormGenerator.php:715 includes/PageGenerator.php:1254
+#: includes/PageGenerator.php:1508 includes/ajaxTools.php:74
 #: includes/ajaxTools.php:82 modules/base/includes/AjaxFilterLog.inc.php:107
 #: modules/base/includes/AjaxFilterLog.inc.php:111
 msgid "Next"
 msgstr "Dalej"
 
-#: includes/FormGenerator.php:721
+#: includes/FormGenerator.php:716
 msgid "Now"
 msgstr ""
 
-#: includes/FormGenerator.php:809 modules/base/groups/localSidebar.php:28
+#: includes/FormGenerator.php:804
+#: modules/admin/admin/ajaxEntitiesManagement.php:58
+#: modules/base/groups/localSidebar.php:28
 msgid "Add"
 msgstr "Dodaj"
 
-#: includes/FormGenerator.php:1158
+#: includes/FormGenerator.php:1153
 msgid "Toggle selection"
 msgstr ""
 
-#: includes/FormGenerator.php:1314 modules/ppolicy/default/delete.php:45
-#: modules/base/groups/ajaxFilter.php:68 modules/base/users/ajaxFilter.php:140
-#: modules/base/views/index.tpl.php:92
+#: includes/FormGenerator.php:1309
+#: modules/admin/admin/ajaxEntitiesManagement.php:83
+#: modules/admin/admin/ajaxListUsersofEntity.php:93
+#: modules/ppolicy/default/delete.php:45 modules/base/groups/ajaxFilter.php:68
+#: modules/base/users/ajaxFilter.php:140 modules/base/views/index.tpl.php:92
 msgid "Delete"
 msgstr "Usuń"
 
-#: includes/PageGenerator.php:904 includes/PageGenerator.php:1152
+#: includes/PageGenerator.php:907 includes/PageGenerator.php:1155
 msgid "to"
 msgstr "do"
 
-#: includes/PageGenerator.php:906 includes/PageGenerator.php:1154
+#: includes/PageGenerator.php:909 includes/PageGenerator.php:1157
 #, php-format
 msgid " - Total <b>%s </b>"
 msgstr " - W sumie <b>%s</b> "
 
-#: includes/PageGenerator.php:909 includes/PageGenerator.php:1157
+#: includes/PageGenerator.php:912 includes/PageGenerator.php:1160
 msgid "page"
 msgstr "strona"
 
-#: includes/PageGenerator.php:1272
+#: includes/PageGenerator.php:1275
 msgid "Pagination"
 msgstr ""
 
-#: includes/PageGenerator.php:1348
+#: includes/PageGenerator.php:1351
 msgid "Go to page"
 msgstr ""
 
-#: includes/PageGenerator.php:1809
+#: includes/PageGenerator.php:1812
 msgid "No item available"
 msgstr ""
 
-#: includes/PageGenerator.php:2038
+#: includes/PageGenerator.php:2041
 msgid "Select entity"
 msgstr ""
 
-#: includes/PageGenerator.php:3169 includes/PageGenerator.php:3251
-#: includes/PageGenerator.php:3280
+#: includes/PageGenerator.php:3178 includes/PageGenerator.php:3260
+#: includes/PageGenerator.php:3289
 #: modules/dyngroup/includes/groups.inc.php:364
 #: modules/dyngroup/includes/groups.inc.php:427
 #: modules/base/groups/members.php:308 modules/base/groups/edit.php:128
 msgid "Confirm"
 msgstr "Potwierdź"
 
-#: includes/PageGenerator.php:3174 includes/PageGenerator.php:3256
+#: includes/PageGenerator.php:3183 includes/PageGenerator.php:3265
 #: modules/imaging/imaging/images_iso.php:112
 #: modules/imaging/imaging/multicast.php:409
 #: modules/imaging/manage/master_iso.php:109
@@ -522,11 +524,11 @@ msgstr "Potwierdź"
 msgid "Cancel"
 msgstr "Anuluj"
 
-#: includes/PageGenerator.php:3456
+#: includes/PageGenerator.php:3465
 msgid "Select all"
 msgstr "Zaznacz wszystkie"
 
-#: includes/PageGenerator.php:3456
+#: includes/PageGenerator.php:3465
 msgid "Unselect all"
 msgstr ""
 
@@ -672,7 +674,7 @@ msgstr ""
 #: modules/medulla_server/includes/menu_actionaudit.php:87
 #: modules/admin/admin/ajaxRelaysList.php:46
 #: modules/admin/admin/ajaxRelaysList.php:48
-#: modules/admin/infoPackage.inc.php:65
+#: modules/admin/infoPackage.inc.php:68
 #: modules/base/includes/computers_list.inc.php:124
 #: modules/base/includes/computers_list.inc.php:126
 msgid "Edit config files"
@@ -939,6 +941,28 @@ msgstr ""
 msgid "Delete Cluster"
 msgstr ""
 
+#: modules/admin/admin/ajaxEntitiesManagement.php:57
+#: modules/admin/admin/ajaxListUsersofEntity.php:85
+#: modules/base/users/ajaxFilter.php:135 modules/base/views/index.tpl.php:89
+msgid "Edit"
+msgstr "Edytuj"
+
+#: modules/admin/admin/ajaxEntitiesManagement.php:59
+msgid "Manage users"
+msgstr ""
+
+#: modules/admin/admin/ajaxEntitiesManagement.php:60
+msgid "Download"
+msgstr ""
+
+#: modules/admin/admin/ajaxEntitiesManagement.php:94
+msgid "Editing not allowed"
+msgstr ""
+
+#: modules/admin/admin/ajaxEntitiesManagement.php:95
+msgid "Deleting not allowed"
+msgstr ""
+
 #: modules/admin/admin/ajaxRelaysList.php:73
 msgid "Relay Rules"
 msgstr ""
@@ -955,6 +979,14 @@ msgstr ""
 
 #: modules/admin/admin/ajaxRulesDetail.php:32
 msgid "Edit rule"
+msgstr ""
+
+#: modules/admin/admin/ajaxListUsersofEntity.php:79
+msgid "Enabled"
+msgstr ""
+
+#: modules/admin/admin/ajaxListUsersofEntity.php:79
+msgid "Disabled"
 msgstr ""
 
 #: modules/imaging/includes/includes.php:211 modules/base/status/index.php:101
@@ -2123,10 +2155,6 @@ msgstr "Nazwa"
 #: modules/base/users/ajaxFilter.php:133
 msgid "Telephone"
 msgstr "Telefon"
-
-#: modules/base/users/ajaxFilter.php:135 modules/base/views/index.tpl.php:89
-msgid "Edit"
-msgstr "Edytuj"
 
 #: modules/base/users/ajaxFilter.php:139 modules/base/views/index.tpl.php:91
 msgid "MMC rights"
