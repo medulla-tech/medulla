@@ -27,7 +27,7 @@
 $MMCApp = & MMCApp::getInstance();
 
 $mod = new Module("services");
-$mod->setVersion("5.3.0");
+$mod->setVersion("5.4.0");
 $mod->setRevision('');
 $mod->setDescription(_T("Services management", "services"));
 $mod->setAPIVersion("0:0:0");
