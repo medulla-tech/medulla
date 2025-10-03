@@ -730,3 +730,41 @@ def delete_provider(provider_id: int) -> dict:
         return db.delete_provider(pid)
     except Exception as e:
         return {"ok": False, "deleted": 0, "id": 0, "error": str(e)}
+
+def restart_medulla_services():
+    try:
+        script_path = '/usr/sbin/restart-pulse-services'
+
+        proc = subprocess.Popen(
+            [script_path],
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            start_new_session=True,
+            close_fds=True,
+            env=os.environ.copy(),
+        )
+        return proc.pid
+    except Exception:
+        return None
+
+def regenerate_agent():
+    try:
+        cmd = (
+            "/var/lib/pulse2/clients/generate-pulse-agent.sh && "
+            "/var/lib/pulse2/clients/generate-pulse-agent.sh --minimal"
+        )
+        proc = subprocess.Popen(
+            ["/bin/bash", "-lc", cmd],
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            start_new_session=True,
+            close_fds=True,
+            env=os.environ,
+        )
+        return True
+    except Exception:
+        logging.exception("regenerate_agent failed")
+        return None
+
