@@ -168,7 +168,7 @@ foreach ($settings_saver as $value => $item) {
 
 //-----------------------------------END SAVE SETTINGS
 
-new NotifyWidgetSuccess(_T("Modification sauvegardé", "urbackup"));
+new NotifyWidgetSuccess(_T("Changes saved", "urbackup"));
 header("Location: ".$url);
 exit;
 
