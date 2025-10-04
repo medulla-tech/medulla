@@ -168,8 +168,8 @@ foreach ($settings_saver as $value => $item) {
 
 //-----------------------------------END SAVE SETTINGS
 
-$url = "main.php?module=urbackup&submod=urbackup&action=edit_group_settings&groupid=".$group_id."&groupname=".$group_name;
-
+new NotifyWidgetSuccess(_T("Modification sauvegardé", "urbackup"));
 header("Location: ".$url);
+exit;
 
 ?>
