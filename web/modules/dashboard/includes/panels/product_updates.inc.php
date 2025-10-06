@@ -40,16 +40,16 @@ class UpdatePanel extends Panel {
         $searchLabel        = _T("Search for updates…", 'dashboard');
         $errorLabel         = _T("Error when retrieving updates.", 'dashboard');
 
-        $labelRestart       = _T("Redémarrer les services Medulla");
-        $msgRestart         = _T("Redémarrage en cours… vous allez être redirigé vers la connexion.");
-        $msgIndex           = _T("Le redémarrage se termine… reconnectez-vous dans un instant.");
+        $labelRestart       = _T("Restart Medulla Services");
+        $msgRestart         = _T("Restarting in progress ... You will be redirected to the connection.");
+        $msgIndex           = _T("The restart ends ... reconnect in a moment.");
 
         $labelRegenerate    = _T("Regenerate Agent Machine");
 
         echo <<<HTML
         <center>
             <div id="updates_zone">
-                <button class="btnSecondary" id="fetch_updates_btn" style="margin-top: 24px; margin-bottom: 9px;">
+                <button class="btnSecondary" id="fetch_updates_btn" style="margin-top: 12px; margin-bottom: 9px;">
                     {$btnLabel}
                 </button>
                 <button class="btnSecondary" id="restart_medulla_services" style="margin-top: 12px; margin-bottom: 9px;">
