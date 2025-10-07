@@ -23,6 +23,7 @@
 
 require("graph/navbar.inc.php");
 require("modules/admin/admin/localSidebar.php");
+require_once("includes/utils.inc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 require_once("modules/admin/includes/xmlrpc.php");
 ?>
@@ -338,8 +339,14 @@ if (isset($_POST["bcreate"])) {
     $postedProfileId    = $normId($_POST['profiles_id']  ?? null);
     $postedEntityId     = $normId($_POST['entities_id']  ?? null);
     $postedIsRecursive  = (isset($_POST['is_recursive']) && $_POST['is_recursive'] === '1');
-    $pwd                = $_POST['newPassword']  ?? '';
-    $pwd2               = $_POST['newPassword2'] ?? '';
+    $authSource         = $_POST['auth_source'] ?? 'local';
+
+    if ($authSource === 'oidc') {
+        $pwd = $pwd2 = generatePassword(20, true);
+    } else {
+        $pwd                = $_POST['newPassword']  ?? '';
+        $pwd2               = $_POST['newPassword2'] ?? '';
+    }
 
     $fail = function(string $origin, string $msg) use ($postedUsername) {
         new NotifyWidgetFailure(
@@ -754,6 +761,12 @@ $recSelect->setElements([_T("No", "admin"), _T("Yes", "admin")]);
 $recSelect->setElementsVal(['0','1']); // No->0, Yes->1
 $recSelect->setSelected($isRecursiveDefault);
 
+$authSelect = new SelectItem('auth_source');
+$authSelect->setElements([_T("Local", "admin"), _T("OIDC", "admin")]);
+$authSelect->setElementsVal(['local', 'oidc']);
+$authDefault = (string)($_POST['auth_source'] ?? ($prefill['auth_source'] ?? 'local'));
+$authSelect->setSelected($authDefault);
+
 $addInput = function(ValidatingForm $form, string $name, string $label, string $value = '') use ($safe) {
     $form->add(
         new TrFormElement(
@@ -778,6 +791,8 @@ $form->push(new Table());
 $form->add(new TrFormElement(_T("User Profile", "admin"), $profileSelect));
 $form->add(new TrFormElement(_T("Entity", "admin"), $entitySelect));
 $form->add(new TrFormElement(_T("Apply to sub-entities (recursive)", "admin"), $recSelect));
+
+$form->add(new TrFormElement(_T("Authentication", "admin"), $authSelect));
 
 if ($mode === 'edit') {
     $displayEmail = (string)($prefill['username'] ?? '');
@@ -855,8 +870,11 @@ $form->display();
 
 <script>
 jQuery(function($){
-  // Password popup
+  // IDs
   const PW_ID1='newPassword', PW_ID2='newPassword2';
+  const AUTH_ID='auth_source', MODE_ID='mode';
+
+  // Password popup
   const $pw1=wirePwField(PW_ID1), $pw2=wirePwField(PW_ID2);
   const hasPw = ($pw1?.length && $pw2?.length);
   let $pwHints=null, pwAnchor=null, pwRaf=null, $pwCrit=null;
@@ -876,6 +894,42 @@ jQuery(function($){
     $pw1.on('input', matchPw); $pw2.on('input', matchPw);
     $pw1.closest('form').on('submit', matchPw);
   }
+
+  const $auth = $('#'+AUTH_ID);
+  const isEdit = ($('#'+MODE_ID).val()==='edit');
+  let $pwRows = $(); if(hasPw){ $pwRows = $pw1.closest('tr').add($pw2.closest('tr')); }
+
+  function isLocalAuth(){ return ($auth.val() || 'local') === 'local'; }
+
+  function applyAuthRules(){
+    const local = isLocalAuth();
+
+    if(local){
+      $pwRows.show();
+      if(!isEdit){
+        $pw1.prop('required', true);
+        $pw2.prop('required', true);
+      }else{
+        $pw1.prop('required', false);
+        $pw2.prop('required', false);
+      }
+    }else{
+      $pwRows.hide();
+      if(hasPw){
+        $pw1.val('').removeClass('pw-error');
+        $pw2.val('').removeClass('pw-error');
+        if($pw1[0]?.setCustomValidity) $pw1[0].setCustomValidity('');
+        if($pw2[0]?.setCustomValidity) $pw2[0].setCustomValidity('');
+        $pw2.closest('td').find('.pw-feedback').text('');
+      }
+      hidePwHints();
+      $pw1.prop('required', false);
+      $pw2.prop('required', false);
+    }
+  }
+
+  $auth.on('change', applyAuthRules);
+  applyAuthRules();
 
   function wirePwField(id){
     const $input=$('#'+id); if(!$input.length) return null;
@@ -911,6 +965,7 @@ jQuery(function($){
     if(!$td.find('.pw-feedback').length){ $('<div class="pw-feedback" aria-live="polite"></div>').appendTo($td); }
     return $input;
   }
+
   function ensurePwHints(){
     let $b=$('#pw-hints');
     if(!$b.length){
@@ -952,12 +1007,14 @@ jQuery(function($){
     $pw2.closest('td').find('.pw-feedback').text(forceMsg ? (msg||'') : (ok ? '' : (msg||'Les mots de passe ne correspondent pas.')));
   }
   function matchPw(){
+    if(!isLocalAuth()) { setPwMatch(true,''); return true; }
+
     if(!hasPw) return true;
     const v1=($pw1.val()||'').trim(), v2=($pw2.val()||'').trim();
     const policyOK=pwUpdateDots(v1);
     if($pw1[0]?.setCustomValidity) $pw1[0].setCustomValidity((v1===''||policyOK)?'':'Password does not meet requirements');
     $pw1.toggleClass('pw-error', v1!=='' && !policyOK);
-    if(v1==='' && v2==='') return setPwMatch(true,'');
+    if(v1==='' && v2==='') return setPwMatch(!$('#'+MODE_ID).val() || $('#'+MODE_ID).val()!=='edit' ? false : true, $('#'+MODE_ID).val()==='edit'?'':'Veuillez saisir un mot de passe.');
     if(v1==='' && v2!=='') return setPwMatch(false,"Saisissez d'abord le mot de passe.");
     if(v1!=='' && v2==='') return setPwMatch(false,'Veuillez confirmer le mot de passe.');
     if(v1 !== v2)          return setPwMatch(false,'Les mots de passe ne correspondent pas.');
@@ -1010,8 +1067,10 @@ jQuery(function($){
   $('form').on('submit', function(e){
     let ok=true;
     if(typeof window.__checkEmailUsername==='function') ok=window.__checkEmailUsername() && ok;
-    if($phone.length) ok=(typeof checkPhone==='function' ? checkPhone() : true) && ok;
-    if(hasPw) ok=(matchPw() !== false) && ok;
+    if($phone?.length) ok=(typeof checkPhone==='function' ? checkPhone() : true) && ok;
+
+    if(isLocalAuth() && hasPw) ok=(matchPw() !== false) && ok;
+
     if(!ok){ e.preventDefault(); ($('.email-error, .phone-error, .pw-error').get(0) || this).focus(); }
   });
 });

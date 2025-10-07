@@ -17,37 +17,6 @@ $client = !empty($_SESSION['o']) ? $_SESSION['o'] : 'MMC';
 
 use Jumbojett\OpenIDConnectClient;
 
-function generate_password(int $length = 32): string {
-    if ($length < 4) {
-        throw new InvalidArgumentException('Length must be >= 4');
-    }
-
-    $upper  = 'ABCDEFGHJKLMNPQRSTUVWXYZ';   // no I/O
-    $lower  = 'abcdefghijkmnopqrstuvwxyz';  // no l
-    $digit  = '23456789';                   // no 0/1
-    $symbol = '!@#%+=-_.?,';                // symbols “safe”
-
-    // 1 char from each required set
-    $pwd = [
-        $upper[random_int(0, strlen($upper) - 1)],
-        $lower[random_int(0, strlen($lower) - 1)],
-        $digit[random_int(0, strlen($digit) - 1)],
-        $symbol[random_int(0, strlen($symbol) - 1)],
-    ];
-
-    $all = $upper . $lower . $digit . $symbol;
-    for ($i = 4; $i < $length; $i++) {
-        $pwd[] = $all[random_int(0, strlen($all) - 1)];
-    }
-
-    for ($i = count($pwd) - 1; $i > 0; $i--) {
-        $j = random_int(0, $i);
-        if ($i !== $j) { [$pwd[$i], $pwd[$j]] = [$pwd[$j], $pwd[$i]]; }
-    }
-
-    return implode('', $pwd);
-}
-
 function handleSession() {
     if (isset($_POST['lang'])) {
         $_SESSION['lang'] = htmlspecialchars($_POST['lang'], ENT_QUOTES, 'UTF-8');
@@ -170,7 +139,7 @@ function handleAuthentication($providerKey) {
             }
 
             $newUser     = $userMappedData['uid'] ?? $userInfo->preferred_username;
-            $newPassUser = generate_password(50);
+            $newPassUser = generatePassword(50);
             $userExists  = false;
 
             foreach ($res[1] as $user) {
@@ -195,7 +164,7 @@ function handleAuthentication($providerKey) {
                     $aclString = get_acl_string($userInfo, $prov);
                     $setlmcACL = setAcl($newUser, $aclString);
 
-                    $newPassUser = generate_password(50);
+                    $newPassUser = generatePassword(50);
                     callPluginFunction("changeUserPasswd", [[ $newUser, prepare_string($newPassUser) ]]);
 
                     if (auth_user($newUser, $newPassUser, true)) {
@@ -213,7 +182,7 @@ function handleAuthentication($providerKey) {
                     header("Location: /mmc/index.php"); exit;
                 }
             } else {
-                $newPassUser = generate_password(50);
+                $newPassUser = generatePassword(50);
                 callPluginFunction("changeUserPasswd", [[ $newUser, prepare_string($newPassUser) ]]);
                 $aclString = get_acl_string($userInfo, $prov);
                 $setlmcACL = setAcl($newUser, $aclString);

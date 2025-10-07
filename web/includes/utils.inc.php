@@ -177,3 +177,41 @@ function encryptPassword($password, $secretKey) {
     return base64_encode($encryptedData);
 }
 
+function generatePassword(int $length = 16, bool $avoidAmbiguous = true): string
+{
+    if ($length < 12) $length = 12;
+
+    $upper   = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $lower   = 'abcdefghijklmnopqrstuvwxyz';
+    $digits  = '0123456789';
+    $special = '!@#$%^&*()-_=+[]{}.,:;?/~';
+
+    if ($avoidAmbiguous) {
+        $upper  = str_replace(['O','I'],   '', $upper);
+        $lower  = str_replace(['l','i','o'],'', $lower);
+        $digits = str_replace(['0','1'],   '', $digits);
+    }
+
+    $all = $upper.$lower.$digits.$special;
+
+    $pick = static function (string $pool): string {
+        $i = random_int(0, strlen($pool) - 1);
+        return $pool[$i];
+    };
+
+    // Garantir 1 de chaque
+    $pwd = $pick($upper).$pick($lower).$pick($digits).$pick($special);
+
+    // Complete to $length
+    for ($i = strlen($pwd); $i < $length; $i++) {
+        $pwd .= $pick($all);
+    }
+
+    $arr = str_split($pwd);
+    for ($i = count($arr) - 1; $i > 0; $i--) {
+        $j = random_int(0, $i);
+        [$arr[$i], $arr[$j]] = [$arr[$j], $arr[$i]];
+    }
+    return implode('', $arr);
+}
+
