@@ -59,7 +59,7 @@ $start  = isset($_GET['start']) ? (int)$_GET['start'] : 0;
 $end    = isset($_GET['end']) ? (int)$_GET['start'] + $maxperpage : $maxperpage;
 
 $facilitylevel = 0;
-$profil = !empty($u['profile_name']) ? $u['profile_name'] : _T("non definie", 'admin');
+$profil = !empty($u['profile_name']) ? $u['profile_name'] : _T("Not defined", 'admin');
 
 if (empty($u['api_token'])) {
     $message = sprintf(
@@ -123,12 +123,12 @@ if ($facilitylevel <= 1) {
     );
 
     //Actions
-    $action_edit         = new ActionItem(_("Modifier"), "editEntity", "edit", "", "admin", "admin");
-    $action_add          = new ActionItem(_("Ajouter"), "editEntity", "add", "", "admin", "admin");
-    $action_manageusers  = new ActionItem(_("Gérer les utilisateurs"), "listUsersofEntity", "manageusers", "", "admin", "admin");
-    $action_download     = new ActionItem(_("Télécharger"), "downloadAgent", "download", "", "admin", "admin");
-    $action_non_edit     = new EmptyActionItem1(_("Modification non autorisée"), "", "editg", "", "admin", "admin");
-    $action_non_delete   = new EmptyActionItem1(_("Suppression non autorisée"), "", "deleteg", "", "admin", "admin");
+    $action_edit         = new ActionItem(_("Modify"), "editEntity", "edit", "", "admin", "admin");
+    $action_add          = new ActionItem(_("Add"), "editEntity", "add", "", "admin", "admin");
+    $action_manageusers  = new ActionItem(_("Manage users"), "listUsersofEntity", "manageusers", "", "admin", "admin");
+    $action_download     = new ActionItem(_("Download"), "downloadAgent", "download", "", "admin", "admin");
+    $action_non_edit     = new EmptyActionItem1(_("Unauthorized modification"), "", "editg", "", "admin", "admin");
+    $action_non_delete   = new EmptyActionItem1(_("Unauthorized modification"), "", "deleteg", "", "admin", "admin");
 
     $editAction = $addAction = $manageusersAction = $downloadAction = $deleteAction = $params = [];
     $data = $entitiesListseach['data'];

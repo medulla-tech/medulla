@@ -170,7 +170,7 @@ if (count($userNames) === 0) {
     $n->addExtraInfo($userPhones,       _T("Phone", "admin"));
     $n->addExtraInfo($userStatus,       _T("Status", "admin"));
     $n->addExtraInfo($userLastLogin,    _T("Last connection", "admin"));
-    $n->addExtraInfo($userProfileNames, _T("Profil", "admin"));
+    $n->addExtraInfo($userProfileNames, _T("Profile", "admin"));
 
     $n->addActionItemArray($userEditActions);
     $n->addActionItemArray($userDesactivateActions);

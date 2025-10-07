@@ -84,7 +84,7 @@ $view = in_array($status, ['sent','invalid','mailfail'], true) ? $status : 'sent
             <?= _("The link will expire in"); ?> <strong>5&nbsp;<?= _("minutes"); ?></strong>.
           </div>
           <p class="note">
-            <?= _("Remember to check your"); ?> <em><?= _("junk"); ?></em> / <em><?= _("spam"); ?></em> <?= _("folders"); ?>.
+            <?= _("Remember to check your <em>junk</em> / <em>spam</em> folders."); ?>
           </p>
 
         <?php elseif ($view === 'invalid'): ?>

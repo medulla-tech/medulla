@@ -82,7 +82,7 @@ function validatePasswords(string $pwd, string $pwd2, bool $isUpdate = false): a
         $errors[] = _T("The password must contain at least one capital letter.", "admin");
     }
     if (!preg_match('/[a-z]/', $pwd)) {
-        $errors[] = _T("The password must contain at least a tiny.", "admin");
+        $errors[] = _T("The password must contain at least a small letter.", "admin");
     }
     if (!preg_match('/\d/', $pwd)) {
         $errors[] = _T("The password must contain at least one figure.", "admin");
