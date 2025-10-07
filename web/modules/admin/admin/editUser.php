@@ -65,7 +65,7 @@ function validatePasswords(string $pwd, string $pwd2, bool $isUpdate = false): a
     if ($pwd === '' || $pwd2 === '') {
         return [false, $isUpdate
             ? _T("The password and its confirmation cannot be empty.", "admin")
-            : _T("Veuillez remplir le mot de passe et sa confirmation.", "admin")
+            : _T("Please complete the password and its confirmation.", "admin")
         ];
     }
 
