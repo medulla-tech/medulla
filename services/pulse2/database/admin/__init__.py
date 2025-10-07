@@ -6,8 +6,8 @@
 import traceback
 
 # SqlAlchemy
-from sqlalchemy import create_engine, MetaData, select
-from sqlalchemy.exc import DBAPIError
+from sqlalchemy import create_engine, MetaData, select, func
+from sqlalchemy.exc import DBAPIError, SQLAlchemyError
 from sqlalchemy.ext.automap import automap_base
 
 
@@ -85,7 +85,7 @@ class AdminDatabase(DatabaseHelper):
 
         # Lists to exclude or include specific tables for mapping
         exclude_table = []
-        include_table = ['providers']
+        include_table = ['providers', 'magic_link']
 
         # Dynamically add attributes to the object for each mapped class
         for table_name, mapped_class in Base.classes.items():
@@ -502,3 +502,39 @@ class AdminDatabase(DatabaseHelper):
             .scalar())
 
         return token
+
+    @DatabaseHelper._sessionm
+    def validateToken(self, session, uid: str, token: str) -> bool:
+        uid = (uid or "").strip()
+        token = (token or "").strip()
+
+        if not uid or not token:
+            return False
+
+        ML = getattr(self, "Magic_link", None)
+        if ML is None:
+            return False
+
+        try:
+            row = (
+                session.query(ML)
+                .with_for_update()
+                .filter(ML.login == uid)
+                .filter(ML.token == token)
+                .filter(ML.used_at.is_(None))
+                .filter(ML.expires_at > func.now())
+                .first()
+            )
+            if not row:
+                session.rollback()
+                return False
+
+            # Consume the link (single use)
+            row.used_at = func.now()
+            session.flush()
+            session.commit()
+            return True
+
+        except SQLAlchemyError:
+            session.rollback()
+            return False

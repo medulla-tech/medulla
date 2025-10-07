@@ -71,6 +71,29 @@ function auth_user($login, $pass)
     return true;
 }
 
+function validateToken($login, $token)
+{
+    global $error;
+
+    $login = trim((string)$login);
+    $token = (string)$token;
+
+    if ($login === '' || $token === '') {
+        $error = _("Invalid or expired link");
+        return false;
+    }
+
+    $ret = xmlCall("base.tokenAuthenticate", [$login, $token]);
+
+    if (!$ret) {
+        if (!isXMLRPCError()) {
+            $error = _("Invalid or expired link");
+        }
+        return false;
+    }
+    return true;
+}
+
 /**
  * get an array of ldap users via cpu
  * @return list of users in an array of ldap users

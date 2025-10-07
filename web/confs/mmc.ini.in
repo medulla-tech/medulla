@@ -8,6 +8,7 @@ sessiontimeout = 7200
 ; HTTP basic authentication credentials to use for XMLRPC communication
 login = mmc
 password = s3cr3t
+magic_link = 0
 
 ; Root URL where the MMC web pages are installed
 ; root= /mmc/ for http://127.0.0.1/mmc/

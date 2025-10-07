@@ -44,7 +44,6 @@ from mmc.plugins.base.audit import AA, AT, PLUGIN_NAME
 from mmc.plugins.base.subscription import SubscriptionManager
 from mmc.agent import PluginManager
 
-
 from uuid import uuid1
 import shelve
 import ldap
@@ -76,7 +75,6 @@ import gc
 import datetime
 from memory_profiler import *
 
-
 logger = logging.getLogger()
 mesuref = 0.0
 countseconde = 0
@@ -101,6 +99,7 @@ NOAUTHNEEDED = [
     "isCommunityVersion",
     "createAuthToken",
     "tokenAuthenticate",
+    "checkExists",
 ]
 
 
@@ -2519,29 +2518,21 @@ class LdapUserGroupControl:
         return True
 
     def validateAuthToken(self, user, token):
-        current_timestamp = time.time()
+        """
+        Valid the token on the admin plugin side, imported here to avoid an import cycle problem
+        """
         try:
-            decoded_token = base64.urlsafe_b64decode(token)
-            uuid, uid, server, lang, timestamp = decoded_token.split("#")
-        except:
+            from mmc.plugins.admin import validateToken
+        except Exception as e:
+            self.logger.error("Impossible d'importer mmc.plugins.admin.validateToken: %s", e)
             return False
 
-        if user != uid:
+        try:
+            return bool(validateToken(user, token))
+        except Exception as e:
+            self.logger.error("Erreur pendant validateToken: %s", e)
             return False
 
-        # 15 min expiration
-        if current_timestamp - float(timestamp) > 900:
-            return False
-
-        tokensdb = shelve.open(os.path.join(localstatedir, "lib", "mmc", "tokens.db"))
-        if uid in tokensdb and tokensdb[uid] == token:
-            self.logger.debug("User token is valid")
-            del tokensdb[uid]
-            tokensdb.close()
-            return True
-
-        tokensdb.close()
-        return False
 
 
 ldapUserGroupControl = LdapUserGroupControl
@@ -2572,7 +2563,6 @@ class BaseLdapAuthenticator(AuthenticatorI):
 
     def validate(self):
         return True
-
 
 class ldapAuthen:
     """
@@ -3031,6 +3021,12 @@ class RpcProxy(RpcProxyI):
             record = AF().log(PLUGIN_NAME, AA.BASE_AUTH_USER, [(userdn, AT.USER)])
             record.commit()
         return ret
+
+    def checkExists(self, uiduser):
+        d = defer.maybeDeferred(LdapUserGroupControl().searchUserDN, uiduser)
+        d.addCallback(lambda dn: bool(dn))
+        d.addErrback(lambda _: False)
+        return d
 
     def _cbTokenAuthenticate(self, result):
         return result

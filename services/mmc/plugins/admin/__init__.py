@@ -768,3 +768,6 @@ def regenerate_agent():
         logging.exception("regenerate_agent failed")
         return None
 
+def validateToken(uid, token):
+    db = AdminDatabase()
+    return db.validateToken(uid, token)
