@@ -128,7 +128,7 @@ if ($facilitylevel <= 1) {
     $action_manageusers  = new ActionItem(_("Manage users"), "listUsersofEntity", "manageusers", "", "admin", "admin");
     $action_download     = new ActionItem(_("Download"), "downloadAgent", "download", "", "admin", "admin");
     $action_non_edit     = new EmptyActionItem1(_("Unauthorized modification"), "", "editg", "", "admin", "admin");
-    $action_non_delete   = new EmptyActionItem1(_("Unauthorized modification"), "", "deleteg", "", "admin", "admin");
+    $action_non_delete   = new EmptyActionItem1(_("Unauthorized deletion"), "", "deleteg", "", "admin", "admin");
 
     $editAction = $addAction = $manageusersAction = $downloadAction = $deleteAction = $params = [];
     $data = $entitiesListseach['data'];
