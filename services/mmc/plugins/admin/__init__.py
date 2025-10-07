@@ -400,8 +400,19 @@ def create_user(
         entity_completename     = entity_info.get('completename')
 
         pkdb = PkgsDatabase()
-        id_shares = pkdb.find_share_by_entity_names(entity_name, entity_completename).get('id')
-        pkdb.add_pkgs_rules_local(identifier, id_shares)
+
+        if id_entity is not None and int(id_entity) == 0:
+            share_row = pkdb.find_global_share()
+        else:
+            entity_info = get_entity_info(id_entity) or {}
+            entity_name = entity_info.get('name')
+            entity_completename = entity_info.get('completename')
+            share_row = pkdb.find_share_by_entity_names(entity_name, entity_completename)
+
+        id_shares = share_row.get('id') if share_row else None
+
+        if id_shares:
+            pkdb.add_pkgs_rules_local(identifier, id_shares)
 
         return {"ok": True, "id": int(id_user), "api_token": api_token}
 
