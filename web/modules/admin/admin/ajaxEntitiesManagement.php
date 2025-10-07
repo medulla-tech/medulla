@@ -175,11 +175,11 @@ if ($facilitylevel <= 1) {
     $entityIdCurrent = isset($data['id'][$i]) ? (int)$data['id'][$i] : null;
     if ($entityIdCurrent === 0) {
         // we gray edit and delete for the root
-        $editAction[]        = new EmptyActionItem1(_("Modification non autorisée"), "", "editg", "", "admin", "admin");
+        $editAction[]        = new EmptyActionItem1(_("Unauthorized modification"), "", "editg", "", "admin", "admin");
         $addAction[]         = $action_add;
         $manageusersAction[] = $action_manageusers;
         $downloadAction[]    = $action_download;
-        $deleteAction[]      = new EmptyActionItem1(_("Suppression non autorisée"), "", "deleteg", "", "admin", "admin");
+        $deleteAction[]      = new EmptyActionItem1(_("Unauthorized deletion"), "", "deleteg", "", "admin", "admin");
 
         continue;
     }
