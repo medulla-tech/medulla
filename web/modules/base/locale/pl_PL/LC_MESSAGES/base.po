@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-08 11:49+0200\n"
+"POT-Creation-Date: 2025-10-07 20:29+0200\n"
 "PO-Revision-Date: 2018-02-13 15:15+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Polish (Poland) (https://app.transifex.com/medulla/teams/72118/pl_PL/)\n"
@@ -21,73 +21,128 @@ msgstr ""
 "Language: pl_PL\n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 
-#: token.php:56 index.php:80
+#: token.php:43
+msgid "Medulla / Sign-in link"
+msgstr ""
+
+#: token.php:77
+msgid "Medulla"
+msgstr ""
+
+#: token.php:81
+msgid "Check your email"
+msgstr ""
+
+#: token.php:83
+msgid ""
+"If your account was found, we sent a sign-in link and you will receive it "
+"shortly."
+msgstr ""
+
+#: token.php:84
+msgid "The link will expire in"
+msgstr ""
+
+#: token.php:84 includes/magiclink.inc.php:54
+msgid "minutes"
+msgstr ""
+
+#: token.php:87
+msgid "Remember to check your <em>junk</em> / <em>spam</em> folders."
+msgstr ""
+
+#: token.php:91
+msgid "Link problem"
+msgstr ""
+
+#: token.php:93
+msgid "This sign-in link is invalid or has expired."
+msgstr ""
+
+#: token.php:94
+msgid "Please return to the sign-in page and request a new link."
+msgstr ""
+
+#: token.php:98
+msgid "Email not sent"
+msgstr ""
+
+#: token.php:100
+msgid ""
+"We couldn't send the email. Please try again later or contact your "
+"administrator."
+msgstr ""
+
+#: token.php:104
+msgid "Back to sign-in"
+msgstr ""
+
+#: index.php:139
 #, php-format
 msgid "The server %s does not exist"
 msgstr ""
 
-#: token.php:68
-msgid "Token not valid"
+#: index.php:147
+msgid "Please enter your login to receive a magic link."
 msgstr ""
 
-#: token.php:70
-msgid "Error while validating your token. Please contact your administrator."
+#: index.php:149
+msgid "Please enter a valid email address to receive a magic link."
 msgstr ""
 
-#: index.php:90
+#: index.php:164
 msgid ""
 "Login failed. Please make sure that you entered the right username and "
 "password. Both fields are case sensitive."
 msgstr ""
 
-#: index.php:99
+#: index.php:174
 msgid ""
 "You have been logged out because the session between the MMC web interface "
 "and the MMC agent expired."
 msgstr ""
 
-#: index.php:103
+#: index.php:177
 msgid "You have been successfully logged out."
 msgstr ""
 
-#: index.php:110
+#: index.php:183
 msgid "Update successful. Please reconnect."
 msgstr ""
 
-#: index.php:112
+#: index.php:185
 msgid "Error updating. You have been disconnected for security reasons."
 msgstr ""
 
-#: index.php:235
+#: index.php:307
 msgid "Forgot password ?"
 msgstr ""
 
-#: index.php:244
+#: index.php:316
 msgid "Server"
 msgstr "Serwer"
 
-#: index.php:251
+#: index.php:323
 msgid "Language"
 msgstr "Język"
 
-#: index.php:257 modules/base/includes/publicFunc.php:323
+#: index.php:329 modules/base/includes/publicFunc.php:323
 #: modules/base/users/ajaxFilter.php:119 modules/base/views/index.tpl.php:78
 msgid "Login"
 msgstr "Logowanie"
 
-#: index.php:263 modules/base/includes/publicFunc.php:338
+#: index.php:336 modules/base/includes/publicFunc.php:338
 #: modules/base/infoPackage.inc.php:433
 msgid "Password"
 msgstr "Hasło "
 
-#: index.php:276
+#: index.php:351
+msgid "Send Magic Link"
+msgstr ""
+
+#: index.php:354
 msgid "Connect"
 msgstr "Połącz"
-
-#: index.php:295
-msgid ""
-"Error reading authproviders.ini or authproviders.ini.local config file."
-msgstr ""
 
 #: graph/header.inc.php:213 graph/header.inc.php:249
 msgid "Yes"
@@ -98,7 +153,7 @@ msgid "No"
 msgstr ""
 
 #: graph/header.inc.php:251 includes/FormGenerator.php:713
-#: includes/PageGenerator.php:2734
+#: includes/PageGenerator.php:2834
 msgid "Close"
 msgstr ""
 
@@ -307,6 +362,34 @@ msgstr ""
 msgid "MMC agent"
 msgstr ""
 
+#: includes/magiclink.inc.php:51
+msgid "Your Medulla sign-in"
+msgstr ""
+
+#: includes/magiclink.inc.php:52
+msgid "Secure sign-in"
+msgstr ""
+
+#: includes/magiclink.inc.php:53
+msgid "Hello,"
+msgstr ""
+
+#: includes/magiclink.inc.php:54
+msgid "Click the button below to sign in. This link expires in"
+msgstr ""
+
+#: includes/magiclink.inc.php:55
+msgid "Open magic link"
+msgstr ""
+
+#: includes/magiclink.inc.php:56
+msgid "If the button doesn’t work, copy and paste this link:"
+msgstr ""
+
+#: includes/magiclink.inc.php:57
+msgid "If you didn’t request this, please ignore this message."
+msgstr ""
+
 #: includes/FormGenerator.php:73 includes/FormGenerator.php:320
 #: includes/FormGenerator.php:844 includes/FormGenerator.php:992
 msgid "unavailable"
@@ -440,15 +523,15 @@ msgstr ""
 msgid "Saturday"
 msgstr ""
 
-#: includes/FormGenerator.php:714 includes/PageGenerator.php:1240
-#: includes/PageGenerator.php:1498 includes/ajaxTools.php:63
+#: includes/FormGenerator.php:714 includes/PageGenerator.php:1340
+#: includes/PageGenerator.php:1598 includes/ajaxTools.php:63
 #: includes/ajaxTools.php:69 modules/base/includes/AjaxFilterLog.inc.php:96
 #: modules/base/includes/AjaxFilterLog.inc.php:100
 msgid "Previous"
 msgstr "Poprzednia"
 
-#: includes/FormGenerator.php:715 includes/PageGenerator.php:1254
-#: includes/PageGenerator.php:1508 includes/ajaxTools.php:74
+#: includes/FormGenerator.php:715 includes/PageGenerator.php:1354
+#: includes/PageGenerator.php:1608 includes/ajaxTools.php:74
 #: includes/ajaxTools.php:82 modules/base/includes/AjaxFilterLog.inc.php:107
 #: modules/base/includes/AjaxFilterLog.inc.php:111
 msgid "Next"
@@ -459,7 +542,7 @@ msgid "Now"
 msgstr ""
 
 #: includes/FormGenerator.php:804
-#: modules/admin/admin/ajaxEntitiesManagement.php:58
+#: modules/admin/admin/ajaxEntitiesManagement.php:127
 #: modules/base/groups/localSidebar.php:28
 msgid "Add"
 msgstr "Dodaj"
@@ -469,51 +552,50 @@ msgid "Toggle selection"
 msgstr ""
 
 #: includes/FormGenerator.php:1309
-#: modules/admin/admin/ajaxEntitiesManagement.php:83
-#: modules/admin/admin/ajaxListUsersofEntity.php:93
+#: modules/admin/admin/ajaxEntitiesManagement.php:163
 #: modules/ppolicy/default/delete.php:45 modules/base/groups/ajaxFilter.php:68
 #: modules/base/users/ajaxFilter.php:140 modules/base/views/index.tpl.php:92
 msgid "Delete"
 msgstr "Usuń"
 
-#: includes/PageGenerator.php:907 includes/PageGenerator.php:1155
+#: includes/PageGenerator.php:1007 includes/PageGenerator.php:1255
 msgid "to"
 msgstr "do"
 
-#: includes/PageGenerator.php:909 includes/PageGenerator.php:1157
+#: includes/PageGenerator.php:1009 includes/PageGenerator.php:1257
 #, php-format
 msgid " - Total <b>%s </b>"
 msgstr " - W sumie <b>%s</b> "
 
-#: includes/PageGenerator.php:912 includes/PageGenerator.php:1160
+#: includes/PageGenerator.php:1012 includes/PageGenerator.php:1260
 msgid "page"
 msgstr "strona"
 
-#: includes/PageGenerator.php:1275
+#: includes/PageGenerator.php:1375
 msgid "Pagination"
 msgstr ""
 
-#: includes/PageGenerator.php:1351
+#: includes/PageGenerator.php:1451
 msgid "Go to page"
 msgstr ""
 
-#: includes/PageGenerator.php:1812
+#: includes/PageGenerator.php:1912
 msgid "No item available"
 msgstr ""
 
-#: includes/PageGenerator.php:2041
+#: includes/PageGenerator.php:2141
 msgid "Select entity"
 msgstr ""
 
-#: includes/PageGenerator.php:3178 includes/PageGenerator.php:3260
-#: includes/PageGenerator.php:3289
+#: includes/PageGenerator.php:3278 includes/PageGenerator.php:3360
+#: includes/PageGenerator.php:3389
 #: modules/dyngroup/includes/groups.inc.php:364
 #: modules/dyngroup/includes/groups.inc.php:427
 #: modules/base/groups/members.php:308 modules/base/groups/edit.php:128
 msgid "Confirm"
 msgstr "Potwierdź"
 
-#: includes/PageGenerator.php:3183 includes/PageGenerator.php:3265
+#: includes/PageGenerator.php:3283 includes/PageGenerator.php:3365
 #: modules/imaging/imaging/images_iso.php:112
 #: modules/imaging/imaging/multicast.php:409
 #: modules/imaging/manage/master_iso.php:109
@@ -524,30 +606,30 @@ msgstr "Potwierdź"
 msgid "Cancel"
 msgstr "Anuluj"
 
-#: includes/PageGenerator.php:3465
+#: includes/PageGenerator.php:3565
 msgid "Select all"
 msgstr "Zaznacz wszystkie"
 
-#: includes/PageGenerator.php:3465
+#: includes/PageGenerator.php:3565
 msgid "Unselect all"
 msgstr ""
 
-#: includes/modules.inc.php:404
+#: includes/modules.inc.php:410
 #, php-format
 msgid "%s service restarting..."
 msgstr ""
 
-#: includes/modules.inc.php:405
+#: includes/modules.inc.php:411
 #, php-format
 msgid "%s service restarted successfully."
 msgstr ""
 
-#: includes/modules.inc.php:406
+#: includes/modules.inc.php:412
 #, php-format
 msgid "%s service failed to restart."
 msgstr ""
 
-#: includes/modules.inc.php:411
+#: includes/modules.inc.php:417
 msgid "Restart the service ?"
 msgid_plural "Restart the services ?"
 msgstr[0] ""
@@ -683,7 +765,7 @@ msgstr ""
 #: modules/glpi/glpi/ajaxMachinesList.php:189
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:94
 #: modules/medulla_server/includes/menu_group_action.php:76
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:170
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:276
 #: modules/base/includes/computers_list.inc.php:134
 msgid "Imaging management"
 msgstr ""
@@ -699,7 +781,7 @@ msgstr ""
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:99
 #: modules/medulla_server/includes/menu_actionaudit.php:77
 #: modules/medulla_server/includes/menu_action.php:75
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:72
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:86
 #: modules/base/includes/computers_list.inc.php:140
 msgid "Quick action"
 msgstr ""
@@ -724,7 +806,7 @@ msgstr ""
 msgid "Delete computer"
 msgstr "Usuń komputer"
 
-#: modules/glpi/glpi/machinesList.php:39
+#: modules/glpi/glpi/machinesList.php:42
 #: modules/glpi/glpi/machinesListglpi.php:40
 #: modules/xmppmaster/xmppmaster/machinesList.php:39
 #: modules/base/computers/index.php:48
@@ -732,14 +814,14 @@ msgstr "Usuń komputer"
 msgid "All computers"
 msgstr "Wszystkie komputery"
 
-#: modules/glpi/glpi/machinesList.php:43
+#: modules/glpi/glpi/machinesList.php:46
 #: modules/glpi/glpi/machinesListglpi.php:44
 #: modules/xmppmaster/xmppmaster/machinesList.php:43
 #: modules/base/computers/index.php:52
 msgid "Online computers"
 msgstr ""
 
-#: modules/glpi/glpi/machinesList.php:47
+#: modules/glpi/glpi/machinesList.php:50
 #: modules/glpi/glpi/machinesListglpi.php:48
 #: modules/xmppmaster/xmppmaster/machinesList.php:47
 #: modules/base/computers/index.php:56
@@ -925,7 +1007,7 @@ msgid "Acknowledge"
 msgstr ""
 
 #: modules/medulla_server/includes/menu_group_action.php:82
-#: modules/dyngroup/dyngroup/display.php:236
+#: modules/dyngroup/dyngroup/display.php:235
 msgid "Group Quick action"
 msgstr ""
 
@@ -941,26 +1023,39 @@ msgstr ""
 msgid "Delete Cluster"
 msgstr ""
 
-#: modules/admin/admin/ajaxEntitiesManagement.php:57
-#: modules/admin/admin/ajaxListUsersofEntity.php:85
-#: modules/base/users/ajaxFilter.php:135 modules/base/views/index.tpl.php:89
-msgid "Edit"
-msgstr "Edytuj"
+#: modules/admin/admin/ajaxEntitiesManagement.php:126
+msgid "Modify"
+msgstr ""
 
-#: modules/admin/admin/ajaxEntitiesManagement.php:59
+#: modules/admin/admin/ajaxEntitiesManagement.php:128
 msgid "Manage users"
 msgstr ""
 
-#: modules/admin/admin/ajaxEntitiesManagement.php:60
+#: modules/admin/admin/ajaxEntitiesManagement.php:129
 msgid "Download"
 msgstr ""
 
-#: modules/admin/admin/ajaxEntitiesManagement.php:94
-msgid "Editing not allowed"
+#: modules/admin/admin/ajaxEntitiesManagement.php:130
+#: modules/admin/admin/ajaxEntitiesManagement.php:178
+msgid "Unauthorized modification"
 msgstr ""
 
-#: modules/admin/admin/ajaxEntitiesManagement.php:95
-msgid "Deleting not allowed"
+#: modules/admin/admin/ajaxEntitiesManagement.php:131
+#: modules/admin/admin/ajaxEntitiesManagement.php:182
+msgid "Unauthorized deletion"
+msgstr ""
+
+#: modules/admin/admin/deleteProvider.php:30
+msgid "Invalid provider ID."
+msgstr ""
+
+#: modules/admin/admin/deleteProvider.php:41
+#, php-format
+msgid "Provider %s deleted."
+msgstr ""
+
+#: modules/admin/admin/deleteProvider.php:44
+msgid "Delete failed: "
 msgstr ""
 
 #: modules/admin/admin/ajaxRelaysList.php:73
@@ -981,11 +1076,11 @@ msgstr ""
 msgid "Edit rule"
 msgstr ""
 
-#: modules/admin/admin/ajaxListUsersofEntity.php:79
+#: modules/admin/admin/ajaxListUsersofEntity.php:96
 msgid "Enabled"
 msgstr ""
 
-#: modules/admin/admin/ajaxListUsersofEntity.php:79
+#: modules/admin/admin/ajaxListUsersofEntity.php:96
 msgid "Disabled"
 msgstr ""
 
@@ -1033,16 +1128,16 @@ msgstr ""
 msgid "Uptime"
 msgstr ""
 
-#: modules/dashboard/includes/panels/product_updates.inc.php:31
+#: modules/dashboard/includes/panels/product_updates.inc.php:33
 msgid "Medulla Updates"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:149
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:173
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:253
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:279
 msgid "Updates compliance by machines"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:151
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:255
 msgid "Deploy specific update on this group"
 msgstr ""
 
@@ -1646,40 +1741,45 @@ msgstr ""
 msgid "Secondary groups"
 msgstr ""
 
-#: modules/base/includes/users-xmlrpc.inc.php:48
+#: modules/base/includes/users-xmlrpc.inc.php:52
 msgid "Invalid login"
 msgstr ""
 
-#: modules/base/includes/users-xmlrpc.inc.php:56
+#: modules/base/includes/users-xmlrpc.inc.php:60
 msgid "users"
 msgstr ""
 
-#: modules/base/includes/users-xmlrpc.inc.php:59
+#: modules/base/includes/users-xmlrpc.inc.php:63
 msgid "computers"
 msgstr "Komputery"
 
-#: modules/base/includes/users-xmlrpc.inc.php:62
+#: modules/base/includes/users-xmlrpc.inc.php:66
 #, php-format
 msgid "WARNING: The number of registered %s is exceeding your license."
 msgstr ""
 
-#: modules/base/includes/users-xmlrpc.inc.php:62
+#: modules/base/includes/users-xmlrpc.inc.php:66
 #: modules/base/status/support.php:34
 msgid " and "
 msgstr ""
 
-#: modules/base/includes/users-xmlrpc.inc.php:114
+#: modules/base/includes/users-xmlrpc.inc.php:82
+#: modules/base/includes/users-xmlrpc.inc.php:90
+msgid "Invalid or expired link"
+msgstr ""
+
+#: modules/base/includes/users-xmlrpc.inc.php:141
 #, php-format
 msgid ""
 "User %s created but password is not valid regarding your password "
 "policies.<br/><strong>You must change the user password.</strong>"
 msgstr ""
 
-#: modules/base/includes/users-xmlrpc.inc.php:117
+#: modules/base/includes/users-xmlrpc.inc.php:144
 msgid "You cannot add more users."
 msgstr ""
 
-#: modules/base/includes/users-xmlrpc.inc.php:122
+#: modules/base/includes/users-xmlrpc.inc.php:149
 #, php-format
 msgid "User %s successfully created"
 msgstr ""
@@ -2155,6 +2255,10 @@ msgstr "Nazwa"
 #: modules/base/users/ajaxFilter.php:133
 msgid "Telephone"
 msgstr "Telefon"
+
+#: modules/base/users/ajaxFilter.php:135 modules/base/views/index.tpl.php:89
+msgid "Edit"
+msgstr "Edytuj"
 
 #: modules/base/users/ajaxFilter.php:139 modules/base/views/index.tpl.php:91
 msgid "MMC rights"

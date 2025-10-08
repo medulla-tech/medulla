@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-30 15:09+0200\n"
+"POT-Creation-Date: 2025-10-07 17:12+0200\n"
 "PO-Revision-Date: 2019-10-02 12:32+0000\n"
 "Last-Translator: Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2023\n"
 "Language-Team: Norwegian Bokmål (Norway) (https://app.transifex.com/medulla/teams/72118/nb_NO/)\n"
@@ -144,7 +144,7 @@ msgstr "Profil %s har blitt oppdatert"
 msgid "Unable to update the profile"
 msgstr ""
 
-#: modules/kiosk/kiosk/index.php:30
+#: modules/kiosk/kiosk/index.php:29
 msgid "List of profils"
 msgstr "Liste over profiler"
 

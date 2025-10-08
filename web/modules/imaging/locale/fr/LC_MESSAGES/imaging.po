@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-30 17:47+0200\n"
+"POT-Creation-Date: 2025-10-07 20:29+0200\n"
 "PO-Revision-Date: 2017-09-12 14:00+0000\n"
 "Last-Translator: SPO, 2025\n"
 "Language-Team: French (https://app.transifex.com/medulla/teams/72118/fr/)\n"
@@ -208,7 +208,7 @@ msgstr "Microsoft Teams"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:273
 msgid "Tips"
-msgstr ""
+msgstr "Astuces"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:278
 msgid "To Do"

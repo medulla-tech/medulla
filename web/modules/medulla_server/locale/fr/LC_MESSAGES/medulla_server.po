@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-31 17:28+0200\n"
+"POT-Creation-Date: 2025-10-07 20:30+0200\n"
 "PO-Revision-Date: 2017-10-11 08:13+0000\n"
 "Last-Translator: SPO, 2025\n"
 "Language-Team: French (https://app.transifex.com/medulla/teams/72118/fr/)\n"
@@ -21,6 +21,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: fr\n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#: modules/medulla_server/update/regenerateAgent.php:28
+msgid "Agent correctly regenerate"
+msgstr "Agent regénéré avec succès"
+
+#: modules/medulla_server/update/regenerateAgent.php:32
+msgid "Failed to regenerate Agent"
+msgstr "Echec de regénération de l'agent"
 
 #: modules/medulla_server/update/viewProductUpdates.php:88
 msgid "No updates data available"
@@ -120,8 +128,8 @@ msgid "Delete this profile"
 msgstr "Supprimer ce profil"
 
 #: modules/medulla_server/includes/menu_group_action.php:52
-msgid "Display this group's content"
-msgstr "Afficher le contenu du groupe"
+msgid "Display3 this group's content"
+msgstr ""
 
 #: modules/medulla_server/includes/menu_group_action.php:53
 msgid "Edit this group"
@@ -179,30 +187,38 @@ msgstr "Entité racine"
 msgid "extTicket issue"
 msgstr "question extTicket"
 
-#: modules/medulla_server/infoPackage.inc.php:34
+#: modules/medulla_server/infoPackage.inc.php:31
 msgid "Medulla"
 msgstr "Medulla"
 
-#: modules/medulla_server/infoPackage.inc.php:45
+#: modules/medulla_server/infoPackage.inc.php:41
 msgid "Computers list"
 msgstr "Liste des ordinateurs"
 
-#: modules/medulla_server/infoPackage.inc.php:50
+#: modules/medulla_server/infoPackage.inc.php:46
 msgid "Location selection in computer edit"
 msgstr "Sélection de l'entité d'un ordinateur"
 
-#: modules/medulla_server/infoPackage.inc.php:60
+#: modules/medulla_server/infoPackage.inc.php:56
 msgid "update"
 msgstr "Mise à jour"
 
-#: modules/medulla_server/infoPackage.inc.php:66
+#: modules/medulla_server/infoPackage.inc.php:59
 msgid "viewProductUpdates"
 msgstr "voir les mise à jour disponibles "
 
-#: modules/medulla_server/infoPackage.inc.php:72
+#: modules/medulla_server/infoPackage.inc.php:64
 msgid "install Product Updates"
 msgstr "Installer les mises à jour"
 
-#: modules/medulla_server/infoPackage.inc.php:78
+#: modules/medulla_server/infoPackage.inc.php:68
 msgid "Product Updates installation (ajax)"
 msgstr "Installation des maj du produit (ajax)"
+
+#: modules/medulla_server/infoPackage.inc.php:72
+msgid "Restart All Medulla Services"
+msgstr "Redémarrer tous les services Medulla"
+
+#: modules/medulla_server/infoPackage.inc.php:77
+msgid "Regenerate Agent"
+msgstr "Regénérer l'agent"

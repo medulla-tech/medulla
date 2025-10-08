@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-08 12:28+0200\n"
+"POT-Creation-Date: 2025-10-07 20:30+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -138,7 +138,7 @@ msgstr ""
 msgid "Unable to update the profile"
 msgstr ""
 
-#: modules/kiosk/kiosk/index.php:30
+#: modules/kiosk/kiosk/index.php:29
 msgid "List of profils"
 msgstr ""
 

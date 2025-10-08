@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-08 11:49+0200\n"
+"POT-Creation-Date: 2025-10-07 20:30+0200\n"
 "PO-Revision-Date: 2023-12-12 11:56+0000\n"
 "Last-Translator: SPO, 2025\n"
 "Language-Team: French (https://app.transifex.com/medulla/teams/72118/fr/)\n"
@@ -595,6 +595,7 @@ msgid "Automatic approval (White list)"
 msgstr "Validation automatique (Liste blanche)"
 
 #: modules/updates/updates/approve_rules.php:114
+#: modules/updates/updates/approve_products.php:121
 msgid "Apply"
 msgstr "Appliquer"
 
@@ -608,6 +609,22 @@ msgstr "Mises à jour en attente pour la machine %s"
 #: modules/updates/infoPackage.inc.php:52
 msgid "Details by Machines"
 msgstr "Détails par machines"
+
+#: modules/updates/updates/approve_products.php:32
+msgid "Approve rule gray_list to white_list"
+msgstr "Règle d'approbation liste grise vers liste blanche"
+
+#: modules/updates/updates/approve_products.php:90
+msgid "Product Microsoft"
+msgstr "Produit Microsoft"
+
+#: modules/updates/updates/approve_products.php:91
+msgid "approve update"
+msgstr "approuver mise à jour"
+
+#: modules/updates/updates/approve_products.php:101
+msgid "approval update Microsoft"
+msgstr "approuver mise à jour Microsoft"
 
 #: modules/updates/updates/localSidebar.php:30
 #: modules/updates/updates/ajaxMajorEntitiesList.php:65
@@ -838,3 +855,7 @@ msgstr "Mises à jour majeures "
 #: modules/updates/infoPackage.inc.php:245
 msgid "Deployment details on group entity"
 msgstr "Détails de déploiement sur groupe entité"
+
+#: modules/updates/infoPackage.inc.php:280
+msgid "Approve produit Microsoft pour mise a jour"
+msgstr ""
