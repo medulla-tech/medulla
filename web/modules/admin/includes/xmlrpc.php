@@ -217,9 +217,9 @@ function xmlrpc_delete_user_profile_on_entity($userId, $profileId, $tokenuser = 
     return xmlCall("admin.delete_user_profile_on_entity", array($userId, $profileId, $tokenuser));
 }
 
-function xmlrpc_toggle_user_active($user_id, $tokenuser = null)
+function xmlrpc_toggle_user_active($user_id, $caller, $tokenuser = null)
 {
-    return xmlCall("admin.toggle_user_active", [$user_id, $tokenuser]);
+    return xmlCall("admin.toggle_user_active", [$user_id, $caller, $tokenuser]);
 }
 
 // PROVIDERS MANAGEMENT

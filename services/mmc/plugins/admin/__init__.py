@@ -673,8 +673,17 @@ def delete_user_profile_on_entity(user_id, profile_id, entities_id, tokenuser=No
     result = client.delete_user_profile_on_entity(user_id, profile_id, entities_id)
     return result
 
-def toggle_user_active(user_id, tokenuser=None):
-    client = get_glpi_client(tokenuser=tokenuser)
+def toggle_user_active(user_id, caller, tokenuser=None):
+    if caller.lower() == "admin":
+        token_to_use = get_root_token()
+        if not token_to_use:
+            return {"success": False, "code": -1, "error": "root token unavailable"}
+    else:
+        token_to_use = tokenuser
+        if not token_to_use:
+            return {"success": False, "code": -1, "error": "no user token provided"}
+
+    client = get_glpi_client(tokenuser=token_to_use)
     result = client.toggle_user_active(user_id)
     return result
 

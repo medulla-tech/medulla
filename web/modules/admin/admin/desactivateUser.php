@@ -23,16 +23,20 @@
 require("modules/base/includes/users.inc.php");
 require_once("modules/admin/includes/xmlrpc.php");
 
-if (isset($_GET['userId']) && !empty($_GET['userId']) &&
-    isset($_GET['entities_id']) && !empty($_GET['entities_id'])) {
+
+
+if (isset($_GET['userId'], $_GET['entities_id']) &&
+    $_GET['userId'] !== '' &&
+    $_GET['entities_id'] !== '') {
 
     $userId     = (int)$_GET['userId'];
     $isActive   = isset($_GET['is_active']) ? (int)$_GET['is_active'] : 0;
     $entityId   = (int)$_GET['entities_id'];
     $userName   = isset($_GET['userName']) ? htmlspecialchars($_GET['userName']) : _T("Unknown", "admin");
+    $caller     = $_SESSION['glpi_user']['profile_name'];
     $token      = $_SESSION['glpi_user']['api_token'] ?? null;
 
-    $result = xmlrpc_toggle_user_active($userId, $token);
+    $result = xmlrpc_toggle_user_active($userId, $caller, $token);
 
     if ($result !== null) {
         $newStatus = $isActive ? "deactivated" : "activated";

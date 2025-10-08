@@ -86,6 +86,9 @@ $userDeleteActions              = [];
 $userDesactivateActions         = [];
 $userParams                     = [];
 
+$loggedProfileName = $u['profile_name'] ?? '';
+$loggedUserId      = isset($u['id']) ? (int)$u['id'] : null;
+
 foreach ($userDetails as $user) {
     $isActive = !empty($user['is_active']);
 
@@ -97,37 +100,83 @@ foreach ($userDetails as $user) {
     $userLastLogin[]    = $fmtDate($user['last_login'] ?? null);
     $userProfileNames[] = $user['profile_name'];
 
-    $userEditActions[]   = new ActionItem(
-        _T("Edit"), "editUser", "edit", "", "admin", "admin"
-    );
+    // Target & rules
+    $targetUserId      = isset($user['user_id']) ? (int)$user['user_id'] : null;
+    $targetProfileName = $user['profile_name'] ?? '';
 
-    // determines the icon according to the status (active/deactivated)
+    $isSelf = ($loggedUserId !== null && $targetUserId !== null && $targetUserId === $loggedUserId);
+    $adminVsSuperAdmin =
+        (strcasecmp($loggedProfileName, 'Admin') === 0) &&
+        (strcasecmp($targetProfileName,  'Super-Admin') === 0);
+
+    // Edit : Admin -> Super-Admin unauthorized
+    if ($adminVsSuperAdmin) {
+        $userEditActions[] = new EmptyActionItem1(
+            _("Unauthorized edition"),
+            "",
+            "editg",
+            "",
+            "admin",
+            "admin"
+        );
+    } else {
+        $userEditActions[] = new ActionItem(
+            _T("Edit"),
+            "editUser",
+            "edit",
+            "",
+            "admin",
+            "admin"
+        );
+    }
+
     $iconKeyToggle = $isActive ? 'donotupdate' : 'donotupdateg';
+    if (!$isSelf && !$adminVsSuperAdmin) {
+        $userDesactivateActions[] = new ActionConfirmItem(
+            $isActive ? _T("Deactivate User", "admin") : _T("Reactivate User", "admin"),
+            "desactivateUser",
+            $iconKeyToggle,
+            "",
+            "admin",
+            "admin",
+            sprintf(
+                $isActive
+                    ? _T("Are you sure you want to deactivate this user <strong>%s</strong>?", "admin")
+                    : _T("Are you sure you want to reactivate this user <strong>%s</strong>?", "admin"),
+                htmlspecialchars($user['name'] ?? '', ENT_QUOTES, 'UTF-8')
+            )
+        );
 
-    $userDesactivateActions[] = new ActionConfirmItem(
-        $isActive ? _T("Deactivate User", "admin") : _T("Reactivate User", "admin"),
-        "desactivateUser",
-        $iconKeyToggle,
-        "",
-        "admin",
-        "admin",
-        sprintf(
-            $isActive
-                ? _T("Are you sure you want to deactivate this user <strong>%s</strong>?", "admin")
-                : _T("Are you sure you want to reactivate this user <strong>%s</strong>?", "admin"),
-            htmlspecialchars($user['name'])
-        )
-    );
-
-    $userDeleteActions[] = new ActionConfirmItem(
-        _T("Delete user", "admin"),
-        "deleteUser",
-        "delete",
-        "",
-        "admin",
-        "admin",
-        sprintf(_T("Are you sure you want to delete this user <strong>%s</strong>?", "admin"), $user['name'])
-    );
+        $userDeleteActions[] = new ActionConfirmItem(
+            _T("Delete user", "admin"),
+            "deleteUser",
+            "delete",
+            "",
+            "admin",
+            "admin",
+            sprintf(
+                _T("Are you sure you want to delete this user <strong>%s</strong>?", "admin"),
+                htmlspecialchars($user['name'] ?? '', ENT_QUOTES, 'UTF-8')
+            )
+        );
+    } else {
+        $userDesactivateActions[] = new EmptyActionItem1(
+            _("Unauthorized deactivation"),
+            "",
+            "donotupdateg",
+            "",
+            "admin",
+            "admin"
+        );
+        $userDeleteActions[] = new EmptyActionItem1(
+            _("Unauthorized deletion"),
+            "",
+            "deleteg",
+            "",
+            "admin",
+            "admin"
+        );
+    }
 
     $userParams[] = [
         'userId'       => $user['user_id'],
