@@ -162,10 +162,10 @@ foreach ($userDetails as $user) {
             "",
             "admin",
             "admin",
-            sprintf(
+            addcslashes(strip_tags(sprintf(
                 _T("Are you sure you want to delete this user <strong>%s</strong>?", "admin"),
                 htmlspecialchars($user['name'] ?? '', ENT_QUOTES, 'UTF-8')
-            )
+            )), "\\'")
         );
     } else {
         $userDesactivateActions[] = new EmptyActionItem1(
