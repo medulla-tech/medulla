@@ -37,6 +37,12 @@ require_once("modules/admin/includes/xmlrpc.php");
 }
 </style>
 <?php
+$filterRaw = isset($_GET["filter"]) ? (string)$_GET["filter"] : "";
+$filters   = [];
+if ($filterRaw !== "") {
+    $filters["q"] = $filterRaw;
+}
+
 $u = (isset($_SESSION['glpi_user']) && is_array($_SESSION['glpi_user'])) ? $_SESSION['glpi_user'] : [];
 $tokenuser = $u['api_token'] ?? null;
 
@@ -50,7 +56,7 @@ if (empty($tokenuser)) {
     exit;
 }
 
-$entityId = isset($_GET['entityId']) ? (int)$_GET['entityId'] : '';
+$entityId = isset($_GET['entityId']) ? (int)$_GET['entityId'] : 0;
 
 $usersList = xmlrpc_get_users_count_by_entity($entityId, $tokenuser);
 
@@ -59,8 +65,10 @@ $userDetails = [];
 foreach ($usersList as $user) {
     if (empty($user['id'])) continue;
 
-    $info = xmlrpc_get_user_info($user['id'], $user['profile_id'], $_GET['entityId']);
-
+    $info = xmlrpc_get_user_info($user['id'], $user['profile_id'], $entityId, $filters);
+    if (!$info || !is_array($info) || empty($info['user_id'])) {
+        continue;
+    }
     $userDetails[] = $info;
 }
 
@@ -211,7 +219,7 @@ if (count($userNames) === 0) {
     $f->display();
 } else {
     $n = new OptimizedListInfos($userNames, _T("User Name", "admin"));
-    $n->setNavBar(new AjaxNavBar("10", ''));
+    $n->setNavBar(new AjaxNavBar("10", $filterRaw));
     $n->disableFirstColumnActionLink();
 
     $n->addExtraInfo($userFirstnames,   _T("First name", "admin"));

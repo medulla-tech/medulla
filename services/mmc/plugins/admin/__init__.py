@@ -209,15 +209,21 @@ def get_list_entity_users(tokenuser=None):
 
     return users
 
-def get_user_info(id_user=None, id_profile=None, id_entity=None):
+def get_user_info(id_user=None, id_profile=None, id_entity=None, filters=None):
     """
     Récupère TOUTES les infos d'un utilisateur (même désactivé).
+    'filters' est un dict optionnel pour filtrer
     Retourne un dictionnaire avec is_active et is_disabled.
     """
-    user_list = get_user_profile_email(id_user, id_profile, id_entity)
-    if not user_list:
+    user = get_user_profile_email(
+        id_user=id_user,
+        id_profile=id_profile,
+        id_entity=id_entity,
+        filters=filters or {}
+    )
+    if not user:
         return {}
-    return user_list
+    return user
 
 def get_users_count_by_entity(entity_id, tokenuser=None):
     client = get_glpi_client(tokenuser=tokenuser)

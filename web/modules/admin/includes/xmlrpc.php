@@ -68,8 +68,8 @@ function xmlrpc_get_profile_name($profilId, $tokenuser = null)
     return xmlCall("admin.get_profile_name", array($profilId, $tokenuser));
 }
 
-function xmlrpc_get_user_info($userId = '', $profileId = null, $entityId = null) {
-    return xmlCall("admin.get_user_info", [$userId, $profileId, $entityId]);
+function xmlrpc_get_user_info($userId = '', $profileId = null, $entityId = null, array $filters = []) {
+    return xmlCall("admin.get_user_info", [$userId, $profileId, $entityId, $filters]);
 }
 
 function xmlrpc_get_users_count_by_entity($entityId, $tokenuser = null)
