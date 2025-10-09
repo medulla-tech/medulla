@@ -870,6 +870,9 @@ $form->display();
 
 <script>
 jQuery(function($){
+  'use strict';
+
+  // --- Constantes / sélecteurs
   const PW1='newPassword', PW2='newPassword2', AUTH='auth_source';
 
   const $pw1=$('#'+PW1).add('input[name="'+PW1+'"]');
@@ -878,11 +881,11 @@ jQuery(function($){
   const $submit=$form.find('button[name="bupdate"], input[name="bupdate"]');
   const $auth=$('#'+AUTH);
 
-  // MODE like in PHP from url
+  // MODE depuis l’URL (comme en PHP)
   const qs=new URLSearchParams(location.search);
   const isEdit = ((qs.get('mode')||'').toLowerCase()==='edit' && (qs.get('userId')||'')!=='');
 
-  // Helpers required
+  // --- Helpers "required"
   function stripRequiredPw(){
     [$pw1,$pw2].forEach($el=>{
       $el.prop('required',false).removeAttr('required').attr('aria-required','false');
@@ -967,7 +970,7 @@ jQuery(function($){
 
     if(shouldShowHints()){
       if(!$pwHints){ $pwHints=ensurePwHints(); $pwCrit=$pwHints.find('.crit'); }
-      let $a=$('#container_input_'+PW1); if(!$a.length) $a=$pw1.closest('span');
+      let $a=$('#container_input_'+PW1); if(!$a.length) $a=$pw1.closest('span,div');
       showPwHintsFor($a); pwUpdateDots(v1);
     } else { hidePwHints(); }
 
@@ -979,15 +982,67 @@ jQuery(function($){
     return setPwMatch(true,'');
   }
 
+  // Bouton Display/Hide
+  function wirePwToggle(id){
+    const $input=$('#'+id); if(!$input.length) return null;
+
+    let $wrap=$('#container_input_'+id); if(!$wrap.length) $wrap=$input.closest('span,div,td');
+    $wrap.addClass('pw-wrap');
+
+    const initialType = ($input.attr('type')||'password').toLowerCase()==='text' ? 'text' : 'password';
+    $input.attr({type: 'password', autocomplete:'new-password'});
+
+    let $btn=$wrap.find('.pw-toggle[data-for="'+id+'"]').first();
+    if(!$btn.length){
+      $btn=$(`
+        <button type="button" class="pw-toggle" data-for="${id}"
+                aria-label="Afficher le mot de passe" aria-controls="${id}"
+                aria-pressed="false"
+                data-open="img/login/open.svg" data-close="img/login/close.svg">
+          <img class="pw-icon" alt="">
+        </button>`);
+      $btn.append('<span class="pw-text" style="position:absolute;left:-9999px;">toggle</span>');
+      $btn.appendTo($wrap);
+    }else if(!$btn.find('img.pw-icon').length){
+      $btn.append('<img class="pw-icon" alt="">');
+    }
+
+    function syncBtn(isHidden){
+      const $icon=$btn.find('img.pw-icon');
+      const open=$btn.data('open')||'';
+      const close=$btn.data('close')||'';
+      $icon.attr('src', isHidden ? close : open);
+      $btn.attr('aria-label', isHidden ? 'Afficher le mot de passe' : 'Masquer le mot de passe')
+          .attr('aria-pressed', !isHidden);
+    }
+    syncBtn(($input.attr('type')==='password'));
+
+    // Toggle
+    $btn.off('click').on('click', function(){
+      const wasHidden=($input.attr('type')==='password');
+      const newType= wasHidden ? 'text' : 'password';
+      const start=$input[0]?.selectionStart, end=$input[0]?.selectionEnd;
+      $input.attr('type', newType);
+      try{ if(start!=null && end!=null){ $input[0].setSelectionRange(start,end); } }catch(e){}
+      syncBtn(newType==='password');
+      $input.trigger('focus');
+    });
+
+    const $td=$wrap.closest('td');
+    if($td.length && !$td.find('.pw-feedback').length){
+      $('<div class="pw-feedback" aria-live="polite"></div>').appendTo($td);
+    }
+    return $input;
+  }
+
+
   if(isEdit){
-    stripRequiredPw()
-    $submit.attr('formnovalidate', true)
-           .on('click', stripRequiredPw);
+    stripRequiredPw();
+    $submit.attr('formnovalidate', true).on('click', stripRequiredPw);
   }else{
     setRequiredPw(true);
   }
 
-  // Show/hide
   $auth.on('change', function(){
     if(isLocalAuth()){
       togglePwRows(true);
@@ -999,18 +1054,22 @@ jQuery(function($){
     }
   }).trigger('change');
 
-  // focus/blur
-  $pw1.on('focus', function(){ if(shouldShowHints()){ if(!$pwHints){ $pwHints=ensurePwHints(); $pwCrit=$pwHints.find('.crit'); } let $a=$('#container_input_'+PW1); if(!$a.length) $a=$pw1.closest('span'); showPwHintsFor($a); pwUpdateDots(($pw1.val()||'').trim()); }});
+  $pw1.on('focus', function(){
+    if(shouldShowHints()){
+      if(!$pwHints){ $pwHints=ensurePwHints(); $pwCrit=$pwHints.find('.crit'); }
+      let $a=$('#container_input_'+PW1); if(!$a.length) $a=$pw1.closest('span,div');
+      showPwHintsFor($a); pwUpdateDots(($pw1.val()||'').trim());
+    }
+  });
   $pw2.on('focus', function(){ if(shouldShowHints()){ validatePw(); }});
   $pw1.add($pw2).on('blur', hidePwHintsIfNoFocus);
 
-  // input
   $pw1.on('input', function(){ if(isEdit && !isTyping()){ clearPwErrors(); hidePwHints(); return; } validatePw(); });
   $pw2.on('input', function(){ if(isEdit && !isTyping()){ clearPwErrors(); hidePwHints(); return; } validatePw(); });
 
   // submit
   $form.on('submit', function(e){
-    if(isEdit) stripRequiredPw();              // re-strip avant envoi
+    if(isEdit) stripRequiredPw();
     if(!validatePw()){ e.preventDefault(); ($('.pw-error').get(0) || this).focus(); }
   });
 
@@ -1019,5 +1078,8 @@ jQuery(function($){
     if(!pwAnchor) return; cancelAnimationFrame(raf);
     raf=requestAnimationFrame(()=>positionPwHints(pwAnchor));
   });
+
+  wirePwToggle(PW1);
+  wirePwToggle(PW2);
 });
 </script>
