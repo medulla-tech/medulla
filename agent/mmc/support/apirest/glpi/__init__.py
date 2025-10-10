@@ -1212,3 +1212,103 @@ class GLPIClient:
         except requests.RequestException as e:
             logger.error(f"Erreur de communication avec l'API: {e}")
             return {"success": False, "message": str(e)}
+
+    def ensure_user_inactive(self, user_id: int) -> bool | None:
+        """
+        Désactive l'utilisateur GLPI si besoin.
+        Retourne:
+        - True  : si on vient de le désactiver (changement effectué)
+        - False : si l'utilisateur était déjà inactif (aucun changement)
+        - None  : en cas d'échec (erreur HTTP, 404, etc.)
+        """
+        try:
+            headers = self._headers()
+        except Exception as e:
+            logger.error(f"Erreur session/headers: {e}")
+            return None
+
+        get_url = f"{self.URL_BASE}/User/{int(user_id)}"
+        try:
+            r = requests.get(get_url, headers=headers, timeout=10)
+            r.raise_for_status()
+            data = r.json() or {}
+            current_active = bool(int(str(data.get("is_active", 1))))
+        except requests.exceptions.HTTPError as e:
+            logger.error(f"Erreur HTTP lecture user {user_id}: {e}")
+            logger.error(f"Réponse: {getattr(r, 'text', '')}")
+            return None
+        except Exception as e:
+            logger.error(f"Erreur lecture user {user_id}: {e}")
+            return None
+
+        # 2) Si déjà inactif ➜ rien à faire
+        if not current_active:
+            logger.info(f"[=] User {user_id} déjà inactif")
+            return False
+
+        # 3) Forcer is_active=0
+        put_url = f"{self.URL_BASE}/User/{int(user_id)}"
+        payload = {"input": {"id": int(user_id), "is_active": 0}}
+        try:
+            r = requests.put(put_url, headers=headers, json=payload, timeout=10)
+            r.raise_for_status()
+            logger.info(f"[-] User {user_id} désactivé")
+            return True
+        except requests.exceptions.HTTPError as e:
+            logger.error(f"Erreur HTTP update user {user_id}: {e}")
+            logger.error(f"Réponse: {getattr(r, 'text', '')}")
+            return None
+        except Exception as e:
+            logger.error(f"Erreur inattendue update user {user_id}: {e}")
+            return None
+
+    def ensure_user_active(self, user_id: int) -> bool | None:
+        """
+        Active l'utilisateur GLPI si besoin.
+        Retourne:
+        - True  : si on vient de l’activer (changement effectué)
+        - False : si l’utilisateur était déjà actif (aucun changement)
+        - None  : en cas d’échec (erreur HTTP, 404, etc.)
+        """
+        try:
+            headers = self._headers()
+        except Exception as e:
+            logger.error(f"Erreur session/headers: {e}")
+            return None
+
+        # 1) Lire l'état courant
+        get_url = f"{self.URL_BASE}/User/{int(user_id)}"
+        try:
+            r = requests.get(get_url, headers=headers, timeout=10)
+            r.raise_for_status()
+            data = r.json() or {}
+            current_active = bool(int(str(data.get("is_active", 1))))
+        except requests.exceptions.HTTPError as e:
+            logger.error(f"Erreur HTTP lecture user {user_id}: {e}")
+            logger.error(f"Réponse: {getattr(r, 'text', '')}")
+            return None
+        except Exception as e:
+            logger.error(f"Erreur lecture user {user_id}: {e}")
+            return None
+
+        # 2) Si déjà actif ➜ rien à faire
+        if current_active:
+            logger.info(f"[=] User {user_id} déjà actif")
+            return False
+
+        # 3) Forcer is_active=1
+        put_url = f"{self.URL_BASE}/User/{int(user_id)}"
+        payload = {"input": {"id": int(user_id), "is_active": 1}}
+        try:
+            r = requests.put(put_url, headers=headers, json=payload, timeout=10)
+            r.raise_for_status()
+            logger.info(f"[+] User {user_id} réactivé")
+            return True
+        except requests.exceptions.HTTPError as e:
+            logger.error(f"Erreur HTTP update user {user_id}: {e}")
+            logger.error(f"Réponse: {getattr(r, 'text', '')}")
+            return None
+        except Exception as e:
+            logger.error(f"Erreur inattendue update user {user_id}: {e}")
+            return None
+

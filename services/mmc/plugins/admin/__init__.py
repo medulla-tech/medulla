@@ -11,7 +11,7 @@ from mmc.plugins.admin.config import AdminConfig
 from pulse2.database.admin import AdminDatabase
 from pulse2.database.pkgs import PkgsDatabase
 
-from mmc.plugins.glpi import get_entities_with_counts, get_entities_with_counts_root, set_user_api_token, get_user_profile_email, get_complete_name, get_user_identifier
+from mmc.plugins.glpi import get_entities_with_counts, get_entities_with_counts_root, set_user_api_token, get_user_profile_email, get_complete_name, get_user_identifier, list_entity_ids_subtree, list_user_ids_in_subtree, list_computer_ids_in_subtree
 from mmc.support.apirest.glpi import GLPIClient
 from mmc.support.apirest.glpi import verifier_parametres
 from configparser import ConfigParser
@@ -427,9 +427,10 @@ def create_user(
         nice = client.extract_glpi_error_message(raw) or raw
         return {"ok": False, "error": nice}
 
-def create_entity_under_custom_parent(parent_entity_id, display_name, user, tokenuser=None):
+def create_entity_under_custom_parent(parent_entity_id, display_name, user, stripe_tag=None, tokenuser=None):
     """
     Crée l’entité GLPI, le dossier /sharing/<dl_tag>, puis pkgs_shares + règles.
+    Si `stripe_tag` est fourni, il est stocké dans saas_organisations.stripe_tag.
     Retourne l'id GLPI créé.
     """
     try:
@@ -440,7 +441,12 @@ def create_entity_under_custom_parent(parent_entity_id, display_name, user, toke
         entity_id = client.create_entity_under_custom_parent(parent_entity_id, display_name, tag_uuid)
 
         # Création dans saas_organisations
-        AdminDatabase().create_entity_under_custom_parent(entity_id, display_name, tag_uuid)
+        AdminDatabase().create_entity_under_custom_parent(
+            entity_id=entity_id,
+            name=display_name,
+            tag_value=tag_uuid,
+            stripe_tag=stripe_tag,
+        )
 
         # Récup méta (nom + nom complet + tag GLPI) et dl_tag interne
         meta = get_complete_name(entity_id) or {}
@@ -797,3 +803,77 @@ def regenerate_agent():
 def validateToken(uid, token):
     db = AdminDatabase()
     return db.validateToken(uid, token)
+
+# CRM
+def get_id_entity(stripe_tag):
+    id_entity = AdminDatabase().get_id_entity(stripe_tag)
+
+    return id_entity
+
+def check_subscribe(id_entity: int) -> dict:
+    ents = list_entity_ids_subtree(id_entity)
+    if isinstance(ents, dict):
+        entity_ids = ents.get("entity_ids", []) or []
+        total_entities = int(ents.get("total_entities", len(entity_ids)))
+    else:
+        entity_ids = list(ents or [])
+        total_entities = len(entity_ids)
+
+    users = list_user_ids_in_subtree(entity_ids)
+    if isinstance(users, dict):
+        user_ids = users.get("user_ids", []) or []
+        total_users = int(users.get("total_users", len(user_ids)))
+    else:
+        user_ids = list(users or [])
+        total_users = len(user_ids)
+
+    comps = list_computer_ids_in_subtree(entity_ids)
+    if isinstance(comps, dict):
+        computer_ids = comps.get("computer_ids", []) or []
+        total_computers = int(comps.get("total_computers", len(computer_ids)))
+    else:
+        computer_ids = list(comps or [])
+        total_computers = len(computer_ids)
+
+    return {
+        "root_entity_id": int(id_entity),
+        "entities":  {"ids": entity_ids, "total": total_entities},
+        "users":     {"ids": user_ids,   "total": total_users},
+        "computers": {"ids": computer_ids, "total": total_computers},
+    }
+
+def deactivate_users_if_needed(user_ids: list[int], tokenuser=None) -> dict:
+    out = {"changed": [], "already": [], "errors": []}
+    client = get_glpi_client(tokenuser=tokenuser)
+
+    for uid in user_ids:
+        res = client.ensure_user_inactive(uid)
+        if res is True:
+            out["changed"].append(uid)
+        elif res is False:
+            out["already"].append(uid)
+        else:
+            out["errors"].append(uid)
+    return out
+
+def activate_users_if_needed(user_ids: list[int], tokenuser=None) -> dict:
+    """
+    Réactive les utilisateurs GLPI si besoin.
+    Retourne:
+    - changed: ceux qu'on vient de réactiver
+    - already: ceux déjà actifs
+    - errors : ceux en erreur (HTTP/404/exception)
+    """
+    out = {"changed": [], "already": [], "errors": []}
+    client = get_glpi_client(tokenuser=tokenuser)
+
+    for uid in user_ids:
+        res = client.ensure_user_active(uid)
+        if res is True:
+            out["changed"].append(uid)
+        elif res is False:
+            out["already"].append(uid)
+        else:
+            out["errors"].append(uid)
+    return out
+

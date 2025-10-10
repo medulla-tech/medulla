@@ -426,6 +426,15 @@ def get_user_identifier(id_user):
 def get_complete_name(id_entity):
     return xmlrpcCleanup(Glpi().get_complete_name(id_entity))
 
+def list_entity_ids_subtree(id_entity):
+    return xmlrpcCleanup(Glpi().list_entity_ids_subtree(id_entity))
+
+def list_user_ids_in_subtree(id_entity):
+    return xmlrpcCleanup(Glpi().list_user_ids_in_subtree(id_entity))
+
+def list_computer_ids_in_subtree(id_entity):
+    return xmlrpcCleanup(Glpi().list_computer_ids_in_subtree(id_entity))
+
 def get_machine_for_id(strlistuuid, filter="", start=0, end=0):
     return xmlrpcCleanup(Glpi().get_machine_for_id(strlistuuid, filter, start, end))
 

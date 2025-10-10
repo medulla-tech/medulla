@@ -85,6 +85,7 @@ import traceback
 import sys
 from collections import OrderedDict
 import decimal
+from typing import Iterable
 
 logger = logging.getLogger()
 
@@ -7452,6 +7453,172 @@ class Glpi100(DyngroupDatabaseHelper):
             }
         else:
             return {}
+
+    @DatabaseHelper._sessionm
+    def list_entity_ids_subtree(self, session, id) -> dict:
+        """
+        Retourne toutes les entités du sous-arbre (racine incluse).
+        - id: int OU liste/tuple/set d’ids (plusieurs racines)
+        Retour:
+        {
+            "entity_ids": [int, ...],
+            "total_entities": int
+        }
+        """
+        # Normalisation racines
+        if isinstance(id, (list, tuple, set)):
+            roots = [int(x) for x in id if x is not None]
+        else:
+            row = session.execute(
+                """
+                SELECT id
+                FROM glpi_entities
+                WHERE id = :rid
+                """,
+                {"rid": int(id)}
+            ).fetchone()
+            if not row:
+                return {"entity_ids": [], "total_entities": 0}
+            roots = [int(row.id)]
+
+        if not roots:
+            return {"entity_ids": [], "total_entities": 0}
+
+        ids = list(roots)
+        visited = set(roots)
+        frontier = list(roots)
+
+        def build_in_clause(vals: Iterable[int], base="ids"):
+            placeholders, params = [], {}
+            for i, v in enumerate(vals):
+                k = f"{base}_{i}"
+                placeholders.append(f":{k}")
+                params[k] = int(v)
+            return ", ".join(placeholders), params
+
+        # BFS sur entities_id
+        while frontier:
+            placeholders, params = build_in_clause(frontier, "ids")
+            children = session.execute(
+                f"""
+                SELECT id
+                FROM glpi_entities
+                WHERE entities_id IN ({placeholders})
+                """,
+                params
+            ).fetchall()
+
+            next_frontier = []
+            for r in children:
+                eid = int(r.id)
+                if eid in visited:
+                    continue
+                visited.add(eid)
+                ids.append(eid)
+                next_frontier.append(eid)
+
+            frontier = next_frontier
+
+        out = {"entity_ids": ids, "total_entities": len(ids)}
+        logging.getLogger().debug(f"[entities_subtree] {out}")
+        return out
+
+    @DatabaseHelper._sessionm
+    def list_user_ids_in_subtree(self, session, id) -> dict:
+        """
+        Liste DISTINCT des users_id liés (glpi_profiles_users) à la/aux entité(s)
+        racine(s) + toutes les sous-entités.
+        - id: int OU liste/tuple/set d’ids OU dict {"entity_ids":[...]}
+        Retour:
+        {
+            "user_ids": [int, ...],
+            "total_users": int
+        }
+        """
+        # Normalisation de l'argument id
+        if isinstance(id, dict) and "entity_ids" in id:
+            entity_ids = [int(x) for x in id["entity_ids"]]
+        elif isinstance(id, (list, tuple, set)):
+            entity_ids = [int(x) for x in id if x is not None]
+        else:
+            ents = self.list_entity_ids_subtree(int(id))
+            entity_ids = ents.get("entity_ids", [])
+
+        if not entity_ids:
+            return {"user_ids": [], "total_users": 0}
+
+        def build_in_clause(vals: Iterable[int], base="eids"):
+            placeholders, params = [], {}
+            for i, v in enumerate(vals):
+                key = f"{base}_{i}"
+                placeholders.append(f":{key}")
+                params[key] = int(v)
+            return ", ".join(placeholders), params
+
+        placeholders, params = build_in_clause(entity_ids, "eids")
+
+        rows = session.execute(
+            f"""
+            SELECT DISTINCT pu.users_id AS user_id
+            FROM glpi_profiles_users pu
+            WHERE pu.entities_id IN ({placeholders})
+            ORDER BY pu.users_id
+            """,
+            params
+        ).fetchall()
+
+        user_ids = [int(r.user_id) for r in rows]
+        out = {"user_ids": user_ids, "total_users": len(user_ids)}
+        logging.getLogger().debug(f"[users_in_subtree] {out}")
+        return out
+
+    @DatabaseHelper._sessionm
+    def list_computer_ids_in_subtree(self, session, id) -> dict:
+        """
+        Liste des computers (glpi_computers.id) pour la/les entité(s) + sous-entités.
+        - id: int OU liste/tuple/set d’ids OU dict {"entity_ids":[...]}
+        Retour:
+        {
+            "computer_ids": [int, ...],
+            "total_computers": int
+        }
+        """
+        # Normalisation de l'argument id
+        if isinstance(id, dict) and "entity_ids" in id:
+            entity_ids = [int(x) for x in id["entity_ids"]]
+        elif isinstance(id, (list, tuple, set)):
+            entity_ids = [int(x) for x in id if x is not None]
+        else:
+            ents = self.list_entity_ids_subtree(int(id))
+            entity_ids = ents.get("entity_ids", [])
+
+        if not entity_ids:
+            return {"computer_ids": [], "total_computers": 0}
+
+        def build_in_clause(vals: Iterable[int], base="eids"):
+            placeholders, params = [], {}
+            for i, v in enumerate(vals):
+                key = f"{base}_{i}"
+                placeholders.append(f":{key}")
+                params[key] = int(v)
+            return ", ".join(placeholders), params
+
+        placeholders, params = build_in_clause(entity_ids, "eids")
+
+        rows = session.execute(
+            f"""
+            SELECT DISTINCT c.id AS computer_id
+            FROM glpi_computers c
+            WHERE c.entities_id IN ({placeholders})
+            ORDER BY c.id
+            """,
+            params
+        ).fetchall()
+
+        computer_ids = [int(r.computer_id) for r in rows]
+        out = {"computer_ids": computer_ids, "total_computers": len(computer_ids)}
+        logging.getLogger().debug(f"[computers_in_subtree] {out}")
+        return out
 
     @DatabaseHelper._sessionm
     def get_entities_with_counts_root(self,
