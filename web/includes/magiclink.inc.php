@@ -111,11 +111,11 @@ if ($ret) {
     HTML;
 
     $headers =
-        "From: Medulla <noreply@medulla-tech.io>\r\n" .
+        "From: Medulla <no-reply@medulla-tech.io>\r\n" .
         "MIME-Version: 1.0\r\n" .
         "Content-Type: text/html; charset=UTF-8\r\n";
 
-    $ok     = mail($to, $subject, $html, $headers, '-f noreply@medulla-tech.io');
+    $ok     = mail($to, $subject, $html, $headers, '-f no-reply@medulla-tech.io');
     $status = $ok ? 'sent' : 'mailfail';
 
 } else {
