@@ -85,16 +85,18 @@ class GlpiProvisioner(ProvisionerI):
                 self.logger.info("No ACL to apply for the GLPI profile %s" % selected)
             else:
                 l = ldapUserGroupControl()
-                self.logger.info(
-                    "Setting MMC ACL corresponding to GLPI profile %s: %s"
-                    % (selected, acls)
-                )
+                self.logger.info("Setting MMC ACL corresponding to GLPI profile %s: %s", selected, acls)
+
                 uid = authtoken.getLogin()
                 entry = l.getDetailedUser(uid)
-                if not "lmcUserObject" in entry["objectClass"]:
-                    entry["objectClass"].append("lmcUserObject")
-                    l.changeUserAttributes(uid, "objectClass", entry["objectClass"])
-                l.changeUserAttributes(authtoken.getLogin(), "lmcAcl", acls)
+
+                obj_classes = [v if isinstance(v, bytes) else str(v).encode("utf-8")
+                            for v in entry.get("objectClass", [])]
+                if b"lmcUserObject" not in obj_classes:
+                    obj_classes.append(b"lmcUserObject")
+                    l.changeUserAttributes(uid, "objectClass", obj_classes)
+
+                l.changeUserAttributes(uid, "lmcACL", [acls.encode("utf-8")])
         return authtoken
 
     def doProvisioning(self, authtoken):

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-30 15:09+0200\n"
+"POT-Creation-Date: 2025-10-07 17:12+0200\n"
 "PO-Revision-Date: 2017-09-12 13:51+0000\n"
 "Language-Team: Danish (Denmark) (https://app.transifex.com/medulla/teams/72118/da_DK/)\n"
 "MIME-Version: 1.0\n"
@@ -457,26 +457,27 @@ msgstr ""
 msgid "All rules"
 msgstr ""
 
-#: modules/glpi/glpi/machinesList.php:28
+#: modules/glpi/glpi/machinesList.php:31
 msgid "Machines List view xmpp"
 msgstr ""
 
-#: modules/glpi/glpi/machinesList.php:39
+#: modules/glpi/glpi/machinesList.php:42
 #: modules/glpi/glpi/machinesListglpi.php:40
 msgid "All computers"
 msgstr ""
 
-#: modules/glpi/glpi/machinesList.php:43
+#: modules/glpi/glpi/machinesList.php:46
 #: modules/glpi/glpi/machinesListglpi.php:44
 msgid "Online computers"
 msgstr ""
 
-#: modules/glpi/glpi/machinesList.php:47
+#: modules/glpi/glpi/machinesList.php:50
 #: modules/glpi/glpi/machinesListglpi.php:48
 msgid "Offline computers"
 msgstr ""
 
-#: modules/glpi/glpi/machinesList.php:99
+#: modules/glpi/glpi/machinesList.php:109
+#: modules/glpi/glpi/machinesList.php:113
 #: modules/glpi/glpi/machinesListglpi.php:53
 msgid "All my entities"
 msgstr ""
@@ -1024,11 +1025,11 @@ msgstr ""
 msgid "Operating systems"
 msgstr ""
 
-#: modules/glpi/includes/html.php:50 modules/glpi/includes/html.php:421
+#: modules/glpi/includes/html.php:50 modules/glpi/includes/html.php:438
 msgid "Hide Windows Updates"
 msgstr ""
 
-#: modules/glpi/includes/html.php:268 modules/glpi/includes/html.php:485
+#: modules/glpi/includes/html.php:268 modules/glpi/includes/html.php:492
 msgid "Search"
 msgstr ""
 

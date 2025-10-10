@@ -7632,17 +7632,81 @@ class Glpi100(DyngroupDatabaseHelper):
 
     @DatabaseHelper._sessionm
     def get_user_profile_email(self,
-                            session,
-                            id_user: int,
-                            id_profile: int | None = None,
-                            id_entity: int | None = None,
-                            is_active: int | None = None) -> dict:
+                               session,
+                               id_user: int,
+                               id_profile: int | None = None,
+                               id_entity: int | None = None,
+                               is_active: int | None = None,
+                               filters: dict | None = None) -> dict:
         """
         User information + most relevant profile/entity link.
         If Id_Profile and Id_entity are provided, we favor the exact match.
         Return {} if nothing found.
         """
-        sqlrequest = """
+        filters = filters or {}
+        q            = (filters.get("q") or "").strip() or None
+        email_f      = (filters.get("email") or "").strip() or None
+        phone_f      = (filters.get("phone") or "").strip() or None
+        profile_name = (filters.get("profile_name") or "").strip() or None
+        entity_name  = (filters.get("entity_name") or "").strip() or None
+        name_f       = (filters.get("name") or "").strip() or None
+        firstname_f  = (filters.get("firstname") or "").strip() or None
+        realname_f   = (filters.get("realname") or "").strip() or None
+
+        if "is_active" in filters and filters.get("is_active") is not None:
+            val = str(filters.get("is_active")).strip().lower()
+            if val in ("1", "true", "yes", "on"):
+                is_active = 1
+            elif val in ("0", "false", "no", "off"):
+                is_active = 0
+
+        conds = [
+            "gu.id = :id_user",
+            "(:id_profile IS NULL OR gpu.profiles_id = :id_profile)",
+            "(:id_entity  IS NULL OR gpu.entities_id  = :id_entity)"
+        ]
+        params = {
+            "id_user": id_user,
+            "id_profile": id_profile,
+            "id_entity": id_entity
+        }
+
+        if is_active is not None:
+            conds.append("gu.is_active = :is_active")
+            params["is_active"] = int(is_active)
+
+        if q:
+            conds.append("""(
+                gu.name LIKE :q OR gu.realname LIKE :q OR gu.firstname LIKE :q
+                OR gm.email LIKE :q OR gu.phone LIKE :q
+                OR gp.name LIKE :q OR ge.name LIKE :q OR ge.completename LIKE :q
+            )""")
+            params["q"] = f"%{q}%"
+        if email_f:
+            conds.append("gm.email LIKE :email_f")
+            params["email_f"] = f"%{email_f}%"
+        if phone_f:
+            conds.append("gu.phone LIKE :phone_f")
+            params["phone_f"] = f"%{phone_f}%"
+        if profile_name:
+            conds.append("gp.name LIKE :profile_name")
+            params["profile_name"] = f"%{profile_name}%"
+        if entity_name:
+            conds.append("ge.name LIKE :entity_name")
+            params["entity_name"] = f"%{entity_name}%"
+        if name_f:
+            conds.append("gu.name LIKE :name_f")
+            params["name_f"] = f"%{name_f}%"
+        if firstname_f:
+            conds.append("gu.firstname LIKE :firstname_f")
+            params["firstname_f"] = f"%{firstname_f}%"
+        if realname_f:
+            conds.append("gu.realname LIKE :realname_f")
+            params["realname_f"] = f"%{realname_f}%"
+
+        where_sql = " AND ".join(conds)
+
+        sqlrequest = f"""
         SELECT
             gu.id             AS user_id,
             gu.name,
@@ -7695,23 +7759,18 @@ class Glpi100(DyngroupDatabaseHelper):
 
         FROM glpi.glpi_users gu
         LEFT JOIN glpi.glpi_useremails gm
-            ON gm.users_id = gu.id AND gm.is_default = 1
-        INNER JOIN glpi.glpi_profiles_users gpu
-                ON gpu.users_id = gu.id
-        INNER JOIN glpi.glpi_profiles gp
-                ON gp.id = gpu.profiles_id
-        INNER JOIN glpi.glpi_entities ge
-                ON ge.id = gpu.entities_id
+               ON gm.users_id = gu.id AND gm.is_default = 1
+        INNER JOIN glpi.glpi_profiles_users gpu ON gpu.users_id = gu.id
+        INNER JOIN glpi.glpi_profiles gp        ON gp.id = gpu.profiles_id
+        INNER JOIN glpi.glpi_entities ge        ON ge.id = gpu.entities_id
 
-        WHERE gu.id = :id_user
-        AND (:id_profile IS NULL OR gpu.profiles_id = :id_profile)
-        AND (:id_entity  IS NULL OR gpu.entities_id  = :id_entity)
+        WHERE {where_sql}
 
         ORDER BY
             exact_match            DESC,
             match_entity           DESC,
             match_profile          DESC,
-            link_is_default        DESC,  -- dérivé ci-dessus
+            link_is_default        DESC,
             is_user_global_default DESC,
             in_target_entity       DESC,
             profile_power          DESC,
@@ -7719,15 +7778,12 @@ class Glpi100(DyngroupDatabaseHelper):
             gp.id                  DESC
         LIMIT 1
         """
-        params = {
-            "id_user": id_user,
-            "id_profile": id_profile,
-            "id_entity": id_entity
-        }
+
         row = session.execute(sqlrequest, params).fetchone()
-        def safe(v): return "" if v is None else v
         if not row:
             return {}
+
+        def safe(v): return "" if v is None else (int(v) if isinstance(v, Decimal) else v)
         m = dict(row._mapping)
         return {
             "user_id":             safe(m.get("user_id")),
@@ -7736,7 +7792,7 @@ class Glpi100(DyngroupDatabaseHelper):
             "firstname":           safe(m.get("firstname")),
             "email":               safe(m.get("email")),
             "is_active":           int(m.get("is_active") or 0),
-            "is_disabled":         not bool(m.get("is_active")),
+            "is_disabled":         int(not bool(m.get("is_active"))),
             "profiles_id":         safe(m.get("profiles_id")),
             "profile_name":        safe(m.get("profile_name")),
             "last_login":          safe(m.get("last_login")),

@@ -1,5 +1,11 @@
 # Change Log
 
+## [5.4.1](https://github.com/medulla-tech/medulla/releases/tag/5.4.1) (2025-10-10)
+- [FEATURE] Ability to restart Medulla services from the dashboard
+- [FEATURE] Ability to generate agents from the dashboard
+- [FEATURE] Ability to log in using a magic link
+- [FEATURE] Improve user creation
+
 ## [5.4.0](https://github.com/medulla-tech/medulla/releases/tag/5.4.0) (2025-10-02)
 - [FEATURE] Improve generation of update database product tables
 - [FEATURE] Management of entities and users from within Medulla management console

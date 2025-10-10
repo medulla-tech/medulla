@@ -1967,6 +1967,20 @@ class PkgsDatabase(DatabaseHelper):
         return result
 
     @DatabaseHelper._sessionm
+    def find_global_share(self, session):
+        """
+        Retourne le partage global (id, name, comments, share_path) ou None.
+        """
+        row = session.execute(text("""
+            SELECT id, name, comments, share_path
+            FROM pkgs_shares
+            WHERE type = 'global' OR name = 'global'
+            ORDER BY id ASC
+            LIMIT 1
+        """)).mappings().first()
+        return dict(row) if row else None
+
+    @DatabaseHelper._sessionm
     def find_share_by_entity_names(self, session, name: str, complete_name: str):
         """
         Tente d'identifier la ligne pkgs_shares liée via name/comments.

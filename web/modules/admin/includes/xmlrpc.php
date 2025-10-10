@@ -68,8 +68,8 @@ function xmlrpc_get_profile_name($profilId, $tokenuser = null)
     return xmlCall("admin.get_profile_name", array($profilId, $tokenuser));
 }
 
-function xmlrpc_get_user_info($userId = '', $profileId = null, $entityId = null) {
-    return xmlCall("admin.get_user_info", [$userId, $profileId, $entityId]);
+function xmlrpc_get_user_info($userId = '', $profileId = null, $entityId = null, array $filters = []) {
+    return xmlCall("admin.get_user_info", [$userId, $profileId, $entityId, $filters]);
 }
 
 function xmlrpc_get_users_count_by_entity($entityId, $tokenuser = null)
@@ -217,9 +217,9 @@ function xmlrpc_delete_user_profile_on_entity($userId, $profileId, $tokenuser = 
     return xmlCall("admin.delete_user_profile_on_entity", array($userId, $profileId, $tokenuser));
 }
 
-function xmlrpc_toggle_user_active($user_id, $tokenuser = null)
+function xmlrpc_toggle_user_active($user_id, $caller, $tokenuser = null)
 {
-    return xmlCall("admin.toggle_user_active", [$user_id, $tokenuser]);
+    return xmlCall("admin.toggle_user_active", [$user_id, $caller, $tokenuser]);
 }
 
 // PROVIDERS MANAGEMENT

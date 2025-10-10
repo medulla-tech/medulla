@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-31 17:28+0200\n"
+"POT-Creation-Date: 2025-10-07 17:12+0200\n"
 "PO-Revision-Date: 2017-10-11 08:13+0000\n"
 "Language-Team: Danish (Denmark) (https://app.transifex.com/medulla/teams/72118/da_DK/)\n"
 "MIME-Version: 1.0\n"
@@ -16,6 +16,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: da_DK\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: modules/medulla_server/update/regenerateAgent.php:28
+msgid "Agent correctly regenerate"
+msgstr ""
+
+#: modules/medulla_server/update/regenerateAgent.php:32
+msgid "Failed to regenerate Agent"
+msgstr ""
 
 #: modules/medulla_server/update/viewProductUpdates.php:88
 msgid "No updates data available"
@@ -115,7 +123,7 @@ msgid "Delete this profile"
 msgstr ""
 
 #: modules/medulla_server/includes/menu_group_action.php:52
-msgid "Display this group's content"
+msgid "Display3 this group's content"
 msgstr ""
 
 #: modules/medulla_server/includes/menu_group_action.php:53
@@ -174,30 +182,38 @@ msgstr ""
 msgid "extTicket issue"
 msgstr ""
 
-#: modules/medulla_server/infoPackage.inc.php:34
+#: modules/medulla_server/infoPackage.inc.php:31
 msgid "Medulla"
 msgstr ""
 
-#: modules/medulla_server/infoPackage.inc.php:45
+#: modules/medulla_server/infoPackage.inc.php:41
 msgid "Computers list"
 msgstr ""
 
-#: modules/medulla_server/infoPackage.inc.php:50
+#: modules/medulla_server/infoPackage.inc.php:46
 msgid "Location selection in computer edit"
 msgstr ""
 
-#: modules/medulla_server/infoPackage.inc.php:60
+#: modules/medulla_server/infoPackage.inc.php:56
 msgid "update"
 msgstr ""
 
-#: modules/medulla_server/infoPackage.inc.php:66
+#: modules/medulla_server/infoPackage.inc.php:59
 msgid "viewProductUpdates"
 msgstr ""
 
-#: modules/medulla_server/infoPackage.inc.php:72
+#: modules/medulla_server/infoPackage.inc.php:64
 msgid "install Product Updates"
 msgstr ""
 
-#: modules/medulla_server/infoPackage.inc.php:78
+#: modules/medulla_server/infoPackage.inc.php:68
 msgid "Product Updates installation (ajax)"
+msgstr ""
+
+#: modules/medulla_server/infoPackage.inc.php:72
+msgid "Restart All Medulla Services"
+msgstr ""
+
+#: modules/medulla_server/infoPackage.inc.php:77
+msgid "Regenerate Agent"
 msgstr ""

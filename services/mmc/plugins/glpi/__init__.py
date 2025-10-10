@@ -407,8 +407,18 @@ def get_entities_with_counts_root( filter: str = None,
 def set_user_api_token(user_id, api_token):
     return xmlrpcCleanup(Glpi().set_user_api_token(user_id, api_token))
 
-def get_user_profile_email(id_user, id_profile, id_entity):
-    return xmlrpcCleanup(Glpi().get_user_profile_email(id_user, id_profile, id_entity))
+def get_user_profile_email(id_user, id_profile=None, id_entity=None, filters=None, is_active=None):
+    if not isinstance(filters, dict):
+        filters = {}
+    return xmlrpcCleanup(
+        Glpi().get_user_profile_email(
+            id_user,
+            id_profile,
+            id_entity,
+            is_active=is_active,
+            filters=filters,
+        )
+    )
 
 def get_user_identifier(id_user):
     return xmlrpcCleanup(Glpi().get_user_identifier(id_user))

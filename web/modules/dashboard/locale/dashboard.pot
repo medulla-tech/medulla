@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-08 12:28+0200\n"
+"POT-Creation-Date: 2025-10-07 20:29+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -198,20 +198,36 @@ msgstr ""
 msgid "Deployements launched from "
 msgstr ""
 
-#: modules/dashboard/includes/panels/product_updates.inc.php:31
+#: modules/dashboard/includes/panels/product_updates.inc.php:33
 msgid "Medulla Updates"
 msgstr ""
 
-#: modules/dashboard/includes/panels/product_updates.inc.php:37
+#: modules/dashboard/includes/panels/product_updates.inc.php:39
 msgid "Check updates"
 msgstr ""
 
-#: modules/dashboard/includes/panels/product_updates.inc.php:38
+#: modules/dashboard/includes/panels/product_updates.inc.php:40
 msgid "Search for updates…"
 msgstr ""
 
-#: modules/dashboard/includes/panels/product_updates.inc.php:39
+#: modules/dashboard/includes/panels/product_updates.inc.php:41
 msgid "Error when retrieving updates."
+msgstr ""
+
+#: modules/dashboard/includes/panels/product_updates.inc.php:43
+msgid "Restart Medulla Services"
+msgstr ""
+
+#: modules/dashboard/includes/panels/product_updates.inc.php:44
+msgid "Restarting in progress ... You will be redirected to the connection."
+msgstr ""
+
+#: modules/dashboard/includes/panels/product_updates.inc.php:45
+msgid "The restart ends ... reconnect in a moment."
+msgstr ""
+
+#: modules/dashboard/includes/panels/product_updates.inc.php:47
+msgid "Regenerate Agent Machine"
 msgstr ""
 
 #: modules/dashboard/includes/panels/successRate.inc.php:30

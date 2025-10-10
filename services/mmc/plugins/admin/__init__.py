@@ -209,15 +209,21 @@ def get_list_entity_users(tokenuser=None):
 
     return users
 
-def get_user_info(id_user=None, id_profile=None, id_entity=None):
+def get_user_info(id_user=None, id_profile=None, id_entity=None, filters=None):
     """
     Récupère TOUTES les infos d'un utilisateur (même désactivé).
+    'filters' est un dict optionnel pour filtrer
     Retourne un dictionnaire avec is_active et is_disabled.
     """
-    user_list = get_user_profile_email(id_user, id_profile, id_entity)
-    if not user_list:
+    user = get_user_profile_email(
+        id_user=id_user,
+        id_profile=id_profile,
+        id_entity=id_entity,
+        filters=filters or {}
+    )
+    if not user:
         return {}
-    return user_list
+    return user
 
 def get_users_count_by_entity(entity_id, tokenuser=None):
     client = get_glpi_client(tokenuser=tokenuser)
@@ -400,8 +406,19 @@ def create_user(
         entity_completename     = entity_info.get('completename')
 
         pkdb = PkgsDatabase()
-        id_shares = pkdb.find_share_by_entity_names(entity_name, entity_completename).get('id')
-        pkdb.add_pkgs_rules_local(identifier, id_shares)
+
+        if id_entity is not None and int(id_entity) == 0:
+            share_row = pkdb.find_global_share()
+        else:
+            entity_info = get_entity_info(id_entity) or {}
+            entity_name = entity_info.get('name')
+            entity_completename = entity_info.get('completename')
+            share_row = pkdb.find_share_by_entity_names(entity_name, entity_completename)
+
+        id_shares = share_row.get('id') if share_row else None
+
+        if id_shares:
+            pkdb.add_pkgs_rules_local(identifier, id_shares)
 
         return {"ok": True, "id": int(id_user), "api_token": api_token}
 
@@ -662,8 +679,17 @@ def delete_user_profile_on_entity(user_id, profile_id, entities_id, tokenuser=No
     result = client.delete_user_profile_on_entity(user_id, profile_id, entities_id)
     return result
 
-def toggle_user_active(user_id, tokenuser=None):
-    client = get_glpi_client(tokenuser=tokenuser)
+def toggle_user_active(user_id, caller, tokenuser=None):
+    if caller.lower() == "admin":
+        token_to_use = get_root_token()
+        if not token_to_use:
+            return {"success": False, "code": -1, "error": "root token unavailable"}
+    else:
+        token_to_use = tokenuser
+        if not token_to_use:
+            return {"success": False, "code": -1, "error": "no user token provided"}
+
+    client = get_glpi_client(tokenuser=token_to_use)
     result = client.toggle_user_active(user_id)
     return result
 
@@ -730,3 +756,44 @@ def delete_provider(provider_id: int) -> dict:
         return db.delete_provider(pid)
     except Exception as e:
         return {"ok": False, "deleted": 0, "id": 0, "error": str(e)}
+
+def restart_medulla_services():
+    try:
+        script_path = '/usr/sbin/restart-pulse-services'
+
+        proc = subprocess.Popen(
+            [script_path],
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            start_new_session=True,
+            close_fds=True,
+            env=os.environ.copy(),
+        )
+        return proc.pid
+    except Exception:
+        return None
+
+def regenerate_agent():
+    try:
+        cmd = (
+            "/var/lib/pulse2/clients/generate-pulse-agent.sh && "
+            "/var/lib/pulse2/clients/generate-pulse-agent.sh --minimal"
+        )
+        proc = subprocess.Popen(
+            ["/bin/bash", "-lc", cmd],
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            start_new_session=True,
+            close_fds=True,
+            env=os.environ,
+        )
+        return True
+    except Exception:
+        logging.exception("regenerate_agent failed")
+        return None
+
+def validateToken(uid, token):
+    db = AdminDatabase()
+    return db.validateToken(uid, token)

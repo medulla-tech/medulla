@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-31 17:28+0200\n"
+"POT-Creation-Date: 2025-10-07 17:12+0200\n"
 "PO-Revision-Date: 2017-10-11 08:13+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2025\n"
 "Language-Team: Ukrainian (https://app.transifex.com/medulla/teams/72118/uk/)\n"
@@ -21,6 +21,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: uk\n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+
+#: modules/medulla_server/update/regenerateAgent.php:28
+msgid "Agent correctly regenerate"
+msgstr ""
+
+#: modules/medulla_server/update/regenerateAgent.php:32
+msgid "Failed to regenerate Agent"
+msgstr ""
 
 #: modules/medulla_server/update/viewProductUpdates.php:88
 msgid "No updates data available"
@@ -120,8 +128,8 @@ msgid "Delete this profile"
 msgstr "Вилучити цей профіль"
 
 #: modules/medulla_server/includes/menu_group_action.php:52
-msgid "Display this group's content"
-msgstr "Показати вміст цієї групи"
+msgid "Display3 this group's content"
+msgstr ""
 
 #: modules/medulla_server/includes/menu_group_action.php:53
 msgid "Edit this group"
@@ -179,30 +187,38 @@ msgstr "Кореневий запис"
 msgid "extTicket issue"
 msgstr "Вада extTicket"
 
-#: modules/medulla_server/infoPackage.inc.php:34
+#: modules/medulla_server/infoPackage.inc.php:31
 msgid "Medulla"
 msgstr "Medulla"
 
-#: modules/medulla_server/infoPackage.inc.php:45
+#: modules/medulla_server/infoPackage.inc.php:41
 msgid "Computers list"
 msgstr "Список комп'ютерів"
 
-#: modules/medulla_server/infoPackage.inc.php:50
+#: modules/medulla_server/infoPackage.inc.php:46
 msgid "Location selection in computer edit"
 msgstr "Вибір розташування у редагуванні комп'ютера"
 
-#: modules/medulla_server/infoPackage.inc.php:60
+#: modules/medulla_server/infoPackage.inc.php:56
 msgid "update"
 msgstr "оновлення"
 
-#: modules/medulla_server/infoPackage.inc.php:66
+#: modules/medulla_server/infoPackage.inc.php:59
 msgid "viewProductUpdates"
 msgstr "viewProductUpdates"
 
-#: modules/medulla_server/infoPackage.inc.php:72
+#: modules/medulla_server/infoPackage.inc.php:64
 msgid "install Product Updates"
 msgstr "Встановити оновлення продукту"
 
-#: modules/medulla_server/infoPackage.inc.php:78
+#: modules/medulla_server/infoPackage.inc.php:68
 msgid "Product Updates installation (ajax)"
 msgstr "Встановлення оновлень продукту (ajax)"
+
+#: modules/medulla_server/infoPackage.inc.php:72
+msgid "Restart All Medulla Services"
+msgstr ""
+
+#: modules/medulla_server/infoPackage.inc.php:77
+msgid "Regenerate Agent"
+msgstr ""
