@@ -39,7 +39,7 @@ if ($ret) {
     $lang       = (string)($_POST['lang'] ?? $_SESSION['lang'] ?? 'en_US');
     $token      = get_token($login);
     $scheme     = $_SESSION['XMLRPC_agent']['scheme'];
-    $hostname   = $_SESSION['XMLRPC_server_description'];
+    $hostname   = $_SERVER['SERVER_NAME'];
 
     $baseUrl    = $scheme . '://' . $hostname . '/mmc/';
     $query      = http_build_query(['token' => $token, 'lang' => $lang]);
