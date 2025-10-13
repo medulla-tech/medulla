@@ -7455,6 +7455,27 @@ class Glpi100(DyngroupDatabaseHelper):
             return {}
 
     @DatabaseHelper._sessionm
+    def get_user_profile_name(self, session, name: str) -> str:
+        sql = """
+            SELECT gp.name AS nameprofil
+            FROM glpi.glpi_users gu
+            LEFT JOIN glpi.glpi_profiles_users gpu
+                ON gpu.id = (
+                    SELECT gpu2.id
+                    FROM glpi.glpi_profiles_users gpu2
+                    WHERE gpu2.users_id = gu.id
+                    ORDER BY (gpu2.entities_id = gu.entities_id) DESC, gpu2.id DESC
+                    LIMIT 1
+                )
+            LEFT JOIN glpi.glpi_profiles gp
+                ON gp.id = gpu.profiles_id
+            WHERE gu.name = :name
+            LIMIT 1
+        """
+        row = session.execute(sql, {"name": name}).fetchone()
+        return row.nameprofil or "" if row else ""
+
+    @DatabaseHelper._sessionm
     def list_entity_ids_subtree(self, session, id) -> dict:
         """
         Retourne toutes les entités du sous-arbre (racine incluse).

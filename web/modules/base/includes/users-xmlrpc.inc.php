@@ -84,13 +84,28 @@ function validateToken($login, $token)
     }
 
     $ret = xmlCall("base.tokenAuthenticate", [$login, $token]);
-
     if (!$ret) {
         if (!isXMLRPCError()) {
             $error = _("Invalid or expired link");
         }
         return false;
     }
+
+    $configPaths = [
+        'GLPI_INI_PATH'       => __sysconfdir__ . '/mmc/plugins/glpi.ini',
+        'GLPI_LOCAL_INI_PATH' => __sysconfdir__ . '/mmc/plugins/glpi.ini.local',
+    ];
+
+    $glpiLogin = $_SESSION['login'];
+    $profileName = xmlrpc_get_user_profile_name($glpiLogin);
+
+    $aclString = getGlpiAclForProfile($profileName, $configPaths);
+
+    $setOk = setAcl($glpiLogin, $aclString);
+    if (!$setOk && !isXMLRPCError()) {
+        error_log(sprintf('Failed to set ACL for user "%s"', (string)$glpiLogin));
+    }
+
     return true;
 }
 
@@ -217,6 +232,11 @@ function getAcl($uid)
 function xmlrpc_get_user_by_name($name)
 {
     return xmlCall("glpi.get_user_by_name", [$name]);
+}
+
+function xmlrpc_get_user_profile_name($login)
+{
+    return xmlCall("glpi.get_user_profile_name", [$login]);
 }
 
 function setAcl($uid, $aclString)

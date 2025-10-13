@@ -394,6 +394,9 @@ def get_machine_for_hostname(strlisthostnale, filter="", start=0, end=0):
 def get_user_by_name(name):
      return xmlrpcCleanup(Glpi().get_user_by_name(name))
 
+def get_user_profile_name(login):
+     return xmlrpcCleanup(Glpi().get_user_profile_name(login))
+
 def get_entities_with_counts( colonne: bool = True,
                               entities: list[int] = None):
     return xmlrpcCleanup(Glpi().get_entities_with_counts(colonne = colonne,

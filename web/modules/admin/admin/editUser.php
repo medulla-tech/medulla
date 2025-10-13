@@ -34,32 +34,6 @@ require_once("modules/admin/includes/xmlrpc.php");
 </style>
 
 <?php
-function parseIniSection($filePath, $section)
-{
-    if (!is_readable($filePath)) {
-        return [];
-    }
-
-    $sectionData   = [];
-    $insideSection = false;
-    $lines         = file($filePath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-
-    foreach ($lines as $line) {
-        if (preg_match('/^\s*[;#]/', $line)) { continue; }
-        if (preg_match('/^\s*\[(.+?)\]\s*$/', $line, $m)) {
-            $insideSection = ($m[1] === $section);
-            continue;
-        }
-        if (!$insideSection) { continue; }
-        if (preg_match('/^\s*([^\s=]+)\s*=\s*(.*?)\s*$/', $line, $m)) {
-            $key = $m[1];
-            $val = $m[2];
-            $sectionData[$key] = $val;
-        }
-    }
-    return $sectionData;
-}
-
 function validatePasswords(string $pwd, string $pwd2, bool $isUpdate = false): array
 {
     if ($pwd === '' || $pwd2 === '') {
@@ -106,32 +80,6 @@ if (!isset($configPaths) || !is_array($configPaths)) {
 
 $configPaths['GLPI_INI_PATH']       = __sysconfdir__ . '/mmc/plugins/glpi.ini';
 $configPaths['GLPI_LOCAL_INI_PATH'] = __sysconfdir__ . '/mmc/plugins/glpi.ini.local';
-
-function fetchGlpiProvisioning(array $configPaths): array {
-    $base  = parseIniSection($configPaths['GLPI_INI_PATH'],       'provisioning_glpi');
-    $local = parseIniSection($configPaths['GLPI_LOCAL_INI_PATH'], 'provisioning_glpi');
-    return array_replace($base ?: [], $local ?: []);
-}
-
-// Returns the ACL channel for a GLPI profile name
-function getGlpiAclForProfile(string $profileName, array $configPaths, string $default=':base#main#default/'): string {
-    $profileName = trim($profileName ?? '');
-    if ($profileName === '') {
-        return $default;
-    }
-    $prov = fetchGlpiProvisioning($configPaths);
-
-    // Cell expected in .Ini: profile_acl_super-admin
-    $key = 'profile_acl_' . preg_replace('/\s+/', '-', $profileName);
-    $val = (string)($prov[$key] ?? '');
-
-    if ($val === '') {
-        $altKey = 'profile_acl_' . str_replace(' ', '_', $profileName);
-        $val = (string)($prov[$altKey] ?? '');
-    }
-
-    return ($val !== '') ? $val : $default;
-}
 
 
 $u = (isset($_SESSION['glpi_user']) && is_array($_SESSION['glpi_user']))
@@ -902,7 +850,7 @@ jQuery(function($){
   function isLocalAuth(){ return (($auth.val()||'local')==='local'); }
   function isTyping(){ return (($pw1.val()||'').trim()!=='' || ($pw2.val()||'').trim()!==''); }
 
-  // Display management of mdp fields (local ↔ oidc)
+  // --- Affichage/masquage des lignes MDP (local ↔ oidc)
   const $pw1Row = $pw1.closest('tr');
   const $pw2Row = $pw2.closest('tr');
   const $pwRows = $pw1Row.add($pw2Row);
@@ -917,7 +865,7 @@ jQuery(function($){
     }
   }
 
-  // Hints
+  // --- Hints / critères
   let $pwHints=null, pwAnchor=null, $pwCrit=null, raf=null;
   function ensurePwHints(){
     let $b=$('#pw-hints'); if($b.length) return $b;
@@ -965,7 +913,7 @@ jQuery(function($){
     if(!isLocalAuth()){ clearPwErrors(); hidePwHints(); return true; }
     const v1=($pw1.val()||'').trim(), v2=($pw2.val()||'').trim();
 
-    // EDIT + empty => OK no popup
+    // EDIT + vide => OK sans popin
     if(isEdit && v1==='' && v2===''){ clearPwErrors(); hidePwHints(); return true; }
 
     if(shouldShowHints()){
@@ -982,16 +930,19 @@ jQuery(function($){
     return setPwMatch(true,'');
   }
 
-  // Bouton Display/Hide
+  // --- Bouton Afficher/Masquer (ajouté)
   function wirePwToggle(id){
     const $input=$('#'+id); if(!$input.length) return null;
 
+    // Cherche un conteneur raisonnable (compat tables/GLPI & co)
     let $wrap=$('#container_input_'+id); if(!$wrap.length) $wrap=$input.closest('span,div,td');
     $wrap.addClass('pw-wrap');
 
+    // Force type initial + auto-complétion
     const initialType = ($input.attr('type')||'password').toLowerCase()==='text' ? 'text' : 'password';
     $input.attr({type: 'password', autocomplete:'new-password'});
 
+    // Bouton existant ? (permet une intégration HTML si déjà présent)
     let $btn=$wrap.find('.pw-toggle[data-for="'+id+'"]').first();
     if(!$btn.length){
       $btn=$(`
@@ -1001,12 +952,14 @@ jQuery(function($){
                 data-open="img/login/open.svg" data-close="img/login/close.svg">
           <img class="pw-icon" alt="">
         </button>`);
+      // À défaut d’icônes, on mettra un libellé texte (fallback léger)
       $btn.append('<span class="pw-text" style="position:absolute;left:-9999px;">toggle</span>');
       $btn.appendTo($wrap);
     }else if(!$btn.find('img.pw-icon').length){
       $btn.append('<img class="pw-icon" alt="">');
     }
 
+    // Mise à jour visuelle selon l’état
     function syncBtn(isHidden){
       const $icon=$btn.find('img.pw-icon');
       const open=$btn.data('open')||'';
@@ -1021,6 +974,7 @@ jQuery(function($){
     $btn.off('click').on('click', function(){
       const wasHidden=($input.attr('type')==='password');
       const newType= wasHidden ? 'text' : 'password';
+      // Préserve la position du curseur au maximum
       const start=$input[0]?.selectionStart, end=$input[0]?.selectionEnd;
       $input.attr('type', newType);
       try{ if(start!=null && end!=null){ $input[0].setSelectionRange(start,end); } }catch(e){}
@@ -1028,6 +982,7 @@ jQuery(function($){
       $input.trigger('focus');
     });
 
+    // Zone de feedback s'il n'existe pas
     const $td=$wrap.closest('td');
     if($td.length && !$td.find('.pw-feedback').length){
       $('<div class="pw-feedback" aria-live="polite"></div>').appendTo($td);
@@ -1035,7 +990,7 @@ jQuery(function($){
     return $input;
   }
 
-
+  // --- Init "required" selon le mode
   if(isEdit){
     stripRequiredPw();
     $submit.attr('formnovalidate', true).on('click', stripRequiredPw);
@@ -1043,6 +998,7 @@ jQuery(function($){
     setRequiredPw(true);
   }
 
+  // --- Règles d’affichage selon auth source
   $auth.on('change', function(){
     if(isLocalAuth()){
       togglePwRows(true);
@@ -1054,6 +1010,7 @@ jQuery(function($){
     }
   }).trigger('change');
 
+  // --- Hints: focus/blur/input
   $pw1.on('focus', function(){
     if(shouldShowHints()){
       if(!$pwHints){ $pwHints=ensurePwHints(); $pwCrit=$pwHints.find('.crit'); }
@@ -1067,18 +1024,19 @@ jQuery(function($){
   $pw1.on('input', function(){ if(isEdit && !isTyping()){ clearPwErrors(); hidePwHints(); return; } validatePw(); });
   $pw2.on('input', function(){ if(isEdit && !isTyping()){ clearPwErrors(); hidePwHints(); return; } validatePw(); });
 
-  // submit
+  // --- Submit
   $form.on('submit', function(e){
-    if(isEdit) stripRequiredPw();
+    if(isEdit) stripRequiredPw(); // re-strip avant envoi
     if(!validatePw()){ e.preventDefault(); ($('.pw-error').get(0) || this).focus(); }
   });
 
-  // reposition hints
+  // --- Repositionnement des hints
   $(window).on('scroll resize', function(){
     if(!pwAnchor) return; cancelAnimationFrame(raf);
     raf=requestAnimationFrame(()=>positionPwHints(pwAnchor));
   });
 
+  // --- Activation des boutons Afficher/Masquer pour les deux champs
   wirePwToggle(PW1);
   wirePwToggle(PW2);
 });
