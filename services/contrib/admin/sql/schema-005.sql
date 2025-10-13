@@ -37,4 +37,7 @@ CREATE EVENT IF NOT EXISTS ev_magic_link_gc
     DELETE FROM magic_link
     WHERE used_at IS NOT NULL OR expires_at < NOW();
 
+ALTER TABLE `admin`.`saas_organisations`
+  ADD COLUMN IF NOT EXISTS `stripe_tag` VARCHAR(255) NULL DEFAULT NULL AFTER `dl_tag`;
+
 UPDATE version SET Number = 5;
