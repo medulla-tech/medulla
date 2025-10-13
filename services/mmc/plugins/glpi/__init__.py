@@ -35,8 +35,10 @@ from pulse2.version import getVersion, getRevision  # pyflakes.ignore
 
 # health check
 from mmc.plugins.glpi.health import scheduleCheckStatus
+from configparser import ConfigParser
 
 import logging
+import os
 
 APIVERSION = "0:0:0"
 logger = logging.getLogger()
@@ -261,6 +263,10 @@ def getGlpiMachineUri():
 def glpi_version():
     return Glpi().glpi_version
 
+def check_saas() -> bool:
+    cfg = ConfigParser(interpolation=None)
+    cfg.read(['/etc/mmc/plugins/glpi.ini', '/etc/mmc/plugins/glpi.ini.local'], encoding='utf-8')
+    return cfg.get('main', 'hide_itsm_link', fallback='False') == 'True'
 
 def getMachineUUIDByMacAddress(mac):
     return xmlrpcCleanup(Glpi().getMachineUUIDByMacAddress(mac))
