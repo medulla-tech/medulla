@@ -74,7 +74,7 @@ for($i = 0; $i < $count_white; $i++) {
     }
     $params_white[] = $tmp;
 }
-
+$ids = array(); // Initialize the array
 // Add css ids to each tr tag in the table
 foreach($white_list['updateid'] as $updateid) {
     $ids [] = 'w_'.$updateid;

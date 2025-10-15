@@ -30,6 +30,8 @@ require_once("modules/xmppmaster/includes/html.inc.php");
 require_once("modules/updates/includes/xmlrpc.php");
 require_once("modules/medulla_server/includes/xmlrpc.inc.php");
 
+
+
 global $conf;
 
 
@@ -87,20 +89,26 @@ $defaultValues = [
 ];
 $mergedArray = [];
 
-// Fusionner les tableaux ['entity'][$name]
 foreach ($entities as $entity) {
     $name = $entity['name'];
     $uuid = intval(substr($entity['uuid'], 4));
+
     if (isset($statglpiversion['entity'][$name])) {
         $additionalInfo = $statglpiversion['entity'][$name];
-
     } else {
-        $defaultValues['name']=$name;
-        $defaultValues['entity_id']=$uuid;
+        $defaultValues['name'] = $name;
+        $defaultValues['entity_id'] = $uuid;
         $additionalInfo = $defaultValues;
     }
+
+    //  Forcer entity_id même si la source l’avait omis
+    if (!isset($additionalInfo['entity_id'])) {
+        $additionalInfo['entity_id'] = $uuid;
+    }
+
     $mergedArray[] = array_merge($entity, $additionalInfo);
 }
+
 $params =  array();
 $actiondetailsByMachs  = array();
 $actionupdateByentity  = array();
@@ -169,6 +177,7 @@ $emptydeployAll = new EmptyActionItem1(_T("There are no major updates to deploy 
 
 $title = _T("OS Upgrades", "updates");
 $texte_help = _T("%s machines in the entity \"%s\" can benefit from a major update.", "updates");
+
 foreach ($mergedArray as  $index=>$datacolonne) {
 
     $nbupdate = $datacolonne['W10to10'] + $datacolonne['W10to11'] + $datacolonne['W11to11'];
@@ -209,6 +218,7 @@ foreach ($mergedArray as  $index=>$datacolonne) {
     $comformite_name_major[]=(string) new medulla_progressbar_static($datacolonne['conformite'],
                                                                      "",
                                                                      $formattedText_help);
+
     // pour chaque action on passe les parametres
     $params[] = array(
         'entity' => $datacolonne['entity_id'],

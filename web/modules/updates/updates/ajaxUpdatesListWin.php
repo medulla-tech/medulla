@@ -38,11 +38,13 @@ $completename_cleaned = preg_replace('/\s+/', ' ', $completename_cleaned);
 $completename_cleaned = trim($completename_cleaned);
 $ide =$selected_location['uuid'];
 $titreentitystr = sprintf("%s  [%s] (%s)", $titreentity , $completename_cleaned, $ide);
-
 echo '<div style="display: block; clear: both;">';
-$p = new PageGenerator($titreentitystr);
-$p->setSideMenu($sidemenu);
-$p->display();
+echo "<h2>";
+echo $titreentitystr;
+echo "</h2>";
+// $p = new PageGenerator($titreentitystr);
+// $p->setSideMenu($sidemenu);
+// $p->display();
 echo "</div>";
 $ajaxG = new AjaxFilter(urlStrRedirect("updates/updates/ajaxUpdatesListWinGray"), "containerGray", $_GET['selected_location'], "formGray");
 $ajaxG->display();

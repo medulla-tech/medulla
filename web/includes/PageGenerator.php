@@ -1698,13 +1698,21 @@ class AjaxFilter extends HtmlElement
         $tab     = $_GET["tab"] ?? "default";
 
         // Construction d’un identifiant unique de contexte
-        $extra = "";
-        foreach ($_GET as $key => $value) {
-            if (!in_array($key, ['module', 'submod', 'tab', 'action', 'filter', 'start', 'end', 'maxperpage'])) {
-                $extra .= $key . "_" . $value;
-            }
+        // $extra = "";
+        // foreach ($_GET as $key => $value) {
+        //     if (!in_array($key, ['module', 'submod', 'tab', 'action', 'filter', 'start', 'end', 'maxperpage'])) {
+        //         $extra .= $key . "_" . $value;
+        //     }
+        // }
+$extra = "";
+foreach ($_GET as $key => $value) {
+    if (!in_array($key, ['module', 'submod', 'tab', 'action', 'filter', 'start', 'end', 'maxperpage'])) {
+        if (is_array($value)) {
+            $value = implode(",", $value); // ou json_encode($value);
         }
-
+        $extra .= $key . "_" . $value;
+    }
+}
         // --- Récupération des valeurs en session (filtres, pagination, etc.) ---
         $session_prefix = "{$module}_{$submod}_{$action}_{$tab}_{$extra}_";
 

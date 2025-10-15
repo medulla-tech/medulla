@@ -69,7 +69,7 @@ for($i = 0; $i < $count; $i++) {
         $updateids_black[] = "<a href=\"https://www.catalog.update.microsoft.com/Search.aspx?q='" . $black_list['updateid_or_kb'][$i] .'" target="_blank">' . $black_list['updateid_or_kb'][$i] . "</a>";
     }
 }
-
+$ids = array(); // Initialize the array
 // ########## Display BlackList Table ########## //
 // Add css ids to each tr tag in the table
 foreach($black_list['updateid_or_kb'] as $updateid) {
