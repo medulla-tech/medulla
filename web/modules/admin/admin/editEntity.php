@@ -100,7 +100,7 @@ if (isset($_POST["bcreate"])) {
         header("Location: " . urlStrRedirect("admin/admin/entitiesManagement", []));
         exit;
     }
-    $result = xmlrpc_create_entity_under_custom_parent($parentEntityId, $newEntityName);
+    $result = xmlrpc_create_entity_under_custom_parent($parentEntityId, $newEntityName, $_SESSION['login']);
     if ($result) {
         new NotifyWidgetSuccess(
             sprintf(

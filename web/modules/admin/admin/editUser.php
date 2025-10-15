@@ -23,6 +23,7 @@
 
 require("graph/navbar.inc.php");
 require("modules/admin/admin/localSidebar.php");
+require_once("includes/utils.inc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 require_once("modules/admin/includes/xmlrpc.php");
 ?>
@@ -33,38 +34,12 @@ require_once("modules/admin/includes/xmlrpc.php");
 </style>
 
 <?php
-function parseIniSection($filePath, $section)
-{
-    if (!is_readable($filePath)) {
-        return [];
-    }
-
-    $sectionData   = [];
-    $insideSection = false;
-    $lines         = file($filePath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-
-    foreach ($lines as $line) {
-        if (preg_match('/^\s*[;#]/', $line)) { continue; }
-        if (preg_match('/^\s*\[(.+?)\]\s*$/', $line, $m)) {
-            $insideSection = ($m[1] === $section);
-            continue;
-        }
-        if (!$insideSection) { continue; }
-        if (preg_match('/^\s*([^\s=]+)\s*=\s*(.*?)\s*$/', $line, $m)) {
-            $key = $m[1];
-            $val = $m[2];
-            $sectionData[$key] = $val;
-        }
-    }
-    return $sectionData;
-}
-
 function validatePasswords(string $pwd, string $pwd2, bool $isUpdate = false): array
 {
     if ($pwd === '' || $pwd2 === '') {
         return [false, $isUpdate
             ? _T("The password and its confirmation cannot be empty.", "admin")
-            : _T("Veuillez remplir le mot de passe et sa confirmation.", "admin")
+            : _T("Please complete the password and its confirmation.", "admin")
         ];
     }
 
@@ -81,7 +56,7 @@ function validatePasswords(string $pwd, string $pwd2, bool $isUpdate = false): a
         $errors[] = _T("The password must contain at least one capital letter.", "admin");
     }
     if (!preg_match('/[a-z]/', $pwd)) {
-        $errors[] = _T("The password must contain at least a tiny.", "admin");
+        $errors[] = _T("The password must contain at least a small letter.", "admin");
     }
     if (!preg_match('/\d/', $pwd)) {
         $errors[] = _T("The password must contain at least one figure.", "admin");
@@ -105,32 +80,6 @@ if (!isset($configPaths) || !is_array($configPaths)) {
 
 $configPaths['GLPI_INI_PATH']       = __sysconfdir__ . '/mmc/plugins/glpi.ini';
 $configPaths['GLPI_LOCAL_INI_PATH'] = __sysconfdir__ . '/mmc/plugins/glpi.ini.local';
-
-function fetchGlpiProvisioning(array $configPaths): array {
-    $base  = parseIniSection($configPaths['GLPI_INI_PATH'],       'provisioning_glpi');
-    $local = parseIniSection($configPaths['GLPI_LOCAL_INI_PATH'], 'provisioning_glpi');
-    return array_replace($base ?: [], $local ?: []);
-}
-
-// Returns the ACL channel for a GLPI profile name
-function getGlpiAclForProfile(string $profileName, array $configPaths, string $default=':base#main#default/'): string {
-    $profileName = trim($profileName ?? '');
-    if ($profileName === '') {
-        return $default;
-    }
-    $prov = fetchGlpiProvisioning($configPaths);
-
-    // Cell expected in .Ini: profile_acl_super-admin
-    $key = 'profile_acl_' . preg_replace('/\s+/', '-', $profileName);
-    $val = (string)($prov[$key] ?? '');
-
-    if ($val === '') {
-        $altKey = 'profile_acl_' . str_replace(' ', '_', $profileName);
-        $val = (string)($prov[$altKey] ?? '');
-    }
-
-    return ($val !== '') ? $val : $default;
-}
 
 
 $u = (isset($_SESSION['glpi_user']) && is_array($_SESSION['glpi_user']))
@@ -338,8 +287,14 @@ if (isset($_POST["bcreate"])) {
     $postedProfileId    = $normId($_POST['profiles_id']  ?? null);
     $postedEntityId     = $normId($_POST['entities_id']  ?? null);
     $postedIsRecursive  = (isset($_POST['is_recursive']) && $_POST['is_recursive'] === '1');
-    $pwd                = $_POST['newPassword']  ?? '';
-    $pwd2               = $_POST['newPassword2'] ?? '';
+    $authSource         = $_POST['auth_source'] ?? 'local';
+
+    if ($authSource === 'oidc') {
+        $pwd = $pwd2 = generatePassword(20, true);
+    } else {
+        $pwd                = $_POST['newPassword']  ?? '';
+        $pwd2               = $_POST['newPassword2'] ?? '';
+    }
 
     $fail = function(string $origin, string $msg) use ($postedUsername) {
         new NotifyWidgetFailure(
@@ -754,6 +709,12 @@ $recSelect->setElements([_T("No", "admin"), _T("Yes", "admin")]);
 $recSelect->setElementsVal(['0','1']); // No->0, Yes->1
 $recSelect->setSelected($isRecursiveDefault);
 
+$authSelect = new SelectItem('auth_source');
+$authSelect->setElements([_T("Local", "admin"), _T("OIDC", "admin")]);
+$authSelect->setElementsVal(['local', 'oidc']);
+$authDefault = (string)($_POST['auth_source'] ?? ($prefill['auth_source'] ?? 'local'));
+$authSelect->setSelected($authDefault);
+
 $addInput = function(ValidatingForm $form, string $name, string $label, string $value = '') use ($safe) {
     $form->add(
         new TrFormElement(
@@ -778,6 +739,8 @@ $form->push(new Table());
 $form->add(new TrFormElement(_T("User Profile", "admin"), $profileSelect));
 $form->add(new TrFormElement(_T("Entity", "admin"), $entitySelect));
 $form->add(new TrFormElement(_T("Apply to sub-entities (recursive)", "admin"), $recSelect));
+
+$form->add(new TrFormElement(_T("Authentication", "admin"), $authSelect));
 
 if ($mode === 'edit') {
     $displayEmail = (string)($prefill['username'] ?? '');
@@ -855,164 +818,226 @@ $form->display();
 
 <script>
 jQuery(function($){
-  // Password popup
-  const PW_ID1='newPassword', PW_ID2='newPassword2';
-  const $pw1=wirePwField(PW_ID1), $pw2=wirePwField(PW_ID2);
-  const hasPw = ($pw1?.length && $pw2?.length);
-  let $pwHints=null, pwAnchor=null, pwRaf=null, $pwCrit=null;
+  'use strict';
 
-  if (hasPw){
-    $pwHints=ensurePwHints(); $pwCrit=$pwHints.find('.crit');
-    $('#'+PW_ID1).on('focus', function(){
-      let $a=$('#container_input_'+this.id); if(!$a.length) $a=$(this).closest('span');
-      showPwHintsFor($a); pwUpdateDots($pw1.val()||''); matchPw();
+  // --- Constantes / sélecteurs
+  const PW1='newPassword', PW2='newPassword2', AUTH='auth_source';
+
+  const $pw1=$('#'+PW1).add('input[name="'+PW1+'"]');
+  const $pw2=$('#'+PW2).add('input[name="'+PW2+'"]');
+  const $form=$pw1.length?$pw1.closest('form'):$('form').first();
+  const $submit=$form.find('button[name="bupdate"], input[name="bupdate"]');
+  const $auth=$('#'+AUTH);
+
+  // MODE depuis l’URL (comme en PHP)
+  const qs=new URLSearchParams(location.search);
+  const isEdit = ((qs.get('mode')||'').toLowerCase()==='edit' && (qs.get('userId')||'')!=='');
+
+  // --- Helpers "required"
+  function stripRequiredPw(){
+    [$pw1,$pw2].forEach($el=>{
+      $el.prop('required',false).removeAttr('required').attr('aria-required','false');
+      if($el[0]?.setCustomValidity) $el[0].setCustomValidity('');
+      $el.removeClass('pw-error');
     });
-    $('#'+PW_ID2).on('focus', function(){ hidePwHints(); matchPw(); });
-    $('#'+PW_ID1+', #'+PW_ID2).on('blur', hidePwHintsIfNoFocus);
-    $(window).on('scroll resize', function(){
-      if(!pwAnchor) return; cancelAnimationFrame(pwRaf);
-      pwRaf=requestAnimationFrame(()=>positionPwHints(pwAnchor));
-    });
-    $pw1.on('input', matchPw); $pw2.on('input', matchPw);
-    $pw1.closest('form').on('submit', matchPw);
   }
+  function setRequiredPw(on){
+    [$pw1,$pw2].forEach($el=>{
+      if(on){ $el.prop('required',true).attr('required','required').attr('aria-required','true'); }
+      else { $el.prop('required',false).removeAttr('required').attr('aria-required','false'); }
+    });
+  }
+  function isLocalAuth(){ return (($auth.val()||'local')==='local'); }
+  function isTyping(){ return (($pw1.val()||'').trim()!=='' || ($pw2.val()||'').trim()!==''); }
 
-  function wirePwField(id){
-    const $input=$('#'+id); if(!$input.length) return null;
-    let $wrap=$('#container_input_'+id); if(!$wrap.length) $wrap=$input.closest('span');
-    $wrap.addClass('pw-wrap'); $input.attr({type:'password', autocomplete:'new-password'});
-    let $btn=$wrap.find('.pw-toggle[data-for="'+id+'"]');
-    if(!$btn.length) $btn=$input.closest('td').find('.pw-toggle[data-for="'+id+'"]').first();
-    if(!$btn.length){
-      $btn=$(`
-        <button type="button" class="pw-toggle" data-for="${id}"
-                aria-label="Afficher le mot de passe" aria-pressed="false"
-                data-open="img/login/open.svg" data-close="img/login/close.svg">
-          <img class="pw-icon" alt="">
-        </button>`);
+  // --- Affichage/masquage des lignes MDP (local ↔ oidc)
+  const $pw1Row = $pw1.closest('tr');
+  const $pw2Row = $pw2.closest('tr');
+  const $pwRows = $pw1Row.add($pw2Row);
+  function togglePwRows(show){
+    if($pwRows.length){
+      show ? $pwRows.show() : $pwRows.hide();
     }else{
-      if(!$btn.attr('data-open'))  $btn.attr('data-open','img/login/open.svg');
-      if(!$btn.attr('data-close')) $btn.attr('data-close','img/login/close.svg');
-      if(!$btn.find('img.pw-icon').length) $btn.append('<img class="pw-icon" alt="">');
+      const $c1 = $('#container_input_'+PW1).closest('span,div').add('#container_input_'+PW1);
+      const $c2 = $('#container_input_'+PW2).closest('span,div').add('#container_input_'+PW2);
+      show ? $c1.show() : $c1.hide();
+      show ? $c2.show() : $c2.hide();
     }
-    const hiddenInit=($input.attr('type')==='password');
-    $btn.find('img.pw-icon').attr('src', hiddenInit ? $btn.data('close') : $btn.data('open'));
-    $btn.attr('aria-label', hiddenInit ? 'Afficher le mot de passe' : 'Masquer le mot de passe')
-        .attr('aria-pressed', !hiddenInit);
-    $btn.appendTo($wrap).off('click').on('click', function(){
-      const wasHidden=($input.attr('type')==='password');
-      const newType=wasHidden?'text':'password'; $input.attr('type', newType);
-      const nowHidden=(newType==='password');
-      $(this).find('img.pw-icon').attr('src', nowHidden ? $(this).data('close') : $(this).data('open'));
-      $(this).attr('aria-label', nowHidden ? 'Afficher le mot de passe' : 'Masquer le mot de passe')
-             .attr('aria-pressed', !nowHidden);
-    });
-    const $td=$wrap.closest('td');
-    if(!$td.find('.pw-feedback').length){ $('<div class="pw-feedback" aria-live="polite"></div>').appendTo($td); }
-    return $input;
   }
+
+  // --- Hints / critères
+  let $pwHints=null, pwAnchor=null, $pwCrit=null, raf=null;
   function ensurePwHints(){
-    let $b=$('#pw-hints');
-    if(!$b.length){
-      $b=$(`
-        <div id="pw-hints" role="status" aria-live="polite">
-          <h4>Critères du mot de passe</h4>
-          <div class="crit" data-key="len"><span class="dot"></span><span>≥ 12 caractères</span></div>
-          <div class="crit" data-key="up"><span class="dot"></span><span>Au moins 1 majuscule</span></div>
-          <div class="crit" data-key="low"><span class="dot"></span><span>Au moins 1 minuscule</span></div>
-          <div class="crit" data-key="num"><span class="dot"></span><span>Au moins 1 chiffre</span></div>
-          <div class="crit" data-key="spec"><span class="dot"></span><span>Au moins 1 caractère spécial</span></div>
-          <div class="muted">Le mot de passe doit respecter tous les critères.</div>
-        </div>`);
-      $('body').append($b);
-    }
-    return $b;
+    let $b=$('#pw-hints'); if($b.length) return $b;
+    return $(`
+      <div id="pw-hints" role="status" aria-live="polite">
+        <h4>Critères du mot de passe</h4>
+        <div class="crit" data-key="len"><span class="dot"></span><span>≥ 12 caractères</span></div>
+        <div class="crit" data-key="up"><span class="dot"></span><span>Au moins 1 majuscule</span></div>
+        <div class="crit" data-key="low"><span class="dot"></span><span>Au moins 1 minuscule</span></div>
+        <div class="crit" data-key="num"><span class="dot"></span><span>Au moins 1 chiffre</span></div>
+        <div class="crit" data-key="spec"><span class="dot"></span><span>Au moins 1 caractère spécial</span></div>
+        <div class="muted">Ces critères ne s’appliquent que si vous modifiez le mot de passe.</div>
+      </div>`).appendTo('body');
   }
   function positionPwHints($a){
     if(!$a?.length) return;
-    const r=$a[0].getBoundingClientRect(), gap=12, vw=innerWidth, vh=innerHeight;
-    if($('#pw-hints').css('display')==='none') $('#pw-hints').css({visibility:'hidden', display:'block'});
-    const w=$('#pw-hints').outerWidth(), h=$('#pw-hints').outerHeight();
-    $('#pw-hints').css({visibility:''});
+    const r=$a[0].getBoundingClientRect(), gap=12, vw=innerWidth, vh=innerHeight, $h=$('#pw-hints');
+    if($h.css('display')==='none') $h.css({visibility:'hidden', display:'block'});
+    const w=$h.outerWidth(), h=$h.outerHeight(); $h.css({visibility:''});
     let left=r.right+gap, top=r.top+r.height/2-h/2; top=Math.max(8, Math.min(top, vh-h-8));
     let flip=false; if(left+w+8>vw){ left=Math.max(8, r.left-gap-w); flip=true; }
-    $('#pw-hints').toggleClass('flip', flip).css({left, top});
+    $h.toggleClass('flip', flip).css({left, top});
   }
   function showPwHintsFor($a){ pwAnchor=$a; positionPwHints($a); $('#pw-hints').stop(true,true).fadeIn(90); }
   function hidePwHints(){ $('#pw-hints').stop(true,true).fadeOut(90); pwAnchor=null; }
-  function hidePwHintsIfNoFocus(){ setTimeout(()=>{ if(!$(document.activeElement).is('#'+PW_ID1)) hidePwHints(); },0); }
+  function hidePwHintsIfNoFocus(){ setTimeout(()=>{ const $a=$(document.activeElement); if(!$a.is('#'+PW1) && !$a.is('#'+PW2)) hidePwHints(); },0); }
   function pwUpdateDots(v){
+    if(!$pwCrit) return true;
     const p={len:v.length>=12, up:/[A-Z]/.test(v), low:/[a-z]/.test(v), num:/\d/.test(v), spec:/[^A-Za-z0-9\s]/.test(v)};
     $pwCrit.each(function(){ $(this).toggleClass('ok', !!p[$(this).data('key')]); });
     return p.len && p.up && p.low && p.num && p.spec;
   }
-  function setPwMatch(ok,msg,forceMsg=false){
-    if($pw2[0]?.setCustomValidity) $pw2[0].setCustomValidity(ok?'':'Passwords do not match');
+
+  function setPwMatch(ok,msg){
+    if($pw2[0]?.setCustomValidity) $pw2[0].setCustomValidity(ok?'':(msg||'Invalid'));
     $pw2.toggleClass('pw-error', !ok);
-    $pw2.closest('td').find('.pw-feedback').text(forceMsg ? (msg||'') : (ok ? '' : (msg||'Les mots de passe ne correspondent pas.')));
+    return ok;
   }
-  function matchPw(){
-    if(!hasPw) return true;
+  function clearPwErrors(){
+    [$pw1,$pw2].forEach($el=>{ if($el[0]?.setCustomValidity) $el[0].setCustomValidity(''); $el.removeClass('pw-error'); });
+  }
+  function shouldShowHints(){ return isLocalAuth() && (!isEdit || isTyping()); }
+
+  function validatePw(){
+    if(!isLocalAuth()){ clearPwErrors(); hidePwHints(); return true; }
     const v1=($pw1.val()||'').trim(), v2=($pw2.val()||'').trim();
-    const policyOK=pwUpdateDots(v1);
-    if($pw1[0]?.setCustomValidity) $pw1[0].setCustomValidity((v1===''||policyOK)?'':'Password does not meet requirements');
-    $pw1.toggleClass('pw-error', v1!=='' && !policyOK);
-    if(v1==='' && v2==='') return setPwMatch(true,'');
-    if(v1==='' && v2!=='') return setPwMatch(false,"Saisissez d'abord le mot de passe.");
+
+    // EDIT + vide => OK sans popin
+    if(isEdit && v1==='' && v2===''){ clearPwErrors(); hidePwHints(); return true; }
+
+    if(shouldShowHints()){
+      if(!$pwHints){ $pwHints=ensurePwHints(); $pwCrit=$pwHints.find('.crit'); }
+      let $a=$('#container_input_'+PW1); if(!$a.length) $a=$pw1.closest('span,div');
+      showPwHintsFor($a); pwUpdateDots(v1);
+    } else { hidePwHints(); }
+
+    if(v1==='' && v2==='') return setPwMatch(false,'Veuillez saisir un mot de passe.');
     if(v1!=='' && v2==='') return setPwMatch(false,'Veuillez confirmer le mot de passe.');
+    if(v1==='' && v2!=='') return setPwMatch(false,"Saisissez d'abord le mot de passe.");
     if(v1 !== v2)          return setPwMatch(false,'Les mots de passe ne correspondent pas.');
-    if(!policyOK)          return setPwMatch(true,'Le mot de passe ne respecte pas les critères.', true);
+    if(!pwUpdateDots(v1))  return setPwMatch(false,'Le mot de passe ne respecte pas les critères.');
     return setPwMatch(true,'');
   }
 
-  // Email-as-username: inline message only (no popup)
-  const $uname=$('#newUsername');
-  if($uname.length){
-    const $wrap=$uname.closest('span').addClass('email-wrap');
-    const $cell=$wrap.closest('td');
-    if(!$cell.find('.email-feedback').length){ $('<div class="email-feedback" aria-live="polite"></div>').appendTo($cell); }
-    const $fb=$cell.find('.email-feedback');
-    const EMAIL_RE=/^[A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}$/;
+  // --- Bouton Afficher/Masquer (ajouté)
+  function wirePwToggle(id){
+    const $input=$('#'+id); if(!$input.length) return null;
 
-    function showErr(msg){ $uname.addClass('email-error').attr('aria-invalid','true'); if($uname[0]?.setCustomValidity) $uname[0].setCustomValidity('Invalid email'); $fb.text(msg||'Adresse email invalide.'); }
-    function clearErr(){ $uname.removeClass('email-error').attr('aria-invalid','false'); if($uname[0]?.setCustomValidity) $uname[0].setCustomValidity(''); $fb.text(''); }
+    // Cherche un conteneur raisonnable (compat tables/GLPI & co)
+    let $wrap=$('#container_input_'+id); if(!$wrap.length) $wrap=$input.closest('span,div,td');
+    $wrap.addClass('pw-wrap');
 
-    $uname.attr({ inputmode:'email', autocapitalize:'none', spellcheck:'false', title:'Enter a valid email address' });
+    // Force type initial + auto-complétion
+    const initialType = ($input.attr('type')||'password').toLowerCase()==='text' ? 'text' : 'password';
+    $input.attr({type: 'password', autocomplete:'new-password'});
 
-    $uname.on('input', function(){ clearErr(); }); // clear on input
-    $uname.on('blur', function(){
-      const v=($uname.val()||'').trim();
-      if(v===''){ showErr(); return; } 
-      if(!EMAIL_RE.test(v)){ showErr(); return; }
-      clearErr();
+    // Bouton existant ? (permet une intégration HTML si déjà présent)
+    let $btn=$wrap.find('.pw-toggle[data-for="'+id+'"]').first();
+    if(!$btn.length){
+      $btn=$(`
+        <button type="button" class="pw-toggle" data-for="${id}"
+                aria-label="Afficher le mot de passe" aria-controls="${id}"
+                aria-pressed="false"
+                data-open="img/login/open.svg" data-close="img/login/close.svg">
+          <img class="pw-icon" alt="">
+        </button>`);
+      // À défaut d’icônes, on mettra un libellé texte (fallback léger)
+      $btn.append('<span class="pw-text" style="position:absolute;left:-9999px;">toggle</span>');
+      $btn.appendTo($wrap);
+    }else if(!$btn.find('img.pw-icon').length){
+      $btn.append('<img class="pw-icon" alt="">');
+    }
+
+    // Mise à jour visuelle selon l’état
+    function syncBtn(isHidden){
+      const $icon=$btn.find('img.pw-icon');
+      const open=$btn.data('open')||'';
+      const close=$btn.data('close')||'';
+      $icon.attr('src', isHidden ? close : open);
+      $btn.attr('aria-label', isHidden ? 'Afficher le mot de passe' : 'Masquer le mot de passe')
+          .attr('aria-pressed', !isHidden);
+    }
+    syncBtn(($input.attr('type')==='password'));
+
+    // Toggle
+    $btn.off('click').on('click', function(){
+      const wasHidden=($input.attr('type')==='password');
+      const newType= wasHidden ? 'text' : 'password';
+      // Préserve la position du curseur au maximum
+      const start=$input[0]?.selectionStart, end=$input[0]?.selectionEnd;
+      $input.attr('type', newType);
+      try{ if(start!=null && end!=null){ $input[0].setSelectionRange(start,end); } }catch(e){}
+      syncBtn(newType==='password');
+      $input.trigger('focus');
     });
 
-    window.__checkEmailUsername=function(){
-      const v=($uname.val()||'').trim();
-      const ok=(v!=='' && EMAIL_RE.test(v));
-      if(!ok) showErr(); else clearErr();
-      return ok;
-    };
+    // Zone de feedback s'il n'existe pas
+    const $td=$wrap.closest('td');
+    if($td.length && !$td.find('.pw-feedback').length){
+      $('<div class="pw-feedback" aria-live="polite"></div>').appendTo($td);
+    }
+    return $input;
   }
 
-  // Phone validation (inline)
-  const $phone=$('#newPhone');
-  if($phone.length){
-    const $wrap=$phone.closest('span').addClass('phone-wrap');
-    if(!$wrap.closest('td').find('.phone-feedback').length){ $('<div class="phone-feedback" aria-live="polite"></div>').appendTo($wrap.closest('td')); }
-    const $fb=$wrap.closest('td').find('.phone-feedback');
-    const PHONE_RE=/^\+?[0-9\s\-\(\)]{6,}$/;
-    function checkPhone(){ const v=($phone.val()||'').trim(); const ok=(v==='' || PHONE_RE.test(v)); $phone.toggleClass('phone-error', !ok); $fb.text(ok?'':'Numéro de téléphone invalide.'); return ok; }
-    $phone.on('input blur', checkPhone);
+  // --- Init "required" selon le mode
+  if(isEdit){
+    stripRequiredPw();
+    $submit.attr('formnovalidate', true).on('click', stripRequiredPw);
+  }else{
+    setRequiredPw(true);
   }
 
-  // Global submit guard
-  $('form').on('submit', function(e){
-    let ok=true;
-    if(typeof window.__checkEmailUsername==='function') ok=window.__checkEmailUsername() && ok;
-    if($phone.length) ok=(typeof checkPhone==='function' ? checkPhone() : true) && ok;
-    if(hasPw) ok=(matchPw() !== false) && ok;
-    if(!ok){ e.preventDefault(); ($('.email-error, .phone-error, .pw-error').get(0) || this).focus(); }
+  // --- Règles d’affichage selon auth source
+  $auth.on('change', function(){
+    if(isLocalAuth()){
+      togglePwRows(true);
+      if(isEdit) stripRequiredPw(); else setRequiredPw(true);
+    }else{
+      togglePwRows(false);
+      stripRequiredPw();
+      $pw1.val(''); $pw2.val(''); hidePwHints();
+    }
+  }).trigger('change');
+
+  // --- Hints: focus/blur/input
+  $pw1.on('focus', function(){
+    if(shouldShowHints()){
+      if(!$pwHints){ $pwHints=ensurePwHints(); $pwCrit=$pwHints.find('.crit'); }
+      let $a=$('#container_input_'+PW1); if(!$a.length) $a=$pw1.closest('span,div');
+      showPwHintsFor($a); pwUpdateDots(($pw1.val()||'').trim());
+    }
   });
+  $pw2.on('focus', function(){ if(shouldShowHints()){ validatePw(); }});
+  $pw1.add($pw2).on('blur', hidePwHintsIfNoFocus);
+
+  $pw1.on('input', function(){ if(isEdit && !isTyping()){ clearPwErrors(); hidePwHints(); return; } validatePw(); });
+  $pw2.on('input', function(){ if(isEdit && !isTyping()){ clearPwErrors(); hidePwHints(); return; } validatePw(); });
+
+  // --- Submit
+  $form.on('submit', function(e){
+    if(isEdit) stripRequiredPw(); // re-strip avant envoi
+    if(!validatePw()){ e.preventDefault(); ($('.pw-error').get(0) || this).focus(); }
+  });
+
+  // --- Repositionnement des hints
+  $(window).on('scroll resize', function(){
+    if(!pwAnchor) return; cancelAnimationFrame(raf);
+    raf=requestAnimationFrame(()=>positionPwHints(pwAnchor));
+  });
+
+  // --- Activation des boutons Afficher/Masquer pour les deux champs
+  wirePwToggle(PW1);
+  wirePwToggle(PW2);
 });
 </script>

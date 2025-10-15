@@ -6,8 +6,8 @@
 import traceback
 
 # SqlAlchemy
-from sqlalchemy import create_engine, MetaData, select
-from sqlalchemy.exc import DBAPIError
+from sqlalchemy import create_engine, MetaData, select, func
+from sqlalchemy.exc import DBAPIError, SQLAlchemyError
 from sqlalchemy.ext.automap import automap_base
 
 
@@ -85,7 +85,7 @@ class AdminDatabase(DatabaseHelper):
 
         # Lists to exclude or include specific tables for mapping
         exclude_table = []
-        include_table = ['providers']
+        include_table = ['providers', 'magic_link']
 
         # Dynamically add attributes to the object for each mapped class
         for table_name, mapped_class in Base.classes.items():
@@ -181,7 +181,7 @@ class AdminDatabase(DatabaseHelper):
             return config_api
 
     @DatabaseHelper._sessionm
-    def create_entity_under_custom_parent(self, session, entity_id, name, tag_value):
+    def create_entity_under_custom_parent(self, session, entity_id, name, tag_value, stripe_tag=None):
         """
         Insère une nouvelle entité dans la table saas_organisations
         après création dans GLPI, en utilisant l'UUID/tag généré côté Python.
@@ -191,6 +191,7 @@ class AdminDatabase(DatabaseHelper):
             entity_id (int|str): ID GLPI de l'entité (enfant créée)
             name (str): Nom de l'entité
             tag_value (str): UUID utilisé aussi pour GLPI
+            stripe_tag (str|None): Valeur à stocker dans saas_organisations.stripe_tag (NULL si absent)
 
         Returns:
             organisation_id: l'id de l'org créée dans la base
@@ -200,6 +201,7 @@ class AdminDatabase(DatabaseHelper):
             entity_id=str(entity_id),
             entity_name=name,
             tag_name=tag_value,
+            stripe_tag=stripe_tag,
         )
         session.add(org)
         session.flush()
@@ -216,6 +218,19 @@ class AdminDatabase(DatabaseHelper):
         row = (
             session.query(self.Saas_organisations.dl_tag)
             .filter(self.Saas_organisations.tag_name == t)
+            .first()
+        )
+        return row[0] if row else None
+
+    @DatabaseHelper._sessionm
+    def get_id_entity(self, session, stripe_tag):
+        stripe_tag = (stripe_tag or "").strip()
+        if not stripe_tag:
+            return None
+
+        row = (
+            session.query(self.Saas_organisations.entity_id)
+            .filter(self.Saas_organisations.stripe_tag == stripe_tag)
             .first()
         )
         return row[0] if row else None
@@ -502,3 +517,39 @@ class AdminDatabase(DatabaseHelper):
             .scalar())
 
         return token
+
+    @DatabaseHelper._sessionm
+    def validateToken(self, session, uid: str, token: str) -> bool:
+        uid = (uid or "").strip()
+        token = (token or "").strip()
+
+        if not uid or not token:
+            return False
+
+        ML = getattr(self, "Magic_link", None)
+        if ML is None:
+            return False
+
+        try:
+            row = (
+                session.query(ML)
+                .with_for_update()
+                .filter(ML.login == uid)
+                .filter(ML.token == token)
+                .filter(ML.used_at.is_(None))
+                .filter(ML.expires_at > func.now())
+                .first()
+            )
+            if not row:
+                session.rollback()
+                return False
+
+            # Consume the link (single use)
+            row.used_at = func.now()
+            session.flush()
+            session.commit()
+            return True
+
+        except SQLAlchemyError:
+            session.rollback()
+            return False

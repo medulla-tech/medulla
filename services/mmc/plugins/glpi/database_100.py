@@ -40,7 +40,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import create_session, mapper, relationship, class_mapper
 from sqlalchemy.exc import NoSuchTableError, NoInspectionAvailable
-
+from mmc.support.apirest.glpi import GLPIClient
 
 try:
     from sqlalchemy.sql.expression import ColumnOperators
@@ -59,9 +59,10 @@ from mmc.database.database_helper import DatabaseHelper
 # TODO rename location into entity (and locations in location)
 from pulse2.utils import same_network, unique, noNone
 from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
+from pulse2.database.admin import AdminDatabase
 from pulse2.managers.group import ComputerGroupManager
 from mmc.plugins.glpi.config import GlpiConfig
-from mmc.plugins.glpi.GLPIClient import XMLRPCClient
+# from mmc.plugins.glpi.GLPIClient import XMLRPCClient
 from mmc.plugins.glpi.utilities import complete_ctx, literalquery
 from mmc.plugins.glpi.database_utils import (
     decode_latin1,
@@ -84,6 +85,7 @@ import traceback
 import sys
 from collections import OrderedDict
 import decimal
+from typing import Iterable
 
 logger = logging.getLogger()
 
@@ -6353,47 +6355,41 @@ class Glpi100(DyngroupDatabaseHelper):
         @return: True if the machine successfully deleted
         @rtype: bool
         """
-        authtoken = base64.b64encode(
-            bytes(
-                "%s:%s"
-                % (
-                    GlpiConfig.webservices["glpi_username"],
-                    GlpiConfig.webservices["glpi_password"],
-                ),
-                "utf-8",
-            )
-        )
 
-        headers = {
-            "content-type": "application/json",
-            "Authorization": "Basic " + authtoken.decode("utf-8"),
-        }
-        url = GlpiConfig.webservices["glpi_base_url"] + "initSession"
-        self.logger.debug("Create session REST")
-        r = requests.get(url, headers=headers)
-        if r.status_code == 200:
-            sessionwebservice = str(json.loads(r.text)["session_token"])
-            self.logger.debug("session %s" % sessionwebservice)
-            url = (
-                GlpiConfig.webservices["glpi_base_url"]
-                + "Computer/"
-                + str(fromUUID(uuid))
-            )
-            headers = {
-                "content-type": "application/json",
-                "Session-Token": sessionwebservice,
-            }
-            if GlpiConfig.webservices["purge_machine"]:
-                parameters = {"force_purge": "1"}
-            else:
-                parameters = {"force_purge": "0"}
-            r = requests.delete(url, headers=headers, params=parameters)
-            if r.status_code == 200:
-                self.logger.debug("Machine %s deleted" % str(fromUUID(uuid)))
-                self._killsession(sessionwebservice)
-                return True
-        self._killsession(sessionwebservice)
-        return False
+        # GLPIClient
+        # recupere les information de connection
+        initparametre = AdminDatabase().get_CONNECT_API()
+        # Liste des clés à vérifier
+        cles_requises = ["glpi_mmc_app_token", "glpi_url_base_api", "glpi_root_user_token"]
+
+        # Vérification
+        valide = True
+        for cle in cles_requises:
+            if cle not in initparametre:
+                logger.error(f"❌ La clé '{cle}' est manquante dans initparametre.voir parametres saas_application")
+                valide = False
+            elif not initparametre[cle]:
+                logger.error(f"❌ La clé '{cle}' est vide ou None. voir parametres saas_application")
+                valide = False
+        if not valide:
+            logger.error("\n❌ Certaines clés sont manquantes ou invalides. voir parametres saas_application")
+            return None
+
+        client = GLPIClient(
+            app_token=initparametre.get('glpi_mmc_app_token'),
+            url_base=initparametre.get('glpi_url_base_api'),
+            user_token=initparametre.get('glpi_root_user_token'),
+        )
+        client.init_session()
+
+        # Vérifie que le client est bien initialisé et qu'une session est active
+        if not client or not hasattr(client, 'SESSION_TOKEN') or not client.SESSION_TOKEN:
+            logger.error("Session GLPI non initialisée : impossible d'obtenir un client valide")
+            return None
+
+        computer_id =fromUUID(uuid)
+        result = client.delete_computer(computer_id, force_purge=True)
+        return result
 
     @DatabaseHelper._sessionm
     def addUser(self, session, username, password, entity_rights=None):
@@ -7459,6 +7455,193 @@ class Glpi100(DyngroupDatabaseHelper):
             return {}
 
     @DatabaseHelper._sessionm
+    def get_user_profile_name(self, session, name: str) -> str:
+        sql = """
+            SELECT gp.name AS nameprofil
+            FROM glpi.glpi_users gu
+            LEFT JOIN glpi.glpi_profiles_users gpu
+                ON gpu.id = (
+                    SELECT gpu2.id
+                    FROM glpi.glpi_profiles_users gpu2
+                    WHERE gpu2.users_id = gu.id
+                    ORDER BY (gpu2.entities_id = gu.entities_id) DESC, gpu2.id DESC
+                    LIMIT 1
+                )
+            LEFT JOIN glpi.glpi_profiles gp
+                ON gp.id = gpu.profiles_id
+            WHERE gu.name = :name
+            LIMIT 1
+        """
+        row = session.execute(sql, {"name": name}).fetchone()
+        return row.nameprofil or "" if row else ""
+
+    @DatabaseHelper._sessionm
+    def list_entity_ids_subtree(self, session, id) -> dict:
+        """
+        Retourne toutes les entités du sous-arbre (racine incluse).
+        - id: int OU liste/tuple/set d’ids (plusieurs racines)
+        Retour:
+        {
+            "entity_ids": [int, ...],
+            "total_entities": int
+        }
+        """
+        # Normalisation racines
+        if isinstance(id, (list, tuple, set)):
+            roots = [int(x) for x in id if x is not None]
+        else:
+            row = session.execute(
+                """
+                SELECT id
+                FROM glpi_entities
+                WHERE id = :rid
+                """,
+                {"rid": int(id)}
+            ).fetchone()
+            if not row:
+                return {"entity_ids": [], "total_entities": 0}
+            roots = [int(row.id)]
+
+        if not roots:
+            return {"entity_ids": [], "total_entities": 0}
+
+        ids = list(roots)
+        visited = set(roots)
+        frontier = list(roots)
+
+        def build_in_clause(vals: Iterable[int], base="ids"):
+            placeholders, params = [], {}
+            for i, v in enumerate(vals):
+                k = f"{base}_{i}"
+                placeholders.append(f":{k}")
+                params[k] = int(v)
+            return ", ".join(placeholders), params
+
+        # BFS sur entities_id
+        while frontier:
+            placeholders, params = build_in_clause(frontier, "ids")
+            children = session.execute(
+                f"""
+                SELECT id
+                FROM glpi_entities
+                WHERE entities_id IN ({placeholders})
+                """,
+                params
+            ).fetchall()
+
+            next_frontier = []
+            for r in children:
+                eid = int(r.id)
+                if eid in visited:
+                    continue
+                visited.add(eid)
+                ids.append(eid)
+                next_frontier.append(eid)
+
+            frontier = next_frontier
+
+        out = {"entity_ids": ids, "total_entities": len(ids)}
+        logging.getLogger().debug(f"[entities_subtree] {out}")
+        return out
+
+    @DatabaseHelper._sessionm
+    def list_user_ids_in_subtree(self, session, id) -> dict:
+        """
+        Liste DISTINCT des users_id liés (glpi_profiles_users) à la/aux entité(s)
+        racine(s) + toutes les sous-entités.
+        - id: int OU liste/tuple/set d’ids OU dict {"entity_ids":[...]}
+        Retour:
+        {
+            "user_ids": [int, ...],
+            "total_users": int
+        }
+        """
+        # Normalisation de l'argument id
+        if isinstance(id, dict) and "entity_ids" in id:
+            entity_ids = [int(x) for x in id["entity_ids"]]
+        elif isinstance(id, (list, tuple, set)):
+            entity_ids = [int(x) for x in id if x is not None]
+        else:
+            ents = self.list_entity_ids_subtree(int(id))
+            entity_ids = ents.get("entity_ids", [])
+
+        if not entity_ids:
+            return {"user_ids": [], "total_users": 0}
+
+        def build_in_clause(vals: Iterable[int], base="eids"):
+            placeholders, params = [], {}
+            for i, v in enumerate(vals):
+                key = f"{base}_{i}"
+                placeholders.append(f":{key}")
+                params[key] = int(v)
+            return ", ".join(placeholders), params
+
+        placeholders, params = build_in_clause(entity_ids, "eids")
+
+        rows = session.execute(
+            f"""
+            SELECT DISTINCT pu.users_id AS user_id
+            FROM glpi_profiles_users pu
+            WHERE pu.entities_id IN ({placeholders})
+            ORDER BY pu.users_id
+            """,
+            params
+        ).fetchall()
+
+        user_ids = [int(r.user_id) for r in rows]
+        out = {"user_ids": user_ids, "total_users": len(user_ids)}
+        logging.getLogger().debug(f"[users_in_subtree] {out}")
+        return out
+
+    @DatabaseHelper._sessionm
+    def list_computer_ids_in_subtree(self, session, id) -> dict:
+        """
+        Liste des computers (glpi_computers.id) pour la/les entité(s) + sous-entités.
+        - id: int OU liste/tuple/set d’ids OU dict {"entity_ids":[...]}
+        Retour:
+        {
+            "computer_ids": [int, ...],
+            "total_computers": int
+        }
+        """
+        # Normalisation de l'argument id
+        if isinstance(id, dict) and "entity_ids" in id:
+            entity_ids = [int(x) for x in id["entity_ids"]]
+        elif isinstance(id, (list, tuple, set)):
+            entity_ids = [int(x) for x in id if x is not None]
+        else:
+            ents = self.list_entity_ids_subtree(int(id))
+            entity_ids = ents.get("entity_ids", [])
+
+        if not entity_ids:
+            return {"computer_ids": [], "total_computers": 0}
+
+        def build_in_clause(vals: Iterable[int], base="eids"):
+            placeholders, params = [], {}
+            for i, v in enumerate(vals):
+                key = f"{base}_{i}"
+                placeholders.append(f":{key}")
+                params[key] = int(v)
+            return ", ".join(placeholders), params
+
+        placeholders, params = build_in_clause(entity_ids, "eids")
+
+        rows = session.execute(
+            f"""
+            SELECT DISTINCT c.id AS computer_id
+            FROM glpi_computers c
+            WHERE c.entities_id IN ({placeholders})
+            ORDER BY c.id
+            """,
+            params
+        ).fetchall()
+
+        computer_ids = [int(r.computer_id) for r in rows]
+        out = {"computer_ids": computer_ids, "total_computers": len(computer_ids)}
+        logging.getLogger().debug(f"[computers_in_subtree] {out}")
+        return out
+
+    @DatabaseHelper._sessionm
     def get_entities_with_counts_root(self,
                                       session,
                                       filter: str = None,
@@ -7628,18 +7811,90 @@ class Glpi100(DyngroupDatabaseHelper):
         return token
 
     @DatabaseHelper._sessionm
+    def get_user_identifier(self, session, id_user: int) -> str | None:
+        row = session.execute(
+            text("SELECT name FROM glpi_users WHERE id = :id_user"),
+            {"id_user": id_user}
+        ).fetchone()
+        return row[0].strip() if row and row[0] else None
+
+    @DatabaseHelper._sessionm
     def get_user_profile_email(self,
-                            session,
-                            id_user: int,
-                            id_profile: int | None = None,
-                            id_entity: int | None = None,
-                            is_active: int | None = None) -> dict:
+                               session,
+                               id_user: int,
+                               id_profile: int | None = None,
+                               id_entity: int | None = None,
+                               is_active: int | None = None,
+                               filters: dict | None = None) -> dict:
         """
         User information + most relevant profile/entity link.
         If Id_Profile and Id_entity are provided, we favor the exact match.
         Return {} if nothing found.
         """
-        sqlrequest = """
+        filters = filters or {}
+        q            = (filters.get("q") or "").strip() or None
+        email_f      = (filters.get("email") or "").strip() or None
+        phone_f      = (filters.get("phone") or "").strip() or None
+        profile_name = (filters.get("profile_name") or "").strip() or None
+        entity_name  = (filters.get("entity_name") or "").strip() or None
+        name_f       = (filters.get("name") or "").strip() or None
+        firstname_f  = (filters.get("firstname") or "").strip() or None
+        realname_f   = (filters.get("realname") or "").strip() or None
+
+        if "is_active" in filters and filters.get("is_active") is not None:
+            val = str(filters.get("is_active")).strip().lower()
+            if val in ("1", "true", "yes", "on"):
+                is_active = 1
+            elif val in ("0", "false", "no", "off"):
+                is_active = 0
+
+        conds = [
+            "gu.id = :id_user",
+            "(:id_profile IS NULL OR gpu.profiles_id = :id_profile)",
+            "(:id_entity  IS NULL OR gpu.entities_id  = :id_entity)"
+        ]
+        params = {
+            "id_user": id_user,
+            "id_profile": id_profile,
+            "id_entity": id_entity
+        }
+
+        if is_active is not None:
+            conds.append("gu.is_active = :is_active")
+            params["is_active"] = int(is_active)
+
+        if q:
+            conds.append("""(
+                gu.name LIKE :q OR gu.realname LIKE :q OR gu.firstname LIKE :q
+                OR gm.email LIKE :q OR gu.phone LIKE :q
+                OR gp.name LIKE :q OR ge.name LIKE :q OR ge.completename LIKE :q
+            )""")
+            params["q"] = f"%{q}%"
+        if email_f:
+            conds.append("gm.email LIKE :email_f")
+            params["email_f"] = f"%{email_f}%"
+        if phone_f:
+            conds.append("gu.phone LIKE :phone_f")
+            params["phone_f"] = f"%{phone_f}%"
+        if profile_name:
+            conds.append("gp.name LIKE :profile_name")
+            params["profile_name"] = f"%{profile_name}%"
+        if entity_name:
+            conds.append("ge.name LIKE :entity_name")
+            params["entity_name"] = f"%{entity_name}%"
+        if name_f:
+            conds.append("gu.name LIKE :name_f")
+            params["name_f"] = f"%{name_f}%"
+        if firstname_f:
+            conds.append("gu.firstname LIKE :firstname_f")
+            params["firstname_f"] = f"%{firstname_f}%"
+        if realname_f:
+            conds.append("gu.realname LIKE :realname_f")
+            params["realname_f"] = f"%{realname_f}%"
+
+        where_sql = " AND ".join(conds)
+
+        sqlrequest = f"""
         SELECT
             gu.id             AS user_id,
             gu.name,
@@ -7692,23 +7947,18 @@ class Glpi100(DyngroupDatabaseHelper):
 
         FROM glpi.glpi_users gu
         LEFT JOIN glpi.glpi_useremails gm
-            ON gm.users_id = gu.id AND gm.is_default = 1
-        INNER JOIN glpi.glpi_profiles_users gpu
-                ON gpu.users_id = gu.id
-        INNER JOIN glpi.glpi_profiles gp
-                ON gp.id = gpu.profiles_id
-        INNER JOIN glpi.glpi_entities ge
-                ON ge.id = gpu.entities_id
+               ON gm.users_id = gu.id AND gm.is_default = 1
+        INNER JOIN glpi.glpi_profiles_users gpu ON gpu.users_id = gu.id
+        INNER JOIN glpi.glpi_profiles gp        ON gp.id = gpu.profiles_id
+        INNER JOIN glpi.glpi_entities ge        ON ge.id = gpu.entities_id
 
-        WHERE gu.id = :id_user
-        AND (:id_profile IS NULL OR gpu.profiles_id = :id_profile)
-        AND (:id_entity  IS NULL OR gpu.entities_id  = :id_entity)
+        WHERE {where_sql}
 
         ORDER BY
             exact_match            DESC,
             match_entity           DESC,
             match_profile          DESC,
-            link_is_default        DESC,  -- dérivé ci-dessus
+            link_is_default        DESC,
             is_user_global_default DESC,
             in_target_entity       DESC,
             profile_power          DESC,
@@ -7716,15 +7966,12 @@ class Glpi100(DyngroupDatabaseHelper):
             gp.id                  DESC
         LIMIT 1
         """
-        params = {
-            "id_user": id_user,
-            "id_profile": id_profile,
-            "id_entity": id_entity
-        }
+
         row = session.execute(sqlrequest, params).fetchone()
-        def safe(v): return "" if v is None else v
         if not row:
             return {}
+
+        def safe(v): return "" if v is None else (int(v) if isinstance(v, Decimal) else v)
         m = dict(row._mapping)
         return {
             "user_id":             safe(m.get("user_id")),
@@ -7733,7 +7980,7 @@ class Glpi100(DyngroupDatabaseHelper):
             "firstname":           safe(m.get("firstname")),
             "email":               safe(m.get("email")),
             "is_active":           int(m.get("is_active") or 0),
-            "is_disabled":         not bool(m.get("is_active")),
+            "is_disabled":         int(not bool(m.get("is_active"))),
             "profiles_id":         safe(m.get("profiles_id")),
             "profile_name":        safe(m.get("profile_name")),
             "last_login":          safe(m.get("last_login")),
@@ -7747,6 +7994,36 @@ class Glpi100(DyngroupDatabaseHelper):
             "level_entity":        safe(m.get("level_entity")),
             "link_is_recursive":   int(m.get("link_is_recursive") or 0),
             "link_is_default":     int(m.get("link_is_default") or 0),
+        }
+
+    @DatabaseHelper._sessionm
+    def get_complete_name(self, session, id_entity):
+        """
+        Récupérer le complete_name
+        """
+        sqlrequest = """
+            SELECT 
+                name,
+                completename,
+                tag
+            FROM glpi_entities
+            WHERE id = :id_entity
+        """
+
+        params = {
+            "id_entity": id_entity
+        }
+
+        row = session.execute(sqlrequest, params).fetchone()
+
+        if not row:
+            return {}
+
+        m = dict(row._mapping)
+        return {
+            "name":                     m.get("name"),
+            "completename":             m.get("completename"),
+            "tag":                      m.get("tag"),
         }
 
     @DatabaseHelper._sessionm

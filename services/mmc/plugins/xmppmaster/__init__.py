@@ -385,26 +385,26 @@ class RpcProxy(RpcProxyI):
     def delMachineXmppPresence(self,uuidinventory):
         return XmppMasterDatabase().delMachineXmppPresence(uuidinventory)
 
-
-    def setlogxmpp(self,
-        text, type, sessionname, priority, who,
-        how, why, module, action, touser, fromuser
-    ):
-        if sessionname.startswith("update"):
-            type = "update"
-        return XmppMasterDatabase().setlogxmpp(
-            text,
-            type,
-            sessionname,
-            priority,
-            who,
-            how,
-            why,
-            module,
-            action,
-            touser,
-            fromuser,
-        )
+    #
+    # def setlogxmpp(self,
+    #     text, type, sessionname, priority, who,
+    #     how, why, module, action, touser, fromuser
+    # ):
+    #     if sessionname.startswith("update"):
+    #         type = "update"
+    #     return XmppMasterDatabase().setlogxmpp(
+    #         text,
+    #         type,
+    #         sessionname,
+    #         priority,
+    #         who,
+    #         how,
+    #         why,
+    #         module,
+    #         action,
+    #         touser,
+    #         fromuser,
+    #     )
 
 
     def setlogxmpp(self,
@@ -546,8 +546,8 @@ class RpcProxy(RpcProxyI):
 
     def getGuacamoleRelayServerMachineHostnameProto(self, hostname):
         result = {
-            "machine": getGuacamoleRelayServerMachineHostname(hostname),
-            "proto": getGuacamoleIdForHostname(hostname),
+            "machine": self.getGuacamoleRelayServerMachineHostname(hostname),
+            "proto": self.getGuacamoleIdForHostname(hostname),
         }
         return result
 
@@ -757,7 +757,7 @@ class RpcProxy(RpcProxyI):
                 "ret": 0,
                 "base64": False,
             }
-            updatedeploystate(result["sessionid"],
+            self.updatedeploystate(result["sessionid"],
                             "ABORT DEPLOYMENT CANCELLED BY USER")
             if "jid_relay" in result and result["jid_relay"] != "fake_jidrelay":
                 send_message_json(result["jid_relay"], msg_stop_deploy)
@@ -778,7 +778,7 @@ class RpcProxy(RpcProxyI):
         }
         for machine in result["objectdeploy"]:
             msg_stop_deploy["sessionid"] = machine["sessionid"]
-            updatedeploystate1(machine["sessionid"],
+            self.updatedeploystate1(machine["sessionid"],
                             "ABORT DEPLOYMENT CANCELLED BY USER")
             if "jidmachine" in machine and machine["jidmachine"] != "fake_jidmachine":
                 send_message_json(machine["jidmachine"], msg_stop_deploy)
@@ -1218,6 +1218,17 @@ class RpcProxy(RpcProxyI):
                     )
                     logging.getLogger().error("Please check the logs in the client machine")
 
+
+    def delcomputer(self, uuid, hostname=""):
+        if uuid not in [None, ""]:
+            self.callrestartbot(uuid)
+            return XmppMasterDatabase().delMachineXmppPresence(uuid)
+        else:
+            self.callrestartbothostname(hostname)
+            return XmppMasterDatabase().delMachineXmppPresenceHostname(hostname)
+
+
+
 #############JFKJFK
 def createdirectoryuser(directory):
     if not os.path.exists(directory):
@@ -1288,7 +1299,6 @@ def remotefile(currentdir, jidmachine):
 def listremotefileedit(jidmachine):
     aa = calllistremotefileedit(jidmachine)
     objout = json.loads(aa)
-    print(objout["data"]["result"])
     return objout["data"]["result"]
 
 
@@ -1627,14 +1637,6 @@ def get_auto_approve_rules(colonne=True):
 def update_auto_approve_rules(updates):
     return XmppMasterDatabase().update_auto_approve_rules(updates)
 
-
-def delcomputer(uuid, hostname=""):
-    if uuid not in [None, ""]:
-        callrestartbot(uuid)
-        return XmppMasterDatabase().delMachineXmppPresence(uuid)
-    else:
-        callrestartbothostname(hostname)
-        return XmppMasterDatabase().delMachineXmppPresenceHostname(hostname)
 
 
 def get_log_status():

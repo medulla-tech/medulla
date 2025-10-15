@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-08 11:49+0200\n"
+"POT-Creation-Date: 2025-10-07 17:12+0200\n"
 "PO-Revision-Date: 2023-12-12 11:56+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2025\n"
 "Language-Team: Japanese (Japan) (https://app.transifex.com/medulla/teams/72118/ja_JP/)\n"
@@ -586,6 +586,7 @@ msgid "Automatic approval (White list)"
 msgstr ""
 
 #: modules/updates/updates/approve_rules.php:114
+#: modules/updates/updates/approve_products.php:121
 msgid "Apply"
 msgstr ""
 
@@ -598,6 +599,22 @@ msgstr ""
 #: modules/updates/infoPackage.inc.php:48
 #: modules/updates/infoPackage.inc.php:52
 msgid "Details by Machines"
+msgstr ""
+
+#: modules/updates/updates/approve_products.php:32
+msgid "Approve rule gray_list to white_list"
+msgstr ""
+
+#: modules/updates/updates/approve_products.php:90
+msgid "Product Microsoft"
+msgstr ""
+
+#: modules/updates/updates/approve_products.php:91
+msgid "approve update"
+msgstr ""
+
+#: modules/updates/updates/approve_products.php:101
+msgid "approval update Microsoft"
 msgstr ""
 
 #: modules/updates/updates/localSidebar.php:30
@@ -824,4 +841,8 @@ msgstr ""
 
 #: modules/updates/infoPackage.inc.php:245
 msgid "Deployment details on group entity"
+msgstr ""
+
+#: modules/updates/infoPackage.inc.php:280
+msgid "Approve produit Microsoft pour mise a jour"
 msgstr ""

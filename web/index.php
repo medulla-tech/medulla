@@ -27,85 +27,142 @@
 ob_start();
 session_name("PULSESESSION");
 session_start();
+
 if (isset($_SESSION['sessiontimeout']) || isset($_SESSION['expire'])) {
     session_unset();
     session_destroy();
 }
 
-if (isset($_POST['lang'])) {
-    $_SESSION['lang'] = $_POST['lang'];
-} elseif (isset($_GET['lang'])) {
-    $_SESSION['lang'] = $_GET['lang'];
-}
+if (isset($_POST['lang']))      $_SESSION['lang'] = $_POST['lang'];
+elseif (isset($_GET['lang']))   $_SESSION['lang'] = $_GET['lang'];
 
-require_once("includes/utils.inc.php");
-require("includes/config.inc.php");
-require("modules/base/includes/users.inc.php");
-require("modules/base/includes/edit.inc.php");
-require("modules/base/includes/groups.inc.php");
-require("includes/PageGenerator.php");
+require_once "includes/utils.inc.php";
+require_once "includes/config.inc.php";
+require_once "modules/base/includes/users.inc.php";
+require_once "modules/base/includes/edit.inc.php";
+require_once "modules/base/includes/groups.inc.php";
+require_once "includes/PageGenerator.php";
 
 global $conf;
 $error = "";
 $login = "";
 
+// Organisation (o)
 if (array_key_exists('o', $_GET)) {
-    $o = (string)$_GET['o'];
-    $o = preg_replace('/[^a-zA-Z0-9._\-]/', '', $o);
-    // replace the dashes with spaces
-    $o = str_replace('-', ' ', $o);
-    $o = preg_replace('/\s+/', ' ', trim($o));
-
-    if ($o === '') { unset($_SESSION['o']); } else { $_SESSION['o'] = $o; }
+    $o = preg_replace('/[^a-zA-Z0-9._\-]/', '', (string)$_GET['o']);
+    $o = preg_replace('/\s+/', ' ', str_replace('-', ' ', $o));
+    if ($o === '') unset($_SESSION['o']); else $_SESSION['o'] = $o;
 } else {
     unset($_SESSION['o']);
 }
 $client = $_SESSION['o'] ?? 'MMC';
 
-// Liste des providers pour ce client (BDD)
-$providers = get_providers_list($client);
+// Magic Link - Token
+if (isset($_GET['token'])) {
+    $token = (string)$_GET['token'];
+    $login = magic_link_peek($token);
 
-if (isset($_POST["bConnect"])) {
-    $login = $_POST["username"];
-    $pass = $_POST["password"];
-
-    /* Session creation */
+    // (re) Creation of a clean session
     $ip = preg_replace('@\.@', '', $_SERVER["REMOTE_ADDR"]);
     $sessionid = md5(time() . $ip . mt_rand());
+    session_destroy();
+    session_name("PULSESESSION");
+    session_id($sessionid);
+    session_start();
 
+    $_SESSION["timezone_offset"]                = $_POST["timezone_offset"] ?? "";
+    $_SESSION["connection_local"]               = $_POST["connection_local"] ?? "";
+    $_SESSION["connection_utc"]                 = $_POST["connection_utc"] ?? "";
+    $_SESSION["connection_serveur_web_utc"]     = (new DateTime('now', new DateTimeZone('UTC')))->format('Y-m-d H:i:s');
+    $_SESSION["connection_serveur_web_local"]   = date('Y-m-d H:i:s');
+    $_SESSION["ip_addr"]                        = $_SERVER["REMOTE_ADDR"];
+
+    $serverKey = $conf['global']['default_server'] ?? null;
+    if (!$serverKey || empty($conf[$serverKey]['url'])) {
+        foreach ($conf as $k => $v) {
+            if ($k !== 'global' && is_array($v) && !empty($v['url'])) { $serverKey = $k; break; }
+        }
+    }
+    if ($serverKey && !empty($conf[$serverKey]['url'])) {
+        $_SESSION["XMLRPC_agent"]               = parse_url($conf[$serverKey]["url"]);
+        $_SESSION["agent"]                      = $serverKey;
+        $_SESSION["XMLRPC_server_description"]  = $conf[$serverKey]["description"] ?? $serverKey;
+    }
+
+    $_SESSION['o']           = $_SESSION['o'] ?? 'MMC';
+    $_SESSION['login']       = (string)$login;
+    $_SESSION['pass']        = '';
+    $_SESSION['RPCSESSION']  = '';
+    $_SESSION['AUTH_METHOD'] = 'magic';
+
+    if ($login && validateToken($login, $token)) {
+        include "includes/createSession.inc.php";
+        $root = $conf['global']['root'] ?? '';
+        header("Location: {$root}main.php");
+        exit;
+    }
+
+    // Invalid/expired token
+    header('Location: token.php?status=invalid');
+    exit;
+}
+
+$providers = get_providers_list($client);
+
+if (isset($_POST["bConnect"]) || isset($_POST["bMagicLink"])) {
+
+    $login   = trim((string)($_POST["username"] ?? ''));
+    $pass    = (string)($_POST["password"] ?? '');
+    $isMagic = isset($_POST["bMagicLink"]) || ((int)($_POST["magic_link"] ?? 0) === 1);
+
+    // Nouvelle session web
+    $ip = preg_replace('@\.@', '', $_SERVER["REMOTE_ADDR"]);
+    $sessionid = md5(time() . $ip . mt_rand());
     session_destroy();
     session_id($sessionid);
     session_name("PULSESESSION");
     session_start();
 
-    $_SESSION["timezone_offset"] = isset($_POST["timezone_offset"]) ? $_POST["timezone_offset"] : "";
-    $_SESSION["connection_local"] = isset($_POST["connection_local"]) ? $_POST["connection_local"] : "";
-    $_SESSION["connection_utc"] = isset($_POST["connection_utc"]) ? $_POST["connection_utc"] : "";
+    $_SESSION["timezone_offset"]                = $_POST["timezone_offset"] ?? "";
+    $_SESSION["connection_local"]               = $_POST["connection_local"] ?? "";
+    $_SESSION["connection_utc"]                 = $_POST["connection_utc"] ?? "";
+    $_SESSION["connection_serveur_web_utc"]     = (new DateTime('now', new DateTimeZone('UTC')))->format('Y-m-d H:i:s');
+    $_SESSION["connection_serveur_web_local"]   = date('Y-m-d H:i:s');
+    $_SESSION["ip_addr"]                        = $_SERVER["REMOTE_ADDR"];
 
-    $utc_timezone = new DateTimeZone('UTC');
-    $current_time_utc = new DateTime('now', $utc_timezone);
-    $_SESSION["connection_serveur_web_utc"] =   $current_time_utc->format('Y-m-d H:i:s');
-    $_SESSION["connection_serveur_web_local"] =  date('Y-m-d H:i:s', time());
-
-    $_SESSION["ip_addr"] = $_SERVER["REMOTE_ADDR"];
-    if (isset($conf[$_POST["server"]])) {
-        $_SESSION["XMLRPC_agent"] = parse_url($conf[$_POST["server"]]["url"]);
-        $_SESSION["agent"] = $_POST["server"];
-        $_SESSION["XMLRPC_server_description"] = $conf[$_POST["server"]]["description"];
+    $srvKey = $_POST["server"] ?? '';
+    if (isset($conf[$srvKey])) {
+        $_SESSION["XMLRPC_agent"]               = parse_url($conf[$srvKey]["url"]);
+        $_SESSION["agent"]                      = $srvKey;
+        $_SESSION["XMLRPC_server_description"]  = $conf[$srvKey]["description"];
     } else {
-        $error = sprintf(_("The server %s does not exist"), $_POST["server"]);
+        $error = sprintf(_("The server %s does not exist"), $srvKey);
     }
 
     $_SESSION['o'] = $client;
 
-    if (empty($error) && auth_user($login, $pass)) {
-        include("includes/createSession.inc.php");
-        /* Redirect to main page */
-        header("Location: main.php");
-        exit;
-    } else {
-        if (!isXMLRPCError()) {
-            $error = _("Login failed. Please make sure that you entered the right username and password. Both fields are case sensitive.");
+    // Connexion - Magic link
+    if ($isMagic) {
+        if ($login === '') {
+            $error = _("Please enter your login to receive a magic link.");
+        } elseif (!filter_var($login, FILTER_VALIDATE_EMAIL)) {
+            $error = _("Please enter a valid email address to receive a magic link.");
+        } else {
+            // Sending the email then redirection to token.php
+            include "includes/magiclink.inc.php";
+            exit;
+        }
+    }
+    // Connexion - Password
+    else {
+        if (empty($error) && auth_user($login, $pass)) {
+            include "includes/createSession.inc.php";
+            header("Location: main.php");
+            exit;
+        } else {
+            if (!isXMLRPCError()) {
+                $error = _("Login failed. Please make sure that you entered the right username and password. Both fields are case sensitive.");
+            }
         }
     }
 }
@@ -116,13 +173,11 @@ if (!empty($_GET["error"])) {
 if (isset($_GET["agentsessionexpired"])) {
     $error = _("You have been logged out because the session between the MMC web interface and the MMC agent expired.");
 }
-
 if (isset($_GET["signout"])) {
     $error = _("You have been successfully logged out.");
     $_SESSION = array();
     session_destroy();
 }
-
 if (isset($_GET["update"])) {
     if ($_GET["update"] === "success") {
         $error = _("Update successful. Please reconnect.");
@@ -132,7 +187,6 @@ if (isset($_GET["update"])) {
     $_SESSION = array();
     session_destroy();
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -277,12 +331,14 @@ if (isset($_GET["update"])) {
                                 <input name="username" type="text" class="input-small" id="username" value="<?= $login ?>" />
                             </div>
                         </div>
+                        <?php if (!$conf['global']['magic_link']): ?>
                         <div class="control-group">
-                            <label class="control-label" for="password"><?php echo  _("Password"); ?></label>
+                            <label class="control-label" for="password"><?= _("Password"); ?></label>
                             <div class="controls">
                                 <input name="password" type="password" class="input-small" id="password" value="" />
                             </div>
                         </div>
+                        <?php endif; ?>
                         <script type="text/javascript">
                             function changeServerLang() {
                                 window.location = "index.php?server=" + jQuery('#server').val() + "&lang=" + jQuery('#lang').val();
@@ -291,7 +347,13 @@ if (isset($_GET["update"])) {
                         <div class="control-group">
                             <label class="control-label"></label>
                             <div class="controls">
-                                <input name="bConnect" type="submit" class="btn btn-primary" id="connect_button" value="<?php echo  _("Connect"); ?>" />
+                                <?php if ($conf['global']['magic_link']): ?>
+                                    <input name="bMagicLink" type="submit" class="btn btn-primary" id="magic_link_button" value="<?= _("Send Magic Link"); ?>" />
+                                    <input type="hidden" name="magic_link" value="1">
+                                    <?php else: ?>
+                                    <input name="bConnect" type="submit" class="btn btn-primary" id="connect_button" value="<?= _("Connect"); ?>" />
+                                    <input type="hidden" name="magic_link" value="0">
+                                <?php endif; ?>
                             </div>
                         </div>
                     </form>

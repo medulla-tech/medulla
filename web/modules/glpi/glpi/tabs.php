@@ -1,16 +1,17 @@
 <?php
 /*
- * (c) 2008 Mandriva, http://www.mandriva.com
- * (c) 2021-2022 Siveo, http://www.siveo.net
+ * (c) 2007 Mandriva, http://www.mandriva.com
+ * (c) 2016-2023 Siveo, http://www.siveo.net
+ * (c) 2024-2025 Medulla, http://www.medulla-tech.io
  *
  * $Id$
  *
- * This file is part of Pulse 2, http://siveo.net
+ * This file is part of MMC, http://www.medulla-tech.io
  *
- * Pulse 2 is free software; you can redistribute it and/or modify
+ * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ * the Free Software Foundation; either version 3 of the License, or
+ * any later version.
  *
  * MMC is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -18,9 +19,8 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with MMC; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
- * MA 02110-1301, USA
+ * along with MMC; If not, see <http://www.gnu.org/licenses/>.
+ * file tabs.php
  */
 
 require_once("modules/glpi/includes/xmlrpc.php");
@@ -74,7 +74,14 @@ if (isset($_SESSION['pull_targets']) && in_array($uuid, $_SESSION['pull_targets'
         );
     }
 }
-$p->addTop(sprintf(_T("%s's inventory %s", "glpi"), $hostname, $glpi_link), "modules/glpi/glpi/header.php");
+
+if (!xmlrpc_check_saas()) {
+    $p->addTop(sprintf(_T("%s's inventory %s", "glpi"), $hostname, $glpi_link), "modules/glpi/glpi/header.php");
+} else {
+    $glpidisplayname = '';
+    $glpi_link = '';
+    $p->addTop(sprintf(_T("%s's inventory %s", "glpi"), $hostname, $glpi_link), "modules/glpi/glpi/header.php");
+}
 
 $i = 0;
 // TODO get the list with trads from agent (conf file...)

@@ -1,14 +1,18 @@
 <?php
-/**
+/*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
- * (c) 2007-2012 Mandriva, http://www.mandriva.com
+ * (c) 2007 Mandriva, http://www.mandriva.com
+ * (c) 2016-2023 Siveo, http://www.siveo.net
+ * (c) 2024-2025 Medulla, http://www.medulla-tech.io
  *
- * This file is part of Mandriva Management Console (MMC).
+ * $Id$
+ *
+ * This file is part of MMC, http://www.medulla-tech.io
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ * the Free Software Foundation; either version 3 of the License, or
+ * any later version.
  *
  * MMC is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -16,32 +20,43 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with MMC; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ * along with MMC; If not, see <http://www.gnu.org/licenses/>.
  * product_updates.php
- */
-
+*/
 include_once("modules/dashboard/includes/panel.class.php");
 require_once("modules/medulla_server/includes/xmlrpc.inc.php");
 
 $options = array(
-    "class" => "UpdatePanel",
-    "id" => "update",
+    "class"   => "UpdatePanel",
+    "id"      => "update",
     "refresh" => 14400,
-    "title" => _("Medulla Updates"),
-    "enable" => TRUE
+    "title"   => _("Medulla Updates"),
+    "enable"  => TRUE
 );
 
 class UpdatePanel extends Panel {
     function display_content() {
-        $btnLabel = _T("Check updates", 'dashboard');
-        $searchLabel = _T("Search for updates…", 'dashboard');
-        $errorLabel  = _T("Error when retrieving updates.", 'dashboard');
+        $btnLabel           = _T("Check updates", 'dashboard');
+        $searchLabel        = _T("Search for updates…", 'dashboard');
+        $errorLabel         = _T("Error when retrieving updates.", 'dashboard');
+
+        $labelRestart       = _T("Restart Medulla Services");
+        $msgRestart         = _T("Restarting in progress ... You will be redirected to the connection.");
+        $msgIndex           = _T("The restart ends ... reconnect in a moment.");
+
+        $labelRegenerate    = _T("Regenerate Agent Machine");
+
         echo <<<HTML
         <center>
             <div id="updates_zone">
-                <button class="btnSecondary" id="fetch_updates_btn" style="margin-top: 24px; margin-bottom: 18px;">
+                <button class="btnSecondary" id="fetch_updates_btn" style="margin-top: 12px; margin-bottom: 9px;">
                     {$btnLabel}
+                </button>
+                <button class="btnSecondary" id="restart_medulla_services" style="margin-top: 12px; margin-bottom: 9px;">
+                    {$labelRestart}
+                </button>
+                <button class="btnSecondary" id="regenerate_agent" style="margin-top: 12px; margin-bottom: 9px;">
+                    {$labelRegenerate}
                 </button>
             </div>
         </center>
@@ -119,11 +134,45 @@ class UpdatePanel extends Panel {
                 e.preventDefault();
                 setTimeout(function() {
                     window.location.href = "main.php?module=medulla_server&submod=update&action=installProductUpdates";
-                }, 600);
+                    }, 600);
+                });
+
+                // --- Restart All Medulla Services ---
+                $(document).on('click', '#restart_medulla_services', function(e){
+                    e.preventDefault();
+
+                    $(this).prop('disabled', true);
+
+                    $('#updates_zone').html(
+                    '<div class="custom-loader-wrapper">'+
+                        '<div class="custom-spinner"></div>'+
+                        '<div class="custom-loader-title">'+"{$msgRestart}"+'</div>'+
+                    '</div>'
+                    );
+
+                    document.addEventListener('click', function(e){ e.preventDefault(); e.stopPropagation(); }, true);
+
+                    $.ajax({
+                    url: 'main.php?module=medulla_server&submod=update&action=restartAllMedullaServices',
+                    type: 'POST',
+                    dataType: 'json',
+                    });
+
+                    setTimeout(function(){
+                    (window.top || window).location.href = '/mmc/index.php?error=' + encodeURIComponent("{$msgIndex}");
+                    }, 20000);
+                });
+
+                // -- Regenearet agent
+                $(document).on('click', '#regenerate_agent', function(e){
+                    e.preventDefault();
+                    setTimeout(function() {
+                    window.location.href = "main.php?module=medulla_server&submod=update&action=regenerateAgent";
+                    }, 600);
+                });
             });
-        });
         </script>
-HTML;
+    HTML;
     }
 
     function display_licence($type, $title) {

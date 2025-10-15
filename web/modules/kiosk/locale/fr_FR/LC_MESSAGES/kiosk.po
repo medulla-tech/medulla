@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-30 15:09+0200\n"
+"POT-Creation-Date: 2025-10-07 17:12+0200\n"
 "PO-Revision-Date: 2019-10-02 12:32+0000\n"
 "Last-Translator: SPO, 2025\n"
 "Language-Team: French (https://app.transifex.com/medulla/teams/72118/fr/)\n"
@@ -147,7 +147,7 @@ msgstr "Le profil %s a été mis à jour"
 msgid "Unable to update the profile"
 msgstr "Impossible de mettre à jour le profil"
 
-#: modules/kiosk/kiosk/index.php:30
+#: modules/kiosk/kiosk/index.php:29
 msgid "List of profils"
 msgstr "Liste des profils"
 

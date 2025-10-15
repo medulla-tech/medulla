@@ -103,6 +103,12 @@ function fetchIniFile() {
         }
     }
 
+    if (isset($conf['global']['magic_link']) && (int)$conf['global']['magic_link'] === 1) {
+        $conf['global']['magic_link'] = true;
+    } else {
+        $conf['global']['magic_link'] = false;
+    }
+
     /* Put the quantities proposed in the selector for the maxperpage value in
        an array */
     if (isset($conf["global"]["pagination"])) {

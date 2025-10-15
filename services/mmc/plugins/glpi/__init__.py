@@ -35,8 +35,10 @@ from pulse2.version import getVersion, getRevision  # pyflakes.ignore
 
 # health check
 from mmc.plugins.glpi.health import scheduleCheckStatus
+from configparser import ConfigParser
 
 import logging
+import os
 
 APIVERSION = "0:0:0"
 logger = logging.getLogger()
@@ -261,6 +263,10 @@ def getGlpiMachineUri():
 def glpi_version():
     return Glpi().glpi_version
 
+def check_saas() -> bool:
+    cfg = ConfigParser(interpolation=None)
+    cfg.read(['/etc/mmc/plugins/glpi.ini', '/etc/mmc/plugins/glpi.ini.local'], encoding='utf-8')
+    return cfg.get('main', 'hide_itsm_link', fallback='False') == 'True'
 
 def getMachineUUIDByMacAddress(mac):
     return xmlrpcCleanup(Glpi().getMachineUUIDByMacAddress(mac))
@@ -388,6 +394,9 @@ def get_machine_for_hostname(strlisthostnale, filter="", start=0, end=0):
 def get_user_by_name(name):
      return xmlrpcCleanup(Glpi().get_user_by_name(name))
 
+def get_user_profile_name(login):
+     return xmlrpcCleanup(Glpi().get_user_profile_name(login))
+
 def get_entities_with_counts( colonne: bool = True,
                               entities: list[int] = None):
     return xmlrpcCleanup(Glpi().get_entities_with_counts(colonne = colonne,
@@ -407,8 +416,33 @@ def get_entities_with_counts_root( filter: str = None,
 def set_user_api_token(user_id, api_token):
     return xmlrpcCleanup(Glpi().set_user_api_token(user_id, api_token))
 
-def get_user_profile_email(id_user, id_profile, id_entity):
-    return xmlrpcCleanup(Glpi().get_user_profile_email(id_user, id_profile, id_entity))
+def get_user_profile_email(id_user, id_profile=None, id_entity=None, filters=None, is_active=None):
+    if not isinstance(filters, dict):
+        filters = {}
+    return xmlrpcCleanup(
+        Glpi().get_user_profile_email(
+            id_user,
+            id_profile,
+            id_entity,
+            is_active=is_active,
+            filters=filters,
+        )
+    )
+
+def get_user_identifier(id_user):
+    return xmlrpcCleanup(Glpi().get_user_identifier(id_user))
+
+def get_complete_name(id_entity):
+    return xmlrpcCleanup(Glpi().get_complete_name(id_entity))
+
+def list_entity_ids_subtree(id_entity):
+    return xmlrpcCleanup(Glpi().list_entity_ids_subtree(id_entity))
+
+def list_user_ids_in_subtree(id_entity):
+    return xmlrpcCleanup(Glpi().list_user_ids_in_subtree(id_entity))
+
+def list_computer_ids_in_subtree(id_entity):
+    return xmlrpcCleanup(Glpi().list_computer_ids_in_subtree(id_entity))
 
 def get_machine_for_id(strlistuuid, filter="", start=0, end=0):
     return xmlrpcCleanup(Glpi().get_machine_for_id(strlistuuid, filter, start, end))

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-30 15:10+0200\n"
+"POT-Creation-Date: 2025-10-07 17:13+0200\n"
 "PO-Revision-Date: 2022-11-14 14:44+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/medulla/teams/72118/zh_CN/)\n"
@@ -344,6 +344,10 @@ msgstr ""
 
 #: modules/urbackup/urbackup/validate_edit_group.php:30
 msgid "Settings saved for "
+msgstr ""
+
+#: modules/urbackup/urbackup/validate_edit_group.php:171
+msgid "Changes saved"
 msgstr ""
 
 #: modules/urbackup/urbackup/start_backup.php:33

@@ -37,6 +37,12 @@ require_once("modules/admin/includes/xmlrpc.php");
 }
 </style>
 <?php
+$filterRaw = isset($_GET["filter"]) ? (string)$_GET["filter"] : "";
+$filters   = [];
+if ($filterRaw !== "") {
+    $filters["q"] = $filterRaw;
+}
+
 $u = (isset($_SESSION['glpi_user']) && is_array($_SESSION['glpi_user'])) ? $_SESSION['glpi_user'] : [];
 $tokenuser = $u['api_token'] ?? null;
 
@@ -50,7 +56,7 @@ if (empty($tokenuser)) {
     exit;
 }
 
-$entityId = isset($_GET['entityId']) ? (int)$_GET['entityId'] : '';
+$entityId = isset($_GET['entityId']) ? (int)$_GET['entityId'] : 0;
 
 $usersList = xmlrpc_get_users_count_by_entity($entityId, $tokenuser);
 
@@ -59,8 +65,10 @@ $userDetails = [];
 foreach ($usersList as $user) {
     if (empty($user['id'])) continue;
 
-    $info = xmlrpc_get_user_info($user['id'], $user['profile_id'], $_GET['entityId']);
-
+    $info = xmlrpc_get_user_info($user['id'], $user['profile_id'], $entityId, $filters);
+    if (!$info || !is_array($info) || empty($info['user_id'])) {
+        continue;
+    }
     $userDetails[] = $info;
 }
 
@@ -86,6 +94,9 @@ $userDeleteActions              = [];
 $userDesactivateActions         = [];
 $userParams                     = [];
 
+$loggedProfileName = $u['profile_name'] ?? '';
+$loggedUserId      = isset($u['id']) ? (int)$u['id'] : null;
+
 foreach ($userDetails as $user) {
     $isActive = !empty($user['is_active']);
 
@@ -97,37 +108,83 @@ foreach ($userDetails as $user) {
     $userLastLogin[]    = $fmtDate($user['last_login'] ?? null);
     $userProfileNames[] = $user['profile_name'];
 
-    $userEditActions[]   = new ActionItem(
-        _T("Edit"), "editUser", "edit", "", "admin", "admin"
-    );
+    // Target & rules
+    $targetUserId      = isset($user['user_id']) ? (int)$user['user_id'] : null;
+    $targetProfileName = $user['profile_name'] ?? '';
 
-    // determines the icon according to the status (active/deactivated)
+    $isSelf = ($loggedUserId !== null && $targetUserId !== null && $targetUserId === $loggedUserId);
+    $adminVsSuperAdmin =
+        (strcasecmp($loggedProfileName, 'Admin') === 0) &&
+        (strcasecmp($targetProfileName,  'Super-Admin') === 0);
+
+    // Edit : Admin -> Super-Admin unauthorized
+    if ($adminVsSuperAdmin) {
+        $userEditActions[] = new EmptyActionItem1(
+            _("Unauthorized edition"),
+            "",
+            "editg",
+            "",
+            "admin",
+            "admin"
+        );
+    } else {
+        $userEditActions[] = new ActionItem(
+            _T("Edit"),
+            "editUser",
+            "edit",
+            "",
+            "admin",
+            "admin"
+        );
+    }
+
     $iconKeyToggle = $isActive ? 'donotupdate' : 'donotupdateg';
+    if (!$isSelf && !$adminVsSuperAdmin) {
+        $userDesactivateActions[] = new ActionConfirmItem(
+            $isActive ? _T("Deactivate User", "admin") : _T("Reactivate User", "admin"),
+            "desactivateUser",
+            $iconKeyToggle,
+            "",
+            "admin",
+            "admin",
+            sprintf(
+                $isActive
+                    ? _T("Are you sure you want to deactivate this user <strong>%s</strong>?", "admin")
+                    : _T("Are you sure you want to reactivate this user <strong>%s</strong>?", "admin"),
+                htmlspecialchars($user['name'] ?? '', ENT_QUOTES, 'UTF-8')
+            )
+        );
 
-    $userDesactivateActions[] = new ActionConfirmItem(
-        $isActive ? _T("Deactivate User", "admin") : _T("Reactivate User", "admin"),
-        "desactivateUser",
-        $iconKeyToggle,
-        "",
-        "admin",
-        "admin",
-        sprintf(
-            $isActive
-                ? _T("Are you sure you want to deactivate this user <strong>%s</strong>?", "admin")
-                : _T("Are you sure you want to reactivate this user <strong>%s</strong>?", "admin"),
-            htmlspecialchars($user['name'])
-        )
-    );
-
-    $userDeleteActions[] = new ActionConfirmItem(
-        _T("Delete user", "admin"),
-        "deleteUser",
-        "delete",
-        "",
-        "admin",
-        "admin",
-        sprintf(_T("Are you sure you want to delete this user <strong>%s</strong>?", "admin"), $user['name'])
-    );
+        $userDeleteActions[] = new ActionConfirmItem(
+            _T("Delete user", "admin"),
+            "deleteUser",
+            "delete",
+            "",
+            "admin",
+            "admin",
+            addcslashes(strip_tags(sprintf(
+                _T("Are you sure you want to delete this user <strong>%s</strong>?", "admin"),
+                htmlspecialchars($user['name'] ?? '', ENT_QUOTES, 'UTF-8')
+            )), "\\'")
+        );
+    } else {
+        $userDesactivateActions[] = new EmptyActionItem1(
+            _("Unauthorized deactivation"),
+            "",
+            "donotupdateg",
+            "",
+            "admin",
+            "admin"
+        );
+        $userDeleteActions[] = new EmptyActionItem1(
+            _("Unauthorized deletion"),
+            "",
+            "deleteg",
+            "",
+            "admin",
+            "admin"
+        );
+    }
 
     $userParams[] = [
         'userId'       => $user['user_id'],
@@ -162,7 +219,7 @@ if (count($userNames) === 0) {
     $f->display();
 } else {
     $n = new OptimizedListInfos($userNames, _T("User Name", "admin"));
-    $n->setNavBar(new AjaxNavBar("10", ''));
+    $n->setNavBar(new AjaxNavBar("10", $filterRaw));
     $n->disableFirstColumnActionLink();
 
     $n->addExtraInfo($userFirstnames,   _T("First name", "admin"));
@@ -170,7 +227,7 @@ if (count($userNames) === 0) {
     $n->addExtraInfo($userPhones,       _T("Phone", "admin"));
     $n->addExtraInfo($userStatus,       _T("Status", "admin"));
     $n->addExtraInfo($userLastLogin,    _T("Last connection", "admin"));
-    $n->addExtraInfo($userProfileNames, _T("Profil", "admin"));
+    $n->addExtraInfo($userProfileNames, _T("Profile", "admin"));
 
     $n->addActionItemArray($userEditActions);
     $n->addActionItemArray($userDesactivateActions);

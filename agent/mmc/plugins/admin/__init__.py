@@ -1,6 +1,6 @@
 # SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-3.0-or-later
-VERSION = "5.3.0"
+VERSION = "5.4.1"
 APIVERSION = "0:0:0"
 REVISION = ""
 

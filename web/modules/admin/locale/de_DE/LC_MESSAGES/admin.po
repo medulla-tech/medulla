@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-08 11:48+0200\n"
+"POT-Creation-Date: 2025-10-07 20:28+0200\n"
 "PO-Revision-Date: 2025-07-30 09:10+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2025\n"
 "Language-Team: German (Germany) (https://app.transifex.com/medulla/teams/72118/de_DE/)\n"
@@ -20,6 +20,29 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: de_DE\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: modules/admin/admin/desactivateUser.php:32
+#: modules/admin/admin/deleteUser.php:30 modules/admin/admin/editEntity.php:81
+#: modules/admin/admin/editEntity.php:85
+#: modules/admin/admin/editEntity.php:178
+#: modules/admin/admin/deleteEntity.php:27
+#: modules/admin/admin/editUser.php:506
+msgid "Unknown"
+msgstr "Unbekannt"
+
+#: modules/admin/admin/desactivateUser.php:42
+#, php-format
+msgid "User <strong>%s</strong> has been <strong>%s</strong> successfully."
+msgstr ""
+
+#: modules/admin/admin/desactivateUser.php:50
+#, php-format
+msgid "Failed to update status for user <strong>%s</strong>."
+msgstr ""
+
+#: modules/admin/admin/desactivateUser.php:66
+msgid "Missing parameters: User ID or Entity ID not provided."
+msgstr ""
 
 #: modules/admin/admin/qaresult.php:29
 msgid "Relay Quick Result Action"
@@ -32,6 +55,94 @@ msgstr ""
 #: modules/admin/admin/rules.php:36 modules/admin/admin/rules_tabs.php:41
 #: modules/admin/infoPackage.inc.php:118
 msgid "Rules List"
+msgstr ""
+
+#: modules/admin/admin/deleteUser.php:47
+#, php-format
+msgid ""
+"User <strong>%s</strong> deleted successfully from entity "
+"<strong>%s</strong>."
+msgstr ""
+
+#: modules/admin/admin/deleteUser.php:54 modules/admin/admin/deleteUser.php:55
+#: modules/admin/admin/deleteEntity.php:44
+#: modules/admin/admin/deleteProvider.php:43
+msgid "Unknown error"
+msgstr ""
+
+#: modules/admin/admin/deleteUser.php:59 modules/admin/admin/deleteUser.php:69
+#, php-format
+msgid ""
+"Failed to delete user <strong>%s</strong> from entity <strong>%s</strong>: "
+"%s"
+msgstr ""
+
+#: modules/admin/admin/editEntity.php:48
+msgid "Your GLPI session has expired. Please sign in again to continue."
+msgstr ""
+
+#: modules/admin/admin/editEntity.php:80
+#, php-format
+msgid "<h2>Edit Entity <span style='font-size: 16px;'>[%s]</span></h2>"
+msgstr ""
+
+#: modules/admin/admin/editEntity.php:84
+#, php-format
+msgid "<h2>Add Sub-Entity to <span style='font-size: 16px;'>[%s]</span></h2>"
+msgstr ""
+
+#: modules/admin/admin/editEntity.php:98
+msgid "Entity creation failed: The name cannot be empty."
+msgstr ""
+
+#: modules/admin/admin/editEntity.php:107
+#, php-format
+msgid "Entity <strong>%s</strong> created successfully."
+msgstr ""
+
+#: modules/admin/admin/editEntity.php:114
+#, php-format
+msgid ""
+"Failed to create entity <strong>%s</strong>. Please check the provided "
+"information and try again."
+msgstr ""
+
+#: modules/admin/admin/editEntity.php:129
+msgid "Update failed: You cannot edit the root entity."
+msgstr ""
+
+#: modules/admin/admin/editEntity.php:136
+msgid "Update failed: The entity name cannot be empty."
+msgstr ""
+
+#: modules/admin/admin/editEntity.php:146
+#, php-format
+msgid "Entity <strong>%s</strong> updated successfully."
+msgstr ""
+
+#: modules/admin/admin/editEntity.php:153
+#, php-format
+msgid "Failed to update entity <strong>%s</strong>. Please try again."
+msgstr ""
+
+#: modules/admin/admin/editEntity.php:164
+msgid "Save Changes"
+msgstr ""
+
+#: modules/admin/admin/editEntity.php:164
+msgid "Create Entity"
+msgstr ""
+
+#: modules/admin/admin/editEntity.php:177
+msgid "Current name"
+msgstr ""
+
+#: modules/admin/admin/editEntity.php:178
+msgid "Parent entity"
+msgstr ""
+
+#: modules/admin/admin/editEntity.php:185
+msgid "Entity Name"
 msgstr ""
 
 #: modules/admin/admin/qalaunched.php:47
@@ -72,9 +183,9 @@ msgstr ""
 
 #: modules/admin/admin/editCluster.php:104
 #: modules/admin/admin/editRelayRule.php:116
-#: modules/admin/admin/ajaxEntitiesManagement.php:57
+#: modules/admin/admin/ajaxManageProviders.php:89
 #: modules/admin/admin/newRelayRule.php:107
-#: modules/admin/admin/ajaxListUsersofEntity.php:85
+#: modules/admin/admin/ajaxListUsersofEntity.php:101
 #: modules/admin/admin/newCluster.php:91
 msgid "Edit"
 msgstr "bearbeiten"
@@ -89,6 +200,91 @@ msgstr ""
 
 #: modules/admin/admin/relaysList.php:60
 msgid "XMPP Relays list"
+msgstr ""
+
+#: modules/admin/admin/editProvider.php:132
+msgid "Provider created successfully"
+msgstr ""
+
+#: modules/admin/admin/editProvider.php:138
+msgid "Creation failed: "
+msgstr ""
+
+#: modules/admin/admin/editProvider.php:170
+msgid "Provider updated successfully"
+msgstr ""
+
+#: modules/admin/admin/editProvider.php:176
+msgid "Update failed: "
+msgstr ""
+
+#: modules/admin/admin/editProvider.php:192
+#, php-format
+msgid "Edit provider <span style='font-size: 16px;'>[%s]</span>"
+msgstr ""
+
+#: modules/admin/admin/editProvider.php:193
+msgid "Add a new provider"
+msgstr ""
+
+#: modules/admin/admin/editProvider.php:200
+#: modules/admin/admin/editUser.php:784
+msgid "Save changes"
+msgstr ""
+
+#: modules/admin/admin/editProvider.php:200
+msgid "Create provider"
+msgstr ""
+
+#: modules/admin/admin/editProvider.php:209
+#: modules/admin/admin/editProvider.php:213
+#: modules/admin/admin/ajaxManageProviders.php:112
+msgid "Client"
+msgstr "Client"
+
+#: modules/admin/admin/editProvider.php:219
+#: modules/admin/admin/editProvider.php:223
+msgid "Provider name"
+msgstr ""
+
+#: modules/admin/admin/editProvider.php:228
+msgid "Logo URL"
+msgstr ""
+
+#: modules/admin/admin/editProvider.php:229
+msgid "Issuer URL"
+msgstr ""
+
+#: modules/admin/admin/editProvider.php:230
+msgid "Client ID"
+msgstr ""
+
+#: modules/admin/admin/editProvider.php:239
+msgid "(leave blank to keep current)"
+msgstr ""
+
+#: modules/admin/admin/editProvider.php:243
+msgid "Client secret"
+msgstr ""
+
+#: modules/admin/admin/editProvider.php:246
+#: modules/admin/admin/ajaxManageProviders.php:118
+msgid "LDAP uid"
+msgstr ""
+
+#: modules/admin/admin/editProvider.php:247
+#: modules/admin/admin/ajaxManageProviders.php:119
+msgid "LDAP givenName"
+msgstr ""
+
+#: modules/admin/admin/editProvider.php:248
+#: modules/admin/admin/ajaxManageProviders.php:120
+msgid "LDAP sn"
+msgstr ""
+
+#: modules/admin/admin/editProvider.php:249
+#: modules/admin/admin/ajaxManageProviders.php:121
+msgid "LDAP mail"
 msgstr ""
 
 #: modules/admin/admin/switchrelay.php:25
@@ -115,6 +311,26 @@ msgid ""
 "I am aware that this disable/enable a relay forcing a <em><b>reconfiguration"
 " of all the machines</b></em> managed by the cluster.<br />Check this box if"
 " it is what you want."
+msgstr ""
+
+#: modules/admin/admin/deleteEntity.php:35
+#, php-format
+msgid "Entity <strong>%s</strong> deleted successfully."
+msgstr ""
+
+#: modules/admin/admin/deleteEntity.php:42
+#, php-format
+msgid "Failed to delete entity <strong>%s</strong>.<br>Reason: %s"
+msgstr ""
+
+#: modules/admin/admin/deleteEntity.php:50
+#, php-format
+msgid "Unexpected response while deleting entity <strong>%s</strong>."
+msgstr ""
+
+#: modules/admin/admin/deleteEntity.php:58
+#, php-format
+msgid "Failed to delete entity <strong>%s</strong>. Invalid server response."
 msgstr ""
 
 #: modules/admin/admin/ban.php:31
@@ -208,44 +424,247 @@ msgstr "Name"
 msgid "Unban Machines"
 msgstr ""
 
-#: modules/admin/admin/ajaxEntitiesManagement.php:58
+#: modules/admin/admin/editUser.php:67
+msgid "The password and its confirmation cannot be empty."
+msgstr ""
+
+#: modules/admin/admin/editUser.php:68
+msgid "Please complete the password and its confirmation."
+msgstr ""
+
+#: modules/admin/admin/editUser.php:73
+msgid "Passwords do not match."
+msgstr ""
+
+#: modules/admin/admin/editUser.php:79
+msgid "The password must contain at least 12 characters."
+msgstr ""
+
+#: modules/admin/admin/editUser.php:82
+msgid "The password must contain at least one capital letter."
+msgstr ""
+
+#: modules/admin/admin/editUser.php:85
+msgid "The password must contain at least a small letter."
+msgstr ""
+
+#: modules/admin/admin/editUser.php:88
+msgid "The password must contain at least one figure."
+msgstr ""
+
+#: modules/admin/admin/editUser.php:91
+msgid "The password must contain at least a special character."
+msgstr ""
+
+#: modules/admin/admin/editUser.php:143
+#: modules/admin/admin/ajaxEntitiesManagement.php:48
+msgid "No GLPI session found. Please sign in again."
+msgstr ""
+
+#: modules/admin/admin/editUser.php:353
+msgid "Failed to create user "
+msgstr ""
+
+#: modules/admin/admin/editUser.php:354
+msgid "Error in "
+msgstr ""
+
+#: modules/admin/admin/editUser.php:362
+msgid "Username (email) is required."
+msgstr ""
+
+#: modules/admin/admin/editUser.php:365
+msgid "Invalid email address"
+msgstr ""
+
+#: modules/admin/admin/editUser.php:378
+msgid "Profile and entity are required."
+msgstr ""
+
+#: modules/admin/admin/editUser.php:382 modules/admin/admin/editUser.php:595
+msgid "Invalid phone number."
+msgstr ""
+
+#: modules/admin/admin/editUser.php:408 modules/admin/admin/editUser.php:528
+msgid "Internal error."
+msgstr ""
+
+#: modules/admin/admin/editUser.php:414 modules/admin/admin/editUser.php:460
+msgid "Unknown error."
+msgstr ""
+
+#: modules/admin/admin/editUser.php:511
+#, php-format
+msgid "User <strong>%s</strong> created in entity <strong>%s</strong>."
+msgstr ""
+
+#: modules/admin/admin/editUser.php:514
+msgid "Some LDAP attributes could not be set: "
+msgstr ""
+
+#: modules/admin/admin/editUser.php:518
+#, php-format
+msgid ""
+"User <strong>%s</strong> created successfully in entity <strong>%s</strong>."
+msgstr ""
+
+#: modules/admin/admin/editUser.php:543
+msgid "Invalid user ID."
+msgstr ""
+
+#: modules/admin/admin/editUser.php:604
+msgid "The selected profile is invalid or not allowed."
+msgstr ""
+
+#: modules/admin/admin/editUser.php:610
+msgid "The selected entity is invalid or not allowed."
+msgstr ""
+
+#: modules/admin/admin/editUser.php:713
+msgid "LDAP update failed for the following attributes: "
+msgstr ""
+
+#: modules/admin/admin/editUser.php:719
+msgid "No changes."
+msgstr ""
+
+#: modules/admin/admin/editUser.php:721
+msgid "Changes saved."
+msgstr ""
+
+#: modules/admin/admin/editUser.php:723
+msgid "Update failed."
+msgstr ""
+
+#: modules/admin/admin/editUser.php:760
+msgid "No"
+msgstr "Nein"
+
+#: modules/admin/admin/editUser.php:760
+msgid "Yes"
+msgstr "Ja"
+
+#: modules/admin/admin/editUser.php:765
+msgid "Local"
+msgstr ""
+
+#: modules/admin/admin/editUser.php:765
+msgid "OIDC"
+msgstr ""
+
+#: modules/admin/admin/editUser.php:784
+msgid "Create new User"
+msgstr ""
+
+#: modules/admin/admin/editUser.php:791
+msgid "User Profile"
+msgstr ""
+
+#: modules/admin/admin/editUser.php:792
+msgid "Entity"
+msgstr "Entitt"
+
+#: modules/admin/admin/editUser.php:793
+msgid "Apply to sub-entities (recursive)"
+msgstr ""
+
+#: modules/admin/admin/editUser.php:795
+msgid "Authentication"
+msgstr ""
+
+#: modules/admin/admin/editUser.php:800 modules/admin/admin/editUser.php:810
+msgid "Mail"
+msgstr "E-Mail"
+
+#: modules/admin/admin/ajaxEntitiesManagement.php:62
+msgid "Not defined"
+msgstr ""
+
+#: modules/admin/admin/ajaxEntitiesManagement.php:66
+#, php-format
+msgid ""
+"Your account with profile [%s] is not provisioned to consult the entities"
+msgstr ""
+
+#: modules/admin/admin/ajaxEntitiesManagement.php:79
+#, php-format
+msgid "Your account with profile [%s] has no reference entities."
+msgstr ""
+
+#: modules/admin/admin/ajaxEntitiesManagement.php:87
+msgid "User"
+msgstr "Benutzer"
+
+#: modules/admin/admin/ajaxEntitiesManagement.php:88
+msgid "real name"
+msgstr ""
+
+#: modules/admin/admin/ajaxEntitiesManagement.php:89
+msgid "first name"
+msgstr ""
+
+#: modules/admin/admin/ajaxEntitiesManagement.php:90
+msgid "profil"
+msgstr ""
+
+#: modules/admin/admin/ajaxEntitiesManagement.php:91
+msgid "entity"
+msgstr ""
+
+#: modules/admin/admin/ajaxEntitiesManagement.php:92
+msgid "complete_entity"
+msgstr ""
+
+#: modules/admin/admin/ajaxEntitiesManagement.php:126
+msgid "Modify"
+msgstr "Modifizieren"
+
+#: modules/admin/admin/ajaxEntitiesManagement.php:127
 msgid "Add"
 msgstr "hinzufügen"
 
-#: modules/admin/admin/ajaxEntitiesManagement.php:59
+#: modules/admin/admin/ajaxEntitiesManagement.php:128
 msgid "Manage users"
 msgstr ""
 
-#: modules/admin/admin/ajaxEntitiesManagement.php:60
+#: modules/admin/admin/ajaxEntitiesManagement.php:129
 msgid "Download"
 msgstr "Download"
 
-#: modules/admin/admin/ajaxEntitiesManagement.php:83
-#: modules/admin/admin/ajaxListUsersofEntity.php:93
+#: modules/admin/admin/ajaxEntitiesManagement.php:130
+#: modules/admin/admin/ajaxEntitiesManagement.php:178
+msgid "Unauthorized modification"
+msgstr ""
+
+#: modules/admin/admin/ajaxEntitiesManagement.php:131
+#: modules/admin/admin/ajaxEntitiesManagement.php:182
+msgid "Unauthorized deletion"
+msgstr ""
+
+#: modules/admin/admin/ajaxEntitiesManagement.php:163
 msgid "Delete"
 msgstr "Löschen"
 
-#: modules/admin/admin/ajaxEntitiesManagement.php:89
-msgid "Are you sure you want to delete this entity ["
+#: modules/admin/admin/ajaxEntitiesManagement.php:170
+#, php-format
+msgid ""
+"Are you sure you want to delete the entity <strong>%s</strong> ? All "
+"packages linked to this entity will also be deleted."
 msgstr ""
 
-#: modules/admin/admin/ajaxEntitiesManagement.php:94
-msgid "Editing not allowed"
-msgstr ""
-
-#: modules/admin/admin/ajaxEntitiesManagement.php:95
-msgid "Deleting not allowed"
-msgstr ""
-
-#: modules/admin/admin/ajaxEntitiesManagement.php:121
+#: modules/admin/admin/ajaxEntitiesManagement.php:230
 msgid "Name of Entity"
 msgstr ""
 
-#: modules/admin/admin/ajaxEntitiesManagement.php:125
+#: modules/admin/admin/ajaxEntitiesManagement.php:231
+msgid "Complete Name"
+msgstr ""
+
+#: modules/admin/admin/ajaxEntitiesManagement.php:232
 msgid "Users"
 msgstr "Benutzer"
 
-#: modules/admin/admin/ajaxEntitiesManagement.php:126
+#: modules/admin/admin/ajaxEntitiesManagement.php:233
 msgid "Computers"
 msgstr "Computers"
 
@@ -311,6 +730,12 @@ msgstr ""
 msgid "Quick Action"
 msgstr ""
 
+#: modules/admin/admin/manageproviders.php:28
+#: modules/admin/admin/localSidebar.php:49
+#: modules/admin/infoPackage.inc.php:231 modules/admin/infoPackage.inc.php:235
+msgid "Manage Providers"
+msgstr ""
+
 #: modules/admin/admin/unban.php:33
 msgid "Unban machines on relay"
 msgstr ""
@@ -327,6 +752,27 @@ msgstr ""
 msgid "Can't move the rule"
 msgstr ""
 
+#: modules/admin/admin/ajaxManageProviders.php:50
+msgid "No providers for this scope."
+msgstr ""
+
+#: modules/admin/admin/ajaxManageProviders.php:91
+msgid "Delete provider"
+msgstr ""
+
+#: modules/admin/admin/ajaxManageProviders.php:98
+#, php-format
+msgid "Delete provider <strong>%s</strong> for client <strong>%s</strong> ?"
+msgstr ""
+
+#: modules/admin/admin/ajaxManageProviders.php:116
+msgid "Provider"
+msgstr ""
+
+#: modules/admin/admin/ajaxManageProviders.php:117
+msgid "Clients ID"
+msgstr ""
+
 #: modules/admin/admin/rules_tabs.php:42 modules/admin/admin/ajaxRules.php:59
 msgid "New Rule"
 msgstr ""
@@ -334,50 +780,6 @@ msgstr ""
 #: modules/admin/admin/rules_tabs.php:48
 msgid "for Relay ["
 msgstr ""
-
-#: modules/admin/admin/editEntities.php:56
-msgid "Edit Entity ["
-msgstr ""
-
-#: modules/admin/admin/editEntities.php:57
-msgid "Add Sub-Entity to ["
-msgstr ""
-
-#: modules/admin/admin/editEntities.php:65
-#: modules/admin/admin/editEntities.php:88
-msgid ""
-"Failed to create the organization: The provided parameters are not valid. "
-"Please check the information and try again."
-msgstr ""
-
-#: modules/admin/admin/editEntities.php:76
-#: modules/admin/admin/editEntities.php:99
-msgid "The entity "
-msgstr ""
-
-#: modules/admin/admin/editEntities.php:80
-msgid "Failed to create the entity "
-msgstr ""
-
-#: modules/admin/admin/editEntities.php:103
-msgid "Failed to update the entity "
-msgstr ""
-
-#: modules/admin/admin/editEntities.php:112
-msgid "Save changes"
-msgstr ""
-
-#: modules/admin/admin/editEntities.php:112
-msgid "Create new Entity"
-msgstr ""
-
-#: modules/admin/admin/editEntities.php:122
-msgid "Head Entity"
-msgstr ""
-
-#: modules/admin/admin/editEntities.php:127
-msgid "Entity"
-msgstr "Entitt"
 
 #: modules/admin/admin/ajaxRelayRules.php:39
 msgid "Edit Rule"
@@ -408,6 +810,19 @@ msgstr "Reihenfolge"
 #: modules/admin/admin/ajaxRelayRules.php:95
 #: modules/admin/admin/ajaxRules.php:103 modules/admin/admin/ajaxRules.php:124
 msgid "Level"
+msgstr ""
+
+#: modules/admin/admin/deleteProvider.php:30
+msgid "Invalid provider ID."
+msgstr ""
+
+#: modules/admin/admin/deleteProvider.php:41
+#, php-format
+msgid "Provider %s deleted."
+msgstr ""
+
+#: modules/admin/admin/deleteProvider.php:44
+msgid "Delete failed: "
 msgstr ""
 
 #: modules/admin/admin/newRelayRule.php:40
@@ -555,48 +970,91 @@ msgstr ""
 msgid "Rules"
 msgstr ""
 
+#: modules/admin/admin/localSidebar.php:39
+#: modules/admin/infoPackage.inc.php:215
+msgid "Edit User"
+msgstr ""
+
+#: modules/admin/admin/localSidebar.php:39
+#: modules/admin/admin/localSidebar.php:40
+msgid "Add User"
+msgstr ""
+
+#: modules/admin/admin/localSidebar.php:43
+#: modules/admin/infoPackage.inc.php:240
+msgid "Edit Provider"
+msgstr ""
+
+#: modules/admin/admin/localSidebar.php:43
+#: modules/admin/admin/localSidebar.php:44
+msgid "Add Provider"
+msgstr ""
+
 #: modules/admin/admin/ajaxban.php:80 modules/admin/infoPackage.inc.php:168
 #: modules/admin/infoPackage.inc.php:173
 msgid "Ban Machines"
 msgstr ""
 
-#: modules/admin/admin/ajaxListUsersofEntity.php:79
+#: modules/admin/admin/ajaxListUsersofEntity.php:96
 msgid "Enabled"
 msgstr "Aktiviert"
 
-#: modules/admin/admin/ajaxListUsersofEntity.php:79
+#: modules/admin/admin/ajaxListUsersofEntity.php:96
 msgid "Disabled"
 msgstr "Deaktiviert"
 
-#: modules/admin/admin/ajaxListUsersofEntity.php:99
-msgid "Delete the user ["
+#: modules/admin/admin/ajaxListUsersofEntity.php:108
+msgid "Deactivate User"
 msgstr ""
 
 #: modules/admin/admin/ajaxListUsersofEntity.php:108
-msgid "Identifier"
-msgstr "Identifier"
-
-#: modules/admin/admin/ajaxListUsersofEntity.php:112
-msgid "First name"
-msgstr "Vorname"
-
-#: modules/admin/admin/ajaxListUsersofEntity.php:113
-msgid "Real name"
+msgid "Reactivate User"
 msgstr ""
-
-#: modules/admin/admin/ajaxListUsersofEntity.php:114
-msgid "eMail"
-msgstr ""
-
-#: modules/admin/admin/ajaxListUsersofEntity.php:115
-msgid "Status"
-msgstr "Status"
 
 #: modules/admin/admin/ajaxListUsersofEntity.php:116
-msgid "Last connection"
+#, php-format
+msgid "Are you sure you want to deactivate this user <strong>%s</strong>?"
 msgstr ""
 
 #: modules/admin/admin/ajaxListUsersofEntity.php:117
+#, php-format
+msgid "Are you sure you want to reactivate this user <strong>%s</strong>?"
+msgstr ""
+
+#: modules/admin/admin/ajaxListUsersofEntity.php:123
+msgid "Delete user"
+msgstr "lösche Benutzer"
+
+#: modules/admin/admin/ajaxListUsersofEntity.php:129
+#, php-format
+msgid "Are you sure you want to delete this user <strong>%s</strong>?"
+msgstr ""
+
+#: modules/admin/admin/ajaxListUsersofEntity.php:164
+msgid "User Name"
+msgstr ""
+
+#: modules/admin/admin/ajaxListUsersofEntity.php:168
+msgid "First name"
+msgstr "Vorname"
+
+#: modules/admin/admin/ajaxListUsersofEntity.php:169
+msgid "Last Name"
+msgstr ""
+
+#: modules/admin/admin/ajaxListUsersofEntity.php:170
+msgid "Phone"
+msgstr "Telefon"
+
+#: modules/admin/admin/ajaxListUsersofEntity.php:171
+msgid "Status"
+msgstr "Status"
+
+#: modules/admin/admin/ajaxListUsersofEntity.php:172
+msgid "Last connection"
+msgstr ""
+
+#: modules/admin/admin/ajaxListUsersofEntity.php:173
 msgid "Profile"
 msgstr "Profil"
 
@@ -653,13 +1111,29 @@ msgid "Move Relay Rule"
 msgstr ""
 
 #: modules/admin/infoPackage.inc.php:198
-msgid "Edit Entities"
+msgid "Edit Entity"
 msgstr ""
 
-#: modules/admin/infoPackage.inc.php:202 modules/admin/infoPackage.inc.php:206
+#: modules/admin/infoPackage.inc.php:202
+msgid "Delete Entitiy"
+msgstr ""
+
+#: modules/admin/infoPackage.inc.php:206 modules/admin/infoPackage.inc.php:210
 msgid "List users of Entity"
 msgstr ""
 
-#: modules/admin/infoPackage.inc.php:211
-msgid "Grub entity users d'une organisation"
+#: modules/admin/infoPackage.inc.php:219
+msgid "Delete User"
+msgstr ""
+
+#: modules/admin/infoPackage.inc.php:223
+msgid "Desactivate User"
+msgstr ""
+
+#: modules/admin/infoPackage.inc.php:227
+msgid "Download Agent"
+msgstr ""
+
+#: modules/admin/infoPackage.inc.php:244
+msgid "Delete Provider"
 msgstr ""

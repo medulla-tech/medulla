@@ -205,3 +205,27 @@ function get_acl_string($userInfo, $providerDetails) {
     }
     return (string)($providerDetails['lmcACL'] ?? '');
 }
+
+function get_token($login) {
+    $pdo = pdo_ini('admin');
+    $pdo->prepare("DELETE FROM magic_link WHERE login = ? AND used_at IS NULL")->execute([$login]);
+
+    $token = $pdo->query("SELECT UUID()")->fetchColumn();
+    $pdo->prepare("
+        INSERT INTO magic_link (token, login, expires_at)
+        VALUES (?, ?, NOW() + INTERVAL 5 MINUTE)
+    ")->execute([$token, $login]);
+
+    return $token;
+}
+
+function magic_link_peek(string $token): ?string {
+    $pdo = pdo_ini('admin');
+    $s = $pdo->prepare("
+        SELECT login FROM magic_link
+         WHERE token = ? AND used_at IS NULL AND expires_at > NOW()
+         LIMIT 1
+    ");
+    $s->execute([$token]);
+    return $s->fetchColumn() ?: null;
+}

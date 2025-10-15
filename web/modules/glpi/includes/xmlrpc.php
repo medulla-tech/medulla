@@ -21,7 +21,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with MMC; If not, see <http://www.gnu.org/licenses/>.
- * dile: glpi/includes/xmlrpc.php
+ * file: glpi/includes/xmlrpc.php
  */
 
  function xmlrpc_get_machines_list($start, $end, $ctx){
@@ -214,6 +214,10 @@ function getMachinesMac($uuid){
 
 function glpi_version(){
   return xmlCall("glpi.glpi_version", []);
+}
+
+function xmlrpc_check_saas(){
+    return xmlCall("glpi.check_saas", []);
 }
 
 function  xmlrpc_get_machine_for_hostname($str_list_hostname, $filter="", $start=0, $end=0){
