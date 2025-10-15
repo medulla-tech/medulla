@@ -174,19 +174,16 @@ $emptydeployAll = new EmptyActionItem1(_T("There are no major updates to deploy 
                                             "updates",
                                             "updates");
 
-
 $title = _T("OS Upgrades", "updates");
 $texte_help = _T("%s machines in the entity \"%s\" can benefit from a major update.", "updates");
 
 foreach ($mergedArray as  $index=>$datacolonne) {
-
     $nbupdate = $datacolonne['W10to10'] + $datacolonne['W10to11'] + $datacolonne['W11to11'];
     if ($datacolonne['count'] > 0){
         $actiondetailsByMachs[] = $detailsByMach;
     }else{
         $actiondetailsByMachs[] =$emptydetailsByMach;
     }
-
     if ($nbupdate > 0){
         // echo "k";
         $actionupdateByentity [] = $deployAll;
@@ -194,7 +191,6 @@ foreach ($mergedArray as  $index=>$datacolonne) {
         // echo "j";
         $actionupdateByentity[] = $emptydeployAll;
     }
-
     // on initialise le tableau
     $complete_name_major[]=$datacolonne['name'];
     $win10towin10_major[]=$datacolonne['W10to10'];

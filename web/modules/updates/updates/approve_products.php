@@ -30,8 +30,6 @@ require_once("modules/admin/includes/xmlrpc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 require_once("modules/medulla_server/includes/xmlrpc.inc.php");
 require_once("modules/updates/includes/updates.inc.php");
-
-
 // Traitement du formulaire
 if (
     $_SERVER['REQUEST_METHOD'] === 'POST' &&
@@ -39,7 +37,6 @@ if (
     $_POST['form_name'] === 'montableau'&& isset($_POST['entityid'])
 ) {
     $submittedCheckValues = $_POST['check'] ?? []; // Valeurs cochées ou non
-
     $result = [];
     foreach ($submittedCheckValues as $key => $value) {
         $result[] = [$key, $value]; // Clé = ID de la règle
@@ -50,6 +47,4 @@ if (
 generateEntityPage(_T("Approve rule gray_list to white_list", 'updates'),
                             "ajaxApproveProduct",
                             $sidemenu);
-
 ?>
-

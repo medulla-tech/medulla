@@ -16,6 +16,7 @@ $filter = (isset($_GET['filter'])) ? htmlentities($_GET['filter']) : "";
 
 $f = xmlrpc_get_approve_products($_GET['selected_location']['uuid']);
 // Initialisation
+
 $htmlelementcheck = [];
 $params = [];
 $submittedCheckValues = $_POST['check'] ?? [];
