@@ -608,6 +608,20 @@ if($package['name'] == "") {
     $package['files'] = [];
     $package['Size'] = 0;
 }
+function strip_py_bytes_prefix($val) {
+    if (!is_string($val)) return $val;
+    $v = trim($val);
+    if (preg_match('/^b([\'"])(.*)\1$/', $v, $m)) {
+        return $m[2];
+    }
+    return $v;
+}
+
+foreach (['Qsoftware','Qversion','Qvendor'] as $k) {
+    if (isset($package[$k])) {
+        $package[$k] = strip_py_bytes_prefix($package[$k]);
+    }
+}
 $associatedInventory = [];
 if ($package['Qsoftware'] != "") {
     $associatedInventory[] = $package['Qsoftware'];
