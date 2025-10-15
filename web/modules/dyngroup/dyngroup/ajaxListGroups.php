@@ -1,17 +1,18 @@
 <?php
-/**
+/*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
- * (c) 2007-2009 Mandriva, http://www.mandriva.com
- * (c) 2021 Siveo, http://siveo.net
+ * (c) 2007 Mandriva, http://www.mandriva.com
+ * (c) 2016-2023 Siveo, http://www.siveo.net
+ * (c) 2024-2025 Medulla, http://www.medulla-tech.io
  *
  * $Id$
  *
- * This file is part of Management Console (MMC).
+ * This file is part of MMC, http://www.medulla-tech.io
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ * the Free Software Foundation; either version 3 of the License, or
+ * any later version.
  *
  * MMC is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -19,7 +20,8 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
+ * along with MMC; If not, see <http://www.gnu.org/licenses/>.
+ * file: ajaxListGroups.php
  */
 
 require_once('modules/glpi/includes/xmlrpc.php');
@@ -120,8 +122,13 @@ $action_display_group_owner = new ActionItem(
     )
 );
 
-
 $empty = new EmptyActionItem();
+
+$owner = $name = $type = $show = $ids = [];
+$array_action_owner = [];
+$actionxmppquickdeploy = [];
+$action_delete = [];
+
 foreach ($list as $group) {
     // Nettoyage des infos propriétaire
     $owneruser   = clean_xss($group->owner_login ?? '');
@@ -130,27 +137,25 @@ foreach ($list as $group) {
 
     // Prépare les infos de base du groupe
     $groupData = [
-        "id"       => clean_xss($group->id),
-        "gid"      => clean_xss($group->id),
-        "groupname"=> clean_xss($group->name),
-        "type"     => clean_xss($is_gp),
-        "owner"    => $owneruser,
-        "idowner"  => $owneruserid,
-        "exist"    => clean_xss($group->exists ?? 0),
-        "is_owner" => clean_xss($group->is_owner ?? 0)
+        "id"        => clean_xss($group->id),
+        "gid"       => clean_xss($group->id),
+        "groupname" => clean_xss($group->name),
+        "type"      => clean_xss($is_gp),
+        "owner"     => $owneruser,
+        "idowner"   => $owneruserid,
+        "exist"     => clean_xss($group->exists ?? 0),
+        "is_owner"  => clean_xss($group->is_owner ?? 0),
+        "login"     => ($owneruser !== '' ? $owneruser : ($_SESSION['login'] ?? ''))
     ];
 
-    // ✅ Ajout des infos entité si disponibles
     if (!empty($owneruser) && isset($entitiesByUser[$owneruser][0])) {
         $entityInfo = $entitiesByUser[$owneruser][0];
-
-        $groupData['entity_id']            = clean_xss($entityInfo['entity_id']);
-        $groupData['entity_name']          = clean_xss($entityInfo['entity_name']);
-        $groupData['entity_completename'] = $entityInfo['entity_completename'];
-        $groupData['profile']              = clean_xss($entityInfo['profile']);
-        $groupData['is_recursive']         = clean_xss($entityInfo['is_recursive']);
-        $groupData['is_dynamic']           = clean_xss($entityInfo['is_dynamic']);
-        $groupData['login']           = "root";
+        $groupData['entity_id']             = clean_xss($entityInfo['entity_id']);
+        $groupData['entity_name']           = clean_xss($entityInfo['entity_name']);
+        $groupData['entity_completename']   = $entityInfo['entity_completename'];
+        $groupData['profile']               = clean_xss($entityInfo['profile']);
+        $groupData['is_recursive']          = clean_xss($entityInfo['is_recursive']);
+        $groupData['is_dynamic']            = clean_xss($entityInfo['is_dynamic']);
     }
 
     // Cas particulier : groupe particulier avec profil "gp"
@@ -174,19 +179,14 @@ foreach ($list as $group) {
         $type[] = _T('static group', 'dyngroup');
     }
 
-    // Affichable ?
     $show[] = ($group->canShow() ? _T('Yes', 'dyngroup') : _T('No', 'dyngroup'));
 
+
     // Suppression possible ?
-    if ($groupData['is_owner'] == 1 || $_SESSION['login'] == "root") {
+    if ($groupData['is_owner'] == "1" || $_SESSION['login'] == "root") {
         $action_delete[] = $delete;
     } else {
         $action_delete[] = $empty;
-    }
-
-    // Action propriétaire uniquement si root
-    if ($_SESSION['login'] == "root") {
-        $array_action_owner[] = ($_SESSION['login'] != $owneruser ? $action_display_group_owner : $empty);
     }
 
     // Déploiement rapide XMPP
@@ -195,8 +195,6 @@ foreach ($list as $group) {
     }
 }
 
-
-// Avoiding the CSS selector (tr id) to start with a number
 $ids_grp = [];
 foreach($ids as $index => $gid_grp) {
     $ids_grp[] = 'g_'.$gid_grp['groupname'];
@@ -207,88 +205,94 @@ if ($is_gp != 1) { // Simple Group
 } else { // Imaging group
     $n = new OptimizedListInfos($name, _T('Group name', 'dyngroup'));
 }
-$n->setcssIds($ids_grp);
+
+$n->setCssIds($ids_grp);
+$n->setParamInfo($ids);
+
 $n->setTableHeaderPadding(0);
 $n->setItemCount($count);
 $n->setNavBar(new AjaxNavBar($count, $filter));
 $n->start = 0;
-$n->end = $conf["global"]["maxperpage"];
+$n->end   = $conf["global"]["maxperpage"];
 
-if ($_SESSION['login'] == "root") {
-        $n->addExtraInfo($owner, _T('Owner', 'dyngroup'));
+if (($_SESSION['login'] ?? '') === "root") {
+    $n->addExtraInfo($owner, _T('Owner', 'dyngroup'));
 }
-if ($is_gp != 1) { // Simple group
+if ($is_gp != 1) {
     $n->addExtraInfo($type, _T('Type', 'dyngroup'));
 }
 $n->addExtraInfo($show, _T('Favourite', 'dyngroup'));
-$n->setParamInfo($ids);
-
-
-if ($_SESSION['login'] == "root") {
-        $n->addActionItemArray($array_action_owner);
+if ($is_gp != 1) { // Simple group
+    $n->addActionItem(new ActionItem(
+        _T("Display this group's content", 'dyngroup'),
+        "display", "displaygroup", "id", "base", "computers"
+    ));
+} else {
+    $n->addActionItem(new ActionItem(
+        _T("Display this imaging group's content", 'dyngroup'),
+        "display", "displaygroup", "id", "imaging", "manage"
+    ));
 }
-
-
 
 if ($is_gp != 1) { // Simple group
-    $n->addActionItem(new ActionItem(_T("Display1 this group's content", 'dyngroup'), "display", "displaygroup", "id", "base", "computers"));
-    if (in_array("inventory", $_SESSION["supportModList"])) {
-        $n->addActionItem(new ActionItem(_T("Inventory on this group", "dyngroup"), "groupinvtabs", "inventory", "inventory", "base", "computers"));
-    } else {
-        # TODO implement the glpi inventory on groups
-        #    $n->addActionItem(new ActionItem(_T("Inventory on this group", "dyngroup"),"groupglpitabs","inventory","inventory", "base", "computers"));
+    if (in_array("inventory", $_SESSION["supportModList"] ?? [])) {
+        $n->addActionItem(new ActionItem(_T("Inventory on this group", "dyngroup"),
+            "groupinvtabs", "inventory", "inventory", "base", "computers"));
     }
-    $n->addActionItem(new ActionItem(_T("Edit this group", 'dyngroup'), "computersgroupedit", "edit", "id", "base", "computers"));
-    $n->addActionItem(new ActionItem(_T("Share this group", 'dyngroup'), "edit_share", "groupshare", "id", "base", "computers"));
+    $n->addActionItem(new ActionItem(_T("Edit this group", 'dyngroup'),
+        "computersgroupedit", "edit", "id", "base", "computers"));
+    $n->addActionItem(new ActionItem(_T("Share this group", 'dyngroup'),
+        "edit_share", "groupshare", "id", "base", "computers"));
 
-    if (in_array("msc", $_SESSION["supportModList"])) {
-        if (!in_array("xmppmaster", $_SESSION["supportModList"])) {
-            $n->addActionItem(new ActionItem(_T("Read log", "dyngroup"), "groupmsctabs", "logfile", "computer", "base", "computers", "grouptablogs"));
+    if (in_array("msc", $_SESSION["supportModList"] ?? [])) {
+        if (!in_array("xmppmaster", $_SESSION["supportModList"] ?? [])) {
+            $n->addActionItem(new ActionItem(_T("Read log", "dyngroup"),
+                "groupmsctabs", "logfile", "computer", "base", "computers", "grouptablogs"));
         }
-        $n->addActionItem(new ActionItem(_T("Software deployment on this group", "dyngroup"), "groupmsctabs", "install", "computer", "base", "computers"));
+        $n->addActionItem(new ActionItem(_T("Software deployment on this group", "dyngroup"),
+            "groupmsctabs", "install", "computer", "base", "computers"));
     }
-    if (in_array("update", $_SESSION["supportModList"])) {
-        $n->addActionItem(new ActionItem(_T("Update on this group", "dyngroup"), "view_updates", "reload", "id", "base", "computers"));
+    if (in_array("update", $_SESSION["supportModList"] ?? [])) {
+        $n->addActionItem(new ActionItem(_T("Update on this group", "dyngroup"),
+            "view_updates", "reload", "id", "base", "computers"));
     }
-    $n->addActionItem(new ActionItem(_("Updates compliance by machines"), "detailsByMachines", "auditbymachine", "updates", "updates", "updates"));
-    //$n->addActionItem(new ActionItem(_("Deploy all update on this group"),"deployAllUpdates", "updateall","updates", "updates", "updates") );
-    $n->addActionItem(new ActionItem(_("Deploy specific update on this group"), "deploySpecificUpdate", "updateone", "updates", "updates", "updates"));
+    $n->addActionItem(new ActionItem(_("Updates compliance by machines"),
+        "detailsByMachines", "auditbymachine", "updates", "updates", "updates"));
+    $n->addActionItem(new ActionItem(_("Deploy specific update on this group"),
+        "deploySpecificUpdate", "updateone", "updates", "updates", "updates"));
 } else { // Imaging group
-    $n->addActionItem(new ActionItem(_T("Display this imaging group's content", 'dyngroup'), "display", "displaygroup", "id", "imaging", "manage"));
-
-
-    if (in_array("inventory", $_SESSION["supportModList"])) {
-        $n->addActionItem(new ActionItem(_T("Inventory on this imaging group", "dyngroup"), "groupinvtabs", "inventory", "inventory", "imaging", "manage"));
-    } else {
-        # TODO implement the glpi inventory on groups
-        #    $n->addActionItem(new ActionItem(_T("Inventory on this profile", "dyngroup"),"groupglpitabs","inventory","inventory", "base", "computers"));
+    if (in_array("inventory", $_SESSION["supportModList"] ?? [])) {
+        $n->addActionItem(new ActionItem(_T("Inventory on this imaging group", "dyngroup"),
+            "groupinvtabs", "inventory", "inventory", "imaging", "manage"));
     }
-    $n->addActionItem(new ActionItem(_T("Edit this imaging group", 'dyngroup'), "computersgroupedit", "edit", "id", "imaging", "manage"));
-    $n->addActionItem(new ActionItem(_T("Share this imaging group", 'dyngroup'), "edit_share", "groupshare", "id", "imaging", "manage"));
-    if (in_array("msc", $_SESSION["supportModList"])) {
-        if (!in_array("xmppmaster", $_SESSION["supportModList"])) {
-            $n->addActionItem(new ActionItem(_T("Read log", "dyngroup"), "groupmsctabs", "logfile", "computer", "imaging", "manage", "grouptablogs"));
+    $n->addActionItem(new ActionItem(_T("Edit this imaging group", 'dyngroup'),
+        "computersgroupedit", "edit", "id", "imaging", "manage"));
+    $n->addActionItem(new ActionItem(_T("Share this imaging group", 'dyngroup'),
+        "edit_share", "groupshare", "id", "imaging", "manage"));
+    if (in_array("msc", $_SESSION["supportModList"] ?? [])) {
+        if (!in_array("xmppmaster", $_SESSION["supportModList"] ?? [])) {
+            $n->addActionItem(new ActionItem(_T("Read log", "dyngroup"),
+                "groupmsctabs", "logfile", "computer", "imaging", "manage", "grouptablogs"));
         }
-        $n->addActionItem(new ActionItem(_T("Software deployment on this imaging group", "dyngroup"), "groupmsctabs", "install", "computer", "imaging", "manage"));
+        $n->addActionItem(new ActionItem(_T("Software deployment on this imaging group", "dyngroup"),
+            "groupmsctabs", "install", "computer", "imaging", "manage"));
     }
-    if (in_array("imaging", $_SESSION["supportModList"])) {
+    if (in_array("imaging", $_SESSION["supportModList"] ?? [])) {
         if (xmlrpc_isImagingInProfilePossible()) {
-            $n->addActionItem(new ActionItem(_("Imaging management"), "groupimgtabs", "imaging", "computer", "imaging", "manage"));
+            $n->addActionItem(new ActionItem(_("Imaging management"),
+                "groupimgtabs", "imaging", "computer", "imaging", "manage"));
         }
     }
-    $n->addActionItem(new ActionItem(_("Updates compliance by machines"), "detailsByMachines", "auditbymachine", "updates", "updates", "updates"));
+    $n->addActionItem(new ActionItem(_("Updates compliance by machines"),
+        "detailsByMachines", "auditbymachine", "updates", "updates", "updates"));
 }
 
-
-if (in_array("xmppmaster", $_SESSION["supportModList"])) {
-    // quick action for group with xmppmodule
+if (in_array("xmppmaster", $_SESSION["supportModList"] ?? [])) {
     $n->addActionItemArray($actionxmppquickdeploy);
 }
 
-
 $n->addActionItemArray($action_delete);
-
-$n->addActionItem(new ActionItem(_T("Csv export", "dyngroup"), "csv", "csv", "computer", "base", "computers"));
-//$n->disableFirstColumnActionLink();
+$n->addActionItem(new ActionItem(_T("Csv export", "dyngroup"),
+    "csv", "csv", "computer", "base", "computers"));
 
 $n->display();
