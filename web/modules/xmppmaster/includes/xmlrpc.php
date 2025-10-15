@@ -1048,7 +1048,6 @@ function xmlrpc_add_rule_to_relay($relay_id, $rule_id, $order, $subject)
     return xmlCall("xmppmaster.add_rule_to_relay", [$relay_id, $rule_id, $order, $subject]);
 }
 
-
 function xmlrpc_delete_rule_relay($rule_id)
 {
     return xmlCall("xmppmaster.delete_rule_relay", [$rule_id]);

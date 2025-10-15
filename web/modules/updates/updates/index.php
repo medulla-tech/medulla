@@ -26,6 +26,7 @@
 </style>
 
 <?php
+global $conf;
 //Entities Compliance
 require("localSidebar.php");
 require("graph/navbar.inc.php");
