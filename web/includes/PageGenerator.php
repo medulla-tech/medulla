@@ -712,6 +712,7 @@ class ConvertCouleur
     }
 }
 
+
 /**
  *  class who maintain array presentation of information
  */
@@ -736,6 +737,9 @@ class ListInfos extends HtmlElement
     public $captionSize = ""; // Taille de la légende (optionnel)
     public $captionEmboss = 0; // Effet de relief sortant (0 par défaut)
     public $rowColor = ""; // Couleur des lignes des cellules (optionnel)
+    public $captionStyle = "";
+    public $captionClass = "";
+
     /**
      * constructor
      * @param $tab must be an array of array
@@ -757,52 +761,71 @@ class ListInfos extends HtmlElement
     }
 
 
-
-    /**
-     * Set the caption text for the table.
-     *
-     * @param string $text The caption text to display.
-     */
-
-    public function setCaptionText($text)
+    // 1. Définir le style CSS complet
+    public function setCaptionText($texte)
     {
-        $this->captionText = $text;
+        $this->captionText = $texte;
     }
-   /**
-     * Set CSS properties for the caption and table rows.
-     *
-     * @param int $border Whether to display a border (1 for yes, 0 for no).
-     * @param int $bold Whether to display bold text (1 for yes, 0 for no).
-     * @param string $bgColor Background color of the caption.
-     * @param string $textColor Text color of the caption.
-     * @param string $padding Padding for the caption.
-     * @param string $size Font size of the caption.
-     * @param int $emboss Whether to apply emboss effect (1 for yes, 0 for no).
-     * @param string $rowColor Background color for table rows. forme rgb(0,0,0,50)
-     */
-    public function setCssCaption($border = 0, $bold = 1, $bgColor = "grey", $textColor = "black", $padding = "5px 0", $size = "", $emboss = 0, $rowColor = "")
+
+    // 1. Définir le style CSS complet
+    public function setCssCaptionStyle($style)
     {
-        $this->captionBorder = $border;
-        $this->captionBold = $bold;
+        $this->captionStyle = $style;
+    }
+
+    // 2. Définir le style via paramètres
+    public function setCssCaption(
+        $border = 0,
+        $bold = 1,
+        $bgColor = "grey",
+        $textColor = "black",
+        $padding = "5px 0",
+        $size = "",
+        $emboss = 0,
+        $rowColor = ""
+    )
+    {
+        $this->captionBorder = (bool)$border;
+        $this->captionBold = (bool)$bold;
         $this->captionBgColor = $bgColor;
         $this->captionTextColor = $textColor;
         $this->captionPadding = $padding;
-        $this->captionSize = !empty($size) ? $size . "px" : ""; // Ajoutez "px" si une taille est spécifiée
+        $this->captionSize = !empty($size) ? (int)$size . "px" : "";
         $this->captionEmboss = $emboss;
         $this->rowColor = $rowColor;
     }
 
-   /**
-     * Draw the caption for the table with CSS styles.
-     */
+
+    // 3. Définir une classe CSS
+    public function setCssCaptionClass($class)
+    {
+        $this->captionClass = $class;
+    }
+
+
+    // Dessiner le caption
     public function drawCaption()
     {
-        if (!empty($this->captionText)) {
-            $style = "background-color: " . htmlspecialchars($this->captionBgColor, ENT_QUOTES, 'UTF-8') . "; ";
+        if (empty($this->captionText)) {
+            return; // rien à afficher
+        }
+
+        $style = "";
+
+        // Priorité 1 : style complet direct
+        if (!empty($this->captionStyle)) {
+            $style = $this->captionStyle;
+        }
+        // Sinon style construit à partir des paramètres
+        elseif (!empty($this->captionText)) {
+            $style .= "background-color: " . htmlspecialchars($this->captionBgColor, ENT_QUOTES, 'UTF-8') . "; ";
+
             $style .= "color: " . htmlspecialchars($this->captionTextColor, ENT_QUOTES, 'UTF-8') . "; ";
+
             $style .= "padding: " . htmlspecialchars($this->captionPadding, ENT_QUOTES, 'UTF-8') . "; ";
+
             if ($this->captionBorder) {
-                $style .= "border: 1px solid " . htmlspecialchars($this->rowColor, ENT_QUOTES, 'UTF-8') . "; ";
+                $style .= "border: 1px solid " . htmlspecialchars($this->rowColor ?: $this->captionTextColor, ENT_QUOTES, 'UTF-8') . "; ";
             }
             if ($this->captionBold) {
                 $style .= "font-weight: bold; ";
@@ -811,10 +834,14 @@ class ListInfos extends HtmlElement
                 $style .= "font-size: " . htmlspecialchars($this->captionSize, ENT_QUOTES, 'UTF-8') . "; ";
             }
             if ($this->captionEmboss) {
-                $style .= "box-shadow: 2px 2px 5px " . htmlspecialchars($this->rowColor, ENT_QUOTES, 'UTF-8') . "; ";
+                $style .= "box-shadow: 2px 2px 5px " . htmlspecialchars($this->rowColor ?: "#000", ENT_QUOTES, 'UTF-8') . "; ";
             }
-            echo "<caption style=\"$style\">" . htmlspecialchars($this->captionText, ENT_QUOTES, 'UTF-8') . "</caption>";
         }
+        // echo $style;
+        // Si une classe est définie, on l'ajoute
+        $classAttr = !empty($this->captionClass) ? ' class="' . htmlspecialchars($this->captionClass, ENT_QUOTES, 'UTF-8') . '"' : '';
+
+       echo "<caption$classAttr style=\"$style\">" . htmlspecialchars($this->captionText, ENT_QUOTES, 'UTF-8') . "</caption>";
     }
 
 
@@ -1063,8 +1090,57 @@ class ListInfos extends HtmlElement
         echo "</td>";
     }
 
+    public function drawInlineStyle()
+    {
+        echo <<<CSS
+            <style>
+
+                /* ==== Styles par défaut pour ListInfosCssUser ==== */
+                table.listinfos {
+                border-collapse: collapse;
+                width: 100%;
+                font-family: Arial, sans-serif;
+                }
+                table.listinfos th {
+                background-color: #f2f2f2;
+                text-align: left;
+                padding: 8px;
+                }
+                table.listinfos td {
+                padding: 8px;
+                border-bottom: 1px solid #ddd;
+                }
+
+                /* Exemple de classes de ligne */
+                .listinfos-background-highlight {
+                    background-color: #e6f7ff !important;
+                }
+                .listinfos-background-warning {
+                    background-color: #e6f7ff !important;
+                }
+                .listinfos-font-gras{
+                    font-size: 16px; /* Taille de la police */
+                    font-weight: bold; /* Texte en gras */
+                    font-style: italic; /* Texte en italique */
+                    color: #00008B !important; /* Bleu foncé */
+                }
+
+                .listinfos-separator { border-bottom: 3px double #999; }
+
+                /* Exemple de classes de colonne */
+                .listinfoscol-center { text-align: center; }
+                .listinfoscol-bold { font-weight: bold; }
+
+                /* Exemple de classes de cellule */
+                .listinfos-cel-success { color: green; font-weight: bold; }
+                .listinfos-cel-error { color: red; text-decoration: underline; }
+            </style>
+            CSS;
+    }
+
     public function drawTable($navbar = 1)
     {
+        $this->drawInlineStyle(); // injecte le CSS
         echo "<table border=\"1\" cellspacing=\"0\" cellpadding=\"5\" class=\"listinfos\">\n";
         $this->drawCaption();
         echo "<thead><tr>";
@@ -1206,6 +1282,7 @@ class ListInfos extends HtmlElement
         $this->drawTable($navbar);
     }
 }
+
 
 /**
  * A modified version of Listinfos
