@@ -854,16 +854,15 @@ class RpcProxy(RpcProxyI):
             "ret": 0,
             "base64": False,
         }
-        for machine in result["objectdeploy"]:
+        # filtre: on ignore les machines déjà en succès
+        for machine in (m for m in result.get("objectdeploy", [])
+                        if str(m.get("state", "")).strip().upper() != "DEPLOYMENT SUCCESS"):
             msg_stop_deploy["sessionid"] = machine["sessionid"]
-            self.updatedeploystate1(machine["sessionid"],
-                            "ABORT DEPLOYMENT CANCELLED BY USER")
+            self.updatedeploystate1(machine["sessionid"], "ABORT DEPLOYMENT CANCELLED BY USER")
             if "jidmachine" in machine and machine["jidmachine"] != "fake_jidmachine":
                 send_message_json(machine["jidmachine"], msg_stop_deploy)
             if "jid_relay" in machine and machine["jid_relay"] != "fake_jidrelay":
-                arscluster = XmppMasterDatabase().getRelayServerofclusterFromjidars(
-                    machine["jid_relay"]
-                )
+                arscluster = XmppMasterDatabase().getRelayServerofclusterFromjidars(machine["jid_relay"])
                 for t in arscluster:
                     send_message_json(t, msg_stop_deploy)
         return True

@@ -47,4 +47,8 @@ if (
 generateEntityPage(_T("Approve rule gray_list to white_list", 'updates'),
                             "ajaxApproveProduct",
                             $sidemenu);
+<<<<<<< HEAD
+=======
+
+>>>>>>> 60d93c2420bf81300a22db153b8e3e0d47695a99
 ?>

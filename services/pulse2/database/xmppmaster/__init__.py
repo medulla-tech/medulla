@@ -4560,18 +4560,10 @@ class XmppMasterDatabase(DatabaseHelper):
             return ret
 
     @DatabaseHelper._sessionm
-    def getstatdeploy_from_command_id_and_title_for_convergence(
-        self, session, command_id, title
-    ):
+    def getstatdeploy_from_command_id_and_title_for_convergence(self, session, command_id, title):
         """
-        Retrieve the deploy statistics based on the command_id and partial title match for convergence.
-
-        Args:
-            command_id: ID of the deploy.
-            title: title for a LIKE query.
-
-        Return:
-            dict: Statistics of deployments grouped by state.
+        Stats par état pour le dernier déploiement (command_id + title LIKE),
+        limitées aux machines encore présentes dans l'inventaire (xmppmaster.machines).
         """
         try:
             global_deploy = (
@@ -4580,39 +4572,38 @@ class XmppMasterDatabase(DatabaseHelper):
                 .order_by(Deploy.start.desc())
                 .first()
             )
-
             if not global_deploy:
                 return {"totalmachinedeploy": 0}
 
-            group_uuid = global_deploy.group_uuid
+            params = {
+                "command_id": command_id,
+                "group_uuid": global_deploy.group_uuid,
+                "title_like": f"%{title}%",
+            }
 
-            sql = """
+            sql = text("""
                 SELECT d.state, COUNT(*) AS count
-                FROM deploy d
+                FROM xmppmaster.deploy d
                 JOIN (
                     SELECT inventoryuuid, MAX(id) AS latest_id
-                    FROM deploy
+                    FROM xmppmaster.deploy
                     WHERE command = :command_id
                     AND group_uuid = :group_uuid
                     AND title LIKE :title_like
                     GROUP BY inventoryuuid
-                ) ld ON d.inventoryuuid = ld.inventoryuuid
-                AND d.id = ld.latest_id
-                WHERE d.command = :command_id
+                ) ld ON ld.inventoryuuid = d.inventoryuuid
+                AND ld.latest_id     = d.id
+                JOIN xmppmaster.machines m
+                ON m.uuid_inventorymachine = d.inventoryuuid
+                WHERE d.command    = :command_id
                 AND d.group_uuid = :group_uuid
-                AND d.title LIKE :title_like
-                GROUP BY d.state;
-            """
-            result = session.execute(
-                sql,
-                {
-                    "command_id": command_id,
-                    "group_uuid": group_uuid,
-                    "title_like": f"%{title}%",
-                },
-            ).fetchall()
+                AND d.title      LIKE :title_like
+                GROUP BY d.state
+            """)
 
-            if not result:
+            rows = session.execute(sql, params).fetchall()
+
+            if not rows:
                 return {"totalmachinedeploy": 0}
 
             ret = {
@@ -4653,86 +4644,51 @@ class XmppMasterDatabase(DatabaseHelper):
                 "otherstatus": 0,
             }
 
-            dynamic_status_list = self.get_log_status()
-            dynamic_label = []
-            dynamic_status = []
-            if dynamic_status_list:
-                for status in dynamic_status_list:
-                    ret[status["label"]] = 0
-                    dynamic_label.append(status["label"])
-                    dynamic_status.append(status["status"])
+            dynamic_status_list = self.get_log_status() or []
+            code_to_label = {d["status"]: d["label"] for d in dynamic_status_list}
+            for d in dynamic_status_list:
+                ret.setdefault(d["label"], 0)
 
-            liststatus = {row[0]: row[1] for row in result}
-            for status, count in liststatus.items():
+            mapping = {
+                "DEPLOYMENT SUCCESS": "deploymentsuccess",
+                "UNINSTALL SUCCESS": "uninstallsuccess",
+                "ABORT ON TIMEOUT": "abortontimeout",
+                "ABORT MISSING AGENT": "abortmissingagent",
+                "ABORT INCONSISTENT GLPI INFORMATION": "abortinconsistentglpiinformation",
+                "ABORT RELAY DOWN": "abortrelaydown",
+                "ABORT ALTERNATIVE RELAYS DOWN": "abortalternativerelaysdown",
+                "ABORT INFO RELAY MISSING": "abortinforelaymissing",
+                "ERROR UNKNOWN ERROR": "errorunknownerror",
+                "ABORT PACKAGE IDENTIFIER MISSING": "abortpackageidentifiermissing",
+                "ABORT PACKAGE NAME MISSING": "abortpackagenamemissing",
+                "ABORT PACKAGE VERSION MISSING": "abortpackageversionmissing",
+                "ABORT PACKAGE WORKFLOW ERROR": "abortpackageworkflowerror",
+                "ABORT DESCRIPTOR MISSING": "abortdescriptormissing",
+                "ABORT MACHINE DISAPPEARED": "abortmachinedisappeared",
+                "ABORT DEPLOYMENT CANCELLED BY USER": "abortdeploymentcancelledbyuser",
+                "ABORT PACKAGE EXECUTION ERROR": "abortpackageexecutionerror",
+                "ABORT DUPLICATE MACHINES": "abortduplicatemachines",
+                "DEPLOYMENT START": "deploymentstart",
+                "WOL 1": "wol1", "WOL 2": "wol2", "WOL 3": "wol3",
+                "WAITING MACHINE ONLINE": "waitingmachineonline",
+                "DEPLOYMENT PENDING (REBOOT/SHUTDOWN/...)": "deploymentpending",
+                "DEPLOYMENT DELAYED": "deploymentdelayed",
+                "DEPLOYMENT SPOOLED": "deploymentspooled",
+                "ERROR HASH MISSING": "errorhashmissing",
+                "ABORT HASH INVALID": "aborthashinvalid",
+                "ERROR TRANSFER FAILED": "errortransferfailed",
+                "ABORT PACKAGE EXECUTION CANCELLED": "abortpackageexecutioncancelled",
+                "ABORT MISSING DEPENDENCY": "abortmissingdependency",
+                "RESTART DEPLOY": "restartdeploy",
+            }
+
+            for state, count in rows:
+                count = int(count or 0)
                 ret["totalmachinedeploy"] += count
-
-                if status == "DEPLOYMENT SUCCESS":
-                    ret["deploymentsuccess"] = count
-                elif status == "UNINSTALL SUCCESS":
-                    ret["uninstallsuccess"] = count
-                elif status == "ABORT ON TIMEOUT":
-                    ret["abortontimeout"] = count
-                elif status == "ABORT MISSING AGENT":
-                    ret["abortmissingagent"] = count
-                elif status == "ABORT INCONSISTENT GLPI INFORMATION":
-                    ret["abortinconsistentglpiinformation"] = count
-                elif status == "ABORT RELAY DOWN":
-                    ret["abortrelaydown"] = count
-                elif status == "ABORT ALTERNATIVE RELAYS DOWN":
-                    ret["abortalternativerelaysdown"] = count
-                elif status == "ABORT INFO RELAY MISSING":
-                    ret["abortinforelaymissing"] = count
-                elif status == "ERROR UNKNOWN ERROR":
-                    ret["errorunknownerror"] = count
-                elif status == "ABORT PACKAGE IDENTIFIER MISSING":
-                    ret["abortpackageidentifiermissing"] = count
-                elif status == "ABORT PACKAGE NAME MISSING":
-                    ret["abortpackagenamemissing"] = count
-                elif status == "ABORT PACKAGE VERSION MISSING":
-                    ret["abortpackageversionmissing"] = count
-                elif status == "ABORT PACKAGE WORKFLOW ERROR":
-                    ret["abortpackageworkflowerror"] = count
-                elif status == "ABORT DESCRIPTOR MISSING":
-                    ret["abortdescriptormissing"] = count
-                elif status == "ABORT MACHINE DISAPPEARED":
-                    ret["abortmachinedisappeared"] = count
-                elif status == "ABORT DEPLOYMENT CANCELLED BY USER":
-                    ret["abortdeploymentcancelledbyuser"] = count
-                elif status == "ABORT PACKAGE EXECUTION ERROR":
-                    ret["abortpackageexecutionerror"] = count
-                elif status == "ABORT DUPLICATE MACHINES":
-                    ret["abortduplicatemachines"] = count
-                elif status == "DEPLOYMENT START":
-                    ret["deploymentstart"] = count
-                elif status == "WOL 1":
-                    ret["wol1"] = count
-                elif status == "WOL 2":
-                    ret["wol2"] = count
-                elif status == "WOL 3":
-                    ret["wol3"] = count
-                elif status == "WAITING MACHINE ONLINE":
-                    ret["waitingmachineonline"] = count
-                elif status == "DEPLOYMENT PENDING (REBOOT/SHUTDOWN/...)":
-                    ret["deploymentpending"] = count
-                elif status == "DEPLOYMENT DELAYED":
-                    ret["deploymentdelayed"] = count
-                elif status == "DEPLOYMENT SPOOLED":
-                    ret["deploymentspooled"] = count
-                elif status == "ERROR HASH MISSING":
-                    ret["errorhashmissing"] = count
-                elif status == "ABORT HASH INVALID":
-                    ret["aborthashinvalid"] = count
-                elif status == "ERROR TRANSFER FAILED":
-                    ret["errortransferfailed"] = count
-                elif status == "ABORT PACKAGE EXECUTION CANCELLED":
-                    ret["abortpackageexecutioncancelled"] = count
-                elif status == "ABORT MISSING DEPENDENCY":
-                    ret["abortmissingdependency"] = count
-                elif status == "RESTART DEPLOY":
-                    ret["restartdeploy"] = count
-                elif status in dynamic_status:
-                    index = dynamic_status.index(status)
-                    ret[dynamic_label[index]] = count
+                if state in mapping:
+                    ret[mapping[state]] = count
+                elif state in code_to_label:
+                    ret[code_to_label[state]] = count
                 else:
                     ret["otherstatus"] += count
 
@@ -6790,24 +6746,24 @@ class XmppMasterDatabase(DatabaseHelper):
         query_base = session.query(Deploy).filter(
             and_(
                 Deploy.sessionid.like(f"{typedeploy}%"),
-                or_(
-                    Deploy.title.like("%Convergence%"),
-                )
+                Deploy.title.like("%Convergence%"),
             )
         )
+
         if login:
             query_base = query_base.filter(Deploy.login.like(login))
         if intervalsearch:
             since_date = datetime.now() - timedelta(seconds=intervalsearch)
             query_base = query_base.filter(Deploy.start >= since_date)
         if filt:
+            like = f"%{filt}%"
             query_base = query_base.filter(
                 or_(
-                    Deploy.state.like(f"%{filt}%"),
-                    Deploy.pathpackage.like(f"%{filt}%"),
-                    Deploy.start.like(f"%{filt}%"),
-                    Deploy.login.like(f"%{filt}%"),
-                    Deploy.host.like(f"%{filt}%"),
+                    Deploy.state.like(like),
+                    Deploy.pathpackage.like(like),
+                    Deploy.start.like(like),
+                    Deploy.login.like(like),
+                    Deploy.host.like(like),
                 )
             )
 
@@ -6829,8 +6785,17 @@ class XmppMasterDatabase(DatabaseHelper):
                 Deploy.start == global_subq.c.global_latest_start,
             ),
         )
-        global_deploy_raw = global_deploy_query.all()
 
+        inv_rows = session.execute(
+            text(
+                "SELECT uuid_inventorymachine "
+                "FROM xmppmaster.machines "
+                "WHERE uuid_inventorymachine IS NOT NULL AND uuid_inventorymachine <> ''"
+            )
+        ).fetchall()
+        inventory_uuids = {r[0] for r in inv_rows}
+
+        global_deploy_raw = global_deploy_query.all()
         unique_global = {}
         for row in global_deploy_raw:
             key = (row.command, row.group_uuid)
@@ -6877,10 +6842,15 @@ class XmppMasterDatabase(DatabaseHelper):
                 .order_by(Deploy.start.desc())
             )
             machine_results = deploy_per_machine_query.all()
-            total_machine_count = len(machine_results)
+
+            filtered_results = [
+                row for row in machine_results
+                if row.inventoryuuid and row.inventoryuuid in inventory_uuids
+            ]
+            total_machine_count = len(filtered_results)
 
             machine_details_list = []
-            for row in machine_results:
+            for row in filtered_results:
                 machine_details_list.append(
                     {
                         "host": row.host,
@@ -6888,16 +6858,8 @@ class XmppMasterDatabase(DatabaseHelper):
                         "inventoryuuid": row.inventoryuuid,
                         "jid_relay": row.jid_relay,
                         "sessionid": row.sessionid,
-                        "start": (
-                            row.start.strftime("%Y-%m-%d %H:%M:%S")
-                            if row.start
-                            else None
-                        ),
-                        "end": (
-                            row.endcmd.strftime("%Y-%m-%d %H:%M:%S")
-                            if row.endcmd
-                            else None
-                        ),
+                        "start": row.start.strftime("%Y-%m-%d %H:%M:%S") if row.start else None,
+                        "end": row.endcmd.strftime("%Y-%m-%d %H:%M:%S") if row.endcmd else None,
                     }
                 )
 
@@ -6905,16 +6867,14 @@ class XmppMasterDatabase(DatabaseHelper):
                 "command": global_deploy.command,
                 "group_uuid": global_deploy.group_uuid,
                 "title": global_deploy.title,
-                "nb_machines": total_machine_count,
+                "nb_machines": total_machine_count,  # ✅ corrigé
                 "start": (
                     {"timestamp": int(global_deploy.start.timestamp())}
-                    if global_deploy.start
-                    else None
+                    if global_deploy.start else None
                 ),
                 "endcmd": (
                     {"timestamp": int(global_deploy.endcmd.timestamp())}
-                    if global_deploy.endcmd
-                    else None
+                    if global_deploy.endcmd else None
                 ),
                 "machine_details_json": json.dumps(machine_details_list),
                 "login": global_deploy.login,
@@ -6934,9 +6894,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 "nb_machines": [a["nb_machines"] for a in aggregated_list],
                 "start": [a["start"] for a in aggregated_list],
                 "endcmd": [a["endcmd"] for a in aggregated_list],
-                "machine_details_json": [
-                    a["machine_details_json"] for a in aggregated_list
-                ],
+                "machine_details_json": [a["machine_details_json"] for a in aggregated_list],
                 "login": [a["login"] for a in aggregated_list],
             },
         }
