@@ -82,6 +82,7 @@ from pulse2.database.xmppmaster.schema import (
     Mmc_module_actif,
     Users_adgroups,
 )
+from pulse2.utils import to_int, normalize_entity
 
 # Imported last
 import logging
@@ -580,6 +581,7 @@ class XmppMasterDatabase(DatabaseHelper):
         {"success": False, "message": "An error occurred during update: <details>"}
         ```
         """
+
         try:
             entity_id = int(entity_id)
         except (TypeError, ValueError):
@@ -1540,6 +1542,11 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def get_ars_list_belongs_cluster(self, session, listidars, start, limit, filter):
+
+
+
+
+
         try:
             start = int(start)
         except BaseException:
@@ -15341,181 +15348,71 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             return False
         return True
 
-    # ##################################END update function ####################################
     @DatabaseHelper._sessionm
     def get_updates_by_entity(self, session, entity, start=0, limit=-1, filter=""):
-        if entity.startswith("UUID"):
-            entity = entity.replace("UUID", "")
-
+        entity = normalize_entity(entity, defaut=-1)
+        start = to_int(start, 0)
+        limit = to_int(limit, -1)
         try:
-            entity = int(entity)
-        except:
-            pass
-
-        try:
-            start = int(start)
-        except:
-            start = 0
-
-        try:
-            limit = int(limit)
-        except:
-            limit = -1
-
-        sub = (
-            session.query(Machines.id)
-            .join(Glpi_entity, Glpi_entity.id == Machines.glpi_entity_id)
-            .filter(Glpi_entity.glpi_id == entity)
-            .join(Up_machine_windows, Up_machine_windows.id_machine == Machines.id)
-            .outerjoin(
-                Up_gray_list, Up_gray_list.updateid == Up_machine_windows.update_id
-            )
-            .outerjoin(
-                Up_white_list, Up_white_list.updateid == Up_machine_windows.update_id
-            )
-            .filter(or_(Up_gray_list.valided == 1, Up_white_list.valided == 1))
-        )
-
-        sub = sub.subquery()
-        query = (
-            session.query(Up_machine_windows)
-            .outerjoin(
-                Up_gray_list, Up_gray_list.updateid == Up_machine_windows.update_id
-            )
-            .outerjoin(
-                Up_white_list, Up_white_list.updateid == Up_machine_windows.update_id
-            )
-            .filter(
-                and_(
-                    Up_machine_windows.id_machine.in_(sub),
-                    or_(
-                        Up_machine_windows.curent_deploy == None,
-                        Up_machine_windows.curent_deploy == 0,
-                    ),
-                    or_(
-                        Up_machine_windows.required_deploy == None,
-                        Up_machine_windows.required_deploy == 0,
-                    ),
-                    or_(Up_gray_list.valided == 1, Up_white_list.valided == 1),
-                )
-            )
-            .group_by(Up_machine_windows.update_id)
-        )
-
-        if filter != "":
-            query = query.filter(
-                or_(
-                    Up_machine_windows.kb.contains(filter),
-                    Up_machine_windows.update_id.contains(filter),
-                )
-            )
-        count = query.count()
-
-        query = query.offset(start)
-        if limit != -1:
-            query = query.limit(limit)
-
-        query = query.all()
-        pkgs_list = {}
-        result = {"total": count, "datas": []}
-
-        for element in query:
-            startdate = ""
-            if element.start_date is not None:
-                startdate = element.start_date
-
-            current_deploy = 0
-            if element.curent_deploy is not None:
-                current_deploy = element.curent_deploy
-
-            required_deploy = 0
-            if element.required_deploy is not None:
-                required_deploy = element.required_deploy
-
-            enddate = ""
-            if element.end_date is not None:
-                enddate = element.end_date
-
-            result["datas"].append(
-                {
-                    "id_machine": element.id_machine if not None else 0,
-                    "update_id": element.update_id if not None else "",
-                    "kb": element.kb if not None else "",
-                    "current_deploy": current_deploy,
-                    "required_deploy": required_deploy,
-                    "start_date": startdate,
-                    "end_date": enddate,
-                    "pkgs_label": "",
-                    "pkgs_version": "",
-                    "pkgs_description": "",
-                }
-            )
-            pkgs_list[element.update_id] = {}
-
-        if pkgs_list != {}:
-            if pkgs_list.keys() != []:
-                concat = "in (%s)" % ",".join(
-                    ['"%s"' % uuid for uuid in pkgs_list.keys()]
-                )
-            else:
-                concat = '= ""'
-
-            sql2 = (
-                """SELECT pkgs.packages.uuid,
-            pkgs.packages.label,
-            pkgs.packages.version,
-            pkgs.packages.description
-            FROM pkgs.packages
-            WHERE pkgs.packages.uuid %s
+            sql = f"""
+                SELECT
+                    umw.id_machine,
+                    umw.update_id,
+                    umw.kb,
+                    COALESCE(umw.curent_deploy, 0) AS current_deploy,
+                    COALESCE(umw.required_deploy, 0) AS required_deploy,
+                    COALESCE(umw.start_date, '') AS start_date,
+                    COALESCE(umw.end_date, '') AS end_date,
+                    COALESCE(umw.intervals, '') AS deployment_intervals,
+                    COALESCE(umw.msrcseverity, '') AS msrcseverity,
+                    COALESCE(p.label, '') AS pkgs_label,
+                    COALESCE(p.version, '') AS pkgs_version,
+                    COALESCE(p.description, '') AS pkgs_description
+                FROM up_machine_windows AS umw
+                INNER JOIN machines AS m ON umw.id_machine = m.id
+                INNER JOIN glpi_entity AS ge ON ge.id = m.glpi_entity_id
+                LEFT JOIN up_gray_list AS g ON g.updateid = umw.update_id
+                LEFT JOIN up_white_list AS w ON w.updateid = umw.update_id
+                LEFT JOIN pkgs.packages AS p ON p.uuid = umw.update_id
+                WHERE
+                    ge.glpi_id = :entity
+                    AND (g.valided = 1 OR w.valided = 1)
+                    AND (umw.curent_deploy IS NULL OR umw.curent_deploy = 0)
+                    AND (umw.required_deploy IS NULL OR umw.required_deploy = 0)
+                    {f"AND (umw.kb LIKE :filter OR umw.update_id LIKE :filter)" if filter else ""}
+                GROUP BY umw.update_id
+                ORDER BY umw.update_id
+                {f"LIMIT {limit} OFFSET {start}" if limit != -1 else ""}
             """
-                % concat
-            )
-            query2 = session.execute(sql2)
 
-            for element in query2:
-                pkgs_list[element[0]] = {
-                    "label": element[1],
-                    "version": element[2],
-                    "description": element[3],
-                }
+            params = {"entity": entity}
+            if filter:
+                params["filter"] = f"%{filter}%"
 
-            for element in result["datas"]:
-                if element["update_id"] in pkgs_list:
-                    element["pkgs_label"] = (
-                        pkgs_list[element["update_id"]]["label"]
-                        if "label" in pkgs_list[element["update_id"]]
-                        else ""
-                    )
-                    element["pkgs_version"] = (
-                        pkgs_list[element["update_id"]]["version"]
-                        if "version" in pkgs_list[element["update_id"]]
-                        else ""
-                    )
-                    element["pkgs_description"] = (
-                        pkgs_list[element["update_id"]]["description"]
-                        if "description" in pkgs_list[element["update_id"]]
-                        else ""
-                    )
-        return result
+            result = session.execute(sql, params).fetchall()
+
+            return {
+                "total": len(result),
+                "datas": [dict(row._mapping) for row in result],
+            }
+
+        except Exception as e:
+            if DEBUG_MODE:
+                logger.exception(f"[get_updates_by_entity] Erreur lors de l'exécution SQL : {e}")
+            else:
+                logger.error(f"[get_updates_by_entity] Erreur SQL : {e}")
+
+            logger.error(f"[get_updates_by_entity] Erreur lors de l'exécution SQL : {e}")
+            return {"total": 0, "datas": []}
+
 
     @DatabaseHelper._sessionm
     def get_updates_machines_by_entity(
         self, session, entity, pid, start, limit, filter
     ):
-        if entity.startswith("UUID"):
-            entity = entity.replace("UUID", "")
-        try:
-            entity = int(entity)
-        except:
-            pass
-        try:
-            start = int(start)
-        except:
-            start = 0
-        try:
-            limit = int(limit)
-        except:
-            limit = -1
+        entity = normalize_entity(entity, defaut=-1)
+        start = to_int(start, 0)
+        limit = to_int(limit, -1)
 
         query = (
             session.query(
@@ -16729,20 +16626,9 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
     def get_tagged_updates_by_machine(
         self, session, machineid, start=0, end=-1, filter=""
     ):
-        try:
-            start = int(start)
-        except:
-            start = 0
-
-        try:
-            end = int(end)
-        except:
-            end = -1
-
-        try:
-            machineid = int(machineid)
-        except:
-            machineid = 0
+        start = to_int(start, 0)
+        machineid = to_int(machineid, 0)
+        end = to_int(end, -1)
 
         query = (
             session.query(Up_machine_windows, Update_data)
@@ -16815,20 +16701,9 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
     def get_audit_summary_updates_by_machine(
         self, session, machineid, start, end, filter
     ):
-        try:
-            machineid = int(machineid)
-        except:
-            machineid = 0
-
-        try:
-            start = int(start)
-        except:
-            start = 0
-
-        try:
-            end = int(end)
-        except:
-            end = -1
+        start = to_int(start, 0)
+        machineid = to_int(machineid, 0)
+        end = to_int(end, -1)
 
         query = (
             session.query(Deploy)
@@ -16995,11 +16870,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
 
     @DatabaseHelper._sessionm
     def cancel_update(self, session, machineid, updateid):
-        try:
-            machineid = int(machineid)
-        except:
-            machineid = machineid
-
+        machineid = to_int(machineid, 0)
         try:
             update = (
                 session.query(Up_machine_windows)
@@ -18053,19 +17924,9 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
 
     @DatabaseHelper._sessionm
     def get_audit_summary_updates_by_entity(self, session, entity_uuid, start, limit, filter):
-        if type(entity_uuid) is str and entity_uuid.startswith("UUID"):
-            entity_uuid = entity_uuid.replace("UUID", "")
-
-        try:
-            start = int(start)
-        except:
-            start = 0
-
-        try:
-            limit = int(limit)
-        except:
-            end = -1
-
+        entity_uuid = normalize_entity(entity_uuid, defaut=-1)
+        start = to_int(start, 0)
+        limit = to_int(limit, -1)
         query = (
             session.query(Deploy)
             .join(Machines, Machines.jid == Deploy.jidmachine)
@@ -18125,16 +17986,8 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
 
     @DatabaseHelper._sessionm
     def get_audit_summary_updates_by_update(self, session, updateid, start, limit, filter):
-        try:
-            start = int(start)
-        except:
-            start = 0
-
-        try:
-            limit = int(limit)
-        except:
-            end = -1
-
+        start = to_int(start, 0)
+        limit = to_int(limit, -1)
         query = (
             session.query(Deploy)
             .join(Machines, Machines.jid == Deploy.jidmachine)
@@ -18190,147 +18043,6 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             }
             result["datas"].append(tmp)
         return result
-
-    #
-    #
-    # @DatabaseHelper._sessionm
-    # def getRestrictedComputersList(self,
-    #                             session,
-    #                             ctx,
-    #                             min=0,
-    #                             max=-1,
-    #                             filt=None,
-    #                             advanced=True,
-    #                             justid=False,
-    #                             top=None):
-    #     """
-    #     Récupère une liste restreinte d'ordinateurs à partir de la base de données en fonction des filtres fournis.
-    #
-    #     Args:
-    #         session: La session de base de données active.
-    #         ctx: Le contexte d'exécution contenant des informations supplémentaires.
-    #         min: L'index de départ pour la pagination des résultats.
-    #         max: L'index de fin pour la pagination des résultats.
-    #         filt: Un dictionnaire de filtres à appliquer à la requête.
-    #         advanced: Indique si des fonctionnalités avancées doivent être utilisées.
-    #         justid: Indique si seuls les identifiants doivent être retournés.
-    #         top: Limite supérieure pour le nombre de résultats.
-    #
-    #     Returns:
-    #         Un dictionnaire contenant les ordinateurs filtrés, structuré par UUID.
-    #     """
-    #     try:
-    #         # Importation locale pour éviter l'importation circulaire
-    #         from mmc.plugins.xmppmaster.config import xmppMasterConfig
-    #         summary = xmppMasterConfig().summary
-    #
-    #         # Liste de correspondance avec summary glpi
-    #         correspondance_summary = {
-    #             "cn": "machines.hostname as cn",
-    #             "type": "machines.model as type",
-    #             "os": "machines.platform as os",
-    #             "description": "machines.glpi_description as description",
-    #             "user": "machines.lastuser as user",
-    #             "entity": "glpi_entity.complete_name as entity",
-    #             "owner_firstnam": "machines.glpi_owner_firstname as owner_firstname",
-    #             "owner_realname": "machines.glpi_owner_realname as owner_realname",
-    #             "location": "glpi_location.complete_name as location",
-    #             "manufacturer": "machines.manufacturer as manufacturer",
-    #         }
-    #
-    #         # Génération de la liste des entités
-    #         entity_list = ""
-    #         if 'ctxlocation' in filt and 'entityid' in filt['ctxlocation'] and filt['ctxlocation']['entityid']:
-    #             logger.error(f"Entity IDs in filter: {filt['ctxlocation']['entityid']}")
-    #             entity_list = ",".join(f"'{x}'" for x in filt['ctxlocation']['entityid'])
-    #             logger.error(f"Generated entity list: {entity_list}")
-    #             if entity_list:
-    #                 entity_list = f"AND glpi_entity.glpi_id IN ({entity_list})"
-    #
-    #         # Construction de la requête SQL de base
-    #         columns = ",\n\t".join(correspondance_summary[x] for x in correspondance_summary if x in summary)
-    #         querybase = f"""
-    #         SELECT
-    #             SQL_CALC_FOUND_ROWS
-    #             xmppmaster.machines.uuid_inventorymachine,
-    #             {columns}
-    #         FROM
-    #             xmppmaster.machines
-    #             LEFT JOIN xmppmaster.up_machine_major_windows
-    #                 ON xmppmaster.up_machine_major_windows.id_machine = xmppmaster.machines.id
-    #             LEFT JOIN xmppmaster.glpi_entity
-    #                 ON xmppmaster.glpi_entity.id = xmppmaster.machines.glpi_entity_id
-    #             LEFT JOIN xmppmaster.glpi_location
-    #                 ON xmppmaster.glpi_location.id = xmppmaster.machines.glpi_location_id
-    #             LEFT JOIN xmppmaster.organization_ad
-    #                 ON xmppmaster.organization_ad.id_inventory = xmppmaster.machines.id_glpi
-    #         WHERE
-    #             agenttype LIKE 'm%%'
-    #             {entity_list}
-    #         """
-    #
-    #         # Correspondance pour les clauses WHERE
-    #         correspondance = {
-    #             "Entity": "glpi_entity.complete_name",
-    #         }
-    #
-    #         # Génération de la clause WHERE si un filtre est présent
-    #         if filt and 'query' in filt:
-    #             logger.error(f"Filter query: {filt['query']}")
-    #             where_clause = ""
-    #             generator = WhereClauseGenerator(filt, correspondance)
-    #             where_clause = generator.generate()
-    #             logger.error(f"Generated WHERE clause: {where_clause}")
-    #             query = querybase + (" AND " + where_clause if where_clause else "") + ";"
-    #         else:
-    #             query = querybase + ";"
-    #
-    #         logger.error(f"Final query: {query}")
-    #
-    #         # Exécution de la requête (à implémenter)
-    #         # Supposons que `session.execute(query)` retourne les résultats sous forme de liste de dictionnaires
-    #         results = session.execute(query).fetchall()
-    #
-    #         # Récupération du nombre total d'éléments
-    #         sql_count = "SELECT FOUND_ROWS();"
-    #         ret_count = session.execute(sql_count)
-    #         count = ret_count.first()[0]
-    #
-    #         # Transformation des résultats
-    #         data = {}
-    #         nb_element = 0  # Compteur pour le nombre d'éléments
-    #         for row in results:
-    #             row_dict = dict(row)
-    #             uuid = row_dict['uuid_inventorymachine']
-    #             data[uuid] = [
-    #                 None,
-    #                 {
-    #                     'cn': [row_dict['cn']],
-    #                     'displayName': [row_dict.get('displayName', None)],
-    #                     'objectUUID': [uuid],
-    #                     'user': [row_dict['user']],
-    #                     'owner': [row_dict.get('owner', None)],
-    #                     'owner_realname': [row_dict.get('owner_realname', None)],
-    #                     'owner_firstname': [row_dict.get('owner_firstname', None)],
-    #                     'entity': row_dict['entity'],
-    #                     'type': row_dict['type'],
-    #                     'os': row_dict['os']
-    #                 }
-    #             ]
-    #             nb_element += 1
-    #         # data['nb_element'] = nb_element
-    #         # data['count'] = count
-    #         logger.error(f"Number of elements returned: {nb_element}")
-    #         logger.error(f"Number of elements returned: {data}")
-    #         return data
-    #
-    #     except Exception as e:
-    #         # Log the exception
-    #         logger.error(f"An error occurred: {e}")
-    #         logger.error("\n%s" % (traceback.format_exc()))
-    #         # Retourne une liste vide en cas d'erreur
-    #         return {}
-
 
 class WhereClauseGenerator:
     def __init__(self, data, correspondance):

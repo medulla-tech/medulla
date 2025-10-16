@@ -23,7 +23,7 @@
 
 // require("localSidebar.php");
 // require("graph/navbar.inc.php");
-require_once("modules/updates/includes/xmlrpc.php");
+// require_once("modules/updates/includes/xmlrpc.php");
 require_once("modules/updates/includes/xmlrpc.php");
 // echo "<br><br><br>";
 

@@ -2460,16 +2460,39 @@ class SideMenu
      *  @return return the Css content for a sidebar
      *  static method to get SideBarCss String
      */
+    // public function getSideBarCss()
+    // {
+    //     $css = "";
+    //     foreach ($this->itemArray as $objSideMenuItem) {
+    //         $active = (($objSideMenuItem->submod == $_GET["submod"])
+    //         && (($objSideMenuItem->action == $_GET["action"]) ||
+    //         ($objSideMenuItem->action == $this->activatedItem)));
+    //         $css = $css . $objSideMenuItem->getCss($active);
+    //     }
+    //     if ($this->backgroundImage) {
+    //         $css .= "#sectionContainer { background-image: url(" . $this->backgroundImage . ") }";
+    //     }
+    //     return $css;
+    // }
     public function getSideBarCss()
     {
         $css = "";
+        $submod = $_GET["submod"] ?? "";
+        $action = $_GET["action"] ?? "";
+
         foreach ($this->itemArray as $objSideMenuItem) {
-            $active = (($objSideMenuItem->submod == $_GET["submod"]) && (($objSideMenuItem->action == $_GET["action"]) || ($objSideMenuItem->action == $this->activatedItem)));
-            $css = $css . $objSideMenuItem->getCss($active);
+            $active = (
+                ($objSideMenuItem->submod == $submod)
+                && (($objSideMenuItem->action == $action)
+                || ($objSideMenuItem->action == $this->activatedItem))
+            );
+            $css .= $objSideMenuItem->getCss($active);
         }
+
         if ($this->backgroundImage) {
             $css .= "#sectionContainer { background-image: url(" . $this->backgroundImage . ") }";
         }
+
         return $css;
     }
 

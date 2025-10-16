@@ -35,18 +35,20 @@ require_once("modules/updates/includes/xmlrpc.php");
  *
  * @return void
  */
+
+
 function generateEntityPage(string $pageTitle,
                             string $ajaxDestination,
-                            $sideMenuparam,
+                            $sideMenuparam = null,
                             string $module = 'updates')
 {
-    // --- Initialisation de la page ---
-    $p = new PageGenerator($pageTitle);
-    if ($sideMenuparam) {
-        $p->setSideMenu($sideMenuparam);
+    if ($pageTitle != ""){
+        $p = new PageGenerator($pageTitle);
+        if ($sideMenuparam) {
+            $p->setSideMenu($sideMenuparam);
+        }
+        $p->display();
     }
-    $p->display();
-
     // --- Récupération des entités accessibles ---
     $_entities = getUserLocations();
 

@@ -90,41 +90,54 @@ $idmachinefrom_xmpp_or_glpi='machineidmajor'; // id xmppmaster
  if ($_GET['source'] != "xmppmaster" ){
          $idmachinefrom_xmpp_or_glpi='inventoryidmajor'; // id glpi
     }
+$actionspeclistUpds = [];
+$actiondetailsByMachslog = [];
+$params = [];
 
-foreach($statglpiversion['id_machine'] as $key=>$valeur){
 
-    $actiondetailsByMachslog[]=new ActionItem(_T("Updates History",
-                                                 "updates"),
-                                              "auditUpdateByMachine",
-                                                "history",
-                                                "",
-                                                "updates",
-                                                "updates");
+// Sécuriser aussi les tableaux de stat
+$statglpiversion = $statglpiversion ?? ['id_machine' => []];
 
-    $actionspeclistUpds[] = new ActionPopupItem(_T(sprintf("Deploy this update on machine %s", $statglpiversion['machine'][$key]), "updates"),
-                                                "deployUpdatemajor",
-                                                "updateone",
-                                                '',
-                                                "updates",
-                                                "updates",
-                                                null,
-                                                320,"machine");
-    $parammachineinfo="";
-    $params[] = array(
-            'entity_id' => $entity,
-            'entity_name' => $entityName,
-            'complete_name' =>$entityCompleteName,
-            'maxperpage' => $maxperpage,
-            'source' => $source,
-            $idmachinefrom_xmpp_or_glpi => $valeur,
-            'cn'=> $statglpiversion['machine'][$key],
-            'platform'=> $statglpiversion['platform'][$key],
-            'version'=> $statglpiversion['version'][$key],
-            'update'=> $statglpiversion['update'][$key],
-            'uuid_inventorymachine'=> $statglpiversion['uuid_inventorymachine'][$key],
-            'package_id'=> $statglpiversion['package_id'][$key],
-            'installeur'=> $statglpiversion['installeur'][$key]
-        );
+$idmachinefrom_xmpp_or_glpi = ($_GET['source'] != "xmppmaster") ? 'inventoryidmajor' : 'machineidmajor';
+
+foreach ($statglpiversion['id_machine'] as $key => $valeur) {
+
+    $actiondetailsByMachslog[] = new ActionItem(
+        _T("Updates History", "updates"),
+        "auditUpdateByMachine",
+        "history",
+        "",
+        "updates",
+        "updates"
+    );
+
+    $actionspeclistUpds[] = new ActionPopupItem(
+        _T(sprintf("Deploy this update on machine %s", $statglpiversion['machine'][$key]), "updates"),
+        "deployUpdatemajor",
+        "updateone",
+        '',
+        "updates",
+        "updates",
+        null,
+        320,
+        "machine"
+    );
+
+    $params[] = [
+        'entity_id' => $entity,
+        'entity_name' => $entityName,
+        'complete_name' => $entityCompleteName,
+        'maxperpage' => $maxperpage,
+        'source' => $source,
+        $idmachinefrom_xmpp_or_glpi => $valeur,
+        'cn' => $statglpiversion['machine'][$key] ?? '',
+        'platform' => $statglpiversion['platform'][$key] ?? '',
+        'version' => $statglpiversion['version'][$key] ?? '',
+        'update' => $statglpiversion['update'][$key] ?? '',
+        'uuid_inventorymachine' => $statglpiversion['uuid_inventorymachine'][$key] ?? '',
+        'package_id' => $statglpiversion['package_id'][$key] ?? '',
+        'installeur' => $statglpiversion['installeur'][$key] ?? ''
+    ];
 }
 
 $n = new OptimizedListInfos($statglpiversion["machine"], _T("Machine name", "updates"));
@@ -137,7 +150,8 @@ $n->addActionItemArray($actiondetailsByMachslog);
 $n->start = 0;
 $n->end = $statglpiversion["nb_machine"];
 $n->setItemCount($statglpiversion["nb_machine"]);
-$n->setNavBar(new AjaxNavBar($statglpiversion["nb_machine"], $ctx['filter']));
+// $n->setNavBar(new AjaxNavBar($statglpiversion["nb_machine"], $ctx['filter']));
+$n->setNavBar(new AjaxNavBar($statglpiversion["nb_machine"] ?? 0, $filter));
 $n->setParamInfo($params);
 $n->display();
 

@@ -223,10 +223,29 @@ $page->setFile("modules/updates/updates/cancelUpdate.php", array("noHeader" => t
 $submod->addPage($page);
 
 // Major update
+/*
 $page = new Page("ajaxMajorEntitiesList", _T("Entities Major Compliance", "updates"));
 $page->setFile("modules/updates/updates/ajaxMajorEntitiesList.php");
 $page->setOptions(array("AJAX" => true, "visible" => false, "noHeader" => true));
+$submod->addPage($page);*/
+
+
+
+
+$page = new Page("ajaxMajorEntitiesList", _T('Entities Major Compliance', 'updates'));
+$page->setFile("modules/updates/updates/ajaxMajorEntitiesList.php");
 $submod->addPage($page);
+
+
+/*
+
+$page = new Page("ajaxMajorEntitiesList", _T("Entities Major Compliance", "updates"));
+$page->setFile("modules/updates/updates/ajaxMajorEntitiesList.php");
+$submod->addPage($page);*/
+/*
+$page = new Page("ajaxMajorListEntity", _T('Major Compliance entity', 'updates'));
+$page->setFile("modules/updates/updates/ajaxMajorListEntity.php");
+$submod->addPage($page);*/
 
 $page = new Page("updatesListMajorWin", _T('Manage Major Updates Lists', 'updates'));
 $page->setFile("modules/updates/updates/updatesListMajorWin.php");

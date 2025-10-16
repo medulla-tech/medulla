@@ -22,18 +22,16 @@
  *
  * file modules/updates/updates/ajaxMajorEntitiesList.php
  */
-require_once("modules/updates/includes/html.inc.php");
+require_once("modules/updates/includes/xmlrpc.php");
 require_once("modules/glpi/includes/xmlrpc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
+/*
+require_once("modules/updates/includes/html.inc.php");
 require_once("modules/xmppmaster/includes/html.inc.php");
-
-require_once("modules/updates/includes/xmlrpc.php");
 require_once("modules/medulla_server/includes/xmlrpc.inc.php");
-
-
+*/
 
 global $conf;
-
 
 $maxperpage = $conf["global"]["maxperpage"];
 $filter  = isset($_GET['filter']) ? $_GET['filter'] : "";
@@ -42,7 +40,6 @@ $end   = (isset($_GET['end']) ? $_GET['start'] + $maxperpage : $maxperpage);
 $source  = (isset($_GET['$source']) ? $_GET['$source']: "");
 
 $_entities = getUserLocations();
-
 
 // Filtrer les entités en fonction d'un motif de recherche
 $filtered_entities = [];
@@ -101,14 +98,16 @@ foreach ($entities as $entity) {
         $additionalInfo = $defaultValues;
     }
 
-    //  Forcer entity_id même si la source l’avait omis
-    if (!isset($additionalInfo['entity_id'])) {
-        $additionalInfo['entity_id'] = $uuid;
+    // Fusion
+    $merged = array_merge($entity, $additionalInfo);
+
+    // Sécuriser entity_id dans tous les cas
+    if (!isset($merged['entity_id'])) {
+        $merged['entity_id'] = $uuid;
     }
 
-    $mergedArray[] = array_merge($entity, $additionalInfo);
+    $mergedArray[] = $merged;
 }
-
 $params =  array();
 $actiondetailsByMachs  = array();
 $actionupdateByentity  = array();
@@ -176,14 +175,15 @@ $emptydeployAll = new EmptyActionItem1(_T("There are no major updates to deploy 
 
 $title = _T("OS Upgrades", "updates");
 $texte_help = _T("%s machines in the entity \"%s\" can benefit from a major update.", "updates");
-
 foreach ($mergedArray as  $index=>$datacolonne) {
+
     $nbupdate = $datacolonne['W10to10'] + $datacolonne['W10to11'] + $datacolonne['W11to11'];
     if ($datacolonne['count'] > 0){
         $actiondetailsByMachs[] = $detailsByMach;
     }else{
         $actiondetailsByMachs[] =$emptydetailsByMach;
     }
+
     if ($nbupdate > 0){
         // echo "k";
         $actionupdateByentity [] = $deployAll;
@@ -191,6 +191,7 @@ foreach ($mergedArray as  $index=>$datacolonne) {
         // echo "j";
         $actionupdateByentity[] = $emptydeployAll;
     }
+
     // on initialise le tableau
     $complete_name_major[]=$datacolonne['name'];
     $win10towin10_major[]=$datacolonne['W10to10'];
@@ -214,7 +215,6 @@ foreach ($mergedArray as  $index=>$datacolonne) {
     $comformite_name_major[]=(string) new medulla_progressbar_static($datacolonne['conformite'],
                                                                      "",
                                                                      $formattedText_help);
-
     // pour chaque action on passe les parametres
     $params[] = array(
         'entity' => $datacolonne['entity_id'],
@@ -254,5 +254,4 @@ $n->display();
 }else{
     echo "object inexistant";
 }
-
 ?>
