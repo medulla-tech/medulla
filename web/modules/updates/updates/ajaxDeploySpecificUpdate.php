@@ -30,9 +30,7 @@ $maxperpage = $conf["global"]["maxperpage"];
 $filter  = isset($_GET['filter']) ? $_GET['filter'] : "";
 $start = isset($_GET['start']) ? $_GET['start'] : 0;
 $end   = (isset($_GET['end']) ? $_GET['start'] + $maxperpage : $maxperpage);
- echo "<pre>";
-        print_r($_GET);
-        echo "</pre>";
+
 $updates_list = [];
 if(!empty($_GET['entity'])) {
     $entityId = (!empty($_GET['entity'])) ? htmlentities($_GET['entity']) : '';
@@ -95,9 +93,6 @@ foreach ($updates_list as $update) {
         "ltitle" => $updates_list[$row]["pkgs_label"],
         "version" => $updates_list[$row]['pkgs_version'],
         "deployment_intervals" => $updates_list[$row]["deployment_intervals"] ];
-        echo "<pre>";
-        print_r($updates_list[$row]);
-        echo "</pre>";
     // "deployment_intervals" => $updates_list[$row]["deployment_intervals"] ?? null,
     if(!empty($_GET['entity'])) {
         $tmp["entity"] = $entityId;
