@@ -49,10 +49,27 @@ class DbTOA(object):
                 ret.append([i, j])
         return ret
 
-
+#
+# def fromUUID(uuid):
+#     return int(uuid.replace("UUID", ""))
 def fromUUID(uuid):
-    return int(uuid.replace("UUID", ""))
+    """
+    Convertit un UUID (chaîne, dictionnaire ou liste) en entier en utilisant `normalize_entity`.
+    Renvoie un entier ou lève une exception si la conversion échoue.
 
+    Args:
+        uuid (str/dict/list): UUID à convertir.
+
+    Returns:
+        int: UUID converti en entier.
+
+    Raises:
+        ValueError: Si la conversion échoue ou si l'UUID est invalide.
+    """
+    normalized_uuid = normalize_entity(uuid)
+    if normalized_uuid is None:
+        raise ValueError(f"UUID invalide : {uuid}")
+    return normalized_uuid
 
 def toUUID(uuid):
     return "UUID%s" % (str(uuid))
@@ -66,3 +83,48 @@ def setUUID(obj):
     else:
         logging.getLogger().error("Can't get id for %s => no UUID" % (str(obj)))
     return obj
+
+
+def to_int(value, default=None):
+    """Convertit value en int, ou renvoie default si conversion impossible."""
+    try:
+        return int(value)
+    except (ValueError, TypeError):
+        return default
+
+
+def normalize_entity(entity, default=0):
+    """
+    Nettoie et convertit une valeur d'entité en entier.
+    - Si entity est une liste, prend le premier élément.
+    - Si entity est un dictionnaire, extrait la valeur de "id" ou "uuid".
+    - Si c'est une chaîne commençant par "UUID", retire le préfixe.
+    - Renvoie un entier ou default si échec.
+    """
+    if isinstance(entity, list):
+        if not entity:  # Liste vide
+            return default
+        entity = entity[0]  # Prend le premier élément
+
+    if isinstance(entity, dict):
+        for key in ["id", "uuid"]:
+            if key in entity:
+                entity = entity[key]
+                break
+        else:
+            return default
+
+    if isinstance(entity, str) and entity.startswith("UUID"):
+        entity = entity.replace("UUID", "")
+
+    return to_int(entity, default)
+
+
+def normalize_entity_list(entities, default=0):
+    """
+    Normalise une liste d'entités (chaînes, dictionnaires, ou mélangé).
+    Renvoie une liste d'entiers normalisés.
+    """
+    if isinstance(entities, list):
+        return [normalize_entity(entity, default) for entity in entities]
+    return [normalize_entity(entities, default)]
