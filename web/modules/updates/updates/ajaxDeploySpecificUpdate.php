@@ -83,8 +83,8 @@ foreach ($updates_list as $update) {
         $jids[] =  $updates_list[$row]['jid'];
     }
 
-    if(!empty($updates_list[$row]['severity'])) {
-        $severities[] =  $updates_list[$row]['severity'];
+    if(!empty($updates_list[$row]['msrcseverity'])) {
+        $severities[] =  $updates_list[$row]['msrcseverity'];
     }
 
     $tmp = [
@@ -92,8 +92,8 @@ foreach ($updates_list as $update) {
         "title" => $updates_list[$row]["pkgs_description"],
         "ltitle" => $updates_list[$row]["pkgs_label"],
         "version" => $updates_list[$row]['pkgs_version'],
-        "deployment_intervals" => $updates_list[$row]["deployment_intervals"],
-    ];
+        "deployment_intervals" => $updates_list[$row]["deployment_intervals"] ];
+    // "deployment_intervals" => $updates_list[$row]["deployment_intervals"] ?? null,
     if(!empty($_GET['entity'])) {
         $tmp["entity"] = $entityId;
         $tmp["completeName"] = $entityCompleteName;

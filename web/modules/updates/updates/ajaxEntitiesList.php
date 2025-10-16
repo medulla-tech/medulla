@@ -41,7 +41,6 @@ $totalMachine = [];
 $nbupdate = [];
 $ids_entity = []; // id des ligne de la list
 $identity = array();
-
 // definition des actions
 $detailsByMach = new ActionItem(_T("Details by machines", "updates"), "detailsByMachines", "auditbymachine", "", "updates", "updates");
 $detailsByUpd = new ActionItem(_T("Details by updates", "updates"), "detailsByUpdates", "auditbyupdate", "", "updates", "updates");

@@ -129,6 +129,16 @@ $page = new Page("updatesListWin", _T('Manage Updates Lists', 'updates'));
 $page->setFile("modules/updates/updates/updatesListWin.php");
 $submod->addPage($page);
 
+$page = new Page("ajaxUpdatesListWin", _T("Manage Updates Lists for entity", "updates"));
+$page->setFile("modules/updates/updates/ajaxUpdatesListWin.php");
+$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
+$submod->addPage($page);
+
+$page = new Page("ajaxEntityCompliance", _T("Entity Compliance", "updates"));
+$page->setFile("modules/updates/updates/ajaxEntityCompliance.php");
+$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
+$submod->addPage($page);
+
 $page = new Page("ajaxUpdatesListWinWhite", _T("Manage Updates Lists", "updates"));
 $page->setFile("modules/updates/updates/ajaxUpdatesListWinWhite.php");
 $page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
@@ -213,10 +223,29 @@ $page->setFile("modules/updates/updates/cancelUpdate.php", array("noHeader" => t
 $submod->addPage($page);
 
 // Major update
+/*
 $page = new Page("ajaxMajorEntitiesList", _T("Entities Major Compliance", "updates"));
 $page->setFile("modules/updates/updates/ajaxMajorEntitiesList.php");
 $page->setOptions(array("AJAX" => true, "visible" => false, "noHeader" => true));
+$submod->addPage($page);*/
+
+
+
+
+$page = new Page("ajaxMajorEntitiesList", _T('Entities Major Compliance', 'updates'));
+$page->setFile("modules/updates/updates/ajaxMajorEntitiesList.php");
 $submod->addPage($page);
+
+
+/*
+
+$page = new Page("ajaxMajorEntitiesList", _T("Entities Major Compliance", "updates"));
+$page->setFile("modules/updates/updates/ajaxMajorEntitiesList.php");
+$submod->addPage($page);*/
+/*
+$page = new Page("ajaxMajorListEntity", _T('Major Compliance entity', 'updates'));
+$page->setFile("modules/updates/updates/ajaxMajorListEntity.php");
+$submod->addPage($page);*/
 
 $page = new Page("updatesListMajorWin", _T('Manage Major Updates Lists', 'updates'));
 $page->setFile("modules/updates/updates/updatesListMajorWin.php");
@@ -272,8 +301,14 @@ $page->setFile("modules/updates/updates/ajaxAuditByUpdate.php");
 $page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
 $submod->addPage($page);
 
+// choose rule upa products
 $page = new Page("approve_rules", _T('Automatic approval rules', 'updates'));
 $page->setFile("modules/updates/updates/approve_rules.php");
+$submod->addPage($page);
+
+$page = new Page("ajaxApproveRules", _T("choise update event for entity", "updates"));
+$page->setFile("modules/updates/updates/ajaxApproveRules.php");
+$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
 $submod->addPage($page);
 
 /// choose produit
@@ -281,8 +316,15 @@ $page = new Page("approve_products", _T('Approve produit Microsoft pour mise a j
 $page->setFile("modules/updates/updates/approve_products.php");
 $submod->addPage($page);
 
+$page = new Page("ajaxApproveProduct", _T("choise product for entity", "updates"));
+$page->setFile("modules/updates/updates/ajaxApproveProduct.php");
+$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
+$submod->addPage($page);
+
 
 $mod->addSubmod($submod);
 
 $MMCApp = &MMCApp::getInstance();
 $MMCApp->addModule($mod);
+
+

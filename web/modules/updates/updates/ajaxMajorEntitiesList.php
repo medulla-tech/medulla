@@ -22,16 +22,16 @@
  *
  * file modules/updates/updates/ajaxMajorEntitiesList.php
  */
-require_once("modules/updates/includes/html.inc.php");
+require_once("modules/updates/includes/xmlrpc.php");
 require_once("modules/glpi/includes/xmlrpc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
+/*
+require_once("modules/updates/includes/html.inc.php");
 require_once("modules/xmppmaster/includes/html.inc.php");
-
-require_once("modules/updates/includes/xmlrpc.php");
 require_once("modules/medulla_server/includes/xmlrpc.inc.php");
+*/
 
 global $conf;
-
 
 $maxperpage = $conf["global"]["maxperpage"];
 $filter  = isset($_GET['filter']) ? $_GET['filter'] : "";
@@ -40,7 +40,6 @@ $end   = (isset($_GET['end']) ? $_GET['start'] + $maxperpage : $maxperpage);
 $source  = (isset($_GET['$source']) ? $_GET['$source']: "");
 
 $_entities = getUserLocations();
-
 
 // Filtrer les entités en fonction d'un motif de recherche
 $filtered_entities = [];
@@ -87,19 +86,27 @@ $defaultValues = [
 ];
 $mergedArray = [];
 
-// Fusionner les tableaux ['entity'][$name]
 foreach ($entities as $entity) {
     $name = $entity['name'];
     $uuid = intval(substr($entity['uuid'], 4));
+
     if (isset($statglpiversion['entity'][$name])) {
         $additionalInfo = $statglpiversion['entity'][$name];
-
     } else {
-        $defaultValues['name']=$name;
-        $defaultValues['entity_id']=$uuid;
+        $defaultValues['name'] = $name;
+        $defaultValues['entity_id'] = $uuid;
         $additionalInfo = $defaultValues;
     }
-    $mergedArray[] = array_merge($entity, $additionalInfo);
+
+    // Fusion
+    $merged = array_merge($entity, $additionalInfo);
+
+    // Sécuriser entity_id dans tous les cas
+    if (!isset($merged['entity_id'])) {
+        $merged['entity_id'] = $uuid;
+    }
+
+    $mergedArray[] = $merged;
 }
 $params =  array();
 $actiondetailsByMachs  = array();
@@ -165,7 +172,6 @@ $emptydeployAll = new EmptyActionItem1(_T("There are no major updates to deploy 
                                             "",
                                             "updates",
                                             "updates");
-
 
 $title = _T("OS Upgrades", "updates");
 $texte_help = _T("%s machines in the entity \"%s\" can benefit from a major update.", "updates");
@@ -248,5 +254,4 @@ $n->display();
 }else{
     echo "object inexistant";
 }
-
 ?>

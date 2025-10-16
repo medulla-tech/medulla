@@ -785,3 +785,20 @@ def subnetForIpMask(ip, netmask):
         return True, result
     except ValueError:
         return False, "O.O.O.O"
+
+def to_int(value, default=None):
+    """Convertit value en int, ou renvoie default si conversion impossible."""
+    try:
+        return int(value)
+    except (ValueError, TypeError):
+        return default
+
+def normalize_entity(entity, defaut=0):
+    """
+    Nettoie et convertit une valeur d'entité en entier.
+    Si la valeur commence par 'UUID', on retire ce préfixe.
+    Si la conversion échoue, renvoie la valeur par défaut.
+    """
+    if isinstance(entity, str) and entity.startswith("UUID"):
+        entity = entity.replace("UUID", "")
+    return to_int(entity, defaut)

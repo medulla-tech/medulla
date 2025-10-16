@@ -628,25 +628,60 @@ class ImagingRpcProxy(RpcProxyI):
         return deferred
 
     def clear_script_multicast(self, process):
-        # check if the script is installed multicast.sh
+        logger = logging.getLogger()
         try:
-            if ImagingRpcProxy.checkThread[process["location"]] == True:
-                ImagingRpcProxy.checkThread[process["location"]] = False
-        except KeyError:
-            ImagingRpcProxy.checkThread[process["location"]] = False
-        location = process["location"]
-        imaging_server = ImagingDatabase().getEntityUrl(location)
-        try:
-            i = ImagingApi(imaging_server.encode("utf8"))
-        except:
-            i = None
+            loc = process.get("location", None)
 
-        if i != None:
+            # Si la localisation est vide ou incohérente → on ne fait rien
+            if not loc or isinstance(loc, dict):
+                logger.warning(f"clear_script_multicast ignoré : process invalide ({process})")
+                return []
+
+            # Désactivation du thread de surveillance
+            if ImagingRpcProxy.checkThread.get(loc, False):
+                ImagingRpcProxy.checkThread[loc] = False
+            else:
+                ImagingRpcProxy.checkThread[loc] = False
+
+        except Exception as e:
+            logger.error(f"Erreur dans clear_script_multicast: {e}")
+            return []
+
+        # Suite : connexion au serveur Imaging
+        try:
+            imaging_server = ImagingDatabase().getEntityUrl(loc)
+            i = ImagingApi(imaging_server.encode("utf8"))
+        except Exception as e:
+            logger.error(f"Erreur lors de la connexion au serveur Imaging pour {loc}: {e}")
+            return []
+
+        if i is not None:
             deferred = i.clear_script_multicast(process)
             deferred.addCallback(lambda x: x)
         else:
             deferred = []
         return deferred
+    #
+    # def clear_script_multicast(self, process):
+    #     # check if the script is installed multicast.sh
+    #     try:
+    #         if ImagingRpcProxy.checkThread[process["location"]] == True:
+    #             ImagingRpcProxy.checkThread[process["location"]] = False
+    #     except KeyError:
+    #         ImagingRpcProxy.checkThread[process["location"]] = False
+    #     location = process["location"]
+    #     imaging_server = ImagingDatabase().getEntityUrl(location)
+    #     try:
+    #         i = ImagingApi(imaging_server.encode("utf8"))
+    #     except:
+    #         i = None
+    #
+    #     if i != None:
+    #         deferred = i.clear_script_multicast(process)
+    #         deferred.addCallback(lambda x: x)
+    #     else:
+    #         deferred = []
+    #     return deferred
 
     def start_process_multicast(self, process):
         # Multicast start
@@ -849,24 +884,58 @@ class ImagingRpcProxy(RpcProxyI):
         return d
 
     def stop_process_multicast(self, process):
-        # Multicast stop
+        logger = logging.getLogger()
         try:
-            if ImagingRpcProxy.checkThread[process["location"]] == True:
-                ImagingRpcProxy.checkThread[process["location"]] = False
-        except KeyError:
-            ImagingRpcProxy.checkThread[process["location"]] = False
-        location = process["location"]
-        imaging_server = ImagingDatabase().getEntityUrl(location)
+            loc = process.get("location", None)
+
+            # Si la localisation est vide ou incohérente → on arrête tout de suite
+            if not loc or isinstance(loc, dict):
+                logger.warning(f"stop_process_multicast ignoré : process invalide ({process})")
+                return []
+
+            # Vérifie et arrête le thread associé
+            if ImagingRpcProxy.checkThread.get(loc, False):
+                ImagingRpcProxy.checkThread[loc] = False
+            else:
+                ImagingRpcProxy.checkThread[loc] = False
+
+        except Exception as e:
+            logger.error(f"Erreur dans stop_process_multicast: {e}")
+            return []
+
+        # On continue uniquement si tout est cohérent
         try:
+            imaging_server = ImagingDatabase().getEntityUrl(loc)
             i = ImagingApi(imaging_server.encode("utf8"))
-        except:
-            i = None
-        if i != None:
-            deferred = i.stop_process_multicast(process)
-            deferred.addCallback(lambda x: x)
-        else:
-            deferred = []
+        except Exception as e:
+            logger.error(f"Erreur lors de la connexion au serveur Imaging pour {loc}: {e}")
+            return []
+
+        deferred = i.stop_process_multicast(process)
+        deferred.addCallback(lambda x: x)
         return deferred
+
+    # def stop_process_multicast(self, process):
+    #     # Multicast stop
+    #     logger = logging.getLogger()
+    #     try:
+    #         logger.error(f"process['location'] = {process['location']} (type: {type(process['location'])})")
+    #         if ImagingRpcProxy.checkThread[process["location"]] == True:
+    #             ImagingRpcProxy.checkThread[process["location"]] = False
+    #     except KeyError:
+    #         ImagingRpcProxy.checkThread[process["location"]] = False
+    #     location = process["location"]
+    #     imaging_server = ImagingDatabase().getEntityUrl(location)
+    #     try:
+    #         i = ImagingApi(imaging_server.encode("utf8"))
+    #     except:
+    #         i = None
+    #     if i != None:
+    #         deferred = i.stop_process_multicast(process)
+    #         deferred.addCallback(lambda x: x)
+    #     else:
+    #         deferred = []
+    #     return deferred
 
     ###### IMAGES
     def imagingServerISOCreate(self, image_uuid, size, title):

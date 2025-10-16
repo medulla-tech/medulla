@@ -258,7 +258,7 @@ if(isset($_POST['bconfirm'],
 
     $start_date = $_POST['start_date'];
     $end_date = $_POST['$end_date'];
-    $result = xmlrpc_deploy_update_major(   htmlentities($_POST['package_id']),
+    $result = xmlrpc_deploy_update_major(htmlentities($_POST['package_id']),
                                         htmlentities($_POST['uuid_inventorymachine']),
                                         htmlentities($_POST['cn']),
                                         htmlentities($title_deployement),

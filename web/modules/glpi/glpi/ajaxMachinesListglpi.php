@@ -34,7 +34,6 @@ global $config;
 }
 </style>
 <?php
-
 $location = (isset($_GET['location'])) ? $_GET['location'] : "";
 $filter = (isset($_GET['filter'])) ? $_GET['filter'] : "";
 $field = (isset($_GET['field'])) ? $_GET['field'] : "";
@@ -59,11 +58,9 @@ if (isset($_SESSION['computerpresence'])  && $_SESSION['computerpresence'] != "a
 }
 
 $machines = xmlrpc_get_machines_list1($start, $maxperpage, $ctx);
-
 $count = $machines["count"];
 $datas = $machines["data"];
 $xmppdatas = $machines['xmppdata'];
-
 $presencesClass = [];
 $params = [];
 
@@ -119,6 +116,7 @@ $raw = 0;
 $cn = [];
 
 foreach($datas['uuid'] as $uuid) {
+
     if(isset($xmppdatas['UUID'.$uuid])) {
         $cnstr = '<span ';
         $cnstr .= 'title="';
@@ -133,6 +131,7 @@ foreach($datas['uuid'] as $uuid) {
         $cnstr .= "ip_xmpp : \t ". $xmppdatas['UUID'.$uuid]['ip_xmpp']."\n";
         $cnstr .= "ippublic : \t ". $xmppdatas['UUID'.$uuid]['ippublic']."\n";
         $cnstr .= "kiosk_presence : \t ". $xmppdatas['UUID'.$uuid]['kiosk_presence']."\n";
+        $cnstr .= "archi : \t ". $xmppdatas['UUID'.$uuid]['archi']."\n";
         $cnstr .= '"';
         $cnstr .= '>'.$datas['cn'][$raw].'</span>';
         $cn[] = $cnstr;
@@ -187,8 +186,8 @@ foreach($datas['uuid'] as $uuid) {
     } elseif ($msc_vnc_show_icon) {
         $actionVncClient[] = $vncClientAction;
     }
-
     $params[] = [
+        'id' => $xmppdatas['UUID'.$uuid]['id'],
         'objectUUID' => 'UUID'.$datas['uuid'][$raw],
         'UUID' => $datas['uuid'][$raw],
         'cn' => $datas['cn'][$raw],
@@ -196,6 +195,7 @@ foreach($datas['uuid'] as $uuid) {
         'type' => $datas['type'][$raw],
         'presencemachinexmpp' => $datas['presence'][$raw],
         'entity' => $datas['entity'][$raw],
+        'entityid' => $datas['entityid'][$raw],
         'user' => $datas['user'][$raw],
     'vnctype' => (in_array("guacamole", $_SESSION["supportModList"])) ? "guacamole" : ((web_def_use_no_vnc() == 1) ? "novnc" : "appletjava"),
         'from' => "machinesListglpi",

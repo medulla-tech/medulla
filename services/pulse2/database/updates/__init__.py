@@ -38,6 +38,9 @@ import traceback
 
 logger = logging.getLogger()
 
+# sql debug mode
+# logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
+
 
 class UpdatesDatabase(DatabaseHelper):
     """
@@ -163,35 +166,50 @@ class UpdatesDatabase(DatabaseHelper):
             logger.error(f"Error in function test_xmppmaster: {e}")
 
     @DatabaseHelper._sessionm
-    def get_black_list(self, session, start, limit, filter=""):
+    def get_black_list(self, session,
+                    start=0,
+                    limit=-1,
+                    filter="",
+                    entityid=None):
         """
         Retrieve the black list of updates with optional filtering, sorting, and pagination.
+        If `entityid` is provided (not None or -1), only returns updates for the specified entity.
 
         Args:
             session: Database session object for executing queries.
-            start (int): Starting index for pagination.
-            limit (int): Maximum number of results to retrieve.
-            filter (str): Optional filter to apply to the query (title, kb, severity, or updateid_or_kb).
+            start (int): Starting index for pagination. Default is 0.
+            limit (int): Maximum number of results to retrieve. Default is -1 (no limit).
+            filter (str): Optional filter to apply to the query (title, kb, severity, or updateid).
+            entityid (int, optional): If provided (not None or -1), filters the results by the specified entity ID. Default is None.
 
         Returns:
             dict: A dictionary containing:
                 - nb_element_total (int): Total number of elements matching the query.
-                - id (list): List of record IDs.
-                - updateid_or_kb (list): List of update IDs or KBs.
+                - id (list): List of record IDs from `up_black_list`.
+                - updateid_or_kb (list): List of KB numbers or update IDs.
                 - title (list): List of update titles.
                 - severity (list): List of severity levels for each update.
         """
-        try:
-            # Ensure start and limit are integers
-            start = int(start)
-        except ValueError:
-            start = -1
-        try:
-            limit = int(limit)
-        except ValueError:
-            limit = -1
+        if entityid in (-1, None, "None", ""):
+            entityid = None
+        else:
+            try:
+                entityid = int(entityid)
+            except Exception:
+                entityid = None
 
         try:
+            # Ensure pagination values are integers
+            try:
+                start = int(start) if start != -1 else 0
+            except ValueError:
+                start = 0
+
+            try:
+                limit = int(limit) if limit != -1 else -1
+            except ValueError:
+                limit = -1
+
             # Initialize the result structure
             black_list = {
                 "nb_element_total": 0,
@@ -200,67 +218,80 @@ class UpdatesDatabase(DatabaseHelper):
                 "title": [],
                 "severity": [],
             }
+            logger.debug(f"entityid{entityid}")
+            # Build entity conditions for both parts of the UNION
+            if entityid is not None:
+                entity_condition_1 = "AND up_black_list.entityid = :entityid"
+                entity_condition_2 = "AND up_black_list.entityid = :entityid"
+            else:
+                entity_condition_1 = ""
+                entity_condition_2 = ""
 
-            # SQL query combining results from different sources using UNION
-            sql = """SELECT SQL_CALC_FOUND_ROWS *
-                    FROM (
-                        SELECT
-                            up_black_list.id,
-                            up_black_list.updateid_or_kb,
-                            update_data.title,
-                            COALESCE(NULLIF(update_data.msrcseverity, ""), "Corrective") AS severity
-                        FROM xmppmaster.up_black_list
-                        INNER JOIN xmppmaster.update_data
-                        ON up_black_list.updateid_or_kb = update_data.kb
-                        OR up_black_list.updateid_or_kb = update_data.updateid
+            # Base query with UNION
+            sql_base = f"""
+                SELECT SQL_CALC_FOUND_ROWS *
+                FROM (
+                    SELECT
+                        up_black_list.id,
+                        up_black_list.updateid_or_kb,
+                        update_data.title,
+                        COALESCE(NULLIF(update_data.msrcseverity, ""), "Corrective") AS severity
+                    FROM xmppmaster.up_black_list
+                    INNER JOIN xmppmaster.update_data
+                    ON (up_black_list.updateid_or_kb = update_data.kb
+                        OR up_black_list.updateid_or_kb = update_data.updateid)
+                    {entity_condition_1}
 
-                        UNION
+                    UNION
 
-                        SELECT
-                            up_black_list.id,
-                            up_black_list.updateid_or_kb,
-                            up_black_list.updateid_or_kb AS title,
-                            "major update" AS severity
-                        FROM xmppmaster.up_black_list
-                        WHERE up_black_list.updateid_or_kb LIKE '%%win10upd_%%'
-                            OR up_black_list.updateid_or_kb LIKE '%%win11upd_%%'
-                    ) AS combined_results
-                """
-
-            # Add a filter condition if the filter is not empty
-            if filter:
-                sql += """
-                    WHERE
-                        (title LIKE :filter OR
-                        CONCAT("KB", updateid_or_kb) LIKE :filter OR
-                        severity LIKE :filter OR
-                        updateid_or_kb LIKE :filter)
-                """
-
-            # Add ordering and pagination
-            sql += """
-                ORDER BY FIELD(severity, "major update", "Critical", "Important", "Corrective")
-                LIMIT :start, :limit;
+                    SELECT
+                        up_black_list.id,
+                        up_black_list.updateid_or_kb,
+                        up_black_list.updateid_or_kb AS title,
+                        "major update" AS severity
+                    FROM xmppmaster.up_black_list
+                    WHERE (up_black_list.updateid_or_kb LIKE '%%win10upd_%%'
+                        OR up_black_list.updateid_or_kb LIKE '%%win11upd_%%')
+                    {entity_condition_2}
+                ) AS combined_results
             """
+
+            # Add filter condition if provided
+            if filter:
+                filter_clause = """
+                    WHERE
+                    (title LIKE :filter OR
+                    severity LIKE :filter OR
+                    updateid_or_kb LIKE :filter)
+                """
+            else:
+                filter_clause = ""
+
+            # Final SQL with ordering and pagination
+            sql = f"""{sql_base}
+                    {filter_clause}
+                    ORDER BY FIELD(severity, "major update", "Critical", "Important", "Corrective")
+                    LIMIT :start, :limit;
+                """
+
+            # Debug log
             logger.debug(f"Executing SQL: {sql}")
 
-            # Execute the query with bind parameters
-            result = session.execute(
-                sql,
-                {
-                    "filter": f"%{filter}%" if filter else None,
-                    "start": start,
-                    "limit": limit,
-                },
-            )
+            # Prepare query parameters
+            params = {"start": start, "limit": limit}
+            if filter:
+                params["filter"] = f"%{filter}%"
+            if entityid is not None:
+                params["entityid"] = entityid
 
-            # Count the total number of matching elements
+            # Execute query
+            result = session.execute(sql, params)
+
+            # Retrieve total count of matching elements
             sql_count = "SELECT FOUND_ROWS();"
             ret_count = session.execute(sql_count)
-            black_list["nb_element_total"] = ret_count.first()[0]
-
-            session.commit()
-            session.flush()
+            nb_element_total = ret_count.first()[0]
+            black_list["nb_element_total"] = nb_element_total
 
             # Process query results
             if result:
@@ -271,158 +302,65 @@ class UpdatesDatabase(DatabaseHelper):
                     black_list["severity"].append(list_b.severity)
 
         except Exception as e:
-            # Log any errors encountered
-            logger.error(f"Error in function get_black_list: {e}")
+            # Log errors
+            logger.error("Error in function get_black_list: %s", e)
+            logger.error("\n%s" % (traceback.format_exc()))
+
+        # Return the resulting black list
         return black_list
 
-    @DatabaseHelper._sessionm
-    def get_grey_list(self, session, start, limit, filter=""):
-        """
-        Retrieve the grey list of updates with optional filtering, sorting, and pagination.
-
-        Args:
-            session: Database session object for executing queries.
-            start (int): Starting index for pagination.
-            limit (int): Maximum number of results to retrieve.
-            filter (str): Optional filter to apply to the query (title, kb, severity, or updateid).
-
-        Returns:
-            dict: A dictionary containing:
-                - nb_element_total (int): Total number of elements matching the query.
-                - updateid (list): List of update IDs.
-                - title (list): List of update titles.
-                - kb (list): List of knowledge base IDs.
-                - valided (list): List of validation statuses.
-                - severity (list): List of severity levels for each update.
-        """
-        try:
-            # Ensure start and limit are integers
-            start = int(start)
-        except ValueError:
-            start = -1
-        try:
-            limit = int(limit)
-        except ValueError:
-            limit = -1
-
-        try:
-            # Initialize the result structure
-            grey_list = {
-                "nb_element_total": 0,
-                "updateid": [],
-                "title": [],
-                "kb": [],
-                "valided": [],
-                "severity": [],
-            }
-
-            # Base SQL query
-            sql_base = """SELECT SQL_CALC_FOUND_ROWS *
-                        FROM (
-                            SELECT
-                                up_gray_list.updateid,
-                                up_gray_list.title,
-                                up_gray_list.kb,
-                                up_gray_list.valided,
-                                COALESCE(NULLIF(update_data.msrcseverity, ""), "Corrective") AS severity
-                            FROM xmppmaster.up_gray_list
-                            JOIN xmppmaster.update_data
-                            ON xmppmaster.update_data.updateid = up_gray_list.updateid
-
-                            UNION
-
-                            SELECT
-                                up_gray_list.updateid,
-                                up_gray_list.title,
-                                up_gray_list.kb,
-                                up_gray_list.valided,
-                                "major update" AS severity
-                            FROM xmppmaster.up_gray_list
-                            WHERE up_gray_list.title LIKE '%%win10upd_%%'
-                                OR up_gray_list.title LIKE '%%win11upd_%%'
-                        ) AS combined_results
-                    """
-
-            # Add filter clause if filter is provided
-            if filter:
-                filter_clause = """
-                    WHERE (title LIKE :filter OR
-                        CONCAT("KB", kb) LIKE :filter OR
-                        severity LIKE :filter OR
-                        updateid LIKE :filter)
-                """
-                sql_base += filter_clause
-
-            # Add ordering and pagination
-            sql = f"""{sql_base}
-                    ORDER BY FIELD(severity, "major update", "Critical", "Important", "Corrective")
-                    LIMIT :start, :limit;
-                """
-
-            logger.debug(f"Executing SQL: {sql}")
-
-            # Execute the query
-            result = session.execute(
-                sql,
-                {
-                    "filter": f"%{filter}%" if filter else None,
-                    "start": start,
-                    "limit": limit,
-                },
-            )
-
-            # Count the total number of matching elements
-            sql_count = "SELECT FOUND_ROWS();"
-            ret_count = session.execute(sql_count)
-            grey_list["nb_element_total"] = ret_count.first()[0]
-
-            session.commit()
-            session.flush()
-
-            # Process query results
-            if result:
-                for list_g in result:
-                    grey_list["updateid"].append(list_g.updateid)
-                    grey_list["title"].append(list_g.title)
-                    grey_list["kb"].append(list_g.kb)
-                    grey_list["valided"].append(list_g.valided)
-                    grey_list["severity"].append(list_g.severity)
-
-        except Exception as e:
-            # Log any errors encountered
-            logger.error(f"Error in function get_grey_list: {e}")
-        return grey_list
 
     @DatabaseHelper._sessionm
-    def get_white_list(self, session, start=0, limit=-1, filter=""):
+    def get_white_list(self, session,
+                    start: int = 0,
+                    limit: int = -1,
+                    filter: str = "",
+                    entityid: int = None):
         """
         Retrieve the white list of updates with optional filtering, sorting, and pagination.
 
+        This function queries the `up_white_list` table and joins it with `update_data` to retrieve
+        update information. It handles both normal updates (with matching updateid) and
+        "major updates" (win10upd_ / win11upd_). If an `entityid` is provided (not None or -1),
+        the query will restrict results to updates belonging to that entity.
+
         Args:
-            session: Database session object for executing queries.
-            start (int): Starting index for pagination. Default is 0.
-            limit (int): Maximum number of results to retrieve. Default is -1 (no limit).
-            filter (str): Optional filter to apply to the query (title, kb, severity, or updateid).
+            session: SQLAlchemy database session object used to execute queries.
+            start (int): Starting index for pagination. If -1 or invalid, defaults to 0.
+            limit (int): Maximum number of results to retrieve. If -1 or invalid, no limit is applied.
+            filter (str, optional): Optional text filter applied on title, kb, severity,
+                                    or updateid. Default is "" (no filter).
+            entityid (int, optional): If provided (not None or -1), only returns updates belonging
+                                    to the specified entity. Default is None.
 
         Returns:
             dict: A dictionary containing:
-                - nb_element_total (int): Total number of elements matching the query.
+                - nb_element_total (int): Total number of matching elements across all pages.
                 - updateid (list): List of update IDs.
                 - title (list): List of update titles.
                 - kb (list): List of knowledge base IDs.
                 - severity (list): List of severity levels for each update.
         """
-        try:
-            # Ensure 'start' and 'limit' are integers; default to -1 if invalid
-            start = int(start)
-        except ValueError:
-            start = -1
-        try:
-            limit = int(limit)
-        except ValueError:
-            limit = -1
+        if entityid in (-1, None, "None", ""):
+            entityid = None
+        else:
+            try:
+                entityid = int(entityid)
+            except Exception:
+                entityid = None
 
         try:
+            # Ensure 'start' and 'limit' are integers
+            try:
+                start = int(start) if start != -1 else 0
+            except ValueError:
+                start = 0
+
+            try:
+                limit = int(limit) if limit != -1 else -1
+            except ValueError:
+                limit = -1
+
             # Initialize the result structure
             white_list = {
                 "nb_element_total": 0,
@@ -432,84 +370,238 @@ class UpdatesDatabase(DatabaseHelper):
                 "severity": [],
             }
 
-            # Base query without the filter
-            sql_base = """SELECT SQL_CALC_FOUND_ROWS *
-                        FROM (
-                            SELECT
-                                up_white_list.updateid,
-                                up_white_list.title,
-                                up_white_list.kb,
-                                COALESCE(NULLIF(update_data.msrcseverity, ""), "Corrective") AS severity
-                            FROM xmppmaster.up_white_list
-                            JOIN xmppmaster.update_data
-                            ON xmppmaster.update_data.updateid = xmppmaster.up_white_list.updateid
-
-                            UNION
-
-                            SELECT
-                                up_white_list.updateid,
-                                up_white_list.title,
-                                up_white_list.kb,
-                                "major update" AS severity
-                            FROM xmppmaster.up_white_list
-                            WHERE up_white_list.title LIKE '%%win10upd_%%'
-                                OR up_white_list.title LIKE '%%win11upd_%%'
-                        ) AS combined_results
-                    """
-
-            # Add the filter condition only if a valid filter is provided
-            if filter:
-                filter_clause = """
-                    WHERE
-                    (title LIKE :filter OR
-                    CONCAT("KB", kb) LIKE :filter OR
-                    severity LIKE :filter OR
-                    updateid LIKE :filter)
-                """
+            # Conditions for entity filtering
+            if entityid is not None:
+                entity_condition_1 = "AND up_white_list.entityid = :entityid"
+                entity_condition_2 = "AND up_white_list.entityid = :entityid"
             else:
-                filter_clause = ""
+                entity_condition_1 = ""
+                entity_condition_2 = ""
+
+            # Base query with UNION
+            sql_base = f"""
+                SELECT SQL_CALC_FOUND_ROWS *
+                FROM (
+                    SELECT
+                        up_white_list.updateid,
+                        up_white_list.title,
+                        up_white_list.kb,
+                        COALESCE(NULLIF(update_data.msrcseverity, ""), "Corrective") AS severity
+                    FROM xmppmaster.up_white_list
+                    JOIN xmppmaster.update_data
+                    ON xmppmaster.update_data.updateid = up_white_list.updateid
+                    {entity_condition_1}
+
+                    UNION
+
+                    SELECT
+                        up_white_list.updateid,
+                        up_white_list.title,
+                        up_white_list.kb,
+                        "major update" AS severity
+                    FROM xmppmaster.up_white_list
+                    WHERE (up_white_list.title LIKE '%%win10upd_%%'
+                        OR up_white_list.title LIKE '%%win11upd_%%')
+                    {entity_condition_2}
+                ) AS combined_results
+            """
+
+            # Add filter if provided
+            if filter:
+                sql_base += """
+                    WHERE (title LIKE :filter OR
+                        CONCAT("KB", kb) LIKE :filter OR
+                        severity LIKE :filter OR
+                        updateid LIKE :filter)
+                """
 
             # Add ordering and pagination
             sql = f"""{sql_base}
-                    {filter_clause}
                     ORDER BY FIELD(severity, "major update", "Critical", "Important", "Corrective")
                     LIMIT :start, :limit;
                 """
 
-            # Log the query for debugging purposes
             logger.debug(f"Executing SQL: {sql}")
 
-            # Execute the query with bind parameters
-            result = session.execute(
-                sql,
-                {
-                    "filter": f"%{filter}%" if filter else None,
-                    "start": start,
-                    "limit": limit
-                }
-            )
+            # Prepare parameters for the query
+            params = {"start": start, "limit": limit}
+            if filter:
+                params["filter"] = f"%{filter}%"
+            if entityid is not None:
+                params["entityid"] = entityid
 
-            # Retrieve the total count of matching elements
+            # Execute the query
+            result = session.execute(sql, params)
+
+            # Retrieve total number of elements
             sql_count = "SELECT FOUND_ROWS();"
             ret_count = session.execute(sql_count)
-            nb_element_total = ret_count.first()[0]
-            white_list["nb_element_total"] = nb_element_total
+            white_list["nb_element_total"] = ret_count.first()[0]
 
-            # Process query results and populate the white_list dictionary
+            session.commit()
+            session.flush()
+
+            # Process query results
             if result:
-                for list_w in result:
-                    white_list["updateid"].append(list_w.updateid)
-                    white_list["title"].append(list_w.title)
-                    white_list["kb"].append(list_w.kb)
-                    white_list["severity"].append(list_w.severity)
+                for row in result:
+                    white_list["updateid"].append(row.updateid)
+                    white_list["title"].append(row.title)
+                    white_list["kb"].append(row.kb)
+                    white_list["severity"].append(row.severity)
 
         except Exception as e:
-            # Log any errors encountered during execution
             logger.error("Error in function get_white_list: %s", e)
             logger.error("\n%s" % (traceback.format_exc()))
 
-        # Return the resulting white list
         return white_list
+
+
+
+    @DatabaseHelper._sessionm
+    def get_grey_list(self, session, start, limit, filter: str = "", entityid: int = None):
+        """
+        Retrieve the grey list of updates with optional filtering, sorting, and pagination.
+
+        This function queries the `up_gray_list` table and joins it with `update_data` to retrieve
+        update information. It handles both normal updates (with matching updateid) and
+        "major updates" (win10upd_ / win11upd_). If an `entityid` is provided (not None or -1),
+        the query will restrict results to updates belonging to that entity.
+
+        Args:
+            session: SQLAlchemy database session object used to execute queries.
+            start (int): Starting index for pagination. If -1 or invalid, defaults to 0.
+            limit (int): Maximum number of results to retrieve. If -1 or invalid, no limit is applied.
+            filter (str, optional): Optional text filter applied on title, kb, severity,
+                                    or updateid. Default is "" (no filter).
+            entityid (int, optional): If provided (not None or -1), only returns updates belonging
+                                    to the specified entity. Default is None.
+
+        Returns:
+            dict: A dictionary containing:
+                - nb_element_total (int): Total number of matching elements across all pages.
+                - updateid (list): List of update IDs.
+                - title (list): List of update titles.
+                - kb (list): List of knowledge base IDs.
+                - valided (list): List of validation statuses.
+                - severity (list): List of severity levels for each update.
+        """
+        if entityid in (-1, None, "None", ""):
+            entityid = None
+        else:
+            try:
+                entityid = int(entityid)
+            except Exception:
+                entityid = None
+        try:
+            # Ensure start and limit are valid integers
+            try:
+                start = int(start) if start != -1 else 0
+            except ValueError:
+                start = 0
+
+            try:
+                limit = int(limit) if limit != -1 else -1
+            except ValueError:
+                limit = -1
+
+            # Initialize result structure
+            grey_list = {
+                "nb_element_total": 0,
+                "updateid": [],
+                "title": [],
+                "kb": [],
+                "valided": [],
+                "severity": [],
+            }
+
+            # Conditions for entity filtering
+            if entityid is not None:
+                entity_condition_1 = "AND up_gray_list.entityid = :entityid"
+                entity_condition_2 = "AND up_gray_list.entityid = :entityid"
+            else:
+                entity_condition_1 = ""
+                entity_condition_2 = ""
+
+            # Base SQL with UNION
+            sql_base = f"""
+                SELECT SQL_CALC_FOUND_ROWS *
+                FROM (
+                    SELECT
+                        up_gray_list.updateid,
+                        up_gray_list.title,
+                        up_gray_list.kb,
+                        up_gray_list.valided,
+                        COALESCE(NULLIF(update_data.msrcseverity, ""), "Corrective") AS severity
+                    FROM xmppmaster.up_gray_list
+                    JOIN xmppmaster.update_data
+                    ON xmppmaster.update_data.updateid = up_gray_list.updateid
+                    {entity_condition_1}
+
+                    UNION
+
+                    SELECT
+                        up_gray_list.updateid,
+                        up_gray_list.title,
+                        up_gray_list.kb,
+                        up_gray_list.valided,
+                        "major update" AS severity
+                    FROM xmppmaster.up_gray_list
+                    WHERE (up_gray_list.title LIKE '%%win10upd_%%'
+                        OR up_gray_list.title LIKE '%%win11upd_%%')
+                    {entity_condition_2}
+                ) AS combined_results
+            """
+
+            # Apply filter if provided
+            if filter:
+                sql_base += """
+                    WHERE (title LIKE :filter OR
+                        CONCAT("KB", kb) LIKE :filter OR
+                        severity LIKE :filter OR
+                        updateid LIKE :filter)
+                """
+
+            # Add ordering and pagination
+            sql = f"""{sql_base}
+                    ORDER BY FIELD(severity, "major update", "Critical", "Important", "Corrective")
+                    LIMIT :start, :limit;
+                """
+
+            logger.debug(f"Executing SQL: {sql}")
+
+            # Prepare query parameters
+            params = {"start": start, "limit": limit}
+            if filter:
+                params["filter"] = f"%{filter}%"
+            if entityid is not None:
+                params["entityid"] = entityid
+
+            # Execute query
+            result = session.execute(sql, params)
+
+            # Count total results
+            sql_count = "SELECT FOUND_ROWS();"
+            ret_count = session.execute(sql_count)
+            grey_list["nb_element_total"] = ret_count.first()[0]
+
+            session.commit()
+            session.flush()
+
+            # Process query results
+            if result:
+                for row in result:
+                    grey_list["updateid"].append(row.updateid)
+                    grey_list["title"].append(row.title)
+                    grey_list["kb"].append(row.kb)
+                    grey_list["valided"].append(row.valided)
+                    grey_list["severity"].append(row.severity)
+
+        except Exception as e:
+            logger.error(f"Error in function get_grey_list: {e}")
+
+        return grey_list
+
+
 
 
     @DatabaseHelper._sessionm
@@ -677,277 +769,525 @@ class UpdatesDatabase(DatabaseHelper):
 
         return enabled_updates_list
 
-
     @DatabaseHelper._sessionm
-    def approve_update(self, session, updateid):
+    def approve_update(self, session, updateid, entityid):
         try:
-            sql = """SELECT updateid,
-                        kb,
-                        title,
-                        description
+            entityid = int(entityid)
+
+            # 1️⃣ Sélection depuis la gray list avec bind parameters
+            sql = """SELECT updateid, kb, title, description, entityid
                     FROM xmppmaster.up_gray_list
-                    WHERE updateid = '%s' or kb='%s' LIMIT 1;""" % (
-                updateid,
-                updateid,
-            )
-            result = session.execute(sql)
-            selected = {"updateid": "", "kb": "", "title": "", "description": ""}
+                    WHERE (updateid = :updateid OR kb = :updateid)
+                    AND entityid = :entityid
+                    LIMIT 1;"""
 
-            if result is not None:
-                selected = [
-                    {
-                        "updateid": elem.updateid,
-                        "kb": elem.kb,
-                        "title": elem.title,
-                        "description": elem.description,
-                    }
-                    for elem in result
-                ]
-            selected = selected[0]
+            result = session.execute(sql, {"updateid": updateid, "entityid": entityid}).fetchone()
 
-            sql2 = """INSERT INTO 
-                        xmppmaster.up_white_list (updateid, kb, title, description, valided) 
-                        VALUES("%s", "%s", "%s", "%s", %s)""" % (
-                selected["updateid"],
-                selected["kb"],
-                selected["title"],
-                selected["description"],
-                1,
+            if not result:
+                return False  # Rien trouvé → on arrête
+
+            # 2️⃣ Insertion dans la white list avec bind parameters
+            insert_sql = """INSERT INTO xmppmaster.up_white_list
+                            (updateid, entityid, kb, title, description, valided)
+                            VALUES (:updateid, :entityid, :kb, :title, :description, :valided);"""
+
+            session.execute(
+                insert_sql,
+                {
+                    "updateid": result.updateid,
+                    "entityid": result.entityid,
+                    "kb": result.kb,
+                    "title": result.title,
+                    "description": result.description,
+                    "valided": 1,
+                },
             )
-            session.execute(sql2)
 
             session.commit()
             session.flush()
             return True
+
         except Exception as e:
+            session.rollback()
+            logger.error(f"[approve_update] ERREUR: {e}")
             return False
 
     @DatabaseHelper._sessionm
-    def grey_update(self, session, updateid, enabled=0):
+    def grey_update(self, session, updateid, entityid, enabled=0):
+        """
+        Met à jour le champ 'valided' dans la table xmppmaster.up_gray_list
+        pour un enregistrement spécifique (updateid + entityid).
+
+        Args:
+            session: SQLAlchemy session.
+            updateid: str — UUID ou KB de l'update.
+            entityid: int-like — identifiant de l'entité.
+            enabled: int (0 ou 1) — nouvelle valeur du champ 'valided'.
+
+        Returns:
+            True si la mise à jour a réussi, False sinon.
+        """
         try:
-            sql = """UPDATE `xmppmaster`.`up_gray_list`
-                    SET
-                        valided = %s
-                    WHERE
-                        (updateid = '%s');""" % (
-                enabled,
-                updateid,
-            )
-            result = session.execute(sql)
+            # 🔹 Validation basique
+            if not updateid or not str(updateid).strip():
+                logging.getLogger().warning("[grey_update] updateid vide ou invalide")
+                return False
+
+            try:
+                entityid = str(entityid)
+                enabled = str(enabled)
+            except (TypeError, ValueError):
+                logging.getLogger().warning(f"[grey_update] entityid invalide: {entityid!r}")
+                return False
+            logging.getLogger().info(f"[grey_update]  pour {updateid} / entity={entityid} → valided={enabled}")
+
+            # enabled = 1 if enabled in (1, "1", True) else 0
+
+            # 🔹 Requête paramétrée
+            update_sql = """
+                UPDATE xmppmaster.up_gray_list
+                SET valided = :enabled
+                WHERE (updateid = :updateid OR kb = :updateid)
+                AND entityid = :entityid;
+            """
+
+            params = {
+                "enabled": enabled,
+                "updateid": str(updateid),
+                "entityid": entityid,
+            }
+
+            result = session.execute(update_sql, params)
+
+            session.commit()
+            session.flush()
+
+            if result.rowcount == 0:
+                logging.getLogger().info(f"[grey_update] Aucun enregistrement mis à jour pour {updateid} / entity={entityid}")
+            else:
+                logging.getLogger().info(f"[grey_update] Mise à jour OK pour {updateid} / entity={entityid} → valided={enabled}")
+
+            return True
+
+        except Exception as e:
+            session.rollback()
+            logging.getLogger().error(f"[grey_update] ERREUR: {e}", exc_info=True)
+            return False
+
+
+    @DatabaseHelper._sessionm
+    def exclude_update(self, session, updateid, entityid):
+        """
+        Ajoute une règle d'exclusion dans up_black_list (INSERT IGNORE) .
+
+        Args:
+            session: SQLAlchemy session.
+            updateid: str, uuid ou KB à exclure (doit être non vide)
+            entityid: int-like, id de l'entité
+        Returns:
+            True si OK, False sinon
+        """
+        try:
+            # Validation minimale
+            if not updateid or not str(updateid).strip():
+                logging.getLogger().warning("[exclude_update] updateid vide")
+                return False
+
+            try:
+                entityid = int(entityid)
+            except (TypeError, ValueError):
+                logging.getLogger().warning(f"[exclude_update] entityid invalide: {entityid!r}")
+                return False
+
+            # Valeurs fixes / contrôlées
+            userjid_regexp = ".*"
+            enable_rule = 1
+            type_rule = "id"  # si d'autres valeurs possibles, valider ici explicitement
+
+            insert_sql = """
+                INSERT IGNORE INTO xmppmaster.up_black_list
+                    (updateid_or_kb, entityid, userjid_regexp, enable_rule, type_rule)
+                VALUES
+                    (:updateid_or_kb, :entityid, :userjid_regexp, :enable_rule, :type_rule);
+            """
+
+            params = {
+                "updateid_or_kb": str(updateid),
+                "entityid": entityid,
+                "userjid_regexp": userjid_regexp,
+                "enable_rule": enable_rule,
+                "type_rule": type_rule,
+            }
+
+            session.execute(insert_sql, params)
+            session.commit()
+            session.flush()
+            logging.getLogger().info(f"[exclude_update] rule inserted for updateid={updateid} entityid={entityid}")
+            return True
+
+        except Exception as e:
+            session.rollback()
+            logging.getLogger().error(f"[exclude_update] ERREUR: {e}", exc_info=True)
+            return False
+
+
+    @DatabaseHelper._sessionm
+    def delete_rule(self, session, id, entityid):
+        """
+        Supprime une règle de la black_list et réinsère le package correspondant dans la gray_list.
+
+        Args:
+            session: SQLAlchemy session.
+            id: ID de la règle à supprimer dans up_black_list.
+            entityid: ID de l'entité (utilisé pour filtrer les données par entité).
+        """
+        try:
+            # 1️⃣ Réinsertion dans la gray_list depuis up_packages
+            sql_add = """
+                INSERT INTO xmppmaster.up_gray_list
+                    (updateid, kb, revisionid, title, updateid_package, payloadfiles, entityid)
+                SELECT
+                    p.updateid,
+                    p.kb,
+                    p.revisionid,
+                    p.title,
+                    p.updateid_package,
+                    p.payloadfiles,
+                    b.entityid
+                FROM xmppmaster.up_packages AS p
+                JOIN xmppmaster.up_black_list AS b
+                ON p.updateid = b.updateid_or_kb OR p.kb = b.updateid_or_kb
+                WHERE b.id = :id AND b.entityid = :entityid;
+            """
+
+            # 2️⃣ Suppression de la règle dans la black_list
+            sql_delete = """
+                DELETE FROM xmppmaster.up_black_list
+                WHERE id = :id AND entityid = :entityid;
+            """
+
+            session.execute(sql_add, {"id": id, "entityid": entityid})
+            session.execute(sql_delete, {"id": id, "entityid": entityid})
             session.commit()
             session.flush()
             return True
-        except Exception as e:
-            logging.getLogger().error(str(e))
-        return False
-
-    @DatabaseHelper._sessionm
-    def exclude_update(self, session, updateid):
-        try:
-            sql = """INSERT IGNORE INTO xmppmaster.up_black_list (updateid_or_kb, userjid_regexp, enable_rule, type_rule)
-                VALUES ('%s', '.*', '1', 'id');""" % (
-                updateid
-            )
-
-            result = session.execute(sql)
-            session.commit()
-
-            session.flush()
-            return True
-        except Exception as e:
-            logging.getLogger().error(str(e))
-        return False
-
-    @DatabaseHelper._sessionm
-    def delete_rule(self, session, id):
-        try:
-            sql_add = """INSERT INTO xmppmaster.up_gray_list (updateid, kb, revisionid, title, updateid_package, payloadfiles)
-        SELECT xmppmaster.up_packages.updateid, xmppmaster.up_packages.kb, xmppmaster.up_packages.revisionid, xmppmaster.up_packages.title, xmppmaster.up_packages.updateid_package, xmppmaster.up_packages.payloadfiles FROM xmppmaster.up_packages
-JOIN xmppmaster.up_black_list ON xmppmaster.up_packages.updateid = xmppmaster.up_black_list.updateid_or_kb or xmppmaster.up_packages.kb = xmppmaster.up_black_list.updateid_or_kb WHERE xmppmaster.up_black_list.id=%s;""" % (
-                id
-            )
-
-            sql = (
-                """DELETE FROM `xmppmaster`.`up_black_list` WHERE (`id` = '%s');"""
-                % (id)
-            )
-
-            result = session.execute(sql_add)
-            result = session.execute(sql)
-            session.commit()
-            session.flush()
-            return True
 
         except Exception as e:
-            logging.getLogger().error(str(e))
-        return False
+            session.rollback()
+            logging.getLogger().error(f"[delete_rule] ERREUR: {e}", exc_info=True)
+            return False
 
     @DatabaseHelper._sessionm
-    def get_family_list(self, session, start, end, filter=""):
+    def get_family_list(self, session, start, end, filter="", entityid=-1):
+        """
+        Récupère la liste des familles (produits) actives depuis xmppmaster.up_list_produit.
+
+        Args:
+            session: SQLAlchemy session.
+            start (int): index de départ pour la pagination.
+            end (int): nombre maximal d’éléments à retourner.
+            filter (str): texte à rechercher dans name_procedure (optionnel).
+            entityid (int): identifiant d'entité (-1 = tous).
+
+        Retour:
+            dict {
+                "nb_element_total": int,
+                "name_procedure": [str, ...]
+            }
+        """
+        family_list = {"nb_element_total": 0, "name_procedure": []}
+
         try:
-            family_list = {"nb_element_total": 0, "name_procedure": []}
+            # 🔹 Nettoyage / validation des bornes
+            try:
+                start = int(start)
+                if start < 0:
+                    start = 0
+            except (TypeError, ValueError):
+                start = 0
 
-            sql = """SELECT SQL_CALC_FOUND_ROWS
-                        *
-                    FROM
-                        xmppmaster.up_list_produit 
-                    WHERE
-                        enable = 1 """
+            try:
+                end = int(end)
+            except (TypeError, ValueError):
+                end = -1
 
+            # 🔹 Calcul du LIMIT / OFFSET
+            if end != -1:
+                slimit = f" LIMIT {start}, {end}"
+            else:
+                slimit = f" LIMIT {start}"
+
+            # 🔹 Base de la requête
+            sql = """
+                SELECT SQL_CALC_FOUND_ROWS *
+                FROM xmppmaster.up_list_produit
+                WHERE enable = 1
+            """
+
+            params = {}
+
+            # 🔹 Si entityid est défini
+            if entityid != -1:
+                sql += " AND entityid = :entityid"
+                params["entityid"] = entityid
+
+            # 🔹 Si un filtre est appliqué
             if filter:
-                filterwhere = (
-                    """AND
-                        name_procedure LIKE '%%%s%%'
-                    LIMIT 5 OFFSET 5"""
-                    % filter
-                )
-                sql = sql + filterwhere
+                sql += " AND name_procedure LIKE :filter"
+                params["filter"] = f"%{filter}%"
 
-            sql += ";"
+            # 🔹 Ajout de la limite
+            sql += slimit + ";"
 
-            result = session.execute(sql)
+            # 🔹 Exécution principale
+            result = session.execute(sql, params)
 
-            sql_count = "SELECT FOUND_ROWS();"
-            ret_count = session.execute(sql_count)
-            nb_element_total = ret_count.first()[0]
-
+            # 🔹 Nombre total d’éléments trouvés
+            ret_count = session.execute("SELECT FOUND_ROWS();")
+            nb_element_total = ret_count.scalar() or 0
             family_list["nb_element_total"] = nb_element_total
 
+            # 🔹 Récupération des résultats
+            for row in result:
+                if hasattr(row, "name_procedure"):
+                    family_list["name_procedure"].append(row.name_procedure)
+                elif "name_procedure" in row.keys():
+                    family_list["name_procedure"].append(row["name_procedure"])
+
             session.commit()
             session.flush()
 
-            if result:
-                for list_f in result:
-                    family_list["name_procedure"].append(list_f.name_procedure)
-
         except Exception as e:
-            logger.error("error function get_family_list")
+            session.rollback()
+            logger.error(f"[get_family_list] ERREUR: {e}", exc_info=True)
 
         return family_list
 
     @DatabaseHelper._sessionm
-    def get_count_machine_as_not_upd(self, session, updateid):
+    def get_count_machine_as_not_upd(self, session, updateid, entityid=-1):
         """
-        This function returns the the update already done and update enable
-        """
-        sql = """SELECT COUNT(*) AS nb_machine_missing_update
-                FROM
-                    xmppmaster.up_machine_windows
-                WHERE
-                    (update_id = '%s');""" % (
-            updateid
-        )
+        Retourne le nombre de machines (xmppmaster.up_machine_windows)
+        pour lesquelles l'update (updateid) est référencé.
 
-        resultquery = session.execute(sql)
-        session.commit()
-        session.flush()
-        result = [
-            {column: value for column, value in rowproxy.items()}
-            for rowproxy in resultquery
-        ]
-        return result
+        Si entityid == -1 => pas de filtre par entityid (comportement historique).
+        Sinon on ajoute "AND entityid = :entityid".
+
+        Retour:
+            dict { "nb_machine_missing_update": int }
+        """
+        try:
+            # validation minimale
+            if not updateid or not str(updateid).strip():
+                logging.getLogger().warning("[get_count_machine_as_not_upd] updateid vide")
+                return {"nb_machine_missing_update": 0}
+
+            try:
+                entityid = int(entityid)
+            except (TypeError, ValueError):
+                logging.getLogger().warning(f"[get_count_machine_as_not_upd] entityid invalide: {entityid!r}")
+                return {"nb_machine_missing_update": 0}
+
+            # Construire la requête de façon paramétrée
+            base_sql = """
+                SELECT COUNT(*) AS nb_machine_missing_update
+                FROM xmppmaster.up_machine_windows
+                WHERE update_id = :updateid
+            """
+
+            params = {"updateid": str(updateid)}
+
+            if entityid != -1:
+                base_sql += " AND entityid = :entityid"
+                params["entityid"] = entityid
+
+            # Exécuter et récupérer le nombre
+            result = session.execute(base_sql, params).fetchone()
+
+            if result is None:
+                return {"nb_machine_missing_update": 0}
+
+            # result peut être un RowProxy / Row — accéder soit par clé soit par index
+            count = result["nb_machine_missing_update"] if "nb_machine_missing_update" in result.keys() else result[0]
+            try:
+                count = int(count)
+            except (TypeError, ValueError):
+                count = 0
+
+            return {"nb_machine_missing_update": count}
+
+        except Exception as e:
+            # pas de commit pour une SELECT ; rollback si erreur côté transaction
+            try:
+                session.rollback()
+            except Exception:
+                pass
+            logging.getLogger().error(f"[get_count_machine_as_not_upd] ERREUR: {e}", exc_info=True)
+            return {"nb_machine_missing_update": 0}
 
     @DatabaseHelper._sessionm
     def get_machines_needing_update(
-        self, session, updateid, uuid, config, start=0, limit=-1, filter=""
+        self,
+        session,
+        updateid,
+        uuid,
+        config,
+        start=0,
+        limit=-1,
+        filter=""
     ):
         """
-        This function returns the list of machines needing a specific update
+        Récupère la liste des machines nécessitant une mise à jour spécifique.
+
+        Cette fonction interroge plusieurs tables (up_machine_activated, machines,
+        local_glpi_machines, local_glpi_filters) pour identifier les machines
+        qui doivent recevoir un update donné.
+
+        Args:
+            session: Session SQLAlchemy.
+            updateid (str): Identifiant de l'update à rechercher.
+            uuid (str): Identifiant d'entité sous la forme "UUID<id>".
+            config (object): Objet contenant éventuellement un attribut `filter_on`
+                            avec des clés "state", "entity" ou "type".
+            start (int, optional): Position de départ pour la pagination. Défaut = 0.
+            limit (int, optional): Nombre maximum de lignes à retourner. -1 = pas de limite.
+            filter (str, optional): Filtre texte sur le nom, la plateforme, le KB, etc.
+
+        Returns:
+            dict: {
+                "datas": {
+                    "id": [int, ...],
+                    "name": [str, ...],
+                    "platform": [str, ...],
+                    "kb": [str, ...]
+                },
+                "total": int
+            }
         """
-        slimit = "limit %s" % start
+        result = {"datas": {"id": [], "name": [], "platform": [], "kb": []}, "total": 0}
+
         try:
-            limit = int(limit)
-        except:
-            limit = -1
+            # 🔹 Validation et calcul du LIMIT / OFFSET
+            try:
+                start = int(start)
+                if start < 0:
+                    start = 0
+            except (TypeError, ValueError):
+                start = 0
 
-        if limit != -1:
-            slimit = "%s,%s" % (slimit, limit)
+            try:
+                limit = int(limit)
+            except (TypeError, ValueError):
+                limit = -1
 
-        filter_on = ""
+            if limit != -1:
+                slimit = f"LIMIT {start}, {limit}"
+            else:
+                slimit = f"LIMIT {start}"
 
-        sfilter = ""
-        if filter != "":
-            sfilter = """AND
-    (lgm.name LIKE '%%%s%%'
-    OR uma.update_id LIKE '%%%s%%'
-    OR m.platform LIKE '%%%s%%'
-    OR uma.kb LIKE '%%%s%%')""" % tuple(
-                filter for x in range(0, 4)
-            )
+            # 🔹 Construction sécurisée des filtres
+            sfilter = ""
+            params = {"updateid": updateid, "entityid": uuid.replace("UUID", "")}
 
-        if config.filter_on is not None:
-            for key in config.filter_on:
-                if key not in ["state", "entity", "type"]:
-                    continue
-                if key == "state":
-                    filter_on = "%s AND lgf.states_id in (%s)" % (
-                        filter_on,
-                        ",".join(config.filter_on[key]),
+            if filter:
+                sfilter = """
+                    AND (
+                        lgm.name LIKE :filter
+                        OR uma.update_id LIKE :filter
+                        OR m.platform LIKE :filter
+                        OR uma.kb LIKE :filter
                     )
-                if key == "type":
-                    filter_on = "%s AND lgf.computertypes_id in (%s)" % (
-                        filter_on,
-                        ",".join(config.filter_on[key]),
-                    )
-                if key == "entity":
-                    filter_on = "%s AND lgf.entities_id in (%s)" % (
-                        filter_on,
-                        ",".join(config.filter_on[key]),
-                    )
+                """
+                params["filter"] = f"%{filter}%"
 
-        sql = """select
-    SQL_CALC_FOUND_ROWS
-    lgm.id,
-    lgm.name,
-    m.platform,
-    concat("KB", uma.kb) as kb
-from xmppmaster.up_machine_activated uma
-join xmppmaster.machines m on uma.id_machine = m.id
-join xmppmaster.local_glpi_machines lgm on concat("UUID", lgm.id) = m.uuid_inventorymachine
-join xmppmaster.local_glpi_filters lgf on lgf.id = lgm.id
-where uma.update_id = "%s"
-and lgm.is_deleted = 0
-and lgm.is_template = 0
-and lgm.entities_id = %s
-%s
-%s
-%s;
-""" % (
-            updateid,
-            uuid.replace("UUID", ""),
-            sfilter,
-            filter_on,
-            slimit,
-        )
-        resultquery = session.execute(sql)
-        session.commit()
-        session.flush()
-        count = session.execute("SELECT FOUND_ROWS();")
-        count = [elem[0] for elem in count][0]
+            # 🔹 Application des filtres dynamiques (config.filter_on)
+            filter_on = ""
+            if getattr(config, "filter_on", None):
+                for key, values in config.filter_on.items():
+                    if key not in ["state", "entity", "type"]:
+                        continue
+                    valid_ids = [v for v in values if str(v).isdigit()]
+                    if not valid_ids:
+                        continue
 
-        result = {
-            "datas": {"id": [], "name": [], "platform": [], "kb": []},
-            "total": count,
-        }
+                    if key == "state":
+                        filter_on += f" AND lgf.states_id IN ({','.join(valid_ids)})"
+                    elif key == "type":
+                        filter_on += f" AND lgf.computertypes_id IN ({','.join(valid_ids)})"
+                    elif key == "entity":
+                        filter_on += f" AND lgf.entities_id IN ({','.join(valid_ids)})"
 
-        if resultquery:
+            # 🔹 Requête principale
+            sql = f"""
+                SELECT
+                    SQL_CALC_FOUND_ROWS
+                    lgm.id,
+                    lgm.name,
+                    m.platform,
+                    CONCAT('KB', uma.kb) AS kb
+                FROM xmppmaster.up_machine_activated uma
+                JOIN xmppmaster.machines m
+                    ON uma.id_machine = m.id
+                JOIN xmppmaster.local_glpi_machines lgm
+                    ON CONCAT('UUID', lgm.id) = m.uuid_inventorymachine
+                JOIN xmppmaster.local_glpi_filters lgf
+                    ON lgf.id = lgm.id
+                WHERE
+                    uma.update_id = :updateid
+                    AND lgm.is_deleted = 0
+                    AND lgm.is_template = 0
+                    AND lgm.entities_id = :entityid
+                    {sfilter}
+                    {filter_on}
+                {slimit};
+            """
+
+            # 🔹 Exécution de la requête
+            resultquery = session.execute(sql, params)
+
+            # 🔹 Compte total (FOUND_ROWS)
+            count = session.execute("SELECT FOUND_ROWS();").scalar() or 0
+            result["total"] = count
+
+            # 🔹 Extraction des résultats
             for row in resultquery:
                 result["datas"]["id"].append(row.id)
                 result["datas"]["name"].append(row.name)
                 result["datas"]["platform"].append(row.platform)
                 result["datas"]["kb"].append(row.kb)
+
+            session.commit()
+            session.flush()
+
+        except Exception as e:
+            session.rollback()
+            logger = logging.getLogger()
+            logger.error(f"[get_machines_needing_update] ERREUR: {e}", exc_info=True)
+
         return result
 
+
     @DatabaseHelper._sessionm
-    def white_unlist_update(self, session, updateid):
-        sql = (
-            """DELETE FROM xmppmaster.up_white_list WHERE updateid = '%s' or kb='%s'"""
-            % (updateid, updateid)
-        )
+    def white_unlist_update(self, session, updateid, entityid):
+        """
+        Supprime un update de la white_list selon son updateid ou son KB.
+
+        Args:
+            session: SQLAlchemy session.
+            updateid: UUID ou KB de l'update.
+            entityid: ID de l'entité (filtrage ajouté)
+        """
         try:
-            session.execute(sql)
+            delete_sql = """
+                DELETE FROM xmppmaster.up_white_list
+                WHERE (updateid = :updateid OR kb = :updateid)
+                AND entityid = :entityid;
+            """
+            session.execute(delete_sql, {"updateid": updateid, "entityid": entityid})
             session.commit()
             session.flush()
             return True
-        except:
+
+        except Exception as e:
+            session.rollback()
+            logger.error(f"[white_unlist_update] ERREUR: {e}", exc_info=True)
             return False

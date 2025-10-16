@@ -27,8 +27,9 @@ $maxperpage = $conf["global"]["maxperpage"];
 $filter  = isset($_GET['filter']) ? $_GET['filter'] : "";
 $start = isset($_GET['start']) ? $_GET['start'] : 0;
 $end   = (isset($_GET['end']) ? $_GET['start'] + $maxperpage : $maxperpage);
+$entityid   = (isset($_GET['uuid']) ? $_GET['uuid']  : -1 );
 
-$white_list = xmlrpc_get_white_list($start, $maxperpage, $filter);
+$white_list = xmlrpc_get_white_list($start, $maxperpage, $filter, $entityid);
 // WhiteList Actions
 $whiteUnlistAction = new ActionPopupItem(_T("Unlist update", "updates"), "whiteUnlist", "unlist", "updates", "updates");
 $banAction = new ActionPopupItem(_T("Ban update", "updates"), "banUpdate", "banupdate", "updates", "updates");
@@ -51,7 +52,13 @@ for($i = 0; $i < $count_white; $i++) {
     $tmp = array(
         'updateid' => $white_list['updateid'][$i],
         'title' => $white_list['title'][$i],
-        'severity' => $white_list['severity'][$i]
+        'severity' => $white_list['severity'][$i],
+        'entityid' => $entityid,
+        'name' => $_GET['name'],
+        'completename' => $_GET['completename'],
+        'comments' => $_GET['comments'],
+        'level' => $_GET['level'],
+        'altname' => $_GET['altname']
     );
 
     if(strlen($white_list['updateid'][$i]) < 10) {
@@ -61,13 +68,13 @@ for($i = 0; $i < $count_white; $i++) {
         $tmp['uid'] = "";
     } else {
         $kbs_white[] = "";
-        $updateids_white[] = "<a href=\"https://www.catalog.update.microsoft.com/Search.aspx?q='" . $white_list['updateid'][$i] . "'\">" . $white_list['updateid'][$i] . "</a>";
+        $updateids_white[] = "<a href=\"https://www.catalog.update.microsoft.com/Search.aspx?q='" . $white_list['updateid'][$i] .'" target="_blank">' . $white_list['updateid'][$i] . "</a>";
         $tmp['kb'] = "";
         $tmp['uid'] = $white_list['updateid'][$i];
     }
     $params_white[] = $tmp;
 }
-
+$ids = array(); // Initialize the array
 // Add css ids to each tr tag in the table
 foreach($white_list['updateid'] as $updateid) {
     $ids [] = 'w_'.$updateid;
@@ -84,8 +91,44 @@ $w->setNavBar(new AjaxNavBar($count_white, $filter, 'updateSearchParamformWhite'
 $w->start = 0;
 $w->end = $count_white;
 $w->setParamInfo($params_white);
-echo '</br></br>';
-echo '<h2>'._T("White list (automatic updates)", "updates").'</h2>';
+// affichage titre tableau
+$converter = new ConvertCouleur();
+
+if ($count_white == 0)
+{
+    $titretableau = _T("No updates are currently available in the White list (automatic updates)", 'updates');
+}else{
+    $titretableau = _T("White list (automatic updates)", 'updates');
+}
+
+// $completename = $_GET['completename'];
+$completename = $_GET['altname'];
+
+// Remplace les "+" par un espace
+$completename_cleaned = str_replace('+', ' ', $completename);
+// Remplace ">" par " → "
+$completename_cleaned = str_replace('>', ' → ', $completename_cleaned);
+// Remplace les "&nbsp;" par un espace
+$completename_cleaned = str_replace('&nbsp;', ' ', $completename_cleaned);
+// Supprime les espaces multiples
+$completename_cleaned = preg_replace('/\s+/', ' ', $completename_cleaned);
+// Supprime les espaces en début et fin de chaîne
+$completename_cleaned = trim($completename_cleaned);
+$ide = $_GET['uuid'];
+$w->setCaptionText(sprintf("%s [%s] (%s)",
+                           $titretableau ,
+                           $completename_cleaned,
+                           $ide));
+$w->setCssCaption(
+    $border = 1,
+    $bold = 0,
+    $bgColor = "lightgray",
+    $textColor = "black",
+    $padding = "10px 0",
+    $size = "20",
+    $emboss = 1,
+    $rowColor = $converter->convert("lightgray")
+);
 $w->addActionItemArray($whiteActions["unlist"]);
 $w->addActionItemArray($whiteActions["ban"]);
 $w->display();

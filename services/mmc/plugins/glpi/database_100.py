@@ -72,7 +72,11 @@ from mmc.plugins.glpi.database_utils import (
     fromUUID,
     toUUID,
     setUUID,
+    to_int,
+    normalize_entity,
+    normalize_entity_list
 )
+
 from mmc.plugins.glpi.database_utils import DbTOA  # pyflakes.ignore
 from mmc.plugins.dyngroup.config import DGConfig
 from distutils.version import LooseVersion, StrictVersion
@@ -1079,6 +1083,7 @@ class Glpi100(DyngroupDatabaseHelper):
 
         if "entity" in self.config.summary:
             query = query.add_column(Entities.name.label("entity"))
+            query = query.add_column(Entities.id.label("entityid"))
 
         if "location" in self.config.summary:
             query = query.add_column(self.locations.c.name.label("location"))
@@ -2907,24 +2912,87 @@ class Glpi100(DyngroupDatabaseHelper):
         session.close()
         return ret
 
-    def getLocation(self, uuid):
+    def getLocationsListsimple(self, uuids):
         """
-        Get a Location by it's uuid
+        Récupère une liste d'entités (Locations) à partir d'une liste d'UUIDs.
+        Les UUIDs peuvent être des chaînes, des dictionnaires ou un mélange des deux.
+
+        Args:
+            uuids (list): Liste d'UUIDs à normaliser et utiliser pour la requête.
+                        Chaque UUID peut être une chaîne (ex: "UUID123"), un dictionnaire (ex: {"id": "UUID456"}),
+                        ou une liste (le premier élément sera utilisé).
+
+        Returns:
+            list: Liste des objets `Entities` correspondant aux UUIDs normalisés.
+                Si aucun UUID valide n'est trouvé, la liste sera vide.
+
+        Example:
+            >>> getLocationsListsimple(["UUID123", {"id": "UUID456"}])
+            # Renvoie les entités avec les IDs 123 et 456.
         """
         session = create_session()
+
+        # Normalise chaque UUID de la liste (gère chaînes, dictionnaires et listes)
+        normalized_uuids = normalize_entity_list(uuids, -1)
+
+        # Filtre les entités dont l'ID est dans la liste des UUIDs normalisés
         ret = (
             session.query(Entities)
-            .filter(self.entities.c.id == uuid.replace("UUID", ""))
+            .filter(self.entities.c.id.in_(normalized_uuids))
+            .all()
+        )
+        session.close()
+        return ret
+
+    def getLocation(self, uuid):
+        """
+        Récupère une entité (Location) unique à partir de son UUID.
+        L'UUID peut être une chaîne, un dictionnaire ou une liste (le premier élément sera utilisé).
+
+        Args:
+            uuid (str/dict/list): UUID de l'entité à récupérer.
+                                - Si chaîne : "UUID123" → 123.
+                                - Si dictionnaire : {"id": "UUID456"} → 456.
+                                - Si liste : ["UUID789", ...] → 789.
+
+        Returns:
+            Entities: Objet représentant l'entité trouvée, ou `None` si aucun résultat.
+
+        Example:
+            >>> getLocation("UUID123")
+            # Renvoie l'entité avec l'ID 123.
+        """
+        session = create_session()
+
+        # Normalise l'UUID pour extraire un entier valide
+        normalized_uuid = normalize_entity(uuid, -1)
+
+        # Récupère la première entité correspondant à l'UUID normalisé
+        ret = (
+            session.query(Entities)
+            .filter(self.entities.c.id == normalized_uuid)
             .first()
         )
         session.close()
         return ret
 
     def getLocationName(self, uuid):
-        if isinstance(uuid, list):
-            uuid = uuid[0]
+        """
+        Récupère le nom d'une entité (Location) à partir de son UUID.
+        Renvoie `None` si l'entité n'existe pas.
 
-        return self.getLocation(uuid).name
+        Args:
+            uuid (str/dict/list): UUID de l'entité.
+
+        Returns:
+            str: Nom de l'entité, ou `None` si non trouvée.
+
+        Example:
+            >>> getLocationName("UUID123")
+            # Renvoie le nom ou None.
+        """
+        location = self.getLocation(uuid)
+        return location.name if location else None
 
     def getLocationsList(self, ctx, filt=None):
         """
@@ -6891,7 +6959,7 @@ class Glpi100(DyngroupDatabaseHelper):
         Returns:
             dict ou list[dict]:
                 - Si `usernames` est une liste : un dictionnaire où chaque clé est un username et la valeur est la liste de ses entités.
-                Exemple : {"jfk1": [{"entity_id": 1, "entity_name": "...", "entity_completename": "...", ...}, ...], ...}
+                Exemple : {"jfk": [{"entity_id": 1, "entity_name": "...", "entity_completename": "...", ...}, ...], ...}
                 - Si `usernames` est une chaîne : une liste d'entités pour cet utilisateur.
                 Exemple : [{"entity_id": 1, "entity_name": "...", "entity_completename": "...", ...}, ...]
                 - Si un utilisateur n'est pas trouvé, sa clé aura une liste vide comme valeur.

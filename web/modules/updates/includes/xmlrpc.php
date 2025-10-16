@@ -27,19 +27,28 @@ function xmlrpc_tests()
     return xmlCall("updates.tests");
 }
 
-function xmlrpc_get_grey_list($start, $end, $filter = "")
+function xmlrpc_get_grey_list($start, $end, $filter = "", $entityid=-1)
 {
-    return xmlCall("updates.get_grey_list", [$start, $end, $filter]);
+    return xmlCall("updates.get_grey_list", [  $start,
+                                                $end,
+                                                $filter,
+                                                $entityid] );
 }
 
-function xmlrpc_get_white_list($start, $end, $filter = "")
+function xmlrpc_get_white_list($start, $end, $filter = "", $entityid=-1)
 {
-    return xmlCall("updates.get_white_list", [$start, $end, $filter]);
+    return xmlCall("updates.get_white_list", [  $start,
+                                                $end,
+                                                $filter,
+                                                $entityid] );
 }
 
-function xmlrpc_get_black_list($start, $end, $filter = "")
+function xmlrpc_get_black_list($start, $end, $filter = "", $entityid=-1)
 {
-    return xmlCall("updates.get_black_list", [$start, $end, $filter]);
+    return xmlCall("updates.get_black_list", [  $start,
+                                                $end,
+                                                $filter,
+                                                $entityid] );
 }
 
 function xmlrpc_get_enabled_updates_list($entity, $upd_list = "gray", $start = 0, $end = -1, $filter = "")
@@ -47,34 +56,34 @@ function xmlrpc_get_enabled_updates_list($entity, $upd_list = "gray", $start = 0
     return xmlCall("updates.get_enabled_updates_list", [$entity, $upd_list, $start, $end, $filter]);
 }
 
-function xmlrpc_get_family_list($start, $end, $filter = "")
+function xmlrpc_get_family_list($start, $end, $filter = "", $entityid=-1)
 {
-    return xmlCall("updates.get_family_list", [$start, $end, $filter]);
+    return xmlCall("updates.get_family_list", [$start, $end, $filter, $entityid=-1]);
 }
 
-function xmlrpc_approve_update($updateid)
+function xmlrpc_approve_update($updateid, $entityid)
 {
-    return xmlCall("updates.approve_update", [$updateid]);
+    return xmlCall("updates.approve_update", [$updateid, $entityid]);
 }
 
-function xmlrpc_grey_update($updateid, $enabled = 0)
+function xmlrpc_grey_update($updateid, $entityid, $enabled = 0)
 {
-    return xmlCall("updates.grey_update", [$updateid, $enabled]);
+    return xmlCall("updates.grey_update", [$updateid, $entityid, $enabled]);
 }
 
-function xmlrpc_exclude_update($updateid)
+function xmlrpc_exclude_update($updateid, $entityid)
 {
-    return xmlCall("updates.exclude_update", [$updateid]);
+    return xmlCall("updates.exclude_update", [$updateid, $entityid]);
 }
 
-function xmlrpc_delete_rule($id)
+function xmlrpc_delete_rule($id, $entityid)
 {
-    return xmlCall("updates.delete_rule", [$id]);
+    return xmlCall("updates.delete_rule", [$id, $entityid]);
 }
 
-function xmlrpc_white_unlist_update($updateid)
+function xmlrpc_white_unlist_update($updateid, $entityid)
 {
-    return xmlCall("updates.white_unlist_update", [$updateid]);
+    return xmlCall("updates.white_unlist_update", [$updateid, $entityid]);
 }
 
 function xmlrpc_get_machine_with_update($kb, $updateid="", $entity, $start=0, $limit=-1, $filter=""){

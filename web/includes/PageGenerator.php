@@ -1648,67 +1648,78 @@ class AjaxPaginator extends AjaxNavBar
 class AjaxFilter extends HtmlElement
 {
     /**
-     * @param $url: URL called by the javascript updated. The URL gets the filter in $_GET["filter"]
-     * @param $divid: div ID which is updated by the URL output
-     * @param $formid: change the form id (usefull for multiple Ajaxfilter in one page)
+     * AjaxFilter : composant de filtre AJAX avec persistance en session
+     *
+     * @param string $url    URL appelée par le JavaScript (ex: "index.php?module=base&action=list")
+     *                       Le filtre sera passé en $_GET["filter"].
+     * @param string $divid  ID du <div> à mettre à jour avec la réponse AJAX.
+     * @param array|string $params  Paramètres supplémentaires à inclure dans l’URL (array ou chaîne).
+     * @param string $formid Identifiant du formulaire (utile si plusieurs filtres sur la même page).
      */
     public function __construct($url, $divid = "container", $params = array(), $formid = "")
     {
+        // --- Normalisation de l’URL de base ---
         if (strpos($url, "?") === false) {
-            /* Add extra ? needed to build the URL */
+            // L’URL n’a pas encore de paramètres → on ajoute "?"
             $this->url = $url . "?";
         } else {
-            /* Add extra & needed to build the URL */
-            $this->url = $url . "&";
+            // L’URL contient déjà des paramètres → on ajoute "&"
+            $this->url = rtrim($url, '&') . "&";
         }
+
         $this->divid = $divid;
         $this->formid = $formid;
         $this->refresh = 0;
-        $this->params = '';
-        foreach ($params as $k => $v) {
-            $this->params .= "&" . $k . "=" . $v;
+
+        // --- Conversion sécurisée des paramètres ---
+        if (is_array($params)) {
+            $this->params = http_build_query($params);
+        } elseif (is_string($params)) {
+            // Si déjà une chaîne, on la garde telle quelle
+            $this->params = ltrim($params, '&');
+        } else {
+            $this->params = '';
         }
 
-        // get the current module pages
-        if (isset($_GET["module"])) {
-            $__module = $_GET["module"];
-        } else {
-            $__module = "default";
-        }
-        if (isset($_GET["submod"])) {
-            $__submod = $_GET["submod"];
-        } else {
-            $__submod = "default";
-        }
-        if (isset($_GET["action"])) {
-            $__action = $_GET["action"];
-        } else {
-            $__action = "default";
-        }
-        if (isset($_GET['tab'])) {
-            $__tab = $_GET['tab'];
-        } else {
-            $__tab = "default";
-        }
-        $extra = "";
-        foreach ($_GET as $key => $value) {
-            if (!in_array($key, array('module', 'submod', 'tab', 'action', 'filter', 'start', 'end', 'maxperpage'))) {
-                $extra .= $key . "_". $value;
+        // --- Ajout correct des paramètres à l’URL ---
+        if (!empty($this->params)) {
+            // Vérifie si l’URL finit déjà par '?' ou '&' pour éviter une concaténation collée
+            $lastChar = substr($this->url, -1);
+            if ($lastChar !== '?' && $lastChar !== '&') {
+                $this->url .= '&';
             }
+            $this->url .= $this->params;
         }
-        // then get our filter info
-        if (isset($_SESSION[$__module . "_" . $__submod . "_" . $__action . "_" . $__tab . "_filter_" . $extra])) {
-            $this->storedfilter = $_SESSION[$__module . "_" . $__submod . "_" . $__action . "_" . $__tab . "_filter_" . $extra];
+
+        // --- Gestion du contexte courant pour stockage du filtre en session ---
+        $module  = $_GET["module"] ?? "default";
+        $submod  = $_GET["submod"] ?? "default";
+        $action  = $_GET["action"] ?? "default";
+        $tab     = $_GET["tab"] ?? "default";
+
+        // Construction d’un identifiant unique de contexte
+        // $extra = "";
+        // foreach ($_GET as $key => $value) {
+        //     if (!in_array($key, ['module', 'submod', 'tab', 'action', 'filter', 'start', 'end', 'maxperpage'])) {
+        //         $extra .= $key . "_" . $value;
+        //     }
+        // }
+$extra = "";
+foreach ($_GET as $key => $value) {
+    if (!in_array($key, ['module', 'submod', 'tab', 'action', 'filter', 'start', 'end', 'maxperpage'])) {
+        if (is_array($value)) {
+            $value = implode(",", $value); // ou json_encode($value);
         }
-        if (isset($_SESSION[$__module . "_" . $__submod . "_" . $__action . "_" . $__tab . "_maxperpage_" . $extra])) {
-            $this->storedmax = $_SESSION[$__module . "_" . $__submod . "_" . $__action . "_" . $__tab . "_maxperpage_" . $extra];
-        }
-        if (isset($_SESSION[$__module . "_" . $__submod . "_" . $__action . "_" . $__tab . "_start_" . $extra])) {
-            $this->storedstart = $_SESSION[$__module . "_" . $__submod . "_" . $__action . "_" . $__tab . "_start_" . $extra];
-        }
-        if (isset($_SESSION[$__module . "_" . $__submod . "_" . $__action . "_" . $__tab . "_end_" . $extra])) {
-            $this->storedend = $_SESSION[$__module . "_" . $__submod . "_" . $__action . "_" . $__tab . "_end_" . $extra];
-        }
+        $extra .= $key . "_" . $value;
+    }
+}
+        // --- Récupération des valeurs en session (filtres, pagination, etc.) ---
+        $session_prefix = "{$module}_{$submod}_{$action}_{$tab}_{$extra}_";
+
+        $this->storedfilter = $_SESSION[$session_prefix . "filter"]      ?? null;
+        $this->storedmax    = $_SESSION[$session_prefix . "maxperpage"]  ?? null;
+        $this->storedstart  = $_SESSION[$session_prefix . "start"]       ?? null;
+        $this->storedend    = $_SESSION[$session_prefix . "end"]         ?? null;
     }
 
     /**
@@ -1786,7 +1797,9 @@ class AjaxFilter extends HtmlElement
                  * Update div
                  */
         <?php
-        $url = $this->url . "filter='+encodeURIComponent(document.Form" . $this->formid . ".param.value)+'&maxperpage='+maxperpage+'" . $this->params;
+        $url = $this->url . "filter='+encodeURIComponent(document.Form" . $this->formid . ".param.value)+'&maxperpage='+maxperpage+'" .
+                    (empty($this->params) ? "" : "&" . ltrim($this->params, "&"));
+
         if (isset($this->storedstart) && isset($this->storedend)) {
             $url .= "&start=" . $this->storedstart . "&end=" . $this->storedend;
         }
@@ -1819,7 +1832,11 @@ class AjaxFilter extends HtmlElement
                         maxperpage = jQuery('#maxperpage').val();
 
                     jQuery.ajax({
-                        'url': '<?php echo $this->url; ?>filter=' + filter + '&start=' + start + '&end=' + end + '&maxperpage=' + maxperpage + '<?php echo $this->params ?>',
+                       'url': '<?php echo $this->url; ?>filter=' + filter
+                            + '&start=' + start
+                            + '&end=' + end
+                            + '&maxperpage=' + maxperpage
+                            + '<?php echo (empty($this->params) ? "" : "&" . ltrim($this->params, "&")); ?>',
                         type: 'get',
                         success: function(data) {
                             jQuery("#<?php echo $this->divid; ?>").html(data);
@@ -2118,6 +2135,8 @@ class AjaxFilterLocation extends AjaxFilter
 
 }
 
+
+/** NEW ajaxLocation */
 class AjaxLocation extends AjaxFilterLocation
 {
     public function __construct($url, $divid = "container", $paramname = 'location', $params = array())
@@ -2126,6 +2145,7 @@ class AjaxLocation extends AjaxFilterLocation
         $this->location = new SelectItem($paramname, 'pushSearchLocation', 'searchfieldreal noborder');
         $this->onchange = "pushSearchLocation(); return false;";
     }
+
     public function display($arrParam = array())
     {
         global $conf;
@@ -2136,59 +2156,86 @@ class AjaxLocation extends AjaxFilterLocation
                 <span id="searchSpan" class="searchbox">
                     <?php foreach ($this->checkbox as $checkbox) {
                         $checkbox->display();
-                    }
-        ?>
+                    } ?>
                     <span class="locationtext">&nbsp;<?php echo _("Select entity") ?>:&nbsp;</span>
                     <span class="locationfield">
                         <?php
-            $this->location->display();
-        ?>
+                        // Le <select> est affiché par SelectItem
+                        $this->location->display();
+                        ?>
                     </span>
                 </span>
                 <img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" />
             </div>
 
-
             <script type="text/javascript">
                 /**
-                 * update div with user
-                 */
-                function updateSearchLocation() {
-                    /*add checkbox param*/
-                    var strCheckbox ="";
-                    jQuery(".checkboxsearch").each(function() {
-                        if (jQuery(this).is(":checked")) {
-                            strCheckbox+='&'+jQuery(this).attr('id')+"=true";
-                        }
-                    });
-                    launch--;
-                    if (launch == 0) {
-                        jQuery.ajax({
-                            'url': '<?php echo $this->url; ?><?php echo $this->params ?>&<?php echo $this->paramname ?>=' + document.FormLocation.<?php echo $this->paramname ?>.value + strCheckbox,
-                            type: 'get',
-                            success: function(data) {
-                                jQuery("#<?php echo $this->divid; ?>").html(data);
-                            }
-                        });
+                * Parse une querystring ("a=1&b=2") en objet {a:1, b:2}
+                */
+                function parseQuery(qs) {
+                    var params = {};
+                    qs = qs.replace(/^\?/, ''); // enlève le "?" si présent
+                    var pairs = qs.split("&");
+                    for (var i=0; i<pairs.length; i++) {
+                        if (!pairs[i]) continue;
+                        var parts = pairs[i].split("=");
+                        var key = decodeURIComponent(parts[0] || "");
+                        var val = decodeURIComponent(parts[1] || "");
+                        params[key] = val;
+                    }
+                    return params;
+                }
 
+            function updateSearchLocation() {
+                /* add checkbox param */
+                var strCheckbox ="";
+                jQuery(".checkboxsearch").each(function() {
+                    if (jQuery(this).is(":checked")) {
+                        strCheckbox+='&'+jQuery(this).attr('id')+"=true";
+                    }
+                });
+
+                // Récupère l’option sélectionnée
+                var selectedVal = jQuery("#<?php echo $this->paramname; ?>").val();
+                var strSelected = "";
+
+                if (selectedVal) {
+                    // Parse la querystring contenue dans value
+                    var parsed = parseQuery(selectedVal);
+
+                    // Construit selected_location[clé]=valeur
+                    for (var k in parsed) {
+                        if (parsed.hasOwnProperty(k)) {
+                            strSelected += "&<?php echo $this->paramname; ?>["+k+"]="+encodeURIComponent(parsed[k]);
+                        }
                     }
                 }
-                /**
-                 * wait 500ms and update search
-                 */
+
+                launch--;
+                if (launch == 0) {
+                    jQuery.ajax({
+                        'url': '<?php echo $this->url; ?><?php echo $this->params ?>' + strSelected + strCheckbox,
+                        type: 'get',
+                        success: function(data) {
+                            jQuery("#<?php echo $this->divid; ?>").html(data);
+                        }
+                    });
+                }
+            }
 
                 function pushSearchLocation() {
                     launch++;
-                    setTimeout("updateSearchLocation()", 500);
+                    setTimeout(updateSearchLocation, 500);
                 }
+
+                // Premier chargement
                 pushSearchLocation();
             </script>
-
         </form>
         <?php
     }
-
 }
+
 class Checkbox
 {
     public function __construct($paramname, $description)
@@ -2413,16 +2460,39 @@ class SideMenu
      *  @return return the Css content for a sidebar
      *  static method to get SideBarCss String
      */
+    // public function getSideBarCss()
+    // {
+    //     $css = "";
+    //     foreach ($this->itemArray as $objSideMenuItem) {
+    //         $active = (($objSideMenuItem->submod == $_GET["submod"])
+    //         && (($objSideMenuItem->action == $_GET["action"]) ||
+    //         ($objSideMenuItem->action == $this->activatedItem)));
+    //         $css = $css . $objSideMenuItem->getCss($active);
+    //     }
+    //     if ($this->backgroundImage) {
+    //         $css .= "#sectionContainer { background-image: url(" . $this->backgroundImage . ") }";
+    //     }
+    //     return $css;
+    // }
     public function getSideBarCss()
     {
         $css = "";
+        $submod = $_GET["submod"] ?? "";
+        $action = $_GET["action"] ?? "";
+
         foreach ($this->itemArray as $objSideMenuItem) {
-            $active = (($objSideMenuItem->submod == $_GET["submod"]) && (($objSideMenuItem->action == $_GET["action"]) || ($objSideMenuItem->action == $this->activatedItem)));
-            $css = $css . $objSideMenuItem->getCss($active);
+            $active = (
+                ($objSideMenuItem->submod == $submod)
+                && (($objSideMenuItem->action == $action)
+                || ($objSideMenuItem->action == $this->activatedItem))
+            );
+            $css .= $objSideMenuItem->getCss($active);
         }
+
         if ($this->backgroundImage) {
             $css .= "#sectionContainer { background-image: url(" . $this->backgroundImage . ") }";
         }
+
         return $css;
     }
 
@@ -2945,30 +3015,75 @@ class WarningMessage extends Message
  * @param $param assoc array with param to add in GET method
  * @param $ampersandEncode bool defining if we want ampersand to be encoded in URL
  */
+// function urlStr($link, $param = array(), $ampersandEncode = true)
+// {
+//     $arr = array();
+//     $arr = explode('/', $link);
+//
+//     if ($ampersandEncode) {
+//         $amp = "&amp;";
+//     } else {
+//         $amp = "&";
+//     }
+//
+//     $enc_param = "";
+//     foreach ($param as $key => $value) {
+//         $enc_param .= "$amp" . "$key=$value";
+//     }
+//     if (safeCount($arr) == 3) {
+//         $ret = "main.php?module=" . $arr[0] . "$amp" . "submod=" . $arr[1] . "$amp" . "action=" . $arr[2] . $enc_param;
+//     } elseif (safeCount($arr) == 4) {
+//         $ret = "main.php?module=" . $arr[0] . "$amp" . "submod=" . $arr[1] . "$amp" . "action=" . $arr[2] . "$amp" . "tab=" . $arr[3] . $enc_param;
+//     } else {
+//         die("Can't build URL");
+//     }
+//
+//     return $ret;
+// }
+
+/**
+ * Retourne un nouveau tableau sans les clés spécifiées.
+ *
+ * @param array|null $array Tableau à filtrer (par défaut $_GET)
+ * @param array|null $keysToRemove Clés à supprimer (par défaut ['module', 'submod', 'action'])
+ * @return array Nouveau tableau filtré
+ */
+function getFilteredGetParams(?array $array = null, ?array $keysToRemove = null): array
+{
+    // Définir le tableau à filtrer
+    $array = $array ?? $_GET;
+
+    // Définir les clés à supprimer (par défaut)
+    $keysToRemove = $keysToRemove ?? ['module', 'submod', 'action' ];
+
+    // Retourner un nouveau tableau sans les clés indésirables
+    return array_diff_key($array, array_flip($keysToRemove));
+}
+
+
+
 function urlStr($link, $param = array(), $ampersandEncode = true)
 {
-    $arr = array();
     $arr = explode('/', $link);
+    $amp = $ampersandEncode ? "&amp;" : "&";
 
-    if ($ampersandEncode) {
-        $amp = "&amp;";
-    } else {
-        $amp = "&";
-    }
-
-    $enc_param = "";
-    foreach ($param as $key => $value) {
-        $enc_param .= "$amp" . "$key=$value";
-    }
-    if (safeCount($arr) == 3) {
-        $ret = "main.php?module=" . $arr[0] . "$amp" . "submod=" . $arr[1] . "$amp" . "action=" . $arr[2] . $enc_param;
-    } elseif (safeCount($arr) == 4) {
-        $ret = "main.php?module=" . $arr[0] . "$amp" . "submod=" . $arr[1] . "$amp" . "action=" . $arr[2] . "$amp" . "tab=" . $arr[3] . $enc_param;
+    // Construction de la base de l'URL selon le nombre d'éléments
+    if (count($arr) == 3) {
+        $baseUrl = "main.php?module={$arr[0]}{$amp}submod={$arr[1]}{$amp}action={$arr[2]}";
+    } elseif (count($arr) == 4) {
+        $baseUrl = "main.php?module={$arr[0]}{$amp}submod={$arr[1]}{$amp}action={$arr[2]}{$amp}tab={$arr[3]}";
     } else {
         die("Can't build URL");
     }
 
-    return $ret;
+    // Ajout des paramètres supplémentaires avec http_build_query
+    if (!empty($param)) {
+        $queryString = http_build_query($param);
+        // Remplace le premier '&' par le séparateur choisi ($amp)
+        $baseUrl .= $amp . str_replace('&', $amp, $queryString);
+    }
+
+    return $baseUrl;
 }
 
 function urlStrRedirect($link, $param = array())
@@ -3619,8 +3734,478 @@ class AjaxPage extends HtmlElement
         </script>
 EOT;
     }
-
 }
+
+class AjaxPagebar extends AjaxPage
+{
+    protected $progressBarId;
+
+    public function __construct($url, $id = "container", $params = array(), $refresh = 10, $progressBarId = "progressBarContainer")
+    {
+        parent::__construct($url, $id, $params, $refresh);
+        $this->progressBarId = $progressBarId;
+    }
+
+    public function display($arrParam = array())
+    {
+        echo <<< EOT
+        <div id="{$this->id}" class="{$this->class}"></div>
+        <div id="{$this->progressBarId}" style="width: 100%; background-color: #f3f3f3; margin-top: 5px;">
+            <div id="{$this->progressBarId}_bar" style="width: 100%; height: 20px; background-color: #4CAF50; text-align: center; line-height: 20px; color: white;"></div>
+        </div>
+        <script type="text/javascript">
+        var remainingTime_{$this->id} = {$this->refresh};
+        var timerInterval_{$this->id};
+
+        function updateProgressBar_{$this->id}() {
+            var percent = (remainingTime_{$this->id} / {$this->refresh}) * 100;
+            jQuery("#{$this->progressBarId}_bar").width(percent + "%");
+            jQuery("#{$this->progressBarId}_bar").text("Rafraîchissement dans " + remainingTime_{$this->id} + "s");
+        }
+
+        function update_{$this->id}(){
+            clearInterval(timerInterval_{$this->id});
+            remainingTime_{$this->id} = {$this->refresh};
+            updateProgressBar_{$this->id}();
+
+            jQuery.ajax({
+                'url': '{$this->url}',
+                type: 'get',
+                data: {$this->params},
+                success: function(data){
+                    jQuery("#{$this->id}").html(data);
+                    timerInterval_{$this->id} = setInterval(function() {
+                        remainingTime_{$this->id}--;
+                        updateProgressBar_{$this->id}();
+                        if (remainingTime_{$this->id} <= 0) {
+                            clearInterval(timerInterval_{$this->id});
+                        }
+                    }, 1000);
+                    setTimeout('update_{$this->id}()',1000*{$this->refresh});
+                }
+            });
+        }
+        update_{$this->id}();
+        </script>
+EOT;
+    }
+}
+
+class AjaxPagerefreshanim extends AjaxPage
+{
+    protected $animationContainerId;
+
+    public function __construct($url, $id = "container", $params = array(), $refresh = 10, $animationContainerId = "refreshAnimationContainer")
+    {
+        parent::__construct($url, $id, $params, $refresh);
+        $this->animationContainerId = $animationContainerId;
+    }
+
+    public function display($arrParam = array())
+    {
+        echo <<< EOT
+        <style>
+            #{$this->animationContainerId} {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-top: 10px;
+                font-family: Arial, sans-serif;
+            }
+            .pulse-circle {
+                width: 20px;
+                height: 20px;
+                background-color: #4CAF50;
+                border-radius: 50%;
+                margin-right: 10px;
+                animation: pulse 1.5s infinite;
+            }
+            @keyframes pulse {
+                0% { transform: scale(1); opacity: 1; }
+                50% { transform: scale(1.5); opacity: 0.7; }
+                100% { transform: scale(1); opacity: 1; }
+            }
+            #{$this->animationContainerId}_text {
+                font-size: 14px;
+                color: #555;
+            }
+        </style>
+        <div id="{$this->id}" class="{$this->class}"></div>
+        <div id="{$this->animationContainerId}">
+            <div class="pulse-circle"></div>
+            <div id="{$this->animationContainerId}_text">Rafraîchissement dans {$this->refresh}s</div>
+        </div>
+        <script type="text/javascript">
+        var remainingTime_{$this->id} = {$this->refresh};
+        var timerInterval_{$this->id};
+
+        function updateAnimationText_{$this->id}() {
+            jQuery("#{$this->animationContainerId}_text").text("Rafraîchissement dans " + remainingTime_{$this->id} + "s");
+        }
+
+        function update_{$this->id}(){
+            clearInterval(timerInterval_{$this->id});
+            remainingTime_{$this->id} = {$this->refresh};
+            updateAnimationText_{$this->id}();
+
+            jQuery.ajax({
+                'url': '{$this->url}',
+                type: 'get',
+                data: {$this->params},
+                success: function(data){
+                    jQuery("#{$this->id}").html(data);
+                    timerInterval_{$this->id} = setInterval(function() {
+                        remainingTime_{$this->id}--;
+                        updateAnimationText_{$this->id}();
+                        if (remainingTime_{$this->id} <= 0) {
+                            clearInterval(timerInterval_{$this->id});
+                        }
+                    }, 1000);
+                    setTimeout('update_{$this->id}()',1000*{$this->refresh});
+                }
+            });
+        }
+        update_{$this->id}();
+        </script>
+EOT;
+    }
+}
+
+class AjaxPagetimebar extends AjaxPage
+{
+    protected $progressBarId;
+
+    public function __construct($url, $id = "container", $params = array(), $refresh = 10, $progressBarId = "progressBarContainer")
+    {
+        parent::__construct($url, $id, $params, $refresh);
+        $this->progressBarId = $progressBarId;
+    }
+
+    public function display($arrParam = array())
+    {
+        echo <<< EOT
+        <style>
+            #{$this->progressBarId} {
+                width: 100%;
+                background-color: #f0f0f0;
+                border-radius: 10px;
+                margin-top: 10px;
+                overflow: hidden;
+                box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+            }
+            #{$this->progressBarId}_bar {
+                width: 100%;
+                height: 20px;
+                background: linear-gradient(90deg, #4CAF50, #8BC34A);
+                border-radius: 10px;
+                text-align: center;
+                line-height: 20px;
+                color: white;
+                font-family: Arial, sans-serif;
+                font-size: 12px;
+                transition: width 0.3s ease;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            }
+        </style>
+        <div id="{$this->id}" class="{$this->class}"></div>
+        <div id="{$this->progressBarId}">
+            <div id="{$this->progressBarId}_bar">Rafraîchissement dans {$this->refresh}s</div>
+        </div>
+        <script type="text/javascript">
+        var remainingTime_{$this->id} = {$this->refresh};
+        var timerInterval_{$this->id};
+
+        function updateProgressBar_{$this->id}() {
+            var percent = (remainingTime_{$this->id} / {$this->refresh}) * 100;
+            jQuery("#{$this->progressBarId}_bar").width(percent + "%");
+            jQuery("#{$this->progressBarId}_bar").text("Rafraîchissement dans " + remainingTime_{$this->id} + "s");
+        }
+
+        function update_{$this->id}(){
+            clearInterval(timerInterval_{$this->id});
+            remainingTime_{$this->id} = {$this->refresh};
+            updateProgressBar_{$this->id}();
+
+            jQuery.ajax({
+                'url': '{$this->url}',
+                type: 'get',
+                data: {$this->params},
+                success: function(data){
+                    jQuery("#{$this->id}").html(data);
+                    timerInterval_{$this->id} = setInterval(function() {
+                        remainingTime_{$this->id}--;
+                        updateProgressBar_{$this->id}();
+                        if (remainingTime_{$this->id} <= 0) {
+                            clearInterval(timerInterval_{$this->id});
+                        }
+                    }, 1000);
+                    setTimeout('update_{$this->id}()',1000*{$this->refresh});
+                }
+            });
+        }
+        update_{$this->id}();
+        </script>
+EOT;
+    }
+}
+
+
+class AjaxPageAdminTime extends AjaxPage
+{
+    protected $animationContainerId;
+
+    public function __construct($url, $id = "container", $params = array(), $refresh = 10, $animationContainerId = "circularProgressContainer")
+    {
+        parent::__construct($url, $id, $params, $refresh);
+        $this->animationContainerId = $animationContainerId;
+    }
+
+    public function display($arrParam = array())
+    {
+        echo <<< EOT
+        <style>
+            .circular-progress-container {
+                display: inline-flex;
+                align-items: center;
+                vertical-align: middle;
+                margin-left: 8px;
+            }
+            .circular-progress {
+                position: relative;
+                width: 20px;
+                height: 20px;
+                border-radius: 50%;
+                background: conic-gradient(#4CAF50 0%, #e0e0e0 0%);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: background 0.3s ease;
+            }
+            .circular-progress::before {
+                content: "";
+                position: absolute;
+                width: 16px;
+                height: 16px;
+                border-radius: 50%;
+                background: white;
+            }
+            .circular-progress-text {
+                font-size: 8px;
+                font-weight: bold;
+                color: #555;
+                z-index: 1;
+            }
+            #{$this->animationContainerId} {
+                position: relative;
+                width: 20px;
+                height: 20px;
+                margin: 0 auto 10px;
+            }
+        </style>
+        <div id="{$this->id}" class="{$this->class}"></div>
+        <script type="text/javascript">
+        var remainingTime_{$this->id} = {$this->refresh};
+        var timerInterval_{$this->id} = null;
+        var isFirstLoad_{$this->id} = true;
+
+        function updateCircularProgress_{$this->id}() {
+            var percent = (remainingTime_{$this->id} / {$this->refresh}) * 100;
+            var angle = (360 * percent) / 100;
+            jQuery("#{$this->animationContainerId}_progress").css("background", "conic-gradient(#4CAF50 " + angle + "deg, #e0e0e0 0deg)");
+            jQuery("#{$this->animationContainerId}_text").text(remainingTime_{$this->id});
+        }
+
+        function update_{$this->id}(){
+            if (timerInterval_{$this->id} !== null) {
+                clearInterval(timerInterval_{$this->id});
+            }
+
+            remainingTime_{$this->id} = {$this->refresh};
+            updateCircularProgress_{$this->id}();
+
+            jQuery.ajax({
+                'url': '{$this->url}',
+                type: 'get',
+                data: {$this->params},
+                success: function(data){
+                    jQuery("#{$this->id}").html(data);
+
+                    if (isFirstLoad_{$this->id}) {
+                        var firstH2 = jQuery("h2").first();
+                        if (firstH2.length > 0) {
+                            var progressHTML = `
+                                <span class="circular-progress-container" id="{$this->animationContainerId}">
+                                    <div class="circular-progress" id="{$this->animationContainerId}_progress">
+                                        <div class="circular-progress-text" id="{$this->animationContainerId}_text">{$this->refresh}</div>
+                                    </div>
+                                </span>
+                            `;
+                            firstH2.append(progressHTML);
+                        } else {
+                            var progressHTML = `
+                                <div id="{$this->animationContainerId}" style="position: relative; width: 20px; height: 20px; margin: 0 auto 10px;">
+                                    <div class="circular-progress" id="{$this->animationContainerId}_progress">
+                                        <div class="circular-progress-text" id="{$this->animationContainerId}_text">{$this->refresh}</div>
+                                    </div>
+                                </div>
+                            `;
+                            jQuery("#{$this->id}").before(progressHTML);
+                        }
+                        isFirstLoad_{$this->id} = false;
+                    }
+
+                    timerInterval_{$this->id} = setInterval(function() {
+                        remainingTime_{$this->id}--;
+                        updateCircularProgress_{$this->id}();
+                        if (remainingTime_{$this->id} <= 0) {
+                            clearInterval(timerInterval_{$this->id});
+                        }
+                    }, 1000);
+
+                    setTimeout(function() {
+                        update_{$this->id}();
+                    }, 1000 * {$this->refresh});
+                }
+            });
+        }
+
+        update_{$this->id}();
+        </script>
+EOT;
+    }
+}
+
+class AjaxPagebartitlletime extends AjaxPage
+{
+    protected $animationContainerId;
+
+    public function __construct($url, $id = "container", $params = array(), $refresh = 10, $animationContainerId = "circularProgressContainer")
+    {
+        parent::__construct($url, $id, $params, $refresh);
+        $this->animationContainerId = $animationContainerId;
+    }
+
+    public function display($arrParam = array())
+    {
+        echo <<< EOT
+        <style>
+            .circular-progress-container {
+                display: inline-flex;
+                align-items: center;
+                vertical-align: middle;
+                margin-left: 10px;
+            }
+            .circular-progress {
+                position: relative;
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+                background: conic-gradient(#4CAF50 0%, #e0e0e0 0%);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: background 0.3s ease;
+            }
+            .circular-progress::before {
+                content: "";
+                position: absolute;
+                width: 24px;
+                height: 24px;
+                border-radius: 50%;
+                background: white;
+            }
+            .circular-progress-text {
+                font-size: 10px;
+                font-weight: bold;
+                color: #555;
+                z-index: 1;
+            }
+            #{$this->animationContainerId} {
+                position: relative;
+                width: 60px;
+                height: 60px;
+                margin: 0 auto 10px;
+            }
+        </style>
+        <div id="{$this->id}" class="{$this->class}"></div>
+        <script type="text/javascript">
+        var remainingTime_{$this->id} = {$this->refresh};
+        var timerInterval_{$this->id} = null;
+        var isFirstLoad_{$this->id} = true;
+
+        function updateCircularProgress_{$this->id}() {
+            var percent = (remainingTime_{$this->id} / {$this->refresh}) * 100;
+            var angle = (360 * percent) / 100;
+            jQuery("#{$this->animationContainerId}_progress").css("background", "conic-gradient(#4CAF50 " + angle + "deg, #e0e0e0 0deg)");
+            jQuery("#{$this->animationContainerId}_text").text(remainingTime_{$this->id});
+        }
+
+        function update_{$this->id}(){
+            // Nettoyage de l'intervalle précédent
+            if (timerInterval_{$this->id} !== null) {
+                clearInterval(timerInterval_{$this->id});
+            }
+
+            remainingTime_{$this->id} = {$this->refresh};
+            updateCircularProgress_{$this->id}();
+
+            jQuery.ajax({
+                'url': '{$this->url}',
+                type: 'get',
+                data: {$this->params},
+                success: function(data){
+                    jQuery("#{$this->id}").html(data);
+
+                    // Intégration dynamique dans le premier <h2> s'il existe
+                    if (isFirstLoad_{$this->id}) {
+                        var firstH2 = jQuery("h2").first();
+                        if (firstH2.length > 0) {
+                            var progressHTML = `
+                                <span class="circular-progress-container" id="{$this->animationContainerId}">
+                                    <div class="circular-progress" id="{$this->animationContainerId}_progress">
+                                        <div class="circular-progress-text" id="{$this->animationContainerId}_text">{$this->refresh}</div>
+                                    </div>
+                                </span>
+                            `;
+                            firstH2.append(progressHTML);
+                        } else {
+                            var progressHTML = `
+                                <div id="{$this->animationContainerId}" style="position: relative; width: 60px; height: 60px; margin: 0 auto 10px;">
+                                    <div class="circular-progress" id="{$this->animationContainerId}_progress">
+                                        <div class="circular-progress-text" id="{$this->animationContainerId}_text">{$this->refresh}</div>
+                                    </div>
+                                </div>
+                            `;
+                            jQuery("#{$this->id}").before(progressHTML);
+                        }
+                        isFirstLoad_{$this->id} = false;
+                    }
+
+                    // Démarrage du timer
+                    timerInterval_{$this->id} = setInterval(function() {
+                        remainingTime_{$this->id}--;
+                        updateCircularProgress_{$this->id}();
+                        if (remainingTime_{$this->id} <= 0) {
+                            clearInterval(timerInterval_{$this->id});
+                        }
+                    }, 1000);
+
+                    // Prochain rafraîchissement
+                    setTimeout(function() {
+                        update_{$this->id}();
+                    }, 1000 * {$this->refresh});
+                }
+            });
+        }
+
+        // Initialisation
+        update_{$this->id}();
+        </script>
+EOT;
+    }
+}
+
+
 
 class medulla_progressbar extends HtmlElement
 {

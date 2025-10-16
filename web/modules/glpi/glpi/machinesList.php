@@ -49,7 +49,6 @@ if ($computerpresence == "no_presence") echo "checked";
 echo ' id="namepresence3" name="namepresence" value="no_presence"/> ';
 echo '<label for="namepresence3" style="display:initial;">'._('Offline computers').'</label>';
 
-$ajax = new AjaxFilterParamssearch(urlStrRedirect("base/computers/ajaxMachinesList"));
 
         $chaine = array(
         'id'                    => _T("Machine ID", 'xmppmaster'),
@@ -92,6 +91,7 @@ $ajax = new AjaxFilterParamssearch(urlStrRedirect("base/computers/ajaxMachinesLi
         'gateway'               => _T("Gateway address" , 'xmppmaster'));
 
 
+$ajax = new AjaxFilterParamssearch(urlStrRedirect("base/computers/ajaxMachinesList",$chaine) );
 $ajax->setfieldsearch(array_flip ($chaine ));
 
 list($list, $values) = getEntitiesSelectableElements();

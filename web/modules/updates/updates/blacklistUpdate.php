@@ -26,7 +26,7 @@ $updateid = $_GET['updateid'];
 // var_dump($updateid);
 // exit;
 
-header('location: '.urlStrRedirect("updates/updates/updatesListWin"));
+header('location: '.urlStrRedirect("updates/updates/updatesListWin", getFilteredGetParams()));
 
 
 ?>

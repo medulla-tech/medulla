@@ -100,6 +100,7 @@ class ContextMaker(ContextMakerI):
         s.session = self.session
         return s
 
+
 class RpcProxy(RpcProxyI):
     ##
     # machines
@@ -110,6 +111,9 @@ class RpcProxy(RpcProxyI):
 
         # init resultarray with default datas
         # init entitiesarray with entities ids, this will be used in the "in" sql clause
+        logger.error(f"Parametres entities {entities}")
+        logger.error(f"Parametres source {source}")
+
         resultarray = {}
         for entity in entities:
             eid = entity["uuid"].replace("UUID", "")
@@ -234,16 +238,16 @@ def test_xmppmaster():
     return UpdatesDatabase().test_xmppmaster()
 
 
-def get_grey_list(start, end, filter=""):
-    return UpdatesDatabase().get_grey_list(start, end, filter)
+def get_grey_list(start, end, filter="", entityid=None):
+    return UpdatesDatabase().get_grey_list(start, end, filter, entityid = entityid)
 
 
-def get_white_list(start, end, filter=""):
-    return UpdatesDatabase().get_white_list(start, end, filter)
+def get_white_list(start, end, filter="", entityid=None):
+    return UpdatesDatabase().get_white_list(start, end, filter, entityid = entityid )
 
 
-def get_black_list(start, end, filter=""):
-    return UpdatesDatabase().get_black_list(start, end, filter)
+def get_black_list(start, end, filter="", entityid=None):
+    return UpdatesDatabase().get_black_list(start, end, filter, entityid = entityid)
 
 
 def get_enabled_updates_list(entity, upd_list="gray", start=0, end=-1, filter=""):
@@ -258,32 +262,32 @@ def get_enabled_updates_list(entity, upd_list="gray", start=0, end=-1, filter=""
     return datas
 
 
-def get_family_list(start, end, filter=""):
-    return UpdatesDatabase().get_family_list(start, end, filter)
+def get_family_list(start, end, filter="", entityid=-1):
+    return UpdatesDatabase().get_family_list(start, end, filter, entityid)
 
 
-def approve_update(updateid):
-    return UpdatesDatabase().approve_update(updateid)
+def approve_update(updateid, entityid):
+    return UpdatesDatabase().approve_update(updateid, entityid)
 
 
-def grey_update(updateid, enabled=0):
-    return UpdatesDatabase().grey_update(updateid, enabled)
+def grey_update(updateid, entityid, enabled=0):
+    return UpdatesDatabase().grey_update(updateid, entityid, enabled)
 
 
-def exclude_update(updateid):
-    return UpdatesDatabase().exclude_update(updateid)
+def exclude_update(updateid, entityid):
+    return UpdatesDatabase().exclude_update(updateid, entityid)
 
 
-def get_count_machine_as_not_upd(updateid):
-    return UpdatesDatabase().get_count_machine_as_not_upd(updateid)
+def get_count_machine_as_not_upd(updateid, entityid=-1):
+    return UpdatesDatabase().get_count_machine_as_not_upd(updateid, entityid )
 
 
-def delete_rule(id):
-    return UpdatesDatabase().delete_rule(id)
+def delete_rule(id, entityid):
+    return UpdatesDatabase().delete_rule(id, entityid)
 
 
-def white_unlist_update(updateid):
-    return UpdatesDatabase().white_unlist_update(updateid)
+def white_unlist_update(updateid, entityid):
+    return UpdatesDatabase().white_unlist_update(updateid, entityid)
 
 
 def get_machine_with_update(kb, updateid, uuid, start=0, limit=-1, filter=""):
