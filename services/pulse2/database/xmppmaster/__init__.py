@@ -6560,127 +6560,51 @@ class XmppMasterDatabase(DatabaseHelper):
             It returns all the deployment done by a user.
             If intervalsearch is not used it is by default in the last 24 hours.
         """
-        deploylog = session.query(Deploy)
-        # Do not show convergence deploy
-        deploylog = deploylog.filter(~Deploy.title.like("%Convergence%"))
-        deploylog = deploylog.filter(
-            Deploy.sessionid.like("%s%%" % typedeploy))
-        if login:
-            deploylog = deploylog.filter(Deploy.login == login)
-        if state:
-            deploylog = deploylog.filter(Deploy.state == state)
+        try:
+            window_sec = 24 * 3600 if intervalsearch is None else int(intervalsearch)
+        except Exception:
+            window_sec = 24 * 3600
 
-        if intervalsearch:
-            deploylog = deploylog.filter(
-                Deploy.start >= (datetime.now() -
-                                 timedelta(seconds=intervalsearch))
+        q = session.query(Deploy).filter(
+            ~Deploy.title.like("%Convergence%"),
+            Deploy.sessionid.like(f"{typedeploy}%"),
+        )
+
+        if window_sec > 0:
+            q = q.filter(
+                Deploy.start >= func.date_sub(func.now(), text(f"INTERVAL {window_sec} SECOND"))
             )
+
+        if login:
+            q = q.filter(Deploy.login == login)
+        if state:
+            q = q.filter(Deploy.state == state)
 
         if filt:
-            deploylog = deploylog.filter(
+            like = f"%{filt}%"
+            q = q.filter(
                 or_(
-                    Deploy.state.like("%%%s%%" % (filt)),
-                    Deploy.pathpackage.like("%%%s%%" % (filt)),
-                    Deploy.start.like("%%%s%%" % (filt)),
-                    Deploy.login.like("%%%s%%" % (filt)),
-                    Deploy.host.like("%%%s%%" % (filt)),
+                    Deploy.state.like(like),
+                    Deploy.pathpackage.like(like),
+                    func.date_format(Deploy.start, "%Y-%m-%d %H:%i:%s").like(like),
+                    Deploy.login.like(like),
+                    Deploy.host.like(like),
                 )
             )
-            if login:
-                count = """select count(*) as nb from (
-                                    select count(id) as nb
-                                    from deploy
-                                    where
-                                    sessionid like "%s%%" AND
-                                     start >= DATE_SUB(NOW(),INTERVAL 24 HOUR)
-                                    AND login like "%s"
-                                    AND (state LIKE "%%%s%%"
-                                    or pathpackage LIKE "%%%s%%"
-                                    or start LIKE "%%%s%%"
-                                    or login LIKE "%%%s%%"
-                                    or host LIKE "%%%s%%"
-                                    )
-                                    group by title
-                                    ) as x;""" % (
-                    typedeploy,
-                    login,
-                    filt,
-                    filt,
-                    filt,
-                    filt,
-                    filt,
-                )
-            else:
-                count = """select count(*) as nb from (
-                                    select count(id) as nb
-                                    from deploy
-                                    where
-                                    sessionid like "%s%%" AND
-                                     start >= DATE_SUB(NOW(),INTERVAL 24 HOUR)
-                                    AND (state LIKE "%%%s%%"
-                                    or pathpackage LIKE "%%%s%%"
-                                    or start LIKE "%%%s%%"
-                                    or login LIKE "%%%s%%"
-                                    or host LIKE "%%%s%%"
-                                    )
-                                    group by title
-                                    ) as x;""" % (
-                    typedeploy,
-                    filt,
-                    filt,
-                    filt,
-                    filt,
-                    filt,
-                )
-        else:
-            if login:
-                count = """select count(*) as nb from (
-                                    select count(id) as nb
-                                        from deploy
-                                        where
-                                    sessionid like "%s%%" AND
-                                     start >= DATE_SUB(NOW(),INTERVAL 24 HOUR)
-                                        AND login like "%s"
-                                        group by title
-                                    ) as x;""" % (
-                    typedeploy,
-                    login,
-                )
-            else:
-                count = """select count(*) as nb from (
-                                    select count(id) as nb
-                                        from deploy
-                                        where
-                                    sessionid like "%s%%" AND
-                                     start >= DATE_SUB(NOW(),INTERVAL 24 HOUR)
-                                        group by title
-                                    ) as x;""" % (
-                    typedeploy
-                )
 
-        len_query = self.get_count(deploylog)
+        total_rows = q.count()
 
-        result = session.execute(count)
-        session.commit()
-        session.flush()
-        lenrequest = [x for x in result]
+        q = q.order_by(desc(Deploy.id))
+        if minimum is not None and maximum is not None:
+            off = int(minimum)
+            lim = max(0, int(maximum) - off)
+            q = q.offset(off).limit(lim)
 
-        # len_query = session.query(func.count(distinct(Deploy.title)))[0]
-        deploylog = deploylog.group_by(Deploy.title)
+        rows = q.all()
 
-        deploylog = deploylog.order_by(desc(Deploy.id))
-
-        # deploylog = deploylog.add_column(func.count(Deploy.title))
-        if minimum and maximum:
-            deploylog = deploylog.offset(int(minimum)).limit(
-                int(maximum) - int(minimum)
-            )
-        result = deploylog.all()
-        session.commit()
-        session.flush()
         ret = {
-            "total_of_rows": 0,
-            "lentotal": 0,
+            "total_of_rows": total_rows,
+            "lentotal": total_rows,
             "tabdeploy": {
                 "state": [],
                 "pathpackage": [],
@@ -6700,36 +6624,33 @@ class XmppMasterDatabase(DatabaseHelper):
             },
         }
 
-        ret["lentotal"] = len_query  # [0]
-        ret["total_of_rows"] = lenrequest[0][0]
-        reg = "(.*)\\.(.*)@(.*)\\/(.*)"
-        for linedeploy in result:
-            if re.match(reg, linedeploy.host):
-                # New jid : name.salt@relay/macaddress
-                hostname = linedeploy.host.split(".")[0]
+        reg = r"(.*)\.(.*)@(.*)\/(.*)"
+        for d in rows:
+            raw_host = d.host or ""
+            if re.match(reg, raw_host):
+                hostname = raw_host.split(".")[0]
             else:
                 try:
-                    # Old jid : macaddress@relay/name
-                    hostname = linedeploy.host.split("/")[1]
-                except Exception as e:
-                    hostname = linedeploy.host.split(".")[0]
-            ret["tabdeploy"]["state"].append(linedeploy.state)
-            ret["tabdeploy"]["pathpackage"].append(
-                linedeploy.pathpackage.split("/")[-1]
-            )
-            ret["tabdeploy"]["sessionid"].append(linedeploy.sessionid)
-            ret["tabdeploy"]["start"].append(str(linedeploy.start))
-            ret["tabdeploy"]["inventoryuuid"].append(linedeploy.inventoryuuid)
-            ret["tabdeploy"]["command"].append(linedeploy.command)
-            ret["tabdeploy"]["login"].append(linedeploy.login)
+                    hostname = raw_host.split("/")[1]
+                except Exception:
+                    hostname = raw_host.split(".")[0] if "." in raw_host else raw_host
+
+            ret["tabdeploy"]["state"].append(d.state)
+            ret["tabdeploy"]["pathpackage"].append((d.pathpackage or "").split("/")[-1])
+            ret["tabdeploy"]["sessionid"].append(d.sessionid)
+            ret["tabdeploy"]["start"].append(str(d.start))
+            ret["tabdeploy"]["inventoryuuid"].append(d.inventoryuuid)
+            ret["tabdeploy"]["command"].append(d.command)
+            ret["tabdeploy"]["login"].append(d.login)
             ret["tabdeploy"]["host"].append(hostname)
-            ret["tabdeploy"]["macadress"].append(linedeploy.macadress)
-            ret["tabdeploy"]["group_uuid"].append(linedeploy.group_uuid)
-            ret["tabdeploy"]["startcmd"].append(linedeploy.startcmd)
-            ret["tabdeploy"]["endcmd"].append(linedeploy.endcmd)
-            ret["tabdeploy"]["jidmachine"].append(linedeploy.jidmachine)
-            ret["tabdeploy"]["jid_relay"].append(linedeploy.jid_relay)
-            ret["tabdeploy"]["title"].append(linedeploy.title)
+            ret["tabdeploy"]["macadress"].append(d.macadress)
+            ret["tabdeploy"]["group_uuid"].append(d.group_uuid)
+            ret["tabdeploy"]["startcmd"].append(d.startcmd)
+            ret["tabdeploy"]["endcmd"].append(d.endcmd)
+            ret["tabdeploy"]["jidmachine"].append(d.jidmachine)
+            ret["tabdeploy"]["jid_relay"].append(d.jid_relay)
+            ret["tabdeploy"]["title"].append(d.title)
+
         return ret
 
     @DatabaseHelper._sessionm
@@ -6920,132 +6841,71 @@ class XmppMasterDatabase(DatabaseHelper):
         Args:
             session: The SQL Alchemy session
             login: The login of the user
-            state: State of the deployment (Started, Error, etc.)
-            intervalsearch: The interval on which we search the deploys.
-            minimum: Minimum value ( for pagination )
-            maximum: Maximum value ( for pagination )
-            filt: Filter of the search
+            intervalsearch: The interval on which we search the deploys (in seconds).
+                            If None, defaults to the last 3 months.
+            minimum: Minimum value (for pagination offset)
+            maximum: Maximum value (for pagination end)
+            filt: Filter of the search (applied with LIKE)
+            typedeploy: Prefix filter on sessionid (default: "command")
+
         Returns:
-            There is 3 scenario.
-                If login is empty, this returns all the past deploys for everyone
-                If login is a string, this returns all the past deploys for this user
-                If login is a list, this returns all the past deploys for the group this user belong to.
+            There are 3 scenarios:
+                If login is empty, returns all past deploys for everyone
+                If login is a string, returns all past deploys for this user
+                If login is a list, returns all past deploys for the group this user belongs to.
         """
-        deploylog = session.query(Deploy)
-        deploylog = deploylog.filter(~Deploy.title.like("%Convergence%"))
-        deploylog = deploylog.filter(
-            Deploy.sessionid.like("%s%%" % typedeploy))
-        if login:
-            if isinstance(login, list):
-                deploylog = deploylog.filter(
-                    Deploy.login.op("regexp")("|".join(login)))
-            else:
-                deploylog = deploylog.filter(Deploy.login.like(login))
 
-        if intervalsearch:
-            deploylog = deploylog.filter(
-                Deploy.endcmd >= (
-                    datetime.now() - timedelta(seconds=intervalsearch))
-            )
-        filter_filt = ""
-        if filt:
-            deploylog = deploylog.filter(
-                or_(
-                    Deploy.state.like("%%%s%%" % (filt)),
-                    Deploy.pathpackage.like("%%%s%%" % (filt)),
-                    Deploy.start.like("%%%s%%" % (filt)),
-                    Deploy.login.like("%%%s%%" % (filt)),
-                    Deploy.host.like("%%%s%%" % (filt)),
-                )
-            )
-            filter_filt = """ AND (state LIKE '%%%s%%'
-                or pathpackage LIKE '%%%s%%'
-                or start LIKE '%%%s%%'
-                or login LIKE '%%%s%%'
-                or host LIKE '%%%s%%'
-                ) """ % (
-                filt,
-                filt,
-                filt,
-                filt,
-                filt,
-            )
+        try:
+            window_sec = 90 * 24 * 3600 if intervalsearch is None else int(intervalsearch)
+        except Exception:
+            window_sec = 90 * 24 * 3600
 
-        deploylog = deploylog.filter(
+        q = session.query(Deploy).filter(
+            ~Deploy.title.like("%Convergence%"),
+            Deploy.sessionid.like(f"{typedeploy}%"),
             or_(
                 Deploy.state == "DEPLOYMENT SUCCESS",
-                Deploy.state.startswith("ERROR"),
-                Deploy.state.startswith("ABORT"),
-            )
+                Deploy.state.like("ERROR%"),
+                Deploy.state.like("ABORT%"),
+            ),
+            Deploy.endcmd.isnot(None),
         )
 
-        len_query = session.query(func.count(distinct(Deploy.title)))[0]
+        if window_sec > 0:
+            q = q.filter(
+                Deploy.endcmd >= func.date_sub(func.now(), text(f"INTERVAL {window_sec} SECOND"))
+            )
 
-        # It is the same as deploylog, but for unknown reason, the count
-        # doesn't works with ORM
         if login:
             if isinstance(login, list):
-                llogin = "|".join([x for x in login])
-                count = """select count(*) as nb from (
-                select count(id) as nb
-                from deploy
-                where
-                sessionid like "%s%%" AND
-                start >= DATE_SUB(NOW(),INTERVAL 3 MONTH)
-                AND login REGEXP "%s" %s
-                group by title
-                ) as x;""" % (
-                    typedeploy,
-                    llogin,
-                    filter_filt,
-                )
+                q = q.filter(Deploy.login.in_(login))
             else:
-                count = """select count(*) as nb from (
-                select count(id) as nb
-                from deploy
-                where
-                sessionid like "%s%%" AND
-                 start >= DATE_SUB(NOW(),INTERVAL 3 MONTH)
-                AND login LIKE "%s" %s
-                group by title
-                ) as x;""" % (
-                    typedeploy,
-                    login,
-                    filter_filt,
+                q = q.filter(Deploy.login == login)
+
+        if filt:
+            like = f"%{filt}%"
+            q = q.filter(
+                or_(
+                    Deploy.state.like(like),
+                    Deploy.pathpackage.like(like),
+                    func.date_format(Deploy.start, "%Y-%m-%d %H:%i:%s").like(like),
+                    Deploy.login.like(like),
+                    Deploy.host.like(like),
                 )
-        else:
-            count = """select count(*) as nb from (
-            select count(id) as nb
-            from deploy
-            where
-                sessionid like "%s%%" AND
-                 start >= DATE_SUB(NOW(),INTERVAL 3 MONTH) %s
-            group by title
-            ) as x;""" % (
-                typedeploy,
-                filter_filt,
             )
 
-        count = session.execute(count)
-        count = [nbcount for nbcount in count]
+        total_rows = q.count()
 
-        deploylog = deploylog.group_by(Deploy.title)
+        q = q.order_by(desc(Deploy.id))
+        if minimum is not None and maximum is not None:
+            off = int(minimum)
+            lim = max(0, int(maximum) - off)
+            q = q.offset(off).limit(lim)
 
-        deploylog = deploylog.order_by(desc(Deploy.id))
+        rows = q.all()
 
-        # deploylog = deploylog.add_column(func.count(Deploy.title))
-
-        nbfilter = self.get_count(deploylog)
-
-        if minimum and maximum:
-            deploylog = deploylog.offset(int(minimum)).limit(
-                int(maximum) - int(minimum)
-            )
-        result = deploylog.all()
-        session.commit()
-        session.flush()
         ret = {
-            "lentotal": 0,
+            "lentotal": total_rows,
             "tabdeploy": {
                 "len": [],
                 "state": [],
@@ -7066,36 +6926,33 @@ class XmppMasterDatabase(DatabaseHelper):
             },
         }
 
-        # ret['lentotal'] = nbfilter
-        ret["lentotal"] = count[0][0]
-        reg = "(.*)\\.(.*)@(.*)\\/(.*)"
-        for linedeploy in result:
-            if re.match(reg, linedeploy.host):
-                # New jid : name.salt@relay/macaddress
-                hostname = linedeploy.host.split(".")[0]
+        reg = r"(.*)\.(.*)@(.*)\/(.*)"
+        for d in rows:
+            raw_host = d.host or ""
+            if re.match(reg, raw_host):
+                hostname = raw_host.split(".")[0]
             else:
                 try:
-                    hostname = linedeploy.host.split("/")[1]
-                except Exception as e:
-                    hostname = linedeploy.host.split(".")[0]
+                    hostname = raw_host.split("/")[1]
+                except Exception:
+                    hostname = raw_host.split(".")[0] if "." in raw_host else raw_host
 
-            ret["tabdeploy"]["state"].append(linedeploy.state)
-            ret["tabdeploy"]["pathpackage"].append(
-                linedeploy.pathpackage.split("/")[-1]
-            )
-            ret["tabdeploy"]["sessionid"].append(linedeploy.sessionid)
-            ret["tabdeploy"]["start"].append(str(linedeploy.start))
-            ret["tabdeploy"]["inventoryuuid"].append(linedeploy.inventoryuuid)
-            ret["tabdeploy"]["command"].append(linedeploy.command)
-            ret["tabdeploy"]["login"].append(linedeploy.login)
+            ret["tabdeploy"]["state"].append(d.state)
+            ret["tabdeploy"]["pathpackage"].append((d.pathpackage or "").split("/")[-1])
+            ret["tabdeploy"]["sessionid"].append(d.sessionid)
+            ret["tabdeploy"]["start"].append(str(d.start))
+            ret["tabdeploy"]["inventoryuuid"].append(d.inventoryuuid)
+            ret["tabdeploy"]["command"].append(d.command)
+            ret["tabdeploy"]["login"].append(d.login)
             ret["tabdeploy"]["host"].append(hostname)
-            ret["tabdeploy"]["macadress"].append(linedeploy.macadress)
-            ret["tabdeploy"]["group_uuid"].append(linedeploy.group_uuid)
-            ret["tabdeploy"]["startcmd"].append(linedeploy.startcmd)
-            ret["tabdeploy"]["endcmd"].append(linedeploy.endcmd)
-            ret["tabdeploy"]["jidmachine"].append(linedeploy.jidmachine)
-            ret["tabdeploy"]["jid_relay"].append(linedeploy.jid_relay)
-            ret["tabdeploy"]["title"].append(linedeploy.title)
+            ret["tabdeploy"]["macadress"].append(d.macadress)
+            ret["tabdeploy"]["group_uuid"].append(d.group_uuid)
+            ret["tabdeploy"]["startcmd"].append(d.startcmd)
+            ret["tabdeploy"]["endcmd"].append(d.endcmd)
+            ret["tabdeploy"]["jidmachine"].append(d.jidmachine)
+            ret["tabdeploy"]["jid_relay"].append(d.jid_relay)
+            ret["tabdeploy"]["title"].append(d.title)
+
         return ret
 
     @DatabaseHelper._sessionm
