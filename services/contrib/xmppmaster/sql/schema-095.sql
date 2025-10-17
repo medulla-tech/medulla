@@ -104,26 +104,26 @@ DELIMITER $$
 
 CREATE PROCEDURE `up_init_packages_office_2007_64bit`()
 BEGIN
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Déclaration du nom de la table de mise à jour à créer
     -- Cette variable contient le nom unique de la table propre au produit.
     -- Elle est utilisée dynamiquement pour créer la table et pour l’enregistrement dans up_list_produit.
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     DECLARE table_name VARCHAR(100) DEFAULT 'up_packages_office_2007_64bit';
     DECLARE sql_query TEXT;
 
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Suppression de la table si elle existe déjà (pour éviter les conflits)
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     SET @drop_query = CONCAT('DROP TABLE IF EXISTS ', table_name);
     PREPARE stmt FROM @drop_query;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Création dynamique de la table des mises à jour du produit
     -- Cette requête est propre à chaque procédure selon le filtre produit (ici Office 2007 64bit)
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     SET @create_query = CONCAT(
         'CREATE TABLE ', table_name, ' AS ',
         'SELECT
@@ -169,12 +169,12 @@ BEGIN
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Enregistrement dans la table de suivi des procédures : up_list_produit
     -- Cette partie est indispensable pour que la procédure soit reconnue dans Medull.
     -- Elle permet de garder trace des procédures existantes et de les activer/désactiver.
     -- Le champ 'enable' est mis à 0 par défaut (désactivé).
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     IF NOT EXISTS (
         SELECT 1 FROM up_list_produit WHERE name_procedure = table_name
     ) THEN
@@ -195,26 +195,26 @@ DELIMITER $$
 
 CREATE PROCEDURE `up_init_packages_office_2010_64bit`()
 BEGIN
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Déclaration du nom de la table de mise à jour à créer
     -- Cette variable contient le nom unique de la table propre au produit.
     -- Elle est utilisée dynamiquement pour créer la table et pour l’enregistrement dans up_list_produit.
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     DECLARE table_name VARCHAR(100) DEFAULT 'up_packages_office_2010_64bit';
     DECLARE sql_query TEXT;
 
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Suppression de la table si elle existe déjà (pour éviter les conflits)
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     SET @drop_query = CONCAT('DROP TABLE IF EXISTS ', table_name);
     PREPARE stmt FROM @drop_query;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Création dynamique de la table des mises à jour du produit
     -- Cette requête est propre à chaque procédure selon le filtre produit (ici Office 2010 64bit)
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     SET @create_query = CONCAT(
         'CREATE TABLE ', table_name, ' AS ',
         'SELECT
@@ -260,12 +260,12 @@ BEGIN
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Enregistrement dans la table de suivi des procédures : up_list_produit
     -- Cette partie est indispensable pour que la procédure soit reconnue dans Medull.
     -- Elle permet de garder trace des procédures existantes et de les activer/désactiver.
     -- Le champ 'enable' est mis à 0 par défaut (désactivé).
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     IF NOT EXISTS (
         SELECT 1 FROM up_list_produit WHERE name_procedure = table_name
     ) THEN
@@ -283,26 +283,26 @@ DELIMITER $$
 
 CREATE PROCEDURE `up_init_packages_office_2013_64bit`()
 BEGIN
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Déclaration du nom de la table de mise à jour à créer
     -- Cette variable contient le nom unique de la table propre au produit.
     -- Elle est utilisée dynamiquement pour créer la table et pour l’enregistrement dans up_list_produit.
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     DECLARE table_name VARCHAR(100) DEFAULT 'up_packages_office_2013_64bit';
     DECLARE sql_query TEXT;
 
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Suppression de la table si elle existe déjà (pour éviter les conflits)
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     SET @drop_query = CONCAT('DROP TABLE IF EXISTS ', table_name);
     PREPARE stmt FROM @drop_query;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Création dynamique de la table des mises à jour du produit
     -- Cette requête est propre à chaque procédure selon le filtre produit (ici Office 2013 64bit)
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     SET @create_query = CONCAT(
         'CREATE TABLE ', table_name, ' AS ',
         'SELECT
@@ -348,12 +348,12 @@ BEGIN
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Enregistrement dans la table de suivi des procédures : up_list_produit
     -- Cette partie est indispensable pour que la procédure soit reconnue dans Medull.
     -- Elle permet de garder trace des procédures existantes et de les activer/désactiver.
     -- Le champ 'enable' est mis à 0 par défaut (désactivé).
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     IF NOT EXISTS (
         SELECT 1 FROM up_list_produit WHERE name_procedure = table_name
     ) THEN
@@ -375,26 +375,26 @@ DELIMITER $$
 
 CREATE PROCEDURE `up_init_packages_office_2016_64bit`()
 BEGIN
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Déclaration du nom de la table de mise à jour à créer
     -- Cette variable contient le nom unique de la table propre au produit.
     -- Elle est utilisée dynamiquement pour créer la table et pour l’enregistrement dans up_list_produit.
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     DECLARE table_name VARCHAR(100) DEFAULT 'up_packages_office_2016_64bit';
     DECLARE sql_query TEXT;
 
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Suppression de la table si elle existe déjà (pour éviter les conflits)
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     SET @drop_query = CONCAT('DROP TABLE IF EXISTS ', table_name);
     PREPARE stmt FROM @drop_query;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Création dynamique de la table des mises à jour du produit
     -- Cette requête est propre à chaque procédure selon le filtre produit (ici Office 2016 64bit)
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     SET @create_query = CONCAT(
         'CREATE TABLE ', table_name, ' AS ',
         'SELECT
@@ -440,12 +440,12 @@ BEGIN
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Enregistrement dans la table de suivi des procédures : up_list_produit
     -- Cette partie est indispensable pour que la procédure soit reconnue dans Medull.
     -- Elle permet de garder trace des procédures existantes et de les activer/désactiver.
     -- Le champ 'enable' est mis à 0 par défaut (désactivé).
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     IF NOT EXISTS (
         SELECT 1 FROM up_list_produit WHERE name_procedure = table_name
     ) THEN
@@ -467,26 +467,26 @@ DELIMITER $$
 
 CREATE PROCEDURE `up_init_packages_Vstudio_2005`()
 BEGIN
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Déclaration du nom de la table de mise à jour à créer
     -- Cette variable contient le nom unique de la table propre au produit.
     -- Elle est utilisée dynamiquement pour créer la table et pour l’enregistrement dans up_list_produit.
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     DECLARE table_name VARCHAR(100) DEFAULT 'up_packages_Vstudio_2005';
     DECLARE sql_query TEXT;
 
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Suppression de la table si elle existe déjà (pour éviter les conflits)
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     SET @drop_query = CONCAT('DROP TABLE IF EXISTS ', table_name);
     PREPARE stmt FROM @drop_query;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Création dynamique de la table des mises à jour du produit
     -- Cette requête est propre à chaque procédure selon le filtre produit (ici Visual Studio 2005)
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     SET @create_query = CONCAT(
         'CREATE TABLE ', table_name, ' AS ',
         'SELECT
@@ -527,12 +527,12 @@ BEGIN
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Enregistrement dans la table de suivi des procédures : up_list_produit
     -- Cette partie est indispensable pour que la procédure soit reconnue dans Medull.
     -- Elle permet de garder trace des procédures existantes et de les activer/désactiver.
     -- Le champ 'enable' est mis à 0 par défaut (désactivé).
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     IF NOT EXISTS (
         SELECT 1 FROM up_list_produit WHERE name_procedure = table_name
     ) THEN
@@ -554,26 +554,26 @@ DELIMITER $$
 
 CREATE PROCEDURE `up_init_packages_Vstudio_2008`()
 BEGIN
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Déclaration du nom de la table de mise à jour à créer
     -- Cette variable contient le nom unique de la table propre au produit.
     -- Elle est utilisée dynamiquement pour créer la table et pour l’enregistrement dans up_list_produit.
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     DECLARE table_name VARCHAR(100) DEFAULT 'up_packages_Vstudio_2008';
     DECLARE sql_query TEXT;
 
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Suppression de la table si elle existe déjà (pour éviter les conflits)
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     SET @drop_query = CONCAT('DROP TABLE IF EXISTS ', table_name);
     PREPARE stmt FROM @drop_query;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Création dynamique de la table des mises à jour du produit
     -- Cette requête est propre à chaque procédure selon le filtre produit (ici Visual Studio 2008)
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     SET @create_query = CONCAT(
         'CREATE TABLE ', table_name, ' AS ',
         'SELECT
@@ -614,12 +614,12 @@ BEGIN
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Enregistrement dans la table de suivi des procédures : up_list_produit
     -- Cette partie est indispensable pour que la procédure soit reconnue dans Medull.
     -- Elle permet de garder trace des procédures existantes et de les activer/désactiver.
     -- Le champ 'enable' est mis à 0 par défaut (désactivé).
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     IF NOT EXISTS (
         SELECT 1 FROM up_list_produit WHERE name_procedure = table_name
     ) THEN
@@ -641,26 +641,26 @@ DELIMITER $$
 
 CREATE PROCEDURE `up_init_packages_Vstudio_2010`()
 BEGIN
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Déclaration du nom de la table de mise à jour à créer
     -- Cette variable contient le nom unique de la table propre au produit.
     -- Elle est utilisée dynamiquement pour créer la table et pour l’enregistrement dans up_list_produit.
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     DECLARE table_name VARCHAR(100) DEFAULT 'up_packages_Vstudio_2010';
     DECLARE sql_query TEXT;
 
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Suppression de la table si elle existe déjà (pour éviter les conflits)
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     SET @drop_query = CONCAT('DROP TABLE IF EXISTS ', table_name);
     PREPARE stmt FROM @drop_query;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Création dynamique de la table des mises à jour du produit
     -- Cette requête est propre à chaque procédure selon le filtre produit (ici Visual Studio 2010)
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     SET @create_query = CONCAT(
         'CREATE TABLE ', table_name, ' AS ',
         'SELECT
@@ -701,12 +701,12 @@ BEGIN
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Enregistrement dans la table de suivi des procédures : up_list_produit
     -- Cette partie est indispensable pour que la procédure soit reconnue dans Medull.
     -- Elle permet de garder trace des procédures existantes et de les activer/désactiver.
     -- Le champ 'enable' est mis à 0 par défaut (désactivé).
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     IF NOT EXISTS (
         SELECT 1 FROM up_list_produit WHERE name_procedure = table_name
     ) THEN
@@ -727,25 +727,25 @@ DELIMITER $$
 
 CREATE PROCEDURE `up_init_packages_Vstudio_2012`()
 BEGIN
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Déclaration du nom de la table de mise à jour à créer
     -- Cette variable contient le nom unique de la table propre au produit.
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     DECLARE table_name VARCHAR(100) DEFAULT 'up_packages_Vstudio_2012';
     DECLARE sql_query TEXT;
 
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Suppression de la table si elle existe déjà (évite les doublons)
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     SET @drop_query = CONCAT('DROP TABLE IF EXISTS ', table_name);
     PREPARE stmt FROM @drop_query;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Création dynamique de la table des mises à jour du produit
     -- Chaque procédure contient un filtre produit spécifique
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     SET @create_query = CONCAT(
         'CREATE TABLE ', table_name, ' AS ',
         'SELECT
@@ -786,10 +786,10 @@ BEGIN
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Vérifier si la table est déjà enregistrée dans up_list_produit
     -- Ne pas oublier cette étape : elle permet à Medull de détecter la procédure
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     IF NOT EXISTS (
         SELECT 1 FROM up_list_produit WHERE name_procedure = table_name
     ) THEN
@@ -811,24 +811,24 @@ DELIMITER $$
 
 CREATE PROCEDURE `up_init_packages_Vstudio_2013`()
 BEGIN
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Déclaration du nom de la table de mise à jour à créer
     -- Chaque procédure génère une table dédiée, conforme au produit ciblé
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     DECLARE table_name VARCHAR(100) DEFAULT 'up_packages_Vstudio_2013';
     DECLARE sql_query TEXT;
 
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Supprimer la table si elle existe déjà
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     SET @drop_query = CONCAT('DROP TABLE IF EXISTS ', table_name);
     PREPARE stmt FROM @drop_query;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Créer dynamiquement la table de mise à jour pour le produit ciblé
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     SET @create_query = CONCAT(
         'CREATE TABLE ', table_name, ' AS ',
         'SELECT
@@ -869,10 +869,10 @@ BEGIN
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Vérification de l'enregistrement dans up_list_produit
     -- Cette étape est essentielle pour que Medull détecte ce jeu de données
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     IF NOT EXISTS (
         SELECT 1 FROM up_list_produit WHERE name_procedure = table_name
     ) THEN
@@ -893,22 +893,22 @@ DELIMITER $$
 
 CREATE PROCEDURE `up_init_packages_Vstudio_2015`()
 BEGIN
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Nom de la table dédiée au produit Visual Studio 2015
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     DECLARE table_name VARCHAR(100) DEFAULT 'up_packages_Vstudio_2015';
 
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Suppression de la table si elle existe déjà
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     SET @drop_query = CONCAT('DROP TABLE IF EXISTS ', table_name);
     PREPARE stmt FROM @drop_query;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Création de la table avec jointure pour payloadfiles et updateid_package
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     SET @create_query = CONCAT(
         'CREATE TABLE ', table_name, ' AS ',
         'SELECT
@@ -949,9 +949,9 @@ BEGIN
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Enregistrement dans up_list_produit si absent (enable = 0 par défaut)
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     IF NOT EXISTS (
         SELECT 1 FROM up_list_produit WHERE name_procedure = table_name
     ) THEN
@@ -973,22 +973,22 @@ DELIMITER $$
 
 CREATE PROCEDURE `up_init_packages_Vstudio_2017`()
 BEGIN
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Nom de la table dédiée au produit Visual Studio 2017
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     DECLARE table_name VARCHAR(100) DEFAULT 'up_packages_Vstudio_2017';
 
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Suppression de la table si elle existe déjà
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     SET @drop_query = CONCAT('DROP TABLE IF EXISTS ', table_name);
     PREPARE stmt FROM @drop_query;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Création de la table avec jointure pour payloadfiles et updateid_package
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     SET @create_query = CONCAT(
         'CREATE TABLE ', table_name, ' AS ',
         'SELECT
@@ -1029,9 +1029,9 @@ BEGIN
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Enregistrement dans up_list_produit si absent (enable = 0 par défaut)
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     IF NOT EXISTS (
         SELECT 1 FROM up_list_produit WHERE name_procedure = table_name
     ) THEN
@@ -1053,22 +1053,22 @@ DELIMITER $$
 
 CREATE PROCEDURE `up_init_packages_Vstudio_2019`()
 BEGIN
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Nom de la table dédiée au produit Visual Studio 2019
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     DECLARE table_name VARCHAR(100) DEFAULT 'up_packages_Vstudio_2019';
 
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Suppression de la table si elle existe déjà
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     SET @drop_query = CONCAT('DROP TABLE IF EXISTS ', table_name);
     PREPARE stmt FROM @drop_query;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Création de la table avec jointure pour payloadfiles et updateid_package
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     SET @create_query = CONCAT(
         'CREATE TABLE ', table_name, ' AS ',
         'SELECT
@@ -1109,9 +1109,9 @@ BEGIN
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Enregistrement dans up_list_produit si absent (enable = 0 par défaut)
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     IF NOT EXISTS (
         SELECT 1 FROM up_list_produit WHERE name_procedure = table_name
     ) THEN
@@ -1133,22 +1133,22 @@ DELIMITER $$
 
 CREATE PROCEDURE `up_init_packages_Vstudio_2022`()
 BEGIN
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Nom de la table dédiée au produit Visual Studio 2022
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     DECLARE table_name VARCHAR(100) DEFAULT 'up_packages_Vstudio_2022';
 
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Suppression de la table si elle existe déjà
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     SET @drop_query = CONCAT('DROP TABLE IF EXISTS ', table_name);
     PREPARE stmt FROM @drop_query;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Création de la table avec jointure pour payloadfiles et updateid_package
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     SET @create_query = CONCAT(
         'CREATE TABLE ', table_name, ' AS ',
         'SELECT
@@ -1189,9 +1189,9 @@ BEGIN
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Enregistrement dans up_list_produit si absent (enable = 0 par défaut)
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     IF NOT EXISTS (
         SELECT 1 FROM up_list_produit WHERE name_procedure = table_name
     ) THEN
@@ -1212,22 +1212,22 @@ DELIMITER $$
 
 CREATE PROCEDURE `up_init_packages_Win10_X64_1903`()
 BEGIN
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Nom de la table dédiée au produit Windows 10 version 1903 X64
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     DECLARE table_name VARCHAR(100) DEFAULT 'up_packages_Win10_X64_1903';
 
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Suppression de la table si elle existe déjà
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     SET @drop_query = CONCAT('DROP TABLE IF EXISTS ', table_name);
     PREPARE stmt FROM @drop_query;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Création de la table avec jointure pour payloadfiles et updateid_package
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     SET @create_query = CONCAT(
         'CREATE TABLE ', table_name, ' AS ',
         'SELECT
@@ -1273,9 +1273,9 @@ BEGIN
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Enregistrement dans up_list_produit si absent (enable = 0 par défaut)
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     IF NOT EXISTS (
         SELECT 1 FROM up_list_produit WHERE name_procedure = table_name
     ) THEN
@@ -1296,22 +1296,22 @@ DELIMITER $$
 
 CREATE PROCEDURE `up_init_packages_Win10_X64_21H1`()
 BEGIN
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Nom de la table dédiée au produit Windows 10 version 21H1 X64
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     DECLARE table_name VARCHAR(100) DEFAULT 'up_packages_Win10_X64_21H1';
 
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Suppression de la table si elle existe déjà
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     SET @drop_query = CONCAT('DROP TABLE IF EXISTS ', table_name);
     PREPARE stmt FROM @drop_query;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Création de la table avec jointure pour payloadfiles et updateid_package
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     SET @create_query = CONCAT(
         'CREATE TABLE ', table_name, ' AS ',
         'SELECT
@@ -1358,9 +1358,9 @@ BEGIN
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Enregistrement dans up_list_produit si absent (enable = 0 par défaut)
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     IF NOT EXISTS (
         SELECT 1 FROM up_list_produit WHERE name_procedure = table_name
     ) THEN
@@ -1382,22 +1382,22 @@ DELIMITER $$
 
 CREATE PROCEDURE `up_init_packages_Win10_X64_21H2`()
 BEGIN
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Nom de la table dédiée au produit Windows 10 Version 21H2 X64
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     DECLARE table_name VARCHAR(100) DEFAULT 'up_packages_Win10_X64_21H2';
 
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Suppression de la table si elle existe déjà
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     SET @drop_query = CONCAT('DROP TABLE IF EXISTS ', table_name);
     PREPARE stmt FROM @drop_query;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Création de la table avec jointure pour payloadfiles et updateid_package
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     SET @create_query = CONCAT(
         'CREATE TABLE ', table_name, ' AS ',
         'SELECT
@@ -1444,9 +1444,9 @@ BEGIN
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Enregistrement dans up_list_produit si absent (enable = 0 par défaut)
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     IF NOT EXISTS (
         SELECT 1 FROM up_list_produit WHERE name_procedure = table_name
     ) THEN
@@ -1469,22 +1469,22 @@ DELIMITER $$
 
 CREATE PROCEDURE `up_init_packages_Win10_X64_22H2`()
 BEGIN
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Nom de la table dédiée au produit Windows 10 Version 22H2 X64
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     DECLARE table_name VARCHAR(100) DEFAULT 'up_packages_Win10_X64_22H2';
 
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Suppression de la table si elle existe déjà
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     SET @drop_query = CONCAT('DROP TABLE IF EXISTS ', table_name);
     PREPARE stmt FROM @drop_query;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Création de la table avec jointure pour payloadfiles et updateid_package
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     SET @create_query = CONCAT(
         'CREATE TABLE ', table_name, ' AS ',
         'SELECT
@@ -1531,9 +1531,9 @@ BEGIN
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Enregistrement dans up_list_produit si absent (enable = 0 par défaut)
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     IF NOT EXISTS (
         SELECT 1 FROM up_list_produit WHERE name_procedure = table_name
     ) THEN
@@ -1556,22 +1556,22 @@ DELIMITER $$
 
 CREATE PROCEDURE `up_init_packages_Win11_X64`()
 BEGIN
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Nom de la table dédiée au produit Windows 11 x64 (hors versions H2 spécifiques)
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     DECLARE table_name VARCHAR(100) DEFAULT 'up_packages_Win11_X64';
 
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Suppression de la table si elle existe déjà
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     SET @drop_query = CONCAT('DROP TABLE IF EXISTS ', table_name);
     PREPARE stmt FROM @drop_query;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Création de la table avec jointure pour payloadfiles et updateid_package
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     SET @create_query = CONCAT(
         'CREATE TABLE ', table_name, ' AS
          SELECT
@@ -1618,9 +1618,9 @@ BEGIN
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Enregistrement dans up_list_produit si absent (enable = 0 par défaut)
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     IF NOT EXISTS (
         SELECT 1 FROM up_list_produit WHERE name_procedure = table_name
     ) THEN
@@ -1640,22 +1640,22 @@ DELIMITER $$
 
 CREATE PROCEDURE `up_init_packages_Win11_X64_21H2`()
 BEGIN
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Nom de la table dédiée au produit Windows 11 Version 21H2 x64
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     DECLARE table_name VARCHAR(100) DEFAULT 'up_packages_Win11_X64_21H2';
 
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Suppression de la table si elle existe déjà
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     SET @drop_query = CONCAT('DROP TABLE IF EXISTS ', table_name);
     PREPARE stmt FROM @drop_query;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Création de la table avec jointure pour payloadfiles et updateid_package
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     SET @create_query = CONCAT(
         'CREATE TABLE ', table_name, ' AS
          SELECT
@@ -1700,9 +1700,9 @@ BEGIN
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Enregistrement dans up_list_produit si absent (enable = 0 par défaut)
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     IF NOT EXISTS (
         SELECT 1 FROM up_list_produit WHERE name_procedure = table_name
     ) THEN
@@ -1722,22 +1722,22 @@ DELIMITER $$
 
 CREATE PROCEDURE `up_init_packages_Win11_X64_22H2`()
 BEGIN
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Nom de la table dédiée au produit Windows 11 Version 22H2 x64
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     DECLARE table_name VARCHAR(100) DEFAULT 'up_packages_Win11_X64_22H2';
 
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Suppression de la table si elle existe déjà
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     SET @drop_query = CONCAT('DROP TABLE IF EXISTS ', table_name);
     PREPARE stmt FROM @drop_query;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Création de la table avec jointure pour payloadfiles et updateid_package
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     SET @create_query = CONCAT(
         'CREATE TABLE ', table_name, ' AS
          SELECT
@@ -1782,9 +1782,9 @@ BEGIN
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Enregistrement dans up_list_produit si absent (enable = 0 par défaut)
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     IF NOT EXISTS (
         SELECT 1 FROM up_list_produit WHERE name_procedure = table_name
     ) THEN
@@ -1947,22 +1947,22 @@ DELIMITER $$
 
 CREATE PROCEDURE `up_init_packages_Win_Malicious_X64`()
 BEGIN
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Nom de la table dédiée au produit Windows Malicious Software Removal Tool x64
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     DECLARE table_name VARCHAR(100) DEFAULT 'up_packages_Win_Malicious_X64';
 
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Suppression de la table si elle existe déjà
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     SET @drop_query = CONCAT('DROP TABLE IF EXISTS ', table_name);
     PREPARE stmt FROM @drop_query;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Création de la table avec jointure pour payloadfiles et updateid_package
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     SET @create_query = CONCAT(
         'CREATE TABLE ', table_name, ' AS ',
         'SELECT
@@ -2005,9 +2005,9 @@ BEGIN
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
 
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     -- Enregistrement dans up_list_produit si absent (enable = 0 par défaut)
-    ----------------------------------------------------------------------
+    -- ----------------------------------------------------------------------
     IF NOT EXISTS (
         SELECT 1 FROM up_list_produit WHERE name_procedure = table_name
     ) THEN
