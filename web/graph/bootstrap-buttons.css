@@ -100,7 +100,9 @@ a.btn { text-decoration: none; }
 
 #fetch_updates_btn:hover,
 #restart_medulla_services:hover,
-#regenerate_agent:hover{ color: #E6EDF2;}
+#regenerate_agent:hover,
+#btnViewUpdates:hover,
+#btnInstallUpdates:hover{ color: #E6EDF2 !important;}
 
 .btn-no-marge { margin: 0; }
 

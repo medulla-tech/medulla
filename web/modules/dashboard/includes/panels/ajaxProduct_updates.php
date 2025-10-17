@@ -59,13 +59,13 @@ if ($update_count === 0) {
     <div id="updates_zone">
         <div class="custom-updates-info">
             <p style="color: green; font-weight: bold; margin-bottom: 1.2em;">$updates_available_txt</p>
-            <a title="View updates" class="btnSecondary"
+            <a title="View updates" class="btnSecondary btnViewUpdates" id="btnViewUpdates" style="color: black;"
                 href="javascript:;"
                 onclick="PopupWindow(event,'main.php?module=medulla_server&amp;submod=update&amp;action=viewProductUpdates&amp;updates=$updates_b64&amp;start=0&amp;end=9&amp;filter=none', 300); return false;">
                 $view_updates_text
             </a>
             <br/><br/>
-            <a style="color: black;" class="btnSecondary btnInstallUpdates" href="#">$install_updates_text</a>
+            <a style="color: black;" class="btnSecondary btnInstallUpdates" id="btnInstallUpdates" href="#">$install_updates_text</a>
         </div>
     </div>
     EOS;
