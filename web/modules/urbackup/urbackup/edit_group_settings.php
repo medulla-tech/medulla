@@ -1,15 +1,16 @@
 <?php
 /*
- * (c) 2022 Siveo, http://www.siveo.net/
+ * (c) 2016-2023 Siveo, http://www.siveo.net
+ * (c) 2024-2025 Medulla, http://www.medulla-tech.io
  *
  * $Id$
  *
- * This file is part of Pulse.
+ * This file is part of MMC, http://www.medulla-tech.io
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ * the Free Software Foundation; either version 3 of the License, or
+ * any later version.
  *
  * MMC is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -17,8 +18,8 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with MMC; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ * along with MMC; If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 require("graph/navbar.inc.php");
 require("localSidebar.php");
@@ -149,5 +150,5 @@ if ($errorFormat == "true")
     <label><?php echo _T("Excluded files", "urbackup"); ?></label><input style="width:100%;" value="<?php echo $current_value_exclude_files; ?>" type="text" name="exclude_files" id="exclude_files"/><br>
     <label><?php echo _T("Included files ", "urbackup"); ?></label><input style="width:100%;" value="<?php echo $current_value_include_files; ?>" type="text" name="include_files" id="include_files"/><br>
     <label><?php echo _T("Default directories to backup", "urbackup"); ?></label><input required value="<?php echo $current_value_default_dirs; ?>" type="text" name="default_dirs" id="default_dirs"/><br><br>
-    <input type="submit" value="Save">
+    <input type="submit" class="btnPrimary btn-no-marge" value="Save">
 </form>
