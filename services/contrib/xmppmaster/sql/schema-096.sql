@@ -170,10 +170,10 @@ ON UPDATE CASCADE;
 
 
 ALTER TABLE `xmppmaster`.`up_machine_windows`
-ADD COLUMN `entityid` INT(11) NULL AFTER `update_id`;
+ADD COLUMN IF NOT EXISTS `entityid` INT(11) NULL AFTER `update_id`;
 
 ALTER TABLE `xmppmaster`.`up_machine_windows`
-ADD UNIQUE INDEX `index_uniq_entity_uuid` (`update_id` ASC, `entityid` ASC) VISIBLE;
+ADD UNIQUE INDEX IF NOT EXISTS `index_uniq_entity_uuid` (`update_id` ASC, `entityid` ASC) VISIBLE;
 ;
 
 
@@ -193,7 +193,7 @@ DROP procedure IF EXISTS `xmppmaster`.`up_genere_list_rule_entity`;
 
 DELIMITER $$
 USE `xmppmaster`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `up_genere_list_rule_entity`(IN p_entity_id INT)
+CREATE PROCEDURE `up_genere_list_rule_entity`(IN p_entity_id INT)
 BEGIN
     -- =====================================================================
     -- PROCEDURE : `up_genere_list_rule_entity`()
@@ -281,7 +281,7 @@ DROP procedure IF EXISTS `xmppmaster`.`up_genere_list_produit_entity`;
 
 DELIMITER $$
 USE `xmppmaster`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `up_genere_list_produit_entity`(IN p_entity_id INT)
+CREATE PROCEDURE `up_genere_list_produit_entity`(IN p_entity_id INT)
 BEGIN
     -- =====================================================================
     -- PROCEDURE : up_genere_list_produit_entity()
@@ -592,7 +592,7 @@ DROP procedure IF EXISTS `xmppmaster`.`up_regenere_list_produit`;
 
 DELIMITER $$
 USE `xmppmaster`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `up_regenere_list_produit`()
+CREATE PROCEDURE `up_regenere_list_produit`()
 BEGIN
     -- =====================================================================
     -- PROCEDURE : regenere_liste_produits
@@ -1925,7 +1925,7 @@ DROP procedure IF EXISTS `xmppmaster`.`move_update_to_white_list`;
 
 DELIMITER $$
 USE `xmppmaster`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `move_update_to_white_list`(IN p_entity_id INT)
+CREATE PROCEDURE `move_update_to_white_list`(IN p_entity_id INT)
 BEGIN
     -- =====================================================================
     -- PROCEDURE : move_update_to_white_list
@@ -2351,7 +2351,7 @@ DROP TRIGGER IF EXISTS `xmppmaster`.`up_gray_list_AFTER_INSERT`;
 
 DELIMITER $$
 USE `xmppmaster`$$
-CREATE DEFINER=`root`@`localhost` TRIGGER `xmppmaster`.`up_gray_list_AFTER_INSERT`
+CREATE TRIGGER `xmppmaster`.`up_gray_list_AFTER_INSERT`
 AFTER INSERT ON xmppmaster.`up_gray_list`
 FOR EACH ROW
 BEGIN
