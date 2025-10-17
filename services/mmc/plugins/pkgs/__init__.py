@@ -418,41 +418,32 @@ def create_directories_sharing(path):
 
 def get_share_from_descriptor(package_descriptor):
     """
-    Prepare the system for the package server by creating the sharing folder if it does not exist.
-
-    Args:
-        package_descriptor (dict): A dictionary containing information about the package,
-                                   including 'localisation_server' and 'id'.
-
-    Returns:
-        str: The path to the sharing folder.
+    Prépare le dossier de partage pour le package.
+    - On récupère l'UUID via get_share_uuid_by_name(name).
+    - Fallback: si non résolu, on utilise le basename de la valeur fournie (ou 'global').
     """
-    packages_input_dir_sharing = os.path.join(
-        "/", "var", "lib", "pulse2", "packages", "sharing"
-    )
+    base_sharing = os.path.join("/", "var", "lib", "pulse2", "packages", "sharing")
+    pkg_id = package_descriptor["id"]
+    raw_loc = (package_descriptor.get("localisation_server") or "").strip()
 
-    # Check if 'localisation_server' is in the package descriptor and is not empty
-    if (
-        "localisation_server" not in package_descriptor
-        or not package_descriptor["localisation_server"]
-    ):
-        logging.getLogger().warning(
-            "keys localisation_server missing or not defined, using global sharing by default"
-        )
-        sharing = os.path.join(
-            packages_input_dir_sharing, "global", package_descriptor["id"]
-        )
+    if not raw_loc:
+        resolved = "global"
+        logging.getLogger().warning("keys localisation_server missing or not defined, using global sharing by default")
+    elif raw_loc == "global":
+        resolved = "global"
     else:
-        logging.getLogger().debug(
-            f"local package {os.path.join(packages_input_dir_sharing, package_descriptor['localisation_server'], package_descriptor['id'])}"
-        )
-        sharing = os.path.join(
-            packages_input_dir_sharing,
-            package_descriptor["localisation_server"],
-            package_descriptor["id"],
-        )
+        try:
+            resolved = PkgsDatabase().get_share_uuid_by_name(raw_loc)
+        except Exception:
+            resolved = None
 
-    # Create the directories for the sharing path
+        if not resolved:
+            resolved = os.path.basename(raw_loc.rstrip("/")) or "global"
+
+    package_descriptor["_resolved_share_uuid"] = resolved
+
+    sharing = os.path.join(base_sharing, resolved, pkg_id)
+
     create_directories_sharing(os.path.dirname(sharing))
 
     return sharing
