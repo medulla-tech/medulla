@@ -360,9 +360,8 @@ if (isset($_GET["update"])) {
 
                     <?php if (!empty($providers)): ?>
                         <form action="providers.php" method="post" id="loginFormProvider">
-                            <div class="control-group">
-                                <br><hr>
-                                <h3 style="text-align: center;">PROVIDERS</h3>
+                            <div class="control-group provider-group">
+                                <h3><?= _("Providers"); ?></h3>
 
                                 <?php foreach ($providers as $row): 
                                     $providerSafe = htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8');

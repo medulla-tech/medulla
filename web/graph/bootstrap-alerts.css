@@ -19,8 +19,23 @@
   color: #c09853;
   font-size: 12px;
 }
+.alert h1,
+.alert h2,
+.alert h3,
 .alert h4 {
-  margin: 0;
+  margin: 0 0 6px;
+  font-size: 1.1em;
+  line-height: 1.4;
+  font-weight: 600;
+  color: inherit;
+}
+.alert p {
+  margin: 0 0 6px;
+  font-size: 1em;
+  line-height: 1.5;
+}
+.alert > :last-child {
+  margin-bottom: 0;
 }
 .alert .close {
   position: relative;
