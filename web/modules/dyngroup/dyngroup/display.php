@@ -21,7 +21,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with MMC; If not, see <http://www.gnu.org/licenses/>.
- *
+ * file: display.php
  */
 
 ?><style>
@@ -51,94 +51,11 @@
     .flex-toolbar .filters input[type="radio"] {
         margin: 0;
     }
-
-    /* Search bar container AjaxFilter */
-    .searchbox {
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-    }
-
-    #searchBest {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        border: 1px solid #ccc;
-        border-radius: 6px;
-        background-color: #fff;
-        padding: 2px 8px;
-        height: 30px;
-        min-width: 260px;
-        line-height: 1;
-    }
-
-    #searchBest * {
-        vertical-align: middle;
-        line-height: 1;
-        margin: 0;
-        padding: 0;
-    }
-
-    #searchBest input.searchfieldreal {
-        border: none !important;
-        outline: none !important;
-        font-size: 13px !important;
-        height: 22px !important;
-        line-height: 22px !important;
-        padding: 0 4px !important;
-        background: transparent !important;
-        max-height: none !important;
-    }
-
-    #searchBest img {
-        height: 16px;
-        width: 16px;
-        display: inline-block;
-    }
-
-    /* croix */
-    #searchBest img.searchfield {
-        cursor: pointer !important;
-        height: 16px !important;
-        width: 16px !important;
-        opacity: 0.6 !important;
-        transition: opacity 0.2s !important;
-        position: static !important;
-        margin: 0 !important;
-        display: inline-block !important;
-    }
-
-    /* loader */
-    #searchBest img.loader {
-        height: 16px !important;
-        width: 16px !important;
-        margin-right: 4px !important;
-        opacity: 0.8 !important;
-    }
-
-    #searchBest button {
-        padding: 4px 10px;
-        font-size: 13px;
-        background-color: #f3f3f3;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        cursor: pointer;
-    }
-
-    #searchBest button:hover {
-        background-color: #e0e0e0;
-    }
-
     #loaderLocation {
         display: flex;
         align-items: center;
         margin-right: 10px;
-    }
-
-    #loaderLocation img,
-    .loader-container img.loader {
-        height: 18px;
-        width: 18px;
+        gap: 8px;
     }
 </style>
 <?php

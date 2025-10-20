@@ -73,7 +73,7 @@ $root = $conf["global"]["root"];
 
             //jQuery ajax response handlers
             function ajaxSend() {
-                jQuery('#loadimg').attr('src', '<?php echo $root; ?>img/common/loader_p.gif');
+                jQuery('.loader').addClass('is-active');
                 try
                 {
                     jQuery('#container').mask("");
@@ -89,7 +89,7 @@ $root = $conf["global"]["root"];
             function ajaxComplete() {
                 jQuery('#container').unmask();
                 if (!jQuery.active && !jQuery.ajax.active) {
-                    jQuery('#loadimg').attr('src', '<?php echo $root; ?>img/common/loader.gif');
+                    jQuery('.loader').removeClass('is-active');
                 }
             }
 

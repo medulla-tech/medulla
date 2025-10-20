@@ -2,15 +2,17 @@
 /*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007 Mandriva, http://www.mandriva.com
+ * (c) 2016-2023 Siveo, http://www.siveo.net
+ * (c) 2024-2025 Medulla, http://www.medulla-tech.io
  *
  * $Id$
  *
- * This file is part of Mandriva Management Console (MMC).
+ * This file is part of MMC, http://www.medulla-tech.io
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ * the Free Software Foundation; either version 3 of the License, or
+ * any later version.
  *
  * MMC is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -18,8 +20,8 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with MMC; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ * along with MMC; If not, see <http://www.gnu.org/licenses/>.
+ * file: widgets.inc.php
  */
 
 function msg_err_qa($msg) {
@@ -369,15 +371,14 @@ class AjaxFilterCommands extends AjaxFilter {
         $root = $conf["global"]["root"];
         ?>
         <form name="Form" id="<?php print $this->formid; ?>" action="#" onsubmit="return false;">
-            <div id="loader"><img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" class="loader"/></div>
-            <div id="searchSpan" class="searchbox" style="float: right;">
+            <div id="searchSpan" class="searchbox">
             <div id="searchBest">
                 <span class="searchfield"><input type="text" class="searchfieldreal" name="param" id="param" onkeyup="pushSearch<?php echo $this->divid; ?>();
                         return false;" />
-                    <img src="graph/croix.gif" alt="suppression" style="position:relative; top : 3px;"
+                    <button type="button" class="search-clear" aria-label="<?php echo _T('Clear search', 'base'); ?>"
                          onclick="document.getElementById('param').value = '';
                                  pushSearch<?php echo $this->divid; ?>();
-                                 return false;" />
+                                 return false;"></button>
                 </span>
                 <?php if (isset($_GET['cmd_id'], $_GET['gid']) && !(isset($_GET['bundle_id']) && $_GET['bundle_id'])) { ?>
                     <!-- <form id="cbx_form"> -->
@@ -417,6 +418,7 @@ class AjaxFilterCommands extends AjaxFilter {
                     <!-- </form> -->
                 <?php } ?>
 
+            <span class="loader" aria-hidden="true"></span>
             </div>
             </div>
 
@@ -546,9 +548,7 @@ class AjaxFilterCommandsStates extends AjaxFilter {
         ?>
         <form name="Form" id="Form" action="#" onsubmit="return false;">
 
-            <div id="loader"><img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" class="loader"/></div>
-
-            <div id="searchSpan" class="searchbox" style="float: right;">
+            <div id="searchSpan" class="searchbox">
 
                 <span class="searchfield">
                     <?php
@@ -559,11 +559,12 @@ class AjaxFilterCommandsStates extends AjaxFilter {
 
                 <span class="searchfield"><input type="text" class="searchfieldreal" name="param" id="param" onkeyup="pushSearch();
                         return false;" />
-                    <img src="graph/croix.gif" alt="suppression" style="position:relative; top : 3px;"
+                    <button type="button" class="search-clear" aria-label="<?php echo _T('Clear search', 'base'); ?>"
                          onclick="document.getElementById('param').value = '';
                                  pushSearch();
-                                 return false;" />
+                                 return false;"></button>
                 </span>
+            <span class="loader" aria-hidden="true"></span>
             </div>
 
             <script type="text/javascript">
