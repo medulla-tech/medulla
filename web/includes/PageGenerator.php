@@ -21,7 +21,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with MMC; If not, see <http://www.gnu.org/licenses/>.
- *
+ * file: PageGenerator.php
  */
 require("FormGenerator.php");
 require_once("utils.inc.php");
@@ -474,13 +474,26 @@ class ActionConfirmItem extends ActionItem
         } else {
             $urlChunk = "&amp;" . $this->paramString . "=" . rawurlencode($param);
         }
+        $confirmMessageJs = htmlspecialchars(
+            json_encode($this->_confirmMessage, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT),
+            ENT_QUOTES,
+            'UTF-8'
+        );
+
+        $decodedUrlChunk = html_entity_decode($urlChunk, ENT_QUOTES, 'UTF-8');
+        $targetUrl = "main.php?module=" . $this->module . "&submod=" . $this->submod . "&action=" . $this->action . $decodedUrlChunk;
+        $targetUrlJs = htmlspecialchars(
+            json_encode($targetUrl, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT),
+            ENT_QUOTES,
+            'UTF-8'
+        );
+
         echo "<li class=\"" . $this->classCss . "\">";
         echo "<a title=\"" . $this->desc . "\" href=\"#\" ";
-        echo " onclick=\"displayConfirmationPopup('" . $this->_confirmMessage . "', 'main.php?module=" . $this->module . "&amp;submod=" . $this->submod . "&amp;action=" . $this->action . $urlChunk . "')\" ";
+        echo " onclick=\"displayConfirmationPopup(" . $confirmMessageJs . ", " . $targetUrlJs . "); return false;\" ";
         echo ">&nbsp;</a>";
         echo "</li>";
     }
-
 }
 
 class EmptyActionItem extends ActionItem
@@ -1739,19 +1752,17 @@ foreach ($_GET as $key => $value) {
         ?>
         <form name="Form<?php echo $this->formid ?>" id="Form<?php echo $this->formid ?>" action="#" onsubmit="return false;" style="margin-bottom:20px;margin-top:20px;">
 
-            <div id="loader<?php echo $this->formid ?>">
-                <img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" class="loader"/>
-            </div>
-            <div id="searchSpan<?php echo $this->formid ?>" class="searchbox" style="float: right;">
+            <div id="searchSpan<?php echo $this->formid ?>" class="searchbox">
             <div id="searchBest">
                 <input type="text" class="searchfieldreal" name="param" id="param<?php echo $this->formid ?>"/>
-                <img class="searchfield" src="graph/croix.gif" alt="suppression" style="position:relative;"
+                <button type="button" class="search-clear" aria-label="<?php echo _T('Clear search', 'base'); ?>"
                      onclick="document.getElementById('param<?php echo $this->formid ?>').value = '';
                              pushSearch<?php echo $this->formid ?>();
-                             return false;" />
-                 <button style="margin-left:20px;" onclick="pushSearch<?php echo $this->formid ?>();
+                             return false;"></button>
+                 <button onclick="pushSearch<?php echo $this->formid ?>();
                          return false;"><?php echo _T("Search", "glpi");?></button>
             </div>
+            <span class="loader" aria-hidden="true"></span>
             </div>
 
             <script type="text/javascript">
@@ -2010,8 +2021,7 @@ class AjaxFilterLocation extends AjaxFilter
         $root = $conf["global"]["root"];
         ?>
         <form name="Form" id="Form" action="#" onsubmit="return false;">
-            <div id="loader"><img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" class="loader"/></div>
-            <div id="searchSpan" class="searchbox" style="float: right;">
+            <div id="searchSpan" class="searchbox">
             <div id="searchBest">
                 <?php foreach ($this->checkbox as $checkbox) {
                     $checkbox->display();
@@ -2024,11 +2034,12 @@ class AjaxFilterLocation extends AjaxFilter
                 </span>
                 <input type="text" class="searchfieldreal" name="param" id="param" onkeyup="pushSearch();
                         return false;" />
-                    <img class="searchfield" src="graph/croix.gif" alt="suppression" style="position:relative;"
+                    <button type="button" class="search-clear" aria-label="<?php echo _T('Clear search', 'base'); ?>"
                          onclick="document.getElementById('param').value = '';
                                  pushSearch();
-                                 return false;" />
+                                 return false;"></button>
             </div>
+            <span class="loader" aria-hidden="true"></span>
             </div>
 
             <script type="text/javascript">
@@ -2165,7 +2176,7 @@ class AjaxLocation extends AjaxFilterLocation
                         ?>
                     </span>
                 </span>
-                <img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" />
+                <span class="loader" aria-hidden="true"></span>
             </div>
 
             <script type="text/javascript">

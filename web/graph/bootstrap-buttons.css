@@ -14,7 +14,7 @@
   font: inherit; font-weight: 600; letter-spacing: .01em; line-height: 1.2;
   display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
   padding: .625rem 1rem;
-  border-radius: 14px;
+  border-radius: 9px;
   border: 1px solid #c5c5c5;
   background: #f5f5f5;
   color: #333;
@@ -45,8 +45,18 @@ a.btn { text-decoration: none; }
   opacity: .55; cursor: not-allowed; transform: none; box-shadow: none;
 }
 
-.btn-large { padding: .8rem 1.25rem; font-size: 1.05rem; border-radius: inherit; }
-.btn-small { padding: .45rem .75rem; font-size: .875rem; border-radius: inherit; }
+.btn-large { padding: .8rem 1.25rem; font-size: 1.05rem; border-radius: 9px; }
+.btn-small {
+  padding: .45rem .75rem;
+  font-size: .875rem;
+  border-radius: 9px;
+  margin: 4px 0;
+}
+.btn-small + .btn,
+.btn-small + .btn-small,
+.btn + .btn-small {
+  margin-left: 8px;
+}
 .btn-block { display: block; width: 100%; padding-left: 0; padding-right: 0; box-sizing: border-box; }
 .btn-block + .btn-block { margin-top: 5px; }
 
@@ -105,6 +115,18 @@ a.btn { text-decoration: none; }
 #btnInstallUpdates:hover{ color: #E6EDF2 !important;}
 
 .btn-no-marge { margin: 0; }
+
+.btn-danger {
+  --tblr-btn-color: #d63939;
+  background-color: var(--tblr-btn-color);
+  color: var(--tblr-btn-color-text);
+}
+
+.btn-danger:hover {
+  color: var(--tblr-btn-color-text);
+  background: var(--tblr-btn-color-interactive);
+  border-color: var(--tblr-btn-color);
+}
 
 @media (forced-colors: active) { .btn { border-color: ButtonText; box-shadow: none; } }
 @media (prefers-reduced-motion: reduce) { .btn { transition: none; } }

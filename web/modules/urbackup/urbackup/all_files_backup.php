@@ -1,15 +1,16 @@
 <?php
 /*
- * (c) 2022 Siveo, http://www.siveo.net/
+ * (c) 2016-2023 Siveo, http://www.siveo.net
+ * (c) 2024-2025 Medulla, http://www.medulla-tech.io
  *
  * $Id$
  *
- * This file is part of Pulse.
+ * This file is part of MMC, http://www.medulla-tech.io
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ * the Free Software Foundation; either version 3 of the License, or
+ * any later version.
  *
  * MMC is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -17,8 +18,8 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with MMC; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ * along with MMC; If not, see <http://www.gnu.org/licenses/>.
+ * file: all_files_backup.php
  */
 require("graph/navbar.inc.php");
 require("localSidebar.php");
@@ -104,9 +105,10 @@ if ($path != "/") {
 }
 ?>
 <a class='btn btn-small btn-primary' title=<?php echo _T("Back to backup list", 'urbackup'); ?> href="main.php?module=urbackup&amp;submod=urbackup&amp;action=list_backups&amp;clientid=<?php echo $client_id ?>&amp;clientname=<?php echo $client_name ?>&amp;groupname=<?php echo $groupname ?>&amp;jidmachine=<?php echo $jidmachine ?>"><?php echo _T("Back to backup list", 'urbackup'); ?></a>
-<form id="searchBest" method="post" style="width:285px; float:right;" action="main.php?module=urbackup&amp;submod=urbackup&amp;action=result_search_file&amp;clientid=<?php echo $client_id ?>&amp;backupid=<?php echo $backup_id ?>">
+<form id="searchBest" method="post" style="width:285px; margin-left:auto;" action="main.php?module=urbackup&amp;submod=urbackup&amp;action=result_search_file&amp;clientid=<?php echo $client_id ?>&amp;backupid=<?php echo $backup_id ?>">
     <input type="text" class="searchfieldreal" name="filenamesearch" id="filenamesearch">
-    <img class="searchfield" src="graph/croix.gif" alt="suppression" style="position:relative;">
+    <button type="button" class="search-clear" aria-label="<?php echo _T('Clear search', 'base'); ?>"
+        onclick="document.getElementById('filenamesearch').value='';"></button>
     <input type="submit" value="Search" style="margin-left: 15px;">
 </form>
 
