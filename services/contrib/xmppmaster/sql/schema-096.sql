@@ -184,6 +184,36 @@ ADD UNIQUE INDEX IF NOT EXISTS `index_uniq_entity_uuid` (`update_id` ASC, `entit
 -- =====================================================================
 -- =====================================================================
 -- =====================================================================
+-- =====================================================================
+-- PROCEDURE : `up_genere_list_rule_entity`()
+-- ---------------------------------------------------------------------
+-- Description :
+--   Cette procédure initialise la table `xmppmaster.up_auto_approve_rules`
+--   pour une entité GLPI donnée (`p_entity_id`) uniquement si celle-ci existe.
+--   Elle ne supprime rien : si des règles existent déjà pour l’entité,
+--   la procédure ne les modifie pas.
+--   Si aucune règle n’existe, elle insère celles définies dans
+--   `xmppmaster.applicationconfig` (key='table rules', context='entity').
+--
+-- Étapes principales :
+--   1. Vérifie que l'entité existe dans `glpi_entity`.
+--   2. Parcourt les entrées `applicationconfig` correspondant aux règles actives.
+--   3. Insère pour chaque règle un enregistrement dans `up_auto_approve_rules`
+--      avec `active_rule = 0` pour l’entité donnée.
+--
+-- Paramètres :
+--   - p_entity_id (INT) : Identifiant GLPI de l’entité à initialiser.
+--
+-- Effets :
+--   - Ne supprime aucune donnée existante.
+--   - Ajoute uniquement les entrées manquantes pour l’entité.
+--
+-- Contraintes / Remarques :
+--   - Le champ `active_rule` est toujours initialisé à 0 (désactivé par défaut).
+--   - Si l’entité n’existe pas dans `glpi_entity`, la procédure ne fait rien.
+--   - Cette procédure est complémentaire à `up_regenere_list_produit_entity()`,
+--     mais limitée à l’initialisation des règles automatiques.
+-- =====================================================================
 USE `xmppmaster`;
 DROP procedure IF EXISTS `up_genere_list_rule_entity`;
 
@@ -195,36 +225,7 @@ DELIMITER $$
 USE `xmppmaster`$$
 CREATE PROCEDURE `up_genere_list_rule_entity`(IN p_entity_id INT)
 BEGIN
-    -- =====================================================================
-    -- PROCEDURE : `up_genere_list_rule_entity`()
-    -- ---------------------------------------------------------------------
-    -- Description :
-    --   Cette procédure initialise la table `xmppmaster.up_auto_approve_rules`
-    --   pour une entité GLPI donnée (`p_entity_id`) uniquement si celle-ci existe.
-    --   Elle ne supprime rien : si des règles existent déjà pour l’entité,
-    --   la procédure ne les modifie pas.
-    --   Si aucune règle n’existe, elle insère celles définies dans
-    --   `xmppmaster.applicationconfig` (key='table rules', context='entity').
-    --
-    -- Étapes principales :
-    --   1. Vérifie que l'entité existe dans `glpi_entity`.
-    --   2. Parcourt les entrées `applicationconfig` correspondant aux règles actives.
-    --   3. Insère pour chaque règle un enregistrement dans `up_auto_approve_rules`
-    --      avec `active_rule = 0` pour l’entité donnée.
-    --
-    -- Paramètres :
-    --   - p_entity_id (INT) : Identifiant GLPI de l’entité à initialiser.
-    --
-    -- Effets :
-    --   - Ne supprime aucune donnée existante.
-    --   - Ajoute uniquement les entrées manquantes pour l’entité.
-    --
-    -- Contraintes / Remarques :
-    --   - Le champ `active_rule` est toujours initialisé à 0 (désactivé par défaut).
-    --   - Si l’entité n’existe pas dans `glpi_entity`, la procédure ne fait rien.
-    --   - Cette procédure est complémentaire à `up_regenere_list_produit_entity()`,
-    --     mais limitée à l’initialisation des règles automatiques.
-    -- =====================================================================
+
     -- Variables
     DECLARE done INT DEFAULT 0;
     DECLARE v_msrcseverity VARCHAR(1024);
@@ -272,6 +273,38 @@ DELIMITER ;
 -- =====================================================================
 -- =====================================================================
 -- =====================================================================
+-- =====================================================================
+-- PROCEDURE : up_genere_list_produit_entity()
+-- Description :
+--   Cette procédure initialise la table xmppmaster.up_list_produit pour une
+--   entité GLPI donnée (spécifiée par son glpi_id) uniquement si aucun produit
+--   n’y est encore associé.
+--   Elle ne supprime rien : si des produits existent déjà pour l’entité,
+--   la procédure ne fait aucune modification.
+--   Dans le cas contraire, elle insère les produits définis dans
+--   xmppmaster.applicationconfig (key='table produits', context='entity').
+--
+-- Étapes principales :
+--   1. Vérification que l'entité existe dans glpi_entity.
+--   2. Vérification de la présence d’entrées dans up_list_produit pour cette entité.
+--   3. Si aucune entrée n’existe :
+--        a. Parcours de la liste des produits définis dans applicationconfig.
+--        b. Insertion d’une ligne (entity_id, name_procedure, enable=0)
+--           pour chaque produit associé à l’entité spécifiée.
+--
+-- Paramètres :
+--   - p_entity_id (INT) : Identifiant GLPI de l’entité à initialiser.
+--
+-- Effets :
+--   - Ne supprime aucune donnée existante.
+--   - Ajoute de nouvelles entrées uniquement si l’entité n’a encore aucun produit.
+--
+-- Contraintes / Remarques :
+--   - Le champ enable est toujours initialisé à 0 (désactivé par défaut).
+--   - Si l’entité n’existe pas dans glpi_entity, la procédure ne fait rien.
+--   - Cette procédure est complémentaire à up_regenere_list_produit_entity(),
+--     mais ne fait l’insertion que si nécessaire.
+-- =====================================================================
 USE `xmppmaster`;
 DROP procedure IF EXISTS `up_genere_list_produit_entity`;
 
@@ -283,38 +316,7 @@ DELIMITER $$
 USE `xmppmaster`$$
 CREATE PROCEDURE `up_genere_list_produit_entity`(IN p_entity_id INT)
 BEGIN
-    -- =====================================================================
-    -- PROCEDURE : up_genere_list_produit_entity()
-    -- Description :
-    --   Cette procédure initialise la table xmppmaster.up_list_produit pour une
-    --   entité GLPI donnée (spécifiée par son glpi_id) uniquement si aucun produit
-    --   n’y est encore associé.
-    --   Elle ne supprime rien : si des produits existent déjà pour l’entité,
-    --   la procédure ne fait aucune modification.
-    --   Dans le cas contraire, elle insère les produits définis dans
-    --   xmppmaster.applicationconfig (key='table produits', context='entity').
-    --
-    -- Étapes principales :
-    --   1. Vérification que l'entité existe dans glpi_entity.
-    --   2. Vérification de la présence d’entrées dans up_list_produit pour cette entité.
-    --   3. Si aucune entrée n’existe :
-    --        a. Parcours de la liste des produits définis dans applicationconfig.
-    --        b. Insertion d’une ligne (entity_id, name_procedure, enable=0)
-    --           pour chaque produit associé à l’entité spécifiée.
-    --
-    -- Paramètres :
-    --   - p_entity_id (INT) : Identifiant GLPI de l’entité à initialiser.
-    --
-    -- Effets :
-    --   - Ne supprime aucune donnée existante.
-    --   - Ajoute de nouvelles entrées uniquement si l’entité n’a encore aucun produit.
-    --
-    -- Contraintes / Remarques :
-    --   - Le champ enable est toujours initialisé à 0 (désactivé par défaut).
-    --   - Si l’entité n’existe pas dans glpi_entity, la procédure ne fait rien.
-    --   - Cette procédure est complémentaire à up_regenere_list_produit_entity(),
-    --     mais ne fait l’insertion que si nécessaire.
-    -- =====================================================================
+
 -- Variables
     DECLARE done INT DEFAULT 0;
     DECLARE v_produit VARCHAR(1024);
@@ -367,6 +369,36 @@ DELIMITER ;
 -- =====================================================================
 -- =====================================================================
 -- =====================================================================
+-- =====================================================================
+-- PROCEDURE : up_regenere_list_produit_entity()
+-- Description :
+--   Cette procédure régénère la table xmppmaster.up_list_produit pour une
+--   seule entité GLPI spécifiée par son glpi_id.
+--   Elle supprime d’abord les entrées existantes pour cette entité, puis
+--   recrée toutes les associations avec les produits définis dans
+--   xmppmaster.applicationconfig (key='table produits', context='entity').
+--
+-- Étapes principales :
+--   1. Vérification que l'entité existe dans glpi_entity.
+--   2. Suppression des anciennes lignes pour cette entité dans up_list_produit.
+--   3. Parcours de la liste des produits définis dans applicationconfig.
+--   4. Pour chaque produit, insertion d’une ligne (entity_id, name_procedure, enable=0)
+--      pour l’entité spécifiée.
+--
+-- Paramètres :
+--   - p_entity_id (INT) : Identifiant GLPI de l’entité à régénérer.
+--
+-- Effets :
+--   - Supprime toutes les entrées existantes pour l’entité spécifiée.
+--   - Ajoute de nouvelles entrées pour cette entité couvrant l’ensemble
+--     des produits définis.
+--
+-- Contraintes / Remarques :
+--   - Le champ enable est toujours initialisé à 0 (désactivé par défaut).
+--   - Si l’entité n’existe pas dans glpi_entity, la procédure ne fait rien.
+--   - Cette procédure s’inspire du trigger xmppmasterglpi_entity_AFTER_INSERT
+--     mais agit uniquement sur l’entité spécifiée, et non sur toutes les entités.
+-- =====================================================================
 USE `xmppmaster`;
 DROP procedure IF EXISTS `up_regenere_list_produit_entity`;
 
@@ -380,36 +412,7 @@ CREATE  PROCEDURE `up_regenere_list_produit_entity`(
     IN p_entity_id INT
 )
 BEGIN
-    -- =====================================================================
-    -- PROCEDURE : up_regenere_list_produit_entity()
-    -- Description :
-    --   Cette procédure régénère la table xmppmaster.up_list_produit pour une
-    --   seule entité GLPI spécifiée par son glpi_id.
-    --   Elle supprime d’abord les entrées existantes pour cette entité, puis
-    --   recrée toutes les associations avec les produits définis dans
-    --   xmppmaster.applicationconfig (key='table produits', context='entity').
-    --
-    -- Étapes principales :
-    --   1. Vérification que l'entité existe dans glpi_entity.
-    --   2. Suppression des anciennes lignes pour cette entité dans up_list_produit.
-    --   3. Parcours de la liste des produits définis dans applicationconfig.
-    --   4. Pour chaque produit, insertion d’une ligne (entity_id, name_procedure, enable=0)
-    --      pour l’entité spécifiée.
-    --
-    -- Paramètres :
-    --   - p_entity_id (INT) : Identifiant GLPI de l’entité à régénérer.
-    --
-    -- Effets :
-    --   - Supprime toutes les entrées existantes pour l’entité spécifiée.
-    --   - Ajoute de nouvelles entrées pour cette entité couvrant l’ensemble
-    --     des produits définis.
-    --
-    -- Contraintes / Remarques :
-    --   - Le champ enable est toujours initialisé à 0 (désactivé par défaut).
-    --   - Si l’entité n’existe pas dans glpi_entity, la procédure ne fait rien.
-    --   - Cette procédure s’inspire du trigger xmppmasterglpi_entity_AFTER_INSERT
-    --     mais agit uniquement sur l’entité spécifiée, et non sur toutes les entités.
-    -- =====================================================================
+
 
     -- Variables pour le curseur
     DECLARE done INT DEFAULT 0;
@@ -460,6 +463,34 @@ DELIMITER ;
 -- =====================================================================
 -- =====================================================================
 -- =====================================================================
+-- =====================================================================
+-- PROCEDURE : up_regenere_list_produit()
+-- Description :
+--   Cette procédure régénère entièrement la table xmppmaster.up_list_produit.
+--   Elle vide d’abord le contenu existant (TRUNCATE), puis recrée toutes les
+--   associations entre les entités GLPI (glpi_entity) et les produits définis
+--   dans xmppmaster.applicationconfig (key='table produits', context='entity').
+--
+-- Étapes principales :
+--   1. Remise à zéro de la table up_list_produit (TRUNCATE).
+--   2. Parcours de la liste des produits définis dans applicationconfig.
+--   3. Pour chaque produit, insertion d’une ligne (entity_id, name_procedure, enable=0)
+--      pour toutes les entités présentes dans glpi_entity.
+--
+-- Paramètres :
+--   - Aucun.
+--
+-- Effets :
+--   - Supprime toutes les entrées existantes dans xmppmaster.up_list_produit.
+--   - Ajoute de nouvelles entrées pour couvrir l’ensemble des entités et produits.
+--
+-- Contraintes / Remarques :
+--   - Le champ enable est toujours initialisé à 0 (désactivé par défaut).
+--   - La procédure peut être appelée manuellement pour forcer une remise à plat
+--     de la configuration produits/entités.
+--   - Elle s’inspire du trigger xmppmasterglpi_entity_AFTER_INSERT mais agit
+--     globalement sur toutes les entités déjà existantes.
+-- =====================================================================
 USE `xmppmaster`;
 DROP procedure IF EXISTS `up_regenere_list_produit`;
 
@@ -471,34 +502,7 @@ DELIMITER $$
 USE `xmppmaster`$$
 CREATE  PROCEDURE `up_regenere_list_produit`()
 BEGIN
-    -- =====================================================================
-    -- PROCEDURE : up_regenere_list_produit()
-    -- Description :
-    --   Cette procédure régénère entièrement la table xmppmaster.up_list_produit.
-    --   Elle vide d’abord le contenu existant (TRUNCATE), puis recrée toutes les
-    --   associations entre les entités GLPI (glpi_entity) et les produits définis
-    --   dans xmppmaster.applicationconfig (key='table produits', context='entity').
-    --
-    -- Étapes principales :
-    --   1. Remise à zéro de la table up_list_produit (TRUNCATE).
-    --   2. Parcours de la liste des produits définis dans applicationconfig.
-    --   3. Pour chaque produit, insertion d’une ligne (entity_id, name_procedure, enable=0)
-    --      pour toutes les entités présentes dans glpi_entity.
-    --
-    -- Paramètres :
-    --   - Aucun.
-    --
-    -- Effets :
-    --   - Supprime toutes les entrées existantes dans xmppmaster.up_list_produit.
-    --   - Ajoute de nouvelles entrées pour couvrir l’ensemble des entités et produits.
-    --
-    -- Contraintes / Remarques :
-    --   - Le champ enable est toujours initialisé à 0 (désactivé par défaut).
-    --   - La procédure peut être appelée manuellement pour forcer une remise à plat
-    --     de la configuration produits/entités.
-    --   - Elle s’inspire du trigger xmppmasterglpi_entity_AFTER_INSERT mais agit
-    --     globalement sur toutes les entités déjà existantes.
-    -- =====================================================================
+
     -- Variables pour le curseur
     DECLARE done INT DEFAULT 0;
     DECLARE v_produit VARCHAR(1024);
@@ -583,6 +587,29 @@ CREATE TABLE xmppmaster.up_list_produit (
 -- =====================================================================
 -- =====================================================================
 -- =====================================================================
+-- =====================================================================
+-- PROCEDURE : regenere_liste_produits
+-- Description :
+--   Réinitialise complètement la table xmppmaster.up_list_produit,
+--   puis régénère les associations entité/produit pour chaque entité
+--   présente dans la table xmppmaster.glpi_entity.
+--
+-- Fonctionnement :
+--   - Vide la table xmppmaster.up_list_produit.
+--   - Récupère la liste des produits configurés (clé 'tables produits', contexte 'entity')
+--     depuis la table xmppmaster.applicationconfig.
+--   - Pour chaque entité et pour chaque produit, insère une ligne dans up_list_produit
+--     avec enable = 0.
+--
+-- Tables concernées :
+--   - xmppmaster.glpi_entity : source des entités.
+--   - xmppmaster.applicationconfig : source des produits configurés.
+--   - xmppmaster.up_list_produit : table cible (reconstruite).
+--
+-- Remarques :
+--   - Le champ enable est toujours initialisé à 0, l’activation doit être faite manuellement.
+--   - Toutes les anciennes associations sont supprimées avant reconstruction.
+-- =====================================================================
 USE `xmppmaster`;
 DROP procedure IF EXISTS `up_regenere_list_produit`;
 
@@ -594,29 +621,7 @@ DELIMITER $$
 USE `xmppmaster`$$
 CREATE PROCEDURE `up_regenere_list_produit`()
 BEGIN
-    -- =====================================================================
-    -- PROCEDURE : regenere_liste_produits
-    -- Description :
-    --   Réinitialise complètement la table xmppmaster.up_list_produit,
-    --   puis régénère les associations entité/produit pour chaque entité
-    --   présente dans la table xmppmaster.glpi_entity.
-    --
-    -- Fonctionnement :
-    --   - Vide la table xmppmaster.up_list_produit.
-    --   - Récupère la liste des produits configurés (clé 'tables produits', contexte 'entity')
-    --     depuis la table xmppmaster.applicationconfig.
-    --   - Pour chaque entité et pour chaque produit, insère une ligne dans up_list_produit
-    --     avec enable = 0.
-    --
-    -- Tables concernées :
-    --   - xmppmaster.glpi_entity : source des entités.
-    --   - xmppmaster.applicationconfig : source des produits configurés.
-    --   - xmppmaster.up_list_produit : table cible (reconstruite).
-    --
-    -- Remarques :
-    --   - Le champ enable est toujours initialisé à 0, l’activation doit être faite manuellement.
-    --   - Toutes les anciennes associations sont supprimées avant reconstruction.
-    -- =====================================================================
+
     -- Variables pour le curseur
     DECLARE done INT DEFAULT 0;
     DECLARE v_produit VARCHAR(1024);
@@ -661,6 +666,30 @@ DELIMITER ;
 -- =====================================================================
 -- =====================================================================
 -- =====================================================================
+-- =====================================================================
+-- Trigger : glpi_entity_AFTER_INSERT
+-- Description :
+--   Ce trigger s’exécute après l’insertion d’une nouvelle entité dans la table glpi_entity.
+--   Il initialise automatiquement la liste des produits associés à cette entité,
+--   en se basant sur la configuration stockée dans la table applicationconfig.
+--
+-- Fonctionnement :
+--   - Récupère la liste des produits configurés (clé 'tables produits', contexte 'entity')
+--     depuis la table xmppmaster.applicationconfig.
+--   - Pour chaque produit trouvé, insère une ligne dans xmppmaster.up_list_produit,
+--     associée à la nouvelle entité, avec enable=0 (désactivé par défaut).
+--   - Ne duplique pas les entrées : vérifie l’absence de (entity_id, name_procedure) avant insertion.
+--
+-- Tables concernées :
+--   - xmppmaster.glpi_entity : table source (déclenche le trigger).
+--   - xmppmaster.applicationconfig : source de la liste des produits à associer.
+--   - xmppmaster.up_list_produit : table cible (stocke les associations entité/produit).
+--
+-- Remarques :
+--   - Utilise un curseur pour parcourir dynamiquement les produits configurés.
+--   - Le champ enable est toujours initialisé à 0, l’activation doit être faite manuellement.
+--   - Le trigger garantit qu’une entité ne peut pas avoir deux fois le même produit associé.
+-- =====================================================================
 DROP TRIGGER IF EXISTS `xmppmaster`.`glpi_entity_AFTER_INSERT`;
 
 DELIMITER $$
@@ -669,30 +698,7 @@ CREATE  TRIGGER `xmppmaster`.`glpi_entity_AFTER_INSERT`
 AFTER INSERT ON `glpi_entity`
 FOR EACH ROW
 BEGIN
-    -- =====================================================================
-    -- Trigger : glpi_entity_AFTER_INSERT
-    -- Description :
-    --   Ce trigger s’exécute après l’insertion d’une nouvelle entité dans la table glpi_entity.
-    --   Il initialise automatiquement la liste des produits associés à cette entité,
-    --   en se basant sur la configuration stockée dans la table applicationconfig.
-    --
-    -- Fonctionnement :
-    --   - Récupère la liste des produits configurés (clé 'tables produits', contexte 'entity')
-    --     depuis la table xmppmaster.applicationconfig.
-    --   - Pour chaque produit trouvé, insère une ligne dans xmppmaster.up_list_produit,
-    --     associée à la nouvelle entité, avec enable=0 (désactivé par défaut).
-    --   - Ne duplique pas les entrées : vérifie l’absence de (entity_id, name_procedure) avant insertion.
-    --
-    -- Tables concernées :
-    --   - xmppmaster.glpi_entity : table source (déclenche le trigger).
-    --   - xmppmaster.applicationconfig : source de la liste des produits à associer.
-    --   - xmppmaster.up_list_produit : table cible (stocke les associations entité/produit).
-    --
-    -- Remarques :
-    --   - Utilise un curseur pour parcourir dynamiquement les produits configurés.
-    --   - Le champ enable est toujours initialisé à 0, l’activation doit être faite manuellement.
-    --   - Le trigger garantit qu’une entité ne peut pas avoir deux fois le même produit associé.
-    -- =====================================================================
+
 
     DECLARE done INT DEFAULT 0;
     DECLARE v_produit VARCHAR(1024);
@@ -734,6 +740,29 @@ DELIMITER ;
 -- =====================================================================
 -- =====================================================================
 -- =====================================================================
+-- =====================================================================
+-- Trigger : glpi_entity_AFTER_UPDATE
+-- Description :
+--   Ce trigger s’exécute après la mise à jour d’une ligne dans la table glpi_entity.
+--   Il permet de maintenir la cohérence des associations entité/produit dans la table
+--   xmppmaster.up_list_produit lorsque l’identifiant (glpi_id) d’une entité est modifié.
+--
+-- Fonctionnement :
+--   - Si la valeur de glpi_id change (OLD.glpi_id ≠ NEW.glpi_id) :
+--     - Supprime les éventuelles entrées déjà existantes dans xmppmaster.up_list_produit
+--       pour le nouvel identifiant (NEW.glpi_id), afin d’éviter les doublons.
+--     - Met à jour toutes les entrées avec l’ancien identifiant (OLD.glpi_id)
+--       pour les associer au nouvel identifiant (NEW.glpi_id).
+--
+-- Tables concernées :
+--   - xmppmaster.glpi_entity : table source (déclenche le trigger).
+--   - xmppmaster.up_list_produit : table cible (contient les associations entité/produit).
+--
+-- Remarques :
+--   - Ce trigger suppose que glpi_id peut être modifié manuellement, bien que cela soit rare.
+--   - Il agit uniquement si la valeur de glpi_id change effectivement.
+--   - Les suppressions sont faites avant la mise à jour pour éviter toute collision d’ID.
+-- =====================================================================
 DROP TRIGGER IF EXISTS `xmppmaster`.`glpi_entity_AFTER_UPDATE`;
 
 DELIMITER $$
@@ -742,29 +771,7 @@ CREATE  TRIGGER `xmppmaster`.`glpi_entity_AFTER_UPDATE`
 AFTER UPDATE ON `glpi_entity`
 FOR EACH ROW
 BEGIN
-    -- =====================================================================
-    -- Trigger : glpi_entity_AFTER_UPDATE
-    -- Description :
-    --   Ce trigger s’exécute après la mise à jour d’une ligne dans la table glpi_entity.
-    --   Il permet de maintenir la cohérence des associations entité/produit dans la table
-    --   xmppmaster.up_list_produit lorsque l’identifiant (glpi_id) d’une entité est modifié.
-    --
-    -- Fonctionnement :
-    --   - Si la valeur de glpi_id change (OLD.glpi_id ≠ NEW.glpi_id) :
-    --     - Supprime les éventuelles entrées déjà existantes dans xmppmaster.up_list_produit
-    --       pour le nouvel identifiant (NEW.glpi_id), afin d’éviter les doublons.
-    --     - Met à jour toutes les entrées avec l’ancien identifiant (OLD.glpi_id)
-    --       pour les associer au nouvel identifiant (NEW.glpi_id).
-    --
-    -- Tables concernées :
-    --   - xmppmaster.glpi_entity : table source (déclenche le trigger).
-    --   - xmppmaster.up_list_produit : table cible (contient les associations entité/produit).
-    --
-    -- Remarques :
-    --   - Ce trigger suppose que glpi_id peut être modifié manuellement, bien que cela soit rare.
-    --   - Il agit uniquement si la valeur de glpi_id change effectivement.
-    --   - Les suppressions sont faites avant la mise à jour pour éviter toute collision d’ID.
-    -- =====================================================================
+
     IF OLD.glpi_id <> NEW.glpi_id THEN
         DELETE FROM xmppmaster.up_list_produit
         WHERE entity_id = NEW.glpi_id;
@@ -783,6 +790,25 @@ DELIMITER ;
 -- =====================================================================
 -- =====================================================================
 -- =====================================================================
+-- =====================================================================
+-- Trigger : glpi_entity_AFTER_DELETE
+-- Description :
+--   Ce trigger s’exécute après la suppression d’une entité dans la table glpi_entity.
+--   Il supprime automatiquement toutes les associations de produits liées à cette entité
+--   dans la table xmppmaster.up_list_produit, afin d’éviter les données orphelines.
+--
+-- Fonctionnement :
+--   - Récupère l’identifiant de l’entité supprimée (OLD.glpi_id).
+--   - Supprime toutes les lignes de xmppmaster.up_list_produit où entity_id correspond à glpi_id.
+--
+-- Tables concernées :
+--   - xmppmaster.glpi_entity : table source (déclenche le trigger).
+--   - xmppmaster.up_list_produit : table cible (nettoyée lors de la suppression d’une entité).
+--
+-- Remarques :
+--   - Ce trigger évite que des produits restent liés à des entités inexistantes.
+--   - Aucun contrôle supplémentaire n’est effectué : la suppression est inconditionnelle.
+-- =====================================================================
 DROP TRIGGER IF EXISTS `xmppmaster`.`glpi_entity_AFTER_DELETE`;
 
 DELIMITER $$
@@ -791,25 +817,7 @@ CREATE  TRIGGER `xmppmaster`.`glpi_entity_AFTER_DELETE`
 AFTER DELETE ON `glpi_entity`
 FOR EACH ROW
 BEGIN
-	-- =====================================================================
-	-- Trigger : glpi_entity_AFTER_DELETE
-	-- Description :
-	--   Ce trigger s’exécute après la suppression d’une entité dans la table glpi_entity.
-	--   Il supprime automatiquement toutes les associations de produits liées à cette entité
-	--   dans la table xmppmaster.up_list_produit, afin d’éviter les données orphelines.
-	--
-	-- Fonctionnement :
-	--   - Récupère l’identifiant de l’entité supprimée (OLD.glpi_id).
-	--   - Supprime toutes les lignes de xmppmaster.up_list_produit où entity_id correspond à glpi_id.
-	--
-	-- Tables concernées :
-	--   - xmppmaster.glpi_entity : table source (déclenche le trigger).
-	--   - xmppmaster.up_list_produit : table cible (nettoyée lors de la suppression d’une entité).
-	--
-	-- Remarques :
-	--   - Ce trigger évite que des produits restent liés à des entités inexistantes.
-	--   - Aucun contrôle supplémentaire n’est effectué : la suppression est inconditionnelle.
-	-- =====================================================================
+
   DELETE FROM xmppmaster.up_list_produit
   WHERE entity_id = OLD.glpi_id;
 END$$
@@ -859,6 +867,40 @@ UNLOCK TABLES;
 -- =====================================================================
 -- =====================================================================
 -- =====================================================================
+-- création table up_packages_MSOS_ARM64_24H2
+-- =====================================================================
+-- PROCEDURE : up_init_packages_server_MSOS_ARM64_24H2
+-- Description :
+--   Cette procédure initialise la table `up_packages_MSOS_ARM64_24H2` en extrayant
+--   les mises à jour spécifiques au **système d'exploitation serveur Microsoft
+--   version 24H2 (ARM64)** depuis la table `xmppmaster.update_data`.
+--   Elle prépare les données nécessaires pour le déploiement des packages
+--   liés à cette version et architecture du système d'exploitation.
+--
+-- Fonctionnement :
+--   - Supprime la table existante `up_packages_MSOS_ARM64_24H2` si elle existe déjà.
+--   - Crée une nouvelle table en effectuant une jointure entre `update_data` (alias `aa`)
+--     et `update_data` (alias `bb`), où `bb.bundledby_revision` correspond à `aa.revisionid`.
+--   - Applique des filtres stricts pour cibler uniquement :
+--     * Les titres (`title`) contenant "Microsoft server operating system version 24H2".
+--     * La famille de produit (`productfamily`) égale à "Windows".
+--     * L'inclusion exclusive de l'architecture ARM64.
+--     * L'exclusion des architectures X86 et X64.
+--     * L'exclusion des titres contenant "Dynamic".
+--
+-- Colonnes sélectionnées :
+--   - Identifiants : `updateid`, `revisionid`, `updateid_package`.
+--   - Métadonnées : `creationdate`, `compagny`, `product`, `productfamily`, etc.
+--   - Détails techniques : `msrcseverity`, `msrcnumber`, `kb`, `languages`, etc.
+--   - Relations entre packages : `supersededby`, `supersedes`, `bundledby_revision`.
+--   - Informations de déploiement : `deploymentaction`, `title_short`.
+--
+-- Remarques :
+--   - La table résultante est conçue pour faciliter la gestion des mises à jour
+--     spécifiques au **système d'exploitation serveur Microsoft version 24H2 (ARM64)**.
+--   - Les critères de filtrage garantissent que seuls les packages pertinents
+--     sont inclus dans la table finale.
+-- =====================================================================
 USE `xmppmaster`;
 DROP procedure IF EXISTS `up_init_packages_server_MSOS_ARM64_24H2`;
 
@@ -870,40 +912,7 @@ DELIMITER $$
 USE `xmppmaster`$$
 CREATE PROCEDURE `up_init_packages_server_MSOS_ARM64_24H2`()
 BEGIN
-    -- création table up_packages_MSOS_ARM64_24H2
-    -- =====================================================================
-    -- PROCEDURE : up_init_packages_server_MSOS_ARM64_24H2
-    -- Description :
-    --   Cette procédure initialise la table `up_packages_MSOS_ARM64_24H2` en extrayant
-    --   les mises à jour spécifiques au **système d'exploitation serveur Microsoft
-    --   version 24H2 (ARM64)** depuis la table `xmppmaster.update_data`.
-    --   Elle prépare les données nécessaires pour le déploiement des packages
-    --   liés à cette version et architecture du système d'exploitation.
-    --
-    -- Fonctionnement :
-    --   - Supprime la table existante `up_packages_MSOS_ARM64_24H2` si elle existe déjà.
-    --   - Crée une nouvelle table en effectuant une jointure entre `update_data` (alias `aa`)
-    --     et `update_data` (alias `bb`), où `bb.bundledby_revision` correspond à `aa.revisionid`.
-    --   - Applique des filtres stricts pour cibler uniquement :
-    --     * Les titres (`title`) contenant "Microsoft server operating system version 24H2".
-    --     * La famille de produit (`productfamily`) égale à "Windows".
-    --     * L'inclusion exclusive de l'architecture ARM64.
-    --     * L'exclusion des architectures X86 et X64.
-    --     * L'exclusion des titres contenant "Dynamic".
-    --
-    -- Colonnes sélectionnées :
-    --   - Identifiants : `updateid`, `revisionid`, `updateid_package`.
-    --   - Métadonnées : `creationdate`, `compagny`, `product`, `productfamily`, etc.
-    --   - Détails techniques : `msrcseverity`, `msrcnumber`, `kb`, `languages`, etc.
-    --   - Relations entre packages : `supersededby`, `supersedes`, `bundledby_revision`.
-    --   - Informations de déploiement : `deploymentaction`, `title_short`.
-    --
-    -- Remarques :
-    --   - La table résultante est conçue pour faciliter la gestion des mises à jour
-    --     spécifiques au **système d'exploitation serveur Microsoft version 24H2 (ARM64)**.
-    --   - Les critères de filtrage garantissent que seuls les packages pertinents
-    --     sont inclus dans la table finale.
-    -- =====================================================================
+
 DROP TABLE IF EXISTS up_packages_MSOS_ARM64_24H2;
 CREATE TABLE up_packages_MSOS_ARM64_24H2 AS
  SELECT
@@ -955,6 +964,39 @@ DELIMITER ;
 -- =====================================================================
 -- =====================================================================
 -- =====================================================================
+-- =====================================================================
+-- PROCEDURE : up_init_packages_server_MSOS_X64_21H2
+-- Description :
+--   Cette procédure initialise la table `up_packages_MSOS_X64_21H2` en extrayant
+--   les mises à jour spécifiques au **système d'exploitation serveur Microsoft
+--   version 21H2 (x64)** depuis la table `xmppmaster.update_data`.
+--   Elle prépare les données nécessaires pour le déploiement des packages
+--   liés à cette version du système d'exploitation.
+--
+-- Fonctionnement :
+--   - Supprime la table existante `up_packages_MSOS_X64_21H2` si elle existe déjà.
+--   - Crée une nouvelle table en effectuant une jointure entre `update_data` (alias `aa`)
+--     et `update_data` (alias `bb`), où `bb.bundledby_revision` correspond à `aa.revisionid`.
+--   - Applique des filtres stricts pour cibler uniquement :
+--     * Les titres (`title`) contenant "Microsoft server operating system version 21H2".
+--     * La famille de produit (`productfamily`) égale à "Windows".
+--     * L'exclusion des architectures ARM64 et X86.
+--     * L'exclusion des titres contenant "Dynamic".
+--     * L'inclusion exclusive de l'architecture X64.
+--
+-- Colonnes sélectionnées :
+--   - Identifiants : `updateid`, `revisionid`, `updateid_package`.
+--   - Métadonnées : `creationdate`, `compagny`, `product`, `productfamily`, etc.
+--   - Détails techniques : `msrcseverity`, `msrcnumber`, `kb`, `languages`, etc.
+--   - Relations entre packages : `supersededby`, `supersedes`, `bundledby_revision`.
+--   - Informations de déploiement : `deploymentaction`, `title_short`.
+--
+-- Remarques :
+--   - La table résultante est conçue pour faciliter la gestion des mises à jour
+--     spécifiques au **système d'exploitation serveur Microsoft version 21H2 (x64)**.
+--   - Les critères de filtrage garantissent que seuls les packages pertinents
+--     sont inclus dans la table finale.
+-- =====================================================================
 USE `xmppmaster`;
 DROP procedure IF EXISTS `xmppmaster`.`up_init_packages_server_MSOS_X64_21H2`;
 ;
@@ -963,39 +1005,7 @@ DELIMITER $$
 USE `xmppmaster`$$
 CREATE PROCEDURE `up_init_packages_server_MSOS_X64_21H2`()
 BEGIN
-    -- =====================================================================
-    -- PROCEDURE : up_init_packages_server_MSOS_X64_21H2
-    -- Description :
-    --   Cette procédure initialise la table `up_packages_MSOS_X64_21H2` en extrayant
-    --   les mises à jour spécifiques au **système d'exploitation serveur Microsoft
-    --   version 21H2 (x64)** depuis la table `xmppmaster.update_data`.
-    --   Elle prépare les données nécessaires pour le déploiement des packages
-    --   liés à cette version du système d'exploitation.
-    --
-    -- Fonctionnement :
-    --   - Supprime la table existante `up_packages_MSOS_X64_21H2` si elle existe déjà.
-    --   - Crée une nouvelle table en effectuant une jointure entre `update_data` (alias `aa`)
-    --     et `update_data` (alias `bb`), où `bb.bundledby_revision` correspond à `aa.revisionid`.
-    --   - Applique des filtres stricts pour cibler uniquement :
-    --     * Les titres (`title`) contenant "Microsoft server operating system version 21H2".
-    --     * La famille de produit (`productfamily`) égale à "Windows".
-    --     * L'exclusion des architectures ARM64 et X86.
-    --     * L'exclusion des titres contenant "Dynamic".
-    --     * L'inclusion exclusive de l'architecture X64.
-    --
-    -- Colonnes sélectionnées :
-    --   - Identifiants : `updateid`, `revisionid`, `updateid_package`.
-    --   - Métadonnées : `creationdate`, `compagny`, `product`, `productfamily`, etc.
-    --   - Détails techniques : `msrcseverity`, `msrcnumber`, `kb`, `languages`, etc.
-    --   - Relations entre packages : `supersededby`, `supersedes`, `bundledby_revision`.
-    --   - Informations de déploiement : `deploymentaction`, `title_short`.
-    --
-    -- Remarques :
-    --   - La table résultante est conçue pour faciliter la gestion des mises à jour
-    --     spécifiques au **système d'exploitation serveur Microsoft version 21H2 (x64)**.
-    --   - Les critères de filtrage garantissent que seuls les packages pertinents
-    --     sont inclus dans la table finale.
-    -- =====================================================================
+
 
 DROP TABLE IF EXISTS up_packages_MSOS_X64_21H2;
 -- création table up_packages_MSOS_X64_21H2
@@ -1049,6 +1059,39 @@ DELIMITER ;
 -- =====================================================================
 -- =====================================================================
 -- =====================================================================
+-- =====================================================================
+-- PROCEDURE : up_init_packages_server_MSOS_X64_22H2
+-- Description :
+--   Cette procédure initialise la table `up_packages_MSOS_X64_22H2` en extrayant
+--   les mises à jour spécifiques au **système d'exploitation serveur Microsoft
+--   version 22H2 (x64)** depuis la table `xmppmaster.update_data`.
+--   Elle prépare les données nécessaires pour le déploiement des packages
+--   liés à cette version du système d'exploitation.
+--
+-- Fonctionnement :
+--   - Supprime la table existante `up_packages_MSOS_X64_22H2` si elle existe déjà.
+--   - Crée une nouvelle table en effectuant une jointure entre `update_data` (alias `aa`)
+--     et `update_data` (alias `bb`), où `bb.bundledby_revision` correspond à `aa.revisionid`.
+--   - Applique des filtres stricts pour cibler uniquement :
+--     * Les titres (`title`) contenant "Microsoft server operating system version 22H2".
+--     * La famille de produit (`productfamily`) égale à "Windows".
+--     * L'exclusion des architectures ARM64 et X86.
+--     * L'exclusion des titres contenant "Dynamic".
+--     * L'inclusion exclusive de l'architecture X64.
+--
+-- Colonnes sélectionnées :
+--   - Identifiants : `updateid`, `revisionid`, `updateid_package`.
+--   - Métadonnées : `creationdate`, `compagny`, `product`, `productfamily`, etc.
+--   - Détails techniques : `msrcseverity`, `msrcnumber`, `kb`, `languages`, etc.
+--   - Relations entre packages : `supersededby`, `supersedes`, `bundledby_revision`.
+--   - Informations de déploiement : `deploymentaction`, `title_short`.
+--
+-- Remarques :
+--   - La table résultante est conçue pour faciliter la gestion des mises à jour
+--     spécifiques au **système d'exploitation serveur Microsoft version 22H2 (x64)**.
+--   - Les critères de filtrage garantissent que seuls les packages pertinents
+--     sont inclus dans la table finale.
+-- =====================================================================
 USE `xmppmaster`;
 DROP procedure IF EXISTS `xmppmaster`.`up_init_packages_server_MSOS_X64_22H2`;
 ;
@@ -1057,39 +1100,7 @@ DELIMITER $$
 USE `xmppmaster`$$
 CREATE PROCEDURE `up_init_packages_server_MSOS_X64_22H2`()
 BEGIN
-    -- =====================================================================
-    -- PROCEDURE : up_init_packages_server_MSOS_X64_22H2
-    -- Description :
-    --   Cette procédure initialise la table `up_packages_MSOS_X64_22H2` en extrayant
-    --   les mises à jour spécifiques au **système d'exploitation serveur Microsoft
-    --   version 22H2 (x64)** depuis la table `xmppmaster.update_data`.
-    --   Elle prépare les données nécessaires pour le déploiement des packages
-    --   liés à cette version du système d'exploitation.
-    --
-    -- Fonctionnement :
-    --   - Supprime la table existante `up_packages_MSOS_X64_22H2` si elle existe déjà.
-    --   - Crée une nouvelle table en effectuant une jointure entre `update_data` (alias `aa`)
-    --     et `update_data` (alias `bb`), où `bb.bundledby_revision` correspond à `aa.revisionid`.
-    --   - Applique des filtres stricts pour cibler uniquement :
-    --     * Les titres (`title`) contenant "Microsoft server operating system version 22H2".
-    --     * La famille de produit (`productfamily`) égale à "Windows".
-    --     * L'exclusion des architectures ARM64 et X86.
-    --     * L'exclusion des titres contenant "Dynamic".
-    --     * L'inclusion exclusive de l'architecture X64.
-    --
-    -- Colonnes sélectionnées :
-    --   - Identifiants : `updateid`, `revisionid`, `updateid_package`.
-    --   - Métadonnées : `creationdate`, `compagny`, `product`, `productfamily`, etc.
-    --   - Détails techniques : `msrcseverity`, `msrcnumber`, `kb`, `languages`, etc.
-    --   - Relations entre packages : `supersededby`, `supersedes`, `bundledby_revision`.
-    --   - Informations de déploiement : `deploymentaction`, `title_short`.
-    --
-    -- Remarques :
-    --   - La table résultante est conçue pour faciliter la gestion des mises à jour
-    --     spécifiques au **système d'exploitation serveur Microsoft version 22H2 (x64)**.
-    --   - Les critères de filtrage garantissent que seuls les packages pertinents
-    --     sont inclus dans la table finale.
-    -- =====================================================================
+
 DROP TABLE IF EXISTS up_packages_MSOS_X64_22H2;
 -- creation table up_packages_MSOS_X64_22H2
 CREATE TABLE up_packages_MSOS_X64_22H2 AS
@@ -1142,6 +1153,41 @@ DELIMITER ;
 -- =====================================================================
 -- =====================================================================
 -- =====================================================================
+-- création table up_packages_MSOS_X64_23H2
+
+-- =====================================================================
+-- PROCEDURE : up_init_packages_server_MSOS_X64_23H2
+-- Description :
+--   Cette procédure initialise la table `up_packages_MSOS_X64_23H2` en extrayant
+--   les mises à jour spécifiques au **système d'exploitation serveur Microsoft
+--   version 23H2 (x64)** depuis la table `xmppmaster.update_data`.
+--   Elle prépare les données nécessaires pour le déploiement des packages
+--   liés à cette version du système d'exploitation.
+--
+-- Fonctionnement :
+--   - Supprime la table existante `up_packages_MSOS_X64_23H2` si elle existe déjà.
+--   - Crée une nouvelle table en effectuant une jointure entre `update_data` (alias `aa`)
+--     et `update_data` (alias `bb`), où `bb.bundledby_revision` correspond à `aa.revisionid`.
+--   - Applique des filtres stricts pour cibler uniquement :
+--     * Les titres (`title`) contenant "Microsoft server operating system version 23H2".
+--     * La famille de produit (`productfamily`) égale à "Windows".
+--     * L'exclusion des architectures ARM64 et X86.
+--     * L'exclusion des titres contenant "Dynamic".
+--     * L'inclusion exclusive de l'architecture X64.
+--
+-- Colonnes sélectionnées :
+--   - Identifiants : `updateid`, `revisionid`, `updateid_package`.
+--   - Métadonnées : `creationdate`, `compagny`, `product`, `productfamily`, etc.
+--   - Détails techniques : `msrcseverity`, `msrcnumber`, `kb`, `languages`, etc.
+--   - Relations entre packages : `supersededby`, `supersedes`, `bundledby_revision`.
+--   - Informations de déploiement : `deploymentaction`, `title_short`.
+--
+-- Remarques :
+--   - La table résultante est conçue pour faciliter la gestion des mises à jour
+--     spécifiques au **système d'exploitation serveur Microsoft version 23H2 (x64)**.
+--   - Les critères de filtrage garantissent que seuls les packages pertinents
+--     sont inclus dans la table finale.
+-- =====================================================================
 USE `xmppmaster`;
 DROP procedure IF EXISTS `xmppmaster`.`up_init_packages_server_MSOS_X64_23H2`;
 ;
@@ -1150,41 +1196,7 @@ DELIMITER $$
 USE `xmppmaster`$$
 CREATE PROCEDURE `up_init_packages_server_MSOS_X64_23H2`()
 BEGIN
-    -- création table up_packages_MSOS_X64_23H2
 
-    -- =====================================================================
-    -- PROCEDURE : up_init_packages_server_MSOS_X64_23H2
-    -- Description :
-    --   Cette procédure initialise la table `up_packages_MSOS_X64_23H2` en extrayant
-    --   les mises à jour spécifiques au **système d'exploitation serveur Microsoft
-    --   version 23H2 (x64)** depuis la table `xmppmaster.update_data`.
-    --   Elle prépare les données nécessaires pour le déploiement des packages
-    --   liés à cette version du système d'exploitation.
-    --
-    -- Fonctionnement :
-    --   - Supprime la table existante `up_packages_MSOS_X64_23H2` si elle existe déjà.
-    --   - Crée une nouvelle table en effectuant une jointure entre `update_data` (alias `aa`)
-    --     et `update_data` (alias `bb`), où `bb.bundledby_revision` correspond à `aa.revisionid`.
-    --   - Applique des filtres stricts pour cibler uniquement :
-    --     * Les titres (`title`) contenant "Microsoft server operating system version 23H2".
-    --     * La famille de produit (`productfamily`) égale à "Windows".
-    --     * L'exclusion des architectures ARM64 et X86.
-    --     * L'exclusion des titres contenant "Dynamic".
-    --     * L'inclusion exclusive de l'architecture X64.
-    --
-    -- Colonnes sélectionnées :
-    --   - Identifiants : `updateid`, `revisionid`, `updateid_package`.
-    --   - Métadonnées : `creationdate`, `compagny`, `product`, `productfamily`, etc.
-    --   - Détails techniques : `msrcseverity`, `msrcnumber`, `kb`, `languages`, etc.
-    --   - Relations entre packages : `supersededby`, `supersedes`, `bundledby_revision`.
-    --   - Informations de déploiement : `deploymentaction`, `title_short`.
-    --
-    -- Remarques :
-    --   - La table résultante est conçue pour faciliter la gestion des mises à jour
-    --     spécifiques au **système d'exploitation serveur Microsoft version 23H2 (x64)**.
-    --   - Les critères de filtrage garantissent que seuls les packages pertinents
-    --     sont inclus dans la table finale.
-    -- =====================================================================
 
 DROP TABLE IF EXISTS up_packages_MSOS_X64_23H2;
 CREATE TABLE up_packages_MSOS_X64_23H2 AS
@@ -1237,7 +1249,39 @@ DELIMITER ;
 -- =====================================================================
 -- =====================================================================
 -- =====================================================================
-
+-- =====================================================================
+-- PROCEDURE : up_init_packages_server_MSOS_X64_24H2
+-- Description :
+--   Cette procédure initialise la table `up_packages_MSOS_X64_24H2` en extrayant
+--   les mises à jour spécifiques au **système d'exploitation serveur Microsoft
+--   version 24H2 (x64)** depuis la table `xmppmaster.update_data`.
+--   Elle prépare les données nécessaires pour le déploiement des packages
+--   liés à cette version du système d'exploitation.
+--
+-- Fonctionnement :
+--   - Supprime la table existante `up_packages_MSOS_X64_24H2` si elle existe déjà.
+--   - Crée une nouvelle table en effectuant une jointure entre `update_data` (alias `aa`)
+--     et `update_data` (alias `bb`), où `bb.bundledby_revision` correspond à `aa.revisionid`.
+--   - Applique des filtres stricts pour cibler uniquement :
+--     * Les titres (`title`) contenant "Microsoft server operating system version 24H2".
+--     * La famille de produit (`productfamily`) égale à "Windows".
+--     * L'exclusion des architectures ARM64 et X86.
+--     * L'exclusion des titres contenant "Dynamic".
+--     * L'inclusion exclusive de l'architecture X64.
+--
+-- Colonnes sélectionnées :
+--   - Identifiants : `updateid`, `revisionid`, `updateid_package`.
+--   - Métadonnées : `creationdate`, `compagny`, `product`, `productfamily`, etc.
+--   - Détails techniques : `msrcseverity`, `msrcnumber`, `kb`, `languages`, etc.
+--   - Relations entre packages : `supersededby`, `supersedes`, `bundledby_revision`.
+--   - Informations de déploiement : `deploymentaction`, `title_short`.
+--
+-- Remarques :
+--   - La table résultante est conçue pour faciliter la gestion des mises à jour
+--     spécifiques au **système d'exploitation serveur Microsoft version 24H2 (x64)**.
+--   - Les critères de filtrage garantissent que seuls les packages pertinents
+--     sont inclus dans la table finale.
+-- =====================================================================
 USE `xmppmaster`;
 DROP procedure IF EXISTS `xmppmaster`.`up_init_packages_server_MSOS_X64_24H2`;
 ;
@@ -1246,39 +1290,7 @@ DELIMITER $$
 USE `xmppmaster`$$
 CREATE PROCEDURE `up_init_packages_server_MSOS_X64_24H2`()
 BEGIN
-    -- =====================================================================
-    -- PROCEDURE : up_init_packages_server_MSOS_X64_24H2
-    -- Description :
-    --   Cette procédure initialise la table `up_packages_MSOS_X64_24H2` en extrayant
-    --   les mises à jour spécifiques au **système d'exploitation serveur Microsoft
-    --   version 24H2 (x64)** depuis la table `xmppmaster.update_data`.
-    --   Elle prépare les données nécessaires pour le déploiement des packages
-    --   liés à cette version du système d'exploitation.
-    --
-    -- Fonctionnement :
-    --   - Supprime la table existante `up_packages_MSOS_X64_24H2` si elle existe déjà.
-    --   - Crée une nouvelle table en effectuant une jointure entre `update_data` (alias `aa`)
-    --     et `update_data` (alias `bb`), où `bb.bundledby_revision` correspond à `aa.revisionid`.
-    --   - Applique des filtres stricts pour cibler uniquement :
-    --     * Les titres (`title`) contenant "Microsoft server operating system version 24H2".
-    --     * La famille de produit (`productfamily`) égale à "Windows".
-    --     * L'exclusion des architectures ARM64 et X86.
-    --     * L'exclusion des titres contenant "Dynamic".
-    --     * L'inclusion exclusive de l'architecture X64.
-    --
-    -- Colonnes sélectionnées :
-    --   - Identifiants : `updateid`, `revisionid`, `updateid_package`.
-    --   - Métadonnées : `creationdate`, `compagny`, `product`, `productfamily`, etc.
-    --   - Détails techniques : `msrcseverity`, `msrcnumber`, `kb`, `languages`, etc.
-    --   - Relations entre packages : `supersededby`, `supersedes`, `bundledby_revision`.
-    --   - Informations de déploiement : `deploymentaction`, `title_short`.
-    --
-    -- Remarques :
-    --   - La table résultante est conçue pour faciliter la gestion des mises à jour
-    --     spécifiques au **système d'exploitation serveur Microsoft version 24H2 (x64)**.
-    --   - Les critères de filtrage garantissent que seuls les packages pertinents
-    --     sont inclus dans la table finale.
-    -- =====================================================================
+
 
 DROP TABLE IF EXISTS up_packages_MSOS_X64_24H2;
 -- création table up_packages_MSOS_X64_24H2
@@ -1332,6 +1344,38 @@ DELIMITER ;
 -- =====================================================================
 -- =====================================================================
 -- =====================================================================
+-- =====================================================================
+-- PROCEDURE : up_init_packages_server_WS_X64_2003
+-- Description :
+--   Cette procédure initialise la table `up_packages_WS_X64_2003` en extrayant
+--   les mises à jour spécifiques à **Windows Server 2003 (x64)** depuis la table
+--   `xmppmaster.update_data`. Elle prépare les données nécessaires pour le déploiement
+--   des packages liés à cette version du système d'exploitation.
+--
+-- Fonctionnement :
+--   - Supprime la table existante `up_packages_WS_X64_2003` si elle existe déjà.
+--   - Crée une nouvelle table en effectuant une jointure entre `update_data` (alias `aa`)
+--     et `update_data` (alias `bb`), où `bb.bundledby_revision` correspond à `aa.revisionid`.
+--   - Applique des filtres stricts pour cibler uniquement :
+--     * Les titres (`title`) contenant "Windows Server 2003".
+--     * La famille de produit (`productfamily`) égale à "Windows".
+--     * L'exclusion des architectures ARM64 et X86.
+--     * L'exclusion des titres contenant "Dynamic".
+--     * L'inclusion exclusive de l'architecture X64.
+--
+-- Colonnes sélectionnées :
+--   - Identifiants : `updateid`, `revisionid`, `updateid_package`.
+--   - Métadonnées : `creationdate`, `compagny`, `product`, `productfamily`, etc.
+--   - Détails techniques : `msrcseverity`, `msrcnumber`, `kb`, `languages`, etc.
+--   - Relations entre packages : `supersededby`, `supersedes`, `bundledby_revision`.
+--   - Informations de déploiement : `deploymentaction`, `title_short`.
+--
+-- Remarques :
+--   - La table résultante est conçue pour faciliter la gestion des mises à jour
+--     spécifiques à **Windows Server 2003 (x64)**.
+--   - Les critères de filtrage garantissent que seuls les packages pertinents
+--     sont inclus dans la table finale.
+-- =====================================================================
 USE `xmppmaster`;
 DROP procedure IF EXISTS `up_init_packages_server_WS_X64_2003`;
 
@@ -1343,38 +1387,7 @@ DELIMITER $$
 USE `xmppmaster`$$
 CREATE PROCEDURE `up_init_packages_server_WS_X64_2003`()
 BEGIN
-    -- =====================================================================
-    -- PROCEDURE : up_init_packages_server_WS_X64_2003
-    -- Description :
-    --   Cette procédure initialise la table `up_packages_WS_X64_2003` en extrayant
-    --   les mises à jour spécifiques à **Windows Server 2003 (x64)** depuis la table
-    --   `xmppmaster.update_data`. Elle prépare les données nécessaires pour le déploiement
-    --   des packages liés à cette version du système d'exploitation.
-    --
-    -- Fonctionnement :
-    --   - Supprime la table existante `up_packages_WS_X64_2003` si elle existe déjà.
-    --   - Crée une nouvelle table en effectuant une jointure entre `update_data` (alias `aa`)
-    --     et `update_data` (alias `bb`), où `bb.bundledby_revision` correspond à `aa.revisionid`.
-    --   - Applique des filtres stricts pour cibler uniquement :
-    --     * Les titres (`title`) contenant "Windows Server 2003".
-    --     * La famille de produit (`productfamily`) égale à "Windows".
-    --     * L'exclusion des architectures ARM64 et X86.
-    --     * L'exclusion des titres contenant "Dynamic".
-    --     * L'inclusion exclusive de l'architecture X64.
-    --
-    -- Colonnes sélectionnées :
-    --   - Identifiants : `updateid`, `revisionid`, `updateid_package`.
-    --   - Métadonnées : `creationdate`, `compagny`, `product`, `productfamily`, etc.
-    --   - Détails techniques : `msrcseverity`, `msrcnumber`, `kb`, `languages`, etc.
-    --   - Relations entre packages : `supersededby`, `supersedes`, `bundledby_revision`.
-    --   - Informations de déploiement : `deploymentaction`, `title_short`.
-    --
-    -- Remarques :
-    --   - La table résultante est conçue pour faciliter la gestion des mises à jour
-    --     spécifiques à **Windows Server 2003 (x64)**.
-    --   - Les critères de filtrage garantissent que seuls les packages pertinents
-    --     sont inclus dans la table finale.
-    -- =====================================================================
+
 DROP TABLE IF EXISTS up_packages_WS_X64_2003;
 -- création table up_packages_WS_X64_2003  Server windows
 CREATE TABLE up_packages_WS_X64_2003 AS
@@ -1420,13 +1433,43 @@ END$$
 DELIMITER ;
 ;
 
-
 -- =====================================================================
 -- =====================================================================
 -- =====================================================================
 -- PROCEDURE : up_init_packages_server_WS_X64_2008
 -- =====================================================================
 -- =====================================================================
+-- =====================================================================
+-- =====================================================================
+-- PROCEDURE : up_init_packages_server_WS_X64_2008
+-- Description :
+--   Cette procédure initialise la table `up_packages_WS_X64_2008` en extrayant
+--   les mises à jour spécifiques à **Windows Server 2008 (x64)** depuis la table
+--   `xmppmaster.update_data`. Elle prépare les données nécessaires pour le déploiement
+--   des packages liés à cette version du système d'exploitation.
+--
+-- Fonctionnement :
+--   - Supprime la table existante `up_packages_WS_X64_2008` si elle existe déjà.
+--   - Crée une nouvelle table en effectuant une jointure entre `update_data` (alias `aa`)
+--     et `update_data` (alias `bb`), où `bb.bundledby_revision` correspond à `aa.revisionid`.
+--   - Applique des filtres stricts pour cibler uniquement :
+--     * Les titres (`title`) contenant "Windows Server 2008".
+--     * L'exclusion des architectures ARM64 et X86.
+--     * L'exclusion des titres contenant "Dynamic".
+--     * L'inclusion exclusive de l'architecture X64.
+--
+-- Colonnes sélectionnées :
+--   - Identifiants : `updateid`, `revisionid`, `updateid_package`.
+--   - Métadonnées : `creationdate`, `compagny`, `product`, `productfamily`, etc.
+--   - Détails techniques : `msrcseverity`, `msrcnumber`, `kb`, `languages`, etc.
+--   - Relations entre packages : `supersededby`, `supersedes`, `bundledby_revision`.
+--   - Informations de déploiement : `deploymentaction`, `title_short`.
+--
+-- Remarques :
+--   - La table résultante est conçue pour faciliter la gestion des mises à jour
+--     spécifiques à **Windows Server 2008 (x64)**.
+--   - Les critères de filtrage garantissent que seuls les packages pertinents
+--     sont inclus dans la table finale.
 -- =====================================================================
 USE `xmppmaster`;
 DROP procedure IF EXISTS `up_init_packages_server_WS_X64_2008`;
@@ -1439,37 +1482,7 @@ DELIMITER $$
 USE `xmppmaster`$$
 CREATE PROCEDURE `up_init_packages_server_WS_X64_2008`()
 BEGIN
-    -- =====================================================================
-    -- PROCEDURE : up_init_packages_server_WS_X64_2008
-    -- Description :
-    --   Cette procédure initialise la table `up_packages_WS_X64_2008` en extrayant
-    --   les mises à jour spécifiques à **Windows Server 2008 (x64)** depuis la table
-    --   `xmppmaster.update_data`. Elle prépare les données nécessaires pour le déploiement
-    --   des packages liés à cette version du système d'exploitation.
-    --
-    -- Fonctionnement :
-    --   - Supprime la table existante `up_packages_WS_X64_2008` si elle existe déjà.
-    --   - Crée une nouvelle table en effectuant une jointure entre `update_data` (alias `aa`)
-    --     et `update_data` (alias `bb`), où `bb.bundledby_revision` correspond à `aa.revisionid`.
-    --   - Applique des filtres stricts pour cibler uniquement :
-    --     * Les titres (`title`) contenant "Windows Server 2008".
-    --     * L'exclusion des architectures ARM64 et X86.
-    --     * L'exclusion des titres contenant "Dynamic".
-    --     * L'inclusion exclusive de l'architecture X64.
-    --
-    -- Colonnes sélectionnées :
-    --   - Identifiants : `updateid`, `revisionid`, `updateid_package`.
-    --   - Métadonnées : `creationdate`, `compagny`, `product`, `productfamily`, etc.
-    --   - Détails techniques : `msrcseverity`, `msrcnumber`, `kb`, `languages`, etc.
-    --   - Relations entre packages : `supersededby`, `supersedes`, `bundledby_revision`.
-    --   - Informations de déploiement : `deploymentaction`, `title_short`.
-    --
-    -- Remarques :
-    --   - La table résultante est conçue pour faciliter la gestion des mises à jour
-    --     spécifiques à **Windows Server 2008 (x64)**.
-    --   - Les critères de filtrage garantissent que seuls les packages pertinents
-    --     sont inclus dans la table finale.
-    -- =====================================================================
+
 DROP TABLE IF EXISTS up_packages_WS_X64_2008;
 -- création table up_packages_WS_X64_2008 serveur window
 CREATE TABLE up_packages_WS_X64_2008 AS
@@ -1522,6 +1535,40 @@ DELIMITER ;
 -- =====================================================================
 -- =====================================================================
 -- =====================================================================
+-- =====================================================================
+-- PROCEDURE : up_init_packages_server_WS_X64_2012
+-- Description :
+--   Cette procédure initialise la table `up_packages_WS_X64_2012` en extrayant
+--   les mises à jour spécifiques à **Windows Server 2012 (x64)** depuis la table
+--   `xmppmaster.update_data`. Elle prépare les données nécessaires pour le déploiement
+--   des packages liés à cette version du système d'exploitation.
+--
+-- Fonctionnement :
+--   - Supprime la table existante `up_packages_WS_X64_2012` si elle existe déjà.
+--   - Crée une nouvelle table en effectuant une jointure entre `update_data` (alias `aa`)
+--     et `update_data` (alias `bb`), où `bb.bundledby_revision` correspond à `aa.revisionid`.
+--   - Applique des filtres stricts pour cibler uniquement :
+--     * Les titres (`title`) contenant "Windows Server 2012".
+--     * La famille de produit (`productfamily`) égale à "Windows".
+--     * L'exclusion des architectures ARM64 et X86.
+--     * L'exclusion des titres contenant "Dynamic".
+--     * L'inclusion exclusive de l'architecture X64.
+--
+-- Colonnes sélectionnées :
+--   - Identifiants : `updateid`, `revisionid`, `updateid_package`.
+--   - Métadonnées : `creationdate`, `compagny`, `product`, `productfamily`, etc.
+--   - Détails techniques : `msrcseverity`, `msrcnumber`, `kb`, `languages`, etc.
+--   - Relations entre packages : `supersededby`, `supersedes`, `bundledby_revision`.
+--   - Informations de déploiement : `deploymentaction`, `title_short`.
+--
+-- Remarques :
+--   - La table résultante est conçue pour faciliter la gestion des mises à jour
+--     spécifiques à **Windows Server 2012 (x64)**.
+--   - Les critères de filtrage garantissent que seuls les packages pertinents
+--     sont inclus dans la table finale.
+-- =====================================================================
+
+
 USE `xmppmaster`;
 DROP procedure IF EXISTS `up_init_packages_server_WS_X64_2012`;
 
@@ -1533,38 +1580,7 @@ DELIMITER $$
 USE `xmppmaster`$$
 CREATE PROCEDURE `up_init_packages_server_WS_X64_2012`()
 BEGIN
-    -- =====================================================================
-    -- PROCEDURE : up_init_packages_server_WS_X64_2012
-    -- Description :
-    --   Cette procédure initialise la table `up_packages_WS_X64_2012` en extrayant
-    --   les mises à jour spécifiques à **Windows Server 2012 (x64)** depuis la table
-    --   `xmppmaster.update_data`. Elle prépare les données nécessaires pour le déploiement
-    --   des packages liés à cette version du système d'exploitation.
-    --
-    -- Fonctionnement :
-    --   - Supprime la table existante `up_packages_WS_X64_2012` si elle existe déjà.
-    --   - Crée une nouvelle table en effectuant une jointure entre `update_data` (alias `aa`)
-    --     et `update_data` (alias `bb`), où `bb.bundledby_revision` correspond à `aa.revisionid`.
-    --   - Applique des filtres stricts pour cibler uniquement :
-    --     * Les titres (`title`) contenant "Windows Server 2012".
-    --     * La famille de produit (`productfamily`) égale à "Windows".
-    --     * L'exclusion des architectures ARM64 et X86.
-    --     * L'exclusion des titres contenant "Dynamic".
-    --     * L'inclusion exclusive de l'architecture X64.
-    --
-    -- Colonnes sélectionnées :
-    --   - Identifiants : `updateid`, `revisionid`, `updateid_package`.
-    --   - Métadonnées : `creationdate`, `compagny`, `product`, `productfamily`, etc.
-    --   - Détails techniques : `msrcseverity`, `msrcnumber`, `kb`, `languages`, etc.
-    --   - Relations entre packages : `supersededby`, `supersedes`, `bundledby_revision`.
-    --   - Informations de déploiement : `deploymentaction`, `title_short`.
-    --
-    -- Remarques :
-    --   - La table résultante est conçue pour faciliter la gestion des mises à jour
-    --     spécifiques à **Windows Server 2012 (x64)**.
-    --   - Les critères de filtrage garantissent que seuls les packages pertinents
-    --     sont inclus dans la table finale.
-    -- =====================================================================
+
 DROP TABLE IF EXISTS up_packages_WS_X64_2012;
 -- création table up_packages_WS_X64_2012 serveur windows
 CREATE TABLE up_packages_WS_X64_2012 AS
@@ -1618,6 +1634,39 @@ DELIMITER ;
 -- =====================================================================
 -- =====================================================================
 -- =====================================================================
+
+-- =====================================================================
+-- PROCEDURE : up_init_packages_server_WS_X64_2016
+-- Description :
+--   Cette procédure initialise la table `up_packages_WS_X64_2016` en extrayant
+--   les mises à jour spécifiques à **Windows Server 2016 (x64)** depuis la table
+--   `xmppmaster.update_data`. Elle permet de préparer les données nécessaires
+--   pour le déploiement des packages liés à cette version de système d'exploitation.
+--
+-- Fonctionnement :
+--   - Supprime la table `up_packages_WS_X64_2016` si elle existe déjà.
+--   - Crée une nouvelle table à partir d'une jointure entre `update_data` (alias `aa`)
+--     et `update_data` (alias `bb`), où `bb.bundledby_revision` correspond à `aa.revisionid`.
+--   - Applique des filtres stricts pour cibler uniquement :
+--     * Les titres (`title`) contenant "Windows Server 2016".
+--     * La famille de produit (`productfamily`) égale à "Windows".
+--     * L'exclusion des architectures ARM64 et X86.
+--     * L'exclusion des titres contenant "Dynamic".
+--     * L'inclusion exclusive de l'architecture X64.
+--
+-- Colonnes sélectionnées :
+--   - Identifiants : `updateid`, `revisionid`, `updateid_package`.
+--   - Métadonnées : `creationdate`, `compagny`, `product`, `productfamily`, etc.
+--   - Détails techniques : `msrcseverity`, `msrcnumber`, `kb`, `languages`, etc.
+--   - Relations entre packages : `supersededby`, `supersedes`, `bundledby_revision`.
+--   - Informations de déploiement : `deploymentaction`, `title_short`, etc.
+--
+-- Remarques :
+--   - La table générée est optimisée pour les déploiements de mises à jour
+--     spécifiques à **Windows Server 2016 (x64)**.
+--   - Les données sont filtrées pour garantir leur pertinence par rapport à
+--     cette version et architecture.
+-- =====================================================================
 USE `xmppmaster`;
 DROP procedure IF EXISTS `up_init_packages_server_WS_X64_2016`;
 
@@ -1629,38 +1678,7 @@ DELIMITER $$
 USE `xmppmaster`$$
 CREATE PROCEDURE `up_init_packages_server_WS_X64_2016`()
 BEGIN
-    -- =====================================================================
-    -- PROCEDURE : up_init_packages_server_WS_X64_2016
-    -- Description :
-    --   Cette procédure initialise la table `up_packages_WS_X64_2016` en extrayant
-    --   les mises à jour spécifiques à **Windows Server 2016 (x64)** depuis la table
-    --   `xmppmaster.update_data`. Elle permet de préparer les données nécessaires
-    --   pour le déploiement des packages liés à cette version de système d'exploitation.
-    --
-    -- Fonctionnement :
-    --   - Supprime la table `up_packages_WS_X64_2016` si elle existe déjà.
-    --   - Crée une nouvelle table à partir d'une jointure entre `update_data` (alias `aa`)
-    --     et `update_data` (alias `bb`), où `bb.bundledby_revision` correspond à `aa.revisionid`.
-    --   - Applique des filtres stricts pour cibler uniquement :
-    --     * Les titres (`title`) contenant "Windows Server 2016".
-    --     * La famille de produit (`productfamily`) égale à "Windows".
-    --     * L'exclusion des architectures ARM64 et X86.
-    --     * L'exclusion des titres contenant "Dynamic".
-    --     * L'inclusion exclusive de l'architecture X64.
-    --
-    -- Colonnes sélectionnées :
-    --   - Identifiants : `updateid`, `revisionid`, `updateid_package`.
-    --   - Métadonnées : `creationdate`, `compagny`, `product`, `productfamily`, etc.
-    --   - Détails techniques : `msrcseverity`, `msrcnumber`, `kb`, `languages`, etc.
-    --   - Relations entre packages : `supersededby`, `supersedes`, `bundledby_revision`.
-    --   - Informations de déploiement : `deploymentaction`, `title_short`, etc.
-    --
-    -- Remarques :
-    --   - La table générée est optimisée pour les déploiements de mises à jour
-    --     spécifiques à **Windows Server 2016 (x64)**.
-    --   - Les données sont filtrées pour garantir leur pertinence par rapport à
-    --     cette version et architecture.
-    -- =====================================================================
+
 DROP TABLE IF EXISTS up_packages_WS_X64_2016;
 -- création table up_packages_WS_X64_2016 serveur windows
 CREATE TABLE up_packages_WS_X64_2016 AS
@@ -1713,6 +1731,38 @@ DELIMITER ;
 -- =====================================================================
 -- =====================================================================
 -- =====================================================================
+
+-- =====================================================================
+-- PROCEDURE : up_init_packages_server_WS_X64_2019
+-- Description :
+--   Cette procédure initialise la table `up_packages_WS_X64_2019` en sélectionnant
+--   les mises à jour spécifiques à **Windows Server 2019 (x64)** depuis la table
+--   `xmppmaster.update_data`. Elle filtre les données pour ne conserver que les
+--   packages pertinents pour cette version et architecture.
+--
+-- Fonctionnement :
+--   - Supprime la table existante si elle existe.
+--   - Crée une nouvelle table `up_packages_WS_X64_2019` à partir d'une jointure
+--     entre `update_data` (alias `aa`) et `update_data` (alias `bb`), où :
+--     * `bb.bundledby_revision` correspond à `aa.revisionid`.
+--   - Applique des filtres stricts sur :
+--     * Le titre (`title`) contenant "Windows Server 2019".
+--     * La famille de produit (`productfamily`) égale à "Windows".
+--     * L'exclusion des architectures ARM64 et X86.
+--     * L'exclusion des titres contenant "Dynamic".
+--     * L'inclusion exclusive de l'architecture X64.
+--
+-- Colonnes sélectionnées :
+--   - Informations générales : `updateid`, `revisionid`, `creationdate`, `compagny`, etc.
+--   - Détails techniques : `msrcseverity`, `msrcnumber`, `kb`, `languages`, etc.
+--   - Métadonnées de déploiement : `deploymentaction`, `title_short`, etc.
+--   - Relations entre packages : `supersededby`, `supersedes`, `bundledby_revision`.
+--
+-- Remarques :
+--   - La table résultante est optimisée pour les déploiements de mises à jour
+--     spécifiques à **Windows Server 2019 (x64)**.
+--   - Les données sont extraites en fonction des critères de filtrage définis.
+-- =====================================================================
 USE `xmppmaster`;
 DROP procedure IF EXISTS `xmppmaster`.`up_init_packages_server_WS_X64_2019`;
 ;
@@ -1721,37 +1771,7 @@ DELIMITER $$
 USE `xmppmaster`$$
 CREATE PROCEDURE `up_init_packages_server_WS_X64_2019`()
 BEGIN
-    -- =====================================================================
-    -- PROCEDURE : up_init_packages_server_WS_X64_2019
-    -- Description :
-    --   Cette procédure initialise la table `up_packages_WS_X64_2019` en sélectionnant
-    --   les mises à jour spécifiques à **Windows Server 2019 (x64)** depuis la table
-    --   `xmppmaster.update_data`. Elle filtre les données pour ne conserver que les
-    --   packages pertinents pour cette version et architecture.
-    --
-    -- Fonctionnement :
-    --   - Supprime la table existante si elle existe.
-    --   - Crée une nouvelle table `up_packages_WS_X64_2019` à partir d'une jointure
-    --     entre `update_data` (alias `aa`) et `update_data` (alias `bb`), où :
-    --     * `bb.bundledby_revision` correspond à `aa.revisionid`.
-    --   - Applique des filtres stricts sur :
-    --     * Le titre (`title`) contenant "Windows Server 2019".
-    --     * La famille de produit (`productfamily`) égale à "Windows".
-    --     * L'exclusion des architectures ARM64 et X86.
-    --     * L'exclusion des titres contenant "Dynamic".
-    --     * L'inclusion exclusive de l'architecture X64.
-    --
-    -- Colonnes sélectionnées :
-    --   - Informations générales : `updateid`, `revisionid`, `creationdate`, `compagny`, etc.
-    --   - Détails techniques : `msrcseverity`, `msrcnumber`, `kb`, `languages`, etc.
-    --   - Métadonnées de déploiement : `deploymentaction`, `title_short`, etc.
-    --   - Relations entre packages : `supersededby`, `supersedes`, `bundledby_revision`.
-    --
-    -- Remarques :
-    --   - La table résultante est optimisée pour les déploiements de mises à jour
-    --     spécifiques à **Windows Server 2019 (x64)**.
-    --   - Les données sont extraites en fonction des critères de filtrage définis.
-    -- =====================================================================
+
 DROP TABLE IF EXISTS up_packages_WS_X64_2019;
 -- création table up_packages_WS_X64_2019 serveur windows
 CREATE TABLE up_packages_WS_X64_2019 AS
@@ -1806,105 +1826,105 @@ DELIMITER ;
 -- =====================================================================
 -- =====================================================================
 -- =====================================================================
-USE `xmppmaster`;
-DROP procedure IF EXISTS `xmppmaster`.`up_create_product_tables`;
-;
-
-DELIMITER $$
-USE `xmppmaster`$$
-CREATE PROCEDURE `up_create_product_tables`()
-BEGIN
-	-- Generation des tables de mise à jour produits
-    -- office mise à jour
-
-    -- =====================================================================
-    -- PROCEDURE : up_create_product_tables
-    -- Description :
-    --   Cette procédure permet de générer les tables de packages pour les produits
-    --   Microsoft (Office, Visual Studio, Windows, Windows Server, et mises à jour
-    --   de sécurité). Elle appelle une série de procédures dédiées pour initialiser
-    --   les packages correspondants dans la base de données.
-    --
-    -- PROCEDURES appelées :
-    --   - Office (2003 à 2016, 64 bits)
-    --   - Visual Studio (2005 à 2022)
-    --   - Windows 10 (versions 1903, 21H1, 21H2, 22H2)
-    --   - Windows 11 (versions 21H2, 22H2, 23H2, 24H2)
-    --   - Mises à jour de sécurité (Malicious X64)
-    --   - Windows Server (versions 21H2 à 24H2, x64 et ARM64)
-    --   - Anciens serveurs Windows (2012, 2016, 2019)
-    --
-    -- Remarques :
-    --   - Les procédures pour les anciens serveurs (2003, 2008) sont commentées
-    --     et non exécutées.
-    --   - Après l'exécution, les produits sont référencés dans la table
-    --     `up_list_produit` avec un statut initial désactivé (`enable = 0`).
-    --   - Chaque procédure appelée est responsable de la création des packages
-    --     spécifiques à sa version de produit.
-    --
-    -- Tables impactées :
-    --   - Tables de packages générées par les procédures appelées.
-    --   - `up_list_produit` : insertion des produits référencés.
-    -- =====================================================================
-    call up_init_packages_office_2003_64bit();
-    call up_init_packages_office_2007_64bit();
-    call up_init_packages_office_2010_64bit();
-    call up_init_packages_office_2013_64bit();
-    call up_init_packages_office_2016_64bit();
-
-    -- visual studio mise à jour
-    call up_init_packages_Vstudio_2005();
-    call up_init_packages_Vstudio_2008();
-    call up_init_packages_Vstudio_2010();
-    call up_init_packages_Vstudio_2012();
-    call up_init_packages_Vstudio_2013();
-    call up_init_packages_Vstudio_2015();
-    call up_init_packages_Vstudio_2017();
-    call up_init_packages_Vstudio_2019();
-    call up_init_packages_Vstudio_2022();
-
-    -- Operating system
-    -- WIN 10 mise à jour
-    call up_init_packages_Win10_X64_1903();
-    call up_init_packages_Win10_X64_21H2();
-    call up_init_packages_Win10_X64_21H1();
-    call up_init_packages_Win10_X64_22H2();
-
-    -- Win 11 mise à jour
-    call up_init_packages_Win11_X64();
-    call up_init_packages_Win11_X64_21H2();
-    call up_init_packages_Win11_X64_22H2();
-    call up_init_packages_Win11_X64_23H2();
-    call up_init_packages_Win11_X64_24H2();
-
-    -- securité mise à jour
-    call up_init_packages_Win_Malicious_X64();
-
-    -- SERVER mise à jour
-    call up_init_packages_server_MSOS_X64_21H2();
-    call up_init_packages_server_MSOS_X64_22H2();
-    call up_init_packages_server_MSOS_X64_23H2();
-    call up_init_packages_server_MSOS_X64_24H2();
-    call up_init_packages_server_MSOS_ARM64_24H2();
-
-        -- OLD SERVEUR WINDOWS
-
-        -- call up_init_packages_server_WS_X64_2003();
-        -- call up_init_packages_server_WS_X64_2008();
-        call up_init_packages_server_WS_X64_2012();
-        call up_init_packages_server_WS_X64_2016();
-        call up_init_packages_server_WS_X64_2019();
-END$$
-
-DELIMITER ;
-;
-
+-- USE `xmppmaster`;
+-- DROP procedure IF EXISTS `xmppmaster`.`up_create_product_tables`;
+-- ;
+--
+-- DELIMITER $$
+-- USE `xmppmaster`$$
+-- CREATE PROCEDURE `up_create_product_tables`()
+-- BEGIN
+-- 	-- Generation des tables de mise à jour produits
+--     -- office mise à jour
+--
+--     -- =====================================================================
+--     -- PROCEDURE : up_create_product_tables
+--     -- Description :
+--     --   Cette procédure permet de générer les tables de packages pour les produits
+--     --   Microsoft (Office, Visual Studio, Windows, Windows Server, et mises à jour
+--     --   de sécurité). Elle appelle une série de procédures dédiées pour initialiser
+--     --   les packages correspondants dans la base de données.
+--     --
+--     -- PROCEDURES appelées :
+--     --   - Office (2003 à 2016, 64 bits)
+--     --   - Visual Studio (2005 à 2022)
+--     --   - Windows 10 (versions 1903, 21H1, 21H2, 22H2)
+--     --   - Windows 11 (versions 21H2, 22H2, 23H2, 24H2)
+--     --   - Mises à jour de sécurité (Malicious X64)
+--     --   - Windows Server (versions 21H2 à 24H2, x64 et ARM64)
+--     --   - Anciens serveurs Windows (2012, 2016, 2019)
+--     --
+--     -- Remarques :
+--     --   - Les procédures pour les anciens serveurs (2003, 2008) sont commentées
+--     --     et non exécutées.
+--     --   - Après l'exécution, les produits sont référencés dans la table
+--     --     `up_list_produit` avec un statut initial désactivé (`enable = 0`).
+--     --   - Chaque procédure appelée est responsable de la création des packages
+--     --     spécifiques à sa version de produit.
+--     --
+--     -- Tables impactées :
+--     --   - Tables de packages générées par les procédures appelées.
+--     --   - `up_list_produit` : insertion des produits référencés.
+--     -- =====================================================================
+--     call up_init_packages_office_2003_64bit();
+--     call up_init_packages_office_2007_64bit();
+--     call up_init_packages_office_2010_64bit();
+--     call up_init_packages_office_2013_64bit();
+--     call up_init_packages_office_2016_64bit();
+--
+--     -- visual studio mise à jour
+--     call up_init_packages_Vstudio_2005();
+--     call up_init_packages_Vstudio_2008();
+--     call up_init_packages_Vstudio_2010();
+--     call up_init_packages_Vstudio_2012();
+--     call up_init_packages_Vstudio_2013();
+--     call up_init_packages_Vstudio_2015();
+--     call up_init_packages_Vstudio_2017();
+--     call up_init_packages_Vstudio_2019();
+--     call up_init_packages_Vstudio_2022();
+--
+--     -- Operating system
+--     -- WIN 10 mise à jour
+--     call up_init_packages_Win10_X64_1903();
+--     call up_init_packages_Win10_X64_21H2();
+--     call up_init_packages_Win10_X64_21H1();
+--     call up_init_packages_Win10_X64_22H2();
+--
+--     -- Win 11 mise à jour
+--     call up_init_packages_Win11_X64();
+--     call up_init_packages_Win11_X64_21H2();
+--     call up_init_packages_Win11_X64_22H2();
+--     call up_init_packages_Win11_X64_23H2();
+--     call up_init_packages_Win11_X64_24H2();
+--
+--     -- securité mise à jour
+--     call up_init_packages_Win_Malicious_X64();
+--
+--     -- SERVER mise à jour
+--     call up_init_packages_server_MSOS_X64_21H2();
+--     call up_init_packages_server_MSOS_X64_22H2();
+--     call up_init_packages_server_MSOS_X64_23H2();
+--     call up_init_packages_server_MSOS_X64_24H2();
+--     call up_init_packages_server_MSOS_ARM64_24H2();
+--
+--         -- OLD SERVEUR WINDOWS
+--
+--         -- call up_init_packages_server_WS_X64_2003();
+--         -- call up_init_packages_server_WS_X64_2008();
+--         call up_init_packages_server_WS_X64_2012();
+--         call up_init_packages_server_WS_X64_2016();
+--         call up_init_packages_server_WS_X64_2019();
+-- END$$
+--
+-- DELIMITER ;
+-- ;
+/*
 -- prise en compte  produit
 INSERT INTO `xmppmaster`.`up_list_produit` (`name_procedure`, `enable`) VALUES ('up_packages_MSOS_X64_21H2','0');
 INSERT INTO `xmppmaster`.`up_list_produit` (`name_procedure`, `enable`) VALUES ('up_packages_MSOS_X64_22H2','0');
 INSERT INTO `xmppmaster`.`up_list_produit` (`name_procedure`, `enable`) VALUES ('up_packages_MSOS_X64_23H2','0');
 INSERT INTO `xmppmaster`.`up_list_produit` (`name_procedure`, `enable`) VALUES ('up_packages_MSOS_X64_24H2','0');
-INSERT INTO `xmppmaster`.`up_list_produit` (`name_procedure`, `enable`) VALUES ('up_packages_MSOS_ARM64_24H2','0');
+INSERT INTO `xmppmaster`.`up_list_produit` (`name_procedure`, `enable`) VALUES ('up_packages_MSOS_ARM64_24H2','0');*/
 
 
 
@@ -1915,6 +1935,46 @@ INSERT INTO `xmppmaster`.`up_list_produit` (`name_procedure`, `enable`) VALUES (
 -- PROCEDURE : move_update_to_white_list
 -- =====================================================================
 -- =====================================================================
+-- =====================================================================
+-- =====================================================================
+
+-- PROCEDURE : move_update_to_white_list
+-- Paramètres :
+--   - p_entity_id (INT) : Identifiant de l'entité concernée.
+--
+-- Description :
+--   Cette procédure est appelée par le trigger `up_auto_approve_rules_AFTER_UPDATE`.
+--   Elle parcourt les mises à jour présentes dans la table `up_gray_list`
+--   pour une entité donnée, vérifie si elles correspondent à une règle
+--   d’approbation automatique définie dans `up_auto_approve_rules`, et si
+--   c’est le cas, elle les insère dans la `up_white_list`.
+--
+-- Tables impactées :
+--   - xmppmaster.up_gray_list : source des mises à jour candidates.
+--   - xmppmaster.update_data : permet de récupérer la sévérité (msrcseverity)
+--     et la classification (updateclassification) associées à une mise à jour.
+--   - xmppmaster.up_auto_approve_rules : contient les règles d’approbation
+--     automatique (actives) propres à une entité.
+--   - xmppmaster.up_white_list : destination des mises à jour validées par
+--     les règles.
+--
+-- Logique de traitement :
+--   1. Parcours des mises à jour de `up_gray_list` pour l’entité.
+--   2. Pour chaque mise à jour :
+--      * Récupération de ses attributs (sévérité et classification).
+--      * Vérification de l’existence d’une règle active applicable
+--        (même sévérité et/ou classification, ou règle générique).
+--   3. Si au moins une règle correspondante existe :
+--      * Insertion de la mise à jour dans `up_white_list` (via `INSERT IGNORE`
+--        pour éviter les doublons).
+--
+-- Remarque :
+--   Cette procédure automatise le passage de mises à jour de la "gray list"
+--   vers la "white list" lorsqu’elles sont couvertes par des règles
+--   d’approbation automatique, garantissant un déploiement simplifié et
+--   cohérent au niveau de l’entité.
+--   La suppression de la mise à jour dans `up_gray_list` est assurée
+--       automatiquement par un **trigger associé à la table `up_white_list`**
 -- =====================================================================
 USE `xmppmaster`;
 DROP procedure IF EXISTS `move_update_to_white_list`;
@@ -1927,45 +1987,7 @@ DELIMITER $$
 USE `xmppmaster`$$
 CREATE PROCEDURE `move_update_to_white_list`(IN p_entity_id INT)
 BEGIN
-    -- =====================================================================
-    -- PROCEDURE : move_update_to_white_list
-    -- Paramètres :
-    --   - p_entity_id (INT) : Identifiant de l'entité concernée.
-    --
-    -- Description :
-    --   Cette procédure est appelée par le trigger `up_auto_approve_rules_AFTER_UPDATE`.
-    --   Elle parcourt les mises à jour présentes dans la table `up_gray_list`
-    --   pour une entité donnée, vérifie si elles correspondent à une règle
-    --   d’approbation automatique définie dans `up_auto_approve_rules`, et si
-    --   c’est le cas, elle les insère dans la `up_white_list`.
-    --
-    -- Tables impactées :
-    --   - xmppmaster.up_gray_list : source des mises à jour candidates.
-    --   - xmppmaster.update_data : permet de récupérer la sévérité (msrcseverity)
-    --     et la classification (updateclassification) associées à une mise à jour.
-    --   - xmppmaster.up_auto_approve_rules : contient les règles d’approbation
-    --     automatique (actives) propres à une entité.
-    --   - xmppmaster.up_white_list : destination des mises à jour validées par
-    --     les règles.
-    --
-    -- Logique de traitement :
-    --   1. Parcours des mises à jour de `up_gray_list` pour l’entité.
-    --   2. Pour chaque mise à jour :
-    --      * Récupération de ses attributs (sévérité et classification).
-    --      * Vérification de l’existence d’une règle active applicable
-    --        (même sévérité et/ou classification, ou règle générique).
-    --   3. Si au moins une règle correspondante existe :
-    --      * Insertion de la mise à jour dans `up_white_list` (via `INSERT IGNORE`
-    --        pour éviter les doublons).
-    --
-    -- Remarque :
-    --   Cette procédure automatise le passage de mises à jour de la "gray list"
-    --   vers la "white list" lorsqu’elles sont couvertes par des règles
-    --   d’approbation automatique, garantissant un déploiement simplifié et
-    --   cohérent au niveau de l’entité.
-    --   La suppression de la mise à jour dans `up_gray_list` est assurée
-    --       automatiquement par un **trigger associé à la table `up_white_list`**
-    -- =====================================================================
+
     DECLARE done INT DEFAULT 0;
     DECLARE v_updateid VARCHAR(255);
     DECLARE v_kb VARCHAR(255);
@@ -2027,6 +2049,35 @@ DELIMITER ;
 -- =====================================================================
 -- =====================================================================
 -- =====================================================================
+-- Passe l'entityid de la ligne mise à jour à la procédure
+
+-- =====================================================================
+-- Trigger : up_auto_approve_rules_AFTER_UPDATE
+-- Événement : AFTER UPDATE sur la table xmppmaster.up_auto_approve_rules
+--
+-- Description :
+--   Ce trigger est exécuté automatiquement après la mise à jour
+--   d’une règle d’approbation automatique dans la table
+--   `up_auto_approve_rules`.
+--
+-- Objectif :
+--   - Transmettre l’identifiant de l’entité (`entityid`) de la règle
+--     mise à jour à la procédure `move_update_to_white_list`.
+--   - Cette procédure se charge ensuite de parcourir la `up_gray_list`
+--     et de déplacer les mises à jour correspondant aux règles actives
+--     vers la `up_white_list`.
+--
+-- Logique de traitement :
+--   1. Détection de la mise à jour d’une règle dans `up_auto_approve_rules`.
+--   2. Appel de la procédure `move_update_to_white_list(NEW.entityid)`.
+--   3. La procédure applique les règles d’auto-approbation pour l’entité
+--      et met à jour les listes (`gray_list` → `white_list`).
+--
+-- Impact :
+--   Garantit que toute modification sur une règle d’auto-approbation est
+--   immédiatement prise en compte pour l’entité correspondante, sans
+--   intervention manuelle supplémentaire.
+-- =====================================================================
 DROP TRIGGER IF EXISTS `xmppmaster`.`up_auto_approve_rules_AFTER_UPDATE`;
 
 DELIMITER $$
@@ -2035,35 +2086,7 @@ CREATE TRIGGER `xmppmaster`.`up_auto_approve_rules_AFTER_UPDATE`
 AFTER UPDATE ON `up_auto_approve_rules`
 FOR EACH ROW
 BEGIN
-    -- Passe l'entityid de la ligne mise à jour à la procédure
 
-    -- =====================================================================
-    -- Trigger : up_auto_approve_rules_AFTER_UPDATE
-    -- Événement : AFTER UPDATE sur la table xmppmaster.up_auto_approve_rules
-    --
-    -- Description :
-    --   Ce trigger est exécuté automatiquement après la mise à jour
-    --   d’une règle d’approbation automatique dans la table
-    --   `up_auto_approve_rules`.
-    --
-    -- Objectif :
-    --   - Transmettre l’identifiant de l’entité (`entityid`) de la règle
-    --     mise à jour à la procédure `move_update_to_white_list`.
-    --   - Cette procédure se charge ensuite de parcourir la `up_gray_list`
-    --     et de déplacer les mises à jour correspondant aux règles actives
-    --     vers la `up_white_list`.
-    --
-    -- Logique de traitement :
-    --   1. Détection de la mise à jour d’une règle dans `up_auto_approve_rules`.
-    --   2. Appel de la procédure `move_update_to_white_list(NEW.entityid)`.
-    --   3. La procédure applique les règles d’auto-approbation pour l’entité
-    --      et met à jour les listes (`gray_list` → `white_list`).
-    --
-    -- Impact :
-    --   Garantit que toute modification sur une règle d’auto-approbation est
-    --   immédiatement prise en compte pour l’entité correspondante, sans
-    --   intervention manuelle supplémentaire.
-    -- =====================================================================
     CALL xmppmaster.move_update_to_white_list(NEW.entityid);
 END$$
 DELIMITER ;
@@ -2075,6 +2098,40 @@ DELIMITER ;
 -- =====================================================================
 -- =====================================================================
 -- =====================================================================
+-- =====================================================================
+-- Trigger : up_black_list_BEFORE_INSERT
+-- Description :
+--   Ce trigger est exécuté avant l'insertion d'une nouvelle entrée dans
+--   la table `up_black_list`. Il permet de :
+--   1. Supprimer les entrées correspondantes dans la table `xmppmaster.deploy`
+--      pour les déploiements en cours ou en attente, liés à l'entité et à l'ID
+--      de mise à jour spécifiés dans la nouvelle entrée.
+--   2. Mettre à jour la date de fin (`end_date`) des commandes associées dans
+--      la table `msc.commands`, en les marquant comme obsolètes (55 minutes en arrière).
+--
+-- Tables impactées :
+--   - xmppmaster.deploy : suppression des déploiements en cours ou en attente.
+--   - msc.commands : mise à jour de la date de fin des commandes associées.
+--
+-- Conditions :
+--   - Les déploiements supprimés doivent correspondre à :
+--     * Un titre commençant par le label du package associé à l'ID de mise à jour.
+--     * Une date de fin de commande (`endcmd`) postérieure à l'instant actuel.
+--     * Un état (`state`) correspondant à "WOL 1", "WOL 2", "WOL 3",
+--       "DEPLOYMENT START" ou "WAITING MACHINE ONLINE".
+--     * Une entité (`entityid`) correspondant à celle de la nouvelle entrée.
+--   - Les commandes mises à jour doivent correspondre à :
+--     * Un `package_id` commençant par l'ID de mise à jour (`updateid_or_kb`).
+--     * Un hôte (`target`) dont l'identifiant inventaire correspond à l'entité
+--       de la nouvelle entrée, ce qui est déterminé par :
+--          SUBSTRING(target.target_uuid, 5) = NEW.entityid
+--
+-- Remarque :
+--   Ce trigger est conçu pour éviter les conflits ou les doublons lors de
+--   l'ajout d'une entrée dans la liste noire des mises à jour.
+--   Il supprime ainsi les mises à jour interdites et invalide les commandes
+--   déjà programmées ou en cours pour la même entité.
+-- =====================================================================
 DROP TRIGGER IF EXISTS `xmppmaster`.`up_black_list_BEFORE_INSERT`;
 
 DELIMITER $$
@@ -2083,40 +2140,7 @@ CREATE TRIGGER `xmppmaster`.`up_black_list_BEFORE_INSERT`
 BEFORE INSERT ON `up_black_list`
 FOR EACH ROW
 BEGIN
-    -- =====================================================================
-    -- Trigger : up_black_list_BEFORE_INSERT
-    -- Description :
-    --   Ce trigger est exécuté avant l'insertion d'une nouvelle entrée dans
-    --   la table `up_black_list`. Il permet de :
-    --   1. Supprimer les entrées correspondantes dans la table `xmppmaster.deploy`
-    --      pour les déploiements en cours ou en attente, liés à l'entité et à l'ID
-    --      de mise à jour spécifiés dans la nouvelle entrée.
-    --   2. Mettre à jour la date de fin (`end_date`) des commandes associées dans
-    --      la table `msc.commands`, en les marquant comme obsolètes (55 minutes en arrière).
-    --
-    -- Tables impactées :
-    --   - xmppmaster.deploy : suppression des déploiements en cours ou en attente.
-    --   - msc.commands : mise à jour de la date de fin des commandes associées.
-    --
-    -- Conditions :
-    --   - Les déploiements supprimés doivent correspondre à :
-    --     * Un titre commençant par le label du package associé à l'ID de mise à jour.
-    --     * Une date de fin de commande (`endcmd`) postérieure à l'instant actuel.
-    --     * Un état (`state`) correspondant à "WOL 1", "WOL 2", "WOL 3",
-    --       "DEPLOYMENT START" ou "WAITING MACHINE ONLINE".
-    --     * Une entité (`entityid`) correspondant à celle de la nouvelle entrée.
-    --   - Les commandes mises à jour doivent correspondre à :
-    --     * Un `package_id` commençant par l'ID de mise à jour (`updateid_or_kb`).
-    --     * Un hôte (`target`) dont l'identifiant inventaire correspond à l'entité
-    --       de la nouvelle entrée, ce qui est déterminé par :
-    --          SUBSTRING(target.target_uuid, 5) = NEW.entityid
-    --
-    -- Remarque :
-    --   Ce trigger est conçu pour éviter les conflits ou les doublons lors de
-    --   l'ajout d'une entrée dans la liste noire des mises à jour.
-    --   Il supprime ainsi les mises à jour interdites et invalide les commandes
-    --   déjà programmées ou en cours pour la même entité.
-    -- =====================================================================
+
     DELETE
     FROM xmppmaster.deploy
     WHERE xmppmaster.deploy.id IN (
@@ -2149,47 +2173,48 @@ DELIMITER ;
 -- =====================================================================
 -- =====================================================================
 -- =====================================================================
+-- =====================================================================
+-- Trigger : up_black_list_AFTER_INSERT
+-- Description :
+--   Ce trigger est exécuté après l'insertion d'une nouvelle entrée dans
+--   la table `up_black_list`. Il permet de synchroniser et nettoyer les
+--   listes de mises à jour (gray list, white list et flop) afin d’éviter
+--   les conflits, doublons ou exécutions non souhaitées.
+--
+-- Tables impactées :
+--   - xmppmaster.up_gray_list :
+--       * Suppression des entrées correspondant à l’ID ou au KB de la mise
+--         à jour nouvellement blacklistée.
+--   - xmppmaster.up_gray_list_flop :
+--       * Mise à jour temporaire des entrées liées à une mise à jour
+--         blacklistée (remplacement par des valeurs "bidon").
+--       * Suppression des entrées "bidon" pour nettoyer la table.
+--   - xmppmaster.up_white_list :
+--       * Suppression des entrées liées à la mise à jour blacklistée.
+--
+-- Conditions :
+--   - Pour le type "id" :
+--       * Les entrées gray list / flop sont ciblées sur la colonne `updateid`
+--         correspondant au champ `updateid_or_kb` de la nouvelle entrée.
+--   - Pour le type "kb" :
+--       * Les entrées gray list / flop sont ciblées sur la colonne `kb`
+--         correspondant au champ `updateid_or_kb` de la nouvelle entrée.
+--   - Dans tous les cas, le filtre se fait aussi sur `entityid = NEW.entityid`.
+--
+-- Remarque :
+--   Ce trigger assure qu’une mise à jour nouvellement blacklistée est
+--   immédiatement retirée des listes de gestion (`gray_list`, `white_list`)
+--   et neutralisée dans la `gray_list_flop`.
+--   Il garantit ainsi la cohérence des règles de déploiement et empêche
+--   toute exécution indésirable d’une mise à jour interdite.
+-- =====================================================================
 DROP TRIGGER IF EXISTS `xmppmaster`.`up_black_list_AFTER_INSERT`;
 
 DELIMITER $$
 USE `xmppmaster`$$
 CREATE  TRIGGER `xmppmaster`.`up_black_list_AFTER_INSERT` AFTER INSERT ON `up_black_list` FOR EACH ROW
 BEGIN
-    -- =====================================================================
-    -- Trigger : up_black_list_AFTER_INSERT
-    -- Description :
-    --   Ce trigger est exécuté après l'insertion d'une nouvelle entrée dans
-    --   la table `up_black_list`. Il permet de synchroniser et nettoyer les
-    --   listes de mises à jour (gray list, white list et flop) afin d’éviter
-    --   les conflits, doublons ou exécutions non souhaitées.
-    --
-    -- Tables impactées :
-    --   - xmppmaster.up_gray_list :
-    --       * Suppression des entrées correspondant à l’ID ou au KB de la mise
-    --         à jour nouvellement blacklistée.
-    --   - xmppmaster.up_gray_list_flop :
-    --       * Mise à jour temporaire des entrées liées à une mise à jour
-    --         blacklistée (remplacement par des valeurs "bidon").
-    --       * Suppression des entrées "bidon" pour nettoyer la table.
-    --   - xmppmaster.up_white_list :
-    --       * Suppression des entrées liées à la mise à jour blacklistée.
-    --
-    -- Conditions :
-    --   - Pour le type "id" :
-    --       * Les entrées gray list / flop sont ciblées sur la colonne `updateid`
-    --         correspondant au champ `updateid_or_kb` de la nouvelle entrée.
-    --   - Pour le type "kb" :
-    --       * Les entrées gray list / flop sont ciblées sur la colonne `kb`
-    --         correspondant au champ `updateid_or_kb` de la nouvelle entrée.
-    --   - Dans tous les cas, le filtre se fait aussi sur `entityid = NEW.entityid`.
-    --
-    -- Remarque :
-    --   Ce trigger assure qu’une mise à jour nouvellement blacklistée est
-    --   immédiatement retirée des listes de gestion (`gray_list`, `white_list`)
-    --   et neutralisée dans la `gray_list_flop`.
-    --   Il garantit ainsi la cohérence des règles de déploiement et empêche
-    --   toute exécution indésirable d’une mise à jour interdite.
-    -- =====================================================================
+
     DELETE FROM `xmppmaster`.`up_gray_list`
     WHERE entityid = NEW.entityid
       AND `updateid` IN (
@@ -2239,11 +2264,6 @@ END$$
 DELIMITER ;
 
 
-
-
-
-
-
 -- =====================================================================
 -- =====================================================================
 -- =====================================================================
@@ -2251,43 +2271,44 @@ DELIMITER ;
 -- =====================================================================
 -- =====================================================================
 -- =====================================================================
+-- =====================================================================
+-- Trigger : up_black_list_AFTER_UPDATE
+-- Description :
+--   Ce trigger est exécuté après la mise à jour d'une entrée dans la table
+--   `up_black_list`. Il assure la synchronisation des listes de mises à jour
+--   afin que toute modification de règle de blacklist soit immédiatement
+--   répercutée dans les tables associées (`gray_list`, `gray_list_flop`).
+--
+-- Tables impactées :
+--   - xmppmaster.up_gray_list :
+--       * Suppression des entrées correspondant à l’ID ou au KB de la mise
+--         à jour désormais blacklistée.
+--   - xmppmaster.up_gray_list_flop :
+--       * Mise à jour des entrées correspondantes avec des valeurs neutres
+--         (remplacement `updateid` par une UUID tronquée, `kb` = 'bidon').
+--       * Suppression des entrées marquées "bidon" pour nettoyer la table.
+--
+-- Conditions :
+--   - Pour le type "id" :
+--       * Les entrées gray list / flop sont ciblées sur la colonne `updateid`
+--         correspondant au champ `updateid_or_kb` de la ligne mise à jour.
+--   - Pour le type "kb" :
+--       * Les entrées gray list / flop sont ciblées sur la colonne `kb`
+--         correspondant au champ `updateid_or_kb` de la ligne mise à jour.
+--   - Dans tous les cas, le filtre s’applique aussi sur `entityid = NEW.entityid`.
+--
+-- Remarque :
+--   Ce trigger garantit qu'une modification d'une règle de blacklist est
+--   immédiatement appliquée aux listes associées, empêchant toute exécution
+--   future d'une mise à jour interdite et assurant la cohérence des données.
+-- =====================================================================
 DROP TRIGGER IF EXISTS `xmppmaster`.`up_black_list_AFTER_UPDATE`;
 
 DELIMITER $$
 USE `xmppmaster`$$
 CREATE TRIGGER `xmppmaster`.`up_black_list_AFTER_UPDATE` AFTER UPDATE ON `up_black_list` FOR EACH ROW
 BEGIN
-    -- =====================================================================
-    -- Trigger : up_black_list_AFTER_UPDATE
-    -- Description :
-    --   Ce trigger est exécuté après la mise à jour d'une entrée dans la table
-    --   `up_black_list`. Il assure la synchronisation des listes de mises à jour
-    --   afin que toute modification de règle de blacklist soit immédiatement
-    --   répercutée dans les tables associées (`gray_list`, `gray_list_flop`).
-    --
-    -- Tables impactées :
-    --   - xmppmaster.up_gray_list :
-    --       * Suppression des entrées correspondant à l’ID ou au KB de la mise
-    --         à jour désormais blacklistée.
-    --   - xmppmaster.up_gray_list_flop :
-    --       * Mise à jour des entrées correspondantes avec des valeurs neutres
-    --         (remplacement `updateid` par une UUID tronquée, `kb` = 'bidon').
-    --       * Suppression des entrées marquées "bidon" pour nettoyer la table.
-    --
-    -- Conditions :
-    --   - Pour le type "id" :
-    --       * Les entrées gray list / flop sont ciblées sur la colonne `updateid`
-    --         correspondant au champ `updateid_or_kb` de la ligne mise à jour.
-    --   - Pour le type "kb" :
-    --       * Les entrées gray list / flop sont ciblées sur la colonne `kb`
-    --         correspondant au champ `updateid_or_kb` de la ligne mise à jour.
-    --   - Dans tous les cas, le filtre s’applique aussi sur `entityid = NEW.entityid`.
-    --
-    -- Remarque :
-    --   Ce trigger garantit qu'une modification d'une règle de blacklist est
-    --   immédiatement appliquée aux listes associées, empêchant toute exécution
-    --   future d'une mise à jour interdite et assurant la cohérence des données.
-    -- =====================================================================
+
 
     DELETE FROM `xmppmaster`.`up_gray_list`
     WHERE entityid = NEW.entityid
@@ -2347,6 +2368,32 @@ DELIMITER ;
 -- =====================================================================
 -- =====================================================================
 -- =====================================================================
+-- =====================================================================
+-- Trigger : up_gray_list_AFTER_INSERT
+-- Description :
+--   Ce trigger est exécuté après l'insertion d'une nouvelle entrée dans la table
+--   `up_gray_list`. Il gère l'ajout de commandes de mise à jour et vérifie si
+--   l'entrée doit être automatiquement approuvée selon des règles prédéfinies.
+--
+-- Fonctionnement :
+--   - Construit une commande pour le script `medulla_mysql_exec_update.sh` avec le `updateid`.
+--   - Insère une action dans `up_action_update_packages` pour déclencher la commande.
+--   - Enregistre un log dans la table `logs` pour tracer la création de la commande.
+--   - Récupère les métadonnées (`msrcseverity`, `updateclassification`) depuis `update_data`.
+--   - Vérifie si une règle d'approbation automatique (`up_auto_approve_rules`) s'applique :
+--     * La règle doit être active (`active_rule = 1`).
+--     * La règle doit correspondre aux métadonnées récupérées ou être générique (valeur NULL).
+--   - Si une règle est trouvée, insère l'entrée dans `pending_events` pour traitement ultérieur.
+--
+-- Tables impactées :
+--   - `up_action_update_packages` : insertion de commandes de mise à jour.
+--   - `logs` : insertion de logs pour tracer les actions effectuées.
+--   - `pending_events` : insertion des entrées approuvées automatiquement.
+--
+-- Remarques :
+--   - Utilise `INSERT IGNORE` pour éviter les erreurs de doublons.
+--   - Les logs sont détaillés pour assurer une traçabilité complète des actions.
+-- =====================================================================
 DROP TRIGGER IF EXISTS `xmppmaster`.`up_gray_list_AFTER_INSERT`;
 
 DELIMITER $$
@@ -2355,32 +2402,7 @@ CREATE TRIGGER `xmppmaster`.`up_gray_list_AFTER_INSERT`
 AFTER INSERT ON xmppmaster.`up_gray_list`
 FOR EACH ROW
 BEGIN
-    -- =====================================================================
-    -- Trigger : up_gray_list_AFTER_INSERT
-    -- Description :
-    --   Ce trigger est exécuté après l'insertion d'une nouvelle entrée dans la table
-    --   `up_gray_list`. Il gère l'ajout de commandes de mise à jour et vérifie si
-    --   l'entrée doit être automatiquement approuvée selon des règles prédéfinies.
-    --
-    -- Fonctionnement :
-    --   - Construit une commande pour le script `medulla_mysql_exec_update.sh` avec le `updateid`.
-    --   - Insère une action dans `up_action_update_packages` pour déclencher la commande.
-    --   - Enregistre un log dans la table `logs` pour tracer la création de la commande.
-    --   - Récupère les métadonnées (`msrcseverity`, `updateclassification`) depuis `update_data`.
-    --   - Vérifie si une règle d'approbation automatique (`up_auto_approve_rules`) s'applique :
-    --     * La règle doit être active (`active_rule = 1`).
-    --     * La règle doit correspondre aux métadonnées récupérées ou être générique (valeur NULL).
-    --   - Si une règle est trouvée, insère l'entrée dans `pending_events` pour traitement ultérieur.
-    --
-    -- Tables impactées :
-    --   - `up_action_update_packages` : insertion de commandes de mise à jour.
-    --   - `logs` : insertion de logs pour tracer les actions effectuées.
-    --   - `pending_events` : insertion des entrées approuvées automatiquement.
-    --
-    -- Remarques :
-    --   - Utilise `INSERT IGNORE` pour éviter les erreurs de doublons.
-    --   - Les logs sont détaillés pour assurer une traçabilité complète des actions.
-    -- =====================================================================
+
     DECLARE v_msrcseverity VARCHAR(255);
     DECLARE v_updateclassification VARCHAR(255);
     DECLARE v_exists_rule INT DEFAULT 0;
@@ -2444,42 +2466,43 @@ DELIMITER ;
 -- =====================================================================
 -- =====================================================================
 -- =====================================================================
+-- =====================================================================
+-- Trigger : up_gray_list_AFTER_DELETE
+-- Description :
+--   Ce trigger est exécuté après la suppression d'une entrée dans la table
+--   `up_gray_list`. Il gère la suppression des packages en fonction de leur
+--   présence dans la liste blanche (`up_white_list`) et de leur type (UUID ou non).
+--
+-- Fonctionnement :
+--   - Déclare des variables pour stocker la commande, le texte de log, et un booléen
+--     indiquant si le package est en liste blanche.
+--   - Construit une commande de suppression pour le script `medulla_mysql_exec_update.sh`.
+--   - Vérifie si le `updateid` supprimé est présent dans la liste blanche pour la même `entityid`.
+--   - Si le package n'est pas en liste blanche :
+--     * Insère une commande dans `up_action_update_packages` pour suppression.
+--     * Enregistre un log dans la table `logs` pour tracer la création de la commande.
+--   - Si le `updateid` est un UUID (longueur = 36) :
+--     * Enregistre un log pour indiquer le recyclage dans `up_gray_list_flop`.
+--     * Insère l'entrée supprimée dans `up_gray_list_flop` pour conservation.
+--   - Si le `updateid` n'est pas un UUID :
+--     * Enregistre un log pour indiquer la suppression définitive du package.
+--
+-- Tables impactées :
+--   - `up_action_update_packages` : insertion de commandes de suppression.
+--   - `logs` : insertion de logs pour tracer les actions effectuées.
+--   - `up_gray_list_flop` : insertion des entrées recyclées (UUID uniquement).
+--
+-- Remarques :
+--   - Utilise `INSERT IGNORE` pour éviter les erreurs de doublons.
+--   - Les logs sont détaillés pour assurer une traçabilité complète des actions.
+-- =====================================================================
 DROP TRIGGER IF EXISTS `xmppmaster`.`up_gray_list_AFTER_DELETE`;
 
 DELIMITER $$
 USE `xmppmaster`$$
 CREATE  TRIGGER `xmppmaster`.`up_gray_list_AFTER_DELETE` AFTER DELETE ON `up_gray_list` FOR EACH ROW
 BEGIN
-    -- =====================================================================
-    -- Trigger : up_gray_list_AFTER_DELETE
-    -- Description :
-    --   Ce trigger est exécuté après la suppression d'une entrée dans la table
-    --   `up_gray_list`. Il gère la suppression des packages en fonction de leur
-    --   présence dans la liste blanche (`up_white_list`) et de leur type (UUID ou non).
-    --
-    -- Fonctionnement :
-    --   - Déclare des variables pour stocker la commande, le texte de log, et un booléen
-    --     indiquant si le package est en liste blanche.
-    --   - Construit une commande de suppression pour le script `medulla_mysql_exec_update.sh`.
-    --   - Vérifie si le `updateid` supprimé est présent dans la liste blanche pour la même `entityid`.
-    --   - Si le package n'est pas en liste blanche :
-    --     * Insère une commande dans `up_action_update_packages` pour suppression.
-    --     * Enregistre un log dans la table `logs` pour tracer la création de la commande.
-    --   - Si le `updateid` est un UUID (longueur = 36) :
-    --     * Enregistre un log pour indiquer le recyclage dans `up_gray_list_flop`.
-    --     * Insère l'entrée supprimée dans `up_gray_list_flop` pour conservation.
-    --   - Si le `updateid` n'est pas un UUID :
-    --     * Enregistre un log pour indiquer la suppression définitive du package.
-    --
-    -- Tables impactées :
-    --   - `up_action_update_packages` : insertion de commandes de suppression.
-    --   - `logs` : insertion de logs pour tracer les actions effectuées.
-    --   - `up_gray_list_flop` : insertion des entrées recyclées (UUID uniquement).
-    --
-    -- Remarques :
-    --   - Utilise `INSERT IGNORE` pour éviter les erreurs de doublons.
-    --   - Les logs sont détaillés pour assurer une traçabilité complète des actions.
-    -- =====================================================================
+
     DECLARE v_updatidpackage BOOLEAN DEFAULT FALSE;
     DECLARE v_cmd VARCHAR(500);
     DECLARE v_logtext VARCHAR(500);
@@ -2560,6 +2583,32 @@ DELIMITER ;
 -- =====================================================================
 -- =====================================================================
 -- =====================================================================
+-- =====================================================================
+-- Trigger : up_gray_list_AFTER_INSERT
+-- Description :
+--   Ce trigger est exécuté après l'insertion d'une nouvelle entrée dans la table
+--   `up_gray_list`. Il gère l'ajout de commandes de mise à jour et vérifie si
+--   l'entrée doit être automatiquement approuvée selon des règles prédéfinies.
+--
+-- Fonctionnement :
+--   - Construit une commande pour le script `medulla_mysql_exec_update.sh` avec le `updateid`.
+--   - Insère une action dans `up_action_update_packages` pour déclencher la commande.
+--   - Enregistre un log dans la table `logs` pour tracer la création de la commande.
+--   - Récupère les métadonnées (`msrcseverity`, `updateclassification`) depuis `update_data`.
+--   - Vérifie si une règle d'approbation automatique (`up_auto_approve_rules`) s'applique :
+--     * La règle doit être active (`active_rule = 1`).
+--     * La règle doit correspondre aux métadonnées récupérées ou être générique (valeur NULL).
+--   - Si une règle est trouvée, insère l'entrée dans `pending_events` pour traitement ultérieur.
+--
+-- Tables impactées :
+--   - `up_action_update_packages` : insertion de commandes de mise à jour.
+--   - `logs` : insertion de logs pour tracer les actions effectuées.
+--   - `pending_events` : insertion des entrées approuvées automatiquement.
+--
+-- Remarques :
+--   - Utilise `INSERT IGNORE` pour éviter les erreurs de doublons.
+--   - Les logs sont détaillés pour assurer une traçabilité complète des actions.
+-- =====================================================================
 DROP TRIGGER IF EXISTS `xmppmaster`.`up_gray_list_AFTER_INSERT`;
 
 DELIMITER $$
@@ -2568,32 +2617,7 @@ CREATE  TRIGGER `xmppmaster`.`up_gray_list_AFTER_INSERT`
 AFTER INSERT ON xmppmaster.`up_gray_list`
 FOR EACH ROW
 BEGIN
-    -- =====================================================================
-    -- Trigger : up_gray_list_AFTER_INSERT
-    -- Description :
-    --   Ce trigger est exécuté après l'insertion d'une nouvelle entrée dans la table
-    --   `up_gray_list`. Il gère l'ajout de commandes de mise à jour et vérifie si
-    --   l'entrée doit être automatiquement approuvée selon des règles prédéfinies.
-    --
-    -- Fonctionnement :
-    --   - Construit une commande pour le script `medulla_mysql_exec_update.sh` avec le `updateid`.
-    --   - Insère une action dans `up_action_update_packages` pour déclencher la commande.
-    --   - Enregistre un log dans la table `logs` pour tracer la création de la commande.
-    --   - Récupère les métadonnées (`msrcseverity`, `updateclassification`) depuis `update_data`.
-    --   - Vérifie si une règle d'approbation automatique (`up_auto_approve_rules`) s'applique :
-    --     * La règle doit être active (`active_rule = 1`).
-    --     * La règle doit correspondre aux métadonnées récupérées ou être générique (valeur NULL).
-    --   - Si une règle est trouvée, insère l'entrée dans `pending_events` pour traitement ultérieur.
-    --
-    -- Tables impactées :
-    --   - `up_action_update_packages` : insertion de commandes de mise à jour.
-    --   - `logs` : insertion de logs pour tracer les actions effectuées.
-    --   - `pending_events` : insertion des entrées approuvées automatiquement.
-    --
-    -- Remarques :
-    --   - Utilise `INSERT IGNORE` pour éviter les erreurs de doublons.
-    --   - Les logs sont détaillés pour assurer une traçabilité complète des actions.
-    -- =====================================================================
+
     DECLARE v_msrcseverity VARCHAR(255);
     DECLARE v_updateclassification VARCHAR(255);
     DECLARE v_exists_rule INT DEFAULT 0;
@@ -2656,6 +2680,38 @@ DELIMITER ;
 -- =====================================================================
 -- =====================================================================
 -- =====================================================================
+-- =====================================================================
+-- Trigger : up_gray_list_flop_AFTER_DELETE
+-- Événement : AFTER DELETE sur la table xmppmaster.up_gray_list_flop
+--
+-- Description :
+--   Ce trigger est exécuté après la suppression d'une entrée dans la table
+--   `up_gray_list_flop`. Il gère la réinjection des entrées supprimées dans
+--   `up_gray_list` si l'`updateid` est un UUID de longeur 36. on modifie updateid a bidon avant la
+--   suppression cela empeche la recopie dans  tale flop car uuid incorrect.
+--
+-- Logique de traitement :
+--   1. Si l’`updateid` a une longueur de 36 caractères :
+--       * Génération d’un log de réinjection dans la table `logs`.
+--       * Réinsertion de la mise à jour dans la table `up_gray_list` pour
+--         la même entité (`entityid`), avec une `validity_date` étendue
+--         de 10 jours.
+--       * Si l’entrée existe déjà, mise à jour de la `validity_date`.
+--   2. Si l’`updateid` n’a pas 36 caractères :
+--       * Génération d’un log indiquant la suppression définitive dans
+--         la table `logs`.
+--
+-- Tables impactées :
+--   - xmppmaster.up_gray_list_flop : table déclencheur (ligne supprimée).
+--   - xmppmaster.up_gray_list : réinsertion des mises à jour valides.
+--   - xmppmaster.logs : journalisation de la suppression ou réinsertion.
+--
+-- Remarque :
+--   Ce trigger assure que les mises à jour importantes (UUID de 36 caractères)
+--   ne sont pas perdues et sont réinsérées automatiquement dans la
+--   `up_gray_list`, tandis que les mises à jour mineures ou invalides
+--   sont simplement consignées dans les logs avant suppression définitive.
+-- =====================================================================
 DROP TRIGGER IF EXISTS `xmppmaster`.`up_gray_list_flop_AFTER_DELETE`;
 
 DELIMITER $$
@@ -2663,38 +2719,7 @@ USE `xmppmaster`$$
 CREATE  TRIGGER `xmppmaster`.`up_gray_list_flop_AFTER_DELETE` AFTER DELETE ON `up_gray_list_flop` FOR EACH ROW
 BEGIN
 
-    -- =====================================================================
-    -- Trigger : up_gray_list_flop_AFTER_DELETE
-    -- Événement : AFTER DELETE sur la table xmppmaster.up_gray_list_flop
-    --
-    -- Description :
-    --   Ce trigger est exécuté après la suppression d'une entrée dans la table
-    --   `up_gray_list_flop`. Il gère la réinjection des entrées supprimées dans
-    --   `up_gray_list` si l'`updateid` est un UUID de longeur 36. on modifie updateid a bidon avant la
-    --   suppression cela empeche la recopie dans  tale flop car uuid incorrect.
-    --
-    -- Logique de traitement :
-    --   1. Si l’`updateid` a une longueur de 36 caractères :
-    --       * Génération d’un log de réinjection dans la table `logs`.
-    --       * Réinsertion de la mise à jour dans la table `up_gray_list` pour
-    --         la même entité (`entityid`), avec une `validity_date` étendue
-    --         de 10 jours.
-    --       * Si l’entrée existe déjà, mise à jour de la `validity_date`.
-    --   2. Si l’`updateid` n’a pas 36 caractères :
-    --       * Génération d’un log indiquant la suppression définitive dans
-    --         la table `logs`.
-    --
-    -- Tables impactées :
-    --   - xmppmaster.up_gray_list_flop : table déclencheur (ligne supprimée).
-    --   - xmppmaster.up_gray_list : réinsertion des mises à jour valides.
-    --   - xmppmaster.logs : journalisation de la suppression ou réinsertion.
-    --
-    -- Remarque :
-    --   Ce trigger assure que les mises à jour importantes (UUID de 36 caractères)
-    --   ne sont pas perdues et sont réinsérées automatiquement dans la
-    --   `up_gray_list`, tandis que les mises à jour mineures ou invalides
-    --   sont simplement consignées dans les logs avant suppression définitive.
-    -- =====================================================================
+
 	   IF LENGTH(OLD.updateid) = 36 THEN
         -- Log de réinjection
         SET @logtext = CONCAT("replace dans la table up_gray_list update : ", OLD.updateid);
@@ -2791,31 +2816,32 @@ DELIMITER ;
 -- =====================================================================
 -- =====================================================================
 -- =====================================================================
+-- =====================================================================
+-- Trigger : up_white_list_AFTER_INSERT
+-- Description :
+--   Ce trigger est exécuté après l'insertion d'une nouvelle entrée dans la table
+--   `up_white_list`. Il garantit la cohérence des données en supprimant toute
+--   entrée correspondante dans la table `up_gray_list`.
+--
+-- Fonctionnement :
+--   - Supprime automatiquement les entrées de `up_gray_list` où :
+--     * `updateid` correspond à celui de la nouvelle entrée en liste blanche.
+--     * `entityid` correspond à celui de la nouvelle entrée en liste blanche.
+--
+-- Tables impactées :
+--   - `up_gray_list` : suppression des entrées correspondantes.
+--
+-- Remarques :
+--   - Assure que les packages approuvés (liste blanche) ne restent pas en
+--     liste grise, évitant ainsi les conflits de gestion des mises à jour.
+-- =====================================================================
 DROP TRIGGER IF EXISTS `xmppmaster`.`up_white_list_AFTER_INSERT`;
 
 DELIMITER $$
 USE `xmppmaster`$$
 CREATE TRIGGER `xmppmaster`.`up_white_list_AFTER_INSERT` AFTER INSERT ON `up_white_list` FOR EACH ROW
 BEGIN
-    -- =====================================================================
-    -- Trigger : up_white_list_AFTER_INSERT
-    -- Description :
-    --   Ce trigger est exécuté après l'insertion d'une nouvelle entrée dans la table
-    --   `up_white_list`. Il garantit la cohérence des données en supprimant toute
-    --   entrée correspondante dans la table `up_gray_list`.
-    --
-    -- Fonctionnement :
-    --   - Supprime automatiquement les entrées de `up_gray_list` où :
-    --     * `updateid` correspond à celui de la nouvelle entrée en liste blanche.
-    --     * `entityid` correspond à celui de la nouvelle entrée en liste blanche.
-    --
-    -- Tables impactées :
-    --   - `up_gray_list` : suppression des entrées correspondantes.
-    --
-    -- Remarques :
-    --   - Assure que les packages approuvés (liste blanche) ne restent pas en
-    --     liste grise, évitant ainsi les conflits de gestion des mises à jour.
-    -- =====================================================================
+
 DELETE
     FROM xmppmaster.up_gray_list
     WHERE updateid = NEW.updateid
@@ -2830,6 +2856,25 @@ DELIMITER ;
 -- =====================================================================
 -- =====================================================================
 -- =====================================================================
+-- =====================================================================
+-- Trigger : up_white_list_AFTER_DELETE
+-- Description :
+--   Ce trigger est exécuté après la suppression d'une entrée dans la table
+--   `up_white_list`. Il nettoie les entrées correspondantes dans la table
+--   `up_gray_list_flop` pour maintenir la cohérence des données.
+--
+-- Fonctionnement :
+--   - Supprime automatiquement les entrées de `up_gray_list_flop` où :
+--     * `updateid` correspond à celui de l'entrée supprimée de la liste blanche.
+--     * `entityid` correspond à celui de l'entrée supprimée de la liste blanche.
+--
+-- Tables impactées :
+--   - `up_gray_list_flop` : suppression des entrées correspondantes.
+--
+-- Remarques :
+--   - Permet de s'assurer que les entrées supprimées de la liste blanche ne
+--     persistent pas dans la liste grise des échecs, évitant ainsi les incohérences.
+-- =====================================================================
 DROP TRIGGER IF EXISTS `xmppmaster`.`up_white_list_AFTER_DELETE`;
 
 DELIMITER $$
@@ -2838,33 +2883,13 @@ CREATE  TRIGGER `xmppmaster`.`up_white_list_AFTER_DELETE`
 AFTER DELETE ON `up_white_list`
 FOR EACH ROW
 BEGIN
-    -- =====================================================================
-    -- Trigger : up_white_list_AFTER_DELETE
-    -- Description :
-    --   Ce trigger est exécuté après la suppression d'une entrée dans la table
-    --   `up_white_list`. Il nettoie les entrées correspondantes dans la table
-    --   `up_gray_list_flop` pour maintenir la cohérence des données.
-    --
-    -- Fonctionnement :
-    --   - Supprime automatiquement les entrées de `up_gray_list_flop` où :
-    --     * `updateid` correspond à celui de l'entrée supprimée de la liste blanche.
-    --     * `entityid` correspond à celui de l'entrée supprimée de la liste blanche.
-    --
-    -- Tables impactées :
-    --   - `up_gray_list_flop` : suppression des entrées correspondantes.
-    --
-    -- Remarques :
-    --   - Permet de s'assurer que les entrées supprimées de la liste blanche ne
-    --     persistent pas dans la liste grise des échecs, évitant ainsi les incohérences.
-    -- =====================================================================
+
     DELETE
     FROM xmppmaster.up_gray_list_flop
     WHERE updateid = OLD.updateid
       AND entityid = OLD.entityid;
 END$$
 DELIMITER ;
-
-
 
 -- ----------------------------------------------------------------------
 -- Database version
