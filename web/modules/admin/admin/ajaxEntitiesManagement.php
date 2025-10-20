@@ -136,10 +136,12 @@ if ($facilitylevel <= 1) {
     $count = isset($data['id']) ? count($data['id']) : 0;
 
     for ($i = 0; $i < $count; $i++) {
+        $entityName = $data['name'][$i];
+
         $params[] = [
             'userIds'              => $data['userIds'][$i],
             'entityId'             => $data['id'][$i],
-            'entityName'           => $data['name'][$i],
+            'entityName'           => $entityName,
             'nbusers'              => $data['nb_users'][$i],
             'nbcomputer'           => $data['nb_machines'][$i],
             'entitycompletename'   => $data['completename'][$i],
@@ -158,6 +160,11 @@ if ($facilitylevel <= 1) {
             'nameentitycomplete'   => isset($u['entity_path']) ? $u['entity_path'] : null,
         ];
 
+        $deleteConfirmMessage = sprintf(
+            _T("Are you sure you want to delete the entity <strong>%s</strong> ? All packages linked to this entity will also be deleted.", "admin"),
+            htmlspecialchars($entityName, ENT_QUOTES, 'UTF-8')
+        );
+
         // Action rights according to belonging
         $deleteToAdd = new ActionConfirmItem(
             _("Delete"),
@@ -166,9 +173,7 @@ if ($facilitylevel <= 1) {
             "",
             "admin",
             "admin",
-            sprintf(
-                _T("Are you sure you want to delete the entity <strong>%s</strong> ? All packages linked to this entity will also be deleted.", "admin"), htmlspecialchars($data['name'][$i]
-            ))
+            $deleteConfirmMessage
         );
 
     // ---- strict deactivation on the root entity (id = 0) ----
