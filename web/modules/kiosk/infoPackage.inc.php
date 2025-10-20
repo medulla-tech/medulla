@@ -27,12 +27,12 @@ require_once("modules/medulla_server/version.php");
 $mod = new Module("kiosk");
 $mod->setVersion("4.0");
 $mod->setRevision('');
-$mod->setDescription(_T("kiosk", "kiosk"));
+$mod->setDescription(_T("Kiosk", "kiosk"));
 $mod->setAPIVersion("0:0:0");
 $mod->setPriority(10);
 
 $submod = new SubModule("kiosk");
-$submod->setDescription(_T("kiosk", "kiosk"));
+$submod->setDescription(_T("Kiosk", "kiosk"));
 $submod->setVisibility(true);
 $submod->setImg('modules/kiosk/graph/navbar/kiosk');
 $submod->setDefaultPage("kiosk/kiosk/index");
