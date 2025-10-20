@@ -1744,6 +1744,44 @@ class PkgsDatabase(DatabaseHelper):
         return list_of_shares
 
     @DatabaseHelper._sessionm
+    def get_share_uuid_by_name(self, session, name: str):
+        """
+        Retourne l'UUID (dernier segment) du share_path pour un partage donné par son 'name'.
+        - Ne fait que retirer le préfixe fixe '/var/lib/pulse2/packages/sharing/'.
+        - Fallback: si le chemin ne commence pas par ce préfixe, on prend simplement le basename.
+        - Retourne None si introuvable ou sans share_path.
+        """
+        if not name or not str(name).strip():
+            return None
+
+        base = "/var/lib/pulse2/packages/sharing/"
+
+        q = (session.query(Pkgs_shares)
+                    .filter(Pkgs_shares.enabled == 1)
+                    .filter(Pkgs_shares.name == name))
+        row = q.first()
+
+        if not row:
+            q = (session.query(Pkgs_shares)
+                        .filter(Pkgs_shares.enabled == 1)
+                        .filter(func.lower(Pkgs_shares.name) == str(name).lower()))
+            row = q.first()
+
+        if not row or not getattr(row, "share_path", None):
+            logging.getLogger().warning("Aucun share_path pour le nom '%s'", name)
+            return None
+
+        spath = str(row.share_path).strip().rstrip("/")
+
+        if spath.startswith(base.rstrip("/")):
+            tail = spath[len(base.rstrip("/")):].lstrip("/")
+            uuid = tail.split("/", 1)[0] or None
+        else:
+            uuid = os.path.basename(spath) or None
+
+        return uuid
+
+    @DatabaseHelper._sessionm
     def pkgs_sharing_admin_profil(self, session):
         """
         Retrieve the list of active shares for the admin profile,
