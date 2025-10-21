@@ -88,11 +88,11 @@ VALUES
   ('table produits','up_packages_Win11_X64_22H2','nom de la table produit:suivant entity','entity','xmppmaster/update',1),
   ('table produits','up_packages_Win11_X64_23H2','nom de la table produit:suivant entity','entity','xmppmaster/update',1),
   ('table produits','up_packages_Win11_X64_24H2','nom de la table produit:suivant entity','entity','xmppmaster/update',1),
-  ('table produits','up_packages_server_WS_X64_2003','nom de la table produit:suivant entity','entity','xmppmaster/update',1),
-  ('table produits','up_packages_server_WS_X64_2008','nom de la table produit:suivant entity','entity','xmppmaster/update',1),
-  ('table produits','up_packages_server_WS_X64_2012','nom de la table produit:suivant entity','entity','xmppmaster/update',1),
-  ('table produits','up_packages_server_WS_X64_2016','nom de la table produit:suivant entity','entity','xmppmaster/update',1),
-  ('table produits','up_packages_server_WS_X64_2019','nom de la table produit:suivant entity','entity','xmppmaster/update',1),
+  ('table produits','up_packages_WS_X64_2003','nom de la table produit:suivant entity','entity','xmppmaster/update',1),
+  ('table produits','up_packages_WS_X64_2008','nom de la table produit:suivant entity','entity','xmppmaster/update',1),
+  ('table produits','up_packages_WS_X64_2012','nom de la table produit:suivant entity','entity','xmppmaster/update',1),
+  ('table produits','up_packages_WS_X64_2016','nom de la table produit:suivant entity','entity','xmppmaster/update',1),
+  ('table produits','up_packages_WS_X64_2019','nom de la table produit:suivant entity','entity','xmppmaster/update',1),
   ('table produits','up_packages_Win_Malicious_X64','nom de la table produit:suivant entity','entity','xmppmaster/update',1);
 
 
