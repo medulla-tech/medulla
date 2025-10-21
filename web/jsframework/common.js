@@ -1,15 +1,17 @@
-/**
+/*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
- * (c) 2007-2009 Mandriva, http://www.mandriva.com
+ * (c) 2007 Mandriva, http://www.mandriva.com
+ * (c) 2016-2023 Siveo, http://www.siveo.net
+ * (c) 2024-2025 Medulla, http://www.medulla-tech.io
  *
  * $Id$
  *
- * This file is part of Mandriva Management Console (MMC).
+ * This file is part of MMC, http://www.medulla-tech.io
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ * the Free Software Foundation; either version 3 of the License, or
+ * any later version.
  *
  * MMC is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -17,7 +19,8 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
+ * along with MMC; If not, see <http://www.gnu.org/licenses/>.
+ * file: common.js
  */
 
 /**
@@ -89,3 +92,35 @@ function toggleVisibility(id) {
 function changeObjectDisplay(elem, display) {
   jQuery('#' + elem).css('display', display);
 }
+
+/**
+ * Apply a shared placeholder to every search field so it can be configured in one spot.
+ * Components can still override the placeholder by setting data-placeholder or placeholder attributes.
+ */
+(function applySharedSearchPlaceholder() {
+    if (typeof jQuery === 'undefined') {
+        return;
+    }
+
+    var defaultPlaceholder = 'Search...';
+    if (typeof window !== 'undefined' && window.mmcSearchPlaceholder) {
+        defaultPlaceholder = window.mmcSearchPlaceholder;
+    }
+
+    jQuery(function onReady() {
+        jQuery('input.searchfieldreal').each(function attachPlaceholder() {
+            var $input = jQuery(this);
+            var explicit = $input.data('placeholder');
+
+            if (explicit) {
+                $input.attr('placeholder', explicit);
+                return;
+            }
+
+            var current = ($input.attr('placeholder') || '').trim().toLowerCase();
+            if (!current || current === 'search...') {
+                $input.attr('placeholder', defaultPlaceholder);
+            }
+        });
+    });
+})();
