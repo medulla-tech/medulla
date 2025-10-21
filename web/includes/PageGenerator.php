@@ -390,7 +390,7 @@ class ActionItem
 class ActionPopupItem extends ActionItem
 {
     private $_displayType = 0;
-
+    public $width;
     public function __construct($desc, $action, $classCss, $paramString, $module = null, $submod = null, $tab = null, $width = 300, $mod = false)
     {
         parent::__construct($desc, $action, $classCss, $paramString, $module, $submod, $tab, $mod);
@@ -736,6 +736,18 @@ class ListInfos extends HtmlElement
     public $captionSize = ""; // Taille de la légende (optionnel)
     public $captionEmboss = 0; // Effet de relief sortant (0 par défaut)
     public $rowColor = ""; // Couleur des lignes des cellules (optionnel)
+    public $extranavbar;
+    public $firstColumnActionLink;
+    public $dissociateColumnsActionLink;
+    public $_addInfo;
+    public $first_elt_padding;
+    public $maxperpage;
+    public $cssClasses;
+    public $cssClass;
+    public $mainActionClasses;
+    public $cssIds;
+    public $navbar;
+
     /**
      * constructor
      * @param $tab must be an array of array
@@ -1212,6 +1224,9 @@ class ListInfos extends HtmlElement
  */
 class OptimizedListInfos extends ListInfos
 {
+    public $itemCount;
+    public $startreal;
+    public $endreal;
     /**
      * Allow to set another item count
      */
@@ -1320,6 +1335,17 @@ class SimpleNavBar extends HtmlElement
      * @param $max: max quantity of elements in a page
      * @param $paginator: boolean which enable the selector of the number of results in a page
      */
+    public $max;
+    public $curstart;
+    public $itemcount;
+    public $extra;
+    public $paginator;
+    public $curpage;
+    public $curend;
+    public $nbpages;
+    public $filter;
+    public $jsfunc;
+
     public function __construct($curstart, $curend, $itemcount, $extra = "", $max = "", $paginator = false)
     {
         global $conf;
@@ -1660,6 +1686,11 @@ class AjaxPaginator extends AjaxNavBar
  */
 class AjaxFilter extends HtmlElement
 {
+    public $url;
+    public $formid;
+    public $divid;
+    public $refresh;
+    public $params;
     /**
      * AjaxFilter : composant de filtre AJAX avec persistance en session
      *

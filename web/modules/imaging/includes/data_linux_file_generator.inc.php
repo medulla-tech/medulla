@@ -1,0 +1,1147 @@
+<?php
+/*
+ * (c) 2025 Medulla, http://www.medulla-tech.io
+ *
+ * $Id$
+ *
+ * This file is part of Management Console (MMC).
+ *
+ * MMC is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * MMC is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MMC; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ */
+// -----
+// DATAS for form
+// -----
+
+$info_installation_note = _T("Meta Information config", "imaging");
+// ---- locale
+
+$info_locale_settings = _T("Preseeding only locale sets language, country and locale.", "imaging");
+$locales_country = [
+    "United States",
+    "United Kingdom",
+    "France",
+    "Canada",
+    "Germany",
+    "Spain",
+    "Portugal",
+    "Brazil",
+    "Italy",
+    "Netherlands",
+    "Denmark",
+    "Finland",
+    "Norway",
+    "Sweden",
+    "Russia",
+    "Poland",
+    "Czech Republic",
+    "Hungary",
+    "Turkey",
+    "Greece",
+    "Egypt",
+    "Israel",
+    "Japan",
+    "South Korea",
+    "China",
+    "Taiwan",
+    "India",
+];
+
+$locales_values= [
+    "en_US.UTF-8",
+    "en_GB.UTF-8",
+    "fr_FR.UTF-8",
+    "fr_CA.UTF-8",
+    "de_DE.UTF-8",
+    "es_ES.UTF-8",
+    "pt_PT.UTF-8",
+    "pt_BR.UTF-8",
+    "it_IT.UTF-8",
+    "nl_NL.UTF-8",
+    "da_DK.UTF-8",
+    "fi_FI.UTF-8",
+    "nb_NO.UTF-8",
+    "sv_SE.UTF-8",
+    "ru_RU.UTF-8",
+    "pl_PL.UTF-8",
+    "cs_CZ.UTF-8",
+    "hu_HU.UTF-8",
+    "tr_TR.UTF-8",
+    "el_GR.UTF-8",
+    "ar_EG.UTF-8",
+    "he_IL.UTF-8",
+    "ja_JP.UTF-8",
+    "ko_KR.UTF-8",
+    "zh_CN.UTF-8",
+    "zh_TW.UTF-8",
+    "hi_IN.UTF-8",
+];
+
+$languages_values = [
+    "aa",
+    "af",
+    "am",
+    "ar",
+    "as",
+    "az",
+    "be",
+    "bg",
+    "bn",
+    "bs",
+    "ca",
+    "cs",
+    "cy",
+    "da",
+    "de",
+    "dz",
+    "el",
+    "en",
+    "eo",
+    "es",
+    "et",
+    "eu",
+    "fa",
+    "fi",
+    "fo",
+    "fr",
+    "ga",
+    "gd",
+    "gl",
+    "gu",
+    "he",
+    "hi",
+    "hr",
+    "hu",
+    "hy",
+    "id",
+    "is",
+    "it",
+    "ja",
+    "ka",
+    "kk",
+    "km",
+    "kn",
+    "ko",
+    "ku",
+    "ky",
+    "lo",
+    "lt",
+    "lv",
+    "mg",
+    "mk",
+    "ml",
+    "mn",
+    "mr",
+    "ms",
+    "mt",
+    "nb",
+    "ne",
+    "nl",
+    "nn",
+    "no",
+    "oc",
+    "or",
+    "pa",
+    "pl",
+    "ps",
+    "pt",
+    "ro",
+    "ru",
+    "si",
+    "sk",
+    "sl",
+    "sq",
+    "sr",
+    "sv",
+    "ta",
+    "te",
+    "th",
+    "tl",
+    "tr",
+    "uk",
+    "ur",
+    "uz",
+    "vi",
+    "zh",
+];
+
+$languages_country = [
+    "Afar",
+    "Afrikaans",
+    "Amharic",
+    "Arabic",
+    "Assamese",
+    "Azerbaijani",
+    "Belarusian",
+    "Bulgarian",
+    "Bengali",
+    "Bosnian",
+    "Catalan",
+    "Czech",
+    "Welsh",
+    "Danish",
+    "German",
+    "Dzongkha",
+    "Greek",
+    "English",
+    "Esperanto",
+    "Spanish",
+    "Estonian",
+    "Basque",
+    "Persian",
+    "Finnish",
+    "Faroese",
+    "French",
+    "Irish",
+    "Scottish Gaelic",
+    "Galician",
+    "Gujarati",
+    "Hebrew",
+    "Hindi",
+    "Croatian",
+    "Hungarian",
+    "Armenian",
+    "Indonesian",
+    "Icelandic",
+    "Italian",
+    "Japanese",
+    "Georgian",
+    "Kazakh",
+    "Khmer",
+    "Kannada",
+    "Korean",
+    "Kurdish",
+    "Kyrgyz",
+    "Lao",
+    "Lithuanian",
+    "Latvian",
+    "Malagasy",
+    "Macedonian",
+    "Malayalam",
+    "Mongolian",
+    "Marathi",
+    "Malay",
+    "Maltese",
+    "Norwegian Bokmål",
+    "Nepali",
+    "Dutch",
+    "Norwegian Nynorsk",
+    "Norwegian",
+    "Occitan",
+    "Oriya",
+    "Punjabi",
+    "Polish",
+    "Pashto",
+    "Portuguese",
+    "Romanian",
+    "Russian",
+    "Sinhala",
+    "Slovak",
+    "Slovenian",
+    "Albanian",
+    "Serbian",
+    "Swedish",
+    "Tamil",
+    "Telugu",
+    "Thai",
+    "Tagalog",
+    "Turkish",
+    "Ukrainian",
+    "Urdu",
+    "Uzbek",
+    "Vietnamese",
+    "Chinese",
+];
+
+$countries_values = [
+    "AF",
+    "AL",
+    "DZ",
+    "AD",
+    "AO",
+    "AR",
+    "AM",
+    "AU",
+    "AT",
+    "AZ",
+    "BH",
+    "BD",
+    "BY",
+    "BE",
+    "BZ",
+    "BJ",
+    "BT",
+    "BO",
+    "BA",
+    "BW",
+    "BR",
+    "BN",
+    "BG",
+    "BF",
+    "BI",
+    "KH",
+    "CM",
+    "CA",
+    "CV",
+    "CF",
+    "TD",
+    "CL",
+    "CN",
+    "CO",
+    "KM",
+    "CG",
+    "CD",
+    "CR",
+    "HR",
+    "CU",
+    "CY",
+    "CZ",
+    "DK",
+    "DJ",
+    "DO",
+    "EC",
+    "EG",
+    "SV",
+    "GQ",
+    "ER",
+    "EE",
+    "SZ",
+    "ET",
+    "FI",
+    "FR",
+    "GA",
+    "GM",
+    "GE",
+    "DE",
+    "GH",
+    "GR",
+    "GL",
+    "GT",
+    "GN",
+    "GW",
+    "GY",
+    "HT",
+    "HN",
+    "HK",
+    "HU",
+    "IS",
+    "IN",
+    "ID",
+    "IR",
+    "IQ",
+    "IE",
+    "IL",
+    "IT",
+    "CI",
+    "JM",
+    "JP",
+    "JO",
+    "KZ",
+    "KE",
+    "KW",
+    "KG",
+    "LA",
+    "LV",
+    "LB",
+    "LS",
+    "LR",
+    "LY",
+    "LI",
+    "LT",
+    "LU",
+    "MG",
+    "MW",
+    "MY",
+    "MV",
+    "ML",
+    "MT",
+    "MR",
+    "MU",
+    "MX",
+    "MD",
+    "MC",
+    "MN",
+    "ME",
+    "MA",
+    "MZ",
+    "MM",
+    "NA",
+    "NP",
+    "NL",
+    "NZ",
+    "NI",
+    "NE",
+    "NG",
+    "MK",
+    "NO",
+    "OM",
+    "PK",
+    "PS",
+    "PA",
+    "PY",
+    "PE",
+    "PH",
+    "PL",
+    "PT",
+    "QA",
+    "RO",
+    "RU",
+    "RW",
+    "SA",
+    "SN",
+    "RS",
+    "SC",
+    "SL",
+    "SG",
+    "SK",
+    "SI",
+    "SO",
+    "ZA",
+    "KR",
+    "SS",
+    "ES",
+    "LK",
+    "SD",
+    "SR",
+    "SE",
+    "CH",
+    "SY",
+    "TW",
+    "TJ",
+    "TZ",
+    "TH",
+    "TG",
+    "TT",
+    "TN",
+    "TR",
+    "TM",
+    "UG",
+    "UA",
+    "AE",
+    "GB",
+    "US",
+    "UY",
+    "UZ",
+    "VE",
+    "VN",
+    "YE",
+    "ZM",
+    "ZW",
+];
+
+$countries_country = [
+    "Afghanistan",
+    "Albania",
+    "Algeria",
+    "Andorra",
+    "Angola",
+    "Argentina",
+    "Armenia",
+    "Australia",
+    "Austria",
+    "Azerbaijan",
+    "Bahrain",
+    "Bangladesh",
+    "Belarus",
+    "Belgium",
+    "Belize",
+    "Benin",
+    "Bhutan",
+    "Bolivia",
+    "Bosnia and Herzegovina",
+    "Botswana",
+    "Brazil",
+    "Brunei",
+    "Bulgaria",
+    "Burkina Faso",
+    "Burundi",
+    "Cambodia",
+    "Cameroon",
+    "Canada",
+    "Cape Verde",
+    "Central African Republic",
+    "Chad",
+    "Chile",
+    "China",
+    "Colombia",
+    "Comoros",
+    "Congo (Brazzaville)",
+    "Congo (Kinshasa)",
+    "Costa Rica",
+    "Croatia",
+    "Cuba",
+    "Cyprus",
+    "Czech Republic",
+    "Denmark",
+    "Djibouti",
+    "Dominican Republic",
+    "Ecuador",
+    "Egypt",
+    "El Salvador",
+    "Equatorial Guinea",
+    "Eritrea",
+    "Estonia",
+    "Eswatini",
+    "Ethiopia",
+    "Finland",
+    "France",
+    "Gabon",
+    "Gambia",
+    "Georgia",
+    "Germany",
+    "Ghana",
+    "Greece",
+    "Greenland",
+    "Guatemala",
+    "Guinea",
+    "Guinea-Bissau",
+    "Guyana",
+    "Haiti",
+    "Honduras",
+    "Hong Kong",
+    "Hungary",
+    "Iceland",
+    "India",
+    "Indonesia",
+    "Iran",
+    "Iraq",
+    "Ireland",
+    "Israel",
+    "Italy",
+    "Ivory Coast",
+    "Jamaica",
+    "Japan",
+    "Jordan",
+    "Kazakhstan",
+    "Kenya",
+    "Kuwait",
+    "Kyrgyzstan",
+    "Laos",
+    "Latvia",
+    "Lebanon",
+    "Lesotho",
+    "Liberia",
+    "Libya",
+    "Liechtenstein",
+    "Lithuania",
+    "Luxembourg",
+    "Madagascar",
+    "Malawi",
+    "Malaysia",
+    "Maldives",
+    "Mali",
+    "Malta",
+    "Mauritania",
+    "Mauritius",
+    "Mexico",
+    "Moldova",
+    "Monaco",
+    "Mongolia",
+    "Montenegro",
+    "Morocco",
+    "Mozambique",
+    "Myanmar",
+    "Namibia",
+    "Nepal",
+    "Netherlands",
+    "New Zealand",
+    "Nicaragua",
+    "Niger",
+    "Nigeria",
+    "North Macedonia",
+    "Norway",
+    "Oman",
+    "Pakistan",
+    "Palestine",
+    "Panama",
+    "Paraguay",
+    "Peru",
+    "Philippines",
+    "Poland",
+    "Portugal",
+    "Qatar",
+    "Romania",
+    "Russia",
+    "Rwanda",
+    "Saudi Arabia",
+    "Senegal",
+    "Serbia",
+    "Seychelles",
+    "Sierra Leone",
+    "Singapore",
+    "Slovakia",
+    "Slovenia",
+    "Somalia",
+    "South Africa",
+    "South Korea",
+    "South Sudan",
+    "Spain",
+    "Sri Lanka",
+    "Sudan",
+    "Suriname",
+    "Sweden",
+    "Switzerland",
+    "Syria",
+    "Taiwan",
+    "Tajikistan",
+    "Tanzania",
+    "Thailand",
+    "Togo",
+    "Trinidad and Tobago",
+    "Tunisia",
+    "Turkey",
+    "Turkmenistan",
+    "Uganda",
+    "Ukraine",
+    "United Arab Emirates",
+    "United Kingdom",
+    "United States",
+    "Uruguay",
+    "Uzbekistan",
+    "Venezuela",
+    "Vietnam",
+    "Yemen",
+    "Zambia",
+    "Zimbabwe",
+];
+
+$info_supported_locales = _T("Optionally specify additional locales to be generated.", "imaging");
+$supported_locales = [
+    "United States",
+    "United Kingdom",
+    "France",
+    "Germany",
+    "Spain",
+    "Italy",
+    "Canada",
+    "Brazil",
+    "Netherlands",
+    "Norway",
+    "Sweden",
+    "Denmark",
+    "Russia",
+    "Japan",
+    "India",
+    "China",
+    "Mexico",
+    "South Africa",
+    "Australia",
+    "Belgium",
+    "Portugal",
+    "Switzerland",
+    "Austria",
+    "Israel",
+    "Turkey",
+    "Poland",
+    "Czech Republic",
+    "Romania",
+    "Greece",
+    "Hungary",
+    "Korea (Republic of)",
+    "Singapore",
+];
+
+$supported_locales_values = [
+    "US",
+    "GB",
+    "FR",
+    "DE",
+    "ES",
+    "IT",
+    "CA",
+    "BR",
+    "NL",
+    "NO",
+    "SE",
+    "DK",
+    "RU",
+    "JP",
+    "IN",
+    "CN",
+    "MX",
+    "ZA",
+    "AU",
+    "BE",
+    "PT",
+    "CH",
+    "AT",
+    "IL",
+    "TR",
+    "PL",
+    "CZ",
+    "RO",
+    "GR",
+    "HU",
+    "KR",
+    "SG",
+];
+
+$keyboard_layouts = [
+    "Arabic",
+    "Armenian",
+    "Belarusian",
+    "Belgian",
+    "Bosnian",
+    "Brazilian",
+    "Bulgarian",
+    "Canadian Multilingual",
+    "Croatian",
+    "Czech",
+    "Danish",
+    "Dutch",
+    "English (US)",
+    "English (UK)",
+    "Estonian",
+    "Finnish",
+    "French",
+    "German",
+    "Greek",
+    "Hebrew",
+    "Hungarian",
+    "Icelandic",
+    "Italian",
+    "Japanese",
+    "Korean",
+    "Latin American",
+    "Lithuanian",
+    "Macedonian",
+    "Norwegian",
+    "Polish",
+    "Portuguese",
+    "Romanian",
+    "Russian",
+    "Serbian",
+    "Slovak",
+    "Slovenian",
+    "Spanish",
+    "Swedish",
+    "Swiss (French)",
+    "Swiss (German)",
+    "Turkish",
+    "Ukrainian",
+];
+
+$keyboard_layouts_values = [
+    "ara",
+    "am",
+    "by",
+    "be",
+    "ba",
+    "br",
+    "bg",
+    "ca",
+    "hr",
+    "cz",
+    "dk",
+    "nl",
+    "us",
+    "gb",
+    "ee",
+    "fi",
+    "fr",
+    "de",
+    "gr",
+    "il",
+    "hu",
+    "is",
+    "it",
+    "jp",
+    "kr",
+    "latam",
+    "lt",
+    "mk",
+    "no",
+    "pl",
+    "pt",
+    "ro",
+    "ru",
+    "rs",
+    "sk",
+    "si",
+    "es",
+    "se",
+    "ch-fr",
+    "ch-de",
+    "tr",
+    "ua",
+];
+
+$keyboard_toggles = [
+    "No toggling",
+    "Alt+Caps Lock",
+    "Alt+Shift",
+    "Alt+Ctrl",
+    "Caps Lock",
+    "Both Shift keys simultaneously",
+    "Control+Alt",
+    "Control+Shift",
+    "Left Alt",
+    "Control+Shift+Alt",
+    "Left Shift",
+    "Left Control",
+    "Right Alt (AltGr)",
+    "Menu",
+    "Right Shift",
+    "Right Control",
+    "Shift+Left Alt",
+    "Shift+Caps Lock",
+    "Both Alt keys simultaneously",
+    "Shift+Right Alt",
+    "Both Shift keys simultaneously",
+    "Both Control keys simultaneously",
+];
+
+$info_enable_network = _T("Disable network configuration entirely. This is useful for cdrom installations on non-networked devices where the network questions, warning and long timeouts are a nuisance.", "imaging");
+
+$interface_choices = [
+    "auto",
+    "manual",
+];
+
+$info_interface = _T("netcfg will choose an interface that has link if possible. This makes it skip displaying a list if there is more than one interface.", "imaging");
+?>
+
+<script>
+update = ()=>{
+    Msgxml  = "To have the Windows Answer File Generator on \n" +
+              "smb://" + window.location.host + "/postinst/sysprep/" + jQuery('#Location').val() + "\n" +
+              "click on Validation" ;
+    jQuery( "#spanxml" ).attr( "title", Msgxml );
+    var erreur=0;
+    if (jQuery('#OrginazationName').val() == ""){
+            erreur = 2;
+            msg = "<? echo _T('Organization Name missing','imaging'); ?>";
+    }
+    if( jQuery('#Location').val() == "" ||  jQuery('#Location').val() == ".xml" ){
+            erreur = 1;
+            msg = "<? echo _T('title missing ex : sysprep.xml','imaging'); ?>";
+    }
+    if(erreur != 0 ){
+            jQuery("#msg_bvalid").text(msg)
+            jQuery("#bvalid").prop('disabled', true);
+            jQuery("#bvalid").prop('disabled', true);
+            jQuery("#msg_bvalid").show();
+      }
+      else{
+             jQuery( "#bvalid").prop('disabled', false);
+             jQuery("#msg_bvalid").hide();
+
+      }
+
+    da=new Date()
+    var dateval = da.getFullYear()+ '-'+(da.getMonth()+1) + '-' + da.getDate()
+
+    var variables = {
+        'Location': jQuery('#Location').val(),
+        'Comments': jQuery('#Comments').val(),
+        'CheckLocale': (jQuery('#check-locale').is(":checked") ? '' : '#'),
+        'SelectLocale': jQuery('#select-locale').find('option:selected').val(),
+        'CheckLanguage': (jQuery('#check-language').is(":checked") ? '' : '#'),
+        'SelectLanguage': jQuery('#select-language').find('option:selected').val(),
+        'CheckCountry': (jQuery('#check-country').is(":checked") ? '' : '#'),
+        'SelectCountry': jQuery('#select-country').find('option:selected').val(),
+        'CheckSupportedCountry' : jQuery('#check-supported-country').is(":checked") ? "" : "#",
+        'SelectSupportedCountry': jQuery('#select-supported-country').find('option:selected').val(),
+        'CheckSupportedLocales' : jQuery('#check-supported-locales').is(":checked") ? "" : "#",
+        'SelectSupportedLocales': jQuery('#select-supported-locales').find('option:selected').val(),
+        'CheckKeyboardLayouts' : jQuery('#check-keyboard-layouts').is(":checked") ? "" : "#",
+        'SelectKeyboardLayouts': jQuery('#select-keyboard-layouts').find('option:selected').val(),
+        'CheckKeyboardToggle' : jQuery('#check-keyboard-toggle').is(":checked") ? "" : "#",
+        'SelectKeyboardToggle': jQuery('#select-keyboard-toggle').find('option:selected').val(),
+        'CheckEnableNetwork':jQuery("#check-enable-network").is(":checked") ? "" : "#",
+        'CheckEnableNetworkValue':jQuery("#check-enable-network-value").is(":checked") ? "true" : "false",
+        'CheckInterface' : jQuery("#check-interface").is(":checked") ? "" : "#",
+        'SelectInterface' : jQuery("#select-interface").find('option:selected').val(),
+        'InputInterface' : jQuery("#select-interface").find('option:selected').val() == 'auto' ? 'auto' : jQuery("#input-interface").val()
+
+        // 'ShowWindowsLive' : jQuery('#ShowWindowsLive').find('option:selected').val(),
+        // 'CopyProfile' : jQuery('#CopyProfile').find('option:selected').val(),
+        // 'ExtendOSPartition' :jQuery('#ExtendOSPartition').find('option:selected').val(),
+        // 'SkipAutoActivation': jQuery('#SkipAutoActivation').find('option:selected').val(),
+        // 'SkipRearm': jQuery('#SkipRearm').find('option:selected').val(),
+        // 'AcceptEULA': jQuery('#AcceptEULA').find('option:selected').val(),
+        // 'SetupUILanguage': jQuery('#SetupUILanguage').find('option:selected').val(),
+        // 'FullName': jQuery('#FullName').val(),
+        // 'ComputerName': jQuery('#ComputerName').val(),
+        // 'InputLocale': jQuery('#InputLocale').find('option:selected').val(),
+        // 'UserLocale': jQuery('#UserLocale').find('option:selected').val(),
+        // 'TimeZone': jQuery('#TimeZone').find('option:selected').val(),
+        // 'UILanguage': jQuery('#UILanguage').find('option:selected').val(),
+        // 'NetworkLocation': jQuery('#NetworkLocation').find('option:selected').val(),
+        // 'ProtectComputer': jQuery('#ProtectComputer').find('option:selected').val(),
+        // 'HideEULA': jQuery('#HideEULA').find('option:selected').val(),
+        // 'DaylightSettings': jQuery('#DaylightSettings').find('option:selected').val(),
+        // 'HideWireless': jQuery('#HideWireless').find('option:selected').val(),
+        // 'MachineOOBE': jQuery('#MachineOOBE').find('option:selected').val(),
+        // 'UserOOBE': jQuery('#UserOOBE').find('option:selected').val(),
+        // 'WipeDisk': jQuery('#WipeDisk').find('option:selected').val(),
+        // 'InstallDisk': jQuery('#InstallDisk').find('option:selected').val(),
+        // 'MainPartition': jQuery('#MainPartition').find('option:selected').val(),
+        // 'Format': jQuery('#Format').find('option:selected').val(),
+        // 'Label': jQuery('#Label').val(),
+        // 'DriveLetter': jQuery('#DriveLetter').find('option:selected').val(),
+        // 'PartitionOrder': jQuery('#PartitionOrder').find('option:selected').val(),
+        // 'Group': jQuery('#Group').find('option:selected').val(),
+        // 'Description': jQuery('#Description').val(),
+        // 'Password': jQuery('#Password').val(),
+        // 'PasswordAdmin': jQuery('#PasswordAdmin').val(),
+        // 'EnableUAC': jQuery('#EnableUAC').find('option:selected').val(),
+        // 'Updates': jQuery('#Updates').find('option:selected').val(),
+        // 'OrginazationName': jQuery('#OrginazationName').val(),
+        // 'BGC':jQuery( '#BGC').find('option:selected').val(),
+        // 'CEIPEnabled':jQuery( '#CEIPEnabled').find('option:selected').val(),
+        // 'ControlPanelView': jQuery('#ControlPanelView').find('option:selected').val(),
+        // 'ControlPanelIconSize': jQuery('#ControlPanelIconSize').find('option:selected').val(),
+        // 'dateval': dateval,
+		// 'Domain': jQuery('#Domain').val(),
+		// 'DomainPassword': jQuery('#DomainPassword').val(),
+		// 'DomainUser' : jQuery('#DomainUser').val(),
+		// 'JoinDomain' : jQuery('#JoinDomain').val(),
+		// 'MachineObjectOU' : jQuery('#MachineObjectOU').val(),
+    };
+
+    listParameters={}
+
+    var newConfig = template.replace(/<\?(\w+)\?>/g,
+    function(match, name) {
+        if(!((name == "dateval") || (name == "Location") || (name == "Comments")))
+            listParameters[name]=variables[name];
+
+        return variables[name];
+    });
+    var myJsonString = JSON.stringify(listParameters);
+
+    var newConfig = template.replace(/<\?(\w+)\?>/g,
+    (match, name) => {
+        if(!((name == "dateval") || (name == "Location") || (name == "Comments")))
+            listParameters[name]=variables[name];
+
+        return variables[name];
+    });
+    newConfig = newConfig.replace("@@listParameters@@",myJsonString);
+    console.log(newConfig)
+
+    jQuery('input[name=codeToCopy]').val(newConfig);
+        jQuery.post( "modules/imaging/manage/ajaxmiseenforme.php", { data: newConfig })
+            .done(( data1 ) => {
+                jQuery('#codeTocopy2').text(data1);
+        });
+}
+
+fn_Installation_Notes=function(){
+    var list_id_masque=['Comments'];
+    jQuery.each(list_id_masque, function( index,value) {
+        jQuery('#'+value).parents("tr").toggle();
+    });
+    if (jQuery('#'+list_id_masque[0]).is(":visible")){
+        jQuery('#Installation_Notes').css( 'cursor', 'n-resize' ).attr('src', 'img/other/expanded.svg');
+    }
+    else{
+        jQuery('#Installation_Notes').css( 'cursor', 's-resize' ).attr('src', 'img/other/expand.svg');
+    }
+};
+
+
+fn_Locale=function(){
+    var list_id_masque=[
+        // "select-locale",
+        // "select-language",
+        // "select-country",
+        // "select-supported-locales",
+        // "select-keyboard-layouts",
+        // "select-keyboard-toggle",
+    ];
+    jQuery.each(list_id_masque, function( index,value) {
+        jQuery('#'+value).parents("tr").toggle();
+    });
+    if (jQuery('#'+list_id_masque[0]).is(":visible")){
+        jQuery('#Locale').css( 'cursor', 'n-resize' ).attr('src', 'img/other/expanded.svg');
+    }
+    else{
+        jQuery('#Locale').css( 'cursor', 's-resize' ).attr('src', 'img/other/expand.svg');
+    }
+};
+
+fn_Network=function(){
+    var list_id_masque=[
+    // "check-enable-network-value",
+    // "select-interface",
+    ];
+    jQuery.each(list_id_masque, function( index,value) {
+        jQuery('#'+value).parents("tr").toggle();
+    });
+    if (jQuery('#'+list_id_masque[0]).is(":visible")){
+        jQuery('#Network').css( 'cursor', 'n-resize' ).attr('src', 'img/other/expanded.svg');
+    }
+    else{
+        jQuery('#Network').css( 'cursor', 's-resize' ).attr('src', 'img/other/expand.svg');
+    }
+};
+
+
+enable_item = (selector) =>{
+    jQuery(selector).prop("disabled", false)
+}
+
+disable_item = (selector) =>{
+    jQuery(selector).prop("disabled", true)
+}
+
+toggle_item = (selector) => {
+    if(jQuery(selector).prop("disabled") == true){
+        jQuery(selector).prop("disabled", false)
+    }
+    else{
+        jQuery(selector).prop("disabled", true)
+    }
+}
+
+init_item = (checkSelector, valueSelector) =>{
+    if(jQuery(checkSelector).is(":checked")){
+        enable_item(valueSelector)
+    }
+    else{
+        disable_item(valueSelector)
+    }
+}
+jQuery(function () {
+    // On form loading, disable elements if the checkbox is not selected
+    init_item("#check-locale", "#select-locale")
+    init_item("#check-language", "#select-language")
+    init_item("#check-country", "#select-country")
+    init_item("#check-supported-locales", "#select-supported-locales")
+    init_item("#check-keyboard-layouts", "#select-keyboard-layouts")
+    init_item("#check-keyboard-toggle", "#select-keyboard-toggle")
+    init_item("#check-enable-network", "#check-enable-network-value")
+
+    console.log(jQuery("#check-interface").is(":checked"))
+    if(jQuery("#check-interface").is(":checked")){
+        enable_item("#select-interface")
+        if(jQuery("#select-interface").val() == "auto"){
+            jQuery("#input-interface").prop("disabled", true)
+        }
+        else{
+            jQuery("#input-interface").prop("disabled", false)
+
+        }
+    }
+    else{
+        disable_item("#select-interface")
+        disable_item("#input-interface")
+    }
+
+    jQuery('#Comments').bind('input propertychange', function() { update();});
+    jQuery( '#Location' ).on('change', function () {
+        // if(getExtension( jQuery('#Location').val() ) != "xml"){
+        //     var namefile=jQuery('#Location').val() + ".xml"
+        //     jQuery('#Location').val( namefile )
+        // }
+        jQuery("#Location").val(jQuery("#Location").val().replace(/ /g,"_"));
+        update();
+    });
+
+    jQuery('#check-locale' ).on( 'change', ()=>{
+        toggle_item("#select-locale");
+        update();
+    });
+    jQuery('#select-locale').on('change', ()=>{update();});
+    jQuery('#check-language').on('change', ()=>{
+        toggle_item("#select-language");
+        update();
+    });
+    jQuery('#select-language').on('change', ()=>{update();});
+
+    jQuery('#check-country').on('change', ()=>{
+        toggle_item("#select-country");
+        update();
+    });
+    jQuery('#select-country').on('change', ()=>{update();});
+
+
+    jQuery('#check-supported-locales').on('change', ()=>{
+        toggle_item("#select-supported-locales");
+        update();
+    });
+    jQuery("#select-supported-locales").on("change", ()=>{update()});
+
+    jQuery('#check-keyboard-layouts').on('change', ()=>{
+        toggle_item("#select-keyboard-layouts");
+        update();
+    });
+    
+    jQuery("#select-keyboard-layouts").on("change", ()=>{update()});
+
+    jQuery('#check-keyboard-toggle').on('change', ()=>{
+        toggle_item("#select-keyboard-toggle");
+        update();
+    });
+    
+    jQuery("#select-keyboard-toggle").on("change", ()=>{update()});
+
+    jQuery("#check-enable-network").on("change", ()=>{
+        toggle_item("#check-enable-network-value");
+        update()
+    });
+    jQuery('#check-enable-network-value').on("change", ()=>{update()});
+    jQuery("#select-interface").on("change", ()=>{
+        if(jQuery('#select-interface').val() == "manual"){
+            enable_item("#input-interface")
+        }
+        else{
+            disable_item("#input-interface")
+        }
+        update()
+    })
+    jQuery('#check-interface').on("change", ()=>{ 
+        toggle_item("#select-interface");   
+        if(jQuery('#select-interface').prop('disabled') == true){
+            disable_item("#input-interface")
+        }
+        else{
+            if(jQuery('#select-interface').val() == "manual"){
+                enable_item("#input-interface")
+            }
+            else{
+                disable_item("#input-interface")
+            }
+        }
+        update()
+    });
+
+    jQuery('#select-interface').on("change", ()=>{    
+        update()
+    });
+
+    jQuery("#input-interface").on("change", ()=>{update()});
+
+
+});
+
+
+
+
+
+
+// toggle_item("check-locale", "select-locale", "")
+// toggle_item("check-language", "select-language", "")
+// toggle_item("check-country", "select-country", "")
+// toggle_item("check-supported-locales", "select-supported-locales", "")
+
+
+
+
+fn_Installation_Notes()
+fn_Locale()
+fn_Network()
+</script>

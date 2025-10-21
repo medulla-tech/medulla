@@ -1,6 +1,6 @@
 <?php
 /*
- * (c) 2015-2023 Siveo, http://www.siveo.net
+ * (c) 2015-2025 Medulla, http://www.medulla-tech.io
  *
  * $Id$
  *
@@ -32,8 +32,7 @@ define("DIR_SYS_PREP", "/var/lib/pulse2/imaging/postinst/sysprep");
 ?>
 
 <?php
-class ajaxSelectItem extends Form
-{
+class ajaxSelectItem extends Form{
     protected $idElt;
     protected $idselect;
     protected $idform;
@@ -134,19 +133,18 @@ if(isset($_GET['edit'])) {
 }
 
 $span = new SpanElement(_T("Choose package source", 'imaging')." : ", "pkgs-title");
-$List=array('Windows 7','Windows 8','Windows 8-uefi', 'Windows 10','Windows 10-uefi', 'Windows 11','Windows 11-uefi');
-$list_val=[ 'modules/imaging/manage/ajaxFormWin7.php',
-            'modules/imaging/manage/ajaxFormWin8.php',
-            'modules/imaging/manage/ajaxFormWin8-uefi.php',
-            'modules/imaging/manage/ajaxFormWin10.php',
-            'modules/imaging/manage/ajaxFormWin10-uefi.php',
-            'modules/imaging/manage/ajaxFormWin11.php',
-            'modules/imaging/manage/ajaxFormWin11-uefi2.php', // Using a new file for Windows 11 UEFI to be able to switch easily with the old one if needed
+$List=array('Windows 10','Windows 10 OEM', 'Windows 11','Windows 11 OEM', 'Debian');
+$list_val=[
+    'modules/imaging/manage/ajaxFormWin10-uefi.php',
+    'modules/imaging/manage/ajaxFormWin10-oem.php',
+    'modules/imaging/manage/ajaxFormWin11-uefi.php', // Using a new file for Windows 11 UEFI to be able to switch easily with the old one if needed
+    'modules/imaging/manage/ajaxFormWin11-oem.php',
+    'modules/imaging/manage/ajaxFormPreseed.php',
 ];
 
 $combine = array_combine($List, $list_val);
 
-$default_value= (isset($_GET['edit'])) ? $_SESSION['parameters']['os'] : '\'Windows 7\'';
+$default_value= (isset($_GET['edit'])) ? $_SESSION['parameters']['os'] : '\'Windows 10\'';
 $selectpapi = new ajaxSelectItem('unattended');
 $selectpapi->push($span);
 $selectpapi->setElements((isset($_GET['edit'])) ? [$_SESSION['parameters']['Os']] : $List);
