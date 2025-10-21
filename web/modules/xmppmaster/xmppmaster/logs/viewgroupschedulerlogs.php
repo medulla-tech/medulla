@@ -81,7 +81,7 @@ include_once("modules/dyngroup/includes/xmlrpc.php");
     // Retrieve information deploy. For cmn_id
 // affichefile(__FILE__);
 $tab = xmlrpc_get_conrainte_slot_deployment_commands([$cmd_id]);
-$contrainte  = count($tab)?$tab[$cmd_id]:"";
+$contrainte  = $tab[$cmd_id] ?? "";
 
 $pkgcreator = get_pkg_creator_from_uuid($pathpackage);
 

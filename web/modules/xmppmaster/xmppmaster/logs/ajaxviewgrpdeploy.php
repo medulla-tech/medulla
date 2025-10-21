@@ -134,7 +134,7 @@ $statsyncthing  = xmlrpc_stat_syncthing_transfert($_GET['gid'], $_GET['cmd_id'])
 
 // get contrainte group
 $tab = xmlrpc_get_conrainte_slot_deployment_commands([$cmd_id]);
-$contrainte  = safeCount($tab) ? $tab[$cmd_id] : "";
+$contrainte  = $tab[$cmd_id] ?? "";
 
 // search from msc table CommandsOnHost
 $lastcommandid = get_last_commands_on_cmd_id_start_end($cmd_id, $filter, $start, $end);

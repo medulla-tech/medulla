@@ -100,7 +100,7 @@ $isUpdate = (substr($info['objectdeploy'][0]['sessionid'], 0, 6) == "update") ? 
 $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id, $uuid);
 
 $tab = xmlrpc_get_conrainte_slot_deployment_commands([$cmd_id]);
-$contrainte  = safeCount($tab) ? $tab[$cmd_id] : "";
+$contrainte  = $tab[$cmd_id] ?? "";
 
 $pkgname = get_pkg_name_from_uuid($deploymachine['package_id']);
 $pkgcreator = get_pkg_creator_from_uuid($deploymachine['package_id']);
@@ -428,7 +428,7 @@ if (safeCount($deploymachine) != 0) {
     echo $start_date_plan_msc;
     echo "</td>";
     if ($contrainte != "") {
-        echo "<td>";
+        echo "<td style='padding-left:128px;'>";
         echo $contrainte;
         echo "</td>";
     }
