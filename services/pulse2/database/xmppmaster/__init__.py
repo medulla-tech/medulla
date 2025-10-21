@@ -494,7 +494,7 @@ class XmppMasterDatabase(DatabaseHelper):
         Retourne :
         - dict/list : dictionnaire ou liste contenant les informations des produits trouvés
         """
-        if identity:
+        if identity != None:
             try:
                 resultat = self._call_procedure(session,"up_genere_list_produit_entity",[identity])
                 session.commit()
