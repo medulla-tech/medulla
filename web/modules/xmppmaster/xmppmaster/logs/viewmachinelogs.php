@@ -1,15 +1,18 @@
 <?php
 /*
- * (c) 2017-2021 siveo, http://www.siveo.net/
+ * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+ * (c) 2007 Mandriva, http://www.mandriva.com
+ * (c) 2016-2023 Siveo, http://www.siveo.net
+ * (c) 2024-2025 Medulla, http://www.medulla-tech.io
  *
  * $Id$
  *
- * This file is part of Mandriva Management Console (MMC).
+ * This file is part of MMC, http://www.medulla-tech.io
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ * the Free Software Foundation; either version 3 of the License, or
+ * any later version.
  *
  * MMC is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -17,10 +20,8 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with MMC; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- *
- *  file : logs/viewmachinelogs.php
+ * along with MMC; If not, see <http://www.gnu.org/licenses/>.
+ * file: logs/viewmachinelogs.php
  */
 ?>
 <style>
@@ -100,7 +101,7 @@ $isUpdate = (substr($info['objectdeploy'][0]['sessionid'], 0, 6) == "update") ? 
 $deploymachine = xmlrpc_get_deployxmpponmachine($cmd_id, $uuid);
 
 $tab = xmlrpc_get_conrainte_slot_deployment_commands([$cmd_id]);
-$contrainte  = safeCount($tab) ? $tab[$cmd_id] : "";
+$contrainte  = $tab[$cmd_id] ?? "";
 
 $pkgname = get_pkg_name_from_uuid($deploymachine['package_id']);
 $pkgcreator = get_pkg_creator_from_uuid($deploymachine['package_id']);
@@ -191,14 +192,14 @@ if ($datawol['len'] != 0) {
     echo '<table class="listinfos" cellspacing="0" cellpadding="5" border="1">';
     echo "<thead>";
     echo "<tr>";
-    echo '<td style="width: ;">';
-    echo '<span style=" padding-left: 32px;">START</span>';
+    echo '<td>';
+    echo _T("START", "xmppmaster");
     echo '</td>';
-    echo '<td style="width: ;">';
-    echo '<span style=" padding-left: 32px;">STEP</span>';
+    echo '<td>';
+    echo _T("STEP", "xmppmaster");
     echo '</td>';
-    echo '<td style="width: ;">';
-    echo '<span style=" padding-left: 32px;">DESCRIPTION</span>';
+    echo '<td>';
+    echo _T("DESCRIPTION", "xmppmaster");
     echo '</td>';
     echo "</tr>";
     echo "</thead>";
@@ -304,15 +305,15 @@ if (safeCount($deploymachine) != 0) {
     echo '<table class="listinfos" cellspacing="0" cellpadding="5">';
     echo "<thead>";
     echo "<tr>";
-    echo '<td style="width: 210px;">';
-    echo '<span style="padding-left: 32px;">'._T("Machine", "xmppmaster").'</span>';
+    echo '<td>';
+    echo _T("Machine", "xmppmaster");
     echo '</td>';
 
-    echo '<td style="width: ;">';
-    echo '<span style=" padding-left: 32px;">'.$titleip.'</span>';
+    echo '<td>';
+    echo $titleip;
     echo '</td>';
-    echo '<td style="width: ;">';
-    echo '<span style=" padding-left: 32px;">'._T("MAC Address", "xmppmaster").'</span>';
+    echo '<td>';
+    echo _T("MAC Address", "xmppmaster");
     echo '</td>';
     echo "</tr>";
     echo "</thead>";
@@ -343,17 +344,17 @@ if (safeCount($deploymachine) != 0) {
     echo '<table class="listinfos" cellspacing="0" cellpadding="5">';
     echo "<thead>";
     echo "<tr>";
-    echo '<td style="width:250 ;">';
-    echo '<span style=" padding-left: 32px;">'._T("Creator", "xmppmaster").'</span>';
+    echo '<td>';
+    echo _T("Creator", "xmppmaster");
     echo '</td>';
-    echo '<td style="width: ;">';
-    echo '<span style=" padding-left: 32px;">'._T("Name", "xmppmaster").'</span>';
+    echo '<td>';
+    echo _T("Name", "xmppmaster");
     echo '</td>';
-    echo '<td style="width: ;">';
-    echo '<span style=" padding-left: 32px;">'._T("Folder", "xmppmaster").'</span>';
+    echo '<td>';
+    echo _T("Folder", "xmppmaster");
     echo '</td>';
     echo '<td style="width: 300px;">';
-    echo '<span style=" padding-left: 32px;">'._T("Creation Date", "xmppmaster").'</span>';
+    echo _T("Creation Date", "xmppmaster");
     echo '</td>';
     if($isUpdate) {
         echo '<td class="action" style="text-align:center;">';
@@ -394,25 +395,25 @@ if (safeCount($deploymachine) != 0) {
     echo '<table class="listinfos" cellspacing="0" cellpadding="5">';
     echo "<thead>";
     echo "<tr>";
-    echo '<td style="width:250 ;">';
-    echo '<span style=" padding-left: 32px;">'._T("User", "xmppmaster").'</span>';
+    echo '<td>';
+    echo _T("User", "xmppmaster");
     echo '</td>';
-    echo '<td style="width: ;">';
-    echo '<span style=" padding-left: 32px;">'._T("Package Name", "xmppmaster").'</span>';
+    echo '<td>';
+    echo _T("Package Name", "xmppmaster");
     echo '</td>';
-    echo '<td style="width: ;">';
-    echo '<span style=" padding-left: 32px;">'._T("Start Date", "xmppmaster").'</span>';
+    echo '<td>';
+    echo _T("Start Date", "xmppmaster");
     echo '</td>';
     if ($contrainte != "") {
-        echo '<td style="width: ;">';
-        echo '<span style=" padding-left: 32px;">'._T("Deployment Interval Constraint", "xmppmaster").'</span>';
+        echo '<td>';
+        echo _T("Deployment Interval Constraint", "xmppmaster");
         echo '</td>';
     }
-    echo '<td style="width: ;">';
-    echo '<span style=" padding-left: 32px;">'._T("Stop Date", "xmppmaster").'</span>';
+    echo '<td>';
+    echo _T("Stop Date", "xmppmaster");
     echo '</td>';
-    echo '<td style="width: ;">';
-    echo '<span style=" padding-left: 32px;">'._T("Session Id", "xmppmaster").'</span>';
+    echo '<td>';
+    echo _T("Session Id", "xmppmaster");
     echo '</td>';
     echo "</tr>";
     echo "</thead>";
@@ -587,13 +588,13 @@ if ($info['len'] != 0) {
     echo "<thead>";
     echo "<tr>";
     echo '<td  style="width : 120px;">';
-    echo '<span style=" padding-left: 32px;">'._T("START", "xmppmaster").'</span>';
+    echo _T("START", "xmppmaster");
     echo '</td>';
     echo '<td>';
-    echo '<span style=" padding-left:0px;">'._T("STEP", "xmppmaster").'</span>';
+    echo _T("STEP", "xmppmaster");
     echo '</td>';
     echo '<td style="text-align: center";>';
-    echo '<span style="padding-left: 32px;">'._T("DESCRIPTION", "xmppmaster").'</span>';
+    echo _T("DESCRIPTION", "xmppmaster");
     echo '</td>';
     echo "</tr>";
     echo "</thead>";
@@ -612,9 +613,7 @@ if ($info['len'] != 0) {
         //echo $formateddate;
         echo "</td>";
         echo "<td>";
-        echo '<span  style="padding-left:10px;">';
         echo $line['priority'];
-        echo "</span>";
         echo "</td>";
         echo "<td>";
         echo $line['text'];
@@ -904,10 +903,10 @@ if ($info['len'] != 0) {
             echo "<thead>";
             echo "<tr>";
             echo '<td  style="width : 120px;">';
-            echo '<span style=" padding-left: 32px;">'._T("key", "xmppmaster").'</span>';
+            echo _T("key", "xmppmaster");
             echo '</td>';
             echo '<td>';
-            echo '<span style=" padding-left:0px;">'._T("value", "xmppmaster").'</span>';
+            echo _T("value", "xmppmaster");
             echo '</td>';
             echo "</tr>";
             echo "</thead>";
@@ -919,9 +918,7 @@ if ($info['len'] != 0) {
                 echo trim($ff[0], "'");
                 echo "</td>";
                 echo "<td>";
-                echo '<span  style="padding-left:10px;">';
                 echo trim($ff[1], "'");
-                echo "</span>";
                 echo "</td>";
                 echo "</tr>";
             }
@@ -960,6 +957,7 @@ $tab = "";
             a = a.replace("<?php echo $hideText;?> ", "<?php echo $showText;?> ");
         }
         jQuery("#"+"title"+id).text(a);
+        jQuery("#"+"title"+id).addClass('collapsed');
     }
     //hidden table by default.decommente pour hide by default
     hideid("env");
@@ -973,6 +971,7 @@ $tab = "";
             }
             jQuery(this).text(a);
             jQuery(this).next('div').toggle();
+            jQuery(this).toggleClass('collapsed', jQuery(this).next('div').is(':hidden'));
         });
 
         jQuery( ".replytab2" ).click(function() {
@@ -984,6 +983,7 @@ $tab = "";
             completed.toggle();
             successed.toggle();
             action.toggle();
+            jQuery(this).toggleClass('collapsed', action.is(':hidden'));
         });
 </script>
 <?php

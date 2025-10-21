@@ -79,6 +79,74 @@ textarea {
 /* remove label borders in IE6 because IE6 does not support transparency */
 * html .ui-multiselect-checkboxes label { border:none; padding:0 }
 
+/* XMPP machine logs layout fixes */
+#titlewol table.listinfos,
+#titledetailmach table.listinfos,
+#titledetailpack table.listinfos,
+#titledeployplan table.listinfos,
+#titlexmppinfo table.listinfos,
+#titledependency table.listinfos,
+#titlephase table.listinfos,
+#env table.listinfos {
+    table-layout: fixed;
+    width: 100%;
+}
+
+#titlewol table.listinfos td,
+#titledetailmach table.listinfos td,
+#titledetailpack table.listinfos td,
+#titledeployplan table.listinfos td,
+#titlexmppinfo table.listinfos td,
+#titledependency table.listinfos td,
+#titlephase table.listinfos td,
+#env table.listinfos td {
+    text-align: left;
+    word-break: break-word;
+}
+
+#titledetailmach table.listinfos td {
+    width: 33.33%;
+}
+
+.replytab,
+.replytab2 {
+    position: relative;
+    cursor: pointer;
+}
+
+.replytab::after,
+.replytab2::after {
+    content: '\25B8';
+    display: inline-block;
+    margin-left: 8px;
+    transition: transform 0.2s ease-in-out;
+    transform: rotate(90deg);
+}
+
+.replytab.collapsed::after,
+.replytab2.collapsed::after {
+    transform: rotate(0deg);
+}
+
+#titledetailpack table.listinfos ul.action {
+    float: none;
+    line-height: normal;
+    display: inline-flex;
+    gap: 8px;
+    padding: 0;
+    margin: 0;
+}
+
+#titledetailpack table.listinfos ul.action li {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 0;
+}
+
+#titledetailpack table.listinfos ul.action li a {
+    line-height: 1;
+}
+
 /*
  * classes for top right shortcut icons
  */
