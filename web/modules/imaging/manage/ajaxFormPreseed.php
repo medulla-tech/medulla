@@ -72,8 +72,14 @@ var template = [
 '<? echo $strin;?>CheckDomaine<? echo $strou;?>d-i netcfg/get_Domaine string <? echo $strin;?>InputDomaine<? echo $strou;?>',
 '<? echo $strin;?>CheckForceHostname<? echo $strou;?>d-i netcfg/hostname string <? echo $strin;?>InputForceHostname<? echo $strou;?>',
 '<? echo $strin;?>CheckDhcpHostname<? echo $strou;?>d-i netcfg/dhcp_hostname string <? echo $strin;?>InputDhcpHostname<? echo $strou;?>',
-'<? echo $strin;?>CheckLoadFirmware<? echo $strou;?>d-i hw-detect/load_firmware boolean <? echo $strin;?>CheckLoadFirmwareValue<? echo $strou;?>'
-
+'<? echo $strin;?>CheckLoadFirmware<? echo $strou;?>d-i hw-detect/load_firmware boolean <? echo $strin;?>CheckLoadFirmwareValue<? echo $strou;?>',
+'',
+'### NETWORK CONSOLE'
+'<? echo $strin;?>CheckNetworkConsole<? echo $strou;?>d-i anna/choose_modules <? echo $strin;?>CheckNetworkConsoleType<? echo $strou;?> <? echo $strin;?>CheckNetworkConsoleValue<? echo $strou;?>',
+'<? echo $strin;?>CheckAuthorizedKeysUrl<? echo $strou;?>d-i network-console/authorized_keys_url string <? echo $strin;?>InputAuthorizedKeysUrl<? echo $strou;?>',
+'',
+'### MIRROR',
+'',
 ].join('\r\n');
 </script>
 
@@ -503,74 +509,54 @@ $values = [
 ];
 
 $f->add(
-    new TrFormElement('<label for="check-load-firmware">'._T("Load Firmware", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, $inf_load_firmware]]
+    new TrFormElement('<label for="check-load-firmware">'._T("Load Firmware", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, $info_load_firmware]]
 );
 
-
-// ---- example for input
-// $check_language = new CheckboxTpl("check-language");
-// $input_language = new InputTplTitle("input-language");
-// $fields = [
-//     $check_language, $input_language
-// ];
-
-// $values = [
-//     (isset($parameters)) ? $parameters['check-language'] : '',
-//     (isset($parameters)) ? $parameters['input-language'] : '',
-// ];
-
-// $f->add(
-//     new TrFormElement('<label for="check-language">'._T("language", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "placeholder" => ["", "fr"]]
-// );
+$f->pop();
 
 
 
+// ==== New Section ====
+// NETWORK Console
+// =====================
+// ---- Toggle button ----
+$f->add(new TitleElement(_T("Network Console","imaging")));
+$f->add(new TrFormElement("", new Iconereply(_T('NetworkConsole', "imaging"),'')));
+$f->push(new Table());
 
-//==== NEW SECTION ====
-// Os Settings
-//=====================
-// $f->add(new TitleElement(_T("Os Settings","imaging")));
-// $f->add(new TrFormElement("",new Iconereply('General_Settings',$InfoBule_General_Settings)));
-// $f->push(new Table());
 
-//     //_____________
-//     $key1 = new InputTplTitle('ProductKey1',$InfoBule_ProductKey);
-//     $key1->setSize(5);
-//     $key2 = new InputTplTitle('ProductKey2',$InfoBule_ProductKey);
-//     $key2->setSize(5);
-//     $key3 = new InputTplTitle('ProductKey3',$InfoBule_ProductKey);
-//     $key3->setSize(5);
-//     $key4 = new InputTplTitle('ProductKey4',$InfoBule_ProductKey);
-//     $key4->setSize(5);
-//     $key5 = new InputTplTitle('ProductKey5',$InfoBule_ProductKey);
-//     $key5->setSize(5);
-//     $fields =   array(
-//         $key1,new SpanElement("-"),
-//         $key2,new SpanElement("-"),
-//         $key3,new SpanElement("-"),
-//         $key4,new SpanElement("-"),
-//         $key5
-//     );
-//     $values = array(
-//         (isset($parameters)) ? $parameters['ProductKey1'] : "HYF8J","",
-//         (isset($parameters)) ? $parameters['ProductKey2'] : "CVRMY","",
-//         (isset($parameters)) ? $parameters['ProductKey3'] : "CM74G","",
-//         (isset($parameters)) ? $parameters['ProductKey4'] : "RPHKF","",
-//         (isset($parameters)) ? $parameters['ProductKey5'] : "PW487"
-//     );
-//     //_____________
-//     $f->add(
-//         new TrFormElement(_T('Product Key','imaging').":", new multifieldTpl($fields)),
-//         array("value" => $values,"required" => True)
-//     );
-//     //_____________
-//     $f->add(
-//         new TrFormElement(_T('Organization Name','imaging').":", new InputTplTitle('OrginazationName',$InfoBule_OrginazationName)),
-//         array("value" => (isset($parameters)) ? $parameters['OrginazationName'] : 'Medulla', "required" => True)
-//     );
+// ---- Network Console
+$check = new CheckboxTpl("check-network-console");
+$input = new CheckboxTpl("check-network-console-value");
+$fields = [
+    $check, $input
+];
 
-// $f->pop();
-// $f->add( new SepTpl());
+$values = [
+    (isset($parameters['CheckNetworkConsole'])) ? $parameters['CheckNetworkConsoleType'] : '',
+    (isset($parameters['CheckNetworkConsoleType']) && $parameters['CheckNetworkConsoleType'] == 'false') ? 'checked' : 'checked',
+];
+
+$f->add(
+    new TrFormElement('<label for="check-network-console">'._T("Network Console", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, $info_network_console]]
+);
+
+// ---- authorized_keys_url
+$check = new CheckboxTpl("check-authorized-keys-url");
+$input = new InputTplTitle("input-authorized-keys-url");
+$fields = [
+    $check, $input
+];
+
+$values = [
+    (isset($parameters['CheckAuthorizedKeysUrl'])) ? $parameters['CheckAuthorizedKeysUrl'] : '',
+    (isset($parameters['InputAuthorizedKeysUrl'])) ? $parameters['InputAuthorizedKeysUrl'] : '',
+];
+
+$f->add(
+    new TrFormElement('<label for="check-authorized-keys-url">'._T("Authorized Keys Url", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, '']]
+);
+
 
 $f->pop();
 
@@ -578,30 +564,5 @@ $f->pop();
 $f->display();
 
 echo "<pre id='codeTocopy2' style='width:100%;'></pre>";
-
-// $table = new CTag("table", "", ["class"=>"listinfos"]);
-
-// // Defin table column head
-// $theader = [
-//     new CTag("th", "tab1"), 
-//     new CTag("th", "tab2"), 
-//     new CTag("th", "tab3")
-// ];
-
-
-// $label = new CTag("label", "label for input", ["for"=>"input"]);
-
-// $tbody = [
-//     new CTag("td"),
-//     new CTag("td"),
-//     new CTag("td"),
-// ];
-// $tbody[0]->addChild($label->addChild(new OTag("input", ["type"=>"text", "name"=>"input", "placeholder"=>"My Input", "id"=>"input"])));
-// $tbody[1]->addChild(new CTag("p", "coucou en rouge", ["style"=>"color:red;"]));
-// $tbody[2]->addChild(new CTag("textarea", "message a ajouter", ['name'=>'textarea']),);
-
-// $table->addChild(new CTag("thead"))->addChild(new CTag("tr"))->addChildren($theader);
-// $table->addChild(new CTag("tbody"))->addChild(new CTag("tr"))->addChildren($tbody);
-// echo $table->render();
 
 ?>

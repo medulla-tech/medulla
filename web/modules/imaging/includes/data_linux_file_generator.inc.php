@@ -818,6 +818,7 @@ $info_disable_dhcp = _T("If you want the preconfiguration file to work on system
 $info_hostname = _T("Any hostname and domain names assigned from dhcp take precedence over values set here. However, setting the values still prevents the questions from being shown, even if values come from dhcp.", "imaging");
 $info_dhcp_hostname = _T("The wacky dhcp hostname that some ISPs use as a password of sorts.", "imaging");
 $info_load_firmware = _T("If non-free firmware is needed for the network or other hardware, you can configure the installer to always try to load it, without prompting. Or change to false to disable asking.", "imaging");
+$info_network_console = _T("Use the following settings if you wish to make use of the network-console component for remote installation over SSH. This only makes sense if you intend to perform the remainder of the installation manually.", "imaging");
 ?>
 
 <script>
@@ -898,7 +899,11 @@ update = ()=>{
         'InputDhcpHostname' : jQuery("#input-dhcp-hostname").val(),
         'CheckLoadFirmware': jQuery("#check-load-firmware").is(":checked") ? '' : '#',
         'CheckLoadFirmwareValue': jQuery("#check-load-firmware-value").is(":checked") ? 'true' : 'false',
-
+        'CheckNetworkConsole' : jQuery("#check-network-console").is(":checked") ? '' : '#',
+        'CheckNetworkConsoleType' : jQuery("#check-network-console-value").is(":checked") ? 'string' : 'boolean',
+        'CheckNetworkConsoleValue' : jQuery("#check-network-console-value").is(":checked") ? 'network-console' : 'false',
+        'CheckAuthorizedKeysUrl' : jQuery("#check-authorized-keys-url").is(":checked") ? '' : '#',
+        'InputAuthorizedKeysUrl' : jQuery("#input-authorized-keys-url").val(),
     };
 
     listParameters={}
@@ -979,6 +984,20 @@ fn_Network=function(){
 };
 
 
+fn_NetworkConsole=function(){
+    var list_id_masque=[
+    ];
+    jQuery.each(list_id_masque, function( index,value) {
+        jQuery('#'+value).parents("tr").toggle();
+    });
+    if (jQuery('#'+list_id_masque[0]).is(":visible")){
+        jQuery('#Network').css( 'cursor', 'n-resize' ).attr('src', 'img/other/expanded.svg');
+    }
+    else{
+        jQuery('#Network').css( 'cursor', 's-resize' ).attr('src', 'img/other/expand.svg');
+    }
+};
+
 enable_item = (selector) =>{
     jQuery(selector).prop("disabled", false)
 }
@@ -1057,6 +1076,8 @@ jQuery(function () {
     init_item("#check-force-hostname", "#input-force-hostname");
     init_item("#check-dhcp-hostname", "#input-dhcp-hostname");
     init_item("#check-load-firmware", "#check-load-firmware-value");
+    init_item("#check-network-console", "#check-network-console-value");
+    init_item("#check-authorized-keys-url", "#input-authorized-keys-url");
 
 
 
@@ -1096,14 +1117,14 @@ jQuery(function () {
         toggle_item("#select-keyboard-layouts");
         update();
     });
-    
+
     jQuery("#select-keyboard-layouts").on("change", ()=>{update()});
 
     jQuery('#check-keyboard-toggle').on('change', ()=>{
         toggle_item("#select-keyboard-toggle");
         update();
     });
-    
+
     jQuery("#select-keyboard-toggle").on("change", ()=>{update()});
 
     jQuery("#check-enable-network").on("change", ()=>{
@@ -1120,8 +1141,8 @@ jQuery(function () {
         }
         update()
     })
-    jQuery('#check-interface').on("change", ()=>{ 
-        toggle_item("#select-interface");   
+    jQuery('#check-interface').on("change", ()=>{
+        toggle_item("#select-interface");
         if(jQuery('#select-interface').prop('disabled') == true){
             disable_item("#input-interface")
         }
@@ -1246,9 +1267,25 @@ jQuery(function () {
         update();
     })
     jQuery('#check-load-firmware-value').on("change", ()=>{update();})
+
+
+    jQuery('#check-network-console').on("change", ()=>{
+        toggle_item("#check-network-console-value");
+        update();
+    })
+    jQuery('#check-network-console-value').on("change", ()=>{update();})
+
+
+    jQuery("#check-authorized-keys-url").on("change", ()=>{
+        toggle_item("#input-authorized-keys-url");
+        update();
+    })
+    jQuery("#input-authorized-keys-url").on("change", ()=>{update()})
+
 });
 
 fn_Installation_Notes()
 fn_Locale()
 fn_Network()
+fn_NetworkConsole()
 </script>
