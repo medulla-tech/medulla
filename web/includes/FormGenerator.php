@@ -49,6 +49,10 @@ function displayErrorCss($name)
 class AbstractTpl extends HtmlElement
 {
     public $name;
+    public $label;
+    public $text;
+    public $value;
+    public $size;
 
     /**
      *  display abstract Element

@@ -24,6 +24,7 @@
 // DATAS for form
 // -----
 
+$info_comment_this_field = _T("Check to uncomment this field", "imaging");
 $info_installation_note = _T("Meta Information config", "imaging");
 // ---- locale
 
@@ -810,6 +811,13 @@ $interface_choices = [
 ];
 
 $info_interface = _T("netcfg will choose an interface that has link if possible. This makes it skip displaying a list if there is more than one interface.", "imaging");
+$info_link_timeout = _T("To set a different link detection timeout (default is 3 seconds).", "imaging");
+$info_dhcp_timeout = _T("If you have a slow dhcp server and the installer times out waiting for it, this might be useful.", "imaging");
+$info_disable_autoconfig = _T("Automatic network configuration is the default. If you prefer to configure the network manually.", "imaging");
+$info_disable_dhcp = _T("If you want the preconfiguration file to work on systems both with and without a dhcp server, uncomment these lines and the static network.", "imaging");
+$info_hostname = _T("Any hostname and domain names assigned from dhcp take precedence over values set here. However, setting the values still prevents the questions from being shown, even if values come from dhcp.", "imaging");
+$info_dhcp_hostname = _T("The wacky dhcp hostname that some ISPs use as a password of sorts.", "imaging");
+$info_load_firmware = _T("If non-free firmware is needed for the network or other hardware, you can configure the installer to always try to load it, without prompting. Or change to false to disable asking.", "imaging");
 ?>
 
 <script>
@@ -844,6 +852,7 @@ update = ()=>{
 
     var variables = {
         'Location': jQuery('#Location').val(),
+        'dateval': dateval,
         'Comments': jQuery('#Comments').val(),
         'CheckLocale': (jQuery('#check-locale').is(":checked") ? '' : '#'),
         'SelectLocale': jQuery('#select-locale').find('option:selected').val(),
@@ -863,52 +872,33 @@ update = ()=>{
         'CheckEnableNetworkValue':jQuery("#check-enable-network-value").is(":checked") ? "true" : "false",
         'CheckInterface' : jQuery("#check-interface").is(":checked") ? "" : "#",
         'SelectInterface' : jQuery("#select-interface").find('option:selected').val(),
-        'InputInterface' : jQuery("#select-interface").find('option:selected').val() == 'auto' ? 'auto' : jQuery("#input-interface").val()
+        'InputInterface' : jQuery("#select-interface").find('option:selected').val() == 'auto' ? 'auto' : jQuery("#input-interface").val(),
+        'CheckLinkTimeout': jQuery("#check-link-timeout").is(":checked") ? "" : "#",
+        'NumberLinkTimeout':jQuery("#number-link-timeout").val(),
+        'CheckDhcpTimeout': jQuery("#check-dhcp-timeout").is(":checked") ? "" : "#",
+        'NumberDhcpTimeout':jQuery("#number-dhcp-timeout").val(),
+        'CheckDhcpV6Timeout': jQuery("#check-dhcpv6-timeout").is(":checked") ? "" : "#",
+        'NumberDhcpV6Timeout':jQuery("#number-dhcpv6-timeout").val(),
+        'CheckDisableAutoconfig': jQuery("#check-disable-autoconfig").is(":checked") ? "" : "#",
+        'CheckDisableAutoconfigValue': jQuery("#check-disable-autoconfig-value").is(":checked") ? "true" : "false",
+        'CheckDisableDhcp' : jQuery("#check-disable-dhcp").is(":checked") ? '' : '#',
+        'CheckDisableDhcpValue' : jQuery('#check-disable-dhcp-value').is(":checked") ? "true" : "false",
+        'CheckDisableDhcpCombine' : jQuery('#check-disable-dhcp-value').is(":checked") ? "" : "#", // Alias for dhcpValue, to put a comment tag or not on the beginning of the static conf
+        'InputGetIpaddress' : jQuery("#input-get-ipaddress").val(),
+        'InputGetNetmask' :  jQuery("#input-get-netmask").val(),
+        'InputGetGateway' : jQuery("#input-get-gateway").val(),
+        'InputGetNameservers' : jQuery("#input-get-nameservers").val(),
+        'CheckHostname': jQuery("#check-hostname").is(":checked") ? '' : '#',
+        'InputHostname' : jQuery("#input-hostname").val(),
+        'CheckDomaine': jQuery("#check-domaine").is(":checked") ? '' : '#',
+        'InputDomaine' : jQuery("#input-domaine").val(),
+        'CheckForceHostname': jQuery("#check-force-hostname").is(":checked") ? '' : '#',
+        'InputForceHostname' : jQuery("#input-force-hostname").val(),
+        'CheckDhcpHostname': jQuery("#check-dhcp-hostname").is(":checked") ? '' : '#',
+        'InputDhcpHostname' : jQuery("#input-dhcp-hostname").val(),
+        'CheckLoadFirmware': jQuery("#check-load-firmware").is(":checked") ? '' : '#',
+        'CheckLoadFirmwareValue': jQuery("#check-load-firmware-value").is(":checked") ? 'true' : 'false',
 
-        // 'ShowWindowsLive' : jQuery('#ShowWindowsLive').find('option:selected').val(),
-        // 'CopyProfile' : jQuery('#CopyProfile').find('option:selected').val(),
-        // 'ExtendOSPartition' :jQuery('#ExtendOSPartition').find('option:selected').val(),
-        // 'SkipAutoActivation': jQuery('#SkipAutoActivation').find('option:selected').val(),
-        // 'SkipRearm': jQuery('#SkipRearm').find('option:selected').val(),
-        // 'AcceptEULA': jQuery('#AcceptEULA').find('option:selected').val(),
-        // 'SetupUILanguage': jQuery('#SetupUILanguage').find('option:selected').val(),
-        // 'FullName': jQuery('#FullName').val(),
-        // 'ComputerName': jQuery('#ComputerName').val(),
-        // 'InputLocale': jQuery('#InputLocale').find('option:selected').val(),
-        // 'UserLocale': jQuery('#UserLocale').find('option:selected').val(),
-        // 'TimeZone': jQuery('#TimeZone').find('option:selected').val(),
-        // 'UILanguage': jQuery('#UILanguage').find('option:selected').val(),
-        // 'NetworkLocation': jQuery('#NetworkLocation').find('option:selected').val(),
-        // 'ProtectComputer': jQuery('#ProtectComputer').find('option:selected').val(),
-        // 'HideEULA': jQuery('#HideEULA').find('option:selected').val(),
-        // 'DaylightSettings': jQuery('#DaylightSettings').find('option:selected').val(),
-        // 'HideWireless': jQuery('#HideWireless').find('option:selected').val(),
-        // 'MachineOOBE': jQuery('#MachineOOBE').find('option:selected').val(),
-        // 'UserOOBE': jQuery('#UserOOBE').find('option:selected').val(),
-        // 'WipeDisk': jQuery('#WipeDisk').find('option:selected').val(),
-        // 'InstallDisk': jQuery('#InstallDisk').find('option:selected').val(),
-        // 'MainPartition': jQuery('#MainPartition').find('option:selected').val(),
-        // 'Format': jQuery('#Format').find('option:selected').val(),
-        // 'Label': jQuery('#Label').val(),
-        // 'DriveLetter': jQuery('#DriveLetter').find('option:selected').val(),
-        // 'PartitionOrder': jQuery('#PartitionOrder').find('option:selected').val(),
-        // 'Group': jQuery('#Group').find('option:selected').val(),
-        // 'Description': jQuery('#Description').val(),
-        // 'Password': jQuery('#Password').val(),
-        // 'PasswordAdmin': jQuery('#PasswordAdmin').val(),
-        // 'EnableUAC': jQuery('#EnableUAC').find('option:selected').val(),
-        // 'Updates': jQuery('#Updates').find('option:selected').val(),
-        // 'OrginazationName': jQuery('#OrginazationName').val(),
-        // 'BGC':jQuery( '#BGC').find('option:selected').val(),
-        // 'CEIPEnabled':jQuery( '#CEIPEnabled').find('option:selected').val(),
-        // 'ControlPanelView': jQuery('#ControlPanelView').find('option:selected').val(),
-        // 'ControlPanelIconSize': jQuery('#ControlPanelIconSize').find('option:selected').val(),
-        // 'dateval': dateval,
-		// 'Domain': jQuery('#Domain').val(),
-		// 'DomainPassword': jQuery('#DomainPassword').val(),
-		// 'DomainUser' : jQuery('#DomainUser').val(),
-		// 'JoinDomain' : jQuery('#JoinDomain').val(),
-		// 'MachineObjectOU' : jQuery('#MachineObjectOU').val(),
     };
 
     listParameters={}
@@ -930,12 +920,11 @@ update = ()=>{
         return variables[name];
     });
     newConfig = newConfig.replace("@@listParameters@@",myJsonString);
-    console.log(newConfig)
 
     jQuery('input[name=codeToCopy]').val(newConfig);
-        jQuery.post( "modules/imaging/manage/ajaxmiseenforme.php", { data: newConfig })
+        jQuery.post( "modules/imaging/manage/ajaxFormatLinux.php", { data: newConfig })
             .done(( data1 ) => {
-                jQuery('#codeTocopy2').text(data1);
+                jQuery('#codeTocopy2').html(data1);
         });
 }
 
@@ -1024,16 +1013,19 @@ jQuery(function () {
     init_item("#check-keyboard-layouts", "#select-keyboard-layouts")
     init_item("#check-keyboard-toggle", "#select-keyboard-toggle")
     init_item("#check-enable-network", "#check-enable-network-value")
+    init_item("#check-link-timeout", "#number-link-timeout")
+    init_item("#check-dhcp-timeout", "#number-dhcp-timeout")
+    init_item("#check-dhcpv6-timeout", "#number-dhcpv6-timeout")
+    init_item("#check-disable-autoconfig", "#check-disable-autoconfig-value")
 
-    console.log(jQuery("#check-interface").is(":checked"))
-    if(jQuery("#check-interface").is(":checked")){
+    // Specific initialization
+    if(jQuery("#check-disable-dhcp").is(":checked")){
         enable_item("#select-interface")
         if(jQuery("#select-interface").val() == "auto"){
             jQuery("#input-interface").prop("disabled", true)
         }
         else{
             jQuery("#input-interface").prop("disabled", false)
-
         }
     }
     else{
@@ -1041,12 +1033,37 @@ jQuery(function () {
         disable_item("#input-interface")
     }
 
+
+    // Disable dhcp
+    if(jQuery("#check-disable-dhcp").is(":checked")){
+        enable_item("#check-disable-dhcp-value");
+        if(jQuery("#check-disable-dhcp-value").is(":checked")){
+            enable_item("#input-get-ipaddress")
+            enable_item("#input-get-netmask")
+            enable_item("#input-get-gateway")
+            enable_item("#input-get-nameservers")
+        }
+    }
+    else{
+        disable_item("#check-disable-dhcp-value")
+        disable_item("#input-get-ipaddress")
+        disable_item("#input-get-netmask")
+        disable_item("#input-get-gateway")
+        disable_item("#input-get-nameservers")
+    }
+
+    init_item("#check-hostname", "#input-hostname");
+    init_item("#check-domaine", "#input-domaine");
+    init_item("#check-force-hostname", "#input-force-hostname");
+    init_item("#check-dhcp-hostname", "#input-dhcp-hostname");
+    init_item("#check-load-firmware", "#check-load-firmware-value");
+
+
+
+    // Change section
+
     jQuery('#Comments').bind('input propertychange', function() { update();});
     jQuery( '#Location' ).on('change', function () {
-        // if(getExtension( jQuery('#Location').val() ) != "xml"){
-        //     var namefile=jQuery('#Location').val() + ".xml"
-        //     jQuery('#Location').val( namefile )
-        // }
         jQuery("#Location").val(jQuery("#Location").val().replace(/ /g,"_"));
         update();
     });
@@ -1119,27 +1136,117 @@ jQuery(function () {
         update()
     });
 
-    jQuery('#select-interface').on("change", ()=>{    
-        update()
-    });
+    jQuery('#select-interface').on("change", ()=>{update()});
 
     jQuery("#input-interface").on("change", ()=>{update()});
 
+    jQuery('#check-link-timeout').on('change', ()=>{
+        toggle_item("#number-link-timeout");
+        update();
+    });
+    jQuery("#number-link-timeout").on("change", ()=>{update()});
 
+    jQuery('#check-dhcp-timeout').on('change', ()=>{
+        toggle_item("#number-dhcp-timeout");
+        update();
+    });
+    jQuery("#number-dhcp-timeout").on("change", ()=>{update()});
+
+    jQuery('#check-dhcpv6-timeout').on('change', ()=>{
+        toggle_item("#nuinput-interfacember-dhcpv6-timeout");
+        update();
+    });
+    jQuery("#number-dhcpv6-timeout").on("change", ()=>{update()});
+
+    jQuery("#check-disable-autoconfig").on('change', ()=>{
+        toggle_item("#check-disable-autoconfig-value");
+        update()}
+    );
+    jQuery("#check-disable-autoconfig-value").on('change', ()=>{update()})
+
+    jQuery("#check-disable-dhcp").on("change", ()=>{
+        toggle_item("#check-disable-dhcp-value");
+
+        if(jQuery("#check-disable-dhcp").is(":checked")){
+            if(jQuery("#check-disable-dhcp-value").is(":checked")){
+                enable_item("#input-get-ipaddress");
+                enable_item("#input-get-netmask");
+                enable_item("#input-get-gateway");
+                enable_item("#input-get-nameservers");
+            }
+            else{
+                disable_item("#input-get-ipaddress");
+                disable_item("#input-get-netmask");
+                disable_item("#input-get-gateway");
+                disable_item("#input-get-nameservers");
+            }
+        }
+        else{
+            disable_item("#check-disable-dhcp-value");
+            disable_item("#input-get-ipaddress");
+            disable_item("#input-get-netmask");
+            disable_item("#input-get-gateway");
+            disable_item("#input-get-nameservers");
+        }
+        update();
+    })
+
+    jQuery("#check-disable-dhcp-value").on("change", ()=>{
+            if(jQuery("#check-disable-dhcp-value").is(":checked")){
+                enable_item("#input-get-ipaddress");
+                enable_item("#input-get-netmask");
+                enable_item("#input-get-gateway");
+                enable_item("#input-get-nameservers");
+            }
+            else{
+                disable_item("#input-get-ipaddress");
+                disable_item("#input-get-netmask");
+                disable_item("#input-get-gateway");
+                disable_item("#input-get-nameservers");
+            }
+        update()
+    })
+    jQuery("#input-get-ipaddress").on("change", ()=>{update()
+    })
+    jQuery("#input-get-netmask").on("change", ()=>{update()})
+    jQuery("#input-get-gateway").on("change", ()=>{update()})
+    jQuery("#input-get-nameservers").on("change", ()=>{update()})
+
+
+    jQuery("#check-hostname").on("change", ()=>{
+        toggle_item("#input-hostname");
+        update();
+    })
+    jQuery('#input-hostname').on("change", ()=>{update()});
+
+
+    jQuery("#check-domaine").on("change", ()=>{
+        toggle_item("#input-domaine");
+        update();
+    })
+    jQuery('#input-domaine').on("change", ()=>{update()});
+
+
+    jQuery("#check-force-hostname").on("change", ()=>{
+        toggle_item("#input-force-hostname");
+        update();
+    })
+    jQuery('#input-force-hostname').on("change", ()=>{update()});
+
+
+    jQuery('#check-dhcp-hostname').on("change", ()=>{
+        toggle_item("#input-dhcp-hostname");
+        update();
+    })
+    jQuery('#input-dhcp-hostname').on("change", ()=>{update()});
+
+
+    jQuery('#check-load-firmware').on("change", ()=>{
+        toggle_item("#check-load-firmware-value");
+        update();
+    })
+    jQuery('#check-load-firmware-value').on("change", ()=>{update();})
 });
-
-
-
-
-
-
-// toggle_item("check-locale", "select-locale", "")
-// toggle_item("check-language", "select-language", "")
-// toggle_item("check-country", "select-country", "")
-// toggle_item("check-supported-locales", "select-supported-locales", "")
-
-
-
 
 fn_Installation_Notes()
 fn_Locale()
