@@ -819,6 +819,416 @@ $info_hostname = _T("Any hostname and domain names assigned from dhcp take prece
 $info_dhcp_hostname = _T("The wacky dhcp hostname that some ISPs use as a password of sorts.", "imaging");
 $info_load_firmware = _T("If non-free firmware is needed for the network or other hardware, you can configure the installer to always try to load it, without prompting. Or change to false to disable asking.", "imaging");
 $info_network_console = _T("Use the following settings if you wish to make use of the network-console component for remote installation over SSH. This only makes sense if you intend to perform the remainder of the installation manually.", "imaging");
+$info_mirror_protocol = _T("If you select ftp, the mirror/country string does not need to be set. Default value for the mirror protocol: http.", "imaging");
+$mirror_protocol_values = ["http", "ftp", "rsync"];
+
+$mirror_countries = [
+    "Manual",
+    "Afghanistan",
+    "Albania",
+    "Algeria",
+    "Andorra",
+    "Angola",
+    "Antigua and Barbuda",
+    "Argentina",
+    "Armenia",
+    "Australia",
+    "Austria",
+    "Azerbaijan",
+    "Bahamas",
+    "Bahrain",
+    "Bangladesh",
+    "Barbados",
+    "Belarus",
+    "Belgium",
+    "Belize",
+    "Benin",
+    "Bhutan",
+    "Bolivia",
+    "Bosnia and Herzegovina",
+    "Botswana",
+    "Brazil",
+    "Brunei",
+    "Bulgaria",
+    "Burkina Faso",
+    "Burundi",
+    "Cambodia",
+    "Cameroon",
+    "Canada",
+    "Cape Verde",
+    "Central African Republic",
+    "Chad",
+    "Chile",
+    "China",
+    "Colombia",
+    "Comoros",
+    "Congo, Democratic Republic of the",
+    "Congo, Republic of the",
+    "Costa Rica",
+    "Croatia",
+    "Cuba",
+    "Cyprus",
+    "Czech Republic",
+    "Denmark",
+    "Djibouti",
+    "Dominica",
+    "Dominican Republic",
+    "Ecuador",
+    "Egypt",
+    "El Salvador",
+    "Equatorial Guinea",
+    "Eritrea",
+    "Estonia",
+    "Eswatini",
+    "Ethiopia",
+    "Fiji",
+    "Finland",
+    "France",
+    "Gabon",
+    "Gambia",
+    "Georgia",
+    "Germany",
+    "Ghana",
+    "Greece",
+    "Grenada",
+    "Guatemala",
+    "Guinea",
+    "Guinea-Bissau",
+    "Guyana",
+    "Haiti",
+    "Honduras",
+    "Hungary",
+    "Iceland",
+    "India",
+    "Indonesia",
+    "Iran",
+    "Iraq",
+    "Ireland",
+    "Israel",
+    "Italy",
+    "Jamaica",
+    "Japan",
+    "Jordan",
+    "Kazakhstan",
+    "Kenya",
+    "Kiribati",
+    "Kuwait",
+    "Kyrgyzstan",
+    "Laos",
+    "Latvia",
+    "Lebanon",
+    "Lesotho",
+    "Liberia",
+    "Libya",
+    "Liechtenstein",
+    "Lithuania",
+    "Luxembourg",
+    "Madagascar",
+    "Malawi",
+    "Malaysia",
+    "Maldives",
+    "Mali",
+    "Malta",
+    "Marshall Islands",
+    "Mauritania",
+    "Mauritius",
+    "Mexico",
+    "Micronesia",
+    "Moldova",
+    "Monaco",
+    "Mongolia",
+    "Montenegro",
+    "Morocco",
+    "Mozambique",
+    "Myanmar",
+    "Namibia",
+    "Nauru",
+    "Nepal",
+    "Netherlands",
+    "New Zealand",
+    "Nicaragua",
+    "Niger",
+    "Nigeria",
+    "North Korea",
+    "North Macedonia",
+    "Norway",
+    "Oman",
+    "Pakistan",
+    "Palau",
+    "Palestine",
+    "Panama",
+    "Papua New Guinea",
+    "Paraguay",
+    "Peru",
+    "Philippines",
+    "Poland",
+    "Portugal",
+    "Qatar",
+    "Romania",
+    "Russia",
+    "Rwanda",
+    "Saint Kitts and Nevis",
+    "Saint Lucia",
+    "Saint Vincent and the Grenadines",
+    "Samoa",
+    "San Marino",
+    "Sao Tome and Principe",
+    "Saudi Arabia",
+    "Senegal",
+    "Serbia",
+    "Seychelles",
+    "Sierra Leone",
+    "Singapore",
+    "Slovakia",
+    "Slovenia",
+    "Solomon Islands",
+    "Somalia",
+    "South Africa",
+    "South Korea",
+    "South Sudan",
+    "Spain",
+    "Sri Lanka",
+    "Sudan",
+    "Suriname",
+    "Sweden",
+    "Switzerland",
+    "Syria",
+    "Taiwan",
+    "Tajikistan",
+    "Tanzania",
+    "Thailand",
+    "Timor-Leste",
+    "Togo",
+    "Tonga",
+    "Trinidad and Tobago",
+    "Tunisia",
+    "Turkey",
+    "Turkmenistan",
+    "Tuvalu",
+    "Uganda",
+    "Ukraine",
+    "United Arab Emirates",
+    "United Kingdom",
+    "United States",
+    "Uruguay",
+    "Uzbekistan",
+    "Vanuatu",
+    "Vatican City",
+    "Venezuela",
+    "Vietnam",
+    "Yemen",
+    "Zambia",
+    "Zimbabwe",
+];
+
+$mirror_countries_values = [
+    "manual",
+    "af",
+    "al",
+    "dz",
+    "ad",
+    "ao",
+    "ag",
+    "ar",
+    "am",
+    "au",
+    "at",
+    "az",
+    "bs",
+    "bh",
+    "bd",
+    "bb",
+    "by",
+    "be",
+    "bz",
+    "bj",
+    "bt",
+    "bo",
+    "ba",
+    "bw",
+    "br",
+    "bn",
+    "bg",
+    "bf",
+    "bi",
+    "kh",
+    "cm",
+    "ca",
+    "cv",
+    "cf",
+    "td",
+    "cl",
+    "cn",
+    "co",
+    "km",
+    "cd",
+    "cg",
+    "cr",
+    "hr",
+    "cu",
+    "cy",
+    "cz",
+    "dk",
+    "dj",
+    "dm",
+    "do",
+    "ec",
+    "eg",
+    "sv",
+    "gq",
+    "er",
+    "ee",
+    "sz",
+    "et",
+    "fj",
+    "fi",
+    "fr",
+    "ga",
+    "gm",
+    "ge",
+    "de",
+    "gh",
+    "gr",
+    "gd",
+    "gt",
+    "gn",
+    "gw",
+    "gy",
+    "ht",
+    "hn",
+    "hu",
+    "is",
+    "in",
+    "id",
+    "ir",
+    "iq",
+    "ie",
+    "il",
+    "it",
+    "jm",
+    "jp",
+    "jo",
+    "kz",
+    "ke",
+    "ki",
+    "kw",
+    "kg",
+    "la",
+    "lv",
+    "lb",
+    "ls",
+    "lr",
+    "ly",
+    "li",
+    "lt",
+    "lu",
+    "mg",
+    "mw",
+    "my",
+    "mv",
+    "ml",
+    "mt",
+    "mh",
+    "mr",
+    "mu",
+    "mx",
+    "fm",
+    "md",
+    "mc",
+    "mn",
+    "me",
+    "ma",
+    "mz",
+    "mm",
+    "na",
+    "nr",
+    "np",
+    "nl",
+    "nz",
+    "ni",
+    "ne",
+    "ng",
+    "kp",
+    "mk",
+    "no",
+    "om",
+    "pk",
+    "pw",
+    "ps",
+    "pa",
+    "pg",
+    "py",
+    "pe",
+    "ph",
+    "pl",
+    "pt",
+    "qa",
+    "ro",
+    "ru",
+    "rw",
+    "kn",
+    "lc",
+    "vc",
+    "ws",
+    "sm",
+    "st",
+    "sa",
+    "sn",
+    "rs",
+    "sc",
+    "sl",
+    "sg",
+    "sk",
+    "si",
+    "sb",
+    "so",
+    "za",
+    "kr",
+    "ss",
+    "es",
+    "lk",
+    "sd",
+    "sr",
+    "se",
+    "ch",
+    "sy",
+    "tw",
+    "tj",
+    "tz",
+    "th",
+    "tl",
+    "tg",
+    "to",
+    "tt",
+    "tn",
+    "tr",
+    "tm",
+    "tv",
+    "ug",
+    "ua",
+    "ae",
+    "gb",
+    "us",
+    "uy",
+    "uz",
+    "vu",
+    "va",
+    "ve",
+    "vn",
+    "ye",
+    "zm",
+    "zw",
+];
+
+$mirror_suites = [
+    "stable",
+    "testing",
+    "unstable",
+    "oldstable",
+    "stable-updates",
+    "proposed-updates",
+    "security"
+];
 ?>
 
 <script>
@@ -904,6 +1314,15 @@ update = ()=>{
         'CheckNetworkConsoleValue' : jQuery("#check-network-console-value").is(":checked") ? 'network-console' : 'false',
         'CheckAuthorizedKeysUrl' : jQuery("#check-authorized-keys-url").is(":checked") ? '' : '#',
         'InputAuthorizedKeysUrl' : jQuery("#input-authorized-keys-url").val(),
+        'CheckMirrorProtocol' : jQuery("#check-mirror-protocol").is(":checked") ? '' : '#',
+        'SelectMirrorProtocol': jQuery("#select-mirror-protocol").find('option:selected').val(),
+        'InputMirrorHostname': jQuery("#input-mirror-hostname").val(),
+        'InputMirrorDirectory': jQuery("#input-mirror-directory").val(),
+        'InputMirrorProxy': jQuery("#input-mirror-proxy").val(),
+        'CheckMirrorCountry': jQuery("#check-mirror-country").is(":checked") ? '' : '#',
+        'SelectMirrorCountry': jQuery("#select-mirror-country").find("option:selected").val(),
+        'CheckMirrorSuite': jQuery("#check-mirror-suite").is(":checked") ? '' : '#',
+        'SelectMirrorSuite': jQuery("#select-mirror-suite").find("option:selected").val()
     };
 
     listParameters={}
@@ -998,6 +1417,22 @@ fn_NetworkConsole=function(){
     }
 };
 
+
+fn_Mirror=function(){
+    var list_id_masque=[
+    ];
+    jQuery.each(list_id_masque, function( index,value) {
+        jQuery('#'+value).parents("tr").toggle();
+    });
+    if (jQuery('#'+list_id_masque[0]).is(":visible")){
+        jQuery('#Network').css( 'cursor', 'n-resize' ).attr('src', 'img/other/expanded.svg');
+    }
+    else{
+        jQuery('#Network').css( 'cursor', 's-resize' ).attr('src', 'img/other/expand.svg');
+    }
+};
+
+
 enable_item = (selector) =>{
     jQuery(selector).prop("disabled", false)
 }
@@ -1078,6 +1513,23 @@ jQuery(function () {
     init_item("#check-load-firmware", "#check-load-firmware-value");
     init_item("#check-network-console", "#check-network-console-value");
     init_item("#check-authorized-keys-url", "#input-authorized-keys-url");
+
+
+    if(jQuery("#check-mirror-protocol").is(":checked")){
+        enable_item("#select-mirror-protocol")
+        enable_item("#input-mirror-hostname")
+        enable_item("#input-mirror-directory")
+        enable_item("#input-mirror-proxy")
+    }
+    else{
+        disable_item("#select-mirror-protocol")
+        disable_item("#input-mirror-hostname")
+        disable_item("#input-mirror-directory")
+        disable_item("#input-mirror-proxy")
+    }
+
+    init_item("#check-mirror-country", "#select-mirror-country")
+    init_item("#check-mirror-suite", "#select-mirror-suite")
 
 
 
@@ -1282,10 +1734,45 @@ jQuery(function () {
     })
     jQuery("#input-authorized-keys-url").on("change", ()=>{update()})
 
+    jQuery("#check-mirror-protocol").on("change", ()=>{
+        if(jQuery("#check-mirror-protocol").is(":checked")){
+            enable_item("#select-mirror-protocol")
+            enable_item("#input-mirror-hostname")
+            enable_item("#input-mirror-directory")
+            enable_item("#input-mirror-proxy")
+        }
+        else{
+            disable_item("#select-mirror-protocol")
+            disable_item("#input-mirror-hostname")
+            disable_item("#input-mirror-directory")
+            disable_item("#input-mirror-proxy")
+        }
+    })
+    jQuery("#check-mirror-protocol").on("change", ()=>{update()})
+    jQuery("#select-mirror-protocol").on("change", ()=>{update()})
+    jQuery("#input-mirror-hostname").on("change", ()=>{update()})
+    jQuery("#input-mirror-directory").on("change", ()=>{update()})
+    jQuery("#input-mirror-proxy").on("change", ()=>{update()})
+
+    jQuery("#check-mirror-country").on("change", ()=>{
+        toggle_item("#select-mirror-country")
+        update()
+    })
+
+    jQuery("#select-mirror-country").on("change", ()=>{update()})
+
+
+    jQuery("#check-mirror-suite").on("change", ()=>{
+        toggle_item("#select-mirror-suite")
+        update()
+    })
+
+    jQuery("#select-mirror-suite").on("change", ()=>{update()})
 });
 
 fn_Installation_Notes()
 fn_Locale()
 fn_Network()
 fn_NetworkConsole()
+fn_Mirror()
 </script>

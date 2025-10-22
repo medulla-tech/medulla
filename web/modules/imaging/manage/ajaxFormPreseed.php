@@ -62,7 +62,7 @@ var template = [
 '<? echo $strin;?>CheckDhcpTimeout<?echo $strou;?>d-i netcfg/dhcp_timeout number <?echo $strin;?>NumberDhcpTimeout<? echo $strou;?>',
 '<? echo $strin;?>CheckDhcpV6Timeout<?echo $strou;?>d-i netcfg/dhcpv6_timeout number <?echo $strin;?>NumberDhcpV6Timeout<? echo $strou;?>',
 '<? echo $strin;?>CheckDisableAutoconfig<? echo $strou;?>d-i netcfg/disable_autoconfig boolean <? echo $strin;?>CheckDisableAutoconfigValue<? echo $strou;?>',
-'<? echo $strin;?>CheckDisableDhcp<? echo $strou;?> d-i netcfg/dhcp_options boolean <? echo $strin;?>CheckDisableDhcpValue<? echo $strou;?>',
+'<? echo $strin;?>CheckDisableDhcp<? echo $strou;?>d-i netcfg/dhcp_options boolean <? echo $strin;?>CheckDisableDhcpValue<? echo $strou;?>',
 '<? echo $strin;?>CheckDisableDhcp<? echo $strou;?><? echo $strin;?>CheckDisableDhcpCombine<? echo $strou;?>d-i netcfg/get_ipaddress string <? echo $strin;?>InputGetIpaddress<? echo $strou;?>',
 '<? echo $strin;?>CheckDisableDhcp<? echo $strou;?><? echo $strin;?>CheckDisableDhcpCombine<? echo $strou;?>d-i netcfg/get_netmask string <? echo $strin;?>InputGetNetmask<? echo $strou;?>',
 '<? echo $strin;?>CheckDisableDhcp<? echo $strou;?><? echo $strin;?>CheckDisableDhcpCombine<? echo $strou;?>d-i netcfg/get_gateway string <? echo $strin;?>InputGetGateway<? echo $strou;?>',
@@ -74,11 +74,17 @@ var template = [
 '<? echo $strin;?>CheckDhcpHostname<? echo $strou;?>d-i netcfg/dhcp_hostname string <? echo $strin;?>InputDhcpHostname<? echo $strou;?>',
 '<? echo $strin;?>CheckLoadFirmware<? echo $strou;?>d-i hw-detect/load_firmware boolean <? echo $strin;?>CheckLoadFirmwareValue<? echo $strou;?>',
 '',
-'### NETWORK CONSOLE'
+'### NETWORK CONSOLE',
 '<? echo $strin;?>CheckNetworkConsole<? echo $strou;?>d-i anna/choose_modules <? echo $strin;?>CheckNetworkConsoleType<? echo $strou;?> <? echo $strin;?>CheckNetworkConsoleValue<? echo $strou;?>',
 '<? echo $strin;?>CheckAuthorizedKeysUrl<? echo $strou;?>d-i network-console/authorized_keys_url string <? echo $strin;?>InputAuthorizedKeysUrl<? echo $strou;?>',
 '',
 '### MIRROR',
+'<? echo $strin;?>CheckMirrorProtocol<? echo $strou;?>d-i mirror/protocol select <? echo $strin;?>SelectMirrorProtocol<? echo $strou;?>',
+'<? echo $strin;?>CheckMirrorProtocol<? echo $strou;?>d-i mirror/http/hostname string <? echo $strin;?>InputMirrorHostname<? echo $strou;?>',
+'<? echo $strin;?>CheckMirrorProtocol<? echo $strou;?>d-i mirror/http/directory string <? echo $strin;?>InputMirrorDirectory<? echo $strou;?>',
+'<? echo $strin;?>CheckMirrorProtocol<? echo $strou;?>d-i mirror/http/proxy string <? echo $strin;?>InputMirrorProxy<? echo $strou;?>',
+'<? echo $strin;?>CheckMirrorCountry<? echo $strou;?>d-i mirror/country string <? echo $strin;?>SelectMirrorCountry<? echo $strou;?>',
+'<? echo $strin;?>CheckMirrorSuite<? echo $strou;?>d-i mirror/suite string <? echo $strin;?>SelectMirrorSuite<? echo $strou;?>',
 '',
 ].join('\r\n');
 </script>
@@ -559,6 +565,96 @@ $f->add(
 
 
 $f->pop();
+
+
+// ==== New Section ====
+// Mirror
+// =====================
+// ---- Toggle button ----
+$f->add(new TitleElement(_T("Mirror","imaging")));
+$f->add(new TrFormElement("", new Iconereply(_T('Mirror', "imaging"),'')));
+$f->push(new Table());
+
+
+// ---- mirror protocol
+$check = new CheckboxTpl("check-mirror-protocol");
+$separator = new SpanElement("<br>");
+
+$select_mirror_protocol = new SelectItemTitle("select-mirror-protocol", $info_mirror_protocol);
+$select_mirror_protocol->setElements($mirror_protocol_values);
+$select_mirror_protocol->setElementsVal($mirror_protocol_values);
+
+$input_mirror_hostname = new InputTplTitle("input-mirror-hostname");
+$input_mirror_directory = new InputTplTitle("input-mirror-directory");
+$input_mirror_proxy = new InputTplTitle("input-mirror-proxy");
+
+$fields = [
+    $check,
+    new SpanElement('<br><label for="select-mirror-protocol">Protocol</label>'), $select_mirror_protocol,
+    new SpanElement("<br><label for='input-mirror-hostname'>Hostname</label>"), $input_mirror_hostname,
+    new SpanElement("<br><label for='input-mirror-directory'>Directory</label>"), $input_mirror_directory,
+    new SpanElement("<br><label for='input-mirror-proxy'>Proxy</label>"), $input_mirror_proxy
+];
+
+$values = [
+    (isset($parameters['CheckMirrorProtocol'])) ? $parameters['CheckMirrorProtocol'] : '',
+    '',
+    (isset($parameters['SelectMirrorProtocol'])) ? $parameters['SelectMirrorProtocol'] : 'html',
+    '',
+    (isset($parameters['InputMirrorHostname'])) ? $parameters['InputMirrorHostname'] : '',
+    '',
+    (isset($parameters['InputMirrorDirectory'])) ? $parameters['InputMirrorDirectory'] : '',
+    '',
+    (isset($parameters['InputMirrorProxy'])) ? $parameters['InputMirrorProxy'] : '',
+];
+
+$f->add(
+    new TrFormElement('<label for="check-mirror-protocol">'._T("Mirror Protocol", "imaging").'</label>', new multifieldTpl($fields)), [
+        "value"=>$values,
+        "title"=>[$info_comment_this_field, '', '', '', '', '', '', '', '', '', ''],
+        "placeholder"=>['', '', '', 'Ip Address', '', 'Netmask', '', 'Gateway', '', 'Nameservers']]
+);
+
+
+// ---- mirror country
+$check = new CheckboxTpl("check-mirror-country");
+$input = new SelectItemtitle("select-mirror-country");
+$input->setElements($mirror_countries);
+$input->setElementsVal($mirror_countries_values);
+
+$fields = [ $check, $input];
+$values = [
+    (isset($parameters["CheckMirrorCountry"])) ? $parameters["CheckMirrorCountry"] : '',
+    (isset($parameters["SelectMirrorCountry"])) ? $parameters["SelectMirrorCountry"] : 'manual',
+];
+
+$f->add(
+    new TrFormElement('<label for="check-mirror-country">'._T("Mirror Country", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, '']]
+);
+
+// ---- mirror suite
+$check = new CheckboxTpl("check-mirror-suite");
+$input = new SelectItemtitle("select-mirror-suite");
+$input->setElements($mirror_suites);
+$input->setElementsVal($mirror_suites);
+
+$fields = [ $check, $input];
+$values = [
+    (isset($parameters["CheckMirrorSuite"])) ? $parameters["CheckMirrorSuite"] : '',
+    (isset($parameters["SelectMirrorSuite"])) ? $parameters["SelectMirrorSuite"] : 'stable',
+];
+
+$f->add(
+    new TrFormElement('<label for="check-mirror-suite">'._T("Mirror Suite", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, '']]
+);
+
+$f->pop(); // End of Section
+
+
+
+
+
+// End of Form
 
 $f->pop();
 $f->display();
