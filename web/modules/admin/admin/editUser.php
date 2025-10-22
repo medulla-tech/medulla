@@ -710,7 +710,7 @@ $recSelect->setElementsVal(['0','1']); // No->0, Yes->1
 $recSelect->setSelected($isRecursiveDefault);
 
 $authSelect = new SelectItem('auth_source');
-$authSelect->setElements([_T("Local", "admin"), _T("OIDC", "admin")]);
+$authSelect->setElements([_T("Local", "admin"), _T("OIDC / Magic Link", "admin")]);
 $authSelect->setElementsVal(['local', 'oidc']);
 $authDefault = (string)($_POST['auth_source'] ?? ($prefill['auth_source'] ?? 'local'));
 $authSelect->setSelected($authDefault);
