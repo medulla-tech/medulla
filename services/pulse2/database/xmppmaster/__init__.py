@@ -494,34 +494,37 @@ class XmppMasterDatabase(DatabaseHelper):
         Retourne :
         - dict/list : dictionnaire ou liste contenant les informations des produits trouvés
         """
-        if identity != None:
+        if identity is not None:
             try:
-                resultat = self._call_procedure(session,"up_genere_list_produit_entity",[identity])
+                resultat = self._call_procedure(session, "up_genere_list_produit_entity", [identity])
                 session.commit()
             except Exception as e:
                 logger.error(f"Erreur call procedure Rollback {e}")
                 session.rollback()
 
-        #  up_regenere_list_produit_entity
         try:
-            # Sélectionne toutes les colonnes sauf entity_id
+            # Sélectionne les colonnes souhaitées, y compris 'comment'
             query = text("""
-                SELECT id, name_procedure, enable
+                SELECT id, name_procedure, enable, comment
                 FROM xmppmaster.up_list_produit
                 WHERE entity_id = :identity
+                ORDER BY comment
             """)
             result = session.execute(query, {"identity": identity})
             produits = result.fetchall()
 
             if not produits:
                 logger.info(f"No products found for entity_id={identity}.")
-                return [] if not colonne else {"id": [], "name_procedure": [], "enable": []}
+                if colonne:
+                    return {"id": [], "name_procedure": [], "enable": [], "comment": []}
+                return []
 
             if colonne:
                 produits_info = {
                     "id": [p[0] if p[0] is not None else "" for p in produits],
                     "name_procedure": [p[1] if p[1] is not None else "" for p in produits],
                     "enable": [p[2] if p[2] is not None else "" for p in produits],
+                    "comment": [p[3] if p[3] is not None else "" for p in produits],
                 }
             else:
                 produits_info = [
@@ -529,6 +532,7 @@ class XmppMasterDatabase(DatabaseHelper):
                         "id": p[0] if p[0] is not None else "",
                         "name_procedure": p[1] if p[1] is not None else "",
                         "enable": p[2] if p[2] is not None else "",
+                        "comment": p[3] if p[3] is not None else "",
                     }
                     for p in produits
                 ]
@@ -537,7 +541,9 @@ class XmppMasterDatabase(DatabaseHelper):
 
         except Exception as e:
             logger.error(f"An error occurred while fetching products for entity_id={identity}: {str(e)}")
-            return {} if colonne else []
+            return {"id": [], "name_procedure": [], "enable": [], "comment": []} if colonne else []
+
+
 
     @DatabaseHelper._sessionm
     def update_approve_products(self, session, updatesproduct, entity_id=None):

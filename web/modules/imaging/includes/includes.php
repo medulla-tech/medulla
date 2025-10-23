@@ -52,21 +52,68 @@ function getPulse2ErrorString($ERR_CODE, $DEFAULT_STRING)
     return $DEFAULT_STRING;
 }
 
-function getCurrentLocation()
-{
+function getCurrentLocation() {
+    // Si $_GET["location"] est défini, on l'utilise et on le stocke dans la session
 
-    $location = false;
+    if (isset($_GET["location"]) && is_array($_GET["location"])) {
+        // Récupère les clés du tableau
+        $keys = array_keys($_GET["location"]);
 
-    if (isset($_GET["location"])) {
+        // Vérifie que la première clé existe et commence par 'UUID'
+        if (isset($keys[0]) && str_starts_with($keys[0], "UUID")) {
+            // On récupère la clé
+            $locationKey = $keys[0];
+
+            // On la stocke en session
+            $_SESSION["location"] = $locationKey;
+            $_GET["location"]= $locationKey;
+            // Et on la retourne
+            // echo $locationKey;
+            return $locationKey;
+        }
+    }
+
+    if (isset($_GET["location"]) && !empty($_GET["location"])) {
+
         $_SESSION["location"] = $_GET["location"];
+        return $_GET["location"];
     }
 
+    // Si $_SESSION["location"] est défini
     if (isset($_SESSION["location"])) {
-        $location = $_SESSION["location"];
+        // Si c'est un tableau, on récupère sa première clé
+        if (is_array($_SESSION["location"]) && !empty($_SESSION["location"])) {
+            return array_key_first($_SESSION["location"]);
+        }
+        // Sinon, on renvoie directement la valeur (si c'est une chaîne)
+        return $_SESSION["location"];
     }
 
-    return $location;
+    // Si rien n'est défini, on vérifie $_SESSION["medulla_server.getUserLocations"]
+    if (isset($_SESSION["medulla_server.getUserLocations"]) && is_array($_SESSION["medulla_server.getUserLocations"]) && !empty($_SESSION["medulla_server.getUserLocations"])) {
+        // On récupère l'UUID de la première entité
+        return $_SESSION["medulla_server.getUserLocations"][0]["uuid"];
+    }
+
+    // Si aucune des conditions n'est remplie, on renvoie false
+    return false;
 }
+
+// function getCurrentLocation()
+// {
+//
+//     $location = false;
+//
+//     if (isset($_GET["location"])) {
+//         $_SESSION["location"] = $_GET["location"];
+//     }
+//
+//     if (isset($_SESSION["location"])) {
+//         $location = $_SESSION["location"];
+//     }
+//
+//     return $location;
+// }
 
 class LedElement extends HtmlElement
 {
