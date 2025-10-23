@@ -1,14 +1,16 @@
 <?php
-
-/**
- * (c) 2018-2023 Siveo, http://siveo.net
+/*
+ * (c) 2016-2023 Siveo, http://www.siveo.net
+ * (c) 2024-2025 Medulla, http://www.medulla-tech.io
  *
- * This file is part of Management Console (MMC).
+ * $Id$
+ *
+ * This file is part of MMC, http://www.medulla-tech.io
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ * the Free Software Foundation; either version 3 of the License, or
+ * any later version.
  *
  * MMC is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -16,8 +18,8 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with MMC; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ * along with MMC; If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 //======================================================================
 // Main Kiosk communications functions [HTTP]
@@ -63,10 +65,10 @@ function xmlrpc_update_profile($login, $id, $name, $ous, $active, $packages = []
     return xmlcall('kiosk.update_profile', [$login, $id, $name, $ous, $active, $packages, $source]);
 }
 
-function xmlrpc_get_ou_list($source, $owner)
+function xmlrpc_get_ou_list($source, $owner, $token = '')
 {
     // Returns the list of all founded OUs
-    return xmlcall('kiosk.get_ou_list', [$source, $owner]);
+    return xmlcall('kiosk.get_ou_list', [$source, $owner, $token]);
 }
 
 function xmlrpc_get_users_from_ou($ou)
