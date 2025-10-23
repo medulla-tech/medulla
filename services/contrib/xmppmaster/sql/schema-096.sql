@@ -317,7 +317,7 @@ DROP procedure IF EXISTS `xmppmaster`.`up_genere_list_produit_entity`;
 
 DELIMITER $$
 USE `xmppmaster`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `up_genere_list_produit_entity`(IN p_entity_id INT)
+CREATE PROCEDURE `up_genere_list_produit_entity`(IN p_entity_id INT)
 BEGIN
 
 -- Variables
