@@ -2955,7 +2955,6 @@ DELIMITER ;
 USE `xmppmaster`;
 CREATE  OR REPLACE
     ALGORITHM = UNDEFINED
-    DEFINER = `root`@`localhost`
     SQL SECURITY DEFINER
 VIEW `up_machine_activated` AS
     SELECT
