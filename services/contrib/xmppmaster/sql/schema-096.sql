@@ -58,58 +58,55 @@ CREATE TABLE `xmppmaster`.`applicationconfig` (
   DEFAULT CHARSET=utf8mb4
   COMMENT='Table de configuration applicative (paramètres généraux et contextuels)';
 
-INSERT IGNORE INTO `xmppmaster`.`applicationconfig`
-(`key`, `value`, `comment`, `context`, `module`, `enable`)
-VALUES
-  ('table produits','up_packages_MSOS_ARM64_24H2','nom de la table produit:suivant entity','entity','xmppmaster/update',1),
-  ('table produits','up_packages_MSOS_X64_21H2','nom de la table produit:suivant entity','entity','xmppmaster/update',1),
-  ('table produits','up_packages_MSOS_X64_22H2','nom de la table produit:suivant entity','entity','xmppmaster/update',1),
-  ('table produits','up_packages_MSOS_X64_23H2','nom de la table produit:suivant entity','entity','xmppmaster/update',1),
-  ('table produits','up_packages_MSOS_X64_24H2','nom de la table produit:suivant entity','entity','xmppmaster/update',1),
-  ('table produits','up_packages_Vstudio_2008','nom de la table produit:suivant entity','entity','xmppmaster/update',0),
-  ('table produits','up_packages_Vstudio_2010','nom de la table produit:suivant entity','entity','xmppmaster/update',0),
-  ('table produits','up_packages_Vstudio_2012','nom de la table produit:suivant entity','entity','xmppmaster/update',0),
-  ('table produits','up_packages_Vstudio_2013','nom de la table produit:suivant entity','entity','xmppmaster/update',0),
-  ('table produits','up_packages_Vstudio_2015','nom de la table produit:suivant entity','entity','xmppmaster/update',0),
-  ('table produits','up_packages_Vstudio_2017','nom de la table produit:suivant entity','entity','xmppmaster/update',0),
-  ('table produits','up_packages_Vstudio_2019','nom de la table produit:suivant entity','entity','xmppmaster/update',0),
-  ('table produits','up_packages_Vstudio_2022','nom de la table produit:suivant entity','entity','xmppmaster/update',0),
-  ('table produits','up_packages_office_2003_64bit','nom de la table produit:suivant entity','entity','xmppmaster/update',0),
-  ('table produits','up_packages_office_2007_64bit','nom de la table produit:suivant entity','entity','xmppmaster/update',0),
-  ('table produits','up_packages_office_2010_64bit','nom de la table produit:suivant entity','entity','xmppmaster/update',0),
-  ('table produits','up_packages_office_2013_64bit','nom de la table produit:suivant entity','entity','xmppmaster/update',0),
-  ('table produits','up_packages_office_2016_64bit','nom de la table produit:suivant entity','entity','xmppmaster/update',0),
-  ('table produits','up_packages_Win10_X64_1903','nom de la table produit:suivant entity','entity','xmppmaster/update',1),
-  ('table produits','up_packages_Win10_X64_21H1','nom de la table produit:suivant entity','entity','xmppmaster/update',1),
-  ('table produits','up_packages_Win10_X64_21H2','nom de la table produit:suivant entity','entity','xmppmaster/update',1),
-  ('table produits','up_packages_Win10_X64_22H2','nom de la table produit:suivant entity','entity','xmppmaster/update',1),
-  ('table produits','up_packages_Win11_X64','nom de la table produit:suivant entity','entity','xmppmaster/update',1),
-  ('table produits','up_packages_Win11_X64_21H2','nom de la table produit:suivant entity','entity','xmppmaster/update',1),
-  ('table produits','up_packages_Win11_X64_22H2','nom de la table produit:suivant entity','entity','xmppmaster/update',1),
-  ('table produits','up_packages_Win11_X64_23H2','nom de la table produit:suivant entity','entity','xmppmaster/update',1),
-  ('table produits','up_packages_Win11_X64_24H2','nom de la table produit:suivant entity','entity','xmppmaster/update',1),
-  ('table produits','up_packages_WS_X64_2003','nom de la table produit:suivant entity','entity','xmppmaster/update',1),
-  ('table produits','up_packages_WS_X64_2008','nom de la table produit:suivant entity','entity','xmppmaster/update',1),
-  ('table produits','up_packages_WS_X64_2012','nom de la table produit:suivant entity','entity','xmppmaster/update',1),
-  ('table produits','up_packages_WS_X64_2016','nom de la table produit:suivant entity','entity','xmppmaster/update',1),
-  ('table produits','up_packages_WS_X64_2019','nom de la table produit:suivant entity','entity','xmppmaster/update',1),
-  ('table produits','up_packages_Win_Malicious_X64','nom de la table produit:suivant entity','entity','xmppmaster/update',1);
+truncate xmppmaster.applicationconfig;
 
+INSERT IGNORE INTO `applicationconfig` VALUES
+(1,'table produits','up_packages_WS_X64_2003','Microsoft Server 2003 [ fin support 2015/07 ]','entity','xmppmaster/update',1),
+(2,'table produits','up_packages_WS_X64_2008','Microsoft Server 2008 [ fin support 2020/01 ]','entity','xmppmaster/update',1),
+(3,'table produits','up_packages_WS_X64_2012','Microsoft Server 2012 [ fin support 2023/10 ]','entity','xmppmaster/update',1),
+(4,'table produits','up_packages_WS_X64_2016','Microsoft Server 2016 [ fin support 2029/01 ]','entity','xmppmaster/update',1),
+(5,'table produits','up_packages_WS_X64_2019','Microsoft Server 2019 [ fin support 2029/01 ]','entity','xmppmaster/update',1),
+(6,'table produits','up_packages_MSOS_ARM64_24H2','Microsoft Server 2025 [ fin support 2034/10 ]','entity','xmppmaster/update',1),
+(7,'table produits','up_packages_MSOS_X64_21H2','Microsoft Server 2022 [ fin support 2029/01 ]','entity','xmppmaster/update',1),
+(8,'table produits','up_packages_MSOS_X64_22H2','Microsoft Server 2022 [ fin support 2031/10 ]','entity','xmppmaster/update',1),
+(9,'table produits','up_packages_MSOS_X64_23H2','Microsoft Server 2022 [ fin support 2031/10 ]','entity','xmppmaster/update',1),
+(10,'table produits','up_packages_MSOS_X64_24H2','Microsoft Server 2025 [ fin support 2034/10 ]','entity','xmppmaster/update',1),
+(11,'table produits','up_packages_Vstudio_2008','Microsoft Visual Studio IDE complet','entity','xmppmaster/update',0),
+(12,'table produits','up_packages_Vstudio_2010','Microsoft Visual Studio IDE complet','entity','xmppmaster/update',0),
+(13,'table produits','up_packages_Vstudio_2012','Microsoft Visual Studio IDE complet','entity','xmppmaster/update',0),
+(14,'table produits','up_packages_Vstudio_2013','Microsoft Visual Studio IDE complet','entity','xmppmaster/update',0),
+(15,'table produits','up_packages_Vstudio_2015','Microsoft Visual Studio IDE complet','entity','xmppmaster/update',0),
+(16,'table produits','up_packages_Vstudio_2017','Microsoft Visual Studio IDE complet','entity','xmppmaster/update',0),
+(17,'table produits','up_packages_Vstudio_2019','Microsoft Visual Studio IDE complet','entity','xmppmaster/update',0),
+(18,'table produits','up_packages_Vstudio_2022','Microsoft Visual Studio IDE complet','entity','xmppmaster/update',0),
+(19,'table produits','up_packages_office_2003_64bit','Microsoft Office suite bureautique','entity','xmppmaster/update',0),
+(20,'table produits','up_packages_office_2007_64bit','Microsoft Office suite bureautique','entity','xmppmaster/update',0),
+(21,'table produits','up_packages_office_2010_64bit','Microsoft Office suite bureautique','entity','xmppmaster/update',0),
+(22,'table produits','up_packages_office_2013_64bit','Microsoft Office suite bureautique','entity','xmppmaster/update',0),
+(23,'table produits','up_packages_office_2016_64bit','Microsoft Office suite bureautique','entity','xmppmaster/update',0),
+(24,'table produits','up_packages_Win10_X64_1903','Microsoft Windows 10 [ fin support 2025/10 ]','entity','xmppmaster/update',1),
+(25,'table produits','up_packages_Win10_X64_21H1','Microsoft Windows 10 [ fin support 2025/10 ]','entity','xmppmaster/update',1),
+(26,'table produits','up_packages_Win10_X64_21H2','Microsoft Windows 10 [ fin support 2025/10 ]','entity','xmppmaster/update',1),
+(27,'table produits','up_packages_Win10_X64_22H2','Microsoft Windows 10 [ fin support 2025/10 ]','entity','xmppmaster/update',1),
+(28,'table produits','up_packages_Win11_X64','Microsoft Windows 11 [ fin support 2029/10 ]','entity','xmppmaster/update',1),
+(29,'table produits','up_packages_Win11_X64_21H2','Microsoft Windows 11 [ fin support 2029/10 ]','entity','xmppmaster/update',1),
+(30,'table produits','up_packages_Win11_X64_22H2','Microsoft Windows 11 [ fin support 2029/10 ]','entity','xmppmaster/update',1),
+(31,'table produits','up_packages_Win11_X64_23H2','Microsoft Windows 11 [ fin support 2029/10 ]','entity','xmppmaster/update',1),
+(32,'table produits','up_packages_Win11_X64_24H2','Microsoft Windows 11 [ fin support 2029/10 ]','entity','xmppmaster/update',1),
+(33,'table produits','up_packages_Win_Malicious_X64','Malicious Software Removal Tool (MSRT)','entity','xmppmaster/update',1),
+(34,'Critical Updates','','table rules','entity','xmppmaster/update',1),
+(35,'Security Updates','','table rules','entity','xmppmaster/update',1),
+(36,'Service Packs','','table rules','entity','xmppmaster/update',1),
+(37,'Update Rollups','','table rules','entity','xmppmaster/update',1),
+(38,'Updates','','table rules','entity','xmppmaster/update',1),
+(39,'Security Updates','Critical','table rules','entity','xmppmaster/update',1),
+(40,'Security Updates','Important','table rules','entity','xmppmaster/update',1),
+(41,'Security Updates','Low','table rules','entity','xmppmaster/update',1),
+(42,'Security Updates','Moderate','table rules','entity','xmppmaster/update',1);
 
-INSERT INTO `xmppmaster`.`applicationconfig`
-(`key`, `value`, `comment`, `context`, `module`, `enable`)
-VALUES
-('Critical Updates',"","table rules", 'entity', 'xmppmaster/update', 1),
-('Security Updates',"","table rules", 'entity', 'xmppmaster/update', 1),
-('Service Packs',"","table rules", 'entity', 'xmppmaster/update', 1),
-('Update Rollups',"","table rules", 'entity', 'xmppmaster/update', 1),
-('Updates',"","table rules", 'entity', 'xmppmaster/update', 1),
-('Security Updates','Critical',"table rules", 'entity', 'xmppmaster/update', 1),
-('Security Updates','Important',"table rules",'entity','xmppmaster/update', 1),
-('Security Updates','Low',"table rules", 'entity','xmppmaster/update', 1),
-('Security Updates','Moderate',"table rules",'entity','xmppmaster/update', 1);
-
-
+-- on ajoute la colonne comment dans la table up list produit.
+ALTER TABLE `xmppmaster`.`up_list_produit`
+ADD COLUMN `comment` VARCHAR(2048) NULL AFTER `enable`;
 -- =====================================================================
 -- Réinitialisation et migration des tables liées à la gestion des listes
 -- =====================================================================
@@ -317,22 +314,26 @@ USE `xmppmaster`;
 DROP procedure IF EXISTS `xmppmaster`.`up_genere_list_produit_entity`;
 ;
 
+
 DELIMITER $$
 USE `xmppmaster`$$
 CREATE PROCEDURE `up_genere_list_produit_entity`(IN p_entity_id INT)
 BEGIN
 
 -- Variables
+    -- Variables
     DECLARE done INT DEFAULT 0;
     DECLARE v_produit VARCHAR(1024);
+    DECLARE v_comment VARCHAR(2048);
 
     -- Curseur pour parcourir applicationconfig
     DECLARE cur CURSOR FOR
-        SELECT `value`
+        SELECT `value`, `comment`
         FROM xmppmaster.applicationconfig
         WHERE `key` = 'table produits'
           AND `context` = 'entity'
-          AND `enable` = 1;
+          AND `enable` = 1
+        ORDER BY `comment`;
 
     DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
 
@@ -349,14 +350,14 @@ BEGIN
             OPEN cur;
 
             read_loop: LOOP
-                FETCH cur INTO v_produit;
+                FETCH cur INTO v_produit, v_comment;
                 IF done THEN
                     LEAVE read_loop;
                 END IF;
 
                 -- Insérer les produits pour l’entité donnée
-                INSERT INTO xmppmaster.up_list_produit (entity_id, name_procedure, enable)
-                VALUES (p_entity_id, v_produit, 0);
+                INSERT IGNORE INTO xmppmaster.up_list_produit (entity_id, name_procedure, comment, enable)
+                VALUES (p_entity_id, v_produit, v_comment, 0);
             END LOOP;
 
             CLOSE cur;
@@ -2895,6 +2896,101 @@ BEGIN
       AND entityid = OLD.entityid;
 END$$
 DELIMITER ;
+
+
+-- =====================================================================
+-- =====================================================================
+-- =====================================================================
+-- VUE : up_machine_activated
+-- =====================================================================
+-- =====================================================================
+-- =====================================================================
+-- =====================================================================
+-- =====================================================================
+-- VUE : up_machine_activated
+-- =====================================================================
+-- Description :
+--    Cette vue permet de lister les machines Windows activées pour les mises à jour,
+--    en tenant compte des listes blanche (white list) et grise (gray list).
+--    Elle fournit des informations sur les machines, leurs identifiants, leur statut de déploiement,
+--    et leur appartenance à une liste (blanche ou grise).
+--
+-- Fonctionnement :
+--    1. Jointure des tables :
+--       - up_machine_windows (umw) : Contient les informations sur les mises à jour des machines Windows.
+--       - machines (m) : Contient les informations générales sur les machines (UUID, hostname, JID).
+--       - local_glpi_machines (lgm) : Contient les informations locales des machines (entités, statut de suppression, etc.).
+--       - up_white_list (uwl) : Liste blanche des mises à jour validées.
+--       - up_gray_list (ugl) : Liste grise des mises à jour validées.
+--
+--    2. Logique de sélection :
+--       - Seules les machines non supprimées (lgm.is_deleted = 0) et non templates (lgm.is_template = 0) sont incluses.
+--       - Seules les machines sous plateforme "Microsoft Windows" sont prises en compte.
+--       - Les machines doivent être validées dans au moins une des listes (blanche ou grise).
+--
+--    3. Champs retournés :
+--       - kb : Priorise la valeur de la liste grise (ugl.kb) si elle existe, sinon utilise la valeur de la liste blanche (uwl.kb).
+--       - id_machine : Identifiant de la machine.
+--       - glpi_id : Identifiant GLPI extrait de l'UUID de la machine.
+--       - hostname : Nom d'hôte de la machine.
+--       - jid : Identifiant JID de la machine.
+--       - entities_id : Identifiant de l'entité associée à la machine.
+--       - update_id : Identifiant de la mise à jour.
+--       - curent_deploy : Déploiement actuel.
+--       - required_deploy : Déploiement requis.
+--       - start_date : Date de début de la mise à jour.
+--       - end_date : Date de fin de la mise à jour.
+--       - intervals : Intervalle de la mise à jour.
+--       - msrcseverity : Niveau de sévérité MSRC.
+--       - list : Indique si la machine est dans la liste blanche ("white") ou grise ("gray").
+--
+-- Remarques :
+--    - Cette vue est utile pour identifier les machines éligibles aux mises à jour,
+--      en fonction des règles définies dans les listes blanche et grise.
+--    - Les machines sans entrée dans la liste grise (ugl.kb IS NULL) sont marquées comme "gray" par défaut.
+--    - Assurez-vous que les tables sources sont à jour pour des résultats précis.
+-- =====================================================================
+
+
+USE `xmppmaster`;
+CREATE  OR REPLACE
+    ALGORITHM = UNDEFINED
+    SQL SECURITY DEFINER
+VIEW `up_machine_activated` AS
+    SELECT
+        CASE
+            WHEN ugl.kb IS NULL THEN uwl.kb
+            ELSE ugl.kb
+        END AS kb,
+        umw.id_machine AS id_machine,
+        SUBSTR(m.uuid_inventorymachine, 5) AS glpi_id,
+        m.hostname AS hostname,
+        m.jid AS jid,
+        lgm.entities_id AS entities_id,
+        umw.update_id AS update_id,
+        umw.curent_deploy AS curent_deploy,
+        umw.required_deploy AS required_deploy,
+        umw.start_date AS start_date,
+        umw.end_date AS end_date,
+        umw.intervals AS intervals,
+        umw.msrcseverity AS msrcseverity,
+        CASE
+            WHEN uwl.kb IS NULL THEN 'gray'
+            ELSE 'white'
+        END AS list
+    FROM
+        up_machine_windows umw
+        JOIN machines m ON m.id = umw.id_machine
+        JOIN local_glpi_machines lgm ON CONCAT('UUID', lgm.id) = m.uuid_inventorymachine
+        LEFT JOIN up_white_list uwl ON uwl.updateid = umw.update_id
+        LEFT JOIN up_gray_list ugl ON ugl.updateid = umw.update_id
+    WHERE
+        (ugl.valided = 1 OR uwl.valided = 1)
+        AND lgm.is_deleted = 0
+        AND lgm.is_template = 0
+        AND m.platform LIKE 'Microsoft Windows%';;
+
+
 
 -- ----------------------------------------------------------------------
 -- Database version

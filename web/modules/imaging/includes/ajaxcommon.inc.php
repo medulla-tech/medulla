@@ -35,8 +35,10 @@ require("../../base/includes/edit.inc.php");
 require_once("../../medulla_server/includes/locations_xmlrpc.inc.php");
 
 $location = getCurrentLocation();
+
+// array_key_first(array $array):
 if ($location == "UUID1") {
-    $location_name = _T("root", "pulse2");
+    $location_name = _T("root", "imaging");
 } else {
     $location_name = xmlrpc_getLocationName($location);
 }
