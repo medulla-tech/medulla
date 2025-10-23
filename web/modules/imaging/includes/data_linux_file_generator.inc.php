@@ -1220,15 +1220,7 @@ $mirror_countries_values = [
     "zw",
 ];
 
-$mirror_suites = [
-    "stable",
-    "testing",
-    "unstable",
-    "oldstable",
-    "stable-updates",
-    "proposed-updates",
-    "security"
-];
+
 ?>
 
 <script>
@@ -1322,7 +1314,25 @@ update = ()=>{
         'CheckMirrorCountry': jQuery("#check-mirror-country").is(":checked") ? '' : '#',
         'SelectMirrorCountry': jQuery("#select-mirror-country").find("option:selected").val(),
         'CheckMirrorSuite': jQuery("#check-mirror-suite").is(":checked") ? '' : '#',
-        'SelectMirrorSuite': jQuery("#select-mirror-suite").find("option:selected").val()
+        'InputMirrorSuite': jQuery("#input-mirror-suite").val(),
+        'CheckMirrorSuiteComponents': jQuery("#check-mirror-suite-components").is(":checked") ? '' : '#',
+        'InputMirrorSuiteComponents': jQuery("#input-mirror-suite-components").val(),
+        'CheckSkipRootLogin' : jQuery("#check-skip-root-login").is(":checked") ? '' : '#',
+        'CheckSkipRootLoginValue' : jQuery("#check-skip-root-login-value").is(":checked") ? 'true' : 'false',
+        'CheckRootPasswd' : jQuery("#check-root-passwd").is(":checked") ? '' : '#',
+        'InputRootPasswd' : jQuery("#input-root-passwd").val(),
+        'CheckMakeUser' : jQuery("#check-makeuser").is(":checked") ? '' : '#',
+        'CheckMakeUserValue' : jQuery("#check-makeuser-value").is(":checked") ? 'true' : 'false',
+        'CheckUserFullname' : jQuery("#check-user-fullname").is(":checked") ? '' : '#',
+        'InputUserFullname' : jQuery("#input-user-fullname").val(),
+        'CheckUsername' : jQuery("#check-username").is(":checked") ? '' : '#',
+        'InputUsername' : jQuery("#input-username").val(),
+        'CheckUserPasswd' : jQuery("#check-user-passwd").is(":checked") ? '' : '#',
+        'InputUserPasswd' : jQuery("#input-user-passwd").val(),
+        'CheckUserUid' : jQuery("#check-user-uid").is(":checked") ? '' : '#',
+        'NumberUserUid' : jQuery("#number-user-uid").val(),
+        'CheckUserGroup' : jQuery("#check-user-group").is(":checked") ? '' : '#',
+        'InputUserGroup' : jQuery("#input-user-group").val(),
     };
 
     listParameters={}
@@ -1353,11 +1363,11 @@ update = ()=>{
 }
 
 fn_Installation_Notes=function(){
-    var list_id_masque=['Comments'];
-    jQuery.each(list_id_masque, function( index,value) {
+    var list_hidden_ids=['Comments'];
+    jQuery.each(list_hidden_ids, function( index,value) {
         jQuery('#'+value).parents("tr").toggle();
     });
-    if (jQuery('#'+list_id_masque[0]).is(":visible")){
+    if (jQuery('#'+list_hidden_ids[0]).is(":visible")){
         jQuery('#Installation_Notes').css( 'cursor', 'n-resize' ).attr('src', 'img/other/expanded.svg');
     }
     else{
@@ -1367,18 +1377,18 @@ fn_Installation_Notes=function(){
 
 
 fn_Locale=function(){
-    var list_id_masque=[
+    var list_hidden_ids=[
         // "select-locale",
-        // "select-language",
-        // "select-country",
-        // "select-supported-locales",
+        "select-language",
+        "select-country",
+        "select-supported-locales",
         // "select-keyboard-layouts",
-        // "select-keyboard-toggle",
+        "select-keyboard-toggle",
     ];
-    jQuery.each(list_id_masque, function( index,value) {
+    jQuery.each(list_hidden_ids, function( index,value) {
         jQuery('#'+value).parents("tr").toggle();
     });
-    if (jQuery('#'+list_id_masque[0]).is(":visible")){
+    if (jQuery('#'+list_hidden_ids[0]).is(":visible")){
         jQuery('#Locale').css( 'cursor', 'n-resize' ).attr('src', 'img/other/expanded.svg');
     }
     else{
@@ -1387,14 +1397,12 @@ fn_Locale=function(){
 };
 
 fn_Network=function(){
-    var list_id_masque=[
-    // "check-enable-network-value",
-    // "select-interface",
+    var list_hidden_ids=[
     ];
-    jQuery.each(list_id_masque, function( index,value) {
+    jQuery.each(list_hidden_ids, function( index,value) {
         jQuery('#'+value).parents("tr").toggle();
     });
-    if (jQuery('#'+list_id_masque[0]).is(":visible")){
+    if (jQuery('#'+list_hidden_ids[0]).is(":visible")){
         jQuery('#Network').css( 'cursor', 'n-resize' ).attr('src', 'img/other/expanded.svg');
     }
     else{
@@ -1404,31 +1412,45 @@ fn_Network=function(){
 
 
 fn_NetworkConsole=function(){
-    var list_id_masque=[
+    var list_hidden_ids=[
     ];
-    jQuery.each(list_id_masque, function( index,value) {
+    jQuery.each(list_hidden_ids, function( index,value) {
         jQuery('#'+value).parents("tr").toggle();
     });
-    if (jQuery('#'+list_id_masque[0]).is(":visible")){
-        jQuery('#Network').css( 'cursor', 'n-resize' ).attr('src', 'img/other/expanded.svg');
+    if (jQuery('#'+list_hidden_ids[0]).is(":visible")){
+        jQuery('#NetworkConsole').css( 'cursor', 'n-resize' ).attr('src', 'img/other/expanded.svg');
     }
     else{
-        jQuery('#Network').css( 'cursor', 's-resize' ).attr('src', 'img/other/expand.svg');
+        jQuery('#NetworkConsole').css( 'cursor', 's-resize' ).attr('src', 'img/other/expand.svg');
     }
 };
 
 
 fn_Mirror=function(){
-    var list_id_masque=[
+    var list_hidden_ids=[
     ];
-    jQuery.each(list_id_masque, function( index,value) {
+    jQuery.each(list_hidden_ids, function( index,value) {
         jQuery('#'+value).parents("tr").toggle();
     });
-    if (jQuery('#'+list_id_masque[0]).is(":visible")){
-        jQuery('#Network').css( 'cursor', 'n-resize' ).attr('src', 'img/other/expanded.svg');
+    if (jQuery('#'+list_hidden_ids[0]).is(":visible")){
+        jQuery('#Mirror').css( 'cursor', 'n-resize' ).attr('src', 'img/other/expanded.svg');
     }
     else{
-        jQuery('#Network').css( 'cursor', 's-resize' ).attr('src', 'img/other/expand.svg');
+        jQuery('#Mirror').css( 'cursor', 's-resize' ).attr('src', 'img/other/expand.svg');
+    }
+};
+
+fn_Accounts=function(){
+    var list_hidden_ids=[
+    ];
+    jQuery.each(list_hidden_ids, function( index,value) {
+        jQuery('#'+value).parents("tr").toggle();
+    });
+    if (jQuery('#'+list_hidden_ids[0]).is(":visible")){
+        jQuery('#Accounts').css( 'cursor', 'n-resize' ).attr('src', 'img/other/expanded.svg');
+    }
+    else{
+        jQuery('#Accounts').css( 'cursor', 's-resize' ).attr('src', 'img/other/expand.svg');
     }
 };
 
@@ -1513,7 +1535,8 @@ jQuery(function () {
     init_item("#check-load-firmware", "#check-load-firmware-value");
     init_item("#check-network-console", "#check-network-console-value");
     init_item("#check-authorized-keys-url", "#input-authorized-keys-url");
-
+    init_item("#check-root-passwd", "#input-root-passwd");
+    init_item("#check-makeuser", "#check-makeuser-value");
 
     if(jQuery("#check-mirror-protocol").is(":checked")){
         enable_item("#select-mirror-protocol")
@@ -1529,11 +1552,20 @@ jQuery(function () {
     }
 
     init_item("#check-mirror-country", "#select-mirror-country")
-    init_item("#check-mirror-suite", "#select-mirror-suite")
+    init_item("#check-mirror-suite", "#input-mirror-suite")
+    init_item("#check-mirror-suite-components", "#input-mirror-suite-components")
+    init_item("#check-skip-root-login", "#check-skip-root-login-value")
+    init_item("#check-user-fullname", "#input-user-fullname")
+    init_item("#check-username", "#input-username")
+    init_item("#check-user-passwd", "#input-user-passwd")
+    init_item("#check-user-uid", "#number-user-uid")
+    init_item("#check-user-group", "#input-user-group")
 
 
 
-    // Change section
+    // ----
+    // CHANGE section
+    // ----
 
     jQuery('#Comments').bind('input propertychange', function() { update();});
     jQuery( '#Location' ).on('change', function () {
@@ -1763,11 +1795,70 @@ jQuery(function () {
 
 
     jQuery("#check-mirror-suite").on("change", ()=>{
-        toggle_item("#select-mirror-suite")
+        toggle_item("#input-mirror-suite")
         update()
     })
 
-    jQuery("#select-mirror-suite").on("change", ()=>{update()})
+    jQuery("#input-mirror-suite").on("change", ()=>{update()})
+
+    jQuery("#check-mirror-suite-components").on("change", ()=>{
+        toggle_item("#input-mirror-suite-components")
+        update()
+    })
+
+    jQuery("#input-mirror-suite-components").on("change", ()=>{update()})
+
+    jQuery("#check-skip-root-login").on("change", ()=>{
+        toggle_item("#check-skip-root-login-value")
+        update()
+    })
+
+    jQuery("#check-skip-root-login-value").on("change", ()=>{update()})
+    
+    jQuery("#check-root-passwd").on("change", ()=>{
+        toggle_item("#input-root-passwd");
+        update()}
+    )
+    jQuery("#input-root-passwd").on("change", ()=>{update()})
+
+    jQuery("#check-makeuser").on("change", ()=>{
+        toggle_item("#check-makeuser-value")
+        update();
+    })
+    jQuery("#check-makeuser-value").on("change", ()=>{update()})
+
+    jQuery("#check-user-fullname").on("change", ()=>{
+        toggle_item("#input-user-fullname")
+        update();
+    })
+    jQuery("#input-user-fullname").on("change", ()=>{update()})
+    
+    jQuery("#check-username").on("change", ()=>{
+        toggle_item("#input-username")
+        update();
+    })
+    jQuery("#input-username").on("change", ()=>{update()})
+
+    jQuery("#check-user-passwd").on("change", ()=>{
+        toggle_item("#input-user-passwd")
+        update();
+    })
+    jQuery("#input-user-passwd").on("change", ()=>{update()})
+
+
+    jQuery("#check-user-uid").on("change", ()=>{
+        toggle_item("#number-user-uid")
+        update();
+    })
+
+    jQuery('#number-user-uid').on("change", ()=>{update()})
+
+    jQuery("#check-user-group").on("change", ()=>{
+        toggle_item("#input-user-group")
+        update();
+    })
+
+    jQuery('#input-user-group').on("change", ()=>{update()})
 });
 
 fn_Installation_Notes()
@@ -1775,4 +1866,5 @@ fn_Locale()
 fn_Network()
 fn_NetworkConsole()
 fn_Mirror()
+fn_Accounts()
 </script>

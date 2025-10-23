@@ -84,8 +84,18 @@ var template = [
 '<? echo $strin;?>CheckMirrorProtocol<? echo $strou;?>d-i mirror/http/directory string <? echo $strin;?>InputMirrorDirectory<? echo $strou;?>',
 '<? echo $strin;?>CheckMirrorProtocol<? echo $strou;?>d-i mirror/http/proxy string <? echo $strin;?>InputMirrorProxy<? echo $strou;?>',
 '<? echo $strin;?>CheckMirrorCountry<? echo $strou;?>d-i mirror/country string <? echo $strin;?>SelectMirrorCountry<? echo $strou;?>',
-'<? echo $strin;?>CheckMirrorSuite<? echo $strou;?>d-i mirror/suite string <? echo $strin;?>SelectMirrorSuite<? echo $strou;?>',
+'<? echo $strin;?>CheckMirrorSuite<? echo $strou;?>d-i mirror/suite string <? echo $strin;?>InputMirrorSuite<? echo $strou;?>',
+'<? echo $strin;?>CheckMirrorSuiteComponents<? echo $strou;?>d-i mirror/udeb/suite string testing <? echo $strin;?>InputMirrorSuiteComponents<? echo $strou;?>',
 '',
+'### ACCOUNT',
+'<?echo $strin;?>CheckSkipRootLogin<? echo $strou;?>d-i passwd/root-login boolean <?echo $strin;?>CheckSkipRootLoginValue<? echo $strou;?>',
+'<?echo $strin;?>CheckRootPasswd<? echo $strou;?>d-i passwd/root-password <?echo $strin;?>InputRootPasswd<? echo $strou;?>',
+'<? echo $strin;?>CheckMakeUser<? echo $strou;?>d-i passwd/make-user boolean <? echo $strin;?>CheckMakeUserValue<? echo $strou;?>',
+'<? echo $strin;?>CheckUserFullname<? echo $strou;?>d-i passwd/user-fullname string <? echo $strin;?>InputUserFullname<? echo $strou;?>',
+'<? echo $strin;?>CheckUsername<? echo $strou;?>d-i passwd/username string <? echo $strin;?>InputUsername<? echo $strou;?>',
+'<? echo $strin;?>CheckUserPasswd<? echo $strou;?>d-i passwd/user-password password <? echo $strin;?>InputUserPasswd<? echo $strou;?>',
+'<? echo $strin;?>CheckUserUid<? echo $strou;?>d-i passwd/user-uid number <? echo $strin;?>NumberUserUid<? echo $strou;?>',
+'<? echo $strin;?>CheckUserGroup<? echo $strou;?>d-i passwd/user-default-groups string <? echo $strin;?>InputUserGroup<? echo $strou;?>'
 ].join('\r\n');
 </script>
 
@@ -483,8 +493,6 @@ $f->add(
 );
 
 
-
-
 // ---- dhcp-hostname
 $check_dhcp_hostname = new CheckboxTpl("check-dhcp-hostname");
 $input_dhcp_hostname = new InputTplTitle("input-dhcp-hostname", $info_dhcp_hostname);
@@ -634,24 +642,159 @@ $f->add(
 
 // ---- mirror suite
 $check = new CheckboxTpl("check-mirror-suite");
-$input = new SelectItemtitle("select-mirror-suite");
-$input->setElements($mirror_suites);
-$input->setElementsVal($mirror_suites);
+$input = new InputTplTitle("input-mirror-suite", _T("Suite to install", "imaging"));
+
 
 $fields = [ $check, $input];
 $values = [
     (isset($parameters["CheckMirrorSuite"])) ? $parameters["CheckMirrorSuite"] : '',
-    (isset($parameters["SelectMirrorSuite"])) ? $parameters["SelectMirrorSuite"] : 'stable',
+    (isset($parameters["InputMirrorSuite"])) ? $parameters["InputMirrorSuite"] : 'stable',
 ];
 
 $f->add(
     new TrFormElement('<label for="check-mirror-suite">'._T("Mirror Suite", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, '']]
 );
 
+// ---- mirror suite components
+$check = new CheckboxTpl("check-mirror-suite-components");
+$input = new InputTplTitle("input-mirror-suite-components", _T("Suite to use for loading installer components (optional).", "imaging"));
+
+
+$fields = [ $check, $input];
+$values = [
+    (isset($parameters["CheckMirrorSuiteComponents"])) ? $parameters["CheckMirrorSuiteComponents"] : '',
+    (isset($parameters["InputMirrorSuiteComponents"])) ? $parameters["InputMirrorSuiteComponents"] : 'stable',
+];
+
+$f->add(
+    new TrFormElement('<label for="check-mirror-suite-components">'._T("Mirror Suite Components", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, '']]
+);
+
 $f->pop(); // End of Section
 
 
+// ==== New Section ====
+// Accounts
+// =====================
+// ---- Toggle button ----
+$f->add(new TitleElement(_T("Accounts","imaging")));
+$f->add(new TrFormElement("", new Iconereply(_T('Accounts', "imaging"),'')));
+$f->push(new Table());
 
+// ---- skip root login
+$check = new CheckboxTpl("check-skip-root-login");
+$input = new CheckboxTpl("check-skip-root-login-value");
+
+
+$fields = [ $check, $input];
+$values = [
+    (isset($parameters["CheckSkipRootLogin"])) ? $parameters["CheckSkipRootLogin"] : '',
+    (isset($parameters["CheckSkipRootLoginValue"])) ? $parameters["CheckSkipRootLoginValue"] : '',
+];
+
+$f->add(
+    new TrFormElement('<label for="check-skip-root-login">'._T("Skip Root Login", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, _T("Skip creation of a root account (normal user account will be able to use sudo).", "imaging")]]
+);
+
+// ---- root password
+$check = new CheckboxTpl("check-root-passwd");
+$input = new InputTplTitle("input-root-passwd", "");
+$input->fieldType = "password";
+
+$fields = [ $check, $input];
+$values = [
+    (isset($parameters["CheckRootPasswd"])) ? $parameters["CheckRootPasswd"] : '',
+    (isset($parameters["InputRootPasswd"])) ? $parameters["InputRootPasswd"] : '',
+];
+
+$f->add(
+    new TrFormElement('<label for="check-root-passwd">'._T("Root Password", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, "", ]]
+);
+
+
+// ---- skip make user
+$check = new CheckboxTpl("check-makeuser");
+$input = new CheckboxTpl("check-makeuser-value");
+$fields = [$check, $input];
+$values = [
+    (isset($parameters["CheckMakeuser"])) ? $parameters["CheckMakeuser"] : 'checked',
+    (isset($parameters["CheckMakeuserValue"])) ? $parameters["CheckMakeuserValue"] : 'checked',
+];
+
+$f->add(
+    new TrFormElement('<label for="check-makeuser">'._T("Make user", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, _T("Skip creation of normal user account.", "imaging"), ]]
+);
+
+// ---- user-fullname
+$check = new CheckboxTpl("check-user-fullname");
+$input = new InputTplTitle("input-user-fullname", "");
+$fields = [$check, $input];
+$values = [
+    (isset($parameters["CheckUserFullname"])) ? $parameters["CheckUserFullname"] : '',
+    (isset($parameters["InputUserFullName"])) ? $parameters["InputUserFullName"] : '',
+];
+
+$f->add(
+    new TrFormElement('<label for="check-user-fullname">'._T("User Fullname", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, "", ]]
+);
+
+// ---- user-username
+$check = new CheckboxTpl("check-username");
+$input = new InputTplTitle("input-username", "");
+$fields = [$check, $input];
+$values = [
+    (isset($parameters["CheckUsername"])) ? $parameters["CheckUsername"] : '',
+    (isset($parameters["InputUsername"])) ? $parameters["InputUsername"] : '',
+];
+
+$f->add(
+    new TrFormElement('<label for="check-username">'._T("User Name", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, "", ]]
+);
+
+
+// ---- user-password
+$check = new CheckboxTpl("check-user-passwd");
+$input = new InputTplTitle("input-user-passwd", "");
+$fields = [$check, $input];
+$values = [
+    (isset($parameters["CheckUserPasswd"])) ? $parameters["CheckUserPasswd"] : '',
+    (isset($parameters["InputUserPasswd"])) ? $parameters["InputUserPasswd"] : '',
+];
+
+$f->add(
+    new TrFormElement('<label for="check-user-passwd">'._T("User Password", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, "", ]]
+);
+
+// ---- user-uid
+$check = new CheckboxTpl("check-user-uid");
+$input = new NumberTplTitle("number-user-uid", _T("Create the first user with the specified UID instead of the default.", "imaging"));
+
+$fields = [$check, $input];
+$values = [
+    (isset($parameters["CheckUserUid"])) ? $parameters["CheckUserUid"] : '',
+    (isset($parameters["InputUserUid"])) ? $parameters["InputUserUid"] : '',
+];
+
+$f->add(
+    new TrFormElement('<label for="check-user-uid">'._T("User Uid", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, "", ]]
+);
+
+// ---- user-default-group
+$check = new CheckboxTpl("check-user-group");
+$input = new InputTplTitle("input-user-group", _T("The user account will be added to some standard initial groups. To override that, use this.", "imaging"));
+
+$fields = [$check, $input];
+$values = [
+    (isset($parameters["CheckUserGroup"])) ? $parameters["CheckUserGroup"] : '',
+    (isset($parameters["InputUserGroup"])) ? $parameters["InputUserGroup"] : '',
+];
+
+$f->add(
+    new TrFormElement('<label for="check-user-group">'._T("User Group", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, "", ]]
+);
+
+
+$f->pop();
 
 
 // End of Form
@@ -660,5 +803,4 @@ $f->pop();
 $f->display();
 
 echo "<pre id='codeTocopy2' style='width:100%;'></pre>";
-
 ?>
