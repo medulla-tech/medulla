@@ -106,7 +106,7 @@ INSERT IGNORE INTO `applicationconfig` VALUES
 
 -- on ajoute la colonne comment dans la table up list produit.
 ALTER TABLE `xmppmaster`.`up_list_produit`
-ADD COLUMN `comment` VARCHAR(2048) NULL AFTER `enable`;
+ADD COLUMN IF NOT EXISTS `comment` VARCHAR(2048) NULL AFTER `enable`;
 -- =====================================================================
 -- Réinitialisation et migration des tables liées à la gestion des listes
 -- =====================================================================
@@ -2954,8 +2954,6 @@ DELIMITER ;
 
 USE `xmppmaster`;
 CREATE  OR REPLACE
-    ALGORITHM = UNDEFINED
-    SQL SECURITY DEFINER
 VIEW `up_machine_activated` AS
     SELECT
         CASE
@@ -2989,7 +2987,6 @@ VIEW `up_machine_activated` AS
         AND lgm.is_deleted = 0
         AND lgm.is_template = 0
         AND m.platform LIKE 'Microsoft Windows%';;
-
 
 
 -- ----------------------------------------------------------------------
