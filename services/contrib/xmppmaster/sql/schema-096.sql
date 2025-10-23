@@ -2897,6 +2897,101 @@ BEGIN
 END$$
 DELIMITER ;
 
+
+-- =====================================================================
+-- =====================================================================
+-- =====================================================================
+-- VUE : up_machine_activated
+-- =====================================================================
+-- =====================================================================
+-- =====================================================================
+-- =====================================================================
+-- =====================================================================
+-- VUE : up_machine_activated
+-- =====================================================================
+-- Description :
+--    Cette vue permet de lister les machines Windows activées pour les mises à jour,
+--    en tenant compte des listes blanche (white list) et grise (gray list).
+--    Elle fournit des informations sur les machines, leurs identifiants, leur statut de déploiement,
+--    et leur appartenance à une liste (blanche ou grise).
+--
+-- Fonctionnement :
+--    1. Jointure des tables :
+--       - up_machine_windows (umw) : Contient les informations sur les mises à jour des machines Windows.
+--       - machines (m) : Contient les informations générales sur les machines (UUID, hostname, JID).
+--       - local_glpi_machines (lgm) : Contient les informations locales des machines (entités, statut de suppression, etc.).
+--       - up_white_list (uwl) : Liste blanche des mises à jour validées.
+--       - up_gray_list (ugl) : Liste grise des mises à jour validées.
+--
+--    2. Logique de sélection :
+--       - Seules les machines non supprimées (lgm.is_deleted = 0) et non templates (lgm.is_template = 0) sont incluses.
+--       - Seules les machines sous plateforme "Microsoft Windows" sont prises en compte.
+--       - Les machines doivent être validées dans au moins une des listes (blanche ou grise).
+--
+--    3. Champs retournés :
+--       - kb : Priorise la valeur de la liste grise (ugl.kb) si elle existe, sinon utilise la valeur de la liste blanche (uwl.kb).
+--       - id_machine : Identifiant de la machine.
+--       - glpi_id : Identifiant GLPI extrait de l'UUID de la machine.
+--       - hostname : Nom d'hôte de la machine.
+--       - jid : Identifiant JID de la machine.
+--       - entities_id : Identifiant de l'entité associée à la machine.
+--       - update_id : Identifiant de la mise à jour.
+--       - curent_deploy : Déploiement actuel.
+--       - required_deploy : Déploiement requis.
+--       - start_date : Date de début de la mise à jour.
+--       - end_date : Date de fin de la mise à jour.
+--       - intervals : Intervalle de la mise à jour.
+--       - msrcseverity : Niveau de sévérité MSRC.
+--       - list : Indique si la machine est dans la liste blanche ("white") ou grise ("gray").
+--
+-- Remarques :
+--    - Cette vue est utile pour identifier les machines éligibles aux mises à jour,
+--      en fonction des règles définies dans les listes blanche et grise.
+--    - Les machines sans entrée dans la liste grise (ugl.kb IS NULL) sont marquées comme "gray" par défaut.
+--    - Assurez-vous que les tables sources sont à jour pour des résultats précis.
+-- =====================================================================
+
+
+USE `xmppmaster`;
+CREATE  OR REPLACE
+    ALGORITHM = UNDEFINED
+    SQL SECURITY DEFINER
+VIEW `up_machine_activated` AS
+    SELECT
+        CASE
+            WHEN ugl.kb IS NULL THEN uwl.kb
+            ELSE ugl.kb
+        END AS kb,
+        umw.id_machine AS id_machine,
+        SUBSTR(m.uuid_inventorymachine, 5) AS glpi_id,
+        m.hostname AS hostname,
+        m.jid AS jid,
+        lgm.entities_id AS entities_id,
+        umw.update_id AS update_id,
+        umw.curent_deploy AS curent_deploy,
+        umw.required_deploy AS required_deploy,
+        umw.start_date AS start_date,
+        umw.end_date AS end_date,
+        umw.intervals AS intervals,
+        umw.msrcseverity AS msrcseverity,
+        CASE
+            WHEN uwl.kb IS NULL THEN 'gray'
+            ELSE 'white'
+        END AS list
+    FROM
+        up_machine_windows umw
+        JOIN machines m ON m.id = umw.id_machine
+        JOIN local_glpi_machines lgm ON CONCAT('UUID', lgm.id) = m.uuid_inventorymachine
+        LEFT JOIN up_white_list uwl ON uwl.updateid = umw.update_id
+        LEFT JOIN up_gray_list ugl ON ugl.updateid = umw.update_id
+    WHERE
+        (ugl.valided = 1 OR uwl.valided = 1)
+        AND lgm.is_deleted = 0
+        AND lgm.is_template = 0
+        AND m.platform LIKE 'Microsoft Windows%';;
+
+
+
 -- ----------------------------------------------------------------------
 -- Database version
 -- ----------------------------------------------------------------------
