@@ -23,14 +23,7 @@
  $strin='<?';
  $strou='?>';
  ?>
-<style type="text/css">
-    #ProductKey1, #ProductKey2, #ProductKey3, #ProductKey4, #ProductKey5{
-        width:50px;
-    }
-    #codeToCopy{
-        width:400px;
-    }
-</style>
+
 <script type="text/javascript">
 var template = [
 '#',
@@ -95,7 +88,10 @@ var template = [
 '<? echo $strin;?>CheckUsername<? echo $strou;?>d-i passwd/username string <? echo $strin;?>InputUsername<? echo $strou;?>',
 '<? echo $strin;?>CheckUserPasswd<? echo $strou;?>d-i passwd/user-password password <? echo $strin;?>InputUserPasswd<? echo $strou;?>',
 '<? echo $strin;?>CheckUserUid<? echo $strou;?>d-i passwd/user-uid number <? echo $strin;?>NumberUserUid<? echo $strou;?>',
-'<? echo $strin;?>CheckUserGroup<? echo $strou;?>d-i passwd/user-default-groups string <? echo $strin;?>InputUserGroup<? echo $strou;?>'
+'<? echo $strin;?>CheckUserGroup<? echo $strou;?>d-i passwd/user-default-groups string <? echo $strin;?>InputUserGroup<? echo $strou;?>',
+'<? echo $strin;?>CheckUtc<? echo $strou;?>d-i clock-setup/utc boolean <? echo $strin;?>CheckUtcValue<? echo $strou;?>',
+'<? echo $strin;?>CheckTimezone<? echo $strou;?>d-i time/zone string <? echo $strin;?>SelectTimezone<? echo $strou;?>',
+''
 ].join('\r\n');
 </script>
 
@@ -111,12 +107,18 @@ require("../includes/class_form.php");
 <!--Click on to validate disposed of the response file
 .on smb: // ipPulse / postinst / sysprep /-->
 <?php
+
+// Try to retrieve parameters from somewhere
 if(isset($_SESSION['parameters']))
 {//If this session exists : editing file, else creating file
     $parameters = $_SESSION['parameters'];
 }
 else if(isset($_POST["Location"])){
     $parameters = $_POST;
+}
+else{
+    // By default define $parameters as empty
+    $parameters = [];
 }
 
 $f = new ValidatingForm(array("id" => "formxml"));
@@ -131,13 +133,13 @@ $f->add(new TitleElement(_T("Installation Notes", "imaging")));
 $f->add(new TrFormElement("", new Iconereply('Installation_Notes',$info_installation_note)));
 $f->push(new Table());
 
-    //_____________
-    $f->add(
-        new TrFormElement(_T('Title','imaging'), new InputTplTitle('Location',"name file xml")),
-        array("required" => True,'value'=>(isset($parameters)) ? $parameters['Title'] : '')
-    );
-    //_____________
-    $f->add(new TrFormElement("Notes".":", new OptTextareaTpl(array('name'=>'Comments','value'=>(isset($parameters)) ? htmlentities($parameters['Notes']) : _T('Enter your comments here...','imaging')))));
+//_____________
+$f->add(
+    new TrFormElement(_T('Title','imaging'), new InputTplTitle('Location',"name file xml")),
+    array("required" => True,'value'=>(isset($parameters['Title'])) ? htmlentities($parameters['Title']) : '')
+);
+//_____________
+$f->add(new TrFormElement("Notes".":", new OptTextareaTpl(array('name'=>'Comments','value'=>(isset($parameters['Notes'])) ? htmlentities($parameters['Notes']) : _T('Enter your comments here...','imaging')))));
 $f->pop();
 $f->add( new SepTpl());
 
@@ -152,129 +154,131 @@ $f->add(new TrFormElement("", new Iconereply(_T('Locale', "imaging"),'')));
 $f->push(new Table());
 
 // ---- locale
-$check_locale = new CheckboxTpl("check-locale");
-$select_locale = new SelectItemtitle("select-locale", $info_locale_settings);
-$select_locale->setElements($locales_country);
-$select_locale->setElementsVal($locales_values);
+$check = new CheckboxTpl("check-locale");
+$select = new SelectItemtitle("select-locale", $info_locale_settings);
+$select->setElements($locales_country);
+$select->setElementsVal($locales_values);
 
 
 $fields = [
-    $check_locale, $select_locale
+    $check, $select
 ];
 
 $values = [
-    (isset($parameters)) ? $parameters['CheckLocale'] : '',
-    (isset($parameters)) ? $parameters['SelectLocale'] : '',
+    (isset($parameters['CheckLocale'])) ? ($parameters['CheckLocale'] == '' ? 'checked': '') : '',
+    (isset($parameters['SelectLocale'])) ? $parameters['SelectLocale'] : '',
 ];
 
 $f->add(
     new TrFormElement('<label for="check-locale">'._T("locale", "imaging").'</label>', new multifieldTpl($fields)), ["value"=>$values, "title"=>[$info_comment_this_field, "", ""]]
 );
-
+unset($check, $select);
 
 // ---- language
-$check_language = new CheckboxTpl("check-language");
-$select_language = new SelectItemtitle("select-language", $info_locale_settings);
-$select_language->setElements($languages_country);
-$select_language->setElementsVal($languages_values);
-
+$check = new CheckboxTpl("check-language");
+$select = new SelectItemtitle("select-language", $info_locale_settings);
+$select->setElements($languages_country);
+$select->setElementsVal($languages_values);
 
 $fields = [
-    $check_language, $select_language
+    $check, $select
 ];
 
 $values = [
-    (isset($parameters)) ? $parameters['CheckLanguage'] : '',
-    (isset($parameters)) ? $parameters['SelectLanguage'] : '',
+    (isset($parameters['CheckLanguage'])) ? ($parameters['CheckLanguage'] == '' ? 'checked' : '') : '',
+    (isset($parameters['SelectLanguage'])) ? $parameters['SelectLanguage'] : '',
 ];
 
 $f->add(
     new TrFormElement('<label for="check-language">'._T("language", "imaging").'</label>', new multifieldTpl($fields)), ["value"=>$values, "title"=>[$info_comment_this_field, "", ""]]
 );
+unset($check, $select);
 
 
 // ---- country
-$check_country = new CheckboxTpl("check-country");
-$select_country = new SelectItemtitle("select-country", $info_locale_settings);
-$select_country->setElements($countries_country);
-$select_country->setElementsVal($countries_values);
+$check = new CheckboxTpl("check-country");
+$select = new SelectItemtitle("select-country", $info_locale_settings);
+$select->setElements($countries_country);
+$select->setElementsVal($countries_values);
 
 
 $fields = [
-    $check_country, $select_country
+    $check, $select
 ];
 
 $values = [
-    (isset($parameters)) ? $parameters['CheckCountry'] : '',
-    (isset($parameters)) ? $parameters['SelectCountry'] : '',
+    (isset($parameters['CheckCountry'])) ? ($parameters['CheckCountry'] == '' ? 'checked' : '') : '',
+    (isset($parameters['SelectCountry'])) ? $parameters['SelectCountry'] : '',
 ];
 
 $f->add(
     new TrFormElement('<label for="check-country">'._T("Country", "imaging").'</label>', new multifieldTpl($fields)), ["value"=>$values, "title"=>[$info_comment_this_field, "", ""]]
 );
+unset($check, $select);
+
 
 // ---- supported locales
-$check_supportedlocales = new CheckboxTpl("check-supported-locales");
-$select_supportedlocales = new SelectItemtitle("select-supported-locales", $info_supported_locales);
-$select_supportedlocales->setElements($supported_locales);
-$select_supportedlocales->setElementsVal($supported_locales_values);
-
+$check = new CheckboxTpl("check-supported-locales");
+$select = new SelectItemtitle("select-supported-locales", $info_supported_locales);
+$select->setElements($supported_locales);
+$select->setElementsVal($supported_locales_values);
 
 $fields = [
-    $check_supportedlocales, $select_supportedlocales
+    $check, $select
 ];
 
 $values = [
-    (isset($parameters)) ? $parameters['CheckSupportedLocales'] : '',
-    (isset($parameters)) ? $parameters['SelectSupportedLocales'] : '',
+    (isset($parameters['CheckSupportedLocales'])) ? ($parameters['CheckSupportedLocales'] == '' ? 'checked' : '') : '',
+    (isset($parameters['SelectSupportedLocales'])) ? $parameters['SelectSupportedLocales'] : '',
 ];
 
 $f->add(
     new TrFormElement('<label for="check-supported-locales">'._T("Supported Locales", "imaging").'</label>', new multifieldTpl($fields)), ["value"=>$values, "title"=>[$info_comment_this_field, "", ""]]
 );
+unset($check, $select);
 
 
 // ---- keyboard layout
-$check_keyboardlayouts = new CheckboxTpl("check-keyboard-layouts");
-$select_keyboardlayouts = new SelectItemtitle("select-keyboard-layouts", "");
-$select_keyboardlayouts->setElements($keyboard_layouts);
-$select_keyboardlayouts->setElementsVal($keyboard_layouts_values);
+$check = new CheckboxTpl("check-keyboard-layouts");
+$select = new SelectItemtitle("select-keyboard-layouts", "");
+$select->setElements($keyboard_layouts);
+$select->setElementsVal($keyboard_layouts_values);
 
 
 $fields = [
-    $check_keyboardlayouts, $select_keyboardlayouts
+    $check, $select
 ];
 
 $values = [
-    (isset($parameters)) ? $parameters['check-keyboard-layouts'] : '',
-    (isset($parameters)) ? $parameters['select-keyboard-layouts'] : '',
+    (isset($parameters['check-keyboard-layouts'])) ? ($parameters['check-keyboard-layouts'] == '' ? 'checked' : '') : '',
+    (isset($parameters['select-keyboard-layouts'])) ? $parameters['select-keyboard-layouts'] : '',
 ];
 
 $f->add(
     new TrFormElement('<label for="check-keyboard-layouts">'._T("Keyboard Layout", "imaging").'</label>', new multifieldTpl($fields)), ["value"=>$values, "title"=>[$info_comment_this_field, "", ""]]
 );
-
+unset($check, $select);
 
 
 // ---- keyboard layout
-$check_keyboardtoggles = new CheckboxTpl("check-keyboard-toggle");
-$select_keyboardtoggles = new SelectItemtitle("select-keyboard-toggle", "");
-$select_keyboardtoggles->setElements($keyboard_toggles);
-$select_keyboardtoggles->setElementsVal($keyboard_toggles);
-
+$check = new CheckboxTpl("check-keyboard-toggle");
+$select = new SelectItemtitle("select-keyboard-toggle", "");
+$select->setElements($keyboard_toggles);
+$select->setElementsVal($keyboard_toggles);
 
 $fields = [
-    $check_keyboardtoggles, $select_keyboardtoggles
+    $check, $select
 ];
 
 $values = [
-    (isset($parameters)) ? $parameters['CheckKeyboardToggle'] : '',
-    (isset($parameters)) ? $parameters['SelectKeyboardToggle'] : '',
+    (isset($parameters['CheckKeyboardToggle'])) ? ($parameters['CheckKeyboardToggle'] == '' ? 'checked' : '') : '',
+    (isset($parameters['SelectKeyboardToggle'])) ? $parameters['SelectKeyboardToggle'] : '',
 ];
 
 $f->add(
     new TrFormElement('<label for="check-keyboard-toggle">'._T("Keyboard Toggle", "imaging").'</label>', new multifieldTpl($fields)), ["value"=>$values, "title"=>[$info_comment_this_field, "", ""]]
 );
+unset($check, $select);
 $f->pop();
 
 
@@ -287,65 +291,66 @@ $f->add(new TrFormElement("", new Iconereply(_T('Network', "imaging"),'')));
 $f->push(new Table());
 
 // ---- keyboard layout
-$check_enablenetwork = new CheckboxTpl("check-enable-network");
-$check_enablenetworkvalue = new CheckboxTpl("check-enable-network-value", "");
-
+$check = new CheckboxTpl("check-enable-network");
+$checkValue = new CheckboxTpl("check-enable-network-value", "");
 
 $fields = [
-    $check_enablenetwork, $check_enablenetworkvalue
+    $check, $checkValue
 ];
 
 $values = [
-    (isset($parameters)) ? $parameters['CheckEnableNetwork'] : '',
-    (isset($parameters)) ? $parameters['CheckEnableNetworkValue'] : '',
+    (isset($parameters['CheckEnableNetwork'])) ? ($parameters['CheckEnableNetwork'] == '' ? 'checked' : '') : '',
+    (isset($parameters['CheckEnableNetworkValue'])) ? ($parameters['CheckEnableNetworkValue'] == 'true' ? 'checked' : '') : '',
 ];
 
 $f->add(
     new TrFormElement('<label for="check-enable-network">'._T("Enable Network", "imaging").'</label>', new multifieldTpl($fields)), ["value"=>$values, "title"=>[$info_comment_this_field, $info_enable_network]]
 );
-
+unset($check, $checkValue);
 
 
 // ---- Interface
-$check_interface = new CheckboxTpl("check-interface");
-$select_interface = new SelectItemtitle("select-interface", $info_interface);
-$select_interface->setElements($interface_choices);
-$select_interface->setElementsVal($interface_choices);
+$check = new CheckboxTpl("check-interface");
+$select = new SelectItemtitle("select-interface", $info_interface);
+$select->setElements($interface_choices);
+$select->setElementsVal($interface_choices);
 
-$input_interface = new InputTplTItle("input-interface", $info_interface);
+$input = new InputTplTItle("input-interface", $info_interface);
 
 $fields = [
-    $check_interface, $select_interface, $input_interface
+    $check, $select, $input
 ];
 
 $values = [
-    (isset($parameters)) ? $parameters['CheckInterface'] : '',
-    (isset($parameters)) ? $parameters['SelectInterface'] : '',
-    (isset($parameters) && $parameters['InputInterface'] != 'auto') ? $parameters['InputInterface'] : 'eth0',
+    (isset($parameters['CheckInterface'])) ? ($parameters['CheckInterface'] == '' ? 'checked' : '') : '',
+    (isset($parameters['SelectInterface'])) ? $parameters['SelectInterface'] : '',
+    (isset($parameters['InputInterface']) && $parameters['InputInterface'] != 'auto') ? $parameters['InputInterface'] : 'eth0',
 ];
 
 $f->add(
     new TrFormElement('<label for="check-interface">'._T("Interface", "imaging").'</label>', new multifieldTpl($fields)), ["value"=>$values, "placeholder"=>["", "", "eth0"], "title"=>[$info_comment_this_field, "", ""]]
 );
+unset($check, $select, $input);
 
 
 
 // ------ link wait timeout
-$check_link_timeout = new CheckboxTpl("check-link-timeout");
-$number_link_timeout = new NumberTplTitle("number-link-timeout", $info_link_timeout);
-$number_link_timeout->setMin(0);
+$check = new CheckboxTpl("check-link-timeout");
+$number = new NumberTplTitle("number-link-timeout", $info_link_timeout);
+$number->setMin(0);
 $fields = [
-    $check_link_timeout, $number_link_timeout
+    $check, $number
 ];
 
 $values = [
-    (isset($parameters)) ? $parameters['CheckLinkTimeout'] : '',
-    (isset($parameters)) ? $parameters['NumberLinkTimeout'] : 3,
+    (isset($parameters['CheckLinkTimeout'])) ? ($parameters['CheckLinkTimeout'] == '' ? 'checked' : '') : '',
+    (isset($parameters['NumberLinkTimeout'])) ? $parameters['NumberLinkTimeout'] : 3,
 ];
 
 $f->add(
     new TrFormElement('<label for="check-link-timeout">'._T("Link Wait Timeout", "imaging").'</label>', new multifieldTpl($fields)), ["value"=>$values, "title"=>[$info_comment_this_field, "", ""]]
 );
+unset($check, $number);
 
 // ------ dhcp wait timeout
 $check_dhcp_timeout = new CheckboxTpl("check-dhcp-timeout");
@@ -356,8 +361,8 @@ $fields = [
 ];
 
 $values = [
-    (isset($parameters)) ? $parameters['CheckDhcpTimeout'] : '',
-    (isset($parameters)) ? $parameters['NumberDhcpTimeout'] : 15,
+    (isset($parameters['CheckDhcpTimeout'])) ? ($parameters['CheckDhcpTimeout'] == '' ? 'checked' : '') : '',
+    (isset($parameters['NumberDhcpTimeout'])) ? $parameters['NumberDhcpTimeout'] : 15,
 ];
 
 $f->add(
@@ -366,46 +371,46 @@ $f->add(
 
 
 // ------ dhcpV6 wait timeout
-$check_dhcpv6_timeout = new CheckboxTpl("check-dhcpv6-timeout");
-$number_dhcpv6_timeout = new NumberTplTitle("number-dhcpv6-timeout", $info_dhcp_timeout);
-$number_dhcpv6_timeout->setMin(1);
+$check = new CheckboxTpl("check-dhcpv6-timeout");
+$number = new NumberTplTitle("number-dhcpv6-timeout", $info_dhcp_timeout);
+$number->setMin(1);
 $fields = [
-    $check_dhcpv6_timeout, $number_dhcpv6_timeout
+    $check, $number
 ];
 
 $values = [
-    (isset($parameters)) ? $parameters['CheckDhcpV6Timeout'] : '',
-    (isset($parameters)) ? $parameters['NumberDhcpV6Timeout'] : 15,
+    (isset($parameters['CheckDhcpV6Timeout'])) ? ($parameters['CheckDhcpV6Timeout'] == '' ? 'checked' : '') : '',
+    (isset($parameters['NumberDhcpV6Timeout'])) ? $parameters['NumberDhcpV6Timeout'] : 15,
 ];
 
 $f->add(
     new TrFormElement('<label for="check-dhcpv6-timeout">'._T("Dhcpv6 Wait Timeout", "imaging").'</label>', new multifieldTpl($fields)), ["value"=>$values, "title"=>[$info_comment_this_field, "", ""]]
 );
-
+unset($check, $number);
 
 
 // ---- Disable autoconfig
-$check_disable_autoconfig = new CheckboxTpl("check-disable-autoconfig");
-$check_disable_autoconfig_value = new CheckboxTpl("check-disable-autoconfig-value");
+$check = new CheckboxTpl("check-disable-autoconfig");
+$checkValue = new CheckboxTpl("check-disable-autoconfig-value");
 
 
 $fields = [
-    $check_disable_autoconfig, $check_disable_autoconfig_value
+    $check, $checkValue
 ];
 
 $values = [
-    (isset($parameters)) ? $parameters['CheckDisableAutoconfig'] : '',
-    (isset($parameters)) ? $parameters['CheckDisableAutoconfigValue'] : 'checked',
+    (isset($parameters['CheckDisableAutoconfig'])) ? ($parameters['CheckDisableAutoconfig'] == '' ? 'checked' : '') : '',
+    (isset($parameters['CheckDisableAutoconfigValue'])) ? ($parameters['CheckDisableAutoconfigValue'] == 'true' ? 'checked' : '') : 'checked',
 ];
 
 $f->add(
     new TrFormElement('<label for="check-disable-autoconfig">'._T("Disable Autoconfig", "imaging").'</label>', new multifieldTpl($fields)), ["value"=>$values, "title"=>[$info_comment_this_field, $info_disable_autoconfig]]
 );
-
+unset($check, $checkValue);
 
 // ---- Disable dhcp
-$check_disable_dhcp = new CheckboxTpl("check-disable-dhcp");
-$check_disable_dhcp_value = new CheckboxTpl("check-disable-dhcp-value");
+$check = new CheckboxTpl("check-disable-dhcp");
+$checkValue = new CheckboxTpl("check-disable-dhcp-value");
 $separator = new SpanElement("<br>");
 $input_ipaddress = new InputTplTitle("input-get-ipaddress");
 $input_netmask = new InputTplTitle("input-get-netmask");
@@ -413,17 +418,17 @@ $input_gateway = new InputTplTitle("input-get-gateway");
 $input_nameservers = new InputTplTitle("input-get-nameservers");
 
 $fields = [
-    $check_disable_dhcp, $check_disable_dhcp_value,
+    $check, $checkValue,
     new SpanElement('<br><label for="input-get-ipaddress">Get Ipaddress</label>'), $input_ipaddress,
-    new SpanElement("<br><label for='input-netmask'>Get Netmask</label>"), $input_netmask,
+    new SpanElement("<br><label for='input-get-netmask'>Get Netmask</label>"), $input_netmask,
     new SpanElement("<br><label for='input-get-gateway'>Gateway</label>"), $input_gateway,
-    new SpanElement("<br><label for='input-get- nameservers'>Nameservers</label>"), $input_nameservers
+    new SpanElement("<br><label for='input-get-nameservers'>Nameservers</label>"), $input_nameservers
 ];
 
 $values = [
-    (isset($parameters['CheckDisableDhcp'])) ? $parameters['CheckDisableDhcp'] : '',
-    (isset($parameters['CheckDisableDhcpValue'])) ? $parameters['CheckDisableDhcpValue'] : '',
-    'input',
+    (isset($parameters['CheckDisableDhcp'])) ? ($parameters['CheckDisableDhcp'] == '' ? 'checked' : '') : '',
+    (isset($parameters['CheckDisableDhcpValue'])) ? ($parameters['CheckDisableDhcpValue'] == 'true' ? 'checked' : '') : '',
+    '',
     (isset($parameters['InputGetIpaddress'])) ? $parameters['InputGetIpaddress'] : '',
     '',
     (isset($parameters['InputGetNetmask'])) ? $parameters['InputGetNetmask'] : '',
@@ -439,37 +444,37 @@ $f->add(
         "title"=>[$info_comment_this_field, $info_disable_dhcp, '', '', '', '', '', '', '', '', ''],
         "placeholder"=>['', '', '', 'Ip Address', '', 'Netmask', '', 'Gateway', '', 'Nameservers']]
 );
-
+unset($check, $checkValue, $input_hostname, $separator, $input_ipaddress, $input_netmask, $input_gateway, $input_nameservers);
 
 
 // ---- hostname
-$check_hostname = new CheckboxTpl("check-hostname");
-$input_hostname = new InputTplTitle("input-hostname", $info_hostname);
+$check = new CheckboxTpl("check-hostname");
+$input = new InputTplTitle("input-hostname", $info_hostname);
 $fields = [
-    $check_hostname, $input_hostname
+    $check, $input
 ];
 
 $values = [
-    (isset($parameters)) ? $parameters['CheckHostname'] : '',
-    (isset($parameters)) ? $parameters['InputHostname'] : '',
+    (isset($parameters['CheckHostname'])) ? $parameters['CheckHostname'] : '',
+    (isset($parameters['InputHostname'])) ? $parameters['InputHostname'] : '',
 ];
 
 $f->add(
     new TrFormElement('<label for="check-hostname">'._T("Hostname", "imaging").'</label>', new multifieldTpl($fields)), ["title"=>[$info_comment_this_field, '' ], "value" => $values]
 );
-
+unset($check, $input);
 
 
 // ---- domain
-$check_domain = new CheckboxTpl("check-domaine");
-$input_domain = new InputTplTitle("input-domaine", $info_hostname);
+$check = new CheckboxTpl("check-domaine");
+$input = new InputTplTitle("input-domaine", $info_hostname);
 $fields = [
-    $check_domain, $input_domain
+    $check, $input
 ];
 
 $values = [
-    (isset($parameters)) ? $parameters['CheckDomaine'] : '',
-    (isset($parameters)) ? $parameters['InputDomaine'] : '',
+    (isset($parameters['CheckDomaine'])) ? ($parameters['CheckDomaine'] == '' ? 'checked' : '') : '',
+    (isset($parameters['InputDomaine'])) ? $parameters['InputDomaine'] : '',
 ];
 
 $f->add(
@@ -477,37 +482,38 @@ $f->add(
 );
 
 // ---- force-hostname
-$check_force_hostname = new CheckboxTpl("check-force-hostname");
-$input_force_hostname = new InputTplTitle("input-force-hostname", $info_hostname);
+$check = new CheckboxTpl("check-force-hostname");
+$input = new InputTplTitle("input-force-hostname", $info_hostname);
 $fields = [
-    $check_force_hostname, $input_force_hostname
+    $check, $input
 ];
 
 $values = [
-    (isset($parameters)) ? $parameters['CheckForceHostname'] : '',
-    (isset($parameters)) ? $parameters['InputForceHostname'] : '',
+    (isset($parameters['CheckForceHostname'])) ? ($parameters['CheckForceHostname'] == '' ? 'checked' : '') : '',
+    (isset($parameters['InputForceHostname'])) ? $parameters['InputForceHostname'] : '',
 ];
 
 $f->add(
     new TrFormElement('<label for="check-force-hostname">'._T("Force Hostname", "imaging").'</label>', new multifieldTpl($fields)), ["title"=>[$info_comment_this_field, '' ], "value" => $values]
 );
-
+unset($check, $input);
 
 // ---- dhcp-hostname
-$check_dhcp_hostname = new CheckboxTpl("check-dhcp-hostname");
-$input_dhcp_hostname = new InputTplTitle("input-dhcp-hostname", $info_dhcp_hostname);
+$check = new CheckboxTpl("check-dhcp-hostname");
+$input = new InputTplTitle("input-dhcp-hostname", $info_dhcp_hostname);
 $fields = [
-    $check_dhcp_hostname, $input_dhcp_hostname
+    $check, $input
 ];
 
 $values = [
-    (isset($parameters)) ? $parameters['CheckDhcpHostname'] : '',
-    (isset($parameters)) ? $parameters['InputDhcpHostname'] : '',
+    (isset($parameters['CheckDhcpHostname'])) ? ($parameters['CheckDhcpHostname'] == '' ? 'checked' : '') : '',
+    (isset($parameters['InputDhcpHostname'])) ? $parameters['InputDhcpHostname'] : '',
 ];
 
 $f->add(
     new TrFormElement('<label for="check-dhcp-hostname">'._T("Dhcp Hostname", "imaging").'</label>', new multifieldTpl($fields)), ["title"=>[$info_comment_this_field, '' ], "value" => $values]
 );
+unset($check, $input);
 
 
 // ---- Firmware Lookup
@@ -518,13 +524,14 @@ $fields = [
 ];
 
 $values = [
-    (isset($parameters)) ? $parameters['CheckLoadFirmware'] : '',
-    (isset($parameters)) ? $parameters['CheckLoadFirmwareValue'] : '',
+    (isset($parameters['CheckLoadFirmware'])) ? ($parameters['CheckLoadFirmware'] == '' ? 'checked' : '') : '',
+    (isset($parameters['CheckLoadFirmwareValue'])) ? $parameters['CheckLoadFirmwareValue'] : '',
 ];
 
 $f->add(
     new TrFormElement('<label for="check-load-firmware">'._T("Load Firmware", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, $info_load_firmware]]
 );
+unset($check, $input);
 
 $f->pop();
 
@@ -541,19 +548,20 @@ $f->push(new Table());
 
 // ---- Network Console
 $check = new CheckboxTpl("check-network-console");
-$input = new CheckboxTpl("check-network-console-value");
+$checkValue = new CheckboxTpl("check-network-console-value");
 $fields = [
-    $check, $input
+    $check, $checkValue
 ];
 
 $values = [
-    (isset($parameters['CheckNetworkConsole'])) ? $parameters['CheckNetworkConsoleType'] : '',
-    (isset($parameters['CheckNetworkConsoleType']) && $parameters['CheckNetworkConsoleType'] == 'false') ? 'checked' : 'checked',
+    (isset($parameters['CheckNetworkConsole'])) ? ($parameters['CheckNetworkConsoleType'] == '' ? 'checked' : '') : '',
+    (isset($parameters['CheckNetworkConsoleType'])) ? ($parameters['CheckNetworkConsoleType'] == 'true' ? 'checked' : '') : 'checked',
 ];
 
 $f->add(
     new TrFormElement('<label for="check-network-console">'._T("Network Console", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, $info_network_console]]
 );
+unset($check, $checkValue);
 
 // ---- authorized_keys_url
 $check = new CheckboxTpl("check-authorized-keys-url");
@@ -563,13 +571,14 @@ $fields = [
 ];
 
 $values = [
-    (isset($parameters['CheckAuthorizedKeysUrl'])) ? $parameters['CheckAuthorizedKeysUrl'] : '',
+    (isset($parameters['CheckAuthorizedKeysUrl'])) ? ($parameters['CheckAuthorizedKeysUrl'] == '' ? 'checked' : '') : '',
     (isset($parameters['InputAuthorizedKeysUrl'])) ? $parameters['InputAuthorizedKeysUrl'] : '',
 ];
 
 $f->add(
     new TrFormElement('<label for="check-authorized-keys-url">'._T("Authorized Keys Url", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, '']]
 );
+unset($check, $input);
 
 
 $f->pop();
@@ -588,9 +597,9 @@ $f->push(new Table());
 $check = new CheckboxTpl("check-mirror-protocol");
 $separator = new SpanElement("<br>");
 
-$select_mirror_protocol = new SelectItemTitle("select-mirror-protocol", $info_mirror_protocol);
-$select_mirror_protocol->setElements($mirror_protocol_values);
-$select_mirror_protocol->setElementsVal($mirror_protocol_values);
+$select = new SelectItemTitle("select-mirror-protocol", $info_mirror_protocol);
+$select->setElements($mirror_protocol_values);
+$select->setElementsVal($mirror_protocol_values);
 
 $input_mirror_hostname = new InputTplTitle("input-mirror-hostname");
 $input_mirror_directory = new InputTplTitle("input-mirror-directory");
@@ -598,14 +607,14 @@ $input_mirror_proxy = new InputTplTitle("input-mirror-proxy");
 
 $fields = [
     $check,
-    new SpanElement('<br><label for="select-mirror-protocol">Protocol</label>'), $select_mirror_protocol,
+    new SpanElement('<br><label for="select-mirror-protocol">Protocol</label>'), $select,
     new SpanElement("<br><label for='input-mirror-hostname'>Hostname</label>"), $input_mirror_hostname,
     new SpanElement("<br><label for='input-mirror-directory'>Directory</label>"), $input_mirror_directory,
     new SpanElement("<br><label for='input-mirror-proxy'>Proxy</label>"), $input_mirror_proxy
 ];
 
 $values = [
-    (isset($parameters['CheckMirrorProtocol'])) ? $parameters['CheckMirrorProtocol'] : '',
+    (isset($parameters['CheckMirrorProtocol'])) ? ($parameters['CheckMirrorProtocol'] == '' ? 'checked' : 'checked') : '',
     '',
     (isset($parameters['SelectMirrorProtocol'])) ? $parameters['SelectMirrorProtocol'] : 'html',
     '',
@@ -622,23 +631,25 @@ $f->add(
         "title"=>[$info_comment_this_field, '', '', '', '', '', '', '', '', '', ''],
         "placeholder"=>['', '', '', 'Ip Address', '', 'Netmask', '', 'Gateway', '', 'Nameservers']]
 );
+unset($check, $separator, $select, $input_mirror_hostname, $input_mirror_directory, $input_mirror_proxy);
 
 
 // ---- mirror country
 $check = new CheckboxTpl("check-mirror-country");
-$input = new SelectItemtitle("select-mirror-country");
-$input->setElements($mirror_countries);
-$input->setElementsVal($mirror_countries_values);
+$select = new SelectItemtitle("select-mirror-country");
+$select->setElements($mirror_countries);
+$select->setElementsVal($mirror_countries_values);
 
-$fields = [ $check, $input];
+$fields = [ $check, $select];
 $values = [
-    (isset($parameters["CheckMirrorCountry"])) ? $parameters["CheckMirrorCountry"] : '',
+    (isset($parameters["CheckMirrorCountry"])) ? ($parameters["CheckMirrorCountry"] == '' ? 'checked' : '') : '',
     (isset($parameters["SelectMirrorCountry"])) ? $parameters["SelectMirrorCountry"] : 'manual',
 ];
 
 $f->add(
     new TrFormElement('<label for="check-mirror-country">'._T("Mirror Country", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, '']]
 );
+unset($check, $select);
 
 // ---- mirror suite
 $check = new CheckboxTpl("check-mirror-suite");
@@ -647,13 +658,14 @@ $input = new InputTplTitle("input-mirror-suite", _T("Suite to install", "imaging
 
 $fields = [ $check, $input];
 $values = [
-    (isset($parameters["CheckMirrorSuite"])) ? $parameters["CheckMirrorSuite"] : '',
+    (isset($parameters["CheckMirrorSuite"])) ? ($parameters["CheckMirrorSuite"] == '' ? 'checked' : '') : '',
     (isset($parameters["InputMirrorSuite"])) ? $parameters["InputMirrorSuite"] : 'stable',
 ];
 
 $f->add(
     new TrFormElement('<label for="check-mirror-suite">'._T("Mirror Suite", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, '']]
 );
+unset($check, $input);
 
 // ---- mirror suite components
 $check = new CheckboxTpl("check-mirror-suite-components");
@@ -662,13 +674,14 @@ $input = new InputTplTitle("input-mirror-suite-components", _T("Suite to use for
 
 $fields = [ $check, $input];
 $values = [
-    (isset($parameters["CheckMirrorSuiteComponents"])) ? $parameters["CheckMirrorSuiteComponents"] : '',
+    (isset($parameters["CheckMirrorSuiteComponents"])) ? ($parameters["CheckMirrorSuiteComponents"] == '' ? 'checked' : '') : '',
     (isset($parameters["InputMirrorSuiteComponents"])) ? $parameters["InputMirrorSuiteComponents"] : 'stable',
 ];
 
 $f->add(
     new TrFormElement('<label for="check-mirror-suite-components">'._T("Mirror Suite Components", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, '']]
 );
+unset($check, $input);
 
 $f->pop(); // End of Section
 
@@ -683,18 +696,19 @@ $f->push(new Table());
 
 // ---- skip root login
 $check = new CheckboxTpl("check-skip-root-login");
-$input = new CheckboxTpl("check-skip-root-login-value");
+$checkValue = new CheckboxTpl("check-skip-root-login-value");
 
 
-$fields = [ $check, $input];
+$fields = [ $check, $checkValue];
 $values = [
-    (isset($parameters["CheckSkipRootLogin"])) ? $parameters["CheckSkipRootLogin"] : '',
-    (isset($parameters["CheckSkipRootLoginValue"])) ? $parameters["CheckSkipRootLoginValue"] : '',
+    (isset($parameters["CheckSkipRootLogin"])) ? ($parameters["CheckSkipRootLogin"] == '' ? 'checked' : '') : '',
+    (isset($parameters["CheckSkipRootLoginValue"])) ? ($parameters["CheckSkipRootLoginValue"] == 'true' ? 'checked' : '') : '',
 ];
 
 $f->add(
     new TrFormElement('<label for="check-skip-root-login">'._T("Skip Root Login", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, _T("Skip creation of a root account (normal user account will be able to use sudo).", "imaging")]]
 );
+unset($check, $checkValue);
 
 // ---- root password
 $check = new CheckboxTpl("check-root-passwd");
@@ -703,13 +717,14 @@ $input->fieldType = "password";
 
 $fields = [ $check, $input];
 $values = [
-    (isset($parameters["CheckRootPasswd"])) ? $parameters["CheckRootPasswd"] : '',
+    (isset($parameters["CheckRootPasswd"])) ? ($parameters["CheckRootPasswd"] == '' ? 'checked' : '') : '',
     (isset($parameters["InputRootPasswd"])) ? $parameters["InputRootPasswd"] : '',
 ];
 
 $f->add(
     new TrFormElement('<label for="check-root-passwd">'._T("Root Password", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, "", ]]
 );
+unset($check, $input);
 
 
 // ---- skip make user
@@ -717,39 +732,42 @@ $check = new CheckboxTpl("check-makeuser");
 $input = new CheckboxTpl("check-makeuser-value");
 $fields = [$check, $input];
 $values = [
-    (isset($parameters["CheckMakeuser"])) ? $parameters["CheckMakeuser"] : 'checked',
-    (isset($parameters["CheckMakeuserValue"])) ? $parameters["CheckMakeuserValue"] : 'checked',
+    (isset($parameters["CheckMakeuser"])) ? ($parameters["CheckMakeuserValue"] == '' ? 'checked' : '') : 'checked',
+    (isset($parameters["CheckMakeuserValue"])) ? (($parameters["CheckMakeuserValue"] == 'true') ? 'checked' : '') : 'checked',
 ];
 
 $f->add(
     new TrFormElement('<label for="check-makeuser">'._T("Make user", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, _T("Skip creation of normal user account.", "imaging"), ]]
 );
+unset($check, $input);
 
 // ---- user-fullname
 $check = new CheckboxTpl("check-user-fullname");
 $input = new InputTplTitle("input-user-fullname", "");
 $fields = [$check, $input];
 $values = [
-    (isset($parameters["CheckUserFullname"])) ? $parameters["CheckUserFullname"] : '',
+    (isset($parameters["CheckUserFullname"])) ? ($parameters["CheckUserFullname"] == '' ? 'checked' : '') : '',
     (isset($parameters["InputUserFullName"])) ? $parameters["InputUserFullName"] : '',
 ];
 
 $f->add(
     new TrFormElement('<label for="check-user-fullname">'._T("User Fullname", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, "", ]]
 );
+unset($check, $input);
 
 // ---- user-username
 $check = new CheckboxTpl("check-username");
 $input = new InputTplTitle("input-username", "");
 $fields = [$check, $input];
 $values = [
-    (isset($parameters["CheckUsername"])) ? $parameters["CheckUsername"] : '',
+    (isset($parameters["CheckUsername"])) ? ($parameters["CheckUsername"] == '' ? 'checked' : '') : '',
     (isset($parameters["InputUsername"])) ? $parameters["InputUsername"] : '',
 ];
 
 $f->add(
     new TrFormElement('<label for="check-username">'._T("User Name", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, "", ]]
 );
+unset($check, $input);
 
 
 // ---- user-password
@@ -764,20 +782,22 @@ $values = [
 $f->add(
     new TrFormElement('<label for="check-user-passwd">'._T("User Password", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, "", ]]
 );
+unset($check, $input);
 
 // ---- user-uid
 $check = new CheckboxTpl("check-user-uid");
-$input = new NumberTplTitle("number-user-uid", _T("Create the first user with the specified UID instead of the default.", "imaging"));
+$number = new NumberTplTitle("number-user-uid", _T("Create the first user with the specified UID instead of the default.", "imaging"));
 
-$fields = [$check, $input];
+$fields = [$check, $number];
 $values = [
     (isset($parameters["CheckUserUid"])) ? $parameters["CheckUserUid"] : '',
-    (isset($parameters["InputUserUid"])) ? $parameters["InputUserUid"] : '',
+    (isset($parameters["NumberUserUid"])) ? $parameters["NumberserUid"] : '',
 ];
 
 $f->add(
     new TrFormElement('<label for="check-user-uid">'._T("User Uid", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, "", ]]
 );
+unset($check, $number);
 
 // ---- user-default-group
 $check = new CheckboxTpl("check-user-group");
@@ -785,19 +805,66 @@ $input = new InputTplTitle("input-user-group", _T("The user account will be adde
 
 $fields = [$check, $input];
 $values = [
-    (isset($parameters["CheckUserGroup"])) ? $parameters["CheckUserGroup"] : '',
+    (isset($parameters["CheckUserGroup"])) ? ($parameters["CheckUserGroup"] == '' ? 'checked' : '') : '',
     (isset($parameters["InputUserGroup"])) ? $parameters["InputUserGroup"] : '',
 ];
 
 $f->add(
     new TrFormElement('<label for="check-user-group">'._T("User Group", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, "", ]]
 );
+unset($check, $input);
+
+
+$f->pop();
+
+// ==== New Section ====
+// Timezone
+// =====================
+// ---- Toggle button ----
+$f->add(new TitleElement(_T("Timezone","imaging")));
+$f->add(new TrFormElement("", new Iconereply(_T('Timezone', "imaging"),'')));
+$f->push(new Table());
+
+
+// ---- UTC
+$check = new CheckboxTpl("check-utc");
+$checkValue = new CheckboxTpl("check-utc-value");
+
+$fields = [$check, $checkValue];
+// $parameters['CheckUtcValue'] = 'true';
+$values = [
+    (isset($parameters["CheckUtc"])) ? ($parameters["CheckUtc"] == '' ? 'checked' : '') : '',
+    (isset($parameters["CheckUtcValue"])) ? ($parameters['CheckUtcValue'] == 'true' ? 'checked' : '') : 'checked',
+];
+
+$f->add(
+    new TrFormElement('<label for="check-utc">'._T("Utc", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, _T("Controls whether or not the hardware clock is set to UTC.", "imaging"), ]]
+);
+unset($check, $checkValue);
+
+// ---- Timezone
+$check = new CheckboxTpl("check-timezone");
+$select = new SelectItemtitle("select-timezone");
+$select->setElements($timezones);
+$select->setElementsVal($timezones);
+
+$fields = [$check, $select];
+$values = [
+    (isset($parameters["CheckTimezone"])) ? ($parameters["CheckTimezone"] == '' ? 'checked' : '') : 'checked',
+    (isset($parameters["SelectTimezone"])) ? $parameters['SelectTimezone'] : date_default_timezone_get(),
+];
+
+$f->add(
+    new TrFormElement('<label for="check-timezone">'._T("Timezone", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, "" ]]
+);
+unset($check, $select);
 
 
 $f->pop();
 
 
 // End of Form
+
 
 $f->pop();
 $f->display();
