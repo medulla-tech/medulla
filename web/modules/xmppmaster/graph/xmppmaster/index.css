@@ -88,8 +88,14 @@ textarea {
 #titledependency table.listinfos,
 #titlephase table.listinfos,
 #env table.listinfos {
-    table-layout: fixed;
+    table-layout: auto;
     width: 100%;
+}
+
+#titlephase table.listinfos th:nth-child(2),
+#titlephase table.listinfos td:nth-child(2) {
+  min-width: 10ch;
+  text-align: center;
 }
 
 #titlewol table.listinfos td,

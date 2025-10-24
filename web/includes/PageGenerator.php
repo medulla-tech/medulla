@@ -1090,57 +1090,8 @@ class ListInfos extends HtmlElement
         echo "</td>";
     }
 
-    public function drawInlineStyle()
-    {
-        echo <<<CSS
-            <style>
-
-                /* ==== Styles par défaut pour ListInfosCssUser ==== */
-                table.listinfos {
-                border-collapse: collapse;
-                width: 100%;
-                font-family: Arial, sans-serif;
-                }
-                table.listinfos th {
-                background-color: #f2f2f2;
-                text-align: left;
-                padding: 8px;
-                }
-                table.listinfos td {
-                padding: 8px;
-                border-bottom: 1px solid #ddd;
-                }
-
-                /* Exemple de classes de ligne */
-                .listinfos-background-highlight {
-                    background-color: #e6f7ff !important;
-                }
-                .listinfos-background-warning {
-                    background-color: #e6f7ff !important;
-                }
-                .listinfos-font-gras{
-                    font-size: 16px; /* Taille de la police */
-                    font-weight: bold; /* Texte en gras */
-                    font-style: italic; /* Texte en italique */
-                    color: #00008B !important; /* Bleu foncé */
-                }
-
-                .listinfos-separator { border-bottom: 3px double #999; }
-
-                /* Exemple de classes de colonne */
-                .listinfoscol-center { text-align: center; }
-                .listinfoscol-bold { font-weight: bold; }
-
-                /* Exemple de classes de cellule */
-                .listinfos-cel-success { color: green; font-weight: bold; }
-                .listinfos-cel-error { color: red; text-decoration: underline; }
-            </style>
-            CSS;
-    }
-
     public function drawTable($navbar = 1)
     {
-        $this->drawInlineStyle(); // injecte le CSS
         echo "<table border=\"1\" cellspacing=\"0\" cellpadding=\"5\" class=\"listinfos\">\n";
         $this->drawCaption();
         echo "<thead><tr>";
