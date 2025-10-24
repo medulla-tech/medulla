@@ -593,7 +593,7 @@ if ($info['len'] != 0) {
     echo '<td>';
     echo _T("STEP", "xmppmaster");
     echo '</td>';
-    echo '<td style="text-align: center";>';
+    echo '<td>';
     echo _T("DESCRIPTION", "xmppmaster");
     echo '</td>';
     echo "</tr>";
@@ -902,7 +902,7 @@ if ($info['len'] != 0) {
             echo '<table class="listinfos" cellspacing="0" cellpadding="2" border="1">';
             echo "<thead>";
             echo "<tr>";
-            echo '<td  style="width : 120px;">';
+            echo '<td style="width : 120px;">';
             echo _T("key", "xmppmaster");
             echo '</td>';
             echo '<td>';
