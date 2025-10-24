@@ -1688,220 +1688,231 @@ class AjaxPaginator extends AjaxNavBar
  */
 class AjaxFilter extends HtmlElement
 {
+    /** @var string URL de base terminée par '?' ou '&' (sans params statiques) */
+    protected $url;
+
+    /** @var string chaîne de paramètres statiques normalisée (ex: "a=1&b=2") */
+    protected $params = '';
+
+    /** @var string */
+    protected $divid = 'container';
+
+    /** @var string */
+    protected $formid = '';
+
+    /** @var int ms */
+    protected $refresh = 0;
+
+    /** @var ?string */
+    protected $storedfilter = null;
+
+    /** @var ?int */
+    protected $storedmax = null;
+
+    /** @var ?int */
+    protected $storedstart = null;
+
+    /** @var ?int */
+    protected $storedend = null;
+
     /**
      * AjaxFilter : composant de filtre AJAX avec persistance en session
      *
-     * @param string $url    URL appelée par le JavaScript (ex: "index.php?module=base&action=list")
-     *                       Le filtre sera passé en $_GET["filter"].
-     * @param string $divid  ID du <div> à mettre à jour avec la réponse AJAX.
-     * @param array|string $params  Paramètres supplémentaires à inclure dans l’URL (array ou chaîne).
-     * @param string $formid Identifiant du formulaire (utile si plusieurs filtres sur la même page).
+     * @param string            $url     URL appelée par le JavaScript (ex: "index.php?module=base&action=list")
+     * @param string            $divid   ID du <div> cible
+     * @param array|string      $params  Paramètres statiques à inclure (array ou chaîne "k=v&x=y")
+     * @param string            $formid  Identifiant du formulaire
      */
     public function __construct($url, $divid = "container", $params = array(), $formid = "")
     {
-        // --- Normalisation de l’URL de base ---
-        if (strpos($url, "?") === false) {
-            // L’URL n’a pas encore de paramètres → on ajoute "?"
-            $this->url = $url . "?";
-        } else {
-            // L’URL contient déjà des paramètres → on ajoute "&"
-            $this->url = rtrim($url, '&') . "&";
-        }
+        // --- URL de base normalisée : finit par '?' ou '&', SANS les params statiques ---
+        $this->url = $this->normalizeBaseUrl($url);
 
-        $this->divid = $divid;
+        $this->divid  = $divid;
         $this->formid = $formid;
-        $this->refresh = 0;
 
-        // --- Conversion sécurisée des paramètres ---
+        // --- Normalisation des paramètres statiques (on NE les ajoute PAS à $this->url ici) ---
         if (is_array($params)) {
             $this->params = http_build_query($params);
         } elseif (is_string($params)) {
-            // Si déjà une chaîne, on la garde telle quelle
             $this->params = ltrim($params, '&');
         } else {
             $this->params = '';
         }
 
-        // --- Ajout correct des paramètres à l’URL ---
-        if (!empty($this->params)) {
-            // Vérifie si l’URL finit déjà par '?' ou '&' pour éviter une concaténation collée
-            $lastChar = substr($this->url, -1);
-            if ($lastChar !== '?' && $lastChar !== '&') {
-                $this->url .= '&';
+        // --- Contexte pour les clés de session ---
+        $module = $_GET["module"] ?? "default";
+        $submod = $_GET["submod"] ?? "default";
+        $action = $_GET["action"] ?? "default";
+        $tab    = $_GET["tab"]    ?? "default";
+
+        // Construit $extra à partir des GET non listés
+        $extra = "";
+        foreach ($_GET as $key => $value) {
+            if (!in_array($key, ['module','submod','tab','action','filter','start','end','maxperpage'])) {
+                if (is_array($value)) { $value = implode(",", $value); }
+                $extra .= $key . "_" . $value;
             }
-            $this->url .= $this->params;
         }
 
-        // --- Gestion du contexte courant pour stockage du filtre en session ---
-        $module  = $_GET["module"] ?? "default";
-        $submod  = $_GET["submod"] ?? "default";
-        $action  = $_GET["action"] ?? "default";
-        $tab     = $_GET["tab"] ?? "default";
+        // Nouveau schéma (celui de la "mauvaise" version)
+        $prefix_new = "{$module}_{$submod}_{$action}_{$tab}_{$extra}_";
+        // Ancien schéma (fallback pour compat)
+        $prefix_old = "{$module}_{$submod}_{$action}_{$tab}_";
 
-        // Construction d’un identifiant unique de contexte
-        // $extra = "";
-        // foreach ($_GET as $key => $value) {
-        //     if (!in_array($key, ['module', 'submod', 'tab', 'action', 'filter', 'start', 'end', 'maxperpage'])) {
-        //         $extra .= $key . "_" . $value;
-        //     }
-        // }
-$extra = "";
-foreach ($_GET as $key => $value) {
-    if (!in_array($key, ['module', 'submod', 'tab', 'action', 'filter', 'start', 'end', 'maxperpage'])) {
-        if (is_array($value)) {
-            $value = implode(",", $value); // ou json_encode($value);
-        }
-        $extra .= $key . "_" . $value;
-    }
-}
-        // --- Récupération des valeurs en session (filtres, pagination, etc.) ---
-        $session_prefix = "{$module}_{$submod}_{$action}_{$tab}_{$extra}_";
+        $this->storedfilter = $_SESSION[$prefix_new . "filter"]
+                           ?? $_SESSION[$prefix_old . "filter_" . $extra]
+                           ?? null;
 
-        $this->storedfilter = $_SESSION[$session_prefix . "filter"]      ?? null;
-        $this->storedmax    = $_SESSION[$session_prefix . "maxperpage"]  ?? null;
-        $this->storedstart  = $_SESSION[$session_prefix . "start"]       ?? null;
-        $this->storedend    = $_SESSION[$session_prefix . "end"]         ?? null;
+        $this->storedmax    = $_SESSION[$prefix_new . "maxperpage"]
+                           ?? $_SESSION[$prefix_old . "maxperpage_" . $extra]
+                           ?? null;
+
+        $this->storedstart  = $_SESSION[$prefix_new . "start"]
+                           ?? $_SESSION[$prefix_old . "start_" . $extra]
+                           ?? null;
+
+        $this->storedend    = $_SESSION[$prefix_new . "end"]
+                           ?? $_SESSION[$prefix_old . "end_" . $extra]
+                           ?? null;
     }
 
     /**
-     * Allow the list to refresh
-     * @param $refresh: time in ms
+     * Force un rafraîchissement périodique
+     * @param int $refresh temps en ms
      */
     public function setRefresh($refresh)
     {
-        $this->refresh = $refresh;
+        $this->refresh = (int) $refresh;
     }
 
+    /**
+     * Affiche le formulaire + JS
+     */
     public function display($arrParam = array())
     {
         global $conf;
-        $root = $conf["global"]["root"];
         $maxperpage = $conf["global"]["maxperpage"];
+
+        // Préfixe d’URL commun aux requêtes AJAX :
+        // base ('...?') + params statiques éventuels + '&' pour accueillir les params dynamiques.
+        $baseUrl = $this->url;
+        if (!empty($this->params)) {
+            $baseUrl .= $this->params;
+            if (substr($baseUrl, -1) !== '&') {
+                $baseUrl .= '&';
+            }
+        }
+
+        // Préremplissage JS sûr (évite les soucis de quotes)
+        $prefill = $this->storedfilter !== null ? json_encode($this->storedfilter) : '""';
         ?>
         <form name="Form<?php echo $this->formid ?>" id="Form<?php echo $this->formid ?>" action="#" onsubmit="return false;" style="margin-bottom:20px;margin-top:20px;">
 
             <div id="searchSpan<?php echo $this->formid ?>" class="searchbox">
-            <div id="searchBest">
+              <div id="searchBest">
                 <input type="text" class="searchfieldreal" name="param" id="param<?php echo $this->formid ?>"/>
                 <button type="button" class="search-clear" aria-label="<?php echo _T('Clear search', 'base'); ?>"
-                     onclick="document.getElementById('param<?php echo $this->formid ?>').value = '';
-                             pushSearch<?php echo $this->formid ?>();
-                             return false;"></button>
-                 <button onclick="pushSearch<?php echo $this->formid ?>();
-                         return false;"><?php echo _T("Search", "glpi");?></button>
-            </div>
-            <span class="loader" aria-hidden="true"></span>
+                        onclick="document.getElementById('param<?php echo $this->formid ?>').value=''; pushSearch<?php echo $this->formid ?>(); return false;"></button>
+                <button onclick="pushSearch<?php echo $this->formid ?>(); return false;"><?php echo _T('Search','glpi'); ?></button>
+              </div>
+              <span class="loader" aria-hidden="true"></span>
             </div>
 
             <script type="text/javascript">
-        <?php
-        if (!$this->formid) {
-            ?>
-                    jQuery('#param<?php echo $this->formid ?>').focus();
-            <?php
-        }
-        if (isset($this->storedfilter)) {
-            ?>
-                    document.Form<?php echo $this->formid ?>.param.value = "<?php echo $this->storedfilter ?>";
-            <?php
-        }
-        ?>
+            (function(){
+                var formId = <?php echo json_encode($this->formid); ?>;
+                var input  = document.getElementById('param' + formId);
+
+                // Focus si possible
+                if (input) { input.focus(); }
+
+                // Préremplissage depuis session (si dispo)
+                input && (input.value = <?php echo $prefill; ?>);
+
                 var refreshtimer<?php echo $this->formid ?> = null;
                 var refreshparamtimer<?php echo $this->formid ?> = null;
-                var refreshdelay<?php echo $this->formid ?> = <?php echo $this->refresh ?>;
-                var maxperpage = <?php echo $maxperpage ?>;
-        <?php
-        if (isset($this->storedmax)) {
-            ?>
-                    maxperpage = <?php echo $this->storedmax ?>;
-            <?php
-        }
-        ?>
-                if (jQuery('#maxperpage').length)
+                var refreshdelay<?php echo $this->formid ?> = <?php echo (int)$this->refresh ?>;
+
+                var maxperpage = <?php echo (int)$maxperpage ?>;
+                if (typeof jQuery !== "undefined" && jQuery('#maxperpage').length) {
                     maxperpage = jQuery('#maxperpage').val();
-
-                /**
-                 * Clear the timers set vith setTimeout
-                 */
-                clearTimers<?php echo $this->formid ?> = function() {
-                    if (refreshtimer<?php echo $this->formid ?> != null) {
-                        clearTimeout(refreshtimer<?php echo $this->formid ?>);
-                    }
-                    if (refreshparamtimer<?php echo $this->formid ?> != null) {
-                        clearTimeout(refreshparamtimer<?php echo $this->formid ?>);
-                    }
                 }
 
-                /**
-                 * Update div
-                 */
-        <?php
-        $url = $this->url . "filter='+encodeURIComponent(document.Form" . $this->formid . ".param.value)+'&maxperpage='+maxperpage+'" .
-                    (empty($this->params) ? "" : "&" . ltrim($this->params, "&"));
+                function clearTimers<?php echo $this->formid ?>() {
+                    if (refreshtimer<?php echo $this->formid ?>)      { clearTimeout(refreshtimer<?php echo $this->formid ?>); }
+                    if (refreshparamtimer<?php echo $this->formid ?>) { clearTimeout(refreshparamtimer<?php echo $this->formid ?>); }
+                }
 
-        if (isset($this->storedstart) && isset($this->storedend)) {
-            $url .= "&start=" . $this->storedstart . "&end=" . $this->storedend;
-        }
-        ?>
+                // Préfixe d’URL commun
+                var baseUrl<?php echo $this->formid ?> = <?php echo json_encode($baseUrl); ?>;
 
-                updateSearch<?php echo $this->formid ?> = function() {
+                // Ajout éventuel de start/end depuis la session lors du premier chargement
+                var firstPageExtra = "";
+                <?php if (isset($this->storedstart, $this->storedend)) { ?>
+                    firstPageExtra = "&start=<?php echo (int)$this->storedstart ?>&end=<?php echo (int)$this->storedend ?>";
+                <?php } ?>
+
+                // Mise à jour standard
+                window.updateSearch<?php echo $this->formid ?> = function() {
+                    var filter = encodeURIComponent((input && input.value) ? input.value : "");
+                    var url = baseUrl<?php echo $this->formid ?>
+                            + "filter=" + filter
+                            + "&maxperpage=" + maxperpage
+                            + firstPageExtra;
+
                     jQuery.ajax({
-                        'url': '<?php echo $url ?>',
+                        url: url,
                         type: 'get',
-                        success: function(data) {
-                            jQuery("#<?php echo $this->divid; ?>").html(data);
-                        }
+                        success: function(data){ jQuery("#<?php echo $this->divid; ?>").html(data); }
                     });
 
-        <?php
-        if ($this->refresh) {
-            ?>
-                        refreshtimer<?php echo $this->formid ?> = setTimeout("updateSearch<?php echo $this->formid ?>()", refreshdelay<?php echo $this->formid ?>)
-            <?php
-        }
-        ?>
-                }
+                    <?php if ($this->refresh) { ?>
+                    refreshtimer<?php echo $this->formid ?> = setTimeout(function(){
+                        updateSearch<?php echo $this->formid ?>();
+                    }, refreshdelay<?php echo $this->formid ?>);
+                    <?php } ?>
+                };
 
-                /**
-                 * Update div when clicking previous / next
-                 */
-                updateSearchParam<?php echo $this->formid ?> = function(filter, start, end, max) {
+                // Mise à jour via pagination (start/end)
+                window.updateSearchParam<?php echo $this->formid ?> = function(filter, start, end, max) {
                     clearTimers<?php echo $this->formid ?>();
-                    if (jQuery('#maxperpage').length)
+                    if (typeof jQuery !== "undefined" && jQuery('#maxperpage').length) {
                         maxperpage = jQuery('#maxperpage').val();
+                    }
+                    var url = baseUrl<?php echo $this->formid ?>
+                            + "filter=" + filter
+                            + "&start=" + start
+                            + "&end=" + end
+                            + "&maxperpage=" + maxperpage;
 
                     jQuery.ajax({
-                       'url': '<?php echo $this->url; ?>filter=' + filter
-                            + '&start=' + start
-                            + '&end=' + end
-                            + '&maxperpage=' + maxperpage
-                            + '<?php echo (empty($this->params) ? "" : "&" . ltrim($this->params, "&")); ?>',
+                        url: url,
                         type: 'get',
-                        success: function(data) {
-                            jQuery("#<?php echo $this->divid; ?>").html(data);
-                        }
+                        success: function(data){ jQuery("#<?php echo $this->divid; ?>").html(data); }
                     });
-        <?php
-        if ($this->refresh) {
-            ?>
-                        refreshparamtimer<?php echo $this->formid ?> = setTimeout("updateSearchParam<?php echo $this->formid ?>('" + filter + "'," + start + "," + end + "," + maxperpage + ")", refreshdelay<?php echo $this->formid ?>);
-            <?php
-        }
-        ?>
-                }
 
-                /**
-                 * wait 500ms and update search
-                 */
-                pushSearch<?php echo $this->formid ?> = function() {
+                    <?php if ($this->refresh) { ?>
+                    refreshparamtimer<?php echo $this->formid ?> = setTimeout(function(){
+                        updateSearchParam<?php echo $this->formid ?>(
+                            filter, start, end, maxperpage
+                        );
+                    }, refreshdelay<?php echo $this->formid ?>);
+                    <?php } ?>
+                };
+
+                // Debounce simple : 500ms après frappe / clic sur Search
+                window.pushSearch<?php echo $this->formid ?> = function() {
                     clearTimers<?php echo $this->formid ?>();
-                    refreshtimer<?php echo $this->formid ?> = setTimeout("updateSearch<?php echo $this->formid ?>()", 500);
-                }
+                    refreshtimer<?php echo $this->formid ?> = setTimeout(function(){
+                        updateSearch<?php echo $this->formid ?>();
+                    }, 500);
+                };
 
+                // Premier lancement
                 pushSearch<?php echo $this->formid ?>();
-
+            })();
             </script>
-
         </form>
         <?php
     }
@@ -1911,6 +1922,23 @@ foreach ($_GET as $key => $value) {
         print '<div id="' . $this->divid . '"></div>' . "\n";
     }
 
+    // ------------------- Helpers -------------------
+
+    /**
+     * Retourne une URL finissant par '?' ou '&' selon la présence de paramètres
+     */
+    protected function normalizeBaseUrl($u)
+    {
+        if (strpos($u, '?') === false) {
+            return $u . '?';
+        }
+        $u = rtrim($u, '&');
+        $last = substr($u, -1);
+        if ($last !== '?' && $last !== '&') {
+            $u .= '&';
+        }
+        return $u;
+    }
 }
 
 class multifieldTpl extends AbstractTpl
