@@ -105,20 +105,9 @@ if ($count_white == 0)
 // $completename = $_GET['completename'];
 $completename = $_GET['altname'];
 
-// Remplace les "+" par un espace
-$completename_cleaned = str_replace('+', ' ', $completename);
-// Remplace ">" par " → "
-$completename_cleaned = str_replace('>', ' → ', $completename_cleaned);
-// Remplace les "&nbsp;" par un espace
-$completename_cleaned = str_replace('&nbsp;', ' ', $completename_cleaned);
-// Supprime les espaces multiples
-$completename_cleaned = preg_replace('/\s+/', ' ', $completename_cleaned);
-// Supprime les espaces en début et fin de chaîne
-$completename_cleaned = trim($completename_cleaned);
 $ide = $_GET['uuid'];
-$w->setCaptionText(sprintf("%s [%s]",
-                           $titretableau ,
-                           $completename_cleaned));
+$w->setCaptionText(sprintf("%s",
+                           $titretableau));
 $w->setCssCaption(
     $border = 1,
     $bold = 0,

@@ -67,27 +67,15 @@ $titrenotableau=  _T("No updates are currently available in the Grey List  (manu
 // $completename = $_GET['completename'];
 $completename = $_GET['altname'];
 
-// Remplace les "+" par un espace
-$completename_cleaned = str_replace('+', ' ', $completename);
-// Remplace ">" par " → "
-$completename_cleaned = str_replace('>', ' → ', $completename_cleaned);
-// Remplace les "&nbsp;" par un espace
-$completename_cleaned = str_replace('&nbsp;', ' ', $completename_cleaned);
-// Supprime les espaces multiples
-$completename_cleaned = preg_replace('/\s+/', ' ', $completename_cleaned);
-// Supprime les espaces en début et fin de chaîne
-$completename_cleaned = trim($completename_cleaned);
 $ide = $_GET['uuid'];
 if ($grey_list['nb_element_total'] == "0")
 {
-    $message_tableau= sprintf("%s [%s]",
-                                    $titrenotableau ,
-                                    $completename_cleaned);
+    $message_tableau= sprintf("%s",
+                                    $titrenotableau);
 } else
 {
-    $message_tableau= sprintf("%s [%s]",
-                            $titretableau ,
-                            $completename_cleaned);
+    $message_tableau= sprintf("%s",
+                            $titretableau);
 }
 
 // GrayList Actions
@@ -156,7 +144,6 @@ $g->setItemCount($count_grey);
 $g->setNavBar(new AjaxNavBar($count_grey, $filter, 'updateSearchParamformGray'));
 $g->setParamInfo($params_grey);
 
-// sprintf("%s [%s] (%s)", $titretableau , $completename_cleaned, $ide)
 // affichage titre tableau
 $g->setCaptionText($message_tableau);
 $g->setCssCaption(
