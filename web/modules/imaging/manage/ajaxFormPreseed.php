@@ -26,17 +26,16 @@
 
 <script type="text/javascript">
 var template = [
-'#',
 '#________________________________',
 '# OS Debian [x86 and amd64]',
 '# Preseed :',
 '#',
 '# date : <? echo $strin; ?>dateval<? echo $strou; ?>',
 '#',
-'#Installation Notes',
-'#Location: <? echo $strin; ?>Location<? echo $strou; ?>',
-'#Notes: <? echo $strin; ?>Comments<? echo $strou; ?>',
-'#list parameters : @@listParameters@@',
+'# Installation Notes',
+'# Location: <? echo $strin; ?>Location<? echo $strou; ?>',
+'# Notes: <? echo $strin; ?>Comments<? echo $strou; ?>',
+'# list parameters : @@listParameters@@',
 '#________________________________',
 '',
 '# LOCALIZATION',
@@ -91,7 +90,11 @@ var template = [
 '<? echo $strin;?>CheckUserGroup<? echo $strou;?>d-i passwd/user-default-groups string <? echo $strin;?>InputUserGroup<? echo $strou;?>',
 '<? echo $strin;?>CheckUtc<? echo $strou;?>d-i clock-setup/utc boolean <? echo $strin;?>CheckUtcValue<? echo $strou;?>',
 '<? echo $strin;?>CheckTimezone<? echo $strou;?>d-i time/zone string <? echo $strin;?>SelectTimezone<? echo $strou;?>',
-''
+'<? echo $strin;?>CheckInitPartition<? echo $strou;?>d-i partman-auto/init_automatically_partition select <? echo $strin;?>SelectInitPartition<? echo $strou;?>',
+'<? echo $strin;?>CheckLvmSize<? echo $strou;?>d-i partman-auto-lvm/guided_size string <? echo $strin;?>InputLvmSize<? echo $strou;?>',
+'<? echo $strin;?>CheckRemoveOldLvm<? echo $strou;?>d-i partman-lvm/device_remove_lvm boolean <? echo $strin;?>CheckRemoveOldLvmValue<? echo $strou;?>',
+'d-i partman-lvm/confirm boolean true',
+'d-i partman-lvm/confirm_nooverwrite boolean true',
 ].join('\r\n');
 </script>
 
@@ -862,12 +865,80 @@ unset($check, $select);
 
 $f->pop();
 
+// ==== New Section ====
+// Partitionning
+// =====================
+// ---- Toggle button ----
+$f->add(new TitleElement(_T("Partitionning","imaging")));
+$f->add(new TrFormElement("", new Iconereply(_T('Partitionning', "imaging"),'')));
+$f->push(new Table());
 
-// End of Form
+// ---- init-partition
+$check = new CheckboxTpl("check-init-partition");
+$select = new SelectItemtitle("select-init-partition", $info_init_partition);
+$select->setElements([_T("All", "imaging"), _T("True", "imaging"), _T("False", "imaging")]);
+$select ->setElementsVal(["all", "true", "false"]);
 
+$values = [
+    (isset($parameters["CheckInitPartition"])) ? ($parameters["CheckInitPartition"] == '' ? 'checked' : '') : 'checked',
+    (isset($parameters["SelectInitPartition"])) ? $parameters["SelectInitPartition"] : 'all',
+];
+$fields = [$check, $select];
+
+$f->add(
+    new TrFormElement('<label for="check-init-partition">'._T("Init automatically partition", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, "" ]]
+);
+unset($check, $select);
+
+
+// ---- lvm-size
+$check = new CheckboxTpl("check-lvm-size");
+$input = new InputTplTitle("input-lvm-size", $info_lvm_size);
+
+$values = [
+    (isset($parameters["CheckLvmSize"])) ? ($parameters["CheckLvmSize"] == '' ? 'checked' : '') : '',
+    (isset($parameters["InputLvmSize"])) ? $parameters["InputLvmSize"] : 'max',
+];
+$fields = [$check, $input];
+
+$f->add(
+    new TrFormElement('<label for="check-lvm-size">'._T("LVM size", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, "" ]]
+);
+unset($check, $input);
+
+// ---- remove-old-lvm
+$check = new CheckboxTpl("check-remove-old-lvm");
+$checkValue = new CheckboxTpl("check-remove-old-lvm-value");
+
+$values = [
+    (isset($parameters["CheckRemoveOldLvm"])) ? ($parameters["CheckRemoveOldLvm"] == '' ? 'checked' : '') : '',
+    (isset($parameters["CheckRemoveOldLvmValue"])) ? ($parameters["CheckRemoveOldLvmValue"] == 'true' ? 'checked' : '') : 'checked',
+];
+$fields = [$check, $checkValue];
+
+$f->add(
+    new TrFormElement('<label for="check-remove-old-lvm">'._T("Remove Old LVM", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, $info_remove_old_lvm]]
+);
+unset($check, $checkValue);
+
+//=============
+$bo = new buttonTpl('bvalid', _T("Validate",'imaging'),'btnPrimary',_T("Create Preseed linux file", "imaging"));
+$rr = new TrFormElementcollapse($bo);
+$rr->setstyle("text-align: center;");
+$f->add(
+        $rr
+);
+$f->add(
+    new TrFormElement("",   new multifieldTpl(
+            array(  new SpanElementtitle(_T("Preseed file", "imaging"),Null, _T("Show preseed content", "imaging")),
+                new Iconereply('Validate',_T("Show preseed content", "imaging"))
+            )
+        )
+    )
+);
+$f->pop();
 
 $f->pop();
 $f->display();
-
 echo "<pre id='codeTocopy2' style='width:100%;'></pre>";
 ?>

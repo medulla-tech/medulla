@@ -1637,10 +1637,40 @@ $timezones = [
     "Pacific/Wake",
     "Pacific/Wallis",
     "UTC",
-]
+];
+
+$info_init_partition = _T("If the system has free space you can choose to only partition that space. This is only honoured if partman-auto/method (below) is not set.", "imaging");
+$info_lvm_size = _T("You can define the amount of space that will be used for the LVM volume group. It can either be a size with its unit (eg. 20 GB), a percentage of free space or the 'max' keyword.", "imaging");
+$info_remove_old_lvm = _T("If one of the disks that are going to be automatically partitioned contains an old LVM configuration, the user will normally receive a warning. This can be preseeded away...", "imaging");
 ?>
 
 <script>
+getExtension = (filename)=>{
+    var parts = filename.split(".");
+    return (parts[(parts.length-1)]);
+}
+
+jQuery( "#bvalid").click(function() {
+    createCfg();
+});
+
+createCfg = ()=>{
+    jQuery.post( "modules/imaging/manage/ajaxgeneratePreseedCfg.php", {
+        data:  jQuery('#codeTocopy2').text(),
+        title: jQuery('#Location').val()
+    })
+    .done(function( data1 ) {
+        var file =  '  <? echo _T('File','imaging'); ?>  ';
+        var avai =  ' <? echo _T('available','imaging'); ?>';
+            if(data1 == 1){
+                var  Msgxml1 = "Windows Answer File Generator available\non smb://"+window.location.host +"/postinst/sysprep/" +
+                        jQuery('#Location').val();
+                jQuery( "#spanxml" ).attr( "title", Msgxml1 );
+            }
+            window.location.replace("main.php?module=imaging&submod=manage&action=systemImageManager&tab=sysprepList");
+    });
+}
+
 update = ()=>{
     Msgxml  = "To have the Windows Answer File Generator on \n" +
               "smb://" + window.location.host + "/postinst/sysprep/" + jQuery('#Location').val() + "\n" +
@@ -1754,6 +1784,13 @@ update = ()=>{
         'CheckUtcValue': jQuery("#check-utc-value").is(":checked") ? 'true' : 'false',
         'CheckTimezone': jQuery("#check-timezone").is(":checked") ? '' : '#',
         'SelectTimezone': jQuery("#select-timezone").val(),
+        'CheckInitPartition' : jQuery("#check-init-partition").is(":checked") ? '' : '#',
+        'SelectInitPartition' : jQuery("#select-init-partition").val(),
+        'CheckLvmSize' : jQuery("#check-lvm-size").is(":checked") ? '' : '#',
+        'InputLvmSize' : jQuery("#input-lvm-size").val(),
+        'CheckRemoveOldLvm' : jQuery("#check-remove-old-lvm").is(":checked") ? '' : '#',
+        'CheckRemoveOldLvmValue' : jQuery("#check-remove-old-lvm-value").is(":checked") ? 'true' : 'false',
+
     };
 
     listParameters={}
@@ -1917,6 +1954,37 @@ fn_Timezone=function(){
 };
 
 
+fn_Partitionning=function(){
+    var list_hidden_ids=[
+    ];
+    jQuery.each(list_hidden_ids, function( index,value) {
+        jQuery('#'+value).parents("tr").toggle();
+    });
+    if (jQuery('#'+list_hidden_ids[0]).is(":visible")){
+        jQuery('#Partitionning').css( 'cursor', 'n-resize' ).attr('src', 'img/other/expanded.svg');
+    }
+    else{
+        jQuery('#Partitionning').css( 'cursor', 's-resize' ).attr('src', 'img/other/expand.svg');
+    }
+};
+
+fn_Validate=function(){
+    var list_hidden_ids=[
+        "codeTocopy2"
+    ];
+    jQuery.each(list_hidden_ids, function( index,value) {
+        jQuery('#'+value).toggle();
+    });
+
+    if (jQuery('#'+list_hidden_ids[0]).is(":visible")){
+        jQuery('#Validate').css( 'cursor', 'n-resize' ).attr('src', 'img/other/expanded.svg');
+    }
+    else{
+        jQuery('#Validate').css( 'cursor', 's-resize' ).attr('src', 'img/other/expand.svg');
+    }
+};
+
+
 
 enable_item = (selector) =>{
     jQuery(selector).prop("disabled", false)
@@ -2025,15 +2093,22 @@ jQuery(function () {
     init_item("#check-user-group", "#input-user-group")
     init_item("#check-utc", "#check-utc-value")
     init_item("#check-timezone", "#select-timezone")
+    init_item("#check-init-partition", "#select-init-partition")
+    init_item("#check-lvm-size", "#input-lvm-size")
+    init_item("#check-remove-old-lvm", "#check-remove-old-lvm-value")
 
-
-
+    jQuery("#codeTocopy2").toggle();
     // ----
     // CHANGE section
     // ----
 
+
     jQuery('#Comments').bind('input propertychange', function() { update();});
     jQuery( '#Location' ).on('change', function () {
+        if(getExtension( jQuery('#Location').val() ) != "cfg"){
+            var namefile=jQuery('#Location').val() + ".cfg"
+            jQuery('#Location').val( namefile )
+        }
         jQuery("#Location").val(jQuery("#Location").val().replace(/ /g,"_"));
         update();
     });
@@ -2279,7 +2354,7 @@ jQuery(function () {
     })
 
     jQuery("#check-skip-root-login-value").on("change", ()=>{update()})
-    
+
     jQuery("#check-root-passwd").on("change", ()=>{
         toggle_item("#input-root-passwd");
         update()}
@@ -2297,7 +2372,7 @@ jQuery(function () {
         update();
     })
     jQuery("#input-user-fullname").on("change", ()=>{update()})
-    
+
     jQuery("#check-username").on("change", ()=>{
         toggle_item("#input-username")
         update();
@@ -2338,6 +2413,24 @@ jQuery(function () {
     jQuery("#select-timezone").on("change", ()=>{update()})
 
 
+    jQuery("#check-init-partition").on("change", ()=>{
+        toggle_item("#select-init-partition")
+        update();
+    })
+    jQuery("#select-init-partition").on("change", ()=>{update()})
+
+
+    jQuery("#check-lvm-size").on("change", ()=>{
+        toggle_item("#input-lvm-size")
+        update()
+    })
+    jQuery('#input-lvm-size').on("change", ()=>{update()})
+
+    jQuery('#check-remove-old-lvm').on("change", ()=>{
+        toggle_item('#check-remove-old-lvm-value')
+        update()
+    })
+    jQuery('#check-remove-old-lvm-value').on("change", ()=>{update()})
     //
     // End of change
     //
@@ -2348,6 +2441,7 @@ jQuery(function () {
     fn_NetworkConsole()
     fn_Mirror()
     fn_Accounts()
+
 
     update();
 });

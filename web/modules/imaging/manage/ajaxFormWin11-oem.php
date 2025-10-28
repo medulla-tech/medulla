@@ -38,7 +38,7 @@ var template = [
 '<unattend xmlns="urn:schemas-microsoft-com:unattend">',
 '<!--',
 '________________________________',
-'OS Windows 11-uefi [amd64 uefi]',
+'OS Windows 11-oem [amd64 uefi]',
 'Windows Answer File Generator :',
 '',
 'date : <?php echo $strin; ?>dateval<?php echo $strou; ?>',

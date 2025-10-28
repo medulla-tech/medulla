@@ -134,7 +134,7 @@ if(isset($_GET['edit'])) {
 
 $span = new SpanElement(_T("Choose package source", 'imaging')." : ", "pkgs-title");
 $List=array('Windows 10','Windows 10 OEM', 'Windows 11','Windows 11 OEM', 'Debian');
-$list_val=[
+$list_val=[ 
     'modules/imaging/manage/ajaxFormWin10-uefi.php',
     'modules/imaging/manage/ajaxFormWin10-oem.php',
     'modules/imaging/manage/ajaxFormWin11-uefi.php', // Using a new file for Windows 11 UEFI to be able to switch easily with the old one if needed
@@ -144,7 +144,7 @@ $list_val=[
 
 $combine = array_combine($List, $list_val);
 
-$default_value= (isset($_GET['edit'])) ? $_SESSION['parameters']['os'] : '\'Windows 10\'';
+$default_value= (isset($_GET['edit'])) ? $_SESSION['parameters']['Os'] : '\'Windows 10\'';
 $selectpapi = new ajaxSelectItem('unattended');
 $selectpapi->push($span);
 $selectpapi->setElements((isset($_GET['edit'])) ? [$_SESSION['parameters']['Os']] : $List);
