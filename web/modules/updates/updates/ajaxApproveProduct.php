@@ -1,115 +1,31 @@
 <?php
+/*
+ * (c) 2016-2023 Siveo, http://www.siveo.net
+ * (c) 2024-2025 Medulla, http://www.medulla-tech.io
+ *
+ * $Id$
+ *
+ * This file is part of MMC, http://www.medulla-tech.io
+ *
+ * MMC is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * any later version.
+ *
+ * MMC is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MMC; If not, see <http://www.gnu.org/licenses/>.
+ * file: ajaxApproveProduct.php
+ */
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 require("localSidebar.php");
 require_once("modules/admin/includes/xmlrpc.php");
 require_once("modules/medulla_server/includes/xmlrpc.inc.php");
-?>
 
-<style>
-/* separateur de list */
-.family-separator td {
-    background: linear-gradient(to bottom, #f8f8f8, #232323);
-    color: white;
-    font-weight: bold;
-    text-align: center;
-    border-top: 3px solid #7caf94;
-    border-bottom: 3px solid #4CAF50;
-    font-size: 16px; /* Taille de la police */
-  }
-
-  /* Ligne de produit */
-  .family-produit td {
-    background: linear-gradient(to bottom, #9d9d9d, #dcdcdc); /* contraste plus net */
-    color: #1a1a1a;
-    font-weight: 600;
-    font-size: 14px;
-    padding: 12px;
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.4),
-                inset 0 -2px 4px rgba(255,255,255,0.2); /* ombres internes */
-  }
-
-.section-icon {
-    font-size: 1.8em;
-    vertical-align: middle;
-    color: #2c3e50;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
-    margin-right: 8px;
-}
-
-
-/* Ligne de sous-section (plus foncée et élégante) */
-.sub-section-row {
-    background: linear-gradient(135deg, #f8f8f8, #040404); /* effet de dégradé doux */
-    color: #1a1a1a; /* texte plus contrasté */
-    font-weight: 600;
-    font-size: 1.25em; /* texte plus grand */
-    padding: 10px;
-}
-
-.sub-section-row td {
-    background-color: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(2px); /* effet verre dépoli (si supporté) */
-    border-top: 2px solid #388E3C; /* vert plus foncé pour la cohérence */
-    border-bottom: 2px solid #388E3C;
-/*     background-color: rgba(255, 255, 255, 0.4); */
-    padding: 10px 12px;
-}
-
-/* Optionnel : effet au survol */
-.sub-section-row:hover {
-    background: linear-gradient(135deg, #dcdcdc, #cfcfcf);
-    transition: background 0.3s ease;
-}
-
-
-
-.caption-style {
-    font-size: 18px;
-    font-weight: bold;
-    color: #333;
-    padding: 10px;
-    text-align: center;
-    background: linear-gradient(to bottom, #383838, #999999);
-    border: 2px solid #9bc1ff;
-    border-image: linear-gradient(to bottom, #3b3b3b, #8c8c8c) 1;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    border-top-left-radius: 10px;   /* Arrondi coin haut gauche */
-    border-top-right-radius: 10px;  /* Arrondi coin haut droit */
-}
-
-/* Style pour le tableau */
-.table-rounded {
-    border-collapse: separate; /* important pour que border-radius fonctionne */
-    border-spacing: 0;
-    border: 2px solid #eeedff;
-    border-radius: 10px; /* Arrondi global du tableau */
-    overflow: hidden;    /* pour que les cellules ne dépassent pas les coins arrondis */
-}
-
-.table-rounded td {
-    padding: 8px;
-    border-bottom: 1px solid #ddd; /* exemple de séparateur de lignes */
-}
-
-
-/* titre colonne*/
-.listinfos thead {
-    background-color: #797979; /* fond bleu */
-    color: white;              /* texte blanc */
-    text-align: left;        /* centrer le texte */
-    font-weight: bold;
-    font-size: 16px;
-}
-
-/* Style des cellules de l'en-tête */
-.listinfos thead th {
-    padding: 10px;
-    border-bottom: 2px solid #005fa3; /* ligne séparatrice */
-}
-
-</style>
-
-<?php
 global $maxperpage;
 $entityuuid = (isset($_GET['entity'])) ? htmlentities($_GET['entity']) : "UUID0";
 $start = (isset($_GET['start'])) ? htmlentities($_GET['start']) : 0;
@@ -130,7 +46,7 @@ $cssClasses= [];
 $listename=[];
 
 // Début du formulaire HTML
-echo '<form method="post" action="" name="montableau">';
+echo '<form method="post" action="" name="montableau" class="approval-form">';
 $currentFamily = null;
 foreach ($f['name_procedure'] as $indextableau => $name) {
     $id = $f['id'][$indextableau];
@@ -154,19 +70,19 @@ foreach ($f['name_procedure'] as $indextableau => $name) {
 
     if ($currentFamily !== $productfamily || $currentFamily == null) {
         if ($productfamily == "server"){
-            $listename[] = '<span class="section-icon">'."&#x1F5A5;".'</span>'._T("SERVER MICROSOFT", "updates");
+            $listename[] = _T("SERVER MICROSOFT", "updates");
         }elseif  ($productfamily == "vstudio"){
-            $listename[] = _T(" VISUAL STUDIO", "updates");
+            $listename[] = _T("VISUAL STUDIO", "updates");
         }elseif  ($productfamily == "Office"){
-            $listename[] =  '<span class="section-icon">'."&#x1F4DD;&#x1F4CB;&#x1F4C8;&#x1F4CA;".'</span>'._T("SUITE OFFICE", "updates");
+            $listename[] = _T("SUITE OFFICE", "updates");
         }elseif  ($productfamily == "Win10"){
-            $listename[] = '<span class="section-icon">'."&#x1F4BB; ".'</span>'._T("MICROSOFT WINDOWS 10", "updates");
+            $listename[] = _T("MICROSOFT WINDOWS 10", "updates");
         }elseif  ($productfamily == "Win11"){
-            $listename[] ='<span class="section-icon">'."&#x1F4BB; ".'</span>'._T("MICROSOFT WINDOWS 11", "updates");
+            $listename[] = _T("MICROSOFT WINDOWS 11", "updates");
         }elseif  ($productfamily == "Win_Malicious_"){
-            $listename[] = '<span class="section-icon">'." &#x1F6E1; &#xFE0F; &#x1F9A0; &#x1F6E1; &#xFE0F;".'</span>'._T(" MALICIOUS SOFTWARE REMOVAL TOOL", "updates"). '<span class="section-icon">';
+            $listename[] = _T("MALICIOUS SOFTWARE REMOVAL TOOL", "updates");
         }
-        $htmlelementcheck[] ='<span class="section-icon">'."&#x26A1&#x2728;".'</span>';
+        $htmlelementcheck[] = '&nbsp;';
         $cssClasses[] = "family-separator";
         //$cssClasses[] = "sub-section-row";
 
@@ -223,9 +139,10 @@ foreach ($f['name_procedure'] as $indextableau => $name) {
 }
 
 // Construction du tableau avec ListInfos
-$n = new ListInfos($listename,  '<span class="section-icon">'."&#x1FA9F;".'</span>'._T("Product Microsoft", "updates"));
+$n = new ListInfos($listename, _T("Product Microsoft", "updates"));
+$n->setTableHeaderPadding(16);
 
-$n->addExtraInfo($htmlelementcheck,'<span class="section-icon">'."&#x2705;".'</span>' ._T("approve update", "updates"));
+$n->addExtraInfo($htmlelementcheck, _T("approve update", "updates"));
 // $n->addExtraClassCssLigne(1, "highlight");
 // $n->addExtraClassCssLigne(3, "warning");
 // $n->addExtraClassCssColonne(2, "col-status");
@@ -234,9 +151,6 @@ $n->setNavBar = "";
 $n->start = 0;
 $n->end = count($f['name_procedure']);
 
-$converter = new ConvertCouleur();
-$titre= "🪟"._T("Approval Update Microsoft", 'updates');
-$n->setCaptionText($titre);
 $n->setCssCaptionClass("table-rounded caption-style");
 
 
@@ -248,5 +162,5 @@ $n->display($navbar = 0, $header = 0);
 echo '<input type="hidden" name="form_name" value="montableau">';
 echo '<input type="hidden" name="entityid" value="'.$_GET['selected_location']['uuid'].'">';
 echo '<input type="hidden" name="entityname" value="'.$_GET['selected_location']['name'].'">';
-echo '<input class="btn btn-primary" type="submit" value="' . _T("Apply", "updates") . '">';
+echo '<input class="btnPrimary" type="submit" value="' . _T("Apply", "updates") . '">';
 echo "\n</form>";

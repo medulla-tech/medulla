@@ -1,0 +1,308 @@
+/* Section headers */
+.approval-form table.listinfos .family-separator td {
+    background-color: #e6edf5;
+    color: #21425a;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 12px 16px;
+    border-top: 1px solid #cdd6df;
+    border-bottom: 1px solid #cdd6df;
+}
+
+.approval-form table.listinfos .family-separator td:first-child {
+    padding-left: 16px;
+}
+
+.approval-form table.listinfos .family-separator td:last-child {
+    text-align: center;
+    width: 160px;
+}
+
+.family-label {
+    display: inline-block;
+    font-size: 13px;
+}
+
+/* Product rows */
+.approval-form table.listinfos .family-produit td {
+    padding: 10px 16px;
+}
+
+.approval-form table.listinfos .family-produit td:first-child {
+    padding-left: 16px;
+}
+
+.approval-form table.listinfos .family-produit td:last-child {
+    text-align: center;
+}
+
+/* Table headers alignment */
+.approval-form table.listinfos thead td {
+    padding: 10px 25px 10px 10px;
+}
+
+.approval-form table.listinfos thead td:last-child {
+    text-align: center;
+}
+
+.approval-form table.listinfos input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    cursor: pointer;
+}
+
+.checkbox-wrapper {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.approve-checkbox {
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    cursor: pointer;
+}
+
+#mondivlocationEntityCompliance table.listinfos td:first-child span {
+    padding-left: 0;
+}
+
+.approval-rules table.listinfos {
+    width: 100%;
+}
+
+.approval-rules table.listinfos thead td:first-child span {
+    padding-left: 0 !important;
+}
+
+.approval-rules table.listinfos td {
+    padding: 10px 25px 10px 10px;
+}
+
+.approval-rules table.listinfos td:last-child,
+.approval-rules table.listinfos thead td:last-child {
+    text-align: center;
+    width: 160px;
+}
+
+
+
+.approval-products table.listinfos td {
+    padding: 10px 25px 10px 10px;
+}
+
+.approval-products table.listinfos td:first-child span,
+.approval-products table.listinfos td:first-child {
+    text-align: left;
+}
+
+.approval-products table.listinfos td:last-child,
+.approval-products table.listinfos thead td:last-child {
+    text-align: center;
+    width: 160px;
+}
+
+.caption-style {
+    background-color: #dfe5ec;
+    color: #203d56;
+    font-weight: 600;
+    font-size: 15px;
+    padding: 10px 16px;
+    letter-spacing: 0.03em;
+    border-bottom: 1px solid #cdd6df;
+}
+
+.approval-form {
+    display: grid;
+    grid-template-columns: 1fr minmax(140px, 180px);
+    align-items: start;
+    gap: 14px;
+}
+
+/* Location selector layout */
+#FormLocation {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 12px 0 14px 0;
+}
+
+#FormLocation #Location {
+    float: none;
+    margin: 0;
+}
+
+#FormLocation .locationtext {
+    font-weight: 600;
+    color: #21425a;
+    white-space: nowrap;
+}
+
+#FormLocation .searchbox {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: flex-start;
+    width: auto;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+}
+
+#FormLocation .locationfield select {
+    min-width: 220px;
+}
+
+.table-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin: 12px 0 18px;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.table-header__title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #203d56;
+}
+
+.table-header__actions {
+    display: none;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-left: auto;
+}
+
+.table-header__actions--active {
+    display: flex;
+}
+
+.table-header__actions #FormLocation {
+    margin: 0;
+}
+
+.table-header__actions form {
+    margin: 0;
+}
+
+.table-header__form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.table-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #203d56;
+    margin: 10px 0 16px;
+    grid-column: 1 / -1;
+}
+
+.table-title.table-title--hidden {
+    display: none;
+}
+
+.approval-form > table.listinfos {
+    border: 1px solid #cdd6df;
+    border-collapse: collapse;
+    grid-column: 1 / -1;
+}
+
+.approval-form > table.listinfos > thead td:first-child span {
+    text-align: left;
+    display: inline;
+    padding-left: 0;
+}
+
+.approval-form > table.listinfos > thead td:last-child span {
+    display: block;
+    text-align: center;
+}
+
+.approval-form > table.listinfos td:last-child,
+.approval-form > table.listinfos thead td:last-child {
+    width: 160px;
+}
+
+.approval-form .btnPrimary {
+    grid-column: 2;
+    justify-self: center;
+    margin: 12px 0 0 0;
+}
+
+.updates-section {
+    margin-bottom: 36px;
+}
+
+.updates-section .table-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin: 0 0 18px;
+    flex-wrap: wrap;
+}
+
+.updates-section .table-header__title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #203d56;
+}
+
+.updates-section .table-header__actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-left: auto;
+}
+
+.updates-section .table-header__form {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0;
+}
+
+.updates-section .table-header__form .searchbox,
+.updates-section .table-header__form #searchBest {
+    margin: 0;
+}
+
+.updates-section .table-header__form .loader {
+    margin-left: 8px;
+}
+
+.table-header--stacked {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.table-header--stacked .table-header__title {
+    width: 100%;
+    margin-bottom: 4px;
+}
+
+.table-header--stacked .table-header__actions {
+    width: 100%;
+    margin-left: 0;
+    justify-content: flex-start;
+}
+
+.table-header--stacked .table-header__form {
+    margin: 0;
+    width: 100%;
+}
+.approval-products table.listinfos thead td:first-child span {
+    margin-left: -8px;
+}
