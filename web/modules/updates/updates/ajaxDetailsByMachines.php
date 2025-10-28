@@ -55,18 +55,22 @@ if ($entity == '') {
     $typeOfDetail = "group";
     $filterOn = array('gid' => $gid);
     $ctx['gid'] = $gid;
+    $source = "xmppmaster";
+    // $source = isset($_GET['source']) ? $_GET['source'] : "xmppmaster";
+    //
+    // if ($source == "glpi") {
+    //     $detailsByMachDefault = new EmptyActionItem1(_T("View details", "updates"), "deploySpecificUpdate", "displayg", "", "updates", "updates");
+    //     $pendingByMachDefault = new EmptyActionItem1(_T("Pending Updates", "updates"), "pendingUpdateByMachine", "pendingg", "", "updates", "updates");
+    //     $doneByMachDefault = new EmptyActionItem1(_T("Updates History", "updates"), "auditUpdateByMachine", "historyg", "", "updates", "updates");
+    // } else {
+    //     $detailsByMachDefault = new ActionItem(_T("View details", "updates"), "deploySpecificUpdate", "display", "", "updates", "updates");
+    //     $pendingByMachDefault = new ActionItem(_T("Pending Updates", "updates"), "pendingUpdateByMachine", "pending", "", "updates", "updates");
+    //     $doneByMachDefault = new ActionItem(_T("Updates History", "updates"), "auditUpdateByMachine", "history", "", "updates", "updates");
+    // }
 
-    $source = isset($_GET['source']) ? $_GET['source'] : "xmppmaster";
-
-    if ($source == "glpi") {
-        $detailsByMachDefault = new EmptyActionItem1(_T("View details", "updates"), "deploySpecificUpdate", "displayg", "", "updates", "updates");
-        $pendingByMachDefault = new EmptyActionItem1(_T("Pending Updates", "updates"), "pendingUpdateByMachine", "pendingg", "", "updates", "updates");
-        $doneByMachDefault = new EmptyActionItem1(_T("Updates History", "updates"), "auditUpdateByMachine", "historyg", "", "updates", "updates");
-    } else {
-        $detailsByMachDefault = new ActionItem(_T("View details", "updates"), "deploySpecificUpdate", "display", "", "updates", "updates");
-        $pendingByMachDefault = new ActionItem(_T("Pending Updates", "updates"), "pendingUpdateByMachine", "pending", "", "updates", "updates");
-        $doneByMachDefault = new ActionItem(_T("Updates History", "updates"), "auditUpdateByMachine", "history", "", "updates", "updates");
-    }
+    $detailsByMachDefault = new ActionItem(_T("View details", "updates"), "deploySpecificUpdate", "display", "", "updates", "updates");
+    $pendingByMachDefault = new ActionItem(_T("Pending Updates", "updates"), "pendingUpdateByMachine", "pending", "", "updates", "updates");
+    $doneByMachDefault = new ActionItem(_T("Updates History", "updates"), "auditUpdateByMachine", "history", "", "updates", "updates");
 
     // Needed all machines of the group to calculate the compliance rate
     $_machines = getRestrictedComputersList($start, $start+$maxperpage, $ctx, true);
@@ -94,6 +98,7 @@ if ($entity == '') {
 
         //FUNCTION TO GET ID
         $xmppdatas = xmlrpc_get_idmachine_from_name($mach[1]["cn"][0]);
+
         $id_machine = $xmppdatas[0]['id_machine'];
         $compliance_computer = xmlrpc_get_conformity_update_by_machines(['ids' => [$id_machine], 'uuids' => [$uuid]]);
         $compliance = round($compliance_computer[$uuid]['compliance']);
@@ -129,7 +134,7 @@ if ($entity == '') {
     $match = (int)str_replace('UUID', '', $entity);
 
     $compliance_bloc = "";
-
+/*
     $source = isset($_GET['source']) ? $_GET['source'] : "xmppmaster";
 
     if ($source == "glpi") {
@@ -144,7 +149,13 @@ if ($entity == '') {
         $doneByMachDefault = new ActionItem(_T("Updates History", "updates"), "auditUpdateByMachine", "history", "", "updates", "updates");
 
         $machines = xmlrpc_get_machines_xmppmaster($start, $maxperpage, $ctx);
-    }
+    }*/
+    $detailsByMachDefault = new ActionItem(_T("View details", "updates"), "deploySpecificUpdate", "display", "", "updates", "updates");
+    $pendingByMachDefault = new ActionItem(_T("Pending Updates", "updates"), "pendingUpdateByMachine", "pending", "", "updates", "updates");
+    $doneByMachDefault = new ActionItem(_T("Updates History", "updates"), "auditUpdateByMachine", "history", "", "updates", "updates");
+
+    $machines = xmlrpc_get_machines_xmppmaster($start, $maxperpage, $ctx);
+    // $machine1 = xmlrpc_get_all_machines_grouped_by_os($start, $maxperpage, $ctx);
 
     $count = $machines['count'];
     $xmppdatas = $machines["xmppdata"];

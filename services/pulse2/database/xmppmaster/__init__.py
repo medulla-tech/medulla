@@ -14842,6 +14842,117 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         return result_data
 
     @DatabaseHelper._sessionm
+    def get_all_machines_grouped_by_os(self, session, start, end, ctx):
+        """
+        Récupère les machines du XMPPMaster, groupées par type d'OS :
+        - Microsoft Windows
+        - Linux (Linux, Ubuntu, RedHat, Debian, CentOS, etc.)
+        - Autres
+
+        Filtres (ctx) et pagination inclus.
+        """
+
+        # ───────────────────────────────
+        # 1️⃣ Préparation des filtres
+        # ───────────────────────────────
+        location = ctx.get("location", "").replace("UUID", "")
+        criterion = ctx.get("filter", "")
+        field = ctx.get("field", "")
+        contains = ctx.get("contains", "")
+
+        where_clauses = ["m.agenttype = 'machine'"]
+
+        if location:
+            where_clauses.append(
+                f"m.glpi_entity_id = (SELECT id FROM glpi_entity WHERE glpi_id = {location})"
+            )
+
+        if criterion:
+            where_clauses.append(
+                f"(m.hostname LIKE '%{criterion}%' OR ge.complete_name LIKE '%{criterion}%')"
+            )
+
+        if field and contains:
+            where_clauses.append(f"{field} LIKE '%{contains}%'")
+
+        where_sql = " AND ".join(where_clauses)
+
+        # ───────────────────────────────
+        # 2️⃣ Structure du résultat final
+        # ───────────────────────────────
+        result_data = {
+            "windows": {"count": 0, "data": {k: [] for k in ["uuid", "cn", "os", "description", "type", "user", "entity", "presence"]}},
+            "linux":   {"count": 0, "data": {k: [] for k in ["uuid", "cn", "os", "description", "type", "user", "entity", "presence"]}},
+            "autres":  {"count": 0, "data": {k: [] for k in ["uuid", "cn", "os", "description", "type", "user", "entity", "presence"]}},
+        }
+
+        # ───────────────────────────────
+        # 3️⃣ Requête SQL principale
+        # ───────────────────────────────
+        sql_query = f"""
+            SELECT
+                m.uuid_inventorymachine AS uuid,
+                m.hostname              AS cn,
+                m.platform              AS os,
+                m.model                 AS description,
+                m.manufacturer          AS type,
+                m.lastuser              AS user,
+                ge.complete_name        AS entity
+            FROM machines m
+            JOIN glpi_entity ge ON m.glpi_entity_id = ge.id
+            WHERE {where_sql}
+            LIMIT {start}, {end}
+        """
+
+        result = session.execute(sql_query)
+        machines = result.fetchall()
+
+        # ───────────────────────────────
+        # 4️⃣ Regroupement par OS
+        # ───────────────────────────────
+        linux_keywords = ["linux", "ubuntu", "debian", "centos", "redhat", "fedora", "suse"]
+
+        for row in machines:
+            uid = row["uuid"].replace("UUID", "") if row["uuid"] else ""
+            os_value = (row["os"] or "").lower()
+
+            if "windows" in os_value or "mic" in os_value:
+                group = "windows"
+            elif any(keyword in os_value for keyword in linux_keywords):
+                group = "linux"
+            else:
+                group = "autres"
+
+            section = result_data[group]
+
+            section["data"]["uuid"].append(uid)
+            section["data"]["cn"].append(row["cn"] or "")
+            section["data"]["os"].append(row["os"] or "")
+            section["data"]["description"].append(row["description"] or "")
+            section["data"]["type"].append(row["type"] or "")
+            section["data"]["user"].append(row["user"] or "")
+            section["data"]["entity"].append(row["entity"] or "")
+            section["data"]["presence"].append(1)
+            section["count"] += 1
+
+        # ───────────────────────────────
+        # 5️⃣ Ajout des données XMPP
+        # ───────────────────────────────
+        all_uuids = (
+            result_data["windows"]["data"]["uuid"]
+            + result_data["linux"]["data"]["uuid"]
+            + result_data["autres"]["data"]["uuid"]
+        )
+
+        uuids = [f"UUID{u}" for u in all_uuids]
+        xmppdata = XmppMasterDatabase().getmachinesbyuuids(uuids)
+
+        result_data["xmppdata"] = xmppdata
+
+        return result_data
+
+
+    @DatabaseHelper._sessionm
     def get_machine_in_both_sources(self, session, glpi_ids):
         """
         This function checks if the machines are present in both sources XMPPMaster and GLPI

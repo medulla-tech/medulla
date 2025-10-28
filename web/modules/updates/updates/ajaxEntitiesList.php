@@ -147,7 +147,7 @@ $n->setcssIds($ids_entity);
 $n->disableFirstColumnActionLink();
 
 $n->addExtraInfo($complRates, _T("Compliance rate", "updates"));
-$n->addExtraInfo($nbupdate, _T("Missing updates", "updates"));
+// $n->addExtraInfo($nbupdate, _T("Missing updates", "updates"));
 $n->addExtraInfo($nbMachines, _T("Non-compliant machines", "updates"));
 $n->addExtraInfo($totalMachine, _T("Total machines", "updates"));
 
