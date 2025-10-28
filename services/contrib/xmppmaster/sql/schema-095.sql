@@ -1963,19 +1963,13 @@ USE `xmppmaster`;
 DROP procedure IF EXISTS `xmppmaster`.`up_genere_list_produit_entity`;
 ;
 
-
 DELIMITER $$
 USE `xmppmaster`$$
 CREATE PROCEDURE `up_genere_list_produit_entity`(IN p_entity_id INT)
 BEGIN
-
--- Variables
-    -- Variables
     DECLARE done INT DEFAULT 0;
     DECLARE v_produit VARCHAR(1024);
     DECLARE v_comment VARCHAR(2048);
-
-    -- Curseur pour parcourir applicationconfig
     DECLARE cur CURSOR FOR
         SELECT `value`, `comment`
         FROM xmppmaster.applicationconfig
@@ -1983,39 +1977,30 @@ BEGIN
           AND `context` = 'entity'
           AND `enable` = 1
         ORDER BY `comment`;
-
     DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
-
-    -- Vérifier si l'entité existe
     IF EXISTS (SELECT 1 FROM glpi_entity WHERE glpi_id = p_entity_id) THEN
-
-        -- Vérifier si l'entité a déjà des produits
-        IF NOT EXISTS (
-            SELECT 1 FROM xmppmaster.up_list_produit
-            WHERE entity_id = p_entity_id
-        ) THEN
-
-            -- Ouvrir le curseur
+       -- IF NOT EXISTS (
+        --    SELECT 1 FROM xmppmaster.up_list_produit
+        --    WHERE entity_id = p_entity_id limit 1
+      --  ) THEN
             OPEN cur;
-
             read_loop: LOOP
                 FETCH cur INTO v_produit, v_comment;
                 IF done THEN
                     LEAVE read_loop;
                 END IF;
-
-                -- Insérer les produits pour l’entité donnée
                 INSERT IGNORE INTO xmppmaster.up_list_produit (entity_id, name_procedure, comment, enable)
                 VALUES (p_entity_id, v_produit, v_comment, 0);
             END LOOP;
 
             CLOSE cur;
-        END IF;
+      --  END IF;
     END IF;
 END$$
 
 DELIMITER ;
 ;
+
 
 -- =====================================================================
 -- =====================================================================
