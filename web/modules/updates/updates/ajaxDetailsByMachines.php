@@ -134,47 +134,45 @@ if ($entity == '') {
     $match = (int)str_replace('UUID', '', $entity);
 
     $compliance_bloc = "";
-/*
-    $source = isset($_GET['source']) ? $_GET['source'] : "xmppmaster";
-
-    if ($source == "glpi") {
-        $detailsByMachDefault = new EmptyActionItem1(_T("View details", "updates"), "deploySpecificUpdate", "displayg", "", "updates", "updates");
-        $pendingByMachDefault = new EmptyActionItem1(_T("Pending Updates", "updates"), "pendingUpdateByMachine", "pendingg", "", "updates", "updates");
-        $doneByMachDefault = new EmptyActionItem1(_T("Updates History", "updates"), "auditUpdateByMachine", "historyg", "", "updates", "updates");
-
-        $machines = xmlrpc_get_machines_list1($start, $maxperpage, $ctx);
-    } else {
-        $detailsByMachDefault = new ActionItem(_T("View details", "updates"), "deploySpecificUpdate", "display", "", "updates", "updates");
-        $pendingByMachDefault = new ActionItem(_T("Pending Updates", "updates"), "pendingUpdateByMachine", "pending", "", "updates", "updates");
-        $doneByMachDefault = new ActionItem(_T("Updates History", "updates"), "auditUpdateByMachine", "history", "", "updates", "updates");
-
-        $machines = xmlrpc_get_machines_xmppmaster($start, $maxperpage, $ctx);
-    }*/
     $detailsByMachDefault = new ActionItem(_T("View details", "updates"), "deploySpecificUpdate", "display", "", "updates", "updates");
     $pendingByMachDefault = new ActionItem(_T("Pending Updates", "updates"), "pendingUpdateByMachine", "pending", "", "updates", "updates");
     $doneByMachDefault = new ActionItem(_T("Updates History", "updates"), "auditUpdateByMachine", "history", "", "updates", "updates");
 
-    $machines = xmlrpc_get_machines_xmppmaster($start, $maxperpage, $ctx);
-    // $machine1 = xmlrpc_get_all_machines_grouped_by_os($start, $maxperpage, $ctx);
+    // $machines = xmlrpc_get_machines_xmppmaster($start, $maxperpage, $ctx);
+    $machine_all_os = xmlrpc_get_all_machines_grouped_by_os($start, $maxperpage, $ctx);
+    $machines=$machine_all_os['windows'];
+
 
     $count = $machines['count'];
-    $xmppdatas = $machines["xmppdata"];
+    // $xmppdatas = $machines["xmppdata"];
+    $xmppdatas = $machine_all_os["xmppdata"];
     $machines = $machines['data'];
 
     $machinesIds = [
         "uuids" => [],
         "ids" => []
     ];
-    foreach($machines["uuid"] as $glpiId){
-        $uuid = "UUID".$glpiId;
-        $machinesIds["uuids"][] = $uuid;
-        $machinesIds["ids"][] = !empty($xmppdatas[$uuid]) ? $xmppdatas[$uuid]["id"] : 0;
+
+    foreach ($machines["uuid"] as $glpiId) {
+        // Vérifie si $glpiId est valide (non null, non 0, non vide, défini)
+        if (!empty($glpiId)) {
+            $uuid = "UUID" . $glpiId;
+
+            // Vérifie si $xmppdatas[$uuid]["id"] existe et est valide
+            if (!empty($xmppdatas[$uuid]["id"])) {
+                $machinesIds["uuids"][] = $uuid;
+                $machinesIds["ids"][] = $xmppdatas[$uuid]["id"];
+            }
+        }
     }
 
     $actionsPerMachine = [];
-    foreach ($machinesIds["uuids"] as $uuid) {
-        $check_machine = xmlrpc_get_machine_in_both_sources($uuid);
-        $actionsPerMachine[$uuid] = (!empty($check_machine) && isset($check_machine[$uuid]) && $check_machine[$uuid])
+    $listeValeurs = array_values($machinesIds["uuids"]);
+    $check_machine = xmlrpc_get_machine_in_both_sources($listeValeurs);
+
+    // Utilise foreach pour itérer sur le résultat
+    foreach ($check_machine as $key => $value) {
+        $actionsPerMachine[$key] = ($value != 0)
             ? [
                 "details" => new ActionItem(_T("View details", "updates"), "deploySpecificUpdate", "display", "", "updates", "updates"),
                 "pending" => new ActionItem(_T("Pending Updates", "updates"), "pendingUpdateByMachine", "pending", "", "updates", "updates"),
@@ -235,64 +233,64 @@ if ($entity == '') {
     }
 }
 
-// Display group compliance, for entity, compliance_bloc == ""
-echo $compliance_bloc;
+    // Display group compliance, for entity, compliance_bloc == ""
+    echo $compliance_bloc;
 
-echo "<br>";
-echo "<br>";
+    echo "<br>";
+    echo "<br>";
 
-echo '<h2>'.$tabletitle.'</h2>';
+    echo '<h2>'.$tabletitle.'</h2>';
 
 
-$n = new OptimizedListInfos($machines["cn"], _T("Machine name", "updates"));
-$n->disableFirstColumnActionLink();
-$n->addExtraInfo($machines["os"], _T("Platform", "updates"));
-$n->addExtraInfo($machines["complianceRate"], _T("Compliance rate", "updates"));
-$n->addExtraInfo($machines["missing"], _T("Missing updates", "updates"));
-$n->addExtraInfo($machines["inprogress"], _T("In progress", "updates"));
-$n->addExtraInfo($machines["installed"], _T("Installed updates", "updates"));
-$n->addExtraInfo($machines["total"], _T("Total updates", "updates"));
-$n->addActionItemArray($machines["actionDetailByMachines"]);
-$n->addActionItemArray($machines["actionPendingByMachines"]);
-$n->addActionItemArray($machines["actionDoneByMachines"]);
-$n->start = 0;
-$n->end = $count;
-$n->setItemCount($count);
-$n->setNavBar(new AjaxNavBar($count, $ctx['filter']));
-$n->setParamInfo($params);
-$n->display();
+    $n = new OptimizedListInfos($machines["cn"], _T("Machine name", "updates"));
+    $n->disableFirstColumnActionLink();
+    $n->addExtraInfo($machines["os"], _T("Platform", "updates"));
+    $n->addExtraInfo($machines["complianceRate"], _T("Compliance rate", "updates"));
+    $n->addExtraInfo($machines["missing"], _T("Missing updates", "updates"));
+    $n->addExtraInfo($machines["inprogress"], _T("In progress", "updates"));
+    $n->addExtraInfo($machines["installed"], _T("Installed updates", "updates"));
+    $n->addExtraInfo($machines["total"], _T("Total updates", "updates"));
+    $n->addActionItemArray($machines["actionDetailByMachines"]);
+    $n->addActionItemArray($machines["actionPendingByMachines"]);
+    $n->addActionItemArray($machines["actionDoneByMachines"]);
+    $n->start = 0;
+    $n->end = $count;
+    $n->setItemCount($count);
+    $n->setNavBar(new AjaxNavBar($count, $ctx['filter']));
+    $n->setParamInfo($params);
+    $n->display();
 
-?>
+    ?>
 
-<script>
-    function showPopup(event, text) {
-        const popup = document.getElementById('popup');
-        popup.textContent = text;
-        popup.style.display = 'block';
+    <script>
+        function showPopup(event, text) {
+            const popup = document.getElementById('popup');
+            popup.textContent = text;
+            popup.style.display = 'block';
 
-        const offsetX = 15;
-        const offsetY = 15;
+            const offsetX = 15;
+            const offsetY = 15;
 
-        let popupLeft = event.pageX - popup.offsetWidth - offsetX;
-        if (popupLeft < 0) {
-            popupLeft = event.pageX + offsetX;
+            let popupLeft = event.pageX - popup.offsetWidth - offsetX;
+            if (popupLeft < 0) {
+                popupLeft = event.pageX + offsetX;
+            }
+
+            popup.style.left = popupLeft + 'px';
+            popup.style.top = (event.pageY + offsetY) + 'px';
         }
 
-        popup.style.left = popupLeft + 'px';
-        popup.style.top = (event.pageY + offsetY) + 'px';
-    }
+        function hidePopup() {
+            const popup = document.getElementById('popup');
+            popup.style.display = 'none';
+        }
 
-    function hidePopup() {
-        const popup = document.getElementById('popup');
-        popup.style.display = 'none';
-    }
+        const message = <?php echo json_encode(_T("Actions are disabled for this machine (MISSING AGENT)")); ?>;
+        document.querySelectorAll('.displayg, .historyg, .pendingg').forEach(function(element) {
+            element.addEventListener('mouseover', function(event) {
+                showPopup(event, message);
+            });
 
-    const message = <?php echo json_encode(_T("Actions are disabled for this machine (MISSING AGENT)")); ?>;
-    document.querySelectorAll('.displayg, .historyg, .pendingg').forEach(function(element) {
-        element.addEventListener('mouseover', function(event) {
-            showPopup(event, message);
+            element.addEventListener('mouseout', hidePopup);
         });
-
-        element.addEventListener('mouseout', hidePopup);
-    });
-</script>
+    </script>
