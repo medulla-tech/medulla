@@ -456,6 +456,10 @@ def get_machines_xmppmaster(start, end, filter=""):
     return XmppMasterDatabase().get_machines_xmppmaster(start, end, filter)
 
 
+def get_all_machines_grouped_by_os(start, end, filter=""):
+    return XmppMasterDatabase().get_all_machines_grouped_by_os(start, end, filter)
+
+
 def get_machine_in_both_sources(glpi_ids):
     return XmppMasterDatabase().get_machine_in_both_sources(glpi_ids)
 
