@@ -270,6 +270,11 @@
     align-items: center;
     gap: 12px;
     margin: 0;
+    margin-left: auto;
+}
+
+.updates-section .table-header__form form {
+    margin: 0 !important;
 }
 
 .updates-section .table-header__form .searchbox,
@@ -282,26 +287,41 @@
 }
 
 .table-header--stacked {
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: row;
+    align-items: center;
     gap: 16px;
     margin-bottom: 20px;
 }
 
 .table-header--stacked .table-header__title {
-    width: 100%;
-    margin-bottom: 4px;
-}
-
-.table-header--stacked .table-header__actions {
-    width: 100%;
-    margin-left: 0;
-    justify-content: flex-start;
+    flex: 1;
+    margin-bottom: 0;
 }
 
 .table-header--stacked .table-header__form {
-    margin: 0;
-    width: 100%;
+    margin-left: auto;
+    width: auto;
+}
+.table-header--stacked .table-header__actions {
+    margin-left: auto;
+}
+
+@media (max-width: 768px) {
+    .table-header--stacked {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .table-header--stacked .table-header__title {
+        width: 100%;
+        margin-bottom: 4px;
+    }
+
+    .table-header--stacked .table-header__form,
+    .table-header--stacked .table-header__actions {
+        width: 100%;
+        margin-left: 0;
+    }
 }
 .approval-products table.listinfos thead td:first-child span {
     margin-left: -8px;
