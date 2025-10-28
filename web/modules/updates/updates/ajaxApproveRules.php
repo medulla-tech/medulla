@@ -1,4 +1,25 @@
 <?php
+/*
+ * (c) 2024-2025 Medulla, http://www.medulla-tech.io
+ *
+ * $Id$
+ *
+ * This file is part of MMC, http://www.medulla-tech.io
+ *
+ * MMC is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * any later version.
+ *
+ * MMC is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MMC; If not, see <http://www.gnu.org/licenses/>.
+ * file: ajaxApproveRules.php
+ */
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 require("localSidebar.php");
 require_once("modules/admin/includes/xmlrpc.php");
@@ -48,10 +69,11 @@ foreach ($f['id'] as $indextableau => $id) {
 $listename=array();
 // Début du formulaire HTML
 
-echo '<form method="post" action="" name="montableau">';
+echo '<form method="post" action="" name="montableau" class="approval-form approval-rules">';
 // Affichage du tableau
 
 $n = new ListInfos($f['msrcseverity'], _T("Update Severity", "updates"));
+$n->setTableHeaderPadding(0);
 $n->addExtraInfo($f['updateclassification'], _T("Update Classification", "updates"));
 $n->addExtraInfo($htmlelementcheck, _T("Automatic approval (White list)", "updates"));;
 
@@ -61,10 +83,6 @@ $n->start = 0;
 $n->end = count($f['msrcseverity']);
 
 $converter = new ConvertCouleur();
-
-$n->setCaptionText(sprintf(
-    _T("Automatic approval update Microsoft (White list)", 'updates')
-));
 
 $n->setCssCaption(
     $border = 1,
@@ -83,7 +101,7 @@ $n->display($navbar = 0, $header = 0);
 echo '<input type="hidden" name="form_name" value="montableau">';
 echo '<input type="hidden" name="entityid" value="'.$_GET['selected_location']['uuid'].'">';
 echo '<input type="hidden" name="entityname" value="'.$_GET['selected_location']['name'].'">';
-echo '<input class="btn btn-primary" type="submit" value="' . _T("Apply", "updates") . '">';
+echo '<input class="btnPrimary" type="submit" value="' . _T("Apply", "updates") . '">';
 echo "\n</form>";
 
 ?>
