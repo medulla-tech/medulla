@@ -17356,7 +17356,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             presence_filter = "AND xma.enabled = 1" if presence else ""
 
             # =========================
-            # 1️⃣ Total des machines Windows non Server
+            # 1 Total des machines Windows non Server
             # =========================
             total_os_sql = f"""
                 SELECT
@@ -17383,7 +17383,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                 }
 
             # =========================
-            # 2️⃣ Statistiques de mise à jour par entité
+            # 2 Statistiques de mise à jour par entité
             # =========================
             entity_sql = f"""
                 SELECT
@@ -17416,7 +17416,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                 entity_data[row.os] = int(row.nbwin)
 
             # =========================
-            # 3️⃣ Calcul des conformités et complétude
+            # 3 Calcul des conformités et complétude
             # =========================
             for entity_name, data in results["entity"].items():
                 total = data.get("count", 0)
@@ -17436,11 +17436,11 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                 for col in cols:
                     data.setdefault(col, 0)
 
-            logger.info(f"✅ OS update stats calculées pour {len(results['entity'])} entités.")
+            logger.info(f"OS update stats calculées pour {len(results['entity'])} entités.")
             return results
 
         except Exception as e:
-            logger.error(f"❌ Erreur lors de la récupération des statistiques OS : {e}")
+            logger.error(f"Erreur lors de la récupération des statistiques OS : {e}")
             logger.error(f"Traceback : {traceback.format_exc()}")
             return {}
 
