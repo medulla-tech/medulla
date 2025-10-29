@@ -293,28 +293,24 @@ class SubModule {
 
 
             if (!$selected) {
-                $css = '#navbar ul li#navbar'.$this->getName().' {
-                    width: '.$this->_imgsize.';
-                }
-                #navbar ul li#navbar'.$this->getName().' a {
-                    background: url("'.$this->_img.'.svg") no-repeat transparent;
+                $css = '#navbar ul li#navbar'.$this->getName().' a {
+                    background-image: url("'.$this->_img.'.svg");
+                    background-repeat: no-repeat;
+                    background-color: transparent;
                     background-position: 50% 10px;
                     background-size: 35px 35px;
                 }
                 #navbar ul li#navbar'.$this->getName().' a:hover {
-                    background: url("'.$this->_img.'.svg") no-repeat transparent;
+                    background-image: url("'.$this->_img.'.svg");
+                    background-repeat: no-repeat;
+                    background-color: #8CB63C;
                     background-position: 50% 10px;
                     background-size: 35px 35px;
-                    filter: grayscale(50%);
-                    -webkit-filter: grayscale(50%);
-                    -moz-filter: grayscale(50%);
-                    opacity:0.5;
+                    color: #fff;
+                    box-shadow: 0 4px 12px rgba(140, 182, 60, 0.5);
                 }';
             } else {
-                $css = '#navbar ul li#navbar'.$this->getName().' {
-                    width: '.$this->_imgsize.'px;
-                }
-                #navbar ul li#navbar'.$this->getName().' a {
+                $css = '#navbar ul li#navbar'.$this->getName().' a {
                     background: url("'.$this->_img.'.svg") no-repeat #8CB63C;
                     color: #fff;
                     background-position: 50% 10px;
