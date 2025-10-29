@@ -1,15 +1,16 @@
 <?php
-/**
- * (c) 2022-2024 Siveo, http://siveo.net/
+/*
+ * (c) 2016-2023 Siveo, http://www.siveo.net
+ * (c) 2024-2025 Medulla, http://www.medulla-tech.io
  *
  * $Id$
  *
- * This file is part of Management Console (MMC).
+ * This file is part of MMC, http://www.medulla-tech.io
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ * the Free Software Foundation; either version 3 of the License, or
+ * any later version.
  *
  * MMC is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -17,22 +18,14 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with MMC; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- *
- * file modules/updates/updates/ajaxMajorEntitiesList.php
+ * along with MMC; If not, see <http://www.gnu.org/licenses/>.
+ * file: ajaxMajorEntitiesList.php
  */
 require_once("modules/updates/includes/xmlrpc.php");
 require_once("modules/glpi/includes/xmlrpc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
-/*
-require_once("modules/updates/includes/html.inc.php");
-require_once("modules/xmppmaster/includes/html.inc.php");
-require_once("modules/medulla_server/includes/xmlrpc.inc.php");
-*/
 
 global $conf;
-
 $maxperpage = $conf["global"]["maxperpage"];
 $filter  = isset($_GET['filter']) ? $_GET['filter'] : "";
 $start = isset($_GET['start']) ? $_GET['start'] : 0;
@@ -245,12 +238,15 @@ $n->addExtraInfo($total_win, _T("Total machines", "updates"));
 $n->addActionItemArray($actionupdateByentity);
 $n->addActionItemArray($actiondetailsByMachs);
 $n->addActionItemArray($actionHardwareConstraintsForMajorUpdatesByEntity);
+$n->setTableHeaderPadding(12);
 $n->setItemCount($count);
 $n->setNavBar(new AjaxNavBar($count, $filter));
 $n->setParamInfo($params);
 $n->start = $start;
 $n->end = $count;
+echo '<div class="major-entities-metrics">';
 $n->display();
+echo '</div>';
 }else{
     echo "object inexistant";
 }
