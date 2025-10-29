@@ -4368,130 +4368,171 @@ class medulla_progressbar extends HtmlElement
      * @param {number} value - Valeur entre 0 et 100.
      * @return {string} - Couleur au format RGB.
      */
-    function getColor(value) {
-        // Assure que la valeur est entre 0 et 100
-        value = Math.max(0, Math.min(100, value));
-        let r, g, b;
-
-        if (value < 50) {
-            // Interpolation entre rouge (0%) et jaune (50%)
-            r = 255;
-            g = Math.round((255 * value) / 50);
-            b = 0;
-        } else {
-            // Interpolation entre jaune (50%) et vert (100%)
-            r = Math.round(255 * (1 - (value - 50) / 50));
-            g = 255;
-            b = 0;
+    function ensureProgressStyles() {
+        if (document.getElementById('medulla-progress-style')) {
+            return;
         }
-        // Retourne la couleur au format RGB string
-        return 'rgb('+r+','+g+','+b+')';
+        var css = [
+            '.medulla-progress {',
+            '  display: block;',
+            '  font-size: 12px;',
+            '  color: #1f2b3a;',
+            '  line-height: 1.4;',
+            '  margin: 4px 0;',
+            '}',
+            '.medulla-progress__track {',
+            '  position: relative;',
+            '  width: 100%;',
+            '  height: 20px;',
+            '  background: #e6ecf3;',
+            '  border-radius: 8px;',
+            '  overflow: hidden;',
+            '  border: 1px solid #d2dae3;',
+            '}',
+            '.medulla-progress__fill {',
+            '  position: absolute;',
+            '  inset: 0;',
+            '  height: 100%;',
+            '  border-radius: inherit;',
+            '  background: #3ca175;',
+            '  transition: width 0.35s ease;',
+            '}',
+            '.medulla-progress__label {',
+            '  position: absolute;',
+            '  inset: 0;',
+            '  display: flex;',
+            '  align-items: center;',
+            '  justify-content: center;',
+            '  font-weight: 600;',
+            '  pointer-events: none;',
+            '  transition: color 0.2s ease;',
+            '}',
+            '.medulla-progress.is-static .medulla-progress__label,',
+            '.medulla-progress.is-dynamic .medulla-progress__label { font-size: 12px; }',
+            '.medulla-progress__fill.is-low { background: #f28b82; }',
+            '.medulla-progress__fill.is-medium { background: #f6bf65; }',
+            '.medulla-progress__fill.is-high { background: #3ca175; }',
+            '.medulla-progress__fill.is-empty { background: transparent; }',
+            '.medulla-progress__value { font-weight: 600; }'
+        ].join('\\n');
+
+        var style = document.createElement('style');
+        style.id = 'medulla-progress-style';
+        style.type = 'text/css';
+        style.appendChild(document.createTextNode(css));
+        document.head.appendChild(style);
+    }
+
+    function getProgressTone(value) {
+        if (value <= 0) {
+            return {
+                className: 'is-empty',
+                color: 'transparent',
+                textColor: '#1f2b3a',
+                textShadow: 'none'
+            };
+        }
+        if (value < 40) {
+            return {
+                className: 'is-low',
+                color: '#f28b82',
+                textColor: '#5c1a18',
+                textShadow: '0 1px 0 rgba(255,255,255,0.65)'
+            };
+        }
+        if (value < 75) {
+            return {
+                className: 'is-medium',
+                color: '#f6bf65',
+                textColor: '#56360b',
+                textShadow: '0 1px 0 rgba(255,255,255,0.55)'
+            };
+        }
+        return {
+            className: 'is-high',
+            color: '#3ca175',
+            textColor: '#ffffff',
+            textShadow: '0 1px 2px rgba(15,23,42,0.45)'
+        };
+    }
+
+    function renderProgress(container, options) {
+        if (!container.length || container.data('medullaProgressInit')) {
+            return;
+        }
+        var spanChild = container.find('.value_progress').first();
+        if (!spanChild.length) {
+            return;
+        }
+
+        container.data('medullaProgressInit', true);
+
+        var rawValue = parseFloat(spanChild.text());
+        if (isNaN(rawValue)) {
+            rawValue = 0;
+        }
+
+        var clampedValue = Math.max(0, Math.min(100, rawValue));
+        var widthValue = clampedValue;
+        var labelPrefix = (spanChild.attr('data-value') || '').trim();
+        var formatter = options && typeof options.formatValue === 'function'
+            ? options.formatValue
+            : function (value) { return Math.round(value); };
+        var displayValue = formatter(rawValue, clampedValue);
+        var labelText = (labelPrefix ? labelPrefix + ' ' : '') + displayValue + '%';
+        var title = spanChild.attr('title') || container.attr('title') || '';
+
+        spanChild.remove();
+        container.empty();
+
+        container.addClass('medulla-progress');
+        if (options && options.variant) {
+            container.addClass('is-' + options.variant);
+        }
+
+        container.attr({
+            role: 'progressbar',
+            'aria-valuemin': 0,
+            'aria-valuemax': 100,
+            'aria-valuenow': Math.round(clampedValue)
+        });
+
+        if (title) {
+            container.attr('title', title);
+        }
+
+        var tone = getProgressTone(clampedValue);
+        var track = jQuery('<div class="medulla-progress__track"></div>');
+        var fill = jQuery('<div class="medulla-progress__fill"></div>')
+            .addClass(tone.className)
+            .css('background', tone.color)
+            .css('width', widthValue + '%');
+
+        var label = jQuery('<div class="medulla-progress__label"></div>')
+            .text(labelText.trim())
+            .css({
+                color: tone.textColor,
+                'text-shadow': tone.textShadow || 'none'
+            });
+
+        track.append(fill).append(label);
+        container.append(track);
     }
 
     jQuery(document).ready(function() {
-        // console.log("Le script est inclus une seule fois par page. URL: " + window.location.href);
+        ensureProgressStyles();
 
         jQuery(".progressbarstaticvalue_med").each(function() {
-            // Récupère l'élément <span> enfant avec la classe "value_progress"
-            let spanChild = jQuery(this).find(".value_progress");
-
-            // Récupère la valeur cachée de la barre de progression
-            let spanInteger = parseInt(spanChild.text(), 10) || 0; // Convertit en entier
-            let spanIntegertrue = spanInteger; // Convertit en entier sécurisé
-
-            // Récupère la couleur en fonction de la valeur
-            let colorgraph = getColor(spanInteger);
-
-            // Récupère les valeurs des attributs data-value et title
-            let spanValueData = spanChild.attr('data-value') || '';
-
-            let spanTitle = spanChild.attr('title') || '';
-
-            // Ajoute l'attribut title au <div> parent si présent
-            if (spanChild.length > 0 && spanChild.attr('title')) {
-                jQuery(this).attr('title', spanTitle);
-            }
-
-            // Initialise la barre de progression jQuery UI avec la valeur récupérée
-            jQuery(this).progressbar({ value: 100 });
-            jQuery(this).find(".ui-progressbar-value")
-                .css({
-                    "background": colorgraph, // Si valeur == 0, barre grise
-                    "color": spanInteger >= 30 && spanInteger <= 70 ? "#000" : "#fff", // Couleur du texte en noir si entre 30 et 70, sinon blanc
-                    "text-align": "center", // Centre le texte
-                    "line-height": "20px", // Ajuste la hauteur pour aligner le texte verticalement
-                    "border-radius": "5px"
-                })
-                .attr("data-value", spanInteger); // Ajoute un attribut data pour stockage
-
-            // Applique un style à la barre de progression vide (fond)
-            jQuery(this).find(".ui-progressbar")
-                .css({
-                    "background-color": "transparent", // Fond transparent
-                    "border-radius": "5px", // Coins arrondis
-                    "height": "15px", // Hauteur de la barre
-                    "border": "1px solid #999" // Bordure grise
-                });
-
-            // Définit le texte de la barre de progression
-            jQuery(this).find(".ui-progressbar-value").text(spanValueData + " " + spanIntegertrue + "%");
+            renderProgress(jQuery(this), { variant: 'static' });
         });
+
         jQuery(".progressbar_med").each(function() {
-            // Récupère la valeur cachée de la barre de progression
-            let spanChild = jQuery(this).find(".value_progress");
-            let spanInteger = parseInt(spanChild.text(), 10) || 0; // Convertit en entier
-            let spanIntegertrue = spanInteger; // Convertit en entiersécurisé
-            // Détermine la couleur de fin en fonction de la valeur
-            let startcolor = "#FF0000"; // Rouge par défaut
-            let endcolor = "#FF0000"; // Rouge par défaut
-            if (spanInteger >= 25) endcolor = "#e2a846"; // Orange
-            if (spanInteger >= 50) endcolor = "#f4f529"; // Jaune
-            if (spanInteger >= 75) endcolor = "#bcf529"; // Vert clair
-            if (spanInteger >= 90) endcolor = "#02ab17"; // Vert foncé
-            // Déclare la variable backgroundinput
-            let backgroundinput = 0;
-
-            // Si la valeur est inférieure à 20, change la couleur et définit la barre à 100%
-            if (spanInteger < 20) {
-                backgroundinput = 1; // Utilise directement la variable globale
-                endcolor = "red"; // Fixe la couleur rouge
-                startcolor= "red";
-                spanInteger = 100; // Définit la valeur à 100%
-            }
-            if (spanInteger == 20) {
-                backgroundinput = 1; // Utilise directement la variable globale
-                endcolor = "green"; // Fixe la couleur rouge
-                startcolor= "green";
-                spanInteger = 100; // Définit la valeur à 100%
-            }
-            // Initialise la barre de progression jQuery UI avec la valeur récupérée
-            jQuery(this).progressbar({ value: spanInteger });
-            // Applique un dégradé de couleur sur la partie remplie de la barre de progression
-            jQuery(this).find(".ui-progressbar-value")
-                .css({
-                    "background": spanInteger > 0 ? "linear-gradient(to right," + startcolor + ", " + endcolor + ")" : "#ccc", // Si valeur == 0, barre grise
-                    "color": "#fff", // Couleur du texte en blanc
-                    "text-align": "center", // Centre le texte
-                    "line-height": "20px", // Ajuste la hauteur pour aligner le texte verticalement
-                    "border-radius": "5px"
-                })
-                .attr("data-value", spanInteger); // Ajoute un attribut data pour stockage
-
-            // Applique un style à la barre de progression vide (fond)
-            jQuery(this).find(".ui-progressbar")
-                .css({
-                    "background-color": "transparent", // Fond transparent
-                    "border-radius": "5px", // Coins arrondis
-                    "height": "15px", // Hauteur de la barre
-                    "border": "1px solid #999" // Bordure grise
-                });
-
-            // Si la condition de fond est remplie, affiche "0%", sinon affiche la valeur
-            if (backgroundinput == 1) {
-                jQuery(this).find(".ui-progressbar-value").text(spanIntegertrue+ "%");
-            } else {
-                jQuery(this).find(".ui-progressbar-value").text(spanInteger + "%");
-            }
+            renderProgress(jQuery(this), {
+                variant: 'dynamic',
+                formatValue: function(value) {
+                    return Math.round(value);
+                }
+            });
         });
     });
 </script>
