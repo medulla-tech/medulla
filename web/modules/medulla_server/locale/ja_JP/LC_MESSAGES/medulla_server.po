@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-30 15:34+0100\n"
+"POT-Creation-Date: 2025-10-30 16:48+0100\n"
 "PO-Revision-Date: 2017-10-11 08:13+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2025\n"
 "Language-Team: Japanese (Japan) (https://app.transifex.com/medulla/teams/72118/ja_JP/)\n"
@@ -127,8 +127,8 @@ msgid "Delete this profile"
 msgstr "このプロファイルを削除"
 
 #: modules/medulla_server/includes/menu_group_action.php:52
-msgid "Display3 this group's content"
-msgstr ""
+msgid "Display this group's content"
+msgstr "このグループ内容を表示"
 
 #: modules/medulla_server/includes/menu_group_action.php:53
 msgid "Edit this group"

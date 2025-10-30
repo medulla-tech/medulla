@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-30 15:34+0100\n"
+"POT-Creation-Date: 2025-10-30 16:48+0100\n"
 "PO-Revision-Date: 2017-10-11 08:12+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Spanish (Spain) (https://app.transifex.com/medulla/teams/72118/es_ES/)\n"
@@ -1139,14 +1139,9 @@ msgstr ""
 msgid "Show all pending task's logs"
 msgstr ""
 
-#: modules/msc/msc/tabs.php:50
+#: modules/msc/msc/tabs.php:50 modules/msc/msc/tabs.php:61
 #, php-format
 msgid "%s's computer secure control"
-msgstr ""
-
-#: modules/msc/msc/tabs.php:61
-#, php-format
-msgid "%s's computer secure controlaaa"
 msgstr ""
 
 #: modules/msc/msc/tabs.php:65 modules/msc/msc/tabs.php:79
@@ -1155,7 +1150,7 @@ msgstr ""
 
 #: modules/msc/msc/tabs.php:77
 #, php-format
-msgid "%s's group secure controlmmm"
+msgid "%s's group secure control"
 msgstr ""
 
 #: modules/msc/msc/tabs.php:87

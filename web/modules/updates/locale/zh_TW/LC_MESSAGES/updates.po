@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-30 15:34+0100\n"
+"POT-Creation-Date: 2025-10-30 16:48+0100\n"
 "PO-Revision-Date: 2023-12-12 11:56+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/medulla/teams/72118/zh_TW/)\n"
@@ -272,15 +272,15 @@ msgid "Ban update"
 msgstr ""
 
 #: modules/updates/updates/ajaxApproveProduct.php:73
-msgid "SERVER MICROSOFT"
+msgid "MICROSOFT SERVER"
 msgstr ""
 
 #: modules/updates/updates/ajaxApproveProduct.php:75
-msgid "VISUAL STUDIO"
+msgid "MICROSOFT VISUAL STUDIO"
 msgstr ""
 
 #: modules/updates/updates/ajaxApproveProduct.php:77
-msgid "SUITE OFFICE"
+msgid "MICROSOFT OFFICE"
 msgstr ""
 
 #: modules/updates/updates/ajaxApproveProduct.php:79
@@ -660,7 +660,7 @@ msgid "Details by Machines"
 msgstr ""
 
 #: modules/updates/updates/approve_products.php:47
-msgid "Activate microsoft product for update."
+msgid "Activate Microsoft product update."
 msgstr ""
 
 #: modules/updates/updates/localSidebar.php:25
@@ -681,7 +681,7 @@ msgid "Automatic Approval Rules"
 msgstr ""
 
 #: modules/updates/updates/localSidebar.php:49
-msgid "Approve Microsoft product"
+msgid "Microsoft Products Approval"
 msgstr ""
 
 #: modules/updates/updates/grayApprove.php:31
@@ -905,13 +905,13 @@ msgid "Deployment details on group entity"
 msgstr ""
 
 #: modules/updates/infoPackage.inc.php:309
-msgid "choise update event for entity"
+msgid "Choose update event for entity"
 msgstr ""
 
 #: modules/updates/infoPackage.inc.php:315
-msgid "Approve produit Microsoft pour mise a jour"
+msgid "Approve Microsoft products updates"
 msgstr ""
 
 #: modules/updates/infoPackage.inc.php:319
-msgid "choise product for entity"
+msgid "Choose product for entity"
 msgstr ""

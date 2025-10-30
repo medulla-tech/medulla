@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-30 15:34+0100\n"
+"POT-Creation-Date: 2025-10-30 16:48+0100\n"
 "PO-Revision-Date: 2017-09-12 13:25+0000\n"
 "Last-Translator: SPO, 2025\n"
 "Language-Team: French (https://app.transifex.com/medulla/teams/72118/fr/)\n"
@@ -362,6 +362,7 @@ msgid "Favourite"
 msgstr "Favori"
 
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:227
+#: modules/dyngroup/dyngroup/display.php:136
 msgid "Display this group's content"
 msgstr "Afficher le contenu du groupe"
 
@@ -675,10 +676,6 @@ msgstr "Ordinateurs en ligne"
 #: modules/dyngroup/dyngroup/display.php:103
 msgid "Offline computers"
 msgstr "Ordinateurs hors ligne"
-
-#: modules/dyngroup/dyngroup/display.php:136
-msgid "Display2 this group's content"
-msgstr ""
 
 #: modules/dyngroup/dyngroup/display.php:152
 msgid "Group Quick action"

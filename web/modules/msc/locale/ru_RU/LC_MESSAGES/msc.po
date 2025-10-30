@@ -4,16 +4,16 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Nicolas Lécureuil <neoclust@mageia.org>, 2018
+# Nicolas Lécureuil <neoclust@mageia.org>, 2025
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-30 15:34+0100\n"
+"POT-Creation-Date: 2025-10-30 16:48+0100\n"
 "PO-Revision-Date: 2017-10-11 08:12+0000\n"
-"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
+"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2025\n"
 "Language-Team: Russian (Russia) (https://app.transifex.com/medulla/teams/72118/ru_RU/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1145,15 +1145,10 @@ msgstr ""
 msgid "Show all pending task's logs"
 msgstr "Показать журналы всех ожидающих задач"
 
-#: modules/msc/msc/tabs.php:50
+#: modules/msc/msc/tabs.php:50 modules/msc/msc/tabs.php:61
 #, php-format
 msgid "%s's computer secure control"
 msgstr "   %s"
-
-#: modules/msc/msc/tabs.php:61
-#, php-format
-msgid "%s's computer secure controlaaa"
-msgstr ""
 
 #: modules/msc/msc/tabs.php:65 modules/msc/msc/tabs.php:79
 msgid "Launch Actions"
@@ -1161,8 +1156,8 @@ msgstr "Запуск Действий"
 
 #: modules/msc/msc/tabs.php:77
 #, php-format
-msgid "%s's group secure controlmmm"
-msgstr ""
+msgid "%s's group secure control"
+msgstr "   %s"
 
 #: modules/msc/msc/tabs.php:87
 msgid "Not enough information"

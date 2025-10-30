@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-30 15:34+0100\n"
+"POT-Creation-Date: 2025-10-30 16:48+0100\n"
 "PO-Revision-Date: 2017-10-11 08:12+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2025\n"
 "Language-Team: Ukrainian (https://app.transifex.com/medulla/teams/72118/uk/)\n"
@@ -1166,15 +1166,10 @@ msgstr "Відсоток успішності"
 msgid "Show all pending task's logs"
 msgstr "Показати журнали усіх завдань з черги"
 
-#: modules/msc/msc/tabs.php:50
+#: modules/msc/msc/tabs.php:50 modules/msc/msc/tabs.php:61
 #, php-format
 msgid "%s's computer secure control"
 msgstr "Безпечне керування комп'ютером %s"
-
-#: modules/msc/msc/tabs.php:61
-#, php-format
-msgid "%s's computer secure controlaaa"
-msgstr ""
 
 #: modules/msc/msc/tabs.php:65 modules/msc/msc/tabs.php:79
 msgid "Launch Actions"
@@ -1182,8 +1177,8 @@ msgstr "Дії із запуску"
 
 #: modules/msc/msc/tabs.php:77
 #, php-format
-msgid "%s's group secure controlmmm"
-msgstr ""
+msgid "%s's group secure control"
+msgstr "Керування захистом групи %s"
 
 #: modules/msc/msc/tabs.php:87
 msgid "Not enough information"

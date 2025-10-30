@@ -5,16 +5,16 @@
 # 
 # Translators:
 # Nicolas Lécureuil <neoclust@mageia.org>, 2018
-# Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2019
+# Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2025
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-30 15:34+0100\n"
+"POT-Creation-Date: 2025-10-30 16:48+0100\n"
 "PO-Revision-Date: 2017-10-11 08:12+0000\n"
-"Last-Translator: Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2019\n"
+"Last-Translator: Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2025\n"
 "Language-Team: Norwegian Bokmål (Norway) (https://app.transifex.com/medulla/teams/72118/nb_NO/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1168,15 +1168,10 @@ msgstr "Suksessprosent"
 msgid "Show all pending task's logs"
 msgstr "Vis logger over alle ventende oppgaver"
 
-#: modules/msc/msc/tabs.php:50
+#: modules/msc/msc/tabs.php:50 modules/msc/msc/tabs.php:61
 #, php-format
 msgid "%s's computer secure control"
 msgstr "%s datamaskinens sikkerhets kontroll"
-
-#: modules/msc/msc/tabs.php:61
-#, php-format
-msgid "%s's computer secure controlaaa"
-msgstr ""
 
 #: modules/msc/msc/tabs.php:65 modules/msc/msc/tabs.php:79
 msgid "Launch Actions"
@@ -1184,8 +1179,8 @@ msgstr "Start handlinger"
 
 #: modules/msc/msc/tabs.php:77
 #, php-format
-msgid "%s's group secure controlmmm"
-msgstr ""
+msgid "%s's group secure control"
+msgstr "%s gruppens sikkerhets kontroll"
 
 #: modules/msc/msc/tabs.php:87
 msgid "Not enough information"
