@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-07 17:12+0200\n"
+"POT-Creation-Date: 2025-10-30 15:34+0100\n"
 "PO-Revision-Date: 2019-10-02 12:32+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2025\n"
 "Language-Team: Ukrainian (https://app.transifex.com/medulla/teams/72118/uk/)\n"
@@ -22,8 +22,8 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #: modules/kiosk/infoPackage.inc.php:30 modules/kiosk/infoPackage.inc.php:35
-msgid "kiosk"
-msgstr "кіоск"
+msgid "Kiosk"
+msgstr ""
 
 #: modules/kiosk/infoPackage.inc.php:43 modules/kiosk/infoPackage.inc.php:47
 #: modules/kiosk/kiosk/localSidebar.php:26

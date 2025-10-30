@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-07 17:12+0200\n"
+"POT-Creation-Date: 2025-10-30 15:34+0100\n"
 "PO-Revision-Date: 2017-09-12 14:00+0000\n"
 "Last-Translator: Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2025\n"
 "Language-Team: Norwegian Bokmål (Norway) (https://app.transifex.com/medulla/teams/72118/nb_NO/)\n"
@@ -1500,49 +1500,49 @@ msgid ""
 msgstr ""
 "Du må registrere datamaskinens bildeserver for å kunne kjøre avbilding."
 
-#: modules/imaging/includes/includes.php:211
+#: modules/imaging/includes/includes.php:258
 msgid "Uptime: "
 msgstr "Oppetid: "
 
-#: modules/imaging/includes/includes.php:213
+#: modules/imaging/includes/includes.php:260
 msgid "day"
 msgstr "dag"
 
-#: modules/imaging/includes/includes.php:216
+#: modules/imaging/includes/includes.php:263
 msgid "hour"
 msgstr "time"
 
-#: modules/imaging/includes/includes.php:218
+#: modules/imaging/includes/includes.php:265
 msgid "minute"
 msgstr "minutt"
 
-#: modules/imaging/includes/includes.php:222
+#: modules/imaging/includes/includes.php:269
 msgid "Memory"
 msgstr "Minne"
 
-#: modules/imaging/includes/includes.php:225
+#: modules/imaging/includes/includes.php:272
 msgid "Swap"
 msgstr "Swap"
 
-#: modules/imaging/includes/includes.php:238
+#: modules/imaging/includes/includes.php:285
 msgid "Never"
 msgstr "Aldri"
 
-#: modules/imaging/includes/includes.php:242
-#: modules/imaging/includes/includes.php:249
+#: modules/imaging/includes/includes.php:289
+#: modules/imaging/includes/includes.php:296
 msgid "As soon as possible"
 msgstr "Så fort som mulig"
 
-#: modules/imaging/includes/includes.php:251
+#: modules/imaging/includes/includes.php:298
 msgid "<i>undefined</i>"
 msgstr "<i>udefinert</i>"
 
-#: modules/imaging/includes/includes.php:322
+#: modules/imaging/includes/includes.php:369
 msgid "Backup log messages"
 msgstr "Sikkerhetskopier loggmeldinger"
 
-#: modules/imaging/includes/ajaxcommon.inc.php:39
-#: modules/imaging/includes/ajaxcommon.inc.php:60
+#: modules/imaging/includes/ajaxcommon.inc.php:41
+#: modules/imaging/includes/ajaxcommon.inc.php:62
 #: modules/imaging/imaging/tabs.php:100
 #: modules/imaging/imaging/ajaxImages.php:182
 #: modules/imaging/imaging/addservice.php:69
@@ -1551,16 +1551,16 @@ msgstr "Sikkerhetskopier loggmeldinger"
 msgid "root"
 msgstr "root"
 
-#: modules/imaging/includes/ajaxcommon.inc.php:86
+#: modules/imaging/includes/ajaxcommon.inc.php:88
 #, php-format
 msgid "Imaging server of entity %s"
 msgstr "Avbildingsserver for enhet %s"
 
-#: modules/imaging/includes/ajaxcommon.inc.php:105
+#: modules/imaging/includes/ajaxcommon.inc.php:107
 msgid "the entity itself"
 msgstr "Selve enheten"
 
-#: modules/imaging/includes/ajaxcommon.inc.php:121
+#: modules/imaging/includes/ajaxcommon.inc.php:123
 msgid "The registering in the imaging server has failed."
 msgstr "Registreringen på avbildingsserveren mislyktes."
 

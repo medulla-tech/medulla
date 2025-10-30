@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-07 17:13+0200\n"
+"POT-Creation-Date: 2025-10-30 15:34+0100\n"
 "PO-Revision-Date: 2018-02-13 15:16+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2025\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/medulla/teams/72118/zh_CN/)\n"
@@ -67,7 +67,7 @@ msgstr ""
 
 #: modules/xmppmaster/xmppmaster/ajaxconvergence.php:69
 #: modules/xmppmaster/xmppmaster/ajaxteamconvergence.php:93
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:408
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:409
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:91
 msgid "Deployment Interval Constraint"
 msgstr ""
@@ -84,8 +84,8 @@ msgstr ""
 #: modules/xmppmaster/xmppmaster/ajaxconvergence.php:325
 #: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:45
 #: modules/xmppmaster/xmppmaster/ajaxteamconvergence.php:136
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:713
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:765
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:727
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:779
 #: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:92
 #: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:105
 #: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:50
@@ -196,8 +196,8 @@ msgstr "进行中"
 
 #: modules/xmppmaster/xmppmaster/ajaxconvergence.php:396
 #: modules/xmppmaster/xmppmaster/ajaxteamconvergence.php:295
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:699
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:730
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:698
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:729
 #: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:514
 #: modules/xmppmaster/xmppmaster/ajaxstatusteamxmpp.php:345
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:337
@@ -224,7 +224,7 @@ msgstr ""
 #: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:94
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:89
 #: modules/xmppmaster/xmppmaster/ajaxteamconvergence.php:298
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:398
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:399
 #: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:122
 #: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:124
 #: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:85
@@ -262,9 +262,9 @@ msgid "File :"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:90
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:350
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:544
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:633
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:351
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:545
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:647
 msgid "Name"
 msgstr "名称"
 
@@ -366,15 +366,15 @@ msgstr ""
 #: modules/xmppmaster/xmppmaster/relays/ajaxpackageslist.php:79
 #: modules/xmppmaster/xmppmaster/relays/ajaxqalaunched.php:54
 #: modules/xmppmaster/xmppmaster/relays/ajaxqalaunched.php:55
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:553
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:642
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:774
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:554
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:656
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:788
 msgid "Description"
 msgstr "说明"
 
 #: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:96
 #: modules/xmppmaster/xmppmaster/editqa.php:78
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:775
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:789
 msgid "Operating System"
 msgstr "作业系统"
 
@@ -560,8 +560,8 @@ msgid "Package name"
 msgstr "封装名称"
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxpackageslist.php:80
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:550
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:639
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:551
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:653
 msgid "Version"
 msgstr "版本"
 
@@ -687,7 +687,7 @@ msgid "Remote address"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:200
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:776
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:790
 msgid "Status"
 msgstr "状态"
 
@@ -978,316 +978,323 @@ msgstr ""
 msgid "Computer deploy"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:50
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:692
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:51
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:691
 msgid "Deployment Status"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:51
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:52
 msgid "Machine Inventory"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:52
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:53
 msgid "Relays"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:59
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:58
+msgid "Clear search"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:60
 msgid "Search"
 msgstr "搜寻"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:115
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:116
 msgid "Deployment [machine "
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:119
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:120
 #: modules/xmppmaster/xmppmaster/logs/viewgroupschedulerlogs.php:95
 msgid "Hide"
 msgstr "隐藏"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:120
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:121
 #: modules/xmppmaster/xmppmaster/logs/viewgroupschedulerlogs.php:96
 msgid "Show"
 msgstr "显示"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:189
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:190
 msgid "Wake on Lan"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:297
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:196
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:591
+msgid "START"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:199
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:594
+msgid "STEP"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:202
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:597
+msgid "DESCRIPTION"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:298
 msgid "IP Address (from XMPP)"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:299
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:300
 msgid "IP Address (from GLPI)"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:302
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:303
 msgid "Machine Details"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:308
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:797
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:309
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:796
 #: modules/xmppmaster/xmppmaster/ajaxxmppplugindownload.php:42
 #: modules/xmppmaster/xmppmaster/monitoring/detail.php:32
 #: modules/xmppmaster/xmppmaster/ajaxxmppplugindownloadexpert.php:44
 msgid "Machine"
 msgstr "电脑"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:315
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:316
 msgid "MAC Address"
 msgstr "MAC "
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:341
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:342
 msgid "Package Details"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:347
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:348
 #: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:286
 #: modules/xmppmaster/xmppmaster/logs/viewgroupschedulerlogs.php:178
 msgid "Creator"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:353
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:354
 msgid "Folder"
 msgstr "资料夹"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:356
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:357
 #: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:280
 msgid "Creation Date"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:360
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:361
 msgid "Actions"
 msgstr "动作"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:392
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:393
 msgid "Deployment plan"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:401
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:402
 msgid "Package Name"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:404
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:405
 #: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:281
 msgid "Start Date"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:412
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:413
 msgid "Stop Date"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:415
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:416
 msgid "Session Id"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:487
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:488
 msgid "Start deployment : "
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:498
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:499
 msgid "XMPP Information"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:504
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:505
 msgid "Machine JID"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:507
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:508
 msgid "Relay Server JID"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:510
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:511
 msgid "Machine IP"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:513
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:514
 msgid "Relay Server IP"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:517
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:518
 msgid "Master IP"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:538
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:539
 msgid "Package and Dependency"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:547
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:548
 msgid "Software"
 msgstr "软体"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:584
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:585
 msgid "Deployment phases"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:590
-msgid "START"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:593
-msgid "STEP"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:596
-msgid "DESCRIPTION"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:695
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:698
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:702
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:694
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:697
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:701
 msgid "Complete"
 msgstr ""
 
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:694
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:695
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:696
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:698
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:697
 msgid "yes"
 msgstr "是"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:696
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:695
 msgid "Successed"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:699
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:698
 msgid "no"
 msgstr "否"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:702
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:701
 msgid "processing"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:717
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:716
 msgid "Not completed"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:717
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:722
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:726
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:730
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:716
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:721
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:725
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:729
 msgid "labelled"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:722
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:721
 msgid "Processing"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:726
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:725
 msgid "Failure"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:736
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:735
 msgid "Executed Command"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:740
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:739
 msgid "Type Script"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:745
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:744
 msgid "Shebang"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:751
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:750
 msgid "Script"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:756
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:755
 msgid "Timeout"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:761
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:760
 msgid "Code Return"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:766
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:765
 msgid "Alternate Package"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:771
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:770
 msgid "Set Environ Variable"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:781
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:780
 msgid "File"
 msgstr "档案"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:787
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:786
 msgid "Set"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:792
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:791
 #: modules/xmppmaster/xmppmaster/ajaxxmppplugindownload.php:43
 msgid "Download File"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:797
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:796
 msgid "Restart"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:797
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:796
 msgid "Agent Machine"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:802
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:801
 msgid "Waiting"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:802
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:801
 msgid "secs."
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:803
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:802
 msgid "Go to"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:807
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:806
 #: modules/xmppmaster/xmppmaster/monitoring/ajaxalertshistory.php:77
 #: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:77
 msgid "Comment"
 msgstr "注解"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:811
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:810
 msgid "Inventory"
 msgstr "清查"
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:819
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:818
 msgid "Clear package after install"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:828
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:832
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:838
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:827
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:831
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:837
 msgid "Next Step"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:828
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:832
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:838
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:827
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:831
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:837
 msgid "at"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:844
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:848
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:852
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:857
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:861
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:865
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:870
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:875
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:880
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:843
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:847
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:851
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:856
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:860
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:864
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:869
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:874
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:879
 msgid "Result Command"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:901
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:900
 msgid "Environment"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:907
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:906
 msgid "key"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:910
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:909
 msgid "value"
 msgstr ""
 
@@ -1550,37 +1557,37 @@ msgstr ""
 msgid "Package deleted"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:636
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:650
 msgid "Associated Inventory"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:645
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:659
 msgid "Size"
 msgstr "大小"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:698
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:712
 msgid "OFFLINE"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:723
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:737
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:125
 msgid "Restart deployment"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:772
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:786
 msgid "Machine Name"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:777
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:791
 #: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:123
 msgid "Type"
 msgstr "类型"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:778
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:792
 msgid "Last User"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:779
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:793
 msgid "Entity"
 msgstr "实体"
 

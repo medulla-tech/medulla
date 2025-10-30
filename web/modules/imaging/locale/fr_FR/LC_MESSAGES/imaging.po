@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-07 20:29+0200\n"
+"POT-Creation-Date: 2025-10-30 15:34+0100\n"
 "PO-Revision-Date: 2017-09-12 14:00+0000\n"
 "Last-Translator: SPO, 2025\n"
 "Language-Team: French (https://app.transifex.com/medulla/teams/72118/fr/)\n"
@@ -1535,49 +1535,49 @@ msgstr ""
 "Vous devez enregistrer le serveur d'imaging de cet ordinateur pour pouvoir "
 "utiliser l'imaging."
 
-#: modules/imaging/includes/includes.php:211
+#: modules/imaging/includes/includes.php:258
 msgid "Uptime: "
 msgstr "Durée de fonctionnement: "
 
-#: modules/imaging/includes/includes.php:213
+#: modules/imaging/includes/includes.php:260
 msgid "day"
 msgstr "jour"
 
-#: modules/imaging/includes/includes.php:216
+#: modules/imaging/includes/includes.php:263
 msgid "hour"
 msgstr "heure"
 
-#: modules/imaging/includes/includes.php:218
+#: modules/imaging/includes/includes.php:265
 msgid "minute"
 msgstr "minute"
 
-#: modules/imaging/includes/includes.php:222
+#: modules/imaging/includes/includes.php:269
 msgid "Memory"
 msgstr "Mémoire"
 
-#: modules/imaging/includes/includes.php:225
+#: modules/imaging/includes/includes.php:272
 msgid "Swap"
 msgstr "Partition d'échange (swap)"
 
-#: modules/imaging/includes/includes.php:238
+#: modules/imaging/includes/includes.php:285
 msgid "Never"
 msgstr "Jamais"
 
-#: modules/imaging/includes/includes.php:242
-#: modules/imaging/includes/includes.php:249
+#: modules/imaging/includes/includes.php:289
+#: modules/imaging/includes/includes.php:296
 msgid "As soon as possible"
 msgstr "Dès que possible"
 
-#: modules/imaging/includes/includes.php:251
+#: modules/imaging/includes/includes.php:298
 msgid "<i>undefined</i>"
 msgstr "<i>indéfini</i>"
 
-#: modules/imaging/includes/includes.php:322
+#: modules/imaging/includes/includes.php:369
 msgid "Backup log messages"
 msgstr "Logs du backup"
 
-#: modules/imaging/includes/ajaxcommon.inc.php:39
-#: modules/imaging/includes/ajaxcommon.inc.php:60
+#: modules/imaging/includes/ajaxcommon.inc.php:41
+#: modules/imaging/includes/ajaxcommon.inc.php:62
 #: modules/imaging/imaging/tabs.php:100
 #: modules/imaging/imaging/ajaxImages.php:182
 #: modules/imaging/imaging/addservice.php:69
@@ -1586,16 +1586,16 @@ msgstr "Logs du backup"
 msgid "root"
 msgstr "root"
 
-#: modules/imaging/includes/ajaxcommon.inc.php:86
+#: modules/imaging/includes/ajaxcommon.inc.php:88
 #, php-format
 msgid "Imaging server of entity %s"
 msgstr "Serveur d'imaging de l'entité %s"
 
-#: modules/imaging/includes/ajaxcommon.inc.php:105
+#: modules/imaging/includes/ajaxcommon.inc.php:107
 msgid "the entity itself"
 msgstr "l'entité elle-même"
 
-#: modules/imaging/includes/ajaxcommon.inc.php:121
+#: modules/imaging/includes/ajaxcommon.inc.php:123
 msgid "The registering in the imaging server has failed."
 msgstr "L'enregistrement dans le serveur d'imaging a échoué."
 

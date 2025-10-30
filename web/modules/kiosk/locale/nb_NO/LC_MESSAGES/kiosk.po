@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-07 17:12+0200\n"
+"POT-Creation-Date: 2025-10-30 15:34+0100\n"
 "PO-Revision-Date: 2019-10-02 12:32+0000\n"
 "Last-Translator: Karl Morten Ramberg <karl.m.ramberg@gmail.com>, 2023\n"
 "Language-Team: Norwegian Bokmål (Norway) (https://app.transifex.com/medulla/teams/72118/nb_NO/)\n"
@@ -23,8 +23,8 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: modules/kiosk/infoPackage.inc.php:30 modules/kiosk/infoPackage.inc.php:35
-msgid "kiosk"
-msgstr "kiosk"
+msgid "Kiosk"
+msgstr ""
 
 #: modules/kiosk/infoPackage.inc.php:43 modules/kiosk/infoPackage.inc.php:47
 #: modules/kiosk/kiosk/localSidebar.php:26
