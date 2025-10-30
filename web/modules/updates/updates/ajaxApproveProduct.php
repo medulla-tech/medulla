@@ -70,11 +70,11 @@ foreach ($f['name_procedure'] as $indextableau => $name) {
 
     if ($currentFamily !== $productfamily || $currentFamily == null) {
         if ($productfamily == "server"){
-            $listename[] = _T("SERVER MICROSOFT", "updates");
+            $listename[] = _T("MICROSOFT SERVER", "updates");
         }elseif  ($productfamily == "vstudio"){
-            $listename[] = _T("VISUAL STUDIO", "updates");
+            $listename[] = _T("MICROSOFT VISUAL STUDIO", "updates");
         }elseif  ($productfamily == "Office"){
-            $listename[] = _T("SUITE OFFICE", "updates");
+            $listename[] = _T("MICROSOFT OFFICE", "updates");
         }elseif  ($productfamily == "Win10"){
             $listename[] = _T("MICROSOFT WINDOWS 10", "updates");
         }elseif  ($productfamily == "Win11"){
