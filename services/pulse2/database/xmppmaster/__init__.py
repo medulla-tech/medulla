@@ -17334,55 +17334,65 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             logger.error(f"Traceback : {traceback.format_exc()}")
             return {}
 
+
     @DatabaseHelper._sessionm
     def get_os_update_major_stats(self, session, presence=False):
         """
-        Récupère les statistiques de mise à jour des systèmes d'exploitation Windows 10 et Windows 11.
+        Récupère les statistiques de mise à jour des systèmes d'exploitation Windows 10 et Windows 11,
+        en excluant les Windows Server.
 
         Args:
             session (sqlalchemy.orm.session.Session): La session de base de données.
-            presence (bool, optional): Filtrer uniquement les machines activées si True. Par défaut, True.
+            presence (bool, optional): Si True, filtre uniquement les machines activées. Par défaut False.
 
         Returns:
-            dict: Un dictionnaire contenant les statistiques de mise à jour des systèmes d'exploitation.
+            dict: Un dictionnaire contenant les statistiques par entité.
         """
         try:
-            # Dictionnaire final des résultats
-            cols = ["W10to10", "W10to11", "W11to11", "UPDATED", "undefined"]
             results = {"entity": {}}
+            cols = ["W10to10", "W10to11", "W11to11", "UPDATED", "undefined"]
 
-            # Condition de filtre sur la présence des machines
-            presence_filter = "AND enabled = 1" if presence else ""
+            # Filtre de présence
+            presence_filter = "AND xma.enabled = 1" if presence else ""
 
-            # Requête pour le nombre total de machines par entité
-            total_os_sql = f'''
+            # =========================
+            # 1 Total des machines Windows non Server
+            # =========================
+            total_os_sql = f"""
                 SELECT
+                    xe.id AS entity_id,
                     xe.name AS entity_name,
                     xe.complete_name AS complete_name,
                     COUNT(*) AS count
                 FROM
-                    xmppmaster.machines xma
-                INNER JOIN xmppmaster.glpi_entity xe ON xe.id = xma.glpi_entity_id
+                    xmppmaster.machines AS xma
+                INNER JOIN xmppmaster.glpi_entity AS xe
+                    ON xe.id = xma.glpi_entity_id
                 WHERE
                     xma.platform LIKE '%Windows%'
+                    AND xma.platform NOT LIKE '%Server%'
                     {presence_filter}
-                GROUP BY xe.id;
-            '''
+                GROUP BY xe.id, xe.name, xe.complete_name;
+            """
 
-            total_os_result = session.execute(total_os_sql).fetchall()
-            for row in total_os_result:
-                results["entity"].setdefault(
-                    row.complete_name, {"count": int(row.count)})
+            for row in session.execute(total_os_sql):
+                results["entity"][row.complete_name] = {
+                    "entity_id": int(row.entity_id),
+                    "name": row.entity_name,
+                    "count": int(row.count)
+                }
 
-            # Requête pour les statistiques par entité
-            entity_sql = f'''
+            # =========================
+            # 2 Statistiques de mise à jour par entité
+            # =========================
+            entity_sql = f"""
                 SELECT
                     ent_id,
                     entity AS entity_name,
                     entity AS complete_name,
                     COUNT(*) AS nbwin,
                     CASE
-                        WHEN old_version = 10 AND new_version = 10 and oldcode NOT LIKE '22H2' THEN 'W10to10'
+                        WHEN old_version = 10 AND new_version = 10 AND oldcode NOT LIKE '22H2' THEN 'W10to10'
                         WHEN old_version = 10 AND new_version = 11 THEN 'W10to11'
                         WHEN old_version = 11 AND oldcode NOT LIKE '24H2' THEN 'W11to11'
                         WHEN old_version = new_version AND oldcode = newcode THEN 'UPDATED'
@@ -17391,53 +17401,49 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                 FROM
                     xmppmaster.up_machine_major_windows
                 WHERE
-                    old_version IS NOT NULL AND new_version IS NOT NULL
+                    old_version IS NOT NULL
+                    AND new_version IS NOT NULL
                     {presence_filter}
-                GROUP BY ent_id, os
+                GROUP BY ent_id, entity, os
                 ORDER BY complete_name, os;
-            '''
+            """
 
-            entity_result = session.execute(entity_sql).fetchall()
-            for row in entity_result:
-                # Initialisation
-                results["entity"].setdefault(row.complete_name, {})
-                results["entity"][row.complete_name]["name"] = row.entity_name
-                results["entity"][row.complete_name][row.os] = int(row.nbwin)
-                results["entity"][row.complete_name]['entity_id'] = int(
-                    row.ent_id)
-                logger.error(f"{row.os}")
+            for row in session.execute(entity_sql):
+                entity_data = results["entity"].setdefault(
+                    row.complete_name,
+                    {"entity_id": int(row.ent_id), "name": row.entity_name, "count": 0}
+                )
+                entity_data[row.os] = int(row.nbwin)
 
-            logger.error(f"result {results}")
-            # Calcul de la conformité
-            for entity, data in results["entity"].items():
-                total = data["count"]
-                non_conforme = sum(
-                    data.get(key, 0) for key in cols if key != "undefined" and key != "UPDATED")
-                definie = sum(data.get(key, 0)
-                              for key in cols if key != "undefined")
-                undefined = total - definie
-                results["entity"][entity]["definie"] = definie
-                results["entity"][entity]["undefined"] = undefined
-                if definie == 0:
-                    results["entity"][entity]["conformite"] = 0.0
-                else:
-                    results["entity"][entity]["conformite"] = round(
-                        ((definie-non_conforme) / definie * 100) if non_conforme > 0 else 0, 2)
+            # =========================
+            # 3 Calcul des conformités et complétude
+            # =========================
+            for entity_name, data in results["entity"].items():
+                total = data.get("count", 0)
 
-            # Copier les clés existantes avant d'itérer
-            existing_entities = list(results["entity"].keys())
-            for entity in existing_entities:  # Itérer sur la copie des clés
+                definie = sum(data.get(c, 0) for c in cols if c != "undefined")
+                non_conforme = sum(data.get(c, 0) for c in ["W10to10", "W10to11", "W11to11"])
+                undefined = max(total - definie, 0)
+
+                data["definie"] = definie
+                data["undefined"] = undefined
+                data["conformite"] = (
+                    round(((definie - non_conforme) / definie * 100), 2)
+                    if definie > 0 else 0.0
+                )
+
+                # Ajouter les clés manquantes pour cohérence
                 for col in cols:
-                    if col not in results["entity"][entity]:
-                        results["entity"][entity][col] = 0
+                    data.setdefault(col, 0)
 
+            logger.info(f"OS update stats calculées pour {len(results['entity'])} entités.")
             return results
 
         except Exception as e:
-            logger.error(
-                f"Erreur lors de la récupération des statistiques de mise à jour des OS : {str(e)}")
+            logger.error(f"Erreur lors de la récupération des statistiques OS : {e}")
             logger.error(f"Traceback : {traceback.format_exc()}")
             return {}
+
 
     @DatabaseHelper._sessionm
     def get_os_xmpp_update_major_details(self,
