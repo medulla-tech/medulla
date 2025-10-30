@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-07 20:29+0200\n"
+"POT-Creation-Date: 2025-10-30 15:34+0100\n"
 "PO-Revision-Date: 2018-02-13 15:15+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2025\n"
 "Language-Team: Ukrainian (https://app.transifex.com/medulla/teams/72118/uk/)\n"
@@ -132,7 +132,7 @@ msgid "Language"
 msgstr "Мова"
 
 #: index.php:329 modules/base/includes/publicFunc.php:323
-#: modules/base/users/ajaxFilter.php:119 modules/base/views/index.tpl.php:78
+#: modules/base/users/ajaxFilter.php:119 modules/base/views/index.tpl.php:79
 msgid "Login"
 msgstr "Реєстраційне ім'я"
 
@@ -149,20 +149,24 @@ msgstr ""
 msgid "Connect"
 msgstr "З'єднатися"
 
-#: graph/header.inc.php:213 graph/header.inc.php:249
+#: index.php:364
+msgid "Providers"
+msgstr ""
+
+#: graph/header.inc.php:218 graph/header.inc.php:254
 msgid "Yes"
 msgstr "Так"
 
-#: graph/header.inc.php:216 graph/header.inc.php:218
+#: graph/header.inc.php:221 graph/header.inc.php:223
 msgid "No"
 msgstr "Ні"
 
-#: graph/header.inc.php:251 includes/FormGenerator.php:713
-#: includes/PageGenerator.php:2834
+#: graph/header.inc.php:256 includes/FormGenerator.php:713
+#: includes/PageGenerator.php:2971
 msgid "Close"
 msgstr "Закрити"
 
-#: graph/header.inc.php:315
+#: graph/header.inc.php:320
 msgid "Form cannot be submit. Input errors are highlighted in red."
 msgstr ""
 "Форму не можна надсилати. Помилки у введених даних позначено червоним "
@@ -184,7 +188,7 @@ msgstr "Натисніть, щоб перемкнутися на"
 msgid "logout"
 msgstr "вихід"
 
-#: graph/navbar.inc.php:83 logout/index.php:54 logout/index.php:61
+#: graph/navbar.inc.php:83 logout/index.php:55 logout/index.php:62
 msgid "Logout"
 msgstr "Вийти"
 
@@ -543,15 +547,15 @@ msgstr "П'ятниця"
 msgid "Saturday"
 msgstr "Субота"
 
-#: includes/FormGenerator.php:714 includes/PageGenerator.php:1340
-#: includes/PageGenerator.php:1598 includes/ajaxTools.php:63
+#: includes/FormGenerator.php:714 includes/PageGenerator.php:1381
+#: includes/PageGenerator.php:1639 includes/ajaxTools.php:63
 #: includes/ajaxTools.php:69 modules/base/includes/AjaxFilterLog.inc.php:96
 #: modules/base/includes/AjaxFilterLog.inc.php:100
 msgid "Previous"
 msgstr "Назад"
 
-#: includes/FormGenerator.php:715 includes/PageGenerator.php:1354
-#: includes/PageGenerator.php:1608 includes/ajaxTools.php:74
+#: includes/FormGenerator.php:715 includes/PageGenerator.php:1395
+#: includes/PageGenerator.php:1649 includes/ajaxTools.php:74
 #: includes/ajaxTools.php:82 modules/base/includes/AjaxFilterLog.inc.php:107
 #: modules/base/includes/AjaxFilterLog.inc.php:111
 msgid "Next"
@@ -572,50 +576,50 @@ msgid "Toggle selection"
 msgstr "Перемкнути стан позначення"
 
 #: includes/FormGenerator.php:1309
-#: modules/admin/admin/ajaxEntitiesManagement.php:163
+#: modules/admin/admin/ajaxEntitiesManagement.php:170
 #: modules/ppolicy/default/delete.php:45 modules/base/groups/ajaxFilter.php:68
-#: modules/base/users/ajaxFilter.php:140 modules/base/views/index.tpl.php:92
+#: modules/base/users/ajaxFilter.php:140 modules/base/views/index.tpl.php:93
 msgid "Delete"
 msgstr "Вилучити"
 
-#: includes/PageGenerator.php:1007 includes/PageGenerator.php:1255
+#: includes/PageGenerator.php:1047 includes/PageGenerator.php:1296
 msgid "to"
 msgstr "з"
 
-#: includes/PageGenerator.php:1009 includes/PageGenerator.php:1257
+#: includes/PageGenerator.php:1049 includes/PageGenerator.php:1298
 #, php-format
 msgid " - Total <b>%s </b>"
 msgstr " - загалом <b>%s </b>"
 
-#: includes/PageGenerator.php:1012 includes/PageGenerator.php:1260
+#: includes/PageGenerator.php:1052 includes/PageGenerator.php:1301
 msgid "page"
 msgstr "сторінка"
 
-#: includes/PageGenerator.php:1375
+#: includes/PageGenerator.php:1416
 msgid "Pagination"
 msgstr "Нумерація сторінок"
 
-#: includes/PageGenerator.php:1451
+#: includes/PageGenerator.php:1492
 msgid "Go to page"
 msgstr "Перейти до сторінки"
 
-#: includes/PageGenerator.php:1912
+#: includes/PageGenerator.php:1996
 msgid "No item available"
 msgstr "Немає записів"
 
-#: includes/PageGenerator.php:2141
+#: includes/PageGenerator.php:2227
 msgid "Select entity"
 msgstr "Виберіть запис"
 
-#: includes/PageGenerator.php:3278 includes/PageGenerator.php:3360
-#: includes/PageGenerator.php:3389
+#: includes/PageGenerator.php:3460 includes/PageGenerator.php:3542
+#: includes/PageGenerator.php:3571
 #: modules/dyngroup/includes/groups.inc.php:364
 #: modules/dyngroup/includes/groups.inc.php:427
 #: modules/base/groups/members.php:308 modules/base/groups/edit.php:128
 msgid "Confirm"
 msgstr "Підтвердити"
 
-#: includes/PageGenerator.php:3283 includes/PageGenerator.php:3365
+#: includes/PageGenerator.php:3465 includes/PageGenerator.php:3547
 #: modules/imaging/imaging/images_iso.php:112
 #: modules/imaging/imaging/multicast.php:409
 #: modules/imaging/manage/master_iso.php:109
@@ -626,11 +630,11 @@ msgstr "Підтвердити"
 msgid "Cancel"
 msgstr "Скасувати"
 
-#: includes/PageGenerator.php:3565
+#: includes/PageGenerator.php:3747
 msgid "Select all"
 msgstr "Позначити все"
 
-#: includes/PageGenerator.php:3565
+#: includes/PageGenerator.php:3747
 msgid "Unselect all"
 msgstr "Зняти позначення з усього"
 
@@ -661,7 +665,7 @@ msgstr[3] "Перезапустити служби?"
 msgid "No job."
 msgstr "Немає завдання."
 
-#: logout/index.php:57
+#: logout/index.php:58
 msgid "Your session will be closed"
 msgstr "Ваш сеанс буде закрито"
 
@@ -715,26 +719,26 @@ msgstr "веб-клієнт: версія"
 msgid "web: plugin is not installed"
 msgstr "веб-клієнт: додаток не встановлено"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:165
-#: modules/glpi/glpi/ajaxMachinesList.php:168
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:73
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:77
+#: modules/glpi/glpi/ajaxMachinesList.php:163
+#: modules/glpi/glpi/ajaxMachinesList.php:166
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:70
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:74
 #: modules/base/includes/computers_list.inc.php:109
 msgid "GLPI Inventory"
 msgstr "Облік GLPI"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:172
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:82
+#: modules/glpi/glpi/ajaxMachinesList.php:170
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:79
 #: modules/base/includes/computers_list.inc.php:108
 msgid "Monitoring"
 msgstr "Спостереження"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:173
-#: modules/glpi/glpi/ajaxMachinesList.php:186
-#: modules/glpi/glpi/ajaxMachinesList.php:198
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:83
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:92
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:102
+#: modules/glpi/glpi/ajaxMachinesList.php:171
+#: modules/glpi/glpi/ajaxMachinesList.php:184
+#: modules/glpi/glpi/ajaxMachinesList.php:196
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:80
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:89
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:99
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:58
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:59
 #: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:41
@@ -749,20 +753,20 @@ msgstr "Спостереження"
 msgid "Remote control"
 msgstr "Дистанційне керування"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:176
-#: modules/glpi/glpi/ajaxMachinesList.php:177
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:74
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:79
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:84
+#: modules/glpi/glpi/ajaxMachinesList.php:174
+#: modules/glpi/glpi/ajaxMachinesList.php:175
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:71
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:76
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:81
 #: modules/base/includes/computers_list.inc.php:111
 #: modules/base/includes/computers_list.inc.php:114
 msgid "Software deployment"
 msgstr "Розгортання програмного забезпечення"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:179
-#: modules/glpi/glpi/ajaxMachinesList.php:180
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:86
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:87
+#: modules/glpi/glpi/ajaxMachinesList.php:177
+#: modules/glpi/glpi/ajaxMachinesList.php:178
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:83
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:84
 #: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:39
 #: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:40
 #: modules/medulla_server/includes/menu_actionaudit.php:86
@@ -772,10 +776,10 @@ msgstr "Розгортання програмного забезпечення"
 msgid "xmppconsole"
 msgstr "xmppconsole"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:182
-#: modules/glpi/glpi/ajaxMachinesList.php:183
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:89
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:90
+#: modules/glpi/glpi/ajaxMachinesList.php:180
+#: modules/glpi/glpi/ajaxMachinesList.php:181
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:86
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:87
 #: modules/xmppmaster/xmppmaster/ajaxlistconffile.php:66
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:38
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:39
@@ -791,45 +795,45 @@ msgstr "xmppconsole"
 msgid "Edit config files"
 msgstr "Редагувати файли налаштувань"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:189
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:94
+#: modules/glpi/glpi/ajaxMachinesList.php:187
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:91
 #: modules/medulla_server/includes/menu_group_action.php:76
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:276
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:282
 #: modules/base/includes/computers_list.inc.php:134
 msgid "Imaging management"
 msgstr "Керування образами"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:191
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:95
+#: modules/glpi/glpi/ajaxMachinesList.php:189
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:92
 #: modules/base/includes/computers_list.inc.php:136
 #: modules/base/users/ajaxFilter.php:137
 msgid "extTicket issue"
 msgstr "Вада extTicket"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:195
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:99
+#: modules/glpi/glpi/ajaxMachinesList.php:193
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:96
 #: modules/medulla_server/includes/menu_actionaudit.php:77
 #: modules/medulla_server/includes/menu_action.php:75
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:86
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:88
 #: modules/base/includes/computers_list.inc.php:140
 msgid "Quick action"
 msgstr "Швидка дія"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:450
+#: modules/glpi/glpi/ajaxMachinesList.php:449
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:301
 #: modules/medulla_server/includes/menu_actionaudit.php:74
 #: modules/base/includes/computers_list.inc.php:383
 msgid "Backup status"
 msgstr "Стан резервного копіювання"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:460
+#: modules/glpi/glpi/ajaxMachinesList.php:459
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:311
 #: modules/medulla_server/includes/menu_actionaudit.php:75
 #: modules/medulla_server/includes/menu_action.php:63
 msgid "Urbackup"
 msgstr "Urbackup"
 
-#: modules/glpi/glpi/ajaxMachinesList.php:487
+#: modules/glpi/glpi/ajaxMachinesList.php:486
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:341
 #: modules/base/includes/computers_list.inc.php:421
 msgid "Delete computer"
@@ -857,12 +861,12 @@ msgstr "Комп'ютери у мережі"
 msgid "Offline computers"
 msgstr "Комп'ютери поза мережею"
 
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:76
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:73
 #: modules/base/includes/computers_list.inc.php:107
 msgid "Inventory"
 msgstr "Облік"
 
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:78
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:75
 #: modules/xmppmaster/xmppmaster/ajaxconvergence.php:111
 #: modules/xmppmaster/xmppmaster/ajaxconvergence.php:325
 #: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:45
@@ -877,7 +881,7 @@ msgstr "Облік"
 msgid "View deployment details"
 msgstr "Переглянути подробиці щодо розгортання"
 
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:97
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:94
 #: modules/base/includes/computers_list.inc.php:138
 msgid "Show Profile"
 msgstr "Показувати профіль"
@@ -1029,7 +1033,7 @@ msgstr "початок"
 msgid "end"
 msgstr "кінець"
 
-#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:723
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:737
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:125
 msgid "Restart deployment"
 msgstr "Перезапустити розгортання"
@@ -1048,7 +1052,7 @@ msgid "Acknowledge"
 msgstr "Оповіщення"
 
 #: modules/medulla_server/includes/menu_group_action.php:82
-#: modules/dyngroup/dyngroup/display.php:235
+#: modules/dyngroup/dyngroup/display.php:152
 msgid "Group Quick action"
 msgstr "Групова швидка дія"
 
@@ -1077,12 +1081,13 @@ msgid "Download"
 msgstr "Отримати"
 
 #: modules/admin/admin/ajaxEntitiesManagement.php:130
-#: modules/admin/admin/ajaxEntitiesManagement.php:178
+#: modules/admin/admin/ajaxEntitiesManagement.php:183
 msgid "Unauthorized modification"
 msgstr ""
 
 #: modules/admin/admin/ajaxEntitiesManagement.php:131
-#: modules/admin/admin/ajaxEntitiesManagement.php:182
+#: modules/admin/admin/ajaxEntitiesManagement.php:187
+#: modules/admin/admin/ajaxListUsersofEntity.php:180
 msgid "Unauthorized deletion"
 msgstr ""
 
@@ -1117,35 +1122,43 @@ msgstr "Розблокувати"
 msgid "Edit rule"
 msgstr "Редагувати правило"
 
-#: modules/admin/admin/ajaxListUsersofEntity.php:96
+#: modules/admin/admin/ajaxListUsersofEntity.php:107
 msgid "Enabled"
 msgstr "Увімкнено"
 
-#: modules/admin/admin/ajaxListUsersofEntity.php:96
+#: modules/admin/admin/ajaxListUsersofEntity.php:107
 msgid "Disabled"
 msgstr "Вимкнено"
 
-#: modules/imaging/includes/includes.php:211 modules/base/status/index.php:101
+#: modules/admin/admin/ajaxListUsersofEntity.php:123
+msgid "Unauthorized edition"
+msgstr ""
+
+#: modules/admin/admin/ajaxListUsersofEntity.php:172
+msgid "Unauthorized deactivation"
+msgstr ""
+
+#: modules/imaging/includes/includes.php:258 modules/base/status/index.php:101
 msgid "Uptime: "
 msgstr "Час роботи: "
 
-#: modules/imaging/includes/includes.php:213 modules/base/status/index.php:104
+#: modules/imaging/includes/includes.php:260 modules/base/status/index.php:104
 msgid "day"
 msgstr "день"
 
-#: modules/imaging/includes/includes.php:216 modules/base/status/index.php:108
+#: modules/imaging/includes/includes.php:263 modules/base/status/index.php:108
 msgid "hour"
 msgstr "година"
 
-#: modules/imaging/includes/includes.php:218 modules/base/status/index.php:111
+#: modules/imaging/includes/includes.php:265 modules/base/status/index.php:111
 msgid "minute"
 msgstr "хвилина"
 
-#: modules/imaging/includes/includes.php:222 modules/base/status/index.php:116
+#: modules/imaging/includes/includes.php:269 modules/base/status/index.php:116
 msgid "Memory"
 msgstr "Пам'ять"
 
-#: modules/imaging/includes/includes.php:225 modules/base/status/index.php:119
+#: modules/imaging/includes/includes.php:272 modules/base/status/index.php:119
 msgid "Swap"
 msgstr "Свопінг"
 
@@ -1157,7 +1170,7 @@ msgstr "Змінити профіль"
 msgid "Delete Profile"
 msgstr "Вилучити профіль"
 
-#: modules/updates/updates/ajaxUpdatesListWinGray.php:36
+#: modules/updates/updates/ajaxUpdatesListWinGray.php:83
 msgid "Enable for manual update"
 msgstr "Увімкніть для оновлення вручну"
 
@@ -1173,12 +1186,12 @@ msgstr "Час роботи"
 msgid "Medulla Updates"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:253
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:279
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:259
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:286
 msgid "Updates compliance by machines"
 msgstr "Сумісність оновлень з комп'ютерами"
 
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:255
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:261
 msgid "Deploy specific update on this group"
 msgstr "Розгорнути певне оновлення для цієї групи"
 
@@ -1833,11 +1846,11 @@ msgid " and "
 msgstr " і "
 
 #: modules/base/includes/users-xmlrpc.inc.php:82
-#: modules/base/includes/users-xmlrpc.inc.php:90
+#: modules/base/includes/users-xmlrpc.inc.php:89
 msgid "Invalid or expired link"
 msgstr ""
 
-#: modules/base/includes/users-xmlrpc.inc.php:141
+#: modules/base/includes/users-xmlrpc.inc.php:156
 #, php-format
 msgid ""
 "User %s created but password is not valid regarding your password "
@@ -1846,16 +1859,16 @@ msgstr ""
 "Створено запис користувача %s, але пароль до нього є некоректним за "
 "правилами паролів.<br/><strong>Вам слід змінити пароль користувача.</strong>"
 
-#: modules/base/includes/users-xmlrpc.inc.php:144
+#: modules/base/includes/users-xmlrpc.inc.php:159
 msgid "You cannot add more users."
 msgstr "Не можна додавати додаткових користувачів."
 
-#: modules/base/includes/users-xmlrpc.inc.php:149
+#: modules/base/includes/users-xmlrpc.inc.php:164
 #, php-format
 msgid "User %s successfully created"
 msgstr "Запис %s успішно створено"
 
-#: modules/base/groups/ajaxFilter.php:60 modules/base/infoPackage.inc.php:305
+#: modules/base/groups/ajaxFilter.php:60
 msgid "Groups"
 msgstr "Групи"
 
@@ -2068,13 +2081,8 @@ msgstr "Типова сторінка стану"
 msgid "Support page"
 msgstr "Сторінка підтримки"
 
-#: modules/base/infoPackage.inc.php:199 modules/base/users/ajaxFilter.php:144
-#: modules/base/views/index.tpl.php:95
-msgid "Users"
-msgstr "Користувачі"
-
 #: modules/base/infoPackage.inc.php:204 modules/base/users/index.php:31
-#: modules/base/views/index.tpl.php:43
+#: modules/base/views/index.tpl.php:44
 msgid "User list"
 msgstr "Список користувачів"
 
@@ -2323,7 +2331,7 @@ msgstr "Користувачі і групи"
 msgid "Proxy"
 msgstr "Проксі"
 
-#: modules/base/users/ajaxFilter.php:131 modules/base/views/index.tpl.php:84
+#: modules/base/users/ajaxFilter.php:131 modules/base/views/index.tpl.php:85
 msgid "Name"
 msgstr "Назва"
 
@@ -2331,17 +2339,21 @@ msgstr "Назва"
 msgid "Telephone"
 msgstr "Телефон"
 
-#: modules/base/users/ajaxFilter.php:135 modules/base/views/index.tpl.php:89
+#: modules/base/users/ajaxFilter.php:135 modules/base/views/index.tpl.php:90
 msgid "Edit"
 msgstr "Змінити"
 
-#: modules/base/users/ajaxFilter.php:139 modules/base/views/index.tpl.php:91
+#: modules/base/users/ajaxFilter.php:139 modules/base/views/index.tpl.php:92
 msgid "MMC rights"
 msgstr "Права MMC"
 
 #: modules/base/users/ajaxFilter.php:142
 msgid "Logged Actions"
 msgstr "Дії з журналу"
+
+#: modules/base/users/ajaxFilter.php:144 modules/base/views/index.tpl.php:96
+msgid "Users"
+msgstr "Користувачі"
 
 #: modules/base/users/editacl.php:155
 msgid "User ACLs successfully modified."
@@ -2509,11 +2521,11 @@ msgstr "У користувача root не може бути вибраних �
 msgid "Add this page to your favorites"
 msgstr "Додати цю сторінку до вибраних"
 
-#: modules/base/views/index.tpl.php:87
+#: modules/base/views/index.tpl.php:88
 msgid "Home directory"
 msgstr "Домашній каталог"
 
-#: modules/base/views/index.tpl.php:93
+#: modules/base/views/index.tpl.php:94
 msgid "Backup"
 msgstr "Резервування"
 
