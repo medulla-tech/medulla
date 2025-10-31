@@ -231,7 +231,7 @@ p {
 }
 
 #navbar ul li a {
-    padding: 40px 5px 15px 5px;
+    padding: 46px 5px 12px 5px;
     text-decoration: none;
     display: block;
     text-align: center;
@@ -244,10 +244,9 @@ p {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    background-color: #1b1e21;
+    border-radius: 8px;
+    transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
 }
-
-#navbar ul li a:hover {color: #999;}
 
 /* ---------------------------------------- */
 /* 3. Style pour localsidebar               */

@@ -1,15 +1,16 @@
 <?php
-/**
- * (c) 2022-2023 Siveo, http://siveo.net/
+/*
+ * (c) 2016-2023 Siveo, http://www.siveo.net
+ * (c) 2024-2025 Medulla, http://www.medulla-tech.io
  *
  * $Id$
  *
- * This file is part of Management Console (MMC).
+ * This file is part of MMC, http://www.medulla-tech.io
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ * the Free Software Foundation; either version 3 of the License, or
+ * any later version.
  *
  * MMC is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -17,8 +18,8 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with MMC; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ * along with MMC; If not, see <http://www.gnu.org/licenses/>.
+ * file: ajaxUpdatesListWinGray.php
  */
 require_once("modules/updates/includes/xmlrpc.php");
 /**
@@ -66,29 +67,15 @@ $titrenotableau=  _T("No updates are currently available in the Grey List  (manu
 // $completename = $_GET['completename'];
 $completename = $_GET['altname'];
 
-// Remplace les "+" par un espace
-$completename_cleaned = str_replace('+', ' ', $completename);
-// Remplace ">" par " → "
-$completename_cleaned = str_replace('>', ' → ', $completename_cleaned);
-// Remplace les "&nbsp;" par un espace
-$completename_cleaned = str_replace('&nbsp;', ' ', $completename_cleaned);
-// Supprime les espaces multiples
-$completename_cleaned = preg_replace('/\s+/', ' ', $completename_cleaned);
-// Supprime les espaces en début et fin de chaîne
-$completename_cleaned = trim($completename_cleaned);
 $ide = $_GET['uuid'];
 if ($grey_list['nb_element_total'] == "0")
 {
-    $message_tableau= sprintf("%s [%s] (%s)",
-                                    $titrenotableau ,
-                                    $completename_cleaned,
-                                    $ide);
+    $message_tableau= sprintf("%s",
+                                    $titrenotableau);
 } else
 {
-    $message_tableau= sprintf("%s [%s] (%s)",
-                            $titretableau ,
-                            $completename_cleaned,
-                            $ide);
+    $message_tableau= sprintf("%s",
+                            $titretableau);
 }
 
 // GrayList Actions
@@ -157,7 +144,6 @@ $g->setItemCount($count_grey);
 $g->setNavBar(new AjaxNavBar($count_grey, $filter, 'updateSearchParamformGray'));
 $g->setParamInfo($params_grey);
 
-// sprintf("%s [%s] (%s)", $titretableau , $completename_cleaned, $ide)
 // affichage titre tableau
 $g->setCaptionText($message_tableau);
 $g->setCssCaption(

@@ -44,7 +44,7 @@ if (
     // Mise à jour de la table avec les données reçues
     xmlrpc_update_approve_products($result, $_POST['entityid']);
 }
-generateEntityPage(_T("Activate microsoft product for update.", 'updates'),
+generateEntityPage(_T("Activate Microsoft product update.", 'updates'),
                             "ajaxApproveProduct",
                             $sidemenu);
 

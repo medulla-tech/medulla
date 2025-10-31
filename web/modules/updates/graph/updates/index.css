@@ -270,6 +270,11 @@
     align-items: center;
     gap: 12px;
     margin: 0;
+    margin-left: auto;
+}
+
+.updates-section .table-header__form form {
+    margin: 0 !important;
 }
 
 .updates-section .table-header__form .searchbox,
@@ -282,27 +287,175 @@
 }
 
 .table-header--stacked {
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: row;
+    align-items: center;
     gap: 16px;
     margin-bottom: 20px;
 }
 
 .table-header--stacked .table-header__title {
-    width: 100%;
-    margin-bottom: 4px;
-}
-
-.table-header--stacked .table-header__actions {
-    width: 100%;
-    margin-left: 0;
-    justify-content: flex-start;
+    flex: 1;
+    margin-bottom: 0;
 }
 
 .table-header--stacked .table-header__form {
-    margin: 0;
+    margin-left: auto;
+    width: auto;
+}
+.table-header--stacked .table-header__actions {
+    margin-left: auto;
+}
+
+@media (max-width: 768px) {
+    .table-header--stacked {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .table-header--stacked .table-header__title {
+        width: 100%;
+        margin-bottom: 4px;
+    }
+
+.table-header--stacked .table-header__form,
+.table-header--stacked .table-header__actions {
     width: 100%;
+    margin-left: 0;
+}
 }
 .approval-products table.listinfos thead td:first-child span {
     margin-left: -8px;
+}
+
+.major-entities-metrics table.listinfos {
+    width: 100%;
+    margin: 0;
+}
+
+.major-entities-metrics table.listinfos thead td {
+    text-align: center;
+    font-size: 12px;
+}
+
+.major-entities-metrics table.listinfos thead td:first-child {
+    text-align: left;
+}
+
+.major-entities-metrics table.listinfos thead td:first-child span {
+    padding-left: 0 !important;
+}
+
+.major-entities-metrics table.listinfos td {
+    vertical-align: middle;
+    padding: 12px 16px;
+}
+
+.major-entities-metrics table.listinfos td:not(:first-child) {
+    text-align: center;
+}
+
+.major-entities-metrics table.listinfos td .medulla-progress__track {
+    margin: 0 auto;
+}
+
+.major-entities-metrics table.listinfos td.action {
+    text-align: left;
+    padding-left: 22px;
+}
+
+.major-entities-metrics table.listinfos td.action ul.action {
+    display: flex;
+    justify-content: flex-start;
+    gap: 0;
+    padding: 0;
+    margin: 0 0 0 12px;
+    float: none;
+    line-height: normal;
+    align-items: center;
+}
+
+.major-entities-metrics table.listinfos td.action ul.action li {
+    float: none;
+    list-style: none;
+    margin-left: 0;
+}
+
+.major-entities-metrics table.listinfos td.action ul.action li + li {
+    margin-left: 8px;
+}
+
+.major-entities-metrics table.listinfos td.action ul.action li a {
+    display: inline-flex;
+    width: 22px;
+    height: 22px;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.entity-compliance-table table.listinfos {
+    width: 100%;
+    margin: 0;
+}
+
+.entity-compliance-table table.listinfos thead td {
+    text-align: center;
+    font-size: 12px;
+}
+
+.entity-compliance-table table.listinfos thead td:first-child {
+    text-align: left;
+}
+
+.entity-compliance-table table.listinfos thead td:first-child span {
+    padding-left: 0 !important;
+}
+
+.entity-compliance-table table.listinfos td {
+    vertical-align: middle;
+    padding: 12px 16px;
+}
+
+.entity-compliance-table table.listinfos td:not(:first-child) {
+    text-align: center;
+}
+
+.entity-compliance-table table.listinfos td .medulla-progress__track {
+    margin: 0 auto;
+}
+
+.entity-compliance-table table.listinfos td.action {
+    text-align: center;
+    padding-left: 0;
+}
+
+.entity-compliance-table table.listinfos td.action ul.action {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    padding: 0;
+    margin: 0 auto;
+    float: none;
+    line-height: normal;
+    align-items: center;
+    transform: translateX(8px);
+}
+
+.entity-compliance-table table.listinfos td.action ul.action li {
+    float: none;
+    list-style: none;
+    margin: 0;
+}
+
+.entity-compliance-table table.listinfos td.action ul.action li + li {
+    margin-left: 8px;
+}
+
+.entity-compliance-table table.listinfos td.action ul.action li a {
+    display: inline-flex;
+    width: 22px;
+    height: 22px;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
 }

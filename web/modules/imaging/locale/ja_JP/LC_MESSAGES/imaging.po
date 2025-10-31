@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-07 17:12+0200\n"
+"POT-Creation-Date: 2025-10-30 15:34+0100\n"
 "PO-Revision-Date: 2017-09-12 14:00+0000\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Japanese (Japan) (https://app.transifex.com/medulla/teams/72118/ja_JP/)\n"
@@ -1369,49 +1369,49 @@ msgid ""
 "imaging."
 msgstr "イメージングの使用を可能にするには、このコンピューターのイメージングサーバーを登録する必要があります。"
 
-#: modules/imaging/includes/includes.php:211
+#: modules/imaging/includes/includes.php:258
 msgid "Uptime: "
 msgstr ": "
 
-#: modules/imaging/includes/includes.php:213
+#: modules/imaging/includes/includes.php:260
 msgid "day"
 msgstr "日"
 
-#: modules/imaging/includes/includes.php:216
+#: modules/imaging/includes/includes.php:263
 msgid "hour"
 msgstr "時間"
 
-#: modules/imaging/includes/includes.php:218
+#: modules/imaging/includes/includes.php:265
 msgid "minute"
 msgstr "分"
 
-#: modules/imaging/includes/includes.php:222
+#: modules/imaging/includes/includes.php:269
 msgid "Memory"
 msgstr "メモリ"
 
-#: modules/imaging/includes/includes.php:225
+#: modules/imaging/includes/includes.php:272
 msgid "Swap"
 msgstr "スワップ"
 
-#: modules/imaging/includes/includes.php:238
+#: modules/imaging/includes/includes.php:285
 msgid "Never"
 msgstr "しない"
 
-#: modules/imaging/includes/includes.php:242
-#: modules/imaging/includes/includes.php:249
+#: modules/imaging/includes/includes.php:289
+#: modules/imaging/includes/includes.php:296
 msgid "As soon as possible"
 msgstr "できる限り早く"
 
-#: modules/imaging/includes/includes.php:251
+#: modules/imaging/includes/includes.php:298
 msgid "<i>undefined</i>"
 msgstr "<i></i> "
 
-#: modules/imaging/includes/includes.php:322
+#: modules/imaging/includes/includes.php:369
 msgid "Backup log messages"
 msgstr "バックアップログメッセージ"
 
-#: modules/imaging/includes/ajaxcommon.inc.php:39
-#: modules/imaging/includes/ajaxcommon.inc.php:60
+#: modules/imaging/includes/ajaxcommon.inc.php:41
+#: modules/imaging/includes/ajaxcommon.inc.php:62
 #: modules/imaging/imaging/tabs.php:100
 #: modules/imaging/imaging/ajaxImages.php:182
 #: modules/imaging/imaging/addservice.php:69
@@ -1420,16 +1420,16 @@ msgstr "バックアップログメッセージ"
 msgid "root"
 msgstr "ルート"
 
-#: modules/imaging/includes/ajaxcommon.inc.php:86
+#: modules/imaging/includes/ajaxcommon.inc.php:88
 #, php-format
 msgid "Imaging server of entity %s"
 msgstr " %s "
 
-#: modules/imaging/includes/ajaxcommon.inc.php:105
+#: modules/imaging/includes/ajaxcommon.inc.php:107
 msgid "the entity itself"
 msgstr "エンティティ自体"
 
-#: modules/imaging/includes/ajaxcommon.inc.php:121
+#: modules/imaging/includes/ajaxcommon.inc.php:123
 msgid "The registering in the imaging server has failed."
 msgstr "イメージングサーバーでの登録に失敗しました。"
 

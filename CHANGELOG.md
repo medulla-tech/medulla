@@ -1,5 +1,15 @@
 # Change Log
 
+## [5.4.2](https://github.com/medulla-tech/medulla/releases/tag/5.4.2) (2025-10-31)
+- [FEATURE] Improve styles across the web interface
+- [FEATURE] Improve user experience on various modules
+- [FEATURE] Add support for Windows Servers in Updates Module
+- [FEATURE] Manage Medulla users from the Admin module
+- [FEATURE] Define update deployment rules per entity in Updates module
+- [FEATURE] Improve the handling of drivers in Imaging module
+- [BUGFIX]  Fix creation of entities having an apostrophe in their names
+- [BUGFIX]  Fix creation of profile in Kiosk module for entities that are not allowed
+
 ## [5.4.1](https://github.com/medulla-tech/medulla/releases/tag/5.4.1) (2025-10-10)
 - [FEATURE] Ability to restart Medulla services from the dashboard
 - [FEATURE] Ability to generate agents from the dashboard

@@ -1,15 +1,16 @@
 <?php
-/**
- * (c) 2022-2025 Siveo, http://siveo.net/
+/*
+ * (c) 2016-2023 Siveo, http://www.siveo.net
+ * (c) 2024-2025 Medulla, http://www.medulla-tech.io
  *
  * $Id$
  *
- * This file is part of Management Console (MMC).
+ * This file is part of MMC, http://www.medulla-tech.io
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ * the Free Software Foundation; either version 3 of the License, or
+ * any later version.
  *
  * MMC is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -17,8 +18,8 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with MMC; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ * along with MMC; If not, see <http://www.gnu.org/licenses/>.
+ * file: ajaxEntitiesList.php
  */
 require_once("modules/updates/includes/xmlrpc.php");
 require_once("modules/updates/includes/html.inc.php");
@@ -147,13 +148,14 @@ $n->setcssIds($ids_entity);
 $n->disableFirstColumnActionLink();
 
 $n->addExtraInfo($complRates, _T("Compliance rate", "updates"));
-// $n->addExtraInfo($nbupdate, _T("Missing updates", "updates"));
+$n->addExtraInfo($nbupdate, _T("Missing updates", "updates"));
 $n->addExtraInfo($nbMachines, _T("Non-compliant machines", "updates"));
 $n->addExtraInfo($totalMachine, _T("Total machines", "updates"));
 
 $n->setItemCount($count);
 $n->setNavBar(new AjaxNavBar($count, $filter));
 $n->setParamInfo($params);
+$n->setTableHeaderPadding(12);
 
 $n->addActionItemArray($actionHistories);
 $n->addActionItemArray($actiondetailsByMachs);
@@ -162,5 +164,7 @@ $n->addActionItemArray($actiondetailsByUpds);
 $n->addActionItemArray($actiondeploySpecifics);
 $n->start = 0;
 $n->end = $count;
+echo '<div class="entity-compliance-table">';
 $n->display();
+echo '</div>';
 ?>

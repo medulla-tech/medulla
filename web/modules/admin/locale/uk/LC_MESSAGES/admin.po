@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-07 20:28+0200\n"
+"POT-Creation-Date: 2025-10-30 15:33+0100\n"
 "PO-Revision-Date: 2025-07-30 09:10+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2025\n"
 "Language-Team: Ukrainian (https://app.transifex.com/medulla/teams/72118/uk/)\n"
@@ -22,26 +22,26 @@ msgstr ""
 "Language: uk\n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
-#: modules/admin/admin/desactivateUser.php:32
+#: modules/admin/admin/desactivateUser.php:35
 #: modules/admin/admin/deleteUser.php:30 modules/admin/admin/editEntity.php:81
 #: modules/admin/admin/editEntity.php:85
 #: modules/admin/admin/editEntity.php:178
 #: modules/admin/admin/deleteEntity.php:27
-#: modules/admin/admin/editUser.php:506
+#: modules/admin/admin/editUser.php:454
 msgid "Unknown"
 msgstr "Невідомий"
 
-#: modules/admin/admin/desactivateUser.php:42
+#: modules/admin/admin/desactivateUser.php:46
 #, php-format
 msgid "User <strong>%s</strong> has been <strong>%s</strong> successfully."
 msgstr ""
 
-#: modules/admin/admin/desactivateUser.php:50
+#: modules/admin/admin/desactivateUser.php:54
 #, php-format
 msgid "Failed to update status for user <strong>%s</strong>."
 msgstr ""
 
-#: modules/admin/admin/desactivateUser.php:66
+#: modules/admin/admin/desactivateUser.php:70
 msgid "Missing parameters: User ID or Entity ID not provided."
 msgstr ""
 
@@ -186,7 +186,7 @@ msgstr ""
 #: modules/admin/admin/editRelayRule.php:116
 #: modules/admin/admin/ajaxManageProviders.php:89
 #: modules/admin/admin/newRelayRule.php:107
-#: modules/admin/admin/ajaxListUsersofEntity.php:101
+#: modules/admin/admin/ajaxListUsersofEntity.php:132
 #: modules/admin/admin/newCluster.php:91
 msgid "Edit"
 msgstr "Змінити"
@@ -229,7 +229,7 @@ msgid "Add a new provider"
 msgstr ""
 
 #: modules/admin/admin/editProvider.php:200
-#: modules/admin/admin/editUser.php:784
+#: modules/admin/admin/editUser.php:732
 msgid "Save changes"
 msgstr ""
 
@@ -431,155 +431,155 @@ msgstr "Назва"
 msgid "Unban Machines"
 msgstr ""
 
-#: modules/admin/admin/editUser.php:67
+#: modules/admin/admin/editUser.php:41
 msgid "The password and its confirmation cannot be empty."
 msgstr ""
 
-#: modules/admin/admin/editUser.php:68
+#: modules/admin/admin/editUser.php:42
 msgid "Please complete the password and its confirmation."
 msgstr ""
 
-#: modules/admin/admin/editUser.php:73
+#: modules/admin/admin/editUser.php:47
 msgid "Passwords do not match."
 msgstr ""
 
-#: modules/admin/admin/editUser.php:79
+#: modules/admin/admin/editUser.php:53
 msgid "The password must contain at least 12 characters."
 msgstr ""
 
-#: modules/admin/admin/editUser.php:82
+#: modules/admin/admin/editUser.php:56
 msgid "The password must contain at least one capital letter."
 msgstr ""
 
-#: modules/admin/admin/editUser.php:85
+#: modules/admin/admin/editUser.php:59
 msgid "The password must contain at least a small letter."
 msgstr ""
 
-#: modules/admin/admin/editUser.php:88
+#: modules/admin/admin/editUser.php:62
 msgid "The password must contain at least one figure."
 msgstr ""
 
-#: modules/admin/admin/editUser.php:91
+#: modules/admin/admin/editUser.php:65
 msgid "The password must contain at least a special character."
 msgstr ""
 
-#: modules/admin/admin/editUser.php:143
+#: modules/admin/admin/editUser.php:91
 #: modules/admin/admin/ajaxEntitiesManagement.php:48
 msgid "No GLPI session found. Please sign in again."
 msgstr ""
 
-#: modules/admin/admin/editUser.php:353
+#: modules/admin/admin/editUser.php:301
 msgid "Failed to create user "
 msgstr ""
 
-#: modules/admin/admin/editUser.php:354
+#: modules/admin/admin/editUser.php:302
 msgid "Error in "
 msgstr ""
 
-#: modules/admin/admin/editUser.php:362
+#: modules/admin/admin/editUser.php:310
 msgid "Username (email) is required."
 msgstr ""
 
-#: modules/admin/admin/editUser.php:365
+#: modules/admin/admin/editUser.php:313
 msgid "Invalid email address"
 msgstr ""
 
-#: modules/admin/admin/editUser.php:378
+#: modules/admin/admin/editUser.php:326
 msgid "Profile and entity are required."
 msgstr ""
 
-#: modules/admin/admin/editUser.php:382 modules/admin/admin/editUser.php:595
+#: modules/admin/admin/editUser.php:330 modules/admin/admin/editUser.php:543
 msgid "Invalid phone number."
 msgstr ""
 
-#: modules/admin/admin/editUser.php:408 modules/admin/admin/editUser.php:528
+#: modules/admin/admin/editUser.php:356 modules/admin/admin/editUser.php:476
 msgid "Internal error."
 msgstr ""
 
-#: modules/admin/admin/editUser.php:414 modules/admin/admin/editUser.php:460
+#: modules/admin/admin/editUser.php:362 modules/admin/admin/editUser.php:408
 msgid "Unknown error."
 msgstr ""
 
-#: modules/admin/admin/editUser.php:511
+#: modules/admin/admin/editUser.php:459
 #, php-format
 msgid "User <strong>%s</strong> created in entity <strong>%s</strong>."
 msgstr ""
 
-#: modules/admin/admin/editUser.php:514
+#: modules/admin/admin/editUser.php:462
 msgid "Some LDAP attributes could not be set: "
 msgstr ""
 
-#: modules/admin/admin/editUser.php:518
+#: modules/admin/admin/editUser.php:466
 #, php-format
 msgid ""
 "User <strong>%s</strong> created successfully in entity <strong>%s</strong>."
 msgstr ""
 
-#: modules/admin/admin/editUser.php:543
+#: modules/admin/admin/editUser.php:491
 msgid "Invalid user ID."
 msgstr ""
 
-#: modules/admin/admin/editUser.php:604
+#: modules/admin/admin/editUser.php:552
 msgid "The selected profile is invalid or not allowed."
 msgstr ""
 
-#: modules/admin/admin/editUser.php:610
+#: modules/admin/admin/editUser.php:558
 msgid "The selected entity is invalid or not allowed."
 msgstr ""
 
-#: modules/admin/admin/editUser.php:713
+#: modules/admin/admin/editUser.php:661
 msgid "LDAP update failed for the following attributes: "
 msgstr ""
 
-#: modules/admin/admin/editUser.php:719
+#: modules/admin/admin/editUser.php:667
 msgid "No changes."
 msgstr ""
 
-#: modules/admin/admin/editUser.php:721
+#: modules/admin/admin/editUser.php:669
 msgid "Changes saved."
 msgstr ""
 
-#: modules/admin/admin/editUser.php:723
+#: modules/admin/admin/editUser.php:671
 msgid "Update failed."
 msgstr ""
 
-#: modules/admin/admin/editUser.php:760
+#: modules/admin/admin/editUser.php:708
 msgid "No"
 msgstr "Ні"
 
-#: modules/admin/admin/editUser.php:760
+#: modules/admin/admin/editUser.php:708
 msgid "Yes"
 msgstr "Так"
 
-#: modules/admin/admin/editUser.php:765
+#: modules/admin/admin/editUser.php:713
 msgid "Local"
 msgstr ""
 
-#: modules/admin/admin/editUser.php:765
-msgid "OIDC"
+#: modules/admin/admin/editUser.php:713
+msgid "OIDC / Magic Link"
 msgstr ""
 
-#: modules/admin/admin/editUser.php:784
+#: modules/admin/admin/editUser.php:732
 msgid "Create new User"
 msgstr ""
 
-#: modules/admin/admin/editUser.php:791
+#: modules/admin/admin/editUser.php:739
 msgid "User Profile"
 msgstr ""
 
-#: modules/admin/admin/editUser.php:792
+#: modules/admin/admin/editUser.php:740
 msgid "Entity"
 msgstr "Запис"
 
-#: modules/admin/admin/editUser.php:793
+#: modules/admin/admin/editUser.php:741
 msgid "Apply to sub-entities (recursive)"
 msgstr ""
 
-#: modules/admin/admin/editUser.php:795
+#: modules/admin/admin/editUser.php:743
 msgid "Authentication"
 msgstr ""
 
-#: modules/admin/admin/editUser.php:800 modules/admin/admin/editUser.php:810
+#: modules/admin/admin/editUser.php:748 modules/admin/admin/editUser.php:758
 msgid "Mail"
 msgstr "Пошта"
 
@@ -639,39 +639,40 @@ msgid "Download"
 msgstr "Отримати"
 
 #: modules/admin/admin/ajaxEntitiesManagement.php:130
-#: modules/admin/admin/ajaxEntitiesManagement.php:178
+#: modules/admin/admin/ajaxEntitiesManagement.php:183
 msgid "Unauthorized modification"
 msgstr ""
 
 #: modules/admin/admin/ajaxEntitiesManagement.php:131
-#: modules/admin/admin/ajaxEntitiesManagement.php:182
+#: modules/admin/admin/ajaxEntitiesManagement.php:187
+#: modules/admin/admin/ajaxListUsersofEntity.php:180
 msgid "Unauthorized deletion"
 msgstr ""
 
-#: modules/admin/admin/ajaxEntitiesManagement.php:163
-msgid "Delete"
-msgstr "Вилучити"
-
-#: modules/admin/admin/ajaxEntitiesManagement.php:170
+#: modules/admin/admin/ajaxEntitiesManagement.php:164
 #, php-format
 msgid ""
 "Are you sure you want to delete the entity <strong>%s</strong> ? All "
 "packages linked to this entity will also be deleted."
 msgstr ""
 
-#: modules/admin/admin/ajaxEntitiesManagement.php:230
+#: modules/admin/admin/ajaxEntitiesManagement.php:170
+msgid "Delete"
+msgstr "Вилучити"
+
+#: modules/admin/admin/ajaxEntitiesManagement.php:235
 msgid "Name of Entity"
 msgstr ""
 
-#: modules/admin/admin/ajaxEntitiesManagement.php:231
+#: modules/admin/admin/ajaxEntitiesManagement.php:236
 msgid "Complete Name"
 msgstr ""
 
-#: modules/admin/admin/ajaxEntitiesManagement.php:232
+#: modules/admin/admin/ajaxEntitiesManagement.php:237
 msgid "Users"
 msgstr "Користувачі"
 
-#: modules/admin/admin/ajaxEntitiesManagement.php:233
+#: modules/admin/admin/ajaxEntitiesManagement.php:238
 msgid "Computers"
 msgstr "Комп'ютери"
 
@@ -1008,66 +1009,74 @@ msgstr ""
 msgid "Ban Machines"
 msgstr ""
 
-#: modules/admin/admin/ajaxListUsersofEntity.php:96
+#: modules/admin/admin/ajaxListUsersofEntity.php:107
 msgid "Enabled"
 msgstr "Увімкнено"
 
-#: modules/admin/admin/ajaxListUsersofEntity.php:96
+#: modules/admin/admin/ajaxListUsersofEntity.php:107
 msgid "Disabled"
 msgstr "Вимкнено"
 
-#: modules/admin/admin/ajaxListUsersofEntity.php:108
+#: modules/admin/admin/ajaxListUsersofEntity.php:123
+msgid "Unauthorized edition"
+msgstr ""
+
+#: modules/admin/admin/ajaxListUsersofEntity.php:144
 msgid "Deactivate User"
 msgstr ""
 
-#: modules/admin/admin/ajaxListUsersofEntity.php:108
+#: modules/admin/admin/ajaxListUsersofEntity.php:144
 msgid "Reactivate User"
 msgstr ""
 
-#: modules/admin/admin/ajaxListUsersofEntity.php:116
+#: modules/admin/admin/ajaxListUsersofEntity.php:152
 #, php-format
 msgid "Are you sure you want to deactivate this user <strong>%s</strong>?"
 msgstr ""
 
-#: modules/admin/admin/ajaxListUsersofEntity.php:117
+#: modules/admin/admin/ajaxListUsersofEntity.php:153
 #, php-format
 msgid "Are you sure you want to reactivate this user <strong>%s</strong>?"
 msgstr ""
 
-#: modules/admin/admin/ajaxListUsersofEntity.php:123
+#: modules/admin/admin/ajaxListUsersofEntity.php:159
 msgid "Delete user"
 msgstr "Вилучити користувача"
 
-#: modules/admin/admin/ajaxListUsersofEntity.php:129
+#: modules/admin/admin/ajaxListUsersofEntity.php:166
 #, php-format
 msgid "Are you sure you want to delete this user <strong>%s</strong>?"
 msgstr ""
 
-#: modules/admin/admin/ajaxListUsersofEntity.php:164
+#: modules/admin/admin/ajaxListUsersofEntity.php:172
+msgid "Unauthorized deactivation"
+msgstr ""
+
+#: modules/admin/admin/ajaxListUsersofEntity.php:221
 msgid "User Name"
 msgstr "Ім'я користувача"
 
-#: modules/admin/admin/ajaxListUsersofEntity.php:168
+#: modules/admin/admin/ajaxListUsersofEntity.php:225
 msgid "First name"
 msgstr "Ім'я"
 
-#: modules/admin/admin/ajaxListUsersofEntity.php:169
+#: modules/admin/admin/ajaxListUsersofEntity.php:226
 msgid "Last Name"
 msgstr ""
 
-#: modules/admin/admin/ajaxListUsersofEntity.php:170
+#: modules/admin/admin/ajaxListUsersofEntity.php:227
 msgid "Phone"
 msgstr "Телефон"
 
-#: modules/admin/admin/ajaxListUsersofEntity.php:171
+#: modules/admin/admin/ajaxListUsersofEntity.php:228
 msgid "Status"
 msgstr "Стан"
 
-#: modules/admin/admin/ajaxListUsersofEntity.php:172
+#: modules/admin/admin/ajaxListUsersofEntity.php:229
 msgid "Last connection"
 msgstr ""
 
-#: modules/admin/admin/ajaxListUsersofEntity.php:173
+#: modules/admin/admin/ajaxListUsersofEntity.php:230
 msgid "Profile"
 msgstr "Профіль"
 

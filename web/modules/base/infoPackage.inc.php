@@ -31,7 +31,7 @@ require_once("modules/base/includes/users-xmlrpc.inc.php");
  * module declaration
  */
 $mod = new Module("base");
-$mod->setVersion("5.4.1");
+$mod->setVersion("5.4.2");
 $mod->setRevision('$Rev$');
 $mod->setAPIVersion("9:0:5");
 $mod->setDescription(_("User, group and computer management"));
@@ -196,10 +196,10 @@ $mod->addSubmod($submod);
  * user submod definition
  */
 
-$submod = new SubModule("users", _("Users"));
-$submod->setImg('modules/base/graph/navbar/user');
-$submod->setDefaultPage("base/users/index");
-$submod->setPriority(0);
+// $submod = new SubModule("users", _("Users"));
+// $submod->setImg('modules/base/graph/navbar/user');
+// $submod->setDefaultPage("base/users/index");
+// $submod->setPriority(0);
 
 $page = new Page("index", _("User list"));
 $page->setImg(
@@ -302,10 +302,10 @@ $mod->addSubmod($submod);
  * groups submod definition
  */
 
-$submod = new SubModule("groups", _("Groups"));
-$submod->setImg('modules/base/graph/navbar/group');
-$submod->setDefaultPage("base/groups/index");
-$submod->setPriority(1);
+// $submod = new SubModule("groups", _("Groups"));
+// $submod->setImg('modules/base/graph/navbar/group');
+// $submod->setDefaultPage("base/groups/index");
+// $submod->setPriority(1);
 
 $page = new Page("index", _("Group list"));
 $submod->addPage($page);

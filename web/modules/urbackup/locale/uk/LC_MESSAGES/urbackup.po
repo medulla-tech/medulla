@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-07 17:13+0200\n"
+"POT-Creation-Date: 2025-10-30 15:34+0100\n"
 "PO-Revision-Date: 2022-11-14 14:44+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2025\n"
 "Language-Team: Ukrainian (https://app.transifex.com/medulla/teams/72118/uk/)\n"
@@ -25,37 +25,37 @@ msgstr ""
 msgid "Assign member to profile"
 msgstr "Пов'язати учасника з профілем"
 
-#: modules/urbackup/urbackup/edit_group_settings.php:31
+#: modules/urbackup/urbackup/edit_group_settings.php:32
 msgid "Settings for "
 msgstr "Параметри для"
 
-#: modules/urbackup/urbackup/edit_group_settings.php:134
+#: modules/urbackup/urbackup/edit_group_settings.php:135
 msgid "You have error with your input informations."
 msgstr "Маємо помилку з введеними вами даними."
 
-#: modules/urbackup/urbackup/edit_group_settings.php:142
+#: modules/urbackup/urbackup/edit_group_settings.php:143
 msgid "Info : Separate path with ';', you can put '*' to every character"
 msgstr ""
 "Відомості: шляхи слід відокремлювати символом «;», «*» замінює довільний "
 "символ"
 
-#: modules/urbackup/urbackup/edit_group_settings.php:147
+#: modules/urbackup/urbackup/edit_group_settings.php:148
 msgid "Interval for incremental file backups (hour)"
 msgstr "Інтервал для нарощувальних резервних копій (у годинах)"
 
-#: modules/urbackup/urbackup/edit_group_settings.php:148
+#: modules/urbackup/urbackup/edit_group_settings.php:149
 msgid "Interval for full file backups (day)"
 msgstr "Інтервал для повних резервних копій (у годинах)"
 
-#: modules/urbackup/urbackup/edit_group_settings.php:149
+#: modules/urbackup/urbackup/edit_group_settings.php:150
 msgid "Excluded files"
 msgstr "Виключені файли"
 
-#: modules/urbackup/urbackup/edit_group_settings.php:150
+#: modules/urbackup/urbackup/edit_group_settings.php:151
 msgid "Included files "
 msgstr "Включені файли"
 
-#: modules/urbackup/urbackup/edit_group_settings.php:151
+#: modules/urbackup/urbackup/edit_group_settings.php:152
 msgid "Default directories to backup"
 msgstr "Типові каталоги для резервного копіювання"
 
@@ -75,7 +75,7 @@ msgstr "Місце на диску, яке використано усіма к�
 #: modules/urbackup/urbackup/index.php:308
 #: modules/urbackup/urbackup/list_backups.php:287
 #: modules/urbackup/urbackup/result_search_file.php:48
-#: modules/urbackup/urbackup/all_files_backup.php:118
+#: modules/urbackup/urbackup/all_files_backup.php:120
 msgid "Size"
 msgstr "Розмір"
 
@@ -93,7 +93,7 @@ msgstr "Назва комп'ютера"
 #: modules/urbackup/urbackup/index.php:268
 #: modules/urbackup/urbackup/list_backups.php:288
 #: modules/urbackup/urbackup/result_search_file.php:49
-#: modules/urbackup/urbackup/all_files_backup.php:122
+#: modules/urbackup/urbackup/all_files_backup.php:124
 msgid "Action"
 msgstr "Дія"
 
@@ -125,7 +125,7 @@ msgid "Id"
 msgstr "Ід."
 
 #: modules/urbackup/urbackup/index.php:303
-#: modules/urbackup/urbackup/usersgroups.php:77
+#: modules/urbackup/urbackup/usersgroups.php:78
 msgid "Name"
 msgstr "Назва"
 
@@ -196,19 +196,19 @@ msgstr ""
 msgid "Logs"
 msgstr "Журнали"
 
-#: modules/urbackup/urbackup/list_computers_ongroup.php:30
+#: modules/urbackup/urbackup/list_computers_ongroup.php:31
 msgid "List user on profil "
 msgstr "Додати користувача до списку профілю"
 
-#: modules/urbackup/urbackup/list_computers_ongroup.php:120
+#: modules/urbackup/urbackup/list_computers_ongroup.php:121
 msgid "Add member to this profile"
 msgstr "Додати учасника до цього профілю"
 
-#: modules/urbackup/urbackup/list_computers_ongroup.php:139
+#: modules/urbackup/urbackup/list_computers_ongroup.php:140
 msgid "Computer <b>outside</b> the profile"
 msgstr "Комп'ютер <b>поза</b> профілем"
 
-#: modules/urbackup/urbackup/list_computers_ongroup.php:140
+#: modules/urbackup/urbackup/list_computers_ongroup.php:141
 msgid "Computer <b>inside</b> the profile"
 msgstr "Комп'ютер <b>у</b> профілі"
 
@@ -342,15 +342,15 @@ msgid "Yes"
 msgstr "Так"
 
 #: modules/urbackup/urbackup/list_backups.php:340
-#: modules/urbackup/urbackup/all_files_backup.php:185
-#: modules/urbackup/urbackup/usersgroups.php:88
-#: modules/urbackup/urbackup/usersgroups.php:93
+#: modules/urbackup/urbackup/all_files_backup.php:187
+#: modules/urbackup/urbackup/usersgroups.php:89
+#: modules/urbackup/urbackup/usersgroups.php:94
 msgid "Browse"
 msgstr "Вибрати"
 
 #: modules/urbackup/urbackup/list_backups.php:350
 #: modules/urbackup/urbackup/list_backups.php:357
-#: modules/urbackup/urbackup/usersgroups.php:99
+#: modules/urbackup/urbackup/usersgroups.php:100
 msgid "Delete"
 msgstr "Вилучити"
 
@@ -405,13 +405,13 @@ msgstr "Дата створення"
 
 #: modules/urbackup/urbackup/result_search_file.php:124
 #: modules/urbackup/urbackup/result_search_file.php:152
-#: modules/urbackup/urbackup/all_files_backup.php:189
+#: modules/urbackup/urbackup/all_files_backup.php:191
 msgid "DOWNLOAD"
 msgstr "ОТРИМАТИ"
 
 #: modules/urbackup/urbackup/result_search_file.php:125
 #: modules/urbackup/urbackup/result_search_file.php:153
-#: modules/urbackup/urbackup/all_files_backup.php:190
+#: modules/urbackup/urbackup/all_files_backup.php:192
 msgid "RESTORE"
 msgstr "ВІДНОВИТИ"
 
@@ -421,54 +421,58 @@ msgid "Review"
 msgstr "Переглянути"
 
 #: modules/urbackup/urbackup/localSidebar.php:25
-#: modules/urbackup/urbackup/usersgroups.php:27
+#: modules/urbackup/urbackup/usersgroups.php:28
 #: modules/urbackup/infoPackage.inc.php:110
 msgid "Profiles"
 msgstr "Профілі"
 
-#: modules/urbackup/urbackup/all_files_backup.php:60
+#: modules/urbackup/urbackup/all_files_backup.php:61
 msgid "Backups list for "
 msgstr "Список резервних копій для"
 
-#: modules/urbackup/urbackup/all_files_backup.php:84
+#: modules/urbackup/urbackup/all_files_backup.php:85
 msgid "Restoring request successfully asked to client."
 msgstr "Запит щодо відновлення успішно подано до клієнта."
 
-#: modules/urbackup/urbackup/all_files_backup.php:90
+#: modules/urbackup/urbackup/all_files_backup.php:91
 msgid "Restoring error, please try again, check if client exist or is online."
 msgstr ""
 "Помилка під час відновлення. Будь ласка, повторіть спробу, перевірте, чи "
 "існує клієнт, і чи перебуває він у мережі."
 
-#: modules/urbackup/urbackup/all_files_backup.php:97
+#: modules/urbackup/urbackup/all_files_backup.php:98
 msgid " Path: "
 msgstr "Шлях:"
 
-#: modules/urbackup/urbackup/all_files_backup.php:102
+#: modules/urbackup/urbackup/all_files_backup.php:103
 msgid "Back to previous path"
 msgstr "Резервне копіювання за попереднім шляхом"
 
-#: modules/urbackup/urbackup/all_files_backup.php:106
+#: modules/urbackup/urbackup/all_files_backup.php:107
 msgid "Back to backup list"
 msgstr "Повернутися до списку резервних копій"
 
-#: modules/urbackup/urbackup/all_files_backup.php:117
+#: modules/urbackup/urbackup/all_files_backup.php:110
+msgid "Clear search"
+msgstr ""
+
+#: modules/urbackup/urbackup/all_files_backup.php:119
 msgid "File/Folder"
 msgstr "Файл/Тека"
 
-#: modules/urbackup/urbackup/all_files_backup.php:119
+#: modules/urbackup/urbackup/all_files_backup.php:121
 msgid "Create date"
 msgstr "Дата створення"
 
-#: modules/urbackup/urbackup/all_files_backup.php:120
+#: modules/urbackup/urbackup/all_files_backup.php:122
 msgid "Last modification"
 msgstr "Остання зміна"
 
-#: modules/urbackup/urbackup/all_files_backup.php:121
+#: modules/urbackup/urbackup/all_files_backup.php:123
 msgid "Last access"
 msgstr "Останній доступ"
 
-#: modules/urbackup/urbackup/all_files_backup.php:131
+#: modules/urbackup/urbackup/all_files_backup.php:133
 msgid "No file"
 msgstr "Немає файла"
 
@@ -488,19 +492,19 @@ msgstr ""
 msgid "Failed to create the group '"
 msgstr ""
 
-#: modules/urbackup/urbackup/usersgroups.php:61
+#: modules/urbackup/urbackup/usersgroups.php:62
 msgid "Profile name :"
 msgstr "Назва профілю:"
 
-#: modules/urbackup/urbackup/usersgroups.php:72
+#: modules/urbackup/urbackup/usersgroups.php:73
 msgid "Profile list :"
 msgstr "Список профілів:"
 
-#: modules/urbackup/urbackup/usersgroups.php:78
+#: modules/urbackup/urbackup/usersgroups.php:79
 msgid "Actions"
 msgstr "Дії"
 
-#: modules/urbackup/urbackup/usersgroups.php:96
+#: modules/urbackup/urbackup/usersgroups.php:97
 msgid "Edit"
 msgstr "Змінити"
 
