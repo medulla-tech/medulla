@@ -26,6 +26,138 @@
 require("FormGenerator.php");
 require_once("utils.inc.php");
 
+
+/**
+ * @brief Génère un écran de splash animé avec une image, des transitions d'apparition et de disparition.
+ *
+ * Cette fonction injecte directement dans le DOM une overlay contenant une image de splash,
+ * avec des animations CSS pour l'apparition et la disparition. L'overlay est supprimée automatiquement
+ * après la fin de l'animation de disparition. Optionnellement, un élément HTML peut recevoir le focus
+ * après la disparition du splash.
+ *
+ * @param string $imageUrl          URL de l'image à afficher dans le splash.
+ * @param int    $appearAnimTime     Durée (ms) de l'animation d'apparition (défaut: 500).
+ * @param int    $disappearDelay     Délai (ms) avant le début de la disparition (défaut: 3000).
+ * @param int    $disappearAnimTime  Durée (ms) de l'animation de disparition (défaut: 800).
+ * @param string $containerId       ID du conteneur HTML (défaut: 'splash-container').
+ * @param string $additionalCss     CSS supplémentaire à appliquer au conteneur.
+ * @param string $focusId           ID de l'élément HTML à focus après la disparition du splash (optionnel).
+ *
+ * @note
+ * - Les durées négatives sont corrigées en 0.
+ * - Le conteneur est positionné en fixed, centré, avec un fond semi-transparent.
+ * - L'image est responsive (max-width: 90%) et possède un léger effet de zoom à l'apparition.
+ * - Si $focusId est fourni, l'élément correspondant recevra le focus après la disparition.
+ *
+ * @example
+ * <?php
+ * generateSplashScreen(
+ *     "graph/test.png",  // URL de l'image
+ *     25,                // Durée d'apparition (ms)
+ *     400,               // Délai avant disparition (ms)
+ *     2000,              // Durée de disparition (ms)
+ *     'splash-container',// ID du conteneur
+ *     '',                // CSS supplémentaire
+ *     'username'         // ID de l'élément à focus après le splash
+ * );
+ * ?>
+ */
+
+function generateSplashScreen(
+    string $imageUrl,
+    int $appearAnimTime = 500,
+    int $disappearDelay = 3000,
+    int $disappearAnimTime = 800,
+    string $containerId = 'splash-container',
+    string $additionalCss = '',
+    string $focusId = '' // <-- ID de l'élément à focus après splash
+): void {
+    $appearMs = max(0, (int)$appearAnimTime);
+    $disappearDelayMs = max(0, (int)$disappearDelay);
+    $disappearMs = max(0, (int)$disappearAnimTime);
+
+    $css = "
+        <style>
+            #$containerId {
+                position: fixed;
+                inset: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: rgba(0,0,0,0.85);
+                opacity: 1;
+                z-index: 2147483647;
+                overflow: hidden;
+                transition: opacity {$disappearMs}ms ease-in-out;
+                $additionalCss
+            }
+            #$containerId.fade-out { opacity: 0; }
+            #$containerId .splash-image {
+                width: 50vw;
+                max-width: 90%;
+                height: auto;
+                opacity: 0;
+                transform: scale(0.92);
+                transition: opacity {$appearMs}ms ease-in-out, transform {$appearMs}ms ease-in-out;
+                border-radius: 6px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            }
+            #$containerId .splash-image.visible { opacity: 1; transform: scale(1); }
+            #$containerId .splash-image.hide { opacity: 0; transform: scale(0.6); }
+        </style>
+    ";
+
+    $html = "
+        <div id='$containerId' role='presentation' aria-hidden='true'>
+            <img class='splash-image' src='$imageUrl' alt='Image de présentation'>
+        </div>
+    ";
+
+    $js = "
+        <script>
+            (function() {
+                const appearMs = {$appearMs};
+                const disappearDelayMs = {$disappearDelayMs};
+                const disappearMs = {$disappearMs};
+
+                const container = document.getElementById('{$containerId}');
+                if (!container) return;
+                const img = container.querySelector('.splash-image');
+                if (!img) return;
+
+                // apparition
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => img.classList.add('visible'));
+                });
+
+                // disparition
+                setTimeout(() => {
+                    img.style.transitionDuration = disappearMs + 'ms, ' + disappearMs + 'ms';
+                    img.classList.remove('visible');
+                    requestAnimationFrame(() => {
+                        img.classList.add('hide');
+                        container.classList.add('fade-out');
+                    });
+
+                    setTimeout(() => {
+                        container.remove();
+
+                        // focus sur l'élément si ID fourni et présent
+                        if ('{$focusId}') {
+                            const el = document.getElementById('{$focusId}');
+                            if (el) el.focus();
+                        }
+
+                    }, disappearMs + 50);
+
+                }, disappearDelayMs);
+            })();
+        </script>
+    ";
+
+    echo $css . $html . $js;
+}
+
 /**
  * Generates a unique ID for auto-generation in JavaScript or other similar contexts.
  * The ID is incremented each time the function is called, ensuring uniqueness.
@@ -336,7 +468,7 @@ class ActionItem
     * Génère plusieurs liens pour la même action, à partir d'une liste de valeurs
     *
     * @param array $paramsList  tableau de valeurs pour le paramètre principal
-    *                           Exemple : ['root', 'jfk', 'admin']
+    *                           Exemple : ['root', 'kno', 'admin']
     * @param array $extraParams tableau associatif commun de paramètres supplémentaires
     *                           Exemple : ['restreint' => 1, 'entity' => 1]
     */
