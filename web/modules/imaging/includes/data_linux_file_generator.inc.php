@@ -1639,9 +1639,23 @@ $timezones = [
     "UTC",
 ];
 
+$info_services_select = _T("Select which update services to use; define the mirrors to be used. Values shown below are the normal defaults.", "imaging");
+$info_add_key = _T("URL to the public key of the local repository; you must provide a key or apt will complain about the unauthenticated repository and so the sources.list line will be left commented out. or one can provide it in-line by base64 encoding the contents of the key file (with `base64 -w0`)", "imaging");
+$info_run_tasksel = _T("Or choose to not get the tasksel dialog displayed at all (and don't install any packages).", "imaging");
+$info_contest = _T("You can choose, if your system will report back on what software you have installed, and what software you use. The default is not to report back, but sending reports helps the project determine what software is most popular and should be included on the first CD/DVD.", "imaging");
+$info_debian = _T("This is fairly safe to set, it makes grub install automatically to the UEFI partition/boot record if no other operating system is detected on the machine.", "imaging");
+$info_multi = _T("This one makes grub-installer install to the UEFI partition/boot record, if it also finds some other OS, which is less safe as it might not be able to boot that other OS.", "imaging");
 $info_init_partition = _T("If the system has free space you can choose to only partition that space. This is only honoured if partman-auto/method (below) is not set.", "imaging");
 $info_lvm_size = _T("You can define the amount of space that will be used for the LVM volume group. It can either be a size with its unit (eg. 20 GB), a percentage of free space or the 'max' keyword.", "imaging");
 $info_remove_old_lvm = _T("If one of the disks that are going to be automatically partitioned contains an old LVM configuration, the user will normally receive a warning. This can be preseeded away...", "imaging");
+$info_disable_cdrom = _T("If you don't want to have the sources.list entry for a DVD/ BD installation image active in the installed system(entries for netinst or CD images will be disabled anyway, regardless of this setting).", "imaging");
+$info_install_recommends = _T("Configure APT to install recommended packages by default. Use of this option can result in an incomplete system and should only be used by very experienced users.", "imaging");
+$info_keep_consoles = _T("During installations from serial console, the regular virtual consoles (VT1-VT6) are normally disabled in /etc/inittab. Uncomment the next line to prevent this.", "imaging");
+$info_reboot_in_progress = _T("Avoid that last message about the install being complete.", "imaging");
+$info_eject_cdrom = _T("This will prevent the installer from ejecting the CD during the reboot, which is useful in some situations.", "imaging");
+$info_reboot = _T("This is how to make the installer shutdown when finished, but not reboot into the installed system.", "imaging");
+$info_poweroff = _T("This will power off the machine instead of just halting it.", "imaging");
+$info_allow_unauth = _T("By default the installer requires that repositories be authenticated using a known gpg key. This setting can be used to disable that authentication. Warning: Insecure, not recommended.", "imaging");
 ?>
 
 <script>
@@ -1790,8 +1804,68 @@ update = ()=>{
         'InputLvmSize' : jQuery("#input-lvm-size").val(),
         'CheckRemoveOldLvm' : jQuery("#check-remove-old-lvm").is(":checked") ? '' : '#',
         'CheckRemoveOldLvmValue' : jQuery("#check-remove-old-lvm-value").is(":checked") ? 'true' : 'false',
+        'CheckLvmConfirm' : jQuery("#check-lvm-confirm").is(":checked") ? '' : '#',
+        'CheckLvmConfirmValue' : jQuery("#check-lvm-confirm-value").is(":checked") ? 'true' : 'false',
+        'CheckLvmNoOverwrite' : jQuery("#check-lvm-nooverwrite").is(":checked") ? '' : '#',
+        'CheckLvmNoOverwriteValue' : jQuery("#check-lvm-nooverwrite-value").is(":checked") ? 'true' : 'false',
+        'CheckInstallRecommends' : jQuery("#check-install-recommends").is(":checked") ? '' : '#',
+        'CheckInstallRecommendsValue' : jQuery("#check-install-recommends-value").is(":checked") ? 'true': 'false',
+        'CheckKernelImage' : jQuery("#check-kernel-image").is(":checked") ? '' : '#',
+        'InputKernelImage' : jQuery("#input-kernel-image").val(),
+        'CheckSetFirst' : jQuery("#check-set-first").is(":checked") ? '' : '#',
+        'CheckSetFirstValue' : jQuery("#check-set-first-value").is(":checked") ? 'true' : 'false',
+        'CheckNonFreeFirmware' : jQuery("#check-non-free-firmware").is(":checked") ? '' : '#',
+        'CheckNonFreeFirmwareValue' : jQuery("#check-non-free-firmware-value").is(":checked") ? 'true' : 'false',
+        'CheckNonFree' : jQuery("#check-non-free").is(":checked") ? '' : '#',
+        'CheckNonFreeValue' : jQuery("#check-non-free-value").is(":checked") ? 'true' : 'false',
+        'CheckContrib' : jQuery("#check-contrib").is(":checked") ? '' : '#',
+        'CheckContribValue' : jQuery("#check-contrib-value").is(":checked") ? 'true' : 'false',
+        'CheckDisableCdrom' : jQuery("#check-disable-cdrom").is(":checked") ? '' : '#',
+        'CheckDisableCdromValue' : jQuery("#check-disable-cdrom-value").is(":checked") ? 'true' : 'false',
+        'CheckUseMirror' : jQuery("#check-use-mirror").is(":checked") ? '' : '#',
+        'CheckUseMirrorValue' : jQuery("#check-use-mirror-value").is(":checked") ? 'true' : 'false',
+        'CheckKeepConsoles' : jQuery("#check-keep-consoles").is(":checked") ? '' : '#',
+        'CheckKeepConsolesValue' : jQuery("#check-keep-consoles-value").is(":checked") ? 'true' : 'false',
+        'CheckRebootInProgress' : jQuery("#check-reboot-in-progress").is(":checked") ? '' : '#',
+        'CheckRebootInProgressValue' : jQuery("#check-reboot-in-progress-value").is(":checked") ? 'true' : 'false',
+        'CheckEjectCdrom' : jQuery("#check-eject-cdrom").is(":checked") ? '' : '#',
+        'CheckEjectCdromValue' : jQuery("#check-eject-cdrom-value").is(":checked") ? 'true' : 'false',
+        'CheckReboot' : jQuery("#check-reboot").is(":checked") ? '' : '#',
+        'CheckRebootValue' : jQuery("#check-reboot-value").is(":checked") ? 'true' : 'false',
+        'CheckPoweroff' : jQuery("#check-poweroff").is(":checked") ? '' : '#',
+        'CheckPoweroffValue' : jQuery("#check-poweroff-value").is(":checked") ? 'true' : 'false',
+        'CheckServicesSelect' : jQuery("#check-services-select").is(":checked") ? '' : '#',
+        'InputServicesSelect' : jQuery("#input-services-select").val(),
+        'CheckSecurityHost' : jQuery("#check-security-host").is(":checked") ? '' : '#',
+        'InputSecurityHost': jQuery("#input-security-host").val(),
+        'CheckAddRepo': jQuery("#check-add-repo").is(":checked") ? '' : '#',
+        'InputAddRepo': jQuery("#input-add-repo").val(),
+        'CheckAddComment': jQuery("#check-add-comment").is(":checked") ? '' : '#',
+        'InputAddComment': jQuery("#input-add-comment").val(),
+        'CheckAddSource': jQuery("#check-add-source").is(":checked") ? '' : '#',
+        'CheckAddSourceValue': jQuery("#check-add-source-value").is(":checked") ? "true" : "false",
+        'CheckAddKey': jQuery("#check-add-key").is(":checked") ? "" : "#",
+        'InputAddKey': jQuery("#input-add-key").val(),
+        'CheckAllowUnauth' : jQuery("#check-allow-unauth").is(":checked") ? "" : "#",
+        'CheckAllowUnauthValue' : jQuery("#check-allow-unauth-value").is(":checked") ? "true" : "false",
+        "CheckMultiArch" : jQuery("#check-multi-arch").is(":checked") ? "" : "#",
+        "InputMultiArch" : jQuery("#input-multi-arch").val(),
+        "CheckTasksel" : jQuery("#check-tasksel").is(":checked") ? '' : '#',
+        "InputTasksel" : jQuery("#input-tasksel").val(),
+        "CheckRunTasksel" : jQuery("#check-run-tasksel").is(":checked") ? '' : '#',
+        "InputRunTasksel" : jQuery("#input-run-tasksel").val(),
+        "CheckInclude" : jQuery("#check-include").is(":checked") ? '' : '#',
+        "InputInclude" : jQuery("#input-include").val(),
+        "CheckUpgrade" : jQuery("#check-upgrade").is(":checked") ? '' : '#',
+        "SelectUpgrade": jQuery("#select-upgrade").val(),
+        "CheckContest" : jQuery("#check-contest").is(":checked") ? '' : '#',
+        "CheckContestValue" : jQuery("#check-contest-value").is(":checked") ? 'true' : 'false',
+        "CheckDebian" : jQuery("#check-debian").is(":checked") ? '' : '#',
+        "CheckDebianValue" : jQuery("#check-debian").is(":checked") ? 'true' : 'false',
+        "CheckMulti" : jQuery("#check-multi").is(":checked") ? '' : '#',
+        "CheckMultiValue" : jQuery("#check-multi").is(":checked") ? 'true' : 'false',
 
-    };
+    };// End of bind
 
     listParameters={}
 
@@ -1941,15 +2015,16 @@ fn_Accounts=function(){
 
 fn_Timezone=function(){
     var list_hidden_ids=[
+        "check-utc"
     ];
     jQuery.each(list_hidden_ids, function( index,value) {
         jQuery('#'+value).parents("tr").toggle();
     });
     if (jQuery('#'+list_hidden_ids[0]).is(":visible")){
-        jQuery('#Accounts').css( 'cursor', 'n-resize' ).attr('src', 'img/other/expanded.svg');
+        jQuery('#Timezone').css( 'cursor', 'n-resize' ).attr('src', 'img/other/expanded.svg');
     }
     else{
-        jQuery('#Accounts').css( 'cursor', 's-resize' ).attr('src', 'img/other/expand.svg');
+        jQuery('#Timezone').css( 'cursor', 's-resize' ).attr('src', 'img/other/expand.svg');
     }
 };
 
@@ -1984,7 +2059,75 @@ fn_Validate=function(){
     }
 };
 
+fn_BaseSystemInstallation = ()=>{
+    var list_hidden_ids=[
+    ];
+    jQuery.each(list_hidden_ids, function( index,value) {
+        jQuery('#'+value).parents("tr").toggle();
+    });
+    if (jQuery('#'+list_hidden_ids[0]).is(":visible")){
+        jQuery('#BaseSystemInstallation').css( 'cursor', 'n-resize' ).attr('src', 'img/other/expanded.svg');
+    }
+    else{
+        jQuery('#BaseSystemInstallation').css( 'cursor', 's-resize' ).attr('src', 'img/other/expand.svg');
+    }
+};
 
+fn_Aptsetup = ()=>{
+       var list_hidden_ids=[
+    ];
+    jQuery.each(list_hidden_ids, function( index,value) {
+        jQuery('#'+value).parents("tr").toggle();
+    });
+    if (jQuery('#'+list_hidden_ids[0]).is(":visible")){
+        jQuery('#Aptsetup').css( 'cursor', 'n-resize' ).attr('src', 'img/other/expanded.svg');
+    }
+    else{
+        jQuery('#Aptsetup').css( 'cursor', 's-resize' ).attr('src', 'img/other/expand.svg');
+    }
+};
+
+fn_PackageSelection = ()=>{
+       var list_hidden_ids=[
+    ];
+    jQuery.each(list_hidden_ids, function( index,value) {
+        jQuery('#'+value).parents("tr").toggle();
+    });
+    if (jQuery('#'+list_hidden_ids[0]).is(":visible")){
+        jQuery('#PackageSelection').css( 'cursor', 'n-resize' ).attr('src', 'img/other/expanded.svg');
+    }
+    else{
+        jQuery('#PackageSelection').css( 'cursor', 's-resize' ).attr('src', 'img/other/expand.svg');
+    }
+};
+
+fn_BootLoader = ()=>{
+       var list_hidden_ids=[
+    ];
+    jQuery.each(list_hidden_ids, function( index,value) {
+        jQuery('#'+value).parents("tr").toggle();
+    });
+    if (jQuery('#'+list_hidden_ids[0]).is(":visible")){
+        jQuery('#BootLoader').css( 'cursor', 'n-resize' ).attr('src', 'img/other/expanded.svg');
+    }
+    else{
+        jQuery('#BootLoader').css( 'cursor', 's-resize' ).attr('src', 'img/other/expand.svg');
+    }
+};
+
+fn_Finishing = ()=>{
+       var list_hidden_ids=[
+    ];
+    jQuery.each(list_hidden_ids, function( index,value) {
+        jQuery('#'+value).parents("tr").toggle();
+    });
+    if (jQuery('#'+list_hidden_ids[0]).is(":visible")){
+        jQuery('#Finishing').css( 'cursor', 'n-resize' ).attr('src', 'img/other/expanded.svg');
+    }
+    else{
+        jQuery('#Finishing').css( 'cursor', 's-resize' ).attr('src', 'img/other/expand.svg');
+    }
+};
 
 enable_item = (selector) =>{
     jQuery(selector).prop("disabled", false)
@@ -2096,6 +2239,36 @@ jQuery(function () {
     init_item("#check-init-partition", "#select-init-partition")
     init_item("#check-lvm-size", "#input-lvm-size")
     init_item("#check-remove-old-lvm", "#check-remove-old-lvm-value")
+    init_item("#check-lvm-confirm", "#check-lvm-confirm-value")
+    init_item("#check-lvm-nooverwrite", "#check-lvm-nooverwrite-value")
+    init_item("#check-install-recommends", "#check-install-recommends-value")
+    init_item("#check-kernel-image", "#input-kernel-image")
+    init_item('#check-set-first', '#check-set-first-value')
+    init_item('#check-non-free-firmware', '#check-non-free-firmware-value')
+    init_item('#check-non-free', '#check-non-free-value')
+    init_item('#check-contrib', '#check-contrib-value')
+    init_item('#check-disable-cdrom', '#check-disable-cdrom-value')
+    init_item('#check-use-mirror', '#check-use-mirror-value')
+    init_item("#check-keep-consoles", "#check-keep-consoles-value")
+    init_item("#check-reboot-in-progress", "#check-reboot-in-progress-value")
+    init_item("#check-eject-cdrom", "#check-eject-cdrom-value")
+    init_item("#check-reboot", "#check-reboot-value")
+    init_item("#check-poweroff", "#check-poweroff-value")
+    init_item("#check-services-select", "#input-services-select")
+    init_item("#check-security-host", "#input-security-host")
+    init_item("#check-add-repo", "#input-add-repo")
+    init_item("#check-add-comment", "#input-add-comment")
+    init_item("#check-add-source", "#check-add-source-value")
+    init_item("#check-add-key", "#input-add-key")
+    init_item("#check-allow-unauth", "#check-allow-unauth-value")
+    init_item("#check-multi-arch", "#input-multi-arch")
+    init_item("#check-tasksel", "#input-tasksel")
+    init_item("#check-run-tasksel", "#input-run-tasksel")
+    init_item("#check-include", "#input-include")
+    init_item("#check-upgrade", "#select-upgrade")
+    init_item("#check-contest", "#check-contest-value")
+    init_item("#check-debian", "#check-debian-value")
+    init_item("#check-multi", "#check-multi-value")
 
     jQuery("#codeTocopy2").toggle();
     // ----
@@ -2385,7 +2558,6 @@ jQuery(function () {
     })
     jQuery("#input-user-passwd").on("change", ()=>{update()})
 
-
     jQuery("#check-user-uid").on("change", ()=>{
         toggle_item("#number-user-uid")
         update();
@@ -2431,6 +2603,183 @@ jQuery(function () {
         update()
     })
     jQuery('#check-remove-old-lvm-value').on("change", ()=>{update()})
+
+    jQuery('#check-lvm-confirm').on("change", ()=>{
+        toggle_item('#check-lvm-confirm-value');
+        update()
+    })
+    jQuery('#check-lvm-confirm-value').on("change", ()=>{update()})
+
+
+    jQuery('#check-lvm-nooverwrite').on("change", ()=>{
+        toggle_item('#check-lvm-nooverwrite-value');
+        update()
+    })
+    jQuery('#check-lvm-nooverwrite-value').on("change", ()=>{update()})
+
+    jQuery("#check-install-recommends").on("change", ()=>{
+        toggle_item("#check-install-recommends-value")
+        update()
+    })
+    jQuery("#check-install-recommends-value").on("change", ()=>{update()})
+
+    jQuery("#check-kernel-image").on("change", ()=>{
+        toggle_item("#input-kernel-image")
+        update()
+    })
+    jQuery("#input-kernel-image").on("change", ()=>{update()})
+
+    jQuery('#check-set-first').on("change", ()=>{
+        toggle_item('#check-set-first-value')
+        update()})
+    jQuery('#check-set-first-value').on("change", ()=>{update()})
+
+    jQuery('#check-non-free-firmware').on("change", ()=>{
+        toggle_item('#check-non-free-firmware-value')
+        update()})
+    jQuery('#check-non-free-firmware-value').on("change", ()=>{update()})
+
+    jQuery('#check-non-free').on("change", ()=>{
+        toggle_item('#check-non-free-value')
+        update()})
+    jQuery('#check-non-free-value').on("change", ()=>{update()})
+
+    jQuery('#check-contrib').on("change", ()=>{
+        toggle_item('#check-contrib-value')
+        update()})
+    jQuery('#check-contrib-value').on("change", ()=>{update()})
+
+    jQuery('#check-disable-cdrom').on("change", ()=>{
+        toggle_item('#check-disable-cdrom-value')
+        update()})
+    jQuery('#check-disable-cdrom-value').on("change", ()=>{update()})
+
+    jQuery('#check-use-mirror').on("change", ()=>{
+        toggle_item('#check-use-mirror-value')
+        update()})
+    jQuery('#check-use-mirror-value').on("change", ()=>{update()})
+
+    jQuery("#check-keep-consoles").on("change", ()=>{
+        toggle_item("#check-keep-consoles-value")
+        update();
+    })
+    jQuery("#check-keep-consoles-value").on("change", ()=>{update()})
+
+    jQuery("#check-reboot-in-progress").on("change", ()=>{
+        toggle_item("#check-reboot-in-progress-value")
+        update();
+    })
+    jQuery("#check-reboot-in-progress-value").on("change", ()=>{update()})
+
+    jQuery("#check-eject-cdrom").on("change", ()=>{
+        toggle_item("#check-eject-cdrom-value")
+        update()
+    })
+    jQuery("#check-eject-cdrom-value").on("change", ()=>{update()})
+
+    jQuery("#check-reboot").on("change", ()=>{
+        toggle_item("#check-reboot-value")
+        update()
+    })
+    jQuery("#check-reboot-value").on("change", ()=>{update()})
+
+    jQuery("#check-poweroff").on("change", ()=>{
+        toggle_item('#check-poweroff-value')
+        update()
+    })
+    jQuery("#check-poweroff-value").on("change", ()=>{update()})
+
+    jQuery("#check-services-select").on("change", ()=>{
+        toggle_item("#input-services-select")
+        update()
+    })
+    jQuery("#input-services-select").on("change", ()=>{update()})
+
+    jQuery("#check-security-host").on("change", ()=>{
+        toggle_item("#input-security-host")
+        update()
+    })
+    jQuery("#input-security-host").on("change", ()=>{update()})
+
+    jQuery("#check-add-repo").on("change", ()=>{
+        toggle_item("#input-add-repo")
+        update()
+    })
+    jQuery("#input-add-repo").on("change", ()=>{update()})
+
+    jQuery("#check-add-comment").on("change", ()=>{
+        toggle_item("#input-add-comment")
+        update()
+    })
+    jQuery("#input-add-comment").on("change", ()=>{update()})
+
+    jQuery("#check-add-source").on("change", ()=>{
+        toggle_item("#check-add-source-value")
+        update()
+    })
+    jQuery("#check-add-source-value").on("change", ()=>{update()})
+
+    jQuery("#check-add-key").on("change", ()=>{
+        toggle_item("#input-add-key")
+        update()
+    })
+    jQuery("#input-add-key").on("change", ()=>{update()})
+
+    jQuery("#check-allow-unauth").on("change", ()=>{
+        toggle_item("#check-allow-unauth-value")
+        update()
+    })
+    jQuery("#check-allow-unauth-value").on("change", ()=>{update()})
+
+    jQuery("#check-multi-arch").on("change", ()=>{
+        toggle_item("#input-multi-arch")
+        update()
+    })
+    jQuery("#input-multi-arch").on("change", ()=>{update()})
+
+    jQuery("#check-tasksel").on("change", ()=>{
+        toggle_item("#input-tasksel")
+        update()
+    })
+    jQuery("#input-tasksel").on("change", ()=>{update()})
+
+    jQuery("#check-run-tasksel").on("change", ()=>{
+        toggle_item("#input-run-tasksel")
+        update()
+    })
+    jQuery("#input-run-tasksel").on("change", ()=>{update()})
+
+    jQuery("#check-include").on("change", ()=>{
+        toggle_item("#input-include")
+        update()
+    })
+    jQuery("#input-include").on("change", ()=>{update()})
+
+    jQuery("#check-upgrade").on("change", ()=>{
+        toggle_item("#select-upgrade")
+        update()
+    })
+    jQuery("#select-upgrade").on("change", ()=>{update()})
+
+    jQuery("#check-contest").on("change", ()=>{
+        toggle_item("#check-contest-value")
+        update()
+    })
+    jQuery("#check-contest-value").on("change", ()=>{update()})
+
+    jQuery("#check-debian").on("change", ()=>{
+        toggle_item("#check-debian-value")
+        update()
+    })
+    jQuery("#check-debian-value").on("change", ()=>{update()})
+
+    jQuery("#check-multi").on("change", ()=>{
+        toggle_item("#check-multi-value")
+        update()
+    })
+    jQuery("#check-multi-value").on("change", ()=>{update()})
+
+
     //
     // End of change
     //
@@ -2441,7 +2790,13 @@ jQuery(function () {
     fn_NetworkConsole()
     fn_Mirror()
     fn_Accounts()
-
+    fn_BaseSystemInstallation()
+    fn_Timezone()
+    fn_Partitionning()
+    fn_Aptsetup()
+    fn_PackageSelection()
+    fn_BootLoader()
+    fn_Finishing()
 
     update();
 });

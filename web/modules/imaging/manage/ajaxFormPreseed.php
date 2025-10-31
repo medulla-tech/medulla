@@ -93,8 +93,46 @@ var template = [
 '<? echo $strin;?>CheckInitPartition<? echo $strou;?>d-i partman-auto/init_automatically_partition select <? echo $strin;?>SelectInitPartition<? echo $strou;?>',
 '<? echo $strin;?>CheckLvmSize<? echo $strou;?>d-i partman-auto-lvm/guided_size string <? echo $strin;?>InputLvmSize<? echo $strou;?>',
 '<? echo $strin;?>CheckRemoveOldLvm<? echo $strou;?>d-i partman-lvm/device_remove_lvm boolean <? echo $strin;?>CheckRemoveOldLvmValue<? echo $strou;?>',
-'d-i partman-lvm/confirm boolean true',
-'d-i partman-lvm/confirm_nooverwrite boolean true',
+'<? echo $strin;?>CheckLvmConfirm<? echo $strou;?>d-i partman-lvm/confirm boolean <? echo $strin;?>CheckLvmConfirmValue<? echo $strou;?>',
+'<? echo $strin;?>CheckLvmNoOverwrite<? echo $strou;?>d-i partman-lvm/confirm_nooverwrite boolean <? echo $strin;?>CheckLvmNoOverwriteValue<? echo $strou;?>',
+'',
+'### BASE SYSTEM INSTALLATION',
+'<? echo $strin;?>CheckInstallRecommends<? echo $strou;?>d-i base-installer/install-recommends boolean <? echo $strin;?>CheckInstallRecommendsValue<? echo $strou;?>',
+'<? echo $strin;?>CheckKernelImage<? echo $strou;?>d-i base-installer/kernel/image string <? echo $strin;?>InputKernelImage<? echo $strou;?>',
+'',
+'### APT SETUP',
+'<? echo $strin;?>CheckSetFirst<? echo $strou;?>d-i apt-setup/cdrom/set-first boolean <? echo $strin;?>CheckSetFirstValue<? echo $strou;?>',
+'<? echo $strin;?>CheckNonFreeFirmware<? echo $strou;?>d-i apt-setup/non-free-firmware boolean <? echo $strin;?>CheckNonFreeFirmwareValue<? echo $strou;?>',
+'<? echo $strin;?>CheckNonFree<? echo $strou;?>d-i apt-setup/non-free boolean <? echo $strin;?>CheckNonFreeValue<? echo $strou;?>',
+'<? echo $strin;?>CheckContrib<? echo $strou;?>d-i apt-setup/contrib boolean <? echo $strin;?>CheckContribValue<? echo $strou;?>',
+'<? echo $strin;?>CheckDisableCdrom<? echo $strou;?>d-i apt-setup/disable-cdrom-entries boolean <? echo $strin;?>CheckDisableCdromValue<? echo $strou;?>',
+'<? echo $strin;?>CheckUseMirror<? echo $strou;?>d-i apt-setup/use_mirror boolean <? echo $strin;?>CheckUseMirrorValue<? echo $strou;?>',
+'<? echo $strin;?>CheckServicesSelect<? echo $strou;?>d-i apt-setup/services-select string <? echo $strin;?>InputServicesSelect<? echo $strou;?>',
+'<? echo $strin;?>CheckSecurityHost<? echo $strou;?>d-i apt-setup/security_host string <? echo $strin;?>InputSecurityHost<? echo $strou;?>',
+'<? echo $strin;?>CheckAddRepo<? echo $strou;?>d-i apt-setup/local0/repository string <? echo $strin;?>InputAddRepo<? echo $strou;?>',
+'<? echo $strin;?>CheckAddComment<? echo $strou;?>d-i additional_comment string <? echo $strin;?>InputAddComment<? echo $strou;?>',
+'<? echo $strin;?>CheckAddSource<? echo $strou;?>d-i apt-setup/local0/source boolean <? echo $strin;?>CheckAddSourceValue<? echo $strou;?>',
+'<? echo $strin;?>CheckAddKey<? echo $strou;?>d-i apt-setup/local0/key string <? echo $strin;?>InputAddKey<? echo $strou;?>',
+'<? echo $strin;?>CheckAllowUnauth<? echo $strou;?>d-i debian-installer/allow_unauthenticated boolean <? echo $strin;?>CheckAllowUnauthValue<? echo $strou;?>',
+'<? echo $strin;?>CheckMultiArch<? echo $strou;?>d-i apt-setup/multiarch string <? echo $strin;?>InputMultiArch<? echo $strou;?>',
+'',
+'### PACKAGE SELECTION',
+'<? echo $strin;?>CheckTasksel<? echo $strou;?>tasksel tasksel/first multiselect <? echo $strin;?>InputTasksel<? echo $strou;?>',
+'<? echo $strin;?>CheckRunTasksel<? echo $strou;?>d-i pkgsel/run_tasksel string <? echo $strin;?>InputRunTasksel<? echo $strou;?>',
+'<? echo $strin;?>CheckInclude<? echo $strou;?>d-i pkgsel/include string <? echo $strin;?>InputInclude<? echo $strou;?>',
+'<? echo $strin;?>CheckUpgrade<? echo $strou;?>d-i pkgsel/upgrade select <? echo $strin;?>SelectUpgrade<? echo $strou;?>',
+'<? echo $strin;?>CheckContest<? echo $strou;?>popularity-contest popularity-contest/participate boolean <? echo $strin;?>CheckContestValue<? echo $strou;?>',
+'',
+'### BOOT LOADER',
+'<? echo $strin;?>CheckDebian<? echo $strou;?>d-i grub-installer/only_debian boolean <? echo $strin;?>CheckDebianValue<? echo $strou;?>',
+'<? echo $strin;?>CheckMulti<? echo $strou;?>d-i grub-installer/with_other_os boolean <? echo $strin;?>CheckMultiValue<? echo $strou;?>',
+'',
+'### FINISHING',
+'<? echo $strin;?>CheckKeepConsoles<? echo $strou;?>d-i finish-install/keep-consoles boolean <? echo $strin;?>CheckKeepConsolesValue<? echo $strou;?>',
+'<? echo $strin;?>CheckRebootInProgress<? echo $strou;?>d-i finish-install/reboot_in_progress boolean <? echo $strin;?>CheckRebootInProgressValue<? echo $strou;?>',
+'<? echo $strin;?>CheckEjectCdrom<? echo $strou;?>d-i cdrom-detect/eject boolean <? echo $strin;?>CheckEjectCdromValue<? echo $strou;?>',
+'<? echo $strin;?>CheckReboot<? echo $strou;?>d-i debian-installer/exit/halt boolean <? echo $strin;?>CheckRebootValue<? echo $strou;?>',
+'<? echo $strin;?>CheckPoweroff<? echo $strou;?>d-i debian-installer/exit/poweroff boolean <? echo $strin;?>CheckPoweroffValue<? echo $strou;?>',
 ].join('\r\n');
 </script>
 
@@ -921,6 +959,535 @@ $f->add(
 );
 unset($check, $checkValue);
 
+// ---- lvm-confirm
+$check = new CheckboxTpl("check-lvm-confirm");
+$checkValue = new CheckboxTpl("check-lvm-confirm-value");
+
+$values = [
+    (isset($parameters["CheckLvmConfirm"])) ? ($parameters["CheckLvmConfirm"] == '' ? 'checked' : '') : 'checked',
+    (isset($parameters["CheckLvmConfirmValue"])) ? ($parameters["CheckLvmConfirmValue"] == 'true' ? 'checked' : '') : 'checked',
+];
+$fields = [$check, $checkValue];
+
+$f->add(
+    new TrFormElement('<label for="check-lvm-confirm">'._T("Confirm LVM", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, _T("Confirm to write LVM partitions", "imaging")]]
+);
+unset($check, $checkValue);
+
+// ---- lvm-nooverwrite
+$check = new CheckboxTpl("check-lvm-nooverwrite");
+$checkValue = new CheckboxTpl("check-lvm-nooverwrite-value");
+
+$values = [
+    (isset($parameters["CheckLvmNoOverwrite"])) ? ($parameters["CheckLvmNoOverwrite"] == '' ? 'checked' : '') : 'checked',
+    (isset($parameters["CheckLvmNoOverwriteValue"])) ? ($parameters["CheckLvmNoOverwriteValue"] == 'true' ? 'checked' : '') : 'checked',
+];
+$fields = [$check, $checkValue];
+
+$f->add(
+    new TrFormElement('<label for="check-lvm-nooverwrite">'._T("Confirm LVM no overwrite", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, _T("And the same goes for the confirmation to write the lvm partitions.", "imaging")]]
+);
+unset($check, $checkValue);
+
+$f->pop();
+
+
+
+// ==== New Section ====
+// Base System Installation
+// =====================
+// ---- Toggle button ----
+$f->add(new TitleElement(_T("Base system installation","imaging")));
+$f->add(new TrFormElement("", new Iconereply(_T('BaseSystemInstallation', "imaging"),'')));
+$f->push(new Table());
+
+
+// ---- install-recommends
+$check = new CheckboxTpl("check-install-recommends");
+$checkValue = new CheckboxTpl("check-install-recommends-value");
+
+$values = [
+    (isset($parameters["CheckInstallRecommends"])) ? ($parameters["CheckInstallRecommends"] == '' ? 'checked' : '') : 'checked',
+    (isset($parameters["CheckInstallRecommendsValue"])) ? ($parameters["CheckInstallRecommendsValue"] == 'true' ? 'checked' : '') : 'checked',
+];
+$fields = [$check, $checkValue];
+
+$f->add(
+    new TrFormElement('<label for="check-install-recommends">'._T("Install Recommends", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, $info_install_recommends]]
+);
+unset($check, $checkValue);
+
+
+// ---- kernel-image
+$check = new CheckboxTpl("check-kernel-image");
+$input = new InputTplTitle("input-kernel-image", _T("The kernel image (meta) package to be installed; \"none\" can be used if no kernel is to be installed.", "imaging"));
+
+$values = [
+    (isset($parameters["CheckKernelImage"])) ? ($parameters["CheckKernelImage"] == '' ? 'checked' : '') : '',
+    (isset($parameters["InputKernelImage"])) ? $parameters["InputKernelImage"] : '',
+];
+$fields = [$check, $input];
+
+$f->add(
+    new TrFormElement('<label for="check-kernel-image">'._T("Kernel image", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, '']]
+);
+unset($check, $input);
+$f->pop();
+
+
+// ==== New Section ====
+// Apt Setup
+// =====================
+// ---- Toggle button ----
+$f->add(new TitleElement(_T("Apt Setup","imaging")));
+$f->add(new TrFormElement("", new Iconereply(_T('Aptsetup', "imaging"),'')));
+$f->push(new Table());
+
+
+// ---- set first
+$check = new CheckboxTpl("check-set-first");
+$checkValue = new CheckboxTpl("check-set-first-value");
+
+$values = [
+    (isset($parameters["CheckSetFirst"])) ? ($parameters["CheckSetFirst"] == '' ? 'checked' : '') : '',
+    (isset($parameters["CheckSetFirstValue"])) ? ($parameters["CheckSetFirstValue"] == 'true' ? 'checked' : '') : '',
+];
+$fields = [$check, $checkValue];
+
+$f->add(
+    new TrFormElement('<label for="check-set-first">'._T("Set First", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, _T("Choose, if you want to scan additional installation media (default: false).", "imaging")]]
+);
+unset($check, $checkValue);
+
+
+// ---- non free firmware
+$check = new CheckboxTpl("check-non-free-firmware");
+$checkValue = new CheckboxTpl("check-non-free-firmware-value");
+
+$values = [
+    (isset($parameters["CheckNonFreeFirmware"])) ? ($parameters["CheckNonFreeFirmware"] == '' ? 'checked' : '') : '',
+    (isset($parameters["CheckNonFreeFirmwareValue"])) ? ($parameters["CheckNonFreeFirmwareValue"] == 'true' ? 'checked' : '') : 'checked',
+];
+$fields = [$check, $checkValue];
+
+$f->add(
+    new TrFormElement('<label for="check-non-free-firmware">'._T("Non Free Firmware", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, _T("You can choose to install non-free firmware.", "imaging")]]
+);
+unset($check, $checkValue);
+
+// ---- non free
+$check = new CheckboxTpl("check-non-free");
+$checkValue = new CheckboxTpl("check-non-free-value");
+
+$values = [
+    (isset($parameters["CheckNonFree"])) ? ($parameters["CheckNonFree"] == '' ? 'checked' : '') : '',
+    (isset($parameters["CheckNonFreeValue"])) ? ($parameters["CheckNonFreeValue"] == 'true' ? 'checked' : '') : 'checked',
+];
+$fields = [$check, $checkValue];
+
+$f->add(
+    new TrFormElement('<label for="check-non-free">'._T("Non Free", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, _T("You can choose to install non-free software.", "imaging")]]
+);
+unset($check, $checkValue);
+
+
+// ---- contrib
+$check = new CheckboxTpl("check-contrib");
+$checkValue = new CheckboxTpl("check-contrib-value");
+
+$values = [
+    (isset($parameters["CheckContrib"])) ? ($parameters["CheckContrib"] == '' ? 'checked' : '') : '',
+    (isset($parameters["CheckContribValue"])) ? ($parameters["CheckContribValue"] == 'true' ? 'checked' : '') : 'checked',
+];
+$fields = [$check, $checkValue];
+
+$f->add(
+    new TrFormElement('<label for="check-contrib">'._T("Contrib", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, _T("You can choose to install contrib software.", "imaging")]]
+);
+unset($check, $checkValue);
+
+
+// ---- disable cdrom entries
+$check = new CheckboxTpl("check-disable-cdrom");
+$checkValue = new CheckboxTpl("check-disable-cdrom-value");
+
+$values = [
+    (isset($parameters["CheckDisableCdrom"])) ? ($parameters["CheckDisableCdrom"] == '' ? 'checked' : '') : '',
+    (isset($parameters["CheckDisableCdromValue"])) ? ($parameters["CheckDisableCdromValue"] == 'true' ? 'checked' : '') : 'checked',
+];
+$fields = [$check, $checkValue];
+
+$f->add(
+    new TrFormElement('<label for="check-disable-cdrom">'._T("Disable Cdrom Entries", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, $info_disable_cdrom]]
+);
+unset($check, $checkValue);
+
+
+
+// ---- use mirror
+$check = new CheckboxTpl("check-use-mirror");
+$checkValue = new CheckboxTpl("check-use-mirror-value");
+
+$values = [
+    (isset($parameters["CheckUseMirror"])) ? ($parameters["CheckUseMirror"] == '' ? 'checked' : '') : '',
+    (isset($parameters["CheckUseMirrorValue"])) ? ($parameters["CheckUseMirrorValue"] == 'true' ? 'checked' : '') : '',
+];
+$fields = [$check, $checkValue];
+
+$f->add(
+    new TrFormElement('<label for="check-use-mirror">'._T("Use Mirror", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, _T("If you don't want to use a network mirror", "imaging")]]
+);
+unset($check, $checkValue);
+
+
+// ---- services-select
+$check = new CheckboxTpl("check-services-select");
+$input = new InputTplTitle("input-services-select", $info_services_select );
+
+$values = [
+    (isset($parameters["CheckServicesSelect"])) ? ($parameters["CheckServicesSelect"] == "" ? "checked" : "") : "",
+    "multiselect security, updates"
+];
+$fields = [$check, $input];
+$f->add(
+    new TrFormElement('<label for="check-services-select">'._T("Service Select", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, ""]]
+);
+unset($check, $input);
+
+// ---- security-host
+$check = new CheckboxTpl("check-security-host");
+$input = new InputTplTitle("input-security-host", "" );
+
+$values = [
+    (isset($parameters["CheckSecurityHost"])) ? ($parameters["CheckSecurityHost"] == "" ? "checked" : "") : "",
+    "security.debian.org"
+];
+$fields = [$check, $input];
+$f->add(
+    new TrFormElement('<label for="check-security-host">'._T("Security Host", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, ""]]
+);
+unset($check, $input);
+
+// ---- add-repo
+$check = new CheckboxTpl("check-add-repo");
+$input = new InputTplTitle("input-add-repo", "" );
+
+$values = [
+    (isset($parameters["CheckAddRepo"])) ? ($parameters["CheckAddRepo"] == "" ? "checked" : "") : "",
+    ""
+];
+$fields = [$check, $input];
+$f->add(
+    new TrFormElement('<label for="check-add-repo">'._T("Additionnal Repositories", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, ""]]
+);
+unset($check, $input);
+
+
+// ---- add-comment
+$check = new CheckboxTpl("check-add-comment");
+$input = new InputTplTitle("input-add-comment", "" );
+
+$values = [
+    (isset($parameters["CheckAddComment"])) ? ($parameters["CheckAddComment"] == "" ? "checked" : "") : "",
+    ""
+];
+$fields = [$check, $input];
+$f->add(
+    new TrFormElement('<label for="check-add-comment">'._T("Additionnal Comment", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, ""]]
+);
+unset($check, $input);
+
+
+// ---- add-source
+$check = new CheckboxTpl("check-add-source");
+$checkValue = new CheckboxTpl("check-add-source-value");
+
+$values = [
+    (isset($parameters["CheckAddSource"])) ? ($parameters["CheckAddSource"] == "" ? "checked" : "") : "",
+    (isset($parameters["CheckAddSourceValue"])) ? ($parameters["CheckAddSourceValue"] == "true" ? "checked" : "") : "",
+];
+$fields = [$check, $checkValue];
+$f->add(
+    new TrFormElement('<label for="check-add-source">'._T("Additionnal Source", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, _T("Enable deb-src lines", "imaging")]]
+);
+unset($check, $checkValue);
+
+// ---- add-key
+$check = new CheckboxTpl("check-add-key");
+$input = new InputTplTitle("input-add-key", $info_add_key);
+
+$values = [
+    (isset($parameters["CheckAddKey"])) ? ($parameters["CheckAddKey"] == "" ? "checked" : "") : "",
+    (isset($parameters["InputAddKey"])) ? $parameters["InputAddKey"] : '',
+];
+$fields = [$check, $input];
+$f->add(
+    new TrFormElement('<label for="check-add-key">'._T("Additionnal Key", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, ""]]
+);
+unset($check, $checkValue);
+
+// ---- allow-unauth
+$check = new CheckboxTpl("check-allow-unauth");
+$checkValue = new CheckboxTpl("check-allow-unauth-value");
+
+$values = [
+    (isset($parameters["CheckAllowUnauth"])) ? ($parameters["CheckAllowUnauth"] == "" ? "checked" : "") : "",
+    (isset($parameters["CheckAllowUnauthValue"])) ? ($parameters["CheckAllowUnauthValue"] == "true" ? "checked" : "") : "",
+];
+$fields = [$check, $checkValue];
+$f->add(
+    new TrFormElement('<label for="check-allow-unauth">'._T("Allow Unauthenticated", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, $info_allow_unauth]]
+);
+unset($check, $checkValue);
+
+
+// ---- multi-arch
+$check = new CheckboxTpl("check-multi-arch");
+$input = new InputTplTitle("input-multi-arch", _T("To add multiarch configuration for i386", "imaging"));
+
+$values = [
+    (isset($parameters["CheckMultiArch"])) ? ($parameters["CheckMultiArch"] == "" ? "checked" : "") : "",
+    (isset($parameters["InputMultiArch"])) ? $parameters["InputMultiArch"] : 'i386',
+];
+$fields = [$check, $input];
+$f->add(
+    new TrFormElement('<label for="check-multi-arch">'._T("Multi Arch", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, ""]]
+);
+unset($check, $checkValue);
+
+
+
+$f->pop();
+
+
+// ==== New Section ====
+// Package Selection
+// =====================
+// ---- Toggle button ----
+$f->add(new TitleElement(_T("Package Selection","imaging")));
+$f->add(new TrFormElement("", new Iconereply(_T('PackageSelection', "imaging"),'')));
+$f->push(new Table());
+
+
+// ---- tasksel
+$check = new CheckboxTpl("check-tasksel");
+$input = new InputTplTitle("input-tasksel", "");
+
+$values = [
+    (isset($parameters["CheckTasksel"])) ? ($parameters["CheckTasksel"] == "" ? "checked" : "") : "",
+    (isset($parameters["InputTasksel"])) ? $parameters["InputTasksel"] : 'standard, web-server, kde-desktop',
+];
+$fields = [$check, $input];
+$f->add(
+    new TrFormElement('<label for="check-tasksel">'._T("Tasksel", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, ""]]
+);
+unset($check, $checkValue);
+
+// ---- run-tasksel
+$check = new CheckboxTpl("check-run-tasksel");
+$input = new InputTplTitle("input-run-tasksel", $info_run_tasksel);
+
+$values = [
+    (isset($parameters["CheckRunTasksel"])) ? ($parameters["CheckRunTasksel"] == "" ? "checked" : "") : "",
+    (isset($parameters["InputRunTasksel"])) ? $parameters["InputRunTasksel"] : '',
+];
+$fields = [$check, $input];
+$f->add(
+    new TrFormElement('<label for="check-run-tasksel">'._T("Run Tasksel", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, ""]]
+);
+unset($check, $checkValue);
+
+// ---- include
+$check = new CheckboxTpl("check-include");
+$input = new InputTplTitle("input-include", _T("Individual additional packages to install", "imaging"));
+
+$values = [
+    (isset($parameters["CheckInclude"])) ? ($parameters["CheckInclude"] == "" ? "checked" : "") : "",
+    (isset($parameters["InputInclude"])) ? $parameters["InputInclude"] : 'openssh-server build-essential',
+];
+$fields = [$check, $input];
+$f->add(
+    new TrFormElement('<label for="check-include">'._T("Include", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, ""]]
+);
+unset($check, $input);
+
+// ---- upgrade
+$check = new CheckboxTpl("check-upgrade");
+$select = new SelectItemtitle("select-upgrade", _T("Whether to upgrade packages after debootstrap.", "imaging"));
+$_values = ["none", "safe-upgrade", "full-upgrade"];
+$select->setElements($_values);
+$select->setElementsVal($_values);
+
+$values = [
+    (isset($parameters["CheckUpgrade"])) ? ($parameters["CheckUpgrade"] == "" ? "checked" : "") : "",
+    (isset($parameters["SelectUpgrade"])) ? $parameters["SelectUpgrade"] : 'none',
+];
+$fields = [$check, $select];
+$f->add(
+    new TrFormElement('<label for="check-upgrade">'._T("Upgrade", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, ""]]
+);
+unset($check, $select);
+
+
+// ---- contest
+$check = new CheckboxTpl("check-contest");
+$checkValue = new CheckboxTpl("check-contest-value");
+
+$values = [
+    (isset($parameters["CheckContest"])) ? ($parameters["CheckContest"] == "" ? "checked" : "") : "",
+    (isset($parameters["CheckContestValue"])) ? ($parameters["CheckContestValue"] == "true" ? "checked" : "") : "",
+];
+$fields = [$check, $checkValue];
+$f->add(
+    new TrFormElement('<label for="check-contest">'._T("Popularity contest", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, $info_contest]]
+);
+unset($check, $checkValue);
+
+$f->pop();
+
+
+
+
+// ==== New Section ====
+// Boot Loader
+// =====================
+// ---- Toggle button ----
+$f->add(new TitleElement(_T("Boot Loader","imaging")));
+$f->add(new TrFormElement("", new Iconereply(_T('BootLoader', "imaging"),'')));
+$f->push(new Table());
+
+
+// ---- debian
+$check = new CheckboxTpl("check-debian");
+$checkValue = new CheckboxTpl("check-debian-value");
+
+$values = [
+    (isset($parameters["CheckDebian"])) ? ($parameters["CheckDebian"] == "" ? "checked" : "") : "",
+    (isset($parameters["CheckDebianValue"])) ? ($parameters["CheckDebianValue"] == "true" ? "checked" : "") : "checked",
+];
+$fields = [$check, $checkValue];
+$f->add(
+    new TrFormElement('<label for="check-debian">'._T("Debian Only", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, $info_debian]]
+);
+unset($check, $checkValue);
+
+
+// ---- multi-os
+$check = new CheckboxTpl("check-multi");
+$checkValue = new CheckboxTpl("check-multi-value");
+
+$values = [
+    (isset($parameters["checkMulti"])) ? ($parameters["checkMulti"] == "" ? "checked" : "") : "",
+    (isset($parameters["checkMultiValue"])) ? ($parameters["checkMultiValue"] == "true" ? "checked" : "") : "checked",
+];
+$fields = [$check, $checkValue];
+$f->add(
+    new TrFormElement('<label for="check-multi">'._T("With Multi OS", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, $info_multi]]
+);
+unset($check, $checkValue);
+
+
+$f->pop();
+
+
+
+
+
+
+
+
+
+// ==== New Section ====
+// Finishing
+// =====================
+// ---- Toggle button ----
+$f->add(new TitleElement(_T("Finishing","imaging")));
+$f->add(new TrFormElement("", new Iconereply(_T('Finishing', "imaging"),'')));
+$f->push(new Table());
+
+
+// ---- keep-consoles
+$check = new CheckboxTpl("check-keep-consoles");
+$checkValue = new CheckboxTpl("check-keep-consoles-value");
+
+$values = [
+    (isset($parameters["CheckKeepConsoles"])) ? ($parameters["CheckKeepConsoles"] == '' ? 'checked' : '') : '',
+    (isset($parameters["CheckKeepConsolesValue"])) ? ($parameters["CheckKeepConsolesValue"] == 'true' ? 'checked' : '') : 'checked',
+];
+$fields = [$check, $checkValue];
+
+$f->add(
+    new TrFormElement('<label for="check-keep-consoles">'._T("Keep Consoles", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, $info_keep_consoles]]
+);
+unset($check, $checkValue);
+
+
+// ---- reboot-in-progress
+$check = new CheckboxTpl("check-reboot-in-progress");
+// ---- reboot-in-prok-reboot-in-progress");
+$checkValue = new CheckboxTpl("check-reboot-in-progress-value");
+
+$values = [
+    (isset($parameters["CheckRebootInProgress"])) ? ($parameters["CheckRebootInProgress"] == '' ? 'checked' : '') : '',
+    (isset($parameters["CheckRebootInProgressValue"])) ? ($parameters["CheckRebootInProgressValue"] == 'true' ? 'checked' : '') : 'checked',
+];
+$fields = [$check, $checkValue];
+
+$f->add(
+    new TrFormElement('<label for="check-reboot-in-progress">'._T("Reboot In Progress", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, $info_keep_consoles]]
+);
+unset($check, $checkValue);
+
+
+// ---- eject-cdrom
+$check = new CheckboxTpl("check-eject-cdrom");
+$checkValue = new CheckboxTpl("check-eject-cdrom-value");
+
+$values = [
+    (isset($parameters["CheckEjectCdrom"])) ? ($parameters["CheckEjectCdrom"] == '' ? 'checked' : '') : '',
+    (isset($parameters["CheckEjectCdromValue"])) ? ($parameters["CheckEjectCdromValue"] == 'true' ? 'checked' : '') : '',
+];
+$fields = [$check, $checkValue];
+
+$f->add(
+    new TrFormElement('<label for="check-eject-cdrom">'._T("Eject cdrom", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, $info_eject_cdrom]]
+);
+unset($check, $checkValue);
+
+// ---- reboot
+$check = new CheckboxTpl("check-reboot");
+$checkValue = new CheckboxTpl("check-reboot-value");
+
+$values = [
+    (isset($parameters["CheckReboot"])) ? ($parameters["CheckReboot"] == '' ? 'checked' : '') : '',
+    (isset($parameters["CheckRebootValue"])) ? ($parameters["CheckRebootValue"] == 'true' ? 'checked' : '') : 'checked',
+];
+$fields = [$check, $checkValue];
+
+$f->add(
+    new TrFormElement('<label for="check-reboot">'._T("Reboot", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, $info_reboot]]
+);
+unset($check, $checkValue);
+
+// ---- poweroff
+
+
+$check = new CheckboxTpl("check-poweroff");
+$checkValue = new CheckboxTpl("check-poweroff-value");
+
+$values = [
+    (isset($parameters["CheckPoweroff"])) ? ($parameters["CheckPoweroff"] == '' ? 'checked' : '') : '',
+    (isset($parameters["CheckPoweroffValue"])) ? ($parameters["CheckPoweroffValue"] == 'true' ? 'checked' : '') : 'checked',
+];
+$fields = [$check, $checkValue];
+
+$f->add(
+    new TrFormElement('<label for="check-poweroff">'._T("Poweroff", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, $info_poweroff]]
+);
+unset($check, $checkValue);
+
+
+
 //=============
 $bo = new buttonTpl('bvalid', _T("Validate",'imaging'),'btnPrimary',_T("Create Preseed linux file", "imaging"));
 $rr = new TrFormElementcollapse($bo);
@@ -936,6 +1503,7 @@ $f->add(
         )
     )
 );
+
 $f->pop();
 
 $f->pop();
