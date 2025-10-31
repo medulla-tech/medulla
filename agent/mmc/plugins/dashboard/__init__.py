@@ -27,7 +27,7 @@ from mmc.plugins.dashboard.panel import (
     AlertsEntityPanel,
 )
 
-VERSION = "5.4.1"
+VERSION = "5.4.2"
 APIVERSION = "0:1:0"
 REVISION = ""
 

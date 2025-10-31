@@ -27,8 +27,8 @@
 
 %define use_git                1
 %define git                    SHA
-%define real_version           5.4.1
-%define mmc_version            5.4.1
+%define real_version           5.4.2
+%define mmc_version            5.4.2
 
 Summary:	Management Console
 Name:		medulla
