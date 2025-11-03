@@ -1,24 +1,15 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-30 17:47+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: POEditor.com\n"
+"Project-Id-Version: medulla\n"
+"Language: en\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: modules/support/includes/panels/license.inc.php:30
-msgid "Subscription info"
+#: modules/support/infoPackage.inc.php:42
+msgid "Connect"
 msgstr ""
 
 #: modules/support/includes/panels/license.inc.php:54
@@ -26,8 +17,16 @@ msgstr ""
 msgid "Support"
 msgstr ""
 
+#: modules/support/includes/panels/license.inc.php:91
+msgid "Computers"
+msgstr ""
+
 #: modules/support/includes/panels/license.inc.php:57
 msgid "Phone"
+msgstr ""
+
+#: modules/support/includes/panels/license.inc.php:30
+msgid "Subscription info"
 msgstr ""
 
 #: modules/support/includes/panels/license.inc.php:61
@@ -42,11 +41,7 @@ msgstr ""
 msgid "Your subscription"
 msgstr ""
 
-#: modules/support/includes/panels/license.inc.php:91
-msgid "Computers"
-msgstr ""
-
-#: modules/support/includes/panels/license.inc.php:106
+#: modules/xmppmaster/xmppmaster/logs/viewgroupschedulerlogs.php:127
 msgid "End"
 msgstr ""
 
@@ -66,10 +61,6 @@ msgstr ""
 msgid "Collect"
 msgstr ""
 
-#: modules/support/infoPackage.inc.php:42
-msgid "Connect"
-msgstr ""
-
 #: modules/support/infoPackage.inc.php:44
 msgid "Disconnect"
 msgstr ""
@@ -77,3 +68,4 @@ msgstr ""
 #: modules/support/infoPackage.inc.php:46
 msgid "Download an archive including logs and config files"
 msgstr ""
+
