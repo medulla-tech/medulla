@@ -1,21 +1,44 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-30 17:47+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: POEditor.com\n"
+"Project-Id-Version: medulla\n"
+"Language: en\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: modules/report/includes/html.inc.php:125
+msgid "Monday"
+msgstr ""
+
+#: modules/report/includes/html.inc.php:126
+msgid "Tuesday"
+msgstr ""
+
+#: modules/report/includes/html.inc.php:127
+msgid "Wednesday"
+msgstr ""
+
+#: modules/report/includes/html.inc.php:128
+msgid "Thursday"
+msgstr ""
+
+#: modules/report/includes/html.inc.php:129
+msgid "Friday"
+msgstr ""
+
+#: modules/report/includes/html.inc.php:130
+msgid "Saturday"
+msgstr ""
+
+#: modules/report/includes/html.inc.php:124
+msgid "Sunday"
+msgstr ""
+
+#: modules/report/report/index.php:63
+msgid "to"
+msgstr ""
 
 #: modules/report/includes/html.inc.php:100
 msgid "January"
@@ -66,6 +89,18 @@ msgstr ""
 msgid "December"
 msgstr ""
 
+#: modules/report/report/index.php:234
+msgid "Get XLS Report"
+msgstr ""
+
+#: modules/report/report/index.php:76
+msgid "Entities"
+msgstr ""
+
+#: modules/report/report/index.php:62
+msgid "Period"
+msgstr ""
+
 #: modules/report/includes/html.inc.php:112
 msgid "Jan"
 msgstr ""
@@ -108,34 +143,6 @@ msgstr ""
 
 #: modules/report/includes/html.inc.php:123
 msgid "Dec"
-msgstr ""
-
-#: modules/report/includes/html.inc.php:124
-msgid "Sunday"
-msgstr ""
-
-#: modules/report/includes/html.inc.php:125
-msgid "Monday"
-msgstr ""
-
-#: modules/report/includes/html.inc.php:126
-msgid "Tuesday"
-msgstr ""
-
-#: modules/report/includes/html.inc.php:127
-msgid "Wednesday"
-msgstr ""
-
-#: modules/report/includes/html.inc.php:128
-msgid "Thursday"
-msgstr ""
-
-#: modules/report/includes/html.inc.php:129
-msgid "Friday"
-msgstr ""
-
-#: modules/report/includes/html.inc.php:130
-msgid "Saturday"
 msgstr ""
 
 #: modules/report/includes/html.inc.php:131
@@ -225,20 +232,8 @@ msgstr ""
 msgid "Download a file from report module (report or PNG)"
 msgstr ""
 
-#: modules/report/report/index.php:62
-msgid "Period"
-msgstr ""
-
 #: modules/report/report/index.php:63
 msgid "from"
-msgstr ""
-
-#: modules/report/report/index.php:63
-msgid "to"
-msgstr ""
-
-#: modules/report/report/index.php:76
-msgid "Entities"
 msgstr ""
 
 #: modules/report/report/index.php:90
@@ -253,10 +248,7 @@ msgstr ""
 msgid "Download image"
 msgstr ""
 
-#: modules/report/report/index.php:234
-msgid "Get XLS Report"
-msgstr ""
-
 #: modules/report/report/index.php:236
 msgid "Get PDF Report"
 msgstr ""
+
