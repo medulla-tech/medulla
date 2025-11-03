@@ -5,9 +5,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: POEditor.com\n"
 "Project-Id-Version: medulla\n"
-"Language: es\n"
+"Language: en\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: modules/admin/admin/qaresult.php:29
+#: modules/xmppmaster/xmppmaster/relays/qaresult.php:29
 msgid "Relay Quick Result Action"
 msgstr ""
 
@@ -20,24 +21,21 @@ msgstr ""
 msgid "Rules List"
 msgstr ""
 
-#: modules/admin/admin/qalaunched.php:47
+#: modules/xmppmaster/xmppmaster/relays/qalaunched.php:47
 msgid "Relay Quick Leunched Action"
 msgstr ""
 
-#: modules/admin/admin/qalaunched.php:74
-#: modules/admin/admin/ajaxRelaysList.php:65
+#: modules/xmppmaster/xmppmaster/relays/qalaunched.php:74
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:56
 msgid "QA Launched"
 msgstr ""
 
-#: modules/admin/admin/editCluster.php:62
-#: modules/admin/admin/ajaxRelaysList.php:158
-#: modules/admin/admin/newCluster.php:58
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:128
+#: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:106
 msgid "Cluster Name"
 msgstr ""
 
-#: modules/admin/admin/editCluster.php:63
-#: modules/admin/admin/ajaxRelaysList.php:159
-#: modules/admin/admin/newCluster.php:59
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:129
 msgid "Cluster Description"
 msgstr ""
 
@@ -53,10 +51,7 @@ msgstr ""
 msgid "Relays <b>inside</b> the cluster"
 msgstr ""
 
-#: modules/admin/admin/editCluster.php:104
-#: modules/admin/admin/editRelayRule.php:116
-#: modules/admin/admin/newRelayRule.php:107
-#: modules/admin/admin/newCluster.php:91
+#: modules/urbackup/urbackup/usersgroups.php:96
 msgid "Edit"
 msgstr ""
 
@@ -68,27 +63,27 @@ msgstr ""
 msgid "The ban command has been sent to "
 msgstr ""
 
-#: modules/admin/admin/relaysList.php:60
+#: modules/xmppmaster/xmppmaster/relays/relaysList.php:28
 msgid "XMPP Relays list"
 msgstr ""
 
-#: modules/admin/admin/switchrelay.php:25
+#: modules/xmppmaster/xmppmaster/relays/switchrelay.php:25
 msgid "You have to check the box <b>\"I am aware that this disable/enable a relay forcing a <em><b>reconfiguration of all the machines</b></em> managed by the cluster."
 msgstr ""
 
-#: modules/admin/admin/switchrelay.php:32
+#: modules/xmppmaster/xmppmaster/relays/switchrelay.php:32
 msgid "The relay "
 msgstr ""
 
-#: modules/admin/admin/switchrelay.php:39
+#: modules/xmppmaster/xmppmaster/relays/switchrelay.php:39
 msgid "Switch Off the relay"
 msgstr ""
 
-#: modules/admin/admin/switchrelay.php:39
+#: modules/xmppmaster/xmppmaster/relays/switchrelay.php:39
 msgid "Switch On the relay"
 msgstr ""
 
-#: modules/admin/admin/switchrelay.php:51
+#: modules/xmppmaster/xmppmaster/relays/switchrelay.php:51
 msgid "I am aware that this disable/enable a relay forcing a <em><b>reconfiguration of all the machines</b></em> managed by the cluster.<br />Check this box if it is what you want."
 msgstr ""
 
@@ -104,16 +99,11 @@ msgstr ""
 msgid "The rule has not been edited to relay "
 msgstr ""
 
-#: modules/admin/admin/editRelayRule.php:91
-#: modules/admin/admin/ajaxRelayRules.php:74
-#: modules/admin/admin/ajaxRelayRules.php:93
-#: modules/admin/admin/newRelayRule.php:83 modules/admin/admin/ajaxRules.php:99
-#: modules/admin/admin/ajaxRules.php:122
+#: modules/inventory/inventory/ajaxEntityRules.php:63
 msgid "Rule"
 msgstr ""
 
-#: modules/admin/admin/editRelayRule.php:99
-#: modules/admin/admin/newRelayRule.php:92
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:52
 msgid "Relays"
 msgstr ""
 
@@ -143,7 +133,6 @@ msgid "Error during rule deletion"
 msgstr ""
 
 #: modules/admin/admin/ajaxClustersList.php:34
-#: modules/admin/infoPackage.inc.php:145
 msgid "Edit Cluster"
 msgstr ""
 
@@ -155,12 +144,13 @@ msgstr ""
 msgid "Clusters"
 msgstr ""
 
-#: modules/admin/admin/ajaxClustersList.php:70
-#: modules/admin/admin/ajaxpackageslist.php:78
-#: modules/admin/admin/ajaxqalaunched.php:54
-#: modules/admin/admin/ajaxqalaunched.php:55
-#: modules/admin/admin/ajaxRelayRules.php:94
-#: modules/admin/admin/ajaxRules.php:102 modules/admin/admin/ajaxRules.php:123
+#: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:95
+#: modules/xmppmaster/xmppmaster/relays/ajaxpackageslist.php:79
+#: modules/xmppmaster/xmppmaster/relays/ajaxqalaunched.php:54
+#: modules/xmppmaster/xmppmaster/relays/ajaxqalaunched.php:55
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:553
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:642
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:774
 msgid "Description"
 msgstr ""
 
@@ -173,8 +163,10 @@ msgstr ""
 msgid "Selection"
 msgstr ""
 
-#: modules/admin/admin/ajaxunban.php:65 modules/admin/admin/ajaxunban.php:88
-#: modules/admin/admin/ajaxban.php:65 modules/admin/admin/ajaxban.php:88
+#: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:90
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:350
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:544
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:633
 msgid "Name"
 msgstr ""
 
@@ -183,19 +175,19 @@ msgstr ""
 msgid "Unban Machines"
 msgstr ""
 
-#: modules/admin/admin/reconfiguremachines.php:25
+#: modules/xmppmaster/xmppmaster/relays/reconfiguremachines.php:25
 msgid "You have to check the box <b>\"I am aware that this action is forcing a <em><b>reconfiguration of all the machines</b></em> managed by the relayserver."
 msgstr ""
 
-#: modules/admin/admin/reconfiguremachines.php:32
+#: modules/xmppmaster/xmppmaster/relays/reconfiguremachines.php:32
 msgid "The machines of the relay "
 msgstr ""
 
-#: modules/admin/admin/reconfiguremachines.php:39
+#: modules/xmppmaster/xmppmaster/relays/reconfiguremachines.php:39
 msgid "Reconfigure all the machines of the relay"
 msgstr ""
 
-#: modules/admin/admin/reconfiguremachines.php:51
+#: modules/xmppmaster/xmppmaster/relays/reconfiguremachines.php:51
 msgid "I am aware that this action is forcing a <em><b>reconfiguration of all the machines</b></em> managed by the relayserver.<br />Check this box if it is what you want."
 msgstr ""
 
@@ -203,35 +195,39 @@ msgstr ""
 msgid "Clusters list"
 msgstr ""
 
-#: modules/admin/admin/ajaxpackageslist.php:77
+#: modules/xmppmaster/xmppmaster/relays/ajaxpackageslist.php:78
 msgid "Package name"
 msgstr ""
 
-#: modules/admin/admin/ajaxpackageslist.php:79
+#: modules/xmppmaster/xmppmaster/relays/ajaxpackageslist.php:80
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:550
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:639
 msgid "Version"
 msgstr ""
 
-#: modules/admin/admin/ajaxpackageslist.php:80
+#: modules/xmppmaster/xmppmaster/relays/ajaxpackageslist.php:81
 msgid "Licenses"
 msgstr ""
 
-#: modules/admin/admin/ajaxpackageslist.php:81
+#: modules/xmppmaster/xmppmaster/relays/ajaxpackageslist.php:82
+#: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:67
+#: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:120
 msgid "Os"
 msgstr ""
 
-#: modules/admin/admin/ajaxpackageslist.php:82
+#: modules/xmppmaster/xmppmaster/relays/ajaxpackageslist.php:83
 msgid "Package size"
 msgstr ""
 
-#: modules/admin/admin/ajaxpackageslist.php:83
+#: modules/xmppmaster/xmppmaster/relays/ajaxpackageslist.php:84
 msgid "Transfer Method"
 msgstr ""
 
-#: modules/admin/admin/ajaxqalaunched.php:35
+#: modules/xmppmaster/xmppmaster/relays/ajaxqalaunched.php:35
 msgid "Show Result"
 msgstr ""
 
-#: modules/admin/admin/ajaxqalaunched.php:53
+#: modules/xmppmaster/xmppmaster/relays/ajaxqalaunched.php:53
 msgid "Quick Action"
 msgstr ""
 
@@ -280,8 +276,7 @@ msgstr ""
 msgid "Delete Rule"
 msgstr ""
 
-#: modules/admin/admin/ajaxRelayRules.php:77
-#: modules/admin/admin/ajaxRulesDetail.php:59
+#: modules/imaging/includes/post_install_script.php:68
 msgid "Order"
 msgstr ""
 
@@ -298,53 +293,57 @@ msgstr ""
 msgid "The rule has not been added to relay "
 msgstr ""
 
-#: modules/admin/admin/ajaxRelaysList.php:46
-#: modules/admin/admin/ajaxRelaysList.php:48
-#: modules/admin/infoPackage.inc.php:65
+#: modules/xmppmaster/xmppmaster/ajaxlistconffile.php:66
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:38
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:39
+#: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:37
+#: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:38
+#: modules/xmppmaster/xmppmaster/ajaxFilterfileconf.php:88
 msgid "Edit config files"
 msgstr ""
 
-#: modules/admin/admin/ajaxRelaysList.php:50
-#: modules/admin/admin/ajaxRelaysList.php:51
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:41
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:42
 msgid "Relay Detail"
 msgstr ""
 
-#: modules/admin/admin/ajaxRelaysList.php:53
-#: modules/admin/admin/ajaxRelaysList.php:54
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:44
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:45
 msgid "Detail actions"
 msgstr ""
 
-#: modules/admin/admin/ajaxRelaysList.php:56
-#: modules/admin/admin/ajaxRelaysList.php:57
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:47
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:48
 msgid "Console Relay"
 msgstr ""
 
-#: modules/admin/admin/ajaxRelaysList.php:58
-#: modules/admin/admin/ajaxRelaysList.php:59
-#: modules/admin/admin/ajaxRelaysList.php:60
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:49
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:50
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:51
 msgid "Switch"
 msgstr ""
 
-#: modules/admin/admin/ajaxRelaysList.php:62
-#: modules/admin/admin/ajaxRelaysList.php:63
-#: modules/admin/infoPackage.inc.php:55
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:53
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:54
+#: modules/xmppmaster/infoPackage.inc.php:380
 msgid "Reconfigure Machines"
 msgstr ""
 
-#: modules/admin/admin/ajaxRelaysList.php:67
-#: modules/admin/admin/ajaxRelaysList.php:68
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:58
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:59
+#: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:41
+#: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:42
 msgid "Remote control"
 msgstr ""
 
-#: modules/admin/admin/ajaxRelaysList.php:70
-#: modules/admin/admin/ajaxRelaysList.php:71
-#: modules/admin/infoPackage.inc.php:46 modules/admin/infoPackage.inc.php:50
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:61
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:62
+#: modules/xmppmaster/infoPackage.inc.php:405
+#: modules/xmppmaster/infoPackage.inc.php:410
 msgid "Packages List"
 msgstr ""
 
 #: modules/admin/admin/ajaxRelaysList.php:73
-#: modules/admin/infoPackage.inc.php:92 modules/admin/infoPackage.inc.php:97
-#: modules/admin/infoPackage.inc.php:110
 msgid "Relay Rules"
 msgstr ""
 
@@ -358,35 +357,45 @@ msgstr ""
 msgid "Unban"
 msgstr ""
 
-#: modules/admin/admin/ajaxRelaysList.php:153
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:124
 msgid "Relays Xmpp"
 msgstr ""
 
-#: modules/admin/admin/ajaxRelaysList.php:157
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:127
+#: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:100
+#: modules/xmppmaster/xmppmaster/monitoring/detail.php:36
 msgid "Jid"
 msgstr ""
 
-#: modules/admin/admin/ajaxRelaysList.php:160
+#: modules/xmppmaster/xmppmaster/ajaxconvergence.php:394
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:130
+#: modules/xmppmaster/xmppmaster/ajaxteamconvergence.php:293
+#: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:123
+#: modules/xmppmaster/xmppmaster/ajaxstatusteamxmpp.php:343
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:335
 msgid "Total Machines"
 msgstr ""
 
-#: modules/admin/admin/ajaxRelaysList.php:161
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:131
 msgid "Uninventoried Online"
 msgstr ""
 
-#: modules/admin/admin/ajaxRelaysList.php:162
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:132
+#: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:102
 msgid "Class Util"
 msgstr ""
 
-#: modules/admin/admin/ajaxRelaysList.php:163
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:133
+#: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:108
 msgid "Mac Address"
 msgstr ""
 
-#: modules/admin/admin/ajaxRelaysList.php:164
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:134
+#: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:109
 msgid "Xmpp IP"
 msgstr ""
 
-#: modules/admin/admin/ajaxRulesDetail.php:32
+#: modules/pkgs/pkgs/rulesList.php:83
 msgid "Edit rule"
 msgstr ""
 
@@ -434,7 +443,7 @@ msgstr ""
 msgid "Ban Machines"
 msgstr ""
 
-#: modules/admin/admin/detailactions.php:28
+#: modules/xmppmaster/xmppmaster/relays/detailactions.php:28
 msgid "Detail Actions"
 msgstr ""
 
@@ -446,7 +455,7 @@ msgstr ""
 msgid "Relays List"
 msgstr ""
 
-#: modules/admin/infoPackage.inc.php:60
+#: modules/xmppmaster/infoPackage.inc.php:375
 msgid "Switch Relay"
 msgstr ""
 
@@ -454,11 +463,12 @@ msgstr ""
 msgid "Launch Quick Action on Relays"
 msgstr ""
 
-#: modules/admin/infoPackage.inc.php:75 modules/admin/infoPackage.inc.php:80
+#: modules/xmppmaster/infoPackage.inc.php:390
+#: modules/xmppmaster/infoPackage.inc.php:395
 msgid "Qa launched on Relays"
 msgstr ""
 
-#: modules/admin/infoPackage.inc.php:86
+#: modules/xmppmaster/infoPackage.inc.php:400
 msgid "Qa result on Relays"
 msgstr ""
 
