@@ -1,114 +1,102 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-30 17:47+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: POEditor.com\n"
+"Project-Id-Version: medulla\n"
+"Language: en\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: modules/glpi/glpi/tabs.php:65 modules/glpi/glpi/tabs.php:73
-msgid "This client has been registered in pull mode"
+#: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:95
+#: modules/xmppmaster/xmppmaster/relays/ajaxpackageslist.php:79
+#: modules/xmppmaster/xmppmaster/relays/ajaxqalaunched.php:54
+#: modules/xmppmaster/xmppmaster/relays/ajaxqalaunched.php:55
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:553
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:642
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:774
+msgid "Description"
 msgstr ""
 
-#: modules/glpi/glpi/tabs.php:67
-msgid "Leave pull mode"
+#: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:90
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:350
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:544
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:633
+msgid "Name"
 msgstr ""
 
-#: modules/glpi/glpi/tabs.php:77
-#, php-format
-msgid "%s's inventory %s"
+#: modules/xmppmaster/xmppmaster/relays/ajaxpackageslist.php:80
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:550
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:639
+msgid "Version"
 msgstr ""
 
-#: modules/glpi/glpi/tabs.php:85
+#: modules/xmppmaster/xmppmaster/ajaxlistconffile.php:66
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:38
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:39
+#: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:37
+#: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:38
+#: modules/xmppmaster/xmppmaster/ajaxFilterfileconf.php:88
+msgid "Edit config files"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:58
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:59
+#: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:41
+#: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:42
+msgid "Remote control"
+msgstr ""
+
+#: modules/pkgs/pkgs/rulesList.php:83
+msgid "Edit rule"
+msgstr ""
+
+#: modules/inventory/includes/publicFunc.php:83
+#: modules/inventory/inventory/addEntityRule.php:180
+msgid "Remove"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:645
+msgid "Size"
+msgstr ""
+
+#: modules/medulla_server/includes/menu_actionaudit.php:74
+#: modules/medulla_server/includes/menu_action.php:62
+msgid "Backup status"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxViewPart.php:616
+msgid "All"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/monitoring/detail.php:36
+msgid "Date"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:59
+msgid "Search"
+msgstr ""
+
+#: modules/inventory/infoPackage.inc.php:50
+#: modules/inventory/inventory/body.php:41
 msgid "Summary"
 msgstr ""
 
-#: modules/glpi/glpi/tabs.php:86
-msgid "Hardware"
+#: modules/inventory/inventory/ajaxViewPart.php:624
+msgid "Enabled"
 msgstr ""
 
-#: modules/glpi/glpi/tabs.php:88
-msgid "Storage"
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:777
+#: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:123
+msgid "Type"
 msgstr ""
 
-#: modules/glpi/glpi/tabs.php:89
-msgid "Network"
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:308
+msgid "Yes"
 msgstr ""
 
-#: modules/glpi/glpi/tabs.php:90
-msgid "Software"
-msgstr ""
-
-#: modules/glpi/glpi/tabs.php:91
-msgid "Administrative"
-msgstr ""
-
-#: modules/glpi/glpi/tabs.php:92
-msgid "History"
-msgstr ""
-
-#: modules/glpi/glpi/tabs.php:93
-#: modules/glpi/includes/panels/antivirus.inc.php:32
-msgid "Antivirus"
-msgstr ""
-
-#: modules/glpi/glpi/tabs.php:98
-msgid "Registry"
-msgstr ""
-
-#: modules/glpi/glpi/tabs.php:112
-msgid "Get XLS Report"
-msgstr ""
-
-#: modules/glpi/glpi/createAntivirusStaticGroup.php:31
-#, php-format
-msgid "Antivirus status is OK at %s"
-msgstr ""
-
-#: modules/glpi/glpi/createAntivirusStaticGroup.php:34
-#, php-format
-msgid "Antivirus is not running or not up-to-date at %s"
-msgstr ""
-
-#: modules/glpi/glpi/createAntivirusStaticGroup.php:37
-#, php-format
-msgid "No antivirus found at %s"
-msgstr ""
-
-#: modules/glpi/glpi/createAntivirusStaticGroup.php:47
-#: modules/glpi/glpi/createBackupStaticGroup.php:69
-#: modules/glpi/glpi/createOSStaticGroup.php:54
-#: modules/glpi/glpi/createMachinesStaticGroup.php:75
-#, php-format
-msgid "Computers list has been truncated at %d computers"
-msgstr ""
-
-#: modules/glpi/glpi/createStaticGroup.php:31
-#, php-format
-msgid "Latest inventory is less than %s days at %s"
-msgstr ""
-
-#: modules/glpi/glpi/createStaticGroup.php:34
-#, php-format
-msgid "Latest inventory is more than %s days at %s"
-msgstr ""
-
-#: modules/glpi/glpi/createStaticGroup.php:44
-#, php-format
-msgid ""
-"Computers list has been truncated at %d computers. Use the filter to find "
-"specific machines."
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:308
+msgid "No"
 msgstr ""
 
 #: modules/glpi/glpi/ajaxMachinesList.php:165
@@ -124,54 +112,230 @@ msgstr ""
 msgid "Monitoring"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:173
-#: modules/glpi/glpi/ajaxMachinesList.php:186
-#: modules/glpi/glpi/ajaxMachinesList.php:198
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:83
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:92
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:102
-msgid "Remote control"
-msgstr ""
-
-#: modules/glpi/glpi/ajaxMachinesList.php:176
-#: modules/glpi/glpi/ajaxMachinesList.php:177
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:74
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:79
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:84
+#: modules/medulla_server/includes/menu_actionaudit.php:80
+#: modules/medulla_server/includes/menu_actionaudit.php:84
+#: modules/medulla_server/includes/menu_action.php:79
+#: modules/medulla_server/includes/menu_action.php:81
+#: modules/medulla_server/includes/menu_action.php:84
 msgid "Software deployment"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:179
-#: modules/glpi/glpi/ajaxMachinesList.php:180
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:86
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:87
+#: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:39
+#: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:40
 msgid "xmppconsole"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:182
-#: modules/glpi/glpi/ajaxMachinesList.php:183
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:89
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:90
-msgid "Edit config files"
-msgstr ""
-
-#: modules/glpi/glpi/ajaxMachinesList.php:189
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:94
+#: modules/medulla_server/includes/menu_actionaudit.php:76
+#: modules/medulla_server/includes/menu_group_action.php:76
+#: modules/medulla_server/includes/menu_action.php:64
 msgid "Imaging management"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:191
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:95
+#: modules/medulla_server/includes/menu_action.php:61
 msgid "extTicket issue"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:195
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:99
+#: modules/medulla_server/includes/menu_actionaudit.php:77
+#: modules/medulla_server/includes/menu_action.php:75
 msgid "Quick action"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:219
-#: modules/glpi/glpi/machinesList.php:62 modules/glpi/glpi/addEntityRule.php:99
+#: modules/medulla_server/includes/menu_actionaudit.php:75
+#: modules/medulla_server/includes/menu_action.php:63
+msgid "Urbackup"
+msgstr ""
+
+#: modules/glpi/glpi/ajaxMachinesList.php:487
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:341
+msgid "Delete computer"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/machinesList.php:39
+msgid "All computers"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/machinesList.php:43
+msgid "Online computers"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/machinesList.php:47
+msgid "Offline computers"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:811
+msgid "Inventory"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxconvergence.php:111
+#: modules/xmppmaster/xmppmaster/ajaxconvergence.php:325
+#: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:45
+#: modules/xmppmaster/xmppmaster/ajaxteamconvergence.php:136
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:713
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:765
+#: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:92
+#: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:105
+#: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:50
+#: modules/xmppmaster/xmppmaster/ajaxstatusteamxmppscheduler.php:73
+#: modules/xmppmaster/xmppmaster/ajaxstatusteamxmpp.php:128
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:116
+msgid "View deployment details"
+msgstr ""
+
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:97
+msgid "Show Profile"
+msgstr ""
+
+#: modules/inventory/infoPackage.inc.php:57
+#: modules/inventory/inventory/i18n_labels.php:100
+#: modules/inventory/inventory/ajaxViewPart.php:227
+#: modules/inventory/inventory/ajaxViewPart.php:607
+#: modules/inventory/inventory/localSidebar.php:39
+msgid "Memory"
+msgstr ""
+
+#: modules/inventory/inventory/i18n_labels.php:91
+#: modules/inventory/inventory/ajaxViewPart.php:593
+msgid "Location"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:81
+msgid "Computer Name"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxconvergence.php:399
+#: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:94
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:89
+#: modules/xmppmaster/xmppmaster/ajaxteamconvergence.php:298
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:398
+#: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:122
+#: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:124
+#: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:85
+#: modules/xmppmaster/xmppmaster/ajaxstatusteamxmppscheduler.php:163
+#: modules/xmppmaster/xmppmaster/ajaxstatusteamxmpp.php:348
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:340
+msgid "User"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:807
+#: modules/xmppmaster/xmppmaster/monitoring/ajaxalertshistory.php:77
+#: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:77
+msgid "Comment"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/monitoringview.php:138
+msgid "History"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/xmppMonitoring.php:574
+msgid "Action"
+msgstr ""
+
+#: modules/msc/includes/command_history.php:55
+#: modules/msc/includes/command_history.php:207
+#: modules/msc/msc/package_detail.php:41
+msgid "Value"
+msgstr ""
+
+#: modules/inventory/infoPackage.inc.php:46
+#: modules/inventory/inventory/i18n_labels.php:107
+#: modules/inventory/inventory/localSidebar.php:32
+msgid "Network"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxViewPart.php:625
+msgid "Up-to-date"
+msgstr ""
+
+#: modules/msc/includes/widgets.inc.php:401
+msgid "Create a group"
+msgstr ""
+
+#: modules/inventory/inventory/createStaticGroup.php:43
+msgid "Computers list has been truncated at %d computers. Use the filter to find specific machines."
+msgstr ""
+
+#: modules/inventory/infoPackage.inc.php:44
+#: modules/inventory/inventory/i18n_labels.php:82
+#: modules/inventory/inventory/localSidebar.php:30
+msgid "Hardware"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:92
+#: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:83
+msgid "State"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:779
+msgid "Entity"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:547
+msgid "Software"
+msgstr ""
+
+#: modules/inventory/inventory/tabs.php:63
+#: modules/inventory/inventory/tabs.php:71
+msgid "This client has been registered in pull mode"
+msgstr ""
+
+#: modules/inventory/inventory/tabs.php:65
+msgid "Leave pull mode"
+msgstr ""
+
+#: modules/glpi/glpi/tabs.php:77
+msgid "%s's inventory %s"
+msgstr ""
+
+#: modules/inventory/infoPackage.inc.php:67
+#: modules/inventory/inventory/i18n_labels.php:148
+#: modules/inventory/inventory/ajaxViewPart.php:228
+#: modules/inventory/inventory/localSidebar.php:44
+msgid "Storage"
+msgstr ""
+
+#: modules/glpi/glpi/tabs.php:91
+msgid "Administrative"
+msgstr ""
+
+#: modules/glpi/glpi/tabs.php:93
+#: modules/glpi/includes/panels/antivirus.inc.php:32
+msgid "Antivirus"
+msgstr ""
+
+#: modules/inventory/infoPackage.inc.php:73
+#: modules/inventory/inventory/localSidebar.php:34
+msgid "Registry"
+msgstr ""
+
+#: modules/report/report/index.php:234
+msgid "Get XLS Report"
+msgstr ""
+
+#: modules/glpi/glpi/createAntivirusStaticGroup.php:31
+msgid "Antivirus status is OK at %s"
+msgstr ""
+
+#: modules/glpi/glpi/createAntivirusStaticGroup.php:34
+msgid "Antivirus is not running or not up-to-date at %s"
+msgstr ""
+
+#: modules/glpi/glpi/createAntivirusStaticGroup.php:37
+msgid "No antivirus found at %s"
+msgstr ""
+
+#: modules/pkgs/pkgs/createGroupLicence.php:64
+msgid "Computers list has been truncated at %d computers"
+msgstr ""
+
+#: modules/inventory/inventory/createStaticGroup.php:30
+msgid "Latest inventory is less than %s days at %s"
+msgstr ""
+
+#: modules/inventory/inventory/createStaticGroup.php:33
+msgid "Latest inventory is more than %s days at %s"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/monitoring/detail.php:36
 msgid "Hostname"
 msgstr ""
 
@@ -180,8 +344,11 @@ msgstr ""
 msgid "Jabber ID"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:221
-#: modules/glpi/glpi/machinesList.php:60
+#: modules/updates/updates/ajaxDetailsSpecificUpdate.php:73
+#: modules/updates/updates/hardwareConstraintsForMajorUpdates.php:57
+#: modules/updates/updates/ajaxDetailsByMachines.php:238
+#: modules/updates/updates/ajaxMajorDetailsByMachines.php:132
+#: modules/updates/updates/ajaxDetailsSpecificUpdateWithout.php:46
 msgid "Platform"
 msgstr ""
 
@@ -221,8 +388,7 @@ msgstr ""
 msgid "Public IP"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:229
-#: modules/glpi/glpi/machinesList.php:66
+#: modules/xmppmaster/xmppmaster/wakeonlan.php:41
 msgid "Mac address"
 msgstr ""
 
@@ -303,16 +469,13 @@ msgstr ""
 msgid "Owner"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:245
-#: modules/glpi/glpi/machinesList.php:81 modules/glpi/glpi/ajaxViewPart.php:243
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:275
+#: modules/inventory/inventory/i18n_labels.php:103
+#: modules/inventory/inventory/ajaxViewPart.php:599
 msgid "Model"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:246
-#: modules/glpi/glpi/ajaxMachinesList.php:433
-#: modules/glpi/glpi/machinesList.php:82 modules/glpi/glpi/ajaxViewPart.php:244
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:278
+#: modules/inventory/inventory/i18n_labels.php:98
+#: modules/inventory/inventory/ajaxViewPart.php:600
 msgid "Manufacturer"
 msgstr ""
 
@@ -366,42 +529,18 @@ msgstr ""
 msgid "Gateway address"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:401
-#: modules/glpi/glpi/ajaxViewPart.php:233
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:244
-msgid "Computer Name"
-msgstr ""
-
-#: modules/glpi/glpi/ajaxMachinesList.php:406
-#: modules/glpi/glpi/ajaxViewPart.php:234
-#: modules/glpi/glpi/addEntityRule.php:77 modules/glpi/glpi/addLocation.php:101
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:248
-#: modules/glpi/glpi/addEntity.php:100
-msgid "Description"
-msgstr ""
-
-#: modules/glpi/glpi/ajaxMachinesList.php:409
-#: modules/glpi/glpi/ajaxViewPart.php:240
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:251
+#: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:96
+#: modules/xmppmaster/xmppmaster/editqa.php:78
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:775
 msgid "Operating System"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:412
-#: modules/glpi/glpi/ajaxViewPart.php:241
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:254
+#: modules/inventory/inventory/ajaxViewPart.php:597
 msgid "Computer Type"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:415
-#: modules/glpi/glpi/ajaxViewPart.php:238
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:257
+#: modules/inventory/inventory/ajaxViewPart.php:594
 msgid "Last Logged User"
-msgstr ""
-
-#: modules/glpi/glpi/ajaxMachinesList.php:421
-#: modules/glpi/glpi/ajaxViewPart.php:236
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:263
-msgid "Entity"
 msgstr ""
 
 #: modules/glpi/glpi/ajaxMachinesList.php:424
@@ -419,36 +558,20 @@ msgstr ""
 msgid "Owner Real Name"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:450
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:301
-msgid "Backup status"
-msgstr ""
-
-#: modules/glpi/glpi/ajaxMachinesList.php:460
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:311
-msgid "Urbackup"
-msgstr ""
-
-#: modules/glpi/glpi/ajaxMachinesList.php:487
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:341
-msgid "Delete computer"
-msgstr ""
-
 #: modules/glpi/glpi/createBackupStaticGroup.php:55
-#, php-format
 msgid "Machines backup configured at %s"
 msgstr ""
 
 #: modules/glpi/glpi/createBackupStaticGroup.php:60
-#, php-format
 msgid "Machines backup not configured at %s"
 msgstr ""
 
-#: modules/glpi/glpi/entityRules.php:28 modules/glpi/infoPackage.inc.php:156
+#: modules/inventory/inventory/entityRules.php:28
+#: modules/inventory/inventory/localComputersSidebar.php:29
 msgid "Entity rules"
 msgstr ""
 
-#: modules/glpi/glpi/entityRules.php:36
+#: modules/inventory/inventory/entityRules.php:35
 msgid "All rules"
 msgstr ""
 
@@ -456,31 +579,15 @@ msgstr ""
 msgid "Machines List view xmpp"
 msgstr ""
 
-#: modules/glpi/glpi/machinesList.php:39
-#: modules/glpi/glpi/machinesListglpi.php:40
-msgid "All computers"
-msgstr ""
-
-#: modules/glpi/glpi/machinesList.php:43
-#: modules/glpi/glpi/machinesListglpi.php:44
-msgid "Online computers"
-msgstr ""
-
-#: modules/glpi/glpi/machinesList.php:47
-#: modules/glpi/glpi/machinesListglpi.php:48
-msgid "Offline computers"
-msgstr ""
-
-#: modules/glpi/glpi/machinesList.php:99
-#: modules/glpi/glpi/machinesListglpi.php:53
+#: modules/medulla_server/includes/utilities.php:87
 msgid "All my entities"
 msgstr ""
 
-#: modules/glpi/glpi/entityList.php:28
+#: modules/inventory/inventory/entityList.php:27
 msgid "Entity list"
 msgstr ""
 
-#: modules/glpi/glpi/entityList.php:36
+#: modules/inventory/inventory/entityList.php:33
 msgid "All entities"
 msgstr ""
 
@@ -492,146 +599,121 @@ msgstr ""
 msgid "All locations"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxViewPart.php:85
+#: modules/inventory/inventory/ajaxViewPart.php:83
 msgid " (Not an antivirus)"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxViewPart.php:109
+#: modules/inventory/inventory/ajaxViewPart.php:106
 msgid "Click here to see this computer on manufacturer website"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxViewPart.php:126
+#: modules/inventory/inventory/ajaxViewPart.php:121
+#: modules/inventory/inventory/view.php:74
 msgid "Properties"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxViewPart.php:127
-msgid "Value"
-msgstr ""
-
-#: modules/glpi/glpi/ajaxViewPart.php:145
+#: modules/inventory/inventory/ajaxViewPart.php:140
 msgid "No record found for this period."
 msgstr ""
 
-#: modules/glpi/glpi/ajaxViewPart.php:148
+#: modules/inventory/inventory/ajaxViewPart.php:143
 msgid "Unable to detect any Antivirus software on this machine."
 msgstr ""
 
-#: modules/glpi/glpi/ajaxViewPart.php:149
-msgid ""
-"Please ensure you are running GLPI with FusionInventory plugin and "
-"FusionInventory Agent on this client."
+#: modules/inventory/inventory/ajaxViewPart.php:144
+msgid "Please ensure you are running GLPI with FusionInventory plugin and FusionInventory Agent on this client."
 msgstr ""
 
-#: modules/glpi/glpi/ajaxViewPart.php:152
+#: modules/inventory/inventory/ajaxViewPart.php:147
 msgid "No record found."
 msgstr ""
 
-#: modules/glpi/glpi/ajaxViewPart.php:190
+#: modules/inventory/inventory/ajaxViewPart.php:226
 msgid "Processors"
-msgstr ""
-
-#: modules/glpi/glpi/ajaxViewPart.php:191
-#: modules/glpi/glpi/ajaxViewPart.php:251
-msgid "Memory"
 msgstr ""
 
 #: modules/glpi/glpi/ajaxViewPart.php:192
 msgid "Hard Drives"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxViewPart.php:193
+#: modules/inventory/inventory/ajaxViewPart.php:229
 msgid "Controllers"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxViewPart.php:194
+#: modules/inventory/inventory/ajaxViewPart.php:230
 msgid "Network Cards"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxViewPart.php:195
+#: modules/inventory/inventory/ajaxViewPart.php:231
 msgid "Drives"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxViewPart.php:196
+#: modules/inventory/inventory/ajaxViewPart.php:232
 msgid "Graphic Cards"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxViewPart.php:197
+#: modules/inventory/inventory/ajaxViewPart.php:233
 msgid "Sound Cards"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxViewPart.php:198
+#: modules/inventory/inventory/ajaxViewPart.php:234
 msgid "Others"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxViewPart.php:212
-msgid "Yes"
-msgstr ""
-
-#: modules/glpi/glpi/ajaxViewPart.php:213
-msgid "No"
-msgstr ""
-
-#: modules/glpi/glpi/ajaxViewPart.php:214
-#: modules/glpi/glpi/ajaxViewPart.php:231
-#: modules/glpi/glpi/addEntityRule.php:72 modules/glpi/glpi/addLocation.php:77
-#: modules/glpi/glpi/addEntity.php:78
-msgid "Name"
-msgstr ""
-
-#: modules/glpi/glpi/ajaxViewPart.php:215
+#: modules/inventory/inventory/i18n_labels.php:108
+#: modules/inventory/inventory/ajaxViewPart.php:572
 msgid "Network Type"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxViewPart.php:216
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:315
 msgid "MAC Address"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxViewPart.php:217
+#: modules/inventory/inventory/i18n_labels.php:86
+#: modules/inventory/inventory/ajaxViewPart.php:574
 msgid "IP"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxViewPart.php:218
+#: modules/inventory/inventory/ajaxViewPart.php:575
 msgid "Netmask"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxViewPart.php:219
+#: modules/inventory/inventory/i18n_labels.php:81
+#: modules/inventory/inventory/ajaxViewPart.php:576
 msgid "Gateway"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxViewPart.php:220
+#: modules/xmppmaster/xmppmaster/monitoring/ajaxalertshistory.php:72
+#: modules/xmppmaster/xmppmaster/monitoring/detail.php:85
+#: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:72
 msgid "Device"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxViewPart.php:221
+#: modules/inventory/inventory/ajaxViewPart.php:578
 msgid "Mount Point"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxViewPart.php:222
+#: modules/inventory/inventory/ajaxViewPart.php:579
 msgid "Filesystem"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxViewPart.php:223
-#: modules/glpi/glpi/ajaxViewPart.php:248
-msgid "Size"
-msgstr ""
-
-#: modules/glpi/glpi/ajaxViewPart.php:224
+#: modules/inventory/inventory/ajaxViewPart.php:581
 msgid "Free Size"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxViewPart.php:225
+#: modules/inventory/inventory/ajaxViewPart.php:582
 msgid "Supplier"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxViewPart.php:226
+#: modules/inventory/inventory/ajaxViewPart.php:583
 msgid "Invoice Number"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxViewPart.php:227
+#: modules/inventory/inventory/ajaxViewPart.php:584
 msgid "Date Of Purchase"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxViewPart.php:228
+#: modules/inventory/inventory/ajaxViewPart.php:585
 msgid "Warranty End Date"
 msgstr ""
 
@@ -639,134 +721,88 @@ msgstr ""
 msgid "Last Inventory Date"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxViewPart.php:230
+#: modules/pkgs/includes/query.php:85
 msgid "Vendor"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxViewPart.php:232
-msgid "Version"
-msgstr ""
-
-#: modules/glpi/glpi/ajaxViewPart.php:235
+#: modules/inventory/inventory/ajaxViewPart.php:591
 msgid "Entity (Location)"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxViewPart.php:237
-msgid "Location"
-msgstr ""
-
-#: modules/glpi/glpi/ajaxViewPart.php:239
+#: modules/inventory/inventory/ajaxViewPart.php:595
 msgid "OS"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxViewPart.php:242
+#: modules/inventory/inventory/ajaxViewPart.php:598
 msgid "Model / Type"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxViewPart.php:245
+#: modules/inventory/inventory/ajaxViewPart.php:601
 msgid "Serial Number"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxViewPart.php:246
+#: modules/inventory/inventory/i18n_labels.php:79
+#: modules/inventory/inventory/ajaxViewPart.php:602
 msgid "Frequency"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxViewPart.php:247
-msgid "Type"
-msgstr ""
-
-#: modules/glpi/glpi/ajaxViewPart.php:249
+#: modules/inventory/inventory/ajaxViewPart.php:605
 msgid "Bandwidth"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxViewPart.php:250
+#: modules/inventory/inventory/ajaxViewPart.php:606
 msgid "Writer"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxViewPart.php:252
-#: modules/glpi/glpi/ajaxLocationList.php:68
-#: modules/glpi/glpi/ajaxEntityList.php:68
-msgid "Comment"
-msgstr ""
-
-#: modules/glpi/glpi/ajaxViewPart.php:253
-msgid "Date"
-msgstr ""
-
-#: modules/glpi/glpi/ajaxViewPart.php:254
-msgid "User"
-msgstr ""
-
-#: modules/glpi/glpi/ajaxViewPart.php:255
+#: modules/inventory/inventory/ajaxViewPart.php:611
 msgid "Category"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxViewPart.php:256
-msgid "Action"
-msgstr ""
-
-#: modules/glpi/glpi/ajaxViewPart.php:257 modules/glpi/includes/html.php:58
+#: modules/inventory/inventory/ajaxViewPart.php:613
 msgid "Today"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxViewPart.php:258 modules/glpi/includes/html.php:59
+#: modules/inventory/inventory/ajaxViewPart.php:614
 msgid "Last 7 days"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxViewPart.php:259 modules/glpi/includes/html.php:60
+#: modules/inventory/inventory/ajaxViewPart.php:615
 msgid "Last 30 days"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxViewPart.php:260 modules/glpi/includes/html.php:61
-msgid "All"
-msgstr ""
-
-#: modules/glpi/glpi/ajaxViewPart.php:261
+#: modules/inventory/inventory/ajaxViewPart.php:617
 msgid "Service Pack"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxViewPart.php:263
+#: modules/inventory/inventory/ajaxViewPart.php:618
 msgid "Windows Key"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxViewPart.php:264
-#: modules/glpi/glpi/addEntityRule.php:100
+#: modules/inventory/inventory/ajaxViewPart.php:619
 msgid "Domain"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxViewPart.php:265
-msgid "State"
-msgstr ""
-
-#: modules/glpi/glpi/ajaxViewPart.php:266
+#: modules/inventory/inventory/ajaxViewPart.php:621
 msgid "Unknown"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxViewPart.php:267
+#: modules/inventory/inventory/ajaxViewPart.php:622
 msgid "Inventory Number"
-msgstr ""
-
-#: modules/glpi/glpi/ajaxViewPart.php:269
-msgid "Enabled"
-msgstr ""
-
-#: modules/glpi/glpi/ajaxViewPart.php:270
-msgid "Up-to-date"
 msgstr ""
 
 #: modules/glpi/glpi/ajaxViewPart.php:307
 msgid "Invalid hostname"
 msgstr ""
 
-#: modules/glpi/glpi/deleteEntityRule.php:31
+#: modules/inventory/inventory/deleteEntityRule.php:30
 msgid "The entity rule has been deleted successfully."
 msgstr ""
 
-#: modules/glpi/glpi/deleteEntityRule.php:36
+#: modules/inventory/inventory/deleteEntityRule.php:33
 msgid "Delete this rule?"
 msgstr ""
 
-#: modules/glpi/glpi/addEntityRule.php:31
+#: modules/inventory/inventory/addEntityRule.php:64
 msgid "The entity rule has been added successfully."
 msgstr ""
 
@@ -774,15 +810,15 @@ msgstr ""
 msgid "The entity rule has been edited successfully."
 msgstr ""
 
-#: modules/glpi/glpi/addEntityRule.php:59 modules/glpi/infoPackage.inc.php:165
+#: modules/inventory/inventory/localComputersSidebar.php:30
 msgid "Add entity rule"
 msgstr ""
 
-#: modules/glpi/glpi/addEntityRule.php:67
+#: modules/xmppmaster/xmppmaster/ajaxconvergence.php:150
 msgid "Active"
 msgstr ""
 
-#: modules/glpi/glpi/addEntityRule.php:86
+#: modules/inventory/inventory/addEntityRule.php:124
 msgid "Aggregator"
 msgstr ""
 
@@ -806,7 +842,7 @@ msgstr ""
 msgid "different from"
 msgstr ""
 
-#: modules/glpi/glpi/addEntityRule.php:115
+#: modules/inventory/inventory/addEntityRule.php:149
 msgid "contains"
 msgstr ""
 
@@ -818,12 +854,11 @@ msgstr ""
 msgid "starts with"
 msgstr ""
 
-#: modules/glpi/glpi/addEntityRule.php:118
-#: modules/glpi/glpi/addEntityRule.php:119
+#: modules/inventory/inventory/addEntityRule.php:152
 msgid "finishes by"
 msgstr ""
 
-#: modules/glpi/glpi/addEntityRule.php:120
+#: modules/inventory/inventory/addEntityRule.php:146
 msgid "matches (regex)"
 msgstr ""
 
@@ -839,16 +874,11 @@ msgstr ""
 msgid "does not exist"
 msgstr ""
 
-#: modules/glpi/glpi/addEntityRule.php:138
-#: modules/glpi/includes/publicFunc.php:142
-msgid "Remove"
-msgstr ""
-
-#: modules/glpi/glpi/addEntityRule.php:149
+#: modules/inventory/inventory/addEntityRule.php:194
 msgid "Criterion"
 msgstr ""
 
-#: modules/glpi/glpi/addEntityRule.php:155
+#: modules/inventory/inventory/addEntityRule.php:200
 msgid "Add criterion"
 msgstr ""
 
@@ -865,9 +895,8 @@ msgstr ""
 msgid "Target location"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxLocationList.php:51
-#: modules/glpi/glpi/ajaxEntityList.php:51
-#: modules/glpi/glpi/ajaxEntityRules.php:51
+#: modules/inventory/inventory/ajaxEntityList.php:51
+#: modules/inventory/inventory/ajaxEntityRules.php:52
 msgid "No entry found"
 msgstr ""
 
@@ -897,25 +926,11 @@ msgid "Parent location"
 msgstr ""
 
 #: modules/glpi/glpi/machinesListglpi.php:29
-#, php-format
 msgid "Machines List view %s"
 msgstr ""
 
 #: modules/glpi/glpi/createOSStaticGroup.php:40
-#, php-format
 msgid "Machine with %s %s installed at %s"
-msgstr ""
-
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:76
-msgid "Inventory"
-msgstr ""
-
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:78
-msgid "View deployment details"
-msgstr ""
-
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:97
-msgid "Show Profile"
 msgstr ""
 
 #: modules/glpi/glpi/createMachinesStaticGroupdeploy.php:31
@@ -923,12 +938,10 @@ msgid "Machines "
 msgstr ""
 
 #: modules/glpi/glpi/createMachinesStaticGroup.php:61
-#, php-format
 msgid "Machines online at %s"
 msgstr ""
 
 #: modules/glpi/glpi/createMachinesStaticGroup.php:66
-#, php-format
 msgid "Machines offline at %s"
 msgstr ""
 
@@ -940,20 +953,20 @@ msgstr ""
 msgid "The entity has been edited successfully."
 msgstr ""
 
-#: modules/glpi/glpi/addEntity.php:43 modules/glpi/infoPackage.inc.php:139
-#: modules/glpi/infoPackage.inc.php:152
+#: modules/inventory/inventory/addEntity.php:42
 msgid "Add entity"
 msgstr ""
 
-#: modules/glpi/glpi/addEntity.php:52 modules/glpi/glpi/ajaxEntityList.php:70
+#: modules/inventory/inventory/EditEntity.php:49
 msgid "Edit entity"
 msgstr ""
 
-#: modules/glpi/glpi/addEntity.php:95
+#: modules/inventory/inventory/addEntity.php:64
 msgid "Parent entity"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxEntityList.php:66
+#: modules/updates/updates/ajaxEntitiesList.php:146
+#: modules/updates/updates/ajaxMajorEntitiesList.php:227
 msgid "Entity name"
 msgstr ""
 
@@ -961,19 +974,15 @@ msgstr ""
 msgid "Rule name"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxEntityRules.php:69
-msgid "Edit rule"
-msgstr ""
-
-#: modules/glpi/glpi/ajaxEntityRules.php:70
+#: modules/inventory/inventory/ajaxEntityRules.php:73
 msgid "Move rule up"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxEntityRules.php:71
+#: modules/inventory/inventory/ajaxEntityRules.php:74
 msgid "Move rule down"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxEntityRules.php:72
+#: modules/pkgs/pkgs/rulesList.php:84
 msgid "Delete rule"
 msgstr ""
 
@@ -981,16 +990,11 @@ msgstr ""
 msgid "Inventories"
 msgstr ""
 
-#: modules/glpi/includes/panels/inventory.inc.php:47
-#: modules/glpi/includes/panels/antivirus.inc.php:45
-msgid "Create a group"
-msgstr ""
-
-#: modules/glpi/includes/panels/inventory.inc.php:48
+#: modules/inventory/includes/panels/inventory.inc.php:44
 msgid "< %s days: %percent% (%d)"
 msgstr ""
 
-#: modules/glpi/includes/panels/inventory.inc.php:49
+#: modules/inventory/includes/panels/inventory.inc.php:45
 msgid "> %s days: %percent% (%d)"
 msgstr ""
 
@@ -1019,12 +1023,8 @@ msgstr ""
 msgid "Operating systems"
 msgstr ""
 
-#: modules/glpi/includes/html.php:50 modules/glpi/includes/html.php:421
+#: modules/inventory/includes/html.php:103
 msgid "Hide Windows Updates"
-msgstr ""
-
-#: modules/glpi/includes/html.php:268 modules/glpi/includes/html.php:485
-msgid "Search"
 msgstr ""
 
 #: modules/glpi/includes/publicFunc.php:86
@@ -1039,11 +1039,12 @@ msgstr ""
 msgid "Static"
 msgstr ""
 
-#: modules/glpi/includes/publicFunc.php:154
+#: modules/inventory/includes/publicFunc.php:57
+#: modules/inventory/includes/publicFunc.php:90
 msgid "Entity right"
 msgstr ""
 
-#: modules/glpi/includes/publicFunc.php:160
+#: modules/inventory/includes/publicFunc.php:95
 msgid "Add entity right"
 msgstr ""
 
@@ -1103,11 +1104,11 @@ msgstr ""
 msgid "Create static group from machines backup widget (GLPI)"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:130
+#: modules/report/report/index.php:76
 msgid "Entities"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:134 modules/glpi/infoPackage.inc.php:147
+#: modules/inventory/infoPackage.inc.php:210
 msgid "Entities (ajax)"
 msgstr ""
 
@@ -1115,7 +1116,7 @@ msgstr ""
 msgid "Locations"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:160
+#: modules/inventory/infoPackage.inc.php:215
 msgid "Entity rules (ajax)"
 msgstr ""
 
@@ -1123,11 +1124,11 @@ msgstr ""
 msgid "Delete entity rule"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:174
+#: modules/inventory/infoPackage.inc.php:221
 msgid "Change entity rule order (up)"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:179
+#: modules/inventory/infoPackage.inc.php:226
 msgid "Change entity rule order (down)"
 msgstr ""
 
@@ -1174,3 +1175,4 @@ msgstr ""
 #: modules/glpi/infoPackage.inc.php:232
 msgid "Connections tab (GLPI)"
 msgstr ""
+
