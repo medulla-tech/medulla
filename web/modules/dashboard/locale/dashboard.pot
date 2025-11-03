@@ -1,21 +1,51 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-30 17:47+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: POEditor.com\n"
+"Project-Id-Version: medulla\n"
+"Language: en\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: modules/dashboard/includes/panels/general.inc.php:39
+msgid "on"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/monitoring/detail.php:36
+msgid "Date"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/xmppMonitoring.php:200
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:776
+msgid "Status"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:329
+#: modules/xmppmaster/xmppmaster/monitoring/ajaxalertshistory.php:28
+#: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:38
+msgid "Detail"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:37
+msgid "Acknowledge"
+msgstr ""
+
+#: modules/dashboard/includes/panels/clients_updates.inc.php:30
+msgid "Clients Update"
+msgstr ""
+
+#: modules/dashboard/includes/panels/general.inc.php:40
+msgid "Uptime"
+msgstr ""
+
+#: modules/dashboard/includes/panels/product_updates.inc.php:31
+msgid "Medulla Updates"
+msgstr ""
+
+#: modules/dashboard/includes/panels/shortcuts.inc.php:29
+msgid "Shortcuts"
+msgstr ""
 
 #: modules/dashboard/includes/panels/computersOnline.inc.php:31
 msgid "Machines Online"
@@ -44,7 +74,6 @@ msgid "No updates available."
 msgstr ""
 
 #: modules/dashboard/includes/panels/ajaxProduct_updates.php:57
-#, php-format
 msgid "%s Updates available."
 msgstr ""
 
@@ -53,13 +82,7 @@ msgid "Installing updates in progress…"
 msgstr ""
 
 #: modules/dashboard/includes/panels/ajaxProduct_updates.php:148
-msgid ""
-"Please stay on this page until the update process is finished.<br>You will "
-"be notified once the process is done."
-msgstr ""
-
-#: modules/dashboard/includes/panels/shortcuts.inc.php:29
-msgid "Shortcuts"
+msgid "Please stay on this page until the update process is finished.<br>You will be notified once the process is done."
 msgstr ""
 
 #: modules/dashboard/includes/panels/process.inc.php:28
@@ -74,28 +97,8 @@ msgstr ""
 msgid "Machines in Medulla from "
 msgstr ""
 
-#: modules/dashboard/includes/panels/alerts.inc.php:28
+#: modules/xmppmaster/xmppmaster/monitoring/alerts.php:36
 msgid "Alerts"
-msgstr ""
-
-#: modules/dashboard/includes/panels/alerts.inc.php:49
-#: modules/dashboard/includes/panels/alertsentity.inc.php:50
-msgid "Detail"
-msgstr ""
-
-#: modules/dashboard/includes/panels/alerts.inc.php:50
-#: modules/dashboard/includes/panels/alertsentity.inc.php:51
-msgid "Acknowledge"
-msgstr ""
-
-#: modules/dashboard/includes/panels/alerts.inc.php:54
-#: modules/dashboard/includes/panels/alertsentity.inc.php:55
-msgid "Status"
-msgstr ""
-
-#: modules/dashboard/includes/panels/alerts.inc.php:55
-#: modules/dashboard/includes/panels/alertsentity.inc.php:56
-msgid "Date"
 msgstr ""
 
 #: modules/dashboard/includes/panels/alerts.inc.php:56
@@ -103,8 +106,11 @@ msgstr ""
 msgid "Evenement"
 msgstr ""
 
-#: modules/dashboard/includes/panels/alerts.inc.php:57
-#: modules/dashboard/includes/panels/alertsentity.inc.php:58
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:308
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:797
+#: modules/xmppmaster/xmppmaster/ajaxxmppplugindownload.php:42
+#: modules/xmppmaster/xmppmaster/monitoring/detail.php:32
+#: modules/xmppmaster/xmppmaster/ajaxxmppplugindownloadexpert.php:44
 msgid "Machine"
 msgstr ""
 
@@ -117,10 +123,6 @@ msgstr ""
 msgid "Plugins loaded"
 msgstr ""
 
-#: modules/dashboard/includes/panels/clients_updates.inc.php:30
-msgid "Clients Update"
-msgstr ""
-
 #: modules/dashboard/includes/panels/clients_updates.inc.php:42
 msgid "An error occured while fetching updates"
 msgstr ""
@@ -129,7 +131,7 @@ msgstr ""
 msgid "updates available."
 msgstr ""
 
-#: modules/dashboard/includes/panels/clients_updates.inc.php:64
+#: modules/inventory/inventory/ajaxViewPart.php:625
 msgid "Up-to-date"
 msgstr ""
 
@@ -153,7 +155,7 @@ msgstr ""
 msgid "Not Supported"
 msgstr ""
 
-#: modules/dashboard/includes/panels/clients_updates.inc.php:92
+#: modules/msc/includes/widgets.inc.php:401
 msgid "Create a group"
 msgstr ""
 
@@ -175,14 +177,6 @@ msgstr ""
 msgid "General"
 msgstr ""
 
-#: modules/dashboard/includes/panels/general.inc.php:39
-msgid "on"
-msgstr ""
-
-#: modules/dashboard/includes/panels/general.inc.php:40
-msgid "Uptime"
-msgstr ""
-
 #: modules/dashboard/includes/panels/general.inc.php:41
 msgid "Load"
 msgstr ""
@@ -197,10 +191,6 @@ msgstr ""
 
 #: modules/dashboard/includes/panels/deploymentsLaunched.inc.php:52
 msgid "Deployements launched from "
-msgstr ""
-
-#: modules/dashboard/includes/panels/product_updates.inc.php:31
-msgid "Medulla Updates"
 msgstr ""
 
 #: modules/dashboard/includes/panels/successRate.inc.php:30
@@ -256,3 +246,4 @@ msgstr ""
 #: modules/dashboard/infoPackage.inc.php:80
 msgid "Alerts by Entity Panel"
 msgstr ""
+
