@@ -1,41 +1,54 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-30 17:47+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"X-Generator: POEditor.com\n"
+"Project-Id-Version: medulla\n"
+"Language: en\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:95
+#: modules/xmppmaster/xmppmaster/relays/ajaxpackageslist.php:79
+#: modules/xmppmaster/xmppmaster/relays/ajaxqalaunched.php:54
+#: modules/xmppmaster/xmppmaster/relays/ajaxqalaunched.php:55
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:553
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:642
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:774
+msgid "Description"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/monitoring/detail.php:36
+msgid "Date"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/xmppMonitoring.php:200
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:776
+msgid "Status"
+msgstr ""
+
+#: modules/services/includes/panels/services.inc.php:44
+msgid "%d inactive service"
+msgid_plural "%d inactive services"
+msgstr[0] ""
+msgstr[1] ""
+
+#: modules/urbackup/urbackup/index.php:418
+#: modules/urbackup/urbackup/logs.php:52
+msgid "Message"
+msgstr ""
+
+#: modules/services/includes/panels/system.inc.php:29
+msgid "System"
+msgstr ""
 
 #: modules/services/includes/panels/services.inc.php:30
 #: modules/services/infoPackage.inc.php:36
 msgid "Services"
 msgstr ""
 
-#: modules/services/includes/panels/services.inc.php:44
-#, php-format
-msgid "%d inactive service"
-msgid_plural "%d inactive services"
-msgstr[0] ""
-msgstr[1] ""
-
 #: modules/services/includes/panels/services.inc.php:50
 msgid "All services are up"
-msgstr ""
-
-#: modules/services/includes/panels/system.inc.php:29
-msgid "System"
 msgstr ""
 
 #: modules/services/includes/panels/system.inc.php:38
@@ -96,8 +109,7 @@ msgstr ""
 msgid "Reload service"
 msgstr ""
 
-#: modules/services/control/ajaxOthersServicesFilter.php:31
-#: modules/services/control/ajaxServicesFilter.php:31
+#: modules/urbackup/urbackup/restart_service.php:32
 msgid "Restart service"
 msgstr ""
 
@@ -112,20 +124,6 @@ msgstr ""
 msgid "Service"
 msgstr ""
 
-#: modules/services/control/ajaxOthersServicesFilter.php:59
-#: modules/services/control/ajaxServicesFilter.php:86
-msgid "Description"
-msgstr ""
-
-#: modules/services/control/ajaxOthersServicesFilter.php:60
-#: modules/services/control/ajaxServicesFilter.php:87
-msgid "Status"
-msgstr ""
-
-#: modules/services/control/ajaxLogFilter.php:53
-msgid "Date"
-msgstr ""
-
 #: modules/services/control/ajaxLogFilter.php:58
 msgid "UID"
 msgstr ""
@@ -134,15 +132,11 @@ msgstr ""
 msgid "GID"
 msgstr ""
 
-#: modules/services/control/ajaxLogFilter.php:60
+#: modules/xmppmaster/xmppmaster/xmppMonitoring.php:201
 msgid "PID"
 msgstr ""
 
-#: modules/services/control/ajaxLogFilter.php:61
-msgid "Message"
-msgstr ""
-
 #: modules/services/control/log.php:36
-#, php-format
 msgid "%s service log"
 msgstr ""
+
