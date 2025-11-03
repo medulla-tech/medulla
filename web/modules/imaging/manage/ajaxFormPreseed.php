@@ -291,8 +291,8 @@ $fields = [
 ];
 
 $values = [
-    (isset($parameters['check-keyboard-layouts'])) ? ($parameters['check-keyboard-layouts'] == '' ? 'checked' : '') : '',
-    (isset($parameters['select-keyboard-layouts'])) ? $parameters['select-keyboard-layouts'] : '',
+    (isset($parameters['CheckKeyboardLayouts'])) ? ($parameters['CheckKeyboardLayouts'] == '' ? 'checked' : '') : '',
+    (isset($parameters['SelectKeyboardLayouts'])) ? $parameters['SelectKeyboardLayouts'] : '',
 ];
 
 $f->add(
@@ -496,7 +496,7 @@ $fields = [
 ];
 
 $values = [
-    (isset($parameters['CheckHostname'])) ? $parameters['CheckHostname'] : '',
+    (isset($parameters['CheckHostname'])) ? ($parameters['CheckHostname'] == '' ? 'checked' : '') : '',
     (isset($parameters['InputHostname'])) ? $parameters['InputHostname'] : '',
 ];
 
@@ -595,8 +595,8 @@ $fields = [
 ];
 
 $values = [
-    (isset($parameters['CheckNetworkConsole'])) ? ($parameters['CheckNetworkConsoleType'] == '' ? 'checked' : '') : '',
-    (isset($parameters['CheckNetworkConsoleType'])) ? ($parameters['CheckNetworkConsoleType'] == 'true' ? 'checked' : '') : 'checked',
+    (isset($parameters['CheckNetworkConsole'])) ? ($parameters['CheckNetworkConsole'] == '' ? 'checked' : '') : '',
+    (isset($parameters['CheckNetworkConsoleValue'])) ? ($parameters['CheckNetworkConsoleValue'] == 'false' ? '' : 'checked') : '',
 ];
 
 $f->add(
@@ -782,13 +782,16 @@ $f->add(
 );
 unset($check, $input);
 
+echo '<pre>';
+print_r($parameters);
+echo '</pre>';
 // ---- user-fullname
 $check = new CheckboxTpl("check-user-fullname");
 $input = new InputTplTitle("input-user-fullname", "");
 $fields = [$check, $input];
 $values = [
     (isset($parameters["CheckUserFullname"])) ? ($parameters["CheckUserFullname"] == '' ? 'checked' : '') : '',
-    (isset($parameters["InputUserFullName"])) ? $parameters["InputUserFullName"] : '',
+    (isset($parameters["InputUserFullname"])) ? $parameters["InputUserFullname"] : '',
 ];
 
 $f->add(
@@ -816,7 +819,7 @@ $check = new CheckboxTpl("check-user-passwd");
 $input = new InputTplTitle("input-user-passwd", "");
 $fields = [$check, $input];
 $values = [
-    (isset($parameters["CheckUserPasswd"])) ? $parameters["CheckUserPasswd"] : '',
+    (isset($parameters["CheckUserPasswd"])) ? ($parameters["CheckUserPasswd"] == '' ? 'checked' : '') : '',
     (isset($parameters["InputUserPasswd"])) ? $parameters["InputUserPasswd"] : '',
 ];
 
@@ -831,8 +834,8 @@ $number = new NumberTplTitle("number-user-uid", _T("Create the first user with t
 
 $fields = [$check, $number];
 $values = [
-    (isset($parameters["CheckUserUid"])) ? $parameters["CheckUserUid"] : '',
-    (isset($parameters["NumberUserUid"])) ? $parameters["NumberserUid"] : '',
+    (isset($parameters["CheckUserUid"])) ? ($parameters["CheckUserUid"] == '' ? 'checked' : '') : '',
+    (isset($parameters["NumberUserUid"])) ? (int)$parameters["NumberUserUid"] : '',
 ];
 
 $f->add(
@@ -1146,7 +1149,7 @@ $input = new InputTplTitle("input-services-select", $info_services_select );
 
 $values = [
     (isset($parameters["CheckServicesSelect"])) ? ($parameters["CheckServicesSelect"] == "" ? "checked" : "") : "",
-    "multiselect security, updates"
+    (isset($parameters['InputServicesSelect'])) ? $parameters['InputServicesSelect'] : "multiselect security, updates"
 ];
 $fields = [$check, $input];
 $f->add(
@@ -1160,7 +1163,7 @@ $input = new InputTplTitle("input-security-host", "" );
 
 $values = [
     (isset($parameters["CheckSecurityHost"])) ? ($parameters["CheckSecurityHost"] == "" ? "checked" : "") : "",
-    "security.debian.org"
+    (isset($parameters['InputSecurityHost'])) ? $parameters['InputSecurityHost'] : "security.debian.org"
 ];
 $fields = [$check, $input];
 $f->add(
@@ -1174,7 +1177,7 @@ $input = new InputTplTitle("input-add-repo", "" );
 
 $values = [
     (isset($parameters["CheckAddRepo"])) ? ($parameters["CheckAddRepo"] == "" ? "checked" : "") : "",
-    ""
+    (isset($parameters['InputAddRepo'])) ? $parameters['InputAddRepo'] : ''
 ];
 $fields = [$check, $input];
 $f->add(
@@ -1189,7 +1192,7 @@ $input = new InputTplTitle("input-add-comment", "" );
 
 $values = [
     (isset($parameters["CheckAddComment"])) ? ($parameters["CheckAddComment"] == "" ? "checked" : "") : "",
-    ""
+    (isset($parameters["InputAddComment"])) ? $parameters["InputAddComment"]: "",
 ];
 $fields = [$check, $input];
 $f->add(
@@ -1377,8 +1380,8 @@ $check = new CheckboxTpl("check-multi");
 $checkValue = new CheckboxTpl("check-multi-value");
 
 $values = [
-    (isset($parameters["checkMulti"])) ? ($parameters["checkMulti"] == "" ? "checked" : "") : "",
-    (isset($parameters["checkMultiValue"])) ? ($parameters["checkMultiValue"] == "true" ? "checked" : "") : "checked",
+    (isset($parameters["CheckMulti"])) ? ($parameters["CheckMulti"] == "" ? "checked" : "") : "",
+    (isset($parameters["CheckMultiValue"])) ? ($parameters["CheckMultiValue"] == "true" ? "checked" : "") : "checked",
 ];
 $fields = [$check, $checkValue];
 $f->add(

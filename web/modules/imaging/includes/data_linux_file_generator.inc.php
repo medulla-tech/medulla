@@ -2371,7 +2371,7 @@ jQuery(function () {
     jQuery("#number-dhcp-timeout").on("change", ()=>{update()});
 
     jQuery('#check-dhcpv6-timeout').on('change', ()=>{
-        toggle_item("#nuinput-interfacember-dhcpv6-timeout");
+        toggle_item("#number-dhcpv6-timeout");
         update();
     });
     jQuery("#number-dhcpv6-timeout").on("change", ()=>{update()});
