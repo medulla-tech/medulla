@@ -1,21 +1,11 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-30 17:46+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: POEditor.com\n"
+"Project-Id-Version: medulla\n"
+"Language: es\n"
 
 #: modules/admin/admin/qaresult.php:29
 msgid "Relay Quick Result Action"
@@ -83,10 +73,7 @@ msgid "XMPP Relays list"
 msgstr ""
 
 #: modules/admin/admin/switchrelay.php:25
-msgid ""
-"You have to check the box <b>\"I am aware that this disable/enable a relay "
-"forcing a <em><b>reconfiguration of all the machines</b></em> managed by the "
-"cluster."
+msgid "You have to check the box <b>\"I am aware that this disable/enable a relay forcing a <em><b>reconfiguration of all the machines</b></em> managed by the cluster."
 msgstr ""
 
 #: modules/admin/admin/switchrelay.php:32
@@ -102,10 +89,7 @@ msgid "Switch On the relay"
 msgstr ""
 
 #: modules/admin/admin/switchrelay.php:51
-msgid ""
-"I am aware that this disable/enable a relay forcing a <em><b>reconfiguration "
-"of all the machines</b></em> managed by the cluster.<br />Check this box if "
-"it is what you want."
+msgid "I am aware that this disable/enable a relay forcing a <em><b>reconfiguration of all the machines</b></em> managed by the cluster.<br />Check this box if it is what you want."
 msgstr ""
 
 #: modules/admin/admin/ban.php:31
@@ -200,10 +184,7 @@ msgid "Unban Machines"
 msgstr ""
 
 #: modules/admin/admin/reconfiguremachines.php:25
-msgid ""
-"You have to check the box <b>\"I am aware that this action is forcing a "
-"<em><b>reconfiguration of all the machines</b></em> managed by the "
-"relayserver."
+msgid "You have to check the box <b>\"I am aware that this action is forcing a <em><b>reconfiguration of all the machines</b></em> managed by the relayserver."
 msgstr ""
 
 #: modules/admin/admin/reconfiguremachines.php:32
@@ -215,10 +196,7 @@ msgid "Reconfigure all the machines of the relay"
 msgstr ""
 
 #: modules/admin/admin/reconfiguremachines.php:51
-msgid ""
-"I am aware that this action is forcing a <em><b>reconfiguration of all the "
-"machines</b></em> managed by the relayserver.<br />Check this box if it is "
-"what you want."
+msgid "I am aware that this action is forcing a <em><b>reconfiguration of all the machines</b></em> managed by the relayserver.<br />Check this box if it is what you want."
 msgstr ""
 
 #: modules/admin/admin/clustersList.php:28
@@ -511,3 +489,4 @@ msgstr ""
 #: modules/admin/infoPackage.inc.php:165
 msgid "Move Relay Rule"
 msgstr ""
+
