@@ -1930,7 +1930,7 @@ fn_Locale=function(){
 
 fn_Network=function(){
     var list_hidden_ids=[
-    // "check-enable-network-value",
+    "check-enable-network-value",
     "select-interface",
     "number-link-timeout",
     "number-dhcp-timeout",
@@ -1975,9 +1975,9 @@ fn_NetworkConsole=function(){
 
 fn_Mirror=function(){
     var list_hidden_ids=[
-        "select-mirror-protocol",
+        // "select-mirror-protocol",
         "select-mirror-country",
-        "input-mirror-suite",
+        // "input-mirror-suite",
         "input-mirror-suite-components",
 
     ];
@@ -1995,12 +1995,10 @@ fn_Mirror=function(){
 fn_Accounts=function(){
     var list_hidden_ids=[
         "check-skip-root-login-value",
-        "input-root-passwd",
         "check-skip-makeuser-value",
-        // "",
-        // "",
-        // "",
-        // "",
+        "check-user-fullname",
+        "check-user-uid",
+        "check-user-group",
     ];
     jQuery.each(list_hidden_ids, function( index,value) {
         jQuery('#'+value).parents("tr").toggle();
@@ -2031,6 +2029,7 @@ fn_Timezone=function(){
 
 fn_Partitionning=function(){
     var list_hidden_ids=[
+        "check-lvm-nooverwrite",
     ];
     jQuery.each(list_hidden_ids, function( index,value) {
         jQuery('#'+value).parents("tr").toggle();
@@ -2061,6 +2060,7 @@ fn_Validate=function(){
 
 fn_BaseSystemInstallation = ()=>{
     var list_hidden_ids=[
+        "check-kernel-image",
     ];
     jQuery.each(list_hidden_ids, function( index,value) {
         jQuery('#'+value).parents("tr").toggle();
@@ -2075,6 +2075,20 @@ fn_BaseSystemInstallation = ()=>{
 
 fn_Aptsetup = ()=>{
        var list_hidden_ids=[
+        "check-set-first",
+        "check-non-free-firmware",
+        "check-non-free",
+        "check-contrib",
+        "check-disable-cdrom",
+        "check-use-mirror",
+        "check-services-select",
+        "check-security-host",
+        "check-add-repo",
+        "check-add-comment",
+        "check-add-source",
+        "check-add-key",
+        "check-allow-unauth",
+        "check-multi-arch",
     ];
     jQuery.each(list_hidden_ids, function( index,value) {
         jQuery('#'+value).parents("tr").toggle();
@@ -2089,6 +2103,9 @@ fn_Aptsetup = ()=>{
 
 fn_PackageSelection = ()=>{
        var list_hidden_ids=[
+        "check-run-tasksel",
+        "check-upgrade",
+        "check-contest",
     ];
     jQuery.each(list_hidden_ids, function( index,value) {
         jQuery('#'+value).parents("tr").toggle();
@@ -2103,6 +2120,8 @@ fn_PackageSelection = ()=>{
 
 fn_BootLoader = ()=>{
        var list_hidden_ids=[
+        "check-debian",
+        "check-multi"
     ];
     jQuery.each(list_hidden_ids, function( index,value) {
         jQuery('#'+value).parents("tr").toggle();
@@ -2117,6 +2136,9 @@ fn_BootLoader = ()=>{
 
 fn_Finishing = ()=>{
        var list_hidden_ids=[
+        "check-keep-consoles",
+        "check-reboot-in-progress",
+        "check-eject-cdrom",
     ];
     jQuery.each(list_hidden_ids, function( index,value) {
         jQuery('#'+value).parents("tr").toggle();
@@ -2562,7 +2584,6 @@ jQuery(function () {
         toggle_item("#number-user-uid")
         update();
     })
-
     jQuery('#number-user-uid').on("change", ()=>{update()})
 
     jQuery("#check-user-group").on("change", ()=>{
