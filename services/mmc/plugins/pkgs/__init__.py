@@ -1403,6 +1403,25 @@ class RpcProxy(RpcProxyI):
         )
         return apimanagepackagemsc.loadpackagelistmsc_on_select_package(listuuidpackag)
 
+    @with_optional_xmpp_context
+    def get_dependencies_list_from_permissions(self, login, ctx=None):
+        """
+        This function is used to retrieve the dependency list in function of the permissions.
+        Args:
+            login: The login of the user we are seeking dependencies
+            ctx: The context to get user entities list
+        Returns:
+            It returns the dependency list in function of the permissions
+        """
+
+        objsearch = {"login": login, "permission": "r"}
+        objsearch["list_sharing"] = list_sharing_id(objsearch)
+        objsearch["liste_entities_user"] = ctx.get_session_info()["mondict"]["liste_entities_user"]
+
+        listuuidpackag = PkgsDatabase().get_list_packages_deploy_view(objsearch)
+
+        return apimanagepackagemsc.load_packagelist_dependencies(listuuidpackag)
+
 
 class DownloadAppstreamPackageList(object):
     """
@@ -2378,21 +2397,6 @@ def list_sharing_id(objsearch):
     for sharing in pkgs_search_share(objsearch)["datas"]:
         list_id_sharing.append(sharing["id_sharing"])
     return list_id_sharing
-
-
-
-def get_dependencies_list_from_permissions(login):
-    """
-    This function is used to retrieve the dependency list in function of the permissions.
-    Args:
-        login: The login of the user we are seeking dependencies
-    Returns:
-        It returns the dependency list in function of the permissions
-    """
-    objsearch = {"login": login, "permission": "r"}
-    objsearch["list_sharing"] = list_sharing_id(objsearch)
-    listuuidpackag = PkgsDatabase().get_list_packages_deploy_view(objsearch)
-    return apimanagepackagemsc.load_packagelist_dependencies(listuuidpackag)
 
 
 def pkgs_search_ars_list_from_cluster_rules(login):
