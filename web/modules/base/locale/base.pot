@@ -1,25 +1,204 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-30 17:46+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"X-Generator: POEditor.com\n"
+"Project-Id-Version: medulla\n"
+"Language: en\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: modules/xmppmaster/xmppmaster/relays/qalaunched.php:74
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:56
+msgid "QA Launched"
+msgstr ""
+
+#: modules/urbackup/urbackup/usersgroups.php:96
+msgid "Edit"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/relays/switchrelay.php:25
+msgid "You have to check the box <b>\"I am aware that this disable/enable a relay forcing a <em><b>reconfiguration of all the machines</b></em> managed by the cluster."
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/relays/switchrelay.php:32
+msgid "The relay "
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/relays/switchrelay.php:51
+msgid "I am aware that this disable/enable a relay forcing a <em><b>reconfiguration of all the machines</b></em> managed by the cluster.<br />Check this box if it is what you want."
+msgstr ""
+
+#: modules/admin/admin/ajaxClustersList.php:34
+msgid "Edit Cluster"
+msgstr ""
+
+#: modules/admin/admin/ajaxClustersList.php:35
+msgid "Delete Cluster"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:95
+#: modules/xmppmaster/xmppmaster/relays/ajaxpackageslist.php:79
+#: modules/xmppmaster/xmppmaster/relays/ajaxqalaunched.php:54
+#: modules/xmppmaster/xmppmaster/relays/ajaxqalaunched.php:55
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:553
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:642
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:774
+msgid "Description"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:90
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:350
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:544
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:633
+msgid "Name"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/relays/reconfiguremachines.php:25
+msgid "You have to check the box <b>\"I am aware that this action is forcing a <em><b>reconfiguration of all the machines</b></em> managed by the relayserver."
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/relays/reconfiguremachines.php:32
+msgid "The machines of the relay "
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/relays/reconfiguremachines.php:51
+msgid "I am aware that this action is forcing a <em><b>reconfiguration of all the machines</b></em> managed by the relayserver.<br />Check this box if it is what you want."
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/relays/ajaxqalaunched.php:35
+msgid "Show Result"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxlistconffile.php:66
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:38
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:39
+#: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:37
+#: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:38
+#: modules/xmppmaster/xmppmaster/ajaxFilterfileconf.php:88
+msgid "Edit config files"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:41
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:42
+msgid "Relay Detail"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:44
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:45
+msgid "Detail actions"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:47
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:48
+msgid "Console Relay"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:49
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:50
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:51
+msgid "Switch"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:53
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:54
+#: modules/xmppmaster/infoPackage.inc.php:380
+msgid "Reconfigure Machines"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:58
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:59
+#: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:41
+#: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:42
+msgid "Remote control"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:61
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:62
+#: modules/xmppmaster/infoPackage.inc.php:405
+#: modules/xmppmaster/infoPackage.inc.php:410
+msgid "Packages List"
+msgstr ""
+
+#: modules/admin/admin/ajaxRelaysList.php:73
+msgid "Relay Rules"
+msgstr ""
+
+#: modules/admin/admin/ajaxRelaysList.php:75
+#: modules/admin/admin/ajaxRelaysList.php:76
+msgid "Ban"
+msgstr ""
+
+#: modules/admin/admin/ajaxRelaysList.php:78
+#: modules/admin/admin/ajaxRelaysList.php:79
+msgid "Unban"
+msgstr ""
+
+#: modules/pkgs/pkgs/rulesList.php:83
+msgid "Edit rule"
+msgstr ""
+
+#: modules/report/includes/html.inc.php:125
+msgid "Monday"
+msgstr ""
+
+#: modules/report/includes/html.inc.php:126
+msgid "Tuesday"
+msgstr ""
+
+#: modules/report/includes/html.inc.php:127
+msgid "Wednesday"
+msgstr ""
+
+#: modules/report/includes/html.inc.php:128
+msgid "Thursday"
+msgstr ""
+
+#: modules/report/includes/html.inc.php:129
+msgid "Friday"
+msgstr ""
+
+#: modules/report/includes/html.inc.php:130
+msgid "Saturday"
+msgstr ""
+
+#: modules/report/includes/html.inc.php:124
+msgid "Sunday"
+msgstr ""
+
+#: modules/report/report/index.php:63
+msgid "to"
+msgstr ""
+
+#: modules/backuppc/backuppc/index.php:58
+msgid "The computer has been removed from the backup system."
+msgstr ""
+
+#: modules/medulla_server/includes/menu_actionaudit.php:74
+#: modules/medulla_server/includes/menu_action.php:62
+msgid "Backup status"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/monitoring/detail.php:36
+msgid "Date"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/xmppMonitoring.php:200
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:776
+msgid "Status"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:777
+#: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:123
+msgid "Type"
+msgstr ""
+
+#: modules/urbackup/infoPackage.inc.php:27
+#: modules/urbackup/infoPackage.inc.php:32
+msgid "Backup"
+msgstr ""
 
 #: token.php:56 index.php:80
-#, php-format
 msgid "The server %s does not exist"
 msgstr ""
 
@@ -32,15 +211,11 @@ msgid "Error while validating your token. Please contact your administrator."
 msgstr ""
 
 #: index.php:90
-msgid ""
-"Login failed. Please make sure that you entered the right username and "
-"password. Both fields are case sensitive."
+msgid "Login failed. Please make sure that you entered the right username and password. Both fields are case sensitive."
 msgstr ""
 
 #: index.php:99
-msgid ""
-"You have been logged out because the session between the MMC web interface "
-"and the MMC agent expired."
+msgid "You have been logged out because the session between the MMC web interface and the MMC agent expired."
 msgstr ""
 
 #: index.php:103
@@ -72,12 +247,11 @@ msgstr ""
 msgid "Login"
 msgstr ""
 
-#: index.php:263 modules/base/includes/publicFunc.php:338
-#: modules/base/infoPackage.inc.php:433
+#: modules/pkgs/pkgs/appstreamSettings.php:135
 msgid "Password"
 msgstr ""
 
-#: index.php:276
+#: modules/support/infoPackage.inc.php:42
 msgid "Connect"
 msgstr ""
 
@@ -85,18 +259,15 @@ msgstr ""
 msgid "Error reading authproviders.ini or authproviders.ini.local config file."
 msgstr ""
 
-#: graph/header.inc.php:213 graph/header.inc.php:249
-#: modules/medulla_server/update/viewProductUpdates.php:122
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:308
 msgid "Yes"
 msgstr ""
 
-#: graph/header.inc.php:216 graph/header.inc.php:218
-#: modules/medulla_server/update/viewProductUpdates.php:122
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:308
 msgid "No"
 msgstr ""
 
-#: graph/header.inc.php:251 includes/FormGenerator.php:718
-#: includes/PageGenerator.php:2731
+#: modules/dyngroup/dyngroup/details.php:49
 msgid "Close"
 msgstr ""
 
@@ -124,15 +295,12 @@ msgstr ""
 msgid "Logout"
 msgstr ""
 
-#: graph/navbar.inc.php:106 modules/base/infoPackage.inc.php:44
-#: modules/base/main/default.php:89
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1911
 msgid "Home"
 msgstr ""
 
 #: graph/navbar.inc.php:127
-msgid ""
-"If this phrase does not change, your browser is not supported by the MMC "
-"application"
+msgid "If this phrase does not change, your browser is not supported by the MMC application"
 msgstr ""
 
 #: includes/ErrorHandling.php:78
@@ -156,8 +324,7 @@ msgid "This item already exists in your LDAP directory"
 msgstr ""
 
 #: includes/commonErrorHandling.php:31
-msgid ""
-"Solve the problem by:\n"
+msgid "Solve the problem by:\n"
 "                        <ul>\n"
 "                            <li>change this entry name</li>\n"
 "                            <li>delete this entry before recreate it</li>\n"
@@ -169,11 +336,9 @@ msgid "MMC Agent can't contact your LDAP server"
 msgstr ""
 
 #: includes/commonErrorHandling.php:44
-msgid ""
-"Solve the problem by:\n"
+msgid "Solve the problem by:\n"
 "                        <ul>\n"
-"                            <li>Verify your LDAP server is correctly "
-"configured in /etc/mmc/plugins/base/ini </li>\n"
+"                            <li>Verify your LDAP server is correctly configured in /etc/mmc/plugins/base/ini </li>\n"
 "                            <li>Verify your LDAP server is up</li>\n"
 "                        </ul>"
 msgstr ""
@@ -182,7 +347,8 @@ msgstr ""
 msgid "Error during authentication process"
 msgstr ""
 
-#: includes/commonErrorHandling.php:54 includes/commonErrorHandling.php:59
+#: modules/msc/includes/bundle_widgets.php:150
+#: modules/msc/msc/ajaxPackageFilter.php:254
 msgid "Please contact your administrator."
 msgstr ""
 
@@ -195,8 +361,7 @@ msgid "This item do not seems to be in the index"
 msgstr ""
 
 #: includes/commonErrorHandling.php:65
-msgid ""
-"This problem can appear if:\n"
+msgid "This problem can appear if:\n"
 "                        <ul>\n"
 "                            <li>This item no longer exists.</li>\n"
 "                            <li>You misspelled it.</li>\n"
@@ -208,12 +373,10 @@ msgid "smbpasswd failed to change your password entry"
 msgstr ""
 
 #: includes/commonErrorHandling.php:78
-msgid ""
-"Verify that your smbpasswd is correctly configured:\n"
+msgid "Verify that your smbpasswd is correctly configured:\n"
 "                        <ul>\n"
 "                            <li> Your Ldap server can be down</li>\n"
-"                            <li> Your Samba server is not properly "
-"configured</li>\n"
+"                            <li> Your Samba server is not properly configured</li>\n"
 "                        </ul>"
 msgstr ""
 
@@ -239,9 +402,7 @@ msgid "MMC agent communication problem"
 msgstr ""
 
 #: includes/xmlrpc.inc.php:190
-msgid ""
-"Timeout when reading data from the MMC agent. Please check network "
-"connectivity and server load."
+msgid "Timeout when reading data from the MMC agent. Please check network connectivity and server load."
 msgstr ""
 
 #: includes/xmlrpc.inc.php:199
@@ -253,15 +414,11 @@ msgid "Please check network connectivity."
 msgstr ""
 
 #: includes/xmlrpc.inc.php:215
-msgid ""
-"Can't communicate with MMC agent. Please check you're using the right TCP "
-"port and the right protocol."
+msgid "Can't communicate with MMC agent. Please check you're using the right TCP port and the right protocol."
 msgstr ""
 
 #: includes/xmlrpc.inc.php:255
-msgid ""
-"The MMC agent didn't give us a session number. Please check the MMC agent "
-"version."
+msgid "The MMC agent didn't give us a session number. Please check the MMC agent version."
 msgstr ""
 
 #: includes/xmlrpc.inc.php:388
@@ -269,9 +426,7 @@ msgid "unknown error"
 msgstr ""
 
 #: includes/xmlrpc.inc.php:389
-msgid ""
-"This exception is unknown. Please contact us to add an error handling on "
-"this error."
+msgid "This exception is unknown. Please contact us to add an error handling on this error."
 msgstr ""
 
 #: includes/acl.inc.php:148
@@ -299,11 +454,13 @@ msgstr ""
 msgid "Delete photo"
 msgstr ""
 
-#: includes/FormGenerator.php:311
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:695
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:696
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:698
 msgid "yes"
 msgstr ""
 
-#: includes/FormGenerator.php:314
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:699
 msgid "no"
 msgstr ""
 
@@ -347,80 +504,53 @@ msgstr ""
 msgid "value=\"never\";'>never</a>"
 msgstr ""
 
-#: includes/FormGenerator.php:694
+#: modules/report/includes/html.inc.php:100
 msgid "January"
 msgstr ""
 
-#: includes/FormGenerator.php:694
+#: modules/report/includes/html.inc.php:101
 msgid "February"
 msgstr ""
 
-#: includes/FormGenerator.php:694
+#: modules/report/includes/html.inc.php:102
 msgid "March"
 msgstr ""
 
-#: includes/FormGenerator.php:694
+#: modules/report/includes/html.inc.php:103
 msgid "April"
 msgstr ""
 
-#: includes/FormGenerator.php:695
+#: modules/report/includes/html.inc.php:104
+#: modules/report/includes/html.inc.php:116
 msgid "May"
 msgstr ""
 
-#: includes/FormGenerator.php:695
+#: modules/report/includes/html.inc.php:105
 msgid "June"
 msgstr ""
 
-#: includes/FormGenerator.php:695
+#: modules/report/includes/html.inc.php:106
 msgid "July"
 msgstr ""
 
-#: includes/FormGenerator.php:695
+#: modules/report/includes/html.inc.php:107
 msgid "August"
 msgstr ""
 
-#: includes/FormGenerator.php:696
+#: modules/report/includes/html.inc.php:108
 msgid "September"
 msgstr ""
 
-#: includes/FormGenerator.php:696
+#: modules/report/includes/html.inc.php:109
 msgid "October"
 msgstr ""
 
-#: includes/FormGenerator.php:696
+#: modules/report/includes/html.inc.php:110
 msgid "November"
 msgstr ""
 
-#: includes/FormGenerator.php:696
+#: modules/report/includes/html.inc.php:111
 msgid "December"
-msgstr ""
-
-#: includes/FormGenerator.php:706
-msgid "Sunday"
-msgstr ""
-
-#: includes/FormGenerator.php:706
-msgid "Monday"
-msgstr ""
-
-#: includes/FormGenerator.php:706
-msgid "Tuesday"
-msgstr ""
-
-#: includes/FormGenerator.php:706
-msgid "Wednesday"
-msgstr ""
-
-#: includes/FormGenerator.php:707
-msgid "Thursday"
-msgstr ""
-
-#: includes/FormGenerator.php:707
-msgid "Friday"
-msgstr ""
-
-#: includes/FormGenerator.php:707
-msgid "Saturday"
 msgstr ""
 
 #: includes/FormGenerator.php:719 includes/PageGenerator.php:1237
@@ -441,7 +571,8 @@ msgstr ""
 msgid "Now"
 msgstr ""
 
-#: includes/FormGenerator.php:809 modules/base/groups/localSidebar.php:28
+#: modules/pkgs/pkgs/add.php:387 modules/pkgs/pkgs/editRule.php:82
+#: modules/pkgs/pkgs/addRule.php:77
 msgid "Add"
 msgstr ""
 
@@ -449,18 +580,13 @@ msgstr ""
 msgid "Toggle selection"
 msgstr ""
 
-#: includes/FormGenerator.php:1314 modules/ppolicy/default/delete.php:45
-#: modules/base/groups/ajaxFilter.php:68 modules/base/users/ajaxFilter.php:140
-#: modules/base/views/index.tpl.php:92
+#: modules/urbackup/urbackup/list_backups.php:350
+#: modules/urbackup/urbackup/list_backups.php:357
+#: modules/urbackup/urbackup/usersgroups.php:99
 msgid "Delete"
 msgstr ""
 
-#: includes/PageGenerator.php:904 includes/PageGenerator.php:1152
-msgid "to"
-msgstr ""
-
 #: includes/PageGenerator.php:906 includes/PageGenerator.php:1154
-#, php-format
 msgid " - Total <b>%s </b>"
 msgstr ""
 
@@ -484,44 +610,33 @@ msgstr ""
 msgid "Select entity"
 msgstr ""
 
-#: includes/PageGenerator.php:3169 includes/PageGenerator.php:3251
-#: includes/PageGenerator.php:3280 modules/dyngroup/includes/groups.inc.php:364
-#: modules/dyngroup/includes/groups.inc.php:427
-#: modules/base/groups/members.php:308 modules/base/groups/edit.php:128
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:808
 msgid "Confirm"
 msgstr ""
 
-#: includes/PageGenerator.php:3174 includes/PageGenerator.php:3256
-#: modules/imaging/imaging/images_iso.php:112
-#: modules/imaging/imaging/multicast.php:409
-#: modules/imaging/manage/master_iso.php:109
-#: modules/dyngroup/includes/groups.inc.php:365
-#: modules/dyngroup/includes/groups.inc.php:428
-#: modules/ppolicy/default/delete.php:46 modules/base/groups/members.php:309
-#: modules/base/groups/delete.php:66
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:828
 msgid "Cancel"
 msgstr ""
 
-#: includes/PageGenerator.php:3456
+#: modules/imaging/imaging/showtarget.php:127
+#: modules/imaging/manage/service_show_used.php:196
 msgid "Select all"
 msgstr ""
 
-#: includes/PageGenerator.php:3456
+#: modules/imaging/imaging/showtarget.php:129
+#: modules/imaging/manage/service_show_used.php:198
 msgid "Unselect all"
 msgstr ""
 
 #: includes/modules.inc.php:404
-#, php-format
 msgid "%s service restarting..."
 msgstr ""
 
 #: includes/modules.inc.php:405
-#, php-format
 msgid "%s service restarted successfully."
 msgstr ""
 
 #: includes/modules.inc.php:406
-#, php-format
 msgid "%s service failed to restart."
 msgstr ""
 
@@ -540,25 +655,19 @@ msgid "Your session will be closed"
 msgstr ""
 
 #: license.php:27
-msgid ""
-"<p>\n"
+msgid "<p>\n"
 "The community version of this product is distributed in the hope that it\n"
-"will be useful, but <strong>without any warranty</strong>; without even the "
-"implied\n"
+"will be useful, but <strong>without any warranty</strong>; without even the implied\n"
 "warranty of merchantability or fitness for a particular purpose. See the\n"
 "GNU General Public License for more details.</p>\n"
 "<p>\n"
-"Moreover, this product is a main and critical component of your information "
-"system. This community version is distributed without professional support "
-"of any kind,\n"
+"Moreover, this product is a main and critical component of your information system. This community version is distributed without professional support of any kind,\n"
 "and without a tested and certified upgrade path from previous versions.\n"
 "</p>"
 msgstr ""
 
 #: license.php:38
-msgid ""
-"Click here to get more information about our support and maintenance "
-"subscription plan."
+msgid "Click here to get more information about our support and maintenance subscription plan."
 msgstr ""
 
 #: version.php:35
@@ -585,111 +694,43 @@ msgstr ""
 #: modules/glpi/glpi/ajaxMachinesList.php:168
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:73
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:77
-#: modules/base/includes/computers_list.inc.php:109
+#: modules/glpi/infoPackage.inc.php:35
 msgid "GLPI Inventory"
 msgstr ""
 
 #: modules/glpi/glpi/ajaxMachinesList.php:172
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:82
-#: modules/base/includes/computers_list.inc.php:108
 msgid "Monitoring"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:173
-#: modules/glpi/glpi/ajaxMachinesList.php:186
-#: modules/glpi/glpi/ajaxMachinesList.php:198
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:83
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:92
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:102
-#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:58
-#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:59
-#: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:41
-#: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:42
-#: modules/medulla_server/includes/menu_actionaudit.php:83
-#: modules/medulla_server/includes/menu_action.php:67
-#: modules/admin/admin/ajaxRelaysList.php:67
-#: modules/admin/admin/ajaxRelaysList.php:68
-#: modules/base/includes/computers_list.inc.php:130
-#: modules/base/includes/computers_list.inc.php:132
-#: modules/base/includes/computers_list.inc.php:143
-msgid "Remote control"
-msgstr ""
-
-#: modules/glpi/glpi/ajaxMachinesList.php:176
-#: modules/glpi/glpi/ajaxMachinesList.php:177
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:74
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:79
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:84
-#: modules/base/includes/computers_list.inc.php:111
-#: modules/base/includes/computers_list.inc.php:114
+#: modules/medulla_server/includes/menu_actionaudit.php:80
+#: modules/medulla_server/includes/menu_actionaudit.php:84
+#: modules/medulla_server/includes/menu_action.php:79
+#: modules/medulla_server/includes/menu_action.php:81
+#: modules/medulla_server/includes/menu_action.php:84
 msgid "Software deployment"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:179
-#: modules/glpi/glpi/ajaxMachinesList.php:180
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:86
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:87
 #: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:39
 #: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:40
-#: modules/medulla_server/includes/menu_actionaudit.php:86
-#: modules/medulla_server/includes/menu_action.php:74
-#: modules/base/includes/computers_list.inc.php:116
-#: modules/base/includes/computers_list.inc.php:117
 msgid "xmppconsole"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:182
-#: modules/glpi/glpi/ajaxMachinesList.php:183
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:89
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:90
-#: modules/xmppmaster/xmppmaster/ajaxlistconffile.php:66
-#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:38
-#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:39
-#: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:37
-#: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:38
-#: modules/xmppmaster/xmppmaster/ajaxFilterfileconf.php:88
-#: modules/medulla_server/includes/menu_actionaudit.php:87
-#: modules/admin/admin/ajaxRelaysList.php:46
-#: modules/admin/admin/ajaxRelaysList.php:48
-#: modules/admin/infoPackage.inc.php:65
-#: modules/base/includes/computers_list.inc.php:124
-#: modules/base/includes/computers_list.inc.php:126
-msgid "Edit config files"
-msgstr ""
-
-#: modules/glpi/glpi/ajaxMachinesList.php:189
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:94
+#: modules/medulla_server/includes/menu_actionaudit.php:76
 #: modules/medulla_server/includes/menu_group_action.php:76
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:170
-#: modules/base/includes/computers_list.inc.php:134
+#: modules/medulla_server/includes/menu_action.php:64
 msgid "Imaging management"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:191
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:95
-#: modules/base/includes/computers_list.inc.php:136
-#: modules/base/users/ajaxFilter.php:137
+#: modules/medulla_server/includes/menu_action.php:61
 msgid "extTicket issue"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:195
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:99
 #: modules/medulla_server/includes/menu_actionaudit.php:77
 #: modules/medulla_server/includes/menu_action.php:75
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:72
-#: modules/base/includes/computers_list.inc.php:140
 msgid "Quick action"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesList.php:450
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:301
-#: modules/medulla_server/includes/menu_actionaudit.php:74
-#: modules/base/includes/computers_list.inc.php:383
-msgid "Backup status"
-msgstr ""
-
-#: modules/glpi/glpi/ajaxMachinesList.php:460
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:311
 #: modules/medulla_server/includes/menu_actionaudit.php:75
 #: modules/medulla_server/includes/menu_action.php:63
 msgid "Urbackup"
@@ -697,162 +738,54 @@ msgstr ""
 
 #: modules/glpi/glpi/ajaxMachinesList.php:487
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:341
-#: modules/base/includes/computers_list.inc.php:421
 msgid "Delete computer"
 msgstr ""
 
-#: modules/glpi/glpi/machinesList.php:39
-#: modules/glpi/glpi/machinesListglpi.php:40
 #: modules/xmppmaster/xmppmaster/machinesList.php:39
-#: modules/base/computers/index.php:48
-#: modules/base/computers/localSidebar.php:7
 msgid "All computers"
 msgstr ""
 
-#: modules/glpi/glpi/machinesList.php:43
-#: modules/glpi/glpi/machinesListglpi.php:44
 #: modules/xmppmaster/xmppmaster/machinesList.php:43
-#: modules/base/computers/index.php:52
 msgid "Online computers"
 msgstr ""
 
-#: modules/glpi/glpi/machinesList.php:47
-#: modules/glpi/glpi/machinesListglpi.php:48
 #: modules/xmppmaster/xmppmaster/machinesList.php:47
-#: modules/base/computers/index.php:56
 msgid "Offline computers"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:76
-#: modules/base/includes/computers_list.inc.php:107
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:811
 msgid "Inventory"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxMachinesListglpi.php:78
 #: modules/xmppmaster/xmppmaster/ajaxconvergence.php:111
 #: modules/xmppmaster/xmppmaster/ajaxconvergence.php:325
 #: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:45
 #: modules/xmppmaster/xmppmaster/ajaxteamconvergence.php:136
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:713
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:765
 #: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:92
 #: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:105
 #: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:50
 #: modules/xmppmaster/xmppmaster/ajaxstatusteamxmppscheduler.php:73
 #: modules/xmppmaster/xmppmaster/ajaxstatusteamxmpp.php:128
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:116
-#: modules/base/includes/computers_list.inc.php:110
 msgid "View deployment details"
 msgstr ""
 
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:97
-#: modules/base/includes/computers_list.inc.php:138
 msgid "Show Profile"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/ajaxconvergence.php:153
 #: modules/xmppmaster/xmppmaster/ajaxconvergence.php:165
 #: modules/xmppmaster/xmppmaster/ajaxconvergence.php:371
+#: modules/xmppmaster/infoPackage.inc.php:429
 msgid "Reschedule Convergence"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:52
 #: modules/xmppmaster/xmppmaster/ajaxstatusteamxmppscheduler.php:67
 msgid "Delete deploy"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/relays/switchrelay.php:25
-#: modules/admin/admin/switchrelay.php:25
-msgid ""
-"You have to check the box <b>\"I am aware that this disable/enable a relay "
-"forcing a <em><b>reconfiguration of all the machines</b></em> managed by the "
-"cluster."
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/relays/switchrelay.php:32
-#: modules/admin/admin/switchrelay.php:32
-msgid "The relay "
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/relays/switchrelay.php:51
-#: modules/admin/admin/switchrelay.php:51
-msgid ""
-"I am aware that this disable/enable a relay forcing a <em><b>reconfiguration "
-"of all the machines</b></em> managed by the cluster.<br />Check this box if "
-"it is what you want."
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:41
-#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:42
-#: modules/admin/admin/ajaxRelaysList.php:50
-#: modules/admin/admin/ajaxRelaysList.php:51
-msgid "Relay Detail"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:44
-#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:45
-#: modules/admin/admin/ajaxRelaysList.php:53
-#: modules/admin/admin/ajaxRelaysList.php:54
-msgid "Detail actions"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:47
-#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:48
-#: modules/admin/admin/ajaxRelaysList.php:56
-#: modules/admin/admin/ajaxRelaysList.php:57
-msgid "Console Relay"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:49
-#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:50
-#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:51
-#: modules/admin/admin/ajaxRelaysList.php:58
-#: modules/admin/admin/ajaxRelaysList.php:59
-#: modules/admin/admin/ajaxRelaysList.php:60
-msgid "Switch"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:53
-#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:54
-#: modules/admin/admin/ajaxRelaysList.php:62
-#: modules/admin/admin/ajaxRelaysList.php:63
-msgid "Reconfigure Machines"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:56
-#: modules/admin/admin/ajaxRelaysList.php:65
-msgid "QA Launched"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:61
-#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:62
-#: modules/admin/admin/ajaxRelaysList.php:70
-#: modules/admin/admin/ajaxRelaysList.php:71
-msgid "Packages List"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/relays/reconfiguremachines.php:25
-#: modules/admin/admin/reconfiguremachines.php:25
-msgid ""
-"You have to check the box <b>\"I am aware that this action is forcing a "
-"<em><b>reconfiguration of all the machines</b></em> managed by the "
-"relayserver."
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/relays/reconfiguremachines.php:32
-#: modules/admin/admin/reconfiguremachines.php:32
-msgid "The machines of the relay "
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/relays/reconfiguremachines.php:51
-#: modules/admin/admin/reconfiguremachines.php:51
-msgid ""
-"I am aware that this action is forcing a <em><b>reconfiguration of all the "
-"machines</b></em> managed by the relayserver.<br />Check this box if it is "
-"what you want."
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/relays/ajaxqalaunched.php:35
-#: modules/admin/admin/ajaxqalaunched.php:35
-msgid "Show Result"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/xmppMonitoring.php:362
@@ -888,87 +821,62 @@ msgstr ""
 msgid "Restart deployment"
 msgstr ""
 
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:329
 #: modules/xmppmaster/xmppmaster/monitoring/ajaxalertshistory.php:28
 #: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:38
-#: modules/dashboard/includes/panels/alerts.inc.php:49
-#: modules/dashboard/includes/panels/alertsentity.inc.php:50
 msgid "Detail"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:37
-#: modules/dashboard/includes/panels/alerts.inc.php:50
-#: modules/dashboard/includes/panels/alertsentity.inc.php:51
 msgid "Acknowledge"
 msgstr ""
 
 #: modules/medulla_server/includes/menu_group_action.php:82
-#: modules/dyngroup/dyngroup/display.php:236
 msgid "Group Quick action"
 msgstr ""
 
-#: modules/backuppc/backuppc/index.php:58
-msgid "The computer has been removed from the backup system."
-msgstr ""
-
-#: modules/admin/admin/ajaxClustersList.php:34
-msgid "Edit Cluster"
-msgstr ""
-
-#: modules/admin/admin/ajaxClustersList.php:35
-msgid "Delete Cluster"
-msgstr ""
-
-#: modules/admin/admin/ajaxRelaysList.php:73
-msgid "Relay Rules"
-msgstr ""
-
-#: modules/admin/admin/ajaxRelaysList.php:75
-#: modules/admin/admin/ajaxRelaysList.php:76
-msgid "Ban"
-msgstr ""
-
-#: modules/admin/admin/ajaxRelaysList.php:78
-#: modules/admin/admin/ajaxRelaysList.php:79
-msgid "Unban"
-msgstr ""
-
-#: modules/admin/admin/ajaxRulesDetail.php:32
-msgid "Edit rule"
-msgstr ""
-
-#: modules/imaging/includes/includes.php:211 modules/base/status/index.php:101
+#: modules/imaging/includes/includes.php:211
 msgid "Uptime: "
 msgstr ""
 
-#: modules/imaging/includes/includes.php:213 modules/base/status/index.php:104
+#: modules/imaging/includes/includes.php:213
 msgid "day"
 msgstr ""
 
-#: modules/imaging/includes/includes.php:216 modules/base/status/index.php:108
+#: modules/imaging/includes/includes.php:216
 msgid "hour"
 msgstr ""
 
-#: modules/imaging/includes/includes.php:218 modules/base/status/index.php:111
+#: modules/imaging/includes/includes.php:218
 msgid "minute"
 msgstr ""
 
-#: modules/imaging/includes/includes.php:222 modules/base/status/index.php:116
+#: modules/inventory/infoPackage.inc.php:57
+#: modules/inventory/inventory/i18n_labels.php:100
+#: modules/inventory/inventory/ajaxViewPart.php:227
+#: modules/inventory/inventory/ajaxViewPart.php:607
+#: modules/inventory/inventory/localSidebar.php:39
 msgid "Memory"
 msgstr ""
 
-#: modules/imaging/includes/includes.php:225 modules/base/status/index.php:119
+#: modules/imaging/includes/includes.php:225
 msgid "Swap"
 msgstr ""
 
-#: modules/imaging/manage/ajaxProfilescript.php:59
+#: modules/kiosk/infoPackage.inc.php:76
+#: modules/kiosk/kiosk/ajaxProfilesList.php:39
+#: modules/kiosk/kiosk/editProfile.php:98
 msgid "Edit Profile"
 msgstr ""
 
-#: modules/imaging/manage/ajaxProfilescript.php:60
+#: modules/kiosk/infoPackage.inc.php:80
+#: modules/kiosk/kiosk/ajaxProfilesList.php:40
 msgid "Delete Profile"
 msgstr ""
 
+#: modules/updates/updates/ajaxUpdatesListWinGray.php:35
 #: modules/updates/updates/ajaxUpdatesListWinGray.php:36
+#: modules/updates/infoPackage.inc.php:147
 msgid "Enable for manual update"
 msgstr ""
 
@@ -993,19 +901,12 @@ msgstr ""
 msgid "Deploy specific update on this group"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/creator.php:269
-#: modules/base/logview/logsdeployment.php:298
-#: modules/base/logview/ajax_showlog.php:68 modules/base/audit/logview.php:58
-#: modules/base/audit/ajaxLogFilter.php:114
-msgid "Date"
-msgstr ""
-
 #: modules/pkgs/includes/panels/appstream.inc.php:30
 msgid "Appstream"
 msgstr ""
 
-#: modules/inventory/includes/html.php:117
-#: modules/base/includes/AjaxFilterLog.inc.php:366
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:553
+#: modules/xmppmaster/includes/html.inc.php:86
 msgid "Refresh"
 msgstr ""
 
@@ -1014,14 +915,11 @@ msgid "Computer list"
 msgstr ""
 
 #: modules/base/computers/delete.php:44
-msgid ""
-"You have to check the box <b>\"I am aware that all related images (non-"
-"master) will be deleted\"</b> if you want to remove this computer."
+msgid "You have to check the box <b>\"I am aware that all related images (non-master) will be deleted\"</b> if you want to remove this computer."
 msgstr ""
 
 #: modules/base/computers/delete.php:78
-msgid ""
-"GLPI base is readonly: The computer has been deleted in xmpp not in GLPI"
+msgid "GLPI base is readonly: The computer has been deleted in xmpp not in GLPI"
 msgstr ""
 
 #: modules/base/computers/delete.php:81 modules/base/computers/delete.php:85
@@ -1036,14 +934,12 @@ msgstr ""
 msgid "Delete this computer"
 msgstr ""
 
-#: modules/base/computers/delete.php:99
+#: modules/imaging/imaging/configure.php:380
 msgid "Do you want a backup to be done ?"
 msgstr ""
 
 #: modules/base/computers/delete.php:105
-msgid ""
-"I am aware that <b>all related images (non-master)</b> will be <b>DELETED</"
-"b>.<br />Check this box if it is what you want."
+msgid "I am aware that <b>all related images (non-master)</b> will be <b>DELETED</b>.<br />Check this box if it is what you want."
 msgstr ""
 
 #: modules/base/computers/edit.php:36
@@ -1066,20 +962,18 @@ msgstr ""
 msgid "Edit a computer"
 msgstr ""
 
-#: modules/base/computers/edit.php:84
+#: modules/urbackup/urbackup/index.php:267
+#: modules/urbackup/urbackup/list_backups.php:178
+#: modules/urbackup/urbackup/checkMachine.php:100
 msgid "Computer name"
 msgstr ""
 
-#: modules/base/computers/edit.php:89 modules/base/groups/edit.php:117
-msgid "Description"
-msgstr ""
-
-#: modules/base/computers/edit.php:123
+#: modules/inventory/inventory/i18n_labels.php:91
+#: modules/inventory/inventory/ajaxViewPart.php:593
 msgid "Location"
 msgstr ""
 
 #: modules/base/computers/localSidebar.php:8
-#, php-format
 msgid "All computers %s"
 msgstr ""
 
@@ -1088,7 +982,7 @@ msgstr ""
 msgid "Add computer"
 msgstr ""
 
-#: modules/base/computers/trads.php:26
+#: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:81
 msgid "Computer Name"
 msgstr ""
 
@@ -1165,9 +1059,17 @@ msgstr ""
 msgid "Deployment Logs"
 msgstr ""
 
-#: modules/base/logview/logsdeployment.php:299
-#: modules/base/includes/auditCodes.php:45 modules/base/audit/indexbase.php:30
-#: modules/base/audit/indexall.php:30 modules/base/audit/ajaxLogFilter.php:121
+#: modules/xmppmaster/xmppmaster/ajaxconvergence.php:399
+#: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:94
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:89
+#: modules/xmppmaster/xmppmaster/ajaxteamconvergence.php:298
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:398
+#: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:122
+#: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:124
+#: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:85
+#: modules/xmppmaster/xmppmaster/ajaxstatusteamxmppscheduler.php:163
+#: modules/xmppmaster/xmppmaster/ajaxstatusteamxmpp.php:348
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:340
 msgid "User"
 msgstr ""
 
@@ -1195,7 +1097,7 @@ msgstr ""
 msgid "Operation"
 msgstr ""
 
-#: modules/base/logview/ajax_showlog.php:71
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:360
 msgid "Actions"
 msgstr ""
 
@@ -1208,14 +1110,11 @@ msgid "LDAP log file does not exist."
 msgstr ""
 
 #: modules/base/includes/errorHandling.php:29
-msgid ""
-"Please be sure you have:\n"
-"                        <p>This line in your /etc/ldap/slapd.conf or /etc/"
-"openldap/slapd.conf:\n"
+msgid "Please be sure you have:\n"
+"                        <p>This line in your /etc/ldap/slapd.conf or /etc/openldap/slapd.conf:\n"
 "                        <pre>loglevel        256</pre></p>\n"
 "                        <p>and this line in your /etc/syslog.conf:\n"
-"                        <pre>local4.*       /var/log/ldap.log (or /var/log/"
-"ldap/ldap.log)</pre>\n"
+"                        <pre>local4.*       /var/log/ldap.log (or /var/log/ldap/ldap.log)</pre>\n"
 "                        </p>\n"
 "                        "
 msgstr ""
@@ -1233,9 +1132,7 @@ msgid "The user home directory already exists."
 msgstr ""
 
 #: modules/base/includes/errorHandling.php:48
-msgid ""
-"Set the home directory in a different location or force the use of the "
-"existing directory (in expert mode)."
+msgid "Set the home directory in a different location or force the use of the existing directory (in expert mode)."
 msgstr ""
 
 #: modules/base/includes/errorHandling.php:53
@@ -1243,9 +1140,7 @@ msgid "Your password is too young to change."
 msgstr ""
 
 #: modules/base/includes/errorHandling.php:54
-msgid ""
-"The password policy of your account doesn't allow you to modify your "
-"password, because your password is too young to change."
+msgid "The password policy of your account doesn't allow you to modify your password, because your password is too young to change."
 msgstr ""
 
 #: modules/base/includes/errorHandling.php:59
@@ -1254,9 +1149,7 @@ msgstr ""
 
 #: modules/base/includes/errorHandling.php:60
 #: modules/base/includes/errorHandling.php:66
-msgid ""
-"The password policy of your account doesn't allow you to modify your "
-"password, because you already had this password previously."
+msgid "The password policy of your account doesn't allow you to modify your password, because you already had this password previously."
 msgstr ""
 
 #: modules/base/includes/errorHandling.php:65
@@ -1268,9 +1161,7 @@ msgid "Password fails quality checking policy."
 msgstr ""
 
 #: modules/base/includes/errorHandling.php:72
-msgid ""
-"The password policy of your account doesn't allow you to modify your "
-"password, because your password is not complex enough or is too short."
+msgid "The password policy of your account doesn't allow you to modify your password, because your password is not complex enough or is too short."
 msgstr ""
 
 #: modules/base/includes/errorHandling.php:77
@@ -1290,12 +1181,10 @@ msgid "The password must contain at least one special character: #$%&+./:=?@{}"
 msgstr ""
 
 #: modules/base/includes/errorHandling.php:99
-#, php-format
 msgid "The password must not contain the same character %s times"
 msgstr ""
 
 #: modules/base/includes/errorHandling.php:110
-#, php-format
 msgid "The password length must be %s or longer"
 msgstr ""
 
@@ -1308,8 +1197,13 @@ msgstr ""
 msgid "Begin date"
 msgstr ""
 
-#: modules/base/includes/AjaxFilterLog.inc.php:326
-#: modules/base/audit/ajaxLogFilter.php:52
+#: modules/msc/includes/command_history.php:37
+#: modules/msc/includes/command_history.php:144
+#: modules/msc/includes/command_history.php:183
+#: modules/msc/logs/ajaxLogsFilter.php:129
+#: modules/msc/logs/ajaxConsultLogsFilter.php:225
+#: modules/msc/msc/ajaxLogsFilter.php:249
+#: modules/msc/msc/ajaxLogsFilter.php:388
 msgid "End date"
 msgstr ""
 
@@ -1326,12 +1220,10 @@ msgid "Computer's netmask address"
 msgstr ""
 
 #: modules/base/includes/groups-xmlrpc.inc.php:85
-#, php-format
 msgid "Group %s already exist"
 msgstr ""
 
 #: modules/base/includes/groups-xmlrpc.inc.php:99
-#, php-format
 msgid "Group %s created"
 msgstr ""
 
@@ -1339,7 +1231,8 @@ msgstr ""
 msgid "Your product"
 msgstr ""
 
-#: modules/base/includes/panels/support.inc.php:39
+#: modules/support/includes/panels/license.inc.php:54
+#: modules/support/infoPackage.inc.php:31
 msgid "Support"
 msgstr ""
 
@@ -1355,7 +1248,7 @@ msgstr ""
 msgid "Computers : "
 msgstr ""
 
-#: modules/base/includes/panels/support.inc.php:54
+#: modules/updates/updates/ajaxMajorDetailsByMachines.php:134
 msgid "Upgrade"
 msgstr ""
 
@@ -1435,7 +1328,7 @@ msgstr ""
 msgid "System user"
 msgstr ""
 
-#: modules/base/includes/auditCodes.php:47
+#: modules/xmppmaster/xmppmaster/logs/viewgroupschedulerlogs.php:116
 msgid "Group"
 msgstr ""
 
@@ -1451,15 +1344,17 @@ msgstr ""
 msgid "base"
 msgstr ""
 
-#: modules/base/includes/computers_list.inc.php:113
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:142
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:164
 msgid "Read log"
 msgstr ""
 
-#: modules/base/includes/computers_list.inc.php:135
+#: modules/urbackup/urbackup/download_file.php:27
+#: modules/urbackup/infoPackage.inc.php:106
 msgid "Download file"
 msgstr ""
 
-#: modules/base/includes/computers_list.inc.php:363
+#: modules/medulla_server/infoPackage.inc.php:45
 msgid "Computers list"
 msgstr ""
 
@@ -1468,12 +1363,10 @@ msgid "Remove machine from group"
 msgstr ""
 
 #: modules/base/includes/publicFunc.php:54
-#, php-format
 msgid "Group %s can't be deleted.<br/>%s is the primary group of some users."
 msgstr ""
 
 #: modules/base/includes/publicFunc.php:56
-#, php-format
 msgid "Group %s successfully deleted."
 msgstr ""
 
@@ -1482,7 +1375,6 @@ msgid "User's name invalid !"
 msgstr ""
 
 #: modules/base/includes/publicFunc.php:96
-#, php-format
 msgid "The user %s already exists."
 msgstr ""
 
@@ -1507,7 +1399,6 @@ msgid "The primary group field can't be empty."
 msgstr ""
 
 #: modules/base/includes/publicFunc.php:127
-#, php-format
 msgid "The group %s does not exist, and so can't be set as primary group."
 msgstr ""
 
@@ -1524,11 +1415,8 @@ msgid "User enabled"
 msgstr ""
 
 #: modules/base/includes/publicFunc.php:282
-#, php-format
-msgid ""
-"The photo is too big. The max size is %s x %s.\n"
-"                    Install php gd extension to resize the photo "
-"automatically"
+msgid "The photo is too big. The max size is %s x %s.\n"
+"                    Install php gd extension to resize the photo automatically"
 msgstr ""
 
 #: modules/base/includes/publicFunc.php:289
@@ -1555,7 +1443,7 @@ msgstr ""
 msgid "First name"
 msgstr ""
 
-#: modules/base/includes/publicFunc.php:362
+#: modules/xmppmaster/xmppmaster/logs/viewgroupschedulerlogs.php:112
 msgid "Title"
 msgstr ""
 
@@ -1582,7 +1470,7 @@ msgstr ""
 msgid "User's groups"
 msgstr ""
 
-#: modules/base/includes/publicFunc.php:423
+#: modules/dyngroup/dyngroup/localSidebar.php:30
 msgid "All groups"
 msgstr ""
 
@@ -1604,7 +1492,6 @@ msgid "computers"
 msgstr ""
 
 #: modules/base/includes/users-xmlrpc.inc.php:62
-#, php-format
 msgid "WARNING: The number of registered %s is exceeding your license."
 msgstr ""
 
@@ -1614,10 +1501,7 @@ msgid " and "
 msgstr ""
 
 #: modules/base/includes/users-xmlrpc.inc.php:114
-#, php-format
-msgid ""
-"User %s created but password is not valid regarding your password policies."
-"<br/><strong>You must change the user password.</strong>"
+msgid "User %s created but password is not valid regarding your password policies.<br/><strong>You must change the user password.</strong>"
 msgstr ""
 
 #: modules/base/includes/users-xmlrpc.inc.php:117
@@ -1625,7 +1509,6 @@ msgid "You cannot add more users."
 msgstr ""
 
 #: modules/base/includes/users-xmlrpc.inc.php:122
-#, php-format
 msgid "User %s successfully created"
 msgstr ""
 
@@ -1633,7 +1516,7 @@ msgstr ""
 msgid "Groups"
 msgstr ""
 
-#: modules/base/groups/ajaxFilter.php:63
+#: modules/inventory/inventory/i18n_labels.php:44
 msgid "Comments"
 msgstr ""
 
@@ -1641,7 +1524,7 @@ msgstr ""
 msgid "Edit members"
 msgstr ""
 
-#: modules/base/groups/ajaxFilter.php:67 modules/base/groups/edit.php:88
+#: modules/urbackup/infoPackage.inc.php:66
 msgid "Edit group"
 msgstr ""
 
@@ -1649,22 +1532,19 @@ msgstr ""
 msgid "Groups management"
 msgstr ""
 
-#: modules/base/groups/index.php:31 modules/base/infoPackage.inc.php:310
+#: modules/dyngroup/dyngroup/list.php:29
 msgid "Group list"
 msgstr ""
 
-#: modules/base/groups/members.php:233
+#: modules/dyngroup/dyngroup/add_groups.php:185
 msgid "Group successfully modified"
 msgstr ""
 
 #: modules/base/groups/members.php:260
-msgid ""
-"Some users can't be removed from this group because this group is their "
-"primary group."
+msgid "Some users can't be removed from this group because this group is their primary group."
 msgstr ""
 
 #: modules/base/groups/members.php:263
-#, php-format
 msgid "Group members %s"
 msgstr ""
 
@@ -1672,11 +1552,13 @@ msgstr ""
 msgid "All users"
 msgstr ""
 
-#: modules/base/groups/members.php:289 modules/base/infoPackage.inc.php:330
+#: modules/dyngroup/includes/groups.inc.php:212
+#: modules/dyngroup/includes/groups.inc.php:216
 msgid "Group members"
 msgstr ""
 
-#: modules/base/groups/delete.php:54 modules/base/groups/delete.php:65
+#: modules/urbackup/urbackup/deleting_group.php:29
+#: modules/urbackup/infoPackage.inc.php:90
 msgid "Delete group"
 msgstr ""
 
@@ -1689,26 +1571,26 @@ msgid "This group will be deleted even though it is not empty"
 msgstr ""
 
 #: modules/base/groups/edit.php:67
-#, php-format
 msgid "Group %s successfully added"
 msgstr ""
 
 #: modules/base/groups/edit.php:81
-#, php-format
 msgid "Group %s successfully modified"
 msgstr ""
 
 #: modules/base/groups/edit.php:100
-msgid ""
-"The group name can only contain letters and numeric, and must begin with a "
-"letter"
+msgid "The group name can only contain letters and numeric, and must begin with a letter"
 msgstr ""
 
-#: modules/base/groups/edit.php:113
+#: modules/dyngroup/includes/groups.inc.php:210
+#: modules/dyngroup/includes/groups.inc.php:214
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:111
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:113
+#: modules/dyngroup/dyngroup/import_from_file.php:81
 msgid "Group name"
 msgstr ""
 
-#: modules/base/groups/edit.php:125
+#: modules/kiosk/kiosk/add.php:169
 msgid "Create"
 msgstr ""
 
@@ -1729,9 +1611,7 @@ msgid "WARNING: The number of registered computers is exceeding your license."
 msgstr ""
 
 #: modules/base/status/support.php:44
-msgid ""
-"Please contact your administrator for more information. If you are an "
-"administrator, please go to the license status page for more information."
+msgid "Please contact your administrator for more information. If you are an administrator, please go to the license status page for more information."
 msgstr ""
 
 #: modules/base/status/support.php:50
@@ -1754,7 +1634,9 @@ msgstr ""
 msgid "Company administrator mail"
 msgstr ""
 
-#: modules/base/status/support.php:55 modules/base/status/support.php:60
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:807
+#: modules/xmppmaster/xmppmaster/monitoring/ajaxalertshistory.php:77
+#: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:77
 msgid "Comment"
 msgstr ""
 
@@ -1778,7 +1660,7 @@ msgstr ""
 msgid "Global view"
 msgstr ""
 
-#: modules/base/status/index.php:206
+#: modules/imaging/infoPackage.inc.php:129
 msgid "Server status"
 msgstr ""
 
@@ -1798,7 +1680,7 @@ msgstr ""
 msgid "User, group and computer management"
 msgstr ""
 
-#: modules/base/infoPackage.inc.php:49
+#: modules/dashboard/includes/panels/shortcuts.inc.php:29
 msgid "Shortcuts"
 msgstr ""
 
@@ -1814,16 +1696,12 @@ msgstr ""
 msgid "View details of an action"
 msgstr ""
 
-#: modules/base/infoPackage.inc.php:123
+#: modules/xmppmaster/xmppmaster/monitoringview.php:138
 msgid "History"
 msgstr ""
 
 #: modules/base/infoPackage.inc.php:130
 msgid "logs of all the modules"
-msgstr ""
-
-#: modules/base/infoPackage.inc.php:177
-msgid "Status"
 msgstr ""
 
 #: modules/base/infoPackage.inc.php:183
@@ -1834,8 +1712,7 @@ msgstr ""
 msgid "Support page"
 msgstr ""
 
-#: modules/base/infoPackage.inc.php:199 modules/base/users/ajaxFilter.php:144
-#: modules/base/views/index.tpl.php:95
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1739
 msgid "Users"
 msgstr ""
 
@@ -1884,7 +1761,7 @@ msgstr ""
 msgid "Get user photo"
 msgstr ""
 
-#: modules/base/infoPackage.inc.php:313
+#: modules/dyngroup/dyngroup/localSidebar.php:31
 msgid "Add a group"
 msgstr ""
 
@@ -1896,7 +1773,7 @@ msgstr ""
 msgid "Edit a group"
 msgstr ""
 
-#: modules/base/infoPackage.inc.php:343
+#: modules/support/includes/panels/license.inc.php:91
 msgid "Computers"
 msgstr ""
 
@@ -1986,12 +1863,7 @@ msgstr ""
 msgid "Object"
 msgstr ""
 
-#: modules/base/audit/indexbase.php:29 modules/base/audit/indexall.php:29
-#: modules/base/audit/ajaxLogFilter.php:123
-msgid "Type"
-msgstr ""
-
-#: modules/base/audit/indexbase.php:30 modules/base/audit/indexall.php:30
+#: modules/xmppmaster/xmppmaster/xmppMonitoring.php:574
 msgid "Action"
 msgstr ""
 
@@ -2011,7 +1883,8 @@ msgstr ""
 msgid "User that initiated the event"
 msgstr ""
 
-#: modules/base/audit/logview.php:62 modules/base/audit/ajaxLogFilter.php:122
+#: modules/xmppmaster/xmppmaster/monitoring/detail.php:50
+#: modules/xmppmaster/xmppmaster/monitoring/detail.php:89
 msgid "Event"
 msgstr ""
 
@@ -2019,7 +1892,7 @@ msgstr ""
 msgid "Plugin"
 msgstr ""
 
-#: modules/base/audit/logview.php:66
+#: modules/msc/msc/ajaxLogsFilter.php:397
 msgid "Client"
 msgstr ""
 
@@ -2035,7 +1908,9 @@ msgstr ""
 msgid "Object type"
 msgstr ""
 
-#: modules/base/audit/logview.php:87
+#: modules/msc/includes/command_history.php:55
+#: modules/msc/includes/command_history.php:207
+#: modules/msc/msc/package_detail.php:41
 msgid "Value"
 msgstr ""
 
@@ -2055,8 +1930,9 @@ msgstr ""
 msgid "Samba"
 msgstr ""
 
-#: modules/base/audit/indexnetwork.php:31
-#: modules/base/audit/localSidebar.php:41
+#: modules/inventory/infoPackage.inc.php:46
+#: modules/inventory/inventory/i18n_labels.php:107
+#: modules/inventory/inventory/localSidebar.php:32
 msgid "Network"
 msgstr ""
 
@@ -2072,7 +1948,11 @@ msgstr ""
 msgid "Result"
 msgstr ""
 
-#: modules/base/audit/ajaxLogFilter.php:132
+#: modules/updates/updates/ajaxDetailsByMachines.php:62
+#: modules/updates/updates/ajaxDetailsByMachines.php:66
+#: modules/updates/updates/ajaxDetailsByMachines.php:136
+#: modules/updates/updates/ajaxDetailsByMachines.php:142
+#: modules/updates/updates/ajaxDetailsByMachines.php:168
 msgid "View details"
 msgstr ""
 
@@ -2089,16 +1969,8 @@ msgstr ""
 msgid "Proxy"
 msgstr ""
 
-#: modules/base/users/ajaxFilter.php:131 modules/base/views/index.tpl.php:84
-msgid "Name"
-msgstr ""
-
 #: modules/base/users/ajaxFilter.php:133
 msgid "Telephone"
-msgstr ""
-
-#: modules/base/users/ajaxFilter.php:135 modules/base/views/index.tpl.php:89
-msgid "Edit"
 msgstr ""
 
 #: modules/base/users/ajaxFilter.php:139 modules/base/views/index.tpl.php:91
@@ -2134,7 +2006,6 @@ msgid "Attribute description"
 msgstr ""
 
 #: modules/base/users/editacl.php:215
-#, php-format
 msgid " (%s module)"
 msgstr ""
 
@@ -2151,7 +2022,6 @@ msgid "Warning: no desc found in infoPackage.inc.php :"
 msgstr ""
 
 #: modules/base/users/editacl.php:257
-#, php-format
 msgid "Edit ACL of user %s"
 msgstr ""
 
@@ -2193,7 +2063,6 @@ msgid "User log"
 msgstr ""
 
 #: modules/base/users/delete.php:33
-#, php-format
 msgid "User %s has been successfully deleted"
 msgstr ""
 
@@ -2202,7 +2071,6 @@ msgid "Delete user"
 msgstr ""
 
 #: modules/base/users/delete.php:39
-#, php-format
 msgid "You will delete user <b>%s</b>."
 msgstr ""
 
@@ -2227,7 +2095,6 @@ msgid "Edit user"
 msgstr ""
 
 #: modules/base/users/edit.php:88
-#, php-format
 msgid "Failed to change primary group in %s plugin"
 msgstr ""
 
@@ -2240,22 +2107,18 @@ msgid "Password updated"
 msgstr ""
 
 #: modules/base/users/edit.php:124
-#, php-format
 msgid "Failed to disable user in %s plugin"
 msgstr ""
 
 #: modules/base/users/edit.php:127
-#, php-format
 msgid "User %s disabled."
 msgstr ""
 
 #: modules/base/users/edit.php:133
-#, php-format
 msgid "Failed to enable user in %s plugin"
 msgstr ""
 
 #: modules/base/users/edit.php:136
-#, php-format
 msgid "User %s enabled"
 msgstr ""
 
@@ -2279,12 +2142,7 @@ msgstr ""
 msgid "Home directory"
 msgstr ""
 
-#: modules/base/views/index.tpl.php:93
-msgid "Backup"
-msgstr ""
-
 #: modules/services/includes/panels/services.inc.php:44
-#, php-format
 msgid "%d inactive service"
 msgid_plural "%d inactive services"
 msgstr[0] ""
@@ -2309,3 +2167,4 @@ msgstr ""
 #: forgotpassword.php:81
 msgid "Back"
 msgstr ""
+
