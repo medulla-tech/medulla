@@ -782,9 +782,7 @@ $f->add(
 );
 unset($check, $input);
 
-echo '<pre>';
-print_r($parameters);
-echo '</pre>';
+
 // ---- user-fullname
 $check = new CheckboxTpl("check-user-fullname");
 $input = new InputTplTitle("input-user-fullname", "");
@@ -798,6 +796,7 @@ $f->add(
     new TrFormElement('<label for="check-user-fullname">'._T("User Fullname", "imaging").'</label>', new multifieldTpl($fields)), ["value" => $values, "title"=>[$info_comment_this_field, "", ]]
 );
 unset($check, $input);
+
 
 // ---- user-username
 $check = new CheckboxTpl("check-username");
