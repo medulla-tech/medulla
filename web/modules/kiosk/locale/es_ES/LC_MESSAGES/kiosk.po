@@ -1,72 +1,57 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
-# Translators:
-# Nicolas Lécureuil <neoclust@mageia.org>, 2023
-# 
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-30 15:34+0100\n"
-"PO-Revision-Date: 2019-10-02 12:32+0000\n"
-"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2023\n"
-"Language-Team: Spanish (Spain) (https://app.transifex.com/medulla/teams/72118/es_ES/)\n"
+"Project-Id-Version: medulla\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: es_ES\n"
-"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: modules/kiosk/infoPackage.inc.php:30 modules/kiosk/infoPackage.inc.php:35
 msgid "Kiosk"
-msgstr ""
+msgstr "Quiosco"
 
 #: modules/kiosk/infoPackage.inc.php:43 modules/kiosk/infoPackage.inc.php:47
 #: modules/kiosk/kiosk/localSidebar.php:26
 msgid "Profile List"
-msgstr ""
+msgstr "Lista de perfiles"
 
-#: modules/kiosk/infoPackage.inc.php:52
-#: modules/kiosk/kiosk/localSidebar.php:27
+#: modules/kiosk/infoPackage.inc.php:52 modules/kiosk/kiosk/localSidebar.php:27
 msgid "Add Profile"
-msgstr ""
+msgstr "Añadir perfil"
 
 #: modules/kiosk/infoPackage.inc.php:76
 #: modules/kiosk/kiosk/ajaxProfilesList.php:39
 #: modules/kiosk/kiosk/editProfile.php:98
 msgid "Edit Profile"
-msgstr ""
+msgstr "Editar perfil"
 
 #: modules/kiosk/infoPackage.inc.php:80
 #: modules/kiosk/kiosk/ajaxProfilesList.php:40
 msgid "Delete Profile"
-msgstr ""
+msgstr "Borrar perfil"
 
 #: modules/kiosk/infoPackage.inc.php:85 modules/kiosk/infoPackage.inc.php:89
 #: modules/kiosk/kiosk/acknowledges.php:7
 #: modules/kiosk/kiosk/localSidebar.php:29
 msgid "Installation Requests"
-msgstr ""
+msgstr "Solicitudes de instalación"
 
 #: modules/kiosk/infoPackage.inc.php:94
 #: modules/kiosk/kiosk/ajaxAcknowledges.php:46
 #: modules/kiosk/kiosk/modifyAcknowledge.php:69
 msgid "Modify Installation Authorisations"
-msgstr ""
+msgstr "Modificar las autorizaciones de instalación"
 
 #: modules/kiosk/kiosk/add.php:63
 msgid "Add New Profile"
-msgstr ""
+msgstr "Añadir nuevo perfil"
 
 #: modules/kiosk/kiosk/add.php:86 modules/kiosk/kiosk/ajaxAcknowledges.php:75
 #: modules/kiosk/kiosk/ajaxProfilesList.php:66
 #: modules/kiosk/kiosk/editProfile.php:122
 msgid "Profile Name"
-msgstr ""
+msgstr "Nombre del perfil"
 
 #: modules/kiosk/kiosk/add.php:87 modules/kiosk/kiosk/editProfile.php:123
 msgid "Name"
@@ -74,49 +59,49 @@ msgstr "Nombre"
 
 #: modules/kiosk/kiosk/add.php:93 modules/kiosk/kiosk/editProfile.php:129
 msgid "Set the profile to active / inactive state"
-msgstr ""
+msgstr "Poner el perfil en estado activo / inactivo"
 
 #: modules/kiosk/kiosk/add.php:94 modules/kiosk/kiosk/ajaxProfilesList.php:53
 #: modules/kiosk/kiosk/editProfile.php:130
 msgid "Active"
-msgstr ""
+msgstr "Activo"
 
 #: modules/kiosk/kiosk/add.php:94 modules/kiosk/kiosk/ajaxProfilesList.php:53
 #: modules/kiosk/kiosk/editProfile.php:130
 msgid "Inactive"
-msgstr ""
+msgstr "Inactivo"
 
 #: modules/kiosk/kiosk/add.php:97 modules/kiosk/kiosk/ajaxProfilesList.php:69
 #: modules/kiosk/kiosk/editProfile.php:133
 msgid "Profile Status"
-msgstr ""
+msgstr "Estado del perfil"
 
 #: modules/kiosk/kiosk/add.php:105 modules/kiosk/kiosk/editProfile.php:143
 msgid "Manage packages"
-msgstr ""
+msgstr "Gestionar paquetes"
 
 #: modules/kiosk/kiosk/add.php:120 modules/kiosk/kiosk/editProfile.php:147
 #: modules/kiosk/kiosk/editProfile.php:152
 msgid "Restricted packages"
-msgstr ""
+msgstr "Paquetes restringidos"
 
 #: modules/kiosk/kiosk/add.php:128 modules/kiosk/kiosk/editProfile.php:163
 msgid "Available packages"
-msgstr ""
+msgstr "Paquetes disponibles"
 
 #: modules/kiosk/kiosk/add.php:129 modules/kiosk/kiosk/add.php:133
 #: modules/kiosk/kiosk/editProfile.php:164
 #: modules/kiosk/kiosk/editProfile.php:168
 msgid "Search by name ..."
-msgstr ""
+msgstr "Buscar por nombre ..."
 
 #: modules/kiosk/kiosk/add.php:132 modules/kiosk/kiosk/editProfile.php:167
 msgid "Allowed packages"
-msgstr ""
+msgstr "Paquetes permitidos"
 
 #: modules/kiosk/kiosk/add.php:147 modules/kiosk/kiosk/editProfile.php:183
 msgid "Source"
-msgstr ""
+msgstr "Fuente"
 
 #: modules/kiosk/kiosk/add.php:169
 msgid "Create"
@@ -124,48 +109,48 @@ msgstr "Crear"
 
 #: modules/kiosk/kiosk/add.php:169
 msgid "Create the profile"
-msgstr ""
+msgstr "Crear el perfil"
 
 #: modules/kiosk/kiosk/add.php:178
 msgid "The LDAP is not configured correctly. Please check your configuration."
-msgstr ""
+msgstr "El LDAP no está configurado correctamente. Por favor, compruebe su configuración."
 
 #: modules/kiosk/kiosk/add.php:187
 msgid "Please select the concerned OUs"
-msgstr ""
+msgstr "Seleccione las OU afectadas"
 
 #: modules/kiosk/kiosk/ajaxEditProfile.php:37
 #, php-format
 msgid "The profile %s has been updated"
-msgstr ""
+msgstr "El perfil %s ha sido actualizado"
 
 #: modules/kiosk/kiosk/ajaxEditProfile.php:40
 msgid "Unable to update the profile"
-msgstr ""
+msgstr "No se puede actualizar el perfil"
 
 #: modules/kiosk/kiosk/index.php:29
 msgid "List of profils"
-msgstr ""
+msgstr "Lista de perfiles"
 
 #: modules/kiosk/kiosk/ajaxAcknowledges.php:73
 msgid "Package Name"
-msgstr ""
+msgstr "Nombre del paquete"
 
 #: modules/kiosk/kiosk/ajaxAcknowledges.php:77
 msgid "Asked by User"
-msgstr ""
+msgstr "Preguntado por un usuario"
 
 #: modules/kiosk/kiosk/ajaxAcknowledges.php:78
 msgid "Asked On"
-msgstr ""
+msgstr "Preguntado el"
 
 #: modules/kiosk/kiosk/ajaxAcknowledges.php:79
 msgid "Starts On"
-msgstr ""
+msgstr "Comienza el"
 
 #: modules/kiosk/kiosk/ajaxAcknowledges.php:80
 msgid "Ends On"
-msgstr ""
+msgstr "Termina el"
 
 #: modules/kiosk/kiosk/ajaxAcknowledges.php:81
 #: modules/kiosk/kiosk/modifyAcknowledge.php:95
@@ -174,62 +159,63 @@ msgstr "Estado"
 
 #: modules/kiosk/kiosk/editProfile.php:202
 msgid "modify"
-msgstr ""
+msgstr "modificar"
 
 #: modules/kiosk/kiosk/editProfile.php:202
 msgid "Modify the profile"
-msgstr ""
+msgstr "Modificar el perfil"
 
 #: modules/kiosk/kiosk/deleteProfile.php:34
 msgid "Missing parameter name"
-msgstr ""
+msgstr "Falta el nombre del parámetro"
 
 #: modules/kiosk/kiosk/deleteProfile.php:43
 msgid "Missing parameter id"
-msgstr ""
+msgstr "Falta id de parámetro"
 
 #: modules/kiosk/kiosk/deleteProfile.php:53
 #, php-format
 msgid "Profile %s successfully deleted"
-msgstr ""
+msgstr "Perfil %s eliminado con éxito"
 
 #: modules/kiosk/kiosk/deleteProfile.php:58
 #, php-format
 msgid "Impossible to delete profile %s"
-msgstr ""
+msgstr "Imposible borrar el perfil %s"
 
 #: modules/kiosk/kiosk/modifyAcknowledge.php:43
 #, php-format
 msgid "%s has been granted the rights %s on package %s (%s) from %s to %s."
-msgstr ""
+msgstr "%s ha obtenido los derechos %s sobre el paquete %s (%s) de %s a %s."
 
 #: modules/kiosk/kiosk/modifyAcknowledge.php:47
 msgid "Error while changing the authorisations"
-msgstr ""
+msgstr "Error al cambiar las autorizaciones"
 
 #: modules/kiosk/kiosk/modifyAcknowledge.php:70
 msgid "This authorisation can't be edited (missing parameter)"
-msgstr ""
+msgstr "Esta autorización no se puede editar (falta un parámetro)"
 
 #: modules/kiosk/kiosk/modifyAcknowledge.php:75
 #, php-format
 msgid "%s requested installation authorisation for package %s (profile %s)"
-msgstr ""
+msgstr "%s ha solicitado autorización de instalación para el paquete %s (perfil %s)"
 
 #: modules/kiosk/kiosk/modifyAcknowledge.php:82
 msgid "Start Date"
-msgstr ""
+msgstr "Fecha de inicio"
 
 #: modules/kiosk/kiosk/modifyAcknowledge.php:86
 msgid "End Date"
-msgstr ""
+msgstr "Fecha final"
 
 #: modules/kiosk/kiosk/ajaxAddProfile.php:47
 #, php-format
 msgid "Profile %s successfully added"
-msgstr ""
+msgstr "Perfil %s añadido correctamente"
 
 #: modules/kiosk/kiosk/ajaxAddProfile.php:49
 #, php-format
 msgid "Unable to create the profile %s"
-msgstr ""
+msgstr "No se ha podido crear el perfil %s"
+
