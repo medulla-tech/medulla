@@ -2948,7 +2948,7 @@ class ImagingRpcProxy(RpcProxyI):
         descriptionfile = []
         for name in listdir(filexml):
             absolufile = path.join(filexml, name)
-            if name.endswith(".xml") and path.isfile(absolufile):
+            if (name.endswith(".xml") or name.endswith(".cfg")) and path.isfile(absolufile):
                 files.append(name)
                 fichier = open(absolufile, "r")
                 for ligne in fichier:
@@ -3036,6 +3036,53 @@ class ImagingRpcProxy(RpcProxyI):
                 f.close()
                 return True
 
+    def linux_preseed_generator(self, datas, title):
+        filepath = "/var/lib/pulse2/imaging/postinst/sysprep/"
+        filetmp = "/tmp/"
+
+        if not path.exists(filepath):
+            makedirs(filepath, 0o722)
+
+        # test if file already exists
+        filename = path.join(filepath, title)
+        tmpfile = path.join(filetmp, title)
+        if path.isfile(filename):
+            try:
+                with open(tmpfile, "w") as fb:
+                    f.write(datas)
+                    f.close()
+            except Exception as e:
+                logging.getLogger().exception(e)
+                return False
+
+            md5tmp = md5file(tmpfile)
+            md5xml = md5file(filename)
+
+            # In this case, compare md5 checksum between filetmp and filexml
+            if md5tmp != md5xml:
+                # Create new file name
+                newTitle = title.split(".")
+                newTitle = newTitle[0]
+                newTitle = newTitle + "_" + md5tmp + ".xml"
+                newfilename = path.join(filepath, newTitle)
+                # Move tmpfile to correct location
+                rename(tmpfile, newfilename)
+                return True
+
+            # Tmpfile is no use anymore
+            else:
+                remove(tmpfile)
+                return True
+        else:
+            try:
+                with open(filename, "w") as fb:
+                    fb.write(datas)
+            except Exception as e:
+                logging.getLogger().exception(e)
+                return False
+            else:
+                return True
+
     def editWindowsAnswerFile(self, xmlWAFG, title):
         filexml = "/var/lib/pulse2/imaging/postinst/sysprep/"
 
@@ -3050,50 +3097,124 @@ class ImagingRpcProxy(RpcProxyI):
             else:
                 f.close()
 
+    def edit_linux_preseed(self, content, title):
+        filepath = "/var/lib/pulse2/imaging/postinst/sysprep/"
+        filename = path.join(filepath, title)
+        # test if file already exists
+        if path.isfile(filename):
+            try:
+                with open(filename, "w") as fb:
+                    fb.write(content)
+            except Exception as e:
+                logging.getLogger().exception(e)
+                return False
+        return True
+
     def getWindowsAnswerFileParameters(self, filename: str) -> dict:
         """
         return the parameters list of sysprep answer file
         """
 
-        filexml = "/var/lib/pulse2/imaging/postinst/sysprep/"
-        filexml = filexml + filename
+        filepath = "/var/lib/pulse2/imaging/postinst/sysprep/"
+        filexml = path.join(filepath, filename)
 
-        parameters = ""
-        os = ""
-        description = ""
-        # get information from sysprep file
-        try:
-            f = open(filexml, "r")
-            # get line to add to json object
-            for line in f:
-                if line.startswith("OS"):
-                    line = line.split(" ")
-                    os = " ".join(line[1:3])
-                    break
+        # Windows mode
+        if filename.endswith(".xml"):
+            filexml = "/var/lib/pulse2/imaging/postinst/sysprep/"
+            filexml = filexml + filename
 
-            for line in f:
-                if line.startswith("Notes"):
-                    line = line.split(" ")
+            parameters = ""
+            os = ""
+            description = ""
+            # get information from sysprep file
+            try:
+                f = open(filexml, "r")
+                # get line to add to json object
+                for line in f:
+                    if line.startswith("OS"):
+                        line = line.split(" ")
+                        os = " ".join(line[1:3])
+                        break
+
+                for line in f:
+                    if line.startswith("Notes"):
+                        line = line.split(" ")
+                        description = " ".join(line[1:])
+                        break
+
+                for line in f:
+                    if line.startswith("list"):
+                        parameters = parameters + line[18:-1]
+                        break
+
+                parameters = json.loads(parameters)
+                parameters["Os"] = os
+                parameters["Notes"] = description
+                parameters["Location"] = filename
+                parameters["Title"] = filename.replace(".xml", "")
+
+            except Exception as e:
+                logging.getLogger().exception(e)
+                return {}
+
+            else:
+                f.close()
+                return parameters
+
+        else:
+            file = filexml
+            parameters_str = ""
+            parameters = {
+                "Title" : "",
+                "Os" : "",
+                "Description" : "",
+                "Notes" :"",
+                "Location" : ""
+            }
+            os = ""
+            description = ""
+            lines = []
+
+            # get information from sysprep file
+            try:
+                with open(file, "r") as fb:
+                    lines = fb.readlines()
+                # get line to add to json object
+            except:
+                return {}
+
+            parameters["Title"] = filename.replace(".cfg", "")
+
+            for line in lines:
+                if line.startswith("# OS"):
+                    _line = line.replace("# OS ", "")
+                    _line = _line.split(" ")
+                    os = _line[0]
+                    continue
+
+                if line.startswith("# Notes"):
+                    _line = line.replace("# Notes ", "")
+                    _line = line.split(" ")
                     description = " ".join(line[1:])
+                    continue
+
+                if line.startswith("# list parameters"):
+                    _line = line.replace("# list parameters : ", "")
+                    parameters_str = _line
+                    continue
+
+                if os != "" and parameters_str != "":
                     break
 
-            for line in f:
-                if line.startswith("list"):
-                    parameters = parameters + line[18:-1]
-                    break
-
-            parameters = json.loads(parameters)
+            try:
+                parameters = json.loads(parameters_str)
+            except Exception as e:
+                logging.getLogger().error(e)
+                return {}
             parameters["Os"] = os
             parameters["Notes"] = description
             parameters["Location"] = filename
-            parameters["Title"] = filename.replace(".xml", "")
 
-        except Exception as e:
-            logging.getLogger().exception(e)
-            return {}
-
-        else:
-            f.close()
             return parameters
 
     def deleteWindowsAnswerFile(self, title):

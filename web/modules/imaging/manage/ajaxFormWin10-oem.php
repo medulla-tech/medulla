@@ -37,7 +37,7 @@ var template = [
 '<unattend xmlns="urn:schemas-microsoft-com:unattend">',
 '<!--',
 '________________________________',
-'OS Windows 8-uefi [amd64 uefi]',
+'OS Windows 10 OEM [amd64 uefi]',
 'Windows Answer File Generator :',
 '',
 'date : <? echo $strin; ?>dateval<? echo $strou; ?>',
@@ -56,12 +56,13 @@ var template = [
 '<SetupUILanguage>',
 '<UILanguage><? echo $strin; ?>SetupUILanguage<? echo $strou; ?></UILanguage>',
 '</SetupUILanguage>',
-'<UILanguage><? echo $strin; ?>SetupUILanguage<? echo $strou; ?></UILanguage>',
 '<InputLocale><? echo $strin; ?>InputLocale<? echo $strou; ?></InputLocale>',
 '<SystemLocale><? echo $strin; ?>SetupUILanguage<? echo $strou; ?></SystemLocale>',
+'<UILanguage><? echo $strin; ?>SetupUILanguage<? echo $strou; ?></UILanguage>',
 '<UILanguageFallback><? echo $strin; ?>SetupUILanguage<? echo $strou; ?></UILanguageFallback>',
 '<UserLocale><? echo $strin; ?>UserLocale<? echo $strou; ?></UserLocale>',
 '</component>',
+//Disk COnfiguration
 '<component name="Microsoft-Windows-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">',
 '<DiskConfiguration>',
 '<Disk wcm:action="add">',
@@ -84,10 +85,10 @@ var template = [
 '<Type>MSR</Type>',
 '<Size>128</Size>',
 '</CreatePartition>',
-//Windows partition
+//OS partition
 '<CreatePartition wcm:action="add">',
-'<Order><? echo $strin; ?>PartitionOrder<? echo $strou; ?></Order>',
 '<Extend>true</Extend>',
+'<Order><? echo $strin; ?>PartitionOrder<? echo $strou; ?></Order>',
 '<Type>Primary</Type>',
 '</CreatePartition>',
 '</CreatePartitions>',
@@ -113,6 +114,7 @@ var template = [
 '</ModifyPartition>',
 //Windows partition
 '<ModifyPartition wcm:action="add">',
+'<Active>true</Active>',
 '<Order><? echo $strin; ?>PartitionOrder<? echo $strou; ?></Order>',
 '<PartitionID><? echo $strin; ?>PartitionOrder<? echo $strou; ?></PartitionID>',
 '<Label><? echo $strin; ?>Label<? echo $strou; ?></Label>',
@@ -124,6 +126,7 @@ var template = [
 '<WillWipeDisk><? echo $strin; ?>WipeDisk<? echo $strou; ?></WillWipeDisk>',
 '</Disk>',
 '</DiskConfiguration>',
+//Install OS to disk and partition
 '<ImageInstall>',
 '<OSImage>',
 '<InstallTo>',
@@ -133,16 +136,22 @@ var template = [
 '<InstallToAvailablePartition>false</InstallToAvailablePartition>',
 '</OSImage>',
 '</ImageInstall>',
+//User Data
 '<UserData>',
-'<ProductKey>',
-'<Key><? echo $strin; ?>ProductKey1<? echo $strou; ?>-<? echo $strin; ?>ProductKey2<? echo $strou; ?>-<? echo $strin; ?>ProductKey3<? echo $strou; ?>-<? echo $strin; ?>ProductKey4<? echo $strou; ?>-<? echo $strin; ?>ProductKey5<? echo $strou; ?></Key>',
-'<WillShowUI>OnError</WillShowUI>',
-'</ProductKey>',
 '<AcceptEula><? echo $strin; ?>AcceptEULA<? echo $strou; ?></AcceptEula>',
 '<FullName><? echo $strin; ?>FullName<? echo $strou; ?></FullName>',
 '<Organization><? echo $strin; ?>OrginazationName<? echo $strou; ?></Organization>',
+'<ProductKey>',
+'<Key><? echo $strin; ?>ProductKey1<? echo $strou; ?>-<? echo $strin; ?>ProductKey2<? echo $strou; ?>-<? echo $strin; ?>ProductKey3<? echo $strou; ?>-<? echo $strin; ?>ProductKey4<? echo $strou; ?>-<? echo $strin; ?>ProductKey5<? echo $strou; ?></Key>',
+'</ProductKey>',
 '</UserData>',
 '<EnableFirewall><? echo $strin; ?>EnableFirewall<? echo $strou; ?></EnableFirewall>',
+'</component>',
+'</settings>',
+//UAC
+'<settings pass="offlineServicing">',
+'<component name="Microsoft-Windows-LUA-Settings" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">',
+'<EnableLUA><? echo $strin; ?>EnableUAC<? echo $strou; ?></EnableLUA>',
 '</component>',
 '</settings>',
 '<settings pass="generalize">',
@@ -150,7 +159,15 @@ var template = [
 '<SkipRearm><? echo $strin; ?>SkipRearm<? echo $strou; ?></SkipRearm>',
 '</component>',
 '</settings>',
+//Specialize pass
 '<settings pass="specialize">',
+'<component name="Microsoft-Windows-International-Core" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">',
+'<InputLocale><? echo $strin; ?>InputLocale<? echo $strou; ?></InputLocale>',
+'<SystemLocale><? echo $strin; ?>UILanguage<? echo $strou; ?></SystemLocale>',
+'<UILanguage><? echo $strin; ?>UILanguage<? echo $strou; ?></UILanguage>',
+'<UILanguageFallback><? echo $strin; ?>UILanguage<? echo $strou; ?></UILanguageFallback>',
+'<UserLocale><? echo $strin; ?>UserLocale<? echo $strou; ?></UserLocale>',
+'</component>',
 //Join domain
 '<component name="Microsoft-Windows-UnattendedJoin" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">',
 '<Identification>',
@@ -163,35 +180,34 @@ var template = [
 '<MachineObjectOU><? echo $strin; ?>MachineObjectOU<? echo $strou; ?></MachineObjectOU>',
 '</Identification>',
 '</component>',
+//Skip auto activation
+'<component name="Microsoft-Windows-Security-SPP-UX" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">',
+'<SkipAutoActivation><? echo $strin; ?>SkipAutoActivation<? echo $strou; ?></SkipAutoActivation>',
+'</component>',
+//CEIP
+'<component name="Microsoft-Windows-SQMApi" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">',
+'<CEIPEnabled><? echo $strin; ?>CEIPEnabled<? echo $strou; ?></CEIPEnabled>',
+'</component>',
+//Computer name
+'<component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">',
+'<ComputerName><? echo $strin; ?>ComputerName<? echo $strou; ?></ComputerName>',
+'<ProductKey><? echo $strin; ?>ProductKey1<? echo $strou; ?>-<? echo $strin; ?>ProductKey2<? echo $strou; ?>-<? echo $strin; ?>ProductKey3<? echo $strou; ?>-<? echo $strin; ?>ProductKey4<? echo $strou; ?>-<? echo $strin; ?>ProductKey5<? echo $strou; ?></ProductKey>',
+'<CopyProfile><? echo $strin;?>CopyProfile<? echo $strou;?></CopyProfile>',
+'</component>',
 '<component name="Microsoft-Windows-Deployment" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">',
 '<ExtendOSPartition>',
 '<Extend><? echo $strin;?>ExtendOSPartition<? echo $strou;?></Extend>',
 '</ExtendOSPartition>',
 '<RunSynchronous>',
 '<RunSynchronousCommand wcm:action="add">',
+'<Path>net user Administrator /active:yes</Path>',
 '<Order>1</Order>',
-'<Path>net user administrator /active:yes</Path>',
+'</RunSynchronousCommand>',
+'<RunSynchronousCommand wcm:action="add">',
+'<Order>2</Order>',
+'<Path>powershell.exe -executionpolicy bypass -File c:\\ProgramData\\SysPrep\\drivers\\install-driver-cert.ps1</Path>',
 '</RunSynchronousCommand>',
 '</RunSynchronous>',
-'</component>',
-'<component name="Microsoft-Windows-International-Core" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">',
-'<InputLocale><? echo $strin; ?>InputLocale<? echo $strou; ?></InputLocale>',
-'<SystemLocale><? echo $strin; ?>UILanguage<? echo $strou; ?></SystemLocale>',
-'<UILanguage><? echo $strin; ?>UILanguage<? echo $strou; ?></UILanguage>',
-'<UILanguageFallback><? echo $strin; ?>UILanguage<? echo $strou; ?></UILanguageFallback>',
-'<UserLocale><? echo $strin; ?>UserLocale<? echo $strou; ?></UserLocale>',
-'</component>',
-'<component name="Microsoft-Windows-Security-SPP-UX" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">',
-'<SkipAutoActivation><? echo $strin; ?>SkipAutoActivation<? echo $strou; ?></SkipAutoActivation>',
-'</component>',
-'<component name="Microsoft-Windows-SQMApi" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">',
-'<CEIPEnabled><? echo $strin; ?>CEIPEnabled<? echo $strou; ?></CEIPEnabled>',
-'</component>',
-'<component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">',
-'<ComputerName><? echo $strin; ?>ComputerName<? echo $strou; ?></ComputerName>',
-'<TimeZone><? echo $strin;?>TimeZone<? echo $strou;?></TimeZone>',
-'<RegisteredOwner><? echo $strin;?>TimeZone<? echo $strou;?></RegisteredOwner>',
-'<RegisteredOrganization><? echo $strin;?>OrginazationName<? echo $strou;?></RegisteredOrganization>',
 '</component>',
 '</settings>',
 '<settings pass="oobeSystem">',
@@ -202,70 +218,71 @@ var template = [
 '<UserLocale><? echo $strin; ?>UserLocale<? echo $strou; ?></UserLocale>',
 '</component>',
 '<component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">',
-'<FirstLogonCommands>',
-'<SynchronousCommand wcm:action="add">',
-'<RequiresUserInput>false</RequiresUserInput>',
-'<Order>1</Order>',
-'<Description>Disable Auto Updates</Description>',
-'<CommandLine>reg add &quot;HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\WindowsUpdate\\Auto Update&quot; /v AUOptions /t REG_DWORD /d <? echo $strin; ?>Updates<? echo $strou; ?> /f</CommandLine>',
-'</SynchronousCommand>',
-'<SynchronousCommand wcm:action="add">',
-'<Description>Control Panel View</Description>',
-'<Order>2</Order>',
-'<CommandLine>reg add &quot;HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\ControlPanel&quot; /v StartupPage /t REG_DWORD /d <? echo $strin; ?>ControlPanelView<? echo $strou; ?> /f</CommandLine>',
-'<RequiresUserInput>true</RequiresUserInput>',
-'</SynchronousCommand>',
-'<SynchronousCommand wcm:action="add">',
-'<Description>Control Panel Icon Size</Description>',
-'<Order>3</Order>',
-'<RequiresUserInput>false</RequiresUserInput>',
-'<CommandLine>reg add &quot;HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\ControlPanel&quot; /v AllItemsIconView /t REG_DWORD /d <? echo $strin; ?>ControlPanelIconSize<? echo $strou; ?> /f</CommandLine>',
-'</SynchronousCommand>',
-'</FirstLogonCommands>',
+//OOBE settings
 '<OOBE>',
+//Hide EULA page
 '<HideEULAPage><? echo $strin; ?>HideEULA<? echo $strou; ?></HideEULAPage>',
+//Hide OEM registration
 '<HideOEMRegistrationScreen>true</HideOEMRegistrationScreen>',
+//Hide Online account
 '<HideOnlineAccountScreens>true</HideOnlineAccountScreens>',
+//Hide wireless setup
 '<HideWirelessSetupInOOBE><? echo $strin; ?>HideWireless<? echo $strou; ?></HideWirelessSetupInOOBE>',
-'<NetworkLocation><? echo $strin; ?>NetworkLocation<? echo $strou; ?></NetworkLocation>',
 '<ProtectYourPC><? echo $strin; ?>ProtectComputer<? echo $strou; ?></ProtectYourPC>',
 '</OOBE>',
+//User accounts
 '<UserAccounts>',
-'<AdministratorPassword>',
-'<Value><? echo $strin;?>PasswordAdmin<? echo $strou;?></Value>',
-'<PlainText>true</PlainText>',
-'</AdministratorPassword>',
 '<LocalAccounts>',
 '<LocalAccount wcm:action="add">',
+//Password
 '<Password>',
 '<Value><? echo $strin; ?>Password<? echo $strou; ?></Value>',
 '<PlainText>true</PlainText>',
 '</Password>',
+//Description
 '<Description><? echo $strin; ?>Description<? echo $strou; ?></Description>',
+//Display Name
 '<DisplayName><? echo $strin; ?>FullName<? echo $strou; ?></DisplayName>',
+//Group
 '<Group><? echo $strin; ?>Group<? echo $strou; ?></Group>',
+//Name
 '<Name><? echo $strin; ?>FullName<? echo $strou; ?></Name>',
 '</LocalAccount>',
 '</LocalAccounts>',
+'<AdministratorPassword>',
+'<Value><? echo $strin;?>PasswordAdmin<? echo $strou;?></Value>',
+'<PlainText>true</PlainText>',
+'</AdministratorPassword>',
 '</UserAccounts>',
-'<VisualEffects>',
-'<SystemDefaultBackgroundColor><? echo $strin; ?>BGC<? echo $strou; ?></SystemDefaultBackgroundColor>',
-'</VisualEffects>',
-'<RegisteredOwner><? echo $strin; ?>FullName<? echo $strou; ?></RegisteredOwner>',
+//Registered Organization
 '<RegisteredOrganization><? echo $strin; ?>OrginazationName<? echo $strou; ?></RegisteredOrganization>',
-'<DisableAutoDaylightTimeSet><? echo $strin; ?>DaylightSettings<? echo $strou; ?></DisableAutoDaylightTimeSet>',
-'<TimeZone><? echo $strin; ?>TimeZone<? echo $strou; ?></TimeZone>',
-'</component>',
-'<component name="Microsoft-Windows-ehome-reg-inf" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="NonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">',
-'<RestartEnabled>true</RestartEnabled>',
+//Registered Owner
+'<RegisteredOwner><? echo $strin; ?>FullName<? echo $strou; ?></RegisteredOwner>',
+//Disable automatic daylight savings mode
+'<DisableAutoDaylightTimeSet><? echo $strin; ?>DaylightSettings<? echo $strou; ?><\/DisableAutoDaylightTimeSet>',
+'<FirstLogonCommands>',
+'<SynchronousCommand wcm:action="add">',
+'<Description>Control Panel View</Description>',
+'<Order>1</Order>',
+'<CommandLine>reg add "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\ControlPanel" /v StartupPage /t REG_DWORD /d 1<? echo $strin; ?>ControlPanelView<? echo $strou; ?> /f</CommandLine>',
+'<RequiresUserInput>true</RequiresUserInput>',
+'</SynchronousCommand>',
+'<SynchronousCommand wcm:action="add">',
+'<Order>2</Order>',
+'<Description>Control Panel Icon Size</Description>',
+'<RequiresUserInput>false</RequiresUserInput>',
+'<CommandLine>reg add "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\ControlPanel" /v AllItemsIconView /t REG_DWORD /d <? echo $strin; ?>ControlPanelIconSize<? echo $strou; ?> /f</CommandLine>',
+'</SynchronousCommand>',
+'<\/FirstLogonCommands>',
+//Timezone settings
+'<TimeZone><? echo $strin; ?>TimeZone<? echo $strou; ?><\/TimeZone>',
 '</component>',
 '</settings>',
-'<cpi:offlineImage cpi:source="catalog:d:/sources/install_windows 8 ultimate.clg" xmlns:cpi="urn:schemas-microsoft-com:cpi" />',
+'<cpi:offlineImage cpi:source="wim:c:/users/1781181/desktop/install.wim#Windows 10 Pro" xmlns:cpi="urn:schemas-microsoft-com:cpi" />',
 '</unattend>',
 ].join('\r\n');
 
 </script>
-
 <?php
 require("../../../includes/config.inc.php");
 require("../../../includes/i18n.inc.php");
@@ -279,7 +296,6 @@ require("../includes/class_form.php");
 if(isset($_SESSION['parameters']))
 {
 	$parameters = $_SESSION['parameters'];
-
 }
 else if(isset($_POST["Location"])){
     $parameters = $_POST;
@@ -296,22 +312,22 @@ $f->add(new TrFormElement("", new Iconereply('Installation_Notes',$InfoBule_Inst
 $f->push(new Table());
 
 	//_____________
-	$f->add(
-		new TrFormElement(_T('Title','imaging'), new InputTplTitle('Location',"name file xml")),
-		array("required" => True,'value'=>(isset($parameters)) ? $parameters['Title'] : '')
-	);
-	//_____________
-	$f->add(new TrFormElement("Notes".":", new OptTextareaTpl(array('name'=>'Comments','value'=>(isset($parameters)) ? $parameters['Notes'] : _T('Enter your comments here...','imaging')))));
+    $f->add(
+        new TrFormElement(_T('Title','imaging'), new InputTplTitle('Location',"name file xml")),
+        array("required" => True,'value'=>(isset($parameters)) ? $parameters['Title'] : '')
+    );
+    //_____________
+    $f->add(new TrFormElement("Notes".":", new OptTextareaTpl(array('name'=>'Comments','value'=>(isset($parameters)) ? $parameters['Notes'] : _T('Enter your comments here...','imaging')))));
 
 $f->pop();
-$f->add(new SepTpl);
+$f->add(new SepTpl());
 
 
 //==== NEW SECTION ====
 // Os Settings
 //=====================
 $f->add(new TitleElement(_T("Os Settings", "imaging")));
-$f->add(new TrFormElement("", new Iconereply('General_Settings',$InfoBule_Installation_Notes)));
+$f->add(new TrFormElement("", new Iconereply('General_Settings',$InfoBule_General_Settings)));
 $f->push(new Table());
 
     //_____________
@@ -333,11 +349,11 @@ $f->push(new Table());
         $key5
     );
     $values = array(
-        (isset($parameters)) ? $parameters['ProductKey1'] : "NG4HW","",
-        (isset($parameters)) ? $parameters['ProductKey2'] : "VH26C","",
-        (isset($parameters)) ? $parameters['ProductKey3'] : "733KW","",
-        (isset($parameters)) ? $parameters['ProductKey4'] : "K6F98","",
-        (isset($parameters)) ? $parameters['ProductKey5'] : "J8CK4"
+        (isset($parameters)) ? $parameters['ProductKey1'] : "00000","",
+        (isset($parameters)) ? $parameters['ProductKey2'] : "00000","",
+        (isset($parameters)) ? $parameters['ProductKey3'] : "00000","",
+        (isset($parameters)) ? $parameters['ProductKey4'] : "00000","",
+        (isset($parameters)) ? $parameters['ProductKey5'] : "00000"
     );
     //_____________
     $f->add(
@@ -347,7 +363,7 @@ $f->push(new Table());
     //_____________
     $f->add(
         new TrFormElement(_T('Organization Name','imaging').":", new InputTplTitle('OrginazationName',$InfoBule_OrginazationName)),
-        array('value' => (isset($parameters)) ? $parameters['OrginazationName'] : 'Medulla',"required" => True)
+        array('value' => (isset($parameters)) ? $parameters['OrginazationName'] :'Medulla', "required" => True)
     );
     //_____________
     $EULA = new SelectItemtitle("AcceptEULA",$InfoBule_AcceptEULA);
@@ -377,23 +393,15 @@ $f->push(new Table());
     $SetupUILanguage = new SelectItemtitle("SetupUILanguage",$InfoBule_SetupUILanguage);
     $SetupUILanguage->setElements($eleUILanguage);
     $SetupUILanguage->setElementsVal($valUILanguage);
-    //_____________
+     //_____________
     $f->add(
         new TrFormElement(_T('Setup Language','imaging').":", $SetupUILanguage),
-        array("value" => (isset($parameters)) ? $parameters['SetupUILanguage'] : "fr-FR","required" => True)
+        array("value" => (isset($parameters)) ? $parameters['SetupUILanguage'] :"fr-FR","required" => True)
     );
     //_____________
     $f->add(
         new TrFormElement(_T('Computer Name','imaging').":", new InputTplTitle('ComputerName',$Infobule_ComputerName)),
-        array("required" => True,"value" =>(isset($parameters)) ? $parameters['ComputerName'] : 'windows8-PC')
-    );
-    //_____________
-    $ShowWindowsLive = new SelectItemtitle("ShowWindowsLive", $InfoBule_ShowWindowsLive);
-    $ShowWindowsLive->setElements($yes_no);
-    $ShowWindowsLive->setElementsVal($truefalse);
-    $f->add(
-        new TrFormElement(_T('Show Windows Live','imaging').":", $ShowWindowsLive),
-        array("value" => (isset($parameters)) ? $parameters['ShowWindowsLive'] : "false","required" => True)
+        array("required" => True,"value" =>(isset($parameters)) ? $parameters['ComputerName'] :'windows10-PC')
     );
     //_____________
     $InputLocale = new SelectItemtitle("InputLocale",$Infobule_InputLocale);
@@ -401,7 +409,7 @@ $f->push(new Table());
     $InputLocale->setElementsVal($valeurInputarray);
     $f->add(
         new TrFormElement(_T('Keyboard or input method','imaging').":", $InputLocale),
-        array("value" =>(isset($parameters)) ? $parameters['InputLocale'] : '1036:0000040c',"required" => True)
+        array("value" => (isset($parameters)) ? $parameters['InputLocale'] :'1036:0000040c',"required" => True)
     );
     //_____________
     $UserLocale = new SelectItemtitle("UserLocale",$InfoBule_UserLocale);
@@ -409,7 +417,7 @@ $f->push(new Table());
     $UserLocale->setElementsVal($valUILanguage);
     $f->add(
         new TrFormElement(_T('Currency and Date format','imaging').":", $UserLocale),
-        array("value" =>(isset($parameters)) ? $parameters['UserLocale'] : "fr-FR","required" => True)
+        array("value" =>(isset($parameters)) ? $parameters['UserLocale'] :"fr-FR","required" => True)
     );
     //_____________
     $TimeZone = new SelectItemtitle("TimeZone",$InfoBule_TimeZone);
@@ -417,7 +425,7 @@ $f->push(new Table());
     $TimeZone->setElementsVal($val_timezone);
     $f->add(
         new TrFormElement(_T('Time Zone','imaging').":", $TimeZone),
-        array("value" =>(isset($parameters)) ? $parameters['TimeZone'] : "Romance Standard Time","required" => True)
+        array("value" =>  (isset($parameters)) ? $parameters['TimeZone'] :"Romance Standard Time","required" => True)
     );
     //_____________
     $UILanguage = new SelectItemtitle("UILanguage",$InfoBule_UILanguage);
@@ -425,7 +433,7 @@ $f->push(new Table());
     $UILanguage->setElementsVal($valUILanguage);
     $f->add(
         new TrFormElement(_T('UI Language','imaging').":", $UILanguage),
-        array("value" =>(isset($parameters)) ? $parameters['UILanguage'] : 'fr-FR' ,"required" => True)
+        array("value" => (isset($parameters)) ? $parameters['UILanguage'] :'fr-FR' ,"required" => True)
     );
 
 $f->pop();
@@ -433,7 +441,7 @@ $f->add(new SepTpl());
 
 
 //==== NEW SECTION ====
-// Partitions settings
+// Partition Settings
 //=====================
 $f->add(new TitleElement(_T("Partition Settings", "imaging")));
 $f->add(new TrFormElement("", new Iconereply('Partition_Settings',$Infobule_Partition_Settings)));
@@ -513,20 +521,20 @@ $f->push(new Table());
         array("value" => (isset($parameters)) ? $parameters['ProtectComputer'] : "1","required" => True)
     );
     //_____________
-    $Updates = new SelectItemtitle("Updates",$InfoBule_Updates);
+    /*$Updates = new SelectItemtitle("Updates",$InfoBule_Updates);
     $Updates->setElements($UpdatesTabElement);
     $Updates->setElementsVal(array('1','2','3','4'));
     $f->add(
         new TrFormElement(_T('System Updates','imaging').":", $Updates),
         array("value" => (isset($parameters)) ? $parameters['Updates'] : "3","required" => True)
-    );
+    );*/
     //_____________
     $NetworkLocation = new SelectItemtitle("NetworkLocation",$InfoBule_NetworkLocation );
     $NetworkLocation->setElements(array('Home','Work','Other'));
     $NetworkLocation->setElementsVal(array('Home','Work','Other'));
     $f->add(
         new TrFormElement(_T('Network Location','imaging').":", $NetworkLocation),
-        array("value" => (isset($parameters)) ? $parameters['NetworkLocation'] : "Work","required" => True)
+        array("value" => (isset($parameters)) ? $parameters['NetworkLocation'] :"Work","required" => True)
     );
     //_____________
     $HideEULA = new SelectItemtitle("HideEULA",$InfoBule_HideEULA);
@@ -578,42 +586,37 @@ $f->push(new Table());
     );
 
 $f->pop();
-$f->add(new SepTpl());
-
+$f->add( new SepTpl());
 
 //==== NEW SECTION ====
 // Domain Settings
 //=====================
-$f->add(new TitleElement(_T("Domain Settings", "imaging")));
+$f->add(new TitleElement(_T("Domain Settings","imaging")));
 $f->push(new Table());
 
-    $f->add(
+	 $f->add(
         new TrFormElement(_T('Domain','imaging').":", new InputTplTitle('Domain',$InfoBule_Domain)),
         array("required" => True,"value" =>(isset($parameters)) ? $parameters['Domain'] : '')
     );
-    //_____________
-    $f->add(
+	$f->add(
         new TrFormElement(_T('Domain User','imaging').":", new InputTplTitle('DomainUser',$InfoBule_DomainUser)),
         array("required" => True,"value" =>(isset($parameters)) ? $parameters['DomainUser'] : '')
     );
-    //_____________
-    $f->add(
+	$f->add(
         new TrFormElement(_T('Domain Password','imaging').":", new InputTplTitle('DomainPassword',$InfoBule_DomainPassword)),
         array("required" => True,"value" =>(isset($parameters)) ? $parameters['DomainPassword'] : '')
     );
-    //_____________
-    $f->add(
+	$f->add(
         new TrFormElement(_T('Join Domain','imaging').":", new InputTplTitle('JoinDomain',$InfoBule_JoinDomain)),
         array("required" => True,"value" =>(isset($parameters)) ? $parameters['JoinDomain'] : '')
     );
-    //_____________
-    $f->add(
+	$f->add(
         new TrFormElement(_T('MachineObjectOU','imaging').":", new InputTplTitle('MachineObjectOU',$InfoBule_MachineObjectOU)),
         array("required" => True,"value" =>(isset($parameters)) ? $parameters['MachineObjectOU'] : '')
     );
 
 $f->pop();
-$f->add(new SepTpl());
+$f->add( new SepTpl());
 
 
 //==== NEW SECTION ====
@@ -622,15 +625,15 @@ $f->add(new SepTpl());
 $f->add(new TitleElement(_T("Administrator Account", "imaging")));
 $f->push(new Table());
 
-    //_____________
+	//_____________
     $f->add(
         new TrFormElement(_T('Password','imaging'), new InputTplTitle('PasswordAdmin',$InfoBule_PasswordAdmin)),
         array(  "required" => True,
-            "value" => (isset($parameters)) ? $parameters['PasswordAdmin'] : "")
+                "value" => (isset($parameters)) ? $parameters['PasswordAdmin'] : "")
     );
 
 $f->pop();
-$f->add(new SepTpl());
+$f->add( new SepTpl());
 
 
 //==== NEW SECTION ====
@@ -649,19 +652,13 @@ $f->push(new Table());
             array("value" => (isset($parameters)) ? $parameters['CEIPEnabled'] : "0","required" => True)
     );
     //_____________
-    $BGC = new SelectItemtitle("BGC",$InfoBule_SystemDefaultBackgroundColor);
-    $BGC->setElements($suite0_24);
-    $BGC->setElementsVal($suite0_24);
+    $CopyProfile = new SelectItemtitle("CopyProfile", $InfoBule_CopyProfile);
+    $CopyProfile->setElements($yes_no);
+    $CopyProfile->setElementsVal($truefalse);
     $f->add(
-        new TrFormElement(_T('System Background Colour','imaging').":", $BGC),
-        array("value" => (isset($parameters)) ? $parameters['BGC'] : "2","required" => True)
+        new TrFormElement(_T('Copy Profile','imaging').":", $CopyProfile),
+        array("value" => (isset($parameters)) ? $parameters['CopyProfile'] : "true","required" => True)
     );
-    //_____________
-    $img_background=new IconeElement("System_Background_Colour","modules/imaging/img/bcgwindowd8.png", "",$InfoBule_backgroundWin8 );
-    $img_background1=new IconeElement("System_Background_Colour", "modules/imaging/img/bcgwindows81.png", "",
-                                     $InfoBule_backgroundWin81 );
-    $f->add(new TrFormElement(_T("For Windows 8", "imaging"), $img_background));
-    $f->add(new TrFormElement(_T("For Windows 8.1", "imaging"), $img_background1));
     //_____________
     $f->add(
         new TrFormElement(_T('User Name','imaging'), new InputTplTitle('FullName',$InfoBule_FullName)),

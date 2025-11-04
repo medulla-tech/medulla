@@ -38,7 +38,7 @@ var template = [
 '<unattend xmlns="urn:schemas-microsoft-com:unattend">',
 '<!--',
 '________________________________',
-'OS Windows 11-uefi [amd64 uefi]',
+'OS Windows 11-oem [amd64 uefi]',
 'Windows Answer File Generator :',
 '',
 'date : <?php echo $strin; ?>dateval<?php echo $strou; ?>',
@@ -695,11 +695,11 @@ $fields =   array(
     $key5
 );
 $values = array(
-    (isset($parameters['ProductKey1'])) ? $parameters['ProductKey1'] : "W269N","",
-    (isset($parameters['ProductKey2'])) ? $parameters['ProductKey2'] : "WFGWX","",
-    (isset($parameters['ProductKey3'])) ? $parameters['ProductKey3'] : "YVC9B","",
-    (isset($parameters['ProductKey4'])) ? $parameters['ProductKey4'] : "4J6C9","",
-    (isset($parameters['ProductKey5'])) ? $parameters['ProductKey5'] : "T83GX"
+    (isset($parameters['ProductKey1'])) ? $parameters['ProductKey1'] : "00000","",
+    (isset($parameters['ProductKey2'])) ? $parameters['ProductKey2'] : "00000","",
+    (isset($parameters['ProductKey3'])) ? $parameters['ProductKey3'] : "00000","",
+    (isset($parameters['ProductKey4'])) ? $parameters['ProductKey4'] : "00000","",
+    (isset($parameters['ProductKey5'])) ? $parameters['ProductKey5'] : "00000"
 );
 //_____________
 $f->add(

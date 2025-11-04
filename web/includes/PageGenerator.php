@@ -390,7 +390,7 @@ class ActionItem
 class ActionPopupItem extends ActionItem
 {
     private $_displayType = 0;
-
+    public $width;
     public function __construct($desc, $action, $classCss, $paramString, $module = null, $submod = null, $tab = null, $width = 300, $mod = false)
     {
         parent::__construct($desc, $action, $classCss, $paramString, $module, $submod, $tab, $mod);
@@ -1240,6 +1240,9 @@ class ListInfos extends HtmlElement
  */
 class OptimizedListInfos extends ListInfos
 {
+    public $itemCount;
+    public $startreal;
+    public $endreal;
     /**
      * Allow to set another item count
      */
@@ -1348,6 +1351,17 @@ class SimpleNavBar extends HtmlElement
      * @param $max: max quantity of elements in a page
      * @param $paginator: boolean which enable the selector of the number of results in a page
      */
+    public $max;
+    public $curstart;
+    public $itemcount;
+    public $extra;
+    public $paginator;
+    public $curpage;
+    public $curend;
+    public $nbpages;
+    public $filter;
+    public $jsfunc;
+
     public function __construct($curstart, $curend, $itemcount, $extra = "", $max = "", $paginator = false)
     {
         global $conf;
