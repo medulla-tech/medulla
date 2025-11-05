@@ -7471,20 +7471,20 @@ class Glpi100(DyngroupDatabaseHelper):
                 ge.completename AS nameentitycomplete,
                 ge.entities_id AS parent_id_entity,
                 ge.level AS level_entity
-            FROM glpi.glpi_users gu
-            LEFT JOIN glpi.glpi_useremails gm
+            FROM glpi_users gu
+            LEFT JOIN glpi_useremails gm
             ON gm.users_id = gu.id AND gm.is_default = 1
-            LEFT JOIN glpi.glpi_profiles_users gpu
+            LEFT JOIN glpi_profiles_users gpu
             ON gpu.id = (
                     SELECT gpu2.id
-                    FROM glpi.glpi_profiles_users gpu2
+                    FROM glpi_profiles_users gpu2
                     WHERE gpu2.users_id = gu.id
                     ORDER BY (gpu2.entities_id = gu.entities_id) DESC, gpu2.id DESC
                     LIMIT 1
                 )
-            LEFT JOIN glpi.glpi_profiles gp
+            LEFT JOIN glpi_profiles gp
             ON gp.id = gpu.profiles_id
-            LEFT JOIN glpi.glpi_entities ge
+            LEFT JOIN glpi_entities ge
             ON ge.id = COALESCE(gpu.entities_id, gu.entities_id)
             WHERE gu.name = :name
             LIMIT 1
@@ -7526,16 +7526,16 @@ class Glpi100(DyngroupDatabaseHelper):
     def get_user_profile_name(self, session, name: str) -> str:
         sql = """
             SELECT gp.name AS nameprofil
-            FROM glpi.glpi_users gu
-            LEFT JOIN glpi.glpi_profiles_users gpu
+            FROM glpi_users gu
+            LEFT JOIN glpi_profiles_users gpu
                 ON gpu.id = (
                     SELECT gpu2.id
-                    FROM glpi.glpi_profiles_users gpu2
+                    FROM glpi_profiles_users gpu2
                     WHERE gpu2.users_id = gu.id
                     ORDER BY (gpu2.entities_id = gu.entities_id) DESC, gpu2.id DESC
                     LIMIT 1
                 )
-            LEFT JOIN glpi.glpi_profiles gp
+            LEFT JOIN glpi_profiles gp
                 ON gp.id = gpu.profiles_id
             WHERE gu.name = :name
             LIMIT 1
@@ -7757,10 +7757,10 @@ class Glpi100(DyngroupDatabaseHelper):
                 COALESCE(c.nb_machines, 0) AS nb_machines,
                 COALESCE(u.nb_users, 0)    AS nb_users,
                 COALESCE(u.userIds, '')    AS userIds
-            FROM glpi.glpi_entities ge
+            FROM glpi_entities ge
             LEFT JOIN (
                 SELECT entities_id, COUNT(*) AS nb_machines
-                FROM glpi.glpi_computers
+                FROM glpi_computers
                 GROUP BY entities_id
             ) c ON ge.id = c.entities_id
             LEFT JOIN (
@@ -7768,8 +7768,8 @@ class Glpi100(DyngroupDatabaseHelper):
                     gpu.entities_id,
                     GROUP_CONCAT(DISTINCT gpu.users_id ORDER BY gpu.users_id ASC) AS userIds,
                     COUNT(DISTINCT gpu.users_id) AS nb_users
-                FROM glpi.glpi_profiles_users gpu
-                JOIN glpi.glpi_users gu ON gu.id = gpu.users_id
+                FROM glpi_profiles_users gpu
+                JOIN glpi_users gu ON gu.id = gpu.users_id
                 WHERE gu.name <> 'root'
                 AND gu.name NOT LIKE 'Plugin\\_%'
                 GROUP BY gpu.entities_id
@@ -7778,7 +7778,7 @@ class Glpi100(DyngroupDatabaseHelper):
                 ge.id <> 0
                 OR EXISTS (
                     SELECT 1
-                    FROM glpi.glpi_users gu2
+                    FROM glpi_users gu2
                     WHERE gu2.entities_id = ge.id
                     AND gu2.name = 'root'
                 )
@@ -7867,7 +7867,7 @@ class Glpi100(DyngroupDatabaseHelper):
     def set_user_api_token(self, session, user_id, token):
         sql = (
         """
-            UPDATE glpi.glpi_users
+            UPDATE glpi_users
             SET api_token = :tok,
                 api_token_date = NOW()
             WHERE id = :uid
@@ -7997,7 +7997,7 @@ class Glpi100(DyngroupDatabaseHelper):
             CASE
                 WHEN :id_profile IS NOT NULL AND EXISTS (
                     SELECT 1
-                    FROM glpi.glpi_profiles_users gpu2
+                    FROM glpi_profiles_users gpu2
                     WHERE gpu2.users_id   = gu.id
                     AND gpu2.profiles_id = :id_profile
                     AND gpu2.entities_id = gpu.entities_id
@@ -8013,12 +8013,12 @@ class Glpi100(DyngroupDatabaseHelper):
                 ELSE 0
             END AS profile_power
 
-        FROM glpi.glpi_users gu
-        LEFT JOIN glpi.glpi_useremails gm
+        FROM glpi_users gu
+        LEFT JOIN glpi_useremails gm
                ON gm.users_id = gu.id AND gm.is_default = 1
-        INNER JOIN glpi.glpi_profiles_users gpu ON gpu.users_id = gu.id
-        INNER JOIN glpi.glpi_profiles gp        ON gp.id = gpu.profiles_id
-        INNER JOIN glpi.glpi_entities ge        ON ge.id = gpu.entities_id
+        INNER JOIN glpi_profiles_users gpu ON gpu.users_id = gu.id
+        INNER JOIN glpi_profiles gp        ON gp.id = gpu.profiles_id
+        INNER JOIN glpi_entities ge        ON ge.id = gpu.entities_id
 
         WHERE {where_sql}
 
@@ -8145,10 +8145,10 @@ class Glpi100(DyngroupDatabaseHelper):
                 COALESCE(c.nb_machines, 0) AS nb_machines,
                 COALESCE(u.nb_users, 0) AS nb_users,
                 COALESCE(u.userIds, '') AS userIds
-            FROM glpi.glpi_entities ge
+            FROM glpi_entities ge
             LEFT JOIN (
                 SELECT entities_id, COUNT(*) AS nb_machines
-                FROM glpi.glpi_computers
+                FROM glpi_computers
                 GROUP BY entities_id
             ) c ON ge.id = c.entities_id
             LEFT JOIN (
@@ -8162,14 +8162,14 @@ class Glpi100(DyngroupDatabaseHelper):
                             ELSE 0
                         END
                     ) AS nb_users
-                FROM glpi.glpi_users
+                FROM glpi_users
                 GROUP BY entities_id
             ) u ON ge.id = u.entities_id
             WHERE (
                 ge.id != 0
                 OR EXISTS (
                     SELECT 1
-                    FROM glpi.glpi_users gu
+                    FROM glpi_users gu
                     WHERE gu.entities_id = ge.id
                     AND gu.name = 'root'
                 )
@@ -8697,15 +8697,15 @@ and glpi_computers.id in %s group by glpi_computers.id;""" % (
                                 e.completename AS complete_name,
                                 COUNT(*) AS count
                             FROM
-                                glpi.glpi_computers AS c
+                                glpi_computers AS c
                                     INNER JOIN
-                                glpi.glpi_items_operatingsystems AS io ON c.id = io.items_id
+                                glpi_items_operatingsystems AS io ON c.id = io.items_id
                                     INNER JOIN
-                                glpi.glpi_entities AS e ON e.id = c.entities_id
+                                glpi_entities AS e ON e.id = c.entities_id
                                     INNER JOIN
-                                glpi.glpi_operatingsystems AS os ON os.id = io.operatingsystems_id
+                                glpi_operatingsystems AS os ON os.id = io.operatingsystems_id
                                     INNER JOIN
-                                glpi.glpi_operatingsystemversions AS v ON v.id = io.operatingsystemversions_id
+                                glpi_operatingsystemversions AS v ON v.id = io.operatingsystemversions_id
                             WHERE
                                 os.name LIKE '%Windows%'
                             GROUP BY e.id
@@ -8745,15 +8745,15 @@ and glpi_computers.id in %s group by glpi_computers.id;""" % (
                             ELSE 'not_win'
                         END AS os
                     FROM
-                        glpi.glpi_computers AS c
+                        glpi_computers AS c
                             INNER JOIN
-                        glpi.glpi_items_operatingsystems AS io ON c.id = io.items_id
+                        glpi_items_operatingsystems AS io ON c.id = io.items_id
                             INNER JOIN
-                        glpi.glpi_entities AS e ON e.id = c.entities_id
+                        glpi_entities AS e ON e.id = c.entities_id
                             INNER JOIN
-                        glpi.glpi_operatingsystems AS os ON os.id = io.operatingsystems_id
+                        glpi_operatingsystems AS os ON os.id = io.operatingsystems_id
                             INNER JOIN
-                        glpi.glpi_operatingsystemversions AS v ON v.id = io.operatingsystemversions_id
+                        glpi_operatingsystemversions AS v ON v.id = io.operatingsystemversions_id
                     WHERE
                         os.name LIKE '%Windows%'
                     GROUP BY e.name, os
@@ -8849,15 +8849,15 @@ and glpi_computers.id in %s group by glpi_computers.id;""" % (
                                 e.completename AS complete_name,
                                 COUNT(*) AS count
                             FROM
-                                glpi.glpi_computers AS c
+                                glpi_computers AS c
                                     INNER JOIN
-                                glpi.glpi_items_operatingsystems AS io ON c.id = io.items_id
+                                glpi_items_operatingsystems AS io ON c.id = io.items_id
                                     INNER JOIN
-                                glpi.glpi_entities AS e ON e.id = c.entities_id
+                                glpi_entities AS e ON e.id = c.entities_id
                                     INNER JOIN
-                                glpi.glpi_operatingsystems AS os ON os.id = io.operatingsystems_id
+                                glpi_operatingsystems AS os ON os.id = io.operatingsystems_id
                                     INNER JOIN
-                                glpi.glpi_operatingsystemversions AS v ON v.id = io.operatingsystemversions_id
+                                glpi_operatingsystemversions AS v ON v.id = io.operatingsystemversions_id
                             WHERE
                                 os.name LIKE '%Windows%'
                             GROUP BY e.id
@@ -8898,15 +8898,15 @@ and glpi_computers.id in %s group by glpi_computers.id;""" % (
                             ELSE 'not_win'
                         END AS os
                     FROM
-                        glpi.glpi_computers AS c
+                        glpi_computers AS c
                             INNER JOIN
-                        glpi.glpi_items_operatingsystems AS io ON c.id = io.items_id
+                        glpi_items_operatingsystems AS io ON c.id = io.items_id
                             INNER JOIN
-                        glpi.glpi_entities AS e ON e.id = c.entities_id
+                        glpi_entities AS e ON e.id = c.entities_id
                             INNER JOIN
-                        glpi.glpi_operatingsystems AS os ON os.id = io.operatingsystems_id
+                        glpi_operatingsystems AS os ON os.id = io.operatingsystems_id
                             INNER JOIN
-                        glpi.glpi_operatingsystemversions AS v ON v.id = io.operatingsystemversions_id
+                        glpi_operatingsystemversions AS v ON v.id = io.operatingsystemversions_id
                     WHERE
                         os.name LIKE '%Windows%'
                     GROUP BY e.name, os
@@ -8993,11 +8993,11 @@ and glpi_computers.id in %s group by glpi_computers.id;""" % (
                     ELSE 'not_win'
                 END AS 'update'
             FROM
-                glpi.glpi_computers AS c
-                INNER JOIN glpi.glpi_items_operatingsystems AS io ON c.id = io.items_id
-                INNER JOIN glpi.glpi_entities AS e ON e.id = c.entities_id
-                INNER JOIN glpi.glpi_operatingsystems AS os ON os.id = io.operatingsystems_id
-                INNER JOIN glpi.glpi_operatingsystemversions AS v ON v.id = io.operatingsystemversions_id
+                glpi_computers AS c
+                INNER JOIN glpi_items_operatingsystems AS io ON c.id = io.items_id
+                INNER JOIN glpi_entities AS e ON e.id = c.entities_id
+                INNER JOIN glpi_operatingsystems AS os ON os.id = io.operatingsystems_id
+                INNER JOIN glpi_operatingsystemversions AS v ON v.id = io.operatingsystemversions_id
             WHERE
                 os.name LIKE '%Windows%' AND e.id = :entity_id
         """
@@ -9127,20 +9127,20 @@ and glpi_computers.id in %s group by glpi_computers.id;""" % (
                 gi.name as entity_name_,
                 gp.name AS profile_name,
                 (SELECT GROUP_CONCAT(gi2.id ORDER BY gi2.id SEPARATOR ',')
-                    FROM glpi.glpi_entities gi2
+                    FROM glpi_entities gi2
                     WHERE gi2.completename LIKE CONCAT(gi.completename, '%')
                 ) AS liste_entities_user,
                 COALESCE(
                     (SELECT ga.app_token
-                        FROM glpi.glpi_apiclients ga
+                        FROM glpi_apiclients ga
                         WHERE ga.app_token IS NOT NULL
                         AND ga.name = 'MMC'
                         LIMIT 1),
                     ''
                 ) AS app_token
-            FROM glpi.glpi_users gu
-            LEFT JOIN glpi.glpi_entities gi ON gi.id = gu.entities_id
-            LEFT JOIN glpi.glpi_profiles gp ON gp.id = gu.profiles_id
+            FROM glpi_users gu
+            LEFT JOIN glpi_entities gi ON gi.id = gu.entities_id
+            LEFT JOIN glpi_profiles gp ON gp.id = gu.profiles_id
             WHERE gu.name = :user_name
         """
 
