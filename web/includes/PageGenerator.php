@@ -381,8 +381,6 @@ class ActionItem
     }
 }
 
-
-
 /**
  * display action in a JavaScript popup
  *
