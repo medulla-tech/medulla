@@ -48,9 +48,6 @@ $listename=[];
 // Début du formulaire HTML
 echo '<form method="post" action="" name="montableau" class="approval-form">';
 $currentFamily = null;
-echo "<pre>";
-print_r($f['name_procedure']);
-echo "</pre>";
 foreach ($f['name_procedure'] as $indextableau => $name) {
     $id = $f['id'][$indextableau];
 
