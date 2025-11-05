@@ -161,7 +161,7 @@ INSERT IGNORE INTO `applicationconfig` (`id`, `key`, `value`, `comment`, `contex
 (21,'table produits','up_packages_office_2010_64bit','Microsoft Office suite bureautique','entity','xmppmaster/update',0),
 (22,'table produits','up_packages_office_2013_64bit','Microsoft Office suite bureautique','entity','xmppmaster/update',0),
 (23,'table produits','up_packages_office_2016_64bit','Microsoft Office suite bureautique','entity','xmppmaster/update',0),
-
+(23,'table produits','up_packages_office_2019_64bit','Microsoft Office suite bureautique','entity','xmppmaster/update',0),
 -- Windows 10/11
 (24,'table produits','up_packages_Win10_X64_1903','Microsoft Windows 10 [ fin support 2025/10 ]','entity','xmppmaster/update',1),
 (25,'table produits','up_packages_Win10_X64_21H1','Microsoft Windows 10 [ fin support 2025/10 ]','entity','xmppmaster/update',1),
@@ -477,6 +477,60 @@ BEGIN
             xmppmaster.update_data bb ON bb.bundledby_revision = aa.revisionid
         WHERE
             aa.product LIKE '%Office 2016%'
+            AND aa.title NOT LIKE '%ARM64%'
+            AND aa.title NOT LIKE '%32-Bit%'
+            AND aa.title NOT LIKE '%Server%'
+            AND aa.title NOT LIKE '%X86%'
+            AND aa.title NOT LIKE '%Dynamic%';
+END$$
+
+DELIMITER ;
+
+-- =======================================
+-- up_init_packages_office_2016_64bit stored procedure
+-- =======================================
+USE `xmppmaster`;
+DROP PROCEDURE IF EXISTS `up_packages_office_2019_64bit`;
+
+DELIMITER $$
+
+CREATE PROCEDURE `up_packages_office_2019_64bit`()
+BEGIN
+    -- Supprime la table si elle existe (sans SQL dynamique)
+    DROP TABLE IF EXISTS up_packages_office_2019_64bit;
+    CREATE TABLE up_packages_office_2019_64bit AS
+        SELECT
+            aa.updateid,
+            bb.updateid AS updateid_package,
+            aa.revisionid,
+            aa.creationdate,
+            aa.compagny,
+            aa.product,
+            aa.productfamily,
+            aa.updateclassification,
+            aa.prerequisite,
+            aa.title,
+            aa.description,
+            aa.msrcseverity,
+            aa.msrcnumber,
+            aa.kb,
+            aa.languages,
+            aa.category,
+            aa.supersededby,
+            aa.supersedes,
+            bb.payloadfiles,
+            aa.revisionnumber,
+            aa.bundledby_revision,
+            aa.isleaf,
+            aa.issoftware,
+            aa.deploymentaction,
+            aa.title_short
+        FROM
+            xmppmaster.update_data aa
+                JOIN
+            xmppmaster.update_data bb ON bb.bundledby_revision = aa.revisionid
+        WHERE
+            aa.product LIKE '%Office 2019%'
             AND aa.title NOT LIKE '%ARM64%'
             AND aa.title NOT LIKE '%32-Bit%'
             AND aa.title NOT LIKE '%Server%'
