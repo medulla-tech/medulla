@@ -2402,7 +2402,7 @@ form.inplaceeditor-form input[type="text"] {
     margin: 5px;
     padding: 10px;
     position: fixed;
-    z-index: 999;
+    z-index: 1001;
     -webkit-border-radius: 4px;
     -moz-border-radius: 4px;
     border-radius: 4px;
@@ -2418,7 +2418,7 @@ form.inplaceeditor-form input[type="text"] {
     position:fixed;
     left:0;
     top:0;
-    z-index:990;
+    z-index:1000;
     background-color:black;
     filter: alpha(opacity=25);
     -khtml-opacity: 0.25;
