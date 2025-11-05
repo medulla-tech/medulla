@@ -202,8 +202,6 @@ if (isset($_GET["update"])) {
 </head>
 
 <body onload="jQuery('#username').focus()">
-<!-- si splash -->
-<!-- <body> -->
 
     <div id="loginBox">
         <div id="header">
@@ -439,19 +437,6 @@ if (isset($_GET["update"])) {
 
         });
     </script>
-
-<?php
-//decomente pour splash
-// generateSplashScreen(
-//     "graph/test.png",
-//     25,      // apparition
-//     400,     // délai avant disparition
-//     2000,    // durée de disparition
-//     'splash-container',
-//     '',
-//     'username'  // ID de l'élément à focus apres fin animation
-// );
-?>
 </body>
 
 </html>
