@@ -161,7 +161,6 @@ INSERT IGNORE INTO `applicationconfig` (`id`, `key`, `value`, `comment`, `contex
 (21,'table produits','up_packages_office_2010_64bit','Microsoft Office suite bureautique','entity','xmppmaster/update',0),
 (22,'table produits','up_packages_office_2013_64bit','Microsoft Office suite bureautique','entity','xmppmaster/update',0),
 (23,'table produits','up_packages_office_2016_64bit','Microsoft Office suite bureautique','entity','xmppmaster/update',0),
-(23,'table produits','up_packages_office_2019_64bit','Microsoft Office suite bureautique','entity','xmppmaster/update',0),
 -- Windows 10/11
 (24,'table produits','up_packages_Win10_X64_1903','Microsoft Windows 10 [ fin support 2025/10 ]','entity','xmppmaster/update',1),
 (25,'table produits','up_packages_Win10_X64_21H1','Microsoft Windows 10 [ fin support 2025/10 ]','entity','xmppmaster/update',1),
@@ -183,8 +182,8 @@ INSERT IGNORE INTO `applicationconfig` (`id`, `key`, `value`, `comment`, `contex
 (39,'Security Updates','Critical','table rules','entity','xmppmaster/update',1),
 (40,'Security Updates','Important','table rules','entity','xmppmaster/update',1),
 (41,'Security Updates','Low','table rules','entity','xmppmaster/update',1),
-(42,'Security Updates','Moderate','table rules','entity','xmppmaster/update',1);
-
+(42,'Security Updates','Moderate','table rules','entity','xmppmaster/update',1),
+(43,'table produits','up_packages_office_2019_64bit','Microsoft Office suite bureautique','entity','xmppmaster/update',0);
 
 
 -- =====================================================================
