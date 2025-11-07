@@ -245,7 +245,7 @@ class Contexte_XmlRpc_surcharge_info_Glpi:
         # On garde l'UUID en mémoire (dans le contexte ou une variable statique)
         if not hasattr(self.ctx, "last_uuid") or self.session_info["uuid"] != self.ctx.last_uuid:
             # Nouveau contexte ou changement d'utilisateur
-            self.ctx._mondict = Glpi().get_user_default_details(self.session_info["userid"])
+            self.ctx._mondict = Glpi().get_user_or_superadmin_details(self.session_info["userid"])
             self.ctx.last_uuid = self.session_info["uuid"]
             logger.debug("context evaluation %s" % self.ctx._mondict)
 

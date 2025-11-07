@@ -9095,82 +9095,122 @@ and glpi_computers.id in %s group by glpi_computers.id;""" % (
 
 
     @DatabaseHelper._sessionm
-    def get_user_default_details(self, session, user_name: str, active: bool | None = True):
+    def get_user_or_superadmin_details(self, session, user_name: str):
         """
-        Récupère les informations détaillées d'un utilisateur GLPI,
-        incluant la liste concaténée des entités accessibles,
-        ainsi que le token applicatif "MMC".
+        Récupère les informations détaillées d'un utilisateur GLPI.
+        Si `user_name` est 'root', renvoie automatiquement le Super-Admin actif.
 
         Paramètres :
-            session (Session) : Objet de session SQLAlchemy.
-            user_name (str)   : Le login de l'utilisateur GLPI.
-            active (bool|None): Filtre sur la colonne gu.is_active.
-                                - True (par défaut) => user actif = 1
-                                - False             => user non actif = 0
-                                - None              => actif ou pas actif
+            session (Session): Objet SQLAlchemy.
+            user_name (str): Login de l'utilisateur GLPI ou 'root'.
 
         Retourne :
-            dict : Dictionnaire unique avec les alias définis dans le SQL.
+            dict : Dictionnaire contenant les alias SQL + alias_user_su, ou {} si non trouvé.
         """
 
-        sql = """
-              SELECT gu.id as user_id,
-                gu.entities_id as entity_id,
-                gu.locations_id as location_id,
-                gu.profiles_id as profile_id,
-                gu.name as user_name,
-                gu.realname as real_name,
-                gu.firstname as first_name,
-                gu.api_token,
-                gu.is_active,
-                gi.completename as complet_entity_name_,
-                gi.name as entity_name_,
-                gp.name AS profile_name,
-                (SELECT GROUP_CONCAT(gi2.id ORDER BY gi2.id SEPARATOR ',')
-                    FROM glpi_entities gi2
-                    WHERE gi2.completename LIKE CONCAT(gi.completename, '%')
-                ) AS liste_entities_user,
-                COALESCE(
-                    (SELECT ga.app_token
+        # --- Cas spécial : root -> on cible le Super-Admin actif ---
+        if user_name == "root":
+            sql = """
+                SELECT
+                    gu.id AS user_id,
+                    gu.entities_id AS entity_id,
+                    gu.locations_id AS location_id,
+                    gu.profiles_id AS profile_id,
+                    gu.name AS user_name,
+                    gu.realname AS real_name,
+                    gu.firstname AS first_name,
+                    gu.api_token,
+                    gu.is_active,
+                    gi.completename AS complet_entity_name_,
+                    gi.name AS entity_name_,
+                    gp.name AS profile_name,
+                    (
+                        SELECT GROUP_CONCAT(gi2.id ORDER BY gi2.id SEPARATOR ',')
+                        FROM glpi_entities gi2
+                        WHERE gi2.completename LIKE CONCAT(gi.completename, '%')
+                    ) AS liste_entities_user,
+                    COALESCE((
+                        SELECT ga.app_token
                         FROM glpi_apiclients ga
                         WHERE ga.app_token IS NOT NULL
                         AND ga.name = 'MMC'
-                        LIMIT 1),
-                    ''
-                ) AS app_token
-            FROM glpi_users gu
-            LEFT JOIN glpi_entities gi ON gi.id = gu.entities_id
-            LEFT JOIN glpi_profiles gp ON gp.id = gu.profiles_id
-            WHERE gu.name = :user_name
-        """
-
-
-        # Ajout dynamique du filtre actif/inactif
-        if active is True:
-            sql += " AND gu.is_active = 1"
-        elif active is False:
-            sql += " AND gu.is_active = 0"
-
-        sql += " LIMIT 1"
+                        LIMIT 1
+                    ), '') AS app_token
+                FROM glpi_users gu
+                LEFT JOIN glpi_entities gi ON gi.id = gu.entities_id
+                LEFT JOIN glpi_profiles gp ON gp.id = gu.profiles_id
+                WHERE gu.is_active = 1
+                AND gu.name IN (
+                        SELECT u.name
+                        FROM glpi_users u
+                        INNER JOIN glpi_profiles_users pu ON u.id = pu.users_id
+                        INNER JOIN glpi_profiles p ON p.id = pu.profiles_id
+                        WHERE p.name = 'Super-Admin'
+                )
+                AND (
+                    SELECT GROUP_CONCAT(gi2.id ORDER BY gi2.id SEPARATOR ',')
+                    FROM glpi_entities gi2
+                    WHERE gi2.completename LIKE CONCAT(gi.completename, '%')
+                ) IS NOT NULL
+                ORDER BY gu.id ASC
+                LIMIT 1
+            """
+            params = {}
+        else:
+            # --- Cas normal : utilisateur actif ---
+            sql = """
+                SELECT
+                    gu.id AS user_id,
+                    gu.entities_id AS entity_id,
+                    gu.locations_id AS location_id,
+                    gu.profiles_id AS profile_id,
+                    gu.name AS user_name,
+                    gu.realname AS real_name,
+                    gu.firstname AS first_name,
+                    gu.api_token,
+                    gu.is_active,
+                    gi.completename AS complet_entity_name_,
+                    gi.name AS entity_name_,
+                    gp.name AS profile_name,
+                    (SELECT GROUP_CONCAT(gi2.id ORDER BY gi2.id SEPARATOR ',')
+                        FROM glpi_entities gi2
+                        WHERE gi2.completename LIKE CONCAT(gi.completename, '%')
+                    ) AS liste_entities_user,
+                    COALESCE(
+                        (SELECT ga.app_token
+                            FROM glpi_apiclients ga
+                            WHERE ga.app_token IS NOT NULL
+                            AND ga.name = 'MMC'
+                            LIMIT 1),
+                        ''
+                    ) AS app_token
+                FROM glpi_users gu
+                LEFT JOIN glpi_entities gi ON gi.id = gu.entities_id
+                LEFT JOIN glpi_profiles gp ON gp.id = gu.profiles_id
+                WHERE gu.name = :user_name
+                AND gu.is_active = 1
+                LIMIT 1
+            """
+            params = {"user_name": user_name}
 
         sql = text(sql)
+        logger.debug("Executing get_user_or_superadmin_details for: %s", user_name)
 
-        # logger.debug("Executing SQL query: %s", sql)
-        logger.debug("With parameters: user_name=%s, active=%s", user_name, active)
-
-        row = session.execute(sql, {"user_name": user_name}).fetchone()
-
+        row = session.execute(sql, params).fetchone()
         if not row:
             return {}
 
-        # Transforme la ligne en dict directement avec les clés alias
         result = dict(row._mapping)
-        # Conversion de "1,2,3" → [1, 2, 3]
+
+        # Nettoyage / formatage de la liste des entités
         liste_raw = result.get("liste_entities_user")
-        if liste_raw:
-            result["liste_entities_user"] = [int(x) for x in liste_raw.split(",") if x.isdigit()]
-        else:
-            result["liste_entities_user"] = []
+        result["liste_entities_user"] = (
+            [int(x) for x in liste_raw.split(",") if x.isdigit()] if liste_raw else []
+        )
+
+        # --- Ajout du champ alias_user_su ---
+        result["alias_user_su"] = "root" if user_name == "root" else result["user_name"]
+
         return result
 
 # Class for SQLalchemy mapping
