@@ -28,6 +28,7 @@ Depends: ${misc:Depends},
          mmc-web-updates, python3-mmc-updates,
          pulse2-uuid-resolver,
          mmc-web-admin, python3-mmc-admin,
+         mmc-web-mastering, python3-mmc-mastering,
          pulse-xmppmaster-agentplugins, pulse-xmpp-agent-relay,
          pulse-agent-installers, pulse2-common,
          pulse2-imaging-client | pulse2-davos-client
@@ -567,3 +568,22 @@ Description: Pulse 2 MMC agent plugins
  organizations.
  .
  This package will install all the Pulse 2 MMC agent interface plugins.
+
+Package: python3-mmc-mastering
+Architecture: all
+Section: python
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python3-pulse2-common-database-mastering (= ${binary:Version})
+Description: Medulla mastering plugin for MMC agent
+ Medulla is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package contains the mastering plugin for MMC agent.
+
+Package: mmc-web-mastering
+Architecture: all
+Depends: ${misc:Depends}, pulse2-common(= ${binary:Version}), mmc-web-base (>= 3.1.1-1)
+Description: Medulla mastering plugin for MMC web interface
+ Medulla is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package will install all the Medulla MMC agent interface plugins

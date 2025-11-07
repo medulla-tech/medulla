@@ -79,6 +79,8 @@ Requires:       mmc-web-urbackup
 Requires:       python3-mmc-urbackup
 Requires:       mmc-web-updates
 Requires:       python3-mmc-updates
+Requires:       mmc-web-mastering
+Requires:       python3-mmc-mastering
 Requires:       pulse2-common
 Requires:       pulse2-package-server
 Requires:       python3-pulse2-common-database-dyngroup
@@ -1310,6 +1312,39 @@ Admin module for the MMC web interface
 
 %files -n mmc-web-admin
 %{_datadir}/mmc/modules/admin
+
+
+#--------------------------------------------------------------------
+
+%package -n python3-mmc-mastering
+Summary:    Mastering plugin for the MMC agent
+Group:      System/Servers
+Requires:   pulse2-common = %version-%release
+Requires:   python3-pulse2-common-database-mastering = %version-%release
+
+Obsoletes:  python-mmc-mastering < 4.7.0
+Provides:   python-mmc-mastering = %version-%release
+
+%description -n python3-mmc-mastering
+This package contains the mastering plugin for the MMC agent.
+
+%files -n python3-mmc-mastering
+%attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/mastering.ini
+%python3_sitelib/mmc/plugins/mastering
+%{_docdir}/pulse2/contrib/mastering
+
+#--------------------------------------------------------------------
+
+%package -n     mmc-web-mastering
+Summary:        Mastering module for the MMC web interface
+Group:          System/Servers
+Requires:       mmc-web-base >= %{version}
+
+%description -n mmc-web-mastering
+Mastering module for the MMC web interface
+
+%files -n mmc-web-mastering
+%{_datadir}/mmc/modules/mastering
 
 #--------------------------------------------------------------------
 
