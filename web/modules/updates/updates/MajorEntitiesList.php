@@ -1,6 +1,7 @@
 <?php
 require("localSidebar.php");
 require("graph/navbar.inc.php");
+require_once("modules/xmppmaster/includes/html.inc.php");
 
 require_once("modules/updates/includes/xmlrpc.php");
 require_once("modules/admin/includes/xmlrpc.php");
@@ -17,13 +18,15 @@ $params = ["source" => "xmppmaster"];
 $p = new PageGenerator(_T("Entity Compliance", "updates"));
 $p->setSideMenu($sidemenu);
 $p->display();
-$timerefresh= 90;
-$_GET["source"] = "xmppmaster";
-$ajax = new AjaxPagebartitlletime(urlStrRedirect("updates/updates/ajaxMajorEntitiesList"),
-                                  "EntityCompliancediv",
-                                  getFilteredGetParams(),
-                                  $timerefresh,
-                                  "circularProgress");
+
+$refresh = new RefreshButton();
+print "<br/>";
+$refresh->display();
+
+$ajax = new AjaxFilter(urlStrRedirect("updates/updates/ajaxMajorEntitiesList"), "container", array('source' => 'xmppmaster'), 'formRunning');
+
+$ajax->setRefresh($refresh->refreshtime());
 $ajax->display();
+$ajax->displayDivToUpdate();
 
 ?>
