@@ -36,7 +36,7 @@ $computerpresence = isset($_GET['computerpresence']) ? $_GET['computerpresence']
 
 $_SESSION['computerpresence'] = $computerpresence;
 
-echo '<div style="position: relative; z-index: 1000; padding: 10px 0; margin-bottom: 20px; background: transparent; clear: both;">';
+echo '<div style="position: relative; z-index: 800; padding: 10px 0; margin-bottom: 20px; background: transparent; clear: both;">';
 echo '<input type="radio" ';
 if ($computerpresence == "all_computer") echo "checked";
 echo ' id="namepresence1" name="namepresence" value="all_computer"/> ';

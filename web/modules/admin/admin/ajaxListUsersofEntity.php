@@ -206,12 +206,16 @@ foreach ($userDetails as $user) {
 
 // Display
 if (count($userNames) === 0) {
-    $messageHtml = '
-    <div style="width:50%;margin:0 auto;background:#e0e0e0;padding:10px;text-align:center;font-size:14px;border-radius:5px;border:1px solid #b0b0b0;">
-        ' . htmlspecialchars(_T(sprintf("This entity [%s] has no associated user.", $_GET['entitycompletename']), "admin"), ENT_QUOTES, 'UTF-8') . '
-        <br>
-    </div>';
-    echo $messageHtml;
+    $entityName = htmlspecialchars($_GET['entityName'] ?? '', ENT_QUOTES, 'UTF-8');
+
+    $translatedTemplate = _T("This entity [%s] has no associated user.", "admin");
+
+    $translatedMessage = sprintf($translatedTemplate, $entityName);
+
+    echo sprintf(
+        '<div class="entity-warning">%s</div>',
+        $translatedMessage
+    );
 
     $f = new ValidatingForm(["action" => urlStrRedirect("admin/admin/entitiesManagement", [])]);
     $f->addValidateButtonWithValue("cancel", "return");
