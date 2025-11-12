@@ -26,6 +26,8 @@
 START TRANSACTION;
 USE `xmppmaster`;
 
+ALTER TABLE `xmppmaster`.`up_machine_major_windows`
+ADD COLUMN `is_active` VARCHAR(10) NULL AFTER `isolang`;
 
 -- =======================================
 -- add office 2019
@@ -209,7 +211,7 @@ BEGIN
     -- ------------------------------------------------------------------
     -- Insertion optimisée avec découpage en CTE
     -- ------------------------------------------------------------------
-    INSERT INTO up_major_win (
+    INSERT IGNORE INTO up_major_win (
         xmpp_id, glpi_id, ent_id,
         hostname, enabled, jid, serial, platform,
         name, comment, entity,
@@ -247,7 +249,6 @@ BEGIN
         lc.lang_code,
         lc.iso_filename,
         lc.package_uuid,
-
         SUBSTRING_INDEX(parts.part1, '_', 1) AS prefix,
         SUBSTRING_INDEX(parts.part1, '_', -1) AS old_version,
         parts.part2 AS oldcode,
@@ -256,10 +257,8 @@ BEGIN
         parts.part5 AS target_name,
         parts.part6 AS is_active,
         parts.part7 AS lang_version,
-
         SUBSTRING_INDEX(parts.part7, '-', -1) AS new_version,
         SUBSTRING_INDEX(SUBSTRING_INDEX(parts.part5, '_', 2), '_', -1) AS newcode
-
     FROM xmppmaster.local_glpi_items_softwareversions si
     LEFT JOIN xmppmaster.local_glpi_softwareversions sv ON si.softwareversions_id = sv.id
     LEFT JOIN xmppmaster.local_glpi_machines m ON si.items_id = m.id
@@ -299,7 +298,7 @@ BEGIN
                 WHERE id_machine = id_machine
                   AND update_id = update_id
             ) THEN
-                INSERT INTO up_machine_major_windows (
+                INSERT IGNORE INTO up_machine_major_windows (
                     id_machine, update_id, kb, msrcseverity,
                     glpi_id, ent_id, hostname, enabled, jid, serial,
                     platform, is_active, name, comment, entity,
