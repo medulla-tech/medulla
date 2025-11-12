@@ -260,7 +260,6 @@ foreach ($mergedArray as  $index=>$datacolonne) {
     }
 
     if (intval($datacolonne['MS19toMS25']) > 0) {
-        echo "kkkkkkkkkkkkkkkkkkkkkk";
         $msgtitle = _T("These machines need a Windows SERVER 25 update", "updates");
         // Construire $namegrp
         $tabcgi= array_merge($datacolonne, ['grp'=> 'MS19toMS25',

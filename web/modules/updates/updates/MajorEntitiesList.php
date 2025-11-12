@@ -14,7 +14,7 @@ global $maxperpage;
 $p = new PageGenerator(_T("Entity Compliance", "updates"));
 $p->setSideMenu($sidemenu);
 $p->display();
-
+/*
 $refresh = new RefreshButton();
 print "<br/>";
 $refresh->display();
@@ -23,7 +23,7 @@ $ajax = new AjaxFilter(urlStrRedirect("updates/updates/ajaxMajorEntitiesList"), 
 
 $ajax->setRefresh($refresh->refreshtime());
 $ajax->display();
-$ajax->displayDivToUpdate();
+$ajax->displayDivToUpdate();*/
 
 $p = new TabbedPageGenerator();
 //$p->setSideMenu($sidemenu);

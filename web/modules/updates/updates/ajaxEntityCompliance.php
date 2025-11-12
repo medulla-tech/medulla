@@ -58,13 +58,23 @@ require_once("modules/updates/includes/xmlrpc.php");
 
 <?php
 
+$timerefresh= 90;
+
+$_GET["source"] = "xmppmaster";
 $params = getFilteredGetParams();
 
-$params["source"]= $dataSource;
-$ajax = new AjaxFilter(urlStrRedirect("updates/updates/ajaxEntitiesList"),
-                       "container", $params);
+// $params["source"]= $dataSource;
+$params["source"]= "xmppmaster";
+// $ajax = new AjaxFilter(urlStrRedirect("updates/updates/ajaxEntitiesList"),"container", $params);
+$ajax = new AjaxPagebartitlletime(urlStrRedirect("updates/updates/ajaxEntitiesList"),
+                                  "EntityCompliancediv",
+                                  $params,
+                                  $timerefresh,
+                                  "circularProgress");
+
+
 $ajax->display();
-$ajax->displayDivToUpdate();
+// $ajax->displayDivToUpdate();
 
 // $ajaxmajor = new AjaxFilter(urlStrRedirect("updates/updates/ajaxMajorEntitiesList"),
 //                             "container-Major", $params, 'formMajor');

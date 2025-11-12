@@ -36,14 +36,13 @@ require_once("modules/xmppmaster/includes/html.inc.php");
 $p = new PageGenerator(_T("Entity Compliance", "updates"));
 $p->setSideMenu($sidemenu);
 $p->display();
-
-$refresh = new RefreshButton();
-print "<br/>";
-$refresh->display();
+// $refresh = new RefreshButton();
+// print "<br/>";
+// $refresh->display();
 
 $ajax = new AjaxFilter(urlStrRedirect("updates/updates/ajaxEntityCompliance"), "container", array('source' => 'xmppmaster'), 'formRunning');
 
-$ajax->setRefresh($refresh->refreshtime());
+// $ajax->setRefresh($refresh->refreshtime());
 $ajax->display();
 $ajax->displayDivToUpdate();
 //
