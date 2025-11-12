@@ -41,7 +41,7 @@ $refresh = new RefreshButton();
 print "<br/>";
 $refresh->display();
 
-$ajax = new AjaxFilter(urlStrRedirect("admin/admin/ajaxEntitiesManagement"), "container", array('source' => 'xmppmaster'), 'formRunning');
+$ajax = new AjaxFilter(urlStrRedirect("updates/updates/ajaxEntityCompliance"), "container", array('source' => 'xmppmaster'), 'formRunning');
 
 $ajax->setRefresh($refresh->refreshtime());
 $ajax->display();
