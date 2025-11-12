@@ -115,6 +115,16 @@ Description: Pulse 2 common backuppc database files.
  .
  This package contains Pulse 2 common BackupPC database files.
 
+Package: python3-pulse2-common-database-mastering
+Architecture: all
+Section: python
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version})
+Description: Medulla common mastering database files
+ Medulla is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package contains Medulla common mastering database files.
+
 Package: python3-pulse2-common-database
 Architecture: all
 Section: python

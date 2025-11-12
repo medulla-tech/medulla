@@ -850,6 +850,23 @@ This package contains Pulse 2 common admin database files
 
 #--------------------------------------------------------------------
 
+%package -n     python3-pulse2-common-database-mastering
+Summary:        Pulse 2 common mastering database files
+Group:          System/Servers
+Requires:       pulse2-common = %version-%release
+Requires:       python3-pulse2-common-database = %version-%release
+
+Obsoletes:  python-pulse2-common-database-mastering < 4.7.0
+Provides:   python-pulse2-common-database-mastering = %version-%release
+
+%description -n python3-pulse2-common-database-mastering
+This package contains Pulse 2 common mastering database files
+
+%files -n python3-pulse2-common-database-mastering
+%python3_sitelib/pulse2/database/mastering
+
+#--------------------------------------------------------------------
+
 %package -n     python3-pulse2-common-database
 Summary:        Pulse 2 common database files
 Group:          System/Servers
