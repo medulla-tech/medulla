@@ -2,28 +2,45 @@
 require("localSidebar.php");
 require("graph/navbar.inc.php");
 
-require_once("modules/updates/includes/xmlrpc.php");
-require_once("modules/admin/includes/xmlrpc.php");
-require_once("modules/xmppmaster/includes/xmlrpc.php");
-require_once("modules/updates/includes/updates.inc.php");
+// require_once("modules/updates/includes/xmlrpc.php");
+// require_once("modules/admin/includes/xmlrpc.php");
+// require_once("modules/xmppmaster/includes/xmlrpc.php");
+// require_once("modules/updates/includes/updates.inc.php");
 
 global $maxperpage;
-$entityuuid = (isset($_GET['entity'])) ? htmlentities($_GET['entity']) : "UUID0";
-$start = (isset($_GET['start'])) ? htmlentities($_GET['start']) : 0;
-$end = (isset($_GET['end'])) ? htmlentities($_GET['end']) : $maxperpage;
-$filter = (isset($_GET['filter'])) ? htmlentities($_GET['filter']) : "";
-$params = ["source" => "xmppmaster"];
+
 
 $p = new PageGenerator(_T("Entity Compliance", "updates"));
 $p->setSideMenu($sidemenu);
 $p->display();
-$timerefresh= 90;
-$_GET["source"] = "xmppmaster";
-$ajax = new AjaxPagebartitlletime(urlStrRedirect("updates/updates/ajaxMajorEntitiesList"),
-                                  "EntityCompliancediv",
-                                  getFilteredGetParams(),
-                                  $timerefresh,
-                                  "circularProgress");
-$ajax->display();
 
+$p = new TabbedPageGenerator();
+//$p->setSideMenu($sidemenu);
+$p->addTab("tabwin", _T("Os Windows", "updates"), "",
+           "modules/updates/updates/major/osWindows.php", array());
+
+$p->addTab("tabwinserv", _T("OS Windows Server", "dyngroup"), "",
+           "modules/updates/updates/major/osWindowsserveur.php", array());
+/*
+$p->addTab("tabrhel", _T("OS Rhel", "dyngroup"), "",
+           "modules/updates/updates/major/Redhat.php", array());
+
+$p->addTab("tabalma", _T("OS Alma", "dyngroup"), "",
+           "modules/updates/updates/major/Alma.php", array());
+
+$p->addTab("tabcentosos", _T("OS CentOS", "dyngroup"), "",
+           "modules/updates/updates/major/Centos.php", array());
+
+$p->addTab("tabdebian", _T("OS Debian", "dyngroup"), "",
+           "modules/updates/updates/major/Debian.php", array());
+
+$p->addTab("tabsuse", _T("OS Suse", "dyngroup"), "",
+           "modules/updates/updates/major/Suse.php", array());
+
+$p->addTab("tabubuntu", _T("OS Ubuntu", "dyngroup"), "",
+           "modules/updates/updates/major/Ubuntu.php", array());
+
+$p->addTab("tabfedora", _T("OS Fedora", "dyngroup"), "",
+           "modules/updates/updates/major/Fedora.php", array());*/
+$p->display();
 ?>

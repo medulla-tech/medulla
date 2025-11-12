@@ -125,6 +125,57 @@ $page = new Page("MajorEntitiesList", _T('os updates', 'updates'));
 $page->setFile("modules/updates/updates/MajorEntitiesList.php");
 $submod->addPage($page);
 
+
+/*
+$page = new Page("testentitylist",_T("testentitylist","updates"));
+$page->setFile("modules/updates/updates/testentitylist.php");*/
+
+$tab = new Tab("tabwin", _T("oswindows", "updates"));
+$page->addTab($tab);
+
+$tab = new Tab("tabwinserv", _T("osWindowsserveur", "dyngroup"));
+$page->addTab($tab);
+
+$tab = new Tab("tabalma", _T("OS ALMA", "dyngroup"));
+$page->addTab($tab);
+
+$tab = new Tab("tabrhel", _T("OS Redhat", "dyngroup"));
+$page->addTab($tab);
+
+
+$tab = new Tab("tabcentosos", _T("OS CentOS", "dyngroup"));
+$page->addTab($tab);
+
+$tab = new Tab("tabdebian", _T("OS Debian", "dyngroup"));
+$page->addTab($tab);
+
+$tab = new Tab("tabsuse", _T("OS Suse", "dyngroup"));
+$page->addTab($tab);
+
+$tab = new Tab("tabubuntu", _T("OS Ubuntu", "dyngroup"));
+$page->addTab($tab);
+
+$tab = new Tab("tabfedora", _T("OS Fedora", "dyngroup"));
+$page->addTab($tab);
+
+
+$submod->addPage($page);
+
+
+
+
+$page = new Page("ajaxMajorEntitiesList", _T('Entities Major Compliance', 'updates'));
+$page->setFile("modules/updates/updates/ajaxMajorEntitiesList.php");
+$submod->addPage($page);
+
+
+
+$page = new Page("ajaxMajorEntitiesListServ", _T('Entities Major Compliance', 'updates'));
+$page->setFile("modules/updates/updates/ajaxMajorEntitiesListServ.php");
+$submod->addPage($page);
+
+//---------------------------------------------------------------
+
 $page = new Page("updatesListWin", _T('Manage Updates Lists', 'updates'));
 $page->setFile("modules/updates/updates/updatesListWin.php");
 $submod->addPage($page);
@@ -232,11 +283,6 @@ $submod->addPage($page);*/
 
 
 
-$page = new Page("ajaxMajorEntitiesList", _T('Entities Major Compliance', 'updates'));
-$page->setFile("modules/updates/updates/ajaxMajorEntitiesList.php");
-$submod->addPage($page);
-
-
 /*
 
 $page = new Page("ajaxMajorEntitiesList", _T("Entities Major Compliance", "updates"));
@@ -318,6 +364,13 @@ $submod->addPage($page);
 
 $page = new Page("ajaxApproveProduct", _T("choise product for entity", "updates"));
 $page->setFile("modules/updates/updates/ajaxApproveProduct.php");
+$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
+$submod->addPage($page);
+
+
+
+$page = new Page("ajaxUpdateCreateGroup", _T("Create GRP update", "updates"));
+$page->setFile("modules/updates/updates/ajaxUpdateCreateGroup.php");
 $page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
 $submod->addPage($page);
 

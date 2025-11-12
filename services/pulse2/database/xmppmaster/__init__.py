@@ -17221,7 +17221,473 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             return {}
 
     @DatabaseHelper._sessionm
-    def get_os_xmpp_update_major_stats(self, session, presence=False):
+    def get_os_update_major_stats_win(self, session, entitylist=None, presence=False):
+        """
+        Statistiques de mise à jour Windows 10 / 11 (client uniquement).
+        Args:
+            session: session SQLAlchemy.
+            presence: si True, filtre uniquement les machines activées.
+        Returns:
+            dict: statistiques par entité.
+        """
+        try:
+            results = {"entity": {}}
+            presence_filter = "AND mw.enabled = 1" if presence else ""
+
+            # Requête pour récupérer les données brutes
+            query = f"""
+                SELECT
+                    mw.ent_id,
+                    e.complete_name,
+                    mw.old_version,
+                    mw.new_version,
+                    mw.oldcode,
+                    mw.is_active
+                FROM xmppmaster.up_major_win mw
+                INNER JOIN xmppmaster.glpi_entity e ON e.glpi_id = mw.ent_id
+                WHERE mw.target_name LIKE 'Win%' AND mw.target_name NOT LIKE '%Server%'
+                {presence_filter}
+            """
+            rows = session.execute(query).fetchall()
+
+            # Initialisation des catégories
+            categories = ["W10to10", "W10to11", "W11to11", "UPDATED", "non_conforme", "autre_cas"]
+
+            # Traitement des résultats bruts en Python
+            for row in rows:
+                ent_id = row.ent_id
+                ent_name = row.complete_name
+                old_version = row.old_version
+                new_version = row.new_version
+                oldcode = row.oldcode
+                is_active = row.is_active
+                logger.error(f"old_version{old_version}  new_version{new_version} oldcode {oldcode}")
+                # Détermination de la catégorie
+                if old_version == "10" and new_version == "10" and not oldcode.startswith('22H2'):
+                    category = "W10to10"
+                elif old_version == "10" and new_version == "11":
+
+                    if is_active == "False":
+                        category = "non_conforme"
+                    else:
+                        category = "W10to11"
+
+                elif old_version == "11" and not oldcode.startswith('24H2'):
+                    category = "W11to11"
+
+                elif old_version == 11 and oldcode.startswith('24H2'):
+
+                    category = "UPDATED"
+                else:
+                    category = "autre_cas"
+
+
+                # Mise à jour des résultats
+                if ent_name not in results["entity"]:
+                    results["entity"][ent_name] = {
+                        "entity_id": ent_id,
+                        "name": ent_name,
+                        "count": 0,
+                        "W10to10": 0,
+                        "W10to11": 0,
+                        "W11to11": 0,
+                        "UPDATED": 0,
+                        "non_conforme": 0,
+                        "autre_cas" : 0,
+                        "non_inventorie" : 0
+                    }
+
+                results["entity"][ent_name][category] += 1
+
+            # Récupération du nombre total de machines Windows par entité
+            total_query = f"""
+                            SELECT
+                                e.complete_name, COUNT(*) AS count
+                            FROM
+                                xmppmaster.machines m
+                                    inner JOIN
+                                xmppmaster.glpi_entity e ON e.id = m.glpi_entity_id
+                            WHERE
+                                m.platform LIKE 'Microsoft Windows%'
+                                AND m.platform NOT LIKE '%Server%' {presence_filter}
+                            GROUP BY e.complete_name;
+            """
+            for row in session.execute(total_query).fetchall():
+                ent_name = row.complete_name
+                if ent_name in results["entity"]:
+                    results["entity"][ent_name]["count"] = row.count
+
+            # Calcul de la conformité et de la complétude
+            for ent_data in results["entity"].values():
+                total = int(ent_data["count"])
+
+                definie = sum(ent_data[c] for c in ["W10to10",
+                                                    "W10to11",
+                                                    "W11to11",
+                                                    "UPDATED",
+                                                    "non_conforme",
+                                                    "autre_cas"])
+
+                ent_data["conformite"] = round(((ent_data['UPDATED']) / definie * 100), 2) if definie else 0.0
+                ent_data["non_inventorie"] = total - sum(ent_data[c] for c in [ "W10to10",
+                                                                                "W10to11",
+                                                                                "W11to11",
+                                                                                "UPDATED",
+                                                                                "non_conforme",
+                                                                                "autre_cas"])
+
+            return results
+
+        except Exception as e:
+            logger.error(f"Erreur stats Windows : {e}")
+            logger.error(traceback.format_exc())
+            return {}
+
+
+    @DatabaseHelper._sessionm
+    def get_os_update_major_stats_win_serv(self, session, entitylist=None, presence=False):
+        """
+        Statistiques de mise à jour Windows 10 / 11 (client uniquement).
+        Args:
+            session: session SQLAlchemy.
+            presence: si True, filtre uniquement les machines activées.
+        Returns:
+            dict: statistiques par entité.
+        """
+        try:
+            results = {"entity": {}}
+            presence_filter = "AND mw.enabled = 1" if presence else ""
+
+            # Requête pour récupérer les données brutes
+            query = f"""
+                SELECT
+                    mw.ent_id,
+                    e.complete_name,
+                    mw.old_version,
+                    mw.new_version,
+                    mw.oldcode,
+                    mw.is_active
+                FROM xmppmaster.up_major_win mw
+                INNER JOIN xmppmaster.glpi_entity e ON e.glpi_id = mw.ent_id
+                WHERE mw.platform LIKE 'Microsoft Windows Server%'
+                {presence_filter}
+            """
+            rows = session.execute(query).fetchall()
+
+            # Initialisation des catégories
+            categories = ["MS25toMS25", "MS19toMS25", "MS16toMS25","MS12toMS25" "UPDATED", "non_conforme", "autre_cas"]
+            # Traitement des résultats bruts en Python
+            for row in rows:
+                ent_id = row.ent_id
+                ent_name = row.complete_name
+                old_version = row.old_version
+                new_version = row.new_version
+                oldcode = row.oldcode
+                is_active = row.is_active
+                logger.error(f"old_version{old_version}  new_version{new_version} oldcode {oldcode}")
+                # Détermination de la catégorie
+                if old_version == "MSO12" :
+                    if is_active == "False":
+                        category = "non_conforme"
+                    else:
+                        category = "MS12toMS25"
+
+                if old_version == "MSO16" :
+                    if is_active == "False":
+                        category = "non_conforme"
+                    else:
+                        category = "MS16toMS25"
+
+                elif old_version == "MSO19":
+                    if is_active == "False":
+                        category = "non_conforme"
+                    else:
+                        category = "MS19toMS25"
+
+                elif old_version == "MSO25" and not oldcode.startswith('24H2'):
+                    category = "MS25toMS25"
+
+                elif old_version == "MSO25" and oldcode.startswith('24H2'):
+                    category = "UPDATED"
+                else:
+                    category = "autre_cas"
+
+
+                # Mise à jour des résultats
+                if ent_name not in results["entity"]:
+                    results["entity"][ent_name] = {
+                        "entity_id": ent_id,
+                        "name": ent_name,
+                        "count": 0,
+                        "MS12toMS25": 0,
+                        "MS16toMS25": 0,
+                        "MS19toMS25": 0,
+                        "MS25toMS25": 0,
+                        "UPDATED": 0,
+                        "non_conforme": 0,
+                        "autre_cas" : 0,
+                        "non_inventorie" : 0
+                    }
+
+                results["entity"][ent_name][category] += 1
+
+            # Récupération du nombre total de machines Windows par entité
+            total_query = f"""
+                            SELECT
+                                e.complete_name, COUNT(*) AS count
+                            FROM
+                                xmppmaster.machines m
+                                    inner JOIN
+                                xmppmaster.glpi_entity e ON e.id = m.glpi_entity_id
+                            WHERE
+                                m.platform LIKE 'Microsoft Windows Server%' {presence_filter}
+                            GROUP BY e.complete_name;
+            """
+            for row in session.execute(total_query).fetchall():
+                ent_name = row.complete_name
+                if ent_name in results["entity"]:
+                    results["entity"][ent_name]["count"] = row.count
+
+            # Calcul de la conformité et de la complétude
+            for ent_data in results["entity"].values():
+                total = int(ent_data["count"])
+
+                definie = sum(ent_data[c] for c in ["MS12toMS25",
+                                                    "MS16toMS25",
+                                                    "MS19toMS25",
+                                                    "MS25toMS25",
+                                                    "UPDATED",
+                                                    "non_conforme",
+                                                    "autre_cas"])
+
+                ent_data["conformite"] = round(((ent_data['UPDATED']) / definie * 100), 2) if definie else 0.0
+                ent_data["non_inventorie"] = total - sum(ent_data[c] for c in [ "MS12toMS25",
+                                                                                "MS16toMS25",
+                                                                                "MS19toMS25",
+                                                                                "MS25toMS25",
+                                                                                "UPDATED",
+                                                                                "non_conforme",
+                                                                                "autre_cas"])
+
+            return results
+
+        except Exception as e:
+            logger.error(f"Erreur stats Windows : {e}")
+            logger.error(traceback.format_exc())
+            return {}
+
+    @DatabaseHelper._sessionm
+    def get_os_update_major_stats(self, session, presence=False):
+        """
+        Récupère les statistiques de mise à jour des systèmes d'exploitation Windows 10 et Windows 11,
+        en excluant les Windows Server.
+
+        Args:
+            session (sqlalchemy.orm.session.Session): La session de base de données.
+            presence (bool, optional): Si True, filtre uniquement les machines activées. Par défaut False.
+
+        Returns:
+            dict: Un dictionnaire contenant les statistiques par entité.
+        """
+        try:
+            results = {"entity": {}}
+            cols = ["W10to10", "W10to11", "W11to11", "UPDATED", "undefined"]
+
+            # Filtre de présence
+            presence_filter = "AND xma.enabled = 1" if presence else ""
+
+            # =========================
+            # 1 Total des machines Windows non Server
+            # =========================
+            total_os_sql = f"""
+                SELECT
+                    xe.id AS entity_id,
+                    xe.name AS entity_name,
+                    xe.complete_name AS complete_name,
+                    COUNT(*) AS count
+                FROM
+                    xmppmaster.machines AS xma
+                INNER JOIN xmppmaster.glpi_entity AS xe
+                    ON xe.id = xma.glpi_entity_id
+                WHERE
+                    xma.platform LIKE '%Windows%'
+                    AND xma.platform NOT LIKE '%Server%'
+                    {presence_filter}
+                GROUP BY xe.id, xe.name, xe.complete_name;
+            """
+
+            for row in session.execute(total_os_sql):
+                results["entity"][row.complete_name] = {
+                    "entity_id": int(row.entity_id),
+                    "name": row.entity_name,
+                    "count": int(row.count)
+                }
+
+            # =========================
+            # 2 Statistiques de mise à jour par entité
+            # =========================
+            entity_sql = f"""
+                SELECT
+                    ent_id,
+                    entity AS entity_name,
+                    entity AS complete_name,
+                    COUNT(*) AS nbwin,
+                    CASE
+                        WHEN old_version = 10 AND new_version = 10 AND oldcode NOT LIKE '22H2' THEN 'W10to10'
+                        WHEN old_version = 10 AND new_version = 11 THEN 'W10to11'
+                        WHEN old_version = 11 AND oldcode NOT LIKE '24H2' THEN 'W11to11'
+                        WHEN old_version = new_version AND oldcode = newcode THEN 'UPDATED'
+                        ELSE 'undefined'
+                    END AS os
+                FROM
+                    xmppmaster.up_machine_major_windows
+                WHERE
+                    old_version IS NOT NULL
+                    AND new_version IS NOT NULL
+                    {presence_filter}
+                GROUP BY ent_id, entity, os
+                ORDER BY complete_name, os;
+            """
+
+            for row in session.execute(entity_sql):
+                entity_data = results["entity"].setdefault(
+                    row.complete_name,
+                    {"entity_id": int(row.ent_id), "name": row.entity_name, "count": 0}
+                )
+                entity_data[row.os] = int(row.nbwin)
+
+            # =========================
+            # 3 Calcul des conformités et complétude
+            # =========================
+            for entity_name, data in results["entity"].items():
+                total = data.get("count", 0)
+
+                definie = sum(data.get(c, 0) for c in cols if c != "undefined")
+                non_conforme = sum(data.get(c, 0) for c in ["W10to10", "W10to11", "W11to11"])
+                undefined = max(total - definie, 0)
+
+                data["definie"] = definie
+                data["undefined"] = undefined
+                data["conformite"] = (
+                    round(((definie - non_conforme) / definie * 100), 2)
+                    if definie > 0 else 0.0
+                )
+
+                # Ajouter les clés manquantes pour cohérence
+                for col in cols:
+                    data.setdefault(col, 0)
+
+            logger.info(f"OS update stats calculées pour {len(results['entity'])} entités.")
+            return results
+
+        except Exception as e:
+            logger.error(f"Erreur lors de la récupération des statistiques OS : {e}")
+            logger.error(f"Traceback : {traceback.format_exc()}")
+            return {}
+
+
+    @DatabaseHelper._sessionm
+    def get_os_update_major_stats2(self, session, presence=False):
+        """
+        Statistiques de mise à jour Windows 10 / 11 (client uniquement).
+
+        Args:
+            session (sqlalchemy.orm.session.Session): session SQLAlchemy.
+            presence (bool): si True, filtre uniquement les machines activées.
+
+        Returns:
+            dict: statistiques par entité.
+        """
+        try:
+            results = {"entity": {}}
+            presence_filter = "AND mw.enabled = 1" if presence else ""
+
+            # Catégories Windows
+            categories = ["W10to10", "W10to11", "W11to11", "UPDATED", "undefined"]
+
+            # Requête principale avec toutes les catégories
+            categories_cte = " UNION ALL ".join([f"SELECT '{c}' AS category" for c in categories])
+            entity_sql = f"""
+                WITH categories AS ({categories_cte}),
+                data AS (
+                    SELECT
+                        mw.ent_id,
+                        e.complete_name,
+                        CASE
+                            WHEN mw.old_version = 10 AND mw.new_version = 10 AND mw.oldcode NOT LIKE '22H2' THEN 'W10to10'
+                            WHEN mw.old_version = 10 AND mw.new_version = 11 AND mw.is_active != 'False' THEN 'W10to11'
+                            WHEN mw.old_version = 10 AND mw.new_version = 11 AND mw.is_active = 'False' THEN 'W10to11'
+                            WHEN mw.old_version = 11 AND mw.oldcode NOT LIKE '24H2' THEN 'W11to11'
+                            WHEN mw.old_version = 11 AND mw.oldcode LIKE '24H2' THEN 'UPDATED'
+                            ELSE 'undefined'
+                        END AS category
+                    FROM xmppmaster.up_major_win mw
+                    INNER JOIN xmppmaster.glpi_entity e ON e.glpi_id = mw.ent_id
+                    WHERE mw.target_name LIKE 'Win%' AND mw.target_name NOT LIKE '%Server%'
+                    {presence_filter}
+                )
+                SELECT
+                    COALESCE(d.complete_name, e.complete_name) AS complete_name,
+                    COALESCE(d.ent_id, e.glpi_id) AS ent_id,
+                    c.category,
+                    COUNT(d.category) AS nb
+                FROM categories c
+                LEFT JOIN data d ON d.category = c.category
+                LEFT JOIN xmppmaster.glpi_entity e ON e.glpi_id = COALESCE(d.ent_id, e.glpi_id)
+                GROUP BY COALESCE(d.ent_id, e.glpi_id), COALESCE(d.complete_name, e.complete_name), c.category
+                ORDER BY complete_name, category;
+            """
+
+            # Exécution de la requête
+            rows = session.execute(entity_sql).fetchall()
+
+            # Initialisation du dictionnaire
+            for row in rows:
+                ent = row.complete_name
+                results["entity"].setdefault(ent, {"count": 0})
+                results["entity"][ent].setdefault("entity_id", int(row.ent_id))
+                results["entity"][ent].setdefault("name", ent)
+                results["entity"][ent][row.category] = int(row.nb)
+
+            # Récupérer le nombre total de machines Windows par entité
+            total_sql = f"""
+                SELECT
+                    e.complete_name,
+                    COUNT(*) AS count
+                FROM xmppmaster.machines m
+                INNER JOIN xmppmaster.glpi_entity e ON e.glpi_id = m.glpi_entity_id
+                WHERE m.platform LIKE '%Windows%' {presence_filter}
+                GROUP BY e.complete_name;
+            """
+            for row in session.execute(total_sql).fetchall():
+                ent = row.complete_name
+                results["entity"].setdefault(ent, {})
+                results["entity"][ent]["count"] = int(row.count)
+
+            # Calcul conformité et complétude
+            for ent, data in results["entity"].items():
+                total = data.get("count", 0)
+                definie = sum(data.get(c, 0) for c in categories if c != "undefined")
+                undefined = max(total - definie, 0)
+                non_conforme = sum(data.get(c, 0) for c in ["W10to10", "W10to11", "W11to11"])
+                data["definie"] = definie
+                data["undefined"] = undefined
+                data["conformite"] = round(((definie - non_conforme) / definie * 100), 2) if definie else 0.0
+
+                # Assurer que toutes les catégories existent
+                for c in categories:
+                    data.setdefault(c, 0)
+
+            return results
+
+        except Exception as e:
+            logger.error(f"Erreur stats Windows : {e}")
+            logger.error(traceback.format_exc())
+            return {}
+
+
+    @DatabaseHelper._sessionm
+    def get_os_xmpp_update_major_stats3(self, session, presence=False):
         """
         Récupère les statistiques de mise à jour majeure des systèmes d'exploitation Windows 10 et Windows 11.
 
@@ -17335,7 +17801,137 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             return {}
 
     @DatabaseHelper._sessionm
-    def get_os_update_major_stats(self, session, presence=False):
+    def get_os_update_major_stats1(self, session, typeos="win", presence=False):
+        """
+        Récupère les statistiques de mise à jour des OS Windows (client) ou Windows Server.
+        Affiche toutes les catégories même si aucune machine ne correspond (nb = 0).
+        Calcule également le nombre total de machines par entité pour évaluer la complétude.
+
+        Args:
+            session (sqlalchemy.orm.session.Session): session SQLAlchemy.
+            typeos (str): "win" pour Windows client, "MSO" pour Windows Server.
+            presence (bool): si True, filtre les machines activées (enabled = 1).
+        """
+        try:
+            results = {"entity": {}}
+            presence_filter = "AND xma.enabled = 1" if presence else ""
+
+            # =========================
+            # 1️⃣ Sélection du filtre OS
+            # =========================
+            if typeos == "win":
+                platform_filter = "xma.platform LIKE '%Windows%' AND xma.platform NOT LIKE '%Server%'"
+                os_filter = "mw.target_name LIKE 'Win%' AND mw.target_name NOT LIKE '%Server%'"
+                categories = ["W10to10", "W10to11", "W10to11_BLOCKED", "W11to11", "UPDATED", "undefined"]
+                case_stmt = """
+                    CASE
+                        WHEN mw.old_version = 10 AND mw.new_version = 10 AND mw.oldcode NOT LIKE '22H2' THEN 'W10to10'
+                        WHEN mw.old_version = 10 AND mw.new_version = 11 AND mw.is_active != 'False' THEN 'W10to11'
+                        WHEN mw.old_version = 10 AND mw.new_version = 11 AND mw.is_active = 'False' THEN 'W10to11_BLOCKED'
+                        WHEN mw.old_version = 11 AND mw.oldcode NOT LIKE '24H2' THEN 'W11to11'
+                        WHEN mw.old_version = 11 AND mw.oldcode LIKE '24H2' THEN 'UPDATED'
+                        ELSE 'undefined'
+                    END AS category
+                """
+            elif typeos == "MSO":
+                platform_filter = "xma.platform LIKE '%Server%'"
+                os_filter = "mw.target_name LIKE '%Win_Server%'"
+                categories = ["S12to25", "S16to25", "S19to25", "S22to25", "S25to25", "S_UPDATED", "undefined"]
+                case_stmt = """
+                    CASE
+                        WHEN mw.old_version = 'MOS12' AND mw.new_version LIKE 'MOS25' AND mw.is_active != 'False' THEN 'S12to25'
+                        WHEN mw.old_version = 'MOS16' AND mw.new_version LIKE 'MOS25' AND mw.is_active != 'False' THEN 'S16to25'
+                        WHEN mw.old_version = 'MOS19' AND mw.new_version LIKE 'MOS25' AND mw.is_active != 'False' THEN 'S19to25'
+                        WHEN mw.old_version = 'MOS22' AND mw.new_version LIKE 'MOS25' AND mw.is_active != 'False' THEN 'S22to25'
+                        WHEN mw.old_version = 'MOS25' AND mw.new_version LIKE 'MOS25' AND mw.oldcode NOT LIKE '24H2' THEN 'S25to25'
+                        WHEN mw.old_version = 'MOS25' AND mw.new_version LIKE 'MOS25' AND mw.oldcode LIKE '24H2' THEN 'S_UPDATED'
+                        ELSE 'undefined'
+                    END AS category
+                """
+            else:
+                raise ValueError(f"typeos inconnu : {typeos}")
+
+            # =========================
+            # 2️⃣ Total des machines par entité
+            # =========================
+            total_os_sql = f"""
+                SELECT
+                    xe.id AS entity_id,
+                    xe.name AS entity_name,
+                    xe.complete_name AS complete_name,
+                    COUNT(*) AS count
+                FROM xmppmaster.machines AS xma
+                INNER JOIN xmppmaster.glpi_entity AS xe
+                    ON xe.glpi_id = xma.glpi_entity_id
+                WHERE {platform_filter} {presence_filter}
+                GROUP BY xe.id, xe.name, xe.complete_name;
+            """
+            for row in session.execute(total_os_sql):
+                results["entity"][row.complete_name] = {
+                    "entity_id": int(row.entity_id),
+                    "name": row.entity_name,
+                    "count": int(row.count),
+                }
+
+            # =========================
+            # 3️⃣ Statistiques avec toutes les catégories
+            # =========================
+            categories_cte = " UNION ALL ".join([f"SELECT '{c}' AS category" for c in categories])
+            entity_sql = f"""
+                WITH categories AS ({categories_cte}),
+                data AS (
+                    SELECT
+                        mw.ent_id,
+                        e.complete_name,
+                        {case_stmt}
+                    FROM xmppmaster.up_major_win mw
+                    INNER JOIN xmppmaster.glpi_entity e ON e.glpi_id = mw.ent_id
+                    WHERE {os_filter}
+                )
+                SELECT
+                    COALESCE(d.ent_id, 0) AS ent_id,
+                    COALESCE(d.complete_name, 'UNKNOWN') AS complete_name,
+                    c.category,
+                    COUNT(d.category) AS nb
+                FROM categories c
+                LEFT JOIN data d ON d.category = c.category
+                GROUP BY d.ent_id, d.complete_name, c.category
+                ORDER BY d.complete_name, c.category;
+            """
+            logger.debug(f"Requête SQL exécutée : {entity_sql}")
+
+            for row in session.execute(entity_sql):
+                entity_data = results["entity"].setdefault(
+                    row.complete_name,
+                    {"entity_id": int(row.ent_id), "name": row.complete_name, "count": 0},
+                )
+                entity_data[row.category] = int(row.nb)
+
+            # =========================
+            # 4️⃣ Calcul conformité et complétude
+            # =========================
+            for name, data in results["entity"].items():
+                total = data.get("count", 0)
+                definie = sum(v for k, v in data.items() if k not in ("entity_id", "name", "count"))
+                undefined = max(total - definie, 0)
+                non_conforme = sum(
+                    v for k, v in data.items()
+                    if any(tag in k for tag in categories if tag not in ["UPDATED", "S_UPDATED", "undefined"])
+                )
+                data["definie"] = definie
+                data["undefined"] = undefined
+                data["conformite"] = round(((definie - non_conforme) / definie * 100), 2) if definie else 0.0
+                data["completeness_rate"] = round(((total - undefined) / total * 100), 2) if total else 0.0
+
+            return results
+
+        except Exception as e:
+            logger.error(f"Erreur stats OS ({typeos}) : {e}")
+            logger.error(traceback.format_exc())
+            return {}
+
+    @DatabaseHelper._sessionm
+    def get_os_update_major_statsbon(self, session, presence=False):
         """
         Récupère les statistiques de mise à jour des systèmes d'exploitation Windows 10 et Windows 11.
 
@@ -17573,21 +18169,37 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
     def get_outdated_major_os_updates_by_entity(self,
                                                 session,
                                                 entity_id,
+                                                typeaction="windows",
                                                 start=0,
                                                 limit=-1,
                                                 filter="",
                                                 colonne=True):
         """
         Récupère les informations des machines dont les mises à jour majeures du système d'exploitation sont obsolètes ou déconseillées,
-        avec la possibilité de filtrer par entité ou nom d'hôte, et de paginer les résultats.
+        avec la possibilité de filtrer par entité, type de plateforme (Windows ou Windows Server), et nom d'hôte, ainsi que de paginer les résultats.
 
-        :param session: session SQLAlchemy (injectée automatiquement par le décorateur)
-        :param entity_id: ID de l'entité, ou None/-1 pour toutes les entités
-        :param filter: filtre sur le hostname (optionnel)
-        :param start: index de départ pour la pagination
-        :param limit: nombre de lignes à retourner (-1 = pas de limite)
-        :param colonne: si True, retourne les données par colonne, sinon par ligne
-        :return: dict contenant les résultats, avec nb_total_element, nb_element et les données
+        Cette fonction exécute une requête SQL pour identifier les machines nécessitant une mise à jour majeure de leur système d'exploitation,
+        en tenant compte du type de plateforme (Windows standard ou Windows Server) selon le paramètre `typeaction`.
+        Les résultats peuvent être retournés soit dans un format détaillé ligne par ligne, soit dans un format en colonnes.
+
+        Paramètres :
+            session (Session) : Objet de session SQLAlchemy pour l'interaction avec la base de données.
+            entity_id (int) : ID de l'entité pour filtrer les résultats. Si None ou -1, toutes les entités sont incluses.
+            typeaction (str) : Type de machines à filtrer :
+                - "windows" : Exclut les machines dont la plateforme (mx.platform) contient "Microsoft Windows Server".
+                - "serverwin" : Inclut uniquement les machines dont la plateforme (mx.platform) contient "Microsoft Windows Server".
+            start (int) : Index de départ pour la pagination.
+            limit (int) : Nombre maximum de lignes à retourner. Si -1, aucune limite n'est appliquée.
+            filter (str) : Filtre optionnel sur le nom d'hôte (hostname).
+            colonne (bool) : Si True, retourne les données par colonne. Sinon, retourne les données par ligne.
+
+        Retourne :
+            dict : Un dictionnaire contenant :
+                - 'nb_total_element' : Nombre total de machines correspondantes (avant pagination).
+                - 'nb_element' : Nombre de machines retournées dans cette requête.
+                - Si 'colonne' est True : Un dictionnaire où chaque clé est un nom de colonne et chaque valeur est une liste des valeurs de cette colonne.
+                - Si 'colonne' est False : Une liste de dictionnaires, chaque dictionnaire représentant une ligne de résultats avec les clés suivantes :
+                    'xmpp_id', 'glpi_id', 'ent_id', 'hostname', 'enabled', 'jid', 'serial', 'platform', 'name', 'comment', 'entity', 'lang_code', 'iso_filename', 'package_uuid', 'old_version', 'new_version', 'oldcode', 'newcode', 'isolang'.
         """
         sql = '''
             SELECT SQL_CALC_FOUND_ROWS
@@ -17631,26 +18243,37 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                     s.name NOT LIKE '%False%'
                     OR NOT SUBSTRING_INDEX(s.name, '-', -1) != '11'
                 )
-            ORDER BY mx.hostname
         '''
 
+        # Ajouter la condition sur typeaction
+        if typeaction == "windows":
+            sql += " AND mx.platform NOT LIKE '%Microsoft Windows Server%'"
+        elif typeaction == "serverwin":
+            sql += " AND mx.platform LIKE '%Microsoft Windows Server%'"
+
+        # Ajouter le filtre sur le nom d'hôte si nécessaire
+        if filter:
+            sql += " AND mx.hostname LIKE :filter"
+
+        # Ajouter la clause ORDER BY
+        sql += " ORDER BY mx.hostname"
+
+        # Ajouter la pagination
         if limit != -1:
             sql += " LIMIT :limit OFFSET :start"
 
         sql_text = text(sql)
         params = {
             'entity_id': entity_id if entity_id is not None else -1,
-            'filter': f"%{filter}%",
-            'limit': int(limit),
+            'filter': f"%{filter}%" if filter else "%",
+            'limit': int(limit) if limit != -1 else 18446744073709551615,
             'start': int(start)
         }
 
-        logger.debug(
-            "Executing SQL query for outdated major OS updates: %s", sql)
+        logger.debug("Executing SQL query for outdated major OS updates: %s", sql)
         logger.debug("Parameters: %s", params)
 
         rows = session.execute(sql_text, params).fetchall()
-
         count_sql = text("SELECT FOUND_ROWS();")
         total = session.execute(count_sql).scalar()
 
@@ -17660,48 +18283,154 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         }
 
         if colonne:
-            result.update({key: [row[key] if row[key] is not None else "" for row in rows]
-                          for key in rows[0].keys()} if rows else {})
+            if rows:
+                result.update({key: [row[key] if row[key] is not None else "" for row in rows] for key in rows[0].keys()})
+            else:
+                result.update({})
         else:
             result['details'] = [dict(row._mapping) for row in rows]
 
         return result
 
+    # @DatabaseHelper._sessionm
+    # def get_outdated_major_os_updates_by_entity(self,
+    #                                             session,
+    #                                             entity_id,
+    #                                             typeaction,
+    #                                             start=0,
+    #                                             limit=-1,
+    #                                             filter="",
+    #                                             # colonne=True):
+    #     """
+    #     Récupère les informations des machines dont les mises à jour majeures du système d'exploitation sont obsolètes ou déconseillées,
+    #     avec la possibilité de filtrer par entité ou nom d'hôte, et de paginer les résultats.
+    #
+    #     :param session: session SQLAlchemy (injectée automatiquement par le décorateur)
+    #     :param entity_id: ID de l'entité, ou None/-1 pour toutes les entités
+    #     :param filter: filtre sur le hostname (optionnel)
+    #     :param start: index de départ pour la pagination
+    #     :param limit: nombre de lignes à retourner (-1 = pas de limite)
+    #     :param colonne: si True, retourne les données par colonne, sinon par ligne
+    #     :return: dict contenant les résultats, avec nb_total_element, nb_element et les données
+    #     """
+    #     sql = '''
+    #         SELECT SQL_CALC_FOUND_ROWS
+    #             mx.id AS xmpp_id,
+    #             m.id AS glpi_id,
+    #             e.id AS ent_id,
+    #             mx.hostname,
+    #             mx.enabled,
+    #             mx.jid,
+    #             mx.uuid_serial_machine AS serial,
+    #             mx.platform AS platform,
+    #             s.name,
+    #             s.comment,
+    #             e.completename AS entity,
+    #             lc.lang_code,
+    #             lc.iso_filename,
+    #             lc.package_uuid,
+    #             SUBSTRING(s.name, LOCATE('_', s.name) + 1, LOCATE('@', s.name) - LOCATE('_', s.name) - 1) AS old_version,
+    #             SUBSTRING_INDEX(s.name, '-', -1) AS new_version,
+    #             SUBSTRING_INDEX(SUBSTRING_INDEX(s.name, '@', 2), '@', -1) AS oldcode,
+    #             SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(s.name, '@', 5), '@', -1), '_', 2), '_', -1) AS newcode,
+    #             SUBSTRING_INDEX(SUBSTRING_INDEX(s.name, '@', 3), '@', -1) AS isolang
+    #         FROM xmppmaster.local_glpi_items_softwareversions si
+    #         JOIN xmppmaster.local_glpi_softwareversions sv ON si.softwareversions_id = sv.id
+    #         JOIN xmppmaster.local_glpi_machines m ON si.items_id = m.id
+    #         JOIN xmppmaster.local_glpi_softwares s ON sv.softwares_id = s.id
+    #         JOIN xmppmaster.local_glpi_entities e ON e.id = m.entities_id
+    #         JOIN xmppmaster.machines mx ON NULLIF(REPLACE(mx.uuid_inventorymachine, 'UUID', ''),'') = si.items_id
+    #         JOIN xmppmaster.up_packages_major_Lang_code lc
+    #             ON lc.lang_code = SUBSTRING_INDEX(SUBSTRING_INDEX(s.name, '@', 3), '@', -1)
+    #             AND lc.major = SUBSTRING(s.name, LENGTH(s.name) - LOCATE('-', REVERSE(s.name)) + 2)
+    #         WHERE
+    #             SUBSTRING_INDEX(s.name, '-', -1) > 10
+    #             AND (:entity_id IS NULL OR :entity_id = -1 OR e.id = :entity_id)
+    #             AND s.name LIKE 'Medulla\_%'
+    #             AND (
+    #                 SUBSTRING(s.name, LOCATE('_', s.name) + 1, LOCATE('@', s.name) - LOCATE('_', s.name) - 1) != SUBSTRING_INDEX(s.name, '@', -1)
+    #                 OR SUBSTRING_INDEX(SUBSTRING_INDEX(s.name, '@', 2), '@', -1) != SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(s.name, '@', 5), '@', -1), '_', 2), '_', -1)
+    #             )
+    #             AND (
+    #                 s.name NOT LIKE '%False%'
+    #                 OR NOT SUBSTRING_INDEX(s.name, '-', -1) != '11'
+    #             )
+    #         ORDER BY mx.hostname
+    #     '''
+    #
+    #     if limit != -1:
+    #         sql += " LIMIT :limit OFFSET :start"
+    #
+    #     sql_text = text(sql)
+    #     params = {
+    #         'entity_id': entity_id if entity_id is not None else -1,
+    #         'filter': f"%{filter}%",
+    #         'limit': int(limit),
+    #         'start': int(start)
+    #     }
+    #
+    #     logger.debug(
+    #         "Executing SQL query for outdated major OS updates: %s", sql)
+    #     logger.debug("Parameters: %s", params)
+    #
+    #     rows = session.execute(sql_text, params).fetchall()
+    #
+    #     count_sql = text("SELECT FOUND_ROWS();")
+    #     total = session.execute(count_sql).scalar()
+    #
+    #     result = {
+    #         'nb_total_element': total,
+    #         'nb_element': len(rows)
+    #     }
+    #
+    #     if colonne:
+    #         result.update({key: [row[key] if row[key] is not None else "" for row in rows]
+    #                       for key in rows[0].keys()} if rows else {})
+    #     else:
+    #         result['details'] = [dict(row._mapping) for row in rows]
+    #
+    #     return result
+
     @DatabaseHelper._sessionm
     def get_os_update_major_details(self,
                                     session,
                                     entity_id,
+                                    typeaction,
                                     filter="",
                                     start=0,
                                     limit=-1,
                                     colonne=True):
         """
-        Récupère les détails des machines avec des systèmes d'exploitation Windows à partir de la base de données XMPPMaster.
+            Récupère les détails des machines avec des systèmes d'exploitation Windows ou Windows Server à partir de la base de données XMPPMaster.
 
-        Cette fonction exécute une requête SQL pour récupérer des informations sur les machines
-        avec des systèmes d'exploitation Windows, y compris une colonne calculée 'os' qui
-        catégorise la version du système d'exploitation et indique les mises à jour majeures
-        nécessaires entre la version actuelle et la prochaine mise à jour majeure. Les résultats
-        peuvent être retournés soit dans un format détaillé ligne par ligne, soit dans un format
-        en colonnes, selon le paramètre 'colonne'.
+            Cette fonction exécute une requête SQL pour récupérer des informations sur les machines Windows,
+            y compris une colonne calculée 'update' qui catégorise les mises à jour majeures nécessaires entre la version actuelle et la prochaine.
+            Les résultats peuvent être retournés soit dans un format détaillé ligne par ligne, soit dans un format en colonnes, selon le paramètre 'colonne'.
 
-        Paramètres :
-            session (Session) : Objet de session SQLAlchemy pour l'interaction avec la base de données.
-            entity_id (int) : L'ID de l'entité pour filtrer les résultats.
-            filter (str) : Critères de filtrage supplémentaires pour filtrer par nom de machine.
-            start (int) : Le décalage pour commencer à retourner les lignes.
-            limit (int) : Le nombre maximum de lignes à retourner. Si -1, pas de limitation.
-            colonne (bool) : Si True, retourne les résultats dans un format en colonnes. La valeur par défaut est True.
+            Paramètres :
+                session (Session) : Objet de session SQLAlchemy pour l'interaction avec la base de données.
+                entity_id (int) : L'ID de l'entité pour filtrer les résultats.
+                typeaction (str) : Type de machines à filtrer :
+                    - "windows" : Exclut les machines dont la plateforme contient "Microsoft Windows Server".
+                    - "serverwin" : Inclut uniquement les machines dont la plateforme contient "Microsoft Windows Server".
+                filter (str) : Critères de filtrage supplémentaires pour filtrer par nom de machine.
+                start (int) : Le décalage pour commencer à retourner les lignes.
+                limit (int) : Le nombre maximum de lignes à retourner. Si -1, pas de limitation.
+                colonne (bool) : Si True, retourne les résultats dans un format en colonnes. La valeur par défaut est True.
 
-        Retourne :
-            dict : Un dictionnaire contenant le nombre de lignes correspondantes et soit
-                des résultats détaillés ligne par ligne, soit des résultats en colonnes,
-                selon le paramètre 'colonne'. La colonne 'update' indique les mises à jour majeures
-                nécessaires, telles que 'W10to10' pour une mise à jour entre versions de Windows 10,
-                'W10to11' pour une mise à jour de Windows 10 vers Windows 11, et 'W11to11' pour une
-                mise à jour entre versions de Windows 11.
+            Retourne :
+                dict : Un dictionnaire contenant :
+                    - 'nb_machine' : Le nombre total de machines correspondantes.
+                    - Si 'colonne' est True : Un dictionnaire de listes, où chaque clé est un nom de colonne et chaque valeur est une liste des valeurs de cette colonne.
+                    - Si 'colonne' est False : Une liste de dictionnaires, chaque dictionnaire représentant une ligne de résultats avec les clés suivantes :
+                        - 'id_machine', 'uuid_inventorymachine', 'entity', 'entity_id', 'machine', 'platform', 'package_id', 'installeur', 'version', 'update'.
+                La colonne 'update' indique les mises à jour majeures nécessaires :
+                    - 'W10to10' : Mise à jour entre versions de Windows 10.
+                    - 'W10to11' : Mise à jour de Windows 10 vers Windows 11.
+                    - 'W11to11' : Mise à jour entre versions de Windows 11.
+                    - 'not update' : Aucune mise à jour majeure nécessaire.
         """
-        # Nouvelle requête SQL
+        # Base de la requête SQL
         total_os_sql = '''
             SELECT
                 SQL_CALC_FOUND_ROWS
@@ -17726,14 +18455,19 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                 ent_id = :entity_id
         '''
 
-        # Ajouter la condition de filtre si le filtre n'est pas vide
+        # Ajouter la condition selon typeaction
+        if typeaction == "windows":
+            total_os_sql += " AND up_mach.platform NOT LIKE '%Microsoft Windows Server%'"
+        elif typeaction == "serverwin":
+            total_os_sql += " AND up_mach.platform LIKE '%Microsoft Windows Server%'"
+
+        # Ajouter le filtre sur le nom de la machine si nécessaire
         if filter:
             total_os_sql += " AND up_mach.hostname LIKE :filter"
 
-        # Ajouter ORDER BY et LIMIT/OFFSET si limit n'est pas -1
+        # Ajouter ORDER BY et LIMIT/OFFSET si nécessaire
         total_os_sql += " ORDER BY up_mach.hostname "
         if limit != -1:
-            logger.error("limit %s ", limit)
             total_os_sql += " LIMIT :limit OFFSET :start"
 
         # Convertir en texte pour la liaison des paramètres
@@ -17741,8 +18475,8 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
 
         # Journaliser la requête SQL avec les paramètres
         logger.debug("Executing SQL query: %s", total_os_sql)
-        logger.debug("With parameters: entity_id=%s, filter=%s, limit=%s, start=%s",
-                     entity_id, f"%{filter}%", limit, start)
+        logger.debug("With parameters: entity_id=%s, filter=%s, limit=%s, start=%s, typeaction=%s",
+                    entity_id, f"%{filter}%", limit, start, typeaction)
 
         # Exécuter la requête SQL avec les paramètres
         entity_result = session.execute(total_os_sql, {
@@ -17752,22 +18486,22 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             'start': start
         }).fetchall()
 
-        # Compter le nombre total d'éléments correspondants en utilisant FOUND_ROWS()
+        # Compter le nombre total d'éléments correspondants
         sql_count = text("SELECT FOUND_ROWS();")
         ret_count = session.execute(sql_count).scalar()
-        # Préparer le dictionnaire de résultats avec le nombre de lignes correspondantes
+
+        # Préparer le dictionnaire de résultats
         result = {
             'nb_machine': ret_count,
         }
 
         if colonne:
-            # Si colonne est True, retourner les résultats au format colonne
+            # Format colonne
             result.update({
                 'id_machine': [row.id_machine if row.id_machine is not None else "" for row in entity_result],
                 'uuid_inventorymachine': [row.uuid_inventorymachine if row.uuid_inventorymachine is not None else "" for row in entity_result],
                 'entity': [row.entity if row.entity is not None else "" for row in entity_result],
                 'entity_id': [row.entity_id if row.entity_id is not None else "" for row in entity_result],
-
                 'machine': [row.machine if row.machine is not None else "" for row in entity_result],
                 'platform': [row.platform if row.platform is not None else "" for row in entity_result],
                 'package_id': [row.package_id if row.package_id is not None else "" for row in entity_result],
@@ -17776,7 +18510,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
                 'update': [row.update if row.update is not None else "" for row in entity_result]
             })
         else:
-            # Si colonne est False, retourner les résultats détaillés au format ligne
+            # Format ligne
             result['details'] = [
                 {
                     'id_machine': row.id_machine if row.id_machine is not None else "",
@@ -17794,6 +18528,139 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             ]
 
         return result
+
+
+#     @DatabaseHelper._sessionm
+#     def get_os_update_major_details(self,
+#                                     session,
+#                                     entity_id,
+#                                     typeaction,
+#                                     filter="",
+#                                     start=0,
+#                                     limit=-1,
+#                                     colonne=True):
+#         """
+#
+#         ""Microsoft Windows Server
+#         Récupère les détails des machines avec des systèmes d'exploitation Windows à partir de la base de données XMPPMaster.
+#
+#         Cette fonction exécute une requête SQL pour récupérer des informations sur les machines
+#         avec des systèmes d'exploitation Windows, y compris une colonne calculée 'os' qui
+#         catégorise la version du système d'exploitation et indique les mises à jour majeures
+#         nécessaires entre la version actuelle et la prochaine mise à jour majeure. Les résultats
+#         peuvent être retournés soit dans un format détaillé ligne par ligne, soit dans un format
+#         en colonnes, selon le paramètre 'colonne'.
+#
+#         Paramètres :
+#             session (Session) : Objet de session SQLAlchemy pour l'interaction avec la base de données.
+#             entity_id (int) : L'ID de l'entité pour filtrer les résultats.
+#             filter (str) : Critères de filtrage supplémentaires pour filtrer par nom de machine.
+#             start (int) : Le décalage pour commencer à retourner les lignes.
+#             limit (int) : Le nombre maximum de lignes à retourner. Si -1, pas de limitation.
+#             colonne (bool) : Si True, retourne les résultats dans un format en colonnes. La valeur par défaut est True.
+#
+#         Retourne :
+#             dict : Un dictionnaire contenant le nombre de lignes correspondantes et soit
+#                 des résultats détaillés ligne par ligne, soit des résultats en colonnes,
+#                 selon le paramètre 'colonne'. La colonne 'update' indique les mises à jour majeures
+#                 nécessaires, telles que 'W10to10' pour une mise à jour entre versions de Windows 10,
+#                 'W10to11' pour une mise à jour de Windows 10 vers Windows 11, et 'W11to11' pour une
+#                 mise à jour entre versions de Windows 11.
+#         """
+#         # Nouvelle requête SQL
+#         total_os_sql = '''
+#             SELECT
+#                 SQL_CALC_FOUND_ROWS
+#                 up_mach.id_machine AS id_machine,
+#                 up_mach.glpi_id AS uuid_inventorymachine,
+#                 up_mach.hostname AS machine,
+#                 up_mach.update_id AS package_id,
+#                 up_mach.platform AS platform,
+#                 up_mach.entity AS entity,
+#                 up_mach.ent_id AS entity_id,
+#                 up_mach.kb AS installeur,
+#                 up_mach.oldcode AS version,
+#                 CASE
+#                     WHEN old_version = 10 AND new_version = 10 THEN 'W10to10'
+#                     WHEN old_version = 10 AND new_version = 11 THEN 'W10to11'
+#                     WHEN old_version = 11 AND oldcode NOT LIKE '24H2' THEN 'W11to11'
+#                     ELSE 'not update'
+#                 END AS 'update'
+#             FROM
+#                 xmppmaster.up_machine_major_windows up_mach
+#             WHERE
+#                 ent_id = :entity_id
+#
+#         '''
+#
+#         # Ajouter la condition de filtre si le filtre n'est pas vide
+#         if filter:
+#             total_os_sql += " AND up_mach.hostname LIKE :filter"
+#
+#         # Ajouter ORDER BY et LIMIT/OFFSET si limit n'est pas -1
+#         total_os_sql += " ORDER BY up_mach.hostname "
+#         if limit != -1:
+#             logger.error("limit %s ", limit)
+#             total_os_sql += " LIMIT :limit OFFSET :start"
+#
+#         # Convertir en texte pour la liaison des paramètres
+#         total_os_sql = text(total_os_sql)
+#
+#         # Journaliser la requête SQL avec les paramètres
+#         logger.debug("Executing SQL query: %s", total_os_sql)
+#         logger.debug("With parameters: entity_id=%s, filter=%s, limit=%s, start=%s",
+#                      entity_id, f"%{filter}%", limit, start)
+#
+#         # Exécuter la requête SQL avec les paramètres
+#         entity_result = session.execute(total_os_sql, {
+#             'entity_id': entity_id,
+#             'filter': f"%{filter}%",
+#             'limit': limit,
+#             'start': start
+#         }).fetchall()
+#
+#         # Compter le nombre total d'éléments correspondants en utilisant FOUND_ROWS()
+#         sql_count = text("SELECT FOUND_ROWS();")
+#         ret_count = session.execute(sql_count).scalar()
+#         # Préparer le dictionnaire de résultats avec le nombre de lignes correspondantes
+#         result = {
+#             'nb_machine': ret_count,
+#         }
+#
+#         if colonne:
+#             # Si colonne est True, retourner les résultats au format colonne
+#             result.update({
+#                 'id_machine': [row.id_machine if row.id_machine is not None else "" for row in entity_result],
+#                 'uuid_inventorymachine': [row.uuid_inventorymachine if row.uuid_inventorymachine is not None else "" for row in entity_result],
+#                 'entity': [row.entity if row.entity is not None else "" for row in entity_result],
+#                 'entity_id': [row.entity_id if row.entity_id is not None else "" for row in entity_result],
+#
+#                 'machine': [row.machine if row.machine is not None else "" for row in entity_result],
+#                 'platform': [row.platform if row.platform is not None else "" for row in entity_result],
+#                 'package_id': [row.package_id if row.package_id is not None else "" for row in entity_result],
+#                 'installeur': [row.installeur if row.installeur is not None else "" for row in entity_result],
+#                 'version': [row.version if row.version is not None else "" for row in entity_result],
+#                 'update': [row.update if row.update is not None else "" for row in entity_result]
+#             })
+#         else:
+#             # Si colonne est False, retourner les résultats détaillés au format ligne
+#             result['details'] = [
+#                 {
+#                     'id_machine': row.id_machine if row.id_machine is not None else "",
+#                     'entity': row.entity if row.entity is not None else "",
+#                     'entity_id': row.entity_id if row.entity_id is not None else "",
+#                     'uuid_inventorymachine': row.uuid_inventorymachine if row.uuid_inventorymachine is not None else "",
+#                     'machine': row.machine if row.machine is not None else "",
+#                     'platform': row.platform if row.platform is not None else "",
+#                     'package_id': row.package_id if row.package_id is not None else "",
+#                     'installeur': row.installeur if row.installeur is not None else "",
+#                     'version': row.version if row.version is not None else "",
+#                     'update': row.update if row.update is not None else ""
+#                 }
+#                 for row in entity_result
+#             ]
+#
+#         return result
 
     @DatabaseHelper._sessionm
     def getAlldistinctvaluetable(self, session, ctx, key: str, value: str) -> list:

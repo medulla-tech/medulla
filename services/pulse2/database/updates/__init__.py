@@ -602,8 +602,152 @@ class UpdatesDatabase(DatabaseHelper):
         return grey_list
 
 
+    # ######################## group update windows ########################
+    @DatabaseHelper._sessionm
+    def get_machines_update_grp(self,
+                                session,
+                                entity_id,
+                                type="windows",
+                                colonne="hardware_requirements"):
+        """
+        Dispatcher pour les fonctions spécialisées de récupération des machines.
+        Appelle la fonction appropriée en fonction de `type` et `colonne`.
+        """
+        try:
+            entity_id = int(entity_id)
+        except (ValueError, TypeError):
+            return {}
 
+        if type == "windows":
+            if colonne == "hardware_requirements":
+                return self._get_windows_hardware_requirements(session, entity_id)
+            elif colonne == "W11to11":
+                return self._get_windows_W11to11(session, entity_id)
+            elif colonne == "W10to10":
+                return self._get_windows_W10to10(session, entity_id)
+            elif colonne == "W10to11":
+                return self._get_windows_W10to11(session, entity_id)
+            elif colonne == "UPDATED":
+                return self._get_windows_UPDATED(session, entity_id)
 
+        return {}
+
+    # Fonction spécialisée pour hardware_requirements
+    def _get_windows_hardware_requirements(self, session, entity_id):
+        ret = {}
+        sql = """
+        SELECT hostname, glpi_id
+        FROM xmppmaster.up_major_win
+        WHERE ent_id = :ent_id
+            AND old_version = '10'
+            AND new_version = '11'
+            AND is_active = 'False';
+        """
+        rows = session.execute(sql, {"ent_id": entity_id})
+        for row in rows:
+            hostname = row.hostname
+            guid = row.glpi_id
+            if hostname:
+                id_uuid = f"UUID{guid}"
+                ret[f"{id_uuid}##{hostname}"] = {
+                    "hostname": hostname,
+                    "uuid": id_uuid,
+                }
+        return ret
+
+    # Fonction spécialisée pour W11to11
+    def _get_windows_W11to11(self, session, entity_id):
+        ret = {}
+        sql = """
+        SELECT hostname, glpi_id
+        FROM xmppmaster.up_major_win
+        WHERE ent_id = :ent_id
+            AND old_version = '11'
+            AND new_version = '11'
+            AND old_code != '25H2';
+        """
+        rows = session.execute(sql, {"ent_id": entity_id})
+        for row in rows:
+            hostname = row.hostname
+            guid = row.glpi_id
+            if hostname:
+                id_uuid = f"UUID{guid}"
+                ret[f"{id_uuid}##{hostname}"] = {
+                    "hostname": hostname,
+                    "uuid": id_uuid,
+                }
+        return ret
+
+    # Fonction spécialisée pour W10to10
+    def _get_windows_W10to10(self, session, entity_id):
+        ret = {}
+        sql = """
+        SELECT hostname, glpi_id
+        FROM xmppmaster.up_major_win
+        WHERE ent_id = :ent_id
+            AND old_version = '10'
+            AND new_version = '10'
+            AND old_code != '22H2';
+        """
+        rows = session.execute(sql, {"ent_id": entity_id})
+        for row in rows:
+            hostname = row.hostname
+            guid = row.glpi_id
+            if hostname:
+                id_uuid = f"UUID{guid}"
+                ret[f"{id_uuid}##{hostname}"] = {
+                    "hostname": hostname,
+                    "uuid": id_uuid,
+                }
+        return ret
+
+    # Fonction spécialisée pour W10to11
+    def _get_windows_W10to11(self, session, entity_id):
+        ret = {}
+        sql = """
+        SELECT hostname, glpi_id
+        FROM xmppmaster.up_major_win
+        WHERE ent_id = :ent_id
+            AND old_version = '10'
+            AND new_version = '11'
+            AND is_active != 'False';
+        """
+        rows = session.execute(sql, {"ent_id": entity_id})
+        for row in rows:
+            hostname = row.hostname
+            guid = row.glpi_id
+            if hostname:
+                id_uuid = f"UUID{guid}"
+                ret[f"{id_uuid}##{hostname}"] = {
+                    "hostname": hostname,
+                    "uuid": id_uuid,
+                }
+        return ret
+
+    # Fonction spécialisée pour UPDATED
+    def _get_windows_UPDATED(self, session, entity_id):
+        ret = {}
+        sql = """
+        SELECT hostname, glpi_id
+        FROM xmppmaster.up_major_win
+        WHERE ent_id = :ent_id
+            AND old_version = '11'
+            AND new_version = '11'
+            AND old_code = '25H2';
+        """
+        rows = session.execute(sql, {"ent_id": entity_id})
+        for row in rows:
+            hostname = row.hostname
+            guid = row.glpi_id
+            if hostname:
+                id_uuid = f"UUID{guid}"
+                ret[f"{id_uuid}##{hostname}"] = {
+                    "hostname": hostname,
+                    "uuid": id_uuid,
+                }
+        return ret
+
+# ######################## end group update windows ########################
     @DatabaseHelper._sessionm
     def get_enabled_updates_list(
         self,

@@ -133,9 +133,14 @@ function xmlrpc_get_conformity_update_by_machines($ids = [])
 
 
 
-function xmlrpc_get_os_update_major_stats()
+function xmlrpc_get_os_update_major_stats_win_serv()
 {
-    return xmlCall("updates.get_os_update_major_stats", []);
+    return xmlCall("updates.get_os_update_major_stats_win_serv", []);
+}
+
+function xmlrpc_get_os_update_major_stats_win()
+{
+    return xmlCall("updates.get_os_update_major_stats_win", []);
 }
 
 function xmlrpc_get_os_xmpp_update_major_stats()
@@ -144,20 +149,46 @@ function xmlrpc_get_os_xmpp_update_major_stats()
 }
 
 
-function xmlrpc_get_outdated_major_os_updates_by_entity($entity_id,  $start=0, $limit=-1,$filter="",$colonne=True)
+function xmlrpc_get_outdated_major_os_updates_by_entity($entity_id,
+                                                        $typeaction,
+                                                        $start=0,
+                                                        $limit=-1,
+                                                        $filter="",
+                                                        $colonne=True)
 {
-    return xmlCall("updates.get_outdated_major_os_updates_by_entity", [$entity_id, $start, $limit,$filter,$colonne]);
+    return xmlCall("updates.get_outdated_major_os_updates_by_entity", [$entity_id,
+                                                                        $typeaction,
+                                                                        $start,
+                                                                        $limit,
+                                                                        $filter,
+                                                                        $colonne]);
 }
 
-function xmlrpc_get_os_update_major_details($entity_id, $filter="", $start=0, $limit=-1)
+function xmlrpc_get_os_update_major_details($entity_id,
+                                            $typeaction,
+                                            $filter="",
+                                            $start=0,
+                                            $limit=-1)
 {
-    return xmlCall("updates.get_os_update_major_details", [$entity_id, $filter, $start, $limit]);
+    return xmlCall("updates.get_os_update_major_details", [ $entity_id,
+                                                            $typeaction,
+                                                            $filter,
+                                                            $start,
+                                                            $limit]);
 }
 
 function xmlrpc_get_os_xmpp_update_major_details($entity_id, $filter="",$start=0, $limit=-1, )
 {
     return xmlCall("updates.get_os_xmpp_update_major_details", [$entity_id, $filter, $start, $limit]);
 }
+
+function xmlrpc_get_machines_update_grp($entity_id,
+                                        $type="window",
+                                        $colonne="hardware_requirements")
+{
+    return xmlCall("updates.get_machines_update_grp", [$entity_id, $type, $colonne]);
+}
+
 
 function xmlrpc_deploy_update_major($package_id,
                                     $uuid_inventorymachine,

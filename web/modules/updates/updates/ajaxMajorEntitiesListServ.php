@@ -76,29 +76,30 @@ $source = isset($_GET['source']) ? $_GET['source'] : "xmppmaster";
 if ($_GET['source'] == "xmppmaster" || $_GET['source'] == "glpi" ){
 
     if ($_GET['source'] == "xmppmaster" ){
-        $p = new PageGenerator(_T("OS Upgrades", 'updates'));
+        $p = new PageGenerator(_T("OS SERVER Upgrades", 'updates'));
         $p->display();
         // $statglpiversion = xmlrpc_get_os_xmpp_update_major_stats();
-        $statglpiversion=xmlrpc_get_os_update_major_stats_win();
+        $statglpiversion=xmlrpc_get_os_update_major_stats_win_serv();
     }else{
-        $p = new PageGenerator(_T("OS Upgrades", 'updates'));
+        $p = new PageGenerator(_T("OS SERVER Upgrades", 'updates'));
         $p->display();
-        $statglpiversion=xmlrpc_get_os_update_major_stats_win();
+        $statglpiversion=xmlrpc_get_os_update_major_stats_win_serv();
     };
 
 // Valeurs par défaut
 $defaultValues = [
     'count' => 0,
     'name' => '',
-    'W10to10' => 0,
-    'W10to11' => 0,
-    'W11to11' => 0,
+    "MS12toMS25" => 0,
+    "MS16toMS25" => 0,
+    "MS19toMS25" => 0,
+    "MS25toMS25" => 0,
     'non_conforme' => 0,
     'autre_cas' => 0,
     'conformite' => 100,
     'UPDATED' => 0,
     'entity_id' => 0,
-    'non_inventorie'=>0
+    'non_inventorie'=> 0
 ];
 
 $mergedArray = [];
@@ -132,9 +133,10 @@ $actionupdateByentity  = array();
 $actionHardwareConstraintsForMajorUpdatesByEntity  = array();
 $complete_name_major  = array();
 $comformite_name_major  = array();
-$win10towin10_major = array();
-$win10towin11_major = array();
-$win11towin11_major = array();
+$MS12toMS25_major = array();
+$MS16toMS25_major = array();
+$MS19toMS25_major = array();
+$MS25toMS25_major = array();
 $total_win=array();
 $complRates=array();
 $updated_major = array();
@@ -196,7 +198,7 @@ $emptydeployAll = new EmptyActionItem1(_T("There are no major updates to deploy 
         "ajaxUpdateCreateGroup", // action
         "btnCreateGroup",
         '',
-        _T("Voulez-vous créer le groupe ?", "updates"),
+        _T("Do you want to create the group ?", "updates"),
         "updates",    // module
         "updates" ,    // submod
         null, // tab
@@ -210,11 +212,14 @@ $emptydeployAll = new EmptyActionItem1(_T("There are no major updates to deploy 
     $title = _T("OS Upgrades", "updates");
     $texte_help = _T("%s machines in the entity \"%s\" can benefit from a major update.", "updates");
 
-// Machine with Windows 10 22H2 installed at 2025-11-04 09:07:17
+
 foreach ($mergedArray as  $index=>$datacolonne) {
     // Remplacer les espaces par des underscores
 
-    $nbupdate = $datacolonne['W10to10'] + $datacolonne['W10to11'] + $datacolonne['W11to11'];
+    $nbupdate = $datacolonne['MS12toMS25'] +
+                $datacolonne['MS16toMS25'] +
+                $datacolonne['MS19toMS25'] +
+                $datacolonne['MS25toMS25'];
     if ($datacolonne['count'] > 0){
         $actiondetailsByMachs[] = $detailsByMach;
     }else{
@@ -231,72 +236,84 @@ foreach ($mergedArray as  $index=>$datacolonne) {
 
     // on initialise le tableau
     $complete_name_major[]=$datacolonne['name'];
-    // $win10towin10_major[]=$datacolonne['W10to10'];
-    // $win10towin11_major[]=$datacolonne['W10to11'];
+    // $win10towin10_major[]=$datacolonne['MS12toMS25'];
+    // $win10towin11_major[]=$datacolonne['MS16toMS25'];
     // $updated_major[]=$datacolonne['UPDATED'];
 
-    $nb_machine_manque_info=$datacolonne['count'] - ( $datacolonne['W10to10'] +
-                                                      $datacolonne['W10to11'] +
-                                                      $datacolonne['W11to11'] +
+    $nb_machine_manque_info=$datacolonne['count'] - ( $datacolonne['MS12toMS25'] +
+                                                      $datacolonne['MS16toMS25'] +
+                                                      $datacolonne['MS19toMS25'] +
+                                                      $datacolonne['MS25toMS25'] +
                                                       $datacolonne['UPDATED']);
 
     if (intval($nb_machine_manque_info) > 0) {
+        echo "hardware_requirements";
         $msgtitle =_T("These machines do not meet the hardware requirements for upgrading to a newer Windows release.", "updates");
         // Construire $namegrp
         $tabcgi= array_merge($datacolonne, ['grp'=> 'hardware_requirements',
-                                            "namegrp" => "Machine with Win10 hardware requirements for win11_".$datestring,
-                                            "colonne" => "norequired",
-                                            "typeaction" => "windows"
-                                           ]);
-        // $namegrp = $Entitynamegrp."_hardware_requirements";
+                                            "namegrp" => "Server hardware requirements for MSO 25".$datestring,
+                                            "colonne" => "hardware_requirements",
+                                            "typeaction" => "serverwin"]);
         $missing_information_major[] = $grp->render($nb_machine_manque_info, $tabcgi, $msgtitle, "csszoomHover");
     }else{
         $missing_information_major[]=$nb_machine_manque_info;
     }
 
-    if (intval($datacolonne['W11to11']) > 0) {
-        $msgtitle = _T("These machines need a Windows 11 update", "updates");
+    if (intval($datacolonne['MS19toMS25']) > 0) {
+        echo "kkkkkkkkkkkkkkkkkkkkkk";
+        $msgtitle = _T("These machines need a Windows SERVER 25 update", "updates");
         // Construire $namegrp
-        $tabcgi= array_merge($datacolonne, ['grp'=> 'W11to11',
-                                            "namegrp" => "Machine with Win11 to Win11 last version".$datestring ,
-                                            "colonne" => "W11to11",
-                                            "typeaction" => "windows"]);
-        $win11towin11_major[] = $grp->render($datacolonne['W11to11'], $tabcgi, $msgtitle, "csszoomHover");
+        $tabcgi= array_merge($datacolonne, ['grp'=> 'MS19toMS25',
+                                            "namegrp" => "Server MSO 19 to release MSO 25".$datestring,
+                                            "colonne" => "MS19toMS25",
+                                            "typeaction" => "serverwin"]);
+        $MS19toMS25_major[] = $grp->render($datacolonne['MS19toMS25'], $tabcgi, $msgtitle, "csszoomHover");
     }else{
-         $win11towin11_major[]=$datacolonne['W11to11'];
+         $MS19toMS25_major[]=$datacolonne['MS19toMS25'];
     }
 
-    if (intval($datacolonne['W10to10']) > 0) {
-        $msgtitle = _T("These machines need a Windows 10 update", "updates");
+    if (intval($datacolonne['MS12toMS25']) > 0) {
+        $msgtitle = _T("These machines need a Windows SERVER 25 update", "updates");
         // Construire $namegrp
-        $tabcgi = array_merge($datacolonne,['grp' => 'W10to10',
-                                            "namegrp" => "Machine for install Win10 22H2".$datestring ,
-                                            "colonne" => "W10to10",
-                                            "typeaction" => "windows"]);
-        $win10towin10_major[] = $grp->render($datacolonne['W10to10'], $tabcgi, $msgtitle, "csszoomHover");
+        $tabcgi = array_merge($datacolonne, ['grp' => 'MS12toMS25',
+                                             "namegrp" => "Server MSO 12 to release MSO 25".$datestring,
+                                             "colonne" => "MS12toMS25",
+                                             "typeaction" => "serverwin"]);
+        $MS12toMS25_major[] = $grp->render($datacolonne['MS12toMS25'], $tabcgi, $msgtitle, "csszoomHover");
     } else {
-        $win10towin10_major[] = $datacolonne['W10to10'];
+        $MS12toMS25_major[] = $datacolonne['MS12toMS25'];
     }
 
-    if (intval($datacolonne['W10to11']) > 0) {
-        $msgtitle = _T("These machines need a Windows 10 to Windows 11 update", "updates");
-        // Construire $namegrp
-        $tabcgi = array_merge($datacolonne, ['grp' => 'W10to11',
-                                             "namegrp" => "Machine for install Win11".$datestring ,
-                                             "colonne" => "W10to11",
-                                             "typeaction" => "windows"]);
-        $win10towin11_major[] = $grp->render($datacolonne['W10to11'], $tabcgi, $msgtitle, "csszoomHover");
+    if (intval($datacolonne['MS16toMS25']) > 0) {
+        $msgtitle = _T("These machines need a Windows SERVER 25 update", "updates");
+        $tabcgi = array_merge($datacolonne, ['grp' => 'MS16toMS25',
+                                             "namegrp" => "Server MSO 16 to release MSO 25".$datestring,
+                                             "colonne" => "MS16toMS25",
+                                             "typeaction" => "serverwin"]);
+        $MS16toMS25_major[] = $grp->render($datacolonne['MS16toMS25'], $tabcgi, $msgtitle, "csszoomHover");
     } else {
-        $win10towin11_major[] = $datacolonne['W10to11'];
+        $MS16toMS25_major[] = $datacolonne['MS16toMS25'];
+    }
+
+
+    if (intval($datacolonne['MS25toMS25']) > 0) {
+        $msgtitle = _T("These machines need a Windows SERVER 25 24H2 update", "updates");
+            $tabcgi = array_merge($datacolonne, ['grp' => 'MS25toMS25',
+                                                 "namegrp" => "Server MSO 15 to last release MSO 25".$datestring,
+                                                 "colonne" => "MS25toMS25",
+                                                 "typeaction" => "serverwin"]);
+        $MS25toMS25_major[] = $grp->render($datacolonne['MS25toMS25'], $tabcgi, $msgtitle, "csszoomHover");
+    } else {
+        $MS25toMS25_major[] = $datacolonne['MS25toMS25'];
     }
 
     if (intval($datacolonne['UPDATED']) > 0) {
         $msgtitle = _T("These machines are up to date", "updates");
         // Construire $namegrp
         $tabcgi = array_merge($datacolonne, ['grp' => 'UPDATED',
-                                             "namegrp" => "Machine updated".$datestring,
+                                             "namegrp" => "Server MSO 25 updated to last release MSO 25".$datestring,
                                              "colonne" => "UPDATED",
-                                             "typeaction" => "windows"]);
+                                             "typeaction" => "serverwin"]);
         $updated_major[] = $grp->render($datacolonne['UPDATED'], $tabcgi, $msgtitle, "csszoomHover");
     } else {
         $updated_major[] = $datacolonne['UPDATED'];
@@ -319,30 +336,24 @@ foreach ($mergedArray as  $index=>$datacolonne) {
         'name' => $datacolonne['name'],
         'completename' => $datacolonne['completename'],
         'source' => $source,
-        'W10to10' => $datacolonne['W10to10'],
-        'W10to11'=> $datacolonne['W10to11'],
-        'W11to11' => $datacolonne['W11to11'],
+        'MS12toMS25' => $datacolonne['MS12toMS25'],
+        'MS16toMS25'=> $datacolonne['MS16toMS25'],
+        'MS19toMS25' => $datacolonne['MS19toMS25'],
+        'MS25toMS25' => $datacolonne['MS25toMS25'],
         'UPDATED' => $datacolonne['UPDATED'],
         "nb_missing" => $nb_machine_manque_info,
         "totalmachineentity" => $datacolonne['count'],
-        "typeaction" => "windows"
+        "typeaction" => "serverwin"
     );
 }
-
-$namemachine = xmlrpc_get_machines_update_grp(
-                                       0,
-                                       "window",
-                                       "hardware_requirements");
-
-
-
 $count = count($complete_name_major);
 $n = new OptimizedListInfos($complete_name_major, _T("Entity name", "updates"));
 $n->disableFirstColumnActionLink();
 $n->addExtraInfo($comformite_name_major, _T("Compliance rate", "updates"));
-$n->addExtraInfoRaw($win10towin10_major, _T("Upgrade W10->W10", "updates"));
-$n->addExtraInfoRaw($win10towin11_major, _T("Upgrade W10->W11", "updates"));
-$n->addExtraInfoRaw($win11towin11_major, _T("Upgrade W11->W11", "updates"));
+$n->addExtraInfoRaw($MS12toMS25_major, _T("Upg WS2012→2025", "updates"));
+$n->addExtraInfoRaw($MS16toMS25_major, _T("Upg WS2016→2025", "updates"));
+$n->addExtraInfoRaw($MS19toMS25_major, _T("Upg WS2019→2025", "updates"));
+$n->addExtraInfoRaw($MS25toMS25_major, _T("Upg WS2025→24H2", "updates"));
 
 $n->addExtraInfoRaw($updated_major, _T("Up to date", "updates"));
 // $n->addExtraInfo($missing_information_major, _T("Upgrade Not recommended", "updates"));

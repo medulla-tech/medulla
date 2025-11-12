@@ -51,3 +51,12 @@ $sidemenu->addSideMenuItem(
                       "updates",
                       "updates",
                       "approve_products"));
+
+// $sidemenu->addSideMenuItem(
+//      new SideMenuItem(_T("test os",
+//                          "updates"),
+//                       "updates",
+//                       "updates",
+//                       "testentitylist"));
+
+
