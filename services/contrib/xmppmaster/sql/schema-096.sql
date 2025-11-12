@@ -26,8 +26,10 @@
 START TRANSACTION;
 USE `xmppmaster`;
 
+
+
 ALTER TABLE `xmppmaster`.`up_machine_major_windows`
-ADD COLUMN `is_active` VARCHAR(10) NULL AFTER `isolang`;
+ADD COLUMN `is_active` VARCHAR(10) DEFAULT '1' AFTER `isolang`;
 
 -- =======================================
 -- add office 2019
