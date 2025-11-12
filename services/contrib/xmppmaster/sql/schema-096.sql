@@ -261,13 +261,13 @@ BEGIN
         SUBSTRING_INDEX(SUBSTRING_INDEX(parts.part5, '_', 2), '_', -1) AS newcode
 
     FROM xmppmaster.local_glpi_items_softwareversions si
-    JOIN xmppmaster.local_glpi_softwareversions sv ON si.softwareversions_id = sv.id
-    JOIN xmppmaster.local_glpi_machines m ON si.items_id = m.id
-    JOIN xmppmaster.local_glpi_entities e ON e.id = m.entities_id
-    JOIN xmppmaster.local_glpi_softwares s ON sv.softwares_id = s.id
-    JOIN parts ON parts.soft_id = s.id
-    JOIN xmppmaster.machines mx ON NULLIF(REPLACE(mx.uuid_inventorymachine, 'UUID', ''),'') = si.items_id
-    JOIN xmppmaster.up_packages_major_Lang_code lc
+    LEFT JOIN xmppmaster.local_glpi_softwareversions sv ON si.softwareversions_id = sv.id
+    LEFT JOIN xmppmaster.local_glpi_machines m ON si.items_id = m.id
+    LEFT JOIN xmppmaster.local_glpi_entities e ON e.id = m.entities_id
+    LEFT JOIN xmppmaster.local_glpi_softwares s ON sv.softwares_id = s.id
+    LEFT JOIN parts ON parts.soft_id = s.id
+    LEFT JOIN xmppmaster.machines mx ON NULLIF(REPLACE(mx.uuid_inventorymachine, 'UUID', ''),'') = si.items_id
+    LEFT JOIN xmppmaster.up_packages_major_Lang_code lc
         ON lc.lang_code = parts.part3
         AND lc.major = SUBSTRING_INDEX(parts.part7, '-', -1)
     WHERE s.name LIKE 'Medulla\_%';
