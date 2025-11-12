@@ -508,7 +508,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 SELECT id, name_procedure, enable, comment
                 FROM xmppmaster.up_list_produit
                 WHERE entity_id = :identity
-                ORDER BY name_procedure
+                ORDER BY comment
             """)
             result = session.execute(query, {"identity": identity})
             produits = result.fetchall()
