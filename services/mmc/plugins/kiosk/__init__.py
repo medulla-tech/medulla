@@ -273,59 +273,31 @@ def get_ou_list_group(login, *args, **kwargs):
 
 def get_ou_list_entity(*args, **kwargs):
     """
-    Returns the OUs where there are machines, filtered by GLPI rights
+    Returns the list of GLPI entities the user has access to
     """
-    ous = XmppMasterDatabase().get_ou_list_from_entity() or []
-    ous = list(dict.fromkeys(ous))
-
     token = args[1]
     allowed_glpi_ids = {int(x) for x in (get_list_user_token(token) or [])}
+    logger.debug(f"IDs GLPI autorisés : {allowed_glpi_ids}")
 
     rule_entity = get_entities_with_counts_root('', 0, 1, list(allowed_glpi_ids))
     data = (rule_entity or {}).get('data', {})
     ids = data.get('id', []) or []
     completes = data.get('completename', []) or []
+    logger.debug(f"IDs des entités GLPI : {ids}")
+    logger.debug(f"Completenames des entités GLPI : {completes}")
 
-    def norm(s: str) -> str:
-        return (s or "").strip().lower()
-
-    comp_to_gid = {}
+    # Build the list of all authorized entity paths
+    result = []
     for i, c in zip(ids, completes):
         try:
             gid = int(i)
         except Exception:
             continue
-        comp_to_gid[norm(c or "")] = gid
-
-    filtered = []
-    for ou in ous:
-        gid = comp_to_gid.get(norm(str(ou)))
         if gid in allowed_glpi_ids:
-            filtered.append(str(ou))
+            result.append(str(c))
 
-    rebased = []
-    seen = set()
-    for comp in filtered:
-        parts = [p.strip() for p in comp.split('>')]
-        prefixes, cur = [], ""
-        for p in parts:
-            cur = (cur + " > " + p).strip(" >")
-            prefixes.append(cur)
-
-        start_idx = 0
-        for idx, pref in enumerate(prefixes):
-            gid = comp_to_gid.get(norm(pref))
-            if gid in allowed_glpi_ids:
-                start_idx = idx
-                break
-
-        new_path = " > ".join(parts[start_idx:])
-        key = norm(new_path)
-        if key not in seen and new_path:
-            rebased.append(new_path)
-            seen.add(key)
-
-    return rebased
+    logger.debug(f"Entités GLPI retournées : {result}")
+    return result
 
 
 def get_ou_tree():

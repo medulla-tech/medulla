@@ -58,7 +58,7 @@ if ($_GET['uuid']) {
         }
         $p = new TabbedPageGenerator();
         $p->setSideMenu($sidemenu);
-        $p->addTop(sprintf(_T("%s's computer secure controlaaa", 'msc'), $machine->hostname), "modules/msc/msc/header.php");
+        $p->addTop(sprintf(_T("%s's computer secure control", 'msc'), $machine->hostname), "modules/msc/msc/header.php");
        $dataparams=getFilteredGetParams() ;
         $dataparams['uuid'] = $machine->uuid;
         //show list packages
@@ -74,7 +74,7 @@ if ($_GET['uuid']) {
         $msc_host = new RenderedMSCGroupDontExists($_GET['gid']);
         $msc_host->headerDisplay();
     } else {
-        $p->addTop(sprintf(_T("%s's group secure controlmmm", 'msc'), $group->getName()), "modules/msc/msc/header.php");
+        $p->addTop(sprintf(_T("%s's group secure control", 'msc'), $group->getName()), "modules/msc/msc/header.php");
         if (!$group->all_params['ro'] || strtolower($group->all_params['ro']) === "false") {
             $p->addTab("grouptablaunch", _T("Launch Actions", 'msc'), "", "modules/msc/msc/launch.php", array('gid' => $_GET['gid']));
         }

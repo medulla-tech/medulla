@@ -518,7 +518,7 @@ class TextareaTplArray extends AbstractTpl{
   * protected $value : string contains the displayed value in the textarea.
   */
   protected $params = array();
-  protected $value;
+  public $value;
   public function __construct($params = [])
   {
     if(is_array($params))

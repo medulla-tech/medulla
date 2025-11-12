@@ -1,52 +1,37 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
-# Translators:
-# Nicolas Lécureuil <neoclust@mageia.org>, 2021
-# 
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-07 17:12+0200\n"
-"PO-Revision-Date: 2017-10-11 08:13+0000\n"
-"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2021\n"
-"Language-Team: Spanish (Spain) (https://app.transifex.com/medulla/teams/72118/es_ES/)\n"
+"Project-Id-Version: medulla\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: es_ES\n"
-"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: modules/pkgs/includes/panels/appstream.inc.php:30
 msgid "Appstream"
-msgstr ""
+msgstr "Appstream"
 
 #: modules/pkgs/includes/panels/appstream.inc.php:38
 msgid "_X_ AppStream(s) available for subscription"
-msgstr ""
+msgstr "_X_ AppStream(s) disponible(s) para suscripción"
 
 #: modules/pkgs/includes/panels/appstream.inc.php:39
 msgid "No featured appstream found."
-msgstr ""
+msgstr "No se ha encontrado ninguna aplicación destacada."
 
 #: modules/pkgs/includes/html.inc.php:44
 #: modules/pkgs/pkgs/ajaxDisplayUploadForm.php:34
 #: modules/pkgs/pkgs/edit.php:559
 msgid "Upload Queued Files"
-msgstr ""
+msgstr "Cargar archivos en cola"
 
 #: modules/pkgs/includes/html.inc.php:61
 #: modules/pkgs/pkgs/ajaxDisplayUploadForm.php:33
 #: modules/pkgs/pkgs/edit.php:558
 msgid "Click here to select files"
-msgstr ""
+msgstr "Haga clic aquí para seleccionar archivos"
 
-#: modules/pkgs/includes/html.inc.php:62
-#: modules/pkgs/includes/html.inc.php:155
+#: modules/pkgs/includes/html.inc.php:62 modules/pkgs/includes/html.inc.php:155
 #: modules/pkgs/includes/html.inc.php:249
 msgid "Cancel"
 msgstr "Cancelar"
@@ -54,17 +39,17 @@ msgstr "Cancelar"
 #: modules/pkgs/includes/html.inc.php:154
 #: modules/pkgs/includes/html.inc.php:248
 msgid "Add files"
-msgstr ""
+msgstr "Añadir archivos"
 
 #: modules/pkgs/includes/html.inc.php:192
 #: modules/pkgs/includes/html.inc.php:298
 #: modules/pkgs/includes/html.inc.php:303
 msgid "Upload selected files"
-msgstr ""
+msgstr "Cargar los archivos seleccionados"
 
 #: modules/pkgs/includes/actions/action_section_uninstall.php:42
 msgid "Uninstall Section"
-msgstr ""
+msgstr "Sección de desinstalación"
 
 #: modules/pkgs/includes/actions/action_section_uninstall.php:50
 #: modules/pkgs/includes/actions/action_set_environ.php:80
@@ -90,15 +75,15 @@ msgstr "Borrar"
 
 #: modules/pkgs/includes/actions/action_set_environ.php:52
 msgid "Set Environment variables"
-msgstr ""
+msgstr "Establecer variables de entorno"
 
 #: modules/pkgs/includes/actions/action_set_environ.php:60
 msgid "Step label : "
-msgstr ""
+msgstr "Etiqueta del paso : "
 
 #: modules/pkgs/includes/actions/action_set_environ.php:68
 msgid "Environment variable"
-msgstr ""
+msgstr "Variable de entorno"
 
 #: modules/pkgs/includes/actions/action_set_environ.php:81
 #: modules/pkgs/includes/actions/actionwaitandgoto.php:112
@@ -118,15 +103,15 @@ msgstr ""
 #: modules/pkgs/includes/actions/actioncleaning.php:63
 #: modules/pkgs/includes/actions/actionrestart.php:97
 msgid "Options"
-msgstr ""
+msgstr "Opciones"
 
 #: modules/pkgs/includes/actions/action_section_install.php:43
 msgid "Install Section"
-msgstr ""
+msgstr "Sección de instalación"
 
 #: modules/pkgs/includes/actions/actionwaitandgoto.php:45
 msgid "Wait and go to step"
-msgstr ""
+msgstr "Espere y vaya al paso"
 
 #: modules/pkgs/includes/actions/actionwaitandgoto.php:54
 #: modules/pkgs/includes/actions/actionerrorcompletedend.php:46
@@ -139,23 +124,23 @@ msgstr ""
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:43
 #: modules/pkgs/includes/actions/actionrestart.php:72
 msgid "Step label :"
-msgstr ""
+msgstr "Etiqueta del paso :"
 
 #: modules/pkgs/includes/actions/actionwaitandgoto.php:65
 msgid "Wait for (seconds)"
-msgstr ""
+msgstr "Espere (segundos)"
 
 #: modules/pkgs/includes/actions/actionerrorcompletedend.php:31
 msgid "End Error"
-msgstr ""
+msgstr "Fin del error"
 
 #: modules/pkgs/includes/actions/action_notification.php:99
 msgid "User Notification"
-msgstr ""
+msgstr "Notificación al usuario"
 
 #: modules/pkgs/includes/actions/action_notification.php:105
 msgid "Send a notification to the connected user"
-msgstr ""
+msgstr "Enviar una notificación al usuario conectado"
 
 #: modules/pkgs/includes/actions/action_notification.php:115
 #: modules/pkgs/includes/actions/action_loop_question.php:112
@@ -163,25 +148,25 @@ msgstr ""
 #: modules/pkgs/includes/actions/action_question.php:116
 #: modules/pkgs/includes/actions/action_kiosknotification.php:109
 msgid "Step label: "
-msgstr ""
+msgstr "Etiqueta del paso: "
 
 #: modules/pkgs/includes/actions/action_notification.php:126
 #: modules/pkgs/includes/actions/action_loop_question.php:121
 #: modules/pkgs/includes/actions/action_question.php:127
 msgid "Message box title"
-msgstr ""
+msgstr "Título del cuadro de mensaje"
 
 #: modules/pkgs/includes/actions/action_notification.php:129
 #: modules/pkgs/includes/actions/action_loop_question.php:124
 #: modules/pkgs/includes/actions/action_question.php:130
 msgid "Insert title of message box"
-msgstr ""
+msgstr "Insertar el título del cuadro de mensaje"
 
 #: modules/pkgs/includes/actions/action_notification.php:132
 #: modules/pkgs/includes/actions/action_loop_question.php:127
 #: modules/pkgs/includes/actions/action_question.php:133
 msgid "Define text size for message box title"
-msgstr ""
+msgstr "Definir el tamaño del texto del título del cuadro de mensaje"
 
 #: modules/pkgs/includes/actions/action_notification.php:133
 #: modules/pkgs/includes/actions/action_notification.php:147
@@ -190,38 +175,38 @@ msgstr ""
 #: modules/pkgs/includes/actions/action_question.php:134
 #: modules/pkgs/includes/actions/action_question.php:148
 msgid "Text size"
-msgstr ""
+msgstr "Tamaño del texto"
 
 #: modules/pkgs/includes/actions/action_notification.php:140
 #: modules/pkgs/includes/actions/action_kiosknotification.php:116
 msgid "Message"
-msgstr ""
+msgstr "Mensaje"
 
 #: modules/pkgs/includes/actions/action_notification.php:143
 msgid "Insert message for user"
-msgstr ""
+msgstr "Insertar mensaje para el usuario"
 
 #: modules/pkgs/includes/actions/action_notification.php:146
 msgid "Define text size for message"
-msgstr ""
+msgstr "Definir el tamaño del texto del mensaje"
 
 #: modules/pkgs/includes/actions/action_notification.php:158
 #: modules/pkgs/includes/actions/action_loop_question.php:152
 #: modules/pkgs/includes/actions/action_question.php:159
 msgid "True button text"
-msgstr ""
+msgstr "Texto del botón True"
 
 #: modules/pkgs/includes/actions/action_notification.php:161
 #: modules/pkgs/includes/actions/action_loop_question.php:155
 #: modules/pkgs/includes/actions/action_question.php:162
 msgid "Define text to be shown on button returning True"
-msgstr ""
+msgstr "Definir el texto que se mostrará en el botón que devuelve True"
 
 #: modules/pkgs/includes/actions/action_notification.php:172
 #: modules/pkgs/includes/actions/action_loop_question.php:238
 #: modules/pkgs/includes/actions/action_question.php:256
 msgid "Set maximum time waiting for a response"
-msgstr ""
+msgstr "Establecer el tiempo máximo de espera de una respuesta"
 
 #: modules/pkgs/includes/actions/action_notification.php:183
 #: modules/pkgs/includes/actions/action_notification.php:198
@@ -235,117 +220,117 @@ msgstr ""
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:64
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:79
 msgid "Set timeout (in seconds)"
-msgstr ""
+msgstr "Establecer tiempo de espera (en segundos)"
 
 #: modules/pkgs/includes/actions/action_notification.php:213
 #: modules/pkgs/includes/actions/action_loop_question.php:301
 #: modules/pkgs/includes/actions/action_question.php:293
 #: modules/pkgs/includes/actions/action_kiosknotification.php:165
 msgid "Delete this step"
-msgstr ""
+msgstr "Eliminar este paso"
 
 #: modules/pkgs/includes/actions/action_notification.php:216
 #: modules/pkgs/includes/actions/action_loop_question.php:305
 #: modules/pkgs/includes/actions/action_question.php:296
 #: modules/pkgs/includes/actions/action_kiosknotification.php:168
 msgid "Show additional options for this step"
-msgstr ""
+msgstr "Mostrar opciones adicionales para este paso"
 
 #: modules/pkgs/includes/actions/action_loop_question.php:97
 msgid "User Postpone Options"
-msgstr ""
+msgstr "Opciones de aplazamiento del usuario"
 
 #: modules/pkgs/includes/actions/action_loop_question.php:103
 msgid "Allow the connected user to postpone an action"
-msgstr ""
+msgstr "Permitir que el usuario conectado posponga una acción"
 
 #: modules/pkgs/includes/actions/action_loop_question.php:135
 #: modules/pkgs/includes/actions/action_question.php:141
 msgid "Question"
-msgstr ""
+msgstr "Pregunta"
 
 #: modules/pkgs/includes/actions/action_loop_question.php:138
 #: modules/pkgs/includes/actions/action_question.php:144
 msgid "Insert question for user"
-msgstr ""
+msgstr "Insertar pregunta para el usuario"
 
 #: modules/pkgs/includes/actions/action_loop_question.php:141
 #: modules/pkgs/includes/actions/action_question.php:147
 msgid "Define text size for question"
-msgstr ""
+msgstr "Definir el tamaño del texto de la pregunta"
 
 #: modules/pkgs/includes/actions/action_loop_question.php:167
 #: modules/pkgs/includes/actions/action_question.php:174
 msgid "False button text"
-msgstr ""
+msgstr "Texto falso del botón"
 
 #: modules/pkgs/includes/actions/action_loop_question.php:170
 #: modules/pkgs/includes/actions/action_question.php:177
 msgid "Define text to be shown on button returning False"
-msgstr ""
+msgstr "Definir el texto que se mostrará en el botón que devuelve False"
 
 #: modules/pkgs/includes/actions/action_loop_question.php:181
 #: modules/pkgs/includes/actions/action_question.php:191
 msgid "If 'True' go to step"
-msgstr ""
+msgstr "Si es \"Verdadero\", vaya al paso"
 
 #: modules/pkgs/includes/actions/action_loop_question.php:184
 #: modules/pkgs/includes/actions/action_question.php:194
 msgid "Define step label if user response is True"
-msgstr ""
+msgstr "Definir la etiqueta del paso si la respuesta del usuario es True"
 
 #: modules/pkgs/includes/actions/action_loop_question.php:195
 msgid "If 'Max Postponements Reached' go to step"
-msgstr ""
+msgstr "Si se ha alcanzado el número máximo de aplazamientos, vaya al paso siguiente"
 
 #: modules/pkgs/includes/actions/action_loop_question.php:198
 msgid "Define step label if the maximum number of postponements reached"
-msgstr ""
+msgstr "Definir la etiqueta de paso si se alcanza el número máximo de aplazamientos"
 
 #: modules/pkgs/includes/actions/action_loop_question.php:209
 #: modules/pkgs/includes/actions/action_question.php:224
 msgid "If 'No User' go to step"
-msgstr ""
+msgstr "Si no hay usuario, vaya al paso"
 
 #: modules/pkgs/includes/actions/action_loop_question.php:212
 #: modules/pkgs/includes/actions/action_question.php:227
 msgid "Define step label if no user is connected"
-msgstr ""
+msgstr "Definir la etiqueta del paso si no hay ningún usuario conectado"
 
 #: modules/pkgs/includes/actions/action_loop_question.php:225
 #: modules/pkgs/includes/actions/action_question.php:241
 msgid "If 'Timeout' go to step"
-msgstr ""
+msgstr "Si 'Timeout' ir al paso"
 
 #: modules/pkgs/includes/actions/action_loop_question.php:228
 #: modules/pkgs/includes/actions/action_question.php:244
 msgid "Define step label if no response is given before the timeout"
-msgstr ""
+msgstr "Definir etiqueta de paso si no hay respuesta antes del tiempo de espera"
 
 #: modules/pkgs/includes/actions/action_loop_question.php:276
 msgid "Maximum allowed postponements"
-msgstr ""
+msgstr "Aplazamientos máximos permitidos"
 
 #: modules/pkgs/includes/actions/action_loop_question.php:279
 msgid "Define the maximum number of times a user can postpone the question"
-msgstr ""
+msgstr "Definir el número máximo de veces que un usuario puede posponer la pregunta"
 
 #: modules/pkgs/includes/actions/action_loop_question.php:288
 msgid "Interval"
-msgstr ""
+msgstr "Intervalo"
 
 #: modules/pkgs/includes/actions/action_loop_question.php:291
 msgid "Define the interval between two questions to the user"
-msgstr ""
+msgstr "Definir el intervalo entre dos preguntas al usuario"
 
 #: modules/pkgs/includes/actions/actionprocessscript.php:61
 msgid "Run command"
-msgstr ""
+msgstr "Ejecutar comando"
 
 #: modules/pkgs/includes/actions/actionprocessscript.php:75
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:47
 msgid "Command"
-msgstr ""
+msgstr "Comando"
 
 #: modules/pkgs/includes/actions/actionprocessscript.php:92
 #: modules/pkgs/includes/actions/actionprocessscript.php:106
@@ -357,42 +342,42 @@ msgstr ""
 #: modules/pkgs/includes/actions/action_unzip_file.php:116
 #: modules/pkgs/includes/actions/action_unzip_file.php:130
 msgid "Alternate package"
-msgstr ""
+msgstr "Paquete alternativo"
 
 #: modules/pkgs/includes/actions/actionprocessscript.php:156
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:319
 #: modules/pkgs/includes/actions/action_unzip_file.php:145
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:91
 msgid "10 first lines of result"
-msgstr ""
+msgstr "10 primeras líneas de resultado"
 
 #: modules/pkgs/includes/actions/actionprocessscript.php:157
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:320
 #: modules/pkgs/includes/actions/action_unzip_file.php:146
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:92
 msgid "20 first lines of result"
-msgstr ""
+msgstr "20 primeras líneas de resultado"
 
 #: modules/pkgs/includes/actions/actionprocessscript.php:158
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:321
 #: modules/pkgs/includes/actions/action_unzip_file.php:147
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:93
 msgid "30 first lines of result"
-msgstr ""
+msgstr "30 primeras líneas de resultado"
 
 #: modules/pkgs/includes/actions/actionprocessscript.php:159
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:322
 #: modules/pkgs/includes/actions/action_unzip_file.php:148
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:94
 msgid "Complete results (limited to 10000 last characters)"
-msgstr ""
+msgstr "Resultados completos (limitados a 10000 últimos caracteres)"
 
 #: modules/pkgs/includes/actions/actionprocessscript.php:160
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:323
 #: modules/pkgs/includes/actions/action_unzip_file.php:149
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:95
 msgid "10 last lines of result"
-msgstr ""
+msgstr "10 últimas líneas de resultado"
 
 #: modules/pkgs/includes/actions/actionprocessscript.php:161
 #: modules/pkgs/includes/actions/actionprocessscript.php:163
@@ -403,21 +388,21 @@ msgstr ""
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:96
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:98
 msgid "20 last lines of result"
-msgstr ""
+msgstr "20 últimas líneas de resultado"
 
 #: modules/pkgs/includes/actions/actionprocessscript.php:162
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:325
 #: modules/pkgs/includes/actions/action_unzip_file.php:151
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:97
 msgid "30 last lines of result"
-msgstr ""
+msgstr "30 últimas líneas de resultado"
 
 #: modules/pkgs/includes/actions/actionprocessscript.php:164
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:327
 #: modules/pkgs/includes/actions/action_unzip_file.php:153
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:99
 msgid "The last line of result"
-msgstr ""
+msgstr "La última línea del resultado"
 
 #: modules/pkgs/includes/actions/actionprocessscript.php:212
 #: modules/pkgs/includes/actions/actionprocessscript.php:227
@@ -427,106 +412,100 @@ msgstr ""
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:145
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:160
 msgid "Return result"
-msgstr ""
+msgstr "Devolver resultado"
 
 #: modules/pkgs/includes/actions/actionprocessscript.php:325
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:489
 msgid "On return code, goto "
-msgstr ""
+msgstr "Con código de retorno, ir a "
 
 #: modules/pkgs/includes/actions/actionprocessscript.php:326
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:490
 msgid "Add goto"
-msgstr ""
+msgstr "Añadir goto"
 
 #: modules/pkgs/includes/actions/action_pwd_package.php:34
 msgid "Go to package folder"
-msgstr ""
+msgstr "Ir a la carpeta de paquetes"
 
 #: modules/pkgs/includes/actions/action_set_config_file.php:36
 msgid "Set config file parameter"
-msgstr ""
+msgstr "Establecer parámetro de archivo de configuración"
 
 #: modules/pkgs/includes/actions/action_set_config_file.php:62
 msgid "Config action description"
-msgstr ""
+msgstr "Descripción de la acción de configuración"
 
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:71
 msgid "Execute script"
-msgstr ""
+msgstr "Ejecutar script"
 
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:90
 msgid "Native (Windows batch, Linux bash and macOS bash)"
-msgstr ""
+msgstr "Nativo (Windows batch, Linux bash y macOS bash)"
 
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:93
 msgid "Python (Windows, Linux and macOS)"
-msgstr ""
+msgstr "Python (Windows, Linux y macOS)"
 
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:96
 msgid "Visual Basic Script (Windows)"
-msgstr ""
+msgstr "Script de Visual Basic (Windows)"
 
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:99
 msgid "Power Shell (Windows)"
-msgstr ""
+msgstr "Power Shell (Windows)"
 
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:102
 msgid "Korn Shell (Linux & macOS)"
-msgstr ""
+msgstr "Korn Shell (Linux y macOS)"
 
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:105
 msgid "C Shell (Linux & macOS)"
-msgstr ""
+msgstr "C Shell (Linux y macOS)"
 
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:120
 msgid "Script language"
-msgstr ""
+msgstr "Lenguaje de script"
 
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:129
 #: modules/pkgs/pkgs/detail.php:52
 msgid "Script"
-msgstr ""
+msgstr "Guión"
 
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:194
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:213
 msgid "Force suffix"
-msgstr ""
+msgstr "Forzar sufijo"
 
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:198
-msgid ""
-"The \"Script language\" property above applies a suffix to the script by default.\n"
-"However, if the \"Force suffix\" property is set, the imposed suffix will be this one'"
-msgstr ""
+msgid "The \"Script language\" property above applies a suffix to the script by default.\nHowever, if the \"Force suffix\" property is set, the imposed suffix will be this one'"
+msgstr "Sin embargo, si se establece la propiedad \"Forzar sufijo\", el sufijo impuesto será este'"
 
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:217
-msgid ""
-"The \"Script language\" property above applies a suffix to the script by default.\n"
-" However, if the \"Force suffix\" property is set, the imposed suffix will be this one'"
-msgstr ""
+msgid "The \"Script language\" property above applies a suffix to the script by default.\n However, if the \"Force suffix\" property is set, the imposed suffix will be this one'"
+msgstr "Sin embargo, si se establece la propiedad \"Forzar sufijo\", el sufijo impuesto será este'"
 
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:247
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:266
-msgid ""
-"The \"Script language\" property above applies a hash-bang to the script by default.\n"
-" However, if the \"Force hash-bang\" property is set, the imposed hash-bang will be this one'"
-msgstr ""
+msgid "The \"Script language\" property above applies a hash-bang to the script by default.\n However, if the \"Force hash-bang\" property is set, the imposed hash-bang will be this one'"
+msgstr "La propiedad \"Script language\" anterior aplica un hash-bang al script por defecto. Sin embargo, si se establece la propiedad \"Force hash-bang\", el hash-bang impuesto será este'"
 
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:262
 msgid "Force hash-bang"
-msgstr ""
+msgstr "Forzar hash-bang"
 
 #: modules/pkgs/includes/actions/actionprocessscriptfile.php:307
 msgid "Set timeout  (in seconds)"
-msgstr ""
+msgstr "Establecer tiempo de espera (en segundos)"
 
 #: modules/pkgs/includes/actions/actionsuccescompletedend.php:39
 msgid "End Success"
-msgstr ""
+msgstr "Éxito final"
 
 #: modules/pkgs/includes/actions/actionsuccescompletedend.php:74
 msgid "Delete package"
-msgstr ""
+msgstr "Borrar paquete"
 
 #: modules/pkgs/includes/actions/actionsuccescompletedend.php:114
 #: modules/pkgs/pkgs/detail.php:230
@@ -537,314 +516,311 @@ msgstr "Inventario"
 #: modules/pkgs/includes/actions/actionsuccescompletedend.php:127
 #: modules/pkgs/includes/actions/actionsuccescompletedend.php:132
 msgid "Forced inventory"
-msgstr ""
+msgstr "Inventario forzoso"
 
 #: modules/pkgs/includes/actions/actionsuccescompletedend.php:123
 #: modules/pkgs/includes/actions/actionsuccescompletedend.php:128
 #: modules/pkgs/includes/actions/actionsuccescompletedend.php:133
 msgid "No inventory"
-msgstr ""
+msgstr "Sin inventario"
 
 #: modules/pkgs/includes/actions/actionsuccescompletedend.php:124
 #: modules/pkgs/includes/actions/actionsuccescompletedend.php:129
 #: modules/pkgs/includes/actions/actionsuccescompletedend.php:134
 msgid "Inventory on change"
-msgstr ""
+msgstr "Inventario sobre el cambio"
 
 #: modules/pkgs/includes/actions/action_question.php:101
 msgid "User Question"
-msgstr ""
+msgstr "Pregunta del usuario"
 
 #: modules/pkgs/includes/actions/action_question.php:106
 msgid "Submit a question to the connected user"
-msgstr ""
+msgstr "Enviar una pregunta al usuario conectado"
 
 #: modules/pkgs/includes/actions/action_question.php:207
 msgid "If 'False' go to step"
-msgstr ""
+msgstr "Si es \"False\", vaya al paso"
 
 #: modules/pkgs/includes/actions/action_question.php:210
 msgid "Define step label if user response is False"
-msgstr ""
+msgstr "Definir la etiqueta del paso si la respuesta del usuario es False"
 
 #: modules/pkgs/includes/actions/action_download.php:76
 #: modules/pkgs/pkgs/detail.php:93
 msgid "Download File"
-msgstr ""
+msgstr "Descargar archivo"
 
 #: modules/pkgs/includes/actions/action_download.php:130
 msgid "Download File:"
-msgstr ""
+msgstr "Descargar archivo:"
 
 #: modules/pkgs/includes/actions/action_comment.php:38
 msgid "Add info in deployment log"
-msgstr ""
+msgstr "Añadir información en el registro de despliegue"
 
 #: modules/pkgs/includes/actions/action_comment.php:62
 msgid "Information"
-msgstr ""
+msgstr "Información"
 
 #: modules/pkgs/includes/actions/action_comment.php:67
 msgid "Your log comments !"
-msgstr ""
+msgstr "Comentarios sobre su registro"
 
 #: modules/pkgs/includes/actions/action_unzip_file.php:79
 msgid "Unzip File"
-msgstr ""
+msgstr "Descomprimir archivo"
 
 #: modules/pkgs/includes/actions/action_unzip_file.php:88
 msgid "Step label:"
-msgstr ""
+msgstr "Etiqueta del paso:"
 
 #: modules/pkgs/includes/actions/action_unzip_file.php:97
 msgid "Zip file:"
-msgstr ""
+msgstr "Archivo zip:"
 
 #: modules/pkgs/includes/actions/action_unzip_file.php:240
 #: modules/pkgs/includes/actions/action_unzip_file.php:255
 msgid "Unzip to specified folder"
-msgstr ""
+msgstr "Descomprimir en la carpeta especificada"
 
 #: modules/pkgs/includes/actions/action_unzip_file.php:274
 #: modules/pkgs/includes/actions/action_unzip_file.php:288
 msgid "Go to step"
-msgstr ""
+msgstr "Ir al paso"
 
 #: modules/pkgs/includes/actions/action_unzip_file.php:311
 #: modules/pkgs/includes/actions/action_unzip_file.php:326
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:181
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:196
 msgid "On success go to step"
-msgstr ""
+msgstr "Si tiene éxito, vaya al paso"
 
 #: modules/pkgs/includes/actions/action_unzip_file.php:346
 #: modules/pkgs/includes/actions/action_unzip_file.php:361
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:216
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:231
 msgid "On error go to step"
-msgstr ""
+msgstr "En caso de error, vaya al paso"
 
 #: modules/pkgs/includes/actions/action_kiosknotification.php:94
 msgid "Kiosk Notification"
-msgstr ""
+msgstr "Notificación del quiosco"
 
 #: modules/pkgs/includes/actions/action_kiosknotification.php:100
 msgid "Send a notification to the kiosk"
-msgstr ""
+msgstr "Enviar una notificación al quiosco"
 
 #: modules/pkgs/includes/actions/action_kiosknotification.php:119
 msgid "Define text for message to be shown in kiosk"
-msgstr ""
+msgstr "Definir el texto del mensaje que se mostrará en el quiosco"
 
 #: modules/pkgs/includes/actions/action_kiosknotification.php:136
 #: modules/pkgs/includes/actions/action_kiosknotification.php:146
 msgid "Progression (percentage)"
-msgstr ""
+msgstr "Progresión (porcentaje)"
 
 #: modules/pkgs/includes/actions/action_kiosknotification.php:150
 msgid "Define progression percentage to be shown in kiosk"
-msgstr ""
+msgstr "Definir el porcentaje de progresión que se mostrará en el quiosco"
 
 #: modules/pkgs/includes/actions/actioncleaning.php:37
 msgid "Remove uploaded files"
-msgstr ""
+msgstr "Eliminar archivos cargados"
 
 #: modules/pkgs/includes/actions/action_command_natif_shell.php:33
 msgid "Run Command in shell"
-msgstr ""
+msgstr "Ejecutar comando en shell"
 
 #: modules/pkgs/includes/actions/actionrestart.php:39
 msgid "Restart Machine"
-msgstr ""
+msgstr "Reiniciar la máquina"
 
 #: modules/pkgs/includes/actions/actionrestart.php:41
 msgid "Restart Agent Machine"
-msgstr ""
+msgstr "Reiniciar la máquina agente"
 
 #: modules/pkgs/includes/actions/actionrestart.php:60
 #: modules/pkgs/pkgs/detail.php:145 modules/pkgs/pkgs/detail.php:231
 msgid "Restart"
-msgstr ""
+msgstr "Reinicie"
 
 #: modules/pkgs/includes/actions/actionrestart.php:83
 msgid "Target Restart"
-msgstr ""
+msgstr "Reinicio del objetivo"
 
 #: modules/pkgs/includes/actions/action_section_update.php:41
 msgid "Update Section"
-msgstr ""
+msgstr "Sección de actualización"
 
 #: modules/pkgs/includes/query.php:38
-msgid ""
-"Please type 3 characters for suggestion.<br>\n"
-"            Wildcard is '%', %text% matches any string containing 'text'.<br>\n"
-"            If unsure, leave Vendor and Version fields blank."
-msgstr ""
+msgid "Please type 3 characters for suggestion.<br>\n            Wildcard is '%', %text% matches any string containing 'text'.<br>\n            If unsure, leave Vendor and Version fields blank."
+msgstr "Escriba 3 caracteres para la sugerencia.<br>\n            El comodín es '%', %text% coincide con cualquier cadena que contenga 'text'.<br>\n            Si no está seguro, deje en blanco los campos Proveedor y Versión."
 
 #: modules/pkgs/includes/query.php:67
 msgid "Query"
-msgstr ""
+msgstr "Consulta"
 
 #: modules/pkgs/includes/query.php:78
 msgid "Associate inventory"
-msgstr ""
+msgstr "Inventario asociado"
 
 #: modules/pkgs/includes/query.php:85
 msgid "Vendor"
-msgstr ""
+msgstr "Vendedor"
 
 #: modules/pkgs/includes/query.php:86
 msgid "Software"
-msgstr ""
+msgstr "Software"
 
 #: modules/pkgs/includes/query.php:88 modules/pkgs/pkgs/add.php:232
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:73
 #: modules/pkgs/pkgs/detail.php:209 modules/pkgs/pkgs/ajaxPackageList.php:292
 #: modules/pkgs/pkgs/ajaxPackageList.php:431
 msgid "Version"
-msgstr ""
+msgstr "Versión"
 
 #: modules/pkgs/includes/query.php:91
 msgid "Bool"
-msgstr ""
+msgstr "Bool"
 
 #: modules/pkgs/includes/query.php:99
 msgid "Number of licenses"
-msgstr ""
+msgstr "Número de licencias"
 
 #: modules/pkgs/infoPackage.inc.php:35 modules/pkgs/infoPackage.inc.php:41
 msgid "Packages"
-msgstr ""
+msgstr "Paquetes"
 
 #: modules/pkgs/infoPackage.inc.php:46 modules/pkgs/pkgs/localSidebar.php:48
 #: modules/pkgs/pkgs/rulesList.php:29
 msgid "Rules list"
-msgstr ""
+msgstr "Lista de normas"
 
 #: modules/pkgs/infoPackage.inc.php:50 modules/pkgs/pkgs/localSidebar.php:49
 msgid "Add a rule"
-msgstr ""
+msgstr "Añadir una regla"
 
 #: modules/pkgs/infoPackage.inc.php:54
 msgid "Edit a rule"
-msgstr ""
+msgstr "Editar una regla"
 
 #: modules/pkgs/infoPackage.inc.php:58
 msgid "Delete a rule"
-msgstr ""
+msgstr "Borrar una regla"
 
 #: modules/pkgs/infoPackage.inc.php:63
 msgid "Show all packages"
-msgstr ""
+msgstr "Mostrar todos los paquetes"
 
 #: modules/pkgs/infoPackage.inc.php:69 modules/pkgs/pkgs/localSidebar.php:41
 #: modules/pkgs/pkgs/localSidebar.php:45
 msgid "Add a package"
-msgstr ""
+msgstr "Añadir un paquete"
 
 #: modules/pkgs/infoPackage.inc.php:72 modules/pkgs/pkgs/edit.php:206
 #: modules/pkgs/pkgs/ajaxPackageList.php:76
 msgid "Edit a package"
-msgstr ""
+msgstr "Editar un paquete"
 
 #: modules/pkgs/infoPackage.inc.php:75
 msgid "Package detail"
-msgstr ""
+msgstr "Detalles del paquete"
 
 #: modules/pkgs/infoPackage.inc.php:78
 msgid "Package File Preview"
-msgstr ""
+msgstr "Vista previa del archivo de paquete"
 
 #: modules/pkgs/infoPackage.inc.php:92
 msgid "Create licence static group"
-msgstr ""
+msgstr "Crear grupo estático de licencias"
 
 #: modules/pkgs/infoPackage.inc.php:98
 msgid "See pending packages"
-msgstr ""
+msgstr "Ver paquetes pendientes"
 
 #: modules/pkgs/infoPackage.inc.php:100
 #: modules/pkgs/pkgs/appstreamSettings.php:34
 msgid "Appstream settings"
-msgstr ""
+msgstr "Configuración de Appstream"
 
 #: modules/pkgs/infoPackage.inc.php:119
 msgid "Show mirror status"
-msgstr ""
+msgstr "Mostrar el estado del espejo"
 
 #: modules/pkgs/infoPackage.inc.php:123
 msgid "Pending Package synchronization"
-msgstr ""
+msgstr "Sincronización de paquetes pendientes"
 
 #: modules/pkgs/infoPackage.inc.php:127
 #: modules/pkgs/pkgs/ajaxPackageList.php:80
 msgid "Delete a package"
-msgstr ""
+msgstr "Eliminar un paquete"
 
 #: modules/pkgs/infoPackage.inc.php:131
 msgid "Delete a bundle"
-msgstr ""
+msgstr "Eliminar un paquete"
 
 #: modules/pkgs/infoPackage.inc.php:135
 msgid "Activate Appstream Stream"
-msgstr ""
+msgstr "Activar Appstream Stream"
 
 #: modules/pkgs/infoPackage.inc.php:174
 msgid "Appstream Updates list"
-msgstr ""
+msgstr "Lista de actualizaciones de Appstream"
 
 #: modules/pkgs/pkgs/add.php:35
 msgid "Add package"
-msgstr ""
+msgstr "Añadir paquete"
 
 #: modules/pkgs/pkgs/add.php:124 modules/pkgs/pkgs/associate_files.php:65
 #, php-format
 msgid "Files successfully associated with package <b>%s (%s)</b>%s"
-msgstr ""
+msgstr "Archivos asociados correctamente con el paquete <b>%s (%s)</b>%s"
 
 #: modules/pkgs/pkgs/add.php:136 modules/pkgs/pkgs/associate_files.php:85
 #: modules/pkgs/pkgs/edit.php:137
 #, php-format
 msgid "Failed to associate files%s"
-msgstr ""
+msgstr "Fallo al asociar archivos%s"
 
 #: modules/pkgs/pkgs/add.php:142 modules/pkgs/pkgs/associate_files.php:88
 #: modules/pkgs/pkgs/edit.php:141
 msgid "Failed to associate files"
-msgstr ""
+msgstr "Fallo al asociar archivos"
 
 #: modules/pkgs/pkgs/add.php:162
 msgid "Choose package source"
-msgstr ""
+msgstr "Elija la fuente del paquete"
 
 #: modules/pkgs/pkgs/add.php:177
 msgid "Already uploaded on the server"
-msgstr ""
+msgstr "Ya cargado en el servidor"
 
 #: modules/pkgs/pkgs/add.php:177
 msgid "Upload from this web page"
-msgstr ""
+msgstr "Cargar desde esta página web"
 
 #: modules/pkgs/pkgs/add.php:177
 msgid "Make an empty package"
-msgstr ""
+msgstr "Hacer un envase vacío"
 
 #: modules/pkgs/pkgs/add.php:187
 msgid "Package source"
-msgstr ""
+msgstr "Paquete fuente"
 
 #: modules/pkgs/pkgs/add.php:188 modules/pkgs/pkgs/add.php:542
 msgid "Files directory"
-msgstr ""
+msgstr "Directorio de archivos"
 
 #: modules/pkgs/pkgs/add.php:191
 msgid "Package Creation"
-msgstr ""
+msgstr "Creación de paquetes"
 
 #: modules/pkgs/pkgs/add.php:225 modules/pkgs/pkgs/edit.php:322
 #: modules/pkgs/pkgs/ajaxPackageList.php:288
 msgid "Share"
-msgstr ""
+msgstr "Compartir"
 
 #: modules/pkgs/pkgs/add.php:231
 msgid "Name"
@@ -852,7 +828,7 @@ msgstr "Nombre"
 
 #: modules/pkgs/pkgs/add.php:231
 msgid "<fill_package_name>"
-msgstr ""
+msgstr "<fill_package_name>"
 
 #: modules/pkgs/pkgs/add.php:233
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:72
@@ -865,88 +841,83 @@ msgstr "Descripción "
 
 #: modules/pkgs/pkgs/add.php:240
 msgid "Command:"
-msgstr ""
+msgstr "Comando:"
 
 #: modules/pkgs/pkgs/add.php:241
-msgid ""
-"Pulse will try to figure out how to install the uploaded files.\\n\\n\n"
-"        If the detection fails, it doesn't mean that the application cannot be installed using Pulse but that you'll have to figure out the proper command.\\n\\n\n"
-"        Many vendors (Acrobat, Flash, Skype) provide a MSI version of their applications which can be processed automatically by Pulse.\\n\n"
-"        You may also ask Google for the silent installation switches. If you're feeling lucky, here is a Google search that may help:\\n\\n\n"
-"        <a href=\"@@GOOGLE_SEARCH_URL@@\">Google search</a>"
-msgstr ""
+msgid "Pulse will try to figure out how to install the uploaded files.\\\n\\\n\n        If the detection fails, it doesn't mean that the application cannot be installed using Pulse but that you'll have to figure out the proper command.\\\n\\\n\n        Many vendors (Acrobat, Flash, Skype) provide a MSI version of their applications which can be processed automatically by Pulse.\\\n\n        You may also ask Google for the silent installation switches. If you're feeling lucky, here is a Google search that may help:\\\n\\\n\n        <a href=\"@@GOOGLE_SEARCH_URL@@\">Google search</a>"
+msgstr "Pulse intentará averiguar cómo instalar los archivos subidos.\\ \\ \\ Si la detección falla, no significa que la aplicación no se pueda instalar usando Pulse, sino que tendrá que averiguar el comando adecuado.\\ \\ \\ Muchos proveedores (Acrobat, Flash, Skype) proporcionan una versión MSI de sus aplicaciones que pueden ser procesadas automáticamente por Pulse.\\ \\ \\ También puede preguntar a Google por los interruptores de instalación silenciosa. Si se siente con suerte, aquí hay una búsqueda en Google que puede ayudar:\\ \\ <a href=\"@@GOOGLE_SEARCH_URL@@\">Búsqueda en Google</a>"
 
 #: modules/pkgs/pkgs/add.php:248 modules/pkgs/pkgs/edit.php:270
 msgid "Command's name : "
-msgstr ""
+msgstr "Nombre del mando : "
 
 #: modules/pkgs/pkgs/add.php:252 modules/pkgs/pkgs/edit.php:274
 msgid "Need a reboot ?"
-msgstr ""
+msgstr "¿Necesitas reiniciar?"
 
 #: modules/pkgs/pkgs/add.php:257 modules/pkgs/pkgs/edit.php:281
 msgid "Windows"
-msgstr ""
+msgstr "Windows"
 
 #: modules/pkgs/pkgs/add.php:257 modules/pkgs/pkgs/edit.php:281
 msgid "Linux"
-msgstr ""
+msgstr "Linux"
 
 #: modules/pkgs/pkgs/add.php:257 modules/pkgs/pkgs/edit.php:281
 msgid "Mac OS"
-msgstr ""
+msgstr "Mac OS"
 
 #: modules/pkgs/pkgs/add.php:276 modules/pkgs/pkgs/edit.php:352
 msgid "Operating System"
-msgstr ""
+msgstr "Sistema operativo"
 
 #: modules/pkgs/pkgs/add.php:296 modules/pkgs/pkgs/edit.php:377
 #: modules/pkgs/pkgs/detail.php:223
 msgid "Transfer method"
-msgstr ""
+msgstr "Método de transferencia"
 
 #: modules/pkgs/pkgs/add.php:302 modules/pkgs/pkgs/edit.php:387
 #: modules/pkgs/pkgs/detail.php:227
 msgid "bandwidth throttling (ko)"
-msgstr ""
+msgstr "limitación del ancho de banda (ko)"
 
 #: modules/pkgs/pkgs/add.php:303 modules/pkgs/pkgs/edit.php:388
 msgid "<in ko>"
-msgstr ""
+msgstr "<in ko>"
 
 #: modules/pkgs/pkgs/add.php:307 modules/pkgs/pkgs/edit.php:397
 msgid "high priority"
-msgstr ""
+msgstr "alta prioridad"
 
 #: modules/pkgs/pkgs/add.php:307 modules/pkgs/pkgs/edit.php:397
 msgid "ordinary priority"
-msgstr ""
+msgstr "prioridad ordinaria"
 
 #: modules/pkgs/pkgs/add.php:310 modules/pkgs/pkgs/edit.php:400
 #: modules/pkgs/pkgs/detail.php:229
 msgid "Spooling"
-msgstr ""
+msgstr "Carrete"
 
 #: modules/pkgs/pkgs/add.php:313 modules/pkgs/pkgs/edit.php:408
 msgid "Launcher (kiosk)"
-msgstr ""
+msgstr "Lanzadera (quiosco)"
 
 #: modules/pkgs/pkgs/add.php:322 modules/pkgs/pkgs/edit.php:454
 #: modules/pkgs/pkgs/detail.php:290
 msgid "Dependencies"
-msgstr ""
+msgstr "Dependencies"
 
 #: modules/pkgs/pkgs/add.php:332 modules/pkgs/pkgs/edit.php:464
 msgid "Added dependencies"
-msgstr ""
+msgstr "Dependencias añadidas"
 
 #: modules/pkgs/pkgs/add.php:348 modules/pkgs/pkgs/edit.php:480
 msgid "Available dependencies"
-msgstr ""
+msgstr "Dependencias disponibles"
 
 #: modules/pkgs/pkgs/add.php:349 modules/pkgs/pkgs/edit.php:481
 msgid "search by name ..."
-msgstr ""
+msgstr "buscar por nombre ..."
 
 #: modules/pkgs/pkgs/add.php:387 modules/pkgs/pkgs/editRule.php:82
 #: modules/pkgs/pkgs/addRule.php:77
@@ -956,39 +927,37 @@ msgstr "Añadir"
 #: modules/pkgs/pkgs/add.php:513 modules/pkgs/pkgs/add.php:520
 #: modules/pkgs/pkgs/edit.php:644 modules/pkgs/pkgs/edit.php:648
 msgid "Accentuated and special chars are not allowed"
-msgstr ""
+msgstr "Los caracteres acentuados y especiales no están permitidos"
 
 #: modules/pkgs/pkgs/add.php:564
 #, php-format
 msgid "Files upload (<b><u title='%s'>%sM max</u></b>)"
-msgstr ""
+msgstr "Carga de archivos (<b><u title='%s'>%sM máx</u></b>)"
 
 #: modules/pkgs/pkgs/add.php:564
-msgid ""
-"Change post_max_size and upload_max_filesize directives in php.ini file to "
-"increase upload size."
-msgstr ""
+msgid "Change post_max_size and upload_max_filesize directives in php.ini file to increase upload size."
+msgstr "Cambie las directivas post_max_size y upload_max_filesize en el archivo php.ini para aumentar el tamaño de subida."
 
 #: modules/pkgs/pkgs/preview.php:5
 msgid "Content for file "
-msgstr ""
+msgstr "Contenido del expediente "
 
 #: modules/pkgs/pkgs/preview.php:16
 msgid "NL mode (unix)"
-msgstr ""
+msgstr "Modo NL (unix)"
 
 #: modules/pkgs/pkgs/preview.php:17
 msgid "CRLF mode (win)"
-msgstr ""
+msgstr "Modo CRLF (win)"
 
 #: modules/pkgs/pkgs/createGroupLicence.php:64
 #, php-format
 msgid "Computers list has been truncated at %d computers"
-msgstr ""
+msgstr "La lista de ordenadores se ha truncado en %d ordenadores"
 
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:50
 msgid "Associate package"
-msgstr ""
+msgstr "Paquete asociado"
 
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:68
 #: modules/pkgs/pkgs/ajaxAppstreamAvailablePackageList.php:52
@@ -996,259 +965,257 @@ msgstr ""
 #: modules/pkgs/pkgs/ajaxPackageList.php:285
 #: modules/pkgs/pkgs/ajaxPackageList.php:427
 msgid "Package name"
-msgstr ""
+msgstr "Nombre del paquete"
 
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:74
 #: modules/pkgs/pkgs/ajaxPackageList.php:294
 #: modules/pkgs/pkgs/ajaxPackageList.php:433
 msgid "Os"
-msgstr ""
+msgstr "Os"
 
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:82
 msgid "Remove all packages from pending"
-msgstr ""
+msgstr "Eliminar todos los paquetes pendientes"
 
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:83
 msgid "Show mirrors"
-msgstr ""
+msgstr "Mostrar espejos"
 
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:84
 msgid "Remove packages from pending"
-msgstr ""
+msgstr "Eliminar paquetes de pendientes"
 
 #: modules/pkgs/pkgs/editRule.php:29
 msgid "Edit a Rule"
-msgstr ""
+msgstr "Editar una regla"
 
 #: modules/pkgs/pkgs/editRule.php:41
 #, php-format
 msgid "The rule %s has been modified"
-msgstr ""
+msgstr "La regla %s ha sido modificada"
 
 #: modules/pkgs/pkgs/editRule.php:66 modules/pkgs/pkgs/addRule.php:61
 #: modules/pkgs/pkgs/rulesList.php:75
 msgid "Rule Name"
-msgstr ""
+msgstr "Nombre de la regla"
 
 #: modules/pkgs/pkgs/editRule.php:68 modules/pkgs/pkgs/addRule.php:63
 msgid "Search in Name"
-msgstr ""
+msgstr "Buscar por nombre"
 
 #: modules/pkgs/pkgs/editRule.php:68 modules/pkgs/pkgs/addRule.php:63
 msgid "File Name"
-msgstr ""
+msgstr "Nombre del archivo"
 
 #: modules/pkgs/pkgs/editRule.php:69 modules/pkgs/pkgs/addRule.php:64
 msgid "Search in Extension"
-msgstr ""
+msgstr "Buscar en Extensión"
 
 #: modules/pkgs/pkgs/editRule.php:69 modules/pkgs/pkgs/addRule.php:64
 msgid "File Extension"
-msgstr ""
+msgstr "Extensión del archivo"
 
 #: modules/pkgs/pkgs/editRule.php:70 modules/pkgs/pkgs/addRule.php:65
 msgid "Search in Bang"
-msgstr ""
+msgstr "Buscar en Bang"
 
 #: modules/pkgs/pkgs/editRule.php:70 modules/pkgs/pkgs/addRule.php:65
 msgid "Element in Bang"
-msgstr ""
+msgstr "Elemento en Bang"
 
 #: modules/pkgs/pkgs/editRule.php:71 modules/pkgs/pkgs/addRule.php:66
 msgid "Search into File command"
-msgstr ""
+msgstr "Comando Buscar en archivo"
 
 #: modules/pkgs/pkgs/editRule.php:71 modules/pkgs/pkgs/addRule.php:66
 msgid "Element in File Result"
-msgstr ""
+msgstr "Elemento del fichero Resultado"
 
 #: modules/pkgs/pkgs/editRule.php:72 modules/pkgs/pkgs/addRule.php:67
 msgid "Search into Strings command"
-msgstr ""
+msgstr "Comando Buscar en cadenas"
 
 #: modules/pkgs/pkgs/editRule.php:72 modules/pkgs/pkgs/addRule.php:67
 msgid "Element in Strings Result"
-msgstr ""
+msgstr "Elemento en cadenas Resultado"
 
 #: modules/pkgs/pkgs/index.php:30 modules/pkgs/pkgs/localSidebar.php:38
 msgid "Packages list"
-msgstr ""
+msgstr "Lista de paquetes"
 
 #: modules/pkgs/pkgs/deletePackage.php:38
 msgid "Delete this rule"
-msgstr ""
+msgstr "Suprimir esta norma"
 
 #: modules/pkgs/pkgs/addXMPP.php:40
 msgid "Available Actions"
-msgstr ""
+msgstr "Acciones disponibles"
 
 #: modules/pkgs/pkgs/addXMPP.php:43
 msgid "Deployment Workflow"
-msgstr ""
+msgstr "Flujo de trabajo de implantación"
 
 #: modules/pkgs/pkgs/ajaxAppstreamAvailablePackageList.php:55
 msgid "Validity (months)"
-msgstr ""
+msgstr "Validez (meses)"
 
 #: modules/pkgs/pkgs/ajaxAppstreamAvailablePackageList.php:62
 msgid "Activate this Appstream stream"
-msgstr ""
+msgstr "Activar este flujo de Appstream"
 
 #: modules/pkgs/pkgs/addRule.php:29
 msgid "Add a Rule"
-msgstr ""
+msgstr "Añadir una regla"
 
 #: modules/pkgs/pkgs/addRule.php:41
 #, php-format
 msgid "The rule %s has been created"
-msgstr ""
+msgstr "La regla %s ha sido creada"
 
 #: modules/pkgs/pkgs/ajaxAppstreamActivatedPackageList.php:47
 msgid "Waiting..."
-msgstr ""
+msgstr "Esperando..."
 
 #: modules/pkgs/pkgs/ajaxAppstreamActivatedPackageList.php:51
 msgid "Downloading"
-msgstr ""
+msgstr "Descargar"
 
 #: modules/pkgs/pkgs/ajaxAppstreamActivatedPackageList.php:55
 msgid "Ready to use"
-msgstr ""
+msgstr "Listo para usar"
 
 #: modules/pkgs/pkgs/ajaxAppstreamActivatedPackageList.php:66
 msgid "Expiration date"
-msgstr ""
+msgstr "Fecha de expiración"
 
 #: modules/pkgs/pkgs/viewAppstreamUpdates.php:25
 msgid "Appstream updates"
-msgstr ""
+msgstr "Actualizaciones de Appstream"
 
 #: modules/pkgs/pkgs/viewAppstreamUpdates.php:38
 msgid "Appstream update"
-msgstr ""
+msgstr "Actualización de Appstream"
 
 #: modules/pkgs/pkgs/remove.php:39
 msgid "The package has been deleted."
-msgstr ""
+msgstr "El paquete ha sido eliminado."
 
 #: modules/pkgs/pkgs/remove.php:53
 msgid "The package failed to delete"
-msgstr ""
+msgstr "El paquete no pudo eliminar"
 
 #: modules/pkgs/pkgs/remove.php:66
 msgid "Delete this package"
-msgstr ""
+msgstr "Eliminar este paquete"
 
 #: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:109
 msgid "Package API temporary directory is empty"
-msgstr ""
+msgstr "El directorio temporal del paquete API está vacío"
 
 #: modules/pkgs/pkgs/activateAppstreamFlow.php:37
-msgid ""
-"The stream has been added successfully. You will receive the latest updates "
-"of this stream directly in your package list."
-msgstr ""
+msgid "The stream has been added successfully. You will receive the latest updates of this stream directly in your package list."
+msgstr "El stream ha sido añadido con éxito. Recibirá las últimas actualizaciones de este flujo directamente en su lista de paquetes."
 
 #: modules/pkgs/pkgs/activateAppstreamFlow.php:51
 msgid "Unable to add stream."
-msgstr ""
+msgstr "No se puede añadir flujo."
 
 #: modules/pkgs/pkgs/activateAppstreamFlow.php:61
 msgid "Activate this Appstream stream?"
-msgstr ""
+msgstr "¿Activar este flujo Appstream?"
 
 #: modules/pkgs/pkgs/edit.php:39
 msgid "Edit package"
-msgstr ""
+msgstr "Editar paquete"
 
 #: modules/pkgs/pkgs/edit.php:105
 #, php-format
 msgid "Package successfully added in %s"
-msgstr ""
+msgstr "Paquete añadido correctamente en %s"
 
 #: modules/pkgs/pkgs/edit.php:112
 msgid "Package successfully edited"
-msgstr ""
+msgstr "Paquete editado correctamente"
 
 #: modules/pkgs/pkgs/edit.php:128
 #, php-format
 msgid "Files successfully added to the package <b>%s (%s)</b>"
-msgstr ""
+msgstr "Archivos añadidos correctamente al paquete <b>%s (%s)</b>"
 
 #: modules/pkgs/pkgs/edit.php:153
 msgid "Package failed to save"
-msgstr ""
+msgstr "No se ha podido guardar el paquete"
 
 #: modules/pkgs/pkgs/edit.php:186
 #, php-format
 msgid "Failed to delete files%s"
-msgstr ""
+msgstr "Error al borrar archivos%s"
 
 #: modules/pkgs/pkgs/edit.php:188 modules/pkgs/pkgs/edit.php:192
 #, php-format
 msgid "<br/>File successfully deleted. %s"
-msgstr ""
+msgstr "<br/>Archivo eliminado con éxito. %s"
 
 #: modules/pkgs/pkgs/edit.php:196
 msgid "Failed to delete files"
-msgstr ""
+msgstr "Error al borrar archivos"
 
 #: modules/pkgs/pkgs/edit.php:261
 msgid "Package label"
-msgstr ""
+msgstr "Etiqueta del envase"
 
 #: modules/pkgs/pkgs/edit.php:262
 msgid "Package version"
-msgstr ""
+msgstr "Versión del paquete"
 
 #: modules/pkgs/pkgs/edit.php:270
 msgid "Command : "
-msgstr ""
+msgstr "Comando : "
 
 #: modules/pkgs/pkgs/edit.php:533 modules/pkgs/pkgs/detail.php:82
 #: modules/pkgs/pkgs/detail.php:246
 msgid "File"
-msgstr ""
+msgstr "Archivo"
 
 #: modules/pkgs/pkgs/edit.php:542
 msgid "Delete file"
-msgstr ""
+msgstr "Eliminar archivo"
 
 #: modules/pkgs/pkgs/edit.php:542
 msgid "Are you sure you want to delete this file?"
-msgstr ""
+msgstr "¿Está seguro de que desea eliminar este archivo?"
 
 #: modules/pkgs/pkgs/detail.php:36
 msgid "Executed Command"
-msgstr ""
+msgstr "Comando ejecutado"
 
 #: modules/pkgs/pkgs/detail.php:41
 msgid "Type Script"
-msgstr ""
+msgstr "Tipo Script"
 
 #: modules/pkgs/pkgs/detail.php:46
 msgid "Shebang"
-msgstr ""
+msgstr "Shebang"
 
 #: modules/pkgs/pkgs/detail.php:57
 msgid "Timeout"
-msgstr ""
+msgstr "Timeout"
 
 #: modules/pkgs/pkgs/detail.php:62
 msgid "Code Return"
-msgstr ""
+msgstr "Código Retorno"
 
 #: modules/pkgs/pkgs/detail.php:67
 msgid "Alternate Package"
-msgstr ""
+msgstr "Paquete alternativo"
 
 #: modules/pkgs/pkgs/detail.php:72
 msgid "Set Environ Variable"
-msgstr ""
+msgstr "Configurar la variable Environ"
 
 #: modules/pkgs/pkgs/detail.php:88
 msgid "Set"
-msgstr ""
+msgstr "Establecer"
 
 #: modules/pkgs/pkgs/detail.php:98 modules/pkgs/pkgs/detail.php:103
 #: modules/pkgs/pkgs/detail.php:108 modules/pkgs/pkgs/detail.php:113
@@ -1256,27 +1223,27 @@ msgstr ""
 #: modules/pkgs/pkgs/detail.php:129 modules/pkgs/pkgs/detail.php:134
 #: modules/pkgs/pkgs/detail.php:139
 msgid "Result Command"
-msgstr ""
+msgstr "Resultado Comando"
 
 #: modules/pkgs/pkgs/detail.php:145
 msgid "Agent Machine"
-msgstr ""
+msgstr "Máquina Agente"
 
 #: modules/pkgs/pkgs/detail.php:145
 msgid "Machine"
-msgstr ""
+msgstr "Máquina"
 
 #: modules/pkgs/pkgs/detail.php:150
 msgid "Waiting"
-msgstr ""
+msgstr "En espera"
 
 #: modules/pkgs/pkgs/detail.php:150
 msgid "secs."
-msgstr ""
+msgstr "seco."
 
 #: modules/pkgs/pkgs/detail.php:151
 msgid "Go to"
-msgstr ""
+msgstr "Ir a"
 
 #: modules/pkgs/pkgs/detail.php:157
 msgid "Comment"
@@ -1284,55 +1251,55 @@ msgstr "Comentario"
 
 #: modules/pkgs/pkgs/detail.php:162
 msgid "Inventory Activated"
-msgstr ""
+msgstr "Inventario activado"
 
 #: modules/pkgs/pkgs/detail.php:167
 msgid "Clear package after install"
-msgstr ""
+msgstr "Borrar el paquete después de la instalación"
 
 #: modules/pkgs/pkgs/detail.php:172
 msgid "If error go to"
-msgstr ""
+msgstr "Si se produce un error, vaya a"
 
 #: modules/pkgs/pkgs/detail.php:175
 msgid "If success go to"
-msgstr ""
+msgstr "Si tiene éxito, vaya a"
 
 #: modules/pkgs/pkgs/detail.php:188
 msgid "Detail of Package "
-msgstr ""
+msgstr "Detalle del paquete "
 
 #: modules/pkgs/pkgs/detail.php:193
 msgid "Context"
-msgstr ""
+msgstr "Contexto"
 
 #: modules/pkgs/pkgs/detail.php:195
 msgid "Package Name"
-msgstr ""
+msgstr "Nombre del paquete"
 
 #: modules/pkgs/pkgs/detail.php:196
 msgid "Creator"
-msgstr ""
+msgstr "Creador"
 
 #: modules/pkgs/pkgs/detail.php:198
 msgid "Edited By"
-msgstr ""
+msgstr "Editado por"
 
 #: modules/pkgs/pkgs/detail.php:200
 msgid "Creation Date"
-msgstr ""
+msgstr "Fecha de creación"
 
 #: modules/pkgs/pkgs/detail.php:202
 msgid "Last Modification Date"
-msgstr ""
+msgstr "Fecha de la última modificación"
 
 #: modules/pkgs/pkgs/detail.php:205
 msgid "Sharing Location"
-msgstr ""
+msgstr "Compartir ubicación"
 
 #: modules/pkgs/pkgs/detail.php:207
 msgid "Package Uuid"
-msgstr ""
+msgstr "Paquete Uuid"
 
 #: modules/pkgs/pkgs/detail.php:210
 msgid "Type"
@@ -1341,43 +1308,43 @@ msgstr "Tipo"
 #: modules/pkgs/pkgs/detail.php:212 modules/pkgs/pkgs/ajaxPackageList.php:293
 #: modules/pkgs/pkgs/ajaxPackageList.php:432
 msgid "Licenses"
-msgstr ""
+msgstr "Licencias"
 
 #: modules/pkgs/pkgs/detail.php:221
 msgid "Transfer Method"
-msgstr ""
+msgstr "Método de transferencia"
 
 #: modules/pkgs/pkgs/detail.php:224 modules/pkgs/pkgs/detail.php:247
 msgid "Size"
-msgstr ""
+msgstr "Talla"
 
 #: modules/pkgs/pkgs/detail.php:225
 msgid "Transferfile"
-msgstr ""
+msgstr "Transferfile"
 
 #: modules/pkgs/pkgs/detail.php:229
 msgid "Priority"
-msgstr ""
+msgstr "Prioridad"
 
 #: modules/pkgs/pkgs/detail.php:238
 msgid "View File Content"
-msgstr ""
+msgstr "Ver el contenido del archivo"
 
 #: modules/pkgs/pkgs/detail.php:241
 msgid "Files"
-msgstr ""
+msgstr "Archivos"
 
 #: modules/pkgs/pkgs/detail.php:241
 msgid "Total"
-msgstr ""
+msgstr "Total"
 
 #: modules/pkgs/pkgs/detail.php:248
 msgid "Ratio Size/Total"
-msgstr ""
+msgstr "Ratio Tamaño/Total"
 
 #: modules/pkgs/pkgs/detail.php:249
 msgid "Mime Type"
-msgstr ""
+msgstr "Tipo Mime"
 
 #: modules/pkgs/pkgs/detail.php:250 modules/pkgs/pkgs/detail.php:299
 msgid "Action"
@@ -1385,85 +1352,85 @@ msgstr "Acciones"
 
 #: modules/pkgs/pkgs/detail.php:274 modules/pkgs/pkgs/ajaxPackageList.php:75
 msgid "Package Detail"
-msgstr ""
+msgstr "Detalles del paquete"
 
 #: modules/pkgs/pkgs/detail.php:297
 msgid "Package"
-msgstr ""
+msgstr "Paquete"
 
 #: modules/pkgs/pkgs/detail.php:298
 msgid "Uuid"
-msgstr ""
+msgstr "Uuid"
 
 #: modules/pkgs/pkgs/detail.php:328
 msgid "Sequences"
-msgstr ""
+msgstr "Secuencias"
 
 #: modules/pkgs/pkgs/localSidebar.php:47 modules/pkgs/pkgs/pending.php:29
 msgid "Pending packages list"
-msgstr ""
+msgstr "Lista de paquetes pendientes"
 
 #: modules/pkgs/pkgs/rulesList.php:35
 #, php-format
 msgid "The rule %s has been removed"
-msgstr ""
+msgstr "La regla %s ha sido eliminada"
 
 #: modules/pkgs/pkgs/rulesList.php:78
 msgid "Rules Order"
-msgstr ""
+msgstr "Reglas Orden"
 
 #: modules/pkgs/pkgs/rulesList.php:79
 msgid "Rule Description"
-msgstr ""
+msgstr "Descripción de la norma"
 
 #: modules/pkgs/pkgs/rulesList.php:81
 msgid "Raise order priority"
-msgstr ""
+msgstr "Aumentar la prioridad de los pedidos"
 
 #: modules/pkgs/pkgs/rulesList.php:82
 msgid "Lower order priority"
-msgstr ""
+msgstr "Prioridad de orden inferior"
 
 #: modules/pkgs/pkgs/rulesList.php:83
 msgid "Edit rule"
-msgstr ""
+msgstr "Editar regla"
 
 #: modules/pkgs/pkgs/rulesList.php:84
 msgid "Delete rule"
-msgstr ""
+msgstr "Borrar regla"
 
 #: modules/pkgs/pkgs/appstreamSettings.php:39
 #, php-format
 msgid "Please access the %s to manage your Appstream subscriptions."
-msgstr ""
+msgstr "Accede a %s para gestionar tus suscripciones a Appstream."
 
 #: modules/pkgs/pkgs/appstreamSettings.php:54
 msgid "Invalid My Credentials, please verify your username/password."
-msgstr ""
+msgstr "Mis credenciales no son válidas, por favor verifique su nombre de usuario/contraseña."
 
 #: modules/pkgs/pkgs/appstreamSettings.php:70
 msgid "Your My credentials have been set successfully."
-msgstr ""
+msgstr "Tus credenciales se han configurado correctamente."
 
 #: modules/pkgs/pkgs/appstreamSettings.php:86
 msgid "Cannot set My Credentials."
-msgstr ""
+msgstr "No se pueden establecer mis credenciales."
 
 #: modules/pkgs/pkgs/appstreamSettings.php:114
 msgid "Your Account credentials are active"
-msgstr ""
+msgstr "Las credenciales de su cuenta están activas"
 
 #: modules/pkgs/pkgs/appstreamSettings.php:115
 msgid "Modify Account credentials"
-msgstr ""
+msgstr "Modificar las credenciales de la cuenta"
 
 #: modules/pkgs/pkgs/appstreamSettings.php:122
 msgid "My Account credentials:"
-msgstr ""
+msgstr "Credenciales de Mi Cuenta:"
 
 #: modules/pkgs/pkgs/appstreamSettings.php:130
 msgid "Username"
-msgstr ""
+msgstr "Nombre de usuario"
 
 #: modules/pkgs/pkgs/appstreamSettings.php:135
 msgid "Password"
@@ -1471,81 +1438,82 @@ msgstr "Contraseña"
 
 #: modules/pkgs/pkgs/ajaxPackageList.php:77
 msgid "Please switch to Expert mode to edit this package"
-msgstr ""
+msgstr "Cambie al modo Experto para editar este paquete"
 
 #: modules/pkgs/pkgs/ajaxPackageList.php:78
 msgid "You must have write rights to edit this package"
-msgstr ""
+msgstr "Debe tener derechos de escritura para editar este paquete"
 
 #: modules/pkgs/pkgs/ajaxPackageList.php:81
 msgid "You must have write rights to delete this package"
-msgstr ""
+msgstr "Debe tener derechos de escritura para eliminar este paquete"
 
 #: modules/pkgs/pkgs/ajaxPackageList.php:144
 #: modules/pkgs/pkgs/ajaxPackageList.php:147
 msgid "Sharing disk usage"
-msgstr ""
+msgstr "Uso compartido del disco"
 
 #: modules/pkgs/pkgs/ajaxPackageList.php:144
 msgid "Package occupation"
-msgstr ""
+msgstr "Ocupación del paquete"
 
 #: modules/pkgs/pkgs/ajaxPackageList.php:146
 msgid "Not limited"
-msgstr ""
+msgstr "No limitado"
 
 #: modules/pkgs/pkgs/ajaxPackageList.php:147
 #: modules/pkgs/pkgs/ajaxPackageList.php:160
 msgid "not limited"
-msgstr ""
+msgstr "no limitado"
 
 #: modules/pkgs/pkgs/ajaxPackageList.php:174
 msgid "Non precised"
-msgstr ""
+msgstr "No precisa"
 
 #: modules/pkgs/pkgs/ajaxPackageList.php:289
 msgid "Permissions"
-msgstr ""
+msgstr "Permisos"
 
 #: modules/pkgs/pkgs/ajaxPackageList.php:295
 #: modules/pkgs/pkgs/ajaxPackageList.php:434
 msgid "Package size"
-msgstr ""
+msgstr "Tamaño del envase"
 
 #: modules/pkgs/pkgs/ajaxPackageList.php:296
 msgid "Share usage"
-msgstr ""
+msgstr "Uso compartido"
 
 #: modules/pkgs/pkgs/rsync.php:74
 msgid "Relay servers not yet synchronized: "
-msgstr ""
+msgstr "Servidores de retransmisión aún no sincronizados: "
 
 #: modules/pkgs/pkgs/rsync.php:93
 msgid "Relay servers already synchronized: "
-msgstr ""
+msgstr "Servidores de retransmisión ya sincronizados: "
 
 #: modules/pkgs/pkgs/desynchronization.php:54
 msgid "Delete Pending"
-msgstr ""
+msgstr "Borrar Pendiente"
 
 #: modules/pkgs/pkgs/desynchronization.php:57
 #: modules/pkgs/pkgs/desynchronization.php:74
 msgid "Remove package "
-msgstr ""
+msgstr "Retire el paquete "
 
 #: modules/pkgs/pkgs/desynchronization.php:57
 #: modules/pkgs/pkgs/desynchronization.php:81
 msgid "Remove specific jids from "
-msgstr ""
+msgstr "Eliminar jids específicos de "
 
 #: modules/pkgs/pkgs/pending.php:41
 msgid "All the pendings have been deleted"
-msgstr ""
+msgstr "Se han eliminado todos los pendientes"
 
 #: modules/pkgs/pkgs/pending.php:44
 msgid "The package "
-msgstr ""
+msgstr "El paquete "
 
 #: modules/pkgs/pkgs/pending.php:47
 msgid "The relays <b>"
-msgstr ""
+msgstr "Los relés <b>"
+

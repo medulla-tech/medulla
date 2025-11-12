@@ -36,18 +36,20 @@ $computerpresence = isset($_GET['computerpresence']) ? $_GET['computerpresence']
 
 $_SESSION['computerpresence'] = $computerpresence;
 
+echo '<div style="position: relative; z-index: 800; padding: 10px 0; margin-bottom: 20px; background: transparent; clear: both;">';
 echo '<input type="radio" ';
 if ($computerpresence == "all_computer") echo "checked";
 echo ' id="namepresence1" name="namepresence" value="all_computer"/> ';
-echo '<label for="namepresence1" style="display:initial;">'._('All computers').'</label>';
+echo '<label for="namepresence1" style="display:initial; cursor: pointer;">'._('All computers').'</label>';
 echo '<input type="radio" ';
 if ($computerpresence == "presence") echo "checked";
 echo ' id="namepresence2" name="namepresence" value="presence"/> ';
-echo '<label for="namepresence2" style="display:initial;">'._('Online computers').'</label>';
+echo '<label for="namepresence2" style="display:initial; cursor: pointer;">'._('Online computers').'</label>';
 echo '<input type="radio" ';
 if ($computerpresence == "no_presence") echo "checked";
 echo ' id="namepresence3" name="namepresence" value="no_presence"/> ';
-echo '<label for="namepresence3" style="display:initial;">'._('Offline computers').'</label>';
+echo '<label for="namepresence3" style="display:initial; cursor: pointer;">'._('Offline computers').'</label>';
+echo '</div>';
 
 
         $chaine = array(

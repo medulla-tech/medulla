@@ -759,6 +759,14 @@ function xmlrpc_Windows_Answer_File_Generator($params, $title)
     return xmlCall("imaging.Windows_Answer_File_Generator", array( $params,$title));
 }
 
+function xmlrpc_linux_preseed_generator($params, $title){
+    return xmlCall("imaging.linux_preseed_generator", [$params, $title]);
+}
+
+function xmlrpc_edit_linux_preseed($params, $title){
+    return xmlCall("imaging.edit_linux_preseed", [$params, $title]);
+}
+
 function xmlrpc_deleteWindowsAnswerFile($title)
 {
     return xmlCall("imaging.deleteWindowsAnswerFile", array($title));

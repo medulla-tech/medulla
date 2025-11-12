@@ -352,17 +352,17 @@ $page = new Page("approve_rules", _T('Automatic approval rules', 'updates'));
 $page->setFile("modules/updates/updates/approve_rules.php");
 $submod->addPage($page);
 
-$page = new Page("ajaxApproveRules", _T("choise update event for entity", "updates"));
+$page = new Page("ajaxApproveRules", _T("Choose update event for entity", "updates"));
 $page->setFile("modules/updates/updates/ajaxApproveRules.php");
 $page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
 $submod->addPage($page);
 
 /// choose produit
-$page = new Page("approve_products", _T('Approve produit Microsoft pour mise a jour', 'updates'));
+$page = new Page("approve_products", _T('Approve Microsoft products updates', 'updates'));
 $page->setFile("modules/updates/updates/approve_products.php");
 $submod->addPage($page);
 
-$page = new Page("ajaxApproveProduct", _T("choise product for entity", "updates"));
+$page = new Page("ajaxApproveProduct", _T("Choose product for entity", "updates"));
 $page->setFile("modules/updates/updates/ajaxApproveProduct.php");
 $page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
 $submod->addPage($page);

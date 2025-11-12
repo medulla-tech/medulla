@@ -1,6 +1,7 @@
 <?php
 /**
  * (c) 2015-2016 Siveo, http://siveo.net
+ * (c) 2025 Medulla, http://medulla-tech.io
  *
  * $Id$
  *
@@ -179,6 +180,72 @@ class InputTplTitle extends InputTpl {
     }
 }
 
+class NumberTplTitle extends InputTpl {
+    public $title;
+    public $fieldType;
+    public $size;
+    public $regexp;
+    public $min;
+    public $max;
+    public $value;
+
+    function __construct($name, $title=null){
+        parent::__construct($name, "");
+        $this->title=$title;
+        $this->fieldType = "number";
+        $this->min = -1;
+        $this->max = -1;
+    }
+
+    /**
+     *  display input Element
+     *  $arrParam accept ["value"] to corresponding value
+     */
+    function display($arrParam = array()) {
+        if ($arrParam == '') {
+            $arrParam = $_POST[$this->name];
+        }
+        if (!isset($arrParam['disabled'])) {
+            $arrParam['disabled'] = '';
+        }
+        if (!isset($arrParam['placeholder'])) {
+            $arrParam['placeholder'] = '';
+        }
+
+        $attrs = array(
+            attribut('type',$this->fieldType),
+            attribut('size',$this->size),
+            attribut('value',$arrParam["value"]),
+            attribut('placeholder="' . $arrParam["placeholder"].'"'),
+            attribut($arrParam["disabled"]),
+            attribut("title",$this->title),
+            attribut( isset($arrParam["required"]) ? ' rel="required" ' : ''),
+            attribut( isset($arrParam["required"]) ? ' required="required" ' : ''),
+            attribut("title",$this->title),
+            attribut('autocomplete="off"'),
+        );
+        if($this->min != -1){
+            $attrs[] = attribut("min", $this->min);
+        }
+
+        echo add_element('span',
+                "" ,
+                "container_input_$this->name",
+                "" ,
+                add_element('input', $this->name, $this->name,$attrs, "", "html" ),
+                "xhtml" );
+        if (isset($arrParam["onchange"])) {
+            print '<script type="text/javascript">';
+            print 'jQuery(\'#' . $this->name . '\').change( function() {' . $arrParam["onchange"] . '});';
+            print '</script>';
+        }
+    }
+
+    public function setMin($value){
+        $this->min = $value;
+    }
+}
+
 class SelectItemtitle extends SelectItem {
     var $title;
     /**
@@ -216,6 +283,13 @@ class SelectItemtitle extends SelectItem {
  * click launch function fn_"id_element"
  */
 class IconeElement extends HtmlElement {
+    public $id;
+    public $src;
+    public $alt;
+    public $style;
+    public $params;
+    public $title;
+
     function __construct($id, $src, $alt="", $title="", $params = array()) {
         $this->id = $id;
         $this->src = $src;

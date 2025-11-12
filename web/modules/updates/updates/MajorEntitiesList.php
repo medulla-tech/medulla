@@ -1,6 +1,7 @@
 <?php
 require("localSidebar.php");
 require("graph/navbar.inc.php");
+require_once("modules/xmppmaster/includes/html.inc.php");
 
 // require_once("modules/updates/includes/xmlrpc.php");
 // require_once("modules/admin/includes/xmlrpc.php");
@@ -13,6 +14,16 @@ global $maxperpage;
 $p = new PageGenerator(_T("Entity Compliance", "updates"));
 $p->setSideMenu($sidemenu);
 $p->display();
+
+$refresh = new RefreshButton();
+print "<br/>";
+$refresh->display();
+
+$ajax = new AjaxFilter(urlStrRedirect("updates/updates/ajaxMajorEntitiesList"), "container", array('source' => 'xmppmaster'), 'formRunning');
+
+$ajax->setRefresh($refresh->refreshtime());
+$ajax->display();
+$ajax->displayDivToUpdate();
 
 $p = new TabbedPageGenerator();
 //$p->setSideMenu($sidemenu);

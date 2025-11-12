@@ -319,7 +319,8 @@ def get_machine_with_update(kb, updateid, uuid, start=0, limit=-1, filter=""):
 
 def get_count_machine_with_update(kb, uuid, list):
     return Glpi().get_count_machine_with_update(kb, uuid, list)
-#
+
+
 #
 # def get_os_update_major_stats():
 #     return XmppMasterDatabase().get_os_update_major_stats()

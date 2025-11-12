@@ -49,6 +49,10 @@ function displayErrorCss($name)
 class AbstractTpl extends HtmlElement
 {
     public $name;
+    public $label;
+    public $text;
+    public $value;
+    public $size;
 
     /**
      *  display abstract Element
@@ -269,6 +273,9 @@ class ImageTpl extends AbstractTpl
  */
 class CheckboxTpl extends AbstractTpl
 {
+    protected $jsFunc;
+    protected $rightlabel;
+
     public function __construct($name, $rightlabel = null, $jsFunc = null)
     {
         $this->name = $name;
@@ -291,6 +298,10 @@ class CheckboxTpl extends AbstractTpl
         print '<input ' . $arrParam["value"] . ' name="' . $this->name . '" id="' . $this->name . '" type="checkbox" class="checkbox" ' . $arrParam["extraArg"];
         if ($this->jsFunc) {
             print " onchange=\"" . $this->jsFunc . "(); return false;\"";
+        }
+
+        if(isset($arrParam["title"])){
+            print ' title="' . $arrParam["title"] . '"';
         }
         print ' />';
         if (isset($this->rightlabel)) {
@@ -337,6 +348,13 @@ class CheckboxTpl extends AbstractTpl
  */
 class InputTpl extends AbstractTpl
 {
+    // Must be public to be sure it doesn't broke anything
+    public $regexp;
+    public $fieldType;
+    public $size;
+    public $attributcustom;
+    public $defaultValue;
+
     public function __construct($name, $regexp = '/.+/', $defaultValue = '')
     {
         $this->name = $name;
@@ -1005,6 +1023,8 @@ class SelectItem extends AbstractTpl
     public $selected; /*     * < element who are selected */
     public $id; /*     * < id for css property */
     public $jsFunc;
+    public $style;
+    public $jsFuncParams;
 
     /**
      * constructor
@@ -1108,6 +1128,8 @@ class SelectItem extends AbstractTpl
 
 class SelectMultiTpl extends SelectItem
 {
+    public $height;
+
     public function setHeight($size)
     {
         $this->height = $size;

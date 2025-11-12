@@ -183,7 +183,7 @@ $infospackage = pkgs_get_infos_details($pathpackage);
                                 echo '</td>';
                             }
                                 echo '<td style="width: 210px;">';
-                                echo '<span style="padding-left: 32px;">'._T("number sharing","xmppmaster").'</span>';
+                                echo '<span style="padding-left: 32px;">'._T("Number of shares","xmppmaster").'</span>';
                                 echo '</td>';
 
                         echo "</tr>";

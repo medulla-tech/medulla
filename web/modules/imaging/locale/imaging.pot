@@ -1,20 +1,9 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-07 20:29+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Project-Id-Version: medulla\n"
+"POT-Creation-Date: 2025-10-30 16:48+0100\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:25
@@ -1363,49 +1352,49 @@ msgid ""
 "imaging."
 msgstr ""
 
-#: modules/imaging/includes/includes.php:211
+#: modules/imaging/includes/includes.php:258
 msgid "Uptime: "
 msgstr ""
 
-#: modules/imaging/includes/includes.php:213
+#: modules/imaging/includes/includes.php:260
 msgid "day"
 msgstr ""
 
-#: modules/imaging/includes/includes.php:216
+#: modules/imaging/includes/includes.php:263
 msgid "hour"
 msgstr ""
 
-#: modules/imaging/includes/includes.php:218
+#: modules/imaging/includes/includes.php:265
 msgid "minute"
 msgstr ""
 
-#: modules/imaging/includes/includes.php:222
+#: modules/imaging/includes/includes.php:269
 msgid "Memory"
 msgstr ""
 
-#: modules/imaging/includes/includes.php:225
+#: modules/imaging/includes/includes.php:272
 msgid "Swap"
 msgstr ""
 
-#: modules/imaging/includes/includes.php:238
+#: modules/imaging/includes/includes.php:285
 msgid "Never"
 msgstr ""
 
-#: modules/imaging/includes/includes.php:242
-#: modules/imaging/includes/includes.php:249
+#: modules/imaging/includes/includes.php:289
+#: modules/imaging/includes/includes.php:296
 msgid "As soon as possible"
 msgstr ""
 
-#: modules/imaging/includes/includes.php:251
+#: modules/imaging/includes/includes.php:298
 msgid "<i>undefined</i>"
 msgstr ""
 
-#: modules/imaging/includes/includes.php:322
+#: modules/imaging/includes/includes.php:369
 msgid "Backup log messages"
 msgstr ""
 
-#: modules/imaging/includes/ajaxcommon.inc.php:39
-#: modules/imaging/includes/ajaxcommon.inc.php:60
+#: modules/imaging/includes/ajaxcommon.inc.php:41
+#: modules/imaging/includes/ajaxcommon.inc.php:62
 #: modules/imaging/imaging/tabs.php:100
 #: modules/imaging/imaging/ajaxImages.php:182
 #: modules/imaging/imaging/addservice.php:69
@@ -1414,16 +1403,16 @@ msgstr ""
 msgid "root"
 msgstr ""
 
-#: modules/imaging/includes/ajaxcommon.inc.php:86
+#: modules/imaging/includes/ajaxcommon.inc.php:88
 #, php-format
 msgid "Imaging server of entity %s"
 msgstr ""
 
-#: modules/imaging/includes/ajaxcommon.inc.php:105
+#: modules/imaging/includes/ajaxcommon.inc.php:107
 msgid "the entity itself"
 msgstr ""
 
-#: modules/imaging/includes/ajaxcommon.inc.php:121
+#: modules/imaging/includes/ajaxcommon.inc.php:123
 msgid "The registering in the imaging server has failed."
 msgstr ""
 

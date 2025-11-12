@@ -1,16 +1,4 @@
-<style type="text/css"><!--
-    /* canvas styles */
-html, body
-{
-    font:normal normal normal 100%/1.4 tahoma, sans-serif;
-    background:#f9f9f9;
-    color:#000;
-}
-body
-{
-    font-size:0.8em;
-}
-
+<style type="text/css">
 /* draggable targets */
 [data-draggable="target"]
 {
@@ -76,4 +64,4 @@ body
     background:#8ad;
     color:#fff;
 }
---></style>
+</style>

@@ -46,7 +46,7 @@ $sidemenu->addSideMenuItem(new SideMenuItem(_T("Automatic Approval Rules",
                                             "approve_rules"));
 
 $sidemenu->addSideMenuItem(
-     new SideMenuItem(_T("Approve Microsoft product",
+     new SideMenuItem(_T("Microsoft Products Approval",
                          "updates"),
                       "updates",
                       "updates",

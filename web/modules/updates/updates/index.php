@@ -30,14 +30,22 @@ global $conf;
 //Entities Compliance
 require("localSidebar.php");
 require("graph/navbar.inc.php");
+require_once("modules/xmppmaster/includes/html.inc.php");
 
 
 $p = new PageGenerator(_T("Entity Compliance", "updates"));
 $p->setSideMenu($sidemenu);
 $p->display();
-$timerefresh= 90;
-$ajax = new AjaxPagebartitlletime(urlStrRedirect("updates/updates/ajaxEntityCompliance"), "EntityCompliancediv", getFilteredGetParams(), $timerefresh, "circularProgress");
+
+$refresh = new RefreshButton();
+print "<br/>";
+$refresh->display();
+
+$ajax = new AjaxFilter(urlStrRedirect("updates/updates/ajaxEntityCompliance"), "container", array('source' => 'xmppmaster'), 'formRunning');
+
+$ajax->setRefresh($refresh->refreshtime());
 $ajax->display();
+$ajax->displayDivToUpdate();
 //
 // generateEntityPage(_T("Entities Compliance", 'updates'),
 //                    "ajaxEntityCompliance",

@@ -1,0 +1,3 @@
+etc/mmc/plugins/mastering.ini
+usr/lib/python3/*-packages/mmc/plugins/mastering
+usr/share/doc/pulse2/contrib/mastering/

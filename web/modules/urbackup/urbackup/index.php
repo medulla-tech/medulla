@@ -140,7 +140,7 @@ $stats = xmlrpc_get_stats();
 
 ?>
 <script>
-    $(document).ready(function(){
+    jQuery(document).ready(function($) {
         setInterval(function() {
             $("#progressBackups").load("index.php");
         }, 10000);

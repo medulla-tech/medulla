@@ -133,7 +133,7 @@ function display_group_actions($group, $paramArray)
     $is_gp = ($group->type == 1);
 
     if (!$is_gp) {
-        $actions['displayGroup'] = new ActionItem(_T("Display2 this group's content", 'dyngroup'), "display", "displaygroup", "id", "base", "computers");
+        $actions['displayGroup'] = new ActionItem(_T("Display this group's content", 'dyngroup'), "display", "displaygroup", "id", "base", "computers");
         $actions['edit'] = new ActionItem(_T("Edit this group", 'dyngroup'), "computersgroupedit", "edit", "id", "base", "computers");
         $actions['share'] = new ActionItem(_T("Share this group", 'dyngroup'), "edit_share", "groupshare", "id", "base", "computers");
         if (in_array("msc", $_SESSION["supportModList"])) {
