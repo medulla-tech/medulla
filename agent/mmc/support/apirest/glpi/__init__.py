@@ -630,12 +630,22 @@ class GLPIClient:
             logger.error(f"Session/headers error: {e}")
             return 0
 
-        data = {
-            "input": {
-                item_name: new_value,
-                "id": user_id
+        # Cas spécial pour les mots de passe
+        if item_name == "password":
+            data = {
+                "input": {
+                    "password": new_value,
+                    "password2": new_value,  # Confirmation requise
+                    "id": user_id
+                }
             }
-        }
+        else:
+            data = {
+                "input": {
+                    item_name: new_value,
+                    "id": user_id
+                }
+            }
 
         response = requests.put(
             f"{self.URL_BASE}/User/{user_id}",
