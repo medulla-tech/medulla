@@ -231,7 +231,8 @@ input[type="text"] {
 
         if (data.notif && data.notif.strings && data.notif.strings[0]) {
             jQuery('#notif').html(data.notif.strings[0]);
-            const redirectUrl = "main.php?module=xmppmaster&submod=xmppmaster&action=ActionQuickGroup";
+            // const redirectUrl = "main.php?module=xmppmaster&submod=xmppmaster&action=ActionQuickGroup";
+            const redirectUrl = window.location.href;
             window.location.href = redirectUrl;
         }
     }

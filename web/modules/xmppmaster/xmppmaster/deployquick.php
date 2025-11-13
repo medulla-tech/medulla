@@ -363,12 +363,14 @@ $jid = (isset($_GET['jid'])) ? $_GET['jid'] : '';
             .done(function( data ) {
                 if (typeof(uuid['entity'] ) != "undefined"){
                     jQuery('#notif').html(data.notif.strings[0]);
-                    const redirectUrl = "main.php?module=xmppmaster&submod=xmppmaster&action=ActionQuickGroup";
+                    // const redirectUrl = "main.php?module=xmppmaster&submod=xmppmaster&action=ActionQuickGroup";
+                    const redirectUrl = window.location.href;
                     window.location.href = redirectUrl;
                 }
                 else{
                     jQuery('#notif').html(data.notif.strings[0]);
-                    const redirectUrl = "main.php?module=xmppmaster&submod=xmppmaster&action=ActionQuickGroup";
+                    // const redirectUrl = "main.php?module=xmppmaster&submod=xmppmaster&action=ActionQuickGroup";
+                    const redirectUrl = window.location.href;
                     window.location.href = redirectUrl;
                 }
             })
