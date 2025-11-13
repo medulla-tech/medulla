@@ -36,18 +36,21 @@ require_once("modules/xmppmaster/includes/html.inc.php");
 $p = new PageGenerator(_T("Entity Compliance", "updates"));
 $p->setSideMenu($sidemenu);
 $p->display();
-// $refresh = new RefreshButton();
-// print "<br/>";
-// $refresh->display();
 
-$ajax = new AjaxFilter(urlStrRedirect("updates/updates/ajaxEntityCompliance"), "container", array('source' => 'xmppmaster'), 'formRunning');
 
-// $ajax->setRefresh($refresh->refreshtime());
+$timerefresh= 90;
+
+$_GET["source"] = "xmppmaster";
+
+$params = getFilteredGetParams();
+
+$ajax = new AjaxPagebartitlletime(urlStrRedirect("updates/updates/ajaxEntityCompliance"),
+                                  "EntityCompliancediv",
+                                  $params,
+                                  $timerefresh,
+                                  "circularProgress");
+
+
 $ajax->display();
-$ajax->displayDivToUpdate();
-//
-// generateEntityPage(_T("Entities Compliance", 'updates'),
-//                    "ajaxEntityCompliance",
-//                    $sidemenu);
 
 ?>

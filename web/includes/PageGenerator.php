@@ -4151,6 +4151,32 @@ class TrTitleElement extends HtmlElement
 
 }
 
+class AjaxUrlDiv extends AjaxPage
+{
+    public function __construct($url, $id = "container", $params = array())
+    {
+        // Appel du constructeur parent sans le paramètre refresh
+        parent::__construct($url, $id, $params, null);
+    }
+
+    public function display($arrParam = array())
+    {
+        echo <<< EOT
+        <div id="{$this->id}" class="{$this->class}"></div>
+        <script type="text/javascript">
+        jQuery.ajax({
+            url: '{$this->url}',
+            type: 'get',
+            data: {$this->params},
+            success: function(data){
+                jQuery("#{$this->id}").html(data);
+            }
+        });
+        </script>
+EOT;
+    }
+}
+
 class AjaxPage extends HtmlElement
 {
     public function __construct($url, $id = "container", $params = array(), $refresh = 10)

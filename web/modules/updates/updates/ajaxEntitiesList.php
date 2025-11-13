@@ -28,7 +28,6 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
 require_once("modules/xmppmaster/includes/html.inc.php");
 
 global $conf;
-
 $params = [];
 $actiondetailsByMachs = [];
 $actiondetailsByUpds = [];
