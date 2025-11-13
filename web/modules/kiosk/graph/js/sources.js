@@ -78,7 +78,14 @@ jQuery(document).ready(function(){
                 // Locate the data-root attribute which contains the selected ou and get data-id attribute.
                 // The data-id attribute is the same as the id attributed to the leafs of the tree.
                 jQuery.each(ousToEdit, function(id, value){
-                    selectedId.push(jQuery(tmpTree).find("[data-root='"+value+"']").attr('data-id'));
+                    // Instead of using a CSS selector with special characters, use filter() to match exact attribute value
+                    var matchedElement = jQuery(tmpTree).find("[data-root]").filter(function() {
+                        return jQuery(this).attr('data-root') === value;
+                    });
+                    var dataId = matchedElement.attr('data-id');
+                    if (dataId) {
+                        selectedId.push(dataId);
+                    }
                 });
 
                 jQuery.each(ousToEdit, function(id,value){
