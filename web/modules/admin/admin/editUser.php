@@ -724,7 +724,7 @@ $addInput = function(ValidatingForm $form, string $name, string $label, string $
                 new TextTpl('<i style="color:#999999">' . _T($label,'admin') . '</i>')
             ])
         ),
-        "organizationSection"
+        ["organizationSection"]
     );
 };
 

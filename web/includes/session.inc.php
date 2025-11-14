@@ -26,9 +26,11 @@
 /**
  * this file provide session registration
  */
-session_cache_expire (30);
-session_name("PULSESESSION");
-session_start();
+if(session_status() != PHP_SESSION_ACTIVE){
+    session_cache_expire (30);
+    session_name("PULSESESSION");
+    session_start();
+}
 
 if (!isset($_SESSION["expire"]) || $_SESSION["expire"] < time()) {
     session_destroy();

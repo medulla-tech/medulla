@@ -28,7 +28,6 @@ require_once('modules/msc/includes/commands_xmlrpc.inc.php');
 
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
-$filter = $_GET["filter"];
 
 $filter  = isset($_GET['filter']) ? $_GET['filter'] : "";
 $start = isset($_GET['start']) ? $_GET['start'] : 0;

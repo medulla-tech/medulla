@@ -65,7 +65,7 @@ if($sharings['config']['centralizedmultiplesharing'] == true) {
 $p->setSideMenu($sidemenu);
 $p->display();
 
-$ou = $_POST['ou'];
+$ou = (isset($_POST['ou'])) ? $_POST['ou'] : "";
 $owner = (!empty($_POST['owner'])) ? htmlentities($_POST['owner']) : $_SESSION['login'];
 
 $ou_list = xmlrpc_get_ou_list($ou, $owner, $_SESSION['glpi_user']['api_token']);

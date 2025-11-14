@@ -23,7 +23,6 @@
 require_once("modules/xmppmaster/includes/html.inc.php");
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
-$filter = $_GET["filter"];
 
 $filter  = isset($_GET['filter'])?$_GET['filter']:"";
 $start = isset($_GET['start'])?$_GET['start']:0;
