@@ -2245,18 +2245,16 @@ class AjaxFilter extends HtmlElement
                 /**
                  * Update div
                  */
-        <?php
-        $url = $this->url . "filter='+encodeURIComponent(document.Form" . $this->formid . ".param.value)+'&maxperpage='+maxperpage+'" .
-                    (empty($this->params) ? "" : "&" . ltrim($this->params, "&"));
-
-        if (isset($this->storedstart) && isset($this->storedend)) {
-            $url .= "&start=" . $this->storedstart . "&end=" . $this->storedend;
-        }
-        ?>
-
                 updateSearch<?php echo $this->formid ?> = function() {
+                    var searchValue = document.Form<?php echo $this->formid ?>.param.value;
+                    var finalUrl = '<?php echo $this->url; ?>&filter=' + encodeURIComponent(searchValue) + '&maxperpage=' + maxperpage<?php
+                    if (isset($this->storedstart) && isset($this->storedend)) {
+                        echo " + '&start=" . $this->storedstart . "&end=" . $this->storedend . "'";
+                    }
+                    ?>;
+
                     jQuery.ajax({
-                        'url': '<?php echo $url ?>',
+                        'url': finalUrl,
                         type: 'get',
                         success: function(data) {
                             jQuery("#<?php echo $this->divid; ?>").html(data);
@@ -2281,11 +2279,10 @@ class AjaxFilter extends HtmlElement
                         maxperpage = jQuery('#maxperpage').val();
 
                     jQuery.ajax({
-                       'url': '<?php echo $this->url; ?>filter=' + filter
+                       'url': '<?php echo $this->url; ?>filter=' + encodeURIComponent(filter)
                             + '&start=' + start
                             + '&end=' + end
-                            + '&maxperpage=' + maxperpage
-                            + '<?php echo (empty($this->params) ? "" : "&" . ltrim($this->params, "&")); ?>',
+                            + '&maxperpage=' + maxperpage,
                         type: 'get',
                         success: function(data) {
                             jQuery("#<?php echo $this->divid; ?>").html(data);
@@ -2322,6 +2319,7 @@ class AjaxFilter extends HtmlElement
     }
 
 }
+
 
 class multifieldTpl extends AbstractTpl
 {
