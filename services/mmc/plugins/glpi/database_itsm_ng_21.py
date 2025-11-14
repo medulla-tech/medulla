@@ -1,3 +1,5 @@
+
+
 # -*- coding: utf-8; -*-
 # SPDX-FileCopyrightText: 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 # SPDX-FileCopyrightText:2007-2014 Mandriva, http://www.mandriva.com
@@ -6,7 +8,7 @@
 
 """
 This module declare all the necessary stuff to connect to a itsm-ng database in it's
-version 1.4
+version 2.1
 """
 
 import os
@@ -87,9 +89,9 @@ import decimal
 logger = logging.getLogger()
 
 
-class Itsmng14(DyngroupDatabaseHelper):
+class Itsmng21(DyngroupDatabaseHelper):
     """
-    Singleton Class to query the glpi database in version >= 9.4
+    Singleton Class to query the itsm-ng database in version >= 2.1
 
     """
 
@@ -112,7 +114,7 @@ class Itsmng14(DyngroupDatabaseHelper):
             pool_size=self.config.dbpoolsize,
         )
         logging.getLogger().debug(
-            "Trying to detect if ITSM-NG version is higher than 1.4"
+            "Trying to detect if ITSM-NG version is higher than 2.1.0"
         )
 
         try:
@@ -126,16 +128,16 @@ class Itsmng14(DyngroupDatabaseHelper):
         except (OperationalError, AttributeError):
             return False
 
-        if LooseVersion(self._itsm_ng_version) >= LooseVersion("1.4") and LooseVersion(
+        if LooseVersion(self._itsm_ng_version) >= LooseVersion("2.0.0") and LooseVersion(
             self._itsm_ng_version
-        ) <= LooseVersion("1.4.99"):
+        ) <= LooseVersion("2.1.0"):
             logging.getLogger().debug(
                 "ITSM-NG version %s found !" % self._itsm_ng_version
             )
             return True
         else:
             logging.getLogger().debug(
-                "ITSM-NG higher than version 1.4 was not detected"
+                "ITSM-NG higher than version 2.1 was not detected"
             )
             return False
 
@@ -165,12 +167,12 @@ class Itsmng14(DyngroupDatabaseHelper):
         )
         try:
             self.db.execute('SELECT "\xe9"')
-            setattr(Itsmng14, "decode", decode_utf8)
-            setattr(Itsmng14, "encode", encode_utf8)
+            setattr(Itsmng21, "decode", decode_utf8)
+            setattr(Itsmng21, "encode", encode_utf8)
         except Exception:
             self.logger.warn("Your database is not in utf8, will fallback in latin1")
-            setattr(Itsmng14, "decode", decode_latin1)
-            setattr(Itsmng14, "encode", encode_latin1)
+            setattr(Itsmng21, "decode", decode_latin1)
+            setattr(Itsmng21, "encode", encode_latin1)
 
         try:
             self._itsm_ng_version = list(
@@ -394,7 +396,7 @@ class Itsmng14(DyngroupDatabaseHelper):
         ## Fusion Inventory tables
 
         self.fusionantivirus = None
-        try:
+        """try:
             self.logger.debug("Try to load fusion antivirus table...")
             self.fusionantivirus = Table(
                 "glpi_computerantiviruses",
@@ -413,13 +415,13 @@ class Itsmng14(DyngroupDatabaseHelper):
                 "This means you can not know antivirus statuses of your machines."
             )
             self.logger.warn("This feature comes with Fusioninventory GLPI plugin")
-
+        """
         # glpi_plugin_fusioninventory_locks
         self.fusionlocks = None
         # glpi_plugin_fusioninventory_agents
         self.fusionagents = None
 
-        if self.fusionantivirus is not None:  # Fusion is not installed
+        """if self.fusionantivirus is not None:  # Fusion is not installed
             self.logger.debug("Load glpi_plugin_fusioninventory_locks")
             self.fusionlocks = Table(
                 "glpi_plugin_fusioninventory_locks",
@@ -436,7 +438,7 @@ class Itsmng14(DyngroupDatabaseHelper):
                 autoload=True,
             )
             mapper(FusionAgents, self.fusionagents)
-
+        """
         # glpi_items_disks
         self.disk = Table(
             "glpi_items_disks",
@@ -685,40 +687,40 @@ class Itsmng14(DyngroupDatabaseHelper):
         mapper(Group, self.group)
 
         # collects
-        self.collects = Table(
-            "glpi_plugin_fusioninventory_collects",
-            self.metadata,
-            Column("entities_id", Integer, ForeignKey("glpi_entities.id")),
-            autoload=True,
-        )
-        mapper(Collects, self.collects)
+        #self.collects = Table(
+        #    "glpi_plugin_fusioninventory_collects",
+        #    self.metadata,
+        #    Column("entities_id", Integer, ForeignKey("glpi_entities.id")),
+        #    autoload=True,
+        #)
+        #mapper(Collects, self.collects)
 
         # registries
-        self.registries = Table(
-            "glpi_plugin_fusioninventory_collects_registries",
-            self.metadata,
-            Column(
-                "plugin_fusioninventory_collects_id",
-                Integer,
-                ForeignKey("glpi_plugin_fusioninventory_collects.id"),
-            ),
-            autoload=True,
-        )
-        mapper(Registries, self.registries)
+        #self.registries = Table(
+        #    "glpi_plugin_fusioninventory_collects_registries",
+        #    self.metadata,
+        #    Column(
+        #        "plugin_fusioninventory_collects_id",
+        #        Integer,
+        #        ForeignKey("glpi_plugin_fusioninventory_collects.id"),
+        #    ),
+        #    autoload=True,
+        #)
+        #mapper(Registries, self.registries)
 
         # registries contents
-        self.regcontents = Table(
-            "glpi_plugin_fusioninventory_collects_registries_contents",
-            self.metadata,
-            Column("computers_id", Integer, ForeignKey("glpi_computers_pulse.id")),
-            Column(
-                "plugin_fusioninventory_collects_registries_id",
-                Integer,
-                ForeignKey("glpi_plugin_fusioninventory_collects_registries.id"),
-            ),
-            autoload=True,
-        )
-        mapper(RegContents, self.regcontents)
+        #self.regcontents = Table(
+        #    "glpi_plugin_fusioninventory_collects_registries_contents",
+        #    self.metadata,
+        #    Column("computers_id", Integer, ForeignKey("glpi_computers_pulse.id")),
+        #    Column(
+        #        "plugin_fusioninventory_collects_registries_id",
+        #        Integer,
+        #        ForeignKey("glpi_plugin_fusioninventory_collects_registries.id"),
+        #    ),
+        #    autoload=True,
+        #)
+        #mapper(RegContents, self.regcontents)
 
         # items contents
         self.computersitems = Table(
@@ -3420,58 +3422,58 @@ class Itsmng14(DyngroupDatabaseHelper):
 
         return values[name]
 
-    def setItsm_ngEditableValue(self, uuid, name, value):
-        """
-        Set a new value for a Itsm-ng field
+    #def setItsm_ngEditableValue(self, uuid, name, value):
+    #    """
+    #    Set a new value for a Itsm-ng field
 
-        @param uuid: machine uuid
-        @type uuid: string
+    #    @param uuid: machine uuid
+    #    @type uuid: string
 
-        @param name: Itsm-ng field who will be updated
-        @param name: string
+    #    @param name: Itsm-ng field who will be updated
+    #    @param name: string
 
-        @param value: The new value
-        @param value: string
-        """
+    #    @param value: The new value
+    #    @param value: string
+    #    """
 
-        self.logger.debug("Update an editable field")
-        self.logger.debug("%s: Set %s as new value for %s" % (uuid, value, name))
-        try:
-            session = create_session()
+    #    self.logger.debug("Update an editable field")
+    #    self.logger.debug("%s: Set %s as new value for %s" % (uuid, value, name))
+    #    try:
+    #        session = create_session()
 
-            # Get SQL field who will be updated
-            table, field = self.__getTableAndFieldFromName(name)
-            session.query(table).filter_by(id=fromUUID(uuid)).update({field: value})
+    #        # Get SQL field who will be updated
+    #        table, field = self.__getTableAndFieldFromName(name)
+    #        session.query(table).filter_by(id=fromUUID(uuid)).update({field: value})
 
-            # Set updated field as a locked field so it won't be updated
-            # at next inventory
-            query = session.query(FusionLocks).filter(
-                self.fusionlocks.c.items_id == fromUUID(uuid)
-            )
-            flocks = query.first()
-            if flocks is not None:
-                # Update glpi_plugin_fusioninventory_locks tablefields table
-                flocksFields = eval(flocks.tablefields)
-                if field not in flocksFields:
-                    flocksFields.append(field)
-                    query.update({"tablefields": str(flocksFields).replace("'", '"')})
-            else:
-                # Create new glpi_plugin_fusioninventory_locks entry
-                session.execute(
-                    self.fusionlocks.insert().values(
-                        {
-                            "tablename": table.__tablename__,
-                            "items_id": fromUUID(uuid),
-                            "tablefields": str([field]).replace("'", '"'),
-                        }
-                    )
-                )
+    #        # Set updated field as a locked field so it won't be updated
+    #        # at next inventory
+    #        query = session.query(FusionLocks).filter(
+    #            self.fusionlocks.c.items_id == fromUUID(uuid)
+    #        )
+    #        flocks = query.first()
+    #        if flocks is not None:
+    #            # Update glpi_plugin_fusioninventory_locks tablefields table
+    #            flocksFields = eval(flocks.tablefields)
+    #            if field not in flocksFields:
+    #                flocksFields.append(field)
+    #                query.update({"tablefields": str(flocksFields).replace("'", '"')})
+    #        else:
+    #            # Create new glpi_plugin_fusioninventory_locks entry
+    #            session.execute(
+    #                self.fusionlocks.insert().values(
+    #                    {
+    #                        "tablename": table.__tablename__,
+    #                        "items_id": fromUUID(uuid),
+    #                        "tablefields": str([field]).replace("'", '"'),
+    #                    }
+    #                )
+    #            )
 
-            session.close()
-            return True
-        except Exception as e:
-            self.logger.error(e)
-            return False
+    #        session.close()
+    #        return True
+    #    except Exception as e:
+    #        self.logger.error(e)
+    #        return False
 
     def getLastMachineSummaryPart(
         self, session, uuid, part, min=0, max=-1, filt=None, options={}, count=False
@@ -6970,15 +6972,15 @@ and glpi_computers.id in %s group by glpi_computers.id;""" % (
                                 e.completename AS complete_name,
                                 COUNT(*) AS count
                             FROM
-                                glpi_computers AS c
+                                glpi.glpi_computers AS c
                                     INNER JOIN
-                                glpi_items_operatingsystems AS io ON c.id = io.items_id
+                                glpi.glpi_items_operatingsystems AS io ON c.id = io.items_id
                                     INNER JOIN
-                                glpi_entities AS e ON e.id = c.entities_id
+                                glpi.glpi_entities AS e ON e.id = c.entities_id
                                     INNER JOIN
-                                glpi_operatingsystems AS os ON os.id = io.operatingsystems_id
+                                glpi.glpi_operatingsystems AS os ON os.id = io.operatingsystems_id
                                     INNER JOIN
-                                glpi_operatingsystemversions AS v ON v.id = io.operatingsystemversions_id
+                                glpi.glpi_operatingsystemversions AS v ON v.id = io.operatingsystemversions_id
                             WHERE
                                 os.name LIKE '%Windows%'
                             GROUP BY e.id
@@ -7017,15 +7019,15 @@ and glpi_computers.id in %s group by glpi_computers.id;""" % (
                             ELSE 'not_win'
                         END AS os
                     FROM
-                        glpi_computers AS c
+                        glpi.glpi_computers AS c
                             INNER JOIN
-                        glpi_items_operatingsystems AS io ON c.id = io.items_id
+                        glpi.glpi_items_operatingsystems AS io ON c.id = io.items_id
                             INNER JOIN
-                        glpi_entities AS e ON e.id = c.entities_id
+                        glpi.glpi_entities AS e ON e.id = c.entities_id
                             INNER JOIN
-                        glpi_operatingsystems AS os ON os.id = io.operatingsystems_id
+                        glpi.glpi_operatingsystems AS os ON os.id = io.operatingsystems_id
                             INNER JOIN
-                        glpi_operatingsystemversions AS v ON v.id = io.operatingsystemversions_id
+                        glpi.glpi_operatingsystemversions AS v ON v.id = io.operatingsystemversions_id
                     WHERE
                         os.name LIKE '%Windows%'
                     GROUP BY e.name, os
@@ -7107,11 +7109,11 @@ and glpi_computers.id in %s group by glpi_computers.id;""" % (
                     ELSE 'not_win'
                 END AS 'update'
             FROM
-                glpi_computers AS c
-                INNER JOIN glpi_items_operatingsystems AS io ON c.id = io.items_id
-                INNER JOIN glpi_entities AS e ON e.id = c.entities_id
-                INNER JOIN glpi_operatingsystems AS os ON os.id = io.operatingsystems_id
-                INNER JOIN glpi_operatingsystemversions AS v ON v.id = io.operatingsystemversions_id
+                glpi.glpi_computers AS c
+                INNER JOIN glpi.glpi_items_operatingsystems AS io ON c.id = io.items_id
+                INNER JOIN glpi.glpi_entities AS e ON e.id = c.entities_id
+                INNER JOIN glpi.glpi_operatingsystems AS os ON os.id = io.operatingsystems_id
+                INNER JOIN glpi.glpi_operatingsystemversions AS v ON v.id = io.operatingsystemversions_id
             WHERE
                 os.name LIKE '%Windows%' AND e.id = :entity_id
         '''
@@ -7183,124 +7185,83 @@ and glpi_computers.id in %s group by glpi_computers.id;""" % (
 
 
     @DatabaseHelper._sessionm
-    def get_user_or_superadmin_details(self, session, user_name: str):
+    def get_user_default_details(self, session, user_name: str, active: bool | None = True):
         """
-        Récupère les informations détaillées d'un utilisateur GLPI.
-        Si `user_name` est 'root', renvoie automatiquement le Super-Admin actif.
+        Récupère les informations détaillées d'un utilisateur GLPI,
+        incluant la liste concaténée des entités accessibles,
+        ainsi que le token applicatif "MMC".
 
         Paramètres :
-            session (Session): Objet SQLAlchemy.
-            user_name (str): Login de l'utilisateur GLPI ou 'root'.
+            session (Session) : Objet de session SQLAlchemy.
+            user_name (str)   : Le login de l'utilisateur GLPI.
+            active (bool|None): Filtre sur la colonne gu.is_active.
+                                - True (par défaut) => user actif = 1
+                                - False             => user non actif = 0
+                                - None              => actif ou pas actif
 
         Retourne :
-            dict : Dictionnaire contenant les alias SQL + alias_user_su, ou {} si non trouvé.
+            dict : Dictionnaire unique avec les alias définis dans le SQL.
         """
 
-        # --- Cas spécial : root -> on cible le Super-Admin actif ---
-        if user_name == "root":
-            sql = """
-                SELECT
-                    gu.id AS user_id,
-                    gu.entities_id AS entity_id,
-                    gu.locations_id AS location_id,
-                    gu.profiles_id AS profile_id,
-                    gu.name AS user_name,
-                    gu.realname AS real_name,
-                    gu.firstname AS first_name,
-                    gu.api_token,
-                    gu.is_active,
-                    gi.completename AS complet_entity_name_,
-                    gi.name AS entity_name_,
-                    gp.name AS profile_name,
-                    (
-                        SELECT GROUP_CONCAT(gi2.id ORDER BY gi2.id SEPARATOR ',')
-                        FROM glpi_entities gi2
-                        WHERE gi2.completename LIKE CONCAT(gi.completename, '%')
-                    ) AS liste_entities_user,
-                    COALESCE((
-                        SELECT ga.app_token
-                        FROM glpi_apiclients ga
+        sql = """
+              SELECT gu.id as user_id,
+                gu.entities_id as entity_id,
+                gu.locations_id as location_id,
+                gu.profiles_id as profile_id,
+                gu.name as user_name,
+                gu.realname as real_name,
+                gu.firstname as first_name,
+                gu.api_token,
+                gu.is_active,
+                gi.completename as complet_entity_name_,
+                gi.name as entity_name_,
+                gp.name AS profile_name,
+                (SELECT GROUP_CONCAT(gi2.id ORDER BY gi2.id SEPARATOR ',')
+                    FROM glpi.glpi_entities gi2
+                    WHERE gi2.completename LIKE CONCAT(gi.completename, '%')
+                ) AS liste_entities_user,
+                COALESCE(
+                    (SELECT ga.app_token
+                        FROM glpi.glpi_apiclients ga
                         WHERE ga.app_token IS NOT NULL
                         AND ga.name = 'MMC'
-                        LIMIT 1
-                    ), '') AS app_token
-                FROM glpi_users gu
-                LEFT JOIN glpi_entities gi ON gi.id = gu.entities_id
-                LEFT JOIN glpi_profiles gp ON gp.id = gu.profiles_id
-                WHERE gu.is_active = 1
-                AND gu.name IN (
-                        SELECT u.name
-                        FROM glpi_users u
-                        INNER JOIN glpi_profiles_users pu ON u.id = pu.users_id
-                        INNER JOIN glpi_profiles p ON p.id = pu.profiles_id
-                        WHERE p.name = 'Super-Admin'
-                )
-                AND (
-                    SELECT GROUP_CONCAT(gi2.id ORDER BY gi2.id SEPARATOR ',')
-                    FROM glpi_entities gi2
-                    WHERE gi2.completename LIKE CONCAT(gi.completename, '%')
-                ) IS NOT NULL
-                ORDER BY gu.id ASC
-                LIMIT 1
-            """
-            params = {}
-        else:
-            # --- Cas normal : utilisateur actif ---
-            sql = """
-                SELECT
-                    gu.id AS user_id,
-                    gu.entities_id AS entity_id,
-                    gu.locations_id AS location_id,
-                    gu.profiles_id AS profile_id,
-                    gu.name AS user_name,
-                    gu.realname AS real_name,
-                    gu.firstname AS first_name,
-                    gu.api_token,
-                    gu.is_active,
-                    gi.completename AS complet_entity_name_,
-                    gi.name AS entity_name_,
-                    gp.name AS profile_name,
-                    (SELECT GROUP_CONCAT(gi2.id ORDER BY gi2.id SEPARATOR ',')
-                        FROM glpi_entities gi2
-                        WHERE gi2.completename LIKE CONCAT(gi.completename, '%')
-                    ) AS liste_entities_user,
-                    COALESCE(
-                        (SELECT ga.app_token
-                            FROM glpi_apiclients ga
-                            WHERE ga.app_token IS NOT NULL
-                            AND ga.name = 'MMC'
-                            LIMIT 1),
-                        ''
-                    ) AS app_token
-                FROM glpi_users gu
-                LEFT JOIN glpi_entities gi ON gi.id = gu.entities_id
-                LEFT JOIN glpi_profiles gp ON gp.id = gu.profiles_id
-                WHERE gu.name = :user_name
-                AND gu.is_active = 1
-                LIMIT 1
-            """
-            params = {"user_name": user_name}
+                        LIMIT 1),
+                    ''
+                ) AS app_token
+            FROM glpi.glpi_users gu
+            LEFT JOIN glpi.glpi_entities gi ON gi.id = gu.entities_id
+            LEFT JOIN glpi.glpi_profiles gp ON gp.id = gu.profiles_id
+            WHERE gu.name = :user_name
+        """
+
+
+        # Ajout dynamique du filtre actif/inactif
+        if active is True:
+            sql += " AND gu.is_active = 1"
+        elif active is False:
+            sql += " AND gu.is_active = 0"
+
+        sql += " LIMIT 1"
 
         sql = text(sql)
-        logger.debug("Executing get_user_or_superadmin_details for: %s", user_name)
 
-        row = session.execute(sql, params).fetchone()
+        # logger.debug("Executing SQL query: %s", sql)
+        logger.debug("With parameters: user_name=%s, active=%s", user_name, active)
+
+        row = session.execute(sql, {"user_name": user_name}).fetchone()
+
         if not row:
             return {}
 
+        # Transforme la ligne en dict directement avec les clés alias
         result = dict(row._mapping)
-
-        # Nettoyage / formatage de la liste des entités
+        # Conversion de "1,2,3" → [1, 2, 3]
         liste_raw = result.get("liste_entities_user")
-        result["liste_entities_user"] = (
-            [int(x) for x in liste_raw.split(",") if x.isdigit()] if liste_raw else []
-        )
-
-        # --- Ajout du champ alias_user_su ---
-        result["alias_user_su"] = "root" if user_name == "root" else result["user_name"]
-
+        if liste_raw:
+            result["liste_entities_user"] = [int(x) for x in liste_raw.split(",") if x.isdigit()]
+        else:
+            result["liste_entities_user"] = []
         return result
-
 
 # Class for SQLalchemy mapping
 class Machine(object):
@@ -7313,7 +7274,7 @@ class Machine(object):
         return {"hostname": self.name, "uuid": toUUID(self.id)}
 
     def to_a(self):
-        owner_login, owner_firstname, owner_realname = Itsmng14().getMachineOwner(self)
+        owner_login, owner_firstname, owner_realname = Itsmng21().getMachineOwner(self)
         return [
             ["id", self.id],
             ["name", self.name],
@@ -7338,7 +7299,7 @@ class Machine(object):
             ["model", self.computermodels_id],
             ["type", self.computertypes_id],
             ["entity", self.entities_id],
-            ["uuid", Itsmng14().getMachineUUID(self)],
+            ["uuid", Itsmng21().getMachineUUID(self)],
         ]
 
 
@@ -7568,3 +7529,4 @@ class Peripherals(DbTOA):
 
 class Peripheralsmanufacturers(DbTOA):
     pass
+

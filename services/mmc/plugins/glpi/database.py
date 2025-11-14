@@ -11,7 +11,8 @@ depending on the version of the database.
 
 # TODO rename location into entity (and locations in location)
 from mmc.plugins.glpi.config import GlpiConfig
-from mmc.plugins.glpi.database_itsm_ng_14 import Itsm_ng14
+from mmc.plugins.glpi.database_itsm_ng_14 import Itsmng14
+from mmc.plugins.glpi.database_itsm_ng_21 import Itsmng21
 from mmc.plugins.glpi.database_084 import Glpi084
 from mmc.plugins.glpi.database_92 import Glpi92
 from mmc.plugins.glpi.database_93 import Glpi93
@@ -44,8 +45,10 @@ class Glpi(DyngroupDatabaseHelper):
         self.config = GlpiConfig("glpi", conffile)
 
         # we choose the good backend for the database
-        if Itsm_ng14().try_activation(self.config):
-            self.database = Itsm_ng14()
+        if Itsmng14().try_activation(self.config):
+            self.database = Itsmng14()
+        elif Itsmng21().try_activation(self.config):
+            self.database = Itsmng21()
         elif Glpi084().try_activation(self.config):
             self.database = Glpi084()
         elif Glpi92().try_activation(self.config):
