@@ -48,7 +48,7 @@ UPDATE xmppmaster.applicationconfig
 SET enable = 1
 WHERE `key` = 'table produits'
   AND (comment LIKE 'Microsoft Office%'
-       OR comment LIKE 'Visual Studio%')
+       OR comment LIKE '%Visual Studio%')
   AND id > 0;
 
 
