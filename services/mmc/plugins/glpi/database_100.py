@@ -2258,46 +2258,57 @@ class Glpi100(DyngroupDatabaseHelper):
         """
         session = create_session()
         now = datetime.datetime.now()
-        states = {
-            "orange": now - datetime.timedelta(orange),
-            "red": now - datetime.timedelta(red),
-        }
+        orange_date = now - datetime.timedelta(days=orange)
+        red_date = now - datetime.timedelta(days=red)
 
-        date_mod = self.machine.c.date_mod
+        base_query = self.__getRestrictedComputersListQuery(
+            ctx, filt, session, count=False
+        )
+
+        if base_query is None:
+            session.close()
+            return {"green": 0, "orange": 0, "red": 0}
+
         if self.fusionagents is not None:
-            last_contact_date = session.query(
-                self.fusionagents.c.last_contact).first()
-            date_mod = last_contact_date[0] if last_contact_date is not None else None
+            # Green: last_contact > orange_date (recent inventory)
+            green_subquery = session.query(self.fusionagents.c.items_id).filter(
+                self.fusionagents.c.last_contact > orange_date
+            ).subquery()
+            green_count = base_query.filter(
+                self.machine.c.id.in_(green_subquery)
+            ).count()
 
-        for value in ["green", "orange", "red"]:
-            # This loop instanciate self.filt_green,
-            # self.filt_orange and self.filt_red
-            setattr(self, "filt_%s" % value, filt.copy())
+            # Orange: orange_date >= last_contact > red_date
+            orange_subquery = session.query(self.fusionagents.c.items_id).filter(
+                and_(
+                    self.fusionagents.c.last_contact <= orange_date,
+                    self.fusionagents.c.last_contact > red_date
+                )
+            ).subquery()
+            orange_count = base_query.filter(
+                self.machine.c.id.in_(orange_subquery)
+            ).count()
 
-            newFilter = getattr(self, "filt_%s" % value)
-            values = {
-                "states": states,
-                "date_mod": date_mod,
-                "value": value,
-            }
-            newFilter["date"] = values
+            # Red: last_contact <= red_date (old inventory)
+            red_subquery = session.query(self.fusionagents.c.items_id).filter(
+                self.fusionagents.c.last_contact <= red_date
+            ).subquery()
+            red_count = base_query.filter(
+                self.machine.c.id.in_(red_subquery)
+            ).count()
+        else:
+            # Fallback to machine.date_mod
+            date_mod = self.machine.c.date_mod
+            green_count = base_query.filter(date_mod > orange_date).count()
+            orange_count = base_query.filter(
+                and_(date_mod <= orange_date, date_mod > red_date)
+            ).count()
+            red_count = base_query.filter(date_mod <= red_date).count()
 
         ret = {
-            "green": int(
-                self.__getRestrictedComputersListQuery(
-                    ctx, self.filt_green, session, count=True
-                )
-            ),
-            "orange": int(
-                self.__getRestrictedComputersListQuery(
-                    ctx, self.filt_orange, session, count=True
-                )
-            ),
-            "red": int(
-                self.__getRestrictedComputersListQuery(
-                    ctx, self.filt_red, session, count=True
-                )
-            ),
+            "green": int(green_count),
+            "orange": int(orange_count),
+            "red": int(red_count),
         }
         session.close()
         return ret
