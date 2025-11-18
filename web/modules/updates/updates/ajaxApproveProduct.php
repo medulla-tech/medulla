@@ -44,7 +44,7 @@ $params = [];
 $submittedCheckValues = $_POST['check'] ?? [];
 $cssClasses= [];
 $listename=[];
-
+$counttitleproduit=0;
 // Début du formulaire HTML
 echo '<form method="post" action="" name="montableau" class="approval-form">';
 $currentFamily = null;
@@ -84,6 +84,7 @@ foreach ($f['name_procedure'] as $indextableau => $name) {
         }
         $htmlelementcheck[] = '&nbsp;';
         $cssClasses[] = "family-separator";
+        $counttitleproduit++;
         //$cssClasses[] = "sub-section-row";
     }
 
@@ -148,7 +149,7 @@ $n->addExtraInfo($htmlelementcheck, _T("approve update", "updates"));
 $n->setParamInfo($params);
 $n->setNavBar = "";
 $n->start = 0;
-$n->end = count($f['name_procedure']);
+$n->end = count($f['name_procedure']+$counttitleproduit);
 
 $n->setCssCaptionClass("table-rounded caption-style");
 
