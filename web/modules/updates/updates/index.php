@@ -37,20 +37,22 @@ $p = new PageGenerator(_T("Entity Compliance", "updates"));
 $p->setSideMenu($sidemenu);
 $p->display();
 
-
-$timerefresh= 90;
+$refresh = new RefreshButton();
+print "<br/>";
+$refresh->display();
 
 $_GET["source"] = "xmppmaster";
 
 $params = getFilteredGetParams();
 
-$ajax = new AjaxPagebartitlletime(urlStrRedirect("updates/updates/ajaxEntityCompliance"),
-                                  "EntityCompliancediv",
-                                  $params,
-                                  $timerefresh,
-                                  "circularProgress");
+$ajax = new AjaxFilter(urlStrRedirect("updates/updates/ajaxEntityCompliance"), "container", $params, 'formRunning');
 
-
+$ajax->setRefresh($refresh->refreshtime());
 $ajax->display();
+$ajax->displayDivToUpdate();
+//
+// generateEntityPage(_T("Entities Compliance", 'updates'),
+//                    "ajaxEntityCompliance",
+//                    $sidemenu);
 
 ?>
