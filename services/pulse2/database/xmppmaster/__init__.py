@@ -6888,7 +6888,8 @@ class XmppMasterDatabase(DatabaseHelper):
         except Exception:
             window_sec = 90 * 24 * 3600
 
-        q = session.query(Deploy).filter(
+        # Filtres communs
+        filters = [
             ~Deploy.title.like("%Convergence%"),
             Deploy.sessionid.like(f"{typedeploy}%"),
             or_(
@@ -6897,22 +6898,22 @@ class XmppMasterDatabase(DatabaseHelper):
                 Deploy.state.like("ABORT%"),
             ),
             Deploy.endcmd.isnot(None),
-        )
+        ]
 
         if window_sec > 0:
-            q = q.filter(
+            filters.append(
                 Deploy.endcmd >= func.date_sub(func.now(), text(f"INTERVAL {window_sec} SECOND"))
             )
 
         if login:
             if isinstance(login, list):
-                q = q.filter(Deploy.login.in_(login))
+                filters.append(Deploy.login.in_(login))
             else:
-                q = q.filter(Deploy.login == login)
+                filters.append(Deploy.login == login)
 
         if filt:
             like = f"%{filt}%"
-            q = q.filter(
+            filters.append(
                 or_(
                     Deploy.state.like(like),
                     Deploy.pathpackage.like(like),
@@ -6922,9 +6923,33 @@ class XmppMasterDatabase(DatabaseHelper):
                 )
             )
 
-        total_rows = q.count()
+        # Clé de groupe sans cast / sans case :
+        #   - si group_uuid est NULL ou "", on prend CONCAT('ID:', id) (type string)
+        #   - sinon on prend group_uuid (déjà string)
+        group_key = func.coalesce(
+            func.nullif(Deploy.group_uuid, ""),
+            func.concat("ID:", Deploy.id),
+        )
 
-        q = q.order_by(desc(Deploy.id))
+        # Sous-requête: id le plus récent par (command, group_key)
+        subq = (
+            session.query(func.max(Deploy.id).label("max_id"))
+            .filter(*filters)
+            .group_by(Deploy.command, group_key)
+            .subquery()
+        )
+
+        # total_rows = nombre de groupes (ou unitaires)
+        total_rows = session.query(func.count()).select_from(subq).scalar()
+
+        # Récupération des lignes représentatives
+        q = (
+            session.query(Deploy)
+            .join(subq, Deploy.id == subq.c.max_id)
+            .order_by(desc(Deploy.id))
+        )
+
+        # Pagination
         if minimum is not None and maximum is not None:
             off = int(minimum)
             lim = max(0, int(maximum) - off)
@@ -6982,6 +7007,7 @@ class XmppMasterDatabase(DatabaseHelper):
             ret["tabdeploy"]["title"].append(d.title)
 
         return ret
+
 
     @DatabaseHelper._sessionm
     def getdeploybyuser(
