@@ -149,7 +149,7 @@ $n->addExtraInfo($htmlelementcheck, _T("approve update", "updates"));
 $n->setParamInfo($params);
 $n->setNavBar = "";
 $n->start = 0;
-$n->end = count($f['name_procedure']+$counttitleproduit);
+$n->end = count($f['name_procedure'])+$counttitleproduit;
 
 $n->setCssCaptionClass("table-rounded caption-style");
 
