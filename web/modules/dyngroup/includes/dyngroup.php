@@ -855,6 +855,9 @@ function restart_active_convergence_commands($papi_id, $package)
             new NotifyWidgetWarn(_T("Failed to load some msc module", "pkgs"));
             return false;
         }
+        if (in_array('xmppmaster', $_SESSION['modulesList'])) {
+            require_once('modules/xmppmaster/includes/xmlrpc.php');
+        }
 
         // We need ServerAPI for some convergence methods...
         $ServerAPI = getPApiDetail($papi_id);
@@ -891,6 +894,27 @@ function restart_active_convergence_commands($papi_id, $package)
                 'cmdPhases' => $params,
             );
             xmlrpc_edit_convergence_datas($gid, $package->id, $updated_datas);
+            if(in_array("xmppmaster", $_SESSION["modulesList"])) {
+                require_once('modules/xmppmaster/includes/xmlrpc.php');
+
+                $countmachine = getRestrictedComputersListLen(array('gid' => $deploy_group_id));
+
+                // Déterminer si c'est une convergence uninstall ou install
+                $parameterspacquage = '';
+                if (isset($params['ltitle']) && strpos($params['ltitle'], 'Uninstall') !== false) {
+                    $parameterspacquage = '{"section":"uninstall"}';
+                }
+
+                xmlrpc_addlogincommand(
+                    $_SESSION['login'],
+                    $command_id,
+                    $deploy_group_id,
+                    $countmachine,
+                    "",
+                    "",
+                    $parameterspacquage
+                );
+            }
         }
     }
 }
