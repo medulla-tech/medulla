@@ -2278,7 +2278,7 @@ updateSearch<?php echo $this->formid ?> = function() {
         <?php } ?>
     ;
 
-    //console.log("AJAX URL (updateSearch):", finalUrl);
+    console.log("AJAX URL (updateSearch):", finalUrl);
 
     // Lancement AJAX
     jQuery.ajax({
@@ -2295,6 +2295,71 @@ updateSearch<?php echo $this->formid ?> = function() {
         setTimeout(updateSearch<?php echo $this->formid ?>, refreshdelay<?php echo $this->formid ?>);
     <?php } ?>
 };
+
+/**
+ * @brief Appel AJAX utilisé pour la pagination.
+ *
+ * @param string filter  Filtre
+ * @param int start      Début
+ * @param int end        Fin
+ * @param int max        Nombre max par page
+ */
+updateSearchParam<?php echo $this->formid ?> = function(filter, start, end, max) {
+
+    clearTimers<?php echo $this->formid ?>();
+
+    var finalUrl =
+        '<?php echo rtrim($this->url, "&"); ?>'
+        + '&filter='     + encodeURIComponent(filter)
+        + '&start='      + start
+        + '&end='        + end
+        + '&maxperpage=' + max;
+
+    console.log("AJAX URL (updateSearchParam):", finalUrl);
+
+    jQuery.ajax({
+        url: finalUrl,
+        type: 'get',
+        success: function(data) {
+            jQuery("#<?php echo $this->divid ?>").html(data);
+        }
+    });
+
+    <?php if ($this->refresh) { ?>
+    refreshparamtimer<?php echo $this->formid ?> =
+        setTimeout(function() {
+            updateSearchParam<?php echo $this->formid ?>(filter, start, end, max);
+        }, refreshdelay<?php echo $this->formid ?>);
+    <?php } ?>
+};
+
+/**
+ * @brief Lance la recherche 500ms après la dernière frappe (debounce).
+ */
+pushSearch<?php echo $this->formid ?> = function() {
+    clearTimers<?php echo $this->formid ?>();
+    refreshtimer<?php echo $this->formid ?> =
+        setTimeout(updateSearch<?php echo $this->formid ?>, 500);
+};
+
+// Appel initial
+updateSearch<?php echo $this->formid ?>();
+
+</script>
+
+</form>
+
+<?php
+    }
+
+    /**
+     * @brief Affiche la div destinée à recevoir le contenu AJAX.
+     */
+    public function displayDivToUpdate()
+    {
+        echo '<div id="' . $this->divid . '"></div>';
+    }
+}
 
 /**
  * @class AjaxFilterTimer
