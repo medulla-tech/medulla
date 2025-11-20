@@ -130,7 +130,7 @@ class Itsmng21(DyngroupDatabaseHelper):
 
         if LooseVersion(self._itsm_ng_version) >= LooseVersion("2.0.0") and LooseVersion(
             self._itsm_ng_version
-        ) <= LooseVersion("2.1.0"):
+        ) <= LooseVersion("2.1.99"):
             logging.getLogger().debug(
                 "ITSM-NG version %s found !" % self._itsm_ng_version
             )
