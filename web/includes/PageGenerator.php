@@ -2278,8 +2278,6 @@ updateSearch<?php echo $this->formid ?> = function() {
         <?php } ?>
     ;
 
-    console.log("AJAX URL (updateSearch):", finalUrl);
-
     // Lancement AJAX
     jQuery.ajax({
         url: finalUrl,
@@ -2315,7 +2313,6 @@ updateSearchParam<?php echo $this->formid ?> = function(filter, start, end, max)
         + '&end='        + end
         + '&maxperpage=' + max;
 
-    console.log("AJAX URL (updateSearchParam):", finalUrl);
 
     jQuery.ajax({
         url: finalUrl,
