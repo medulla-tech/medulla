@@ -36,6 +36,7 @@ require_once("modules/imaging/includes/class_form.php");
 require("graph/navbar.inc.php");
 require("modules/kiosk/kiosk/localSidebar.php");
 
+
 // Need the user sharing groups
 if(isset($_SESSION['sharings'])) {
     $sharings = $_SESSION['sharings'];
@@ -64,10 +65,10 @@ if($sharings['config']['centralizedmultiplesharing'] == true) {
 $p->setSideMenu($sidemenu);
 $p->display();
 
-$ou = $_POST['ou'];
+$ou = (isset($_POST['ou'])) ? $_POST['ou'] : "";
 $owner = (!empty($_POST['owner'])) ? htmlentities($_POST['owner']) : $_SESSION['login'];
 
-$ou_list = xmlrpc_get_ou_list($ou, $owner);
+$ou_list = xmlrpc_get_ou_list($ou, $owner, $_SESSION['glpi_user']['api_token']);
 
 if(is_array($ou_list)) {
     $f = new ValidatingForm(array("id" => "profile-form"));

@@ -126,36 +126,37 @@ foreach($arraydeploy['tabdeploy']['groupid'] as $groupid){
 }
 
 
-foreach($arraydeploy['tabdeploy']['journee'] as $key => $value){
-    if ($value == 1){
-        $style='style="color:darkblue"';
-    }else
-    {
-        $style='';
-    }
-    if ($arraydeploy['tabdeploy']['deployment_intervals'][$key] != ""){
-        $deployment_intervals = _T("deployment intervals contraints", "xmppmaster")." ".$arraydeploy['tabdeploy']['deployment_intervals'][$key];
-    }else
-    {
-         $deployment_intervals = _T("No deployment intervals contraint", "xmppmaster");
-    }
-
-    $arraydeploy['tabdeploy']['title'][$key]= sprintf('<span %s title="%s " > %s </span>',
-                                                        $style,
-                                                  $deployment_intervals = _T("No deployment intervals contraint", "xmppmaster"));
-
-
-    $arraydeploy['tabdeploy']['title'][$key]= sprintf('<span %s title="%s " > %s </span>',
-                                                        $style,
-               $deployment_intervals,
-                                                        $arraydeploy['tabdeploy']['title'][$key] );
-    if ($convergence[$arraydeploy['tabdeploy']['command'][$key]] != 0 ){
-           $arraydeploy['tabdeploy']['title'][$key]= "<img style='position:relative;top : 5px;'src='img/other/convergence.svg' width='25' height='25'/>" . $arraydeploy['tabdeploy']['title'][$key];
-        }else{
-             $arraydeploy['tabdeploy']['title'][$key]= "<img style='position:relative;top : 5px;'src='img/other/package.svg' width='25' height='25'/>" . $arraydeploy['tabdeploy']['title'][$key];
+if((isset($arraydeploy['tabdeploy']['journee']))){
+    foreach($arraydeploy['tabdeploy']['journee'] as $key => $value){
+        if ($value == 1){
+            $style='style="color:darkblue"';
+        }else
+        {
+            $style='';
         }
-}
+        if ($arraydeploy['tabdeploy']['deployment_intervals'][$key] != ""){
+            $deployment_intervals = _T("deployment intervals contraints", "xmppmaster")." ".$arraydeploy['tabdeploy']['deployment_intervals'][$key];
+        }else
+        {
+            $deployment_intervals = _T("No deployment intervals contraint", "xmppmaster");
+        }
 
+        $arraydeploy['tabdeploy']['title'][$key]= sprintf('<span %s title="%s " > %s </span>',
+                                                            $style,
+                                                    $deployment_intervals = _T("No deployment intervals contraint", "xmppmaster"));
+
+
+        $arraydeploy['tabdeploy']['title'][$key]= sprintf('<span %s title="%s " > %s </span>',
+                                                            $style,
+                $deployment_intervals,
+                                                            $arraydeploy['tabdeploy']['title'][$key] );
+        if ($convergence[$arraydeploy['tabdeploy']['command'][$key]] != 0 ){
+            $arraydeploy['tabdeploy']['title'][$key]= "<img style='position:relative;top : 5px;'src='img/other/convergence.svg' width='25' height='25'/>" . $arraydeploy['tabdeploy']['title'][$key];
+            }else{
+                $arraydeploy['tabdeploy']['title'][$key]= "<img style='position:relative;top : 5px;'src='img/other/package.svg' width='25' height='25'/>" . $arraydeploy['tabdeploy']['title'][$key];
+            }
+    }
+}
 $arraydeploy['tabdeploy']['start'] = $startdeploy;
 $n = new OptimizedListInfos($arraydeploy['tabdeploy']['title'], _T("Deployment", "xmppmaster"));
 $n->addExtraInfo( $arraytargetname, _T("Target", "xmppmaster"));

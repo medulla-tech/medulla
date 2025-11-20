@@ -59,17 +59,11 @@ require_once("modules/updates/includes/xmlrpc.php");
 <?php
 
 $params = getFilteredGetParams();
-
-$params["source"]= $dataSource;
-$ajax = new AjaxFilter(urlStrRedirect("updates/updates/ajaxEntitiesList"),
-                       "container", $params);
+$ajax = new AjaxUrlDiv(urlStrRedirect("updates/updates/ajaxEntitiesList"),
+                                  "entitylist",
+                                  $params);
 $ajax->display();
-$ajax->displayDivToUpdate();
 
-// $ajaxmajor = new AjaxFilter(urlStrRedirect("updates/updates/ajaxMajorEntitiesList"),
-//                             "container-Major", $params, 'formMajor');
-// $ajaxmajor->display();
-// $ajaxmajor->displayDivToUpdate();
 ?>
 
 <style>

@@ -105,6 +105,18 @@ class RpcProxy(RpcProxyI):
     ##
     # machines
     ##
+
+    @with_optional_xmpp_context
+    def get_os_update_major_stats_win(self, ctx=None):
+        infos = ctx.get_session_info()['mondict']
+        return XmppMasterDatabase().get_os_update_major_stats_win(infos['liste_entities_user'])
+
+    @with_optional_xmpp_context
+    def get_os_update_major_stats_win_serv(self, ctx=None):
+        infos = ctx.get_session_info()['mondict']
+        return XmppMasterDatabase().get_os_update_major_stats_win_serv(infos['liste_entities_user'])
+
+
     @with_optional_xmpp_context
     def get_conformity_update_by_entity(self, entities=[], source="xmppmaster",ctx=None):
         """Get the conformity for specified entities"""
@@ -228,7 +240,15 @@ class RpcProxy(RpcProxyI):
 
         return resultarray
 
-
+    @with_optional_xmpp_context
+    def get_machines_update_grp(self,
+                                entity_id,
+                                type="windows",
+                                colonne="hardware_requirements",
+                                ctx=None):
+        return UpdatesDatabase().get_machines_update_grp( entity_id,
+                                                          type=type,
+                                                          colonne=colonne )
 
 def tests():
     return UpdatesDatabase().tests()
@@ -301,8 +321,9 @@ def get_count_machine_with_update(kb, uuid, list):
     return Glpi().get_count_machine_with_update(kb, uuid, list)
 
 
-def get_os_update_major_stats():
-    return XmppMasterDatabase().get_os_update_major_stats()
+#
+# def get_os_update_major_stats():
+#     return XmppMasterDatabase().get_os_update_major_stats()
 
 
 def get_os_xmpp_update_major_stats():
@@ -310,11 +331,13 @@ def get_os_xmpp_update_major_stats():
 
 
 def get_outdated_major_os_updates_by_entity(entity_id,
+                                            typeaction,
                                             start=0,
                                             limit=-1,
                                             filter="",
                                             colonne=True):
     return XmppMasterDatabase().get_outdated_major_os_updates_by_entity(entity_id,
+                                                                        typeaction,
                                                                         start,
                                                                         limit,
                                                                         filter,
@@ -322,11 +345,13 @@ def get_outdated_major_os_updates_by_entity(entity_id,
 
 
 def get_os_update_major_details(entity_id,
+                                typeaction="windows",
                                 filter="",
                                 start=0,
                                 limit=-1,
                                 colonne=True):
     return XmppMasterDatabase().get_os_update_major_details(entity_id,
+                                                            typeaction,
                                                             filter,
                                                             start,
                                                             limit,

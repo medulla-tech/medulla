@@ -120,6 +120,7 @@ class RpcProxy(RpcProxyI):
         logger.debug("filter : %s " % filter)
         return xmlrpcCleanup(Glpi().get_machines_list(start, end, filter))
 
+
     @with_optional_xmpp_context
     def get_machines_list1(self, start, end, filter, ctx=None):
         filter = update_filter(filter, ctx.get_session_info()['mondict']['liste_entities_user'])

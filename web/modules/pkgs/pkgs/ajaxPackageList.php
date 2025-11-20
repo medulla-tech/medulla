@@ -125,11 +125,8 @@ if($sharings['config']['centralizedmultiplesharing'] == true) {
     $_localisations = [];
     $_sharing_types = [];
     $_descriptions = [];
-    $_versions = [];
-    $_licenses = [];
     $_sizes = [];
     $_diskUsages = [];
-    $_params = [];
 
     for($i = 0; $i < safeCount($_packages['uuid']); $i++) {
         $packageSize = $_packages['size'][$i];

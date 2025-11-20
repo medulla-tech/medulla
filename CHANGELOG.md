@@ -1,5 +1,21 @@
 # Change Log
 
+## [5.4.3](https://github.com/medulla-tech/medulla/releases/tag/5.4.3) (2025-11-19)
+- [FEATURE] Update Office and Visual Studio through Windows update module
+- [FEATURE] Remove unused locale
+- [FEATURE] Improve translations
+- [FEATURE] When a user password is changed in Medulla, also change it in GLPI
+- [FEATURE] Improve display of quick action results
+- [FEATURE] Add support for ITSM-NG version 2.1
+- [BUGFIX]  Fix packages depencies list which was empty
+- [BUGFIX]  Fix getting of user profiles when glpi database name is not glpi
+- [BUGFIX]  Fix broken deployments 
+- [BUGFIX]  Various fixes due to a broken stylesheet
+- [BUGFIX]  Fix use of filters in table views
+- [BUGFIX]  Fix inventory quick action that didn't run
+- [BUGFIX]  Fix duplication of deployments on groups
+- [BUGFIX]  Fix convergence deployments
+
 ## [5.4.2](https://github.com/medulla-tech/medulla/releases/tag/5.4.2) (2025-10-31)
 - [FEATURE] Improve styles across the web interface
 - [FEATURE] Improve user experience on various modules

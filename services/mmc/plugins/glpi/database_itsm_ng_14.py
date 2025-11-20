@@ -87,7 +87,7 @@ import decimal
 logger = logging.getLogger()
 
 
-class Itsm_ng14(DyngroupDatabaseHelper):
+class Itsmng14(DyngroupDatabaseHelper):
     """
     Singleton Class to query the glpi database in version >= 9.4
 
@@ -156,7 +156,7 @@ class Itsm_ng14(DyngroupDatabaseHelper):
         if config != None:
             self.config = config
         else:
-            self.config = Itsm - ngConfig("glpi")
+            self.config = GlpiConfig("glpi")
         dburi = self.makeConnectionPath()
         self.db = create_engine(
             dburi,
@@ -165,12 +165,12 @@ class Itsm_ng14(DyngroupDatabaseHelper):
         )
         try:
             self.db.execute('SELECT "\xe9"')
-            setattr(Itsm_ng14, "decode", decode_utf8)
-            setattr(Itsm_ng14, "encode", encode_utf8)
+            setattr(Itsmng14, "decode", decode_utf8)
+            setattr(Itsmng14, "encode", encode_utf8)
         except Exception:
             self.logger.warn("Your database is not in utf8, will fallback in latin1")
-            setattr(Itsm_ng14, "decode", decode_latin1)
-            setattr(Itsm_ng14, "encode", encode_latin1)
+            setattr(Itsmng14, "decode", decode_latin1)
+            setattr(Itsmng14, "encode", encode_latin1)
 
         try:
             self._itsm_ng_version = list(
@@ -5864,7 +5864,7 @@ class Itsm_ng14(DyngroupDatabaseHelper):
             "content-type": "application/json",
             "Session-Token": sessionwebservice,
         }
-        url = Itsm - ngConfig.webservices["glpi_base_url"] + "killSession"
+        url = GlpiConfig.webservices["glpi_base_url"] + "killSession"
         r = requests.get(url, headers=headers)
         if r.status_code == 200:
             self.logger.debug("Kill session REST: %s" % sessionwebservice)
@@ -5880,25 +5880,22 @@ class Itsm_ng14(DyngroupDatabaseHelper):
         @rtype: bool
         """
         authtoken = base64.b64encode(
-            Itsm
-            - ngConfig.webservices["glpi_username"]
+            GlpiConfig.webservices["glpi_username"]
             + ":"
-            + Itsm
-            - ngConfig.webservices["glpi_password"]
+            + GlpiConfig.webservices["glpi_password"]
         )
         headers = {
             "content-type": "application/json",
             "Authorization": "Basic " + authtoken,
         }
-        url = Itsm - ngConfig.webservices["glpi_base_url"] + "initSession"
+        url = GlpiConfig.webservices["glpi_base_url"] + "initSession"
         self.logger.debug("Create session REST")
         r = requests.get(url, headers=headers)
         if r.status_code == 200:
             sessionwebservice = str(json.loads(r.text)["session_token"])
             self.logger.debug("session %s" % sessionwebservice)
             url = (
-                Itsm
-                - ngConfig.webservices["glpi_base_url"]
+                GlpiConfig.webservices["glpi_base_url"]
                 + "Computer/"
                 + str(fromUUID(uuid))
             )
@@ -6973,15 +6970,15 @@ and glpi_computers.id in %s group by glpi_computers.id;""" % (
                                 e.completename AS complete_name,
                                 COUNT(*) AS count
                             FROM
-                                glpi.glpi_computers AS c
+                                glpi_computers AS c
                                     INNER JOIN
-                                glpi.glpi_items_operatingsystems AS io ON c.id = io.items_id
+                                glpi_items_operatingsystems AS io ON c.id = io.items_id
                                     INNER JOIN
-                                glpi.glpi_entities AS e ON e.id = c.entities_id
+                                glpi_entities AS e ON e.id = c.entities_id
                                     INNER JOIN
-                                glpi.glpi_operatingsystems AS os ON os.id = io.operatingsystems_id
+                                glpi_operatingsystems AS os ON os.id = io.operatingsystems_id
                                     INNER JOIN
-                                glpi.glpi_operatingsystemversions AS v ON v.id = io.operatingsystemversions_id
+                                glpi_operatingsystemversions AS v ON v.id = io.operatingsystemversions_id
                             WHERE
                                 os.name LIKE '%Windows%'
                             GROUP BY e.id
@@ -7020,15 +7017,15 @@ and glpi_computers.id in %s group by glpi_computers.id;""" % (
                             ELSE 'not_win'
                         END AS os
                     FROM
-                        glpi.glpi_computers AS c
+                        glpi_computers AS c
                             INNER JOIN
-                        glpi.glpi_items_operatingsystems AS io ON c.id = io.items_id
+                        glpi_items_operatingsystems AS io ON c.id = io.items_id
                             INNER JOIN
-                        glpi.glpi_entities AS e ON e.id = c.entities_id
+                        glpi_entities AS e ON e.id = c.entities_id
                             INNER JOIN
-                        glpi.glpi_operatingsystems AS os ON os.id = io.operatingsystems_id
+                        glpi_operatingsystems AS os ON os.id = io.operatingsystems_id
                             INNER JOIN
-                        glpi.glpi_operatingsystemversions AS v ON v.id = io.operatingsystemversions_id
+                        glpi_operatingsystemversions AS v ON v.id = io.operatingsystemversions_id
                     WHERE
                         os.name LIKE '%Windows%'
                     GROUP BY e.name, os
@@ -7110,11 +7107,11 @@ and glpi_computers.id in %s group by glpi_computers.id;""" % (
                     ELSE 'not_win'
                 END AS 'update'
             FROM
-                glpi.glpi_computers AS c
-                INNER JOIN glpi.glpi_items_operatingsystems AS io ON c.id = io.items_id
-                INNER JOIN glpi.glpi_entities AS e ON e.id = c.entities_id
-                INNER JOIN glpi.glpi_operatingsystems AS os ON os.id = io.operatingsystems_id
-                INNER JOIN glpi.glpi_operatingsystemversions AS v ON v.id = io.operatingsystemversions_id
+                glpi_computers AS c
+                INNER JOIN glpi_items_operatingsystems AS io ON c.id = io.items_id
+                INNER JOIN glpi_entities AS e ON e.id = c.entities_id
+                INNER JOIN glpi_operatingsystems AS os ON os.id = io.operatingsystems_id
+                INNER JOIN glpi_operatingsystemversions AS v ON v.id = io.operatingsystemversions_id
             WHERE
                 os.name LIKE '%Windows%' AND e.id = :entity_id
         '''
@@ -7186,83 +7183,124 @@ and glpi_computers.id in %s group by glpi_computers.id;""" % (
 
 
     @DatabaseHelper._sessionm
-    def get_user_default_details(self, session, user_name: str, active: bool | None = True):
+    def get_user_or_superadmin_details(self, session, user_name: str):
         """
-        Récupère les informations détaillées d'un utilisateur GLPI,
-        incluant la liste concaténée des entités accessibles,
-        ainsi que le token applicatif "MMC".
+        Récupère les informations détaillées d'un utilisateur GLPI.
+        Si `user_name` est 'root', renvoie automatiquement le Super-Admin actif.
 
         Paramètres :
-            session (Session) : Objet de session SQLAlchemy.
-            user_name (str)   : Le login de l'utilisateur GLPI.
-            active (bool|None): Filtre sur la colonne gu.is_active.
-                                - True (par défaut) => user actif = 1
-                                - False             => user non actif = 0
-                                - None              => actif ou pas actif
+            session (Session): Objet SQLAlchemy.
+            user_name (str): Login de l'utilisateur GLPI ou 'root'.
 
         Retourne :
-            dict : Dictionnaire unique avec les alias définis dans le SQL.
+            dict : Dictionnaire contenant les alias SQL + alias_user_su, ou {} si non trouvé.
         """
 
-        sql = """
-              SELECT gu.id as user_id,
-                gu.entities_id as entity_id,
-                gu.locations_id as location_id,
-                gu.profiles_id as profile_id,
-                gu.name as user_name,
-                gu.realname as real_name,
-                gu.firstname as first_name,
-                gu.api_token,
-                gu.is_active,
-                gi.completename as complet_entity_name_,
-                gi.name as entity_name_,
-                gp.name AS profile_name,
-                (SELECT GROUP_CONCAT(gi2.id ORDER BY gi2.id SEPARATOR ',')
-                    FROM glpi.glpi_entities gi2
-                    WHERE gi2.completename LIKE CONCAT(gi.completename, '%')
-                ) AS liste_entities_user,
-                COALESCE(
-                    (SELECT ga.app_token
-                        FROM glpi.glpi_apiclients ga
+        # --- Cas spécial : root -> on cible le Super-Admin actif ---
+        if user_name == "root":
+            sql = """
+                SELECT
+                    gu.id AS user_id,
+                    gu.entities_id AS entity_id,
+                    gu.locations_id AS location_id,
+                    gu.profiles_id AS profile_id,
+                    gu.name AS user_name,
+                    gu.realname AS real_name,
+                    gu.firstname AS first_name,
+                    gu.api_token,
+                    gu.is_active,
+                    gi.completename AS complet_entity_name_,
+                    gi.name AS entity_name_,
+                    gp.name AS profile_name,
+                    (
+                        SELECT GROUP_CONCAT(gi2.id ORDER BY gi2.id SEPARATOR ',')
+                        FROM glpi_entities gi2
+                        WHERE gi2.completename LIKE CONCAT(gi.completename, '%')
+                    ) AS liste_entities_user,
+                    COALESCE((
+                        SELECT ga.app_token
+                        FROM glpi_apiclients ga
                         WHERE ga.app_token IS NOT NULL
                         AND ga.name = 'MMC'
-                        LIMIT 1),
-                    ''
-                ) AS app_token
-            FROM glpi.glpi_users gu
-            LEFT JOIN glpi.glpi_entities gi ON gi.id = gu.entities_id
-            LEFT JOIN glpi.glpi_profiles gp ON gp.id = gu.profiles_id
-            WHERE gu.name = :user_name
-        """
-
-
-        # Ajout dynamique du filtre actif/inactif
-        if active is True:
-            sql += " AND gu.is_active = 1"
-        elif active is False:
-            sql += " AND gu.is_active = 0"
-
-        sql += " LIMIT 1"
+                        LIMIT 1
+                    ), '') AS app_token
+                FROM glpi_users gu
+                LEFT JOIN glpi_entities gi ON gi.id = gu.entities_id
+                LEFT JOIN glpi_profiles gp ON gp.id = gu.profiles_id
+                WHERE gu.is_active = 1
+                AND gu.name IN (
+                        SELECT u.name
+                        FROM glpi_users u
+                        INNER JOIN glpi_profiles_users pu ON u.id = pu.users_id
+                        INNER JOIN glpi_profiles p ON p.id = pu.profiles_id
+                        WHERE p.name = 'Super-Admin'
+                )
+                AND (
+                    SELECT GROUP_CONCAT(gi2.id ORDER BY gi2.id SEPARATOR ',')
+                    FROM glpi_entities gi2
+                    WHERE gi2.completename LIKE CONCAT(gi.completename, '%')
+                ) IS NOT NULL
+                ORDER BY gu.id ASC
+                LIMIT 1
+            """
+            params = {}
+        else:
+            # --- Cas normal : utilisateur actif ---
+            sql = """
+                SELECT
+                    gu.id AS user_id,
+                    gu.entities_id AS entity_id,
+                    gu.locations_id AS location_id,
+                    gu.profiles_id AS profile_id,
+                    gu.name AS user_name,
+                    gu.realname AS real_name,
+                    gu.firstname AS first_name,
+                    gu.api_token,
+                    gu.is_active,
+                    gi.completename AS complet_entity_name_,
+                    gi.name AS entity_name_,
+                    gp.name AS profile_name,
+                    (SELECT GROUP_CONCAT(gi2.id ORDER BY gi2.id SEPARATOR ',')
+                        FROM glpi_entities gi2
+                        WHERE gi2.completename LIKE CONCAT(gi.completename, '%')
+                    ) AS liste_entities_user,
+                    COALESCE(
+                        (SELECT ga.app_token
+                            FROM glpi_apiclients ga
+                            WHERE ga.app_token IS NOT NULL
+                            AND ga.name = 'MMC'
+                            LIMIT 1),
+                        ''
+                    ) AS app_token
+                FROM glpi_users gu
+                LEFT JOIN glpi_entities gi ON gi.id = gu.entities_id
+                LEFT JOIN glpi_profiles gp ON gp.id = gu.profiles_id
+                WHERE gu.name = :user_name
+                AND gu.is_active = 1
+                LIMIT 1
+            """
+            params = {"user_name": user_name}
 
         sql = text(sql)
+        logger.debug("Executing get_user_or_superadmin_details for: %s", user_name)
 
-        # logger.debug("Executing SQL query: %s", sql)
-        logger.debug("With parameters: user_name=%s, active=%s", user_name, active)
-
-        row = session.execute(sql, {"user_name": user_name}).fetchone()
-
+        row = session.execute(sql, params).fetchone()
         if not row:
             return {}
 
-        # Transforme la ligne en dict directement avec les clés alias
         result = dict(row._mapping)
-        # Conversion de "1,2,3" → [1, 2, 3]
+
+        # Nettoyage / formatage de la liste des entités
         liste_raw = result.get("liste_entities_user")
-        if liste_raw:
-            result["liste_entities_user"] = [int(x) for x in liste_raw.split(",") if x.isdigit()]
-        else:
-            result["liste_entities_user"] = []
+        result["liste_entities_user"] = (
+            [int(x) for x in liste_raw.split(",") if x.isdigit()] if liste_raw else []
+        )
+
+        # --- Ajout du champ alias_user_su ---
+        result["alias_user_su"] = "root" if user_name == "root" else result["user_name"]
+
         return result
+
 
 # Class for SQLalchemy mapping
 class Machine(object):
@@ -7275,7 +7313,7 @@ class Machine(object):
         return {"hostname": self.name, "uuid": toUUID(self.id)}
 
     def to_a(self):
-        owner_login, owner_firstname, owner_realname = Itsm_ng14().getMachineOwner(self)
+        owner_login, owner_firstname, owner_realname = Itsmng14().getMachineOwner(self)
         return [
             ["id", self.id],
             ["name", self.name],
@@ -7300,7 +7338,7 @@ class Machine(object):
             ["model", self.computermodels_id],
             ["type", self.computertypes_id],
             ["entity", self.entities_id],
-            ["uuid", Itsm_ng14().getMachineUUID(self)],
+            ["uuid", Itsmng14().getMachineUUID(self)],
         ]
 
 

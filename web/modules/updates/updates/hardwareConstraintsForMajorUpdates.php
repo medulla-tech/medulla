@@ -42,7 +42,11 @@ $filter = filter_input(INPUT_GET, 'filter', FILTER_SANITIZE_STRING) ?? "";
 $entityname = filter_input(INPUT_GET, 'completename', FILTER_SANITIZE_STRING) ?? "";
 $entityid = filter_input(INPUT_GET, 'entity', FILTER_VALIDATE_INT) ?? 0;
 
-$titlepage = sprintf(_T("List of machines that should not be updated [ Entity %s ]"), htmlspecialchars($entityname));
+$titlepage = sprintf(_T("List of machines that should not be updated [ Entity %s ]"),
+                     htmlspecialchars($entityname));
+
+$typeaction= !empty($_GET['typeaction']) ? htmlentities($_GET['typeaction']) : "windows";
+
 $p = new PageGenerator($titlepage);
 $p->setSideMenu($sidemenu);
 $p->display();
@@ -51,8 +55,11 @@ echo '
     <input type="hidden" name="entityid" value="'.htmlspecialchars($entityid).'">
     <button class="btn btn-primary" type="submit">Creation Group</button>
 </form>';
-
-$list_Machine_outdated_major_update = xmlrpc_get_outdated_major_os_updates_by_entity($entityid, $start, $end, $filter);
+$list_Machine_outdated_major_update = xmlrpc_get_outdated_major_os_updates_by_entity($entityid,
+                                                                                     $typeaction,
+                                                                                     $start,
+                                                                                     $end,
+                                                                                     $filter);
 $n = new ListInfos($list_Machine_outdated_major_update['hostname'], _T("Computer", "updates"));
 $n->addExtraInfo($list_Machine_outdated_major_update['platform'], _T("Platform", "updates"));
 $n->addExtraInfo($list_Machine_outdated_major_update['oldcode'], _T("Version Code", "updates"));

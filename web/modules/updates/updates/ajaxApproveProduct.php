@@ -44,7 +44,7 @@ $params = [];
 $submittedCheckValues = $_POST['check'] ?? [];
 $cssClasses= [];
 $listename=[];
-
+$counttitleproduit=0;
 // Début du formulaire HTML
 echo '<form method="post" action="" name="montableau" class="approval-form">';
 $currentFamily = null;
@@ -58,9 +58,9 @@ foreach ($f['name_procedure'] as $indextableau => $name) {
     elseif (str_starts_with($str, "WS")) {
         $productfamily="server";}
     elseif (str_starts_with($str, "Vstudio")) {
-        $productfamily="vstudio";}
-    elseif (str_starts_with($str, "Office")) {
-        $productfamily="Office";}
+        $productfamily="Vstudio";}
+    elseif (str_starts_with($str, "office")) {
+        $productfamily="office";}
     elseif (str_starts_with($str, "Win10")) {
         $productfamily="Win10";}
     elseif (str_starts_with($str, "Win11")) {
@@ -71,9 +71,9 @@ foreach ($f['name_procedure'] as $indextableau => $name) {
     if ($currentFamily !== $productfamily || $currentFamily == null) {
         if ($productfamily == "server"){
             $listename[] = _T("MICROSOFT SERVER", "updates");
-        }elseif  ($productfamily == "vstudio"){
+        }elseif  ($productfamily == "Vstudio"){
             $listename[] = _T("MICROSOFT VISUAL STUDIO", "updates");
-        }elseif  ($productfamily == "Office"){
+        }elseif  ($productfamily == "office"){
             $listename[] = _T("MICROSOFT OFFICE", "updates");
         }elseif  ($productfamily == "Win10"){
             $listename[] = _T("MICROSOFT WINDOWS 10", "updates");
@@ -84,15 +84,15 @@ foreach ($f['name_procedure'] as $indextableau => $name) {
         }
         $htmlelementcheck[] = '&nbsp;';
         $cssClasses[] = "family-separator";
+        $counttitleproduit++;
         //$cssClasses[] = "sub-section-row";
-
     }
 
     $currentFamily=$productfamily;
     $str = str_replace("MSOS", _T("Microsoft Server Operating System", "admin"), $str);
     $str = str_replace("Vstudio", _T("Visual studio", "admin"), $str);
     $str = str_replace("Win_Malicious_", _T("Malicious Software Removal Tool_", "admin"), $str);
-    $str = str_replace("Office", "Microsoft Office", $str);
+    $str = str_replace("office", "Microsoft Office", $str);
     $str = str_replace("Win10", "Windows 10", $str);
     $str = str_replace("Win11", "Windows 11", $str);
     $str = str_replace("WS", _T("Microsoft Server Operating System", "admin"), $str);
@@ -125,9 +125,9 @@ foreach ($f['name_procedure'] as $indextableau => $name) {
     # on definie les css appliquue au produit
     if ($productfamily == "server"){
             $cssClasses[] ="family-produit";
-        }elseif  ($productfamily == "vstudio"){
+        }elseif  ($productfamily == "Vstudio"){
             $cssClasses[] ="family-produit";
-        }elseif  ($productfamily == "Office"){
+        }elseif  ($productfamily == "office"){
             $cssClasses[] ="family-produit";
         }elseif  ($productfamily == "Win10"){
             $cssClasses[] ="family-produit";
@@ -149,7 +149,7 @@ $n->addExtraInfo($htmlelementcheck, _T("approve update", "updates"));
 $n->setParamInfo($params);
 $n->setNavBar = "";
 $n->start = 0;
-$n->end = count($f['name_procedure']);
+$n->end = count($f['name_procedure'])+$counttitleproduit;
 
 $n->setCssCaptionClass("table-rounded caption-style");
 

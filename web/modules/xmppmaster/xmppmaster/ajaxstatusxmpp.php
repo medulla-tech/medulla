@@ -29,7 +29,6 @@ require_once('modules/msc/includes/commands_xmlrpc.inc.php');
 
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
-$filter = $_GET["filter"];
 
 $filter  = isset($_GET['filter']) ? $_GET['filter'] : "";
 $start = isset($_GET['start']) ? $_GET['start'] : 0;
@@ -121,9 +120,10 @@ $logAction = new ActionItem(
     "xmppmaster"
 );
 
+$previous = (isset($_GET['previous'])) ? htmlentities($_GET['previous']) : "";
 $reloadAction = new ActionPopupItem(
     _("Restart deployment"),
-    "popupReloadDeploy&previous=".$_GET['previous'],
+    "popupReloadDeploy&previous=".$previous,
     "reload",
     "",
     "xmppmaster",

@@ -22,7 +22,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-define("VERSION", "5.4.2");
+define("VERSION", "5.4.3");
 define("REVISION", "");
 
 function getVersion()

@@ -26,6 +26,101 @@
 require("FormGenerator.php");
 require_once("utils.inc.php");
 
+
+function generateSplashScreen(
+    string $imageUrl,
+    int $appearAnimTime = 500,
+    int $disappearDelay = 3000,
+    int $disappearAnimTime = 800,
+    string $containerId = 'splash-container',
+    string $additionalCss = '',
+    string $focusId = '' // <-- ID de l'élément à focus après splash
+): void {
+    $appearMs = max(0, (int)$appearAnimTime);
+    $disappearDelayMs = max(0, (int)$disappearDelay);
+    $disappearMs = max(0, (int)$disappearAnimTime);
+
+    $css = "
+        <style>
+            #$containerId {
+                position: fixed;
+                inset: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: rgba(0,0,0,0.85);
+                opacity: 1;
+                z-index: 2147483647;
+                overflow: hidden;
+                transition: opacity {$disappearMs}ms ease-in-out;
+                $additionalCss
+            }
+            #$containerId.fade-out { opacity: 0; }
+            #$containerId .splash-image {
+                width: 50vw;
+                max-width: 90%;
+                height: auto;
+                opacity: 0;
+                transform: scale(0.92);
+                transition: opacity {$appearMs}ms ease-in-out, transform {$appearMs}ms ease-in-out;
+                border-radius: 6px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            }
+            #$containerId .splash-image.visible { opacity: 1; transform: scale(1); }
+            #$containerId .splash-image.hide { opacity: 0; transform: scale(0.6); }
+        </style>
+    ";
+
+    $html = "
+        <div id='$containerId' role='presentation' aria-hidden='true'>
+            <img class='splash-image' src='$imageUrl' alt='Image de présentation'>
+        </div>
+    ";
+
+    $js = "
+        <script>
+            (function() {
+                const appearMs = {$appearMs};
+                const disappearDelayMs = {$disappearDelayMs};
+                const disappearMs = {$disappearMs};
+
+                const container = document.getElementById('{$containerId}');
+                if (!container) return;
+                const img = container.querySelector('.splash-image');
+                if (!img) return;
+
+                // apparition
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => img.classList.add('visible'));
+                });
+
+                // disparition
+                setTimeout(() => {
+                    img.style.transitionDuration = disappearMs + 'ms, ' + disappearMs + 'ms';
+                    img.classList.remove('visible');
+                    requestAnimationFrame(() => {
+                        img.classList.add('hide');
+                        container.classList.add('fade-out');
+                    });
+
+                    setTimeout(() => {
+                        container.remove();
+
+                        // focus sur l'élément si ID fourni et présent
+                        if ('{$focusId}') {
+                            const el = document.getElementById('{$focusId}');
+                            if (el) el.focus();
+                        }
+
+                    }, disappearMs + 50);
+
+                }, disappearDelayMs);
+            })();
+        </script>
+    ";
+
+    echo $css . $html . $js;
+}
 /**
  * Generates a unique ID for auto-generation in JavaScript or other similar contexts.
  * The ID is incremented each time the function is called, ensuring uniqueness.
@@ -336,7 +431,7 @@ class ActionItem
     * Génère plusieurs liens pour la même action, à partir d'une liste de valeurs
     *
     * @param array $paramsList  tableau de valeurs pour le paramètre principal
-    *                           Exemple : ['root', 'jfk', 'admin']
+    *                           Exemple : ['root', 'kjf', 'admin']
     * @param array $extraParams tableau associatif commun de paramètres supplémentaires
     *                           Exemple : ['restreint' => 1, 'entity' => 1]
     */
@@ -381,6 +476,295 @@ class ActionItem
     }
 }
 
+
+
+class ActionAjaxPopupItem extends ActionItem
+{
+    private $message;
+    private $width;
+
+    public function __construct(
+        $desc,
+        $action,
+        $classCss,
+        $paramString,
+        $message,
+        $module = null,
+        $submod = null,
+        $tab = null,
+        $width = 400,
+        $mod = false
+    ) {
+        parent::__construct($desc, $action, $classCss, $paramString, $module, $submod, $tab, $mod);
+        $this->message = $message;
+        $this->width   = $width;
+    }
+
+    /**
+     * Affiche le lien texte déclenchant la popup AJAX.
+     */
+    public function encapsulate($obj, $extraParams = array())
+    {
+        if (is_array($extraParams) && !empty($extraParams)) {
+            $urlChunk = $this->buildUrlChunk($extraParams);
+        } else {
+            $urlChunk = "&amp;" . $this->paramString . "=" . rawurlencode($obj);
+        }
+
+        // Construit l’URL AJAX dynamique
+        $ajaxUrl = "main.php?module=" . $this->module;
+        if (!empty($this->submod)) {
+            $ajaxUrl .= "&amp;submod=" . $this->submod;
+        }
+        if (!empty($this->tab)) {
+            $ajaxUrl .= "&amp;tab=" . $this->tab;
+        }
+        $ajaxUrl .= "&amp;action=" . $this->action . $urlChunk;
+
+        $popupId = "popup_" . uniqid();
+
+        // Lien HTML cliquable
+        $str  = "<a href=\"#\" class=\"" . htmlspecialchars($this->classCss) . "\" ";
+        $str .= "title=\"" . htmlspecialchars($this->desc) . "\" ";
+        $str .= "onclick=\"openAjaxPopup_{$popupId}(); return false;\">";
+        $str .= htmlspecialchars($obj);
+        $str .= "</a>";
+
+        // Intègre le JavaScript directement (comme SimpleNavBar)
+        $str .= $this->buildPopupScript($popupId, $ajaxUrl, $this->message, $this->width);
+
+        return $str;
+    }
+
+    /**
+     * Génère le JavaScript intégré pour cette instance.
+     */
+    private function buildPopupScript($popupId, $ajaxUrl, $message, $width)
+    {
+        ob_start(); ?>
+        <script type="text/javascript">
+            function openAjaxPopup_<?php echo $popupId; ?>() {
+                // Supprime l’ancienne popup s’il y en a une
+                jQuery('#<?php echo $popupId; ?>').remove();
+
+                // Crée la popup en jQuery
+                const popup = jQuery('<div>', { id: '<?php echo $popupId; ?>' })
+                    .css({
+                        position: 'fixed',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        width: '<?php echo $width; ?>px',
+                        background: '#fff',
+                        border: '1px solid #999',
+                        padding: '20px',
+                        zIndex: 9999,
+                        boxShadow: '0 0 15px rgba(0,0,0,0.3)',
+                        borderRadius: '8px',
+                        textAlign: 'center'
+                    })
+                    .html(`
+                        <div style="font-weight:bold;margin-bottom:10px;"><?php echo addslashes($message); ?></div>
+                        <button onclick="confirmAjaxAction_<?php echo $popupId; ?>()">Oui</button>
+                        <button onclick="closeAjaxPopup_<?php echo $popupId; ?>()">Non</button>
+                        <div id="<?php echo $popupId; ?>_result" style="margin-top:15px;font-size:0.9em;color:#333;"></div>
+                    `);
+
+                jQuery('body').append(popup);
+            }
+
+            function closeAjaxPopup_<?php echo $popupId; ?>() {
+                jQuery('#<?php echo $popupId; ?>').remove();
+            }
+
+            function confirmAjaxAction_<?php echo $popupId; ?>() {
+                const resultDiv = jQuery('#<?php echo $popupId; ?>_result');
+                resultDiv.html('Exécution en cours...');
+
+                jQuery.ajax({
+                    url: '<?php echo $ajaxUrl; ?>'.replace(/&amp;/g, '&'),
+                    method: 'GET',
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                    success: function (data) {
+                        resultDiv.html('<b>Résultat :</b><br>' + data);
+                    },
+                    error: function (xhr, status, error) {
+                        resultDiv.html('Erreur : ' + error);
+                    }
+                });
+            }
+        </script>
+        <?php
+        return ob_get_clean();
+    }
+}
+
+class ActionAjaxPopup extends ActionItem
+{
+    private $_confirmMessage = '';
+    private $_width = 400;
+    private $_replaceContent = true;
+
+    public function __construct(
+        $desc,
+        $action,
+        $classCss,
+        $paramString,
+        $confirmMessage,
+        $module = null,
+        $submod = null,
+        $tab = null,
+        $width = 400,
+        $mod = false,
+        $replace_content = true
+    ) {
+        parent::__construct($desc, $action, $classCss, $paramString, $module, $submod, $tab, $mod);
+        $this->_confirmMessage = $confirmMessage;
+        $this->_width = $width;
+        $this->_replaceContent = $replace_content;
+    }
+
+    public function render($text, $extraParams = array(), $title = '', $hoverClass = '')
+    {
+        if (is_string($extraParams) && !empty($extraParams)) {
+            $urlChunk = $extraParams;
+        } elseif (is_array($extraParams) && !empty($extraParams)) {
+            $urlChunk = $this->buildUrlChunk($extraParams);
+        } else {
+            $urlChunk = "&" . $this->paramString . "=" . rawurlencode($text);
+        }
+
+        $decodedUrlChunk = html_entity_decode($urlChunk, ENT_QUOTES, 'UTF-8');
+        $targetUrl = "main.php?module=" . $this->module .
+                    "&submod=" . $this->submod .
+                    "&action=" . $this->action;
+        if (!empty($this->tab)) {
+            $targetUrl .= "&tab=" . $this->tab;
+        }
+        $targetUrl .= $decodedUrlChunk;
+        $targetUrlJs = htmlspecialchars($targetUrl, ENT_QUOTES, 'UTF-8');
+        $confirmMessageJs = htmlspecialchars($this->_confirmMessage, ENT_QUOTES, 'UTF-8');
+
+        if (empty($title)) {
+            $title = $text;
+        }
+        $titleAttr = ' title="' . htmlspecialchars($title, ENT_QUOTES, 'UTF-8') . '"';
+        $allClasses = trim($this->classCss . ' ' . $hoverClass);
+
+        $html = '<a href="#" class="' . $allClasses . '"' . $titleAttr . '
+                    onclick="return ActionAjaxPopup_showPopup(\'' . $confirmMessageJs . '\', \'' . $targetUrlJs . '\', ' . $this->_width . ', ' . ($this->_replaceContent ? 'true' : 'false') . ');">'
+                    . htmlspecialchars($text, ENT_QUOTES, 'UTF-8') .
+                '</a>';
+
+        static $jsIncluded = false;
+        if (!$jsIncluded) {
+            ob_start();
+            $this->printJavascript();
+            $html .= ob_get_clean();
+            $jsIncluded = true;
+        }
+
+        return $html;
+    }
+
+    private function printJavascript()
+    {
+        ?>
+        <script type="text/javascript">
+        function ActionAjaxPopup_showPopup(message, targetUrl, width, replaceContent) {
+            // Si pas de message de confirmation, on fait un autoload dans la popup
+            if (message === '') {
+                if (!jQuery('#actionConfirmPopup').length) {
+                    jQuery('body').append('<div id="actionConfirmPopup" class="action-popup" style="display:none; padding:10px; background:#fff; border:1px solid #666; border-radius:6px; box-shadow:0 0 10px #000; position:fixed; z-index:10000;"></div>');
+                }
+                var $popup = jQuery('#actionConfirmPopup');
+                $popup.html('<em>Chargement...</em>').css({
+                    width: width + 'px',
+                    top: '20%',
+                    left: '50%',
+                    transform: 'translateX(-50%)'
+                }).fadeIn(200);
+
+                jQuery.ajax({
+                    url: targetUrl,
+                    type: 'GET',
+                    success: function(data) {
+                        if (replaceContent) {
+                            // Remplace le contenu du div de la popup
+                            $popup.html(data);
+                        } else {
+                            // Affiche le résultat dans la popup (comportement par défaut)
+                            $popup.html(data);
+                        }
+                        $popup.append('<div style="text-align:center; margin-top:10px;"><button id="popupClose">Fermer</button></div>');
+                        jQuery('#popupClose').on('click', function() {
+                            $popup.fadeOut(200);
+                        });
+                    },
+                    error: function(xhr) {
+                        $popup.html('<span style="color:red;">Erreur AJAX : ' + xhr.status + '</span>');
+                    }
+                });
+                return false;
+            }
+
+            // Comportement classique avec confirmation
+            if (!jQuery('#actionConfirmPopup').length) {
+                jQuery('body').append('<div id="actionConfirmPopup" class="action-popup" style="display:none; padding:10px; background:#fff; border:1px solid #666; border-radius:6px; box-shadow:0 0 10px #000; position:fixed; z-index:10000;"></div>');
+            }
+            var $popup = jQuery('#actionConfirmPopup');
+            var html = '<div class="popup-message" style="margin-bottom:10px;">' + message + '</div>' +
+                       '<div class="popup-buttons" style="text-align:center;">' +
+                       '<button id="popupYes" style="margin-right:10px;">Oui</button>' +
+                       '<button id="popupNo">Non</button>' +
+                       '</div>' +
+                       '<div id="popupResult" style="margin-top:10px; display:none;"></div>';
+            $popup.html(html);
+            $popup.css({
+                width: width + 'px',
+                top: '20%',
+                left: '50%',
+                transform: 'translateX(-50%)'
+            }).fadeIn(200);
+
+            jQuery('#popupNo').on('click', function() {
+                $popup.fadeOut(200);
+            });
+
+            jQuery('#popupYes').on('click', function() {
+                jQuery('#popupResult').html('<em>Chargement...</em>').show();
+                jQuery.ajax({
+                    url: targetUrl,
+                    type: 'GET',
+                    success: function(data) {
+                        if (replaceContent) {
+                            // Remplace le contenu du div de la popup
+                            $popup.html(data);
+                        } else {
+                            // Affiche le résultat dans la popup (comportement par défaut)
+                            jQuery('#popupResult').html(data).show();
+                        }
+                        if (!jQuery('#popupClose').length) {
+                            $popup.append('<div style="text-align:center; margin-top:10px;"><button id="popupClose">Fermer</button></div>');
+                            jQuery('#popupClose').on('click', function() {
+                                $popup.fadeOut(200);
+                            });
+                        }
+                    },
+                    error: function(xhr) {
+                        jQuery('#popupResult').html('<span style="color:red;">Erreur AJAX : ' + xhr.status + '</span>').show();
+                    }
+                });
+            });
+
+            return false;
+        }
+        </script>
+        <?php
+    }
+}
+
+
 /**
  * display action in a JavaScript popup
  *
@@ -390,7 +774,7 @@ class ActionItem
 class ActionPopupItem extends ActionItem
 {
     private $_displayType = 0;
-
+    public $width;
     public function __construct($desc, $action, $classCss, $paramString, $module = null, $submod = null, $tab = null, $width = 300, $mod = false)
     {
         parent::__construct($desc, $action, $classCss, $paramString, $module, $submod, $tab, $mod);
@@ -719,7 +1103,7 @@ class ConvertCouleur
 class ListInfos extends HtmlElement
 {
     public $arrInfo; /*     * < main list */
-    public $extraInfo;
+    // public $extraInfo;
     public $paramInfo;
     public $name;
     public $arrAction; /*     * < list of possible action */
@@ -739,6 +1123,8 @@ class ListInfos extends HtmlElement
     public $rowColor = ""; // Couleur des lignes des cellules (optionnel)
     public $captionStyle = "";
     public $captionClass = "";
+    // public $extraInfoRaw = array();
+    public $extraColumns = array();
 
     /**
      * constructor
@@ -844,8 +1230,6 @@ class ListInfos extends HtmlElement
        echo "<caption$classAttr style=\"$style\">" . htmlspecialchars($this->captionText, ENT_QUOTES, 'UTF-8') . "</caption>";
     }
 
-
-
     public function setAdditionalInfo($addinfo)
     {
         $this->_addInfo = $addinfo;
@@ -883,20 +1267,41 @@ class ListInfos extends HtmlElement
         }
     }
 
-    /**
-     *  add an array String to display
-     *  @param $arrString an Array String to display
-     *  @param description Table column name
-     *  @param width Table column width
-     *  @param tooltip Tooltip to display on the column name
-     */
     public function addExtraInfo($arrString, $description = "", $width = "", $tooltip = "")
     {
-        if(is_array($arrString)) {
-            $this->extraInfo[] = &$arrString;
-            $this->description[] = $description;
-            $this->col_width[] = $width;
-            $this->tooltip[] = $tooltip;
+        if (is_array($arrString)) {
+            $this->extraColumns[] = [
+                "data" => $arrString,
+                "isRaw" => false,
+                "description" => $description,
+                "width" => $width,
+                "tooltip" => $tooltip
+            ];
+        }
+    }
+    public function addExtraInfoRaw($arrString, $description = "", $width = "", $tooltip = "")
+    {
+        if (is_array($arrString)) {
+            $this->extraColumns[] = [
+                "data" => $arrString,
+                "isRaw" => true,
+                "description" => $description,
+                "width" => $width,
+                "tooltip" => $tooltip
+            ];
+        }
+    }
+    public function addExtraInfodirecthtml($arrString, $description = "", $directhtml = false, $width = "",
+    $tooltip = "")
+    {
+        if (is_array($arrString)) {
+            $this->extraColumns[] = [
+                "data" => $arrString,
+                "isRaw" => $directhtml,
+                "description" => $description,
+                "width" => $width,
+                "tooltip" => $tooltip
+            ];
         }
     }
 
@@ -1090,137 +1495,133 @@ class ListInfos extends HtmlElement
         echo "</td>";
     }
 
+
+
+
+
+
     public function drawTable($navbar = 1)
-    {
-        echo "<table border=\"1\" cellspacing=\"0\" cellpadding=\"5\" class=\"listinfos\">\n";
-        $this->drawCaption();
-        echo "<thead><tr>";
-        $first = false;
-        foreach ($this->description as $key => $desc) {
-            if (isset($this->col_width[$key])) {
-                $width_styl = 'width: ' . $this->col_width[$key] . ';';
-            } else {
-                $width_styl = '';
-            }
-            if (!$first) {
+{
+    echo "<table border=\"1\" cellspacing=\"0\" cellpadding=\"5\" class=\"listinfos\">\n";
+    $this->drawCaption();
 
-                if (!isset($this->first_elt_padding)) {
-                    $this->first_elt_padding = 32;
-                }
-                echo "<td style=\"$width_styl\"><span style=\" padding-left: " . $this->first_elt_padding . "px;\">$desc</span></td>";
-                $first = true;
-            } else {
-                /* Draw table header line */
-                /* Add a tooltip to the column name if there is one set */
-                if (!empty($this->tooltip[$key])) {
-                    $tooltipbegin = "<a href=\"#\" class=\"tooltip\">";
-                    $tooltipend = "<span>" . $this->tooltip[$key] . "</span></a>";
-                } else {
-                    $tooltipbegin = "";
-                    $tooltipend = "";
-                }
-                echo "<td style=\"$width_styl\"><span style=\" \">$tooltipbegin$desc$tooltipend</span></td>";
+    // En-têtes du tableau
+    echo "<thead><tr>";
+    $first = false;
+
+    // Colonnes principales (description)
+    foreach ($this->description as $key => $desc) {
+        $width_styl = isset($this->col_width[$key]) ? 'width: ' . $this->col_width[$key] . ';' : '';
+        if (!$first) {
+            if (!isset($this->first_elt_padding)) {
+                $this->first_elt_padding = 32;
             }
+            echo "<td style=\"$width_styl\"><span style=\"padding-left: " . $this->first_elt_padding . "px;\">$desc</span></td>";
+            $first = true;
+        } else {
+            $tooltipbegin = !empty($this->tooltip[$key]) ? "<a href=\"#\" class=\"tooltip\">" : "";
+            $tooltipend = !empty($this->tooltip[$key]) ? "<span>" . $this->tooltip[$key] . "</span></a>" : "";
+            echo "<td style=\"$width_styl\"><span>$tooltipbegin$desc$tooltipend</span></td>";
+        }
+    }
+
+    // Colonnes extra (normales et brutes)
+    foreach ($this->extraColumns as $extraCol) {
+        $width_styl = !empty($extraCol["width"]) ? 'width: ' . $extraCol["width"] . ';' : '';
+        $tooltipbegin = !empty($extraCol["tooltip"]) ? "<a href=\"#\" class=\"tooltip\">" : "";
+        $tooltipend = !empty($extraCol["tooltip"]) ? "<span>" . $extraCol["tooltip"] . "</span></a>" : "";
+        echo "<td style=\"$width_styl\"><span>$tooltipbegin" . $extraCol["description"] . "$tooltipend</span></td>";
+    }
+
+    // Colonne "Actions" si nécessaire
+    if (safeCount($this->arrAction) != 0) {
+        $width_styl = !empty(end($this->col_width)) ? 'width: ' . end($this->col_width) . ';' : '';
+        echo "<td style=\"text-align: center; $width_styl\"><span>Actions</span></td>";
+    }
+
+    echo "</tr></thead>";
+
+    // Lignes du tableau
+    for ($idx = $this->start; ($idx < safeCount($this->arrInfo)) && ($idx <= $this->end); $idx++) {
+        // Début de la ligne
+        echo "<tr";
+        if (!empty($this->cssIds[$idx])) {
+            echo " id='" . $this->cssIds[$idx] . "'";
+        }
+        if (!empty($this->cssClasses[$idx])) {
+            echo " class=\"" . $this->cssClasses[$idx] . "\"";
+        } else {
+            echo " class=\"alternate" . (!empty($this->cssClasses[$idx]) ? " " . $this->cssClasses[$idx] : "") . "\"";
+        }
+        echo ">";
+
+        // Première colonne (lien vers la première action si disponible)
+        if (safeCount($this->arrAction) && $this->firstColumnActionLink && !in_array($idx, $this->dissociateColumnsActionLink)) {
+            $this->drawMainAction($idx);
+        } else {
+            echo "<td>";
+            echo $this->arrInfo[$idx];
+            echo "</td>";
         }
 
-        if (safeCount($this->arrAction) != 0) { //if we have actions
-            if (!empty($this->col_width)) {
-                $width_styl = $this->col_width[safeCount($this->col_width) - 1];
-            }
-            $width_styl = isset($width_styl) ? sprintf('width: %s;', $width_styl) : '';
-            echo "<td style=\"text-align: center; $width_styl\"><span>Actions</span></td>";
-        }
-
-        echo "</tr></thead>";
-
-        for ($idx = $this->start; ($idx < safeCount($this->arrInfo)) && ($idx <= $this->end); $idx++) {
-            if (($this->start - $idx) % 2) {
-                echo "<tr";
-                if (!empty($this->cssIds[$idx])) {
-                    echo " id='". $this->cssIds[$idx]."'";
-                }
-                if (!empty($this->cssClasses[$idx])) {
-                    echo " class=\"" . $this->cssClasses[$idx] . "\"";
-                }
-                echo ">";
-            } else {
-                echo "<tr";
-                if (!empty($this->cssIds[$idx])) {
-                    echo " id='". $this->cssIds[$idx]."'";
-                }
-                echo " class=\"alternate";
-                if (!empty($this->cssClasses[$idx])) {
-                    echo " " . $this->cssClasses[$idx];
-                }
-                echo "\">";
-            }
-
-
-            //link to first action (if we have an action)
-            if (safeCount($this->arrAction) && $this->firstColumnActionLink && !in_array($idx, $this->dissociateColumnsActionLink)) {
-                $this->drawMainAction($idx);
-            } else {
-                if (!empty($this->cssClass)) {
-                    echo "<td class=\"" . $this->cssClass . "\">";
-                } elseif (!empty($this->mainActionClasses)) {
-                    echo "<td class=\"" . $this->mainActionClasses[$idx] . "\">";
+        // Colonnes extra (normales et brutes)
+        foreach ($this->extraColumns as $extraCol) {
+            echo "<td>";
+            if (isset($extraCol["data"][$idx])) {
+                if ($extraCol["isRaw"]) {
+                    echo $extraCol["data"][$idx]; // Affichage brut
                 } else {
-                    echo "<td>";
-                }
-                echo $this->arrInfo[$idx];
-                echo "</td>";
-            }
-
-            if ($this->extraInfo) {
-                foreach ($this->extraInfo as $arrayTMP) {
-                    echo "<td>";
-                    if (isset($arrayTMP[$idx]) && is_subclass_of($arrayTMP[$idx], "HtmlContainer")) {
-                        $arrayTMP[$idx]->display();
-                    } elseif (isset($arrayTMP[$idx]) && trim($arrayTMP[$idx]) != "") {
-                        echo_obj($arrayTMP[$idx]);
+                    if (is_subclass_of($extraCol["data"][$idx], "HtmlContainer")) {
+                        $extraCol["data"][$idx]->display();
+                    } elseif (trim($extraCol["data"][$idx]) != "") {
+                        echo_obj($extraCol["data"][$idx]);
                     } else {
                         echo "&nbsp;";
                     }
-                    echo "</td>";
                 }
+            } else {
+                echo "&nbsp;";
             }
-
-            if (safeCount($this->arrAction) != 0) {
-                echo "<td class=\"action\">";
-                echo "<ul class=\"action\">";
-                foreach ($this->arrAction as $objActionItem) {
-                    if (is_a($objActionItem, 'ActionItem')) {
-                        $objActionItem->display($this->arrInfo[$idx], $this->paramInfo[$idx]);
-                    } elseif (is_array($objActionItem)) {
-                        $obj = $objActionItem[$idx];
-                        $obj->display($this->arrInfo[$idx], $this->paramInfo[$idx]);
-                    }
-                }
-                echo "</ul>";
-                echo "</td>";
-            }
-            echo "</tr>\n";
+            echo "</td>";
         }
 
-
-        echo "</table>\n";
-
-        $this->displayNavbar($navbar);
-
-        if (false) {
-            /* Code disabled because not used and make javavascript errors */
-            print '<script type="text/javascript"><!--';
-            print "jQuery('#help').html('');\n";
-            print '$(\'help\').innerHTML+=\'<ul>\'' . "\n";
-            print '$(\'help\').innerHTML+=\'<li><h3>Aide contextuelle</h3></li>\'' . "\n";
+        // Colonne "Actions" si nécessaire
+        if (safeCount($this->arrAction) != 0) {
+            echo "<td class=\"action\">";
+            echo "<ul class=\"action\">";
             foreach ($this->arrAction as $objActionItem) {
-                $content = $objActionItem->strHelp();
-                print '$(\'help\').innerHTML+=\'' . $content . '\';' . "\n";
+                if (is_a($objActionItem, 'ActionItem')) {
+                    $objActionItem->display($this->arrInfo[$idx], $this->paramInfo[$idx]);
+                } elseif (is_array($objActionItem)) {
+                    $obj = $objActionItem[$idx];
+                    $obj->display($this->arrInfo[$idx], $this->paramInfo[$idx]);
+                }
             }
-            print '$(\'help\').innerHTML+=\'</ul>\'' . "\n";
-            print '--></script>';
+            echo "</ul>";
+            echo "</td>";
         }
+
+        echo "</tr>\n";
     }
+
+    echo "</table>\n";
+    $this->displayNavbar($navbar);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public function display($navbar = 1, $header = 1)
     {
@@ -1240,6 +1641,9 @@ class ListInfos extends HtmlElement
  */
 class OptimizedListInfos extends ListInfos
 {
+    public $itemCount;
+    public $startreal;
+    public $endreal;
     /**
      * Allow to set another item count
      */
@@ -1348,6 +1752,17 @@ class SimpleNavBar extends HtmlElement
      * @param $max: max quantity of elements in a page
      * @param $paginator: boolean which enable the selector of the number of results in a page
      */
+    public $max;
+    public $curstart;
+    public $itemcount;
+    public $extra;
+    public $paginator;
+    public $curpage;
+    public $curend;
+    public $nbpages;
+    public $filter;
+    public $jsfunc;
+
     public function __construct($curstart, $curend, $itemcount, $extra = "", $max = "", $paginator = false)
     {
         global $conf;
@@ -1830,6 +2245,17 @@ class AjaxFilter extends HtmlElement
                 /**
                  * Update div
                  */
+                updateSearch<?php echo $this->formid ?> = function() {
+                    var searchValue = document.Form<?php echo $this->formid ?>.param.value;
+                    var finalUrl = '<?php echo $this->url; ?>&filter=' + encodeURIComponent(searchValue) + '&maxperpage=' + maxperpage<?php
+                    if (isset($this->storedstart) && isset($this->storedend)) {
+                        echo " + '&start=" . $this->storedstart . "&end=" . $this->storedend . "'";
+                    }
+                    ?>;
+
+                /**
+                 * Update div
+                 */
         <?php
         $url = $this->url . "filter='+encodeURIComponent(document.Form" . $this->formid . ".param.value)+'&maxperpage='+maxperpage+'" .
                     (empty($this->params) ? "" : "&" . ltrim($this->params, "&"));
@@ -1841,7 +2267,7 @@ class AjaxFilter extends HtmlElement
 
                 updateSearch<?php echo $this->formid ?> = function() {
                     jQuery.ajax({
-                        'url': '<?php echo $url ?>',
+                        'url': finalUrl,
                         type: 'get',
                         success: function(data) {
                             jQuery("#<?php echo $this->divid; ?>").html(data);
@@ -1866,11 +2292,10 @@ class AjaxFilter extends HtmlElement
                         maxperpage = jQuery('#maxperpage').val();
 
                     jQuery.ajax({
-                       'url': '<?php echo $this->url; ?>filter=' + filter
+                       'url': '<?php echo $this->url; ?>filter=' + encodeURIComponent(filter)
                             + '&start=' + start
                             + '&end=' + end
-                            + '&maxperpage=' + maxperpage
-                            + '<?php echo (empty($this->params) ? "" : "&" . ltrim($this->params, "&")); ?>',
+                            + '&maxperpage=' + maxperpage,
                         type: 'get',
                         success: function(data) {
                             jQuery("#<?php echo $this->divid; ?>").html(data);
@@ -1907,6 +2332,7 @@ class AjaxFilter extends HtmlElement
     }
 
 }
+
 
 class multifieldTpl extends AbstractTpl
 {
@@ -3734,6 +4160,32 @@ class TrTitleElement extends HtmlElement
         print '</tr>';
     }
 
+}
+
+class AjaxUrlDiv extends AjaxPage
+{
+    public function __construct($url, $id = "container", $params = array())
+    {
+        // Appel du constructeur parent sans le paramètre refresh
+        parent::__construct($url, $id, $params, null);
+    }
+
+    public function display($arrParam = array())
+    {
+        echo <<< EOT
+        <div id="{$this->id}" class="{$this->class}"></div>
+        <script type="text/javascript">
+        jQuery.ajax({
+            url: '{$this->url}',
+            type: 'get',
+            data: {$this->params},
+            success: function(data){
+                jQuery("#{$this->id}").html(data);
+            }
+        });
+        </script>
+EOT;
+    }
 }
 
 class AjaxPage extends HtmlElement

@@ -24,7 +24,7 @@
 require_once("modules/medulla_server/version.php");
 
 $mod = new Module("admin");
-$mod->setVersion("5.4.2");
+$mod->setVersion("5.4.3");
 //$mod->setRevision('');
 $mod->setDescription(_T("Admin", "admin"));
 $mod->setAPIVersion("1:0:0");

@@ -1,73 +1,59 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
-# Translators:
-# Nicolas Lécureuil <neoclust@mageia.org>, 2024
-# 
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-30 15:34+0100\n"
-"PO-Revision-Date: 2022-11-14 14:44+0000\n"
-"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2024\n"
-"Language-Team: Spanish (Spain) (https://app.transifex.com/medulla/teams/72118/es_ES/)\n"
+"Project-Id-Version: medulla\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: es_ES\n"
-"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: modules/urbackup/urbackup/add_member_togroup_aftercheck.php:37
 msgid "Assign member to profile"
-msgstr ""
+msgstr "Asignar un miembro a un perfil"
 
 #: modules/urbackup/urbackup/edit_group_settings.php:32
 msgid "Settings for "
-msgstr ""
+msgstr "Ajustes para "
 
 #: modules/urbackup/urbackup/edit_group_settings.php:135
 msgid "You have error with your input informations."
-msgstr ""
+msgstr "Tiene un error en la información introducida."
 
 #: modules/urbackup/urbackup/edit_group_settings.php:143
 msgid "Info : Separate path with ';', you can put '*' to every character"
-msgstr ""
+msgstr "Info : Separe la ruta con ';', puede poner '*' a cada carácter"
 
 #: modules/urbackup/urbackup/edit_group_settings.php:148
 msgid "Interval for incremental file backups (hour)"
-msgstr ""
+msgstr "Intervalo para copias de seguridad incrementales de archivos (hora)"
 
 #: modules/urbackup/urbackup/edit_group_settings.php:149
 msgid "Interval for full file backups (day)"
-msgstr ""
+msgstr "Intervalo para copias de seguridad de archivos completos (día)"
 
 #: modules/urbackup/urbackup/edit_group_settings.php:150
 msgid "Excluded files"
-msgstr ""
+msgstr "Ficheros excluidos"
 
 #: modules/urbackup/urbackup/edit_group_settings.php:151
 msgid "Included files "
-msgstr ""
+msgstr "Archivos incluidos "
 
 #: modules/urbackup/urbackup/edit_group_settings.php:152
 msgid "Default directories to backup"
-msgstr ""
+msgstr "Directorios predeterminados para realizar copias de seguridad"
 
 #: modules/urbackup/urbackup/index.php:27
 msgid "Reviews"
-msgstr ""
+msgstr "Reseñas"
 
 #: modules/urbackup/urbackup/index.php:152
 msgid "Global statistics"
-msgstr ""
+msgstr "Estadísticas mundiales"
 
 #: modules/urbackup/urbackup/index.php:160
 msgid "Space on disk used by all client"
-msgstr ""
+msgstr "Espacio en disco utilizado por todos los clientes"
 
 #: modules/urbackup/urbackup/index.php:161
 #: modules/urbackup/urbackup/index.php:308
@@ -75,12 +61,12 @@ msgstr ""
 #: modules/urbackup/urbackup/result_search_file.php:48
 #: modules/urbackup/urbackup/all_files_backup.php:120
 msgid "Size"
-msgstr ""
+msgstr "Talla"
 
 #: modules/urbackup/urbackup/index.php:189
 #: modules/urbackup/urbackup/index.php:270
 msgid "Progress"
-msgstr ""
+msgstr "Progreso"
 
 #: modules/urbackup/urbackup/index.php:267
 #: modules/urbackup/urbackup/list_backups.php:178
@@ -98,29 +84,29 @@ msgstr "Acciones"
 #: modules/urbackup/urbackup/index.php:269
 #: modules/urbackup/urbackup/index.php:306
 msgid "Details"
-msgstr ""
+msgstr "Detalles"
 
 #: modules/urbackup/urbackup/index.php:271
 msgid "ETA (approximation)"
-msgstr ""
+msgstr "ETA (aproximación)"
 
 #: modules/urbackup/urbackup/index.php:272
 msgid "Speed (bpms)"
-msgstr ""
+msgstr "Velocidad (bpms)"
 
 #: modules/urbackup/urbackup/index.php:273
 msgid "File in queue"
-msgstr ""
+msgstr "Archivos en cola"
 
 #: modules/urbackup/urbackup/index.php:295
 msgid "Last activities"
-msgstr ""
+msgstr "Últimas actividades"
 
 #: modules/urbackup/urbackup/index.php:302
 #: modules/urbackup/urbackup/logs.php:51
 #: modules/urbackup/urbackup/list_backups.php:283
 msgid "Id"
-msgstr ""
+msgstr "Id"
 
 #: modules/urbackup/urbackup/index.php:303
 #: modules/urbackup/urbackup/usersgroups.php:78
@@ -129,7 +115,7 @@ msgstr "Nombre"
 
 #: modules/urbackup/urbackup/index.php:304
 msgid "Date of backup"
-msgstr ""
+msgstr "Fecha de la copia de seguridad"
 
 #: modules/urbackup/urbackup/index.php:305
 msgid "Status"
@@ -137,76 +123,74 @@ msgstr "Estado"
 
 #: modules/urbackup/urbackup/index.php:307
 msgid "Duration H:M:S"
-msgstr ""
+msgstr "Duración H:M:S"
 
 #: modules/urbackup/urbackup/index.php:319
 msgid "Delete of incremental backup"
-msgstr ""
+msgstr "Eliminación de la copia de seguridad incremental"
 
 #: modules/urbackup/urbackup/index.php:325
 msgid "Delete of full backup"
-msgstr ""
+msgstr "Eliminación de la copia de seguridad completa"
 
 #: modules/urbackup/urbackup/index.php:337
 #: modules/urbackup/urbackup/index.php:345
 msgid "Restoration of file"
-msgstr ""
+msgstr "Restauración del expediente"
 
 #: modules/urbackup/urbackup/index.php:354
 #: modules/urbackup/urbackup/list_backups.php:322
 msgid "Incremental backup"
-msgstr ""
+msgstr "Copia de seguridad incremental"
 
 #: modules/urbackup/urbackup/index.php:356
 msgid "Incremental image"
-msgstr ""
+msgstr "Imagen incremental"
 
 #: modules/urbackup/urbackup/index.php:362
 msgid "Full files backup"
-msgstr ""
+msgstr "Copia de seguridad completa"
 
 #: modules/urbackup/urbackup/index.php:364
 msgid "Full files image"
-msgstr ""
+msgstr "Imagen completa de los archivos"
 
 #: modules/urbackup/urbackup/index.php:418
 #: modules/urbackup/urbackup/logs.php:52
 msgid "Message"
-msgstr ""
+msgstr "Mensaje"
 
 #: modules/urbackup/urbackup/index.php:419
 #: modules/urbackup/urbackup/logs.php:53
 #: modules/urbackup/urbackup/list_backups.php:286
 msgid "Time"
-msgstr ""
+msgstr "Tiempo"
 
 #: modules/urbackup/urbackup/index.php:448
 #: modules/urbackup/urbackup/logs.php:82
-msgid ""
-"Backup failed because of disk problems, no space left on disk (see previous "
-"messages)"
-msgstr ""
+msgid "Backup failed because of disk problems, no space left on disk (see previous messages)"
+msgstr "La copia de seguridad ha fallado por problemas de disco, no queda espacio en el disco (ver mensajes anteriores)"
 
 #: modules/urbackup/urbackup/logs.php:27
 #: modules/urbackup/infoPackage.inc.php:114
 msgid "Logs"
-msgstr ""
+msgstr "Registros"
 
 #: modules/urbackup/urbackup/list_computers_ongroup.php:31
 msgid "List user on profil "
-msgstr ""
+msgstr "Listar usuario en perfil "
 
 #: modules/urbackup/urbackup/list_computers_ongroup.php:121
 msgid "Add member to this profile"
-msgstr ""
+msgstr "Añadir un miembro a este perfil"
 
 #: modules/urbackup/urbackup/list_computers_ongroup.php:140
 msgid "Computer <b>outside</b> the profile"
-msgstr ""
+msgstr "Ordenador <b>fuera</b> del perfil"
 
 #: modules/urbackup/urbackup/list_computers_ongroup.php:141
 msgid "Computer <b>inside</b> the profile"
-msgstr ""
+msgstr "Ordenador <b>dentro</b> del perfil"
 
 #: modules/urbackup/urbackup/download_file.php:27
 #: modules/urbackup/infoPackage.inc.php:106
@@ -216,12 +200,12 @@ msgstr "Descargar archivo"
 #: modules/urbackup/urbackup/deleting_backup.php:30
 #: modules/urbackup/infoPackage.inc.php:86
 msgid "Delete backup"
-msgstr ""
+msgstr "Eliminar copia de seguridad"
 
 #: modules/urbackup/urbackup/restore_file.php:27
 #: modules/urbackup/infoPackage.inc.php:102
 msgid "Restore file"
-msgstr ""
+msgstr "Restauración de archivos"
 
 #: modules/urbackup/urbackup/deleting_group.php:29
 #: modules/urbackup/infoPackage.inc.php:90
@@ -230,76 +214,67 @@ msgstr "Eliminar grupo"
 
 #: modules/urbackup/urbackup/list_backups.php:31
 msgid "Backups List "
-msgstr ""
+msgstr "Lista de copias de seguridad "
 
 #: modules/urbackup/urbackup/list_backups.php:173
 msgid "Statistics by client"
-msgstr ""
+msgstr "Estadísticas por cliente"
 
 #: modules/urbackup/urbackup/list_backups.php:179
 msgid "File size"
-msgstr ""
+msgstr "Tamaño del archivo"
 
 #: modules/urbackup/urbackup/list_backups.php:207
 msgid "Start incremental backup"
-msgstr ""
+msgstr "Iniciar copia de seguridad incremental"
 
 #: modules/urbackup/urbackup/list_backups.php:208
 msgid "Start full backup"
-msgstr ""
+msgstr "Iniciar copia de seguridad completa"
 
 #: modules/urbackup/urbackup/list_backups.php:214
 msgid "Enable backup for this client"
-msgstr ""
+msgstr "Activar la copia de seguridad para este cliente"
 
 #: modules/urbackup/urbackup/list_backups.php:221
 msgid "Disable backup for this client"
-msgstr ""
+msgstr "Desactivar la copia de seguridad para este cliente"
 
 #: modules/urbackup/urbackup/list_backups.php:228
 msgid "Profile name: "
-msgstr ""
+msgstr "Nombre del perfil: "
 
 #: modules/urbackup/urbackup/list_backups.php:238
-msgid ""
-"Incremental backup failed, be sure client urbackup is installed on computer "
-"or is online."
-msgstr ""
+msgid "Incremental backup failed, be sure client urbackup is installed on computer or is online."
+msgstr "Ha fallado la copia de seguridad incremental, asegúrese de que el cliente urbackup está instalado en el ordenador o está en línea."
 
 #: modules/urbackup/urbackup/list_backups.php:244
-msgid ""
-"Full backup failed, be sure client urbackup is installed on computer or is "
-"online."
-msgstr ""
+msgid "Full backup failed, be sure client urbackup is installed on computer or is online."
+msgstr "La copia de seguridad completa ha fallado, asegúrese de que el cliente urbackup está instalado en el ordenador o está en línea."
 
 #: modules/urbackup/urbackup/list_backups.php:250
-msgid ""
-"The installation and configuration of the urbackup client on computers can "
-"take up to 10 minutes. This is required to have a fully operational client "
-"and enable the backups. After that, fully backup will be automatically "
-"created."
-msgstr ""
+msgid "The installation and configuration of the urbackup client on computers can take up to 10 minutes. This is required to have a fully operational client and enable the backups. After that, fully backup will be automatically created."
+msgstr "La instalación y configuración del cliente urbackup en los ordenadores puede llevar hasta 10 minutos. Esto es necesario para tener un cliente totalmente operativo y habilitar las copias de seguridad. Después de eso, se creará automáticamente una copia de seguridad completa."
 
 #: modules/urbackup/urbackup/list_backups.php:256
 msgid "This client has been successfully disabled."
-msgstr ""
+msgstr "Este cliente ha sido desactivado correctamente."
 
 #: modules/urbackup/urbackup/list_backups.php:261
 msgid "This client has been successfully enabled."
-msgstr ""
+msgstr "Este cliente se ha activado correctamente."
 
 #: modules/urbackup/urbackup/list_backups.php:267
 msgid "This client was offline, please wait until it is online and try again."
-msgstr ""
+msgstr "Este cliente estaba fuera de línea, por favor espere hasta que esté en línea e inténtelo de nuevo."
 
 #: modules/urbackup/urbackup/list_backups.php:273
-msgid ""
-"Restart can take up to 5 seconds, please wait before taking any action."
-msgstr ""
+msgid "Restart can take up to 5 seconds, please wait before taking any action."
+msgstr "El reinicio puede tardar hasta 5 segundos, por favor espere antes de tomar cualquier acción."
 
 #: modules/urbackup/urbackup/list_backups.php:278
 msgid "File save"
-msgstr ""
+msgstr "Guardar archivo"
 
 #: modules/urbackup/urbackup/list_backups.php:284
 msgid "Type"
@@ -307,30 +282,30 @@ msgstr "Tipo"
 
 #: modules/urbackup/urbackup/list_backups.php:285
 msgid "Archived ?"
-msgstr ""
+msgstr "Archivado ?"
 
 #: modules/urbackup/urbackup/list_backups.php:297
 msgid "No backup"
-msgstr ""
+msgstr "Sin copia de seguridad"
 
 #: modules/urbackup/urbackup/list_backups.php:320
 msgid "Full backup"
-msgstr ""
+msgstr "Copia de seguridad completa"
 
 #: modules/urbackup/urbackup/list_backups.php:325
 msgid "No"
-msgstr ""
+msgstr "No"
 
 #: modules/urbackup/urbackup/list_backups.php:327
 msgid "Yes"
-msgstr ""
+msgstr "Sí"
 
 #: modules/urbackup/urbackup/list_backups.php:340
 #: modules/urbackup/urbackup/all_files_backup.php:187
 #: modules/urbackup/urbackup/usersgroups.php:89
 #: modules/urbackup/urbackup/usersgroups.php:94
 msgid "Browse"
-msgstr ""
+msgstr "Visite"
 
 #: modules/urbackup/urbackup/list_backups.php:350
 #: modules/urbackup/urbackup/list_backups.php:357
@@ -340,147 +315,147 @@ msgstr "Borrar"
 
 #: modules/urbackup/urbackup/list_backups.php:372
 msgid "Client disabled"
-msgstr ""
+msgstr "Cliente desactivado"
 
 #: modules/urbackup/urbackup/validate_edit_group.php:30
 msgid "Settings saved for "
-msgstr ""
+msgstr "Ajustes guardados para "
 
 #: modules/urbackup/urbackup/validate_edit_group.php:171
 msgid "Changes saved"
-msgstr ""
+msgstr "Cambios guardados"
 
 #: modules/urbackup/urbackup/start_backup.php:33
 msgid "Start "
-msgstr ""
+msgstr "Inicio "
 
 #: modules/urbackup/urbackup/add_member_togroup.php:37
 msgid "Assign member to profil"
-msgstr ""
+msgstr "Asignar miembro a perfil"
 
 #: modules/urbackup/urbackup/checkMachine.php:30
 msgid "Assign profile to computer "
-msgstr ""
+msgstr "Asignar un perfil a un ordenador "
 
 #: modules/urbackup/urbackup/checkMachine.php:106
 msgid "Choose profile to computer"
-msgstr ""
+msgstr "Elegir perfil a ordenador"
 
 #: modules/urbackup/urbackup/restart_service.php:32
 msgid "Restart service"
-msgstr ""
+msgstr "Reiniciar el servicio"
 
 #: modules/urbackup/urbackup/result_search_file.php:27
 #: modules/urbackup/infoPackage.inc.php:74
 msgid "File research by name"
-msgstr ""
+msgstr "Búsqueda de archivos por nombre"
 
 #: modules/urbackup/urbackup/result_search_file.php:45
 msgid "File"
-msgstr ""
+msgstr "Archivo"
 
 #: modules/urbackup/urbackup/result_search_file.php:46
 msgid "Path"
-msgstr ""
+msgstr "Ruta"
 
 #: modules/urbackup/urbackup/result_search_file.php:47
 msgid "Creation date"
-msgstr ""
+msgstr "Fecha de creación"
 
 #: modules/urbackup/urbackup/result_search_file.php:124
 #: modules/urbackup/urbackup/result_search_file.php:152
 #: modules/urbackup/urbackup/all_files_backup.php:191
 msgid "DOWNLOAD"
-msgstr ""
+msgstr "DESCARGAR"
 
 #: modules/urbackup/urbackup/result_search_file.php:125
 #: modules/urbackup/urbackup/result_search_file.php:153
 #: modules/urbackup/urbackup/all_files_backup.php:192
 msgid "RESTORE"
-msgstr ""
+msgstr "RESTAURAR"
 
 #: modules/urbackup/urbackup/localSidebar.php:24
 #: modules/urbackup/infoPackage.inc.php:38
 msgid "Review"
-msgstr ""
+msgstr "Consulte"
 
 #: modules/urbackup/urbackup/localSidebar.php:25
 #: modules/urbackup/urbackup/usersgroups.php:28
 #: modules/urbackup/infoPackage.inc.php:110
 msgid "Profiles"
-msgstr ""
+msgstr "Perfiles"
 
 #: modules/urbackup/urbackup/all_files_backup.php:61
 msgid "Backups list for "
-msgstr ""
+msgstr "Lista de copias de seguridad para "
 
 #: modules/urbackup/urbackup/all_files_backup.php:85
 msgid "Restoring request successfully asked to client."
-msgstr ""
+msgstr "Petición de restauración solicitada con éxito al cliente."
 
 #: modules/urbackup/urbackup/all_files_backup.php:91
 msgid "Restoring error, please try again, check if client exist or is online."
-msgstr ""
+msgstr "Error de restauración, inténtelo de nuevo, compruebe si el cliente existe o está en línea."
 
 #: modules/urbackup/urbackup/all_files_backup.php:98
 msgid " Path: "
-msgstr ""
+msgstr " Senda: "
 
 #: modules/urbackup/urbackup/all_files_backup.php:103
 msgid "Back to previous path"
-msgstr ""
+msgstr "Volver a la ruta anterior"
 
 #: modules/urbackup/urbackup/all_files_backup.php:107
 msgid "Back to backup list"
-msgstr ""
+msgstr "Volver a la lista de copias de seguridad"
 
 #: modules/urbackup/urbackup/all_files_backup.php:110
 msgid "Clear search"
-msgstr ""
+msgstr "Búsqueda clara"
 
 #: modules/urbackup/urbackup/all_files_backup.php:119
 msgid "File/Folder"
-msgstr ""
+msgstr "Archivo/Carpeta"
 
 #: modules/urbackup/urbackup/all_files_backup.php:121
 msgid "Create date"
-msgstr ""
+msgstr "Crear fecha"
 
 #: modules/urbackup/urbackup/all_files_backup.php:122
 msgid "Last modification"
-msgstr ""
+msgstr "Última modificación"
 
 #: modules/urbackup/urbackup/all_files_backup.php:123
 msgid "Last access"
-msgstr ""
+msgstr "Último acceso"
 
 #: modules/urbackup/urbackup/all_files_backup.php:133
 msgid "No file"
-msgstr ""
+msgstr "Ningún archivo"
 
 #: modules/urbackup/urbackup/deleting_client.php:14
 msgid "Enable or disable client"
-msgstr ""
+msgstr "Activar o desactivar el cliente"
 
 #: modules/urbackup/urbackup/create_group.php:27
 msgid "Group creation"
-msgstr ""
+msgstr "Creación de grupos"
 
 #: modules/urbackup/urbackup/create_group.php:55
 msgid "The group '"
-msgstr ""
+msgstr "El grupo '"
 
 #: modules/urbackup/urbackup/create_group.php:58
 msgid "Failed to create the group '"
-msgstr ""
+msgstr "Error al crear el grupo '"
 
 #: modules/urbackup/urbackup/usersgroups.php:62
 msgid "Profile name :"
-msgstr ""
+msgstr "Nombre del perfil :"
 
 #: modules/urbackup/urbackup/usersgroups.php:73
 msgid "Profile list :"
-msgstr ""
+msgstr "Lista de perfiles :"
 
 #: modules/urbackup/urbackup/usersgroups.php:79
 msgid "Actions"
@@ -497,27 +472,27 @@ msgstr "Copia de seguridad"
 
 #: modules/urbackup/infoPackage.inc.php:42
 msgid "List Backups by Client"
-msgstr ""
+msgstr "Listar copias de seguridad por cliente"
 
 #: modules/urbackup/infoPackage.inc.php:46
 msgid "Start backup"
-msgstr ""
+msgstr "Iniciar copia de seguridad"
 
 #: modules/urbackup/infoPackage.inc.php:50
 msgid "Check machine if exist"
-msgstr ""
+msgstr "Comprobar la máquina si existe"
 
 #: modules/urbackup/infoPackage.inc.php:54
 msgid "Create group"
-msgstr ""
+msgstr "Crear grupo"
 
 #: modules/urbackup/infoPackage.inc.php:58
 msgid "Assign member to group"
-msgstr ""
+msgstr "Asignar un miembro al grupo"
 
 #: modules/urbackup/infoPackage.inc.php:62
 msgid "Assign member to group after add client"
-msgstr ""
+msgstr "Asignar miembro a grupo después de añadir cliente"
 
 #: modules/urbackup/infoPackage.inc.php:66
 msgid "Edit group"
@@ -525,20 +500,21 @@ msgstr "Editar grupo"
 
 #: modules/urbackup/infoPackage.inc.php:70
 msgid "List computer on group"
-msgstr ""
+msgstr "Listar ordenador en grupo"
 
 #: modules/urbackup/infoPackage.inc.php:78
 msgid "Restart Service"
-msgstr ""
+msgstr "Reiniciar el servicio"
 
 #: modules/urbackup/infoPackage.inc.php:82
 msgid "Validate save settings"
-msgstr ""
+msgstr "Validar la configuración de guardado"
 
 #: modules/urbackup/infoPackage.inc.php:94
 msgid "Delete client"
-msgstr ""
+msgstr "Borrar cliente"
 
 #: modules/urbackup/infoPackage.inc.php:98
 msgid "List of files from on backup"
-msgstr ""
+msgstr "Lista de archivos de la copia de seguridad"
+

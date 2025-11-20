@@ -1,21 +1,6 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
-# Translators:
-# Nicolas Lécureuil <neoclust@mageia.org>, 2025
-# SPO, 2025
-# 
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-30 15:34+0100\n"
-"PO-Revision-Date: 2017-09-12 14:00+0000\n"
-"Last-Translator: SPO, 2025\n"
-"Language-Team: French (https://app.transifex.com/medulla/teams/72118/fr/)\n"
+"Project-Id-Version: medulla\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -60,7 +45,7 @@ msgstr "Dev Home"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:78
 msgid "Family"
-msgstr ""
+msgstr "Famille"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:83
 msgid "Feedback Hub"
@@ -84,15 +69,15 @@ msgstr "Courrier & calendrier"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:108
 msgid "Maps"
-msgstr ""
+msgstr "Cartes"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:113
 msgid "Math Input Panel"
-msgstr ""
+msgstr "Panneau de saisie mathématique"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:118
 msgid "Media Features"
-msgstr ""
+msgstr "Caractéristiques des médias"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:123
 msgid "Mixed Reality"
@@ -124,7 +109,7 @@ msgstr "OneNote"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:162
 msgid "OnSync"
-msgstr ""
+msgstr "OnSync"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:167
 msgid "OpenSSH Client"
@@ -144,7 +129,7 @@ msgstr "Paint 3D"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:189
 msgid "People"
-msgstr ""
+msgstr "Les personnes"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:194
 msgid "Photos"
@@ -156,7 +141,7 @@ msgstr "Power Automate"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:204
 msgid "PowerShell 2.0"
-msgstr ""
+msgstr "PowerShell 2.0"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:209
 msgid "PowerShell ISE"
@@ -184,7 +169,7 @@ msgstr "Capture et croquis"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:241
 msgid "Solitaire Collection"
-msgstr ""
+msgstr "Solitaire Collection"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:246
 msgid "Speech (all languages)"
@@ -344,9 +329,7 @@ msgstr "Ne jamais vérifier les mises à jours"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1759
 msgid "Check for updates but choose to download and install"
-msgstr ""
-"Vérifiez les mises à jour, mais choisissez de les télécharger et de les "
-"installer"
+msgstr "Vérifiez les mises à jour, mais choisissez de les télécharger et de les installer"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1760
 msgid "Download updates but choose when to install"
@@ -390,29 +373,16 @@ msgid "Disabled"
 msgstr "Désactivé"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1793
-msgid ""
-"CEIPEnabled indicates whether the Windows Customer Experience Improvement "
-"Program (CEIP) is enabled"
-msgstr ""
-"CEIP indique si le programme CEIP (Windows Customer Experience Improvement "
-"Program) est activé"
+msgid "CEIPEnabled indicates whether the Windows Customer Experience Improvement Program (CEIP) is enabled"
+msgstr "CEIP indique si le programme CEIP (Windows Customer Experience Improvement Program) est activé"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1795
-msgid ""
-"If the Microsoft-Windows-SQMAPI component is enabled, it collects and sends "
-"data to Microsoft about Windows usage"
-msgstr ""
-"Si le composant Microsoft-Windows-SQMAPI est activé, il collecte et envoie "
-"des données à Microsoft à propos de l'utilisation de Windows"
+msgid "If the Microsoft-Windows-SQMAPI component is enabled, it collects and sends data to Microsoft about Windows usage"
+msgstr "Si le composant Microsoft-Windows-SQMAPI est activé, il collecte et envoie des données à Microsoft à propos de l'utilisation de Windows"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1797
-msgid ""
-"Participation in this program is voluntary, and the results are recorded to "
-"implement improvements for future releases"
-msgstr ""
-"La participation à ce programme est volontaire, et les résultats sont "
-"enregistrés pour mettre en œuvre des améliorations pour les prochaines "
-"versions"
+msgid "Participation in this program is voluntary, and the results are recorded to implement improvements for future releases"
+msgstr "La participation à ce programme est volontaire, et les résultats sont enregistrés pour mettre en œuvre des améliorations pour les prochaines versions"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1799
 msgid "enabled "
@@ -427,30 +397,16 @@ msgid "Specifies that Windows CEIP is enabled"
 msgstr "Indique que Windows CEIP est activé"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1808
-msgid ""
-"SystemDefaultBackgroundColor specifies the system default Windows background"
-" color scheme appearing on first boot, and on LogonUI if no user is selected"
-msgstr ""
-"Couleur d'arrière-plan par défaut du système spécifie le schéma de couleurs "
-"d'arrière-plan Windows par défaut du système apparaissant au premier "
-"démarrage, et sur LogonUI si aucun utilisateur n'est sélectionné"
+msgid "SystemDefaultBackgroundColor specifies the system default Windows background color scheme appearing on first boot, and on LogonUI if no user is selected"
+msgstr "Couleur d'arrière-plan par défaut du système spécifie le schéma de couleurs d'arrière-plan Windows par défaut du système apparaissant au premier démarrage, et sur LogonUI si aucun utilisateur n'est sélectionné"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1811
-msgid ""
-"Specifies the default system language to display user interface (UI) items "
-"(such as menus, dialog boxes, and help files)"
-msgstr ""
-"Spécifie la langue système par défaut pour afficher les éléments de "
-"l'interface utilisateur (tels que les menus, les boîtes de dialogue et les "
-"fichiers d'aide)"
+msgid "Specifies the default system language to display user interface (UI) items (such as menus, dialog boxes, and help files)"
+msgstr "Spécifie la langue système par défaut pour afficher les éléments de l'interface utilisateur (tels que les menus, les boîtes de dialogue et les fichiers d'aide)"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1814
-msgid ""
-"Specifies the time zone of the computer. The time zones that are specified "
-"in Windows System Image Manager are not localized"
-msgstr ""
-"Spécifie le fuseau horaire de l'ordinateur. Les fuseaux horaires spécifiés "
-"dans Windows System Image Manager ne sont pas localisés"
+msgid "Specifies the time zone of the computer. The time zones that are specified in Windows System Image Manager are not localized"
+msgstr "Spécifie le fuseau horaire de l'ordinateur. Les fuseaux horaires spécifiés dans Windows System Image Manager ne sont pas localisés"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1817
 msgid "Meta Information xml"
@@ -469,48 +425,28 @@ msgid "IMPORTANT"
 msgstr "IMPORTANT"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1827
-msgid ""
-"Entering an invalid product key in the answer file will cause Windows Setup "
-"to fail"
-msgstr ""
-"La saisie d'une clé de produit non valide dans le fichier de réponses "
-"entraîne l'échec de l'installation de Windows"
+msgid "Entering an invalid product key in the answer file will cause Windows Setup to fail"
+msgstr "La saisie d'une clé de produit non valide dans le fichier de réponses entraîne l'échec de l'installation de Windows"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1830
-msgid ""
-"Specifies whether to automatically accept the Microsoft Software License "
-"Terms"
-msgstr ""
-"Indique s'il faut accepter automatiquement les termes du contrat de licence "
-"logiciel Microsoft"
+msgid "Specifies whether to automatically accept the Microsoft Software License Terms"
+msgstr "Indique s'il faut accepter automatiquement les termes du contrat de licence logiciel Microsoft"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1834
-msgid ""
-"Specifies that the license terms are automatically accepted without being "
-"displayed to the end user"
-msgstr ""
-"Indique que les termes de la licence sont automatiquement acceptés sans être"
-" affichés pour l'utilisateur final"
+msgid "Specifies that the license terms are automatically accepted without being displayed to the end user"
+msgstr "Indique que les termes de la licence sont automatiquement acceptés sans être affichés pour l'utilisateur final"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1838
-msgid ""
-"Prompts the user to accept the license terms before proceeding with Windows "
-"Setup"
-msgstr ""
-"Invite l'utilisateur à accepter les termes de la licence avant de procéder à"
-" l'installation de Windows"
+msgid "Prompts the user to accept the license terms before proceeding with Windows Setup"
+msgstr "Invite l'utilisateur à accepter les termes de la licence avant de procéder à l'installation de Windows"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1841
 msgid "Specifies whether Windows attempts to automatically activate"
 msgstr "Indique si Windows tente d'activer automatiquement"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1843
-msgid ""
-"For automatic activation to complete, a valid Windows product key is "
-"required"
-msgstr ""
-"Pour que l'activation automatique soit terminée, une clé de produit Windows "
-"valide est requise"
+msgid "For automatic activation to complete, a valid Windows product key is required"
+msgstr "Pour que l'activation automatique soit terminée, une clé de produit Windows valide est requise"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1845
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1939
@@ -550,66 +486,35 @@ msgstr "Indique que Windows tente d'activer automatiquement"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1854
 msgid "Specifies whether to run the Windows Software Licensing Rearm program"
-msgstr ""
-"Indique s'il faut exécuter le programme Windows Software Licensing Rearm"
+msgstr "Indique s'il faut exécuter le programme Windows Software Licensing Rearm"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1858
-msgid ""
-"Specifies that the computer is not rearmed and the computer will not be "
-"restored to its original, out-of-box state. All activation-related licensing"
-" and registry data will remain and will not be reset. Similarly, any grace "
-"period timers is not reset."
-msgstr ""
-"Indique que l'ordinateur n'est pas réarmé et que l'ordinateur ne sera pas "
-"restauré dans son état d'origine, prêt à l'emploi. Toutes les licences et "
-"les données de registre liées à l'activation resteront et ne seront pas "
-"réinitialisées. De même, les temporisateurs de période de grâce ne sont pas "
-"réinitialisés."
+msgid "Specifies that the computer is not rearmed and the computer will not be restored to its original, out-of-box state. All activation-related licensing and registry data will remain and will not be reset. Similarly, any grace period timers is not reset."
+msgstr "Indique que l'ordinateur n'est pas réarmé et que l'ordinateur ne sera pas restauré dans son état d'origine, prêt à l'emploi. Toutes les licences et les données de registre liées à l'activation resteront et ne seront pas réinitialisées. De même, les temporisateurs de période de grâce ne sont pas réinitialisés."
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1862
-msgid ""
-"Specifies that the computer is rearmed, restoring the computer to the "
-"original, out-of-box state. All activation-related licensing and registry "
-"data is removed or reset, and any grace period timers are also reset."
-msgstr ""
-"Spécifie que l'ordinateur est réarmé, en restaurant l'ordinateur à l'état "
-"d'origine, out-of-box. Toutes les licences et les données de registre liées "
-"à l'activation sont supprimées ou réinitialisées, et les temporisateurs de "
-"période de grâce sont également réinitialisés."
+msgid "Specifies that the computer is rearmed, restoring the computer to the original, out-of-box state. All activation-related licensing and registry data is removed or reset, and any grace period timers are also reset."
+msgstr "Spécifie que l'ordinateur est réarmé, en restaurant l'ordinateur à l'état d'origine, out-of-box. Toutes les licences et les données de registre liées à l'activation sont supprimées ou réinitialisées, et les temporisateurs de période de grâce sont également réinitialisés."
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1865
-msgid ""
-"SetupUILanguage defines the language to use in Windows Setup and Windows "
-"Deployment Services"
-msgstr ""
-"Language définit la langue à utiliser dans le programme d'installation de "
-"Windows et les services de déploiement Windows"
+msgid "SetupUILanguage defines the language to use in Windows Setup and Windows Deployment Services"
+msgstr "Language définit la langue à utiliser dans le programme d'installation de Windows et les services de déploiement Windows"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1868
-msgid ""
-"Specifies the computer name used to access the computer from the network"
-msgstr ""
-"Indique le nom de l'ordinateur utilisé pour accéder à l'ordinateur depuis le"
-" réseau"
+msgid "Specifies the computer name used to access the computer from the network"
+msgstr "Indique le nom de l'ordinateur utilisé pour accéder à l'ordinateur depuis le réseau"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1871
 msgid "Specifies the name of the organization that owns the computer"
 msgstr "Indique le nom de l'organisation propriétaire de l'ordinateur"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1874
-msgid ""
-"Specifies the per-user settings used for formatting dates, times, currency, "
-"and numbers in a Windows installation"
-msgstr ""
-"Spécifie les paramètres par utilisateur utilisés pour le formatage des "
-"dates, des heures, des devises et des nombres dans une installation Windows"
+msgid "Specifies the per-user settings used for formatting dates, times, currency, and numbers in a Windows installation"
+msgstr "Spécifie les paramètres par utilisateur utilisés pour le formatage des dates, des heures, des devises et des nombres dans une installation Windows"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1877
-msgid ""
-"Specifies the input language and keyboard layout for a Windows installation"
-msgstr ""
-"Spécifie la langue d'entrée et la disposition du clavier pour une "
-"installation Windows"
+msgid "Specifies the input language and keyboard layout for a Windows installation"
+msgstr "Spécifie la langue d'entrée et la disposition du clavier pour une installation Windows"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1880
 msgid "Configure Partition Settings"
@@ -633,15 +538,11 @@ msgstr "OOBE spécifie l'expérience prête à l'emploi pour l'utilisateur final
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1894
 msgid "These settings specify whether to do the following"
-msgstr ""
-"Ces paramètres spécifient si vous souhaitez effectuer les opérations "
-"suivantes"
+msgstr "Ces paramètres spécifient si vous souhaitez effectuer les opérations suivantes"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1896
 msgid "   - Hide the Microsoft Software License Terms page in Windows Welcome"
-msgstr ""
-"- Masquer la page Termes du contrat de licence logiciel Microsoft dans "
-"Windows Bienvenue"
+msgstr "- Masquer la page Termes du contrat de licence logiciel Microsoft dans Windows Bienvenue"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1898
 msgid "   - Skip Windows Welcome, also known as Machine OOBE"
@@ -649,8 +550,7 @@ msgstr "- Passer Windows Welcome, également connu sous le nom Machine OOBE"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1900
 msgid "   - Skip Welcome Center, also known as Per User OOBE"
-msgstr ""
-"- Passer Centre d'accueil, également connu sous le nom de Per User OOBE"
+msgstr "- Passer Centre d'accueil, également connu sous le nom de Per User OOBE"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1902
 msgid "It also specifies the following"
@@ -665,12 +565,8 @@ msgid "   - What type of computer protection is in place"
 msgstr " - Quelle type de protection est déjà existante"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1909
-msgid ""
-"Specifies the location of the network if the computer is connected to a "
-"network when a user first logs on"
-msgstr ""
-"Indique l'emplacement du réseau si l'ordinateur est connecté à un réseau "
-"lors de la première connexion d'un utilisateur"
+msgid "Specifies the location of the network if the computer is connected to a network when a user first logs on"
+msgstr "Indique l'emplacement du réseau si l'ordinateur est connecté à un réseau lors de la première connexion d'un utilisateur"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1911
 msgid "Home"
@@ -698,24 +594,15 @@ msgstr "Ne spécifie ni un réseau domestique ni un réseau de travail"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1923
 msgid "Network discovery is disabled by default on this network type"
-msgstr ""
-"La découverte du réseau est désactivée par défaut sur ce type de réseau"
+msgstr "La découverte du réseau est désactivée par défaut sur ce type de réseau"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1926
-msgid ""
-"Specifies whether to display the Help protect your computer automatically "
-"page of Windows Welcome to the user"
-msgstr ""
-"Indique s'il faut afficher la page d'aide pour protéger automatiquement "
-"votre ordinateur de Windows Bienvenue à l'utilisateur"
+msgid "Specifies whether to display the Help protect your computer automatically page of Windows Welcome to the user"
+msgstr "Indique s'il faut afficher la page d'aide pour protéger automatiquement votre ordinateur de Windows Bienvenue à l'utilisateur"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1928
-msgid ""
-"There is no default value. If a value is not set, the page opens during "
-"Windows Welcome"
-msgstr ""
-"Il n'y a aucune valeur par défaut. Si aucune valeur n'est définie, la page "
-"s'ouvre pendant l'accueil de Windows"
+msgid "There is no default value. If a value is not set, the page opens during Windows Welcome"
+msgstr "Il n'y a aucune valeur par défaut. Si aucune valeur n'est définie, la page s'ouvre pendant l'accueil de Windows"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1930
 msgid "Specifies the recommended level of protection for your computer"
@@ -730,63 +617,40 @@ msgid "Specifies that automatic protection is disabled"
 msgstr "Indique que la protection automatique est désactivée"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1937
-msgid ""
-"Specifies whether to hide the Microsoft Software License Terms page of "
-"Windows Welcome"
-msgstr ""
-"Indique s'il faut masquer la page Termes du contrat de licence logiciel "
-"Microsoft de Windows Bienvenue"
+msgid "Specifies whether to hide the Microsoft Software License Terms page of Windows Welcome"
+msgstr "Indique s'il faut masquer la page Termes du contrat de licence logiciel Microsoft de Windows Bienvenue"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1941
-msgid ""
-"Specifies that the Microsoft Software License Terms page of Windows Welcome "
-"is not displayed"
-msgstr ""
-"Indique que la page Termes du contrat de licence logiciel Microsoft de "
-"Windows Welcome n'est pas affichée"
+msgid "Specifies that the Microsoft Software License Terms page of Windows Welcome is not displayed"
+msgstr "Indique que la page Termes du contrat de licence logiciel Microsoft de Windows Welcome n'est pas affichée"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1945
-msgid ""
-"Specifies that the Microsoft Software License Terms page of Windows Welcome "
-"is displayed"
-msgstr ""
-"Indique que la page Termes du contrat de licence logiciel Microsoft de "
-"Windows Welcome s'affiche"
+msgid "Specifies that the Microsoft Software License Terms page of Windows Welcome is displayed"
+msgstr "Indique que la page Termes du contrat de licence logiciel Microsoft de Windows Welcome s'affiche"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1948
-msgid ""
-"Specifies whether the time on the computer is set to daylight saving time"
+msgid "Specifies whether the time on the computer is set to daylight saving time"
 msgstr "Indique si l'heure de l'ordinateur est définie sur l'heure d'été"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1952
-msgid ""
-"Specifies that the time on the computer is not reset to daylight saving time"
-msgstr ""
-"Indique que l'heure sur l'ordinateur n'est pas réinitialisée à l'heure d'été"
+msgid "Specifies that the time on the computer is not reset to daylight saving time"
+msgstr "Indique que l'heure sur l'ordinateur n'est pas réinitialisée à l'heure d'été"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1956
-msgid ""
-"Specifies that the time on the computer is reset to daylight saving time"
+msgid "Specifies that the time on the computer is reset to daylight saving time"
 msgstr "Indique que l'heure de l'ordinateur est réinitialisée à l'heure d'été"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1959
-msgid ""
-"Specifies whether to hide the Join Wireless Network screen that appears "
-"during Windows Welcome"
-msgstr ""
-"Indique s'il faut masquer l'écran Rejoindre le réseau sans fil qui s'affiche"
-" pendant Windows Welcome"
+msgid "Specifies whether to hide the Join Wireless Network screen that appears during Windows Welcome"
+msgstr "Indique s'il faut masquer l'écran Rejoindre le réseau sans fil qui s'affiche pendant Windows Welcome"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1963
 msgid "Hides the Join Wireless Network screen during Windows Welcome"
-msgstr ""
-"Masque l'écran Rejoindre le réseau sans fil pendant l'accueil de Windows"
+msgstr "Masque l'écran Rejoindre le réseau sans fil pendant l'accueil de Windows"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1967
 msgid "Does not hide the Join Wireless Network screen during Windows Welcome"
-msgstr ""
-"Ne masque pas l'écran Rejoindre le réseau sans fil pendant l'accueil de "
-"Windows"
+msgstr "Ne masque pas l'écran Rejoindre le réseau sans fil pendant l'accueil de Windows"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1970
 msgid "Specifies whether to skip Windows Welcome"
@@ -805,20 +669,12 @@ msgid "warning"
 msgstr "Attention"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1982
-msgid ""
-"If you enable SkipMachineOOBE, any settings specified for ProtectYourPC and "
-"NetworkLocation in your answer file are ignored"
-msgstr ""
-"Si vous activez SkipMachineOOBE, les paramètres spécifiés pour ProtectYourPC"
-" et NetworkLocation dans votre fichier de réponses sont ignorés"
+msgid "If you enable SkipMachineOOBE, any settings specified for ProtectYourPC and NetworkLocation in your answer file are ignored"
+msgstr "Si vous activez SkipMachineOOBE, les paramètres spécifiés pour ProtectYourPC et NetworkLocation dans votre fichier de réponses sont ignorés"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1985
-msgid ""
-"Specifies whether to skip Welcome Center. This can be used only for testing "
-"prior to shipment"
-msgstr ""
-"Indique s'il faut ignorer le centre d'accueil. Cela peut être utilisé "
-"uniquement pour les tests avant l'expédition"
+msgid "Specifies whether to skip Welcome Center. This can be used only for testing prior to shipment"
+msgstr "Indique s'il faut ignorer le centre d'accueil. Cela peut être utilisé uniquement pour les tests avant l'expédition"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1989
 msgid "Specifies that Welcome Center is skipped"
@@ -830,19 +686,15 @@ msgstr "Indique que le Centre d'accueil est affiché"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1996
 msgid "CommandLine reg Set the Control Panel View to Small Icons"
-msgstr ""
-"CommandLine reg Définir la vue du panneau de configuration à petites icônes"
+msgstr "CommandLine reg Définir la vue du panneau de configuration à petites icônes"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1999
 msgid "CommandLine reg ControlPanel AllItemsIconView"
 msgstr "CommandLine reg ControlPanel AllItemsIconView"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:2002
-msgid ""
-"Specifies whether to erase all partitions on the hard disk before adding "
-"additional configurations to the disk"
-msgstr ""
-"disque dur avant d'ajouter des configurations supplémentaires au disque"
+msgid "Specifies whether to erase all partitions on the hard disk before adding additional configurations to the disk"
+msgstr "disque dur avant d'ajouter des configurations supplémentaires au disque"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:2006
 msgid "Specifies that the disk is erased"
@@ -853,33 +705,24 @@ msgid "Specifies that the disk is not erased"
 msgstr "Indique que le disque n'est pas effacé"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:2013
-msgid ""
-"Specifies the disk ID of the disk to which the image is to be installed"
-msgstr ""
-"Spécifie l'ID de disque du disque sur lequel l'image doit être installée"
+msgid "Specifies the disk ID of the disk to which the image is to be installed"
+msgstr "Spécifie l'ID de disque du disque sur lequel l'image doit être installée"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:2015
 msgid "This sequence starts with 0"
 msgstr "Cette séquence commence par 0"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:2017
-msgid ""
-"If you are installing to a computer with a single disk, you must specify 0"
-msgstr ""
-"Si vous installez sur un ordinateur avec un seul disque, vous devez "
-"spécifier 0"
+msgid "If you are installing to a computer with a single disk, you must specify 0"
+msgstr "Si vous installez sur un ordinateur avec un seul disque, vous devez spécifier 0"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:2019
 msgid "Disk_ID is an integer"
 msgstr "Disk_ID est un nombre entier"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:2022
-msgid ""
-"Specifies whether to erase the partition, and which file system to apply to "
-"the partition"
-msgstr ""
-"Indique s'il faut effacer la partition et quel système de fichiers appliquer"
-" à la partition"
+msgid "Specifies whether to erase the partition, and which file system to apply to the partition"
+msgstr "Indique s'il faut effacer la partition et quel système de fichiers appliquer à la partition"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:2024
 msgid "NTFS"
@@ -895,131 +738,68 @@ msgstr "FAT32"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:2030
 msgid "Formats the partition for the File Allocation Table (FAT) file system"
-msgstr ""
-"Formate la partition du système de fichiers FAT (File Allocation Table)"
+msgstr "Formate la partition du système de fichiers FAT (File Allocation Table)"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:2033
-msgid ""
-"Specifies the drive letter to apply to a partition. Drive_letter is an "
-"uppercase letter, C through Z"
-msgstr ""
-"Spécifie la lettre de lecteur à appliquer à une partition. Drive_letter est "
-"une lettre majuscule, de C à Z"
+msgid "Specifies the drive letter to apply to a partition. Drive_letter is an uppercase letter, C through Z"
+msgstr "Spécifie la lettre de lecteur à appliquer à une partition. Drive_letter est une lettre majuscule, de C à Z"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:2036
-msgid ""
-"Specifies the order in which the ModifyPartition command is to be run at "
-"first logon"
-msgstr ""
-"Spécifie l'ordre dans lequel la commande ModifyPartition doit être exécutée "
-"à la première ouverture de session"
+msgid "Specifies the order in which the ModifyPartition command is to be run at first logon"
+msgstr "Spécifie l'ordre dans lequel la commande ModifyPartition doit être exécutée à la première ouverture de session"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:2038
-msgid ""
-"Synchronous commands start in the order specified in the unattended "
-"installation answer file, and each command must finish before the next "
-"command starts"
-msgstr ""
-"Les commandes synchrones démarrent dans l'ordre spécifié dans le fichier de "
-"réponses d'installation sans assistance, et chaque commande doit se terminer"
-" avant le démarrage de la commande suivante"
+msgid "Synchronous commands start in the order specified in the unattended installation answer file, and each command must finish before the next command starts"
+msgstr "Les commandes synchrones démarrent dans l'ordre spécifié dans le fichier de réponses d'installation sans assistance, et chaque commande doit se terminer avant le démarrage de la commande suivante"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:2040
-msgid ""
-"Synchronous commands are always run before asynchronous commands in the same"
-" configuration pass"
-msgstr ""
-"Les commandes synchrones sont toujours exécutées avant les commandes "
-"asynchrones dans le même passage de configuration"
+msgid "Synchronous commands are always run before asynchronous commands in the same configuration pass"
+msgstr "Les commandes synchrones sont toujours exécutées avant les commandes asynchrones dans le même passage de configuration"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:2043
 msgid "Configure Administrators Account"
 msgstr "Configurer les comptes administrateurs"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:2046
-msgid ""
-"Specifies the administrator password of the computer and whether it is "
-"hidden in the unattended installation answer file"
-msgstr ""
-"Spécifie le mot de passe administrateur de l'ordinateur et s'il est masqué "
-"dans le fichier de réponses d'installation sans assistance"
+msgid "Specifies the administrator password of the computer and whether it is hidden in the unattended installation answer file"
+msgstr "Spécifie le mot de passe administrateur de l'ordinateur et s'il est masqué dans le fichier de réponses d'installation sans assistance"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:2049
-msgid ""
-"Specifies the name of an existing local security group to which a new "
-"LocalAccount will be added during installation"
-msgstr ""
-"Spécifie le nom d'un groupe de sécurité local existant auquel un nouveau "
-"LocalAccount sera ajouté lors de l'installation"
+msgid "Specifies the name of an existing local security group to which a new LocalAccount will be added during installation"
+msgstr "Spécifie le nom d'un groupe de sécurité local existant auquel un nouveau LocalAccount sera ajouté lors de l'installation"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:2052
 msgid "Specifies a LocalAccount"
 msgstr "Choisir un compte admin local"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:2055
-msgid ""
-"Specifies the password for a LocalAccount and whether the password is hidden"
-" in the unattended installation answer file"
-msgstr ""
-"Spécifie le mot de passe pour un compte Compte Local et si le mot de passe "
-"est caché dans le fichier de réponses d'installation sans assistance"
+msgid "Specifies the password for a LocalAccount and whether the password is hidden in the unattended installation answer file"
+msgstr "Spécifie le mot de passe pour un compte Compte Local et si le mot de passe est caché dans le fichier de réponses d'installation sans assistance"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:2058
-msgid ""
-"Specifies the name of the end user. User_name is a string with a maximum "
-"length of 63 characters"
-msgstr ""
-"Indique le nom de l'utilisateur final. Nom_utilisateur est une chaîne d'une "
-"longueur maximale de 63 caractères"
+msgid "Specifies the name of the end user. User_name is a string with a maximum length of 63 characters"
+msgstr "Indique le nom de l'utilisateur final. Nom_utilisateur est une chaîne d'une longueur maximale de 63 caractères"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:2061
-msgid ""
-"Specifies whether Windows User Account Controls (UAC) notifies the user when"
-" programs try to make changes to the computer. UAC was formerly known as "
-"Limited User Account (LUA)"
-msgstr ""
-"Indique si les contrôles de compte d'utilisateur Windows (UAC) notifient "
-"l'utilisateur lorsque des programmes tentent d'apporter des modifications à "
-"l'ordinateur. UAC était auparavant connu sous le nom de compte d'utilisateur"
-" limité (LUA)"
+msgid "Specifies whether Windows User Account Controls (UAC) notifies the user when programs try to make changes to the computer. UAC was formerly known as Limited User Account (LUA)"
+msgstr "Indique si les contrôles de compte d'utilisateur Windows (UAC) notifient l'utilisateur lorsque des programmes tentent d'apporter des modifications à l'ordinateur. UAC était auparavant connu sous le nom de compte d'utilisateur limité (LUA)"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:2065
-msgid ""
-"Windows notifies the user when programs try to make changes to the computer"
-msgstr ""
-"Windows notifie l'utilisateur lorsque les programmes tentent d'apporter des "
-"modifications à l'ordinateur"
+msgid "Windows notifies the user when programs try to make changes to the computer"
+msgstr "Windows notifie l'utilisateur lorsque les programmes tentent d'apporter des modifications à l'ordinateur"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:2069
-msgid ""
-"Windows does not notify the user when programs try to install software or "
-"make changes to the computer"
-msgstr ""
-"Windows n'informe pas l'utilisateur lorsque des programmes tentent "
-"d'installer le logiciel ou d'apporter des modifications à l'ordinateur"
+msgid "Windows does not notify the user when programs try to install software or make changes to the computer"
+msgstr "Windows n'informe pas l'utilisateur lorsque des programmes tentent d'installer le logiciel ou d'apporter des modifications à l'ordinateur"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:2071
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:2076
-msgid ""
-"To provide better protection for computers connected to any kind of network "
-"(such as the Internet, a home network, or an organization network), the "
-"Windows operating system enables Windows Firewall on all network connections"
-" by default"
-msgstr ""
-"Pour assurer une meilleure protection des ordinateurs connectés à tout type "
-"de réseau (Internet, réseau domestique ou réseau d'entreprise, par exemple),"
-" le système d'exploitation Windows active le Pare-feu Windows sur toutes les"
-" connexions réseau par défaut"
+msgid "To provide better protection for computers connected to any kind of network (such as the Internet, a home network, or an organization network), the Windows operating system enables Windows Firewall on all network connections by default"
+msgstr "Pour assurer une meilleure protection des ordinateurs connectés à tout type de réseau (Internet, réseau domestique ou réseau d'entreprise, par exemple), le système d'exploitation Windows active le Pare-feu Windows sur toutes les connexions réseau par défaut"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:2074
-msgid ""
-"Windows Firewall is a stateful host firewall that discards unsolicited "
-"incoming traffic, providing a level of protection for computers against "
-"malicious users or programs"
-msgstr ""
-"Le Pare-feu Windows est un pare-feu hôte dynamique qui élimine le trafic "
-"entrant non sollicité, offrant ainsi un niveau de protection aux ordinateurs"
-" contre les utilisateurs ou programmes malveillants"
+msgid "Windows Firewall is a stateful host firewall that discards unsolicited incoming traffic, providing a level of protection for computers against malicious users or programs"
+msgstr "Le Pare-feu Windows est un pare-feu hôte dynamique qui élimine le trafic entrant non sollicité, offrant ainsi un niveau de protection aux ordinateurs contre les utilisateurs ou programmes malveillants"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:2080
 msgid "Enables Windows Firewall for Windows PE"
@@ -1030,165 +810,84 @@ msgid "Disables Windows Firewall for Windows PE"
 msgstr "Désactive le pare-feu Windows pour Windows PE"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:2087
-msgid ""
-"Use the following steps to use CopyProfile to set customized user profiles"
-msgstr ""
-"Utilisez les étapes suivantes pour utiliser CopyProfile pour définir des "
-"profils utilisateur personnalisés"
+msgid "Use the following steps to use CopyProfile to set customized user profiles"
+msgstr "Utilisez les étapes suivantes pour utiliser CopyProfile pour définir des profils utilisateur personnalisés"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:2090
-msgid ""
-"Log on as a user whose profile you can customize (for example, the built-in-"
-"administrator account)"
-msgstr ""
-"Connectez-vous en tant qu'utilisateur dont vous pouvez personnaliser le "
-"profil (par exemple, le compte administrateur intégré)"
+msgid "Log on as a user whose profile you can customize (for example, the built-in-administrator account)"
+msgstr "Connectez-vous en tant qu'utilisateur dont vous pouvez personnaliser le profil (par exemple, le compte administrateur intégré)"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:2092
 msgid "Customize the desired user profile settings"
 msgstr "Personnalisez les paramètres de profil utilisateur souhaités"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:2094
-msgid ""
-"Set CopyProfile to true in the Unattend.xml file that you will use with "
-"Sysprep in the next step"
-msgstr ""
-"Définissez CopyProfile sur true dans le fichier Unattend.xml que vous "
-"utiliserez avec Sysprep à l'étape suivante"
+msgid "Set CopyProfile to true in the Unattend.xml file that you will use with Sysprep in the next step"
+msgstr "Définissez CopyProfile sur true dans le fichier Unattend.xml que vous utiliserez avec Sysprep à l'étape suivante"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:2096
-msgid ""
-"Run sysprep /generalize /unattend:unattend.xml to copy the customized user "
-"profile settings over the default user profile"
-msgstr ""
-"Exécutez sysprep / generalize /unattend:unattend.xml pour copier les "
-"paramètres de profil utilisateur personnalisés sur le profil utilisateur par"
-" défaut"
+msgid "Run sysprep /generalize /unattend:unattend.xml to copy the customized user profile settings over the default user profile"
+msgstr "Exécutez sysprep / generalize /unattend:unattend.xml pour copier les paramètres de profil utilisateur personnalisés sur le profil utilisateur par défaut"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:2100
-msgid ""
-"Changes the default user profile with customizations made . You must set "
-"this value to true only if you have made customizations to the logged-on "
-"user profile that you need to apply to all new users"
-msgstr ""
-"Modifie le profil utilisateur par défaut avec les personnalisations "
-"effectuées. Vous devez définir cette valeur sur true uniquement si vous avez"
-" personnalisé le profil utilisateur connecté que vous devez appliquer à tous"
-" les nouveaux utilisateurs"
+msgid "Changes the default user profile with customizations made . You must set this value to true only if you have made customizations to the logged-on user profile that you need to apply to all new users"
+msgstr "Modifie le profil utilisateur par défaut avec les personnalisations effectuées. Vous devez définir cette valeur sur true uniquement si vous avez personnalisé le profil utilisateur connecté que vous devez appliquer à tous les nouveaux utilisateurs"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:2104
 msgid "Does not change the default user profile"
 msgstr "Ne modifie pas le profil utilisateur par défaut"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:2107
-msgid ""
-"ShowWindowsLive specifies whether to display a link to Windows Live on the "
-"Start menu"
-msgstr ""
-"ShowWindowsLive spécifie s'il faut afficher un lien vers Windows Live dans "
-"le menu Démarrer"
+msgid "ShowWindowsLive specifies whether to display a link to Windows Live on the Start menu"
+msgstr "ShowWindowsLive spécifie s'il faut afficher un lien vers Windows Live dans le menu Démarrer"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:2109
-msgid ""
-"If the Windows Live shortcut has been removed from the Start menu, this "
-"setting cannot be used to put it back on the Start menu"
-msgstr ""
-"Si le raccourci Windows Live a été supprimé du menu Démarrer, ce paramètre "
-"ne peut pas être utilisé pour le remettre dans le menu Démarrer"
+msgid "If the Windows Live shortcut has been removed from the Start menu, this setting cannot be used to put it back on the Start menu"
+msgstr "Si le raccourci Windows Live a été supprimé du menu Démarrer, ce paramètre ne peut pas être utilisé pour le remettre dans le menu Démarrer"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:2113
 msgid "Specifies that a link to Windows Live is displayed on the Start menu"
-msgstr ""
-"Indique qu'un lien vers Windows Live est affiché dans le menu Démarrer"
+msgstr "Indique qu'un lien vers Windows Live est affiché dans le menu Démarrer"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:2117
-msgid ""
-"Specifies that a link to Windows Live is not displayed on the Start menu"
-msgstr ""
-"Indique qu'un lien vers Windows Live n'est pas affiché dans le menu Démarrer"
+msgid "Specifies that a link to Windows Live is not displayed on the Start menu"
+msgstr "Indique qu'un lien vers Windows Live n'est pas affiché dans le menu Démarrer"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:2120
 msgid "Specifies whether to extend the partition to fill the entire hard disk"
-msgstr ""
-"Indique si la partition doit être étendue pour remplir tout le disque dur"
+msgstr "Indique si la partition doit être étendue pour remplir tout le disque dur"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:2123
-msgid ""
-"In Windows 8, SystemDefaultBackgroundColor must be a value from 0 to 24, as "
-"shown in the following image, which represents the index of the color scheme"
-" as viewed in the SystemSettings"
-msgstr ""
-"Dans Windows 8, la couleur d'arrière-plan par défaut du système doit être "
-"une valeur comprise entre 0 et 24, comme illustré dans l'image suivante, qui"
-" représente l'index du modèle de couleurs tel qu'il est affiché dans les "
-"paramètres système."
+msgid "In Windows 8, SystemDefaultBackgroundColor must be a value from 0 to 24, as shown in the following image, which represents the index of the color scheme as viewed in the SystemSettings"
+msgstr "Dans Windows 8, la couleur d'arrière-plan par défaut du système doit être une valeur comprise entre 0 et 24, comme illustré dans l'image suivante, qui représente l'index du modèle de couleurs tel qu'il est affiché dans les paramètres système."
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:2126
-msgid ""
-"In Windows 8.1, SystemDefaultBackgroundColor must be a value from 0 to 24 "
-"which represents the index of the color scheme as viewed in the out-of-box "
-"experience (OOBE) phase. The colors are indexed in the same manner as "
-"Windows 8 colors, from left to right. Samples of the color choices are shown"
-" in the following image"
-msgstr ""
-"Dans Windows 8.1, SystemDefaultBackgroundColor doit être une valeur comprise"
-" entre 0 et 24, ce qui représente l'indice du modèle de couleurs tel qu'il "
-"est affiché dans la phase OOBE (out-of-box experience). Les couleurs sont "
-"indexées de la même manière que les couleurs de Windows 8, de gauche à "
-"droite. Des échantillons des choix de couleur sont montrés dans l'image "
-"suivante"
+msgid "In Windows 8.1, SystemDefaultBackgroundColor must be a value from 0 to 24 which represents the index of the color scheme as viewed in the out-of-box experience (OOBE) phase. The colors are indexed in the same manner as Windows 8 colors, from left to right. Samples of the color choices are shown in the following image"
+msgstr "Dans Windows 8.1, SystemDefaultBackgroundColor doit être une valeur comprise entre 0 et 24, ce qui représente l'indice du modèle de couleurs tel qu'il est affiché dans la phase OOBE (out-of-box experience). Les couleurs sont indexées de la même manière que les couleurs de Windows 8, de gauche à droite. Des échantillons des choix de couleur sont montrés dans l'image suivante"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:2129
 msgid "Show file XML AWFG"
 msgstr "Voir le fichier XML AWFG"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:2131
-msgid ""
-"Domain specifies the name of the domain used for an account authentication. "
-"Domain is used to authenticate an account before the computer can be joined "
-"to a domain during Windows Setup."
-msgstr ""
-"Domaine spécifie le nom du domaine utilisé pour l'authentification d'un "
-"compte. Le domaine est utilisé pour authentifier un compte avant que "
-"l'ordinateur puisse être joint à un domaine pendant l'installation de "
-"Windows."
+msgid "Domain specifies the name of the domain used for an account authentication. Domain is used to authenticate an account before the computer can be joined to a domain during Windows Setup."
+msgstr "Domaine spécifie le nom du domaine utilisé pour l'authentification d'un compte. Le domaine est utilisé pour authentifier un compte avant que l'ordinateur puisse être joint à un domaine pendant l'installation de Windows."
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:2133
-msgid ""
-"Password specifies the password of the user account used for authentication "
-"of an account to the domain before the computer can be joined to a domain "
-"during Windows Setup."
-msgstr ""
-"Mot de passe spécifie le mot de passe du compte d'utilisateur utilisé pour "
-"l'authentification d'un compte sur le domaine avant que l'ordinateur puisse "
-"être joint à un domaine pendant l'installation de Windows."
+msgid "Password specifies the password of the user account used for authentication of an account to the domain before the computer can be joined to a domain during Windows Setup."
+msgstr "Mot de passe spécifie le mot de passe du compte d'utilisateur utilisé pour l'authentification d'un compte sur le domaine avant que l'ordinateur puisse être joint à un domaine pendant l'installation de Windows."
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:2135
-msgid ""
-"Username specifies the name of the user account with permission to add the "
-"computer to a domain during Windows Setup."
-msgstr ""
-"Nom d'utilisateur spécifie le nom du compte d'utilisateur avec "
-"l'autorisation d'ajouter l'ordinateur à un domaine pendant l'installation de"
-" Windows."
+msgid "Username specifies the name of the user account with permission to add the computer to a domain during Windows Setup."
+msgstr "Nom d'utilisateur spécifie le nom du compte d'utilisateur avec l'autorisation d'ajouter l'ordinateur à un domaine pendant l'installation de Windows."
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:2137
 msgid "Domain to join"
 msgstr "Domaine à joindre"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:2139
-msgid ""
-"MachineObjectOU is an optional setting. It specifies the Lightweight "
-"Directory Access Protocol (LDAP) X 500-distinguished name of the "
-"organizational unit (OU) in which the computer account is created. This "
-"account is in Active Directory on a domain controller in the domain to which"
-" the computer is being joined."
-msgstr ""
-"MachineObjectOU est un paramètre facultatif. Il spécifie le nom distinctif "
-"LDAP (Lightweight Directory Access Protocol) 500 de l'unité d'organisation "
-"(UO) dans laquelle le compte d'ordinateur est créé. Ce compte est dans "
-"Active Directory sur un contrôleur de domaine dans le domaine auquel "
-"l'ordinateur est joint."
+msgid "MachineObjectOU is an optional setting. It specifies the Lightweight Directory Access Protocol (LDAP) X 500-distinguished name of the organizational unit (OU) in which the computer account is created. This account is in Active Directory on a domain controller in the domain to which the computer is being joined."
+msgstr "MachineObjectOU est un paramètre facultatif. Il spécifie le nom distinctif LDAP (Lightweight Directory Access Protocol) 500 de l'unité d'organisation (UO) dans laquelle le compte d'ordinateur est créé. Ce compte est dans Active Directory sur un contrôleur de domaine dans le domaine auquel l'ordinateur est joint."
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:2141
 msgid "Remove Bloatwares from the install"
@@ -1432,16 +1131,13 @@ msgstr "Génération du menu de démarrage pour le groupe d'imaging %s"
 #: modules/imaging/includes/xmlrpc.inc.php:356
 #, php-format
 msgid "Boot menu generation Success for Package Server on location %s"
-msgstr ""
-"Menu de démarrage généré avec succès sur le package server sur le site %s"
+msgstr "Menu de démarrage généré avec succès sur le package server sur le site %s"
 
 #: modules/imaging/includes/xmlrpc.inc.php:371
 #: modules/imaging/includes/xmlrpc.inc.php:386
 #, php-format
 msgid "Boot menu generation failed for package server on location %s [%s]"
-msgstr ""
-"La génération du menu de démarrage a échoué pour le serveur de package sur "
-"site %s [%s]"
+msgstr "La génération du menu de démarrage a échoué pour le serveur de package sur site %s [%s]"
 
 #: modules/imaging/includes/post_install_script.php:30
 #: modules/imaging/manage/ajaxEditProfilescript.php:78
@@ -1515,9 +1211,7 @@ msgstr "Cette cible n'a pas de menu."
 
 #: modules/imaging/includes/includes.php:43
 msgid "This entity has no default menu, you first need to set one."
-msgstr ""
-"Cette entité n'a pas de menu par défaut, vous devez commencer par lui en "
-"assigner un."
+msgstr "Cette entité n'a pas de menu par défaut, vous devez commencer par lui en assigner un."
 
 #: modules/imaging/includes/includes.php:44
 msgid "This image already exists."
@@ -1528,12 +1222,8 @@ msgid "This computer already exists."
 msgstr "Cet ordinateur existe déjà."
 
 #: modules/imaging/includes/includes.php:46
-msgid ""
-"You need to register this computer's imaging server to be able to use "
-"imaging."
-msgstr ""
-"Vous devez enregistrer le serveur d'imaging de cet ordinateur pour pouvoir "
-"utiliser l'imaging."
+msgid "You need to register this computer's imaging server to be able to use imaging."
+msgstr "Vous devez enregistrer le serveur d'imaging de cet ordinateur pour pouvoir utiliser l'imaging."
 
 #: modules/imaging/includes/includes.php:258
 msgid "Uptime: "
@@ -1607,12 +1297,8 @@ msgstr "Le menu par défaut a été restauré avec succès."
 #: modules/imaging/imaging/addservice.php:78
 #: modules/imaging/imaging/bootmenu_remove.php:103
 #: modules/imaging/imaging/addimage.php:81
-msgid ""
-"The bootmenus cannot be generated as a multicast deployment is currently "
-"running."
-msgstr ""
-"Les menus de démarrage ne peuvent pas être générés car un déploiement en "
-"multicast est en cours."
+msgid "The bootmenus cannot be generated as a multicast deployment is currently running."
+msgstr "Les menus de démarrage ne peuvent pas être générés car un déploiement en multicast est en cours."
 
 #: modules/imaging/imaging/tabs.php:127
 #, php-format
@@ -1630,12 +1316,8 @@ msgid "%s's computer imaging"
 msgstr "Module d'imaging pour l'ordinateur %s"
 
 #: modules/imaging/imaging/tabs.php:158
-msgid ""
-"This computer can't be declared in the imaging module: it's already part of "
-"a broken imaging group."
-msgstr ""
-"Cet ordinateur ne peut être déclaré dans le module d'imaging: il fait déjà "
-"partie d'un groupe dans un état incohérent."
+msgid "This computer can't be declared in the imaging module: it's already part of a broken imaging group."
+msgstr "Cet ordinateur ne peut être déclaré dans le module d'imaging: il fait déjà partie d'un groupe dans un état incohérent."
 
 #: modules/imaging/imaging/tabs.php:166
 #, php-format
@@ -1657,8 +1339,7 @@ msgstr "Menu de démarrage"
 msgid "Current boot menu"
 msgstr "Menu de démarrage actuel"
 
-#: modules/imaging/imaging/tabs.php:189
-#: modules/imaging/infoPackage.inc.php:306
+#: modules/imaging/imaging/tabs.php:189 modules/imaging/infoPackage.inc.php:306
 #: modules/imaging/infoPackage.inc.php:385
 msgid "Images and Masters"
 msgstr "Images et masters"
@@ -1748,22 +1429,16 @@ msgstr "La génération du menu de démarrage de l'ordinateur %s a échoué"
 #: modules/imaging/manage/service_del.php:61
 #, php-format
 msgid "Boot menu generation failed for package server: %s"
-msgstr ""
-"La génération du menu de démarrage sur le package server a échoué : %s"
+msgstr "La génération du menu de démarrage sur le package server a échoué : %s"
 
 #: modules/imaging/imaging/showtarget.php:123
 #: modules/imaging/manage/service_show_used.php:163
 msgid "Show all targets that use that image in their boot menu"
-msgstr ""
-"Afficher tous les postes qui ont cette image dans leur menu de démarrage"
+msgstr "Afficher tous les postes qui ont cette image dans leur menu de démarrage"
 
 #: modules/imaging/imaging/showtarget.php:125
-msgid ""
-"If you want to remove this master from one or more targets, check these "
-"targets and click on the remove button"
-msgstr ""
-"Si vous voulez enlever ce master d'une ou plusieurs cibles, sélectionnez-les"
-" et validez"
+msgid "If you want to remove this master from one or more targets, check these targets and click on the remove button"
+msgstr "Si vous voulez enlever ce master d'une ou plusieurs cibles, sélectionnez-les et validez"
 
 #: modules/imaging/imaging/showtarget.php:127
 #: modules/imaging/manage/service_show_used.php:196
@@ -1977,9 +1652,7 @@ msgstr "Ne pas vérifier la taille du disque dur"
 
 #: modules/imaging/imaging/configure.php:177
 msgid "Update the NT boot loader if the hard disk has changed"
-msgstr ""
-"Corrige le boot loader NT dans le cas où la géométrie du disque a été "
-"modifiée."
+msgstr "Corrige le boot loader NT dans le cas où la géométrie du disque a été modifiée."
 
 #: modules/imaging/imaging/configure.php:178
 msgid "Diskless Linux command line access"
@@ -2011,12 +1684,8 @@ msgid "Error generating the menu : %s"
 msgstr "Erreur de génération du menu : %s"
 
 #: modules/imaging/imaging/configure.php:374
-msgid ""
-"You are going to unregister this computer from the imaging module, are you "
-"sure you want to do that?"
-msgstr ""
-"Vous allez supprimer cet ordinateur du module d'imaging, êtes-vous sur de "
-"vouloir faire ça ?"
+msgid "You are going to unregister this computer from the imaging module, are you sure you want to do that?"
+msgstr "Vous allez supprimer cet ordinateur du module d'imaging, êtes-vous sur de vouloir faire ça ?"
 
 #: modules/imaging/imaging/configure.php:380
 msgid "Do you want a backup to be done ?"
@@ -2048,32 +1717,16 @@ msgid "Imaging activation for group '%s'"
 msgstr "Activation de l'imaging pour le groupe '%s'"
 
 #: modules/imaging/imaging/configure.php:490
-msgid ""
-"To register, you must first set a default menu to the imaging server that "
-"manages the entity of this computer."
-msgstr ""
-"Avant de pouvoir faire l'enregistrement, un menu par défaut doit d'abord "
-"être positionné sur le serveur d'imaging qui gère l'entité de cet "
-"ordinateur."
+msgid "To register, you must first set a default menu to the imaging server that manages the entity of this computer."
+msgstr "Avant de pouvoir faire l'enregistrement, un menu par défaut doit d'abord être positionné sur le serveur d'imaging qui gère l'entité de cet ordinateur."
 
 #: modules/imaging/imaging/configure.php:492
-msgid ""
-"To register, you must first set a default menu to the imaging server that "
-"manages the entities of the computers that belongs to this profile."
-msgstr ""
-"Avant de pouvoir faire l'enregistrement, un menu par défaut doit d'abord "
-"être positionné sur le serveur d'imaging qui gère les entités des "
-"ordinateurs appartenant à ce profil."
+msgid "To register, you must first set a default menu to the imaging server that manages the entities of the computers that belongs to this profile."
+msgstr "Avant de pouvoir faire l'enregistrement, un menu par défaut doit d'abord être positionné sur le serveur d'imaging qui gère les entités des ordinateurs appartenant à ce profil."
 
 #: modules/imaging/imaging/configure.php:497
-msgid ""
-"The computer either doesn't have a MAC address, either has more than one MAC"
-" address or the only NIC doesn't have any network mask. It can't be "
-"registered into the imaging module."
-msgstr ""
-"L'ordinateur n'a pas d'adresse MAC, ou a plus d'une adresse MAC, ou sa seule"
-" interface ne possède pas de masque de réseau. Il ne peut pas être "
-"enregistré dans le module d'imaging."
+msgid "The computer either doesn't have a MAC address, either has more than one MAC address or the only NIC doesn't have any network mask. It can't be registered into the imaging module."
+msgstr "L'ordinateur n'a pas d'adresse MAC, ou a plus d'une adresse MAC, ou sa seule interface ne possède pas de masque de réseau. Il ne peut pas être enregistré dans le module d'imaging."
 
 #: modules/imaging/imaging/configure.php:502
 msgid "The profile can't be registered into the imaging module."
@@ -2090,36 +1743,21 @@ msgstr "Veuillez choisir l'adresse MAC que vous désirez utiliser"
 
 #: modules/imaging/imaging/configure.php:575
 #: modules/imaging/imaging/configure.php:743
-msgid ""
-"Please switch to expert mode now if you want to change more parameters."
-msgstr ""
-"Veuillez passer en mode expert maintenant si vous désirez changer plus de "
-"paramètres."
+msgid "Please switch to expert mode now if you want to change more parameters."
+msgstr "Veuillez passer en mode expert maintenant si vous désirez changer plus de paramètres."
 
 #: modules/imaging/imaging/configure.php:577
 #: modules/imaging/imaging/configure.php:745
 msgid "You can switch to standard mode now if you want less parameters."
-msgstr ""
-"Vous pouvez maintenant passer en mode standard si vous désirez afficher "
-"moins de paramètres."
+msgstr "Vous pouvez maintenant passer en mode standard si vous désirez afficher moins de paramètres."
 
 #: modules/imaging/imaging/configure.php:595
-msgid ""
-"The default values for the imaging parameters will be inherited from the "
-"imaging server that manages the entity that owns this computer."
-msgstr ""
-"Les valeurs par défaut des paramètres d'imaging seront héritées de celles du"
-" serveur d'imaging qui gère l'entité auquelle appartient cet ordinateur."
+msgid "The default values for the imaging parameters will be inherited from the imaging server that manages the entity that owns this computer."
+msgstr "Les valeurs par défaut des paramètres d'imaging seront héritées de celles du serveur d'imaging qui gère l'entité auquelle appartient cet ordinateur."
 
 #: modules/imaging/imaging/configure.php:597
-msgid ""
-"The default values for the imaging parameters will be inherited from the "
-"imaging server that manages the entities of the computers that belongs to "
-"this profile."
-msgstr ""
-"Les valeurs par défaut des paramètres d'imaging seront héritées de celles du"
-" serveur d'imaging qui gère les entités des ordinateurs appartenant à ce "
-"profil."
+msgid "The default values for the imaging parameters will be inherited from the imaging server that manages the entities of the computers that belongs to this profile."
+msgstr "Les valeurs par défaut des paramètres d'imaging seront héritées de celles du serveur d'imaging qui gère les entités des ordinateurs appartenant à ce profil."
 
 #: modules/imaging/imaging/configure.php:608
 #, php-format
@@ -2192,12 +1830,8 @@ msgstr "Affiché sur WOL"
 
 #: modules/imaging/imaging/header.php:36
 #, php-format
-msgid ""
-"This computer has a <u>custom boot menu</u>. <a href=\"%s\">Click here</a> "
-"to get back the default one."
-msgstr ""
-"Cet ordinateur a <u>menu de démarrage personnalisé</u>. <a "
-"href=\"%s\">Cliquer ici</a> pour récupérer le menu par défaut."
+msgid "This computer has a <u>custom boot menu</u>. <a href=\"%s\">Click here</a> to get back the default one."
+msgstr "Cet ordinateur a <u>menu de démarrage personnalisé</u>. <a href=\"%s\">Cliquer ici</a> pour récupérer le menu par défaut."
 
 #: modules/imaging/imaging/header.php:45
 #, php-format
@@ -2206,12 +1840,8 @@ msgstr "<a href=\"%s\">Cliquer ici</a> pour récupérer le menu par défaut."
 
 #: modules/imaging/imaging/header.php:59
 #, php-format
-msgid ""
-"This computer is currently member of \"%s\". <a href=\"%s\">Click here</a> "
-"to leave the group and customize the boot menu."
-msgstr ""
-"Cet ordinateur fait actuellement partie de \"%s\". <a href=\"%s\">Cliquer "
-"ici</a> pour quitter le groupe et personnaliser son menu de démarrage."
+msgid "This computer is currently member of \"%s\". <a href=\"%s\">Click here</a> to leave the group and customize the boot menu."
+msgstr "Cet ordinateur fait actuellement partie de \"%s\". <a href=\"%s\">Cliquer ici</a> pour quitter le groupe et personnaliser son menu de démarrage."
 
 #: modules/imaging/imaging/bootmenu.php:66
 #, php-format
@@ -2232,9 +1862,7 @@ msgstr "Déplacement de l'item <strong>%s</strong> du boot menu [ %s ] réussi"
 #: modules/imaging/imaging/bootmenu.php:186
 #, php-format
 msgid "Failed to move item <strong>%s</strong> in the boot menu"
-msgstr ""
-"Impossible de déplacer l'élément <strong>%s</strong> dans le menu de "
-"démarrage"
+msgstr "Impossible de déplacer l'élément <strong>%s</strong> dans le menu de démarrage"
 
 #: modules/imaging/imaging/bootmenu.php:135
 #, php-format
@@ -2335,30 +1963,17 @@ msgid "boot service"
 msgstr "service de démarrage"
 
 #: modules/imaging/imaging/bootmenu.php:510
-msgid ""
-"Use \"Preselected choice\" or \"Preselected choice on WOL\" to define the "
-"default boot entry."
-msgstr ""
-"Utilisez les options \"Choix pre-séléctionné\" ou \"Choix pre-séléctionné "
-"pour le WOL\" pour définir l'entrée de démarrage par défaut."
+msgid "Use \"Preselected choice\" or \"Preselected choice on WOL\" to define the default boot entry."
+msgstr "Utilisez les options \"Choix pre-séléctionné\" ou \"Choix pre-séléctionné pour le WOL\" pour définir l'entrée de démarrage par défaut."
 
 #: modules/imaging/imaging/bootmenu.php:513
 #: modules/imaging/imaging/bootmenu.php:515
-msgid ""
-"If the default entry is an image creation or restore, the following network "
-"boots will fall back to the first menu entry."
-msgstr ""
-"Si l'entrée par défaut est une création ou une restauration d'image, les "
-"démarrages suivants se feront sur la première entrée du menu."
+msgid "If the default entry is an image creation or restore, the following network boots will fall back to the first menu entry."
+msgstr "Si l'entrée par défaut est une création ou une restauration d'image, les démarrages suivants se feront sur la première entrée du menu."
 
 #: modules/imaging/imaging/bootmenu.php:515
-msgid ""
-"When changing \"Preselected choice\" or \"Preselected choice on WOL\" entry,"
-" this value will be set on all the computers in this group."
-msgstr ""
-"Le changement de l'option \"Choix pre-séléctionné\" ou \"Choix pre-"
-"séléctionné pour le WOL\" entrainera la modification sur toutes les machines"
-" du groupe."
+msgid "When changing \"Preselected choice\" or \"Preselected choice on WOL\" entry, this value will be set on all the computers in this group."
+msgstr "Le changement de l'option \"Choix pre-séléctionné\" ou \"Choix pre-séléctionné pour le WOL\" entrainera la modification sur toutes les machines du groupe."
 
 #: modules/imaging/imaging/bootmenu.php:520
 msgid "Preselected choice"
@@ -2378,26 +1993,16 @@ msgstr "Créer une image ISO depuis le master"
 
 #: modules/imaging/imaging/images_iso.php:56
 #, php-format
-msgid ""
-"The ISO image generation of master <strong>%s</strong> has been launched in "
-"background."
-msgstr ""
-"La génération de l'image ISO du master <strong>%s</strong> a été lancée en "
-"tâche de fond."
+msgid "The ISO image generation of master <strong>%s</strong> has been launched in background."
+msgstr "La génération de l'image ISO du master <strong>%s</strong> a été lancée en tâche de fond."
 
 #: modules/imaging/imaging/images_iso.php:58
-msgid ""
-"The ISO image file will be stored into the imaging server at the end of the "
-"backup."
-msgstr ""
-"Le fichier de l'image ISO sera stockée sur le serveur d'imaging à la fin de "
-"la sauvegarde."
+msgid "The ISO image file will be stored into the imaging server at the end of the backup."
+msgstr "Le fichier de l'image ISO sera stockée sur le serveur d'imaging à la fin de la sauvegarde."
 
 #: modules/imaging/imaging/images_iso.php:65
 msgid "This operation will last according to the master size."
-msgstr ""
-"La durée de cette opération dépend du volume de données contenues dans le "
-"master."
+msgstr "La durée de cette opération dépend du volume de données contenues dans le master."
 
 #: modules/imaging/imaging/images_iso.php:90
 #, php-format
@@ -2418,12 +2023,8 @@ msgid "Title"
 msgstr "Titre"
 
 #: modules/imaging/imaging/images_iso.php:95
-msgid ""
-"Please select media size. If your data exceeds the volume size, several "
-"files of your media size will be created."
-msgstr ""
-"Veuillez choisir la taille du médium à utiliser. Si le volume des données "
-"dépasse la taille du médium choisi, un jeu de média sera créé."
+msgid "Please select media size. If your data exceeds the volume size, several files of your media size will be created."
+msgstr "Veuillez choisir la taille du médium à utiliser. Si le volume des données dépasse la taille du médium choisi, un jeu de média sera créé."
 
 #: modules/imaging/imaging/images_iso.php:98
 #: modules/imaging/manage/master_iso.php:95
@@ -2458,10 +2059,8 @@ msgstr "Ajouter l'image <b>%s</b> à <b>%s</b>"
 
 #: modules/imaging/imaging/multicast.php:48
 #: modules/imaging/imaging/multicast.php:250
-msgid ""
-"Multicast menu has not been created : there are no computers in the group"
-msgstr ""
-"Le muticast n'a pas été créé  : il n'y a pas d'ordinateurs dans le groupe"
+msgid "Multicast menu has not been created : there are no computers in the group"
+msgstr "Le muticast n'a pas été créé  : il n'y a pas d'ordinateurs dans le groupe"
 
 #: modules/imaging/imaging/multicast.php:68
 #: modules/imaging/imaging/multicast.php:90
@@ -2472,12 +2071,8 @@ msgstr "Le muticast n'a pas été créé  : nombre d'ordinateurs manquant"
 #: modules/imaging/imaging/multicast.php:128
 #: modules/imaging/imaging/multicast.php:136
 #, php-format
-msgid ""
-"Multicast menu has not been created : the imaging group contains %d "
-"computers and you have entered %d"
-msgstr ""
-"Le muticast n'a pas été créé  : le groupe imaging contient %d ordinateurs et"
-" vous en avez saisi %d"
+msgid "Multicast menu has not been created : the imaging group contains %d computers and you have entered %d"
+msgstr "Le muticast n'a pas été créé  : le groupe imaging contient %d ordinateurs et vous en avez saisi %d"
 
 #: modules/imaging/imaging/multicast.php:197
 msgid "computers have a [IPV6] interfaces address exclusively in the group"
@@ -2492,43 +2087,29 @@ msgid "Multicast menu has not been created : --max-time-to-wait < 60"
 msgstr "Le muticast n'a pas été créé : --max-time-to-wait < 60"
 
 #: modules/imaging/imaging/multicast.php:269
-msgid ""
-"Multicast menu has not been created : the selected master is missing on disk"
-msgstr ""
-"Le muticast n'a pas été créé  : le master sélectionné est manquant sur le "
-"disque"
+msgid "Multicast menu has not been created : the selected master is missing on disk"
+msgstr "Le muticast n'a pas été créé  : le master sélectionné est manquant sur le disque"
 
 #: modules/imaging/imaging/multicast.php:309
 msgid "Multicast menu has been successfully created."
 msgstr "Le menu du Multicast a été créé avec succès."
 
 #: modules/imaging/imaging/multicast.php:328
-msgid ""
-"Multicast menu has not been created : check that the imaging server is "
-"running"
-msgstr ""
-"Le muticast n'a pas été créé  : vérifiez que le serveur d'imaging est "
-"démarré"
+msgid "Multicast menu has not been created : check that the imaging server is running"
+msgstr "Le muticast n'a pas été créé  : vérifiez que le serveur d'imaging est démarré"
 
 #: modules/imaging/imaging/multicast.php:367
 #, php-format
-msgid ""
-"deploy the master <strong>%s</strong> to this group <strong>%s</strong> in "
-"multicast"
-msgstr ""
-"deployer le master <strong>%s</strong> sur ce groupe <strong>%s</strong> en "
-"multicast"
+msgid "deploy the master <strong>%s</strong> to this group <strong>%s</strong> in multicast"
+msgstr "deployer le master <strong>%s</strong> sur ce groupe <strong>%s</strong> en multicast"
 
 #: modules/imaging/imaging/multicast.php:374
 msgid "Number of machines to wait for"
 msgstr "Nombre de machines à attendre"
 
 #: modules/imaging/imaging/multicast.php:390
-msgid ""
-"start anyways when t seconds since first receiver connection have passed"
-msgstr ""
-"démarrer dans tous les cas au bout de t secondes après la connection de la "
-"première machine"
+msgid "start anyways when t seconds since first receiver connection have passed"
+msgstr "démarrer dans tous les cas au bout de t secondes après la connection de la première machine"
 
 #: modules/imaging/imaging/multicast.php:408
 #: modules/imaging/manage/ajaxStatus.php:496
@@ -2826,9 +2407,7 @@ msgstr "Enregistrer un ordinateur dans le module d'imaging"
 
 #: modules/imaging/infoPackage.inc.php:375
 msgid "Create a static group containing computers with custom imaging menu"
-msgstr ""
-"Créer un groupe statique contenant les ordinateurs ayant un menu d'imaging "
-"personnalisé"
+msgstr "Créer un groupe statique contenant les ordinateurs ayant un menu d'imaging personnalisé"
 
 #: modules/imaging/infoPackage.inc.php:380
 msgid "Imaging on computer"
@@ -2869,8 +2448,7 @@ msgstr "Initialisation multicast"
 #: modules/imaging/manage/master_remove.php:37
 #, php-format
 msgid "Image <strong>%s</strong> removed from default boot menu."
-msgstr ""
-"L'image <strong>%s</strong> a été retirée du menu de démarrage par défaut."
+msgstr "L'image <strong>%s</strong> a été retirée du menu de démarrage par défaut."
 
 #: modules/imaging/manage/master_remove.php:38
 msgid "Notify Success : removed from default boot menu."
@@ -2884,29 +2462,22 @@ msgstr "Etes-vous sûr de vouloir supprimer le master <b>%s</b> ?"
 #: modules/imaging/manage/service_add.php:49
 #, php-format
 msgid "Service <strong>%s</strong> added to default boot menu"
-msgstr ""
-"Le service <strong>%s</strong> a été ajouté au menu de démarrage par défaut"
+msgstr "Le service <strong>%s</strong> a été ajouté au menu de démarrage par défaut"
 
 #: modules/imaging/manage/service_add.php:94
 #, php-format
 msgid "Add the boot service <b>%s</b> to the default boot menu"
-msgstr ""
-"Ajout du service de démarrage <b>%s</b> au menu de démarrage par défaut"
+msgstr "Ajout du service de démarrage <b>%s</b> au menu de démarrage par défaut"
 
 #: modules/imaging/manage/bootmenu_down.php:36
 #, php-format
 msgid "Success : to move down <strong>%s</strong> in the default boot menu"
-msgstr ""
-"Succès :  pour descendre <strong>%s</strong> dans le menu de démarrage par "
-"défaut"
+msgstr "Succès :  pour descendre <strong>%s</strong> dans le menu de démarrage par défaut"
 
 #: modules/imaging/manage/bootmenu_down.php:49
 #, php-format
-msgid ""
-"Error : Failed to move down <strong>%s</strong> in the default boot menu"
-msgstr ""
-"Erreur : Échec de déplacement de <strong>%s</strong> dans le menu de "
-"démarrage par défaut"
+msgid "Error : Failed to move down <strong>%s</strong> in the default boot menu"
+msgstr "Erreur : Échec de déplacement de <strong>%s</strong> dans le menu de démarrage par défaut"
 
 #: modules/imaging/manage/systemImageManager.php:38
 msgid "Sysprep generator"
@@ -2939,8 +2510,7 @@ msgstr "Le service <strong>%s</strong> a été supprimé avec succès"
 #: modules/imaging/manage/service_remove.php:79
 #, php-format
 msgid "Are you sure you want to delete <b>%s</b> Boot Service ?"
-msgstr ""
-"Êtes-vous sûr de vouloir supprimer le service de démarrage <b>%s</b> ?"
+msgstr "Êtes-vous sûr de vouloir supprimer le service de démarrage <b>%s</b> ?"
 
 #: modules/imaging/manage/ajaxEditProfilescript.php:60
 #: modules/imaging/manage/ajaxAddProfilescript.php:62
@@ -3541,14 +3111,12 @@ msgstr "Générateur de fichier de réponse Windows Xml"
 #: modules/imaging/manage/master_add.php:49
 #, php-format
 msgid "Image <strong>%s</strong> added to default boot menu"
-msgstr ""
-"L'image <strong>%s</strong> a été ajoutée au menu de démarrage par défaut"
+msgstr "L'image <strong>%s</strong> a été ajoutée au menu de démarrage par défaut"
 
 #: modules/imaging/manage/master_add.php:65
 #, php-format
 msgid "Error : Image <strong>%s</strong> added to default boot menu"
-msgstr ""
-"Erreur : Image <strong>%s</strong> ajouter au menu de démarrage par defaut."
+msgstr "Erreur : Image <strong>%s</strong> ajouter au menu de démarrage par defaut."
 
 #: modules/imaging/manage/ajaxStatus.php:129
 msgid "Stats"
@@ -3601,9 +3169,7 @@ msgstr "Activité récente"
 
 #: modules/imaging/manage/ajaxStatus.php:555
 msgid "Can't connect to the imaging server linked to the selected entity."
-msgstr ""
-"Impossible de se connecter au serveur d'imaging associé à l'entité "
-"sélectionnée."
+msgstr "Impossible de se connecter au serveur d'imaging associé à l'entité sélectionnée."
 
 #: modules/imaging/manage/synchromaster.php:47
 #, php-format
@@ -3691,9 +3257,7 @@ msgstr "La suppression du service de démarrage a échoué"
 #: modules/imaging/manage/service_del.php:44
 #, php-format
 msgid "Service <strong>%s</strong> removed from default boot menu"
-msgstr ""
-"Le service <strong>%s</strong> a été supprimé du menu de démarrage par "
-"défaut"
+msgstr "Le service <strong>%s</strong> a été supprimé du menu de démarrage par défaut"
 
 #: modules/imaging/manage/service_show_used.php:128
 #: modules/imaging/manage/service_show_used.php:132
@@ -3701,12 +3265,8 @@ msgstr ""
 #: modules/imaging/manage/location.php:65
 #: modules/imaging/manage/save_configuration.php:97
 #, php-format
-msgid ""
-"Boot menu generation failed for package server: %s<br /><br />Check "
-"/var/log/mmc/pulse2-package-server.log"
-msgstr ""
-"La génération du menu de démarrage sur le package server %s a échoué.<br "
-"/><br />Vérifiez /var/log/mmc/pulse2-package-server.log"
+msgid "Boot menu generation failed for package server: %s<br /><br />Check /var/log/mmc/pulse2-package-server.log"
+msgstr "La génération du menu de démarrage sur le package server %s a échoué.<br /><br />Vérifiez /var/log/mmc/pulse2-package-server.log"
 
 #: modules/imaging/manage/service_show_used.php:170
 #, php-format
@@ -3714,12 +3274,8 @@ msgid "Remove this boot service from imaging server %s"
 msgstr "Supprimer ce service de démarrage du serveur d'imaging %s"
 
 #: modules/imaging/manage/service_show_used.php:194
-msgid ""
-"If you want to remove this boot service from one or more targets, check "
-"these targets and click on the remove button"
-msgstr ""
-"Si vous voulez enlever ce service de démarrage d'une ou plusieurs cibles, "
-"sélectionnez-les et validez"
+msgid "If you want to remove this boot service from one or more targets, check these targets and click on the remove button"
+msgstr "Si vous voulez enlever ce service de démarrage d'une ou plusieurs cibles, sélectionnez-les et validez"
 
 #: modules/imaging/manage/multicastaction.php:69
 msgid "Start Multicast of ( Master :"
@@ -3918,21 +3474,13 @@ msgstr "<b>%s</b> a déjà été converti en service de démarrage"
 
 #: modules/imaging/manage/imaging_server_link.php:60
 #, php-format
-msgid ""
-"Link between package server <strong>%s</strong> and the entity "
-"<strong>%s</strong> succeeded."
-msgstr ""
-"Le lien entre le package <strong>%s</strong> et l'entité <strong>%s</strong>"
-" effectué"
+msgid "Link between package server <strong>%s</strong> and the entity <strong>%s</strong> succeeded."
+msgstr "Le lien entre le package <strong>%s</strong> et l'entité <strong>%s</strong> effectué"
 
 #: modules/imaging/manage/imaging_server_link.php:106
 #, php-format
-msgid ""
-"Do you really want to link the Imaging Server '<b>%s</b>' to the entity "
-"'<b>%s</b>'"
-msgstr ""
-"Êtes vous sur de vouloir associer le serveur d'imaging '<b>%s</b>' à "
-"l'entité '<b>%s</b>'"
+msgid "Do you really want to link the Imaging Server '<b>%s</b>' to the entity '<b>%s</b>'"
+msgstr "Êtes vous sur de vouloir associer le serveur d'imaging '<b>%s</b>' à l'entité '<b>%s</b>'"
 
 #: modules/imaging/manage/unattended.php:90
 msgid "form not found"
@@ -3953,16 +3501,12 @@ msgstr "Choisir le paquetage source"
 #: modules/imaging/manage/bootmenu_up.php:37
 #, php-format
 msgid "Success to move <strong>%s</strong> in the default boot menu"
-msgstr ""
-"Succès pour déplacer <strong>%s</strong> dans le menu de démarrage par "
-"défaut"
+msgstr "Succès pour déplacer <strong>%s</strong> dans le menu de démarrage par défaut"
 
 #: modules/imaging/manage/bootmenu_up.php:50
 #, php-format
 msgid "Failed to move <strong>%s</strong> in the default boot menu"
-msgstr ""
-"Impossible de déplacer <strong>%s</strong> dans le menu de démarrage par "
-"défaut"
+msgstr "Impossible de déplacer <strong>%s</strong> dans le menu de démarrage par défaut"
 
 #: modules/imaging/manage/editProfilescript.php:36
 #, php-format
@@ -4089,9 +3633,7 @@ msgstr "Notification avertissement : le script n'a pas été supprimé"
 
 #: modules/imaging/manage/postinstall_delete.php:93
 msgid "Can't delete this post-imaging script, it's a global script."
-msgstr ""
-"Impossible de supprimer ce script de post-imaging, il s'agit d'un script "
-"global"
+msgstr "Impossible de supprimer ce script de post-imaging, il s'agit d'un script global"
 
 #: modules/imaging/manage/postinstall_delete.php:99
 #, php-format
@@ -4116,9 +3658,7 @@ msgstr "Une erreur est survenue lors de la création du service de démarrage"
 
 #: modules/imaging/manage/postinstall_create_boot_service.php:56
 msgid "Notify Error : Error while creating Boot Service"
-msgstr ""
-"Notification erreur : Erreur lors de la création du service de menu "
-"démarrage."
+msgstr "Notification erreur : Erreur lors de la création du service de menu démarrage."
 
 #: modules/imaging/manage/postinstall_create_boot_service.php:77
 #, php-format
@@ -4154,16 +3694,8 @@ msgid "No master available."
 msgstr "Aucun master disponible."
 
 #: modules/imaging/manage/ajaxMasterLevel2.php:46
-msgid ""
-"To define a master, browse to the computers module click on the imaging icon"
-" for the computer you wish to make a master from, then choose &quot;Images "
-"and Masters&quot;, followed by clicking the edit button on a backup image to"
-" convert it to a master."
-msgstr ""
-"Pour définir un master, aller dans l'onglet « Ordinateurs », cliquer sur "
-"l'icône d'imaging de l'ordinateur dont vous souhaitez faire un master, "
-"cliquer sur « Images et masters », puis cliquer sur le bouton d'édition de "
-"l'image de secours à convertir en master."
+msgid "To define a master, browse to the computers module click on the imaging icon for the computer you wish to make a master from, then choose &quot;Images and Masters&quot;, followed by clicking the edit button on a backup image to convert it to a master."
+msgstr "Pour définir un master, aller dans l'onglet « Ordinateurs », cliquer sur l'icône d'imaging de l'ordinateur dont vous souhaitez faire un master, cliquer sur « Images et masters », puis cliquer sur le bouton d'édition de l'image de secours à convertir en master."
 
 #: modules/imaging/manage/ajaxMasterLevel2.php:52
 msgid "Add image to default boot menu"
@@ -4188,31 +3720,20 @@ msgstr "Créer une iso depuis le master"
 #: modules/imaging/manage/master_iso.php:46
 #, php-format
 msgid "Iso of master <strong>%s</strong> has been launched in background."
-msgstr ""
-"La création de l'iso du master <strong>%s</strong> a été lancée en tâche de "
-"fond."
+msgstr "La création de l'iso du master <strong>%s</strong> a été lancée en tâche de fond."
 
 #: modules/imaging/manage/master_iso.php:48
 #, php-format
-msgid ""
-"The files will be stored in the directory %s of the server at the end of the"
-" backup."
-msgstr ""
-"Les fichiers seront stockés dans le répertoire %s du serveur à la fin de la "
-"sauvegarde."
+msgid "The files will be stored in the directory %s of the server at the end of the backup."
+msgstr "Les fichiers seront stockés dans le répertoire %s du serveur à la fin de la sauvegarde."
 
 #: modules/imaging/manage/master_iso.php:50
 msgid "Please go to the status page to check the iso creation status."
-msgstr ""
-"Merci de visiter la page de statuts pour suivre l'avancement de la création "
-"de l'iso."
+msgstr "Merci de visiter la page de statuts pour suivre l'avancement de la création de l'iso."
 
 #: modules/imaging/manage/master_iso.php:52
-msgid ""
-"This operation will last according to the amount of data of the master."
-msgstr ""
-"La durée de cette opération dépend du volume de données contenues dans le "
-"master."
+msgid "This operation will last according to the amount of data of the master."
+msgstr "La durée de cette opération dépend du volume de données contenues dans le master."
 
 #: modules/imaging/manage/master_iso.php:88
 #, php-format
@@ -4236,9 +3757,7 @@ msgstr "Le profil %s a été correctement créé : %s"
 #: modules/imaging/manage/save_configuration.php:79
 #, php-format
 msgid "Imaging server <strong>%s</strong> configuration saved."
-msgstr ""
-"La configuration du serveur d'Imaging <strong>%s</strong> a été enregistrée "
-"avec succès."
+msgstr "La configuration du serveur d'Imaging <strong>%s</strong> a été enregistrée avec succès."
 
 #: modules/imaging/manage/ajaxBootmenu.php:94
 msgid "Default boot menu configuration"
@@ -4259,3 +3778,4 @@ msgstr "l'ordre est déjà utilisé"
 #: modules/imaging/manage/ajaxFormWin11-uefi2.php:858
 msgid "Remove Bloatware"
 msgstr "Supprimer le Bloatware"
+
