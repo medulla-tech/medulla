@@ -540,6 +540,18 @@ class RpcProxy(RpcProxyI):
             logging.getLogger().error("for machine %s : jid xmpp missing" % uuid)
             return "jid missing"
 
+    @with_optional_xmpp_context
+    def get_computer_count_for_dashboard(self, ctx=None):
+        """Get the count of inventoried/uninventoried machines for dashboard
+
+        Params:
+            - self RpcProxy : Object Instance
+            - ctx Contexte_XmlRpc_surcharge_info_Glpi (default=None) : The user context to get his entities list
+
+        Return dict containing the machines counts.
+        """
+        entities = ctx.get_session_info()['mondict']['liste_entities_user']
+        return xmlrpcCleanup(XmppMasterDatabase().get_computer_count_for_dashboard(entities))
 
     def getCommand_action_time(self, during_the_last_seconds, start, stop, filt):
         return XmppMasterDatabase().getCommand_action_time(
@@ -2060,10 +2072,6 @@ def write_content(path, datas, mode="w"):
                 return True
         except:
             return False
-
-
-def get_computer_count_for_dashboard():
-    return xmlrpcCleanup(XmppMasterDatabase().get_computer_count_for_dashboard())
 
 
 def get_count_success_rate_for_dashboard():

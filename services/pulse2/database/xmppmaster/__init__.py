@@ -10582,7 +10582,30 @@ class XmppMasterDatabase(DatabaseHelper):
         return ret
 
     @DatabaseHelper._sessionm
-    def get_computer_count_for_dashboard(self, session):
+    def get_computer_count_for_dashboard(self, session, entities:list=[]):
+        """
+        Count the machines based on:
+            - machine offline uninventoried
+            - machine offline inventoried
+            - machine online uninventoried
+            - machine online inventoried
+            - total of uninventoried machines
+            - total of inventoried machines
+            - total of (all) machines
+
+        Params:
+            - self XmppMasterDatabase: Object instance
+            - session Sqlalchemy session: Wrapped session.
+
+        Return dict containing the machines counts
+        """
+
+        # Convert the list of int to a list of str, to be able to join them
+        entities = [str(e) for e in entities]
+        entities = ','.join(entities)
+
+        # Bind the datas to the request.
+        bind = {'agenttype': 'machine', 'entities': entities}
         sql = """SELECT
           SUM(1) as total,
           SUM(CASE WHEN enabled = 0 THEN 1 ELSE 0 END) as total_offline,
@@ -10593,8 +10616,10 @@ class XmppMasterDatabase(DatabaseHelper):
           SUM(CASE WHEN enabled = 1 AND uuid_inventorymachine != "" THEN 1 ELSE 0 END) as online_inventoried,
           SUM(CASE WHEN uuid_inventorymachine = "" THEN 1 ELSE 0 END) as total_uninventoried,
           SUM(CASE WHEN uuid_inventorymachine != "" THEN 1 ELSE 0 END) as total_inventoried
-        FROM machines WHERE agenttype="machine";"""
-        result = session.execute(sql)
+        FROM machines 
+        JOIN glpi_entity on machines.glpi_entity_id = glpi_entity.id
+        WHERE agenttype=:agenttype and glpi_entity.glpi_id in (:entities)"""
+        result = session.execute(sql, bind)
         session.commit()
         session.flush()
         # There is only one line so we can truncate
@@ -10609,10 +10634,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 "online_inventoried": int(x[6]) if x[6] is not None else 0,
                 "total_uninventoried": int(x[7]) if x[7] is not None else 0,
                 "total_inventoried": int(x[8]) if x[8] is not None else 0,
-            }
-            for x in result
-        ][0]
-
+            } for x in result][0]
         return ret
 
     @DatabaseHelper._sessionm
