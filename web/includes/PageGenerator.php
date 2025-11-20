@@ -2278,7 +2278,7 @@ updateSearch<?php echo $this->formid ?> = function() {
         <?php } ?>
     ;
 
-    console.log("AJAX URL (updateSearch):", finalUrl);
+    //console.log("AJAX URL (updateSearch):", finalUrl);
 
     // Lancement AJAX
     jQuery.ajax({
@@ -2295,6 +2295,66 @@ updateSearch<?php echo $this->formid ?> = function() {
         setTimeout(updateSearch<?php echo $this->formid ?>, refreshdelay<?php echo $this->formid ?>);
     <?php } ?>
 };
+
+/**
+ * @class AjaxFilterTimer
+ * @brief Classe dérivée d'AjaxFilter pour appels AJAX automatiques périodiques.
+ *
+ * Cette classe hérite de AjaxFilter et ajoute la possibilité de déclencher
+ * automatiquement les requêtes AJAX à intervalles réguliers si un refresh
+ * est défini via setRefresh().
+ *
+ * Fonctionnalités :
+ * - Hérite de tout le comportement de AjaxFilter (formulaire AJAX + filtre)
+ * - Lance automatiquement la recherche AJAX au chargement de la page
+ * - Continue les mises à jour périodiques selon l'intervalle défini
+ *
+ * Exemple d'utilisation :
+ * @code
+ * $ajax = new AjaxFilterTimer(urlStrRedirect("pkgs/pkgs/ajaxPackageList"));
+ * $ajax->setRefresh(10000);  // refresh toutes les 10 secondes
+ * $ajax->display();
+ * $ajax->displayDivToUpdate();
+ * @endcode
+ */
+class AjaxFilterTimer extends AjaxFilter
+{
+    /**
+     * @brief Affichage du formulaire + initialisation du timer automatique
+     *
+     * Cette méthode surcharge display() pour lancer automatiquement
+     * la première recherche AJAX et démarrer le refresh périodique.
+     *
+     * @param array $arrParam Paramètres supplémentaires (compatibilité)
+     */
+    public function display($arrParam = array())
+    {
+        // --- Appel de la méthode parent pour générer le formulaire AJAX ---
+        parent::display($arrParam);
+
+        // --- Si aucun refresh défini, on ne fait rien ---
+        if (!$this->refresh) {
+            return;
+        }
+
+        // --- Injection JavaScript pour démarrer automatiquement le timer ---
+        ?>
+<script type="text/javascript">
+/* --------------------------------------------------------------------------
+ * TIMER AUTOMATIQUE POUR AJAXFILTERTIMER
+ * -------------------------------------------------------------------------- */
+document.addEventListener("DOMContentLoaded", function () {
+
+    // console.log("AjaxFilterTimer: refresh auto démarré (<?php echo $this->formid ?>) : <?php echo $this->refresh ?> ms");
+
+    // --- Première mise à jour immédiate de la div ---
+    updateSearch<?php echo $this->formid ?>();
+});
+</script>
+        <?php
+    }
+}
+
 
 class multifieldTpl extends AbstractTpl
 {
