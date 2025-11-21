@@ -1148,7 +1148,7 @@ function xmlrpc_get_updates_by_entity($entity, $start, $limit, $filter = "")
 
 function xmlrpc_get_updates_machines_by_entity($entity, $pid, $start = 0, $limit = -1, $filter = "")
 {
-    return xmlCall("xmppmaster.get_updates_machines_by_entity", [$entity, $pid, $start, $end, $filter]);
+    return xmlCall("xmppmaster.get_updates_machines_by_entity", [$entity, $pid, $start, $limit, $filter]);
 }
 
 function xmlrpc_pending_entity_update_by_pid($entity, $pid, $startdate = "", $enddate = "", $deployment_intervals="")
