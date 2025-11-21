@@ -59,6 +59,7 @@ msgstr "L'email n'a pas pu être envoyé. Veuillez réessayer plus tard ou conta
 msgid "Back to sign-in"
 msgstr "Retour à l'authentification"
 
+#: index.php:139
 #, php-format
 msgid "The server %s does not exist"
 msgstr "Le serveur %s n'existe pas"
@@ -103,10 +104,12 @@ msgstr "Serveur"
 msgid "Language"
 msgstr "Langue"
 
+#: index.php:329 modules/base/includes/publicFunc.php:323
 #: modules/base/users/ajaxFilter.php:119 modules/base/views/index.tpl.php:79
 msgid "Login"
 msgstr "Identifiant"
 
+#: index.php:336 modules/base/includes/publicFunc.php:338
 #: modules/base/infoPackage.inc.php:433
 msgid "Password"
 msgstr "Mot de passe"
@@ -131,6 +134,7 @@ msgstr "Oui"
 msgid "No"
 msgstr "Non"
 
+#: graph/header.inc.php:256 includes/FormGenerator.php:713
 #: includes/PageGenerator.php:2971
 msgid "Close"
 msgstr "Fermer"
@@ -159,6 +163,7 @@ msgstr "déconnexion"
 msgid "Logout"
 msgstr "Déconnexion"
 
+#: graph/navbar.inc.php:106 modules/base/infoPackage.inc.php:44
 #: modules/base/main/default.php:89
 msgid "Home"
 msgstr "Page principale"
@@ -243,6 +248,7 @@ msgstr "Impossible d'envoyer la requête XML-RPC à l'agent"
 msgid "MMC agent seems to be not correctly configured."
 msgstr "L'agent MMC semble ne pas être correctement configuré."
 
+#: includes/xmlrpc.inc.php:189 includes/xmlrpc.inc.php:214
 #: includes/xmlrpc.inc.php:254
 msgid "MMC agent communication problem"
 msgstr "Problème de communication avec l'agent MMC"
@@ -319,6 +325,7 @@ msgstr "Si le bouton ne fonctionne pas, veuillez copier-coller ce lien:"
 msgid "If you didn’t request this, please ignore this message."
 msgstr "Si vous n'avez pas demandé ceci, veuillez ignorer ce message."
 
+#: includes/FormGenerator.php:73 includes/FormGenerator.php:320
 #: includes/FormGenerator.php:844 includes/FormGenerator.php:992
 msgid "unavailable"
 msgstr "indisponible"
@@ -359,14 +366,18 @@ msgstr "Min.: "
 msgid "Sec.: "
 msgstr "Sec.:"
 
+#: includes/FormGenerator.php:628 includes/FormGenerator.php:634
+#: modules/base/includes/AjaxFilterLog.inc.php:168
 #: modules/base/includes/AjaxFilterLog.inc.php:172
 msgid "or <a href='#'"
 msgstr "ou <a href='#'"
 
+#: includes/FormGenerator.php:630
 #: modules/base/includes/AjaxFilterLog.inc.php:170
 msgid "value=\"now\";'>now</a>"
 msgstr "value=\"immediat\";'>immediat</a>"
 
+#: includes/FormGenerator.php:636
 #: modules/base/includes/AjaxFilterLog.inc.php:174
 msgid "value=\"never\";'>never</a>"
 msgstr "value=\"jamais\";'>jamais</a>"
@@ -447,10 +458,16 @@ msgstr "Vendredi"
 msgid "Saturday"
 msgstr "Samedi"
 
+#: includes/FormGenerator.php:714 includes/PageGenerator.php:1381
+#: includes/PageGenerator.php:1639 includes/ajaxTools.php:63
+#: includes/ajaxTools.php:69 modules/base/includes/AjaxFilterLog.inc.php:96
 #: modules/base/includes/AjaxFilterLog.inc.php:100
 msgid "Previous"
 msgstr "Précédent"
 
+#: includes/FormGenerator.php:715 includes/PageGenerator.php:1395
+#: includes/PageGenerator.php:1649 includes/ajaxTools.php:74
+#: includes/ajaxTools.php:82 modules/base/includes/AjaxFilterLog.inc.php:107
 #: modules/base/includes/AjaxFilterLog.inc.php:111
 msgid "Next"
 msgstr "Suivant"
@@ -459,6 +476,8 @@ msgstr "Suivant"
 msgid "Now"
 msgstr "Maintenant"
 
+#: includes/FormGenerator.php:804
+#: modules/admin/admin/ajaxEntitiesManagement.php:127
 #: modules/base/groups/localSidebar.php:28
 msgid "Add"
 msgstr "Ajout"
@@ -467,6 +486,9 @@ msgstr "Ajout"
 msgid "Toggle selection"
 msgstr "Inverser la sélection"
 
+#: includes/FormGenerator.php:1309
+#: modules/admin/admin/ajaxEntitiesManagement.php:170
+#: modules/ppolicy/default/delete.php:45 modules/base/groups/ajaxFilter.php:68
 #: modules/base/users/ajaxFilter.php:140 modules/base/views/index.tpl.php:93
 msgid "Delete"
 msgstr "Suppression"
@@ -475,6 +497,7 @@ msgstr "Suppression"
 msgid "to"
 msgstr "à"
 
+#: includes/PageGenerator.php:1049 includes/PageGenerator.php:1298
 #, php-format
 msgid " - Total <b>%s </b>"
 msgstr " - Total <b>%s</b>"
@@ -499,10 +522,20 @@ msgstr "Aucun élément disponible"
 msgid "Select entity"
 msgstr "Entité sélectionnée"
 
+#: includes/PageGenerator.php:3460 includes/PageGenerator.php:3542
+#: includes/PageGenerator.php:3571 modules/dyngroup/includes/groups.inc.php:364
+#: modules/dyngroup/includes/groups.inc.php:427
 #: modules/base/groups/members.php:308 modules/base/groups/edit.php:128
 msgid "Confirm"
 msgstr "Valider"
 
+#: includes/PageGenerator.php:3465 includes/PageGenerator.php:3547
+#: modules/imaging/imaging/images_iso.php:112
+#: modules/imaging/imaging/multicast.php:409
+#: modules/imaging/manage/master_iso.php:109
+#: modules/dyngroup/includes/groups.inc.php:365
+#: modules/dyngroup/includes/groups.inc.php:428
+#: modules/ppolicy/default/delete.php:46 modules/base/groups/members.php:309
 #: modules/base/groups/delete.php:66
 msgid "Cancel"
 msgstr "Annuler"
@@ -515,14 +548,17 @@ msgstr "Tout sélectionner"
 msgid "Unselect all"
 msgstr "Tout désélectionner"
 
+#: includes/modules.inc.php:410
 #, php-format
 msgid "%s service restarting..."
 msgstr "Le service %s redémarre..."
 
+#: includes/modules.inc.php:411
 #, php-format
 msgid "%s service restarted successfully."
 msgstr "Le service %s a redémarré."
 
+#: includes/modules.inc.php:412
 #, php-format
 msgid "%s service failed to restart."
 msgstr "Le redémarrage du service %s a échoué."
@@ -567,138 +603,264 @@ msgstr "web: version"
 msgid "web: plugin is not installed"
 msgstr "web: plugin non installé"
 
+#: modules/glpi/glpi/ajaxMachinesList.php:163
+#: modules/glpi/glpi/ajaxMachinesList.php:166
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:70
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:74
 #: modules/base/includes/computers_list.inc.php:109
 msgid "GLPI Inventory"
 msgstr "Inventaire GLPI"
 
+#: modules/glpi/glpi/ajaxMachinesList.php:170
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:79
 #: modules/base/includes/computers_list.inc.php:108
 msgid "Monitoring"
 msgstr "Monitoring"
 
+#: modules/glpi/glpi/ajaxMachinesList.php:171
+#: modules/glpi/glpi/ajaxMachinesList.php:184
+#: modules/glpi/glpi/ajaxMachinesList.php:196
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:80
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:89
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:99
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:58
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:59
+#: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:41
+#: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:42
+#: modules/medulla_server/includes/menu_actionaudit.php:83
+#: modules/medulla_server/includes/menu_action.php:67
+#: modules/admin/admin/ajaxRelaysList.php:67
+#: modules/admin/admin/ajaxRelaysList.php:68
+#: modules/base/includes/computers_list.inc.php:130
+#: modules/base/includes/computers_list.inc.php:132
 #: modules/base/includes/computers_list.inc.php:143
 msgid "Remote control"
 msgstr "Prise en main à distance"
 
+#: modules/glpi/glpi/ajaxMachinesList.php:174
+#: modules/glpi/glpi/ajaxMachinesList.php:175
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:71
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:76
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:81
+#: modules/base/includes/computers_list.inc.php:111
 #: modules/base/includes/computers_list.inc.php:114
 msgid "Software deployment"
 msgstr "Déploiement de logiciels"
 
+#: modules/glpi/glpi/ajaxMachinesList.php:177
+#: modules/glpi/glpi/ajaxMachinesList.php:178
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:83
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:84
+#: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:39
+#: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:40
+#: modules/medulla_server/includes/menu_actionaudit.php:86
+#: modules/medulla_server/includes/menu_action.php:74
+#: modules/base/includes/computers_list.inc.php:116
 #: modules/base/includes/computers_list.inc.php:117
 msgid "xmppconsole"
 msgstr "Console xmpp"
 
+#: modules/glpi/glpi/ajaxMachinesList.php:180
+#: modules/glpi/glpi/ajaxMachinesList.php:181
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:86
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:87
+#: modules/xmppmaster/xmppmaster/ajaxlistconffile.php:66
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:38
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:39
+#: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:37
+#: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php:38
+#: modules/xmppmaster/xmppmaster/ajaxFilterfileconf.php:88
+#: modules/medulla_server/includes/menu_actionaudit.php:87
+#: modules/admin/admin/ajaxRelaysList.php:46
+#: modules/admin/admin/ajaxRelaysList.php:48
+#: modules/admin/infoPackage.inc.php:68
+#: modules/base/includes/computers_list.inc.php:124
 #: modules/base/includes/computers_list.inc.php:126
 msgid "Edit config files"
 msgstr "Éditer les fichiers de configuration"
 
+#: modules/glpi/glpi/ajaxMachinesList.php:187
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:91
+#: modules/medulla_server/includes/menu_group_action.php:76
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:282
 #: modules/base/includes/computers_list.inc.php:134
 msgid "Imaging management"
 msgstr "Gestion de l'imaging"
 
+#: modules/glpi/glpi/ajaxMachinesList.php:189
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:92
+#: modules/base/includes/computers_list.inc.php:136
 #: modules/base/users/ajaxFilter.php:137
 msgid "extTicket issue"
 msgstr "Question extTicket"
 
+#: modules/glpi/glpi/ajaxMachinesList.php:193
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:96
+#: modules/medulla_server/includes/menu_actionaudit.php:77
+#: modules/medulla_server/includes/menu_action.php:75
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:88
 #: modules/base/includes/computers_list.inc.php:140
 msgid "Quick action"
 msgstr "Actions Rapides"
 
+#: modules/glpi/glpi/ajaxMachinesList.php:449
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:301
+#: modules/medulla_server/includes/menu_actionaudit.php:74
 #: modules/base/includes/computers_list.inc.php:383
 msgid "Backup status"
 msgstr "Statut de la sauvegarde"
 
+#: modules/glpi/glpi/ajaxMachinesList.php:459
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:311
+#: modules/medulla_server/includes/menu_actionaudit.php:75
 #: modules/medulla_server/includes/menu_action.php:63
 msgid "Urbackup"
 msgstr "Urbackup"
 
+#: modules/glpi/glpi/ajaxMachinesList.php:486
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:341
 #: modules/base/includes/computers_list.inc.php:421
 msgid "Delete computer"
 msgstr "Supprimer un ordinateur"
 
+#: modules/glpi/glpi/machinesList.php:42
+#: modules/glpi/glpi/machinesListglpi.php:40
+#: modules/xmppmaster/xmppmaster/machinesList.php:39
+#: modules/base/computers/index.php:48
 #: modules/base/computers/localSidebar.php:7
 msgid "All computers"
 msgstr "Tous les ordinateurs"
 
+#: modules/glpi/glpi/machinesList.php:46
+#: modules/glpi/glpi/machinesListglpi.php:44
+#: modules/xmppmaster/xmppmaster/machinesList.php:43
 #: modules/base/computers/index.php:52
 msgid "Online computers"
 msgstr "Ordinateurs en ligne"
 
+#: modules/glpi/glpi/machinesList.php:50
+#: modules/glpi/glpi/machinesListglpi.php:48
+#: modules/xmppmaster/xmppmaster/machinesList.php:47
 #: modules/base/computers/index.php:56
 msgid "Offline computers"
 msgstr "Ordinateurs hors ligne"
 
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:73
 #: modules/base/includes/computers_list.inc.php:107
 msgid "Inventory"
 msgstr "Inventaire"
 
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:75
+#: modules/xmppmaster/xmppmaster/ajaxconvergence.php:111
+#: modules/xmppmaster/xmppmaster/ajaxconvergence.php:325
+#: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:45
+#: modules/xmppmaster/xmppmaster/ajaxteamconvergence.php:136
+#: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:92
+#: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php:105
+#: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:50
+#: modules/xmppmaster/xmppmaster/ajaxstatusteamxmppscheduler.php:73
+#: modules/xmppmaster/xmppmaster/ajaxstatusteamxmpp.php:128
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:116
 #: modules/base/includes/computers_list.inc.php:110
 msgid "View deployment details"
 msgstr "Afficher les détails du déploiement"
 
+#: modules/glpi/glpi/ajaxMachinesListglpi.php:94
 #: modules/base/includes/computers_list.inc.php:138
 msgid "Show Profile"
 msgstr "Voir le profil"
 
+#: modules/xmppmaster/xmppmaster/ajaxconvergence.php:153
+#: modules/xmppmaster/xmppmaster/ajaxconvergence.php:165
 #: modules/xmppmaster/xmppmaster/ajaxconvergence.php:371
 msgid "Reschedule Convergence"
 msgstr "Reproduire une convergence"
 
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:52
 #: modules/xmppmaster/xmppmaster/ajaxstatusteamxmppscheduler.php:67
 msgid "Delete deploy"
 msgstr "Supprimer le déploiement"
 
+#: modules/xmppmaster/xmppmaster/relays/switchrelay.php:25
 #: modules/admin/admin/switchrelay.php:25
 msgid "You have to check the box <b>\"I am aware that this disable/enable a relay forcing a <em><b>reconfiguration of all the machines</b></em> managed by the cluster."
 msgstr "Veuillez cocher la case <b>\"Je suis conscient que cette désactivation/activation du relais va forcer une <em><b>reconfiguration de toutes les machines</b></em> gérées pas le cluster."
 
+#: modules/xmppmaster/xmppmaster/relays/switchrelay.php:32
 #: modules/admin/admin/switchrelay.php:32
 msgid "The relay "
 msgstr "Le relais"
 
+#: modules/xmppmaster/xmppmaster/relays/switchrelay.php:51
 #: modules/admin/admin/switchrelay.php:51
 msgid "I am aware that this disable/enable a relay forcing a <em><b>reconfiguration of all the machines</b></em> managed by the cluster.<br />Check this box if it is what you want."
 msgstr "Je suis conscient que cette désactivation/activation du relais va forcer une <em><b>reconfiguration de toutes les machines</b></em> gérées pas le cluster.<br />Cochez cette case si c'est bien ce que vous souhaitez."
 
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:41
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:42
+#: modules/admin/admin/ajaxRelaysList.php:50
 #: modules/admin/admin/ajaxRelaysList.php:51
 msgid "Relay Detail"
 msgstr "Infos relais"
 
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:44
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:45
+#: modules/admin/admin/ajaxRelaysList.php:53
 #: modules/admin/admin/ajaxRelaysList.php:54
 msgid "Detail actions"
 msgstr "Actions"
 
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:47
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:48
+#: modules/admin/admin/ajaxRelaysList.php:56
 #: modules/admin/admin/ajaxRelaysList.php:57
 msgid "Console Relay"
 msgstr "Console XMPP"
 
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:49
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:50
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:51
+#: modules/admin/admin/ajaxRelaysList.php:58
+#: modules/admin/admin/ajaxRelaysList.php:59
 #: modules/admin/admin/ajaxRelaysList.php:60
 msgid "Switch"
 msgstr "Switch"
 
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:53
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:54
+#: modules/admin/admin/ajaxRelaysList.php:62
 #: modules/admin/admin/ajaxRelaysList.php:63
 msgid "Reconfigure Machines"
 msgstr "Reconfigurer les machines"
 
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:56
 #: modules/admin/admin/ajaxRelaysList.php:65
 msgid "QA Launched"
 msgstr "QA lancées"
 
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:61
+#: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:62
+#: modules/admin/admin/ajaxRelaysList.php:70
 #: modules/admin/admin/ajaxRelaysList.php:71
 msgid "Packages List"
 msgstr "Liste de packages"
 
+#: modules/xmppmaster/xmppmaster/relays/reconfiguremachines.php:25
 #: modules/admin/admin/reconfiguremachines.php:25
 msgid "You have to check the box <b>\"I am aware that this action is forcing a <em><b>reconfiguration of all the machines</b></em> managed by the relayserver."
 msgstr "Veuillez cocher la case <b>\"Je suis conscient que cette action va forcer une <em><b>reconfiguration de toutes les machines</b></em> gérées pas le serveur relais."
 
+#: modules/xmppmaster/xmppmaster/relays/reconfiguremachines.php:32
 #: modules/admin/admin/reconfiguremachines.php:32
 msgid "The machines of the relay "
 msgstr "Les machines du relais"
 
+#: modules/xmppmaster/xmppmaster/relays/reconfiguremachines.php:51
 #: modules/admin/admin/reconfiguremachines.php:51
 msgid "I am aware that this action is forcing a <em><b>reconfiguration of all the machines</b></em> managed by the relayserver.<br />Check this box if it is what you want."
 msgstr "Je suis conscient que cette action va forcer une <em><b>reconfiguration de toutes les machines</b></em> gérées pas le serveur relais.<br />Cochez cette case si c'est bien ce que vous souhaitez."
 
+#: modules/xmppmaster/xmppmaster/relays/ajaxqalaunched.php:35
 #: modules/admin/admin/ajaxqalaunched.php:35
 msgid "Show Result"
 msgstr "Afficher le résultat"
@@ -731,18 +893,25 @@ msgstr "début"
 msgid "end"
 msgstr "fin"
 
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:737
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:125
 msgid "Restart deployment"
 msgstr "Redémarrer le déploiement"
 
+#: modules/xmppmaster/xmppmaster/monitoring/ajaxalertshistory.php:28
+#: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:38
+#: modules/dashboard/includes/panels/alerts.inc.php:49
 #: modules/dashboard/includes/panels/alertsentity.inc.php:50
 msgid "Detail"
 msgstr "Détails"
 
+#: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php:37
+#: modules/dashboard/includes/panels/alerts.inc.php:50
 #: modules/dashboard/includes/panels/alertsentity.inc.php:51
 msgid "Acknowledge"
 msgstr "Acquitter"
 
+#: modules/medulla_server/includes/menu_group_action.php:82
 #: modules/dyngroup/dyngroup/display.php:152
 msgid "Group Quick action"
 msgstr "Groupe Action rapide"
@@ -771,10 +940,13 @@ msgstr "Gérer les utilisateurs"
 msgid "Download"
 msgstr "Télécharger"
 
+#: modules/admin/admin/ajaxEntitiesManagement.php:130
 #: modules/admin/admin/ajaxEntitiesManagement.php:183
 msgid "Unauthorized modification"
 msgstr "Modification non autorisée"
 
+#: modules/admin/admin/ajaxEntitiesManagement.php:131
+#: modules/admin/admin/ajaxEntitiesManagement.php:187
 #: modules/admin/admin/ajaxListUsersofEntity.php:180
 msgid "Unauthorized deletion"
 msgstr "Suppression non autorisée"
@@ -783,6 +955,7 @@ msgstr "Suppression non autorisée"
 msgid "Invalid provider ID."
 msgstr "ID de provider invalide."
 
+#: modules/admin/admin/deleteProvider.php:41
 #, php-format
 msgid "Provider %s deleted."
 msgstr "Provider %s supprimé."
@@ -795,10 +968,12 @@ msgstr "Echec de suppression:"
 msgid "Relay Rules"
 msgstr "Règles des relais"
 
+#: modules/admin/admin/ajaxRelaysList.php:75
 #: modules/admin/admin/ajaxRelaysList.php:76
 msgid "Ban"
 msgstr "Bannir"
 
+#: modules/admin/admin/ajaxRelaysList.php:78
 #: modules/admin/admin/ajaxRelaysList.php:79
 msgid "Unban"
 msgstr "Débannir"
@@ -871,6 +1046,7 @@ msgstr "Uptime"
 msgid "Medulla Updates"
 msgstr "Mises à Jour Medulla"
 
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:259
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:286
 msgid "Updates compliance by machines"
 msgstr "Conformité par machines"
@@ -879,6 +1055,9 @@ msgstr "Conformité par machines"
 msgid "Deploy specific update on this group"
 msgstr "Déployer mise à jour spécifique sur ce groupe"
 
+#: modules/dyngroup/dyngroup/creator.php:269
+#: modules/base/logview/logsdeployment.php:298
+#: modules/base/logview/ajax_showlog.php:68 modules/base/audit/logview.php:58
 #: modules/base/audit/ajaxLogFilter.php:114
 msgid "Date"
 msgstr "Date"
@@ -887,6 +1066,7 @@ msgstr "Date"
 msgid "Appstream"
 msgstr "Appstream"
 
+#: modules/inventory/includes/html.php:117
 #: modules/base/includes/AjaxFilterLog.inc.php:366
 msgid "Refresh"
 msgstr "Rafraîchir"
@@ -955,10 +1135,12 @@ msgstr "Description"
 msgid "Location"
 msgstr "Lieu"
 
+#: modules/base/computers/localSidebar.php:8
 #, php-format
 msgid "All computers %s"
 msgstr "Tous les ordinateurs %s"
 
+#: modules/base/computers/localSidebar.php:11
 #: modules/base/infoPackage.inc.php:351
 msgid "Add computer"
 msgstr "Ajouter un ordinateur"
@@ -971,18 +1153,46 @@ msgstr "Nom de l'ordinateur"
 msgid "Display Name"
 msgstr "Nom affiché"
 
+#: modules/base/logview/index.php:419 modules/base/logview/logsdownload.php:281
+#: modules/base/logview/logsremotedesktop.php:276
+#: modules/base/logview/logsquickaction.php:296
+#: modules/base/logview/logsbackup.php:307
+#: modules/base/logview/logspackaging.php:304
+#: modules/base/logview/logsinventory.php:305
+#: modules/base/logview/logskiosk.php:284
 #: modules/base/logview/logsimaging.php:360
 msgid "date"
 msgstr "date"
 
+#: modules/base/logview/index.php:420 modules/base/logview/logsdownload.php:282
+#: modules/base/logview/logsremotedesktop.php:277
+#: modules/base/logview/logsquickaction.php:297
+#: modules/base/logview/logsbackup.php:308
+#: modules/base/logview/logspackaging.php:305
+#: modules/base/logview/logsinventory.php:306
+#: modules/base/logview/logskiosk.php:285
 #: modules/base/logview/logsimaging.php:361
 msgid "user"
 msgstr "utilisateur"
 
+#: modules/base/logview/index.php:421 modules/base/logview/logsdownload.php:283
+#: modules/base/logview/logsremotedesktop.php:278
+#: modules/base/logview/logsquickaction.php:298
+#: modules/base/logview/logsbackup.php:309
+#: modules/base/logview/logspackaging.php:306
+#: modules/base/logview/logsinventory.php:307
+#: modules/base/logview/logskiosk.php:286
 #: modules/base/logview/logsimaging.php:362
 msgid "who"
 msgstr "qui"
 
+#: modules/base/logview/index.php:422 modules/base/logview/logsdownload.php:284
+#: modules/base/logview/logsremotedesktop.php:279
+#: modules/base/logview/logsquickaction.php:299
+#: modules/base/logview/logsbackup.php:310
+#: modules/base/logview/logspackaging.php:307
+#: modules/base/logview/logsinventory.php:308
+#: modules/base/logview/logskiosk.php:287
 #: modules/base/logview/logsimaging.php:363
 msgid "text"
 msgstr "texte"
@@ -995,6 +1205,7 @@ msgstr "Journal des transfert de fichiers"
 msgid "Remote Desktop Logs"
 msgstr "Journal de la Prise en mains à distance"
 
+#: modules/base/logview/logsquickaction.php:140
 #: modules/base/logview/logskiosk.php:136
 msgid "Quick Actions Logs"
 msgstr "Journal des Actions rapides"
@@ -1011,6 +1222,8 @@ msgstr "Journal de l'Inventaire"
 msgid "Deployment Logs"
 msgstr "Journal des Déploiements"
 
+#: modules/base/logview/logsdeployment.php:299
+#: modules/base/includes/auditCodes.php:45 modules/base/audit/indexbase.php:30
 #: modules/base/audit/indexall.php:30 modules/base/audit/ajaxLogFilter.php:121
 msgid "User"
 msgstr "Utilisateur"
@@ -1083,6 +1296,7 @@ msgstr "La politique des mots de passe de votre compte ne vous permet pas de mod
 msgid "Password is in history of old passwords"
 msgstr "Le mot de passe est dans l'historique des anciens mots de passe"
 
+#: modules/base/includes/errorHandling.php:60
 #: modules/base/includes/errorHandling.php:66
 msgid "The password policy of your account doesn't allow you to modify your password, because you already had this password previously."
 msgstr "La politique des mots de passe de votre compte ne vous permet pas de modifier votre mot de passe, car vous aviez déjà ce mot de passe précédemment."
@@ -1115,10 +1329,12 @@ msgstr "Le mot de passe doit contenir au moins un caractère minuscule"
 msgid "The password must contain at least one special character: #$%&+./:=?@{}"
 msgstr "Le mot de passe doit contenir au moins un caractère spécial : #$%&+./:=?@{}"
 
+#: modules/base/includes/errorHandling.php:99
 #, php-format
 msgid "The password must not contain the same character %s times"
 msgstr "Le mot de passe ne doit pas contenir le même caractère plus de %s fois"
 
+#: modules/base/includes/errorHandling.php:110
 #, php-format
 msgid "The password length must be %s or longer"
 msgstr "La taille du mot de passe doit être égale ou supérieure à %s caractères"
@@ -1127,10 +1343,12 @@ msgstr "La taille du mot de passe doit être égale ou supérieure à %s caract�
 msgid "The password is too short."
 msgstr "Le mot de passe est trop court."
 
+#: modules/base/includes/AjaxFilterLog.inc.php:325
 #: modules/base/audit/ajaxLogFilter.php:49
 msgid "Begin date"
 msgstr "Date de début"
 
+#: modules/base/includes/AjaxFilterLog.inc.php:326
 #: modules/base/audit/ajaxLogFilter.php:52
 msgid "End date"
 msgstr "Date de fin"
@@ -1147,10 +1365,12 @@ msgstr "Adresse MAC de l'ordinateur"
 msgid "Computer's netmask address"
 msgstr "Masque réseau de l'ordinateur"
 
+#: modules/base/includes/groups-xmlrpc.inc.php:85
 #, php-format
 msgid "Group %s already exist"
 msgstr "Le groupe %s existe déjà"
 
+#: modules/base/includes/groups-xmlrpc.inc.php:99
 #, php-format
 msgid "Group %s created"
 msgstr "Groupe %s crée"
@@ -1287,10 +1507,12 @@ msgstr "Liste des ordinateurs"
 msgid "Remove machine from group"
 msgstr "Enlever un ordinateur du groupe"
 
+#: modules/base/includes/publicFunc.php:54
 #, php-format
 msgid "Group %s can't be deleted.<br/>%s is the primary group of some users."
 msgstr "Le groupe %s ne peut pas être supprimé.<br/>%s est le groupe primaire de certains utilisateurs."
 
+#: modules/base/includes/publicFunc.php:56
 #, php-format
 msgid "Group %s successfully deleted."
 msgstr "Le groupe %s a été suppprimé avec succès"
@@ -1299,6 +1521,7 @@ msgstr "Le groupe %s a été suppprimé avec succès"
 msgid "User's name invalid !"
 msgstr "Nom de l'utilisateur invalide !"
 
+#: modules/base/includes/publicFunc.php:96
 #, php-format
 msgid "The user %s already exists."
 msgstr "L'utilisateur %s existe."
@@ -1323,6 +1546,7 @@ msgstr "Le mot de passe de confirmation n'est pas identique au nouveau mot de pa
 msgid "The primary group field can't be empty."
 msgstr "Le groupe primaire de l'utilisateur doit être spécifié."
 
+#: modules/base/includes/publicFunc.php:127
 #, php-format
 msgid "The group %s does not exist, and so can't be set as primary group."
 msgstr "Le groupe %s n'existe pas, et ne peut donc pas être utilisé en tant que groupe primaire."
@@ -1339,6 +1563,7 @@ msgstr "Compte utilisateur désactivé"
 msgid "User enabled"
 msgstr "Compte utilisateur activé"
 
+#: modules/base/includes/publicFunc.php:282
 #, php-format
 msgid "The photo is too big. The max size is %s x %s.\n                    Install php gd extension to resize the photo automatically"
 msgstr "L'image est trop grosse. La taille maximum est %s x %s.\n                    Installer l'extension php gd pour redimensionner l'image automatiquement"
@@ -1375,6 +1600,8 @@ msgstr "Titre"
 msgid "Email address"
 msgstr "Adresse email"
 
+#: modules/base/includes/publicFunc.php:375
+#: modules/base/includes/publicFunc.php:378
 #: modules/base/infoPackage.inc.php:425
 msgid "Telephone number"
 msgstr "Numéro de téléphone"
@@ -1383,6 +1610,7 @@ msgstr "Numéro de téléphone"
 msgid "Mobile number"
 msgstr "Numéro de mobile"
 
+#: modules/base/includes/publicFunc.php:414
 #: modules/base/infoPackage.inc.php:429
 msgid "Primary group"
 msgstr "Groupe primaire"
@@ -1395,6 +1623,7 @@ msgstr "Groupes de l'utilisateur"
 msgid "All groups"
 msgstr "Tous les groupes"
 
+#: modules/base/includes/publicFunc.php:448
 #: modules/base/infoPackage.inc.php:430
 msgid "Secondary groups"
 msgstr "Groupes secondaires"
@@ -1411,18 +1640,22 @@ msgstr "utilisateurs"
 msgid "computers"
 msgstr "ordinateurs"
 
+#: modules/base/includes/users-xmlrpc.inc.php:66
 #, php-format
 msgid "WARNING: The number of registered %s is exceeding your license."
 msgstr "ATTENTION: Le nombre d'%s enregistrés dépasse votre souscription."
 
+#: modules/base/includes/users-xmlrpc.inc.php:66
 #: modules/base/status/support.php:34
 msgid " and "
 msgstr " et "
 
+#: modules/base/includes/users-xmlrpc.inc.php:82
 #: modules/base/includes/users-xmlrpc.inc.php:89
 msgid "Invalid or expired link"
 msgstr "Lien invalide ou expiré"
 
+#: modules/base/includes/users-xmlrpc.inc.php:156
 #, php-format
 msgid "User %s created but password is not valid regarding your password policies.<br/><strong>You must change the user password.</strong>"
 msgstr "Utilisateur %s créé mais le mot de passe ne respecte pas la politique des mots de passe.<br /><strong>Vous devez changer le mot de passe</strong>"
@@ -1431,6 +1664,7 @@ msgstr "Utilisateur %s créé mais le mot de passe ne respecte pas la politique 
 msgid "You cannot add more users."
 msgstr "Vous ne pouvez plus ajouter d'utilisateurs."
 
+#: modules/base/includes/users-xmlrpc.inc.php:164
 #, php-format
 msgid "User %s successfully created"
 msgstr "Utilisateur %s créé avec succès"
@@ -1467,6 +1701,7 @@ msgstr "Groupe modifié avec succès"
 msgid "Some users can't be removed from this group because this group is their primary group."
 msgstr "Certains utilisateurs n'ont pas pu être enlevés de ce groupe car ce groupe est leur groupe primaire."
 
+#: modules/base/groups/members.php:263
 #, php-format
 msgid "Group members %s"
 msgstr "Membres du groupe %s"
@@ -1491,10 +1726,12 @@ msgstr "Vous allez supprimer un groupe"
 msgid "This group will be deleted even though it is not empty"
 msgstr "Ce groupe sera supprimé même si il n'est pas vide"
 
+#: modules/base/groups/edit.php:67
 #, php-format
 msgid "Group %s successfully added"
 msgstr "Le groupe %s a été ajouté avec succès"
 
+#: modules/base/groups/edit.php:81
 #, php-format
 msgid "Group %s successfully modified"
 msgstr "Le groupe %s a été modifié avec succès"
@@ -1631,6 +1868,7 @@ msgstr "Page de statut par défaut"
 msgid "Support page"
 msgstr "Page support"
 
+#: modules/base/infoPackage.inc.php:204 modules/base/users/index.php:31
 #: modules/base/views/index.tpl.php:44
 msgid "User list"
 msgstr "Liste des utilisateurs"
@@ -1759,6 +1997,7 @@ msgstr "Nom commun"
 msgid "Preferred name to be used"
 msgstr "Nom préféré à utiliser"
 
+#: modules/base/infoPackage.inc.php:434 modules/base/users/resetpasswd.php:53
 #: modules/base/users/passwd.php:68
 msgid "Confirm your password"
 msgstr "Confirmez votre mot de passe"
@@ -1771,10 +2010,12 @@ msgstr "Activer/Désactiver un compte"
 msgid "Proxy audit"
 msgstr "Audit du module proxy"
 
+#: modules/base/audit/indexbase.php:29 modules/base/audit/indexall.php:29
 #: modules/base/audit/logview.php:75
 msgid "Object"
 msgstr "Objet"
 
+#: modules/base/audit/indexbase.php:29 modules/base/audit/indexall.php:29
 #: modules/base/audit/ajaxLogFilter.php:123
 msgid "Type"
 msgstr "Type"
@@ -1843,6 +2084,7 @@ msgstr "Recherche"
 msgid "Samba"
 msgstr "Samba"
 
+#: modules/base/audit/indexnetwork.php:31
 #: modules/base/audit/localSidebar.php:41
 msgid "Network"
 msgstr "Réseau"
@@ -1863,6 +2105,7 @@ msgstr "Résultat"
 msgid "View details"
 msgstr "Voir les détails"
 
+#: modules/base/audit/indexmail.php:31 modules/base/audit/localSidebar.php:35
 #: modules/base/users/ajaxFilter.php:132
 msgid "Mail"
 msgstr "Courriel"
@@ -1923,6 +2166,7 @@ msgstr "masquer"
 msgid "Attribute description"
 msgstr "Description de l'attribut"
 
+#: modules/base/users/editacl.php:215
 #, php-format
 msgid " (%s module)"
 msgstr " (module %s)"
@@ -1939,6 +2183,7 @@ msgstr "Autorisation"
 msgid "Warning: no desc found in infoPackage.inc.php :"
 msgstr "Warning: aucune description trouvée dans infoPackage.inc.php :"
 
+#: modules/base/users/editacl.php:257
 #, php-format
 msgid "Edit ACL of user %s"
 msgstr "Édition des ACLs de l'utilisateur %s"
@@ -1963,6 +2208,7 @@ msgstr "Vous allez changer votre mot de passe"
 msgid "New password"
 msgstr "Nouveau mot de passe"
 
+#: modules/base/users/resetpasswd.php:58 modules/base/users/passwd.php:36
 #: modules/base/users/passwd.php:73
 msgid "Change your password"
 msgstr "Changement de votre mot de passe"
@@ -1979,6 +2225,7 @@ msgstr "Vos mots de passe ne sont pas identiques. Veuillez recommencer."
 msgid "User log"
 msgstr "Journal de l'utilisateur"
 
+#: modules/base/users/delete.php:33
 #, php-format
 msgid "User %s has been successfully deleted"
 msgstr "L'utilisateur %s a été supprimé avec succès"
@@ -1987,6 +2234,7 @@ msgstr "L'utilisateur %s a été supprimé avec succès"
 msgid "Delete user"
 msgstr "Supprimer un utilisateur"
 
+#: modules/base/users/delete.php:39
 #, php-format
 msgid "You will delete user <b>%s</b>."
 msgstr "Vous allez supprimer l'utilisateur <b>%s</b>."
@@ -2011,6 +2259,7 @@ msgstr "Le mot de passe actuel n'est pas valide. Réessayez."
 msgid "Edit user"
 msgstr "Édition d'un utilisateur"
 
+#: modules/base/users/edit.php:88
 #, php-format
 msgid "Failed to change primary group in %s plugin"
 msgstr "Erreur lors du changement du groupe primaire dans le module %s"
@@ -2023,18 +2272,22 @@ msgstr "Mot de passe non mis à jour"
 msgid "Password updated"
 msgstr "Mot de passe mis à jour"
 
+#: modules/base/users/edit.php:124
 #, php-format
 msgid "Failed to disable user in %s plugin"
 msgstr "Erreur lors de la désactivation de l'utilisateur dans le module %s"
 
+#: modules/base/users/edit.php:127
 #, php-format
 msgid "User %s disabled."
 msgstr "Utilisateur %s désactivé."
 
+#: modules/base/users/edit.php:133
 #, php-format
 msgid "Failed to enable user in %s plugin"
 msgstr "Erreur lors de l'activation de l'utilisateur dans le module %s"
 
+#: modules/base/users/edit.php:136
 #, php-format
 msgid "User %s enabled"
 msgstr "Utilisateur %s activé"
@@ -2063,6 +2316,7 @@ msgstr "Répertoire de l'utilisateur"
 msgid "Backup"
 msgstr "Sauvegarde"
 
+#: modules/services/includes/panels/services.inc.php:44
 #, php-format
 msgid "%d inactive service"
 msgstr "service inactif %d"
@@ -2087,314 +2341,3 @@ msgstr "Identifiant ou email"
 msgid "Back"
 msgstr "Retour"
 
-#: token.php:83
-msgid ""
-"If your account was found, we sent a sign-in link and you will receive it "
-"shortly."
-msgstr ""
-"Si votre compte a été trouvé, nous avons envoyé un lien d'authentification "
-"et vous le recevrez rapidement."
-
-#: token.php:100
-msgid ""
-"We couldn't send the email. Please try again later or contact your "
-"administrator."
-msgstr ""
-"L'email n'a pas pu être envoyé. Veuillez réessayer plus tard ou contacter "
-"votre administrateur."
-
-#: index.php:164
-msgid ""
-"Login failed. Please make sure that you entered the right username and "
-"password. Both fields are case sensitive."
-msgstr ""
-"Echec d'authentification. Veuillez vous assurer que les bons nom "
-"d'utilisateur et mot de passe ont été entrés. Les deux champs sont sensibles"
-" à la casse."
-
-#: index.php:174
-msgid ""
-"You have been logged out because the session between the MMC web interface "
-"and the MMC agent expired."
-msgstr ""
-"Vous avez été déconnecté parce que la session entre l'interface web MMC et "
-"l'agent MMC a expiré."
-
-#: graph/navbar.inc.php:127
-msgid ""
-"If this phrase does not change, your browser is not supported by the MMC "
-"application"
-msgstr ""
-"Si cette phrase reste inchangée, votre navigateur n'est pas supporté par "
-"l'application MMC"
-
-#: includes/commonErrorHandling.php:31
-msgid ""
-"Solve the problem by:\n"
-"                        <ul>\n"
-"                            <li>change this entry name</li>\n"
-"                            <li>delete this entry before recreate it</li>\n"
-"                        </ul>"
-msgstr ""
-"Pour résoudre ce problème:        <ul>         <li>changez le nom de cette "
-"entrée</li>         <li>supprimer cette entrée avant de la recréer</li> "
-"</ul>"
-
-#: includes/commonErrorHandling.php:44
-msgid ""
-"Solve the problem by:\n"
-"                        <ul>\n"
-"                            <li>Verify your LDAP server is correctly configured in /etc/mmc/plugins/base/ini </li>\n"
-"                            <li>Verify your LDAP server is up</li>\n"
-"                        </ul>"
-msgstr ""
-"Résolvez le problème en:\n"
-"<ul>\n"
-"<li>Vérifiez que votre serveur LDAP soit correctement configuré dans /etc/mmc/plugins/base/ini </li>\n"
-"<li>Vérifiez que votre serveur LDAP soit démarré</li>\n"
-"</ul>"
-
-#: includes/commonErrorHandling.php:65
-msgid ""
-"This problem can appear if:\n"
-"                        <ul>\n"
-"                            <li>This item no longer exists.</li>\n"
-"                            <li>You misspelled it.</li>\n"
-"                        </ul>"
-msgstr ""
-"Ce problème peut survenir si:       <ul>           <li>Cette entrée n'existe"
-" plus</li>            <li> elle est mal orthographiée</li> </ul>"
-
-#: includes/commonErrorHandling.php:78
-msgid ""
-"Verify that your smbpasswd is correctly configured:\n"
-"                        <ul>\n"
-"                            <li> Your Ldap server can be down</li>\n"
-"                            <li> Your Samba server is not properly configured</li>\n"
-"                        </ul>"
-msgstr ""
-"Vérifiez que smbpasswd est correctement configuré: <ul>    <li>Votre serveur"
-" LDAP n'est pas joignable</li>    <li>Votre serveur SAMBA n'est pas "
-"correctement configuré</li> </ul>"
-
-#: includes/xmlrpc.inc.php:190
-msgid ""
-"Timeout when reading data from the MMC agent. Please check network "
-"connectivity and server load."
-msgstr ""
-"Temps dépassé lors de la réception de données en provenance de l'agent MMC. "
-"Veuillez vérifier les connexions réseau et la charge du serveur."
-
-#: includes/xmlrpc.inc.php:215
-msgid ""
-"Can't communicate with MMC agent. Please check you're using the right TCP "
-"port and the right protocol."
-msgstr ""
-"Impossible de dialoguer avec l'agent MMC. Vérifiez que vous avez configuré "
-"le bon port TCP et le bon protocole."
-
-#: includes/xmlrpc.inc.php:255
-msgid ""
-"The MMC agent didn't give us a session number. Please check the MMC agent "
-"version."
-msgstr ""
-"L'agent MMC n'a pas fourni de numéro de session. Veuillez vérifier la "
-"version de l'agent MMC."
-
-#: includes/xmlrpc.inc.php:389
-msgid ""
-"This exception is unknown. Please contact us to add an error handling on "
-"this error."
-msgstr ""
-"Cette exception est inconnue. Veuillez nous contacter pour correctement "
-"gérer cette erreur."
-
-#: license.php:27
-msgid ""
-"<p>\n"
-"The community version of this product is distributed in the hope that it\n"
-"will be useful, but <strong>without any warranty</strong>; without even the implied\n"
-"warranty of merchantability or fitness for a particular purpose. See the\n"
-"GNU General Public License for more details.</p>\n"
-"<p>\n"
-"Moreover, this product is a main and critical component of your information system. This community version is distributed without professional support of any kind,\n"
-"and without a tested and certified upgrade path from previous versions.\n"
-"</p>"
-msgstr ""
-"<p>\n"
-"La version communautaire de ce programme est distribuée dans l'espoir qu'elle sera utile, mais <strong>sans aucune garantie</strong>; sans même une garantie implicite de commerciabilité ou de conformité à une utilisation particulière. Voir la Licence Publique Générale GNU pour plus de détails.</p>\n"
-"<p>\n"
-"Ce programme est un élément important et critique de votre système d'informations. La version communautaire est distribuée sans aucun support professionnel, et sans un chemin de mis à jour testé et certifié depuis d'anciennes versions.\n"
-"</p>"
-
-#: license.php:38
-msgid ""
-"Click here to get more information about our support and maintenance "
-"subscription plan."
-msgstr ""
-"Cliquer ici pour avoir plus d'informations à propos de notre plan de "
-"maintenance et de souscription."
-
-#: modules/admin/admin/switchrelay.php:25
-msgid ""
-"You have to check the box <b>\"I am aware that this disable/enable a relay "
-"forcing a <em><b>reconfiguration of all the machines</b></em> managed by the"
-" cluster."
-msgstr ""
-"Veuillez cocher la case <b>\"Je suis conscient que cette "
-"désactivation/activation du relais va forcer une <em><b>reconfiguration de "
-"toutes les machines</b></em> gérées pas le cluster."
-
-#: modules/admin/admin/switchrelay.php:51
-msgid ""
-"I am aware that this disable/enable a relay forcing a <em><b>reconfiguration"
-" of all the machines</b></em> managed by the cluster.<br />Check this box if"
-" it is what you want."
-msgstr ""
-"Je suis conscient que cette désactivation/activation du relais va forcer une"
-" <em><b>reconfiguration de toutes les machines</b></em> gérées pas le "
-"cluster.<br />Cochez cette case si c'est bien ce que vous souhaitez."
-
-#: modules/admin/admin/reconfiguremachines.php:25
-msgid ""
-"You have to check the box <b>\"I am aware that this action is forcing a "
-"<em><b>reconfiguration of all the machines</b></em> managed by the "
-"relayserver."
-msgstr ""
-"Veuillez cocher la case <b>\"Je suis conscient que cette action va forcer "
-"une <em><b>reconfiguration de toutes les machines</b></em> gérées pas le "
-"serveur relais."
-
-#: modules/admin/admin/reconfiguremachines.php:51
-msgid ""
-"I am aware that this action is forcing a <em><b>reconfiguration of all the "
-"machines</b></em> managed by the relayserver.<br />Check this box if it is "
-"what you want."
-msgstr ""
-"Je suis conscient que cette action va forcer une <em><b>reconfiguration de "
-"toutes les machines</b></em> gérées pas le serveur relais.<br />Cochez cette"
-" case si c'est bien ce que vous souhaitez."
-
-#: modules/base/computers/delete.php:44
-msgid ""
-"You have to check the box <b>\"I am aware that all related images (non-"
-"master) will be deleted\"</b> if you want to remove this computer."
-msgstr ""
-"Vous devez cocher la case <b>\"Je suis conscient que tous les images "
-"associées (hors masters) seront supprimées\"</b> si vous supprimez cet "
-"ordinateur."
-
-#: modules/base/computers/delete.php:78
-msgid ""
-"GLPI base is readonly: The computer has been deleted in xmpp not in GLPI"
-msgstr ""
-"La base GLPI est en lecture seule. L'ordinateur a été supprimé uniquement de"
-" Pulse."
-
-#: modules/base/computers/delete.php:105
-msgid ""
-"I am aware that <b>all related images (non-master)</b> will be "
-"<b>DELETED</b>.<br />Check this box if it is what you want."
-msgstr ""
-"Je suis conscient que <b>toutes les images associées</b> (hors masters) "
-"seront <b>SUPPRIMEES</b>.<br/>Cochez cette case si c'est bien ce que vous "
-"souhaitez."
-
-#: modules/base/includes/errorHandling.php:29
-msgid ""
-"Please be sure you have:\n"
-"                        <p>This line in your /etc/ldap/slapd.conf or /etc/openldap/slapd.conf:\n"
-"                        <pre>loglevel        256</pre></p>\n"
-"                        <p>and this line in your /etc/syslog.conf:\n"
-"                        <pre>local4.*       /var/log/ldap.log (or /var/log/ldap/ldap.log)</pre>\n"
-"                        </p>\n"
-"                        "
-msgstr ""
-"Assurrez vous d'avoir :\n"
-"                        <p>Cette ligne dans /etc/ldap/slapd.conf ou /etc/openldap/slapd.conf:\n"
-"                        <pre>loglevel        256</pre></p>\n"
-"                        <p>et cette ligne dans  /etc/syslog.conf:\n"
-"                        <pre>local4.*       /var/log/ldap.log (ou /var/log/ldap/ldap.log)</pre>\n"
-"                        </p>\n"
-"                        "
-
-#: modules/base/includes/errorHandling.php:48
-msgid ""
-"Set the home directory in a different location or force the use of the "
-"existing directory (in expert mode)."
-msgstr ""
-"Modifiez le chemin du répertoire personnel ou forcez l'utilisation du "
-"répertoire existant (en mode expert)"
-
-#: modules/base/includes/errorHandling.php:54
-msgid ""
-"The password policy of your account doesn't allow you to modify your "
-"password, because your password is too young to change."
-msgstr ""
-"La politique des mots de passe de votre compte ne vous permet pas de "
-"modifier votre mot de passe, car votre mot de passe n'a pas atteint la durée"
-" de vie minimale requise."
-
-#: modules/base/includes/errorHandling.php:66
-msgid ""
-"The password policy of your account doesn't allow you to modify your "
-"password, because you already had this password previously."
-msgstr ""
-"La politique des mots de passe de votre compte ne vous permet pas de "
-"modifier votre mot de passe, car vous aviez déjà ce mot de passe "
-"précédemment."
-
-#: modules/base/includes/errorHandling.php:72
-msgid ""
-"The password policy of your account doesn't allow you to modify your "
-"password, because your password is not complex enough or is too short."
-msgstr ""
-"La politique des mots de passe de votre compte ne vous permet pas de changer"
-" votre mot de passe, car celui-ci n'est pas assez complexe ou trop court."
-
-#: modules/base/includes/errorHandling.php:93
-msgid ""
-"The password must contain at least one special character: #$%&+./:=?@{}"
-msgstr ""
-"Le mot de passe doit contenir au moins un caractère spécial : #$%&+./:=?@{}"
-
-#, php-format
-msgid ""
-"The photo is too big. The max size is %s x %s.\n"
-"                    Install php gd extension to resize the photo automatically"
-msgstr ""
-"L'image est trop grosse. La taille maximum est %s x %s.\n"
-"                    Installer l'extension php gd pour redimensionner l'image automatiquement"
-
-#, php-format
-msgid ""
-"User %s created but password is not valid regarding your password "
-"policies.<br/><strong>You must change the user password.</strong>"
-msgstr ""
-"Utilisateur %s créé mais le mot de passe ne respecte pas la politique des "
-"mots de passe.<br /><strong>Vous devez changer le mot de passe</strong>"
-
-#: modules/base/groups/members.php:260
-msgid ""
-"Some users can't be removed from this group because this group is their "
-"primary group."
-msgstr ""
-"Certains utilisateurs n'ont pas pu être enlevés de ce groupe car ce groupe "
-"est leur groupe primaire."
-
-#: modules/base/groups/edit.php:100
-msgid ""
-"The group name can only contain letters and numeric, and must begin with a "
-"letter"
-msgstr ""
-"Le nom de groupe ne peut contenir que des lettres minuscules ou caractères "
-"numériques, et il doit commencer par une lettre"
-
-#: modules/base/status/support.php:44
-msgid ""
-"Please contact your administrator for more information. If you are an "
-"administrator, please go to the license status page for more information."
-msgstr ""
-"Veuillez contacter votre administrateur pour plus d'informations. Si vous "
-"êtes un administrateur, consulter la page de statut des licences pour plus "
-"d'informations."

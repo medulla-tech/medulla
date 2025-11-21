@@ -1,6 +1,22 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+# Translators:
+# SPO, 2018
+# Nicolas Lécureuil <neoclust@mageia.org>, 2019
+# Tom Grabherr, 2022
+# 
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: medulla\n"
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-10-30 15:34+0100\n"
+"PO-Revision-Date: 2017-10-11 08:07+0000\n"
+"Last-Translator: Tom Grabherr, 2022\n"
+"Language-Team: French (https://app.transifex.com/medulla/teams/72118/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
