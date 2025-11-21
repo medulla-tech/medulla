@@ -553,6 +553,33 @@ class RpcProxy(RpcProxyI):
         entities = ctx.get_session_info()['mondict']['liste_entities_user']
         return xmlrpcCleanup(XmppMasterDatabase().get_computer_count_for_dashboard(entities))
 
+    @with_optional_xmpp_context
+    def get_mon_events(self, start, maxperpage, filter:str="", ctx=None):
+        """Get monitoring events
+
+        Args:
+            self (RpcProxy): RpcProxy Object Instance
+            start (int): Offset to select datas (not declared as int in the prototype, because if the data cames from rpc, it could be an int casted as str)
+            maxperpage (int): Limit to select datas (not declared as int in the prototype, because if the data cames from rpc, it could be an int casted as str)
+            filter (str, optionnal): Criterion to search on result
+            ctx (Contexte_XmlRpc_surcharge_info_Glpi = None, optionnal): The user context to get his entities list
+
+        Returns:
+            dict: Dict of event found. The dict will have the shape:
+            {
+                'total': 1, # Count of event found
+                'datas' : [
+                    {dict representing the event 1}, # Event 1
+                    {dict representing the event 2}, # Event 2
+                    ...
+                ]
+            }
+            """
+        entities = ctx.get_session_info()['mondict']['liste_entities_user']
+
+        result = XmppMasterDatabase().get_mon_events(start, maxperpage, filter, entities)
+        return result
+
     def getCommand_action_time(self, during_the_last_seconds, start, stop, filt):
         return XmppMasterDatabase().getCommand_action_time(
             during_the_last_seconds, start, stop, filt
@@ -2005,11 +2032,6 @@ def getLastOnlineStatus(jid):
         return result[0]["status"]
     except:
         return False
-
-
-def get_mon_events(start, maxperpage, filter):
-    result = XmppMasterDatabase().get_mon_events(start, maxperpage, filter)
-    return result
 
 
 def get_mon_events_history(start, maxperpage, filter):
