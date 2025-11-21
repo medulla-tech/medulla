@@ -12799,16 +12799,17 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         return list_panels_template
 
     @DatabaseHelper._sessionm
-    def get_mon_events(self, session, start, max, filter):
+    def get_mon_events(self, session, start=0, max=-1, filter="", entities=[]):
         """Get monitoring events informations
-        Params:
-            - sqlalchemy session: managed by DatabaseHelper._sessionm decorator
-            - int start: represents the starting offset for a sql limit clause
-            - int max: represents the number of result returned by the function
-            - string filter: if not empty this string is searched into each event
+
+        Args:
+            session (SqlAlchemy session):Managed by DatabaseHelper._sessionm decorator
+            start (int, optionnal): Represents the starting offset for a sql limit clause
+            max (int, optionnal): Represents the number of result returned by the function
+            filter (str): if not empty this string is searched into each event
+            entities (list): the list of entities the user can reach
         Returns:
-            dict events: all the events found for the limit and filter clause. The
-            dict has the following shape:
+            dict: All the events found for the limit and filter clause. The dict has the following shape:
             result = {
                 'total': 1,
                 'datas' : [
@@ -12838,9 +12839,11 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             .outerjoin(Mon_rules, Mon_event.id_rule == Mon_rules.id)
             .outerjoin(Mon_machine, Mon_event.machines_id == Mon_machine.id)
             .outerjoin(Machines, Mon_machine.machines_id == Machines.id)
+            .join(Glpi_entity, Machines.glpi_entity_id == Glpi_entity.id)
             .filter(
                 and_(Mon_event.status_event == 1,
-                     Mon_event.type_event.in_(event_types))
+                     Mon_event.type_event.in_(event_types),
+                     Glpi_entity.glpi_id.in_(entities))
             )
         )
 
