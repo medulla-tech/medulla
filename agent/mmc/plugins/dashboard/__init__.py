@@ -24,7 +24,6 @@ from mmc.plugins.dashboard.panel import (
     DeploymentsLaunchedPanel,
     AgentsPanel,
     AlertsPanel,
-    AlertsEntityPanel,
 )
 
 VERSION = "5.4.3"
@@ -63,7 +62,6 @@ def activate():
     DM.register_panel(DeploymentsLaunchedPanel("deploymentsLaunched"))
     DM.register_panel(AgentsPanel("agents"))
     DM.register_panel(AlertsPanel("alerts"))
-    DM.register_panel(AlertsEntityPanel("alertsentity"))
     return True
 
 
