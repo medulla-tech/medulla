@@ -580,6 +580,14 @@ class RpcProxy(RpcProxyI):
         result = XmppMasterDatabase().get_mon_events(start, maxperpage, filter, entities)
         return result
 
+    @with_optional_xmpp_context
+    def get_count_success_rate_for_dashboard(self, ctx=None):
+        entities = ctx.get_session_info()['mondict']['liste_entities_user']
+
+        result = XmppMasterDatabase().get_count_success_rate_for_dashboard(entities)
+        return result
+
+
     def getCommand_action_time(self, during_the_last_seconds, start, stop, filt):
         return XmppMasterDatabase().getCommand_action_time(
             during_the_last_seconds, start, stop, filt
@@ -2095,10 +2103,6 @@ def write_content(path, datas, mode="w"):
         except:
             return False
 
-
-def get_count_success_rate_for_dashboard():
-    result = XmppMasterDatabase().get_count_success_rate_for_dashboard()
-    return result
 
 
 def get_count_total_deploy_for_dashboard():
