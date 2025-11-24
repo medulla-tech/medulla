@@ -2096,67 +2096,74 @@ class AjaxPaginator extends AjaxNavBar
 
 }
 
+
 /**
+ * @class AjaxFilter
+ * @brief Génère un formulaire AJAX permettant de filtrer dynamiquement le contenu d'une div.
  *
- * Create an AjaxFilter Form that updates a div according to an url output
+ * Cette classe :
+ * - génère un champ de recherche + boutons
+ * - construit dynamiquement une URL d'appel AJAX
+ * - stocke le filtre et paramètres en session (pagination, maxperpage…)
+ * - recharge automatiquement la div ciblée lors de la saisie
+ * - gère un refresh automatique optionnel
  *
+ * Usage :
+ * @code
+ * $filter = new AjaxFilter("ajax.php?module=test", "resultDiv");
+ * $filter->display();
+ * $filter->displayDivToUpdate();
+ * @endcode
  */
 class AjaxFilter extends HtmlElement
 {
     /**
-     * AjaxFilter : composant de filtre AJAX avec persistance en session
+     * @brief Constructeur du filtre AJAX.
      *
-     * @param string $url    URL appelée par le JavaScript (ex: "index.php?module=base&action=list")
-     *                       Le filtre sera passé en $_GET["filter"].
-     * @param string $divid  ID du <div> à mettre à jour avec la réponse AJAX.
-     * @param array|string $params  Paramètres supplémentaires à inclure dans l'URL (array ou chaîne).
-     * @param string $formid Identifiant du formulaire (utile si plusieurs filtres sur la même page).
+     * @param string $url      URL cible pour les appels AJAX
+     * @param string $divid    ID de la div à mettre à jour
+     * @param array|string $params Paramètres additionnels à ajouter à l’URL
+     * @param string $formid   Identifiant unique du formulaire
      */
     public function __construct($url, $divid = "container", $params = array(), $formid = "")
     {
-        // --- Normalisation de l'URL de base ---
+        // --- Normalisation de l'URL ("?" ou "&") ---
         if (strpos($url, "?") === false) {
-            // L'URL n'a pas encore de paramètres → on ajoute "?"
             $this->url = $url . "?";
         } else {
-            // L'URL contient déjà des paramètres → on ajoute "&"
             $this->url = rtrim($url, '&') . "&";
         }
 
-        $this->divid = $divid;
-        $this->formid = $formid;
+        $this->divid   = $divid;
+        $this->formid  = $formid;
         $this->refresh = 0;
 
-        // --- Conversion sécurisée des paramètres ---
+        // --- Convertit les paramètres en chaîne propre ---
         if (is_array($params)) {
             $this->params = http_build_query($params);
         } elseif (is_string($params)) {
-            // Si déjà une chaîne, on la garde telle quelle
             $this->params = ltrim($params, '&');
         } else {
             $this->params = '';
         }
 
-        // --- Ajout correct des paramètres à l'URL ---
+        // --- Ajoute les paramètres à l’URL ---
         if (!empty($this->params)) {
-            // Vérifie si l'URL finit déjà par '?' ou '&' pour éviter une concaténation collée
-            $lastChar = substr($this->url, -1);
-            if ($lastChar !== '?' && $lastChar !== '&') {
+            if (!in_array(substr($this->url, -1), ['?', '&'])) {
                 $this->url .= '&';
             }
             $this->url .= $this->params;
         }
 
-        // --- Gestion du contexte courant pour stockage du filtre en session ---
-        $module  = $_GET["module"] ?? "default";
-        $submod  = $_GET["submod"] ?? "default";
-        $action  = $_GET["action"] ?? "default";
-        $tab     = $_GET["tab"] ?? "default";
+        // --- Stockage en session selon contexte ---
+        $module = $_GET["module"] ?? "default";
+        $submod = $_GET["submod"] ?? "default";
+        $action = $_GET["action"] ?? "default";
+        $tab    = $_GET["tab"] ?? "default";
 
-        // Construction d'un identifiant unique de contexte
         $extra = "";
         foreach ($_GET as $key => $value) {
-            if (!in_array($key, ['module', 'submod', 'tab', 'action', 'filter', 'start', 'end', 'maxperpage'])) {
+            if (!in_array($key, ['module','submod','tab','action','filter','start','end','maxperpage'])) {
                 if (is_array($value)) {
                     $value = implode(",", $value);
                 }
@@ -2164,173 +2171,250 @@ class AjaxFilter extends HtmlElement
             }
         }
 
-        // --- Récupération des valeurs en session (filtres, pagination, etc.) ---
         $session_prefix = "{$module}_{$submod}_{$action}_{$tab}_{$extra}_";
 
-        $this->storedfilter = $_SESSION[$session_prefix . "filter"]      ?? null;
-        $this->storedmax    = $_SESSION[$session_prefix . "maxperpage"]  ?? null;
-        $this->storedstart  = $_SESSION[$session_prefix . "start"]       ?? null;
-        $this->storedend    = $_SESSION[$session_prefix . "end"]         ?? null;
+        // --- Rechargement des valeurs depuis la session ---
+        $this->storedfilter = $_SESSION[$session_prefix . "filter"] ?? null;
+        $this->storedmax    = $_SESSION[$session_prefix . "maxperpage"] ?? null;
+        $this->storedstart  = $_SESSION[$session_prefix . "start"] ?? null;
+        $this->storedend    = $_SESSION[$session_prefix . "end"] ?? null;
     }
 
     /**
-     * Allow the list to refresh
-     * @param $refresh: time in ms
+     * @brief Active ou désactive le refresh automatique périodique.
+     *
+     * @param int $refresh Délai en ms. 0 = désactivé.
      */
     public function setRefresh($refresh)
     {
         $this->refresh = $refresh;
     }
 
+    /**
+     * @brief Génère le formulaire AJAX + JavaScript associé.
+     *
+     * @param array $arrParam Paramètres non utilisés mais conservés pour compatibilité.
+     */
     public function display($arrParam = array())
     {
         global $conf;
-        $root = $conf["global"]["root"];
         $maxperpage = $conf["global"]["maxperpage"];
-        ?>
-        <form name="Form<?php echo $this->formid ?>" id="Form<?php echo $this->formid ?>" action="#" onsubmit="return false;" style="margin-bottom:20px;margin-top:20px;">
+?>
 
-            <div id="searchSpan<?php echo $this->formid ?>" class="searchbox">
-            <div id="searchBest">
-                <input type="text" class="searchfieldreal" name="param" id="param<?php echo $this->formid ?>"/>
-                <button type="button" class="search-clear" aria-label="<?php echo _T('Clear search', 'base'); ?>"
-                     onclick="document.getElementById('param<?php echo $this->formid ?>').value = '';
-                             pushSearch<?php echo $this->formid ?>();
-                             return false;"></button>
-                 <button onclick="pushSearch<?php echo $this->formid ?>();
-                         return false;"><?php echo _T("Search", "glpi");?></button>
-            </div>
-            <span class="loader" aria-hidden="true"></span>
-            </div>
+<!-- FORMULAIRE DE RECHERCHE AJAX -->
+<form name="Form<?php echo $this->formid ?>"
+      id="Form<?php echo $this->formid ?>"
+      onsubmit="return false;"
+      style="margin:20px 0;">
 
-            <script type="text/javascript">
-        <?php
-        if (!$this->formid) {
-            ?>
-                    jQuery('#param<?php echo $this->formid ?>').focus();
-            <?php
+    <div id="searchSpan<?php echo $this->formid ?>" class="searchbox">
+
+        <div id="searchBest">
+            <input type="text"
+                   class="searchfieldreal"
+                   name="param"
+                   id="param<?php echo $this->formid ?>" />
+
+            <!-- Bouton pour effacer le champ -->
+            <button type="button"
+                    class="search-clear"
+                    onclick="document.getElementById('param<?php echo $this->formid ?>').value=''; pushSearch<?php echo $this->formid ?>();">
+            </button>
+
+            <!-- Bouton rechercher -->
+            <button onclick="pushSearch<?php echo $this->formid ?>(); return false;">
+                <?php echo _T("Search", "glpi"); ?>
+            </button>
+        </div>
+
+        <span class="loader"></span>
+
+    </div>
+
+<script type="text/javascript">
+
+/* --------------------------------------------------------------------------
+ * INITIALISATION DU FORMULAIRE
+ * -------------------------------------------------------------------------- */
+
+// Recharge le filtre mémorisé
+<?php if (isset($this->storedfilter)) { ?>
+document.Form<?php echo $this->formid ?>.param.value = "<?php echo $this->storedfilter ?>";
+<?php } ?>
+
+var refreshtimer<?php echo $this->formid ?>      = null;
+var refreshparamtimer<?php echo $this->formid ?> = null;
+var refreshdelay<?php echo $this->formid ?>      = <?php echo $this->refresh ?>;
+var maxperpage                                   = <?php echo $this->storedmax ?? $maxperpage ?>;
+
+/**
+ * @brief Réinitialise les timers de refresh.
+ */
+clearTimers<?php echo $this->formid ?> = function() {
+    if (refreshtimer<?php echo $this->formid ?> !== null)
+        clearTimeout(refreshtimer<?php echo $this->formid ?>);
+
+    if (refreshparamtimer<?php echo $this->formid ?> !== null)
+        clearTimeout(refreshparamtimer<?php echo $this->formid ?>);
+};
+
+/**
+ * @brief Appel AJAX principal pour mise à jour du tableau.
+ */
+updateSearch<?php echo $this->formid ?> = function() {
+
+    clearTimers<?php echo $this->formid ?>();
+
+    var searchValue = document.Form<?php echo $this->formid ?>.param.value;
+
+    // Construction de l’URL AJAX
+    var finalUrl =
+        '<?php echo rtrim($this->url, "&"); ?>'
+        + '&filter='     + encodeURIComponent(searchValue)
+        + '&maxperpage=' + maxperpage
+        <?php if ($this->storedstart !== null && $this->storedend !== null) { ?>
+        + '&start=<?php echo $this->storedstart ?>'
+        + '&end=<?php echo $this->storedend ?>'
+        <?php } ?>
+    ;
+
+    // Lancement AJAX
+    jQuery.ajax({
+        url: finalUrl,
+        type: 'get',
+        success: function(data) {
+            jQuery("#<?php echo $this->divid ?>").html(data);
         }
-        if (isset($this->storedfilter)) {
-            ?>
-                    document.Form<?php echo $this->formid ?>.param.value = "<?php echo $this->storedfilter ?>";
-            <?php
+    });
+
+    // Refresh automatique éventuel
+    <?php if ($this->refresh) { ?>
+    refreshtimer<?php echo $this->formid ?> =
+        setTimeout(updateSearch<?php echo $this->formid ?>, refreshdelay<?php echo $this->formid ?>);
+    <?php } ?>
+};
+
+/**
+ * @brief Appel AJAX utilisé pour la pagination.
+ *
+ * @param string filter  Filtre
+ * @param int start      Début
+ * @param int end        Fin
+ * @param int max        Nombre max par page
+ */
+updateSearchParam<?php echo $this->formid ?> = function(filter, start, end, max) {
+
+    clearTimers<?php echo $this->formid ?>();
+
+    var finalUrl =
+        '<?php echo rtrim($this->url, "&"); ?>'
+        + '&filter='     + encodeURIComponent(filter)
+        + '&start='      + start
+        + '&end='        + end
+        + '&maxperpage=' + max;
+
+
+    jQuery.ajax({
+        url: finalUrl,
+        type: 'get',
+        success: function(data) {
+            jQuery("#<?php echo $this->divid ?>").html(data);
         }
-        ?>
-                var refreshtimer<?php echo $this->formid ?> = null;
-                var refreshparamtimer<?php echo $this->formid ?> = null;
-                var refreshdelay<?php echo $this->formid ?> = <?php echo $this->refresh ?>;
-                var maxperpage = <?php echo $maxperpage ?>;
-        <?php
-        if (isset($this->storedmax)) {
-            ?>
-                    maxperpage = <?php echo $this->storedmax ?>;
-            <?php
-        }
-        ?>
-                if (jQuery('#maxperpage').length)
-                    maxperpage = jQuery('#maxperpage').val();
+    });
 
-                /**
-                 * Clear the timers set vith setTimeout
-                 */
-                clearTimers<?php echo $this->formid ?> = function() {
-                    if (refreshtimer<?php echo $this->formid ?> != null) {
-                        clearTimeout(refreshtimer<?php echo $this->formid ?>);
-                    }
-                    if (refreshparamtimer<?php echo $this->formid ?> != null) {
-                        clearTimeout(refreshparamtimer<?php echo $this->formid ?>);
-                    }
-                }
+    <?php if ($this->refresh) { ?>
+    refreshparamtimer<?php echo $this->formid ?> =
+        setTimeout(function() {
+            updateSearchParam<?php echo $this->formid ?>(filter, start, end, max);
+        }, refreshdelay<?php echo $this->formid ?>);
+    <?php } ?>
+};
 
-                /**
-                 * Update div
-                 */
-                updateSearch<?php echo $this->formid ?> = function() {
-                    var searchValue = document.Form<?php echo $this->formid ?>.param.value;
-                    var finalUrl = '<?php echo $this->url; ?>&filter=' + encodeURIComponent(searchValue) + '&maxperpage=' + maxperpage<?php
-                    if (isset($this->storedstart) && isset($this->storedend)) {
-                        echo " + '&start=" . $this->storedstart . "&end=" . $this->storedend . "'";
-                    }
-                    ?>;
+/**
+ * @brief Lance la recherche 500ms après la dernière frappe (debounce).
+ */
+pushSearch<?php echo $this->formid ?> = function() {
+    clearTimers<?php echo $this->formid ?>();
+    refreshtimer<?php echo $this->formid ?> =
+        setTimeout(updateSearch<?php echo $this->formid ?>, 500);
+};
 
-                /**
-                 * Update div
-                 */
-        <?php
-        $url = $this->url . "filter='+encodeURIComponent(document.Form" . $this->formid . ".param.value)+'&maxperpage='+maxperpage+'" .
-                    (empty($this->params) ? "" : "&" . ltrim($this->params, "&"));
+// Appel initial
+updateSearch<?php echo $this->formid ?>();
 
-        if (isset($this->storedstart) && isset($this->storedend)) {
-            $url .= "&start=" . $this->storedstart . "&end=" . $this->storedend;
-        }
-        ?>
+</script>
 
-                updateSearch<?php echo $this->formid ?> = function() {
-                    jQuery.ajax({
-                        'url': finalUrl,
-                        type: 'get',
-                        success: function(data) {
-                            jQuery("#<?php echo $this->divid; ?>").html(data);
-                        }
-                    });
+</form>
 
-        <?php
-        if ($this->refresh) {
-            ?>
-                        refreshtimer<?php echo $this->formid ?> = setTimeout("updateSearch<?php echo $this->formid ?>()", refreshdelay<?php echo $this->formid ?>)
-            <?php
-        }
-        ?>
-                }
-
-                /**
-                 * Update div when clicking previous / next
-                 */
-                updateSearchParam<?php echo $this->formid ?> = function(filter, start, end, max) {
-                    clearTimers<?php echo $this->formid ?>();
-                    if (jQuery('#maxperpage').length)
-                        maxperpage = jQuery('#maxperpage').val();
-
-                    jQuery.ajax({
-                       'url': '<?php echo $this->url; ?>filter=' + encodeURIComponent(filter)
-                            + '&start=' + start
-                            + '&end=' + end
-                            + '&maxperpage=' + maxperpage,
-                        type: 'get',
-                        success: function(data) {
-                            jQuery("#<?php echo $this->divid; ?>").html(data);
-                        }
-                    });
-        <?php
-        if ($this->refresh) {
-            ?>
-                        refreshparamtimer<?php echo $this->formid ?> = setTimeout("updateSearchParam<?php echo $this->formid ?>('" + filter + "'," + start + "," + end + "," + maxperpage + ")", refreshdelay<?php echo $this->formid ?>);
-            <?php
-        }
-        ?>
-                }
-
-                /**
-                 * wait 500ms and update search
-                 */
-                pushSearch<?php echo $this->formid ?> = function() {
-                    clearTimers<?php echo $this->formid ?>();
-                    refreshtimer<?php echo $this->formid ?> = setTimeout("updateSearch<?php echo $this->formid ?>()", 500);
-                }
-
-                pushSearch<?php echo $this->formid ?>();
-
-            </script>
-
-        </form>
-        <?php
+<?php
     }
 
+    /**
+     * @brief Affiche la div destinée à recevoir le contenu AJAX.
+     */
     public function displayDivToUpdate()
     {
-        print '<div id="' . $this->divid . '"></div>' . "\n";
+        echo '<div id="' . $this->divid . '"></div>';
     }
+}
 
+/**
+ * @class AjaxFilterTimer
+ * @brief Classe dérivée d'AjaxFilter pour appels AJAX automatiques périodiques.
+ *
+ * Cette classe hérite de AjaxFilter et ajoute la possibilité de déclencher
+ * automatiquement les requêtes AJAX à intervalles réguliers si un refresh
+ * est défini via setRefresh().
+ *
+ * Fonctionnalités :
+ * - Hérite de tout le comportement de AjaxFilter (formulaire AJAX + filtre)
+ * - Lance automatiquement la recherche AJAX au chargement de la page
+ * - Continue les mises à jour périodiques selon l'intervalle défini
+ *
+ * Exemple d'utilisation :
+ * @code
+ * $ajax = new AjaxFilterTimer(urlStrRedirect("pkgs/pkgs/ajaxPackageList"));
+ * $ajax->setRefresh(10000);  // refresh toutes les 10 secondes
+ * $ajax->display();
+ * $ajax->displayDivToUpdate();
+ * @endcode
+ */
+class AjaxFilterTimer extends AjaxFilter
+{
+    /**
+     * @brief Affichage du formulaire + initialisation du timer automatique
+     *
+     * Cette méthode surcharge display() pour lancer automatiquement
+     * la première recherche AJAX et démarrer le refresh périodique.
+     *
+     * @param array $arrParam Paramètres supplémentaires (compatibilité)
+     */
+    public function display($arrParam = array())
+    {
+        // --- Appel de la méthode parent pour générer le formulaire AJAX ---
+        parent::display($arrParam);
+
+        // --- Si aucun refresh défini, on ne fait rien ---
+        if (!$this->refresh) {
+            return;
+        }
+
+        // --- Injection JavaScript pour démarrer automatiquement le timer ---
+        ?>
+<script type="text/javascript">
+/* --------------------------------------------------------------------------
+ * TIMER AUTOMATIQUE POUR AJAXFILTERTIMER
+ * -------------------------------------------------------------------------- */
+document.addEventListener("DOMContentLoaded", function () {
+
+    // console.log("AjaxFilterTimer: refresh auto démarré (<?php echo $this->formid ?>) : <?php echo $this->refresh ?> ms");
+
+    // --- Première mise à jour immédiate de la div ---
+    updateSearch<?php echo $this->formid ?>();
+});
+</script>
+        <?php
+    }
 }
 
 

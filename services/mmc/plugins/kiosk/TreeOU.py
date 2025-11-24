@@ -22,14 +22,14 @@ class TreeOU(object):
 
         Params:
             string string represents the element we need to locate. The string is formated like this:
-            string = "first/second/third/fourth"
+            string = "first>>second>>third>>fourth"
 
         Returns:
             TreeOU object if the string match with any leaf of the tree
             False if the string don't match
         """
 
-        string = string.split("/")
+        string = string.split(">>")
         temp = self
 
         for element in string:
@@ -104,12 +104,12 @@ class TreeOU(object):
         Create recursively the TreeOU objects as child from the specified string.
 
         Params:
-            string this string contains the OUs name separated by /, like "my_first/my_sub/my_subsub"
+            string this string contains the OUs name separated by >>, like "my_first>>my_sub>>my_subsub"
         """
         temp = self
 
-        string = string.replace(" > ", "/")
-        elements = string.split("/")
+        string = string.replace(" > ", ">>")
+        elements = string.split(">>")
         for element in elements:
             element = element.strip()
             if element:
@@ -129,7 +129,7 @@ class TreeOU(object):
         """
 
         # This is the initial structure whe want.
-        self.json = {"name": self.name, "child": [], "path": "/".join(self.path)}
+        self.json = {"name": self.name, "child": [], "path": ">>".join(self.path)}
         # Check if the actual node has children
         for element in self.child:
             # If it's the case each child's dict is append
@@ -154,7 +154,7 @@ class TreeOU(object):
 
     def str_to_ou(self, ou_string):
         """
-        Generate a OU string with the path of the node. For example, for the node /root/first_child/grand_son,
+        Generate a OU string with the path of the node. For example, for the node root>>first_child>>grand_son,
         it's str_to_ou() is OU=grand_son,OU=first_child,OU=root,DC=myDomain,DC=local.
         The DC datas are read from the configuration file.
 
@@ -171,7 +171,7 @@ class TreeOU(object):
             # Get the parameters from the config file
             suffix = config.get("authentication_externalldap", "suffix_ou")
 
-            ou_list = ou_string.split("/")
+            ou_list = ou_string.split(">>")
             ou_list.reverse()
 
             ous = []
@@ -194,7 +194,7 @@ class TreeOU(object):
         """
         for children in self.child:
             if children is not None:
-                list.append("/".join(children.get_path()))
+                list.append(">>".join(children.get_path()))
                 children.recursive_paths(list)
         return list
 
@@ -203,9 +203,9 @@ class TreeOU(object):
         Params:
             list: reference to the final list.
         Returns:
-            The list of all the parents in canonical format (/parent1/parent2).
+            The list of all the parents in canonical format (parent1>>parent2).
         """
         if self.parent is not None:
-            list.append("/".join(self.parent.get_path()))
+            list.append(">>".join(self.parent.get_path()))
             self.parent.recursive_parent(list)
         return list

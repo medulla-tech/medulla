@@ -19,7 +19,6 @@ msgstr "Ordinateurs en ligne"
 msgid "Machines offline"
 msgstr "Ordinateurs hors ligne"
 
-#: modules/dashboard/includes/panels/ajaxProduct_updates.php:47
 #: modules/dashboard/includes/panels/clients_updates.inc.php:45
 msgid "View updates"
 msgstr "Afficher les mises à jour"
@@ -28,7 +27,6 @@ msgstr "Afficher les mises à jour"
 msgid "Install updates"
 msgstr "Installer les mises à jour"
 
-#: modules/dashboard/includes/panels/ajaxProduct_updates.php:54
 #: modules/dashboard/includes/panels/clients_updates.inc.php:50
 msgid "No updates available."
 msgstr "Aucune mise à jour disponible"
@@ -65,37 +63,30 @@ msgstr "Machines dans la moelle de "
 msgid "Alerts"
 msgstr "Alertes"
 
-#: modules/dashboard/includes/panels/alerts.inc.php:49
 #: modules/dashboard/includes/panels/alertsentity.inc.php:50
 msgid "Detail"
 msgstr "Détails"
 
-#: modules/dashboard/includes/panels/alerts.inc.php:50
 #: modules/dashboard/includes/panels/alertsentity.inc.php:51
 msgid "Acknowledge"
 msgstr "Acquitter"
 
-#: modules/dashboard/includes/panels/alerts.inc.php:54
 #: modules/dashboard/includes/panels/alertsentity.inc.php:55
 msgid "Status"
 msgstr "État"
 
-#: modules/dashboard/includes/panels/alerts.inc.php:55
 #: modules/dashboard/includes/panels/alertsentity.inc.php:56
 msgid "Date"
 msgstr "Date"
 
-#: modules/dashboard/includes/panels/alerts.inc.php:56
 #: modules/dashboard/includes/panels/alertsentity.inc.php:57
 msgid "Evenement"
 msgstr "Événement"
 
-#: modules/dashboard/includes/panels/alerts.inc.php:57
 #: modules/dashboard/includes/panels/alertsentity.inc.php:58
 msgid "Machine"
 msgstr "Ordinateur"
 
-#: modules/dashboard/includes/panels/alerts.inc.php:70
 #: modules/dashboard/includes/panels/alertsentity.inc.php:71
 msgid "No alerts"
 msgstr "Pas d'alertes"
@@ -148,12 +139,10 @@ msgstr "Créer un groupe"
 msgid "Disk usage"
 msgstr "Utilisation des disques"
 
-#: modules/dashboard/includes/panels/space.inc.php:36
 #: modules/dashboard/includes/panels/general.inc.php:38
 msgid "used"
 msgstr "utilisé"
 
-#: modules/dashboard/includes/panels/space.inc.php:37
 #: modules/dashboard/includes/panels/general.inc.php:37
 msgid "free"
 msgstr "libre"
@@ -230,8 +219,6 @@ msgstr "Taux de succès pour les 6 dernières semaines"
 msgid "Alerts by Entity"
 msgstr "Alertes par entité"
 
-#: modules/dashboard/infoPackage.inc.php:38
-#: modules/dashboard/infoPackage.inc.php:42
 #: modules/dashboard/infoPackage.inc.php:48
 msgid "Dashboard"
 msgstr "Dashboard"
@@ -272,3 +259,14 @@ msgstr "Widget Alertes"
 msgid "Alerts by Entity Panel"
 msgstr "Panneau des alertes par entité"
 
+#: modules/dashboard/includes/panels/product_updates.inc.php:30
+msgid "Pulse Updates"
+msgstr "Mises à jour de Pulse"
+
+#: modules/dashboard/includes/panels/product_updates.inc.php:56
+msgid "Updates available."
+msgstr "Mise à jour disponible."
+
+#: modules/dashboard/includes/panels/agents.inc.php:52
+msgid "Machines in Pulse from "
+msgstr "Machines dans Pulse depuis "
