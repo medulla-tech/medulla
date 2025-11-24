@@ -13756,11 +13756,15 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         return result
 
     @DatabaseHelper._sessionm
-    def get_count_total_deploy_for_dashboard(self, session):
+    def get_count_total_deploy_for_dashboard(self, session, entities=[]):
         """Get the total of deployments for each last six months
         Returns: list of deployments
         """
-        session.execute("call countDeployLastSixMonths()")
+        entities = ",".join([str(e) for e in entities])
+
+        bind = {"entities": entities}
+
+        session.execute("call countDeployLastSixMonths(:entities)", bind)
         query = session.execute(
             "select @month6, @month5, @month4, @month3, @month2, @month1"
         )

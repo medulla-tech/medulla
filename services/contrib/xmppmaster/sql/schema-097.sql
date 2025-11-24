@@ -102,6 +102,47 @@ end;
 DELIMITER ;
 
 
+-- Update the schema 57 : scope the stored procedure with entities list
+DELIMITER //
+CREATE OR REPLACE PROCEDURE countDeployLastSixMonths(IN entities varchar(255))
+begin
+set @month1 = 0;
+set @month2 = 0;
+set @month3 = 0;
+set @month4 = 0;
+set @month5 = 0;
+set @month6 = 0;
+
+-- current month
+set @date_end = NOW();
+set @date_begin = convert(concat(YEAR(@date_end),'-',MONTH(@date_end),'-',1,' ', 0,':',0,':',0), datetime);
+select @month1:=count(deploy.id) from deploy join machines on deploy.jidmachine = machines.jid join glpi_entity on machines.glpi_entity_id=glpi_entity.id where startcmd >= @date_begin and startcmd <= @date_end and glpi_entity.glpi_id in (entities);
+
+set @date_end = DATE_SUB(@date_begin, INTERVAL 1 SECOND);
+set @date_begin = convert(concat(YEAR(@date_end),'-',MONTH(@date_end),'-',1,' ', 0,':',0,':',0), datetime);
+select @month2:=count(deploy.id) from deploy join machines on deploy.jidmachine = machines.jid join glpi_entity on machines.glpi_entity_id=glpi_entity.id where startcmd >= @date_begin and startcmd <= @date_end and glpi_entity.glpi_id in (entities);
+
+set @date_end = DATE_SUB(@date_begin, INTERVAL 1 SECOND);
+set @date_begin = convert(concat(YEAR(@date_end),'-',MONTH(@date_end),'-',1,' ', 0,':',0,':',0), datetime);
+select @month3:=count(deploy.id) from deploy join machines on deploy.jidmachine = machines.jid join glpi_entity on machines.glpi_entity_id=glpi_entity.id where startcmd >= @date_begin and startcmd <= @date_end and glpi_entity.glpi_id in (entities);
+
+set @date_end = DATE_SUB(@date_begin, INTERVAL 1 SECOND);
+set @date_begin = convert(concat(YEAR(@date_end),'-',MONTH(@date_end),'-',1,' ', 0,':',0,':',0), datetime);
+select @month4:=count(deploy.id) from deploy join machines on deploy.jidmachine = machines.jid join glpi_entity on machines.glpi_entity_id=glpi_entity.id where startcmd >= @date_begin and startcmd <= @date_end and glpi_entity.glpi_id in (entities);
+
+set @date_end = DATE_SUB(@date_begin, INTERVAL 1 SECOND);
+set @date_begin = convert(concat(YEAR(@date_end),'-',MONTH(@date_end),'-',1,' ', 0,':',0,':',0), datetime);
+select @month5:=count(deploy.id) from deploy join machines on deploy.jidmachine = machines.jid join glpi_entity on machines.glpi_entity_id=glpi_entity.id where startcmd >= @date_begin and startcmd <= @date_end and glpi_entity.glpi_id in (entities);
+
+set @date_end = DATE_SUB(@date_begin, INTERVAL 1 SECOND);
+set @date_begin = convert(concat(YEAR(@date_end),'-',MONTH(@date_end),'-',1,' ', 0,':',0,':',0), datetime);
+select @month6:=count(deploy.id) from deploy join machines on deploy.jidmachine = machines.jid join glpi_entity on machines.glpi_entity_id=glpi_entity.id where startcmd >= @date_begin and startcmd <= @date_end and glpi_entity.glpi_id in (entities);
+
+end;
+//
+DELIMITER ;
+
+
 -- ----------------------------------------------------------------------
 -- Database version
 -- ----------------------------------------------------------------------
