@@ -6373,6 +6373,9 @@ class XmppMasterDatabase(DatabaseHelper):
             }
             aggregated_list.append(aggregated)
 
+        # Sort by start date (most recent first)
+        aggregated_list.sort(key=lambda x: x["start"]["timestamp"] if x["start"] else 0, reverse=True)
+
         if minimum is not None and maximum is not None:
             aggregated_list = aggregated_list[int(minimum): int(maximum)]
         lentotal = len(aggregated_list)
@@ -6584,6 +6587,9 @@ class XmppMasterDatabase(DatabaseHelper):
                 "login": global_deploy.login,
             }
             aggregated_list.append(aggregated)
+
+        # Sort by start date (most recent first)
+        aggregated_list.sort(key=lambda x: x["start"]["timestamp"] if x["start"] else 0, reverse=True)
 
         if minimum is not None and maximum is not None:
             aggregated_list = aggregated_list[int(minimum): int(maximum)]
@@ -6900,6 +6906,9 @@ class XmppMasterDatabase(DatabaseHelper):
                 "login": global_deploy.login,
             }
             aggregated_list.append(aggregated)
+
+        # Sort by start date (most recent first)
+        aggregated_list.sort(key=lambda x: x["start"]["timestamp"] if x["start"] else 0, reverse=True)
 
         if minimum is not None and maximum is not None:
             aggregated_list = aggregated_list[int(minimum): int(maximum)]

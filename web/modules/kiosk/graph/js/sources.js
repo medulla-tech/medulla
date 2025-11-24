@@ -103,7 +103,9 @@ jQuery(document).ready(function(){
                 ous = [];
                 //data.selected contains the selected elements
                 jQuery.each(data.selected, function(id, element){
-                    ous.push(jQuery("#"+element).attr('data-root'))
+                    var dataRoot = jQuery("#"+element).attr('data-root');
+                    console.log("DEBUG: data-root =", dataRoot);
+                    ous.push(dataRoot)
                 })
                 jQuery("#users").load('/mmc/modules/kiosk/kiosk/ajaxGetUsersForOu.php', {'roots':ous}, function(result){
                 });

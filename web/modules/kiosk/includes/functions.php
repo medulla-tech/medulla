@@ -55,19 +55,13 @@ function recursiveArrayToList(Array $array = array(), &$result, &$count)
     {
         $name = $array['name'];
 
-        // The limit set the limit of displayed characters for each rows in the tree
-        $limit = 15;
+        // Display full entity name without truncation
+        // The title attribute provides tooltip for long names
         if(isset($array['name']) && $array['name'] != "")
-            if(strlen($name) > $limit)
-            {
-                $count +=1;
-                $result.= '<li title="'.$name.'" data-id="j1_'.$count.'" data-root="'.$array['path'].'">'.substr($name,0,$limit).'...';
-            }
-            else
-            {
-                $count +=1;
-                $result.= '<li data-id="j1_'.$count.'" data-root="'.$array['path'].'">'.$name;
-            }
+        {
+            $count +=1;
+            $result.= '<li title="'.$name.'" data-id="j1_'.$count.'" data-root="'.$array['path'].'">'.$name;
+        }
         recursiveArrayToList($array['child'], $result, $count);
         $result.= '</li>';
     }

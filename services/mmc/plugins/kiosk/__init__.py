@@ -251,7 +251,7 @@ def get_ou_list_ldap(*args, **kwargs):
 
                 ou = ou.split(" < ")
                 ou.reverse()
-                ou = "/".join(ou)
+                ou = ">>".join(ou)
                 # Save the content into a list
                 ous.append(ou)
 
@@ -362,7 +362,7 @@ def get_ou_tree():
 
                 ou = ou.split(" < ")
                 ou.reverse()
-                ou = "/".join(ou)
+                ou = ">>".join(ou)
                 # Save the content into a list
                 ous.append(ou)
 
@@ -620,7 +620,7 @@ def get_ou_for_user(user):
 
                 ou = ou.split(" < ")
                 ou.reverse()
-                ou = "/".join(ou)
+                ou = ">>".join(ou)
                 # Save the content into a list
                 ous.append(ou)
         # Delete the file
@@ -673,15 +673,15 @@ def get_packages_for_machine(machine):
 
     machine_entity = XmppMasterDatabase().getmachineentityfromjid(machine["jid"])
     machine_entity = (
-        machine_entity.complete_name.replace(" > ", "/")
+        machine_entity.complete_name.replace(" > ", ">>")
         if machine_entity is not None
         else None
     )
     OUmachine = (
-        machine["ad_ou_machine"].replace("\n", "").replace("\r", "").replace("@@", "/")
+        machine["ad_ou_machine"].replace("\n", "").replace("\r", "").replace("@@", ">>")
     )
     OUuser = (
-        machine["ad_ou_user"].replace("\n", "").replace("\r", "").replace("@@", "/")
+        machine["ad_ou_user"].replace("\n", "").replace("\r", "").replace("@@", ">>")
     )
     group = XmppMasterDatabase().get_ad_group_for_lastuser(machine["lastuser"])
     if OUmachine == "":
