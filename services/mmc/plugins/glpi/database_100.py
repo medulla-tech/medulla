@@ -9223,6 +9223,186 @@ and glpi_computers.id in %s group by glpi_computers.id;""" % (
         result["alias_user_su"] = "root" if user_name == "root" else result["user_name"]
 
         return result
+    
+    @DatabaseHelper._sessionm
+    def get_devices_list(self, session, start, end, ctx):
+        """
+        [HMDM]
+        Returns the list of mobile devices based on GLPI/HMDM inventory.
+
+        """
+        # implementation using glpi_phones table (self.phones)
+        from mmc.plugins.xmppmaster.config import xmppMasterConfig
+        start = int(start)
+        end = int(end)
+        master_config = xmppMasterConfig()
+
+        # Prepare tag column names (if any)
+        r = re.compile(r"tag_.*")
+        tags = list(filter(r.search, self.config.summary))
+        list_tag_columns_name = [
+            getattr(master_config, tagkey).split("|")[0].split("\\")[-1]
+            for tagkey in tags
+        ]
+
+        uuidsetup = ctx.get("uuidsetup", "")
+        iddevice = ctx.get("iddevice", "").replace("UUID", "")
+        location = ctx.get("location", "")
+        if location:
+            location = location.replace("UUID", "")
+        criterion = ctx.get("filter", "")
+        field = ctx.get("field", "")
+        contains = ctx.get("contains", "")
+
+        # ONLINE DEVICES
+        online_devices = []
+        if iddevice == "" and uuidsetup == "":
+            try:
+                online_devices = XmppMasterDatabase().getlistPresenceMachineid() or []
+                online_devices = [id.replace("UUID", "") for id in online_devices if id and id != "UUID"]
+            except Exception:
+                online_devices = []
+
+        phones_table = self.phones
+
+        # Build base query on glpi_phones
+        query = (
+            session.query(phones_table.c.id.label("uuid"))
+            .distinct(phones_table.c.id)
+            .join(Entities, Entities.id == phones_table.c.entities_id)
+            .outerjoin(self.user, phones_table.c.users_id == self.user.c.id)
+            .outerjoin(self.locations, phones_table.c.locations_id == self.locations.c.id)
+            .outerjoin(self.manufacturers, phones_table.c.manufacturers_id == self.manufacturers.c.id)
+        )
+
+        # determine model column or related table if exists
+        model_col = None
+        if hasattr(self, "mobilemodels"):
+            try:
+                query = query.join(self.mobilemodels, phones_table.c.mobiledevicemodels_id == self.mobilemodels.c.id)
+                model_col = self.mobilemodels.c.name.label("model")
+            except Exception:
+                model_col = None
+        if model_col is None:
+            if "model" in phones_table.c.keys():
+                model_col = phones_table.c.model.label("model")
+            else:
+                # fallback to empty string column
+                from sqlalchemy import literal
+
+                model_col = literal("").label("model")
+
+        # Add columns: Name, Manufacturer, Type, Model, Last Update, Alternate Username
+        from sqlalchemy import literal
+        name_col = phones_table.c.name.label("name") if "name" in phones_table.c.keys() else (phones_table.c.number.label("name") if "number" in phones_table.c.keys() else literal("").label("name"))
+        manuf_col = self.manufacturers.c.name.label("manufacturer") if hasattr(self, "manufacturers") else literal("").label("manufacturer")
+        type_col = phones_table.c.type.label("type") if "type" in phones_table.c.keys() else literal("").label("type")
+        last_update_col = phones_table.c.date_mod.label("last_update") if "date_mod" in phones_table.c.keys() else (phones_table.c.updated_at.label("last_update") if "updated_at" in phones_table.c.keys() else literal(0).label("last_update"))
+        alt_user_col = phones_table.c.contact.label("alternate_username") if "contact" in phones_table.c.keys() else (phones_table.c.username.label("alternate_username") if "username" in phones_table.c.keys() else literal("").label("alternate_username"))
+
+        query = query.add_column(name_col)
+        query = query.add_column(manuf_col)
+        query = query.add_column(type_col)
+        query = query.add_column(model_col)
+        query = query.add_column(last_update_col)
+        query = query.add_column(alt_user_col)
+
+        if location:
+            listentity = [int(x.strip()) for x in location.split(",")]
+            query = query.filter(Entities.id.in_(listentity))
+
+        # search filter
+        if criterion and iddevice == "" and uuidsetup == "":
+            if field == "":
+                filters = []
+                if "name" in phones_table.c.keys():
+                    filters.append(phones_table.c.name.contains(criterion))
+                if "type" in phones_table.c.keys():
+                    filters.append(phones_table.c.type.contains(criterion))
+                if hasattr(self, "manufacturers"):
+                    filters.append(self.manufacturers.c.name.contains(criterion))
+                if "contact" in phones_table.c.keys():
+                    filters.append(phones_table.c.contact.contains(criterion))
+                # model search
+                try:
+                    filters.append(model_col.contains(criterion))
+                except Exception:
+                    pass
+                if filters:
+                    query = query.filter(or_(*filters))
+            else:
+                # Map search field names to columns
+                col_map = {
+                    "name": phones_table.c.name if "name" in phones_table.c.keys() else None,
+                    "type": phones_table.c.type if "type" in phones_table.c.keys() else None,
+                    "model": (self.mobilemodels.c.name if hasattr(self, "mobilemodels") else (phones_table.c.model if "model" in phones_table.c.keys() else None)),
+                    "manufacturer": (self.manufacturers.c.name if hasattr(self, "manufacturers") else None),
+                    "alternate_username": (phones_table.c.contact if "contact" in phones_table.c.keys() else None),
+                }
+                if field in col_map and col_map[field] is not None:
+                    if contains == "notcontains":
+                        query = query.filter(not_(col_map[field].contains(criterion)))
+                    else:
+                        query = query.filter(col_map[field].contains(criterion))
+
+        # Ordering
+        if iddevice == "" and uuidsetup == "":
+            if "name" in phones_table.c.keys():
+                query = query.order_by(phones_table.c.name)
+
+        query = self.__filter_on(query)
+
+        if iddevice:
+            query = query.filter(phones_table.c.id == str(iddevice))
+        if uuidsetup:
+            if "uuid" in phones_table.c.keys():
+                query = query.filter(phones_table.c.uuid == str(uuidsetup))
+
+        count = query.count()
+
+        # Pagination
+        if iddevice == "" and uuidsetup == "":
+            try:
+                query = query.offset(start).limit(end)
+            except Exception:
+                pass
+
+        columns_name = [col["name"] for col in query.column_descriptions]
+        devices = query.all()
+
+        # Build result
+        result = {"count": count, "data": {col: [] for col in columns_name}}
+        if iddevice == "" and uuidsetup == "":
+            result["data"]["presence"] = []
+
+        # Add tags placeholder
+        tags_dict = {tag_column: [] for tag_column in list_tag_columns_name}
+        result["data"]["tags"] = tags_dict
+
+        for device in devices:
+            if iddevice == "" and uuidsetup == "":
+                result["data"]["presence"].append(1 if str(device[0]) in online_devices else 0)
+                for idx, col in enumerate(columns_name):
+                    result["data"][col].append(device[idx])
+            else:
+                record = self._device_object_dym_result(device, encode="utf8")
+                for key in record:
+                    result["data"][key] = [record[key]]
+
+            for tag_column in list_tag_columns_name:
+                result["data"]["tags"][tag_column].append(None)
+
+        uuids = ["UUID%s" % id for id in result["data"]["uuid"]]
+        if iddevice == "" and uuidsetup == "":
+            try:
+                result["xmppdata"] = XmppMasterDatabase().getmachinesbyuuids(uuids)
+            except Exception:
+                result["xmppdata"] = {}
+
+        if iddevice or uuidsetup:
+            result["data"]["uuidglpimobile"] = result["data"].pop("uuid")
+
+        return result
 
 # Class for SQLalchemy mapping
 class Machine(object):
