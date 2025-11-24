@@ -10616,7 +10616,7 @@ class XmppMasterDatabase(DatabaseHelper):
           SUM(CASE WHEN enabled = 1 AND uuid_inventorymachine != "" THEN 1 ELSE 0 END) as online_inventoried,
           SUM(CASE WHEN uuid_inventorymachine = "" THEN 1 ELSE 0 END) as total_uninventoried,
           SUM(CASE WHEN uuid_inventorymachine != "" THEN 1 ELSE 0 END) as total_inventoried
-        FROM machines 
+        FROM machines
         JOIN glpi_entity on machines.glpi_entity_id = glpi_entity.id
         WHERE agenttype=:agenttype and glpi_entity.glpi_id in (:entities)"""
         result = session.execute(sql, bind)
@@ -13129,16 +13129,18 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             return "failure"
 
     @DatabaseHelper._sessionm
-    def get_count_success_rate_for_dashboard(self, session):
+    def get_count_success_rate_for_dashboard(self, session, entities=[]):
         """
         call the stored procedure to get the deployment success rate for the 6 last weeks
 
         @returns:
             list of float
         """
-        session.execute(
-            "call countSuccessRateLastSixWeeks(@week1, @week2, @week3, @week4, @week5, @week6)"
-        )
+
+        entities = ",".join([str(e) for e in entities])
+
+        bind = {"entities": entities}
+        session.execute("call countSuccessRateLastSixWeeks((:entities), @week1, @week2, @week3, @week4, @week5, @week6)", bind)
         query = session.execute(
             "select @week1, @week2, @week3, @week4, @week5, @week6")
         query = query.fetchall()[0]
