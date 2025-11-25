@@ -1,0 +1,9 @@
+.radio-group {
+    display: flex;
+    justify-content: flex-start; 
+    align-items: center;
+}
+.radio-group label {
+    display: flex;
+    align-items: center;
+}

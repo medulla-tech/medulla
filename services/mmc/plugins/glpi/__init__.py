@@ -154,6 +154,13 @@ class RpcProxy(RpcProxyI):
     def getMachineByHostnameAndMacs(self, hostname, macs):
         ctx = self.currentContext
         return xmlrpcCleanup(Glpi().getMachineByHostnameAndMacs(ctx, hostname, macs))
+    
+    @with_optional_xmpp_context
+    def get_devices_list(self, start, end, filter, ctx=None):
+        #[HMDM]
+        filter = update_filter(filter, ctx.get_session_info()['mondict']['liste_entities_user'])
+        logger.debug("filter : %s " % filter)
+        return xmlrpcCleanup(Glpi().get_devices_list(start, end, filter))
 
 
 def getLicensesComputer(vendor, software, version):

@@ -31,6 +31,12 @@
  function xmlrpc_get_machines_list1($start, $end, $ctx){
      return xmlCall("glpi.get_machines_list1", [$start, $end, $ctx]);
  }
+
+function xmlrpc_get_devices_list($start, $end, $ctx){
+    // [HMDM]
+    return xmlCall("glpi.get_devices_list", [$start, $end, $ctx]);
+}
+
 // $array_list_user_for_entity = explode(",", entitiesListseach['data']['userIds'][$i]);
 //     if (in_array($loginglpi['id'], $array_list_user_for_entity))
 function glpiExists($uuid) {
