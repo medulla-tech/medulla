@@ -3593,9 +3593,7 @@ class Itsmng21(DyngroupDatabaseHelper):
     def getLastMachineSummaryPart(
         self, session, uuid, part, min=0, max=-1, filt=None, options={}, count=False
     ):
-        # Mutable dict options used as default argument to a method or function
-        query = self.filterOnUUID(
-            session.query(Machine)
+        primary = (session.query(Machine)
             .add_entity(Infocoms)
             .add_column(self.entities.c.name)
             .add_column(self.locations.c.name)
@@ -3608,7 +3606,6 @@ class Itsmng21(DyngroupDatabaseHelper):
             .add_column(self.glpi_operatingsystemarchitectures.c.name)
             .add_column(self.glpi_domains.c.name)
             .add_column(self.state.c.name)
-            .add_column(self.fusionagents.c.last_contact)
             .select_from(
                 self.machine.outerjoin(self.entities)
                 .outerjoin(self.locations)
@@ -3621,9 +3618,16 @@ class Itsmng21(DyngroupDatabaseHelper):
                 .outerjoin(self.glpi_operatingsystemversions)
                 .outerjoin(self.glpi_operatingsystemarchitectures)
                 .outerjoin(self.state)
-                .outerjoin(self.fusionagents)
                 .outerjoin(self.glpi_domains)
-            ),
+            )
+        )
+        if self.fusionagents is not None:
+            primary = primary.add_column(self.fusionagents.c.last_contact)
+            primary = primary.select_from(self.machine.outerjoin(self.fusionagents))
+
+        # Mutable dict options used as default argument to a method or function
+        query = self.filterOnUUID(
+            primary,
             uuid,
         )
 
