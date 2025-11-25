@@ -1,0 +1,20 @@
+<?php
+/**
+
+*/
+$sidemenu = new SideMenu();
+$sidemenu->setClass("mobile");
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("All devices", 'mobile'), "mobile", "mobile", "index"));
+
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("Add a device", 'mobile'), "mobile", "mobile", "addMobile"));
+
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("Applications", 'mobile'), "mobile", "mobile", "applications"));
+
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("Configurations", 'mobile'), "mobile", "mobile", "configurations"));
+
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("Add Configuration", 'mobile'), "mobile", "mobile", "addConfiguration"));
+
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("Files", 'mobile'), "mobile", "mobile", "files"));
+
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("All devices glpi", 'mobile'), "mobile", "mobile", "glpiDevices"));
+ ?>

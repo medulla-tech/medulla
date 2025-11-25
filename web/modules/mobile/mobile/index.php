@@ -1,0 +1,16 @@
+<?php
+require("graph/navbar.inc.php");
+require("localSidebar.php");
+
+
+$p = new PageGenerator(_T("List of all devices", 'mobile'));
+$p->setSideMenu($sidemenu);
+
+$p->display();
+
+
+$ajax = new AjaxFilter(urlStrRedirect("mobile/mobile/ajaxMobileList"));
+$ajax->display();
+$ajax->displayDivToUpdate();
+
+?>
