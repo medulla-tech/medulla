@@ -69,7 +69,7 @@ foreach ($mobiles as $index => $mobile) {
 $count = is_array($mobiles) ? count($mobiles) : 0;
 $count = count($mobiles);
 $filter = "";
-$n = new OptimizedListInfos($col1, _T("Nom de l'appareil", "mobile"));
+$n = new OptimizedListInfos($col1, _T("Device's name", "mobile"));
 // TODO: adjust AjaxNavBar parameters if needed
 $n->setNavBar(new AjaxNavBar($count, $filter, "updateSearchParamform".($actions?'image':'master')));
 $n->setCssIds($ids);
@@ -78,9 +78,9 @@ $n->disableFirstColumnActionLink();
 //$n->addExtraInfo($enligne, _T("Status", "mobile"));
 $n->addExtraInfo($descript, _T("Description", "mobile"));
 $n->addExtraInfo($configurations, _T("Configuration", "mobile"));
-$n->addExtraInfo($sources, _T("Modèle", "mobile"));
-$n->addExtraInfo($ip, _T("Adresse ip", "mobile"));
-$n->addExtraInfo($installations, _T("Statut", "mobile"));
+$n->addExtraInfo($sources, _T("Model", "mobile"));
+$n->addExtraInfo($ip, _T("IP address", "mobile"));
+$n->addExtraInfo($installations, _T("Status", "mobile"));
 // $n->addExtraInfo($etatFichiers, _T("État des fichiers", "mobile"));
 $n->addExtraInfo($actions, _T("Actions", "mobile"));
 

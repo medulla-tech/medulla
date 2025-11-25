@@ -28,8 +28,8 @@ $submod->addPage($page);
 # add device page
 ################################
 
-$pageAddDevice = new Page("addMobile", _T('Add a device', 'mobile'));
-$pageAddDevice->setFile("modules/mobile/mobile/addMobile.php");
+$pageAddDevice = new Page("addDevice", _T('Add a device', 'mobile'));
+$pageAddDevice->setFile("modules/mobile/mobile/addDevice.php");
 $submod->addPage($pageAddDevice);
 
 ################################
@@ -52,6 +52,43 @@ $pageGlpiPhones = new Page("glpiPhones", _T('All phones glpi', 'mobile'));
 $pageGlpiPhones->setFile("modules/mobile/mobile/glpiPhonesList.php");
 $submod->addPage($pageGlpiPhones);
 
+$glpidisplayname = (!empty($conf['global']['glpidisplayname'])) ? htmlentities($conf['global']['glpidisplayname']) : 'glpi';
+
+$page = new Page("glpitabs", _T("Inventory ($glpidisplayname) on machine", "glpi"));
+$page->setFile("modules/glpi/glpi/tabs.php");
+$page->setOptions(array("visible"=>False));
+$tab = new Tab("tab0", _T("Summary tab (GLPI)", 'glpi'));
+$page->addTab($tab);
+
+$tab = new Tab("tab1", _T("Hardware tab (GLPI)", 'glpi'));
+$page->addTab($tab);
+
+$tab = new Tab("tab2", _T("Storage tab (GLPI)", 'glpi'));
+$page->addTab($tab);
+
+$tab = new Tab("tab3", _T("Network tab (GLPI)", 'glpi'));
+$page->addTab($tab);
+
+$tab = new Tab("tab4", _T("Softwares tab (GLPI)", 'glpi'));
+$page->addTab($tab);
+
+$tab = new Tab("tab5", _T("Administrative tab (GLPI)", 'glpi'));
+$page->addTab($tab);
+
+$tab = new Tab("tab6", _T("History tab (GLPI)", 'glpi'));
+$page->addTab($tab);
+
+$tab = new Tab("tab7", _T("Antivirus tab (GLPI)", 'glpi'));
+$page->addTab($tab);
+
+$tab = new Tab("tab8", _T("Registry tab (GLPI)", 'glpi'));
+$page->addTab($tab);
+
+$tab = new Tab("tab9", _T("Connections tab (GLPI)", "glpi"));
+$page->addTab($tab);
+
+$submod->addPage($page);
+
 ################################
 # Files page
 ################################
@@ -71,15 +108,15 @@ $submod->addPage($pageConfig);
 ################################
 # ListMobile - ajax
 ################################
-$pageAjaxMobileList = new Page("ajaxMobileList", _T('Device list view', 'mobile'));
-$pageAjaxMobileList->setFile("modules/mobile/mobile/ajaxMobileList.php");
-$pageAjaxMobileList->setOptions(array("AJAX" => true, "visible" => false));
-$submod->addPage($pageAjaxMobileList);
+$pageajaxDeviceList = new Page("ajaxDeviceList", _T('Device list view', 'mobile'));
+$pageajaxDeviceList->setFile("modules/mobile/mobile/ajaxDeviceList.php");
+$pageajaxDeviceList->setOptions(array("AJAX" => true, "visible" => false));
+$submod->addPage($pageajaxDeviceList);
 
-$pageAjaxMobileList = new Page("ajaxAddMobile", _T('Add device', 'mobile'));
-$pageAjaxMobileList->setFile("modules/mobile/mobile/ajaxAddMobile.php");
-$pageAjaxMobileList->setOptions(array("AJAX" => true, "visible" => false));
-$submod->addPage($pageAjaxMobileList);
+$pageajaxDeviceList = new Page("ajaxAddDevice", _T('Add device', 'mobile'));
+$pageajaxDeviceList->setFile("modules/mobile/mobile/ajaxAddDevice.php");
+$pageajaxDeviceList->setOptions(array("AJAX" => true, "visible" => false));
+$submod->addPage($pageajaxDeviceList);
 
 ################################
 # Applications - ajax

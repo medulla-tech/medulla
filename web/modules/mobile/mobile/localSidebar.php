@@ -6,7 +6,7 @@ $sidemenu = new SideMenu();
 $sidemenu->setClass("mobile");
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("All devices", 'mobile'), "mobile", "mobile", "index"));
 
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Add a device", 'mobile'), "mobile", "mobile", "addMobile"));
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("Add a device", 'mobile'), "mobile", "mobile", "addDevice"));
 
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Applications", 'mobile'), "mobile", "mobile", "applications"));
 

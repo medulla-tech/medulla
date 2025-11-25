@@ -28,8 +28,8 @@ $submod->addPage($page);
 # add device page
 ################################
 
-$pageAddDevice = new Page("addMobile", _T('Add a device', 'mobile'));
-$pageAddDevice->setFile("modules/mobile/mobile/addMobile.php");
+$pageAddDevice = new Page("addDevice", _T('Add a device', 'mobile'));
+$pageAddDevice->setFile("modules/mobile/mobile/addDevice.php");
 $submod->addPage($pageAddDevice);
 
 ################################
@@ -71,15 +71,15 @@ $submod->addPage($pageConfig);
 ################################
 # ListMobile - ajax
 ################################
-$pageAjaxMobileList = new Page("ajaxMobileList", _T('Device list view', 'mobile'));
-$pageAjaxMobileList->setFile("modules/mobile/mobile/ajaxMobileList.php");
-$pageAjaxMobileList->setOptions(array("AJAX" => true, "visible" => false));
-$submod->addPage($pageAjaxMobileList);
+$pageajaxDeviceList = new Page("ajaxDeviceList", _T('Device list view', 'mobile'));
+$pageajaxDeviceList->setFile("modules/mobile/mobile/ajaxDeviceList.php");
+$pageajaxDeviceList->setOptions(array("AJAX" => true, "visible" => false));
+$submod->addPage($pageajaxDeviceList);
 
-$pageAjaxMobileList = new Page("ajaxAddMobile", _T('Add device', 'mobile'));
-$pageAjaxMobileList->setFile("modules/mobile/mobile/ajaxAddMobile.php");
-$pageAjaxMobileList->setOptions(array("AJAX" => true, "visible" => false));
-$submod->addPage($pageAjaxMobileList);
+$pageajaxDeviceList = new Page("ajaxAddDevice", _T('Add device', 'mobile'));
+$pageajaxDeviceList->setFile("modules/mobile/mobile/ajaxAddDevice.php");
+$pageajaxDeviceList->setOptions(array("AJAX" => true, "visible" => false));
+$submod->addPage($pageajaxDeviceList);
 
 ################################
 # Applications - ajax

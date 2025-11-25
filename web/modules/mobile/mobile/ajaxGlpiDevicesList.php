@@ -67,11 +67,8 @@ $params = [];
 $msc_vnc_show_icon = web_vnc_show_icon();
 
 // Actions for each machines
-$glpiAction = new ActionItem(_("GLPI Inventory"), "glpitabs", "inventory", "inventory", "base", "computers");
-$mscAction = new ActionItem(_("Software deployment"), "msctabs", "install", "computer", "base", "computers");
-
 $inventAction = new ActionItem(_("Inventory"), "invtabs", "inventory", "inventory", "base", "computers");
-$glpiAction = new ActionItem(_("GLPI Inventory"), "glpitabs", "inventory", "inventory", "base", "computers");
+$glpiAction = new ActionItem(_("GLPI Inventory"), "glpitabs", "inventory", "inventory", "mobile", "mobile");
 $logAction = new ActionItem(_("View deployment details"), "viewlogs", "logfile", "computer", "xmppmaster", "xmppmaster");
 $mscAction = new ActionItem(_("Software deployment"), "msctabs", "install", "computer", "base", "computers");
 
