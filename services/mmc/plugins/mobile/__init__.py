@@ -67,3 +67,5 @@ def deleteFileById(id=None, filePath=None):
 def deleteConfigurationById(id):
     return MobileDatabase().deleteConfigurationById(id)
 
+def getHmdmAuditLogs(page_size=50, page_num=1, message_filter="", user_filter=""):
+    return MobileDatabase().getHmdmAuditLogs(page_size, page_num, message_filter, user_filter)

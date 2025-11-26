@@ -144,6 +144,15 @@ $pageDeleteConfiguration->setFile("modules/mobile/mobile/deleteConfiguration.php
 $pageDeleteConfiguration->setOptions(array("AJAX" => false, "visible" => false));
 $submod->addPage($pageDeleteConfiguration);
 
+
+################################
+# Functions page (HMDM features)
+################################
+
+$pageFunctions = new Page("functions", _T('Functions', 'mobile'));
+$pageFunctions->setFile("modules/mobile/mobile/functions.php");
+$submod->addPage($pageFunctions);
+
 ################################
 # End
 ################################
