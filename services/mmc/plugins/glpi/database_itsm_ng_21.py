@@ -36,6 +36,7 @@ from sqlalchemy import (
     distinct,
     text,
     inspect,
+    literal,
 )
 
 from sqlalchemy.orm import create_session, mapper, relationship, class_mapper
@@ -421,7 +422,7 @@ class Itsmng21(DyngroupDatabaseHelper):
             mapper(FusionAgents, self.fusionagents)
         except:
             self.logger.warning("Impossible to map glpi_plugin_fusioninventory_agents")
-            
+
         # try an another way for fusionagent
         if self.fusionagents is None:
             try:
@@ -437,7 +438,7 @@ class Itsmng21(DyngroupDatabaseHelper):
                 mapper(FusionAgents, self.fusionagents)
             except:
                 self.logger.warning("Impossible to map glpi_agents")
-            
+
 
         # glpi_items_disks
         self.disk = Table(
@@ -683,7 +684,7 @@ class Itsmng21(DyngroupDatabaseHelper):
 
         except :
             self.logger.warning("Impossible to map glpi_plugin_fusioninventory_collects")
-        
+
         if self.collects is None:
             try:
                 self.collects = Table(
@@ -3325,7 +3326,7 @@ class Itsmng21(DyngroupDatabaseHelper):
                         ]
                         ret.append(l)
         return ret
-                                    
+
 
     def getLastMachineAdministrativePart(
         self, session, uuid, part, min=0, max=-1, filt=None, options={}, count=False
@@ -3590,9 +3591,7 @@ class Itsmng21(DyngroupDatabaseHelper):
             self.logger.error(e)
             return False
 
-    def getLastMachineSummaryPart(
-        self, session, uuid, part, min=0, max=-1, filt=None, options={}, count=False
-    ):
+    def getLastMachineSummaryPart(self, session, uuid, part, min=0, max=-1, filt=None, options={}, count=False):
         primary = (session.query(Machine)
             .add_entity(Infocoms)
             .add_column(self.entities.c.name)
@@ -3624,33 +3623,19 @@ class Itsmng21(DyngroupDatabaseHelper):
         if self.fusionagents is not None:
             primary = primary.add_column(self.fusionagents.c.last_contact)
             primary = primary.select_from(self.machine.outerjoin(self.fusionagents))
+        else:
+            # Add an empty column instead of last_contact, because if not, the for loop just below will crash
+            primary = primary.add_column(literal(None).label("last_contact"))
 
         # Mutable dict options used as default argument to a method or function
-        query = self.filterOnUUID(
-            primary,
-            uuid,
-        )
+        query = self.filterOnUUID(primary, uuid)
 
         if count:
             ret = query.count()
         else:
             ret = []
-            for (
-                machine,
-                infocoms,
-                entity,
-                location,
-                oslocal,
-                manufacturer,
-                type,
-                model,
-                servicepack,
-                version,
-                architecture,
-                domain,
-                state,
-                last_contact,
-            ) in query:
+
+            for ( machine, infocoms, entity, location, oslocal, manufacturer, type, model, servicepack, version, architecture, domain, state, last_contact) in query:
                 endDate = ""
                 if infocoms is not None:
                     endDate = self.getWarrantyEndDate(infocoms)
@@ -7160,7 +7145,48 @@ class Itsmng21(DyngroupDatabaseHelper):
             Si aucun utilisateur trouvé, retourne un dict vide.
         """
 
-        sqlrequest = """
+        bind = {}
+        if name == "root":
+            sqlrequest = """
+            SELECT
+                gu.id,
+                gu.name AS nameuser,
+                gu.realname,
+                gu.firstname,
+                gm.email AS mail,
+                gu.phone,
+                gu.api_token,
+                gu.is_active AS is_activeuser,
+                gu.locations_id,
+                gu.users_id_supervisor,
+                gpu.profiles_id,
+                gp.name AS nameprofil,
+                ge.id AS entities_id,
+                ge.name AS nameentity,
+                ge.completename AS nameentitycomplete,
+                ge.entities_id AS parent_id_entity,
+                ge.level AS level_entity
+            FROM glpi_users gu
+            LEFT JOIN glpi_useremails gm
+            ON gm.users_id = gu.id AND gm.is_default = 1
+            LEFT JOIN glpi_profiles_users gpu
+            ON gpu.id = (
+                    SELECT gpu2.id
+                    FROM glpi_profiles_users gpu2
+                    WHERE gpu2.users_id = gu.id
+                    ORDER BY (gpu2.entities_id = gu.entities_id) DESC, gpu2.id DESC
+                    LIMIT 1
+                )
+            LEFT JOIN glpi_profiles gp
+            ON gp.id = gpu.profiles_id
+            LEFT JOIN glpi_entities ge
+            ON ge.id = COALESCE(gpu.entities_id, gu.entities_id)
+            WHERE gu.name = (select gu.name from glpi_profiles_users gpu join glpi_users gu on gu.id = gpu.users_id join glpi_profiles gp on gp.id = gpu.profiles_id where gp.name=:name limit 1)
+            LIMIT 1
+            """
+            bind["name"] = "super-admin"
+        else:
+            sqlrequest = """
             SELECT
                 gu.id,
                 gu.name AS nameuser,
@@ -7196,9 +7222,9 @@ class Itsmng21(DyngroupDatabaseHelper):
             ON ge.id = COALESCE(gpu.entities_id, gu.entities_id)
             WHERE gu.name = :name
             LIMIT 1
-        """
-
-        row = session.execute(sqlrequest, {"name": name}).fetchone()
+            """
+            bind["name"] = name
+        row = session.execute(sqlrequest, bind).fetchone()
 
         def safe(v):
             if v is None:
@@ -7778,7 +7804,7 @@ class Itsmng21(DyngroupDatabaseHelper):
         Récupérer le complete_name
         """
         sqlrequest = """
-            SELECT 
+            SELECT
                 name,
                 completename,
                 tag
@@ -7936,11 +7962,11 @@ class Itsmng21(DyngroupDatabaseHelper):
     @DatabaseHelper._sessionm
     def get_machine_with_update(self, session, kb):
         sqlrequest = """
-            SELECT 
+            SELECT
                 glpi_computers.id AS uuid_inventory,
                 glpi_computers.name AS hostname,
                 glpi_entities.completename AS entity,
-                glpi_softwares.name AS kb, 
+                glpi_softwares.name AS kb,
                 SUBSTR(glpi_softwares.name,
                     LOCATE('KB', glpi_softwares.name)+2, 7) as numkb
             FROM
@@ -8013,7 +8039,7 @@ class Itsmng21(DyngroupDatabaseHelper):
                     )
 
         sqlrequest = """
-            SELECT 
+            SELECT
                 COUNT(*) as nb_machines
             FROM
                 glpi_computers_pulse gcp
