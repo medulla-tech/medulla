@@ -34,6 +34,7 @@ from sqlalchemy import (
     distinct,
     text,
     inspect,
+    literal
 )
 from sqlalchemy.orm import create_session, mapper, relationship, class_mapper
 from sqlalchemy.exc import NoSuchTableError, NoInspectionAvailable
@@ -3764,12 +3765,8 @@ class Glpi110(DyngroupDatabaseHelper):
             self.logger.error(e)
             return False
 
-    def getLastMachineSummaryPart(
-        self, session, uuid, part, min=0, max=-1, filt=None, options={}, count=False
-    ):
-        # Mutable dict options used as default argument to a method or function
-        query = self.filterOnUUID(
-            session.query(Machine)
+    def getLastMachineSummaryPart(self, session, uuid, part, min=0, max=-1, filt=None, options={}, count=False):
+        primary = (session.query(Machine)
             .add_entity(Infocoms)
             .add_column(self.entities.c.name)
             .add_column(self.locations.c.name)
@@ -3782,7 +3779,6 @@ class Glpi110(DyngroupDatabaseHelper):
             .add_column(self.glpi_operatingsystemarchitectures.c.name)
             .add_column(self.glpi_domains.c.name)
             .add_column(self.state.c.name)
-            .add_column(self.fusionagents.c.last_contact)
             .select_from(
                 self.machine.outerjoin(self.entities)
                 .outerjoin(self.locations)
@@ -3795,32 +3791,25 @@ class Glpi110(DyngroupDatabaseHelper):
                 .outerjoin(self.glpi_operatingsystemversions)
                 .outerjoin(self.glpi_operatingsystemarchitectures)
                 .outerjoin(self.state)
-                .outerjoin(self.fusionagents)
                 .outerjoin(self.glpi_domains)
-            ),
-            uuid,
+            )
         )
+        if self.fusionagents is not None:
+            primary = primary.add_column(self.fusionagents.c.last_contact)
+            primary = primary.select_from(self.machine.outerjoin(self.fusionagents))
+        else:
+            # Add an empty column instead of last_contact, because if not, the for loop just below will crash
+            primary = primary.add_column(literal(None).label("last_contact"))
+
+        # Mutable dict options used as default argument to a method or function
+        query = self.filterOnUUID(primary, uuid)
 
         if count:
             ret = query.count()
         else:
             ret = []
-            for (
-                machine,
-                infocoms,
-                entity,
-                location,
-                oslocal,
-                manufacturer,
-                type,
-                model,
-                servicepack,
-                version,
-                architecture,
-                domain,
-                state,
-                last_contact,
-            ) in query:
+
+            for ( machine, infocoms, entity, location, oslocal, manufacturer, type, model, servicepack, version, architecture, domain, state, last_contact) in query:
                 endDate = ""
                 if infocoms is not None:
                     endDate = self.getWarrantyEndDate(infocoms)
@@ -3911,10 +3900,42 @@ class Glpi110(DyngroupDatabaseHelper):
                     ],
                     ["State", state],
                     ["Warranty End Date", endDate],
-                    ["Last Inventory Date", date_mod.strftime(
-                        "%Y-%m-%d %H:%M:%S")],
+                    ["Last Inventory Date", date_mod.strftime("%Y-%m-%d %H:%M:%S")],
                 ]
                 ret.append(l)
+        return ret
+
+    def getLastMachineProcessorsPart(
+        self, session, uuid, part, min=0, max=-1, filt=None, options={}, count=False
+    ):
+        # Mutable dict options used as default argument to a method or function
+        # options = options or {}
+        query = self.filterOnUUID(
+            session.query(ComputerProcessor)
+            .add_column(self.processor.c.designation)
+            .select_from(
+                self.machine.outerjoin(
+                    self.computerProcessor).outerjoin(self.processor)
+            ),
+            uuid,
+        )
+
+        if count:
+            ret = query.count()
+        else:
+            ret = []
+            for processor, designation in query:
+                if processor is not None:
+                    l = [
+                        ["Name", designation],
+                        [
+                            "Frequency",
+                            processor.frequency
+                            and str(processor.frequency) + " MHz"
+                            or "",
+                        ],
+                    ]
+                    ret.append(l)
         return ret
 
     def getLastMachineProcessorsPart(
