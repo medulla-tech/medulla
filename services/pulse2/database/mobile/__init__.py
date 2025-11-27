@@ -364,6 +364,66 @@ class MobileDatabase(DatabaseHelper):
             logging.getLogger().error(f"Error fetching applications: {e}")
             return None
 
+    def searchHmdmDevices(self, filter_text=""):
+        """
+        Search for devices by name for autocomplete.
+        
+        :param filter_text: Search filter text
+        :return: List of device dicts with id, name
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Impossible d'authentifier pour la recherche de devices.")
+            return []
+
+        url = f"{self.BASE_URL}/private/devices/search"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+        
+        payload = {
+            "value": filter_text,
+            "fastSearch": False,
+            "pageSize": 5,
+            "pageNum": 1
+        }
+
+        try:
+            resp = requests.post(url, headers=headers, json=payload)
+            resp.raise_for_status()
+            data = resp.json()
+            logging.getLogger().info(f"Device search completed with filter: {filter_text}")
+            devices = data.get("data", {}).get("devices", {}).get("items", [])
+            result = [{"id": d["id"], "name": d["number"]} for d in devices]
+            return result
+        except Exception as e:
+            logging.getLogger().error(f"Error searching devices: {e}")
+            return []
+
+    def getHmdmDetailedInfo(self, device_number):
+        """
+        Fetch detailed information for a specific device.
+        
+        :param device_number: Device number/identifier
+        :return: Device information dict or empty dict on error
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Impossible d'authentifier pour récupérer les infos détaillées.")
+            return {}
+
+        url = f"{self.BASE_URL}/plugins/deviceinfo/deviceinfo/private/{device_number}"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+
+        try:
+            resp = requests.get(url, headers=headers)
+            resp.raise_for_status()
+            data = resp.json()
+            logging.getLogger().info(f"Device detailed info fetched successfully for {device_number}.")
+            return data.get("data", {}) if isinstance(data, dict) else data
+        except Exception as e:
+            logging.getLogger().error(f"Error fetching device detailed info: {e}")
+            return {}
+
+   
     def getHmdmConfigurations(self):
         """
         Fetch the list of configurations from HMDM.

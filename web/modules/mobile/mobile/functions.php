@@ -6,6 +6,7 @@ $p = new TabbedPageGenerator();
 $p->setSideMenu($sidemenu);
 
 $p->addTab("tabaudit", _T("Audit", "mobile"), "", "modules/mobile/mobile/audit.php", array());
+$p->addTab("tabdetailed", _T("Detailed information", "mobile"), "", "modules/mobile/mobile/detailed_info.php", array());
 
 $p->display();
 

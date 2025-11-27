@@ -36,3 +36,12 @@ function xmlrpc_delete_hmdm_device_by_id($id){
 function xmlrpc_get_hmdm_audit_logs($page_size=50, $page_num=1, $message_filter="", $user_filter=""){
     return xmlCall("mobile.getHmdmAuditLogs", array($page_size, $page_num, $message_filter, $user_filter));
 }
+
+function xmlrpc_get_hmdm_detailed_info($device_number){
+    return xmlCall("mobile.getHmdmDetailedInfo", array($device_number));
+}
+
+function xmlrpc_search_hmdm_devices($filter_text=""){
+    return xmlCall("mobile.searchHmdmDevices", array($filter_text));
+}
+?>

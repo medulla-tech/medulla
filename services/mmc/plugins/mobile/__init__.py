@@ -18,7 +18,6 @@ def getApiVersion():
     return APIVERSION
 
 def activate():
-    
     config = MobileConfig("mobile")
     if config.disable:
         logger.warning("Plugin %s: disabled by configuration." % "mobile")
@@ -29,16 +28,6 @@ def activate():
             "Plugin %s: an error occurred during the database initialization" % "mobile")
         return False
     return True
-
-# nano devices: currently commented out
-# def nano_devices():
-#     return db.devices()
-
-# TODO: remove this helper if unused
-# def to_back(name, desc):
-#     logging.getLogger().error(f"111 - Voila ma variable name quand je suis dans plugins {name}")
-#     logging.getLogger().error(f"222 - Voila ma variable quand je suis dans plugins desc {desc}")
-#     return MobileDatabase().givenNameDesc(name, desc)
 
 def getHmdmDevices():
     return MobileDatabase().getHmdmDevices()
@@ -69,3 +58,9 @@ def deleteConfigurationById(id):
 
 def getHmdmAuditLogs(page_size=50, page_num=1, message_filter="", user_filter=""):
     return MobileDatabase().getHmdmAuditLogs(page_size, page_num, message_filter, user_filter)
+
+def getHmdmDetailedInfo(device_number):
+    return MobileDatabase().getHmdmDetailedInfo(device_number)
+
+def searchHmdmDevices(filter_text=""):
+    return MobileDatabase().searchHmdmDevices(filter_text)

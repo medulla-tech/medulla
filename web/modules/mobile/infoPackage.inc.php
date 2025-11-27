@@ -105,6 +105,11 @@ $pageAjaxFilesList->setFile("modules/mobile/mobile/ajaxFilesList.php");
 $pageAjaxFilesList->setOptions(array("AJAX" => true, "visible" => false));
 $submod->addPage($pageAjaxFilesList);
 
+$pageAjaxDeviceSearch = new Page("ajaxDeviceSearch", _T('Device search', 'mobile'));
+$pageAjaxDeviceSearch->setFile("modules/mobile/mobile/ajaxDeviceSearch.php");
+$pageAjaxDeviceSearch->setOptions(array("AJAX" => true, "visible" => false));
+$submod->addPage($pageAjaxDeviceSearch);
+
 
 ################################
 # Applications - delete handler
