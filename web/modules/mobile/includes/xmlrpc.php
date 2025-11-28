@@ -44,4 +44,10 @@ function xmlrpc_get_hmdm_detailed_info($device_number){
 function xmlrpc_search_hmdm_devices($filter_text=""){
     return xmlCall("mobile.searchHmdmDevices", array($filter_text));
 }
+
+function xmlrpc_get_hmdm_messages($device_number="", $message_filter="", $status_filter="",
+                                 $date_from_millis=null, $date_to_millis=null, $page_size=50, $page_num=1){
+    return xmlCall("mobile.getHmdmMessages", array($device_number, $message_filter, $status_filter,
+                                                  $date_from_millis, $date_to_millis, $page_size, $page_num));
+}
 ?>

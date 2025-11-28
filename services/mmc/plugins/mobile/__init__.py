@@ -64,3 +64,8 @@ def getHmdmDetailedInfo(device_number):
 
 def searchHmdmDevices(filter_text=""):
     return MobileDatabase().searchHmdmDevices(filter_text)
+
+def getHmdmMessages(device_number="", message_filter="", status_filter="",
+                date_from_millis=None, date_to_millis=None, page_size=50, page_num=1):
+    return MobileDatabase().getHmdmMessages(device_number, message_filter, status_filter,
+                                          date_from_millis, date_to_millis, page_size, page_num)
