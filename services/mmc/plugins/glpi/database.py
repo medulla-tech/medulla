@@ -2,6 +2,7 @@
 # SPDX-FileCopyrightText: 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 # SPDX-FileCopyrightText:2007-2014 Mandriva, http://www.mandriva.com
 # SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net>
+# SPDX-FileCopyrightText: 2024-2025 Medulla, http://www.medulla-tech.io
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 """
@@ -19,6 +20,7 @@ from mmc.plugins.glpi.database_93 import Glpi93
 from mmc.plugins.glpi.database_94 import Glpi94
 from mmc.plugins.glpi.database_95 import Glpi95
 from mmc.plugins.glpi.database_100 import Glpi100
+from mmc.plugins.glpi.database_110 import Glpi110
 
 from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
 
@@ -61,6 +63,8 @@ class Glpi(DyngroupDatabaseHelper):
             self.database = Glpi95()
         elif Glpi100().try_activation(self.config):
             self.database = Glpi100()
+        elif Glpi110().try_activation(self.config):
+            self.database = Glpi110()
         else:
             self.logger.warn(
                 "Can't load the right database backend for your version of GLPI"

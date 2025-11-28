@@ -343,7 +343,6 @@ class GLPIClient:
                 "date_creation": t.get("date_creation") or "",
                 "entities_id": t.get("entities_id"),
                 "locations_id":t.get("locations_id"),
-                "groups_id":t.get("groups_id"),
             })
         return users_data
 
