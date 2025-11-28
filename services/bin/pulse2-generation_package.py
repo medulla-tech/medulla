@@ -631,11 +631,11 @@ if __name__ == "__main__":
         cursor = db.cursor()
         sharingid = {}
         try:
-            cursor.execute("SELECT id,name FROM pkgs.pkgs_shares;")
+            cursor.execute("SELECT id,share_path FROM pkgs.pkgs_shares;")
             records = cursor.fetchall()
 
             for row in records:
-                sharingid[row[1]] = row[0]
+                sharingid[os.path.basename(row[1])] = row[0]
             if opts.verbosereport:
                 print("\nPARTAGE LISTE")
                 for part in sharingid:
