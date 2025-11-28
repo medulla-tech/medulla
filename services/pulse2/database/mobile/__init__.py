@@ -484,7 +484,69 @@ class MobileDatabase(DatabaseHelper):
             logging.getLogger().error(f"Error fetching messages: {e}")
             return []
 
-   
+    def getHmdmPushMessages(self, device_number="", message_filter="", status_filter="",
+                    date_from_millis=None, date_to_millis=None,
+                    page_size=50, page_num=1):
+        """
+        Fetch push messages from HMDM.
+        
+        :param device_number: Device number filter
+        :param message_filter: Message content filter
+        :param status_filter: Status filter (all messages, sent, delivered, read)
+        :param date_from_millis: Start date in milliseconds
+        :param date_to_millis: End date in milliseconds
+        :param page_size: Records per page
+        :param page_num: Page number
+        :return: List of push message records or empty list
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Impossible d'authentifier pour récupérer les messages.")
+            return []
+
+        url = f"{self.BASE_URL}/plugins/push/private/search"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+        
+        payload = {
+            "pageSize": page_size,
+            "pageNum": page_num
+        }
+
+        STATUS_MAP = {
+            0: "Sent",
+            1: "Delivered",
+            2: "Read",
+            3: "Failed",
+            4: "Pending",
+        }
+        
+        if device_number:
+            payload["deviceNumber"] = device_number
+        if message_filter:
+            payload["filter"] = message_filter
+        if status_filter and status_filter != "all messages":
+            payload["status"] = status_filter
+        if date_from_millis:
+            payload["dateFromMillis"] = date_from_millis
+        if date_to_millis:
+            payload["dateToMillis"] = date_to_millis
+
+        try:
+            resp = requests.post(url, json=payload, headers=headers)
+            resp.raise_for_status()
+            data = resp.json()
+            logging.getLogger().info(f"Push messages: {data}")
+
+
+            messages = data.get("data", {}).get("items", [])
+            result = [{"name": m["deviceNumber"], "time": m["ts"]//1000, "type": m["messageType"], "payload": m.get("payload", "")} for m in messages]
+
+            logging.getLogger().info(f"Push messages fetched successfully.")
+            return result
+        except Exception as e:
+            logging.getLogger().error(f"Error fetching push messages: {e}")
+            return []
+
     def getHmdmConfigurations(self):
         """
         Fetch the list of configurations from HMDM.

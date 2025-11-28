@@ -50,4 +50,10 @@ function xmlrpc_get_hmdm_messages($device_number="", $message_filter="", $status
     return xmlCall("mobile.getHmdmMessages", array($device_number, $message_filter, $status_filter,
                                                   $date_from_millis, $date_to_millis, $page_size, $page_num));
 }
+
+function xmlrpc_get_hmdm_push_messages($device_number="", $message_filter="", $status_filter="",
+                                      $date_from_millis=null, $date_to_millis=null, $page_size=50, $page_num=1){
+    return xmlCall("mobile.getHmdmPushMessages", array($device_number, $message_filter, $status_filter,
+                                                      $date_from_millis, $date_to_millis, $page_size, $page_num));
+}
 ?>
