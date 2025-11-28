@@ -50,7 +50,14 @@ if (safeCount($machinegroup) != 0) {
     echo strtoupper($machinegroup['platform']);
     echo "<br>";
     echo $os;
-    if (strpos(strtoupper($machinegroup['platform']), strtoupper($os)) !== false) {
+    // Mapping des distributions Linux
+    $linuxDistros = ['ubuntu', 'debian', 'centos', 'redhat', 'fedora', 'rocky', 'alma', 'suse', 'mint'];
+    $platformLower = strtolower($machinegroup['platform']);
+
+    $isLinuxMatch = (strtolower($os) === 'linux' &&
+        array_filter($linuxDistros, fn($d) => strpos($platformLower, $d) !== false));
+
+    if (strpos(strtoupper($machinegroup['platform']), strtoupper($os)) !== false || $isLinuxMatch) {
         // machine presente et os correct pour la QA
 
         $machineinfos = array_merge($_GET, $machinegroup, $customqa, $result);
@@ -64,21 +71,23 @@ if (safeCount($machinegroup) != 0) {
         $result['cmdid'] =  $COMMANDID;
         $machineinfos = array_merge($_GET, $machinegroup, $customqa, $result);
         xmlrpc_runXmppAsyncCommand(trim($customqa['customcmd']), $machineinfos);
-        xmlrpc_setfromxmppmasterlogxmpp("QA : user ".$_SESSION['login']." requests command [ ".$customqa['customcmd']." ] on machine : ".$machineinfos['cn'],
-                                    "QA",
-                                    '',
-                                    0,
-                                    $machineinfos['cn'] ,
-                                    'Manuel',
-                                    '',
-                                    '',
-                                    '',
-                                    "session user ".$_SESSION["login"],
-                                    'QuickAction | Command');
+        xmlrpc_setfromxmppmasterlogxmpp(
+            "QA : user ".$_SESSION['login']." requests command [ ".$customqa['customcmd']." ] on machine : ".$machineinfos['cn'],
+            "QA",
+            '',
+            0,
+            $machineinfos['cn'] ,
+            'Manuel',
+            '',
+            '',
+            '',
+            "session user ".$_SESSION["login"],
+            'QuickAction | Command');
         echo "send";
     } else {
         $msg = sprintf(_T("Sorry the operating system of the machine %s is [%s].<br>The custom QA is defined for operating system [%s]", "xmppmaster"), $machine, $machinegroup['platform'], $os);
-        xmlrpc_setCommand_action($uuid, $COMMANDID, "consoleweb", '<span style = "color : navy;">'. $msg.'</span>', "warning", $jid);
+        xmlrpc_setCommand_action($uuid, $COMMANDID, "consoleweb", '<span style = "color : navy;">'. $msg.'</span>', "warning",
+        $jid);
     }
 } else {
     // update table command action
