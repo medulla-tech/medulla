@@ -10600,12 +10600,11 @@ class XmppMasterDatabase(DatabaseHelper):
         Return dict containing the machines counts
         """
 
-        # Convert the list of int to a list of str, to be able to join them
-        entities = [str(e) for e in entities]
-        entities = ','.join(entities)
+        # Convert the list of int to a list of str, to be able to join them. Then concat the id list as "(idList)"
+        entities = "(%s)"%(",".join([str(e) for e in entities]))
 
         # Bind the datas to the request.
-        bind = {'agenttype': 'machine', 'entities': entities}
+        bind = {'agenttype': 'machine'}
         sql = """SELECT
           SUM(1) as total,
           SUM(CASE WHEN enabled = 0 THEN 1 ELSE 0 END) as total_offline,
@@ -10618,7 +10617,7 @@ class XmppMasterDatabase(DatabaseHelper):
           SUM(CASE WHEN uuid_inventorymachine != "" THEN 1 ELSE 0 END) as total_inventoried
         FROM machines
         JOIN glpi_entity on machines.glpi_entity_id = glpi_entity.id
-        WHERE agenttype=:agenttype and glpi_entity.glpi_id in (:entities)"""
+        WHERE agenttype=:agenttype and glpi_entity.glpi_id in %s"""%entities
         result = session.execute(sql, bind)
         session.commit()
         session.flush()
