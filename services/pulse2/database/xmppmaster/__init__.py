@@ -6014,6 +6014,23 @@ class XmppMasterDatabase(DatabaseHelper):
             return []
 
     @DatabaseHelper._sessionm
+    def get_team_patterns_from_login(self, session, login):
+        if login is None or login == "":
+            return []
+
+        sql = text("""
+            SELECT DISTINCT xmppmaster.pulse_users.login
+            FROM xmppmaster.pulse_users
+            INNER JOIN xmppmaster.pulse_team_user
+            ON xmppmaster.pulse_team_user.id_user = xmppmaster.pulse_users.id
+            WHERE :login REGEXP xmppmaster.pulse_users.login
+        """)
+        result = session.execute(sql, {"login": login})
+        patterns = [row[0] for row in result]
+
+        return patterns
+
+    @DatabaseHelper._sessionm
     def get_deploy_by_team_member(
         self,
         session,

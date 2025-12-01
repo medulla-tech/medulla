@@ -132,13 +132,14 @@ class RpcProxy(RpcProxyI):
 
     @with_optional_xmpp_context
     def get_profiles_list(self, login, start=0, limit=-1, filter="", ctx=None):
-        teammates = XmppMasterDatabase().get_teammembers_from_login(login)
         if login == "root":
             return KioskDatabase().get_profiles_list(start, limit, filter)
         else:
-            if teammates == []:
-                teammates.append(login)
-            return KioskDatabase().get_profiles_list_team(teammates, start, limit, filter)
+            patterns = XmppMasterDatabase().get_team_patterns_from_login(login)
+            if patterns == []:
+                patterns = [login]
+            result = KioskDatabase().get_profiles_list_team(patterns, start, limit, filter)
+            return result
 
     @with_optional_xmpp_context
     def get_profiles_name_list(self, ctx=None):
