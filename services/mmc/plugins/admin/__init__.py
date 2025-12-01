@@ -783,8 +783,7 @@ def restart_medulla_services():
 def regenerate_agent():
     try:
         cmd = (
-            "/var/lib/pulse2/clients/generate-pulse-agent.sh && "
-            "/var/lib/pulse2/clients/generate-pulse-agent.sh --minimal"
+            "/var/lib/pulse2/clients/generate-pulse-agent.sh"
         )
         proc = subprocess.Popen(
             ["/bin/bash", "-lc", cmd],
