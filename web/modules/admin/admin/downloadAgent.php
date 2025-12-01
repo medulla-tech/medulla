@@ -22,27 +22,69 @@
  */
 require_once "modules/admin/includes/xmlrpc.php";
 
-$tag = $_GET['tag'] ?? '';
+// POST: validate and redirect to download
+if (isset($_POST["bconfirm"])) {
+    $tag = $_POST['tag'] ?? '';
+    $os  = $_POST['os'] ?? 'windows';
 
-$dl_tag = xmlrpc_get_dl_tag($tag);
+    $dl_tag = xmlrpc_get_dl_tag($tag);
 
-$filename = 'Medulla-Agent-windows-FULL-latest.exe';
+    // Select filename based on OS
+    if ($os === 'linux') {
+        $filename = 'Medulla-Agent-linux-MINIMAL-latest.sh';
+    } else {
+        $filename = 'Medulla-Agent-windows-FULL-latest.exe';
+    }
 
-$fs_path  = "/var/lib/pulse2/medulla_agent/$dl_tag/$filename";
-$pub_path = "/medulla_agent/" . rawurlencode($dl_tag) . "/" . rawurlencode($filename);
+    $fs_path = "/var/lib/pulse2/medulla_agent/$dl_tag/$filename";
 
-if (!is_file($fs_path)) { http_response_code(404); exit('Not found'); }
+    if (!is_file($fs_path)) {
+        new NotifyWidgetFailure(_("Agent file not found."));
+        header("Location: " . urlStrRedirect("admin/admin/entitiesManagement", []));
+        exit;
+    }
 
-/* --- Option A : X-Sendfile (recommandé) --- */
-if (function_exists('apache_get_modules') && in_array('mod_xsendfile', apache_get_modules(), true)) {
-    header('Content-Type: application/octet-stream');
-    header('Content-Disposition: attachment; filename="'.$filename.'"');
-    header('Content-Length: ' . filesize($fs_path));
-    header('X-Sendfile: ' . $fs_path);
+    // Show notification
+    new NotifyWidgetSuccess(sprintf(_("Download of %s started."), $filename));
+
+    // Build URLs
+    $downloadUrl = urlStrRedirect("admin/admin/downloadAgentFile", [
+        "tag" => $tag,
+        "os" => $os
+    ]);
+    $redirectUrl = urlStrRedirect("admin/admin/entitiesManagement", []);
+
+    // Trigger download and redirect Entities page
+    echo '<script>
+    window.location.href = "' . addslashes($downloadUrl) . '";
+    setTimeout(function() {
+        window.parent.location.href = "' . addslashes($redirectUrl) . '";
+    }, 1000);
+    </script>';
     exit;
 }
 
-/* --- Option B : fallback via redirection vers l’Aliased path --- */
-header('Content-Type: application/octet-stream'); // facultatif, le redirect suffit
-header('Location: ' . $pub_path, true, 302);
-exit;
+// GET: display popup form
+$tag = $_GET['tag'] ?? '';
+
+$f = new PopupForm(_("Download Agent"));
+$f->push(new Table());
+
+// Radio button for OS selection
+$osRadio = new RadioTpl("os");
+$osRadio->setChoices([_("Windows"), _("Linux")]);
+$osRadio->setValues(["windows", "linux"]);
+$osRadio->setSelected("windows");
+
+$tr = new TrFormElement(_("Select the operating system:"), $osRadio);
+$tr->setFirstColWidth('50%');
+$f->add($tr);
+
+// Hidden field for tag
+$hidden = new HiddenTpl("tag");
+$f->add($hidden, array("value" => $tag, "hide" => true));
+
+$f->pop();
+$f->addValidateButton("bconfirm", _("Download"));
+$f->addCancelButton("bback");
+$f->display();
