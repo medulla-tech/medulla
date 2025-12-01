@@ -25,7 +25,7 @@ require_once("modules/medulla_server/includes/xmlrpc.inc.php");
 $res = xmlrpc_regenerate_agent();
 
 if($res) {
-    new NotifyWidgetSuccess(_T("Agent correctly regenerate", "admin"));
+    new NotifyWidgetSuccess(_T("Agent successfully regenerated", "admin"));
     header("Location:main.php");
     exit;
 } else {
