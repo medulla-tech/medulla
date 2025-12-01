@@ -10599,7 +10599,29 @@ class XmppMasterDatabase(DatabaseHelper):
         return ret
 
     @DatabaseHelper._sessionm
-    def get_computer_count_for_dashboard(self, session):
+    def get_computer_count_for_dashboard(self, session, entities:list=[]):
+        """
+        Count the machines based on:
+            - machine offline uninventoried
+            - machine offline inventoried
+            - machine online uninventoried
+            - machine online inventoried
+            - total of uninventoried machines
+            - total of inventoried machines
+            - total of (all) machines
+
+        Params:
+            - self XmppMasterDatabase: Object instance
+            - session Sqlalchemy session: Wrapped session.
+
+        Return dict containing the machines counts
+        """
+
+        # Convert the list of int to a list of str, to be able to join them. Then concat the id list as "(idList)"
+        entities = "(%s)"%(",".join([str(e) for e in entities]))
+
+        # Bind the datas to the request.
+        bind = {'agenttype': 'machine'}
         sql = """SELECT
           SUM(1) as total,
           SUM(CASE WHEN enabled = 0 THEN 1 ELSE 0 END) as total_offline,
@@ -10610,8 +10632,10 @@ class XmppMasterDatabase(DatabaseHelper):
           SUM(CASE WHEN enabled = 1 AND uuid_inventorymachine != "" THEN 1 ELSE 0 END) as online_inventoried,
           SUM(CASE WHEN uuid_inventorymachine = "" THEN 1 ELSE 0 END) as total_uninventoried,
           SUM(CASE WHEN uuid_inventorymachine != "" THEN 1 ELSE 0 END) as total_inventoried
-        FROM machines WHERE agenttype="machine";"""
-        result = session.execute(sql)
+        FROM machines
+        JOIN glpi_entity on machines.glpi_entity_id = glpi_entity.id
+        WHERE agenttype=:agenttype and glpi_entity.glpi_id in %s"""%entities
+        result = session.execute(sql, bind)
         session.commit()
         session.flush()
         # There is only one line so we can truncate
@@ -10626,10 +10650,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 "online_inventoried": int(x[6]) if x[6] is not None else 0,
                 "total_uninventoried": int(x[7]) if x[7] is not None else 0,
                 "total_inventoried": int(x[8]) if x[8] is not None else 0,
-            }
-            for x in result
-        ][0]
-
+            } for x in result][0]
         return ret
 
     @DatabaseHelper._sessionm
@@ -12803,16 +12824,17 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         return list_panels_template
 
     @DatabaseHelper._sessionm
-    def get_mon_events(self, session, start, max, filter):
+    def get_mon_events(self, session, start=0, max=-1, filter="", entities=[]):
         """Get monitoring events informations
-        Params:
-            - sqlalchemy session: managed by DatabaseHelper._sessionm decorator
-            - int start: represents the starting offset for a sql limit clause
-            - int max: represents the number of result returned by the function
-            - string filter: if not empty this string is searched into each event
+
+        Args:
+            session (SqlAlchemy session):Managed by DatabaseHelper._sessionm decorator
+            start (int, optionnal): Represents the starting offset for a sql limit clause
+            max (int, optionnal): Represents the number of result returned by the function
+            filter (str): if not empty this string is searched into each event
+            entities (list): the list of entities the user can reach
         Returns:
-            dict events: all the events found for the limit and filter clause. The
-            dict has the following shape:
+            dict: All the events found for the limit and filter clause. The dict has the following shape:
             result = {
                 'total': 1,
                 'datas' : [
@@ -12842,9 +12864,11 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             .outerjoin(Mon_rules, Mon_event.id_rule == Mon_rules.id)
             .outerjoin(Mon_machine, Mon_event.machines_id == Mon_machine.id)
             .outerjoin(Machines, Mon_machine.machines_id == Machines.id)
+            .join(Glpi_entity, Machines.glpi_entity_id == Glpi_entity.id)
             .filter(
                 and_(Mon_event.status_event == 1,
-                     Mon_event.type_event.in_(event_types))
+                     Mon_event.type_event.in_(event_types),
+                     Glpi_entity.glpi_id.in_(entities))
             )
         )
 
@@ -13121,16 +13145,18 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             return "failure"
 
     @DatabaseHelper._sessionm
-    def get_count_success_rate_for_dashboard(self, session):
+    def get_count_success_rate_for_dashboard(self, session, entities=[]):
         """
         call the stored procedure to get the deployment success rate for the 6 last weeks
 
         @returns:
             list of float
         """
-        session.execute(
-            "call countSuccessRateLastSixWeeks(@week1, @week2, @week3, @week4, @week5, @week6)"
-        )
+
+        entities = ",".join([str(e) for e in entities])
+
+        bind = {"entities": entities}
+        session.execute("call countSuccessRateLastSixWeeks((:entities), @week1, @week2, @week3, @week4, @week5, @week6)", bind)
         query = session.execute(
             "select @week1, @week2, @week3, @week4, @week5, @week6")
         query = query.fetchall()[0]
@@ -13746,11 +13772,15 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         return result
 
     @DatabaseHelper._sessionm
-    def get_count_total_deploy_for_dashboard(self, session):
+    def get_count_total_deploy_for_dashboard(self, session, entities=[]):
         """Get the total of deployments for each last six months
         Returns: list of deployments
         """
-        session.execute("call countDeployLastSixMonths()")
+        entities = ",".join([str(e) for e in entities])
+
+        bind = {"entities": entities}
+
+        session.execute("call countDeployLastSixMonths(:entities)", bind)
         query = session.execute(
             "select @month6, @month5, @month4, @month3, @month2, @month1"
         )

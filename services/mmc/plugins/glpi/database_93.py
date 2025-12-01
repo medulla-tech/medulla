@@ -6827,7 +6827,7 @@ class Glpi93(DyngroupDatabaseHelper):
             return True
 
     @DatabaseHelper._sessionm
-    def get_os_for_dashboard(self, session):
+    def get_os_for_dashboard(self, session, entities=[]):
         """This function returns a list of OS and its version for dashboard
         Returns:
             dict of all the founded elements
@@ -6847,6 +6847,8 @@ class Glpi93(DyngroupDatabaseHelper):
             ]
         """
 
+        entities = ",".join([str(e) for e in entities])
+        binding = {"entities": entities}
         sql = """SELECT
   glpi_operatingsystems.name as os,
   glpi_operatingsystemversions.name as version_name
@@ -6856,14 +6858,14 @@ INNER JOIN
   glpi_operatingsystems
 ON
   operatingsystems_id = glpi_operatingsystems.id
-
 left JOIN
   glpi_operatingsystemversions
 ON
   operatingsystemversions_id = glpi_operatingsystemversions.id
+WHERE glpi_computers_pulse.entities_id in (:entities)
 ORDER BY
  glpi_operatingsystems.name, glpi_operatingsystemversions.name ASC;"""
-        res = session.execute(sql)
+        res = session.execute(sql, binding)
         result = [{"os": os, "version": version, "count": 1} for os, version in res]
 
         def _add_element(element, list):

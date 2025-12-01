@@ -33,7 +33,7 @@ $base = &$MMCApp->getModule('base');
 $main = &$base->getSubmod('main');
 
 $mod = new Module("dashboard");
-$mod->setVersion("5.4.3");
+$mod->setVersion("5.4.4");
 $mod->setRevision('');
 $mod->setDescription(_T("Dashboard", "dashboard"));
 $mod->setAPIVersion("0:0:0");
@@ -77,7 +77,13 @@ $submod->addPage($page);
 $page = new Page("alerts", _T("Alerts Panel", "dashboard"));
 $submod->addPage($page);
 
-$page = new Page("alertsentity", _T("Alerts by Entity Panel", "dashboard"));
+$page = new Page("successRate", _T("Success Rate Panel", "dashboard"));
+$submod->addPage($page);
+
+$page = new Page("agents", _T("Agent Panel", "dashboard"));
+$submod->addPage($page);
+
+$page = new Page("deploymentsLaunched", _T("Deployment Launched Panel", "dashboard"));
 $submod->addPage($page);
 
 $mod->addSubmod($submod);
