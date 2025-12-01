@@ -228,6 +228,11 @@ $page = new Page("downloadAgent", _T('Download Agent', 'admin'));
 $page->setFile("modules/admin/admin/downloadAgent.php");
 $submod->addPage($page);
 
+$page = new Page("downloadAgentFile", _T('Download Agent File', 'admin'));
+$page->setFile("modules/admin/admin/downloadAgentFile.php");
+$page->setOptions(array("visible" => false, "noHeader" => true, "noACL" => true));
+$submod->addPage($page);
+
 $page = new Page("manageproviders", _T('Manage Providers', 'admin'));
 $page->setFile("modules/admin/admin/manageproviders.php");
 $submod->addPage($page);
