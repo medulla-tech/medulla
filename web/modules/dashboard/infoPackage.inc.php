@@ -80,6 +80,12 @@ $submod->addPage($page);
 $page = new Page("successRate", _T("Success Rate Panel", "dashboard"));
 $submod->addPage($page);
 
+$page = new Page("agents", _T("Agent Panel", "dashboard"));
+$submod->addPage($page);
+
+$page = new Page("deploymentsLaunched", _T("Deployment Launched Panel", "dashboard"));
+$submod->addPage($page);
+
 $mod->addSubmod($submod);
 $MMCApp->addModule($mod);
 
