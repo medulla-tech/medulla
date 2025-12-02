@@ -22,7 +22,7 @@ from sqlalchemy import (
 from sqlalchemy.orm import sessionmaker, load_only
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 from sqlalchemy.exc import DBAPIError
-from datetime import datetime, timedelta  # date,
+from datetime import datetime, date, timedelta  # date,
 
 # PULSE2 modules
 from mmc.database.database_helper import DatabaseHelper
@@ -10617,8 +10617,8 @@ class XmppMasterDatabase(DatabaseHelper):
         Return dict containing the machines counts
         """
 
-        # Convert the list of int to a list of str, to be able to join them. Then concat the id list as "(idList)"
-        entities = "(%s)"%(",".join([str(e) for e in entities]))
+        # Convert the list of int to a list of str, to be able to join them
+        entities = "(%s)"%(','.join([str(e) for e in entities]))
 
         # Bind the datas to the request.
         bind = {'agenttype': 'machine'}
@@ -10635,22 +10635,23 @@ class XmppMasterDatabase(DatabaseHelper):
         FROM machines
         JOIN glpi_entity on machines.glpi_entity_id = glpi_entity.id
         WHERE agenttype=:agenttype and glpi_entity.glpi_id in %s"""%entities
-        result = session.execute(sql, bind)
+        result = session.execute(sql, bind).first()
         session.commit()
         session.flush()
+
         # There is only one line so we can truncate
-        ret = [
-            {
-                "total": int(x[0]) if x[0] is not None else 0,
-                "total_offline": int(x[1]) if x[1] is not None else 0,
-                "offline_uninventoried": int(x[2]) if x[2] is not None else 0,
-                "offline_inventoried": int(x[3]) if x[3] is not None else 0,
-                "total_online": int(x[4]) if x[4] is not None else 0,
-                "online_uninventoried": int(x[5]) if x[5] is not None else 0,
-                "online_inventoried": int(x[6]) if x[6] is not None else 0,
-                "total_uninventoried": int(x[7]) if x[7] is not None else 0,
-                "total_inventoried": int(x[8]) if x[8] is not None else 0,
-            } for x in result][0]
+        ret = {
+            "total": int(result.total) if result.total is not None else 0,
+            "total_offline": int(result.total_offline) if result.total_offline is not None else 0,
+            "offline_uninventoried": int(result.offline_uninventoried) if result.offline_uninventoried is not None else 0,
+            "offline_inventoried": int(result.offline_inventoried) if result.offline_inventoried is not None else 0,
+            "total_online": int(result.total_online) if result.total_online is not None else 0,
+            "online_uninventoried": int(result.online_uninventoried) if result.online_uninventoried is not None else 0,
+            "online_inventoried": int(result.online_inventoried) if result.online_inventoried is not None else 0,
+            "total_uninventoried": int(result.total_uninventoried) if result.total_uninventoried is not None else 0,
+            "total_inventoried": int(result.total_inventoried) if result.total_inventoried is not None else 0,
+        }
+
         return ret
 
     @DatabaseHelper._sessionm
@@ -13788,13 +13789,74 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         return list(query)
 
     @DatabaseHelper._sessionm
-    def get_count_agent_for_dashboard(self, session):
-        session.execute("call countAgentsLastSixMonths()")
-        query = session.execute(
-            "select @month6, @month5, @month4, @month3, @month2, @month1"
-        )
-        query = query.fetchall()[0]
-        return list(query)
+    def get_count_agent_for_dashboard(self, session, entity=[]):
+        #knokno
+
+        entities = "(%s)"%(','.join([str(e) for e in entity]))
+        e0 = date.today()
+        b0 = e0.replace(day=1)
+        e1 = b0 - timedelta(days=1)
+        b1 = e1.replace(day=1)
+        e2 = b1- timedelta(days=1)
+        b2 = e2.replace(day=1)
+        e3 = b2 - timedelta(days=1)
+        b3 = e3.replace(day=1)
+        e4 = b3 - timedelta(days=1)
+        b4 = e4.replace(day=1)
+        e5 = b4 - timedelta(days=1)
+        b5 = e5.replace(day=1)
+        bind = {
+            "e0" : e0,
+            "b0" : b0,
+            "e1" : e1,
+            "b1" : b1,
+            "e2" : e2,
+            "b2" : b2,
+            "e3" : e3,
+            "b3" : b3,
+            "e4" : e4,
+            "b4" : b4,
+            "e5" : e5,
+            "b5" : b5,
+        }
+
+
+        sql = """SELECT
+    SUM(month1) AS total_month1,
+    SUM(month2) AS total_month2,
+    SUM(month3) AS total_month3,
+    SUM(month4) AS total_month4,
+    SUM(month5) AS total_month5,
+    SUM(month6) AS total_month6
+FROM (
+    SELECT
+        um.jid,
+        (um.date >= :b0 AND um.date <= :e0) AS month1,
+        (um.date >= :b1 AND um.date <= :e1) AS month2,
+        (um.date >= :b2 AND um.date <= :e2) AS month3,
+        (um.date >= :b3 AND um.date <= :e3) AS month4,
+        (um.date >= :b4 AND um.date <= :e4) AS month5,
+        (um.date >= :b5 AND um.date <= :e5) AS month6
+    FROM uptime_machine um
+    JOIN machines m ON um.jid = m.jid
+    JOIN glpi_entity ge ON m.glpi_entity_id = ge.id
+    WHERE    m.agenttype = 'machine'
+         AND ge.glpi_id IN %s
+    GROUP BY um.jid
+) AS t;"""%entities
+
+        query = session.execute(sql, bind).first()
+        if query is None :
+            return [0, 0, 0, 0, 0, 0]
+        result = [
+            int(query.total_month1),
+            int(query.total_month2),
+            int(query.total_month3),
+            int(query.total_month4),
+            int(query.total_month5),
+            int(query.total_month6),
+        ]
+        return result
 
     @DatabaseHelper._sessionm
     def get_ars_group_in_list_clusterid(self, session, clusterid, enabled=None):
