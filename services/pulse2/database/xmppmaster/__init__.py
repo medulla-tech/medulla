@@ -8278,7 +8278,7 @@ class XmppMasterDatabase(DatabaseHelper):
         # fiel for table ent and alias
         entityfield = {
             "entityname": "name",
-            "entitypath": "complete_name",
+            "entitypath": "completename",
             "entityid": "id",
         }
         # fiel for table location and alias
@@ -8361,7 +8361,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 ]
                 if entitylist:
                     entitystrlist = ",".join(entitylist)
-                    entity = " AND ent.glpi_id in (%s) " % entitystrlist
+                    entity = " AND ent.id in (%s) " % entitystrlist
 
         ordered = ""
         if self.config.ordered == 1:
@@ -8408,7 +8408,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     loc.complete_name AS locationpath,
                     loc.glpi_id AS locationid,
                     ent.name AS entityname,
-                    ent.complete_name AS entitypath,
+                    ent.completename AS entitypath,
                     ent.id AS entityid,
                     GROUP_CONCAT(DISTINCT IF( netw.ipaddress='', null,netw.ipaddress) SEPARATOR ',') AS listipadress,
                     GROUP_CONCAT(DISTINCT IF( netw.broadcast='', null,netw.broadcast) SEPARATOR ',') AS broadcast,
@@ -8419,9 +8419,11 @@ class XmppMasterDatabase(DatabaseHelper):
                         LEFT OUTER JOIN
                     local_glpi_filters lgf on CONCAT("UUID", lgf.id) = mach.uuid_inventorymachine
                         LEFT OUTER JOIN
-                    glpi_location loc ON loc.id = mach.glpi_location_id
+                    local_glpi_machines lgm ON CONCAT("UUID", lgm.id) = mach.uuid_inventorymachine
                         LEFT OUTER JOIN
-                    glpi_entity ent ON ent.id = mach.glpi_entity_id
+                    local_glpi_entities ent ON lgm.entities_id = ent.id
+                        LEFT OUTER JOIN
+                    glpi_location loc ON loc.id = mach.glpi_location_id
                         LEFT OUTER JOIN
                     glpi_register_keys reg ON reg.machines_id = mach.id
                         LEFT OUTER JOIN
