@@ -593,6 +593,11 @@ class RpcProxy(RpcProxyI):
         result = XmppMasterDatabase().get_count_total_deploy_for_dashboard(entities)
         return result
 
+    @with_optional_xmpp_context
+    def get_count_agent_for_dashboard(self, ctx=None):
+        entities = ctx.get_session_info()['mondict']['liste_entities_user']
+        result = XmppMasterDatabase().get_count_agent_for_dashboard(entities)
+        return result
 
     def getCommand_action_time(self, during_the_last_seconds, start, stop, filt):
         return XmppMasterDatabase().getCommand_action_time(
@@ -2177,11 +2182,6 @@ def edit_rule_to_relay(id, relay_id, rule_id, subject):
 
 def get_minimal_relays_list(mode):
     return XmppMasterDatabase().get_minimal_relays_list(mode)
-
-
-def get_count_agent_for_dashboard():
-    result = XmppMasterDatabase().get_count_agent_for_dashboard()
-    return result
 
 
 def get_machines_for_ban(jid_ars, start=0, end=-1, filter=""):
