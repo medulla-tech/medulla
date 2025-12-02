@@ -13842,9 +13842,10 @@ FROM (
         (um.date >= :b5 AND um.date <= :e5) AS month6
     FROM uptime_machine um
     JOIN machines m ON um.jid = m.jid
-    JOIN glpi_entity ge ON m.glpi_entity_id = ge.id
+    JOIN local_glpi_machine lgm on machines.id = concat("UUID", lgm.id)
+    JOIN local_glpi_entities lge on lgm.entities_id = lge.id
     WHERE    m.agenttype = 'machine'
-         AND ge.glpi_id IN %s
+         AND lge.id IN %s
     GROUP BY um.jid
 ) AS t;"""%entities
 
