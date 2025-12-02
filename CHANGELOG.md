@@ -1,5 +1,14 @@
 # Change Log
 
+## [5.4.4](https://github.com/medulla-tech/medulla/releases/tag/5.4.4) (2025-12-01)
+- [FEATURE] Dashboard widgets are now scoped to the user’s allowed entities
+- [FEATURE] Initial support for GLPI version 11
+- [FEATURE] Support for Ubuntu distributions for clients
+- [FEATURE] Improve imaging experience on post imaging scripts and master images
+- [BUGFIX]  Fix support for ITSM-NG version 2.1
+- [BUGFIX]  Fix insertion of packages in the database when shares other than global are used
+- [BUGFIX]  Fix detection of Linux distributions for quick actions
+
 ## [5.4.3](https://github.com/medulla-tech/medulla/releases/tag/5.4.3) (2025-11-19)
 - [FEATURE] Update Office and Visual Studio through Windows update module
 - [FEATURE] Remove unused locale
