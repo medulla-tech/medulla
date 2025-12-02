@@ -10635,8 +10635,9 @@ class XmppMasterDatabase(DatabaseHelper):
           SUM(CASE WHEN uuid_inventorymachine = "" THEN 1 ELSE 0 END) as total_uninventoried,
           SUM(CASE WHEN uuid_inventorymachine != "" THEN 1 ELSE 0 END) as total_inventoried
         FROM machines
-        JOIN glpi_entity on machines.glpi_entity_id = glpi_entity.id
-        WHERE agenttype=:agenttype and glpi_entity.glpi_id in %s"""%entities
+        join local_glpi_machines lgm on machines.uuid_inventorymachine = concat("UUID", lgm.id)
+        join local_glpi_entities lge on lgm.entities_id = lge.id
+        where agenttype ="machine" and lge.id in %s"""%entities
         result = session.execute(sql, bind).first()
         session.commit()
         session.flush()
