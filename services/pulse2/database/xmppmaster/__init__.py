@@ -13151,21 +13151,58 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
     @DatabaseHelper._sessionm
     def get_count_success_rate_for_dashboard(self, session, entities=[]):
         """
-        call the stored procedure to get the deployment success rate for the 6 last weeks
+        Calculate the success rate for deployments for the six last weeks socped for specified entities
 
-        @returns:
-            list of float
+        Args:
+            self (XmppMasterDatabase): Instance of the model object
+            session (sqlalchemy session): The sql session
+            entities (list, optionnal): The list of entities to include on the scope
+        Returns:
+            (list) list of float corresponding to the success ratio for the six last weeks
         """
 
-        entities = ",".join([str(e) for e in entities])
+        entities = "(%s)"%(",".join([str(e) for e in entities]))
 
-        bind = {"entities": entities}
-        session.execute("call countSuccessRateLastSixWeeks((:entities), @week1, @week2, @week3, @week4, @week5, @week6)", bind)
-        query = session.execute(
-            "select @week1, @week2, @week3, @week4, @week5, @week6")
-        query = query.fetchall()[0]
+        sql = """select
+  coalesce(NULL, (w1/total_w1)*100, 0) as ratio1,
+  coalesce(NULL, (w2/total_w2)*100, 0) as ratio2,
+  coalesce(NULL, (w3/total_w3)*100, 0) as ratio3,
+  coalesce(NULL, (w4/total_w4)*100, 0) as ratio4,
+  coalesce(NULL, (w5/total_w5)*100, 0) as ratio5,
+  coalesce(NULL, (w6/total_w6)*100, 0) as ratio6
+from(select 
+    coalesce(NULL, sum(case when state = "DEPLOYMENT SUCCESS" and startcmd >= (CURRENT_DATE() - INTERVAL 1 WEEK) then 1 else 0 end), 0) as w1,
+    coalesce(NULL, sum(case when startcmd >= (CURRENT_DATE() - INTERVAL 1 WEEK) then 1 else 0 end), 0) as total_w1,
+    coalesce(NULL, sum(case when state = "DEPLOYMENT SUCCESS" and startcmd >= (CURRENt_DATE() - INTERVAL 2 WEEK) and startcmd < (CURRENT_DATE() - INTERVAL 1 WEEK) then 1 else 0 end), 0) as w2,
+    coalesce(NULL, sum(case when startcmd >= (CURRENt_DATE() - INTERVAL 2 WEEK) and startcmd < (CURRENT_DATE() - INTERVAL 1 WEEK) then 1 else 0 end), 0) as total_w2,
+    coalesce(NULL, sum(case when state = "DEPLOYMENT SUCCESS" and startcmd >= (CURRENt_DATE() - INTERVAL 3 WEEK) and startcmd < (CURRENT_DATE() - INTERVAL 2 WEEK) then 1 else 0 end), 0) as w3,
+    coalesce(NULL, sum(case when startcmd >= (CURRENt_DATE() - INTERVAL 3 WEEK) and startcmd < (CURRENT_DATE() - INTERVAL 2 WEEK) then 1 else 0 end), 0) as total_w3,
+    coalesce(NULL, sum(case when state = "DEPLOYMENT SUCCESS" and startcmd >= (CURRENt_DATE() - INTERVAL 4 WEEK) and startcmd < (CURRENT_DATE() - INTERVAL 3 WEEK) then 1 else 0 end), 0) as w4,
+    coalesce(NULL, sum(case when startcmd >= (CURRENt_DATE() - INTERVAL 4 WEEK) and startcmd < (CURRENT_DATE() - INTERVAL 3 WEEK) then 1 else 0 end), 0) as total_w4,
+    coalesce(NULL, sum(case when state = "DEPLOYMENT SUCCESS" and startcmd >= (CURRENt_DATE() - INTERVAL 5 WEEK) and startcmd < (CURRENT_DATE() - INTERVAL 4 WEEK) then 1 else 0 end), 0) as w5,
+    coalesce(NULL, sum(case when startcmd >= (CURRENt_DATE() - INTERVAL 5 WEEK) and startcmd < (CURRENT_DATE() - INTERVAL 4 WEEK) then 1 else 0 end), 0) as total_w5,
+    coalesce(NULL, sum(case when state = "DEPLOYMENT SUCCESS" and startcmd >= (CURRENt_DATE() - INTERVAL 5 WEEK) and startcmd < (CURRENT_DATE() - INTERVAL 4 WEEK) then 1 else 0 end), 0) as w6,
+    coalesce(NULL, sum(case when startcmd >= (CURRENt_DATE() - INTERVAL 5 WEEK) and startcmd < (CURRENT_DATE() - INTERVAL 4 WEEK) then 1 else 0 end), 0) as total_w6
+  from deploy d
+  join machines m on m.jid = d.jidmachine
+  join local_glpi_machines lgm on m.uuid_inventorymachine = concat("UUID", lgm.id)
+  join local_glpi_entities lge on lgm.entities_id = lge.id
+  where lge.id in %s
+) as t;"""%entities
+        query = session.execute(sql).first()
+        if query is None :
+            return [0, 0, 0, 0, 0, 0]
 
-        return list(query)
+        # return sorted datas order by older to newer
+        result = [
+            query.ratio1,
+            query.ratio2,
+            query.ratio3,
+            query.ratio4,
+            query.ratio5,
+            query.ratio6,
+        ]
+        return result
 
     @DatabaseHelper._sessionm
     def get_ars_from_cluster(self, session, id, filter=""):
