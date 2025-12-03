@@ -13793,8 +13793,16 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
 
     @DatabaseHelper._sessionm
     def get_count_agent_for_dashboard(self, session, entity=[]):
-        #knokno
+        """
+        Count distincts agents in activity (enabled or disabled) for the six last months.
 
+        Args:
+            self (XmppMasterDatabase) : The instance of the model object
+            session (sqlalchemy session) : The session to the database
+            entity (list, optionnal) : Define the entity scope we have to count
+        Returns:
+            (list) List of counts for the last six months, ordered by older to newer (element[0] = month 6 and element[5] = month 1)
+        """
         entities = "(%s)"%(','.join([str(e) for e in entity]))
         e0 = date.today()
         b0 = e0.replace(day=1)
@@ -13823,26 +13831,25 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             "b5" : b5,
         }
 
-
         sql = """SELECT
-    SUM(month1) AS total_month1,
-    SUM(month2) AS total_month2,
-    SUM(month3) AS total_month3,
-    SUM(month4) AS total_month4,
+    SUM(month6) AS total_month6,
     SUM(month5) AS total_month5,
-    SUM(month6) AS total_month6
+    SUM(month4) AS total_month4,
+    SUM(month3) AS total_month3,
+    SUM(month2) AS total_month2,
+    SUM(month1) AS total_month1
 FROM (
     SELECT
         um.jid,
-        (um.date >= :b0 AND um.date <= :e0) AS month1,
-        (um.date >= :b1 AND um.date <= :e1) AS month2,
-        (um.date >= :b2 AND um.date <= :e2) AS month3,
-        (um.date >= :b3 AND um.date <= :e3) AS month4,
-        (um.date >= :b4 AND um.date <= :e4) AS month5,
-        (um.date >= :b5 AND um.date <= :e5) AS month6
+        (case when um.date >= :b0 AND um.date <= :e0 then 1 else 0 end) AS month1,
+        (case when um.date >= :b1 AND um.date <= :e1 then 1 else 0 end) AS month2,
+        (case when um.date >= :b2 AND um.date <= :e2 then 1 else 0 end) AS month3,
+        (case when um.date >= :b3 AND um.date <= :e3 then 1 else 0 end) AS month4,
+        (case when um.date >= :b4 AND um.date <= :e4 then 1 else 0 end) AS month5,
+        (case when um.date >= :b5 AND um.date <= :e5 then 1 else 0 end) AS month6
     FROM uptime_machine um
     JOIN machines m ON um.jid = m.jid
-    JOIN local_glpi_machine lgm on machines.id = concat("UUID", lgm.id)
+    JOIN local_glpi_machines lgm on m.uuid_inventorymachine = concat("UUID", lgm.id)
     JOIN local_glpi_entities lge on lgm.entities_id = lge.id
     WHERE    m.agenttype = 'machine'
          AND lge.id IN %s
@@ -13852,13 +13859,15 @@ FROM (
         query = session.execute(sql, bind).first()
         if query is None :
             return [0, 0, 0, 0, 0, 0]
+
+        # return sorted datas order by older to newer
         result = [
-            int(query.total_month1),
-            int(query.total_month2),
-            int(query.total_month3),
-            int(query.total_month4),
-            int(query.total_month5),
-            int(query.total_month6),
+            query.total_month6,
+            query.total_month5,
+            query.total_month4,
+            query.total_month3,
+            query.total_month2,
+            query.total_month1,
         ]
         return result
 
