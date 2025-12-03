@@ -13170,7 +13170,7 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
   coalesce(NULL, (w4/total_w4)*100, 0) as ratio4,
   coalesce(NULL, (w5/total_w5)*100, 0) as ratio5,
   coalesce(NULL, (w6/total_w6)*100, 0) as ratio6
-from(select 
+from(select
     coalesce(NULL, sum(case when state = "DEPLOYMENT SUCCESS" and startcmd >= (CURRENT_DATE() - INTERVAL 1 WEEK) then 1 else 0 end), 0) as w1,
     coalesce(NULL, sum(case when startcmd >= (CURRENT_DATE() - INTERVAL 1 WEEK) then 1 else 0 end), 0) as total_w1,
     coalesce(NULL, sum(case when state = "DEPLOYMENT SUCCESS" and startcmd >= (CURRENt_DATE() - INTERVAL 2 WEEK) and startcmd < (CURRENT_DATE() - INTERVAL 1 WEEK) then 1 else 0 end), 0) as w2,
@@ -13815,18 +13815,42 @@ from(select
     @DatabaseHelper._sessionm
     def get_count_total_deploy_for_dashboard(self, session, entities=[]):
         """Get the total of deployments for each last six months
+        Params:
+            self (XmppMasterDatabase) : The model object instance
+            session (sqlalchemy session): The session sql
+            entities (list, optionnal): The list of entities to include in the scope
         Returns: list of deployments
         """
-        entities = ",".join([str(e) for e in entities])
 
-        bind = {"entities": entities}
+        entities = "(%s)"%(",".join([str(e) for e in entities]))
 
-        session.execute("call countDeployLastSixMonths(:entities)", bind)
-        query = session.execute(
-            "select @month6, @month5, @month4, @month3, @month2, @month1"
-        )
-        query = query.fetchall()[0]
-        return list(query)
+        sql = """select
+  coalesce(NULL, sum(case when startcmd >= (DATE_FORMAT(CURDATE(), "%%Y-%%m-01") - INTERVAL 6 MONTH) and startcmd < (DATE_FORMAT(CURDATE(), "%%Y-%%m-01") - INTERVAL 5 MONTH) then 1 else 0 end), 0) as m6,
+  coalesce(NULL, sum(case when startcmd >= (DATE_FORMAT(CURDATE(), "%%Y-%%m-01") - INTERVAL 5 MONTH) and startcmd < (DATE_FORMAT(CURDATE(), "%%Y-%%m-01") - INTERVAL 4 MONTH) then 1 else 0 end), 0) as m5,
+  coalesce(NULL, sum(case when startcmd >= (DATE_FORMAT(CURDATE(), "%%Y-%%m-01") - INTERVAL 4 MONTH) and startcmd < (DATE_FORMAT(CURDATE(), "%%Y-%%m-01") - INTERVAL 3 MONTH) then 1 else 0 end), 0) as m4,
+  coalesce(NULL, sum(case when startcmd >= (DATE_FORMAT(CURDATE(), "%%Y-%%m-01") - INTERVAL 3 MONTH) and startcmd < (DATE_FORMAT(CURDATE(), "%%Y-%%m-01") - INTERVAL 2 MONTH) then 1 else 0 end), 0) as m3,
+  coalesce(NULL, sum(case when startcmd >= (DATE_FORMAT(CURDATE(), "%%Y-%%m-01") - INTERVAL 2 MONTH) and startcmd < (DATE_FORMAT(CURDATE(), "%%Y-%%m-01")) then 1 else 0 end), 0) as m2,
+  coalesce(NULL, sum(case when startcmd >= (DATE_FORMAT(CURDATE(), "%%Y-%%m-01")) then 1 else 0 end), 0) as m1
+from deploy d
+join machines m on m.jid = d.jidmachine
+join local_glpi_machines lgm on concat("UUID", lgm.id) = m.uuid_inventorymachine
+join local_glpi_entities lge on lgm.entities_id = lge.id
+where lge.id in %s"""%entities
+
+        query = session.execute(sql).first()
+
+        if query is None:
+            return [0, 0, 0, 0, 0, 0]
+
+        result = [
+            query.m6,
+            query.m5,
+            query.m4,
+            query.m3,
+            query.m2,
+            query.m1,
+        ]
+        return result
 
     @DatabaseHelper._sessionm
     def get_count_agent_for_dashboard(self, session, entity=[]):
