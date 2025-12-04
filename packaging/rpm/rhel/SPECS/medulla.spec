@@ -81,6 +81,8 @@ Requires:       mmc-web-updates
 Requires:       python3-mmc-updates
 Requires:       mmc-web-mastering
 Requires:       python3-mmc-mastering
+Requires:       mmc-web-mobile
+Requires:       python3-mmc-mobile
 Requires:       pulse2-common
 Requires:       pulse2-package-server
 Requires:       python3-pulse2-common-database-dyngroup
@@ -867,6 +869,23 @@ This package contains Pulse 2 common mastering database files
 
 #--------------------------------------------------------------------
 
+%package -n     python3-pulse2-common-database-mobile
+Summary:        Pulse 2 common mobile database files
+Group:          System/Servers
+Requires:       pulse2-common = %version-%release
+Requires:       python3-pulse2-common-database = %version-%release
+
+Obsoletes:  python-pulse2-common-database-mobile < 4.7.0
+Provides:   python-pulse2-common-database-mobile = %version-%release
+
+%description -n python3-pulse2-common-database-mobile
+This package contains Pulse 2 common mobile database files
+
+%files -n python3-pulse2-common-database-mobile
+%python3_sitelib/pulse2/database/mobile
+
+#--------------------------------------------------------------------
+
 %package -n     python3-pulse2-common-database
 Summary:        Pulse 2 common database files
 Group:          System/Servers
@@ -1362,6 +1381,38 @@ Mastering module for the MMC web interface
 
 %files -n mmc-web-mastering
 %{_datadir}/mmc/modules/mastering
+
+#--------------------------------------------------------------------
+
+%package -n python3-mmc-mobile
+Summary:    Mobile plugin for the MMC agent
+Group:      System/Servers
+Requires:   pulse2-common = %version-%release
+Requires:   python3-pulse2-common-database-mobile = %version-%release
+
+Obsoletes:  python-mmc-mobile < 4.7.0
+Provides:   python-mmc-mobile = %version-%release
+
+%description -n python3-mmc-mobile
+This package contains the mobile plugin for the MMC agent.
+
+%files -n python3-mmc-mobile
+%attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/mobile.ini
+%python3_sitelib/mmc/plugins/mobile
+%{_docdir}/pulse2/contrib/mobile
+
+#--------------------------------------------------------------------
+
+%package -n     mmc-web-mobile
+Summary:        Mobile module for the MMC web interface
+Group:          System/Servers
+Requires:       mmc-web-base >= %{version}
+
+%description -n mmc-web-mobile
+Mobile module for the MMC web interface
+
+%files -n mmc-web-mobile
+%{_datadir}/mmc/modules/mobile
 
 #--------------------------------------------------------------------
 
