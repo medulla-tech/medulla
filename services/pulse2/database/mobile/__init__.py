@@ -27,7 +27,7 @@ logger = logging.getLogger()
 class MobileDatabase(DatabaseHelper):
     is_activated = False
     session = None
-    # Headwind REST API base (consider moving to config)
+    # Headwind REST API base (TO DO: consider moving to config)
     BASE_URL = "http://hba.medulla-tech.io/hmdm/rest"
     login = "admin"
     password = "HbaHmdm!"
@@ -108,29 +108,6 @@ class MobileDatabase(DatabaseHelper):
         Initialize mappers. This method can be overridden to provide specific mapper initialization.
         """
         return
-#
-#     def activate(self, config):
-#         if self.is_activated:
-#             return None
-#         self.config = config
-#         self.db = create_engine(self.makeConnectionPath(
-#         ), pool_recycle=self.config.dbpoolrecycle, pool_size=self.config.dbpoolsize)
-#         print(self.makeConnectionPath())
-#         if not self.db_check():
-#             return False
-#         self.metadata = MetaData(self.db)
-#         if not self.initMappersCatchException():
-#             self.session = None
-#             return False
-#         self.metadata.create_all()
-#         self.is_activated = True
-#         result = self.db.execute(
-#             "SELECT * FROM mobile.version limit 1;")
-#         re = [element.Number for element in result]
-#         return True
-#
-#     def initMappers(self):
-#         return
 
     def getDbConnection(self):
         NB_DB_CONN_TRY = 2
@@ -189,9 +166,6 @@ class MobileDatabase(DatabaseHelper):
 
     # Headwind MDM device handling
     def to_back(self, name, desc):
-
-        # Convert incoming name/description to backend payload
-
         try:
                 
             logger.error(f"111 - Voila ma variable name et desc avant d entrée en base {name} , {desc}")
@@ -250,13 +224,123 @@ class MobileDatabase(DatabaseHelper):
             logging.getLogger().error(f"Erreur lors de l'authentification : {e}")
             return None
     
-    # récupération de laliste des devices from hmdm 
     def getHmdmDevices(self):
         auth = self.authenticate()
         if auth is None:
             logging.getLogger().error("Impossible d'authentifier pour récupérer la liste des appareils.")
             return []
         return self.getList(auth)
+
+    def getHmdmAuditLogs(self, page_size=50, page_num=1, message_filter="", user_filter=""):
+        """
+        Fetch audit logs from HMDM and return a normalized list.
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Impossible d'authentifier pour récupérer les logs d'audit.")
+            return []
+
+        url = f"{self.BASE_URL}/plugins/audit/private/log/search"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+
+        payload = {
+            "pageSize": page_size,
+            "pageNum": page_num
+        }
+
+        if message_filter:
+            payload["messageFilter"] = message_filter
+        if user_filter:
+            payload["userFilter"] = user_filter
+
+        try:
+            resp = requests.post(url, json=payload, headers=headers)
+            resp.raise_for_status()
+
+            raw_data = resp.json()
+            if raw_data is None:
+                logging.getLogger().error("The audit logs were not retrieved")
+                return []
+
+            logging.getLogger().info("Audit logs retrieved successfully")
+
+            #  Extract audit items
+            audit_items = raw_data.get("data", {}).get("items", [])
+
+            audit_list = []
+
+            for item in audit_items:
+                ts = item.get("createTime")  
+
+                # Convert ms epoch -> formatted date
+                if ts:
+                    dt = datetime.fromtimestamp(ts / 1000)
+                    date_str = dt.strftime("%d/%m/%Y %H:%M:%S.%f")[:-3]
+                else:
+                    date_str = ""
+
+                action_code = item.get("action", "")
+                readable_action = self._convert_action(action_code)
+
+                audit_entry = {
+                    "id": item.get("id"),
+                    "date": date_str,
+                    "login": item.get("login", ""),
+                    "ip": item.get("ipAddress", ""),
+                    "action": readable_action,
+                    "raw_action": action_code,
+                    "message": item.get("message", "")
+                }
+
+                audit_list.append(audit_entry)
+
+            return audit_list
+
+        except Exception as e:
+            logging.getLogger().error(f"Error fetching audit logs: {e}")
+            return []
+
+
+    def _convert_action(self, action):
+        """
+        Convert HMDM audit action code into readable text.
+        """
+        mapping = {
+            "plugin.audit.action.jwt.login": "API client login",
+            "plugin.audit.action.user.login": "User login",
+            "plugin.audit.action.user.logout": "User logout",
+            "plugin.audit.action.update.configuration": "Configuration updated",
+            "plugin.audit.action.copy.configuration": "Configuration copied",
+            "plugin.audit.action.remove.configuration": "Configuration removed",
+            "plugin.audit.action.update.device": "Device updated",
+            "plugin.audit.action.remove.device": "Device removed",
+            "plugin.audit.action.device.enroll": "Device enrollment",
+            "plugin.audit.action.device.unenroll": "Device unenrollment",
+            "plugin.audit.action.update.application": "Application updated",
+            "plugin.audit.action.update.webapp": "Web application updated",
+            "plugin.audit.action.remove.application": "Application removed",
+            "plugin.audit.action.update.version": "Application version updated",
+            "plugin.audit.action.remove.version": "Application version deleted",
+            "plugin.audit.action.update.file": "File updated",
+            "plugin.audit.action.remove.file": "File deleted",
+            "plugin.audit.action.update.app.config": "Application configurations changed",
+            "plugin.audit.action.version.config": "Version configurations changed",
+            "plugin.audit.action.update.design": "Design settings updated",
+            "plugin.audit.action.update.user.roles": "User role settings updated",
+            "plugin.audit.action.update.language": "Language settings updated",
+            "plugin.audit.action.update.plugins": "Plugin settings updated",
+            "plugin.audit.action.update.user": "User updated",
+            "plugin.audit.action.remove.user": "User removed",
+            "plugin.audit.action.update.group": "Group updated",
+            "plugin.audit.action.remove.group": "Group removed",
+            "plugin.audit.action.password.changed": "User password changed",
+            "plugin.audit.action.password.reset": "Device password reset",
+            "plugin.audit.action.device.reset": "Device factory reset",
+            "plugin.audit.action.device.lock": "Device locked"
+        }
+
+        return mapping.get(action, action)
+
 
     def getHmdmApplications(self):
         """
@@ -279,6 +363,189 @@ class MobileDatabase(DatabaseHelper):
         except Exception as e:
             logging.getLogger().error(f"Error fetching applications: {e}")
             return None
+
+    def searchHmdmDevices(self, filter_text=""):
+        """
+        Search for devices by name for autocomplete.
+        
+        :param filter_text: Search filter text
+        :return: List of device dicts with id, name
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Impossible d'authentifier pour la recherche de devices.")
+            return []
+
+        url = f"{self.BASE_URL}/private/devices/search"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+        
+        payload = {
+            "value": filter_text,
+            "fastSearch": False,
+            "pageSize": 5,
+            "pageNum": 1
+        }
+
+        try:
+            resp = requests.post(url, headers=headers, json=payload)
+            resp.raise_for_status()
+            data = resp.json()
+            logging.getLogger().info(f"Device search completed with filter: {filter_text}")
+            devices = data.get("data", {}).get("devices", {}).get("items", [])
+            result = [{"id": d["id"], "name": d["number"]} for d in devices]
+            return result
+        except Exception as e:
+            logging.getLogger().error(f"Error searching devices: {e}")
+            return []
+
+    def getHmdmDetailedInfo(self, device_number):
+        """
+        Fetch detailed information for a specific device.
+        
+        :param device_number: Device number/identifier
+        :return: Device information dict or empty dict on error
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Impossible d'authentifier pour récupérer les infos détaillées.")
+            return {}
+
+        url = f"{self.BASE_URL}/plugins/deviceinfo/deviceinfo/private/{device_number}"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+
+        try:
+            resp = requests.get(url, headers=headers)
+            resp.raise_for_status()
+            data = resp.json()
+            logging.getLogger().info(f"Device detailed info fetched successfully for {device_number}.")
+            return data.get("data", {}) if isinstance(data, dict) else data
+        except Exception as e:
+            logging.getLogger().error(f"Error fetching device detailed info: {e}")
+            return {}
+        
+    def getHmdmMessages(self, device_number="", message_filter="", status_filter="",
+                    date_from_millis=None, date_to_millis=None,
+                    page_size=50, page_num=1):
+        """
+        Fetch messaging records from HMDM.
+        
+        :param device_number: Device number filter
+        :param message_filter: Message content filter
+        :param status_filter: Status filter (all messages, sent, delivered, read)
+        :param date_from_millis: Start date in milliseconds
+        :param date_to_millis: End date in milliseconds
+        :param page_size: Records per page
+        :param page_num: Page number
+        :return: List of message records or empty list
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Impossible d'authentifier pour récupérer les messages.")
+            return []
+
+        url = f"{self.BASE_URL}/plugins/messaging/private/search"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+        
+        payload = {
+            "pageSize": page_size,
+            "pageNum": page_num
+        }
+
+        STATUS_MAP = {
+            0: "Sent",
+            1: "Delivered",
+            2: "Read",
+            3: "Failed",
+            4: "Pending",
+        }
+        
+        if device_number:
+            payload["deviceNumber"] = device_number
+        if message_filter:
+            payload["filter"] = message_filter
+        if status_filter and status_filter != "all messages":
+            payload["status"] = status_filter
+        if date_from_millis:
+            payload["dateFromMillis"] = date_from_millis
+        if date_to_millis:
+            payload["dateToMillis"] = date_to_millis
+
+        try:
+            resp = requests.post(url, json=payload, headers=headers)
+            resp.raise_for_status()
+            data = resp.json()
+
+            messages = data.get("data", {}).get("items", [])
+            result = [{"name": m["deviceNumber"], "time": m["ts"]//1000, "message": m["message"], "status": STATUS_MAP[m["status"]]} for m in messages]
+
+            logging.getLogger().info(f"Messages fetched successfully.")
+            return result
+        except Exception as e:
+            logging.getLogger().error(f"Error fetching messages: {e}")
+            return []
+
+    def getHmdmPushMessages(self, device_number="", message_filter="", status_filter="",
+                    date_from_millis=None, date_to_millis=None,
+                    page_size=50, page_num=1):
+        """
+        Fetch push messages from HMDM.
+        
+        :param device_number: Device number filter
+        :param message_filter: Message content filter
+        :param status_filter: Status filter (all messages, sent, delivered, read)
+        :param date_from_millis: Start date in milliseconds
+        :param date_to_millis: End date in milliseconds
+        :param page_size: Records per page
+        :param page_num: Page number
+        :return: List of push message records or empty list
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Impossible d'authentifier pour récupérer les messages.")
+            return []
+
+        url = f"{self.BASE_URL}/plugins/push/private/search"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+        
+        payload = {
+            "pageSize": page_size,
+            "pageNum": page_num
+        }
+
+        STATUS_MAP = {
+            0: "Sent",
+            1: "Delivered",
+            2: "Read",
+            3: "Failed",
+            4: "Pending",
+        }
+        
+        if device_number:
+            payload["deviceNumber"] = device_number
+        if message_filter:
+            payload["filter"] = message_filter
+        if status_filter and status_filter != "all messages":
+            payload["status"] = status_filter
+        if date_from_millis:
+            payload["dateFromMillis"] = date_from_millis
+        if date_to_millis:
+            payload["dateToMillis"] = date_to_millis
+
+        try:
+            resp = requests.post(url, json=payload, headers=headers)
+            resp.raise_for_status()
+            data = resp.json()
+            logging.getLogger().info(f"Push messages: {data}")
+
+
+            messages = data.get("data", {}).get("items", [])
+            result = [{"name": m["deviceNumber"], "time": m["ts"]//1000, "type": m["messageType"], "payload": m.get("payload", "")} for m in messages]
+
+            logging.getLogger().info(f"Push messages fetched successfully.")
+            return result
+        except Exception as e:
+            logging.getLogger().error(f"Error fetching push messages: {e}")
+            return []
 
     def getHmdmConfigurations(self):
         """

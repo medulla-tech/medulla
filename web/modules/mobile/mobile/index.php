@@ -9,7 +9,7 @@ $p->setSideMenu($sidemenu);
 $p->display();
 
 
-$ajax = new AjaxFilter(urlStrRedirect("mobile/mobile/ajaxMobileList"));
+$ajax = new AjaxFilter(urlStrRedirect("mobile/mobile/ajaxDeviceList"));
 $ajax->display();
 $ajax->displayDivToUpdate();
 

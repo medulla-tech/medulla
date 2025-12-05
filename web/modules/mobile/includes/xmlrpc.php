@@ -33,6 +33,27 @@ function xmlrpc_get_hmdm_configuration_by_id($id){
 function xmlrpc_delete_hmdm_device_by_id($id){
     return xmlCall("mobile.deleteDeviceById", array($id));
 }
+function xmlrpc_get_hmdm_audit_logs($page_size=50, $page_num=1, $message_filter="", $user_filter=""){
+    return xmlCall("mobile.getHmdmAuditLogs", array($page_size, $page_num, $message_filter, $user_filter));
+}
 
+function xmlrpc_get_hmdm_detailed_info($device_number){
+    return xmlCall("mobile.getHmdmDetailedInfo", array($device_number));
+}
 
+function xmlrpc_search_hmdm_devices($filter_text=""){
+    return xmlCall("mobile.searchHmdmDevices", array($filter_text));
+}
+
+function xmlrpc_get_hmdm_messages($device_number="", $message_filter="", $status_filter="",
+                                 $date_from_millis=null, $date_to_millis=null, $page_size=50, $page_num=1){
+    return xmlCall("mobile.getHmdmMessages", array($device_number, $message_filter, $status_filter,
+                                                  $date_from_millis, $date_to_millis, $page_size, $page_num));
+}
+
+function xmlrpc_get_hmdm_push_messages($device_number="", $message_filter="", $status_filter="",
+                                      $date_from_millis=null, $date_to_millis=null, $page_size=50, $page_num=1){
+    return xmlCall("mobile.getHmdmPushMessages", array($device_number, $message_filter, $status_filter,
+                                                      $date_from_millis, $date_to_millis, $page_size, $page_num));
+}
 ?>
