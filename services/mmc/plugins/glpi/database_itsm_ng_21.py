@@ -8905,6 +8905,90 @@ and glpi_computers.id in %s group by glpi_computers.id;""" % (
 
         return result
 
+    @DatabaseHelper._sessionm
+    def get_antiviruses_for_dashboard(self, session, entities=[]):
+        """Get the count of machines, without antiviruses (missing), outdated antiviruses (red), not actives or becomming old (orange), uptodate (green).
+
+        Args:
+            self (Glpi100): Model Instance Object
+            session (sqlalchemy session): The access to sql. Generated through @DatabaseHelper._sessionm decorator
+            entities (list, optionnal): The list of entities the user has the right to access to
+
+        Returns:
+            (dict): The count as dict. The dict will have the shape:
+            {
+            "total": 0,
+            "missing":"0,
+            "red":0,
+            "orange":0,
+            "green":0
+            }
+        """
+        entities = ""
+        if entities != []:
+            entities = "AND c.entities_id in (%s)"%','.join([str(e) for e in entities])
+
+        excluded = ""
+        if self.config.av_false_positive != []:
+            lst = ",".join(["\"%s\""%e for e in self.config.av_false_positive if e != ""])
+            excluded = " WHERE  name not in (%s)"%lst
+
+        filter_on_state = ""
+        if self.config.filter_on != None:
+            for filter_key, filter_values in list(self.config.filter_on.items()):
+                if filter_key == "state":
+                    filter_on_state = "AND c.states_id in (%s) "%(",".join([val for val in filter_values]))
+
+        result = {"total":0, "missing":0, "red":0, "orange":0, "green":0}
+        if self.fusionantivirus is None:
+            return result
+        bind = {
+            "red1":self.config.red,
+            "red2":self.config.red,
+            "orange1":self.config.orange,
+            "orange2":self.config.orange,
+        }
+        sql="""select
+    coalesce(NULL, sum(1), 0) as total,
+    coalesce(NULL, sum(case when a.id is NULL then 1 else 0 end), 0) as missing,
+    coalesce(NULL, sum(case when a.date_mod <= (CURDATE() - INTERVAL :red1 DAY) then 1 else 0 end), 0) as red,
+    coalesce(NULL, sum(case when a.date_mod > (CURDATE() - INTERVAL :red2 DAY) and a.date_mod <= (CURDATE() - INTERVAL :orange1 DAY) or (a.is_uptodate = 0 and a.is_active=0) then 1 else 0 end), 0) as orange,
+    coalesce(NULL, sum(case when a.date_mod >(CURDATE() - INTERVAL :orange2 DAY) and a.is_uptodate=1 and a.is_active = 1 then 1 else 0 end), 0) as green
+from glpi_computers c
+left join (select
+            antivirus.id,
+            antivirus.computers_id,
+            antivirus.name,
+            antivirus.date_mod,
+            antivirus.is_uptodate,
+            antivirus.is_active
+        from glpi_computerantiviruses antivirus
+        join
+        (select
+            distinct(computers_id) as computers_id,
+            max(date_mod) as max_date
+        from glpi_computerantiviruses
+        %s
+        group by computers_id
+        order by computers_id desc) as ref on antivirus.computers_id=ref.computers_id and antivirus.date_mod = ref.max_date
+        group by antivirus.date_mod
+        order by computers_id
+    ) as a  on c.id = a.computers_id
+where c.is_deleted=0 and c.is_template=0 %s %s
+    """%(excluded, entities, filter_on_state)
+
+        query = session.execute(sql, bind, execution_options={"autocommit": True}).first()
+
+        if query is None:
+            return result
+
+        result["total"] = query.total
+        result["missing"] = query.missing
+        result["red"] = query.red
+        result["orange"] = query.orange
+        result["green"] = query.green
+        return result
+
 # Class for SQLalchemy mapping
 class Machine(object):
     __tablename__ = "glpi_computers_pulse"

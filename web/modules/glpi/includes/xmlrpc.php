@@ -232,4 +232,15 @@ function  xmlrpc_get_machine_for_hostname($str_list_hostname, $filter="", $start
 function  xmlrpc_get_machine_for_id($str_list_uuid, $filter, $start, $end){
   return xmlCall("glpi.get_machine_for_id", [$str_list_uuid, $filter, $start, $end]);
 }
+
+/**
+ * Call the RPC glpi.get_antiviruses_for_dashboard function.
+ * Get counts of antiviruses for the dashboard for the user's scope.
+ *
+ * @return array The counts are stored as ["total":0, "missing":0, "red":0, "orange":0, "green"=0].
+ */
+function xmlrpc_get_antiviruses_for_dashboard(){
+    return xmlCall("glpi.get_antiviruses_for_dashboard");
+}
+
 ?>

@@ -3,8 +3,9 @@
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2012 Mandriva, http://www.mandriva.com
  * (c) 2012-2019 siveo, http://www.siveo.net/
+ * (c) 2025 Medulla, http://www.medulla-tech.io
  *
- * This file is part of Mandriva Management Console (MMC).
+ * This file is part of Management Console (MMC).
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,15 +38,16 @@ class AntivirusPanel extends Panel
     public function display_content()
     {
 
-        $count = getAntivirusStatus();
+        $count = xmlrpc_get_antiviruses_for_dashboard();
+
         $uninventorized_text = _T("Uninventoried Machines", "dashboard");
         $uninventorized = get_computer_count_for_dashboard()['total_uninventoried'];
-
         $jsonCount = json_encode($count);
         $createGroupText = json_encode(_T("Create a group", "glpi"));
         $greenMessage = json_encode(_T("OK: %percent% (%d)", "glpi"));
         $orangeMessage = json_encode(_T("Not running or not up-to-date: %percent% (%d)", "glpi"));
-        $redMessage = json_encode(_T("No antivirus found: %percent% (%d)", "glpi"));
+        $redMessage = json_encode(_T("Outdated antivirus: %percent% (%d)", "glpi"));
+        $missingMessage = json_encode(_T("Missing antivirus: %percent% (%d)", "glpi"));
         $urlRedirect = json_encode(urlStrRedirect("base/computers/createAntivirusStaticGroup"));
 
         echo <<< ANTIVIRUS
@@ -55,6 +57,7 @@ class AntivirusPanel extends Panel
         greenMessage = $greenMessage,
         orangeMessage = $orangeMessage,
         redMessage = $redMessage,
+        missingMessage = $missingMessage,
         uninventorized = $uninventorized,
         createGroupText = $createGroupText,
         urlRedirect = $urlRedirect;
@@ -76,12 +79,17 @@ class AntivirusPanel extends Panel
             'href':urlRedirect+"&group=orange",
           },
           {
+            'label': missingMessage.split(" %percent% ")[0],
+            'value':("missing" in machineCount)?machineCount["missing"]:0,
+            'href':"#",
+          },
+          {
             'label': '$uninventorized_text',
             'value': uninventorized,
             'href':"#",
           }
         ];
-        donut("antivirus-graphs", datas, "Total", parseInt(machineCount["green"])+parseInt(machineCount["red"])+parseInt(machineCount["orange"])+parseInt(uninventorized));
+        donut("antivirus-graphs", datas, "Total", parseInt(machineCount["total"])+parseInt(uninventorized));
     </script>
 ANTIVIRUS;
     }
