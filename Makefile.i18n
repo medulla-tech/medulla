@@ -55,8 +55,11 @@ i18n-setup:
 # Extract translatable strings from PHP code
 extract-strings:
 	@echo "🔍 Extracting translatable strings from PHP code..."
+ifdef MODULE
+	cd web && bash scripts/build_pot.sh $(MODULE)
+else
 	cd web && bash scripts/build_pot.sh
-	@echo "✅ Extraction complete"
+endif
 
 # Clean .pot file headers
 clean-headers:
