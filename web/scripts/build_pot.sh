@@ -23,6 +23,7 @@ all_modules=(
   imaging
   inventory
   kiosk
+  mastering
   medulla_server
   mobile
   msc
