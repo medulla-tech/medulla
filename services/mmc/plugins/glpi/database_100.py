@@ -37,6 +37,7 @@ from sqlalchemy import (
     distinct,
     text,
     inspect,
+    case,
 )
 from sqlalchemy.orm import create_session, mapper, relationship, class_mapper
 from sqlalchemy.exc import NoSuchTableError, NoInspectionAvailable
@@ -6259,6 +6260,49 @@ class Glpi100(DyngroupDatabaseHelper):
                 }
 
         session.close()
+        return ret
+
+    @DatabaseHelper._sessionm
+    def get_inventories_for_dashboard(self, session, entities:list=[]) -> dict:
+        """
+        Get the count of inventories older than 35 days, bewtween 35 and 10 days and newer than 10 days.
+
+        Args:
+            self (Glpi100): Glpi100 Model Instance
+            session (sqlalchemy session): Session to access to the DB
+            entities (list, optionnal): list of scoped entities
+        Return:
+        dict of the with this shape
+
+            {
+                "days": {"red": 35,"orange": 10},
+                "count": {
+                    "red" : 0,
+                    "orange" : 0,
+                    "green" : 0
+                }
+            }
+        """
+        orange = self.config.orange
+        red = self.config.red
+
+        query = (
+        session.query(
+            func.coalesce(func.sum(case((Machine.date_mod > func.curdate() - func.interval(red, "DAY"), 1), else_=0)), 0).label("red"),
+            func.coalesce(func.sum(case(((Machine.date_mod <= func.curdate() - func.interval(red, "DAY")) &(Machine.date_mod > func.curdate() - func.interval(orange, "DAY")), 1), else_=0)), 0).label("orange"),
+            func.coalesce(func.sum(case((Machine.date_mod <= func.curdate() - func.interval(orange, "DAY"), 1),else_=0)), 0).label("green"))
+        .filter(Machine.entities_id.in_(entities))
+        )
+        result = query.one()
+
+        ret = {
+            "days": {"red":red,"orange":orange},
+            "count": {
+                "red" : result.red,
+                "orange" : result.orange,
+                "green" : result.green
+            }
+        }
         return ret
 
     def getMachineNumberByState(self, ctx):

@@ -35,8 +35,7 @@ class GlpiPanel extends Panel
 {
     public function display_content()
     {
-        // TODO : check this function
-        $result = getMachineNumberByState();
+        $result = xmlrpc_get_inventories_for_dashboard();
         $count = $result['count'];
         $days = $result['days'];
 

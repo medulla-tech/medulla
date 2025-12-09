@@ -172,6 +172,11 @@ class RpcProxy(RpcProxyI):
         entities = ctx.get_session_info()['mondict']['liste_entities_user']
         return xmlrpcCleanup(Glpi().get_antiviruses_for_dashboard(entities))
 
+    @with_optional_xmpp_context
+    def get_inventories_for_dashboard(self, ctx=None):
+        entities = ctx.get_session_info()['mondict']['liste_entities_user']
+        return xmlrpcCleanup(Glpi().get_inventories_for_dashboard(entities))
+
 
 def getLicensesComputer(vendor, software, version):
     return getLicensesCount(vendor, software, version, 3)

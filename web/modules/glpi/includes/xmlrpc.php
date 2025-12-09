@@ -243,4 +243,21 @@ function xmlrpc_get_antiviruses_for_dashboard(){
     return xmlCall("glpi.get_antiviruses_for_dashboard");
 }
 
+/**
+ * Call the RPC glpi.get_inventories_for_dashboard function.
+ * Get the count of inventories older than 35 days (red in conf), are between 35 and 10 days (orange in conf), and are newer than 10 days.
+ * @return array The shape of the array will be :
+ *
+ * [
+ * "days"=>[
+ *  "red"=>35,
+ *  "orange"=>10],
+ * "count"=>[
+ *  "red"=>0,
+ *  "orange"=>0,
+ *  "green"=>0]]
+ */
+function xmlrpc_get_inventories_for_dashboard(){
+    return XmlCall("glpi.get_inventories_for_dashboard");
+}
 ?>
