@@ -129,10 +129,10 @@ if($sharings['config']['centralizedmultiplesharing'] == true) {
     $_diskUsages = [];
 
     for($i = 0; $i < safeCount($_packages['uuid']); $i++) {
-        $packageSize = $_packages['size'][$i];
-        $usedQuotas = $quotas[$_packages['share_id'][$i]]['usedquotas'];
-        $totalQuotas = 1048576 * $quotas[$_packages['share_id'][$i]]['quotas'];
-        $percentQuotas = $quotas[$_packages['share_id'][$i]]['percent'];
+        $packageSize = (int)$_packages['size'][$i];
+        $usedQuotas = (int)$quotas[$_packages['share_id'][$i]]['usedquotas'];
+        $totalQuotas = 1048576 * (int)$quotas[$_packages['share_id'][$i]]['quotas'];
+        $percentQuotas = (int)$quotas[$_packages['share_id'][$i]]['percent'];
 
         if(($quotas[$_packages['share_id'][$i]]['quotas'] > 0)) {
             $occupation = number_format(($_packages['size'][$i] / $totalQuotas) * 100, 2);
