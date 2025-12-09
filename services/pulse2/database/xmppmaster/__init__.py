@@ -8416,7 +8416,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     GROUP_CONCAT(DISTINCT IF( netw.mask='', null, netw.mask) SEPARATOR ',') AS mask
                 FROM
                     xmppmaster.machines mach
-                        LEFT OUTER JOIN
+                        INNER JOIN
                     local_glpi_filters lgf on CONCAT("UUID", lgf.id) = mach.uuid_inventorymachine
                         LEFT OUTER JOIN
                     local_glpi_machines lgm ON CONCAT("UUID", lgm.id) = mach.uuid_inventorymachine
