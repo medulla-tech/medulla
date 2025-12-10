@@ -15272,6 +15272,10 @@ FROM (
         if isinstance(glpi_ids, str):
             glpi_ids = [glpi_ids]
 
+        # No id selected: nothing to return
+        if glpi_ids == []:
+            return {}
+
         query_xmpp = session.execute(
             """
             SELECT uuid_inventorymachine
