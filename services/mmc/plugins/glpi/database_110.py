@@ -9258,9 +9258,9 @@ and glpi_computers.id in %s group by glpi_computers.id;""" % (
             "green":0
             }
         """
-        entities = ""
+        entities_str = ""
         if entities != []:
-            entities = "AND c.entities_id in (%s)"%','.join([str(e) for e in entities])
+            entities_str = "AND c.entities_id in (%s)"%','.join([str(e) for e in entities])
 
         excluded = ""
         if self.config.av_false_positive != []:
@@ -9309,7 +9309,7 @@ left join (select
         order by computers_id
     ) as a  on c.id = a.computers_id
 where c.is_deleted=0 and c.is_template=0 %s %s
-    """%(excluded, entities, filter_on_state)
+    """%(excluded, entities_str, filter_on_state)
 
         query = session.execute(sql, bind, execution_options={"autocommit": True}).first()
 
