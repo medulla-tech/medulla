@@ -196,6 +196,7 @@ if ($entity == '') {
     $machines["actionDetailByMachines"] = [];
     $machines["actionPendingByMachines"] = [];
     $machines["actionDoneByMachines"] = [];
+    $texte_help = _T("%s missing updates for %s in progress updates and %s installed updates for %s in total" , "updates");
 
     $_count = count($machines['uuid']);
     for($i = 0; $i < $_count; $i++) {
@@ -212,11 +213,16 @@ if ($entity == '') {
         $machines["compliance"][] = $compliance;
 
         $color = colorconf($compliance);
-        $complianceRate = ($missing == 0 && $installed == 0) ? '-'
-            : "<div class='progress' style='width: {$compliance}%; background : {$color}; font-weight: bold; color : black; text-align: right;'> {$compliance}% </div>";
-        $machines["complianceRate"][] = $complianceRate;
 
-        $machines["total"][] = !empty($compliance_computers[$uuid]) ? $compliance_computers[$uuid]["total"] : 0;
+        $total = !empty($compliance_computers[$uuid]) ? $compliance_computers[$uuid]["total"] : 0;
+        $complianceRate = (string) new medulla_progressbar_static($compliance,
+            "",
+            sprintf($texte_help , $missing, $inprogress ,
+            $installed,
+            $total  )
+        );
+        $machines["complianceRate"][] = $complianceRate;
+        $machines["total"][] = $total;
 
         $machines["actionDetailByMachines"][] = $actionsPerMachine[$uuid]["details"];
         $machines["actionPendingByMachines"][] = $actionsPerMachine[$uuid]["pending"];
