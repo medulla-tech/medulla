@@ -50,6 +50,9 @@ def getHmdmConfigurations():
 def getHmdmFiles():
     return MobileDatabase().getHmdmFiles()
 
+def addHmdmFile(uploaded_file_path=None, uploaded_file_name=None, external_url=None, file_name=None, path_on_device=None, description=None, variable_content=None, configuration_ids=None):
+    return MobileDatabase().addHmdmFile(uploaded_file_path, uploaded_file_name, external_url, file_name, path_on_device, description, variable_content, configuration_ids)
+
 def deleteFileById(id=None, filePath=None):
     return MobileDatabase().deleteFileById(file_id=id, filePath=filePath)
 

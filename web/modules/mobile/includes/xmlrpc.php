@@ -3,9 +3,9 @@
 // function xmlrpc_nano_devices(){
 //     return xmlCall("mobile.nano_devices", array());
 // }
-// function xmlrpc_to_back($name, $desc, $conf, $grp){
-//     return xmlCall("mobile.to_back", array($name, $desc));
-// }
+function xmlrpc_to_back($name, $desc, $conf, $grp){
+    return xmlCall("mobile.to_back", array($name, $desc));
+}
 function xmlrpc_get_hmdm_devices(){
     return xmlCall("mobile.getHmdmDevices", array());
 }
@@ -20,6 +20,9 @@ function xmlrpc_get_hmdm_configurations(){
 }
 function xmlrpc_get_hmdm_files(){
     return xmlCall("mobile.getHmdmFiles", array());
+}
+function xmlrpc_add_hmdm_file($uploadedFilePath = null, $uploadedFileName = null, $externalUrl = null, $fileName = null, $pathOnDevice = null, $description = null, $variableContent = null, $configurationIds = null){
+    return xmlCall("mobile.addHmdmFile", array($uploadedFilePath, $uploadedFileName, $externalUrl, $fileName, $pathOnDevice, $description, $variableContent, $configurationIds));
 }
 function xmlrpc_delete_file_by_id($id = null, $filePath = null){
     return xmlCall("mobile.deleteFileById", array($id, $filePath));

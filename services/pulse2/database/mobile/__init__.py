@@ -633,6 +633,182 @@ class MobileDatabase(DatabaseHelper):
         except Exception as e:
             logging.getLogger().error(f"Error fetching files: {e}")
             return []
+        
+    def hmdmRawFile(self, uploaded_file_path, uploaded_file_name, token):
+        """
+        Upload raw file via multipart to HMDM.
+        Returns dict with serverPath, name, raw response or error.
+        """
+        upload_url = f"{self.BASE_URL}/private/web-ui-files/raw"
+        headers = {"Authorization": f"Bearer {token}"}
+        resp = None
+        try:
+            with open(uploaded_file_path, "rb") as fh:
+                files = {"file": (uploaded_file_name, fh)}
+                resp = requests.post(upload_url, headers=headers, files=files)
+                logger.info(f"Raw upload response status: {resp.status_code}")
+                logger.info(f"Raw upload response body: {resp.text}")
+                resp.raise_for_status()
+                upload_resp = resp.json() if resp.text else {}
+                upload_data = upload_resp.get("data") or {}
+                server_path = upload_data.get("serverPath") or upload_resp.get("serverPath")
+                name = upload_data.get("name") or upload_resp.get("name")
+                return {"serverPath": server_path, "name": name, "raw": upload_resp}
+        except Exception as e:
+            logger.error(f"Error in raw upload: {e}", exc_info=True)
+            return {"error": True, "message": str(e), "raw_text": resp.text if resp else None}
+
+    def hmdmUploadFile(self, body, token):
+        """
+        Commit uploaded/external file to HMDM (update endpoint).
+        Returns dict with raw response or error.
+        Note: Server may return 500 even if file is successfully uploaded.
+        """
+        update_url = f"{self.BASE_URL}/private/web-ui-files/update"
+        headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
+        resp = None
+        try:
+            resp = requests.post(update_url, headers=headers, json=body)
+            logger.info(f"Update response status: {resp.status_code}")
+            logger.info(f"Update response body: {resp.text}")
+            if resp.status_code == 500:
+                # Server returns 500 but file may already be on server from raw upload
+                logger.warning(f"Update endpoint returned 500, but file may be uploaded. Continuing...")
+                # Return a basic response based on the body we sent
+                return {"raw": {"filePath": body.get("filePath"), "tmpPath": body.get("tmpPath")}}
+            resp.raise_for_status()
+            return {"raw": resp.json() if resp.text else {}}
+        except Exception as e:
+            logger.error(f"Error in update/commit: {e}", exc_info=True)
+            return {"error": True, "message": str(e), "raw_text": resp.text if resp else None}
+
+    def hmdmFileConfiguration(self, file_id, config_ids, token):
+        """
+        Link file to configurations in HMDM.
+        Returns dict with raw response or error.
+        """
+        resp_cfg = None
+        try:
+            if not file_id:
+                return {"error": True, "message": "file_id missing"}
+            config_url = f"{self.BASE_URL}/private/web-ui-files/configurations"
+            configs_payload = []
+            for cid in (config_ids if isinstance(config_ids, list) else [config_ids]):
+                configs_payload.append({"configurationId": int(cid), "upload": True})
+            cfg_body = {"fileId": int(file_id), "configurations": configs_payload}
+            headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
+            logger.info(f"Linking file {file_id} to configurations: {json.dumps(cfg_body)}")
+            resp_cfg = requests.post(config_url, headers=headers, json=cfg_body)
+            logger.info(f"Configurations response status: {resp_cfg.status_code}")
+            logger.info(f"Configurations response body: {resp_cfg.text}")
+            resp_cfg.raise_for_status()
+            return {"raw": resp_cfg.json() if resp_cfg.text else {}}
+        except Exception as e:
+            logger.error(f"Failed to link configurations: {e}", exc_info=True)
+            return {"error": True, "message": str(e), "raw_text": resp_cfg.text if resp_cfg else None}
+
+    def addHmdmFile(self, uploaded_file_path=None, uploaded_file_name=None, external_url=None, file_name=None, path_on_device=None, description=None, variable_content=None, configuration_ids=None):
+        """
+        Add a file to HMDM.
+
+        All arguments are optional:
+        - uploaded_file_path: local file path to upload
+        - uploaded_file_name: original name of the uploaded file
+        - external_url: URL of an external file
+        - file_name: name to give the file in HMDM
+        - path_on_device: path where the file should be placed on the device
+        - description: optional description of the file
+        - variable_content: whether the file content should replace variables
+        - configuration_ids: list of configuration IDs to link this file to (optional)
+
+        Returns the added file info dict with keys: id, filePath, description, size, uploadTime (seconds),
+        devicePath, external, replaceVariables
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logger.error("Impossible d'authentifier pour ajouter le fichier.")
+            return {"error": True, "message": "Authentication failed"}
+
+        # Main flow: raw upload (if file), then commit, then optional configuration linking
+        raw_commit = None
+        if uploaded_file_path and uploaded_file_name:
+            logger.info(f"Starting file upload: {uploaded_file_name}")
+            raw = self.hmdmRawFile(uploaded_file_path, uploaded_file_name, hmtoken)
+            if raw.get("error"):
+                return {"error": True, "message": f"Raw upload failed: {raw.get('message')}", "raw_text": raw.get("raw_text")}
+            tmp_path = raw.get("serverPath")
+            chosen_file_path = file_name or raw.get("name") or uploaded_file_name
+            # Build body matching web app format
+            body = {
+                "tmpPath": tmp_path,
+                "filePath": chosen_file_path,
+                "devicePath": path_on_device or "",
+                "description": description or "",
+                "replaceVariables": bool(variable_content),
+            }
+            logger.info(f"Committing file with body: {json.dumps(body, indent=2)}")
+            commit = self.hmdmUploadFile(body, hmtoken)
+            if commit.get("error"):
+                return {"error": True, "message": f"Commit failed: {commit.get('message')}", "raw_text": commit.get("raw_text")}
+            raw_commit = commit.get("raw")
+
+        elif external_url:
+            logger.info(f"Adding external file from URL: {external_url}")
+            chosen_file_path = file_name or (external_url.split('/')[-1] if external_url else None)
+            # Build body for external URL matching web app format
+            body = {
+                "externalUrl": external_url,
+                "filePath": chosen_file_path,
+                "devicePath": path_on_device or "",
+                "description": description or "",
+                "replaceVariables": bool(variable_content),
+                "external": True,
+            }
+            logger.info(f"External file body: {json.dumps(body, indent=2)}")
+            commit = self.hmdmUploadFile(body, hmtoken)
+            if commit.get("error"):
+                return {"error": True, "message": f"External commit failed: {commit.get('message')}", "raw_text": commit.get("raw_text")}
+            raw_commit = commit.get("raw")
+
+        else:
+            return {"error": True, "message": "Either a file or external URL must be provided"}
+
+        if not raw_commit:
+            return {"error": True, "message": "Empty response from server after commit"}
+
+        f = raw_commit if isinstance(raw_commit, dict) else (raw_commit[0] if isinstance(raw_commit, list) and len(raw_commit) > 0 else {})
+        upload_ms = f.get("uploadTime") or f.get("upload_time") or f.get("upload")
+        upload_sec = None
+        if isinstance(upload_ms, (int, float)):
+            try:
+                upload_sec = int(upload_ms) // 1000
+            except Exception:
+                upload_sec = None
+        raw_size = f.get("size") or f.get("fileDetails", {}).get("size")
+        size_mb = None
+        if isinstance(raw_size, (int, float)):
+            size_mb = round(raw_size / (1024 * 1024), 1)
+
+        # Link configurations if requested
+        try:
+            file_id = f.get('id') or f.get('fileId') or (f.get('data', {}).get('id') if isinstance(f, dict) else None)
+            if file_id and configuration_ids:
+                cfg_res = self.hmdmFileConfiguration(file_id, configuration_ids, hmtoken)
+                if cfg_res.get("error"):
+                    logger.error(f"Configuration linking failed: {cfg_res}")
+        except Exception as e:
+            logger.error(f"Error while attempting to link configurations: {e}", exc_info=True)
+
+        return {
+            "id": f.get("id"),
+            "filePath": f.get("filePath") or f.get("path") or f.get("url") or f.get("serverPath") or "",
+            "description": f.get("description") or "",
+            "size": size_mb,
+            "uploadTime": upload_sec,
+            "devicePath": f.get("devicePath") or f.get("device_path") or "",
+            "external": bool(f.get("external")),
+            "replaceVariables": bool(f.get("replaceVariables")),
+        }
 
     def deleteFileById(self, file_id: int = None, filePath: str = None):
         """

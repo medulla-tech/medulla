@@ -59,6 +59,10 @@ $pageFiles = new Page("files", _T('Files', 'mobile'));
 $pageFiles->setFile("modules/mobile/mobile/filesList.php");
 $submod->addPage($pageFiles);
 
+$pageAddFile = new Page("addFile", _T('Add a file', 'mobile'));
+$pageAddFile->setFile("modules/mobile/mobile/addFile.php");
+$submod->addPage($pageAddFile);
+
 ################################
 # add configuration page  
 ################################

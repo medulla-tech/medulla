@@ -16,6 +16,8 @@ $sidemenu->addSideMenuItem(new SideMenuItem(_T("Add Configuration", 'mobile'), "
 
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Files", 'mobile'), "mobile", "mobile", "files"));
 
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("Add a file", 'mobile'), "mobile", "mobile", "addFile"));
+
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("All devices glpi", 'mobile'), "mobile", "mobile", "glpiDevices"));
 
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Functions", 'mobile'), "mobile", "mobile", "functions"));
