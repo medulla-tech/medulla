@@ -152,8 +152,11 @@ if (isset($_GET['uuid'])) {
         $filter['filter1'] = "win";
     }
     // Hard to tell if it is a darwin or linux from xmppmaster.machines.platform field, unless we keep track on each big OS names such as Ubuntu, Lubuntu, Debian etc...
-    else if(stripos($platform, "darwin") !== false) {
+    else if(preg_match("#macOS#i", $platform)) {
         $filter['filter1'] = "darwin";
+    }
+    else if(preg_match("#Android#i", $platform)){
+        $filter['filter1'] = "android";
     }
     else{
         $filter['filter1'] = "linux";
