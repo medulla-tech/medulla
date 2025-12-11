@@ -1,118 +1,74 @@
 <?php
 require_once("modules/mobile/includes/xmlrpc.php");
 
-$device_number = isset($_POST['device']) ? $_POST['device'] : (isset($_GET['device']) ? $_GET['device'] : "");
-$message_filter = isset($_POST['message']) ? $_POST['message'] : (isset($_GET['message']) ? $_GET['message'] : "");
-$status_filter = isset($_POST['status']) ? $_POST['status'] : (isset($_GET['status']) ? $_GET['status'] : "all messages");
-$date_from = isset($_POST['date_from']) ? $_POST['date_from'] : (isset($_GET['date_from']) ? $_GET['date_from'] : "");
-$date_to = isset($_POST['date_to']) ? $_POST['date_to'] : (isset($_GET['date_to']) ? $_GET['date_to'] : "");
+$field = isset($_POST['field']) ? $_POST['field'] : (isset($_GET['field']) ? $_GET['field'] : "all");
+$param = isset($_POST['param']) ? $_POST['param'] : (isset($_GET['param']) ? $_GET['param'] : "");
+$status_filter = isset($_POST['status']) ? $_POST['status'] : (isset($_GET['status']) ? $_GET['status'] : "all");
 $page_num = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $page_size = 50;
 
-$messages = array();
-$show_results = false;
+$device_number = "";
+$message_filter = "";
 
-if (true) {
-    $show_results = true;
-    
-    // Convert dates to milliseconds
-    $date_from_millis = null;
-    $date_to_millis = null;
-    
-    if ($date_from) {
-        $date_from_millis = strtotime($date_from) * 1000;
-    }
-    if ($date_to) {
-        $date_to_millis = strtotime($date_to) * 1000;
-    }
-    
-    $messages = xmlrpc_get_hmdm_messages($device_number, $message_filter, $status_filter,
-                                        $date_from_millis, $date_to_millis, $page_size, $page_num);
+if ($field === "device") {
+    $device_number = $param;
+} else {
+    // "all" and "message" both map to message text filter
+    $message_filter = $param;
 }
+
+$messages = array();
+$show_results = true;
+$status_param = ($status_filter === "all") ? "all messages" : $status_filter;
+$messages = xmlrpc_get_hmdm_messages($device_number, $message_filter, $status_param,
+                                    null, null, $page_size, $page_num);
 
 ?>
 
 <h3><?php echo _T("Messaging", "mobile"); ?></h3>
 <p><?php echo _T("Search messages and send new messages to devices", "mobile"); ?></p>
 
-<!-- <div style="margin-bottom: 20px;">
-    <button onclick="toggleNewMessage()" class="btn"><?php echo _T("New message", "mobile"); ?></button>
-</div>
 
-<div id="new-message-form" style="display: none; margin-bottom: 20px; border: 1px solid #ccc; padding: 10px;">
-    <h4><?php echo _T("Send New Message", "mobile"); ?></h4>
-    <form method="post" action="">
-        <table>
-            <tr>
-                <td><?php echo _T("Device", "mobile"); ?></td>
-                <td>
-                    <input type="text" name="new_device" required />
-                </td>
-            </tr>
-            <tr>
-                <td><?php echo _T("Message", "mobile"); ?></td>
-                <td>
-                    <textarea name="new_message" rows="4" cols="40" required></textarea>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <button type="submit" name="send_message" value="1"><?php echo _T("Send", "mobile"); ?></button>
-                    <button type="button" onclick="toggleNewMessage()"><?php echo _T("Cancel", "mobile"); ?></button>
-                </td>
-            </tr>
-        </table>
-    </form>
-</div>
 
 <hr />
 
 <h4><?php echo _T("Search Messages", "mobile"); ?></h4>
-
-<form method="post" name="searchform">
-    <table>
-        <tr>
-            <td><?php echo _T("Device", "mobile"); ?></td>
-            <td>
-                <input type="text" name="device" id="device" value="<?php echo htmlspecialchars($device_number); ?>" />
-            </td>
-        </tr>
-        <tr>
-            <td><?php echo _T("Message", "mobile"); ?></td>
-            <td>
-                <input type="text" name="message" id="message" value="<?php echo htmlspecialchars($message_filter); ?>" />
-            </td>
-        </tr>
-        <tr>
-            <td><?php echo _T("From", "mobile"); ?></td>
-            <td>
-                <input type="datetime-local" name="date_from" id="date_from" value="<?php echo htmlspecialchars($date_from); ?>" />
-            </td>
-        </tr>
-        <tr>
-            <td><?php echo _T("To", "mobile"); ?></td>
-            <td>
-                <input type="datetime-local" name="date_to" id="date_to" value="<?php echo htmlspecialchars($date_to); ?>" />
-            </td>
-        </tr>
-        <tr>
-            <td><?php echo _T("Status", "mobile"); ?></td>
-            <td>
-                <select name="status" id="status">
-                    <option value="all messages" <?php echo $status_filter == "all messages" ? "selected" : ""; ?>><?php echo _T("All messages", "mobile"); ?></option>
-                    <option value="sent" <?php echo $status_filter == "sent" ? "selected" : ""; ?>><?php echo _T("Sent", "mobile"); ?></option>
-                    <option value="delivered" <?php echo $status_filter == "delivered" ? "selected" : ""; ?>><?php echo _T("Delivered", "mobile"); ?></option>
-                    <option value="read" <?php echo $status_filter == "read" ? "selected" : ""; ?>><?php echo _T("Read", "mobile"); ?></option>
+<div style="display:flex; justify-content:space-between; width:100%;">
+    <form method="post" name="searchform" id="searchform" onsubmit="return false;">
+        <div id="searchBest" style="width: 800px;">
+            <span class="searchfield">
+                <select class="searchfieldreal noborder" name="field" id="field" onchange="document.getElementById('searchform').submit();">
+                    <option value="all" <?php echo $field === "all" ? "selected" : ""; ?>><?php echo _T("Search all fields", "mobile"); ?></option>
+                    <option value="message" <?php echo $field === "message" ? "selected" : ""; ?>><?php echo _T("Message", "mobile"); ?></option>
+                    <option value="device" <?php echo $field === "device" ? "selected" : ""; ?>><?php echo _T("Device", "mobile"); ?></option>
                 </select>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <button type="submit" name="search" value="1"><?php echo _T("Search", "mobile"); ?></button>
-            </td>
-        </tr>
-    </table>
-</form> -->
+            </span>
+
+            <span class="searchfield">
+                <select class="searchfieldreal noborder" name="status" id="status" onchange="document.getElementById('searchform').submit();">
+                    <option value="all" <?php echo $status_filter == "all" ? "selected" : ""; ?>><?php echo _T("All statuses", "mobile"); ?></option>
+                    <option value="0" <?php echo $status_filter === "0" ? "selected" : ""; ?>><?php echo _T("Sent", "mobile"); ?></option>
+                    <option value="1" <?php echo $status_filter === "1" ? "selected" : ""; ?>><?php echo _T("Delivered", "mobile"); ?></option>
+                    <option value="2" <?php echo $status_filter === "2" ? "selected" : ""; ?>><?php echo _T("Read", "mobile"); ?></option>  
+                </select>
+            </span>
+
+            <span style="width: 240px;">
+                <input type="text" class="searchfieldreal" name="param" id="param" placeholder="<?php echo _T("Search...", "mobile"); ?>" value="<?php echo htmlspecialchars($param); ?>" onkeyup="if(event.keyCode===13){ document.getElementById('searchform').submit(); }" />
+                <button type="button" class="search-clear" aria-label="<?php echo _T('Clear search', 'mobile'); ?>" onclick="document.getElementById('param').value=''; document.getElementById('searchform').submit();"></button>
+            </span>
+
+            <button type="submit" name="search" value="1" onclick="document.getElementById('searchform').submit(); return false;"><?php echo _T("Search", "mobile"); ?></button>
+            <span class="loader" aria-hidden="true"></span>
+        </div>
+    </form>
+    <div style="margin-bottom: 20px;">
+        <a href="<?php echo urlStrRedirect("mobile/mobile/newMessage"); ?>" style="color: #fff" class="btnPrimary">
+            <?php echo _T("New message", "mobile"); ?>
+        </a>
+    </div>
+</div>
+
 
 <?php if ($show_results): ?>
     <?php if (is_array($messages) && count($messages) > 0): ?>

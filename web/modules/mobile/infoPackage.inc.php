@@ -162,6 +162,10 @@ $pageFunctions = new Page("functions", _T('Functions', 'mobile'));
 $pageFunctions->setFile("modules/mobile/mobile/functions.php");
 $submod->addPage($pageFunctions);
 
+$pageNewMessage = new Page("newMessage", _T('Send new message', 'mobile'));
+$pageNewMessage->setFile("modules/mobile/mobile/newMessage.php");
+$submod->addPage($pageNewMessage);
+
 ################################
 # End
 ################################

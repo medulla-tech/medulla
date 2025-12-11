@@ -431,7 +431,7 @@ class MobileDatabase(DatabaseHelper):
         
         :param device_number: Device number filter
         :param message_filter: Message content filter
-        :param status_filter: Status filter (all messages, sent, delivered, read)
+        :param status_filter: Status filter (all messages, or numeric status 0-4)
         :param date_from_millis: Start date in milliseconds
         :param date_to_millis: End date in milliseconds
         :param page_size: Records per page
@@ -448,7 +448,8 @@ class MobileDatabase(DatabaseHelper):
         
         payload = {
             "pageSize": page_size,
-            "pageNum": page_num
+            "pageNum": page_num,
+            "status": -1  # Default to all messages
         }
 
         STATUS_MAP = {
@@ -460,15 +461,18 @@ class MobileDatabase(DatabaseHelper):
         }
         
         if device_number:
-            payload["deviceNumber"] = device_number
+            payload["deviceFilter"] = device_number
         if message_filter:
-            payload["filter"] = message_filter
+            payload["messageFilter"] = message_filter
         if status_filter and status_filter != "all messages":
-            payload["status"] = status_filter
+            try:
+                payload["status"] = int(status_filter)
+            except (ValueError, TypeError):
+                payload["status"] = -1
         if date_from_millis:
-            payload["dateFromMillis"] = date_from_millis
+            payload["dateFrom"] = date_from_millis
         if date_to_millis:
-            payload["dateToMillis"] = date_to_millis
+            payload["dateTo"] = date_to_millis
 
         try:
             resp = requests.post(url, json=payload, headers=headers)
@@ -476,7 +480,7 @@ class MobileDatabase(DatabaseHelper):
             data = resp.json()
 
             messages = data.get("data", {}).get("items", [])
-            result = [{"name": m["deviceNumber"], "time": m["ts"]//1000, "message": m["message"], "status": STATUS_MAP[m["status"]]} for m in messages]
+            result = [{"name": m["deviceNumber"], "time": m["ts"]//1000, "message": m["message"], "status": STATUS_MAP.get(m["status"], "Unknown")} for m in messages]
 
             logging.getLogger().info(f"Messages fetched successfully.")
             return result
@@ -1039,3 +1043,79 @@ class MobileDatabase(DatabaseHelper):
         except Exception as e:
             logging.getLogger().error(f"Error deleting application {app_id}: {e}")
             return False
+
+    def getHmdmGroups(self):
+        """
+        Fetch all groups from HMDM.
+        
+        :return: List of group objects with id and name
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Impossible to authenticate to retrieve groups.")
+            return []
+
+        url = f"{self.BASE_URL}/private/groups/search"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+
+        try:
+            resp = requests.get(url, headers=headers)
+            resp.raise_for_status()
+            data = resp.json()
+            logging.getLogger().info(f"Groups fetched successfully")
+            
+            groups = data.get("data", [])
+            return groups
+        except Exception as e:
+            logging.getLogger().error(f"Error fetching groups: {e}")
+            return []
+
+    def sendHmdmMessage(self, scope, device_number="", group_id="", configuration_id="", message=""):
+        """
+        Send a message to devices, groups, configurations, or all devices via HMDM.
+        
+        :param scope: One of: 'device', 'group', 'configuration', 'all_devices'
+        :param device_number: Device number (for device scope)
+        :param group_id: Group ID (for group scope)
+        :param configuration_id: Configuration ID (for configuration scope)
+        :param message: Message text to send
+        :return: Response from HMDM or error dict
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Impossible to authenticate to send message.")
+            return {"status": "error", "message": "Authentication failed"}
+
+        url = f"{self.BASE_URL}/plugins/messaging/private/send"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+
+        # Build payload based on scope
+        payload = {"message": message}
+
+        if scope == "device":
+            payload["scope"] = "DEVICE"
+            payload["deviceNumber"] = device_number
+        elif scope == "group":
+            payload["scope"] = "GROUP"
+            payload["groupId"] = int(group_id)
+        elif scope == "configuration":
+            payload["scope"] = "CONFIGURATION"
+            payload["configurationId"] = int(configuration_id)
+        elif scope == "all_devices":
+            payload["scope"] = "ALL"
+        else:
+            return {"status": "error", "message": "Invalid scope"}
+
+        try:
+            logging.getLogger().info(f"Sending message via HMDM: {json.dumps(payload)}")
+            resp = requests.post(url, json=payload, headers=headers)
+            logging.getLogger().info(f"HMDM send message HTTP status: {resp.status_code}")
+            logging.getLogger().info(f"HMDM send message raw response: {resp.text}")
+            
+            resp.raise_for_status()
+            resp_json = resp.json()
+            logging.getLogger().info(f"Message sent successfully: {json.dumps(resp_json)}")
+            return resp_json
+        except Exception as e:
+            logging.getLogger().error(f"Error sending message: {e}")
+            return {"status": "error", "message": str(e)}

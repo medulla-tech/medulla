@@ -77,3 +77,9 @@ def getHmdmPushMessages(device_number="", message_filter="", status_filter="",
                 date_from_millis=None, date_to_millis=None, page_size=50, page_num=1):
     return MobileDatabase().getHmdmPushMessages(device_number, message_filter, status_filter,
                                         date_from_millis, date_to_millis, page_size, page_num)
+
+def getHmdmGroups():
+    return MobileDatabase().getHmdmGroups()
+
+def sendHmdmMessage(scope, device_number="", group_id="", configuration_id="", message=""):
+    return MobileDatabase().sendHmdmMessage(scope, device_number, group_id, configuration_id, message)
