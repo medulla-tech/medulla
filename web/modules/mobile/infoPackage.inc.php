@@ -166,6 +166,10 @@ $pageNewMessage = new Page("newMessage", _T('Send new message', 'mobile'));
 $pageNewMessage->setFile("modules/mobile/mobile/newMessage.php");
 $submod->addPage($pageNewMessage);
 
+$pageNewPushMessage = new Page("newPushMessage", _T('Send new push message', 'mobile'));
+$pageNewPushMessage->setFile("modules/mobile/mobile/newPushMessage.php");
+$submod->addPage($pageNewPushMessage);
+    
 ################################
 # End
 ################################

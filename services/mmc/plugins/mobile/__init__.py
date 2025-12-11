@@ -83,3 +83,6 @@ def getHmdmGroups():
 
 def sendHmdmMessage(scope, device_number="", group_id="", configuration_id="", message=""):
     return MobileDatabase().sendHmdmMessage(scope, device_number, group_id, configuration_id, message)
+
+def sendHmdmPushMessage(scope, message_type="", payload="", device_number="", group_id="", configuration_id=""):
+    return MobileDatabase().sendHmdmPushMessage(scope, message_type, payload, device_number, group_id, configuration_id)

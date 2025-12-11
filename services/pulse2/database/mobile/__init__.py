@@ -1119,3 +1119,57 @@ class MobileDatabase(DatabaseHelper):
         except Exception as e:
             logging.getLogger().error(f"Error sending message: {e}")
             return {"status": "error", "message": str(e)}
+        
+    def sendHmdmPushMessage(self, scope, message_type="", payload="", device_number="", group_id="", configuration_id=""):
+        """
+        Send a push message to devices, groups, configurations, or all devices via HMDM.
+        
+        :param scope: One of: 'device', 'group', 'configuration', 'all_devices'
+        :param message_type: Type of push message (e.g., configUpdated, runApp, etc.)
+        :param payload: Payload/content of the push message
+        :param device_number: Device number (for device scope)
+        :param group_id: Group ID (for group scope)
+        :param configuration_id: Configuration ID (for configuration scope)
+        :return: Response from HMDM or error dict
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Impossible to authenticate to send push message.")
+            return {"status": "error", "message": "Authentication failed"}
+
+        url = f"{self.BASE_URL}/plugins/push/private/send"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+
+        # Build payload based on scope
+        api_payload = {
+            "messageType": message_type,
+            "payload": payload
+        }
+
+        if scope == "device":
+            api_payload["scope"] = "DEVICE"
+            api_payload["deviceNumber"] = device_number
+        elif scope == "group":
+            api_payload["scope"] = "GROUP"
+            api_payload["groupId"] = int(group_id)
+        elif scope == "configuration":
+            api_payload["scope"] = "CONFIGURATION"
+            api_payload["configurationId"] = int(configuration_id)
+        elif scope == "all_devices":
+            api_payload["scope"] = "ALL"
+        else:
+            return {"status": "error", "message": "Invalid scope"}
+
+        try:
+            logging.getLogger().info(f"Sending push message via HMDM: {json.dumps(api_payload)}")
+            resp = requests.post(url, json=api_payload, headers=headers)
+            logging.getLogger().info(f"HMDM send push message HTTP status: {resp.status_code}")
+            logging.getLogger().info(f"HMDM send push message raw response: {resp.text}")
+            
+            resp.raise_for_status()
+            resp_json = resp.json()
+            logging.getLogger().info(f"Push message sent successfully: {json.dumps(resp_json)}")
+            return resp_json
+        except Exception as e:
+            logging.getLogger().error(f"Error sending push message: {e}")
+            return {"status": "error", "message": str(e)}
