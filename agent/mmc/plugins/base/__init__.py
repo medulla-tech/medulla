@@ -1327,8 +1327,12 @@ class LdapUserGroupControl:
             "shadowMax": "99999",
             "shadowFlag": "134538308",
             "shadowLastChange": "11192",
-            "o": organisation if organisation else "",
         }
+
+        if organisation:
+            user_info["o"] = organisation
+        else:
+            user_info["o"] = "MMC"
 
         user_info = self._applyUserDefault(user_info, self.userDefault["base"])
 
