@@ -6062,7 +6062,7 @@ class XmppMasterDatabase(DatabaseHelper):
         deploylog = session.query(Deploy).filter(
             Deploy.sessionid.like("%s%%" % typedeploy)
         )
-        deploylog = deploylog.filter(~Deploy.title.like("%Convergence%"))
+        deploylog = deploylog.filter(and_(~Deploy.title.like("%Convergence%"), ~Deploy.title.like("%-@system@-%")) )
 
         if not pulse_usersid or len(pulse_usersid) == 1 and pulse_usersid[0] == "root":
             return self.get_deploy_by_user_with_interval(
@@ -6667,6 +6667,7 @@ class XmppMasterDatabase(DatabaseHelper):
         # Filtres communs
         filters = [
             ~Deploy.title.like("%Convergence%"),
+            ~Deploy.title.like("%-@system@-%"),
             Deploy.sessionid.like(f"{typedeploy}%"),
         ]
         if window_sec > 0:
@@ -6988,6 +6989,7 @@ class XmppMasterDatabase(DatabaseHelper):
         # Filtres communs
         filters = [
             ~Deploy.title.like("%Convergence%"),
+            ~Deploy.title.like("%-@system@-%"),
             Deploy.sessionid.like(f"{typedeploy}%"),
             or_(
                 Deploy.state == "DEPLOYMENT SUCCESS",
