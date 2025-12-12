@@ -148,16 +148,21 @@ if (!empty($_GET['uuid'])) {
 
 if (isset($_GET['uuid'])) {
     $platform = xmlrpc_getMachinefromuuid($_GET['uuid'])['platform'];
-    if (stripos($platform, "win") !== false) {
+    if (preg_match("#Microsoft#i", $platform)){
         $filter['filter1'] = "win";
-    } elseif(stripos($platform, "linux") !== false) {
-        $filter['filter1'] = "linux";
-    } elseif(stripos($platform, "darwin") !== false) {
+    }
+    // Hard to tell if it is a darwin or linux from xmppmaster.machines.platform field, unless we keep track on each big OS names such as Ubuntu, Lubuntu, Debian etc...
+    else if(preg_match("#macOS#i", $platform)) {
         $filter['filter1'] = "darwin";
+    }
+    else if(preg_match("#Android#i", $platform)){
+        $filter['filter1'] = "android";
+    }
+    else{
+        $filter['filter1'] = "linux";
     }
 };
 
-$filter['id'] = "darwin";
 
 
 list($count, $packages) =  get_all_packages_deploy($_SESSION['login'], $start, $start + $maxperpage, $filter);

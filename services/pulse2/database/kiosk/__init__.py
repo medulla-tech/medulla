@@ -12,7 +12,7 @@ from sqlalchemy.ext.automap import automap_base
 
 Session = sessionmaker()
 from sqlalchemy.exc import DBAPIError
-from sqlalchemy import update
+from sqlalchemy import update, or_
 from datetime import date, datetime, timedelta
 # PULSE2 modules
 from mmc.database.database_helper import DatabaseHelper
@@ -172,7 +172,10 @@ class KioskDatabase(DatabaseHelper):
         except:
             limit = -1
 
-        ret = session.query(Profiles).filter(and_(Profiles.owner.in_(teammates)))
+        # Use REGEXP to match owners with patterns
+        regex_conditions = [Profiles.owner.op('REGEXP')(pattern) for pattern in teammates]
+        ret = session.query(Profiles).filter(or_(*regex_conditions))
+
         if filter != "":
             ret = ret.filter(
                 or_(

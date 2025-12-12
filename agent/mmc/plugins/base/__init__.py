@@ -88,7 +88,7 @@ INI = f"{mmcconfdir}/plugins/base.ini"
 
 modList = None
 
-VERSION = "5.4.3"
+VERSION = "5.4.4"
 APIVERSION = "9:0:5"
 REVISION = scmRevision("$Rev$")
 
@@ -1327,8 +1327,12 @@ class LdapUserGroupControl:
             "shadowMax": "99999",
             "shadowFlag": "134538308",
             "shadowLastChange": "11192",
-            "o": organisation if organisation else "",
         }
+
+        if organisation:
+            user_info["o"] = organisation
+        else:
+            user_info["o"] = "MMC"
 
         user_info = self._applyUserDefault(user_info, self.userDefault["base"])
 

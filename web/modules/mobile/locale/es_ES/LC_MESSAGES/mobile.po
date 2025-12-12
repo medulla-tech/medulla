@@ -1,148 +1,129 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
-#: modules/mobile/mobile/ajaxConfigurationsList.php:23
-#: modules/mobile/mobile/ajaxApplicationsList.php:29
-#: modules/mobile/mobile/audit.php:26
-#: modules/mobile/mobile/ajaxDeviceList.php:59
-#: modules/mobile/mobile/ajaxDeviceList.php:60
-#: modules/mobile/mobile/ajaxDeviceList.php:61
-#: modules/mobile/mobile/ajaxDeviceList.php:62
-#: modules/mobile/mobile/ajaxDeviceList.php:63
-#: modules/mobile/mobile/ajaxFilesList.php:31
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-28 17:28+0100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Project-Id-Version: medulla\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: es_ES\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: modules/mobile/infoPackage.inc.php:6 modules/mobile/infoPackage.inc.php:10
 msgid "Mobiles"
-msgstr ""
+msgstr "Móviles"
 
 #: modules/mobile/infoPackage.inc.php:22
 msgid "Get all available phones"
-msgstr ""
+msgstr "Obtener todos los teléfonos disponibles"
 
 #: modules/mobile/infoPackage.inc.php:31 modules/mobile/mobile/addDevice.php:53
 #: modules/mobile/mobile/localSidebar.php:9
 msgid "Add a device"
-msgstr ""
+msgstr "Añadir un dispositivo"
 
 #: modules/mobile/infoPackage.inc.php:39
 #: modules/mobile/mobile/applicationsList.php:5
 #: modules/mobile/mobile/localSidebar.php:11
 msgid "Applications"
-msgstr ""
+msgstr "Aplicaciones"
 
 #: modules/mobile/infoPackage.inc.php:46
 #: modules/mobile/mobile/localSidebar.php:19
 msgid "All devices glpi"
-msgstr ""
+msgstr "Todos los dispositivos glpi"
 
 #: modules/mobile/infoPackage.inc.php:51
 msgid "All phones glpi"
-msgstr ""
+msgstr "Todos los teléfonos glpi"
 
 #: modules/mobile/infoPackage.inc.php:58 modules/mobile/mobile/filesList.php:8
 #: modules/mobile/mobile/localSidebar.php:17
 msgid "Files"
-msgstr ""
+msgstr "Archivos"
 
 #: modules/mobile/infoPackage.inc.php:66
 msgid "Add a configuration"
-msgstr ""
+msgstr "Añadir una configuración"
 
 #: modules/mobile/infoPackage.inc.php:74
 msgid "Device list view"
-msgstr ""
+msgstr "Vista de la lista de dispositivos"
 
 #: modules/mobile/infoPackage.inc.php:79
 msgid "Add device"
-msgstr ""
+msgstr "Añadir dispositivo"
 
 #: modules/mobile/infoPackage.inc.php:88
 msgid "Applications list view"
-msgstr ""
+msgstr "Vista de lista de aplicaciones"
 
 #: modules/mobile/infoPackage.inc.php:93
 msgid "GLPI devices list view"
-msgstr ""
+msgstr "Vista de la lista de dispositivos GLPI"
 
 #: modules/mobile/infoPackage.inc.php:98
 msgid "GLPI phones list view"
-msgstr ""
+msgstr "Vista de la lista de teléfonos GLPI"
 
 #: modules/mobile/infoPackage.inc.php:103
 msgid "Files list view"
-msgstr ""
+msgstr "Vista de la lista de archivos"
 
 #: modules/mobile/infoPackage.inc.php:108
 msgid "Device search"
-msgstr ""
+msgstr "Búsqueda de dispositivos"
 
 #: modules/mobile/infoPackage.inc.php:118
 msgid "Delete application"
-msgstr ""
+msgstr "Eliminar aplicación"
 
 #: modules/mobile/infoPackage.inc.php:124
 msgid "Delete GLPI Device"
-msgstr ""
+msgstr "Borrar dispositivo GLPI"
 
 #: modules/mobile/infoPackage.inc.php:129
 msgid "Delete file"
-msgstr ""
+msgstr "Eliminar archivo"
 
 #: modules/mobile/infoPackage.inc.php:138
 #: modules/mobile/mobile/localSidebar.php:13
 #: modules/mobile/mobile/configurationsList.php:8
 msgid "Configurations"
-msgstr ""
+msgstr "Configuraciones"
 
 #: modules/mobile/infoPackage.inc.php:142
 msgid "Configurations list view"
-msgstr ""
+msgstr "Vista de lista de configuraciones"
 
 #: modules/mobile/infoPackage.inc.php:147
 msgid "Delete configuration"
-msgstr ""
+msgstr "Borrar configuración"
 
 #: modules/mobile/infoPackage.inc.php:157
 #: modules/mobile/mobile/localSidebar.php:21
 msgid "Functions"
-msgstr ""
+msgstr "Funciones"
 
 #: modules/mobile/mobile/functions.php:8
 msgid "Audit"
-msgstr ""
+msgstr "Auditoría"
 
 #: modules/mobile/mobile/functions.php:9
 msgid "Detailed information"
-msgstr ""
+msgstr "Información detallada"
 
 #: modules/mobile/mobile/functions.php:10
 #: modules/mobile/mobile/messaging.php:35
 msgid "Messaging"
-msgstr ""
+msgstr "Mensajería"
 
 #: modules/mobile/mobile/functions.php:11
 msgid "Push messages"
-msgstr ""
+msgstr "Mensajes push"
 
 #: modules/mobile/mobile/ajaxConfigurationsList.php:27
 #: modules/mobile/mobile/ajaxDeviceList.php:80
 msgid "Configuration"
-msgstr ""
+msgstr "Configuración"
 
 #: modules/mobile/mobile/ajaxConfigurationsList.php:36
 #: modules/mobile/mobile/ajaxGlpiDevicesList.php:264
@@ -150,28 +131,28 @@ msgstr ""
 #: modules/mobile/mobile/ajaxDeviceList.php:79
 #: modules/mobile/mobile/ajaxFilesList.php:43
 msgid "Description"
-msgstr ""
+msgstr "Descripción"
 
 #: modules/mobile/mobile/ajaxConfigurationsList.php:37
 #: modules/mobile/mobile/ajaxApplicationsList.php:45
 #: modules/mobile/mobile/ajaxDeviceList.php:85
 #: modules/mobile/mobile/ajaxFilesList.php:49
 msgid "Actions"
-msgstr ""
+msgstr "Acciones"
 
 #: modules/mobile/mobile/messaging.php:36
 msgid "Search messages and send new messages to devices"
-msgstr ""
+msgstr "Buscar mensajes y enviar mensajes nuevos a dispositivos"
 
 #: modules/mobile/mobile/messaging.php:39
 #: modules/mobile/mobile/pushMessages.php:39
 msgid "New message"
-msgstr ""
+msgstr "Nuevo mensaje"
 
 #: modules/mobile/mobile/messaging.php:43
 #: modules/mobile/mobile/pushMessages.php:43
 msgid "Send New Message"
-msgstr ""
+msgstr "Enviar nuevo mensaje"
 
 #: modules/mobile/mobile/messaging.php:47
 #: modules/mobile/mobile/messaging.php:75
@@ -180,7 +161,7 @@ msgstr ""
 #: modules/mobile/mobile/pushMessages.php:75
 #: modules/mobile/mobile/pushMessages.php:123
 msgid "Device"
-msgstr ""
+msgstr "Dispositivo"
 
 #: modules/mobile/mobile/messaging.php:53
 #: modules/mobile/mobile/messaging.php:81
@@ -188,482 +169,483 @@ msgstr ""
 #: modules/mobile/mobile/pushMessages.php:53
 #: modules/mobile/mobile/pushMessages.php:81
 msgid "Message"
-msgstr ""
+msgstr "Mensaje"
 
 #: modules/mobile/mobile/messaging.php:60
 #: modules/mobile/mobile/pushMessages.php:60
 msgid "Send"
-msgstr ""
+msgstr "Enviar"
 
 #: modules/mobile/mobile/messaging.php:61
 #: modules/mobile/mobile/pushMessages.php:61
 msgid "Cancel"
-msgstr ""
+msgstr "Cancelar"
 
 #: modules/mobile/mobile/messaging.php:70
 #: modules/mobile/mobile/pushMessages.php:70
 msgid "Search Messages"
-msgstr ""
+msgstr "Buscar mensajes"
 
 #: modules/mobile/mobile/messaging.php:87
 #: modules/mobile/mobile/pushMessages.php:87
 msgid "From"
-msgstr ""
+msgstr "En"
 
 #: modules/mobile/mobile/messaging.php:93
 #: modules/mobile/mobile/pushMessages.php:93
 msgid "To"
-msgstr ""
+msgstr "A"
 
 #: modules/mobile/mobile/messaging.php:99
 #: modules/mobile/mobile/messaging.php:124
 #: modules/mobile/mobile/pushMessages.php:99
 #: modules/mobile/mobile/ajaxDeviceList.php:83
 msgid "Status"
-msgstr ""
+msgstr "Estado"
 
 #: modules/mobile/mobile/messaging.php:102
 #: modules/mobile/mobile/pushMessages.php:102
 msgid "All messages"
-msgstr ""
+msgstr "Todos los mensajes"
 
 #: modules/mobile/mobile/messaging.php:103
 #: modules/mobile/mobile/pushMessages.php:103
 msgid "Sent"
-msgstr ""
+msgstr "Tarde"
 
 #: modules/mobile/mobile/messaging.php:104
 #: modules/mobile/mobile/pushMessages.php:104
 msgid "Delivered"
-msgstr ""
+msgstr "Entregado"
 
 #: modules/mobile/mobile/messaging.php:105
 #: modules/mobile/mobile/pushMessages.php:105
 msgid "Read"
-msgstr ""
+msgstr "Leer"
 
 #: modules/mobile/mobile/messaging.php:111
 #: modules/mobile/mobile/pushMessages.php:111
 #: modules/mobile/mobile/detailedInfo.php:26
 msgid "Search"
-msgstr ""
+msgstr "Buscar en"
 
 #: modules/mobile/mobile/messaging.php:122
 #: modules/mobile/mobile/pushMessages.php:122
 #: modules/mobile/mobile/detailedInfo.php:39
 msgid "Time"
-msgstr ""
+msgstr "Tiempo"
 
 #: modules/mobile/mobile/messaging.php:139
 #: modules/mobile/mobile/pushMessages.php:139
 msgid "No messages found matching the criteria"
-msgstr ""
+msgstr "No se han encontrado mensajes que coincidan con los criterios"
 
 #: modules/mobile/mobile/index.php:6
 msgid "List of all devices"
-msgstr ""
+msgstr "Lista de todos los dispositivos"
 
 #: modules/mobile/mobile/deleteFile.php:14
 #: modules/mobile/mobile/deleteApplication.php:16
 #: modules/mobile/mobile/deleteConfiguration.php:14
 msgid "Missing parameter id"
-msgstr ""
+msgstr "Falta id de parámetro"
 
 #: modules/mobile/mobile/deleteFile.php:22
 #, php-format
 msgid "File %s successfully deleted"
-msgstr ""
+msgstr "Fichero %s eliminado con éxito"
 
 #: modules/mobile/mobile/deleteFile.php:26
 #, php-format
 msgid "Impossible to delete file %s"
-msgstr ""
+msgstr "Imposible borrar el fichero %s"
 
 #: modules/mobile/mobile/ajaxApplicationsList.php:33
 msgid "Application name"
-msgstr ""
+msgstr "Nombre de la aplicación"
 
 #: modules/mobile/mobile/ajaxApplicationsList.php:42
 #: modules/mobile/mobile/detailedInfo.php:66
 msgid "Package ID"
-msgstr ""
+msgstr "ID del paquete"
 
 #: modules/mobile/mobile/ajaxApplicationsList.php:43
 msgid "Version"
-msgstr ""
+msgstr "Versión"
 
 #: modules/mobile/mobile/ajaxApplicationsList.php:44
 msgid "URL"
-msgstr ""
+msgstr "URL"
 
 #: modules/mobile/mobile/addConfiguration.php:7
 msgid "Configuration du mobile"
-msgstr ""
+msgstr "Configuración del teléfono móvil"
 
 #: modules/mobile/mobile/deleteGlpiDevice.php:3
 msgid "Not implemented"
-msgstr ""
+msgstr "No se ha aplicado"
 
 #: modules/mobile/mobile/pushMessages.php:35
 msgid "Push Messages"
-msgstr ""
+msgstr "Mensajes Push"
 
 #: modules/mobile/mobile/pushMessages.php:36
 msgid "Search push messages and send new push messages to devices"
-msgstr ""
+msgstr "Buscar mensajes push y enviar nuevos mensajes push a los dispositivos"
 
 #: modules/mobile/mobile/pushMessages.php:124
 #: modules/mobile/mobile/ajaxGlpiDevicesList.php:281
 msgid "Type"
-msgstr ""
+msgstr "Tipo"
 
 #: modules/mobile/mobile/pushMessages.php:125
 msgid "Payload"
-msgstr ""
+msgstr "Carga útil"
 
 #: modules/mobile/mobile/glpiDevicesList.php:8
 #, php-format
 msgid "All devices %s"
-msgstr ""
+msgstr "Todos los dispositivos %s"
 
 #: modules/mobile/mobile/glpiDevicesList.php:15
 msgid "All my entities"
-msgstr ""
+msgstr "Todas mis entidades"
 
 #: modules/mobile/mobile/audit.php:14
 msgid "Audit Logs"
-msgstr ""
+msgstr "Registros de auditoría"
 
 #: modules/mobile/mobile/audit.php:15
 msgid "Audit log records from HMDM"
-msgstr ""
+msgstr "Registros de auditoría de HMDM"
 
 #: modules/mobile/mobile/audit.php:22
 msgid "Date and time"
-msgstr ""
+msgstr "Fecha y hora"
 
 #: modules/mobile/mobile/audit.php:23
 msgid "User login"
-msgstr ""
+msgstr "Inicio de sesión de usuario"
 
 #: modules/mobile/mobile/audit.php:24
 msgid "IP Address"
-msgstr ""
+msgstr "Dirección IP"
 
 #: modules/mobile/mobile/audit.php:25
 msgid "Action"
-msgstr ""
+msgstr "Acción"
 
 #: modules/mobile/mobile/audit.php:43
 msgid "No audit logs found"
-msgstr ""
+msgstr "No se han encontrado registros de auditoría"
 
 #: modules/mobile/mobile/ajaxGlpiDevicesList.php:70
 msgid "Inventory"
-msgstr ""
+msgstr "Inventario"
 
 #: modules/mobile/mobile/ajaxGlpiDevicesList.php:71
 msgid "GLPI Inventory"
-msgstr ""
+msgstr "Inventario GLPI"
 
 #: modules/mobile/mobile/ajaxGlpiDevicesList.php:72
 msgid "View deployment details"
-msgstr ""
+msgstr "Ver detalles del despliegue"
 
 #: modules/mobile/mobile/ajaxGlpiDevicesList.php:73
 #: modules/mobile/mobile/ajaxGlpiDevicesList.php:78
 msgid "Software deployment"
-msgstr ""
+msgstr "Implantación de software"
 
 #: modules/mobile/mobile/ajaxGlpiDevicesList.php:76
 msgid "Monitoring"
-msgstr ""
+msgstr "Supervisión"
 
 #: modules/mobile/mobile/ajaxGlpiDevicesList.php:77
 #: modules/mobile/mobile/ajaxGlpiDevicesList.php:86
 #: modules/mobile/mobile/ajaxGlpiDevicesList.php:96
 msgid "Remote control"
-msgstr ""
+msgstr "Mando a distancia"
 
 #: modules/mobile/mobile/ajaxGlpiDevicesList.php:80
 #: modules/mobile/mobile/ajaxGlpiDevicesList.php:81
 msgid "xmppconsole"
-msgstr ""
+msgstr "xmppconsole"
 
 #: modules/mobile/mobile/ajaxGlpiDevicesList.php:83
 #: modules/mobile/mobile/ajaxGlpiDevicesList.php:84
 msgid "Edit config files"
-msgstr ""
+msgstr "Editar archivos de configuración"
 
 #: modules/mobile/mobile/ajaxGlpiDevicesList.php:88
 msgid "Imaging management"
-msgstr ""
+msgstr "Gestión de imágenes"
 
 #: modules/mobile/mobile/ajaxGlpiDevicesList.php:89
 msgid "extTicket issue"
-msgstr ""
+msgstr "problema extTicket"
 
 #: modules/mobile/mobile/ajaxGlpiDevicesList.php:91
 msgid "Show Profile"
-msgstr ""
+msgstr "Mostrar perfil"
 
 #: modules/mobile/mobile/ajaxGlpiDevicesList.php:93
 msgid "Quick action"
-msgstr ""
+msgstr "Acción rápida"
 
 #: modules/mobile/mobile/ajaxGlpiDevicesList.php:260
 msgid "Device Name"
-msgstr ""
+msgstr "Nombre del dispositivo"
 
 #: modules/mobile/mobile/ajaxGlpiDevicesList.php:267
 msgid "Manufacturer"
-msgstr ""
+msgstr "Fabricante"
 
 #: modules/mobile/mobile/ajaxGlpiDevicesList.php:270
 msgid "Operating System"
-msgstr ""
+msgstr "Sistema operativo"
 
 #: modules/mobile/mobile/ajaxGlpiDevicesList.php:282
 #: modules/mobile/mobile/detailedInfo.php:54
 #: modules/mobile/mobile/ajaxDeviceList.php:81
 msgid "Model"
-msgstr ""
+msgstr "Modelo"
 
 #: modules/mobile/mobile/ajaxGlpiDevicesList.php:283
 msgid "Alternate Username"
-msgstr ""
+msgstr "Nombre de usuario alternativo"
 
 #: modules/mobile/mobile/ajaxGlpiDevicesList.php:284
 msgid "Last Update"
-msgstr ""
+msgstr "Última actualización"
 
 #: modules/mobile/mobile/ajaxGlpiDevicesList.php:288
 msgid "Last Logged User"
-msgstr ""
+msgstr "Último usuario registrado"
 
 #: modules/mobile/mobile/ajaxGlpiDevicesList.php:291
 msgid "Owner"
-msgstr ""
+msgstr "Propietario"
 
 #: modules/mobile/mobile/ajaxGlpiDevicesList.php:294
 msgid "Entity"
-msgstr ""
+msgstr "Entidad"
 
 #: modules/mobile/mobile/ajaxGlpiDevicesList.php:297
 msgid "Localization"
-msgstr ""
+msgstr "Localización"
 
 #: modules/mobile/mobile/ajaxGlpiDevicesList.php:300
 msgid "Owner Firstname"
-msgstr ""
+msgstr "Propietario Nombre"
 
 #: modules/mobile/mobile/ajaxGlpiDevicesList.php:303
 msgid "Owner Real Name"
-msgstr ""
+msgstr "Nombre real del propietario"
 
 #: modules/mobile/mobile/ajaxGlpiDevicesList.php:327
 msgid "Backup status"
-msgstr ""
+msgstr "Estado de la copia de seguridad"
 
 #: modules/mobile/mobile/ajaxGlpiDevicesList.php:337
 msgid "Urbackup"
-msgstr ""
+msgstr "Urbackup"
 
 #: modules/mobile/mobile/ajaxGlpiDevicesList.php:367
 msgid "Delete computer"
-msgstr ""
+msgstr "Borrar ordenador"
 
 #: modules/mobile/mobile/detailedInfo.php:13
 #: modules/mobile/mobile/detailedInfo.php:38
 msgid "Detailed Device Information"
-msgstr ""
+msgstr "Información detallada del dispositivo"
 
 #: modules/mobile/mobile/detailedInfo.php:14
 msgid "Search for a device and view its detailed information"
-msgstr ""
+msgstr "Buscar un dispositivo y ver su información detallada"
 
 #: modules/mobile/mobile/detailedInfo.php:40
 msgid "Device number"
-msgstr ""
+msgstr "Número de dispositivo"
 
 #: modules/mobile/mobile/detailedInfo.php:42
 msgid "Groups"
-msgstr ""
+msgstr "Grupos"
 
 #: modules/mobile/mobile/detailedInfo.php:43
 msgid "IMEI (required)"
-msgstr ""
+msgstr "IMEI (obligatorio)"
 
 #: modules/mobile/mobile/detailedInfo.php:44
 msgid "IMEI"
-msgstr ""
+msgstr "IMEI"
 
 #: modules/mobile/mobile/detailedInfo.php:45
 msgid "Phone (required)"
-msgstr ""
+msgstr "Teléfono (obligatorio)"
 
 #: modules/mobile/mobile/detailedInfo.php:46
 msgid "Phone"
-msgstr ""
+msgstr "Teléfono"
 
 #: modules/mobile/mobile/detailedInfo.php:47
 msgid "ICCID"
-msgstr ""
+msgstr "ICCID"
 
 #: modules/mobile/mobile/detailedInfo.php:48
 msgid "Serial number"
-msgstr ""
+msgstr "Número de serie"
 
 #: modules/mobile/mobile/detailedInfo.php:49
 msgid "CPU architecture"
-msgstr ""
+msgstr "Arquitectura de la CPU"
 
 #: modules/mobile/mobile/detailedInfo.php:50
 msgid "Permission to install as device administrator"
-msgstr ""
+msgstr "Permiso para instalar como administrador del dispositivo"
 
 #: modules/mobile/mobile/detailedInfo.php:50
 #: modules/mobile/mobile/detailedInfo.php:51
 #: modules/mobile/mobile/detailedInfo.php:52
 #: modules/mobile/mobile/detailedInfo.php:53
 msgid "yes"
-msgstr ""
+msgstr "sí"
 
 #: modules/mobile/mobile/detailedInfo.php:50
 #: modules/mobile/mobile/detailedInfo.php:51
 #: modules/mobile/mobile/detailedInfo.php:52
 #: modules/mobile/mobile/detailedInfo.php:53
 msgid "no"
-msgstr ""
+msgstr "no"
 
 #: modules/mobile/mobile/detailedInfo.php:51
 msgid "Permission to overlay on top of other windows"
-msgstr ""
+msgstr "Permiso para superponer sobre otras ventanas"
 
 #: modules/mobile/mobile/detailedInfo.php:52
 msgid "Permission to access the use of history"
-msgstr ""
+msgstr "Permiso para acceder al uso de la historia"
 
 #: modules/mobile/mobile/detailedInfo.php:53
 msgid "Permission to access the accessibility services"
-msgstr ""
+msgstr "Permiso para acceder a los servicios de accesibilidad"
 
 #: modules/mobile/mobile/detailedInfo.php:55
 msgid "OS version"
-msgstr ""
+msgstr "Versión del sistema operativo"
 
 #: modules/mobile/mobile/detailedInfo.php:56
 msgid "Battery charge"
-msgstr ""
+msgstr "Carga de la batería"
 
 #: modules/mobile/mobile/detailedInfo.php:57
 msgid "MDM mode"
-msgstr ""
+msgstr "Modo MDM"
 
 #: modules/mobile/mobile/detailedInfo.php:58
 msgid "Kiosk mode"
-msgstr ""
+msgstr "Modo quiosco"
 
 #: modules/mobile/mobile/detailedInfo.php:59
 msgid "Launcher variant"
-msgstr ""
+msgstr "Variante de lanzador"
 
 #: modules/mobile/mobile/detailedInfo.php:60
 msgid "Default launcher"
-msgstr ""
+msgstr "Lanzador por defecto"
 
 #: modules/mobile/mobile/detailedInfo.php:61
 msgid "Installation status"
-msgstr ""
+msgstr "Estado de la instalación"
 
 #: modules/mobile/mobile/detailedInfo.php:65
 msgid "Title"
-msgstr ""
+msgstr "Título"
 
 #: modules/mobile/mobile/detailedInfo.php:67
 msgid "Installed version"
-msgstr ""
+msgstr "Versión instalada"
 
 #: modules/mobile/mobile/detailedInfo.php:68
 msgid "Required version"
-msgstr ""
+msgstr "Versión requerida"
 
 #: modules/mobile/mobile/detailedInfo.php:82
 msgid "No information found for this device"
-msgstr ""
+msgstr "No se ha encontrado información sobre este dispositivo"
 
 #: modules/mobile/mobile/deleteApplication.php:24
 #, php-format
 msgid "Application %s successfully deleted"
-msgstr ""
+msgstr "Aplicación %s eliminada con éxito"
 
 #: modules/mobile/mobile/deleteApplication.php:28
 #, php-format
 msgid "Impossible to delete application %s"
-msgstr ""
+msgstr "Imposible eliminar la aplicación %s"
 
 #: modules/mobile/mobile/deleteConfiguration.php:22
 #, php-format
 msgid "Configuration %s successfully deleted"
-msgstr ""
+msgstr "Configuración %s eliminada con éxito"
 
 #: modules/mobile/mobile/deleteConfiguration.php:26
 #, php-format
 msgid "Impossible to delete configuration %s"
-msgstr ""
+msgstr "Imposible borrar la configuración %s"
 
 #: modules/mobile/mobile/addDevice.php:70
 msgid "<label for=\"add-phone\">Device's name</label>"
-msgstr ""
+msgstr "<label for=\"add-phone\">Nombre del dispositivo</label>"
 
 #: modules/mobile/mobile/addDevice.php:82
 msgid "<label for=\"desc-zone\">Description</label>"
-msgstr ""
+msgstr "<label for=\"desc-zone\">Descripción</label>"
 
 #: modules/mobile/mobile/addDevice.php:94
 msgid "<label for=\"status_conf\">Configuration</label>"
-msgstr ""
+msgstr "<label for=\"status_conf\">Configuración</label>"
 
 #: modules/mobile/mobile/addDevice.php:106
 msgid "<label for=\"status_group\">Group</label>"
-msgstr ""
+msgstr "<label for=\"status_group\">Grupo</label>"
 
 #: modules/mobile/mobile/ajaxDeviceList.php:72
 msgid "Device's name"
-msgstr ""
+msgstr "Nombre del dispositivo"
 
 #: modules/mobile/mobile/ajaxDeviceList.php:82
 msgid "IP address"
-msgstr ""
+msgstr "Dirección IP"
 
 #: modules/mobile/mobile/ajaxFilesList.php:34
 msgid "File"
-msgstr ""
+msgstr "Archivo"
 
 #: modules/mobile/mobile/ajaxFilesList.php:44
 msgid "Size"
-msgstr ""
+msgstr "Talla"
 
 #: modules/mobile/mobile/ajaxFilesList.php:45
 msgid "Updated at"
-msgstr ""
+msgstr "Actualizado en"
 
 #: modules/mobile/mobile/ajaxFilesList.php:46
 msgid "Path on device"
-msgstr ""
+msgstr "Ruta en el dispositivo"
 
 #: modules/mobile/mobile/ajaxFilesList.php:47
 msgid "External"
-msgstr ""
+msgstr "Exterior"
 
 #: modules/mobile/mobile/ajaxFilesList.php:48
 msgid "Variable"
-msgstr ""
+msgstr "Variable"
 
 #: modules/mobile/mobile/localSidebar.php:7
 msgid "All devices"
-msgstr ""
+msgstr "Todos los dispositivos"
 
 #: modules/mobile/mobile/localSidebar.php:15
 msgid "Add Configuration"
-msgstr ""
+msgstr "Añadir configuración"
+

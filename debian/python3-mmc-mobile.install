@@ -1,0 +1,3 @@
+etc/mmc/plugins/mobile.ini
+usr/lib/python3/*-packages/mmc/plugins/mobile
+usr/share/doc/pulse2/contrib/mobile/

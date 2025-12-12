@@ -37,6 +37,7 @@ from sqlalchemy import (
     distinct,
     text,
     inspect,
+    case,
 )
 from sqlalchemy.orm import create_session, mapper, relationship, class_mapper
 from sqlalchemy.exc import NoSuchTableError, NoInspectionAvailable
@@ -5553,7 +5554,7 @@ class Glpi100(DyngroupDatabaseHelper):
             query = query.filter(self.group.c.name.like("%" + filt + "%"))
         # Exclude groups where the name starts with "_@Grp_Major_update_win_"
         query = query.filter(
-            ~self.group.c.name.startswith("_@Grp_Major_update_win_"))
+            self.group.c.name.startswith("_@Grp_Major_update_win_"))
 
         ret = query.group_by(self.group.c.name).all()
         session.close()
@@ -6259,6 +6260,49 @@ class Glpi100(DyngroupDatabaseHelper):
                 }
 
         session.close()
+        return ret
+
+    @DatabaseHelper._sessionm
+    def get_inventories_for_dashboard(self, session, entities:list=[]) -> dict:
+        """
+        Get the count of inventories older than 35 days, bewtween 35 and 10 days and newer than 10 days.
+
+        Args:
+            self (Glpi100): Glpi100 Model Instance
+            session (sqlalchemy session): Session to access to the DB
+            entities (list, optionnal): list of scoped entities
+        Return:
+        dict of the with this shape
+
+            {
+                "days": {"red": 35,"orange": 10},
+                "count": {
+                    "red" : 0,
+                    "orange" : 0,
+                    "green" : 0
+                }
+            }
+        """
+        orange = self.config.orange
+        red = self.config.red
+
+        query = (
+        session.query(
+            func.coalesce(func.sum(case((Machine.date_mod > func.curdate() - func.interval(red, "DAY"), 1), else_=0)), 0).label("red"),
+            func.coalesce(func.sum(case(((Machine.date_mod <= func.curdate() - func.interval(red, "DAY")) &(Machine.date_mod > func.curdate() - func.interval(orange, "DAY")), 1), else_=0)), 0).label("orange"),
+            func.coalesce(func.sum(case((Machine.date_mod <= func.curdate() - func.interval(orange, "DAY"), 1),else_=0)), 0).label("green"))
+        .filter(Machine.entities_id.in_(entities))
+        )
+        result = query.one()
+
+        ret = {
+            "days": {"red":red,"orange":orange},
+            "count": {
+                "red" : result.red,
+                "orange" : result.orange,
+                "green" : result.green
+            }
+        }
         return ret
 
     def getMachineNumberByState(self, ctx):
@@ -7248,7 +7292,7 @@ class Glpi100(DyngroupDatabaseHelper):
             return True
 
     @DatabaseHelper._sessionm
-    def get_os_for_dashboard(self, session):
+    def get_os_for_dashboard(self, session, entities=[]):
         """This function returns a list of OS and its version for dashboard
         Returns:
             dict of all the founded elements
@@ -7278,8 +7322,11 @@ class Glpi100(DyngroupDatabaseHelper):
             .join(OS, OS.id == Machine.operatingsystems_id)
             .outerjoin(OsVersion, OsVersion.id == Machine.operatingsystemversions_id)
             .order_by(asc(OsVersion.name))
-        )
-        sql = sql.filter(Machine.is_deleted == 0, Machine.is_template == 0)
+        ).filter(and_(
+            Machine.is_deleted == 0,
+            Machine.is_template == 0,
+            Machine.entities_id.in_(entities)))
+
         sql = self.__filter_on(sql)
 
         res = sql.all()
@@ -8081,7 +8128,7 @@ class Glpi100(DyngroupDatabaseHelper):
         Récupérer le complete_name
         """
         sqlrequest = """
-            SELECT 
+            SELECT
                 name,
                 completename,
                 tag
@@ -8239,11 +8286,11 @@ class Glpi100(DyngroupDatabaseHelper):
     @DatabaseHelper._sessionm
     def get_machine_with_update(self, session, kb):
         sqlrequest = """
-            SELECT 
+            SELECT
                 glpi_computers.id AS uuid_inventory,
                 glpi_computers.name AS hostname,
                 glpi_entities.completename AS entity,
-                glpi_softwares.name AS kb, 
+                glpi_softwares.name AS kb,
                 SUBSTR(glpi_softwares.name,
                     LOCATE('KB', glpi_softwares.name)+2, 7) as numkb
             FROM
@@ -8316,7 +8363,7 @@ class Glpi100(DyngroupDatabaseHelper):
                     )
 
         sqlrequest = """
-            SELECT 
+            SELECT
                 COUNT(*) as nb_machines
             FROM
                 glpi_computers_pulse gcp
@@ -9223,7 +9270,7 @@ and glpi_computers.id in %s group by glpi_computers.id;""" % (
         result["alias_user_su"] = "root" if user_name == "root" else result["user_name"]
 
         return result
-    
+
     @DatabaseHelper._sessionm
     def get_devices_list(self, session, start, end, ctx):
         """
@@ -9403,6 +9450,91 @@ and glpi_computers.id in %s group by glpi_computers.id;""" % (
             result["data"]["uuidglpimobile"] = result["data"].pop("uuid")
 
         return result
+
+    @DatabaseHelper._sessionm
+    def get_antiviruses_for_dashboard(self, session, entities=[]):
+        """Get the count of machines, without antiviruses (missing), outdated antiviruses (red), not actives or becomming old (orange), uptodate (green).
+
+        Args:
+            self (Glpi100): Model Instance Object
+            session (sqlalchemy session): The access to sql. Generated through @DatabaseHelper._sessionm decorator
+            entities (list, optionnal): The list of entities the user has the right to access to
+
+        Returns:
+            (dict): The count as dict. The dict will have the shape:
+            {
+            "total": 0,
+            "missing":"0,
+            "red":0,
+            "orange":0,
+            "green":0
+            }
+        """
+        entities_str = ""
+        if entities != []:
+            entities_str = "AND c.entities_id in (%s)"%','.join([str(e) for e in entities])
+
+        excluded = ""
+        if self.config.av_false_positive != []:
+            lst = ",".join(["\"%s\""%e for e in self.config.av_false_positive if e != ""])
+            excluded = " WHERE  name not in (%s)"%lst
+
+        filter_on_state = ""
+        if self.config.filter_on != None:
+            for filter_key, filter_values in list(self.config.filter_on.items()):
+                if filter_key == "state":
+                    filter_on_state = "AND c.states_id in (%s) "%(",".join([val for val in filter_values]))
+
+        result = {"total":0, "missing":0, "red":0, "orange":0, "green":0}
+        if self.fusionantivirus is None:
+            return result
+        bind = {
+            "red1":self.config.red,
+            "red2":self.config.red,
+            "orange1":self.config.orange,
+            "orange2":self.config.orange,
+        }
+        sql="""select
+    coalesce(NULL, sum(1), 0) as total,
+    coalesce(NULL, sum(case when a.id is NULL then 1 else 0 end), 0) as missing,
+    coalesce(NULL, sum(case when a.date_mod <= (CURDATE() - INTERVAL :red1 DAY) then 1 else 0 end), 0) as red,
+    coalesce(NULL, sum(case when a.date_mod > (CURDATE() - INTERVAL :red2 DAY) and a.date_mod <= (CURDATE() - INTERVAL :orange1 DAY) or (a.is_uptodate = 0 and a.is_active=0) then 1 else 0 end), 0) as orange,
+    coalesce(NULL, sum(case when a.date_mod >(CURDATE() - INTERVAL :orange2 DAY) and a.is_uptodate=1 and a.is_active = 1 then 1 else 0 end), 0) as green
+from glpi_computers c
+left join (select
+            antivirus.id,
+            antivirus.computers_id,
+            antivirus.name,
+            antivirus.date_mod,
+            antivirus.is_uptodate,
+            antivirus.is_active
+        from glpi_computerantiviruses antivirus
+        join
+        (select
+            distinct(computers_id) as computers_id,
+            max(date_mod) as max_date
+        from glpi_computerantiviruses
+        %s
+        group by computers_id
+        order by computers_id desc) as ref on antivirus.computers_id=ref.computers_id and antivirus.date_mod = ref.max_date
+        group by antivirus.date_mod
+        order by computers_id
+    ) as a  on c.id = a.computers_id
+where c.is_deleted=0 and c.is_template=0 %s %s
+    """%(excluded, entities_str, filter_on_state)
+
+        query = session.execute(sql, bind, execution_options={"autocommit": True}).first()
+
+        if query is None:
+            return result
+
+        result["total"] = query.total
+        result["missing"] = query.missing
+        result["red"] = query.red
+        result["orange"] = query.orange
+        result["green"] = query.green
+        return result
+
 
 # Class for SQLalchemy mapping
 class Machine(object):

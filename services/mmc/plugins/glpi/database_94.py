@@ -6553,7 +6553,7 @@ class Glpi94(DyngroupDatabaseHelper):
             return True
 
     @DatabaseHelper._sessionm
-    def get_os_for_dashboard(self, session):
+    def get_os_for_dashboard(self, session, entities=[]):
         """This function returns a list of OS and its version for dashboard
         Returns:
             dict of all the founded elements
@@ -6583,8 +6583,11 @@ class Glpi94(DyngroupDatabaseHelper):
             .join(OS, OS.id == Machine.operatingsystems_id)
             .outerjoin(OsVersion, OsVersion.id == Machine.operatingsystemversions_id)
             .order_by(asc(OsVersion.name))
+        ).filter(and_(
+            Machine.is_deleted == 0,
+            Machine.is_template == 0,
+            Machine.entities_id.in_(entities))
         )
-        sql = sql.filter(Machine.is_deleted == 0, Machine.is_template == 0)
         sql = self.__filter_on(sql)
 
         res = sql.all()
@@ -6730,11 +6733,11 @@ class Glpi94(DyngroupDatabaseHelper):
     @DatabaseHelper._sessionm
     def get_machine_with_update(self, session, kb):
         sqlrequest = """
-            SELECT 
+            SELECT
                 glpi_computers.id AS uuid_inventory,
                 glpi_computers.name AS hostname,
                 glpi_entities.completename AS entity,
-                glpi_softwares.name AS kb, 
+                glpi_softwares.name AS kb,
                 SUBSTR(glpi_softwares.name,
                     LOCATE('KB', glpi_softwares.name)+2, 7) as numkb
             FROM
@@ -6807,7 +6810,7 @@ class Glpi94(DyngroupDatabaseHelper):
                     )
 
         sqlrequest = """
-            SELECT 
+            SELECT
                 COUNT(*) as nb_machines
             FROM
                 glpi_computers_pulse gcp

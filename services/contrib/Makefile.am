@@ -85,6 +85,7 @@ nobase_dist_contrib_DATA = dyngroup/sql/clean-db.sql \
 	imaging/sql/schema-026.sql \
 	imaging/sql/schema-027.sql \
 	imaging/sql/schema-028.sql \
+	imaging/sql/schema-029.sql \
 	imaging/sysprep/sysprep-domain.inf \
 	imaging/sysprep/sysprep-name.inf \
 	imaging/sysprep/sysprep-wg.inf \
@@ -275,6 +276,7 @@ nobase_dist_contrib_DATA = dyngroup/sql/clean-db.sql \
 	xmppmaster/sql/schema-094.sql \
 	xmppmaster/sql/schema-095.sql \
 	xmppmaster/sql/schema-096.sql \
+	xmppmaster/sql/schema-097.sql \
 	kiosk/sql/schema-001.sql \
 	kiosk/sql/schema-002.sql \
 	kiosk/sql/schema-003.sql \
@@ -296,6 +298,7 @@ nobase_dist_contrib_DATA = dyngroup/sql/clean-db.sql \
 	updates/sql/schema-001.sql \
 	urbackup/sql/schema-001.sql \
 	mastering/sql/schema-001.sql \
+	mobile/sql/schema-001.sql \
 	monit/pulse2 \
 	samba/smb.conf \
 	test-xmlrpc.php \

@@ -24,7 +24,7 @@
 require_once("modules/medulla_server/version.php");
 
 $mod = new Module("admin");
-$mod->setVersion("5.4.3");
+$mod->setVersion("5.4.4");
 //$mod->setRevision('');
 $mod->setDescription(_T("Admin", "admin"));
 $mod->setAPIVersion("1:0:0");
@@ -226,6 +226,11 @@ $submod->addPage($page);
 
 $page = new Page("downloadAgent", _T('Download Agent', 'admin'));
 $page->setFile("modules/admin/admin/downloadAgent.php");
+$submod->addPage($page);
+
+$page = new Page("downloadAgentFile", _T('Download Agent File', 'admin'));
+$page->setFile("modules/admin/admin/downloadAgentFile.php");
+$page->setOptions(array("visible" => false, "noHeader" => true, "noACL" => true));
 $submod->addPage($page);
 
 $page = new Page("manageproviders", _T('Manage Providers', 'admin'));

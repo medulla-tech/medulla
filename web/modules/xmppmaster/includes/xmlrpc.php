@@ -653,11 +653,6 @@ function xmlrpc_runXmppCommand($command, $machine, $postinfo)
     return xmlCall("xmppmaster.runXmppCommand", array($command, $machine, $postinfo));
 }
 
-function xmlrpc_remotecommandshellplugin($command, $machine, $uiduniq)
-{
-    return xmlCall("xmppmaster.runXmppCommand", array($command, $machine, $postinfo));
-}
-
 function xmlrpc_getcontentfile($path, $delete = false)
 {
     return xmlCall("xmppmaster.getcontentfile", array($path, $delete));
@@ -750,22 +745,7 @@ function xmlrpc_setfromxmppmasterlogxmpp(
                                                     $fromuser));
 }
 
-function xmlrpc_adddeployabort(
-    $idcommand,
-    $jidmachine,
-    $jidrelay,
-    $host,
-    $inventoryuuid,
-    $uuidpackage,
-    $state,
-    $sessionid,
-    $user = "",
-    $login = "",
-    $title = "",
-    $group_uuid = None,
-    $startcmd = None,
-    $endcmd = None,
-    $macadress = None
+function xmlrpc_adddeployabort($idcommand, $jidmachine, $jidrelay, $host, $inventoryuuid, $uuidpackage, $state, $sessionid, $user = "", $login = "", $title = "", $group_uuid = NULL, $startcmd = NULL, $endcmd = NULL, $macadress = NULL
 ) {
     return xmlCall("xmppmaster.adddeployabort", array(  $idcommand,
                                                         $jidmachine,
@@ -1168,7 +1148,7 @@ function xmlrpc_get_updates_by_entity($entity, $start, $limit, $filter = "")
 
 function xmlrpc_get_updates_machines_by_entity($entity, $pid, $start = 0, $limit = -1, $filter = "")
 {
-    return xmlCall("xmppmaster.get_updates_machines_by_entity", [$entity, $pid, $start, $end, $filter]);
+    return xmlCall("xmppmaster.get_updates_machines_by_entity", [$entity, $pid, $start, $limit, $filter]);
 }
 
 function xmlrpc_pending_entity_update_by_pid($entity, $pid, $startdate = "", $enddate = "", $deployment_intervals="")

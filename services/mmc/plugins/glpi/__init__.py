@@ -127,6 +127,11 @@ class RpcProxy(RpcProxyI):
         logger.debug("filter : %s " % filter)
         return xmlrpcCleanup(Glpi().get_machines_list1(start, end, filter))
 
+    @with_optional_xmpp_context
+    def get_os_for_dashboard(self, ctx=None):
+        entities = ctx.get_session_info()['mondict']['liste_entities_user']
+        return xmlrpcCleanup(Glpi().get_os_for_dashboard(entities))
+
     def getMachineNumberByState(self):
         ctx = self.currentContext
         return xmlrpcCleanup(Glpi().getMachineNumberByState(ctx))
@@ -161,6 +166,16 @@ class RpcProxy(RpcProxyI):
         filter = update_filter(filter, ctx.get_session_info()['mondict']['liste_entities_user'])
         logger.debug("filter : %s " % filter)
         return xmlrpcCleanup(Glpi().get_devices_list(start, end, filter))
+
+    @with_optional_xmpp_context
+    def get_antiviruses_for_dashboard(self, ctx=None):
+        entities = ctx.get_session_info()['mondict']['liste_entities_user']
+        return xmlrpcCleanup(Glpi().get_antiviruses_for_dashboard(entities))
+
+    @with_optional_xmpp_context
+    def get_inventories_for_dashboard(self, ctx=None):
+        entities = ctx.get_session_info()['mondict']['liste_entities_user']
+        return xmlrpcCleanup(Glpi().get_inventories_for_dashboard(entities))
 
 
 def getLicensesComputer(vendor, software, version):
@@ -372,10 +387,6 @@ def moveEntityRuleDown(*args, **kwargs):
 
 def get_all_uuids_and_hostnames():
     return Glpi().get_all_uuids_and_hostnames()
-
-
-def get_os_for_dashboard():
-    return xmlrpcCleanup(Glpi().get_os_for_dashboard())
 
 
 def get_machines_with_os_and_version(os, version):

@@ -22,7 +22,7 @@ from sqlalchemy import (
 from sqlalchemy.orm import sessionmaker, load_only
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 from sqlalchemy.exc import DBAPIError
-from datetime import datetime, timedelta  # date,
+from datetime import datetime, date, timedelta  # date,
 
 # PULSE2 modules
 from mmc.database.database_helper import DatabaseHelper
@@ -6014,6 +6014,23 @@ class XmppMasterDatabase(DatabaseHelper):
             return []
 
     @DatabaseHelper._sessionm
+    def get_team_patterns_from_login(self, session, login):
+        if login is None or login == "":
+            return []
+
+        sql = text("""
+            SELECT DISTINCT xmppmaster.pulse_users.login
+            FROM xmppmaster.pulse_users
+            INNER JOIN xmppmaster.pulse_team_user
+            ON xmppmaster.pulse_team_user.id_user = xmppmaster.pulse_users.id
+            WHERE :login REGEXP xmppmaster.pulse_users.login
+        """)
+        result = session.execute(sql, {"login": login})
+        patterns = [row[0] for row in result]
+
+        return patterns
+
+    @DatabaseHelper._sessionm
     def get_deploy_by_team_member(
         self,
         session,
@@ -8261,7 +8278,7 @@ class XmppMasterDatabase(DatabaseHelper):
         # fiel for table ent and alias
         entityfield = {
             "entityname": "name",
-            "entitypath": "complete_name",
+            "entitypath": "completename",
             "entityid": "id",
         }
         # fiel for table location and alias
@@ -8344,7 +8361,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 ]
                 if entitylist:
                     entitystrlist = ",".join(entitylist)
-                    entity = " AND ent.glpi_id in (%s) " % entitystrlist
+                    entity = " AND ent.id in (%s) " % entitystrlist
 
         ordered = ""
         if self.config.ordered == 1:
@@ -8391,7 +8408,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     loc.complete_name AS locationpath,
                     loc.glpi_id AS locationid,
                     ent.name AS entityname,
-                    ent.complete_name AS entitypath,
+                    ent.completename AS entitypath,
                     ent.id AS entityid,
                     GROUP_CONCAT(DISTINCT IF( netw.ipaddress='', null,netw.ipaddress) SEPARATOR ',') AS listipadress,
                     GROUP_CONCAT(DISTINCT IF( netw.broadcast='', null,netw.broadcast) SEPARATOR ',') AS broadcast,
@@ -8399,12 +8416,14 @@ class XmppMasterDatabase(DatabaseHelper):
                     GROUP_CONCAT(DISTINCT IF( netw.mask='', null, netw.mask) SEPARATOR ',') AS mask
                 FROM
                     xmppmaster.machines mach
-                        LEFT OUTER JOIN
+                        INNER JOIN
                     local_glpi_filters lgf on CONCAT("UUID", lgf.id) = mach.uuid_inventorymachine
                         LEFT OUTER JOIN
-                    glpi_location loc ON loc.id = mach.glpi_location_id
+                    local_glpi_machines lgm ON CONCAT("UUID", lgm.id) = mach.uuid_inventorymachine
                         LEFT OUTER JOIN
-                    glpi_entity ent ON ent.id = mach.glpi_entity_id
+                    local_glpi_entities ent ON lgm.entities_id = ent.id
+                        LEFT OUTER JOIN
+                    glpi_location loc ON loc.id = mach.glpi_location_id
                         LEFT OUTER JOIN
                     glpi_register_keys reg ON reg.machines_id = mach.id
                         LEFT OUTER JOIN
@@ -10582,7 +10601,29 @@ class XmppMasterDatabase(DatabaseHelper):
         return ret
 
     @DatabaseHelper._sessionm
-    def get_computer_count_for_dashboard(self, session):
+    def get_computer_count_for_dashboard(self, session, entities:list=[]):
+        """
+        Count the machines based on:
+            - machine offline uninventoried
+            - machine offline inventoried
+            - machine online uninventoried
+            - machine online inventoried
+            - total of uninventoried machines
+            - total of inventoried machines
+            - total of (all) machines
+
+        Params:
+            - self XmppMasterDatabase: Object instance
+            - session Sqlalchemy session: Wrapped session.
+
+        Return dict containing the machines counts
+        """
+
+        # Convert the list of int to a list of str, to be able to join them
+        entities = "(%s)"%(','.join([str(e) for e in entities]))
+
+        # Bind the datas to the request.
+        bind = {'agenttype': 'machine'}
         sql = """SELECT
           SUM(1) as total,
           SUM(CASE WHEN enabled = 0 THEN 1 ELSE 0 END) as total_offline,
@@ -10593,25 +10634,26 @@ class XmppMasterDatabase(DatabaseHelper):
           SUM(CASE WHEN enabled = 1 AND uuid_inventorymachine != "" THEN 1 ELSE 0 END) as online_inventoried,
           SUM(CASE WHEN uuid_inventorymachine = "" THEN 1 ELSE 0 END) as total_uninventoried,
           SUM(CASE WHEN uuid_inventorymachine != "" THEN 1 ELSE 0 END) as total_inventoried
-        FROM machines WHERE agenttype="machine";"""
-        result = session.execute(sql)
+        FROM machines
+        join local_glpi_machines lgm on machines.uuid_inventorymachine = concat("UUID", lgm.id)
+        join local_glpi_entities lge on lgm.entities_id = lge.id
+        where agenttype ="machine" and lge.id in %s"""%entities
+        result = session.execute(sql, bind).first()
         session.commit()
         session.flush()
+
         # There is only one line so we can truncate
-        ret = [
-            {
-                "total": int(x[0]) if x[0] is not None else 0,
-                "total_offline": int(x[1]) if x[1] is not None else 0,
-                "offline_uninventoried": int(x[2]) if x[2] is not None else 0,
-                "offline_inventoried": int(x[3]) if x[3] is not None else 0,
-                "total_online": int(x[4]) if x[4] is not None else 0,
-                "online_uninventoried": int(x[5]) if x[5] is not None else 0,
-                "online_inventoried": int(x[6]) if x[6] is not None else 0,
-                "total_uninventoried": int(x[7]) if x[7] is not None else 0,
-                "total_inventoried": int(x[8]) if x[8] is not None else 0,
-            }
-            for x in result
-        ][0]
+        ret = {
+            "total": int(result.total) if result.total is not None else 0,
+            "total_offline": int(result.total_offline) if result.total_offline is not None else 0,
+            "offline_uninventoried": int(result.offline_uninventoried) if result.offline_uninventoried is not None else 0,
+            "offline_inventoried": int(result.offline_inventoried) if result.offline_inventoried is not None else 0,
+            "total_online": int(result.total_online) if result.total_online is not None else 0,
+            "online_uninventoried": int(result.online_uninventoried) if result.online_uninventoried is not None else 0,
+            "online_inventoried": int(result.online_inventoried) if result.online_inventoried is not None else 0,
+            "total_uninventoried": int(result.total_uninventoried) if result.total_uninventoried is not None else 0,
+            "total_inventoried": int(result.total_inventoried) if result.total_inventoried is not None else 0,
+        }
 
         return ret
 
@@ -12786,16 +12828,17 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         return list_panels_template
 
     @DatabaseHelper._sessionm
-    def get_mon_events(self, session, start, max, filter):
+    def get_mon_events(self, session, start=0, max=-1, filter="", entities=[]):
         """Get monitoring events informations
-        Params:
-            - sqlalchemy session: managed by DatabaseHelper._sessionm decorator
-            - int start: represents the starting offset for a sql limit clause
-            - int max: represents the number of result returned by the function
-            - string filter: if not empty this string is searched into each event
+
+        Args:
+            session (SqlAlchemy session):Managed by DatabaseHelper._sessionm decorator
+            start (int, optionnal): Represents the starting offset for a sql limit clause
+            max (int, optionnal): Represents the number of result returned by the function
+            filter (str): if not empty this string is searched into each event
+            entities (list): the list of entities the user can reach
         Returns:
-            dict events: all the events found for the limit and filter clause. The
-            dict has the following shape:
+            dict: All the events found for the limit and filter clause. The dict has the following shape:
             result = {
                 'total': 1,
                 'datas' : [
@@ -12825,9 +12868,11 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             .outerjoin(Mon_rules, Mon_event.id_rule == Mon_rules.id)
             .outerjoin(Mon_machine, Mon_event.machines_id == Mon_machine.id)
             .outerjoin(Machines, Mon_machine.machines_id == Machines.id)
+            .join(Glpi_entity, Machines.glpi_entity_id == Glpi_entity.id)
             .filter(
                 and_(Mon_event.status_event == 1,
-                     Mon_event.type_event.in_(event_types))
+                     Mon_event.type_event.in_(event_types),
+                     Glpi_entity.glpi_id.in_(entities))
             )
         )
 
@@ -13104,21 +13149,60 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             return "failure"
 
     @DatabaseHelper._sessionm
-    def get_count_success_rate_for_dashboard(self, session):
+    def get_count_success_rate_for_dashboard(self, session, entities=[]):
         """
-        call the stored procedure to get the deployment success rate for the 6 last weeks
+        Calculate the success rate for deployments for the six last weeks socped for specified entities
 
-        @returns:
-            list of float
+        Args:
+            self (XmppMasterDatabase): Instance of the model object
+            session (sqlalchemy session): The sql session
+            entities (list, optionnal): The list of entities to include on the scope
+        Returns:
+            (list) list of float corresponding to the success ratio for the six last weeks
         """
-        session.execute(
-            "call countSuccessRateLastSixWeeks(@week1, @week2, @week3, @week4, @week5, @week6)"
-        )
-        query = session.execute(
-            "select @week1, @week2, @week3, @week4, @week5, @week6")
-        query = query.fetchall()[0]
 
-        return list(query)
+        entities = "(%s)"%(",".join([str(e) for e in entities]))
+
+        sql = """select
+  coalesce(NULL, (w1/total_w1)*100, 0) as ratio1,
+  coalesce(NULL, (w2/total_w2)*100, 0) as ratio2,
+  coalesce(NULL, (w3/total_w3)*100, 0) as ratio3,
+  coalesce(NULL, (w4/total_w4)*100, 0) as ratio4,
+  coalesce(NULL, (w5/total_w5)*100, 0) as ratio5,
+  coalesce(NULL, (w6/total_w6)*100, 0) as ratio6
+from(select
+    coalesce(NULL, sum(case when state = "DEPLOYMENT SUCCESS" and startcmd >= (CURRENT_DATE() - INTERVAL 1 WEEK) then 1 else 0 end), 0) as w1,
+    coalesce(NULL, sum(case when startcmd >= (CURRENT_DATE() - INTERVAL 1 WEEK) then 1 else 0 end), 0) as total_w1,
+    coalesce(NULL, sum(case when state = "DEPLOYMENT SUCCESS" and startcmd >= (CURRENt_DATE() - INTERVAL 2 WEEK) and startcmd < (CURRENT_DATE() - INTERVAL 1 WEEK) then 1 else 0 end), 0) as w2,
+    coalesce(NULL, sum(case when startcmd >= (CURRENt_DATE() - INTERVAL 2 WEEK) and startcmd < (CURRENT_DATE() - INTERVAL 1 WEEK) then 1 else 0 end), 0) as total_w2,
+    coalesce(NULL, sum(case when state = "DEPLOYMENT SUCCESS" and startcmd >= (CURRENt_DATE() - INTERVAL 3 WEEK) and startcmd < (CURRENT_DATE() - INTERVAL 2 WEEK) then 1 else 0 end), 0) as w3,
+    coalesce(NULL, sum(case when startcmd >= (CURRENt_DATE() - INTERVAL 3 WEEK) and startcmd < (CURRENT_DATE() - INTERVAL 2 WEEK) then 1 else 0 end), 0) as total_w3,
+    coalesce(NULL, sum(case when state = "DEPLOYMENT SUCCESS" and startcmd >= (CURRENt_DATE() - INTERVAL 4 WEEK) and startcmd < (CURRENT_DATE() - INTERVAL 3 WEEK) then 1 else 0 end), 0) as w4,
+    coalesce(NULL, sum(case when startcmd >= (CURRENt_DATE() - INTERVAL 4 WEEK) and startcmd < (CURRENT_DATE() - INTERVAL 3 WEEK) then 1 else 0 end), 0) as total_w4,
+    coalesce(NULL, sum(case when state = "DEPLOYMENT SUCCESS" and startcmd >= (CURRENt_DATE() - INTERVAL 5 WEEK) and startcmd < (CURRENT_DATE() - INTERVAL 4 WEEK) then 1 else 0 end), 0) as w5,
+    coalesce(NULL, sum(case when startcmd >= (CURRENt_DATE() - INTERVAL 5 WEEK) and startcmd < (CURRENT_DATE() - INTERVAL 4 WEEK) then 1 else 0 end), 0) as total_w5,
+    coalesce(NULL, sum(case when state = "DEPLOYMENT SUCCESS" and startcmd >= (CURRENt_DATE() - INTERVAL 5 WEEK) and startcmd < (CURRENT_DATE() - INTERVAL 4 WEEK) then 1 else 0 end), 0) as w6,
+    coalesce(NULL, sum(case when startcmd >= (CURRENt_DATE() - INTERVAL 5 WEEK) and startcmd < (CURRENT_DATE() - INTERVAL 4 WEEK) then 1 else 0 end), 0) as total_w6
+  from deploy d
+  join machines m on m.jid = d.jidmachine
+  join local_glpi_machines lgm on m.uuid_inventorymachine = concat("UUID", lgm.id)
+  join local_glpi_entities lge on lgm.entities_id = lge.id
+  where lge.id in %s
+) as t;"""%entities
+        query = session.execute(sql).first()
+        if query is None :
+            return [0, 0, 0, 0, 0, 0]
+
+        # return sorted datas order by older to newer
+        result = [
+            query.ratio1,
+            query.ratio2,
+            query.ratio3,
+            query.ratio4,
+            query.ratio5,
+            query.ratio6,
+        ]
+        return result
 
     @DatabaseHelper._sessionm
     def get_ars_from_cluster(self, session, id, filter=""):
@@ -13729,25 +13813,124 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         return result
 
     @DatabaseHelper._sessionm
-    def get_count_total_deploy_for_dashboard(self, session):
+    def get_count_total_deploy_for_dashboard(self, session, entities=[]):
         """Get the total of deployments for each last six months
+        Params:
+            self (XmppMasterDatabase) : The model object instance
+            session (sqlalchemy session): The session sql
+            entities (list, optionnal): The list of entities to include in the scope
         Returns: list of deployments
         """
-        session.execute("call countDeployLastSixMonths()")
-        query = session.execute(
-            "select @month6, @month5, @month4, @month3, @month2, @month1"
-        )
-        query = query.fetchall()[0]
-        return list(query)
+
+        entities = "(%s)"%(",".join([str(e) for e in entities]))
+
+        sql = """select
+  coalesce(NULL, sum(case when startcmd >= (DATE_FORMAT(CURDATE(), "%%Y-%%m-01") - INTERVAL 6 MONTH) and startcmd < (DATE_FORMAT(CURDATE(), "%%Y-%%m-01") - INTERVAL 5 MONTH) then 1 else 0 end), 0) as m6,
+  coalesce(NULL, sum(case when startcmd >= (DATE_FORMAT(CURDATE(), "%%Y-%%m-01") - INTERVAL 5 MONTH) and startcmd < (DATE_FORMAT(CURDATE(), "%%Y-%%m-01") - INTERVAL 4 MONTH) then 1 else 0 end), 0) as m5,
+  coalesce(NULL, sum(case when startcmd >= (DATE_FORMAT(CURDATE(), "%%Y-%%m-01") - INTERVAL 4 MONTH) and startcmd < (DATE_FORMAT(CURDATE(), "%%Y-%%m-01") - INTERVAL 3 MONTH) then 1 else 0 end), 0) as m4,
+  coalesce(NULL, sum(case when startcmd >= (DATE_FORMAT(CURDATE(), "%%Y-%%m-01") - INTERVAL 3 MONTH) and startcmd < (DATE_FORMAT(CURDATE(), "%%Y-%%m-01") - INTERVAL 2 MONTH) then 1 else 0 end), 0) as m3,
+  coalesce(NULL, sum(case when startcmd >= (DATE_FORMAT(CURDATE(), "%%Y-%%m-01") - INTERVAL 2 MONTH) and startcmd < (DATE_FORMAT(CURDATE(), "%%Y-%%m-01")) then 1 else 0 end), 0) as m2,
+  coalesce(NULL, sum(case when startcmd >= (DATE_FORMAT(CURDATE(), "%%Y-%%m-01")) then 1 else 0 end), 0) as m1
+from deploy d
+join machines m on m.jid = d.jidmachine
+join local_glpi_machines lgm on concat("UUID", lgm.id) = m.uuid_inventorymachine
+join local_glpi_entities lge on lgm.entities_id = lge.id
+where lge.id in %s"""%entities
+
+        query = session.execute(sql).first()
+
+        if query is None:
+            return [0, 0, 0, 0, 0, 0]
+
+        result = [
+            query.m6,
+            query.m5,
+            query.m4,
+            query.m3,
+            query.m2,
+            query.m1,
+        ]
+        return result
 
     @DatabaseHelper._sessionm
-    def get_count_agent_for_dashboard(self, session):
-        session.execute("call countAgentsLastSixMonths()")
-        query = session.execute(
-            "select @month6, @month5, @month4, @month3, @month2, @month1"
-        )
-        query = query.fetchall()[0]
-        return list(query)
+    def get_count_agent_for_dashboard(self, session, entity=[]):
+        """
+        Count distincts agents in activity (enabled or disabled) for the six last months.
+
+        Args:
+            self (XmppMasterDatabase) : The instance of the model object
+            session (sqlalchemy session) : The session to the database
+            entity (list, optionnal) : Define the entity scope we have to count
+        Returns:
+            (list) List of counts for the last six months, ordered by older to newer (element[0] = month 6 and element[5] = month 1)
+        """
+        entities = "(%s)"%(','.join([str(e) for e in entity]))
+        e0 = date.today()
+        b0 = e0.replace(day=1)
+        e1 = b0 - timedelta(days=1)
+        b1 = e1.replace(day=1)
+        e2 = b1- timedelta(days=1)
+        b2 = e2.replace(day=1)
+        e3 = b2 - timedelta(days=1)
+        b3 = e3.replace(day=1)
+        e4 = b3 - timedelta(days=1)
+        b4 = e4.replace(day=1)
+        e5 = b4 - timedelta(days=1)
+        b5 = e5.replace(day=1)
+        bind = {
+            "e0" : e0,
+            "b0" : b0,
+            "e1" : e1,
+            "b1" : b1,
+            "e2" : e2,
+            "b2" : b2,
+            "e3" : e3,
+            "b3" : b3,
+            "e4" : e4,
+            "b4" : b4,
+            "e5" : e5,
+            "b5" : b5,
+        }
+
+        sql = """SELECT
+    SUM(month6) AS total_month6,
+    SUM(month5) AS total_month5,
+    SUM(month4) AS total_month4,
+    SUM(month3) AS total_month3,
+    SUM(month2) AS total_month2,
+    SUM(month1) AS total_month1
+FROM (
+    SELECT
+        um.jid,
+        (case when um.date >= :b0 AND um.date <= :e0 then 1 else 0 end) AS month1,
+        (case when um.date >= :b1 AND um.date <= :e1 then 1 else 0 end) AS month2,
+        (case when um.date >= :b2 AND um.date <= :e2 then 1 else 0 end) AS month3,
+        (case when um.date >= :b3 AND um.date <= :e3 then 1 else 0 end) AS month4,
+        (case when um.date >= :b4 AND um.date <= :e4 then 1 else 0 end) AS month5,
+        (case when um.date >= :b5 AND um.date <= :e5 then 1 else 0 end) AS month6
+    FROM uptime_machine um
+    JOIN machines m ON um.jid = m.jid
+    JOIN local_glpi_machines lgm on m.uuid_inventorymachine = concat("UUID", lgm.id)
+    JOIN local_glpi_entities lge on lgm.entities_id = lge.id
+    WHERE    m.agenttype = 'machine'
+         AND lge.id IN %s
+    GROUP BY um.jid
+) AS t;"""%entities
+
+        query = session.execute(sql, bind).first()
+        if query is None :
+            return [0, 0, 0, 0, 0, 0]
+
+        # return sorted datas order by older to newer
+        result = [
+            query.total_month6,
+            query.total_month5,
+            query.total_month4,
+            query.total_month3,
+            query.total_month2,
+            query.total_month1,
+        ]
+        return result
 
     @DatabaseHelper._sessionm
     def get_ars_group_in_list_clusterid(self, session, clusterid, enabled=None):
@@ -15088,6 +15271,10 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
         """
         if isinstance(glpi_ids, str):
             glpi_ids = [glpi_ids]
+
+        # No id selected: nothing to return
+        if glpi_ids == []:
+            return {}
 
         query_xmpp = session.execute(
             """
