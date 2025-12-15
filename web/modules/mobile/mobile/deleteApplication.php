@@ -14,7 +14,7 @@ if (isset($_GET['id'])) {
     $id = htmlentities($_GET['id']);
 } else {
     new NotifyWidgetFailure(_T("Missing parameter id", "mobile"));
-    header("location:" . urlStrRedirect("modules/mobile/mobile/applicationsList.php"));
+    header("location:" . urlStrRedirect("mobile/mobile/applications"));
     exit;
 }
 
@@ -22,11 +22,11 @@ if (isset($_GET['action']) && $_GET['action'] === 'deleteApplication') {
     $result = xmlrpc_delete_application_by_id($_GET['id']);
     if ($result) {
         new NotifyWidgetSuccess(sprintf(_T("Application %s successfully deleted", "mobile"), $name));
-        header("location:" . urlStrRedirect("modules/mobile/mobile/applicationsList.php"));
+        header("location:" . urlStrRedirect("mobile/mobile/applications"));
         exit;
     } else {
         new NotifyWidgetFailure(sprintf(_T("Impossible to delete application %s", "mobile"), $name));
-        header("location:" . urlStrRedirect("modules/mobile/mobile/applicationsList.php"));
+        header("location:" . urlStrRedirect("mobile/mobile/applications"));
         exit;
     }
 }

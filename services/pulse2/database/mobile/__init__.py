@@ -28,9 +28,9 @@ class MobileDatabase(DatabaseHelper):
     is_activated = False
     session = None
     # Headwind REST API base (TO DO: consider moving to config)
-    BASE_URL = "http://hba.medulla-tech.io/hmdm/rest"
+    BASE_URL = "http://localhost/hmdm/rest"
     login = "admin"
-    password = "HbaHmdm!"
+    password = "admin"
 
 
     def db_check(self):
@@ -389,7 +389,11 @@ class MobileDatabase(DatabaseHelper):
         try:
             resp = requests.post(url, headers=headers, json=payload)
             resp.raise_for_status()
-            data = resp.json()
+            try:
+                data = resp.json()
+            except Exception:
+                txt = resp.text.strip()
+                return [txt] if txt else []
             logging.getLogger().info(f"Device search completed with filter: {filter_text}")
             devices = data.get("data", {}).get("devices", {}).get("items", [])
             result = [{"id": d["id"], "name": d["number"]} for d in devices]
@@ -1037,7 +1041,49 @@ class MobileDatabase(DatabaseHelper):
 
         try:
             resp = requests.delete(url, headers=headers)
-            resp.raise_for_status()
+
+            if resp.status_code not in (200, 204):
+                logging.getLogger().warning(
+                    f"Unexpected status deleting application {app_id}: {resp.status_code}"
+                )
+
+            try:
+                if resp.headers.get("Content-Type", "").startswith("application/json"):
+                    body = resp.json()
+                    if isinstance(body, dict):
+                        if str(body.get("status", "")).upper() in ("ERROR", "FAIL", "FAILED"):
+                            logging.getLogger().error(
+                                f"HMDM reported error deleting app {app_id}: {body}"
+                            )
+                            return False
+                        if body.get("error") is True:
+                            logging.getLogger().error(
+                                f"HMDM reported error deleting app {app_id}: {body}"
+                            )
+                            return False
+            except Exception:
+                # Ignore JSON parsing errors
+                pass
+            try:
+                apps = self.getHmdmApplications() or []
+                still_exists = False
+                for app in apps:
+                    try:
+                        if int(app.get("id")) == int(app_id):
+                            still_exists = True
+                            break
+                    except Exception:
+                        continue
+                if still_exists:
+                    logging.getLogger().warning(
+                        f"Application {app_id} still present after delete; treating as failure."
+                    )
+                    return False
+            except Exception as ve:
+                logging.getLogger().warning(
+                    f"Could not verify deletion of application {app_id}: {ve}"
+                )
+
             logging.getLogger().info(f"Application {app_id} deleted successfully.")
             return True
         except Exception as e:

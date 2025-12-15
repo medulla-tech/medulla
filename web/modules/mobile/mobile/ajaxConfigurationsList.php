@@ -1,9 +1,20 @@
 <?php
 require_once("modules/mobile/includes/xmlrpc.php");
 
+// Get filter parameter
+$filter = isset($_GET['filter']) ? $_GET['filter'] : '';
+
 // Fetch configurations from HMDM via xmlrpc wrapper
 $configs = xmlrpc_get_hmdm_configurations();
 if (!is_array($configs)) $configs = [];
+
+// Filter by configuration name if filter is provided
+if (!empty($filter)) {
+    $configs = array_filter($configs, function($cfg) use ($filter) {
+        $cfgName = $cfg['name'] ?? '';
+        return stripos($cfgName, $filter) !== false;
+    });
+}
 
 $ids = $col1 = $descriptions = $actions = [];
 
@@ -20,7 +31,6 @@ foreach ($configs as $index => $cfg) {
 
     $deleteUrl = urlStrRedirect("mobile/mobile/deleteConfiguration", array('action' => 'deleteConfiguration', 'id' => $cfgId, 'name' => $name));
     $actions[] = "<ul class='action' style='list-style-type: none; padding: 0; margin: 0; display: flex; gap: 8px; align-items: center;'>
-        <li class='delete'><a href='{$deleteUrl}' class='delete-link' data-id='{$cfgId}' title='Supprimer'>" . _T("", "mobile") . "</a></li>
     </ul>";
 }
 

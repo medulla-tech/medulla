@@ -1,6 +1,9 @@
 <?php
 require_once("modules/mobile/includes/xmlrpc.php");
 
+// Get filter parameter
+$filter = isset($_GET['filter']) ? $_GET['filter'] : '';
+
 // ICI 
 $mobiles_headwind = xmlrpc_get_hmdm_devices();
     
@@ -19,6 +22,14 @@ foreach ($mobiles_headwind as &$m) {
 }
 
 unset($m);
+
+// Filter by device name if filter is provided
+if (!empty($filter)) {
+    $mobiles_headwind = array_filter($mobiles_headwind, function($mobile) use ($filter) {
+        $deviceName = $mobile['number'] ?? '';
+        return stripos($deviceName, $filter) !== false;
+    });
+}
 
 // $mobiles = array_merge($mobiles_headwind, $mobiles_nano);
 $mobiles = $mobiles_headwind; // Pour le moment on n'affiche que les headwind
@@ -58,9 +69,7 @@ foreach ($mobiles as $index => $mobile) {
     <ul class='action' style='list-style-type: none; padding: 0; margin: 0; display: flex; gap: 8px; align-items: center;'>
         <li class='configuremobile'><a href='#' title='Éditer'>" . _T("", "mobile") . "</a></li>  
         <li class='mobilepush'><a href='#' title='Push Message'>" . _T("", "mobile") . "</a></li>
-        <li class='audit'><a href='#' title='Logs'>" . _T("", "mobile") . "</a></li>
-        <li class='delete'><a href='/hmdm/rest/private/devices/$numero' data-method='DELETE' class='delete-link' data-id='{$index}' title='Supprimer'>" . _T("", "mobile") . "</a></li>
-        <li class='delete'><a href='/hmdm/rest/public/qr/$qrCode?deviceId=$numero' data-method='GET' class='delete-link' target='_blank' title='QR Code'>" . _T("", "mobile") . "</a></li>
+        <li class='qr-code'><a href='/hmdm/rest/public/qr/$qrCode?deviceId=$numero' data-method='GET' class='delete-link' target='_blank' title='QR Code'>" . _T("", "mobile") . "</a></li>
     </ul>
     ";
 }

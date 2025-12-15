@@ -9,9 +9,7 @@ $p = new PageGenerator(_T("Configurations", 'mobile'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
-$ajax = new AjaxFilterParams(urlStrRedirect("mobile/mobile/ajaxConfigurationsList"));
-$ajax->setElements(array());
-$ajax->setElementsVal(array());
+$ajax = new AjaxFilter(urlStrRedirect("mobile/mobile/ajaxConfigurationsList"));
 $ajax->display();
 $ajax->displayDivToUpdate();
 

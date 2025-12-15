@@ -1,8 +1,19 @@
 <?php
 require_once("modules/mobile/includes/xmlrpc.php");
 
+// Get filter parameter
+$filter = isset($_GET['filter']) ? $_GET['filter'] : '';
+
 $files = xmlrpc_get_hmdm_files();
 if (!is_array($files)) $files = [];
+
+// Filter by file name if filter is provided
+if (!empty($filter)) {
+    $files = array_filter($files, function($file) use ($filter) {
+        $fileName = basename($file['filePath'] ?? '');
+        return stripos($fileName, $filter) !== false;
+    });
+}
 
 $ids = $col1 = $descriptions = $sizes = $updated = $devicePaths = $externals = $variables = $actions = [];
 
