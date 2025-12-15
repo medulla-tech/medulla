@@ -64,4 +64,13 @@ function xmlrpc_send_hmdm_message($scope, $device_number="", $group_id="", $conf
 function xmlrpc_send_hmdm_push_message($scope, $message_type="", $payload="", $device_number="", $group_id="", $configuration_id=""){
     return xmlCall("mobile.sendHmdmPushMessage", array($scope, $message_type, $payload, $device_number, $group_id, $configuration_id));
 }
+function xmlrpc_get_hmdm_device_logs($device_number="", $package_filter="", $severity="-1", $page_size=50, $page_num=1){
+    return xmlCall("mobile.getHmdmDeviceLogs", array($device_number, $package_filter, $severity, $page_size, $page_num));
+}
+function xmlrpc_export_hmdm_device_logs($device_number="", $app="", $severity="-1"){ 
+    return xmlCall("mobile.exportHmdmDeviceLogs", array($device_number, $app, $severity));
+}
+function xmlrpc_search_hmdm_app_packages($filter_text=""){
+    return xmlCall("mobile.searchHmdmAppPackages", array($filter_text));
+}
 ?>

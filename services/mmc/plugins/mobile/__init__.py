@@ -86,3 +86,12 @@ def sendHmdmMessage(scope, device_number="", group_id="", configuration_id="", m
 
 def sendHmdmPushMessage(scope, message_type="", payload="", device_number="", group_id="", configuration_id=""):
     return MobileDatabase().sendHmdmPushMessage(scope, message_type, payload, device_number, group_id, configuration_id)
+
+def getHmdmDeviceLogs(device_number="", package_id="", severity="-1", page_size=50, page_num=1):
+    return MobileDatabase().getHmdmDeviceLogs(device_number, package_id, severity, page_size, page_num)
+
+def exportHmdmDeviceLogs(device_number="", app="", severity="-1"):
+    return MobileDatabase().exportHmdmDeviceLogs(device_number, app, severity)
+
+def searchHmdmAppPackages(filter_text=""):
+    return MobileDatabase().searchHmdmAppPackages(filter_text)

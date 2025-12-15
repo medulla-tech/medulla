@@ -162,13 +162,27 @@ $pageFunctions = new Page("functions", _T('Functions', 'mobile'));
 $pageFunctions->setFile("modules/mobile/mobile/functions.php");
 $submod->addPage($pageFunctions);
 
+# messages
 $pageNewMessage = new Page("newMessage", _T('Send new message', 'mobile'));
 $pageNewMessage->setFile("modules/mobile/mobile/newMessage.php");
 $submod->addPage($pageNewMessage);
 
+#quick actions (push message)
 $pageNewPushMessage = new Page("newPushMessage", _T('Send new push message', 'mobile'));
 $pageNewPushMessage->setFile("modules/mobile/mobile/newPushMessage.php");
 $submod->addPage($pageNewPushMessage);
+
+#app package autocomplete
+$pageAjaxAppSearch = new Page("ajaxAppSearch", _T('App package search', 'mobile'));
+$pageAjaxAppSearch->setFile("modules/mobile/mobile/ajaxAppSearch.php");
+$pageAjaxAppSearch->setOptions(array("AJAX" => true, "visible" => false));
+$submod->addPage($pageAjaxAppSearch);
+
+#export logs page
+$pageExportLogs = new Page("exportLogs", _T('Export logs', 'mobile'));
+$pageExportLogs->setFile("modules/mobile/mobile/exportLogs.php");
+$pageExportLogs->setOptions(array("visible" => false, "noHeader" => true));
+$submod->addPage($pageExportLogs);
     
 ################################
 # End

@@ -1173,3 +1173,126 @@ class MobileDatabase(DatabaseHelper):
         except Exception as e:
             logging.getLogger().error(f"Error sending push message: {e}")
             return {"status": "error", "message": str(e)}
+    def getHmdmDeviceLogs(self, device_number="", package_id="", severity="-1", page_size=50, page_num=1):
+        """
+        Search device logs via HMDM.
+        Endpoint: /plugins/devicelog/log/private/search
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Unable to authenticate for device logs search.")
+            return []
+
+        url = f"{self.BASE_URL}/plugins/devicelog/log/private/search"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+
+        payload = {
+            "pageSize": page_size,
+            "pageNum": page_num
+        }
+        if device_number:
+            payload["deviceFilter"] = device_number
+        if package_id:
+            payload["applicationFilter"] = package_id
+        try:
+            sev = int(severity)
+        except Exception:
+            sev = -1
+        payload["severity"] = sev
+
+        try:
+            resp = requests.post(url, json=payload, headers=headers)
+            resp.raise_for_status()
+            data = resp.json()
+            items = data.get("data", {}).get("items", [])
+            result = []
+            for m in items:
+                result.append({
+                    "device": m.get("deviceNumber") or m.get("device"),
+                    "time": (m.get("ts") or m.get("time") or 0) // 1000,
+                    "package": m.get("package") or m.get("packageName") or "",
+                    "severity": m.get("severity"),
+                    "message": m.get("message") or m.get("text") or "",
+                })
+            return result
+        except Exception as e:
+            logging.getLogger().error(f"Error fetching device logs: {e}")
+            return []
+
+    def exportHmdmDeviceLogs(self, device_number="", app_id="", severity="-1"):
+        """
+        Export device logs via HMDM.
+        Endpoint: /plugins/devicelog/log/private/search/export
+        Returns dict with 'content' (binary) or error.
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Unable to authenticate for device logs export.")
+            return {"status": "error", "message": "Authentication failed"}
+
+        url = f"{self.BASE_URL}/plugins/devicelog/log/private/search/export"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+
+        try:
+            sev = int(severity)
+        except Exception:
+            sev = -1
+
+        payload = {
+            "pageNum": 1,
+            "pageSize": 50,
+            "deviceFilter": device_number or "",
+            "applicationFilter": app_id,
+            "severity": sev,
+            "messageFilter": "",
+            "dateFrom": None,
+            "dateTo": None,
+            "sortValue": "createTime"
+        }
+
+        try:
+            resp = requests.post(url, json=payload, headers=headers)
+            resp.raise_for_status()
+            return {"status": "OK", "content": resp.content}
+        except Exception as e:
+            logging.getLogger().error(f"Error exporting device logs: {e}")
+            return {"status": "error", "message": str(e)}
+
+    def searchHmdmAppPackages(self, filter_text=""):
+        """Autocomplete for app package names using /private/applications/autocomplete (POST body = filter string).
+        Response: { 'status': 'OK', 'data': [ { 'id': int, 'name': str }, ... ] }
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Unable to authenticate for app package search.")
+            return []
+
+        url = f"{self.BASE_URL}/private/applications/autocomplete"
+        headers = {"Content-Type": "text/plain", "Authorization": f"Bearer {hmtoken}"}
+        body = filter_text or ""
+        
+        try:
+            resp = requests.post(url, data=body, headers=headers)
+            resp.raise_for_status()
+            data = resp.json()
+            
+            # Extract data array from response
+            items = data.get("data", []) if isinstance(data, dict) else []
+            
+            packages = []
+            f = (filter_text or "").lower()
+            for item in items:
+                if isinstance(item, dict):
+                    pkg = item.get("name", "")
+                    if pkg and f in pkg.lower():
+                        packages.append({
+                            "id": item.get("id"),
+                            "name": pkg
+                        })
+                        if len(packages) >= 7:
+                            break
+            
+            return packages
+        except Exception as e:
+            logging.getLogger().error(f"Error searching app packages: {e}")
+            return []
