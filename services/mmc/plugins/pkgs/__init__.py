@@ -1936,9 +1936,9 @@ def save_xmpp_json(folder, json_content):
     uuid = folder.split("/")[-1]
     dependencies_list = structpackage["info"]["Dependency"]
     pkgmanage().refresh_dependencies(uuid, dependencies_list)
-    from mmc.plugins.kiosk import update_launcher
-
-    update_launcher(uuid, structpackage["info"]["launcher"])
+    # TODO: see how to notify differently, this function takes too much time, do not use it as it is
+    # from mmc.plugins.kiosk import update_launcher
+    # update_launcher(uuid, structpackage["info"]["launcher"])
 
 
 def _aliasforstep(step, dictstepseq):
