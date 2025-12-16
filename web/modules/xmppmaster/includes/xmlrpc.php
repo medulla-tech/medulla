@@ -61,6 +61,11 @@ function xmlrpc_getPresenceuuid($uuid)
     return xmlCall("xmppmaster.getPresenceuuid", array($uuid));
 }
 
+function xmlrpc_get_remote_log_machine($params)
+{
+    return xmlCall("xmppmaster.get_remote_log_machine", array($params));
+}
+
 function xmlrpc_getPresenceuuids($uuids)
 {
     return xmlCall("xmppmaster.getPresenceuuids", array($uuids));

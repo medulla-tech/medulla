@@ -98,7 +98,7 @@ if (isset($_SESSION['request'])) {
     $filter['request'] = $_SESSION['request'];
 }
 if (isset($_GET['equ_bool'])) {
-    $filter['equ_bool'] = $_GET['equ_bool'];
+    $filter['equ_bool'] = urldecode($_GET['equ_bool']);
 }
 if (isset($_GET['imaging_server'])) {
     $filter['imaging_server'] = $_GET['imaging_server'];
