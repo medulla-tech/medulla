@@ -398,6 +398,72 @@ class MobileDatabase(DatabaseHelper):
         except Exception as e:
             logging.getLogger().error(f"Error fetching applications: {e}")
             return None
+        
+    def getHmdmIcons(self):
+        """
+        Fetch the list of icons from HMDM.
+        Returns a list of icon dicts.
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Failed to authenticate when fetching icons.")
+            return []
+
+        url = f"{self.BASE_URL}/private/icons/search"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+
+        try:
+            resp = requests.get(url, headers=headers, json={})
+            resp.raise_for_status()
+            data = resp.json()
+            if data.get("status") == "OK":
+                logging.getLogger().info(f"Icons fetched successfully.")
+                return data.get("data", [])
+            else:
+                logging.getLogger().error(f"Failed to fetch icons: {data}")
+                return []
+        except Exception as e:
+            logging.getLogger().error(f"Failed to fetch icons: {e}")
+            return []
+
+    def addHmdmIcon(self, icon_data: dict):
+        """
+        Create an icon in HMDM.
+        
+        :param icon_data: Dict with 'name' (required), 'fileId' (required), and optionally 'fileName'
+        :return: Response from HMDM or None on error
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Failed to authenticate when creating icon.")
+            return None
+
+        url = f"{self.BASE_URL}/private/icons"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+
+        payload = {
+            "id": 0,
+            "name": icon_data.get("name", ""),
+            "fileId": int(icon_data.get("fileId", 0)),
+            "fileName": icon_data.get("fileName", "")
+        }
+
+        logging.getLogger().info(f"[mobile] addHmdmIcon payload: {json.dumps(payload)}")
+
+        try:
+            resp = requests.put(url, headers=headers, json=payload)
+            resp.raise_for_status()
+            data = resp.json()
+            logging.getLogger().info(f"[mobile] addHmdmIcon response: {json.dumps(data)}")
+            if data.get("status") == "OK":
+                logging.getLogger().info(f"Icon created successfully.")
+                return data.get("data")
+            else:
+                logging.getLogger().error(f"Failed to create icon: {data}")
+                return None
+        except Exception as e:
+            logging.getLogger().error(f"Failed to create icon: {e}")
+            return None    
 
     def searchHmdmDevices(self, filter_text=""):
         """
@@ -1377,3 +1443,83 @@ class MobileDatabase(DatabaseHelper):
         except Exception as e:
             logging.getLogger().error(f"Error searching app packages: {e}")
             return []
+
+    def addHmdmApplication(self, app_data: dict):
+        """
+        Create or update an application in HMDM, with icon upload support.
+
+        If app_data contains 'icon_upload_path' and 'icon_upload_name', upload the icon
+        to HMDM and set the icon filename in the payload.
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Impossible d'authentifier pour ajouter/modifier l'application.")
+            return None
+
+        # Icon uploads are no longer handled server-side. If callers still provide
+        # icon_upload_* fields they will be ignored. Use `iconText` or `showIcon`
+        # flags in the payload instead.
+
+        payload = {
+            "pkg": app_data.get("pkg", ""),
+            "name": app_data.get("name", ""),
+            "showIcon": False,
+            "useKiosk": False,
+            "system": False,
+            "type": "app",
+        }
+
+        # Optional fields
+        if app_data.get("version"):
+            payload["version"] = app_data["version"]
+
+        if app_data.get("system"):
+            payload["system"] = app_data["system"]
+
+        if app_data.get("url"):
+            payload["url"] = app_data["url"]
+
+        if app_data.get("arch"):
+            payload["arch"] = app_data["arch"]
+
+        if app_data.get("iconText"):
+            payload["iconText"] = app_data["iconText"]
+
+        if app_data.get("showIcon"):
+            payload["showIcon"] = True
+
+        # If icon id provided, include it; otherwise accept an 'icon' field
+        icon_id = app_data.get("iconId")
+        if icon_id:
+            payload["iconId"] = icon_id
+
+        url = f"{self.BASE_URL}/private/applications/android"
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {hmtoken}",
+        }
+
+        try:
+            logging.getLogger().info(f"Sending application payload to HMDM: {json.dumps(payload)}")
+            resp = requests.put(url, json=payload, headers=headers)
+            logging.getLogger().info(f"HMDM HTTP status: {resp.status_code}")
+            logging.getLogger().info(f"HMDM raw response: {resp.text}")
+            resp.raise_for_status()
+            try:
+                resp_json = resp.json()
+            except Exception:
+                logging.getLogger().error("Failed to decode HMDM response as JSON")
+                return None
+
+            logging.getLogger().info(f"HMDM response: {json.dumps(resp_json)}")
+            if resp_json.get("status") == "OK":
+                resp_json["message"] = resp_json.get("message") or ""
+                resp_json["data"] = resp_json.get("data") or {}
+                logging.getLogger().info("Application added/updated successfully in HMDM.")
+                return resp_json
+            else:
+                logging.getLogger().error(f"HMDM returned error: {resp_json.get('message', 'Unknown error')}")
+                return None
+        except Exception as e:
+            logging.getLogger().error(f"Error adding/updating application: {e}")
+            return None    

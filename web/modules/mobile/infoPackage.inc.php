@@ -41,6 +41,14 @@ $pageAddAppliations->setFile("modules/mobile/mobile/applicationsList.php");
 $submod->addPage($pageAddAppliations);
 
 ################################
+# add application page
+################################
+
+$pageAddApplication = new Page("addApplication", _T('Add an application', 'mobile'));
+$pageAddApplication->setFile("modules/mobile/mobile/addApplication.php");
+$submod->addPage($pageAddApplication);
+
+################################
  # GLPI devices page
 ################################
 $pageGlpiDevices = new Page("glpiDevices", _T('All devices glpi', 'mobile'));

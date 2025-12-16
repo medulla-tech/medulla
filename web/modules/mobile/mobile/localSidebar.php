@@ -10,6 +10,8 @@ $sidemenu->addSideMenuItem(new SideMenuItem(_T("Add a device", 'mobile'), "mobil
 
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Applications", 'mobile'), "mobile", "mobile", "applications"));
 
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("Add an application", 'mobile'), "mobile", "mobile", "addApplication"));
+
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Configurations", 'mobile'), "mobile", "mobile", "configurations"));
 
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Add Configuration", 'mobile'), "mobile", "mobile", "addConfiguration"));
