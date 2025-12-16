@@ -39,12 +39,12 @@ if ($show_results) {
             <span class="searchfield">
                 <select class="searchfieldreal noborder" name="severity" id="severity" onchange="document.getElementById('searchform').submit();">
                     <option value="-1" <?php echo $field_severity === "-1" ? "selected" : ""; ?>><?php echo _T("Severity search...", "mobile"); ?></option>
-                    <option value="0" <?php echo $field_severity === "0" ? "selected" : ""; ?>>NONE</option>
-                    <option value="1" <?php echo $field_severity === "1" ? "selected" : ""; ?>>ERROR</option>
-                    <option value="2" <?php echo $field_severity === "2" ? "selected" : ""; ?>>WARNING</option>
-                    <option value="3" <?php echo $field_severity === "3" ? "selected" : ""; ?>>INFO</option>
-                    <option value="4" <?php echo $field_severity === "4" ? "selected" : ""; ?>>DEBUG</option>
-                    <option value="5" <?php echo $field_severity === "5" ? "selected" : ""; ?>>VERBOSE</option>
+                    <option value="0" <?php echo $field_severity === "0" ? "selected" : ""; ?>><?php echo _T("None", "mobile"); ?></option>
+                    <option value="1" <?php echo $field_severity === "1" ? "selected" : ""; ?>><?php echo _T("Error", "mobile"); ?></option>
+                    <option value="2" <?php echo $field_severity === "2" ? "selected" : ""; ?>><?php echo _T("Warning", "mobile"); ?></option>
+                    <option value="3" <?php echo $field_severity === "3" ? "selected" : ""; ?>><?php echo _T("Info", "mobile"); ?></option>
+                    <option value="4" <?php echo $field_severity === "4" ? "selected" : ""; ?>><?php echo _T("Debug", "mobile"); ?></option>
+                    <option value="5" <?php echo $field_severity === "5" ? "selected" : ""; ?>><?php echo _T("Verbose", "mobile"); ?></option>
                 </select>
             </span>
 
@@ -193,7 +193,7 @@ function exportLogs() {
         })
         .catch(error => {
             console.error('Export error:', error);
-            alert('Failed to export logs');
+            alert('<?php echo _T("Failed to export logs", "mobile"); ?>');
         });
 }
 </script>

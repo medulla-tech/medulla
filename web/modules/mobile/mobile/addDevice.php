@@ -50,13 +50,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['test'])) {
 
     // Validation
     if ($values['add-phone'] === '') {
-        $errors['add-phone'] = "The device name is required";
+        $errors['add-phone'] = _T("The device name is required", "mobile");
     } elseif (!preg_match('/^[a-zA-Z0-9\s]+$/', $values['add-phone'])) {
-        $errors['add-phone'] = "The device name contains invalid characters";
+        $errors['add-phone'] = _T("The device name contains invalid characters", "mobile");
     }
 
     if ($values['configuration_id'] === '') {
-        $errors['configuration_id'] = "Configuration is required";
+        $errors['configuration_id'] = _T("Configuration is required", "mobile");
     }
 
     // Si pas d'erreurs, traitement
@@ -76,14 +76,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['test'])) {
             header("Location: /mmc/main.php?module=mobile&submod=mobile&action=index");
             exit;
         } else {
-            $error_msg = isset($result['message']) ? $result['message'] : 'Unknown error occurred';
+            $error_msg = isset($result['message']) ? $result['message'] : _T('Unknown error occurred', 'mobile');
             new NotifyWidgetFailure(sprintf(_T("Failed to create device: %s", "mobile"), $error_msg));
         }
     }
 }
 
 // Affichage formulaire
-$p = new PageGenerator(_T("Add a device", 'mobile'));
+$p = new PageGenerator(_T("Add device", 'mobile'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
@@ -99,22 +99,31 @@ function showError($field, $errors) {
 }
 
 // Nom de l'appareil
-$formAddDevice->add(new TrFormElement(
-    _T('<label for="add-phone">Device\'s name</label>', 'device-name'),
-    new InputTpl(
-        'add-phone',
-        '/^[a-zA-Z0-9\s]+$/',
-        $values['add-phone']
+$formAddDevice->add(
+    new TrFormElement(
+        _T("Device's name", 'mobile') . "*",
+        new InputTpl('add-phone', '/^[a-zA-Z0-9\s]+$/', $values['add-phone'])
+    ),
+    array(
+        "value" => $values['add-phone'],
+        "placeholder" => _T("Enter device name", "mobile"),
+        "required" => true
     )
-));
+);
 $formAddDevice->add(new TrFormElement('', $sep));
 echo showError('add-phone', $errors);
 
 // Description
-$formAddDevice->add(new TrFormElement(
-    _T('<label for="desc-zone">Description</label>', 'device-desc'),
-    new TextareaTpl('desc-zone', $values['desc-zone'])
-));
+$formAddDevice->add(
+    new TrFormElement(
+        _T('Description', 'mobile'),
+        new TextareaTpl('desc-zone', $values['desc-zone'])
+    ),
+    array(
+        "value" => $values['desc-zone'],
+        "placeholder" => _T("Enter description", "mobile")
+    )
+);
 $formAddDevice->add(new TrFormElement('', $sep));
 echo showError('desc-zone', $errors);
 
@@ -131,10 +140,15 @@ $sc = new SelectItem('configuration_id');
 $sc->setElements($config_names);
 $sc->setElementsVal($config_ids);
 $sc->setSelected($values['configuration_id']);
-$formAddDevice->add(new TrFormElement(
-    _T('<label for="configuration_id">Configuration <span style="color:red">*</span></label>', 'device-conf'),
-    $sc
-));
+$formAddDevice->add(
+    new TrFormElement(
+        _T('Configuration', 'mobile') . "*",
+        $sc
+    ),
+    array(
+        "required" => true
+    )
+);
 $formAddDevice->add(new TrFormElement('', $sep));
 echo showError('configuration_id', $errors);
 
@@ -153,33 +167,46 @@ if (count($group_names) > 1) {
     $sg->setElements($group_names);
     $sg->setElementsVal($group_ids);
     $sg->setSelected(isset($values['groups'][0]) ? $values['groups'][0] : '');
-    $formAddDevice->add(new TrFormElement(
-        _T('<label for="groups">Group</label>', 'device-grp'),
-        $sg
-    ));
+    $formAddDevice->add(
+        new TrFormElement(
+            _T('Group', 'mobile'),
+            $sg
+        ),
+        array(
+            "value" => isset($values['groups'][0]) ? $values['groups'][0] : '',
+            "placeholder" => _T("Select group", "mobile")
+        )
+    );
     $formAddDevice->add(new TrFormElement('', $sep));
 }
 
 // IMEI (optional)
-$formAddDevice->add(new TrFormElement(
-    _T('<label for="imei">IMEI</label>', 'device-imei'),
-    new InputTpl('imei', '', $values['imei'])
-));
+$formAddDevice->add(
+    new TrFormElement(
+        _T('IMEI', 'mobile'),
+        new InputTpl('imei', '', $values['imei'])
+    ),
+    array(
+        "value" => $values['imei'],
+    )
+);
 $formAddDevice->add(new TrFormElement('', $sep));
 
 // Phone Number (optional)
-$formAddDevice->add(new TrFormElement(
-    _T('<label for="phone">Phone Number</label>', 'device-phone'),
-    new InputTpl('phone', '', $values['phone'])
-));
+$formAddDevice->add(
+    new TrFormElement(
+        _T("Mobile number", "mobile"),
+        new InputTpl('phone', '', $values['phone'])
+    ),
+    array(
+        "value" => $values['phone'],
+    )
+);
 $formAddDevice->add(new TrFormElement('', $sep));
 
 // Bouton validation
-$formAddDevice->addValidateButton("test");
+$formAddDevice->addValidateButton("test", _T("Add", "mobile"));
 
 // Affichage formulaire
 $formAddDevice->display();
 ?>
-
-   
-

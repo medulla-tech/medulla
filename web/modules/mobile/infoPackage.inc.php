@@ -193,6 +193,14 @@ $pageExportLogs->setOptions(array("visible" => false, "noHeader" => true));
 $submod->addPage($pageExportLogs);
     
 ################################
+# QR Code page
+################################
+$pageQrCode = new Page("qrCode", _T('QR Code', 'mobile'));
+$pageQrCode->setFile("modules/mobile/mobile/qrCode.php");
+$pageQrCode->setOptions(array("AJAX" => false, "visible" => false));
+$submod->addPage($pageQrCode);
+
+################################
 # End
 ################################
 

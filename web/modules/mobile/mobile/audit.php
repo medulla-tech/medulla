@@ -23,7 +23,7 @@ $audit_logs = xmlrpc_get_hmdm_audit_logs($page_size, $page_num, $message_filter,
                     <td><?php echo _T("User login", "mobile"); ?></td>
                     <td><?php echo _T("IP Address", "mobile"); ?></td>
                     <td><?php echo _T("Action", "mobile"); ?></td>
-                    <td><?php echo _T("", "mobile"); ?></td>
+                    <td><?php echo _T("Details", "mobile"); ?></td>
                 </tr>
             </thead>
             <tbody>
@@ -33,7 +33,7 @@ $audit_logs = xmlrpc_get_hmdm_audit_logs($page_size, $page_num, $message_filter,
                         <td><?php echo isset($log['login']) ? htmlspecialchars($log['login']) : '-'; ?></td>
                         <td><?php echo isset($log['ip']) ? htmlspecialchars($log['ip']) : '-'; ?></td>
                         <td><?php echo isset($log['action']) ? htmlspecialchars($log['action']) : '-'; ?></td>
-                        <td>Details</td>
+                        <td><?php echo _T("Details", "mobile"); ?></td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>

@@ -15,7 +15,9 @@ if (!empty($filter)) {
     });
 }
 
-$ids = $col1 = $descriptions = $sizes = $updated = $devicePaths = $externals = $variables = $actions = [];
+$ids = $col1 = $descriptions = $sizes = $updated = $devicePaths = $externals = $variables = [];
+$actionDelete = [];
+$params = [];
 
 foreach ($files as $index => $file) {
 	$id = 'file_' . $index;
@@ -38,8 +40,12 @@ foreach ($files as $index => $file) {
 	$externals[] = $external;
 	$variables[] = $variable;
 
-	$deleteUrl = urlStrRedirect("mobile/mobile/deleteFile", array('action' => 'deleteFile', 'id' => $fileId, 'name' => $name));
-	$actions[] = "<ul class='action' style='list-style-type: none; padding: 0; margin: 0; display: flex; gap: 8px; align-items: center;'><li class='delete'><a href='{$deleteUrl}' class='delete-link' data-id='{$fileId}' title='Delete'>" . _T("", "mobile") . "</a></li></ul>";
+	// Build ActionPopupItem (Delete)
+	$actionDelete[] = new ActionPopupItem(_("Delete File"), "deleteFile", "delete", "", "mobile", "mobile");
+	$params[] = [
+		'id' => $fileId,
+		'name' => $name,
+	];
 }
 
 $n = new OptimizedListInfos($col1, _T("File", "mobile"));
@@ -57,7 +63,9 @@ $n->addExtraInfo($updated, _T("Updated at", "mobile"));
 $n->addExtraInfo($devicePaths, _T("Path on device", "mobile"));
 $n->addExtraInfo($externals, _T("External", "mobile"));
 $n->addExtraInfo($variables, _T("Variable", "mobile"));
-$n->addExtraInfo($actions, _T("Actions", "mobile"));
+// Attach actions
+$n->addActionItemArray($actionDelete);
+$n->setParamInfo($params);
 
 $n->start = 0;
 $n->display();

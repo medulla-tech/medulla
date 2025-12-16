@@ -16,7 +16,9 @@ if (!empty($filter)) {
     });
 }
 
-$ids = $col1 = $descriptions = $actions = [];
+$ids = $col1 = $descriptions = [];
+$actionDelete = [];
+$params = [];
 
 foreach ($configs as $index => $cfg) {
     $id = 'cfg_' . $index;
@@ -29,9 +31,12 @@ foreach ($configs as $index => $cfg) {
     $col1[] = "<a href='#' class='cfglink'>{$name}</a>";
     $descriptions[] = $desc;
 
-    $deleteUrl = urlStrRedirect("mobile/mobile/deleteConfiguration", array('action' => 'deleteConfiguration', 'id' => $cfgId, 'name' => $name));
-    $actions[] = "<ul class='action' style='list-style-type: none; padding: 0; margin: 0; display: flex; gap: 8px; align-items: center;'>
-    </ul>";
+        // Build ActionPopupItem (Delete)
+        $actionDelete[] = new ActionPopupItem(_("Delete Configuration"), "deleteConfiguration", "delete", "", "mobile", "mobile");
+        $params[] = [
+            'id' => $cfgId,
+            'name' => $name,
+        ];
 }
 
 $n = new OptimizedListInfos($col1, _T("Configuration", "mobile"));
@@ -44,7 +49,9 @@ $filter = isset($_REQUEST['filter']) ? $_REQUEST['filter'] : "";
 $n->setNavBar(new AjaxNavBar($count, $filter));
 
 $n->addExtraInfo($descriptions, _T("Description", "mobile"));
-$n->addExtraInfo($actions, _T("Actions", "mobile"));
+// Attach actions
+$n->addActionItemArray($actionDelete);
+$n->setParamInfo($params);
 
 $n->start = 0;
 $n->display();

@@ -17,7 +17,9 @@ if (!empty($filter)) {
     });
 }
 
-$ids = $col1 = $packages = $versions = $urls = $actions = [];
+$ids = $col1 = $packages = $versions = $urls = [];
+$actionDelete = [];
+$params = [];
 
 foreach ($apps as $index => $app) {
 	$id = 'app_' . $index;
@@ -34,11 +36,12 @@ foreach ($apps as $index => $app) {
 	$versions[] = $version;
 	$urls[] = $url;
 
-	// Action: Delete (server-side via xmlrpc wrapper for security/consistency)
-	$deleteUrl = urlStrRedirect("mobile/mobile/deleteApplication", array('action' => 'deleteApplication', 'id' => $appId, 'name' => $name));
-	$actions[] = "<ul class='action' style='list-style-type: none; padding: 0; margin: 0; display: flex; gap: 8px; align-items: center;'>
-		<li class='delete'><a href='{$deleteUrl}' class='delete-link' data-id='{$appId}' title='Supprimer'>" . _T("", "mobile") . "</a></li>
-	</ul>";
+	// Build ActionPopupItem (Delete) using standard action API
+	$actionDelete[] = new ActionPopupItem(_("Delete Application"), "deleteApplication", "delete", "", "mobile", "mobile");
+	$params[] = [
+		'id' => $appId,
+		'name' => $name,
+	];
 }
 
 $n = new OptimizedListInfos($col1, _T("Application name", "mobile"));
@@ -53,7 +56,9 @@ $n->setNavBar(new AjaxNavBar($count, $filter));
 $n->addExtraInfo($packages, _T("Package ID", "mobile"));
 $n->addExtraInfo($versions, _T("Version", "mobile"));
 $n->addExtraInfo($urls, _T("URL", "mobile"));
-$n->addExtraInfo($actions, _T("Actions", "mobile"));
+// Attach actions
+$n->addActionItemArray($actionDelete);
+$n->setParamInfo($params);
 
 $n->start = 0;
 $n->display();

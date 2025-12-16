@@ -17,13 +17,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     $fileName = trim($_POST['fileName'] ?? '');
     
     if (empty($name)) {
-        $response['error'] = 'Icon name is required';
+        $response['error'] = _T('Icon name is required', 'mobile');
         echo json_encode($response);
         exit;
     }
     
     if (empty($fileId)) {
-        $response['error'] = 'File ID is required';
+        $response['error'] = _T('File ID is required', 'mobile');
         echo json_encode($response);
         exit;
     }
@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             $response['success'] = true;
             $response['data'] = $result;
         } else {
-            $response['error'] = 'Failed to create icon';
+            $response['error'] = _T('Failed to create icon', 'mobile');
         }
     } catch (Exception $e) {
         $response['error'] = $e->getMessage();
@@ -92,18 +92,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['test'])) {
     // Validation
     error_log('[mobile] Starting validation...');
     if ($values['name'] === '') {
-        $errors['name'] = "Application name is required.";
+        $errors['name'] = _T("Application name is required.", "mobile");
         error_log('[mobile] ERROR: name is empty');
     }
     if ($values['pkg'] === '') {
-        $errors['pkg'] = "Package name is required (ex: com.example.app).";
+        $errors['pkg'] = _T("Package name is required (ex: com.example.app).", "mobile");
         error_log('[mobile] ERROR: pkg is empty');
     } elseif (!preg_match('/^[a-zA-Z0-9_.]+$/', $values['pkg'])) {
-        $errors['pkg'] = "Package name contains invalid characters.";
+        $errors['pkg'] = _T("Package name contains invalid characters.", "mobile");
         error_log('[mobile] ERROR: pkg invalid format: ' . $values['pkg']);
     }
     if ($values['url'] !== '' && !filter_var($values['url'], FILTER_VALIDATE_URL)) {
-        $errors['url'] = "APK URL is not valid.";
+        $errors['url'] = _T("APK URL is not valid.", "mobile");
         error_log('[mobile] ERROR: invalid URL: ' . $values['url']);
     }
     error_log('[mobile] Validation complete. Errors count: ' . count($errors));
@@ -153,7 +153,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['test'])) {
         $resp = xmlrpc_add_hmdm_application($app);
 
         if ($resp === false || $resp === null) {
-            $errors['global'] = "Erreur lors de l'ajout de l'application.";
+            $errors['global'] = _T("Error while adding the application.", "mobile");
             error_log('[mobile] ERROR: xmlrpc_add_application returned false/null');
             error_log('[mobile] === POST HANDLER FAILED ===');
         } else {
@@ -181,7 +181,7 @@ function showError($field, $errors) {
 
 // --- Name
 $formAddApplication->add(new TrFormElement(
-    _T('<label for="name">Application name</label>', 'name'),
+    _T('Application name', 'mobile'),
     new InputTpl('name', '/^.{1,255}$/', $values['name'])
 ));
 $formAddApplication->add(new TrFormElement('', $sep));
@@ -189,7 +189,7 @@ echo showError('name', $errors);
 
 // --- Package
 $formAddApplication->add(new TrFormElement(
-    _T('<label for="pkg">Package name</label>', 'pkg'),
+    _T('Package name', 'mobile'),
     new InputTpl('pkg', '/^[a-zA-Z0-9_.]+$/', $values['pkg'])
 ));
 $formAddApplication->add(new TrFormElement('', $sep));
@@ -197,7 +197,7 @@ echo showError('pkg', $errors);
 
 // --- Version
 $formAddApplication->add(new TrFormElement(
-    _T('<label for="version">Version</label>', 'version'),
+    _T('Version', 'mobile'),
     new InputTpl('version', '/^.{0,50}$/', $values['version'])
 ));
 $formAddApplication->add(new TrFormElement('', $sep));
@@ -210,7 +210,7 @@ if (!empty($values['system'])) {
     $checkbox->setAttributCustom('checked');
 }
 $formAddApplication->add(new TrFormElement(
-    _T('<label for="system">System</label>', 'system'),
+    _T('System', 'mobile'),
     $checkbox
 ));
 $formAddApplication->add(new TrFormElement('', $sep));
@@ -220,7 +220,7 @@ $apkInput = new InputTpl('url', '/^https?:\/\//', $values['url']);
 $apkInput->setAttributCustom('id="url" class="apk-field"');
 
 $formAddApplication->add(new TrFormElement(
-    _T('<label for="url">APK URL</label>', 'url'),
+    _T('APK URL', 'mobile'),
     $apkInput
 ));
 $formAddApplication->add(new TrFormElement('', $sep));
@@ -229,7 +229,7 @@ echo showError('url', $errors);
 // --- Architecture (dropdown list)
 $archSelect = new SelectItem('arch');
 $archSelect->setElements([
-    'Choose your architecture',
+    _T('Choose your architecture', 'mobile'),
     'armeabi-v7a',
     'arm64-v8a',
 ]);
@@ -240,7 +240,7 @@ $archSelect->setElementsVal([
 ]);
 $archSelect->style = 'arch-field';
 $formAddApplication->add(new TrFormElement(
-    _T('<label for="arch">Architecture</label>', 'arch'),
+    _T('Architecture', 'mobile'),
     $archSelect
 ));
 $formAddApplication->add(new TrFormElement('', $sep));
@@ -254,13 +254,13 @@ if (!empty($values['showicon'])) {
     $checkboxIcon->setAttributCustom('checked');
 }
 $formAddApplication->add(new TrFormElement(
-    _T('<label for="showicon">Show icon</label>', 'showicon'),
+    _T('Show icon', 'mobile'),
     $checkboxIcon
 ));
 
 // --- Icon dropdown
 $iconSelect = new SelectItem('icon_id');
-$iconNames = ['Choose an icon'];
+$iconNames = [_T('Choose an icon', 'mobile')];
 $iconValues = [''];
 if (is_array($availableIcons)) {
     foreach ($availableIcons as $icon) {
@@ -272,7 +272,7 @@ $iconSelect->setElements($iconNames);
 $iconSelect->setElementsVal($iconValues);
 $iconSelect->style = 'icon-extra';
 $formAddApplication->add(new TrFormElement(
-    _T('<label for="icon_id">Icon</label>', 'icon_id'),
+    _T('Icon', 'mobile'),
     $iconSelect
 ));
 
@@ -283,9 +283,8 @@ $formAddApplication->add(new TrFormElement('', $newIconButton));
 
 // --- Icon text input
 $iconText = new InputTpl('icon_text', '/^.{0,255}$/', $values['icon_text'] ?? '');
-$iconText->style = 'icon-extra';
 $formAddApplication->add(new TrFormElement(
-    _T('<label for="icon_text">Icon text</label>', 'icon_text'),
+    _T('Icon text', 'mobile'),
     $iconText
 ));
 
@@ -315,11 +314,11 @@ if (isset($errors['global'])) {
         <div style="margin:15px 0;">
             <label for="modal_file_id"><?php echo _T("Select file", "mobile"); ?>:</label><br/>
             <select id="modal_file_id" name="modal_file_id" style="width:100%; padding:5px;">
-                <option value="">Choose a file</option>
+                <option value=""><?php echo _T("Choose a file", "mobile"); ?></option>
                 <?php
                 if (is_array($availableFiles)) {
                     foreach ($availableFiles as $file) {
-                        $displayName = $file['filePath'] ?? $file['name'] ?? 'Unknown';
+                        $displayName = $file['filePath'] ?? $file['name'] ?? _T('Unknown', 'mobile');
                         $fileId = $file['id'];
                         echo '<option value="' . htmlspecialchars($fileId) . '">' . htmlspecialchars($displayName) . '</option>';
                     }
@@ -450,7 +449,7 @@ if (isset($errors['global'])) {
                     // Reload page to update dropdown
                     window.location.reload();
                 } else {
-                    alert('<?php echo _T("Error creating icon", "mobile"); ?>: ' + (response.error || 'Unknown error'));
+                    alert('<?php echo _T("Error creating icon", "mobile"); ?>: ' + (response.error || '<?php echo _T("Unknown error", "mobile"); ?>'));
                 }
             },
             error: function(xhr, status, error) {
