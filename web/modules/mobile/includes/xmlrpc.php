@@ -3,8 +3,8 @@
 // function xmlrpc_nano_devices(){
 //     return xmlCall("mobile.nano_devices", array());
 // }
-function xmlrpc_to_back($name, $desc, $conf, $grp){
-    return xmlCall("mobile.to_back", array($name, $desc));
+function xmlrpc_add_hmdm_device($name, $configuration_id, $description="", $groups=null, $imei="", $phone=""){
+    return xmlCall("mobile.addHmdmDevice", array($name, $configuration_id, $description, $groups, $imei, $phone));
 }
 function xmlrpc_get_hmdm_devices(){
     return xmlCall("mobile.getHmdmDevices", array());

@@ -163,24 +163,59 @@ class MobileDatabase(DatabaseHelper):
 
         return devices_nano
 
+    def addHmdmDevice(self, name, configuration_id, description="", groups=None, imei="", phone=""):
+        """
+        Create a new device in HMDM.
+        
+        :param name: Device number/name (required)
+        :param configuration_id: Configuration ID (required)
+        :param description: Device description (optional)
+        :param groups: List of group IDs (optional)
+        :param imei: Device IMEI (optional)
+        :param phone: Device phone number (optional)
+        :return: Response from HMDM or None on error
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Impossible d'authentifier pour créer un appareil.")
+            return None
 
-    # Headwind MDM device handling
-    def to_back(self, name, desc):
+        url = f"{self.BASE_URL}/private/devices"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+
+        device_data = {
+            "number": name,
+            "configurationId": int(configuration_id)
+        }
+
+        if description:
+            device_data["description"] = description
+        
+        if groups and isinstance(groups, list):
+            device_data["groups"] = [{"id": int(g)} for g in groups if g]
+        
+        if imei:
+            device_data["imei"] = imei
+        
+        if phone:
+            device_data["phone"] = phone
+
         try:
-                
-            logger.error(f"111 - Voila ma variable name et desc avant d entrée en base {name} , {desc}")
-
+            logging.getLogger().info(f"Creating device in HMDM: {json.dumps(device_data, indent=2)}")
+            resp = requests.put(url, json=device_data, headers=headers)
+            logging.getLogger().info(f"HMDM device creation HTTP status: {resp.status_code}")
+            logging.getLogger().info(f"HMDM device creation response: {resp.text}")
+            resp.raise_for_status()
             
-            device_data = {
-                    "id": 0,
-                    "number": name,
-                    "description": desc,
-                    "configurationId": 1
-                }
-            return device_data
+            resp_json = resp.json()
+            resp_json["message"] = resp_json.get("message") or ""
+            resp_json["data"] = resp_json.get("data") or {}
+            
+            logging.getLogger().info(f"Device '{name}' created successfully in HMDM.")
+            return resp_json
         except Exception as e:
-                logging.getLogger().error(f"Erreur dans to_back: {e}")
-                raise
+            logging.getLogger().error(f"Error creating device '{name}': {e}")
+            return None
     
     # HMDM API authentication
     def hash_password(self, password: str)-> str:
