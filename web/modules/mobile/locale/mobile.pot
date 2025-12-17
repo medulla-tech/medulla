@@ -3,21 +3,12 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#: modules/mobile/mobile/ajaxConfigurationsList.php:23
-#: modules/mobile/mobile/ajaxApplicationsList.php:29
-#: modules/mobile/mobile/audit.php:26
-#: modules/mobile/mobile/ajaxDeviceList.php:59
-#: modules/mobile/mobile/ajaxDeviceList.php:60
-#: modules/mobile/mobile/ajaxDeviceList.php:61
-#: modules/mobile/mobile/ajaxDeviceList.php:62
-#: modules/mobile/mobile/ajaxDeviceList.php:63
-#: modules/mobile/mobile/ajaxFilesList.php:31
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-28 17:28+0100\n"
+"POT-Creation-Date: 2025-12-17 10:08+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -34,7 +25,7 @@ msgstr ""
 msgid "Get all available phones"
 msgstr ""
 
-#: modules/mobile/infoPackage.inc.php:31 modules/mobile/mobile/addDevice.php:53
+#: modules/mobile/infoPackage.inc.php:31
 #: modules/mobile/mobile/localSidebar.php:9
 msgid "Add a device"
 msgstr ""
@@ -45,81 +36,113 @@ msgstr ""
 msgid "Applications"
 msgstr ""
 
-#: modules/mobile/infoPackage.inc.php:46
-#: modules/mobile/mobile/localSidebar.php:19
+#: modules/mobile/infoPackage.inc.php:47
+#: modules/mobile/mobile/addApplication.php:168
+#: modules/mobile/mobile/localSidebar.php:13
+msgid "Add an application"
+msgstr ""
+
+#: modules/mobile/infoPackage.inc.php:54
+#: modules/mobile/mobile/localSidebar.php:23
 msgid "All devices glpi"
 msgstr ""
 
-#: modules/mobile/infoPackage.inc.php:51
+#: modules/mobile/infoPackage.inc.php:59
 msgid "All phones glpi"
 msgstr ""
 
-#: modules/mobile/infoPackage.inc.php:58 modules/mobile/mobile/filesList.php:8
-#: modules/mobile/mobile/localSidebar.php:17
+#: modules/mobile/infoPackage.inc.php:66 modules/mobile/mobile/filesList.php:8
+#: modules/mobile/mobile/localSidebar.php:19
 msgid "Files"
 msgstr ""
 
-#: modules/mobile/infoPackage.inc.php:66
+#: modules/mobile/infoPackage.inc.php:70
+#: modules/mobile/mobile/localSidebar.php:21
+msgid "Add a file"
+msgstr ""
+
+#: modules/mobile/infoPackage.inc.php:78
 msgid "Add a configuration"
 msgstr ""
 
-#: modules/mobile/infoPackage.inc.php:74
+#: modules/mobile/infoPackage.inc.php:86
 msgid "Device list view"
 msgstr ""
 
-#: modules/mobile/infoPackage.inc.php:79
+#: modules/mobile/infoPackage.inc.php:91 modules/mobile/mobile/addDevice.php:86
 msgid "Add device"
 msgstr ""
 
-#: modules/mobile/infoPackage.inc.php:88
+#: modules/mobile/infoPackage.inc.php:100
 msgid "Applications list view"
 msgstr ""
 
-#: modules/mobile/infoPackage.inc.php:93
+#: modules/mobile/infoPackage.inc.php:105
 msgid "GLPI devices list view"
 msgstr ""
 
-#: modules/mobile/infoPackage.inc.php:98
+#: modules/mobile/infoPackage.inc.php:110
 msgid "GLPI phones list view"
 msgstr ""
 
-#: modules/mobile/infoPackage.inc.php:103
+#: modules/mobile/infoPackage.inc.php:115
 msgid "Files list view"
 msgstr ""
 
-#: modules/mobile/infoPackage.inc.php:108
+#: modules/mobile/infoPackage.inc.php:120
 msgid "Device search"
 msgstr ""
 
-#: modules/mobile/infoPackage.inc.php:118
+#: modules/mobile/infoPackage.inc.php:130
 msgid "Delete application"
 msgstr ""
 
-#: modules/mobile/infoPackage.inc.php:124
+#: modules/mobile/infoPackage.inc.php:136
 msgid "Delete GLPI Device"
 msgstr ""
 
-#: modules/mobile/infoPackage.inc.php:129
+#: modules/mobile/infoPackage.inc.php:141
 msgid "Delete file"
 msgstr ""
 
-#: modules/mobile/infoPackage.inc.php:138
-#: modules/mobile/mobile/localSidebar.php:13
+#: modules/mobile/infoPackage.inc.php:150
+#: modules/mobile/mobile/localSidebar.php:15
 #: modules/mobile/mobile/configurationsList.php:8
 msgid "Configurations"
 msgstr ""
 
-#: modules/mobile/infoPackage.inc.php:142
+#: modules/mobile/infoPackage.inc.php:154
 msgid "Configurations list view"
 msgstr ""
 
-#: modules/mobile/infoPackage.inc.php:147
+#: modules/mobile/infoPackage.inc.php:159
 msgid "Delete configuration"
 msgstr ""
 
-#: modules/mobile/infoPackage.inc.php:157
-#: modules/mobile/mobile/localSidebar.php:21
+#: modules/mobile/infoPackage.inc.php:169
+#: modules/mobile/mobile/localSidebar.php:25
 msgid "Functions"
+msgstr ""
+
+#: modules/mobile/infoPackage.inc.php:174
+msgid "Send new message"
+msgstr ""
+
+#: modules/mobile/infoPackage.inc.php:179
+msgid "Send new push message"
+msgstr ""
+
+#: modules/mobile/infoPackage.inc.php:184
+msgid "App package search"
+msgstr ""
+
+#: modules/mobile/infoPackage.inc.php:190
+msgid "Export logs"
+msgstr ""
+
+#: modules/mobile/infoPackage.inc.php:198
+#: modules/mobile/mobile/ajaxDeviceList.php:71
+msgid "QR Code"
 msgstr ""
 
 #: modules/mobile/mobile/functions.php:8
@@ -131,7 +154,7 @@ msgid "Detailed information"
 msgstr ""
 
 #: modules/mobile/mobile/functions.php:10
-#: modules/mobile/mobile/messaging.php:35
+#: modules/mobile/mobile/messaging.php:28
 msgid "Messaging"
 msgstr ""
 
@@ -139,124 +162,208 @@ msgstr ""
 msgid "Push messages"
 msgstr ""
 
-#: modules/mobile/mobile/ajaxConfigurationsList.php:27
-#: modules/mobile/mobile/ajaxDeviceList.php:80
-msgid "Configuration"
+#: modules/mobile/mobile/functions.php:12
+msgid "Logs"
 msgstr ""
 
-#: modules/mobile/mobile/ajaxConfigurationsList.php:36
-#: modules/mobile/mobile/ajaxGlpiDevicesList.php:264
-#: modules/mobile/mobile/detailedInfo.php:41
-#: modules/mobile/mobile/ajaxDeviceList.php:79
-#: modules/mobile/mobile/ajaxFilesList.php:43
-msgid "Description"
-msgstr ""
-
-#: modules/mobile/mobile/ajaxConfigurationsList.php:37
-#: modules/mobile/mobile/ajaxApplicationsList.php:45
-#: modules/mobile/mobile/ajaxDeviceList.php:85
-#: modules/mobile/mobile/ajaxFilesList.php:49
-msgid "Actions"
-msgstr ""
-
-#: modules/mobile/mobile/messaging.php:36
-msgid "Search messages and send new messages to devices"
-msgstr ""
-
-#: modules/mobile/mobile/messaging.php:39
-#: modules/mobile/mobile/pushMessages.php:39
-msgid "New message"
-msgstr ""
-
-#: modules/mobile/mobile/messaging.php:43
-#: modules/mobile/mobile/pushMessages.php:43
+#: modules/mobile/mobile/newMessage.php:14
 msgid "Send New Message"
 msgstr ""
 
-#: modules/mobile/mobile/messaging.php:47
-#: modules/mobile/mobile/messaging.php:75
-#: modules/mobile/mobile/messaging.php:123
-#: modules/mobile/mobile/pushMessages.php:47
-#: modules/mobile/mobile/pushMessages.php:75
-#: modules/mobile/mobile/pushMessages.php:123
+#: modules/mobile/mobile/newMessage.php:37
+msgid "Message text is required"
+msgstr ""
+
+#: modules/mobile/mobile/newMessage.php:40
+#: modules/mobile/mobile/newPushMessage.php:39
+msgid "Device is required"
+msgstr ""
+
+#: modules/mobile/mobile/newMessage.php:42
+#: modules/mobile/mobile/newPushMessage.php:41
+msgid "Group is required"
+msgstr ""
+
+#: modules/mobile/mobile/newMessage.php:44
+#: modules/mobile/mobile/addDevice.php:59
+#: modules/mobile/mobile/newPushMessage.php:43
+msgid "Configuration is required"
+msgstr ""
+
+#: modules/mobile/mobile/newMessage.php:59
+msgid "Message sent successfully"
+msgstr ""
+
+#: modules/mobile/mobile/newMessage.php:67
+msgid "Failed to send message. Please try again."
+msgstr ""
+
+#: modules/mobile/mobile/newMessage.php:77
+msgid "Send a message to devices, groups, configurations, or all devices"
+msgstr ""
+
+#: modules/mobile/mobile/newMessage.php:94
+#: modules/mobile/mobile/newPushMessage.php:95
+msgid "Send to"
+msgstr ""
+
+#: modules/mobile/mobile/newMessage.php:97
+#: modules/mobile/mobile/newMessage.php:107
+#: modules/mobile/mobile/messaging.php:43
+#: modules/mobile/mobile/messaging.php:79 modules/mobile/mobile/logs.php:67
+#: modules/mobile/mobile/pushMessages.php:40
+#: modules/mobile/mobile/pushMessages.php:66
+#: modules/mobile/mobile/newPushMessage.php:98
+#: modules/mobile/mobile/newPushMessage.php:108
 msgid "Device"
 msgstr ""
 
-#: modules/mobile/mobile/messaging.php:53
-#: modules/mobile/mobile/messaging.php:81
-#: modules/mobile/mobile/messaging.php:125
-#: modules/mobile/mobile/pushMessages.php:53
-#: modules/mobile/mobile/pushMessages.php:81
+#: modules/mobile/mobile/newMessage.php:98
+#: modules/mobile/mobile/newMessage.php:122
+#: modules/mobile/mobile/addConfiguration.php:47
+#: modules/mobile/mobile/addDevice.php:172
+#: modules/mobile/mobile/newPushMessage.php:99
+#: modules/mobile/mobile/newPushMessage.php:122
+msgid "Group"
+msgstr ""
+
+#: modules/mobile/mobile/newMessage.php:99
+#: modules/mobile/mobile/newMessage.php:137
+#: modules/mobile/mobile/ajaxConfigurationsList.php:42
+#: modules/mobile/mobile/addConfiguration.php:63
+#: modules/mobile/mobile/addDevice.php:145
+#: modules/mobile/mobile/ajaxDeviceList.php:90
+#: modules/mobile/mobile/newPushMessage.php:100
+#: modules/mobile/mobile/newPushMessage.php:137
+msgid "Configuration"
+msgstr ""
+
+#: modules/mobile/mobile/newMessage.php:100
+#: modules/mobile/mobile/localSidebar.php:7
+#: modules/mobile/mobile/newPushMessage.php:101
+msgid "All devices"
+msgstr ""
+
+#: modules/mobile/mobile/newMessage.php:110 modules/mobile/mobile/logs.php:27
+#: modules/mobile/mobile/addDevice.php:104
+#: modules/mobile/mobile/ajaxDeviceList.php:82
+#: modules/mobile/mobile/newPushMessage.php:111
+msgid "Device's name"
+msgstr ""
+
+#: modules/mobile/mobile/newMessage.php:125
+#: modules/mobile/mobile/newPushMessage.php:125
+msgid "Select a group"
+msgstr ""
+
+#: modules/mobile/mobile/newMessage.php:140
+#: modules/mobile/mobile/newPushMessage.php:140
+msgid "Select a configuration"
+msgstr ""
+
+#: modules/mobile/mobile/newMessage.php:152
+#: modules/mobile/mobile/messaging.php:42
+#: modules/mobile/mobile/messaging.php:81 modules/mobile/mobile/logs.php:70
 msgid "Message"
 msgstr ""
 
-#: modules/mobile/mobile/messaging.php:60
-#: modules/mobile/mobile/pushMessages.php:60
+#: modules/mobile/mobile/newMessage.php:162
+#: modules/mobile/mobile/newPushMessage.php:185
 msgid "Send"
 msgstr ""
 
-#: modules/mobile/mobile/messaging.php:61
-#: modules/mobile/mobile/pushMessages.php:61
+#: modules/mobile/mobile/newMessage.php:165
+#: modules/mobile/mobile/addApplication.php:331
+#: modules/mobile/mobile/newPushMessage.php:188
 msgid "Cancel"
 msgstr ""
 
-#: modules/mobile/mobile/messaging.php:70
-#: modules/mobile/mobile/pushMessages.php:70
+#: modules/mobile/mobile/ajaxConfigurationsList.php:35
+msgid "Delete Configuration"
+msgstr ""
+
+#: modules/mobile/mobile/ajaxConfigurationsList.php:51
+#: modules/mobile/mobile/addConfiguration.php:32
+#: modules/mobile/mobile/ajaxGlpiDevicesList.php:286
+#: modules/mobile/mobile/detailedInfo.php:41
+#: modules/mobile/mobile/addDevice.php:119
+#: modules/mobile/mobile/ajaxDeviceList.php:89
+#: modules/mobile/mobile/ajaxFilesList.php:60
+#: modules/mobile/mobile/addFile.php:162
+msgid "Description"
+msgstr ""
+
+#: modules/mobile/mobile/messaging.php:29
+msgid "Search messages and send new messages to devices"
+msgstr ""
+
+#: modules/mobile/mobile/messaging.php:35
 msgid "Search Messages"
 msgstr ""
 
-#: modules/mobile/mobile/messaging.php:87
-#: modules/mobile/mobile/pushMessages.php:87
-msgid "From"
+#: modules/mobile/mobile/messaging.php:41
+#: modules/mobile/mobile/pushMessages.php:37
+msgid "Search all fields"
 msgstr ""
 
-#: modules/mobile/mobile/messaging.php:93
-#: modules/mobile/mobile/pushMessages.php:93
-msgid "To"
+#: modules/mobile/mobile/messaging.php:49
+msgid "All statuses"
 msgstr ""
 
-#: modules/mobile/mobile/messaging.php:99
-#: modules/mobile/mobile/messaging.php:124
-#: modules/mobile/mobile/pushMessages.php:99
-#: modules/mobile/mobile/ajaxDeviceList.php:83
-msgid "Status"
-msgstr ""
-
-#: modules/mobile/mobile/messaging.php:102
-#: modules/mobile/mobile/pushMessages.php:102
-msgid "All messages"
-msgstr ""
-
-#: modules/mobile/mobile/messaging.php:103
-#: modules/mobile/mobile/pushMessages.php:103
+#: modules/mobile/mobile/messaging.php:50
 msgid "Sent"
 msgstr ""
 
-#: modules/mobile/mobile/messaging.php:104
-#: modules/mobile/mobile/pushMessages.php:104
+#: modules/mobile/mobile/messaging.php:51
 msgid "Delivered"
 msgstr ""
 
-#: modules/mobile/mobile/messaging.php:105
-#: modules/mobile/mobile/pushMessages.php:105
+#: modules/mobile/mobile/messaging.php:52
 msgid "Read"
 msgstr ""
 
-#: modules/mobile/mobile/messaging.php:111
-#: modules/mobile/mobile/pushMessages.php:111
+#: modules/mobile/mobile/messaging.php:57
+#: modules/mobile/mobile/pushMessages.php:45
+msgid "Search..."
+msgstr ""
+
+#: modules/mobile/mobile/messaging.php:58
+#: modules/mobile/mobile/pushMessages.php:46
+msgid "Clear search"
+msgstr ""
+
+#: modules/mobile/mobile/messaging.php:61 modules/mobile/mobile/logs.php:51
+#: modules/mobile/mobile/pushMessages.php:49
 #: modules/mobile/mobile/detailedInfo.php:26
 msgid "Search"
 msgstr ""
 
-#: modules/mobile/mobile/messaging.php:122
-#: modules/mobile/mobile/pushMessages.php:122
+#: modules/mobile/mobile/messaging.php:67
+msgid "New message"
+msgstr ""
+
+#: modules/mobile/mobile/messaging.php:78 modules/mobile/mobile/logs.php:66
+#: modules/mobile/mobile/pushMessages.php:65
 #: modules/mobile/mobile/detailedInfo.php:39
 msgid "Time"
 msgstr ""
 
-#: modules/mobile/mobile/messaging.php:139
-#: modules/mobile/mobile/pushMessages.php:139
+#: modules/mobile/mobile/messaging.php:80
+#: modules/mobile/mobile/ajaxDeviceList.php:93
+msgid "Status"
+msgstr ""
+
+#: modules/mobile/mobile/messaging.php:95
+#: modules/mobile/mobile/pushMessages.php:82
 msgid "No messages found matching the criteria"
+msgstr ""
+
+#: modules/mobile/mobile/qrCode.php:9
+msgid "Missing device number"
+msgstr ""
+
+#: modules/mobile/mobile/qrCode.php:17
+msgid "Unable to fetch configuration QR key"
 msgstr ""
 
 #: modules/mobile/mobile/index.php:6
@@ -279,55 +386,190 @@ msgstr ""
 msgid "Impossible to delete file %s"
 msgstr ""
 
-#: modules/mobile/mobile/ajaxApplicationsList.php:33
+#: modules/mobile/mobile/ajaxApplicationsList.php:40
+msgid "Delete Application"
+msgstr ""
+
+#: modules/mobile/mobile/ajaxApplicationsList.php:47
+#: modules/mobile/mobile/addApplication.php:184
 msgid "Application name"
 msgstr ""
 
-#: modules/mobile/mobile/ajaxApplicationsList.php:42
+#: modules/mobile/mobile/ajaxApplicationsList.php:56
 #: modules/mobile/mobile/detailedInfo.php:66
 msgid "Package ID"
 msgstr ""
 
-#: modules/mobile/mobile/ajaxApplicationsList.php:43
+#: modules/mobile/mobile/ajaxApplicationsList.php:57
+#: modules/mobile/mobile/addApplication.php:200
 msgid "Version"
 msgstr ""
 
-#: modules/mobile/mobile/ajaxApplicationsList.php:44
+#: modules/mobile/mobile/ajaxApplicationsList.php:58
 msgid "URL"
 msgstr ""
 
 #: modules/mobile/mobile/addConfiguration.php:7
-msgid "Configuration du mobile"
+msgid "Add configuration"
+msgstr ""
+
+#: modules/mobile/mobile/addConfiguration.php:23
+msgid "Configuration name"
+msgstr ""
+
+#: modules/mobile/mobile/addConfiguration.php:33
+msgid "Configuration description"
+msgstr ""
+
+#: modules/mobile/mobile/addConfiguration.php:42
+msgid "Group 1"
+msgstr ""
+
+#: modules/mobile/mobile/addConfiguration.php:43
+msgid "Group 2"
+msgstr ""
+
+#: modules/mobile/mobile/addConfiguration.php:44
+msgid "Group 3"
+msgstr ""
+
+#: modules/mobile/mobile/addConfiguration.php:55
+msgid "Apple Conf Background"
+msgstr ""
+
+#: modules/mobile/mobile/addConfiguration.php:56
+msgid "Agent"
+msgstr ""
+
+#: modules/mobile/mobile/addConfiguration.php:57
+msgid "Mode Managed"
+msgstr ""
+
+#: modules/mobile/mobile/addConfiguration.php:58
+msgid "Launcher MIUI (Xiaomi Redmi)"
+msgstr ""
+
+#: modules/mobile/mobile/addConfiguration.php:70
+#: modules/mobile/mobile/addConfiguration.php:71
+#: modules/mobile/mobile/detailedInfo.php:44
+#: modules/mobile/mobile/addDevice.php:186
+msgid "IMEI"
+msgstr ""
+
+#: modules/mobile/mobile/addConfiguration.php:78
+#: modules/mobile/mobile/addDevice.php:208
+msgid "Add"
+msgstr ""
+
+#: modules/mobile/mobile/addConfiguration.php:78
+msgid "Click to add configuration"
 msgstr ""
 
 #: modules/mobile/mobile/deleteGlpiDevice.php:3
 msgid "Not implemented"
 msgstr ""
 
-#: modules/mobile/mobile/pushMessages.php:35
+#: modules/mobile/mobile/logs.php:18
+msgid "Device Logs"
+msgstr ""
+
+#: modules/mobile/mobile/logs.php:19
+msgid "Search device logs with filters and export"
+msgstr ""
+
+#: modules/mobile/mobile/logs.php:28
+#: modules/mobile/mobile/newPushMessage.php:113
+msgid "Clear device"
+msgstr ""
+
+#: modules/mobile/mobile/logs.php:33
+#: modules/mobile/mobile/addApplication.php:192
+msgid "Package name"
+msgstr ""
+
+#: modules/mobile/mobile/logs.php:35
+msgid "Clear app"
+msgstr ""
+
+#: modules/mobile/mobile/logs.php:41
+msgid "Severity search..."
+msgstr ""
+
+#: modules/mobile/mobile/logs.php:42
+msgid "None"
+msgstr ""
+
+#: modules/mobile/mobile/logs.php:43
+msgid "Error"
+msgstr ""
+
+#: modules/mobile/mobile/logs.php:44
+msgid "Warning"
+msgstr ""
+
+#: modules/mobile/mobile/logs.php:45
+msgid "Info"
+msgstr ""
+
+#: modules/mobile/mobile/logs.php:46
+msgid "Debug"
+msgstr ""
+
+#: modules/mobile/mobile/logs.php:47
+msgid "Verbose"
+msgstr ""
+
+#: modules/mobile/mobile/logs.php:57
+msgid "Export"
+msgstr ""
+
+#: modules/mobile/mobile/logs.php:68
+msgid "Package"
+msgstr ""
+
+#: modules/mobile/mobile/logs.php:69
+msgid "Severity"
+msgstr ""
+
+#: modules/mobile/mobile/logs.php:85
+msgid "No logs found matching the criteria"
+msgstr ""
+
+#: modules/mobile/mobile/logs.php:196
+msgid "Failed to export logs"
+msgstr ""
+
+#: modules/mobile/mobile/pushMessages.php:26
 msgid "Push Messages"
 msgstr ""
 
-#: modules/mobile/mobile/pushMessages.php:36
+#: modules/mobile/mobile/pushMessages.php:27
 msgid "Search push messages and send new push messages to devices"
 msgstr ""
 
-#: modules/mobile/mobile/pushMessages.php:124
-#: modules/mobile/mobile/ajaxGlpiDevicesList.php:281
+#: modules/mobile/mobile/pushMessages.php:31
+msgid "Search Push Messages"
+msgstr ""
+
+#: modules/mobile/mobile/pushMessages.php:38
+#: modules/mobile/mobile/pushMessages.php:67
+#: modules/mobile/mobile/ajaxGlpiDevicesList.php:303
 msgid "Type"
 msgstr ""
 
-#: modules/mobile/mobile/pushMessages.php:125
+#: modules/mobile/mobile/pushMessages.php:39
+#: modules/mobile/mobile/pushMessages.php:68
+#: modules/mobile/mobile/newPushMessage.php:175
 msgid "Payload"
+msgstr ""
+
+#: modules/mobile/mobile/pushMessages.php:55
+msgid "New push message"
 msgstr ""
 
 #: modules/mobile/mobile/glpiDevicesList.php:8
 #, php-format
 msgid "All devices %s"
-msgstr ""
-
-#: modules/mobile/mobile/glpiDevicesList.php:15
-msgid "All my entities"
 msgstr ""
 
 #: modules/mobile/mobile/audit.php:14
@@ -354,122 +596,126 @@ msgstr ""
 msgid "Action"
 msgstr ""
 
+#: modules/mobile/mobile/audit.php:26 modules/mobile/mobile/audit.php:36
+msgid "Details"
+msgstr ""
+
 #: modules/mobile/mobile/audit.php:43
 msgid "No audit logs found"
 msgstr ""
 
-#: modules/mobile/mobile/ajaxGlpiDevicesList.php:70
+#: modules/mobile/mobile/ajaxGlpiDevicesList.php:92
 msgid "Inventory"
 msgstr ""
 
-#: modules/mobile/mobile/ajaxGlpiDevicesList.php:71
+#: modules/mobile/mobile/ajaxGlpiDevicesList.php:93
 msgid "GLPI Inventory"
 msgstr ""
 
-#: modules/mobile/mobile/ajaxGlpiDevicesList.php:72
+#: modules/mobile/mobile/ajaxGlpiDevicesList.php:94
 msgid "View deployment details"
 msgstr ""
 
-#: modules/mobile/mobile/ajaxGlpiDevicesList.php:73
-#: modules/mobile/mobile/ajaxGlpiDevicesList.php:78
+#: modules/mobile/mobile/ajaxGlpiDevicesList.php:95
+#: modules/mobile/mobile/ajaxGlpiDevicesList.php:100
 msgid "Software deployment"
 msgstr ""
 
-#: modules/mobile/mobile/ajaxGlpiDevicesList.php:76
+#: modules/mobile/mobile/ajaxGlpiDevicesList.php:98
 msgid "Monitoring"
 msgstr ""
 
-#: modules/mobile/mobile/ajaxGlpiDevicesList.php:77
-#: modules/mobile/mobile/ajaxGlpiDevicesList.php:86
-#: modules/mobile/mobile/ajaxGlpiDevicesList.php:96
+#: modules/mobile/mobile/ajaxGlpiDevicesList.php:99
+#: modules/mobile/mobile/ajaxGlpiDevicesList.php:108
+#: modules/mobile/mobile/ajaxGlpiDevicesList.php:118
 msgid "Remote control"
 msgstr ""
 
-#: modules/mobile/mobile/ajaxGlpiDevicesList.php:80
-#: modules/mobile/mobile/ajaxGlpiDevicesList.php:81
+#: modules/mobile/mobile/ajaxGlpiDevicesList.php:102
+#: modules/mobile/mobile/ajaxGlpiDevicesList.php:103
 msgid "xmppconsole"
 msgstr ""
 
-#: modules/mobile/mobile/ajaxGlpiDevicesList.php:83
-#: modules/mobile/mobile/ajaxGlpiDevicesList.php:84
+#: modules/mobile/mobile/ajaxGlpiDevicesList.php:105
+#: modules/mobile/mobile/ajaxGlpiDevicesList.php:106
 msgid "Edit config files"
 msgstr ""
 
-#: modules/mobile/mobile/ajaxGlpiDevicesList.php:88
+#: modules/mobile/mobile/ajaxGlpiDevicesList.php:110
 msgid "Imaging management"
 msgstr ""
 
-#: modules/mobile/mobile/ajaxGlpiDevicesList.php:89
+#: modules/mobile/mobile/ajaxGlpiDevicesList.php:111
 msgid "extTicket issue"
 msgstr ""
 
-#: modules/mobile/mobile/ajaxGlpiDevicesList.php:91
+#: modules/mobile/mobile/ajaxGlpiDevicesList.php:113
 msgid "Show Profile"
 msgstr ""
 
-#: modules/mobile/mobile/ajaxGlpiDevicesList.php:93
+#: modules/mobile/mobile/ajaxGlpiDevicesList.php:115
 msgid "Quick action"
 msgstr ""
 
-#: modules/mobile/mobile/ajaxGlpiDevicesList.php:260
+#: modules/mobile/mobile/ajaxGlpiDevicesList.php:282
 msgid "Device Name"
 msgstr ""
 
-#: modules/mobile/mobile/ajaxGlpiDevicesList.php:267
+#: modules/mobile/mobile/ajaxGlpiDevicesList.php:289
 msgid "Manufacturer"
 msgstr ""
 
-#: modules/mobile/mobile/ajaxGlpiDevicesList.php:270
+#: modules/mobile/mobile/ajaxGlpiDevicesList.php:292
 msgid "Operating System"
 msgstr ""
 
-#: modules/mobile/mobile/ajaxGlpiDevicesList.php:282
+#: modules/mobile/mobile/ajaxGlpiDevicesList.php:304
 #: modules/mobile/mobile/detailedInfo.php:54
-#: modules/mobile/mobile/ajaxDeviceList.php:81
+#: modules/mobile/mobile/ajaxDeviceList.php:91
 msgid "Model"
 msgstr ""
 
-#: modules/mobile/mobile/ajaxGlpiDevicesList.php:283
+#: modules/mobile/mobile/ajaxGlpiDevicesList.php:305
 msgid "Alternate Username"
 msgstr ""
 
-#: modules/mobile/mobile/ajaxGlpiDevicesList.php:284
+#: modules/mobile/mobile/ajaxGlpiDevicesList.php:306
 msgid "Last Update"
 msgstr ""
 
-#: modules/mobile/mobile/ajaxGlpiDevicesList.php:288
+#: modules/mobile/mobile/ajaxGlpiDevicesList.php:310
 msgid "Last Logged User"
 msgstr ""
 
-#: modules/mobile/mobile/ajaxGlpiDevicesList.php:291
+#: modules/mobile/mobile/ajaxGlpiDevicesList.php:313
 msgid "Owner"
 msgstr ""
 
-#: modules/mobile/mobile/ajaxGlpiDevicesList.php:294
+#: modules/mobile/mobile/ajaxGlpiDevicesList.php:316
 msgid "Entity"
 msgstr ""
 
-#: modules/mobile/mobile/ajaxGlpiDevicesList.php:297
+#: modules/mobile/mobile/ajaxGlpiDevicesList.php:319
 msgid "Localization"
 msgstr ""
 
-#: modules/mobile/mobile/ajaxGlpiDevicesList.php:300
+#: modules/mobile/mobile/ajaxGlpiDevicesList.php:322
 msgid "Owner Firstname"
 msgstr ""
 
-#: modules/mobile/mobile/ajaxGlpiDevicesList.php:303
+#: modules/mobile/mobile/ajaxGlpiDevicesList.php:325
 msgid "Owner Real Name"
 msgstr ""
 
-#: modules/mobile/mobile/ajaxGlpiDevicesList.php:327
+#: modules/mobile/mobile/ajaxGlpiDevicesList.php:349
 msgid "Backup status"
 msgstr ""
 
-#: modules/mobile/mobile/ajaxGlpiDevicesList.php:337
+#: modules/mobile/mobile/ajaxGlpiDevicesList.php:359
 msgid "Urbackup"
 msgstr ""
 
-#: modules/mobile/mobile/ajaxGlpiDevicesList.php:367
+#: modules/mobile/mobile/ajaxGlpiDevicesList.php:389
 msgid "Delete computer"
 msgstr ""
 
@@ -482,6 +728,10 @@ msgstr ""
 msgid "Search for a device and view its detailed information"
 msgstr ""
 
+#: modules/mobile/mobile/detailedInfo.php:21
+msgid "Search device..."
+msgstr ""
+
 #: modules/mobile/mobile/detailedInfo.php:40
 msgid "Device number"
 msgstr ""
@@ -492,10 +742,6 @@ msgstr ""
 
 #: modules/mobile/mobile/detailedInfo.php:43
 msgid "IMEI (required)"
-msgstr ""
-
-#: modules/mobile/mobile/detailedInfo.php:44
-msgid "IMEI"
 msgstr ""
 
 #: modules/mobile/mobile/detailedInfo.php:45
@@ -592,6 +838,119 @@ msgstr ""
 msgid "No information found for this device"
 msgstr ""
 
+#: modules/mobile/mobile/addApplication.php:20
+msgid "Icon name is required"
+msgstr ""
+
+#: modules/mobile/mobile/addApplication.php:26
+msgid "File ID is required"
+msgstr ""
+
+#: modules/mobile/mobile/addApplication.php:44
+msgid "Failed to create icon"
+msgstr ""
+
+#: modules/mobile/mobile/addApplication.php:95
+msgid "Application name is required."
+msgstr ""
+
+#: modules/mobile/mobile/addApplication.php:99
+msgid "Package name is required (ex: com.example.app)."
+msgstr ""
+
+#: modules/mobile/mobile/addApplication.php:102
+msgid "Package name contains invalid characters."
+msgstr ""
+
+#: modules/mobile/mobile/addApplication.php:106
+msgid "APK URL is not valid."
+msgstr ""
+
+#: modules/mobile/mobile/addApplication.php:156
+msgid "Error while adding the application."
+msgstr ""
+
+#: modules/mobile/mobile/addApplication.php:213
+msgid "System"
+msgstr ""
+
+#: modules/mobile/mobile/addApplication.php:223
+msgid "APK URL"
+msgstr ""
+
+#: modules/mobile/mobile/addApplication.php:232
+msgid "Choose your architecture"
+msgstr ""
+
+#: modules/mobile/mobile/addApplication.php:243
+msgid "Architecture"
+msgstr ""
+
+#: modules/mobile/mobile/addApplication.php:257
+msgid "Show icon"
+msgstr ""
+
+#: modules/mobile/mobile/addApplication.php:263
+msgid "Choose an icon"
+msgstr ""
+
+#: modules/mobile/mobile/addApplication.php:275
+msgid "Icon"
+msgstr ""
+
+#: modules/mobile/mobile/addApplication.php:280
+msgid "New icon"
+msgstr ""
+
+#: modules/mobile/mobile/addApplication.php:287
+msgid "Icon text"
+msgstr ""
+
+#: modules/mobile/mobile/addApplication.php:307
+msgid "Create new icon"
+msgstr ""
+
+#: modules/mobile/mobile/addApplication.php:310
+msgid "Icon name"
+msgstr ""
+
+#: modules/mobile/mobile/addApplication.php:315
+msgid "Select file"
+msgstr ""
+
+#: modules/mobile/mobile/addApplication.php:317
+msgid "Choose a file"
+msgstr ""
+
+#: modules/mobile/mobile/addApplication.php:321
+msgid "Unknown"
+msgstr ""
+
+#: modules/mobile/mobile/addApplication.php:332
+msgid "Save"
+msgstr ""
+
+#: modules/mobile/mobile/addApplication.php:423
+msgid "Please enter an icon name"
+msgstr ""
+
+#: modules/mobile/mobile/addApplication.php:427
+msgid "Please select a file"
+msgstr ""
+
+#: modules/mobile/mobile/addApplication.php:447
+msgid "Icon created successfully"
+msgstr ""
+
+#: modules/mobile/mobile/addApplication.php:452
+#: modules/mobile/mobile/addApplication.php:457
+msgid "Error creating icon"
+msgstr ""
+
+#: modules/mobile/mobile/addApplication.php:452
+msgid "Unknown error"
+msgstr ""
+
 #: modules/mobile/mobile/deleteApplication.php:24
 #, php-format
 msgid "Application %s successfully deleted"
@@ -612,58 +971,195 @@ msgstr ""
 msgid "Impossible to delete configuration %s"
 msgstr ""
 
-#: modules/mobile/mobile/addDevice.php:70
-msgid "<label for=\"add-phone\">Device's name</label>"
+#: modules/mobile/mobile/addDevice.php:53
+msgid "The device name is required"
 msgstr ""
 
-#: modules/mobile/mobile/addDevice.php:82
-msgid "<label for=\"desc-zone\">Description</label>"
+#: modules/mobile/mobile/addDevice.php:55
+msgid "The device name contains invalid characters"
 msgstr ""
 
-#: modules/mobile/mobile/addDevice.php:94
-msgid "<label for=\"status_conf\">Configuration</label>"
+#: modules/mobile/mobile/addDevice.php:75
+#, php-format
+msgid "Device '%s' successfully created"
 msgstr ""
 
-#: modules/mobile/mobile/addDevice.php:106
-msgid "<label for=\"status_group\">Group</label>"
+#: modules/mobile/mobile/addDevice.php:79
+msgid "Unknown error occurred"
 msgstr ""
 
-#: modules/mobile/mobile/ajaxDeviceList.php:72
-msgid "Device's name"
+#: modules/mobile/mobile/addDevice.php:80
+#, php-format
+msgid "Failed to create device: %s"
 msgstr ""
 
-#: modules/mobile/mobile/ajaxDeviceList.php:82
+#: modules/mobile/mobile/addDevice.php:109
+msgid "Enter device name"
+msgstr ""
+
+#: modules/mobile/mobile/addDevice.php:124
+msgid "Enter description"
+msgstr ""
+
+#: modules/mobile/mobile/addDevice.php:177
+msgid "Select group"
+msgstr ""
+
+#: modules/mobile/mobile/addDevice.php:198
+msgid "Mobile number"
+msgstr ""
+
+#: modules/mobile/mobile/ajaxDeviceList.php:92
 msgid "IP address"
 msgstr ""
 
-#: modules/mobile/mobile/ajaxFilesList.php:34
+#: modules/mobile/mobile/ajaxFilesList.php:44
+msgid "Delete File"
+msgstr ""
+
+#: modules/mobile/mobile/ajaxFilesList.php:51
+#: modules/mobile/mobile/addFile.php:130
 msgid "File"
 msgstr ""
 
-#: modules/mobile/mobile/ajaxFilesList.php:44
+#: modules/mobile/mobile/ajaxFilesList.php:61
 msgid "Size"
 msgstr ""
 
-#: modules/mobile/mobile/ajaxFilesList.php:45
+#: modules/mobile/mobile/ajaxFilesList.php:62
 msgid "Updated at"
 msgstr ""
 
-#: modules/mobile/mobile/ajaxFilesList.php:46
+#: modules/mobile/mobile/ajaxFilesList.php:63
 msgid "Path on device"
 msgstr ""
 
-#: modules/mobile/mobile/ajaxFilesList.php:47
+#: modules/mobile/mobile/ajaxFilesList.php:64
 msgid "External"
 msgstr ""
 
-#: modules/mobile/mobile/ajaxFilesList.php:48
+#: modules/mobile/mobile/ajaxFilesList.php:65
 msgid "Variable"
 msgstr ""
 
-#: modules/mobile/mobile/localSidebar.php:7
-msgid "All devices"
+#: modules/mobile/mobile/localSidebar.php:17
+msgid "Add Configuration"
 msgstr ""
 
-#: modules/mobile/mobile/localSidebar.php:15
-msgid "Add Configuration"
+#: modules/mobile/mobile/newPushMessage.php:14
+msgid "Send New Push Message"
+msgstr ""
+
+#: modules/mobile/mobile/newPushMessage.php:59
+msgid "Push message sent successfully"
+msgstr ""
+
+#: modules/mobile/mobile/newPushMessage.php:68
+msgid "Failed to send push message. Please try again."
+msgstr ""
+
+#: modules/mobile/mobile/newPushMessage.php:78
+msgid "Send a push message to devices, groups, configurations, or all devices"
+msgstr ""
+
+#: modules/mobile/mobile/newPushMessage.php:152
+msgid "Message Type"
+msgstr ""
+
+#: modules/mobile/mobile/addFile.php:19 modules/mobile/mobile/addFile.php:207
+msgid "Add File"
+msgstr ""
+
+#: modules/mobile/mobile/addFile.php:47
+msgid "Please select a file to upload"
+msgstr ""
+
+#: modules/mobile/mobile/addFile.php:52
+msgid "File name is required"
+msgstr ""
+
+#: modules/mobile/mobile/addFile.php:62
+#, php-format
+msgid "File '%s' successfully added"
+msgstr ""
+
+#: modules/mobile/mobile/addFile.php:66 modules/mobile/mobile/addFile.php:89
+msgid "Failed to add file"
+msgstr ""
+
+#: modules/mobile/mobile/addFile.php:75
+msgid "File URL is required"
+msgstr ""
+
+#: modules/mobile/mobile/addFile.php:77
+msgid "Please enter a valid URL"
+msgstr ""
+
+#: modules/mobile/mobile/addFile.php:85
+#, php-format
+msgid "External file '%s' successfully added"
+msgstr ""
+
+#: modules/mobile/mobile/addFile.php:112
+msgid "File Source"
+msgstr ""
+
+#: modules/mobile/mobile/addFile.php:119
+msgid "Upload from this web page"
+msgstr ""
+
+#: modules/mobile/mobile/addFile.php:120
+msgid "External file (URL)"
+msgstr ""
+
+#: modules/mobile/mobile/addFile.php:125
+msgid "Source"
+msgstr ""
+
+#: modules/mobile/mobile/addFile.php:139
+msgid "File Name"
+msgstr ""
+
+#: modules/mobile/mobile/addFile.php:143
+msgid "Auto-filled from upload"
+msgstr ""
+
+#: modules/mobile/mobile/addFile.php:149
+msgid "File URL"
+msgstr ""
+
+#: modules/mobile/mobile/addFile.php:153
+msgid "https://example.com/file.apk"
+msgstr ""
+
+#: modules/mobile/mobile/addFile.php:157
+msgid "File Details"
+msgstr ""
+
+#: modules/mobile/mobile/addFile.php:165
+msgid "Optional description"
+msgstr ""
+
+#: modules/mobile/mobile/addFile.php:170
+msgid "Path on Device"
+msgstr ""
+
+#: modules/mobile/mobile/addFile.php:175
+msgid "Path relative to /storage/emulated/0"
+msgstr ""
+
+#: modules/mobile/mobile/addFile.php:181
+msgid "Variable Content"
+msgstr ""
+
+#: modules/mobile/mobile/addFile.php:184
+msgid "Mark if file content will be processed on device"
+msgstr ""
+
+#: modules/mobile/mobile/addFile.php:188
+msgid "Link to Configurations"
+msgstr ""
+
+#: modules/mobile/mobile/addFile.php:203
+msgid "No configurations available"
 msgstr ""
