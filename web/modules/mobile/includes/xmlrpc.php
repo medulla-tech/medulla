@@ -67,6 +67,12 @@ function xmlrpc_get_hmdm_push_messages($device_number="", $message_filter="", $s
 function xmlrpc_get_hmdm_groups(){
     return xmlCall("mobile.getHmdmGroups", array());
 }
+function xmlrpc_add_hmdm_group($name){
+    return xmlCall("mobile.addHmdmGroup", array($name));
+}
+function xmlrpc_delete_hmdm_group_by_id($id){
+    return xmlCall("mobile.deleteHmdmGroupById", array($id));
+}
 function xmlrpc_send_hmdm_message($scope, $device_number="", $group_id="", $configuration_id="", $message=""){
     return xmlCall("mobile.sendHmdmMessage", array($scope, $device_number, $group_id, $configuration_id, $message));
 }

@@ -1217,6 +1217,71 @@ class MobileDatabase(DatabaseHelper):
             logging.getLogger().error(f"Error fetching groups: {e}")
             return []
 
+    def addHmdmGroup(self, name):
+        """
+        Create a new group in HMDM.
+        
+        :param name: Group name (required)
+        :return: Response from HMDM or None on error
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Impossible to authenticate to create group.")
+            return None
+
+        url = f"{self.BASE_URL}/private/groups"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+
+        group_data = {
+            "name": name
+        }
+
+        try:
+            logging.getLogger().info(f"Creating group in HMDM: {json.dumps(group_data, indent=2)}")
+            resp = requests.put(url, json=group_data, headers=headers)
+            logging.getLogger().info(f"HMDM group creation HTTP status: {resp.status_code}")
+            logging.getLogger().info(f"HMDM group creation response: {resp.text}")
+            resp.raise_for_status()
+            
+            resp_json = resp.json()
+            resp_json["message"] = resp_json.get("message") or ""
+            resp_json["data"] = resp_json.get("data") or {}
+            
+            logging.getLogger().info(f"Group '{name}' created successfully in HMDM.")
+            return resp_json
+        except Exception as e:
+            logging.getLogger().error(f"Error creating group '{name}': {e}")
+            return None
+
+    def deleteHmdmGroupById(self, group_id):
+        """
+        Delete a group from HMDM by its ID.
+
+        :param group_id: The group ID to delete.
+        :return: True if deleted, False otherwise.
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Impossible to authenticate to delete group.")
+            return False
+
+        url = f"{self.BASE_URL}/private/groups/{group_id}"
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {hmtoken}"
+        }
+
+        try:
+            resp = requests.delete(url, headers=headers)
+            resp.raise_for_status()
+
+            logging.getLogger().info(f"Group {group_id} deleted successfully.")
+            return True
+
+        except Exception as e:
+            logging.getLogger().error(f"Error deleting group {group_id}: {e}")
+            return False
+
     def sendHmdmMessage(self, scope, device_number="", group_id="", configuration_id="", message=""):
         """
         Send a message to devices, groups, configurations, or all devices via HMDM.

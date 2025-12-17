@@ -161,6 +161,27 @@ $pageDeleteConfiguration->setFile("modules/mobile/mobile/deleteConfiguration.php
 $pageDeleteConfiguration->setOptions(array("AJAX" => false, "visible" => false));
 $submod->addPage($pageDeleteConfiguration);
 
+################################
+# Groups pages
+################################
+
+$pageGroups = new Page("groups", _T('All groups', 'mobile'));
+$pageGroups->setFile("modules/mobile/mobile/groups.php");
+$submod->addPage($pageGroups);
+
+$pageAddGroup = new Page("addGroup", _T('Add a group', 'mobile'));
+$pageAddGroup->setFile("modules/mobile/mobile/addGroup.php");
+$submod->addPage($pageAddGroup);
+
+$pageAjaxGroupList = new Page("ajaxGroupList", _T('Groups list view', 'mobile'));
+$pageAjaxGroupList->setFile("modules/mobile/mobile/ajaxGroupList.php");
+$pageAjaxGroupList->setOptions(array("AJAX" => true, "visible" => false));
+$submod->addPage($pageAjaxGroupList);
+
+$pageDeleteGroup = new Page("deleteGroup", _T('Delete group', 'mobile'));
+$pageDeleteGroup->setFile("modules/mobile/mobile/deleteGroup.php");
+$pageDeleteGroup->setOptions(array("AJAX" => false, "visible" => false));
+$submod->addPage($pageDeleteGroup);
 
 ################################
 # Functions page (HMDM features)
