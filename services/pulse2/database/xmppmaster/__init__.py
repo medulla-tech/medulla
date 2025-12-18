@@ -8280,8 +8280,8 @@ class XmppMasterDatabase(DatabaseHelper):
         # fiel for table ent and alias
         entityfield = {
             "entityname": "name",
-            "entitypath": "completename",
-            "entityid": "id",
+            "entitypath": "complete_name",
+            "entityid": "glpi_id",
         }
         # fiel for table location and alias
         locationfield = {
@@ -8336,7 +8336,7 @@ class XmppMasterDatabase(DatabaseHelper):
                         "mach.id",
                         "mach.glpi_entity_id",
                         "mach.glpi_location_id",
-                        "ent.id",
+                        "ent.glpi_id",
                         "loc.glpi_id",
                     ]:
                         recherchefild = " AND %s = '%s'" % (
@@ -8363,7 +8363,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 ]
                 if entitylist:
                     entitystrlist = ",".join(entitylist)
-                    entity = " AND ent.id in (%s) " % entitystrlist
+                    entity = " AND ent.glpi_id in (%s) " % entitystrlist
 
         ordered = ""
         if self.config.ordered == 1:
@@ -8410,8 +8410,8 @@ class XmppMasterDatabase(DatabaseHelper):
                     loc.complete_name AS locationpath,
                     loc.glpi_id AS locationid,
                     ent.name AS entityname,
-                    ent.completename AS entitypath,
-                    ent.id AS entityid,
+                    ent.complete_name AS entitypath,
+                    ent.glpi_id AS entityid,
                     GROUP_CONCAT(DISTINCT IF( netw.ipaddress='', null,netw.ipaddress) SEPARATOR ',') AS listipadress,
                     GROUP_CONCAT(DISTINCT IF( netw.broadcast='', null,netw.broadcast) SEPARATOR ',') AS broadcast,
                     GROUP_CONCAT(DISTINCT IF( netw.gateway='', null,netw.gateway) SEPARATOR ',') AS gateway,
@@ -8421,9 +8421,7 @@ class XmppMasterDatabase(DatabaseHelper):
                         INNER JOIN
                     local_glpi_filters lgf on CONCAT("UUID", lgf.id) = mach.uuid_inventorymachine
                         LEFT OUTER JOIN
-                    local_glpi_machines lgm ON CONCAT("UUID", lgm.id) = mach.uuid_inventorymachine
-                        LEFT OUTER JOIN
-                    local_glpi_entities ent ON lgm.entities_id = ent.id
+                    glpi_entity ent ON lgf.entities_id = ent.glpi_id
                         LEFT OUTER JOIN
                     glpi_location loc ON loc.id = mach.glpi_location_id
                         LEFT OUTER JOIN
