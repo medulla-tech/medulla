@@ -30,7 +30,7 @@ from mmc.plugins.report.config import ReportConfig, reportconfdir
 from mmc.plugins.report.database import ReportDatabase
 from mmc.plugins.report.output import XLSGenerator, PDFGenerator, SVGGenerator
 
-VERSION = "5.4.4"
+VERSION = "5.4.5"
 APIVERSION = "0:1:0"
 REVISION = scmRevision("$Rev$")
 

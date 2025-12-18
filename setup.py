@@ -24,7 +24,7 @@ setup(
     ],
     keywords="pulse2",
     name="pulse2",
-    version='5.4.4',  # fmt: skip
+    version='5.4.5',  # fmt: skip
     debian_distro='stretch',  # fmt: skip
     description="pulse2",
     url="https://medulla-tech.io/",
