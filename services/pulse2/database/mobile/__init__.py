@@ -1081,9 +1081,56 @@ class MobileDatabase(DatabaseHelper):
             resp = requests.get(url, headers=headers)
             resp.raise_for_status()
             raw = resp.json()
-            return raw.get('data', {}).get('qrCodeKey')
+            config_data = raw.get('data', {})
+            # Log the raw configuration for debugging
+            logging.getLogger().info(f"Retrieved configuration {config_id}: {json.dumps(config_data, indent=2)}")
+            return config_data
         except Exception as e:
             logging.getLogger().error(f"Error fetching configuration {config_id}: {e}")
+            return None
+
+    def updateHmdmConfiguration(self, config_data: dict):
+        """
+        Update an existing HMDM configuration by merging changes into the existing config.
+        """
+        if not isinstance(config_data, dict):
+            logging.getLogger().error("config_data must be a dict")
+            return None
+
+        config_id = config_data.get("id") or config_data.get("configurationId")
+        if not config_id:
+            logging.getLogger().error("Configuration ID is required to update configuration.")
+            return None
+
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Impossible d'authentifier pour mettre à jour la configuration.")
+            return None
+
+        # First, GET the existing configuration
+        existing = self.getHmdmConfigurationById(config_id)
+        if not existing:
+            logging.getLogger().error(f"Could not fetch existing configuration {config_id}")
+            return None
+
+        # Merge user changes into existing config
+        existing.update(config_data)
+
+        url = f"{self.BASE_URL}/private/configurations"
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {hmtoken}"
+        }
+
+        try:
+            logging.getLogger().info(f"Updating HMDM configuration {config_id} with merged payload: {json.dumps(existing, indent=2)}")
+            resp = requests.put(url, headers=headers, json=existing)
+            resp.raise_for_status()
+            data = resp.json()
+            logging.getLogger().info(f"Configuration {config_id} updated successfully: {data}")
+            return data.get('data', data)
+        except Exception as e:
+            logging.getLogger().error(f"Error updating configuration {config_id}: {e}")
             return None
 
     def deleteHmdmDeviceById(self, device_id: int):

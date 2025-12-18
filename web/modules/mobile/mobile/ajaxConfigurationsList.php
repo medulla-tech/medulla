@@ -18,6 +18,7 @@ if (!empty($filter)) {
 
 $ids = $col1 = $descriptions = [];
 $actionDelete = [];
+$actionModify = [];
 $params = [];
 
 foreach ($configs as $index => $cfg) {
@@ -28,11 +29,17 @@ foreach ($configs as $index => $cfg) {
     $name = htmlspecialchars($cfg['name'] ?? 'Unnamed');
     $desc = htmlspecialchars($cfg['description'] ?? '-');
 
-    $col1[] = "<a href='#' class='cfglink'>{$name}</a>";
+    // Link to configuration details in-place (no new tab)
+    $detailsUrl = urlStr("mobile/mobile/configurationDetails", array("id" => $cfgId));
+    $col1[] = "<a href='" . htmlspecialchars($detailsUrl, ENT_QUOTES, 'UTF-8') . "' class='cfglink'>{$name}</a>";
     $descriptions[] = $desc;
 
+        // Build Modify action (same tab)
+        $actionModify[] = new ActionItem(_T("Modify", "mobile"), "configurationDetails", "edit", "id", "mobile", "mobile");
+
         // Build ActionPopupItem (Delete)
-        $actionDelete[] = new ActionPopupItem(_("Delete Configuration"), "deleteConfiguration", "delete", "", "mobile", "mobile");
+        $actionDelete[] = new ActionPopupItem(_T("Delete Configuration", "mobile"), "deleteConfiguration", "delete", "", "mobile", "mobile");
+
         $params[] = [
             'id' => $cfgId,
             'name' => $name,
@@ -50,6 +57,7 @@ $n->setNavBar(new AjaxNavBar($count, $filter));
 
 $n->addExtraInfo($descriptions, _T("Description", "mobile"));
 // Attach actions
+$n->addActionItemArray($actionModify);
 $n->addActionItemArray($actionDelete);
 $n->setParamInfo($params);
 

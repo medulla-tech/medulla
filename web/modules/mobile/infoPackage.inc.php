@@ -151,6 +151,10 @@ $pageConfigurations = new Page("configurations", _T('Configurations', 'mobile'))
 $pageConfigurations->setFile("modules/mobile/mobile/configurationsList.php");
 $submod->addPage($pageConfigurations);
 
+$pageConfigurationDetails = new Page("configurationDetails", _T('Configuration details', 'mobile'));
+$pageConfigurationDetails->setFile("modules/mobile/mobile/configurationDetails.php");
+$submod->addPage($pageConfigurationDetails);
+
 $pageAjaxConfigurationsList = new Page("ajaxConfigurationsList", _T('Configurations list view', 'mobile'));
 $pageAjaxConfigurationsList->setFile("modules/mobile/mobile/ajaxConfigurationsList.php");
 $pageAjaxConfigurationsList->setOptions(array("AJAX" => true, "visible" => false));

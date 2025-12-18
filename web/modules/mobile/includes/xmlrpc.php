@@ -42,6 +42,9 @@ function xmlrpc_delete_configuration_by_id($id){
 function xmlrpc_get_hmdm_configuration_by_id($id){
     return xmlCall("mobile.getHmdmConfigurationById", array($id));
 }
+function xmlrpc_update_hmdm_configuration($config_data){
+    return xmlCall("mobile.updateHmdmConfiguration", array($config_data));
+}
 function xmlrpc_delete_hmdm_device_by_id($id){
     return xmlCall("mobile.deleteDeviceById", array($id));
 }
