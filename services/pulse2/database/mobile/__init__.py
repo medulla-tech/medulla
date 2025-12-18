@@ -441,29 +441,76 @@ class MobileDatabase(DatabaseHelper):
         url = f"{self.BASE_URL}/private/icons"
         headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
 
+        # Build base payload
         payload = {
-            "id": 0,
             "name": icon_data.get("name", ""),
             "fileId": int(icon_data.get("fileId", 0)),
             "fileName": icon_data.get("fileName", "")
         }
 
-        logging.getLogger().info(f"[mobile] addHmdmIcon payload: {json.dumps(payload)}")
+        # If an id is provided, treat this as an update operation
+        icon_id = icon_data.get("id") if isinstance(icon_data, dict) else None
+        is_update = False
+        try:
+            if icon_id is not None and str(icon_id).strip() != "":
+                payload["id"] = int(icon_id)
+                is_update = True
+        except Exception:
+            # ignore invalid id, proceed as create
+            is_update = False
+
+        logging.getLogger().info(f"[mobile] addHmdmIcon payload (update={is_update}): {json.dumps(payload)}")
 
         try:
+            # PUT is used for both create and update in HMDM API
             resp = requests.put(url, headers=headers, json=payload)
             resp.raise_for_status()
             data = resp.json()
             logging.getLogger().info(f"[mobile] addHmdmIcon response: {json.dumps(data)}")
             if data.get("status") == "OK":
-                logging.getLogger().info(f"Icon created successfully.")
+                if is_update:
+                    logging.getLogger().info(f"Icon (id={payload.get('id')}) updated successfully.")
+                else:
+                    logging.getLogger().info(f"Icon created successfully.")
                 return data.get("data")
             else:
-                logging.getLogger().error(f"Failed to create icon: {data}")
+                action = "update" if is_update else "create"
+                logging.getLogger().error(f"Failed to {action} icon: {data}")
                 return None
         except Exception as e:
-            logging.getLogger().error(f"Failed to create icon: {e}")
-            return None    
+            action = "update" if is_update else "create"
+            logging.getLogger().error(f"Failed to {action} icon: {e}")
+            return None
+
+    def deleteHmdmIconsById(self, id):
+        """
+        Delete an icon in HMDM by its ID.
+        
+        :param id: Icon ID to delete
+        :return: True if deletion was successful, False otherwise
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Failed to authenticate when deleting icon.")
+            return False
+
+        url = f"{self.BASE_URL}/private/icons/{id}"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+
+        try:
+            resp = requests.delete(url, headers=headers)
+            resp.raise_for_status()
+            data = resp.json()
+            logging.getLogger().info(f"[mobile] deleteHmdmIconsById response: {json.dumps(data)}")
+            if data.get("status") == "OK":
+                logging.getLogger().info(f"Icon (id={id}) deleted successfully.")
+                return True
+            else:
+                logging.getLogger().error(f"Failed to delete icon (id={id}): {data}")
+                return False
+        except Exception as e:
+            logging.getLogger().error(f"Failed to delete icon (id={id}): {e}")
+            return False
 
     def searchHmdmDevices(self, filter_text=""):
         """
@@ -1573,12 +1620,12 @@ class MobileDatabase(DatabaseHelper):
         # flags in the payload instead.
 
         payload = {
+            "type": app_data.get("type", ""),
             "pkg": app_data.get("pkg", ""),
             "name": app_data.get("name", ""),
             "showIcon": False,
             "useKiosk": False,
             "system": False,
-            "type": "app",
         }
 
         # Optional fields
@@ -1635,3 +1682,4 @@ class MobileDatabase(DatabaseHelper):
         except Exception as e:
             logging.getLogger().error(f"Error adding/updating application: {e}")
             return None    
+

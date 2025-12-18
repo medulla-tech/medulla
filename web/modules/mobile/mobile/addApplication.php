@@ -5,51 +5,7 @@
 // error_log('[mobile] addApplication.php loaded');
 // echo "<!-- DEBUG: addApplication.php loaded -->\n";
 
-// Handle AJAX icon creation request
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'create_icon') {
-    require_once("modules/mobile/includes/xmlrpc.php");
-    
-    header('Content-Type: application/json');
-    $response = ['success' => false, 'error' => ''];
-    
-    $name = trim($_POST['name'] ?? '');
-    $fileId = trim($_POST['fileId'] ?? '');
-    $fileName = trim($_POST['fileName'] ?? '');
-    
-    if (empty($name)) {
-        $response['error'] = _T('Icon name is required', 'mobile');
-        echo json_encode($response);
-        exit;
-    }
-    
-    if (empty($fileId)) {
-        $response['error'] = _T('File ID is required', 'mobile');
-        echo json_encode($response);
-        exit;
-    }
-    
-    $iconData = [
-        'name' => $name,
-        'fileId' => $fileId,
-        'fileName' => $fileName
-    ];
-    
-    try {
-        $result = xmlrpc_add_hmdm_icon($iconData);
-        
-        if ($result !== false && $result !== null) {
-            $response['success'] = true;
-            $response['data'] = $result;
-        } else {
-            $response['error'] = _T('Failed to create icon', 'mobile');
-        }
-    } catch (Exception $e) {
-        $response['error'] = $e->getMessage();
-    }
-    
-    echo json_encode($response);
-    exit;
-}
+// AJAX icon creation is handled by modules/mobile/mobile/ajaxCreateIcon.php
 
 require("graph/navbar.inc.php");
 require("localSidebar.php");
@@ -57,12 +13,12 @@ require("localSidebar.php");
 require_once("modules/imaging/includes/class_form.php");
 require_once("modules/mobile/includes/xmlrpc.php");
 
-// Fetch icons and files for dropdowns
-$availableIcons = xmlrpc_get_hmdm_icons();
+// Fetch files for the "New icon" modal dropdown. Icons themselves are loaded via AJAX.
 $availableFiles = xmlrpc_get_hmdm_files();
 
 $errors = [];
 $values = [
+    'type' => '',
     'name' => '',
     'pkg' => '',
     'version' => '',
@@ -76,6 +32,7 @@ $values = [
 
 // POST handler
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['test'])) {
+    $values['type'] = trim($_POST['type'] ?? '');
     $values['name'] = trim($_POST['name'] ?? '');
     $values['pkg'] = trim($_POST['pkg'] ?? '');
     $values['version'] = trim($_POST['version'] ?? '');
@@ -154,7 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['test'])) {
 
         if ($resp === false || $resp === null) {
             $errors['global'] = _T("Error while adding the application.", "mobile");
-            error_log('[mobile] ERROR: xmlrpc_add_application returned false/null');
+            error_log('[mobile] ERROR: xmlrpc_add_hmdm_application returned false/null');
             error_log('[mobile] === POST HANDLER FAILED ===');
         } else {
             error_log('[mobile] SUCCESS: Application created');
@@ -178,6 +135,27 @@ function showError($field, $errors) {
     }
     return '';
 }
+
+// --- Type 
+$typeSelect = new SelectItem('type');
+$typeSelect->setElements([
+    _T('Choose your type', 'mobile'),
+    'Application',
+    'Web Page',
+    'System Action',
+]);
+$typeSelect->setElementsVal([
+    '',
+    'Application',
+    'Web Page',
+    'System Action',
+]);
+$typeSelect->style = 'type-field';
+$formAddApplication->add(new TrFormElement(
+    _T('Type', 'mobile'),
+    $typeSelect
+));
+$formAddApplication->add(new TrFormElement('', $sep));
 
 // --- Name
 $formAddApplication->add(new TrFormElement(
@@ -258,18 +236,13 @@ $formAddApplication->add(new TrFormElement(
     $checkboxIcon
 ));
 
-// --- Icon dropdown
+// --- Icon dropdown (initially empty; populated by AJAX)
 $iconSelect = new SelectItem('icon_id');
-$iconNames = [_T('Choose an icon', 'mobile')];
-$iconValues = [''];
-if (is_array($availableIcons)) {
-    foreach ($availableIcons as $icon) {
-        $iconNames[] = $icon['name'];
-        $iconValues[] = $icon['id'];
-    }
-}
-$iconSelect->setElements($iconNames);
-$iconSelect->setElementsVal($iconValues);
+$iconSelect->setElements([_T('Choose an icon', 'mobile')]);
+$iconSelect->setElementsVal(['']);
+$iconSelect->setSelected('');
+// `SelectItem` doesn't implement setAttributCustom; set id and class via properties
+$iconSelect->id = 'icon_select';
 $iconSelect->style = 'icon-extra';
 $formAddApplication->add(new TrFormElement(
     _T('Icon', 'mobile'),
@@ -283,6 +256,7 @@ $formAddApplication->add(new TrFormElement('', $newIconButton));
 
 // --- Icon text input
 $iconText = new InputTpl('icon_text', '/^.{0,255}$/', $values['icon_text'] ?? '');
+$iconText->setAttributCustom('class="icon-extra"');
 $formAddApplication->add(new TrFormElement(
     _T('Icon text', 'mobile'),
     $iconText
@@ -371,37 +345,32 @@ if (isset($errors['global'])) {
         }
     }
 
+    // Function to update Icon extra fields visibility based on Show Icon checkbox
+    function updateIconVisibility() {
+    try {
+        let showIcon = $('#showicon').is(':checked');
+        clog('DEBUG: showIcon=', showIcon);
 
-    // Function to update Icon extra fields visibility based on Icon checkbox
-    function updateIconFields() {
-        try {
-            let isIconEnabled = $('#showicon').is(':checked') || $('.icon-checkbox').is(':checked');
-            clog('DEBUG: isIconEnabled=', isIconEnabled);
+        $('.icon-extra').each(function () {
+            let $field = $(this);
+            let $tr = $field.closest('tr');
 
-            let $fields = $('.icon-extra');
-
-            if (!$fields.length) {
-                clog('DEBUG: no icon-extra fields found');
-                return;
+            if ($tr.length) {
+                // Hide/show full row (label + field)
+                showIcon ? $tr.show() : $tr.hide();
+            } else {
+                // Fallback (buttons, inputs outside TR)
+                showIcon ? $field.show() : $field.hide();
             }
+        });
 
-            $fields.each(function() {
-                let $elem = $(this);
-                let $parent = $elem.closest('tr');
-                
-                if (isIconEnabled) {
-                    clog('DEBUG: showing icon field');
-                    $parent.show();
-                } else {
-                    clog('DEBUG: hiding icon field');
-                    $parent.hide();
-                }
-            });
-
-        } catch (e) {
-            clog('ERROR in updateIconFields:', e);
-        }
+    } catch (e) {
+        clog('ERROR in updateIconVisibility:', e);
     }
+}
+
+    
+
 
     // Modal handling
     function openNewIconModal() {
@@ -430,13 +399,12 @@ if (isset($errors['global'])) {
 
         clog('Creating icon:', iconName, 'with file ID:', fileId, 'fileName:', fileName);
 
-        // AJAX call to create icon
+        // AJAX call to create icon (dedicated endpoint)
         $.ajax({
-            url: window.location.pathname + window.location.search,
+            url: 'modules/mobile/mobile/ajaxCreateIcon.php',
             method: 'POST',
             dataType: 'json',
             data: {
-                action: 'create_icon',
                 name: iconName,
                 fileId: fileId,
                 fileName: fileName
@@ -462,9 +430,9 @@ if (isset($errors['global'])) {
 
     $(function(){
         setTimeout(updateApkVisibility, 100);
+        setTimeout(updateIconVisibility, 100);
         $(document).on('change', '.system-checkbox', updateApkVisibility);
-        setTimeout(updateIconFields, 100);
-        $(document).on('change', '.icon-checkbox, #showicon', updateIconFields);
+        $(document).on('change', '#showicon', updateIconVisibility);
         
         // Modal event handlers
         $('#new_icon_btn').on('click', openNewIconModal);
@@ -479,6 +447,37 @@ if (isset($errors['global'])) {
         });
         
         clog('DEBUG: jQuery handler attached');
+        // Helper: fetch icons via AJAX and populate the select. Returns jqXHR.
+        function getIcons(selectedIcon) {
+            selectedIcon = selectedIcon || '';
+            return $.ajax({
+                url: 'modules/mobile/mobile/ajaxGetIcons.php',
+                method: 'GET',
+                dataType: 'json'
+            }).done(function(resp) {
+                clog('getIcons response', resp);
+                var $sel = $('#icon_select');
+                if (!$sel.length) return;
+                $sel.empty();
+                $sel.append($('<option>').attr('value','').text('<?php echo _T('Choose an icon', 'mobile'); ?>'));
+                if (resp && resp.success && Array.isArray(resp.data)) {
+                    resp.data.forEach(function(it) {
+                        var $opt = $('<option>').attr('value', it.id).text(it.name);
+                        if (String(it.id) === String(selectedIcon)) $opt.prop('selected', true);
+                        $sel.append($opt);
+                    });
+                } else {
+                    clog('No icons returned or error:', resp && resp.error);
+                }
+                setTimeout(updateIconVisibility, 20);
+            }).fail(function(xhr, status, err) {
+                clog('Failed to load icons:', status, err);
+            });
+        }
+
+        // Immediately load icons, preserving selected value from server-side
+        var selectedIcon = '<?php echo htmlspecialchars($values['icon_id'], ENT_QUOTES); ?>';
+        getIcons(selectedIcon);
     });
 })(jQuery);
 </script>

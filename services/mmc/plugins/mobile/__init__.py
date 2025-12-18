@@ -53,6 +53,9 @@ def getHmdmIcons():
 def addHmdmIcon(icon_data):
     return MobileDatabase().addHmdmIcon(icon_data)
 
+def deleteIconById(id):
+    return MobileDatabase().deleteIconById(id)
+
 def addHmdmApplication(app_data):
     return MobileDatabase().addHmdmApplication(app_data)
 

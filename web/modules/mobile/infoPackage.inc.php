@@ -48,6 +48,37 @@ $pageAddApplication = new Page("addApplication", _T('Add an application', 'mobil
 $pageAddApplication->setFile("modules/mobile/mobile/addApplication.php");
 $submod->addPage($pageAddApplication);
 
+###############################
+# create icon page (ajax)
+################################
+$pageAjaxCreateIcon = new Page("createIcon", _T('Create an icon', 'mobile'));
+$pageAjaxCreateIcon->setFile("modules/mobile/mobile/ajaxCreateIcon.php");
+$pageAjaxCreateIcon->setOptions(array("AJAX" => true, "visible" => false));
+$submod->addPage($pageAjaxCreateIcon);
+
+################################
+# get icons page (ajax)
+################################
+$pageAjaxGetIcons = new Page("getIcons", _T('Get icons', 'mobile'));
+$pageAjaxGetIcons->setFile("modules/mobile/mobile/ajaxGetIcons.php");
+$pageAjaxGetIcons->setOptions(array("AJAX" => true, "visible" => false));
+$submod->addPage($pageAjaxGetIcons);
+
+################################
+# delete icon page (ajax)
+################################
+$pageAjaxDeleteIcon = new Page("deleteIcon", _T('Delete icon', 'mobile'));
+$pageAjaxDeleteIcon->setFile("modules/mobile/mobile/ajaxDeleteIcon.php");
+$pageAjaxDeleteIcon->setOptions(array("AJAX" => true, "visible" => false));
+$submod->addPage($pageAjaxDeleteIcon);
+
+################################
+# icon settings page
+################################
+$pageIconSettings = new Page("iconSettings", _T('Icon settings', 'mobile'));
+$pageIconSettings->setFile("modules/mobile/mobile/iconSettings.php");
+$submod->addPage($pageIconSettings);
+
 ################################
  # GLPI devices page
 ################################

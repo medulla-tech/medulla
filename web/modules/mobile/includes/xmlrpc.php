@@ -18,6 +18,9 @@ function xmlrpc_get_hmdm_icons(){
 function xmlrpc_add_hmdm_icon($icon_data){
     return xmlCall("mobile.addHmdmIcon", array($icon_data));
 }
+function xmlrpc_delete_icon_by_id($id){
+    return xmlCall("mobile.deleteIconById", array($id));
+}
 function xmlrpc_add_hmdm_application($app_data){
     return xmlCall("mobile.addHmdmApplication", array($app_data));
 }
