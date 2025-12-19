@@ -139,6 +139,91 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $payload['passwordMode'] = $_POST['config_password_mode'];
         }
         
+        // MDM Settings
+        $mdmCheckboxFields = array(
+            'config_kiosk_mode' => 'kioskMode',
+            'config_mobile_enrollment' => 'mobileEnrollment',
+            'config_encrypt_device' => 'encryptDevice',
+            'config_permissive' => 'permissive',
+            'config_lock_safe_settings' => 'lockSafeSettings',
+            'config_kiosk_home' => 'kioskHome',
+            'config_kiosk_recents' => 'kioskRecents',
+            'config_kiosk_notifications' => 'kioskNotifications',
+            'config_kiosk_system_info' => 'kioskSystemInfo',
+            'config_kiosk_keyguard' => 'kioskKeyguard',
+            'config_kiosk_lock_buttons' => 'kioskLockButtons',
+            'config_kiosk_exit' => 'kioskExit'
+        );
+        foreach ($mdmCheckboxFields as $formField => $apiField) {
+            $payload[$apiField] = isset($_POST[$formField]);
+        }
+        
+        $mdmTextFields = array(
+            'config_event_receiving_component' => 'eventReceivingComponent',
+            'config_wifi_ssid' => 'wifiSSID',
+            'config_wifi_password' => 'wifiPassword',
+            'config_wifi_security_type' => 'wifiSecurityType',
+            'config_qr_parameters' => 'qrParameters',
+            'config_allowed_classes' => 'allowedClasses',
+            'config_restrictions' => 'restrictions',
+            'config_new_server_url' => 'newServerUrl'
+        );
+        foreach ($mdmTextFields as $formField => $apiField) {
+            if (isset($_POST[$formField])) {
+                $payload[$apiField] = $_POST[$formField];
+            }
+        }
+        
+        $postedMainAppName = isset($_POST['config_main_app']) ? trim($_POST['config_main_app']) : '';
+        $postedMainAppId = isset($_POST['config_main_app_id']) ? trim((string)$_POST['config_main_app_id']) : '';
+        $postedContentAppName = isset($_POST['config_content_app']) ? trim($_POST['config_content_app']) : '';
+        $postedContentAppId = isset($_POST['config_content_app_id']) ? trim((string)$_POST['config_content_app_id']) : '';
+        
+        $configApps = xmlrpc_get_hmdm_configuration_applications($configId);
+        if (is_array($configApps)) {
+            $payload['applications'] = array_filter($configApps, function($app) {
+                return isset($app['selected']) && $app['selected'];
+            });
+            $payload['applications'] = array_values($payload['applications']);
+
+            $idNameMap = array();
+            foreach ($payload['applications'] as $app) {
+                $id = null;
+                if (isset($app['latestVersion'])) { $id = $app['latestVersion']; }
+                elseif (isset($app['id'])) { $id = $app['id']; }
+                elseif (isset($app['applicationId'])) { $id = $app['applicationId']; }
+
+                $name = '';
+                if (isset($app['name'])) { $name = $app['name']; }
+                elseif (isset($app['applicationName'])) { $name = $app['applicationName']; }
+                elseif (isset($app['pkg'])) { $name = $app['pkg']; }
+
+                if ($id !== null && $name !== '') {
+                    $idNameMap[(string)$id] = $name;
+                }
+            }
+
+            if ($postedMainAppId !== '') {
+                if ($postedMainAppName === '' || !isset($idNameMap[$postedMainAppId]) || $idNameMap[$postedMainAppId] !== $postedMainAppName) {
+                    $payload['mainAppId'] = null;
+                } else {
+                    $payload['mainAppId'] = intval($postedMainAppId);
+                }
+            } else {
+                $payload['mainAppId'] = null;
+            }
+
+            if ($postedContentAppId !== '') {
+                if ($postedContentAppName === '' || !isset($idNameMap[$postedContentAppId]) || $idNameMap[$postedContentAppId] !== $postedContentAppName) {
+                    $payload['contentAppId'] = null;
+                } else {
+                    $payload['contentAppId'] = intval($postedContentAppId);
+                }
+            } else {
+                $payload['contentAppId'] = null;
+            }
+        }
+        
         $result = xmlrpc_update_hmdm_configuration($payload);
         
         if ($result !== null && $result !== false) {
@@ -206,6 +291,9 @@ $p->display();
 .tab-content.active {
     display: block;
 }
+.hidden-row {
+    display: none !important;
+}
 </style>
 
 <div class="config-tabs">
@@ -223,26 +311,26 @@ $p->display();
 $form = new Form();
 $form->push(new Table());
 
-echo '<div id="tab-common" class="tab-content active">';
+// COMMON SETTINGS
 
 $form->add(new TrFormElement(
     _T("Name", "mobile"),
     new InputTpl("config_name", '/^.{1,255}$/', isset($config['name']) ? $config['name'] : '')
-), array("value" => isset($config['name']) ? $config['name'] : ''));
+), array_merge(array("value" => isset($config['name']) ? $config['name'] : ''), array('placeholder' => _T("Enter the configuration name", "mobile"))));
 
 $descTpl = new TextareaTpl("config_description");
 $descTpl->setRows(4);
 $form->add(new TrFormElement(
     _T("Description", "mobile"),
     $descTpl
-), array("value" => isset($config['description']) ? $config['description'] : ''));
+), array_merge(array("value" => isset($config['description']) ? $config['description'] : ''), array('placeholder' => _T("Enter the configuration description", "mobile"))));
 
 $passwordTpl = new InputTpl("config_password", '/^.+$/', isset($config['password']) ? $config['password'] : '');
 $passwordTpl->fieldType = "password";
 $form->add(new TrFormElement(
     _T("Unlock password", "mobile"),
     $passwordTpl
-), array("value" => isset($config['password']) ? $config['password'] : ''));
+), array_merge(array("value" => isset($config['password']) ? $config['password'] : ''), array('placeholder' => _T("Enter the device unlock password", "mobile"))));
 
 $locationTpl = new SelectItem("config_location_tracking");
 $locationTpl->setElements(array(
@@ -564,36 +652,283 @@ $form->add(new TrFormElement(
     new CheckboxTpl("config_autostart_foreground")
 ), array("value" => isset($config['autostartForeground']) && $config['autostartForeground'] ? 'checked' : ''));
 
-echo '</div>'; // END tab-common
-
-echo '<div id="tab-design" class="tab-content">';
-echo '<h3>' . _T("Design Settings", "mobile") . '</h3>';
-echo '<p>' . _T("Coming soon...", "mobile") . '</p>';
-echo '</div>';
-
-echo '<div id="tab-apps" class="tab-content">';
-echo '<h3>' . _T("Applications", "mobile") . '</h3>';
-echo '<p>' . _T("Coming soon...", "mobile") . '</p>';
-echo '</div>';
-
-echo '<div id="tab-mdm" class="tab-content">';
-echo '<h3>' . _T("MDM Settings", "mobile") . '</h3>';
-echo '<p>' . _T("Coming soon...", "mobile") . '</p>';
-echo '</div>';
-
-echo '<div id="tab-appsettings" class="tab-content">';
-echo '<h3>' . _T("Application Settings", "mobile") . '</h3>';
-echo '<p>' . _T("Coming soon...", "mobile") . '</p>';
-echo '</div>';
-
-echo '<div id="tab-files" class="tab-content">';
-echo '<h3>' . _T("Files", "mobile") . '</h3>';
-echo '<p>' . _T("Coming soon...", "mobile") . '</p>';
-echo '</div>';
+$form->pop();
 
 $form->addButton('bsave', _T('Save', 'mobile'), 'btnPrimary');
 $form->addButton('bsaveexit', _T('Save and exit', 'mobile'), 'btnPrimary');
 $form->addButton('bcancel', _T('Cancel', 'mobile'), 'btnSecondary');
+
+$form->push(new Table());
+// Design tab placeholder
+$form->pop();
+
+$form->push(new Table());
+// Applications tab placeholder; will use configuration-available apps list when adding apps
+// $availableApps = xmlrpc_get_hmdm_configuration_applications($configId);
+$form->pop();
+
+$form->push(new Table());
+
+// MDM SETTINGS
+
+$form->add(new TrFormElement(
+    _T("Kiosk mode", "mobile"),
+    new CheckboxTpl("config_kiosk_mode")
+), array("value" => isset($config['kioskMode']) && $config['kioskMode'] ? 'checked' : ''));
+
+// Build autocomplete list from configuration applications endpoint, keeping only selected entries
+$allApps = xmlrpc_get_hmdm_configuration_applications($configId);
+if (!is_array($allApps)) {
+    $allApps = array();
+}
+
+$selectedApps = array();
+foreach ($allApps as $app) {
+    if (!(isset($app['selected']) && $app['selected'])) {
+        continue;
+    }
+
+    // Prefer latestVersion as the identifier; fall back to application IDs if missing
+    $id = null;
+    if (isset($app['latestVersion'])) {
+        $id = $app['latestVersion'];
+    } elseif (isset($app['id'])) {
+        $id = $app['id'];
+    } elseif (isset($app['applicationId'])) {
+        $id = $app['applicationId'];
+    }
+
+    $name = '';
+    if (isset($app['name'])) {
+        $name = $app['name'];
+    } elseif (isset($app['applicationName'])) {
+        $name = $app['applicationName'];
+    } elseif (isset($app['pkg'])) {
+        $name = $app['pkg'];
+    }
+
+    if ($id !== null && $name !== '') {
+        $selectedApps[] = array('name' => $name, 'id' => $id);
+    }
+}
+
+$appsJson = json_encode($selectedApps);
+
+// Resolve app names from selectedApps if config lacks them
+$mainAppName = isset($config['mainApp']) ? $config['mainApp'] : '';
+$contentAppName = isset($config['contentApp']) ? $config['contentApp'] : '';
+if (empty($mainAppName) && isset($config['mainAppId'])) {
+    foreach ($selectedApps as $app) {
+        if ($app['id'] == $config['mainAppId']) {
+            $mainAppName = $app['name'];
+            break;
+        }
+    }
+}
+if (empty($contentAppName) && isset($config['contentAppId'])) {
+    foreach ($selectedApps as $app) {
+        if ($app['id'] == $config['contentAppId']) {
+            $contentAppName = $app['name'];
+            break;
+        }
+    }
+}
+
+$form->add(new TrFormElement(
+    _T("MDM Application", "mobile"),
+    new InputTpl("config_main_app", '/^.{0,512}$/', $mainAppName)
+), array_merge(array("value" => $mainAppName), 
+    array('placeholder' => _T("Search for an application", 'mobile'), 'autocomplete_data' => $appsJson)));
+
+$mainAppIdTpl = new InputTpl("config_main_app_id", '/^.*$/', isset($config['mainAppId']) ? $config['mainAppId'] : '');
+$mainAppIdTpl->setAttributCustom('readonly="readonly"');
+$form->add(new TrFormElement(
+    _T("MDM Application ID", "mobile"),
+    $mainAppIdTpl,
+    array("class" => "hidden-row")
+), array("value" => isset($config['mainAppId']) ? htmlspecialchars($config['mainAppId']) : ''));
+
+$form->add(new TrFormElement(
+    _T("Admin receiver class", "mobile"),
+    new InputTpl("config_event_receiving_component", '/^.{0,512}$/', isset($config['eventReceivingComponent']) ? $config['eventReceivingComponent'] : '')
+), array_merge(array("value" => isset($config['eventReceivingComponent']) ? $config['eventReceivingComponent'] : ''), 
+    array('placeholder' => _T("Should be com.hmdm.launcher.AdminReceiver", 'mobile'))));
+
+$form->add(new TrFormElement(
+    _T("Content application", "mobile"),
+    new InputTpl("config_content_app", '/^.{0,512}$/', $contentAppName),
+    array("class" => "kiosk-checkbox")
+), array_merge(array("value" => $contentAppName), 
+    array('placeholder' => _T("Search for an application", 'mobile'), 'autocomplete_data' => $appsJson)));
+
+$contentAppIdTpl = new InputTpl("config_content_app_id", '/^.*$/', isset($config['contentAppId']) ? $config['contentAppId'] : '');
+$contentAppIdTpl->setAttributCustom('readonly="readonly"');
+$form->add(new TrFormElement(
+    _T("Content Application ID", "mobile"),
+    $contentAppIdTpl,
+    array("class" => "hidden-row")
+), array("value" => isset($config['contentAppId']) ? htmlspecialchars($config['contentAppId']) : ''));
+
+$form->add(new TrFormElement(
+    _T("Enable Home button", "mobile"),
+    new CheckboxTpl("config_kiosk_home"),
+    array("class" => "kiosk-checkbox")
+), array("value" => isset($config['kioskHome']) && $config['kioskHome'] ? 'checked' : ''));
+
+$form->add(new TrFormElement(
+    _T("Enable Recents button", "mobile"),
+    new CheckboxTpl("config_kiosk_recents"),
+    array("class" => "kiosk-checkbox")
+), array("value" => isset($config['kioskRecents']) && $config['kioskRecents'] ? 'checked' : ''));
+
+$form->add(new TrFormElement(
+    _T("Enable notifications", "mobile"),
+    new CheckboxTpl("config_kiosk_notifications"),
+    array("class" => "kiosk-checkbox")
+), array("value" => isset($config['kioskNotifications']) && $config['kioskNotifications'] ? 'checked' : ''));
+
+$form->add(new TrFormElement(
+    _T("Enable status bar info", "mobile"),
+    new CheckboxTpl("config_kiosk_system_info"),
+    array("class" => "kiosk-checkbox")
+), array("value" => isset($config['kioskSystemInfo']) && $config['kioskSystemInfo'] ? 'checked' : ''));
+
+$form->add(new TrFormElement(
+    _T("Enable screen lock", "mobile"),
+    new CheckboxTpl("config_kiosk_keyguard"),
+    array("class" => "kiosk-checkbox")
+), array("value" => isset($config['kioskKeyguard']) && $config['kioskKeyguard'] ? 'checked' : ''));
+
+$form->add(new TrFormElement(
+    _T("Lock the Power button", "mobile"),
+    new CheckboxTpl("config_kiosk_lock_buttons"),
+    array("class" => "kiosk-checkbox")
+), array("value" => isset($config['kioskLockButtons']) && $config['kioskLockButtons'] ? 'checked' : ''));
+
+$form->add(new TrFormElement(
+    _T("Kiosk exit button", "mobile"),
+    new CheckboxTpl("config_kiosk_exit"),
+    array("class" => "kiosk-checkbox")
+), array("value" => isset($config['kioskExit']) && $config['kioskExit'] ? 'checked' : ''));
+
+$form->add(new TrFormElement(
+    _T("WiFi SSID", "mobile"),
+    new InputTpl("config_wifi_ssid", '/^.{0,512}$/', isset($config['wifiSSID']) ? $config['wifiSSID'] : '')
+), array_merge(array("value" => isset($config['wifiSSID']) ? $config['wifiSSID'] : ''), 
+    array('placeholder' => _T("Enrollment WiFi SSID - leave empty to enter manually", 'mobile'))));
+
+$form->add(new TrFormElement(
+    _T("WiFi password", "mobile"),
+    new InputTpl("config_wifi_password", '/^.{0,512}$/', isset($config['wifiPassword']) ? $config['wifiPassword'] : '')
+), array_merge(array("value" => isset($config['wifiPassword']) ? $config['wifiPassword'] : ''), 
+    array('placeholder' => _T("Enrollment WiFi pass - leave empty to enter manually", 'mobile'))));
+
+$wifiSecTpl = new SelectItem("config_wifi_security_type");
+$wifiSecTpl->setElements(array(
+    "",
+    _T("WPA", "mobile"),
+    _T("WEP", "mobile"),
+    _T("EAP", "mobile"),
+    _T("NONE", "mobile")
+));
+$wifiSecTpl->setElementsVal(array("", "WPA", "WEP", "EAP", "NONE"));
+$wifiSecTpl->setSelected(isset($config['wifiSecurityType']) ? $config['wifiSecurityType'] : '');
+$form->add(new TrFormElement(
+    _T("WiFi security type", "mobile"),
+    $wifiSecTpl,
+    array("tooltip" => _T("Notice: these WiFi settings are applied to the initial enrollment only!", "mobile"))
+));
+
+$qrParamsTpl = new TextareaTpl("config_qr_parameters");
+$qrParamsTpl->setRows(3);
+$form->add(new TrFormElement(
+    _T("Other QR code entries", "mobile"),
+    $qrParamsTpl,
+    array("tooltip" => _T("comma-separated entries, e.g.:\n\"android.app.extra.PROVISIONING_LOCALE\": \"de_DE\"", "mobile"))
+), array_merge(array("value" => isset($config['qrParameters']) ? $config['qrParameters'] : ''), array('placeholder' => _T("comma-separated entries, e.g.:\n\"android.app.extra.PROVISIONING_LOCALE\": \"de_DE\"", "mobile"))));
+
+$form->add(new TrFormElement(
+    _T("Enroll using mobile data", "mobile"),
+    new CheckboxTpl("config_mobile_enrollment")
+), array("value" => isset($config['mobileEnrollment']) && $config['mobileEnrollment'] ? 'checked' : ''));
+
+$form->add(new TrFormElement(
+    _T("Encrypt the device storage", "mobile"),
+    new CheckboxTpl("config_encrypt_device")
+), array("value" => isset($config['encryptDevice']) && $config['encryptDevice'] ? 'checked' : ''));
+
+$form->add(new TrFormElement(
+    _T("Permissive (unlocked) mode", "mobile"),
+    new CheckboxTpl("config_permissive"),
+    array("class" => "permissive-row")
+), array("value" => isset($config['permissive']) && $config['permissive'] ? 'checked' : ''));
+
+$form->add(new TrFormElement(
+    _T("Lock safe settings (WiFi, GPS, etc)", "mobile"),
+    new CheckboxTpl("config_lock_safe_settings"),
+    array("class" => "lock-safe-settings-row")
+), array("value" => isset($config['lockSafeSettings']) && $config['lockSafeSettings'] ? 'checked' : ''));
+
+$allowedClassesTpl = new TextareaTpl("config_allowed_classes");
+$allowedClassesTpl->setRows(3);
+$form->add(new TrFormElement(
+    _T("Allowed activities", "mobile"),
+    $allowedClassesTpl,
+    array(
+        "class" => "allowed-classes-row",
+        "tooltip" => _T("Comma-separated classes, e.g.: com.android.settings.homepage.SettingsHomepageActivity", "mobile"),
+        "style" => (isset($config['kioskMode']) && $config['kioskMode']) ? "display:none;" : ""
+    )
+), array_merge(array("value" => isset($config['allowedClasses']) ? $config['allowedClasses'] : ''), array('placeholder' => _T("Comma-separated classes, e.g.: com.android.settings.homepage.SettingsHomepageActivity", "mobile"))));
+
+$restrictionsTpl = new TextareaTpl("config_restrictions");
+$restrictionsTpl->setRows(3);
+$form->add(new TrFormElement(
+    _T("Restrictions", "mobile"),
+    $restrictionsTpl,
+    array(
+        "class" => "restrictions-row",
+        "tooltip" => _T("MDM restrictions, comma-separated, e.g.: no_sms,no_outgoing_calls,no_usb_file_transfer", "mobile")
+    )
+), array_merge(array("value" => isset($config['restrictions']) ? $config['restrictions'] : ''), array('placeholder' => _T("MDM restrictions, comma-separated, e.g.: no_sms,no_outgoing_calls,no_usb_file_transfer", "mobile"))));
+
+$form->add(new TrFormElement(
+    _T("New server URL", "mobile"),
+    new InputTpl("config_new_server_url", '/^.{0,512}$/', isset($config['newServerUrl']) ? $config['newServerUrl'] : ''),
+    array("tooltip" => _T("Used for migration to a new MDM server", 'mobile'))
+), array_merge(array("value" => isset($config['newServerUrl']) ? $config['newServerUrl'] : ''), 
+    array('placeholder' => _T("Used for migration to a new MDM server", 'mobile'))));
+
+if (!empty($configId)) {
+    $qrCodeUrl = '';
+    if (!empty($config['qrCodeKey']) && !empty($config['eventReceivingComponent'])) {
+        // Extract hostname without port from baseUrl
+        $baseUrl = isset($config['baseUrl']) ? $config['baseUrl'] : '';
+        if (!empty($baseUrl)) {
+            $parsedUrl = parse_url($baseUrl);
+            $scheme = isset($parsedUrl['scheme']) ? $parsedUrl['scheme'] : 'http';
+            $host = isset($parsedUrl['host']) ? $parsedUrl['host'] : '';
+            $path = isset($parsedUrl['path']) ? $parsedUrl['path'] : '';
+            if (!empty($host)) {
+                $qrCodeUrl = $scheme . '://' . $host . $path . '/#/qr/' . $config['qrCodeKey'] . '/';
+            }
+        }
+    }
+    $qrUrlTpl = new InputTpl("config_qr_code_url", '/^.*$/', $qrCodeUrl);
+    $qrUrlTpl->setAttributCustom('readonly="readonly"');
+    $form->add(new TrFormElement(
+        _T("QR code URL", "mobile"),
+        $qrUrlTpl
+    ), array("value" => $qrCodeUrl));
+}
+
+$form->pop();
+
+$form->push(new Table());
+$form->pop();
+
+$form->push(new Table());
+$form->pop();
 
 $form->display();
 ?>
@@ -726,13 +1061,71 @@ jQuery(document).ready(function() {
     }
     jQuery('input[name="config_brightness"]').on('change', toggleBrightnessSlider);
 
+    // MDM TOGGLES
+    
+    function toggleKioskCheckboxes() {
+        var kioskMode = jQuery('input[name="config_kiosk_mode"]').is(':checked');
+        if (kioskMode) {
+            jQuery('.kiosk-checkbox').show();
+            jQuery('.permissive-row').hide();
+            jQuery('.lock-safe-settings-row').hide();
+            jQuery('.allowed-classes-row').hide();
+        } else {
+            jQuery('.kiosk-checkbox').hide();
+            jQuery('.permissive-row').show();
+            jQuery('.lock-safe-settings-row').show();
+            jQuery('.allowed-classes-row').show();
+        }
+    }
+    jQuery('input[name="config_kiosk_mode"]').on('change', toggleKioskCheckboxes);
+    
+    function togglePermissiveDependents() {
+        var permissive = jQuery('input[name="config_permissive"]').is(':checked');
+        var kioskMode = jQuery('input[name="config_kiosk_mode"]').is(':checked');
+        
+        if (permissive) {
+            jQuery('.lock-safe-settings-row').hide();
+            jQuery('.allowed-classes-row').hide();
+            jQuery('.restrictions-row').hide();
+            jQuery('input[name="config_lock_safe_settings"]').prop('disabled', true);
+            jQuery('textarea[name="config_allowed_classes"]').prop('disabled', true);
+            jQuery('textarea[name="config_restrictions"]').prop('disabled', true);
+        } else {
+            // Only show lock-safe-settings if kiosk mode is not checked
+            if (!kioskMode) {
+                jQuery('.lock-safe-settings-row').show();
+            }
+            jQuery('.allowed-classes-row').show();
+            jQuery('.restrictions-row').show();
+            jQuery('input[name="config_lock_safe_settings"]').prop('disabled', false);
+            jQuery('textarea[name="config_allowed_classes"]').prop('disabled', false);
+            jQuery('textarea[name="config_restrictions"]').prop('disabled', false);
+        }
+    }
+    jQuery('input[name="config_permissive"]').on('change', togglePermissiveDependents);
+
+    // TAB SWITCHING
+    
+    // Assign IDs to tables based on their order: common, design, apps, mdm, appsettings, files
+    var tabNames = ['common', 'design', 'apps', 'mdm', 'appsettings', 'files'];
+    jQuery('form table').each(function(index) {
+        if (index < tabNames.length) {
+            jQuery(this).attr('id', 'tab-' + tabNames[index]);
+            if (index === 0) {
+                jQuery(this).addClass('active-tab');
+            } else {
+                jQuery(this).hide();
+            }
+        }
+    });
+
     jQuery('.tab-link').click(function(e) {
         e.preventDefault();
         var targetTab = jQuery(this).data('tab');
         jQuery('.tab-link').removeClass('active');
         jQuery(this).addClass('active');
-        jQuery('.tab-content').removeClass('active');
-        jQuery('#tab-' + targetTab).addClass('active');
+        jQuery('form table').hide().removeClass('active-tab');
+        jQuery('#tab-' + targetTab).show().addClass('active-tab');
     });
 
     setTimeout(function() {
@@ -743,6 +1136,98 @@ jQuery(document).ready(function() {
         toggleVolumeSlider();
         toggleKeepAliveTime();
         toggleBrightnessSlider();
+        toggleKioskCheckboxes();
+        togglePermissiveDependents();
     }, 100);
+
+    // APP AUTOCOMPLETE
+    var allApps = <?php echo $appsJson; ?>;
+    
+    function setupAppAutocomplete(inputId, suggestionsId) {
+        var inputEl = document.getElementById(inputId);
+        if (!inputEl) return;
+        
+        var suggestionsEl = document.createElement('ul');
+        suggestionsEl.id = suggestionsId;
+        suggestionsEl.style.cssText = 'position: absolute; background: white; border: 1px solid #ccc; list-style: none; padding: 0; margin: 0; display: none; z-index: 1000; box-sizing: border-box; max-height: none; overflow-y: visible;';
+        
+        inputEl.parentElement.style.position = 'relative';
+        inputEl.parentElement.appendChild(suggestionsEl);
+        
+        function positionSuggestions() {
+            var rect = inputEl.getBoundingClientRect();
+            var parentRect = inputEl.parentElement.getBoundingClientRect();
+            var top = (inputEl.offsetTop + inputEl.offsetHeight);
+            var left = inputEl.offsetLeft;
+            var width = inputEl.offsetWidth;
+            suggestionsEl.style.top = top + 'px';
+            suggestionsEl.style.left = left + 'px';
+            suggestionsEl.style.width = width + 'px';
+        }
+
+        var autocompleteTimeout;
+        
+        inputEl.addEventListener('input', function(e) {
+            clearTimeout(autocompleteTimeout);
+            var query = e.target.value.toLowerCase();
+            
+            if (query.length < 1) {
+                suggestionsEl.style.display = 'none';
+                return;
+            }
+            
+            autocompleteTimeout = setTimeout(function() {
+                suggestionsEl.innerHTML = '';
+                var matches = allApps.filter(function(app) {
+                    return app.name.toLowerCase().indexOf(query) !== -1;
+                }).slice(0, 7);
+                
+                if (matches.length > 0) {
+                    positionSuggestions();
+                    matches.forEach(function(app) {
+                        var li = document.createElement('li');
+                        li.style.cssText = 'padding: 8px 12px; cursor: pointer; border-bottom: 1px solid #eee;';
+                        li.textContent = app.name;
+                        li.title = app.name;
+                        li.setAttribute('data-id', app.id);
+                        
+                        li.onmouseover = function() {
+                            li.style.backgroundColor = '#f0f0f0';
+                        };
+                        li.onmouseout = function() {
+                            li.style.backgroundColor = 'white';
+                        };
+                        
+                        li.onclick = function() {
+                            inputEl.value = app.name;
+                            var hiddenId = inputId + '_id';
+                            var hiddenEl = document.getElementById(hiddenId);
+                            if (hiddenEl) {
+                                hiddenEl.value = this.getAttribute('data-id');
+                            }
+                            suggestionsEl.style.display = 'none';
+                        };
+                        
+                        suggestionsEl.appendChild(li);
+                    });
+                    suggestionsEl.style.display = 'block';
+                } else {
+                    suggestionsEl.style.display = 'none';
+                }
+            }, 300);
+        });
+        
+        document.addEventListener('click', function(e) {
+            if (e.target.id !== inputId) {
+                suggestionsEl.style.display = 'none';
+            }
+        });
+
+        window.addEventListener('resize', positionSuggestions);
+        window.addEventListener('scroll', positionSuggestions, true);
+    }
+    
+    setupAppAutocomplete('config_main_app', 'main-app-suggestions');
+    setupAppAutocomplete('config_content_app', 'content-app-suggestions');
 });
 </script>

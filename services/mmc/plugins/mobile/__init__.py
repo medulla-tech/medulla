@@ -47,6 +47,9 @@ def deleteHmdmDeviceById(id):
 def getHmdmApplications():
     return MobileDatabase().getHmdmApplications()
 
+def getHmdmConfigurationApplications(id):
+    return MobileDatabase().getHmdmConfigurationApplications(id)
+
 def getHmdmIcons():
     return MobileDatabase().getHmdmIcons()
 

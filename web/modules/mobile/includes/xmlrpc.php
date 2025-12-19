@@ -12,6 +12,9 @@ function xmlrpc_get_hmdm_devices(){
 function xmlrpc_get_hmdm_applications(){
     return xmlCall("mobile.getHmdmApplications", array());
 }
+function xmlrpc_get_hmdm_configuration_applications($config_id){
+    return xmlCall("mobile.getHmdmConfigurationApplications", array($config_id));
+}
 function xmlrpc_get_hmdm_icons(){
     return xmlCall("mobile.getHmdmIcons", array());
 }

@@ -399,6 +399,35 @@ class MobileDatabase(DatabaseHelper):
             logging.getLogger().error(f"Error fetching applications: {e}")
             return None
         
+    def getHmdmConfigurationApplications(self, config_id: int):
+        """
+        Fetch applications linked to a specific configuration.
+
+        :param config_id: Configuration ID
+        :return: List of application dicts or [] on error
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Impossible d'authentifier pour récupérer les applications de la configuration.")
+            return []
+
+        url = f"{self.BASE_URL}/private/configurations/applications/{config_id}"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+
+        try:
+            resp = requests.get(url, headers=headers)
+            resp.raise_for_status()
+            logging.getLogger().info(f"Applications for configuration {config_id} fetched successfully {resp.json()}")
+            data = resp.json() or {}
+            payload = data.get("data", data)
+            # Some responses may nest under 'applications'
+            if isinstance(payload, dict) and "applications" in payload:
+                payload = payload.get("applications", [])
+            return payload if isinstance(payload, list) else []
+        except Exception as e:
+            logging.getLogger().error(f"Error fetching applications for configuration {config_id}: {e}")
+            return []    
+
     def getHmdmIcons(self):
         """
         Fetch the list of icons from HMDM.
@@ -1101,6 +1130,16 @@ class MobileDatabase(DatabaseHelper):
         except Exception as e:
             logging.getLogger().error(f"There is an error: device was not created: {e} ")
 
+    def _strip_file_last_update(self, config_data: dict):
+        """Remove large millisecond timestamps from files entries to avoid XML-RPC overflow."""
+        try:
+            files = config_data.get('files', []) if isinstance(config_data, dict) else []
+            if isinstance(files, list):
+                for file_item in files:
+                    if isinstance(file_item, dict) and 'lastUpdate' in file_item:
+                        del file_item['lastUpdate']
+        except Exception:
+            pass
 
     def getHmdmConfigurationById(self, config_id: int, base_url: str = None):
         """
@@ -1129,7 +1168,11 @@ class MobileDatabase(DatabaseHelper):
             resp.raise_for_status()
             raw = resp.json()
             config_data = raw.get('data', {})
-            # Log the raw configuration for debugging
+
+            # Remove fields with large integers that exceed XML-RPC limits
+            self._strip_file_last_update(config_data)
+            
+            # Log the configuration for debugging
             logging.getLogger().info(f"Retrieved configuration {config_id}: {json.dumps(config_data, indent=2)}")
             return config_data
         except Exception as e:
@@ -1163,6 +1206,9 @@ class MobileDatabase(DatabaseHelper):
         # Merge user changes into existing config
         existing.update(config_data)
 
+        # Ensure outgoing payload does not contain large integers in files
+        self._strip_file_last_update(existing)
+
         url = f"{self.BASE_URL}/private/configurations"
         headers = {
             "Content-Type": "application/json",
@@ -1174,8 +1220,10 @@ class MobileDatabase(DatabaseHelper):
             resp = requests.put(url, headers=headers, json=existing)
             resp.raise_for_status()
             data = resp.json()
-            logging.getLogger().info(f"Configuration {config_id} updated successfully: {data}")
-            return data.get('data', data)
+            cleaned = data.get('data', data) or {}
+            self._strip_file_last_update(cleaned)
+            logging.getLogger().info(f"Configuration {config_id} updated successfully: {json.dumps(cleaned, indent=2)}")
+            return cleaned
         except Exception as e:
             logging.getLogger().error(f"Error updating configuration {config_id}: {e}")
             return None
