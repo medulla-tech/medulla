@@ -37,7 +37,7 @@ if ($id === '') {
 }
 
 try {
-    $res = xmlrpc_delete_icon_by_id(intval($id));
+    $res = xmlrpc_delete_hmdm_icons_by_id(intval($id));
     if ($res === FALSE || $res === null) {
         echo json_encode(['success' => false, 'error' => 'Failed to delete icon']);
         exit;
