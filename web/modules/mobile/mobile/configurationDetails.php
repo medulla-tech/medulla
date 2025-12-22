@@ -158,6 +158,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $payload[$apiField] = isset($_POST[$formField]);
         }
         
+        $designCheckboxFields = array(
+            'config_use_default_design' => 'useDefaultDesignSettings',
+            'config_display_status' => 'displayStatus'
+        );
+        foreach ($designCheckboxFields as $formField => $apiField) {
+            $payload[$apiField] = isset($_POST[$formField]);
+        }
+
+        $designTextFields = array(
+            'config_text_color' => 'textColor',
+            'config_background_color' => 'backgroundColor',
+            'config_background_image_url' => 'backgroundImageUrl',
+            'config_icon_size' => 'iconSize',
+            'config_desktop_title_mode' => 'desktopHeader',
+            'config_desktop_title' => 'desktopHeaderTemplate'
+        );
+        foreach ($designTextFields as $formField => $apiField) {
+            if (isset($_POST[$formField])) {
+                $val = $_POST[$formField];
+                $payload[$apiField] = ($val === '') ? '' : $val;
+            }
+        }
+
+        if (isset($_POST['config_orientation'])) {
+            $payload['orientation'] = intval($_POST['config_orientation']);
+        } else {
+            $payload['orientation'] = 0;
+        }
+
         $mdmTextFields = array(
             'config_event_receiving_component' => 'eventReceivingComponent',
             'config_wifi_ssid' => 'wifiSSID',
@@ -188,19 +217,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $idNameMap = array();
             foreach ($payload['applications'] as $app) {
-                $id = null;
-                if (isset($app['latestVersion'])) { $id = $app['latestVersion']; }
-                elseif (isset($app['id'])) { $id = $app['id']; }
-                elseif (isset($app['applicationId'])) { $id = $app['applicationId']; }
-
-                $name = '';
-                if (isset($app['name'])) { $name = $app['name']; }
-                elseif (isset($app['applicationName'])) { $name = $app['applicationName']; }
-                elseif (isset($app['pkg'])) { $name = $app['pkg']; }
-
-                if ($id !== null && $name !== '') {
-                    $idNameMap[(string)$id] = $name;
-                }
+                $idNameMap[(string)$app['latestVersion']] = $app['name'];
             }
 
             if ($postedMainAppId !== '') {
@@ -659,7 +676,99 @@ $form->addButton('bsaveexit', _T('Save and exit', 'mobile'), 'btnPrimary');
 $form->addButton('bcancel', _T('Cancel', 'mobile'), 'btnSecondary');
 
 $form->push(new Table());
-// Design tab placeholder
+
+// DESIGN SETTINGS
+
+$form->add(new TrFormElement(
+    _T("Use default design", "mobile"),
+    new CheckboxTpl("config_use_default_design")
+), array("value" => isset($config['useDefaultDesignSettings']) && $config['useDefaultDesignSettings'] ? 'checked' : ''));
+
+$bgColorTpl = new InputTpl("config_background_color", '/^.{0,50}$/', isset($config['backgroundColor']) ? $config['backgroundColor'] : '');
+$bgColorTpl->setAttributCustom('data-color-picker="true"');
+$form->add(new TrFormElement(
+    _T("Background color", "mobile"),
+    $bgColorTpl,
+    array("class" => "design-field")
+), array("value" => isset($config['backgroundColor']) ? $config['backgroundColor'] : ''));
+
+$textColorTpl = new InputTpl("config_text_color", '/^.{0,50}$/', isset($config['textColor']) ? $config['textColor'] : '');
+$textColorTpl->setAttributCustom('data-color-picker="true"');
+$form->add(new TrFormElement(
+    _T("Application names color", "mobile"),
+    $textColorTpl,
+    array("class" => "design-field")
+), array("value" => isset($config['textColor']) ? $config['textColor'] : ''));
+
+$form->add(new TrFormElement(
+    _T("Background image URL", "mobile"),
+    new InputTpl("config_background_image_url", '/^.{0,512}$/', isset($config['backgroundImageUrl']) ? $config['backgroundImageUrl'] : ''),
+    array("class" => "design-field")
+), array("value" => isset($config['backgroundImageUrl']) ? $config['backgroundImageUrl'] : ''));
+
+$iconSizeTpl = new SelectItem("config_icon_size");
+$iconSizeTpl->setElements(array(
+    _T("Small", "mobile"),
+    _T("Normal (+20%)", "mobile"),
+    _T("Large (+40%)", "mobile")
+));
+$iconSizeTpl->setElementsVal(array("SMALL", "MEDIUM", "LARGE"));
+$iconSizeVal = isset($config['iconSize']) ? strtoupper($config['iconSize']) : 'MEDIUM';
+$iconSizeTpl->setSelected($iconSizeVal);
+$form->add(new TrFormElement(
+    _T("Icon size", "mobile"),
+    $iconSizeTpl,
+    array("class" => "design-field")
+));
+
+$desktopTitleModeTpl = new SelectItem("config_desktop_title_mode");
+$desktopTitleModeTpl->setElements(array(
+    _T("No", "mobile"),
+    _T("Device ID", "mobile"),
+    _T("Description", "mobile"),
+    _T("Custom template", "mobile")
+));
+$desktopTitleModeTpl->setElementsVal(array("NONE", "DEVICE_ID", "DESCRIPTION", "TEMPLATE"));
+$headerModeVal = isset($config['desktopHeader']) ? $config['desktopHeader'] : 'NONE';
+$allowedHeaderVals = array("NONE", "DEVICE_ID", "DESCRIPTION", "TEMPLATE");
+if (!in_array($headerModeVal, $allowedHeaderVals, true)) { $headerModeVal = 'NONE'; }
+$desktopTitleModeTpl->setSelected($headerModeVal);
+$form->add(new TrFormElement(
+    _T("Desktop title", "mobile"),
+    $desktopTitleModeTpl,
+    array("class" => "design-field")
+));
+
+$form->add(new TrFormElement(
+    _T("Title template", "mobile"),
+    new InputTpl("config_desktop_title", '/^.{0,255}$/', isset($config['desktopHeaderTemplate']) ? $config['desktopHeaderTemplate'] : ''),
+    array(
+        "class" => "design-field desktop-title-row",
+        "tooltip" => _T("Use variables deviceId, description, custom1, custom2, custom3", "mobile")
+    )
+), array_merge(
+    array("value" => isset($config['desktopHeaderTemplate']) ? $config['desktopHeaderTemplate'] : ''),
+    array('placeholder' => _T('Use variables deviceId, description...', 'mobile'))
+));
+
+$orientationTpl = new SelectItem("config_orientation");
+$orientationTpl->setElements(array(
+    _T("Any", "mobile"),
+    _T("Portrait", "mobile"),
+    _T("Landscape", "mobile")
+));
+$orientationTpl->setElementsVal(array("0", "1", "2"));
+$orientationTpl->setSelected(isset($config['orientation']) ? (string)$config['orientation'] : '0');
+$form->add(new TrFormElement(
+    _T("Lock orientation", "mobile"),
+    $orientationTpl
+));
+
+$form->add(new TrFormElement(
+    _T("Display time and battery state", "mobile"),
+    new CheckboxTpl("config_display_status")
+), array("value" => isset($config['displayStatus']) && $config['displayStatus'] ? 'checked' : ''));
+
 $form->pop();
 
 $form->push(new Table());
@@ -684,31 +793,8 @@ if (!is_array($allApps)) {
 
 $selectedApps = array();
 foreach ($allApps as $app) {
-    if (!(isset($app['selected']) && $app['selected'])) {
-        continue;
-    }
-
-    // Prefer latestVersion as the identifier; fall back to application IDs if missing
-    $id = null;
-    if (isset($app['latestVersion'])) {
-        $id = $app['latestVersion'];
-    } elseif (isset($app['id'])) {
-        $id = $app['id'];
-    } elseif (isset($app['applicationId'])) {
-        $id = $app['applicationId'];
-    }
-
-    $name = '';
-    if (isset($app['name'])) {
-        $name = $app['name'];
-    } elseif (isset($app['applicationName'])) {
-        $name = $app['applicationName'];
-    } elseif (isset($app['pkg'])) {
-        $name = $app['pkg'];
-    }
-
-    if ($id !== null && $name !== '') {
-        $selectedApps[] = array('name' => $name, 'id' => $id);
+    if (isset($app['selected']) && $app['selected']) {
+        $selectedApps[] = array('name' => $app['name'], 'id' => $app['latestVersion']);
     }
 }
 
@@ -1061,6 +1147,28 @@ jQuery(document).ready(function() {
     }
     jQuery('input[name="config_brightness"]').on('change', toggleBrightnessSlider);
 
+    // DESIGN TAB
+    
+    function toggleDesignFields() {
+        var useDefault = jQuery('input[name="config_use_default_design"]').is(':checked');
+        if (useDefault) {
+            jQuery('.design-field').find('input, select, textarea').prop('readonly', true).prop('disabled', true);
+        } else {
+            jQuery('.design-field').find('input, select, textarea').prop('readonly', false).prop('disabled', false);
+        }
+    }
+    jQuery('input[name="config_use_default_design"]').on('change', toggleDesignFields);
+    
+    function toggleDesktopTitleRow() {
+        var headerVal = jQuery('select[name="config_desktop_title_mode"]').val();
+        if (headerVal === 'TEMPLATE') {
+            jQuery('.desktop-title-row').show();
+        } else {
+            jQuery('.desktop-title-row').hide();
+        }
+    }
+    jQuery('select[name="config_desktop_title_mode"]').on('change', toggleDesktopTitleRow);
+
     // MDM TOGGLES
     
     function toggleKioskCheckboxes() {
@@ -1136,6 +1244,8 @@ jQuery(document).ready(function() {
         toggleVolumeSlider();
         toggleKeepAliveTime();
         toggleBrightnessSlider();
+        toggleDesignFields();
+        toggleDesktopTitleRow();
         toggleKioskCheckboxes();
         togglePermissiveDependents();
     }, 100);
@@ -1229,5 +1339,32 @@ jQuery(document).ready(function() {
     
     setupAppAutocomplete('config_main_app', 'main-app-suggestions');
     setupAppAutocomplete('config_content_app', 'content-app-suggestions');
+
+    // COLOR PICKER INPUTS
+    jQuery('input[data-color-picker="true"]').each(function() {
+        var $textInput = jQuery(this);
+        var $wrapper = $textInput.closest('span');
+        
+        $wrapper.css('position', 'relative').css('display', 'inline-block');
+        
+        var $colorPicker = jQuery('<input type="color" style="position: absolute; right: 2px; top: 50%; transform: translateY(-50%); width: 30px; height: 25px; border: none; cursor: pointer; padding: 0;">');
+        
+        if ($textInput.val()) {
+            $colorPicker.val($textInput.val());
+        }
+        
+        $colorPicker.on('input', function() {
+            $textInput.val(this.value);
+        });
+        
+        $textInput.on('input', function() {
+            var val = this.value;
+            if (/^#[0-9A-Fa-f]{6}$/.test(val)) {
+                $colorPicker.val(val);
+            }
+        });
+        
+        $wrapper.append($colorPicker);
+    });
 });
 </script>
