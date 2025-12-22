@@ -399,6 +399,35 @@ class MobileDatabase(DatabaseHelper):
             logging.getLogger().error(f"Error fetching applications: {e}")
             return None
         
+    def getHmdmConfigurationApplications(self, config_id: int):
+        """
+        Fetch applications linked to a specific configuration.
+
+        :param config_id: Configuration ID
+        :return: List of application dicts or [] on error
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Impossible d'authentifier pour récupérer les applications de la configuration.")
+            return []
+
+        url = f"{self.BASE_URL}/private/configurations/applications/{config_id}"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+
+        try:
+            resp = requests.get(url, headers=headers)
+            resp.raise_for_status()
+            logging.getLogger().info(f"Applications for configuration {config_id} fetched successfully {resp.json()}")
+            data = resp.json() or {}
+            payload = data.get("data", data)
+            # Some responses may nest under 'applications'
+            if isinstance(payload, dict) and "applications" in payload:
+                payload = payload.get("applications", [])
+            return payload if isinstance(payload, list) else []
+        except Exception as e:
+            logging.getLogger().error(f"Error fetching applications for configuration {config_id}: {e}")
+            return []    
+
     def getHmdmIcons(self):
         """
         Fetch the list of icons from HMDM.
@@ -441,29 +470,76 @@ class MobileDatabase(DatabaseHelper):
         url = f"{self.BASE_URL}/private/icons"
         headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
 
+        # Build base payload
         payload = {
-            "id": 0,
             "name": icon_data.get("name", ""),
             "fileId": int(icon_data.get("fileId", 0)),
             "fileName": icon_data.get("fileName", "")
         }
 
-        logging.getLogger().info(f"[mobile] addHmdmIcon payload: {json.dumps(payload)}")
+        # If an id is provided, treat this as an update operation
+        icon_id = icon_data.get("id") if isinstance(icon_data, dict) else None
+        is_update = False
+        try:
+            if icon_id is not None and str(icon_id).strip() != "":
+                payload["id"] = int(icon_id)
+                is_update = True
+        except Exception:
+            # ignore invalid id, proceed as create
+            is_update = False
+
+        logging.getLogger().info(f"[mobile] addHmdmIcon payload (update={is_update}): {json.dumps(payload)}")
 
         try:
+            # PUT is used for both create and update in HMDM API
             resp = requests.put(url, headers=headers, json=payload)
             resp.raise_for_status()
             data = resp.json()
             logging.getLogger().info(f"[mobile] addHmdmIcon response: {json.dumps(data)}")
             if data.get("status") == "OK":
-                logging.getLogger().info(f"Icon created successfully.")
+                if is_update:
+                    logging.getLogger().info(f"Icon (id={payload.get('id')}) updated successfully.")
+                else:
+                    logging.getLogger().info(f"Icon created successfully.")
                 return data.get("data")
             else:
-                logging.getLogger().error(f"Failed to create icon: {data}")
+                action = "update" if is_update else "create"
+                logging.getLogger().error(f"Failed to {action} icon: {data}")
                 return None
         except Exception as e:
-            logging.getLogger().error(f"Failed to create icon: {e}")
-            return None    
+            action = "update" if is_update else "create"
+            logging.getLogger().error(f"Failed to {action} icon: {e}")
+            return None
+
+    def deleteHmdmIconsById(self, id):
+        """
+        Delete an icon in HMDM by its ID.
+        
+        :param id: Icon ID to delete
+        :return: True if deletion was successful, False otherwise
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Failed to authenticate when deleting icon.")
+            return False
+
+        url = f"{self.BASE_URL}/private/icons/{id}"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+
+        try:
+            resp = requests.delete(url, headers=headers)
+            resp.raise_for_status()
+            data = resp.json()
+            logging.getLogger().info(f"[mobile] deleteHmdmIconsById response: {json.dumps(data)}")
+            if data.get("status") == "OK":
+                logging.getLogger().info(f"Icon (id={id}) deleted successfully.")
+                return True
+            else:
+                logging.getLogger().error(f"Failed to delete icon (id={id}): {data}")
+                return False
+        except Exception as e:
+            logging.getLogger().error(f"Failed to delete icon (id={id}): {e}")
+            return False
 
     def searchHmdmDevices(self, filter_text=""):
         """
@@ -1054,6 +1130,16 @@ class MobileDatabase(DatabaseHelper):
         except Exception as e:
             logging.getLogger().error(f"There is an error: device was not created: {e} ")
 
+    def _strip_file_last_update(self, config_data: dict):
+        """Remove large millisecond timestamps from files entries to avoid XML-RPC overflow."""
+        try:
+            files = config_data.get('files', []) if isinstance(config_data, dict) else []
+            if isinstance(files, list):
+                for file_item in files:
+                    if isinstance(file_item, dict) and 'lastUpdate' in file_item:
+                        del file_item['lastUpdate']
+        except Exception:
+            pass
 
     def getHmdmConfigurationById(self, config_id: int, base_url: str = None):
         """
@@ -1081,9 +1167,65 @@ class MobileDatabase(DatabaseHelper):
             resp = requests.get(url, headers=headers)
             resp.raise_for_status()
             raw = resp.json()
-            return raw.get('data', {}).get('qrCodeKey')
+            config_data = raw.get('data', {})
+
+            # Remove fields with large integers that exceed XML-RPC limits
+            self._strip_file_last_update(config_data)
+            
+            # Log the configuration for debugging
+            logging.getLogger().info(f"Retrieved configuration {config_id}: {json.dumps(config_data, indent=2)}")
+            return config_data
         except Exception as e:
             logging.getLogger().error(f"Error fetching configuration {config_id}: {e}")
+            return None
+
+    def updateHmdmConfiguration(self, config_data: dict):
+        """
+        Update an existing HMDM configuration by merging changes into the existing config.
+        """
+        if not isinstance(config_data, dict):
+            logging.getLogger().error("config_data must be a dict")
+            return None
+
+        config_id = config_data.get("id") or config_data.get("configurationId")
+        if not config_id:
+            logging.getLogger().error("Configuration ID is required to update configuration.")
+            return None
+
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Impossible d'authentifier pour mettre à jour la configuration.")
+            return None
+
+        # First, GET the existing configuration
+        existing = self.getHmdmConfigurationById(config_id)
+        if not existing:
+            logging.getLogger().error(f"Could not fetch existing configuration {config_id}")
+            return None
+
+        # Merge user changes into existing config
+        existing.update(config_data)
+
+        # Ensure outgoing payload does not contain large integers in files
+        self._strip_file_last_update(existing)
+
+        url = f"{self.BASE_URL}/private/configurations"
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {hmtoken}"
+        }
+
+        try:
+            logging.getLogger().info(f"Updating HMDM configuration {config_id} with merged payload: {json.dumps(existing, indent=2)}")
+            resp = requests.put(url, headers=headers, json=existing)
+            resp.raise_for_status()
+            data = resp.json()
+            cleaned = data.get('data', data) or {}
+            self._strip_file_last_update(cleaned)
+            logging.getLogger().info(f"Configuration {config_id} updated successfully: {json.dumps(cleaned, indent=2)}")
+            return cleaned
+        except Exception as e:
+            logging.getLogger().error(f"Error updating configuration {config_id}: {e}")
             return None
 
     def deleteHmdmDeviceById(self, device_id: int):
@@ -1216,6 +1358,71 @@ class MobileDatabase(DatabaseHelper):
         except Exception as e:
             logging.getLogger().error(f"Error fetching groups: {e}")
             return []
+
+    def addHmdmGroup(self, name):
+        """
+        Create a new group in HMDM.
+        
+        :param name: Group name (required)
+        :return: Response from HMDM or None on error
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Impossible to authenticate to create group.")
+            return None
+
+        url = f"{self.BASE_URL}/private/groups"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+
+        group_data = {
+            "name": name
+        }
+
+        try:
+            logging.getLogger().info(f"Creating group in HMDM: {json.dumps(group_data, indent=2)}")
+            resp = requests.put(url, json=group_data, headers=headers)
+            logging.getLogger().info(f"HMDM group creation HTTP status: {resp.status_code}")
+            logging.getLogger().info(f"HMDM group creation response: {resp.text}")
+            resp.raise_for_status()
+            
+            resp_json = resp.json()
+            resp_json["message"] = resp_json.get("message") or ""
+            resp_json["data"] = resp_json.get("data") or {}
+            
+            logging.getLogger().info(f"Group '{name}' created successfully in HMDM.")
+            return resp_json
+        except Exception as e:
+            logging.getLogger().error(f"Error creating group '{name}': {e}")
+            return None
+
+    def deleteHmdmGroupById(self, group_id):
+        """
+        Delete a group from HMDM by its ID.
+
+        :param group_id: The group ID to delete.
+        :return: True if deleted, False otherwise.
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Impossible to authenticate to delete group.")
+            return False
+
+        url = f"{self.BASE_URL}/private/groups/{group_id}"
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {hmtoken}"
+        }
+
+        try:
+            resp = requests.delete(url, headers=headers)
+            resp.raise_for_status()
+
+            logging.getLogger().info(f"Group {group_id} deleted successfully.")
+            return True
+
+        except Exception as e:
+            logging.getLogger().error(f"Error deleting group {group_id}: {e}")
+            return False
 
     def sendHmdmMessage(self, scope, device_number="", group_id="", configuration_id="", message=""):
         """
@@ -1461,12 +1668,12 @@ class MobileDatabase(DatabaseHelper):
         # flags in the payload instead.
 
         payload = {
+            "type": app_data.get("type", ""),
             "pkg": app_data.get("pkg", ""),
             "name": app_data.get("name", ""),
             "showIcon": False,
             "useKiosk": False,
             "system": False,
-            "type": "app",
         }
 
         # Optional fields
@@ -1523,3 +1730,4 @@ class MobileDatabase(DatabaseHelper):
         except Exception as e:
             logging.getLogger().error(f"Error adding/updating application: {e}")
             return None    
+

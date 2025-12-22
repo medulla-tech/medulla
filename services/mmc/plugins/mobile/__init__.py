@@ -38,17 +38,29 @@ def getHmdmDevices():
 def getHmdmConfigurationById(id):
     return MobileDatabase().getHmdmConfigurationById(id)
 
+def updateHmdmConfiguration(config_data):
+    return MobileDatabase().updateHmdmConfiguration(config_data)
+
 def deleteHmdmDeviceById(id):
     return MobileDatabase().deleteHmdmDeviceById(id)
 
 def getHmdmApplications():
     return MobileDatabase().getHmdmApplications()
 
+def getHmdmConfigurationApplications(id):
+    return MobileDatabase().getHmdmConfigurationApplications(id)
+
 def getHmdmIcons():
     return MobileDatabase().getHmdmIcons()
 
 def addHmdmIcon(icon_data):
     return MobileDatabase().addHmdmIcon(icon_data)
+
+def deleteHmdmIconsById(id):
+    return MobileDatabase().deleteHmdmIconsById(id)
+
+def deleteIconById(id):
+    return MobileDatabase().deleteIconById(id)
 
 def addHmdmApplication(app_data):
     return MobileDatabase().addHmdmApplication(app_data)
@@ -92,6 +104,12 @@ def getHmdmPushMessages(device_number="", message_filter="", status_filter="",
 
 def getHmdmGroups():
     return MobileDatabase().getHmdmGroups()
+
+def addHmdmGroup(name):
+    return MobileDatabase().addHmdmGroup(name)
+
+def deleteHmdmGroupById(id):
+    return MobileDatabase().deleteHmdmGroupById(id)
 
 def sendHmdmMessage(scope, device_number="", group_id="", configuration_id="", message=""):
     return MobileDatabase().sendHmdmMessage(scope, device_number, group_id, configuration_id, message)
