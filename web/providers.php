@@ -82,6 +82,9 @@ function handleAuthentication($providerKey) {
         $hostname = $conf["server_01"]["description"];
         $redirectUri = 'https://' . $hostname . '/mmc/providers.php';
         $oidc->setRedirectURL($redirectUri);
+        if (!empty($prov['proxy_url'])) {
+            $oidc->setHttpProxy($prov['proxy_url']);
+        }
         $oidc->addScope(['email']);
 
         if (!isset($_GET['code'])) {
