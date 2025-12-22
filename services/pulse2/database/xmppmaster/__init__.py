@@ -10635,9 +10635,8 @@ class XmppMasterDatabase(DatabaseHelper):
           SUM(CASE WHEN uuid_inventorymachine = "" THEN 1 ELSE 0 END) as total_uninventoried,
           SUM(CASE WHEN uuid_inventorymachine != "" THEN 1 ELSE 0 END) as total_inventoried
         FROM machines
-        join local_glpi_machines lgm on machines.uuid_inventorymachine = concat("UUID", lgm.id)
-        join local_glpi_entities lge on lgm.entities_id = lge.id
-        where agenttype ="machine" and lge.id in %s"""%entities
+        join local_glpi_filters lgf on machines.uuid_inventorymachine = concat("UUID", lgf.id)
+        where agenttype ="machine" and lgf.entities_id in %s"""%entities
         result = session.execute(sql, bind).first()
         session.commit()
         session.flush()
@@ -13185,9 +13184,8 @@ from(select
     coalesce(NULL, sum(case when startcmd >= (CURRENt_DATE() - INTERVAL 5 WEEK) and startcmd < (CURRENT_DATE() - INTERVAL 4 WEEK) then 1 else 0 end), 0) as total_w6
   from deploy d
   join machines m on m.jid = d.jidmachine
-  join local_glpi_machines lgm on m.uuid_inventorymachine = concat("UUID", lgm.id)
-  join local_glpi_entities lge on lgm.entities_id = lge.id
-  where lge.id in %s
+  join local_glpi_filters lgf on m.uuid_inventorymachine = concat("UUID", lgf.id)
+  where lgf.entities_id in %s
 ) as t;"""%entities
         query = session.execute(sql).first()
         if query is None :
@@ -13833,9 +13831,8 @@ from(select
   coalesce(NULL, sum(case when startcmd >= (DATE_FORMAT(CURDATE(), "%%Y-%%m-01")) then 1 else 0 end), 0) as m1
 from deploy d
 join machines m on m.jid = d.jidmachine
-join local_glpi_machines lgm on concat("UUID", lgm.id) = m.uuid_inventorymachine
-join local_glpi_entities lge on lgm.entities_id = lge.id
-where lge.id in %s"""%entities
+join local_glpi_filters lgf on concat("UUID", lgf.id) = m.uuid_inventorymachine
+where lgf.entities_id in %s"""%entities
 
         query = session.execute(sql).first()
 
