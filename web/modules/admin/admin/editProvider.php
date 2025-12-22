@@ -100,6 +100,7 @@ $prefill = [
     'ldap_givenName' => '',
     'ldap_sn'        => '',
     'ldap_mail'      => '',
+    'proxy_url'      => '',
     // to activate later:
     // 'profiles_order' => '',
     // 'acls_json'      => '',
@@ -120,6 +121,7 @@ if (isset($_POST['bcreate'])) {
         'ldap_givenName' => $_POST['ldap_givenName'] ?? null,
         'ldap_sn'        => $_POST['ldap_sn']        ?? null,
         'ldap_mail'      => $_POST['ldap_mail']      ?? null,
+        'proxy_url'      => $_POST['proxy_url']      ?? null,
 
         // to activate later:
         // 'profiles_order' => $_POST['profiles_order'] ?? null,
@@ -149,13 +151,14 @@ if (isset($_POST['bupdate'])) {
         // empty secret => we do not modify
         'client_secret'  => (($_POST['client_secret'] ?? '') !== '') ? $_POST['client_secret'] : null,
 
-        'lmc_acl'        => $_POST['lmc_acl']        ?? null,
         'ldap_uid'       => $_POST['ldap_uid']       ?? null,
         'ldap_givenName' => $_POST['ldap_givenName'] ?? null,
         'ldap_sn'        => $_POST['ldap_sn']        ?? null,
         'ldap_mail'      => $_POST['ldap_mail']      ?? null,
+        'proxy_url'      => $_POST['proxy_url']      ?? null,
 
         // to activate later:
+        // 'lmc_acl'        => $_POST['lmc_acl']        ?? null,
         // 'profiles_order' => $_POST['profiles_order'] ?? null,
         // 'acls_json'      => $_POST['acls_json']      ?? null,
     ];
@@ -247,6 +250,7 @@ $form->add(new TrFormElement(_T("LDAP uid", "admin"),       new InputTpl('ldap_u
 $form->add(new TrFormElement(_T("LDAP givenName", "admin"), new InputTpl('ldap_givenName', '/^.{0,64}$/')), ['value' => $prefill['ldap_givenName']]);
 $form->add(new TrFormElement(_T("LDAP sn", "admin"),        new InputTpl('ldap_sn', '/^.{0,64}$/')),        ['value' => $prefill['ldap_sn']]);
 $form->add(new TrFormElement(_T("LDAP mail", "admin"),      new InputTpl('ldap_mail', '/^.{0,64}$/')),      ['value' => $prefill['ldap_mail']]);
+$form->add(new TrFormElement(_T("Proxy URL", "admin"),      new InputTpl('proxy_url', '/^.{0,400}$/')),     ['value' => $prefill['proxy_url']]);
 
 // to activate later (let commented for now):
 // $form->add(new TrFormElement(_T("Profiles order", "admin"),  new InputTpl('profiles_order', '/^.{0,400}$/')), ['value' => ($prefill['profiles_order'] ?? '')]);
