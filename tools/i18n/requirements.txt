@@ -1,4 +1,0 @@
-# Requirements for Medulla translation tools
-# Install with: pip install -r requirements.txt
-
-deepl>=1.16.0

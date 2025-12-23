@@ -1,121 +1,75 @@
 # Medulla Translation Makefile
 #
-# Simple commands for managing translations
-#
 # Usage:
-#   make extract-strings      # Extract translatable strings from PHP code
-#   make clean-headers        # Clean .pot file headers
-#   make translate            # Translate new/missing strings (requires DEEPL_KEY)
-#   make compile              # Compile .po to .mo files
-#   make i18n-update          # Full workflow: extract → clean → translate → compile
+#   make -f Makefile.i18n extract              # Extract strings → .pot
+#   make -f Makefile.i18n extract MODULE=store # Single module
+#   make -f Makefile.i18n init                 # Create/update .po files
+#   make -f Makefile.i18n translate DEEPL_KEY=xxx  # Translate via DeepL
+#   make -f Makefile.i18n compile              # Compile .po → .mo (local test)
+#   make -f Makefile.i18n all DEEPL_KEY=xxx    # Full workflow
 #
-# Variables:
-#   DEEPL_KEY    Your DeepL API key (required for translate commands)
-#   MODULE       Specific module to process (optional, default: all)
-#   LANG         Target language (optional, default: auto-detect)
-#
-# Examples:
-#   make extract-strings
-#   make translate DEEPL_KEY=your_api_key_here
-#   make translate DEEPL_KEY=your_key MODULE=admin
-#   make i18n-update DEEPL_KEY=your_key
+# Note: .mo files are compiled at installation time by autotools.
 
-.PHONY: help extract-strings clean-headers translate compile i18n-update i18n-setup
+.PHONY: help extract init translate compile all
 
-# Default target
 help:
 	@echo "Medulla Translation Tools"
 	@echo ""
-	@echo "Available commands:"
-	@echo "  make extract-strings      Extract translatable strings from PHP code → .pot"
-	@echo "  make clean-headers        Clean .pot file headers"
-	@echo "  make translate            Translate new/missing strings (requires DEEPL_KEY=...)"
-	@echo "  make compile              Compile .po → .mo files (for local testing only)"
-	@echo "  make i18n-update          Full workflow (extract → clean → translate)"
-	@echo "  make i18n-setup           Install Python dependencies for translation tools"
+	@echo "Commands:"
+	@echo "  make extract              Extract strings from PHP → .pot"
+	@echo "  make init                 Create/update .po files from .pot"
+	@echo "  make translate            Translate empty strings via DeepL"
+	@echo "  make compile              Compile .po → .mo (local testing)"
+	@echo "  make all                  Full workflow: extract → init → translate"
 	@echo ""
 	@echo "Variables:"
-	@echo "  DEEPL_KEY    Your DeepL API key (required for translate)"
 	@echo "  MODULE       Specific module (optional, default: all)"
-	@echo "  TARGET_LANG  Target language (optional, default: auto-detect)"
+	@echo "  DEEPL_KEY    DeepL API key (required for translate/all)"
 	@echo ""
 	@echo "Examples:"
-	@echo "  make extract-strings"
-	@echo "  make translate DEEPL_KEY=abc123..."
-	@echo "  make translate DEEPL_KEY=abc123... MODULE=admin"
-	@echo "  make translate DEEPL_KEY=abc123... TARGET_LANG=fr_FR"
-	@echo "  make i18n-update DEEPL_KEY=abc123..."
+	@echo "  make -f Makefile.i18n extract MODULE=store"
+	@echo "  make -f Makefile.i18n translate DEEPL_KEY=abc123"
+	@echo "  make -f Makefile.i18n all MODULE=store DEEPL_KEY=abc123"
 
-# Install translation tool dependencies
-i18n-setup:
-	@echo "📦 Installing translation tool dependencies..."
-	pip install -r tools/i18n/requirements.txt
-	@echo "✅ Dependencies installed"
-
-# Extract translatable strings from PHP code
-extract-strings:
-	@echo "🔍 Extracting translatable strings from PHP code..."
+extract:
 ifdef MODULE
-	cd web && bash scripts/build_pot.sh $(MODULE)
+	python3 tools/i18n.py extract $(MODULE)
 else
-	cd web && bash scripts/build_pot.sh
+	python3 tools/i18n.py extract
 endif
 
-# Clean .pot file headers
-clean-headers:
-	@echo "🧹 Cleaning .pot file headers..."
+init:
 ifdef MODULE
-	python3 tools/i18n/clean_pot_headers.py --module $(MODULE)
+	python3 tools/i18n.py init $(MODULE)
 else
-	python3 tools/i18n/clean_pot_headers.py
+	python3 tools/i18n.py init
 endif
-	@echo "✅ Headers cleaned"
 
-# Translate new/missing strings
 translate:
 ifndef DEEPL_KEY
-	@echo "❌ Error: DEEPL_KEY variable is required"
-	@echo "Usage: make translate DEEPL_KEY=your_api_key_here"
+	@echo "❌ DEEPL_KEY required. Usage: make translate DEEPL_KEY=xxx"
 	@exit 1
 endif
-	@echo "🌍 Translating new/missing strings..."
 ifdef MODULE
-ifdef TARGET_LANG
-	python3 tools/i18n/sync_translations.py $(DEEPL_KEY) --module $(MODULE) --lang $(TARGET_LANG)
+	python3 tools/i18n.py translate $(MODULE) --key=$(DEEPL_KEY)
 else
-	python3 tools/i18n/sync_translations.py $(DEEPL_KEY) --module $(MODULE)
+	python3 tools/i18n.py translate --key=$(DEEPL_KEY)
 endif
-else
-ifdef TARGET_LANG
-	python3 tools/i18n/sync_translations.py $(DEEPL_KEY) --lang $(TARGET_LANG)
-else
-	python3 tools/i18n/sync_translations.py $(DEEPL_KEY)
-endif
-endif
-	@echo "✅ Translation complete"
 
-# Compile .po to .mo files
 compile:
-	@echo "🔨 Compiling .po files to .mo..."
-	cd web && bash scripts/build_mo.sh modules/
-	@echo "✅ Compilation complete"
+ifdef MODULE
+	python3 tools/i18n.py compile $(MODULE)
+else
+	python3 tools/i18n.py compile
+endif
 
-# Full translation workflow
-i18n-update:
+all:
 ifndef DEEPL_KEY
-	@echo "❌ Error: DEEPL_KEY variable is required"
-	@echo "Usage: make i18n-update DEEPL_KEY=your_api_key_here"
+	@echo "❌ DEEPL_KEY required. Usage: make all DEEPL_KEY=xxx"
 	@exit 1
 endif
-	@echo "🚀 Starting full translation update workflow..."
-	@echo ""
-	@$(MAKE) extract-strings
-	@echo ""
-	@$(MAKE) clean-headers
-	@echo ""
-	@$(MAKE) translate DEEPL_KEY=$(DEEPL_KEY) $(if $(MODULE),MODULE=$(MODULE)) $(if $(TARGET_LANG),TARGET_LANG=$(TARGET_LANG))
-	@echo ""
-	@echo "✨ Translation workflow complete!"
-	@echo ""
-	@echo "Note: .mo files are NOT compiled (they're generated during server installation)"
-	@echo "To compile .mo files for local testing: make -f Makefile.i18n compile"
+ifdef MODULE
+	python3 tools/i18n.py all $(MODULE) --key=$(DEEPL_KEY)
+else
+	python3 tools/i18n.py all --key=$(DEEPL_KEY)
+endif
