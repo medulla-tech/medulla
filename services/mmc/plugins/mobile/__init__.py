@@ -29,17 +29,41 @@ def activate():
         return False
     return True
 
+def addHmdmDevice(name, configuration_id, description="", groups=None, imei="", phone=""):
+    return MobileDatabase().addHmdmDevice(name, configuration_id, description, groups, imei, phone)
+
 def getHmdmDevices():
     return MobileDatabase().getHmdmDevices()
 
 def getHmdmConfigurationById(id):
     return MobileDatabase().getHmdmConfigurationById(id)
 
+def updateHmdmConfiguration(config_data):
+    return MobileDatabase().updateHmdmConfiguration(config_data)
+
 def deleteHmdmDeviceById(id):
     return MobileDatabase().deleteHmdmDeviceById(id)
 
 def getHmdmApplications():
     return MobileDatabase().getHmdmApplications()
+
+def getHmdmConfigurationApplications(id):
+    return MobileDatabase().getHmdmConfigurationApplications(id)
+
+def getHmdmIcons():
+    return MobileDatabase().getHmdmIcons()
+
+def addHmdmIcon(icon_data):
+    return MobileDatabase().addHmdmIcon(icon_data)
+
+def deleteHmdmIconsById(id):
+    return MobileDatabase().deleteHmdmIconsById(id)
+
+def deleteIconById(id):
+    return MobileDatabase().deleteIconById(id)
+
+def addHmdmApplication(app_data):
+    return MobileDatabase().addHmdmApplication(app_data)
 
 def deleteApplicationById(id):
     return MobileDatabase().deleteApplicationById(id)
@@ -81,8 +105,23 @@ def getHmdmPushMessages(device_number="", message_filter="", status_filter="",
 def getHmdmGroups():
     return MobileDatabase().getHmdmGroups()
 
+def addHmdmGroup(name):
+    return MobileDatabase().addHmdmGroup(name)
+
+def deleteHmdmGroupById(id):
+    return MobileDatabase().deleteHmdmGroupById(id)
+
 def sendHmdmMessage(scope, device_number="", group_id="", configuration_id="", message=""):
     return MobileDatabase().sendHmdmMessage(scope, device_number, group_id, configuration_id, message)
 
 def sendHmdmPushMessage(scope, message_type="", payload="", device_number="", group_id="", configuration_id=""):
     return MobileDatabase().sendHmdmPushMessage(scope, message_type, payload, device_number, group_id, configuration_id)
+
+def getHmdmDeviceLogs(device_number="", package_id="", severity="-1", page_size=50, page_num=1):
+    return MobileDatabase().getHmdmDeviceLogs(device_number, package_id, severity, page_size, page_num)
+
+def exportHmdmDeviceLogs(device_number="", app="", severity="-1"):
+    return MobileDatabase().exportHmdmDeviceLogs(device_number, app, severity)
+
+def searchHmdmAppPackages(filter_text=""):
+    return MobileDatabase().searchHmdmAppPackages(filter_text)

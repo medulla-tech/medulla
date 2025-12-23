@@ -1,6 +1,9 @@
 <?php
 require_once("modules/mobile/includes/xmlrpc.php");
 
+// Get filter parameter
+$filter = isset($_GET['filter']) ? $_GET['filter'] : '';
+
 // ICI 
 $mobiles_headwind = xmlrpc_get_hmdm_devices();
     
@@ -11,6 +14,8 @@ $qrCode = $configurationJson;
 
 // Construction du tableau avec OptimizedListInfos
 $ids = $col1 = $descript = $enligne = $numeros = $autorisations = $installations = $etatFichiers = $configurations = $actions = [];
+$actionQr = [];
+$params = [];
 
 if (!is_array($mobiles_headwind)) $mobiles_headwind = [];
 
@@ -19,6 +24,14 @@ foreach ($mobiles_headwind as &$m) {
 }
 
 unset($m);
+
+// Filter by device name if filter is provided
+if (!empty($filter)) {
+    $mobiles_headwind = array_filter($mobiles_headwind, function($mobile) use ($filter) {
+        $deviceName = $mobile['number'] ?? '';
+        return stripos($deviceName, $filter) !== false;
+    });
+}
 
 // $mobiles = array_merge($mobiles_headwind, $mobiles_nano);
 $mobiles = $mobiles_headwind; // Pour le moment on n'affiche que les headwind
@@ -54,15 +67,12 @@ foreach ($mobiles as $index => $mobile) {
 
     $col1[] = "<a href='#' class='mobilestatus {$statut}'>{$numero}</a>";
 
-    $actions[] = "
-    <ul class='action' style='list-style-type: none; padding: 0; margin: 0; display: flex; gap: 8px; align-items: center;'>
-        <li class='configuremobile'><a href='#' title='Éditer'>" . _T("", "mobile") . "</a></li>  
-        <li class='mobilepush'><a href='#' title='Push Message'>" . _T("", "mobile") . "</a></li>
-        <li class='audit'><a href='#' title='Logs'>" . _T("", "mobile") . "</a></li>
-        <li class='delete'><a href='/hmdm/rest/private/devices/$numero' data-method='DELETE' class='delete-link' data-id='{$index}' title='Supprimer'>" . _T("", "mobile") . "</a></li>
-        <li class='delete'><a href='/hmdm/rest/public/qr/$qrCode?deviceId=$numero' data-method='GET' class='delete-link' target='_blank' title='QR Code'>" . _T("", "mobile") . "</a></li>
-    </ul>
-    ";
+    // Standard QR Code action via MMC action API
+    $actionQr[] = new ActionItem(_T("QR Code", "mobile"), "qrCode", "qr-code", "", "mobile", "mobile");
+    $params[] = [
+        'device_number' => $numero,
+        'configuration_id' => isset($mobile['configurationId']) ? $mobile['configurationId'] : 1,
+    ];
 }
 
 
@@ -82,9 +92,10 @@ $n->addExtraInfo($sources, _T("Model", "mobile"));
 $n->addExtraInfo($ip, _T("IP address", "mobile"));
 $n->addExtraInfo($installations, _T("Status", "mobile"));
 // $n->addExtraInfo($etatFichiers, _T("État des fichiers", "mobile"));
-$n->addExtraInfo($actions, _T("Actions", "mobile"));
 
-
+// Attach actions
+$n->addActionItemArray($actionQr);
+$n->setParamInfo($params);
 
 // $n->setItemCount(count($mobiles));
 $n->start = 0;
@@ -92,3 +103,16 @@ $n->start = 0;
 
 $n->display();
 ?>
+<script type="text/javascript">
+jQuery(document).ready(function() {
+    jQuery('li.qr-code a').each(function() {
+        var $link = jQuery(this);
+        var href = $link.attr('href');
+        
+        $link.on('click', function(e) {
+            e.preventDefault();
+            window.open(href, '_blank');
+        });
+    });
+});
+</script>

@@ -150,7 +150,7 @@ $f->add(
         new InputTpl("file_url"),
         array("class" => "external-field", "style" => "display:none;")
     ),
-    array("value" => '', "placeholder" => "https://example.com/file.apk")
+    array("value" => '', "placeholder" => _T("https://example.com/file.apk", "mobile"))
 );
 
 // Always-visible fields section

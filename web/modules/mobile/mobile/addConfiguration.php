@@ -4,7 +4,7 @@ require("localSidebar.php");
 require_once("modules/imaging/includes/class_form.php");
 require_once("modules/mobile/includes/HtmlClasses.php");
 
-$p = new PageGenerator(_T("Configuration du mobile", 'mobile'));
+$p = new PageGenerator(_T("Add configuration", 'mobile'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
@@ -20,7 +20,7 @@ $formAddDevice->addElement(new SepTpl()); // Séparateur
 
 // Élément: Numéro de téléphone
 $phoneAddDevice = new TrFormElement(
-    "Nom de la configuration",
+    _T("Configuration name", 'mobile'),
     new InputTpl('add-phone', '/^[a-zA-Z0-9\s]+$/')
 );
 $phoneAddDevice->setClass('add-phone');
@@ -29,8 +29,8 @@ $formAddDevice->addElement(new SepTpl()); // Séparateur
 
 // Élément: Description
 $descAddDevice = new TrFormElement(
-    'Description:',
-    new TextareaTpl('add-desc', 'Description du téléphone')
+    _T('Description', 'mobile'),
+    new TextareaTpl('add-desc', _T('Configuration description', 'mobile'))
 );
 $descAddDevice->setClass('add-desc');
 $formAddDevice->addElement($descAddDevice);
@@ -38,9 +38,13 @@ $formAddDevice->addElement(new SepTpl()); // Séparateur
 
 // Élément: Groupe
 $grpSelAddDevice = new SelectItem('add-grp');
-$grpSelAddDevice->setElements(['Group 1', 'Group 2', 'Group 3']);
+$grpSelAddDevice->setElements([
+    _T('Group 1', 'mobile'),
+    _T('Group 2', 'mobile'),
+    _T('Group 3', 'mobile')
+]);
 $grpSelAddDevice->setElementsVal(['group1', 'group2', 'group3']);
-$grpAddDevice = new TrFormElement('Groupe:', $grpSelAddDevice);
+$grpAddDevice = new TrFormElement(_T('Group', 'mobile'), $grpSelAddDevice);
 $grpAddDevice->setClass('add-grp');
 $formAddDevice->addElement($grpAddDevice);
 $formAddDevice->addElement(new SepTpl()); // Séparateur
@@ -48,27 +52,30 @@ $formAddDevice->addElement(new SepTpl()); // Séparateur
 // Élément: Configuration
 $configSelAddDevice = new SelectItem('add-config');
 $configSelAddDevice->setElements([
-    'Apple Conf Background', 'Agent', 'Mode Managed', 'Launcher MIUI (Xiaomi Redmi)'
+    _T('Apple Conf Background', 'mobile'),
+    _T('Agent', 'mobile'),
+    _T('Mode Managed', 'mobile'),
+    _T('Launcher MIUI (Xiaomi Redmi)', 'mobile')
 ]);
 $configSelAddDevice->setElementsVal([
     'apple_conf_background', 'agent', 'mode_managed', 'launcher_miui'
 ]);
-$configAddDevice = new TrFormElement('Configuration:', $configSelAddDevice);
+$configAddDevice = new TrFormElement(_T('Configuration', 'mobile'), $configSelAddDevice);
 $configAddDevice->setClass('add-config');
 $formAddDevice->addElement($configAddDevice);
 $formAddDevice->addElement(new SepTpl()); // Séparateur
 
 // Élément: IMEI
 $imeiAddDevice = new TrFormElement(
-    'IMEI:',
-    new InputTpl('add-imei', '/^[0-9]+$/', 'IMEI', 'IMEI')
+    _T('IMEI', 'mobile'),
+    new InputTpl('add-imei', '/^[0-9]+$/', _T('IMEI', 'mobile'), _T('IMEI', 'mobile'))
 );
 $imeiAddDevice->setClass('add-imei');
 $formAddDevice->addElement($imeiAddDevice);
 $formAddDevice->addElement(new SepTpl()); // Séparateur
 
 // Bouton de validation
-$submitAddDevice = new buttonTpl('add-submit', "Ajouter", 'add-btn-submit', 'Cliquez pour ajouter un téléphone');
+$submitAddDevice = new buttonTpl('add-submit', _T("Add", 'mobile'), 'add-btn-submit', _T('Click to add configuration', 'mobile'));
 $formAddDevice->addElement($submitAddDevice);
 
 // Affichage du formulaire

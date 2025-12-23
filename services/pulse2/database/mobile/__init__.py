@@ -28,9 +28,9 @@ class MobileDatabase(DatabaseHelper):
     is_activated = False
     session = None
     # Headwind REST API base (TO DO: consider moving to config)
-    BASE_URL = "http://hba.medulla-tech.io/hmdm/rest"
+    BASE_URL = "http://localhost/hmdm/rest"
     login = "admin"
-    password = "HbaHmdm!"
+    password = "admin"
 
 
     def db_check(self):
@@ -163,24 +163,59 @@ class MobileDatabase(DatabaseHelper):
 
         return devices_nano
 
+    def addHmdmDevice(self, name, configuration_id, description="", groups=None, imei="", phone=""):
+        """
+        Create a new device in HMDM.
+        
+        :param name: Device number/name (required)
+        :param configuration_id: Configuration ID (required)
+        :param description: Device description (optional)
+        :param groups: List of group IDs (optional)
+        :param imei: Device IMEI (optional)
+        :param phone: Device phone number (optional)
+        :return: Response from HMDM or None on error
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Impossible d'authentifier pour créer un appareil.")
+            return None
 
-    # Headwind MDM device handling
-    def to_back(self, name, desc):
+        url = f"{self.BASE_URL}/private/devices"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+
+        device_data = {
+            "number": name,
+            "configurationId": int(configuration_id)
+        }
+
+        if description:
+            device_data["description"] = description
+        
+        if groups and isinstance(groups, list):
+            device_data["groups"] = [{"id": int(g)} for g in groups if g]
+        
+        if imei:
+            device_data["imei"] = imei
+        
+        if phone:
+            device_data["phone"] = phone
+
         try:
-                
-            logger.error(f"111 - Voila ma variable name et desc avant d entrée en base {name} , {desc}")
-
+            logging.getLogger().info(f"Creating device in HMDM: {json.dumps(device_data, indent=2)}")
+            resp = requests.put(url, json=device_data, headers=headers)
+            logging.getLogger().info(f"HMDM device creation HTTP status: {resp.status_code}")
+            logging.getLogger().info(f"HMDM device creation response: {resp.text}")
+            resp.raise_for_status()
             
-            device_data = {
-                    "id": 0,
-                    "number": name,
-                    "description": desc,
-                    "configurationId": 1
-                }
-            return device_data
+            resp_json = resp.json()
+            resp_json["message"] = resp_json.get("message") or ""
+            resp_json["data"] = resp_json.get("data") or {}
+            
+            logging.getLogger().info(f"Device '{name}' created successfully in HMDM.")
+            return resp_json
         except Exception as e:
-                logging.getLogger().error(f"Erreur dans to_back: {e}")
-                raise
+            logging.getLogger().error(f"Error creating device '{name}': {e}")
+            return None
     
     # HMDM API authentication
     def hash_password(self, password: str)-> str:
@@ -363,6 +398,148 @@ class MobileDatabase(DatabaseHelper):
         except Exception as e:
             logging.getLogger().error(f"Error fetching applications: {e}")
             return None
+        
+    def getHmdmConfigurationApplications(self, config_id: int):
+        """
+        Fetch applications linked to a specific configuration.
+
+        :param config_id: Configuration ID
+        :return: List of application dicts or [] on error
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Impossible d'authentifier pour récupérer les applications de la configuration.")
+            return []
+
+        url = f"{self.BASE_URL}/private/configurations/applications/{config_id}"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+
+        try:
+            resp = requests.get(url, headers=headers)
+            resp.raise_for_status()
+            logging.getLogger().info(f"Applications for configuration {config_id} fetched successfully {resp.json()}")
+            data = resp.json() or {}
+            payload = data.get("data", data)
+            # Some responses may nest under 'applications'
+            if isinstance(payload, dict) and "applications" in payload:
+                payload = payload.get("applications", [])
+            return payload if isinstance(payload, list) else []
+        except Exception as e:
+            logging.getLogger().error(f"Error fetching applications for configuration {config_id}: {e}")
+            return []    
+
+    def getHmdmIcons(self):
+        """
+        Fetch the list of icons from HMDM.
+        Returns a list of icon dicts.
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Failed to authenticate when fetching icons.")
+            return []
+
+        url = f"{self.BASE_URL}/private/icons/search"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+
+        try:
+            resp = requests.get(url, headers=headers, json={})
+            resp.raise_for_status()
+            data = resp.json()
+            if data.get("status") == "OK":
+                logging.getLogger().info(f"Icons fetched successfully.")
+                return data.get("data", [])
+            else:
+                logging.getLogger().error(f"Failed to fetch icons: {data}")
+                return []
+        except Exception as e:
+            logging.getLogger().error(f"Failed to fetch icons: {e}")
+            return []
+
+    def addHmdmIcon(self, icon_data: dict):
+        """
+        Create an icon in HMDM.
+        
+        :param icon_data: Dict with 'name' (required), 'fileId' (required), and optionally 'fileName'
+        :return: Response from HMDM or None on error
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Failed to authenticate when creating icon.")
+            return None
+
+        url = f"{self.BASE_URL}/private/icons"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+
+        # Build base payload
+        payload = {
+            "name": icon_data.get("name", ""),
+            "fileId": int(icon_data.get("fileId", 0)),
+            "fileName": icon_data.get("fileName", "")
+        }
+
+        # If an id is provided, treat this as an update operation
+        icon_id = icon_data.get("id") if isinstance(icon_data, dict) else None
+        is_update = False
+        try:
+            if icon_id is not None and str(icon_id).strip() != "":
+                payload["id"] = int(icon_id)
+                is_update = True
+        except Exception:
+            # ignore invalid id, proceed as create
+            is_update = False
+
+        logging.getLogger().info(f"[mobile] addHmdmIcon payload (update={is_update}): {json.dumps(payload)}")
+
+        try:
+            # PUT is used for both create and update in HMDM API
+            resp = requests.put(url, headers=headers, json=payload)
+            resp.raise_for_status()
+            data = resp.json()
+            logging.getLogger().info(f"[mobile] addHmdmIcon response: {json.dumps(data)}")
+            if data.get("status") == "OK":
+                if is_update:
+                    logging.getLogger().info(f"Icon (id={payload.get('id')}) updated successfully.")
+                else:
+                    logging.getLogger().info(f"Icon created successfully.")
+                return data.get("data")
+            else:
+                action = "update" if is_update else "create"
+                logging.getLogger().error(f"Failed to {action} icon: {data}")
+                return None
+        except Exception as e:
+            action = "update" if is_update else "create"
+            logging.getLogger().error(f"Failed to {action} icon: {e}")
+            return None
+
+    def deleteHmdmIconsById(self, id):
+        """
+        Delete an icon in HMDM by its ID.
+        
+        :param id: Icon ID to delete
+        :return: True if deletion was successful, False otherwise
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Failed to authenticate when deleting icon.")
+            return False
+
+        url = f"{self.BASE_URL}/private/icons/{id}"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+
+        try:
+            resp = requests.delete(url, headers=headers)
+            resp.raise_for_status()
+            data = resp.json()
+            logging.getLogger().info(f"[mobile] deleteHmdmIconsById response: {json.dumps(data)}")
+            if data.get("status") == "OK":
+                logging.getLogger().info(f"Icon (id={id}) deleted successfully.")
+                return True
+            else:
+                logging.getLogger().error(f"Failed to delete icon (id={id}): {data}")
+                return False
+        except Exception as e:
+            logging.getLogger().error(f"Failed to delete icon (id={id}): {e}")
+            return False
 
     def searchHmdmDevices(self, filter_text=""):
         """
@@ -389,7 +566,11 @@ class MobileDatabase(DatabaseHelper):
         try:
             resp = requests.post(url, headers=headers, json=payload)
             resp.raise_for_status()
-            data = resp.json()
+            try:
+                data = resp.json()
+            except Exception:
+                txt = resp.text.strip()
+                return [txt] if txt else []
             logging.getLogger().info(f"Device search completed with filter: {filter_text}")
             devices = data.get("data", {}).get("devices", {}).get("items", [])
             result = [{"id": d["id"], "name": d["number"]} for d in devices]
@@ -949,6 +1130,16 @@ class MobileDatabase(DatabaseHelper):
         except Exception as e:
             logging.getLogger().error(f"There is an error: device was not created: {e} ")
 
+    def _strip_file_last_update(self, config_data: dict):
+        """Remove large millisecond timestamps from files entries to avoid XML-RPC overflow."""
+        try:
+            files = config_data.get('files', []) if isinstance(config_data, dict) else []
+            if isinstance(files, list):
+                for file_item in files:
+                    if isinstance(file_item, dict) and 'lastUpdate' in file_item:
+                        del file_item['lastUpdate']
+        except Exception:
+            pass
 
     def getHmdmConfigurationById(self, config_id: int, base_url: str = None):
         """
@@ -976,9 +1167,65 @@ class MobileDatabase(DatabaseHelper):
             resp = requests.get(url, headers=headers)
             resp.raise_for_status()
             raw = resp.json()
-            return raw.get('data', {}).get('qrCodeKey')
+            config_data = raw.get('data', {})
+
+            # Remove fields with large integers that exceed XML-RPC limits
+            self._strip_file_last_update(config_data)
+            
+            # Log the configuration for debugging
+            logging.getLogger().info(f"Retrieved configuration {config_id}: {json.dumps(config_data, indent=2)}")
+            return config_data
         except Exception as e:
             logging.getLogger().error(f"Error fetching configuration {config_id}: {e}")
+            return None
+
+    def updateHmdmConfiguration(self, config_data: dict):
+        """
+        Update an existing HMDM configuration by merging changes into the existing config.
+        """
+        if not isinstance(config_data, dict):
+            logging.getLogger().error("config_data must be a dict")
+            return None
+
+        config_id = config_data.get("id") or config_data.get("configurationId")
+        if not config_id:
+            logging.getLogger().error("Configuration ID is required to update configuration.")
+            return None
+
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Impossible d'authentifier pour mettre à jour la configuration.")
+            return None
+
+        # First, GET the existing configuration
+        existing = self.getHmdmConfigurationById(config_id)
+        if not existing:
+            logging.getLogger().error(f"Could not fetch existing configuration {config_id}")
+            return None
+
+        # Merge user changes into existing config
+        existing.update(config_data)
+
+        # Ensure outgoing payload does not contain large integers in files
+        self._strip_file_last_update(existing)
+
+        url = f"{self.BASE_URL}/private/configurations"
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {hmtoken}"
+        }
+
+        try:
+            logging.getLogger().info(f"Updating HMDM configuration {config_id} with merged payload: {json.dumps(existing, indent=2)}")
+            resp = requests.put(url, headers=headers, json=existing)
+            resp.raise_for_status()
+            data = resp.json()
+            cleaned = data.get('data', data) or {}
+            self._strip_file_last_update(cleaned)
+            logging.getLogger().info(f"Configuration {config_id} updated successfully: {json.dumps(cleaned, indent=2)}")
+            return cleaned
+        except Exception as e:
+            logging.getLogger().error(f"Error updating configuration {config_id}: {e}")
             return None
 
     def deleteHmdmDeviceById(self, device_id: int):
@@ -1037,7 +1284,49 @@ class MobileDatabase(DatabaseHelper):
 
         try:
             resp = requests.delete(url, headers=headers)
-            resp.raise_for_status()
+
+            if resp.status_code not in (200, 204):
+                logging.getLogger().warning(
+                    f"Unexpected status deleting application {app_id}: {resp.status_code}"
+                )
+
+            try:
+                if resp.headers.get("Content-Type", "").startswith("application/json"):
+                    body = resp.json()
+                    if isinstance(body, dict):
+                        if str(body.get("status", "")).upper() in ("ERROR", "FAIL", "FAILED"):
+                            logging.getLogger().error(
+                                f"HMDM reported error deleting app {app_id}: {body}"
+                            )
+                            return False
+                        if body.get("error") is True:
+                            logging.getLogger().error(
+                                f"HMDM reported error deleting app {app_id}: {body}"
+                            )
+                            return False
+            except Exception:
+                # Ignore JSON parsing errors
+                pass
+            try:
+                apps = self.getHmdmApplications() or []
+                still_exists = False
+                for app in apps:
+                    try:
+                        if int(app.get("id")) == int(app_id):
+                            still_exists = True
+                            break
+                    except Exception:
+                        continue
+                if still_exists:
+                    logging.getLogger().warning(
+                        f"Application {app_id} still present after delete; treating as failure."
+                    )
+                    return False
+            except Exception as ve:
+                logging.getLogger().warning(
+                    f"Could not verify deletion of application {app_id}: {ve}"
+                )
+
             logging.getLogger().info(f"Application {app_id} deleted successfully.")
             return True
         except Exception as e:
@@ -1069,6 +1358,71 @@ class MobileDatabase(DatabaseHelper):
         except Exception as e:
             logging.getLogger().error(f"Error fetching groups: {e}")
             return []
+
+    def addHmdmGroup(self, name):
+        """
+        Create a new group in HMDM.
+        
+        :param name: Group name (required)
+        :return: Response from HMDM or None on error
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Impossible to authenticate to create group.")
+            return None
+
+        url = f"{self.BASE_URL}/private/groups"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+
+        group_data = {
+            "name": name
+        }
+
+        try:
+            logging.getLogger().info(f"Creating group in HMDM: {json.dumps(group_data, indent=2)}")
+            resp = requests.put(url, json=group_data, headers=headers)
+            logging.getLogger().info(f"HMDM group creation HTTP status: {resp.status_code}")
+            logging.getLogger().info(f"HMDM group creation response: {resp.text}")
+            resp.raise_for_status()
+            
+            resp_json = resp.json()
+            resp_json["message"] = resp_json.get("message") or ""
+            resp_json["data"] = resp_json.get("data") or {}
+            
+            logging.getLogger().info(f"Group '{name}' created successfully in HMDM.")
+            return resp_json
+        except Exception as e:
+            logging.getLogger().error(f"Error creating group '{name}': {e}")
+            return None
+
+    def deleteHmdmGroupById(self, group_id):
+        """
+        Delete a group from HMDM by its ID.
+
+        :param group_id: The group ID to delete.
+        :return: True if deleted, False otherwise.
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Impossible to authenticate to delete group.")
+            return False
+
+        url = f"{self.BASE_URL}/private/groups/{group_id}"
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {hmtoken}"
+        }
+
+        try:
+            resp = requests.delete(url, headers=headers)
+            resp.raise_for_status()
+
+            logging.getLogger().info(f"Group {group_id} deleted successfully.")
+            return True
+
+        except Exception as e:
+            logging.getLogger().error(f"Error deleting group {group_id}: {e}")
+            return False
 
     def sendHmdmMessage(self, scope, device_number="", group_id="", configuration_id="", message=""):
         """
@@ -1173,3 +1527,207 @@ class MobileDatabase(DatabaseHelper):
         except Exception as e:
             logging.getLogger().error(f"Error sending push message: {e}")
             return {"status": "error", "message": str(e)}
+    def getHmdmDeviceLogs(self, device_number="", package_id="", severity="-1", page_size=50, page_num=1):
+        """
+        Search device logs via HMDM.
+        Endpoint: /plugins/devicelog/log/private/search
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Unable to authenticate for device logs search.")
+            return []
+
+        url = f"{self.BASE_URL}/plugins/devicelog/log/private/search"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+
+        payload = {
+            "pageSize": page_size,
+            "pageNum": page_num
+        }
+        if device_number:
+            payload["deviceFilter"] = device_number
+        if package_id:
+            payload["applicationFilter"] = package_id
+        try:
+            sev = int(severity)
+        except Exception:
+            sev = -1
+        payload["severity"] = sev
+
+        try:
+            resp = requests.post(url, json=payload, headers=headers)
+            resp.raise_for_status()
+            data = resp.json()
+            items = data.get("data", {}).get("items", [])
+            result = []
+            for m in items:
+                result.append({
+                    "device": m.get("deviceNumber") or m.get("device"),
+                    "time": (m.get("ts") or m.get("time") or 0) // 1000,
+                    "package": m.get("package") or m.get("packageName") or "",
+                    "severity": m.get("severity"),
+                    "message": m.get("message") or m.get("text") or "",
+                })
+            return result
+        except Exception as e:
+            logging.getLogger().error(f"Error fetching device logs: {e}")
+            return []
+
+    def exportHmdmDeviceLogs(self, device_number="", app_id="", severity="-1"):
+        """
+        Export device logs via HMDM.
+        Endpoint: /plugins/devicelog/log/private/search/export
+        Returns dict with 'content' (binary) or error.
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Unable to authenticate for device logs export.")
+            return {"status": "error", "message": "Authentication failed"}
+
+        url = f"{self.BASE_URL}/plugins/devicelog/log/private/search/export"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+
+        try:
+            sev = int(severity)
+        except Exception:
+            sev = -1
+
+        payload = {
+            "pageNum": 1,
+            "pageSize": 50,
+            "deviceFilter": device_number or "",
+            "applicationFilter": app_id,
+            "severity": sev,
+            "messageFilter": "",
+            "dateFrom": None,
+            "dateTo": None,
+            "sortValue": "createTime"
+        }
+
+        try:
+            resp = requests.post(url, json=payload, headers=headers)
+            resp.raise_for_status()
+            return {"status": "OK", "content": resp.content}
+        except Exception as e:
+            logging.getLogger().error(f"Error exporting device logs: {e}")
+            return {"status": "error", "message": str(e)}
+
+    def searchHmdmAppPackages(self, filter_text=""):
+        """Autocomplete for app package names using /private/applications/autocomplete (POST body = filter string).
+        Response: { 'status': 'OK', 'data': [ { 'id': int, 'name': str }, ... ] }
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Unable to authenticate for app package search.")
+            return []
+
+        url = f"{self.BASE_URL}/private/applications/autocomplete"
+        headers = {"Content-Type": "text/plain", "Authorization": f"Bearer {hmtoken}"}
+        body = filter_text or ""
+        
+        try:
+            resp = requests.post(url, data=body, headers=headers)
+            resp.raise_for_status()
+            data = resp.json()
+            
+            # Extract data array from response
+            items = data.get("data", []) if isinstance(data, dict) else []
+            
+            packages = []
+            f = (filter_text or "").lower()
+            for item in items:
+                if isinstance(item, dict):
+                    pkg = item.get("name", "")
+                    if pkg and f in pkg.lower():
+                        packages.append({
+                            "id": item.get("id"),
+                            "name": pkg
+                        })
+                        if len(packages) >= 7:
+                            break
+            
+            return packages
+        except Exception as e:
+            logging.getLogger().error(f"Error searching app packages: {e}")
+            return []
+
+    def addHmdmApplication(self, app_data: dict):
+        """
+        Create or update an application in HMDM, with icon upload support.
+
+        If app_data contains 'icon_upload_path' and 'icon_upload_name', upload the icon
+        to HMDM and set the icon filename in the payload.
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Impossible d'authentifier pour ajouter/modifier l'application.")
+            return None
+
+        # Icon uploads are no longer handled server-side. If callers still provide
+        # icon_upload_* fields they will be ignored. Use `iconText` or `showIcon`
+        # flags in the payload instead.
+
+        payload = {
+            "type": app_data.get("type", ""),
+            "pkg": app_data.get("pkg", ""),
+            "name": app_data.get("name", ""),
+            "showIcon": False,
+            "useKiosk": False,
+            "system": False,
+        }
+
+        # Optional fields
+        if app_data.get("version"):
+            payload["version"] = app_data["version"]
+
+        if app_data.get("system"):
+            payload["system"] = app_data["system"]
+
+        if app_data.get("url"):
+            payload["url"] = app_data["url"]
+
+        if app_data.get("arch"):
+            payload["arch"] = app_data["arch"]
+
+        if app_data.get("iconText"):
+            payload["iconText"] = app_data["iconText"]
+
+        if app_data.get("showIcon"):
+            payload["showIcon"] = True
+
+        # If icon id provided, include it; otherwise accept an 'icon' field
+        icon_id = app_data.get("iconId")
+        if icon_id:
+            payload["iconId"] = icon_id
+
+        url = f"{self.BASE_URL}/private/applications/android"
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {hmtoken}",
+        }
+
+        try:
+            logging.getLogger().info(f"Sending application payload to HMDM: {json.dumps(payload)}")
+            resp = requests.put(url, json=payload, headers=headers)
+            logging.getLogger().info(f"HMDM HTTP status: {resp.status_code}")
+            logging.getLogger().info(f"HMDM raw response: {resp.text}")
+            resp.raise_for_status()
+            try:
+                resp_json = resp.json()
+            except Exception:
+                logging.getLogger().error("Failed to decode HMDM response as JSON")
+                return None
+
+            logging.getLogger().info(f"HMDM response: {json.dumps(resp_json)}")
+            if resp_json.get("status") == "OK":
+                resp_json["message"] = resp_json.get("message") or ""
+                resp_json["data"] = resp_json.get("data") or {}
+                logging.getLogger().info("Application added/updated successfully in HMDM.")
+                return resp_json
+            else:
+                logging.getLogger().error(f"HMDM returned error: {resp_json.get('message', 'Unknown error')}")
+                return None
+        except Exception as e:
+            logging.getLogger().error(f"Error adding/updating application: {e}")
+            return None    
+

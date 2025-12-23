@@ -3,14 +3,29 @@
 // function xmlrpc_nano_devices(){
 //     return xmlCall("mobile.nano_devices", array());
 // }
-function xmlrpc_to_back($name, $desc, $conf, $grp){
-    return xmlCall("mobile.to_back", array($name, $desc));
+function xmlrpc_add_hmdm_device($name, $configuration_id, $description="", $groups=null, $imei="", $phone=""){
+    return xmlCall("mobile.addHmdmDevice", array($name, $configuration_id, $description, $groups, $imei, $phone));
 }
 function xmlrpc_get_hmdm_devices(){
     return xmlCall("mobile.getHmdmDevices", array());
 }
 function xmlrpc_get_hmdm_applications(){
     return xmlCall("mobile.getHmdmApplications", array());
+}
+function xmlrpc_get_hmdm_configuration_applications($config_id){
+    return xmlCall("mobile.getHmdmConfigurationApplications", array($config_id));
+}
+function xmlrpc_get_hmdm_icons(){
+    return xmlCall("mobile.getHmdmIcons", array());
+}
+function xmlrpc_add_hmdm_icon($icon_data){
+    return xmlCall("mobile.addHmdmIcon", array($icon_data));
+}
+function xmlrpc_delete_hmdm_icons_by_id($id){
+    return xmlCall("mobile.deleteHmdmIconsById", array($id));
+}
+function xmlrpc_add_hmdm_application($app_data){
+    return xmlCall("mobile.addHmdmApplication", array($app_data));
 }
 function xmlrpc_delete_application_by_id($id){
     return xmlCall("mobile.deleteApplicationById", array($id));
@@ -32,6 +47,9 @@ function xmlrpc_delete_configuration_by_id($id){
 }
 function xmlrpc_get_hmdm_configuration_by_id($id){
     return xmlCall("mobile.getHmdmConfigurationById", array($id));
+}
+function xmlrpc_update_hmdm_configuration($config_data){
+    return xmlCall("mobile.updateHmdmConfiguration", array($config_data));
 }
 function xmlrpc_delete_hmdm_device_by_id($id){
     return xmlCall("mobile.deleteDeviceById", array($id));
@@ -58,10 +76,25 @@ function xmlrpc_get_hmdm_push_messages($device_number="", $message_filter="", $s
 function xmlrpc_get_hmdm_groups(){
     return xmlCall("mobile.getHmdmGroups", array());
 }
+function xmlrpc_add_hmdm_group($name){
+    return xmlCall("mobile.addHmdmGroup", array($name));
+}
+function xmlrpc_delete_hmdm_group_by_id($id){
+    return xmlCall("mobile.deleteHmdmGroupById", array($id));
+}
 function xmlrpc_send_hmdm_message($scope, $device_number="", $group_id="", $configuration_id="", $message=""){
     return xmlCall("mobile.sendHmdmMessage", array($scope, $device_number, $group_id, $configuration_id, $message));
 }
 function xmlrpc_send_hmdm_push_message($scope, $message_type="", $payload="", $device_number="", $group_id="", $configuration_id=""){
     return xmlCall("mobile.sendHmdmPushMessage", array($scope, $message_type, $payload, $device_number, $group_id, $configuration_id));
+}
+function xmlrpc_get_hmdm_device_logs($device_number="", $package_filter="", $severity="-1", $page_size=50, $page_num=1){
+    return xmlCall("mobile.getHmdmDeviceLogs", array($device_number, $package_filter, $severity, $page_size, $page_num));
+}
+function xmlrpc_export_hmdm_device_logs($device_number="", $app="", $severity="-1"){ 
+    return xmlCall("mobile.exportHmdmDeviceLogs", array($device_number, $app, $severity));
+}
+function xmlrpc_search_hmdm_app_packages($filter_text=""){
+    return xmlCall("mobile.searchHmdmAppPackages", array($filter_text));
 }
 ?>
