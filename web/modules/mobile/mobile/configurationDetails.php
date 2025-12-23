@@ -7,7 +7,7 @@ require_once("modules/imaging/includes/class_form.php");
 $configId = isset($_GET['id']) ? $_GET['id'] : '';
 if ($configId === '') {
     new NotifyWidgetFailure(_T("Configuration ID is missing", "mobile"));
-    header("Location: " . urlStrRedirect("mobile/mobile/configurationsList"));
+    header("Location: " . urlStrRedirect("mobile/mobile/configurations"));
     exit;
 }
 
@@ -18,7 +18,7 @@ $notifyMessage = null;
 $notifyError = null;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['bcancel'])) {
-        header("Location: " . urlStrRedirect("mobile/mobile/configurationsList"));
+        header("Location: " . urlStrRedirect("mobile/mobile/configurations"));
         exit;
     }
     if (isset($_POST['bsave']) || isset($_POST['bsaveexit'])) {
@@ -210,6 +210,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         $configApps = xmlrpc_get_hmdm_configuration_applications($configId);
         if (is_array($configApps)) {
+            // Update app settings from form
+            foreach ($configApps as $idx => &$app) {
+                if (isset($_POST['app_action_' . $idx])) {
+                    $action = intval($_POST['app_action_' . $idx]);
+                    
+                    // Handle the action value
+                    if ($action === 0) {
+                        // Delete action - mark for removal and set action=2 (server convention)
+                        $app['remove'] = true;
+                        $app['action'] = 2;
+                        $app['selected'] = true;
+                    } elseif ($action === 1) {
+                        // Install action
+                        $app['remove'] = false;
+                        $app['action'] = 1;
+                        $app['selected'] = true;
+                    } elseif ($action === 2) {
+                        // Do not install action
+                        $app['remove'] = false;
+                        $app['action'] = 0;
+                        $app['selected'] = true;
+                    }
+                }
+                
+                if (isset($_POST['app_show_icon_' . $idx])) {
+                    $app['showIcon'] = (intval($_POST['app_show_icon_' . $idx]) === 1);
+                }
+                
+                if (isset($_POST['app_order_' . $idx])) {
+                    $app['screenOrder'] = intval($_POST['app_order_' . $idx]);
+                }
+            }
+            unset($app);
+            
             $payload['applications'] = array_filter($configApps, function($app) {
                 return isset($app['selected']) && $app['selected'];
             });
@@ -247,10 +281,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $notifyMessage = _T("Configuration saved successfully", "mobile");
             $config = xmlrpc_get_hmdm_configuration_by_id($configId);
             if (isset($_POST['bsaveexit'])) {
-                header("Location: " . urlStrRedirect("mobile/mobile/configurationsList"));
+                header("Location: " . urlStrRedirect("mobile/mobile/configurations", array("saved" => "1")));
                 exit;
             }
         } else {
+            if (isset($_POST['bsaveexit'])) {
+                header("Location: " . urlStrRedirect("mobile/mobile/configurations", array("error" => "1")));
+                exit;
+            }
             $notifyError = _T("Failed to save configuration", "mobile");
         }
     }
@@ -326,6 +364,8 @@ $p->display();
 
 <?php
 $form = new Form();
+
+$form->push(new Div(array('id' => 'tab-common')));
 $form->push(new Table());
 
 // COMMON SETTINGS
@@ -669,12 +709,14 @@ $form->add(new TrFormElement(
     new CheckboxTpl("config_autostart_foreground")
 ), array("value" => isset($config['autostartForeground']) && $config['autostartForeground'] ? 'checked' : ''));
 
-$form->pop();
+$form->pop(); // end Common table
+$form->pop(); // end Common div
 
 $form->addButton('bsave', _T('Save', 'mobile'), 'btnPrimary');
 $form->addButton('bsaveexit', _T('Save and exit', 'mobile'), 'btnPrimary');
 $form->addButton('bcancel', _T('Cancel', 'mobile'), 'btnSecondary');
 
+$form->push(new Div(array('id' => 'tab-design', 'style' => 'display:none;')));
 $form->push(new Table());
 
 // DESIGN SETTINGS
@@ -769,13 +811,116 @@ $form->add(new TrFormElement(
     new CheckboxTpl("config_display_status")
 ), array("value" => isset($config['displayStatus']) && $config['displayStatus'] ? 'checked' : ''));
 
-$form->pop();
+$form->pop(); // end Design table
+$form->pop(); // end Design div
 
+$form->push(new Div(array('id' => 'tab-apps', 'style' => 'display:none;')));
+
+ob_start();
+?>
+<div id="tab-table-apps-filters" class="searchbox" style="margin-bottom: 12px;">
+    <div id="searchBest">
+        <span class="searchfield">
+            <select id="app_sort_by" name="app_sort_by" class="searchfieldreal noborder">
+                <option value="pkg" selected><?php echo _T("By ID", "mobile"); ?></option>
+                <option value="name"><?php echo _T("By name", "mobile"); ?></option>
+            </select>
+        </span>
+        <span class="searchfield">
+            <select id="app_system_filter" name="app_system_filter" class="searchfieldreal noborder">
+                <option value="user" selected><?php echo _T("User apps only", "mobile"); ?></option>
+                <option value="all"><?php echo _T("All apps", "mobile"); ?></option>
+            </select>
+        </span>
+        <span class="searchfield">
+            <input type="text" id="app_search_filter" name="app_search_filter" class="searchfieldreal" placeholder="<?php echo _T("Search for an application", "mobile"); ?>" />
+            <button type="button" class="search-clear" aria-label="<?php echo _T('Clear search', 'base'); ?>"
+                            onclick="jQuery('#app_search_filter').val(''); jQuery('#app_search_filter').trigger('input');"></button>
+        </span>
+        <button onclick="jQuery('#app_search_filter').trigger('input'); return false;"><?php echo _T("Search", "glpi");?></button>
+        <span class="loader" aria-hidden="true"></span>
+    </div>
+</div>
+<?php
+$filtersHtml = ob_get_clean();
 $form->push(new Table());
-// Applications tab placeholder; will use configuration-available apps list when adding apps
-// $availableApps = xmlrpc_get_hmdm_configuration_applications($configId);
+$form->add(new TrFormElementcollapse(new textTpl($filtersHtml)));
 $form->pop();
 
+// Results table with pagination
+$configApps = xmlrpc_get_hmdm_configuration_applications($configId);
+if (!is_array($configApps)) { $configApps = array(); }
+ob_start();
+?>
+<table id="tab-table-apps-results" style="width: 100%; border-collapse: collapse; border: 1px solid #ddd; margin-bottom: 12px;">
+    <thead style="background-color: #f5f5f5;">
+        <tr>
+            <th style="border: 1px solid #ddd; padding: 10px; text-align: left;"><?php echo _T("Application Name", "mobile"); ?></th>
+            <th style="border: 1px solid #ddd; padding: 10px; text-align: left;"><?php echo _T("Version", "mobile"); ?></th>
+            <th style="border: 1px solid #ddd; padding: 10px; text-align: left;"><?php echo _T("Actions", "mobile"); ?></th>
+            <th style="border: 1px solid #ddd; padding: 10px; text-align: left;"><?php echo _T("Icon", "mobile"); ?></th>
+            <th style="border: 1px solid #ddd; padding: 10px; text-align: left;"><?php echo _T("Order", "mobile"); ?></th>
+        </tr>
+    </thead>
+    <tbody id="app_table_body">
+        <?php foreach ($configApps as $idx => $app):
+                $appId = isset($app['latestVersion']) ? $app['latestVersion'] : (isset($app['id']) ? $app['id'] : '');
+                $appName = isset($app['name']) ? $app['name'] : '';
+                $appPkg = isset($app['pkg']) ? $app['pkg'] : '';
+                $appVersion = isset($app['version']) ? $app['version'] : '';
+                $appSystem = isset($app['system']) && $app['system'];
+                $appSelected = isset($app['selected']) && $app['selected'];
+                if (isset($app['remove']) && $app['remove']) {
+                    $appAction = 0; // Delete
+                } elseif (isset($app['action']) && (int)$app['action'] === 1) {
+                    $appAction = 1; // Install
+                } else {
+                    $appAction = 2; // Do not install
+                }
+                $appShowIcon = isset($app['showIcon']) ? $app['showIcon'] : true;
+                $appOrder = isset($app['screenOrder']) ? (int)$app['screenOrder'] : 0;
+                $rowStyle = 'border: 1px solid #ddd;';
+                $initialDisplay = $appSelected ? 'table-row' : 'none';
+        ?>
+        <tr style="<?php echo $rowStyle; ?>display: <?php echo $initialDisplay; ?>;" class="app-row" data-app-id="<?php echo htmlspecialchars($appId); ?>" data-app-name="<?php echo htmlspecialchars($appName); ?>" data-app-pkg="<?php echo htmlspecialchars($appPkg); ?>" data-is-system="<?php echo ($appSystem ? '1' : '0'); ?>">
+            <td style="border: 1px solid #ddd; padding: 10px;">
+                <strong class="app-name-text"><?php echo htmlspecialchars($appName); ?></strong>
+                <?php if ($appPkg): ?>
+                <br><small class="app-pkg-text" style="color: #666;"><?php echo htmlspecialchars($appPkg); ?></small>
+                <?php endif; ?>
+            </td>
+            <td style="border: 1px solid #ddd; padding: 10px;"><?php echo htmlspecialchars($appVersion); ?></td>
+            <td style="border: 1px solid #ddd; padding: 10px;">
+                <select name="app_action_<?php echo $idx; ?>" class="app-action-select form-control" style="width: 100%;">
+                    <option value="1"<?php echo ($appAction === 1 ? ' selected' : ''); ?>><?php echo _T("Install", "mobile"); ?></option>
+                    <option value="2"<?php echo ($appAction === 2 ? ' selected' : ''); ?>><?php echo _T("Do not install", "mobile"); ?></option>
+                    <option value="0"<?php echo ($appAction === 0 ? ' selected' : ''); ?>><?php echo _T("Delete", "mobile"); ?></option>
+                </select>
+            </td>
+            <td style="border: 1px solid #ddd; padding: 10px; text-align: center;">
+                <select name="app_show_icon_<?php echo $idx; ?>" class="app-icon-select form-control" style="width: 100%;<?php echo ($appAction !== 1 ? ' display: none;' : ''); ?>">
+                    <option value="1"<?php echo ($appShowIcon ? ' selected' : ''); ?>><?php echo _T("Show", "mobile"); ?></option>
+                    <option value="0"<?php echo (!$appShowIcon ? ' selected' : ''); ?>><?php echo _T("Hide", "mobile"); ?></option>
+                </select>
+            </td>
+            <td style="border: 1px solid #ddd; padding: 10px;">
+                <input type="number" name="app_order_<?php echo $idx; ?>" class="app-order-input form-control" value="<?php echo $appOrder; ?>" style="width: 80px;<?php echo (($appAction !== 1 || !$appShowIcon) ? ' display: none;' : ''); ?>">
+            </td>
+        </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+<div id="apps-pagination" style="margin-bottom: 12px;"></div>
+<?php
+$resultsHtml = ob_get_clean();
+$form->push(new Table());
+$form->add(new TrFormElementcollapse(new textTpl($resultsHtml)));
+$form->pop();
+
+$form->pop(); // end Apps div
+
+// MDM tab in a div container with its table inside
+$form->push(new Div(array('id' => 'tab-mdm', 'style' => 'display:none;')));
 $form->push(new Table());
 
 // MDM SETTINGS
@@ -785,7 +930,6 @@ $form->add(new TrFormElement(
     new CheckboxTpl("config_kiosk_mode")
 ), array("value" => isset($config['kioskMode']) && $config['kioskMode'] ? 'checked' : ''));
 
-// Build autocomplete list from configuration applications endpoint, keeping only selected entries
 $allApps = xmlrpc_get_hmdm_configuration_applications($configId);
 if (!is_array($allApps)) {
     $allApps = array();
@@ -800,7 +944,6 @@ foreach ($allApps as $app) {
 
 $appsJson = json_encode($selectedApps);
 
-// Resolve app names from selectedApps if config lacks them
 $mainAppName = isset($config['mainApp']) ? $config['mainApp'] : '';
 $contentAppName = isset($config['contentApp']) ? $config['contentApp'] : '';
 if (empty($mainAppName) && isset($config['mainAppId'])) {
@@ -988,7 +1131,6 @@ $form->add(new TrFormElement(
 if (!empty($configId)) {
     $qrCodeUrl = '';
     if (!empty($config['qrCodeKey']) && !empty($config['eventReceivingComponent'])) {
-        // Extract hostname without port from baseUrl
         $baseUrl = isset($config['baseUrl']) ? $config['baseUrl'] : '';
         if (!empty($baseUrl)) {
             $parsedUrl = parse_url($baseUrl);
@@ -1008,13 +1150,18 @@ if (!empty($configId)) {
     ), array("value" => $qrCodeUrl));
 }
 
-$form->pop();
+$form->pop(); // end MDM table
+$form->pop(); // end MDM div
 
+$form->push(new Div(array('id' => 'tab-appsettings', 'style' => 'display:none;')));
 $form->push(new Table());
-$form->pop();
+$form->pop(); // end Appsettings table
+$form->pop(); // end Appsettings div
 
+$form->push(new Div(array('id' => 'tab-files', 'style' => 'display:none;')));
 $form->push(new Table());
-$form->pop();
+$form->pop(); // end Files table
+$form->pop(); // end Files div
 
 $form->display();
 ?>
@@ -1214,16 +1361,21 @@ jQuery(document).ready(function() {
 
     // TAB SWITCHING
     
-    // Assign IDs to tables based on their order: common, design, apps, mdm, appsettings, files
+    // Define tab names; each tab is a div container with an inner table
     var tabNames = ['common', 'design', 'apps', 'mdm', 'appsettings', 'files'];
-    jQuery('form table').each(function(index) {
-        if (index < tabNames.length) {
-            jQuery(this).attr('id', 'tab-' + tabNames[index]);
-            if (index === 0) {
-                jQuery(this).addClass('active-tab');
-            } else {
-                jQuery(this).hide();
-            }
+
+    // Hide all tab containers except the first (common)
+    tabNames.forEach(function(name, idx) {
+        var $container = jQuery('#tab-' + name);
+        if (idx === 0) {
+            $container.show().addClass('active-tab');
+        } else {
+            $container.hide().removeClass('active-tab');
+        }
+        // assign IDs to inner tables 
+        var $innerTable = $container.find('table').first();
+        if ($innerTable.length) {
+            $innerTable.attr('id', 'tab-table-' + name);
         }
     });
 
@@ -1232,9 +1384,161 @@ jQuery(document).ready(function() {
         var targetTab = jQuery(this).data('tab');
         jQuery('.tab-link').removeClass('active');
         jQuery(this).addClass('active');
-        jQuery('form table').hide().removeClass('active-tab');
+        
+        // Hide all containers and show only the target
+        tabNames.forEach(function(name) {
+            jQuery('#tab-' + name).hide().removeClass('active-tab');
+        });
         jQuery('#tab-' + targetTab).show().addClass('active-tab');
+
+        if (targetTab === 'apps') {
+            if (!$appAllRows || $appAllRows.length === 0) {
+                captureOriginalRows();
+            }
+            refreshApps();
+        }
     });
+
+    // Toggle Show Icon and Order visibility when Action dropdown changes
+    jQuery(document).on('change', '.app-action-select', function() {
+        var $row = jQuery(this).closest('tr');
+        var actionValue = parseInt(jQuery(this).val());
+        var $iconSelect = $row.find('.app-icon-select');
+        var $orderInput = $row.find('.app-order-input');
+        
+        if (actionValue === 1) {
+            $iconSelect.show();
+            $orderInput.show();
+        } else {
+            $iconSelect.hide();
+            $orderInput.hide();
+        }
+    });
+
+    // Toggle Order visibility based on Icon dropdown
+    jQuery(document).on('change', '.app-icon-select', function() {
+        var $row = jQuery(this).closest('tr');
+        var iconValue = parseInt(jQuery(this).val());
+        var $orderInput = $row.find('.app-order-input');
+        
+        if (iconValue === 1) {
+            $orderInput.show();
+        } else {
+            $orderInput.hide();
+        }
+    });
+
+    // APPS FILTER + PAGINATION
+    var appPageSize = 10;
+    var appCurrentPage = 1;
+    var $appTableBody = jQuery('#tab-apps #app_table_body');
+    var $appAllRows = null; // Store original rows before they get emtpied
+    
+    // Capture all original rows on page load
+    function captureOriginalRows() {
+        $appAllRows = [];
+        jQuery('#tab-table-apps-results tbody tr').each(function() {
+            $appAllRows.push(jQuery(this).clone());
+        });
+    }
+
+    function parseBool(val) {
+        return val === true || val === '1' || val === 1;
+    }
+
+    function updateAppsPagination(totalPages, total) {
+        var $p = jQuery('#apps-pagination');
+        if (!$p.length) { return; }
+        var prevDisabled = (appCurrentPage <= 1) ? 'disabled' : '';
+        var nextDisabled = (appCurrentPage >= totalPages) ? 'disabled' : '';
+        var html = '';
+        html += '<div style="display:flex; align-items:center; gap:10px;">';
+        html += '<button type="button" class="btn btn-default" id="apps-prev" ' + prevDisabled + '>&laquo;</button>';
+        html += '<span>Page ' + appCurrentPage + ' / ' + totalPages + ' (' + total + ' apps)</span>';
+        html += '<button type="button" class="btn btn-default" id="apps-next" ' + nextDisabled + '>&raquo;</button>';
+        html += '</div>';
+        $p.html(html);
+        jQuery('#apps-prev').off('click').on('click', function() {
+            if (appCurrentPage > 1) { appCurrentPage -= 1; renderAppsPage(); }
+        });
+        jQuery('#apps-next').off('click').on('click', function() {
+            if (appCurrentPage < totalPages) { appCurrentPage += 1; renderAppsPage(); }
+        });
+    }
+
+    function renderAppsPage() {
+        if (!$appTableBody.length || !$appAllRows) { return; }
+        var search = (jQuery('#app_search_filter').val() || '').toLowerCase();
+        var systemMode = (jQuery('#app_system_filter').val() || 'user');
+        var showSystem = (systemMode === 'all');
+        var sortBy = (jQuery('#app_sort_by').val() || 'pkg');
+        
+        var visibleRows = [];
+        
+        for (var i = 0; i < $appAllRows.length; i++) {
+            var $r = jQuery($appAllRows[i]);
+            var nm = ($r.data('appName') || '').toString().toLowerCase();
+            var pkg = ($r.data('appPkg') || '').toString().toLowerCase();
+            var isSysStr = ($r.attr('data-is-system') || '0');
+            var isSys = (isSysStr === '1');
+            
+            // Apply system filter
+            if (!showSystem && isSys) { 
+                continue;
+            }
+            
+            // Apply search filter
+            if (search) {
+                if (nm.indexOf(search) === -1 && pkg.indexOf(search) === -1) {
+                    continue;
+                }
+            }
+            
+            visibleRows.push($r);
+        };
+        
+        // Sort
+        visibleRows.sort(function(a, b) {
+            var $a = jQuery(a), $b = jQuery(b);
+            var aName = ($a.data('appName') || '').toString().toLowerCase();
+            var bName = ($b.data('appName') || '').toString().toLowerCase();
+            var aPkg = ($a.data('appPkg') || '').toString().toLowerCase();
+            var bPkg = ($b.data('appPkg') || '').toString().toLowerCase();
+            if (sortBy === 'name') {
+                var cmp = aName.localeCompare(bName);
+                if (cmp === 0) { return aPkg.localeCompare(bPkg); }
+                return cmp;
+            }
+            var cmpPkg = aPkg.localeCompare(bPkg);
+            if (cmpPkg === 0) { return aName.localeCompare(bName); }
+            return cmpPkg;
+        });
+        
+        var total = visibleRows.length;
+        var totalPages = Math.max(1, Math.ceil(total / appPageSize));
+        if (appCurrentPage > totalPages) { appCurrentPage = totalPages; }
+        var start = (appCurrentPage - 1) * appPageSize;
+        var end = start + appPageSize;
+        
+        $appTableBody.empty();
+        for (var i = start; i < end && i < visibleRows.length; i++) {
+            var $clone = visibleRows[i].clone();
+            $clone.attr('style', 'border: 1px solid #ddd;');
+            $clone.appendTo($appTableBody);
+        }
+        updateAppsPagination(totalPages, total);
+    }
+
+    function refreshApps() {
+        $appTableBody = jQuery('#tab-apps #app_table_body');
+        appCurrentPage = 1;
+        renderAppsPage();
+    }
+
+    // Wire filter events
+    jQuery('#app_search_filter').on('input', function() { refreshApps(); });
+    jQuery('#app_sort_by').on('change', function() { refreshApps(); });
+    jQuery('#app_system_filter').on('change', function() { refreshApps(); });
 
     setTimeout(function() {
         toggleTimeoutRow();
