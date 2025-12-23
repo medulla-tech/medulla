@@ -645,6 +645,16 @@ class RpcProxy(RpcProxyI):
         session_info = ctx.get_session_info().get("mondict", {})
         user_name = session_info.get("user_name")
 
+        # --- Vérification de l'entité demandée ---
+        entityid = params.get("entityid")
+        if not entityid:
+            logger.error("Paramètre 'entityid' manquant : impossible de vérifier les droits de l'utilisateur.")
+            return False
+        try:
+            entity_id = int(entityid)
+        except ValueError:
+            logger.error(f"Valeur incorrecte pour 'entityid' : '{entityid}' n'est pas un entier valide.")
+            return False
 
         if user_name != "root":
             # on verifi contexte pour les non root
@@ -652,16 +662,6 @@ class RpcProxy(RpcProxyI):
             logger.debug(f"session_info : {session_info}")
             logger.debug(f"Entités accessibles par l'utilisateur : {allowed_entities}")
 
-            # --- Vérification de l'entité demandée ---
-            entityid = params.get("entityid")
-            if not entityid:
-                logger.error("Paramètre 'entityid' manquant : impossible de vérifier les droits de l'utilisateur.")
-                return False
-            try:
-                entity_id = int(entityid)
-            except ValueError:
-                logger.error(f"Valeur incorrecte pour 'entityid' : '{entityid}' n'est pas un entier valide.")
-                return False
             if entity_id not in allowed_entities:
                 logger.error(f"L'utilisateur n'a pas les droits nécessaires pour accéder à l'entité {entity_id}.")
                 return False
@@ -702,7 +702,10 @@ class RpcProxy(RpcProxyI):
         UUID = params.get("UUID")
         if not UUID:
             UUID = ""
-
+        logger.error(f"UUID {UUID}")
+        logger.error(f"entity {entity}")
+        logger.error(f"user {user}")
+        logger.error(f"namemachine {namemachine}")
         # --- Construction de la requête XMPP ---
         request_payload = {
             "action": "ask_log",
@@ -719,8 +722,8 @@ class RpcProxy(RpcProxyI):
         # Ajout de tous les paramètres reçus
         request_payload["data"].update(params)
 
-        # logger.debug("Requête XMPP construite :")
-        # logger.debug(json.dumps(request_payload, indent=4))
+        logger.debug("Requête XMPP construite :")
+        logger.debug(json.dumps(request_payload, indent=4))
 
         # --- Envoi du message XMPP ---
         logger.debug(f"Envoi de la requête '{request_payload['action']}' à la machine : {machine_jid}")
