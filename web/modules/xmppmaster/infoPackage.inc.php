@@ -259,13 +259,6 @@ $page->setFile("modules/xmppmaster/xmppmaster/deployquickgroup.php");
 $page->setOptions(array("visible" => false, "noHeader" => true));
 $submod->addPage($page);
 
-
-$page = new Page("logview", _T("affiche log machine", "xmppmaster"));
-$page->setFile("modules/xmppmaster/xmppmaster/logview.php");
-$page->setOptions(array("visible" => false, "noHeader" => true));
-$submod->addPage($page);
-
-
 $page = new Page("actionwakeonlan", _T("quick action Wol", "xmppmaster"));
 $page->setFile("modules/xmppmaster/xmppmaster/actionwakeonlan.php");
 $page->setOptions(array("AJAX" => true, "visible" => false));

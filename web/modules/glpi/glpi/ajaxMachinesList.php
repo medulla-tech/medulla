@@ -21,7 +21,6 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  * file : /glpi/glpi/ajaxMachinesList.php
- * view Machines List view xmpp
  */
 
 require_once("modules/glpi/includes/xmlrpc.php");
@@ -35,6 +34,9 @@ global $config;
 .selectable{
 	cursor:pointer;
 }
+</style>
+
+<style>
 
 .tooltip{   font-size:20px; }
 .ui-tooltip {
@@ -78,56 +80,30 @@ global $config;
                 background-image:none;
                 font-size:.9em;
 }
-
-/* Tooltip OFFLINE */
-.tooltip-offline {  background: #ffdddd;
-                    color: #b30000;
-                    border: 1px solid #ff6666;
-                    padding: 6px 10px;
-                }
-
-/* Tooltip ONLINE */
-.tooltip-online {   background: #ddffdd;
-                    color: #006600;
-                    border: 1px solid #66cc66;
-                    padding: 6px 10px;
-                }
-.infomachoffline::before {  content: "💻"; /* Emoji ou symbole de votre choix */
-                            margin-right: 8px; /* Espace entre l'emoji et le texte */
-                            font-size: 16px; /* Taille de l'emoji */
-                            opacity: 0.3; /* 50% d'opacité */
-                            }
-
-
-.infomachonline::before {   content: "💻"; /* Emoji ou symbole de votre choix */
-                            margin-right: 8px; /* Espace entre l'emoji et le texte */
-                            font-size: 16px; /* Taille de l'emoji */
-                            opacity: 1; /* 50% d'opacité */
-                            }
 </style>
 
 <script>
-  jQuery(function(){
 
-    // Tooltip pour OFFLINE
-    jQuery(".infomachoffline").tooltip({
-        position: { my: "left+15 center", at: "right center" },
-        items: "[mydata]",
-        tooltipClass: "tooltip-offline",
-        content: function() {
-            return jQuery(this).attr("mydata");
-        }
-    });
-    // Tooltip pour ONLINE
-    jQuery(".infomachonline").tooltip({
-        position: { my: "left+15 center", at: "right center" },
-        items: "[mydata]",
-        tooltipClass: "tooltip-online",
-        content: function() {
-            return jQuery(this).attr("mydata");
-        }
-    });
+jQuery(function()
+{
+	 jQuery( function() {
+      jQuery(".infomach").tooltip({
+      position: { my: "left+15 center", at: "right center" },
+          items: "[mydata]",
+          content: function() {
+              var element = jQuery( this );
+              if ( element.is( "[mydata]" ) ) {
+              console.log(element.attr('mydata'));
+                  var text = element.attr('mydata');
+                  return text;
+              }
+
+          }
+      });
+  } );
+
 });
+
 </script>
 
 <?php
@@ -149,6 +125,7 @@ $ctx['contains'] = $contains;
 $ctx['start'] = $start;
 $ctx['end'] = $end;
 $ctx['maxperpage'] = $maxperpage;
+
 
 
 if (isset($_SESSION['computerpresence'])  && $_SESSION['computerpresence'] != "all_computer") {
@@ -187,49 +164,6 @@ $glpinoAction = new EmptyActionItem1(_("GLPI Inventory"), "glpitabs", "inventory
 
 // Actions for each machines
 $glpiAction = new ActionItem(_("GLPI Inventory"), "glpitabs", "inventory", "inventory", "base", "computers");
-// echo "jjjjjjjj";
-// echo "<ul>";
-//
-// $item = new ActionItemIframe(
-//     "Voir les logs",
-//     "loadLogs",
-//     "log_on",
-//     "machine",
-//     "base",
-//     "computers",
-//     "iframeContainer",
-//     "logIframe",
-//     "logs_iframe"
-// );
-//
-// $item->display(null, ["machine" => "PC01"]);
-//
-// echo "</ul>";
-// echo "ddddddddddd";
-
-$logmachineoff = new EmptyActionItem1(_T("Log Machine", "xmppmaster"),
-                                      "logview",
-                                      "log_off",
-                                      "xmppmaster",
-                                      "xmppmaster",
-                                      "xmppmaster");
-
-// Actions for each machines
-$logmachineon = new ActionItemIframe(
-    _T("Log Machine",
-       "xmppmaster"),  // title
-    "logview",        // action
-    "log_on",          // classcss icone
-    "machine",         // parametre string
-    "xmppmaster",      // module
-    "xmppmaster",      // submod
-    "iframeContainer", // id div container iframe
-    "logIframe",       // id de iframe logIframe
-    "logs_iframe"      // logs_iframe.php
-);
-
-// $logmachineon =  new ActionItem(_T("Log Machine", "xmppmaster"), "loggview", "log_on", "xmppmaster", "xmppmaster", "xmppmaster");
-
 
 
 if (in_array("xmppmaster", $_SESSION["supportModList"])) {
@@ -260,7 +194,7 @@ $DeployQuickxmpp = new ActionPopupItem(_("Quick action"), "deployquick", "quick"
 $DeployQuickxmpp->setWidth(600);
 // with check presence xmpp
 $vncClientActiongriser = new EmptyActionItem1(_("Remote control"), "vnc_client", "guacag", "computer", "base", "computers");
-$actionlogmachine = array();
+
 $actionMonitoring = array();
 $actionInventory = array();
 $actionConsole = array();
@@ -392,23 +326,17 @@ for ($index = 0; $index < safeCount($datas['hostname']); $index++) {
         $chainestr .= "<tr class='ttabletr'><td class='ttabletd'>".$chaine[$mach] ."</td><td class='ttabletd'>: ".$value[$index]."</td></tr>";
     }
     $chainestr .= "</table>";
-    if ($datas['enabled'][$index] == 0){
-        $cn[] = sprintf('<span class="infomachoffline" mydata="%s">%s</span>', $chainestr, $datas['hostname'][$index]);
-    }else{
-        $cn[] = sprintf('<span class="infomachonline" mydata="%s">%s</span>', $chainestr, $datas['hostname'][$index]);
-    }
+    $cn[] = sprintf('<span class="infomach" mydata="%s">%s</pan>', $chainestr, $datas['hostname'][$index]);
 }
 
 $index = 0;
 foreach($datas['enabled'] as $valeue) {
 
     if ($datas['uuid_inventorymachine'][$index] == "") {
-        $actionlogmachine[] = $logmachineoff;
         $actionInventory[] = $glpinoAction;
         $dissociatedFirstColumns[] = $index;
         $action_deploy_msc[] = $mscNoAction; //deployement
     } else {
-        $actionlogmachine[] = $logmachineon;
         $actionInventory[] = $glpiAction;
         $action_deploy_msc[] = $mscAction; //deployement
     }
@@ -509,7 +437,6 @@ foreach($machines1['list_reg_columns_name'] as $columnamekey) {
 }
 
 if (in_array("xmppmaster", $_SESSION["supportModList"])) {
-    $n->addActionItemArray($actionlogmachine);
     $n->addActionItemArray($actionInventory);
     $n->addActionItemArray($actionMonitoring);
 }
@@ -559,13 +486,13 @@ if(canDelComputer()) {
     $n->addActionItem(new ActionPopupItem(_("Delete computer"), "delete", "delete", "computer", "base", "computers", null, 400));
 }
 
+
 $n->setMainActionClasses($presencesClass);
 $n->setItemCount($total);
 
 $n->setNavBar(new AjaxNavBar($total, $location));
 $n->start = 0;
 $n->end = $total;
- $n->disableFirstColumnActionLink();
 $n->display();
 ?>
 
@@ -574,4 +501,6 @@ jQuery(".selectable").on("click", function(){
 	jQuery("#param").val(jQuery(this).text());
 	pushSearch();
 });
+
+
 </script>
