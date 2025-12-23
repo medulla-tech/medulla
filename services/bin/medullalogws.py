@@ -27,12 +27,6 @@ DEFAULT_CONFIG = {
     "levellog": "INFO"
 }
 
-# taille_historique_line = 150
-# Un dictionnaire pour stocker les derniers ID par client et le temps de connexion
-last_client_data = {}
-# Dictionnaire global pour stocker les last_id et les horodatages
-client_last_ids = {}
-hist_requests = {}
 # ============================================
 #               LOGGING
 # ============================================
@@ -42,13 +36,13 @@ def setup_logging(console_mode, log_file, log_level):
 
     # Clear previous handlers
     logger.handlers = []
-    formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+
     # File Handler
     if not console_mode:
         os.makedirs(os.path.dirname(log_file), exist_ok=True)
         file_handler = logging.FileHandler(log_file)
         file_handler.setLevel(getattr(logging, log_level.upper()))
-
+        formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
         file_handler.setFormatter(formatter)
         logger.addHandler(file_handler)
 
@@ -139,12 +133,6 @@ async def handle_client(websocket, path, logger, config):
     RECONNECT_WINDOW = 180
     HIST_DELAY = 60
 
-    # # Initialisation des variables "globales" locales
-    # if not hasattr(handle_client, 'client_last_ids'):
-    #     handle_client.client_last_ids = {}
-    # if not hasattr(handle_client, 'hist_requests'):
-    #     handle_client.hist_requests = {}
-
     logger.info("Client connecté")
     db = get_db(config)
     cursor = db.cursor(dictionary=True)
@@ -171,7 +159,6 @@ async def handle_client(websocket, path, logger, config):
     if action == "hist":
         now = datetime.now()
         await safe_send(websocket, "@COMMAND@:CLEANIFRAME", logger)
-        hist_requests[cn] = now
         await safe_send(websocket, f"Machine OFF Historique Machine  {cn}", logger)
         cursor.execute("""
             SELECT id, text
@@ -211,7 +198,7 @@ async def handle_client(websocket, path, logger, config):
         else:
             del client_last_ids[cn]
     else:
-        logger.info(f"Nouveau client ou reconnexion tardive pour {cn} ")
+        logger.info(f"Nouveau client ou reconnexion tardive pour {cn}")
 
     # --------------------------------------------------------------------------
     # Envoi de l’historique live (appel viewlog)
@@ -238,16 +225,17 @@ async def handle_client(websocket, path, logger, config):
                         return
             last_id = r["id"]
 
-        logger.info(f"Historique VIEWLOG envoyé pour {cn}, last_id={last_id} ")
+        logger.info(f"Historique VIEWLOG envoyé pour {cn}, last_id={last_id}")
 
     # ============================================================================
     # Boucle LIVE
     # ============================================================================
     last_ping_time = asyncio.get_event_loop().time()
+
     try:
         while True:
             if websocket.closed:
-                logger.info(f"Client déconnecté. {cn}")
+                logger.info("Client déconnecté.")
                 client_last_ids[cn] = (last_id, datetime.now())
                 return
 
@@ -270,8 +258,8 @@ async def handle_client(websocket, path, logger, config):
                 ORDER BY id ASC
             """, (cn, last_id))
             rows = cursor.fetchall()
-            # if len(rows) > 0:
-            #     logger.info(f"FROM {cn} : {len(rows)} ")
+
+            logger.info(f"Nombre de nouvelles lignes : {len(rows)}")
 
             for r in rows:
                 for line in r["text"].splitlines():
@@ -284,10 +272,10 @@ async def handle_client(websocket, path, logger, config):
             await asyncio.sleep(1)
 
     except websockets.exceptions.ConnectionClosed:
-        logger.info(f"Client a fermé proprement. {cn}")
+        logger.info("Client a fermé proprement.")
         client_last_ids[cn] = (last_id, datetime.now())
     except Exception:
-        logger.exception(f"Erreur inattendue dans le live. {cn}")
+        logger.exception("Erreur inattendue dans le live.")
         client_last_ids[cn] = (last_id, datetime.now())
 
 # ============================================
