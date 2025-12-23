@@ -48,15 +48,9 @@ if (strpos($origin, $current_domain) !== 0) {
 // 4. Autorise l'accès et définit les en-têtes
 header("Access-Control-Allow-Origin: " . $current_domain);
 header("Content-Type: text/plain");
-// echo "<p> Voici mes parametre get</p>";
-// print_r($_GET['objectUUID']);
-
-$result = xmlrpc_get_remote_log_machine($_GET);
-if ($result == true){
-    echo 1;
-}else
-{
-echo 0;
-}
-
+echo "<p> Voici mes parametre get</p>";
+print_r($_GET);
+echo "<p>COOOL</p>";
+$machinegroup = xmlrpc_getPresenceuuid('UUID11');
+print_r($machinegroup);
 ?>
