@@ -149,7 +149,7 @@ function get_provider_details($client, $provider) {
     $stmt = $pdo->prepare(
         "SELECT name, url_provider, client_id, client_secret, lmc_acl,
                 ldap_uid, ldap_givenName, ldap_sn, ldap_mail,
-                profiles_order, acls_json
+                profiles_order, acls_json, proxy_url
            FROM admin.providers
           WHERE client_name = ? AND name = ?
           LIMIT 1"
@@ -177,6 +177,7 @@ function get_provider_details($client, $provider) {
         'ldap_sn'         => $row['ldap_sn'] ?? null,
         'ldap_mail'       => $row['ldap_mail'] ?? null,
         'acl_map'         => $aclMap,
+        'proxy_url'       => $row['proxy_url'] ?? null,
     ];
 }
 

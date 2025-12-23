@@ -292,6 +292,7 @@ class AdminDatabase(DatabaseHelper):
             self.Providers.ldap_mail,
             self.Providers.profiles_order,
             self.Providers.acls_json,
+            self.Providers.proxy_url,
         ).order_by(self.Providers.client_name, self.Providers.name)
 
         rows = session.execute(stmt).mappings().all()
@@ -312,6 +313,7 @@ class AdminDatabase(DatabaseHelper):
                 "ldap_mail":      r["ldap_mail"]      or "",
                 "profiles_order": r["profiles_order"] or "",
                 "acls_json":      r["acls_json"]      or "",
+                "proxy_url":      r["proxy_url"]      or "",
             })
         return out
 
@@ -333,6 +335,7 @@ class AdminDatabase(DatabaseHelper):
             self.Providers.ldap_mail,
             self.Providers.profiles_order,
             self.Providers.acls_json,
+            self.Providers.proxy_url,
         ).where(self.Providers.client_name == client
         ).order_by(self.Providers.name)
 
@@ -354,6 +357,7 @@ class AdminDatabase(DatabaseHelper):
                 "ldap_mail":      r["ldap_mail"]      or "",
                 "profiles_order": r["profiles_order"] or "",
                 "acls_json":      r["acls_json"]      or "",
+                "proxy_url":      r["proxy_url"]      or "",
             })
         return out
 
@@ -409,7 +413,7 @@ class AdminDatabase(DatabaseHelper):
             data["lmc_acl"] = v_acl
 
         # ldap_*: add only if provided (otherwise default sql)
-        for k in ("ldap_uid", "ldap_givenName", "ldap_sn", "ldap_mail"):
+        for k in ("ldap_uid", "ldap_givenName", "ldap_sn", "ldap_mail", "proxy_url"):
             v = norm(payload.get(k))
             if v:
                 data[k] = v
@@ -455,7 +459,7 @@ class AdminDatabase(DatabaseHelper):
             payload.pop("name", None)
 
         nullable = {"logo_url", "lmc_acl", "ldap_uid", "ldap_givenName",
-                    "ldap_sn", "ldap_mail", "profiles_order"}
+                    "ldap_sn", "ldap_mail", "profiles_order", "proxy_url"}
 
         for key in list(nullable):
             if key in payload:
