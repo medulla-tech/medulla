@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 141.7 141.7">
+<style type="text/css">
+	.st0{fill:#8BB53C;stroke:#24607E;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st1{fill:#FFFFFF;stroke:#24607E;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st2{fill:none;stroke:#24607E;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;}
+</style>
+<g>
+	<!-- Handle - forme pleine -->
+	<path class="st0" d="M10,15 L32,15 L32,25 L20,25 L20,20 L10,20 Z"/>
+	<path class="st0" d="M28,20 L34,20 L44,48 L38,50 Z"/>
+
+	<!-- Caddie basket -->
+	<path class="st0" d="M32,48 L48,108 L118,108 L130,48 Z"/>
+
+	<!-- Inner basket - blanc pour contraste -->
+	<path class="st1" d="M42,56 L54,100 L112,100 L122,56 Z"/>
+
+	<!-- Items in cart - traits fins -->
+	<line class="st2" x1="60" y1="62" x2="56" y2="94"/>
+	<line class="st2" x1="80" y1="62" x2="76" y2="94"/>
+	<line class="st2" x1="100" y1="62" x2="96" y2="94"/>
+
+	<!-- Wheels -->
+	<circle class="st0" cx="60" cy="122" r="12"/>
+	<circle class="st0" cx="108" cy="122" r="12"/>
+</g>
+</svg>
