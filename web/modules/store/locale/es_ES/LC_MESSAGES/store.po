@@ -20,7 +20,7 @@ msgstr ""
 #: /Users/xdrien/medulla/GIT/medulla/web/modules/store/infoPackage.inc.php:27
 #: /Users/xdrien/medulla/GIT/medulla/web/modules/store/infoPackage.inc.php:31
 msgid "Store"
-msgstr "Tienda"
+msgstr "Store"
 
 #: /Users/xdrien/medulla/GIT/medulla/web/modules/store/infoPackage.inc.php:37
 #: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/localSidebar.php:25
