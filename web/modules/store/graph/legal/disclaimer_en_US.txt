@@ -1,7 +1,3 @@
-Warning: The Windows image provided is for testing and deployment purposes only.
+The software images provided are the contractual responsibility of the customer. The customer must comply with the publisher's end user license agreement or any other provisions that supplement or replace it.
 
-The client must comply with the Microsoft End User License Agreement or any other provisions supplementing or replacing it.
-
-The user acknowledges having valid software keys that comply with Microsoft licenses.
-
-Natsu cannot be held responsible for non-compliant use, particularly in the case of use without an appropriate license.
+The user acknowledges in particular that they have valid software keys that comply with the license agreements. Natsu cannot be held liable in the event of non-compliant use, in particular in the event of use without an appropriate license.

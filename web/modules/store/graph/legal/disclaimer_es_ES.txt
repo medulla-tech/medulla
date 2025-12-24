@@ -1,7 +1,3 @@
-Advertencia: La imagen de Windows proporcionada se ofrece únicamente como ejemplo para facilitar sus pruebas y despliegues.
+Las imágenes de software se proporcionan bajo la responsabilidad contractual del cliente. El cliente debe cumplir con el contrato de licencia de usuario final del editor o con cualquier otra disposición que lo complemente o sustituya.
 
-El cliente debe cumplir con el contrato de licencia de usuario final de Microsoft o cualquier otra disposición que lo complemente o sustituya.
-
-El usuario reconoce disponer de claves de software válidas y conformes con las licencias de Microsoft.
-
-Natsu no podrá ser considerado responsable en caso de uso no conforme, particularmente en caso de uso sin una licencia apropiada.
+El usuario reconoce, en particular, que dispone de claves de software válidas y conformes con los contratos de licencia. Natsu no se hace responsable en caso de uso no conforme, en particular en caso de uso sin la licencia adecuada.
