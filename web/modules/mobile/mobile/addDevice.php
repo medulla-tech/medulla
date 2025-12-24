@@ -79,6 +79,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['test'])) {
             $error_msg = isset($result['message']) ? $result['message'] : _T('Unknown error occurred', 'mobile');
             new NotifyWidgetFailure(sprintf(_T("Failed to create device: %s", "mobile"), $error_msg));
         }
+    } else {
+        // Display validation errors
+        foreach ($errors as $field => $error) {
+            new NotifyWidgetFailure($error);
+        }
     }
 }
 
@@ -90,13 +95,7 @@ $p->display();
 $formAddDevice = new Form();
 $sep = new SepTpl();
 
-// Fonction simple pour afficher l'erreur après un champ
-function showError($field, $errors) {
-    if (isset($errors[$field])) {
-        return '<div class="error-message">' . htmlspecialchars($errors[$field]) . '</div>';
-    }
-    return '';
-}
+$formAddDevice->push(new Table());
 
 // Nom de l'appareil
 $formAddDevice->add(
@@ -110,8 +109,6 @@ $formAddDevice->add(
         "required" => true
     )
 );
-$formAddDevice->add(new TrFormElement('', $sep));
-echo showError('add-phone', $errors);
 
 // Description
 $formAddDevice->add(
@@ -124,8 +121,6 @@ $formAddDevice->add(
         "placeholder" => _T("Enter description", "mobile")
     )
 );
-$formAddDevice->add(new TrFormElement('', $sep));
-echo showError('desc-zone', $errors);
 
 // Configuration (required)
 $config_names = [''];
@@ -149,8 +144,6 @@ $formAddDevice->add(
         "required" => true
     )
 );
-$formAddDevice->add(new TrFormElement('', $sep));
-echo showError('configuration_id', $errors);
 
 // Groups (optional, multi-select)
 // Note: Using simple select for now - can be enhanced to multi-select later
@@ -177,7 +170,6 @@ if (count($group_names) > 1) {
             "placeholder" => _T("Select group", "mobile")
         )
     );
-    $formAddDevice->add(new TrFormElement('', $sep));
 }
 
 // IMEI (optional)
@@ -190,7 +182,6 @@ $formAddDevice->add(
         "value" => $values['imei'],
     )
 );
-$formAddDevice->add(new TrFormElement('', $sep));
 
 // Phone Number (optional)
 $formAddDevice->add(
@@ -202,7 +193,6 @@ $formAddDevice->add(
         "value" => $values['phone'],
     )
 );
-$formAddDevice->add(new TrFormElement('', $sep));
 
 // Bouton validation
 $formAddDevice->addValidateButton("test", _T("Add", "mobile"));

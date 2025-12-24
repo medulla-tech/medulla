@@ -31,6 +31,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['test'])) {
             $error_msg = is_array($result) && isset($result['message']) ? $result['message'] : _T('Unknown error occurred', 'mobile');
             new NotifyWidgetFailure(sprintf(_T("Failed to create group: %s", "mobile"), $error_msg));
         }
+    } else {
+        // Display validation errors
+        foreach ($errors as $field => $error) {
+            new NotifyWidgetFailure($error);
+        }
     }
 }
 
@@ -39,14 +44,7 @@ $p->setSideMenu($sidemenu);
 $p->display();
 
 $formAddGroup = new Form();
-$sep = new SepTpl();
-
-function showError($field, $errors) {
-    if (isset($errors[$field])) {
-        return '<div class="error-message">' . htmlspecialchars($errors[$field]) . '</div>';
-    }
-    return '';
-}
+$formAddGroup->push(new Table());
 
 // Group name
 $formAddGroup->add(
@@ -60,12 +58,11 @@ $formAddGroup->add(
         "required" => true
     )
 );
-$formAddGroup->add(new TrFormElement('', $sep));
-echo showError('name', $errors);
 
 // Validation button
 $formAddGroup->addValidateButton("test", _T("Add", "mobile"));
 
 // Display form
+$formAddGroup->pop();
 $formAddGroup->display();
 ?>

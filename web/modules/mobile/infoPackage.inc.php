@@ -103,15 +103,6 @@ $pageAddFile->setFile("modules/mobile/mobile/addFile.php");
 $submod->addPage($pageAddFile);
 
 ################################
-# add configuration page  
-################################
-
-$pageConfig = new Page("addConfiguration", _T('Add a configuration', 'mobile'));
-$pageConfig->setFile("modules/mobile/mobile/addConfiguration.php");
-$submod->addPage($pageConfig);
-
-
-################################
 # ListMobile - ajax
 ################################
 $pageajaxDeviceList = new Page("ajaxDeviceList", _T('Device list view', 'mobile'));
