@@ -97,4 +97,7 @@ function xmlrpc_export_hmdm_device_logs($device_number="", $app="", $severity="-
 function xmlrpc_search_hmdm_app_packages($filter_text=""){
     return xmlCall("mobile.searchHmdmAppPackages", array($filter_text));
 }
+function xmlrpc_upload_web_ui_files($uploadedFilePath = null, $uploadedFileName = null, $mimeType = null){
+    return xmlCall("mobile.uploadWebUiFiles", array($uploadedFilePath, $uploadedFileName, $mimeType));
+}
 ?>

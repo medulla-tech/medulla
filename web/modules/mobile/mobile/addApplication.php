@@ -76,7 +76,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['test'])) {
             $errors['pkg'] = _T("Package name contains invalid characters.", "mobile");
             error_log('[mobile] ERROR: pkg invalid format: ' . $values['pkg']);
         }
-        if ($values['url'] !== '' && !filter_var($values['url'], FILTER_VALIDATE_URL)) {
+        // Accept full URLs or relative paths (starting with /)
+        if ($values['url'] !== '' && !filter_var($values['url'], FILTER_VALIDATE_URL) && !preg_match('#^/#', $values['url'])) {
             $errors['url'] = _T("APK URL is not valid.", "mobile");
             error_log('[mobile] ERROR: invalid URL: ' . $values['url']);
         }
@@ -85,8 +86,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['test'])) {
         if ($values['url'] === '') {
             $errors['url'] = _T("URL is required for web applications.", "mobile");
             error_log('[mobile] ERROR: url is empty for web type');
-        } elseif (!filter_var($values['url'], FILTER_VALIDATE_URL)) {
-            $errors['url'] = _T("APK URL is not valid.", "mobile");
+        } elseif (!filter_var($values['url'], FILTER_VALIDATE_URL) && !preg_match('#^/#', $values['url'])) {
+            $errors['url'] = _T("URL is not valid.", "mobile");
             error_log('[mobile] ERROR: invalid URL: ' . $values['url']);
         }
     } elseif ($values['type'] === 'intent') {
@@ -98,82 +99,82 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['test'])) {
 
     error_log('[mobile] Validation complete. Errors count: ' . count($errors));
 
-        if (empty($errors)) {
-            error_log('[mobile] No validation errors, proceeding with application creation');
-            // include iconText from form if present
-            if (isset($_POST['icon_text']) && trim($_POST['icon_text']) !== '') {
-                $app['iconText'] = trim($_POST['icon_text']);
-            }
-        $app = array(
-            'name' => $values['name'],
-            'version' => $values['version']
-        );
-        // include type if provided (HMDM expects 'app','web' or 'intent')
+    if (empty($errors)) {
+        error_log('[mobile] No validation errors, proceeding with application creation');
+
+        // Base payload: always include name and type
+        $app = array('name' => $values['name']);
         if (!empty($values['type'])) {
             $app['type'] = $values['type'];
             error_log('[mobile] type set in payload: ' . $values['type']);
         }
-        // include pkg for app type
+
+        // Type-specific fields
         if ($values['type'] === 'app') {
+            // Required/app-specific
             $app['pkg'] = $values['pkg'];
-        }
-        error_log('[mobile] Base app array created');
-        // include url for web type; for app keep legacy behaviour
-        if ($values['type'] === 'web' && $values['url'] !== '') {
-            $app['url'] = $values['url'];
-        } elseif ($values['type'] === 'app' && !$values['system'] && $values['url'] !== '') {
-            $app['url'] = $values['url'];
-        }
-        // web-specific useKiosk flag
-        if ($values['type'] === 'web' && !empty($values['useKiosk'])) {
-            $app['useKiosk'] = true;
-            error_log('[mobile] useKiosk set in payload');
-        }
-        // intent action
-        if ($values['type'] === 'intent' && trim($values['action']) !== '') {
-            $app['action'] = $values['action'];
-            error_log('[mobile] intent action set in payload');
-        }
-        // include explicit system flag when checked
-        if ($values['system']) {
-            $app['system'] = true;
+            if ($values['version'] !== '') {
+                $app['version'] = $values['version'];
+            }
+            if ($values['system']) {
+                $app['system'] = true;
+            }
+            if ($values['arch'] !== '') {
+                $app['arch'] = $values['arch'];
+            }
+            // URL only for non-system apps
+            if (!$values['system'] && $values['url'] !== '') {
+                $app['url'] = $values['url'];
+            }
+            // Run options
+            if (!empty($values['runAfterInstall'])) {
+                $app['runAfterInstall'] = true;
+            }
+            if (!empty($values['runAtBoot'])) {
+                $app['runAtBoot'] = true;
+            }
+            // VersionCode from APK upload
+            if (!empty($_POST['versioncode'])) {
+                $app['versionCode'] = $_POST['versioncode'];
+                error_log('[mobile] versionCode set from Ajax upload: ' . $_POST['versioncode']);
+            }
+        } elseif ($values['type'] === 'web') {
+            // Web-specific
+            if ($values['url'] !== '') {
+                $app['url'] = $values['url'];
+            }
+            if (!empty($values['useKiosk'])) {
+                $app['useKiosk'] = true;
+                error_log('[mobile] useKiosk set in payload');
+            }
+        } elseif ($values['type'] === 'intent') {
+            // Intent/System Action
+            if (trim($values['action']) !== '') {
+                $app['action'] = $values['action'];
+                error_log('[mobile] intent action set in payload');
+            }
         }
 
-        if ($values['arch'] !== '') {
-            $app['arch'] = $values['arch'];
-        }
-        // include explicit showIcon flag when requested
+        // Common optional icon fields
         if (!empty($values['showicon'])) {
             $app['showIcon'] = true;
             error_log('[mobile] showIcon set in payload');
         }
-        // include icon_id if selected
         if (!empty($values['icon_id'])) {
             $app['iconId'] = $values['icon_id'];
             error_log('[mobile] iconId set in payload: ' . $values['icon_id']);
         }
-        // include run flags if requested
-        if (!empty($values['runAfterInstall'])) {
-            $app['runAfterInstall'] = true;
-            error_log('[mobile] runAfterInstall set in payload');
-        }
-        if (!empty($values['runAtBoot'])) {
-            $app['runAtBoot'] = true;
-            error_log('[mobile] runAtBoot set in payload');
-        }
-        // include iconText from form if present
         if (isset($_POST['icon_text']) && trim($_POST['icon_text']) !== '') {
             $app['iconText'] = trim($_POST['icon_text']);
         }
 
-        // Icon upload handling removed (no uploads are processed server-side).
-
-        // Call backend and log minimal response
+        // Create application
+        error_log('[mobile] Creating application via addHmdmApplication');
         $resp = xmlrpc_add_hmdm_application($app);
 
         if ($resp === false || $resp === null) {
             $errors['global'] = _T("Error while adding the application.", "mobile");
-            error_log('[mobile] ERROR: xmlrpc_add_hmdm_application returned false/null');
+            error_log('[mobile] ERROR: Application creation failed');
             error_log('[mobile] === POST HANDLER FAILED ===');
         } else {
             error_log('[mobile] SUCCESS: Application created');
@@ -183,15 +184,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['test'])) {
         }
     }
 }
-
 $p = new PageGenerator(_T("Add an application", 'mobile'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
-// Build three separate forms: app, web, intent
-$formApp = new Form();
-$formWeb = new Form();
-$formIntent = new Form();
+// Build three separate forms: app, web, intent (app uses multipart for file upload)
+$formApp = new Form(array("method" => "post", "enctype" => "multipart/form-data", "id" => "FormApp"));
+$formWeb = new Form(array("method" => "post", "id" => "FormWeb"));
+$formIntent = new Form(array("method" => "post", "id" => "FormIntent"));
 $sep = new SepTpl();
 
 function showError($field, $errors) {
@@ -225,6 +225,10 @@ $formApp->add(new TrFormElement(
     new InputTpl('version', '/^.{0,50}$/', $values['version'])
 ));
 $formApp->add(new TrFormElement('', $sep));
+// Version Code (hidden, filled by Ajax)
+$versionCodeHidden = new InputTpl('versioncode', '/^.{0,50}$/', '');
+$versionCodeHidden->fieldType = 'hidden';
+$formApp->add(new TrFormElement('', $versionCodeHidden));
 // Run options
 $runAfterA = new InputTpl('runAfterInstall', '/^.{0,1}$/', !empty($values['runAfterInstall']) ? '1' : '');
 $runAfterA->fieldType = 'checkbox';
@@ -243,10 +247,17 @@ $formApp->add(new TrFormElement('', $sep));
 // APK URL
 $formApp->add(new TrFormElement(_T('APK URL', 'mobile'), new InputTpl('url', '/^https?:\/\//', $values['url'])));
 $formApp->add(new TrFormElement('', $sep));
+// APK File Upload for app type
+$apkFileInput = new InputTpl('apk_file', '/^.+$/', '');
+$apkFileInput->fieldType = 'file';
+$apkFileInput->setAttributCustom('accept=".apk,.xapk" id="apk_file_input" class="apk-field"');
+$formApp->add(new TrFormElement(_T('Upload APK file', 'mobile'), $apkFileInput));
+// Status div for APK upload
+$formApp->add(new TrFormElement('', new SpanElement('<div id="apk_upload_status" style="margin-top: 5px;"></div>')));
 // Architecture
 $archSelectA = new SelectItem('arch');
 $archSelectA->setElements([
-    _T('Choose your architecture', 'mobile'),
+    _T('None (Universal APK)', 'mobile'),
     'armeabi-v7a',
     'arm64-v8a',
 ]);
@@ -257,7 +268,6 @@ $formApp->add(new TrFormElement('', $sep));
 $checkboxIconA = new InputTpl('showicon', '/^.{0,1}$/', !empty($values['showicon']) ? '1' : '');
 $checkboxIconA->fieldType = 'checkbox';
 $formApp->add(new TrFormElement(_T('Show icon', 'mobile'), $checkboxIconA));
-
 $iconSelectA = new SelectItem('icon_id');
 $iconSelectA->setElements([_T('Choose an icon', 'mobile')]);
 $iconSelectA->setElementsVal(['']);
@@ -338,21 +348,25 @@ $iconTextI->setAttributCustom('class="icon-extra"');
 $formIntent->add(new TrFormElement(_T('Icon text', 'mobile'), $iconTextI));
 $formIntent->addValidateButton("test");
 
-// Type selector (controls which form is visible)
-echo '<div style="margin-bottom:10px;">';
-echo '<label for="type">' . _T('Type','mobile') . ':</label> ';
-echo '<select id="type" name="type_selector" style="margin-left:8px; padding:6px;">';
-$opt = htmlspecialchars($values['type'] ?? '', ENT_QUOTES);
-echo '<option value=""' . ($opt === '' ? ' selected' : '') . '>' . _T('Choose your type', 'mobile') . '</option>';
-echo '<option value="app"' . ($opt === 'app' ? ' selected' : '') . '>Application</option>';
-echo '<option value="web"' . ($opt === 'web' ? ' selected' : '') . '>Web Page</option>';
-echo '<option value="intent"' . ($opt === 'intent' ? ' selected' : '') . '>System Action</option>';
-echo '</select>';
-echo ' ' . showError('type', $errors);
-echo '</div>';
+// Type selector form
+$typeForm = new Form();
+$typeForm->enctype = 'multipart/form-data';
+$typeSelect = new SelectItem('type_selector');
+$typeSelect->setElements([
+    _T('Choose your type', 'mobile'),
+    'Application',
+    'Web Page',
+    'System Action'
+]);
+$typeSelect->setElementsVal(['', 'app', 'web', 'intent']);
+$typeSelect->id = 'type';
+$typeForm->add(new TrFormElement(_T('Type', 'mobile'), $typeSelect));
 
-// Display forms inside wrappers
 echo '<div id="forms_container">';
+echo '<div style="margin-bottom:20px;">';
+$typeForm->display();
+echo showError('type', $errors);
+echo '</div>';
 
 echo '<div class="app-form">';
 $formApp->display();
@@ -408,28 +422,58 @@ if (isset($errors['global'])) {
 
 <script type="text/javascript">
 (function($) {
+    // ========== LOGGING ==========
     function clog() {
         if (window.console && console.log) console.log.apply(console, arguments);
     }
 
     clog('DEBUG: jQuery detected');
 
+    // ========== FORM VISIBILITY ==========
+    function showFormForType(type) {
+        $('.app-form, .web-form, .intent-form').hide();
+        if (type === 'app') $('.app-form').show();
+        else if (type === 'web') $('.web-form').show();
+        else if (type === 'intent') $('.intent-form').show();
+    }
 
-    // Function to update APK visibility based on System checkbox
+    function updateFieldsByType() {
+        var t = $('#type').length ? $('#type').val() : $('select[name="type_selector"]').val();
+        $('.type-app, .type-web, .type-intent').each(function(){
+            var $el = $(this);
+            var show = $el.hasClass('type-' + t);
+            var $tr = $el.closest('tr');
+            if ($tr.length) {
+                if (show) $tr.show(); else $tr.hide();
+            } else {
+                if (show) $el.show(); else $el.hide();
+            }
+        });
+        $('input[name="name"]').closest('tr').show();
+    }
+
+    // ========== FIELD VISIBILITY ==========
     function updateApkVisibility() {
         try {
             var $visible = $('#forms_container').find('div:visible');
-            let isSystem = $visible.find('.system-checkbox').is(':checked');
+            var isSystem = $visible.find('.system-checkbox').is(':checked');
             clog('DEBUG: isSystem=', isSystem);
 
-            let $apk = $visible.find('.apk-field');
+            var $apk = $visible.find('.apk-field');
+            if (!$apk.length) {
+                // Fallback to id search if class not present
+                $apk = $visible.find('#apk_file_input');
+            }
+            if (!$apk.length) {
+                // Fallback to name selector if id not present
+                $apk = $visible.find('input[name="apk_file"]');
+            }
             if (!$apk.length) { 
                 clog('DEBUG: apk-field NOT found in visible form'); 
                 return; 
             }
 
-            let $parent = $apk.parent();
-
+            var $parent = $apk.parent();
             clog('DEBUG: Parent tagName:', $parent.prop('tagName'), 'id:', $parent.attr('id'), 'class:', $parent.attr('class'));
 
             if (isSystem) {
@@ -440,39 +484,67 @@ if (isset($errors['global'])) {
                 $parent.show();
             }
         } catch (e) {
-            clog('ERROR in updateApkVisibility (jQuery):', e);
+            clog('ERROR in updateApkVisibility:', e);
         }
     }
 
-    // Function to update Icon extra fields visibility based on Show Icon checkbox
     function updateIconVisibility() {
-    try {
-        var $visible = $('#forms_container').find('div:visible');
-        let showIcon = $visible.find('input[name="showicon"]').is(':checked');
-        clog('DEBUG: showIcon=', showIcon);
+        try {
+            var $visible = $('#forms_container').find('div:visible');
+            var showIcon = $visible.find('input[name="showicon"]').is(':checked');
+            clog('DEBUG: showIcon=', showIcon);
 
-        $visible.find('.icon-extra').each(function () {
-            let $field = $(this);
-            let $tr = $field.closest('tr');
+            $visible.find('.icon-extra').each(function () {
+                var $field = $(this);
+                var $tr = $field.closest('tr');
 
-            if ($tr.length) {
-                // Hide/show full row (label + field)
-                showIcon ? $tr.show() : $tr.hide();
-            } else {
-                // Fallback (buttons, inputs outside TR)
-                showIcon ? $field.show() : $field.hide();
-            }
-        });
-
-    } catch (e) {
-        clog('ERROR in updateIconVisibility:', e);
+                if ($tr.length) {
+                    showIcon ? $tr.show() : $tr.hide();
+                } else {
+                    showIcon ? $field.show() : $field.hide();
+                }
+            });
+        } catch (e) {
+            clog('ERROR in updateIconVisibility:', e);
+        }
     }
-}
 
-    
+    // ========== ICON MANAGEMENT ==========
+    function getIcons(selectedIcon, selector) {
+        selectedIcon = selectedIcon || '';
+        selector = selector || '#icon_select';
+        return $.ajax({
+            url: 'modules/mobile/mobile/ajaxGetIcons.php',
+            method: 'GET',
+            dataType: 'json'
+        }).done(function(resp) {
+            clog('getIcons response', resp, selector);
+            var $sel = $(selector);
+            if (!$sel.length) return;
+            $sel.empty();
+            $sel.append($('<option>').attr('value','').text('<?php echo _T('Choose an icon', 'mobile'); ?>'));
+            if (resp && resp.success && Array.isArray(resp.data)) {
+                resp.data.forEach(function(it) {
+                    var $opt = $('<option>').attr('value', it.id).text(it.name);
+                    if (String(it.id) === String(selectedIcon)) $opt.prop('selected', true);
+                    $sel.append($opt);
+                });
+            } else {
+                clog('No icons returned or error:', resp && resp.error);
+            }
+            setTimeout(updateIconVisibility, 20);
+        }).fail(function(xhr, status, err) {
+            clog('Failed to load icons:', status, err);
+        });
+    }
 
+    function refreshAllIconSelects(selected) {
+        selected = selected || '<?php echo htmlspecialchars($values['icon_id'], ENT_QUOTES); ?>';
+        getIcons(selected, '#icon_select_app');
+        getIcons(selected, '#icon_select_web');
+        getIcons(selected, '#icon_select_intent');
+    }
 
-    // Modal handling
     function openNewIconModal() {
         $('#newIconModal').fadeIn();
     }
@@ -484,9 +556,9 @@ if (isset($errors['global'])) {
     }
 
     function saveNewIcon() {
-        let iconName = $('#modal_icon_name').val().trim();
-        let fileId = $('#modal_file_id').val();
-        let fileName = $('#modal_file_id option:selected').text();
+        var iconName = $('#modal_icon_name').val().trim();
+        var fileId = $('#modal_file_id').val();
+        var fileName = $('#modal_file_id option:selected').text();
 
         if (!iconName) {
             alert('<?php echo _T("Please enter an icon name", "mobile"); ?>');
@@ -499,7 +571,6 @@ if (isset($errors['global'])) {
 
         clog('Creating icon:', iconName, 'with file ID:', fileId, 'fileName:', fileName);
 
-        // AJAX call to create icon (dedicated endpoint)
         $.ajax({
             url: 'modules/mobile/mobile/ajaxCreateIcon.php',
             method: 'POST',
@@ -514,7 +585,6 @@ if (isset($errors['global'])) {
                 if (response.success) {
                     alert('<?php echo _T("Icon created successfully", "mobile"); ?>');
                     closeNewIconModal();
-                    // Refresh icon selects; if server returned new id, select it
                     var newId = (response.data && response.data.id) ? response.data.id : '';
                     if (typeof refreshAllIconSelects === 'function') refreshAllIconSelects(newId);
                 } else {
@@ -527,99 +597,154 @@ if (isset($errors['global'])) {
             }
         });
     }
-     
 
-    $(function(){
-        // initialize field visibility based on selected type first
-        function updateFieldsByType() {
-            var t = $('#type').length ? $('#type').val() : $('select[name="type"]').val();
-            // show/hide elements marked with type classes
-            $('.type-app, .type-web, .type-intent').each(function(){
-                var $el = $(this);
-                var show = $el.hasClass('type-' + t);
-                var $tr = $el.closest('tr');
-                if ($tr.length) {
-                    if (show) $tr.show(); else $tr.hide();
+    // ========== APK FILE VALIDATION ==========
+    function validateApkFile(file) {
+        var ext = file.name.split('.').pop().toLowerCase();
+        if (ext !== 'apk' && ext !== 'xapk') {
+            return { valid: false, error: 'Only APK and XAPK files are allowed' };
+        }
+        return { valid: true };
+    }
+
+    function handleApkFileSelect() {
+        var $input = $(this);
+        clog('DEBUG: change event fired on #apk_file_input');
+        console.log('[mobile] change on #apk_file_input');
+        var file = $input[0].files[0];
+
+        if (!file) {
+            clog('DEBUG: No file found in input after change');
+            $('#apk_upload_status').html('<span style="color:red;">No file selected</span>');
+            return;
+        }
+        clog('DEBUG: File selected:', file && file.name);
+        $('#apk_upload_status').html('<span style="color:#555;">File selected: ' + file.name + '</span>');
+
+        var validation = validateApkFile(file);
+        if (!validation.valid) {
+            $('#apk_upload_status').html('<span style="color:red;">Error: ' + validation.error + '</span>');
+            $input.val('');
+            return;
+        }
+
+        // Upload immediately via Ajax
+        uploadApkFileAjax(file);
+    }
+
+    function uploadApkFileAjax(file) {
+        $('#apk_upload_status').html('<span style="color:orange;">⏳ Uploading ' + file.name + '...</span>');
+        clog('Starting Ajax upload of:', file.name);
+
+        var formData = new FormData();
+        formData.append('action', 'upload_apk');
+        formData.append('apk_file', file);
+
+        $.ajax({
+            url: 'modules/mobile/mobile/ajaxUploadApk.php',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                clog('Upload response:', response);
+                if (response.status === 'success' && response.data) {
+                    var fileDetails = response.data.fileDetails || {};
+                    var version = fileDetails.version || '';
+                    var pkg = fileDetails.pkg || '';
+                    var versionCode = fileDetails.versionCode || '';
+                    var appName = fileDetails.name || '';
+                    var fileName = response.data.fileName || file.name;
+
+                    // Build HMDM file URL using current domain but force HTTP (HMDM stores HTTP URLs)
+                    var hostname = window.location.hostname || '';
+                    var fileUrl = hostname ? 'http://' + hostname + ':8080/hmdm/files/' + fileName : '';
+
+                    // Fill form fields
+                    $('input[name="version"]').val(version);
+                    $('input[name="pkg"]').val(pkg);
+                    $('input[name="versioncode"]').val(versionCode);
+                    $('input[name="name"]').val(appName);
+                    if (fileUrl) {
+                        $('input[name="url"]').val(fileUrl);
+                        clog('File URL set to:', fileUrl);
+                    }
+
+                    $('#apk_upload_status').html('<span style="color:green;">✓ Upload successful</span>');
                 } else {
-                    if (show) $el.show(); else $el.hide();
+                    $('#apk_upload_status').html('<span style="color:red;">Upload failed: ' + (response.error || 'Unknown error') + '</span>');
                 }
-            });
-            // name should always be visible
-            $('input[name="name"]').closest('tr').show();
-        }
-        // Show the correct form wrapper based on type selection
-        function showFormForType(t) {
-            $('.app-form, .web-form, .intent-form').hide();
-            if (t === 'app') $('.app-form').show();
-            else if (t === 'web') $('.web-form').show();
-            else if (t === 'intent') $('.intent-form').show();
-        }
-        var currentType = $('#type').val() || '';
-        showFormForType(currentType);
-        setTimeout(updateApkVisibility, 120);
-        setTimeout(updateIconVisibility, 120);
+            },
+            error: function(xhr, status, err) {
+                clog('Upload error:', status, err);
+                $('#apk_upload_status').html('<span style="color:red;">Error uploading file: ' + err + '</span>');
+            }
+        });
+    }
+
+    // ========== EVENT HANDLERS ==========
+    function attachEventHandlers() {
+        clog('DEBUG: Attaching event handlers');
+
         $(document).on('change', '#type', function(){
             var t = $(this).val();
             showFormForType(t);
             updateApkVisibility();
             updateIconVisibility();
-            // refresh icon selects when changing type to ensure they're populated
             refreshAllIconSelects();
         });
+
         $(document).on('change', '.system-checkbox', updateApkVisibility);
-        $(document).on('change', '#showicon', updateIconVisibility);
-        
-        // Modal event handlers
+        $(document).on('change', 'input[name="showicon"]', updateIconVisibility);
+
         $(document).on('click', '.new-icon-btn', openNewIconModal);
         $('#modal_cancel').on('click', closeNewIconModal);
         $('#modal_save').on('click', saveNewIcon);
-        
-        // Close modal when clicking outside
+
         $('#newIconModal').on('click', function(e) {
             if (e.target.id === 'newIconModal') {
                 closeNewIconModal();
             }
         });
+
+        // Bind by name (robust for rendered form fields)
+        $(document).on('change', 'input[name="apk_file"]', handleApkFileSelect);
+        clog('DEBUG: Bound delegated change handler to input[name=apk_file]');
+
+        // Direct binding no longer needed; server-side field is rendered by PHP classes
+    }
+
+    // ========== INITIALIZATION ==========
+    function initializePage() {
+        clog('DEBUG: Initializing page');
         
-        clog('DEBUG: jQuery handler attached');
-        // Helper: fetch icons via AJAX and populate the select. Returns jqXHR.
-        function getIcons(selectedIcon, selector) {
-            selectedIcon = selectedIcon || '';
-            selector = selector || '#icon_select';
-            return $.ajax({
-                url: 'modules/mobile/mobile/ajaxGetIcons.php',
-                method: 'GET',
-                dataType: 'json'
-            }).done(function(resp) {
-                clog('getIcons response', resp, selector);
-                var $sel = $(selector);
-                if (!$sel.length) return;
-                $sel.empty();
-                $sel.append($('<option>').attr('value','').text('<?php echo _T('Choose an icon', 'mobile'); ?>'));
-                if (resp && resp.success && Array.isArray(resp.data)) {
-                    resp.data.forEach(function(it) {
-                        var $opt = $('<option>').attr('value', it.id).text(it.name);
-                        if (String(it.id) === String(selectedIcon)) $opt.prop('selected', true);
-                        $sel.append($opt);
-                    });
-                } else {
-                    clog('No icons returned or error:', resp && resp.error);
-                }
-                setTimeout(updateIconVisibility, 20);
-            }).fail(function(xhr, status, err) {
-                clog('Failed to load icons:', status, err);
-            });
+        var currentType = $('#type').val() || '';
+        if (!currentType) {
+            clog('DEBUG: No type selected, defaulting to app');
+            $('#type').val('app').trigger('change');
+            currentType = 'app';
         }
-
-        function refreshAllIconSelects(selected) {
-            selected = selected || '<?php echo htmlspecialchars($values['icon_id'], ENT_QUOTES); ?>';
-            getIcons(selected, '#icon_select_app');
-            getIcons(selected, '#icon_select_web');
-            getIcons(selected, '#icon_select_intent');
-        }
-
-        // Immediately load icons for all selects
+        showFormForType(currentType);
+        
+        setTimeout(updateApkVisibility, 120);
+        setTimeout(updateIconVisibility, 120);
+        
+        attachEventHandlers();
         refreshAllIconSelects();
+
+        // Debug presence/visibility of apk input (should exist via PHP form classes)
+        var $apk = $('#apk_file_input');
+        clog('DEBUG: After init, #apk_file_input exists?', $apk.length, 'visible?', $apk.is(':visible'));
+        var $apkByName = $('input[name="apk_file"]');
+        clog('DEBUG: After init, input[name=apk_file] exists?', $apkByName.length, 'visible?', $apkByName.is(':visible'));
+
+        clog('DEBUG: Page initialized');
+    }
+
+    // ========== DOM READY ==========
+    $(function(){
+        initializePage();
     });
+
 })(jQuery);
 </script>

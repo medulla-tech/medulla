@@ -125,3 +125,6 @@ def exportHmdmDeviceLogs(device_number="", app="", severity="-1"):
 
 def searchHmdmAppPackages(filter_text=""):
     return MobileDatabase().searchHmdmAppPackages(filter_text)
+
+def uploadWebUiFiles(uploaded_file_path=None, uploaded_file_name=None, mime_type=None):
+    return MobileDatabase().uploadWebUiFiles(uploaded_file_path, uploaded_file_name, mime_type)

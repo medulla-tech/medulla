@@ -163,9 +163,9 @@ class MobileDatabase(DatabaseHelper):
 
         return devices_nano
 
-    def addHmdmDevice(self, name, configuration_id, description="", groups=None, imei="", phone=""):
+    def addHmdmDevice(self, name, configuration_id, description="", groups=None, imei="", phone="", device_id=None):
         """
-        Create a new device in HMDM.
+        Create or update a device in HMDM.
         
         :param name: Device number/name (required)
         :param configuration_id: Configuration ID (required)
@@ -173,8 +173,19 @@ class MobileDatabase(DatabaseHelper):
         :param groups: List of group IDs (optional)
         :param imei: Device IMEI (optional)
         :param phone: Device phone number (optional)
+        :param device_id: Device ID for updates (optional)
         :return: Response from HMDM or None on error
         """
+        # Log all received parameters
+        logging.getLogger().info(f"=== addHmdmDevice called ===")
+        logging.getLogger().info(f"  name: {repr(name)}")
+        logging.getLogger().info(f"  configuration_id: {repr(configuration_id)}")
+        logging.getLogger().info(f"  description: {repr(description)}")
+        logging.getLogger().info(f"  groups: {repr(groups)}")
+        logging.getLogger().info(f"  imei: {repr(imei)}")
+        logging.getLogger().info(f"  phone: {repr(phone)}")
+        logging.getLogger().info(f"  device_id: {repr(device_id)}")
+        
         hmtoken = self.authenticate()
         if hmtoken is None:
             logging.getLogger().error("Impossible d'authentifier pour créer un appareil.")
@@ -187,21 +198,33 @@ class MobileDatabase(DatabaseHelper):
             "number": name,
             "configurationId": int(configuration_id)
         }
+        logging.getLogger().info(f"Initial device_data: {device_data}")
+
+        if device_id is not None and str(device_id).strip():
+            device_data["id"] = int(device_id)
+            logging.getLogger().info(f"Added device_id to payload: {device_id}")
 
         if description:
             device_data["description"] = description
+            logging.getLogger().info(f"Added description to payload: {description}")
         
         if groups and isinstance(groups, list):
             device_data["groups"] = [{"id": int(g)} for g in groups if g]
+            logging.getLogger().info(f"Added groups to payload: {device_data['groups']}")
         
         if imei:
             device_data["imei"] = imei
+            logging.getLogger().info(f"Added imei to payload: {imei}")
         
         if phone:
             device_data["phone"] = phone
+            logging.getLogger().info(f"Added phone to payload: {phone}")
+
+        logging.getLogger().info(f"=== FINAL PAYLOAD ===")
+        logging.getLogger().info(f"{json.dumps(device_data, indent=2)}")
+        logging.getLogger().info(f"=== END PAYLOAD ===")
 
         try:
-            logging.getLogger().info(f"Creating device in HMDM: {json.dumps(device_data, indent=2)}")
             resp = requests.put(url, json=device_data, headers=headers)
             logging.getLogger().info(f"HMDM device creation HTTP status: {resp.status_code}")
             logging.getLogger().info(f"HMDM device creation response: {resp.text}")
@@ -818,7 +841,43 @@ class MobileDatabase(DatabaseHelper):
         except Exception as e:
             logging.getLogger().error(f"Error fetching files: {e}")
             return []
-        
+
+    def uploadFileToHmdm(self, file_path: str, file_name: str, mime_type: str = "application/octet-stream") -> dict:
+        """
+        Upload an APK/XAPK (or any file) to HMDM via /private/web-ui-files.
+
+        Returns the file metadata (id, url, fileDetails…) sanitized for XML-RPC,
+        or None on error.
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logger.error("Unable to authenticate for file upload.")
+            return None
+
+        url = f"{self.BASE_URL}/private/web-ui-files"
+        headers = {"Authorization": f"Bearer {hmtoken}"}
+
+        try:
+            with open(file_path, "rb") as fh:
+                files = {"file": (file_name, fh, mime_type)}
+                resp = requests.post(url, headers=headers, files=files)
+            logger.info(f"Upload response status: {resp.status_code}")
+            logger.info(f"Upload response body: {resp.text}")
+            resp.raise_for_status()
+
+            data = resp.json() if resp.text else {}
+            if data.get("status") == "OK":
+                payload = self._sanitize_for_xmlrpc(data.get("data", {}))
+                return payload
+            logger.error(f"HMDM returned error during upload: {data.get('message', 'Unknown error')}")
+            return None
+        except FileNotFoundError:
+            logger.error(f"File not found: {file_path}")
+            return None
+        except Exception as e:
+            logger.error(f"Error uploading file to HMDM: {e}", exc_info=True)
+            return None
+    
     def hmdmRawFile(self, uploaded_file_path, uploaded_file_name, token):
         """
         Upload raw file via multipart to HMDM.
@@ -1359,40 +1418,48 @@ class MobileDatabase(DatabaseHelper):
             logging.getLogger().error(f"Error fetching groups: {e}")
             return []
 
-    def addHmdmGroup(self, name):
+    def addHmdmGroup(self, name, group_id=None):
         """
-        Create a new group in HMDM.
+        Create or update a group in HMDM.
         
         :param name: Group name (required)
+        :param group_id: Group ID for updates (optional)
         :return: Response from HMDM or None on error
         """
         hmtoken = self.authenticate()
         if hmtoken is None:
-            logging.getLogger().error("Impossible to authenticate to create group.")
+            logging.getLogger().error("Impossible to authenticate to create/update group.")
             return None
 
         url = f"{self.BASE_URL}/private/groups"
         headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
 
+        # Build payload - HMDM API expects only id and name
         group_data = {
             "name": name
         }
+        
+        if group_id is not None:
+            # For updates, include the id
+            group_data["id"] = int(group_id)
 
         try:
-            logging.getLogger().info(f"Creating group in HMDM: {json.dumps(group_data, indent=2)}")
+            action = "Updating" if group_id else "Creating"
+            logging.getLogger().info(f"{action} group in HMDM: {json.dumps(group_data, indent=2)}")
             resp = requests.put(url, json=group_data, headers=headers)
-            logging.getLogger().info(f"HMDM group creation HTTP status: {resp.status_code}")
-            logging.getLogger().info(f"HMDM group creation response: {resp.text}")
+            logging.getLogger().info(f"HMDM group {action.lower()} HTTP status: {resp.status_code}")
+            logging.getLogger().info(f"HMDM group {action.lower()} response: {resp.text}")
             resp.raise_for_status()
             
             resp_json = resp.json()
             resp_json["message"] = resp_json.get("message") or ""
             resp_json["data"] = resp_json.get("data") or {}
             
-            logging.getLogger().info(f"Group '{name}' created successfully in HMDM.")
+            logging.getLogger().info(f"Group '{name}' {action.lower()}d successfully in HMDM.")
             return resp_json
         except Exception as e:
-            logging.getLogger().error(f"Error creating group '{name}': {e}")
+            action = "updating" if group_id else "creating"
+            logging.getLogger().error(f"Error {action} group '{name}': {e} {group_data}")
             return None
 
     def deleteHmdmGroupById(self, group_id):
@@ -1667,40 +1734,57 @@ class MobileDatabase(DatabaseHelper):
         # icon_upload_* fields they will be ignored. Use `iconText` or `showIcon`
         # flags in the payload instead.
 
+        # Build payload strictly per type, only relevant fields
+        app_type = app_data.get("type", "")
         payload = {
-            "type": app_data.get("type", ""),
-            "pkg": app_data.get("pkg", ""),
+            "type": app_type,
             "name": app_data.get("name", ""),
-            "showIcon": False,
-            "useKiosk": False,
-            "system": False,
         }
 
-        # Optional fields
-        if app_data.get("version"):
-            payload["version"] = app_data["version"]
+        if app_type == "app":
+            if app_data.get("pkg"):
+                payload["pkg"] = app_data["pkg"]
+            if app_data.get("version"):
+                payload["version"] = app_data["version"]
+            if app_data.get("system"):
+                payload["system"] = True
+            if app_data.get("arch"):
+                payload["arch"] = app_data["arch"]
+            # URL only for non-system apps
+            if not app_data.get("system") and app_data.get("url"):
+                payload["url"] = app_data["url"]
+            # Run options
+            if app_data.get("runAfterInstall"):
+                payload["runAfterInstall"] = True
+            if app_data.get("runAtBoot"):
+                payload["runAtBoot"] = True
+            # Optional versionCode from APK metadata
+            if app_data.get("versionCode"):
+                payload["versionCode"] = app_data["versionCode"]
 
-        if app_data.get("system"):
-            payload["system"] = app_data["system"]
+        elif app_type == "web":
+            if app_data.get("url"):
+                payload["url"] = app_data["url"]
+            if app_data.get("useKiosk"):
+                payload["useKiosk"] = True
 
-        if app_data.get("url"):
-            payload["url"] = app_data["url"]
+        elif app_type == "intent":
+            payload["arch"]=""
+            if app_data.get("action"):
+                payload["intent"] = app_data["action"]
 
-        if app_data.get("arch"):
-            payload["arch"] = app_data["arch"]
-
+        # Common optional icon fields
         if app_data.get("iconText"):
             payload["iconText"] = app_data["iconText"]
-
         if app_data.get("showIcon"):
             payload["showIcon"] = True
-
-        # If icon id provided, include it; otherwise accept an 'icon' field
         icon_id = app_data.get("iconId")
         if icon_id:
             payload["iconId"] = icon_id
 
-        url = f"{self.BASE_URL}/private/applications/android"
+        # Select endpoint based on app type
+        endpoint = "web" if app_type == "web" else "android"
+        url = f"{self.BASE_URL}/private/applications/{endpoint}"
         headers = {
             "Content-Type": "application/json",
             "Authorization": f"Bearer {hmtoken}",
@@ -1729,5 +1813,71 @@ class MobileDatabase(DatabaseHelper):
                 return None
         except Exception as e:
             logging.getLogger().error(f"Error adding/updating application: {e}")
-            return None    
+            return None   
 
+    def _sanitize_for_xmlrpc(self, obj):
+        """Recursively cast big ints to strings to avoid XML-RPC overflow."""
+        limit = 2**31 - 1
+        if isinstance(obj, dict):
+            return {k: self._sanitize_for_xmlrpc(v) for k, v in obj.items()}
+        if isinstance(obj, list):
+            return [self._sanitize_for_xmlrpc(v) for v in obj]
+        if isinstance(obj, int) and (obj > limit or obj < -limit):
+            return str(obj)
+        return obj
+
+    def uploadWebUiFiles(self, file_path: str, file_name: str, mime_type: str = "application/octet-stream"):
+        """
+        Upload a file to HMDM via /private/web-ui-files.
+        
+        Returns sanitized HMDM response dict containing serverPath, fileDetails, etc., or error dict.
+        """
+        logger.info(f"[uploadWebUiFiles] === START ===")
+        logger.info(f"[uploadWebUiFiles] file_path: {file_path}")
+        logger.info(f"[uploadWebUiFiles] file_name: {file_name}")
+        logger.info(f"[uploadWebUiFiles] mime_type: {mime_type}")
+        
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logger.error("[uploadWebUiFiles] Unable to authenticate.")
+            return {"status": "error", "message": "Authentication failed"}
+        
+        logger.info("[uploadWebUiFiles] Authentication successful")
+
+        url = f"{self.BASE_URL}/private/web-ui-files"
+        headers = {"Authorization": f"Bearer {hmtoken}"}
+        logger.info(f"[uploadWebUiFiles] Target URL: {url}")
+
+        try:
+            logger.info(f"[uploadWebUiFiles] Sending multipart request with file")
+            with open(file_path, "rb") as fh:
+                files = {"file": (file_name, fh, mime_type)}
+                logger.info(f"[uploadWebUiFiles] File opened: {file_name} (MIME: {mime_type})")
+                resp = requests.post(url, headers=headers, files=files)
+
+            logger.info(f"[uploadWebUiFiles] HTTP status code: {resp.status_code}")
+            logger.info(f"[uploadWebUiFiles] Response headers: {dict(resp.headers)}")
+            logger.info(f"[uploadWebUiFiles] Response body: {resp.text}")
+            
+            resp.raise_for_status()
+            logger.info(f"[uploadWebUiFiles] HTTP request successful")
+
+            resp_json = resp.json() if resp.text else {"status": "OK", "data": {}}
+            logger.info(f"[uploadWebUiFiles] Response JSON before sanitization: {json.dumps(resp_json, indent=2)}")
+            
+            resp_json = self._sanitize_for_xmlrpc(resp_json)
+            logger.info(f"[uploadWebUiFiles] Response JSON after sanitization: {json.dumps(resp_json, indent=2)}")
+
+            if resp_json.get("status") == "OK":
+                logger.info(f"[uploadWebUiFiles] === SUCCESS === File uploaded")
+                return resp_json
+            
+            logger.error(f"[uploadWebUiFiles] Status is not OK: {resp_json.get('status')}, message: {resp_json.get('message')}")
+            return {"status": "error", "message": resp_json.get("message", "Unknown error"), "raw": resp_json}
+
+        except FileNotFoundError:
+            logger.error(f"[uploadWebUiFiles] File not found: {file_path}")
+            return {"status": "error", "message": "File not found"}
+        except Exception as e:
+            logger.error(f"[uploadWebUiFiles] Exception occurred: {e}", exc_info=True)
+            return {"status": "error", "message": str(e)}

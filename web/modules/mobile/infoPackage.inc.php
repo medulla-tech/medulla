@@ -79,6 +79,14 @@ $pageIconSettings = new Page("iconSettings", _T('Icon settings', 'mobile'));
 $pageIconSettings->setFile("modules/mobile/mobile/iconSettings.php");
 $submod->addPage($pageIconSettings);
 
+###############################
+#upload apk page (ajax)
+###############################
+$pageAjaxUploadApk = new Page("ajaxUploadApk", _T('Upload APK', 'mobile'));
+$pageAjaxUploadApk->setFile("modules/mobile/mobile/ajaxUploadApk.php");
+$pageAjaxUploadApk->setOptions(array("AJAX" => true, "visible" => false));
+$submod->addPage($pageAjaxUploadApk);
+
 ################################
  # GLPI devices page
 ################################
