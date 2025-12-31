@@ -34,7 +34,7 @@ from mmc.plugins.ppolicy.signals import (
 
 logger = logging.getLogger()
 
-VERSION = "5.4.5"
+VERSION = "5.4.6"
 APIVERSION = "0:1:0"
 REVISION = scmRevision("$Rev$")
 
