@@ -1,5 +1,10 @@
 # Change Log
 
+## [5.4.6](https://github.com/medulla-tech/medulla/releases/tag/5.4.6) (2025-12-31)
+- [FEATURE] Add regex-based team filtering for profiles
+- [FEATURE] Add proxy support for OIDC providers
+- [BUGFIX]  Improve the time to get the xmpp computers page
+
 ## [5.4.5](https://github.com/medulla-tech/medulla/releases/tag/5.4.5) (2025-12-17)
 - [FEATURE] Dashboard widgets are now based on user's allowed entities
 - [FEATURE] Improve speed of query listing machines of allowed entities
