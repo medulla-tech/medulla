@@ -108,8 +108,7 @@ foreach($enabled_updates_list['kb'] as $kb) {
     $totalMachines = $enabled_updates_list["total"];
     $compliance_rate = ($totalMachines > 0) ? round((($totalMachines-$machineWithoutUpd[$i]) / $totalMachines) * 100) : 100;
 
-    $color = colorconf($compliance_rate);
-    $complRates[] = "<div class='progress' style='width: ".$compliance_rate."%; background : ".$color."; font-weight: bold; color : black; text-align: right;'> ".$compliance_rate."% </div>";
+    $complRates[] = (string) new medulla_progressbar_static($compliance_rate, "", "");
     $i++;
 }
 
