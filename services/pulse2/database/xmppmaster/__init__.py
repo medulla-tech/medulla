@@ -11077,7 +11077,9 @@ class XmppMasterDatabase(DatabaseHelper):
         sql_count = f"""
             SELECT COUNT(DISTINCT rs.id)
             FROM relayserver rs
+            LEFT JOIN has_cluster_ars hca ON hca.id_ars = rs.id
             LEFT JOIN machines m ON m.hostname = rs.nameserver
+            LEFT JOIN cluster_ars c ON c.id = hca.id_cluster
             WHERE {where_sql}
         """
         total = session.execute(sql_count).scalar()
