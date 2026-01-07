@@ -1,9 +1,20 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: medulla\n"
-"POT-Creation-Date: 2025-10-30 16:48+0100\n"
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-07 16:27+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: modules/glpi/glpi/tabs.php:65 modules/glpi/glpi/tabs.php:73
@@ -48,7 +59,7 @@ msgid "History"
 msgstr ""
 
 #: modules/glpi/glpi/tabs.php:100
-#: modules/glpi/includes/panels/antivirus.inc.php:32
+#: modules/glpi/includes/panels/antivirus.inc.php:33
 msgid "Antivirus"
 msgstr ""
 
@@ -160,198 +171,198 @@ msgid "Quick action"
 msgstr ""
 
 #: modules/glpi/glpi/ajaxMachinesList.php:217
-#: modules/glpi/glpi/machinesList.php:61 modules/glpi/glpi/addEntityRule.php:99
+#: modules/glpi/glpi/machinesList.php:63 modules/glpi/glpi/addEntityRule.php:99
 msgid "Hostname"
 msgstr ""
 
 #: modules/glpi/glpi/ajaxMachinesList.php:218
-#: modules/glpi/glpi/machinesList.php:55
+#: modules/glpi/glpi/machinesList.php:57
 msgid "Jabber ID"
 msgstr ""
 
 #: modules/glpi/glpi/ajaxMachinesList.php:219
-#: modules/glpi/glpi/machinesList.php:59
+#: modules/glpi/glpi/machinesList.php:61
 msgid "Platform"
 msgstr ""
 
 #: modules/glpi/glpi/ajaxMachinesList.php:220
-#: modules/glpi/glpi/machinesList.php:60 modules/glpi/glpi/ajaxViewPart.php:262
+#: modules/glpi/glpi/machinesList.php:62 modules/glpi/glpi/ajaxViewPart.php:262
 msgid "Architecture"
 msgstr ""
 
 #: modules/glpi/glpi/ajaxMachinesList.php:221
-#: modules/glpi/glpi/machinesList.php:56
+#: modules/glpi/glpi/machinesList.php:58
 msgid "Machine UUID"
 msgstr ""
 
 #: modules/glpi/glpi/ajaxMachinesList.php:222
-#: modules/glpi/glpi/machinesList.php:57
+#: modules/glpi/glpi/machinesList.php:59
 msgid "Reconf. requested"
 msgstr ""
 
 #: modules/glpi/glpi/ajaxMachinesList.php:223
-#: modules/glpi/glpi/machinesList.php:58
+#: modules/glpi/glpi/machinesList.php:60
 msgid "Online"
 msgstr ""
 
 #: modules/glpi/glpi/ajaxMachinesList.php:224
-#: modules/glpi/glpi/machinesList.php:63
+#: modules/glpi/glpi/machinesList.php:65
 msgid "IP address"
 msgstr ""
 
 #: modules/glpi/glpi/ajaxMachinesList.php:225
-#: modules/glpi/glpi/machinesList.php:64
+#: modules/glpi/glpi/machinesList.php:66
 #: modules/glpi/glpi/addEntityRule.php:102
 msgid "Subnet"
 msgstr ""
 
 #: modules/glpi/glpi/ajaxMachinesList.php:226
-#: modules/glpi/glpi/machinesList.php:66
+#: modules/glpi/glpi/machinesList.php:68
 msgid "Public IP"
 msgstr ""
 
 #: modules/glpi/glpi/ajaxMachinesList.php:227
-#: modules/glpi/glpi/machinesList.php:65
+#: modules/glpi/glpi/machinesList.php:67
 msgid "Mac address"
 msgstr ""
 
 #: modules/glpi/glpi/ajaxMachinesList.php:228
-#: modules/glpi/glpi/machinesList.php:67
+#: modules/glpi/glpi/machinesList.php:69
 msgid "Agent type"
 msgstr ""
 
 #: modules/glpi/glpi/ajaxMachinesList.php:229
-#: modules/glpi/glpi/machinesList.php:68
+#: modules/glpi/glpi/machinesList.php:70
 msgid "Usage class"
 msgstr ""
 
 #: modules/glpi/glpi/ajaxMachinesList.php:230
-#: modules/glpi/glpi/machinesList.php:69
+#: modules/glpi/glpi/machinesList.php:71
 msgid "Relay JID"
 msgstr ""
 
 #: modules/glpi/glpi/ajaxMachinesList.php:231
-#: modules/glpi/glpi/machinesList.php:70
+#: modules/glpi/glpi/machinesList.php:72
 msgid "AD machine OU"
 msgstr ""
 
 #: modules/glpi/glpi/ajaxMachinesList.php:232
-#: modules/glpi/glpi/machinesList.php:71
+#: modules/glpi/glpi/machinesList.php:73
 msgid "AD user OU"
 msgstr ""
 
 #: modules/glpi/glpi/ajaxMachinesList.php:233
-#: modules/glpi/glpi/machinesList.php:72
+#: modules/glpi/glpi/machinesList.php:74
 msgid "Kiosk enabled"
 msgstr ""
 
 #: modules/glpi/glpi/ajaxMachinesList.php:234
-#: modules/glpi/glpi/machinesList.php:73
+#: modules/glpi/glpi/machinesList.php:75
 msgid "Last user connected"
 msgstr ""
 
 #: modules/glpi/glpi/ajaxMachinesList.php:235
-#: modules/glpi/glpi/machinesList.php:74
+#: modules/glpi/glpi/machinesList.php:76
 msgid "Syncthing ID"
 msgstr ""
 
 #: modules/glpi/glpi/ajaxMachinesList.php:236
-#: modules/glpi/glpi/machinesList.php:75
+#: modules/glpi/glpi/machinesList.php:77
 msgid "Registry keys"
 msgstr ""
 
 #: modules/glpi/glpi/ajaxMachinesList.php:237
-#: modules/glpi/glpi/machinesList.php:54
+#: modules/glpi/glpi/machinesList.php:56
 msgid "Machine ID"
 msgstr ""
 
 #: modules/glpi/glpi/ajaxMachinesList.php:238
-#: modules/glpi/glpi/machinesList.php:62
+#: modules/glpi/glpi/machinesList.php:64
 msgid "GLPI ID"
 msgstr ""
 
 #: modules/glpi/glpi/ajaxMachinesList.php:239
-#: modules/glpi/glpi/machinesList.php:76
+#: modules/glpi/glpi/machinesList.php:78
 msgid "GLPI description"
 msgstr ""
 
 #: modules/glpi/glpi/ajaxMachinesList.php:240
-#: modules/glpi/glpi/machinesList.php:77
+#: modules/glpi/glpi/machinesList.php:79
 msgid "Owner firstname"
 msgstr ""
 
 #: modules/glpi/glpi/ajaxMachinesList.php:241
-#: modules/glpi/glpi/machinesList.php:78
+#: modules/glpi/glpi/machinesList.php:80
 msgid "Owner lastname"
 msgstr ""
 
 #: modules/glpi/glpi/ajaxMachinesList.php:242
 #: modules/glpi/glpi/ajaxMachinesList.php:417
-#: modules/glpi/glpi/machinesList.php:79
+#: modules/glpi/glpi/machinesList.php:81
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:260
 msgid "Owner"
 msgstr ""
 
 #: modules/glpi/glpi/ajaxMachinesList.php:243
-#: modules/glpi/glpi/machinesList.php:80 modules/glpi/glpi/ajaxViewPart.php:243
+#: modules/glpi/glpi/machinesList.php:82 modules/glpi/glpi/ajaxViewPart.php:243
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:275
 msgid "Model"
 msgstr ""
 
 #: modules/glpi/glpi/ajaxMachinesList.php:244
 #: modules/glpi/glpi/ajaxMachinesList.php:432
-#: modules/glpi/glpi/machinesList.php:81 modules/glpi/glpi/ajaxViewPart.php:244
+#: modules/glpi/glpi/machinesList.php:83 modules/glpi/glpi/ajaxViewPart.php:244
 #: modules/glpi/glpi/ajaxMachinesListglpi.php:278
 msgid "Manufacturer"
 msgstr ""
 
 #: modules/glpi/glpi/ajaxMachinesList.php:245
-#: modules/glpi/glpi/machinesList.php:82
+#: modules/glpi/glpi/machinesList.php:84
 msgid "Short entity name"
 msgstr ""
 
 #: modules/glpi/glpi/ajaxMachinesList.php:246
-#: modules/glpi/glpi/machinesList.php:83
+#: modules/glpi/glpi/machinesList.php:85
 msgid "Full entity name"
 msgstr ""
 
 #: modules/glpi/glpi/ajaxMachinesList.php:247
-#: modules/glpi/glpi/machinesList.php:84
+#: modules/glpi/glpi/machinesList.php:86
 msgid "Entity ID"
 msgstr ""
 
 #: modules/glpi/glpi/ajaxMachinesList.php:248
-#: modules/glpi/glpi/machinesList.php:85
+#: modules/glpi/glpi/machinesList.php:87
 msgid "Short location name"
 msgstr ""
 
 #: modules/glpi/glpi/ajaxMachinesList.php:249
-#: modules/glpi/glpi/machinesList.php:86
+#: modules/glpi/glpi/machinesList.php:88
 msgid "Full location name"
 msgstr ""
 
 #: modules/glpi/glpi/ajaxMachinesList.php:250
-#: modules/glpi/glpi/machinesList.php:87
+#: modules/glpi/glpi/machinesList.php:89
 msgid "Location ID"
 msgstr ""
 
 #: modules/glpi/glpi/ajaxMachinesList.php:251
-#: modules/glpi/glpi/machinesList.php:88
+#: modules/glpi/glpi/machinesList.php:90
 msgid "IP addresses"
 msgstr ""
 
 #: modules/glpi/glpi/ajaxMachinesList.php:252
-#: modules/glpi/glpi/machinesList.php:89
+#: modules/glpi/glpi/machinesList.php:91
 msgid "Network mask"
 msgstr ""
 
 #: modules/glpi/glpi/ajaxMachinesList.php:253
-#: modules/glpi/glpi/machinesList.php:90
+#: modules/glpi/glpi/machinesList.php:92
 msgid "Broadcast address"
 msgstr ""
 
 #: modules/glpi/glpi/ajaxMachinesList.php:254
-#: modules/glpi/glpi/machinesList.php:91
+#: modules/glpi/glpi/machinesList.php:93
 msgid "Gateway address"
 msgstr ""
 
@@ -445,23 +456,23 @@ msgstr ""
 msgid "Machines List view xmpp"
 msgstr ""
 
-#: modules/glpi/glpi/machinesList.php:42
+#: modules/glpi/glpi/machinesList.php:43
 #: modules/glpi/glpi/machinesListglpi.php:40
 msgid "All computers"
 msgstr ""
 
-#: modules/glpi/glpi/machinesList.php:46
+#: modules/glpi/glpi/machinesList.php:47
 #: modules/glpi/glpi/machinesListglpi.php:44
 msgid "Online computers"
 msgstr ""
 
-#: modules/glpi/glpi/machinesList.php:50
+#: modules/glpi/glpi/machinesList.php:51
 #: modules/glpi/glpi/machinesListglpi.php:48
 msgid "Offline computers"
 msgstr ""
 
-#: modules/glpi/glpi/machinesList.php:109
-#: modules/glpi/glpi/machinesList.php:113
+#: modules/glpi/glpi/machinesList.php:111
+#: modules/glpi/glpi/machinesList.php:115
 #: modules/glpi/glpi/machinesListglpi.php:53
 msgid "All my entities"
 msgstr ""
@@ -971,38 +982,42 @@ msgstr ""
 msgid "Inventories"
 msgstr ""
 
-#: modules/glpi/includes/panels/inventory.inc.php:47
-#: modules/glpi/includes/panels/antivirus.inc.php:45
+#: modules/glpi/includes/panels/inventory.inc.php:46
+#: modules/glpi/includes/panels/antivirus.inc.php:46
 msgid "Create a group"
 msgstr ""
 
-#: modules/glpi/includes/panels/inventory.inc.php:48
+#: modules/glpi/includes/panels/inventory.inc.php:47
 msgid "< %s days: %percent% (%d)"
 msgstr ""
 
-#: modules/glpi/includes/panels/inventory.inc.php:49
+#: modules/glpi/includes/panels/inventory.inc.php:48
 msgid "> %s days: %percent% (%d)"
 msgstr ""
 
-#: modules/glpi/includes/panels/inventory.inc.php:50
+#: modules/glpi/includes/panels/inventory.inc.php:49
 msgid "Uninventoried machines"
 msgstr ""
 
-#: modules/glpi/includes/panels/antivirus.inc.php:41
+#: modules/glpi/includes/panels/antivirus.inc.php:43
 #: modules/glpi/includes/panels/os_repartition.inc.php:44
 msgid "Uninventoried Machines"
 msgstr ""
 
-#: modules/glpi/includes/panels/antivirus.inc.php:46
+#: modules/glpi/includes/panels/antivirus.inc.php:47
 msgid "OK: %percent% (%d)"
 msgstr ""
 
-#: modules/glpi/includes/panels/antivirus.inc.php:47
+#: modules/glpi/includes/panels/antivirus.inc.php:48
 msgid "Not running or not up-to-date: %percent% (%d)"
 msgstr ""
 
-#: modules/glpi/includes/panels/antivirus.inc.php:48
-msgid "No antivirus found: %percent% (%d)"
+#: modules/glpi/includes/panels/antivirus.inc.php:49
+msgid "Outdated antivirus: %percent% (%d)"
+msgstr ""
+
+#: modules/glpi/includes/panels/antivirus.inc.php:50
+msgid "Missing antivirus: %percent% (%d)"
 msgstr ""
 
 #: modules/glpi/includes/panels/os_repartition.inc.php:36

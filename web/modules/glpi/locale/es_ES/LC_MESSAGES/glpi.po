@@ -1002,6 +1002,14 @@ msgstr "No funciona o no está actualizado: %percent% (%d)"
 msgid "No antivirus found: %percent% (%d)"
 msgstr "No se ha encontrado ningún antivirus: %percent% (%d)"
 
+#: modules/glpi/includes/panels/antivirus.inc.php:49
+msgid "Outdated antivirus: %percent% (%d)"
+msgstr "Antivirus obsoleto: %percent% (%d)"
+
+#: modules/glpi/includes/panels/antivirus.inc.php:50
+msgid "Missing antivirus: %percent% (%d)"
+msgstr "Antivirus no instalado: %percent% (%d)"
+
 #: modules/glpi/includes/panels/os_repartition.inc.php:36
 msgid "Operating systems"
 msgstr "Sistemas operativos"

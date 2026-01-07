@@ -89,13 +89,13 @@ foreach ($f['name_procedure'] as $indextableau => $name) {
     }
 
     $currentFamily=$productfamily;
-    $str = str_replace("MSOS", _T("Microsoft Server Operating System", "admin"), $str);
-    $str = str_replace("Vstudio", _T("Visual studio", "admin"), $str);
-    $str = str_replace("Win_Malicious_", _T("Malicious Software Removal Tool_", "admin"), $str);
+    $str = str_replace("MSOS", _T("Microsoft Server Operating System", "updates"), $str);
+    $str = str_replace("Vstudio", _T("Visual studio", "updates"), $str);
+    $str = str_replace("Win_Malicious_", _T("Malicious Software Removal Tool_", "updates"), $str);
     $str = str_replace("office", "Microsoft Office", $str);
     $str = str_replace("Win10", "Windows 10", $str);
     $str = str_replace("Win11", "Windows 11", $str);
-    $str = str_replace("WS", _T("Microsoft Server Operating System", "admin"), $str);
+    $str = str_replace("WS", _T("Microsoft Server Operating System", "updates"), $str);
 
     $str = str_replace("_", " ", $str);
     // Récupération du commentaire correspondant (s'il existe)
