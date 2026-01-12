@@ -68,6 +68,18 @@ def addHmdmApplication(app_data):
 def deleteApplicationById(id):
     return MobileDatabase().deleteApplicationById(id)
 
+def getApplicationVersions(app_id):
+    return MobileDatabase().getApplicationVersions(app_id)
+
+def getConfigurationNames():
+    return MobileDatabase().getConfigurationNames()
+
+def updateApplicationConfigurations(app_id, configuration_id, configuration_name=None):
+    return MobileDatabase().updateApplicationConfigurations(app_id, configuration_id, configuration_name)
+
+def getConfigurationNames():
+    return MobileDatabase().getConfigurationNames()
+
 def getHmdmConfigurations():
     return MobileDatabase().getHmdmConfigurations()
 

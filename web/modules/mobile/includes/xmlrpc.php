@@ -30,6 +30,15 @@ function xmlrpc_add_hmdm_application($app_data){
 function xmlrpc_delete_application_by_id($id){
     return xmlCall("mobile.deleteApplicationById", array($id));
 }
+function xmlrpc_get_application_versions($app_id){
+    return xmlCall("mobile.getApplicationVersions", array($app_id));
+}
+function xmlrpc_get_configuration_names(){
+    return xmlCall("mobile.getConfigurationNames", array());
+}
+function xmlrpc_update_application_configurations($app_id, $configuration_id, $configuration_name = null){
+    return xmlCall("mobile.updateApplicationConfigurations", array($app_id, $configuration_id, $configuration_name));
+}
 function xmlrpc_get_hmdm_configurations(){
     return xmlCall("mobile.getHmdmConfigurations", array());
 }

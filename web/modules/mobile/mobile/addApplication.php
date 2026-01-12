@@ -25,6 +25,7 @@ $values = [
     'url' => '',
     'system' => false,
     'arch' => '',
+    'filePath' => '',
     'showicon' => false,
     'runAfterInstall' => false,
     'runAtBoot' => false,
@@ -42,6 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['test'])) {
     $values['url'] = trim($_POST['url'] ?? '');
     $values['system'] = isset($_POST['system']) ? true : false;
     $values['arch'] = trim($_POST['arch'] ?? '');
+    $values['filePath'] = trim($_POST['filePath'] ?? '');
     // checkbox to indicate that an icon should be shown
     $values['showicon'] = isset($_POST['showicon']) ? true : false;
     // run options
@@ -125,6 +127,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['test'])) {
             // URL only for non-system apps
             if (!$values['system'] && $values['url'] !== '') {
                 $app['url'] = $values['url'];
+            }
+            if (!empty($values['filePath'])) {
+                $app['filePath'] = $values['filePath'];
             }
             // Run options
             if (!empty($values['runAfterInstall'])) {
@@ -229,6 +234,11 @@ $formApp->add(new TrFormElement('', $sep));
 $versionCodeHidden = new InputTpl('versioncode', '/^.{0,50}$/', '');
 $versionCodeHidden->fieldType = 'hidden';
 $formApp->add(new TrFormElement('', $versionCodeHidden));
+
+// FilePath (hidden, filled by Ajax upload response)
+$filePathHidden = new InputTpl('filePath', '/^.{0,255}$/', '');
+$filePathHidden->fieldType = 'hidden';
+$formApp->add(new TrFormElement('', $filePathHidden));
 // Run options
 $runAfterA = new InputTpl('runAfterInstall', '/^.{0,1}$/', !empty($values['runAfterInstall']) ? '1' : '');
 $runAfterA->fieldType = 'checkbox';
@@ -655,6 +665,7 @@ if (isset($errors['global'])) {
                     var versionCode = fileDetails.versionCode || '';
                     var appName = fileDetails.name || '';
                     var fileName = response.data.fileName || file.name;
+                    var serverPath = response.data.serverPath || response.data.tmpPath || '';
 
                     // Build HMDM file URL using current domain but force HTTP (HMDM stores HTTP URLs)
                     var hostname = window.location.hostname || '';
@@ -668,6 +679,10 @@ if (isset($errors['global'])) {
                     if (fileUrl) {
                         $('input[name="url"]').val(fileUrl);
                         clog('File URL set to:', fileUrl);
+                    }
+                    if (serverPath) {
+                        $('input[name="filePath"]').val(serverPath);
+                        clog('filePath set to:', serverPath);
                     }
 
                     $('#apk_upload_status').html('<span style="color:green;">✓ Upload successful</span>');

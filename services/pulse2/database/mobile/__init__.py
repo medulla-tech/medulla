@@ -1127,6 +1127,7 @@ class MobileDatabase(DatabaseHelper):
             deviceList = []
             for d in devices_items:
                 device_data = {
+                    "id": d.get("id", ""),
                     "number": d.get("number", ""),
                     "description": d.get("description", ""),
                     "statusCode": d.get("statusCode", ""),
@@ -1141,7 +1142,8 @@ class MobileDatabase(DatabaseHelper):
                     "launcherVersion": d.get("launcherVersion", ""),
                     "mdmMode": d.get("mdmMode", ""),
                     "kioskMode": d.get("kioskMode", ""),
-                    "androidVersion": d.get("androidVersion", "")
+                    "androidVersion": d.get("androidVersion", ""),
+                    "groups": d.get("groups", [])
                 }
                 deviceList.append(device_data)
 
@@ -1325,17 +1327,14 @@ class MobileDatabase(DatabaseHelper):
         Delete an application in HMDM by its ID.
 
         :param app_id: The application ID to delete.
-        :return: True if deleted, False otherwise.
+        :return: Dict { error: bool, message: str }
         """
         hmtoken = self.authenticate()
         if hmtoken is None:
-            logging.getLogger().error(
-                "Impossible d'authentifier pour supprimer l'application."
-            )
-            return False
+            logging.getLogger().error("Impossible d'authentifier pour supprimer l'application.")
+            return {"error": True, "message": "auth_failed"}
 
         url = f"{self.BASE_URL}/private/applications/{app_id}"
-
         headers = {
             "Content-Type": "application/json",
             "Authorization": f"Bearer {hmtoken}"
@@ -1344,53 +1343,157 @@ class MobileDatabase(DatabaseHelper):
         try:
             resp = requests.delete(url, headers=headers)
 
+            # Parse JSON body if present
+            body = None
+            try:
+                if resp.headers.get("Content-Type", "").startswith("application/json"):
+                    body = resp.json()
+            except Exception:
+                body = None
+
+            # If HMDM returns an explicit error status
+            if isinstance(body, dict):
+                status_val = str(body.get("status", "")).upper()
+                if status_val in ("ERROR", "FAIL", "FAILED") or body.get("error") is True:
+                    msg = body.get("message") or body.get("error") or "error"
+                    logging.getLogger().error(f"HMDM error deleting app {app_id}: {body}")
+                    return {"error": True, "message": msg}
+
+            # HTTP status check
             if resp.status_code not in (200, 204):
                 logging.getLogger().warning(
                     f"Unexpected status deleting application {app_id}: {resp.status_code}"
                 )
+                return {"error": True, "message": f"http_{resp.status_code}"}
 
-            try:
-                if resp.headers.get("Content-Type", "").startswith("application/json"):
-                    body = resp.json()
-                    if isinstance(body, dict):
-                        if str(body.get("status", "")).upper() in ("ERROR", "FAIL", "FAILED"):
-                            logging.getLogger().error(
-                                f"HMDM reported error deleting app {app_id}: {body}"
-                            )
-                            return False
-                        if body.get("error") is True:
-                            logging.getLogger().error(
-                                f"HMDM reported error deleting app {app_id}: {body}"
-                            )
-                            return False
-            except Exception:
-                # Ignore JSON parsing errors
-                pass
+            # Verify that app is really gone
             try:
                 apps = self.getHmdmApplications() or []
-                still_exists = False
                 for app in apps:
                     try:
                         if int(app.get("id")) == int(app_id):
-                            still_exists = True
-                            break
+                            logging.getLogger().warning(
+                                f"Application {app_id} still present after delete; treating as failure."
+                            )
+                            return {"error": True, "message": "delete_verification_failed"}
                     except Exception:
                         continue
-                if still_exists:
-                    logging.getLogger().warning(
-                        f"Application {app_id} still present after delete; treating as failure."
-                    )
-                    return False
             except Exception as ve:
                 logging.getLogger().warning(
                     f"Could not verify deletion of application {app_id}: {ve}"
                 )
 
             logging.getLogger().info(f"Application {app_id} deleted successfully.")
-            return True
+            return {"error": False, "message": ""}
         except Exception as e:
             logging.getLogger().error(f"Error deleting application {app_id}: {e}")
-            return False
+            return {"error": True, "message": str(e)}
+
+    def getApplicationVersions(self, app_id: int):
+        """
+        Get the list of versions for a specified application.
+        
+        :param app_id: Application ID
+        :return: List of version dicts or empty list on error
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Unable to authenticate to retrieve application versions.")
+            return []
+
+        url = f"{self.BASE_URL}/private/applications/{app_id}/versions"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+
+        try:
+            resp = requests.get(url, headers=headers)
+            resp.raise_for_status()
+            data = resp.json()
+            logging.getLogger().info(f"Application versions fetched successfully for app {app_id}")
+            
+            versions = data.get("data", [])
+            return versions
+        except Exception as e:
+            logging.getLogger().error(f"Error fetching application versions for app {app_id}: {e}")
+            return []
+
+    def getConfigurationNames(self):
+        """
+        Get the list of available configuration names.
+
+        :return: List of dicts with keys id and name
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Unable to authenticate to retrieve configuration names.")
+            return []
+
+        url = f"{self.BASE_URL}/private/configurations/list"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+
+        try:
+            resp = requests.get(url, headers=headers)
+            resp.raise_for_status()
+            data = resp.json()
+            raw_items = data if isinstance(data, list) else data.get("data") or data.get("configurations") or []
+
+            configs = []
+            for item in raw_items:
+                if isinstance(item, dict):
+                    cid = item.get("id") or item.get("configurationId")
+                    cname = item.get("name") or item.get("title") or item.get("configurationName")
+                    configs.append({"id": cid, "name": cname})
+                else:
+                    configs.append({"id": None, "name": str(item)})
+
+            logging.getLogger().info("Configuration names fetched successfully")
+            return configs
+        except Exception as e:
+            logging.getLogger().error(f"Error fetching configuration names: {e}")
+            return []
+
+    def updateApplicationConfigurations(self, app_id: int, configuration_id: int, configuration_name: str = None):
+        """
+        Attach a configuration to an application.
+
+        :param app_id: Application ID
+        :param configuration_id: Configuration ID to attach
+        :param configuration_name: Optional configuration name
+        :return: dict result from HMDM
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Unable to authenticate to update application configurations.")
+            return {"status": "ERROR", "message": "auth_failed"}
+
+        url = f"{self.BASE_URL}/private/applications/configurations"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+
+        config_entry = {
+            "applicationId": app_id,
+            "configurationId": configuration_id,
+            "action": 0,
+        }
+        if configuration_name:
+            config_entry["configurationName"] = configuration_name
+
+        payload = {
+            "applicationId": app_id,
+            "configurations": [config_entry],
+        }
+
+        try:
+            resp = requests.post(url, headers=headers, json=payload)
+            resp.raise_for_status()
+            data = resp.json()
+            logging.getLogger().info(
+                f"Configuration {configuration_id} attached to application {app_id}"
+            )
+            return data if isinstance(data, dict) else {"status": "OK"}
+        except Exception as e:
+            logging.getLogger().error(
+                f"Error updating configurations for application {app_id} with configuration {configuration_id}: {e}"
+            )
+            return {"status": "ERROR", "message": str(e)}
 
     def getHmdmGroups(self):
         """
@@ -1418,14 +1521,19 @@ class MobileDatabase(DatabaseHelper):
             logging.getLogger().error(f"Error fetching groups: {e}")
             return []
 
-    def addHmdmGroup(self, name, group_id=None):
+    def addHmdmGroup(self, name, group_id=None, customer_id=None, common=None):
         """
         Create or update a group in HMDM.
         
         :param name: Group name (required)
         :param group_id: Group ID for updates (optional)
+        :param customer_id: Customer ID (optional)
+        :param common: Common flag (optional)
         :return: Response from HMDM or None on error
         """
+        logging.getLogger().info(
+            f"addHmdmGroup called with name={name!r}, group_id={group_id}, customer_id={customer_id}, common={common}"
+        )
         hmtoken = self.authenticate()
         if hmtoken is None:
             logging.getLogger().error("Impossible to authenticate to create/update group.")
@@ -1434,14 +1542,22 @@ class MobileDatabase(DatabaseHelper):
         url = f"{self.BASE_URL}/private/groups"
         headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
 
-        # Build payload - HMDM API expects only id and name
+        # Build payload - HMDM API expects id/name and may include customer/common
         group_data = {
             "name": name
         }
         
-        if group_id is not None:
-            # For updates, include the id
+        if group_id is not None and str(group_id).strip():
             group_data["id"] = int(group_id)
+
+        if customer_id is not None and str(customer_id).strip():
+            group_data["customerId"] = int(customer_id)
+
+        if common is not None:
+            common_value = common
+            if isinstance(common_value, str):
+                common_value = common_value.lower() not in ("false", "0", "")
+            group_data["common"] = bool(common_value)
 
         try:
             action = "Updating" if group_id else "Creating"
@@ -1741,18 +1857,30 @@ class MobileDatabase(DatabaseHelper):
             "name": app_data.get("name", ""),
         }
 
+        # If ID is provided, include it for update operation
+        if app_data.get("id"):
+            payload["id"] = app_data["id"]
+
         if app_type == "app":
             if app_data.get("pkg"):
                 payload["pkg"] = app_data["pkg"]
             if app_data.get("version"):
                 payload["version"] = app_data["version"]
+            # System flag: only send if provided
             if app_data.get("system"):
                 payload["system"] = True
+            
             if app_data.get("arch"):
                 payload["arch"] = app_data["arch"]
-            # URL only for non-system apps
-            if not app_data.get("system") and app_data.get("url"):
+            
+            if app_data.get("url"):
                 payload["url"] = app_data["url"]
+
+            # Include filePath key when provided by caller (even if None)
+            # Some HMDM endpoints expect the key to exist (can be null).
+            if "filePath" in app_data:
+                payload["filePath"] = app_data.get("filePath")
+            
             # Run options
             if app_data.get("runAfterInstall"):
                 payload["runAfterInstall"] = True
@@ -1761,6 +1889,16 @@ class MobileDatabase(DatabaseHelper):
             # Optional versionCode from APK metadata
             if app_data.get("versionCode"):
                 payload["versionCode"] = app_data["versionCode"]
+            # If provided, include usedVersionId to keep HMDM version tracking consistent
+            # Preserve usedVersionId and mirror it to latestVersion to match HMDM UI payload
+            if app_data.get("usedVersionId") is not None:
+                try:
+                    uvid = int(app_data.get("usedVersionId"))
+                    payload["usedVersionId"] = uvid
+                    payload["latestVersion"] = uvid
+                except Exception:
+                    payload["usedVersionId"] = app_data.get("usedVersionId")
+                    payload["latestVersion"] = app_data.get("usedVersionId")
 
         elif app_type == "web":
             if app_data.get("url"):
@@ -1769,7 +1907,6 @@ class MobileDatabase(DatabaseHelper):
                 payload["useKiosk"] = True
 
         elif app_type == "intent":
-            payload["arch"]=""
             if app_data.get("action"):
                 payload["intent"] = app_data["action"]
 
@@ -1784,11 +1921,27 @@ class MobileDatabase(DatabaseHelper):
 
         # Select endpoint based on app type
         endpoint = "web" if app_type == "web" else "android"
-        url = f"{self.BASE_URL}/private/applications/{endpoint}"
         headers = {
             "Content-Type": "application/json",
             "Authorization": f"Bearer {hmtoken}",
         }
+
+        # For Android apps, validate package first (required by HMDM)
+        if app_type == "app" and app_data.get("pkg"):
+            validate_url = f"{self.BASE_URL}/private/applications/validatePkg"
+            try:
+                logging.getLogger().info(f"Validating package with full payload")
+                validate_resp = requests.put(validate_url, json=payload, headers=headers)
+                logging.getLogger().info(f"Validation HTTP status: {validate_resp.status_code}")
+                logging.getLogger().info(f"Validation response: {validate_resp.text}")
+                if validate_resp.status_code != 200:
+                    logging.getLogger().error(f"Package validation failed: {validate_resp.text}")
+                    return None
+            except Exception as e:
+                logging.getLogger().error(f"Error validating package: {e}")
+                return None
+
+        url = f"{self.BASE_URL}/private/applications/{endpoint}"
 
         try:
             logging.getLogger().info(f"Sending application payload to HMDM: {json.dumps(payload)}")

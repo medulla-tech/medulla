@@ -41,12 +41,36 @@ $pageAddAppliations->setFile("modules/mobile/mobile/applicationsList.php");
 $submod->addPage($pageAddAppliations);
 
 ################################
+# application versions page
+################################
+$pageApplicationVersions = new Page("applicationVersions", _T('Application Versions', 'mobile'));
+$pageApplicationVersions->setFile("modules/mobile/mobile/applicationVersions.php");
+$pageApplicationVersions->setOptions(array("visible" => false));
+$submod->addPage($pageApplicationVersions);
+
+################################
+# application configuration page
+################################
+$pageApplicationConfiguration = new Page("applicationConfiguration", _T('Application Configuration', 'mobile'));
+$pageApplicationConfiguration->setFile("modules/mobile/mobile/applicationConfiguration.php");
+$pageApplicationConfiguration->setOptions(array("visible" => false));
+$submod->addPage($pageApplicationConfiguration);
+
+################################
 # add application page
 ################################
 
 $pageAddApplication = new Page("addApplication", _T('Add an application', 'mobile'));
 $pageAddApplication->setFile("modules/mobile/mobile/addApplication.php");
 $submod->addPage($pageAddApplication);
+
+###############################
+# edit application page
+###############################
+$pageEditApplication = new Page("editApplication", _T('Edit an application', 'mobile'));
+$pageEditApplication->setFile("modules/mobile/mobile/editApplication.php");
+$pageEditApplication->setOptions(array("visible" => false));
+$submod->addPage($pageEditApplication);
 
 ###############################
 # create icon page (ajax)
