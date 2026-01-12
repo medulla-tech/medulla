@@ -1,10 +1,6 @@
 <?php
-// IOS Nano devices commented out for the moment
-// function xmlrpc_nano_devices(){
-//     return xmlCall("mobile.nano_devices", array());
-// }
-function xmlrpc_add_hmdm_device($name, $configuration_id, $description="", $groups=null, $imei="", $phone=""){
-    return xmlCall("mobile.addHmdmDevice", array($name, $configuration_id, $description, $groups, $imei, $phone));
+function xmlrpc_add_hmdm_device($name, $configuration_id, $description="", $groups=null, $imei="", $phone="", $device_id=null){
+    return xmlCall("mobile.addHmdmDevice", array($name, $configuration_id, $description, $groups, $imei, $phone, $device_id));
 }
 function xmlrpc_get_hmdm_devices(){
     return xmlCall("mobile.getHmdmDevices", array());
@@ -85,8 +81,8 @@ function xmlrpc_get_hmdm_push_messages($device_number="", $message_filter="", $s
 function xmlrpc_get_hmdm_groups(){
     return xmlCall("mobile.getHmdmGroups", array());
 }
-function xmlrpc_add_hmdm_group($name){
-    return xmlCall("mobile.addHmdmGroup", array($name));
+function xmlrpc_add_hmdm_group($name, $group_id=null, $customer_id=null, $common=null){
+    return xmlCall("mobile.addHmdmGroup", array($name, $group_id, $customer_id, $common));
 }
 function xmlrpc_delete_hmdm_group_by_id($id){
     return xmlCall("mobile.deleteHmdmGroupById", array($id));

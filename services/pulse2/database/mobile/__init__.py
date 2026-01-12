@@ -1495,89 +1495,6 @@ class MobileDatabase(DatabaseHelper):
             )
             return {"status": "ERROR", "message": str(e)}
 
-    def getHmdmGroups(self):
-        """
-        Fetch all groups from HMDM.
-        
-        :return: List of group objects with id and name
-        """
-        hmtoken = self.authenticate()
-        if hmtoken is None:
-            logging.getLogger().error("Impossible to authenticate to retrieve groups.")
-            return []
-
-        url = f"{self.BASE_URL}/private/groups/search"
-        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
-
-        try:
-            resp = requests.get(url, headers=headers)
-            resp.raise_for_status()
-            data = resp.json()
-            logging.getLogger().info(f"Groups fetched successfully")
-            
-            groups = data.get("data", [])
-            return groups
-        except Exception as e:
-            logging.getLogger().error(f"Error fetching groups: {e}")
-            return []
-
-    def addHmdmGroup(self, name, group_id=None, customer_id=None, common=None):
-        """
-        Create or update a group in HMDM.
-        
-        :param name: Group name (required)
-        :param group_id: Group ID for updates (optional)
-        :param customer_id: Customer ID (optional)
-        :param common: Common flag (optional)
-        :return: Response from HMDM or None on error
-        """
-        logging.getLogger().info(
-            f"addHmdmGroup called with name={name!r}, group_id={group_id}, customer_id={customer_id}, common={common}"
-        )
-        hmtoken = self.authenticate()
-        if hmtoken is None:
-            logging.getLogger().error("Impossible to authenticate to create/update group.")
-            return None
-
-        url = f"{self.BASE_URL}/private/groups"
-        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
-
-        # Build payload - HMDM API expects id/name and may include customer/common
-        group_data = {
-            "name": name
-        }
-        
-        if group_id is not None and str(group_id).strip():
-            group_data["id"] = int(group_id)
-
-        if customer_id is not None and str(customer_id).strip():
-            group_data["customerId"] = int(customer_id)
-
-        if common is not None:
-            common_value = common
-            if isinstance(common_value, str):
-                common_value = common_value.lower() not in ("false", "0", "")
-            group_data["common"] = bool(common_value)
-
-        try:
-            action = "Updating" if group_id else "Creating"
-            logging.getLogger().info(f"{action} group in HMDM: {json.dumps(group_data, indent=2)}")
-            resp = requests.put(url, json=group_data, headers=headers)
-            logging.getLogger().info(f"HMDM group {action.lower()} HTTP status: {resp.status_code}")
-            logging.getLogger().info(f"HMDM group {action.lower()} response: {resp.text}")
-            resp.raise_for_status()
-            
-            resp_json = resp.json()
-            resp_json["message"] = resp_json.get("message") or ""
-            resp_json["data"] = resp_json.get("data") or {}
-            
-            logging.getLogger().info(f"Group '{name}' {action.lower()}d successfully in HMDM.")
-            return resp_json
-        except Exception as e:
-            action = "updating" if group_id else "creating"
-            logging.getLogger().error(f"Error {action} group '{name}': {e} {group_data}")
-            return None
-
     def deleteHmdmGroupById(self, group_id):
         """
         Delete a group from HMDM by its ID.
@@ -2034,3 +1951,83 @@ class MobileDatabase(DatabaseHelper):
         except Exception as e:
             logger.error(f"[uploadWebUiFiles] Exception occurred: {e}", exc_info=True)
             return {"status": "error", "message": str(e)}
+
+    def getHmdmGroups(self):
+        """
+        Fetch all groups from HMDM.
+        
+        :return: List of group objects with id and name
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Impossible to authenticate to retrieve groups.")
+            return []
+
+        url = f"{self.BASE_URL}/private/groups/search"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+
+        try:
+            resp = requests.get(url, headers=headers)
+            resp.raise_for_status()
+            data = resp.json()
+            logging.getLogger().info(f"Groups fetched successfully")
+            
+            groups = data.get("data", [])
+            return groups
+        except Exception as e:
+            logging.getLogger().error(f"Error fetching groups: {e}")
+            return []
+
+    def addHmdmGroup(self, name, group_id=None, customer_id=None, common=None):
+        """
+        Create or update a group in HMDM.
+        
+        :param name: Group name (required)
+        :param group_id: Group ID for updates (optional)
+        :param customer_id: Customer ID (optional)
+        :param common: Common flag (optional)
+        :return: Response from HMDM or None on error
+        """
+        logging.getLogger().info(
+            f"addHmdmGroup called with name={name!r}, group_id={group_id}, customer_id={customer_id}, common={common}"
+        )
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Impossible to authenticate to create/update group.")
+            return None
+
+        url = f"{self.BASE_URL}/private/groups"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+
+        group_data = {
+            "name": name
+        }
+        
+        if group_id is not None and str(group_id).strip():
+            group_data["id"] = int(group_id)
+
+        if customer_id is not None and str(customer_id).strip():
+            group_data["customerId"] = int(customer_id)
+
+        if common is not None:
+            common_value = common
+            if isinstance(common_value, str):
+                common_value = common_value.lower() not in ("false", "0", "")
+            group_data["common"] = bool(common_value)
+
+        try:
+            action = "Updating" if group_id else "Creating"
+            logging.getLogger().info(f"{action} group in HMDM: {json.dumps(group_data, indent=2)}")
+            resp = requests.put(url, json=group_data, headers=headers)
+            resp.raise_for_status()
+            
+            resp_json = resp.json()
+            resp_json["message"] = resp_json.get("message") or ""
+            resp_json["data"] = resp_json.get("data") or {}
+            
+            logging.getLogger().info(f"Group '{name}' {action.lower()}d successfully in HMDM.")
+            return resp_json
+        except Exception as e:
+            action = "updating" if group_id else "creating"
+            logging.getLogger().error(f"Error {action} group '{name}': {e} {group_data}")
+            return None

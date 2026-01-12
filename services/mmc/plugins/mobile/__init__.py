@@ -29,8 +29,8 @@ def activate():
         return False
     return True
 
-def addHmdmDevice(name, configuration_id, description="", groups=None, imei="", phone=""):
-    return MobileDatabase().addHmdmDevice(name, configuration_id, description, groups, imei, phone)
+def addHmdmDevice(name, configuration_id, description="", groups=None, imei="", phone="", device_id=None):
+    return MobileDatabase().addHmdmDevice(name, configuration_id, description, groups, imei, phone, device_id)
 
 def getHmdmDevices():
     return MobileDatabase().getHmdmDevices()
@@ -117,8 +117,8 @@ def getHmdmPushMessages(device_number="", message_filter="", status_filter="",
 def getHmdmGroups():
     return MobileDatabase().getHmdmGroups()
 
-def addHmdmGroup(name):
-    return MobileDatabase().addHmdmGroup(name)
+def addHmdmGroup(name, group_id=None, customer_id=None, common=None):
+    return MobileDatabase().addHmdmGroup(name, group_id, customer_id, common)
 
 def deleteHmdmGroupById(id):
     return MobileDatabase().deleteHmdmGroupById(id)

@@ -112,7 +112,7 @@ $pageAjaxUploadApk->setOptions(array("AJAX" => true, "visible" => false));
 $submod->addPage($pageAjaxUploadApk);
 
 ################################
- # GLPI devices page
+# GLPI devices page
 ################################
 $pageGlpiDevices = new Page("glpiDevices", _T('All devices glpi', 'mobile'));
 $pageGlpiDevices->setFile("modules/mobile/mobile/glpiDevicesList.php");
@@ -231,6 +231,11 @@ $pageAddGroup = new Page("addGroup", _T('Add a group', 'mobile'));
 $pageAddGroup->setFile("modules/mobile/mobile/addGroup.php");
 $submod->addPage($pageAddGroup);
 
+$pageEditGroup = new Page("editGroup", _T('Edit group', 'mobile'));
+$pageEditGroup->setFile("modules/mobile/mobile/editGroup.php");
+$pageEditGroup->setOptions(array("visible" => false));
+$submod->addPage($pageEditGroup);
+
 $pageAjaxGroupList = new Page("ajaxGroupList", _T('Groups list view', 'mobile'));
 $pageAjaxGroupList->setFile("modules/mobile/mobile/ajaxGroupList.php");
 $pageAjaxGroupList->setOptions(array("AJAX" => true, "visible" => false));
@@ -270,7 +275,7 @@ $pageExportLogs = new Page("exportLogs", _T('Export logs', 'mobile'));
 $pageExportLogs->setFile("modules/mobile/mobile/exportLogs.php");
 $pageExportLogs->setOptions(array("visible" => false, "noHeader" => true));
 $submod->addPage($pageExportLogs);
-    
+
 ################################
 # QR Code page
 ################################
@@ -283,7 +288,5 @@ $submod->addPage($pageQrCode);
 # End
 ################################
 
-$MMCApp =& MMCApp::getInstance();
+$MMCApp = &MMCApp::getInstance();
 $MMCApp->addModule($mod);
-
-?>
