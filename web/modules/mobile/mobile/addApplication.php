@@ -323,6 +323,7 @@ $iconSelectW->style = 'icon-extra';
 $formWeb->add(new TrFormElement(_T('Icon', 'mobile'), $iconSelectW));
 $newIconBtnW = new buttonTpl('new_icon_btn_web', _T('New icon', 'mobile'));
 $newIconBtnW->setClass('icon-extra btnPrimary new-icon-btn');
+$newIconBtnW->infobulle = _T('Créer une nouvelle icône','mobile');
 $formWeb->add(new TrFormElement('', $newIconBtnW));
 
 $iconTextW = new InputTpl('icon_text', '/^.{0,255}$/', $values['icon_text'] ?? '');

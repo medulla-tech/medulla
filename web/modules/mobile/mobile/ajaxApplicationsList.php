@@ -41,7 +41,7 @@ foreach ($apps as $index => $app) {
 
 	// Build ActionItem (Edit) and ActionPopupItem (Delete)
 	$actionEdit[] = new ActionItem(_("Edit Application"), "editApplication", "edit", "", "mobile", "mobile");
-	$actionConfiguration[] = new ActionItem(_("Configuration"), "applicationConfiguration", "info", "", "mobile", "mobile");
+	// $actionConfiguration[] = new ActionItem(_("Configuration"), "applicationConfiguration", "info", "", "mobile", "mobile");
 	$actionVersions[] = new ActionItem(_("Versions"), "applicationVersions", "history", "", "mobile", "mobile");
 	$actionDelete[] = new ActionPopupItem(_("Delete Application"), "deleteApplication", "delete", "", "mobile", "mobile");
 	$params[] = [
@@ -64,7 +64,7 @@ $n->addExtraInfo($versions, _T("Version", "mobile"));
 $n->addExtraInfo($urls, _T("URL", "mobile"));
 // Attach actions
 $n->addActionItemArray($actionEdit);
-$n->addActionItemArray($actionConfiguration);
+// $n->addActionItemArray($actionConfiguration);
 $n->addActionItemArray($actionVersions);
 $n->addActionItemArray($actionDelete);
 $n->setParamInfo($params);

@@ -422,34 +422,34 @@ class MobileDatabase(DatabaseHelper):
             logging.getLogger().error(f"Error fetching applications: {e}")
             return None
         
-    def getHmdmConfigurationApplications(self, config_id: int):
+    def getHmdmConfigurationApplications(self, app_id: int):
         """
-        Fetch applications linked to a specific configuration.
+        Fetch configurations linked to a specific application.
 
-        :param config_id: Configuration ID
+        :param app_id: Application ID
         :return: List of application dicts or [] on error
         """
         hmtoken = self.authenticate()
         if hmtoken is None:
             logging.getLogger().error("Impossible d'authentifier pour récupérer les applications de la configuration.")
             return []
-
-        url = f"{self.BASE_URL}/private/configurations/applications/{config_id}"
+        # Call per-application configurations endpoint using given id as application id
+        url = f"{self.BASE_URL}/private/applications/configurations/{app_id}"
         headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
 
         try:
             resp = requests.get(url, headers=headers)
             resp.raise_for_status()
-            logging.getLogger().info(f"Applications for configuration {config_id} fetched successfully {resp.json()}")
+            logging.getLogger().info(f"Configurations for application {app_id} fetched successfully {resp.text}")
             data = resp.json() or {}
             payload = data.get("data", data)
-            # Some responses may nest under 'applications'
-            if isinstance(payload, dict) and "applications" in payload:
-                payload = payload.get("applications", [])
+            # Some responses may nest under 'configurations' or be a list directly
+            if isinstance(payload, dict) and "configurations" in payload:
+                payload = payload.get("configurations", [])
             return payload if isinstance(payload, list) else []
         except Exception as e:
-            logging.getLogger().error(f"Error fetching applications for configuration {config_id}: {e}")
-            return []    
+            logging.getLogger().error(f"Error fetching configurations for application {app_id}: {e}")
+            return []
 
     def getHmdmIcons(self):
         """
@@ -1468,31 +1468,122 @@ class MobileDatabase(DatabaseHelper):
         url = f"{self.BASE_URL}/private/applications/configurations"
         headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
 
-        config_entry = {
-            "applicationId": app_id,
-            "configurationId": configuration_id,
-            "action": 0,
-        }
-        if configuration_name:
-            config_entry["configurationName"] = configuration_name
+        # Build a full configurations payload similar to HMDM UI
+        try:
+            cfg_url = f"{self.BASE_URL}/private/configurations/list"
+            cfg_resp = requests.get(cfg_url, headers=headers)
+            cfg_resp.raise_for_status()
+            cfg_json = cfg_resp.json()
+            raw_configs = cfg_json if isinstance(cfg_json, list) else cfg_json.get("data") or cfg_json.get("configurations") or []
+        except Exception as e:
+            logging.getLogger().error(f"Error fetching configurations list: {e}")
+            raw_configs = []
+
+        # Try to fetch application name
+        app_name = ""
+        try:
+            app_url = f"{self.BASE_URL}/private/applications/{app_id}"
+            app_resp = requests.get(app_url, headers=headers)
+            app_resp.raise_for_status()
+            app_json = app_resp.json() or {}
+            app_info = app_json.get("data") if isinstance(app_json, dict) and "data" in app_json else app_json
+            app_name = app_info.get("applicationName") or app_info.get("name") or app_info.get("title") or ""
+        except Exception:
+            app_name = ""
+
+        configurations_payload = []
+
+        for item in raw_configs:
+            try:
+                cfg_id = item.get("id") or item.get("configurationId")
+                cfg_name = item.get("name") or item.get("title") or item.get("configurationName") or ""
+                customer_id = item.get("customerId") or item.get("customerid") or item.get("customer") or None
+                latest_version = item.get("latestVersionText") or item.get("latestVersion") or "1"
+                common = item.get("common", False)
+
+                # Check if this app is already linked to this configuration
+                mapping_id = None
+                current_mapping = None
+                if cfg_id is not None:
+                    try:
+                        apps_for_cfg = self.getHmdmConfigurationApplications(int(cfg_id))
+                        for app_entry in apps_for_cfg:
+                            app_entry_app_id = app_entry.get("applicationId") or app_entry.get("id") or None
+                            if app_entry_app_id is None and isinstance(app_entry, dict) and app_entry.get("application"):
+                                app_entry_app_id = app_entry.get("application").get("id")
+                            if app_entry_app_id is not None and int(app_entry_app_id) == int(app_id):
+                                mapping_id = app_entry.get("id") or app_entry.get("configurationApplicationId") or None
+                                current_mapping = app_entry
+                                break
+                    except Exception:
+                        mapping_id = None
+
+                # Determine action and remove flag
+                if cfg_id is not None and int(cfg_id) == int(configuration_id):
+                    action = 0
+                    remove_flag = False
+                else:
+                    if current_mapping:
+                        action = 2
+                        remove_flag = True
+                    else:
+                        action = 0
+                        remove_flag = False
+
+                cfg_entry = {
+                    "id": mapping_id,
+                    "customerId": customer_id,
+                    "configurationId": cfg_id,
+                    "configurationName": cfg_name,
+                    "action": action,
+                    "applicationId": app_id,
+                    "applicationName": app_name,
+                    "common": common,
+                    "currentVersionText": (current_mapping.get("currentVersionText") if current_mapping else None),
+                    "latestVersionText": latest_version,
+                    "notify": (current_mapping.get("notify") if current_mapping else True),
+                    "outdated": (current_mapping.get("outdated") if current_mapping else False),
+                    "remove": remove_flag,
+                    "showIcon": False,
+                }
+                configurations_payload.append(cfg_entry)
+            except Exception:
+                logging.getLogger().exception(f"Failed to build configuration entry for item: {item}")
 
         payload = {
             "applicationId": app_id,
-            "configurations": [config_entry],
+            "configurations": configurations_payload,
         }
 
+        # Sanitize payload for XML-RPC if needed (avoid large int overflow)
         try:
-            resp = requests.post(url, headers=headers, json=payload)
+            payload_to_send = self._sanitize_for_xmlrpc(payload)
+        except Exception:
+            payload_to_send = payload
+
+        # Log the payload sent to HMDM for debugging
+        try:
+            logging.getLogger().info("=== UPDATE APPLICATION CONFIGURATIONS PAYLOAD ===")
+            logging.getLogger().info(json.dumps(payload_to_send, indent=2, ensure_ascii=False))
+            logging.getLogger().info("=== END PAYLOAD ===")
+        except Exception:
+            logging.getLogger().exception("Failed to log update payload")
+
+        try:
+            resp = requests.post(url, headers=headers, json=payload_to_send)
             resp.raise_for_status()
             data = resp.json()
-            logging.getLogger().info(
-                f"Configuration {configuration_id} attached to application {app_id}"
-            )
+
+            # Sanitize response before returning
+            try:
+                data = self._sanitize_for_xmlrpc(data)
+            except Exception:
+                pass
+
+            logging.getLogger().info(f"Configuration {configuration_id} attached to application {app_id}")
             return data if isinstance(data, dict) else {"status": "OK"}
         except Exception as e:
-            logging.getLogger().error(
-                f"Error updating configurations for application {app_id} with configuration {configuration_id}: {e}"
-            )
+            logging.getLogger().error(f"Error updating configurations for application {app_id} with configuration {configuration_id}: {e}")
             return {"status": "ERROR", "message": str(e)}
 
     def deleteHmdmGroupById(self, group_id):
@@ -1770,6 +1861,7 @@ class MobileDatabase(DatabaseHelper):
         # Build payload strictly per type, only relevant fields
         app_type = app_data.get("type", "")
         payload = {
+            "action": 0,
             "type": app_type,
             "name": app_data.get("name", ""),
         }
@@ -1859,6 +1951,35 @@ class MobileDatabase(DatabaseHelper):
                 return None
 
         url = f"{self.BASE_URL}/private/applications/{endpoint}"
+
+        # If updating an existing application, fetch its current data and
+        # merge it with the form-provided fields so the payload contains
+        # unchanged fields from HMDM and only overrides with the new values.
+        if app_data.get("id"):
+            try:
+                app_id = app_data.get("id")
+                get_url = f"{self.BASE_URL}/private/applications/{app_id}"
+                logging.getLogger().info(f"Fetching existing application {app_id} from HMDM to merge payload")
+                get_resp = requests.get(get_url, headers=headers)
+                get_resp.raise_for_status()
+                get_json = get_resp.json() if get_resp.text else {}
+                existing = None
+                if isinstance(get_json, dict) and "data" in get_json:
+                    existing = get_json.get("data") or {}
+                else:
+                    existing = get_json or {}
+
+                if isinstance(existing, dict) and existing:
+                    merged = existing.copy()
+                    # Overlay form-provided payload keys onto existing data
+                    for k, v in payload.items():
+                        merged[k] = v
+                    payload = merged
+                    logging.getLogger().info(f"Final merged payload: {json.dumps(payload)}")
+                else:
+                    logging.getLogger().info("No existing application data returned; using form payload as-is")
+            except Exception as e:
+                logging.getLogger().warning(f"Could not fetch/merge existing application data: {e}")
 
         try:
             logging.getLogger().info(f"Sending application payload to HMDM: {json.dumps(payload)}")
