@@ -1,40 +1,32 @@
 <?php
 require_once("modules/mobile/includes/xmlrpc.php");
 
-// Get filter parameter
 $filter = isset($_GET['filter']) ? $_GET['filter'] : '';
 
-// ICI 
-$mobiles_headwind = xmlrpc_get_hmdm_devices();
+$mobiles = xmlrpc_get_hmdm_devices();
     
-// Retrieving QR code for a specific configuration
 $configurationId = 1;
 $configurationJson = xmlrpc_get_hmdm_configuration_by_id($configurationId);
 $qrCode = $configurationJson;
 
-// Construction du tableau avec OptimizedListInfos
 $ids = $col1 = $descript = $enligne = $numeros = $autorisations = $installations = $etatFichiers = $configurations = $actions = [];
 $actionQr = [];
 $params = [];
 
-if (!is_array($mobiles_headwind)) $mobiles_headwind = [];
+if (!is_array($mobiles)) $mobiles = [];
 
-foreach ($mobiles_headwind as &$m) {
+foreach ($mobiles as &$m) {
     $m['source'] = 'headwind';
 }
 
 unset($m);
 
-// Filter by device name if filter is provided
 if (!empty($filter)) {
-    $mobiles_headwind = array_filter($mobiles_headwind, function($mobile) use ($filter) {
+    $mobiles = array_filter($mobiles, function($mobile) use ($filter) {
         $deviceName = $mobile['number'] ?? '';
         return stripos($deviceName, $filter) !== false;
     });
 }
-
-// $mobiles = array_merge($mobiles_headwind, $mobiles_nano);
-$mobiles = $mobiles_headwind; // Pour le moment on n'affiche que les headwind
 
 foreach ($mobiles as $index => $mobile) {
     $id = 'mob_' . $index;
@@ -67,8 +59,7 @@ foreach ($mobiles as $index => $mobile) {
 
     $col1[] = "<a href='#' class='mobilestatus {$statut}'>{$numero}</a>";
 
-    // Standard QR Code action via MMC action API
-    $actionQr[] = new ActionItem(_T("QR Code", "mobile"), "qrCode", "qr-code", "", "mobile", "mobile");
+    $actionQr[] = new ActionPopupItem(_T("QR Code", "mobile"), "qrCode", "qr-code", "", "mobile", "mobile");
     $params[] = [
         'device_number' => $numero,
         'configuration_id' => isset($mobile['configurationId']) ? $mobile['configurationId'] : 1,
@@ -103,16 +94,3 @@ $n->start = 0;
 
 $n->display();
 ?>
-<script type="text/javascript">
-jQuery(document).ready(function() {
-    jQuery('li.qr-code a').each(function() {
-        var $link = jQuery(this);
-        var href = $link.attr('href');
-        
-        $link.on('click', function(e) {
-            e.preventDefault();
-            window.open(href, '_blank');
-        });
-    });
-});
-</script>
