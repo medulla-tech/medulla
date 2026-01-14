@@ -124,16 +124,34 @@ if (isset($this->storedmax)) {
 
         /**
          * Update div
+         * Build URL dynamically in JS to avoid duplicate params issue
          */
-        <?php
-        $url = $this->url."filter='+encodeURIComponent(document.Form".$this->formid.".param.value)+'&maxperpage='+maxperpage+'&hide_win_updates='+hide_win_updates+'&history_delta='+history_delta+'".$this->params;
-        if (isset($this->storedstart) && isset($this->storedend)) {
-            $url .= "&start=".$this->storedstart."&end=".$this->storedend;
-        }
-        ?>
-
         updateSearch<?php echo $this->formid ?> = function() {
-            jQuery('#<?php echo  $this->divid; ?>').load('<?php echo $url ?>');
+            clearTimers<?php echo $this->formid ?>();
+
+            // Refresh checkbox/select states
+            if(document.Form<?php echo $this->formid ?>.hide_win_updates != undefined) {
+                hide_win_updates = document.Form<?php echo $this->formid ?>.hide_win_updates.checked;
+            }
+            if(document.Form<?php echo $this->formid ?>.history_delta != undefined) {
+                history_delta = document.Form<?php echo $this->formid ?>.history_delta.value;
+            }
+
+            var searchValue = document.Form<?php echo $this->formid ?>.param.value;
+
+            // Build URL with filter FIRST to ensure it's not overwritten
+            var finalUrl = '<?php echo rtrim($this->url, "&"); ?>'
+                + '&filter=' + encodeURIComponent(searchValue)
+                + '&maxperpage=' + maxperpage
+                + '&hide_win_updates=' + hide_win_updates
+                + '&history_delta=' + history_delta
+                <?php if (isset($this->storedstart) && isset($this->storedend)) { ?>
+                + '&start=<?php echo $this->storedstart ?>'
+                + '&end=<?php echo $this->storedend ?>'
+                <?php } ?>
+            ;
+
+            jQuery('#<?php echo $this->divid; ?>').load(finalUrl);
 
 <?php
 if ($this->refresh) {
@@ -152,7 +170,15 @@ if ($this->refresh) {
             if(document.getElementById('maxperpage') != undefined)
                 maxperpage = document.getElementById('maxperpage').value;
 
-            jQuery('#<?php echo  $this->divid; ?>').load('<?php echo  $this->url; ?>filter='+filter+'&start='+start+'&end='+end+'&maxperpage='+maxperpage+'&hide_win_updates='+hide_win_updates+'&history_delta='+history_delta+'<?php echo  $this->params ?>');
+            var finalUrl = '<?php echo rtrim($this->url, "&"); ?>'
+                + '&filter=' + encodeURIComponent(filter)
+                + '&start=' + start
+                + '&end=' + end
+                + '&maxperpage=' + maxperpage
+                + '&hide_win_updates=' + hide_win_updates
+                + '&history_delta=' + history_delta;
+
+            jQuery('#<?php echo $this->divid; ?>').load(finalUrl);
 <?php
 if ($this->refresh) {
 ?>
@@ -168,14 +194,6 @@ if ($this->refresh) {
         pushSearch<?php echo $this->formid ?> = function() {
             clearTimers<?php echo $this->formid ?>();
             refreshtimer<?php echo $this->formid ?> = setTimeout("updateSearch<?php echo $this->formid ?>()", 500);
-            // Refresh the state of the hide_win_updates checkbox
-            if(document.Form<?php echo $this->formid ?>.hide_win_updates != undefined) {
-                hide_win_updates = document.Form<?php echo $this->formid ?>.hide_win_updates.checked;
-            }
-            // Refresh the state of the history_delta dropdown
-            if(document.Form<?php echo $this->formid ?>.history_delta != undefined) {
-                history_delta = document.Form<?php echo $this->formid ?>.history_delta.value;
-            }
         }
 
         pushSearch<?php echo $this->formid ?>();
