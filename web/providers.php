@@ -85,7 +85,7 @@ function handleAuthentication($providerKey) {
         if (!empty($prov['proxy_url'])) {
             $oidc->setHttpProxy($prov['proxy_url']);
         }
-        $oidc->addScope(['email']);
+        $oidc->addScope(['openid', 'profile', 'email']);
 
         if (!isset($_GET['code'])) {
             // $oidc->addAuthParam(['prompt' => 'login']); // optionnel
