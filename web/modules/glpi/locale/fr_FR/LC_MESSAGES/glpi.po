@@ -1015,6 +1015,14 @@ msgstr "Inactif ou pas  jour: %percent% (%d)"
 msgid "No antivirus found: %percent% (%d)"
 msgstr "Pas d'antivirus détecté: %percent% (%d)"
 
+#: modules/glpi/includes/panels/antivirus.inc.php:49
+msgid "Outdated antivirus: %percent% (%d)"
+msgstr "Antivirus obsolète: %percent% (%d)"
+
+#: modules/glpi/includes/panels/antivirus.inc.php:50
+msgid "Missing antivirus: %percent% (%d)"
+msgstr "Antivirus manquant: %percent% (%d)"
+
 #: modules/glpi/includes/panels/os_repartition.inc.php:36
 msgid "Operating systems"
 msgstr "Systèmes d'exploitation"

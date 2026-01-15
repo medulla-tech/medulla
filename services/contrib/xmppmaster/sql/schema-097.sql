@@ -143,9 +143,6 @@ end;
 DELIMITER ;
 
 
--- augmente taille de la table log pour recuperer en entirer les message  de logs machine
-ALTER TABLE `xmppmaster`.`logs`
-CHANGE COLUMN `text` `text` VARCHAR(8192) NOT NULL ;
 -- ----------------------------------------------------------------------
 -- Database version
 -- ----------------------------------------------------------------------

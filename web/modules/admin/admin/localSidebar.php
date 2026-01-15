@@ -24,10 +24,20 @@
 
 $sidemenu = new SideMenu();
 $sidemenu->setClass("admin");
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("List of Relays", "admin"), "admin", "admin", "relaysList"));
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Clusters List", 'admin'), "admin", "admin", "clustersList"));
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("New Cluster", 'admin'), "admin", "admin", "newCluster"));
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Rules", "admin"), "admin", "admin", "rules"));
+
+//--------------------- Relays & Clusters ----------------
+$sidemenu->addSideMenuItem(
+    new SideMenuItem(_T("List of Relays","admin"), "admin", "admin", "relaysList")
+);
+$sidemenu->addSideMenuItem(
+    new SideMenuItem(_T("Clusters List", 'admin'), "admin", "admin", "clustersList")
+);
+$sidemenu->addSideMenuItem(
+    new SideMenuItem(_T("New Cluster", 'admin'), "admin", "admin", "newCluster")
+);
+$sidemenu->addSideMenuItem(
+    new SideMenuItem(_T("Rules","admin"), "admin", "admin", "rules")
+);
 
 //--------------------- Entity Manager ----------------
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Entities Management", "admin"), "admin", "admin", "entitiesManagement"));
@@ -49,3 +59,9 @@ $sidemenu->addSideMenuItem(new SideMenuItem($userLabel,     "admin", "admin", "e
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Manage Providers", "admin"), "admin", "admin", "manageproviders"));
 
 $sidemenu->addSideMenuItem(new SideMenuItem($providerLabel, "admin", "admin", "editProvider"));
+
+// --------------------- WebSocket Logs ----------------
+$sidemenu->addSideMenuItem(
+    new SideMenuItem(_T("Server Logs","admin"), "admin", "admin", "webSocket_logs")
+);
+?>

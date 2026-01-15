@@ -82,7 +82,10 @@ function handleAuthentication($providerKey) {
         $hostname = $conf["server_01"]["description"];
         $redirectUri = 'https://' . $hostname . '/mmc/providers.php';
         $oidc->setRedirectURL($redirectUri);
-        $oidc->addScope(['email']);
+        if (!empty($prov['proxy_url'])) {
+            $oidc->setHttpProxy($prov['proxy_url']);
+        }
+        $oidc->addScope(['openid', 'profile', 'email']);
 
         if (!isset($_GET['code'])) {
             // $oidc->addAuthParam(['prompt' => 'login']); // optionnel
@@ -213,34 +216,12 @@ function handleAuthentication($providerKey) {
     }
 }
 
-// Handle signout if requested and destroy session
 function handleSignout() {
     if (isset($_GET['signout']) && strtolower($_GET['signout']) === '1') {
-        try {
-            if (empty($_SESSION['id_token']) || empty($_SESSION['selectedProvider'])) {
-                new NotifyWidgetFailure("No provider/token for signout.");
-                header("Location: /mmc/index.php"); exit;
-            }
-            $client      = !empty($_SESSION['o']) ? preg_replace('/[^a-zA-Z0-9._-]/','',$_SESSION['o']) : 'MMC';
-            $providerKey = $_SESSION['selectedProvider'];
-            $prov        = get_provider_details($client, $providerKey);
-            if (!$prov) {
-                new NotifyWidgetFailure("Invalid provider for signout.");
-                header("Location: /mmc/index.php"); exit;
-            }
-
-            $oidc = new OpenIDConnectClient($prov['urlProvider'], $prov['clientId'], $prov['clientSecret']);
-
-            $idToken = $_SESSION['id_token'];
-            global $conf;
-            $hostname = $conf["server_01"]["description"];
-            $redirectUri = 'https://' . $hostname . '/mmc/index.php?signout=1';
-            $oidc->signOut($idToken, $redirectUri);
-        } catch (Exception $e) {
-            error_log("SignOut Exception: " . $e->getMessage());
-            new NotifyWidgetFailure("An error occurred during signout.");
-            header("Location: /mmc/index.php"); exit;
-        }
+        session_unset();
+        session_destroy();
+        header("Location: /mmc/index.php?signout=1");
+        exit;
     }
 }
 

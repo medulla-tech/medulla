@@ -8280,8 +8280,8 @@ class XmppMasterDatabase(DatabaseHelper):
         # fiel for table ent and alias
         entityfield = {
             "entityname": "name",
-            "entitypath": "completename",
-            "entityid": "id",
+            "entitypath": "complete_name",
+            "entityid": "glpi_id",
         }
         # fiel for table location and alias
         locationfield = {
@@ -8336,7 +8336,7 @@ class XmppMasterDatabase(DatabaseHelper):
                         "mach.id",
                         "mach.glpi_entity_id",
                         "mach.glpi_location_id",
-                        "ent.id",
+                        "ent.glpi_id",
                         "loc.glpi_id",
                     ]:
                         recherchefild = " AND %s = '%s'" % (
@@ -8363,7 +8363,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 ]
                 if entitylist:
                     entitystrlist = ",".join(entitylist)
-                    entity = " AND ent.id in (%s) " % entitystrlist
+                    entity = " AND ent.glpi_id in (%s) " % entitystrlist
 
         ordered = ""
         if self.config.ordered == 1:
@@ -8410,8 +8410,8 @@ class XmppMasterDatabase(DatabaseHelper):
                     loc.complete_name AS locationpath,
                     loc.glpi_id AS locationid,
                     ent.name AS entityname,
-                    ent.completename AS entitypath,
-                    ent.id AS entityid,
+                    ent.complete_name AS entitypath,
+                    ent.glpi_id AS entityid,
                     GROUP_CONCAT(DISTINCT IF( netw.ipaddress='', null,netw.ipaddress) SEPARATOR ',') AS listipadress,
                     GROUP_CONCAT(DISTINCT IF( netw.broadcast='', null,netw.broadcast) SEPARATOR ',') AS broadcast,
                     GROUP_CONCAT(DISTINCT IF( netw.gateway='', null,netw.gateway) SEPARATOR ',') AS gateway,
@@ -8421,9 +8421,7 @@ class XmppMasterDatabase(DatabaseHelper):
                         INNER JOIN
                     local_glpi_filters lgf on CONCAT("UUID", lgf.id) = mach.uuid_inventorymachine
                         LEFT OUTER JOIN
-                    local_glpi_machines lgm ON CONCAT("UUID", lgm.id) = mach.uuid_inventorymachine
-                        LEFT OUTER JOIN
-                    local_glpi_entities ent ON lgm.entities_id = ent.id
+                    glpi_entity ent ON lgf.entities_id = ent.glpi_id
                         LEFT OUTER JOIN
                     glpi_location loc ON loc.id = mach.glpi_location_id
                         LEFT OUTER JOIN
@@ -10637,9 +10635,8 @@ class XmppMasterDatabase(DatabaseHelper):
           SUM(CASE WHEN uuid_inventorymachine = "" THEN 1 ELSE 0 END) as total_uninventoried,
           SUM(CASE WHEN uuid_inventorymachine != "" THEN 1 ELSE 0 END) as total_inventoried
         FROM machines
-        join local_glpi_machines lgm on machines.uuid_inventorymachine = concat("UUID", lgm.id)
-        join local_glpi_entities lge on lgm.entities_id = lge.id
-        where agenttype ="machine" and lge.id in %s"""%entities
+        join local_glpi_filters lgf on machines.uuid_inventorymachine = concat("UUID", lgf.id)
+        where agenttype ="machine" and lgf.entities_id in %s"""%entities
         result = session.execute(sql, bind).first()
         session.commit()
         session.flush()
@@ -11080,7 +11077,9 @@ class XmppMasterDatabase(DatabaseHelper):
         sql_count = f"""
             SELECT COUNT(DISTINCT rs.id)
             FROM relayserver rs
+            LEFT JOIN has_cluster_ars hca ON hca.id_ars = rs.id
             LEFT JOIN machines m ON m.hostname = rs.nameserver
+            LEFT JOIN cluster_ars c ON c.id = hca.id_cluster
             WHERE {where_sql}
         """
         total = session.execute(sql_count).scalar()
@@ -13187,9 +13186,8 @@ from(select
     coalesce(NULL, sum(case when startcmd >= (CURRENt_DATE() - INTERVAL 5 WEEK) and startcmd < (CURRENT_DATE() - INTERVAL 4 WEEK) then 1 else 0 end), 0) as total_w6
   from deploy d
   join machines m on m.jid = d.jidmachine
-  join local_glpi_machines lgm on m.uuid_inventorymachine = concat("UUID", lgm.id)
-  join local_glpi_entities lge on lgm.entities_id = lge.id
-  where lge.id in %s
+  join local_glpi_filters lgf on m.uuid_inventorymachine = concat("UUID", lgf.id)
+  where lgf.entities_id in %s
 ) as t;"""%entities
         query = session.execute(sql).first()
         if query is None :
@@ -13835,9 +13833,8 @@ from(select
   coalesce(NULL, sum(case when startcmd >= (DATE_FORMAT(CURDATE(), "%%Y-%%m-01")) then 1 else 0 end), 0) as m1
 from deploy d
 join machines m on m.jid = d.jidmachine
-join local_glpi_machines lgm on concat("UUID", lgm.id) = m.uuid_inventorymachine
-join local_glpi_entities lge on lgm.entities_id = lge.id
-where lge.id in %s"""%entities
+join local_glpi_filters lgf on concat("UUID", lgf.id) = m.uuid_inventorymachine
+where lgf.entities_id in %s"""%entities
 
         query = session.execute(sql).first()
 
