@@ -26,6 +26,9 @@ from pulse2.database.imaging.types import P2IT, P2ISS, P2IM, P2ERR
 from pulse2.apis.clients.imaging import ImagingApi
 import pulse2.utils
 import threading
+import os
+import pwd
+import grp
 from os import path, makedirs, listdir, remove, rename
 import subprocess
 import json
@@ -2984,6 +2987,8 @@ class ImagingRpcProxy(RpcProxyI):
     def Windows_Answer_File_Generator(self, xmlWAFG, title):
         filexml = "/var/lib/pulse2/imaging/postinst/sysprep/"
         filetmp = "/tmp/"
+        uid = pwd.getpwnam("syncthing").pw_uid
+        gid = grp.getgrnam("syncthing").gr_gid
 
         # Replace chars
         xmlWAFG = xmlWAFG.replace("&amp;", "&")
@@ -3018,11 +3023,13 @@ class ImagingRpcProxy(RpcProxyI):
                 newTitle = newTitle + "_" + md5tmp + ".xml"
                 # Move tmpfile to correct location
                 rename(filetmp + title, filexml + newTitle)
+                os.chown(filexml + newTitle, uid, gid)
                 return True
 
             # Tmpfile is no use anymore
             else:
                 remove(filetmp + title)
+                os.chown(filexml + newTitle, uid, gid)
                 return True
         else:
             filexml = filexml + title
@@ -3034,11 +3041,14 @@ class ImagingRpcProxy(RpcProxyI):
                 return False
             else:
                 f.close()
+                os.chown(filexml, uid, gid)
                 return True
 
     def linux_preseed_generator(self, datas, title):
         filepath = "/var/lib/pulse2/imaging/postinst/sysprep/"
         filetmp = "/tmp/"
+        uid = pwd.getpwnam("syncthing").pw_uid
+        gid = grp.getgrnam("syncthing").gr_gid
 
         if not path.exists(filepath):
             makedirs(filepath, 0o722)
@@ -3067,11 +3077,13 @@ class ImagingRpcProxy(RpcProxyI):
                 newfilename = path.join(filepath, newTitle)
                 # Move tmpfile to correct location
                 rename(tmpfile, newfilename)
+                os.chown(newfilename, uid, gid)
                 return True
 
             # Tmpfile is no use anymore
             else:
                 remove(tmpfile)
+                os.chown(newfilename, uid, gid)
                 return True
         else:
             try:
@@ -3081,11 +3093,13 @@ class ImagingRpcProxy(RpcProxyI):
                 logging.getLogger().exception(e)
                 return False
             else:
+                os.chown(filename, uid, gid)
                 return True
 
     def editWindowsAnswerFile(self, xmlWAFG, title):
         filexml = "/var/lib/pulse2/imaging/postinst/sysprep/"
-
+        uid = pwd.getpwnam("syncthing").pw_uid
+        gid = grp.getgrnam("syncthing").gr_gid
         # test if file already exists
         if path.isfile(filexml + title):
             try:
@@ -3096,9 +3110,14 @@ class ImagingRpcProxy(RpcProxyI):
                 return False
             else:
                 f.close()
+            os.chown(filexml + title, uid, gid)
+            return True
+
 
     def edit_linux_preseed(self, content, title):
         filepath = "/var/lib/pulse2/imaging/postinst/sysprep/"
+        uid = pwd.getpwnam("syncthing").pw_uid
+        gid = grp.getgrnam("syncthing").gr_gid
         filename = path.join(filepath, title)
         # test if file already exists
         if path.isfile(filename):
@@ -3108,6 +3127,7 @@ class ImagingRpcProxy(RpcProxyI):
             except Exception as e:
                 logging.getLogger().exception(e)
                 return False
+        os.chown(filename, uid, gid)
         return True
 
     def getWindowsAnswerFileParameters(self, filename: str) -> dict:
