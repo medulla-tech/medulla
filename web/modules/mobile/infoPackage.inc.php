@@ -49,6 +49,22 @@ $pageApplicationVersions->setOptions(array("visible" => false));
 $submod->addPage($pageApplicationVersions);
 
 ################################
+# modify file page
+################################
+$pageModifyFile = new Page("modifyFile", _T('Modify File', 'mobile'));
+$pageModifyFile->setFile("modules/mobile/mobile/modifyFile.php");
+$pageModifyFile->setOptions(array("visible" => false));
+$submod->addPage($pageModifyFile);
+
+################################
+# assign configurations to file page
+################################
+$pageFileConfigurations = new Page("fileConfigurations", _T('File Configurations', 'mobile'));
+$pageFileConfigurations->setFile("modules/mobile/mobile/fileConfigurations.php");
+$pageFileConfigurations->setOptions(array("visible" => false));
+$submod->addPage($pageFileConfigurations);
+
+################################
 # application configuration page
 ################################
 $pageApplicationConfiguration = new Page("applicationConfiguration", _T('Application Configuration', 'mobile'));

@@ -44,8 +44,14 @@ function xmlrpc_get_hmdm_files(){
 function xmlrpc_add_hmdm_file($uploadedFilePath = null, $uploadedFileName = null, $externalUrl = null, $fileName = null, $pathOnDevice = null, $description = null, $variableContent = null, $configurationIds = null){
     return xmlCall("mobile.addHmdmFile", array($uploadedFilePath, $uploadedFileName, $externalUrl, $fileName, $pathOnDevice, $description, $variableContent, $configurationIds));
 }
-function xmlrpc_delete_file_by_id($id = null, $filePath = null){
-    return xmlCall("mobile.deleteFileById", array($id, $filePath));
+function xmlrpc_update_hmdm_file($file_data){
+    return xmlCall("mobile.updateHmdmFile", array($file_data));
+}
+function xmlrpc_delete_file_by_id($file_data = null, $file_id = null, $filePath = null){
+    return xmlCall("mobile.deleteFileById", array($file_data, $file_id, $filePath));
+}
+function xmlrpc_assign_file_to_configurations($file_id, $configuration_ids){
+    return xmlCall("mobile.assignFileToConfigurations", array($file_id, $configuration_ids));
 }
 function xmlrpc_delete_configuration_by_id($id){
     return xmlCall("mobile.deleteConfigurationById", array($id));
