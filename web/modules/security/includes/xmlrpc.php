@@ -58,6 +58,10 @@ function xmlrpc_get_machine_cves($id_glpi, $start = 0, $limit = 50, $filter = ''
     return xmlCall("security.get_machine_cves", array($id_glpi, $start, $limit, $filter, $severity));
 }
 
+function xmlrpc_get_machine_softwares_summary($id_glpi, $start = 0, $limit = 50, $filter = '') {
+    return xmlCall("security.get_machine_softwares_summary", array($id_glpi, $start, $limit, $filter));
+}
+
 function xmlrpc_scan_machine($id_glpi) {
     return xmlCall("security.scan_machine", array($id_glpi));
 }

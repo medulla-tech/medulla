@@ -96,6 +96,16 @@ def get_machine_cves(id_glpi, start=0, limit=50, filter_str='', severity=None):
     )
 
 
+def get_machine_softwares_summary(id_glpi, start=0, limit=50, filter_str=''):
+    """Get vulnerable software summary for a machine, grouped by software."""
+    return SecurityDatabase().get_machine_softwares_summary(
+        int(id_glpi),
+        start=int(start),
+        limit=int(limit),
+        filter_str=filter_str
+    )
+
+
 def scan_machine(id_glpi):
     """Scan a specific machine (triggers full scan)"""
     from mmc.plugins.security.scanner import scan_single_machine

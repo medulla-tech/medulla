@@ -212,11 +212,21 @@ class CVECentralClient:
             logger.error(f"Error submitting software to CVE Central: {e}")
             return {'success': False, 'error': str(e)}
 
-    def trigger_scan(self, background: bool = True) -> Dict:
-        """Trigger a CVE scan on the central server"""
+    def trigger_scan(self, background: bool = True, max_age_days: int = 365, min_published_year: int = 2015) -> Dict:
+        """Trigger a CVE scan on the central server
+
+        Args:
+            background: Run scan in background (non-blocking)
+            max_age_days: Only fetch CVEs modified in the last N days
+            min_published_year: Ignore CVEs published before this year
+        """
         try:
             url = f"{self.base_url}/api/scan"
-            params = {'background': 'true' if background else 'false'}
+            params = {
+                'background': 'true' if background else 'false',
+                'max_age_days': max_age_days,
+                'min_published_year': min_published_year
+            }
             response = self.session.post(
                 url,
                 headers=self._get_headers(),
@@ -370,8 +380,10 @@ def run_cve_scan(scan_id: Optional[int] = None, entity_id: Optional[int] = None,
             logger.warning(f"Software submission warning: {submit_result.get('error')}")
 
         # Step 3: Trigger NVD scan on CVE Central
-        logger.info("Triggering CVE scan on central server (this may take a while)...")
-        scan_result = cve_client.trigger_scan(background=False)
+        max_age_days = getattr(config, 'max_age_days', 365)
+        min_published_year = getattr(config, 'min_published_year', 2015)
+        logger.info(f"Triggering CVE scan on central server (max_age_days={max_age_days}, min_published_year={min_published_year})...")
+        scan_result = cve_client.trigger_scan(background=False, max_age_days=max_age_days, min_published_year=min_published_year)
 
         if scan_result.get('success'):
             logger.info(f"Central scan: {scan_result.get('cves_found', 0)} CVEs found")
@@ -395,13 +407,17 @@ def run_cve_scan(scan_id: Optional[int] = None, entity_id: Optional[int] = None,
             if not cve_id_str:
                 continue
 
-            cvss_score = float(cve_entry.get('cvss_score', 0.0) or 0.0)
-            severity = cve_entry.get('severity', 'None')
+            # Handle NULL cvss_score (CVEs not yet evaluated by NVD)
+            cvss_raw = cve_entry.get('cvss_score')
+            cvss_score = float(cvss_raw) if cvss_raw is not None else None
+            severity = cve_entry.get('severity', 'N/A')
             description = cve_entry.get('description', '')
             published_at = cve_entry.get('published_at')
             last_modified = cve_entry.get('last_modified')
-            software_name = cve_entry.get('software_name', '')
-            software_version = cve_entry.get('software_version', '')
+            software_name = cve_entry.get('software_name', '')  # Nom normalisé
+            software_version = cve_entry.get('software_version', '')  # Version normalisée
+            glpi_software_name = cve_entry.get('glpi_software_name', '')  # Nom GLPI original
+            target_platform = cve_entry.get('target_platform')  # Platform cible (android, macos, ios, etc.)
 
             # Add CVE to local cache
             cve_db_id = security_db.add_cve(
@@ -413,12 +429,14 @@ def run_cve_scan(scan_id: Optional[int] = None, entity_id: Optional[int] = None,
                 last_modified=last_modified
             )
 
-            # Link software to CVE
+            # Link software to CVE with target platform
             if software_name:
                 security_db.link_software_cve(
                     software_name=software_name,
                     software_version=software_version,
-                    cve_db_id=cve_db_id
+                    cve_db_id=cve_db_id,
+                    glpi_software_name=glpi_software_name or None,
+                    target_platform=target_platform
                 )
 
             cves_added.add(cve_id_str)

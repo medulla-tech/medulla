@@ -54,11 +54,27 @@
     gap: 8px;
 }
 
+.severity-filter label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+}
+
+.severity-filter input[type="checkbox"] {
+    cursor: pointer;
+}
+
 .severity-filter select {
     padding: 5px 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
     min-width: 120px;
+}
+
+.filter-hint {
+    font-size: 0.8em;
+    color: #888;
 }
 
 .search-wrapper {
@@ -108,6 +124,7 @@
 .badge-medium { background-color: #ffc107; color: #333; }
 .badge-low { background-color: #28a745; }
 .badge-none { background-color: #6c757d; }
+.badge-na { background-color: #adb5bd; color: #333; }
 
 /* =============================================================================
    Dashboard Cards (index.php)
@@ -182,6 +199,7 @@
 .cve-header.severity-medium { border-left: 4px solid #ffc107; }
 .cve-header.severity-low { border-left: 4px solid #28a745; }
 .cve-header.severity-none { border-left: 4px solid #6c757d; }
+.cve-header.severity-na { border-left: 4px solid #adb5bd; }
 
 .cve-title {
     font-size: 1.5em;
@@ -294,6 +312,7 @@ tr.severity-critical td:first-child { border-left: 3px solid #dc3545; }
 tr.severity-high td:first-child { border-left: 3px solid #fd7e14; }
 tr.severity-medium td:first-child { border-left: 3px solid #ffc107; }
 tr.severity-low td:first-child { border-left: 3px solid #28a745; }
+tr.severity-na td:first-child { border-left: 3px solid #adb5bd; }
 
 /* =============================================================================
    Empty Message

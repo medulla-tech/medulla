@@ -48,7 +48,7 @@ if (!$cve) {
 }
 
 // Determine severity class for styling
-$severityClass = strtolower($cve['severity']);
+$severityClass = $cve['severity'] === 'N/A' ? 'na' : strtolower($cve['severity']);
 
 // Determine CVSS class
 $cvss = floatval($cve['cvss_score']);
@@ -114,29 +114,54 @@ else $cvssClass = 'cvss-low';
 </ul>
 <?php endif; ?>
 
+<?php
+// Group machines by hostname to avoid duplicates
+$machinesByHost = array();
+foreach ($cve['machines'] as $machine) {
+    $hostname = $machine['hostname'];
+    if (!isset($machinesByHost[$hostname])) {
+        $machinesByHost[$hostname] = array(
+            'id_glpi' => $machine['id_glpi'],
+            'hostname' => $hostname,
+            'softwares' => array()
+        );
+    }
+    $machinesByHost[$hostname]['softwares'][] = array(
+        'name' => $machine['software_name'],
+        'version' => $machine['software_version']
+    );
+}
+$uniqueMachineCount = count($machinesByHost);
+?>
+
 <h3 class="section-title">
     <?php echo _T("Affected Machines", "security"); ?>
     <span class="section-count">
-        (<?php echo count($cve['machines']); ?>)
+        (<?php echo $uniqueMachineCount; ?>)
     </span>
 </h3>
 
-<?php if (!empty($cve['machines'])): ?>
+<?php if (!empty($machinesByHost)): ?>
 <table class="machines-table">
     <thead>
         <tr>
             <th><?php echo _T("Hostname", "security"); ?></th>
-            <th><?php echo _T("Software", "security"); ?></th>
-            <th><?php echo _T("Version", "security"); ?></th>
+            <th><?php echo _T("Affected Software", "security"); ?></th>
             <th><?php echo _T("Actions", "security"); ?></th>
         </tr>
     </thead>
     <tbody>
-        <?php foreach ($cve['machines'] as $machine): ?>
+        <?php foreach ($machinesByHost as $machine): ?>
         <tr>
             <td><?php echo htmlspecialchars($machine['hostname']); ?></td>
-            <td><?php echo htmlspecialchars($machine['software_name']); ?></td>
-            <td><?php echo htmlspecialchars($machine['software_version']); ?></td>
+            <td>
+                <?php foreach ($machine['softwares'] as $sw): ?>
+                <div class="software-item">
+                    <?php echo htmlspecialchars($sw['name']); ?>
+                    <span class="software-version">v<?php echo htmlspecialchars($sw['version']); ?></span>
+                </div>
+                <?php endforeach; ?>
+            </td>
             <td>
                 <a href="<?php echo urlStrRedirect('security/security/machineDetail', array('id_glpi' => $machine['id_glpi'], 'hostname' => $machine['hostname'])); ?>">
                     <?php echo _T("View all CVEs", "security"); ?>

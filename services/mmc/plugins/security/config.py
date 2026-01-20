@@ -26,6 +26,10 @@ class SecurityConfig(PluginConfig, SecurityDatabaseConfig):
         self.cve_central_url = ''
         self.cve_central_server_id = ''
         self.cve_central_keyAES32 = ''
+        # Policy defaults
+        self.max_age_days = 365
+        self.min_cvss = 0.0
+        self.min_published_year = 2020  # Ignore CVEs published before this year
 
     def readConf(self):
         PluginConfig.readConf(self)
@@ -41,6 +45,21 @@ class SecurityConfig(PluginConfig, SecurityDatabaseConfig):
             self.cve_central_url = self.safe_get("cve_central", "url", "")
             self.cve_central_server_id = self.safe_get("cve_central", "server_id", "")
             self.cve_central_keyAES32 = self.safe_get("cve_central", "keyAES32", "")
+
+        # [policy] section
+        if self.has_section("policy"):
+            try:
+                self.max_age_days = int(self.safe_get("policy", "max_age_days", "365"))
+            except ValueError:
+                self.max_age_days = 365
+            try:
+                self.min_cvss = float(self.safe_get("policy", "alert_min_cvss", "0.0"))
+            except ValueError:
+                self.min_cvss = 0.0
+            try:
+                self.min_published_year = int(self.safe_get("policy", "min_published_year", "2020"))
+            except ValueError:
+                self.min_published_year = 2020
 
     def safe_get(self, section, option, default=''):
         """Get config value with fallback to default"""

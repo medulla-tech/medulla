@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with MMC; If not, see <http://www.gnu.org/licenses/>.
  *
- * Security Module - Machine Detail
+ * Security Module - Machine Detail (Vulnerable softwares grouped)
  */
 
 require("graph/navbar.inc.php");
@@ -27,7 +27,7 @@ require_once("modules/security/includes/xmlrpc.php");
 $id_glpi = isset($_GET['id_glpi']) ? intval($_GET['id_glpi']) : 0;
 $hostname = isset($_GET['hostname']) ? htmlspecialchars($_GET['hostname']) : '';
 
-$p = new PageGenerator(sprintf(_T("CVEs for %s", 'security'), $hostname));
+$p = new PageGenerator(sprintf(_T("Vulnerable Software on %s", 'security'), $hostname));
 $p->setSideMenu($sidemenu);
 $p->display();
 
@@ -37,8 +37,12 @@ if ($id_glpi <= 0) {
 }
 
 // Get total count for summary
-$summary = xmlrpc_get_machine_cves($id_glpi, 0, 1, '', null);
-$totalCves = $summary['total'];
+$summary = xmlrpc_get_machine_softwares_summary($id_glpi, 0, 1, '');
+$totalSoftwares = $summary['total'];
+
+// Also get CVE count
+$cveSummary = xmlrpc_get_machine_cves($id_glpi, 0, 1, '', null);
+$totalCves = $cveSummary['total'];
 ?>
 
 <link rel="stylesheet" href="modules/security/graph/security.css" type="text/css" media="screen" />
@@ -49,49 +53,21 @@ $totalCves = $summary['total'];
 
 <div class="summary-box">
     <strong><?php echo _T("Machine", "security"); ?>:</strong> <?php echo $hostname; ?> &nbsp;|&nbsp;
+    <strong><?php echo _T("Vulnerable Software", "security"); ?>:</strong> <?php echo $totalSoftwares; ?> &nbsp;|&nbsp;
     <strong><?php echo _T("Total CVEs", "security"); ?>:</strong> <?php echo $totalCves; ?>
 </div>
 
-<!-- Filters row: severity on left, search on right -->
-<div class="filters-row">
-    <div class="severity-filter">
-        <label for="severity-filter"><?php echo _T("Severity", "security"); ?>:</label>
-        <select id="severity-filter" onchange="updateMachineFilter()">
-            <option value=""><?php echo _T("All", "security"); ?></option>
-            <option value="Critical"><?php echo _T("Critical", "security"); ?></option>
-            <option value="High"><?php echo _T("High", "security"); ?></option>
-            <option value="Medium"><?php echo _T("Medium", "security"); ?></option>
-            <option value="Low"><?php echo _T("Low", "security"); ?></option>
-        </select>
-    </div>
-    <div class="search-wrapper">
-    <?php
-    // AjaxFilter for search (will be placed on the right)
-    $ajaxUrl = urlStrRedirect("security/security/ajaxMachineCVEList") . "&id_glpi=" . $id_glpi;
-    $ajax = new AjaxFilter($ajaxUrl);
-    $ajax->display();
-    ?>
-    </div>
+<div class="search-wrapper">
+<?php
+// AjaxFilter for search
+$ajaxUrl = urlStrRedirect("security/security/ajaxMachineSoftwaresList")
+    . "&id_glpi=" . $id_glpi
+    . "&hostname=" . urlencode($hostname);
+$ajax = new AjaxFilter($ajaxUrl);
+$ajax->display();
+?>
 </div>
 
 <?php
 $ajax->displayDivToUpdate();
 ?>
-
-<script>
-function updateMachineFilter() {
-    var severity = document.getElementById('severity-filter').value;
-    var url = '<?php echo urlStrRedirect("security/security/ajaxMachineCVEList"); ?>';
-    url += '&id_glpi=<?php echo $id_glpi; ?>';
-    url += '&severity=' + encodeURIComponent(severity);
-
-    // Get filter value from AjaxFilter search box
-    var filterInput = document.querySelector('input[name="param"]');
-    if (filterInput) {
-        url += '&filter=' + encodeURIComponent(filterInput.value);
-    }
-
-    // Update the container div using jQuery
-    jQuery('#container').load(url);
-}
-</script>

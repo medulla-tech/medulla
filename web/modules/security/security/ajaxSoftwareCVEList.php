@@ -58,7 +58,7 @@ foreach ($data as $row) {
 
     // Severity with color badge
     $sev = $row['severity'];
-    $sevClass = strtolower($sev);
+    $sevClass = $sev === 'N/A' ? 'na' : strtolower($sev);
     $severities[] = '<span class="badge badge-' . $sevClass . '">' . $sev . '</span>';
 
     // CVSS Score

@@ -96,6 +96,12 @@ $page->setFile("modules/security/security/ajaxMachineCVEList.php");
 $page->setOptions(array("visible" => False, "noHeader" => True, "AJAX" => True));
 $submod->addPage($page);
 
+// Ajax Machine Softwares List (grouped view)
+$page = new Page("ajaxMachineSoftwaresList", _T('Machine Softwares List', 'security'));
+$page->setFile("modules/security/security/ajaxMachineSoftwaresList.php");
+$page->setOptions(array("visible" => False, "noHeader" => True, "AJAX" => True));
+$submod->addPage($page);
+
 // CVE Detail page
 $page = new Page("cveDetail", _T('CVE Details', 'security'));
 $page->setFile("modules/security/security/cveDetail.php");
