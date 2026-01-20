@@ -1,16 +1,28 @@
+--
+--  (c) 2024-2025 Medulla, http://www.medulla-tech.io
+--
+--
+-- This file is part of MMC, http://www.medulla-tech.io
+--
+-- MMC is free software; you can redistribute it and/or modify
+-- it under the terms of the GNU General Public License as published by
+-- the Free Software Foundation; either version 3 of the License, or
+-- (at your option) any later version.
+--
+-- MMC is distributed in the hope that it will be useful,
+-- but WITHOUT ANY WARRANTY; without even the implied warranty of
+-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-- GNU General Public License for more details.
+--
+-- You should have received a copy of the GNU General Public License
+-- along with MMC; If not, see <http://www.gnu.org/licenses/.>
+
+START TRANSACTION;
+
 -- ----------------------------------------------------------------------
 -- Security Module - Schema 001
 -- CVE scanning and vulnerability management via CVE Central API
 -- ----------------------------------------------------------------------
-
--- ----------------------------------------------------------------------
--- Database version
--- ----------------------------------------------------------------------
-CREATE TABLE IF NOT EXISTS `version` (
-    `Number` tinyint(4) unsigned NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-INSERT INTO `version` VALUES (1);
 
 -- ----------------------------------------------------------------------
 -- Table: tests (legacy, for module activation test)
@@ -28,7 +40,7 @@ INSERT INTO `tests` (`name`, `message`) VALUES
 
 -- ----------------------------------------------------------------------
 -- Table: cves
--- Cache local des CVEs récupérées de CVE Central
+-- Cache local des CVEs recuperees de CVE Central
 -- Cette table contient TOUTES les CVEs connues pour les logiciels du parc
 -- ----------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `cves` (
@@ -38,8 +50,8 @@ CREATE TABLE IF NOT EXISTS `cves` (
     `severity` enum('Critical','High','Medium','Low','None') DEFAULT 'None',
     `description` text DEFAULT NULL,
     `published_at` date DEFAULT NULL,
-    `last_modified` date DEFAULT NULL COMMENT 'Dernière modification sur NVD',
-    `fetched_at` datetime DEFAULT CURRENT_TIMESTAMP COMMENT 'Quand on a récupéré cette CVE',
+    `last_modified` date DEFAULT NULL COMMENT 'Derniere modification sur NVD',
+    `fetched_at` datetime DEFAULT CURRENT_TIMESTAMP COMMENT 'Quand on a recupere cette CVE',
     PRIMARY KEY (`id`),
     UNIQUE KEY `uk_cve_id` (`cve_id`),
     KEY `idx_severity` (`severity`),
@@ -56,7 +68,7 @@ CREATE TABLE IF NOT EXISTS `software_cves` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
     `software_name` varchar(255) NOT NULL,
     `software_version` varchar(100) NOT NULL,
-    `cve_id` int(11) NOT NULL COMMENT 'Référence vers cves.id',
+    `cve_id` int(11) NOT NULL COMMENT 'Reference vers cves.id',
     `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
     UNIQUE KEY `uk_software_cve` (`software_name`, `software_version`, `cve_id`),
@@ -67,25 +79,25 @@ CREATE TABLE IF NOT EXISTS `software_cves` (
 
 -- ----------------------------------------------------------------------
 -- Table: scans
--- Historique des scans effectués
+-- Historique des scans effectues
 -- ----------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `scans` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
     `started_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `finished_at` datetime DEFAULT NULL,
     `status` enum('running','completed','failed') DEFAULT 'running',
-    `softwares_sent` int(11) DEFAULT 0 COMMENT 'Nombre de logiciels envoyés à CVE Central',
+    `softwares_sent` int(11) DEFAULT 0 COMMENT 'Nombre de logiciels envoyes a CVE Central',
     `cves_received` int(11) DEFAULT 0 COMMENT 'Nombre de CVEs reçues',
-    `machines_affected` int(11) DEFAULT 0 COMMENT 'Nombre de machines avec vulnérabilités',
+    `machines_affected` int(11) DEFAULT 0 COMMENT 'Nombre de machines avec vulnerabilites',
     `error_message` text DEFAULT NULL,
     PRIMARY KEY (`id`),
     KEY `idx_started_at` (`started_at`),
     KEY `idx_status` (`status`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Historique des scans de sécurité';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Historique des scans de securite';
 
 -- ----------------------------------------------------------------------
 -- Table: cve_exclusions
--- CVE à ignorer (faux positifs globaux, exceptions métier)
+-- CVE a ignorer (faux positifs globaux, exceptions metier)
 -- ----------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `cve_exclusions` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -104,12 +116,29 @@ CREATE TABLE IF NOT EXISTS `cve_exclusions` (
 -- ----------------------------------------------------------------------
 
 -- ----------------------------------------------------------------------
--- Note: Les machines affectées sont calculées dynamiquement via une requête
+-- Note: Les machines affectees sont calculees dynamiquement via une requête
 -- qui joint les tables:
 --   xmppmaster.local_glpi_machines (machines GLPI)
---   xmppmaster.local_glpi_items_softwareversions (logiciels installés)
+--   xmppmaster.local_glpi_items_softwareversions (logiciels installes)
 --   xmppmaster.local_glpi_softwareversions (versions)
 --   xmppmaster.local_glpi_softwares (noms)
 --   security.software_cves (lien logiciel->CVE)
---   security.cves (détails CVE)
+--   security.cves (details CVE)
 -- ----------------------------------------------------------------------
+
+-- ----------------------------------------------------------------------
+-- Database version
+-- ----------------------------------------------------------------------
+
+--
+-- Table structure for table `version`
+--
+
+CREATE TABLE IF NOT EXISTS `version` (
+  `Number` tinyint(4) unsigned NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+INSERT INTO `version` VALUES (1);
+
+COMMIT;

@@ -32,7 +32,7 @@ pythonmodules = plugins plugins.dyngroup plugins.dyngroup.querymanager \
 	plugins.pkgs plugins.backuppc plugins.backuppc.report plugins.medulla_server \
 	plugins.medulla_server.medulla-update-manager \
 	plugins.support plugins.kiosk plugins.admin plugins.updates plugins.urbackup\
-	plugins.mastering plugins.mobile \
+	plugins.mastering plugins.mobile plugins.security \
 	plugins.xmppmaster plugins.xmppmaster.master plugins.xmppmaster.master.lib \
 	plugins.xmppmaster.master.pluginsmaster plugins.xmppmaster.master.script \
 	plugins.xmppmaster.master.script.perl plugins.xmppmaster.querymanager
