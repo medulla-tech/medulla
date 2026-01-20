@@ -10,6 +10,7 @@ require("modules/base/includes/users.inc.php");
 require("modules/base/includes/edit.inc.php");
 require("modules/base/includes/groups.inc.php");
 require_once("includes/modules.inc.php");
+require_once("modules/admin/includes/xmlrpc.php");
 
 session_name("PULSESESSION");
 session_start();
@@ -165,6 +166,24 @@ function handleAuthentication($providerKey) {
                 $mail = updateUserMail($newUser, $userMappedData['mail'] ?? $userInfo->email);
 
                 if ($add['code'] == 0) {
+                    //GLPI creation with Self-Service + root entity
+                    $glpiRes = xmlrpc_create_user(
+                        $newUser,                                              // identifier (email)
+                        $userMappedData['sn'] ?? $userInfo->family_name,       // lastname
+                        $userMappedData['givenName'] ?? $userInfo->given_name, // firstname
+                        $newPassUser,                                          // password
+                        null,                                                  // phone
+                        null,                                                  // id_entity (backend → 0)
+                        null,                                                  // id_profile
+                        false,                                                 // is_recursive
+                        'admin',
+                        null                                                   // tokenuser
+                    );
+
+                    if (empty($glpiRes['ok']) && empty($glpiRes['id'])) {
+                        error_log("[OIDC] GLPI user creation failed for $newUser: " . ($glpiRes['error'] ?? 'Unknown error'));
+                    }
+
                     $aclString = get_acl_string($userInfo, $prov);
                     $setlmcACL = setAcl($newUser, $aclString);
 
