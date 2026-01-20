@@ -162,11 +162,17 @@ class SecurityDatabase(DatabaseHelper):
     # Dashboard / Summary
     # =========================================================================
     @DatabaseHelper._sessionm
-    def get_dashboard_summary(self, session, location=''):
+    def get_dashboard_summary(self, session, location='', min_cvss=0.0):
         """Get summary for dashboard: counts by severity, machines affected
         Filtered by entity if location is provided.
+        Filtered by min_cvss if > 0.
         """
         entity_ids = self._parse_entity_ids(session, location)
+
+        # Build min_cvss filter
+        cvss_filter = ""
+        if min_cvss > 0:
+            cvss_filter = f"AND c.cvss_score >= {min_cvss}"
 
         # Build entity filter clause for machines
         entity_filter = ""
@@ -175,8 +181,6 @@ class SecurityDatabase(DatabaseHelper):
             entity_filter = f"AND m.entities_id IN ({entity_ids_str})"
 
         # Count CVEs by severity (only CVEs affecting machines in selected entities)
-        # Platform filter: exclude CVEs targeting mobile (android, ios) or macos for Windows/Linux machines
-        # target_platform values from CPE: android, macos, ios, iphone_os, etc.
         # Join using glpi_software_name which is the original GLPI software name
         counts = {'Critical': 0, 'High': 0, 'Medium': 0, 'Low': 0, 'None': 0}
         try:
@@ -188,27 +192,7 @@ class SecurityDatabase(DatabaseHelper):
                 JOIN xmppmaster.local_glpi_softwareversions sv ON sv.softwares_id = s.id
                 JOIN xmppmaster.local_glpi_items_softwareversions isv ON isv.softwareversions_id = sv.id
                 JOIN xmppmaster.local_glpi_machines m ON m.id = isv.items_id
-                LEFT JOIN xmppmaster.machines xm ON xm.id_glpi = m.id
-                WHERE 1=1 {entity_filter}
-                AND (
-                    sc.target_platform IS NULL
-                    OR sc.target_platform = ''
-                    OR (
-                        -- Windows machine: exclude macos, android, ios CVEs
-                        xm.platform LIKE '%Windows%'
-                        AND sc.target_platform NOT IN ('macos', 'android', 'ios', 'iphone_os')
-                    )
-                    OR (
-                        -- Linux machine: exclude macos, android, ios, windows CVEs
-                        (xm.platform LIKE '%Linux%' OR xm.platform LIKE '%Debian%' OR xm.platform LIKE '%Ubuntu%')
-                        AND sc.target_platform NOT IN ('macos', 'android', 'ios', 'iphone_os', 'windows')
-                    )
-                    OR (
-                        -- macOS machine: exclude android, ios, windows CVEs
-                        (xm.platform LIKE '%macOS%' OR xm.platform LIKE '%Mac%')
-                        AND sc.target_platform NOT IN ('android', 'ios', 'iphone_os', 'windows')
-                    )
-                )
+                WHERE 1=1 {entity_filter} {cvss_filter}
                 GROUP BY c.severity
             """))
             for row in result:
@@ -218,35 +202,18 @@ class SecurityDatabase(DatabaseHelper):
             logger.error(f"Error counting CVEs by severity: {e}")
 
         # Count affected machines
-        # With platform filtering to exclude CVEs that don't match machine OS
         # Join using glpi_software_name
         machines_affected = 0
         try:
             result = session.execute(text(f"""
                 SELECT COUNT(DISTINCT m.id) as count
                 FROM security.software_cves sc
+                JOIN security.cves c ON c.id = sc.cve_id
                 JOIN xmppmaster.local_glpi_softwares s ON s.name = sc.glpi_software_name
                 JOIN xmppmaster.local_glpi_softwareversions sv ON sv.softwares_id = s.id
                 JOIN xmppmaster.local_glpi_items_softwareversions isv ON isv.softwareversions_id = sv.id
                 JOIN xmppmaster.local_glpi_machines m ON m.id = isv.items_id
-                LEFT JOIN xmppmaster.machines xm ON xm.id_glpi = m.id
-                WHERE 1=1 {entity_filter}
-                AND (
-                    sc.target_platform IS NULL
-                    OR sc.target_platform = ''
-                    OR (
-                        xm.platform LIKE '%Windows%'
-                        AND sc.target_platform NOT IN ('macos', 'android', 'ios', 'iphone_os')
-                    )
-                    OR (
-                        (xm.platform LIKE '%Linux%' OR xm.platform LIKE '%Debian%' OR xm.platform LIKE '%Ubuntu%')
-                        AND sc.target_platform NOT IN ('macos', 'android', 'ios', 'iphone_os', 'windows')
-                    )
-                    OR (
-                        (xm.platform LIKE '%macOS%' OR xm.platform LIKE '%Mac%')
-                        AND sc.target_platform NOT IN ('android', 'ios', 'iphone_os', 'windows')
-                    )
-                )
+                WHERE 1=1 {entity_filter} {cvss_filter}
             """))
             row = result.fetchone()
             if row:
@@ -283,9 +250,11 @@ class SecurityDatabase(DatabaseHelper):
     # =========================================================================
     @DatabaseHelper._sessionm
     def get_cves(self, session, start=0, limit=50, filter_str='',
-                 severity=None, location='', sort_by='cvss_score', sort_order='desc'):
+                 severity=None, location='', sort_by='cvss_score', sort_order='desc',
+                 min_cvss=0.0):
         """Get paginated list of CVEs with affected machine count
         Filtered by entity if location is provided.
+        Filtered by min_cvss if > 0.
         """
         entity_ids = self._parse_entity_ids(session, location)
 
@@ -297,35 +266,18 @@ class SecurityDatabase(DatabaseHelper):
 
         # Build filter clauses
         cve_filters = []
+        if min_cvss > 0:
+            cve_filters.append(f"c.cvss_score >= {min_cvss}")
         if severity:
             cve_filters.append(f"c.severity = '{severity}'")
         if filter_str:
             escaped_filter = filter_str.replace("'", "''")
             cve_filters.append(f"(c.cve_id LIKE '%{escaped_filter}%' OR c.description LIKE '%{escaped_filter}%')")
 
-        # Platform filter condition (exclude CVEs targeting wrong platform)
-        platform_filter = """(
-            sc.target_platform IS NULL
-            OR sc.target_platform = ''
-            OR (
-                xm.platform LIKE '%Windows%'
-                AND sc.target_platform NOT IN ('macos', 'android', 'ios', 'iphone_os')
-            )
-            OR (
-                (xm.platform LIKE '%Linux%' OR xm.platform LIKE '%Debian%' OR xm.platform LIKE '%Ubuntu%')
-                AND sc.target_platform NOT IN ('macos', 'android', 'ios', 'iphone_os', 'windows')
-            )
-            OR (
-                (xm.platform LIKE '%macOS%' OR xm.platform LIKE '%Mac%')
-                AND sc.target_platform NOT IN ('android', 'ios', 'iphone_os', 'windows')
-            )
-        )"""
-
         # Build complete WHERE clause
-        where_conditions = [platform_filter]
+        cve_where_clause = ""
         if cve_filters:
-            where_conditions.extend(cve_filters)
-        cve_where_clause = "AND " + " AND ".join(where_conditions)
+            cve_where_clause = "AND " + " AND ".join(cve_filters)
 
         # Get CVEs that affect machines in selected entities
         # Join using glpi_software_name
@@ -339,7 +291,6 @@ class SecurityDatabase(DatabaseHelper):
                 JOIN xmppmaster.local_glpi_softwareversions sv ON sv.softwares_id = s.id
                 JOIN xmppmaster.local_glpi_items_softwareversions isv ON isv.softwareversions_id = sv.id
                 JOIN xmppmaster.local_glpi_machines m ON m.id = isv.items_id
-                LEFT JOIN xmppmaster.machines xm ON xm.id_glpi = m.id
                 WHERE 1=1 {entity_filter}
                 {cve_where_clause}
             """)
@@ -358,7 +309,6 @@ class SecurityDatabase(DatabaseHelper):
                 JOIN xmppmaster.local_glpi_softwareversions sv ON sv.softwares_id = s.id
                 JOIN xmppmaster.local_glpi_items_softwareversions isv ON isv.softwareversions_id = sv.id
                 JOIN xmppmaster.local_glpi_machines m ON m.id = isv.items_id
-                LEFT JOIN xmppmaster.machines xm ON xm.id_glpi = m.id
                 WHERE 1=1 {entity_filter}
                 {cve_where_clause}
                 GROUP BY c.id, c.cve_id, c.cvss_score, c.severity, c.description, c.published_at
@@ -474,9 +424,11 @@ class SecurityDatabase(DatabaseHelper):
     # Machine-centric view
     # =========================================================================
     @DatabaseHelper._sessionm
-    def get_machines_summary(self, session, start=0, limit=50, filter_str='', location=''):
+    def get_machines_summary(self, session, start=0, limit=50, filter_str='', location='',
+                             min_cvss=0.0):
         """Get list of ALL machines from GLPI with vulnerability counts (only latest software versions)
         Filtered by entity if location is provided.
+        Filtered by min_cvss if > 0.
         """
         entity_ids = self._parse_entity_ids(session, location)
 
@@ -495,6 +447,11 @@ class SecurityDatabase(DatabaseHelper):
         filter_clause = ""
         if where_clauses:
             filter_clause = "WHERE " + " AND ".join(where_clauses)
+
+        # Build min_cvss filter for inner query
+        cvss_filter = ""
+        if min_cvss > 0:
+            cvss_filter = f"AND c.cvss_score >= {min_cvss}"
 
         # Count query
         count_sql = text(f"""
@@ -533,6 +490,7 @@ class SecurityDatabase(DatabaseHelper):
                 JOIN security.software_cves sc ON sc.software_name = latest_sw.software_name
                                                 AND sc.software_version = latest_sw.software_version
                 JOIN security.cves c ON c.id = sc.cve_id
+                WHERE 1=1 {cvss_filter}
                 GROUP BY latest_sw.machine_id
             ) v ON m.id = v.machine_id
             {filter_clause}
@@ -563,7 +521,8 @@ class SecurityDatabase(DatabaseHelper):
             return {'total': 0, 'data': []}
 
     @DatabaseHelper._sessionm
-    def get_machine_cves(self, session, id_glpi, start=0, limit=50, filter_str='', severity=None):
+    def get_machine_cves(self, session, id_glpi, start=0, limit=50, filter_str='', severity=None,
+                         min_cvss=0.0):
         """Get all CVEs affecting a specific machine (only latest software versions)
 
         Args:
@@ -572,6 +531,7 @@ class SecurityDatabase(DatabaseHelper):
             limit: Max results per page
             filter_str: Search filter for CVE ID or description
             severity: Filter by severity (Critical, High, Medium, Low)
+            min_cvss: Minimum CVSS score to display
 
         Returns:
             dict with 'total' count and 'data' list
@@ -580,6 +540,9 @@ class SecurityDatabase(DatabaseHelper):
             # Build WHERE clause for filters
             where_clauses = []
             params = {'id_glpi': id_glpi, 'start': start, 'limit': limit}
+
+            if min_cvss > 0:
+                where_clauses.append(f"c.cvss_score >= {min_cvss}")
 
             if filter_str:
                 where_clauses.append("(c.cve_id LIKE :filter OR c.description LIKE :filter)")
@@ -664,7 +627,8 @@ class SecurityDatabase(DatabaseHelper):
             return {'total': 0, 'data': []}
 
     @DatabaseHelper._sessionm
-    def get_machine_softwares_summary(self, session, id_glpi, start=0, limit=50, filter_str=''):
+    def get_machine_softwares_summary(self, session, id_glpi, start=0, limit=50, filter_str='',
+                                      min_cvss=0.0):
         """Get vulnerable software summary for a specific machine, grouped by software.
 
         Args:
@@ -672,6 +636,7 @@ class SecurityDatabase(DatabaseHelper):
             start: Pagination offset
             limit: Max results per page
             filter_str: Search filter for software name
+            min_cvss: Minimum CVSS score to display
 
         Returns:
             dict with 'total' count and 'data' list (grouped by software)
@@ -683,6 +648,11 @@ class SecurityDatabase(DatabaseHelper):
             if filter_str:
                 filter_clause = "AND latest_sw.software_name LIKE :filter"
                 params['filter'] = f"%{filter_str}%"
+
+            # Build min_cvss filter
+            cvss_filter = ""
+            if min_cvss > 0:
+                cvss_filter = f"AND c.cvss_score >= {min_cvss}"
 
             # Count query - number of distinct vulnerable software
             count_sql = text(f"""
@@ -698,7 +668,8 @@ class SecurityDatabase(DatabaseHelper):
                 ) latest_sw
                 JOIN security.software_cves sc ON sc.software_name = latest_sw.software_name
                                                 AND sc.software_version = latest_sw.software_version
-                WHERE 1=1 {filter_clause}
+                JOIN security.cves c ON c.id = sc.cve_id
+                WHERE 1=1 {filter_clause} {cvss_filter}
             """)
 
             count_result = session.execute(count_sql, params)
@@ -727,7 +698,7 @@ class SecurityDatabase(DatabaseHelper):
                 JOIN security.software_cves sc ON sc.software_name = latest_sw.software_name
                                                 AND sc.software_version = latest_sw.software_version
                 JOIN security.cves c ON c.id = sc.cve_id
-                WHERE 1=1 {filter_clause}
+                WHERE 1=1 {filter_clause} {cvss_filter}
                 GROUP BY latest_sw.software_name, latest_sw.software_version
                 ORDER BY max_cvss DESC, total_cves DESC
                 LIMIT :limit OFFSET :start
@@ -958,9 +929,11 @@ class SecurityDatabase(DatabaseHelper):
     # Software-centric view
     # =========================================================================
     @DatabaseHelper._sessionm
-    def get_softwares_summary(self, session, start=0, limit=50, filter_str='', location=''):
+    def get_softwares_summary(self, session, start=0, limit=50, filter_str='', location='',
+                              min_cvss=0.0):
         """Get list of softwares with CVE counts, grouped by software name+version.
         Filtered by entity if location is provided.
+        Filtered by min_cvss if > 0.
 
         Returns:
             dict with 'total' count and 'data' list containing:
@@ -980,6 +953,11 @@ class SecurityDatabase(DatabaseHelper):
         if entity_ids:
             entity_ids_str = ','.join(str(e) for e in entity_ids)
             entity_filter = f"AND m.entities_id IN ({entity_ids_str})"
+
+        # Build min_cvss filter
+        cvss_filter = ""
+        if min_cvss > 0:
+            cvss_filter = f"AND c.cvss_score >= {min_cvss}"
 
         # Build filter clause (search on normalized name for user convenience)
         filter_clause = ""
@@ -1003,7 +981,7 @@ class SecurityDatabase(DatabaseHelper):
                     JOIN xmppmaster.local_glpi_machines m ON m.id = isv.items_id
                     WHERE 1=1 {entity_filter}
                 ) glpi_sw ON COALESCE(sc.glpi_software_name, sc.software_name) = glpi_sw.glpi_software_name
-                WHERE 1=1 {filter_clause}
+                WHERE 1=1 {filter_clause} {cvss_filter}
             """)
             count_result = session.execute(count_sql, params)
             total = count_result.scalar() or 0
@@ -1031,7 +1009,7 @@ class SecurityDatabase(DatabaseHelper):
                     JOIN xmppmaster.local_glpi_machines m ON m.id = isv.items_id
                     WHERE 1=1 {entity_filter}
                 ) glpi_sw ON COALESCE(sc.glpi_software_name, sc.software_name) = glpi_sw.glpi_software_name
-                WHERE 1=1 {filter_clause}
+                WHERE 1=1 {filter_clause} {cvss_filter}
                 GROUP BY sc.software_name, sc.software_version
                 ORDER BY max_cvss DESC, total_cves DESC
                 LIMIT :limit OFFSET :start
@@ -1319,7 +1297,7 @@ class SecurityDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def get_software_cves(self, session, software_name, software_version, start=0, limit=50,
-                          filter_str='', severity=None):
+                          filter_str='', severity=None, min_cvss=0.0):
         """Get all CVEs affecting a specific software version.
 
         Args:
@@ -1329,6 +1307,7 @@ class SecurityDatabase(DatabaseHelper):
             limit: Max results per page
             filter_str: Search filter for CVE ID or description
             severity: Filter by severity (Critical, High, Medium, Low)
+            min_cvss: Minimum CVSS score to display
 
         Returns:
             dict with 'total' count and 'data' list of CVEs
@@ -1342,6 +1321,9 @@ class SecurityDatabase(DatabaseHelper):
                 'start': start,
                 'limit': limit
             }
+
+            if min_cvss > 0:
+                where_clauses.append(f"c.cvss_score >= {min_cvss}")
 
             if filter_str:
                 where_clauses.append("(c.cve_id LIKE :filter OR c.description LIKE :filter)")

@@ -26,10 +26,13 @@ class SecurityConfig(PluginConfig, SecurityDatabaseConfig):
         self.cve_central_url = ''
         self.cve_central_server_id = ''
         self.cve_central_keyAES32 = ''
+        # Display settings
+        self.display_min_cvss = 0.0
+        self.display_per_product_limit = 50
         # Policy defaults
+        self.alert_min_cvss = 9.0
         self.max_age_days = 365
-        self.min_cvss = 0.0
-        self.min_published_year = 2020  # Ignore CVEs published before this year
+        self.min_published_year = 2020
 
     def readConf(self):
         PluginConfig.readConf(self)
@@ -46,16 +49,27 @@ class SecurityConfig(PluginConfig, SecurityDatabaseConfig):
             self.cve_central_server_id = self.safe_get("cve_central", "server_id", "")
             self.cve_central_keyAES32 = self.safe_get("cve_central", "keyAES32", "")
 
+        # [display] section
+        if self.has_section("display"):
+            try:
+                self.display_min_cvss = float(self.safe_get("display", "min_cvss", "0.0"))
+            except ValueError:
+                self.display_min_cvss = 0.0
+            try:
+                self.display_per_product_limit = int(self.safe_get("display", "per_product_limit", "50"))
+            except ValueError:
+                self.display_per_product_limit = 50
+
         # [policy] section
         if self.has_section("policy"):
+            try:
+                self.alert_min_cvss = float(self.safe_get("policy", "alert_min_cvss", "9.0"))
+            except ValueError:
+                self.alert_min_cvss = 9.0
             try:
                 self.max_age_days = int(self.safe_get("policy", "max_age_days", "365"))
             except ValueError:
                 self.max_age_days = 365
-            try:
-                self.min_cvss = float(self.safe_get("policy", "alert_min_cvss", "0.0"))
-            except ValueError:
-                self.min_cvss = 0.0
             try:
                 self.min_published_year = int(self.safe_get("policy", "min_published_year", "2020"))
             except ValueError:

@@ -47,7 +47,12 @@ def tests():
 # =============================================================================
 def get_dashboard_summary(location=''):
     """Get summary for dashboard display, filtered by entity"""
-    return SecurityDatabase().get_dashboard_summary(location=location)
+    # Get display config for min_cvss filter
+    from mmc.plugins.security.config import SecurityConfig
+    cfg = SecurityConfig("security")
+    min_cvss = cfg.display_min_cvss
+
+    return SecurityDatabase().get_dashboard_summary(location=location, min_cvss=min_cvss)
 
 
 # =============================================================================
@@ -56,6 +61,11 @@ def get_dashboard_summary(location=''):
 def get_cves(start=0, limit=50, filter_str='', severity=None, location='',
              sort_by='cvss_score', sort_order='desc'):
     """Get paginated list of CVEs, filtered by entity"""
+    # Get display config for min_cvss filter
+    from mmc.plugins.security.config import SecurityConfig
+    cfg = SecurityConfig("security")
+    min_cvss = cfg.display_min_cvss
+
     return SecurityDatabase().get_cves(
         start=int(start),
         limit=int(limit),
@@ -63,7 +73,8 @@ def get_cves(start=0, limit=50, filter_str='', severity=None, location='',
         severity=severity,
         location=location,
         sort_by=sort_by,
-        sort_order=sort_order
+        sort_order=sort_order,
+        min_cvss=min_cvss
     )
 
 
@@ -77,39 +88,74 @@ def get_cve_details(cve_id, location=''):
 # =============================================================================
 def get_machines_summary(start=0, limit=50, filter_str='', location=''):
     """Get list of machines with CVE counts, filtered by entity"""
+    # Get display config for min_cvss filter
+    from mmc.plugins.security.config import SecurityConfig
+    cfg = SecurityConfig("security")
+    min_cvss = cfg.display_min_cvss
+
     return SecurityDatabase().get_machines_summary(
         start=int(start),
         limit=int(limit),
         filter_str=filter_str,
-        location=location
+        location=location,
+        min_cvss=min_cvss
     )
 
 
 def get_machine_cves(id_glpi, start=0, limit=50, filter_str='', severity=None):
     """Get all CVEs affecting a specific machine with pagination and filtering."""
+    # Get display config for min_cvss filter
+    from mmc.plugins.security.config import SecurityConfig
+    cfg = SecurityConfig("security")
+    min_cvss = cfg.display_min_cvss
+
     return SecurityDatabase().get_machine_cves(
         int(id_glpi),
         start=int(start),
         limit=int(limit),
         filter_str=filter_str,
-        severity=severity
+        severity=severity,
+        min_cvss=min_cvss
     )
 
 
 def get_machine_softwares_summary(id_glpi, start=0, limit=50, filter_str=''):
     """Get vulnerable software summary for a machine, grouped by software."""
+    # Get display config for min_cvss filter
+    from mmc.plugins.security.config import SecurityConfig
+    cfg = SecurityConfig("security")
+    min_cvss = cfg.display_min_cvss
+
     return SecurityDatabase().get_machine_softwares_summary(
         int(id_glpi),
         start=int(start),
         limit=int(limit),
-        filter_str=filter_str
+        filter_str=filter_str,
+        min_cvss=min_cvss
     )
 
 
 def scan_machine(id_glpi):
     """Scan a specific machine (triggers full scan)"""
     from mmc.plugins.security.scanner import scan_single_machine
-    return scan_single_machine(int(id_glpi))
+    # Get machine hostname for logging
+    try:
+        from sqlalchemy import text
+        from mmc.plugins.security.scanner import get_glpi_db_url, create_engine
+        engine = create_engine(get_glpi_db_url())
+        with engine.connect() as conn:
+            result = conn.execute(text("SELECT name FROM glpi_computers WHERE id = :id"), {'id': int(id_glpi)})
+            row = result.fetchone()
+            hostname = row[0] if row else f"ID:{id_glpi}"
+    except Exception:
+        hostname = f"ID:{id_glpi}"
+    logger.info(f"Starting CVE scan for machine '{hostname}' (id_glpi={id_glpi})")
+    result = scan_single_machine(int(id_glpi))
+    if result.get('success'):
+        logger.info(f"CVE scan completed for '{hostname}': {result.get('vulnerabilities_found', 0)} vulnerabilities found")
+    else:
+        logger.error(f"CVE scan failed for '{hostname}': {result.get('error', 'Unknown error')}")
+    return result
 
 
 # =============================================================================
@@ -123,7 +169,10 @@ def get_scans(start=0, limit=20):
 def create_scan():
     """Create a new scan and start it asynchronously"""
     from mmc.plugins.security.scanner import run_scan_async
-    return run_scan_async()
+    logger.info("Starting global CVE scan (all machines)")
+    scan_id = run_scan_async()
+    logger.info(f"Global CVE scan started with ID: {scan_id}")
+    return scan_id
 
 
 def create_scan_entity(entity_id):
@@ -132,11 +181,23 @@ def create_scan_entity(entity_id):
     from pulse2.database.security import SecurityDatabase
     from threading import Thread
 
+    # Get entity name for logging
+    try:
+        from sqlalchemy import text
+        from mmc.plugins.security.scanner import get_glpi_db_url, create_engine
+        engine = create_engine(get_glpi_db_url())
+        with engine.connect() as conn:
+            result = conn.execute(text("SELECT name FROM glpi_entities WHERE id = :id"), {'id': int(entity_id)})
+            row = result.fetchone()
+            entity_name = row[0] if row else f"ID:{entity_id}"
+    except Exception:
+        entity_name = f"ID:{entity_id}"
+
     scan_id = SecurityDatabase().create_scan()
     thread = Thread(target=run_cve_scan, args=(scan_id, int(entity_id), None), daemon=True)
     thread.start()
 
-    logger.info(f"Started async CVE scan for entity {entity_id} with ID: {scan_id}")
+    logger.info(f"Started CVE scan for entity '{entity_name}' (entity_id={entity_id}) with scan ID: {scan_id}")
     return scan_id
 
 
@@ -146,11 +207,23 @@ def create_scan_group(group_id):
     from pulse2.database.security import SecurityDatabase
     from threading import Thread
 
+    # Get group name for logging
+    try:
+        from sqlalchemy import text, create_engine
+        from mmc.plugins.security.scanner import get_glpi_db_url
+        engine = create_engine(get_glpi_db_url())
+        with engine.connect() as conn:
+            result = conn.execute(text("SELECT name FROM dyngroup.Groups WHERE id = :id"), {'id': int(group_id)})
+            row = result.fetchone()
+            group_name = row[0] if row else f"ID:{group_id}"
+    except Exception:
+        group_name = f"ID:{group_id}"
+
     scan_id = SecurityDatabase().create_scan()
     thread = Thread(target=run_cve_scan, args=(scan_id, None, int(group_id)), daemon=True)
     thread.start()
 
-    logger.info(f"Started async CVE scan for group {group_id} with ID: {scan_id}")
+    logger.info(f"Started CVE scan for group '{group_name}' (group_id={group_id}) with scan ID: {scan_id}")
     return scan_id
 
 
@@ -216,24 +289,36 @@ def is_excluded(cve_id):
 # =============================================================================
 def get_softwares_summary(start=0, limit=50, filter_str='', location=''):
     """Get list of softwares with CVE counts, filtered by entity"""
+    # Get display config for min_cvss filter
+    from mmc.plugins.security.config import SecurityConfig
+    cfg = SecurityConfig("security")
+    min_cvss = cfg.display_min_cvss
+
     return SecurityDatabase().get_softwares_summary(
         start=int(start),
         limit=int(limit),
         filter_str=filter_str,
-        location=location
+        location=location,
+        min_cvss=min_cvss
     )
 
 
 def get_software_cves(software_name, software_version, start=0, limit=50,
                       filter_str='', severity=None):
     """Get all CVEs affecting a specific software version"""
+    # Get display config for min_cvss filter
+    from mmc.plugins.security.config import SecurityConfig
+    cfg = SecurityConfig("security")
+    min_cvss = cfg.display_min_cvss
+
     return SecurityDatabase().get_software_cves(
         software_name=software_name,
         software_version=software_version,
         start=int(start),
         limit=int(limit),
         filter_str=filter_str,
-        severity=severity
+        severity=severity,
+        min_cvss=min_cvss
     )
 
 
