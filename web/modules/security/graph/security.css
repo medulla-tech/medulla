@@ -1,0 +1,468 @@
+/*
+ * (c) 2024-2025 Medulla, http://www.medulla-tech.io
+ * Security Module - Centralized CSS Styles
+ */
+
+/* =============================================================================
+   Common Elements
+   ============================================================================= */
+.back-link {
+    display: inline-block;
+    margin-bottom: 8px;
+    color: #24607E;
+}
+
+.summary-box {
+    background: #f8f9fa;
+    padding: 10px 15px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+/* =============================================================================
+   Filters Row (entity + severity + search)
+   ============================================================================= */
+.filters-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px 0;
+}
+
+.filters-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.entity-filter {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.entity-filter select {
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    min-width: 180px;
+}
+
+.severity-filter {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.severity-filter label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+}
+
+.severity-filter input[type="checkbox"] {
+    cursor: pointer;
+}
+
+.severity-filter select {
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    min-width: 120px;
+}
+
+.filter-hint {
+    font-size: 0.8em;
+    color: #888;
+}
+
+.search-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.search-wrapper form {
+    margin: 0 !important;
+}
+
+.search-wrapper .searchbox {
+    margin: 0;
+}
+
+/* =============================================================================
+   Pagination - same line as count
+   ============================================================================= */
+#container ul.navList {
+    position: relative;
+    right: auto;
+    float: right;
+    margin: 0;
+    line-height: 24px;
+}
+
+#container p.listInfos {
+    float: left;
+    margin: 0 0 10px 0;
+    line-height: 24px;
+}
+
+/* =============================================================================
+   Severity Badges
+   ============================================================================= */
+.badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 3px;
+    font-size: 0.9em;
+    font-weight: bold;
+    color: #fff;
+}
+
+.badge-critical { background-color: #dc3545; }
+.badge-high { background-color: #fd7e14; }
+.badge-medium { background-color: #ffc107; color: #333; }
+.badge-low { background-color: #28a745; }
+.badge-none { background-color: #6c757d; }
+.badge-na { background-color: #adb5bd; color: #333; }
+
+/* =============================================================================
+   Dashboard Cards (index.php)
+   ============================================================================= */
+.security-dashboard {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 10px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+.security-card {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 12px 15px;
+    flex: 1;
+    min-width: 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.security-card.critical { border-left: 4px solid #dc3545; }
+.security-card.high { border-left: 4px solid #fd7e14; }
+.security-card.medium { border-left: 4px solid #ffc107; }
+.security-card.low { border-left: 4px solid #28a745; }
+.security-card.info { border-left: 4px solid #17a2b8; }
+
+.security-card .card-value {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: #333;
+}
+
+.security-card .card-label {
+    font-size: 0.85em;
+    color: #666;
+    margin-top: 3px;
+    white-space: nowrap;
+}
+
+.security-card.critical .card-value { color: #dc3545; }
+.security-card.high .card-value { color: #fd7e14; }
+.security-card.medium .card-value { color: #856404; }
+.security-card.low .card-value { color: #28a745; }
+
+.last-scan-info {
+    background: #f8f9fa;
+    padding: 8px 15px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    font-size: 0.9em;
+    color: #666;
+}
+
+.last-scan-info strong {
+    color: #333;
+}
+
+/* =============================================================================
+   CVE Detail Page
+   ============================================================================= */
+.cve-header {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.cve-header.severity-critical { border-left: 4px solid #dc3545; }
+.cve-header.severity-high { border-left: 4px solid #fd7e14; }
+.cve-header.severity-medium { border-left: 4px solid #ffc107; }
+.cve-header.severity-low { border-left: 4px solid #28a745; }
+.cve-header.severity-none { border-left: 4px solid #6c757d; }
+.cve-header.severity-na { border-left: 4px solid #adb5bd; }
+
+.cve-title {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+.cve-meta {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 15px;
+}
+
+.cve-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.cve-meta-item strong {
+    color: #666;
+}
+
+.cvss-score {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.cvss-score.cvss-critical { color: #dc3545; }
+.cvss-score.cvss-high { color: #fd7e14; }
+.cvss-score.cvss-medium { color: #ffc107; }
+.cvss-score.cvss-low { color: #28a745; }
+
+.cve-description {
+    background: #fff;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    line-height: 1.6;
+}
+
+.section-title {
+    font-size: 1.2em;
+    margin: 20px 0 10px 0;
+    padding-bottom: 5px;
+    border-bottom: 2px solid #24607E;
+}
+
+.software-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.software-list li {
+    padding: 8px 12px;
+    background: #f8f9fa;
+    margin-bottom: 5px;
+    border-radius: 3px;
+}
+
+.software-list li:hover {
+    background: #e9ecef;
+}
+
+.machines-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.machines-table th,
+.machines-table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.machines-table th {
+    background: #f8f9fa;
+    font-weight: bold;
+}
+
+.machines-table tr:hover {
+    background: #f8f9fa;
+}
+
+.machines-table a {
+    color: #24607E;
+}
+
+.external-link {
+    margin-top: 15px;
+}
+
+.external-link a {
+    color: #24607E;
+    text-decoration: none;
+}
+
+.external-link a:hover {
+    text-decoration: underline;
+}
+
+/* =============================================================================
+   Ajax CVE List (ajaxCVEList.php, ajaxMachineCVEList.php)
+   ============================================================================= */
+tr.severity-critical td:first-child { border-left: 3px solid #dc3545; }
+tr.severity-high td:first-child { border-left: 3px solid #fd7e14; }
+tr.severity-medium td:first-child { border-left: 3px solid #ffc107; }
+tr.severity-low td:first-child { border-left: 3px solid #28a745; }
+tr.severity-na td:first-child { border-left: 3px solid #adb5bd; }
+
+/* =============================================================================
+   Empty Message
+   ============================================================================= */
+.empty-message {
+    padding: 20px;
+    text-align: center;
+    color: #666;
+    background: #f8f9fa;
+    border-radius: 5px;
+}
+
+/* =============================================================================
+   Risk Score (machines list)
+   ============================================================================= */
+.risk-score {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 3px;
+    font-weight: bold;
+}
+
+.risk-critical {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.risk-high {
+    background-color: #fd7e14;
+    color: #fff;
+}
+
+.risk-medium {
+    background-color: #ffc107;
+    color: #333;
+}
+
+.risk-low {
+    background-color: #28a745;
+    color: #fff;
+}
+
+/* =============================================================================
+   Settings Page
+   ============================================================================= */
+.settings-section {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.settings-section h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+    color: #24607E;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group select {
+    width: 200px;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.form-group .help-text {
+    font-size: 0.85em;
+    color: #666;
+    margin-top: 3px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+.btn-primary {
+    background: #24607E;
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background: #1a4a61;
+}
+
+.btn-success {
+    background: #28a745;
+    color: #fff;
+}
+
+.btn-success:hover {
+    background: #218838;
+}
+
+.scan-history {
+    margin-top: 15px;
+}
+
+.scan-history table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.scan-history th,
+.scan-history td {
+    padding: 8px 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.scan-history th {
+    background: #f5f5f5;
+}
+
+.status-completed { color: #28a745; }
+.status-running { color: #ffc107; }
+.status-failed { color: #dc3545; }
+
+/* =============================================================================
+   Misc
+   ============================================================================= */
+.software-version {
+    color: #666;
+}
+
+.section-count {
+    font-weight: normal;
+    font-size: 0.9em;
+    color: #666;
+}
+
+.scan-button-wrapper {
+    margin-bottom: 10px;
+}

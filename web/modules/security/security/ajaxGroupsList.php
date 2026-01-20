@@ -1,0 +1,110 @@
+<?php
+/*
+ * (c) 2024-2025 Medulla, http://www.medulla-tech.io
+ *
+ * This file is part of MMC, http://www.medulla-tech.io
+ *
+ * MMC is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * any later version.
+ *
+ * MMC is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MMC; If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Security Module - Ajax Groups List
+ */
+
+require_once("modules/security/includes/xmlrpc.php");
+
+global $conf;
+$maxperpage = $conf["global"]["maxperpage"];
+
+// Get filter parameters
+$filter = isset($_GET["filter"]) ? $_GET["filter"] : "";
+$start = isset($_GET["start"]) ? intval($_GET["start"]) : 0;
+$userLogin = isset($_GET["user_login"]) ? $_GET["user_login"] : "";
+
+// Get data from backend (filtered by ShareGroup for this user)
+$result = xmlrpc_get_groups_summary($start, $maxperpage, $filter, $userLogin);
+$data = $result['data'];
+$count = $result['total'];
+
+// Prepare arrays for display
+$groupNames = array();
+$groupTypes = array();
+$machinesCounts = array();
+$maxScores = array();
+$criticalCounts = array();
+$highCounts = array();
+$mediumCounts = array();
+$lowCounts = array();
+$totalCounts = array();
+$params = array();
+
+foreach ($data as $row) {
+    $groupNames[] = $row['group_name'];
+    $groupTypes[] = _T($row['group_type'], 'security');
+    $machinesCounts[] = $row['machines_count'];
+
+    // Max CVSS score with color
+    $score = floatval($row['max_cvss']);
+    $scoreClass = 'low';
+    if ($score >= 9.0) $scoreClass = 'critical';
+    elseif ($score >= 7.0) $scoreClass = 'high';
+    elseif ($score >= 4.0) $scoreClass = 'medium';
+    $maxScores[] = '<span class="risk-score risk-' . $scoreClass . '">' . number_format($score, 1) . '</span>';
+
+    // Counts with badges
+    $criticalCounts[] = $row['critical'] > 0 ?
+        '<span class="badge badge-critical">' . $row['critical'] . '</span>' : '0';
+    $highCounts[] = $row['high'] > 0 ?
+        '<span class="badge badge-high">' . $row['high'] . '</span>' : '0';
+    $mediumCounts[] = $row['medium'] > 0 ?
+        '<span class="badge badge-medium">' . $row['medium'] . '</span>' : '0';
+    $lowCounts[] = $row['low'] > 0 ?
+        '<span class="badge badge-low">' . $row['low'] . '</span>' : '0';
+    $totalCounts[] = $row['total_cves'];
+
+    // Params for actions
+    $params[] = array(
+        'group_id' => $row['group_id'],
+        'group_name' => $row['group_name']
+    );
+}
+
+// Actions - view details for this group
+$detailAction = new ActionItem(_T("View Details", "security"), "groupDetail", "display", "", "security", "security");
+$scanAction = new ActionPopupItem(_T("Scan this group", "security"), "ajaxStartScanGroup", "scan", "", "security", "security");
+
+// Display the list
+if ($count > 0) {
+    $n = new OptimizedListInfos($groupNames, _T("Group", "security"));
+    $n->disableFirstColumnActionLink();
+    $n->addExtraInfo($groupTypes, _T("Type", "security"));
+    $n->addExtraInfo($machinesCounts, _T("Machines", "security"));
+    $n->addExtraInfo($maxScores, _T("Max CVSS", "security"));
+    $n->addExtraInfo($criticalCounts, _T("Critical", "security"));
+    $n->addExtraInfo($highCounts, _T("High", "security"));
+    $n->addExtraInfo($mediumCounts, _T("Medium", "security"));
+    $n->addExtraInfo($lowCounts, _T("Low", "security"));
+    $n->addExtraInfo($totalCounts, _T("Total CVEs", "security"));
+    $n->setItemCount($count);
+    $n->setNavBar(new AjaxNavBar($count, $filter));
+    $n->setParamInfo($params);
+    $n->addActionItem($detailAction);
+    $n->addActionItem($scanAction);
+    $n->start = 0;
+    $n->end = $count;
+    $n->display();
+} else {
+    echo '<div class="empty-message">';
+    echo '<p>' . _T("No groups found", "security") . '</p>';
+    echo '</div>';
+}
+?>

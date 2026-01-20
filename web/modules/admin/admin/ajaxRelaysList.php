@@ -41,6 +41,30 @@ if ($_SESSION["login"] == "root"){
   }
 }
 
+
+
+$actionlogrelay = array();
+$logmachineoff = new EmptyActionItem1(_T("Log Relay", "xmppmaster"),
+                                      "logview",
+                                      "log_off",
+                                      "xmppmaster",
+                                      "xmppmaster",
+                                      "xmppmaster");
+
+// Actions for each machines ajax call js toggleIframeAndSendParams to main.php
+// param obligatoire. 'jid'=>,'cn' => ,'os' =>"" peut etre , 'entity' =>"" peut etre
+$logmachineon = new ActionItemIframe( _T("Log Relay",
+                                      "xmppmaster"),  // title
+                                      "logview",        // action
+                                      "log_on",          // classcss icone
+                                      "machine",         // parametre string
+                                      "xmppmaster",      // module
+                                      "xmppmaster",      // submod
+                                      "iframeContainer", // id div container iframe
+                                      "logIframe",       // id de iframe logIframe
+                                      "logs_iframe"      // logs_iframe.php
+                                  );
+
 //$editremoteconfigurationempty = new EmptyActionItem1(_("Edit config files"),"listconffile", "configg","computers","xmppmaster", "xmppmaster");
 $editremoteconfigurationempty = new EmptyActionItem1(_("Edit config files"),"conffile", "configg","","admin", "admin");
 //$editremoteconfiguration = new ActionItem(_("Edit config files"),"listconffile","config","computers", "xmppmaster", "xmppmaster");
@@ -81,12 +105,15 @@ $raw = 0;
 $params = [];
 if($relays['total'] > 0){
 foreach($relays['datas']['hostname'] as $key=>$array){
-  $params[] = [
+   $params[] = [
     'id' => $relays['datas']['id'][$raw],
     'hostname' => $relays['datas']['hostname'][$raw],
     'enabled' => $relays['datas']['enabled'][$raw],
     'enabled_css' => $relays['datas']['enabled_css'][$raw],
     'jid'=> $relays['datas']['jid'][$raw],
+    'cn' => $relays['datas']['jid'][$raw], //explode('@', $relays['datas']['jid'][$raw])[0], // Extraction de la première partie du jid
+    'os' => "server Linux",
+    'entity' => "",
     'cluster_name' => $relays['datas']['cluster_name'][$raw],
     'cluster_description' => $relays['datas']['cluster_description'][$raw],
     'classutil' => $relays['datas']['classutil'][$raw],
@@ -106,6 +133,7 @@ foreach($relays['datas']['hostname'] as $key=>$array){
   $relays['datas']['ip_xmpp'][$raw] = '<span class="relay-clickable">'.$relays['datas']['ip_xmpp'][$raw].'</span>';
 
   if ($relays['datas']['enabled'][$raw]){
+    $actionlogrelay[] = $logmachineon;
     $configActions[] =$editremoteconfiguration;
     $consoleActions[] = $consoleaction;
     $reconfigurationActions[] = $reconfigureaction;
@@ -116,6 +144,7 @@ foreach($relays['datas']['hostname'] as $key=>$array){
     $unbanActions[] = $unbanAction;
   }
   else{
+    $actionlogrelay[]=$logmachineoff;
     $configActions[] =$editremoteconfigurationempty;
     $consoleActions[] = $consoleactionempty;
     $reconfigurationActions[] = $reconfigureemptyaction;
@@ -166,6 +195,7 @@ $n->addExtraInfo( $relays['datas']['ip_xmpp'], _T("Xmpp IP", "xmppmaster"));
 $n->setTableHeaderPadding(0);
 $n->setItemCount($relays['total']);
 $n->setNavBar(new AjaxNavBar($relays['total'], $filter, "updateSearchParamformRunning"));
+$n->addActionItemArray($actionlogrelay);
 $n->addActionItemArray($packagesAction);
 $n->addActionItemArray($reconfigurationActions);
 $n->addActionItemArray($switchActions);

@@ -34,8 +34,9 @@ function updateUserMail($uid, $mail) {
 
 // Sanitize and store selected provider in session
 function handleProviderSelection(): string {
-    if (!empty($_POST['selectedProvider'])) {
-        $provider = preg_replace('/[^a-zA-Z0-9._-]/', '', (string)$_POST['selectedProvider']);
+    // Check POST (form submission) or SESSION (direct URL with ?provider=)
+    if (!empty($_POST['selectedProvider']) || !empty($_SESSION['selectedProvider'])) {
+        $provider = preg_replace('/[^a-zA-Z0-9._-]/', '', (string)($_POST['selectedProvider'] ?? $_SESSION['selectedProvider']));
         $_SESSION['selectedProvider'] = $provider;
         return $provider;
     }

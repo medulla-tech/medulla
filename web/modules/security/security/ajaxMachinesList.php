@@ -1,0 +1,98 @@
+<?php
+/*
+ * (c) 2024-2025 Medulla, http://www.medulla-tech.io
+ *
+ * This file is part of MMC, http://www.medulla-tech.io
+ *
+ * MMC is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * any later version.
+ *
+ * MMC is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MMC; If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Security Module - Ajax Machines List
+ */
+
+require_once("modules/security/includes/xmlrpc.php");
+
+global $conf;
+$maxperpage = $conf["global"]["maxperpage"];
+
+// Get filter parameters
+$filter = isset($_GET["filter"]) ? $_GET["filter"] : "";
+$start = isset($_GET["start"]) ? intval($_GET["start"]) : 0;
+$location = isset($_GET["location"]) ? $_GET["location"] : "";
+
+// Get data from backend
+$result = xmlrpc_get_machines_summary($start, $maxperpage, $filter, $location);
+$data = $result['data'];
+$count = $result['total'];
+
+// Prepare arrays for display
+$hostnames = array();
+$riskScores = array();
+$criticalCounts = array();
+$highCounts = array();
+$mediumCounts = array();
+$totalCounts = array();
+$params = array();
+
+foreach ($data as $row) {
+    $hostnames[] = $row['hostname'];
+
+    // Risk score with color
+    $score = floatval($row['risk_score']);
+    $scoreClass = 'low';
+    if ($score >= 9.0) $scoreClass = 'critical';
+    elseif ($score >= 7.0) $scoreClass = 'high';
+    elseif ($score >= 4.0) $scoreClass = 'medium';
+    $riskScores[] = '<span class="risk-score risk-' . $scoreClass . '">' . number_format($score, 1) . '</span>';
+
+    // Counts with badges
+    $criticalCounts[] = $row['critical'] > 0 ?
+        '<span class="badge badge-critical">' . $row['critical'] . '</span>' : '0';
+    $highCounts[] = $row['high'] > 0 ?
+        '<span class="badge badge-high">' . $row['high'] . '</span>' : '0';
+    $mediumCounts[] = $row['medium'] > 0 ?
+        '<span class="badge badge-medium">' . $row['medium'] . '</span>' : '0';
+    $totalCounts[] = $row['total_cves'];
+
+    // Params for actions
+    $params[] = array('id_glpi' => $row['id_glpi'], 'hostname' => $row['hostname']);
+}
+
+// Actions
+$detailAction = new ActionItem(_T("View CVEs", "security"), "machineDetail", "display", "", "security", "security");
+$scanAction = new ActionPopupItem(_T("Scan Machine", "security"), "ajaxScanMachine", "scan", "", "security", "security");
+$scanAction->setWidth(500);
+
+// Display the list
+if ($count > 0) {
+    $n = new OptimizedListInfos($hostnames, _T("Machine", "security"));
+    $n->disableFirstColumnActionLink();
+    $n->addExtraInfo($riskScores, _T("Risk Score", "security"));
+    $n->addExtraInfo($criticalCounts, _T("Critical", "security"));
+    $n->addExtraInfo($highCounts, _T("High", "security"));
+    $n->addExtraInfo($mediumCounts, _T("Medium", "security"));
+    $n->addExtraInfo($totalCounts, _T("Total", "security"));
+    $n->setItemCount($count);
+    $n->setNavBar(new AjaxNavBar($count, $filter));
+    $n->setParamInfo($params);
+    $n->addActionItem($detailAction);
+    $n->addActionItem($scanAction);
+    $n->start = 0;
+    $n->end = $count;
+    $n->display();
+} else {
+    echo '<div class="empty-message">';
+    echo '<p>' . _T("No machines found", "security") . '</p>';
+    echo '</div>';
+}
+?>
