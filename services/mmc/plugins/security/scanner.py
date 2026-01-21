@@ -69,9 +69,14 @@ setup_logger('INFO')
 
 
 def get_glpi_db_url():
-    """Read GLPI database configuration and return SQLAlchemy URL"""
+    """Read GLPI database configuration and return SQLAlchemy URL
+
+    Reads /etc/mmc/plugins/glpi.ini first, then overrides with
+    /etc/mmc/plugins/glpi.ini.local if it exists.
+    """
     config = configparser.ConfigParser()
-    config.read('/etc/mmc/plugins/glpi.ini')
+    # Read base config, then local overrides (local values take precedence)
+    config.read(['/etc/mmc/plugins/glpi.ini', '/etc/mmc/plugins/glpi.ini.local'])
 
     dbhost = config.get('main', 'dbhost', fallback='localhost')
     dbport = config.get('main', 'dbport', fallback='3306')
@@ -196,18 +201,44 @@ class CVECentralClient:
             'Content-Type': 'application/json'
         }
 
-    def submit_softwares(self, software_list: List[Dict]) -> Dict:
-        """Submit software list to central API"""
+    def submit_softwares(self, software_list: List[Dict], batch_size: int = 4000) -> Dict:
+        """Submit software list to central API in batches
+
+        Args:
+            software_list: List of software dicts with name/version
+            batch_size: Max items per request (CVE Central limit is 5000)
+        """
+        total_added = 0
+        total_received = 0
+
         try:
             url = f"{self.base_url}/api/softwares"
-            response = self.session.post(
-                url,
-                headers=self._get_headers(),
-                json={'softwares': software_list},
-                timeout=60
-            )
-            response.raise_for_status()
-            return response.json()
+
+            # Split into batches
+            for i in range(0, len(software_list), batch_size):
+                batch = software_list[i:i + batch_size]
+                batch_num = (i // batch_size) + 1
+                total_batches = (len(software_list) + batch_size - 1) // batch_size
+
+                logger.debug(f"Submitting batch {batch_num}/{total_batches} ({len(batch)} softwares)")
+
+                response = self.session.post(
+                    url,
+                    headers=self._get_headers(),
+                    json={'softwares': batch},
+                    timeout=120
+                )
+                response.raise_for_status()
+                result = response.json()
+
+                total_added += result.get('added', 0)
+                total_received += result.get('received', 0)
+
+            return {
+                'success': True,
+                'added': total_added,
+                'received': total_received
+            }
         except requests.exceptions.RequestException as e:
             logger.error(f"Error submitting software to CVE Central: {e}")
             return {'success': False, 'error': str(e)}
@@ -239,26 +270,50 @@ class CVECentralClient:
             logger.error(f"Error triggering CVE scan: {e}")
             return {'success': False, 'error': str(e)}
 
-    def get_cves(self, software_list: List[Dict]) -> Dict:
-        """Get CVEs for a list of software.
+    def get_cves(self, software_list: List[Dict], batch_size: int = 4000) -> Dict:
+        """Get CVEs for a list of software in batches.
 
         Filtering (min_cvss, max_age_days) is managed server-side by CVE Central.
 
         Args:
             software_list: List of software dicts with name/version
+            batch_size: Max items per request (CVE Central limit is 5000)
         """
+        all_cves = []
+        seen_cve_ids = set()
+
         try:
             url = f"{self.base_url}/api/cves"
-            payload = {'softwares': software_list}
 
-            response = self.session.post(
-                url,
-                headers=self._get_headers(),
-                json=payload,
-                timeout=120
-            )
-            response.raise_for_status()
-            return response.json()
+            # Split into batches
+            for i in range(0, len(software_list), batch_size):
+                batch = software_list[i:i + batch_size]
+                batch_num = (i // batch_size) + 1
+                total_batches = (len(software_list) + batch_size - 1) // batch_size
+
+                logger.debug(f"Getting CVEs batch {batch_num}/{total_batches} ({len(batch)} softwares)")
+
+                response = self.session.post(
+                    url,
+                    headers=self._get_headers(),
+                    json={'softwares': batch},
+                    timeout=120
+                )
+                response.raise_for_status()
+                result = response.json()
+
+                # Deduplicate CVEs across batches
+                for cve in result.get('cves', []):
+                    cve_id = cve.get('cve_id')
+                    if cve_id and cve_id not in seen_cve_ids:
+                        seen_cve_ids.add(cve_id)
+                        all_cves.append(cve)
+
+            return {
+                'success': True,
+                'cves': all_cves,
+                'count': len(all_cves)
+            }
         except requests.exceptions.RequestException as e:
             logger.error(f"Error getting CVEs from CVE Central: {e}")
             return {'success': False, 'error': str(e)}

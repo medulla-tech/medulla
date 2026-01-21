@@ -66,13 +66,16 @@ CREATE TABLE IF NOT EXISTS `cves` (
 -- ----------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `software_cves` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
-    `software_name` varchar(255) NOT NULL,
-    `software_version` varchar(100) NOT NULL,
+    `software_name` varchar(255) NOT NULL COMMENT 'Nom normalise (ex: Python)',
+    `software_version` varchar(100) NOT NULL COMMENT 'Version normalisee (ex: 3.11.9)',
+    `glpi_software_name` varchar(255) DEFAULT NULL COMMENT 'Nom original GLPI pour jointure (ex: Python 3.11.9 (64-bit))',
+    `target_platform` varchar(50) DEFAULT NULL COMMENT 'Plateforme cible depuis CPE (android, macos, ios, windows, etc.)',
     `cve_id` int(11) NOT NULL COMMENT 'Reference vers cves.id',
     `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
     UNIQUE KEY `uk_software_cve` (`software_name`, `software_version`, `cve_id`),
     KEY `idx_software` (`software_name`, `software_version`),
+    KEY `idx_glpi_software` (`glpi_software_name`),
     KEY `idx_cve_id` (`cve_id`),
     CONSTRAINT `fk_software_cves_cve` FOREIGN KEY (`cve_id`) REFERENCES `cves` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Lien logiciel vers CVE';
