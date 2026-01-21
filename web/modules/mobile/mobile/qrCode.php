@@ -51,12 +51,25 @@ function ensureApkQrCache($downloadUrl, $version) {
 }
 
 if ($apkMode) {
-    // build url
     $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
-    $host = $_SERVER['SERVER_NAME'] ?? 'localhost';
+    
+    $host = null;
+    if (!empty($_SERVER['HTTP_X_FORWARDED_HOST'])) {
+        $host = $_SERVER['HTTP_X_FORWARDED_HOST'];
+    } elseif (!empty($_SERVER['HTTP_REFERER'])) {
+        $parsed = parse_url($_SERVER['HTTP_REFERER']);
+        if (isset($parsed['host'])) {
+            $host = $parsed['host'];
+        }
+    }
+    
+    if (!$host) {
+        $host = $_SERVER['HTTP_HOST'] ?? $_SERVER['SERVER_NAME'] ?? 'localhost';
+    }
+    
     $downloadUrl = $scheme . '://' . $host . '/downloads/android/hmdm-latest.apk';
     // version qr cache
-    $APK_QR_VERSION = 1;
+    $APK_QR_VERSION = 2;
 
     $qrCodeUrl = ensureApkQrCache($downloadUrl, $APK_QR_VERSION);
     $pageTitle = _T("QR Code", "mobile") . ": hmdm-latest.apk";
