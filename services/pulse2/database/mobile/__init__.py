@@ -775,7 +775,6 @@ class MobileDatabase(DatabaseHelper):
             if raw is None:
                 return []
 
-            # Depending on API shape, items may be top-level or under 'data'
             items = raw if isinstance(raw, list) else raw.get('data') or raw.get('configurations') or []
             configs = []
             for c in items:
@@ -813,7 +812,7 @@ class MobileDatabase(DatabaseHelper):
             items = raw if isinstance(raw, list) else raw.get('data') or raw.get('files') or []
             files = []
             for f in items:
-                # Protect against huge integers: convert ms -> seconds to avoid XML-RPC 32-bit overflow
+                # xml overflow
                 upload_ms = f.get('uploadTime') or f.get('upload_time') or f.get('upload')
                 upload_sec = None
                 if isinstance(upload_ms, (int, float)):
@@ -826,15 +825,24 @@ class MobileDatabase(DatabaseHelper):
                 if isinstance(raw_size, (int, float)):
                     size_mb = round(raw_size / (1024 * 1024), 1)
 
+                # empty to none
+                used_by_apps = f.get('usedByApps')
+                if used_by_apps == '':
+                    used_by_apps = None
+                
                 file_entry = {
                     'id': f.get('id'),
                     'filePath': f.get('filePath') or f.get('path') or f.get('url') or '',
+                    'url': f.get('url') or '',
                     'description': f.get('description') or '',
                     'size': size_mb,
                     'uploadTime': upload_sec,
                     'devicePath': f.get('devicePath') or f.get('device_path') or '',
                     'external': bool(f.get('external')),
-                    'replaceVariables': bool(f.get('replaceVariables'))
+                    'replaceVariables': bool(f.get('replaceVariables')),
+                    'usedByConfigurations': f.get('usedByConfigurations') if f.get('usedByConfigurations') else [],
+                    'usedByApps': used_by_apps,
+                    'usedByIcons': f.get('usedByIcons') if f.get('usedByIcons') else []
                 }
                 files.append(file_entry)
             return files
@@ -909,22 +917,142 @@ class MobileDatabase(DatabaseHelper):
         Note: Server may return 500 even if file is successfully uploaded.
         """
         update_url = f"{self.BASE_URL}/private/web-ui-files/update"
-        headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
+        headers = {
+            "Authorization": f"Bearer {token}",
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+        }
         resp = None
         try:
+            logger.info(f"Sending update request to {update_url}")
+            logger.info(f"Headers: {dict((k, v[:20] + '...' if k == 'Authorization' else v) for k, v in headers.items())}")
+            logger.info(f"Body: {json.dumps(body)}")
             resp = requests.post(update_url, headers=headers, json=body)
             logger.info(f"Update response status: {resp.status_code}")
             logger.info(f"Update response body: {resp.text}")
             if resp.status_code == 500:
-                # Server returns 500 but file may already be on server from raw upload
-                logger.warning(f"Update endpoint returned 500, but file may be uploaded. Continuing...")
-                # Return a basic response based on the body we sent
-                return {"raw": {"filePath": body.get("filePath"), "tmpPath": body.get("tmpPath")}}
+                logger.warning(f"Update endpoint returned 500, attempting to find uploaded file...")
+                try:
+                    files_url = f"{self.BASE_URL}/private/web-ui-files/search"
+                    files_resp = requests.get(files_url, headers=headers)
+                    files_resp.raise_for_status()
+                    files_data = files_resp.json()
+                    files_list = files_data if isinstance(files_data, list) else files_data.get('data', [])
+                    
+                    target_path = body.get("filePath")
+                    for file_item in files_list:
+                        if file_item.get("filePath") == target_path:
+                            logger.info(f"Found uploaded file after 500: {file_item.get('id')}")
+                            return {"raw": file_item}
+                    
+                    logger.warning(f"Could not find file {target_path} after 500, returning basic response")
+                    return {"raw": {"filePath": body.get("filePath"), "tmpPath": body.get("tmpPath")}}
+                except Exception as search_err:
+                    logger.error(f"Error searching for file after 500: {search_err}")
+                    return {"raw": {"filePath": body.get("filePath"), "tmpPath": body.get("tmpPath")}}
             resp.raise_for_status()
-            return {"raw": resp.json() if resp.text else {}}
+            json_resp = resp.json() if resp.text else {}
+            if json_resp.get("status") == "ERROR":
+                error_msg = json_resp.get("message", "Unknown error")
+                logger.warning(f"HMDM returned error: {error_msg}")
+                return {"error": True, "message": error_msg, "raw": json_resp}
+            return {"raw": json_resp}
         except Exception as e:
             logger.error(f"Error in update/commit: {e}", exc_info=True)
             return {"error": True, "message": str(e), "raw_text": resp.text if resp else None}
+
+    def updateHmdmFile(self, file_data):
+        """
+        Update a file in HMDM.
+        
+        :param file_data: Dict with file data to update (must include 'id')
+        :return: Dict with status and result
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logger.error("Impossible d'authentifier pour mettre à jour le fichier.")
+            return {"status": "ERROR", "message": "auth_failed"}
+        
+        file_id = file_data.get('id')
+        if not file_id:
+            logger.error("File ID is required for update")
+            return {"status": "ERROR", "message": "missing_file_id"}
+        
+        # Get current file data to merge with updates
+        files = self.getHmdmFiles()
+        current_file = None
+        for f in files:
+            if str(f.get('id')) == str(file_id):
+                current_file = f
+                break
+        
+        if not current_file:
+            logger.error(f"File {file_id} not found")
+            return {"status": "ERROR", "message": "file_not_found"}
+        
+        upload_time_ms = current_file.get('uploadTime')
+        if upload_time_ms:
+            if upload_time_ms < 10000000000:  # If it's in seconds
+                upload_time_ms = upload_time_ms * 1000
+        else:
+            import time
+            upload_time_ms = int(time.time() * 1000)
+        
+        size_mb = current_file.get('size')
+        size_bytes = int(size_mb * 1024 * 1024) if size_mb else 0
+        
+        description = file_data.get('description', current_file.get('description'))
+        if description == '':
+            description = None
+            
+        devicePath = file_data.get('devicePath', current_file.get('devicePath'))
+        if devicePath == '':
+            devicePath = None
+        
+        is_external = file_data.get('external', current_file.get('external', False))
+        new_file_path = file_data.get('filePath', current_file.get('filePath', ''))
+        
+        if is_external:
+            external_url = new_file_path if new_file_path else current_file.get('externalUrl', '')
+            file_path = None
+            url = None
+            copyLinkTooltip = f"Copy link: {external_url}" if external_url else ""
+        else:
+            external_url = None
+            file_path = new_file_path
+            url = current_file.get('url', '')
+            copyLinkTooltip = f"Copy link: {url}" if url else ""
+        
+        body = {
+            "id": int(file_id),
+            "filePath": file_path,
+            "description": description,
+            "url": url,
+            "size": size_bytes,
+            "uploadTime": upload_time_ms if not is_external else 0,
+            "devicePath": devicePath,
+            "external": is_external,
+            "replaceVariables": file_data.get('replaceVariables', current_file.get('replaceVariables', False)),
+            "usedByApps": current_file.get('usedByApps'),
+            "usedByIcons": current_file.get('usedByIcons', []),
+            "usedByConfigurations": current_file.get('usedByConfigurations', []),
+            "removeButtonTooltip": current_file.get('removeButtonTooltip', ''),
+            "copyLinkTooltip": copyLinkTooltip
+        }
+        
+        if is_external and external_url:
+            body["externalUrl"] = external_url
+        
+        logger.info(f"UPDATING FILE WITH BODY: {json.dumps(body, indent=2)}")
+        logger.info(f"Current file data: {json.dumps(current_file, indent=2)}")
+        logger.info(f"Incoming update data: {json.dumps(file_data, indent=2)}")
+        
+        result = self.hmdmUploadFile(body, hmtoken)
+        if result.get("error"):
+            return {"status": "ERROR", "message": result.get("message", "Unknown error")}
+        
+        sanitized_data = self._sanitize_for_xmlrpc(result.get("raw", {}))
+        return {"status": "OK", "data": sanitized_data}
 
     def hmdmFileConfiguration(self, file_id, config_ids, token):
         """
@@ -973,7 +1101,7 @@ class MobileDatabase(DatabaseHelper):
             logger.error("Impossible d'authentifier pour ajouter le fichier.")
             return {"error": True, "message": "Authentication failed"}
 
-        # Main flow: raw upload (if file), then commit, then optional configuration linking
+        # work flow: raw upload (if file), then commit, then optional configuration linking
         raw_commit = None
         if uploaded_file_path and uploaded_file_name:
             logger.info(f"Starting file upload: {uploaded_file_name}")
@@ -982,36 +1110,45 @@ class MobileDatabase(DatabaseHelper):
                 return {"error": True, "message": f"Raw upload failed: {raw.get('message')}", "raw_text": raw.get("raw_text")}
             tmp_path = raw.get("serverPath")
             chosen_file_path = file_name or raw.get("name") or uploaded_file_name
-            # Build body matching web app format
             body = {
                 "tmpPath": tmp_path,
                 "filePath": chosen_file_path,
-                "devicePath": path_on_device or "",
-                "description": description or "",
-                "replaceVariables": bool(variable_content),
             }
+            if path_on_device:
+                body["devicePath"] = path_on_device
+            if description:
+                body["description"] = description
+            if variable_content:
+                body["replaceVariables"] = True
             logger.info(f"Committing file with body: {json.dumps(body, indent=2)}")
             commit = self.hmdmUploadFile(body, hmtoken)
             if commit.get("error"):
-                return {"error": True, "message": f"Commit failed: {commit.get('message')}", "raw_text": commit.get("raw_text")}
+                error_msg = commit.get('message', 'Unknown error')
+                logger.error(f"Commit failed: {error_msg}")
+                return {"status": "ERROR", "message": error_msg}
             raw_commit = commit.get("raw")
 
         elif external_url:
             logger.info(f"Adding external file from URL: {external_url}")
             chosen_file_path = file_name or (external_url.split('/')[-1] if external_url else None)
-            # Build body for external URL matching web app format
+            # external url
             body = {
                 "externalUrl": external_url,
                 "filePath": chosen_file_path,
-                "devicePath": path_on_device or "",
-                "description": description or "",
-                "replaceVariables": bool(variable_content),
                 "external": True,
             }
+            if path_on_device:
+                body["devicePath"] = path_on_device
+            if description:
+                body["description"] = description
+            if variable_content:
+                body["replaceVariables"] = True
             logger.info(f"External file body: {json.dumps(body, indent=2)}")
             commit = self.hmdmUploadFile(body, hmtoken)
             if commit.get("error"):
-                return {"error": True, "message": f"External commit failed: {commit.get('message')}", "raw_text": commit.get("raw_text")}
+                error_msg = commit.get('message', 'Unknown error')
+                logger.error(f"External commit failed: {error_msg}")
+                return {"status": "ERROR", "message": error_msg}
             raw_commit = commit.get("raw")
 
         else:
@@ -1054,34 +1191,130 @@ class MobileDatabase(DatabaseHelper):
             "replaceVariables": bool(f.get("replaceVariables")),
         }
 
-    def deleteFileById(self, file_id: int = None, filePath: str = None):
+    def deleteFileById(self, file_data: dict = None, file_id: int = None, filePath: str = None):
         """
-        Delete a file in HMDM by id or filePath. Returns True on success.
+        Delete a file in HMDM. Can accept full file data dict or just id/filePath.
+        Returns dict with status and message.
         """
         hmtoken = self.authenticate()
         if hmtoken is None:
             logging.getLogger().error("Impossible d'authentifier pour supprimer le fichier.")
-            return False
+            return {"status": "ERROR", "message": "auth_failed"}
 
         url = f"{self.BASE_URL}/private/web-ui-files/remove"
-        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {hmtoken}",
+            "Accept": "application/json"
+        }
 
-        body = {}
-        if file_id is not None:
-            body['id'] = file_id
-        if filePath is not None:
-            body['filePath'] = filePath
-        if not body:
-            logging.getLogger().error("No file id or filePath provided for deletion.")
-            return False
+        if file_data:
+            body = dict(file_data)  # full copy
+            if body.get('usedByApps') == '':
+                body['usedByApps'] = None
+        else:
+            body = {}
+            if file_id is not None:
+                body['id'] = file_id
+            if filePath is not None:
+                body['filePath'] = filePath
+            if not body:
+                logging.getLogger().error("No file data, id or filePath provided for deletion.")
+                return {"status": "ERROR", "message": "missing_params"}
 
         try:
+            logging.getLogger().info(f"Deleting file with payload: {json.dumps(body, indent=2)}")
             resp = requests.post(url, headers=headers, json=body)
+            logging.getLogger().info(f"Delete response status: {resp.status_code}")
+            logging.getLogger().info(f"Delete response body: {resp.text}")
+            
             resp.raise_for_status()
-            return True
+            json_resp = resp.json() if resp.text else {}
+            
+            if json_resp.get("status") == "OK":
+                logging.getLogger().info("File deleted successfully")
+                return {"status": "OK", "message": ""}
+            else:
+                error_msg = json_resp.get("message", "Unknown error")
+                logging.getLogger().error(f"HMDM returned error: {error_msg}")
+                return {"status": "ERROR", "message": error_msg}
         except Exception as e:
             logging.getLogger().error(f"Error deleting file: {e}")
-            return False
+            return {"status": "ERROR", "message": str(e)}
+
+    def assignFileToConfigurations(self, file_id, configuration_ids):
+        """
+        Assign a file to configurations in HMDM.
+        
+        :param file_id: File ID
+        :param configuration_ids: List of configuration IDs to assign (all others will be unassigned)
+        :return: Dict with status and message
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Impossible d'authentifier pour assigner les configurations.")
+            return {"status": "ERROR", "message": "auth_failed"}
+        
+        # Get all configurations to build the full payload
+        all_configs = self.getHmdmConfigurations()
+        if not all_configs:
+            logging.getLogger().error("Could not fetch configurations list")
+            return {"status": "ERROR", "message": "failed_to_fetch_configs"}
+        
+        # Build the payload with all configurations
+        config_url = f"{self.BASE_URL}/private/web-ui-files/configurations"
+        headers = {
+            "Authorization": f"Bearer {hmtoken}",
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+        }
+        
+        selected_ids = set(int(cid) for cid in (configuration_ids if configuration_ids else []))
+        configurations_payload = []
+        
+        for cfg in all_configs:
+            cfg_id = cfg.get('id')
+            if cfg_id is None:
+                continue
+            
+            is_selected = int(cfg_id) in selected_ids
+            configurations_payload.append({
+                "id": None,
+                "customerId": 1,
+                "configurationId": int(cfg_id),
+                "configurationName": cfg.get('name', ''),
+                "fileId": int(file_id),
+                "fileName": None,
+                "upload": is_selected,
+                "remove": False,
+                "notify": is_selected,
+                "common": False
+            })
+        
+        body = {
+            "fileId": int(file_id),
+            "configurations": configurations_payload
+        }
+        
+        try:
+            logging.getLogger().info(f"Assigning file {file_id} to configurations: {json.dumps(body, indent=2)}")
+            resp = requests.post(config_url, headers=headers, json=body)
+            logging.getLogger().info(f"Response status: {resp.status_code}")
+            logging.getLogger().info(f"Response body: {resp.text}")
+            
+            resp.raise_for_status()
+            json_resp = resp.json() if resp.text else {}
+            
+            if json_resp.get("status") == "OK" or resp.status_code == 200:
+                logging.getLogger().info("Configurations assigned successfully")
+                return {"status": "OK", "message": ""}
+            else:
+                error_msg = json_resp.get("message", "Unknown error")
+                logging.getLogger().error(f"HMDM returned error: {error_msg}")
+                return {"status": "ERROR", "message": error_msg}
+        except Exception as e:
+            logging.getLogger().error(f"Error assigning configurations: {e}")
+            return {"status": "ERROR", "message": str(e)}
 
     def deleteConfigurationById(self, config_id: int):
         """

@@ -63,7 +63,14 @@ if (isset($_POST['bconfirm'])) {
                 header("Location: " . urlStrRedirect("mobile/mobile/files"));
                 exit;
             } else {
-                $errorMsg = is_array($result) && isset($result['message']) ? $result['message'] : _T("Failed to add file", "mobile");
+                $errorMsg = _T("Failed to add file", "mobile");
+                if (is_array($result) && isset($result['message'])) {
+                    if ($result['message'] === 'error.duplicate.file') {
+                        $errorMsg = _T("A file with the same name already exists", "mobile");
+                    } else {
+                        $errorMsg = $result['message'];
+                    }
+                }
                 new NotifyWidgetFailure($errorMsg);
             }
         }
@@ -86,7 +93,14 @@ if (isset($_POST['bconfirm'])) {
                 header("Location: " . urlStrRedirect("mobile/mobile/files"));
                 exit;
             } else {
-                $errorMsg = is_array($result) && isset($result['message']) ? $result['message'] : _T("Failed to add file", "mobile");
+                $errorMsg = _T("Failed to add file", "mobile");
+                if (is_array($result) && isset($result['message'])) {
+                    if ($result['message'] === 'error.duplicate.file') {
+                        $errorMsg = _T("A file with the same name already exists", "mobile");
+                    } else {
+                        $errorMsg = $result['message'];
+                    }
+                }
                 new NotifyWidgetFailure($errorMsg);
             }
         }
