@@ -2,6 +2,9 @@
 function xmlrpc_add_hmdm_device($name, $configuration_id, $description="", $groups=null, $imei="", $phone="", $device_id=null){
     return xmlCall("mobile.addHmdmDevice", array($name, $configuration_id, $description, $groups, $imei, $phone, $device_id));
 }
+function xmlrpc_update_hmdm_device($device_data){
+    return xmlCall("mobile.updateHmdmDevice", array($device_data));
+}
 function xmlrpc_get_hmdm_devices(){
     return xmlCall("mobile.getHmdmDevices", array());
 }
