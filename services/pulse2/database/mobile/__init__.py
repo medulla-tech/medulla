@@ -240,6 +240,80 @@ class MobileDatabase(DatabaseHelper):
             logging.getLogger().error(f"Error creating device '{name}': {e}")
             return None
     
+    def updateHmdmDevice(self, device_data):
+        """
+        Update a device in HMDM.
+        
+        :param device_data: Dict with device data to update (must include 'id')
+        :return: Response from HMDM or None on error
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logger.error("Unable to authenticate for device update.")
+            return None
+        
+        device_id = device_data.get('id')
+        if not device_id:
+            logger.error("Device ID is required for update")
+            return None
+        
+        # current data
+        devices = self.getHmdmDevices()
+        current_device = None
+        for d in devices:
+            if str(d.get('id')) == str(device_id):
+                current_device = d
+                break
+        
+        if not current_device:
+            logger.error(f"Device {device_id} not found")
+            return None
+        
+        # current and updated
+        update_payload = {
+            "id": int(device_id),
+            "number": device_data.get('number', current_device.get('number', '')),
+            "configurationId": int(device_data.get('configurationId', current_device.get('configurationId', 1)))
+        }
+        
+        # optional
+        description = device_data.get('description', current_device.get('description'))
+        if description:
+            update_payload['description'] = description
+        
+        imei = device_data.get('imei', current_device.get('imei'))
+        if imei:
+            update_payload['imei'] = imei
+        
+        phone = device_data.get('phone', current_device.get('phone'))
+        if phone:
+            update_payload['phone'] = phone
+        
+        if 'groups' in device_data:
+            logger.info(f"Groups in device_data: {device_data['groups']}")
+            update_payload['groups'] = [{"id": int(g)} for g in device_data['groups'] if g]
+        elif current_device.get('groups'):
+            logger.info("Using current device groups (groups not in device_data)")
+            update_payload['groups'] = current_device.get('groups')
+        
+        url = f"{self.BASE_URL}/private/devices"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+        
+        logger.info(f"Updating device with payload: {json.dumps(update_payload, indent=2)}")
+        
+        try:
+            resp = requests.put(url, json=update_payload, headers=headers)
+            logger.info(f"Device update HTTP status: {resp.status_code}")
+            logger.info(f"Device update response: {resp.text}")
+            resp.raise_for_status()
+            
+            resp_json = resp.json()
+            logger.info(f"Device '{update_payload['number']}' updated successfully.")
+            return resp_json
+        except Exception as e:
+            logger.error(f"Error updating device: {e}")
+            return None
+    
     # HMDM API authentication
     def hash_password(self, password: str)-> str:
         """

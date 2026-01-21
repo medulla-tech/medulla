@@ -5,6 +5,25 @@ require("localSidebar.php");
 require_once("modules/imaging/includes/class_form.php");
 require_once("modules/mobile/includes/xmlrpc.php");
 
+$deviceId = isset($_GET['id']) ? $_GET['id'] : '';
+$devices = xmlrpc_get_hmdm_devices();
+if (!is_array($devices)) { $devices = []; }
+
+$device = null;
+foreach ($devices as $d) {
+    if ((string)($d['id'] ?? '') === (string)$deviceId) { 
+        $device = $d; 
+        break; 
+    }
+}
+
+if (!$device) {
+    new NotifyWidgetFailure(_T("Device not found", "mobile"));
+    header("Location: " . urlStrRedirect("mobile/mobile/index"));
+    exit;
+}
+
+// Fetch configurations and groups
 $configurations = [];
 $groups = [];
 try {
@@ -27,21 +46,17 @@ try {
     $groups = [];
 }
 
-$errors = [];
-$values = [
-    'add-phone' => '',
-    'desc-zone' => '',
-    'configuration_id' => '',
-    'groups' => [],
-    'imei' => '',
-    'phone' => '',
-];
-
-// groups
 if (isset($_POST['selected_groups'])) {
     $selected_groups = unserialize(base64_decode($_POST['selected_groups']));
 } else {
     $selected_groups = [];
+    foreach ($device['groups'] ?? [] as $grp) {
+        if (isset($grp['id'])) {
+            $groupId = (string)$grp['id'];
+            $groupName = $grp['name'] ?? '';
+            $selected_groups[$groupId] = $groupName;
+        }
+    }
 }
 
 if (isset($_POST['available_groups'])) {
@@ -50,7 +65,9 @@ if (isset($_POST['available_groups'])) {
     $available_groups = [];
     foreach ($groups as $group) {
         $groupId = (string)$group['id'];
-        $available_groups[$groupId] = $group['name'];
+        if (!isset($selected_groups[$groupId])) {
+            $available_groups[$groupId] = $group['name'];
+        }
     }
 }
 
@@ -72,91 +89,48 @@ if (isset($_POST['baddgroup_x'])) {
             }
         }
     }
-}
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['test'])) {
-    $values['add-phone'] = trim($_POST['add-phone'] ?? '');
-    $values['desc-zone'] = trim($_POST['desc-zone'] ?? '');
-    $values['configuration_id'] = $_POST['configuration_id'] ?? '';
-    $values['groups'] = array_keys($selected_groups);
-    $values['imei'] = trim($_POST['imei'] ?? '');
-    $values['phone'] = trim($_POST['phone'] ?? '');
-
-    // validation
-    if ($values['add-phone'] === '') {
-        $errors['add-phone'] = _T("The device name is required", "mobile");
-    } elseif (!preg_match('/^[a-zA-Z0-9\s]+$/', $values['add-phone'])) {
-        $errors['add-phone'] = _T("The device name contains invalid characters", "mobile");
-    }
-
-    if ($values['configuration_id'] === '') {
-        $errors['configuration_id'] = _T("Configuration is required", "mobile");
-    }
-
-    if (empty($errors)) {
-        $groups_to_send = !empty($values['groups']) ? $values['groups'] : null;
-        $result = xmlrpc_add_hmdm_device(
-            $values['add-phone'],
-            $values['configuration_id'],
-            $values['desc-zone'],
-            $groups_to_send,
-            $values['imei'],
-            $values['phone']
-        );
+} elseif (isset($_POST['bconfirm'])) {
+    $updateData = array(
+        'id' => $deviceId,
+        'number' => $_POST['device_name'] ?? $device['number'],
+        'description' => $_POST['description'] ?? '',
+        'configurationId' => $_POST['configuration_id'] ?? $device['configurationId'],
+        'groups' => array_keys($selected_groups)
+    );
         
-        if ($result && isset($result['status']) && $result['status'] === 'OK') {
-            new NotifyWidgetSuccess(sprintf(_T("Device '%s' successfully created", "mobile"), $values['add-phone']));
-            header("Location: /mmc/main.php?module=mobile&submod=mobile&action=index");
-            exit;
-        } else {
-            $error_msg = isset($result['message']) ? $result['message'] : _T('Unknown error occurred', 'mobile');
-            new NotifyWidgetFailure(sprintf(_T("Failed to create device: %s", "mobile"), $error_msg));
-        }
+    $result = xmlrpc_update_hmdm_device($updateData);
+    if ($result) {
+        new NotifyWidgetSuccess(_T("Changes saved successfully", "mobile"));
     } else {
-        foreach ($errors as $field => $error) {
-            new NotifyWidgetFailure($error);
-        }
+        new NotifyWidgetFailure(_T("Failed to save changes", "mobile"));
     }
+    header("Location: " . urlStrRedirect("mobile/mobile/index"));
+    exit;
 }
 
-$p = new PageGenerator(_T("Add device", 'mobile'));
+$p = new PageGenerator(_T("Edit Device", "mobile"));
 $p->setSideMenu($sidemenu);
 $p->display();
+
+$deviceName = $device['number'] ?? '';
+$description = $device['description'] ?? '';
+$configurationId = $device['configurationId'] ?? '';
+$imei = $device['imei'] ?? '';
+$phone = $device['phone'] ?? '';
 
 ?>
 <form action="<?php echo $_SERVER["REQUEST_URI"]; ?>" method="post">
 <?php
 
-$formAddDevice = new Form();
-$sep = new SepTpl();
+$f = new ValidatingForm();
+$f->push(new Table());
 
-$formAddDevice->push(new Table());
+$f->add(new TrFormElement(_T("Device's name", "mobile"), new InputTpl("device_name")), array("value" => $deviceName));
 
-$formAddDevice->add(
-    new TrFormElement(
-        _T("Device's name", 'mobile') . "*",
-        new InputTpl('add-phone', '/^[a-zA-Z0-9\s]+$/', $values['add-phone'])
-    ),
-    array(
-        "value" => $values['add-phone'],
-        "placeholder" => _T("Enter device name", "mobile"),
-        "required" => true
-    )
-);
+$f->add(new TrFormElement(_T("Description", "mobile"), new TextareaTpl("description")), array("value" => $description));
 
-$formAddDevice->add(
-    new TrFormElement(
-        _T('Description', 'mobile'),
-        new TextareaTpl('desc-zone', $values['desc-zone'])
-    ),
-    array(
-        "value" => $values['desc-zone'],
-        "placeholder" => _T("Enter description", "mobile")
-    )
-);
-
-$config_names = [''];
-$config_ids = [''];
+$config_names = [];
+$config_ids = [];
 if ($configurations && is_array($configurations)) {
     foreach ($configurations as $config) {
         $config_names[] = $config['name'];
@@ -166,19 +140,11 @@ if ($configurations && is_array($configurations)) {
 $sc = new SelectItem('configuration_id');
 $sc->setElements($config_names);
 $sc->setElementsVal($config_ids);
-$sc->setSelected($values['configuration_id']);
-$formAddDevice->add(
-    new TrFormElement(
-        _T('Configuration', 'mobile') . "*",
-        $sc
-    ),
-    array(
-        "required" => true
-    )
-);
+$sc->setSelected($configurationId);
+$f->add(new TrFormElement(_T('Configuration', 'mobile'), $sc));
 
-$formAddDevice->pop();
-foreach ($formAddDevice->elements as $element) {
+$f->pop();
+foreach ($f->elements as $element) {
     $element->display();
 }
 
@@ -218,7 +184,8 @@ if ($groups && is_array($groups) && count($groups) > 0): ?>
 </div>
 
 <div style="margin-top: 20px;">
-    <input name="test" type="submit" class="btnPrimary" value="<?php echo _T("Add", "mobile"); ?>" />
+    <input name="bconfirm" type="submit" class="btnPrimary" value="<?php echo _T("Save", "mobile"); ?>" />
+    <input type="button" class="btnSecondary" value="<?php echo _T("Cancel", "mobile"); ?>" onclick="location.href='main.php?module=mobile&submod=mobile&action=index';" />
 </div>
 </form>
 

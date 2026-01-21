@@ -32,6 +32,9 @@ def activate():
 def addHmdmDevice(name, configuration_id, description="", groups=None, imei="", phone="", device_id=None):
     return MobileDatabase().addHmdmDevice(name, configuration_id, description, groups, imei, phone, device_id)
 
+def updateHmdmDevice(device_data):
+    return MobileDatabase().updateHmdmDevice(device_data)
+
 def getHmdmDevices():
     return MobileDatabase().getHmdmDevices()
 

@@ -57,6 +57,14 @@ $pageModifyFile->setOptions(array("visible" => false));
 $submod->addPage($pageModifyFile);
 
 ################################
+# edit device page
+################################
+$pageEditDevice = new Page("editDevice", _T('Edit Device', 'mobile'));
+$pageEditDevice->setFile("modules/mobile/mobile/editDevice.php");
+$pageEditDevice->setOptions(array("visible" => false));
+$submod->addPage($pageEditDevice);
+
+################################
 # assign configurations to file page
 ################################
 $pageFileConfigurations = new Page("fileConfigurations", _T('File Configurations', 'mobile'));

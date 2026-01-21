@@ -4,6 +4,17 @@ require_once("modules/mobile/includes/xmlrpc.php");
 $filter = isset($_GET['filter']) ? $_GET['filter'] : '';
 
 $mobiles = xmlrpc_get_hmdm_devices();
+$configurations_data = xmlrpc_get_hmdm_configurations();
+
+// map id name
+$config_map = [];
+if (is_array($configurations_data)) {
+    foreach ($configurations_data as $config) {
+        if (isset($config['id']) && isset($config['name'])) {
+            $config_map[$config['id']] = $config['name'];
+        }
+    }
+}
     
 $configurationId = 1;
 $configurationJson = xmlrpc_get_hmdm_configuration_by_id($configurationId);
@@ -11,6 +22,7 @@ $qrCode = $configurationJson;
 
 $ids = $col1 = $descript = $enligne = $numeros = $autorisations = $installations = $etatFichiers = $configurations = $actions = [];
 $actionQr = [];
+$actionEdit = [];
 $params = [];
 
 if (!is_array($mobiles)) $mobiles = [];
@@ -32,7 +44,6 @@ foreach ($mobiles as $index => $mobile) {
     $id = 'mob_' . $index;
     $ids[] = $id;
 
-    // Détection de la source
     $is_headwind = $mobile['source'] === 'headwind';
     $origine = $is_headwind ? 'Android' : 'Inconnu';
     $sources[] = $origine;
@@ -44,7 +55,8 @@ foreach ($mobiles as $index => $mobile) {
         $ip[] = $mobile['publicIp'] ?? "Inconnue";
         $installations[] = $mobile['custom2'] ?? "Inconnue"; 
         $etatFichiers[] = $mobile['custom3'] ?? "N/A";
-        $configurations[] = $mobile['configurationId'] ?? "N/A";
+        $configId = $mobile['configurationId'] ?? null;
+        $configurations[] = isset($configId) && isset($config_map[$configId]) ? $config_map[$configId] : "N/A";
     } 
     else {
         $numero = "Inconnue";
@@ -59,8 +71,10 @@ foreach ($mobiles as $index => $mobile) {
 
     $col1[] = "<a href='#' class='mobilestatus {$statut}'>{$numero}</a>";
 
+    $actionEdit[] = new ActionItem(_T("Edit", "mobile"), "editDevice", "edit", "id", "mobile", "mobile");
     $actionQr[] = new ActionPopupItem(_T("QR Code", "mobile"), "qrCode", "qr-code", "", "mobile", "mobile");
     $params[] = [
+        'id' => isset($mobile['id']) ? $mobile['id'] : $index,
         'device_number' => $numero,
         'configuration_id' => isset($mobile['configurationId']) ? $mobile['configurationId'] : 1,
     ];
@@ -71,7 +85,7 @@ $count = is_array($mobiles) ? count($mobiles) : 0;
 $count = count($mobiles);
 $filter = "";
 $n = new OptimizedListInfos($col1, _T("Device's name", "mobile"));
-// TODO: adjust AjaxNavBar parameters if needed
+
 $n->setNavBar(new AjaxNavBar($count, $filter, "updateSearchParamform".($actions?'image':'master')));
 $n->setCssIds($ids);
 $n->disableFirstColumnActionLink();
@@ -85,6 +99,7 @@ $n->addExtraInfo($installations, _T("Status", "mobile"));
 // $n->addExtraInfo($etatFichiers, _T("État des fichiers", "mobile"));
 
 // Attach actions
+$n->addActionItemArray($actionEdit);
 $n->addActionItemArray($actionQr);
 $n->setParamInfo($params);
 
