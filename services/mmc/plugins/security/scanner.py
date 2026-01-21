@@ -341,6 +341,51 @@ class CVECentralClient:
         except:
             return False
 
+    def get_scan_status(self) -> Dict:
+        """Get current scan status from CVE Central"""
+        try:
+            url = f"{self.base_url}/api/scan/status"
+            response = self.session.get(
+                url,
+                headers=self._get_headers(),
+                timeout=30
+            )
+            response.raise_for_status()
+            return response.json()
+        except requests.exceptions.RequestException as e:
+            logger.error(f"Error getting scan status from CVE Central: {e}")
+            return {'running': False, 'error': str(e)}
+
+    def wait_for_scan_completion(self, poll_interval: int = 10, max_wait: int = 3600) -> Dict:
+        """Wait for background scan to complete with polling
+
+        Args:
+            poll_interval: Seconds between status checks
+            max_wait: Maximum seconds to wait before timeout
+
+        Returns:
+            Final scan status dict
+        """
+        start_time = time.time()
+        while True:
+            status = self.get_scan_status()
+
+            if not status.get('running', False):
+                # Scan finished (or never started)
+                return status
+
+            elapsed = time.time() - start_time
+            if elapsed >= max_wait:
+                logger.warning(f"Scan wait timeout after {elapsed:.0f}s")
+                return {'running': False, 'error': 'Timeout waiting for scan completion', 'partial': True}
+
+            progress = status.get('progress', 0)
+            total = status.get('total', 0)
+            cves_found = status.get('cves_found', 0)
+            logger.info(f"Scan in progress: {progress}/{total} software scanned, {cves_found} CVEs found...")
+
+            time.sleep(poll_interval)
+
 
 def run_cve_scan(scan_id: Optional[int] = None, entity_id: Optional[int] = None,
                  group_id: Optional[int] = None, machine_id: Optional[int] = None) -> Dict[str, Any]:
@@ -434,14 +479,26 @@ def run_cve_scan(scan_id: Optional[int] = None, entity_id: Optional[int] = None,
         if not submit_result.get('success', False):
             logger.warning(f"Software submission warning: {submit_result.get('error')}")
 
-        # Step 3: Trigger NVD scan on CVE Central
+        # Step 3: Trigger NVD scan on CVE Central (background mode with polling)
         max_age_days = getattr(config, 'max_age_days', 365)
         min_published_year = getattr(config, 'min_published_year', 2015)
         logger.info(f"Triggering CVE scan on central server (max_age_days={max_age_days}, min_published_year={min_published_year})...")
-        scan_result = cve_client.trigger_scan(background=False, max_age_days=max_age_days, min_published_year=min_published_year)
+
+        # Use background=True to avoid Gunicorn worker timeout, then poll for completion
+        scan_result = cve_client.trigger_scan(background=True, max_age_days=max_age_days, min_published_year=min_published_year)
 
         if scan_result.get('success'):
-            logger.info(f"Central scan: {scan_result.get('cves_found', 0)} CVEs found")
+            softwares_to_scan = scan_result.get('softwares_to_scan', 0)
+            if softwares_to_scan > 0:
+                logger.info(f"Central scan started in background for {softwares_to_scan} software, waiting for completion...")
+                # Wait for scan to complete with polling (max 1 hour)
+                final_status = cve_client.wait_for_scan_completion(poll_interval=10, max_wait=3600)
+                cves_found = final_status.get('cves_found', 0)
+                logger.info(f"Central scan completed: {cves_found} CVEs found")
+                if final_status.get('error'):
+                    logger.warning(f"Central scan warning: {final_status.get('error')}")
+            else:
+                logger.info("No software needs scanning on CVE Central (all up to date)")
         else:
             logger.warning(f"Central scan warning: {scan_result.get('error', 'Unknown')}")
 
