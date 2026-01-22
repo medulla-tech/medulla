@@ -366,36 +366,31 @@ class SecurityDatabase(DatabaseHelper):
         softwares = [{'name': sc.software_name, 'version': sc.software_version}
                     for sc in sw_cves]
 
-        # Get affected machines (unique, only latest software versions)
+        # Get affected machines using glpi_software_name for accurate matching
         # Filtered by entity if location is provided
-        # Include software_name and software_version for each machine
         machines = []
-        if softwares:
+        if sw_cves:
             try:
-                conditions = []
-                for sw in softwares:
-                    sw_name = sw['name'].replace("'", "''")
-                    sw_ver = sw['version'].replace("'", "''")
-                    conditions.append(f"(latest_sw.software_name = '{sw_name}' AND latest_sw.software_version = '{sw_ver}')")
+                # Get glpi_software_names linked to this CVE
+                glpi_names = [sc.glpi_software_name for sc in sw_cves if sc.glpi_software_name]
+                if glpi_names:
+                    # Build conditions using glpi_software_name
+                    conditions = []
+                    for glpi_name in glpi_names:
+                        escaped_name = glpi_name.replace("'", "''")
+                        conditions.append(f"s.name = '{escaped_name}'")
 
-                if conditions:
                     where_clause = " OR ".join(conditions)
                     result = session.execute(text(f"""
-                        SELECT latest_sw.machine_id, m.name as hostname,
-                               latest_sw.software_name, latest_sw.software_version
-                        FROM (
-                            SELECT isv.items_id as machine_id, s.name as software_name,
-                                   SUBSTRING_INDEX(GROUP_CONCAT(sv.name ORDER BY isv.id DESC), ',', 1) as software_version
-                            FROM xmppmaster.local_glpi_items_softwareversions isv
-                            JOIN xmppmaster.local_glpi_softwareversions sv ON sv.id = isv.softwareversions_id
-                            JOIN xmppmaster.local_glpi_softwares s ON s.id = sv.softwares_id
-                            JOIN xmppmaster.local_glpi_machines m ON m.id = isv.items_id
-                            WHERE 1=1 {entity_filter}
-                            GROUP BY isv.items_id, s.name
-                        ) latest_sw
-                        JOIN xmppmaster.local_glpi_machines m ON m.id = latest_sw.machine_id
+                        SELECT DISTINCT m.id as machine_id, m.name as hostname,
+                               sc.software_name, sc.software_version
+                        FROM xmppmaster.local_glpi_items_softwareversions isv
+                        JOIN xmppmaster.local_glpi_softwareversions sv ON sv.id = isv.softwareversions_id
+                        JOIN xmppmaster.local_glpi_softwares s ON s.id = sv.softwares_id
+                        JOIN xmppmaster.local_glpi_machines m ON m.id = isv.items_id
+                        JOIN security.software_cves sc ON sc.glpi_software_name = s.name AND sc.cve_id = {cve.id}
                         WHERE ({where_clause}) {entity_filter}
-                        ORDER BY m.name, latest_sw.software_name
+                        ORDER BY m.name, sc.software_name
                     """))
                     for row in result:
                         machines.append({
@@ -460,7 +455,8 @@ class SecurityDatabase(DatabaseHelper):
             {filter_clause}
         """)
 
-        # Main query with vulnerability counts (only most recent version per software)
+        # Main query with vulnerability counts
+        # Join using glpi_software_name (original GLPI name) for accurate matching
         main_sql = text(f"""
             SELECT
                 m.id as id_glpi,
@@ -473,25 +469,19 @@ class SecurityDatabase(DatabaseHelper):
             FROM xmppmaster.local_glpi_machines m
             LEFT JOIN (
                 SELECT
-                    latest_sw.machine_id,
+                    isv.items_id as machine_id,
                     COUNT(DISTINCT c.id) as total_cves,
                     COUNT(DISTINCT CASE WHEN c.severity = 'Critical' THEN c.id END) as critical,
                     COUNT(DISTINCT CASE WHEN c.severity = 'High' THEN c.id END) as high,
                     COUNT(DISTINCT CASE WHEN c.severity = 'Medium' THEN c.id END) as medium,
                     MAX(c.cvss_score) as max_cvss
-                FROM (
-                    SELECT isv.items_id as machine_id, s.name as software_name,
-                           SUBSTRING_INDEX(GROUP_CONCAT(sv.name ORDER BY isv.id DESC), ',', 1) as software_version
-                    FROM xmppmaster.local_glpi_items_softwareversions isv
-                    JOIN xmppmaster.local_glpi_softwareversions sv ON sv.id = isv.softwareversions_id
-                    JOIN xmppmaster.local_glpi_softwares s ON s.id = sv.softwares_id
-                    GROUP BY isv.items_id, s.name
-                ) latest_sw
-                JOIN security.software_cves sc ON sc.software_name = latest_sw.software_name
-                                                AND sc.software_version = latest_sw.software_version
+                FROM xmppmaster.local_glpi_items_softwareversions isv
+                JOIN xmppmaster.local_glpi_softwareversions sv ON sv.id = isv.softwareversions_id
+                JOIN xmppmaster.local_glpi_softwares s ON s.id = sv.softwares_id
+                JOIN security.software_cves sc ON sc.glpi_software_name = s.name
                 JOIN security.cves c ON c.id = sc.cve_id
                 WHERE 1=1 {cvss_filter}
-                GROUP BY latest_sw.machine_id
+                GROUP BY isv.items_id
             ) v ON m.id = v.machine_id
             {filter_clause}
             ORDER BY v.max_cvss DESC, m.name ASC
@@ -556,28 +546,23 @@ class SecurityDatabase(DatabaseHelper):
             if where_clauses:
                 where_sql = "WHERE " + " AND ".join(where_clauses)
 
-            # Count query
+            # Count query - use glpi_software_name for accurate matching
             count_sql = text(f"""
                 SELECT COUNT(DISTINCT c.id) as total
-                FROM (
-                    SELECT s.name as software_name,
-                           SUBSTRING_INDEX(GROUP_CONCAT(sv.name ORDER BY isv.id DESC), ',', 1) as software_version
-                    FROM xmppmaster.local_glpi_items_softwareversions isv
-                    JOIN xmppmaster.local_glpi_softwareversions sv ON sv.id = isv.softwareversions_id
-                    JOIN xmppmaster.local_glpi_softwares s ON s.id = sv.softwares_id
-                    WHERE isv.items_id = :id_glpi
-                    GROUP BY s.name
-                ) latest_sw
-                JOIN security.software_cves sc ON sc.software_name = latest_sw.software_name
-                                                AND sc.software_version = latest_sw.software_version
+                FROM xmppmaster.local_glpi_items_softwareversions isv
+                JOIN xmppmaster.local_glpi_softwareversions sv ON sv.id = isv.softwareversions_id
+                JOIN xmppmaster.local_glpi_softwares s ON s.id = sv.softwares_id
+                JOIN security.software_cves sc ON sc.glpi_software_name = s.name
                 JOIN security.cves c ON c.id = sc.cve_id
-                {where_sql}
+                WHERE isv.items_id = :id_glpi
+                {where_sql.replace('WHERE', 'AND') if where_sql else ''}
             """)
 
             count_result = session.execute(count_sql, params)
             total = count_result.scalar() or 0
 
-            # Main query with pagination - group by CVE to avoid duplicates
+            # Main query with pagination - use glpi_software_name for accurate matching
+            # Display normalized software_name from software_cves for clarity
             main_sql = text(f"""
                 SELECT
                     c.cve_id,
@@ -586,21 +571,15 @@ class SecurityDatabase(DatabaseHelper):
                     c.description,
                     c.published_at,
                     c.last_modified,
-                    GROUP_CONCAT(DISTINCT latest_sw.software_name ORDER BY latest_sw.software_name SEPARATOR ', ') as software_name,
-                    GROUP_CONCAT(DISTINCT latest_sw.software_version ORDER BY latest_sw.software_name SEPARATOR ', ') as software_version
-                FROM (
-                    SELECT s.name as software_name,
-                           SUBSTRING_INDEX(GROUP_CONCAT(sv.name ORDER BY isv.id DESC), ',', 1) as software_version
-                    FROM xmppmaster.local_glpi_items_softwareversions isv
-                    JOIN xmppmaster.local_glpi_softwareversions sv ON sv.id = isv.softwareversions_id
-                    JOIN xmppmaster.local_glpi_softwares s ON s.id = sv.softwares_id
-                    WHERE isv.items_id = :id_glpi
-                    GROUP BY s.name
-                ) latest_sw
-                JOIN security.software_cves sc ON sc.software_name = latest_sw.software_name
-                                                AND sc.software_version = latest_sw.software_version
+                    GROUP_CONCAT(DISTINCT sc.software_name ORDER BY sc.software_name SEPARATOR ', ') as software_name,
+                    GROUP_CONCAT(DISTINCT sc.software_version ORDER BY sc.software_name SEPARATOR ', ') as software_version
+                FROM xmppmaster.local_glpi_items_softwareversions isv
+                JOIN xmppmaster.local_glpi_softwareversions sv ON sv.id = isv.softwareversions_id
+                JOIN xmppmaster.local_glpi_softwares s ON s.id = sv.softwares_id
+                JOIN security.software_cves sc ON sc.glpi_software_name = s.name
                 JOIN security.cves c ON c.id = sc.cve_id
-                {where_sql}
+                WHERE isv.items_id = :id_glpi
+                {where_sql.replace('WHERE', 'AND') if where_sql else ''}
                 GROUP BY c.id, c.cve_id, c.cvss_score, c.severity, c.description, c.published_at, c.last_modified
                 ORDER BY c.cvss_score DESC
                 LIMIT :limit OFFSET :start
@@ -644,9 +623,10 @@ class SecurityDatabase(DatabaseHelper):
         try:
             params = {'id_glpi': id_glpi, 'start': start, 'limit': limit}
 
+            # Filter on normalized software_name for user convenience
             filter_clause = ""
             if filter_str:
-                filter_clause = "AND latest_sw.software_name LIKE :filter"
+                filter_clause = "AND sc.software_name LIKE :filter"
                 params['filter'] = f"%{filter_str}%"
 
             # Build min_cvss filter
@@ -654,52 +634,38 @@ class SecurityDatabase(DatabaseHelper):
             if min_cvss > 0:
                 cvss_filter = f"AND c.cvss_score >= {min_cvss}"
 
-            # Count query - number of distinct vulnerable software
+            # Count query - use glpi_software_name for accurate matching
             count_sql = text(f"""
-                SELECT COUNT(DISTINCT CONCAT(latest_sw.software_name, ':', latest_sw.software_version)) as total
-                FROM (
-                    SELECT s.name as software_name,
-                           SUBSTRING_INDEX(GROUP_CONCAT(sv.name ORDER BY isv.id DESC), ',', 1) as software_version
-                    FROM xmppmaster.local_glpi_items_softwareversions isv
-                    JOIN xmppmaster.local_glpi_softwareversions sv ON sv.id = isv.softwareversions_id
-                    JOIN xmppmaster.local_glpi_softwares s ON s.id = sv.softwares_id
-                    WHERE isv.items_id = :id_glpi
-                    GROUP BY s.name
-                ) latest_sw
-                JOIN security.software_cves sc ON sc.software_name = latest_sw.software_name
-                                                AND sc.software_version = latest_sw.software_version
+                SELECT COUNT(DISTINCT CONCAT(sc.software_name, ':', sc.software_version)) as total
+                FROM xmppmaster.local_glpi_items_softwareversions isv
+                JOIN xmppmaster.local_glpi_softwareversions sv ON sv.id = isv.softwareversions_id
+                JOIN xmppmaster.local_glpi_softwares s ON s.id = sv.softwares_id
+                JOIN security.software_cves sc ON sc.glpi_software_name = s.name
                 JOIN security.cves c ON c.id = sc.cve_id
-                WHERE 1=1 {filter_clause} {cvss_filter}
+                WHERE isv.items_id = :id_glpi {filter_clause} {cvss_filter}
             """)
 
             count_result = session.execute(count_sql, params)
             total = count_result.scalar() or 0
 
-            # Main query - group by software with CVE counts
+            # Main query - use glpi_software_name for join, display normalized names
             main_sql = text(f"""
                 SELECT
-                    latest_sw.software_name,
-                    latest_sw.software_version,
+                    sc.software_name,
+                    sc.software_version,
                     COUNT(DISTINCT c.id) as total_cves,
                     COUNT(DISTINCT CASE WHEN c.severity = 'Critical' THEN c.id END) as critical,
                     COUNT(DISTINCT CASE WHEN c.severity = 'High' THEN c.id END) as high,
                     COUNT(DISTINCT CASE WHEN c.severity = 'Medium' THEN c.id END) as medium,
                     COUNT(DISTINCT CASE WHEN c.severity = 'Low' THEN c.id END) as low,
                     MAX(c.cvss_score) as max_cvss
-                FROM (
-                    SELECT s.name as software_name,
-                           SUBSTRING_INDEX(GROUP_CONCAT(sv.name ORDER BY isv.id DESC), ',', 1) as software_version
-                    FROM xmppmaster.local_glpi_items_softwareversions isv
-                    JOIN xmppmaster.local_glpi_softwareversions sv ON sv.id = isv.softwareversions_id
-                    JOIN xmppmaster.local_glpi_softwares s ON s.id = sv.softwares_id
-                    WHERE isv.items_id = :id_glpi
-                    GROUP BY s.name
-                ) latest_sw
-                JOIN security.software_cves sc ON sc.software_name = latest_sw.software_name
-                                                AND sc.software_version = latest_sw.software_version
+                FROM xmppmaster.local_glpi_items_softwareversions isv
+                JOIN xmppmaster.local_glpi_softwareversions sv ON sv.id = isv.softwareversions_id
+                JOIN xmppmaster.local_glpi_softwares s ON s.id = sv.softwares_id
+                JOIN security.software_cves sc ON sc.glpi_software_name = s.name
                 JOIN security.cves c ON c.id = sc.cve_id
-                WHERE 1=1 {filter_clause} {cvss_filter}
-                GROUP BY latest_sw.software_name, latest_sw.software_version
+                WHERE isv.items_id = :id_glpi {filter_clause} {cvss_filter}
+                GROUP BY sc.software_name, sc.software_version
                 ORDER BY max_cvss DESC, total_cves DESC
                 LIMIT :limit OFFSET :start
             """)
@@ -1070,6 +1036,7 @@ class SecurityDatabase(DatabaseHelper):
             total = count_result.scalar() or 0
 
             # Main query: entities with CVE counts
+            # Use glpi_software_name for accurate matching
             main_sql = text(f"""
                 SELECT
                     e.id as entity_id,
@@ -1084,16 +1051,10 @@ class SecurityDatabase(DatabaseHelper):
                     COALESCE(MAX(c.cvss_score), 0) as max_cvss
                 FROM xmppmaster.local_glpi_entities e
                 LEFT JOIN xmppmaster.local_glpi_machines m ON m.entities_id = e.id
-                LEFT JOIN (
-                    SELECT isv.items_id as machine_id, s.name as software_name,
-                           SUBSTRING_INDEX(GROUP_CONCAT(sv.name ORDER BY isv.id DESC), ',', 1) as software_version
-                    FROM xmppmaster.local_glpi_items_softwareversions isv
-                    JOIN xmppmaster.local_glpi_softwareversions sv ON sv.id = isv.softwareversions_id
-                    JOIN xmppmaster.local_glpi_softwares s ON s.id = sv.softwares_id
-                    GROUP BY isv.items_id, s.name
-                ) latest_sw ON latest_sw.machine_id = m.id
-                LEFT JOIN security.software_cves sc ON sc.software_name = latest_sw.software_name
-                                                    AND sc.software_version = latest_sw.software_version
+                LEFT JOIN xmppmaster.local_glpi_items_softwareversions isv ON isv.items_id = m.id
+                LEFT JOIN xmppmaster.local_glpi_softwareversions sv ON sv.id = isv.softwareversions_id
+                LEFT JOIN xmppmaster.local_glpi_softwares s ON s.id = sv.softwares_id
+                LEFT JOIN security.software_cves sc ON sc.glpi_software_name = s.name
                 LEFT JOIN security.cves c ON c.id = sc.cve_id
                 WHERE 1=1 {filter_clause}
                 GROUP BY e.id, e.name, e.completename
@@ -1163,8 +1124,7 @@ class SecurityDatabase(DatabaseHelper):
             total = count_result.scalar() or 0
 
             # Main query: groups with CVE counts
-            # Results table links groups (FK_groups) to machines (FK_machines)
-            # Machines table has uuid that matches local_glpi_machines
+            # Use glpi_software_name for accurate matching
             main_sql = text(f"""
                 SELECT
                     g.id as group_id,
@@ -1181,16 +1141,10 @@ class SecurityDatabase(DatabaseHelper):
                 LEFT JOIN dyngroup.Results r ON r.FK_groups = g.id
                 LEFT JOIN dyngroup.Machines dm ON dm.id = r.FK_machines
                 LEFT JOIN xmppmaster.local_glpi_machines m ON CONCAT('UUID', m.id) = dm.uuid
-                LEFT JOIN (
-                    SELECT isv.items_id as machine_id, s.name as software_name,
-                           SUBSTRING_INDEX(GROUP_CONCAT(sv.name ORDER BY isv.id DESC), ',', 1) as software_version
-                    FROM xmppmaster.local_glpi_items_softwareversions isv
-                    JOIN xmppmaster.local_glpi_softwareversions sv ON sv.id = isv.softwareversions_id
-                    JOIN xmppmaster.local_glpi_softwares s ON s.id = sv.softwares_id
-                    GROUP BY isv.items_id, s.name
-                ) latest_sw ON latest_sw.machine_id = m.id
-                LEFT JOIN security.software_cves sc ON sc.software_name = latest_sw.software_name
-                                                    AND sc.software_version = latest_sw.software_version
+                LEFT JOIN xmppmaster.local_glpi_items_softwareversions isv ON isv.items_id = m.id
+                LEFT JOIN xmppmaster.local_glpi_softwareversions sv ON sv.id = isv.softwareversions_id
+                LEFT JOIN xmppmaster.local_glpi_softwares s ON s.id = sv.softwares_id
+                LEFT JOIN security.software_cves sc ON sc.glpi_software_name = s.name
                 LEFT JOIN security.cves c ON c.id = sc.cve_id
                 WHERE 1=1 {filter_clause} {share_filter}
                 GROUP BY g.id, g.name, g.type
@@ -1248,6 +1202,7 @@ class SecurityDatabase(DatabaseHelper):
             total = count_result.scalar() or 0
 
             # Main query: machines with CVE counts
+            # Use glpi_software_name for accurate matching
             main_sql = text(f"""
                 SELECT
                     m.id as id_glpi,
@@ -1260,16 +1215,10 @@ class SecurityDatabase(DatabaseHelper):
                 FROM dyngroup.Results r
                 JOIN dyngroup.Machines dm ON dm.id = r.FK_machines
                 JOIN xmppmaster.local_glpi_machines m ON CONCAT('UUID', m.id) = dm.uuid
-                LEFT JOIN (
-                    SELECT isv.items_id as machine_id, s.name as software_name,
-                           SUBSTRING_INDEX(GROUP_CONCAT(sv.name ORDER BY isv.id DESC), ',', 1) as software_version
-                    FROM xmppmaster.local_glpi_items_softwareversions isv
-                    JOIN xmppmaster.local_glpi_softwareversions sv ON sv.id = isv.softwareversions_id
-                    JOIN xmppmaster.local_glpi_softwares s ON s.id = sv.softwares_id
-                    GROUP BY isv.items_id, s.name
-                ) latest_sw ON latest_sw.machine_id = m.id
-                LEFT JOIN security.software_cves sc ON sc.software_name = latest_sw.software_name
-                                                    AND sc.software_version = latest_sw.software_version
+                LEFT JOIN xmppmaster.local_glpi_items_softwareversions isv ON isv.items_id = m.id
+                LEFT JOIN xmppmaster.local_glpi_softwareversions sv ON sv.id = isv.softwareversions_id
+                LEFT JOIN xmppmaster.local_glpi_softwares s ON s.id = sv.softwares_id
+                LEFT JOIN security.software_cves sc ON sc.glpi_software_name = s.name
                 LEFT JOIN security.cves c ON c.id = sc.cve_id
                 WHERE r.FK_groups = :group_id {filter_clause}
                 GROUP BY m.id, m.name
