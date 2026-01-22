@@ -83,10 +83,10 @@ else $cvssClass = 'cvss-low';
             <span><?php echo date('Y-m-d', strtotime($cve['published_at'])); ?></span>
         </div>
         <?php endif; ?>
-        <?php if ($cve['fetched_at']): ?>
+        <?php if ($cve['last_modified']): ?>
         <div class="cve-meta-item">
-            <strong><?php echo _T("Last Updated", "security"); ?>:</strong>
-            <span><?php echo date('Y-m-d H:i', strtotime($cve['fetched_at'])); ?></span>
+            <strong><?php echo _T("Last Modified", "security"); ?>:</strong>
+            <span><?php echo date('Y-m-d', strtotime($cve['last_modified'])); ?></span>
         </div>
         <?php endif; ?>
     </div>
