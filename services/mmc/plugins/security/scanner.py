@@ -422,7 +422,7 @@ def run_cve_scan(scan_id: Optional[int] = None, entity_id: Optional[int] = None,
     Run a full CVE scan:
     1. Get unique software from GLPI (optionally filtered by entity, group or machine)
     2. Submit to CVE Central
-    3. Trigger NVD scan on CVE Central
+    3. Trigger CVE scan on CVE Central
     4. Get CVEs for our software
     5. Store CVEs locally and link to software
 
@@ -513,7 +513,7 @@ def run_cve_scan(scan_id: Optional[int] = None, entity_id: Optional[int] = None,
         if not submit_result.get('success', False):
             logger.warning(f"Software submission failed: {submit_result.get('error')}")
 
-        # Step 3: Trigger NVD scan on CVE Central (background mode with polling)
+        # Step 3: Trigger CVE scan on CVE Central (background mode with polling)
         max_age_days = getattr(config, 'max_age_days', 365)
         min_published_year = getattr(config, 'min_published_year', 2015)
         logger.debug(f"Triggering CVE Central scan (max_age_days={max_age_days}, min_published_year={min_published_year})")
@@ -550,7 +550,7 @@ def run_cve_scan(scan_id: Optional[int] = None, entity_id: Optional[int] = None,
             if not cve_id_str:
                 continue
 
-            # Handle NULL cvss_score (CVEs not yet evaluated by NVD)
+            # Handle NULL cvss_score (CVEs not yet evaluated)
             cvss_raw = cve_entry.get('cvss_score')
             cvss_score = float(cvss_raw) if cvss_raw is not None else None
             severity = cve_entry.get('severity', 'N/A')
