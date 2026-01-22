@@ -56,7 +56,13 @@ foreach ($mobiles as $index => $mobile) {
         $installations[] = $mobile['custom2'] ?? "Inconnue"; 
         $etatFichiers[] = $mobile['custom3'] ?? "N/A";
         $configId = $mobile['configurationId'] ?? null;
-        $configurations[] = isset($configId) && isset($config_map[$configId]) ? $config_map[$configId] : "N/A";
+        if (isset($configId) && isset($config_map[$configId])) {
+            $configName = $config_map[$configId];
+            $configUrl = urlStrRedirect("mobile/mobile/configurationDetails", array("id" => $configId));
+            $configurations[] = "<a href='{$configUrl}'>{$configName}</a>";
+        } else {
+            $configurations[] = "N/A";
+        }
     } 
     else {
         $numero = "Inconnue";
