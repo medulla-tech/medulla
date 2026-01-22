@@ -15,9 +15,12 @@ logger = logging.getLogger()
 
 
 class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
-    def __init__(self, name="xmppmaster", conffile=None):
+    def __init__(self, name="xmppmaster", conffile=None, backend="database"):
         if not hasattr(self, "initdone"):
-            PluginConfig.__init__(self, name, conffile)
+            logger.info(f"[xmppMasterConfig] Initialisation avec backend={backend}")
+            # Initialiser avec backend database (lit depuis variables d'environnement)
+            PluginConfig.__init__(self, name, conffile, backend=backend, db_table="xmpp_conf")
+            logger.info(f"[xmppMasterConfig] ✅ Configuration chargée depuis la BDD")
             XmppMasterDatabaseConfig.__init__(self)
             self.initdone = True
 
@@ -47,7 +50,32 @@ class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
         "main" section.
         """
         PluginConfig.readConf(self)
-        XmppMasterDatabaseConfig.setup(self, self.conffile)
+        # Appeler setup() pour initialiser la connexion à la base xmppmaster
+        if self.backend == "ini":
+            XmppMasterDatabaseConfig.setup(self, self.conffile)
+        else:
+            if self.has_option("database", "dbdriver"):
+                self.dbdriver = self.get("database", "dbdriver")
+            if self.has_option("database", "dbhost"):
+                self.dbhost = self.get("database", "dbhost")
+            if self.has_option("database", "dbport"):
+                self.dbport = self.getint("database", "dbport")
+            if self.has_option("database", "dbname"):
+                self.dbname = self.get("database", "dbname")
+            if self.has_option("database", "dbuser"):
+                self.dbuser = self.get("database", "dbuser")
+            if self.has_option("database", "dbpasswd"):
+                self.dbpasswd = self.getpassword("database", "dbpasswd")
+            if self.has_option("database", "dbdebug"):
+                self.dbdebug = self.get("database", "dbdebug")
+            if self.has_option("database", "dbpoolrecycle"):
+                self.dbpoolrecycle = self.getint("database", "dbpoolrecycle")
+            if self.has_option("database", "dbpoolsize"):
+                self.dbpoolsize = self.getint("database", "dbpoolsize")
+            if self.has_option("database", "dbpooltimeout"):
+                self.dbpooltimeout = self.getint("database", "dbpooltimeout")
+
+
         self.disable = self.getboolean("main", "disable")
         self.tempdir = self.get("main", "tempdir")
 
