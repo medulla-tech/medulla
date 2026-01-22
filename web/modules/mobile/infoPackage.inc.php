@@ -65,6 +65,14 @@ $pageEditDevice->setOptions(array("visible" => false));
 $submod->addPage($pageEditDevice);
 
 ################################
+# delete device page
+################################
+$pageDeleteDevice = new Page("deleteDevice", _T('Delete Device', 'mobile'));
+$pageDeleteDevice->setFile("modules/mobile/mobile/deleteDevice.php");
+$pageDeleteDevice->setOptions(array("visible" => false));
+$submod->addPage($pageDeleteDevice);
+
+################################
 # assign configurations to file page
 ################################
 $pageFileConfigurations = new Page("fileConfigurations", _T('File Configurations', 'mobile'));

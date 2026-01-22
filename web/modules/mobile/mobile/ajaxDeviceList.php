@@ -79,6 +79,7 @@ foreach ($mobiles as $index => $mobile) {
 
     $actionEdit[] = new ActionItem(_T("Edit", "mobile"), "editDevice", "edit", "id", "mobile", "mobile");
     $actionQr[] = new ActionPopupItem(_T("QR Code", "mobile"), "qrCode", "qr-code", "", "mobile", "mobile");
+    $actionDelete[] = new ActionPopupItem(_T("Delete", "mobile"), "deleteDevice", "delete", "id", "mobile", "mobile");
     $params[] = [
         'id' => isset($mobile['id']) ? $mobile['id'] : $index,
         'device_number' => $numero,
@@ -107,6 +108,7 @@ $n->addExtraInfo($installations, _T("Status", "mobile"));
 // Attach actions
 $n->addActionItemArray($actionEdit);
 $n->addActionItemArray($actionQr);
+$n->addActionItemArray($actionDelete);
 $n->setParamInfo($params);
 
 // $n->setItemCount(count($mobiles));
