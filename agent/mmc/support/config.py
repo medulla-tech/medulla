@@ -12,8 +12,13 @@ from . import mmctools
 
 import ldap
 import re
+import os
+import logging
+import MySQLdb
 from os.path import isfile
 from configparser import ConfigParser, NoOptionError, NoSectionError, InterpolationError
+
+logger = logging.getLogger()
 
 
 class ConfigException(Exception):
@@ -22,6 +27,120 @@ class ConfigException(Exception):
     """
 
     pass
+
+
+class DatabaseConfigBackend:
+    """
+    Backend pour lire la configuration depuis une base de données MySQL.
+    Les paramètres de connexion sont lus depuis les variables d'environnement.
+    """
+
+    def __init__(self, table_name):
+        """
+        Args:
+            table_name: Nom de la table de configuration (ex: 'xmpp_conf')
+        """
+        self.table_name = table_name
+        self._cache = {}  # Cache des valeurs lues
+        self._connection = None
+        
+        # Configuration depuis variables d'environnement avec defaults
+        self.db_config = {
+            'host': os.getenv('MMC_DB_HOST', 'localhost'),
+            'port': int(os.getenv('MMC_DB_PORT', '3306')),
+            'user': os.getenv('MMC_DB_USER', 'mmc'),
+            'password': os.getenv('MMC_DB_PASSWORD', 'pBWfpjErqtsU'),
+            'database': os.getenv('MMC_DB_NAME', 'admin')
+        }
+
+    def _get_connection(self):
+        """Retourne une connexion DB (lazy loading)"""
+        if self._connection is None:
+            try:
+                logger.info(f"[DatabaseConfigBackend] Connexion à MySQL: {self.db_config['host']}:{self.db_config['port']}/{self.db_config['database']}")
+                self._connection = MySQLdb.connect(
+                    host=self.db_config['host'],
+                    port=self.db_config['port'],
+                    user=self.db_config['user'],
+                    passwd=self.db_config['password'],
+                    db=self.db_config['database'],
+                    charset='utf8'
+                )
+                logger.info(f"[DatabaseConfigBackend] ✅ Connecté avec succès")
+            except ImportError:
+                raise ConfigException(
+                    "MySQLdb not installed. Install python3-mysqldb to use database backend."
+                )
+            except Exception as e:
+                logger.error(f"[DatabaseConfigBackend] ❌ Erreur de connexion: {e}")
+                raise ConfigException(f"Cannot connect to database: {e}")
+        return self._connection
+
+    def get(self, section, option):
+        """
+        Récupère une valeur depuis la base de données.
+        Retourne None si la clé n'existe pas.
+        """
+        cache_key = f"{section}.{option}"
+        
+        # Check cache first
+        if cache_key in self._cache:
+            return self._cache[cache_key]
+        
+        conn = self._get_connection()
+        cursor = conn.cursor()
+        
+        try:
+            query = f"""
+                SELECT valeur, valeur_defaut FROM {self.table_name}
+                WHERE section = %s AND nom = %s AND activer = 1
+            """
+            cursor.execute(query, (section, option))
+            result = cursor.fetchone()
+            
+            if result:
+                # Priorité à 'valeur', sinon 'valeur_defaut'
+                value = result[0] if result[0] is not None else result[1]
+                self._cache[cache_key] = value
+                logger.debug(f"[DatabaseConfigBackend] Lue: {section}.{option} = {value}")
+                return value
+            logger.debug(f"[DatabaseConfigBackend] Non trouvé: {section}.{option}")
+            return None
+        finally:
+            cursor.close()
+
+    def has_option(self, section, option):
+        """Vérifie si une option existe"""
+        return self.get(section, option) is not None
+
+    def has_section(self, section):
+        """Vérifie si une section existe"""
+        conn = self._get_connection()
+        cursor = conn.cursor()
+        
+        try:
+            query = f"SELECT COUNT(*) FROM {self.table_name} WHERE section = %s AND activer = 1"
+            cursor.execute(query, (section,))
+            count = cursor.fetchone()[0]
+            return count > 0
+        finally:
+            cursor.close()
+
+    def options(self, section):
+        """Retourne la liste des options d'une section"""
+        conn = self._get_connection()
+        cursor = conn.cursor()
+        
+        try:
+            query = f"SELECT nom FROM {self.table_name} WHERE section = %s AND activer = 1"
+            cursor.execute(query, (section,))
+            return [row[0] for row in cursor.fetchall()]
+        finally:
+            cursor.close()
+
+    def reload_cache(self):
+        """Vide le cache pour forcer le rechargement"""
+        self._cache = {}
 
 
 class MMCConfigParser(ConfigParser):
@@ -89,20 +208,70 @@ class PluginConfig(MMCConfigParser):
     HOOKS = "hooks"
     SERVICE = "service"
 
-    def __init__(self, name, conffile=None):
+    def __init__(self, name, conffile=None, backend="ini", db_table=None):
+        """
+        Args:
+            name: Nom du plugin
+            conffile: Chemin du fichier de config (optionnel)
+            backend: "ini" (défaut) ou "database"
+            db_table: Nom de la table DB (ex: 'xmpp_conf') si backend="database"
+        """
         MMCConfigParser.__init__(self)
         self.name = name
         self.userDefault = {}
         self.hooks = {}
         self.service = {}
-        self.conffile = mmctools.getConfigFile(name) if not conffile else conffile
-        self.setDefault()
-        fid = open(self.conffile, "r")
-        self.readfp(fid, self.conffile)
-        if isfile(f"{self.conffile}.local"):
-            fid = open(f"{self.conffile}.local", "r")
+        self.backend_type = backend
+        
+        if backend == "database":
+            if not db_table:
+                raise ConfigException(f"db_table required when using database backend for {name}")
+            self.backend = DatabaseConfigBackend(db_table)
+            self.conffile = None  # Pas de fichier si on lit la BDD
+        else:
+            # Mode INI classique
+            self.backend = None
+            self.conffile = mmctools.getConfigFile(name) if not conffile else conffile
+            self.setDefault()
+            fid = open(self.conffile, "r")
             self.readfp(fid, self.conffile)
+            if isfile(f"{self.conffile}.local"):
+                fid = open(f"{self.conffile}.local", "r")
+                self.readfp(fid, self.conffile)
+        
+        self.setDefault()
         self.readConf()
+
+    def get(self, section, option, **kwargs):
+        """Override get pour router vers le bon backend"""
+        if self.backend_type == "database":
+            value = self.backend.get(section, option)
+            if value is None:
+                raise NoOptionError(option, section)
+            return value
+        else:
+            return MMCConfigParser.get(self, section, option, **kwargs)
+
+    def has_option(self, section, option):
+        """Override has_option pour router vers le bon backend"""
+        if self.backend_type == "database":
+            return self.backend.has_option(section, option)
+        else:
+            return ConfigParser.has_option(self, section, option)
+
+    def has_section(self, section):
+        """Override has_section pour router vers le bon backend"""
+        if self.backend_type == "database":
+            return self.backend.has_section(section)
+        else:
+            return ConfigParser.has_section(self, section)
+
+    def options(self, section):
+        """Override options pour router vers le bon backend"""
+        if self.backend_type == "database":
+            return self.backend.options(section)
+        else:
+            return ConfigParser.options(self, section)
 
     def readConf(self):
         """Read the configuration file"""
