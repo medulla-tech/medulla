@@ -87,7 +87,8 @@ def get_glpi_db_url():
     return f"mysql+pymysql://{dbuser}:{dbpasswd}@{dbhost}:{dbport}/{dbname}"
 
 
-def get_unique_software_from_glpi(entity_id=None, group_id=None, machine_id=None):
+def get_unique_software_from_glpi(entity_id=None, group_id=None, machine_id=None,
+                                   excluded_patterns=None, excluded_vendors=None, excluded_names=None):
     """
     Get unique software list from GLPI (optionally filtered by entity, group or machine)
 
@@ -95,10 +96,24 @@ def get_unique_software_from_glpi(entity_id=None, group_id=None, machine_id=None
         entity_id: Filter by entity ID (optional)
         group_id: Filter by group ID (optional)
         machine_id: Filter by machine GLPI ID (optional)
+        excluded_patterns: List of patterns to exclude (substring match, case-insensitive)
+        excluded_vendors: List of vendors to exclude (exact match, case-insensitive)
+        excluded_names: List of exact names to exclude (case-sensitive)
 
     Returns:
         List of unique software dicts with name, version, vendor
     """
+    # Use empty lists if not provided (exclusions come from config)
+    if excluded_patterns is None:
+        excluded_patterns = []
+    if excluded_vendors is None:
+        excluded_vendors = []
+    if excluded_names is None:
+        excluded_names = []
+
+    # Prepare lowercase patterns and vendors for comparison
+    excluded_patterns_lower = [p.lower() for p in excluded_patterns if p]
+    excluded_vendors_lower = [v.lower() for v in excluded_vendors if v]
     try:
         engine = create_engine(get_glpi_db_url())
 
@@ -139,6 +154,7 @@ def get_unique_software_from_glpi(entity_id=None, group_id=None, machine_id=None
         """)
 
         softwares = []
+        excluded_count = 0
         with engine.connect() as conn:
             result = conn.execute(query, params)
             for row in result:
@@ -146,25 +162,38 @@ def get_unique_software_from_glpi(entity_id=None, group_id=None, machine_id=None
                 sw_version = row[1]
                 sw_vendor = row[2]
 
-                # Skip internal Medulla/Pulse software
-                if sw_name and any(skip in sw_name.lower() for skip in ['medulla', 'pulse', 'siveo']):
+                if not sw_name:
                     continue
 
-                if sw_name:
-                    softwares.append({
-                        'name': sw_name,
-                        'version': sw_version or '',
-                        'vendor': sw_vendor or ''
-                    })
+                # Check exclusion patterns (substring match, case-insensitive)
+                sw_name_lower = sw_name.lower()
+                if any(pattern in sw_name_lower for pattern in excluded_patterns_lower):
+                    excluded_count += 1
+                    logger.debug(f"Excluded by pattern: {sw_name}")
+                    continue
 
-        filter_info = ""
-        if machine_id:
-            filter_info = f" (machine_id={machine_id})"
-        elif entity_id:
-            filter_info = f" (entity_id={entity_id})"
-        elif group_id:
-            filter_info = f" (group_id={group_id})"
-        logger.info(f"Found {len(softwares)} unique software packages{filter_info}")
+                # Check exclusion vendors (exact match, case-insensitive)
+                if sw_vendor and sw_vendor.lower() in excluded_vendors_lower:
+                    excluded_count += 1
+                    logger.debug(f"Excluded by vendor: {sw_name} ({sw_vendor})")
+                    continue
+
+                # Check exclusion names (exact match, case-sensitive)
+                if sw_name in excluded_names:
+                    excluded_count += 1
+                    logger.debug(f"Excluded by name: {sw_name}")
+                    continue
+
+                softwares.append({
+                    'name': sw_name,
+                    'version': sw_version or '',
+                    'vendor': sw_vendor or ''
+                })
+
+        if excluded_count > 0:
+            logger.debug(f"Excluded {excluded_count} software by config rules")
+
+        logger.debug(f"GLPI query returned {len(softwares)} software packages")
         return softwares
 
     except Exception as e:
@@ -459,9 +488,16 @@ def run_cve_scan(scan_id: Optional[int] = None, entity_id: Optional[int] = None,
             raise Exception("Cannot connect to CVE Central API")
         logger.debug("Connection successful")
 
-        # Step 1: Get unique software from GLPI (with optional filters)
+        # Step 1: Get unique software from GLPI (with optional filters and exclusions)
         logger.debug(f"Querying GLPI for software (machine_id={machine_id}, entity_id={entity_id}, group_id={group_id})")
-        softwares = get_unique_software_from_glpi(entity_id=entity_id, group_id=group_id, machine_id=machine_id)
+        softwares = get_unique_software_from_glpi(
+            entity_id=entity_id,
+            group_id=group_id,
+            machine_id=machine_id,
+            excluded_patterns=config.excluded_patterns,
+            excluded_vendors=config.excluded_vendors,
+            excluded_names=config.excluded_names
+        )
         stats['softwares_sent'] = len(softwares)
 
         if not softwares:
@@ -469,20 +505,18 @@ def run_cve_scan(scan_id: Optional[int] = None, entity_id: Optional[int] = None,
             security_db.complete_scan(scan_id, 0, 0, 0, "No software in GLPI")
             return {'scan_id': scan_id, 'status': 'completed', **stats}
 
-        logger.info(f"Found {len(softwares)} unique software packages")
         logger.debug(f"First 5 software: {softwares[:5]}")
 
         # Step 2: Submit software to CVE Central
-        logger.info("Submitting software list to CVE Central...")
         submit_result = cve_client.submit_softwares(softwares)
         logger.debug(f"Submit result: {submit_result}")
         if not submit_result.get('success', False):
-            logger.warning(f"Software submission warning: {submit_result.get('error')}")
+            logger.warning(f"Software submission failed: {submit_result.get('error')}")
 
         # Step 3: Trigger NVD scan on CVE Central (background mode with polling)
         max_age_days = getattr(config, 'max_age_days', 365)
         min_published_year = getattr(config, 'min_published_year', 2015)
-        logger.info(f"Triggering CVE scan on central server (max_age_days={max_age_days}, min_published_year={min_published_year})...")
+        logger.debug(f"Triggering CVE Central scan (max_age_days={max_age_days}, min_published_year={min_published_year})")
 
         # Use background=True to avoid Gunicorn worker timeout, then poll for completion
         scan_result = cve_client.trigger_scan(background=True, max_age_days=max_age_days, min_published_year=min_published_year)
@@ -490,30 +524,27 @@ def run_cve_scan(scan_id: Optional[int] = None, entity_id: Optional[int] = None,
         if scan_result.get('success'):
             softwares_to_scan = scan_result.get('softwares_to_scan', 0)
             if softwares_to_scan > 0:
-                logger.info(f"Central scan started in background for {softwares_to_scan} software, waiting for completion...")
+                logger.debug(f"CVE Central scanning {softwares_to_scan} software...")
                 # Wait for scan to complete with polling (max 1 hour)
                 final_status = cve_client.wait_for_scan_completion(poll_interval=10, max_wait=3600)
-                cves_found = final_status.get('cves_found', 0)
-                logger.info(f"Central scan completed: {cves_found} CVEs found")
                 if final_status.get('error'):
-                    logger.warning(f"Central scan warning: {final_status.get('error')}")
-            else:
-                logger.info("No software needs scanning on CVE Central (all up to date)")
+                    logger.warning(f"CVE Central scan warning: {final_status.get('error')}")
         else:
-            logger.warning(f"Central scan warning: {scan_result.get('error', 'Unknown')}")
+            logger.warning(f"CVE Central scan failed: {scan_result.get('error', 'Unknown')}")
 
         # Step 4: Get CVEs for our software (filtering is done server-side by CVE Central)
-        logger.info("Retrieving CVEs from central server...")
         cve_result = cve_client.get_cves(softwares)
 
         if not cve_result.get('success', False):
             raise Exception(f"Failed to get CVEs: {cve_result.get('error')}")
 
         cves_data = cve_result.get('cves', [])
-        logger.info(f"Received {len(cves_data)} CVE-software associations")
 
-        # Step 5: Store CVEs locally
+        # Step 5: Store CVEs locally and count by severity
         cves_added = set()
+        severity_counts = {'Critical': 0, 'High': 0, 'Medium': 0, 'Low': 0, 'N/A': 0}
+        new_critical_cves = []
+
         for cve_entry in cves_data:
             cve_id_str = cve_entry.get('cve_id')
             if not cve_id_str:
@@ -555,28 +586,29 @@ def run_cve_scan(scan_id: Optional[int] = None, entity_id: Optional[int] = None,
                     target_platform=target_platform
                 )
 
+            # Count by severity (only once per CVE)
+            if cve_id_str not in cves_added:
+                sev = severity if severity in severity_counts else 'N/A'
+                severity_counts[sev] = severity_counts.get(sev, 0) + 1
+                # Track new critical CVEs for alerting
+                if severity == 'Critical':
+                    new_critical_cves.append(cve_id_str)
+
             cves_added.add(cve_id_str)
 
         stats['cves_received'] = len(cves_added)
-        logger.info(f"Stored {len(cves_added)} unique CVEs locally")
 
-        # Count affected machines
-        try:
-            summary = security_db.get_dashboard_summary()
-            stats['machines_affected'] = summary.get('machines_affected', 0)
-        except Exception as e:
-            logger.error(f"Error counting affected machines: {e}")
-
-        # Complete scan
+        # Complete scan (machines_affected is computed globally, not per-entity)
         security_db.complete_scan(
             scan_id=scan_id,
             softwares_sent=stats['softwares_sent'],
             cves_received=stats['cves_received'],
-            machines_affected=stats['machines_affected']
+            machines_affected=0
         )
 
-        logger.info(f"CVE scan completed: {stats['softwares_sent']} software, "
-                   f"{stats['cves_received']} CVEs, {stats['machines_affected']} machines affected")
+        # Log final summary with severity breakdown
+        severity_summary = f"{severity_counts['Critical']}C/{severity_counts['High']}H/{severity_counts['Medium']}M/{severity_counts['Low']}L"
+        logger.info(f"Scan #{scan_id} completed: {stats['softwares_sent']} software -> {stats['cves_received']} CVEs ({severity_summary})")
 
         return {'scan_id': scan_id, 'status': 'completed', **stats}
 

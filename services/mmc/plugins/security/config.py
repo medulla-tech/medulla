@@ -33,6 +33,10 @@ class SecurityConfig(PluginConfig, SecurityDatabaseConfig):
         self.alert_min_cvss = 9.0
         self.max_age_days = 365
         self.min_published_year = 2020
+        # Exclusions (read from ini file)
+        self.excluded_patterns = []
+        self.excluded_vendors = []
+        self.excluded_names = []
 
     def readConf(self):
         PluginConfig.readConf(self)
@@ -74,6 +78,17 @@ class SecurityConfig(PluginConfig, SecurityDatabaseConfig):
                 self.min_published_year = int(self.safe_get("policy", "min_published_year", "2020"))
             except ValueError:
                 self.min_published_year = 2020
+
+        # [exclusions] section
+        if self.has_section("exclusions"):
+            patterns = self.safe_get("exclusions", "patterns", "medulla,pulse,siveo")
+            self.excluded_patterns = [p.strip() for p in patterns.split(',') if p.strip()]
+
+            vendors = self.safe_get("exclusions", "vendors", "")
+            self.excluded_vendors = [v.strip() for v in vendors.split(',') if v.strip()]
+
+            names = self.safe_get("exclusions", "names", "")
+            self.excluded_names = [n.strip() for n in names.split(',') if n.strip()]
 
     def safe_get(self, section, option, default=''):
         """Get config value with fallback to default"""
