@@ -1328,3 +1328,46 @@ class SecurityDatabase(DatabaseHelper):
         except Exception as e:
             logger.error(f"Error getting CVEs for software {software_name} {software_version}: {e}")
             return {'total': 0, 'data': []}
+
+    # =========================================================================
+    # Group creation helpers
+    # =========================================================================
+    @DatabaseHelper._sessionm
+    def get_machines_by_severity(self, session, severity, location=''):
+        """Get list of machines affected by CVEs of a given severity.
+
+        Args:
+            severity: CVE severity level (Critical, High, Medium, Low)
+            location: Entity filter (optional)
+
+        Returns:
+            List of dicts with 'uuid' and 'hostname' for each machine
+        """
+        entity_ids = self._parse_entity_ids(session, location)
+
+        # Build entity filter
+        entity_filter = ""
+        if entity_ids:
+            entity_ids_str = ','.join(str(e) for e in entity_ids)
+            entity_filter = f"AND m.entities_id IN ({entity_ids_str})"
+
+        try:
+            # Get distinct machines with CVEs of given severity
+            # Use glpi_software_name for accurate matching
+            result = session.execute(text(f"""
+                SELECT DISTINCT m.id, m.name
+                FROM xmppmaster.local_glpi_machines m
+                JOIN xmppmaster.local_glpi_items_softwareversions isv ON isv.items_id = m.id
+                JOIN xmppmaster.local_glpi_softwareversions sv ON sv.id = isv.softwareversions_id
+                JOIN xmppmaster.local_glpi_softwares s ON s.id = sv.softwares_id
+                JOIN security.software_cves sc ON sc.glpi_software_name = s.name
+                JOIN security.cves c ON c.id = sc.cve_id
+                WHERE c.severity = :severity {entity_filter}
+                ORDER BY m.name
+            """), {'severity': severity})
+
+            machines = [{'uuid': f"UUID{row[0]}", 'hostname': row[1]} for row in result]
+            return machines
+        except Exception as e:
+            logger.error(f"Error getting machines by severity {severity}: {e}")
+            return []

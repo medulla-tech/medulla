@@ -178,6 +178,12 @@ $page->setFile("modules/security/security/ajaxDashboardSummary.php");
 $page->setOptions(array("visible" => False, "noHeader" => True, "AJAX" => True));
 $submod->addPage($page);
 
+// Ajax Create Group from Severity popup
+$page = new Page("ajaxCreateGroupFromSeverity", _T('Create Group from Severity', 'security'));
+$page->setFile("modules/security/security/ajaxCreateGroupFromSeverity.php");
+$page->setOptions(array("visible" => False, "noHeader" => True, "AJAX" => True));
+$submod->addPage($page);
+
 $mod->addSubmod($submod);
 $MMCApp =& MMCApp::getInstance();
 $MMCApp->addModule($mod);

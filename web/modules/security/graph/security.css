@@ -145,6 +145,28 @@
     flex: 1;
     min-width: 0;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.security-card.clickable {
+    cursor: pointer;
+}
+
+.security-card.clickable:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    z-index: 10;
+}
+
+.security-card.clickable.critical:hover { border-color: #dc3545; }
+.security-card.clickable.high:hover { border-color: #fd7e14; }
+.security-card.clickable.medium:hover { border-color: #ffc107; }
+.security-card.clickable.low:hover { border-color: #28a745; }
+.security-card.clickable.info:hover { border-color: #17a2b8; }
+
+.security-card.clickable:active {
+    transform: scale(1.02);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
 }
 
 .security-card.critical { border-left: 4px solid #dc3545; }

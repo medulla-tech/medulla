@@ -45,27 +45,27 @@ $summary = xmlrpc_get_dashboard_summary($location);
 
 <!-- Dashboard Cards -->
 <div class="security-dashboard">
-    <div class="security-card info">
+    <div class="security-card info clickable" onclick="goToAllCves()" title="<?php echo _T("Click to view all CVEs", "security"); ?>">
         <div class="card-value"><?php echo intval($summary['total_cves']); ?></div>
         <div class="card-label"><?php echo _T("CVEs in Database", "security"); ?></div>
     </div>
-    <div class="security-card critical">
+    <div class="security-card critical clickable" onclick="createGroupFromSeverity('Critical')" title="<?php echo _T("Click to create a group with affected machines", "security"); ?>">
         <div class="card-value"><?php echo intval($summary['critical']); ?></div>
         <div class="card-label"><?php echo _T("Critical", "security"); ?></div>
     </div>
-    <div class="security-card high">
+    <div class="security-card high clickable" onclick="createGroupFromSeverity('High')" title="<?php echo _T("Click to create a group with affected machines", "security"); ?>">
         <div class="card-value"><?php echo intval($summary['high']); ?></div>
         <div class="card-label"><?php echo _T("High", "security"); ?></div>
     </div>
-    <div class="security-card medium">
+    <div class="security-card medium clickable" onclick="createGroupFromSeverity('Medium')" title="<?php echo _T("Click to create a group with affected machines", "security"); ?>">
         <div class="card-value"><?php echo intval($summary['medium']); ?></div>
         <div class="card-label"><?php echo _T("Medium", "security"); ?></div>
     </div>
-    <div class="security-card low">
+    <div class="security-card low clickable" onclick="createGroupFromSeverity('Low')" title="<?php echo _T("Click to create a group with affected machines", "security"); ?>">
         <div class="card-value"><?php echo intval($summary['low']); ?></div>
         <div class="card-label"><?php echo _T("Low", "security"); ?></div>
     </div>
-    <div class="security-card info">
+    <div class="security-card info clickable" onclick="goToMachines()" title="<?php echo _T("Click to view affected machines", "security"); ?>">
         <div class="card-value"><?php echo intval($summary['machines_affected']); ?></div>
         <div class="card-label"><?php echo _T("Machines Affected", "security"); ?></div>
     </div>
@@ -157,5 +157,21 @@ function updateDashboard(location) {
             }
         }
     });
+}
+
+function createGroupFromSeverity(severity) {
+    var location = document.getElementById('entity-filter').value;
+    var url = '<?php echo urlStrRedirect("security/security/ajaxCreateGroupFromSeverity"); ?>';
+    url += '&severity=' + encodeURIComponent(severity);
+    url += '&location=' + encodeURIComponent(location);
+    PopupWindow(null, url, 300);
+}
+
+function goToAllCves() {
+    window.location.href = '<?php echo urlStrRedirect("security/security/allcves"); ?>';
+}
+
+function goToMachines() {
+    window.location.href = '<?php echo urlStrRedirect("security/security/machines"); ?>';
 }
 </script>

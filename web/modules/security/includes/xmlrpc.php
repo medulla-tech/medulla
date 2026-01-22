@@ -142,4 +142,11 @@ function xmlrpc_get_groups_summary($start = 0, $limit = 50, $filter = '', $user_
 function xmlrpc_get_group_machines($group_id, $start = 0, $limit = 50, $filter = '') {
     return xmlCall("security.get_group_machines", array($group_id, $start, $limit, $filter));
 }
+
+// =============================================================================
+// Group creation helpers
+// =============================================================================
+function xmlrpc_get_machines_by_severity($severity, $location = '') {
+    return xmlCall("security.get_machines_by_severity", array($severity, $location));
+}
 ?>

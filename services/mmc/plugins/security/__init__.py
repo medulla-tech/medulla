@@ -356,3 +356,19 @@ def get_group_machines(group_id, start=0, limit=50, filter_str=''):
         limit=int(limit),
         filter_str=filter_str
     )
+
+
+# =============================================================================
+# Group creation helpers
+# =============================================================================
+def get_machines_by_severity(severity, location=''):
+    """Get list of machine UUIDs affected by CVEs of a given severity.
+
+    Args:
+        severity: CVE severity level (Critical, High, Medium, Low)
+        location: Entity filter (optional)
+
+    Returns:
+        List of machine UUIDs in format 'UUID<id>'
+    """
+    return SecurityDatabase().get_machines_by_severity(severity, location)
