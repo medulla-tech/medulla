@@ -329,7 +329,7 @@ class SecurityDatabase(DatabaseHelper):
                 results.append({
                     'id': row.id,
                     'cve_id': row.cve_id,
-                    'cvss_score': float(row.cvss_score) if row.cvss_score else 0.0,
+                    'cvss_score': str(round(float(row.cvss_score), 1)) if row.cvss_score else '0.0',
                     'severity': row.severity,
                     'description': row.description,
                     'published_at': row.published_at.isoformat() if row.published_at else None,
@@ -405,7 +405,7 @@ class SecurityDatabase(DatabaseHelper):
         return {
             'id': cve.id,
             'cve_id': cve.cve_id,
-            'cvss_score': float(cve.cvss_score) if cve.cvss_score else 0.0,
+            'cvss_score': str(round(float(cve.cvss_score), 1)) if cve.cvss_score else '0.0',
             'severity': cve.severity,
             'description': cve.description,
             'published_at': cve.published_at.isoformat() if cve.published_at else None,
@@ -502,7 +502,7 @@ class SecurityDatabase(DatabaseHelper):
                     'critical': int(row.critical),
                     'high': int(row.high),
                     'medium': int(row.medium),
-                    'risk_score': float(row.risk_score) if row.risk_score else 0.0
+                    'risk_score': str(round(float(row.risk_score), 1)) if row.risk_score else '0.0'
                 })
 
             return {'total': total, 'data': results}
@@ -591,7 +591,7 @@ class SecurityDatabase(DatabaseHelper):
             for row in result:
                 cves.append({
                     'cve_id': row.cve_id,
-                    'cvss_score': float(row.cvss_score) if row.cvss_score else 0.0,
+                    'cvss_score': str(round(float(row.cvss_score), 1)) if row.cvss_score else '0.0',
                     'severity': row.severity,
                     'description': row.description,
                     'published_at': str(row.published_at) if row.published_at else None,
@@ -682,7 +682,7 @@ class SecurityDatabase(DatabaseHelper):
                     'high': int(row.high),
                     'medium': int(row.medium),
                     'low': int(row.low),
-                    'max_cvss': float(row.max_cvss) if row.max_cvss else 0.0
+                    'max_cvss': str(round(float(row.max_cvss), 1)) if row.max_cvss else '0.0'
                 })
 
             return {'total': total, 'data': data}
@@ -992,7 +992,7 @@ class SecurityDatabase(DatabaseHelper):
                     'high': int(row.high),
                     'medium': int(row.medium),
                     'low': int(row.low),
-                    'max_cvss': float(row.max_cvss) if row.max_cvss else 0.0,
+                    'max_cvss': str(round(float(row.max_cvss), 1)) if row.max_cvss else '0.0',
                     'machines_affected': int(row.machines_affected)
                 })
 
@@ -1075,7 +1075,7 @@ class SecurityDatabase(DatabaseHelper):
                     'high': int(row.high),
                     'medium': int(row.medium),
                     'low': int(row.low),
-                    'max_cvss': float(row.max_cvss) if row.max_cvss else 0.0
+                    'max_cvss': str(round(float(row.max_cvss), 1)) if row.max_cvss else '0.0'
                 })
 
             return {'total': total, 'data': results}
@@ -1166,7 +1166,7 @@ class SecurityDatabase(DatabaseHelper):
                     'high': int(row.high),
                     'medium': int(row.medium),
                     'low': int(row.low),
-                    'max_cvss': float(row.max_cvss) if row.max_cvss else 0.0
+                    'max_cvss': str(round(float(row.max_cvss), 1)) if row.max_cvss else '0.0'
                 })
 
             return {'total': total, 'data': results}
@@ -1236,7 +1236,7 @@ class SecurityDatabase(DatabaseHelper):
                     'critical': int(row.critical),
                     'high': int(row.high),
                     'medium': int(row.medium),
-                    'risk_score': float(row.risk_score) if row.risk_score else 0.0
+                    'risk_score': str(round(float(row.risk_score), 1)) if row.risk_score else '0.0'
                 })
 
             return {'total': total, 'data': results}
@@ -1317,7 +1317,7 @@ class SecurityDatabase(DatabaseHelper):
                 cves.append({
                     'id': row.id,
                     'cve_id': row.cve_id,
-                    'cvss_score': float(row.cvss_score) if row.cvss_score else 0.0,
+                    'cvss_score': str(round(float(row.cvss_score), 1)) if row.cvss_score else '0.0',
                     'severity': row.severity,
                     'description': row.description,
                     'published_at': row.published_at.isoformat() if row.published_at else None,
