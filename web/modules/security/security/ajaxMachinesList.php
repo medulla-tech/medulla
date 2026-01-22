@@ -41,6 +41,7 @@ $riskScores = array();
 $criticalCounts = array();
 $highCounts = array();
 $mediumCounts = array();
+$lowCounts = array();
 $totalCounts = array();
 $params = array();
 
@@ -62,6 +63,8 @@ foreach ($data as $row) {
         '<span class="badge badge-high">' . $row['high'] . '</span>' : '0';
     $mediumCounts[] = $row['medium'] > 0 ?
         '<span class="badge badge-medium">' . $row['medium'] . '</span>' : '0';
+    $lowCounts[] = $row['low'] > 0 ?
+        '<span class="badge badge-low">' . $row['low'] . '</span>' : '0';
     $totalCounts[] = $row['total_cves'];
 
     // Params for actions
@@ -81,6 +84,7 @@ if ($count > 0) {
     $n->addExtraInfo($criticalCounts, _T("Critical", "security"));
     $n->addExtraInfo($highCounts, _T("High", "security"));
     $n->addExtraInfo($mediumCounts, _T("Medium", "security"));
+    $n->addExtraInfo($lowCounts, _T("Low", "security"));
     $n->addExtraInfo($totalCounts, _T("Total", "security"));
     $n->setItemCount($count);
     $n->setNavBar(new AjaxNavBar($count, $filter));

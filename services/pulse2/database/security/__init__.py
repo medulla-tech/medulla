@@ -402,6 +402,18 @@ class SecurityDatabase(DatabaseHelper):
             except Exception as e:
                 logger.error(f"Error getting machines for CVE {cve_id_str}: {e}")
 
+        # Parse sources string to list
+        sources = cve.sources.split(',') if cve.sources else []
+
+        # Parse source_urls JSON to dict
+        import json
+        source_urls = {}
+        if cve.source_urls:
+            try:
+                source_urls = json.loads(cve.source_urls)
+            except (json.JSONDecodeError, TypeError):
+                pass
+
         return {
             'id': cve.id,
             'cve_id': cve.cve_id,
@@ -411,6 +423,8 @@ class SecurityDatabase(DatabaseHelper):
             'published_at': cve.published_at.isoformat() if cve.published_at else None,
             'last_modified': cve.last_modified.isoformat() if cve.last_modified else None,
             'fetched_at': cve.fetched_at.isoformat() if cve.fetched_at else None,
+            'sources': sources,
+            'source_urls': source_urls,
             'softwares': softwares,
             'machines': machines
         }
@@ -465,6 +479,7 @@ class SecurityDatabase(DatabaseHelper):
                 COALESCE(v.critical, 0) as critical,
                 COALESCE(v.high, 0) as high,
                 COALESCE(v.medium, 0) as medium,
+                COALESCE(v.low, 0) as low,
                 COALESCE(v.max_cvss, 0) as risk_score
             FROM xmppmaster.local_glpi_machines m
             LEFT JOIN (
@@ -474,6 +489,7 @@ class SecurityDatabase(DatabaseHelper):
                     COUNT(DISTINCT CASE WHEN c.severity = 'Critical' THEN c.id END) as critical,
                     COUNT(DISTINCT CASE WHEN c.severity = 'High' THEN c.id END) as high,
                     COUNT(DISTINCT CASE WHEN c.severity = 'Medium' THEN c.id END) as medium,
+                    COUNT(DISTINCT CASE WHEN c.severity = 'Low' THEN c.id END) as low,
                     MAX(c.cvss_score) as max_cvss
                 FROM xmppmaster.local_glpi_items_softwareversions isv
                 JOIN xmppmaster.local_glpi_softwareversions sv ON sv.id = isv.softwareversions_id
@@ -502,6 +518,7 @@ class SecurityDatabase(DatabaseHelper):
                     'critical': int(row.critical),
                     'high': int(row.high),
                     'medium': int(row.medium),
+                    'low': int(row.low),
                     'risk_score': str(round(float(row.risk_score), 1)) if row.risk_score else '0.0'
                 })
 
@@ -694,8 +711,21 @@ class SecurityDatabase(DatabaseHelper):
     # CVE Management (add/update from scanner)
     # =========================================================================
     @DatabaseHelper._sessionm
-    def add_cve(self, session, cve_id, cvss_score, severity, description, published_at=None, last_modified=None):
-        """Add or update a CVE in local cache"""
+    def add_cve(self, session, cve_id, cvss_score, severity, description, published_at=None, last_modified=None, sources=None, source_urls=None):
+        """Add or update a CVE in local cache
+
+        Args:
+            sources: List of source names (e.g., ['circl', 'nvd']) or None
+            source_urls: Dict of source URLs (e.g., {'nvd': 'https://...', 'circl': 'https://...'}) or None
+        """
+        import json
+
+        # Convert sources list to comma-separated string
+        sources_str = ','.join(sources) if sources else None
+
+        # Convert source_urls dict to JSON string
+        source_urls_str = json.dumps(source_urls) if source_urls else None
+
         cve = session.query(Cve).filter(Cve.cve_id == cve_id).first()
 
         if cve:
@@ -707,6 +737,10 @@ class SecurityDatabase(DatabaseHelper):
                 cve.published_at = published_at
             if last_modified:
                 cve.last_modified = last_modified
+            if sources_str:
+                cve.sources = sources_str
+            if source_urls_str:
+                cve.source_urls = source_urls_str
             cve.fetched_at = datetime.utcnow()
         else:
             # Create new
@@ -716,7 +750,9 @@ class SecurityDatabase(DatabaseHelper):
                 severity=severity,
                 description=description,
                 published_at=published_at,
-                last_modified=last_modified
+                last_modified=last_modified,
+                sources=sources_str,
+                source_urls=source_urls_str
             )
             session.add(cve)
 

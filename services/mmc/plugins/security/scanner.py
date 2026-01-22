@@ -530,6 +530,8 @@ def run_cve_scan(scan_id: Optional[int] = None, entity_id: Optional[int] = None,
             software_version = cve_entry.get('software_version', '')  # Version normalisée
             glpi_software_name = cve_entry.get('glpi_software_name', '')  # Nom GLPI original
             target_platform = cve_entry.get('target_platform')  # Platform cible (android, macos, ios, etc.)
+            sources = cve_entry.get('sources', [])  # Sources ayant cette CVE (circl, nvd, euvd)
+            source_urls = cve_entry.get('source_urls', {})  # URLs des sources
 
             # Add CVE to local cache
             cve_db_id = security_db.add_cve(
@@ -538,7 +540,9 @@ def run_cve_scan(scan_id: Optional[int] = None, entity_id: Optional[int] = None,
                 severity=severity,
                 description=description,
                 published_at=published_at,
-                last_modified=last_modified
+                last_modified=last_modified,
+                sources=sources,
+                source_urls=source_urls
             )
 
             # Link software to CVE with target platform

@@ -34,6 +34,8 @@ class Cve(Base, SecurityDBObj):
     description = Column(Text)
     published_at = Column(Date)
     last_modified = Column(Date)
+    sources = Column(String(50))  # Sources ayant cette CVE (ex: circl,nvd,euvd)
+    source_urls = Column(Text)  # URLs des sources en JSON (ex: {"nvd": "https://...", "circl": "https://..."})
     fetched_at = Column(DateTime, default=datetime.datetime.utcnow)
 
     # Relations

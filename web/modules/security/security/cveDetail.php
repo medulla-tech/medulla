@@ -90,10 +90,36 @@ else $cvssClass = 'cvss-low';
         </div>
         <?php endif; ?>
     </div>
-    <div class="external-link">
-        <a href="https://nvd.nist.gov/vuln/detail/<?php echo urlencode($cve['cve_id']); ?>" target="_blank">
-            <?php echo _T("View on NVD", "security"); ?> &rarr;
-        </a>
+    <div class="external-links">
+        <?php
+        // Source URLs are now provided by CVE Central API (no more hardcoded URLs)
+        $source_urls = isset($cve['source_urls']) && is_array($cve['source_urls']) ? $cve['source_urls'] : array();
+        $sources = isset($cve['sources']) && is_array($cve['sources']) ? $cve['sources'] : array();
+
+        // Source display names
+        $source_names = array(
+            'nvd' => 'NVD',
+            'circl' => 'CIRCL',
+            'euvd' => 'EUVD'
+        );
+
+        // If source_urls available from API, use them directly
+        if (!empty($source_urls)) {
+            echo '<strong>' . _T("View on", "security") . ':</strong> ';
+            $links = array();
+            foreach ($source_urls as $src => $url) {
+                $name = isset($source_names[$src]) ? $source_names[$src] : strtoupper($src);
+                $links[] = '<a href="' . htmlspecialchars($url) . '" target="_blank">' . $name . '</a>';
+            }
+            echo implode(' | ', $links);
+        } elseif (!empty($sources)) {
+            // Fallback: sources list without URLs (legacy data) - use NVD as default
+            echo '<a href="https://nvd.nist.gov/vuln/detail/' . urlencode($cve['cve_id']) . '" target="_blank">' . _T("View on NVD", "security") . ' &rarr;</a>';
+        } else {
+            // No sources at all - fallback to NVD
+            echo '<a href="https://nvd.nist.gov/vuln/detail/' . urlencode($cve['cve_id']) . '" target="_blank">' . _T("View on NVD", "security") . ' &rarr;</a>';
+        }
+        ?>
     </div>
 </div>
 
