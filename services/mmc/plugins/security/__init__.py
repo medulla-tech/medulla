@@ -46,13 +46,15 @@ def tests():
 # Dashboard
 # =============================================================================
 def get_dashboard_summary(location=''):
-    """Get summary for dashboard display, filtered by entity"""
-    # Get display config for min_cvss filter
+    """Get summary for dashboard display, filtered by entity and policies"""
     from mmc.plugins.security.config import SecurityConfig
     cfg = SecurityConfig("security")
-    min_cvss = cfg.display_min_cvss
 
-    return SecurityDatabase().get_dashboard_summary(location=location, min_cvss=min_cvss)
+    return SecurityDatabase().get_dashboard_summary(
+        location=location,
+        min_cvss=cfg.display_min_cvss,
+        min_severity=cfg.display_min_severity
+    )
 
 
 # =============================================================================
@@ -64,23 +66,24 @@ def get_cves(start=0, limit=50, filter_str='', severity=None, location='',
     from mmc.plugins.security.config import SecurityConfig
     cfg = SecurityConfig("security")
 
+    # Use min_severity from config if no explicit severity filter requested
+    effective_severity = severity if severity else cfg.display_min_severity
+
     result = SecurityDatabase().get_cves(
         start=int(start),
         limit=int(limit),
         filter_str=filter_str,
-        severity=severity,
+        severity=effective_severity,
         location=location,
         sort_by=sort_by,
         sort_order=sort_order,
         min_cvss=cfg.display_min_cvss
     )
 
-    # Apply local policies filtering
+    # Apply local policies filtering (for exclusions, etc.)
     if result.get('data'):
         filtered_data = [cve for cve in result['data'] if cfg.should_display_cve(cve)]
         result['data'] = filtered_data
-        # Note: total count may not match after client-side filtering
-        # This is acceptable for local policies as they are applied post-query
 
     return result
 
@@ -94,18 +97,17 @@ def get_cve_details(cve_id, location=''):
 # Machine-centric view
 # =============================================================================
 def get_machines_summary(start=0, limit=50, filter_str='', location=''):
-    """Get list of machines with CVE counts, filtered by entity"""
-    # Get display config for min_cvss filter
+    """Get list of machines with CVE counts, filtered by entity and policies"""
     from mmc.plugins.security.config import SecurityConfig
     cfg = SecurityConfig("security")
-    min_cvss = cfg.display_min_cvss
 
     return SecurityDatabase().get_machines_summary(
         start=int(start),
         limit=int(limit),
         filter_str=filter_str,
         location=location,
-        min_cvss=min_cvss
+        min_cvss=cfg.display_min_cvss,
+        min_severity=cfg.display_min_severity
     )
 
 
@@ -279,12 +281,7 @@ def get_policies():
 
     return {
         'display': config.get_display_policies(),
-        'policy': config.get_alert_policies(),
-        'exclusions': config.get_exclusion_policies(),
-        'age': {
-            'max_age_days': config.max_age_days,
-            'min_published_year': config.min_published_year
-        }
+        'exclusions': config.get_exclusion_policies()
     }
 
 
@@ -302,7 +299,6 @@ def set_policies(policies, user=None):
     Args:
         policies: dict like {
             'display': {'min_cvss': 4.0, 'min_severity': 'High'},
-            'policy': {'alert_min_cvss': 9.0},
             'exclusions': {'cve_ids': ['CVE-2024-1234']}
         }
         user: username making the change
@@ -339,8 +335,8 @@ def set_policy(category, key, value, user=None):
     """Set a single policy value.
 
     Args:
-        category: 'display', 'policy', or 'exclusions'
-        key: policy key (e.g., 'min_cvss', 'alert_min_severity')
+        category: 'display' or 'exclusions'
+        key: policy key (e.g., 'min_cvss', 'vendors')
         value: the value to set
         user: username making the change
 
@@ -395,18 +391,17 @@ def is_excluded(cve_id):
 # Software-centric view
 # =============================================================================
 def get_softwares_summary(start=0, limit=50, filter_str='', location=''):
-    """Get list of softwares with CVE counts, filtered by entity"""
-    # Get display config for min_cvss filter
+    """Get list of softwares with CVE counts, filtered by entity and policies"""
     from mmc.plugins.security.config import SecurityConfig
     cfg = SecurityConfig("security")
-    min_cvss = cfg.display_min_cvss
 
     return SecurityDatabase().get_softwares_summary(
         start=int(start),
         limit=int(limit),
         filter_str=filter_str,
         location=location,
-        min_cvss=min_cvss
+        min_cvss=cfg.display_min_cvss,
+        min_severity=cfg.display_min_severity
     )
 
 
@@ -439,11 +434,16 @@ def get_software_cves(software_name, software_version, start=0, limit=50,
 # =============================================================================
 def get_entities_summary(start=0, limit=50, filter_str='', user_entities=''):
     """Get list of entities with CVE counts, filtered by user's accessible entities"""
+    from mmc.plugins.security.config import SecurityConfig
+    cfg = SecurityConfig("security")
+
     return SecurityDatabase().get_entities_summary(
         start=int(start),
         limit=int(limit),
         filter_str=filter_str,
-        user_entities=user_entities
+        user_entities=user_entities,
+        min_cvss=cfg.display_min_cvss,
+        min_severity=cfg.display_min_severity
     )
 
 
@@ -452,21 +452,31 @@ def get_entities_summary(start=0, limit=50, filter_str='', user_entities=''):
 # =============================================================================
 def get_groups_summary(start=0, limit=50, filter_str='', user_login=''):
     """Get list of groups with CVE counts, filtered by ShareGroup for this user"""
+    from mmc.plugins.security.config import SecurityConfig
+    cfg = SecurityConfig("security")
+
     return SecurityDatabase().get_groups_summary(
         start=int(start),
         limit=int(limit),
         filter_str=filter_str,
-        user_login=user_login
+        user_login=user_login,
+        min_cvss=cfg.display_min_cvss,
+        min_severity=cfg.display_min_severity
     )
 
 
 def get_group_machines(group_id, start=0, limit=50, filter_str=''):
     """Get machines in a group with CVE counts"""
+    from mmc.plugins.security.config import SecurityConfig
+    cfg = SecurityConfig("security")
+
     return SecurityDatabase().get_group_machines(
         group_id=int(group_id),
         start=int(start),
         limit=int(limit),
-        filter_str=filter_str
+        filter_str=filter_str,
+        min_cvss=cfg.display_min_cvss,
+        min_severity=cfg.display_min_severity
     )
 
 

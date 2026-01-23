@@ -162,17 +162,29 @@ class SecurityDatabase(DatabaseHelper):
     # Dashboard / Summary
     # =========================================================================
     @DatabaseHelper._sessionm
-    def get_dashboard_summary(self, session, location='', min_cvss=0.0):
+    def get_dashboard_summary(self, session, location='', min_cvss=0.0, min_severity='None'):
         """Get summary for dashboard: counts by severity, machines affected
         Filtered by entity if location is provided.
         Filtered by min_cvss if > 0.
+        Filtered by min_severity if not 'None'.
         """
         entity_ids = self._parse_entity_ids(session, location)
+
+        # Severity order for filtering
+        severity_order = ['None', 'Low', 'Medium', 'High', 'Critical']
+        min_sev_index = severity_order.index(min_severity) if min_severity in severity_order else 0
 
         # Build min_cvss filter
         cvss_filter = ""
         if min_cvss > 0:
             cvss_filter = f"AND c.cvss_score >= {min_cvss}"
+
+        # Build min_severity filter
+        severity_filter = ""
+        if min_sev_index > 0:
+            allowed_severities = severity_order[min_sev_index:]
+            severity_list = ','.join(f"'{s}'" for s in allowed_severities)
+            severity_filter = f"AND c.severity IN ({severity_list})"
 
         # Build entity filter clause for machines
         entity_filter = ""
@@ -192,7 +204,7 @@ class SecurityDatabase(DatabaseHelper):
                 JOIN xmppmaster.local_glpi_softwareversions sv ON sv.softwares_id = s.id
                 JOIN xmppmaster.local_glpi_items_softwareversions isv ON isv.softwareversions_id = sv.id
                 JOIN xmppmaster.local_glpi_machines m ON m.id = isv.items_id
-                WHERE 1=1 {entity_filter} {cvss_filter}
+                WHERE 1=1 {entity_filter} {cvss_filter} {severity_filter}
                 GROUP BY c.severity
             """))
             for row in result:
@@ -213,7 +225,7 @@ class SecurityDatabase(DatabaseHelper):
                 JOIN xmppmaster.local_glpi_softwareversions sv ON sv.softwares_id = s.id
                 JOIN xmppmaster.local_glpi_items_softwareversions isv ON isv.softwareversions_id = sv.id
                 JOIN xmppmaster.local_glpi_machines m ON m.id = isv.items_id
-                WHERE 1=1 {entity_filter} {cvss_filter}
+                WHERE 1=1 {entity_filter} {cvss_filter} {severity_filter}
             """))
             row = result.fetchone()
             if row:
@@ -264,12 +276,20 @@ class SecurityDatabase(DatabaseHelper):
             entity_ids_str = ','.join(str(e) for e in entity_ids)
             entity_filter = f"AND m.entities_id IN ({entity_ids_str})"
 
+        # Severity order for filtering
+        severity_order = ['None', 'Low', 'Medium', 'High', 'Critical']
+
         # Build filter clauses
         cve_filters = []
         if min_cvss > 0:
             cve_filters.append(f"c.cvss_score >= {min_cvss}")
-        if severity:
-            cve_filters.append(f"c.severity = '{severity}'")
+        if severity and severity in severity_order:
+            # Filter by minimum severity (>= requested level)
+            min_sev_index = severity_order.index(severity)
+            if min_sev_index > 0:
+                allowed_severities = severity_order[min_sev_index:]
+                severity_list = ','.join(f"'{s}'" for s in allowed_severities)
+                cve_filters.append(f"c.severity IN ({severity_list})")
         if filter_str:
             escaped_filter = filter_str.replace("'", "''")
             cve_filters.append(f"(c.cve_id LIKE '%{escaped_filter}%' OR c.description LIKE '%{escaped_filter}%')")
@@ -434,12 +454,17 @@ class SecurityDatabase(DatabaseHelper):
     # =========================================================================
     @DatabaseHelper._sessionm
     def get_machines_summary(self, session, start=0, limit=50, filter_str='', location='',
-                             min_cvss=0.0):
+                             min_cvss=0.0, min_severity='None'):
         """Get list of ALL machines from GLPI with vulnerability counts (only latest software versions)
         Filtered by entity if location is provided.
         Filtered by min_cvss if > 0.
+        Filtered by min_severity if not 'None'.
         """
         entity_ids = self._parse_entity_ids(session, location)
+
+        # Severity order for filtering
+        severity_order = ['None', 'Low', 'Medium', 'High', 'Critical']
+        min_sev_index = severity_order.index(min_severity) if min_severity in severity_order else 0
 
         # Build WHERE clauses
         where_clauses = []
@@ -461,6 +486,13 @@ class SecurityDatabase(DatabaseHelper):
         cvss_filter = ""
         if min_cvss > 0:
             cvss_filter = f"AND c.cvss_score >= {min_cvss}"
+
+        # Build min_severity filter for inner query
+        severity_filter = ""
+        if min_sev_index > 0:
+            allowed_severities = severity_order[min_sev_index:]
+            severity_list = ','.join(f"'{s}'" for s in allowed_severities)
+            severity_filter = f"AND c.severity IN ({severity_list})"
 
         # Count query
         count_sql = text(f"""
@@ -496,7 +528,7 @@ class SecurityDatabase(DatabaseHelper):
                 JOIN xmppmaster.local_glpi_softwares s ON s.id = sv.softwares_id
                 JOIN security.software_cves sc ON sc.glpi_software_name = s.name
                 JOIN security.cves c ON c.id = sc.cve_id
-                WHERE 1=1 {cvss_filter}
+                WHERE 1=1 {cvss_filter} {severity_filter}
                 GROUP BY isv.items_id
             ) v ON m.id = v.machine_id
             {filter_clause}
@@ -932,10 +964,11 @@ class SecurityDatabase(DatabaseHelper):
     # =========================================================================
     @DatabaseHelper._sessionm
     def get_softwares_summary(self, session, start=0, limit=50, filter_str='', location='',
-                              min_cvss=0.0):
+                              min_cvss=0.0, min_severity='None'):
         """Get list of softwares with CVE counts, grouped by software name+version.
         Filtered by entity if location is provided.
         Filtered by min_cvss if > 0.
+        Filtered by min_severity if not 'None'.
 
         Returns:
             dict with 'total' count and 'data' list containing:
@@ -950,6 +983,10 @@ class SecurityDatabase(DatabaseHelper):
         """
         entity_ids = self._parse_entity_ids(session, location)
 
+        # Severity order for filtering
+        severity_order = ['None', 'Low', 'Medium', 'High', 'Critical']
+        min_sev_index = severity_order.index(min_severity) if min_severity in severity_order else 0
+
         # Build entity filter clause for machines
         entity_filter = ""
         if entity_ids:
@@ -960,6 +997,13 @@ class SecurityDatabase(DatabaseHelper):
         cvss_filter = ""
         if min_cvss > 0:
             cvss_filter = f"AND c.cvss_score >= {min_cvss}"
+
+        # Build min_severity filter
+        severity_filter = ""
+        if min_sev_index > 0:
+            allowed_severities = severity_order[min_sev_index:]
+            severity_list = ','.join(f"'{s}'" for s in allowed_severities)
+            severity_filter = f"AND c.severity IN ({severity_list})"
 
         # Build filter clause (search on normalized name for user convenience)
         filter_clause = ""
@@ -983,7 +1027,7 @@ class SecurityDatabase(DatabaseHelper):
                     JOIN xmppmaster.local_glpi_machines m ON m.id = isv.items_id
                     WHERE 1=1 {entity_filter}
                 ) glpi_sw ON COALESCE(sc.glpi_software_name, sc.software_name) = glpi_sw.glpi_software_name
-                WHERE 1=1 {filter_clause} {cvss_filter}
+                WHERE 1=1 {filter_clause} {cvss_filter} {severity_filter}
             """)
             count_result = session.execute(count_sql, params)
             total = count_result.scalar() or 0
@@ -1011,7 +1055,7 @@ class SecurityDatabase(DatabaseHelper):
                     JOIN xmppmaster.local_glpi_machines m ON m.id = isv.items_id
                     WHERE 1=1 {entity_filter}
                 ) glpi_sw ON COALESCE(sc.glpi_software_name, sc.software_name) = glpi_sw.glpi_software_name
-                WHERE 1=1 {filter_clause} {cvss_filter}
+                WHERE 1=1 {filter_clause} {cvss_filter} {severity_filter}
                 GROUP BY sc.software_name, sc.software_version
                 ORDER BY max_cvss DESC, total_cves DESC
                 LIMIT :limit OFFSET :start
@@ -1038,9 +1082,12 @@ class SecurityDatabase(DatabaseHelper):
             return {'total': 0, 'data': []}
 
     @DatabaseHelper._sessionm
-    def get_entities_summary(self, session, start=0, limit=50, filter_str='', user_entities=''):
+    def get_entities_summary(self, session, start=0, limit=50, filter_str='', user_entities='',
+                             min_cvss=0.0, min_severity='None'):
         """Get list of entities with CVE counts.
         Filtered by user's accessible entities if user_entities is provided.
+        Filtered by min_cvss if > 0.
+        Filtered by min_severity if not 'None'.
 
         Returns:
             dict with 'total' count and 'data' list containing:
@@ -1048,6 +1095,19 @@ class SecurityDatabase(DatabaseHelper):
             - total_cves, critical, high, medium, low
             - max_cvss, machines_count
         """
+        # Severity order for filtering
+        severity_order = ['None', 'Low', 'Medium', 'High', 'Critical']
+        min_sev_index = severity_order.index(min_severity) if min_severity in severity_order else 0
+
+        # Build CVE filters
+        cve_filter = ""
+        if min_cvss > 0:
+            cve_filter += f" AND c.cvss_score >= {min_cvss}"
+        if min_sev_index > 0:
+            allowed_severities = severity_order[min_sev_index:]
+            severity_list = ','.join(f"'{s}'" for s in allowed_severities)
+            cve_filter += f" AND c.severity IN ({severity_list})"
+
         try:
             # Build filter clause
             filter_clause = ""
@@ -1091,7 +1151,7 @@ class SecurityDatabase(DatabaseHelper):
                 LEFT JOIN xmppmaster.local_glpi_softwareversions sv ON sv.id = isv.softwareversions_id
                 LEFT JOIN xmppmaster.local_glpi_softwares s ON s.id = sv.softwares_id
                 LEFT JOIN security.software_cves sc ON sc.glpi_software_name = s.name
-                LEFT JOIN security.cves c ON c.id = sc.cve_id
+                LEFT JOIN security.cves c ON c.id = sc.cve_id {cve_filter}
                 WHERE 1=1 {filter_clause}
                 GROUP BY e.id, e.name, e.completename
                 ORDER BY max_cvss DESC, total_cves DESC
@@ -1120,9 +1180,12 @@ class SecurityDatabase(DatabaseHelper):
             return {'total': 0, 'data': []}
 
     @DatabaseHelper._sessionm
-    def get_groups_summary(self, session, start=0, limit=50, filter_str='', user_login=''):
+    def get_groups_summary(self, session, start=0, limit=50, filter_str='', user_login='',
+                           min_cvss=0.0, min_severity='None'):
         """Get list of groups with CVE counts.
         Filtered by ShareGroup - only show groups shared with this user.
+        Filtered by min_cvss if > 0.
+        Filtered by min_severity if not 'None'.
 
         Returns:
             dict with 'total' count and 'data' list containing:
@@ -1130,6 +1193,19 @@ class SecurityDatabase(DatabaseHelper):
             - total_cves, critical, high, medium, low
             - max_cvss, machines_count
         """
+        # Severity order for filtering
+        severity_order = ['None', 'Low', 'Medium', 'High', 'Critical']
+        min_sev_index = severity_order.index(min_severity) if min_severity in severity_order else 0
+
+        # Build CVE filters
+        cve_filter = ""
+        if min_cvss > 0:
+            cve_filter += f" AND c.cvss_score >= {min_cvss}"
+        if min_sev_index > 0:
+            allowed_severities = severity_order[min_sev_index:]
+            severity_list = ','.join(f"'{s}'" for s in allowed_severities)
+            cve_filter += f" AND c.severity IN ({severity_list})"
+
         try:
             # Build filter clause - exclude internal PULSE groups
             filter_clause = "AND g.name NOT LIKE 'PULSE_INTERNAL%'"
@@ -1181,7 +1257,7 @@ class SecurityDatabase(DatabaseHelper):
                 LEFT JOIN xmppmaster.local_glpi_softwareversions sv ON sv.id = isv.softwareversions_id
                 LEFT JOIN xmppmaster.local_glpi_softwares s ON s.id = sv.softwares_id
                 LEFT JOIN security.software_cves sc ON sc.glpi_software_name = s.name
-                LEFT JOIN security.cves c ON c.id = sc.cve_id
+                LEFT JOIN security.cves c ON c.id = sc.cve_id {cve_filter}
                 WHERE 1=1 {filter_clause} {share_filter}
                 GROUP BY g.id, g.name, g.type
                 ORDER BY max_cvss DESC, total_cves DESC
@@ -1211,12 +1287,28 @@ class SecurityDatabase(DatabaseHelper):
             return {'total': 0, 'data': []}
 
     @DatabaseHelper._sessionm
-    def get_group_machines(self, session, group_id, start=0, limit=50, filter_str=''):
+    def get_group_machines(self, session, group_id, start=0, limit=50, filter_str='',
+                           min_cvss=0.0, min_severity='None'):
         """Get machines in a group with their CVE counts.
+        Filtered by min_cvss if > 0.
+        Filtered by min_severity if not 'None'.
 
         Returns:
             dict with 'total' count and 'data' list
         """
+        # Severity order for filtering
+        severity_order = ['None', 'Low', 'Medium', 'High', 'Critical']
+        min_sev_index = severity_order.index(min_severity) if min_severity in severity_order else 0
+
+        # Build CVE filters
+        cve_filter = ""
+        if min_cvss > 0:
+            cve_filter += f" AND c.cvss_score >= {min_cvss}"
+        if min_sev_index > 0:
+            allowed_severities = severity_order[min_sev_index:]
+            severity_list = ','.join(f"'{s}'" for s in allowed_severities)
+            cve_filter += f" AND c.severity IN ({severity_list})"
+
         try:
             # Build filter clause
             filter_clause = ""
@@ -1247,6 +1339,7 @@ class SecurityDatabase(DatabaseHelper):
                     COUNT(DISTINCT CASE WHEN c.severity = 'Critical' THEN c.id END) as critical,
                     COUNT(DISTINCT CASE WHEN c.severity = 'High' THEN c.id END) as high,
                     COUNT(DISTINCT CASE WHEN c.severity = 'Medium' THEN c.id END) as medium,
+                    COUNT(DISTINCT CASE WHEN c.severity = 'Low' THEN c.id END) as low,
                     COALESCE(MAX(c.cvss_score), 0) as risk_score
                 FROM dyngroup.Results r
                 JOIN dyngroup.Machines dm ON dm.id = r.FK_machines
@@ -1255,7 +1348,7 @@ class SecurityDatabase(DatabaseHelper):
                 LEFT JOIN xmppmaster.local_glpi_softwareversions sv ON sv.id = isv.softwareversions_id
                 LEFT JOIN xmppmaster.local_glpi_softwares s ON s.id = sv.softwares_id
                 LEFT JOIN security.software_cves sc ON sc.glpi_software_name = s.name
-                LEFT JOIN security.cves c ON c.id = sc.cve_id
+                LEFT JOIN security.cves c ON c.id = sc.cve_id {cve_filter}
                 WHERE r.FK_groups = :group_id {filter_clause}
                 GROUP BY m.id, m.name
                 ORDER BY risk_score DESC, m.name ASC
@@ -1272,6 +1365,7 @@ class SecurityDatabase(DatabaseHelper):
                     'critical': int(row.critical),
                     'high': int(row.high),
                     'medium': int(row.medium),
+                    'low': int(row.low),
                     'risk_score': str(round(float(row.risk_score), 1)) if row.risk_score else '0.0'
                 })
 

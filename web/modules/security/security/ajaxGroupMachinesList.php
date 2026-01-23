@@ -30,6 +30,18 @@ $group_id = isset($_GET["group_id"]) ? intval($_GET["group_id"]) : 0;
 $filter = isset($_GET["filter"]) ? $_GET["filter"] : "";
 $start = isset($_GET["start"]) ? intval($_GET["start"]) : 0;
 
+// Get policies to determine which columns to show
+$policies = xmlrpc_get_policies();
+$minSeverity = $policies['display']['min_severity'] ?? 'None';
+
+// Determine which severity columns to show based on min_severity
+$severityOrder = array('None' => 0, 'Low' => 1, 'Medium' => 2, 'High' => 3, 'Critical' => 4);
+$minSevIndex = isset($severityOrder[$minSeverity]) ? $severityOrder[$minSeverity] : 0;
+$showLow = $minSevIndex <= 1;
+$showMedium = $minSevIndex <= 2;
+$showHigh = $minSevIndex <= 3;
+$showCritical = true; // Always show Critical
+
 if ($group_id <= 0) {
     echo '<div class="empty-message">';
     echo '<p>' . _T("Invalid group", "security") . '</p>';
@@ -48,6 +60,7 @@ $riskScores = array();
 $criticalCounts = array();
 $highCounts = array();
 $mediumCounts = array();
+$lowCounts = array();
 $totalCounts = array();
 $params = array();
 
@@ -69,6 +82,8 @@ foreach ($data as $row) {
         '<span class="badge badge-high">' . $row['high'] . '</span>' : '0';
     $mediumCounts[] = $row['medium'] > 0 ?
         '<span class="badge badge-medium">' . $row['medium'] . '</span>' : '0';
+    $lowCounts[] = isset($row['low']) && $row['low'] > 0 ?
+        '<span class="badge badge-low">' . $row['low'] . '</span>' : '0';
     $totalCounts[] = $row['total_cves'];
 
     // Params for actions
@@ -83,9 +98,19 @@ if ($count > 0) {
     $n = new OptimizedListInfos($hostnames, _T("Machine", "security"));
     $n->disableFirstColumnActionLink();
     $n->addExtraInfo($riskScores, _T("Risk Score", "security"));
-    $n->addExtraInfo($criticalCounts, _T("Critical", "security"));
-    $n->addExtraInfo($highCounts, _T("High", "security"));
-    $n->addExtraInfo($mediumCounts, _T("Medium", "security"));
+    // Only show severity columns that are >= min_severity
+    if ($showCritical) {
+        $n->addExtraInfo($criticalCounts, _T("Critical", "security"));
+    }
+    if ($showHigh) {
+        $n->addExtraInfo($highCounts, _T("High", "security"));
+    }
+    if ($showMedium) {
+        $n->addExtraInfo($mediumCounts, _T("Medium", "security"));
+    }
+    if ($showLow) {
+        $n->addExtraInfo($lowCounts, _T("Low", "security"));
+    }
     $n->addExtraInfo($totalCounts, _T("Total", "security"));
     $n->setItemCount($count);
     $n->setNavBar(new AjaxNavBar($count, $filter));

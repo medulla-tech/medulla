@@ -31,21 +31,16 @@ $currentUser = $_SESSION['login'] ?? 'unknown';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['bsave'])) {
         // Build policies array from form data
+        // Note: Use strings for numeric values to avoid XMLRPC type issues
         $policies = array(
             'display' => array(
-                'min_cvss' => floatval($_POST['display_min_cvss'] ?? 0),
+                'min_cvss' => strval($_POST['display_min_cvss'] ?? '0'),
                 'min_severity' => $_POST['display_min_severity'] ?? 'None',
-                'show_patched' => isset($_POST['display_show_patched']) && $_POST['display_show_patched'] === 'on'
-            ),
-            'policy' => array(
-                'alert_min_cvss' => floatval($_POST['policy_alert_min_cvss'] ?? 9.0),
-                'alert_min_severity' => $_POST['policy_alert_min_severity'] ?? 'Critical',
-                'alert_on_new' => isset($_POST['policy_alert_on_new']) && $_POST['policy_alert_on_new'] === 'on',
-                'max_age_days' => intval($_POST['policy_max_age_days'] ?? 365),
-                'min_published_year' => intval($_POST['policy_min_published_year'] ?? 2020)
+                'show_patched' => isset($_POST['display_show_patched']) && $_POST['display_show_patched'] === 'on',
+                'max_age_days' => strval($_POST['display_max_age_days'] ?? '0'),
+                'min_published_year' => strval($_POST['display_min_published_year'] ?? '2000')
             ),
             'exclusions' => array(
-                'patterns' => array_filter(array_map('trim', explode("\n", $_POST['exclusions_patterns'] ?? ''))),
                 'vendors' => array_filter(array_map('trim', explode("\n", $_POST['exclusions_vendors'] ?? ''))),
                 'names' => array_filter(array_map('trim', explode("\n", $_POST['exclusions_names'] ?? ''))),
                 'cve_ids' => array_filter(array_map('trim', explode("\n", $_POST['exclusions_cve_ids'] ?? '')))
@@ -72,20 +67,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header("Location: " . urlStrRedirect("security/security/settings"));
         exit;
     }
-
 }
 
 // Display page header
-$p = new PageGenerator(_T("Settings & Policies", 'security'));
+$p = new PageGenerator(_T("Settings", 'security'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
 // Get current policies (merged from DB + ini)
 $policies = xmlrpc_get_policies();
 $display = $policies['display'] ?? array();
-$policy = $policies['policy'] ?? array();
 $exclusions = $policies['exclusions'] ?? array();
-$age = $policies['age'] ?? array();
 
 // Severity options
 $severityOptions = array('None', 'Low', 'Medium', 'High', 'Critical');
@@ -114,17 +106,19 @@ $severityOptions = array('None', 'Low', 'Medium', 'High', 'Critical');
 $f = new ValidatingForm(array('method' => 'POST'));
 
 // ============================================
-// Display Policies Section
+// Display Filters Section
 // ============================================
-$f->add(new TitleElement(_T("Display Policies", "security")));
+$f->add(new TitleElement(_T("Display Filters", "security")));
 $f->add(new SpanElement('<p>' . _T("Control which CVEs are shown in the interface", "security") . '</p>', "security"));
 
 $f->push(new Table());
 
 // Minimum CVSS
 $f->add(
-    new TrFormElement(_T("Minimum CVSS", "security"), new InputTpl('display_min_cvss')),
-    array("value" => htmlspecialchars($display['min_cvss'] ?? 0))
+    new TrFormElement(_T("Minimum CVSS", "security"), new multifieldTpl(array(
+        new InputTpl('display_min_cvss', '/^[0-9](\.[0-9])?$|^10(\.0)?$/', htmlspecialchars($display['min_cvss'] ?? 0)),
+        new TextTpl('<i style="color:#999999">' . _T("0.0 - 10.0", "security") . '</i>')
+    )))
 );
 
 // Minimum Severity
@@ -143,48 +137,20 @@ $f->add(
     array("value" => ($display['show_patched'] ?? true) ? "checked" : "")
 );
 
-$f->pop();
-
-// ============================================
-// Alert Policies Section
-// ============================================
-$f->add(new TitleElement(_T("Alert Policies", "security")));
-$f->add(new SpanElement('<p>' . _T("Configure when to trigger alerts for critical vulnerabilities", "security") . '</p>', "security"));
-
-$f->push(new Table());
-
-// Alert CVSS threshold
+// Max CVE age (days)
 $f->add(
-    new TrFormElement(_T("Alert CVSS threshold", "security"), new InputTpl('policy_alert_min_cvss')),
-    array("value" => htmlspecialchars($policy['min_cvss'] ?? 9.0))
+    new TrFormElement(_T("Max CVE age (days)", "security"), new multifieldTpl(array(
+        new InputTpl('display_max_age_days', '/^[0-9]+$/', htmlspecialchars($display['max_age_days'] ?? 0)),
+        new TextTpl('<i style="color:#999999">' . _T("0 = no limit", "security") . '</i>')
+    )))
 );
 
-// Alert severity threshold
-$alertSeveritySelect = new SelectItem("policy_alert_min_severity");
-$alertSeveritySelect->setElements($severityOptions);
-$alertSeveritySelect->setElementsVal($severityOptions);
+// Min published year (1999-2099)
 $f->add(
-    new TrFormElement(_T("Alert severity threshold", "security"), $alertSeveritySelect),
-    array("value" => $policy['min_severity'] ?? 'Critical')
-);
-
-// Alert on new CVEs
-$alertOnNewCb = new CheckboxTpl("policy_alert_on_new");
-$f->add(
-    new TrFormElement(_T("Alert on new CVEs", "security"), $alertOnNewCb),
-    array("value" => ($policy['alert_on_new'] ?? true) ? "checked" : "")
-);
-
-// Max CVE age
-$f->add(
-    new TrFormElement(_T("Max CVE age (days)", "security"), new InputTpl('policy_max_age_days')),
-    array("value" => htmlspecialchars($age['max_age_days'] ?? 365))
-);
-
-// Min published year
-$f->add(
-    new TrFormElement(_T("Min published year", "security"), new InputTpl('policy_min_published_year')),
-    array("value" => htmlspecialchars($age['min_published_year'] ?? 2020))
+    new TrFormElement(_T("Min published year", "security"), new multifieldTpl(array(
+        new InputTpl('display_min_published_year', '/^(199[9]|20[0-9]{2})$/', htmlspecialchars($display['min_published_year'] ?? 2000)),
+        new TextTpl('<i style="color:#999999">' . _T("1999 - 2099", "security") . '</i>')
+    )))
 );
 
 $f->pop();
@@ -193,42 +159,35 @@ $f->pop();
 // Exclusions Section
 // ============================================
 $f->add(new TitleElement(_T("Exclusions", "security")));
-$f->add(new SpanElement('<p>' . _T("Exclude specific software or CVEs from display (one per line)", "security") . '</p>', "security"));
+$f->add(new SpanElement('<p>' . _T("Exclude specific vendors, software or CVEs from display (one per line)", "security") . '</p>', "security"));
 
 $f->push(new Table());
-
-// Software name patterns
-$patternsArea = new TextareaTpl("exclusions_patterns");
-$f->add(
-    new TrFormElement(_T("Software name patterns", "security"), $patternsArea),
-    array("value" => htmlspecialchars(implode("\n", $exclusions['patterns'] ?? array())))
-);
 
 // Vendor names
 $vendorsArea = new TextareaTpl("exclusions_vendors");
 $f->add(
-    new TrFormElement(_T("Vendor names", "security"), $vendorsArea),
+    new TrFormElement(_T("Vendors", "security") . '<br/><i style="color:#999999;font-weight:normal">' . _T("e.g. Microsoft Corporation", "security") . '</i>', $vendorsArea),
     array("value" => htmlspecialchars(implode("\n", $exclusions['vendors'] ?? array())))
 );
 
 // Exact software names
 $namesArea = new TextareaTpl("exclusions_names");
 $f->add(
-    new TrFormElement(_T("Exact software names", "security"), $namesArea),
+    new TrFormElement(_T("Software names", "security") . '<br/><i style="color:#999999;font-weight:normal">' . _T("e.g. Firefox 135.0 (x64 fr)", "security") . '</i>', $namesArea),
     array("value" => htmlspecialchars(implode("\n", $exclusions['names'] ?? array())))
 );
 
 // CVE IDs to exclude
 $cveIdsArea = new TextareaTpl("exclusions_cve_ids");
 $f->add(
-    new TrFormElement(_T("CVE IDs to exclude", "security"), $cveIdsArea),
+    new TrFormElement(_T("CVE IDs", "security") . '<br/><i style="color:#999999;font-weight:normal">' . _T("e.g. CVE-2024-1234", "security") . '</i>', $cveIdsArea),
     array("value" => htmlspecialchars(implode("\n", $exclusions['cve_ids'] ?? array())))
 );
 
 $f->pop();
 
 // Submit buttons
-$f->addButton("bsave", _T("Save Policies", "security"));
+$f->addButton("bsave", _T("Save", "security"));
 $f->addButton("breset", _T("Reset to Defaults", "security"), "btnSecondary");
 
 $f->display();

@@ -39,6 +39,18 @@ $location = isset($_GET['location']) ? $_GET['location'] : (count($valuesWithAll
 
 // Get dashboard summary (filtered by entity)
 $summary = xmlrpc_get_dashboard_summary($location);
+
+// Get policies to determine which severity cards to show
+$policies = xmlrpc_get_policies();
+$minSeverity = $policies['display']['min_severity'] ?? 'None';
+
+// Determine which severity cards to show based on min_severity
+$severityOrder = array('None' => 0, 'Low' => 1, 'Medium' => 2, 'High' => 3, 'Critical' => 4);
+$minSevIndex = isset($severityOrder[$minSeverity]) ? $severityOrder[$minSeverity] : 0;
+$showLow = $minSevIndex <= 1;
+$showMedium = $minSevIndex <= 2;
+$showHigh = $minSevIndex <= 3;
+$showCritical = true; // Always show Critical
 ?>
 
 <link rel="stylesheet" href="modules/security/graph/security.css" type="text/css" media="screen" />
@@ -49,22 +61,30 @@ $summary = xmlrpc_get_dashboard_summary($location);
         <div class="card-value"><?php echo intval($summary['total_cves']); ?></div>
         <div class="card-label"><?php echo _T("CVEs in Database", "security"); ?></div>
     </div>
+    <?php if ($showCritical): ?>
     <div class="security-card critical clickable" onclick="createGroupFromSeverity('Critical')" title="<?php echo _T("Click to create a group with affected machines", "security"); ?>">
         <div class="card-value"><?php echo intval($summary['critical']); ?></div>
         <div class="card-label"><?php echo _T("Critical", "security"); ?></div>
     </div>
+    <?php endif; ?>
+    <?php if ($showHigh): ?>
     <div class="security-card high clickable" onclick="createGroupFromSeverity('High')" title="<?php echo _T("Click to create a group with affected machines", "security"); ?>">
         <div class="card-value"><?php echo intval($summary['high']); ?></div>
         <div class="card-label"><?php echo _T("High", "security"); ?></div>
     </div>
+    <?php endif; ?>
+    <?php if ($showMedium): ?>
     <div class="security-card medium clickable" onclick="createGroupFromSeverity('Medium')" title="<?php echo _T("Click to create a group with affected machines", "security"); ?>">
         <div class="card-value"><?php echo intval($summary['medium']); ?></div>
         <div class="card-label"><?php echo _T("Medium", "security"); ?></div>
     </div>
+    <?php endif; ?>
+    <?php if ($showLow): ?>
     <div class="security-card low clickable" onclick="createGroupFromSeverity('Low')" title="<?php echo _T("Click to create a group with affected machines", "security"); ?>">
         <div class="card-value"><?php echo intval($summary['low']); ?></div>
         <div class="card-label"><?php echo _T("Low", "security"); ?></div>
     </div>
+    <?php endif; ?>
     <div class="security-card info clickable" onclick="goToMachines()" title="<?php echo _T("Click to view affected machines", "security"); ?>">
         <div class="card-value"><?php echo intval($summary['machines_affected']); ?></div>
         <div class="card-label"><?php echo _T("Machines Affected", "security"); ?></div>

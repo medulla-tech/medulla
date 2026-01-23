@@ -630,8 +630,8 @@ def run_cve_scan(scan_id: Optional[int] = None, entity_id: Optional[int] = None,
             logger.warning(f"Software submission failed: {submit_result.get('error')}")
 
         # Step 3: Trigger CVE scan (uses queue internally in CVE Central 1.1+)
-        max_age_days = getattr(config, 'max_age_days', 365)
-        min_published_year = getattr(config, 'min_published_year', 2015)
+        max_age_days = getattr(config, 'display_max_age_days', 0)
+        min_published_year = getattr(config, 'display_min_published_year', 2000)
         logger.debug(f"Triggering CVE Central scan (max_age_days={max_age_days}, min_published_year={min_published_year})")
 
         # Trigger scan - CVE Central 1.1+ uses queue internally for multi-server deduplication

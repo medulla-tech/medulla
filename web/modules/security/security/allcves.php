@@ -36,6 +36,18 @@ $listWithAll = array_merge([_T("All my entities", "security")], $listEntities);
 
 // Get current location filter
 $location = isset($_GET['location']) ? $_GET['location'] : (count($valuesWithAll) > 0 ? $valuesWithAll[0] : '');
+
+// Get policies to determine which severity options to show
+$policies = xmlrpc_get_policies();
+$minSeverity = $policies['display']['min_severity'] ?? 'None';
+
+// Determine which severity options to show based on min_severity
+$severityOrder = array('None' => 0, 'Low' => 1, 'Medium' => 2, 'High' => 3, 'Critical' => 4);
+$minSevIndex = isset($severityOrder[$minSeverity]) ? $severityOrder[$minSeverity] : 0;
+$showLow = $minSevIndex <= 1;
+$showMedium = $minSevIndex <= 2;
+$showHigh = $minSevIndex <= 3;
+$showCritical = true; // Always show Critical
 ?>
 
 <link rel="stylesheet" href="modules/security/graph/security.css" type="text/css" media="screen" />
@@ -58,10 +70,10 @@ $location = isset($_GET['location']) ? $_GET['location'] : (count($valuesWithAll
             <label for="severity-filter"><?php echo _T("Severity", "security"); ?>:</label>
             <select id="severity-filter" onchange="updateFilter()">
                 <option value=""><?php echo _T("All", "security"); ?></option>
-                <option value="Critical"><?php echo _T("Critical", "security"); ?></option>
-                <option value="High"><?php echo _T("High", "security"); ?></option>
-                <option value="Medium"><?php echo _T("Medium", "security"); ?></option>
-                <option value="Low"><?php echo _T("Low", "security"); ?></option>
+                <?php if ($showCritical): ?><option value="Critical"><?php echo _T("Critical", "security"); ?></option><?php endif; ?>
+                <?php if ($showHigh): ?><option value="High"><?php echo _T("High", "security"); ?></option><?php endif; ?>
+                <?php if ($showMedium): ?><option value="Medium"><?php echo _T("Medium", "security"); ?></option><?php endif; ?>
+                <?php if ($showLow): ?><option value="Low"><?php echo _T("Low", "security"); ?></option><?php endif; ?>
             </select>
         </div>
     </div>

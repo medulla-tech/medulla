@@ -30,6 +30,18 @@ $filter = isset($_GET["filter"]) ? $_GET["filter"] : "";
 $start = isset($_GET["start"]) ? intval($_GET["start"]) : 0;
 $userEntities = isset($_GET["user_entities"]) ? $_GET["user_entities"] : "";
 
+// Get policies to determine which columns to show
+$policies = xmlrpc_get_policies();
+$minSeverity = $policies['display']['min_severity'] ?? 'None';
+
+// Determine which severity columns to show based on min_severity
+$severityOrder = array('None' => 0, 'Low' => 1, 'Medium' => 2, 'High' => 3, 'Critical' => 4);
+$minSevIndex = isset($severityOrder[$minSeverity]) ? $severityOrder[$minSeverity] : 0;
+$showLow = $minSevIndex <= 1;
+$showMedium = $minSevIndex <= 2;
+$showHigh = $minSevIndex <= 3;
+$showCritical = true; // Always show Critical
+
 // Get data from backend (filtered by user's accessible entities)
 $result = xmlrpc_get_entities_summary($start, $maxperpage, $filter, $userEntities);
 $data = $result['data'];
@@ -87,10 +99,19 @@ if ($count > 0) {
     $n->disableFirstColumnActionLink();
     $n->addExtraInfo($machinesCounts, _T("Machines", "security"));
     $n->addExtraInfo($maxScores, _T("Max CVSS", "security"));
-    $n->addExtraInfo($criticalCounts, _T("Critical", "security"));
-    $n->addExtraInfo($highCounts, _T("High", "security"));
-    $n->addExtraInfo($mediumCounts, _T("Medium", "security"));
-    $n->addExtraInfo($lowCounts, _T("Low", "security"));
+    // Only show severity columns that are >= min_severity
+    if ($showCritical) {
+        $n->addExtraInfo($criticalCounts, _T("Critical", "security"));
+    }
+    if ($showHigh) {
+        $n->addExtraInfo($highCounts, _T("High", "security"));
+    }
+    if ($showMedium) {
+        $n->addExtraInfo($mediumCounts, _T("Medium", "security"));
+    }
+    if ($showLow) {
+        $n->addExtraInfo($lowCounts, _T("Low", "security"));
+    }
     $n->addExtraInfo($totalCounts, _T("Total CVEs", "security"));
     $n->setItemCount($count);
     $n->setNavBar(new AjaxNavBar($count, $filter));
