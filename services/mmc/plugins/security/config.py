@@ -45,6 +45,7 @@ class SecurityConfig(PluginConfig, SecurityDatabaseConfig):
         self.cve_central_url = ''
         self.cve_central_server_id = ''
         self.cve_central_keyAES32 = ''
+        self.use_websocket = True  # Use WebSocket for real-time scan (fallback to polling if unavailable)
         # Display filters
         self.display_min_cvss = 0.0
         self.display_min_severity = 'None'
@@ -70,6 +71,8 @@ class SecurityConfig(PluginConfig, SecurityDatabaseConfig):
             self.cve_central_url = self.safe_get("cve_central", "url", "")
             self.cve_central_server_id = self.safe_get("cve_central", "server_id", "")
             self.cve_central_keyAES32 = self.safe_get("cve_central", "keyAES32", "")
+            use_ws = self.safe_get("cve_central", "use_websocket", "true").lower()
+            self.use_websocket = use_ws in ('true', '1', 'yes', 'on')
 
         # [display] section
         if self.has_section("display"):
