@@ -88,7 +88,7 @@ def get_glpi_db_url():
 
 
 def get_unique_software_from_glpi(entity_id=None, group_id=None, machine_id=None,
-                                   excluded_patterns=None, excluded_vendors=None, excluded_names=None):
+                                   excluded_vendors=None, excluded_names=None):
     """
     Get unique software list from GLPI (optionally filtered by entity, group or machine)
 
@@ -96,7 +96,6 @@ def get_unique_software_from_glpi(entity_id=None, group_id=None, machine_id=None
         entity_id: Filter by entity ID (optional)
         group_id: Filter by group ID (optional)
         machine_id: Filter by machine GLPI ID (optional)
-        excluded_patterns: List of patterns to exclude (substring match, case-insensitive)
         excluded_vendors: List of vendors to exclude (exact match, case-insensitive)
         excluded_names: List of exact names to exclude (case-sensitive)
 
@@ -104,15 +103,12 @@ def get_unique_software_from_glpi(entity_id=None, group_id=None, machine_id=None
         List of unique software dicts with name, version, vendor
     """
     # Use empty lists if not provided (exclusions come from config)
-    if excluded_patterns is None:
-        excluded_patterns = []
     if excluded_vendors is None:
         excluded_vendors = []
     if excluded_names is None:
         excluded_names = []
 
-    # Prepare lowercase patterns and vendors for comparison
-    excluded_patterns_lower = [p.lower() for p in excluded_patterns if p]
+    # Prepare lowercase vendors for comparison
     excluded_vendors_lower = [v.lower() for v in excluded_vendors if v]
     try:
         engine = create_engine(get_glpi_db_url())
@@ -163,13 +159,6 @@ def get_unique_software_from_glpi(entity_id=None, group_id=None, machine_id=None
                 sw_vendor = row[2]
 
                 if not sw_name:
-                    continue
-
-                # Check exclusion patterns (substring match, case-insensitive)
-                sw_name_lower = sw_name.lower()
-                if any(pattern in sw_name_lower for pattern in excluded_patterns_lower):
-                    excluded_count += 1
-                    logger.debug(f"Excluded by pattern: {sw_name}")
                     continue
 
                 # Check exclusion vendors (exact match, case-insensitive)
@@ -610,7 +599,6 @@ def run_cve_scan(scan_id: Optional[int] = None, entity_id: Optional[int] = None,
             entity_id=entity_id,
             group_id=group_id,
             machine_id=machine_id,
-            excluded_patterns=config.excluded_patterns,
             excluded_vendors=config.excluded_vendors,
             excluded_names=config.excluded_names
         )
