@@ -114,6 +114,22 @@ CREATE TABLE IF NOT EXISTS `cve_exclusions` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='CVE exclues des rapports';
 
 -- ----------------------------------------------------------------------
+-- Table: policies
+-- Policies editables via UI (display, alert, exclusions)
+-- Priorite: DB > security.ini.local > security.ini
+-- ----------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `policies` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `category` varchar(50) NOT NULL COMMENT 'display, policy, exclusions',
+    `key` varchar(100) NOT NULL,
+    `value` text DEFAULT NULL,
+    `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `updated_by` varchar(100) DEFAULT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uk_category_key` (`category`, `key`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Policies editables via UI';
+
+-- ----------------------------------------------------------------------
 -- Note: Configuration is stored in /etc/mmc/plugins/security.ini.local
 -- NOT in database (following Medulla convention for module configuration)
 -- ----------------------------------------------------------------------
