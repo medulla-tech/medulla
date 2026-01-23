@@ -447,17 +447,22 @@ class CVECentralClient:
             logger.error(f"Error triggering queue processing: {e}")
             return {'success': False, 'error': str(e)}
 
-    def wait_for_queue_completion(self, poll_interval: int = 10, max_wait: int = 3600) -> Dict:
+    def wait_for_queue_completion(self, poll_interval: int = 10, max_wait: int = 3600,
+                                     on_progress: callable = None) -> Dict:
         """Wait for queue processing to complete with polling
 
         Args:
             poll_interval: Seconds between status checks
             max_wait: Maximum seconds to wait before timeout
+            on_progress: Optional callback(status_dict) called on each poll iteration
+                        Can be used to fetch CVEs progressively
 
         Returns:
             Final queue status dict
         """
         start_time = time.time()
+        last_done = 0
+
         while True:
             status = self.get_queue_status()
             queue = status.get('queue', {})
@@ -468,8 +473,22 @@ class CVECentralClient:
             done = queue.get('done', 0)
             failed = queue.get('failed', 0)
 
+            # Call progress callback if provided and new jobs completed
+            if on_progress and done > last_done:
+                try:
+                    on_progress(status)
+                except Exception as e:
+                    logger.warning(f"Progress callback error: {e}")
+                last_done = done
+
             # Queue is complete when no pending/processing jobs
             if pending == 0 and processing == 0 and not scan.get('running', False):
+                # Final callback
+                if on_progress:
+                    try:
+                        on_progress(status)
+                    except Exception as e:
+                        logger.warning(f"Final progress callback error: {e}")
                 return status
 
             elapsed = time.time() - start_time
@@ -618,6 +637,79 @@ def run_cve_scan(scan_id: Optional[int] = None, entity_id: Optional[int] = None,
         # Trigger scan - CVE Central 1.1+ uses queue internally for multi-server deduplication
         scan_result = cve_client.trigger_scan(background=True, max_age_days=max_age_days, min_published_year=min_published_year)
 
+        # Prepare CVE storage tracking (for progressive fetching)
+        cves_added = set()
+        severity_counts = {'Critical': 0, 'High': 0, 'Medium': 0, 'Low': 0, 'N/A': 0}
+        new_critical_cves = []
+
+        def store_cves_from_central():
+            """Fetch and store CVEs from CVE Central (called during polling)"""
+            nonlocal cves_added, severity_counts, new_critical_cves
+
+            cve_result = cve_client.get_cves(softwares)
+            if not cve_result.get('success', False):
+                logger.warning(f"Failed to get CVEs: {cve_result.get('error')}")
+                return 0
+
+            new_cves = 0
+            for cve_entry in cve_result.get('cves', []):
+                cve_id_str = cve_entry.get('cve_id')
+                if not cve_id_str or cve_id_str in cves_added:
+                    continue  # Skip if no ID or already processed
+
+                # Handle NULL cvss_score
+                cvss_raw = cve_entry.get('cvss_score')
+                cvss_score = float(cvss_raw) if cvss_raw is not None else None
+                severity = cve_entry.get('severity', 'N/A')
+                description = cve_entry.get('description', '')
+                published_at = cve_entry.get('published_at')
+                last_modified = cve_entry.get('last_modified')
+                software_name = cve_entry.get('software_name', '')
+                software_version = cve_entry.get('software_version', '')
+                glpi_software_name = cve_entry.get('glpi_software_name', '')
+                target_platform = cve_entry.get('target_platform')
+                sources = cve_entry.get('sources', [])
+                source_urls = cve_entry.get('source_urls', {})
+
+                # Add CVE to local cache
+                cve_db_id = security_db.add_cve(
+                    cve_id=cve_id_str,
+                    cvss_score=cvss_score,
+                    severity=severity,
+                    description=description,
+                    published_at=published_at,
+                    last_modified=last_modified,
+                    sources=sources,
+                    source_urls=source_urls
+                )
+
+                # Link software to CVE
+                if software_name:
+                    security_db.link_software_cve(
+                        software_name=software_name,
+                        software_version=software_version,
+                        cve_db_id=cve_db_id,
+                        glpi_software_name=glpi_software_name or None,
+                        target_platform=target_platform
+                    )
+
+                # Count by severity
+                sev = severity if severity in severity_counts else 'N/A'
+                severity_counts[sev] = severity_counts.get(sev, 0) + 1
+                if severity == 'Critical':
+                    new_critical_cves.append(cve_id_str)
+
+                cves_added.add(cve_id_str)
+                new_cves += 1
+
+            if new_cves > 0:
+                logger.info(f"Progressive fetch: {new_cves} new CVEs stored (total: {len(cves_added)})")
+            return new_cves
+
+        def on_progress(status):
+            """Callback for progressive CVE fetching during queue polling"""
+            store_cves_from_central()
+
         if scan_result.get('success'):
             softwares_to_scan = scan_result.get('softwares_to_scan', 0) or scan_result.get('queued', 0)
             if softwares_to_scan > 0:
@@ -626,84 +718,32 @@ def run_cve_scan(scan_id: Optional[int] = None, entity_id: Optional[int] = None,
                 # Check if CVE Central 1.1+ (has queue status)
                 queue_status = cve_client.get_queue_status()
                 if 'queue' in queue_status and 'error' not in queue_status:
-                    # Use queue polling (more accurate for multi-server scenarios)
-                    logger.debug("Using queue-based polling (CVE Central 1.1+)")
-                    final_status = cve_client.wait_for_queue_completion(poll_interval=10, max_wait=3600)
+                    # Use queue polling with progressive CVE fetching
+                    logger.debug("Using queue-based polling with progressive CVE fetching (CVE Central 1.1+)")
+                    final_status = cve_client.wait_for_queue_completion(
+                        poll_interval=10, max_wait=3600, on_progress=on_progress
+                    )
                 else:
-                    # Fallback to legacy scan status polling
+                    # Fallback to legacy scan status polling (no progressive fetch)
                     final_status = cve_client.wait_for_scan_completion(poll_interval=10, max_wait=3600)
+                    # Fetch all CVEs at the end for legacy mode
+                    store_cves_from_central()
 
                 if final_status.get('error'):
                     logger.warning(f"CVE Central scan warning: {final_status.get('error')}")
             else:
                 logger.debug("No software needs scanning (all recently scanned)")
+                # Still fetch existing CVEs from cache
+                store_cves_from_central()
         else:
             logger.warning(f"CVE Central scan failed: {scan_result.get('error', 'Unknown')}")
+            # Try to get cached CVEs anyway
+            store_cves_from_central()
 
-        # Step 4: Get CVEs for our software (filtering is done server-side by CVE Central)
-        cve_result = cve_client.get_cves(softwares)
+        # Final fetch to ensure we have all CVEs (in case some were missed)
+        store_cves_from_central()
 
-        if not cve_result.get('success', False):
-            raise Exception(f"Failed to get CVEs: {cve_result.get('error')}")
-
-        cves_data = cve_result.get('cves', [])
-
-        # Step 5: Store CVEs locally and count by severity
-        cves_added = set()
-        severity_counts = {'Critical': 0, 'High': 0, 'Medium': 0, 'Low': 0, 'N/A': 0}
-        new_critical_cves = []
-
-        for cve_entry in cves_data:
-            cve_id_str = cve_entry.get('cve_id')
-            if not cve_id_str:
-                continue
-
-            # Handle NULL cvss_score (CVEs not yet evaluated)
-            cvss_raw = cve_entry.get('cvss_score')
-            cvss_score = float(cvss_raw) if cvss_raw is not None else None
-            severity = cve_entry.get('severity', 'N/A')
-            description = cve_entry.get('description', '')
-            published_at = cve_entry.get('published_at')
-            last_modified = cve_entry.get('last_modified')
-            software_name = cve_entry.get('software_name', '')  # Nom normalisé
-            software_version = cve_entry.get('software_version', '')  # Version normalisée
-            glpi_software_name = cve_entry.get('glpi_software_name', '')  # Nom GLPI original
-            target_platform = cve_entry.get('target_platform')  # Platform cible (android, macos, ios, etc.)
-            sources = cve_entry.get('sources', [])  # Sources ayant cette CVE (circl, nvd, euvd)
-            source_urls = cve_entry.get('source_urls', {})  # URLs des sources
-
-            # Add CVE to local cache
-            cve_db_id = security_db.add_cve(
-                cve_id=cve_id_str,
-                cvss_score=cvss_score,
-                severity=severity,
-                description=description,
-                published_at=published_at,
-                last_modified=last_modified,
-                sources=sources,
-                source_urls=source_urls
-            )
-
-            # Link software to CVE with target platform
-            if software_name:
-                security_db.link_software_cve(
-                    software_name=software_name,
-                    software_version=software_version,
-                    cve_db_id=cve_db_id,
-                    glpi_software_name=glpi_software_name or None,
-                    target_platform=target_platform
-                )
-
-            # Count by severity (only once per CVE)
-            if cve_id_str not in cves_added:
-                sev = severity if severity in severity_counts else 'N/A'
-                severity_counts[sev] = severity_counts.get(sev, 0) + 1
-                # Track new critical CVEs for alerting
-                if severity == 'Critical':
-                    new_critical_cves.append(cve_id_str)
-
-            cves_added.add(cve_id_str)
-
+        # CVEs are already stored by store_cves_from_central() during polling
         stats['cves_received'] = len(cves_added)
 
         # Complete scan (machines_affected is computed globally, not per-entity)
