@@ -184,6 +184,11 @@ $page->setFile("modules/security/security/ajaxCreateGroupFromSeverity.php");
 $page->setOptions(array("visible" => False, "noHeader" => True, "AJAX" => True));
 $submod->addPage($page);
 
+// Settings & Policies page
+$page = new Page("settings", _T('Settings', 'security'));
+$page->setFile("modules/security/security/settings.php");
+$submod->addPage($page);
+
 $mod->addSubmod($submod);
 $MMCApp =& MMCApp::getInstance();
 $MMCApp->addModule($mod);

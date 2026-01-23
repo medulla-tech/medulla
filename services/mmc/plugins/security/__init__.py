@@ -60,13 +60,11 @@ def get_dashboard_summary(location=''):
 # =============================================================================
 def get_cves(start=0, limit=50, filter_str='', severity=None, location='',
              sort_by='cvss_score', sort_order='desc'):
-    """Get paginated list of CVEs, filtered by entity"""
-    # Get display config for min_cvss filter
+    """Get paginated list of CVEs, filtered by entity and local policies"""
     from mmc.plugins.security.config import SecurityConfig
     cfg = SecurityConfig("security")
-    min_cvss = cfg.display_min_cvss
 
-    return SecurityDatabase().get_cves(
+    result = SecurityDatabase().get_cves(
         start=int(start),
         limit=int(limit),
         filter_str=filter_str,
@@ -74,8 +72,17 @@ def get_cves(start=0, limit=50, filter_str='', severity=None, location='',
         location=location,
         sort_by=sort_by,
         sort_order=sort_order,
-        min_cvss=min_cvss
+        min_cvss=cfg.display_min_cvss
     )
+
+    # Apply local policies filtering
+    if result.get('data'):
+        filtered_data = [cve for cve in result['data'] if cfg.should_display_cve(cve)]
+        result['data'] = filtered_data
+        # Note: total count may not match after client-side filtering
+        # This is acceptable for local policies as they are applied post-query
+
+    return result
 
 
 def get_cve_details(cve_id, location=''):
@@ -104,19 +111,24 @@ def get_machines_summary(start=0, limit=50, filter_str='', location=''):
 
 def get_machine_cves(id_glpi, start=0, limit=50, filter_str='', severity=None):
     """Get all CVEs affecting a specific machine with pagination and filtering."""
-    # Get display config for min_cvss filter
     from mmc.plugins.security.config import SecurityConfig
     cfg = SecurityConfig("security")
-    min_cvss = cfg.display_min_cvss
 
-    return SecurityDatabase().get_machine_cves(
+    result = SecurityDatabase().get_machine_cves(
         int(id_glpi),
         start=int(start),
         limit=int(limit),
         filter_str=filter_str,
         severity=severity,
-        min_cvss=min_cvss
+        min_cvss=cfg.display_min_cvss
     )
+
+    # Apply local policies filtering
+    if result.get('data'):
+        filtered_data = [cve for cve in result['data'] if cfg.should_display_cve(cve)]
+        result['data'] = filtered_data
+
+    return result
 
 
 def get_machine_softwares_summary(id_glpi, start=0, limit=50, filter_str=''):
@@ -252,6 +264,101 @@ def get_config(key=None):
     return config_dict
 
 
+def get_policies():
+    """Get current policies (merged from DB + ini files).
+
+    Returns effective policies after DB overrides are applied.
+    Always reloads from DB to get fresh values.
+    """
+    from mmc.plugins.security.config import SecurityConfig
+    config = SecurityConfig("security")
+
+    # Force reload from DB to get fresh values
+    config._db_policies_loaded = False
+    config._ensure_db_policies_loaded()
+
+    return {
+        'display': config.get_display_policies(),
+        'policy': config.get_alert_policies(),
+        'exclusions': config.get_exclusion_policies(),
+        'age': {
+            'max_age_days': config.max_age_days,
+            'min_published_year': config.min_published_year
+        }
+    }
+
+
+def get_policies_raw():
+    """Get raw policies from database only (for editing UI).
+
+    Returns only values stored in DB, not merged with ini defaults.
+    """
+    return SecurityDatabase().get_all_policies()
+
+
+def set_policies(policies, user=None):
+    """Set policies in database.
+
+    Args:
+        policies: dict like {
+            'display': {'min_cvss': 4.0, 'min_severity': 'High'},
+            'policy': {'alert_min_cvss': 9.0},
+            'exclusions': {'cve_ids': ['CVE-2024-1234']}
+        }
+        user: username making the change
+
+    Returns:
+        bool: True on success
+    """
+    return SecurityDatabase().set_policies_bulk(policies, user)
+
+
+def set_policies_json(policies_json, user=None):
+    """Set policies in database from JSON string.
+
+    This function is used by PHP XMLRPC to avoid nested array issues.
+
+    Args:
+        policies_json: JSON string of policies dict
+        user: username making the change
+
+    Returns:
+        bool: True on success
+    """
+    import json
+    try:
+        policies = json.loads(policies_json)
+        logger.debug(f"set_policies_json received: {policies}")
+        return SecurityDatabase().set_policies_bulk(policies, user)
+    except json.JSONDecodeError as e:
+        logger.error(f"Invalid JSON in set_policies_json: {e}")
+        return False
+
+
+def set_policy(category, key, value, user=None):
+    """Set a single policy value.
+
+    Args:
+        category: 'display', 'policy', or 'exclusions'
+        key: policy key (e.g., 'min_cvss', 'alert_min_severity')
+        value: the value to set
+        user: username making the change
+
+    Returns:
+        bool: True on success
+    """
+    return SecurityDatabase().set_policy(category, key, value, user)
+
+
+def reset_policies():
+    """Reset all policies to ini file defaults.
+
+    Returns:
+        bool: True on success
+    """
+    return SecurityDatabase().reset_all_policies()
+
+
 def set_config(key, value):
     """
     Configuration is read-only from ini file.
@@ -306,20 +413,25 @@ def get_softwares_summary(start=0, limit=50, filter_str='', location=''):
 def get_software_cves(software_name, software_version, start=0, limit=50,
                       filter_str='', severity=None):
     """Get all CVEs affecting a specific software version"""
-    # Get display config for min_cvss filter
     from mmc.plugins.security.config import SecurityConfig
     cfg = SecurityConfig("security")
-    min_cvss = cfg.display_min_cvss
 
-    return SecurityDatabase().get_software_cves(
+    result = SecurityDatabase().get_software_cves(
         software_name=software_name,
         software_version=software_version,
         start=int(start),
         limit=int(limit),
         filter_str=filter_str,
         severity=severity,
-        min_cvss=min_cvss
+        min_cvss=cfg.display_min_cvss
     )
+
+    # Apply local policies filtering
+    if result.get('data'):
+        filtered_data = [cve for cve in result['data'] if cfg.should_display_cve(cve)]
+        result['data'] = filtered_data
+
+    return result
 
 
 # =============================================================================

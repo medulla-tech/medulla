@@ -97,6 +97,31 @@ function xmlrpc_set_config($key, $value) {
 }
 
 // =============================================================================
+// Policies (editable via UI, stored in database)
+// =============================================================================
+function xmlrpc_get_policies() {
+    return xmlCall("security.get_policies", array());
+}
+
+function xmlrpc_get_policies_raw() {
+    return xmlCall("security.get_policies_raw", array());
+}
+
+function xmlrpc_set_policies($policies, $user = null) {
+    // Encode policies as JSON string to avoid XMLRPC nested array issues
+    $policies_json = json_encode($policies);
+    return xmlCall("security.set_policies_json", array($policies_json, $user));
+}
+
+function xmlrpc_set_policy($category, $key, $value, $user = null) {
+    return xmlCall("security.set_policy", array($category, $key, $value, $user));
+}
+
+function xmlrpc_reset_policies() {
+    return xmlCall("security.reset_policies", array());
+}
+
+// =============================================================================
 // Exclusions
 // =============================================================================
 function xmlrpc_get_exclusions() {

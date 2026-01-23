@@ -25,4 +25,5 @@ $sidemenu->addSideMenuItem(new SideMenuItem(_T("Results by Machine", 'security')
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Results by Entity", 'security'), "security", "security", "entities"));
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Results by Group", 'security'), "security", "security", "groups"));
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("All CVEs", 'security'), "security", "security", "allcves"));
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("Settings", 'security'), "security", "security", "settings"));
 ?>

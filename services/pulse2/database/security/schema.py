@@ -2,7 +2,7 @@
 # SPDX-FileCopyrightText: 2024-2025 Medulla, http://www.medulla-tech.io
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from sqlalchemy import Column, String, Integer, Text, DateTime, Date, Enum, DECIMAL, ForeignKey
+from sqlalchemy import Column, String, Integer, Text, DateTime, Date, Enum, DECIMAL, ForeignKey, UniqueConstraint
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from mmc.database.database_helper import DBObj
@@ -82,5 +82,26 @@ class CveExclusion(Base, SecurityDBObj):
 
 
 
-# NOTE: Configuration is now read from /etc/mmc/plugins/security.ini and security.ini.local
-# The scan_config table has been removed - config is managed via ini files like other modules
+class Policy(Base, SecurityDBObj):
+    """Policies de sécurité éditables via l'interface.
+
+    Stocke les paramètres des sections [display], [policy] et [exclusions]
+    qui peuvent être modifiés via l'UI. Les paramètres [main] et [cve_central]
+    restent dans les fichiers .ini pour des raisons de sécurité.
+
+    Chaque paramètre est stocké comme une paire clé/valeur avec sa catégorie.
+    """
+    __tablename__ = 'policies'
+    __table_args__ = (
+        UniqueConstraint('category', 'key', name='uk_category_key'),
+    )
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    category = Column(String(50), nullable=False)  # display, policy, exclusions
+    key = Column(String(100), nullable=False)  # nom du paramètre
+    value = Column(Text)  # valeur (peut être JSON pour les listes)
+    updated_at = Column(DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
+    updated_by = Column(String(100))  # utilisateur ayant modifié
+
+
+# NOTE: [main] and [cve_central] config remain in /etc/mmc/plugins/security.ini
+# Only [display], [policy] and [exclusions] are stored in the policies table

@@ -1407,3 +1407,194 @@ class SecurityDatabase(DatabaseHelper):
         except Exception as e:
             logger.error(f"Error getting machines by severity {severity}: {e}")
             return []
+
+    # =========================================================================
+    # Policies Management (stored in DB for UI editing)
+    # =========================================================================
+    @DatabaseHelper._sessionm
+    def get_all_policies(self, session):
+        """Get all policies from database, grouped by category.
+
+        Returns:
+            dict: {'display': {...}, 'policy': {...}, 'exclusions': {...}}
+        """
+        import json
+        try:
+            result = session.execute(text("""
+                SELECT category, `key`, value FROM policies
+            """))
+
+            policies = {}
+            for row in result:
+                category, key, value = row
+                if category not in policies:
+                    policies[category] = {}
+
+                # Try to parse JSON for list values
+                try:
+                    parsed = json.loads(value) if value else value
+                    policies[category][key] = parsed
+                except (json.JSONDecodeError, TypeError):
+                    policies[category][key] = value
+
+            return policies
+        except Exception as e:
+            logger.debug(f"Could not get policies from DB: {e}")
+            return {}
+
+    @DatabaseHelper._sessionm
+    def get_policy(self, session, category, key):
+        """Get a single policy value.
+
+        Args:
+            category: display, policy, or exclusions
+            key: the policy key
+
+        Returns:
+            The value (parsed from JSON if applicable) or None
+        """
+        import json
+        try:
+            result = session.execute(text("""
+                SELECT value FROM policies WHERE category = :category AND `key` = :key
+            """), {'category': category, 'key': key})
+            row = result.fetchone()
+            if row and row[0]:
+                try:
+                    return json.loads(row[0])
+                except (json.JSONDecodeError, TypeError):
+                    return row[0]
+            return None
+        except Exception as e:
+            logger.error(f"Error getting policy {category}.{key}: {e}")
+            return None
+
+    @DatabaseHelper._sessionm
+    def set_policy(self, session, category, key, value, user=None):
+        """Set a policy value.
+
+        Args:
+            category: display, policy, or exclusions
+            key: the policy key
+            value: the value (will be JSON encoded if list/dict)
+            user: username making the change
+
+        Returns:
+            bool: True on success
+        """
+        import json
+
+        # Validate category
+        if category not in ('display', 'policy', 'exclusions'):
+            raise ValueError(f"Invalid category: {category}")
+
+        # JSON encode lists and dicts
+        if isinstance(value, (list, dict)):
+            value_str = json.dumps(value)
+        elif isinstance(value, bool):
+            value_str = 'true' if value else 'false'
+        else:
+            value_str = str(value) if value is not None else ''
+
+        try:
+            # Use INSERT ... ON DUPLICATE KEY UPDATE for upsert
+            session.execute(text("""
+                INSERT INTO policies (category, `key`, value, updated_by, updated_at)
+                VALUES (:category, :key, :value, :user, NOW())
+                ON DUPLICATE KEY UPDATE
+                    value = :value,
+                    updated_by = :user,
+                    updated_at = NOW()
+            """), {
+                'category': category,
+                'key': key,
+                'value': value_str,
+                'user': user
+            })
+            session.commit()
+            return True
+        except Exception as e:
+            logger.error(f"Error setting policy {category}.{key}: {e}")
+            return False
+
+    @DatabaseHelper._sessionm
+    def set_policies_bulk(self, session, policies, user=None):
+        """Set multiple policies at once.
+
+        Args:
+            policies: dict like {'display': {'min_cvss': 4.0}, 'exclusions': {'cve_ids': [...]}}
+            user: username making the change
+
+        Returns:
+            bool: True on success
+        """
+        import json
+
+        try:
+            for category, settings in policies.items():
+                if category not in ('display', 'policy', 'exclusions'):
+                    continue
+                for key, value in settings.items():
+                    # JSON encode lists and dicts
+                    if isinstance(value, (list, dict)):
+                        value_str = json.dumps(value)
+                    elif isinstance(value, bool):
+                        value_str = 'true' if value else 'false'
+                    else:
+                        value_str = str(value) if value is not None else ''
+
+                    session.execute(text("""
+                        INSERT INTO policies (category, `key`, value, updated_by, updated_at)
+                        VALUES (:category, :key, :value, :user, NOW())
+                        ON DUPLICATE KEY UPDATE
+                            value = :value,
+                            updated_by = :user,
+                            updated_at = NOW()
+                    """), {
+                        'category': category,
+                        'key': key,
+                        'value': value_str,
+                        'user': user
+                    })
+
+            session.commit()
+            return True
+        except Exception as e:
+            logger.error(f"Error setting policies bulk: {e}")
+            return False
+
+    @DatabaseHelper._sessionm
+    def delete_policy(self, session, category, key):
+        """Delete a policy (reverts to ini file default).
+
+        Args:
+            category: display, policy, or exclusions
+            key: the policy key
+
+        Returns:
+            bool: True on success
+        """
+        try:
+            session.execute(text("""
+                DELETE FROM policies WHERE category = :category AND `key` = :key
+            """), {'category': category, 'key': key})
+            session.commit()
+            return True
+        except Exception as e:
+            logger.error(f"Error deleting policy {category}.{key}: {e}")
+            return False
+
+    @DatabaseHelper._sessionm
+    def reset_all_policies(self, session):
+        """Delete all policies (reverts to ini file defaults).
+
+        Returns:
+            bool: True on success
+        """
+        try:
+            session.execute(text("DELETE FROM policies"))
+            session.commit()
+            return True
+        except Exception as e:
+            logger.error(f"Error resetting policies: {e}")
+            return False
