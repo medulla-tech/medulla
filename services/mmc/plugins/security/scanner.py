@@ -385,6 +385,103 @@ class CVECentralClient:
             logger.error(f"Error getting scan status from CVE Central: {e}")
             return {'running': False, 'error': str(e)}
 
+    def get_queue_status(self) -> Dict:
+        """Get current queue status from CVE Central"""
+        try:
+            url = f"{self.base_url}/api/queue/status"
+            response = self.session.get(
+                url,
+                headers=self._get_headers(),
+                timeout=30
+            )
+            response.raise_for_status()
+            return response.json()
+        except requests.exceptions.RequestException as e:
+            logger.error(f"Error getting queue status from CVE Central: {e}")
+            return {'queue': {'pending': 0}, 'error': str(e)}
+
+    def queue_submit(self, software_ids: List[int], force_rescan: bool = False) -> Dict:
+        """Submit software IDs to the scan queue
+
+        Args:
+            software_ids: List of software IDs to queue for scanning
+            force_rescan: If True, queue even if recently scanned
+
+        Returns:
+            Dict with queued/skipped/already_pending counts
+        """
+        try:
+            url = f"{self.base_url}/api/queue/submit"
+            response = self.session.post(
+                url,
+                headers=self._get_headers(),
+                json={'software_ids': software_ids, 'force_rescan': force_rescan},
+                timeout=120
+            )
+            response.raise_for_status()
+            return response.json()
+        except requests.exceptions.RequestException as e:
+            logger.error(f"Error submitting to queue: {e}")
+            return {'success': False, 'error': str(e)}
+
+    def queue_process(self, batch_size: int = 100) -> Dict:
+        """Trigger queue processing on CVE Central
+
+        Args:
+            batch_size: Number of jobs to process per batch
+
+        Returns:
+            Dict with processing status
+        """
+        try:
+            url = f"{self.base_url}/api/queue/process"
+            response = self.session.post(
+                url,
+                headers=self._get_headers(),
+                params={'batch_size': batch_size},
+                timeout=30
+            )
+            response.raise_for_status()
+            return response.json()
+        except requests.exceptions.RequestException as e:
+            logger.error(f"Error triggering queue processing: {e}")
+            return {'success': False, 'error': str(e)}
+
+    def wait_for_queue_completion(self, poll_interval: int = 10, max_wait: int = 3600) -> Dict:
+        """Wait for queue processing to complete with polling
+
+        Args:
+            poll_interval: Seconds between status checks
+            max_wait: Maximum seconds to wait before timeout
+
+        Returns:
+            Final queue status dict
+        """
+        start_time = time.time()
+        while True:
+            status = self.get_queue_status()
+            queue = status.get('queue', {})
+            scan = status.get('scan', {})
+
+            pending = queue.get('pending', 0)
+            processing = queue.get('processing', 0)
+            done = queue.get('done', 0)
+            failed = queue.get('failed', 0)
+
+            # Queue is complete when no pending/processing jobs
+            if pending == 0 and processing == 0 and not scan.get('running', False):
+                return status
+
+            elapsed = time.time() - start_time
+            if elapsed >= max_wait:
+                logger.warning(f"Queue wait timeout after {elapsed:.0f}s")
+                return {'error': 'Timeout waiting for queue completion', 'partial': True, **status}
+
+            cves_found = scan.get('cves_found', 0)
+            logger.info(f"Queue processing: {pending} pending, {processing} processing, {done} done, {failed} failed, {cves_found} CVEs found...")
+
+            time.sleep(poll_interval)
+
     def wait_for_scan_completion(self, poll_interval: int = 10, max_wait: int = 3600) -> Dict:
         """Wait for background scan to complete with polling
 
@@ -513,22 +610,33 @@ def run_cve_scan(scan_id: Optional[int] = None, entity_id: Optional[int] = None,
         if not submit_result.get('success', False):
             logger.warning(f"Software submission failed: {submit_result.get('error')}")
 
-        # Step 3: Trigger CVE scan on CVE Central (background mode with polling)
+        # Step 3: Trigger CVE scan (uses queue internally in CVE Central 1.1+)
         max_age_days = getattr(config, 'max_age_days', 365)
         min_published_year = getattr(config, 'min_published_year', 2015)
         logger.debug(f"Triggering CVE Central scan (max_age_days={max_age_days}, min_published_year={min_published_year})")
 
-        # Use background=True to avoid Gunicorn worker timeout, then poll for completion
+        # Trigger scan - CVE Central 1.1+ uses queue internally for multi-server deduplication
         scan_result = cve_client.trigger_scan(background=True, max_age_days=max_age_days, min_published_year=min_published_year)
 
         if scan_result.get('success'):
-            softwares_to_scan = scan_result.get('softwares_to_scan', 0)
+            softwares_to_scan = scan_result.get('softwares_to_scan', 0) or scan_result.get('queued', 0)
             if softwares_to_scan > 0:
                 logger.debug(f"CVE Central scanning {softwares_to_scan} software...")
-                # Wait for scan to complete with polling (max 1 hour)
-                final_status = cve_client.wait_for_scan_completion(poll_interval=10, max_wait=3600)
+
+                # Check if CVE Central 1.1+ (has queue status)
+                queue_status = cve_client.get_queue_status()
+                if 'queue' in queue_status and 'error' not in queue_status:
+                    # Use queue polling (more accurate for multi-server scenarios)
+                    logger.debug("Using queue-based polling (CVE Central 1.1+)")
+                    final_status = cve_client.wait_for_queue_completion(poll_interval=10, max_wait=3600)
+                else:
+                    # Fallback to legacy scan status polling
+                    final_status = cve_client.wait_for_scan_completion(poll_interval=10, max_wait=3600)
+
                 if final_status.get('error'):
                     logger.warning(f"CVE Central scan warning: {final_status.get('error')}")
+            else:
+                logger.debug("No software needs scanning (all recently scanned)")
         else:
             logger.warning(f"CVE Central scan failed: {scan_result.get('error', 'Unknown')}")
 
