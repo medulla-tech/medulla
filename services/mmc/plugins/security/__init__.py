@@ -401,7 +401,10 @@ def get_softwares_summary(start=0, limit=50, filter_str='', location=''):
         filter_str=filter_str,
         location=location,
         min_cvss=cfg.display_min_cvss,
-        min_severity=cfg.display_min_severity
+        min_severity=cfg.display_min_severity,
+        excluded_vendors=cfg.excluded_vendors,
+        excluded_names=cfg.excluded_names,
+        excluded_cve_ids=cfg.excluded_cve_ids
     )
 
 

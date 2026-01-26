@@ -964,11 +964,13 @@ class SecurityDatabase(DatabaseHelper):
     # =========================================================================
     @DatabaseHelper._sessionm
     def get_softwares_summary(self, session, start=0, limit=50, filter_str='', location='',
-                              min_cvss=0.0, min_severity='None'):
+                              min_cvss=0.0, min_severity='None',
+                              excluded_vendors=None, excluded_names=None, excluded_cve_ids=None):
         """Get list of softwares with CVE counts, grouped by software name+version.
         Filtered by entity if location is provided.
         Filtered by min_cvss if > 0.
         Filtered by min_severity if not 'None'.
+        Excludes vendors, names and CVE IDs based on exclusion policies.
 
         Returns:
             dict with 'total' count and 'data' list containing:
@@ -1005,6 +1007,34 @@ class SecurityDatabase(DatabaseHelper):
             severity_list = ','.join(f"'{s}'" for s in allowed_severities)
             severity_filter = f"AND c.severity IN ({severity_list})"
 
+        # Build exclusion filters (escape single quotes for SQL safety)
+        def sql_escape(val):
+            return val.replace("'", "''") if val else val
+
+        # Vendor exclusion: join with real GLPI tables to get manufacturer info
+        # glpi.glpi_softwares has manufacturers_id, glpi.glpi_manufacturers has name
+        # Use COLLATE to handle collation mismatch between databases
+        vendor_exclusion = ""
+        if excluded_vendors:
+            vendors_escaped = ','.join(f"'{sql_escape(v)}'" for v in excluded_vendors)
+            vendor_exclusion = f"""AND glpi_sw.glpi_software_name COLLATE utf8mb4_general_ci NOT IN (
+                SELECT gs.name COLLATE utf8mb4_general_ci FROM glpi.glpi_softwares gs
+                LEFT JOIN glpi.glpi_manufacturers gm ON gm.id = gs.manufacturers_id
+                WHERE gm.name IN ({vendors_escaped})
+            )"""
+
+        name_exclusion = ""
+        if excluded_names:
+            # Exclude by exact software name (normalized)
+            names_escaped = ','.join(f"'{sql_escape(n)}'" for n in excluded_names)
+            name_exclusion = f"AND sc.software_name NOT IN ({names_escaped})"
+
+        cve_exclusion = ""
+        if excluded_cve_ids:
+            # Exclude specific CVE IDs
+            cve_ids_escaped = ','.join(f"'{sql_escape(c)}'" for c in excluded_cve_ids)
+            cve_exclusion = f"AND c.cve_id NOT IN ({cve_ids_escaped})"
+
         # Build filter clause (search on normalized name for user convenience)
         filter_clause = ""
         params = {'start': start, 'limit': limit}
@@ -1027,7 +1057,7 @@ class SecurityDatabase(DatabaseHelper):
                     JOIN xmppmaster.local_glpi_machines m ON m.id = isv.items_id
                     WHERE 1=1 {entity_filter}
                 ) glpi_sw ON COALESCE(sc.glpi_software_name, sc.software_name) = glpi_sw.glpi_software_name
-                WHERE 1=1 {filter_clause} {cvss_filter} {severity_filter}
+                WHERE 1=1 {filter_clause} {cvss_filter} {severity_filter} {name_exclusion} {cve_exclusion} {vendor_exclusion}
             """)
             count_result = session.execute(count_sql, params)
             total = count_result.scalar() or 0
@@ -1055,7 +1085,7 @@ class SecurityDatabase(DatabaseHelper):
                     JOIN xmppmaster.local_glpi_machines m ON m.id = isv.items_id
                     WHERE 1=1 {entity_filter}
                 ) glpi_sw ON COALESCE(sc.glpi_software_name, sc.software_name) = glpi_sw.glpi_software_name
-                WHERE 1=1 {filter_clause} {cvss_filter} {severity_filter}
+                WHERE 1=1 {filter_clause} {cvss_filter} {severity_filter} {name_exclusion} {cve_exclusion} {vendor_exclusion}
                 GROUP BY sc.software_name, sc.software_version
                 ORDER BY max_cvss DESC, total_cves DESC
                 LIMIT :limit OFFSET :start
