@@ -33,9 +33,14 @@ if(session_status() != PHP_SESSION_ACTIVE){
 }
 
 if (!isset($_SESSION["expire"]) || $_SESSION["expire"] < time()) {
+    $wasAgentExpired = isset($_SESSION["agentsessionexpired"]);
     session_destroy();
 
-    $errorcode = isset($_SESSION["agentsessionexpired"]) ? "?agentsessionexpired=1" : "";
+    if ($wasAgentExpired) {
+        $errorcode = "?agentsessionexpired=1";
+    } else {
+        $errorcode = "?sessionexpired=1";
+    }
     $root = $conf["global"]["root"];
     echo "<script>\n";
     echo "window.location = '".$root."index.php". $errorcode ."';";
