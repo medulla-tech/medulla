@@ -496,33 +496,34 @@ class MobileDatabase(DatabaseHelper):
             logging.getLogger().error(f"Error fetching applications: {e}")
             return None
         
-    def getHmdmConfigurationApplications(self, app_id: int):
+    def getHmdmConfigurationApplications(self, config_id: int):
         """
-        Fetch configurations linked to a specific application.
+        Fetch applications linked to a specific configuration.
 
-        :param app_id: Application ID
+        :param config_id: Configuration ID
         :return: List of application dicts or [] on error
         """
         hmtoken = self.authenticate()
         if hmtoken is None:
             logging.getLogger().error("Impossible d'authentifier pour récupérer les applications de la configuration.")
             return []
-        # Call per-application configurations endpoint using given id as application id
-        url = f"{self.BASE_URL}/private/applications/configurations/{app_id}"
+
+        url = f"{self.BASE_URL}/private/configurations/applications/{config_id}"
         headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
 
         try:
             resp = requests.get(url, headers=headers)
             resp.raise_for_status()
-            logging.getLogger().info(f"Configurations for application {app_id} fetched successfully {resp.text}")
+            logging.getLogger().info(f"Applications for configuration {config_id} fetched successfully")
             data = resp.json() or {}
             payload = data.get("data", data)
-            # Some responses may nest under 'configurations' or be a list directly
-            if isinstance(payload, dict) and "configurations" in payload:
-                payload = payload.get("configurations", [])
-            return payload if isinstance(payload, list) else []
+
+            if not isinstance(payload, list):
+                logging.getLogger().warning(f"Unexpected payload type: {type(payload)}")
+                return []
+            return payload
         except Exception as e:
-            logging.getLogger().error(f"Error fetching configurations for application {app_id}: {e}")
+            logging.getLogger().error(f"Error fetching applications for configuration {config_id}: {e}")
             return []
 
     def getHmdmIcons(self):
