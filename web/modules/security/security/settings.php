@@ -133,7 +133,7 @@ $f->add(
 // Show patched CVEs
 $showPatchedCb = new CheckboxTpl("display_show_patched");
 $f->add(
-    new TrFormElement(_T("Show patched CVEs", "security"), $showPatchedCb),
+    new TrFormElement(_T("Show the CVEs that have a fix available", "security"), $showPatchedCb),
     array("value" => ($display['show_patched'] ?? true) ? "checked" : "")
 );
 
