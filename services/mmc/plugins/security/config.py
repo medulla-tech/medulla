@@ -12,14 +12,32 @@ class SecurityConfig(PluginConfig, SecurityDatabaseConfig):
     """
     Security plugin configuration.
 
-    Configuration priority (highest to lowest):
-    1. Database (policies table) - for [display], [exclusions]
-    2. /etc/mmc/plugins/security.ini.local
-    3. /etc/mmc/plugins/security.ini
+    Configuration sources:
+    - [main] and [cve_central]: read from .ini files only (security reasons)
+    - [display] and [exclusions]: read from database only (policies table)
 
-    Note: [main] and [cve_central] sections are ONLY read from .ini files
-    for security reasons (prevent UI tampering with credentials).
+    Note: Display and exclusion policies are managed via the UI and stored in DB.
+    The .ini file should NOT contain [display] or [exclusions] sections.
     """
+
+    # Valid severity levels in order
+    SEVERITY_LEVELS = ['None', 'Low', 'Medium', 'High', 'Critical']
+
+    # Default values for policies (matching schema-001.sql defaults)
+    DEFAULT_POLICIES = {
+        'display': {
+            'min_cvss': '4.0',
+            'min_severity': 'Medium',
+            'show_patched': True,
+            'max_age_days': '365',
+            'min_published_year': '2020'
+        },
+        'exclusions': {
+            'vendors': [],
+            'names': [],
+            'cve_ids': []
+        }
+    }
 
     def __init__(self, name='security', conffile=None):
         if not hasattr(self, 'initdone'):
@@ -34,8 +52,15 @@ class SecurityConfig(PluginConfig, SecurityDatabaseConfig):
             self._load_db_policies()
             self._db_policies_loaded = True
 
-    # Valid severity levels in order
-    SEVERITY_LEVELS = ['None', 'Low', 'Medium', 'High', 'Critical']
+    def reload_policies(self):
+        """Force reload policies from database.
+
+        Call this after modifying policies to ensure the config
+        reflects the latest values.
+        """
+        self._db_policies_loaded = False
+        self._load_db_policies()
+        self._db_policies_loaded = True
 
     def setDefault(self):
         PluginConfig.setDefault(self)
@@ -45,14 +70,16 @@ class SecurityConfig(PluginConfig, SecurityDatabaseConfig):
         self.cve_central_url = ''
         self.cve_central_server_id = ''
         self.cve_central_keyAES32 = ''
-        self.use_websocket = True  # Use WebSocket for real-time scan (fallback to polling if unavailable)
-        # Display filters
-        self.display_min_cvss = 0.0
-        self.display_min_severity = 'None'
+        self.use_websocket = True
+
+        # Display filters (defaults from schema-001.sql)
+        self.display_min_cvss = 4.0
+        self.display_min_severity = 'Medium'
         self.display_show_patched = True
-        self.display_max_age_days = 0  # 0 = no limit
-        self.display_min_published_year = 2000
-        # Exclusions
+        self.display_max_age_days = 365
+        self.display_min_published_year = 2020
+
+        # Exclusions (empty by default)
         self.excluded_vendors = []
         self.excluded_names = []
         self.excluded_cve_ids = []
@@ -61,12 +88,12 @@ class SecurityConfig(PluginConfig, SecurityDatabaseConfig):
         PluginConfig.readConf(self)
         SecurityDatabaseConfig.setup(self, self.conffile)
 
-        # [main] section
+        # [main] section - from .ini file only
         self.disable = self.getboolean("main", "disable")
         self.tempdir = self.safe_get("main", "tempdir", "/tmp/mmc-security")
         self.log_level = self.safe_get("main", "log_level", "INFO").upper()
 
-        # [cve_central] section
+        # [cve_central] section - from .ini file only
         if self.has_section("cve_central"):
             self.cve_central_url = self.safe_get("cve_central", "url", "")
             self.cve_central_server_id = self.safe_get("cve_central", "server_id", "")
@@ -74,42 +101,8 @@ class SecurityConfig(PluginConfig, SecurityDatabaseConfig):
             use_ws = self.safe_get("cve_central", "use_websocket", "true").lower()
             self.use_websocket = use_ws in ('true', '1', 'yes', 'on')
 
-        # [display] section
-        if self.has_section("display"):
-            try:
-                self.display_min_cvss = float(self.safe_get("display", "min_cvss", "0.0"))
-            except ValueError:
-                self.display_min_cvss = 0.0
-
-            severity = self.safe_get("display", "min_severity", "None")
-            if severity in self.SEVERITY_LEVELS:
-                self.display_min_severity = severity
-            else:
-                self.display_min_severity = 'None'
-
-            show_patched = self.safe_get("display", "show_patched", "true").lower()
-            self.display_show_patched = show_patched in ('true', '1', 'yes', 'on')
-
-            try:
-                self.display_max_age_days = int(self.safe_get("display", "max_age_days", "0"))
-            except ValueError:
-                self.display_max_age_days = 0
-
-            try:
-                self.display_min_published_year = int(self.safe_get("display", "min_published_year", "2000"))
-            except ValueError:
-                self.display_min_published_year = 2000
-
-        # [exclusions] section
-        if self.has_section("exclusions"):
-            vendors = self.safe_get("exclusions", "vendors", "")
-            self.excluded_vendors = [v.strip() for v in vendors.split(',') if v.strip()]
-
-            names = self.safe_get("exclusions", "names", "")
-            self.excluded_names = [n.strip() for n in names.split(',') if n.strip()]
-
-            cve_ids = self.safe_get("exclusions", "cve_ids", "")
-            self.excluded_cve_ids = [c.strip().upper() for c in cve_ids.split(',') if c.strip()]
+        # NOTE: [display] and [exclusions] are NOT read from .ini
+        # They are loaded from database via _load_db_policies()
 
     def safe_get(self, section, option, default=''):
         """Get config value with fallback to default"""
@@ -119,23 +112,22 @@ class SecurityConfig(PluginConfig, SecurityDatabaseConfig):
             return default
 
     def _load_db_policies(self):
-        """Load policies from database, overriding ini file values.
+        """Load policies from database.
 
-        Only loads [display], [exclusions] sections.
-        [main] and [cve_central] remain from ini files only.
+        Display and exclusion policies are stored in the policies table.
+        If no values in DB, defaults from DEFAULT_POLICIES are used.
         """
         try:
             from pulse2.database.security import SecurityDatabase
             db = SecurityDatabase()
             if not db.is_activated:
-                return  # DB not ready yet
-
-            policies = db.get_all_policies()
-            if not policies:
+                logger.debug("DB not activated, using default policies")
                 return
 
-            # Apply display policies
-            if 'display' in policies:
+            policies = db.get_all_policies()
+
+            # Apply display policies from DB (or keep defaults)
+            if policies and 'display' in policies:
                 display = policies['display']
                 if 'min_cvss' in display:
                     try:
@@ -158,8 +150,8 @@ class SecurityConfig(PluginConfig, SecurityDatabaseConfig):
                     except (ValueError, TypeError):
                         pass
 
-            # Apply exclusions
-            if 'exclusions' in policies:
+            # Apply exclusions from DB (or keep defaults)
+            if policies and 'exclusions' in policies:
                 exclusions = policies['exclusions']
                 if 'vendors' in exclusions:
                     val = exclusions['vendors']
@@ -182,8 +174,7 @@ class SecurityConfig(PluginConfig, SecurityDatabaseConfig):
 
             logger.debug("Loaded policies from database")
         except Exception as e:
-            # Silently fail - use ini values as fallback
-            logger.debug(f"Could not load DB policies (using ini): {e}")
+            logger.warning(f"Could not load DB policies, using defaults: {e}")
 
     def check(self):
         pass

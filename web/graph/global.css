@@ -854,6 +854,18 @@ li.delete a {
     color: #FFF;
 }
 
+li.remove a {
+    padding: 5px 0px  5px 22px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/actions/remove.svg");
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-size: 25px 25px;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+}
+
 li.csv a {
         padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;

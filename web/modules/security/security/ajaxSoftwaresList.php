@@ -92,6 +92,8 @@ foreach ($data as $row) {
 
 // Actions
 $detailAction = new ActionItem(_T("View CVEs", "security"), "softwareDetail", "display", "", "security", "security");
+$excludeAction = new ActionPopupItem(_T("Exclude this software", "security"), "ajaxAddExclusion", "delete", "", "security", "security");
+$excludeAction->setWidth(400);
 
 // Display the list
 if ($count > 0) {
@@ -118,6 +120,7 @@ if ($count > 0) {
     $n->setNavBar(new AjaxNavBar($count, $filter));
     $n->setParamInfo($params);
     $n->addActionItem($detailAction);
+    $n->addActionItem($excludeAction);
     $n->start = 0;
     $n->end = $count;
     $n->display();

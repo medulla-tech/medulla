@@ -53,7 +53,10 @@ def get_dashboard_summary(location=''):
     return SecurityDatabase().get_dashboard_summary(
         location=location,
         min_cvss=cfg.display_min_cvss,
-        min_severity=cfg.display_min_severity
+        min_severity=cfg.display_min_severity,
+        excluded_vendors=cfg.excluded_vendors,
+        excluded_names=cfg.excluded_names,
+        excluded_cve_ids=cfg.excluded_cve_ids
     )
 
 
@@ -77,7 +80,10 @@ def get_cves(start=0, limit=50, filter_str='', severity=None, location='',
         location=location,
         sort_by=sort_by,
         sort_order=sort_order,
-        min_cvss=cfg.display_min_cvss
+        min_cvss=cfg.display_min_cvss,
+        excluded_vendors=cfg.excluded_vendors,
+        excluded_names=cfg.excluded_names,
+        excluded_cve_ids=cfg.excluded_cve_ids
     )
 
     # Apply local policies filtering (for exclusions, etc.)
@@ -107,7 +113,10 @@ def get_machines_summary(start=0, limit=50, filter_str='', location=''):
         filter_str=filter_str,
         location=location,
         min_cvss=cfg.display_min_cvss,
-        min_severity=cfg.display_min_severity
+        min_severity=cfg.display_min_severity,
+        excluded_vendors=cfg.excluded_vendors,
+        excluded_names=cfg.excluded_names,
+        excluded_cve_ids=cfg.excluded_cve_ids
     )
 
 
@@ -122,7 +131,10 @@ def get_machine_cves(id_glpi, start=0, limit=50, filter_str='', severity=None):
         limit=int(limit),
         filter_str=filter_str,
         severity=severity,
-        min_cvss=cfg.display_min_cvss
+        min_cvss=cfg.display_min_cvss,
+        excluded_vendors=cfg.excluded_vendors,
+        excluded_names=cfg.excluded_names,
+        excluded_cve_ids=cfg.excluded_cve_ids
     )
 
     # Apply local policies filtering
@@ -135,17 +147,18 @@ def get_machine_cves(id_glpi, start=0, limit=50, filter_str='', severity=None):
 
 def get_machine_softwares_summary(id_glpi, start=0, limit=50, filter_str=''):
     """Get vulnerable software summary for a machine, grouped by software."""
-    # Get display config for min_cvss filter
     from mmc.plugins.security.config import SecurityConfig
     cfg = SecurityConfig("security")
-    min_cvss = cfg.display_min_cvss
 
     return SecurityDatabase().get_machine_softwares_summary(
         int(id_glpi),
         start=int(start),
         limit=int(limit),
         filter_str=filter_str,
-        min_cvss=min_cvss
+        min_cvss=cfg.display_min_cvss,
+        excluded_vendors=cfg.excluded_vendors,
+        excluded_names=cfg.excluded_names,
+        excluded_cve_ids=cfg.excluded_cve_ids
     )
 
 
@@ -306,7 +319,12 @@ def set_policies(policies, user=None):
     Returns:
         bool: True on success
     """
-    return SecurityDatabase().set_policies_bulk(policies, user)
+    result = SecurityDatabase().set_policies_bulk(policies, user)
+    if result:
+        # Reload config to reflect new policies
+        from mmc.plugins.security.config import SecurityConfig
+        SecurityConfig("security").reload_policies()
+    return result
 
 
 def set_policies_json(policies_json, user=None):
@@ -325,7 +343,12 @@ def set_policies_json(policies_json, user=None):
     try:
         policies = json.loads(policies_json)
         logger.debug(f"set_policies_json received: {policies}")
-        return SecurityDatabase().set_policies_bulk(policies, user)
+        result = SecurityDatabase().set_policies_bulk(policies, user)
+        if result:
+            # Reload config to reflect new policies
+            from mmc.plugins.security.config import SecurityConfig
+            SecurityConfig("security").reload_policies()
+        return result
     except json.JSONDecodeError as e:
         logger.error(f"Invalid JSON in set_policies_json: {e}")
         return False
@@ -343,16 +366,32 @@ def set_policy(category, key, value, user=None):
     Returns:
         bool: True on success
     """
-    return SecurityDatabase().set_policy(category, key, value, user)
+    result = SecurityDatabase().set_policy(category, key, value, user)
+    if result:
+        # Reload config to reflect new policies
+        from mmc.plugins.security.config import SecurityConfig
+        SecurityConfig("security").reload_policies()
+    return result
 
 
-def reset_policies():
-    """Reset all policies to ini file defaults.
+def reset_policies(user=None):
+    """Reset all policies to default values.
+
+    Deletes all existing policies and reinserts the default values
+    matching schema-001.sql.
+
+    Args:
+        user: username making the change (optional)
 
     Returns:
         bool: True on success
     """
-    return SecurityDatabase().reset_all_policies()
+    result = SecurityDatabase().reset_all_policies(user=user)
+    if result:
+        # Reload config to reflect new policies
+        from mmc.plugins.security.config import SecurityConfig
+        SecurityConfig("security").reload_policies()
+    return result
 
 
 def set_config(key, value):
@@ -446,7 +485,10 @@ def get_entities_summary(start=0, limit=50, filter_str='', user_entities=''):
         filter_str=filter_str,
         user_entities=user_entities,
         min_cvss=cfg.display_min_cvss,
-        min_severity=cfg.display_min_severity
+        min_severity=cfg.display_min_severity,
+        excluded_vendors=cfg.excluded_vendors,
+        excluded_names=cfg.excluded_names,
+        excluded_cve_ids=cfg.excluded_cve_ids
     )
 
 
@@ -464,7 +506,10 @@ def get_groups_summary(start=0, limit=50, filter_str='', user_login=''):
         filter_str=filter_str,
         user_login=user_login,
         min_cvss=cfg.display_min_cvss,
-        min_severity=cfg.display_min_severity
+        min_severity=cfg.display_min_severity,
+        excluded_vendors=cfg.excluded_vendors,
+        excluded_names=cfg.excluded_names,
+        excluded_cve_ids=cfg.excluded_cve_ids
     )
 
 
@@ -479,7 +524,10 @@ def get_group_machines(group_id, start=0, limit=50, filter_str=''):
         limit=int(limit),
         filter_str=filter_str,
         min_cvss=cfg.display_min_cvss,
-        min_severity=cfg.display_min_severity
+        min_severity=cfg.display_min_severity,
+        excluded_vendors=cfg.excluded_vendors,
+        excluded_names=cfg.excluded_names,
+        excluded_cve_ids=cfg.excluded_cve_ids
     )
 
 

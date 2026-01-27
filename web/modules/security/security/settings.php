@@ -41,9 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'min_published_year' => strval($_POST['display_min_published_year'] ?? '2000')
             ),
             'exclusions' => array(
-                'vendors' => array_filter(array_map('trim', explode("\n", $_POST['exclusions_vendors'] ?? ''))),
-                'names' => array_filter(array_map('trim', explode("\n", $_POST['exclusions_names'] ?? ''))),
-                'cve_ids' => array_filter(array_map('trim', explode("\n", $_POST['exclusions_cve_ids'] ?? '')))
+                'vendors' => array_filter(array_map('trim', explode("\n", $_POST['exclusions_vendors'] ?? '')))
             )
         );
 
@@ -58,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (isset($_POST['breset'])) {
-        $result = xmlrpc_reset_policies();
+        $result = xmlrpc_reset_policies($currentUser);
         if ($result) {
             new NotifyWidgetSuccess(_T("Policies reset to defaults", "security"));
         } else {
@@ -98,6 +96,15 @@ $severityOptions = array('None', 'Low', 'Medium', 'High', 'Critical');
     width: 300px;
     height: 80px;
     font-family: monospace;
+}
+.exclusions-section {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.exclusions-section h3 {
+    color: #333;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 5px;
 }
 </style>
 
@@ -156,38 +163,68 @@ $f->add(
 $f->pop();
 
 // ============================================
-// Exclusions Section
+// Exclusions Section - Vendors (textarea only)
 // ============================================
-$f->add(new TitleElement(_T("Exclusions", "security")));
-$f->add(new SpanElement('<p>' . _T("Exclude specific vendors, software or CVEs from display (one per line)", "security") . '</p>', "security"));
+$f->add(new TitleElement(_T("Vendor Exclusions", "security")));
+$f->add(new SpanElement('<p>' . _T("Exclude all software from specific vendors (one per line)", "security") . '</p>', "security"));
 
 $f->push(new Table());
 
-// Vendor names
+// Vendor names (keep as textarea - managed in form)
 $vendorsArea = new TextareaTpl("exclusions_vendors");
 $f->add(
     new TrFormElement(_T("Vendors", "security") . '<br/><i style="color:#999999;font-weight:normal">' . _T("e.g. Microsoft Corporation", "security") . '</i>', $vendorsArea),
     array("value" => htmlspecialchars(implode("\n", $exclusions['vendors'] ?? array())))
 );
 
-// Exact software names
-$namesArea = new TextareaTpl("exclusions_names");
-$f->add(
-    new TrFormElement(_T("Software names", "security") . '<br/><i style="color:#999999;font-weight:normal">' . _T("e.g. Firefox 135.0 (x64 fr)", "security") . '</i>', $namesArea),
-    array("value" => htmlspecialchars(implode("\n", $exclusions['names'] ?? array())))
-);
-
-// CVE IDs to exclude
-$cveIdsArea = new TextareaTpl("exclusions_cve_ids");
-$f->add(
-    new TrFormElement(_T("CVE IDs", "security") . '<br/><i style="color:#999999;font-weight:normal">' . _T("e.g. CVE-2024-1234", "security") . '</i>', $cveIdsArea),
-    array("value" => htmlspecialchars(implode("\n", $exclusions['cve_ids'] ?? array())))
-);
-
 $f->pop();
 
-// Submit buttons
-$f->addButton("bsave", _T("Save", "security"));
-$f->addButton("breset", _T("Reset to Defaults", "security"), "btnSecondary");
-
+// Display form WITHOUT buttons first
 $f->display();
+?>
+
+<!-- ============================================ -->
+<!-- Excluded Software Names (Table with search) -->
+<!-- ============================================ -->
+<div class="exclusions-section">
+    <h3><?php echo _T("Excluded Software", "security"); ?></h3>
+    <p style="color:#666; font-size:0.9em; margin-bottom:10px;">
+        <?php echo _T("Software excluded from CVE reports. Use the exclude button on the CVE Summary page to add software here.", "security"); ?>
+    </p>
+    <?php
+    $ajaxSoftware = new AjaxFilter(
+        urlStrRedirect("security/security/ajaxExcludedSoftwaresList"),
+        "containerExcludedSoftware",
+        array(),
+        "searchSoftware"
+    );
+    $ajaxSoftware->display();
+    $ajaxSoftware->displayDivToUpdate();
+    ?>
+</div>
+
+<!-- ============================================ -->
+<!-- Excluded CVE IDs (Table with search) -->
+<!-- ============================================ -->
+<div class="exclusions-section">
+    <h3><?php echo _T("Excluded CVEs", "security"); ?></h3>
+    <p style="color:#666; font-size:0.9em; margin-bottom:10px;">
+        <?php echo _T("CVEs excluded from reports. Use the exclude button on the All CVEs page to add CVEs here.", "security"); ?>
+    </p>
+    <?php
+    $ajaxCve = new AjaxFilter(
+        urlStrRedirect("security/security/ajaxExcludedCvesList"),
+        "containerExcludedCves",
+        array(),
+        "searchCve"
+    );
+    $ajaxCve->display();
+    $ajaxCve->displayDivToUpdate();
+    ?>
+</div>
+
+<!-- Submit buttons at the very end -->
+<div style="margin-top: 20px;">
+    <input type="submit" name="bsave" value="<?php echo _T("Save", "security"); ?>" class="btnPrimary" form="Form" />
+    <input type="submit" name="breset" value="<?php echo _T("Reset to Defaults", "security"); ?>" class="btnSecondary" form="Form" />
+</div>

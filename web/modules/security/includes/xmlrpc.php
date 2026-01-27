@@ -117,8 +117,8 @@ function xmlrpc_set_policy($category, $key, $value, $user = null) {
     return xmlCall("security.set_policy", array($category, $key, $value, $user));
 }
 
-function xmlrpc_reset_policies() {
-    return xmlCall("security.reset_policies", array());
+function xmlrpc_reset_policies($user = null) {
+    return xmlCall("security.reset_policies", array($user));
 }
 
 // =============================================================================

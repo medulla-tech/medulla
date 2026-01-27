@@ -488,3 +488,18 @@ tr.severity-na td:first-child { border-left: 3px solid #adb5bd; }
 .scan-button-wrapper {
     margin-bottom: 10px;
 }
+
+/* =============================================================================
+   Exclusions Section (Settings page)
+   ============================================================================= */
+.exclusions-section {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #ddd;
+}
+
+.exclusions-section h3 {
+    margin-bottom: 15px;
+    color: #24607E;
+    font-size: 1.1em;
+}

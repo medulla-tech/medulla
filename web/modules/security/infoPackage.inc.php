@@ -183,6 +183,30 @@ $page = new Page("settings", _T('Settings', 'security'));
 $page->setFile("modules/security/security/settings.php");
 $submod->addPage($page);
 
+// Ajax Excluded Software List
+$page = new Page("ajaxExcludedSoftwaresList", _T('Excluded Software', 'security'));
+$page->setFile("modules/security/security/ajaxExcludedSoftwaresList.php");
+$page->setOptions(array("visible" => False, "noHeader" => True, "AJAX" => True));
+$submod->addPage($page);
+
+// Ajax Excluded CVEs List
+$page = new Page("ajaxExcludedCvesList", _T('Excluded CVEs', 'security'));
+$page->setFile("modules/security/security/ajaxExcludedCvesList.php");
+$page->setOptions(array("visible" => False, "noHeader" => True, "AJAX" => True));
+$submod->addPage($page);
+
+// Ajax Remove Exclusion popup
+$page = new Page("ajaxRemoveExclusion", _T('Remove Exclusion', 'security'));
+$page->setFile("modules/security/security/ajaxRemoveExclusion.php");
+$page->setOptions(array("visible" => False, "noHeader" => True, "AJAX" => True));
+$submod->addPage($page);
+
+// Ajax Add Exclusion popup
+$page = new Page("ajaxAddExclusion", _T('Add Exclusion', 'security'));
+$page->setFile("modules/security/security/ajaxAddExclusion.php");
+$page->setOptions(array("visible" => False, "noHeader" => True, "AJAX" => True));
+$submod->addPage($page);
+
 $mod->addSubmod($submod);
 $MMCApp =& MMCApp::getInstance();
 $MMCApp->addModule($mod);
