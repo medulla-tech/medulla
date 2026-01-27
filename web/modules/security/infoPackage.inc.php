@@ -142,12 +142,6 @@ $page->setFile("modules/security/security/ajaxGroupMachinesList.php");
 $page->setOptions(array("visible" => False, "noHeader" => True, "AJAX" => True));
 $submod->addPage($page);
 
-// Start Scan action
-$page = new Page("startScan", _T('Start Scan', 'security'));
-$page->setFile("modules/security/security/startScan.php");
-$page->setOptions(array("visible" => False, "noHeader" => True));
-$submod->addPage($page);
-
 // Ajax Start Scan popup
 $page = new Page("ajaxStartScan", _T('Start Scan', 'security'));
 $page->setFile("modules/security/security/ajaxStartScan.php");
