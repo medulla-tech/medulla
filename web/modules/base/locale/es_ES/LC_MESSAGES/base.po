@@ -84,6 +84,10 @@ msgstr "Ha sido desconectado automáticamente ya que la sesión entre la interfa
 msgid "You have been successfully logged out."
 msgstr "Se ha cerrado la sesión correctamente."
 
+#: index.php:198
+msgid "Your session has expired due to inactivity. Please log in again."
+msgstr "Su sesión ha expirado por inactividad. Por favor, inicie sesión de nuevo."
+
 #: index.php:183
 msgid "Update successful. Please reconnect."
 msgstr "La actualización se ha realizado correctamente. Por favor, vuelva a conectar."
