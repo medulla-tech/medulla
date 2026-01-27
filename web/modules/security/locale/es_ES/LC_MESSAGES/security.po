@@ -2,101 +2,103 @@ msgid ""
 msgstr ""
 "Project-Id-Version: medulla\n"
 "POT-Creation-Date: 2025-01-27 10:30+0100\n"
+"Language: es_ES\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: modules/security/infoPackage.inc.php:25
 #: modules/security/infoPackage.inc.php:30
 msgid "Security"
-msgstr ""
+msgstr "Seguridad"
 
 #: modules/security/infoPackage.inc.php:37
 #: modules/security/security/index.php:28
 #: modules/security/security/localSidebar.php:23
 msgid "CVE Summary"
-msgstr ""
+msgstr "Resumen de CVE"
 
 #: modules/security/infoPackage.inc.php:42
 msgid "CVE List"
-msgstr ""
+msgstr "Lista de CVE"
 
 #: modules/security/infoPackage.inc.php:48
 #: modules/security/security/allcves.php:28
 #: modules/security/security/localSidebar.php:27
 msgid "All CVEs"
-msgstr ""
+msgstr "Todas las CVE"
 
 #: modules/security/infoPackage.inc.php:53
 #: modules/security/security/softwares.php:28
 msgid "Results by Software"
-msgstr ""
+msgstr "Resultados por software"
 
 #: modules/security/infoPackage.inc.php:59
 msgid "Softwares List"
-msgstr ""
+msgstr "Lista de software"
 
 #: modules/security/infoPackage.inc.php:65
 msgid "Software Vulnerabilities"
-msgstr ""
+msgstr "Vulnerabilidades del software"
 
 #: modules/security/infoPackage.inc.php:71
 msgid "Software CVE List"
-msgstr ""
+msgstr "Lista de CVE del software"
 
 #: modules/security/infoPackage.inc.php:77
 #: modules/security/security/localSidebar.php:24
 #: modules/security/security/machines.php:28
 msgid "Results by Machine"
-msgstr ""
+msgstr "Resultados por máquina"
 
 #: modules/security/infoPackage.inc.php:82
 msgid "Machines List"
-msgstr ""
+msgstr "Lista de máquinas"
 
 #: modules/security/infoPackage.inc.php:88
 msgid "Machine Vulnerabilities"
-msgstr ""
+msgstr "Vulnerabilidades de la máquina"
 
 #: modules/security/infoPackage.inc.php:94
 msgid "Machine CVE List"
-msgstr ""
+msgstr "Lista de CVE de la máquina"
 
 #: modules/security/infoPackage.inc.php:100
 msgid "Machine Softwares List"
-msgstr ""
+msgstr "Lista de software de la máquina"
 
 #: modules/security/infoPackage.inc.php:106
 msgid "CVE Details"
-msgstr ""
+msgstr "Detalles de la CVE"
 
 #: modules/security/infoPackage.inc.php:112
 #: modules/security/security/entities.php:28
 #: modules/security/security/localSidebar.php:25
 msgid "Results by Entity"
-msgstr ""
+msgstr "Resultados por entidad"
 
 #: modules/security/infoPackage.inc.php:117
 msgid "Entities List"
-msgstr ""
+msgstr "Lista de entidades"
 
 #: modules/security/infoPackage.inc.php:123
 #: modules/security/security/groups.php:27
 #: modules/security/security/localSidebar.php:26
 msgid "Results by Group"
-msgstr ""
+msgstr "Resultados por grupo"
 
 #: modules/security/infoPackage.inc.php:128
 msgid "Groups List"
-msgstr ""
+msgstr "Lista de grupos"
 
 #: modules/security/infoPackage.inc.php:134
 msgid "Group Vulnerabilities"
-msgstr ""
+msgstr "Vulnerabilidades del grupo"
 
 #: modules/security/infoPackage.inc.php:140
 msgid "Group Machines List"
-msgstr ""
+msgstr "Lista de máquinas del grupo"
 
 #: modules/security/infoPackage.inc.php:146
 #: modules/security/infoPackage.inc.php:152
@@ -105,55 +107,55 @@ msgstr ""
 #: modules/security/security/ajaxStartScanEntity.php:54
 #: modules/security/security/ajaxStartScanGroup.php:54
 msgid "Start Scan"
-msgstr ""
+msgstr "Iniciar escaneo"
 
 #: modules/security/infoPackage.inc.php:158
 msgid "Scan Entity"
-msgstr ""
+msgstr "Escanear entidad"
 
 #: modules/security/infoPackage.inc.php:164
 msgid "Scan Group"
-msgstr ""
+msgstr "Escanear grupo"
 
 #: modules/security/infoPackage.inc.php:170
 #: modules/security/security/ajaxMachinesList.php:88
 msgid "Scan Machine"
-msgstr ""
+msgstr "Escanear máquina"
 
 #: modules/security/infoPackage.inc.php:176
 msgid "Dashboard Summary"
-msgstr ""
+msgstr "Resumen del panel"
 
 #: modules/security/infoPackage.inc.php:182
 msgid "Create Group from Severity"
-msgstr ""
+msgstr "Crear grupo por severidad"
 
 #: modules/security/infoPackage.inc.php:188
 #: modules/security/security/localSidebar.php:28
 #: modules/security/security/settings.php:73
 msgid "Settings"
-msgstr ""
+msgstr "Configuración"
 
 #: modules/security/security/ajaxCreateGroupFromSeverity.php:32
 msgid "Invalid severity level"
-msgstr ""
+msgstr "Nivel de severidad inválido"
 
 #: modules/security/security/ajaxCreateGroupFromSeverity.php:42
 msgid "No machines found with this severity level"
-msgstr ""
+msgstr "No se encontraron máquinas con este nivel de severidad"
 
 #: modules/security/security/ajaxCreateGroupFromSeverity.php:58
 #, php-format
 msgid "Group '%s' created with %d machines"
-msgstr ""
+msgstr "Grupo '%s' creado con %d máquinas"
 
 #: modules/security/security/ajaxCreateGroupFromSeverity.php:64
 msgid "Group created but failed to add machines"
-msgstr ""
+msgstr "Grupo creado pero error al añadir máquinas"
 
 #: modules/security/security/ajaxCreateGroupFromSeverity.php:67
 msgid "Failed to create group"
-msgstr ""
+msgstr "Error al crear el grupo"
 
 #: modules/security/security/ajaxCreateGroupFromSeverity.php:82
 #: modules/security/security/ajaxEntitiesList.php:104
@@ -166,7 +168,7 @@ msgstr ""
 #: modules/security/security/index.php:67
 #: modules/security/security/softwareDetail.php:74
 msgid "Critical"
-msgstr ""
+msgstr "Crítico"
 
 #: modules/security/security/ajaxCreateGroupFromSeverity.php:83
 #: modules/security/security/ajaxEntitiesList.php:107
@@ -179,7 +181,7 @@ msgstr ""
 #: modules/security/security/index.php:73
 #: modules/security/security/softwareDetail.php:75
 msgid "High"
-msgstr ""
+msgstr "Alto"
 
 #: modules/security/security/ajaxCreateGroupFromSeverity.php:84
 #: modules/security/security/ajaxEntitiesList.php:110
@@ -192,7 +194,7 @@ msgstr ""
 #: modules/security/security/index.php:79
 #: modules/security/security/softwareDetail.php:76
 msgid "Medium"
-msgstr ""
+msgstr "Medio"
 
 #: modules/security/security/ajaxCreateGroupFromSeverity.php:85
 #: modules/security/security/ajaxEntitiesList.php:113
@@ -205,37 +207,41 @@ msgstr ""
 #: modules/security/security/index.php:85
 #: modules/security/security/softwareDetail.php:77
 msgid "Low"
-msgstr ""
+msgstr "Bajo"
 
 #: modules/security/security/ajaxCreateGroupFromSeverity.php:90
 msgid "Create Group from CVE Severity"
-msgstr ""
+msgstr "Crear grupo por severidad CVE"
 
 #: modules/security/security/ajaxCreateGroupFromSeverity.php:95
 #, php-format
-msgid "Create a static group with <strong>%d machines</strong> affected by <strong>%s</strong> severity CVEs?"
+msgid ""
+"Create a static group with <strong>%d machines</strong> affected by "
+"<strong>%s</strong> severity CVEs?"
 msgstr ""
+"¿Crear un grupo estático con <strong>%d máquinas</strong> afectadas por CVE "
+"de severidad <strong>%s</strong>?"
 
 #: modules/security/security/ajaxCreateGroupFromSeverity.php:100
 msgid "Create Group"
-msgstr ""
+msgstr "Crear grupo"
 
 #: modules/security/security/ajaxCreateGroupFromSeverity.php:102
 msgid "No machines found with this severity level."
-msgstr ""
+msgstr "No se encontraron máquinas con este nivel de severidad."
 
 #: modules/security/security/ajaxCVEList.php:88
 #: modules/security/security/ajaxGroupsList.php:94
 #: modules/security/security/ajaxMachineCVEList.php:87
 #: modules/security/security/ajaxSoftwareCVEList.php:90
 msgid "View Details"
-msgstr ""
+msgstr "Ver detalles"
 
 #: modules/security/security/ajaxCVEList.php:92
 #: modules/security/security/ajaxMachineCVEList.php:91
 #: modules/security/security/ajaxSoftwareCVEList.php:94
 msgid "CVE ID"
-msgstr ""
+msgstr "ID CVE"
 
 #: modules/security/security/ajaxCVEList.php:95
 #: modules/security/security/ajaxMachineCVEList.php:94
@@ -244,13 +250,13 @@ msgstr ""
 #: modules/security/security/cveDetail.php:71
 #: modules/security/security/softwareDetail.php:71
 msgid "Severity"
-msgstr ""
+msgstr "Severidad"
 
 #: modules/security/security/ajaxCVEList.php:96
 #: modules/security/security/ajaxMachineCVEList.php:95
 #: modules/security/security/ajaxSoftwareCVEList.php:98
 msgid "CVSS"
-msgstr ""
+msgstr "CVSS"
 
 #: modules/security/security/ajaxCVEList.php:97
 #: modules/security/security/ajaxMachineCVEList.php:96
@@ -258,33 +264,34 @@ msgstr ""
 #: modules/security/security/ajaxSoftwaresList.php:98
 #: modules/security/security/softwareDetail.php:63
 msgid "Software"
-msgstr ""
+msgstr "Software"
 
 #: modules/security/security/ajaxCVEList.php:98
 #: modules/security/security/ajaxEntitiesList.php:100
 #: modules/security/security/ajaxGroupsList.php:102
 #: modules/security/security/ajaxSoftwaresList.php:116
 msgid "Machines"
-msgstr ""
+msgstr "Máquinas"
 
 #: modules/security/security/ajaxCVEList.php:99
 #: modules/security/security/ajaxMachineCVEList.php:98
 #: modules/security/security/ajaxSoftwareCVEList.php:99
 #: modules/security/security/cveDetail.php:126
 msgid "Description"
-msgstr ""
+msgstr "Descripción"
 
 #: modules/security/security/ajaxCVEList.php:109
 msgid "No CVEs found. Run a scan to populate the database."
 msgstr ""
+"No se encontraron CVE. Ejecute un escaneo para llenar la base de datos."
 
 #: modules/security/security/ajaxEntitiesList.php:93
 msgid "View Machines"
-msgstr ""
+msgstr "Ver máquinas"
 
 #: modules/security/security/ajaxEntitiesList.php:94
 msgid "Scan this entity"
-msgstr ""
+msgstr "Escanear esta entidad"
 
 #: modules/security/security/ajaxEntitiesList.php:98
 #: modules/security/security/allcves.php:59
@@ -292,456 +299,467 @@ msgstr ""
 #: modules/security/security/machines.php:46
 #: modules/security/security/softwares.php:46
 msgid "Entity"
-msgstr ""
+msgstr "Entidad"
 
 #: modules/security/security/ajaxEntitiesList.php:101
 #: modules/security/security/ajaxGroupsList.php:103
 #: modules/security/security/ajaxMachineSoftwaresList.php:105
 #: modules/security/security/ajaxSoftwaresList.php:101
 msgid "Max CVSS"
-msgstr ""
+msgstr "CVSS máximo"
 
 #: modules/security/security/ajaxEntitiesList.php:115
 #: modules/security/security/ajaxGroupsList.php:117
 #: modules/security/security/machineDetail.php:57
 #: modules/security/security/softwareDetail.php:65
 msgid "Total CVEs"
-msgstr ""
+msgstr "Total CVE"
 
 #: modules/security/security/ajaxEntitiesList.php:126
 msgid "No entities found"
-msgstr ""
+msgstr "No se encontraron entidades"
 
 #: modules/security/security/ajaxGroupMachinesList.php:47
 #: modules/security/security/ajaxStartScanGroup.php:29
 #: modules/security/security/groupDetail.php:35
 msgid "Invalid group"
-msgstr ""
+msgstr "Grupo inválido"
 
 #: modules/security/security/ajaxGroupMachinesList.php:94
 #: modules/security/security/ajaxMachinesList.php:87
 #: modules/security/security/ajaxMachineSoftwaresList.php:98
 #: modules/security/security/ajaxSoftwaresList.php:94
 msgid "View CVEs"
-msgstr ""
+msgstr "Ver CVE"
 
 #: modules/security/security/ajaxGroupMachinesList.php:98
 #: modules/security/security/ajaxMachinesList.php:93
 #: modules/security/security/machineDetail.php:55
 msgid "Machine"
-msgstr ""
+msgstr "Máquina"
 
 #: modules/security/security/ajaxGroupMachinesList.php:100
 #: modules/security/security/ajaxMachinesList.php:95
 msgid "Risk Score"
-msgstr ""
+msgstr "Puntuación de riesgo"
 
 #: modules/security/security/ajaxGroupMachinesList.php:114
 #: modules/security/security/ajaxMachinesList.php:109
 #: modules/security/security/ajaxMachineSoftwaresList.php:119
 #: modules/security/security/ajaxSoftwaresList.php:115
 msgid "Total"
-msgstr ""
+msgstr "Total"
 
 #: modules/security/security/ajaxGroupMachinesList.php:124
 msgid "No machines in this group"
-msgstr ""
+msgstr "No hay máquinas en este grupo"
 
 #: modules/security/security/ajaxGroupsList.php:95
 msgid "Scan this group"
-msgstr ""
+msgstr "Escanear este grupo"
 
 #: modules/security/security/ajaxGroupsList.php:99
 #: modules/security/security/groupDetail.php:51
 msgid "Group"
-msgstr ""
+msgstr "Grupo"
 
 #: modules/security/security/ajaxGroupsList.php:101
 msgid "Type"
-msgstr ""
+msgstr "Tipo"
 
 #: modules/security/security/ajaxGroupsList.php:128
 msgid "No groups found"
-msgstr ""
+msgstr "No se encontraron grupos"
 
 #: modules/security/security/ajaxMachineCVEList.php:36
 #: modules/security/security/ajaxMachineSoftwaresList.php:47
 #: modules/security/security/machineDetail.php:35
 msgid "Invalid machine ID"
-msgstr ""
+msgstr "ID de máquina inválido"
 
 #: modules/security/security/ajaxMachineCVEList.php:97
 #: modules/security/security/ajaxMachineSoftwaresList.php:104
 #: modules/security/security/ajaxSoftwaresList.php:100
 #: modules/security/security/softwareDetail.php:64
 msgid "Version"
-msgstr ""
+msgstr "Versión"
 
 #: modules/security/security/ajaxMachineCVEList.php:109
 #: modules/security/security/ajaxSoftwareCVEList.php:111
 msgid "No CVEs match your filter criteria"
-msgstr ""
+msgstr "Ninguna CVE coincide con sus criterios de filtro"
 
 #: modules/security/security/ajaxMachineCVEList.php:111
 msgid "No CVEs found for this machine"
-msgstr ""
+msgstr "No se encontraron CVE para esta máquina"
 
 #: modules/security/security/ajaxMachinesList.php:120
 msgid "No machines found"
-msgstr ""
+msgstr "No se encontraron máquinas"
 
 #: modules/security/security/ajaxMachineSoftwaresList.php:129
 msgid "No vulnerable software found on this machine"
-msgstr ""
+msgstr "No se encontró software vulnerable en esta máquina"
 
 #: modules/security/security/ajaxScanMachine.php:34
 #, php-format
 msgid "Scan completed for %s. %d vulnerabilities found."
-msgstr ""
+msgstr "Escaneo completado para %s. %d vulnerabilidades encontradas."
 
 #: modules/security/security/ajaxScanMachine.php:36
 msgid "Unknown error"
-msgstr ""
+msgstr "Error desconocido"
 
 #: modules/security/security/ajaxScanMachine.php:37
 #, php-format
 msgid "Failed to scan %s: %s"
-msgstr ""
+msgstr "Error al escanear %s: %s"
 
 #: modules/security/security/ajaxScanMachine.php:45
 #, php-format
 msgid "Scan Machine: %s"
-msgstr ""
+msgstr "Escanear máquina: %s"
 
 #: modules/security/security/ajaxScanMachine.php:52
 msgid "Start a CVE vulnerability scan on this machine?"
-msgstr ""
+msgstr "¿Iniciar un escaneo de vulnerabilidades CVE en esta máquina?"
 
 #: modules/security/security/ajaxScanMachine.php:53
 #: modules/security/security/ajaxStartScan.php:45
 #: modules/security/security/ajaxStartScanEntity.php:53
 #: modules/security/security/ajaxStartScanGroup.php:53
 msgid "The scan runs in background."
-msgstr ""
+msgstr "El escaneo se ejecuta en segundo plano."
 
 #: modules/security/security/ajaxSoftwareCVEList.php:37
 #: modules/security/security/softwareDetail.php:35
 msgid "Invalid software"
-msgstr ""
+msgstr "Software inválido"
 
 #: modules/security/security/ajaxSoftwareCVEList.php:100
 #: modules/security/security/cveDetail.php:82
 msgid "Published"
-msgstr ""
+msgstr "Publicado"
 
 #: modules/security/security/ajaxSoftwareCVEList.php:113
 msgid "No CVEs found for this software"
-msgstr ""
+msgstr "No se encontraron CVE para este software"
 
 #: modules/security/security/ajaxSoftwaresList.php:126
 msgid "No vulnerable software found"
-msgstr ""
+msgstr "No se encontró software vulnerable"
 
 #: modules/security/security/ajaxStartScan.php:30
 #, php-format
 msgid "CVE scan started successfully (ID: %s). The scan runs in background."
 msgstr ""
+"Escaneo CVE iniciado con éxito (ID: %s). El escaneo se ejecuta en segundo "
+"plano."
 
 #: modules/security/security/ajaxStartScan.php:33
 #: modules/security/security/ajaxStartScanEntity.php:41
 #: modules/security/security/ajaxStartScanGroup.php:41
 msgid "Failed to start CVE scan. Please check the configuration."
-msgstr ""
+msgstr "Error al iniciar el escaneo CVE. Por favor verifique la configuración."
 
 #: modules/security/security/ajaxStartScan.php:42
 #: modules/security/security/index.php:114
 msgid "Start CVE Scan"
-msgstr ""
+msgstr "Iniciar escaneo CVE"
 
 #: modules/security/security/ajaxStartScan.php:44
 msgid "Start a CVE vulnerability scan on all machines?"
-msgstr ""
+msgstr "¿Iniciar un escaneo de vulnerabilidades CVE en todas las máquinas?"
 
 #: modules/security/security/ajaxStartScanEntity.php:29
 msgid "Invalid entity"
-msgstr ""
+msgstr "Entidad inválida"
 
 #: modules/security/security/ajaxStartScanEntity.php:38
 #, php-format
 msgid "CVE scan started for entity '%s' (ID: %s). The scan runs in background."
 msgstr ""
+"Escaneo CVE iniciado para la entidad '%s' (ID: %s). El escaneo se ejecuta en "
+"segundo plano."
 
 #: modules/security/security/ajaxStartScanEntity.php:50
 #, php-format
 msgid "Scan Entity: %s"
-msgstr ""
+msgstr "Escanear entidad: %s"
 
 #: modules/security/security/ajaxStartScanEntity.php:52
 msgid "Start a CVE vulnerability scan on machines in this entity?"
 msgstr ""
+"¿Iniciar un escaneo de vulnerabilidades CVE en las máquinas de esta entidad?"
 
 #: modules/security/security/ajaxStartScanGroup.php:38
 #, php-format
 msgid "CVE scan started for group '%s' (ID: %s). The scan runs in background."
 msgstr ""
+"Escaneo CVE iniciado para el grupo '%s' (ID: %s). El escaneo se ejecuta en "
+"segundo plano."
 
 #: modules/security/security/ajaxStartScanGroup.php:50
 #, php-format
 msgid "Scan Group: %s"
-msgstr ""
+msgstr "Escanear grupo: %s"
 
 #: modules/security/security/ajaxStartScanGroup.php:52
 msgid "Start a CVE vulnerability scan on machines in this group?"
 msgstr ""
+"¿Iniciar un escaneo de vulnerabilidades CVE en las máquinas de este grupo?"
 
 #: modules/security/security/allcves.php:35
 #: modules/security/security/index.php:35
 #: modules/security/security/machines.php:35
 #: modules/security/security/softwares.php:35
 msgid "All my entities"
-msgstr ""
+msgstr "Todas mis entidades"
 
 #: modules/security/security/allcves.php:72
 #: modules/security/security/softwareDetail.php:73
 msgid "All"
-msgstr ""
+msgstr "Todos"
 
 #: modules/security/security/cveDetail.php:29
 #, php-format
 msgid "CVE Details: %s"
-msgstr ""
+msgstr "Detalles CVE: %s"
 
 #: modules/security/security/cveDetail.php:34
 msgid "Invalid CVE ID"
-msgstr ""
+msgstr "ID CVE inválido"
 
 #: modules/security/security/cveDetail.php:46
 msgid "CVE not found"
-msgstr ""
+msgstr "CVE no encontrada"
 
 #: modules/security/security/cveDetail.php:64
 msgid "Back to CVE list"
-msgstr ""
+msgstr "Volver a la lista de CVE"
 
 #: modules/security/security/cveDetail.php:77
 msgid "CVSS Score"
-msgstr ""
+msgstr "Puntuación CVSS"
 
 #: modules/security/security/cveDetail.php:88
 msgid "Last Modified"
-msgstr ""
+msgstr "Última modificación"
 
 #: modules/security/security/cveDetail.php:108
 msgid "View on"
-msgstr ""
+msgstr "Ver en"
 
 #: modules/security/security/cveDetail.php:117
 #: modules/security/security/cveDetail.php:120
 msgid "View on NVD"
-msgstr ""
+msgstr "Ver en NVD"
 
 #: modules/security/security/cveDetail.php:128
 msgid "No description available"
-msgstr ""
+msgstr "Sin descripción disponible"
 
 #: modules/security/security/cveDetail.php:132
 #: modules/security/security/cveDetail.php:175
 msgid "Affected Software"
-msgstr ""
+msgstr "Software afectado"
 
 #: modules/security/security/cveDetail.php:164
 msgid "Affected Machines"
-msgstr ""
+msgstr "Máquinas afectadas"
 
 #: modules/security/security/cveDetail.php:174
 msgid "Hostname"
-msgstr ""
+msgstr "Nombre de host"
 
 #: modules/security/security/cveDetail.php:176
 msgid "Actions"
-msgstr ""
+msgstr "Acciones"
 
 #: modules/security/security/cveDetail.php:193
 msgid "View all CVEs"
-msgstr ""
+msgstr "Ver todas las CVE"
 
 #: modules/security/security/cveDetail.php:202
 msgid "No machines currently affected by this CVE"
-msgstr ""
+msgstr "Ninguna máquina actualmente afectada por esta CVE"
 
 #: modules/security/security/groupDetail.php:30
 #, php-format
 msgid "Machines in group: %s"
-msgstr ""
+msgstr "Máquinas en el grupo: %s"
 
 #: modules/security/security/groupDetail.php:47
 msgid "Back to groups list"
-msgstr ""
+msgstr "Volver a la lista de grupos"
 
 #: modules/security/security/groupDetail.php:52
 msgid "Total Machines"
-msgstr ""
+msgstr "Total máquinas"
 
 #: modules/security/security/index.php:60
 msgid "Click to view all CVEs"
-msgstr ""
+msgstr "Clic para ver todas las CVE"
 
 #: modules/security/security/index.php:62
 msgid "CVEs in Database"
-msgstr ""
+msgstr "CVE en base de datos"
 
 #: modules/security/security/index.php:65
 #: modules/security/security/index.php:71
 #: modules/security/security/index.php:77
 #: modules/security/security/index.php:83
 msgid "Click to create a group with affected machines"
-msgstr ""
+msgstr "Clic para crear un grupo con las máquinas afectadas"
 
 #: modules/security/security/index.php:88
 msgid "Click to view affected machines"
-msgstr ""
+msgstr "Clic para ver las máquinas afectadas"
 
 #: modules/security/security/index.php:90
 msgid "Machines Affected"
-msgstr ""
+msgstr "Máquinas afectadas"
 
 #: modules/security/security/index.php:97
 msgid "Last Scan"
-msgstr ""
+msgstr "Último escaneo"
 
 #: modules/security/security/index.php:102
 #, php-format
 msgid "Started at %s - Status: %s - %d software scanned, %d CVEs found"
 msgstr ""
+"Iniciado el %s - Estado: %s - %d software escaneados, %d CVE encontradas"
 
 #: modules/security/security/index.php:108
 msgid "No scan has been performed yet"
-msgstr ""
+msgstr "Aún no se ha realizado ningún escaneo"
 
 #: modules/security/security/index.php:119
 #: modules/security/security/machineDetail.php:56
 msgid "Vulnerable Software"
-msgstr ""
+msgstr "Software vulnerable"
 
 #: modules/security/security/machineDetail.php:30
 #, php-format
 msgid "Vulnerable Software on %s"
-msgstr ""
+msgstr "Software vulnerable en %s"
 
 #: modules/security/security/machineDetail.php:51
 msgid "Back to machines list"
-msgstr ""
+msgstr "Volver a la lista de máquinas"
 
 #: modules/security/security/settings.php:52
 msgid "Policies saved successfully"
-msgstr ""
+msgstr "Políticas guardadas con éxito"
 
 #: modules/security/security/settings.php:54
 msgid "Failed to save policies"
-msgstr ""
+msgstr "Error al guardar las políticas"
 
 #: modules/security/security/settings.php:63
 msgid "Policies reset to defaults"
-msgstr ""
+msgstr "Políticas restablecidas a valores predeterminados"
 
 #: modules/security/security/settings.php:65
 msgid "Failed to reset policies"
-msgstr ""
+msgstr "Error al restablecer las políticas"
 
 #: modules/security/security/settings.php:111
 msgid "Display Filters"
-msgstr ""
+msgstr "Filtros de visualización"
 
 #: modules/security/security/settings.php:112
 msgid "Control which CVEs are shown in the interface"
-msgstr ""
+msgstr "Controle qué CVE se muestran en la interfaz"
 
 #: modules/security/security/settings.php:118
 msgid "Minimum CVSS"
-msgstr ""
+msgstr "CVSS mínimo"
 
 #: modules/security/security/settings.php:120
 msgid "0.0 - 10.0"
-msgstr ""
+msgstr "0.0 - 10.0"
 
 #: modules/security/security/settings.php:129
 msgid "Minimum Severity"
-msgstr ""
+msgstr "Severidad mínima"
 
 #: modules/security/security/settings.php:136
 msgid "Show the CVEs that have a fix available"
-msgstr ""
+msgstr "Mostrar las CVE que tienen una corrección disponible"
 
 #: modules/security/security/settings.php:142
 msgid "Max CVE age (days)"
-msgstr ""
+msgstr "Antigüedad máx. de CVE (días)"
 
 #: modules/security/security/settings.php:144
 msgid "0 = no limit"
-msgstr ""
+msgstr "0 = sin límite"
 
 #: modules/security/security/settings.php:150
 msgid "Min published year"
-msgstr ""
+msgstr "Año de publicación mín."
 
 #: modules/security/security/settings.php:152
 msgid "1999 - 2099"
-msgstr ""
+msgstr "1999 - 2099"
 
 #: modules/security/security/settings.php:161
 msgid "Exclusions"
-msgstr ""
+msgstr "Exclusiones"
 
 #: modules/security/security/settings.php:162
 msgid "Exclude specific vendors, software or CVEs from display (one per line)"
 msgstr ""
+"Excluir proveedores, software o CVE específicos de la visualización (uno por "
+"línea)"
 
 #: modules/security/security/settings.php:169
 msgid "Vendors"
-msgstr ""
+msgstr "Proveedores"
 
 #: modules/security/security/settings.php:169
 msgid "e.g. Microsoft Corporation"
-msgstr ""
+msgstr "ej. Microsoft Corporation"
 
 #: modules/security/security/settings.php:176
 msgid "Software names"
-msgstr ""
+msgstr "Nombres de software"
 
 #: modules/security/security/settings.php:176
 msgid "e.g. Firefox 135.0 (x64 fr)"
-msgstr ""
+msgstr "ej. Firefox 135.0 (x64 fr)"
 
 #: modules/security/security/settings.php:183
 msgid "CVE IDs"
-msgstr ""
+msgstr "Identificadores CVE"
 
 #: modules/security/security/settings.php:183
 msgid "e.g. CVE-2024-1234"
-msgstr ""
+msgstr "ej. CVE-2024-1234"
 
 #: modules/security/security/settings.php:190
 msgid "Save"
-msgstr ""
+msgstr "Guardar"
 
 #: modules/security/security/settings.php:191
 msgid "Reset to Defaults"
-msgstr ""
+msgstr "Restablecer valores predeterminados"
 
 #: modules/security/security/softwareDetail.php:30
 #, php-format
 msgid "CVEs for %s %s"
-msgstr ""
+msgstr "CVE para %s %s"
 
 #: modules/security/security/softwareDetail.php:59
 msgid "Back to software list"
-msgstr ""
+msgstr "Volver a la lista de software"
 
 #: modules/security/security/startScan.php:29
 #, php-format
 msgid "CVE scan started successfully (ID: %s)"
-msgstr ""
+msgstr "Escaneo CVE iniciado con éxito (ID: %s)"
 
 #: modules/security/security/startScan.php:32
 msgid "Failed to start CVE scan"
-msgstr ""
+msgstr "Error al iniciar el escaneo CVE"
