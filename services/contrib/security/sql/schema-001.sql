@@ -129,6 +129,23 @@ CREATE TABLE IF NOT EXISTS `policies` (
     UNIQUE KEY `uk_category_key` (`category`, `key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Policies editables via UI';
 
+-- Default policies for security module
+--   - min_cvss: 4.0 (ignore minor CVEs with score < 4)
+--   - min_severity: Medium (ignore Low severity CVEs)
+--   - show_patched: true (show CVEs that have a fix available)
+--   - max_age_days: 365 (show only CVEs from the last year)
+--   - min_published_year: 2020 (ignore CVEs published before 2020)
+--   - exclusions: empty by default (vendors, names, cve_ids)
+INSERT INTO `policies` (`category`, `key`, `value`, `updated_at`, `updated_by`) VALUES
+('display', 'min_cvss', '4.0', NOW(), 'root'),
+('display', 'min_severity', 'Medium', NOW(), 'root'),
+('display', 'show_patched', 'true', NOW(), 'root'),
+('display', 'max_age_days', '365', NOW(), 'root'),
+('display', 'min_published_year', '2020', NOW(), 'root'),
+('exclusions', 'vendors', '[]', NOW(), 'root'),
+('exclusions', 'names', '[]', NOW(), 'root'),
+('exclusions', 'cve_ids', '[]', NOW(), 'root');
+
 -- ----------------------------------------------------------------------
 -- Note: Configuration is stored in /etc/mmc/plugins/security.ini.local
 -- NOT in database (following Medulla convention for module configuration)
