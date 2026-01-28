@@ -23,11 +23,16 @@ class StoreConfig(PluginConfig, StoreDatabaseConfig):
         self.packages_path = self.get("main", "packages_path") if self.has_option("main", "packages_path") else "/var/lib/pulse2/packages"
         # Client UUID for subscriptions
         self.client_uuid = self.get("client", "uuid") if self.has_option("client", "uuid") else None
-        # Kestra webhook configuration (single section, global enabled flag)
+        # Kestra integration
         self.kestra_enabled = self.getboolean("kestra", "enabled") if self.has_option("kestra", "enabled") else False
-        self.kestra_ai_webhook_url = self.get("kestra", "ai_webhook_url") if self.has_option("kestra", "ai_webhook_url") else None
-        self.kestra_sync_webhook_url = self.get("kestra", "sync_webhook_url") if self.has_option("kestra", "sync_webhook_url") else None
         self.kestra_skip_ssl_verify = self.getboolean("kestra", "skip_ssl_verify") if self.has_option("kestra", "skip_ssl_verify") else False
+        # Packages API (server fetches packages from Kestra)
+        self.packages_api_url = self.get("kestra", "packages_api_url") if self.has_option("kestra", "packages_api_url") else None
+        self.packages_api_token = self.get("kestra", "packages_api_token") if self.has_option("kestra", "packages_api_token") else None
+        # AI webhook for software requests
+        self.kestra_ai_webhook_url = self.get("kestra", "ai_webhook_url") if self.has_option("kestra", "ai_webhook_url") else None
+        # Script to regenerate packages in Medulla database
+        self.generate_package_script = self.get("main", "generate_package_script") if self.has_option("main", "generate_package_script") else "/usr/sbin/pulse2-generation_package.py"
 
     def check(self):
         pass

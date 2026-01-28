@@ -464,3 +464,38 @@ class StoreDatabase(DatabaseHelper):
             logging.getLogger().error(f"create_software_request error: {e}")
             session.rollback()
             return {'success': False, 'error': str(e)}
+
+    @DatabaseHelper._sessionm
+    def get_package_uuids_for_software_ids(self, session, software_ids):
+        """Get package UUIDs for a list of software IDs (for sync)
+
+        Returns list of dicts with software_id, software_name, and package_uuid
+        Only returns packages that have been built (package_uuid is not null)
+        """
+        try:
+            if not software_ids:
+                return []
+
+            downloads = session.query(
+                SoftwareDownload.software_id,
+                SoftwareDownload.package_uuid,
+                Software.name.label('software_name')
+            ).join(
+                Software, SoftwareDownload.software_id == Software.id
+            ).filter(
+                SoftwareDownload.software_id.in_(software_ids),
+                SoftwareDownload.package_uuid != None,
+                SoftwareDownload.package_built_at != None
+            ).all()
+
+            return [
+                {
+                    'software_id': d.software_id,
+                    'software_name': d.software_name,
+                    'package_uuid': d.package_uuid
+                }
+                for d in downloads
+            ]
+        except Exception as e:
+            logging.getLogger().error(f"get_package_uuids_for_software_ids error: {e}")
+            return []

@@ -43,15 +43,43 @@ if (empty($clientUuid) || !$clientInfo) {
     exit;
 }
 
-// Process POST form
+// Process POST form - Save subscriptions
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_subscriptions'])) {
     $selectedIds = isset($_POST['software_ids']) ? array_map('intval', $_POST['software_ids']) : array();
     $result = xmlrpc_save_subscriptions($selectedIds);
 
     if ($result && $result['success']) {
-        new NotifyWidgetSuccess(_T('Subscriptions saved successfully!', 'store') . ' (' . $result['count'] . ' ' . _T('software selected', 'store') . ')');
+        $msg = _T('Subscriptions saved successfully!', 'store') . ' (' . $result['count'] . ' ' . _T('software selected', 'store') . ')';
+        // Check if sync was performed
+        if (isset($result['sync'])) {
+            if ($result['sync']['success']) {
+                $msg .= ' - ' . $result['sync']['synced'] . ' ' . _T('packages synchronized', 'store');
+            } elseif (!empty($result['sync']['error'])) {
+                $msg .= ' - ' . _T('Sync warning', 'store') . ': ' . $result['sync']['error'];
+            }
+        }
+        new NotifyWidgetSuccess($msg);
     } else {
         new NotifyWidgetFailure(_T('Error saving subscriptions', 'store') . ': ' . htmlspecialchars($result['error'] ?? 'Unknown error'));
+    }
+    // POST/Redirect/GET to avoid resubmission on refresh
+    header("Location: " . urlStrRedirect("store/store/subscribe"));
+    exit;
+}
+
+// Process POST form - Manual sync
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['sync_packages'])) {
+    $result = xmlrpc_sync_packages_from_kestra();
+
+    if ($result && $result['success']) {
+        $msg = _T('Synchronization completed!', 'store') . ' ' . $result['synced'] . '/' . $result['total_subscribed'] . ' ' . _T('packages synchronized', 'store');
+        new NotifyWidgetSuccess($msg);
+    } else {
+        $error = $result['error'] ?? 'Unknown error';
+        if (!empty($result['errors'])) {
+            $error .= ' (' . implode(', ', $result['errors']) . ')';
+        }
+        new NotifyWidgetFailure(_T('Synchronization failed', 'store') . ': ' . htmlspecialchars($error));
     }
     // POST/Redirect/GET to avoid resubmission on refresh
     header("Location: " . urlStrRedirect("store/store/subscribe"));
@@ -224,17 +252,27 @@ if (!empty($currentSort) && $currentSort !== 'popular') $baseUrl .= "&sort=" . u
     $n->display();
     ?>
 
-<!-- Form placed AFTER the list to avoid HTML structure conflicts -->
-<form action="main.php?module=store&submod=store&action=subscribe" method="post" id="subscriptionForm">
-    <input type="hidden" name="save_subscriptions" value="1">
-    <!-- Hidden container for selected IDs - populated by JavaScript before submit -->
-    <div id="selectedIdsContainer"></div>
-    <div class="subscription-actions">
+<!-- Actions container with both buttons on same line -->
+<div class="subscription-actions">
+    <!-- Save subscriptions form -->
+    <form action="main.php?module=store&submod=store&action=subscribe" method="post" id="subscriptionForm" style="display: inline-block;">
+        <input type="hidden" name="save_subscriptions" value="1">
+        <!-- Hidden container for selected IDs - populated by JavaScript before submit -->
+        <div id="selectedIdsContainer"></div>
         <button type="button" id="btnOpenDisclaimer" class="btn btn-primary" disabled>
             <?php echo _T('Save Subscriptions', 'store'); ?>
         </button>
-    </div>
-</form>
+    </form>
+
+    <!-- Sync button form -->
+    <form action="main.php?module=store&submod=store&action=subscribe" method="post" id="syncForm" style="display: inline-block; margin-left: 10px; vertical-align: top;">
+        <input type="hidden" name="sync_packages" value="1">
+        <button type="submit" class="btn btn-default" style="padding: 6px 12px; line-height: 1.42857143;" onclick="return confirm('<?php echo _T('Synchronize packages from Kestra now?', 'store'); ?>');">
+            <img src="img/common/reload.png" style="vertical-align: middle; margin-right: 5px; height: 14px; width: 14px;" alt="" />
+            <?php echo _T('Sync Now', 'store'); ?>
+        </button>
+    </form>
+</div>
 
 <!-- Disclaimer modal -->
 <?php

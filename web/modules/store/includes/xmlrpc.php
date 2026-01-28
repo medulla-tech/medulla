@@ -73,4 +73,12 @@ function xmlrpc_get_subscribers_for_software($software_id) {
 function xmlrpc_create_software_request($software_name, $os, $requester_name, $requester_email, $message = "") {
     return xmlCall("store.create_software_request", array($software_name, $os, $requester_name, $requester_email, $message));
 }
+
+// ============================================
+// Package sync functions
+// ============================================
+
+function xmlrpc_sync_packages_from_kestra() {
+    return xmlCall("store.sync_packages_from_kestra", array());
+}
 ?>
