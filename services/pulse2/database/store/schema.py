@@ -92,7 +92,6 @@ class Client(Base, StoreDBObj):
 
     uuid = Column(String(36), nullable=False, unique=True)
     name = Column(String(255), nullable=False)
-    server_key = Column(String(50), nullable=False, unique=True)
     contact_email = Column(String(255))
     active = Column(TINYINT, default=1)
     created_at = Column(DateTime, default=datetime.datetime.now)
