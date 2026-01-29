@@ -499,3 +499,49 @@ class StoreDatabase(DatabaseHelper):
         except Exception as e:
             logging.getLogger().error(f"get_package_uuids_for_software_ids error: {e}")
             return []
+
+    @DatabaseHelper._sessionm
+    def update_deployed_at(self, session, package_uuid):
+        """Update deployed_at timestamp for a package after successful sync
+
+        Args:
+            package_uuid: UUID of the package that was deployed
+
+        Returns:
+            bool: True if updated successfully
+        """
+        try:
+            from sqlalchemy import text
+            session.execute(text("""
+                UPDATE software_downloads
+                SET deployed_at = NOW()
+                WHERE package_uuid = :uuid
+            """), {'uuid': package_uuid})
+            session.commit()
+            return True
+        except Exception as e:
+            logging.getLogger().error(f"update_deployed_at error: {e}")
+            return False
+
+    @DatabaseHelper._sessionm
+    def clear_deployed_at(self, session, package_uuid):
+        """Clear deployed_at timestamp when a package is removed
+
+        Args:
+            package_uuid: UUID of the package that was removed
+
+        Returns:
+            bool: True if updated successfully
+        """
+        try:
+            from sqlalchemy import text
+            session.execute(text("""
+                UPDATE software_downloads
+                SET deployed_at = NULL
+                WHERE package_uuid = :uuid
+            """), {'uuid': package_uuid})
+            session.commit()
+            return True
+        except Exception as e:
+            logging.getLogger().error(f"clear_deployed_at error: {e}")
+            return False

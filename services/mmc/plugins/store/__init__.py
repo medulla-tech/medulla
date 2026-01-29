@@ -202,8 +202,18 @@ def sync_packages_from_kestra():
             # Download package files
             result = _download_package(config, remote_pkg, local_path)
             if result['success']:
-                synced += 1
-                logger.info(f"Synced package {uuid} ({software_name})")
+                # Verify package files exist on disk before marking as deployed
+                conf_exists = os.path.exists(os.path.join(local_path, 'conf.json'))
+                xmppdeploy_exists = os.path.exists(os.path.join(local_path, 'xmppdeploy.json'))
+
+                if conf_exists and xmppdeploy_exists:
+                    # Update deployed_at in database
+                    StoreDatabase().update_deployed_at(uuid)
+                    synced += 1
+                    logger.info(f"Synced package {uuid} ({software_name})")
+                else:
+                    errors.append(f"{uuid}: Package files missing after download")
+                    logger.error(f"Package {uuid} files missing: conf.json={conf_exists}, xmppdeploy.json={xmppdeploy_exists}")
             else:
                 errors.append(f"{uuid}: {result.get('error', 'Unknown error')}")
         except Exception as e:
@@ -357,6 +367,8 @@ def _cleanup_unsubscribed_packages(config, subscribed_uuids):
         # Remove unsubscribed package
         try:
             shutil.rmtree(entry_path)
+            # Clear deployed_at in database
+            StoreDatabase().clear_deployed_at(entry)
             removed += 1
             removed_packages.append(entry)
             logger.info(f"Removed unsubscribed package: {entry}")
