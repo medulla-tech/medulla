@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: medulla\n"
-"POT-Creation-Date: 2025-01-27 10:30+0100\n"
+"POT-Creation-Date: 2025-01-30 14:00+0100\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -744,4 +744,431 @@ msgstr ""
 
 #: modules/security/security/startScan.php:32
 msgid "Failed to start CVE scan"
+msgstr ""
+
+#: modules/security/security/settings.php
+msgid "Filters"
+msgstr ""
+
+#: modules/security/security/settings/tabSoftware.php
+msgid "Excluded Software"
+msgstr ""
+
+#: modules/security/security/settings/tabSoftware.php
+msgid "Software listed here will not appear in CVE reports. You can also exclude software directly from the CVE Summary page."
+msgstr ""
+
+#: modules/security/security/settings/tabSoftware.php
+msgid "Add software to exclusions:"
+msgstr ""
+
+#: modules/security/security/settings/tabSoftware.php
+msgid "e.g. Mozilla Firefox"
+msgstr ""
+
+#: modules/security/security/settings/tabSoftware.php
+msgid "Add"
+msgstr ""
+
+#: modules/security/security/settings/tabSoftware.php
+#, php-format
+msgid "'%s' added to excluded software"
+msgstr ""
+
+#: modules/security/security/settings/tabSoftware.php
+msgid "Failed to add software exclusion"
+msgstr ""
+
+#: modules/security/security/settings/tabSoftware.php
+#, php-format
+msgid "'%s' is already excluded"
+msgstr ""
+
+#: modules/security/security/settings/tabSoftware.php
+msgid "Please enter a software name"
+msgstr ""
+
+#: modules/security/security/settings/tabCves.php
+msgid "Excluded CVEs"
+msgstr ""
+
+#: modules/security/security/settings/tabCves.php
+msgid "CVEs listed here will not appear in reports. You can also exclude CVEs directly from the All CVEs page."
+msgstr ""
+
+#: modules/security/security/settings/tabCves.php
+msgid "Add CVE to exclusions:"
+msgstr ""
+
+#: modules/security/security/settings/tabCves.php
+msgid "e.g. CVE-2024-12345"
+msgstr ""
+
+#: modules/security/security/settings/tabCves.php
+#, php-format
+msgid "'%s' added to excluded CVEs"
+msgstr ""
+
+#: modules/security/security/settings/tabCves.php
+msgid "Failed to add CVE exclusion"
+msgstr ""
+
+#: modules/security/security/settings/tabCves.php
+msgid "Please enter a valid CVE ID (e.g. CVE-2024-12345)"
+msgstr ""
+
+#: modules/security/security/settings/tabVendors.php
+msgid "Excluded Vendors"
+msgstr ""
+
+#: modules/security/security/settings/tabVendors.php
+msgid "All software from these vendors will be excluded from CVE reports."
+msgstr ""
+
+#: modules/security/security/settings/tabVendors.php
+msgid "Add vendor to exclusions:"
+msgstr ""
+
+#: modules/security/security/settings/tabVendors.php
+#, php-format
+msgid "'%s' added to excluded vendors"
+msgstr ""
+
+#: modules/security/security/settings/tabVendors.php
+msgid "Failed to add vendor exclusion"
+msgstr ""
+
+#: modules/security/security/settings/tabVendors.php
+msgid "Please enter a vendor name"
+msgstr ""
+
+#: modules/security/security/settings/tabFilters.php
+msgid "Display filters saved successfully"
+msgstr ""
+
+#: modules/security/security/settings/tabFilters.php
+msgid "Failed to save display filters"
+msgstr ""
+
+#: modules/security/security/ajaxExcludedSoftwaresList.php
+msgid "Software name"
+msgstr ""
+
+#: modules/security/security/ajaxExcludedSoftwaresList.php
+msgid "Remove from exclusions"
+msgstr ""
+
+#: modules/security/security/ajaxExcludedSoftwaresList.php
+msgid "No excluded software"
+msgstr ""
+
+#: modules/security/security/ajaxExcludedCvesList.php
+msgid "CVE"
+msgstr ""
+
+#: modules/security/security/ajaxExcludedCvesList.php
+msgid "No excluded CVEs"
+msgstr ""
+
+#: modules/security/security/ajaxExcludedVendorsList.php
+msgid "Vendor name"
+msgstr ""
+
+#: modules/security/security/ajaxExcludedVendorsList.php
+msgid "No excluded vendors"
+msgstr ""
+
+#: modules/security/security/ajaxRemoveExclusion.php
+msgid "Remove Software Exclusion"
+msgstr ""
+
+#: modules/security/security/ajaxRemoveExclusion.php
+#, php-format
+msgid "Remove '%s' from excluded software?"
+msgstr ""
+
+#: modules/security/security/ajaxRemoveExclusion.php
+msgid "Remove CVE Exclusion"
+msgstr ""
+
+#: modules/security/security/ajaxRemoveExclusion.php
+#, php-format
+msgid "Remove '%s' from excluded CVEs?"
+msgstr ""
+
+#: modules/security/security/ajaxRemoveExclusion.php
+msgid "Remove Vendor Exclusion"
+msgstr ""
+
+#: modules/security/security/ajaxRemoveExclusion.php
+#, php-format
+msgid "Remove '%s' from excluded vendors?"
+msgstr ""
+
+#: modules/security/security/ajaxRemoveExclusion.php
+msgid "Invalid exclusion type"
+msgstr ""
+
+#: modules/security/security/ajaxRemoveExclusion.php
+#, php-format
+msgid "'%s' removed from exclusions"
+msgstr ""
+
+#: modules/security/security/ajaxRemoveExclusion.php
+msgid "Failed to remove exclusion"
+msgstr ""
+
+#: modules/security/security/ajaxRemoveExclusion.php
+msgid "Remove"
+msgstr ""
+
+#: modules/security/security/settings.php
+msgid "CVEs"
+msgstr ""
+
+#: modules/security/security/ajaxExcludedSoftwaresList.php
+msgid "Use the form above to add software to the exclusion list."
+msgstr ""
+
+#: modules/security/security/ajaxExcludedCvesList.php
+msgid "Use the form above to add CVEs to the exclusion list."
+msgstr ""
+
+#: modules/security/security/ajaxExcludedVendorsList.php
+msgid "Use the form above to add vendors to the exclusion list."
+msgstr ""
+
+#: modules/security/security/ajaxExcludedCvesList.php
+msgid "Unknown"
+msgstr ""
+
+#: modules/security/security/settings/tabMachines.php
+msgid "Excluded Machines"
+msgstr ""
+
+#: modules/security/security/settings/tabMachines.php
+msgid "Machines listed here will be excluded from CVE reports and dashboard counts."
+msgstr ""
+
+#: modules/security/security/settings/tabMachines.php
+msgid "Add machine ID to exclusions:"
+msgstr ""
+
+#: modules/security/security/settings/tabMachines.php
+msgid "e.g. 123"
+msgstr ""
+
+#: modules/security/security/settings/tabMachines.php
+#, php-format
+msgid "Machine ID '%s' added to exclusions"
+msgstr ""
+
+#: modules/security/security/settings/tabMachines.php
+msgid "Failed to add machine exclusion"
+msgstr ""
+
+#: modules/security/security/settings/tabMachines.php
+#, php-format
+msgid "Machine ID '%s' is already excluded"
+msgstr ""
+
+#: modules/security/security/settings/tabMachines.php
+msgid "Please enter a valid machine ID"
+msgstr ""
+
+#: modules/security/security/settings/tabGroups.php
+msgid "Excluded Groups"
+msgstr ""
+
+#: modules/security/security/settings/tabGroups.php
+msgid "All machines in these groups will be excluded from CVE reports and dashboard counts."
+msgstr ""
+
+#: modules/security/security/settings/tabGroups.php
+msgid "Add group ID to exclusions:"
+msgstr ""
+
+#: modules/security/security/settings/tabGroups.php
+msgid "e.g. 45"
+msgstr ""
+
+#: modules/security/security/settings/tabGroups.php
+#, php-format
+msgid "Group ID '%s' added to exclusions"
+msgstr ""
+
+#: modules/security/security/settings/tabGroups.php
+msgid "Failed to add group exclusion"
+msgstr ""
+
+#: modules/security/security/settings/tabGroups.php
+#, php-format
+msgid "Group ID '%s' is already excluded"
+msgstr ""
+
+#: modules/security/security/settings/tabGroups.php
+msgid "Please enter a valid group ID"
+msgstr ""
+
+#: modules/security/security/ajaxExcludedMachinesList.php
+msgid "Machine ID"
+msgstr ""
+
+#: modules/security/security/ajaxExcludedMachinesList.php
+msgid "No excluded machines"
+msgstr ""
+
+#: modules/security/security/ajaxExcludedMachinesList.php
+msgid "Use the form above to add machines to the exclusion list."
+msgstr ""
+
+#: modules/security/security/ajaxExcludedGroupsList.php
+msgid "Group ID"
+msgstr ""
+
+#: modules/security/security/ajaxExcludedGroupsList.php
+msgid "Group Name"
+msgstr ""
+
+#: modules/security/security/ajaxExcludedGroupsList.php
+msgid "No excluded groups"
+msgstr ""
+
+#: modules/security/security/ajaxExcludedGroupsList.php
+msgid "Use the form above to add groups to the exclusion list."
+msgstr ""
+
+#: modules/security/security/ajaxRemoveExclusion.php
+msgid "Remove Machine Exclusion"
+msgstr ""
+
+#: modules/security/security/ajaxRemoveExclusion.php
+#, php-format
+msgid "Remove '%s' from excluded machines?"
+msgstr ""
+
+#: modules/security/security/ajaxRemoveExclusion.php
+msgid "Remove Group Exclusion"
+msgstr ""
+
+#: modules/security/security/ajaxRemoveExclusion.php
+#, php-format
+msgid "Remove '%s' from excluded groups?"
+msgstr ""
+
+#: modules/security/security/settings.php
+msgid "Groups"
+msgstr ""
+
+#: modules/security/security/ajaxMachinesList.php
+#: modules/security/security/ajaxGroupsList.php
+msgid "Exclude from reports"
+msgstr ""
+
+#: modules/security/security/ajaxAddExclusion.php
+msgid "Exclude Machine"
+msgstr ""
+
+#: modules/security/security/ajaxAddExclusion.php
+#, php-format
+msgid "Add '%s' to excluded machines?"
+msgstr ""
+
+#: modules/security/security/ajaxAddExclusion.php
+msgid "This machine will no longer appear in CVE reports and dashboard counts."
+msgstr ""
+
+#: modules/security/security/ajaxAddExclusion.php
+msgid "Exclude Group"
+msgstr ""
+
+#: modules/security/security/ajaxAddExclusion.php
+#, php-format
+msgid "Add '%s' to excluded groups?"
+msgstr ""
+
+#: modules/security/security/ajaxAddExclusion.php
+msgid "All machines in this group will no longer appear in CVE reports and dashboard counts."
+msgstr ""
+
+#: modules/security/security/ajaxAddExclusion.php
+msgid "Exclude"
+msgstr ""
+
+#: modules/security/security/ajaxAddExclusion.php
+msgid "Invalid exclusion request"
+msgstr ""
+
+#: modules/security/security/ajaxExcludedMachinesList.php
+msgid "Machines can be excluded directly from the 'Results by Machine' view using the exclude action."
+msgstr ""
+
+#: modules/security/security/ajaxExcludedMachinesList.php
+msgid "Operating System"
+msgstr ""
+
+#: modules/security/security/ajaxExcludedMachinesList.php
+msgid "No machines match your search"
+msgstr ""
+
+#: modules/security/security/ajaxExcludedMachinesList.php
+msgid "Try a different search term."
+msgstr ""
+
+#: modules/security/security/ajaxExcludedGroupsList.php
+msgid "Groups can be excluded directly from the 'Results by Group' view using the exclude action."
+msgstr ""
+
+#: modules/security/security/ajaxExcludedGroupsList.php
+msgid "Static"
+msgstr ""
+
+#: modules/security/security/ajaxExcludedGroupsList.php
+msgid "Dynamic"
+msgstr ""
+
+#: modules/security/security/ajaxExcludedGroupsList.php
+msgid "No groups match your search"
+msgstr ""
+
+#: modules/security/security/settings/tabMachines.php
+msgid "To exclude a machine, use the 'Exclude from reports' action in the 'Results by Machine' view."
+msgstr ""
+
+#: modules/security/security/settings/tabGroups.php
+msgid "To exclude a group, use the 'Exclude from reports' action in the 'Results by Group' view."
+msgstr ""
+
+#: modules/security/security/ajaxMachinesList.php
+msgid "No machines with CVE data match your current filters. Try adjusting your search criteria or run a scan to collect vulnerability data."
+msgstr ""
+
+#: modules/security/security/ajaxGroupsList.php
+msgid "No groups with CVE data match your current filters. Try adjusting your search criteria or run a scan to collect vulnerability data."
+msgstr ""
+
+#: modules/security/security/ajaxEntitiesList.php
+msgid "No entities with CVE data match your current filters. Try adjusting your search criteria or run a scan to collect vulnerability data."
+msgstr ""
+
+#: modules/security/security/settings/tabFilters.php
+msgid "Display filters reset to defaults"
+msgstr ""
+
+#: modules/security/security/settings/tabFilters.php
+msgid "Failed to reset display filters"
+msgstr ""
+
+#: modules/security/security/settings/tabFilters.php
+#: modules/security/security/ajaxResetDisplayFilters.php
+msgid "Are you sure you want to reset display filters to default values?"
+msgstr ""
+
+#: modules/security/security/ajaxResetDisplayFilters.php
+#: modules/security/infoPackage.inc.php
+msgid "Reset Display Filters"
+msgstr ""
+
+#: modules/security/security/ajaxResetDisplayFilters.php
+msgid "Reset"
 msgstr ""

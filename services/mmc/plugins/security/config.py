@@ -18,26 +18,11 @@ class SecurityConfig(PluginConfig, SecurityDatabaseConfig):
 
     Note: Display and exclusion policies are managed via the UI and stored in DB.
     The .ini file should NOT contain [display] or [exclusions] sections.
+    Default values are defined in schema-001.sql and inserted at installation.
     """
 
     # Valid severity levels in order
     SEVERITY_LEVELS = ['None', 'Low', 'Medium', 'High', 'Critical']
-
-    # Default values for policies (matching schema-001.sql defaults)
-    DEFAULT_POLICIES = {
-        'display': {
-            'min_cvss': '4.0',
-            'min_severity': 'Medium',
-            'show_patched': True,
-            'max_age_days': '365',
-            'min_published_year': '2020'
-        },
-        'exclusions': {
-            'vendors': [],
-            'names': [],
-            'cve_ids': []
-        }
-    }
 
     def __init__(self, name='security', conffile=None):
         if not hasattr(self, 'initdone'):
@@ -62,6 +47,14 @@ class SecurityConfig(PluginConfig, SecurityDatabaseConfig):
         self._load_db_policies()
         self._db_policies_loaded = True
 
+    # Attributes that trigger lazy loading from DB
+    _POLICY_ATTRS = {
+        'display_min_cvss', 'display_min_severity', 'display_show_patched',
+        'display_max_age_days', 'display_min_published_year',
+        'excluded_vendors', 'excluded_names', 'excluded_cve_ids',
+        'excluded_machines_ids', 'excluded_groups_ids'
+    }
+
     def setDefault(self):
         PluginConfig.setDefault(self)
         # Logging
@@ -72,17 +65,13 @@ class SecurityConfig(PluginConfig, SecurityDatabaseConfig):
         self.cve_central_keyAES32 = ''
         self.use_websocket = True
 
-        # Display filters (defaults from schema-001.sql)
-        self.display_min_cvss = 4.0
-        self.display_min_severity = 'Medium'
-        self.display_show_patched = True
-        self.display_max_age_days = 365
-        self.display_min_published_year = 2020
-
-        # Exclusions (empty by default)
-        self.excluded_vendors = []
-        self.excluded_names = []
-        self.excluded_cve_ids = []
+    def __getattr__(self, name):
+        """Lazy load policies from DB on first access to policy attributes."""
+        if name in self._POLICY_ATTRS:
+            self._ensure_db_policies_loaded()
+            # After loading, the attribute should exist with _ prefix
+            return getattr(self, f'_{name}')
+        raise AttributeError(f"'{type(self).__name__}' object has no attribute '{name}'")
 
     def readConf(self):
         PluginConfig.readConf(self)
@@ -111,70 +100,70 @@ class SecurityConfig(PluginConfig, SecurityDatabaseConfig):
         except:
             return default
 
-    def _load_db_policies(self):
-        """Load policies from database.
+    def _parse_list(self, val, transform=None):
+        """Parse a value into a list, handling string/list/None inputs."""
+        if isinstance(val, list):
+            items = val
+        elif isinstance(val, str) and val:
+            items = [v.strip() for v in val.split(',') if v.strip()]
+        else:
+            return []
+        return [transform(v) for v in items] if transform else items
 
-        Display and exclusion policies are stored in the policies table.
-        If no values in DB, defaults from DEFAULT_POLICIES are used.
-        """
+    def _parse_int_list(self, val):
+        """Parse a value into a list of integers."""
+        if isinstance(val, list):
+            return [int(v) for v in val if str(v).isdigit()]
+        elif isinstance(val, str) and val:
+            return [int(v.strip()) for v in val.split(',') if v.strip().isdigit()]
+        return []
+
+    def _load_db_policies(self):
+        """Load policies from database."""
         try:
             from pulse2.database.security import SecurityDatabase
             db = SecurityDatabase()
             if not db.is_activated:
-                logger.debug("DB not activated, using default policies")
+                logger.error("Security DB not activated - policies cannot be loaded")
                 return
 
             policies = db.get_all_policies()
+            if not policies:
+                logger.error("No policies found in database - check schema installation")
+                return
 
-            # Apply display policies from DB (or keep defaults)
-            if policies and 'display' in policies:
-                display = policies['display']
-                if 'min_cvss' in display:
-                    try:
-                        self.display_min_cvss = float(display['min_cvss'])
-                    except (ValueError, TypeError):
-                        pass
-                if 'min_severity' in display:
-                    if display['min_severity'] in self.SEVERITY_LEVELS:
-                        self.display_min_severity = display['min_severity']
-                if 'show_patched' in display:
-                    self.display_show_patched = display['show_patched'] in (True, 'true', '1', 1)
-                if 'max_age_days' in display:
-                    try:
-                        self.display_max_age_days = int(display['max_age_days'])
-                    except (ValueError, TypeError):
-                        pass
-                if 'min_published_year' in display:
-                    try:
-                        self.display_min_published_year = int(display['min_published_year'])
-                    except (ValueError, TypeError):
-                        pass
+            # Display policies
+            display = policies.get('display', {})
+            try:
+                self._display_min_cvss = float(display.get('min_cvss', 0))
+            except (ValueError, TypeError):
+                self._display_min_cvss = 0.0
 
-            # Apply exclusions from DB (or keep defaults)
-            if policies and 'exclusions' in policies:
-                exclusions = policies['exclusions']
-                if 'vendors' in exclusions:
-                    val = exclusions['vendors']
-                    if isinstance(val, list):
-                        self.excluded_vendors = val
-                    elif isinstance(val, str) and val:
-                        self.excluded_vendors = [v.strip() for v in val.split(',') if v.strip()]
-                if 'names' in exclusions:
-                    val = exclusions['names']
-                    if isinstance(val, list):
-                        self.excluded_names = val
-                    elif isinstance(val, str) and val:
-                        self.excluded_names = [n.strip() for n in val.split(',') if n.strip()]
-                if 'cve_ids' in exclusions:
-                    val = exclusions['cve_ids']
-                    if isinstance(val, list):
-                        self.excluded_cve_ids = [c.upper() for c in val]
-                    elif isinstance(val, str) and val:
-                        self.excluded_cve_ids = [c.strip().upper() for c in val.split(',') if c.strip()]
+            severity = display.get('min_severity', 'None')
+            self._display_min_severity = severity if severity in self.SEVERITY_LEVELS else 'None'
+            self._display_show_patched = display.get('show_patched', True) in (True, 'true', '1', 1)
+
+            try:
+                self._display_max_age_days = int(display.get('max_age_days', 365))
+            except (ValueError, TypeError):
+                self._display_max_age_days = 365
+
+            try:
+                self._display_min_published_year = int(display.get('min_published_year', 2020))
+            except (ValueError, TypeError):
+                self._display_min_published_year = 2020
+
+            # Exclusion policies
+            exclusions = policies.get('exclusions', {})
+            self._excluded_vendors = self._parse_list(exclusions.get('vendors', []))
+            self._excluded_names = self._parse_list(exclusions.get('names', []))
+            self._excluded_cve_ids = self._parse_list(exclusions.get('cve_ids', []), str.upper)
+            self._excluded_machines_ids = self._parse_int_list(exclusions.get('machines_ids', []))
+            self._excluded_groups_ids = self._parse_int_list(exclusions.get('groups_ids', []))
 
             logger.debug("Loaded policies from database")
         except Exception as e:
-            logger.warning(f"Could not load DB policies, using defaults: {e}")
+            logger.error(f"Could not load DB policies: {e}")
 
     def check(self):
         pass
@@ -250,7 +239,9 @@ class SecurityConfig(PluginConfig, SecurityDatabaseConfig):
         return {
             'vendors': self.excluded_vendors,
             'names': self.excluded_names,
-            'cve_ids': self.excluded_cve_ids
+            'cve_ids': self.excluded_cve_ids,
+            'machines_ids': self.excluded_machines_ids,
+            'groups_ids': self.excluded_groups_ids
         }
 
     @staticmethod

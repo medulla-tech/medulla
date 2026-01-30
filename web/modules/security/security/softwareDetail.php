@@ -23,6 +23,7 @@
 require("graph/navbar.inc.php");
 require("localSidebar.php");
 require_once("modules/security/includes/xmlrpc.php");
+require_once("modules/security/includes/html.inc.php");
 
 $software_name = isset($_GET['software_name']) ? $_GET['software_name'] : '';
 $software_version = isset($_GET['software_version']) ? $_GET['software_version'] : '';
@@ -39,14 +40,7 @@ if (empty($software_name)) {
 // Get policies to determine which severity options to show
 $policies = xmlrpc_get_policies();
 $minSeverity = $policies['display']['min_severity'] ?? 'None';
-
-// Determine which severity options to show based on min_severity
-$severityOrder = array('None' => 0, 'Low' => 1, 'Medium' => 2, 'High' => 3, 'Critical' => 4);
-$minSevIndex = isset($severityOrder[$minSeverity]) ? $severityOrder[$minSeverity] : 0;
-$showLow = $minSevIndex <= 1;
-$showMedium = $minSevIndex <= 2;
-$showHigh = $minSevIndex <= 3;
-$showCritical = true; // Always show Critical
+$showSeverity = SeverityHelper::getVisibility($minSeverity);
 
 // Get total count for summary
 $summary = xmlrpc_get_software_cves($software_name, $software_version, 0, 1, '', null);
@@ -71,10 +65,10 @@ $totalCves = $summary['total'];
         <label for="severity-filter"><?php echo _T("Severity", "security"); ?>:</label>
         <select id="severity-filter" onchange="updateSoftwareFilter()">
             <option value=""><?php echo _T("All", "security"); ?></option>
-            <?php if ($showCritical): ?><option value="Critical"><?php echo _T("Critical", "security"); ?></option><?php endif; ?>
-            <?php if ($showHigh): ?><option value="High"><?php echo _T("High", "security"); ?></option><?php endif; ?>
-            <?php if ($showMedium): ?><option value="Medium"><?php echo _T("Medium", "security"); ?></option><?php endif; ?>
-            <?php if ($showLow): ?><option value="Low"><?php echo _T("Low", "security"); ?></option><?php endif; ?>
+            <?php if ($showSeverity['critical']): ?><option value="Critical"><?php echo _T("Critical", "security"); ?></option><?php endif; ?>
+            <?php if ($showSeverity['high']): ?><option value="High"><?php echo _T("High", "security"); ?></option><?php endif; ?>
+            <?php if ($showSeverity['medium']): ?><option value="Medium"><?php echo _T("Medium", "security"); ?></option><?php endif; ?>
+            <?php if ($showSeverity['low']): ?><option value="Low"><?php echo _T("Low", "security"); ?></option><?php endif; ?>
         </select>
     </div>
     <div class="search-wrapper">

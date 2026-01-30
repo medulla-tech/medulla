@@ -56,7 +56,9 @@ def get_dashboard_summary(location=''):
         min_severity=cfg.display_min_severity,
         excluded_vendors=cfg.excluded_vendors,
         excluded_names=cfg.excluded_names,
-        excluded_cve_ids=cfg.excluded_cve_ids
+        excluded_cve_ids=cfg.excluded_cve_ids,
+        excluded_machines_ids=cfg.excluded_machines_ids,
+        excluded_groups_ids=cfg.excluded_groups_ids
     )
 
 
@@ -83,7 +85,9 @@ def get_cves(start=0, limit=50, filter_str='', severity=None, location='',
         min_cvss=cfg.display_min_cvss,
         excluded_vendors=cfg.excluded_vendors,
         excluded_names=cfg.excluded_names,
-        excluded_cve_ids=cfg.excluded_cve_ids
+        excluded_cve_ids=cfg.excluded_cve_ids,
+        excluded_machines_ids=cfg.excluded_machines_ids,
+        excluded_groups_ids=cfg.excluded_groups_ids
     )
 
     # Apply local policies filtering (for exclusions, etc.)
@@ -116,7 +120,9 @@ def get_machines_summary(start=0, limit=50, filter_str='', location=''):
         min_severity=cfg.display_min_severity,
         excluded_vendors=cfg.excluded_vendors,
         excluded_names=cfg.excluded_names,
-        excluded_cve_ids=cfg.excluded_cve_ids
+        excluded_cve_ids=cfg.excluded_cve_ids,
+        excluded_machines_ids=cfg.excluded_machines_ids,
+        excluded_groups_ids=cfg.excluded_groups_ids
     )
 
 
@@ -134,7 +140,9 @@ def get_machine_cves(id_glpi, start=0, limit=50, filter_str='', severity=None):
         min_cvss=cfg.display_min_cvss,
         excluded_vendors=cfg.excluded_vendors,
         excluded_names=cfg.excluded_names,
-        excluded_cve_ids=cfg.excluded_cve_ids
+        excluded_cve_ids=cfg.excluded_cve_ids,
+        excluded_machines_ids=cfg.excluded_machines_ids,
+        excluded_groups_ids=cfg.excluded_groups_ids
     )
 
     # Apply local policies filtering
@@ -158,7 +166,9 @@ def get_machine_softwares_summary(id_glpi, start=0, limit=50, filter_str=''):
         min_cvss=cfg.display_min_cvss,
         excluded_vendors=cfg.excluded_vendors,
         excluded_names=cfg.excluded_names,
-        excluded_cve_ids=cfg.excluded_cve_ids
+        excluded_cve_ids=cfg.excluded_cve_ids,
+        excluded_machines_ids=cfg.excluded_machines_ids,
+        excluded_groups_ids=cfg.excluded_groups_ids
     )
 
 
@@ -202,56 +212,56 @@ def create_scan():
     return scan_id
 
 
-def create_scan_entity(entity_id):
-    """Create a new scan for a specific entity and start it asynchronously"""
-    from mmc.plugins.security.scanner import run_cve_scan
+def _create_targeted_scan(target_type, target_id):
+    """Internal helper for creating scoped scans (entity or group).
+
+    Args:
+        target_type: 'entity' or 'group'
+        target_id: ID of the entity or group to scan
+
+    Returns:
+        scan_id: The ID of the created scan
+    """
+    from mmc.plugins.security.scanner import run_cve_scan, get_glpi_db_url
     from pulse2.database.security import SecurityDatabase
     from threading import Thread
+    from sqlalchemy import text, create_engine
 
-    # Get entity name for logging
+    target_id = int(target_id)
+
+    # Get target name for logging
+    queries = {
+        'entity': "SELECT name FROM glpi_entities WHERE id = :id",
+        'group': "SELECT name FROM dyngroup.Groups WHERE id = :id"
+    }
     try:
-        from sqlalchemy import text
-        from mmc.plugins.security.scanner import get_glpi_db_url, create_engine
         engine = create_engine(get_glpi_db_url())
         with engine.connect() as conn:
-            result = conn.execute(text("SELECT name FROM glpi_entities WHERE id = :id"), {'id': int(entity_id)})
+            result = conn.execute(text(queries[target_type]), {'id': target_id})
             row = result.fetchone()
-            entity_name = row[0] if row else f"ID:{entity_id}"
+            target_name = row[0] if row else f"ID:{target_id}"
     except Exception:
-        entity_name = f"ID:{entity_id}"
+        target_name = f"ID:{target_id}"
 
+    # Start scan in background thread
     scan_id = SecurityDatabase().create_scan()
-    thread = Thread(target=run_cve_scan, args=(scan_id, int(entity_id), None), daemon=True)
+    entity_id = target_id if target_type == 'entity' else None
+    group_id = target_id if target_type == 'group' else None
+    thread = Thread(target=run_cve_scan, args=(scan_id, entity_id, group_id), daemon=True)
     thread.start()
 
-    logger.info(f"Started CVE scan for entity '{entity_name}' (entity_id={entity_id}) with scan ID: {scan_id}")
+    logger.info(f"Started CVE scan for {target_type} '{target_name}' ({target_type}_id={target_id}) with scan ID: {scan_id}")
     return scan_id
+
+
+def create_scan_entity(entity_id):
+    """Create a new scan for a specific entity and start it asynchronously"""
+    return _create_targeted_scan('entity', entity_id)
 
 
 def create_scan_group(group_id):
     """Create a new scan for a specific group and start it asynchronously"""
-    from mmc.plugins.security.scanner import run_cve_scan
-    from pulse2.database.security import SecurityDatabase
-    from threading import Thread
-
-    # Get group name for logging
-    try:
-        from sqlalchemy import text, create_engine
-        from mmc.plugins.security.scanner import get_glpi_db_url
-        engine = create_engine(get_glpi_db_url())
-        with engine.connect() as conn:
-            result = conn.execute(text("SELECT name FROM dyngroup.Groups WHERE id = :id"), {'id': int(group_id)})
-            row = result.fetchone()
-            group_name = row[0] if row else f"ID:{group_id}"
-    except Exception:
-        group_name = f"ID:{group_id}"
-
-    scan_id = SecurityDatabase().create_scan()
-    thread = Thread(target=run_cve_scan, args=(scan_id, None, int(group_id)), daemon=True)
-    thread.start()
-
-    logger.info(f"Started CVE scan for group '{group_name}' (group_id={group_id}) with scan ID: {scan_id}")
-    return scan_id
+    return _create_targeted_scan('group', group_id)
 
 
 def run_scan_sync():
@@ -394,6 +404,23 @@ def reset_policies(user=None):
     return result
 
 
+def reset_display_policies(user=None):
+    """Reset only display policies to default values, keeping exclusions intact.
+
+    Args:
+        user: username making the change (optional)
+
+    Returns:
+        bool: True on success
+    """
+    result = SecurityDatabase().reset_display_policies(user=user)
+    if result:
+        # Reload config to reflect new policies
+        from mmc.plugins.security.config import SecurityConfig
+        SecurityConfig("security").reload_policies()
+    return result
+
+
 def set_config(key, value):
     """
     Configuration is read-only from ini file.
@@ -443,7 +470,9 @@ def get_softwares_summary(start=0, limit=50, filter_str='', location=''):
         min_severity=cfg.display_min_severity,
         excluded_vendors=cfg.excluded_vendors,
         excluded_names=cfg.excluded_names,
-        excluded_cve_ids=cfg.excluded_cve_ids
+        excluded_cve_ids=cfg.excluded_cve_ids,
+        excluded_machines_ids=cfg.excluded_machines_ids,
+        excluded_groups_ids=cfg.excluded_groups_ids
     )
 
 
@@ -488,7 +517,9 @@ def get_entities_summary(start=0, limit=50, filter_str='', user_entities=''):
         min_severity=cfg.display_min_severity,
         excluded_vendors=cfg.excluded_vendors,
         excluded_names=cfg.excluded_names,
-        excluded_cve_ids=cfg.excluded_cve_ids
+        excluded_cve_ids=cfg.excluded_cve_ids,
+        excluded_machines_ids=cfg.excluded_machines_ids,
+        excluded_groups_ids=cfg.excluded_groups_ids
     )
 
 
@@ -509,7 +540,9 @@ def get_groups_summary(start=0, limit=50, filter_str='', user_login=''):
         min_severity=cfg.display_min_severity,
         excluded_vendors=cfg.excluded_vendors,
         excluded_names=cfg.excluded_names,
-        excluded_cve_ids=cfg.excluded_cve_ids
+        excluded_cve_ids=cfg.excluded_cve_ids,
+        excluded_machines_ids=cfg.excluded_machines_ids,
+        excluded_groups_ids=cfg.excluded_groups_ids
     )
 
 
@@ -527,7 +560,9 @@ def get_group_machines(group_id, start=0, limit=50, filter_str=''):
         min_severity=cfg.display_min_severity,
         excluded_vendors=cfg.excluded_vendors,
         excluded_names=cfg.excluded_names,
-        excluded_cve_ids=cfg.excluded_cve_ids
+        excluded_cve_ids=cfg.excluded_cve_ids,
+        excluded_machines_ids=cfg.excluded_machines_ids,
+        excluded_groups_ids=cfg.excluded_groups_ids
     )
 
 

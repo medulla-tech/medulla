@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with MMC; If not, see <http://www.gnu.org/licenses/>.
  *
- * Security Module - AJAX Excluded Software List
+ * Security Module - AJAX Excluded Vendors List
  */
 
 require_once("modules/security/includes/xmlrpc.php");
@@ -32,31 +32,31 @@ $start = isset($_GET["start"]) ? intval($_GET["start"]) : 0;
 
 // Get current exclusions from policies
 $policies = xmlrpc_get_policies();
-$excludedNames = $policies['exclusions']['names'] ?? array();
+$excludedVendors = $policies['exclusions']['vendors'] ?? array();
 
 // Filter by search term
 if (!empty($filter)) {
-    $excludedNames = array_filter($excludedNames, function($name) use ($filter) {
-        return stripos($name, $filter) !== false;
+    $excludedVendors = array_filter($excludedVendors, function($vendor) use ($filter) {
+        return stripos($vendor, $filter) !== false;
     });
 }
 
 // Re-index array after filtering
-$excludedNames = array_values($excludedNames);
-$count = count($excludedNames);
+$excludedVendors = array_values($excludedVendors);
+$count = count($excludedVendors);
 
 // Paginate
-$pagedNames = array_slice($excludedNames, $start, $maxperpage);
+$pagedVendors = array_slice($excludedVendors, $start, $maxperpage);
 
 // Prepare arrays for display
-$softwareNames = array();
+$vendorNames = array();
 $params = array();
 
-foreach ($pagedNames as $name) {
-    $softwareNames[] = htmlspecialchars($name);
+foreach ($pagedVendors as $vendor) {
+    $vendorNames[] = htmlspecialchars($vendor);
     $params[] = array(
-        'name' => $name,
-        'type' => 'software'
+        'name' => $vendor,
+        'type' => 'vendor'
     );
 }
 
@@ -74,15 +74,15 @@ $removeAction->setWidth(400);
 // Display message if no exclusions
 if ($count == 0) {
     EmptyStateBox::show(
-        _T("No excluded software", "security"),
-        _T("Use the form above to add software to the exclusion list.", "security")
+        _T("No excluded vendors", "security"),
+        _T("Use the form above to add vendors to the exclusion list.", "security")
     );
 } else {
     // Create and display list
-    $list = new OptimizedListInfos($softwareNames, _T("Software name", "security"));
+    $list = new OptimizedListInfos($vendorNames, _T("Vendor name", "security"));
     $list->disableFirstColumnActionLink();
     $list->setItemCount($count);
-    $list->setNavBar(new AjaxNavBar($count, $filter, "updateSearchParamcontainerExcludedSoftware", $maxperpage));
+    $list->setNavBar(new AjaxNavBar($count, $filter, "updateSearchParamcontainerExcludedVendors", $maxperpage));
     $list->setParamInfo($params);
     $list->addActionItem($removeAction);
     $list->start = 0;

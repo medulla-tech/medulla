@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS `tests` (
     PRIMARY KEY(`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `tests` (`name`, `message`) VALUES
+INSERT IGNORE INTO `tests` (`name`, `message`) VALUES
     ('msg1', 'My message 1'),
     ('msg2', 'My message 2');
 
@@ -114,6 +114,38 @@ CREATE TABLE IF NOT EXISTS `cve_exclusions` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='CVE exclues des rapports';
 
 -- ----------------------------------------------------------------------
+-- Table: policies_defaults
+-- Default values for policies (source of truth for resets)
+-- ----------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `policies_defaults` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `category` varchar(50) NOT NULL COMMENT 'display, exclusions',
+    `key` varchar(100) NOT NULL,
+    `value` text DEFAULT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uk_category_key` (`category`, `key`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Default values for policies';
+
+-- Default policies for security module
+--   - min_cvss: 4.0 (ignore minor CVEs with score < 4)
+--   - min_severity: Medium (ignore Low severity CVEs)
+--   - show_patched: true (show CVEs that have a fix available)
+--   - max_age_days: 365 (show only CVEs from the last year)
+--   - min_published_year: 2020 (ignore CVEs published before 2020)
+--   - exclusions: empty by default (vendors, names, cve_ids, machines_ids, groups_ids)
+INSERT IGNORE INTO `policies_defaults` (`category`, `key`, `value`) VALUES
+('display', 'min_cvss', '4.0'),
+('display', 'min_severity', 'Medium'),
+('display', 'show_patched', 'true'),
+('display', 'max_age_days', '365'),
+('display', 'min_published_year', '2020'),
+('exclusions', 'vendors', '[]'),
+('exclusions', 'names', '[]'),
+('exclusions', 'cve_ids', '[]'),
+('exclusions', 'machines_ids', '[]'),
+('exclusions', 'groups_ids', '[]');
+
+-- ----------------------------------------------------------------------
 -- Table: policies
 -- Policies editables via UI (display, alert, exclusions)
 -- Priorite: DB > security.ini.local > security.ini
@@ -129,22 +161,9 @@ CREATE TABLE IF NOT EXISTS `policies` (
     UNIQUE KEY `uk_category_key` (`category`, `key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Policies editables via UI';
 
--- Default policies for security module
---   - min_cvss: 4.0 (ignore minor CVEs with score < 4)
---   - min_severity: Medium (ignore Low severity CVEs)
---   - show_patched: true (show CVEs that have a fix available)
---   - max_age_days: 365 (show only CVEs from the last year)
---   - min_published_year: 2020 (ignore CVEs published before 2020)
---   - exclusions: empty by default (vendors, names, cve_ids)
-INSERT INTO `policies` (`category`, `key`, `value`, `updated_at`, `updated_by`) VALUES
-('display', 'min_cvss', '4.0', NOW(), 'root'),
-('display', 'min_severity', 'Medium', NOW(), 'root'),
-('display', 'show_patched', 'true', NOW(), 'root'),
-('display', 'max_age_days', '365', NOW(), 'root'),
-('display', 'min_published_year', '2020', NOW(), 'root'),
-('exclusions', 'vendors', '[]', NOW(), 'root'),
-('exclusions', 'names', '[]', NOW(), 'root'),
-('exclusions', 'cve_ids', '[]', NOW(), 'root');
+-- Initialize policies from defaults
+INSERT IGNORE INTO `policies` (`category`, `key`, `value`, `updated_at`, `updated_by`)
+SELECT `category`, `key`, `value`, NOW(), 'system' FROM `policies_defaults`;
 
 -- ----------------------------------------------------------------------
 -- Note: Configuration is stored in /etc/mmc/plugins/security.ini.local
@@ -175,6 +194,6 @@ CREATE TABLE IF NOT EXISTS `version` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-INSERT INTO `version` VALUES (1);
+INSERT IGNORE INTO `version` VALUES (1);
 
 COMMIT;

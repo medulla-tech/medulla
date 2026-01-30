@@ -21,6 +21,7 @@
  */
 
 require_once("modules/security/includes/xmlrpc.php");
+require_once("modules/security/includes/html.inc.php");
 
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
@@ -48,11 +49,8 @@ $cssClasses = array();
 
 foreach ($data as $row) {
     $cveIds[] = $row['cve_id'];
-
-    // Severity with color badge
     $sev = $row['severity'];
-    $sevClass = $sev === 'N/A' ? 'na' : strtolower($sev);
-    $severities[] = '<span class="badge badge-' . $sevClass . '">' . $sev . '</span>';
+    $severities[] = SecurityBadge::severity($sev);
 
     // CVSS Score
     $cvss = floatval($row['cvss_score']);
@@ -81,6 +79,7 @@ foreach ($data as $row) {
     $params[] = array('cve_id' => $row['cve_id']);
 
     // CSS class
+    $sevClass = ($sev === 'N/A') ? 'na' : strtolower($sev);
     $cssClasses[] = 'severity-' . $sevClass;
 }
 
@@ -108,8 +107,9 @@ if ($count > 0) {
     $n->end = $count;
     $n->display();
 } else {
-    echo '<div class="empty-message">';
-    echo '<p>' . _T("No CVEs found. Run a scan to populate the database.", "security") . '</p>';
-    echo '</div>';
+    EmptyStateBox::show(
+        _T("No CVEs found", "security"),
+        _T("Run a scan to populate the database.", "security")
+    );
 }
 ?>

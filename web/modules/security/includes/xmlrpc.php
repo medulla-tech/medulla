@@ -121,6 +121,10 @@ function xmlrpc_reset_policies($user = null) {
     return xmlCall("security.reset_policies", array($user));
 }
 
+function xmlrpc_reset_display_policies($user = null) {
+    return xmlCall("security.reset_display_policies", array($user));
+}
+
 // =============================================================================
 // Exclusions
 // =============================================================================

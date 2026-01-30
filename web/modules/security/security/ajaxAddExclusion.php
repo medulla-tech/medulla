@@ -21,71 +21,66 @@
  */
 
 require_once("modules/security/includes/xmlrpc.php");
+require_once("modules/security/includes/html.inc.php");
 
-// Determine if it's a software or CVE exclusion
-$softwareName = $_GET['software_name'] ?? '';
-$softwareVersion = $_GET['software_version'] ?? '';
-$cveId = $_GET['cve_id'] ?? '';
+// Determine the type of exclusion and set parameters
+$exclusionTypes = array(
+    'software' => array(
+        'param' => $_GET['software_name'] ?? '',
+        'key' => 'names',
+        'redirect' => 'security/security/index',
+        'title' => _T("Exclude Software", "security"),
+        'message' => _T("Add '%s' to excluded software?", "security"),
+        'subMessage' => _T("All versions of this software will no longer appear in CVE reports.", "security")
+    ),
+    'cve' => array(
+        'param' => $_GET['cve_id'] ?? '',
+        'key' => 'cve_ids',
+        'redirect' => 'security/security/allcves',
+        'title' => _T("Exclude CVE", "security"),
+        'message' => _T("Add '%s' to excluded CVEs?", "security"),
+        'subMessage' => _T("This CVE will no longer appear in reports.", "security")
+    ),
+    'machine' => array(
+        'param' => $_GET['machine_id'] ?? '',
+        'name' => $_GET['machine_name'] ?? '',
+        'key' => 'machines_ids',
+        'redirect' => 'security/security/machines',
+        'title' => _T("Exclude Machine", "security"),
+        'message' => _T("Add '%s' to excluded machines?", "security"),
+        'subMessage' => _T("This machine will no longer appear in CVE reports and dashboard counts.", "security"),
+        'isInt' => true
+    ),
+    'group' => array(
+        'param' => $_GET['group_id'] ?? '',
+        'name' => $_GET['group_name'] ?? '',
+        'key' => 'groups_ids',
+        'redirect' => 'security/security/groups',
+        'title' => _T("Exclude Group", "security"),
+        'message' => _T("Add '%s' to excluded groups?", "security"),
+        'subMessage' => _T("This group will no longer appear in CVE reports.", "security"),
+        'isInt' => true
+    )
+);
 
-// Get current user for audit
+// Find which exclusion type is being used
+$type = null;
+$config = null;
+foreach ($exclusionTypes as $key => $cfg) {
+    if (!empty($cfg['param'])) {
+        $type = $key;
+        $config = $cfg;
+        break;
+    }
+}
+
 $currentUser = $_SESSION['login'] ?? 'unknown';
 
-if (isset($_POST['bconfirm'])) {
-    // Get current policies
-    $policies = xmlrpc_get_policies();
+if (isset($_POST['bconfirm']) && $config) {
+    $value = isset($config['isInt']) ? intval($config['param']) : $config['param'];
+    $itemName = isset($config['name']) && !empty($config['name']) ? $config['name'] : $config['param'];
 
-    $success = false;
-    $itemName = '';
-
-    if (!empty($softwareName)) {
-        // Add software to exclusions (by name only, excludes all versions)
-        $itemName = $softwareName;
-
-        $currentExclusions = $policies['exclusions']['names'] ?? array();
-        if (!in_array($softwareName, $currentExclusions)) {
-            $currentExclusions[] = $softwareName;
-
-            // Build updated policies
-            $updatedPolicies = array(
-                'display' => $policies['display'],
-                'exclusions' => array(
-                    'vendors' => $policies['exclusions']['vendors'] ?? array(),
-                    'names' => $currentExclusions,
-                    'cve_ids' => $policies['exclusions']['cve_ids'] ?? array()
-                )
-            );
-
-            $result = xmlrpc_set_policies($updatedPolicies, $currentUser);
-            $success = ($result === true || $result === 1);
-        } else {
-            // Already excluded
-            $success = true;
-        }
-    } elseif (!empty($cveId)) {
-        // Add CVE to exclusions
-        $itemName = $cveId;
-
-        $currentExclusions = $policies['exclusions']['cve_ids'] ?? array();
-        if (!in_array($cveId, $currentExclusions)) {
-            $currentExclusions[] = $cveId;
-
-            // Build updated policies
-            $updatedPolicies = array(
-                'display' => $policies['display'],
-                'exclusions' => array(
-                    'vendors' => $policies['exclusions']['vendors'] ?? array(),
-                    'names' => $policies['exclusions']['names'] ?? array(),
-                    'cve_ids' => $currentExclusions
-                )
-            );
-
-            $result = xmlrpc_set_policies($updatedPolicies, $currentUser);
-            $success = ($result === true || $result === 1);
-        } else {
-            // Already excluded
-            $success = true;
-        }
-    }
+    $success = ExclusionHelper::addExclusion($config['key'], $value, $currentUser);
 
     if ($success) {
         new NotifyWidgetSuccess(sprintf(_T("'%s' added to exclusions", "security"), $itemName));
@@ -93,25 +88,20 @@ if (isset($_POST['bconfirm'])) {
         new NotifyWidgetFailure(_T("Failed to add exclusion", "security"));
     }
 
-    // Redirect back to the appropriate page
-    if (!empty($softwareName)) {
-        header("Location: " . urlStrRedirect("security/security/index"));
-    } else {
-        header("Location: " . urlStrRedirect("security/security/allcves"));
-    }
+    header("Location: " . urlStrRedirect($config['redirect']));
     exit;
 }
 
 // Show confirmation popup
-if (!empty($softwareName)) {
-    $title = _T("Exclude Software", "security");
-    $message = sprintf(_T("Add '%s' to excluded software?", "security"), htmlspecialchars($softwareName));
-    $subMessage = _T("All versions of this software will no longer appear in CVE reports.", "security");
+if ($config) {
+    $displayName = isset($config['name']) && !empty($config['name']) ? $config['name'] : $config['param'];
+    $title = $config['title'];
+    $message = sprintf($config['message'], htmlspecialchars($displayName));
+    $subMessage = $config['subMessage'];
 } else {
-    $displayName = $cveId;
-    $title = _T("Exclude CVE", "security");
-    $message = sprintf(_T("Add '%s' to excluded CVEs?", "security"), htmlspecialchars($cveId));
-    $subMessage = _T("This CVE will no longer appear in reports.", "security");
+    $title = _T("Exclude", "security");
+    $message = _T("Invalid exclusion request", "security");
+    $subMessage = "";
 }
 
 $f = new PopupForm($title);

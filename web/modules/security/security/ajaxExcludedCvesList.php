@@ -21,6 +21,7 @@
  */
 
 require_once("modules/security/includes/xmlrpc.php");
+require_once("modules/security/includes/html.inc.php");
 
 global $conf;
 $maxperpage = 10;
@@ -106,7 +107,10 @@ $removeAction->setWidth(400);
 
 // Display message if no exclusions
 if ($count == 0) {
-    echo '<p style="color:#666; font-style:italic;">' . _T("No excluded CVEs", "security") . '</p>';
+    EmptyStateBox::show(
+        _T("No excluded CVEs", "security"),
+        _T("Use the form above to add CVEs to the exclusion list.", "security")
+    );
 } else {
     // Create and display list
     $list = new OptimizedListInfos($cveIds, _T("CVE ID", "security"));

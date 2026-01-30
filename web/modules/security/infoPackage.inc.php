@@ -207,6 +207,30 @@ $page->setFile("modules/security/security/ajaxAddExclusion.php");
 $page->setOptions(array("visible" => False, "noHeader" => True, "AJAX" => True));
 $submod->addPage($page);
 
+// Ajax Excluded Vendors List
+$page = new Page("ajaxExcludedVendorsList", _T('Excluded Vendors', 'security'));
+$page->setFile("modules/security/security/ajaxExcludedVendorsList.php");
+$page->setOptions(array("visible" => False, "noHeader" => True, "AJAX" => True));
+$submod->addPage($page);
+
+// Ajax Excluded Machines List
+$page = new Page("ajaxExcludedMachinesList", _T('Excluded Machines', 'security'));
+$page->setFile("modules/security/security/ajaxExcludedMachinesList.php");
+$page->setOptions(array("visible" => False, "noHeader" => True, "AJAX" => True));
+$submod->addPage($page);
+
+// Ajax Excluded Groups List
+$page = new Page("ajaxExcludedGroupsList", _T('Excluded Groups', 'security'));
+$page->setFile("modules/security/security/ajaxExcludedGroupsList.php");
+$page->setOptions(array("visible" => False, "noHeader" => True, "AJAX" => True));
+$submod->addPage($page);
+
+// Ajax Reset Display Filters popup
+$page = new Page("ajaxResetDisplayFilters", _T('Reset Display Filters', 'security'));
+$page->setFile("modules/security/security/ajaxResetDisplayFilters.php");
+$page->setOptions(array("visible" => False, "noHeader" => True, "AJAX" => True));
+$submod->addPage($page);
+
 $mod->addSubmod($submod);
 $MMCApp =& MMCApp::getInstance();
 $MMCApp->addModule($mod);

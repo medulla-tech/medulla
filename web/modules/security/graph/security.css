@@ -1,3 +1,4 @@
+<style type="text/css"><!--
 /*
  * (c) 2024-2025 Medulla, http://www.medulla-tech.io
  * Security Module - Centralized CSS Styles
@@ -503,3 +504,78 @@ tr.severity-na td:first-child { border-left: 3px solid #adb5bd; }
     color: #24607E;
     font-size: 1.1em;
 }
+
+/* =============================================================================
+   Empty State Box (for empty lists)
+   ============================================================================= */
+.empty-state-box {
+    max-width: 500px;
+    margin: 60px auto 24px auto;
+    padding: 24px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.07), 0 1px 3px rgba(0,0,0,0.06);
+    text-align: center;
+}
+
+.empty-state-box-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.empty-state-box-description {
+    color: #888;
+    line-height: 1.5;
+    font-size: 14px;
+}
+
+/* =============================================================================
+   Add Item Form (for exclusion tabs)
+   ============================================================================= */
+.add-item-form {
+    margin-bottom: 20px;
+    padding: 20px;
+    background: #f5f5f5;
+    border-radius: 8px;
+}
+
+.add-item-form label {
+    display: block;
+    margin-bottom: 12px;
+    font-weight: 500;
+    color: #333;
+}
+
+.add-item-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.add-item-input {
+    flex: 1;
+    max-width: 400px;
+    padding: .625rem 1rem;
+    font-size: inherit;
+    line-height: 1.2;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.add-item-input:focus {
+    border-color: #24607E;
+    box-shadow: 0 0 0 3px rgba(36, 96, 126, 0.1);
+}
+
+.add-item-input::placeholder {
+    color: #999;
+}
+
+.add-item-button {
+    white-space: nowrap;
+}
+--></style>

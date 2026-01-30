@@ -153,7 +153,9 @@ class SecurityDatabase(DatabaseHelper):
     # =========================================================================
     # Exclusion filtering helper
     # =========================================================================
-    def _build_exclusion_filters(self, excluded_vendors=None, excluded_names=None, excluded_cve_ids=None):
+    def _build_exclusion_filters(self, excluded_vendors=None, excluded_names=None, excluded_cve_ids=None,
+                                   excluded_machines_ids=None, excluded_groups_ids=None,
+                                   include_group_machines=False):
         """
         Build SQL WHERE clauses for exclusions.
 
@@ -161,9 +163,13 @@ class SecurityDatabase(DatabaseHelper):
             excluded_vendors: List of vendor names to exclude
             excluded_names: List of software names to exclude
             excluded_cve_ids: List of CVE IDs to exclude
+            excluded_machines_ids: List of machine IDs (GLPI id) to exclude
+            excluded_groups_ids: List of group IDs to exclude
+            include_group_machines: If True, also exclude machines belonging to excluded groups
+                                   (used only in Results by Group view)
 
         Returns:
-            tuple: (name_exclusion, cve_exclusion, vendor_exclusion) SQL strings
+            tuple: (name_exclusion, cve_exclusion, vendor_exclusion, machine_exclusion) SQL strings
         """
         def sql_escape(val):
             return val.replace("'", "''") if val else val
@@ -188,7 +194,27 @@ class SecurityDatabase(DatabaseHelper):
                 WHERE gm.name IN ({vendors_escaped})
             )"""
 
-        return name_exclusion, cve_exclusion, vendor_exclusion
+        # Machine exclusion - exclude specific machines by GLPI id (individual exclusions only)
+        machine_exclusion = ""
+        if excluded_machines_ids:
+            machine_ids_str = ','.join(str(int(mid)) for mid in excluded_machines_ids)
+            machine_exclusion = f"AND m.id NOT IN ({machine_ids_str})"
+
+        # Group exclusion - exclude machines that belong to excluded groups
+        # Only applied when include_group_machines=True (for Results by Group view)
+        # Results table links groups (FK_groups) to machines (FK_machines)
+        # Machines table has uuid like 'UUID123' which corresponds to GLPI machine id
+        if include_group_machines and excluded_groups_ids:
+            group_ids_str = ','.join(str(int(gid)) for gid in excluded_groups_ids)
+            group_exclusion = f"""AND m.id NOT IN (
+                SELECT CAST(REPLACE(dm.uuid, 'UUID', '') AS UNSIGNED)
+                FROM dyngroup.Results r
+                JOIN dyngroup.Machines dm ON dm.id = r.FK_machines
+                WHERE r.FK_groups IN ({group_ids_str})
+            )"""
+            machine_exclusion = machine_exclusion + " " + group_exclusion if machine_exclusion else group_exclusion
+
+        return name_exclusion, cve_exclusion, vendor_exclusion, machine_exclusion
 
     # =========================================================================
     # Tests (legacy)
@@ -203,7 +229,8 @@ class SecurityDatabase(DatabaseHelper):
     # =========================================================================
     @DatabaseHelper._sessionm
     def get_dashboard_summary(self, session, location='', min_cvss=0.0, min_severity='None',
-                              excluded_vendors=None, excluded_names=None, excluded_cve_ids=None):
+                              excluded_vendors=None, excluded_names=None, excluded_cve_ids=None,
+                              excluded_machines_ids=None, excluded_groups_ids=None):
         """Get summary for dashboard: counts by severity, machines affected
         Filtered by entity if location is provided.
         Filtered by min_cvss if > 0.
@@ -235,8 +262,8 @@ class SecurityDatabase(DatabaseHelper):
             entity_filter = f"AND m.entities_id IN ({entity_ids_str})"
 
         # Build exclusion filters
-        name_exclusion, cve_exclusion, vendor_exclusion = self._build_exclusion_filters(
-            excluded_vendors, excluded_names, excluded_cve_ids
+        name_exclusion, cve_exclusion, vendor_exclusion, machine_exclusion = self._build_exclusion_filters(
+            excluded_vendors, excluded_names, excluded_cve_ids, excluded_machines_ids, excluded_groups_ids
         )
 
         # Count CVEs by severity (only CVEs affecting machines in selected entities)
@@ -252,7 +279,7 @@ class SecurityDatabase(DatabaseHelper):
                 JOIN xmppmaster.local_glpi_items_softwareversions isv ON isv.softwareversions_id = sv.id
                 JOIN xmppmaster.local_glpi_machines m ON m.id = isv.items_id
                 WHERE 1=1 {entity_filter} {cvss_filter} {severity_filter}
-                {name_exclusion} {cve_exclusion} {vendor_exclusion}
+                {name_exclusion} {cve_exclusion} {vendor_exclusion} {machine_exclusion}
                 GROUP BY c.severity
             """))
             for row in result:
@@ -274,7 +301,7 @@ class SecurityDatabase(DatabaseHelper):
                 JOIN xmppmaster.local_glpi_items_softwareversions isv ON isv.softwareversions_id = sv.id
                 JOIN xmppmaster.local_glpi_machines m ON m.id = isv.items_id
                 WHERE 1=1 {entity_filter} {cvss_filter} {severity_filter}
-                {name_exclusion} {cve_exclusion} {vendor_exclusion}
+                {name_exclusion} {cve_exclusion} {vendor_exclusion} {machine_exclusion}
             """))
             row = result.fetchone()
             if row:
@@ -312,7 +339,8 @@ class SecurityDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def get_cves(self, session, start=0, limit=50, filter_str='',
                  severity=None, location='', sort_by='cvss_score', sort_order='desc',
-                 min_cvss=0.0, excluded_vendors=None, excluded_names=None, excluded_cve_ids=None):
+                 min_cvss=0.0, excluded_vendors=None, excluded_names=None, excluded_cve_ids=None,
+                 excluded_machines_ids=None, excluded_groups_ids=None):
         """Get paginated list of CVEs with affected machine count
         Filtered by entity if location is provided.
         Filtered by min_cvss if > 0.
@@ -327,8 +355,8 @@ class SecurityDatabase(DatabaseHelper):
             entity_filter = f"AND m.entities_id IN ({entity_ids_str})"
 
         # Build exclusion filters
-        name_exclusion, cve_exclusion, vendor_exclusion = self._build_exclusion_filters(
-            excluded_vendors, excluded_names, excluded_cve_ids
+        name_exclusion, cve_exclusion, vendor_exclusion, machine_exclusion = self._build_exclusion_filters(
+            excluded_vendors, excluded_names, excluded_cve_ids, excluded_machines_ids, excluded_groups_ids
         )
 
         # Severity order for filtering
@@ -368,7 +396,7 @@ class SecurityDatabase(DatabaseHelper):
                 JOIN xmppmaster.local_glpi_machines m ON m.id = isv.items_id
                 WHERE 1=1 {entity_filter}
                 {cve_where_clause}
-                {name_exclusion} {cve_exclusion} {vendor_exclusion}
+                {name_exclusion} {cve_exclusion} {vendor_exclusion} {machine_exclusion}
             """)
             count_result = session.execute(count_sql)
             total = count_result.scalar() or 0
@@ -387,7 +415,7 @@ class SecurityDatabase(DatabaseHelper):
                 JOIN xmppmaster.local_glpi_machines m ON m.id = isv.items_id
                 WHERE 1=1 {entity_filter}
                 {cve_where_clause}
-                {name_exclusion} {cve_exclusion} {vendor_exclusion}
+                {name_exclusion} {cve_exclusion} {vendor_exclusion} {machine_exclusion}
                 GROUP BY c.id, c.cve_id, c.cvss_score, c.severity, c.description, c.published_at
                 ORDER BY c.cvss_score {sort_dir}
                 LIMIT :limit OFFSET :start
@@ -512,7 +540,8 @@ class SecurityDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def get_machines_summary(self, session, start=0, limit=50, filter_str='', location='',
                              min_cvss=0.0, min_severity='None',
-                             excluded_vendors=None, excluded_names=None, excluded_cve_ids=None):
+                             excluded_vendors=None, excluded_names=None, excluded_cve_ids=None,
+                             excluded_machines_ids=None, excluded_groups_ids=None):
         """Get list of ALL machines from GLPI with vulnerability counts (only latest software versions)
         Filtered by entity if location is provided.
         Filtered by min_cvss if > 0.
@@ -554,15 +583,25 @@ class SecurityDatabase(DatabaseHelper):
             severity_filter = f"AND c.severity IN ({severity_list})"
 
         # Build exclusion filters
-        name_exclusion, cve_exclusion, vendor_exclusion = self._build_exclusion_filters(
-            excluded_vendors, excluded_names, excluded_cve_ids
+        name_exclusion, cve_exclusion, vendor_exclusion, machine_exclusion = self._build_exclusion_filters(
+            excluded_vendors, excluded_names, excluded_cve_ids, excluded_machines_ids, excluded_groups_ids
         )
+
+        # Add machine exclusion to WHERE clauses for the main query
+        # machine_exclusion starts with "AND m.id NOT IN..." so we need to handle it properly
+        machine_filter_clause = filter_clause
+        if machine_exclusion:
+            if machine_filter_clause:
+                machine_filter_clause += " " + machine_exclusion
+            else:
+                # Convert "AND m.id NOT IN..." to "WHERE m.id NOT IN..."
+                machine_filter_clause = "WHERE " + machine_exclusion[4:]  # Remove leading "AND "
 
         # Count query
         count_sql = text(f"""
             SELECT COUNT(*) as total
             FROM xmppmaster.local_glpi_machines m
-            {filter_clause}
+            {machine_filter_clause}
         """)
 
         # Main query with vulnerability counts
@@ -593,10 +632,10 @@ class SecurityDatabase(DatabaseHelper):
                 JOIN security.software_cves sc ON sc.glpi_software_name = s.name
                 JOIN security.cves c ON c.id = sc.cve_id
                 WHERE 1=1 {cvss_filter} {severity_filter}
-                {name_exclusion} {cve_exclusion} {vendor_exclusion}
+                {name_exclusion} {cve_exclusion} {vendor_exclusion} {machine_exclusion}
                 GROUP BY isv.items_id
             ) v ON m.id = v.machine_id
-            {filter_clause}
+            {machine_filter_clause}
             ORDER BY v.max_cvss DESC, m.name ASC
             LIMIT :limit OFFSET :start
         """)
@@ -626,7 +665,8 @@ class SecurityDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def get_machine_cves(self, session, id_glpi, start=0, limit=50, filter_str='', severity=None,
-                         min_cvss=0.0, excluded_vendors=None, excluded_names=None, excluded_cve_ids=None):
+                         min_cvss=0.0, excluded_vendors=None, excluded_names=None, excluded_cve_ids=None,
+                         excluded_machines_ids=None, excluded_groups_ids=None):
         """Get all CVEs affecting a specific machine (only latest software versions)
 
         Args:
@@ -663,9 +703,9 @@ class SecurityDatabase(DatabaseHelper):
             if where_clauses:
                 where_sql = "WHERE " + " AND ".join(where_clauses)
 
-            # Build exclusion filters
-            name_exclusion, cve_exclusion, vendor_exclusion = self._build_exclusion_filters(
-                excluded_vendors, excluded_names, excluded_cve_ids
+            # Build exclusion filters (machine_exclusion not used here since we're already filtering by specific machine)
+            name_exclusion, cve_exclusion, vendor_exclusion, _ = self._build_exclusion_filters(
+                excluded_vendors, excluded_names, excluded_cve_ids, excluded_machines_ids, excluded_groups_ids
             )
 
             # Count query - use glpi_software_name for accurate matching
@@ -731,7 +771,8 @@ class SecurityDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def get_machine_softwares_summary(self, session, id_glpi, start=0, limit=50, filter_str='',
-                                      min_cvss=0.0, excluded_vendors=None, excluded_names=None, excluded_cve_ids=None):
+                                      min_cvss=0.0, excluded_vendors=None, excluded_names=None, excluded_cve_ids=None,
+                                      excluded_machines_ids=None, excluded_groups_ids=None):
         """Get vulnerable software summary for a specific machine, grouped by software.
 
         Args:
@@ -761,9 +802,9 @@ class SecurityDatabase(DatabaseHelper):
             if min_cvss > 0:
                 cvss_filter = f"AND c.cvss_score >= {min_cvss}"
 
-            # Build exclusion filters
-            name_exclusion, cve_exclusion, vendor_exclusion = self._build_exclusion_filters(
-                excluded_vendors, excluded_names, excluded_cve_ids
+            # Build exclusion filters (machine_exclusion not used here since we're already filtering by specific machine)
+            name_exclusion, cve_exclusion, vendor_exclusion, _ = self._build_exclusion_filters(
+                excluded_vendors, excluded_names, excluded_cve_ids, excluded_machines_ids, excluded_groups_ids
             )
 
             # Count query - use glpi_software_name for accurate matching
@@ -1050,7 +1091,8 @@ class SecurityDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def get_softwares_summary(self, session, start=0, limit=50, filter_str='', location='',
                               min_cvss=0.0, min_severity='None',
-                              excluded_vendors=None, excluded_names=None, excluded_cve_ids=None):
+                              excluded_vendors=None, excluded_names=None, excluded_cve_ids=None,
+                              excluded_machines_ids=None, excluded_groups_ids=None):
         """Get list of softwares with CVE counts, grouped by software name+version.
         Filtered by entity if location is provided.
         Filtered by min_cvss if > 0.
@@ -1092,33 +1134,10 @@ class SecurityDatabase(DatabaseHelper):
             severity_list = ','.join(f"'{s}'" for s in allowed_severities)
             severity_filter = f"AND c.severity IN ({severity_list})"
 
-        # Build exclusion filters (escape single quotes for SQL safety)
-        def sql_escape(val):
-            return val.replace("'", "''") if val else val
-
-        # Vendor exclusion: join with real GLPI tables to get manufacturer info
-        # glpi.glpi_softwares has manufacturers_id, glpi.glpi_manufacturers has name
-        # Use COLLATE to handle collation mismatch between databases
-        vendor_exclusion = ""
-        if excluded_vendors:
-            vendors_escaped = ','.join(f"'{sql_escape(v)}'" for v in excluded_vendors)
-            vendor_exclusion = f"""AND glpi_sw.glpi_software_name COLLATE utf8mb4_general_ci NOT IN (
-                SELECT gs.name COLLATE utf8mb4_general_ci FROM glpi.glpi_softwares gs
-                LEFT JOIN glpi.glpi_manufacturers gm ON gm.id = gs.manufacturers_id
-                WHERE gm.name IN ({vendors_escaped})
-            )"""
-
-        name_exclusion = ""
-        if excluded_names:
-            # Exclude by exact software name (normalized)
-            names_escaped = ','.join(f"'{sql_escape(n)}'" for n in excluded_names)
-            name_exclusion = f"AND sc.software_name NOT IN ({names_escaped})"
-
-        cve_exclusion = ""
-        if excluded_cve_ids:
-            # Exclude specific CVE IDs
-            cve_ids_escaped = ','.join(f"'{sql_escape(c)}'" for c in excluded_cve_ids)
-            cve_exclusion = f"AND c.cve_id NOT IN ({cve_ids_escaped})"
+        # Build exclusion filters
+        name_exclusion, cve_exclusion, vendor_exclusion, machine_exclusion = self._build_exclusion_filters(
+            excluded_vendors, excluded_names, excluded_cve_ids, excluded_machines_ids, excluded_groups_ids
+        )
 
         # Build filter clause (search on normalized name for user convenience)
         filter_clause = ""
@@ -1129,26 +1148,28 @@ class SecurityDatabase(DatabaseHelper):
 
         try:
             # Count total distinct software+version with CVEs
-            # Use glpi_software_name for joining with GLPI, fallback to software_name if null
+            # Software is shown if it exists in GLPI (any entity), CVE/name/vendor exclusions apply
+            # Machine exclusions only affect the machines_affected count, not visibility
             count_sql = text(f"""
                 SELECT COUNT(DISTINCT CONCAT(sc.software_name, '|', sc.software_version)) as total
                 FROM security.software_cves sc
                 JOIN security.cves c ON c.id = sc.cve_id
-                JOIN (
-                    SELECT DISTINCT s.name as glpi_software_name
-                    FROM xmppmaster.local_glpi_items_softwareversions isv
-                    JOIN xmppmaster.local_glpi_softwareversions sv ON sv.id = isv.softwareversions_id
-                    JOIN xmppmaster.local_glpi_softwares s ON s.id = sv.softwares_id
+                WHERE EXISTS (
+                    SELECT 1 FROM xmppmaster.local_glpi_softwares s
+                    JOIN xmppmaster.local_glpi_softwareversions sv ON sv.softwares_id = s.id
+                    JOIN xmppmaster.local_glpi_items_softwareversions isv ON isv.softwareversions_id = sv.id
                     JOIN xmppmaster.local_glpi_machines m ON m.id = isv.items_id
-                    WHERE 1=1 {entity_filter}
-                ) glpi_sw ON COALESCE(sc.glpi_software_name, sc.software_name) = glpi_sw.glpi_software_name
-                WHERE 1=1 {filter_clause} {cvss_filter} {severity_filter} {name_exclusion} {cve_exclusion} {vendor_exclusion}
+                    WHERE s.name = COALESCE(sc.glpi_software_name, sc.software_name)
+                    {entity_filter}
+                )
+                AND 1=1 {filter_clause} {cvss_filter} {severity_filter} {name_exclusion} {cve_exclusion} {vendor_exclusion}
             """)
             count_result = session.execute(count_sql, params)
             total = count_result.scalar() or 0
 
             # Main query: software grouped with CVE counts
-            # Join using glpi_software_name but display normalized software_name
+            # Shows all software with CVEs that exist in GLPI
+            # machines_affected counts only non-excluded machines
             main_sql = text(f"""
                 SELECT
                     sc.software_name,
@@ -1159,19 +1180,28 @@ class SecurityDatabase(DatabaseHelper):
                     COUNT(DISTINCT CASE WHEN c.severity = 'Medium' THEN c.id END) as medium,
                     COUNT(DISTINCT CASE WHEN c.severity = 'Low' THEN c.id END) as low,
                     MAX(c.cvss_score) as max_cvss,
-                    COUNT(DISTINCT glpi_sw.machine_id) as machines_affected
+                    (
+                        SELECT COUNT(DISTINCT m2.id)
+                        FROM xmppmaster.local_glpi_softwares s2
+                        JOIN xmppmaster.local_glpi_softwareversions sv2 ON sv2.softwares_id = s2.id
+                        JOIN xmppmaster.local_glpi_items_softwareversions isv2 ON isv2.softwareversions_id = sv2.id
+                        JOIN xmppmaster.local_glpi_machines m2 ON m2.id = isv2.items_id
+                        WHERE s2.name = COALESCE(sc.glpi_software_name, sc.software_name)
+                        {entity_filter.replace('m.', 'm2.')}
+                        {machine_exclusion.replace('m.', 'm2.')}
+                    ) as machines_affected
                 FROM security.software_cves sc
                 JOIN security.cves c ON c.id = sc.cve_id
-                JOIN (
-                    SELECT isv.items_id as machine_id, s.name as glpi_software_name
-                    FROM xmppmaster.local_glpi_items_softwareversions isv
-                    JOIN xmppmaster.local_glpi_softwareversions sv ON sv.id = isv.softwareversions_id
-                    JOIN xmppmaster.local_glpi_softwares s ON s.id = sv.softwares_id
+                WHERE EXISTS (
+                    SELECT 1 FROM xmppmaster.local_glpi_softwares s
+                    JOIN xmppmaster.local_glpi_softwareversions sv ON sv.softwares_id = s.id
+                    JOIN xmppmaster.local_glpi_items_softwareversions isv ON isv.softwareversions_id = sv.id
                     JOIN xmppmaster.local_glpi_machines m ON m.id = isv.items_id
-                    WHERE 1=1 {entity_filter}
-                ) glpi_sw ON COALESCE(sc.glpi_software_name, sc.software_name) = glpi_sw.glpi_software_name
-                WHERE 1=1 {filter_clause} {cvss_filter} {severity_filter} {name_exclusion} {cve_exclusion} {vendor_exclusion}
-                GROUP BY sc.software_name, sc.software_version
+                    WHERE s.name = COALESCE(sc.glpi_software_name, sc.software_name)
+                    {entity_filter}
+                )
+                AND 1=1 {filter_clause} {cvss_filter} {severity_filter} {name_exclusion} {cve_exclusion} {vendor_exclusion}
+                GROUP BY sc.software_name, sc.software_version, sc.glpi_software_name
                 ORDER BY max_cvss DESC, total_cves DESC
                 LIMIT :limit OFFSET :start
             """)
@@ -1199,7 +1229,8 @@ class SecurityDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def get_entities_summary(self, session, start=0, limit=50, filter_str='', user_entities='',
                              min_cvss=0.0, min_severity='None',
-                             excluded_vendors=None, excluded_names=None, excluded_cve_ids=None):
+                             excluded_vendors=None, excluded_names=None, excluded_cve_ids=None,
+                             excluded_machines_ids=None, excluded_groups_ids=None):
         """Get list of entities with CVE counts.
         Filtered by user's accessible entities if user_entities is provided.
         Filtered by min_cvss if > 0.
@@ -1226,8 +1257,8 @@ class SecurityDatabase(DatabaseHelper):
             cve_filter += f" AND c.severity IN ({severity_list})"
 
         # Build exclusion filters
-        name_exclusion, cve_exclusion, vendor_exclusion = self._build_exclusion_filters(
-            excluded_vendors, excluded_names, excluded_cve_ids
+        name_exclusion, cve_exclusion, vendor_exclusion, machine_exclusion = self._build_exclusion_filters(
+            excluded_vendors, excluded_names, excluded_cve_ids, excluded_machines_ids, excluded_groups_ids
         )
 
         try:
@@ -1254,28 +1285,46 @@ class SecurityDatabase(DatabaseHelper):
             total = count_result.scalar() or 0
 
             # Main query: entities with CVE counts
-            # Use glpi_software_name for accurate matching
+            # Entity is always shown, machine exclusions only affect counts
+            # Use subqueries for counts to properly apply machine exclusions
             main_sql = text(f"""
                 SELECT
                     e.id as entity_id,
                     e.name as entity_name,
                     e.completename as entity_fullname,
-                    COUNT(DISTINCT m.id) as machines_count,
-                    COUNT(DISTINCT c.id) as total_cves,
-                    COUNT(DISTINCT CASE WHEN c.severity = 'Critical' THEN c.id END) as critical,
-                    COUNT(DISTINCT CASE WHEN c.severity = 'High' THEN c.id END) as high,
-                    COUNT(DISTINCT CASE WHEN c.severity = 'Medium' THEN c.id END) as medium,
-                    COUNT(DISTINCT CASE WHEN c.severity = 'Low' THEN c.id END) as low,
-                    COALESCE(MAX(c.cvss_score), 0) as max_cvss
+                    (
+                        SELECT COUNT(DISTINCT m2.id)
+                        FROM xmppmaster.local_glpi_machines m2
+                        WHERE m2.entities_id = e.id
+                        {machine_exclusion.replace('m.', 'm2.')}
+                    ) as machines_count,
+                    COALESCE(cve_stats.total_cves, 0) as total_cves,
+                    COALESCE(cve_stats.critical, 0) as critical,
+                    COALESCE(cve_stats.high, 0) as high,
+                    COALESCE(cve_stats.medium, 0) as medium,
+                    COALESCE(cve_stats.low, 0) as low,
+                    COALESCE(cve_stats.max_cvss, 0) as max_cvss
                 FROM xmppmaster.local_glpi_entities e
-                LEFT JOIN xmppmaster.local_glpi_machines m ON m.entities_id = e.id
-                LEFT JOIN xmppmaster.local_glpi_items_softwareversions isv ON isv.items_id = m.id
-                LEFT JOIN xmppmaster.local_glpi_softwareversions sv ON sv.id = isv.softwareversions_id
-                LEFT JOIN xmppmaster.local_glpi_softwares s ON s.id = sv.softwares_id
-                LEFT JOIN security.software_cves sc ON sc.glpi_software_name = s.name
-                LEFT JOIN security.cves c ON c.id = sc.cve_id
-                WHERE 1=1 {filter_clause} {cve_filter}
-                {name_exclusion} {cve_exclusion} {vendor_exclusion}
+                LEFT JOIN (
+                    SELECT
+                        m.entities_id,
+                        COUNT(DISTINCT c.id) as total_cves,
+                        COUNT(DISTINCT CASE WHEN c.severity = 'Critical' THEN c.id END) as critical,
+                        COUNT(DISTINCT CASE WHEN c.severity = 'High' THEN c.id END) as high,
+                        COUNT(DISTINCT CASE WHEN c.severity = 'Medium' THEN c.id END) as medium,
+                        COUNT(DISTINCT CASE WHEN c.severity = 'Low' THEN c.id END) as low,
+                        MAX(c.cvss_score) as max_cvss
+                    FROM xmppmaster.local_glpi_machines m
+                    JOIN xmppmaster.local_glpi_items_softwareversions isv ON isv.items_id = m.id
+                    JOIN xmppmaster.local_glpi_softwareversions sv ON sv.id = isv.softwareversions_id
+                    JOIN xmppmaster.local_glpi_softwares s ON s.id = sv.softwares_id
+                    JOIN security.software_cves sc ON sc.glpi_software_name = s.name
+                    JOIN security.cves c ON c.id = sc.cve_id
+                    WHERE 1=1 {cve_filter}
+                    {name_exclusion} {cve_exclusion} {vendor_exclusion} {machine_exclusion}
+                    GROUP BY m.entities_id
+                ) cve_stats ON cve_stats.entities_id = e.id
+                WHERE 1=1 {filter_clause}
                 GROUP BY e.id, e.name, e.completename
                 ORDER BY max_cvss DESC, total_cves DESC
                 LIMIT :limit OFFSET :start
@@ -1305,7 +1354,8 @@ class SecurityDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def get_groups_summary(self, session, start=0, limit=50, filter_str='', user_login='',
                            min_cvss=0.0, min_severity='None',
-                           excluded_vendors=None, excluded_names=None, excluded_cve_ids=None):
+                           excluded_vendors=None, excluded_names=None, excluded_cve_ids=None,
+                           excluded_machines_ids=None, excluded_groups_ids=None):
         """Get list of groups with CVE counts.
         Filtered by ShareGroup - only show groups shared with this user.
         Filtered by min_cvss if > 0.
@@ -1331,18 +1381,24 @@ class SecurityDatabase(DatabaseHelper):
             severity_list = ','.join(f"'{s}'" for s in allowed_severities)
             cve_filter += f" AND c.severity IN ({severity_list})"
 
-        # Build exclusion filters
-        name_exclusion, cve_exclusion, vendor_exclusion = self._build_exclusion_filters(
-            excluded_vendors, excluded_names, excluded_cve_ids
+        # Build exclusion filters - for groups view, also exclude machines from excluded groups
+        name_exclusion, cve_exclusion, vendor_exclusion, machine_exclusion = self._build_exclusion_filters(
+            excluded_vendors, excluded_names, excluded_cve_ids, excluded_machines_ids, excluded_groups_ids,
+            include_group_machines=True
         )
 
         try:
-            # Build filter clause - exclude internal PULSE groups
+            # Build filter clause - exclude internal PULSE groups and excluded groups
             filter_clause = "AND g.name NOT LIKE 'PULSE_INTERNAL%'"
             params = {'start': start, 'limit': limit}
             if filter_str:
                 filter_clause += " AND g.name LIKE :filter"
                 params['filter'] = f"%{filter_str}%"
+
+            # Exclude groups that are in the exclusion list
+            if excluded_groups_ids:
+                group_ids_str = ','.join(str(int(gid)) for gid in excluded_groups_ids)
+                filter_clause += f" AND g.id NOT IN ({group_ids_str})"
 
             # Filter by ShareGroup - only show groups shared with this user
             share_filter = ""
@@ -1366,31 +1422,51 @@ class SecurityDatabase(DatabaseHelper):
             total = count_result.scalar() or 0
 
             # Main query: groups with CVE counts
-            # Use glpi_software_name for accurate matching
+            # Group is always shown, machine exclusions only affect counts
+            # is_dynamic: 1 if query is not null and not empty, 0 otherwise
             main_sql = text(f"""
                 SELECT
                     g.id as group_id,
                     g.name as group_name,
-                    g.type as group_type,
-                    COUNT(DISTINCT m.id) as machines_count,
-                    COUNT(DISTINCT c.id) as total_cves,
-                    COUNT(DISTINCT CASE WHEN c.severity = 'Critical' THEN c.id END) as critical,
-                    COUNT(DISTINCT CASE WHEN c.severity = 'High' THEN c.id END) as high,
-                    COUNT(DISTINCT CASE WHEN c.severity = 'Medium' THEN c.id END) as medium,
-                    COUNT(DISTINCT CASE WHEN c.severity = 'Low' THEN c.id END) as low,
-                    COALESCE(MAX(c.cvss_score), 0) as max_cvss
+                    CASE WHEN g.query IS NOT NULL AND LENGTH(g.query) > 0 THEN 1 ELSE 0 END as is_dynamic,
+                    (
+                        SELECT COUNT(DISTINCT m2.id)
+                        FROM dyngroup.Results r2
+                        JOIN dyngroup.Machines dm2 ON dm2.id = r2.FK_machines
+                        JOIN xmppmaster.local_glpi_machines m2 ON CONCAT('UUID', m2.id) = dm2.uuid
+                        WHERE r2.FK_groups = g.id
+                        {machine_exclusion.replace('m.', 'm2.')}
+                    ) as machines_count,
+                    COALESCE(cve_stats.total_cves, 0) as total_cves,
+                    COALESCE(cve_stats.critical, 0) as critical,
+                    COALESCE(cve_stats.high, 0) as high,
+                    COALESCE(cve_stats.medium, 0) as medium,
+                    COALESCE(cve_stats.low, 0) as low,
+                    COALESCE(cve_stats.max_cvss, 0) as max_cvss
                 FROM dyngroup.Groups g
-                LEFT JOIN dyngroup.Results r ON r.FK_groups = g.id
-                LEFT JOIN dyngroup.Machines dm ON dm.id = r.FK_machines
-                LEFT JOIN xmppmaster.local_glpi_machines m ON CONCAT('UUID', m.id) = dm.uuid
-                LEFT JOIN xmppmaster.local_glpi_items_softwareversions isv ON isv.items_id = m.id
-                LEFT JOIN xmppmaster.local_glpi_softwareversions sv ON sv.id = isv.softwareversions_id
-                LEFT JOIN xmppmaster.local_glpi_softwares s ON s.id = sv.softwares_id
-                LEFT JOIN security.software_cves sc ON sc.glpi_software_name = s.name
-                LEFT JOIN security.cves c ON c.id = sc.cve_id
-                WHERE 1=1 {filter_clause} {share_filter} {cve_filter}
-                {name_exclusion} {cve_exclusion} {vendor_exclusion}
-                GROUP BY g.id, g.name, g.type
+                LEFT JOIN (
+                    SELECT
+                        r.FK_groups as group_id,
+                        COUNT(DISTINCT c.id) as total_cves,
+                        COUNT(DISTINCT CASE WHEN c.severity = 'Critical' THEN c.id END) as critical,
+                        COUNT(DISTINCT CASE WHEN c.severity = 'High' THEN c.id END) as high,
+                        COUNT(DISTINCT CASE WHEN c.severity = 'Medium' THEN c.id END) as medium,
+                        COUNT(DISTINCT CASE WHEN c.severity = 'Low' THEN c.id END) as low,
+                        MAX(c.cvss_score) as max_cvss
+                    FROM dyngroup.Results r
+                    JOIN dyngroup.Machines dm ON dm.id = r.FK_machines
+                    JOIN xmppmaster.local_glpi_machines m ON CONCAT('UUID', m.id) = dm.uuid
+                    JOIN xmppmaster.local_glpi_items_softwareversions isv ON isv.items_id = m.id
+                    JOIN xmppmaster.local_glpi_softwareversions sv ON sv.id = isv.softwareversions_id
+                    JOIN xmppmaster.local_glpi_softwares s ON s.id = sv.softwares_id
+                    JOIN security.software_cves sc ON sc.glpi_software_name = s.name
+                    JOIN security.cves c ON c.id = sc.cve_id
+                    WHERE 1=1 {cve_filter}
+                    {name_exclusion} {cve_exclusion} {vendor_exclusion} {machine_exclusion}
+                    GROUP BY r.FK_groups
+                ) cve_stats ON cve_stats.group_id = g.id
+                WHERE 1=1 {filter_clause} {share_filter}
+                GROUP BY g.id, g.name
                 ORDER BY max_cvss DESC, total_cves DESC
                 LIMIT :limit OFFSET :start
             """)
@@ -1398,7 +1474,8 @@ class SecurityDatabase(DatabaseHelper):
             result = session.execute(main_sql, params)
             results = []
             for row in result:
-                group_type_label = 'Static' if row.group_type == 0 else 'Dynamic'
+                # is_dynamic is computed in SQL: 1 = dynamic, 0 = static
+                group_type_label = 'Dynamic' if int(row.is_dynamic) == 1 else 'Static'
                 results.append({
                     'group_id': row.group_id,
                     'group_name': row.group_name,
@@ -1420,7 +1497,8 @@ class SecurityDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def get_group_machines(self, session, group_id, start=0, limit=50, filter_str='',
                            min_cvss=0.0, min_severity='None',
-                           excluded_vendors=None, excluded_names=None, excluded_cve_ids=None):
+                           excluded_vendors=None, excluded_names=None, excluded_cve_ids=None,
+                           excluded_machines_ids=None, excluded_groups_ids=None):
         """Get machines in a group with their CVE counts.
         Filtered by min_cvss if > 0.
         Filtered by min_severity if not 'None'.
@@ -1443,8 +1521,8 @@ class SecurityDatabase(DatabaseHelper):
             cve_filter += f" AND c.severity IN ({severity_list})"
 
         # Build exclusion filters
-        name_exclusion, cve_exclusion, vendor_exclusion = self._build_exclusion_filters(
-            excluded_vendors, excluded_names, excluded_cve_ids
+        name_exclusion, cve_exclusion, vendor_exclusion, machine_exclusion = self._build_exclusion_filters(
+            excluded_vendors, excluded_names, excluded_cve_ids, excluded_machines_ids, excluded_groups_ids
         )
 
         try:
@@ -1463,6 +1541,7 @@ class SecurityDatabase(DatabaseHelper):
                 JOIN dyngroup.Machines dm ON dm.id = r.FK_machines
                 JOIN xmppmaster.local_glpi_machines m ON CONCAT('UUID', m.id) = dm.uuid
                 WHERE r.FK_groups = :group_id {filter_clause}
+                {machine_exclusion}
             """)
             count_result = session.execute(count_sql, params)
             total = count_result.scalar() or 0
@@ -1488,7 +1567,7 @@ class SecurityDatabase(DatabaseHelper):
                 LEFT JOIN security.software_cves sc ON sc.glpi_software_name = s.name
                 LEFT JOIN security.cves c ON c.id = sc.cve_id
                 WHERE r.FK_groups = :group_id {filter_clause} {cve_filter}
-                {name_exclusion} {cve_exclusion} {vendor_exclusion}
+                {name_exclusion} {cve_exclusion} {vendor_exclusion} {machine_exclusion}
                 GROUP BY m.id, m.name
                 ORDER BY risk_score DESC, m.name ASC
                 LIMIT :limit OFFSET :start
@@ -1818,11 +1897,10 @@ class SecurityDatabase(DatabaseHelper):
             return False
 
     @DatabaseHelper._sessionm
-    def reset_all_policies(self, session, user=None):
-        """Reset all policies to default values.
+    def reset_display_policies(self, session, user=None):
+        """Reset only display policies to default values, keeping exclusions intact.
 
-        Deletes all existing policies and inserts the default values.
-        Default values match those in schema-001.sql.
+        Reads defaults from policies_defaults table.
 
         Args:
             user: username making the change (default: 'system')
@@ -1833,41 +1911,53 @@ class SecurityDatabase(DatabaseHelper):
         if user is None:
             user = 'system'
 
-        # Default policies matching schema-001.sql
-        default_policies = {
-            'display': {
-                'min_cvss': '4.0',
-                'min_severity': 'Medium',
-                'show_patched': 'true',
-                'max_age_days': '365',
-                'min_published_year': '2020'
-            },
-            'exclusions': {
-                'vendors': '[]',
-                'names': '[]',
-                'cve_ids': '[]'
-            }
-        }
+        try:
+            # Delete only display policies
+            session.execute(text("DELETE FROM policies WHERE category = 'display'"))
+
+            # Reinsert from policies_defaults table
+            session.execute(text("""
+                INSERT INTO policies (category, `key`, value, updated_by, updated_at)
+                SELECT category, `key`, value, :user, NOW()
+                FROM policies_defaults
+                WHERE category = 'display'
+            """), {'user': user})
+
+            session.commit()
+            logger.info(f"Display policies reset to defaults by user '{user}'")
+            return True
+        except Exception as e:
+            logger.error(f"Error resetting display policies: {e}")
+            return False
+
+    @DatabaseHelper._sessionm
+    def reset_all_policies(self, session, user=None):
+        """Reset all policies to default values.
+
+        Reads defaults from policies_defaults table.
+
+        Args:
+            user: username making the change (default: 'system')
+
+        Returns:
+            bool: True on success
+        """
+        if user is None:
+            user = 'system'
 
         try:
             # Delete all existing policies
             session.execute(text("DELETE FROM policies"))
 
-            # Insert default values
-            for category, settings in default_policies.items():
-                for key, value in settings.items():
-                    session.execute(text("""
-                        INSERT INTO policies (category, `key`, value, updated_by, updated_at)
-                        VALUES (:category, :key, :value, :user, NOW())
-                    """), {
-                        'category': category,
-                        'key': key,
-                        'value': value,
-                        'user': user
-                    })
+            # Reinsert all from policies_defaults table
+            session.execute(text("""
+                INSERT INTO policies (category, `key`, value, updated_by, updated_at)
+                SELECT category, `key`, value, :user, NOW()
+                FROM policies_defaults
+            """), {'user': user})
 
             session.commit()
-            logger.info(f"Policies reset to defaults by user '{user}'")
+            logger.info(f"All policies reset to defaults by user '{user}'")
             return True
         except Exception as e:
             logger.error(f"Error resetting policies: {e}")
