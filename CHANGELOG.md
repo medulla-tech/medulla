@@ -1,5 +1,23 @@
 # Change Log
 
+## [5.4.6](https://github.com/medulla-tech/medulla/releases/tag/5.4.6) (2025-12-31)
+- [FEATURE] Add regex-based team filtering for profiles
+- [FEATURE] Add proxy support for OIDC providers
+- [BUGFIX]  Improve the time to get the xmpp computers page
+
+## [5.4.5](https://github.com/medulla-tech/medulla/releases/tag/5.4.5) (2025-12-17)
+- [FEATURE] Dashboard widgets are now based on user's allowed entities
+- [FEATURE] Improve speed of query listing machines of allowed entities
+- [BUGFIX]  Fix display of packages list
+- [BUGFIX]  Fix filtering of packages based on machine's OS
+- [BUGFIX]  Fix traceback on update by machine page when the list is empty
+- [BUGFIX]  Fix traceback on dashboard right after login
+- [BUGFIX]  Update the progress bar style on details by machine update view
+- [BUGFIX]  Fix external ldap default organisation to MMC when now provided
+- [BUGFIX]  Fix filter used on group for updates
+- [BUGFIX]  Fix import in package server when used on relays
+- [BUGFIX]  Improve handling of kiosk updates after package creation
+
 ## [5.4.4](https://github.com/medulla-tech/medulla/releases/tag/5.4.4) (2025-12-01)
 - [FEATURE] Dashboard widgets are now scoped to the user’s allowed entities
 - [FEATURE] Initial support for GLPI version 11

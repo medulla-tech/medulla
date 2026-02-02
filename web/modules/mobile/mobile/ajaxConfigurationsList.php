@@ -1,11 +1,22 @@
 <?php
 require_once("modules/mobile/includes/xmlrpc.php");
 
-// Fetch configurations from HMDM via xmlrpc wrapper
+$filter = isset($_GET['filter']) ? $_GET['filter'] : '';
+
 $configs = xmlrpc_get_hmdm_configurations();
 if (!is_array($configs)) $configs = [];
 
-$ids = $col1 = $descriptions = $actions = [];
+if (!empty($filter)) {
+    $configs = array_filter($configs, function($cfg) use ($filter) {
+        $cfgName = $cfg['name'] ?? '';
+        return stripos($cfgName, $filter) !== false;
+    });
+}
+
+$ids = $col1 = $descriptions = [];
+$actionDelete = [];
+$actionModify = [];
+$params = [];
 
 foreach ($configs as $index => $cfg) {
     $id = 'cfg_' . $index;
@@ -15,26 +26,30 @@ foreach ($configs as $index => $cfg) {
     $name = htmlspecialchars($cfg['name'] ?? 'Unnamed');
     $desc = htmlspecialchars($cfg['description'] ?? '-');
 
-    $col1[] = "<a href='#' class='cfglink'>{$name}</a>";
+    $col1[] = "<a href='" . htmlspecialchars($detailsUrl, ENT_QUOTES, 'UTF-8') . "' class='cfglink'>{$name}</a>";
     $descriptions[] = $desc;
 
-    $deleteUrl = urlStrRedirect("mobile/mobile/deleteConfiguration", array('action' => 'deleteConfiguration', 'id' => $cfgId, 'name' => $name));
-    $actions[] = "<ul class='action' style='list-style-type: none; padding: 0; margin: 0; display: flex; gap: 8px; align-items: center;'>
-        <li class='delete'><a href='{$deleteUrl}' class='delete-link' data-id='{$cfgId}' title='Supprimer'>" . _T("", "mobile") . "</a></li>
-    </ul>";
+    $actionModify[] = new ActionItem(_T("Modify", "mobile"), "configurationDetails", "edit", "id", "mobile", "mobile");
+    $actionDelete[] = new ActionPopupItem(_T("Delete Configuration", "mobile"), "deleteConfiguration", "delete", "", "mobile", "mobile");
+
+    $params[] = [
+            'id' => $cfgId,
+            'name' => $name,
+        ];
 }
 
 $n = new OptimizedListInfos($col1, _T("Configuration", "mobile"));
 $n->setCssIds($ids);
 $n->disableFirstColumnActionLink();
 
-// navbar
 $count = safeCount($col1);
 $filter = isset($_REQUEST['filter']) ? $_REQUEST['filter'] : "";
 $n->setNavBar(new AjaxNavBar($count, $filter));
 
 $n->addExtraInfo($descriptions, _T("Description", "mobile"));
-$n->addExtraInfo($actions, _T("Actions", "mobile"));
+$n->addActionItemArray($actionModify);
+$n->addActionItemArray($actionDelete);
+$n->setParamInfo($params);
 
 $n->start = 0;
 $n->display();

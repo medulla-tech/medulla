@@ -8,12 +8,12 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: modules/medulla_server/update/regenerateAgent.php:28
-msgid "Agent correctly regenerate"
-msgstr "El agente se regenera correctamente"
+msgid "Agent successfully regenerated"
+msgstr "Agente regenerado con éxito"
 
 #: modules/medulla_server/update/regenerateAgent.php:32
 msgid "Failed to regenerate Agent"
-msgstr "No se ha podido regenerar el agente"
+msgstr "Error al regenerar el agente"
 
 #: modules/medulla_server/update/viewProductUpdates.php:88
 msgid "No updates data available"

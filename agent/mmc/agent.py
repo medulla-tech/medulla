@@ -80,7 +80,7 @@ sys.path.append("plugins")
 
 Fault = xmlrpc.client.Fault
 ctx = None
-VERSION = "5.4.4"
+VERSION = "5.4.6"
 
 PYTHON_VERSION = sys.version_info.major
 
@@ -814,7 +814,7 @@ sys.path.append("plugins")
 
 Fault = xmlrpc.client.Fault
 ctx = None
-VERSION = "5.4.4"
+VERSION = "5.4.6"
 
 
 class IncludeStartsWithFilter(logging.Filter):
@@ -1958,8 +1958,8 @@ class MMCApp(object):
         # Add event handler before shutdown
         reactor.addSystemEventTrigger("before", "shutdown", self.cleanUp)
         logger.info(
-            "Listening to XML-RPC requests on %s:%s"
-            % (self.config.host, self.config.port)
+            "Listening to XML-RPC requests on %s:%s (session timeout: %ds)"
+            % (self.config.host, self.config.port, self.config.sessiontimeout)
         )
         # Start client XMPP if module xmppmaster enable
         if PluginManager().isEnabled("xmppmaster"):
@@ -2137,6 +2137,13 @@ def readConfig(config):
     except (configparser.NoSectionError, configparser.NoOptionError):
         # Use default session timeout
         config.sessiontimeout = server.Session.sessionTimeout
+
+    # IMPORTANT: Set the session timeout at the class level so that
+    # all new Twisted sessions are created with the configured timeout.
+    # Without this, sessions are created with the default 900s (15 min)
+    # and the timer is only updated on subsequent requests.
+    server.Session.sessionTimeout = config.sessiontimeout
+    logger.info(f"Session timeout configured to {config.sessiontimeout} seconds")
 
     # SSL stuff
     try:

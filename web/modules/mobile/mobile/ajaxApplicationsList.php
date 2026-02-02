@@ -1,12 +1,28 @@
 <?php
 require_once("modules/mobile/includes/xmlrpc.php");
 
+// Get filter parameter
+$filter = isset($_GET['filter']) ? $_GET['filter'] : '';
+
 // Fetch applications from HMDM via xmlrpc wrapper
 $apps = xmlrpc_get_hmdm_applications();
 
 if (!is_array($apps)) $apps = [];
 
-$ids = $col1 = $packages = $versions = $urls = $actions = [];
+// Filter by application name if filter is provided
+if (!empty($filter)) {
+    $apps = array_filter($apps, function($app) use ($filter) {
+        $appName = $app['name'] ?? '';
+        return stripos($appName, $filter) !== false;
+    });
+}
+
+$ids = $col1 = $packages = $versions = $urls = [];
+$actionEdit = [];
+$actionConfiguration = [];
+$actionVersions = [];
+$actionDelete = [];
+$params = [];
 
 foreach ($apps as $index => $app) {
 	$id = 'app_' . $index;
@@ -23,11 +39,15 @@ foreach ($apps as $index => $app) {
 	$versions[] = $version;
 	$urls[] = $url;
 
-	// Action: Delete (server-side via xmlrpc wrapper for security/consistency)
-	$deleteUrl = urlStrRedirect("mobile/mobile/deleteApplication", array('action' => 'deleteApplication', 'id' => $appId, 'name' => $name));
-	$actions[] = "<ul class='action' style='list-style-type: none; padding: 0; margin: 0; display: flex; gap: 8px; align-items: center;'>
-		<li class='delete'><a href='{$deleteUrl}' class='delete-link' data-id='{$appId}' title='Supprimer'>" . _T("", "mobile") . "</a></li>
-	</ul>";
+	// Build ActionItem (Edit) and ActionPopupItem (Delete)
+	$actionEdit[] = new ActionItem(_("Edit Application"), "editApplication", "edit", "", "mobile", "mobile");
+	// $actionConfiguration[] = new ActionItem(_("Configuration"), "applicationConfiguration", "info", "", "mobile", "mobile");
+	$actionVersions[] = new ActionItem(_("Versions"), "applicationVersions", "history", "", "mobile", "mobile");
+	$actionDelete[] = new ActionPopupItem(_("Delete Application"), "deleteApplication", "delete", "", "mobile", "mobile");
+	$params[] = [
+		'id' => $appId,
+		'name' => $name,
+	];
 }
 
 $n = new OptimizedListInfos($col1, _T("Application name", "mobile"));
@@ -42,7 +62,12 @@ $n->setNavBar(new AjaxNavBar($count, $filter));
 $n->addExtraInfo($packages, _T("Package ID", "mobile"));
 $n->addExtraInfo($versions, _T("Version", "mobile"));
 $n->addExtraInfo($urls, _T("URL", "mobile"));
-$n->addExtraInfo($actions, _T("Actions", "mobile"));
+// Attach actions
+$n->addActionItemArray($actionEdit);
+// $n->addActionItemArray($actionConfiguration);
+$n->addActionItemArray($actionVersions);
+$n->addActionItemArray($actionDelete);
+$n->setParamInfo($params);
 
 $n->start = 0;
 $n->display();

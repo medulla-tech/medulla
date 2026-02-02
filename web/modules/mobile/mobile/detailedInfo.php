@@ -18,7 +18,7 @@ if (isset($_POST['search']) && $device_number) {
         <tr>
             <td>
                 <div id="searchBest" style="width:370px; position: relative; justify-self:end;">
-                    <input type="text" class="searchfieldreal" name="device" id="device" placeholder="Device's name " value="<?php echo htmlspecialchars($device_number); ?>" autocomplete="off">
+                    <input type="text" class="searchfieldreal" name="device" id="device" placeholder="<?php echo _T("Search device...", "mobile"); ?>" value="<?php echo htmlspecialchars($device_number); ?>" autocomplete="off">
 
                     <button type="button" class="search-clear" onclick="document.getElementById('device').value=''; pushSearch();">
                     </button>

@@ -544,10 +544,16 @@ class GLPIClient:
                 phone=phone,
             )
 
+            final_entity_id = int(id_entity) if id_entity not in (None, '', 0) else 0
+            final_profile_id = int(id_profile) if id_profile not in (None, '', 0) else self._find_selfservice_profile_id()
+
+            if final_profile_id is None:
+                raise RuntimeError("Unable to find Self-Service profile in GLPI")
+
             self.switch_user_profile(
                 user_id=user_id,
-                new_profile_id=int(id_profile),
-                entities_id=int(id_entity),
+                new_profile_id=final_profile_id,
+                entities_id=final_entity_id,
                 is_recursive=1 if is_recursive else 0,
             )
 

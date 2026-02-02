@@ -9,25 +9,15 @@ $p = new PageGenerator(_T("Configurations", 'mobile'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
-$ajax = new AjaxFilterParams(urlStrRedirect("mobile/mobile/ajaxConfigurationsList"));
-$ajax->setElements(array());
-$ajax->setElementsVal(array());
+// Display notification if redirected from save
+if (isset($_GET['saved']) && $_GET['saved'] == '1') {
+    new NotifyWidgetSuccess(_T("Configuration saved successfully", "mobile"));
+}
+if (isset($_GET['error']) && $_GET['error'] == '1') {
+    new NotifyWidgetFailure(_T("Failed to save configuration", "mobile"));
+}
+
+$ajax = new AjaxFilter(urlStrRedirect("mobile/mobile/ajaxConfigurationsList"));
 $ajax->display();
 $ajax->displayDivToUpdate();
-
-?>
-<script type="text/javascript">
-// Optional: prevent inner links from hijacking the main page (kept minimal)
-jQuery(document).on('click', '#container a', function(e){
-    var $a = jQuery(this);
-    var href = $a.attr('href');
-    if(!href) return;
-    if($a.data('method')) return;
-    if(href.indexOf('#') === 0) return;
-    e.preventDefault();
-    window.open(href, '_blank');
-});
-</script>
-<?php
-
 ?>

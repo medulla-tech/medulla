@@ -1,0 +1,72 @@
+/* /usr/share/mmc/modules/admin/graph/admin/websocket_logs.css */
+#settingsPanel {
+    width: 90%;
+    max-width: 1200px;
+    background-color: #2c2c2c;
+    border: 1px solid #444;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 30px auto 15px auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    color: #E1E1E3;
+    transform: translateX(-40px);
+  }
+
+  .form-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .form-group label,
+  .form-group span {
+    font-weight: 500;
+  }
+
+  #fileSelect {
+    padding: 5px 10px;
+    background-color: #222;
+    border: 1px solid #555;
+    color: #e1e1e3;
+    border-radius: 4px;
+  }
+
+  #serverSelect {
+    padding: 5px 10px;
+    background-color: #222;
+    border: 1px solid #555;
+    color: #e1e1e3;
+    border-radius: 4px;
+  }
+
+  input[type="number"] {
+    padding: 5px;
+    width: 80px;
+    background-color: #222;
+    border: 1px solid #555;
+    color: #e1e1e3;
+    border-radius: 4px;
+  }
+
+  #logOutput {
+      /* Keep formatting with the returns to the line received from the server \ n */
+      white-space: pre-wrap;
+  }
+
+  #logOutputContainer {
+    width: 90%;
+    max-width: 1200px;
+    background-color: #1f1f1f;
+    border: 1px solid #444;
+    border-radius: 8px;
+    overflow-y: auto;
+    height: 60vh;
+    padding: 15px;
+    font-family: Consolas, 'Roboto Mono', Courier, monospace;
+    font-size: 0.85em;
+    margin: 5px auto;
+    transform: translateX(-40px);
+    color: #E1E1E3;
+  }

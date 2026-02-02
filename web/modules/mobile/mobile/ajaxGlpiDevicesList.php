@@ -61,6 +61,28 @@ $machines = xmlrpc_get_devices_list($start, $maxperpage, $ctx);
 $count = $machines["count"];
 $datas = $machines["data"];
 $xmppdatas = $machines['xmppdata'];
+
+// Apply client-side filter by device name if filter is provided
+if (!empty($filter) && isset($datas['name'])) {
+    $filtered_indices = [];
+    foreach ($datas['name'] as $idx => $name) {
+        $deviceName = $name ?? (isset($datas['cn'][$idx]) ? $datas['cn'][$idx] : '');
+        if (stripos($deviceName, $filter) !== false) {
+            $filtered_indices[] = $idx;
+        }
+    }
+    
+    // Filter all data arrays to keep only matching indices
+    foreach ($datas as $key => $values) {
+        if (is_array($values)) {
+            $datas[$key] = array_values(array_intersect_key($values, array_flip($filtered_indices)));
+        }
+    }
+    
+    // Update count
+    $count = count($filtered_indices);
+}
+
 $presencesClass = [];
 $params = [];
 
@@ -68,7 +90,7 @@ $msc_vnc_show_icon = web_vnc_show_icon();
 
 // Actions for each machines
 $inventAction = new ActionItem(_("Inventory"), "invtabs", "inventory", "inventory", "base", "computers");
-$glpiAction = new ActionItem(_("GLPI Inventory"), "glpitabs", "inventory", "inventory", "mobile", "mobile");
+$glpiAction = new ActionItem(_("GLPI Inventory"), "glpitabs", "inventory", "inventory", "base", "computers");
 $logAction = new ActionItem(_("View deployment details"), "viewlogs", "logfile", "computer", "xmppmaster", "xmppmaster");
 $mscAction = new ActionItem(_("Software deployment"), "msctabs", "install", "computer", "base", "computers");
 

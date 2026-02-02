@@ -27,8 +27,8 @@
 
 %define use_git                1
 %define git                    SHA
-%define real_version           5.4.4
-%define mmc_version            5.4.4
+%define real_version           5.4.6
+%define mmc_version            5.4.6
 
 Summary:	Management Console
 Name:		medulla
@@ -83,6 +83,8 @@ Requires:       mmc-web-mastering
 Requires:       python3-mmc-mastering
 Requires:       mmc-web-mobile
 Requires:       python3-mmc-mobile
+Requires:       mmc-web-security
+Requires:       python3-mmc-security
 Requires:       pulse2-common
 Requires:       pulse2-package-server
 Requires:       python3-pulse2-common-database-dyngroup
@@ -886,6 +888,23 @@ This package contains Pulse 2 common mobile database files
 
 #--------------------------------------------------------------------
 
+%package -n     python3-pulse2-common-database-security
+Summary:        Pulse 2 common security database files
+Group:          System/Servers
+Requires:       pulse2-common = %version-%release
+Requires:       python3-pulse2-common-database = %version-%release
+
+Obsoletes:  python-pulse2-common-database-security < 4.7.0
+Provides:   python-pulse2-common-database-security = %version-%release
+
+%description -n python3-pulse2-common-database-security
+This package contains Pulse 2 common security database files
+
+%files -n python3-pulse2-common-database-security
+%python3_sitelib/pulse2/database/security
+
+#--------------------------------------------------------------------
+
 %package -n     python3-pulse2-common-database
 Summary:        Pulse 2 common database files
 Group:          System/Servers
@@ -1413,6 +1432,38 @@ Mobile module for the MMC web interface
 
 %files -n mmc-web-mobile
 %{_datadir}/mmc/modules/mobile
+
+#--------------------------------------------------------------------
+
+%package -n python3-mmc-security
+Summary:    Security plugin for the MMC agent
+Group:      System/Servers
+Requires:   pulse2-common = %version-%release
+Requires:   python3-pulse2-common-database-mobile = %version-%release
+
+Obsoletes:  python-mmc-security < 4.7.0
+Provides:   python-mmc-security = %version-%release
+
+%description -n python3-mmc-security
+This package contains the security plugin for the MMC agent.
+
+%files -n python3-mmc-security
+%attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/security.ini
+%python3_sitelib/mmc/plugins/security
+%{_docdir}/pulse2/contrib/security
+
+#--------------------------------------------------------------------
+
+%package -n     mmc-web-security
+Summary:        Security module for the MMC web interface
+Group:          System/Servers
+Requires:       mmc-web-base >= %{version}
+
+%description -n mmc-web-security
+Security module for the MMC web interface
+
+%files -n mmc-web-security
+%{_datadir}/mmc/modules/security
 
 #--------------------------------------------------------------------
 

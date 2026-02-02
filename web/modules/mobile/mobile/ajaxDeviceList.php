@@ -1,33 +1,49 @@
 <?php
 require_once("modules/mobile/includes/xmlrpc.php");
 
-// ICI 
-$mobiles_headwind = xmlrpc_get_hmdm_devices();
+$filter = isset($_GET['filter']) ? $_GET['filter'] : '';
+
+$mobiles = xmlrpc_get_hmdm_devices();
+$configurations_data = xmlrpc_get_hmdm_configurations();
+
+// map id name
+$config_map = [];
+if (is_array($configurations_data)) {
+    foreach ($configurations_data as $config) {
+        if (isset($config['id']) && isset($config['name'])) {
+            $config_map[$config['id']] = $config['name'];
+        }
+    }
+}
     
-// Retrieving QR code for a specific configuration
 $configurationId = 1;
 $configurationJson = xmlrpc_get_hmdm_configuration_by_id($configurationId);
 $qrCode = $configurationJson;
 
-// Construction du tableau avec OptimizedListInfos
 $ids = $col1 = $descript = $enligne = $numeros = $autorisations = $installations = $etatFichiers = $configurations = $actions = [];
+$actionQr = [];
+$actionEdit = [];
+$params = [];
 
-if (!is_array($mobiles_headwind)) $mobiles_headwind = [];
+if (!is_array($mobiles)) $mobiles = [];
 
-foreach ($mobiles_headwind as &$m) {
+foreach ($mobiles as &$m) {
     $m['source'] = 'headwind';
 }
 
 unset($m);
 
-// $mobiles = array_merge($mobiles_headwind, $mobiles_nano);
-$mobiles = $mobiles_headwind; // Pour le moment on n'affiche que les headwind
+if (!empty($filter)) {
+    $mobiles = array_filter($mobiles, function($mobile) use ($filter) {
+        $deviceName = $mobile['number'] ?? '';
+        return stripos($deviceName, $filter) !== false;
+    });
+}
 
 foreach ($mobiles as $index => $mobile) {
     $id = 'mob_' . $index;
     $ids[] = $id;
 
-    // Détection de la source
     $is_headwind = $mobile['source'] === 'headwind';
     $origine = $is_headwind ? 'Android' : 'Inconnu';
     $sources[] = $origine;
@@ -39,7 +55,14 @@ foreach ($mobiles as $index => $mobile) {
         $ip[] = $mobile['publicIp'] ?? "Inconnue";
         $installations[] = $mobile['custom2'] ?? "Inconnue"; 
         $etatFichiers[] = $mobile['custom3'] ?? "N/A";
-        $configurations[] = $mobile['configurationId'] ?? "N/A";
+        $configId = $mobile['configurationId'] ?? null;
+        if (isset($configId) && isset($config_map[$configId])) {
+            $configName = $config_map[$configId];
+            $configUrl = urlStrRedirect("mobile/mobile/configurationDetails", array("id" => $configId));
+            $configurations[] = "<a href='{$configUrl}'>{$configName}</a>";
+        } else {
+            $configurations[] = "N/A";
+        }
     } 
     else {
         $numero = "Inconnue";
@@ -54,15 +77,14 @@ foreach ($mobiles as $index => $mobile) {
 
     $col1[] = "<a href='#' class='mobilestatus {$statut}'>{$numero}</a>";
 
-    $actions[] = "
-    <ul class='action' style='list-style-type: none; padding: 0; margin: 0; display: flex; gap: 8px; align-items: center;'>
-        <li class='configuremobile'><a href='#' title='Éditer'>" . _T("", "mobile") . "</a></li>  
-        <li class='mobilepush'><a href='#' title='Push Message'>" . _T("", "mobile") . "</a></li>
-        <li class='audit'><a href='#' title='Logs'>" . _T("", "mobile") . "</a></li>
-        <li class='delete'><a href='/hmdm/rest/private/devices/$numero' data-method='DELETE' class='delete-link' data-id='{$index}' title='Supprimer'>" . _T("", "mobile") . "</a></li>
-        <li class='delete'><a href='/hmdm/rest/public/qr/$qrCode?deviceId=$numero' data-method='GET' class='delete-link' target='_blank' title='QR Code'>" . _T("", "mobile") . "</a></li>
-    </ul>
-    ";
+    $actionEdit[] = new ActionItem(_T("Edit", "mobile"), "editDevice", "edit", "id", "mobile", "mobile");
+    $actionQr[] = new ActionPopupItem(_T("QR Code", "mobile"), "qrCode", "qr-code", "", "mobile", "mobile");
+    $actionDelete[] = new ActionPopupItem(_T("Delete", "mobile"), "deleteDevice", "delete", "id", "mobile", "mobile");
+    $params[] = [
+        'id' => isset($mobile['id']) ? $mobile['id'] : $index,
+        'device_number' => $numero,
+        'configuration_id' => isset($mobile['configurationId']) ? $mobile['configurationId'] : 1,
+    ];
 }
 
 
@@ -70,7 +92,7 @@ $count = is_array($mobiles) ? count($mobiles) : 0;
 $count = count($mobiles);
 $filter = "";
 $n = new OptimizedListInfos($col1, _T("Device's name", "mobile"));
-// TODO: adjust AjaxNavBar parameters if needed
+
 $n->setNavBar(new AjaxNavBar($count, $filter, "updateSearchParamform".($actions?'image':'master')));
 $n->setCssIds($ids);
 $n->disableFirstColumnActionLink();
@@ -82,9 +104,12 @@ $n->addExtraInfo($sources, _T("Model", "mobile"));
 $n->addExtraInfo($ip, _T("IP address", "mobile"));
 $n->addExtraInfo($installations, _T("Status", "mobile"));
 // $n->addExtraInfo($etatFichiers, _T("État des fichiers", "mobile"));
-$n->addExtraInfo($actions, _T("Actions", "mobile"));
 
-
+// Attach actions
+$n->addActionItemArray($actionEdit);
+$n->addActionItemArray($actionQr);
+$n->addActionItemArray($actionDelete);
+$n->setParamInfo($params);
 
 // $n->setItemCount(count($mobiles));
 $n->start = 0;

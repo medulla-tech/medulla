@@ -24,7 +24,7 @@
 require_once("modules/medulla_server/version.php");
 
 $mod = new Module("admin");
-$mod->setVersion("5.4.4");
+$mod->setVersion("5.4.6");
 //$mod->setRevision('');
 $mod->setDescription(_T("Admin", "admin"));
 $mod->setAPIVersion("1:0:0");
@@ -39,6 +39,10 @@ $submod->setPriority(1001);
 
 $page = new Page("relaysList", _T("Relays List", "glpi"));
 $page->setFile("modules/admin/admin/relaysList.php");
+$submod->addPage($page);
+
+$page = new Page("webSocket_logs", _T("webSocket Log", "glpi"));
+$page->setFile("modules/admin/admin/webSocket_logs.php");
 $submod->addPage($page);
 
 $page = new Page("ajaxRelaysList", _T("Relays List", "glpi"));
