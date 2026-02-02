@@ -16,7 +16,7 @@ $sidemenu->addSideMenuItem(new SideMenuItem(_T("Applications", 'mobile'), "mobil
 
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Add an application", 'mobile'), "mobile", "mobile", "addApplication"));
 
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Icon settings", 'mobile'), "mobile", "mobile", "iconSettings"));
+// $sidemenu->addSideMenuItem(new SideMenuItem(_T("Icon settings", 'mobile'), "mobile", "mobile", "iconSettings"));
 
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Configurations", 'mobile'), "mobile", "mobile", "configurations"));
 
@@ -24,7 +24,7 @@ $sidemenu->addSideMenuItem(new SideMenuItem(_T("Files", 'mobile'), "mobile", "mo
 
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Add a file", 'mobile'), "mobile", "mobile", "addFile"));
 
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("All devices glpi", 'mobile'), "mobile", "mobile", "glpiDevices"));
+// $sidemenu->addSideMenuItem(new SideMenuItem(_T("All devices glpi", 'mobile'), "mobile", "mobile", "glpiDevices"));
 
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Functions", 'mobile'), "mobile", "mobile", "functions"));
  ?>
