@@ -219,9 +219,7 @@ def get_extension(id):
 
 ########### Json ###########
 def chown(uuid):
-    simplecommand(
-        "chown -R syncthing:syncthing %s" % os.path.join(_path_package(), uuid)
-    )
+    simplecommand("chown -RL syncthing:syncthing %s" % os.path.join(_path_package(), uuid))
     simplecommand("chmod -R 755 %s" % os.path.join(_path_package(), uuid))
 
 
@@ -1086,7 +1084,7 @@ def putPackageDetail(package, need_assign=True):
     package["preCommand"] = {"command": "", "name": ""}
 
     result = [True, package["id"], packages_id_input_dir, package]
-
+    chown(package["id"])
     return result
 
 
