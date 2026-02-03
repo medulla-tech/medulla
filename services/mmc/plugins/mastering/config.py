@@ -25,6 +25,11 @@ class MasteringConfig(PluginConfig,MasteringDatabaseConfig):
         MasteringDatabaseConfig.setup(self, self.conffile)
         self.disable = self.getboolean("main", "disable")
         self.tempdir = self.get("main", "tempdir")
+        
+        self.master_path = ""
+        if self.has_option("master", "path"):
+            self.master_path = self.get("master", "path")
+
         # ...
 
     def check(self):
