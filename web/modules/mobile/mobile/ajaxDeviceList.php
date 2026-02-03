@@ -78,6 +78,7 @@ foreach ($mobiles as $index => $mobile) {
     $col1[] = "<a href='#' class='mobilestatus {$statut}'>{$numero}</a>";
 
     $actionEdit[] = new ActionItem(_T("Edit", "mobile"), "editDevice", "edit", "id", "mobile", "mobile");
+    $actionQuick[] = new ActionPopupItem(_T("Quick action", "mobile"), "deviceQuickAction", "quick", "id", "mobile", "mobile");
     $actionQr[] = new ActionPopupItem(_T("QR Code", "mobile"), "qrCode", "qr-code", "", "mobile", "mobile");
     $actionDelete[] = new ActionPopupItem(_T("Delete", "mobile"), "deleteDevice", "delete", "id", "mobile", "mobile");
     $params[] = [
@@ -107,6 +108,7 @@ $n->addExtraInfo($installations, _T("Status", "mobile"));
 
 // Attach actions
 $n->addActionItemArray($actionEdit);
+$n->addActionItemArray($actionQuick);
 $n->addActionItemArray($actionQr);
 $n->addActionItemArray($actionDelete);
 $n->setParamInfo($params);
