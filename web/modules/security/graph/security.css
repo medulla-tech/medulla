@@ -578,4 +578,30 @@ tr.severity-na td:first-child { border-left: 3px solid #adb5bd; }
 .add-item-button {
     white-space: nowrap;
 }
+
+/* =============================================================================
+   Store Update Badges (ajaxSoftwaresList.php)
+   ============================================================================= */
+.badge-store-update {
+    background-color: #28a745;
+    color: #fff;
+    font-weight: bold;
+    animation: pulse-green 2s infinite;
+}
+
+.badge-store-current {
+    background-color: #6c757d;
+    color: #fff;
+}
+
+.badge-store-none {
+    background-color: #e9ecef;
+    color: #6c757d;
+}
+
+@keyframes pulse-green {
+    0% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.4); }
+    70% { box-shadow: 0 0 0 6px rgba(40, 167, 69, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0); }
+}
 --></style>

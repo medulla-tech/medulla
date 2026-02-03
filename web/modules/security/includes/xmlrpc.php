@@ -178,4 +178,18 @@ function xmlrpc_get_group_machines($group_id, $start = 0, $limit = 50, $filter =
 function xmlrpc_get_machines_by_severity($severity, $location = '') {
     return xmlCall("security.get_machines_by_severity", array($severity, $location));
 }
+
+// =============================================================================
+// Store integration - Deploy updates for vulnerable software
+// =============================================================================
+function xmlrpc_get_store_software_info($software_name) {
+    return xmlCall("security.get_store_software_info", array($software_name));
+}
+
+function xmlrpc_get_machines_for_vulnerable_software($software_name, $software_version,
+                                                      $location = '', $start = 0, $limit = 100, $filter = '') {
+    return xmlCall("security.get_machines_for_vulnerable_software", array(
+        $software_name, $software_version, $location, $start, $limit, $filter
+    ));
+}
 ?>

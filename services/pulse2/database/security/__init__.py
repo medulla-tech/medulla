@@ -1209,7 +1209,7 @@ class SecurityDatabase(DatabaseHelper):
             result = session.execute(main_sql, params)
             results = []
             for row in result:
-                results.append({
+                software_data = {
                     'software_name': row.software_name,
                     'software_version': row.software_version,
                     'total_cves': int(row.total_cves),
@@ -1218,8 +1218,17 @@ class SecurityDatabase(DatabaseHelper):
                     'medium': int(row.medium),
                     'low': int(row.low),
                     'max_cvss': str(round(float(row.max_cvss), 1)) if row.max_cvss else '0.0',
-                    'machines_affected': int(row.machines_affected)
-                })
+                    'machines_affected': int(row.machines_affected),
+                    # Store info (will be populated below)
+                    'store_version': None,
+                    'store_has_update': False,
+                    'store_package_uuid': None
+                }
+                results.append(software_data)
+
+            # Enrich with store info for each software
+            if results:
+                self._enrich_with_store_info(session, results)
 
             return {'total': total, 'data': results}
         except Exception as e:
@@ -1962,3 +1971,301 @@ class SecurityDatabase(DatabaseHelper):
         except Exception as e:
             logger.error(f"Error resetting policies: {e}")
             return False
+
+    # =========================================================================
+    # Store integration methods
+    # =========================================================================
+
+    def _enrich_with_store_info(self, session, results):
+        """Enrich software results with store update information.
+
+        For each software in results, checks if a newer version exists in the store.
+        Uses partial matching: GLPI software name often includes version (e.g., "7-Zip 23.01 (x64)")
+        while store name is clean (e.g., "7-Zip"). We match if GLPI name starts with store name.
+
+        Updates results in-place with store_version, store_has_update, store_package_uuid.
+
+        Args:
+            session: SQLAlchemy session
+            results: List of software dicts to enrich
+        """
+        if not results:
+            return
+
+        try:
+            # Get all active store software with their versions
+            store_sql = text("""
+                SELECT
+                    s.name,
+                    s.version as store_version,
+                    sd.package_uuid
+                FROM store.software s
+                LEFT JOIN store.software_downloads sd ON sd.software_id = s.id
+                    AND sd.status = 'success'
+                WHERE s.active = 1
+                AND s.version IS NOT NULL
+                AND s.version != ''
+            """)
+
+            store_result = session.execute(store_sql)
+            store_info = {}
+            for row in store_result:
+                # Store by lowercase name for case-insensitive matching
+                store_info[row.name.lower()] = {
+                    'name': row.name,
+                    'store_version': row.store_version,
+                    'store_package_uuid': row.package_uuid
+                }
+
+            # Enrich results - match if GLPI name starts with store name
+            for software in results:
+                glpi_name = software['software_name'].lower()
+
+                # Find matching store software
+                matched_store = None
+                for store_name, store_data in store_info.items():
+                    # Match if GLPI name starts with store name
+                    # e.g., "7-zip 23.01 (x64)" starts with "7-zip"
+                    if glpi_name.startswith(store_name):
+                        # Prefer longer matches (more specific)
+                        if matched_store is None or len(store_name) > len(matched_store[0]):
+                            matched_store = (store_name, store_data)
+
+                if matched_store:
+                    store_data = matched_store[1]
+                    software['store_version'] = store_data['store_version']
+                    software['store_package_uuid'] = store_data['store_package_uuid']
+                    software['store_name'] = store_data['name']  # Original store name for display
+                    # Compare versions to determine if update available
+                    software['store_has_update'] = self._is_version_newer(
+                        store_data['store_version'],
+                        software['software_version']
+                    )
+
+        except Exception as e:
+            logger.warning(f"Could not enrich with store info: {e}")
+            # Don't fail - just leave store fields as None/False
+
+    def _is_version_newer(self, store_version, vulnerable_version):
+        """Compare two version strings to determine if store version is newer.
+
+        Args:
+            store_version: Version in the store (e.g., "3.14.2")
+            vulnerable_version: Vulnerable version (e.g., "3.11.9")
+
+        Returns:
+            bool: True if store_version > vulnerable_version
+        """
+        if not store_version or not vulnerable_version:
+            return False
+
+        try:
+            # Parse version strings into comparable tuples
+            def parse_version(v):
+                # Remove common suffixes like 'esr', 'lts', etc.
+                v = v.lower().replace('esr', '').replace('lts', '').strip('.')
+                # Split and convert to integers where possible
+                parts = []
+                for part in v.split('.'):
+                    try:
+                        parts.append(int(part))
+                    except ValueError:
+                        # Handle non-numeric parts (e.g., "1.0.0a1")
+                        parts.append(part)
+                return tuple(parts)
+
+            store_parts = parse_version(store_version)
+            vuln_parts = parse_version(vulnerable_version)
+
+            return store_parts > vuln_parts
+        except Exception:
+            # If comparison fails, assume no update (safe default)
+            return False
+
+    @DatabaseHelper._sessionm
+    def get_store_software_info(self, session, software_name):
+        """Get store information for a specific software.
+
+        Uses partial matching: the software_name might be a GLPI name like "7-Zip 23.01 (x64)"
+        while store has clean name "7-Zip". We find store software where GLPI name starts with store name.
+
+        Args:
+            software_name: Name of the software (GLPI name or clean name)
+
+        Returns:
+            dict with store info or None if not found:
+            - name, version, vendor, short_desc
+            - package_uuid, download_url
+            - has_package (bool)
+        """
+        try:
+            # First try exact match
+            sql = text("""
+                SELECT
+                    s.id,
+                    s.name,
+                    s.version,
+                    s.vendor,
+                    s.short_desc,
+                    s.os,
+                    s.arch,
+                    sd.package_uuid,
+                    sd.filename,
+                    sd.medulla_path
+                FROM store.software s
+                LEFT JOIN store.software_downloads sd ON sd.software_id = s.id
+                    AND sd.status = 'success'
+                WHERE s.name = :name
+                AND s.active = 1
+                LIMIT 1
+            """)
+
+            result = session.execute(sql, {'name': software_name})
+            row = result.fetchone()
+
+            # If no exact match, try partial match (GLPI name starts with store name)
+            if not row:
+                sql_partial = text("""
+                    SELECT
+                        s.id,
+                        s.name,
+                        s.version,
+                        s.vendor,
+                        s.short_desc,
+                        s.os,
+                        s.arch,
+                        sd.package_uuid,
+                        sd.filename,
+                        sd.medulla_path,
+                        LENGTH(s.name) as name_len
+                    FROM store.software s
+                    LEFT JOIN store.software_downloads sd ON sd.software_id = s.id
+                        AND sd.status = 'success'
+                    WHERE LOWER(:glpi_name) LIKE CONCAT(LOWER(s.name), '%')
+                    AND s.active = 1
+                    ORDER BY name_len DESC
+                    LIMIT 1
+                """)
+                result = session.execute(sql_partial, {'glpi_name': software_name})
+                row = result.fetchone()
+
+            if not row:
+                return None
+
+            return {
+                'id': row.id,
+                'name': row.name,
+                'version': row.version,
+                'vendor': row.vendor,
+                'short_desc': row.short_desc,
+                'os': row.os,
+                'arch': row.arch,
+                'package_uuid': row.package_uuid,
+                'filename': row.filename,
+                'medulla_path': row.medulla_path,
+                'has_package': row.package_uuid is not None
+            }
+        except Exception as e:
+            logger.error(f"Error getting store software info for '{software_name}': {e}")
+            return None
+
+    @DatabaseHelper._sessionm
+    def get_machines_for_vulnerable_software(self, session, software_name, software_version,
+                                              location='', start=0, limit=100, filter_str=''):
+        """Get machines that have a specific vulnerable software installed.
+
+        Args:
+            software_name: Normalized software name (e.g., "Python")
+            software_version: Vulnerable version (e.g., "3.11.9")
+            location: Entity filter (comma-separated entity IDs)
+            start: Pagination offset
+            limit: Pagination limit
+            filter_str: Search filter on hostname
+
+        Returns:
+            dict with 'total' count and 'data' list containing:
+            - id (GLPI machine ID)
+            - uuid (format "UUID<id>")
+            - hostname
+            - entity_id, entity_name
+            - glpi_software_name (original name in GLPI)
+        """
+        entity_ids = self._parse_entity_ids(session, location)
+
+        entity_filter = ""
+        if entity_ids:
+            entity_ids_str = ','.join(str(e) for e in entity_ids)
+            entity_filter = f"AND m.entities_id IN ({entity_ids_str})"
+
+        filter_clause = ""
+        params = {'software_name': software_name, 'start': start, 'limit': limit}
+        if filter_str:
+            filter_clause = "AND m.name LIKE :filter"
+            params['filter'] = f"%{filter_str}%"
+
+        try:
+            # First get the glpi_software_name from software_cves
+            glpi_name_sql = text("""
+                SELECT COALESCE(glpi_software_name, software_name) as glpi_name
+                FROM security.software_cves
+                WHERE software_name = :software_name
+                LIMIT 1
+            """)
+            glpi_result = session.execute(glpi_name_sql, {'software_name': software_name})
+            glpi_row = glpi_result.fetchone()
+            glpi_software_name = glpi_row.glpi_name if glpi_row else software_name
+            params['glpi_software_name'] = glpi_software_name
+
+            # Count total
+            count_sql = text(f"""
+                SELECT COUNT(DISTINCT m.id) as total
+                FROM xmppmaster.local_glpi_machines m
+                JOIN xmppmaster.local_glpi_items_softwareversions isv ON isv.items_id = m.id
+                JOIN xmppmaster.local_glpi_softwareversions sv ON sv.id = isv.softwareversions_id
+                JOIN xmppmaster.local_glpi_softwares s ON s.id = sv.softwares_id
+                WHERE s.name = :glpi_software_name
+                {entity_filter}
+                {filter_clause}
+            """)
+            count_result = session.execute(count_sql, params)
+            total = count_result.scalar() or 0
+
+            # Get machines
+            main_sql = text(f"""
+                SELECT DISTINCT
+                    m.id,
+                    CONCAT('UUID', m.id) as uuid,
+                    m.name as hostname,
+                    m.entities_id as entity_id,
+                    e.name as entity_name,
+                    s.name as glpi_software_name,
+                    sv.name as installed_version
+                FROM xmppmaster.local_glpi_machines m
+                JOIN xmppmaster.local_glpi_items_softwareversions isv ON isv.items_id = m.id
+                JOIN xmppmaster.local_glpi_softwareversions sv ON sv.id = isv.softwareversions_id
+                JOIN xmppmaster.local_glpi_softwares s ON s.id = sv.softwares_id
+                LEFT JOIN xmppmaster.local_glpi_entities e ON e.id = m.entities_id
+                WHERE s.name = :glpi_software_name
+                {entity_filter}
+                {filter_clause}
+                ORDER BY m.name
+                LIMIT :limit OFFSET :start
+            """)
+
+            result = session.execute(main_sql, params)
+            machines = []
+            for row in result:
+                machines.append({
+                    'id': row.id,
+                    'uuid': row.uuid,
+                    'hostname': row.hostname,
+                    'entity_id': row.entity_id,
+                    'entity_name': row.entity_name or 'Root',
+                    'glpi_software_name': row.glpi_software_name,
+                    'installed_version': row.installed_version
+                })
+
+            return {'total': total, 'data': machines}
+        except Exception as e:
+            logger.error(f"Error getting machines for vulnerable software '{software_name}': {e}")
+            return {'total': 0, 'data': []}

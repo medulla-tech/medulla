@@ -231,6 +231,12 @@ $page->setFile("modules/security/security/ajaxResetDisplayFilters.php");
 $page->setOptions(array("visible" => False, "noHeader" => True, "AJAX" => True));
 $submod->addPage($page);
 
+// Deploy Store Update page
+$page = new Page("deployStoreUpdate", _T('Deploy Store Update', 'security'));
+$page->setFile("modules/security/security/deployStoreUpdate.php");
+$page->setOptions(array("visible" => False));
+$submod->addPage($page);
+
 $mod->addSubmod($submod);
 $MMCApp =& MMCApp::getInstance();
 $MMCApp->addModule($mod);

@@ -51,7 +51,13 @@ $mediumCounts = array();
 $lowCounts = array();
 $totalCounts = array();
 $machinesAffected = array();
+$storeStatus = array();
 $params = array();
+$deployActions = array(); // Array of deploy actions (or EmptyActionItem)
+
+// Action templates
+$deployActionTemplate = new ActionItem(_T("Deploy update", "security"), "deployStoreUpdate", "install", "", "security", "security");
+$emptyAction = new EmptyActionItem();
 
 foreach ($data as $row) {
     $softwareNames[] = $row['software_name'];
@@ -63,9 +69,27 @@ foreach ($data as $row) {
     $lowCounts[] = SecurityBadge::count($row['low'], 'low');
     $totalCounts[] = $row['total_cves'];
     $machinesAffected[] = $row['machines_affected'];
+
+    // Store update status and deploy action
+    if (!empty($row['store_has_update']) && $row['store_has_update']) {
+        $storeStatus[] = '<span class="badge badge-store-update" title="' . _T("Update available in Store", "security") . '">'
+            . htmlspecialchars($row['store_version']) . '</span>';
+        $deployActions[] = $deployActionTemplate;
+    } elseif (!empty($row['store_version'])) {
+        $storeStatus[] = '<span class="badge badge-store-current" title="' . _T("Same version in Store", "security") . '">'
+            . htmlspecialchars($row['store_version']) . '</span>';
+        $deployActions[] = $emptyAction;
+    } else {
+        $storeStatus[] = '<span class="badge badge-store-none" title="' . _T("Not available in Store", "security") . '">-</span>';
+        $deployActions[] = $emptyAction;
+    }
+
     $params[] = array(
         'software_name' => $row['software_name'],
-        'software_version' => $row['software_version']
+        'software_version' => $row['software_version'],
+        'store_has_update' => !empty($row['store_has_update']) ? '1' : '0',
+        'store_version' => isset($row['store_version']) ? $row['store_version'] : '',
+        'store_package_uuid' => isset($row['store_package_uuid']) ? $row['store_package_uuid'] : ''
     );
 }
 
@@ -79,6 +103,7 @@ if ($count > 0) {
     $n = new OptimizedListInfos($softwareNames, _T("Software", "security"));
     $n->disableFirstColumnActionLink();
     $n->addExtraInfo($versions, _T("Version", "security"));
+    $n->addExtraInfo($storeStatus, _T("Store", "security"));
     $n->addExtraInfo($maxScores, _T("Max CVSS", "security"));
     if ($showSeverity['critical']) $n->addExtraInfo($criticalCounts, _T("Critical", "security"));
     if ($showSeverity['high']) $n->addExtraInfo($highCounts, _T("High", "security"));
@@ -89,6 +114,8 @@ if ($count > 0) {
     $n->setItemCount($count);
     $n->setNavBar(new AjaxNavBar($count, $filter));
     $n->setParamInfo($params);
+    // Deploy action first - conditionally shown based on store_has_update
+    $n->addActionItemArray($deployActions);
     $n->addActionItem($detailAction);
     $n->addActionItem($excludeAction);
     $n->start = 0;

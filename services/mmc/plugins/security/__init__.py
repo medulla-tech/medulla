@@ -580,3 +580,43 @@ def get_machines_by_severity(severity, location=''):
         List of machine UUIDs in format 'UUID<id>'
     """
     return SecurityDatabase().get_machines_by_severity(severity, location)
+
+
+# =============================================================================
+# Store integration - Deploy updates for vulnerable software
+# =============================================================================
+def get_store_software_info(software_name):
+    """Get store information for a specific software.
+
+    Args:
+        software_name: Name of the software (e.g., "Python")
+
+    Returns:
+        dict with store info or None if not found
+    """
+    return SecurityDatabase().get_store_software_info(software_name)
+
+
+def get_machines_for_vulnerable_software(software_name, software_version,
+                                          location='', start=0, limit=100, filter_str=''):
+    """Get machines that have a specific vulnerable software installed.
+
+    Args:
+        software_name: Normalized software name (e.g., "Python")
+        software_version: Vulnerable version (e.g., "3.11.9")
+        location: Entity filter (comma-separated entity IDs)
+        start: Pagination offset
+        limit: Pagination limit
+        filter_str: Search filter on hostname
+
+    Returns:
+        dict with 'total' count and 'data' list of machines
+    """
+    return SecurityDatabase().get_machines_for_vulnerable_software(
+        software_name=software_name,
+        software_version=software_version,
+        location=location,
+        start=int(start),
+        limit=int(limit),
+        filter_str=filter_str
+    )
