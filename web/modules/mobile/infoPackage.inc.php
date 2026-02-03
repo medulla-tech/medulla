@@ -312,6 +312,19 @@ $pageQrCode->setOptions(array("AJAX" => false, "visible" => false));
 $submod->addPage($pageQrCode);
 
 ################################
+# Device Quick Actions page
+################################
+$pageDeviceQuickAction = new Page("deviceQuickAction", _T('Device Quick Action', 'mobile'));
+$pageDeviceQuickAction->setFile("modules/mobile/mobile/deviceQuickAction.php");
+$pageDeviceQuickAction->setOptions(array("visible" => false, "noHeader" => true));
+$submod->addPage($pageDeviceQuickAction);
+
+$pageDeviceQuickActionExec = new Page("deviceQuickActionExec", _T('Device Quick Action Exec', 'mobile'));
+$pageDeviceQuickActionExec->setFile("modules/mobile/mobile/deviceQuickActionExec.php");
+$pageDeviceQuickActionExec->setOptions(array("AJAX" => false, "visible" => false));
+$submod->addPage($pageDeviceQuickActionExec);
+
+################################
 # End
 ################################
 
