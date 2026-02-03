@@ -854,6 +854,18 @@ li.delete a {
     color: #FFF;
 }
 
+li.remove a {
+    padding: 5px 0px  5px 22px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/actions/remove.svg");
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-size: 25px 25px;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+}
+
 li.csv a {
         padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
@@ -1074,6 +1086,34 @@ li.reloadg a {
     padding: 5px 0px  5px 22px;
     margin: 0 0px 0 0px;
     background-image: url("../img/actions/reload.svg");
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-size: 25px 25px;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+    filter: grayscale(50%);
+    -webkit-filter: grayscale(50%);
+    -moz-filter: grayscale(50%);
+    opacity:0.5;
+}
+
+li.scan a {
+    padding: 5px 0px  5px 22px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/actions/scan.svg");
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-size: 25px 25px;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+}
+
+li.scang a {
+    padding: 5px 0px  5px 22px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/actions/scan.svg");
     background-repeat: no-repeat;
     background-position: left top;
     background-size: 25px 25px;
@@ -2411,7 +2451,7 @@ form.inplaceeditor-form input[type="text"] {
     border-radius: 4px;
     box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.3);
     margin: 5px;
-    padding: 10px;
+    padding: 15px 20px;
     position: fixed;
     z-index: 1001;
     -webkit-border-radius: 4px;
@@ -2422,6 +2462,32 @@ form.inplaceeditor-form input[type="text"] {
     -o-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.3);
     box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.3);
     filter:progid:DXImageTransform.Microsoft.Shadow(color=#aaaaaa, Direction=NaN, Strength=2);
+}
+
+/* PopupForm: structure #__popup_container > h2 + form */
+.popup #__popup_container > h2:first-child {
+    margin: 0 0 12px 0;
+}
+
+.popup #__popup_container > h2:first-child + form {
+    margin-top: 0;
+}
+
+.popup #__popup_container > h2:first-child + form p {
+    margin: 8px 0;
+}
+
+.popup #__popup_container > h2:first-child + form p:empty {
+    display: none;
+}
+
+.popup #__popup_container > h2:first-child + form .btnPrimary,
+.popup #__popup_container > h2:first-child + form .btnSecondary {
+    margin-top: 12px;
+}
+
+.popup #__popup_container > h2:first-child + form .btnPrimary {
+    margin-left: 0 !important;
 }
 .overlay {
     height:100%;

@@ -1,0 +1,11 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 141.7 141.7">
+<!-- Radar/scan circles -->
+<circle cx="70.85" cy="70.85" r="55" fill="none" stroke="#24607E" stroke-width="8" stroke-opacity="0.3"/>
+<circle cx="70.85" cy="70.85" r="40" fill="none" stroke="#24607E" stroke-width="8" stroke-opacity="0.5"/>
+<circle cx="70.85" cy="70.85" r="25" fill="none" stroke="#24607E" stroke-width="8" stroke-opacity="0.7"/>
+<!-- Center dot -->
+<circle cx="70.85" cy="70.85" r="10" fill="#8BB53C"/>
+<!-- Radar sweep line -->
+<line x1="70.85" y1="70.85" x2="70.85" y2="15" stroke="#8BB53C" stroke-width="10" stroke-linecap="round"/>
+<line x1="70.85" y1="70.85" x2="115" y2="40" stroke="#8BB53C" stroke-width="7" stroke-linecap="round" stroke-opacity="0.6"/>
+</svg>

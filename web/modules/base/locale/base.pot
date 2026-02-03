@@ -2442,3 +2442,7 @@ msgstr ""
 #: forgotpassword.php:81
 msgid "Back"
 msgstr ""
+
+#: index.php:198
+msgid "Your session has expired due to inactivity. Please log in again."
+msgstr ""

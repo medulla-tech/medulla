@@ -57,6 +57,27 @@ if (array_key_exists('o', $_GET)) {
 }
 $client = $_SESSION['o'] ?? 'MMC';
 
+// Direct OIDC redirect - if provider parameter is set, redirect to OIDC authentication
+if (isset($_GET['provider']) && !empty($_GET['provider'])) {
+    $provider = preg_replace('/[^a-zA-Z0-9._-]/', '', (string)$_GET['provider']);
+    // Verify provider exists for this client
+    $providers = get_providers_list($client);
+    $providerExists = false;
+    foreach ($providers as $p) {
+        if ($p['name'] === $provider) {
+            $providerExists = true;
+            break;
+        }
+    }
+    if ($providerExists) {
+        $_SESSION['selectedProvider'] = $provider;
+        header("Location: providers.php");
+        exit;
+    }
+    // If provider doesn't exist, continue to normal login page with error
+    $error = sprintf(_("Provider '%s' not found"), htmlspecialchars($provider));
+}
+
 // Magic Link - Token
 if (isset($_GET['token'])) {
     $token = (string)$_GET['token'];
@@ -172,6 +193,9 @@ if (!empty($_GET["error"])) {
 }
 if (isset($_GET["agentsessionexpired"])) {
     $error = _("You have been logged out because the session between the MMC web interface and the MMC agent expired.");
+}
+if (isset($_GET["sessionexpired"])) {
+    $error = _("Your session has expired due to inactivity. Please log in again.");
 }
 if (isset($_GET["signout"])) {
     $error = _("You have been successfully logged out.");
