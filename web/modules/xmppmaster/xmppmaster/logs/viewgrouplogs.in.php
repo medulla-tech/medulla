@@ -75,7 +75,7 @@ class AjaxFilterAudit extends AjaxFilter
     }
     else
     {
-        var url = '<?php echo $this->url ?>'+'<?php echo $this->params ?>'+'&filter='+params['filter']+'&criterion'+'='+params['value'];
+        var url = '<?php echo $this->url ?>'+'&<?php echo $this->params ?>'+'&filter='+params['filter']+'&criterion'+'='+params['value'];
     }
     jQuery('#<?php echo  $this->divid; ?>').load(url);
   }
@@ -98,9 +98,9 @@ class AjaxFilterAudit extends AjaxFilter
       maxperpage = <?php echo $conf["global"]["maxperpage"];?>
 
     if(arr['value'])
-      jQuery('#<?php echo  $this->divid; ?>').load('<?php echo  $this->url; ?>filter='+arr['filter']+'&criterion='+arr['value']+'&start='+start+'&end='+end+'&maxperpage='+maxperpage+'<?php echo  $this->params ?>');
+      jQuery('#<?php echo  $this->divid; ?>').load('<?php echo  $this->url; ?>&filter='+arr['filter']+'&criterion='+arr['value']+'&start='+start+'&end='+end+'&maxperpage='+maxperpage+'&<?php echo  $this->params ?>');
     else
-      jQuery('#<?php echo  $this->divid; ?>').load('<?php echo  $this->url; ?>start='+start+'&end='+end+'&maxperpage='+maxperpage+'<?php echo  $this->params ?>');
+      jQuery('#<?php echo  $this->divid; ?>').load('<?php echo  $this->url; ?>&start='+start+'&end='+end+'&maxperpage='+maxperpage+'&<?php echo  $this->params ?>');
   }
 
 
