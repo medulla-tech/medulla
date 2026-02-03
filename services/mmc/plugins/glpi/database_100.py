@@ -9534,6 +9534,112 @@ where c.is_deleted=0 and c.is_template=0 %s %s
         result["green"] = query.green
         return result
 
+    @DatabaseHelper._sessionm
+    def get_machines_list_for_mastering(self, session, start=0, limit = -1, entity="", filter=""):
+        try:
+            start = int(start)
+        except:
+            start = 0
+
+        try:
+            limit = int(limit)
+        except:
+            limit = -1
+
+        # limit_str = ""
+        # if limit != -1:
+        #     limit_str = f" limit {start},{limit}"
+
+        # entity_str = ""
+        if entity != "" and entity.startswith("UUID"):
+                entity = entity.replace("UUID", "")
+
+        # entity_str = f" entities_id = {entity}"
+
+        # filter_str = ""
+        # if filter != "":
+        #     filter_str = f"name like \"%%{filter}%%\""
+
+        # sql = "Select id, name, uuid from glpi_computers"
+        ret = {
+            "total" : 0,
+            "data" : {
+                "id" : [],
+                "uuid" : [],
+                "name" : []
+            }
+        }
+
+        query = session.query(Machine.id, Machine.uuid, Machine.name)
+        query = self.__filter_on(query)
+        query = query.filter(and_(
+            Machine.is_deleted == 0,
+            Machine.is_template == 0,
+            Machine.entities_id == entity
+        ))
+
+        if filter != "":
+            query = query.filter(or_(
+                Machine.name.like(f"%{filter}%"),
+                Machine.uuid.like(f"%{filter}%"))
+            )
+
+        count = query.count()
+
+        query = query.offset(start)
+        if limit != -1:
+            query = query.limit(limit)
+
+        result = query.all()
+        
+        if result == None:
+            return ret
+
+        ret["total"] = count
+
+        for id, uuid, name in result:
+            ret["data"]["id"].append(id if id is not None else 0)
+            ret["data"]["uuid"].append(uuid if uuid is not None else "")
+            ret["data"]["name"].append(name if name is not None else "")
+        return ret
+
+    @DatabaseHelper._sessionm
+    def get_entity_parents(self, session, entity=""):
+        if entity == "":
+            return ""
+        if entity.startswith("UUID"):
+            entity = entity.replace("UUID", "")
+
+        sql = """WITH RECURSIVE parent AS (
+    SELECT 
+        glpi_entities.id, 
+        glpi_entities.entities_id
+    FROM glpi_entities
+    WHERE glpi_entities.id = :entity
+    UNION ALL
+    SELECT 
+        e.id,
+        e.entities_id
+    FROM glpi_entities e
+    JOIN parent p ON e.id = p.entities_id
+)
+SELECT id, group_concat(entities_id) FROM parent;
+"""
+
+        query = session.execute(sql, {"entity": entity}).all()
+
+        if query is None:
+            return ""
+
+        logging.getLogger().error(2)
+        logging.getLogger().error(2)
+        for e in query:
+            logging.getLogger().error(e)
+        logging.getLogger().error(2)
+        logging.getLogger().error(2)
+
+        return ""
+
 
 # Class for SQLalchemy mapping
 class Machine(object):
