@@ -94,11 +94,18 @@ $filter  = isset($_GET['filter']) ? $_GET['filter'] : "";
 $criterion = isset($_GET['criterion']) ? $_GET['criterion'] : "";
 $filter = ["filter" => $filter, "criterion" => $criterion];
 $start = (isset($_GET['start'])) ? $_GET['start'] : 0;
-$end   = (isset($_GET['end']) ? $_GET['end'] + $maxperpage : $maxperpage);
+$end   = (isset($_GET['end']) ? $_GET['end'] : $maxperpage);
 
 function urlredirect_group_for_deploy($typegroup, $g_id, $login_deploy, $cmddeploy_id)
 {
-    $urlRedirect1 = urlStrRedirect("base/computers/createMachinesStaticGroupdeploy&gid=".$g_id."&login=".$login_deploy."&cmd_id=".$cmddeploy_id."&type=".$typegroup);
+    $p = [
+        "gid"=>$g_id,
+        "login"=>$login_deploy,
+        "cmd_id"=>$cmddeploy_id,
+        "type"=>$typegroup,
+
+    ];
+    $urlRedirect1 = urlStrRedirect("base/computers/createMachinesStaticGroupdeploy", $p);
     return $urlRedirect1;
 }
 
@@ -169,7 +176,6 @@ if($isconvergence != 0) {
         $maxperpage
     );
 } else {
-    // Get uuid, hostname and status of the deployed machines from xmppmaster.deploy
     $getdeployment = xmlrpc_getdeployment_cmd_and_title(
         $cmd_id,
         $title,
@@ -880,7 +886,8 @@ function fillSearch(content){
             echo 'datas.push({"label":"Abort Package Name Missing", "value":parseInt('.$abortpackagenamemissing.'), "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortpackagenamemissing", $_GET['gid'], $_GET['login'], $cmd_id).'"});';
         }
         if ($abortpackageversionmissing > 0) {
-            echo 'datas.push({"label":"Abort Package Version Missing", "value":parseInt('.$abortpackageversionmissing.'), "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortpackageversionmissing", $_GET['gid'], $_GET['login'], $cmd_id).'"});';
+            echo 'datas.push({
+"label":"Abort Package Version Missing", "value":parseInt('.$abortpackageversionmissing.'), "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortpackageversionmissing", $_GET['gid'], $_GET['login'], $cmd_id).'"});';
         }
         if ($abortdescriptormissing > 0) {
             echo 'datas.push({"label":"Abort Descriptor Missing", "value":parseInt('.$abortdescriptormissing.'), "color": "#FF8600", "href":"'.urlredirect_group_for_deploy("abortdescriptormissing", $_GET['gid'], $_GET['login'], $cmd_id).'"});';
