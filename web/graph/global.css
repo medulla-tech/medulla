@@ -94,11 +94,13 @@ p {
 /* ---------------------------------------- */
 
 #header {
+    position: relative;
     background-color: #25607D;
     border-bottom: 1px solid #d4d4d4;
     border-top: 1px solid #21262b;
-    padding: 0 0px 0px 0px;
+    padding: 0;
     height: auto;
+    min-height: 50px;
 }
 
 #header p {
@@ -119,134 +121,137 @@ p {
 }
 
 #header #menuTopRight {
-    float: right;
-    overflow: hidden;
-    position: relative;
+    position: absolute;
+    top: 100%;
+    right: 30px;
+    display: flex;
+    align-items: center;
     font-size: 12px;
-    color: #292F36;
-    margin-top: 6px;
-    /*background-color: #d4d4d4;*/
+    color: #666;
+    height: 32px;
+    z-index: 10;
 }
 
 #header #menuTopRight  ul {
+    display: flex;
+    align-items: center;
+    gap: 10px;
     border: 0;
     margin: 0;
     padding: 0;
     list-style-type: none;
-    text-align: center;
 }
 
 #header #menuTopRight  ul li {
-    display: block;
-    float: right;
-    text-align: left;
-    padding: 0 0 0 0;
-    margin: 0;
+    display: inline-flex;
+    align-items: center;
 }
 
 #header #menuTopRight ul li a {
-    width: 50px;
     font-size: 11px;
-    color: #6f6f6f;
-    padding: 5px 0 0 18px;
-    margin: 0 0 0 0;
+    color: #666;
+    padding: 6px 12px;
     text-decoration: none;
-    display: block;
+    display: inline-flex;
+    align-items: center;
+    transition: color 0.2s ease;
 }
 
-
-
-/* Commented Backslash Hack hides rule from IE5-Mac \*/
-#header #menuTopRight  ul li { float: left; }
-#header #menuTopRight ul li a { width: auto; }
-/* End IE5-Mac hack */
-
-#header #menuTopRight  ul li a:hover { color: #fff; }
+#header #menuTopRight ul li a:hover {
+    color: #25607D;
+}
 
 #header #menuTopRight ul li#expertmode a {
-    padding-right: 15px;
     border-right: 1px solid #ccc;
-    height: 15px;
-    padding: 5px 20px;
+    padding-right: 15px;
+    margin-right: 10px;
 }
-
-#header #menuTopRight ul li#username {
-    width: auto;
-    height: 70px;
-    padding: 5px 0px 0px 9px;
-    /*background: url("../img/common/icn_user.gif") no-repeat 0 4px transparent;*/
-    font-size: 12px;
-    color : #FFF;
-}
-
-#header #menuTopRight ul li#expertmode a:hover { background-position: 0 4px; color: #2295D2}
 
 #header #menuTopRight ul li#disconnect a {
-    background: url("../img/common/icn_disconnect.gif") no-repeat 0 -11px transparent;
-    padding-right: 33px;
-    margin-left: 20px;
-
+    color: #666;
 }
 
-#header #menuTopRight ul li#disconnect a:hover { background-position: 0 8px; color: #2295D2;}
-
-#header #menuTopRight ul li#help a { background: url("../img/common/icn_help.gif") no-repeat 0 -15px transparent;}
-
-#header #menuTopRight ul li#help a:hover { background-position: 0 4px; }
+#header #menuTopRight ul li#disconnect a:hover {
+    color: #25607D;
+}
 
 /* ---------------------------------------- */
 /* 2. Style pour la Navbar                  */
 /* ---------------------------------------- */
 
 #navbar {
-    padding: 0px 0px 0px 0px;
-    /*height: 69px;*/
-    background-color: none;
-    overflow: hidden;
+    display: flex;
+    align-items: center;
+    padding: 0;
+    background-color: transparent;
     position: relative;
-    width: auto;
     height: auto;
+    gap: 0;
 }
 
 #navbar #logo {
-    float: left;
-    padding: 10px 10px 10px 30px;
+    flex-shrink: 0;
+    padding: 8px 10px 8px 15px;
 }
 
 #navbar ul {
+    display: flex;
+    align-items: center;
+    gap: 4px;
     border: 0;
     margin: 0;
-    padding: 0;
+    padding: 8px 15px 8px 0;
     list-style-type: none;
-    text-align: center;
+    flex-wrap: wrap;
+    flex: 1;
 }
 
 #navbar ul li {
-    width: 70px;
-    display: inline-block;
-    float: left;
+    display: inline-flex;
     text-align: center;
-    margin: 0 5px 0 5px;
-    border-left: 1px solid #21262b;
+    margin: 0;
+    border: none;
 }
 
 #navbar ul li a {
-    padding: 46px 5px 12px 5px;
+    display: inline-block;
+    padding: 10px 8px 10px 28px !important;
     text-decoration: none;
-    display: block;
-    text-align: center;
     font-size: 11px;
+    font-weight: 600;
     color: #fff;
-    line-height: 16px;
-    /* default icon */
-    position: relative;
-    width: 100%;
-    overflow: hidden;
+    line-height: 1.2;
+    background-color: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 16px;
     white-space: nowrap;
-    text-overflow: ellipsis;
-    border-radius: 8px;
-    transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+    background-position: 6px center !important;
+    background-size: 20px 20px !important;
+    transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    min-width: 60px;
+    text-align: center;
 }
+
+#navbar ul li a:hover {
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    border-color: rgba(255, 255, 255, 1);
+    color: #25607D !important;
+    box-shadow: none !important;
+}
+
+#navbar ul li.active a,
+#navbar ul li a.active {
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    border-color: rgba(255, 255, 255, 1);
+    color: #25607D !important;
+}
+
+#navbar ul li.active a:hover,
+#navbar ul li a.active:hover {
+    background-color: #fff !important;
+    color: #1a4a5f !important;
+}
+
 
 /* ---------------------------------------- */
 /* 3. Style pour localsidebar               */
