@@ -35,7 +35,7 @@ $values = [
 ];
 
 // POST handler
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['test'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['bconfirm'])) {
     $values['type'] = trim($_POST['type'] ?? '');
     $values['name'] = trim($_POST['name'] ?? '');
     $values['pkg'] = trim($_POST['pkg'] ?? '');
@@ -194,10 +194,9 @@ $p->setSideMenu($sidemenu);
 $p->display();
 
 // Build three separate forms: app, web, intent (app uses multipart for file upload)
-$formApp = new Form(array("method" => "post", "enctype" => "multipart/form-data", "id" => "FormApp"));
-$formWeb = new Form(array("method" => "post", "id" => "FormWeb"));
-$formIntent = new Form(array("method" => "post", "id" => "FormIntent"));
-$sep = new SepTpl();
+$formApp = new ValidatingForm(array("method" => "post", "enctype" => "multipart/form-data", "id" => "FormApp"));
+$formWeb = new ValidatingForm(array("method" => "post", "id" => "FormWeb"));
+$formIntent = new ValidatingForm(array("method" => "post", "id" => "FormIntent"));
 
 function showError($field, $errors) {
     if (isset($errors[$field])) {
@@ -207,6 +206,8 @@ function showError($field, $errors) {
 }
 
 // --- App form ---
+$formApp->push(new Table());
+
 // hidden type field
 $appTypeHidden = new InputTpl('type', '/^.{0,255}$/', 'app');
 $appTypeHidden->fieldType = 'hidden';
@@ -216,20 +217,17 @@ $formApp->add(new TrFormElement(
     _T('Application name', 'mobile'),
     new InputTpl('name', '/^.{1,255}$/', $values['name'])
 ));
-$formApp->add(new TrFormElement('', $sep));
 // Package
 $pkgInputA = new InputTpl('pkg', '/^[a-zA-Z0-9_.]+$/', $values['pkg']);
 $formApp->add(new TrFormElement(
     _T('Package name', 'mobile'),
     $pkgInputA
 ));
-$formApp->add(new TrFormElement('', $sep));
 // Version
 $formApp->add(new TrFormElement(
     _T('Version', 'mobile'),
     new InputTpl('version', '/^.{0,50}$/', $values['version'])
 ));
-$formApp->add(new TrFormElement('', $sep));
 // Version Code (hidden, filled by Ajax)
 $versionCodeHidden = new InputTpl('versioncode', '/^.{0,50}$/', '');
 $versionCodeHidden->fieldType = 'hidden';
@@ -243,20 +241,17 @@ $formApp->add(new TrFormElement('', $filePathHidden));
 $runAfterA = new InputTpl('runAfterInstall', '/^.{0,1}$/', !empty($values['runAfterInstall']) ? '1' : '');
 $runAfterA->fieldType = 'checkbox';
 $formApp->add(new TrFormElement(_T('Run after install', 'mobile'), $runAfterA));
-$formApp->add(new TrFormElement('', $sep));
+
 $runBootA = new InputTpl('runAtBoot', '/^.{0,1}$/', !empty($values['runAtBoot']) ? '1' : '');
 $runBootA->fieldType = 'checkbox';
 $formApp->add(new TrFormElement(_T('Run at boot', 'mobile'), $runBootA));
-$formApp->add(new TrFormElement('', $sep));
 // System
 $checkboxA = new InputTpl('system', '/^.{0,1}$/', !empty($values['system']) ? '1' : '');
 $checkboxA->fieldType = 'checkbox';
 $checkboxA->setAttributCustom('class="system-checkbox"');
 $formApp->add(new TrFormElement(_T('System', 'mobile'), $checkboxA));
-$formApp->add(new TrFormElement('', $sep));
 // APK URL
 $formApp->add(new TrFormElement(_T('APK URL', 'mobile'), new InputTpl('url', '/^https?:\/\//', $values['url'])));
-$formApp->add(new TrFormElement('', $sep));
 // APK File Upload for app type
 $apkFileInput = new InputTpl('apk_file', '/^.+$/', '');
 $apkFileInput->fieldType = 'file';
@@ -273,7 +268,6 @@ $archSelectA->setElements([
 ]);
 $archSelectA->setElementsVal(['', 'armeabi-v7a', 'arm64-v8a']);
 $formApp->add(new TrFormElement(_T('Architecture', 'mobile'), $archSelectA));
-$formApp->add(new TrFormElement('', $sep));
 // Icons
 $checkboxIconA = new InputTpl('showicon', '/^.{0,1}$/', !empty($values['showicon']) ? '1' : '');
 $checkboxIconA->fieldType = 'checkbox';
@@ -290,18 +284,20 @@ $formApp->add(new TrFormElement('', $newIconBtnA));
 $iconTextA = new InputTpl('icon_text', '/^.{0,255}$/', $values['icon_text'] ?? ''); 
 $iconTextA->setAttributCustom('class="icon-extra"'); 
 $formApp->add(new TrFormElement(_T('Icon text', 'mobile'), $iconTextA));
-$formApp->addValidateButton("test");
+
+$formApp->pop();
+$formApp->addButton("bconfirm", _T("Add Application", "mobile"));
 
 // --- Web form ---
+$formWeb->push(new Table());
+
 $webTypeHidden = new InputTpl('type', '/^.{0,255}$/', 'web');
 $webTypeHidden->fieldType = 'hidden';
 $formWeb->add(new TrFormElement('', $webTypeHidden));
 
 $formWeb->add(new TrFormElement(_T('Application name', 'mobile'), new InputTpl('name', '/^.{1,255}$/', $values['name'])));
-$formWeb->add(new TrFormElement('', $sep));
 
 $formWeb->add(new TrFormElement(_T('URL', 'mobile'), new InputTpl('url', '/^https?:\/\//', $values['url'])));
-$formWeb->add(new TrFormElement('', $sep));
 
 // Open in Kiosk-Browser checkbox (web only)
 $useKiosk = new InputTpl('useKiosk', '/^.{0,1}$/', !empty($values['useKiosk']) ? '1' : '');
@@ -311,7 +307,7 @@ $formWeb->add(new TrFormElement(
     _T('Open in Kiosk-Browser', 'mobile'),
     $useKiosk
 ));
-$formWeb->add(new TrFormElement('', $sep));
+
 $checkboxIconW = new InputTpl('showicon', '/^.{0,1}$/', !empty($values['showicon']) ? '1' : '');
 $checkboxIconW->fieldType = 'checkbox';
 $formWeb->add(new TrFormElement(_T('Show icon', 'mobile'), $checkboxIconW));
@@ -329,16 +325,20 @@ $formWeb->add(new TrFormElement('', $newIconBtnW));
 $iconTextW = new InputTpl('icon_text', '/^.{0,255}$/', $values['icon_text'] ?? '');
 $iconTextW->setAttributCustom('class="icon-extra"');
 $formWeb->add(new TrFormElement(_T('Icon text', 'mobile'), $iconTextW));
-$formWeb->addValidateButton("test");
+
+$formWeb->pop();
+$formWeb->addButton("bconfirm", _T("Add Application", "mobile"));
 
 // --- Intent form ---
+$formIntent->push(new Table());
+
 $intentTypeHidden = new InputTpl('type', '/^.{0,255}$/', 'intent');
 $intentTypeHidden->fieldType = 'hidden';
 $formIntent->add(new TrFormElement('', $intentTypeHidden));
 $formIntent->add(new TrFormElement(_T('Application name', 'mobile'), new InputTpl('name', '/^.{1,255}$/', $values['name'])));
-$formIntent->add(new TrFormElement('', $sep));
+
 $formIntent->add(new TrFormElement(_T('Action', 'mobile'), new InputTpl('action', '/^.{1,255}$/', $values['action'])));
-$formIntent->add(new TrFormElement('', $sep));
+
 $checkboxIconI = new InputTpl('showicon', '/^.{0,1}$/', !empty($values['showicon']) ? '1' : '');
 $checkboxIconI->fieldType = 'checkbox';
 $formIntent->add(new TrFormElement(_T('Show icon', 'mobile'), $checkboxIconI));
@@ -357,11 +357,13 @@ $formIntent->add(new TrFormElement('', $newIconBtnI));
 $iconTextI = new InputTpl('icon_text', '/^.{0,255}$/', $values['icon_text'] ?? '');
 $iconTextI->setAttributCustom('class="icon-extra"');
 $formIntent->add(new TrFormElement(_T('Icon text', 'mobile'), $iconTextI));
-$formIntent->addValidateButton("test");
+
+$formIntent->pop();
+$formIntent->addButton("bconfirm", _T("Add Application", "mobile"));
 
 // Type selector form
-$typeForm = new Form();
-$typeForm->enctype = 'multipart/form-data';
+$typeForm = new ValidatingForm();
+$typeForm->push(new Table());
 $typeSelect = new SelectItem('type_selector');
 $typeSelect->setElements([
     _T('Choose your type', 'mobile'),
@@ -372,6 +374,7 @@ $typeSelect->setElements([
 $typeSelect->setElementsVal(['', 'app', 'web', 'intent']);
 $typeSelect->id = 'type';
 $typeForm->add(new TrFormElement(_T('Type', 'mobile'), $typeSelect));
+$typeForm->pop();
 
 echo '<div id="forms_container">';
 echo '<div style="margin-bottom:20px;">';
