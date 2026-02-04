@@ -17,10 +17,8 @@ logger = logging.getLogger()
 class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
     def __init__(self, name="xmppmaster", conffile=None, backend="database"):
         if not hasattr(self, "initdone"):
-            logger.info(f"[xmppMasterConfig] Initialisation avec backend={backend}")
-            # Initialiser avec backend database (lit depuis variables d'environnement)
+            # Initialiser avec backend database
             PluginConfig.__init__(self, name, conffile, backend=backend, db_table="xmpp_conf")
-            logger.info(f"[xmppMasterConfig] ✅ Configuration chargée depuis la BDD")
             XmppMasterDatabaseConfig.__init__(self)
             self.initdone = True
 
@@ -50,10 +48,7 @@ class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
         "main" section.
         """
         PluginConfig.readConf(self)
-        # Appeler setup() pour initialiser la connexion à la base xmppmaster
-        if self.backend == "ini":
-            XmppMasterDatabaseConfig.setup(self, self.conffile)
-        else:
+        if self.backend != "ini":
             if self.has_option("database", "dbdriver"):
                 self.dbdriver = self.get("database", "dbdriver")
             if self.has_option("database", "dbhost"):
@@ -75,7 +70,11 @@ class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
             if self.has_option("database", "dbpooltimeout"):
                 self.dbpooltimeout = self.getint("database", "dbpooltimeout")
 
-
+        # Call setup only if a config file is provided; when using DB backend
+        # `self.conffile` may be None and DatabaseConfig.setup would try to
+        # read it (raising TypeError). Skip in that case; defaults remain.
+        if self.conffile:
+            XmppMasterDatabaseConfig.setup(self, self.conffile)
         self.disable = self.getboolean("main", "disable")
         self.tempdir = self.get("main", "tempdir")
 

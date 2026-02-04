@@ -254,6 +254,16 @@ $page = new Page("deleteProvider", _T('Delete Provider', 'admin'));
 $page->setFile("modules/admin/admin/deleteProvider.php");
 $submod->addPage($page);
 
+// CONFIGURATION PAGES
+
+$page = new Page("configList", _T("Configuration Management", "admin"));
+$page->setFile("modules/admin/admin/configList.php");
+$submod->addPage($page);
+
+$page = New Page("editConfig", _T("Edit Configuration", "admin"));
+$page->setFile("modules/admin/admin/editConfig.php");
+$submod->addPage($page);
+
 $mod->addSubmod($submod);
 
 $MMCApp = &MMCApp::getInstance();

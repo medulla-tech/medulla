@@ -239,3 +239,15 @@ function xmlrpc_update_provider(array $data) {
 function xmlrpc_delete_provider(int $id) {
     return xmlCall("admin.delete_provider", [$id]);
 }
+
+function xmlrpc_get_config_tables() {
+    return xmlCall("admin.get_config_tables", []);
+}
+
+function xmlrpc_get_config_data(string $table) {
+    return xmlCall("admin.get_config_data", [$table]);
+}
+
+function xmlrpc_update_config_data(string $table, array $data) {
+    return xmlCall("admin.update_config_data", [$table, $data]);
+}
