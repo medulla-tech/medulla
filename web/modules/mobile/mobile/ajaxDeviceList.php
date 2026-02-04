@@ -20,9 +20,12 @@ $configurationId = 1;
 $configurationJson = xmlrpc_get_hmdm_configuration_by_id($configurationId);
 $qrCode = $configurationJson;
 
-$ids = $col1 = $descript = $statusIndicators = $permissionIndicators = $installationIndicators = $filesIndicators = $configurations = $actions = [];
+$ids = $col1 = $statusIndicators = $permissionIndicators = $installationIndicators = $filesIndicators = $configurations = $actions = [];
 $actionQr = [];
 $actionEdit = [];
+$actionDetails = [];
+$actionLogs = [];
+$actionMessage = [];
 $params = [];
 $sources = $ip = [];
 
@@ -52,7 +55,6 @@ foreach ($mobiles as $index => $mobile) {
     if ($is_headwind) {
         $numero = $mobile['number'];
         $statut = isset($mobile['statusCode']) ? $mobile['statusCode'] : 'red';
-        $descript[] = $mobile['description'] ?? "N/A";
         $ip[] = $mobile['publicIp'] ?? "Inconnue";
         
         // Status indicator (online/offline)
@@ -163,7 +165,6 @@ foreach ($mobiles as $index => $mobile) {
     else {
         $numero = "Inconnue";
         $statut = "down";
-        $descript[] = "N/A";
         $ip[] = "Inconnue";
         $statusIndicators[] = '<span class="status-circle status-red" title="' . _T("Device offline", "mobile") . '">●</span>';
         $permissionIndicators[] = '<span class="status-circle status-red" title="' . _T("No data", "mobile") . '">●</span>';
@@ -175,12 +176,17 @@ foreach ($mobiles as $index => $mobile) {
 
     $col1[] = "<a href='#' class='mobilestatus {$statut}'>{$numero}</a>";
 
+    $actionDetails[] = new ActionItem(_T("Details", "mobile"), "functions", "display", "device", "mobile", "mobile", "tabdetailed");
+    $actionLogs[] = new ActionItem(_T("Logs", "mobile"), "functions", "logfile", "device", "mobile", "mobile", "taglogs");
+    $actionMessage[] = new ActionItem(_T("Message", "mobile"), "newMessage", "add", "device", "mobile", "mobile");
     $actionEdit[] = new ActionItem(_T("Edit", "mobile"), "editDevice", "edit", "id", "mobile", "mobile");
     $actionQuick[] = new ActionPopupItem(_T("Quick action", "mobile"), "deviceQuickAction", "quick", "id", "mobile", "mobile");
     $actionQr[] = new ActionPopupItem(_T("QR Code", "mobile"), "qrCode", "qr-code", "", "mobile", "mobile");
     $actionDelete[] = new ActionPopupItem(_T("Delete", "mobile"), "deleteDevice", "delete", "id", "mobile", "mobile");
+
     $params[] = [
         'id' => isset($mobile['id']) ? $mobile['id'] : $index,
+        'device' => $numero,
         'device_number' => $numero,
         'configuration_id' => isset($mobile['configurationId']) ? $mobile['configurationId'] : 1,
     ];
@@ -200,12 +206,14 @@ $n->addExtraInfo($statusIndicators, _T("Status", "mobile"));
 $n->addExtraInfo($permissionIndicators, _T("Permissions", "mobile"));
 $n->addExtraInfo($installationIndicators, _T("Installation", "mobile"));
 $n->addExtraInfo($filesIndicators, _T("Files", "mobile"));
-$n->addExtraInfo($descript, _T("Description", "mobile"));
 $n->addExtraInfo($configurations, _T("Configuration", "mobile"));
 $n->addExtraInfo($sources, _T("Model", "mobile"));
 $n->addExtraInfo($ip, _T("IP address", "mobile"));
 
 // Attach actions
+$n->addActionItemArray($actionDetails);
+$n->addActionItemArray($actionLogs);
+$n->addActionItemArray($actionMessage);
 $n->addActionItemArray($actionEdit);
 $n->addActionItemArray($actionQuick);
 $n->addActionItemArray($actionQr);

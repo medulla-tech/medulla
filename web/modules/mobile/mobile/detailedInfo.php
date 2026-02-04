@@ -1,10 +1,10 @@
 <?php
 require_once("modules/mobile/includes/xmlrpc.php");
 
-$device_number = isset($_POST['device']) ? $_POST['device'] : "";
+$device_number = isset($_POST['device']) ? $_POST['device'] : (isset($_GET['device']) ? $_GET['device'] : "");
 $device_info = array();
 
-if (isset($_POST['search']) && $device_number) {
+if ((isset($_POST['search']) || isset($_GET['device'])) && $device_number) {
     $device_info = xmlrpc_get_hmdm_detailed_info($device_number);
 }
 
