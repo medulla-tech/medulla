@@ -18,7 +18,7 @@ $p->display();
 
 $send_to_type = isset($_POST['send_to']) ? $_POST['send_to'] : "device";
 $message_text = isset($_POST['message']) ? $_POST['message'] : "";
-$device_number = isset($_POST['device_input']) ? $_POST['device_input'] : "";
+$device_number = isset($_POST['device_input']) ? $_POST['device_input'] : (isset($_GET['device']) ? $_GET['device'] : "");
 $group_id = isset($_POST['group_input']) ? $_POST['group_input'] : "";
 $configuration_id = isset($_POST['configuration_input']) ? $_POST['configuration_input'] : "";
 
@@ -92,7 +92,7 @@ $sendToSelect->setSelected($send_to_type);
 $form->add(new TrFormElement(_T('Send to', 'mobile'), $sendToSelect));
 
 // Device input
-$deviceInput = new InputTpl('device_input');
+$deviceInput = new InputTpl('device_input', '/.+/', $device_number);
 $deviceRow = new TrFormElement(_T('Device', 'mobile'), $deviceInput);
 $deviceRow->setClass('row-device');
 $form->add($deviceRow);
