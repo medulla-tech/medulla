@@ -1,37 +1,3 @@
-# -*- coding:Utf-8; -*
-# SPDX-FileCopyrightText: 2016-2023 Siveo, http://www.siveo.net
-# SPDX-FileCopyrightText: 2024-2025 Medulla, http://www.medulla-tech.io
-# SPDX-License-Identifier: GPL-3.0-or-later
-
-from pulse2.version import getVersion, getRevision
-
-from mmc.plugins.admin.config import AdminConfig
-
-# Import for Database
-from pulse2.database.admin import AdminDatabase
-from pulse2.database.pkgs import PkgsDatabase
-
-from mmc.plugins.glpi import get_entities_with_counts, get_entities_with_counts_root, set_user_api_token, get_user_profile_email, get_complete_name, get_user_identifier, list_entity_ids_subtree, list_user_ids_in_subtree, list_computer_ids_in_subtree
-from mmc.support.apirest.glpi import GLPIClient
-from mmc.support.apirest.glpi import verifier_parametres
-from configparser import ConfigParser
-import subprocess
-import traceback
-import requests
-import logging
-import base64
-import random
-import shutil
-import string
-import json
-import uuid
-import os
-import re
-
-VERSION = "1.0.0"
-APIVERSION = "4:1:3"
-
-logger = logging.getLogger()
 #
 # def verifier_parametres(dictctrl, cles_requises):
 #     # Vérifier chaque clé
@@ -401,16 +367,18 @@ def create_user(
         set_user_api_token(int(id_user), api_token)
 
         # Creation of the sharing rule for the user who has just been created
-        entity_info = get_entity_info(id_entity)
+        final_entity_id = int(id_entity) if id_entity not in (None, '', 0) else 0
+
+        entity_info = get_entity_info(final_entity_id)
         entity_name             = entity_info.get('name')
         entity_completename     = entity_info.get('completename')
 
         pkdb = PkgsDatabase()
 
-        if id_entity is not None and int(id_entity) == 0:
+        if final_entity_id == 0:
             share_row = pkdb.find_global_share()
         else:
-            entity_info = get_entity_info(id_entity) or {}
+            entity_info = get_entity_info(final_entity_id) or {}
             entity_name = entity_info.get('name')
             entity_completename = entity_info.get('completename')
             share_row = pkdb.find_share_by_entity_names(entity_name, entity_completename)
@@ -599,14 +567,21 @@ def switch_user_profile(
 
     # Update of sharing ID for this user
     identifier = get_user_identifier(user_id)
-    entity_info = get_entity_info(entities_id)
+    entity_info = get_entity_info(entities_id) or {}
     entity_name             = entity_info.get('name')
     entity_completename     = entity_info.get('completename')
 
     pkdb = PkgsDatabase()
-    id_shares = pkdb.find_share_by_entity_names(entity_name, entity_completename).get('id')
 
-    pkgs_rules = pkdb.update_pkgs_rules_local(identifier, id_shares)
+    if int(entities_id) == 0:
+        share_row = pkdb.find_global_share()
+    else:
+        share_row = pkdb.find_share_by_entity_names(entity_name, entity_completename)
+
+    id_shares = share_row.get('id') if share_row else None
+
+    if id_shares:
+        pkgs_rules = pkdb.update_pkgs_rules_local(identifier, id_shares)
 
     return client.switch_user_profile(
         user_id=int(user_id),
@@ -875,4 +850,23 @@ def activate_users_if_needed(user_ids: list[int], tokenuser=None) -> dict:
         else:
             out["errors"].append(uid)
     return out
+
+def get_config_tables():
+    db = AdminDatabase()
+    tables = db.get_config_tables()
+    return tables
+
+def get_config_data(table: str):
+    db = AdminDatabase()
+    data = db.get_config_data(table)
+    return data
+
+def update_config_data(table: str, data: dict) -> bool:
+    try:
+        logger.info("update_config_data: table=%s data=%s", table, data)
+        db = AdminDatabase()
+        return db.update_config_data(table, data)
+    except Exception as e:
+        logger.error("update_config_data failed: %s", e)
+        return False
 
