@@ -1434,6 +1434,14 @@ class MobileDatabase(DatabaseHelper):
 
             deviceList = []
             for d in devices_items:
+                info = d.get("info", {})
+                
+                lastUpdate = d.get("lastUpdate", 0)
+                lastUpdateSeconds = int(lastUpdate / 1000) if lastUpdate else 0
+                
+                applications = info.get("applications", [])
+                files = info.get("files", [])
+                
                 device_data = {
                     "id": d.get("id", ""),
                     "number": d.get("number", ""),
@@ -1448,12 +1456,24 @@ class MobileDatabase(DatabaseHelper):
                     "phone": d.get("phone", ""),
                     "serial": d.get("serial", ""),
                     "launcherVersion": d.get("launcherVersion", ""),
-                    "mdmMode": d.get("mdmMode", ""),
-                    "kioskMode": d.get("kioskMode", ""),
+                    "mdmMode": d.get("mdmMode", info.get("mdmMode", "")),
+                    "kioskMode": d.get("kioskMode", info.get("kioskMode", "")),
                     "androidVersion": d.get("androidVersion", ""),
-                    "groups": d.get("groups", [])
+                    "lastUpdate": lastUpdateSeconds,
+                    "groups": d.get("groups", []),
+                    "info": {
+                        "permissions": info.get("permissions", []),
+                        "defaultLauncher": info.get("defaultLauncher", False),
+                        "mdmMode": info.get("mdmMode", False),
+                        "kioskMode": info.get("kioskMode", False),
+                        "batteryLevel": info.get("batteryLevel", 0),
+                        "applicationsCount": len(applications),
+                        "filesCount": len(files),
+                        "hasFiles": len(files) > 0
+                    }
                 }
                 deviceList.append(device_data)
+            logging.getLogger().info(f"device data {deviceList}")
 
             return deviceList
 
