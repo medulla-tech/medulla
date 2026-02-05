@@ -275,6 +275,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
         
+        // Process files
+        $allFiles = xmlrpc_get_hmdm_files();
+        if (is_array($allFiles)) {
+            $newConfigFiles = array();
+            foreach ($allFiles as $idx => $file) {
+                $fileId = isset($file['id']) ? $file['id'] : null;
+                if ($fileId === null) continue;
+                
+                // Get the action from POST (1=Include, 0=Exclude, 2=Remove)
+                $fileAction = isset($_POST['file_action_' . $idx]) ? intval($_POST['file_action_' . $idx]) : 0;
+                
+                if ($fileAction === 1) {
+                    // Include: add file without remove flag
+                    $newConfigFiles[] = array(
+                        'fileId' => $fileId,
+                        'remove' => false
+                    );
+                } elseif ($fileAction === 2) {
+                    // Remove: add file with remove=true flag
+                    $newConfigFiles[] = array(
+                        'fileId' => $fileId,
+                        'remove' => true
+                    );
+                }
+                // fileAction === 0 (Exclude): don't add to array at all
+            }
+            
+            $payload['files'] = $newConfigFiles;
+        }
+        
         $result = xmlrpc_update_hmdm_configuration($payload);
         
         if ($result !== null && $result !== false) {
@@ -1159,7 +1189,96 @@ $form->pop(); // end Appsettings table
 $form->pop(); // end Appsettings div
 
 $form->push(new Div(array('id' => 'tab-files', 'style' => 'display:none;')));
+
+ob_start();
+?>
+<div id="tab-table-files-filters" class="searchbox" style="margin-bottom: 12px;">
+    <div id="searchBest">
+        <span class="searchfield">
+            <input type="text" id="file_search_filter" name="file_search_filter" class="searchfieldreal" placeholder="<?php echo _T("Search for a file", "mobile"); ?>" />
+            <button type="button" class="search-clear" aria-label="<?php echo _T('Clear search', 'base'); ?>"
+                            onclick="jQuery('#file_search_filter').val(''); jQuery('#file_search_filter').trigger('input');"></button>
+        </span>
+        <button onclick="jQuery('#file_search_filter').trigger('input'); return false;"><?php echo _T("Search", "glpi");?></button>
+        <span class="loader" aria-hidden="true"></span>
+    </div>
+</div>
+<?php
+$filtersHtml = ob_get_clean();
 $form->push(new Table());
+$form->add(new TrFormElementcollapse(new textTpl($filtersHtml)));
+$form->pop();
+
+// get files for this configuration from config data
+$configFiles = isset($config['files']) && is_array($config['files']) ? $config['files'] : array();
+$allFiles = xmlrpc_get_hmdm_files();
+if (!is_array($allFiles)) { $allFiles = array(); }
+
+ob_start();
+?>
+<table id="tab-table-files-results" style="width: 100%; border-collapse: collapse; border: 1px solid #ddd; margin-bottom: 12px;">
+    <thead style="background-color: #f5f5f5;">
+        <tr>
+            <th style="border: 1px solid #ddd; padding: 10px; text-align: left;"><?php echo _T("URL", "mobile"); ?></th>
+            <th style="border: 1px solid #ddd; padding: 10px; text-align: left;"><?php echo _T("File description", "mobile"); ?></th>
+            <th style="border: 1px solid #ddd; padding: 10px; text-align: left;"><?php echo _T("Path on device", "mobile"); ?></th>
+            <th style="border: 1px solid #ddd; padding: 10px; text-align: left;"><?php echo _T("Action", "mobile"); ?></th>
+            <th style="border: 1px solid #ddd; padding: 10px; text-align: left;"><?php echo _T("Variable", "mobile"); ?></th>
+        </tr>
+    </thead>
+    <tbody id="file_table_body">
+        <?php foreach ($allFiles as $idx => $file):
+                $fileId = isset($file['id']) ? $file['id'] : '';
+                $filePath = isset($file['filePath']) ? $file['filePath'] : '';
+                $fileName = basename($filePath);
+                $fileUrl = isset($file['url']) ? $file['url'] : '';
+                $fileDescription = isset($file['description']) ? $file['description'] : '';
+                $fileDevicePath = isset($file['devicePath']) ? $file['devicePath'] : '';
+                $fileReplaceVariables = isset($file['replaceVariables']) ? $file['replaceVariables'] : false;
+                
+                $fileAction = 0; // Exclude by default
+                foreach ($configFiles as $cf) {
+                    $configFileId = isset($cf['fileId']) ? $cf['fileId'] : (isset($cf['id']) ? $cf['id'] : null);
+                    if ($configFileId && $configFileId == $fileId) {
+                        // File is in this config - check if it's marked for removal
+                        if (isset($cf['remove']) && $cf['remove']) {
+                            $fileAction = 2; // Remove
+                        } else {
+                            $fileAction = 1; // Include
+                        }
+                        break;
+                    }
+                }
+                
+                $rowStyle = 'border: 1px solid #ddd;';
+        ?>
+        <tr style="<?php echo $rowStyle; ?>" class="file-row" data-file-id="<?php echo htmlspecialchars($fileId); ?>" data-file-name="<?php echo htmlspecialchars($fileName); ?>" data-file-desc="<?php echo htmlspecialchars($fileDescription); ?>" data-file-path="<?php echo htmlspecialchars($fileDevicePath); ?>">
+            <td style="border: 1px solid #ddd; padding: 10px;">
+                <strong class="file-name-text"><?php echo htmlspecialchars($fileUrl ? $fileUrl : $fileName); ?></strong>
+            </td>
+            <td style="border: 1px solid #ddd; padding: 10px;"><?php echo htmlspecialchars($fileDescription); ?></td>
+            <td style="border: 1px solid #ddd; padding: 10px;"><?php echo htmlspecialchars($fileDevicePath); ?></td>
+            <td style="border: 1px solid #ddd; padding: 10px;">
+                <select name="file_action_<?php echo $idx; ?>" class="file-action-select form-control" style="width: 100%;">
+                    <option value="1"<?php echo ($fileAction === 1 ? ' selected' : ''); ?>><?php echo _T("Include", "mobile"); ?></option>
+                    <option value="0"<?php echo ($fileAction === 0 ? ' selected' : ''); ?>><?php echo _T("Exclude", "mobile"); ?></option>
+                    <option value="2"<?php echo ($fileAction === 2 ? ' selected' : ''); ?>><?php echo _T("Remove", "mobile"); ?></option>
+                </select>
+            </td>
+            <td style="border: 1px solid #ddd; padding: 10px; text-align: center;">
+                <?php echo $fileReplaceVariables ? _T("Yes", "mobile") : _T("No", "mobile"); ?>
+            </td>
+        </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+<div id="files-pagination" style="margin-bottom: 12px;"></div>
+<?php
+$resultsHtml = ob_get_clean();
+$form->push(new Table());
+$form->add(new TrFormElementcollapse(new textTpl($resultsHtml)));
+$form->pop();
+
 $form->pop(); // end Files table
 $form->pop(); // end Files div
 
@@ -1670,5 +1789,91 @@ jQuery(document).ready(function() {
         
         $wrapper.append($colorPicker);
     });
+
+    // FILES FILTER + PAGINATION
+    var filePageSize = 10;
+    var fileCurrentPage = 1;
+    var $fileTableBody = jQuery('#tab-files #file_table_body');
+    var $fileAllRows = null; // Store original rows before they get emptied
+
+    // Capture all original file rows on page load
+    function captureOriginalFileRows() {
+        $fileAllRows = [];
+        jQuery('#tab-table-files-results tbody tr').each(function() {
+            $fileAllRows.push(jQuery(this).clone());
+        });
+    }
+
+    function updateFilesPagination(totalPages, total) {
+        var $p = jQuery('#files-pagination');
+        if (!$p.length) { return; }
+        var prevDisabled = (fileCurrentPage <= 1) ? 'disabled' : '';
+        var nextDisabled = (fileCurrentPage >= totalPages) ? 'disabled' : '';
+        var html = '';
+        html += '<div style="display:flex; align-items:center; gap:10px;">';
+        html += '<button type="button" class="btn btn-default" id="files-prev" ' + prevDisabled + '>&laquo;</button>';
+        html += '<span>Page ' + fileCurrentPage + ' / ' + totalPages + ' (' + total + ' files)</span>';
+        html += '<button type="button" class="btn btn-default" id="files-next" ' + nextDisabled + '>&raquo;</button>';
+        html += '</div>';
+        $p.html(html);
+        jQuery('#files-prev').off('click').on('click', function() {
+            if (fileCurrentPage > 1) { fileCurrentPage -= 1; renderFilesPage(); }
+        });
+        jQuery('#files-next').off('click').on('click', function() {
+            if (fileCurrentPage < totalPages) { fileCurrentPage += 1; renderFilesPage(); }
+        });
+    }
+
+    function renderFilesPage() {
+        if (!$fileTableBody.length || !$fileAllRows) { return; }
+        var search = (jQuery('#file_search_filter').val() || '').toLowerCase();
+        
+        var visibleRows = [];
+        
+        for (var i = 0; i < $fileAllRows.length; i++) {
+            var $r = jQuery($fileAllRows[i]);
+            var fileName = ($r.data('fileName') || '').toString().toLowerCase();
+            var fileDesc = ($r.data('fileDesc') || '').toString().toLowerCase();
+            var filePath = ($r.data('filePath') || '').toString().toLowerCase();
+            
+            // Apply search filter
+            if (search) {
+                if (fileName.indexOf(search) === -1 && fileDesc.indexOf(search) === -1 && filePath.indexOf(search) === -1) {
+                    continue;
+                }
+            }
+            
+            visibleRows.push($r);
+        }
+        
+        var total = visibleRows.length;
+        var totalPages = Math.max(1, Math.ceil(total / filePageSize));
+        if (fileCurrentPage > totalPages) { fileCurrentPage = totalPages; }
+        var start = (fileCurrentPage - 1) * filePageSize;
+        var end = start + filePageSize;
+        
+        $fileTableBody.empty();
+        for (var i = start; i < end && i < visibleRows.length; i++) {
+            var $clone = visibleRows[i].clone();
+            $clone.attr('style', 'border: 1px solid #ddd;');
+            $clone.appendTo($fileTableBody);
+        }
+        updateFilesPagination(totalPages, total);
+    }
+
+    function refreshFiles() {
+        $fileTableBody = jQuery('#tab-files #file_table_body');
+        fileCurrentPage = 1;
+        renderFilesPage();
+    }
+
+    // Wire filter events
+    jQuery('#file_search_filter').on('input', function() { refreshFiles(); });
+
+    // Initialize file rows and pagination when tab is loaded
+    setTimeout(function() {
+        captureOriginalFileRows();
+        renderFilesPage();
+    }, 150);
 });
 </script>
