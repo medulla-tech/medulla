@@ -209,6 +209,9 @@ class CVECentralClient:
         self.session.verify = False
         import urllib3
         urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+        # Supprimer les logs verbeux urllib3/requests
+        logging.getLogger('urllib3').setLevel(logging.WARNING)
+        logging.getLogger('requests').setLevel(logging.WARNING)
 
     def _generate_auth_token(self) -> str:
         """Generate AES-encrypted authentication token"""
@@ -565,16 +568,16 @@ class CVECentralClient:
 
         @sio.on('connect')
         def on_connect():
-            logger.info("WebSocket connected to CVE Central")
+            logger.debug("WebSocket connected to CVE Central")
 
         @sio.on('disconnect')
         def on_disconnect():
-            logger.info("WebSocket disconnected from CVE Central")
+            logger.debug("WebSocket disconnected from CVE Central")
             completed.set()
 
         @sio.on('authenticated')
         def on_authenticated(data):
-            logger.info(f"WebSocket authenticated: {data}")
+            logger.debug(f"WebSocket authenticated: {data}")
 
         @sio.on('auth_error')
         def on_auth_error(data):
@@ -584,7 +587,7 @@ class CVECentralClient:
 
         @sio.on('scan_started')
         def on_scan_started(data):
-            logger.info(f"WebSocket scan started: {data}")
+            logger.debug(f"WebSocket scan_started event: {data}")
             if on_progress:
                 on_progress({'phase': 'started', 'percent': 0, **data})
 
@@ -597,17 +600,19 @@ class CVECentralClient:
         @sio.on('cves_found')
         def on_cves_found(data):
             cves = data.get('cves', [])
-            logger.info(f"WebSocket CVEs found for {data.get('software')}: {len(cves)} CVEs")
+            logger.debug(f"CVEs received for {data.get('software')}: {len(cves)}")
             results['cves'].extend(cves)
             if on_cves:
                 on_cves(cves)
 
         @sio.on('scan_completed')
         def on_scan_completed(data):
-            logger.info(f"WebSocket scan completed: {data}")
+            logger.debug(f"WebSocket scan_completed event: {data}")
             results['success'] = data.get('success', True)
             results['softwares_scanned'] = data.get('softwares_scanned', 0)
             results['cves_found'] = data.get('cves_found', 0)
+            results['duration_seconds'] = data.get('duration_seconds', 0)
+            results['duration_display'] = data.get('duration_display', '')
             completed.set()
 
         @sio.on('scan_error')
@@ -619,7 +624,7 @@ class CVECentralClient:
         try:
             # Connect to CVE Central WebSocket
             ws_url = self.base_url.replace('https://', 'wss://').replace('http://', 'ws://')
-            logger.info(f"Connecting to WebSocket: {ws_url}")
+            logger.debug(f"Connecting to WebSocket: {ws_url}")
             sio.connect(ws_url, transports=['websocket'])
 
             # Generate auth data
@@ -680,13 +685,12 @@ def run_cve_scan(scan_id: Optional[int] = None, entity_id: Optional[int] = None,
 
     filter_info = ""
     if machine_id:
-        filter_info = f" for machine {machine_id}"
+        filter_info = f" (machine {machine_id})"
     elif entity_id:
-        filter_info = f" for entity {entity_id}"
+        filter_info = f" (entity {entity_id})"
     elif group_id:
-        filter_info = f" for group {group_id}"
-    logger.info(f"Starting CVE scan{filter_info}...")
-    logger.debug(f"Config: log_level={config.log_level}, url={config.cve_central_url}")
+        filter_info = f" (group {group_id})"
+    logger.debug(f"CVE scan config: log_level={config.log_level}, url={config.cve_central_url}")
 
     # Ensure database is activated
     security_db = SecurityDatabase()
@@ -741,7 +745,7 @@ def run_cve_scan(scan_id: Optional[int] = None, entity_id: Optional[int] = None,
             security_db.complete_scan(scan_id, 0, 0, 0, "No software in GLPI")
             return {'scan_id': scan_id, 'status': 'completed', **stats}
 
-        logger.debug(f"First 5 software: {softwares[:5]}")
+        logger.info(f"CVE scan: {len(softwares)} software{filter_info}")
 
         # Step 2: Submit software to CVE Central
         submit_result = cve_client.submit_softwares(softwares)
@@ -837,19 +841,26 @@ def run_cve_scan(scan_id: Optional[int] = None, entity_id: Optional[int] = None,
         ws_success = False
 
         if use_websocket:
-            logger.info("Using WebSocket for CVE scan (real-time mode)")
+            logger.debug("Using WebSocket for CVE scan")
 
             def on_ws_progress(data):
                 """WebSocket progress callback"""
                 phase = data.get('phase', '')
-                percent = data.get('percent', 0)
-                current = data.get('current', 0)
-                total = data.get('total', 0)
-                cves = data.get('cves_found', 0)
-                if phase == 'scanning':
-                    logger.info(f"WebSocket progress: {current}/{total} ({percent}%) - {cves} CVEs")
+                if phase == 'started':
+                    eta = data.get('eta_display', '')
+                    count = data.get('softwares_count', 0)
+                    if eta:
+                        logger.info(f"Scan started: {count} softwares, ETA {eta}")
+                elif phase == 'scanning':
+                    current = data.get('current', 0)
+                    total = data.get('total', 0)
+                    cves = data.get('cves_found', 0)
+                    eta = data.get('eta_display', '')
+                    elapsed = data.get('elapsed_seconds', 0)
+                    elapsed_display = f"{elapsed // 60}m{elapsed % 60:02d}s" if elapsed >= 60 else f"{elapsed}s"
+                    logger.info(f"Scan progress: {current}/{total} - {cves} CVEs - {elapsed_display} elapsed, ETA {eta}")
                 else:
-                    logger.info(f"WebSocket progress: {phase} ({percent}%)")
+                    logger.debug(f"Scan phase: {phase}")
 
             def on_ws_cves(cves_list):
                 """WebSocket CVE callback - store CVEs as they arrive"""
@@ -858,7 +869,7 @@ def run_cve_scan(scan_id: Optional[int] = None, entity_id: Optional[int] = None,
                     if store_cve(cve_entry):
                         new_count += 1
                 if new_count > 0:
-                    logger.info(f"WebSocket: {new_count} CVEs received (total: {len(cves_added)})")
+                    logger.debug(f"{new_count} new CVEs stored (total: {len(cves_added)})")
 
             ws_result = cve_client.scan_via_websocket(
                 softwares=softwares,
@@ -870,7 +881,9 @@ def run_cve_scan(scan_id: Optional[int] = None, entity_id: Optional[int] = None,
             )
 
             if ws_result.get('success'):
-                logger.info(f"WebSocket scan completed: {ws_result.get('softwares_scanned', 0)} software scanned, {len(cves_added)} CVEs stored")
+                duration = ws_result.get('duration_display', '')
+                duration_info = f" in {duration}" if duration else ""
+                logger.info(f"Scan completed: {ws_result.get('softwares_scanned', 0)} scanned, {len(cves_added)} CVEs stored{duration_info}")
                 ws_success = True
             elif ws_result.get('fallback'):
                 # WebSocket not available, fall through to polling
