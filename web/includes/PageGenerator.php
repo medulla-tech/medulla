@@ -2820,6 +2820,7 @@ class SideMenuItem
     public $action;
     public $activebg;
     public $inactivebg;
+    public $active = false;
 
     /**
      *  main constructor
@@ -2856,7 +2857,8 @@ class SideMenuItem
     public function display()
     {
         if (hasCorrectAcl($this->module, $this->submod, $this->action)) {
-            echo '<li id="' . $this->cssId . '">';
+            $activeClass = $this->active ? ' class="active"' : '';
+            echo '<li id="' . $this->cssId . '"' . $activeClass . '>';
             echo '<a href="' . $this->getLink() . '">' . $this->text . '</a></li>';
         }
     }
@@ -2879,16 +2881,16 @@ class SideMenuItem
      */
     public function getCss($active = false)
     {
+        $this->active = $active;
+
         $bgi_active = $bgi_inactive = "";
         if ($this->activebg != "" && $this->inactivebg != "") {
             $bgi_active = "background-image: url(" . $this->activebg . ");";
             $bgi_inactive = "background-image: url(" . $this->inactivebg . ");";
         }
 
-        if ($active) {
+        if ($active && $bgi_active) {
             return "#sidebar ul.$this->submod li#$this->cssId a {
-                        background-color: #8CB63C;
-                        color: #fff;
                         $bgi_active
             }";
         } elseif ($bgi_inactive) {
@@ -2912,7 +2914,8 @@ class SideMenuItemNoAclCheck extends SideMenuItem
      */
     public function display()
     {
-        echo '<li id="' . $this->cssId . '">';
+        $activeClass = $this->active ? ' class="active"' : '';
+        echo '<li id="' . $this->cssId . '"' . $activeClass . '>';
         echo '<a href="' . $this->getLink() . '" target="_self">' . $this->text . '</a></li>' . "\n";
     }
 
@@ -2991,8 +2994,22 @@ class SideMenu
      */
     public function display()
     {
-        echo "<style>#section {margin-left:200px;}</style>";
+        echo "<style>#section {margin-left:230px;}</style>";
         echo "<div id=\"sidebar\">\n";
+
+        $MMCApp = &MMCApp::getInstance();
+        $mod = $MMCApp->getModule($_GET['module']);
+        $submod = $mod->getSubmod($_GET['submod']);
+        $desc = $submod->getDescription();
+        $icon = $submod->_img ? $submod->_img . '.svg' : '';
+
+        echo '<div class="sidebar-header">';
+        if ($icon) {
+            echo '<img src="' . $icon . '" alt="" class="sidebar-header-icon" />';
+        }
+        echo '<span>' . $desc . '</span>';
+        echo '</div>';
+
         echo "<ul class=\"" . $this->className . "\">\n";
         foreach ($this->itemArray as $objSideMenuItem) {
             $objSideMenuItem->display();
