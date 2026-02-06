@@ -1520,15 +1520,30 @@ class MobileDatabase(DatabaseHelper):
             logging.getLogger().error(f"There is an error: device was not created: {e} ")
 
     def _strip_file_last_update(self, config_data: dict):
-        """Remove large millisecond timestamps from files entries to avoid XML-RPC overflow."""
-        try:
-            files = config_data.get('files', []) if isinstance(config_data, dict) else []
-            if isinstance(files, list):
-                for file_item in files:
-                    if isinstance(file_item, dict) and 'lastUpdate' in file_item:
-                        del file_item['lastUpdate']
-        except Exception:
-            pass
+        """Convert millisecond timestamps to seconds to avoid XML-RPC overflow."""
+        if not isinstance(config_data, dict):
+            return
+        timestamp_fields = ['lastUpdate', 'uploadTime', 'createTime']
+        # xmlrpc compatibility
+        for section in ['files', 'applications', 'applicationSettings']:
+            for item in config_data.get(section, []):
+                if isinstance(item, dict):
+                    for field in timestamp_fields:
+                        if field in item and isinstance(item[field], (int, float)):
+                            item[field] = int(item[field] / 1000) if item[field] else 0
+
+    def _restore_timestamps_to_milliseconds(self, config_data: dict):
+        """Convert timestamps from seconds back to milliseconds for HMDM API."""
+        if not isinstance(config_data, dict):
+            return
+        timestamp_fields = ['lastUpdate', 'uploadTime', 'createTime']
+        # xmlrpc compatibility
+        for section in ['files', 'applications', 'applicationSettings']:
+            for item in config_data.get(section, []):
+                if isinstance(item, dict):
+                    for field in timestamp_fields:
+                        if field in item and isinstance(item[field], (int, float)):
+                            item[field] = int(item[field] * 1000) if item[field] else 0
 
     def getHmdmConfigurationById(self, config_id: int, base_url: str = None):
         """
@@ -1586,17 +1601,27 @@ class MobileDatabase(DatabaseHelper):
             logging.getLogger().error("Impossible d'authentifier pour mettre à jour la configuration.")
             return None
 
-        # First, GET the existing configuration
+        # log what we're receiving from frontend
+        logging.getLogger().info(f"Received config_data for update: {json.dumps(config_data, indent=2)}")
+        
+        # first, GET the existing configuration
         existing = self.getHmdmConfigurationById(config_id)
         if not existing:
             logging.getLogger().error(f"Could not fetch existing configuration {config_id}")
             return None
 
-        # Merge user changes into existing config
+        # merge user changes into existing config
         existing.update(config_data)
 
-        # Ensure outgoing payload does not contain large integers in files
-        self._strip_file_last_update(existing)
+        # front uses s but back uses ms
+        if 'applicationSettings' in config_data and isinstance(config_data['applicationSettings'], list):
+            for incoming_setting in config_data['applicationSettings']:
+                if 'lastUpdate' in incoming_setting and incoming_setting['lastUpdate']:
+                    incoming_setting['lastUpdate'] = int(incoming_setting['lastUpdate'] * 1000)
+            
+            existing['applicationSettings'] = config_data['applicationSettings']
+
+        logging.getLogger().info(f"Final payload to HMDM (after merge): {json.dumps(existing, indent=2)}")
 
         url = f"{self.BASE_URL}/private/configurations"
         headers = {
@@ -1605,11 +1630,11 @@ class MobileDatabase(DatabaseHelper):
         }
 
         try:
-            logging.getLogger().info(f"Updating HMDM configuration {config_id} with merged payload: {json.dumps(existing, indent=2)}")
             resp = requests.put(url, headers=headers, json=existing)
             resp.raise_for_status()
             data = resp.json()
             cleaned = data.get('data', data) or {}
+            # xmlrpc compatibility
             self._strip_file_last_update(cleaned)
             logging.getLogger().info(f"Configuration {config_id} updated successfully: {json.dumps(cleaned, indent=2)}")
             return cleaned
