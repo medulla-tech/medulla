@@ -22,7 +22,7 @@ import MySQLdb
 # Configuration logging
 # ----------------------
 logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
+# logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 
 # ----------------------
 # Fonctions utilitaires
@@ -105,8 +105,18 @@ def main():
     parser.add_argument("-u", "--user", default="root", help="Utilisateur MySQL")
     parser.add_argument("-p", "--password", default="", help="Mot de passe MySQL")
     parser.add_argument("-g", "--regeneratetable", action="store_true", help="Supprime tous les packages avant insertion")
+    parser.add_argument(
+        "-D", "--debug",
+        action="store_true",
+        help="Active le mode debug"
+    )
     args = parser.parse_args()
-
+    # Configuration du logging
+    log_level = logging.DEBUG if args.debug else logging.INFO
+    logging.basicConfig(
+        level=log_level,
+        format="%(levelname)s: %(message)s"
+    )
     dbname = "pkgs"
     password = args.password or getpass.getpass(f"Password for mysql://{args.user}@{args.hostname}:{args.port}/{dbname}: ")
 
@@ -114,6 +124,20 @@ def main():
     packagedir = "/var/lib/pulse2/packages"
     list_package = find_packages(packagedir)
     logger.info("Packages trouvés : %d", len(list_package))
+    # supprimer uniquement les liens symboliques dans
+    # /var/lib/pulse2/packages
+    for entry in os.listdir(packagedir):
+        path = os.path.join(packagedir, entry)
+
+        try:
+            if os.path.islink(path):
+                os.remove(path)
+                logger.info("Lien symbolique supprimé : %s", path)
+        except OSError as e:
+            logger.error(
+                "Erreur lors de la suppression du lien symbolique %s : %s",
+                path, e
+            )
 
     # Connexion MySQL
     try:
@@ -191,6 +215,10 @@ def main():
         # Parcours des packages
         for package in list_package:
             try:
+                pkg_name = os.path.basename(package)
+                share_name = os.path.basename(os.path.dirname(package))
+                logger.debug("Install package %s (partage: %s)", pkg_name, share_name)
+
                 conf_path = os.path.join(package, "conf.json")
                 conf = loadjsonfile(conf_path)
                 if not conf:
@@ -212,6 +240,7 @@ def main():
                 # Récupérer pkgs_share_id
                 pkgs_share_id = None
                 if pkgs_share_name:
+                    os.symlink(package, os.path.join(packagedir, os.path.basename(package)))
                     cursor.execute("SELECT id FROM pkgs.pkgs_shares WHERE name = %s", (pkgs_share_name,))
                     res = cursor.fetchone()
                     if res:
