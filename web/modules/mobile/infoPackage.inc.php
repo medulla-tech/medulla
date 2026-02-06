@@ -274,6 +274,19 @@ $pageDeleteGroup->setOptions(array("AJAX" => false, "visible" => false));
 $submod->addPage($pageDeleteGroup);
 
 ################################
+# Group Quick Actions page
+################################
+$pageGroupQuickAction = new Page("groupQuickAction", _T('Group Quick Action', 'mobile'));
+$pageGroupQuickAction->setFile("modules/mobile/mobile/groupQuickAction.php");
+$pageGroupQuickAction->setOptions(array("visible" => false, "noHeader" => true));
+$submod->addPage($pageGroupQuickAction);
+
+$pageGroupQuickActionExec = new Page("groupQuickActionExec", _T('Group Quick Action Exec', 'mobile'));
+$pageGroupQuickActionExec->setFile("modules/mobile/mobile/groupQuickActionExec.php");
+$pageGroupQuickActionExec->setOptions(array("AJAX" => false, "visible" => false));
+$submod->addPage($pageGroupQuickActionExec);
+
+################################
 # Functions page (HMDM features)
 ################################
 

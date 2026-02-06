@@ -19,8 +19,13 @@ $p->display();
 $send_to_type = isset($_POST['send_to']) ? $_POST['send_to'] : "device";
 $message_text = isset($_POST['message']) ? $_POST['message'] : "";
 $device_number = isset($_POST['device_input']) ? $_POST['device_input'] : (isset($_GET['device']) ? $_GET['device'] : "");
-$group_id = isset($_POST['group_input']) ? $_POST['group_input'] : "";
+$group_id = isset($_POST['group_input']) ? $_POST['group_input'] : (isset($_GET['group_id']) ? $_GET['group_id'] : "");
 $configuration_id = isset($_POST['configuration_input']) ? $_POST['configuration_input'] : "";
+
+// If group_id is provided from GET, pre-select group
+if (isset($_GET['group_id']) && !empty($_GET['group_id']) && !isset($_POST['send_to'])) {
+    $send_to_type = "group";
+}
 
 $groups = xmlrpc_get_hmdm_groups();
 $configurations = xmlrpc_get_hmdm_configurations();
