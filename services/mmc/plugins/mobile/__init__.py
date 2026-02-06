@@ -38,6 +38,9 @@ def updateHmdmDevice(device_data):
 def getHmdmDevices():
     return MobileDatabase().getHmdmDevices()
 
+def getHmdmDevicesOsCount():
+    return MobileDatabase().getHmdmDevicesOsCount()
+
 def getHmdmConfigurationById(id):
     return MobileDatabase().getHmdmConfigurationById(id)
 

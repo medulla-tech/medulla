@@ -9,6 +9,17 @@ $values = [
     'name' => ''
 ];
 
+// get name from url param
+if (isset($_GET['name'])) {
+    $nameParam = trim($_GET['name']);
+    // auto-generate name for widget
+    if ($nameParam === 'widget') {
+        $values['name'] = 'Android OS Widget at ' . date('Y-m-d H:i');
+    } else {
+        $values['name'] = $nameParam;
+    }
+}
+
 $allDevices = xmlrpc_get_hmdm_devices();
 if (!is_array($allDevices)) {
     $allDevices = [];
@@ -41,6 +52,20 @@ if (isset($_POST['lmembers'])) {
 
 if (isset($_POST['lmachines'])) {
     $currentNonMembers = unserialize(base64_decode($_POST['lmachines']));
+}
+
+// auto-select all devices on initial load
+if ($_SERVER['REQUEST_METHOD'] !== 'POST' && isset($_GET['autoselect']) && $_GET['autoselect'] === 'all') {
+    $currentMembers = [];
+    foreach ($allDevices as $device) {
+        $deviceId = $device['id'] ?? $device['deviceId'] ?? null;
+        $deviceName = $device['number'];
+        if ($deviceId) {
+            $deviceKey = $deviceName . "##" . $deviceId;
+            $currentMembers[$deviceKey] = $deviceName;
+        }
+    }
+    $currentNonMembers = [];
 }
 
 if (isset($_POST['baddmachine_x'])) {
@@ -93,7 +118,7 @@ if (isset($_POST['baddmachine_x'])) {
 } elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['test'])) {
     if ($values['name'] === '') {
         $errors['name'] = _T("Group name is required", "mobile");
-    } elseif (!preg_match('/^[a-zA-Z0-9\s\-_]+$/', $values['name'])) {
+    } elseif (!preg_match('/^[a-zA-Z0-9\s\-_:]+$/', $values['name'])) {
         $errors['name'] = _T("Group name contains invalid characters", "mobile");
     }
 

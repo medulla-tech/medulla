@@ -363,6 +363,32 @@ class MobileDatabase(DatabaseHelper):
             return []
         return self.getList(auth)
 
+    def getHmdmDevicesOsCount(self):
+        """
+        Get count of HMDM Android devices for dashboard (all hmdm devices are android)
+        Returns: [{'os': 'Android', 'version': 'HMDM', 'count': N}]
+        """
+        auth = self.authenticate()
+        if auth is None:
+            return []
+        
+        url = f"{self.BASE_URL}/private/devices/search"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {auth}"}
+        payload = {"limit": 1, "offset": 0}
+        
+        try:
+            resp = requests.post(url, json=payload, headers=headers)
+            resp.raise_for_status()
+            data = resp.json()
+            total_count = data.get("data", {}).get("devices", {}).get("totalItemsCount", 0)
+            
+            if total_count > 0:
+                return [{'os': 'Android', 'version': 'HMDM', 'count': total_count}]
+            return []
+        except Exception as e:
+            logging.getLogger().error(f"Error getting HMDM device count: {e}")
+            return []
+
     def getHmdmAuditLogs(self, page_size=50, page_num=1, message_filter="", user_filter=""):
         """
         Fetch audit logs from HMDM and return a normalized list.
