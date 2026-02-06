@@ -1,21 +1,38 @@
 /* Have ideas for improving this CSS for the general community? Submit your changes at: https://github.com/Valums-File-Uploader/file-uploader */
+#package-temp-directory {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	max-width: 320px;
+}
+#file-uploader {
+	width: 100%;
+}
 .qq-uploader {
 	position: relative;
 	width: 100%;
 }
 .qq-upload-button {
 	display: block;
-	/*or inline-block*/
-	padding: 7px;
+	padding: 12px 22px;
 	text-align: center;
-	background: #DDD;
-	border: 1px solid #AAA;
+	background: #f8f9fa;
+	border: 2px dashed #ccc;
+	border-radius: 6px;
+	color: #444050;
+	cursor: pointer;
+	transition: all 0.2s ease;
+	box-sizing: border-box;
+	width: 100%;
 }
 .qq-upload-button-hover {
-	background: #CCC;
+	background: #fff;
+	border-color: #0D4F6E;
+	color: #0D4F6E;
 }
 .qq-upload-button-focus {
-	outline: 1px dotted #000000;
+	outline: none;
+	border-color: #0D4F6E;
 }
 .qq-upload-drop-area, .qq-upload-extra-drop-area {
 	position: absolute;
@@ -48,7 +65,7 @@
 	background: #FF7171;
 }
 .qq-upload-list {
-	margin: 0;
+	margin: 10px 0 0 0;
 	padding: 0;
 	list-style: none;
 }
@@ -94,27 +111,29 @@
 	display: inline;
 }
 .qq-upload-list li.qq-upload-success {
-	background-color: #CCFFCC;
-	color: #000;
+	background-color: #e8f5e0;
+	color: #444050;
+	border-left: 3px solid #8CB63C;
 }
 .qq-upload-list li.qq-upload-fail {
 	background-color: #D60000;
 	color: #FFFFFF;
 }
 #parentTrigger {
-    position: relative;
-    z-index: 1;
+    width: 100%;
 }
 #triggerUpload {
-    padding: 5px;
-    width: 190px;
+    padding: 12px 24px;
     text-align: center;
-    background-color: #2295D2;
+    background-color: #25607d;
     color: white;
     cursor: pointer;
-    z-index: 1000;
-    position: relative;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+    width: 100%;
+    box-sizing: border-box;
 }
-#file-uploader {
-    width: 200px;
+#triggerUpload:hover {
+    background-color: #093d54;
 }

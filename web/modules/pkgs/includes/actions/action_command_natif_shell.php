@@ -46,7 +46,7 @@ extract($_POST);
         <tr>
             <th><?php echo _T('Command', 'pkgs') ?></th>
             <th>
-              <textarea name="command" cols="5" rows="5"><?php echo (isset($command)) ? $command : "" ;?></textarea>
+              <textarea name="command"><?php echo (isset($command)) ? $command : "" ;?></textarea>
             </th>
         </tr>
         <tr>

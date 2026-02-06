@@ -205,7 +205,7 @@ class RadioTpl extends AbstractTpl
                 $selected = "";
             }
 
-            print '<input name="' . $this->name . '" value="' . $this->choiceVal[$key] . '" id="' . $this->name . '" type="radio" ' . $selected . '>' . $this->choices[$key];
+            print '<label><input name="' . $this->name . '" value="' . $this->choiceVal[$key] . '" id="' . $this->name . '_' . $key . '" type="radio" ' . $selected . '>' . $this->choices[$key] . '</label>';
 
             if (isset($this->choiceWidget)) {
                 if ($key == 0) {
@@ -401,7 +401,7 @@ class InputTpl extends AbstractTpl
         $required_attr = isset($arrParam["required"]) ? ' rel="required"' : '';
         $regexp_attr = isset($this->regexp) ? ' data-regexp="' . $this->regexp . '"' : '';
         $valparm = $arrParam["value"];
-        print '<span id="container_input_' . $this->name . '"><input name="' . $this->name . '" id="' . $this->name . '" type="' . $this->fieldType . '" size="' . $this->size . '" '.
+        print '<span id="container_input_' . $this->name . '"><input class="mmc-input" name="' . $this->name . '" id="' . $this->name . '" type="' . $this->fieldType . '" size="' . $this->size . '" '.
         $this->attributcustom . ' value="' . $valparm . '" placeholder="' . $arrParam["placeholder"] . '" ' . $arrParam["disabled"] . $required_attr . $regexp_attr . ' autocomplete="off" /></span>';
         if (isset($arrParam["onchange"])) {
             print '<script type="text/javascript">';
@@ -809,7 +809,7 @@ class MultipleInputTpl extends AbstractTpl
             $test->setCssError($this->name . $key);
             $test->display(array("value" => $param));
         }
-        print '<tr><td width="40%" style="text-align:right;">';
+        print '<tr class="mmc-form-row"><td class="mmc-label">';
         if (safeCount($arrParam) == 0) {
             //if we got a tooltip, we show it
             if ($this->tooltip) {
@@ -845,7 +845,7 @@ class MultipleInputTpl extends AbstractTpl
             $test->displayRo(array("value" => $param));
         }
         if (safeCount($arrParam) == 0) {
-            print '<tr><td width="40%" style="text-align:right;">';
+            print '<tr class="mmc-form-row"><td class="mmc-label">';
             print $this->desc;
             print '</td><td>';
             print '</td></tr>';
@@ -858,7 +858,7 @@ class MultipleInputTpl extends AbstractTpl
     {
         print '<div id="' . $this->name . '">';
         print '<table>';
-        print '<tr><td width="40%" style="text-align:right;">' . $this->desc . '</td>';
+        print '<tr class="mmc-form-row"><td class="mmc-label">' . $this->desc . '</td>';
         print '<td style="color: rgb(204, 0, 0);">' . _('unavailable') . '</td></tr>';
         print '</table>';
         print '<div style="display:none">';
@@ -874,7 +874,7 @@ class MultipleInputTpl extends AbstractTpl
             $test->displayHide(array("value" => $param));
         }
         if (safeCount($arrParam) == 0) {
-            print '<tr><td width="40%" style="text-align:right;">';
+            print '<tr class="mmc-form-row"><td class="mmc-label">';
             print $this->desc;
             print '</td><td>';
             print '</td></tr>';
@@ -1108,7 +1108,9 @@ class SelectItem extends AbstractTpl
     {
         $ret = "<select";
         if ($this->style) {
-            $ret .= " class=\"" . $this->style . "\"";
+            $ret .= " class=\"mmc-select " . $this->style . "\"";
+        } else {
+            $ret .= " class=\"mmc-select\"";
         }
         if ($this->jsFunc) {
             $ret .= " onchange=\"" . $this->jsFunc . "(";
@@ -1314,9 +1316,9 @@ class DeletableTrFormElement extends FormElement
             print '<input type="hidden" name="old_' . $field_name . '" value="' . $old_value . '" />';
         }
 
-        print '<tr><td width="40%" ';
+        print '<tr class="mmc-form-row"><td class="mmc-label" ';
         print displayErrorCss($this->cssErrorName);
-        print 'style = "text-align: right;">';
+        print '>';
 
         //if we got a tooltip, we show it
         if ($this->tooltip) {
@@ -1342,9 +1344,9 @@ class DeletableTrFormElement extends FormElement
         if ($this->key == 0) {
             $desc = $this->desc;
         }
-        print '<tr><td width="40%" ';
+        print '<tr class="mmc-form-row"><td class="mmc-label" ';
         print displayErrorCss($this->cssErrorName);
-        print 'style = "text-align: right;">';
+        print '>';
 
         //if we got a tooltip, we show it
         if ($this->tooltip) {
@@ -1410,19 +1412,20 @@ class TrFormElement extends FormElement
             $this->cssErrorName = isset($this->template->name) ? $this->template->name : "";
         }
 
-        printf('<tr');
+        printf('<tr class="mmc-form-row');
+        if ($this->class !== null) {
+            printf(' %s', $this->class);
+        }
+        printf('"');
         if ($this->trid !== null) {
             printf(' id="%s"', $this->trid);
-        }
-        if ($this->class !== null) {
-            printf(' class="%s"', $this->class);
         }
         if ($this->style !== null) {
             printf(' style="%s"', $this->style);
         }
-        printf('><td class="label" width="%s" ', $this->firstColWidth);
+        printf('><td class="mmc-label" ');
         print displayErrorCss($this->cssErrorName);
-        print 'style = "text-align: right;">';
+        print '>';
 
         //if we got a tooltip, we show it
         if ($this->tooltip) {
@@ -1466,9 +1469,9 @@ class TrFormElement extends FormElement
     public function displayRo($arrParam)
     {
 
-        printf('<tr><td width="%s" ', $this->firstColWidth);
+        printf('<tr class="mmc-form-row"><td class="mmc-label" ');
         print displayErrorCss($this->cssErrorName);
-        print 'style = "text-align: right;">';
+        print '>';
 
         //if we got a tooltip, we show it
         if ($this->tooltip) {

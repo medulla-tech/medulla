@@ -301,7 +301,7 @@ p {
   text-decoration: none;
   background-repeat: no-repeat;
   background-color: #eaf3f7;
-  color: #444;
+  color: #444050;
   border-bottom: 1px solid #d5e4ec;
   display: block;
   padding: 11px 14px;
@@ -2059,6 +2059,267 @@ td.machineAction {
 
 #footer a:hover {
   text-decoration: underline;
+}
+
+/* ---------------------------------------- */
+/* Form components                         */
+/* ---------------------------------------- */
+
+/* Form table */
+.mmc-form-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* Form row */
+.mmc-form-row {
+  border-bottom: none;
+}
+
+/* Label cell */
+.mmc-label {
+  text-align: left;
+  width: 220px;
+  padding: 10px 16px 10px 0;
+  font-weight: 500;
+  color: #444050;
+  vertical-align: middle;
+  border: none;
+}
+
+/* Value cell */
+.mmc-form-row td:not(.mmc-label) {
+  padding: 10px 0;
+  vertical-align: middle;
+  border: none;
+}
+
+/* Text inputs */
+.mmc-input,
+.mmc-form-table input[type="text"],
+.mmc-form-table input[type="password"],
+.mmc-form-table input[type="number"] {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 12px;
+  width: 320px;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease;
+}
+
+/* Focus */
+.mmc-form-table input:focus,
+.mmc-form-table select:focus,
+.mmc-form-table textarea:focus {
+  border-color: #25607d;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(37, 96, 125, 0.15);
+}
+
+/* Selects */
+.mmc-select,
+.mmc-form-table select {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 320px;
+  box-sizing: border-box;
+  background-color: #fff;
+}
+
+/* Textareas */
+.mmc-form-table textarea {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 320px;
+  box-sizing: border-box;
+}
+
+/* Radio buttons - custom styling */
+.mmc-form-table input[type="radio"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #ccc;
+  border-radius: 50%;
+  margin: 0 6px 2px 0;
+  vertical-align: middle;
+  cursor: pointer;
+  position: relative;
+  background-color: #fff;
+}
+.mmc-form-table input[type="radio"]:hover {
+  border-color: #8CB63C;
+  background-color: #fff;
+}
+.mmc-form-table input[type="radio"]:checked {
+  border-color: #8CB63C;
+  background-color: #fff;
+}
+.mmc-form-table input[type="radio"]:checked::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #8CB63C;
+}
+.mmc-form-table input[type="radio"]:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+.mmc-form-table label {
+  vertical-align: middle;
+  line-height: 1.4;
+}
+
+/* Radio buttons inline variant */
+.radio-inline br {
+  display: none;
+}
+.radio-inline label {
+  margin-right: 16px;
+  display: inline;
+}
+
+/* Section title — generic style for modules using *-title pattern */
+span[class$="-title"] {
+  font-size: 15px;
+  font-weight: 600;
+  color: #25607d;
+  padding: 8px 0 4px;
+  display: block;
+  border-bottom: 2px solid #25607d;
+  margin-bottom: 4px;
+}
+
+/* Inside form table — pull left to cover label column */
+.mmc-form-table span[class$="-title"] {
+  margin-left: -236px;
+  width: calc(100% + 236px);
+}
+
+/* Dependencies dual-list widget */
+.deps-widget {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr auto;
+  gap: 12px;
+  align-items: end;
+  padding: 12px 0;
+  margin-left: -236px;
+  width: calc(100% + 236px);
+}
+
+/* Left column: h3 + search + list */
+.deps-available {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Right column: h3 + list + order buttons wrapper */
+.deps-added {
+  display: flex;
+  flex-direction: column;
+}
+
+.deps-col h3 {
+  font-size: 13px;
+  font-weight: 600;
+  color: #444050;
+  margin: 0 0 8px 0;
+}
+
+.deps-search {
+  width: 100% !important;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 12px;
+  box-sizing: border-box;
+  margin-bottom: 8px;
+}
+
+.deps-list {
+  width: 100% !important;
+  min-width: 0 !important;
+  height: 170px !important;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 4px;
+  font-size: 12px;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+.deps-list option {
+  padding: 6px 8px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+  color: #333;
+}
+
+.deps-list option:last-child {
+  border-bottom: none;
+}
+
+.deps-list option:checked {
+  background: #25607d linear-gradient(0deg, #25607d 0%, #25607d 100%);
+  color: #fff;
+  -webkit-text-fill-color: #fff;
+}
+
+/* Center arrows (left/right transfer) — aligned to the list area */
+.deps-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  align-self: end;
+  height: 170px;
+}
+
+.deps-actions img {
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+}
+
+.deps-actions img:hover {
+  opacity: 1;
+}
+
+/* Up/down order arrows — aligned to the list */
+.deps-order {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 170px;
+}
+
+.deps-order img {
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+}
+
+.deps-order img:hover {
+  opacity: 1;
+}
+
+/* Form button placement */
+.mmc-form .btnPrimary,
+.mmc-form .btnSecondary {
+  margin-top: 16px;
 }
 
 /* ---------------------------------------- */
