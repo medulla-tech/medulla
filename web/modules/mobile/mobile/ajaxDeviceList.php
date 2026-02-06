@@ -207,12 +207,12 @@ $n->addExtraInfo($sources, _T("Model", "mobile"));
 $n->addExtraInfo($ip, _T("IP address", "mobile"));
 
 // Attach actions
+$n->addActionItemArray($actionQr);
+$n->addActionItemArray($actionQuick);
 $n->addActionItemArray($actionDetails);
 $n->addActionItemArray($actionLogs);
 $n->addActionItemArray($actionMessage);
 $n->addActionItemArray($actionEdit);
-$n->addActionItemArray($actionQuick);
-$n->addActionItemArray($actionQr);
 $n->addActionItemArray($actionDelete);
 $n->setParamInfo($params);
 

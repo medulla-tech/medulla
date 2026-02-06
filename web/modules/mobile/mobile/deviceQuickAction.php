@@ -177,15 +177,6 @@ $deviceDescription = $device['description'] ?? '';
                 messageType = customType;
             }
             
-            if (payload.trim() !== '') {
-                try {
-                    JSON.parse(payload);
-                } catch (e) {
-                    alert('<?php echo _T("Invalid JSON payload. Please check the format.", "mobile"); ?>');
-                    return;
-                }
-            }
-            
             submitAction('custom', messageType, payload);
         });
     });
