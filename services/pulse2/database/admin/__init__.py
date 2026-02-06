@@ -99,6 +99,9 @@ class AdminDatabase(DatabaseHelper):
             if table_name.endswith("_conf"):
                 logger.debug(f"Mapping config table by automap: {table_name.capitalize()}")
                 setattr(self, table_name.capitalize(), mapped_class)
+            if table_name.endswith("_conf_version"):
+                logger.debug(f"Mapping config version table by automap: {table_name.capitalize()}")
+                setattr(self, table_name.capitalize(), mapped_class)
             if table_name in include_table:
                 logger.debug(f"Mapping table by automap by list include: {table_name.capitalize()}")
                 setattr(self, table_name.capitalize(), mapped_class)
@@ -632,7 +635,6 @@ class AdminDatabase(DatabaseHelper):
                     Conf.description,
                     Conf.activer,
                 )
-                .filter(Conf.activer == 1)
                 .all()
             )
             # Convert SQLAlchemy Row objects to native Python dicts for XML-RPC serialization
@@ -685,8 +687,127 @@ class AdminDatabase(DatabaseHelper):
                 row.activer = int(data["activer"])
             session.flush()
             session.commit()
-            logger.info("[ConfigDB] update_config_data: updated table=%s id=%s", table_name, getattr(row, "id", None))
+            logger.debug("[ConfigDB] update_config_data: updated table=%s id=%s", table_name, getattr(row, "id", None))
             return True
         except SQLAlchemyError as e:
             logger.error(f"[ConfigDB] Error updating data: {e}")
+            return False
+
+    @DatabaseHelper._sessionm
+    def add_config_data(self, session, table_name: str, data: dict) -> bool:
+        """Add a configuration to a *_conf table."""
+        try:
+            cls_name = table_name.capitalize()
+            Conf = getattr(self, cls_name)
+            section = (data.get("section") or "").strip()
+            nom = (data.get("nom") or "").strip()
+            if not section or not nom:
+                logger.warning("[ConfigDB] add_config_data: missing keys table=%s data=%s", table_name, data)
+                return False
+
+            existing = (
+                session.query(Conf)
+                .filter(
+                    Conf.section == section,
+                    Conf.nom == nom,
+                )
+                .first()
+            )
+            if existing:
+                logger.warning("[ConfigDB] add_config_data: config already exists for table=%s section=%s nom=%s", table_name, section, nom)
+                return False
+
+            new_row = Conf(
+                section=section,
+                nom=nom,
+                valeur=data.get("valeur"),
+                valeur_defaut=data.get("valeur_defaut"),
+                description=data.get("description"),
+                activer=int(data.get("activer", 1)),
+            )
+            session.add(new_row)
+            session.flush()
+            session.commit()
+            logger.debug("[ConfigDB] add_config_data: added table=%s section=%s nom=%s", table_name, section, nom)
+            return True
+        except SQLAlchemyError as e:
+            logger.error(f"[ConfigDB] Error adding data: {e}")
+            return False
+        
+
+    @DatabaseHelper._sessionm
+    def delete_config_data(self, session, table_name: str, data: dict) -> bool:
+        """Delete a configuration from a *_conf table."""
+        try:
+            cls_name = table_name.capitalize()
+            Conf = getattr(self, cls_name)
+            row = None
+            section = (data.get("section") or "").strip()
+            nom = (data.get("nom") or "").strip()
+            if section and nom:
+                row = (
+                    session.query(Conf)
+                    .filter(
+                        Conf.section == section,
+                        Conf.nom == nom,
+                    )
+                    .first()
+                )
+            else:
+                logger.warning("[ConfigDB] delete_config_data: missing keys table=%s data=%s", table_name, data)
+                return False
+            if not row:
+                logger.warning("[ConfigDB] delete_config_data: row not found for table=%s data=%s", table_name, data)
+                return False
+
+            session.delete(row)
+            session.flush()
+            session.commit()
+            logger.debug("[ConfigDB] delete_config_data: deleted table=%s section=%s nom=%s", table_name, section, nom)
+            return True
+        except SQLAlchemyError as e:
+            logger.error(f"[ConfigDB] Error deleting data: {e}")
+            return False
+
+    @DatabaseHelper._sessionm
+    def restore_config_version(self, session, table_name: str, table_version_name: str) -> bool:
+        """Restore a previous version of a configuration from a *_conf_history table."""
+        try:
+            cls_name = table_version_name.capitalize() 
+            Version = getattr(self, cls_name)
+            # Récupérer toutes les données de la table de version
+            versions = session.query(Version).all()
+            if not versions:
+                logger.warning("[ConfigDB] restore_config_version: no versions found for table=%s", table_version_name)
+                return False
+
+            # Obtenir la classe de la table de conf
+            Conf = getattr(self, table_name.capitalize())
+            
+            # Pour chaque entrée dans la table de version, mettre à jour la table de conf correspondante
+            for version in versions:
+                row = (
+                    session.query(Conf)
+                    .filter(
+                        Conf.section == version.section,
+                        Conf.nom == version.nom,
+                    )
+                    .first()
+                )
+                if not row:
+                    logger.warning("[ConfigDB] restore_config_version: config row not found for table=%s section=%s nom=%s", table_name, version.section, version.nom)
+                    continue  # Passer à la suivante si la ligne n'existe pas
+
+                # Remplacer les valeurs
+                row.valeur = version.valeur
+                row.valeur_defaut = version.valeur_defaut
+                row.description = version.description
+                row.activer = version.activer
+            
+            session.flush()
+            session.commit()
+            logger.info("[ConfigDB] restore_config_version: restored all data from %s to %s", table_version_name, table_name)
+            return True
+        except SQLAlchemyError as e:
+            logger.error(f"[ConfigDB] Error restoring config version: {e}")
             return False

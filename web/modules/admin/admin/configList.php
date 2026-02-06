@@ -43,7 +43,7 @@ $btn = new Button();
 foreach ($tables as $table) {
     $plugin_name = str_replace('_conf', '', $table);
     $label = ucfirst($plugin_name);
-    $edit_url = urlStrRedirect("admin/admin/editConfig", ['table' => $table]);
+    $edit_url = urlStrRedirect("admin/admin/parameterList", ['table' => $table]);
     $button_text = htmlspecialchars(sprintf("%s (%s)", $label, $table), ENT_QUOTES);
 
     echo '<p>' . $btn->getOnClickButton($button_text, $edit_url) . '</p>';

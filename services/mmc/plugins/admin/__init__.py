@@ -1,3 +1,37 @@
+# -*- coding:Utf-8; -*
+# SPDX-FileCopyrightText: 2016-2023 Siveo, http://www.siveo.net
+# SPDX-FileCopyrightText: 2024-2025 Medulla, http://www.medulla-tech.io
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+from pulse2.version import getVersion, getRevision
+
+from mmc.plugins.admin.config import AdminConfig
+
+# Import for Database
+from pulse2.database.admin import AdminDatabase
+from pulse2.database.pkgs import PkgsDatabase
+
+from mmc.plugins.glpi import get_entities_with_counts, get_entities_with_counts_root, set_user_api_token, get_user_profile_email, get_complete_name, get_user_identifier, list_entity_ids_subtree, list_user_ids_in_subtree, list_computer_ids_in_subtree
+from mmc.support.apirest.glpi import GLPIClient
+from mmc.support.apirest.glpi import verifier_parametres
+from configparser import ConfigParser
+import subprocess
+import traceback
+import requests
+import logging
+import base64
+import random
+import shutil
+import string
+import json
+import uuid
+import os
+import re
+
+VERSION = "1.0.0"
+APIVERSION = "4:1:3"
+
+logger = logging.getLogger()
 #
 # def verifier_parametres(dictctrl, cles_requises):
 #     # Vérifier chaque clé
@@ -870,3 +904,29 @@ def update_config_data(table: str, data: dict) -> bool:
         logger.error("update_config_data failed: %s", e)
         return False
 
+def add_config_data(table: str, data: dict) -> bool:
+    try:
+        logger.info("add_config_data: table=%s data=%s", table, data)
+        db = AdminDatabase()
+        return db.add_config_data(table, data)
+    except Exception as e:
+        logger.error("add_config_data failed: %s", e)
+        return False
+
+def delete_config_data(table: str, data: dict) -> bool:
+    try:
+        logger.info("delete_config_data: table=%s data=%s", table, data)
+        db = AdminDatabase()
+        return db.delete_config_data(table, data)
+    except Exception as e:
+        logger.error("delete_config_data failed: %s", e)
+        return False
+
+def restore_config_version(table: str, table_version: str) -> bool:
+    try:
+        logger.info("restore_config_version: table=%s version=%s", table, table_version)
+        db = AdminDatabase()
+        return db.restore_config_version(table, table_version)
+    except Exception as e:
+        logger.error("restore_config_version failed: %s", e)
+        return False
