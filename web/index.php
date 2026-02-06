@@ -194,6 +194,9 @@ if (!empty($_GET["error"])) {
 if (isset($_GET["agentsessionexpired"])) {
     $error = _("You have been logged out because the session between the MMC web interface and the MMC agent expired.");
 }
+if (isset($_GET["sessionexpired"])) {
+    $error = _("Your session has expired due to inactivity. Please log in again.");
+}
 if (isset($_GET["signout"])) {
     $error = _("You have been successfully logged out.");
     $_SESSION = array();

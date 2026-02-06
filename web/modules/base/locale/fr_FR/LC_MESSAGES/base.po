@@ -2086,3 +2086,7 @@ msgstr "Identifiant ou email"
 #: forgotpassword.php:81
 msgid "Back"
 msgstr "Retour"
+
+#: index.php:198
+msgid "Your session has expired due to inactivity. Please log in again."
+msgstr "Votre session a expiré en raison d'inactivité. Veuillez vous reconnecter."

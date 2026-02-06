@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Security Module Icon - Medulla -->
+<svg version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 141.7 141.7" style="enable-background:new 0 0 141.7 141.7;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#8BB53C;stroke:#24607E;stroke-width:4.5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st1{fill:#FFFFFF;stroke:#24607E;stroke-width:4.5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st2{fill:#FFFFFF;stroke:#24607E;stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st3{fill:none;stroke:#24607E;stroke-width:7;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+</style>
+<g transform="translate(70.85, 70.85) scale(1.12) translate(-70.85, -70.85)">
+	<!-- Shield body -->
+	<path class="st0" d="M70.9,14.2c0,0-40.5,8.1-48.6,16.2c0,24.3,0,40.5,8.1,64.8C38.4,111.4,70.9,127.5,70.9,127.5
+		s32.4-16.2,40.5-32.4c8.1-24.3,8.1-40.5,8.1-64.8C111.4,22.3,70.9,14.2,70.9,14.2z"/>
+	<!-- Inner shield highlight -->
+	<path class="st1" d="M70.9,28c0,0-30.4,6.1-36.5,12.2c0,18.2,0,30.4,6.1,48.6c6.1,12.2,30.4,24.3,30.4,24.3
+		s24.3-12.2,30.4-24.3c6.1-18.2,6.1-30.4,6.1-48.6C101.2,34.1,70.9,28,70.9,28z"/>
+	<!-- Exclamation mark - alert symbol for CVE -->
+	<line class="st3" x1="70.9" y1="45" x2="70.9" y2="72"/>
+	<circle class="st2" cx="70.9" cy="88" r="5"/>
+</g>
+</svg>

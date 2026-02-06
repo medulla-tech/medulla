@@ -20,8 +20,6 @@ $sidemenu->addSideMenuItem(new SideMenuItem(_T("Icon settings", 'mobile'), "mobi
 
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Configurations", 'mobile'), "mobile", "mobile", "configurations"));
 
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Add Configuration", 'mobile'), "mobile", "mobile", "addConfiguration"));
-
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Files", 'mobile'), "mobile", "mobile", "files"));
 
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Add a file", 'mobile'), "mobile", "mobile", "addFile"));

@@ -18,6 +18,9 @@ if (!empty($filter)) {
 }
 
 $ids = $col1 = $packages = $versions = $urls = [];
+$actionEdit = [];
+$actionConfiguration = [];
+$actionVersions = [];
 $actionDelete = [];
 $params = [];
 
@@ -36,7 +39,10 @@ foreach ($apps as $index => $app) {
 	$versions[] = $version;
 	$urls[] = $url;
 
-	// Build ActionPopupItem (Delete) using standard action API
+	// Build ActionItem (Edit) and ActionPopupItem (Delete)
+	$actionEdit[] = new ActionItem(_("Edit Application"), "editApplication", "edit", "", "mobile", "mobile");
+	// $actionConfiguration[] = new ActionItem(_("Configuration"), "applicationConfiguration", "info", "", "mobile", "mobile");
+	$actionVersions[] = new ActionItem(_("Versions"), "applicationVersions", "history", "", "mobile", "mobile");
 	$actionDelete[] = new ActionPopupItem(_("Delete Application"), "deleteApplication", "delete", "", "mobile", "mobile");
 	$params[] = [
 		'id' => $appId,
@@ -57,6 +63,9 @@ $n->addExtraInfo($packages, _T("Package ID", "mobile"));
 $n->addExtraInfo($versions, _T("Version", "mobile"));
 $n->addExtraInfo($urls, _T("URL", "mobile"));
 // Attach actions
+$n->addActionItemArray($actionEdit);
+// $n->addActionItemArray($actionConfiguration);
+$n->addActionItemArray($actionVersions);
 $n->addActionItemArray($actionDelete);
 $n->setParamInfo($params);
 

@@ -5,8 +5,9 @@ require("localSidebar.php");
 
 $p = new PageGenerator(_T("List of all devices", 'mobile'));
 $p->setSideMenu($sidemenu);
-
 $p->display();
+
+echo '<button class="btn btn-small btn-primary" onclick="PopupWindow(event, \'main.php?module=mobile&submod=mobile&action=qrCode&apk=1\', 300); return false;" type="button">'._T("HMDM APK","mobile").'</button>';
 
 // Display notifications for QR errors
 if (isset($_GET['error'])) {

@@ -1,46 +1,49 @@
 <?php
 require_once("modules/mobile/includes/xmlrpc.php");
 
-// Get filter parameter
 $filter = isset($_GET['filter']) ? $_GET['filter'] : '';
 
-// ICI 
-$mobiles_headwind = xmlrpc_get_hmdm_devices();
+$mobiles = xmlrpc_get_hmdm_devices();
+$configurations_data = xmlrpc_get_hmdm_configurations();
+
+// map id name
+$config_map = [];
+if (is_array($configurations_data)) {
+    foreach ($configurations_data as $config) {
+        if (isset($config['id']) && isset($config['name'])) {
+            $config_map[$config['id']] = $config['name'];
+        }
+    }
+}
     
-// Retrieving QR code for a specific configuration
 $configurationId = 1;
 $configurationJson = xmlrpc_get_hmdm_configuration_by_id($configurationId);
 $qrCode = $configurationJson;
 
-// Construction du tableau avec OptimizedListInfos
 $ids = $col1 = $descript = $enligne = $numeros = $autorisations = $installations = $etatFichiers = $configurations = $actions = [];
 $actionQr = [];
+$actionEdit = [];
 $params = [];
 
-if (!is_array($mobiles_headwind)) $mobiles_headwind = [];
+if (!is_array($mobiles)) $mobiles = [];
 
-foreach ($mobiles_headwind as &$m) {
+foreach ($mobiles as &$m) {
     $m['source'] = 'headwind';
 }
 
 unset($m);
 
-// Filter by device name if filter is provided
 if (!empty($filter)) {
-    $mobiles_headwind = array_filter($mobiles_headwind, function($mobile) use ($filter) {
+    $mobiles = array_filter($mobiles, function($mobile) use ($filter) {
         $deviceName = $mobile['number'] ?? '';
         return stripos($deviceName, $filter) !== false;
     });
 }
 
-// $mobiles = array_merge($mobiles_headwind, $mobiles_nano);
-$mobiles = $mobiles_headwind; // Pour le moment on n'affiche que les headwind
-
 foreach ($mobiles as $index => $mobile) {
     $id = 'mob_' . $index;
     $ids[] = $id;
 
-    // Détection de la source
     $is_headwind = $mobile['source'] === 'headwind';
     $origine = $is_headwind ? 'Android' : 'Inconnu';
     $sources[] = $origine;
@@ -52,7 +55,14 @@ foreach ($mobiles as $index => $mobile) {
         $ip[] = $mobile['publicIp'] ?? "Inconnue";
         $installations[] = $mobile['custom2'] ?? "Inconnue"; 
         $etatFichiers[] = $mobile['custom3'] ?? "N/A";
-        $configurations[] = $mobile['configurationId'] ?? "N/A";
+        $configId = $mobile['configurationId'] ?? null;
+        if (isset($configId) && isset($config_map[$configId])) {
+            $configName = $config_map[$configId];
+            $configUrl = urlStrRedirect("mobile/mobile/configurationDetails", array("id" => $configId));
+            $configurations[] = "<a href='{$configUrl}'>{$configName}</a>";
+        } else {
+            $configurations[] = "N/A";
+        }
     } 
     else {
         $numero = "Inconnue";
@@ -67,9 +77,11 @@ foreach ($mobiles as $index => $mobile) {
 
     $col1[] = "<a href='#' class='mobilestatus {$statut}'>{$numero}</a>";
 
-    // Standard QR Code action via MMC action API
-    $actionQr[] = new ActionItem(_T("QR Code", "mobile"), "qrCode", "qr-code", "", "mobile", "mobile");
+    $actionEdit[] = new ActionItem(_T("Edit", "mobile"), "editDevice", "edit", "id", "mobile", "mobile");
+    $actionQr[] = new ActionPopupItem(_T("QR Code", "mobile"), "qrCode", "qr-code", "", "mobile", "mobile");
+    $actionDelete[] = new ActionPopupItem(_T("Delete", "mobile"), "deleteDevice", "delete", "id", "mobile", "mobile");
     $params[] = [
+        'id' => isset($mobile['id']) ? $mobile['id'] : $index,
         'device_number' => $numero,
         'configuration_id' => isset($mobile['configurationId']) ? $mobile['configurationId'] : 1,
     ];
@@ -80,7 +92,7 @@ $count = is_array($mobiles) ? count($mobiles) : 0;
 $count = count($mobiles);
 $filter = "";
 $n = new OptimizedListInfos($col1, _T("Device's name", "mobile"));
-// TODO: adjust AjaxNavBar parameters if needed
+
 $n->setNavBar(new AjaxNavBar($count, $filter, "updateSearchParamform".($actions?'image':'master')));
 $n->setCssIds($ids);
 $n->disableFirstColumnActionLink();
@@ -94,7 +106,9 @@ $n->addExtraInfo($installations, _T("Status", "mobile"));
 // $n->addExtraInfo($etatFichiers, _T("État des fichiers", "mobile"));
 
 // Attach actions
+$n->addActionItemArray($actionEdit);
 $n->addActionItemArray($actionQr);
+$n->addActionItemArray($actionDelete);
 $n->setParamInfo($params);
 
 // $n->setItemCount(count($mobiles));
@@ -103,16 +117,3 @@ $n->start = 0;
 
 $n->display();
 ?>
-<script type="text/javascript">
-jQuery(document).ready(function() {
-    jQuery('li.qr-code a').each(function() {
-        var $link = jQuery(this);
-        var href = $link.attr('href');
-        
-        $link.on('click', function(e) {
-            e.preventDefault();
-            window.open(href, '_blank');
-        });
-    });
-});
-</script>

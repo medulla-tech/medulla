@@ -22,7 +22,8 @@ if (!empty($filter)) {
 // Build arrays for OptimizedListInfos
 $ids = [];
 $names = [];
-$actions = [];
+$actionEdit = [];
+$actionDelete = [];
 $params = [];
 
 foreach ($groups as $index => $group) {
@@ -32,8 +33,18 @@ foreach ($groups as $index => $group) {
     $groupName = $group['name'] ?? _T("Unknown", "mobile");
     $names[] = $groupName;
     
+    // Edit action
+    $actionEdit[] = new ActionItem(
+        _T("Edit", "mobile"),
+        "editGroup",
+        "edit",
+        "group_id",
+        "mobile",
+        "mobile"
+    );
+    
     // Delete action
-    $actions[] = new ActionPopupItem(
+    $actionDelete[] = new ActionPopupItem(
         _T("Delete", "mobile"),
         "deleteGroup",
         "delete",
@@ -56,8 +67,9 @@ $n->setNavBar(new AjaxNavBar($count, $filter, "updateSearchParamform"));
 $n->setCssIds($ids);
 $n->disableFirstColumnActionLink();
 
-// Add delete action
-$n->addActionItemArray($actions);
+// Add edit and delete actions
+$n->addActionItemArray($actionEdit);
+$n->addActionItemArray($actionDelete);
 $n->setParamInfo($params);
 
 $n->display();

@@ -8505,17 +8505,6 @@ class XmppMasterDatabase(DatabaseHelper):
         return False
 
     @DatabaseHelper._sessionm
-    def getPresenceid(self, session, id, enabled=1):
-        exists = (
-            session.query(Machines.id)
-            .filter(
-                and_(Machines.id == id, Machines.enabled == enabled)
-            )
-            .exists()
-        )
-        return session.query(exists).scalar()
-
-    @DatabaseHelper._sessionm
     def getPresenceuuids(self, session, uuids):
         if isinstance(uuids, str):
             uuids = [uuids]
