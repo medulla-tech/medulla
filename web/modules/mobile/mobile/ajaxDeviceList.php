@@ -15,10 +15,6 @@ if (is_array($configurations_data)) {
         }
     }
 }
-    
-$configurationId = 1;
-$configurationJson = xmlrpc_get_hmdm_configuration_by_id($configurationId);
-$qrCode = $configurationJson;
 
 $ids = $col1 = $statusIndicators = $permissionIndicators = $installationIndicators = $filesIndicators = $configurations = $actions = [];
 $actionQr = [];
