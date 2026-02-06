@@ -90,7 +90,12 @@ p {
 
 .path {
   background-color: white;
-  padding: 10px 0 10px 30px;
+  padding: 12px 30px 12px 20px;
+  min-height: 42px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  margin: 0;
 }
 
 #wrapper {
@@ -129,7 +134,7 @@ p {
   align-items: center;
   font-size: 12px;
   color: #666;
-  height: 32px;
+  height: 42px;
   z-index: 10;
 }
 
@@ -146,26 +151,78 @@ p {
 #header #menuTopRight ul li {
   display: inline-flex;
   align-items: center;
+  border-radius: 9px;
+  padding: 0;
+  margin: 10px 0;
 }
 
 #header #menuTopRight ul li a {
-  font-size: 11px;
-  color: #666;
-  padding: 6px 12px;
+  font-size: 12px;
+  padding: 8px 16px;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
-  transition: color 0.2s ease;
+  gap: 8px;
+  border-radius: 9px;
+  transition: all 0.2s ease;
+  height: 18px;
+  line-height: 18px;
 }
 
-#header #menuTopRight ul li a:hover {
-  color: #25607d;
+/* Expert mode button - light background style */
+#header #menuTopRight ul li#expertmode {
+  background-color: rgba(58, 143, 168, 0.12);
+  border: 1px solid transparent;
 }
 
 #header #menuTopRight ul li#expertmode a {
-  border-right: 1px solid #ccc;
-  padding-right: 15px;
-  margin-right: 10px;
+  color: #3a8fa8;
+  font-weight: 600;
+}
+
+#header #menuTopRight ul li#expertmode:hover {
+  background-color: rgba(58, 143, 168, 0.2);
+}
+
+#header #menuTopRight ul li#expertmode:hover a {
+  color: #fff;
+  background-color: #3a8fa8;
+}
+
+/* Disconnect button - outlined style with icon */
+#header #menuTopRight ul li#disconnect {
+  background-color: #fff;
+  border: 1px solid #3a8fa8;
+}
+
+#header #menuTopRight ul li#disconnect a {
+  color: #3a8fa8;
+  font-weight: 600;
+}
+
+#header #menuTopRight ul li#disconnect a::before {
+  content: '';
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  background-image: url('../img/actions/logout.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  filter: invert(52%) sepia(53%) saturate(405%) hue-rotate(145deg) brightness(91%) contrast(87%);
+}
+
+#header #menuTopRight ul li#disconnect:hover {
+  background-color: #3a8fa8;
+  border-color: #3a8fa8;
+}
+
+#header #menuTopRight ul li#disconnect:hover a {
+  color: #fff;
+}
+
+#header #menuTopRight ul li#disconnect:hover a::before {
+  filter: brightness(0) invert(1);
 }
 
 /* ---------------------------------------- */

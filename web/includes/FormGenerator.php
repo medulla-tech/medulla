@@ -688,7 +688,7 @@ class DateTimeTpl extends AbstractTpl {
     {
         // Display text input
         $value = (isset($arrParam['value'])) ? $arrParam["value"] : '';
-        print '<input style="width:110px" name="' . $this->name . '" id="' . $this->name . '" type="text" value="' . $value . '" readonly=1 />';
+        print '<input style="width:130px" name="' . $this->name . '" id="' . $this->name . '" type="text" value="' . $value . '" readonly=1 />';
 
         if (!isset($GLOBALS["__JSDATETIME_SOURCED__"])) { // to avoid double-sourcing
             $GLOBALS["__JSDATETIME_SOURCED__"] = 1;
