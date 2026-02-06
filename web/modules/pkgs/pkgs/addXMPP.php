@@ -34,15 +34,18 @@ if(isset($_GET["action"]) && $_GET["action"] =="edit")
     $json = json_decode($json,true);
 }
 
-
-$f->add(new TrFormElement("",new SpanElement('<div style="width:100%; display:flex;">
-    <div style="width:40%;position:sticky;top:10px;align-self: flex-start;">
-        <h1>'._T('Available Actions', 'pkgs').'</h1>
-        <ul id="available-actions" style="background-color:rgba(158,158,158,0.27);"></ul>
-    </div>'.'<div id="workflow" style="width:95%">
-        <h1>'._T('Deployment Workflow', 'pkgs').'</h1>
-        <ul id="current-actions" style="min-height:30px;background-color:rgba(158,158,158,0.27);">
-        </ul>
+$f->add(new TrFormElement("",new SpanElement('<div class="workflow-section">
+    <span class="pkgs-title">'._T("Workflow", "pkgs").'</span>
+    <div class="workflow-builder">
+        <div class="workflow-panel workflow-panel-available">
+            <h3>'._T('Available Actions', 'pkgs').'</h3>
+            <ul id="available-actions"></ul>
+        </div>
+        <div class="workflow-panel workflow-panel-current">
+            <h3>'._T('Deployment Workflow', 'pkgs').'</h3>
+            <ul id="current-actions">
+            </ul>
+        </div>
     </div>
 </div>',"pkgs")));
 

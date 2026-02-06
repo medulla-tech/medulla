@@ -62,7 +62,7 @@ $idclass =  "#".$tableToggle.' tr.'.$toggleable;
                    '._T("Information","pkgs").'
                 </td>
                 <td width="25%">
-                <textarea name="comment" cols="5" rows="2">';
+                <textarea name="comment">';
 
                 echo (isset($comment)) ? $comment : _T("Your log comments !","pkgs");
 

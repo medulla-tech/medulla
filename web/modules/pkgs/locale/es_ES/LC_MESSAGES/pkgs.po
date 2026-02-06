@@ -661,6 +661,22 @@ msgstr "Escriba 3 caracteres para la sugerencia.<br>\n            El comodín es
 msgid "Query"
 msgstr "Consulta"
 
+#: modules/pkgs/pkgs/add.php:232
+msgid "x.x.x"
+msgstr "x.x.x"
+
+#: modules/pkgs/pkgs/add.php:233
+msgid "Enter a description"
+msgstr "Ingrese una descripción"
+
+#: modules/pkgs/pkgs/add.php:303
+msgid "in ko, 0 = unlimited"
+msgstr "en ko, 0 = ilimitado"
+
+#: modules/pkgs/pkgs/addXMPP.php:38
+msgid "Workflow"
+msgstr "Workflow"
+
 #: modules/pkgs/includes/query.php:78
 msgid "Associate inventory"
 msgstr "Inventario asociado"
@@ -827,8 +843,8 @@ msgid "Name"
 msgstr "Nombre"
 
 #: modules/pkgs/pkgs/add.php:231
-msgid "<fill_package_name>"
-msgstr "<fill_package_name>"
+msgid "Enter package name"
+msgstr "Ingrese el nombre del paquete"
 
 #: modules/pkgs/pkgs/add.php:233
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:72
@@ -917,7 +933,7 @@ msgstr "Dependencias disponibles"
 
 #: modules/pkgs/pkgs/add.php:349 modules/pkgs/pkgs/edit.php:481
 msgid "search by name ..."
-msgstr "buscar por nombre ..."
+msgstr "Buscar por nombre"
 
 #: modules/pkgs/pkgs/add.php:387 modules/pkgs/pkgs/editRule.php:82
 #: modules/pkgs/pkgs/addRule.php:77

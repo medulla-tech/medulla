@@ -3842,7 +3842,7 @@ class Form extends HtmlContainer
         foreach ($this->options as $key => $value) {
             $str .= " $key=\"$value\"";
         }
-        $ret = "<form$str>";
+        $ret = "<form class=\"mmc-form\"$str>";
         if (isset($this->summary)) {
             $ret = "<p>" . $this->summary . "</p>\n" . $ret;
         }
@@ -4091,7 +4091,7 @@ class Table extends HtmlContainer
 
     public function begin()
     {
-        return '<table cellspacing="0">';
+        return '<table class="mmc-form-table" cellspacing="0">';
     }
 
     public function end()
