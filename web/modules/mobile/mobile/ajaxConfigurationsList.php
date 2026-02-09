@@ -16,6 +16,7 @@ if (!empty($filter)) {
 $ids = $col1 = $descriptions = [];
 $actionDelete = [];
 $actionModify = [];
+$actionDuplicate = [];
 $params = [];
 
 foreach ($configs as $index => $cfg) {
@@ -30,6 +31,7 @@ foreach ($configs as $index => $cfg) {
     $descriptions[] = $desc;
 
     $actionModify[] = new ActionItem(_T("Modify", "mobile"), "configurationDetails", "edit", "id", "mobile", "mobile");
+    $actionDuplicate[] = new ActionItem(_T("Duplicate", "mobile"), "duplicateConfiguration", "duplicatescript", "id", "mobile", "mobile");
     $actionDelete[] = new ActionPopupItem(_T("Delete Configuration", "mobile"), "deleteConfiguration", "delete", "", "mobile", "mobile");
 
     $params[] = [
@@ -48,6 +50,7 @@ $n->setNavBar(new AjaxNavBar($count, $filter));
 
 $n->addExtraInfo($descriptions, _T("Description", "mobile"));
 $n->addActionItemArray($actionModify);
+$n->addActionItemArray($actionDuplicate);
 $n->addActionItemArray($actionDelete);
 $n->setParamInfo($params);
 

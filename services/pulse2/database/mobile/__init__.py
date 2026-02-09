@@ -1668,6 +1668,44 @@ class MobileDatabase(DatabaseHelper):
             logging.getLogger().error(f"Error updating configuration {config_id}: {e}")
             return None
 
+    def copyHmdmConfiguration(self, id, name, description):
+        """
+        Copy/duplicate an HMDM configuration with a new name.
+        
+        :param id: Original configuration ID to copy
+        :param name: New configuration name
+        :param description: New configuration description
+        :return: Response from HMDM or None on error
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Failed to authenticate for copying configuration.")
+            return None
+
+        url = f"{self.BASE_URL}/private/configurations/copy"
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {hmtoken}"
+        }
+
+        payload = {
+            "id": int(id),
+            "name": name,
+            "description": description
+        }
+
+        logging.getLogger().info(f"Copying configuration {id} with payload: {json.dumps(payload, indent=2)}")
+
+        try:
+            resp = requests.put(url, headers=headers, json=payload)
+            resp.raise_for_status()
+            result = resp.json()
+            logging.getLogger().info(f"Configuration copied successfully: {json.dumps(result, indent=2)}")
+            return {"status": "OK", "data": result}
+        except Exception as e:
+            logging.getLogger().error(f"Error copying configuration {id}: {e}")
+            return {"status": "ERROR", "message": str(e)}
+
     def deleteHmdmDeviceById(self, device_id: int):
         """
         Delete a device from HMDM by its ID.

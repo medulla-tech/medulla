@@ -47,6 +47,9 @@ def getHmdmConfigurationById(id):
 def updateHmdmConfiguration(config_data):
     return MobileDatabase().updateHmdmConfiguration(config_data)
 
+def copyHmdmConfiguration(id, name, description):
+    return MobileDatabase().copyHmdmConfiguration(id, name, description)
+
 def deleteHmdmDeviceById(id):
     return MobileDatabase().deleteHmdmDeviceById(id)
 
