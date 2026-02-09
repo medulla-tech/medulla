@@ -27,10 +27,10 @@ logger = logging.getLogger()
 class MobileDatabase(DatabaseHelper):
     is_activated = False
     session = None
-    # Headwind REST API base (TO DO: consider moving to config)
-    BASE_URL = "http://localhost/hmdm/rest"
-    login = "admin"
-    password = "admin"
+    # Headwind REST API base - configured from config file
+    BASE_URL = None
+    login = None
+    password = None
 
 
     def db_check(self):
@@ -53,6 +53,16 @@ class MobileDatabase(DatabaseHelper):
             return None
 
         self.config = config
+
+        # Load HMDM API configuration from config - fail if not present
+        if not hasattr(config, 'hmdm_url') or not hasattr(config, 'hmdm_login') or not hasattr(config, 'hmdm_password'):
+            logger.error("HMDM configuration missing in mobile.ini. Please add [hmdm] section with url, login, and password.")
+            return False
+        
+        self.BASE_URL = config.hmdm_url
+        self.login = config.hmdm_login
+        self.password = config.hmdm_password
+        logger.info(f"HMDM API configured: {self.BASE_URL}")
 
         try:
             # Create a database engine using the provided configuration
