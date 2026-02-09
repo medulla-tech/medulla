@@ -246,6 +246,11 @@ $pageDeleteConfiguration->setFile("modules/mobile/mobile/deleteConfiguration.php
 $pageDeleteConfiguration->setOptions(array("AJAX" => false, "visible" => false));
 $submod->addPage($pageDeleteConfiguration);
 
+$pageDuplicateConfiguration = new Page("duplicateConfiguration", _T('Duplicate configuration', 'mobile'));
+$pageDuplicateConfiguration->setFile("modules/mobile/mobile/duplicateConfiguration.php");
+$pageDuplicateConfiguration->setOptions(array("visible" => false));
+$submod->addPage($pageDuplicateConfiguration);
+
 ################################
 # Groups pages
 ################################
