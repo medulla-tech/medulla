@@ -346,7 +346,7 @@ class ActionItem
      */
     public function displayWithNoRight($param, $extraParams = array())
     {
-        echo "<li class=\"" . $this->classCss . "\" style=\"opacity: 0.30;\">";
+        echo "<li class=\"" . $this->classCss . " inactive\">";
         echo "<a title=\"" . $this->desc . "\" href=\"#\" onclick='return false;'>&nbsp;</a>";
         echo "</li>";
     }
@@ -890,7 +890,7 @@ class EmptyActionItem extends ActionItem
 
     public function display($param = null, $extraParams = array())
     {
-        echo "<li class=\"" . $this->classCss . "\">";
+        echo "<li class=\"" . $this->classCss . " inactive\">";
         echo "<a title=\"" . $this->desc . "\" href=\"#\" ";
         echo "onclick=\"return false;\">&nbsp;</a>";
         print "</li>";

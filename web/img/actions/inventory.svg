@@ -1,13 +1,8 @@
-<svg version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 141.7 141.7" style="enable-background:new 0 0 141.7 141.7;" xml:space="preserve">
-<path d="M46.9299 113.4H93.8599" stroke="#25607E" stroke-width="3.9851" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M79.6801 78.73H61.1101V113.4H79.6801V78.73Z" fill="white" stroke="#25607E" stroke-width="3.9851" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M114.78 101.45H26.95C22.84 101.45 19.52 98.1201 19.52 94.0101V35.7701C19.52 31.6601 22.85 28.3301 26.95 28.3301H114.79C118.9 28.3301 122.22 31.6601 122.22 35.7701V94.0101C122.22 98.1201 118.89 101.45 114.78 101.45Z" fill="#8CB63C" stroke="#25607E" stroke-width="3.9851" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M27.9401 90.32C27.8601 90.32 27.8 90.26 27.8 90.18V38.83C27.8 36.72 29.5101 35 31.6201 35H110.01C112.12 35 113.83 36.71 113.83 38.82V90.17C113.83 90.25 113.77 90.31 113.69 90.31H27.9401V90.32Z" fill="white" stroke="#25607E" stroke-width="3.9006" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M66.4299 95.8701H74.3799" stroke="#25607E" stroke-width="3.9851" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M39 47H80.14" stroke="#25607E" stroke-width="3.9851" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M39 54.8699H57.13" stroke="#25607E" stroke-width="3.9851" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M80.14 62.74H39" stroke="#25607E" stroke-width="3.9851" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M39 71H80.14" stroke="#25607E" stroke-width="3.9851" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M39 79.25H57.13" stroke="#25607E" stroke-width="3.9851" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Calque_1" xmlns="http://www.w3.org/2000/svg" baseProfile="tiny" version="1.2" viewBox="0 0 141.7 141.7">
+  <!-- Generator: Adobe Illustrator 30.2.0, SVG Export Plug-In . SVG Version: 2.1.1 Build 105)  -->
+  <path d="M114,17.9H27.7c-8.4,0-15.2,6.8-15.2,15.2v53.9c0,8.4,6.8,15.2,15.2,15.2h38.7v12.6h-17.1c-2.5,0-4.5,2-4.5,4.5s2,4.5,4.5,4.5h43.1c2.5,0,4.5-2,4.5-4.5s-2-4.5-4.5-4.5h-17v-12.6h38.6c8.4,0,15.2-6.8,15.2-15.2v-53.9c0-8.4-6.8-15.2-15.2-15.2ZM120.2,87c0,3.4-2.8,6.2-6.2,6.2H27.7c-3.4,0-6.2-2.8-6.2-6.2v-53.9c0-3.4,2.8-6.2,6.2-6.2h86.3c3.4,0,6.2,2.8,6.2,6.2v53.9Z" fill="#dadcdd"/>
+  <path d="M38.6,43h16.2c2.5,0,4.5-2,4.5-4.5s-2-4.5-4.5-4.5h-16.2c-2.5,0-4.5,2-4.5,4.5s2,4.5,4.5,4.5Z" fill="#dadcdd"/>
+  <path d="M103.3,55.5H38.6c-2.5,0-4.5,2-4.5,4.5s2,4.5,4.5,4.5h64.7c2.5,0,4.5-2,4.5-4.5s-2-4.5-4.5-4.5Z" fill="#dadcdd"/>
+  <path d="M103.3,77.1H38.6c-2.5,0-4.5,2-4.5,4.5s2,4.5,4.5,4.5h64.7c2.5,0,4.5-2,4.5-4.5s-2-4.5-4.5-4.5Z" fill="#dadcdd"/>
 </svg>

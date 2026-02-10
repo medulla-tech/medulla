@@ -1,12 +1,6 @@
-<svg version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 141.7 141.7" style="enable-background:new 0 0 141.7 141.7;" xml:space="preserve">
-<path d="M77.06 18H23V123.9H97.44V43.34H77.07V18H77.06Z" fill="white" stroke="#25607E" stroke-width="4.4403" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M77.06 18V43.34H97.44L77.15 18H77.06Z" fill="#8CB63C" stroke="#25607E" stroke-width="4.4403" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M82.83 56.97H37.61" stroke="#25607E" stroke-width="4.4403" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M82.83 67.03H37.61" stroke="#25607E" stroke-width="4.4403" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M82.83 77.08H37.61" stroke="#25607E" stroke-width="4.4403" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M82.83 87.14H37.61" stroke="#25607E" stroke-width="4.4403" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M82.83 97.19H37.61" stroke="#25607E" stroke-width="4.4403" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M82.83 107.25H37.61" stroke="#25607E" stroke-width="4.4403" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M90.0088 104.34V78.5688H115.78C118.514 78.5688 120.73 76.3526 120.73 73.6188V67.0612C120.73 64.3274 118.514 62.1112 115.78 62.1112H90.0088V36.34C90.0088 33.6062 87.7926 31.39 85.0588 31.39H78.5012C75.7674 31.39 73.5512 33.6062 73.5512 36.34V62.1112H47.78C45.0462 62.1112 42.83 64.3274 42.83 67.0612V73.6188C42.83 76.3526 45.0462 78.5688 47.78 78.5688H73.5512V104.34C73.5512 107.074 75.7674 109.29 78.5012 109.29H85.0588C87.7926 109.29 90.0088 107.074 90.0088 104.34Z" fill="#8BB53C" stroke="#25607E" stroke-width="3.9"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Calque_1" xmlns="http://www.w3.org/2000/svg" baseProfile="tiny" version="1.2" viewBox="0 0 141.7 141.7">
+  <!-- Generator: Adobe Illustrator 30.2.0, SVG Export Plug-In . SVG Version: 2.1.1 Build 105)  -->
+  <path d="M118,32.2l-18.3-18.3c-3.2-3.2-7.4-4.9-11.9-4.9h-40.9c-8.1,0-14.7,6.6-14.7,14.7v54.8c0,2.5,2,4.5,4.5,4.5s4.5-2,4.5-4.5V23.7c0-3.1,2.6-5.7,5.7-5.7h36.4v21.1c0,5.3,4.3,9.6,9.6,9.6h21.1v56.9c0,3.1-2.6,5.7-5.7,5.7h-34.3c-2.5,0-4.5,2-4.5,4.5s2,4.5,4.5,4.5h34.3c8.1,0,14.7-6.6,14.7-14.7v-61.4c0-4.5-1.8-8.8-4.9-11.9ZM92.2,39v-19.7c.4.3.7.6,1.1.9l18.3,18.3c.3.3.6.7.9,1.1h-19.7c-.4,0-.6-.3-.6-.6Z" fill="#dadcdd"/>
+  <path d="M59.6,102h-8.1c-1.2,0-2-.8-2-2v-8.1c0-2.2-1.8-4-4-4h-4c-2.2,0-4,1.8-4,4v8.1c0,1.2-.8,2-2,2h-8.1c-2.2,0-4,1.8-4,4v4c0,2.2,1.8,4,4,4h8.1c1.2,0,2,.8,2,2v8.1c0,2.2,1.8,4,4,4h4c2.2,0,4-1.8,4-4v-8.1c0-1.2.8-2,2-2h8.1c2.2,0,4-1.8,4-4v-4c0-2.2-1.8-4-4-4Z" fill="#dadcdd"/>
 </svg>
