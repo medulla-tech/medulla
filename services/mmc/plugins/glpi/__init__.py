@@ -29,6 +29,7 @@ from mmc.plugins.glpi.computers import GlpiComputers
 from mmc.plugins.glpi.provisioning import GlpiProvisioner
 from pulse2.managers.location import ComputerLocationManager
 from mmc.plugins.glpi.location import GlpiLocation
+from mmc.plugins.mobile import getHmdmDevicesOsCount #hmdm
 import inspect
 
 from pulse2.version import getVersion, getRevision  # pyflakes.ignore
@@ -54,7 +55,7 @@ def getApiVersion():
 
 
 def activate():
-    config = GlpiConfig("glpi")
+    config = GlpiConfig("glpi", None, "database")
     logger = logging.getLogger()
     if config.disable:
         logger.warning("Plugin glpi: disabled by configuration.")
@@ -130,7 +131,9 @@ class RpcProxy(RpcProxyI):
     @with_optional_xmpp_context
     def get_os_for_dashboard(self, ctx=None):
         entities = ctx.get_session_info()['mondict']['liste_entities_user']
-        return xmlrpcCleanup(Glpi().get_os_for_dashboard(entities))
+        os_data = Glpi().get_os_for_dashboard(entities)
+        os_data.extend(getHmdmDevicesOsCount()) #hmdm
+        return xmlrpcCleanup(os_data)
 
     def getMachineNumberByState(self):
         ctx = self.currentContext
