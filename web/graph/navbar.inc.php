@@ -91,14 +91,6 @@ if ($_SESSION["login"]=='root') {
   <!--menuTopRight-->
   <div id="menuTopRight">
     <ul>
-    <?php
-    if (isExpertMode()) {
-        $modeLabel = _("Standard Mode");
-    } else {
-        $modeLabel = _("Expert Mode");
-    }
-    ?>
-      <li id="expertmode"><a href="<?php echo $root ?>includes/switchmode.php"><?php echo $modeLabel; ?></a></li>
       <?php echo "<li id=\"disconnect\"><a title=\""._("logout")."\" href=\"".$root."logout/index.php\"";
           echo " onclick=\"showPopup(event,'".$root."logout/index.php'); event.returnValue=false; return false;\">";
           echo _("Logout").' '.$_SESSION['login'];
