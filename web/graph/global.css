@@ -346,6 +346,8 @@ p {
   grid-row: 1;
   /* Flex fallback */
   order: 1;
+  /* Pour positionnement absolu des actions */
+  position: relative;
 }
 
 .sidebar-header {
@@ -440,18 +442,29 @@ p {
   grid-column: 2;
 }
 
-.section-content > ul.action {
+.section-content > ul.action,
+#section > ul.action {
   display: flex;
   flex-wrap: wrap;
-  gap: 5px;
-  margin: 0 0 10px 15px;
+  gap: 6px;
+  margin: 0;
   padding: 0;
-  float: right;
+  position: absolute;
+  top: -5px;
+  right: 0;
 }
 
-.section-content > ul.action li {
+.section-content > ul.action li,
+#section > ul.action li {
   list-style: none;
-  float: none;
+  float: none !important;
+  margin: 0 !important;
+  padding: 0;
+}
+
+.section-content > ul.action li:empty,
+#section > ul.action li:empty {
+  display: none;
 }
 
 #container {
