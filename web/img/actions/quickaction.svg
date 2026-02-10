@@ -1,48 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 26.5.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 141.73 141.73" style="enable-background:new 0 0 141.73 141.73;" xml:space="preserve">
-<style type="text/css">
-	.st0{fill:none;stroke:#25607E;stroke-width:3.9851;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
-	.st1{fill:#8CB63C;stroke:#25607E;stroke-width:3.9851;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
-</style>
-<g>
-	<g>
-		<g>
-			<line class="st0" x1="41.08" y1="56.46" x2="28.32" y2="51.77"/>
-			<line class="st0" x1="21.45" y1="49.24" x2="18.62" y2="48.2"/>
-		</g>
-		<g>
-			<line class="st0" x1="40.23" y1="73.06" x2="28.32" y2="74.23"/>
-			<line class="st0" x1="19.41" y1="75.12" x2="16.41" y2="75.41"/>
-		</g>
-		<g>
-			<line class="st0" x1="44.76" y1="89.12" x2="32.95" y2="98.42"/>
-			<line class="st0" x1="28.32" y1="102.06" x2="25.95" y2="103.92"/>
-		</g>
-		<g>
-			<line class="st0" x1="48.58" y1="42.29" x2="38.02" y2="31.43"/>
-			<line class="st0" x1="34" y1="27.29" x2="31.89" y2="25.12"/>
-		</g>
-	</g>
-	<g>
-		<g>
-			<line class="st0" x1="100.65" y1="72.58" x2="114.6" y2="77.71"/>
-			<line class="st0" x1="120.28" y1="79.8" x2="123.12" y2="80.84"/>
-		</g>
-		<g>
-			<line class="st0" x1="101.5" y1="55.99" x2="114.6" y2="54.69"/>
-			<line class="st0" x1="122.32" y1="53.93" x2="125.32" y2="53.63"/>
-		</g>
-		<g>
-			<line class="st0" x1="96.97" y1="39.92" x2="106.98" y2="32.05"/>
-			<line class="st0" x1="113.41" y1="26.99" x2="115.78" y2="25.12"/>
-		</g>
-		<g>
-			<line class="st0" x1="93.15" y1="86.76" x2="104.49" y2="98.42"/>
-			<line class="st0" x1="107.73" y1="101.76" x2="109.84" y2="103.92"/>
-		</g>
-	</g>
-	<polygon class="st1" points="73.33,59.83 84.28,32.11 64.68,31.43 51.72,76.09 67.94,75.91 59.67,116.61 93.01,59.64 	"/>
-</g>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Calque_1" xmlns="http://www.w3.org/2000/svg" baseProfile="tiny" version="1.2" viewBox="0 0 141.7 141.7">
+  <!-- Generator: Adobe Illustrator 30.2.0, SVG Export Plug-In . SVG Version: 2.1.1 Build 105)  -->
+  <path d="M46.7,133.2c-1.4,0-2.8-.4-4.1-1.4,0,0,0,0-.1,0-2-1.6-2.8-4.3-2.1-6.8.1-.4.3-.8.5-1.1l25-40.5h-27.6c-4.7,0-8.6-3.8-8.6-8.6s.7-3.9,2-5.4c0,0,.1-.2.2-.2L88.3,10.7c2.3-2.5,6.1-2.8,8.9-.8,0,0,0,0,.1,0,2,1.6,2.8,4.3,2.1,6.8-.1.4-.2.7-.4,1l-23.2,40h27.7c4.7,0,8.6,3.8,8.6,8.6s-.7,3.9-2,5.4c0,0-.2.2-.3.3l-58.2,58.8c-1.3,1.4-3,2.1-4.8,2.1ZM44.8,125s0,0,0,0c0,0,0,0,0,0ZM39.4,74.2h27.4c1,0,1.9.2,2.5.4.2,0,.3,0,.5.1,2.2.8,4,2.4,4.9,4.5.9,2.1,1,4.4.2,6.5,0,.3-.2.5-.4.7l-14,22.7,41.9-42.3h-27.4c-1,0-1.9-.2-2.5-.4-.2,0-.3,0-.5-.1-2.2-.8-4-2.4-4.9-4.5-.9-2.1-1-4.4-.2-6.5,0-.2.2-.4.3-.6l13.4-23.1-41.2,42.6ZM95,16.7s0,0,0,0c0,0,0,0,0,0Z" fill="#dadcdd"/>
 </svg>

@@ -1,21 +1,5 @@
-<svg version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 141.7 141.7" style="enable-background:new 0 0 141.7 141.7;" xml:space="preserve">
-<path d="M68.9433 26H23V116H86.2635V47.5354H68.9518V26H68.9433Z" fill="white" stroke="#25607E" stroke-width="4.4403" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M68.9434 26V47.5354H86.2635L69.0199 26H68.9434Z" fill="#8CB63C" stroke="#25607E" stroke-width="4.4403" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M73.847 59.1189H35.4164Z" fill="black"/>
-<path d="M73.847 59.1189H35.4164" stroke="#25607E" stroke-width="4.4403" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M73.847 67.6686H35.4164Z" fill="black"/>
-<path d="M73.847 67.6686H35.4164" stroke="#25607E" stroke-width="4.4403" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M73.847 76.2096H35.4164Z" fill="black"/>
-<path d="M73.847 76.2096H35.4164" stroke="#25607E" stroke-width="4.4403" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M73.847 84.7593H35.4164Z" fill="black"/>
-<path d="M73.847 84.7593H35.4164" stroke="#25607E" stroke-width="4.4403" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M73.847 93.3003H35.4164Z" fill="black"/>
-<path d="M73.847 93.3003H35.4164" stroke="#25607E" stroke-width="4.4403" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M73.847 101.85H35.4164Z" fill="black"/>
-<path d="M73.847 101.85H35.4164" stroke="#25607E" stroke-width="4.4403" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M49.0991 56.5115C49.0991 56.4987 49.183 56.4987 49.1836 56.4987C49.1837 56.4987 49.1837 56.4987 49.1837 56.4987H92.6296C94.4043 56.4987 95.8413 56.7171 95.8413 56.9869V67.0587C95.8413 67.3285 94.4043 67.5468 92.6296 67.5468H49.1836C49.1036 67.5468 49.0994 67.5353 49.0991 67.5341C49.0991 67.534 49.0991 67.5339 49.0991 67.5339V56.5115Z" fill="#8BB53C" stroke="#24607E" stroke-width="3.9006" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M112.888 62.8933L97.6666 71.6812C96.9666 72.0853 96.0916 71.5801 96.0916 70.7718V53.1962C96.0916 52.3879 96.9666 51.8827 97.6666 52.2868L112.888 61.0747C113.588 61.4788 113.588 62.4892 112.888 62.8933Z" fill="#8BB53C" stroke="#24607E" stroke-width="3.9"/>
-<path d="M113.263 102.301C113.263 102.314 113.18 102.314 113.179 102.314C113.179 102.314 113.179 102.314 113.179 102.314L69.733 102.314C67.9582 102.314 66.5212 102.095 66.5212 101.825V91.7535C66.5212 91.4837 67.9582 91.2654 69.733 91.2654H113.179C113.259 91.2654 113.263 91.2769 113.263 91.2782C113.263 91.2782 113.263 91.2783 113.263 91.2784V102.301Z" fill="#8BB53C" stroke="#24607E" stroke-width="3.9006" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M49.475 95.9188L64.6959 87.131C65.3959 86.7268 66.2709 87.232 66.2709 88.0403V105.616C66.2709 106.424 65.3959 106.929 64.6959 106.525L49.475 97.7375C48.775 97.3333 48.775 96.323 49.475 95.9188Z" fill="#8BB53C" stroke="#24607E" stroke-width="3.9"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Calque_1" xmlns="http://www.w3.org/2000/svg" baseProfile="tiny" version="1.2" viewBox="0 0 141.7 141.7">
+  <!-- Generator: Adobe Illustrator 30.2.0, SVG Export Plug-In . SVG Version: 2.1.1 Build 105)  -->
+  <path d="M110.6,39.1l-18-18c-3.1-3.1-7.4-4.9-11.8-4.9h-40.1c-8,0-14.5,6.5-14.5,14.5v35.1c0,2.5,2,4.5,4.5,4.5s4.5-2,4.5-4.5V30.7c0-3.1,2.4-5.5,5.5-5.5h35.6v20.5c0,5.2,4.3,9.5,9.5,9.5h20.7v55.7c0,3.1-2.4,5.5-5.5,5.5h-60.1c-3.1,0-5.5-2.4-5.5-5.5v-15c0-3.1,2.4-5.5,5.5-5.5h23.9l-7.2,7.2c-1.8,1.8-1.8,4.6,0,6.4.9.9,2,1.3,3.2,1.3s2.3-.4,3.2-1.3l14.1-14.1c1.4-.8,2.4-2.2,2.4-3.9s-.5-2.4-1.4-3.2c0,0,0,0,0,0l-15-15c-1.8-1.8-4.6-1.8-6.4,0-1.8,1.8-1.8,4.6,0,6.4l7.5,7.5h-24.2c-8,0-14.5,6.5-14.5,14.5v15c0,8,6.5,14.5,14.5,14.5h60.1c8,0,14.5-6.5,14.5-14.5v-60.1c0-4.4-1.7-8.6-4.9-11.8ZM85.3,45.8v-19c.3.2.6.5.9.8l18,18c.2.2.5.5.7.8h-19.1c-.2,0-.5-.3-.5-.5Z" fill="#dadcdd"/>
 </svg>

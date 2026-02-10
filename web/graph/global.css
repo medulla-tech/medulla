@@ -3057,4 +3057,44 @@ ul.roACL {
   margin-left: 10px;
 }
 
+/* ---------------------------------------- */
+/* Action Icons Colors                      */
+/* ---------------------------------------- */
+
+/* Active action icons - green #8CB63C */
+ul.action li a,
+td.action ul.action li a {
+  filter: brightness(0) saturate(100%) invert(65%) sepia(52%) saturate(456%) hue-rotate(43deg) brightness(95%) contrast(89%);
+  transition: filter 0.15s ease;
+}
+
+ul.action li a:hover,
+td.action ul.action li a:hover {
+  filter: brightness(0) saturate(100%) invert(45%) sepia(70%) saturate(600%) hue-rotate(43deg) brightness(90%) contrast(100%);
+}
+
+/* Row hover - slightly darker green */
+tr:hover ul.action li a,
+tr:hover td.action ul.action li a {
+  filter: brightness(0) saturate(100%) invert(55%) sepia(60%) saturate(500%) hue-rotate(43deg) brightness(92%) contrast(92%);
+}
+
+tr:hover ul.action li a:hover,
+tr:hover td.action ul.action li a:hover {
+  filter: brightness(0) saturate(100%) invert(40%) sepia(75%) saturate(650%) hue-rotate(43deg) brightness(88%) contrast(100%);
+}
+
+/* Inactive action icons - light gray */
+ul.action li.inactive a,
+td.action ul.action li.inactive a {
+  filter: brightness(0) saturate(100%) invert(75%) sepia(0%) saturate(0%);
+  opacity: 0.5;
+}
+
+ul.action li.inactive a:hover,
+td.action ul.action li.inactive a:hover {
+  filter: brightness(0) saturate(100%) invert(50%) sepia(0%) saturate(0%);
+  opacity: 0.8;
+}
+
 
