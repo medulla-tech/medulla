@@ -86,7 +86,7 @@ def activate():
     it is ready to operate.
     """
     logger = logging.getLogger()
-    config = xmppMasterConfig("xmppmaster")
+    config = xmppMasterConfig("xmppmaster", None, "database")
     if config.disable:
         logger.warning("Plugin xmppmaster: disabled by configuration.")
         return False

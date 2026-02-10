@@ -57,7 +57,7 @@ def activate():
     it is ready to operate.
     """
     logger = logging.getLogger()
-    config = KioskConfig("kiosk")
+    config = KioskConfig("kiosk", None, "database")
 
     # Registering KioskComputers in ComputerManager
     # ComputerManager().register('kiosk', KioskComputers)

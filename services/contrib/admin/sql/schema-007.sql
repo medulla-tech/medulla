@@ -28,7 +28,7 @@ START TRANSACTION;
 USE admin;
 
 -- ====================================================================
--- Création de la table glpi_conf
+-- GLPI CONF 
 -- ====================================================================
 
 CREATE TABLE IF NOT EXISTS glpi_conf (
@@ -62,9 +62,6 @@ CREATE TABLE IF NOT EXISTS glpi_conf (
 )
 COMMENT='Table de gestion des paramètres de configuration GLPI pour Medulla';
 
--- ====================================================================
--- Insertion des paramètres dans la table glpi_conf
--- ====================================================================
 
 INSERT INTO glpi_conf (section, nom, activer, type, valeur, valeur_defaut, description) VALUES
 ('main', 'disable', 1, 'booleen', '0', '0', 'Désactiver le plugin GLPI (0=actif, 1=inactif)'),
@@ -112,9 +109,6 @@ ON DUPLICATE KEY UPDATE
     valeur_defaut = VALUES(valeur_defaut),
     description = VALUES(description);
 
--- ====================================================================
--- Création de la table glpi_conf_version
--- ====================================================================
 
 CREATE TABLE IF NOT EXISTS glpi_conf_version (
     id INT AUTO_INCREMENT PRIMARY KEY
@@ -147,9 +141,6 @@ CREATE TABLE IF NOT EXISTS glpi_conf_version (
 )
 COMMENT='Table de versionnage des paramètres de configuration GLPI pour Medulla';
 
--- ====================================================================
--- Insertion des paramètres dans la table glpi_conf_version
--- ====================================================================
 
 INSERT INTO glpi_conf_version (section, nom, activer, type, valeur, valeur_defaut, description) VALUES
 ('main', 'disable', 1, 'booleen', '0', '0', 'Désactiver le plugin GLPI (0=actif, 1=inactif)'),
@@ -198,7 +189,7 @@ ON DUPLICATE KEY UPDATE
     description = VALUES(description);
 
 -- ====================================================================
--- Création de la table xmpp_conf
+-- XMPP CONF
 -- ====================================================================
 
 CREATE TABLE IF NOT EXISTS xmpp_conf (
@@ -232,9 +223,6 @@ CREATE TABLE IF NOT EXISTS xmpp_conf (
 )
 COMMENT='Table de gestion des paramètres de configuration XMPP master pour Medulla';
 
--- ====================================================================
--- Insertion des paramètres dans la table xmpp_conf
--- ====================================================================
 
 INSERT INTO xmpp_conf (section, nom, activer, type, valeur, valeur_defaut, description) VALUES
 ('main', 'disable', 1, 'booleen', '0', '0', 'Désactiver le plugin XMPP (0=actif)'),
@@ -292,9 +280,6 @@ ON DUPLICATE KEY UPDATE
     valeur_defaut = VALUES(valeur_defaut),
     description = VALUES(description);
 
--- ====================================================================
--- Création de la table xmpp_conf_version
--- ====================================================================
 
 CREATE TABLE IF NOT EXISTS xmpp_conf_version (
     id INT AUTO_INCREMENT PRIMARY KEY
@@ -327,9 +312,6 @@ CREATE TABLE IF NOT EXISTS xmpp_conf_version (
 )
 COMMENT='Table de versionnage des paramètres de configuration XMPP master pour Medulla';
 
--- ====================================================================
--- Insertion des paramètres dans la table xmpp_conf_version
--- ====================================================================
 
 INSERT INTO xmpp_conf_version (section, nom, activer, type, valeur, valeur_defaut, description) VALUES
 ('main', 'disable', 1, 'booleen', '0', '0', 'Désactiver le plugin XMPP (0=actif)'),
@@ -380,6 +362,112 @@ INSERT INTO xmpp_conf_version (section, nom, activer, type, valeur, valeur_defau
 ('submaster', 'ip_format', 1, 'string', 'ipv4', 'ipv4', 'Format IP utilisé'),
 ('submaster', 'allowed_token', 1, 'string', '4O&vHYKG3Cqq3RCUJu!vnQu+dBGwDkpZ', '4O&vHYKG3Cqq3RCUJu!vnQu+dBGwDkpZ', 'Jeton autorisé pour le substitut'),
 ('submaster', 'check_hostname', 1, 'booleen', '1', '1', 'Vérifier le certificat du serveur')
+ON DUPLICATE KEY UPDATE
+    activer = VALUES(activer),
+    type = VALUES(type),
+    valeur = VALUES(valeur),
+    valeur_defaut = VALUES(valeur_defaut),
+    description = VALUES(description);
+
+
+-- ====================================================================
+-- KIOSK CONF 
+-- ====================================================================
+
+CREATE TABLE IF NOT EXISTS kiosk_conf (
+    id INT AUTO_INCREMENT PRIMARY KEY
+        COMMENT 'Identifiant unique du parametre de configuration',
+
+    section VARCHAR(50) NOT NULL
+        COMMENT 'Section du fichier de configuration (ex : [main] devient "main")',
+
+    nom VARCHAR(100) NOT NULL
+        COMMENT 'Nom du parametre, unique au sein de sa section',
+
+    activer BOOLEAN NOT NULL DEFAULT TRUE
+        COMMENT 'Indique si le parametre est actif (TRUE par defaut)',
+
+    type ENUM('string', 'booleen', 'entier', 'decimal', 'autre')
+        NOT NULL DEFAULT 'string'
+        COMMENT 'Type du parametre, utilise pour la validation et l''affichage',
+
+    valeur TEXT
+        COMMENT 'Valeur actuellement affectee au parametre',
+
+    valeur_defaut TEXT DEFAULT NULL
+        COMMENT 'Valeur par defaut utilisee si le parametre est desactive',
+
+    description TEXT NOT NULL
+        COMMENT 'Description fonctionnelle obligatoire du parametre (usage, format, exemples)',
+
+    CONSTRAINT uc_kiosk_section_nom UNIQUE (section, nom)
+        COMMENT 'Garantit l''unicite du parametre par section'
+)
+COMMENT='Table de gestion des parametres de configuration Kiosk pour Medulla';
+
+
+INSERT INTO kiosk_conf (section, nom, activer, type, valeur, valeur_defaut, description) VALUES
+('main', 'disable', 1, 'booleen', '0', '1', 'Desactiver le plugin Kiosk (0=actif, 1=inactif)'),
+('main', 'tempdir', 1, 'string', '/var/tmp/mmc-kiosk', '/var/tmp/mmc-kiosk', 'Repertoire temporaire du plugin'),
+('database', 'dbdriver', 1, 'string', 'mysql', 'mysql', 'Driver de base de donnees'),
+('database', 'dbhost', 1, 'string', 'localhost', 'localhost', 'Hote du serveur de base de donnees'),
+('database', 'dbport', 1, 'entier', '3306', '3306', 'Port du serveur de base de donnees'),
+('database', 'dbname', 1, 'string', 'kiosk', 'kiosk', 'Nom de la base de donnees Kiosk'),
+('database', 'dbuser', 1, 'string', 'mmc', 'mmc', 'Utilisateur de base de donnees'),
+('database', 'dbpasswd', 1, 'string', 'pBWfpjErqtsU', NULL, 'Mot de passe de base de donnees'),
+('provider', 'use_external_ldap', 1, 'booleen', '0', '0', 'Utiliser un LDAP externe pour la recherche d''OU'),
+('display', 'enable_acknowledgements', 1, 'booleen', '0', '0', 'Activer ou desactiver la fonction d''accuse de reception')
+ON DUPLICATE KEY UPDATE
+    activer = VALUES(activer),
+    type = VALUES(type),
+    valeur = VALUES(valeur),
+    valeur_defaut = VALUES(valeur_defaut),
+    description = VALUES(description);
+
+
+CREATE TABLE IF NOT EXISTS kiosk_conf_version (
+    id INT AUTO_INCREMENT PRIMARY KEY
+        COMMENT 'Identifiant unique du parametre de configuration',
+
+    section VARCHAR(50) NOT NULL
+        COMMENT 'Section du fichier de configuration (ex : [main] devient "main")',
+
+    nom VARCHAR(100) NOT NULL
+        COMMENT 'Nom du parametre, unique au sein de sa section',
+
+    activer BOOLEAN NOT NULL DEFAULT TRUE
+        COMMENT 'Indique si le parametre est actif (TRUE par defaut)',
+
+    type ENUM('string', 'booleen', 'entier', 'decimal', 'autre')
+        NOT NULL DEFAULT 'string'
+        COMMENT 'Type du parametre, utilise pour la validation et l''affichage',
+
+    valeur TEXT
+        COMMENT 'Valeur actuellement affectee au parametre',
+
+    valeur_defaut TEXT DEFAULT NULL
+        COMMENT 'Valeur par defaut utilisee si le parametre est desactive',
+
+    description TEXT NOT NULL
+        COMMENT 'Description fonctionnelle obligatoire du parametre (usage, format, exemples)',
+
+    CONSTRAINT uc_kiosk_version_section_nom UNIQUE (section, nom)
+        COMMENT 'Garantit l''unicite du parametre par section'
+)
+COMMENT='Table de versionnage des parametres de configuration Kiosk pour Medulla';
+
+
+INSERT INTO kiosk_conf_version (section, nom, activer, type, valeur, valeur_defaut, description) VALUES
+('main', 'disable', 1, 'booleen', '0', '1', 'Desactiver le plugin Kiosk (0=actif, 1=inactif)'),
+('main', 'tempdir', 1, 'string', '/var/tmp/mmc-kiosk', '/var/tmp/mmc-kiosk', 'Repertoire temporaire du plugin'),
+('database', 'dbdriver', 1, 'string', 'mysql', 'mysql', 'Driver de base de donnees'),
+('database', 'dbhost', 1, 'string', 'localhost', 'localhost', 'Hote du serveur de base de donnees'),
+('database', 'dbport', 1, 'entier', '3306', '3306', 'Port du serveur de base de donnees'),
+('database', 'dbname', 1, 'string', 'kiosk', 'kiosk', 'Nom de la base de donnees Kiosk'),
+('database', 'dbuser', 1, 'string', 'mmc', 'mmc', 'Utilisateur de base de donnees'),
+('database', 'dbpasswd', 1, 'string', 'pBWfpjErqtsU', NULL, 'Mot de passe de base de donnees'),
+('provider', 'use_external_ldap', 1, 'booleen', '0', '0', 'Utiliser un LDAP externe pour la recherche d''OU'),
+('display', 'enable_acknowledgements', 1, 'booleen', '0', '0', 'Activer ou desactiver la fonction d''accuse de reception')
 ON DUPLICATE KEY UPDATE
     activer = VALUES(activer),
     type = VALUES(type),

@@ -48,32 +48,9 @@ class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
         "main" section.
         """
         PluginConfig.readConf(self)
-        if self.backend != "ini":
-            if self.has_option("database", "dbdriver"):
-                self.dbdriver = self.get("database", "dbdriver")
-            if self.has_option("database", "dbhost"):
-                self.dbhost = self.get("database", "dbhost")
-            if self.has_option("database", "dbport"):
-                self.dbport = self.getint("database", "dbport")
-            if self.has_option("database", "dbname"):
-                self.dbname = self.get("database", "dbname")
-            if self.has_option("database", "dbuser"):
-                self.dbuser = self.get("database", "dbuser")
-            if self.has_option("database", "dbpasswd"):
-                self.dbpasswd = self.getpassword("database", "dbpasswd")
-            if self.has_option("database", "dbdebug"):
-                self.dbdebug = self.get("database", "dbdebug")
-            if self.has_option("database", "dbpoolrecycle"):
-                self.dbpoolrecycle = self.getint("database", "dbpoolrecycle")
-            if self.has_option("database", "dbpoolsize"):
-                self.dbpoolsize = self.getint("database", "dbpoolsize")
-            if self.has_option("database", "dbpooltimeout"):
-                self.dbpooltimeout = self.getint("database", "dbpooltimeout")
-
-        # Call setup only if a config file is provided; when using DB backend
-        # `self.conffile` may be None and DatabaseConfig.setup would try to
-        # read it (raising TypeError). Skip in that case; defaults remain.
-        if self.conffile:
+        if self.backend == "database":
+            self._load_db_settings_from_backend()
+        elif self.conffile and self.backend == "ini":
             XmppMasterDatabaseConfig.setup(self, self.conffile)
         self.disable = self.getboolean("main", "disable")
         self.tempdir = self.get("main", "tempdir")
@@ -357,7 +334,43 @@ class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
         # if not self.confOption: raise ConfigException("Conf error")
         pass
 
+    def _load_db_settings_from_backend(self):
+        if not self.has_section(self.dbsection):
+            return
+
+        if self.has_option(self.dbsection, "dbdriver"):
+            self.dbdriver = self.get(self.dbsection, "dbdriver")
+        if self.has_option(self.dbsection, "dbhost"):
+            self.dbhost = self.get(self.dbsection, "dbhost")
+        if self.has_option(self.dbsection, "dbport"):
+            self.dbport = self.getint(self.dbsection, "dbport")
+        if self.has_option(self.dbsection, "dbname"):
+            self.dbname = self.get(self.dbsection, "dbname")
+        if self.has_option(self.dbsection, "dbuser"):
+            self.dbuser = self.get(self.dbsection, "dbuser")
+        if self.has_option(self.dbsection, "dbpasswd"):
+            self.dbpasswd = self.getpassword(self.dbsection, "dbpasswd")
+
+        if self.has_option(self.dbsection, "dbdebug"):
+            self.dbdebug = self.get(self.dbsection, "dbdebug")
+        if self.has_option(self.dbsection, "dbpoolrecycle"):
+            self.dbpoolrecycle = self.getint(self.dbsection, "dbpoolrecycle")
+        if self.has_option(self.dbsection, "dbpoolsize"):
+            self.dbpoolsize = self.getint(self.dbsection, "dbpoolsize")
+        if self.has_option(self.dbsection, "dbpooltimeout"):
+            self.dbpooltimeout = self.getint(self.dbsection, "dbpooltimeout")
+
+        if self.has_option(self.dbsection, "dbsslenable"):
+            self.dbsslenable = self.getboolean(self.dbsection, "dbsslenable")
+            if self.dbsslenable:
+                if self.has_option(self.dbsection, "dbsslca"):
+                    self.dbsslca = self.get(self.dbsection, "dbsslca")
+                if self.has_option(self.dbsection, "dbsslcert"):
+                    self.dbsslcert = self.get(self.dbsection, "dbsslcert")
+                if self.has_option(self.dbsection, "dbsslkey"):
+                    self.dbsslkey = self.get(self.dbsection, "dbsslkey")
+
     def activate():
         # Get module config from "/etc/mmc/plugins/module_name.ini"
-        xmppMasterConfig("xmppmaster")
+        xmppMasterConfig("xmppmaster", None, "database")
         return True
