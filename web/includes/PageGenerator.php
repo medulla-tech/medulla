@@ -2994,7 +2994,10 @@ class SideMenu
      */
     public function display()
     {
-        echo "<style>#section {margin-left:230px;}</style>";
+        global $sidebarDisplayed;
+        $sidebarDisplayed = true;
+
+        echo "<style>#section {display:grid; grid-template-columns:220px 1fr; gap:30px; align-items:start;}</style>";
         echo "<div id=\"sidebar\">\n";
 
         $MMCApp = &MMCApp::getInstance();
@@ -3014,7 +3017,7 @@ class SideMenu
         foreach ($this->itemArray as $objSideMenuItem) {
             $objSideMenuItem->display();
         }
-        echo "</ul><div class=\"clearer\"></div></div>";
+        echo "</ul></div><div class=\"section-content\">";
     }
 
     /**

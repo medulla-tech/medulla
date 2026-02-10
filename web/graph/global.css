@@ -88,14 +88,23 @@ p {
   margin: 0;
 }
 
-.path {
+.path-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   background-color: white;
-  padding: 12px 30px 12px 20px;
-  min-height: 42px;
+  padding: 6px 30px 6px 20px;
   box-sizing: border-box;
+  position: sticky;
+  top: 66px;
+  z-index: 99;
+}
+
+.path {
   display: flex;
   align-items: center;
   margin: 0;
+  padding: 0;
 }
 
 .path a {
@@ -125,7 +134,9 @@ p {
 /* ---------------------------------------- */
 
 #header {
-  position: relative;
+  position: sticky;
+  top: 0;
+  z-index: 100;
   background-color: #25607d;
   border-bottom: 1px solid #d4d4d4;
   border-top: 1px solid #21262b;
@@ -134,19 +145,14 @@ p {
   min-height: 50px;
 }
 
-#header #menuTopRight {
-  position: absolute;
-  top: 100%;
-  right: 30px;
+#menuTopRight {
   display: flex;
   align-items: center;
   font-size: 12px;
   color: #666;
-  height: 42px;
-  z-index: 10;
 }
 
-#header #menuTopRight ul {
+#menuTopRight ul {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -156,15 +162,15 @@ p {
   list-style-type: none;
 }
 
-#header #menuTopRight ul li {
+#menuTopRight ul li {
   display: inline-flex;
   align-items: center;
   border-radius: 9px;
   padding: 0;
-  margin: 10px 0;
+  margin: 0;
 }
 
-#header #menuTopRight ul li a {
+#menuTopRight ul li a {
   font-size: 12px;
   padding: 8px 16px;
   text-decoration: none;
@@ -178,37 +184,37 @@ p {
 }
 
 /* Expert mode button - light background style */
-#header #menuTopRight ul li#expertmode {
+#menuTopRight ul li#expertmode {
   background-color: rgba(58, 143, 168, 0.12);
   border: 1px solid transparent;
 }
 
-#header #menuTopRight ul li#expertmode a {
+#menuTopRight ul li#expertmode a {
   color: #3a8fa8;
   font-weight: 600;
 }
 
-#header #menuTopRight ul li#expertmode:hover {
+#menuTopRight ul li#expertmode:hover {
   background-color: rgba(58, 143, 168, 0.2);
 }
 
-#header #menuTopRight ul li#expertmode:hover a {
+#menuTopRight ul li#expertmode:hover a {
   color: #fff;
   background-color: #3a8fa8;
 }
 
 /* Disconnect button - outlined style with icon */
-#header #menuTopRight ul li#disconnect {
+#menuTopRight ul li#disconnect {
   background-color: #fff;
   border: 1px solid #3a8fa8;
 }
 
-#header #menuTopRight ul li#disconnect a {
+#menuTopRight ul li#disconnect a {
   color: #3a8fa8;
   font-weight: 600;
 }
 
-#header #menuTopRight ul li#disconnect a::before {
+#menuTopRight ul li#disconnect a::before {
   content: '';
   display: inline-block;
   width: 18px;
@@ -220,16 +226,16 @@ p {
   filter: invert(52%) sepia(53%) saturate(405%) hue-rotate(145deg) brightness(91%) contrast(87%);
 }
 
-#header #menuTopRight ul li#disconnect:hover {
+#menuTopRight ul li#disconnect:hover {
   background-color: #3a8fa8;
   border-color: #3a8fa8;
 }
 
-#header #menuTopRight ul li#disconnect:hover a {
+#menuTopRight ul li#disconnect:hover a {
   color: #fff;
 }
 
-#header #menuTopRight ul li#disconnect:hover a::before {
+#menuTopRight ul li#disconnect:hover a::before {
   filter: brightness(0) invert(1);
 }
 
@@ -318,10 +324,28 @@ p {
 /* Sidebar                                 */
 /* ---------------------------------------- */
 #sidebar {
-  left: 0;
-  min-height: 300px;
-  padding: 0 0 0 15px;
-  position: absolute;
+  position: sticky;
+  top: 125px;
+  width: 220px;
+  padding: 0;
+  z-index: 50;
+  flex-shrink: 0;
+  align-self: start;
+  /* Grid */
+  grid-column: 1;
+  grid-row: 1;
+  /* Flex fallback */
+  order: -1;
+}
+
+.section-content {
+  flex: 1;
+  min-width: 0;
+  /* Grid */
+  grid-column: 2;
+  grid-row: 1;
+  /* Flex fallback */
+  order: 1;
 }
 
 .sidebar-header {
@@ -402,10 +426,32 @@ p {
 }
 
 #section {
+  position: relative;
   padding: 0px 0 0 0px;
-  min-height: 350px;
   height: auto !important;
   padding-top: 10px;
+}
+
+#section > style {
+  display: none !important;
+}
+
+#section > *:not(#sidebar):not(style) {
+  grid-column: 2;
+}
+
+.section-content > ul.action {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin: 0 0 10px 15px;
+  padding: 0;
+  float: right;
+}
+
+.section-content > ul.action li {
+  list-style: none;
+  float: none;
 }
 
 #container {
