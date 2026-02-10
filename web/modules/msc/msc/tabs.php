@@ -38,10 +38,7 @@ require_once("modules/medulla_server/includes/utilities.php");
 
 $_GET['hostname'] = isset($_GET['hostname']) ? $_GET['hostname'] : (isset($_GET['cn']) ? $_GET['cn'] : "");
 $_GET['uuid'] = isset($_GET['uuid']) ? $_GET['uuid'] : (isset($_GET['objectUUID']) ? $_GET['objectUUID'] : null);
-/*
- * Display right top shortcuts menu
- */
-right_top_shortcuts_display();
+
 if ($_GET['uuid']) {
 
 
@@ -50,6 +47,7 @@ if ($_GET['uuid']) {
         $p = new PageGenerator(sprintf(_T("%s's computer secure control", 'msc'), $_GET['hostname']));
         $p->setSideMenu($sidemenu);
         $p->display();
+        right_top_shortcuts_display();
         // affiche page vide header.php
         include('modules/msc/msc/header.php');
     } else {
@@ -64,6 +62,7 @@ if ($_GET['uuid']) {
         //show list packages
         $p->addTab("tablaunch", _T("Launch Actions", 'msc'), "", "modules/msc/msc/launch.php", $dataparams);
         $p->display();
+        right_top_shortcuts_display();
     }
 } elseif ($_GET['gid']) {
     $p = new TabbedPageGenerator();
@@ -80,10 +79,12 @@ if ($_GET['uuid']) {
         }
     }
     $p->display();
+    right_top_shortcuts_display();
 } else {
     $p = new PageGenerator();
     $p->setSideMenu($sidemenu);
     $p->display();
+    right_top_shortcuts_display();
     print _T("Not enough information", "msc");
 }
 ?>
