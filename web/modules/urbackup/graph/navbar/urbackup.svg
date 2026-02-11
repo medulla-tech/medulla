@@ -1,45 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 26.5.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 141.73 141.73" style="enable-background:new 0 0 141.73 141.73;" xml:space="preserve">
-<style type="text/css">
-	.st0{fill:#8CB63C;stroke:#25607E;stroke-width:3.9851;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
-	.st1{fill:#FFFFFF;stroke:#25607E;stroke-width:3.9851;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
-	.st2{fill:none;stroke:#25607E;stroke-width:3.9851;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
-</style>
-<g>
-	<g>
-		<polygon class="st0" points="87.4,66.75 67.11,42.87 67.11,66.75 		"/>
-		<polygon class="st1" points="67.11,66.75 67.11,42.87 22.81,42.87 22.81,130.39 87.4,130.39 87.4,66.75 		"/>
-		<line class="st2" x1="34.73" y1="87.25" x2="75.86" y2="87.25"/>
-		<line class="st2" x1="34.73" y1="95.12" x2="52.85" y2="95.12"/>
-		<line class="st2" x1="75.86" y1="102.99" x2="34.73" y2="102.99"/>
-		<line class="st2" x1="34.73" y1="111.24" x2="75.86" y2="111.24"/>
-		<line class="st2" x1="34.73" y1="119.5" x2="52.85" y2="119.5"/>
-		<line class="st2" x1="34.73" y1="79.38" x2="75.86" y2="79.38"/>
-		<rect x="35.02" y="53.76" class="st0" width="17.26" height="17.69"/>
-	</g>
-	<g>
-		<polygon class="st0" points="103.16,50.99 82.87,27.11 82.87,50.99 		"/>
-		<polygon class="st1" points="82.87,50.99 82.87,27.11 38.57,27.11 38.57,114.62 103.16,114.62 103.16,50.99 		"/>
-		<line class="st2" x1="50.49" y1="71.49" x2="91.63" y2="71.49"/>
-		<line class="st2" x1="50.49" y1="79.36" x2="68.61" y2="79.36"/>
-		<line class="st2" x1="91.63" y1="87.23" x2="50.49" y2="87.23"/>
-		<line class="st2" x1="50.49" y1="95.48" x2="91.63" y2="95.48"/>
-		<line class="st2" x1="50.49" y1="103.73" x2="68.61" y2="103.73"/>
-		<line class="st2" x1="50.49" y1="63.62" x2="91.63" y2="63.62"/>
-		<rect x="50.78" y="38" class="st0" width="17.26" height="17.69"/>
-	</g>
-	<g>
-		<polygon class="st0" points="118.93,35.23 98.64,11.35 98.64,35.23 		"/>
-		<polygon class="st1" points="98.64,35.23 98.64,11.35 54.33,11.35 54.33,98.86 118.93,98.86 118.93,35.23 		"/>
-		<line class="st2" x1="66.25" y1="55.72" x2="107.39" y2="55.72"/>
-		<line class="st2" x1="66.25" y1="63.59" x2="84.38" y2="63.59"/>
-		<line class="st2" x1="107.39" y1="71.46" x2="66.25" y2="71.46"/>
-		<line class="st2" x1="66.25" y1="79.72" x2="107.39" y2="79.72"/>
-		<line class="st2" x1="66.25" y1="87.97" x2="84.38" y2="87.97"/>
-		<line class="st2" x1="66.25" y1="47.85" x2="107.39" y2="47.85"/>
-		<rect x="66.54" y="22.24" class="st0" width="17.26" height="17.69"/>
-	</g>
-</g>
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M12 3L12 15M12 15L8 11M12 15L16 11" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M3 15V19C3 19.5304 3.21071 20.0391 3.58579 20.4142C3.96086 20.7893 4.46957 21 5 21H19C19.5304 21 20.0391 20.7893 20.4142 20.4142C20.7893 20.0391 21 19.5304 21 19V15" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>

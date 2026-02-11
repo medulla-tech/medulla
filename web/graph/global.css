@@ -28,6 +28,11 @@
 /* ---------------------------------------- */
 
 :root {
+  /* Font sizes */
+  --font-size-base: 12px;
+  --font-size-form: 13px;
+  --font-size-section-title: 15px;
+
   /* Primary brand colors */
   --color-primary: #25607d;
   --color-primary-light: #3a8fa8;
@@ -395,8 +400,6 @@ p {
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 9px;
   white-space: nowrap;
-  background-position: 8px center !important;
-  background-size: 20px 20px !important;
   transition:
     background-color 0.2s ease,
     color 0.2s ease,
@@ -404,6 +407,7 @@ p {
     border-color 0.2s ease;
   min-width: 50px;
   text-align: center;
+  position: relative;
 }
 
 #navbar ul li a:hover {
@@ -424,6 +428,16 @@ p {
 #navbar ul li a.active:hover {
   background-color: var(--color-bg-white) !important;
   color: #1a4a5f !important;
+}
+
+/* Navbar icon color change on hover (white -> primary blue) */
+#navbar ul li a:hover::before {
+  background-color: var(--color-primary) !important;
+}
+
+#navbar ul li.active a::before,
+#navbar ul li a.active::before {
+  background-color: var(--color-primary) !important;
 }
 
 /* ---------------------------------------- */
@@ -577,30 +591,55 @@ p {
   overflow-x: auto;
 }
 
-#section h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+h1, h2, h3, h4, h5, h6 {
   color: var(--color-text-medium);
-  font-weight: normal;
-  padding: 0 0 0px 0;
+  font-weight: 500;
+  padding: 0;
   margin: 0;
 }
 
+h1 {
+  font-size: 18px;
+  color: var(--color-text-dark);
+}
+
+h2 {
+  font-size: var(--font-size-section-title, 15px);
+  color: var(--color-text-dark);
+}
+
+h3 {
+  font-size: var(--font-size-form, 13px);
+}
+
+h4 {
+  font-size: var(--font-size-base, 12px);
+}
+
+/* Section titles in forms (span.section-title or span.*-title) */
+span.section-title,
+span[class$="-title"] {
+  font-size: var(--font-size-section-title, 15px);
+  font-weight: 600;
+  color: #444050;
+  padding: 8px 0 4px;
+  display: block;
+  border-bottom: 2px solid #444050;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+
+/* Inside form table — pull left to cover label column */
+.mmc-form-table span.section-title,
+.mmc-form-table span[class$="-title"] {
+  margin-left: -236px;
+  width: calc(100% + 236px);
+}
+
+/* Legacy section-specific overrides */
 #section h2 {
   font-size: 17px;
   color: black;
-}
-#section h3 {
-  font-size: 14px;
-}
-#section form h3 {
-  font-size: 14px;
-}
-#section form h4 {
-  font-size: 13px;
 }
 
 p.listInfos {
@@ -1283,22 +1322,6 @@ td.machineAction {
   display: inline;
 }
 
-/* Section title — generic style for modules using *-title pattern */
-span[class$="-title"] {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--color-primary);
-  padding: 8px 0 4px;
-  display: block;
-  border-bottom: 2px solid var(--color-primary);
-  margin-bottom: 4px;
-}
-
-/* Inside form table — pull left to cover label column */
-.mmc-form-table span[class$="-title"] {
-  margin-left: -236px;
-  width: calc(100% + 236px);
-}
 
 /* Dependencies dual-list widget */
 .deps-widget {
