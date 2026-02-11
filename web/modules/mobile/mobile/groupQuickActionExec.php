@@ -77,7 +77,7 @@ if ($result && isset($result['status']) && $result['status'] === 'OK') {
     new NotifyWidgetFailure(_T("Failed to send command to group", "mobile"));
 }
 
-header("Location: " . urlStrRedirect("mobile/mobile/groups"));
+header("Location: " . urlStrRedirect("mobile/mobile/functions", array("tab" => "tabpush")));
 exit;
 
 ?>
