@@ -45,11 +45,18 @@ class os_repartitionPanel extends Panel {
     $uninventorized = get_computer_count_for_dashboard()['total_uninventoried'];
 
     $pcs = array_map(function($pcs) {
+    // android hmdm devices redirect to mobile group creation
+    if ($pcs['os'] === 'Android' && $pcs['version'] === 'HMDM') {
+        $href = urlStrRedirect("mobile/mobile/addGroup").'&autoselect=all&name=widget';
+    } else {
+        $href = urlStrRedirect("base/computers/createOSStaticGroup").'&os='.$pcs['os'].'&version='.$pcs['version'];
+    }
+    
     return array(
         'label' => $pcs['os'],
         'value' => $pcs['count'],
         'version' => $pcs['version'],
-        'href' => urlStrRedirect("base/computers/createOSStaticGroup").'&os='.$pcs['os'].'&version='.$pcs['version'],
+        'href' => $href,
     );
 }, $pcs);
 

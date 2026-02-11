@@ -228,9 +228,9 @@ if (isset($_POST['bconfirm'])){
     }
     // fields
     $fields = array(
-        array("label", _T("Name", "pkgs"), array("required" => True, 'placeholder' => _T('<fill_package_name>', 'pkgs'))),
-        array("version", _T("Version", "pkgs"), array("required" => True)),
-        array('description', _T("Description", "pkgs"), array()),
+        array("label", _T("Name", "pkgs"), array("required" => True, 'placeholder' => _T('Enter package name', 'pkgs'))),
+        array("version", _T("Version", "pkgs"), array("required" => True, 'placeholder' => _T('x.x.x', 'pkgs'))),
+        array('description', _T("Description", "pkgs"), array('placeholder' => _T('Enter a description', 'pkgs'))),
     );
 
     $options = array();
@@ -300,14 +300,14 @@ if (isset($_POST['bconfirm'])){
         $bpuploaddownload->setAttributCustom('min = 0');
         $f->add(
                 new TrFormElement(_T("bandwidth throttling (ko)",'pkgs'), $bpuploaddownload), array_merge(array("value" => ''),
-                array('placeholder' => _T('<in ko>', 'pkgs')))
+                array('placeholder' => _T('in ko, 0 = unlimited', 'pkgs')))
         );
         //spooling priority
         $rb = new RadioTpl("spooling");
         $rb->setChoices(array(_T('high priority', 'pkgs'), _T('ordinary priority', 'pkgs')));
         $rb->setvalues(array('high', 'ordinary'));
         $rb->setSelected('ordinary');
-        $f->add(new TrFormElement(_T('Spooling', 'pkgs'), $rb));
+        $f->add(new TrFormElement(_T('Spooling', 'pkgs'), $rb, array('class' => 'radio-inline')));
 
         $f->add(
                 new TrFormElement(_T("Launcher (kiosk)", "pkgs"), new InputTpl("launcher")), ["value"=>"","placeholder"=>"C:\Program Files\my_app\app.exe"]
@@ -319,43 +319,29 @@ if (isset($_POST['bconfirm'])){
         {
             $packagesInOption .= '<option title="'.$package['name'].' v.'.$package['version'].'" value="'.$package['uuid'].'">'.$package['name'].' V.'.$package['version'].'</option>';
         }
-        $f->add(new TrFormElement(_T("Dependencies", "pkgs"),new SpanElement('<div id="grouplist">
-    <table style="border: none;" cellspacing="0">
-        <tr>
-            <td style="border: none;">
-                <div>
-                    <img src="img/other/up.svg" width="25" height="25" alt="|^" id="moveDependencyToUp" onclick="moveToUp()"/><br/>
-                    <img src="img/other/down.svg" width="25" height="25" alt="|v" id="moveDependencyToDown" onclick="moveToDown()"/></a><br/>
-                </div>
-            </td>
-            <td style="border: none;">
-                <h3>'._T('Added dependencies', 'pkgs').'</h3>
-                <div class="list">
-                    <select multiple size="13" class="list" name="Dependency" id="addeddependencies">
-
-                    </select>
-                    <div class="opt_name" style="position:absolute;background-color:yellow"></div>
-                </div>
-            </td>
-            <td style="border: none;">
-                <div>
-                    <img src="img/other/right.svg" width="25" height="25" alt="-->" id="moveDependencyToRight" onclick="moveToRight()"/><br/>
-                    <img src="img/other/left.svg" width="25" height="25" alt="<--" id="moveDependencyToLeft" onclick="moveToLeft()"/></a><br/>
-                </div>
-            </td>
-            <td style="border: none;">
-                <div class="list" style="padding-left: 10px;">
-                    <h3>'._T('Available dependencies', 'pkgs').'</h3>
-                    <input type="text" id="dependenciesFilter" value="" placeholder="'._T("search by name ...", "pkgs").'"><br/>
-                    <select multiple size="13" class="list" name="members[]" id="pooldependencies">
-                        '.$packagesInOption.'
-                    </select>
-                    <div class="opt_name" style="position:absolute;background-color:yellow;"></div>
-                </div>
-                <div class="clearer"></div>
-            </td>
-        </tr>
-    </table>
+        $spanDeps = new SpanElement(_T("Dependencies", "pkgs"), "pkgs-title");
+        $f->add(new TrFormElement("", $spanDeps), array());
+        $f->add(new TrFormElement("",new SpanElement('<div id="grouplist" class="deps-widget">
+    <div class="deps-col deps-available">
+        <h3>'._T('Available dependencies', 'pkgs').'</h3>
+        <input type="text" id="dependenciesFilter" class="deps-search" value="" placeholder="'._T("search by name ...", "pkgs").'">
+        <select multiple class="deps-list" name="members[]" id="pooldependencies">
+            '.$packagesInOption.'
+        </select>
+    </div>
+    <div class="deps-actions">
+        <img src="img/other/right.svg" width="25" height="25" alt="-->" id="moveDependencyToRight" onclick="moveToLeft()"/>
+        <img src="img/other/left.svg" width="25" height="25" alt="<--" id="moveDependencyToLeft" onclick="moveToRight()"/>
+    </div>
+    <div class="deps-col deps-added">
+        <h3>'._T('Added dependencies', 'pkgs').'</h3>
+        <select multiple class="deps-list" name="Dependency" id="addeddependencies">
+        </select>
+    </div>
+    <div class="deps-order">
+        <img src="img/other/up.svg" width="25" height="25" alt="|^" id="moveDependencyToUp" onclick="moveToUp()"/>
+        <img src="img/other/down.svg" width="25" height="25" alt="|v" id="moveDependencyToDown" onclick="moveToDown()"/>
+    </div>
 </div>',"pkgs")));
     }
 

@@ -254,6 +254,29 @@ $page = new Page("deleteProvider", _T('Delete Provider', 'admin'));
 $page->setFile("modules/admin/admin/deleteProvider.php");
 $submod->addPage($page);
 
+// CONFIGURATION PAGES
+
+$page = new Page("configList", _T("Configuration Management", "admin"));
+$page->setFile("modules/admin/admin/configList.php");
+$submod->addPage($page);
+
+$page = New Page("parameterList", _T("Parameter List", "admin"));
+$page->setFile("modules/admin/admin/parameterList.php");
+$submod->addPage($page);
+
+$pageAjaxParameterList = new Page("ajaxParameterList", _T("Parameter List AJAX", "admin"));
+$pageAjaxParameterList->setFile("modules/admin/admin/ajaxParameterList.php");
+$pageAjaxParameterList->setOptions(array("AJAX" => true, "visible" => false));
+$submod->addPage($pageAjaxParameterList);
+
+$page = new Page("editParameter", _T("Edit Parameter", "admin"));
+$page->setFile("modules/admin/admin/editParameter.php");
+$submod->addPage($page);
+
+$page = new Page("deleteParameter", _T("Delete Parameter", "admin"));
+$page->setFile("modules/admin/admin/deleteParameter.php");
+$submod->addPage($page);
+
 $mod->addSubmod($submod);
 
 $MMCApp = &MMCApp::getInstance();

@@ -68,7 +68,7 @@ $environstr = trim($environstr,",\n\r");
                     <th width="16%"><?php echo _T('Environment variable', 'pkgs') ?></th>
                     <th width="25%">
                         <?php
-                        echo'<textarea title="eg : key1 :: value1,'."\n".'key1 :: value1" style="width:206px;height: 50px;" name="environ" cols="5" rows="5">'.$environstr.'</textarea>';
+                        echo'<textarea title="eg : key1 :: value1,'."\n".'key1 :: value1" name="environ">'.$environstr.'</textarea>';
                         ?>
                     </th>
                     <th></th>

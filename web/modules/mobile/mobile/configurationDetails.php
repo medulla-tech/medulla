@@ -275,6 +275,82 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
         
+        // Process files
+        $allFiles = xmlrpc_get_hmdm_files();
+        if (is_array($allFiles)) {
+            $newConfigFiles = array();
+            foreach ($allFiles as $idx => $file) {
+                $fileId = isset($file['id']) ? $file['id'] : null;
+                if ($fileId === null) continue;
+                
+                // Get the action from POST (1=Include, 0=Exclude, 2=Remove)
+                $fileAction = isset($_POST['file_action_' . $idx]) ? intval($_POST['file_action_' . $idx]) : 0;
+                
+                if ($fileAction === 1) {
+                    // Include: add file without remove flag
+                    $newConfigFiles[] = array(
+                        'fileId' => $fileId,
+                        'remove' => false
+                    );
+                } elseif ($fileAction === 2) {
+                    $newConfigFiles[] = array(
+                        'fileId' => $fileId,
+                        'remove' => true
+                    );
+                }
+            }
+            
+            $payload['files'] = $newConfigFiles;
+        }
+        
+        // process app settings
+        $configAppSettings = isset($config['applicationSettings']) && is_array($config['applicationSettings']) ? $config['applicationSettings'] : array();
+        $newAppSettings = array();
+        foreach ($configAppSettings as $idx => $setting) {
+            $removeField = 'appsetting_remove_' . $idx;
+            if (!isset($_POST[$removeField]) || $_POST[$removeField] != '1') {
+                $dataField = 'appsetting_data_' . $idx;
+                if (isset($_POST[$dataField])) {
+                    $updatedSetting = json_decode($_POST[$dataField], true);
+                    if ($updatedSetting && is_array($updatedSetting)) {
+                        $newAppSettings[] = $updatedSetting;
+                    } else {
+                        $newAppSettings[] = $setting;
+                    }
+                } else {
+                    $newAppSettings[] = $setting;
+                }
+            }
+        }
+        
+        foreach ($_POST as $key => $value) {
+            if (preg_match('/^appsetting_new_appid_(\d+)$/', $key, $matches)) {
+                $idx = $matches[1];
+                $appId = isset($_POST['appsetting_new_appid_' . $idx]) ? intval($_POST['appsetting_new_appid_' . $idx]) : null;
+                $appName = isset($_POST['appsetting_new_appname_' . $idx]) ? $_POST['appsetting_new_appname_' . $idx] : '';
+                $appPkg = isset($_POST['appsetting_new_apppkg_' . $idx]) ? $_POST['appsetting_new_apppkg_' . $idx] : '';
+                $settingName = isset($_POST['appsetting_new_name_' . $idx]) ? $_POST['appsetting_new_name_' . $idx] : '';
+                $settingValue = isset($_POST['appsetting_new_value_' . $idx]) ? $_POST['appsetting_new_value_' . $idx] : '';
+                $settingComment = isset($_POST['appsetting_new_comment_' . $idx]) ? $_POST['appsetting_new_comment_' . $idx] : '';
+                $lastUpdate = isset($_POST['appsetting_new_lastupdate_' . $idx]) ? intval($_POST['appsetting_new_lastupdate_' . $idx]) : 0;
+                
+                if ($appId && $settingName) {
+                    $newAppSettings[] = array(
+                        'type' => 'STRING',
+                        'name' => $settingName,
+                        'value' => $settingValue,
+                        'comment' => $settingComment,
+                        'applicationPkg' => $appPkg,
+                        'applicationName' => $appName,
+                        'applicationId' => $appId,
+                        'lastUpdate' => $lastUpdate
+                    );
+                }
+            }
+        }
+        
+        $payload['applicationSettings'] = $newAppSettings;
+        
         $result = xmlrpc_update_hmdm_configuration($payload);
         
         if ($result !== null && $result !== false) {
@@ -367,8 +443,6 @@ $form = new Form();
 
 $form->push(new Div(array('id' => 'tab-common')));
 $form->push(new Table());
-
-// COMMON SETTINGS
 
 $form->add(new TrFormElement(
     _T("Name", "mobile"),
@@ -847,7 +921,6 @@ $form->push(new Table());
 $form->add(new TrFormElementcollapse(new textTpl($filtersHtml)));
 $form->pop();
 
-// Results table with pagination
 $configApps = xmlrpc_get_hmdm_configuration_applications($configId);
 if (!is_array($configApps)) { $configApps = array(); }
 ob_start();
@@ -917,13 +990,10 @@ $form->push(new Table());
 $form->add(new TrFormElementcollapse(new textTpl($resultsHtml)));
 $form->pop();
 
-$form->pop(); // end Apps div
+$form->pop();
 
-// MDM tab in a div container with its table inside
 $form->push(new Div(array('id' => 'tab-mdm', 'style' => 'display:none;')));
 $form->push(new Table());
-
-// MDM SETTINGS
 
 $form->add(new TrFormElement(
     _T("Kiosk mode", "mobile"),
@@ -938,7 +1008,7 @@ if (!is_array($allApps)) {
 $selectedApps = array();
 foreach ($allApps as $app) {
     if (isset($app['selected']) && $app['selected']) {
-        $selectedApps[] = array('name' => $app['name'], 'id' => $app['latestVersion']);
+        $selectedApps[] = array('name' => $app['name'], 'id' => $app['id'], 'pkg' => $app['pkg']);
     }
 }
 
@@ -1154,12 +1224,252 @@ $form->pop(); // end MDM table
 $form->pop(); // end MDM div
 
 $form->push(new Div(array('id' => 'tab-appsettings', 'style' => 'display:none;')));
+
+ob_start();
+?>
+<div style="margin-bottom: 12px;">
+    <button type="button" id="open_appsetting_modal_btn" class="btn btn-primary">
+        <?php echo _T("Add Application Setting", "mobile"); ?>
+    </button>
+</div>
+<?php
+$buttonHtml = ob_get_clean();
 $form->push(new Table());
-$form->pop(); // end Appsettings table
+$form->add(new TrFormElementcollapse(new textTpl($buttonHtml)));
+$form->pop();
+
+ob_start();
+?>
+<div id="tab-table-appsettings-filters" class="searchbox" style="margin-bottom: 12px;">
+    <div id="searchBest">
+        <span class="searchfield">
+            <input type="text" id="appsetting_search_filter" name="appsetting_search_filter" class="searchfieldreal" placeholder="<?php echo _T("Search application settings", "mobile"); ?>" />
+            <button type="button" class="search-clear" aria-label="<?php echo _T('Clear search', 'base'); ?>"
+                            onclick="jQuery('#appsetting_search_filter').val(''); jQuery('#appsetting_search_filter').trigger('input');"></button>
+        </span>
+        <button onclick="jQuery('#appsetting_search_filter').trigger('input'); return false;"><?php echo _T("Search", "glpi");?></button>
+        <span class="loader" aria-hidden="true"></span>
+    </div>
+</div>
+
+<!-- Modal overlay -->
+<div id="appsetting-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; overflow: auto;">
+    <div style="background: white; margin: 50px auto; padding: 20px; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 10px rgba(0,0,0,0.3);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #ddd; padding-bottom: 10px;">
+            <h3 id="appsetting_modal_title" style="margin: 0;"><?php echo _T("Add Application Setting", "mobile"); ?></h3>
+            <button type="button" id="close_appsetting_modal_btn" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #666;">&times;</button>
+        </div>
+        <table style="width: 100%;">
+            <tr>
+                <td style="padding: 10px; width: 30%; vertical-align: top;">
+                    <label><strong><?php echo _T("Application", "mobile"); ?></strong></label>
+                </td>
+                <td style="padding: 10px;">
+                    <div style="position: relative;">
+                        <input type="text" id="appsetting_app_name" name="appsetting_app_name" class="searchfieldreal" 
+                               placeholder="<?php echo _T("Search for an application", "mobile"); ?>" style="width: 100%;" />
+                        <input type="hidden" id="appsetting_app_id" name="appsetting_app_id" />
+                        <input type="hidden" id="appsetting_app_pkg" name="appsetting_app_pkg" />
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 10px; vertical-align: top;">
+                    <label><strong><?php echo _T("Attribute", "mobile"); ?></strong></label>
+                </td>
+                <td style="padding: 10px;">
+                    <input type="text" id="appsetting_name" name="appsetting_name" class="searchfieldreal" 
+                           placeholder="<?php echo _T("Attribute name", "mobile"); ?>" style="width: 100%;" />
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 10px; vertical-align: top;">
+                    <label><strong><?php echo _T("Value", "mobile"); ?></strong></label>
+                </td>
+                <td style="padding: 10px;">
+                    <textarea id="appsetting_value" name="appsetting_value" class="searchfieldreal" 
+                              placeholder="<?php echo _T("Attribute value", "mobile"); ?>" 
+                              style="width: 100%; min-height: 80px;"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 10px; vertical-align: top;">
+                    <label><strong><?php echo _T("Comment", "mobile"); ?></strong></label>
+                </td>
+                <td style="padding: 10px;">
+                    <input type="text" id="appsetting_comment" name="appsetting_comment" class="searchfieldreal" 
+                           placeholder="<?php echo _T("Optional comment", "mobile"); ?>" style="width: 100%;" />
+                </td>
+            </tr>
+        </table>
+        <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #ddd; text-align: right;">
+            <button type="button" id="cancel_appsetting_btn" class="btn btn-default" style="margin-right: 10px;">
+                <?php echo _T("Cancel", "mobile"); ?>
+            </button>
+            <button type="button" id="add_appsetting_btn" class="btn btn-primary">
+                <?php echo _T("Add Setting", "mobile"); ?>
+            </button>
+        </div>
+    </div>
+</div>
+<?php
+$buttonHtml = ob_get_clean();
+$form->push(new Table());
+$form->add(new TrFormElementcollapse(new textTpl($buttonHtml)));
+$form->pop();
+
+$configAppSettings = isset($config['applicationSettings']) && is_array($config['applicationSettings']) ? $config['applicationSettings'] : array();
+
+ob_start();
+?>
+<table id="tab-table-appsettings-results" style="width: 100%; border-collapse: collapse; border: 1px solid #ddd; margin-top: 12px;">
+    <thead style="background-color: #f5f5f5;">
+        <tr>
+            <th style="border: 1px solid #ddd; padding: 10px; text-align: left;"><?php echo _T("Package ID", "mobile"); ?></th>
+            <th style="border: 1px solid #ddd; padding: 10px; text-align: left;"><?php echo _T("Application Name", "mobile"); ?></th>
+            <th style="border: 1px solid #ddd; padding: 10px; text-align: left;"><?php echo _T("Attribute", "mobile"); ?></th>
+            <th style="border: 1px solid #ddd; padding: 10px; text-align: left;"><?php echo _T("Value", "mobile"); ?></th>
+            <th style="border: 1px solid #ddd; padding: 10px; text-align: left;"><?php echo _T("Comment", "mobile"); ?></th>
+            <th style="border: 1px solid #ddd; padding: 10px; text-align: left;"><?php echo _T("Creation Date", "mobile"); ?></th>
+            <th style="border: 1px solid #ddd; padding: 10px; text-align: center;"><?php echo _T("Actions", "mobile"); ?></th>
+        </tr>
+    </thead>
+    <tbody id="appsettings_table_body">
+        <?php foreach ($configAppSettings as $idx => $setting):
+                $appName = isset($setting['applicationName']) ? $setting['applicationName'] : '';
+                $appPkg = isset($setting['applicationPkg']) ? $setting['applicationPkg'] : '';
+                $settingName = isset($setting['name']) ? $setting['name'] : '';
+                $settingValue = isset($setting['value']) ? $setting['value'] : '';
+                $settingComment = isset($setting['comment']) ? $setting['comment'] : '';
+                $lastUpdate = isset($setting['lastUpdate']) ? $setting['lastUpdate'] : 0;
+                $createDate = $lastUpdate ? date('Y-m-d H:i:s', $lastUpdate) : '';
+                $appId = isset($setting['applicationId']) ? $setting['applicationId'] : '';
+        ?>
+        <tr class="appsetting-row" data-idx="<?php echo $idx; ?>" 
+            data-app-id="<?php echo htmlspecialchars($appId); ?>"
+            data-app-name="<?php echo htmlspecialchars($appName); ?>"
+            data-app-pkg="<?php echo htmlspecialchars($appPkg); ?>"
+            data-setting-name="<?php echo htmlspecialchars($settingName); ?>"
+            data-setting-value="<?php echo htmlspecialchars($settingValue); ?>"
+            data-setting-comment="<?php echo htmlspecialchars($settingComment); ?>">
+            <td style="border: 1px solid #ddd; padding: 10px;"><small style="color: #666;"><?php echo htmlspecialchars($appPkg); ?></small></td>
+            <td style="border: 1px solid #ddd; padding: 10px;"><strong><?php echo htmlspecialchars($appName); ?></strong></td>
+            <td style="border: 1px solid #ddd; padding: 10px;"><?php echo htmlspecialchars($settingName); ?></td>
+            <td style="border: 1px solid #ddd; padding: 10px;"><pre style="margin: 0; white-space: pre-wrap; font-size: 11px;"><?php echo htmlspecialchars($settingValue); ?></pre></td>
+            <td style="border: 1px solid #ddd; padding: 10px;"><?php echo htmlspecialchars($settingComment); ?></td>
+            <td style="border: 1px solid #ddd; padding: 10px; white-space: nowrap;"><?php echo htmlspecialchars($createDate); ?></td>
+            <td style="border: 1px solid #ddd; padding: 10px; text-align: center; white-space: nowrap;">
+                <button type="button" class="appsetting-edit-btn" data-idx="<?php echo $idx; ?>" title="<?php echo _T("Edit", "mobile"); ?>" style="background: none; border: none; padding: 0; margin: 0 5px; cursor: pointer;">
+                    <img src="img/actions/edit.svg" style="vertical-align: middle;" width="20" height="20" />
+                </button>
+                <button type="button" class="appsetting-delete-btn" data-idx="<?php echo $idx; ?>" title="<?php echo _T("Delete", "mobile"); ?>" style="background: none; border: none; padding: 0; margin: 0 5px; cursor: pointer;">
+                    <img src="img/actions/delete.svg" style="vertical-align: middle;" width="20" height="20" />
+                </button>
+                <input type="hidden" class="appsetting-data" name="appsetting_data_<?php echo $idx; ?>" value="<?php echo htmlspecialchars(json_encode($setting)); ?>" />
+                <input type="hidden" class="appsetting-remove-field" name="appsetting_remove_<?php echo $idx; ?>" value="0" />
+            </td>
+        </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+<?php
+$resultsHtml = ob_get_clean();
+$form->push(new Table());
+$form->add(new TrFormElementcollapse(new textTpl($resultsHtml)));
+$form->pop();
+
 $form->pop(); // end Appsettings div
 
 $form->push(new Div(array('id' => 'tab-files', 'style' => 'display:none;')));
+
+ob_start();
+?>
+<div id="tab-table-files-filters" class="searchbox" style="margin-bottom: 12px;">
+    <div id="searchBest">
+        <span class="searchfield">
+            <input type="text" id="file_search_filter" name="file_search_filter" class="searchfieldreal" placeholder="<?php echo _T("Search for a file", "mobile"); ?>" />
+            <button type="button" class="search-clear" aria-label="<?php echo _T('Clear search', 'base'); ?>"
+                            onclick="jQuery('#file_search_filter').val(''); jQuery('#file_search_filter').trigger('input');"></button>
+        </span>
+        <button onclick="jQuery('#file_search_filter').trigger('input'); return false;"><?php echo _T("Search", "glpi");?></button>
+        <span class="loader" aria-hidden="true"></span>
+    </div>
+</div>
+<?php
+$filtersHtml = ob_get_clean();
 $form->push(new Table());
+$form->add(new TrFormElementcollapse(new textTpl($filtersHtml)));
+$form->pop();
+
+$configFiles = isset($config['files']) && is_array($config['files']) ? $config['files'] : array();
+$allFiles = xmlrpc_get_hmdm_files();
+if (!is_array($allFiles)) { $allFiles = array(); }
+
+ob_start();
+?>
+<table id="tab-table-files-results" style="width: 100%; border-collapse: collapse; border: 1px solid #ddd; margin-bottom: 12px;">
+    <thead style="background-color: #f5f5f5;">
+        <tr>
+            <th style="border: 1px solid #ddd; padding: 10px; text-align: left;"><?php echo _T("URL", "mobile"); ?></th>
+            <th style="border: 1px solid #ddd; padding: 10px; text-align: left;"><?php echo _T("File description", "mobile"); ?></th>
+            <th style="border: 1px solid #ddd; padding: 10px; text-align: left;"><?php echo _T("Path on device", "mobile"); ?></th>
+            <th style="border: 1px solid #ddd; padding: 10px; text-align: left;"><?php echo _T("Action", "mobile"); ?></th>
+            <th style="border: 1px solid #ddd; padding: 10px; text-align: left;"><?php echo _T("Variable", "mobile"); ?></th>
+        </tr>
+    </thead>
+    <tbody id="file_table_body">
+        <?php foreach ($allFiles as $idx => $file):
+                $fileId = isset($file['id']) ? $file['id'] : '';
+                $filePath = isset($file['filePath']) ? $file['filePath'] : '';
+                $fileName = basename($filePath);
+                $fileUrl = isset($file['url']) ? $file['url'] : '';
+                $fileDescription = isset($file['description']) ? $file['description'] : '';
+                $fileDevicePath = isset($file['devicePath']) ? $file['devicePath'] : '';
+                $fileReplaceVariables = isset($file['replaceVariables']) ? $file['replaceVariables'] : false;
+                
+                $fileAction = 0; // Exclude by default
+                foreach ($configFiles as $cf) {
+                    $configFileId = isset($cf['fileId']) ? $cf['fileId'] : (isset($cf['id']) ? $cf['id'] : null);
+                    if ($configFileId && $configFileId == $fileId) {
+                        // File is in this config - check if it's marked for removal
+                        if (isset($cf['remove']) && $cf['remove']) {
+                            $fileAction = 2; // Remove
+                        } else {
+                            $fileAction = 1; // Include
+                        }
+                        break;
+                    }
+                }
+                
+                $rowStyle = 'border: 1px solid #ddd;';
+        ?>
+        <tr style="<?php echo $rowStyle; ?>" class="file-row" data-file-id="<?php echo htmlspecialchars($fileId); ?>" data-file-name="<?php echo htmlspecialchars($fileName); ?>" data-file-desc="<?php echo htmlspecialchars($fileDescription); ?>" data-file-path="<?php echo htmlspecialchars($fileDevicePath); ?>">
+            <td style="border: 1px solid #ddd; padding: 10px;">
+                <strong class="file-name-text"><?php echo htmlspecialchars($fileUrl ? $fileUrl : $fileName); ?></strong>
+            </td>
+            <td style="border: 1px solid #ddd; padding: 10px;"><?php echo htmlspecialchars($fileDescription); ?></td>
+            <td style="border: 1px solid #ddd; padding: 10px;"><?php echo htmlspecialchars($fileDevicePath); ?></td>
+            <td style="border: 1px solid #ddd; padding: 10px;">
+                <select name="file_action_<?php echo $idx; ?>" class="file-action-select form-control" style="width: 100%;">
+                    <option value="1"<?php echo ($fileAction === 1 ? ' selected' : ''); ?>><?php echo _T("Include", "mobile"); ?></option>
+                    <option value="0"<?php echo ($fileAction === 0 ? ' selected' : ''); ?>><?php echo _T("Exclude", "mobile"); ?></option>
+                    <option value="2"<?php echo ($fileAction === 2 ? ' selected' : ''); ?>><?php echo _T("Remove", "mobile"); ?></option>
+                </select>
+            </td>
+            <td style="border: 1px solid #ddd; padding: 10px; text-align: center;">
+                <?php echo $fileReplaceVariables ? _T("Yes", "mobile") : _T("No", "mobile"); ?>
+            </td>
+        </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+<div id="files-pagination" style="margin-bottom: 12px;"></div>
+<?php
+$resultsHtml = ob_get_clean();
+$form->push(new Table());
+$form->add(new TrFormElementcollapse(new textTpl($resultsHtml)));
+$form->pop();
+
 $form->pop(); // end Files table
 $form->pop(); // end Files div
 
@@ -1293,8 +1603,6 @@ jQuery(document).ready(function() {
         }
     }
     jQuery('input[name="config_brightness"]').on('change', toggleBrightnessSlider);
-
-    // DESIGN TAB
     
     function toggleDesignFields() {
         var useDefault = jQuery('input[name="config_use_default_design"]').is(':checked');
@@ -1315,8 +1623,6 @@ jQuery(document).ready(function() {
         }
     }
     jQuery('select[name="config_desktop_title_mode"]').on('change', toggleDesktopTitleRow);
-
-    // MDM TOGGLES
     
     function toggleKioskCheckboxes() {
         var kioskMode = jQuery('input[name="config_kiosk_mode"]').is(':checked');
@@ -1346,7 +1652,6 @@ jQuery(document).ready(function() {
             jQuery('textarea[name="config_allowed_classes"]').prop('disabled', true);
             jQuery('textarea[name="config_restrictions"]').prop('disabled', true);
         } else {
-            // Only show lock-safe-settings if kiosk mode is not checked
             if (!kioskMode) {
                 jQuery('.lock-safe-settings-row').show();
             }
@@ -1359,12 +1664,8 @@ jQuery(document).ready(function() {
     }
     jQuery('input[name="config_permissive"]').on('change', togglePermissiveDependents);
 
-    // TAB SWITCHING
-    
-    // Define tab names; each tab is a div container with an inner table
+    // tabs
     var tabNames = ['common', 'design', 'apps', 'mdm', 'appsettings', 'files'];
-
-    // Hide all tab containers except the first (common)
     tabNames.forEach(function(name, idx) {
         var $container = jQuery('#tab-' + name);
         if (idx === 0) {
@@ -1372,7 +1673,6 @@ jQuery(document).ready(function() {
         } else {
             $container.hide().removeClass('active-tab');
         }
-        // assign IDs to inner tables 
         var $innerTable = $container.find('table').first();
         if ($innerTable.length) {
             $innerTable.attr('id', 'tab-table-' + name);
@@ -1385,7 +1685,6 @@ jQuery(document).ready(function() {
         jQuery('.tab-link').removeClass('active');
         jQuery(this).addClass('active');
         
-        // Hide all containers and show only the target
         tabNames.forEach(function(name) {
             jQuery('#tab-' + name).hide().removeClass('active-tab');
         });
@@ -1399,7 +1698,6 @@ jQuery(document).ready(function() {
         }
     });
 
-    // Toggle Show Icon and Order visibility when Action dropdown changes
     jQuery(document).on('change', '.app-action-select', function() {
         var $row = jQuery(this).closest('tr');
         var actionValue = parseInt(jQuery(this).val());
@@ -1415,7 +1713,6 @@ jQuery(document).ready(function() {
         }
     });
 
-    // Toggle Order visibility based on Icon dropdown
     jQuery(document).on('change', '.app-icon-select', function() {
         var $row = jQuery(this).closest('tr');
         var iconValue = parseInt(jQuery(this).val());
@@ -1428,13 +1725,11 @@ jQuery(document).ready(function() {
         }
     });
 
-    // APPS FILTER + PAGINATION
     var appPageSize = 10;
     var appCurrentPage = 1;
     var $appTableBody = jQuery('#tab-apps #app_table_body');
-    var $appAllRows = null; // Store original rows before they get emtpied
+    var $appAllRows = null;
     
-    // Capture all original rows on page load
     function captureOriginalRows() {
         $appAllRows = [];
         jQuery('#tab-table-apps-results tbody tr').each(function() {
@@ -1482,12 +1777,10 @@ jQuery(document).ready(function() {
             var isSysStr = ($r.attr('data-is-system') || '0');
             var isSys = (isSysStr === '1');
             
-            // Apply system filter
             if (!showSystem && isSys) { 
                 continue;
             }
             
-            // Apply search filter
             if (search) {
                 if (nm.indexOf(search) === -1 && pkg.indexOf(search) === -1) {
                     continue;
@@ -1497,7 +1790,6 @@ jQuery(document).ready(function() {
             visibleRows.push($r);
         };
         
-        // Sort
         visibleRows.sort(function(a, b) {
             var $a = jQuery(a), $b = jQuery(b);
             var aName = ($a.data('appName') || '').toString().toLowerCase();
@@ -1535,7 +1827,6 @@ jQuery(document).ready(function() {
         renderAppsPage();
     }
 
-    // Wire filter events
     jQuery('#app_search_filter').on('input', function() { refreshApps(); });
     jQuery('#app_sort_by').on('change', function() { refreshApps(); });
     jQuery('#app_system_filter').on('change', function() { refreshApps(); });
@@ -1554,7 +1845,6 @@ jQuery(document).ready(function() {
         togglePermissiveDependents();
     }, 100);
 
-    // APP AUTOCOMPLETE
     var allApps = <?php echo $appsJson; ?>;
     
     function setupAppAutocomplete(inputId, suggestionsId) {
@@ -1643,8 +1933,403 @@ jQuery(document).ready(function() {
     
     setupAppAutocomplete('config_main_app', 'main-app-suggestions');
     setupAppAutocomplete('config_content_app', 'content-app-suggestions');
+    
+    jQuery('#open_appsetting_modal_btn').on('click', function() {
+        jQuery('#appsetting-modal').fadeIn(200);
+    });
+    
+    jQuery('#close_appsetting_modal_btn, #cancel_appsetting_btn').on('click', function() {
+        jQuery('#appsetting_app_name').val('').prop('readonly', false);
+        jQuery('#appsetting_app_id').val('');
+        jQuery('#appsetting_app_pkg').val('');
+        jQuery('#appsetting_name').val('');
+        jQuery('#appsetting_value').val('');
+        jQuery('#appsetting_comment').val('');
+        appSettingSelectedApp = null;
+        
+        jQuery('#appsetting_modal_title').text('<?php echo _T("Add Application Setting", "mobile"); ?>');
+        jQuery('#add_appsetting_btn').text('<?php echo _T("Add Setting", "mobile"); ?>');
+        
+        jQuery('#appsetting-modal').removeData('editing-row');
+        jQuery('#appsetting-modal').removeData('editing-idx');
+        
+        jQuery('#appsetting-modal').fadeOut(200);
+    });
+    
+    jQuery('#appsetting-modal').on('click', function(e) {
+        if (e.target.id === 'appsetting-modal') {
+            jQuery('#appsetting_app_name').val('').prop('readonly', false);
+            jQuery('#appsetting_app_id').val('');
+            jQuery('#appsetting_app_pkg').val('');
+            jQuery('#appsetting_name').val('');
+            jQuery('#appsetting_value').val('');
+            jQuery('#appsetting_comment').val('');
+            appSettingSelectedApp = null;
+            
+            jQuery('#appsetting_modal_title').text('<?php echo _T("Add Application Setting", "mobile"); ?>');
+            jQuery('#add_appsetting_btn').text('<?php echo _T("Add Setting", "mobile"); ?>');
+            
+            jQuery('#appsetting-modal').removeData('editing-row');
+            jQuery('#appsetting-modal').removeData('editing-idx');
+            
+            jQuery('#appsetting-modal').fadeOut(200);
+        }
+    });
+    
+    var appSettingSelectedApp = null;
+    
+    var inputEl = document.getElementById('appsetting_app_name');
+    if (inputEl) {
+        var suggestionsEl = document.createElement('ul');
+        suggestionsEl.id = 'appsetting-app-suggestions';
+        suggestionsEl.style.cssText = 'position: absolute; background: white; border: 1px solid #ccc; list-style: none; padding: 0; margin: 0; display: none; z-index: 1000; box-sizing: border-box; max-height: 200px; overflow-y: auto;';
+        
+        inputEl.parentElement.appendChild(suggestionsEl);
+        
+        function positionSuggestions() {
+            var rect = inputEl.getBoundingClientRect();
+            var top = (inputEl.offsetTop + inputEl.offsetHeight);
+            var left = inputEl.offsetLeft;
+            var width = inputEl.offsetWidth;
+            suggestionsEl.style.top = top + 'px';
+            suggestionsEl.style.left = left + 'px';
+            suggestionsEl.style.width = width + 'px';
+        }
 
-    // COLOR PICKER INPUTS
+        var autocompleteTimeout;
+        
+        inputEl.addEventListener('input', function(e) {
+            clearTimeout(autocompleteTimeout);
+            var query = e.target.value.toLowerCase();
+            appSettingSelectedApp = null;
+            document.getElementById('appsetting_app_id').value = '';
+            document.getElementById('appsetting_app_pkg').value = '';
+            
+            if (query.length < 1) {
+                suggestionsEl.style.display = 'none';
+                return;
+            }
+            
+            autocompleteTimeout = setTimeout(function() {
+                suggestionsEl.innerHTML = '';
+                var matches = allApps.filter(function(app) {
+                    return app.name.toLowerCase().indexOf(query) !== -1 || app.pkg.toLowerCase().indexOf(query) !== -1;
+                }).slice(0, 10);
+                
+                if (matches.length > 0) {
+                    positionSuggestions();
+                    matches.forEach(function(app) {
+                        var li = document.createElement('li');
+                        li.style.cssText = 'padding: 8px 12px; cursor: pointer; border-bottom: 1px solid #eee;';
+                        li.innerHTML = '<strong>' + app.name + '</strong><br><small style="color:#666;">' + app.pkg + '</small>';
+                        li.title = app.name + ' (' + app.pkg + ')';
+                        li.setAttribute('data-id', app.id);
+                        li.setAttribute('data-pkg', app.pkg);
+                        li.setAttribute('data-name', app.name);
+                        
+                        li.onmouseover = function() {
+                            li.style.backgroundColor = '#f0f0f0';
+                        };
+                        li.onmouseout = function() {
+                            li.style.backgroundColor = 'white';
+                        };
+                        
+                        li.onclick = function() {
+                            appSettingSelectedApp = {
+                                id: app.id,
+                                name: app.name,
+                                pkg: app.pkg
+                            };
+                            inputEl.value = app.name;
+                            document.getElementById('appsetting_app_id').value = app.id;
+                            document.getElementById('appsetting_app_pkg').value = app.pkg;
+                            suggestionsEl.style.display = 'none';
+                        };
+                        
+                        suggestionsEl.appendChild(li);
+                    });
+                    suggestionsEl.style.display = 'block';
+                } else {
+                    suggestionsEl.style.display = 'none';
+                }
+            }, 200);
+        });
+        
+        document.addEventListener('click', function(e) {
+            if (e.target !== inputEl && e.target.parentElement !== suggestionsEl) {
+                suggestionsEl.style.display = 'none';
+            }
+        });
+    }
+    
+    jQuery('#add_appsetting_btn').on('click', function() {
+        var appId = jQuery('#appsetting_app_id').val();
+        var appName = jQuery('#appsetting_app_name').val().trim();
+        var appPkg = jQuery('#appsetting_app_pkg').val();
+        var settingName = jQuery('#appsetting_name').val().trim();
+        var settingValue = jQuery('#appsetting_value').val();
+        var settingComment = jQuery('#appsetting_comment').val().trim();
+        
+        if (!appId || !appName) {
+            alert('<?php echo _T("Please select an application", "mobile"); ?>');
+            return;
+        }
+        if (!settingName) {
+            alert('<?php echo _T("Please enter an attribute name", "mobile"); ?>');
+            return;
+        }
+        
+        var $modal = jQuery('#appsetting-modal');
+        var $editingRow = $modal.data('editing-row');
+        
+        if ($editingRow && $editingRow.length) {
+            var idx = $editingRow.data('idx');
+            $editingRow.attr('data-app-id', appId);
+            $editingRow.attr('data-app-name', appName);
+            $editingRow.attr('data-app-pkg', appPkg);
+            $editingRow.attr('data-setting-name', settingName);
+            $editingRow.attr('data-setting-value', settingValue);
+            $editingRow.attr('data-setting-comment', settingComment);
+            
+            $editingRow.find('td:eq(0)').html('<small style="color: #666;">' + appPkg + '</small>');
+            $editingRow.find('td:eq(1)').html('<strong>' + appName + '</strong>');
+            $editingRow.find('td:eq(2)').text(settingName);
+            $editingRow.find('td:eq(3)').html('<pre style="margin: 0; white-space: pre-wrap; font-size: 11px;">' + settingValue + '</pre>');
+            $editingRow.find('td:eq(4)').text(settingComment);
+            
+            if (!$editingRow.hasClass('appsetting-new')) {
+                try {
+                    var $dataField = $editingRow.find('.appsetting-data');
+                    var settingData = JSON.parse($dataField.val());
+                    var originalAppId = settingData.applicationId;
+                    var idx = $editingRow.data('idx');
+                    
+                    // hmdm can't change appid on existing setting
+                    if (originalAppId !== parseInt(appId)) {
+                        console.log('Application changed from', originalAppId, 'to', appId, '- marking old for removal and creating new');
+                        
+                        var $removeField = $editingRow.find('input[name="appsetting_remove_' + idx + '"]');
+                        if ($removeField.length === 0) {
+                            $editingRow.append('<input type="hidden" name="appsetting_remove_' + idx + '" value="1">');
+                        } else {
+                            $removeField.val('1');
+                        }
+                        
+                        $editingRow.addClass('appsetting-new');
+                        $editingRow.removeClass('appsetting-existing');
+                        
+                        var newIdx = jQuery('#appsettings_table_body tr').length;
+                        $editingRow.attr('data-idx', newIdx);
+                        $editingRow.find('.appsetting-data').remove();
+                        
+                        // timestamp in seconds, backend converts to ms
+                        var nowSeconds = Math.floor(Date.now() / 1000);
+                        $editingRow.find('td:eq(0)').append(
+                            '<input type="hidden" name="appsetting_new_appid_' + newIdx + '" value="' + appId + '">' +
+                            '<input type="hidden" name="appsetting_new_appname_' + newIdx + '" value="' + appName + '">' +
+                            '<input type="hidden" name="appsetting_new_apppkg_' + newIdx + '" value="' + appPkg + '">'
+                        );
+                        $editingRow.find('td:eq(2)').append('<input type="hidden" name="appsetting_new_name_' + newIdx + '" value="' + settingName + '">');
+                        $editingRow.find('td:eq(3)').append('<input type="hidden" name="appsetting_new_value_' + newIdx + '" value="' + settingValue + '">');
+                        $editingRow.find('td:eq(4)').append(
+                            '<input type="hidden" name="appsetting_new_comment_' + newIdx + '" value="' + settingComment + '">' +
+                            '<input type="hidden" name="appsetting_new_lastupdate_' + newIdx + '" value="' + nowSeconds + '">'
+                        );
+                        
+                        var updateDate = new Date(nowSeconds * 1000).toISOString().slice(0, 19).replace('T', ' ');
+                        $editingRow.find('td:eq(5)').text(updateDate);
+                    } else {
+                        settingData.name = settingName;
+                        settingData.value = settingValue;
+                        settingData.comment = settingComment;
+                        settingData.applicationId = parseInt(appId);
+                        settingData.applicationName = appName;
+                        settingData.applicationPkg = appPkg;
+                        
+                        // save timestamp in seconds
+                        var nowMs = Date.now();
+                        var nowSeconds = Math.floor(nowMs / 1000);
+                        console.log('Timestamp in ms:', nowMs, 'Timestamp in seconds:', nowSeconds);
+                        settingData.lastUpdate = nowSeconds;
+                        var jsonData = JSON.stringify(settingData);
+                        console.log('JSON being saved:', jsonData);
+                        $dataField.val(jsonData);
+                        
+                        var updateDate = new Date(settingData.lastUpdate * 1000).toISOString().slice(0, 19).replace('T', ' ');
+                        $editingRow.find('td:eq(5)').text(updateDate);
+                    }
+                } catch (e) {
+                    console.error('Error updating setting data:', e);
+                }
+            } else {
+                $editingRow.find('input[name="appsetting_new_appid_' + idx + '"]').val(appId);
+                $editingRow.find('input[name="appsetting_new_appname_' + idx + '"]').val(appName);
+                $editingRow.find('input[name="appsetting_new_apppkg_' + idx + '"]').val(appPkg);
+                $editingRow.find('input[name="appsetting_new_name_' + idx + '"]').val(settingName);
+                $editingRow.find('input[name="appsetting_new_value_' + idx + '"]').val(settingValue);
+                $editingRow.find('input[name="appsetting_new_comment_' + idx + '"]').val(settingComment);
+            }
+            
+        } else {
+            var $tbody = jQuery('#appsettings_table_body');
+            var nextIdx = $tbody.find('tr').length;
+            // new setting with timestamp in seconds
+            var nowSeconds = Math.floor(Date.now() / 1000);
+            var currentDate = new Date(nowSeconds * 1000).toISOString().slice(0, 19).replace('T', ' ');
+            
+            var $newRow = jQuery('<tr class="appsetting-row appsetting-new" data-idx="' + nextIdx + '">');
+            
+            $newRow.append('<td style="border: 1px solid #ddd; padding: 10px;"><small style="color: #666;">' + appPkg + '</small>' +
+                '<input type="hidden" name="appsetting_new_appid_' + nextIdx + '" value="' + appId + '">' +
+                '<input type="hidden" name="appsetting_new_appname_' + nextIdx + '" value="' + appName + '">' +
+                '<input type="hidden" name="appsetting_new_apppkg_' + nextIdx + '" value="' + appPkg + '"></td>');
+            $newRow.append('<td style="border: 1px solid #ddd; padding: 10px;"><strong>' + appName + '</strong></td>');
+            $newRow.append('<td style="border: 1px solid #ddd; padding: 10px;">' + settingName + 
+                '<input type="hidden" name="appsetting_new_name_' + nextIdx + '" value="' + settingName + '"></td>');
+            $newRow.append('<td style="border: 1px solid #ddd; padding: 10px;"><pre style="margin: 0; white-space: pre-wrap; font-size: 11px;">' + settingValue + '</pre>' +
+                '<input type="hidden" name="appsetting_new_value_' + nextIdx + '" value="' + settingValue + '"></td>');
+            $newRow.append('<td style="border: 1px solid #ddd; padding: 10px;">' + settingComment +
+                '<input type="hidden" name="appsetting_new_comment_' + nextIdx + '" value="' + settingComment + '">' +
+                '<input type="hidden" name="appsetting_new_lastupdate_' + nextIdx + '" value="' + nowSeconds + '"></td>');
+            $newRow.append('<td style="border: 1px solid #ddd; padding: 10px; white-space: nowrap;">' + currentDate + '</td>');
+            $newRow.append('<td style="border: 1px solid #ddd; padding: 10px; text-align: center; white-space: nowrap;">' +
+                '<button type="button" class="appsetting-edit-btn-new" data-idx="' + nextIdx + '" title="Edit" style="background: none; border: none; padding: 0; margin: 0 5px; cursor: pointer;">' +
+                '<img src="img/actions/edit.svg" style="vertical-align: middle;" width="20" height="20" /></button> ' +
+                '<button type="button" class="appsetting-remove-new" data-idx="' + nextIdx + '" title="Delete" style="background: none; border: none; padding: 0; margin: 0 5px; cursor: pointer;">' +
+                '<img src="img/actions/delete.svg" style="vertical-align: middle;" width="20" height="20" /></button></td>');
+            
+            $tbody.append($newRow);
+        }
+        
+        $modal.fadeOut(200, function() {
+            jQuery('#appsetting_app_name').val('').prop('readonly', false);
+            jQuery('#appsetting_app_id').val('');
+            jQuery('#appsetting_app_pkg').val('');
+            jQuery('#appsetting_name').val('');
+            jQuery('#appsetting_value').val('');
+            jQuery('#appsetting_comment').val('');
+            appSettingSelectedApp = null;
+            
+            jQuery('#appsetting_modal_title').text('<?php echo _T("Add Application Setting", "mobile"); ?>');
+            jQuery('#add_appsetting_btn').text('<?php echo _T("Add Setting", "mobile"); ?>');
+            
+            $modal.removeData('editing-row');
+            $modal.removeData('editing-idx');
+        });
+    });
+    
+    jQuery(document).on('click', '.appsetting-delete-btn', function() {
+        var idx = jQuery(this).data('idx');
+        var $row = jQuery(this).closest('tr');
+        var appName = $row.data('app-name');
+        var settingName = $row.data('setting-name');
+        
+        if (!confirm('<?php echo _T("Delete this setting?", "mobile"); ?>\n' + appName + ' - ' + settingName)) {
+            return;
+        }
+        
+        $row.find('.appsetting-remove-field').val('1');
+        $row.fadeOut(300);
+    });
+    
+    jQuery(document).on('click', '.appsetting-edit-btn', function() {
+        var $row = jQuery(this).closest('tr');
+        var idx = $row.data('idx');
+        var appId = $row.data('app-id');
+        var appName = $row.data('app-name');
+        var appPkg = $row.data('app-pkg');
+        var settingName = $row.data('setting-name');
+        var settingValue = $row.data('setting-value');
+        var settingComment = $row.data('setting-comment');
+        
+        jQuery('#appsetting-modal').data('editing-row', $row);
+        jQuery('#appsetting-modal').data('editing-idx', idx);
+        
+        jQuery('#appsetting_modal_title').text('<?php echo _T("Edit Application Setting", "mobile"); ?>');
+        jQuery('#add_appsetting_btn').text('<?php echo _T("Save Changes", "mobile"); ?>');
+        
+        jQuery('#appsetting_app_name').val(appName);
+        jQuery('#appsetting_app_id').val(appId);
+        jQuery('#appsetting_app_pkg').val(appPkg);
+        jQuery('#appsetting_name').val(settingName);
+        jQuery('#appsetting_value').val(settingValue);
+        jQuery('#appsetting_comment').val(settingComment);
+        appSettingSelectedApp = { id: appId, name: appName, pkg: appPkg };
+        
+        jQuery('#appsetting-modal').fadeIn(200);
+    });
+    
+    jQuery(document).on('click', '.appsetting-edit-btn-new', function() {
+        var $row = jQuery(this).closest('tr');
+        var idx = jQuery(this).data('idx');
+        
+        var appId = $row.find('input[name="appsetting_new_appid_' + idx + '"]').val();
+        var appName = $row.find('input[name="appsetting_new_appname_' + idx + '"]').val();
+        var appPkg = $row.find('input[name="appsetting_new_apppkg_' + idx + '"]').val();
+        var settingName = $row.find('input[name="appsetting_new_name_' + idx + '"]').val();
+        var settingValue = $row.find('input[name="appsetting_new_value_' + idx + '"]').val();
+        var settingComment = $row.find('input[name="appsetting_new_comment_' + idx + '"]').val();
+        
+        jQuery('#appsetting-modal').data('editing-row', $row);
+        jQuery('#appsetting-modal').data('editing-idx', idx);
+        
+        jQuery('#appsetting_modal_title').text('<?php echo _T("Edit Application Setting", "mobile"); ?>');
+        jQuery('#add_appsetting_btn').text('<?php echo _T("Save Changes", "mobile"); ?>');
+        
+        jQuery('#appsetting_app_name').val(appName);
+        jQuery('#appsetting_app_id').val(appId);
+        jQuery('#appsetting_app_pkg').val(appPkg);
+        jQuery('#appsetting_name').val(settingName);
+        jQuery('#appsetting_value').val(settingValue);
+        jQuery('#appsetting_comment').val(settingComment);
+        appSettingSelectedApp = { id: appId, name: appName, pkg: appPkg };
+        
+        jQuery('#appsetting-modal').fadeIn(200);
+    });
+    
+    jQuery(document).on('click', '.appsetting-remove-new', function() {
+        var $row = jQuery(this).closest('tr');
+        var idx = jQuery(this).data('idx');
+        var appName = $row.find('input[name="appsetting_new_appname_' + idx + '"]').val();
+        var settingName = $row.find('input[name="appsetting_new_name_' + idx + '"]').val();
+        
+        if (!confirm('<?php echo _T("Delete this setting?", "mobile"); ?>\n' + appName + ' - ' + settingName)) {
+            return;
+        }
+        
+        $row.remove();
+    });
+
+    jQuery('#appsetting_search_filter').on('input', function() {
+        var query = jQuery(this).val().toLowerCase();
+        var $rows = jQuery('#tab-table-appsettings-results tbody tr');
+        
+        if (query === '') {
+            $rows.show();
+        } else {
+            $rows.each(function() {
+                var $row = jQuery(this);
+                var packageId = $row.find('td:eq(0)').text().toLowerCase();
+                var appName = $row.find('td:eq(1)').text().toLowerCase();
+                var attribute = $row.find('td:eq(2)').text().toLowerCase();
+                var value = $row.find('td:eq(3)').text().toLowerCase();
+                var comment = $row.find('td:eq(4)').text().toLowerCase();
+                var createDate = $row.find('td:eq(5)').text().toLowerCase();
+                
+                if (packageId.indexOf(query) !== -1 || 
+                    appName.indexOf(query) !== -1 || 
+                    attribute.indexOf(query) !== -1 || 
+                    value.indexOf(query) !== -1 || 
+                    comment.indexOf(query) !== -1 ||
+                    createDate.indexOf(query) !== -1) {
+                    $row.show();
+                } else {
+                    $row.hide();
+                }
+            });
+        }
+    });
+
     jQuery('input[data-color-picker="true"]').each(function() {
         var $textInput = jQuery(this);
         var $wrapper = $textInput.closest('span');
@@ -1670,5 +2355,87 @@ jQuery(document).ready(function() {
         
         $wrapper.append($colorPicker);
     });
+
+    var filePageSize = 10;
+    var fileCurrentPage = 1;
+    var $fileTableBody = jQuery('#tab-files #file_table_body');
+    var $fileAllRows = null;
+
+    function captureOriginalFileRows() {
+        $fileAllRows = [];
+        jQuery('#tab-table-files-results tbody tr').each(function() {
+            $fileAllRows.push(jQuery(this).clone());
+        });
+    }
+
+    function updateFilesPagination(totalPages, total) {
+        var $p = jQuery('#files-pagination');
+        if (!$p.length) { return; }
+        var prevDisabled = (fileCurrentPage <= 1) ? 'disabled' : '';
+        var nextDisabled = (fileCurrentPage >= totalPages) ? 'disabled' : '';
+        var html = '';
+        html += '<div style="display:flex; align-items:center; gap:10px;">';
+        html += '<button type="button" class="btn btn-default" id="files-prev" ' + prevDisabled + '>&laquo;</button>';
+        html += '<span>Page ' + fileCurrentPage + ' / ' + totalPages + ' (' + total + ' files)</span>';
+        html += '<button type="button" class="btn btn-default" id="files-next" ' + nextDisabled + '>&raquo;</button>';
+        html += '</div>';
+        $p.html(html);
+        jQuery('#files-prev').off('click').on('click', function() {
+            if (fileCurrentPage > 1) { fileCurrentPage -= 1; renderFilesPage(); }
+        });
+        jQuery('#files-next').off('click').on('click', function() {
+            if (fileCurrentPage < totalPages) { fileCurrentPage += 1; renderFilesPage(); }
+        });
+    }
+
+    function renderFilesPage() {
+        if (!$fileTableBody.length || !$fileAllRows) { return; }
+        var search = (jQuery('#file_search_filter').val() || '').toLowerCase();
+        
+        var visibleRows = [];
+        
+        for (var i = 0; i < $fileAllRows.length; i++) {
+            var $r = jQuery($fileAllRows[i]);
+            var fileName = ($r.data('fileName') || '').toString().toLowerCase();
+            var fileDesc = ($r.data('fileDesc') || '').toString().toLowerCase();
+            var filePath = ($r.data('filePath') || '').toString().toLowerCase();
+            
+            // Apply search filter
+            if (search) {
+                if (fileName.indexOf(search) === -1 && fileDesc.indexOf(search) === -1 && filePath.indexOf(search) === -1) {
+                    continue;
+                }
+            }
+            
+            visibleRows.push($r);
+        }
+        
+        var total = visibleRows.length;
+        var totalPages = Math.max(1, Math.ceil(total / filePageSize));
+        if (fileCurrentPage > totalPages) { fileCurrentPage = totalPages; }
+        var start = (fileCurrentPage - 1) * filePageSize;
+        var end = start + filePageSize;
+        
+        $fileTableBody.empty();
+        for (var i = start; i < end && i < visibleRows.length; i++) {
+            var $clone = visibleRows[i].clone();
+            $clone.attr('style', 'border: 1px solid #ddd;');
+            $clone.appendTo($fileTableBody);
+        }
+        updateFilesPagination(totalPages, total);
+    }
+
+    function refreshFiles() {
+        $fileTableBody = jQuery('#tab-files #file_table_body');
+        fileCurrentPage = 1;
+        renderFilesPage();
+    }
+
+    jQuery('#file_search_filter').on('input', function() { refreshFiles(); });
+
+    setTimeout(function() {
+        captureOriginalFileRows();
+        renderFilesPage();
+    }, 150);
 });
 </script>

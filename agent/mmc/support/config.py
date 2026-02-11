@@ -12,8 +12,12 @@ from . import mmctools
 
 import ldap
 import re
+from pulse2.database.admin import AdminDatabase
 from os.path import isfile
 from configparser import ConfigParser, NoOptionError, NoSectionError, InterpolationError
+import logging
+
+logger = logging.getLogger()
 
 
 class ConfigException(Exception):
@@ -89,20 +93,74 @@ class PluginConfig(MMCConfigParser):
     HOOKS = "hooks"
     SERVICE = "service"
 
-    def __init__(self, name, conffile=None):
+    def __init__(self, name, conffile=None, backend="ini", db_table=None):
+        """
+        Args:
+            name: Plugin name
+            conffile: Path to config file (optional)
+            backend: "ini" (default) or "database"
+            db_table: DB table name (e.g., 'xmpp_conf') if backend="database"
+        """
         MMCConfigParser.__init__(self)
         self.name = name
         self.userDefault = {}
         self.hooks = {}
         self.service = {}
-        self.conffile = mmctools.getConfigFile(name) if not conffile else conffile
-        self.setDefault()
-        fid = open(self.conffile, "r")
-        self.readfp(fid, self.conffile)
-        if isfile(f"{self.conffile}.local"):
-            fid = open(f"{self.conffile}.local", "r")
+        self.backend = backend
+        
+        if backend == "database":
+            if not db_table:
+                raise ConfigException(f"db_table required when using database backend for {name}")
+            self.db_table = db_table
+            self.conffile = None  # No file when reading from DB
+            self._admin_db = AdminDatabase()
+            if hasattr(self._admin_db, "activate"):
+                self._admin_db.activate(self)
+            logger.info(f"[PluginConfig] Backend database activé pour {name} (table: {db_table})")
+        else:
+            # Classic INI mode
+            self.conffile = mmctools.getConfigFile(name) if not conffile else conffile
+            self.setDefault()
+            fid = open(self.conffile, "r")
             self.readfp(fid, self.conffile)
+            if isfile(f"{self.conffile}.local"):
+                fid = open(f"{self.conffile}.local", "r")
+                self.readfp(fid, self.conffile)
+            logger.info(f"[PluginConfig] Backend ini file activé pour {name} ({self.conffile})")
+        
+        self.setDefault()
         self.readConf()
+
+    def get(self, section, option, **kwargs):
+        """Override get to route to the appropriate backend"""
+        if self.backend == "database":
+            value = self._admin_db.get_config_value(self.db_table, section, option)
+            if value is None:
+                raise NoOptionError(option, section)
+            return value
+        else:
+            return MMCConfigParser.get(self, section, option, **kwargs)
+
+    def has_option(self, section, option):
+        """Override has_option to route to the appropriate backend"""
+        if self.backend == "database":
+            return self._admin_db.get_config_value(self.db_table, section, option) is not None
+        else:
+            return ConfigParser.has_option(self, section, option)
+
+    def has_section(self, section):
+        """Override has_section to route to the appropriate backend"""
+        if self.backend == "database":
+            return self._admin_db.has_config_section(self.db_table, section)
+        else:
+            return ConfigParser.has_section(self, section)
+
+    def options(self, section):
+        """Override options to route to the appropriate backend"""
+        if self.backend == "database":
+            return self._admin_db.get_config_options(self.db_table, section)
+        else:
+            return ConfigParser.options(self, section)
 
     def readConf(self):
         """Read the configuration file"""

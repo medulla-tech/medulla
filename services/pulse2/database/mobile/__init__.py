@@ -27,10 +27,10 @@ logger = logging.getLogger()
 class MobileDatabase(DatabaseHelper):
     is_activated = False
     session = None
-    # Headwind REST API base (TO DO: consider moving to config)
-    BASE_URL = "http://localhost/hmdm/rest"
-    login = "admin"
-    password = "admin"
+    # Headwind REST API base - configured from config file
+    BASE_URL = None
+    login = None
+    password = None
 
 
     def db_check(self):
@@ -53,6 +53,16 @@ class MobileDatabase(DatabaseHelper):
             return None
 
         self.config = config
+
+        # Load HMDM API configuration from config - fail if not present
+        if not hasattr(config, 'hmdm_url') or not hasattr(config, 'hmdm_login') or not hasattr(config, 'hmdm_password'):
+            logger.error("HMDM configuration missing in mobile.ini. Please add [hmdm] section with url, login, and password.")
+            return False
+        
+        self.BASE_URL = config.hmdm_url
+        self.login = config.hmdm_login
+        self.password = config.hmdm_password
+        logger.info(f"HMDM API configured: {self.BASE_URL}")
 
         try:
             # Create a database engine using the provided configuration
@@ -362,6 +372,32 @@ class MobileDatabase(DatabaseHelper):
             logging.getLogger().error("Impossible d'authentifier pour récupérer la liste des appareils.")
             return []
         return self.getList(auth)
+
+    def getHmdmDevicesOsCount(self):
+        """
+        Get count of HMDM Android devices for dashboard (all hmdm devices are android)
+        Returns: [{'os': 'Android', 'version': 'HMDM', 'count': N}]
+        """
+        auth = self.authenticate()
+        if auth is None:
+            return []
+        
+        url = f"{self.BASE_URL}/private/devices/search"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {auth}"}
+        payload = {"limit": 1, "offset": 0}
+        
+        try:
+            resp = requests.post(url, json=payload, headers=headers)
+            resp.raise_for_status()
+            data = resp.json()
+            total_count = data.get("data", {}).get("devices", {}).get("totalItemsCount", 0)
+            
+            if total_count > 0:
+                return [{'os': 'Android', 'version': 'HMDM', 'count': total_count}]
+            return []
+        except Exception as e:
+            logging.getLogger().error(f"Error getting HMDM device count: {e}")
+            return []
 
     def getHmdmAuditLogs(self, page_size=50, page_num=1, message_filter="", user_filter=""):
         """
@@ -1434,6 +1470,14 @@ class MobileDatabase(DatabaseHelper):
 
             deviceList = []
             for d in devices_items:
+                info = d.get("info", {})
+                
+                lastUpdate = d.get("lastUpdate", 0)
+                lastUpdateSeconds = int(lastUpdate / 1000) if lastUpdate else 0
+                
+                applications = info.get("applications", [])
+                files = info.get("files", [])
+                
                 device_data = {
                     "id": d.get("id", ""),
                     "number": d.get("number", ""),
@@ -1448,12 +1492,24 @@ class MobileDatabase(DatabaseHelper):
                     "phone": d.get("phone", ""),
                     "serial": d.get("serial", ""),
                     "launcherVersion": d.get("launcherVersion", ""),
-                    "mdmMode": d.get("mdmMode", ""),
-                    "kioskMode": d.get("kioskMode", ""),
+                    "mdmMode": d.get("mdmMode", info.get("mdmMode", "")),
+                    "kioskMode": d.get("kioskMode", info.get("kioskMode", "")),
                     "androidVersion": d.get("androidVersion", ""),
-                    "groups": d.get("groups", [])
+                    "lastUpdate": lastUpdateSeconds,
+                    "groups": d.get("groups", []),
+                    "info": {
+                        "permissions": info.get("permissions", []),
+                        "defaultLauncher": info.get("defaultLauncher", False),
+                        "mdmMode": info.get("mdmMode", False),
+                        "kioskMode": info.get("kioskMode", False),
+                        "batteryLevel": info.get("batteryLevel", 0),
+                        "applicationsCount": len(applications),
+                        "filesCount": len(files),
+                        "hasFiles": len(files) > 0
+                    }
                 }
                 deviceList.append(device_data)
+            logging.getLogger().info(f"device data {deviceList}")
 
             return deviceList
 
@@ -1500,15 +1556,30 @@ class MobileDatabase(DatabaseHelper):
             logging.getLogger().error(f"There is an error: device was not created: {e} ")
 
     def _strip_file_last_update(self, config_data: dict):
-        """Remove large millisecond timestamps from files entries to avoid XML-RPC overflow."""
-        try:
-            files = config_data.get('files', []) if isinstance(config_data, dict) else []
-            if isinstance(files, list):
-                for file_item in files:
-                    if isinstance(file_item, dict) and 'lastUpdate' in file_item:
-                        del file_item['lastUpdate']
-        except Exception:
-            pass
+        """Convert millisecond timestamps to seconds to avoid XML-RPC overflow."""
+        if not isinstance(config_data, dict):
+            return
+        timestamp_fields = ['lastUpdate', 'uploadTime', 'createTime']
+        # xmlrpc compatibility
+        for section in ['files', 'applications', 'applicationSettings']:
+            for item in config_data.get(section, []):
+                if isinstance(item, dict):
+                    for field in timestamp_fields:
+                        if field in item and isinstance(item[field], (int, float)):
+                            item[field] = int(item[field] / 1000) if item[field] else 0
+
+    def _restore_timestamps_to_milliseconds(self, config_data: dict):
+        """Convert timestamps from seconds back to milliseconds for HMDM API."""
+        if not isinstance(config_data, dict):
+            return
+        timestamp_fields = ['lastUpdate', 'uploadTime', 'createTime']
+        # xmlrpc compatibility
+        for section in ['files', 'applications', 'applicationSettings']:
+            for item in config_data.get(section, []):
+                if isinstance(item, dict):
+                    for field in timestamp_fields:
+                        if field in item and isinstance(item[field], (int, float)):
+                            item[field] = int(item[field] * 1000) if item[field] else 0
 
     def getHmdmConfigurationById(self, config_id: int, base_url: str = None):
         """
@@ -1566,17 +1637,27 @@ class MobileDatabase(DatabaseHelper):
             logging.getLogger().error("Impossible d'authentifier pour mettre à jour la configuration.")
             return None
 
-        # First, GET the existing configuration
+        # log what we're receiving from frontend
+        logging.getLogger().info(f"Received config_data for update: {json.dumps(config_data, indent=2)}")
+        
+        # first, GET the existing configuration
         existing = self.getHmdmConfigurationById(config_id)
         if not existing:
             logging.getLogger().error(f"Could not fetch existing configuration {config_id}")
             return None
 
-        # Merge user changes into existing config
+        # merge user changes into existing config
         existing.update(config_data)
 
-        # Ensure outgoing payload does not contain large integers in files
-        self._strip_file_last_update(existing)
+        # front uses s but back uses ms
+        if 'applicationSettings' in config_data and isinstance(config_data['applicationSettings'], list):
+            for incoming_setting in config_data['applicationSettings']:
+                if 'lastUpdate' in incoming_setting and incoming_setting['lastUpdate']:
+                    incoming_setting['lastUpdate'] = int(incoming_setting['lastUpdate'] * 1000)
+            
+            existing['applicationSettings'] = config_data['applicationSettings']
+
+        logging.getLogger().info(f"Final payload to HMDM (after merge): {json.dumps(existing, indent=2)}")
 
         url = f"{self.BASE_URL}/private/configurations"
         headers = {
@@ -1585,17 +1666,55 @@ class MobileDatabase(DatabaseHelper):
         }
 
         try:
-            logging.getLogger().info(f"Updating HMDM configuration {config_id} with merged payload: {json.dumps(existing, indent=2)}")
             resp = requests.put(url, headers=headers, json=existing)
             resp.raise_for_status()
             data = resp.json()
             cleaned = data.get('data', data) or {}
+            # xmlrpc compatibility
             self._strip_file_last_update(cleaned)
             logging.getLogger().info(f"Configuration {config_id} updated successfully: {json.dumps(cleaned, indent=2)}")
             return cleaned
         except Exception as e:
             logging.getLogger().error(f"Error updating configuration {config_id}: {e}")
             return None
+
+    def copyHmdmConfiguration(self, id, name, description):
+        """
+        Copy/duplicate an HMDM configuration with a new name.
+        
+        :param id: Original configuration ID to copy
+        :param name: New configuration name
+        :param description: New configuration description
+        :return: Response from HMDM or None on error
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Failed to authenticate for copying configuration.")
+            return None
+
+        url = f"{self.BASE_URL}/private/configurations/copy"
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {hmtoken}"
+        }
+
+        payload = {
+            "id": int(id),
+            "name": name,
+            "description": description
+        }
+
+        logging.getLogger().info(f"Copying configuration {id} with payload: {json.dumps(payload, indent=2)}")
+
+        try:
+            resp = requests.put(url, headers=headers, json=payload)
+            resp.raise_for_status()
+            result = resp.json()
+            logging.getLogger().info(f"Configuration copied successfully: {json.dumps(result, indent=2)}")
+            return {"status": "OK", "data": result}
+        except Exception as e:
+            logging.getLogger().error(f"Error copying configuration {id}: {e}")
+            return {"status": "ERROR", "message": str(e)}
 
     def deleteHmdmDeviceById(self, device_id: int):
         """
