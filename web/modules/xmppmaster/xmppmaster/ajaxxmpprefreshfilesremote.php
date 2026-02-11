@@ -61,7 +61,7 @@ if (isset($lifdir['err'])){
     }else{
         $msg = sprintf(_T("Error : %s", "xmppmaster"), $machine);
     }
-        echo '<h2 style="color : red;">';
+        echo '<h2 class="text-error-header">';
         echo "$msg";
         echo "</h2>";
         exit;
@@ -86,14 +86,14 @@ printf ('
 
 
 
-echo "<h2>Remove Root file system : <span style=\"Font-Weight : Bold ;font-size : 15px;\"  id='remotecurrrent'>".$lifdir['rootfilesystem'] ."</span></h2>";
-echo "<h2>Parent Dir .. : <span style=\"Font-Weight : Bold ;font-size : 15px;\"  id='remotecurrrent'>".$lifdir['parentdir'] ."</span></h2>";
+echo "<h2>Remove Root file system : <span class=\"fb-remote-path\"  id='remotecurrrent'>".$lifdir['rootfilesystem'] ."</span></h2>";
+echo "<h2>Parent Dir .. : <span class=\"fb-remote-path\"  id='remotecurrrent'>".$lifdir['parentdir'] ."</span></h2>";
 echo'
     <ul class="rightdir">';
         foreach($lifdir['list_dirs_current'] as $namedir){
             echo "<li>
                       <span class='dir'>".$namedir."</span>
-                      <span class='but'><img style='padding-left : 20px; float : right;'src='modules/xmppmaster/graph/img/browserdownload.png'></span>
+                      <span class='but'><img class='fb-download-icon' src='modules/xmppmaster/graph/img/browserdownload.png'></span>
                  </li>";
         }
         echo'
@@ -103,9 +103,9 @@ echo'
     <ul class="rightfile">';
         foreach($lifdir['list_files_current'] as $namefile){
             echo "<li>
-                    <span style='position : relative; top : -4px;'>".$namefile[0]."</span>
-                    <span style='position : relative; top : -4px;'>[ ".sizefile($namefile[1])."] </span>
-                    <span><img  class='download' style='padding-left : 20px;float : right;' src='modules/xmppmaster/graph/img/browserdownload.png'></span>
+                    <span class='fb-file-info'>".$namefile[0]."</span>
+                    <span class='fb-file-info'>[ ".sizefile($namefile[1])."] </span>
+                    <span><img class='download fb-download-icon' src='modules/xmppmaster/graph/img/browserdownload.png'></span>
                 </li>";
         }
       echo '

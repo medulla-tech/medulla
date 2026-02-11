@@ -39,7 +39,7 @@ function displayErrorCss($name)
 {
     global $formErrorArray;
     if (isFormError($name)) {
-        print ' style="color: #C00; text-align:right;"';
+        print ' class="form-error-text"';
     }
 }
 
@@ -74,7 +74,7 @@ class AbstractTpl extends HtmlElement
 
     public function displayHide($arrParam)
     {
-        print '<div style="color: #C00;">' . _("unavailable") . '</div>';
+        print '<div class="form-unavailable">' . _("unavailable") . '</div>';
         print '<input type="hidden" value="' . $arrParam["value"] . '" name="' . $this->name . '" />';
     }
 
@@ -183,13 +183,13 @@ class RadioTpl extends AbstractTpl
         }
 
         if (isset($this->choiceWidget)) {
-            print '<table cellspacing="0" style="border: none; margin: 0px;">' . "\n";
+            print '<table cellspacing="0" class="form-table-inline">' . "\n";
         }
 
         foreach ($this->choiceVal as $key => $value) {
             if (isset($this->choiceWidget)) {
                 if ($key == 0) {
-                    print '<tr><td style="border-top: none;">';
+                    print '<tr><td class="form-table-inline">';
                 } else {
                     print '<tr><td>';
                 }
@@ -209,7 +209,7 @@ class RadioTpl extends AbstractTpl
 
             if (isset($this->choiceWidget)) {
                 if ($key == 0) {
-                    print '</td><td style="border-top: none;">';
+                    print '</td><td class="form-table-inline">';
                 } else {
                     print '</td><td>';
                 }
@@ -245,7 +245,7 @@ class ImageTpl extends AbstractTpl
             $img = "modules/base/graph/users/img/icn_users_large.gif";
         }
         echo '
-                <img src=' . $img . ' style="border-width: 1px; border-style: solid" />
+                <img src=' . $img . ' class="form-image-bordered" />
             </td>
         </tr>
         <tr>
@@ -263,7 +263,7 @@ class ImageTpl extends AbstractTpl
         } else {
             $img = "modules/base/graph/users/img/icn_users_large.gif";
         }
-        echo '<img src=' . $img . ' style="border-width: 1px; border-style: solid" />';
+        echo '<img src=' . $img . ' class="form-image-bordered" />';
     }
 
 }
@@ -328,7 +328,7 @@ class CheckboxTpl extends AbstractTpl
         } else {
             $value = "off";
         }
-        print '<div style="color: #C00;">' . _("unavailable") . '</div>';
+        print '<div class="form-unavailable">' . _("unavailable") . '</div>';
         print '<input type="hidden" value="' . $value . '" name="' . $this->name . '" />';
     }
 
@@ -635,8 +635,8 @@ class DynamicDateTpl extends InputTpl
         $readonlystr = ($this->readonly) ? "readonly=1" : "";
         print '
             <span id="container_input_' . $this->name . '">
-                <input style="width:100px" name="' . $this->name . '" id="' . $this->name . '" type="' . $this->fieldType . '" size="' . $this->size . '" value="' . $arrParam["value"] . '"'.$readonlystr.' />
-                <input type="image" style="width: 24px;height: 21px;vertical-align: bottom;" src="graph/jscalendar/img/calendar.png" id="' . $this->name . '_button" />
+                <input class="form-input-calendar" name="' . $this->name . '" id="' . $this->name . '" type="' . $this->fieldType . '" size="' . $this->size . '" value="' . $arrParam["value"] . '"'.$readonlystr.' />
+                <input type="image" class="form-input-calendar-btn" src="graph/jscalendar/img/calendar.png" id="' . $this->name . '_button" />
         ';
 
         // ugly gettext workaround
@@ -688,7 +688,7 @@ class DateTimeTpl extends AbstractTpl {
     {
         // Display text input
         $value = (isset($arrParam['value'])) ? $arrParam["value"] : '';
-        print '<input style="width:130px" name="' . $this->name . '" id="' . $this->name . '" type="text" value="' . $value . '" readonly=1 />';
+        print '<input class="form-input-datetime" name="' . $this->name . '" id="' . $this->name . '" type="text" value="' . $value . '" readonly=1 />';
 
         if (!isset($GLOBALS["__JSDATETIME_SOURCED__"])) { // to avoid double-sourcing
             $GLOBALS["__JSDATETIME_SOURCED__"] = 1;
@@ -859,9 +859,9 @@ class MultipleInputTpl extends AbstractTpl
         print '<div id="' . $this->name . '">';
         print '<table>';
         print '<tr class="mmc-form-row"><td class="mmc-label">' . $this->desc . '</td>';
-        print '<td style="color: rgb(204, 0, 0);">' . _('unavailable') . '</td></tr>';
+        print '<td class="form-unavailable">' . _('unavailable') . '</td></tr>';
         print '</table>';
-        print '<div style="display:none">';
+        print '<div class="d-none">';
         print '<table>';
         foreach ($arrParam as $key => $param) {
             $test = new DeletableTrFormElement(
@@ -939,11 +939,11 @@ class MembersTpl extends AbstractTpl
 
         <td class="membersTplSwitchs">
             <a href="#" onclick="switch_' . $this->name . '(\'available_' . $this->name . '\', \'' . $this->name . '\'); event.returnValue=false; return false;">
-                <img style="padding: 5px;" src="img/other/right.svg" width="25" height="25" value="<--" />
+                <img class="p-5" src="img/other/right.svg" width="25" height="25" value="<--" />
             </a>
             <br/>
             <a href="#" onclick="switch_' . $this->name . '(\'' . $this->name . '\', \'available_' . $this->name . '\'); event.returnValue=false; return false;">
-                <img style="padding: 5px;" src="img/other/left.svg" width="25" height="25" value = "-->" />
+                <img class="p-5" src="img/other/left.svg" width="25" height="25" value = "-->" />
             </a>
         </td>
 
@@ -1007,7 +1007,7 @@ class MembersTpl extends AbstractTpl
             echo '<input type="hidden" name="' . $this->name . '[]" value="' . $name . '" />';
         }
 
-        echo '<div style="color: #C00;">' . _("unavailable") . '</div>';
+        echo '<div class="form-unavailable">' . _("unavailable") . '</div>';
     }
 
 }
@@ -1174,7 +1174,7 @@ class SelectMultiTpl extends SelectItem
         $ret .= " name=\"" . $this->name . "\" id=\"" . $this->id . "\" style=\"width: auto\" multiple>\n";
         $ret .= $this->content_to_string($paramArray);
         $ret .= "</select>";
-        $ret .= '<p style="margin-top: 5px;"><button class="btn btn-small" onclick="toggleMultiAll(this); return false;">' . _("Toggle selection") . '</button></p>';
+        $ret .= '<p class="mt-5"><button class="btn btn-small" onclick="toggleMultiAll(this); return false;">' . _("Toggle selection") . '</button></p>';
         return $ret;
     }
 

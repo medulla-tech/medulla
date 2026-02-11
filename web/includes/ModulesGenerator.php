@@ -303,16 +303,16 @@ class SubModule {
                 #navbar ul li#navbar'.$this->getName().' a:hover {
                     background-image: url("'.$this->_img.'.svg");
                     background-repeat: no-repeat;
-                    background-color: #8CB63C;
+                    background-color: var(--color-accent);
                     background-position: 50% 10px;
                     background-size: 35px 35px;
-                    color: #fff;
+                    color: var(--color-text-white);
                     box-shadow: 0 4px 12px rgba(140, 182, 60, 0.5);
                 }';
             } else {
                 $css = '#navbar ul li#navbar'.$this->getName().' a {
-                    background: url("'.$this->_img.'.svg") no-repeat #8CB63C;
-                    color: #fff;
+                    background: url("'.$this->_img.'.svg") no-repeat var(--color-accent);
+                    color: var(--color-text-white);
                     background-position: 50% 10px;
                     background-size: 35px 35px;
                 }';

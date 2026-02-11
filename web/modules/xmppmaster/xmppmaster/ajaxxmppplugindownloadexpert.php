@@ -41,11 +41,11 @@ xmlrpc_CallXmppPluginmmc("downloadfileexpert", Array($_GET));
 
 // dest, src, jidmachine
 
-    echo    "<p style=' margin-left: 10px;'><b>"._T("Machine", 'xmppmaster')." : ".$jidmachine."</b></p>".
-            "<p style=' margin-left: 20px;'>"._T("Download files and folders", 'xmppmaster')." :</p>".
-            "<p style=' margin-left: 40px;'><b>".print_r($listdirectory,true)."</b></p>".
-            "<p style=' margin-left: 40px;'><b>".print_r($listfile,true)."</b></p>".
-            "<p style=' margin-left: 20px;'>"._T("To", 'xmppmaster') ."</p>".
-            "<p style=' margin-left: 40px;'><b>".$dest."</b></p>";
+    echo    "<p style='margin-left:10px'><b>"._T("Machine", 'xmppmaster')." : ".$jidmachine."</b></p>".
+            "<p style='margin-left:20px'>"._T("Download files and folders", 'xmppmaster')." :</p>".
+            "<p style='margin-left:40px'><b>".print_r($listdirectory,true)."</b></p>".
+            "<p style='margin-left:40px'><b>".print_r($listfile,true)."</b></p>".
+            "<p style='margin-left:20px'>"._T("To", 'xmppmaster') ."</p>".
+            "<p style='margin-left:40px'><b>".$dest."</b></p>";
 
 ?>

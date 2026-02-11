@@ -69,11 +69,11 @@ foreach($arraydeploy['tabdeploy']['group_uuid'] as $groupid){
         $arraydeploy['tabdeploy']['state'][$index] == "DEPLOYMENT DIFFERED")&&
             (get_object_vars($arraydeploy['tabdeploy']['endcmd'][$index])['timestamp']- time()) < 0){
         $error = True;
-        $arraydeploy['tabdeploy']['state'][$index] = "<span style='font-weight: bold; color : red;'>DEPLOY ERROR TIMEOUT</span>";
+        $arraydeploy['tabdeploy']['state'][$index] = "<span class='status-error'>DEPLOY ERROR TIMEOUT</span>";
     }
-        $arraytitlename[] = "<span style='color : blue;'>( Mach : ) ".$arraydeploy['tabdeploy']['title'][$index]."</span>";
+        $arraytitlename[] = "<span class='text-blue'>( Mach : ) ".$arraydeploy['tabdeploy']['title'][$index]."</span>";
         $arrayname[] = $arraydeploy['tabdeploy']['host'][$index];
-        $arraystate[]="<span style='font-weight: bold; color : green;'>".$arraydeploy['tabdeploy']['state'][$index]."</span>";
+        $arraystate[]="<span class='status-success'>".$arraydeploy['tabdeploy']['state'][$index]."</span>";
     $index++;
 }
 

@@ -25,209 +25,7 @@
 <?php
 echo '<link rel="stylesheet" href="jsframework/lib/pluginjqueryjtree/themes/default/style.min.css" />'."\n".
 '<script src="jsframework/lib/pluginjqueryjtree/jstree.min.js"></script>'."\n";
-?>
-
-<style type='text/css'>
-textarea {
-        width:50% ;
-        height:150px;
-        margin:auto;
-        display:block;
-}
-
-body{
-        font-family: Georgia;
-        font-size: 11pt;
-}
-
-#global{
-        width:100%;
-        height:800px;
-}
-
-#gauche {
-        width:35%;
-        height:90%;
-}
-
-#droite {
-        width: 64%;
-        height:90%;
-}
-
-#droite, #gauche {
-        display: inline-block;
-        vertical-align: top;
-        border-width:1px;
-        border-style:dotted;
-        border-color:black;
-}
-
-.download{
-        /*display : none;*/
-        /*background: url('modules/xmppmaster/graph/img/browserdownload.png') no-repeat;*/
-        cursor:pointer;
-        border: none;
-}
-
-.fileshow {
-        overflow:auto;
-        height:85%;
-}
-
-#fileshowremote {
-        width: 50%;
-        height:100%;
-        overflow:auto;
-}
-
-#fileshowlocal {
-        width: 100%;
-        height:100%;
-        overflow:auto;
-}
-
-#directoryremote{
-        width: 50%;
-        height:100%;
-        overflow:auto;
-        padding-botton:15px;
-        float:left;
-}
-
-.piedbrowser{
-        vertical-align:bottom;
-        height:5%;
-        text-align: center;
-        padding-top:5px;
-        color: blue;
-}
-
-ul.leftdir, ul.rightdir {
-        list-style-image: url('modules/xmppmaster/graph/img/closedir.png');
-        padding-right:25px;
-        cursor: pointer;
-}
-ul.leftfile, ul.rightfile {
-        list-style-image: url('modules/xmppmaster/graph/img/file1.png');
-        padding-right:25px;
-        cursor: pointer;
-}
-
-
- ul.rightfile.li {
-        background-color:#C0C0C0;
-}
-
-.fileselect{
-        margin-left  : 250px;
-        margin-right : 250px;
-}
-
-.marge {
-    margin-bottom:20px;
-}
-.Localdestination{
-        padding: 0px 0px  5px 22px;
-        margin: 0 0px 0 0px;
-        background: url('modules/xmppmaster/graph/img/browserdownload.png');
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
-        opacity:1;
-        Font-Weight : Bold ;
-        font-size : 15px;
-}
-.Localdestination:hover {
-        Font-Weight : Bold ;
-        font-size : 15px;
-        cursor:pointer;
-}
-.delete{
-        padding: 3px 0px 5px 20px;
-        margin: 0 0px 0 0px;
-        background-image: url("modules/xmppmaster/graph/img/button_cancel.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
-        Font-Weight : Bold ;
-        font-size : 15px;
-}
-.delete:hover{
-        Font-Weight : Bold ;
-        font-size : 15px;
-        cursor:pointer;
-}
-.pop{
-        padding: 3px 0px 5px 20px;
-        margin: 0 0px 0 0px;
-        background-image: url("modules/xmppmaster/graph/img/rewind.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
-        Font-Weight : Bold ;
-        font-size : 15px;
-}
-.pop:hover{
-        Font-Weight : Bold ;
-        font-size : 15px;
-        cursor:pointer;
-}
-.ombremultiple {
-        /*width:100%;*/
-        background-color:#ECECEC;
-        padding:5px;
-        box-shadow:2px 2px 2px gray,
-        -1px -1px 2px white;
-}
-.ombretable1 {
-        /*width:100%;*/
-        background-color:#ECECEC;
-        box-shadow:2px 2px 2px gray,
-        -1px -1px 2px white;
-}
-
-.guaca a {
-    padding: 0px 0px 5px 22px;
-    margin: 0 0px 0 0px;
-    background-image: url("modules/base/graph/computers/guaca.png");
-    background-repeat: no-repeat;
-    background-position: left top;
-    line-height: 18px;
-    text-decoration: none;
-    color: #FFF;
-}
-
-.quick a {
-    padding: 0px 0px 5px 22px;
-    margin: 0 0px 0 0px;
-    background-image: url("modules/base/graph/computers/quick.png");
-    background-repeat: no-repeat;
-    background-position: left top;
-    line-height: 18px;
-    text-decoration: none;
-    color: #FFF;
-}
-
-.console a {
-    padding: 3px 0px 5px 22px;
-    margin: 0 0px 0 0px;
-    background-image: url("modules/base/graph/computers/console.png");
-    background-repeat: no-repeat;
-    background-position: left top;
-    line-height: 18px;
-    text-decoration: none;
-    color: #FFF;
-}
-</style>
-
-<?php
+?><?php
 require("modules/base/computers/localSidebar.php");
 require("graph/navbar.inc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
@@ -291,7 +89,7 @@ if (isset($lifdirremote['err'])) {
     } else {
         $msg = sprintf(_T("Error : %s", "xmppmaster"), $machine);
     }
-    echo '<h2 style="color : red;">';
+    echo '<h2 class="text-error-header">';
     echo "$msg";
     echo "</h2>";
     exit;
@@ -335,54 +133,44 @@ printf(
 
 <div id="global">
     <table>
-        <caption style = " caption-side : top;
-                           text-align : left;
-                           Font-Weight : Bold ;
-                           font-size : 17px;" ><?php echo sprintf(_T('Downloads basket', 'xmppmaster')); ?>
+        <caption class="fb-caption"><?php echo sprintf(_T('Downloads basket', 'xmppmaster')); ?>
         </caption>
 
         <tr>
-            <td style = "width:10%; font-size : 15px; Font-Weight : Bold ;"><?php echo sprintf(_T('Folders', 'xmppmaster')); ?>:</td>
-            <td id="filedirectory" colspan="2" style = "font-size : 14px; Font-Weight : Bold ;"><ul></ul></td>
-            <td style = "width:10%;">
+            <td class="fb-label"><?php echo sprintf(_T('Folders', 'xmppmaster')); ?>:</td>
+            <td id="filedirectory" colspan="2" class="fb-text"><ul></ul></td>
+            <td class="fb-label">
             <span id="poplistdirectory" title="<?php echo sprintf(_T('Remove last folder', 'xmppmaster')); ?>" class="pop" ></span>
                 <span id="deletelistdirectory" title="<?php echo sprintf(_T('Remove all folders', 'xmppmaster')); ?>" class="delete" ></span>
             </td>
         </tr>
 
         <tr>
-            <td style = "width:10%;font-size : 15px; Font-Weight : Bold ;"><?php echo sprintf(_T('Files', 'xmppmaster')); ?>:</td>
-            <td id="filelist" colspan="2" style = "font-size : 14px; Font-Weight : Bold ;"><ul></ul></td>
-            <td style = "width:10%;">
+            <td class="fb-label"><?php echo sprintf(_T('Files', 'xmppmaster')); ?>:</td>
+            <td id="filelist" colspan="2" class="fb-text"><ul></ul></td>
+            <td class="fb-label">
             <span  id="poplistfile" title="<?php echo sprintf(_T('Remove last file', 'xmppmaster')); ?>"  class="pop" ></span>
                 <span  id="deletelistfile" title="<?php echo sprintf(_T('Remove all files', 'xmppmaster')); ?>"  class="delete" ></span>
             </td>
         </tr>
 
         <tr>
-            <td style = "text-align:left; width:10%;Font-Weight : Bold ;font-size : 15px;"><?php echo sprintf(_T('Downloads basket to', 'xmppmaster')); ?></td>
-            <td id="dest_string" colspan="2" style = "text-align:left;font-size : 17px;Font-Weight : Bold ; ">dest :</td>
-            <td style = "text-align:left; width:15px;">
+            <td class="fb-label"><?php echo sprintf(_T('Downloads basket to', 'xmppmaster')); ?></td>
+            <td id="dest_string" colspan="2" class="fb-text-xl">dest :</td>
+            <td class="fb-label">
                 <span id="downloadlist" title="<?php echo sprintf(_T('Download list selection', 'xmppmaster')); ?>" class="Localdestination" ></span>
             </td>
         </tr>
     </table>
     <br>
     <div id="gauche">
-        <table style = "width:100%;
-                        height:100%;
-                        padding:0px;
-                        border-spacing: 5px 5px;
-                        border-collapse :separate;"
-                        class="ombremultiple">
-            <tr style="height: 100%;">
-                <td class = "ombremultiple" style="vertical-align : top; height:600px; Font-Weight : Bold;font-size : 15px;" >
+        <table class="fb-table ombremultiple">
+            <tr>
+                <td class="ombremultiple fb-cell-left">
                     <div id="fileshowlocal" class="fileshow" >
-                        <?php  echo '<div style=" Font-Weight : Bold;
-                                                  font-size : 15px;">'.
+                        <?php  echo '<div class="fb-text-lg">'.
                                                   sprintf(_T('Local folder', 'xmppmaster')).'
-                                                  : <span  style=" Font-Weight : Bold;
-                                                                               Font-size : 15px;"
+                                                  : <span class="fb-text-lg"
                         id=\'localcurrrent\'>'.$lifdirlocal['path_abs_current'] ."</span></div>";
 
 echo '<ul id="leftdirdata" class="leftdir">';
@@ -397,37 +185,26 @@ echo '</ul>';
     </div>
 
     <div id="droite">
-        <table style = "width:100%;
-                        height:100%;
-                        padding:0px;
-                        border-spacing: 5px 5px;
-                        border-collapse :separate;"
-                        class="ombremultiple">
+        <table class="fb-table ombremultiple">
             <tr>
                 <td class="enplacementcss ombremultiple">
-                    <span style="Font-Weight : Bold; font-size : 15px;"><?php echo sprintf(_T('Remote tree view', 'xmppmaster')); ?>: </span><br>
-                    <span style="Font-Weight : Bold;
-                    font-size : 15px;
-                    text-align: right"><?php echo _T('root:', 'xmppmaster')." ".$rootfilesystempath; ?></span>
+                    <span class="fb-text-lg"><?php echo sprintf(_T('Remote tree view', 'xmppmaster')); ?>: </span><br>
+                    <span class="fb-text-lg"><?php echo _T('root:', 'xmppmaster')." ".$rootfilesystempath; ?></span>
                 </td>
-                <td class="currentdircss ombremultiple" style="Font-Weight : Bold; font-size : 15px;">
+                <td class="currentdircss ombremultiple fb-text-lg">
                 <?php echo sprintf(_T('Current path: ', 'xmppmaster')); ?>
-                    <span id="cur" style="Font-Weight : Bold ;font-size : 15px;">
+                    <span id="cur" class="fb-text-lg">
                             <?php echo $lifdir['data']['path_abs_current']; ?>
                     </span>
                 </td>
             </tr>
 
-            <tr style="height: 100%;">
-                <td style = " width:40%;vertical-align: top; height: 100%;"  class="ombremultiple" >
-                    <div id ="directoryremote" style = " width:100%; height: 650px; overflow : auto;" ></div>
+            <tr>
+                <td class="ombremultiple fb-cell-tree">
+                    <div id="directoryremote"></div>
                 </td>
-                <td class="ombremultiple"  style = " width:60%; vertical-align: middle;"  >
-                    <div id ="fileshowremote"
-                        style = "padding-top:10px;
-                                width:100%;
-                                height: 600px;
-                                overflow:auto;">
+                <td class="ombremultiple fb-cell-files">
+                    <div id="fileshowremote">
                     </div>
                 </td>
             </tr>
@@ -445,7 +222,7 @@ echo '</ul>';
 
 <div id="dialog-confirm-download-directory" title="<?php echo sprintf(_T('Summary download', 'xmppmaster')); ?>">
   <div>
-    <span style="float:left; margin:12px 12px 20px 0;">
+    <span class="fb-dialog-span">
         <span id="dialogmsg">
         </span>
     </span>
@@ -454,7 +231,7 @@ echo '</ul>';
 
 <div id="dialog-confirm-download-file" title="<?php echo sprintf(_T('Summary download', 'xmppmaster')); ?>">
   <div>
-    <span style="float:left; margin:12px 12px 20px 0;">
+    <span class="fb-dialog-span">
         <span id="dialogmsg1">
         </span>
     </span>
@@ -464,7 +241,7 @@ echo '</ul>';
 <!-- dialog box  Notify file-->
 <div id="dialog-notification-download-file" >
   <div>
-    <span style="float:left; padding:12px 12px 20px 0; background-color: #d9edf7; width: 95%; height:100%;">
+    <span class="fb-notification-span">
         <span id="dialogmsg2">
         </span>
     </span>
@@ -683,7 +460,7 @@ echo '</ul>';
                         listfileusermachinejson['directory'] = uniqueNames;
                         jQuery('#filedirectory ul').html("");
                         jQuery.each(listfileusermachinejson['directory'], function(id, dir){
-                            jQuery('#filedirectory ul').append('<li style="border-bottom: dashed 1px gray;position:relative; padding:2px;"><span style="position:absolute;left:100%;height:20px;" onclick="removeElement(this,\'directory\')" class="delete"></span><span class="element-text">'+dir+'</span></li>');
+                            jQuery('#filedirectory ul').append('<li class="fb-list-item"><span class="fb-delete-btn" onclick="removeElement(this,\'directory\')" class="delete"></span><span class="element-text">'+dir+'</span></li>');
                         })
                 });
             });
@@ -697,7 +474,7 @@ echo '</ul>';
                         listfileusermachinejson['files'] = uniqueNames;
                         jQuery('#filelist ul').html("");
                         jQuery.each(listfileusermachinejson['files'],function(id, element){
-                          jQuery('#filelist ul').append('<li style="border-bottom: dashed 1px gray;position:relative; padding:2px;"><span style="position:absolute;left:100%;height:20px;" onclick="removeElement(this, \'files\')" class="delete"></span><span class="element-text">'+element+'</span></li>');
+                          jQuery('#filelist ul').append('<li class="fb-list-item"><span class="fb-delete-btn" onclick="removeElement(this, \'files\')" class="delete"></span><span class="element-text">'+element+'</span></li>');
                         });
 
                 } );
@@ -851,7 +628,7 @@ echo '</ul>';
          pop_list("directory");
          jQuery('#filedirectory ul').html("");
          jQuery.each(listfileusermachinejson['directory'], function(id, element){
-           jQuery('#filedirectory ul').append('<li style="border-bottom: dashed 1px gray;position:relative; padding:2px;"><span style="position:absolute;left:100%;height:20px;" onclick="removeElement(this, \'directory\')" class="delete"></span><span class="element-text">'+element+'</span></li>');
+           jQuery('#filedirectory ul').append('<li class="fb-list-item"><span class="fb-delete-btn" onclick="removeElement(this, \'directory\')" class="delete"></span><span class="element-text">'+element+'</span></li>');
          });
     });
 
@@ -859,7 +636,7 @@ echo '</ul>';
         pop_list("files");
         jQuery('#filelist ul').html("");
         jQuery.each(listfileusermachinejson['files'], function(id, element){
-          jQuery('#filelist ul').append('<li style="border-bottom: dashed 1px gray;position:relative; padding:2px;"><span style="position:absolute;left:100%;height:20px;" onclick="removeElement(this, \'files\')" class="delete"></span><span class="element-text">'+element+'</span></li>');
+          jQuery('#filelist ul').append('<li class="fb-list-item"><span class="fb-delete-btn" onclick="removeElement(this, \'files\')" class="delete"></span><span class="element-text">'+element+'</span></li>');
         });
     });
     </script>

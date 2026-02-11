@@ -87,7 +87,7 @@ $contrainte = array();
 // or avec second line pour la contrainte
 foreach ($arraydeploy['tabdeploy']['command'] as $dd => $ss) {
     if ($tab[$arraydeploy['tabdeploy']['command'][$dd]] != "") {
-        $arraydeploy['tabdeploy']['state'][$dd] = $arraydeploy['tabdeploy']['state'][$dd].'<br><span title="'._T("Deployment Interval Constraint", "xmppmaster"). '" style="opacity: 0.5;font-size: x-small;color:  Gray;">'._T("Constraint: ", "xmppmaster").$tab[$arraydeploy['tabdeploy']['command'][$dd]]."</span>";
+        $arraydeploy['tabdeploy']['state'][$dd] = $arraydeploy['tabdeploy']['state'][$dd].'<br><span title="'._T("Deployment Interval Constraint", "xmppmaster"). '" class="constraint-text">'._T("Constraint: ", "xmppmaster").$tab[$arraydeploy['tabdeploy']['command'][$dd]]."</span>";
     }
 }
 
@@ -154,6 +154,7 @@ $lastcommandid = get_array_last_commands_on_cmd_id_start_end($arraydeploy['tabde
 $statarray = xmlrpc_getarraystatbycmd($arraydeploy['tabdeploy']['command']);
 $convergence = is_array_commands_convergence_type($arraydeploy['tabdeploy']['command']);
 $groupname = getInfosNameGroup($arraydeploy['tabdeploy']['group_uuid']);
+
 $index = 0;
 foreach($arraydeploy['tabdeploy']['group_uuid'] as $groupid) {
     $error = false;
@@ -161,7 +162,7 @@ foreach($arraydeploy['tabdeploy']['group_uuid'] as $groupid) {
         strpos($arraydeploy['tabdeploy']['state'][$index], "DEPLOYMENT START") !== false) &&
             (strtotime($arraydeploy['tabdeploy']['endcmd'][$index]) - time()) < 0) {
         $error = true;
-        $arraydeploy['tabdeploy']['state'][$index] = "<span style='font-weight: bold; color : red;'>DEPLOY ERROR TIMEOUT</span>";
+        $arraydeploy['tabdeploy']['state'][$index] = "<span class='status-group-error'>DEPLOY ERROR TIMEOUT</span>";
     }
     $result = xmlrpc_getstatdeploy_from_command_id_and_title(
         $arraydeploy['tabdeploy']['command'][$index],
@@ -205,12 +206,6 @@ foreach($arraydeploy['tabdeploy']['group_uuid'] as $groupid) {
         } else {
             $namegrp = "";
         }
-        //recherche information de deployement sur ce groupe.
-        if ($convergence[$arraydeploy['tabdeploy']['command'][$index]] != 0) {
-            $arraytitlename[] = "<img style='position:relative;top : 5px;'src='img/other/convergence.svg' width='25' height='25'/>" . $arraydeploy['tabdeploy']['title'][$index];
-        } else {
-            $arraytitlename[] = "<img style='position:relative;top : 5px;'src='img/other/package.svg' width='25' height='25'/>" . $arraydeploy['tabdeploy']['title'][$index];
-        }
 
         if($totalmachinedeploy == 0) {
             $progressrate = 0;
@@ -219,6 +214,24 @@ foreach($arraydeploy['tabdeploy']['group_uuid'] as $groupid) {
             $progressrate = ($progressrate > 100) ? 100 : $progressrate;
         }
         $successrate = round(($deploymentsuccess / $totalmachinedeploy) * 100, 2);
+
+        // Determine icon class based on status
+        $iconClass = 'icon-inline';
+        if ($progressrate == 0 || ($progressrate == 100 && $successrate == 0)) {
+            $iconClass .= ' icon-error';
+        } else if ($progressrate == 100 && $successrate == 100) {
+            $iconClass .= ' icon-success';
+        } else if ($progressrate == 100 && $successrate > 0 && $successrate < 100) {
+            $iconClass .= ' icon-partial';
+        }
+
+        // Set title with appropriate icon class
+        if ($convergence[$arraydeploy['tabdeploy']['command'][$index]] != 0) {
+            $arraytitlename[] = "<img class='".$iconClass."' src='img/other/convergence.svg'/>" . $arraydeploy['tabdeploy']['title'][$index];
+        } else {
+            $arraytitlename[] = "<img class='".$iconClass."' src='img/other/package.svg'/>" . $arraydeploy['tabdeploy']['title'][$index];
+        }
+
         switch(intval($progressrate)) {
             case $progressrate <= 10:
                 $color = "#ff0000";
@@ -252,34 +265,38 @@ foreach($arraydeploy['tabdeploy']['group_uuid'] as $groupid) {
                 break;
         }
         if ($progressrate == 0) {
-            $arraystate[] = "<span style='font-weight: bold; color : red;'>".$progressrate."%"."</span>" ;
+            $arraystate[] = "<span class='status-group-error'>".$progressrate."%"."</span>" ;
         } else {
             if ($progressrate == 100) {
                 if($successrate == 0) {
-                    $arraystate[] = '<span style="font-weight: bold; color: red ;">'._T('GROUP ERROR', 'xmppmaster').'</span>';
+                    $arraystate[] = '<span class="status-group-error">'._T('GROUP ERROR', 'xmppmaster').'</span>';
                 } elseif($successrate > 0 && $successrate < 100) {
-                    $arraystate[] = '<span style="font-weight: bold; color: orange ;">'._T('GROUP PARTIAL SUCCESS', 'xmppmaster').'</span>';
+                    $arraystate[] = '<span class="status-group-partial">'._T('GROUP PARTIAL SUCCESS', 'xmppmaster').'</span>';
                 } else {
-                    $arraystate[] = '<span style="font-weight: bold; color: green ;">'._T('GROUP FULL SUCCESS', 'xmppmaster').'</span>';
+                    $arraystate[] = '<span class="status-group-success">'._T('GROUP FULL SUCCESS', 'xmppmaster').'</span>';
                 }
             } else {
-                $arraystate[] = "<span style='background-color:".$color." ;'>".$progressrate."%"."</span>" ;
+                $arraystate[] = "<span style='background-color:".$color.";'>".$progressrate."%"."</span>" ;
             }
         }
         //'<progress max="'.$stat['nbmachine'].'" value="'.$stat['nbdeploydone'].'" form="form-id"></progress>';
         if (!isset($groupname[$groupid]['name'])) {
             $arrayname[] = _T("This group doesn't exist", "xmppmaster");
         } else {
-            $arrayname[] = "<span style='text-decoration : underline;'><img style='position:relative;top : 5px;'src='img/other/machinegroup.svg' width='25' height='25' />" . $groupname[$groupid]['name']."</span>";
+            $arrayname[] = "<span class='text-underline'><img class='icon-inline' src='img/other/machinegroup.svg'/>" . $groupname[$groupid]['name']."</span>";
         }
     } else {
-        $arraytitlename[] = "<img style='position:relative;top : 5px;'src='img/other/package.svg' width='25' height='25'/>" . $arraydeploy['tabdeploy']['title'][$index];
-        $arrayname[] = "<img style='position:relative;top : 5px;'src='img/other/machine_down.svg' width='25' height='25'/> " . $arraydeploy['tabdeploy']['host'][$index];
+        // Determine icon class based on deployment state
+        $iconClass = 'icon-inline';
         if ($arraydeploy['tabdeploy']['state'][$index] == "DEPLOYMENT ERROR") {
-            $arraystate[] = "<span style='font-weight: bold; color : red;'>".$arraydeploy['tabdeploy']['state'][$index]."</span>";
+            $iconClass .= ' icon-error';
+            $arraystate[] = "<span class='status-group-error'>".$arraydeploy['tabdeploy']['state'][$index]."</span>";
         } else {
-            $arraystate[] = "<span style='font-weight: bold; color : green;'>".$arraydeploy['tabdeploy']['state'][$index]."</span>";
+            $iconClass .= ' icon-success';
+            $arraystate[] = "<span class='status-group-success'>".$arraydeploy['tabdeploy']['state'][$index]."</span>";
         }
+        $arraytitlename[] = "<img class='".$iconClass."' src='img/other/package.svg'/>" . $arraydeploy['tabdeploy']['title'][$index];
+        $arrayname[] = "<img class='icon-inline' src='img/other/machine_down.svg'/> " . $arraydeploy['tabdeploy']['host'][$index];
     }
     $index++;
 }
@@ -294,17 +311,18 @@ if(isset($arraynotdeploy)) {
         $logs[] = $logAction;
         $params[] = $param;
 
-        $arraytitlename[] = '<img style="position:relative;top : 5px;" src="img/other/package.svg" width="25" height="25" /> '.$deploy['package_name'];
+        $arraytitlename[] = '<img class="icon-inline" src="img/other/package.svg"/> '.$deploy['package_name'];
 
         $name = "";
         if($deploy['gid'] != "") {
             $name = getInfosNameGroup($deploy['gid']);
             $name = $name[$deploy['gid']]['name'];
-            $name = '<img style="position:relative;top : 5px;" src="img/other/machinegroup.svg" width="25" height="25" /> '.$name;
+            $name = '<img class="icon-inline" src="img/other/machinegroup.svg"/> '.$name;
         //echo '<a href="main.php?module=xmppmaster&submod=xmppmaster&action=viewlogs&tab=grouptablogs&uuid=&hostname=&gid='.$deploy['gid'].'&cmd_id='.$deploy['cmd_id'].'&login='.$deploy['login'].'">'.$deploy['package_name'].'</a><br />';
         } else {
             $name = $deploy['machine_name'];
-            $name = '<img style="position:relative;top : 5px;" src="img/other/machine_down.svg" width="25" height="25" /> '.$name;
+            // Check machine presence to use correct icon
+            $name = '<img class="icon-inline" src="img/other/machine_down.svg"/> '.$name;
         }
         $arrayname[] = $name;
 
@@ -312,10 +330,10 @@ if(isset($arraynotdeploy)) {
         $arraydeploy['tabdeploy']['start'][] = substr($date['scalar'], 0, 4).'-'.substr($date['scalar'], 4, 2).'-'.substr($date['scalar'], 6, 2).' '.substr($date['scalar'], 9);
         //TODO
         if ($deploy['deployment_intervals'] != "") {
-            $arraystate[] = '<span style="font-weight: bold; color : orange;">Pending<br><span style="opacity: 0.5;font-size: x-small;color:  Gray;">'._T("Constraint: ", "xmppmaster").
+            $arraystate[] = '<span class="status-pending">Pending<br><span class="constraint-text">'._T("Constraint: ", "xmppmaster").
             $deploy['deployment_intervals'].'</span></span>';
         } else {
-            $arraystate[] = '<span style="font-weight : bold; color : orange;">Pending</span>';
+            $arraystate[] = '<span class="status-pending">Pending</span>';
         }
         $tolmach[] = $deploy['nb_machines'];
         $processmachr[] = '0 (0%)';
@@ -354,24 +372,3 @@ $n->end = $arraydeploy['lentotal'];
 $n->display();
 echo "<br>";
 ?>
-<style>
-progress {
-  width: 100px;
-  height: 9px;
-  margin:-5px;
-  background-color: #ffffff;
-  border-style: solid;
-  border-width: 1px;
-  border-color: #dddddd;
-  padding: 3px 3px 3px 3px;
-}
-
-progress::-webkit-progress-bar {
-    background: #f3f3f3 ;
-}
-
-progress::-webkit-progress-value {
-     Background: #ef9ea9;
-}
-
-</style>

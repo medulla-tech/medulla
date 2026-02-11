@@ -84,7 +84,7 @@ $lifdir['html']  .='
     $lifdir['html']  .= "<li>
           <span>".$namefile[0]."</span>
                 </span></span>
-                <span style='float:right; position : relative; top : 7px;'>".sizefile($namefile[1])."</span>
+                <span class='file-size'>".sizefile($namefile[1])."</span>
             </li>";
         }
     $lifdir['html']  .= '

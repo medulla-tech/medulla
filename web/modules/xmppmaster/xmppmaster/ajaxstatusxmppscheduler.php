@@ -55,6 +55,7 @@ $arraytitlename=array();
 $delete=array();
 $params=array();
 $arraytargetname=array();
+
 $index = 0;
 foreach($arraydeploy['tabdeploy']['groupid'] as $groupid){
     $param=array();
@@ -74,10 +75,12 @@ foreach($arraydeploy['tabdeploy']['groupid'] as $groupid){
     $delete[] = $deletecommand;
     if($groupid){
         $groupname = getPGobject($arraydeploy['tabdeploy']['groupid'][$index], true)->getName();
-        $arraytargetname[] = "<img style='position:relative;top : 5px;'src='img/other/machinegroup.svg' width='25' height='25'/> " . $groupname ;
+        $arraytargetname[] = "<img class='icon-inline' src='img/other/machinegroup.svg'/> " . $groupname ;
     }
     else{
-        $arraytargetname[] = "<img style='position:relative;top : 5px;'src='img/other/machine_down.svg' width='25' height='25'/> " . $arraydeploy['tabdeploy']['host'][$index] ;
+        // Check machine presence to use correct icon
+        $machineUuid = $arraydeploy['tabdeploy']['inventoryuuid'][$index];
+        $arraytargetname[] = "<img class='icon-inline' src='img/other/machine_down.svg'/> " . $arraydeploy['tabdeploy']['host'][$index] ;
     }
     $index++;
 }

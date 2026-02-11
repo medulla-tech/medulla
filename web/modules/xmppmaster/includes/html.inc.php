@@ -127,7 +127,7 @@ class CheckActionItem extends ActionItem{
     $disabledstr = ($this->disabled) ? 'disabled' : '';
     $valuestr = ($this->value == 1) ? 'checked' : '';
 
-    echo '<li style="width:10px;position=relative" class="'.$this->class.'" onclick="switchvalue(this)">';
+    echo '<li style="width:10px;position:relative" class="'.$this->class.'" onclick="switchvalue(this)">';
     echo '<input type="checkbox" title="'.$this->title.'" '.$disabledstr.' '.$valuestr.'>';
         echo '<input type="hidden" value="'.$extraParams['jid'].'" '.$disabledstr.' '.$valuestr.'>';
     echo '</li>';
@@ -370,7 +370,6 @@ class Editor{
   <!--HERE Load <link /> css for output editor-->
 <?php }?>
   <style>
-
   .info{
     font-size:1.3em;
     background-color: lightblue;

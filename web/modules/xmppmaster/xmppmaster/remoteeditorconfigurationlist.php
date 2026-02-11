@@ -188,12 +188,12 @@ include_once('modules/medulla_server/includes/menu_actionaudit.php');
                        box-shadow: 6px 6px 0px #6E6E6E;"
     ></textarea>
     <br>
-    <button style="color:#FFFFFF;background-color: #000000;" id="savefile" class="btn btn-small">save file</button>
+    <button style="color:#FFFFFF;background-color:#000000;" id="savefile" class="btn btn-small">save file</button>
 </form>
         <!-- dialog box Transfert directory -->
         <div id="dialog-confirm-save-conf" title="Confirm Saving Configuration">
             <div>
-                <span style="float:left; margin:12px 12px 20px 0;">
+                <span class="fb-dialog-span">
                     <span id="dialogmsg">
                     </span>
                 </span>
@@ -279,9 +279,9 @@ include_once('modules/medulla_server/includes/menu_actionaudit.php');
     jQuery( "#savefile" ).click(function(event) {
         event.preventDefault();
         msg="<p><b>" +
-                "<?php echo _T("Save Configuration", 'xmppmaster')."</p></b><p style=' margin-left: 30px;' >"._T("File :", 'xmppmaster'); ?>"+
+                "<?php echo _T("Save Configuration", 'xmppmaster')."</p></b><p style='margin-left:30px' >"._T("File :", 'xmppmaster'); ?>"+
             "</p>"+
-            "<p style=' margin-left: 60px;' >" + jQuery('#namefileconf').val() + "</p>"
+            "<p style='margin-left:60px' >" + jQuery('#namefileconf').val() + "</p>"
         jQuery("#dialogmsg").html(msg);
 
         jQuery( function() {

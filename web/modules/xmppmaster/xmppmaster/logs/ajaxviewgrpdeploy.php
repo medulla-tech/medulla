@@ -30,61 +30,6 @@ require_once("modules/pkgs/includes/xmlrpc.php");
 require_once('modules/msc/includes/commands_xmlrpc.inc.php');
 ?>
 <script src="jsframework/d3/d3.js"></script>
-<style>
-.log_err{
-  color : red;
-}
-
-.log_warn{
-  color : orange;
-}
-
-.log_ok{
-  color : green;
-}
-.status, .machine-inventory{
-    cursor: pointer;
-}
-
-progress{
-    border-color: #ffffff;
-    background-color: #009ea9;
-}
-progress.mscdeloy{
-    width: 390px;
-    background-color: #00f3f3;
-}
-
-progress::-webkit-progress-bar {
-    background: #00f3f3 ;
-}
-
-progress::-webkit-progress-value {
-    background: #009ea9;
-}
-progress::-moz-progress-bar {
-  background-color:blue;
-}
-
-
-.bars{
-    width: 400px;
-    float:left;
-}
-.bars1{
-    width:650px;
-    float:left;
-}
-
-#holder ul li a{
-    font-weight : normal;
-}
-
-.deployment td{
-  vertical-align: top;
-}
-</style>
-
 <?php
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
@@ -307,15 +252,15 @@ if ($contrainte != "") {
 echo '<td>'.$end_date.'</td>';
 echo '<td>'.$creator_user.'</td>';
 if($isconvergence != 0) {
-    echo "<td><img style='position:relative;top : 5px;' src='img/other/convergence.svg' width='25' height='25'/></td>";
+    echo "<td><img class='icon-inline' src='img/other/convergence.svg'/></td>";
 }
 
 
 echo ($syncthing_enabled) ? '<td>'._T("Yes", "xmppmaster").'</td>' : '<td>'._T("No", "xmppmaster").'</td>';
 echo '<td>';
 echo '<div class="bars">';
-echo'<span style="margin-left:10px">Deployment '.$evolution.'%</span>';
-echo '<span style="width: 200px;">';
+echo'<span class="deploy-progress-text">Deployment '.$evolution.'%</span>';
+echo '<span class="deploy-progress-bar">';
 echo'<progress class="mscdeloy" data-label="50% Complete" max="'.$totalmachinedeploy.'" value="'.$done .'" form="form-id"></progress>';
 echo '</span>';
 echo '</td>';
@@ -358,19 +303,19 @@ if ($statsyncthing['package'] != "") {
 
 
     //OLD
-    echo "<div style='width :100%;'>";
+    echo "<div class='w-full'>";
     echo "<div>";
     echo "<div id='tablesyncthing'>";
     ?>
     <table id="tablelog" width="100%" border="1" cellspacing="0" cellpadding="1" class="listinfos">
             <thead>
                 <tr>
-                    <th style="width: 12%;"><?php echo _('cluster list'); ?></th>
-                    <th style="width: 7%;"><?php echo _('cluster nb ars'); ?></th>
-                    <th style="width: 7%;"><?php echo _('machine'); ?></th>
-                    <th style="width: 7%;"><?php echo _('progress'); ?></th>
-                    <th style="width: 7%;"><?php echo _('start'); ?></th>
-                    <th style="width: 7%;"><?php echo _('end'); ?></th>
+                    <th class="syncthing-col-cluster"><?php echo _('cluster list'); ?></th>
+                    <th class="syncthing-col-small"><?php echo _('cluster nb ars'); ?></th>
+                    <th class="syncthing-col-small"><?php echo _('machine'); ?></th>
+                    <th class="syncthing-col-small"><?php echo _('progress'); ?></th>
+                    <th class="syncthing-col-small"><?php echo _('start'); ?></th>
+                    <th class="syncthing-col-small"><?php echo _('end'); ?></th>
                 </tr>
             </thead>
         </table>
@@ -482,7 +427,7 @@ if(!$terminate) {
     echo "</tr></thead>";
 
     echo "<tbody><tr>";
-    echo '<td style="width:500px"><div id="holder"></div>';
+    echo '<td class="chart-holder"><div id="holder"></div>';
     echo (isset($deploymentsuccess) && $deploymentsuccess) ? "<td>".$deploymentsuccess."</td>" : "";
     echo (isset($uninstallsuccess) && $uninstallsuccess) ? "<td>"._T("Uninstall Success", "xmppmaster")."</td>" : "";
     echo (isset($deploymenterror) && $deploymenterror) ? "<td>".$deploymenterror."</td>" : "";
@@ -522,7 +467,7 @@ if(!$terminate) {
               <td>"._T("Aborted", "xmppmaster")."</td>";
     echo "</tr></thead>
           <tbody><tr>";
-    echo '<td style="width:500px"><div id="holder"></div>';
+    echo '<td class="chart-holder"><div id="holder"></div>';
     echo '</td>';
     echo "<td>".$deploymentsuccess."</td>
               <td>".$errors."</td>
@@ -564,7 +509,7 @@ if(!$terminate) {
     echo "</tr></thead>";
 
     echo "<tbody><tr>";
-    echo '<td style="width:500px"><div id="holder2"></div>';
+    echo '<td class="chart-holder"><div id="holder2"></div>';
     echo (isset($deploymentsuccess) && $deploymentsuccess) ? "<td>".$deploymentsuccess."</td>" : "";
     echo (isset($uninstallsuccess) && $uninstallsuccess) ? "<td>"._T("Uninstall Success", "xmppmaster")."</td>" : "";
     echo (isset($deploymenterror) && $deploymenterror) ? "<td>".$deploymenterror."</td>" : "";
@@ -649,20 +594,20 @@ foreach($package['files'] as $file) {
 echo '<table class="listinfos" cellspacing="0" cellpadding="5" border="1">';
 echo "<thead>";
 echo "<tr>";
-echo '<td style="width: ;">';
-echo '<span style=" padding-left: 32px;">'._T('Name', 'xmppmaster').'</span>';
+echo '<td>';
+echo '<span class="pkg-detail-header">'._T('Name', 'xmppmaster').'</span>';
 echo '</td>';
-echo '<td style="width: ;">';
-echo '<span style=" padding-left: 32px;">'._T('Associated Inventory', 'xmppmaster').'</span>';
+echo '<td>';
+echo '<span class="pkg-detail-header">'._T('Associated Inventory', 'xmppmaster').'</span>';
 echo '</td>';
-echo '<td style="width: ;">';
-echo '<span style=" padding-left: 32px;">'._T('Version', 'xmppmaster').'</span>';
+echo '<td>';
+echo '<span class="pkg-detail-header">'._T('Version', 'xmppmaster').'</span>';
 echo '</td>';
-echo '<td style="width: ;">';
-echo '<span style=" padding-left: 32px;">'._T('Description', 'xmppmaster').'</span>';
+echo '<td>';
+echo '<span class="pkg-detail-header">'._T('Description', 'xmppmaster').'</span>';
 echo '</td>';
-echo '<td style="width: ;">';
-echo '<span style=" padding-left: 32px;">'._T('Size', 'xmppmaster').'</span>';
+echo '<td>';
+echo '<span class="pkg-detail-header">'._T('Size', 'xmppmaster').'</span>';
 echo '</td>';
 echo "</tr>";
 echo "</thead>";
@@ -715,7 +660,7 @@ if ($count != 0) {
           'owner' => $info_from_machines[5][$key],
           'user' => $_GET['login'],
           'os' => $info_from_machines[3][$key],
-          'status' => isset($info_from_machines[7][$key]) ? $info_from_machines[7][$key] : '<span style="color:red">'._T('OFFLINE', 'xmppmaster').'</span>',
+          'status' => isset($info_from_machines[7][$key]) ? $info_from_machines[7][$key] : '<span class="status-offline">'._T('OFFLINE', 'xmppmaster').'</span>',
           'gid' => $_GET['gid'],
           'gr_cmd_id' => $_GET['cmd_id'],
           'gr_login' => $_GET['login'],
@@ -761,20 +706,20 @@ if ($count != 0) {
         $raw++;
     }
 
-    echo '<div style="clear:both"></div>';
+    echo '<div class="clear-both"></div>';
     if ($count == 0) {
         echo'
 <table class="listinfos" cellspacing="0" cellpadding="5" border="1">
 <thead>
     <tr>
-        <td style="width: ;"><span style=" padding-left: 32px;">Machine Name</span></td>
-        <td style="width: ;"><span style=" ">Description</span></td>
-        <td style="width: ;"><span style=" ">Operating System</span></td>
-        <td style="width: ;"><span style=" ">Status</span></td>
-        <td style="width: ;"><span style=" ">Type</span></td>
-        <td style="width: ;"><span style=" ">Last User</span>
-        </td><td style="width: ;"><span style=" ">Entity</span>
-        </td><td style="text-align: center; width: ;"><span>Actions</span></td>
+        <td><span class="pkg-detail-header">Machine Name</span></td>
+        <td><span>Description</span></td>
+        <td><span>Operating System</span></td>
+        <td><span>Status</span></td>
+        <td><span>Type</span></td>
+        <td><span>Last User</span></td>
+        <td><span>Entity</span></td>
+        <td class="text-center"><span>Actions</span></td>
     </tr>
 </thead>
 <tbody>

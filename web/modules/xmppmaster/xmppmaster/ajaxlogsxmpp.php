@@ -64,11 +64,11 @@ foreach($arraydeploy['tabdeploy']['group_uuid'] as $groupid){
         $arraydeploy['tabdeploy']['state'][$index] == "DEPLOYMENT DIFFERED")&&
             (get_object_vars($arraydeploy['tabdeploy']['endcmd'][$index])['timestamp']- time()) < 0){
         $error = True;
-        $arraydeploy['tabdeploy']['state'][$index] = "<span style='font-weight: bold; color : red;'>DEPLOY ERROR TIMEOUT</span>";
+        $arraydeploy['tabdeploy']['state'][$index] = "<span class='status-group-error'>DEPLOY ERROR TIMEOUT</span>";
     }
 
     if($groupid){
-        $arraytitlename[] = "<span style='color : blue;'>(GRP  : ".$arraydeploy['tabdeploy']['len'][$index] . ") ".$arraydeploy['tabdeploy']['title'][$index]."</span>";
+        $arraytitlename[] = "<span class='text-blue'>(GRP  : ".$arraydeploy['tabdeploy']['len'][$index] . ") ".$arraydeploy['tabdeploy']['title'][$index]."</span>";
         $arraystate[]="";
         $group = new Group($groupid, true, true);
         if ($group->exists == False) {
@@ -79,9 +79,9 @@ foreach($arraydeploy['tabdeploy']['group_uuid'] as $groupid){
         }
     }
     else{
-        $arraytitlename[] = "<span style='color : green;'>( Mach : ) ".$arraydeploy['tabdeploy']['title'][$index]."</span>";
+        $arraytitlename[] = "<span class='text-green'>( Mach : ) ".$arraydeploy['tabdeploy']['title'][$index]."</span>";
         $arrayname[] = $arraydeploy['tabdeploy']['host'][$index];
-        $arraystate[]="<span style='font-weight: bold; color : green;'>".$arraydeploy['tabdeploy']['state'][$index]."</span>";
+        $arraystate[]="<span class='status-group-success'>".$arraydeploy['tabdeploy']['state'][$index]."</span>";
     }
     $index++;
 }

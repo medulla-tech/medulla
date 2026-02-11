@@ -50,26 +50,23 @@ foreach($list['datas']['size'] as $size){
 
   switch($list['datas']['metagenerator'][$row]){
     case "expert":
-        $packagesname[] = "<img style='position:relative; top : 5px;'
-                                    src='img/other/package.svg' width='25' height='25'/>" .
-                                    "<span title='Package Expert Mode\n".$countfiles ." files : \n". $filesstr."'>".
-                                        $list['datas']['name'][$row].
-                                    "</span>" ;
+        $packagesname[] = "<img class='icon-inline' src='img/other/package.svg'/>" .
+                          "<span title='Package Expert Mode\n".$countfiles ." files : \n". $filesstr."'>".
+                              $list['datas']['name'][$row].
+                          "</span>" ;
     break;
-      case "standard":
-          $packagesname[] = "<img style='position:relative; top : 5px;
-                                      'src='img/other/package.svg' width='25' height='25'/>".
-                                      "<span title='Package Standart Mode\n".$countfiles ." files : \n". $filesstr."'>".
-                                          $list['datas']['name'][$row].
-                                      "</span>"  ;
-      break;
-      default: //"manual":
-          $packagesname[] = "<img style='position:relative; top : 5px;'
-                                      src='img/other/package_ro.svg' width='25' height='25'/>".
-                                      "<span title='Package manual Mode\n".$countfiles ." files : \n". $filesstr."'>".
-                                          $list['datas']['name'][$row].
-                                      "</span>" ;
-      break;
+    case "standard":
+        $packagesname[] = "<img class='icon-inline' src='img/other/package.svg'/>".
+                          "<span title='Package Standart Mode\n".$countfiles ." files : \n". $filesstr."'>".
+                              $list['datas']['name'][$row].
+                          "</span>"  ;
+    break;
+    default: //"manual":
+        $packagesname[] = "<img class='icon-inline' src='img/other/package_ro.svg'/>".
+                          "<span title='Package manual Mode\n".$countfiles ." files : \n". $filesstr."'>".
+                              $list['datas']['name'][$row].
+                          "</span>" ;
+    break;
   }
 
   $row++;
