@@ -1920,17 +1920,48 @@ tr:hover td.action ul.action li a:hover {
   filter: brightness(0) saturate(100%) invert(40%) sepia(75%) saturate(650%) hue-rotate(43deg) brightness(88%) contrast(100%);
 }
 
-/* Inactive action icons - light gray */
+/* Inactive action icons - gray (classes ending with "g") */
 ul.action li.inactive a,
-td.action ul.action li.inactive a {
+td.action ul.action li.inactive a,
+li.fileviewerg a, li.inventoryg a, li.installg a, li.imagingg a,
+li.folderg a, li.urbackupg a, li.consoleg a, li.configg a,
+li.quickg a, li.guacag a, li.displayg a, li.displaygroupg a,
+li.logfileg a, li.packageg a, li.reconfiguregroupg a, li.stopg a,
+li.reloadg a, li.scang a, li.bang a, li.unbang a,
+li.donotupdateg a, li.updateallg a, li.updateoneg a,
+li.enableupdateg a, li.disableupdateg a, li.deleteprofileg a,
+li.infoupdateg a, li.helpupdateg a, li.pendingg a, li.historyg a,
+li.manageusersg a, li.editg a, li.deleteg a, li.downloadg a {
   filter: brightness(0) saturate(100%) invert(75%) sepia(0%) saturate(0%);
   opacity: 0.5;
 }
 
 ul.action li.inactive a:hover,
-td.action ul.action li.inactive a:hover {
+td.action ul.action li.inactive a:hover,
+li.fileviewerg a:hover, li.inventoryg a:hover, li.installg a:hover, li.imagingg a:hover,
+li.folderg a:hover, li.urbackupg a:hover, li.consoleg a:hover, li.configg a:hover,
+li.quickg a:hover, li.guacag a:hover, li.displayg a:hover, li.displaygroupg a:hover,
+li.logfileg a:hover, li.packageg a:hover, li.reconfiguregroupg a:hover, li.stopg a:hover,
+li.reloadg a:hover, li.scang a:hover, li.bang a:hover, li.unbang a:hover,
+li.donotupdateg a:hover, li.updateallg a:hover, li.updateoneg a:hover,
+li.enableupdateg a:hover, li.disableupdateg a:hover, li.deleteprofileg a:hover,
+li.infoupdateg a:hover, li.helpupdateg a:hover, li.pendingg a:hover, li.historyg a:hover,
+li.manageusersg a:hover, li.editg a:hover, li.deleteg a:hover, li.downloadg a:hover {
   filter: brightness(0) saturate(100%) invert(50%) sepia(0%) saturate(0%);
   opacity: 0.8;
+}
+
+/* ---------------------------------------- */
+/* Inline Icons (in table cells)            */
+/* ---------------------------------------- */
+
+/* Default green color for inline SVG icons in tables */
+td img[src*="img/other/"],
+.icon-inline {
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+  filter: brightness(0) saturate(100%) invert(65%) sepia(52%) saturate(456%) hue-rotate(43deg) brightness(95%) contrast(89%);
 }
 
 /* ======================================== */

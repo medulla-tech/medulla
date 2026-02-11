@@ -344,9 +344,9 @@ progress::-moz-progress-bar {
   padding: 2px 8px;
   border-radius: 4px;
   display: inline-block;
-  font-size: 12px;
+  font-size: 11px;
   white-space: nowrap;
-  min-width: 185px;
+  min-width: 160px;
   text-align: center;
   box-sizing: border-box;
 }
@@ -399,6 +399,8 @@ progress::-moz-progress-bar {
   margin-right: 2px;
   width: 20px;
   height: 20px;
+  /* Default green color */
+  filter: brightness(0) saturate(100%) invert(65%) sepia(52%) saturate(456%) hue-rotate(43deg) brightness(95%) contrast(89%);
 }
 
 /* Icon status colors (used with .icon-inline) */
@@ -417,7 +419,6 @@ progress::-moz-progress-bar {
 /* Text decoration */
 .text-underline {
   text-decoration: underline;
-  white-space: nowrap;
 }
 
 /* Status list progress bar styles */
