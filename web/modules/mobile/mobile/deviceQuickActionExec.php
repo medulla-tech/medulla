@@ -82,7 +82,7 @@ if ($result && isset($result['status']) && $result['status'] === 'OK') {
     new NotifyWidgetFailure(_T("Failed to send command to device", "mobile"));
 }
 
-header("Location: " . urlStrRedirect("mobile/mobile/index"));
+header("Location: " . urlStrRedirect("mobile/mobile/functions", array("tab" => "tabpush")));
 exit;
 
 ?>

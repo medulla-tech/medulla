@@ -14,9 +14,11 @@ if (!empty($filter)) {
 }
 
 $ids = $col1 = $descriptions = [];
-$actionDelete = [];
+$actionMessage = [];
 $actionModify = [];
+$actionQuick = [];
 $actionDuplicate = [];
+$actionDelete = [];
 $params = [];
 
 foreach ($configs as $index => $cfg) {
@@ -30,12 +32,15 @@ foreach ($configs as $index => $cfg) {
     $col1[] = "<a href='" . htmlspecialchars($detailsUrl, ENT_QUOTES, 'UTF-8') . "' class='cfglink'>{$name}</a>";
     $descriptions[] = $desc;
 
+    $actionMessage[] = new ActionItem(_T("Message", "mobile"), "newMessage", "add", "config_id", "mobile", "mobile");
     $actionModify[] = new ActionItem(_T("Modify", "mobile"), "configurationDetails", "edit", "id", "mobile", "mobile");
+    $actionQuick[] = new ActionPopupItem(_T("Quick action", "mobile"), "configQuickAction", "quick", "config_id", "mobile", "mobile");
     $actionDuplicate[] = new ActionItem(_T("Duplicate", "mobile"), "duplicateConfiguration", "duplicatescript", "id", "mobile", "mobile");
     $actionDelete[] = new ActionPopupItem(_T("Delete Configuration", "mobile"), "deleteConfiguration", "delete", "", "mobile", "mobile");
 
     $params[] = [
             'id' => $cfgId,
+            'config_id' => $cfgId,
             'name' => $name,
         ];
 }
@@ -49,6 +54,8 @@ $filter = isset($_REQUEST['filter']) ? $_REQUEST['filter'] : "";
 $n->setNavBar(new AjaxNavBar($count, $filter));
 
 $n->addExtraInfo($descriptions, _T("Description", "mobile"));
+$n->addActionItemArray($actionQuick);
+$n->addActionItemArray($actionMessage);
 $n->addActionItemArray($actionModify);
 $n->addActionItemArray($actionDuplicate);
 $n->addActionItemArray($actionDelete);
