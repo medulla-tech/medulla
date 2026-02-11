@@ -292,31 +292,26 @@ class SubModule {
         if ($this->_img!=Null) {
 
 
-            if (!$selected) {
-                $css = '#navbar ul li#navbar'.$this->getName().' a {
-                    background-image: url("'.$this->_img.'.svg");
-                    background-repeat: no-repeat;
-                    background-color: transparent;
-                    background-position: 50% 10px;
-                    background-size: 35px 35px;
-                }
-                #navbar ul li#navbar'.$this->getName().' a:hover {
-                    background-image: url("'.$this->_img.'.svg");
-                    background-repeat: no-repeat;
-                    background-color: var(--color-accent);
-                    background-position: 50% 10px;
-                    background-size: 35px 35px;
-                    color: var(--color-text-white);
-                    box-shadow: 0 4px 12px rgba(140, 182, 60, 0.5);
+            // Icon displayed using mask-image technique (allows color change via background-color)
+            // Hover and active states are handled in global.css
+            $css = '#navbar ul li#navbar'.$this->getName().' a::before {
+                    content: "";
+                    position: absolute;
+                    left: 8px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    width: 20px;
+                    height: 20px;
+                    background-color: white;
+                    -webkit-mask-image: url("'.$this->_img.'.svg");
+                    mask-image: url("'.$this->_img.'.svg");
+                    -webkit-mask-size: contain;
+                    mask-size: contain;
+                    -webkit-mask-repeat: no-repeat;
+                    mask-repeat: no-repeat;
+                    -webkit-mask-position: center;
+                    mask-position: center;
                 }';
-            } else {
-                $css = '#navbar ul li#navbar'.$this->getName().' a {
-                    background: url("'.$this->_img.'.svg") no-repeat var(--color-accent);
-                    color: var(--color-text-white);
-                    background-position: 50% 10px;
-                    background-size: 35px 35px;
-                }';
-            }
 
             $style = &$MMC->getStyle();
             $style->addCSS($css);
