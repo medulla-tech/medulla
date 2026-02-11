@@ -22,9 +22,7 @@
  *
  */
 
-// Import the css needed
-require("modules/kiosk/graph/index.css");
-require("modules/kiosk/graph/packages.css");
+// Import the css needed - using consolidated kiosk.css
 
 //Import the functions and classes needed
 require_once("modules/kiosk/includes/xmlrpc.php");
@@ -52,14 +50,8 @@ if($sharings['config']['centralizedmultiplesharing'] == true) {
 }
 ?>
 
-<style type="text/css">
-    @import url(modules/kiosk/graph/style.min.css);
-
-    #availableFilter, #allowedFilter {
-        width: 80%;
-        margin-bottom: 2px;
-    }
-</style>
+<link rel="stylesheet" href="modules/kiosk/graph/css/kiosk.css" />
+<link rel="stylesheet" href="jsframework/lib/pluginjqueryjtree/themes/default/style.min.css" />
 
 <?php $p = new PageGenerator(_T("Add New Profile", 'kiosk'));
 $p->setSideMenu($sidemenu);
@@ -78,6 +70,9 @@ if(is_array($ou_list)) {
     $f->add(new HiddenTpl("action"), array("value" => $_GET['action'], "hide" => true));
     $f->add(new HiddenTpl("owner"), array("value" => $_SESSION['login'], "hide" => true));
     $f->add(new SpanElement('', "packages"));
+
+    // Section title for profile information
+    $f->add(new TitleElement(_T("Profile information", "kiosk")));
 
     // -------
     // Add an input for the profile name
@@ -100,9 +95,8 @@ if(is_array($ou_list)) {
     );
 
     $f->pop(); // End of the table
-    //SepTpl came from modules/imaging/includes/class_form.php
-    $f->add(new SepTpl());
-    // Create a section without table in the form
+
+    // Section title for package management
     $f->add(new TitleElement(_T("Manage packages", "kiosk")));
     // Get the list of the packages
     $available_packages = [];
@@ -117,25 +111,27 @@ if(is_array($ou_list)) {
         $row++;
     }
 
-    $restricted_area = (xmlrpc_get_conf_kiosk()['enable_acknowledgements'] == true) ? '<div style="width:100%">
+    $restricted_area = (xmlrpc_get_conf_kiosk()['enable_acknowledgements'] == true) ? '<div>
             <h1>'._T("Restricted packages", "kiosk").'</h1>
             <ol data-draggable="target" id="restricted-packages">
             </ol>
         </div>' : '';
 
-    $f->add(new SpanElement('<div style="display:inline-flex; width:100%" id="packages">
-        <!-- Source : https://www.sitepoint.com/accessible-drag-drop/ -->
-        <div style="width:100%">
+    $f->add(new SpanElement('<div id="packages">
+        <div>
             <h1>'._T("Available packages", "kiosk").'</h1>
-            <input type="text" id="availableFilter" value="" placeholder="'._T("Search by name ...", "pkgs").'"><br/>
+            <input type="text" id="availableFilter" value="" placeholder="'._T("Search by name ...", "pkgs").'">
             <ol data-draggable="target" id="available-packages">'.$available_packages_str.'</ol>
-        </div>'.$restricted_area.'<div style="width:100%">
+        </div>'.$restricted_area.'<div>
             <h1>'._T("Allowed packages", "kiosk").'</h1>
-            <input type="text" id="allowedFilter" value="" placeholder="'._T("Search by name ...", "pkgs").'"><br/>
+            <input type="text" id="allowedFilter" value="" placeholder="'._T("Search by name ...", "pkgs").'">
             <ol data-draggable="target" id="allowed-packages">
             </ol>
         </div>
     </div>', "packages"));
+
+    // Section title for source selection
+    $f->add(new TitleElement(_T("Source selection", "kiosk")));
 
     $sources = ["Entity", "Group", "LDAP", "Ou User", "Ou Machine"];
     if(xmlrpc_get_conf_kiosk()['use_external_ldap'] == true) {
@@ -154,13 +150,11 @@ if(is_array($ou_list)) {
     // -------
     $result = "";
     $f->add(new SpanElement(
-        '
-    <div id="source-container" class="user-list" style="display:inline"></div>
-        <div id="ou-container" style="display:flex; max-height:350px;">
-            <br>
+        '<div id="source-container"></div>
+        <div id="ou-container">
             <input type="button" id="treeToggler" value="+" />
-            <div id="jstree" role="tree" style="width:40%;overflow:scroll;">'.$result.'</div>
-            <div id="users" class="user-list" style="display:inline"></div>
+            <div id="jstree" role="tree">'.$result.'</div>
+            <div id="users"></div>
         </div>',
         "kiosk"
     ));

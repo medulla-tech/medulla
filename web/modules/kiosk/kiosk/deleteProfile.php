@@ -19,7 +19,6 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-require("modules/kiosk/graph/index.css");
 require_once("modules/kiosk/includes/xmlrpc.php");
 require_once("modules/medulla_server/includes/utilities.php");
 

@@ -62,6 +62,160 @@
   --color-header-bg: #444050;
   --color-sidebar-text: #8fa0b1;
   --color-link-hover: #d8e7ef;
+
+  /* Button colors */
+  --btn-primary-bg: #25607d;
+  --btn-primary-text: #fff;
+  --btn-primary-hover-bg: #fff;
+  --btn-primary-hover-text: #25607d;
+  --btn-primary-active: #1d4d64;
+  --btn-secondary-bg: transparent;
+  --btn-secondary-hover: #25607d;
+  --btn-secondary-border: #25607d;
+  --btn-secondary-text: #25607d;
+  --btn-danger-bg: #d63939;
+  --btn-danger-hover: #b52d2d;
+}
+
+/* ---------------------------------------- */
+/* Buttons                                  */
+/* ---------------------------------------- */
+
+.btn,
+.btn-primary,
+.btn-secondary,
+.btn-danger,
+/* Legacy aliases */
+.btnPrimary,
+.btnSecondary {
+  -webkit-appearance: none;
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-width: 100px;
+  padding: 0.625rem 1rem;
+  font: inherit;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+  border: 1px solid var(--color-border-medium);
+  border-radius: 6px;
+  background: var(--color-bg-light);
+  color: var(--color-text-dark);
+  text-decoration: none;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.06s ease;
+}
+
+.btn {
+  background: var(--color-bg-light);
+  border-color: var(--color-border-dark);
+}
+
+.btn:hover {
+  background: var(--color-bg-gray);
+  border-color: var(--color-text-medium);
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn-secondary:active,
+.btnSecondary:active {
+  transform: translateY(1px);
+  background: var(--btn-primary-active);
+}
+
+.btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-bg-white), 0 0 0 4px var(--color-primary);
+}
+
+.btn:disabled,
+.btn[aria-disabled="true"] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Primary button */
+.btn-primary,
+.btnPrimary {
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  border-color: var(--btn-primary-bg);
+}
+
+.btn-primary:hover,
+.btnPrimary:hover {
+  background: var(--btn-primary-hover-bg);
+  color: var(--btn-primary-hover-text);
+  border-color: var(--btn-primary-bg);
+}
+
+.btn-primary:active,
+.btnPrimary:active {
+  background: var(--btn-primary-active);
+  color: var(--btn-primary-text);
+}
+
+/* Secondary button (outlined) */
+.btn-secondary,
+.btnSecondary {
+  background: var(--btn-secondary-bg);
+  color: var(--btn-secondary-text);
+  border-color: var(--btn-secondary-border);
+  border-width: 2px;
+}
+
+.btn-secondary:hover,
+.btnSecondary:hover {
+  background: var(--btn-secondary-hover);
+  color: var(--color-text-white);
+  border-color: var(--btn-secondary-hover);
+}
+
+/* Danger button */
+.btn-danger {
+  background: var(--btn-danger-bg);
+  color: var(--color-text-white);
+  border-color: var(--btn-danger-bg);
+}
+
+.btn-danger:hover {
+  background: var(--btn-danger-hover);
+  border-color: var(--btn-danger-hover);
+}
+
+
+/* Size variants */
+.btn-small {
+  min-width: 80px;
+  padding: 0.4rem 0.75rem;
+  font-size: 11px;
+  border-radius: 5px;
+}
+
+.btn-large {
+  min-width: 140px;
+  padding: 0.8rem 1.25rem;
+  font-size: 14px;
+  border-radius: 8px;
+}
+
+/* Utility */
+.btn-block {
+  display: block;
+  width: 100%;
+}
+
+.btn-no-margin {
+  margin: 0;
 }
 
 /* ---------------------------------------- */
@@ -1026,47 +1180,55 @@ td.machineAction {
   border: none;
 }
 
-/* Text inputs */
-.mmc-input,
-.mmc-form-table input[type="text"],
-.mmc-form-table input[type="password"],
-.mmc-form-table input[type="number"] {
-  padding: 8px 12px;
-  border: 1px solid var(--color-border-medium);
-  border-radius: 4px;
-  font-size: 12px;
-  width: 320px;
-  box-sizing: border-box;
-  transition: border-color 0.2s ease;
+/* ---------------------------------------- */
+/* Form Inputs                              */
+/* ---------------------------------------- */
+
+:root {
+  --input-width: 320px;
+  --input-height: 38px;
 }
 
-/* Focus */
+/* Inputs in mmc-form-table */
+.mmc-form-table input[type="text"],
+.mmc-form-table input[type="password"],
+.mmc-form-table input[type="number"],
+.mmc-form-table input[type="email"],
+.mmc-form-table input[type="search"],
+.mmc-form-table select,
+.mmc-form-table textarea {
+  width: var(--input-width);
+  height: var(--input-height);
+  padding: 8px 12px;
+  font-size: 13px;
+  font-family: inherit;
+  line-height: 1.4;
+  color: #333;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.mmc-form-table textarea {
+  height: auto;
+  min-height: 80px;
+  resize: vertical;
+}
+
+.mmc-form-table input:hover,
+.mmc-form-table select:hover,
+.mmc-form-table textarea:hover {
+  border-color: #25607d;
+}
+
 .mmc-form-table input:focus,
 .mmc-form-table select:focus,
 .mmc-form-table textarea:focus {
-  border-color: var(--color-primary);
+  border-color: #25607d;
   outline: none;
-  box-shadow: 0 0 0 2px rgba(37, 96, 125, 0.15);
-}
-
-/* Selects */
-.mmc-select,
-.mmc-form-table select {
-  padding: 8px 12px;
-  border: 1px solid var(--color-border-medium);
-  border-radius: 4px;
-  width: 320px;
-  box-sizing: border-box;
-  background-color: var(--color-bg-white);
-}
-
-/* Textareas */
-.mmc-form-table textarea {
-  padding: 8px 12px;
-  border: 1px solid var(--color-border-medium);
-  border-radius: 4px;
-  width: 320px;
-  box-sizing: border-box;
+  box-shadow: 0 0 0 3px rgba(37, 96, 125, 0.2);
 }
 
 /* Radio buttons - custom styling */

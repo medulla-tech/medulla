@@ -20,7 +20,6 @@
  */
 
 
-require("modules/kiosk/graph/index.css");
 require_once("modules/kiosk/includes/xmlrpc.php");
 require_once("modules/medulla_server/includes/utilities.php");
 
