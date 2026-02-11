@@ -219,11 +219,13 @@ def get_extension(id):
 
 ########### Json ###########
 def chown(uuid):
-    simplecommand(
-        "chown -R syncthing:syncthing %s" % os.path.join(_path_package(), uuid)
-    )
-    simplecommand("chmod -R 755 %s" % os.path.join(_path_package(), uuid))
+    # Change owner for sym link
+    simplecommand("chown -h syncthing:syncthing %s" % os.path.join(_path_package(), uuid))
 
+    # Change owner for sym link target
+    simplecommand("chown -LR syncthing:syncthing %s" % os.path.join(_path_package(), uuid))
+
+    simplecommand("chmod -R 755 %s" % os.path.join(_path_package(), uuid))
 
 def associatePackages(pid, fs, level=0):
     tmp_input_dir = os.path.join("/", "var", "lib", "pulse2", "package-server-tmpdir")
@@ -1086,7 +1088,7 @@ def putPackageDetail(package, need_assign=True):
     package["preCommand"] = {"command": "", "name": ""}
 
     result = [True, package["id"], packages_id_input_dir, package]
-
+    chown(package["id"])
     return result
 
 

@@ -1,0 +1,195 @@
+<?php
+/*
+ * (c) 2024-2025 Medulla, http://www.medulla-tech.io
+ *
+ * This file is part of MMC, http://www.medulla-tech.io
+ *
+ * MMC is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * any later version.
+ *
+ * MMC is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MMC; If not, see <http://www.gnu.org/licenses/>.
+ */
+
+// =============================================================================
+// Legacy
+// =============================================================================
+function xmlrpc_tests() {
+    return xmlCall("security.tests", array());
+}
+
+// =============================================================================
+// Dashboard
+// =============================================================================
+function xmlrpc_get_dashboard_summary($location = '') {
+    return xmlCall("security.get_dashboard_summary", array($location));
+}
+
+// =============================================================================
+// CVE List
+// =============================================================================
+function xmlrpc_get_cves($start = 0, $limit = 50, $filter = '',
+                         $severity = null, $location = '',
+                         $sort_by = 'cvss_score', $sort_order = 'desc') {
+    return xmlCall("security.get_cves", array(
+        $start, $limit, $filter, $severity, $location, $sort_by, $sort_order
+    ));
+}
+
+function xmlrpc_get_cve_details($cve_id, $location = '') {
+    return xmlCall("security.get_cve_details", array($cve_id, $location));
+}
+
+// =============================================================================
+// Machines
+// =============================================================================
+function xmlrpc_get_machines_summary($start = 0, $limit = 50, $filter = '', $location = '') {
+    return xmlCall("security.get_machines_summary", array($start, $limit, $filter, $location));
+}
+
+function xmlrpc_get_machine_cves($id_glpi, $start = 0, $limit = 50, $filter = '', $severity = null) {
+    return xmlCall("security.get_machine_cves", array($id_glpi, $start, $limit, $filter, $severity));
+}
+
+function xmlrpc_get_machine_softwares_summary($id_glpi, $start = 0, $limit = 50, $filter = '') {
+    return xmlCall("security.get_machine_softwares_summary", array($id_glpi, $start, $limit, $filter));
+}
+
+function xmlrpc_scan_machine($id_glpi) {
+    return xmlCall("security.scan_machine", array($id_glpi));
+}
+
+// =============================================================================
+// Scans
+// =============================================================================
+function xmlrpc_get_scans($start = 0, $limit = 20) {
+    return xmlCall("security.get_scans", array($start, $limit));
+}
+
+function xmlrpc_create_scan() {
+    return xmlCall("security.create_scan", array());
+}
+
+function xmlrpc_create_scan_entity($entity_id) {
+    return xmlCall("security.create_scan_entity", array($entity_id));
+}
+
+function xmlrpc_create_scan_group($group_id) {
+    return xmlCall("security.create_scan_group", array($group_id));
+}
+
+// =============================================================================
+// Configuration
+// =============================================================================
+function xmlrpc_get_config($key = null) {
+    return xmlCall("security.get_config", array($key));
+}
+
+function xmlrpc_set_config($key, $value) {
+    return xmlCall("security.set_config", array($key, $value));
+}
+
+// =============================================================================
+// Policies (editable via UI, stored in database)
+// =============================================================================
+function xmlrpc_get_policies() {
+    return xmlCall("security.get_policies", array());
+}
+
+function xmlrpc_get_policies_raw() {
+    return xmlCall("security.get_policies_raw", array());
+}
+
+function xmlrpc_set_policies($policies, $user = null) {
+    // Encode policies as JSON string to avoid XMLRPC nested array issues
+    $policies_json = json_encode($policies);
+    return xmlCall("security.set_policies_json", array($policies_json, $user));
+}
+
+function xmlrpc_set_policy($category, $key, $value, $user = null) {
+    return xmlCall("security.set_policy", array($category, $key, $value, $user));
+}
+
+function xmlrpc_reset_policies($user = null) {
+    return xmlCall("security.reset_policies", array($user));
+}
+
+function xmlrpc_reset_display_policies($user = null) {
+    return xmlCall("security.reset_display_policies", array($user));
+}
+
+// =============================================================================
+// Exclusions
+// =============================================================================
+function xmlrpc_get_exclusions() {
+    return xmlCall("security.get_exclusions", array());
+}
+
+function xmlrpc_add_exclusion($cve_id, $reason, $user, $expires_at = null) {
+    return xmlCall("security.add_exclusion", array($cve_id, $reason, $user, $expires_at));
+}
+
+function xmlrpc_remove_exclusion($cve_id) {
+    return xmlCall("security.remove_exclusion", array($cve_id));
+}
+
+// =============================================================================
+// Software-centric view
+// =============================================================================
+function xmlrpc_get_softwares_summary($start = 0, $limit = 50, $filter = '', $location = '') {
+    return xmlCall("security.get_softwares_summary", array($start, $limit, $filter, $location));
+}
+
+function xmlrpc_get_software_cves($software_name, $software_version, $start = 0, $limit = 50,
+                                   $filter = '', $severity = null) {
+    return xmlCall("security.get_software_cves", array(
+        $software_name, $software_version, $start, $limit, $filter, $severity
+    ));
+}
+
+// =============================================================================
+// Entity-centric view
+// =============================================================================
+function xmlrpc_get_entities_summary($start = 0, $limit = 50, $filter = '', $user_entities = '') {
+    return xmlCall("security.get_entities_summary", array($start, $limit, $filter, $user_entities));
+}
+
+// =============================================================================
+// Group-centric view
+// =============================================================================
+function xmlrpc_get_groups_summary($start = 0, $limit = 50, $filter = '', $user_login = '') {
+    return xmlCall("security.get_groups_summary", array($start, $limit, $filter, $user_login));
+}
+
+function xmlrpc_get_group_machines($group_id, $start = 0, $limit = 50, $filter = '') {
+    return xmlCall("security.get_group_machines", array($group_id, $start, $limit, $filter));
+}
+
+// =============================================================================
+// Group creation helpers
+// =============================================================================
+function xmlrpc_get_machines_by_severity($severity, $location = '') {
+    return xmlCall("security.get_machines_by_severity", array($severity, $location));
+}
+
+// =============================================================================
+// Store integration - Deploy updates for vulnerable software
+// =============================================================================
+function xmlrpc_get_store_software_info($software_name) {
+    return xmlCall("security.get_store_software_info", array($software_name));
+}
+
+function xmlrpc_get_machines_for_vulnerable_software($software_name, $software_version,
+                                                      $location = '', $start = 0, $limit = 100, $filter = '') {
+    return xmlCall("security.get_machines_for_vulnerable_software", array(
+        $software_name, $software_version, $location, $start, $limit, $filter
+    ));
+}
+?>

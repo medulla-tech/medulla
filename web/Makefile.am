@@ -27,7 +27,7 @@ datapaths = graph img includes jsframework logout imaging modules/admin modules/
 	modules/dyngroup modules/msc modules/inventory modules/glpi modules/pkgs modules/urbackup \
 	modules/medulla_server modules/imaging modules/backuppc modules/support \
 	modules/kiosk conf/apache modules/ppolicy modules/update modules/services modules/report \
-	modules/xmppmaster modules/updates modules/mastering modules/mobile \
+	modules/xmppmaster modules/updates modules/mastering modules/mobile modules/security \
 	index.php main.php version.php license.php forgotpassword.php token.php providers.php demobanner.php
 
 datafiles = $(shell find $(patsubst %,$(srcdir)/%,$(datapaths)) \

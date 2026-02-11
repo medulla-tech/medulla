@@ -300,6 +300,7 @@ nobase_dist_contrib_DATA = dyngroup/sql/clean-db.sql \
 	urbackup/sql/schema-001.sql \
 	mastering/sql/schema-001.sql \
 	mobile/sql/schema-001.sql \
+	security/sql/schema-001.sql \
 	monit/pulse2 \
 	samba/smb.conf \
 	test-xmlrpc.php \

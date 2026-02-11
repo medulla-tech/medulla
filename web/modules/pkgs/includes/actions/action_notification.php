@@ -122,32 +122,36 @@ $namestep=_T("User Notification","pkgs");
             $sizemessage = (isset($sizemessage)) ? $sizemessage : 10;
         ?>
         <tr>
+            <th><?php echo _T('Message box title', 'pkgs'); ?></th>
             <th>
-                    <?php echo _T('Message box title', 'pkgs'); ?>
-            </th>
-            <th>
-                <span  data-title="<?php echo _T('Insert title of message box', 'pkgs'); ?>">
-                    <textarea class="special_textarea" name="titlemessage" ><?php echo $titlemessage; ?></textarea>
-                </span>
-                <span  data-title="<?php echo _T('Define text size for message box title', 'pkgs'); ?>">
-                    <?php echo _T('Text size', 'pkgs'); ?>
-                    <?php echo'<input style="width:35px;" type="number"  value="'.$sizeheader.'" name="sizeheader" min=10 max=20 />'; ?>
+                <span data-title="<?php echo _T('Insert title of message box', 'pkgs'); ?>">
+                    <textarea class="special_textarea" name="titlemessage"><?php echo $titlemessage; ?></textarea>
                 </span>
             </th>
         </tr>
         <tr>
             <th>
-                    <?php echo _T('Message', 'pkgs'); ?>
-            </th>
-            <th>
-                <span  data-title="<?php echo _T('Insert message for user', 'pkgs'); ?>">
-                    <textarea class="special_textarea" name="message" ><?php echo $message; ?></textarea>
-                </span>
-                 <span  data-title="<?php echo _T('Define text size for message', 'pkgs'); ?>">
+                <span data-title="<?php echo _T('Define text size for message box title', 'pkgs'); ?>">
                     <?php echo _T('Text size', 'pkgs'); ?>
-                    <?php echo'<input style="width:35px;" type="number"  value="'.$sizemessage.'" name="sizemessage" min=7 max=15 />'; ?>
                 </span>
             </th>
+            <th><?php echo'<input  type="number" value="'.$sizeheader.'" name="sizeheader" min=10 max=20 />'; ?></th>
+        </tr>
+        <tr>
+            <th><?php echo _T('Message', 'pkgs'); ?></th>
+            <th>
+                <span data-title="<?php echo _T('Insert message for user', 'pkgs'); ?>">
+                    <textarea class="special_textarea" name="message"><?php echo $message; ?></textarea>
+                </span>
+            </th>
+        </tr>
+        <tr>
+            <th>
+                <span data-title="<?php echo _T('Define text size for message', 'pkgs'); ?>">
+                    <?php echo _T('Text size', 'pkgs'); ?>
+                </span>
+            </th>
+            <th><?php echo'<input  type="number" value="'.$sizemessage.'" name="sizemessage" min=7 max=15 />'; ?></th>
         </tr>
 
         <tr>

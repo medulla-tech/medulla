@@ -65,6 +65,14 @@ $pageEditDevice->setOptions(array("visible" => false));
 $submod->addPage($pageEditDevice);
 
 ################################
+# delete device page
+################################
+$pageDeleteDevice = new Page("deleteDevice", _T('Delete Device', 'mobile'));
+$pageDeleteDevice->setFile("modules/mobile/mobile/deleteDevice.php");
+$pageDeleteDevice->setOptions(array("visible" => false));
+$submod->addPage($pageDeleteDevice);
+
+################################
 # assign configurations to file page
 ################################
 $pageFileConfigurations = new Page("fileConfigurations", _T('File Configurations', 'mobile'));
@@ -99,33 +107,33 @@ $submod->addPage($pageEditApplication);
 ###############################
 # create icon page (ajax)
 ################################
-$pageAjaxCreateIcon = new Page("createIcon", _T('Create an icon', 'mobile'));
-$pageAjaxCreateIcon->setFile("modules/mobile/mobile/ajaxCreateIcon.php");
-$pageAjaxCreateIcon->setOptions(array("AJAX" => true, "visible" => false));
-$submod->addPage($pageAjaxCreateIcon);
+// $pageAjaxCreateIcon = new Page("createIcon", _T('Create an icon', 'mobile'));
+// $pageAjaxCreateIcon->setFile("modules/mobile/mobile/ajaxCreateIcon.php");
+// $pageAjaxCreateIcon->setOptions(array("AJAX" => true, "visible" => false));
+// $submod->addPage($pageAjaxCreateIcon);
 
 ################################
 # get icons page (ajax)
 ################################
-$pageAjaxGetIcons = new Page("getIcons", _T('Get icons', 'mobile'));
-$pageAjaxGetIcons->setFile("modules/mobile/mobile/ajaxGetIcons.php");
-$pageAjaxGetIcons->setOptions(array("AJAX" => true, "visible" => false));
-$submod->addPage($pageAjaxGetIcons);
+// $pageAjaxGetIcons = new Page("getIcons", _T('Get icons', 'mobile'));
+// $pageAjaxGetIcons->setFile("modules/mobile/mobile/ajaxGetIcons.php");
+// $pageAjaxGetIcons->setOptions(array("AJAX" => true, "visible" => false));
+// $submod->addPage($pageAjaxGetIcons);
 
 ################################
 # delete icon page (ajax)
 ################################
-$pageAjaxDeleteIcon = new Page("deleteIcon", _T('Delete icon', 'mobile'));
-$pageAjaxDeleteIcon->setFile("modules/mobile/mobile/ajaxDeleteIcon.php");
-$pageAjaxDeleteIcon->setOptions(array("AJAX" => true, "visible" => false));
-$submod->addPage($pageAjaxDeleteIcon);
+// $pageAjaxDeleteIcon = new Page("deleteIcon", _T('Delete icon', 'mobile'));
+// $pageAjaxDeleteIcon->setFile("modules/mobile/mobile/ajaxDeleteIcon.php");
+// $pageAjaxDeleteIcon->setOptions(array("AJAX" => true, "visible" => false));
+// $submod->addPage($pageAjaxDeleteIcon);
 
 ################################
 # icon settings page
 ################################
-$pageIconSettings = new Page("iconSettings", _T('Icon settings', 'mobile'));
-$pageIconSettings->setFile("modules/mobile/mobile/iconSettings.php");
-$submod->addPage($pageIconSettings);
+// $pageIconSettings = new Page("iconSettings", _T('Icon settings', 'mobile'));
+// $pageIconSettings->setFile("modules/mobile/mobile/iconSettings.php");
+// $submod->addPage($pageIconSettings);
 
 ###############################
 #upload apk page (ajax)
@@ -138,14 +146,9 @@ $submod->addPage($pageAjaxUploadApk);
 ################################
 # GLPI devices page
 ################################
-$pageGlpiDevices = new Page("glpiDevices", _T('All devices glpi', 'mobile'));
-$pageGlpiDevices->setFile("modules/mobile/mobile/glpiDevicesList.php");
-$submod->addPage($pageGlpiDevices);
-
-# GLPI phones page
-$pageGlpiPhones = new Page("glpiPhones", _T('All phones glpi', 'mobile'));
-$pageGlpiPhones->setFile("modules/mobile/mobile/glpiPhonesList.php");
-$submod->addPage($pageGlpiPhones);
+// $pageGlpiDevices = new Page("glpiDevices", _T('All devices glpi', 'mobile'));
+// $pageGlpiDevices->setFile("modules/mobile/mobile/glpiDevicesList.php");
+// $submod->addPage($pageGlpiDevices);
 
 ################################
 # Files page
@@ -243,6 +246,11 @@ $pageDeleteConfiguration->setFile("modules/mobile/mobile/deleteConfiguration.php
 $pageDeleteConfiguration->setOptions(array("AJAX" => false, "visible" => false));
 $submod->addPage($pageDeleteConfiguration);
 
+$pageDuplicateConfiguration = new Page("duplicateConfiguration", _T('Duplicate configuration', 'mobile'));
+$pageDuplicateConfiguration->setFile("modules/mobile/mobile/duplicateConfiguration.php");
+$pageDuplicateConfiguration->setOptions(array("visible" => false));
+$submod->addPage($pageDuplicateConfiguration);
+
 ################################
 # Groups pages
 ################################
@@ -269,6 +277,19 @@ $pageDeleteGroup = new Page("deleteGroup", _T('Delete group', 'mobile'));
 $pageDeleteGroup->setFile("modules/mobile/mobile/deleteGroup.php");
 $pageDeleteGroup->setOptions(array("AJAX" => false, "visible" => false));
 $submod->addPage($pageDeleteGroup);
+
+################################
+# Group Quick Actions page
+################################
+$pageGroupQuickAction = new Page("groupQuickAction", _T('Group Quick Action', 'mobile'));
+$pageGroupQuickAction->setFile("modules/mobile/mobile/groupQuickAction.php");
+$pageGroupQuickAction->setOptions(array("visible" => false, "noHeader" => true));
+$submod->addPage($pageGroupQuickAction);
+
+$pageGroupQuickActionExec = new Page("groupQuickActionExec", _T('Group Quick Action Exec', 'mobile'));
+$pageGroupQuickActionExec->setFile("modules/mobile/mobile/groupQuickActionExec.php");
+$pageGroupQuickActionExec->setOptions(array("AJAX" => false, "visible" => false));
+$submod->addPage($pageGroupQuickActionExec);
 
 ################################
 # Functions page (HMDM features)
@@ -307,6 +328,19 @@ $pageQrCode = new Page("qrCode", _T('QR Code', 'mobile'));
 $pageQrCode->setFile("modules/mobile/mobile/qrCode.php");
 $pageQrCode->setOptions(array("AJAX" => false, "visible" => false));
 $submod->addPage($pageQrCode);
+
+################################
+# Device Quick Actions page
+################################
+$pageDeviceQuickAction = new Page("deviceQuickAction", _T('Device Quick Action', 'mobile'));
+$pageDeviceQuickAction->setFile("modules/mobile/mobile/deviceQuickAction.php");
+$pageDeviceQuickAction->setOptions(array("visible" => false, "noHeader" => true));
+$submod->addPage($pageDeviceQuickAction);
+
+$pageDeviceQuickActionExec = new Page("deviceQuickActionExec", _T('Device Quick Action Exec', 'mobile'));
+$pageDeviceQuickActionExec->setFile("modules/mobile/mobile/deviceQuickActionExec.php");
+$pageDeviceQuickActionExec->setOptions(array("AJAX" => false, "visible" => false));
+$submod->addPage($pageDeviceQuickActionExec);
 
 ################################
 # End

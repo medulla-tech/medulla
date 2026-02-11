@@ -30,6 +30,7 @@ Depends: ${misc:Depends},
          mmc-web-admin, python3-mmc-admin,
          mmc-web-mastering, python3-mmc-mastering,
          mmc-web-mobile, python3-mmc-mobile,
+         mmc-web-security, python3-mmc-security,
          pulse-xmppmaster-agentplugins, pulse-xmpp-agent-relay,
          pulse-agent-installers, pulse2-common,
          pulse2-imaging-client | pulse2-davos-client
@@ -135,6 +136,16 @@ Description: Medulla common mobile database files
  organizations.
  .
  This package contains Medulla common mobile database files.
+
+Package: python3-pulse2-common-database-security
+Architecture: all
+Section: python
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version})
+Description: Medulla common security database files
+ Medulla is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package contains Medulla common security database files.
 
 Package: python3-pulse2-common-database
 Architecture: all
@@ -623,6 +634,25 @@ Package: mmc-web-mobile
 Architecture: all
 Depends: ${misc:Depends}, pulse2-common(= ${binary:Version}), mmc-web-base (>= 3.1.1-1)
 Description: Medulla mobile plugin for MMC web interface
+ Medulla is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package will install all the Medulla MMC agent interface plugins
+
+Package: python3-mmc-security
+Architecture: all
+Section: python
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python3-pulse2-common-database-security (= ${binary:Version})
+Description: Medulla security plugin for MMC agent
+ Medulla is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package contains the security plugin for MMC agent.
+
+Package: mmc-web-security
+Architecture: all
+Depends: ${misc:Depends}, pulse2-common(= ${binary:Version}), mmc-web-base (>= 3.1.1-1)
+Description: Medulla security plugin for MMC web interface
  Medulla is Open Source computer system management for medium and large
  organizations.
  .
