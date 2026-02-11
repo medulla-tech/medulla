@@ -65,14 +65,14 @@ $ou_list = xmlrpc_get_ou_list($ou, $owner, $_SESSION['glpi_user']['api_token']);
 if(is_array($ou_list)) {
     $f = new ValidatingForm(array("id" => "profile-form"));
 
-    $f->push(new Table());
-
     $f->add(new HiddenTpl("action"), array("value" => $_GET['action'], "hide" => true));
     $f->add(new HiddenTpl("owner"), array("value" => $_SESSION['login'], "hide" => true));
     $f->add(new SpanElement('', "packages"));
 
     // Section title for profile information
-    $f->add(new TitleElement(_T("Profile information", "kiosk")));
+    $f->add(new SpanElement(_T("Profile information", "kiosk"), "section-title"));
+
+    $f->push(new Table());
 
     // -------
     // Add an input for the profile name
@@ -97,7 +97,7 @@ if(is_array($ou_list)) {
     $f->pop(); // End of the table
 
     // Section title for package management
-    $f->add(new TitleElement(_T("Manage packages", "kiosk")));
+    $f->add(new SpanElement(_T("Manage packages", "kiosk"), "section-title"));
     // Get the list of the packages
     $available_packages = [];
     $available_packages_str = "";
@@ -112,18 +112,18 @@ if(is_array($ou_list)) {
     }
 
     $restricted_area = (xmlrpc_get_conf_kiosk()['enable_acknowledgements'] == true) ? '<div>
-            <h1>'._T("Restricted packages", "kiosk").'</h1>
+            <h3>'._T("Restricted packages", "kiosk").'</h3>
             <ol data-draggable="target" id="restricted-packages">
             </ol>
         </div>' : '';
 
     $f->add(new SpanElement('<div id="packages">
         <div>
-            <h1>'._T("Available packages", "kiosk").'</h1>
+            <h3>'._T("Available packages", "kiosk").'</h3>
             <input type="text" id="availableFilter" value="" placeholder="'._T("Search by name ...", "pkgs").'">
             <ol data-draggable="target" id="available-packages">'.$available_packages_str.'</ol>
         </div>'.$restricted_area.'<div>
-            <h1>'._T("Allowed packages", "kiosk").'</h1>
+            <h3>'._T("Allowed packages", "kiosk").'</h3>
             <input type="text" id="allowedFilter" value="" placeholder="'._T("Search by name ...", "pkgs").'">
             <ol data-draggable="target" id="allowed-packages">
             </ol>
@@ -131,7 +131,7 @@ if(is_array($ou_list)) {
     </div>', "packages"));
 
     // Section title for source selection
-    $f->add(new TitleElement(_T("Source selection", "kiosk")));
+    $f->add(new SpanElement(_T("Source selection", "kiosk"), "section-title"));
 
     $sources = ["Entity", "Group", "LDAP", "Ou User", "Ou Machine"];
     if(xmlrpc_get_conf_kiosk()['use_external_ldap'] == true) {
