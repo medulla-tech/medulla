@@ -2,6 +2,7 @@
  * (c) 2024-2025 Medulla, http://www.medulla-tech.io
  *
  * Kiosk module styles - consolidated CSS
+ * Uses CSS variables from global.css for consistency
  */
 
 /* ============================================ */
@@ -15,7 +16,7 @@ li.list a {
     background-repeat: no-repeat;
     line-height: 18px;
     text-decoration: none;
-    color: #FFF;
+    color: var(--color-text-white, #fff);
 }
 
 li.users a {
@@ -25,50 +26,9 @@ li.users a {
     background-repeat: no-repeat;
     line-height: 18px;
     text-decoration: none;
-    color: #FFF;
+    color: var(--color-text-white, #fff);
 }
 
-/* ============================================ */
-/* Section Titles (like pkgs module)            */
-/* ============================================ */
-
-span.kiosk-title {
-    font-size: 15px;
-    font-weight: 600;
-    color: #444050;
-    padding: 8px 0 4px;
-    display: block;
-    border-bottom: 2px solid #444050;
-    margin-bottom: 4px;
-    text-transform: uppercase;
-}
-
-/* Inside form table — pull left to cover label column */
-.mmc-form-table .kiosk-title {
-    margin-left: -236px;
-    width: calc(100% + 236px);
-}
-
-/* TitleElement generates h2 by default (with a <br/> before) */
-#profile-form > br {
-    display: none;
-}
-
-#profile-form > h2 {
-    font-size: 15px;
-    font-weight: 600;
-    color: #444050;
-    padding: 8px 0 4px;
-    display: block;
-    border-bottom: 2px solid #444050;
-    margin: 25px 0 12px 0;
-    text-transform: uppercase;
-}
-
-/* First section title has less top margin */
-#profile-form > h2:first-of-type {
-    margin-top: 5px;
-}
 
 /* ============================================ */
 /* Package Manager Layout                       */
@@ -91,11 +51,9 @@ span.kiosk-title {
     flex-direction: column;
 }
 
-/* Package section titles (h1) */
-#packages h1 {
-    font-size: 12px;
-    font-weight: 600;
-    color: #444;
+/* Package column titles (h3) */
+#packages h3 {
+    color: var(--color-header-bg, #444050);
     margin: 0 0 8px 0;
     padding: 0;
     border: none;
@@ -107,11 +65,11 @@ span.kiosk-title {
     height: var(--input-height, 38px);
     padding: 8px 12px;
     margin-bottom: 8px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--color-border-medium, #ccc);
     border-radius: 6px;
-    font-size: 13px;
+    font-size: var(--font-size-form, 13px);
     box-sizing: border-box;
-    background: #fff;
+    background: var(--color-bg-white, #fff);
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -122,7 +80,7 @@ span.kiosk-title {
 }
 
 #packages input[type="text"]::placeholder {
-    color: #999;
+    color: var(--color-text-muted, #999);
 }
 
 /* ============================================ */
@@ -138,9 +96,9 @@ span.kiosk-title {
     overflow-y: auto;
     margin: 0;
     padding: 8px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--color-border-light, #ddd);
     border-radius: 4px;
-    background: #fff;
+    background: var(--color-bg-white, #fff);
     box-sizing: border-box;
 }
 
@@ -164,9 +122,9 @@ span.kiosk-title {
     padding: 6px 10px;
     border-radius: 3px;
     background: transparent;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--color-bg-gray, #eee);
     line-height: 1.4;
-    font-size: 12px;
+    font-size: var(--font-size-base, 12px);
     cursor: grab;
     transition: background-color 0.15s ease;
 }
@@ -176,19 +134,19 @@ span.kiosk-title {
 }
 
 [data-draggable="item"]:hover {
-    background: #f0f7fa;
+    background: rgba(37, 96, 125, 0.06);
 }
 
 /* Items focus state */
 [data-draggable="item"]:focus {
     outline: none;
-    background: #e8f4f8;
+    background: rgba(37, 96, 125, 0.1);
 }
 
 /* Items grabbed state */
 [data-draggable="item"][aria-grabbed="true"] {
     background: var(--color-primary, #25607d);
-    color: #fff;
+    color: var(--color-text-white, #fff);
     border-radius: 3px;
     border-bottom-color: transparent;
     cursor: grabbing;
@@ -210,9 +168,9 @@ span.kiosk-title {
     flex-shrink: 0;
     width: 32px;
     height: 32px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--color-border-medium, #ccc);
     border-radius: 4px;
-    background: #fff;
+    background: var(--color-bg-white, #fff);
     cursor: pointer;
     font-size: 18px;
     font-weight: bold;
@@ -222,7 +180,7 @@ span.kiosk-title {
 
 #treeToggler:hover {
     background: var(--color-primary, #25607d);
-    color: #fff;
+    color: var(--color-text-white, #fff);
     border-color: var(--color-primary, #25607d);
 }
 
@@ -232,8 +190,8 @@ span.kiosk-title {
     max-width: 40%;
     max-height: 310px;
     overflow: auto;
-    background: #fff;
-    border: 1px solid #ccc;
+    background: var(--color-bg-white, #fff);
+    border: 1px solid var(--color-border-medium, #ccc);
     border-radius: 4px;
     padding: 10px;
 }
@@ -243,8 +201,8 @@ span.kiosk-title {
     flex: 1;
     max-height: 310px;
     overflow: auto;
-    background: #fff;
-    border: 1px solid #ccc;
+    background: var(--color-bg-white, #fff);
+    border: 1px solid var(--color-border-medium, #ccc);
     border-radius: 4px;
     padding: 10px;
     min-width: 200px;
@@ -262,8 +220,8 @@ span.kiosk-title {
 
 #users li {
     padding: 6px 10px;
-    border-bottom: 1px solid #eee;
-    font-size: 12px;
+    border-bottom: 1px solid var(--color-bg-gray, #eee);
+    font-size: var(--font-size-base, 12px);
 }
 
 #users li:last-child {
@@ -290,8 +248,9 @@ span.kiosk-title {
 
 #profile-form .mmc-form-table .mmc-label {
     width: 180px;
+    font-size: var(--font-size-form, 13px);
     font-weight: 500;
-    color: #444050;
+    color: var(--color-header-bg, #444050);
 }
 
 /* Override global input styles for kiosk form */
@@ -303,7 +262,7 @@ span.kiosk-title {
 /* Separator */
 #profile-form hr {
     border: none;
-    border-top: 1px solid #ddd;
+    border-top: 1px solid var(--color-border-light, #ddd);
     margin: 20px 0;
 }
 
@@ -319,10 +278,10 @@ span.kiosk-title {
 /* ============================================ */
 
 .profile-status-active {
-    color: #28a745;
+    color: var(--color-success, #28a745);
     font-weight: 600;
 }
 
 .profile-status-inactive {
-    color: #999;
+    color: var(--color-text-muted, #999);
 }

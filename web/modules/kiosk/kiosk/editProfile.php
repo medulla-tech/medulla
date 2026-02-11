@@ -93,9 +93,6 @@ $p->display();
 
 $f = new ValidatingForm(array("id" => "profile-form"));
 
-$f->push(new Table());
-
-
 $f->add(new HiddenTpl("id"), array("value" => $_GET['id'], "hide" => true));
 $ous = join(';', $profile['ous']);
 
@@ -106,7 +103,9 @@ $f->add(new HiddenTpl("owner"), array("value" => $_SESSION['login'], "hide" => t
 $f->add(new SpanElement('', "packages"));
 
 // Section title for profile information
-$f->add(new TitleElement(_T("Profile information", "kiosk")));
+$f->add(new SpanElement(_T("Profile information", "kiosk"), "section-title"));
+
+$f->push(new Table());
 
 // -------
 // Add an input for the profile name
@@ -132,11 +131,11 @@ $f->pop(); // End of the table
 $defaultValue = (safeCount($profile['ous']) > 0 && $profile['ous'][0] != "") ? ["value" => "checked"] : [];
 
 // Section title for package management
-$f->add(new TitleElement(_T("Manage packages", "kiosk")));
+$f->add(new SpanElement(_T("Manage packages", "kiosk"), "section-title"));
 
 if(xmlrpc_get_conf_kiosk()['enable_acknowledgements'] == true) {
     $restricted_area = '<div>
-    <h1>'._T("Restricted packages", "kiosk").'</h1>
+    <h3>'._T("Restricted packages", "kiosk").'</h3>
     <ol data-draggable="target" id="restricted-packages">'.$restricted_packages_str.'</ol>
     </div>';
 } else {
@@ -146,18 +145,18 @@ if(xmlrpc_get_conf_kiosk()['enable_acknowledgements'] == true) {
 
 $f->add(new SpanElement('<div id="packages">
         <div>
-            <h1>'._T("Available packages", "kiosk").'</h1>
+            <h3>'._T("Available packages", "kiosk").'</h3>
             <input type="text" id="availableFilter" value="" placeholder="'._T("Search by name ...", "pkgs").'">
             <ol data-draggable="target" id="available-packages">'.$available_packages_str.'</ol>
         </div>'.$restricted_area.'<div>
-            <h1>'._T("Allowed packages", "kiosk").'</h1>
+            <h3>'._T("Allowed packages", "kiosk").'</h3>
             <input type="text" id="allowedFilter" value="" placeholder="'._T("Search by name ...", "pkgs").'">
             <ol data-draggable="target" id="allowed-packages">'.$allowed_packages_str.'</ol>
         </div>
     </div>', "packages"));
 
 // Section title for source selection
-$f->add(new TitleElement(_T("Source selection", "kiosk")));
+$f->add(new SpanElement(_T("Source selection", "kiosk"), "section-title"));
 
 $sources = ["Entity", "Group", "LDAP", "Ou User", "Ou Machine"];
 if(xmlrpc_get_conf_kiosk()['use_external_ldap'] == true) {
