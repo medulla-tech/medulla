@@ -67,7 +67,7 @@ if (isset($lifdir['err'])){
     else{
         $msg = sprintf(_T("Error : %s", "xmppmaster"), $machine);
     }
-    $strlistdir.= '<h2 style="color : red;">';
+    $strlistdir.= '<h2 class="text-error-header">';
     $strlistdir.= $msg;
     $strlistdir.= "</h2>";
     $lifdir['html'] = $strlistdir;
@@ -85,7 +85,7 @@ $strlistdir .= '<ul class="rightdir">';
         foreach($lifdir['list_dirs_current'] as $namedir){
             $strlistdir.= "<li>
                       <span class='dir'>".$namedir."</span>
-                      <span class='but'><img style='padding-left : 20px; float : right;'src='modules/xmppmaster/graph/img/browserdownload.png'></span>
+                      <span class='but'><img class='fb-download-icon' src='modules/xmppmaster/graph/img/browserdownload.png'></span>
                  </li>
                  ";
         }
@@ -94,11 +94,9 @@ $strlistdir .= '
 <ul class="rightfile">';
         foreach($lifdir['list_files_current'] as $namefile){
             $strlistdir .=  "<li>
-                    <span style='position : relative; top : -4px;'>".$namefile[0]."</span>
-                    <span style='position : relative; top : -4px;'>[ ".sizefile($namefile[1])."] </span>
-                    <span><img  class='download' style='padding-left : 20px;
-                                                        float : right;'
-                                                        src='modules/xmppmaster/graph/img/browserdownload.png'>
+                    <span class='fb-file-info'>".$namefile[0]."</span>
+                    <span class='fb-file-info'>[ ".sizefile($namefile[1])."] </span>
+                    <span><img class='download fb-download-icon' src='modules/xmppmaster/graph/img/browserdownload.png'>
                     </span>
                 </li>
                 ";

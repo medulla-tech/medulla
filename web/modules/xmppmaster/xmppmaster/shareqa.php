@@ -82,27 +82,27 @@ $f->push(new Table());
 
 $f->add(new TitleElement(_T("User Already Owning Quick Action", "xmppmaster")." ".$_GET['namecmd']));
 
-$owner_str = "<ul style='margin-top:0;margin-bottom:0;'>";
+$owner_str = "<ul class='qa-owner-list'>";
 foreach($users_owning_qa as $user)
 {
   $owner_str.='<li>'.$user.'</li>';
 }
 $owner_str .= "</ul>";
-$f->add(new SpanElement("<div style='max-height=30px;columns: 5;background-color:rgb(221,221,221);border: 2px solid #888;border-radius: 0.2em;'>".$owner_str."</div>","users"));
+$f->add(new SpanElement("<div class='qa-owner-box'>".$owner_str."</div>","users"));
 
 
 $f->add(new TitleElement(_T("Select Users", "xmppmaster")));
 
-$f->add(new SpanElement('<div><input type="button" onclick="selectAllUsers()" value="Select all users"/></div><div style="display:inline-flex; width:100%" id="users">
+$f->add(new SpanElement('<div><input type="button" onclick="selectAllUsers()" value="Select all users"/></div><div class="qa-users-container" id="users">
     <!-- Source : https://www.sitepoint.com/accessible-drag-drop/ -->
-    <div style="width:100%">
+    <div class="qa-user-column">
         <h1>'._T("Available users","xmppmaster").'</h1>
-        <ol style="width:95%" data-draggable="target" id="available-users">'.$list_str.'</ol>
+        <ol class="qa-user-list" data-draggable="target" id="available-users">'.$list_str.'</ol>
     </div>
 
-    <div style="width:100%">
+    <div class="qa-user-column">
         <h1>'._T("Selected users","xmppmaster").'</h1>
-        <ol style="width:95%" data-draggable="target" id="selected-users">
+        <ol class="qa-user-list" data-draggable="target" id="selected-users">
         </ol>
     </div>
 </div>',"users"));

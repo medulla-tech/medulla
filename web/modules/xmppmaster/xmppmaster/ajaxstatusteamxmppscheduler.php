@@ -92,6 +92,7 @@ $logs=array();
 $replanifie=array();
 $params=array();
 $arraytargetname=array();
+
 $index = 0;
 $deployment_intervals=array();
 foreach($arraydeploy['tabdeploy']['groupid'] as $groupid){
@@ -117,10 +118,12 @@ foreach($arraydeploy['tabdeploy']['groupid'] as $groupid){
     $replanifie[] =  $rescheduleAction;
     if($groupid){
         $groupname = getPGobject($arraydeploy['tabdeploy']['groupid'][$index], true)->getName();
-        $arraytargetname[] = "<img style='position:relative;top : 5px;'src='img/other/machinegroup.svg' width='25' height='25' /> " . $groupname ;
+        $arraytargetname[] = "<img class='icon-inline' src='img/other/machinegroup.svg'/> " . $groupname ;
     }
     else{
-        $arraytargetname[] = "<img style='position:relative;top : 5px;'src='img/other/machine_down.svg' width='25' height='25' /> " . $arraydeploy['tabdeploy']['host'][$index] ;
+        // Check machine presence to use correct icon
+        $machineUuid = $arraydeploy['tabdeploy']['inventoryuuid'][$index];
+        $arraytargetname[] = "<img class='icon-inline' src='img/other/machine_down.svg'/> " . $arraydeploy['tabdeploy']['host'][$index] ;
     }
     $index++;
 }
@@ -129,7 +132,7 @@ foreach($arraydeploy['tabdeploy']['groupid'] as $groupid){
 if((isset($arraydeploy['tabdeploy']['journee']))){
     foreach($arraydeploy['tabdeploy']['journee'] as $key => $value){
         if ($value == 1){
-            $style='style="color:darkblue"';
+            $style='class="text-darkblue"';
         }else
         {
             $style='';
@@ -151,9 +154,9 @@ if((isset($arraydeploy['tabdeploy']['journee']))){
                 $deployment_intervals,
                                                             $arraydeploy['tabdeploy']['title'][$key] );
         if ($convergence[$arraydeploy['tabdeploy']['command'][$key]] != 0 ){
-            $arraydeploy['tabdeploy']['title'][$key]= "<img style='position:relative;top : 5px;'src='img/other/convergence.svg' width='25' height='25'/>" . $arraydeploy['tabdeploy']['title'][$key];
+            $arraydeploy['tabdeploy']['title'][$key]= "<img class='icon-inline' src='img/other/convergence.svg'/>" . $arraydeploy['tabdeploy']['title'][$key];
             }else{
-                $arraydeploy['tabdeploy']['title'][$key]= "<img style='position:relative;top : 5px;'src='img/other/package.svg' width='25' height='25'/>" . $arraydeploy['tabdeploy']['title'][$key];
+                $arraydeploy['tabdeploy']['title'][$key]= "<img class='icon-inline' src='img/other/package.svg'/>" . $arraydeploy['tabdeploy']['title'][$key];
             }
     }
 }

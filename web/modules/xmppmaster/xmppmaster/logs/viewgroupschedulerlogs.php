@@ -22,54 +22,6 @@
  *
  *  file : logs/viewgroupschedulerlogs.php
  */
-?>
-<style>
-
-.log_err{
-  color : red;
-}
-
-.log_warn{
-  color : orange;
-}
-
-.log_ok{
-  color : green;
-}
-
-.shadow
-{
-  -moz-box-shadow: 4px 4px 10px #888;
-  -webkit-box-shadow: 4px 4px 10px #888;
-  box-shadow:4px 4px 6px #888;
-}
-
-.actions:target {
-   background-color: #ffa;
-}
-.actions{
-  margin-bottom:5px;
-  padding:3px;
-  border: dashed 1px rgb(100,100,100);
-  display:flex;
-}
-
-.actions a:hover{
-  background-color: #007fff;
-  color:rgb(255, 255, 255);
-  border: 1px solid #003eff
-}
-
-.actions a{
-  padding:1px;
-}
-
-.action_datas, .action_result{
-  width:50%;
-  padding:10px;
-}
-</style>
-
 <?
 
 require_once("modules/pulse2/includes/utilities.php"); # for quickGet method
@@ -108,28 +60,28 @@ $infospackage = pkgs_get_infos_details($pathpackage);
             echo '<table class="listinfos" cellspacing="0" cellpadding="5">';
                 echo "<thead>";
                     echo "<tr>";
-                        echo '<td style="width: 210px;">';
-                            echo '<span style="padding-left: 32px; ">'._T("Title","xmppmaster").'</span>';
+                        echo '<td class="col-w-210">';
+                            echo '<span class="pkg-detail-header">'._T("Title","xmppmaster").'</span>';
                         echo '</td>';
 
-                        echo '<td style="width: 210px;">';
-                            echo '<span style="padding-left: 32px;">'._T("Group","xmppmaster").'</span>';
+                        echo '<td class="col-w-210">';
+                            echo '<span class="pkg-detail-header">'._T("Group","xmppmaster").'</span>';
                         echo '</td>';
 
-                        echo '<td style="width: 210px;">';
-                            echo '<span style="padding-left: 32px;">'._T("Package","xmppmaster").'</span>';
+                        echo '<td class="col-w-210">';
+                            echo '<span class="pkg-detail-header">'._T("Package","xmppmaster").'</span>';
                         echo '</td>';
 
-                        echo '<td style="width: 210px;">';
-                            echo '<span style="padding-left: 32px;">'._T("Start","xmppmaster").'</span>';
+                        echo '<td class="col-w-210">';
+                            echo '<span class="pkg-detail-header">'._T("Start","xmppmaster").'</span>';
                         echo '</td>';
-                        echo '<td style="width: 210px;">';
-                            echo '<span style="padding-left: 32px;">'._T("End","xmppmaster").'</span>';
+                        echo '<td class="col-w-210">';
+                            echo '<span class="pkg-detail-header">'._T("End","xmppmaster").'</span>';
                         echo '</td>';
 
                         if ($deployment_intervals !=""){
-                            echo '<td style="width: 210px;">';
-                                echo '<span style="padding-left: 32px;">'._T("Deployment Intervals","xmppmaster").'</span>';
+                            echo '<td class="col-w-210">';
+                                echo '<span class="pkg-detail-header">'._T("Deployment Intervals","xmppmaster").'</span>';
                             echo '</td>';
                         }
                     echo "</tr>";
@@ -171,19 +123,19 @@ $infospackage = pkgs_get_infos_details($pathpackage);
                 echo '<table class="listinfos" cellspacing="0" cellpadding="5">';
                     echo "<thead>";
                         echo "<tr>";
-                            echo '<td style="width: 210px;">';
-                                echo '<span style="padding-left: 32px;">'._T("Group Name","xmppmaster").'</span>';
+                            echo '<td class="col-w-210">';
+                                echo '<span class="pkg-detail-header">'._T("Group Name","xmppmaster").'</span>';
                             echo '</td>';
-                            echo '<td style="width: 210px;">';
-                                echo '<span style="padding-left: 32px;">'._T("Creator","xmppmaster").'</span>';
+                            echo '<td class="col-w-210">';
+                                echo '<span class="pkg-detail-header">'._T("Creator","xmppmaster").'</span>';
                             echo '</td>';
                             if (isset($nbmachine)){
-                                echo '<td style="width: 210px;">';
-                                echo '<span style="padding-left: 32px;">'._T("Number of Machines","xmppmaster").'</span>';
+                                echo '<td class="col-w-210">';
+                                echo '<span class="pkg-detail-header">'._T("Number of Machines","xmppmaster").'</span>';
                                 echo '</td>';
                             }
-                                echo '<td style="width: 210px;">';
-                                echo '<span style="padding-left: 32px;">'._T("Number of shares","xmppmaster").'</span>';
+                                echo '<td class="col-w-210">';
+                                echo '<span class="pkg-detail-header">'._T("Number of shares","xmppmaster").'</span>';
                                 echo '</td>';
 
                         echo "</tr>";
@@ -219,8 +171,8 @@ $infospackage = pkgs_get_infos_details($pathpackage);
                 echo '<table class="listinfos" cellspacing="0" cellpadding="5">';
                     echo "<thead>";
                         echo "<tr>";
-                            echo '<td style="width: 210px;">';
-                                echo '<span style="padding-left: 32px;">'._T("owner Name","xmppmaster").'</span>';
+                            echo '<td class="col-w-210">';
+                                echo '<span class="pkg-detail-header">'._T("owner Name","xmppmaster").'</span>';
                             echo '</td>';
                         echo "</tr>";
                     echo "</thead>";
@@ -229,7 +181,7 @@ $infospackage = pkgs_get_infos_details($pathpackage);
                             echo "<tr>";
                                 echo "<td>";
                                 if ($val['creator'] == $group_info['info'][0]['creator']){
-                                    echo  '<span style="font-weight : bold; color : darkblue;">'. $val['creator'].' (Creator) </span>';
+                                    echo  '<span class="creator-highlight">'. $val['creator'].' (Creator) </span>';
                                 }else{
                                     echo  $val['creator'];
                                 }
@@ -250,29 +202,29 @@ $infospackage = pkgs_get_infos_details($pathpackage);
  echo '<table class="listinfos" cellspacing="0" cellpadding="5">';
                     echo "<thead>";
                         echo "<tr>";
-                            echo '<td style="width: 210px;">';
-                                echo '<span style="padding-left: 32px;">'._T("pkg Name","xmppmaster").'</span>';
+                            echo '<td class="col-w-210">';
+                                echo '<span class="pkg-detail-header">'._T("pkg Name","xmppmaster").'</span>';
                             echo '</td>';
-                            echo '<td style="width: 210px;">';
-                                echo '<span style="padding-left: 32px;">'._T("description","xmppmaster").'</span>';
+                            echo '<td class="col-w-210">';
+                                echo '<span class="pkg-detail-header">'._T("description","xmppmaster").'</span>';
                             echo '</td>';
 
-                                echo '<td style="width: 210px;">';
-                                echo '<span style="padding-left: 32px;">'._T("version","xmppmaster").'</span>';
+                                echo '<td class="col-w-210">';
+                                echo '<span class="pkg-detail-header">'._T("version","xmppmaster").'</span>';
                                 echo '</td>';
- echo '<td style="width: 210px;">';
-                                echo '<span style="padding-left: 32px;">'._T("uuid","xmppmaster").'</span>';
+ echo '<td class="col-w-210">';
+                                echo '<span class="pkg-detail-header">'._T("uuid","xmppmaster").'</span>';
                             echo '</td>';
-                                echo '<td style="width: 210px;">';
-                                echo '<span style="padding-left: 32px;">'._T("os","xmppmaster").'</span>';
+                                echo '<td class="col-w-210">';
+                                echo '<span class="pkg-detail-header">'._T("os","xmppmaster").'</span>';
                                 echo '</td>';
 
-                                 echo '<td style="width: 210px;">';
-                                echo '<span style="padding-left: 32px;">'._T("share Name","xmppmaster").'</span>';
+                                 echo '<td class="col-w-210">';
+                                echo '<span class="pkg-detail-header">'._T("share Name","xmppmaster").'</span>';
                                 echo '</td>';
 
-                                 echo '<td style="width: 210px;">';
-                                echo '<span style="padding-left: 32px;">'._T("share Comment","xmppmaster").'</span>';
+                                 echo '<td class="col-w-210">';
+                                echo '<span class="pkg-detail-header">'._T("share Comment","xmppmaster").'</span>';
                                 echo '</td>';
                         echo "</tr>";
                     echo "</thead>";
@@ -323,22 +275,22 @@ $infospackage = pkgs_get_infos_details($pathpackage);
                             echo "<thead>";
 
                                 echo "<tr>";
-                                    echo '<td style="width: 210px;">';
-                                        echo '<span style="padding-left: 32px;">'._T("Software Name","xmppmaster").'</span>';
+                                    echo '<td class="col-w-210">';
+                                        echo '<span class="pkg-detail-header">'._T("Software Name","xmppmaster").'</span>';
                                     echo '</td>';
 
                                     echo "<tr>";
-                                    echo '<td style="width: 210px;">';
-                                        echo '<span style="padding-left: 32px;">'._T("Vendor software]","xmppmaster").'</span>';
+                                    echo '<td class="col-w-210">';
+                                        echo '<span class="pkg-detail-header">'._T("Vendor software]","xmppmaster").'</span>';
                                     echo '</td>';
 
                                     echo "<tr>";
-                                    echo '<td style="width: 210px;">';
-                                        echo '<span style="padding-left: 32px;">'._T("Version software","xmppmaster").'</span>';
+                                    echo '<td class="col-w-210">';
+                                        echo '<span class="pkg-detail-header">'._T("Version software","xmppmaster").'</span>';
                                     echo '</td>';
                                     if ($AssoINVinventorylicence){
-                                        echo '<td style="width: 210px;">';
-                                            echo '<span style="padding-left: 32px;">'._T("number version","xmppmaster").'</span>';
+                                        echo '<td class="col-w-210">';
+                                            echo '<span class="pkg-detail-header">'._T("number version","xmppmaster").'</span>';
                                         echo '</td>';
                                     }
                                 echo "</tr>";
@@ -377,8 +329,8 @@ if($infospackage['dependencies'] != "")
             echo "<thead>";
 
                 echo "<tr>";
-                    echo '<td style="width: 210px;">';
-                        echo '<span style="padding-left: 32px;">'._T("dependencies","xmppmaster").'</span>';
+                    echo '<td class="col-w-210">';
+                        echo '<span class="pkg-detail-header">'._T("dependencies","xmppmaster").'</span>';
                     echo '</td>';
                 echo "</tr>";
             echo "</thead>";
@@ -413,8 +365,8 @@ if ($infospackage['verify']['Package_info']){
                             echo "<thead>";
 
                                 echo "<tr>";
-                                    echo '<td style="width: 210px;">';
-                                        echo '<span style="padding-left: 32px;">'."<h2>Packge ".$pathpackage. "</h2>".'</span>';
+                                    echo '<td class="col-w-210">';
+                                        echo '<span class="pkg-detail-header">'."<h2>Packge ".$pathpackage. "</h2>".'</span>';
                                     echo '</td>';
                                 echo "</tr>";
                             echo "</thead>";
@@ -453,8 +405,8 @@ if ($infospackage['verify']['deploy_xmppdeploy']){
                             echo "<thead>";
 
                                 echo "<tr>";
-                                    echo '<td style="width: 210px;">';
-                                        echo '<span style="padding-left: 32px;">'."<h2>". "Note xmppdeploy.json file"."</h2>".'</span>';
+                                    echo '<td class="col-w-210">';
+                                        echo '<span class="pkg-detail-header">'."<h2>". "Note xmppdeploy.json file"."</h2>".'</span>';
                                     echo '</td>';
                                 echo "</tr>";
                             echo "</thead>";
@@ -492,8 +444,8 @@ if ($infospackage['verify']['conf_confjson']){
                     echo "<thead>";
 
                         echo "<tr>";
-                            echo '<td style="width: 210px;">';
-                                echo '<span style="padding-left: 32px;">'."<h2>"."Note conf.json file"."</h2>".'</span>';
+                            echo '<td class="col-w-210">';
+                                echo '<span class="pkg-detail-header">'."<h2>"."Note conf.json file"."</h2>".'</span>';
                             echo '</td>';
                         echo "</tr>";
                     echo "</thead>";

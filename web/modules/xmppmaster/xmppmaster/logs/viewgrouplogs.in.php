@@ -64,7 +64,7 @@ class AjaxFilterAudit extends AjaxFilter
       <br /><br /><br />
 
   </form>
-  <div id="<?php echo $this->divid;?>" style="width:100%"></div>
+  <div id="<?php echo $this->divid;?>" class="w-full"></div>
 
   <script>
   var arr = {};

@@ -27,115 +27,6 @@
     echo '<link rel="stylesheet" href="jsframework/lib/pluginjqueryjtree/themes/default/style.min.css" />'."\n".
     '<script src="jsframework/lib/pluginjqueryjtree/jstree.min.js"></script>'."\n";
 ?>
-<style type='text/css'>
-textarea {
-    width:50% ;
-    height:150px;
-    margin:auto;
-    display:block;
-}
-
-body{
-    font-family: Georgia;
-    font-size: 11pt;
-}
-
-/*h2{
-    text-align: center;
-}*/
-
-#global{
-  width:100%;
-  height:700px;
-
-}
-#droite, #gauche {
-    display: inline-block;
-    vertical-align: top;
-    border-width:1px;
-    border-style:dotted;
-    border-color:black;
-    margin-left  : 25px;
-}
-
-.fileshow {
-    overflow:auto;
-    height:85%;
-}
-#gauche {
-    width:49%;
-    height:45%;
-}
-
-#droite {
-    width: 90%;
-    height:90%;
-}
-
-#fileshowremote {
-    width: 50%;
-    height:100%;
-    overflow:auto;
-}
-
-#directoryremote{
-    width: 50%;
-    height:100%;
-    overflow:auto;
-    padding-botton:15px;
-    float:left;
-}
-
-.titlebrowser{
-    vertical-align:middle;
-    height:5%;
-    text-align: center;
-    padding-top:5px;
-}
-
-.currentdir{
-    vertical-align:middle;
-    height:5%;
-    text-align: left;
-    padding-top:5px;
-    padding-left:45px;
-}
-
-.piedbrowser{
-    vertical-align:bottom;
-    height:5%;
-    text-align: center;
-    padding-top:5px;
-    color: blue;
-}
-.download{
-    /*display : none*/;
-    /*background: url('modules/xmppmaster/graph/img/browserdownload.png') no-repeat;*/
-    cursor:pointer;
-    border: none;
-}
-ul.leftdir, ul.rightdir {
-    list-style-image: url('modules/xmppmaster/graph/img/closedir.png');
-    cursor: pointer;
-    padding-right:25px;
-}
-ul.leftfile, ul.rightfile {
-    list-style-image: url('modules/xmppmaster/graph/img/file1.png');
-    cursor: pointer;
-    padding-right:25px;
-}
-
-
-.fileselect{
-    margin-left  : 250px;
-    margin-right : 250px;
-}
-
-.marge {
-    margin-bottom:20px;
-}
-</style>
-
 <?
     require("modules/base/computers/localSidebar.php");
     require("graph/navbar.inc.php");
@@ -211,7 +102,7 @@ echo '</script>';
         }else{
             $msg = sprintf(_T("Error : %s", "xmppmaster"), $machine);
         }
-            echo '<h2 style="color : red;">';
+            echo '<h2 class="text-error-header">';
             echo "$msg";
             echo "</h2>";
             exit;
@@ -255,7 +146,7 @@ echo '</script>';
 
 <!-- dialog box Transfert directory -->
   <div>
-    <span style="float:left; margin:12px 12px 20px 0;">
+    <span class="fb-dialog-span">
         <span id="dialogmsg">
         </span>
     </span>
@@ -264,7 +155,7 @@ echo '</script>';
 
 <div id="dialog-confirm-download-file" title="Transfer File"><!-- dialog box Transfert File -->
   <div>
-    <span style="float:left; margin:12px 12px 20px 0;">
+    <span class="fb-dialog-span">
         <span id="dialogmsg1">
         </span>
     </span>
@@ -274,7 +165,7 @@ echo '</script>';
 <!-- dialog box  Notify file-->
 <div id="dialog-notification-download-file" >
   <div>
-    <span style="float:left; padding:12px 12px 20px 0; background-color: #d9edf7; width: 95%; height:100%;">
+    <span class="fb-notification-span">
         <span id="dialogmsg2">
         </span>
     </span>
@@ -446,11 +337,11 @@ echo '</script>';
                 msg="<p><b>" +
                         "<?php echo _T("Copy remote folder", 'xmppmaster'); ?>"+
                     "</p>"+
-                    "<p style=' margin-left: 60px;' >" + source + "</p>"+
+                    "<p style='margin-left:60px' >" + source + "</p>"+
                     "<p>"+
                     "<?php echo _T("to local folder", 'xmppmaster'); ?>" +
                     "</p>"+
-                    "<p style=' margin-left: 60px;'>"+
+                    "<p style='margin-left:60px'>"+
                         jQuery('input[name=path_abs_current_local]').val() + "/" + timetmp +"/"+
                     "</p>"
                 jQuery("#dialogmsg").html(msg);
@@ -500,13 +391,13 @@ echo '</script>';
                 msg="<p>" +
                     "<?php echo _T("Copy remote file", 'xmppmaster'); ?>"+
                         "</p>"+
-                        "<p style=' margin-left: 60px;' >" +
+                        "<p style='margin-left:60px' >" +
                             jQuery('input[name=path_abs_current_remote]').val() + seperator + filenameremote +
                         "</p>"+
                         "<p>"+
                         "<?php echo _T("to local File", 'xmppmaster'); ?>" +
                         "</p>"+
-                        "<p style=' margin-left: 60px;'>"+
+                        "<p style='margin-left:60px'>"+
                             jQuery('input[name=path_abs_current_local]').val() + "/" + timetmp + "/" + filenamelocal+
                         "</p>"
                 jQuery("#dialogmsg1").html(msg);

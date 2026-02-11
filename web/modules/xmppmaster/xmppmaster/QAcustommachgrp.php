@@ -255,7 +255,7 @@ if ($result != "") {
                 <tr>
                     <td><?php echo htmlspecialchars($message[1]); ?></td>
                     <td><span class="log-type-badge"><?php echo htmlspecialchars($message[3]); ?></span></td>
-                    <td style="font-family: monospace;"><?php echo htmlspecialchars($message[4]); ?></td>
+                    <td class="text-monospace"><?php echo htmlspecialchars($message[4]); ?></td>
                 </tr>
                 <?php endforeach; ?>
             </tbody>

@@ -23,55 +23,7 @@
  * along with MMC; If not, see <http://www.gnu.org/licenses/>.
  * file: logs/viewmachinelogs.php
  */
-?>
-<style>
-
-.log_err{
-  color : red;
-}
-
-.log_warn{
-  color : orange;
-}
-
-.log_ok{
-  color : green;
-}
-
-.shadow
-{
-  -moz-box-shadow: 4px 4px 10px #888;
-  -webkit-box-shadow: 4px 4px 10px #888;
-  box-shadow:4px 4px 6px #888;
-}
-
-.actions:target {
-   background-color: #ffa;
-}
-.actions{
-  margin-bottom:5px;
-  padding:3px;
-  border: dashed 1px rgb(100,100,100);
-  display:flex;
-}
-
-.actions a:hover{
-  background-color: #007fff;
-  color:rgb(255, 255, 255);
-  border: 1px solid #003eff
-}
-
-.actions a{
-  padding:1px;
-}
-
-.action_datas, .action_result{
-  width:50%;
-  padding:10px;
-}
-</style>
-
-<?php
+?><?php
 
 require_once("modules/medulla_server/includes/utilities.php"); # for quickGet method
 require_once("modules/dyngroup/includes/utilities.php");
@@ -133,7 +85,7 @@ if(isset($info['objectdeploy'][0]['sessionid'])) {
         // session for session id
         //xmlrpc_getlinelogssession($sessionxmpp);
         xmlrpc_set_simple_log(
-            '<span style="color : Orange, font-style : bold">WARNING !!! </span><span  style="color : Orange ">Request for a stop of deployment</span>',
+            '<span class="text-warning-bold">WARNING !!! </span><span class="text-warning">Request for a stop of deployment</span>',
             $info['objectdeploy'][0]['sessionid'],
             "deploy",
             "-1",
@@ -354,11 +306,11 @@ if (safeCount($deploymachine) != 0) {
     echo '<td>';
     echo _T("Folder", "xmppmaster");
     echo '</td>';
-    echo '<td style="width: 300px;">';
+    echo '<td class="col-w-300">';
     echo _T("Creation Date", "xmppmaster");
     echo '</td>';
     if($isUpdate) {
-        echo '<td class="action" style="text-align:center;">';
+        echo '<td class="action text-center">';
         echo '<span>'._T("Actions", "updates").'</span>';
         echo '</td>';
     }
@@ -379,7 +331,7 @@ if (safeCount($deploymachine) != 0) {
     echo $creation_date;
     echo "</td>";
     if($isUpdate) {
-        echo '<td class="action" style="text-align:center;">';
+        echo '<td class="action text-center">';
         echo '<ul class="action">';
         echo '<li class="infoupdate"><a href="https://www.catalog.update.microsoft.com/Search.aspx?q='.$deploymachine['package_id'].'"> </a></li>';
         echo '<li class="helpupdate"><a href="https://support.microsoft.com/help/'.$update_kb.'"> </a></li>';
@@ -486,7 +438,7 @@ if ($info['len'] != 0) {
     }
 
     echo "<div>";
-    echo '<h2 style="align=center;">'._T("Start deployment : ", "xmppmaster").$formateddate.'</h2>';
+    echo '<h2>'._T("Start deployment : ", "xmppmaster").$formateddate.'</h2>';
     echo "</div>";
     if (!empty($infoslist) || empty($deploymachine)) {
         if ($info['len'] != 0) {
@@ -502,20 +454,20 @@ if ($info['len'] != 0) {
             echo '<table class="listinfos" cellspacing="0" cellpadding="2" border="1">';
             echo "<thead>";
             echo "<tr>";
-            echo '<td style="text-align: center";>';
+            echo '<td class="text-center">';
             echo '<span>'._T("Machine JID", "xmppmaster").'</span>';
             echo '</td>';
-            echo '<td style="text-align: center";>';
+            echo '<td class="text-center">';
             echo '<span">'._T("Relay Server JID", "xmppmaster").'</span>';
             echo '</td>';
-            echo '<td style="text-align: center";>';
+            echo '<td class="text-center">';
             echo '<span>'._T("Machine IP", "xmppmaster").'</span>';
             echo '</td>';
-            echo '<td style="text-align: center";>';
+            echo '<td class="text-center">';
             echo '<span>'._T("Relay Server IP", "xmppmaster").'</span>';
             echo '</td>';
             if(!empty($otherinfos[0]->ipmaster)) {
-                echo '<td style="text-align: center";>';
+                echo '<td class="text-center">';
                 echo '<span>'._T("Master IP", "xmppmaster").'</span>';
                 echo '</td>';
             }
@@ -524,12 +476,12 @@ if ($info['len'] != 0) {
 
             echo "<tbody>";
             echo '<tr>';
-            echo '<td style="text-align: center";>' . $jidmachine . '</td>';
-            echo '<td style="text-align: center";>' . $jid_relay . '</td>';
-            echo '<td style="text-align: center";>' . $ipmachine . '</td>';
-            echo '<td style="text-align: center";>' . $iprelay . '</td>';
+            echo '<td class="text-center">' . $jidmachine . '</td>';
+            echo '<td class="text-center">' . $jid_relay . '</td>';
+            echo '<td class="text-center">' . $ipmachine . '</td>';
+            echo '<td class="text-center">' . $iprelay . '</td>';
             if(!empty($otherinfos[0]->ipmaster)) {
-                echo '<td style="text-align: center";>' . $ipmaster . '</td>';
+                echo '<td class="text-center">' . $ipmaster . '</td>';
             }
             echo "</tr>";
             echo "</tbody>";
@@ -542,16 +494,16 @@ if ($info['len'] != 0) {
         echo '<table class="listinfos" cellspacing="0" cellpadding="5">';
         echo "<thead>";
         echo "<tr>";
-        echo '<td style="text-align: center";>';
+        echo '<td class="text-center">';
         echo '<span>'._T("Name", "xmppmaster").'</span>';
         echo '</td>';
-        echo '<td style="text-align: center";">';
+        echo '<td class="text-center">';
         echo '<span>'._T("Software", "xmppmaster").'</span>';
         echo '</td>';
-        echo '<td style="text-align: center";">';
+        echo '<td class="text-center">';
         echo '<span>'._T("Version", "xmppmaster").'</span>';
         echo '</td>';
-        echo '<td style="text-align: center";">';
+        echo '<td class="text-center">';
         echo '<span>'._T("Description", "xmppmaster").'</span>';
         echo '</td>';
         echo "</tr>";
@@ -562,18 +514,18 @@ if ($info['len'] != 0) {
                     : pkgsGetDetails($info['objectdeploy'][0]['pathpackage']);
         if (empty($infoslist)) {
             echo "<tr>";
-            echo '<td style="text-align: center;">' . htmlspecialchars($infoPkg['label']) . "</td>";
-            echo '<td style="text-align: center;">' . htmlspecialchars($infoPkg['label']) . "</td>";
-            echo '<td style="text-align: center;">' . htmlspecialchars($infoPkg['version']) . "</td>";
-            echo '<td style="text-align: center;">' . htmlspecialchars($infoPkg['description']) . "</td>";
+            echo '<td class="text-center">' . htmlspecialchars($infoPkg['label']) . "</td>";
+            echo '<td class="text-center">' . htmlspecialchars($infoPkg['label']) . "</td>";
+            echo '<td class="text-center">' . htmlspecialchars($infoPkg['version']) . "</td>";
+            echo '<td class="text-center">' . htmlspecialchars($infoPkg['description']) . "</td>";
             echo "</tr>";
         } else {
             foreach ($infoslist as $inf) {
                 echo "<tr>";
-                echo '<td style="text-align: center;">' . htmlspecialchars($inf->name) . "</td>";
-                echo '<td style="text-align: center;">' . htmlspecialchars($inf->software) . "</td>";
-                echo '<td style="text-align: center;">' . htmlspecialchars($inf->version) . "</td>";
-                echo '<td style="text-align: center;">' . htmlspecialchars($inf->description) . "</td>";
+                echo '<td class="text-center">' . htmlspecialchars($inf->name) . "</td>";
+                echo '<td class="text-center">' . htmlspecialchars($inf->software) . "</td>";
+                echo '<td class="text-center">' . htmlspecialchars($inf->version) . "</td>";
+                echo '<td class="text-center">' . htmlspecialchars($inf->description) . "</td>";
                 echo "</tr>";
             }
         }
@@ -588,7 +540,7 @@ if ($info['len'] != 0) {
     echo '<table class="listinfos" cellspacing="0" cellpadding="2" border="1">';
     echo "<thead>";
     echo "<tr>";
-    echo '<td  style="width : 120px;">';
+    echo '<td class="col-w-120">';
     echo _T("START", "xmppmaster");
     echo '</td>';
     echo '<td>';
@@ -629,7 +581,7 @@ if ($info['len'] != 0) {
                           "action_pwd_package" =>  "Current directory is package directory",
                           "actionprocessscript" => "Script Running in process",
                           "action_command_natif_shell" => "Script Running in thread",
-                          "actionerrorcompletedend" => "<span style='color:red;'>Deployment terminated on an error. Clean packages</span>",
+                          "actionerrorcompletedend" => "<span class='text-error-inline'>Deployment terminated on an error. Clean packages</span>",
                           "actionsuccescompletedend" => "Deployment terminated successfully. Clean package",
                           "actioncleaning"  => "Clean downloaded package",
                           "actionrestartbot" => "Restart agent",
@@ -692,14 +644,14 @@ if ($info['len'] != 0) {
         echo '<h2 class="replytab2">'._T("Deployment Status", "xmppmaster").'</h2>';
         if($deploymentCompleted) {
             if($deploymentSuccessed) {
-                echo '<p style="font-weight:bold; color:green;">'._T("Complete", 'xmppmaster')." : "._T("yes", "xmppmaster").'</p>';
-                echo '<p style="font-weight:bold; color:green;">'._T("Successed", "xmppmaster").' : '._T("yes", "xmppmaster").'</p>';
+                echo '<p class="status-success">'._T("Complete", 'xmppmaster')." : "._T("yes", "xmppmaster").'</p>';
+                echo '<p class="status-success">'._T("Successed", "xmppmaster").' : '._T("yes", "xmppmaster").'</p>';
             } else {
-                echo '<p style="font-weight:bold; color:green;">'._T("Complete", 'xmppmaster')." : "._T("yes", "xmppmaster").'</p>';
-                echo '<p style="font-weight:bold; color:red;">'._T("Success", "xmppmaster").' : '._T("no", "xmppmaster").'</p>';
+                echo '<p class="status-success">'._T("Complete", 'xmppmaster')." : "._T("yes", "xmppmaster").'</p>';
+                echo '<p class="status-error">'._T("Success", "xmppmaster").' : '._T("no", "xmppmaster").'</p>';
             }
         } else {
-            echo '<p style="font-weight:bold; color:blue;">'._T("Complete", "xmppmaster").' : '._T("processing", "xmppmaster").'</p>';
+            echo '<p class="status-processing">'._T("Complete", "xmppmaster").' : '._T("processing", "xmppmaster").'</p>';
         }
 
         // Now we know all the steps status
@@ -903,7 +855,7 @@ if ($info['len'] != 0) {
             echo '<table class="listinfos" cellspacing="0" cellpadding="2" border="1">';
             echo "<thead>";
             echo "<tr>";
-            echo '<td style="width : 120px;">';
+            echo '<td class="col-w-120">';
             echo _T("key", "xmppmaster");
             echo '</td>';
             echo '<td>';

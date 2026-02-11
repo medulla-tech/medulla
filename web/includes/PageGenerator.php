@@ -156,7 +156,7 @@ function echo_obj($obj) {
 function debug($obj, $return = false)
 {
     // Define a string to hold the output in a preformatted style with Courier font and bold text
-    $s = '<pre style="font-family:Courier, monospace; font-weight:bold ">';
+    $s = '<pre class="text-monospace">';
 
     // Print the given object in a readable format using print_r()
     $s .= print_r($obj, true);
@@ -564,10 +564,10 @@ class ActionAjaxPopupItem extends ActionItem
                         textAlign: 'center'
                     })
                     .html(`
-                        <div style="font-weight:bold;margin-bottom:10px;"><?php echo addslashes($message); ?></div>
+                        <div class="modal-popup-message"><?php echo addslashes($message); ?></div>
                         <button onclick="confirmAjaxAction_<?php echo $popupId; ?>()">Oui</button>
                         <button onclick="closeAjaxPopup_<?php echo $popupId; ?>()">Non</button>
-                        <div id="<?php echo $popupId; ?>_result" style="margin-top:15px;font-size:0.9em;color:#333;"></div>
+                        <div id="<?php echo $popupId; ?>_result" class="modal-popup-result"></div>
                     `);
 
                 jQuery('body').append(popup);
@@ -675,7 +675,7 @@ class ActionAjaxPopup extends ActionItem
             // Si pas de message de confirmation, on fait un autoload dans la popup
             if (message === '') {
                 if (!jQuery('#actionConfirmPopup').length) {
-                    jQuery('body').append('<div id="actionConfirmPopup" class="action-popup" style="display:none; padding:10px; background:#fff; border:1px solid #666; border-radius:6px; box-shadow:0 0 10px #000; position:fixed; z-index:10000;"></div>');
+                    jQuery('body').append('<div id="actionConfirmPopup" class="modal-popup"></div>');
                 }
                 var $popup = jQuery('#actionConfirmPopup');
                 $popup.html('<em>Chargement...</em>').css({
@@ -696,13 +696,13 @@ class ActionAjaxPopup extends ActionItem
                             // Affiche le résultat dans la popup (comportement par défaut)
                             $popup.html(data);
                         }
-                        $popup.append('<div style="text-align:center; margin-top:10px;"><button id="popupClose">Fermer</button></div>');
+                        $popup.append('<div class="modal-popup-buttons mt-10"><button id="popupClose">Fermer</button></div>');
                         jQuery('#popupClose').on('click', function() {
                             $popup.fadeOut(200);
                         });
                     },
                     error: function(xhr) {
-                        $popup.html('<span style="color:red;">Erreur AJAX : ' + xhr.status + '</span>');
+                        $popup.html('<span class="text-error">Erreur AJAX : ' + xhr.status + '</span>');
                     }
                 });
                 return false;
@@ -710,15 +710,15 @@ class ActionAjaxPopup extends ActionItem
 
             // Comportement classique avec confirmation
             if (!jQuery('#actionConfirmPopup').length) {
-                jQuery('body').append('<div id="actionConfirmPopup" class="action-popup" style="display:none; padding:10px; background:#fff; border:1px solid #666; border-radius:6px; box-shadow:0 0 10px #000; position:fixed; z-index:10000;"></div>');
+                jQuery('body').append('<div id="actionConfirmPopup" class="modal-popup"></div>');
             }
             var $popup = jQuery('#actionConfirmPopup');
-            var html = '<div class="popup-message" style="margin-bottom:10px;">' + message + '</div>' +
-                       '<div class="popup-buttons" style="text-align:center;">' +
-                       '<button id="popupYes" style="margin-right:10px;">Oui</button>' +
+            var html = '<div class="modal-popup-message">' + message + '</div>' +
+                       '<div class="modal-popup-buttons">' +
+                       '<button id="popupYes">Oui</button>' +
                        '<button id="popupNo">Non</button>' +
                        '</div>' +
-                       '<div id="popupResult" style="margin-top:10px; display:none;"></div>';
+                       '<div id="popupResult" class="mt-10 d-none"></div>';
             $popup.html(html);
             $popup.css({
                 width: width + 'px',
@@ -745,14 +745,14 @@ class ActionAjaxPopup extends ActionItem
                             jQuery('#popupResult').html(data).show();
                         }
                         if (!jQuery('#popupClose').length) {
-                            $popup.append('<div style="text-align:center; margin-top:10px;"><button id="popupClose">Fermer</button></div>');
+                            $popup.append('<div class="modal-popup-buttons mt-10"><button id="popupClose">Fermer</button></div>');
                             jQuery('#popupClose').on('click', function() {
                                 $popup.fadeOut(200);
                             });
                         }
                     },
                     error: function(xhr) {
-                        jQuery('#popupResult').html('<span style="color:red;">Erreur AJAX : ' + xhr.status + '</span>').show();
+                        jQuery('#popupResult').html('<span class="text-error">Erreur AJAX : ' + xhr.status + '</span>').show();
                     }
                 });
             });
@@ -1514,7 +1514,7 @@ class ListInfos extends HtmlElement
         $width_styl = isset($this->col_width[$key]) ? 'width: ' . $this->col_width[$key] . ';' : '';
         if (!$first) {
             if (!isset($this->first_elt_padding)) {
-                $this->first_elt_padding = 32;
+                $this->first_elt_padding = 0;
             }
             echo "<td style=\"$width_styl\"><span style=\"padding-left: " . $this->first_elt_padding . "px;\">$desc</span></td>";
             $first = true;
@@ -2793,12 +2793,11 @@ class Checkbox
         global $conf;
         $root = $conf["global"]["root"];
         ?>
-        <input checked style="top: 2px; left: 5px; position: relative; float: left"
+        <input checked class="form-checkbox-inline checkboxsearch"
         type="checkbox"
-        class="checkboxsearch"
         name="<?php echo $this->paramname ?>"
         id="<?php echo  $this->paramname ?>" onchange=" <?php echo $this->onchange ?> "/>
-        <span style="padding: 7px 15px; position: relative; float: left"><?php echo $this->description ?></span>
+        <span class="form-checkbox-label"><?php echo $this->description ?></span>
         <?php
     }
 }
@@ -3450,12 +3449,12 @@ class NotifyWidget
 
     public static function begin()
     {
-        return '<div style="padding: 10px">';
+        return '<div class="notify-widget">';
     }
 
     public function content()
     {
-        $str = '<div style="width: 50px; padding-top: 15px; float: left; text-align: center"><img src="' . $this->getImgLevel() . '" /></div><div style="margin-left: 60px">';
+        $str = '<div class="notify-widget-icon"><img src="' . $this->getImgLevel() . '" /></div><div class="notify-widget-content">';
         foreach ($this->strings as $string) {
             $str .= $string;
         }
@@ -3465,7 +3464,7 @@ class NotifyWidget
 
     public static function end()
     {
-        $str = '<div style="clear: left; text-align: right; margin-top: 1em;"><button class="btn btn-small" onclick="closePopup()">' . _("Close") . '</button></div></div>';
+        $str = '<div class="notify-widget-actions"><button class="btn btn-small" onclick="closePopup()">' . _("Close") . '</button></div></div>';
         return $str;
     }
 
@@ -4340,8 +4339,8 @@ class AjaxPagebar extends AjaxPage
     {
         echo <<< EOT
         <div id="{$this->id}" class="{$this->class}"></div>
-        <div id="{$this->progressBarId}" style="width: 100%; background-color: #f3f3f3; margin-top: 5px;">
-            <div id="{$this->progressBarId}_bar" style="width: 100%; height: 20px; background-color: #4CAF50; text-align: center; line-height: 20px; color: white;"></div>
+        <div id="{$this->progressBarId}" class="progress-bar">
+            <div id="{$this->progressBarId}_bar" class="progress-bar-fill"></div>
         </div>
         <script type="text/javascript">
         var remainingTime_{$this->id} = {$this->refresh};
