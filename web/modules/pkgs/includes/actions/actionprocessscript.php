@@ -312,7 +312,7 @@ $lab =  (isset($actionlabel))? $actionlabel : uniqid();
             ?>
         </tr>
         <tr class="toggleable">
-          <td  width="100%">
+          <td colspan="2">
             <input type="checkbox" checked onclick="if(jQuery(this).is(':checked')){
               jQuery(this).next('.add-goto').attr('disabled', false);
               jQuery(this).parent().find('.goto-on-return-section').show();

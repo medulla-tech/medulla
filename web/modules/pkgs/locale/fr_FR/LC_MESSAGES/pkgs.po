@@ -684,6 +684,22 @@ msgstr ""
 msgid "Query"
 msgstr "Requête"
 
+#: modules/pkgs/pkgs/add.php:232
+msgid "x.x.x"
+msgstr "x.x.x"
+
+#: modules/pkgs/pkgs/add.php:233
+msgid "Enter a description"
+msgstr "Entrez une description"
+
+#: modules/pkgs/pkgs/add.php:303
+msgid "in ko, 0 = unlimited"
+msgstr "en ko, 0 = illimité"
+
+#: modules/pkgs/pkgs/addXMPP.php:38
+msgid "Workflow"
+msgstr "Plan de déploiement"
+
 #: modules/pkgs/includes/query.php:78
 msgid "Associate inventory"
 msgstr "Associer  l'inventaire"
@@ -851,8 +867,8 @@ msgid "Name"
 msgstr "Nom"
 
 #: modules/pkgs/pkgs/add.php:231
-msgid "<fill_package_name>"
-msgstr "<définir_un_nom>"
+msgid "Enter package name"
+msgstr "Entrez le nom du package"
 
 #: modules/pkgs/pkgs/add.php:233
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:72
@@ -951,7 +967,7 @@ msgstr "Dépendances disponible"
 
 #: modules/pkgs/pkgs/add.php:349 modules/pkgs/pkgs/edit.php:481
 msgid "search by name ..."
-msgstr "recherche par nom"
+msgstr "Rechercher par nom"
 
 #: modules/pkgs/pkgs/add.php:387 modules/pkgs/pkgs/editRule.php:82
 #: modules/pkgs/pkgs/addRule.php:77

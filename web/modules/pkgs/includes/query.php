@@ -64,7 +64,7 @@ function getQFields() {
 }
 function addQuerySection($Form, $p) {
     /* ================= BEGIN QUERY ===================== */
-    $span = new SpanElement(_T("Query", "pkgs"), "pkgs-title");
+    $span = new SpanElement(_T("Inventory", "pkgs"), "pkgs-title");
     $Form->add(new TrFormElement("", $span), array());
 
     $check = '';

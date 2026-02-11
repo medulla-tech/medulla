@@ -126,7 +126,7 @@ foreach($_POST as $key => $value){
     ?>
 
         <tr>
-            <h1><?php echo _T('Script', 'pkgs'); ?></h1>
+            <th><?php echo _T('Script', 'pkgs'); ?></th>
             <th>
             <?php
                 if (isset($script)){
@@ -138,7 +138,7 @@ foreach($_POST as $key => $value){
                     $script = '';
                 }
             ?>
-              <textarea name="script" cols="5" rows="5"><?php echo $script ;?></textarea>
+              <textarea name="script"><?php echo $script ;?></textarea>
             </th>
         </tr>
 
@@ -476,7 +476,7 @@ However, if the "Force suffix" property is set, the imposed suffix will be this 
             ?>
         </tr>
         <tr class="toggleable">
-          <td  width="100%">
+          <td colspan="2">
             <input type="checkbox" checked onclick="if(jQuery(this).is(':checked')){
               jQuery(this).next('.add-goto').attr('disabled', false);
               jQuery(this).parent().find('.goto-on-return-section').show();
