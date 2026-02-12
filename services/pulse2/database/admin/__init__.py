@@ -580,6 +580,23 @@ class AdminDatabase(DatabaseHelper):
             return []
 
     @DatabaseHelper._sessionm
+    def get_config_sections(self, session, table_name: str) -> List[str]:
+        """Get distinct sections from a *_conf table."""
+        try:
+            cls_name = table_name.capitalize()
+            Conf = getattr(self, cls_name)
+            rows = (
+                session.query(Conf.section)
+                .filter(Conf.activer == 1)
+                .distinct()
+                .all()
+            )
+            return [row[0] or "" for row in rows]
+        except SQLAlchemyError as e:
+            logger.error(f"[ConfigDB] Error reading sections: {e}")
+            return []
+
+    @DatabaseHelper._sessionm
     def get_config_value(self, session, table_name: str, section: str, option: str):
         """Get a configuration value from a *_conf table."""
         try:

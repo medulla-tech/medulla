@@ -475,6 +475,240 @@ ON DUPLICATE KEY UPDATE
     valeur_defaut = VALUES(valeur_defaut),
     description = VALUES(description);
 
+-- ====================================================================
+-- MEDULLA SERVER CONF
+-- ====================================================================
+
+CREATE TABLE IF NOT EXISTS medulla_server_conf (
+    id INT AUTO_INCREMENT PRIMARY KEY
+        COMMENT 'Identifiant unique du parametre de configuration',
+
+    section VARCHAR(50) NOT NULL
+        COMMENT 'Section du fichier de configuration (ex : [main] devient "main")',
+
+    nom VARCHAR(100) NOT NULL
+        COMMENT 'Nom du parametre, unique au sein de sa section',
+
+    activer BOOLEAN NOT NULL DEFAULT TRUE
+        COMMENT 'Indique si le parametre est actif (TRUE par defaut)',
+
+    type ENUM('string', 'booleen', 'entier', 'decimal', 'autre')
+        NOT NULL DEFAULT 'string'
+        COMMENT 'Type du parametre, utilise pour la validation et l''affichage',
+
+    valeur TEXT
+        COMMENT 'Valeur actuellement affectee au parametre',
+
+    valeur_defaut TEXT DEFAULT NULL
+        COMMENT 'Valeur par defaut utilisee si le parametre est desactive',
+
+    description TEXT NOT NULL
+        COMMENT 'Description fonctionnelle obligatoire du parametre (usage, format, exemples)',
+
+    CONSTRAINT uc_medulla_server_section_nom UNIQUE (section, nom)
+        COMMENT 'Garantit l''unicite du parametre par section'
+)
+COMMENT='Table de gestion des parametres de configuration Medulla Server pour Medulla';
+
+
+INSERT INTO medulla_server_conf (section, nom, activer, type, valeur, valeur_defaut, description) VALUES
+('main', 'disable', 1, 'booleen', '0', '0', 'Desactiver le serveur Medulla (0=actif, 1=inactif)'),
+('database', 'dbdriver', 1, 'string', 'mysql', 'mysql', 'Driver de base de donnees (mysql, postgresql, etc.)'),
+('database', 'dbhost', 1, 'string', 'localhost', 'localhost', 'Hote du serveur de base de donnees Medulla'),
+('database', 'dbport', 1, 'entier', '3306', '3306', 'Port du serveur de base de donnees Medulla'),
+('database', 'dbname', 1, 'string', 'pulse2', 'pulse2', 'Nom de la base de donnees Medulla'),
+('database', 'dbuser', 1, 'string', 'mmc', 'mmc', 'Utilisateur de base de donnees Medulla'),
+('database', 'dbpasswd', 1, 'string', 'pBWfpjErqtsU', NULL, 'Mot de passe de la base de donnees Medulla (format: {scheme}value)')
+ON DUPLICATE KEY UPDATE
+    activer = VALUES(activer),
+    type = VALUES(type),
+    valeur = VALUES(valeur),
+    valeur_defaut = VALUES(valeur_defaut),
+    description = VALUES(description);
+
+
+CREATE TABLE IF NOT EXISTS medulla_server_conf_version (
+    id INT AUTO_INCREMENT PRIMARY KEY
+        COMMENT 'Identifiant unique du parametre de configuration',
+
+    section VARCHAR(50) NOT NULL
+        COMMENT 'Section du fichier de configuration (ex : [main] devient "main")',
+
+    nom VARCHAR(100) NOT NULL
+        COMMENT 'Nom du parametre, unique au sein de sa section',
+
+    activer BOOLEAN NOT NULL DEFAULT TRUE
+        COMMENT 'Indique si le parametre est actif (TRUE par defaut)',
+
+    type ENUM('string', 'booleen', 'entier', 'decimal', 'autre')
+        NOT NULL DEFAULT 'string'
+        COMMENT 'Type du parametre, utilise pour la validation et l''affichage',
+
+    valeur TEXT
+        COMMENT 'Valeur actuellement affectee au parametre',
+
+    valeur_defaut TEXT DEFAULT NULL
+        COMMENT 'Valeur par defaut utilisee si le parametre est desactive',
+
+    description TEXT NOT NULL
+        COMMENT 'Description fonctionnelle obligatoire du parametre (usage, format, exemples)',
+
+    CONSTRAINT uc_medulla_server_version_section_nom UNIQUE (section, nom)
+        COMMENT 'Garantit l''unicite du parametre par section'
+)
+COMMENT='Table de versionnage des parametres de configuration Medulla Server pour Medulla';
+
+
+INSERT INTO medulla_server_conf_version (section, nom, activer, type, valeur, valeur_defaut, description) VALUES
+('main', 'disable', 1, 'booleen', '0', '0', 'Desactiver le serveur Medulla (0=actif, 1=inactif)'),
+('database', 'dbdriver', 1, 'string', 'mysql', 'mysql', 'Driver de base de donnees (mysql, postgresql, etc.)'),
+('database', 'dbhost', 1, 'string', 'localhost', 'localhost', 'Hote du serveur de base de donnees Medulla'),
+('database', 'dbport', 1, 'entier', '3306', '3306', 'Port du serveur de base de donnees Medulla'),
+('database', 'dbname', 1, 'string', 'pulse2', 'pulse2', 'Nom de la base de donnees Medulla'),
+('database', 'dbuser', 1, 'string', 'mmc', 'mmc', 'Utilisateur de base de donnees Medulla'),
+('database', 'dbpasswd', 1, 'string', 'pBWfpjErqtsU', NULL, 'Mot de passe de la base de donnees Medulla (format: {scheme}value)')
+ON DUPLICATE KEY UPDATE
+    activer = VALUES(activer),
+    type = VALUES(type),
+    valeur = VALUES(valeur),
+    valeur_defaut = VALUES(valeur_defaut),
+    description = VALUES(description);
+
+-- ====================================================================
+-- MSC CONF
+-- ====================================================================
+
+CREATE TABLE IF NOT EXISTS msc_conf (
+    id INT AUTO_INCREMENT PRIMARY KEY
+        COMMENT 'Identifiant unique du parametre de configuration',
+
+    section VARCHAR(50) NOT NULL
+        COMMENT 'Section du fichier de configuration (ex : [main] devient "main")',
+
+    nom VARCHAR(100) NOT NULL
+        COMMENT 'Nom du parametre, unique au sein de sa section',
+
+    activer BOOLEAN NOT NULL DEFAULT TRUE
+        COMMENT 'Indique si le parametre est actif (TRUE par defaut)',
+
+    type ENUM('string', 'booleen', 'entier', 'decimal', 'autre')
+        NOT NULL DEFAULT 'string'
+        COMMENT 'Type du parametre, utilise pour la validation et l''affichage',
+
+    valeur TEXT
+        COMMENT 'Valeur actuellement affectee au parametre',
+
+    valeur_defaut TEXT DEFAULT NULL
+        COMMENT 'Valeur par defaut utilisee si le parametre est desactive',
+
+    description TEXT NOT NULL
+        COMMENT 'Description fonctionnelle obligatoire du parametre (usage, format, exemples)',
+
+    CONSTRAINT uc_msc_section_nom UNIQUE (section, nom)
+        COMMENT 'Garantit l''unicite du parametre par section'
+)
+COMMENT='Table de gestion des parametres de configuration MSC pour Medulla';
+
+
+INSERT INTO msc_conf (section, nom, activer, type, valeur, valeur_defaut, description) VALUES
+('main', 'disable', 1, 'booleen', '0', '0', 'Desactiver le module MSC (0=actif, 1=inactif)'),
+('msc', 'repopath', 1, 'string', '/var/lib/pulse2/packages', '/var/lib/pulse2/packages', 'Repertoire des packages MSC'),
+('msc', 'qactionspath', 1, 'string', '/var/lib/pulse2/qactions', '/var/lib/pulse2/qactions', 'Repertoire des qactions'),
+('msc', 'download_directory_path', 1, 'string', '/var/lib/pulse2/downloads', '/var/lib/pulse2/downloads', 'Repertoire de telechargement MSC'),
+('msc', 'dbdriver', 1, 'string', 'mysql', 'mysql', 'Driver de base de donnees (mysql, postgresql, etc.)'),
+('msc', 'dbhost', 1, 'string', 'localhost', 'localhost', 'Hote du serveur de base de donnees MSC'),
+('msc', 'dbport', 1, 'entier', '3306', '3306', 'Port du serveur de base de donnees MSC'),
+('msc', 'dbname', 1, 'string', 'msc', 'msc', 'Nom de la base de donnees MSC'),
+('msc', 'dbuser', 1, 'string', 'mmc', 'mmc', 'Utilisateur de base de donnees MSC'),
+('msc', 'dbpasswd', 1, 'string', 'pBWfpjErqtsU', NULL, 'Mot de passe de la base de donnees MSC (format: {scheme}value)'),
+('msc', 'default_scheduler', 1, 'string', 'scheduler_01', 'scheduler_01', 'Scheduler par defaut pour MSC'),
+('scheduler_api', 'host', 1, 'string', '127.0.0.1', '127.0.0.1', 'Hote API scheduler'),
+('scheduler_api', 'port', 1, 'entier', '9990', '9990', 'Port API scheduler'),
+('scheduler_api', 'username', 1, 'string', '', '', 'Utilisateur API scheduler'),
+('scheduler_api', 'password', 1, 'string', '', '', 'Mot de passe API scheduler'),
+('scheduler_api', 'enablessl', 1, 'booleen', '1', '1', 'Activer SSL pour API scheduler'),
+('scheduler_01', 'host', 1, 'string', '127.0.0.1', '127.0.0.1', 'Hote du scheduler_01'),
+('scheduler_01', 'port', 1, 'entier', '8000', '8000', 'Port du scheduler_01'),
+('scheduler_01', 'username', 1, 'string', 'username', 'username', 'Utilisateur scheduler_01'),
+('scheduler_01', 'password', 1, 'string', 'password', 'password', 'Mot de passe scheduler_01'),
+('scheduler_01', 'enablessl', 1, 'booleen', '1', '1', 'Activer SSL pour scheduler_01'),
+('web', 'vnc_show_icon', 1, 'booleen', '1', '1', 'Afficher icone VNC'),
+('web', 'vnc_view_only', 1, 'booleen', '0', '0', 'VNC en lecture seule pour l''interface web'),
+('web', 'vnc_allow_user_control', 1, 'booleen', '1', '1', 'Autoriser controle VNC par utilisateur'),
+('package_api', 'mserver', 1, 'string', '127.0.0.1', '127.0.0.1', 'Adresse du package server (mserver)')
+ON DUPLICATE KEY UPDATE
+    activer = VALUES(activer),
+    type = VALUES(type),
+    valeur = VALUES(valeur),
+    valeur_defaut = VALUES(valeur_defaut),
+    description = VALUES(description);
+
+
+CREATE TABLE IF NOT EXISTS msc_conf_version (
+    id INT AUTO_INCREMENT PRIMARY KEY
+        COMMENT 'Identifiant unique du parametre de configuration',
+
+    section VARCHAR(50) NOT NULL
+        COMMENT 'Section du fichier de configuration (ex : [main] devient "main")',
+
+    nom VARCHAR(100) NOT NULL
+        COMMENT 'Nom du parametre, unique au sein de sa section',
+
+    activer BOOLEAN NOT NULL DEFAULT TRUE
+        COMMENT 'Indique si le parametre est actif (TRUE par defaut)',
+
+    type ENUM('string', 'booleen', 'entier', 'decimal', 'autre')
+        NOT NULL DEFAULT 'string'
+        COMMENT 'Type du parametre, utilise pour la validation et l''affichage',
+
+    valeur TEXT
+        COMMENT 'Valeur actuellement affectee au parametre',
+
+    valeur_defaut TEXT DEFAULT NULL
+        COMMENT 'Valeur par defaut utilisee si le parametre est desactive',
+
+    description TEXT NOT NULL
+        COMMENT 'Description fonctionnelle obligatoire du parametre (usage, format, exemples)',
+
+    CONSTRAINT uc_msc_version_section_nom UNIQUE (section, nom)
+        COMMENT 'Garantit l''unicite du parametre par section'
+)
+COMMENT='Table de versionnage des parametres de configuration MSC pour Medulla';
+
+
+INSERT INTO msc_conf_version (section, nom, activer, type, valeur, valeur_defaut, description) VALUES
+('main', 'disable', 1, 'booleen', '0', '0', 'Desactiver le module MSC (0=actif, 1=inactif)'),
+('msc', 'repopath', 1, 'string', '/var/lib/pulse2/packages', '/var/lib/pulse2/packages', 'Repertoire des packages MSC'),
+('msc', 'qactionspath', 1, 'string', '/var/lib/pulse2/qactions', '/var/lib/pulse2/qactions', 'Repertoire des qactions'),
+('msc', 'download_directory_path', 1, 'string', '/var/lib/pulse2/downloads', '/var/lib/pulse2/downloads', 'Repertoire de telechargement MSC'),
+('msc', 'dbdriver', 1, 'string', 'mysql', 'mysql', 'Driver de base de donnees (mysql, postgresql, etc.)'),
+('msc', 'dbhost', 1, 'string', 'localhost', 'localhost', 'Hote du serveur de base de donnees MSC'),
+('msc', 'dbport', 1, 'entier', '3306', '3306', 'Port du serveur de base de donnees MSC'),
+('msc', 'dbname', 1, 'string', 'msc', 'msc', 'Nom de la base de donnees MSC'),
+('msc', 'dbuser', 1, 'string', 'mmc', 'mmc', 'Utilisateur de base de donnees MSC'),
+('msc', 'dbpasswd', 1, 'string', 'pBWfpjErqtsU', NULL, 'Mot de passe de la base de donnees MSC (format: {scheme}value)'),
+('msc', 'default_scheduler', 1, 'string', 'scheduler_01', 'scheduler_01', 'Scheduler par defaut pour MSC'),
+('scheduler_api', 'host', 1, 'string', '127.0.0.1', '127.0.0.1', 'Hote API scheduler'),
+('scheduler_api', 'port', 1, 'entier', '9990', '9990', 'Port API scheduler'),
+('scheduler_api', 'username', 1, 'string', '', '', 'Utilisateur API scheduler'),
+('scheduler_api', 'password', 1, 'string', '', '', 'Mot de passe API scheduler'),
+('scheduler_api', 'enablessl', 1, 'booleen', '1', '1', 'Activer SSL pour API scheduler'),
+('scheduler_01', 'host', 1, 'string', '127.0.0.1', '127.0.0.1', 'Hote du scheduler_01'),
+('scheduler_01', 'port', 1, 'entier', '8000', '8000', 'Port du scheduler_01'),
+('scheduler_01', 'username', 1, 'string', 'username', 'username', 'Utilisateur scheduler_01'),
+('scheduler_01', 'password', 1, 'string', 'password', 'password', 'Mot de passe scheduler_01'),
+('scheduler_01', 'enablessl', 1, 'booleen', '1', '1', 'Activer SSL pour scheduler_01'),
+('web', 'vnc_show_icon', 1, 'booleen', '1', '1', 'Afficher icone VNC'),
+('web', 'vnc_view_only', 1, 'booleen', '0', '0', 'VNC en lecture seule pour l''interface web'),
+('web', 'vnc_allow_user_control', 1, 'booleen', '1', '1', 'Autoriser controle VNC par utilisateur'),
+('package_api', 'mserver', 1, 'string', '127.0.0.1', '127.0.0.1', 'Adresse du package server (mserver)')
+ON DUPLICATE KEY UPDATE
+    activer = VALUES(activer),
+    type = VALUES(type),
+    valeur = VALUES(valeur),
+    valeur_defaut = VALUES(valeur_defaut),
+    description = VALUES(description);
+
 UPDATE version SET Number = 7;
 
 COMMIT;
