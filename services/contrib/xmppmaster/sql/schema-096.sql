@@ -267,7 +267,7 @@ BEGIN
     LEFT JOIN xmppmaster.local_glpi_entities e ON e.id = m.entities_id
     LEFT JOIN xmppmaster.local_glpi_softwares s ON sv.softwares_id = s.id
     LEFT JOIN parts ON parts.soft_id = s.id
-    LEFT JOIN xmppmaster.machines mx ON NULLIF(REPLACE(mx.uuid_inventorymachine, 'UUID', ''),'') = si.items_id
+    INNER JOIN xmppmaster.machines mx ON NULLIF(REPLACE(mx.uuid_inventorymachine, 'UUID', ''),'') = si.items_id
     LEFT JOIN xmppmaster.up_packages_major_Lang_code lc
         ON lc.lang_code = parts.part3
         AND lc.major = SUBSTRING_INDEX(parts.part7, '-', -1)
