@@ -9,6 +9,13 @@ import logging
 
 
 class GlpiConfig(PluginConfig):
+    def __init__(self, name="glpi", conffile=None, backend="database"):
+        # Ensure singleton-style initialization when used with PluginConfigFactory
+        if not hasattr(self, "initdone"):
+            # Initialize PluginConfig using database backend and the proper table
+            PluginConfig.__init__(self, name, conffile, backend="database", db_table="glpi_conf")
+            self.initdone = True
+
     dbpoolrecycle = 60
     dbpoolsize = 5
     dbport = None

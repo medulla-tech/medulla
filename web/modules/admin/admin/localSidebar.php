@@ -53,6 +53,9 @@ $providerLabel = ($action === 'editprovider')
 ? (($mode === 'edit') ? _T("Edit Provider", "admin") : _T("Add Provider", "admin"))
 : _T("Add Provider", "admin");
 
+// Configuration
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("Configuration", "admin"), "admin", "admin", "configList"));
+
 // Side menu
 $sidemenu->addSideMenuItem(new SideMenuItem($userLabel,     "admin", "admin", "editUser"));
 

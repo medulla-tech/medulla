@@ -4,9 +4,10 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import traceback
+import os
 
 # SqlAlchemy
-from sqlalchemy import create_engine, MetaData, select, func
+from sqlalchemy import create_engine, MetaData, Table, select, func, text, inspect
 from sqlalchemy.exc import DBAPIError, SQLAlchemyError
 from sqlalchemy.ext.automap import automap_base
 
@@ -94,6 +95,12 @@ class AdminDatabase(DatabaseHelper):
             if table_name.startswith("saas_"):
                 logger.debug(f"Mapping table by automap: {table_name.capitalize()}")
                 # Set the mapped class as an attribute of this instance
+                setattr(self, table_name.capitalize(), mapped_class)
+            if table_name.endswith("_conf"):
+                logger.debug(f"Mapping config table by automap: {table_name.capitalize()}")
+                setattr(self, table_name.capitalize(), mapped_class)
+            if table_name.endswith("_conf_version"):
+                logger.debug(f"Mapping config version table by automap: {table_name.capitalize()}")
                 setattr(self, table_name.capitalize(), mapped_class)
             if table_name in include_table:
                 logger.debug(f"Mapping table by automap by list include: {table_name.capitalize()}")
@@ -183,18 +190,18 @@ class AdminDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def create_entity_under_custom_parent(self, session, entity_id, name, tag_value, stripe_tag=None):
         """
-        Insère une nouvelle entité dans la table saas_organisations
-        après création dans GLPI, en utilisant l'UUID/tag généré côté Python.
+        Inserts a new entity into the saas_organisations table
+        after creation in GLPI, using the UUID/tag generated on the Python side.
 
         Args:
-            session (Session): session SQLAlchemy ouverte
-            entity_id (int|str): ID GLPI de l'entité (enfant créée)
-            name (str): Nom de l'entité
-            tag_value (str): UUID utilisé aussi pour GLPI
-            stripe_tag (str|None): Valeur à stocker dans saas_organisations.stripe_tag (NULL si absent)
+            session (Session): open SQLAlchemy session
+            entity_id (int|str): GLPI ID of the entity (created child)
+            name (str): Entity name
+            tag_value (str): UUID also used for GLPI
+            stripe_tag (str|None): Value to store in saas_organisations.stripe_tag (NULL if absent)
 
         Returns:
-            organisation_id: l'id de l'org créée dans la base
+            organisation_id: the id of the org created in the database
         """
         org = self.Saas_organisations(
             organisation_name=name,
@@ -241,12 +248,12 @@ class AdminDatabase(DatabaseHelper):
         Updates the name of the entity in the Saas_organizations table.
 
         Args:
-            session (session):SessionSqlAlchemyOuverte
-            entity_id (int | str): id glpi of the entity to update
-            new_name (STR): new name
+            session (session): open SQLAlchemy session
+            entity_id (int | str): GLPI id of the entity to update
+            new_name (str): new name
 
         Returns:
-            Bool: True Si Maj, False otherwise
+            Bool: True if updated, False otherwise
         """
         org = session.query(self.Saas_organisations).filter_by(entity_id=str(entity_id)).first()
         if not org:
@@ -263,7 +270,7 @@ class AdminDatabase(DatabaseHelper):
         Deletes the entity
 
         Args:
-            entity_id: ID GLPI of the entity to be deleted
+            entity_id: GLPI ID of the entity to be deleted
         """
         rows = (
             session.query(self.Saas_organisations)
@@ -384,7 +391,7 @@ class AdminDatabase(DatabaseHelper):
         if exists:
             return {"ok": False, "error": f"Provider '{name}' already exists for client '{client_name}'."}
 
-        # acls_json souple
+        # Flexible acls_json
         acls_json = payload.get("acls_json")
         if isinstance(acls_json, dict):
             acls_json = json.dumps(acls_json, ensure_ascii=False)
@@ -396,7 +403,7 @@ class AdminDatabase(DatabaseHelper):
         else:
             acls_json = None
 
-        # We don't put lmc_acl here to let the default sql play if there is nothing
+        # We don't set lmc_acl here to let the default SQL value play if there is nothing
         data = {
             "client_name":   client_name,
             "name":          name,
@@ -412,7 +419,7 @@ class AdminDatabase(DatabaseHelper):
         if v_acl != "":
             data["lmc_acl"] = v_acl
 
-        # ldap_*: add only if provided (otherwise default sql)
+        # ldap_*: add only if provided (otherwise default SQL)
         for k in ("ldap_uid", "ldap_givenName", "ldap_sn", "ldap_mail", "proxy_url"):
             v = norm(payload.get(k))
             if v:
@@ -440,10 +447,10 @@ class AdminDatabase(DatabaseHelper):
 
         if "client_name" in payload:
             new_cn = norm(payload["client_name"])
-            if new_cn:  # si fourni et non vide, on le traite
+            if new_cn:  # if provided and not empty, process it
                 if len(new_cn) > 64 or not re.match(r'^[A-Za-z0-9._\- ]+$', new_cn):
                     return {"ok": False, "error": "Invalid client_name"}
-                # unicité (client_name, name)
+                # uniqueness (client_name, name)
                 conflict = session.execute(
                     select(self.Providers.id).where(
                         (self.Providers.client_name == new_cn) &
@@ -556,4 +563,251 @@ class AdminDatabase(DatabaseHelper):
 
         except SQLAlchemyError:
             session.rollback()
+            return False
+
+    ############### CONFIG #########################
+
+    @DatabaseHelper._sessionm
+    def get_config_tables (self, session) -> List[str]:
+        """Get all *_conf tables in the admin databse"""
+        try:
+            inspector = inspect(self.db)
+            tables = inspector.get_table_names()
+            conf_tables = [t for t in tables if t.endswith("_conf")]
+            return conf_tables
+        except SQLAlchemyError as e:
+            logger.error(f"[ConfigDB] Error reading config tables: {e}")
+            return []
+
+    @DatabaseHelper._sessionm
+    def get_config_value(self, session, table_name: str, section: str, option: str):
+        """Get a configuration value from a *_conf table."""
+        try:
+            cls_name = table_name.capitalize()
+            Conf = getattr(self, cls_name)
+            row = (
+                session.query(Conf.valeur, Conf.valeur_defaut)
+                .filter(
+                    Conf.section == section,
+                    Conf.nom == option,
+                    Conf.activer == 1,
+                )
+                .first()
+            )
+            if row:
+                return row[0] if row[0] is not None else row[1]
+            return None
+        except SQLAlchemyError as e:
+            logger.error(f"[ConfigDB] Error reading: {e}")
+            return None
+
+    @DatabaseHelper._sessionm
+    def has_config_section(self, session, table_name: str, section: str) -> bool:
+        """Check if a section exists in a *_conf table."""
+        try:
+            cls_name = table_name.capitalize()
+            Conf = getattr(self, cls_name)
+            count = (
+                session.query(func.count(Conf.id))
+                .filter(
+                    Conf.section == section,
+                    Conf.activer == 1,
+                )
+                .scalar()
+            )
+            return count > 0
+        except SQLAlchemyError as e:
+            logger.error(f"[ConfigDB] Error checking section: {e}")
+            return False
+
+    @DatabaseHelper._sessionm
+    def get_config_data(self, session, table_name: str):
+        """Get all configuration data from a *_conf table."""
+        try:
+            cls_name = table_name.capitalize()
+            Conf = getattr(self, cls_name)
+            rows = (
+                session.query(
+                    Conf.section,
+                    Conf.nom,
+                    Conf.valeur,
+                    Conf.valeur_defaut,
+                    Conf.description,
+                    Conf.activer,
+                )
+                .all()
+            )
+            # Convert SQLAlchemy Row objects to native Python dicts for XML-RPC serialization
+            return [
+                {
+                    "section": row[0] or "",
+                    "nom": row[1] or "",
+                    "valeur": row[2],
+                    "valeur_defaut": row[3],
+                    "description": row[4] or "",
+                    "activer": int(row[5] or 0),
+                }
+                for row in rows
+            ]
+        except SQLAlchemyError as e:
+            logger.error(f"[ConfigDB] Error reading data: {e}")
+            return []
+        
+    @DatabaseHelper._sessionm
+    def update_config_data(self, session, table_name: str, data: dict) -> bool:
+        """Update a configuration in a *_conf table."""
+        try:
+            cls_name = table_name.capitalize()
+            Conf = getattr(self, cls_name)
+            row = None
+            section = (data.get("section") or "").strip()
+            nom = (data.get("nom") or "").strip()
+            if section and nom:
+                row = (
+                    session.query(Conf)
+                    .filter(
+                        Conf.section == section,
+                        Conf.nom == nom,
+                    )
+                    .first()
+                )
+            else:
+                logger.warning("[ConfigDB] update_config_data: missing keys table=%s data=%s", table_name, data)
+            if not row:
+                logger.warning("[ConfigDB] update_config_data: row not found for table=%s data=%s", table_name, data)
+                return False
+
+            if "valeur" in data:
+                row.valeur = data["valeur"]
+            if "valeur_defaut" in data:
+                row.valeur_defaut = data["valeur_defaut"]
+            if "description" in data:
+                row.description = data["description"]
+            if "activer" in data:
+                row.activer = int(data["activer"])
+            session.flush()
+            session.commit()
+            logger.debug("[ConfigDB] update_config_data: updated table=%s id=%s", table_name, getattr(row, "id", None))
+            return True
+        except SQLAlchemyError as e:
+            logger.error(f"[ConfigDB] Error updating data: {e}")
+            return False
+
+    @DatabaseHelper._sessionm
+    def add_config_data(self, session, table_name: str, data: dict) -> bool:
+        """Add a configuration to a *_conf table."""
+        try:
+            cls_name = table_name.capitalize()
+            Conf = getattr(self, cls_name)
+            section = (data.get("section") or "").strip()
+            nom = (data.get("nom") or "").strip()
+            if not section or not nom:
+                logger.warning("[ConfigDB] add_config_data: missing keys table=%s data=%s", table_name, data)
+                return False
+
+            existing = (
+                session.query(Conf)
+                .filter(
+                    Conf.section == section,
+                    Conf.nom == nom,
+                )
+                .first()
+            )
+            if existing:
+                logger.warning("[ConfigDB] add_config_data: config already exists for table=%s section=%s nom=%s", table_name, section, nom)
+                return False
+
+            new_row = Conf(
+                section=section,
+                nom=nom,
+                valeur=data.get("valeur"),
+                valeur_defaut=data.get("valeur_defaut"),
+                description=data.get("description"),
+                activer=int(data.get("activer", 1)),
+            )
+            session.add(new_row)
+            session.flush()
+            session.commit()
+            logger.debug("[ConfigDB] add_config_data: added table=%s section=%s nom=%s", table_name, section, nom)
+            return True
+        except SQLAlchemyError as e:
+            logger.error(f"[ConfigDB] Error adding data: {e}")
+            return False
+        
+
+    @DatabaseHelper._sessionm
+    def delete_config_data(self, session, table_name: str, data: dict) -> bool:
+        """Delete a configuration from a *_conf table."""
+        try:
+            cls_name = table_name.capitalize()
+            Conf = getattr(self, cls_name)
+            row = None
+            section = (data.get("section") or "").strip()
+            nom = (data.get("nom") or "").strip()
+            if section and nom:
+                row = (
+                    session.query(Conf)
+                    .filter(
+                        Conf.section == section,
+                        Conf.nom == nom,
+                    )
+                    .first()
+                )
+            else:
+                logger.warning("[ConfigDB] delete_config_data: missing keys table=%s data=%s", table_name, data)
+                return False
+            if not row:
+                logger.warning("[ConfigDB] delete_config_data: row not found for table=%s data=%s", table_name, data)
+                return False
+
+            session.delete(row)
+            session.flush()
+            session.commit()
+            logger.debug("[ConfigDB] delete_config_data: deleted table=%s section=%s nom=%s", table_name, section, nom)
+            return True
+        except SQLAlchemyError as e:
+            logger.error(f"[ConfigDB] Error deleting data: {e}")
+            return False
+
+    @DatabaseHelper._sessionm
+    def restore_config_version(self, session, table_name: str, table_version_name: str) -> bool:
+        """Restore a previous version of a configuration from a *_conf_history table."""
+        try:
+            cls_name = table_version_name.capitalize() 
+            Version = getattr(self, cls_name)
+            # Récupérer toutes les données de la table de version
+            versions = session.query(Version).all()
+            if not versions:
+                logger.warning("[ConfigDB] restore_config_version: no versions found for table=%s", table_version_name)
+                return False
+
+            # Obtenir la classe de la table de conf
+            Conf = getattr(self, table_name.capitalize())
+            
+            # Pour chaque entrée dans la table de version, mettre à jour la table de conf correspondante
+            for version in versions:
+                row = (
+                    session.query(Conf)
+                    .filter(
+                        Conf.section == version.section,
+                        Conf.nom == version.nom,
+                    )
+                    .first()
+                )
+                if not row:
+                    logger.warning("[ConfigDB] restore_config_version: config row not found for table=%s section=%s nom=%s", table_name, version.section, version.nom)
+                    continue  # Passer à la suivante si la ligne n'existe pas
+
+                # Remplacer les valeurs
+                row.valeur = version.valeur
+                row.valeur_defaut = version.valeur_defaut
+                row.description = version.description
+                row.activer = version.activer
+            
+            session.flush()
+            session.commit()
+            logger.info("[ConfigDB] restore_config_version: restored all data from %s to %s", table_version_name, table_name)
+            return True
+        except SQLAlchemyError as e:
+            logger.error(f"[ConfigDB] Error restoring config version: {e}")
             return False

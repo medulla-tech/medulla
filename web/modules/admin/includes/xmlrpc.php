@@ -239,3 +239,27 @@ function xmlrpc_update_provider(array $data) {
 function xmlrpc_delete_provider(int $id) {
     return xmlCall("admin.delete_provider", [$id]);
 }
+
+// CONFIG MANAGEMENT
+
+function xmlrpc_get_config_tables() {
+    return xmlCall("admin.get_config_tables", []);
+}
+
+function xmlrpc_get_config_data(string $table) {
+    return xmlCall("admin.get_config_data", [$table]);
+}
+
+function xmlrpc_add_config_data(string $table, array $data) {
+    return xmlCall("admin.add_config_data", [$table, $data]);
+}
+
+function xmlrpc_update_config_data(string $table, array $data) {
+    return xmlCall("admin.update_config_data", [$table, $data]);
+}
+function xmlrpc_delete_config_data(string $table, array $data) {
+    return xmlCall("admin.delete_config_data", [$table, $data]);
+}
+function xmlrpc_restore_config_version(string $table, string $table_version) {
+    return xmlCall("admin.restore_config_version", [$table, $table_version]);
+}

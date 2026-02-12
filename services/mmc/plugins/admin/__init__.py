@@ -885,3 +885,48 @@ def activate_users_if_needed(user_ids: list[int], tokenuser=None) -> dict:
             out["errors"].append(uid)
     return out
 
+def get_config_tables():
+    db = AdminDatabase()
+    tables = db.get_config_tables()
+    return tables
+
+def get_config_data(table: str):
+    db = AdminDatabase()
+    data = db.get_config_data(table)
+    return data
+
+def update_config_data(table: str, data: dict) -> bool:
+    try:
+        logger.info("update_config_data: table=%s data=%s", table, data)
+        db = AdminDatabase()
+        return db.update_config_data(table, data)
+    except Exception as e:
+        logger.error("update_config_data failed: %s", e)
+        return False
+
+def add_config_data(table: str, data: dict) -> bool:
+    try:
+        logger.info("add_config_data: table=%s data=%s", table, data)
+        db = AdminDatabase()
+        return db.add_config_data(table, data)
+    except Exception as e:
+        logger.error("add_config_data failed: %s", e)
+        return False
+
+def delete_config_data(table: str, data: dict) -> bool:
+    try:
+        logger.info("delete_config_data: table=%s data=%s", table, data)
+        db = AdminDatabase()
+        return db.delete_config_data(table, data)
+    except Exception as e:
+        logger.error("delete_config_data failed: %s", e)
+        return False
+
+def restore_config_version(table: str, table_version: str) -> bool:
+    try:
+        logger.info("restore_config_version: table=%s version=%s", table, table_version)
+        db = AdminDatabase()
+        return db.restore_config_version(table, table_version)
+    except Exception as e:
+        logger.error("restore_config_version failed: %s", e)
+        return False

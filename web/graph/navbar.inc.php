@@ -39,7 +39,7 @@ $root = $conf["global"]["root"];
 if (getMMCLogo()) {
 ?>
 <a href="https://medulla-tech.io">
-	<img src="<?=getMMCLogo()?>" alt="Medulla" id="logo" width="153" height="50"/>
+	<img src="<?=getMMCLogo()?>" alt="Medulla" id="logo" width="115" height="45"/>
 </a>
 <?php
 }
@@ -58,65 +58,16 @@ if ($_SESSION["login"]=='root') {
 
 ?>
 </ul>
+<a id="navbar-logout" title="<?php echo _("logout") . ' ' . $_SESSION['login']; ?>" href="<?php echo $root; ?>logout/index.php" onclick="showPopup(event,'<?php echo $root; ?>logout/index.php'); event.returnValue=false; return false;">
+    <img src="img/other/logout.svg" alt="Logout" />
+</a>
 </div>
 <!--navbar-->
 
 
 
-<!--menuTopRight-->
-<div id="menuTopRight">
-
-  <ul>
-
-<?php
-if (isExpertMode()) {
-    $mode = _("standard mode");
-} else {
-    $mode = _("expert mode");
-}
-
-?>
-
-    <li id="expertmode"><a href="<?php echo $root ?>includes/switchmode.php"><?php echo _("Click to switch to") . " " . $mode; ?></a></li>
-    <?php echo "<li id=\"disconnect\"><a title=\""._("logout")."\" href=\"".$root."logout/index.php\"";
-        echo " onclick=\"showPopup(event,'".$root."logout/index.php'); event.returnValue=false; return false;\">";
-        echo _("Logout").' '.$_SESSION['login'];
-        echo "</a></li>";
-    ?>
-
-  </ul>
-</div>
-<!--menuTopRight-->
-
-
-
-
 </div>
 
-
-
-
-
-<!--path-->
-<p class="path">
-<?php
-/* Path automatic creation */
-print '<span>' . $_SESSION["XMLRPC_server_description"] . '</span>&nbsp;:&nbsp;';
-if ($_GET["submod"] != "main" && $_GET["action"] != "default")
-    print '<a href="' . urlStr("base/main/default"). '">' . _("Home") . '</a> &gt; ';
-$MMCApp =&MMCApp::getInstance();
-$mod = $MMCApp->_modules[$_GET['module']];
-$submod = $mod->_submod[$_GET['submod']];
-list($m, $s, $a) = preg_split('@/@',$submod->_defaultpage,3);
-print '<a href="'. urlStr("$m/$s/$a") .'">' . $submod->getDescription() . '</a>';
-$action = $submod->_pages[$_GET["action"]];
-if (is_object($action)) {
-    print ' &gt; ';
-    print '<span>' . $action->getDescription() . "</span>";
-}
-?>
-</p>
-<!--path-->
 
 
 
