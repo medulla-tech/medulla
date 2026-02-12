@@ -65,7 +65,7 @@ def getApiVersion():
 
 
 def activate():
-    config = Pulse2Config("medulla_server")
+    config = Pulse2Config("medulla_server", None, "database")
     logger = logging.getLogger()
     if config.disable:
         logger.warning("Plugin medulla_server: disabled by configuration.")
@@ -82,7 +82,7 @@ def activate():
 
 
 def activate_2():
-    config = Pulse2Config("medulla_server")
+    config = Pulse2Config("medulla_server", None, "database")
     try:
         ComputerLocationManager().select(config.location)
     except Exception as e:
@@ -147,9 +147,9 @@ def create_method(m):
 class Pulse2Config(PluginConfig, Pulse2DatabaseConfig):
     location = None
 
-    def __init__(self, name="medulla_server", conffile=None):
+    def __init__(self, name="medulla_server", conffile=None, backend="database"):
         if not hasattr(self, "initdone"):
-            PluginConfig.__init__(self, name, conffile)
+            PluginConfig.__init__(self, name, conffile, backend=backend, db_table="medulla_server_conf")
             Pulse2DatabaseConfig.__init__(self)
             self.initdone = True
 
@@ -159,7 +159,10 @@ class Pulse2Config(PluginConfig, Pulse2DatabaseConfig):
         """
         PluginConfig.readConf(self)
         self.disable = self.getboolean("main", "disable")
-        Pulse2DatabaseConfig.setup(self, self.conffile)
+        if self.backend == "database":
+            PluginConfig._load_db_settings_from_backend(self)
+        elif self.conffile and self.backend == "ini":
+            Pulse2DatabaseConfig.setup(self, self.conffile)
 
         if self.has_option("main", "location"):
             self.location = self.get("main", "location")
@@ -393,3 +396,4 @@ def canDoInventory():
         return canDoInventory()
     except ImportError:
         return True
+

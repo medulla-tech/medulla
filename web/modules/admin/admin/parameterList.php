@@ -43,6 +43,8 @@ $ajax->displayDivToUpdate();
 // Bouton pour ouvrir la modale d'ajout
 echo '<div style="margin-top: 10px;">';
 echo '<button type="button" onclick="openModal()" class="btnPrimary">' . _T("Add Parameter", "admin") . '</button>';
+$back_url = urlStrRedirect("admin/admin/configList");
+echo '<button type="button" onclick="window.location.href=\'' . $back_url . '\'" class="btnPrimary">' . _T("Back", "admin") . '</button>';
 echo '</div>';
 
 // Traiter l'ajout d'un nouveau paramètre

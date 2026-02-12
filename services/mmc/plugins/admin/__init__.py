@@ -930,3 +930,8 @@ def restore_config_version(table: str, table_version: str) -> bool:
     except Exception as e:
         logger.error("restore_config_version failed: %s", e)
         return False
+
+def get_config_sections():
+    db = AdminDatabase()
+    sections = db.get_config_sections()
+    return sections
