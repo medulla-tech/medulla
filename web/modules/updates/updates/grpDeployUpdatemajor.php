@@ -209,8 +209,8 @@ if(isset($_POST['bconfirm'],
          $_POST['deployment_intervals'])) {
           verifyCSRFToken($_POST);
 
-
-$res=xmlrpc_get_os_update_major_details($_POST['entity_id']);
+$typeaction = !empty($_GET['typeaction']) ? htmlentities($_GET['typeaction']) : "windows";
+$res = xmlrpc_get_os_update_major_details($_POST['entity_id'], $typeaction);
 
 $start_date = $_POST['start_date'] ?? null;
 $end_date = $_POST['end_date'] ?? null;
