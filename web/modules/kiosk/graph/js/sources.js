@@ -51,6 +51,8 @@ jQuery(document).ready(function(){
             selectedId = [];
             jQuery("#jstree").jstree("deselect_all");
             jQuery("input[name='ous']").val("");
+            jQuery("#users").empty().hide();
+            jQuery("#ou-container").removeClass("has-users");
         }
     }
 
@@ -108,6 +110,15 @@ jQuery(document).ready(function(){
                     ous.push(dataRoot)
                 })
                 jQuery("#users").load('/mmc/modules/kiosk/kiosk/ajaxGetUsersForOu.php', {'roots':ous}, function(result){
+                    // Toggle has-users class based on actual li elements
+                    var hasUsers = jQuery("#users li").length > 0;
+                    if (hasUsers) {
+                        jQuery("#users").show();
+                        jQuery("#ou-container").addClass("has-users");
+                    } else {
+                        jQuery("#users").hide();
+                        jQuery("#ou-container").removeClass("has-users");
+                    }
                 });
             });
 

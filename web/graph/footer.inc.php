@@ -22,6 +22,10 @@
 
 $MMCApp =& MMCApp::getInstance();
 $MMCApp->render();
+global $sidebarDisplayed;
+if ($sidebarDisplayed) {
+    echo '</div><!-- section-content -->';
+}
 ?>
         <div class="clearer"></div>
         </div><!-- section -->

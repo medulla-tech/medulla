@@ -292,6 +292,19 @@ $pageGroupQuickActionExec->setOptions(array("AJAX" => false, "visible" => false)
 $submod->addPage($pageGroupQuickActionExec);
 
 ################################
+# Configuration Quick Actions page
+################################
+$pageConfigQuickAction = new Page("configQuickAction", _T('Configuration Quick Action', 'mobile'));
+$pageConfigQuickAction->setFile("modules/mobile/mobile/configQuickAction.php");
+$pageConfigQuickAction->setOptions(array("visible" => false, "noHeader" => true));
+$submod->addPage($pageConfigQuickAction);
+
+$pageConfigQuickActionExec = new Page("configQuickActionExec", _T('Configuration Quick Action Exec', 'mobile'));
+$pageConfigQuickActionExec->setFile("modules/mobile/mobile/configQuickActionExec.php");
+$pageConfigQuickActionExec->setOptions(array("AJAX" => false, "visible" => false));
+$submod->addPage($pageConfigQuickActionExec);
+
+################################
 # Functions page (HMDM features)
 ################################
 

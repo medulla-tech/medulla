@@ -2061,20 +2061,25 @@ class MobileDatabase(DatabaseHelper):
         url = f"{self.BASE_URL}/plugins/messaging/private/send"
         headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
 
-        # Build payload based on scope
-        payload = {"message": message}
+        payload = {
+            "scope": "",
+            "deviceNumber": "",
+            "groupId": "",
+            "configurationId": "",
+            "message": message
+        }
 
         if scope == "device":
-            payload["scope"] = "DEVICE"
+            payload["scope"] = "device"
             payload["deviceNumber"] = device_number
         elif scope == "group":
-            payload["scope"] = "GROUP"
+            payload["scope"] = "group"
             payload["groupId"] = int(group_id)
         elif scope == "configuration":
-            payload["scope"] = "CONFIGURATION"
+            payload["scope"] = "configuration"
             payload["configurationId"] = int(configuration_id)
         elif scope == "all_devices":
-            payload["scope"] = "ALL"
+            payload["scope"] = "all"
         else:
             return {"status": "error", "message": "Invalid scope"}
 
@@ -2112,23 +2117,27 @@ class MobileDatabase(DatabaseHelper):
         url = f"{self.BASE_URL}/plugins/push/private/send"
         headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
 
-        # Build payload based on scope
         api_payload = {
+            "scope": "",
+            "deviceNumber": "",
+            "groupId": "",
+            "configurationId": "",
             "messageType": message_type,
+            "customMessageType": "",
             "payload": payload
         }
 
         if scope == "device":
-            api_payload["scope"] = "DEVICE"
+            api_payload["scope"] = "device"
             api_payload["deviceNumber"] = device_number
         elif scope == "group":
-            api_payload["scope"] = "GROUP"
+            api_payload["scope"] = "group"
             api_payload["groupId"] = int(group_id)
         elif scope == "configuration":
-            api_payload["scope"] = "CONFIGURATION"
+            api_payload["scope"] = "configuration"
             api_payload["configurationId"] = int(configuration_id)
         elif scope == "all_devices":
-            api_payload["scope"] = "ALL"
+            api_payload["scope"] = "all"
         else:
             return {"status": "error", "message": "Invalid scope"}
 

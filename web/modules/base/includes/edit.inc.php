@@ -133,14 +133,10 @@ function setExpertMode($value) {
 }
 
 /**
- * Returns 0 if the interface is in standard mode, or 1 if in expert mode.
+ * Returns 1 (expert mode always enabled).
  */
 function isExpertMode() {
-    $ret = 0;
-    if (isset($_COOKIE["expertMode"])) {
-        $ret = $_COOKIE["expertMode"];
-    }
-    return $ret;
+    return 1;
 }
 
 function displayExpertCss() {

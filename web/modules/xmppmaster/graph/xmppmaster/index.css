@@ -167,3 +167,638 @@ li.vncclient a {
         text-decoration: none;
         color: #FFF;
 }
+
+/* ---------------------------------------- */
+/* Deployment logs styles                   */
+/* ---------------------------------------- */
+
+/* Log status colors */
+.log_err {
+  color: var(--color-error);
+}
+
+.log_warn {
+  color: var(--color-warning);
+}
+
+.log_ok {
+  background-color: var(--color-success);
+  color: var(--color-text-white);
+  font-weight: bold;
+  padding: 2px 8px;
+  margin-left: 4px;
+  border-radius: 4px;
+  display: inline-block;
+  font-size: 12px;
+  text-align: center;
+}
+
+.status-offline {
+  color: var(--color-error);
+}
+
+/* Clickable elements */
+.status,
+.machine-inventory {
+  cursor: pointer;
+}
+
+/* Progress bar styles */
+progress {
+  border-color: #ffffff;
+  background-color: #009ea9;
+}
+
+progress.mscdeloy {
+  width: 390px;
+  background-color: #00f3f3;
+}
+
+progress::-webkit-progress-bar {
+  background: #00f3f3;
+}
+
+progress::-webkit-progress-value {
+  background: #009ea9;
+}
+
+progress::-moz-progress-bar {
+  background-color: blue;
+}
+
+/* Deployment bars layout */
+.bars {
+  width: 400px;
+  float: left;
+}
+
+.bars1 {
+  width: 650px;
+  float: left;
+}
+
+/* Holder link styles */
+#holder ul li a {
+  font-weight: normal;
+}
+
+/* Deployment table */
+.deployment td {
+  vertical-align: top;
+}
+
+/* Chart holder */
+.chart-holder {
+  width: 500px;
+}
+
+/* Convergence icon - uses .icon-inline */
+
+/* Syncthing table */
+.syncthing-table th {
+  text-align: left;
+}
+
+.syncthing-col-cluster { width: 12%; }
+.syncthing-col-small { width: 7%; }
+
+/* Package detail table header */
+.pkg-detail-header {
+  padding-left: 32px;
+}
+
+/* Deployment progress text */
+.deploy-progress-text {
+  margin-left: 10px;
+}
+
+.deploy-progress-bar {
+  width: 200px;
+}
+
+/* Scheduler logs styles */
+.shadow {
+  -moz-box-shadow: 4px 4px 10px #888;
+  -webkit-box-shadow: 4px 4px 10px #888;
+  box-shadow: 4px 4px 6px #888;
+}
+
+.actions:target {
+  background-color: #ffa;
+}
+
+.actions {
+  margin-bottom: 5px;
+  padding: 3px;
+  border: dashed 1px rgb(100, 100, 100);
+  display: flex;
+}
+
+.actions a:hover {
+  background-color: #007fff;
+  color: rgb(255, 255, 255);
+  border: 1px solid #003eff;
+}
+
+.actions a {
+  padding: 1px;
+}
+
+.action_datas,
+.action_result {
+  width: 50%;
+  padding: 10px;
+}
+
+/* Table column widths */
+.col-w-210 {
+  width: 210px;
+}
+
+/* Creator highlight */
+.creator-highlight {
+  font-weight: bold;
+  color: darkblue;
+}
+
+/* Table column widths */
+.col-w-120 {
+  width: 120px;
+}
+
+.col-w-300 {
+  width: 300px;
+}
+
+/* Deployment status messages */
+.status-success {
+  font-weight: bold;
+  color: var(--color-success);
+}
+
+.status-group-success,
+.status-group-error,
+.status-group-partial {
+  color: var(--color-text-white);
+  font-weight: bold;
+  padding: 2px 8px;
+  border-radius: 4px;
+  display: inline-block;
+  font-size: 11px;
+  white-space: nowrap;
+  min-width: 160px;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.status-group-success {
+  background-color: var(--color-success);
+}
+
+.status-group-error {
+  background-color: var(--color-error);
+}
+
+.status-group-partial {
+  background-color: var(--color-warning);
+}
+
+.status-error {
+  font-weight: bold;
+  color: var(--color-error);
+}
+
+.status-processing {
+  font-weight: bold;
+  color: var(--color-primary);
+}
+
+/* Warning/pending text (orange bold) */
+.text-warning-bold,
+.status-pending {
+  font-weight: bold;
+  color: var(--color-warning);
+}
+
+/* Error text inline */
+.text-error-inline {
+  color: var(--color-error);
+}
+
+/* Constraint text */
+.constraint-text {
+  opacity: 0.5;
+  font-size: x-small;
+  color: Gray;
+}
+
+/* Icon alignment for inline images */
+.icon-inline {
+  position: relative;
+  top: 5px;
+  margin-right: 2px;
+  width: 20px;
+  height: 20px;
+  /* Default green color */
+  filter: brightness(0) saturate(100%) invert(65%) sepia(52%) saturate(456%) hue-rotate(43deg) brightness(95%) contrast(89%);
+}
+
+/* Icon status colors (used with .icon-inline) */
+.icon-success {
+  filter: brightness(0) saturate(100%) invert(65%) sepia(52%) saturate(456%) hue-rotate(43deg) brightness(95%) contrast(89%);
+}
+
+.icon-error {
+  filter: brightness(0) saturate(100%) invert(30%) sepia(90%) saturate(2000%) hue-rotate(350deg) brightness(90%) contrast(95%);
+}
+
+.icon-partial {
+  filter: brightness(0) saturate(100%) invert(60%) sepia(80%) saturate(500%) hue-rotate(10deg) brightness(95%) contrast(95%);
+}
+
+/* Text decoration */
+.text-underline {
+  text-decoration: underline;
+}
+
+/* Status list progress bar styles */
+.status-progress {
+  width: 100px;
+  height: 9px;
+  margin: -5px;
+  background-color: #ffffff;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #dddddd;
+  padding: 3px;
+}
+
+.status-progress::-webkit-progress-bar {
+  background: #f3f3f3;
+}
+
+.status-progress::-webkit-progress-value {
+  background: #ef9ea9;
+}
+
+/* ---------------------------------------- */
+/* File browser styles                      */
+/* ---------------------------------------- */
+
+#global {
+  width: 100%;
+  height: 800px;
+}
+
+#gauche {
+  width: 35%;
+  height: 90%;
+}
+
+#droite {
+  width: 64%;
+  height: 90%;
+}
+
+#droite,
+#gauche {
+  display: inline-block;
+  vertical-align: top;
+  border-width: 1px;
+  border-style: dotted;
+  border-color: black;
+}
+
+.download {
+  cursor: pointer;
+  border: none;
+}
+
+.fileshow {
+  overflow: auto;
+  height: 85%;
+}
+
+#fileshowremote {
+  width: 50%;
+  height: 100%;
+  overflow: auto;
+}
+
+#fileshowlocal {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+}
+
+#directoryremote {
+  width: 50%;
+  height: 100%;
+  overflow: auto;
+  padding-bottom: 15px;
+  float: left;
+}
+
+.piedbrowser {
+  vertical-align: bottom;
+  height: 5%;
+  text-align: center;
+  padding-top: 5px;
+  color: blue;
+}
+
+ul.leftdir,
+ul.rightdir {
+  list-style-image: url('modules/xmppmaster/graph/img/closedir.png');
+  padding-right: 25px;
+  cursor: pointer;
+}
+
+ul.leftfile,
+ul.rightfile {
+  list-style-image: url('modules/xmppmaster/graph/img/file1.png');
+  padding-right: 25px;
+  cursor: pointer;
+}
+
+ul.rightfile.li {
+  background-color: #C0C0C0;
+}
+
+.fileselect {
+  margin-left: 250px;
+  margin-right: 250px;
+}
+
+.marge {
+  margin-bottom: 20px;
+}
+
+.Localdestination {
+  padding: 0px 0px 5px 22px;
+  margin: 0 0px 0 0px;
+  background: url('modules/xmppmaster/graph/img/browserdownload.png');
+  background-repeat: no-repeat;
+  background-position: left top;
+  line-height: 18px;
+  text-decoration: none;
+  color: #FFF;
+  opacity: 1;
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.Localdestination:hover {
+  font-weight: bold;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.delete {
+  padding: 3px 0px 5px 20px;
+  margin: 0 0px 0 0px;
+  background-image: url("modules/xmppmaster/graph/img/button_cancel.png");
+  background-repeat: no-repeat;
+  background-position: left top;
+  line-height: 18px;
+  text-decoration: none;
+  color: #FFF;
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.delete:hover {
+  font-weight: bold;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.pop {
+  padding: 3px 0px 5px 20px;
+  margin: 0 0px 0 0px;
+  background-image: url("modules/xmppmaster/graph/img/rewind.png");
+  background-repeat: no-repeat;
+  background-position: left top;
+  line-height: 18px;
+  text-decoration: none;
+  color: #FFF;
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.pop:hover {
+  font-weight: bold;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.ombremultiple {
+  background-color: #ECECEC;
+  padding: 5px;
+  box-shadow: 2px 2px 2px gray, -1px -1px 2px white;
+}
+
+.ombretable1 {
+  background-color: #ECECEC;
+  box-shadow: 2px 2px 2px gray, -1px -1px 2px white;
+}
+
+.guaca a {
+  padding: 0px 0px 5px 22px;
+  margin: 0 0px 0 0px;
+  background-image: url("modules/base/graph/computers/guaca.png");
+  background-repeat: no-repeat;
+  background-position: left top;
+  line-height: 18px;
+  text-decoration: none;
+  color: #FFF;
+}
+
+.quick a {
+  padding: 0px 0px 5px 22px;
+  margin: 0 0px 0 0px;
+  background-image: url("modules/base/graph/computers/quick.png");
+  background-repeat: no-repeat;
+  background-position: left top;
+  line-height: 18px;
+  text-decoration: none;
+  color: #FFF;
+}
+
+.console a {
+  padding: 3px 0px 5px 22px;
+  margin: 0 0px 0 0px;
+  background-image: url("modules/base/graph/computers/console.png");
+  background-repeat: no-repeat;
+  background-position: left top;
+  line-height: 18px;
+  text-decoration: none;
+  color: #FFF;
+}
+
+/* Code/console output */
+.code-output {
+  font-family: Consolas, "Liberation Mono", Courier, monospace, sans-serif;
+  font-size: 12px;
+}
+
+/* Text helpers */
+.text-blue {
+  color: blue;
+}
+
+.text-darkblue {
+  color: darkblue;
+}
+
+.text-green {
+  color: var(--color-success);
+}
+
+/* ---------------------------------------- */
+/* Share QA page styles                     */
+/* ---------------------------------------- */
+
+.qa-owner-list {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.qa-owner-box {
+  max-height: 30px;
+  columns: 5;
+  background-color: rgb(221, 221, 221);
+  border: 2px solid #888;
+  border-radius: 0.2em;
+}
+
+.qa-users-container {
+  display: inline-flex;
+  width: 100%;
+}
+
+.qa-user-column {
+  width: 100%;
+}
+
+.qa-user-list {
+  width: 95%;
+}
+
+/* File browser remote styles */
+.fb-remote-path {
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.fb-download-icon {
+  padding-left: 20px;
+  float: right;
+}
+
+.fb-file-info {
+  position: relative;
+  top: -4px;
+}
+
+/* File size display (aligned right) */
+.file-size {
+  float: right;
+  position: relative;
+  top: 7px;
+}
+
+/* ---------------------------------------- */
+/* File browser text styles */
+.fb-caption {
+  caption-side: top;
+  text-align: left;
+  font-weight: bold;
+  font-size: 17px;
+}
+
+.fb-label {
+  width: 10%;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.fb-text {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.fb-text-lg {
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.fb-text-xl {
+  font-size: 17px;
+  font-weight: bold;
+}
+
+.fb-table {
+  width: 100%;
+  height: 100%;
+  padding: 0px;
+  border-spacing: 5px 5px;
+  border-collapse: separate;
+}
+
+.fb-cell-left {
+  vertical-align: top;
+  height: 600px;
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.fb-cell-tree {
+  width: 40%;
+  vertical-align: top;
+  height: 100%;
+}
+
+.fb-cell-files {
+  width: 60%;
+  vertical-align: middle;
+}
+
+.fb-dialog-span {
+  float: left;
+  margin: 12px 12px 20px 0;
+}
+
+.fb-notification-span {
+  float: left;
+  padding: 12px 12px 20px 0;
+  background-color: #d9edf7;
+  width: 95%;
+  height: 100%;
+}
+
+/* File browser textarea */
+.fb-textarea {
+  width: 50%;
+  height: 150px;
+  margin: auto;
+  display: block;
+}
+
+/* Error message */
+.text-error-header {
+  color: var(--color-error);
+}
+
+/* File browser list items */
+.fb-list-item {
+  border-bottom: dashed 1px gray;
+  position: relative;
+  padding: 2px;
+}
+
+.fb-delete-btn {
+  position: absolute;
+  left: 100%;
+  height: 20px;
+}
