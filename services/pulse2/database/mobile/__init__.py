@@ -329,6 +329,8 @@ class MobileDatabase(DatabaseHelper):
         """
         Hasher le mots de passe en md5 
         """
+        if password is None:
+            return None
         hashed_pwd = hashlib.md5(password.encode()).hexdigest().upper()
         return hashed_pwd
 
@@ -341,6 +343,11 @@ class MobileDatabase(DatabaseHelper):
             login = self.login
         if password is None:
             password = self.password
+        
+        # Check if mobile module is activated and configured
+        if not self.is_activated or password is None or login is None:
+            logging.getLogger().warning("Mobile module not activated or configured. Skipping authentication.")
+            return None
 
         hashed_pwd = self.hash_password(password)
 
@@ -378,8 +385,14 @@ class MobileDatabase(DatabaseHelper):
         Get count of HMDM Android devices for dashboard (all hmdm devices are android)
         Returns: [{'os': 'Android', 'version': 'HMDM', 'count': N}]
         """
+        # Check if mobile module is activated before attempting to authenticate
+        if not self.is_activated:
+            logging.getLogger().info("Mobile module not activated. Skipping HMDM device count.")
+            return []
+        
         auth = self.authenticate()
         if auth is None:
+            logging.getLogger().warning("Authentication to HMDM failed. Skipping device count.")
             return []
         
         url = f"{self.BASE_URL}/private/devices/search"
