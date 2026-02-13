@@ -8,24 +8,7 @@ h1 {
 
 /* ---- Workflow builder layout ---- */
 
-/* ---- Section titles ---- */
-
-span.pkgs-title {
-    font-size: 15px;
-    font-weight: 600;
-    color: #444050;
-    padding: 8px 0 4px;
-    display: block;
-    border-bottom: 2px solid #444050;
-    margin-bottom: 4px;
-    text-transform: uppercase;
-}
-
-/* Inside form table — pull left to cover label column */
-.mmc-form-table .pkgs-title {
-    margin-left: -236px;
-    width: calc(100% + 236px);
-}
+/* Section titles - styles defined in global.css via span[class$="-title"] */
 
 .workflow-section {
     margin-top: 16px;

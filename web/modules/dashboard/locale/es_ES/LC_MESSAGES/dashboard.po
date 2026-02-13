@@ -272,3 +272,7 @@ msgstr "Panel de alertas"
 msgid "Alerts by Entity Panel"
 msgstr "Panel de Alertas por Entidad"
 
+#: modules/dashboard/main/default.php:105
+msgid "Disabled widgets"
+msgstr "Widgets desactivados"
+

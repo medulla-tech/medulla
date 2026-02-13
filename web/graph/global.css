@@ -544,7 +544,7 @@ p {
 #content {
   background-color: var(--color-bg-white);
   padding: 0px 30px 100px 15px;
-  border-top: 1px solid #d4d4d4;
+  margin-top: 10px;
 }
 
 #section {
@@ -619,14 +619,16 @@ h4 {
 /* Section titles in forms (span.section-title or span.*-title) */
 span.section-title,
 span[class$="-title"] {
-  font-size: var(--font-size-section-title, 15px);
+  font-size: 13px;
   font-weight: 600;
   color: #444050;
   padding: 8px 0 4px;
   display: block;
   border-bottom: 2px solid #444050;
-  margin-bottom: 4px;
+  margin-bottom: 12px;
+  margin-top: 8px;
   text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 /* Inside form table — pull left to cover label column */
@@ -636,10 +638,19 @@ span[class$="-title"] {
   width: calc(100% + 236px);
 }
 
-/* Legacy section-specific overrides */
+/* First section title in form — no extra top margin needed after page title */
+form > table > tbody > tr:first-child span.section-title,
+form > table > tbody > tr:first-child span[class$="-title"] {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+/* Page title */
 #section h2 {
-  font-size: 17px;
-  color: black;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--color-text-dark);
+  margin-bottom: 16px;
 }
 
 p.listInfos {
@@ -1977,46 +1988,6 @@ ul.roACL {
   color: var(--color-text-medium);
 }
 
-/* ---------------------------------------- */
-/* Dashboard                               */
-/* ---------------------------------------- */
-
-.column {
-  width: 230px;
-  float: left;
-  padding: 20px 0 100px 0;
-}
-
-.portlet {
-  background-color: #fafafa;
-  padding: 0px;
-  margin: 20px 20px 10px 10px;
-  min-width: 220px;
-  border: 1px solid var(--color-border-light);
-  border-radius: 4px;
-
-  box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.05);
-}
-
-.portlet-header {
-  font-size: 13px;
-  font-weight: bold;
-  color: var(--color-text-dark);
-  padding: 10px;
-  margin: auto;
-  cursor: move;
-  background-color: #e6e6e6;
-  border-bottom: 1px solid #dadada;
-}
-
-.portlet-header .ui-icon {
-  float: right;
-}
-
-.portlet-content {
-  padding: 10px;
-}
-
 .ui-sortable-placeholder {
   border: 1px dotted #324c96;
   visibility: visible !important;
@@ -2044,16 +2015,6 @@ ul.roACL {
 .subpanel h4,
 .submod h4 {
   padding: 0;
-}
-
-.portlet .errors {
-  color: var(--color-error);
-  font-weight: bold;
-}
-
-.portlet .alert,
-.portlet .alert {
-  padding: 4px;
 }
 
 .errorTraceback pre {

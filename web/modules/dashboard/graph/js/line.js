@@ -34,12 +34,12 @@ function lineChart(selector, rawdatas){
   */
 
   var config = {
-    top: 50,
-    right: 50,
-    bottom: 50,
-    left: 50,
-    width:125,
-    height:70,
+    top: 10,
+    right: 15,
+    bottom: 15,
+    left: 35,
+    width: 220,
+    height: 120,
     delta:"absolute", // If the delta is absolute : the delta y is included between 0 and Ymax
     unit: " %"
   }
@@ -57,8 +57,8 @@ function lineChart(selector, rawdatas){
 
   // Set the bottom border when labels are displayed
   if(config.xlabel == true){
-    if(config.bottom < 75)
-      config.bottom= 75;
+    if(config.bottom < 65)
+      config.bottom = 65;
   }
 
 
@@ -115,7 +115,11 @@ function lineChart(selector, rawdatas){
     .y(function(d) { return yScale(d.y); }) // set the y values for the line generator
     .curve(d3.curveMonotoneX); // apply smoothing to the line
 
-  var svg = d3.select("#"+selector).append("svg")
+  var svgContainer = d3.select("#"+selector).append("div")
+    .style("display", "flex")
+    .style("justify-content", "center");
+
+  var svg = svgContainer.append("svg")
     .attr("width", config.width + config.left + config.right)
     .attr("height", config.height + config.top + config.bottom)
     .append("g")
@@ -134,8 +138,8 @@ function lineChart(selector, rawdatas){
     .datum(datas) // 10. Binds data to the line
     .attr("class", "line") // Assign a class for styling
     .attr("d", line) // 11. Calls the line generator
-    .attr("stroke","#ef2929")
-    .attr("fill", "rgba(239, 41, 41,0.2)")
+    .attr("stroke","#3a8fa8")
+    .attr("fill", "rgba(58, 143, 168, 0.2)")
     .attr("stroke-width", "1px")
 
   svg.selectAll(".dot")
@@ -149,7 +153,7 @@ function lineChart(selector, rawdatas){
       if(i== 0 || i > n)
         return "none";
     })
-    .attr("fill","#ef2929")
+    .attr("fill","#3a8fa8")
     .on("mouseover", function(d,i){
       svg.append("g")
         .attr("class", selector+"tooltip");

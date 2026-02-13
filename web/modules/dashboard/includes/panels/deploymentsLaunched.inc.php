@@ -58,12 +58,15 @@ class DeploymentsLaunchedPanel extends Panel {
       lineChart("deploymentsLaunched-graphs",{"datas":datas, "config": {"xlabel":true,"delta":"relative", "height":150,"unit":"deploy."}})
     </script>
 RATE;
-echo '<div id="deploymentsLaunched-legend">';
-  echo '<ul style="padding-left:15px;">';
-    echo '<li>'.end($json)['label'].' : '.current($json)['y'].' depl.</li>';
-    echo '<li>'.prev($json)['label'].' : '.current($json)['y'].' depl.</li>';
-    echo '<li>'.prev($json)['label'].' : '.current($json)['y'].' depl.</li>';
-  echo '</ul>';
+// Reset array pointer to end
+end($json);
+$latest = current($json);
+$prev1 = prev($json);
+$prev2 = prev($json);
+echo '<div id="deploymentsLaunched-legend" style="text-align:center;font-size:10px;color:#666;margin-top:8px;">';
+  echo $latest['label'].': <strong>'.$latest['y'].'</strong>';
+  echo ' &nbsp;|&nbsp; '.$prev1['label'].': <strong>'.$prev1['y'].'</strong>';
+  echo ' &nbsp;|&nbsp; '.$prev2['label'].': <strong>'.$prev2['y'].'</strong>';
 echo '</div>';
   }
 }

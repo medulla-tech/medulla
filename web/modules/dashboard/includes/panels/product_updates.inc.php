@@ -47,19 +47,17 @@ class UpdatePanel extends Panel {
         $labelRegenerate    = _T("Regenerate Agent Machine");
 
         echo <<<HTML
-        <center>
             <div id="updates_zone">
-                <button class="btnSecondary" id="fetch_updates_btn" style="margin-top: 12px; margin-bottom: 9px;">
+                <button class="btnSecondary" id="fetch_updates_btn">
                     {$btnLabel}
                 </button>
-                <button class="btnSecondary" id="restart_medulla_services" style="margin-top: 12px; margin-bottom: 9px;">
+                <button class="btnSecondary" id="restart_medulla_services">
                     {$labelRestart}
                 </button>
-                <button class="btnSecondary" id="regenerate_agent" style="margin-top: 12px; margin-bottom: 9px;">
+                <button class="btnSecondary" id="regenerate_agent">
                     {$labelRegenerate}
                 </button>
             </div>
-        </center>
         <style>
         .custom-loader-wrapper {
             display: flex;

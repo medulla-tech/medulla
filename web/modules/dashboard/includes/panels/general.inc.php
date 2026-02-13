@@ -31,23 +31,72 @@ include_once("modules/dashboard/includes/panel.class.php");?>
 
 class GeneralPanel extends Panel {
 
+    function formatUptime($uptime) {
+        // Parse uptime string like "29 days, 1:16:11.297513"
+        $parts = explode(', ', $uptime);
+        $days = '';
+        $time = $uptime;
+
+        if (count($parts) == 2) {
+            $days = $parts[0];
+            $time = $parts[1];
+        }
+
+        // Extract hours and minutes from time part
+        $timeParts = explode(':', $time);
+        $hours = isset($timeParts[0]) ? intval($timeParts[0]) : 0;
+        $minutes = isset($timeParts[1]) ? intval($timeParts[1]) : 0;
+
+        $result = '';
+        if ($days) {
+            $result .= $days;
+        }
+        if ($hours > 0) {
+            $result .= ($result ? ', ' : '') . $hours . 'h';
+        }
+        if ($minutes > 0) {
+            $result .= ($result ? ' ' : '') . $minutes . 'min';
+        }
+
+        return $result ?: '< 1 min';
+    }
+
     function display_content() {
         $load = json_encode($this->data['load']);
         $memory = json_encode($this->data['memory']);
         $free_text = _T("free", "dashboard");
         $used_text = _T("used", "dashboard");
-        echo '<p><strong>' . $this->data['hostname'] . '</strong> ' . _T('on') . ' <strong>' . $this->data['dist'][0] . ' ' . $this->data['dist'][1] . '</strong></p>
-        <p><strong>' . _('Uptime') . '</strong> : ' . $this->data['uptime'] . '</p>
-        <div><strong>' . _T('Load') . '</strong>
-        <div id="load-graph"></div>
-        </div>
-        <div><strong>' . _T('RAM') . '</strong>
-        <div id="ram-graph"></div>
+        $hostname = $this->data['hostname'];
+        $os = $this->data['dist'][0] . ' ' . $this->data['dist'][1];
+        $uptime = $this->formatUptime($this->data['uptime']);
+
+        echo '<div class="general-header">
+            <div class="general-hostname">' . $hostname . '</div>
+            <div class="general-os">' . $os . '</div>
+            <div class="general-uptime">' . _T('Uptime') . ' : ' . $uptime . '</div>
         </div>';
+
+        echo '<div class="general-section">
+            <div class="general-section-title">' . _T('Load') . '</div>
+            <div id="load-graph"></div>
+        </div>';
+
+        echo '<div class="general-section">
+            <div class="general-section-title">' . _T('RAM') . '</div>
+            <div id="ram-graph" style="display:flex;flex-direction:column;align-items:center;flex:1;"></div>
+        </div>';
+
+        echo '<style>
+            .general-header { margin-bottom: 20px; text-align: center; }
+            .general-hostname { font-size: 18px; font-weight: 600; color: #333; margin-bottom: 4px; }
+            .general-os { font-size: 13px; color: #555; margin-bottom: 2px; }
+            .general-uptime { font-size: 12px; color: #888; }
+            .general-section { margin-bottom: 20px; }
+            .general-section-title { font-size: 11px; font-weight: 600; color: #666; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px; }
+        </style>';
 
         echo <<< GENERAL
 <script>
-
   var load = $load;
   load = load.reverse();
   var n = load.length;
@@ -62,7 +111,6 @@ class GeneralPanel extends Panel {
   function splitMem(valueToSplit)
   {
     var result = [];
-
     if(valueToSplit.endsWith("GB"))
       result = valueToSplit.split("GB");
     else if(valueToSplit.endsWith("MB"))

@@ -49,11 +49,20 @@ function restoreOrder() {
 
 jQuery(document).ready( function () {
 
-    // Make columns sortable
-    jQuery(".column").sortable({
-        connectWith: ['.column'],
-        stop: function(event,ui) { ui.item.css('opacity',1);saveOrder();},
-        sort: function(event,ui) { ui.item.css('opacity',0.7); }
+    // Drag-and-drop on dashboard grid (only for active widgets)
+    jQuery("#dashboard-grid").sortable({
+        items: "> .column:not(.collapsed-column):not(#collapsed-widgets-section)",
+        handle: ".portlet-header",
+        placeholder: "column-placeholder",
+        tolerance: "pointer",
+        start: function(event, ui) {
+            ui.item.css('opacity', 0.7);
+            ui.placeholder.height(ui.item.height());
+        },
+        stop: function(event, ui) {
+            ui.item.css('opacity', 1);
+            saveOrder();
+        }
     });
 
     jQuery(".portlet")
@@ -64,8 +73,8 @@ jQuery(document).ready( function () {
         .end()
         .find(".portlet-content");
 
-    // Restore order from cookie
-    restoreOrder();
+    // Order is now fixed in PHP - no longer restored from cookies
+    // restoreOrder();
 
     jQuery(".portlet-header .ui-icon").click(function() {
         jQuery(this).toggleClass("ui-icon-minus");
@@ -78,11 +87,12 @@ jQuery(document).ready( function () {
         function() {jQuery(this).removeClass('ui-icon-hover'); }
     );
 
-    setTimeout(function(){
-        jQuery('.portlet-content').resizable({handles:'e'}).resize(function(){
-            jQuery(this).parents('.column:first').width(jQuery(this).width()+25);
-            saveOrder();
-        })
-    },1000);
+    // Resize disabled - layout is fixed
+    // setTimeout(function(){
+    //     jQuery('.portlet-content').resizable({handles:'e'}).resize(function(){
+    //         jQuery(this).parents('.column:first').width(jQuery(this).width()+25);
+    //         saveOrder();
+    //     })
+    // },1000);
 
 });

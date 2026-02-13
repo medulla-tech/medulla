@@ -43,16 +43,16 @@ class ComputersOnlinePanel extends Panel
         $machines_online = $counts['total_online'];
         $machines_offline = $counts['total_offline'];
 
-        $online_text = _T("Machines online", "dashboard")." : ";
-        $offline_text = _T("Machines offline", "dashboard")." : ";
+        $online_text = _T("Online", "dashboard")." : ";
+        $offline_text = _T("Offline", "dashboard")." : ";
 
         echo <<< ONLINE
-          <div id="computersonline-graph"></div>
+          <div id="computersonline-graph" style="display:flex;flex-direction:column;align-items:center;flex:1;"></div>
           <script>
             var onlineDatas = [
-              {"label": "$online_text", "value":$machines_online, "href":"$urlRedirect&machines=online"},
               {'label': '$offline_text', 'value': $machines_offline, "href": "$urlRedirect&machines=offline"},
               {'label': '', 'value': 0, "href": ""},
+              {"label": "$online_text", "value":$machines_online, "href":"$urlRedirect&machines=online"},
             ];
 
             donut("computersonline-graph",onlineDatas, "Total", $total_machines);

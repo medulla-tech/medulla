@@ -20,12 +20,12 @@
 
 function barchart(selector, rawdatas){
   var config = {
-      top: 15,
+      top: 10,
       right: 45,
-      bottom: 15,
-      left: 30,
-      width: 125,
-      height: 200,
+      bottom: 10,
+      left: 32,
+      width: 140,
+      height: 260,
   };
 
   var datas = {};
@@ -44,13 +44,18 @@ function barchart(selector, rawdatas){
   }
 
   var color1 = d3.scaleLinear()
-    // Force constant color between 0 and 80%
-    .domain([0, 30, 100])
-    .range(['#000000','#e03c3c', '#52b749'])
-    .interpolate(d3.interpolateHcl); //interpolateHsl interpolateHcl interpolateRgb";
+    // Gradient: red (bad) -> orange (medium) -> green (good)
+    .domain([0, 50, 100])
+    .range(['#e03c3c','#f48f42', '#8CB63C'])
+    .interpolate(d3.interpolateHcl);
+
+  // Create centered container
+  var svgContainer = d3.select("#"+selector).append("div")
+    .style("display", "flex")
+    .style("justify-content", "center");
 
   // Setup the svg canvas
-  var svg = d3.select("#"+selector).append("svg")
+  var svg = svgContainer.append("svg")
       .attr("width", config.width + config.left + config.right)
       .attr("height", config.height + config.top + config.bottom)
       .append("g")
