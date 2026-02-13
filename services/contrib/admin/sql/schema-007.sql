@@ -709,6 +709,324 @@ ON DUPLICATE KEY UPDATE
     valeur_defaut = VALUES(valeur_defaut),
     description = VALUES(description);
 
+
+-- ====================================================================
+-- MOBILE CONF
+-- ====================================================================
+
+CREATE TABLE IF NOT EXISTS mobile_conf (
+    id INT AUTO_INCREMENT PRIMARY KEY
+        COMMENT 'Identifiant unique du parametre de configuration',
+
+    section VARCHAR(50) NOT NULL
+        COMMENT 'Section du fichier de configuration (ex : [main] devient "main")',
+
+    nom VARCHAR(100) NOT NULL
+        COMMENT 'Nom du parametre, unique au sein de sa section',
+
+    activer BOOLEAN NOT NULL DEFAULT TRUE
+        COMMENT 'Indique si le parametre est actif (TRUE par defaut)',
+
+    type ENUM('string', 'booleen', 'entier', 'decimal', 'autre')
+        NOT NULL DEFAULT 'string'
+        COMMENT 'Type du parametre, utilise pour la validation et l''affichage',
+
+    valeur TEXT
+        COMMENT 'Valeur actuellement affectee au parametre',
+
+    valeur_defaut TEXT DEFAULT NULL
+        COMMENT 'Valeur par defaut utilisee si le parametre est desactive',
+
+    description TEXT NOT NULL
+        COMMENT 'Description fonctionnelle obligatoire du parametre (usage, format, exemples)',
+
+    CONSTRAINT uc_mobile_section_nom UNIQUE (section, nom)
+        COMMENT 'Garantit l''unicite du parametre par section'
+)
+COMMENT='Table de gestion des parametres de configuration Mobile pour Medulla';
+
+
+INSERT INTO mobile_conf (section, nom, activer, type, valeur, valeur_defaut, description) VALUES
+('main', 'disable', 1, 'booleen', '0', '0', 'Desactiver le plugin Mobile (0=actif, 1=inactif)'),
+('main', 'tempdir', 1, 'string', '/tmp/mmc-mobile', '/tmp/mmc-mobile', 'Repertoire temporaire du plugin mobile'),
+('database', 'dbdriver', 1, 'string', 'mysql', 'mysql', 'Driver de base de donnees'),
+('database', 'dbhost', 1, 'string', 'localhost', 'localhost', 'Hote du serveur de base de donnees'),
+('database', 'dbport', 1, 'entier', '3306', '3306', 'Port du serveur de base de donnees'),
+('database', 'dbname', 1, 'string', 'mobile', 'mobile', 'Nom de la base de donnees Mobile'),
+('database', 'dbuser', 1, 'string', 'mmc', 'mmc', 'Utilisateur de base de donnees'),
+('database', 'dbpasswd', 1, 'string', 'pBWfpjErqtsU', NULL, 'Mot de passe de la base de donnees'),
+('hmdm', 'url', 1, 'string', 'http://localhost/hmdm/rest', 'http://localhost/hmdm/rest', 'URL de l''API HMDM'),
+('hmdm', 'login', 1, 'string', 'admin', 'admin', 'Login pour l''API HMDM'),
+('hmdm', 'password', 1, 'string', 'admin', NULL, 'Mot de passe pour l''API HMDM')
+ON DUPLICATE KEY UPDATE
+    activer = VALUES(activer),
+    type = VALUES(type),
+    valeur = VALUES(valeur),
+    valeur_defaut = VALUES(valeur_defaut),
+    description = VALUES(description);
+
+
+CREATE TABLE IF NOT EXISTS mobile_conf_version (
+    id INT AUTO_INCREMENT PRIMARY KEY
+        COMMENT 'Identifiant unique du parametre de configuration',
+
+    section VARCHAR(50) NOT NULL
+        COMMENT 'Section du fichier de configuration (ex : [main] devient "main")',
+
+    nom VARCHAR(100) NOT NULL
+        COMMENT 'Nom du parametre, unique au sein de sa section',
+
+    activer BOOLEAN NOT NULL DEFAULT TRUE
+        COMMENT 'Indique si le parametre est actif (TRUE par defaut)',
+
+    type ENUM('string', 'booleen', 'entier', 'decimal', 'autre')
+        NOT NULL DEFAULT 'string'
+        COMMENT 'Type du parametre, utilise pour la validation et l''affichage',
+
+    valeur TEXT
+        COMMENT 'Valeur actuellement affectee au parametre',
+
+    valeur_defaut TEXT DEFAULT NULL
+        COMMENT 'Valeur par defaut utilisee si le parametre est desactive',
+
+    description TEXT NOT NULL
+        COMMENT 'Description fonctionnelle obligatoire du parametre (usage, format, exemples)',
+
+    CONSTRAINT uc_mobile_version_section_nom UNIQUE (section, nom)
+        COMMENT 'Garantit l''unicite du parametre par section'
+)
+COMMENT='Table de versionnage des parametres de configuration Mobile pour Medulla';
+
+
+INSERT INTO mobile_conf_version (section, nom, activer, type, valeur, valeur_defaut, description) VALUES
+('main', 'disable', 1, 'booleen', '0', '0', 'Desactiver le plugin Mobile (0=actif, 1=inactif)'),
+('main', 'tempdir', 1, 'string', '/tmp/mmc-mobile', '/tmp/mmc-mobile', 'Repertoire temporaire du plugin mobile'),
+('database', 'dbdriver', 1, 'string', 'mysql', 'mysql', 'Driver de base de donnees'),
+('database', 'dbhost', 1, 'string', 'localhost', 'localhost', 'Hote du serveur de base de donnees'),
+('database', 'dbport', 1, 'entier', '3306', '3306', 'Port du serveur de base de donnees'),
+('database', 'dbname', 1, 'string', 'mobile', 'mobile', 'Nom de la base de donnees Mobile'),
+('database', 'dbuser', 1, 'string', 'mmc', 'mmc', 'Utilisateur de base de donnees'),
+('database', 'dbpasswd', 1, 'string', 'pBWfpjErqtsU', NULL, 'Mot de passe de la base de donnees'),
+('hmdm', 'url', 1, 'string', 'http://localhost/hmdm/rest', 'http://localhost/hmdm/rest', 'URL de l''API HMDM'),
+('hmdm', 'login', 1, 'string', 'admin', 'admin', 'Login pour l''API HMDM'),
+('hmdm', 'password', 1, 'string', 'admin', NULL, 'Mot de passe pour l''API HMDM')
+ON DUPLICATE KEY UPDATE
+    activer = VALUES(activer),
+    type = VALUES(type),
+    valeur = VALUES(valeur),
+    valeur_defaut = VALUES(valeur_defaut),
+    description = VALUES(description);
+
+-- ====================================================================
+-- MASTERING CONF 
+-- ====================================================================
+
+CREATE TABLE IF NOT EXISTS mastering_conf (
+    id INT AUTO_INCREMENT PRIMARY KEY
+        COMMENT 'Identifiant unique du paramètre de configuration',
+
+    section VARCHAR(50) NOT NULL
+        COMMENT 'Section du fichier de configuration (ex : [main] devient "main")',
+
+    nom VARCHAR(100) NOT NULL
+        COMMENT 'Nom du paramètre, unique au sein de sa section',
+
+    activer BOOLEAN NOT NULL DEFAULT TRUE
+        COMMENT 'Indique si le paramètre est actif (TRUE par défaut)',
+
+    type ENUM('string', 'booleen', 'entier', 'decimal', 'autre')
+        NOT NULL DEFAULT 'string'
+        COMMENT 'Type du paramètre, utilisé pour la validation et l''affichage',
+
+    valeur TEXT
+        COMMENT 'Valeur actuellement affectée au paramètre',
+
+    valeur_defaut TEXT DEFAULT NULL
+        COMMENT 'Valeur par défaut utilisée si le paramètre est désactivé',
+
+    description TEXT NOT NULL
+        COMMENT 'Description fonctionnelle obligatoire du paramètre (usage, format, exemples)',
+
+    CONSTRAINT uc_mastering_section_nom UNIQUE (section, nom)
+        COMMENT 'Garantit l''unicité du paramètre par section'
+)
+COMMENT='Table de gestion des paramètres de configuration Mastering pour Medulla';
+
+
+INSERT INTO mastering_conf (section, nom, activer, type, valeur, valeur_defaut, description) VALUES
+('main', 'disable', 1, 'booleen', '1', '0', 'Désactiver le plugin Mastering (0=actif, 1=inactif)'),
+('main', 'tempdir', 1, 'string', '/tmp/mmc-mastering', '/tmp/mmc-mastering', 'Répertoire temporaire du plugin Mastering'),
+('database', 'dbdriver', 1, 'string', 'mysql', 'mysql', 'Driver de base de données'),
+('database', 'dbhost', 1, 'string', 'localhost', 'localhost', 'Hôte du serveur de base de données'),
+('database', 'dbport', 1, 'entier', '3306', '3306', 'Port du serveur de base de données'),
+('database', 'dbname', 1, 'string', 'mastering', 'mastering', 'Nom de la base de données Mastering'),
+('database', 'dbuser', 1, 'string', 'mmc', 'mmc', 'Utilisateur de base de données'),
+('database', 'dbpasswd', 1, 'string', 'pBWfpjErqtsU', NULL, 'Mot de passe de la base de données')
+ON DUPLICATE KEY UPDATE
+    activer = VALUES(activer),
+    type = VALUES(type),
+    valeur = VALUES(valeur),
+    valeur_defaut = VALUES(valeur_defaut),
+    description = VALUES(description);
+
+CREATE TABLE IF NOT EXISTS mastering_conf_version (
+    id INT AUTO_INCREMENT PRIMARY KEY
+        COMMENT 'Identifiant unique du paramètre de configuration',
+
+    section VARCHAR(50) NOT NULL
+        COMMENT 'Section du fichier de configuration (ex : [main] devient "main")',
+
+    nom VARCHAR(100) NOT NULL
+        COMMENT 'Nom du paramètre, unique au sein de sa section',
+
+    activer BOOLEAN NOT NULL DEFAULT TRUE
+        COMMENT 'Indique si le paramètre est actif (TRUE par défaut)',
+
+    type ENUM('string', 'booleen', 'entier', 'decimal', 'autre')
+        NOT NULL DEFAULT 'string'
+        COMMENT 'Type du paramètre, utilisé pour la validation et l''affichage',
+
+    valeur TEXT
+        COMMENT 'Valeur actuellement affectée au paramètre',
+
+    valeur_defaut TEXT DEFAULT NULL
+        COMMENT 'Valeur par défaut utilisée si le paramètre est désactivé',
+
+    description TEXT NOT NULL
+        COMMENT 'Description fonctionnelle obligatoire du paramètre (usage, format, exemples)',
+
+    CONSTRAINT uc_mastering_version_section_nom UNIQUE (section, nom)
+        COMMENT 'Garantit l''unicité du paramètre par section'
+)
+COMMENT='Table de versionnage des paramètres de configuration Mastering pour Medulla';
+
+
+INSERT INTO mastering_conf_version (section, nom, activer, type, valeur, valeur_defaut, description) VALUES
+('main', 'disable', 1, 'booleen', '1', '0', 'Désactiver le plugin Mastering (0=actif, 1=inactif)'),
+('main', 'tempdir', 1, 'string', '/tmp/mmc-mastering', '/tmp/mmc-mastering', 'Répertoire temporaire du plugin Mastering'),
+('database', 'dbdriver', 1, 'string', 'mysql', 'mysql', 'Driver de base de données'),
+('database', 'dbhost', 1, 'string', 'localhost', 'localhost', 'Hôte du serveur de base de données'),
+('database', 'dbport', 1, 'entier', '3306', '3306', 'Port du serveur de base de données'),
+('database', 'dbname', 1, 'string', 'mastering', 'mastering', 'Nom de la base de données Mastering'),
+('database', 'dbuser', 1, 'string', 'mmc', 'mmc', 'Utilisateur de base de données'),
+('database', 'dbpasswd', 1, 'string', 'pBWfpjErqtsU', NULL, 'Mot de passe de la base de données')
+ON DUPLICATE KEY UPDATE
+    activer = VALUES(activer),
+    type = VALUES(type),
+    valeur = VALUES(valeur),
+    valeur_defaut = VALUES(valeur_defaut),
+    description = VALUES(description);
+
+-- ====================================================================
+-- URBACKUP CONF 
+-- ====================================================================
+
+CREATE TABLE IF NOT EXISTS urbackup_conf (
+    id INT AUTO_INCREMENT PRIMARY KEY
+        COMMENT 'Identifiant unique du paramètre de configuration',
+
+    section VARCHAR(50) NOT NULL
+        COMMENT 'Section du fichier de configuration (ex : [main] devient "main")',
+
+    nom VARCHAR(100) NOT NULL
+        COMMENT 'Nom du paramètre, unique au sein de sa section',
+
+    activer BOOLEAN NOT NULL DEFAULT TRUE
+        COMMENT 'Indique si le paramètre est actif (TRUE par défaut)',
+
+    type ENUM('string', 'booleen', 'entier', 'decimal', 'autre')
+        NOT NULL DEFAULT 'string'
+        COMMENT 'Type du paramètre, utilisé pour la validation et l''affichage',
+
+    valeur TEXT
+        COMMENT 'Valeur actuellement affectée au paramètre',
+
+    valeur_defaut TEXT DEFAULT NULL
+        COMMENT 'Valeur par défaut utilisée si le paramètre est désactivé',
+
+    description TEXT NOT NULL
+        COMMENT 'Description fonctionnelle obligatoire du paramètre (usage, format, exemples)',
+
+    CONSTRAINT uc_urbackup_section_nom UNIQUE (section, nom)
+        COMMENT 'Garantit l''unicité du paramètre par section'
+)
+COMMENT='Table de gestion des paramètres de configuration UrBackup pour Medulla';
+
+
+INSERT INTO urbackup_conf (section, nom, activer, type, valeur, valeur_defaut, description) VALUES
+('main', 'disable', 1, 'booleen', '0', '1', 'Désactiver le plugin UrBackup (0=actif, 1=inactif)'),
+('main', 'tempdir', 1, 'string', '/var/tmp/mmc-urbackup', '/var/tmp/mmc-urbackup', 'Répertoire temporaire du plugin UrBackup'),
+('urbackup', 'url', 1, 'string', 'http://127.0.0.1/urbackup/x', 'http://127.0.0.1/urbackup/x', 'URL de l''API UrBackup'),
+('urbackup', 'username', 1, 'string', 'admin', 'admin', 'Nom d''utilisateur pour UrBackup'),
+('urbackup', 'password', 1, 'string', 'M3dull4+HBA', NULL, 'Mot de passe pour UrBackup'),
+('urbackup', 'usernameapi', 1, 'string', 'adminapi', 'adminapi', 'Nom d''utilisateur API pour UrBackup'),
+('urbackup', 'passwordapi', 1, 'string', '32t6mRiljsfc', NULL, 'Mot de passe API pour UrBackup'),
+('database', 'dbdriver', 1, 'string', 'mysql', 'mysql', 'Driver de base de données'),
+('database', 'dbhost', 1, 'string', 'localhost', 'localhost', 'Hôte du serveur de base de données'),
+('database', 'dbport', 1, 'entier', '3306', '3306', 'Port du serveur de base de données'),
+('database', 'dbname', 1, 'string', 'urbackup', 'urbackup', 'Nom de la base de données UrBackup'),
+('database', 'dbuser', 1, 'string', 'mmc', 'mmc', 'Utilisateur de base de données'),
+('database', 'dbpasswd', 1, 'string', 'pBWfpjErqtsU', NULL, 'Mot de passe de la base de données')
+ON DUPLICATE KEY UPDATE
+    activer = VALUES(activer),
+    type = VALUES(type),
+    valeur = VALUES(valeur),
+    valeur_defaut = VALUES(valeur_defaut),
+    description = VALUES(description);
+
+CREATE TABLE IF NOT EXISTS urbackup_conf_version (
+    id INT AUTO_INCREMENT PRIMARY KEY
+        COMMENT 'Identifiant unique du paramètre de configuration',
+
+    section VARCHAR(50) NOT NULL
+        COMMENT 'Section du fichier de configuration (ex : [main] devient "main")',
+
+    nom VARCHAR(100) NOT NULL
+        COMMENT 'Nom du paramètre, unique au sein de sa section',
+
+    activer BOOLEAN NOT NULL DEFAULT TRUE
+        COMMENT 'Indique si le paramètre est actif (TRUE par défaut)',
+
+    type ENUM('string', 'booleen', 'entier', 'decimal', 'autre')
+        NOT NULL DEFAULT 'string'
+        COMMENT 'Type du paramètre, utilisé pour la validation et l''affichage',
+
+    valeur TEXT
+        COMMENT 'Valeur actuellement affectée au paramètre',
+
+    valeur_defaut TEXT DEFAULT NULL
+        COMMENT 'Valeur par défaut utilisée si le paramètre est désactivé',
+
+    description TEXT NOT NULL
+        COMMENT 'Description fonctionnelle obligatoire du paramètre (usage, format, exemples)',
+
+    CONSTRAINT uc_urbackup_version_section_nom UNIQUE (section, nom)
+        COMMENT 'Garantit l''unicité du paramètre par section'
+)
+COMMENT='Table de versionnage des paramètres de configuration UrBackup pour Medulla';
+
+
+INSERT INTO urbackup_conf_version (section, nom, activer, type, valeur, valeur_defaut, description) VALUES
+('main', 'disable', 1, 'booleen', '0', '1', 'Désactiver le plugin UrBackup (0=actif, 1=inactif)'),
+('main', 'tempdir', 1, 'string', '/var/tmp/mmc-urbackup', '/var/tmp/mmc-urbackup', 'Répertoire temporaire du plugin UrBackup'),
+('urbackup', 'url', 1, 'string', 'http://127.0.0.1/urbackup/x', 'http://127.0.0.1/urbackup/x', 'URL de l''API UrBackup'),
+('urbackup', 'username', 1, 'string', 'admin', 'admin', 'Nom d''utilisateur pour UrBackup'),
+('urbackup', 'password', 1, 'string', 'M3dull4+HBA', NULL, 'Mot de passe pour UrBackup'),
+('urbackup', 'usernameapi', 1, 'string', 'adminapi', 'adminapi', 'Nom d''utilisateur API pour UrBackup'),
+('urbackup', 'passwordapi', 1, 'string', '32t6mRiljsfc', NULL, 'Mot de passe API pour UrBackup'),
+('database', 'dbdriver', 1, 'string', 'mysql', 'mysql', 'Driver de base de données'),
+('database', 'dbhost', 1, 'string', 'localhost', 'localhost', 'Hôte du serveur de base de données'),
+('database', 'dbport', 1, 'entier', '3306', '3306', 'Port du serveur de base de données'),
+('database', 'dbname', 1, 'string', 'urbackup', 'urbackup', 'Nom de la base de données UrBackup'),
+('database', 'dbuser', 1, 'string', 'mmc', 'mmc', 'Utilisateur de base de données'),
+('database', 'dbpasswd', 1, 'string', 'pBWfpjErqtsU', NULL, 'Mot de passe de la base de données')
+ON DUPLICATE KEY UPDATE
+    activer = VALUES(activer),
+    type = VALUES(type),
+    valeur = VALUES(valeur),
+    valeur_defaut = VALUES(valeur_defaut),
+    description = VALUES(description);
+
 UPDATE version SET Number = 7;
 
 COMMIT;

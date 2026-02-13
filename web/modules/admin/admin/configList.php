@@ -35,8 +35,8 @@ if (!$tables || !is_array($tables)) {
     return;
 }
 
-echo '<div class="container-fluid">';
-echo '<h3 class="mb-3">' . _T("Available Configurations", "admin") . '</h3>';
+echo '<div class="container-fluid" style="margin-bottom: 10px;">';
+echo '<h3 style="margin-bottom: 20px;">' . _T("Available Configurations", "admin") . '</h3>';
 
 $btn = new Button();
 
@@ -46,7 +46,7 @@ foreach ($tables as $table) {
     $edit_url = urlStrRedirect("admin/admin/parameterList", ['table' => $table]);
     $button_text = htmlspecialchars(sprintf("%s (%s)", $label, $table), ENT_QUOTES);
 
-    echo '<p>' . $btn->getOnClickButton($button_text, $edit_url) . '</p>';
+    echo '<p style="margin-bottom: 15px;">' . $btn->getOnClickButton($button_text, $edit_url) . '</p>';
 }
 
 echo '</div>';
