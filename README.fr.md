@@ -27,7 +27,7 @@ Vous souhaitez tester Medulla ?
 Nous proposons une version installable de Medulla pour évaluer la solution directement dans votre environnement.
 
 Pour obtenir le fichier d’installation et recevoir les instructions de déploiement, faites votre demande ici :
-https://medulla-tech.io/?ff_landing=11
+https://medulla-tech.io/?ff_landing=18
 
 Notre équipe est à votre disposition pour toute question ou demande de démonstration.
 
