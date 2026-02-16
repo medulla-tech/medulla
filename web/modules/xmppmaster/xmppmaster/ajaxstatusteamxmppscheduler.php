@@ -23,6 +23,7 @@
 
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 require_once('modules/msc/includes/commands_xmlrpc.inc.php');
+require_once("includes/UIComponents.php");
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
 
@@ -31,10 +32,20 @@ $start = isset($_GET['start'])?$_GET['start']:0;
 $end   = (isset($_GET['end'])?$_GET['end']:$maxperpage-1);
 
 $arraydeploy = xmlrpc_get_deploy_xmpp_teamscheduler( $_GET['login'] , $start, $end, $filter);
-$convergence = is_array_commands_convergence_type($arraydeploy['tabdeploy']['command']);
+
 $etat="";
 $LastdeployINsecond = 3600 * 72;
 echo "<h2>" . _T("Planned tasks") . "</h2>";
+
+if (!isset($arraydeploy['lentotal']) || $arraydeploy['lentotal'] == 0) {
+    EmptyStateBox::show(
+        _T("No planned tasks", "xmppmaster"),
+        _T("No deployments are scheduled.", "xmppmaster")
+    );
+    return;
+}
+
+$convergence = is_array_commands_convergence_type($arraydeploy['tabdeploy']['command']);
 $login   = array();
 $startdeploy = array();
 $enddeploy= array();
@@ -180,8 +191,6 @@ $n->setParamInfo($params);
 // $n->end = $end;
 $n->start = 0;
 $n->end = $arraydeploy['lentotal'];
-
-print "<br/>";
 
 $n->display();
 

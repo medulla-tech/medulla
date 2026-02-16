@@ -24,8 +24,8 @@
  */
 
 require_once("modules/xmppmaster/includes/xmlrpc.php");
-?>
-<?php
+require_once("includes/UIComponents.php");
+
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
 $filter  = isset($_GET['filter']) ? $_GET['filter'] : "";
@@ -37,6 +37,14 @@ $machinegroup = xmlrpc_getCommand_action_time(10000, $start, $end, $filter);
 $dd = array();
 $dd = $machinegroup['result'];
 $nbitem = $machinegroup['nbtotal'];
+
+if ($nbitem == 0) {
+    EmptyStateBox::show(
+        _T("No quick action results", "xmppmaster"),
+        _T("No quick actions have been executed yet.", "xmppmaster")
+    );
+    return;
+}
 
 $startdate =  array();
 foreach ($dd[4] as $val) {
@@ -130,5 +138,4 @@ $n->setParamInfo($params);
 $n->start = 0;
 $n->end = $nbitem;
 $n->display();
-echo "<br>";
 ?>

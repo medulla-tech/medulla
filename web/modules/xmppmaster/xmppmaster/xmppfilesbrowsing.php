@@ -140,7 +140,7 @@ printf(
             <td id="filedirectory" colspan="2" class="fb-text"><ul></ul></td>
             <td class="fb-label">
             <span id="poplistdirectory" title="<?php echo sprintf(_T('Remove last folder', 'xmppmaster')); ?>" class="pop" ></span>
-                <span id="deletelistdirectory" title="<?php echo sprintf(_T('Remove all folders', 'xmppmaster')); ?>" class="delete" ></span>
+                <span id="deletelistdirectory" title="<?php echo sprintf(_T('Remove all folders', 'xmppmaster')); ?>" class="xmpp-delete-btn" ></span>
             </td>
         </tr>
 
@@ -149,7 +149,7 @@ printf(
             <td id="filelist" colspan="2" class="fb-text"><ul></ul></td>
             <td class="fb-label">
             <span  id="poplistfile" title="<?php echo sprintf(_T('Remove last file', 'xmppmaster')); ?>"  class="pop" ></span>
-                <span  id="deletelistfile" title="<?php echo sprintf(_T('Remove all files', 'xmppmaster')); ?>"  class="delete" ></span>
+                <span  id="deletelistfile" title="<?php echo sprintf(_T('Remove all files', 'xmppmaster')); ?>"  class="xmpp-delete-btn" ></span>
             </td>
         </tr>
 
@@ -459,7 +459,7 @@ echo '</ul>';
                         listfileusermachinejson['directory'] = uniqueNames;
                         jQuery('#filedirectory ul').html("");
                         jQuery.each(listfileusermachinejson['directory'], function(id, dir){
-                            jQuery('#filedirectory ul').append('<li class="fb-list-item"><span class="fb-delete-btn" onclick="removeElement(this,\'directory\')" class="delete"></span><span class="element-text">'+dir+'</span></li>');
+                            jQuery('#filedirectory ul').append('<li class="fb-list-item"><span class="fb-delete-btn" onclick="removeElement(this,\'directory\')" class="xmpp-delete-btn"></span><span class="element-text">'+dir+'</span></li>');
                         })
                 });
             });
@@ -473,7 +473,7 @@ echo '</ul>';
                         listfileusermachinejson['files'] = uniqueNames;
                         jQuery('#filelist ul').html("");
                         jQuery.each(listfileusermachinejson['files'],function(id, element){
-                          jQuery('#filelist ul').append('<li class="fb-list-item"><span class="fb-delete-btn" onclick="removeElement(this, \'files\')" class="delete"></span><span class="element-text">'+element+'</span></li>');
+                          jQuery('#filelist ul').append('<li class="fb-list-item"><span class="fb-delete-btn" onclick="removeElement(this, \'files\')" class="xmpp-delete-btn"></span><span class="element-text">'+element+'</span></li>');
                         });
 
                 } );
@@ -627,7 +627,7 @@ echo '</ul>';
          pop_list("directory");
          jQuery('#filedirectory ul').html("");
          jQuery.each(listfileusermachinejson['directory'], function(id, element){
-           jQuery('#filedirectory ul').append('<li class="fb-list-item"><span class="fb-delete-btn" onclick="removeElement(this, \'directory\')" class="delete"></span><span class="element-text">'+element+'</span></li>');
+           jQuery('#filedirectory ul').append('<li class="fb-list-item"><span class="fb-delete-btn" onclick="removeElement(this, \'directory\')" class="xmpp-delete-btn"></span><span class="element-text">'+element+'</span></li>');
          });
     });
 
@@ -635,7 +635,7 @@ echo '</ul>';
         pop_list("files");
         jQuery('#filelist ul').html("");
         jQuery.each(listfileusermachinejson['files'], function(id, element){
-          jQuery('#filelist ul').append('<li class="fb-list-item"><span class="fb-delete-btn" onclick="removeElement(this, \'files\')" class="delete"></span><span class="element-text">'+element+'</span></li>');
+          jQuery('#filelist ul').append('<li class="fb-list-item"><span class="fb-delete-btn" onclick="removeElement(this, \'files\')" class="xmpp-delete-btn"></span><span class="element-text">'+element+'</span></li>');
         });
     });
     </script>

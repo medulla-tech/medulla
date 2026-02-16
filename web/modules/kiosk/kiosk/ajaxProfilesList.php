@@ -22,6 +22,7 @@
 
 require_once("modules/kiosk/includes/xmlrpc.php");
 require_once("modules/medulla_server/includes/utilities.php");
+require_once("includes/UIComponents.php");
 
 
 global $conf;
@@ -34,6 +35,14 @@ $login = $_SESSION['login'];
 $profiles = xmlrpc_get_profiles_list($login, $start, $maxperpage, $filter);
 $count = $profiles['total'];
 $profiles = $profiles['datas'];
+
+if ($count == 0) {
+    EmptyStateBox::show(
+        _T("No profiles", "kiosk"),
+        _T("Use the sidebar menu to create a new profile.", "kiosk")
+    );
+    return;
+}
 
 $action_editProfiles = new ActionItem(_T("Edit Profile", 'kiosk'), "edit", "edit", "profile", "kiosk", "kiosk");
 $action_deleteProfile = new ActionItem(_T("Delete Profile", 'kiosk'), "deleteProfile", "delete", "profile", "kiosk", "kiosk");

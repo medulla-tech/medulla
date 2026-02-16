@@ -869,3 +869,27 @@ msgstr "La ecuación booleana es válida"
 msgid "Display content"
 msgstr "Mostrar contenido"
 
+
+#: modules/dyngroup/dyngroup/ajaxListGroups.php
+msgid "No favourite groups"
+msgstr "Sin grupos favoritos"
+
+#: modules/dyngroup/dyngroup/ajaxListGroups.php
+msgid "Mark groups as favourite to see them here."
+msgstr "Marque grupos como favoritos para verlos aquí."
+
+#: modules/dyngroup/dyngroup/ajaxListGroups.php
+msgid "No imaging groups"
+msgstr "Sin grupos de imagen"
+
+#: modules/dyngroup/dyngroup/ajaxListGroups.php
+msgid "Create an imaging group to get started."
+msgstr "Cree un grupo de imagen para comenzar."
+
+#: modules/dyngroup/dyngroup/ajaxListGroups.php
+msgid "No groups"
+msgstr "Sin grupos"
+
+#: modules/dyngroup/dyngroup/ajaxListGroups.php
+msgid "Create a group to get started."
+msgstr "Cree un grupo para comenzar."
