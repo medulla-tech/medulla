@@ -82,8 +82,6 @@ echo '</center>';
         min-height: 100px;
         padding: 20px 12px 18px 12px;
         border-radius: 8px;
-        background: #fff;
-        box-shadow: 0 2px 10px #0001;
     }
 
     .custom-spinner {

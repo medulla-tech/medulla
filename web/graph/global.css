@@ -960,6 +960,7 @@ th {
   border-width: 1px 0 0 0;
   border-style: solid;
   vertical-align: center;
+  font-size: 13px;
 }
 
 td.printerName,
