@@ -6,31 +6,6 @@
  */
 
 /* ============================================ */
-/* Action Icons (sidebar)                       */
-/* ============================================ */
-
-li.list a {
-    padding: 3px 0px 5px 20px;
-    margin: 0;
-    background-image: url("../img/list.png");
-    background-repeat: no-repeat;
-    line-height: 18px;
-    text-decoration: none;
-    color: var(--color-text-white, #fff);
-}
-
-li.users a {
-    padding: 3px 0px 5px 20px;
-    margin: 0;
-    background-image: url("../img/users.gif");
-    background-repeat: no-repeat;
-    line-height: 18px;
-    text-decoration: none;
-    color: var(--color-text-white, #fff);
-}
-
-
-/* ============================================ */
 /* Package Manager Layout                       */
 /* ============================================ */
 
