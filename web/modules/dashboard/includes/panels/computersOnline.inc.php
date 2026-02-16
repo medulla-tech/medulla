@@ -47,7 +47,7 @@ class ComputersOnlinePanel extends Panel
         $offline_text = _T("Offline", "dashboard")." : ";
 
         echo <<< ONLINE
-          <div id="computersonline-graph" style="display:flex;flex-direction:column;align-items:center;flex:1;"></div>
+          <div id="computersonline-graph"></div>
           <script>
             var onlineDatas = [
               {'label': '$offline_text', 'value': $machines_offline, "href": "$urlRedirect&machines=offline"},

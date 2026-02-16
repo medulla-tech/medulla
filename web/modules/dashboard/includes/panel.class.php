@@ -54,68 +54,6 @@ class Panel {
     }
 
     function display() {
-      echo '<style>
-.switch {
-  position: relative;
-  display: inline-block;
-  width: 30px;
-  height: 15px;
-}
-
-.switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #ccc;
-  -webkit-transition: .4s;
-  transition: .4s;
-}
-
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 13px;
-  width: 13px;
-  left: 1px;
-  bottom: 1px;
-  background-color: white;
-  -webkit-transition: .4s;
-  transition: .4s;
-}
-
-input:checked + .slider {
-  background-color: #2196F3;
-}
-
-input:focus + .slider {
-  box-shadow: 0 0 1px #2196F3;
-}
-
-input:checked + .slider:before {
-  -webkit-transform: translateX(14px);
-  -ms-transform: translateX(14px);
-  transform: translateX(14px);
-}
-
-/* Rounded sliders */
-.slider.round {
-  border-radius: 17px;
-}
-
-.slider.round:before {
-  border-radius: 50%;
-}
-</style>
-';
         //echo '<h3 class="handle">' . $this->title . '</h3>';
         echo '<div class="portlet-header"><div class="header-title">' . $this->title . '</div><div class="header-switch">
         <label class="switch">
@@ -129,7 +67,7 @@ echo <<< JSSCRIPT
 jQuery(function(){
   var selector = "#$this->id .switch input";
   var portlet = jQuery(selector).closest('.portlet');
-  var column = portlet.closest('.column');
+  var column = portlet.closest('.dashboard-column');
 
   // Initialize visibility and position
   var collapsedSection = jQuery('#collapsed-widgets-section');
@@ -147,14 +85,14 @@ jQuery(function(){
     // Update button
     var btn = jQuery('#disabled-widgets-btn');
     btn.removeClass('hidden');
-    btn.find('.btn-count').text(collapsedSection.find('.column').length);
+    btn.find('.btn-count').text(collapsedSection.find('.dashboard-column').length);
   }
 
   // Bind change event
   jQuery(selector).off('change').on('change', function() {
     var input = jQuery(this);
     var portlet = input.closest('.portlet');
-    var column = portlet.closest('.column');
+    var column = portlet.closest('.dashboard-column');
     var widgetId = input.data('widget');
     var collapsedSection = jQuery('#collapsed-widgets-section');
 
@@ -176,7 +114,7 @@ jQuery(function(){
 
     // Update drawer button
     var btn = jQuery('#disabled-widgets-btn');
-    var count = collapsedSection.find('.column').length;
+    var count = collapsedSection.find('.dashboard-column').length;
     if (count > 0) {
       btn.removeClass('hidden');
       btn.find('.btn-count').text(count);

@@ -83,17 +83,8 @@ class GeneralPanel extends Panel {
 
         echo '<div class="general-section">
             <div class="general-section-title">' . _T('RAM') . '</div>
-            <div id="ram-graph" style="display:flex;flex-direction:column;align-items:center;flex:1;"></div>
+            <div id="ram-graph"></div>
         </div>';
-
-        echo '<style>
-            .general-header { margin-bottom: 20px; text-align: center; }
-            .general-hostname { font-size: 18px; font-weight: 600; color: #333; margin-bottom: 4px; }
-            .general-os { font-size: 13px; color: #555; margin-bottom: 2px; }
-            .general-uptime { font-size: 12px; color: #888; }
-            .general-section { margin-bottom: 20px; }
-            .general-section-title { font-size: 11px; font-weight: 600; color: #666; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px; }
-        </style>';
 
         echo <<< GENERAL
 <script>

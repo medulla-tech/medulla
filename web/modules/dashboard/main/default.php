@@ -91,7 +91,7 @@ foreach($customPanelOrder as $panelName) {
         $file = $panelData['file'];
         $options = $panelData['options'];
         if ($options["enable"]) {
-            print '<div class="column" id="col'.$z++.'">';
+            print '<div class="dashboard-column" id="col'.$z++.'">';
             $panel = new AjaxPage(urlStrRedirect('dashboard/main/ajaxPanels'), $options["id"], array("file" => urlencode($file)), $options["refresh"]);
             $panel->class = "portlet";
             $panel->display();

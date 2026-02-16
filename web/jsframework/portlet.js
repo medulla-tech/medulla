@@ -1,7 +1,7 @@
 // function that writes the list order to a cookie
 function saveOrder() {
-    jQuery(".column script").remove();
-    jQuery(".column").each(function(index, value){
+    jQuery(".dashboard-column script").remove();
+    jQuery(".dashboard-column").each(function(index, value){
         var colid = value.id;
         var cookieName = "cookie-" + colid;
         // Get the order for this column.
@@ -21,7 +21,7 @@ function saveOrder() {
 
 // function that restores the list order from a cookie
 function restoreOrder() {
-    jQuery(".column").each(function(index, value) {
+    jQuery(".dashboard-column").each(function(index, value) {
         var colid = value.id;
         var cookieName = "cookie-" + colid
         var cookie = jQuery.cookie(cookieName);
@@ -34,7 +34,7 @@ function restoreOrder() {
             }
             var portletID = toks[0];
             var visible = toks[1]
-            var portlet = jQuery(".column")
+            var portlet = jQuery(".dashboard-column")
                 .find('#' + portletID)
                 .appendTo(jQuery('#' + colid));
             if (visible === 'false') {
@@ -51,7 +51,7 @@ jQuery(document).ready( function () {
 
     // Drag-and-drop on dashboard grid (only for active widgets)
     jQuery("#dashboard-grid").sortable({
-        items: "> .column:not(.collapsed-column):not(#collapsed-widgets-section)",
+        items: "> .dashboard-column:not(.collapsed-column):not(#collapsed-widgets-section)",
         handle: ".portlet-header",
         placeholder: "column-placeholder",
         tolerance: "pointer",
@@ -90,7 +90,7 @@ jQuery(document).ready( function () {
     // Resize disabled - layout is fixed
     // setTimeout(function(){
     //     jQuery('.portlet-content').resizable({handles:'e'}).resize(function(){
-    //         jQuery(this).parents('.column:first').width(jQuery(this).width()+25);
+    //         jQuery(this).parents('.dashboard-column:first').width(jQuery(this).width()+25);
     //         saveOrder();
     //     })
     // },1000);

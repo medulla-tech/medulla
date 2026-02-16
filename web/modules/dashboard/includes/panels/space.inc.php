@@ -46,7 +46,7 @@ dataset.forEach(function(d,i){
     {"label":"$free","value":parseFloat(dataset[i].usage.free.split("GB")[0]),"unit":"GB"},
     {"label":"$used","value":parseFloat(dataset[i].usage.used.split("GB")[0]),"unit":"GB"},
   ];
-  jQuery("#spaceChart").append("<div id='spaceChart"+i+"' style='display:flex;flex-direction:column;align-items:center;flex:1;'></div>");
+  jQuery("#spaceChart").append("<div id='spaceChart"+i+"' class='space-chart-item'></div>");
   donut("spaceChart"+i, tmp, dataset[i].mountpoint, dataset[i].usage.total);
 })
 

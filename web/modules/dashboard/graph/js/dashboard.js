@@ -12,7 +12,7 @@ jQuery(function() {
 
     // Update button visibility and count
     function updateDrawerButton() {
-        var count = collapsedSection.find('.column').length;
+        var count = collapsedSection.find('.dashboard-column').length;
         if (count > 0) {
             drawerBtn.removeClass('hidden');
             drawerBtn.find('.btn-count').text(count);
@@ -47,13 +47,13 @@ jQuery(function() {
     // Move collapsed widgets to drawer
     function organizeCollapsedWidgets() {
         // Move collapsed columns to drawer
-        jQuery('#dashboard-grid > .column.collapsed-column').each(function() {
+        jQuery('#dashboard-grid > .dashboard-column.collapsed-column').each(function() {
             jQuery(this).appendTo(collapsedSection);
         });
 
         // Move uncollapsed columns back to grid
         var grid = jQuery('#dashboard-grid');
-        collapsedSection.find('.column:not(.collapsed-column)').each(function() {
+        collapsedSection.find('.dashboard-column:not(.collapsed-column)').each(function() {
             jQuery(this).appendTo(grid);
         });
 

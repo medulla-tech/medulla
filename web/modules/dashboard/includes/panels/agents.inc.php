@@ -63,7 +63,7 @@ end($json);
 $latest = current($json);
 $prev1 = prev($json);
 $prev2 = prev($json);
-echo '<div id="agents-legend" style="text-align:center;font-size:10px;color:#666;margin-top:8px;">';
+echo '<div id="agents-legend">';
   echo $latest['label'].': <strong>'.$latest['y'].'</strong>';
   echo ' &nbsp;|&nbsp; '.$prev1['label'].': <strong>'.$prev1['y'].'</strong>';
   echo ' &nbsp;|&nbsp; '.$prev2['label'].': <strong>'.$prev2['y'].'</strong>';
