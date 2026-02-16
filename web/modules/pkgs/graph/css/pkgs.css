@@ -658,6 +658,27 @@ td.package {
 }
 
 /* ============================================ */
+/* File List Table (edit package)               */
+/* ============================================ */
+
+/* Add left padding to first column header and cells */
+.listinfos th:first-child,
+.listinfos td:first-child {
+  padding-left: 12px;
+}
+
+/* Center action column */
+.listinfos td.action {
+  text-align: center;
+}
+
+.listinfos td.action ul.action {
+  float: none;
+  display: inline-flex;
+  justify-content: center;
+}
+
+/* ============================================ */
 /* Package List Table (main list)               */
 /* ============================================ */
 
