@@ -77,7 +77,7 @@ if ($result && isset($result['status']) && $result['status'] === 'OK') {
     new NotifyWidgetFailure(_T("Failed to send command to configuration", "mobile"));
 }
 
-header("Location: " . urlStrRedirect("mobile/mobile/functions", array("tab" => "tabpush")));
+header("Location: " . urlStrRedirect("mobile/mobile/pushMessages"));
 exit;
 
 ?>

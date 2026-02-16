@@ -304,22 +304,24 @@ $pageConfigQuickActionExec->setFile("modules/mobile/mobile/configQuickActionExec
 $pageConfigQuickActionExec->setOptions(array("AJAX" => false, "visible" => false));
 $submod->addPage($pageConfigQuickActionExec);
 
-################################
-# Functions page (HMDM features)
-################################
+# messaging pages
+$pageMessaging = new Page("messaging", _T('Messages', 'mobile'));
+$pageMessaging->setFile("modules/mobile/mobile/messaging.php");
+$submod->addPage($pageMessaging);
 
-$pageFunctions = new Page("functions", _T('Functions', 'mobile'));
-$pageFunctions->setFile("modules/mobile/mobile/functions.php");
-$submod->addPage($pageFunctions);
+$pagePushMessages = new Page("pushMessages", _T('Push messages', 'mobile'));
+$pagePushMessages->setFile("modules/mobile/mobile/pushMessages.php");
+$submod->addPage($pagePushMessages);
 
-# messages
+# send message forms (hidden pages)
 $pageNewMessage = new Page("newMessage", _T('Send new message', 'mobile'));
 $pageNewMessage->setFile("modules/mobile/mobile/newMessage.php");
+$pageNewMessage->setOptions(array("visible" => false));
 $submod->addPage($pageNewMessage);
 
-#quick actions (push message)
 $pageNewPushMessage = new Page("newPushMessage", _T('Send new push message', 'mobile'));
 $pageNewPushMessage->setFile("modules/mobile/mobile/newPushMessage.php");
+$pageNewPushMessage->setOptions(array("visible" => false));
 $submod->addPage($pageNewPushMessage);
 
 #app package autocomplete

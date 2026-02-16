@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['test'])) {
         
         if ($result && isset($result['status']) && $result['status'] === 'OK') {
             new NotifyWidgetSuccess(_T("Push message sent successfully", "mobile"));
-            header("Location: " . urlStrRedirect("mobile/mobile/functions", array("tab" => "tabpush")));
+            header("Location: " . urlStrRedirect("mobile/mobile/pushMessages"));
             exit;
         } else {
             $errors[] = _T("Failed to send push message. Please try again.", "mobile");
