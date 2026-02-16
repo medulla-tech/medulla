@@ -79,7 +79,7 @@ $n->start = 0;
 $n->end = $count - 1;
 //$n->addActionItem($assoc_list);
 if(isExpertMode())
-  echo '<a href="'.urlStrRedirect("pkgs/pkgs/pending", array('delete' => 'all')).'"><button class="btn btn-small btn-primary">'._T('Remove all packages from pending', 'pkgs').'</button></a>';
+  echo '<div class="action-button-container"><a class="btnPrimary" href="'.urlStrRedirect("pkgs/pkgs/pending", array('delete' => 'all')).'">'._T('Remove all packages from pending', 'pkgs').'</a></div>';
 $n->addActionItem(new ActionPopupItem(_T("Show mirrors", "pkgs"), "rsync", "info", "pkgs", "pkgs", "pkgs"));
 $n->addActionItem(new ActionPopupItem(_T("Remove packages from pending", "pkgs"),"desynchronization","delete","pkgs", "pkgs", "pkgs"));
 $n->display();

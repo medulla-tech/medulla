@@ -5,13 +5,7 @@ require_once("includes/PageGenerator.php");
 require_once("modules/pkgs/includes/xmlrpc.php");
 require_once("modules/msc/includes/utilities.php");
 ?>
-
-<style>
-thead{
-  text-align: :left;
-}
-</style>
-
+<link rel="stylesheet" href="modules/pkgs/graph/css/pkgs.css" />
 <?php
 function renderAction($sequence, $os)
 {
@@ -240,24 +234,24 @@ $fileViewerAction = new ActionPopupItem(_T("View File Content", "pkgs"), "previe
 // Using manual table because we don't want pagination
 echo '<h2 onclick="_toggle(\'#files\')">'._T("Files", "pkgs").' - ('._T("Total", "pkgs").': '.prettyOctetDisplay($totalSize).')</h2>';
 echo '<div id="files">';
-echo '<table class="listinfos" cellspacing="0" cellpadding="5" border="1">';
+echo '<table class="listinfos pkg-files-table" cellspacing="0" cellpadding="5" border="1">';
 echo '<thead>';
 echo '<tr>';
-echo '<th style="text-align: center;">'._T("File", "pkgs").'</th>';
-echo '<th style="text-align: center;">'._T("Size", "pkgs").'</th>';
-echo '<th style="text-align: center;">'._T("Ratio Size/Total", "pkgs").'</th>';
-echo '<th style="text-align: center;">'._T("Mime Type", "pkgs").'</th>';
-echo '<th style="text-align: center;">'._T("Action", "pkgs").'</th>';
+echo '<th>'._T("File", "pkgs").'</th>';
+echo '<th>'._T("Size", "pkgs").'</th>';
+echo '<th>'._T("Ratio Size/Total", "pkgs").'</th>';
+echo '<th>'._T("Mime Type", "pkgs").'</th>';
+echo '<th>'._T("Action", "pkgs").'</th>';
 echo '</tr>';
 echo '</thead>';
 echo '<tbody>';
 foreach($filesInfos['files'] as $id => $file) {
     echo '<tr class="alternate">';
-    echo '<td style="text-align: center;">'.$file['name'].'</td>';
-    echo '<td style="text-align: center;">'.prettyOctetDisplay((int)$file['size']).'</td>';
-    echo '<td style="text-align: center;">'.round(((int)$file['size'] / $totalSize) * 100, 2).'%</td>';
-    echo '<td style="text-align: center;">'.$file["mime"][0].'</td>';
-    echo '<td style="text-align: center;" class="action">';
+    echo '<td>'.$file['name'].'</td>';
+    echo '<td>'.prettyOctetDisplay((int)$file['size']).'</td>';
+    echo '<td>'.round(((int)$file['size'] / $totalSize) * 100, 2).'%</td>';
+    echo '<td>'.$file["mime"][0].'</td>';
+    echo '<td class="action">';
     if(preg_match("#text/(.*)#i", $file['mime'][0])) {
         echo '<ul class="action">';
         $fileViewerAction->display("", ["uuid" => $_GET['packageUuid'], "name" => $file["name"]]);
@@ -334,26 +328,6 @@ echo '</ul>';
 echo $tabscontents;
 echo '</div>';
 ?>
-<style>
-.actions:target {
-   background-color: #ffa;
-}
-.actions{
-  margin-bottom:5px;
-  padding:3px;
-  border: dashed 1px rgb(100,100,100);
-}
-
-.actions a:hover{
-  background-color: #007fff;
-  color:rgb(255, 255, 255);
-  border: 1px solid #003eff
-}
-
-.actions a{
-  padding:1px;
-}
-</style>
 
 <script>
 jQuery( "#tabs" ).tabs();

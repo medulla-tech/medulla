@@ -23,7 +23,9 @@
  */
 
 include_once("modules/pkgs/includes/help.php");
-
+?>
+<link rel="stylesheet" href="modules/pkgs/graph/css/pkgs.css" />
+<?php
 if(isset($_GET["action"]) && $_GET["action"] =="edit")
 {
     //If entering in edit mode : get json information
@@ -52,10 +54,6 @@ $f->add(new TrFormElement("",new SpanElement('<div class="workflow-section">
 
 
 ?>
-<style type="text/css">
-    @import url(modules/pkgs/graph/pkgs/package.css);
-</style>
-
 
 <script src="modules/pkgs/graph/js/class.js"></script>
 <script src="modules/pkgs/graph/js/controller.js"></script>

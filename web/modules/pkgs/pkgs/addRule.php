@@ -73,7 +73,7 @@ foreach ($fields as $p) {
     );
 }
 
-$f->add(new TrFormElement("Install Proposition", new TextareaTplArray(["value"=>'"%s" /S',"name"=>"proposition", "required"=>true, "cols"=>"39px", "rows"=>1, 'style'=>"width:auto; height:auto;"])));
+$f->add(new TrFormElement(_T("Install Proposition", "pkgs"), new TextareaTplArray(["value"=>'"%s" /S',"name"=>"proposition", "required"=>true, "rows"=>3])));
 $f->addValidateButton("bconfirm", _T("Add", "pkgs"));
 $f->display(); // display the form
 ?>

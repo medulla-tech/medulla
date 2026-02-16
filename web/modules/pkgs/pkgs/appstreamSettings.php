@@ -156,10 +156,6 @@ include("modules/pkgs/pkgs/ajaxAppstreamAvailablePackageList.php");
 }
 ?>
 
-<style>
-    .noborder { border:0px solid blue; }
-</style>
-
 <script type="text/javascript">
     if (jQuery('#show_credentials').val() == "0")
     {
