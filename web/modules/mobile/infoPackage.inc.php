@@ -73,6 +73,14 @@ $pageDeleteDevice->setOptions(array("visible" => false));
 $submod->addPage($pageDeleteDevice);
 
 ################################
+# detailed info page
+################################
+$pageDetailedInfo = new Page("detailedInfo", _T('Detailed Information', 'mobile'));
+$pageDetailedInfo->setFile("modules/mobile/mobile/detailedInfo.php");
+$pageDetailedInfo->setOptions(array("visible" => false));
+$submod->addPage($pageDetailedInfo);
+
+################################
 # assign configurations to file page
 ################################
 $pageFileConfigurations = new Page("fileConfigurations", _T('File Configurations', 'mobile'));

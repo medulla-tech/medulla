@@ -172,12 +172,12 @@ foreach ($mobiles as $index => $mobile) {
 
     $col1[] = "<a href='#' class='mobilestatus {$statut}'>{$numero}</a>";
 
-    $actionDetails[] = new ActionItem(_T("Details", "mobile"), "functions", "display", "device", "mobile", "mobile", "tabdetailed");
+    $actionDetails[] = new ActionItem(_T("Details", "mobile"), "detailedInfo", "display", "device", "mobile", "mobile");
     $actionLogs[] = new ActionItem(_T("Logs", "mobile"), "functions", "logfile", "device", "mobile", "mobile", "taglogs");
     $actionMessage[] = new ActionItem(_T("Message", "mobile"), "newMessage", "add", "device", "mobile", "mobile");
     $actionEdit[] = new ActionItem(_T("Edit", "mobile"), "editDevice", "edit", "id", "mobile", "mobile");
     $actionQuick[] = new ActionPopupItem(_T("Quick action", "mobile"), "deviceQuickAction", "quick", "id", "mobile", "mobile");
-    $actionQr[] = new ActionPopupItem(_T("QR Code", "mobile"), "qrCode", "qr-code", "", "mobile", "mobile");
+    $actionQr[] = new ActionPopupItem(_T("QR Code", "mobile"), "qrCode", "qrcode", "", "mobile", "mobile");
     $actionDelete[] = new ActionPopupItem(_T("Delete", "mobile"), "deleteDevice", "delete", "id", "mobile", "mobile");
 
     $params[] = [

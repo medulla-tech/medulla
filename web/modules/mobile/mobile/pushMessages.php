@@ -100,4 +100,4 @@ function toggleNewMessage() {
         form.style.display = 'none';
     }
 }
-</script>w
+</script>

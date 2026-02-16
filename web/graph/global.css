@@ -829,6 +829,7 @@ li.urbackup a, li.urbackupg a { background-image: url("../img/actions/backup.svg
 li.console a, li.consoleg a { background-image: url("../img/actions/console.svg"); }
 li.config a, li.configg a { background-image: url("../img/actions/settings.svg"); }
 li.quick a, li.quickg a { background-image: url("../img/actions/quickaction.svg"); }
+li.qrcode a, li.qrcodeg a { background-image: url("../img/actions/qrcode.svg"); }
 li.guaca a, li.guacag a { background-image: url("../img/actions/control.svg"); }
 li.monit a { background-image: url("../img/actions/monitoring.svg"); }
 li.display a, li.displayg a { background-image: url("../img/actions/display.svg"); }
