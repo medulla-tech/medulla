@@ -2473,3 +2473,30 @@ td img[src*="img/other/"],
   color: var(--color-text-light);
 }
 
+/* ---------------------------------------- */
+/* Empty State Box                          */
+/* ---------------------------------------- */
+
+.empty-state-box {
+  max-width: 500px;
+  margin: 40px auto;
+  padding: 24px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  text-align: center;
+}
+
+.empty-state-box-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.empty-state-box-description {
+  color: #666;
+  line-height: 1.5;
+  font-size: 13px;
+}
+

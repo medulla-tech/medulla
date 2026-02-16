@@ -23,6 +23,7 @@
  */
 
 require("modules/security/graph/security.css");
+require_once("includes/UIComponents.php");
 
 /**
  * Displays a styled form to add an item to an exclusion list.
@@ -88,49 +89,6 @@ class AddItemForm
     {
         $form = new self($inputName, $buttonName, $placeholder, $buttonLabel, $label);
         $form->display();
-    }
-}
-
-/**
- * Displays an empty state box with a title and description.
- * Used when a list has no items to display.
- *
- * CSS classes used (defined in security.css):
- * - .empty-state-box
- * - .empty-state-box-title
- * - .empty-state-box-description
- *
- * @param string $title The main message (e.g. "No excluded vendors")
- * @param string $description Optional description text
- */
-class EmptyStateBox
-{
-    private $title;
-    private $description;
-
-    public function __construct($title, $description = '')
-    {
-        $this->title = $title;
-        $this->description = $description;
-    }
-
-    public function display()
-    {
-        echo '<div class="empty-state-box">';
-        echo '<div class="empty-state-box-title">' . htmlspecialchars($this->title) . '</div>';
-        if (!empty($this->description)) {
-            echo '<div class="empty-state-box-description">' . htmlspecialchars($this->description) . '</div>';
-        }
-        echo '</div>';
-    }
-
-    /**
-     * Static helper for quick display
-     */
-    public static function show($title, $description = '')
-    {
-        $box = new self($title, $description);
-        $box->display();
     }
 }
 
