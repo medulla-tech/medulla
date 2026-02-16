@@ -87,6 +87,5 @@ if($location)
     $ajax->setSelected($location);
 
 $ajax->display();
-echo '<br/><br/><br/>';
 $ajax->displayDivToUpdate();
 ?>

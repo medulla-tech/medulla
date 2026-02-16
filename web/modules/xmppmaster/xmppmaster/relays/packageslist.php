@@ -37,12 +37,10 @@ $p->setSideMenu($sidemenu);
 $p->display();
 
 
-print "<br/><br/><br/>";
 if($agenttype && $jid){
   $ajax = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxpackageslist"), "container", ['jid'=>$jid], 'formRunning');
   $ajax->display();
-  print "<br/><br/><br/>";
-  $ajax->displayDivToUpdate();
+    $ajax->displayDivToUpdate();
 }
 
 ?>

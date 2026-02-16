@@ -50,6 +50,5 @@ $ajax->setElementsVal($list);
 
 $ajax->setRefresh(web_def_refresh_time());
 $ajax->display();
-print "<br/><br/><br/>";
 $ajax->displayDivToUpdate();
 ?>

@@ -77,5 +77,4 @@ $ajax = new AjaxFilter(urlStrRedirect("imaging/manage/ajaxEditProfilescript"), "
 
 
 $ajax->display();
-echo '<br/><br/><br/>';
 $ajax->displayDivToUpdate();

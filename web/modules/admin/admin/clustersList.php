@@ -29,10 +29,8 @@ $p = new PageGenerator(_T("Clusters list", 'admin'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
-  print "<br/><br/><br/>";
   $ajax = new AjaxFilter(urlStrRedirect("admin/admin/ajaxClustersList"), "container", array('login' => $_SESSION['login']), 'formRunning');
   $ajax->display();
-  print "<br/><br/><br/>";
   $ajax->displayDivToUpdate();
 
  ?>

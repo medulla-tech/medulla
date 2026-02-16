@@ -82,7 +82,6 @@ if(isExpertMode())
   echo '<a href="'.urlStrRedirect("pkgs/pkgs/pending", array('delete' => 'all')).'"><button class="btn btn-small btn-primary">'._T('Remove all packages from pending', 'pkgs').'</button></a>';
 $n->addActionItem(new ActionPopupItem(_T("Show mirrors", "pkgs"), "rsync", "info", "pkgs", "pkgs", "pkgs"));
 $n->addActionItem(new ActionPopupItem(_T("Remove packages from pending", "pkgs"),"desynchronization","delete","pkgs", "pkgs", "pkgs"));
-print "<br/><br/><br/>"; // start display below the location bar, yes it's quiet ugly, so : FIXME !
 $n->display();
 
 ?>

@@ -1,6 +1,11 @@
-<svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M8.25 2.75H3.66667C3.16041 2.75 2.75 3.16041 2.75 3.66667V10.0833C2.75 10.5896 3.16041 11 3.66667 11H8.25C8.75626 11 9.16667 10.5896 9.16667 10.0833V3.66667C9.16667 3.16041 8.75626 2.75 8.25 2.75Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M18.3333 2.75H13.75C13.2437 2.75 12.8333 3.16041 12.8333 3.66667V6.41667C12.8333 6.92293 13.2437 7.33333 13.75 7.33333H18.3333C18.8396 7.33333 19.25 6.92293 19.25 6.41667V3.66667C19.25 3.16041 18.8396 2.75 18.3333 2.75Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M18.3333 11H13.75C13.2437 11 12.8333 11.4104 12.8333 11.9167V18.3333C12.8333 18.8396 13.2437 19.25 13.75 19.25H18.3333C18.8396 19.25 19.25 18.8396 19.25 18.3333V11.9167C19.25 11.4104 18.8396 11 18.3333 11Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M8.25 14.6667H3.66667C3.16041 14.6667 2.75 15.0771 2.75 15.5833V18.3333C2.75 18.8396 3.16041 19.25 3.66667 19.25H8.25C8.75626 19.25 9.16667 18.8396 9.16667 18.3333V15.5833C9.16667 15.0771 8.75626 14.6667 8.25 14.6667Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Calque_1" xmlns="http://www.w3.org/2000/svg" baseProfile="tiny" version="1.2" viewBox="0 0 141.7 141.7">
+  <!-- Generator: Adobe Illustrator 30.2.1, SVG Export Plug-In . SVG Version: 2.1.1 Build 1)  -->
+  <g>
+    <rect x="73.4" y="65.5" width="17.7" height="20.7" rx="3.2" ry="3.2" fill="#dadcdd"/>
+    <rect x="96.3" y="45.9" width="17.7" height="40.2" rx="3.2" ry="3.2" fill="#dadcdd"/>
+    <rect x="27.7" y="59.4" width="17.7" height="26.8" rx="3.2" ry="3.2" fill="#dadcdd"/>
+    <rect x="50.6" y="67.7" width="17.7" height="18.5" rx="3.2" ry="3.2" fill="#dadcdd"/>
+  </g>
+  <path d="M113.9,17.9H27.7c-8.4,0-15.3,6.9-15.3,15.3v53.9c0,8.4,6.9,15.3,15.3,15.3h38.6v12.5h-17c-2.5,0-4.5,2-4.5,4.5s2,4.5,4.5,4.5h43.1c2.5,0,4.5-2,4.5-4.5s-2-4.5-4.5-4.5h-17v-12.5h38.6c8.4,0,15.3-6.9,15.3-15.3v-53.9c0-8.4-6.9-15.3-15.3-15.3h-.1ZM120.2,87c0,3.5-2.8,6.3-6.3,6.3H27.7c-3.5,0-6.3-2.8-6.3-6.3v-53.9c0-3.5,2.8-6.3,6.3-6.3h86.2c3.5,0,6.3,2.8,6.3,6.3v53.9Z" fill="#dadcdd"/>
 </svg>

@@ -54,7 +54,6 @@ $p->display();
 require_once("modules/medulla_server/includes/utilities.php"); # for quickGet method
 require_once("modules/dyngroup/includes/utilities.php");
 include_once('modules/medulla_server/includes/menu_actionaudit.php');
-echo "<br><br><br>";
 
 // creation repertoire namemachine si non existe.
 // et recuperation pathcurent pour cette machine eg /var/lib/pulse2/transfertfiles

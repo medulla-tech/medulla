@@ -113,6 +113,5 @@ if (displayLocalisationBar() && (isset($_GET['imaging_server']) && $_GET['imagin
 }
 
 $ajax->display();
-echo "<br /><br /><br /><br />";
 $ajax->displayDivToUpdate();
 ?>

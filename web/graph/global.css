@@ -1474,12 +1474,12 @@ select#location.searchfieldreal.noborder {
 
 .searchbox {
   display: flex;
-  justify-content: flex-end;
   align-items: center;
+  justify-content: flex-end;
   gap: 8px;
   flex-wrap: nowrap;
   width: 100%;
-  margin: 20px 0 -25px 0;
+  margin: 20px 0 15px 0;
   padding: 0;
   background: transparent;
 }
@@ -1489,6 +1489,8 @@ select#location.searchfieldreal.noborder {
   align-items: center;
   gap: 4px;
   flex-wrap: nowrap;
+  width: fit-content;
+  max-width: 100%;
   padding: 4px 10px;
   border: 1px solid #d7dee6;
   border-radius: 9px;
@@ -1497,6 +1499,11 @@ select#location.searchfieldreal.noborder {
   transition:
     box-shadow 0.2s ease,
     border-color 0.2s ease;
+}
+
+/* Full width when there are multiple selects */
+#searchBest:has(select) {
+  width: 100%;
 }
 
 #searchBest > * {
@@ -1511,6 +1518,7 @@ select#location.searchfieldreal.noborder {
   width: auto !important;
   min-width: 0 !important;
   padding: 0;
+  flex: 1 1 auto;
 }
 
 #searchBest input.searchfieldreal {
@@ -1699,11 +1707,15 @@ select#location.searchfieldreal.noborder {
 }
 
 .loader {
-  display: inline-block;
+  display: none;
   float: none;
   position: static;
   margin: 0;
   vertical-align: middle;
+}
+
+.loader.active {
+  display: inline-block;
 }
 
 .items {
@@ -1772,7 +1784,8 @@ div.autocomplete ul li {
   background-color: var(--color-primary);
 }
 
-.listinfos thead td {
+.listinfos thead td,
+.listinfos thead th {
   font-weight: 600;
   color: var(--color-text-white);
   border: none;
@@ -1782,7 +1795,8 @@ div.autocomplete ul li {
   letter-spacing: 0.3px;
 }
 
-.listinfos thead td span {
+.listinfos thead td span,
+.listinfos thead th span {
   color: var(--color-text-white);
 }
 

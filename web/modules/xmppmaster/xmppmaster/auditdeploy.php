@@ -39,13 +39,11 @@ $refresh->display();
 $ajax = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxstatusxmpp"), "container", array('login' => '', 'currenttasks' => '1'), 'formRunning' );
 $ajax->setRefresh($refresh->refreshtime());
 $ajax->display();
-print "<br/><br/><br/>";
 $ajax->displayDivToUpdate();
 
 $ajax1 = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxstatusxmppscheduler"), "container1", array('login' => ''), 'formRunning1' );
 $ajax1->setRefresh($refresh->refreshtime());
 $ajax1->display();
-print "<br/><br/><br/>";
 $ajax1->displayDivToUpdate();
 
 ?>

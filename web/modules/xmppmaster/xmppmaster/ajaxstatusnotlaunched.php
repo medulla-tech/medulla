@@ -129,7 +129,6 @@ $m->setParamInfo($params);
 $m->start = 0;
 $m->end = $arraynotdeploy['total'];
 $m->display();
-echo '<br /><br /><br />';
 ?>
 <style>
 progress {

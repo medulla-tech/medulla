@@ -66,9 +66,7 @@ class AjaxFilterGlpi extends AjaxFilter {
     <button type="button" class="search-clear" aria-label="<?php echo _T('Clear search', 'base'); ?>"
     onclick="document.getElementById('param<?php echo $this->formid ?>').value =''; pushSearch<?php echo $this->formid ?>(); return false;"></button>
     </span>
-    <span class="loader" aria-hidden="true"></span>
     </div>
-    <br /><br /><br />
 
     <script type="text/javascript">
     <?php if (!in_array($_GET['part'], array('Softwares', 'History'))) echo "jQuery('#Form').hide();" ?>
@@ -283,8 +281,7 @@ if ($this->refresh) {
               </span>
               <button onclick="pushSearch();
                       return false;"><?php echo _T("Search", "glpi");?></button>
-              <span class="loader" aria-hidden="true"></span>
-          </div>
+                    </div>
            </div>
 
            <script type="text/javascript">
@@ -507,8 +504,7 @@ class AjaxFilterParamssearch extends AjaxFilterLocation {
               </span>
               <button onclick="pushSearch();
                       return false;"><?php echo _T("Search", "glpi");?></button>
-              <span class="loader" aria-hidden="true"></span>
-           </div>
+                     </div>
            </div>
 
            <script type="text/javascript">
