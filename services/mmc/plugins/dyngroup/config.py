@@ -7,7 +7,7 @@ from mmc.support.config import PluginConfig
 from pulse2.database.dyngroup.config import DyngroupDatabaseConfig
 
 
-class DGConfig(DyngroupDatabaseConfig):
+class DGConfig(PluginConfig, DyngroupDatabaseConfig):
     dyngroup_activate = True
     defaultModule = ""
     maxElementsForStaticList = 500
@@ -15,40 +15,43 @@ class DGConfig(DyngroupDatabaseConfig):
     check_db_enable = False
     check_db_interval = 300
 
-    def init(self, name, conffile=None):
-        self.name = name
-        if not conffile:
-            self.conffile = mmctools.getConfigFile(name)
-        else:
-            self.conffile = conffile
-
-        DyngroupDatabaseConfig.setup(self, self.conffile)
+    def __init__(self, name, conffile=None, backend="database"):
+        if not hasattr(self, "initdone"):
+            PluginConfig.__init__(self, name, conffile, backend=backend, db_table="dyngroup_conf")
+            DyngroupDatabaseConfig.__init__(self)
+        
+        if backend == "database":
+            # read DB settings from admin DB backend
+            self._load_db_settings_from_backend()
+        elif conffile and backend == "ini":
+            # read DB settings from INI file
+            DyngroupDatabaseConfig.setup(self, self.conffile)
         self.setup(self.conffile)
 
     def setup(self, conf_file):
         """
         Read the module configuration
         """
-        self.disable = self.cp.getboolean("main", "disable")
-        self.dynamicEnable = self.cp.getboolean("main", "dynamic_enable")
-        if self.cp.has_option("main", "profiles_enable"):
-            self.profilesEnable = self.cp.getboolean("main", "profiles_enable")
-        if self.cp.has_option("main", "default_module"):
-            self.defaultModule = self.cp.get("main", "default_module")
+        self.disable = self.getboolean("main", "disable")
+        self.dynamicEnable = self.getboolean("main", "dynamic_enable")
+        if self.has_option("main", "profiles_enable"):
+            self.profilesEnable = self.getboolean("main", "profiles_enable")
+        if self.has_option("main", "default_module"):
+            self.defaultModule = self.get("main", "default_module")
 
-        if self.cp.has_option("main", "max_elements_for_static_list"):
-            self.maxElementsForStaticList = self.cp.get(
+        if self.has_option("main", "max_elements_for_static_list"):
+            self.maxElementsForStaticList = self.get(
                 "main", "max_elements_for_static_list"
             )
 
-        if self.cp.has_section("querymanager"):
-            if self.cp.has_option("querymanager", "activate"):
-                self.dyngroup_activate = self.cp.getboolean("querymanager", "activate")
+        if self.has_section("querymanager"):
+            if self.has_option("querymanager", "activate"):
+                self.dyngroup_activate = self.getboolean("querymanager", "activate")
 
-        if self.cp.has_option("main", "check_db_enable"):
-            self.check_db_enable = self.cp.getboolean("main", "check_db_enable")
-        if self.cp.has_option("main", "check_db_interval"):
-            self.check_db_interval = self.cp.getint("main", "check_db_interval")
+        if self.has_option("main", "check_db_enable"):
+            self.check_db_enable = self.getboolean("main", "check_db_enable")
+        if self.has_option("main", "check_db_interval"):
+            self.check_db_interval = self.getint("main", "check_db_interval")
 
     def setDefault(self):
         """

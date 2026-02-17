@@ -65,7 +65,7 @@ def activate():
     it is ready to operate.
     """
     logger = logging.getLogger()
-    config = ImagingConfig("imaging")
+    config = ImagingConfig("imaging", None, "database")
 
     if config.disabled:
         logger.warning("Plugin imaging: disabled by configuration.")

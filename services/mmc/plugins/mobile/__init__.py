@@ -18,7 +18,7 @@ def getApiVersion():
     return APIVERSION
 
 def activate():
-    config = MobileConfig("mobile")
+    config = MobileConfig("mobile", None, "database")
     if config.disable:
         logger.warning("Plugin %s: disabled by configuration." % "mobile")
         return False

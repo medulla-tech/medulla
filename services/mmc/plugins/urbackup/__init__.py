@@ -42,7 +42,7 @@ def getApiVersion():
 
 def activate():
     logger = logging.getLogger()
-    config = UrbackupConfig("urbackup")
+    config = UrbackupConfig("urbackup", None, "database")
 
     if config.disable:
         logger.warning("Plugin urbackup: disabled by configuration.")
@@ -678,3 +678,4 @@ def create_backup_full_file(client_id):
         return backup["content"]
 
     return "No DATA full backup file"
+

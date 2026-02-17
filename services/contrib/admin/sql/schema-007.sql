@@ -709,6 +709,982 @@ ON DUPLICATE KEY UPDATE
     valeur_defaut = VALUES(valeur_defaut),
     description = VALUES(description);
 
+
+-- ====================================================================
+-- MOBILE CONF
+-- ====================================================================
+
+CREATE TABLE IF NOT EXISTS mobile_conf (
+    id INT AUTO_INCREMENT PRIMARY KEY
+        COMMENT 'Identifiant unique du parametre de configuration',
+
+    section VARCHAR(50) NOT NULL
+        COMMENT 'Section du fichier de configuration (ex : [main] devient "main")',
+
+    nom VARCHAR(100) NOT NULL
+        COMMENT 'Nom du parametre, unique au sein de sa section',
+
+    activer BOOLEAN NOT NULL DEFAULT TRUE
+        COMMENT 'Indique si le parametre est actif (TRUE par defaut)',
+
+    type ENUM('string', 'booleen', 'entier', 'decimal', 'autre')
+        NOT NULL DEFAULT 'string'
+        COMMENT 'Type du parametre, utilise pour la validation et l''affichage',
+
+    valeur TEXT
+        COMMENT 'Valeur actuellement affectee au parametre',
+
+    valeur_defaut TEXT DEFAULT NULL
+        COMMENT 'Valeur par defaut utilisee si le parametre est desactive',
+
+    description TEXT NOT NULL
+        COMMENT 'Description fonctionnelle obligatoire du parametre (usage, format, exemples)',
+
+    CONSTRAINT uc_mobile_section_nom UNIQUE (section, nom)
+        COMMENT 'Garantit l''unicite du parametre par section'
+)
+COMMENT='Table de gestion des parametres de configuration Mobile pour Medulla';
+
+
+INSERT INTO mobile_conf (section, nom, activer, type, valeur, valeur_defaut, description) VALUES
+('main', 'disable', 1, 'booleen', '0', '0', 'Desactiver le plugin Mobile (0=actif, 1=inactif)'),
+('main', 'tempdir', 1, 'string', '/tmp/mmc-mobile', '/tmp/mmc-mobile', 'Repertoire temporaire du plugin mobile'),
+('database', 'dbdriver', 1, 'string', 'mysql', 'mysql', 'Driver de base de donnees'),
+('database', 'dbhost', 1, 'string', 'localhost', 'localhost', 'Hote du serveur de base de donnees'),
+('database', 'dbport', 1, 'entier', '3306', '3306', 'Port du serveur de base de donnees'),
+('database', 'dbname', 1, 'string', 'mobile', 'mobile', 'Nom de la base de donnees Mobile'),
+('database', 'dbuser', 1, 'string', 'mmc', 'mmc', 'Utilisateur de base de donnees'),
+('database', 'dbpasswd', 1, 'string', 'pBWfpjErqtsU', NULL, 'Mot de passe de la base de donnees'),
+('hmdm', 'url', 1, 'string', 'http://localhost/hmdm/rest', 'http://localhost/hmdm/rest', 'URL de l''API HMDM'),
+('hmdm', 'login', 1, 'string', 'admin', 'admin', 'Login pour l''API HMDM'),
+('hmdm', 'password', 1, 'string', 'admin', NULL, 'Mot de passe pour l''API HMDM')
+ON DUPLICATE KEY UPDATE
+    activer = VALUES(activer),
+    type = VALUES(type),
+    valeur = VALUES(valeur),
+    valeur_defaut = VALUES(valeur_defaut),
+    description = VALUES(description);
+
+
+CREATE TABLE IF NOT EXISTS mobile_conf_version (
+    id INT AUTO_INCREMENT PRIMARY KEY
+        COMMENT 'Identifiant unique du parametre de configuration',
+
+    section VARCHAR(50) NOT NULL
+        COMMENT 'Section du fichier de configuration (ex : [main] devient "main")',
+
+    nom VARCHAR(100) NOT NULL
+        COMMENT 'Nom du parametre, unique au sein de sa section',
+
+    activer BOOLEAN NOT NULL DEFAULT TRUE
+        COMMENT 'Indique si le parametre est actif (TRUE par defaut)',
+
+    type ENUM('string', 'booleen', 'entier', 'decimal', 'autre')
+        NOT NULL DEFAULT 'string'
+        COMMENT 'Type du parametre, utilise pour la validation et l''affichage',
+
+    valeur TEXT
+        COMMENT 'Valeur actuellement affectee au parametre',
+
+    valeur_defaut TEXT DEFAULT NULL
+        COMMENT 'Valeur par defaut utilisee si le parametre est desactive',
+
+    description TEXT NOT NULL
+        COMMENT 'Description fonctionnelle obligatoire du parametre (usage, format, exemples)',
+
+    CONSTRAINT uc_mobile_version_section_nom UNIQUE (section, nom)
+        COMMENT 'Garantit l''unicite du parametre par section'
+)
+COMMENT='Table de versionnage des parametres de configuration Mobile pour Medulla';
+
+
+INSERT INTO mobile_conf_version (section, nom, activer, type, valeur, valeur_defaut, description) VALUES
+('main', 'disable', 1, 'booleen', '0', '0', 'Desactiver le plugin Mobile (0=actif, 1=inactif)'),
+('main', 'tempdir', 1, 'string', '/tmp/mmc-mobile', '/tmp/mmc-mobile', 'Repertoire temporaire du plugin mobile'),
+('database', 'dbdriver', 1, 'string', 'mysql', 'mysql', 'Driver de base de donnees'),
+('database', 'dbhost', 1, 'string', 'localhost', 'localhost', 'Hote du serveur de base de donnees'),
+('database', 'dbport', 1, 'entier', '3306', '3306', 'Port du serveur de base de donnees'),
+('database', 'dbname', 1, 'string', 'mobile', 'mobile', 'Nom de la base de donnees Mobile'),
+('database', 'dbuser', 1, 'string', 'mmc', 'mmc', 'Utilisateur de base de donnees'),
+('database', 'dbpasswd', 1, 'string', 'pBWfpjErqtsU', NULL, 'Mot de passe de la base de donnees'),
+('hmdm', 'url', 1, 'string', 'http://localhost/hmdm/rest', 'http://localhost/hmdm/rest', 'URL de l''API HMDM'),
+('hmdm', 'login', 1, 'string', 'admin', 'admin', 'Login pour l''API HMDM'),
+('hmdm', 'password', 1, 'string', 'admin', NULL, 'Mot de passe pour l''API HMDM')
+ON DUPLICATE KEY UPDATE
+    activer = VALUES(activer),
+    type = VALUES(type),
+    valeur = VALUES(valeur),
+    valeur_defaut = VALUES(valeur_defaut),
+    description = VALUES(description);
+
+-- ====================================================================
+-- MASTERING CONF 
+-- ====================================================================
+
+CREATE TABLE IF NOT EXISTS mastering_conf (
+    id INT AUTO_INCREMENT PRIMARY KEY
+        COMMENT 'Identifiant unique du paramètre de configuration',
+
+    section VARCHAR(50) NOT NULL
+        COMMENT 'Section du fichier de configuration (ex : [main] devient "main")',
+
+    nom VARCHAR(100) NOT NULL
+        COMMENT 'Nom du paramètre, unique au sein de sa section',
+
+    activer BOOLEAN NOT NULL DEFAULT TRUE
+        COMMENT 'Indique si le paramètre est actif (TRUE par défaut)',
+
+    type ENUM('string', 'booleen', 'entier', 'decimal', 'autre')
+        NOT NULL DEFAULT 'string'
+        COMMENT 'Type du paramètre, utilisé pour la validation et l''affichage',
+
+    valeur TEXT
+        COMMENT 'Valeur actuellement affectée au paramètre',
+
+    valeur_defaut TEXT DEFAULT NULL
+        COMMENT 'Valeur par défaut utilisée si le paramètre est désactivé',
+
+    description TEXT NOT NULL
+        COMMENT 'Description fonctionnelle obligatoire du paramètre (usage, format, exemples)',
+
+    CONSTRAINT uc_mastering_section_nom UNIQUE (section, nom)
+        COMMENT 'Garantit l''unicité du paramètre par section'
+)
+COMMENT='Table de gestion des paramètres de configuration Mastering pour Medulla';
+
+
+INSERT INTO mastering_conf (section, nom, activer, type, valeur, valeur_defaut, description) VALUES
+('main', 'disable', 1, 'booleen', '1', '0', 'Désactiver le plugin Mastering (0=actif, 1=inactif)'),
+('main', 'tempdir', 1, 'string', '/tmp/mmc-mastering', '/tmp/mmc-mastering', 'Répertoire temporaire du plugin Mastering'),
+('database', 'dbdriver', 1, 'string', 'mysql', 'mysql', 'Driver de base de données'),
+('database', 'dbhost', 1, 'string', 'localhost', 'localhost', 'Hôte du serveur de base de données'),
+('database', 'dbport', 1, 'entier', '3306', '3306', 'Port du serveur de base de données'),
+('database', 'dbname', 1, 'string', 'mastering', 'mastering', 'Nom de la base de données Mastering'),
+('database', 'dbuser', 1, 'string', 'mmc', 'mmc', 'Utilisateur de base de données'),
+('database', 'dbpasswd', 1, 'string', 'pBWfpjErqtsU', NULL, 'Mot de passe de la base de données')
+ON DUPLICATE KEY UPDATE
+    activer = VALUES(activer),
+    type = VALUES(type),
+    valeur = VALUES(valeur),
+    valeur_defaut = VALUES(valeur_defaut),
+    description = VALUES(description);
+
+CREATE TABLE IF NOT EXISTS mastering_conf_version (
+    id INT AUTO_INCREMENT PRIMARY KEY
+        COMMENT 'Identifiant unique du paramètre de configuration',
+
+    section VARCHAR(50) NOT NULL
+        COMMENT 'Section du fichier de configuration (ex : [main] devient "main")',
+
+    nom VARCHAR(100) NOT NULL
+        COMMENT 'Nom du paramètre, unique au sein de sa section',
+
+    activer BOOLEAN NOT NULL DEFAULT TRUE
+        COMMENT 'Indique si le paramètre est actif (TRUE par défaut)',
+
+    type ENUM('string', 'booleen', 'entier', 'decimal', 'autre')
+        NOT NULL DEFAULT 'string'
+        COMMENT 'Type du paramètre, utilisé pour la validation et l''affichage',
+
+    valeur TEXT
+        COMMENT 'Valeur actuellement affectée au paramètre',
+
+    valeur_defaut TEXT DEFAULT NULL
+        COMMENT 'Valeur par défaut utilisée si le paramètre est désactivé',
+
+    description TEXT NOT NULL
+        COMMENT 'Description fonctionnelle obligatoire du paramètre (usage, format, exemples)',
+
+    CONSTRAINT uc_mastering_version_section_nom UNIQUE (section, nom)
+        COMMENT 'Garantit l''unicité du paramètre par section'
+)
+COMMENT='Table de versionnage des paramètres de configuration Mastering pour Medulla';
+
+
+INSERT INTO mastering_conf_version (section, nom, activer, type, valeur, valeur_defaut, description) VALUES
+('main', 'disable', 1, 'booleen', '1', '0', 'Désactiver le plugin Mastering (0=actif, 1=inactif)'),
+('main', 'tempdir', 1, 'string', '/tmp/mmc-mastering', '/tmp/mmc-mastering', 'Répertoire temporaire du plugin Mastering'),
+('database', 'dbdriver', 1, 'string', 'mysql', 'mysql', 'Driver de base de données'),
+('database', 'dbhost', 1, 'string', 'localhost', 'localhost', 'Hôte du serveur de base de données'),
+('database', 'dbport', 1, 'entier', '3306', '3306', 'Port du serveur de base de données'),
+('database', 'dbname', 1, 'string', 'mastering', 'mastering', 'Nom de la base de données Mastering'),
+('database', 'dbuser', 1, 'string', 'mmc', 'mmc', 'Utilisateur de base de données'),
+('database', 'dbpasswd', 1, 'string', 'pBWfpjErqtsU', NULL, 'Mot de passe de la base de données')
+ON DUPLICATE KEY UPDATE
+    activer = VALUES(activer),
+    type = VALUES(type),
+    valeur = VALUES(valeur),
+    valeur_defaut = VALUES(valeur_defaut),
+    description = VALUES(description);
+
+-- ====================================================================
+-- URBACKUP CONF 
+-- ====================================================================
+
+CREATE TABLE IF NOT EXISTS urbackup_conf (
+    id INT AUTO_INCREMENT PRIMARY KEY
+        COMMENT 'Identifiant unique du paramètre de configuration',
+
+    section VARCHAR(50) NOT NULL
+        COMMENT 'Section du fichier de configuration (ex : [main] devient "main")',
+
+    nom VARCHAR(100) NOT NULL
+        COMMENT 'Nom du paramètre, unique au sein de sa section',
+
+    activer BOOLEAN NOT NULL DEFAULT TRUE
+        COMMENT 'Indique si le paramètre est actif (TRUE par défaut)',
+
+    type ENUM('string', 'booleen', 'entier', 'decimal', 'autre')
+        NOT NULL DEFAULT 'string'
+        COMMENT 'Type du paramètre, utilisé pour la validation et l''affichage',
+
+    valeur TEXT
+        COMMENT 'Valeur actuellement affectée au paramètre',
+
+    valeur_defaut TEXT DEFAULT NULL
+        COMMENT 'Valeur par défaut utilisée si le paramètre est désactivé',
+
+    description TEXT NOT NULL
+        COMMENT 'Description fonctionnelle obligatoire du paramètre (usage, format, exemples)',
+
+    CONSTRAINT uc_urbackup_section_nom UNIQUE (section, nom)
+        COMMENT 'Garantit l''unicité du paramètre par section'
+)
+COMMENT='Table de gestion des paramètres de configuration UrBackup pour Medulla';
+
+
+INSERT INTO urbackup_conf (section, nom, activer, type, valeur, valeur_defaut, description) VALUES
+('main', 'disable', 1, 'booleen', '0', '1', 'Désactiver le plugin UrBackup (0=actif, 1=inactif)'),
+('main', 'tempdir', 1, 'string', '/var/tmp/mmc-urbackup', '/var/tmp/mmc-urbackup', 'Répertoire temporaire du plugin UrBackup'),
+('urbackup', 'url', 1, 'string', 'http://127.0.0.1/urbackup/x', 'http://127.0.0.1/urbackup/x', 'URL de l''API UrBackup'),
+('urbackup', 'username', 1, 'string', 'admin', 'admin', 'Nom d''utilisateur pour UrBackup'),
+('urbackup', 'password', 1, 'string', 'M3dull4+HBA', NULL, 'Mot de passe pour UrBackup'),
+('urbackup', 'usernameapi', 1, 'string', 'adminapi', 'adminapi', 'Nom d''utilisateur API pour UrBackup'),
+('urbackup', 'passwordapi', 1, 'string', '32t6mRiljsfc', NULL, 'Mot de passe API pour UrBackup'),
+('database', 'dbdriver', 1, 'string', 'mysql', 'mysql', 'Driver de base de données'),
+('database', 'dbhost', 1, 'string', 'localhost', 'localhost', 'Hôte du serveur de base de données'),
+('database', 'dbport', 1, 'entier', '3306', '3306', 'Port du serveur de base de données'),
+('database', 'dbname', 1, 'string', 'urbackup', 'urbackup', 'Nom de la base de données UrBackup'),
+('database', 'dbuser', 1, 'string', 'mmc', 'mmc', 'Utilisateur de base de données'),
+('database', 'dbpasswd', 1, 'string', 'pBWfpjErqtsU', NULL, 'Mot de passe de la base de données')
+ON DUPLICATE KEY UPDATE
+    activer = VALUES(activer),
+    type = VALUES(type),
+    valeur = VALUES(valeur),
+    valeur_defaut = VALUES(valeur_defaut),
+    description = VALUES(description);
+
+CREATE TABLE IF NOT EXISTS urbackup_conf_version (
+    id INT AUTO_INCREMENT PRIMARY KEY
+        COMMENT 'Identifiant unique du paramètre de configuration',
+
+    section VARCHAR(50) NOT NULL
+        COMMENT 'Section du fichier de configuration (ex : [main] devient "main")',
+
+    nom VARCHAR(100) NOT NULL
+        COMMENT 'Nom du paramètre, unique au sein de sa section',
+
+    activer BOOLEAN NOT NULL DEFAULT TRUE
+        COMMENT 'Indique si le paramètre est actif (TRUE par défaut)',
+
+    type ENUM('string', 'booleen', 'entier', 'decimal', 'autre')
+        NOT NULL DEFAULT 'string'
+        COMMENT 'Type du paramètre, utilisé pour la validation et l''affichage',
+
+    valeur TEXT
+        COMMENT 'Valeur actuellement affectée au paramètre',
+
+    valeur_defaut TEXT DEFAULT NULL
+        COMMENT 'Valeur par défaut utilisée si le paramètre est désactivé',
+
+    description TEXT NOT NULL
+        COMMENT 'Description fonctionnelle obligatoire du paramètre (usage, format, exemples)',
+
+    CONSTRAINT uc_urbackup_version_section_nom UNIQUE (section, nom)
+        COMMENT 'Garantit l''unicité du paramètre par section'
+)
+COMMENT='Table de versionnage des paramètres de configuration UrBackup pour Medulla';
+
+
+INSERT INTO urbackup_conf_version (section, nom, activer, type, valeur, valeur_defaut, description) VALUES
+('main', 'disable', 1, 'booleen', '0', '1', 'Désactiver le plugin UrBackup (0=actif, 1=inactif)'),
+('main', 'tempdir', 1, 'string', '/var/tmp/mmc-urbackup', '/var/tmp/mmc-urbackup', 'Répertoire temporaire du plugin UrBackup'),
+('urbackup', 'url', 1, 'string', 'http://127.0.0.1/urbackup/x', 'http://127.0.0.1/urbackup/x', 'URL de l''API UrBackup'),
+('urbackup', 'username', 1, 'string', 'admin', 'admin', 'Nom d''utilisateur pour UrBackup'),
+('urbackup', 'password', 1, 'string', 'M3dull4+HBA', NULL, 'Mot de passe pour UrBackup'),
+('urbackup', 'usernameapi', 1, 'string', 'adminapi', 'adminapi', 'Nom d''utilisateur API pour UrBackup'),
+('urbackup', 'passwordapi', 1, 'string', '32t6mRiljsfc', NULL, 'Mot de passe API pour UrBackup'),
+('database', 'dbdriver', 1, 'string', 'mysql', 'mysql', 'Driver de base de données'),
+('database', 'dbhost', 1, 'string', 'localhost', 'localhost', 'Hôte du serveur de base de données'),
+('database', 'dbport', 1, 'entier', '3306', '3306', 'Port du serveur de base de données'),
+('database', 'dbname', 1, 'string', 'urbackup', 'urbackup', 'Nom de la base de données UrBackup'),
+('database', 'dbuser', 1, 'string', 'mmc', 'mmc', 'Utilisateur de base de données'),
+('database', 'dbpasswd', 1, 'string', 'pBWfpjErqtsU', NULL, 'Mot de passe de la base de données')
+ON DUPLICATE KEY UPDATE
+    activer = VALUES(activer),
+    type = VALUES(type),
+    valeur = VALUES(valeur),
+    valeur_defaut = VALUES(valeur_defaut),
+    description = VALUES(description);
+
+-- ====================================================================
+-- SECURITY CONF 
+-- ====================================================================
+
+CREATE TABLE IF NOT EXISTS security_conf (
+    id INT AUTO_INCREMENT PRIMARY KEY
+        COMMENT 'Identifiant unique du paramètre de configuration',
+
+    section VARCHAR(50) NOT NULL
+        COMMENT 'Section du fichier de configuration (ex : [main] devient "main")',
+
+    nom VARCHAR(100) NOT NULL
+        COMMENT 'Nom du paramètre, unique au sein de sa section',
+
+    activer BOOLEAN NOT NULL DEFAULT TRUE
+        COMMENT 'Indique si le paramètre est actif (TRUE par défaut)',
+
+    type ENUM('string', 'booleen', 'entier', 'decimal', 'autre')
+        NOT NULL DEFAULT 'string'
+        COMMENT 'Type du paramètre, utilisé pour la validation et l''affichage',
+
+    valeur TEXT
+        COMMENT 'Valeur actuellement affectée au paramètre',
+
+    valeur_defaut TEXT DEFAULT NULL
+        COMMENT 'Valeur par défaut utilisée si le paramètre est désactivé',
+
+    description TEXT NOT NULL
+        COMMENT 'Description fonctionnelle obligatoire du paramètre (usage, format, exemples)',
+
+    CONSTRAINT uc_security_section_nom UNIQUE (section, nom)
+        COMMENT 'Garantit l''unicité du paramètre par section'
+)
+COMMENT='Table de gestion des paramètres de configuration Security pour Medulla';
+
+
+INSERT INTO security_conf (section, nom, activer, type, valeur, valeur_defaut, description) VALUES
+('main', 'disable', 1, 'booleen', '1', '0', 'Désactiver le plugin Security (0=actif, 1=inactif)'),
+('main', 'tempdir', 1, 'string', '/tmp/mmc-security', '/tmp/mmc-security', 'Répertoire temporaire du plugin Security'),
+('main', 'log_level', 1, 'string', 'INFO', 'INFO', 'Niveau de journalisation (DEBUG, INFO, WARNING, ERROR, CRITICAL)'),
+('database', 'dbdriver', 1, 'string', 'mysql', 'mysql', 'Driver de base de données'),
+('database', 'dbhost', 1, 'string', 'localhost', 'localhost', 'Hôte du serveur de base de données'),
+('database', 'dbport', 1, 'entier', '3306', '3306', 'Port du serveur de base de données'),
+('database', 'dbname', 1, 'string', 'security', 'security', 'Nom de la base de données Security'),
+('database', 'dbuser', 1, 'string', 'mmc', 'mmc', 'Utilisateur de base de données'),
+('database', 'dbpasswd', 1, 'string', 'mmc', NULL, 'Mot de passe de la base de données'),
+('cve_central', 'url', 1, 'string', '', 'https://cve-central.example.com', 'URL du serveur CVE Central'),
+('cve_central', 'server_id', 1, 'string', '', NULL, 'ID du serveur enregistré sur CVE Central'),
+('cve_central', 'keyAES32', 1, 'string', '', NULL, 'Clé AES-256 (32 caractères)'),
+('display', 'min_cvss', 1, 'decimal', '0.0', '0.0', 'Score CVSS minimum à afficher (0.0-10.0)'),
+('display', 'min_severity', 1, 'string', 'None', 'None', 'Sévérité minimum à afficher (None, Low, Medium, High, Critical)'),
+('display', 'show_patched', 1, 'booleen', '1', '1', 'Afficher les CVE avec correctifs disponibles (0=non, 1=oui)'),
+('display', 'max_age_days', 1, 'entier', '0', '0', 'Âge maximum des CVE en jours (0 = pas de limite)'),
+('display', 'min_published_year', 1, 'entier', '2000', '2000', 'Ignorer les CVE publiées avant cette année'),
+('exclusions', 'vendors', 1, 'string', '', NULL, 'Vendeurs à exclure (séparés par virgules, insensible à la casse)'),
+('exclusions', 'names', 1, 'string', '', NULL, 'Noms de logiciels exacts à exclure (séparés par virgules)'),
+('exclusions', 'cve_ids', 1, 'string', '', NULL, 'IDs CVE spécifiques à exclure (séparés par virgules)')
+ON DUPLICATE KEY UPDATE
+    activer = VALUES(activer),
+    type = VALUES(type),
+    valeur = VALUES(valeur),
+    valeur_defaut = VALUES(valeur_defaut),
+    description = VALUES(description);
+
+CREATE TABLE IF NOT EXISTS security_conf_version (
+    id INT AUTO_INCREMENT PRIMARY KEY
+        COMMENT 'Identifiant unique du paramètre de configuration',
+
+    section VARCHAR(50) NOT NULL
+        COMMENT 'Section du fichier de configuration (ex : [main] devient "main")',
+
+    nom VARCHAR(100) NOT NULL
+        COMMENT 'Nom du paramètre, unique au sein de sa section',
+
+    activer BOOLEAN NOT NULL DEFAULT TRUE
+        COMMENT 'Indique si le paramètre est actif (TRUE par défaut)',
+
+    type ENUM('string', 'booleen', 'entier', 'decimal', 'autre')
+        NOT NULL DEFAULT 'string'
+        COMMENT 'Type du paramètre, utilisé pour la validation et l''affichage',
+
+    valeur TEXT
+        COMMENT 'Valeur actuellement affectée au paramètre',
+
+    valeur_defaut TEXT DEFAULT NULL
+        COMMENT 'Valeur par défaut utilisée si le paramètre est désactivé',
+
+    description TEXT NOT NULL
+        COMMENT 'Description fonctionnelle obligatoire du paramètre (usage, format, exemples)',
+
+    CONSTRAINT uc_security_version_section_nom UNIQUE (section, nom)
+        COMMENT 'Garantit l''unicité du paramètre par section'
+)
+COMMENT='Table de versionnage des paramètres de configuration Security pour Medulla';
+
+
+INSERT INTO security_conf_version (section, nom, activer, type, valeur, valeur_defaut, description) VALUES
+('main', 'disable', 1, 'booleen', '1', '0', 'Désactiver le plugin Security (0=actif, 1=inactif)'),
+('main', 'tempdir', 1, 'string', '/tmp/mmc-security', '/tmp/mmc-security', 'Répertoire temporaire du plugin Security'),
+('main', 'log_level', 1, 'string', 'INFO', 'INFO', 'Niveau de journalisation (DEBUG, INFO, WARNING, ERROR, CRITICAL)'),
+('database', 'dbdriver', 1, 'string', 'mysql', 'mysql', 'Driver de base de données'),
+('database', 'dbhost', 1, 'string', 'localhost', 'localhost', 'Hôte du serveur de base de données'),
+('database', 'dbport', 1, 'entier', '3306', '3306', 'Port du serveur de base de données'),
+('database', 'dbname', 1, 'string', 'security', 'security', 'Nom de la base de données Security'),
+('database', 'dbuser', 1, 'string', 'mmc', 'mmc', 'Utilisateur de base de données'),
+('database', 'dbpasswd', 1, 'string', 'mmc', NULL, 'Mot de passe de la base de données'),
+('cve_central', 'url', 1, 'string', '', 'https://cve-central.example.com', 'URL du serveur CVE Central'),
+('cve_central', 'server_id', 1, 'string', '', NULL, 'ID du serveur enregistré sur CVE Central'),
+('cve_central', 'keyAES32', 1, 'string', '', NULL, 'Clé AES-256 (32 caractères)'),
+('display', 'min_cvss', 1, 'decimal', '0.0', '0.0', 'Score CVSS minimum à afficher (0.0-10.0)'),
+('display', 'min_severity', 1, 'string', 'None', 'None', 'Sévérité minimum à afficher (None, Low, Medium, High, Critical)'),
+('display', 'show_patched', 1, 'booleen', '1', '1', 'Afficher les CVE avec correctifs disponibles (0=non, 1=oui)'),
+('display', 'max_age_days', 1, 'entier', '0', '0', 'Âge maximum des CVE en jours (0 = pas de limite)'),
+('display', 'min_published_year', 1, 'entier', '2000', '2000', 'Ignorer les CVE publiées avant cette année'),
+('exclusions', 'vendors', 1, 'string', '', NULL, 'Vendeurs à exclure (séparés par virgules, insensible à la casse)'),
+('exclusions', 'names', 1, 'string', '', NULL, 'Noms de logiciels exacts à exclure (séparés par virgules)'),
+('exclusions', 'cve_ids', 1, 'string', '', NULL, 'IDs CVE spécifiques à exclure (séparés par virgules)')
+ON DUPLICATE KEY UPDATE
+    activer = VALUES(activer),
+    type = VALUES(type),
+    valeur = VALUES(valeur),
+    valeur_defaut = VALUES(valeur_defaut),
+    description = VALUES(description);
+
+-- ====================================================================
+-- IMAGING CONF 
+-- ====================================================================
+
+CREATE TABLE IF NOT EXISTS imaging_conf (
+    id INT AUTO_INCREMENT PRIMARY KEY
+        COMMENT 'Identifiant unique du paramètre de configuration',
+
+    section VARCHAR(50) NOT NULL
+        COMMENT 'Section du fichier de configuration (ex : [main] devient "main")',
+
+    nom VARCHAR(100) NOT NULL
+        COMMENT 'Nom du paramètre, unique au sein de sa section',
+
+    activer BOOLEAN NOT NULL DEFAULT TRUE
+        COMMENT 'Indique si le paramètre est actif (TRUE par défaut)',
+
+    type ENUM('string', 'booleen', 'entier', 'decimal', 'autre')
+        NOT NULL DEFAULT 'string'
+        COMMENT 'Type du paramètre, utilisé pour la validation et l''affichage',
+
+    valeur TEXT
+        COMMENT 'Valeur actuellement affectée au paramètre',
+
+    valeur_defaut TEXT DEFAULT NULL
+        COMMENT 'Valeur par défaut utilisée si le paramètre est désactivé',
+
+    description TEXT NOT NULL
+        COMMENT 'Description fonctionnelle obligatoire du paramètre (usage, format, exemples)',
+
+    CONSTRAINT uc_imaging_section_nom UNIQUE (section, nom)
+        COMMENT 'Garantit l''unicité du paramètre par section'
+)
+COMMENT='Table de gestion des paramètres de configuration Imaging pour Medulla';
+
+
+INSERT INTO imaging_conf (section, nom, activer, type, valeur, valeur_defaut, description) VALUES
+('main', 'disable', 1, 'booleen', '0', '1', 'Désactiver le plugin Imaging (0=actif, 1=inactif)'),
+('main', 'purge_interval', 0, 'string', '23 0 * * 0', '23 0 * * 0', 'Intervalle de purge (cron) — paramètre commenté par défaut'),
+('database', 'dbdriver', 1, 'string', 'mysql', 'mysql', 'Driver de base de données'),
+('database', 'dbhost', 1, 'string', 'localhost', 'localhost', 'Hôte du serveur de base de données'),
+('database', 'dbport', 1, 'entier', '3306', '3306', 'Port du serveur de base de données'),
+('database', 'dbname', 1, 'string', 'imaging', 'imaging', 'Nom de la base de données Imaging'),
+('database', 'dbuser', 1, 'string', 'mmc', 'mmc', 'Utilisateur de base de données'),
+('database', 'dbpasswd', 1, 'string', 'pBWfpjErqtsU', NULL, 'Mot de passe de la base de données'),
+('database', 'dbsslenable', 0, 'booleen', '0', '0', 'Activer SSL pour la connexion à la base de données (0=non, 1=oui)'),
+('database', 'dbsslca', 0, 'string', '/etc/mmc/pulse2/imaging/cacert.pem', '/etc/mmc/pulse2/imaging/cacert.pem', 'Chemin vers le certificat CA SSL'),
+('database', 'dbsslcert', 0, 'string', '/etc/mmc/pulse2/imaging/cert.pem', '/etc/mmc/pulse2/imaging/cert.pem', 'Chemin vers le certificat client SSL'),
+('database', 'dbsslkey', 0, 'string', '/etc/mmc/pulse2/imaging/key.pem', '/etc/mmc/pulse2/imaging/key.pem', 'Chemin vers la clé privée SSL'),
+('database', 'dbpoolrecycle', 0, 'entier', '60', '60', 'Durée de vie des connexions (dbpoolrecycle)'),
+('database', 'dbpoolsize', 0, 'entier', '5', '5', 'Taille du pool de connexions (dbpoolsize)'),
+('web', 'web_def_date_fmt', 0, 'string', '%Y-%m-%d %H:%M:%S', '%Y-%m-%d %H:%M:%S', 'Format de date par défaut pour l''interface web'),
+('web', 'web_def_default_menu_name', 0, 'string', 'Menu', 'Menu', 'Nom du menu par défaut'),
+('web', 'web_def_default_timeout', 0, 'entier', '60', '60', 'Timeout par défaut de l''interface web (secondes)'),
+('web', 'web_def_default_hidden_menu', 0, 'booleen', '0', '0', 'Masquer le menu par défaut (0=non, 1=oui)'),
+('web', 'web_def_default_background_uri', 0, 'string', NULL, NULL, 'URI de fond par défaut (commenté)'),
+('web', 'web_def_default_message', 0, 'string', 'Warning ! Your PC is being backed up or restored. Do not reboot !', 'Warning ! Your PC is being backed up or restored. Do not reboot !', 'Message d''avertissement par défaut'),
+('web', 'web_def_kernel_parameters', 0, 'string', 'quiet', 'quiet', 'Paramètres noyau par défaut'),
+('web', 'web_def_image_parameters', 0, 'string', NULL, NULL, 'Paramètres d''image par défaut (commenté)'),
+('web', 'web_def_image_hidden', 0, 'booleen', '1', '1', 'Masquer les images par défaut (0=non, 1=oui)'),
+('web', 'web_def_image_hidden_WOL', 0, 'booleen', '0', '0', 'Masquer les images WOL par défaut'),
+('web', 'web_def_image_default', 0, 'booleen', '0', '0', 'Image par défaut (0=non, 1=oui)'),
+('web', 'web_def_image_default_WOL', 0, 'booleen', '0', '0', 'Image WOL par défaut (0=non, 1=oui)'),
+('web', 'web_def_service_hidden', 0, 'booleen', '1', '1', 'Masquer les services par défaut'),
+('web', 'web_def_service_hidden_WOL', 0, 'booleen', '0', '0', 'Masquer les services WOL par défaut'),
+('web', 'web_def_service_default', 0, 'booleen', '0', '0', 'Service par défaut (0=non, 1=oui)'),
+('web', 'web_def_service_default_WOL', 0, 'booleen', '0', '0', 'Service WOL par défaut (0=non, 1=oui)'),
+('network', 'resolv_order', 0, 'string', 'ip netbios dns fqdn hosts', 'ip netbios dns fqdn hosts', 'Ordre des méthodes de résolution'),
+('network', 'preferred_network', 0, 'string', NULL, NULL, 'Réseaux préférés (format ip/netmask)'),
+('network', 'netbios_path', 0, 'string', '/usr/bin/nmblookup', '/usr/bin/nmblookup', 'Chemin vers nmblookup')
+ON DUPLICATE KEY UPDATE
+    activer = VALUES(activer),
+    type = VALUES(type),
+    valeur = VALUES(valeur),
+    valeur_defaut = VALUES(valeur_defaut),
+    description = VALUES(description);
+
+CREATE TABLE IF NOT EXISTS imaging_conf_version (
+    id INT AUTO_INCREMENT PRIMARY KEY
+        COMMENT 'Identifiant unique du paramètre de configuration',
+
+    section VARCHAR(50) NOT NULL
+        COMMENT 'Section du fichier de configuration (ex : [main] devient "main")',
+
+    nom VARCHAR(100) NOT NULL
+        COMMENT 'Nom du paramètre, unique au sein de sa section',
+
+    activer BOOLEAN NOT NULL DEFAULT TRUE
+        COMMENT 'Indique si le paramètre est actif (TRUE par défaut)',
+
+    type ENUM('string', 'booleen', 'entier', 'decimal', 'autre')
+        NOT NULL DEFAULT 'string'
+        COMMENT 'Type du paramètre, utilisé pour la validation et l''affichage',
+
+    valeur TEXT
+        COMMENT 'Valeur actuellement affectée au paramètre',
+
+    valeur_defaut TEXT DEFAULT NULL
+        COMMENT 'Valeur par défaut utilisée si le paramètre est désactivé',
+
+    description TEXT NOT NULL
+        COMMENT 'Description fonctionnelle obligatoire du paramètre (usage, format, exemples)',
+
+    CONSTRAINT uc_imaging_version_section_nom UNIQUE (section, nom)
+        COMMENT 'Garantit l''unicité du paramètre par section'
+)
+COMMENT='Table de versionnage des paramètres de configuration Imaging pour Medulla';
+
+
+INSERT INTO imaging_conf_version (section, nom, activer, type, valeur, valeur_defaut, description) VALUES
+('main', 'disable', 1, 'booleen', '0', '1', 'Désactiver le plugin Imaging (0=actif, 1=inactif)'),
+('main', 'purge_interval', 0, 'string', '23 0 * * 0', '23 0 * * 0', 'Intervalle de purge (cron) — paramètre commenté par défaut'),
+('database', 'dbdriver', 1, 'string', 'mysql', 'mysql', 'Driver de base de données'),
+('database', 'dbhost', 1, 'string', 'localhost', 'localhost', 'Hôte du serveur de base de données'),
+('database', 'dbport', 1, 'entier', '3306', '3306', 'Port du serveur de base de données'),
+('database', 'dbname', 1, 'string', 'imaging', 'imaging', 'Nom de la base de données Imaging'),
+('database', 'dbuser', 1, 'string', 'mmc', 'mmc', 'Utilisateur de base de données'),
+('database', 'dbpasswd', 1, 'string', 'pBWfpjErqtsU', NULL, 'Mot de passe de la base de données'),
+('database', 'dbsslenable', 0, 'booleen', '0', '0', 'Activer SSL pour la connexion à la base de données (0=non, 1=oui)'),
+('database', 'dbsslca', 0, 'string', '/etc/mmc/pulse2/imaging/cacert.pem', '/etc/mmc/pulse2/imaging/cacert.pem', 'Chemin vers le certificat CA SSL'),
+('database', 'dbsslcert', 0, 'string', '/etc/mmc/pulse2/imaging/cert.pem', '/etc/mmc/pulse2/imaging/cert.pem', 'Chemin vers le certificat client SSL'),
+('database', 'dbsslkey', 0, 'string', '/etc/mmc/pulse2/imaging/key.pem', '/etc/mmc/pulse2/imaging/key.pem', 'Chemin vers la clé privée SSL'),
+('database', 'dbpoolrecycle', 0, 'entier', '60', '60', 'Durée de vie des connexions (dbpoolrecycle)'),
+('database', 'dbpoolsize', 0, 'entier', '5', '5', 'Taille du pool de connexions (dbpoolsize)'),
+('web', 'web_def_date_fmt', 0, 'string', '%Y-%m-%d %H:%M:%S', '%Y-%m-%d %H:%M:%S', 'Format de date par défaut pour l''interface web'),
+('web', 'web_def_default_menu_name', 0, 'string', 'Menu', 'Menu', 'Nom du menu par défaut'),
+('web', 'web_def_default_timeout', 0, 'entier', '60', '60', 'Timeout par défaut de l''interface web (secondes)'),
+('web', 'web_def_default_hidden_menu', 0, 'booleen', '0', '0', 'Masquer le menu par défaut (0=non, 1=oui)'),
+('web', 'web_def_default_background_uri', 0, 'string', NULL, NULL, 'URI de fond par défaut (commenté)'),
+('web', 'web_def_default_message', 0, 'string', 'Warning ! Your PC is being backed up or restored. Do not reboot !', 'Warning ! Your PC is being backed up or restored. Do not reboot !', 'Message d''avertissement par défaut'),
+('web', 'web_def_kernel_parameters', 0, 'string', 'quiet', 'quiet', 'Paramètres noyau par défaut'),
+('web', 'web_def_image_parameters', 0, 'string', NULL, NULL, 'Paramètres d''image par défaut (commenté)'),
+('web', 'web_def_image_hidden', 0, 'booleen', '1', '1', 'Masquer les images par défaut (0=non, 1=oui)'),
+('web', 'web_def_image_hidden_WOL', 0, 'booleen', '0', '0', 'Masquer les images WOL par défaut'),
+('web', 'web_def_image_default', 0, 'booleen', '0', '0', 'Image par défaut (0=non, 1=oui)'),
+('web', 'web_def_image_default_WOL', 0, 'booleen', '0', '0', 'Image WOL par défaut (0=non, 1=oui)'),
+('web', 'web_def_service_hidden', 0, 'booleen', '1', '1', 'Masquer les services par défaut'),
+('web', 'web_def_service_hidden_WOL', 0, 'booleen', '0', '0', 'Masquer les services WOL par défaut'),
+('web', 'web_def_service_default', 0, 'booleen', '0', '0', 'Service par défaut (0=non, 1=oui)'),
+('web', 'web_def_service_default_WOL', 0, 'booleen', '0', '0', 'Service WOL par défaut (0=non, 1=oui)'),
+('network', 'resolv_order', 0, 'string', 'ip netbios dns fqdn hosts', 'ip netbios dns fqdn hosts', 'Ordre des méthodes de résolution'),
+('network', 'preferred_network', 0, 'string', NULL, NULL, 'Réseaux préférés (format ip/netmask)'),
+('network', 'netbios_path', 0, 'string', '/usr/bin/nmblookup', '/usr/bin/nmblookup', 'Chemin vers nmblookup')
+ON DUPLICATE KEY UPDATE
+    activer = VALUES(activer),
+    type = VALUES(type),
+    valeur = VALUES(valeur),
+    valeur_defaut = VALUES(valeur_defaut),
+    description = VALUES(description);
+
+-- ====================================================================
+-- SUPPORT CONF 
+-- ====================================================================
+
+CREATE TABLE IF NOT EXISTS support_conf (
+    id INT AUTO_INCREMENT PRIMARY KEY
+        COMMENT 'Identifiant unique du paramètre de configuration',
+
+    section VARCHAR(50) NOT NULL
+        COMMENT 'Section du fichier de configuration (ex : [main] devient "main")',
+
+    nom VARCHAR(100) NOT NULL
+        COMMENT 'Nom du paramètre, unique au sein de sa section',
+
+    activer BOOLEAN NOT NULL DEFAULT TRUE
+        COMMENT 'Indique si le paramètre est actif (TRUE par défaut)',
+
+    type ENUM('string', 'booleen', 'entier', 'decimal', 'autre')
+        NOT NULL DEFAULT 'string'
+        COMMENT 'Type du paramètre, utilisé pour la validation et l''affichage',
+
+    valeur TEXT
+        COMMENT 'Valeur actuellement affectée au paramètre',
+
+    valeur_defaut TEXT DEFAULT NULL
+        COMMENT 'Valeur par défaut utilisée si le paramètre est désactivé',
+
+    description TEXT NOT NULL
+        COMMENT 'Description fonctionnelle obligatoire du paramètre (usage, format, exemples)',
+
+    CONSTRAINT uc_support_section_nom UNIQUE (section, nom)
+        COMMENT 'Garantit l''unicité du paramètre par section'
+)
+COMMENT='Table de gestion des paramètres de configuration Support pour Medulla';
+
+
+INSERT INTO support_conf (section, nom, activer, type, valeur, valeur_defaut, description) VALUES
+('main', 'disable', 1, 'booleen', '0', '0', 'Désactiver le plugin Support (0=actif, 1=inactif)'),
+('main', 'pid_path', 0, 'string', '/var/run/pulse2/ssh_support', '/var/run/pulse2/ssh_support', 'Chemin du fichier PID (commenté par défaut)'),
+('main', 'ssh_path', 0, 'string', '/usr/bin/ssh', '/usr/bin/ssh', 'Chemin vers l''exécutable ssh (commenté par défaut)'),
+('main', 'support_url', 0, 'string', NULL, NULL, 'URL du service de support (commenté)'),
+('main', 'support_user', 0, 'string', 'support', 'support', 'Utilisateur de support par défaut (commenté)'),
+('main', 'identify_file', 0, 'string', '/etc/mmc/plugins/support/id_rsa', '/etc/mmc/plugins/support/id_rsa', 'Fichier d''identité SSH (clé privée, commenté)'),
+('main', 'session_timeout', 0, 'entier', '7200', '7200', 'Timeout de session en secondes (commenté)'),
+('main', 'license_server_url', 0, 'string', NULL, NULL, 'URL du serveur de licence (commenté)'),
+('main', 'install_id_path', 0, 'string', '/etc/pulse-licensing/installation_id', '/etc/pulse-licensing/installation_id', 'Chemin vers l''installation_id de licence (commenté)'),
+('main', 'cron_search_for_updates', 0, 'string', '0 6 * * *', '0 6 * * *', 'Cron pour les vérifications quotidiennes de licence (commenté)'),
+('main', 'license_tmp_file', 0, 'string', '/var/lib/mmc/pulse_license_info', '/var/lib/mmc/pulse_license_info', 'Fichier temporaire d''info licence (commenté)'),
+('main', 'country', 0, 'string', 'FR', 'FR', 'Code pays par défaut (commenté)')
+ON DUPLICATE KEY UPDATE
+    activer = VALUES(activer),
+    type = VALUES(type),
+    valeur = VALUES(valeur),
+    valeur_defaut = VALUES(valeur_defaut),
+    description = VALUES(description);
+
+CREATE TABLE IF NOT EXISTS support_conf_version (
+    id INT AUTO_INCREMENT PRIMARY KEY
+        COMMENT 'Identifiant unique du paramètre de configuration',
+
+    section VARCHAR(50) NOT NULL
+        COMMENT 'Section du fichier de configuration (ex : [main] devient "main")',
+
+    nom VARCHAR(100) NOT NULL
+        COMMENT 'Nom du paramètre, unique au sein de sa section',
+
+    activer BOOLEAN NOT NULL DEFAULT TRUE
+        COMMENT 'Indique si le paramètre est actif (TRUE par défaut)',
+
+    type ENUM('string', 'booleen', 'entier', 'decimal', 'autre')
+        NOT NULL DEFAULT 'string'
+        COMMENT 'Type du paramètre, utilisé pour la validation et l''affichage',
+
+    valeur TEXT
+        COMMENT 'Valeur actuellement affectée au paramètre',
+
+    valeur_defaut TEXT DEFAULT NULL
+        COMMENT 'Valeur par défaut utilisée si le paramètre est désactivé',
+
+    description TEXT NOT NULL
+        COMMENT 'Description fonctionnelle obligatoire du paramètre (usage, format, exemples)',
+
+    CONSTRAINT uc_support_version_section_nom UNIQUE (section, nom)
+        COMMENT 'Garantit l''unicité du paramètre par section'
+)
+COMMENT='Table de versionnage des paramètres de configuration Support pour Medulla';
+
+
+INSERT INTO support_conf_version (section, nom, activer, type, valeur, valeur_defaut, description) VALUES
+('main', 'disable', 1, 'booleen', '0', '0', 'Désactiver le plugin Support (0=actif, 1=inactif)'),
+('main', 'pid_path', 0, 'string', '/var/run/pulse2/ssh_support', '/var/run/pulse2/ssh_support', 'Chemin du fichier PID (commenté par défaut)'),
+('main', 'ssh_path', 0, 'string', '/usr/bin/ssh', '/usr/bin/ssh', 'Chemin vers l''exécutable ssh (commenté par défaut)'),
+('main', 'support_url', 0, 'string', NULL, NULL, 'URL du service de support (commenté)'),
+('main', 'support_user', 0, 'string', 'support', 'support', 'Utilisateur de support par défaut (commenté)'),
+('main', 'identify_file', 0, 'string', '/etc/mmc/plugins/support/id_rsa', '/etc/mmc/plugins/support/id_rsa', 'Fichier d''identité SSH (clé privée, commenté)'),
+('main', 'session_timeout', 0, 'entier', '7200', '7200', 'Timeout de session en secondes (commenté)'),
+('main', 'license_server_url', 0, 'string', NULL, NULL, 'URL du serveur de licence (commenté)'),
+('main', 'install_id_path', 0, 'string', '/etc/pulse-licensing/installation_id', '/etc/pulse-licensing/installation_id', 'Chemin vers l''installation_id de licence (commenté)'),
+('main', 'cron_search_for_updates', 0, 'string', '0 6 * * *', '0 6 * * *', 'Cron pour les vérifications quotidiennes de licence (commenté)'),
+('main', 'license_tmp_file', 0, 'string', '/var/lib/mmc/pulse_license_info', '/var/lib/mmc/pulse_license_info', 'Fichier temporaire d''info licence (commenté)'),
+('main', 'country', 0, 'string', 'FR', 'FR', 'Code pays par défaut (commenté)')
+ON DUPLICATE KEY UPDATE
+    activer = VALUES(activer),
+    type = VALUES(type),
+    valeur = VALUES(valeur),
+    valeur_defaut = VALUES(valeur_defaut),
+    description = VALUES(description);
+
+-- ====================================================================
+-- PKGS CONF
+-- ====================================================================
+
+CREATE TABLE IF NOT EXISTS pkgs_conf (
+    id INT AUTO_INCREMENT PRIMARY KEY
+        COMMENT 'Identifiant unique du paramètre de configuration',
+
+    section VARCHAR(50) NOT NULL
+        COMMENT 'Section du fichier de configuration (ex : [main] devient "main")',
+
+    nom VARCHAR(100) NOT NULL
+        COMMENT 'Nom du paramètre, unique au sein de sa section',
+
+    activer BOOLEAN NOT NULL DEFAULT TRUE
+        COMMENT 'Indique si le paramètre est actif (TRUE par défaut)',
+
+    type ENUM('string', 'booleen', 'entier', 'decimal', 'autre')
+        NOT NULL DEFAULT 'string'
+        COMMENT 'Type du paramètre, utilisé pour la validation et l''affichage',
+
+    valeur TEXT
+        COMMENT 'Valeur actuellement affectée au paramètre',
+
+    valeur_defaut TEXT DEFAULT NULL
+        COMMENT 'Valeur par défaut utilisée si le paramètre est désactivé',
+
+    description TEXT NOT NULL
+        COMMENT 'Description fonctionnelle obligatoire du paramètre (usage, format, exemples)',
+
+    CONSTRAINT uc_pkgs_section_nom UNIQUE (section, nom)
+        COMMENT 'Garantit l''unicité du paramètre par section'
+)
+COMMENT='Table de gestion des paramètres de configuration PKGS pour Medulla';
+
+
+INSERT INTO pkgs_conf (section, nom, activer, type, valeur, valeur_defaut, description) VALUES
+('main', 'disable', 1, 'booleen', '0', '0', 'Désactiver le plugin PKGS (0=actif, 1=inactif)'),
+('database', 'dbdriver', 1, 'string', 'mysql', 'mysql', 'Driver de base de données'),
+('database', 'dbhost', 1, 'string', 'localhost', 'localhost', 'Hôte du serveur de base de données'),
+('database', 'dbport', 1, 'entier', '3306', '3306', 'Port du serveur de base de données'),
+('database', 'dbname', 1, 'string', 'pkgs', 'pkgs', 'Nom de la base de données PKGS'),
+('database', 'dbuser', 1, 'string', 'mmc', 'mmc', 'Utilisateur de base de données'),
+('database', 'dbpasswd', 1, 'string', 'pBWfpjErqtsU', NULL, 'Mot de passe de la base de données'),
+('database', 'dbsslenable', 0, 'booleen', '0', '0', 'Activer SSL pour la connexion à la base de données (commenté)'),
+('database', 'dbsslca', 0, 'string', NULL, NULL, 'Chemin vers le CA SSL (commenté)'),
+('database', 'dbsslcert', 0, 'string', NULL, NULL, 'Chemin vers le certificat client SSL (commenté)'),
+('database', 'dbsslkey', 0, 'string', NULL, NULL, 'Chemin vers la clé privée SSL (commenté)'),
+('database', 'dbpooltimeout', 0, 'entier', '30', '30', 'Timeout du pool de connexions DB (commenté)'),
+('database', 'dbpoolrecycle', 0, 'entier', '60', '60', 'Durée de recyclage du pool DB (commenté)'),
+('database', 'dbpoolsize', 0, 'entier', '5', '5', 'Taille du pool DB (commenté)'),
+
+('user_package_api', 'server', 1, 'string', 'localhost', 'localhost', 'Serveur de l''API user_package'),
+('user_package_api', 'port', 1, 'entier', '9990', '9990', 'Port de l''API user_package'),
+('user_package_api', 'mountpoint', 1, 'string', '/upaa', '/upaa', 'Point de montage de l''API user_package'),
+('user_package_api', 'username', 1, 'string', NULL, NULL, 'Nom d''utilisateur pour l''API (vide)'),
+('user_package_api', 'password', 1, 'string', NULL, NULL, 'Mot de passe pour l''API (vide)'),
+('user_package_api', 'enablessl', 1, 'booleen', '1', '1', 'Activer SSL pour l''API user_package (0=non,1=oui)'),
+('user_package_api', 'verifypeer', 0, 'booleen', '0', '0', 'Vérifier le pair SSL (commenté)'),
+('user_package_api', 'cacert', 0, 'string', NULL, NULL, 'Chemin vers le CA pour l''API (commenté)'),
+('user_package_api', 'localcert', 0, 'string', NULL, NULL, 'Chemin vers le certificat local (commenté)'),
+('user_package_api', 'tmp_dir', 0, 'string', '/tmp/pkgs_tmp', '/tmp/pkgs_tmp', 'Répertoire temporaire pour uploads (commenté)'),
+
+('quick_deploy', 'max_size_stanza_xmpp', 0, 'entier', '1048576', '1048576', 'Taille maximale pour déploiements rapides (commenté)'),
+
+('pkgs', 'centralizedmultiplesharing', 1, 'booleen', '1', '0', 'Activer le partage centralisé des paquets (override .ini.local)'),
+('pkgs', 'movepackage', 0, 'booleen', '0', '0', 'Permettre le déplacement de paquets si l''utilisateur a les droits (commenté)'),
+
+('integrity_checks', 'generate_hash', 0, 'booleen', '0', '0', 'Générer des hash pour vérification d''intégrité (commenté)'),
+('integrity_checks', 'hashing_algo', 0, 'string', 'SHA256', 'SHA256', 'Algorithme de hachage (commenté)'),
+('integrity_checks', 'keyAES32', 0, 'string', 'abcdefghijklnmopqrstuvwxyz012345', 'abcdefghijklnmopqrstuvwxyz012345', 'Clé AES-256 d''exemple (commenté)')
+ON DUPLICATE KEY UPDATE
+    activer = VALUES(activer),
+    type = VALUES(type),
+    valeur = VALUES(valeur),
+    valeur_defaut = VALUES(valeur_defaut),
+    description = VALUES(description);
+
+CREATE TABLE IF NOT EXISTS pkgs_conf_version (
+    id INT AUTO_INCREMENT PRIMARY KEY
+        COMMENT 'Identifiant unique du paramètre de configuration',
+
+    section VARCHAR(50) NOT NULL
+        COMMENT 'Section du fichier de configuration (ex : [main] devient "main")',
+
+    nom VARCHAR(100) NOT NULL
+        COMMENT 'Nom du paramètre, unique au sein de sa section',
+
+    activer BOOLEAN NOT NULL DEFAULT TRUE
+        COMMENT 'Indique si le paramètre est actif (TRUE par défaut)',
+
+    type ENUM('string', 'booleen', 'entier', 'decimal', 'autre')
+        NOT NULL DEFAULT 'string'
+        COMMENT 'Type du paramètre, utilisé pour la validation et l''affichage',
+
+    valeur TEXT
+        COMMENT 'Valeur actuellement affectée au paramètre',
+
+    valeur_defaut TEXT DEFAULT NULL
+        COMMENT 'Valeur par défaut utilisée si le paramètre est désactivé',
+
+    description TEXT NOT NULL
+        COMMENT 'Description fonctionnelle obligatoire du paramètre (usage, format, exemples)',
+
+    CONSTRAINT uc_pkgs_version_section_nom UNIQUE (section, nom)
+        COMMENT 'Garantit l''unicité du paramètre par section'
+)
+COMMENT='Table de versionnage des paramètres de configuration PKGS pour Medulla';
+
+
+INSERT INTO pkgs_conf_version (section, nom, activer, type, valeur, valeur_defaut, description) VALUES
+('main', 'disable', 1, 'booleen', '0', '0', 'Désactiver le plugin PKGS (0=actif, 1=inactif)'),
+('database', 'dbdriver', 1, 'string', 'mysql', 'mysql', 'Driver de base de données'),
+('database', 'dbhost', 1, 'string', 'localhost', 'localhost', 'Hôte du serveur de base de données'),
+('database', 'dbport', 1, 'entier', '3306', '3306', 'Port du serveur de base de données'),
+('database', 'dbname', 1, 'string', 'pkgs', 'pkgs', 'Nom de la base de données PKGS'),
+('database', 'dbuser', 1, 'string', 'mmc', 'mmc', 'Utilisateur de base de données'),
+('database', 'dbpasswd', 1, 'string', 'pBWfpjErqtsU', NULL, 'Mot de passe de la base de données'),
+('database', 'dbsslenable', 0, 'booleen', '0', '0', 'Activer SSL pour la connexion à la base de données (commenté)'),
+('database', 'dbsslca', 0, 'string', NULL, NULL, 'Chemin vers le CA SSL (commenté)'),
+('database', 'dbsslcert', 0, 'string', NULL, NULL, 'Chemin vers le certificat client SSL (commenté)'),
+('database', 'dbsslkey', 0, 'string', NULL, NULL, 'Chemin vers la clé privée SSL (commenté)'),
+('database', 'dbpooltimeout', 0, 'entier', '30', '30', 'Timeout du pool de connexions DB (commenté)'),
+('database', 'dbpoolrecycle', 0, 'entier', '60', '60', 'Durée de recyclage du pool DB (commenté)'),
+('database', 'dbpoolsize', 0, 'entier', '5', '5', 'Taille du pool DB (commenté)'),
+
+('user_package_api', 'server', 1, 'string', 'localhost', 'localhost', 'Serveur de l''API user_package'),
+('user_package_api', 'port', 1, 'entier', '9990', '9990', 'Port de l''API user_package'),
+('user_package_api', 'mountpoint', 1, 'string', '/upaa', '/upaa', 'Point de montage de l''API user_package'),
+('user_package_api', 'username', 1, 'string', NULL, NULL, 'Nom d''utilisateur pour l''API (vide)'),
+('user_package_api', 'password', 1, 'string', NULL, NULL, 'Mot de passe pour l''API (vide)'),
+('user_package_api', 'enablessl', 1, 'booleen', '1', '1', 'Activer SSL pour l''API user_package (0=non,1=oui)'),
+('user_package_api', 'verifypeer', 0, 'booleen', '0', '0', 'Vérifier le pair SSL (commenté)'),
+('user_package_api', 'cacert', 0, 'string', NULL, NULL, 'Chemin vers le CA pour l''API (commenté)'),
+('user_package_api', 'localcert', 0, 'string', NULL, NULL, 'Chemin vers le certificat local (commenté)'),
+('user_package_api', 'tmp_dir', 0, 'string', '/tmp/pkgs_tmp', '/tmp/pkgs_tmp', 'Répertoire temporaire pour uploads (commenté)'),
+
+('quick_deploy', 'max_size_stanza_xmpp', 0, 'entier', '1048576', '1048576', 'Taille maximale pour déploiements rapides (commenté)'),
+
+('pkgs', 'centralizedmultiplesharing', 1, 'booleen', '1', '0', 'Activer le partage centralisé des paquets (valeur de .ini.local)'),
+('pkgs', 'movepackage', 0, 'booleen', '0', '0', 'Permettre le déplacement de paquets si l''utilisateur a les droits (commenté)'),
+
+('integrity_checks', 'generate_hash', 0, 'booleen', '0', '0', 'Générer des hash pour vérification d''intégrité (commenté)'),
+('integrity_checks', 'hashing_algo', 0, 'string', 'SHA256', 'SHA256', 'Algorithme de hachage (commenté)'),
+('integrity_checks', 'keyAES32', 0, 'string', 'abcdefghijklnmopqrstuvwxyz012345', 'abcdefghijklnmopqrstuvwxyz012345', 'Clé AES-256 d''exemple (commenté)')
+ON DUPLICATE KEY UPDATE
+    activer = VALUES(activer),
+    type = VALUES(type),
+    valeur = VALUES(valeur),
+    valeur_defaut = VALUES(valeur_defaut),
+    description = VALUES(description);
+
+-- ====================================================================
+-- DYN GROUP CONF 
+-- ====================================================================
+
+CREATE TABLE IF NOT EXISTS dyngroup_conf (
+    id INT AUTO_INCREMENT PRIMARY KEY
+        COMMENT 'Identifiant unique du paramètre de configuration',
+
+    section VARCHAR(50) NOT NULL
+        COMMENT 'Section du fichier de configuration (ex : [main] devient "main")',
+
+    nom VARCHAR(100) NOT NULL
+        COMMENT 'Nom du paramètre, unique au sein de sa section',
+
+    activer BOOLEAN NOT NULL DEFAULT TRUE
+        COMMENT 'Indique si le paramètre est actif (TRUE par défaut)',
+
+    type ENUM('string', 'booleen', 'entier', 'decimal', 'autre')
+        NOT NULL DEFAULT 'string'
+        COMMENT 'Type du paramètre, utilisé pour la validation et l''affichage',
+
+    valeur TEXT
+        COMMENT 'Valeur actuellement affectée au paramètre',
+
+    valeur_defaut TEXT DEFAULT NULL
+        COMMENT 'Valeur par défaut utilisée si le paramètre est désactivé',
+
+    description TEXT NOT NULL
+        COMMENT 'Description fonctionnelle obligatoire du paramètre (usage, format, exemples)',
+
+    CONSTRAINT uc_dyngroup_section_nom UNIQUE (section, nom)
+        COMMENT 'Garantit l''unicité du paramètre par section'
+)
+COMMENT='Table de gestion des paramètres de configuration Dyngroup pour Medulla';
+
+
+INSERT INTO dyngroup_conf (section, nom, activer, type, valeur, valeur_defaut, description) VALUES
+('main', 'disable', 1, 'booleen', '0', '0', 'Désactiver le plugin Dyngroup (0=actif, 1=inactif)'),
+('main', 'dynamic_enable', 1, 'booleen', '1', '1', 'Activer les groupes dynamiques (0=non, 1=oui)'),
+('main', 'profiles_enable', 0, 'booleen', '1', '1', 'Activer les profils (imaging sur groupe) — commenté par défaut'),
+('main', 'default_module', 0, 'string', NULL, NULL, 'Module pré‑sélectionné pour la création de groupes dynamiques (commenté)'),
+('main', 'max_elements_for_static_list', 0, 'entier', '2000', '2000', 'Nombre maximum d''éléments pour la liste statique (commenté)'),
+('main', 'check_db_enable', 0, 'booleen', '0', '0', 'Activer la boucle de vérification DB (commenté; False=0)'),
+('main', 'check_db_interval', 0, 'entier', '300', '300', 'Intervalle de vérification DB en secondes (commenté)'),
+('database', 'dbdriver', 1, 'string', 'mysql', 'mysql', 'Driver de base de données'),
+('database', 'dbhost', 1, 'string', 'localhost', 'localhost', 'Hôte du serveur de base de données'),
+('database', 'dbport', 1, 'entier', '3306', '3306', 'Port du serveur de base de données'),
+('database', 'dbname', 1, 'string', 'dyngroup', 'dyngroup', 'Nom de la base de données Dyngroup'),
+('database', 'dbuser', 1, 'string', 'mmc', 'mmc', 'Utilisateur de base de données'),
+('database', 'dbpasswd', 1, 'string', 'pBWfpjErqtsU', NULL, 'Mot de passe de la base de données'),
+('database', 'dbsslenable', 0, 'booleen', '0', '0', 'Activer SSL pour la connexion à la base de données (commenté)'),
+('database', 'dbsslca', 0, 'string', NULL, NULL, 'Chemin vers le CA SSL (commenté)'),
+('database', 'dbsslcert', 0, 'string', NULL, NULL, 'Chemin vers le certificat client SSL (commenté)'),
+('database', 'dbsslkey', 0, 'string', NULL, NULL, 'Chemin vers la clé privée SSL (commenté)'),
+('database', 'dbpoolrecycle', 0, 'entier', '60', '60', 'Durée de vie des connexions (dbpoolrecycle) — commenté'),
+('database', 'dbpoolsize', 0, 'entier', '5', '5', 'Taille du pool de connexions (dbpoolsize) — commenté'),
+('querymanager', 'activate', 1, 'booleen', '1', '1', 'Autoriser les requêtes sur les noms de groupe (0=non,1=oui)')
+ON DUPLICATE KEY UPDATE
+    activer = VALUES(activer),
+    type = VALUES(type),
+    valeur = VALUES(valeur),
+    valeur_defaut = VALUES(valeur_defaut),
+    description = VALUES(description);
+
+CREATE TABLE IF NOT EXISTS dyngroup_conf_version (
+    id INT AUTO_INCREMENT PRIMARY KEY
+        COMMENT 'Identifiant unique du paramètre de configuration',
+
+    section VARCHAR(50) NOT NULL
+        COMMENT 'Section du fichier de configuration (ex : [main] devient "main")',
+
+    nom VARCHAR(100) NOT NULL
+        COMMENT 'Nom du paramètre, unique au sein de sa section',
+
+    activer BOOLEAN NOT NULL DEFAULT TRUE
+        COMMENT 'Indique si le paramètre est actif (TRUE par défaut)',
+
+    type ENUM('string', 'booleen', 'entier', 'decimal', 'autre')
+        NOT NULL DEFAULT 'string'
+        COMMENT 'Type du paramètre, utilisé pour la validation et l''affichage',
+
+    valeur TEXT
+        COMMENT 'Valeur actuellement affectée au paramètre',
+
+    valeur_defaut TEXT DEFAULT NULL
+        COMMENT 'Valeur par défaut utilisée si le paramètre est désactivé',
+
+    description TEXT NOT NULL
+        COMMENT 'Description fonctionnelle obligatoire du paramètre (usage, format, exemples)',
+
+    CONSTRAINT uc_dyngroup_version_section_nom UNIQUE (section, nom)
+        COMMENT 'Garantit l''unicité du paramètre par section'
+)
+COMMENT='Table de versionnage des paramètres de configuration Dyngroup pour Medulla';
+
+
+INSERT INTO dyngroup_conf_version (section, nom, activer, type, valeur, valeur_defaut, description) VALUES
+('main', 'disable', 1, 'booleen', '0', '0', 'Désactiver le plugin Dyngroup (0=actif, 1=inactif)'),
+('main', 'dynamic_enable', 1, 'booleen', '1', '1', 'Activer les groupes dynamiques (0=non, 1=oui)'),
+('main', 'profiles_enable', 0, 'booleen', '1', '1', 'Activer les profils (imaging sur groupe) — commenté par défaut'),
+('main', 'default_module', 0, 'string', NULL, NULL, 'Module pré‑sélectionné pour la création de groupes dynamiques (commenté)'),
+('main', 'max_elements_for_static_list', 0, 'entier', '2000', '2000', 'Nombre maximum d''éléments pour la liste statique (commenté)'),
+('main', 'check_db_enable', 0, 'booleen', '0', '0', 'Activer la boucle de vérification DB (commenté; False=0)'),
+('main', 'check_db_interval', 0, 'entier', '300', '300', 'Intervalle de vérification DB en secondes (commenté)'),
+('database', 'dbdriver', 1, 'string', 'mysql', 'mysql', 'Driver de base de données'),
+('database', 'dbhost', 1, 'string', 'localhost', 'localhost', 'Hôte du serveur de base de données'),
+('database', 'dbport', 1, 'entier', '3306', '3306', 'Port du serveur de base de données'),
+('database', 'dbname', 1, 'string', 'dyngroup', 'dyngroup', 'Nom de la base de données Dyngroup'),
+('database', 'dbuser', 1, 'string', 'mmc', 'mmc', 'Utilisateur de base de données'),
+('database', 'dbpasswd', 1, 'string', 'pBWfpjErqtsU', NULL, 'Mot de passe de la base de données'),
+('database', 'dbsslenable', 0, 'booleen', '0', '0', 'Activer SSL pour la connexion à la base de données (commenté)'),
+('database', 'dbsslca', 0, 'string', NULL, NULL, 'Chemin vers le CA SSL (commenté)'),
+('database', 'dbsslcert', 0, 'string', NULL, NULL, 'Chemin vers le certificat client SSL (commenté)'),
+('database', 'dbsslkey', 0, 'string', NULL, NULL, 'Chemin vers la clé privée SSL (commenté)'),
+('database', 'dbpoolrecycle', 0, 'entier', '60', '60', 'Durée de vie des connexions (dbpoolrecycle) — commenté'),
+('database', 'dbpoolsize', 0, 'entier', '5', '5', 'Taille du pool de connexions (dbpoolsize) — commenté'),
+('querymanager', 'activate', 1, 'booleen', '1', '1', 'Autoriser les requêtes sur les noms de groupe (0=non,1=oui)')
+ON DUPLICATE KEY UPDATE
+    activer = VALUES(activer),
+    type = VALUES(type),
+    valeur = VALUES(valeur),
+    valeur_defaut = VALUES(valeur_defaut),
+    description = VALUES(description);
+
 UPDATE version SET Number = 7;
 
 COMMIT;

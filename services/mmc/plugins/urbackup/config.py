@@ -7,9 +7,9 @@ from pulse2.database.urbackup.config import UrbackupDatabaseConfig
 
 
 class UrbackupConfig(PluginConfig, UrbackupDatabaseConfig):
-    def __init__(self, name="urbackup", conffile=None):
+    def __init__(self, name="urbackup", conffile=None, backend="database"):
         if not hasattr(self, "initdone"):
-            PluginConfig.__init__(self, name, conffile)
+            PluginConfig.__init__(self, name, conffile, backend=backend, db_table="urbackup_conf")
             UrbackupDatabaseConfig.__init__(self)
             self.initdone = True
 
@@ -22,7 +22,10 @@ class UrbackupConfig(PluginConfig, UrbackupDatabaseConfig):
         The configuration file is stored in /etc/mmc/plugins/urbackup.ini
         """
         PluginConfig.readConf(self)
-        UrbackupDatabaseConfig.setup(self, self.conffile)
+        if self.backend == "database":
+            self._load_db_settings_from_backend()
+        elif self.conffile and self.backend == "ini":
+            UrbackupDatabaseConfig.setup(self, self.conffile)
         self.disable = self.getboolean("main", "disable")
         self.tempdir = self.get("main", "tempdir")
         # ...
@@ -44,5 +47,5 @@ class UrbackupConfig(PluginConfig, UrbackupDatabaseConfig):
         If disable is set to 0 the plugin is enabled.
         """
         # Get module config from "/etc/mmc/plugins/urbackup.ini"
-        UrbackupConfig("urbackup")
+        UrbackupConfig("urbackup", None, "database")
         return True

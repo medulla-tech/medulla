@@ -9,9 +9,9 @@ from mmc.support.config import PluginConfig
 from pulse2.database.mastering.config import MasteringDatabaseConfig
 
 class MasteringConfig(PluginConfig,MasteringDatabaseConfig):
-    def __init__(self, name = 'mastering', conffile = None):
+    def __init__(self, name = 'mastering', conffile = None, backend = "database"):
         if not hasattr(self, 'initdone'):
-            PluginConfig.__init__(self, name, conffile)
+            PluginConfig.__init__(self, name, conffile, backend = backend, db_table = "mastering_conf")
             MasteringDatabaseConfig.__init__(self)
             self.initdone = True
 
@@ -22,7 +22,10 @@ class MasteringConfig(PluginConfig,MasteringDatabaseConfig):
 
     def readConf(self):
         PluginConfig.readConf(self)
-        MasteringDatabaseConfig.setup(self, self.conffile)
+        if self.backend == "database":
+            self._load_db_settings_from_backend()
+        elif self.backend == "ini" and self.conffile:
+            MasteringDatabaseConfig.setup(self, self.conffile)
         self.disable = self.getboolean("main", "disable")
         self.tempdir = self.get("main", "tempdir")
         
@@ -39,6 +42,7 @@ class MasteringConfig(PluginConfig,MasteringDatabaseConfig):
     @staticmethod
     def activate():
         # Get module config from "/etc/mmc/plugins/mastering.ini"
-        MasteringConfig("mastering")
+        MasteringConfig("mastering", None, "database")
         return True
+
 
