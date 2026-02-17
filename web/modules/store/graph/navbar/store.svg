@@ -1,28 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 141.7 141.7">
-<style type="text/css">
-	.st0{fill:#8BB53C;stroke:#24607E;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
-	.st1{fill:#FFFFFF;stroke:#24607E;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
-	.st2{fill:none;stroke:#24607E;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;}
-</style>
-<g>
-	<!-- Handle - forme pleine -->
-	<path class="st0" d="M10,15 L32,15 L32,25 L20,25 L20,20 L10,20 Z"/>
-	<path class="st0" d="M28,20 L34,20 L44,48 L38,50 Z"/>
-
-	<!-- Caddie basket -->
-	<path class="st0" d="M32,48 L48,108 L118,108 L130,48 Z"/>
-
-	<!-- Inner basket - blanc pour contraste -->
-	<path class="st1" d="M42,56 L54,100 L112,100 L122,56 Z"/>
-
-	<!-- Items in cart - traits fins -->
-	<line class="st2" x1="60" y1="62" x2="56" y2="94"/>
-	<line class="st2" x1="80" y1="62" x2="76" y2="94"/>
-	<line class="st2" x1="100" y1="62" x2="96" y2="94"/>
-
-	<!-- Wheels -->
-	<circle class="st0" cx="60" cy="122" r="12"/>
-	<circle class="st0" cx="108" cy="122" r="12"/>
-</g>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Calque_1" xmlns="http://www.w3.org/2000/svg" baseProfile="tiny" version="1.2" viewBox="0 0 141.7 141.7">
+  <!-- Generator: Adobe Illustrator 30.2.1, SVG Export Plug-In . SVG Version: 2.1.1 Build 1)  -->
+  <path d="M48.9,129c-5.5,0-9.9-4.4-9.9-9.9s4.4-9.9,9.9-9.9,9.9,4.4,9.9,9.9-4.4,9.9-9.9,9.9Z" fill="#dadcdd"/>
+  <path d="M108,129c-5.5,0-9.9-4.4-9.9-9.9s4.4-9.9,9.9-9.9,9.9,4.4,9.9,9.9-4.4,9.9-9.9,9.9Z" fill="#dadcdd"/>
+  <path d="M52.5,97c-7.1,0-13.4-5-14.9-12l-13.5-63.3h-7.2c-2.5,0-4.5-2-4.5-4.5s2-4.5,4.5-4.5h10.8c2.1,0,4,1.5,4.4,3.6l5,23.4h87.7c1.4,0,2.7.6,3.5,1.7.9,1.1,1.2,2.5.9,3.8l-8.9,39.9c-1.5,6.9-7.8,11.9-14.9,11.9h-52.6c0,0-.2,0-.3,0ZM39.1,48.7l7.4,34.4c.6,2.9,3.2,5,6.3,4.9h52.7c2.9,0,5.5-2.1,6.1-4.9l7.7-34.4H39.1Z" fill="#dadcdd"/>
 </svg>
