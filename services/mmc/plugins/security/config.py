@@ -24,9 +24,9 @@ class SecurityConfig(PluginConfig, SecurityDatabaseConfig):
     # Valid severity levels in order
     SEVERITY_LEVELS = ['None', 'Low', 'Medium', 'High', 'Critical']
 
-    def __init__(self, name='security', conffile=None):
+    def __init__(self, name='security', conffile=None, backend="database"):
         if not hasattr(self, 'initdone'):
-            PluginConfig.__init__(self, name, conffile)
+            PluginConfig.__init__(self, name, conffile, backend=backend, db_table="security_conf")
             SecurityDatabaseConfig.__init__(self)
             self.initdone = True
             self._db_policies_loaded = False
@@ -75,7 +75,10 @@ class SecurityConfig(PluginConfig, SecurityDatabaseConfig):
 
     def readConf(self):
         PluginConfig.readConf(self)
-        SecurityDatabaseConfig.setup(self, self.conffile)
+        if self.backend == "database":
+            self._load_db_settings_from_backend()
+        elif self.conffile and self.backend == "ini":
+            SecurityDatabaseConfig.setup(self, self.conffile)
 
         # [main] section - from .ini file only
         self.disable = self.getboolean("main", "disable")
@@ -246,5 +249,6 @@ class SecurityConfig(PluginConfig, SecurityDatabaseConfig):
 
     @staticmethod
     def activate():
-        SecurityConfig("security")
+        SecurityConfig("security", None, "database")
         return True
+

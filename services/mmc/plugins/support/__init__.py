@@ -25,7 +25,7 @@ def getApiVersion():
 
 
 def activate():
-    config = SupportConfig(NAME)
+    config = SupportConfig(NAME, None, "database")
     if config.disabled:
         logging.getLogger().warning("Plugin Support: disabled by configuration.")
         return False
@@ -330,3 +330,4 @@ def delete_archive():
     if os.path.exists(config.collector_archive_path):
         os.unlink(config.collector_archive_path)
     cd.info_collected = False
+

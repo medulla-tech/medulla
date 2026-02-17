@@ -1253,7 +1253,7 @@ def removeFilesFromPackage(pid, files):
 def activate():
     logger = logging.getLogger()
     logger.debug("Pkgs is activating")
-    config = PkgsConfig("pkgs")
+    config = PkgsConfig("pkgs", None, "database")
     if config.disabled:
         logger.warning("Plugin pkgs: disabled by configuration.")
         return False

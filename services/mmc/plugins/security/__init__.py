@@ -23,7 +23,7 @@ def getApiVersion():
 def activate():
     global config
     logger = logging.getLogger()
-    config = SecurityConfig("security")
+    config = SecurityConfig("security", None, "database")
     if config.disable:
         logger.warning("Plugin security: disabled by configuration.")
         return False
