@@ -1072,3 +1072,15 @@ msgstr "Méthode d'authentification"
 #: modules/admin/admin/editUser.php
 msgid "Personal information"
 msgstr "Informations personnelles"
+
+#: modules/admin/admin/editProvider.php
+msgid "General"
+msgstr "Général"
+
+#: modules/admin/admin/editProvider.php
+msgid "OAuth/OIDC Configuration"
+msgstr "Configuration OAuth/OIDC"
+
+#: modules/admin/admin/editProvider.php
+msgid "LDAP Mapping"
+msgstr "Mapping LDAP"

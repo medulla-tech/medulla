@@ -780,19 +780,7 @@ $form->display();
 ?>
 
 <style>
-  .pw-wrap{ position:relative; display:inline-block; vertical-align:middle; }
-  .pw-wrap > .pw-toggle{
-    position:absolute; right:1.6rem; top:50%; transform:translateY(-50%);
-    border:0; background:transparent; cursor:pointer; padding:0;
-    width:1.2rem; height:1.2rem; line-height:1; z-index:2;
-  }
-  .pw-toggle img{ width:100%; height:100%; display:block; pointer-events:none; }
-  .pw-feedback{ font-size:.9em; margin-top:.25rem; color:#e33; }
-  .pw-wrap input.pw-error,
-  .pw-wrap input.pw-error:focus{
-    border-color:#e33 !important; outline:none !important; box-shadow:none !important;
-  }
-
+  /* Password hints popup - specific to this form */
   #pw-hints{
     position:fixed; left:0; top:0; width:320px; max-width:85vw; background:#fff;
     border:1px solid #d9d9d9; border-radius:8px; box-shadow:0 8px 24px rgba(0,0,0,.12);
