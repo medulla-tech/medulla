@@ -53,15 +53,15 @@ $providerLabel = ($action === 'editprovider')
 ? (($mode === 'edit') ? _T("Edit Provider", "admin") : _T("Add Provider", "admin"))
 : _T("Add Provider", "admin");
 
-// Configuration
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Configuration", "admin"), "admin", "admin", "configList"));
-
 // Side menu
 $sidemenu->addSideMenuItem(new SideMenuItem($userLabel,     "admin", "admin", "editUser"));
 
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Manage Providers", "admin"), "admin", "admin", "manageproviders"));
 
 $sidemenu->addSideMenuItem(new SideMenuItem($providerLabel, "admin", "admin", "editProvider"));
+
+// Configuration
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("Configuration", "admin"), "admin", "admin", "configList"));
 
 // --------------------- WebSocket Logs ----------------
 $sidemenu->addSideMenuItem(

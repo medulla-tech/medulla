@@ -1106,3 +1106,15 @@ msgstr "Agente de descargas"
 msgid "Delete Provider"
 msgstr "Borrar proveedor"
 
+
+#: modules/admin/admin/editUser.php
+msgid "Assignment"
+msgstr "Asignación"
+
+#: modules/admin/admin/editUser.php
+msgid "Authentication method"
+msgstr "Método de autenticación"
+
+#: modules/admin/admin/editUser.php
+msgid "Personal information"
+msgstr "Información personal"

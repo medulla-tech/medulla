@@ -1060,3 +1060,15 @@ msgstr "Supprimer le provider"
 #: modules/admin/admin/editUser.php:765
 msgid "OIDC"
 msgstr "OIDC"
+
+#: modules/admin/admin/editUser.php
+msgid "Assignment"
+msgstr "Affectation"
+
+#: modules/admin/admin/editUser.php
+msgid "Authentication method"
+msgstr "Méthode d'authentification"
+
+#: modules/admin/admin/editUser.php
+msgid "Personal information"
+msgstr "Informations personnelles"

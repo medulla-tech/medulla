@@ -27,11 +27,6 @@ require_once("includes/utils.inc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 require_once("modules/admin/includes/xmlrpc.php");
 ?>
-<style>
-    h2 {
-        margin-bottom: 40px;
-    }
-</style>
 
 <?php
 function validatePasswords(string $pwd, string $pwd2, bool $isUpdate = false): array
@@ -734,13 +729,19 @@ $buttonValue = ($mode === 'edit') ? _T("Save changes", "admin") : _T("Create new
 // Form
 $form = new ValidatingForm(['method' => 'POST']);
 $form->addValidateButtonWithValue($buttonName, $buttonValue);
-$form->push(new Table());
 
+// Section: Assignment
+$form->add(new SpanElement(_T("Assignment", "admin"), "section-title"));
+$form->push(new Table());
 $form->add(new TrFormElement(_T("User Profile", "admin"), $profileSelect));
 $form->add(new TrFormElement(_T("Entity", "admin"), $entitySelect));
 $form->add(new TrFormElement(_T("Apply to sub-entities (recursive)", "admin"), $recSelect));
+$form->pop();
 
-$form->add(new TrFormElement(_T("Authentication", "admin"), $authSelect));
+// Section: Authentication
+$form->add(new SpanElement(_T("Authentication", "admin"), "section-title"));
+$form->push(new Table());
+$form->add(new TrFormElement(_T("Authentication method", "admin"), $authSelect));
 
 if ($mode === 'edit') {
     $displayEmail = (string)($prefill['username'] ?? '');
@@ -762,15 +763,19 @@ if ($mode === 'edit') {
 
 $addInput($form, 'newPassword',  'Password',         '');
 $addInput($form, 'newPassword2', 'Confirm password', '');
+$form->pop();
 
+// Section: Personal information
+$form->add(new SpanElement(_T("Personal information", "admin"), "section-title"));
+$form->push(new Table());
 $addInput($form, 'newFirstName', 'First name', $_POST['newFirstName'] ?? ($prefill['firstname'] ?? ''));
 $addInput($form, 'newLastName',  'Last name',  $_POST['newLastName']  ?? ($prefill['lastname']  ?? ''));
 $addInput($form, 'newPhone',     'Phone',      $_POST['newPhone']     ?? ($prefill['phone']     ?? ''));
 
 $form->add(new HiddenTpl('userId'), ['value' => (string)$userId, 'hide' => true]);
 $form->add(new HiddenTpl('mode'),   ['value' => (string)$mode,   'hide' => true]);
-
 $form->pop();
+
 $form->display();
 ?>
 
