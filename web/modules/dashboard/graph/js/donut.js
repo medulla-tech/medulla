@@ -51,18 +51,34 @@ function donut(selector, datas, title, subtitle){
       datas[i].unit = "";
     total += datas[i].value;
   }
-  var height = 135, width = 125;
-  var outerRadius = 45;
-  var innerRadius = 30;
+  var height = 130, width = 130;
+  var outerRadius = 56;
+  var innerRadius = 38;
   var widgetWidth = d3.select("#"+selector).node().getBoundingClientRect().width;
 
   //var colors = d3.scaleOrdinal(d3.schemeCategory10);
-  var colors = ["#52b749","#e03c3c", "#f48f42", "#523c42"];
+  // 0:gris 1:bleu 2:vert 3:orange 4:rouge 5:gris-foncé 6:gris-clair
+  var colors = ["#b5c7cc", "#3a8fa8", "#8CB63C", "#f48f42", "#e03c3c", "#7a8a8f", "#d0d8db"];
 
-  var canvas = d3.select("#"+selector).append("svg")
+  // Make the selector container a flex column, aligned to top
+  d3.select("#"+selector)
+    .style("display", "flex")
+    .style("flex-direction", "column")
+    .style("align-items", "center")
+    .style("justify-content", "flex-start")
+    .style("flex", "1");
+
+  var container = d3.select("#"+selector);
+
+  var svgContainer = container.append("div")
+    .style("display", "flex")
+    .style("justify-content", "center")
+    .style("height", height + "px")
+    .style("margin-top", "20px");
+
+  var canvas = svgContainer.append("svg")
     .attr("width", width)
-    .attr("height", height)
-    .style("margin-left",(getDivWidth("#"+selector)-width)/2+"px");
+    .attr("height", height);
 
   var group = canvas.append("g")
     .attr("transform", "translate("+width/2+","+ height/2+")");
@@ -74,7 +90,7 @@ function donut(selector, datas, title, subtitle){
 
   canvas.select(".center")
     .append("text")
-    .attr("font-size",11)
+    .attr("font-size",13)
     .append("tspan")
     .attr("text-anchor", "middle")
     .attr("x", 0)
@@ -84,9 +100,10 @@ function donut(selector, datas, title, subtitle){
   canvas.select(".center").select("text")
     .append("tspan")
     .attr("x", 0)
-    .attr("dy", 11)
+    .attr("dy", 14)
     .attr("text-anchor", "middle")
-    .attr("font-size",11)
+    .attr("font-size",13)
+    .attr("font-weight", "normal")
     .text(subtitle);
 
   var dataset = d3.pie()
@@ -107,107 +124,61 @@ function donut(selector, datas, title, subtitle){
 
     // Actions executed when the mouse is over the section
     .on("mouseover", function(d,i){
-      canvas.attr("width", 300);
-      d3.select("#"+selector).select("ul").select('.'+selector+'Label'+i.index)
-      .style("font-weight","bold");
-
-      d3.select("#"+selector).select("ul").select('.'+selector+'Label'+i.index).select("a")
-      .style("font-weight","bold");
-      // Add the tooltip text
-      canvas.append("g")
-        .attr("class", selector+"tooltip");
-
-      canvas.select("."+selector+"tooltip")
-        .style("position","relative")
-        .append("text")
-        .attr("y", height-10)
-        .attr("text-anchor", "start")
-        .text(i.data.label+" "+ i.data.value+i.data.unit+" ("+((i.data.value/total)*100).toFixed(0)+"%)")
-        .attr("fill","white");
-
-      var tooltiptextwidth = jQuery("#"+selector+" svg ."+selector+"tooltip text")[0].getComputedTextLength();
-      var tooltipwidth = tooltiptextwidth +5;
-
-      var offset = ((width-tooltipwidth)/2 >0) ? (width-tooltipwidth)/2 : 2;
-      canvas.select("."+selector+"tooltip")
-        .append("rect")
-        .attr("rx", 2)
-        .attr("ry", 2)
-        .attr("width", tooltipwidth)
-        .attr("height", 22)
-        .attr("opacity", 0.6)
-        .attr("fill", "black")
-        .attr("x", offset)
-        .attr("y", height-25).lower();
-
-      var offset = ((width-tooltiptextwidth)/2 >0) ? (width-tooltiptextwidth)/2 : 5;
-      canvas.select("."+selector+"tooltip")
-        .select("text")
-        .attr("x", offset);
-
-      d3.select(this).attr("cursor","pointer")
-
-      // Create a new arc path to replace the old
+      d3.select(this).attr("cursor","pointer");
+      // Highlight the label
+      d3.select("#"+selector).select('.'+selector+'Label'+i.index)
+        .style("font-weight","bold");
+      // Expand the arc slightly
       var s = d3.arc()
         .innerRadius(innerRadius)
         .outerRadius(outerRadius+5)
         .padAngle(.20)
         .padRadius(5);
       d3.select(this).attr("d", s(i));
-      return segments(i);
     })
 
-    // Action executed when the mouse is over the section
+    // Action executed when the mouse leaves the section
     .on("mouseout", function(d,i){
-      canvas.attr("width", width);
-
-      d3.select("#"+selector).select("ul").select('.'+selector+'Label'+i.index)
-      .style("font-size", "2em")
-      .style("line-height","0.5em");
-      d3.select("#"+selector).select("ul").select('.'+selector+'Label'+i.index).select("a")
-      .style("font-size", "1em")
-      .style("line-height","0.5em")
-      .style("font-weight", "normal");
-      // Define the div for the tooltip
-      canvas.select("."+selector+"tooltip").remove();
-
+      // Remove label highlight
+      d3.select("#"+selector).select('.'+selector+'Label'+i.index)
+        .style("font-weight","normal");
+      // Reset arc size
       var s = d3.arc()
         .innerRadius(innerRadius)
         .outerRadius(outerRadius)
         .padAngle(.20)
         .padRadius(5);
       d3.select(this).attr("d", s(i));
-      return segments(i);
     })
     .on("click", function(i, d){
       if(typeof(d.data.href) != "undefined" && d.data.href != "")
         window.location.replace(d.data.href)
     });
 
-  //Add label text
-    d3.select("#"+selector).append("ul")
-    .selectAll("li")
+  //Add label text below (stacked vertically)
+    d3.select("#"+selector).append("div")
+    .style("display", "flex")
+    .style("flex-direction", "column")
+    .style("align-items", "center")
+    .style("gap", "8px")
+    .style("font-size", "17px")
+    .style("margin-top", "12px")
+    .selectAll("div")
     .data(dataset)
     .enter()
-    .append("li")
-    .style("font-size", "2em")
-    .style("line-height","0.5em")
-    .attr("class",function(d,i){return selector+'Label'+i})
-    .style("color",function(d, i){
-      var tmp = segments(d);
-      return colors[i];
-    })
+    .append("div")
     .style("display", function(d,i){
       if(d.data.value == 0)
         return "none";
       else
-        return "reset";
+        return "flex";
     })
-    .append("span")
-    .append('a')
-    .style("color","black")
-    .attr("href", function(d){return d.data.href})
-    .text(function(d,i){return d.data.label+" ("+d.data.value+d.data.unit+")"});
+    .style("align-items", "center")
+    .attr("class",function(d){return selector+'Label'+d.index})
+    .html(function(d, i){
+      return '<span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:'+colors[i]+';margin-right:8px;"></span>' +
+        '<span style="color:#333;font-size:13px;">' + d.data.label + ' (' + d.data.value + d.data.unit + ')</span>';
+    });
 
     if(dataset.length == 3)
     {

@@ -63,6 +63,9 @@ $sidemenu->addSideMenuItem(new SideMenuItem(_T("Manage Providers", "admin"), "ad
 
 $sidemenu->addSideMenuItem(new SideMenuItem($providerLabel, "admin", "admin", "editProvider"));
 
+// Configuration
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("Configuration", "admin"), "admin", "admin", "configList"));
+
 // --------------------- WebSocket Logs ----------------
 $sidemenu->addSideMenuItem(
     new SideMenuItem(_T("Server Logs","admin"), "admin", "admin", "webSocket_logs")

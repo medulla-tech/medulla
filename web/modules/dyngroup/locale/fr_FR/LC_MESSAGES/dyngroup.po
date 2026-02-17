@@ -903,3 +903,27 @@ msgstr "L'équation booléenne est valide"
 #: modules/dyngroup/dyngroup/save.php:165
 msgid "Display content"
 msgstr "Voir le contenu"
+
+#: modules/dyngroup/dyngroup/ajaxListGroups.php
+msgid "No favourite groups"
+msgstr "Aucun groupe favori"
+
+#: modules/dyngroup/dyngroup/ajaxListGroups.php
+msgid "Mark groups as favourite to see them here."
+msgstr "Marquez des groupes comme favoris pour les voir ici."
+
+#: modules/dyngroup/dyngroup/ajaxListGroups.php
+msgid "No imaging groups"
+msgstr "Aucun groupe d'imagerie"
+
+#: modules/dyngroup/dyngroup/ajaxListGroups.php
+msgid "Create an imaging group to get started."
+msgstr "Créez un groupe d'imagerie pour commencer."
+
+#: modules/dyngroup/dyngroup/ajaxListGroups.php
+msgid "No groups"
+msgstr "Aucun groupe"
+
+#: modules/dyngroup/dyngroup/ajaxListGroups.php
+msgid "Create a group to get started."
+msgstr "Créez un groupe pour commencer."

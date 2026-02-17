@@ -26,6 +26,7 @@
 //require("modules/dyngroup/includes/includes.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 require_once('modules/msc/includes/commands_xmlrpc.inc.php');
+require_once("includes/UIComponents.php");
 ?>
 
 <?php
@@ -90,6 +91,22 @@ if (isset($arraydeploy['total_of_rows']))
     $arraydeploy['lentotal'] += $arraynotdeploy['total'];
   }
 }
+
+if (!isset($arraydeploy['lentotal']) || $arraydeploy['lentotal'] == 0) {
+    if (isset($_GET['currenttasks']) && $_GET['currenttasks'] == '1') {
+        EmptyStateBox::show(
+            _T("No current tasks", "xmppmaster"),
+            _T("No deployments are in progress.", "xmppmaster")
+        );
+    } else {
+        EmptyStateBox::show(
+            _T("No past tasks", "xmppmaster"),
+            _T("No deployments have been completed yet.", "xmppmaster")
+        );
+    }
+    return;
+}
+
 $arrayname = array();
 $arraytitlename = array();
 $arraystate = array();
@@ -374,5 +391,4 @@ $n->start = 0;
 $n->end = $arraydeploy['lentotal'];
 
 $n->display();
-echo "<br>";
 ?>

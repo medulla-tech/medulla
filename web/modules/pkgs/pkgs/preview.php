@@ -12,12 +12,12 @@ $content = htmlspecialchars(base64_decode($content['content']));
 
 $match = preg_match_all("#\r?\n#", $content);
 echo 'new line : '.$match.'<br>';
-echo '<div style="display:flex">';
+echo '<div class="preview-container">';
 echo '<label for="nlmode">'._T("NL mode (unix)", "pkgs").'</label><input type="radio" id="nlmode" name="lfmode" value="ln" checked/>';
 echo '<label for="crlfmode">'._T("CRLF mode (win)", "pkgs").'</label><input type="radio" id="crlfmode" name="lfmode" value="crln"/>';
 echo '</div>';
 
-echo '<pre style="max-height:40vh;overflow-y:scroll">';
+echo '<pre class="preview-content">';
 echo '<object id="filecontainer">';
 echo '</object>';
 echo '</pre>';

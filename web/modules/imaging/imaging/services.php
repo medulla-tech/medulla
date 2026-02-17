@@ -97,7 +97,6 @@ if (($type == '' && (xmlrpc_isComputerRegistered($target_uuid) || xmlrpc_isCompu
         $ajax = new AjaxFilter("modules/imaging/imaging/ajaxServices.php", "Level2", $params, "Level2");
         //$ajax->setRefresh(10000);
         $ajax->display();
-        echo '<br/><br/><br/>';
         $ajax->displayDivToUpdate();
     }
 

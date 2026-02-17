@@ -1,0 +1,658 @@
+/*
+ * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+ * (c) 2007-2012 Mandriva, http://www.mandriva.com
+ * (c) 2016-2025 Siveo, http://www.siveo.net
+ *
+ * Dashboard specific styles
+ */
+
+/* ---------------------------------------- */
+/* Dashboard Grid                           */
+/* ---------------------------------------- */
+
+#dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-flow: dense;
+  gap: 16px;
+}
+
+.dashboard-column {
+  width: auto !important;
+  float: none !important;
+  padding: 0;
+  margin: 0;
+}
+
+/* Drag and drop placeholder */
+.column-placeholder {
+  background: rgba(58, 143, 168, 0.1);
+  border: 2px dashed var(--color-primary-light);
+  border-radius: 8px;
+}
+
+.dashboard-column .portlet {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard-column .portlet.collapsed {
+  height: auto;
+}
+
+.dashboard-column .portlet .portlet-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Widgets with multiple sections: distribute content from top to bottom */
+#col1 .portlet-content,
+#col8 .portlet-content,
+#col9 .portlet-content,
+#col10 .portlet-content {
+  justify-content: space-between;
+}
+
+/* Donut widgets: align content to top */
+#col2 .portlet-content,
+#col3 .portlet-content,
+#col4 .portlet-content,
+#col6 .portlet-content,
+#col7 .portlet-content {
+  justify-content: flex-start;
+}
+
+/* Général widget spans 2 rows */
+#col1 {
+  grid-row: span 2;
+}
+
+.dashboard-column:empty {
+  display: none;
+}
+
+/* Hide collapsed widgets in main grid - they move to drawer */
+#dashboard-grid > .dashboard-column.collapsed-column {
+  display: none;
+}
+
+/* But show them inside the collapsed section */
+#collapsed-widgets-section > .dashboard-column.collapsed-column {
+  display: block;
+}
+
+/* ---------------------------------------- */
+/* Disabled Widgets Drawer                  */
+/* ---------------------------------------- */
+
+/* Drawer toggle button */
+#disabled-widgets-btn {
+  position: fixed;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 999;
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  border-radius: 0 6px 6px 0;
+  padding: 10px 5px;
+  cursor: pointer;
+  box-shadow: 2px 0 8px rgba(0,0,0,0.15);
+  transition: all 0.2s ease;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+#disabled-widgets-btn:hover {
+  background: var(--color-primary-light);
+  padding-right: 8px;
+}
+
+#disabled-widgets-btn .btn-count {
+  display: inline-block;
+  background: rgba(255,255,255,0.25);
+  border-radius: 10px;
+  padding: 2px 6px;
+  margin-top: 6px;
+  font-size: 10px;
+}
+
+#disabled-widgets-btn.hidden {
+  display: none;
+}
+
+/* Drawer panel */
+#disabled-widgets-drawer {
+  position: fixed;
+  left: -320px;
+  top: 0;
+  width: 300px;
+  height: 100vh;
+  background: var(--color-bg-white);
+  box-shadow: 4px 0 20px rgba(0,0,0,0.15);
+  z-index: 1000;
+  transition: left 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+#disabled-widgets-drawer.open {
+  left: 0;
+}
+
+.drawer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--color-border-light);
+  background: var(--color-bg-light);
+}
+
+.drawer-header h3 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-dark);
+}
+
+.drawer-close {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: var(--color-text-medium);
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+}
+
+.drawer-close:hover {
+  background: var(--color-bg-gray);
+  color: var(--color-text-dark);
+}
+
+.drawer-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+}
+
+/* Collapsed widgets inside drawer */
+#collapsed-widgets-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#collapsed-widgets-section .dashboard-column {
+  width: 100%;
+}
+
+#collapsed-widgets-section .dashboard-column .portlet {
+  height: auto;
+  min-height: auto;
+  background: var(--color-bg-light);
+  border-radius: 8px;
+  border: 1px solid var(--color-border-light);
+  transition: all 0.2s ease;
+}
+
+#collapsed-widgets-section .dashboard-column .portlet:hover {
+  background: var(--color-bg-white);
+  border-color: var(--color-primary-light);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+#collapsed-widgets-section .dashboard-column .portlet-header {
+  border-bottom: none;
+  padding: 12px 14px;
+  border-radius: 8px;
+}
+
+#collapsed-widgets-section .dashboard-column .portlet-header .header-title {
+  font-size: 12px;
+}
+
+#collapsed-widgets-section .dashboard-column .portlet-content {
+  display: none;
+}
+
+/* Drawer overlay */
+#drawer-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.3);
+  z-index: 999;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+#drawer-overlay.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* ---------------------------------------- */
+/* Portlet (Widget) Styling                 */
+/* ---------------------------------------- */
+
+.portlet {
+  background-color: #fff;
+  padding: 0px;
+  margin: 10px;
+  min-width: 220px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.portlet-header {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  padding: 12px 14px;
+  margin: 0;
+  cursor: move;
+  background-color: transparent;
+  border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.portlet-header .header-title {
+  flex: 1;
+  font-size: 14px;
+}
+
+.portlet-header .header-switch {
+  flex-shrink: 0;
+}
+
+.portlet-header .ui-icon {
+  float: right;
+}
+
+.portlet-content {
+  padding: 14px;
+}
+
+.portlet-content h1 {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-text-light);
+  margin: 0 0 8px 0;
+}
+
+.portlet-content ul {
+  padding-left: 16px;
+  margin: 8px 0;
+  font-size: 11px;
+}
+
+.portlet-content li {
+  margin-bottom: 4px;
+}
+
+/* Donut/pie charts containers */
+.portlet-content > div[id$="-graph"],
+.portlet-content > div[id$="-graphs"],
+.portlet-content > div[id$="Chart"] {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  flex: 1;
+}
+
+/* Center buttons in update widget */
+#updates_zone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 8px;
+}
+
+#updates_zone button {
+  margin: 4px 0 !important;
+}
+
+/* Toggle switch in portlets */
+.portlet .switch {
+  position: relative;
+  display: inline-block;
+  width: 36px;
+  height: 20px;
+}
+
+.portlet .switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.portlet .slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.3s;
+  border-radius: 20px;
+}
+
+.portlet .slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  transition: 0.3s;
+  border-radius: 50%;
+}
+
+.portlet input:checked + .slider {
+  background-color: #8CB63C;
+}
+
+.portlet input:checked + .slider:before {
+  transform: translateX(16px);
+}
+
+.portlet .errors {
+  color: var(--color-error);
+  font-weight: bold;
+}
+
+.portlet .alert {
+  padding: 4px;
+}
+
+/* ---------------------------------------- */
+/* Responsive Grid                          */
+/* ---------------------------------------- */
+
+/* 5 columns on large screens */
+@media (min-width: 1600px) {
+  #dashboard-grid {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+/* 2 columns on smaller screens */
+@media (max-width: 1200px) {
+  #dashboard-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  #col1 {
+    grid-row: span 1;
+  }
+}
+
+/* 1 column on mobile */
+@media (max-width: 700px) {
+  #dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------------------------------------- */
+/* General Widget                           */
+/* ---------------------------------------- */
+
+.general-header {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.general-hostname {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 4px;
+}
+
+.general-os {
+  font-size: 13px;
+  color: #555;
+  margin-bottom: 2px;
+}
+
+.general-uptime {
+  font-size: 12px;
+  color: #888;
+}
+
+.general-section {
+  margin-bottom: 20px;
+}
+
+.general-section-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: #666;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  letter-spacing: 0.5px;
+}
+
+/* ---------------------------------------- */
+/* Dashboard Legends                        */
+/* ---------------------------------------- */
+
+.dashboard-legend {
+  text-align: center;
+  font-size: 10px;
+  color: #666;
+  margin-top: 8px;
+}
+
+#agents-legend,
+#deploymentsLaunched-legend {
+  text-align: center;
+  font-size: 10px;
+  color: #666;
+  margin-top: 8px;
+}
+
+/* ---------------------------------------- */
+/* Graph Containers                         */
+/* ---------------------------------------- */
+
+.space-chart-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+.dashboard-graph-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+#computersonline-graph,
+#ram-graph {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+/* ---------------------------------------- */
+/* Custom Loader (Product Updates)          */
+/* ---------------------------------------- */
+
+.custom-loader-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100px;
+  padding: 20px 12px 18px 12px;
+  border-radius: 8px;
+}
+
+.custom-spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  animation: dashboard-spin 1s linear infinite;
+  margin-bottom: 16px;
+}
+
+@keyframes dashboard-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.custom-loader-title {
+  font-size: 1em;
+  font-weight: 700;
+  text-align: center;
+  color: #222;
+  margin-bottom: 10px;
+  margin-top: 3px;
+  letter-spacing: 0.01em;
+}
+
+.custom-loader-title.error {
+  color: #c00;
+}
+
+.custom-loader-msg {
+  color: #666;
+  font-size: 0.98em;
+  text-align: center;
+  margin-top: 8px;
+  line-height: 1.4;
+  font-weight: 500;
+  max-width: 190px;
+}
+
+/* ---------------------------------------- */
+/* Update Status Widget                     */
+/* ---------------------------------------- */
+
+#update_status ul {
+  margin: 0;
+  padding-left: 28px;
+}
+
+#update_status li {
+  list-style: none;
+  font-size: 13px;
+}
+
+#update_status li:before {
+  content: "\2022";
+  font-size: 20px;
+  vertical-align: bottom;
+  line-height: 16px;
+  margin-right: 3px;
+}
+
+#update_status li img {
+  height: 10px;
+  padding-left: 3px;
+}
+
+#update_status li span {
+  color: #000;
+}
+
+/* ---------------------------------------- */
+/* Page Overlay (Updates Installation)      */
+/* ---------------------------------------- */
+
+.page-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.page-overlay-content {
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.page-overlay-content .custom-spinner {
+  margin: 0 auto 16px auto;
+}
+
+/* ---------------------------------------- */
+/* Error Messages                           */
+/* ---------------------------------------- */
+
+.dashboard-error-message {
+  color: red;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* ---------------------------------------- */
+/* Updates Info Widget                      */
+/* ---------------------------------------- */
+
+.custom-updates-info {
+  text-align: center;
+}
+
+.custom-updates-info .updates-available {
+  color: green;
+  font-weight: bold;
+  margin-bottom: 1.2em;
+}
+
+.custom-updates-info .btnSecondary {
+  color: black;
+  margin-bottom: 10px;
+  display: inline-block;
+}
+
+.overlay-title {
+  font-weight: bold;
+  margin-bottom: 7px;
+}
+
+.overlay-message {
+  color: #666;
+  font-size: 14px;
+  text-align: center;
+  line-height: 1.5;
+}
+
+.page-overlay.hidden {
+  display: none;
+}

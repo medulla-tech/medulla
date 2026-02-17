@@ -52,7 +52,6 @@ $ajax = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxlogsgrpxmpp"), 
 $ajax->setRefresh($refresh->refreshtime());
 $ajax->display();
 
-print "<br/><br/><br/>";
 $ajax->displayDivToUpdate();
 
 ?>

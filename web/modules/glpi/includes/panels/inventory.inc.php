@@ -50,7 +50,7 @@ class GlpiPanel extends Panel
         $urlRedirect = json_encode(urlStrRedirect("base/computers/createStaticGroup"));
 
         echo <<< INVENTORY
-    <div id="inventory-graphs"></div>
+    <div id="inventory-graphs" style="display:flex;flex-direction:column;align-items:center;flex:1;"></div>
     <script type="text/javascript">
     var machineCount = $jsonCount,
         days = $jsonDays,
@@ -62,20 +62,22 @@ class GlpiPanel extends Panel
         urlRedirect = $urlRedirect;
 
     var datas = [
+      {'label': '', 'value': 0, 'href': ''},
+      {'label': '', 'value': 0, 'href': ''},
       {
         'label': lessThanText.replace("%s", days['orange']).split(": %percent%")[0],
         'value':("green" in machineCount)?machineCount["green"]:0,
         'href':urlRedirect+"&group=green&days="+days['orange'],
       },
       {
-        'label': moreThanText.replace("%s", days['red']).split(": %percent%")[0],
-        'value':("red" in machineCount)?machineCount["red"]:0,
-        'href':urlRedirect+"&group=red&days="+days['red'],
-      },
-      {
         'label': moreThanText.replace("%s", days['orange']).split(": %percent%")[0],
         'value':("orange" in machineCount)?machineCount["orange"]:0,
         'href':urlRedirect+"&group=orange&days="+days['orange'],
+      },
+      {
+        'label': moreThanText.replace("%s", days['red']).split(": %percent%")[0],
+        'value':("red" in machineCount)?machineCount["red"]:0,
+        'href':urlRedirect+"&group=red&days="+days['red'],
       },
       {
         'label': unregisteredText,

@@ -1,0 +1,731 @@
+/*
+ * (c) 2016-2025 Siveo, http://www.siveo.net
+ * (c) 2024-2025 Medulla, http://www.medulla-tech.io
+ *
+ * Pkgs module styles - consolidated CSS
+ * Uses CSS variables from global.css for consistency
+ */
+
+/* ============================================ */
+/* General Utilities                            */
+/* ============================================ */
+
+.noborder {
+  border: 0;
+}
+
+/* ============================================ */
+/* Action Button Container                      */
+/* ============================================ */
+
+.action-button-container {
+  margin-bottom: 15px;
+}
+
+/* ============================================ */
+/* Rules Form                                   */
+/* ============================================ */
+
+#add-rule textarea,
+#edit-rule textarea {
+  width: 100%;
+  max-width: 350px;
+  min-height: 80px;
+  box-sizing: border-box;
+}
+
+/* ============================================ */
+/* Package List - Info Tooltips                 */
+/* ============================================ */
+
+a.info {
+  position: relative;
+  z-index: 24;
+  color: #000;
+  text-decoration: none;
+}
+
+a.info:hover {
+  z-index: 25;
+  background-color: #fff;
+}
+
+a.info span {
+  display: none;
+}
+
+a.info:hover span {
+  display: block;
+  position: absolute;
+  top: 2em;
+  left: 2em;
+  width: 25em;
+  border: 1px solid #000;
+  background-color: #E0FFFF;
+  color: #000;
+  text-align: justify;
+  font-weight: normal;
+  padding: 5px;
+}
+
+/* ============================================ */
+/* Package List - Status Colors                 */
+/* ============================================ */
+
+.pkg-size-tooltip {
+  cursor: help;
+  border-bottom: 1px dotted #666;
+}
+
+.pkg-disk-ok {
+  color: green;
+}
+
+.pkg-disk-warning {
+  color: orange;
+}
+
+.pkg-disk-critical {
+  color: red;
+}
+
+.pkg-licenses {
+  border-width: 1px;
+  border-style: dotted;
+  border-color: black;
+}
+
+.pkg-icon {
+  position: relative;
+  top: 5px;
+}
+
+/* ============================================ */
+/* Package Detail - Actions                     */
+/* ============================================ */
+
+.actions:target {
+  background-color: #ffa;
+}
+
+.actions {
+  margin-bottom: 5px;
+  padding: 3px;
+  border: dashed 1px rgb(100, 100, 100);
+}
+
+.actions a {
+  padding: 1px;
+}
+
+.actions a:hover {
+  background-color: #007fff;
+  color: #fff;
+  border: 1px solid #003eff;
+}
+
+/* ============================================ */
+/* Desynchronization                            */
+/* ============================================ */
+
+.spaced h2 {
+  margin-bottom: 5px;
+  margin-top: 5px;
+}
+
+/* ============================================ */
+/* Data-title Tooltips (workflow actions)       */
+/* ============================================ */
+
+[data-title] {
+  position: relative;
+}
+
+[data-title]:after {
+  content: attr(data-title);
+  background-color: #00FF00;
+  color: #111;
+  font-size: 100%;
+  position: absolute;
+  padding: 1px 5px 2px 5px;
+  bottom: -1.6em;
+  left: 10%;
+  white-space: nowrap;
+  box-shadow: 1px 1px 3px #222;
+  opacity: 0;
+  border: 1px solid #111;
+  z-index: 99999;
+  visibility: hidden;
+}
+
+[data-title]:hover:after {
+  opacity: 1;
+  transition: all 0.1s ease 0.5s;
+  visibility: visible;
+}
+
+.showText {
+  text-decoration: none;
+}
+
+.showText:hover {
+  position: relative;
+}
+
+.showText span {
+  display: none;
+}
+
+.showText:hover span {
+  border: #666 2px solid;
+  padding: 5px 20px 5px 5px;
+  display: block;
+  z-index: 1000;
+  background: #e3e3e3;
+  left: 0;
+  margin: 15px;
+  width: 200px;
+  position: absolute;
+  top: 15px;
+  text-decoration: none;
+  border-radius: 100% 50%;
+  text-align: center;
+  box-shadow: 10px 10px 5px 0 rgba(0, 0, 0, 0.75);
+}
+
+/* ============================================ */
+/* Autocomplete / Easy Suggest                  */
+/* ============================================ */
+
+.easy_suggest {
+  background-color: #e5e5e5;
+  border: 1px solid #ccc;
+  border-width: 0 1px;
+  box-shadow: 0 2px 4px #ccc;
+  border-bottom-right-radius: 8px;
+  border-bottom-left-radius: 8px;
+  display: none;
+  overflow: hidden;
+  position: absolute;
+  z-index: 9999;
+}
+
+.easy_list {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+.easy_list li {
+  border: 1px solid #ccc;
+  border-width: 0 1px 1px 0;
+  font-size: 12px;
+  list-style: none;
+  text-align: left;
+  width: 100%;
+}
+
+.easy_list li a {
+  color: #000;
+  display: block;
+  padding: 5px;
+  text-decoration: none;
+}
+
+.easy_list li.selected {
+  background-color: #678FD6;
+  color: #fff;
+}
+
+.easy_list li.selected a {
+  color: #fff;
+}
+
+/* ============================================ */
+/* Preview Page                                 */
+/* ============================================ */
+
+.preview-container {
+  display: flex;
+}
+
+.preview-content {
+  max-height: 40vh;
+  overflow-y: scroll;
+}
+
+/* ============================================ */
+/* Error Messages                               */
+/* ============================================ */
+
+.pkg-error {
+  color: red;
+  font-weight: bold;
+}
+
+.pkg-warning {
+  color: orange;
+}
+
+/* ============================================ */
+/* Hidden Action Markers                        */
+/* ============================================ */
+
+.action-marker {
+  display: none;
+}
+
+/* ============================================ */
+/* Workflow Builder (imported from package.css) */
+/* ============================================ */
+
+/* Section titles - styles defined in global.css via span[class$="-title"] */
+
+.workflow-section {
+  margin-top: 16px;
+}
+
+.workflow-section .pkgs-title {
+  margin-bottom: 12px;
+}
+
+.workflow-builder {
+  display: flex;
+  gap: 20px;
+  width: 100%;
+}
+
+.workflow-panel {
+  min-width: 0;
+}
+
+.workflow-panel-available {
+  width: 35%;
+  flex-shrink: 0;
+  position: sticky;
+  top: 10px;
+  align-self: flex-start;
+}
+
+.workflow-panel-current {
+  flex: 1;
+}
+
+.workflow-panel h3 {
+  font-size: 13px;
+  font-weight: 600;
+  color: #444;
+  margin: 0 0 8px 0;
+}
+
+#available-actions,
+#current-actions {
+  margin: 0;
+  padding: 8px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  min-height: 40px;
+  list-style: none;
+}
+
+/* ---- Available actions (left panel) ---- */
+
+#available-actions .header {
+  background-color: #25607d;
+  border-radius: 4px;
+  margin-bottom: 4px;
+  padding: 8px 12px;
+  transition: background-color 0.2s ease;
+}
+
+#available-actions .header:hover {
+  background-color: #1d4e66;
+}
+
+#available-actions .header h1 {
+  color: #fff;
+  margin: 0;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+#available-actions .content {
+  display: none;
+}
+
+#available-actions li {
+  list-style: none;
+}
+
+#available-actions li:hover {
+  cursor: move;
+}
+
+/* ---- Workflow actions (right panel) ---- */
+
+#current-actions .header {
+  background-color: #25607d;
+  border-radius: 4px 4px 0 0;
+  padding: 8px 12px;
+}
+
+#current-actions .header h1 {
+  color: #fff;
+  margin: 0;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+#current-actions li {
+  width: 100%;
+  margin-bottom: 6px;
+  list-style-type: none;
+}
+
+#current-actions li .content {
+  background-color: #fafafa;
+  border: 1px solid #ddd;
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  padding: 12px;
+  margin-bottom: 0;
+}
+
+#current-actions li .content table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+#current-actions li .content table td,
+#current-actions li .content table th {
+  border: none;
+  padding: 6px 10px 6px 0;
+  font-size: 12px;
+  font-weight: 500;
+  color: #444;
+  text-align: left;
+  vertical-align: middle;
+  line-height: 1.6;
+}
+
+#current-actions li .content table th:first-child,
+#current-actions li .content table td:first-child {
+  width: 160px;
+  white-space: nowrap;
+  padding-right: 16px;
+}
+
+/* Override HTML width="16%"/width="25%" on non-label cells */
+#current-actions li .content table th:not(:first-child),
+#current-actions li .content table td:not(:first-child) {
+  width: auto;
+}
+
+/* Hide 3rd+ columns (always empty padding cells) */
+#current-actions li .content table td:nth-child(n+3),
+#current-actions li .content table th:nth-child(n+3) {
+  display: none;
+}
+
+/* When a cell is alone in its row, let it take full width */
+#current-actions li .content table th:only-child,
+#current-actions li .content table td:only-child {
+  width: 100%;
+  white-space: normal;
+}
+
+#current-actions li .content table input[type="text"],
+#current-actions li .content table select {
+  width: 260px;
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 12px;
+  box-sizing: border-box;
+}
+
+#current-actions li .content table input[type="number"] {
+  width: 60px;
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 12px;
+  box-sizing: border-box;
+}
+
+#current-actions li .content table textarea {
+  width: 100%;
+  height: 5em;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 8px;
+  font-size: 12px;
+  box-sizing: border-box;
+}
+
+/* Checkbox alignment in action rows */
+#current-actions li .content table input[type="checkbox"] {
+  vertical-align: middle;
+  margin: 0 6px 2px 0;
+}
+
+#current-actions li .content > .btn {
+  margin-top: 12px;
+  margin-right: 6px;
+  margin-left: 0;
+}
+
+/* ---- Toggleable option rows ---- */
+
+#current-actions li .content table tr.toggleable {
+  border-top: 1px solid #e8e8e8;
+}
+
+#current-actions li .content table tr.toggleable td:first-child,
+#current-actions li .content table tr.toggleable th:first-child {
+  white-space: normal;
+}
+
+/* Goto return code section */
+.goto-on-return-section {
+  margin-top: 8px;
+}
+
+.goto-on-return {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 6px 0;
+  flex-wrap: wrap;
+}
+
+.goto-on-return input[type="text"] {
+  width: 120px !important;
+  padding: 5px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 12px;
+  box-sizing: border-box;
+}
+
+.goto-on-return input[type="button"] {
+  padding: 4px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: #fff;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.goto-on-return input[type="button"]:hover {
+  background: #f0f0f0;
+}
+
+.add-goto {
+  margin-left: 8px !important;
+  margin-top: 0 !important;
+}
+
+/* ---- Section titles (h1 above panels) ---- */
+
+#workflow h1,
+#available-actions + h1 {
+  font-size: 13px;
+  font-weight: 600;
+  color: #444;
+  margin: 0 0 8px 0;
+}
+
+/* ---- Workflow selected list ---- */
+
+#workflow-selected-list li {
+  display: block;
+  margin-bottom: 5px;
+}
+
+#upload-result {
+  clear: left;
+}
+
+/* ============================================ */
+/* Question/Loop Action Inputs                  */
+/* ============================================ */
+
+.action-goto-input {
+  width: 80px;
+}
+
+/* ============================================ */
+/* Sidebar Icons                                */
+/* ============================================ */
+
+li.file a {
+  padding: 0 0 5px 20px;
+  margin: 0;
+  background-image: url("../img/file.png");
+  background-repeat: no-repeat;
+  background-position: left top;
+  line-height: 18px;
+  text-decoration: none;
+  color: #fff;
+}
+
+li.info a {
+  padding: 0 0 5px 20px;
+  margin: 0;
+  background-image: url("../../msc/graph/images/detail.gif");
+  background-repeat: no-repeat;
+  background-position: left top;
+  line-height: 18px;
+  text-decoration: none;
+  color: #fff;
+}
+
+li.associate_files a {
+  padding: 0 0 5px 20px;
+  margin: 0;
+  background-image: url("../img/share.png");
+  background-repeat: no-repeat;
+  background-position: left top;
+  line-height: 18px;
+  text-decoration: none;
+  color: #fff;
+}
+
+/* ============================================ */
+/* Package Cell                                 */
+/* ============================================ */
+
+td.package {
+  padding: 0 0 0 37px;
+  background-image: url("../img/package.png");
+  background-position: 7px 7px;
+  background-repeat: no-repeat;
+}
+
+/* ============================================ */
+/* Label with Description                       */
+/* ============================================ */
+
+.label span {
+  float: right;
+  width: 250px;
+  color: grey;
+}
+
+/* ============================================ */
+/* Package List Table Headers                   */
+/* ============================================ */
+
+.pkg-name-header {
+  padding-left: 32px;
+}
+
+.pkg-actions-header {
+  text-align: center;
+}
+
+.pkg-list-spacer {
+  height: 2em;
+}
+
+/* ============================================ */
+/* Package Files Table (detail page)            */
+/* ============================================ */
+
+.pkg-files-table th,
+.pkg-files-table td {
+  text-align: center;
+}
+
+/* ============================================ */
+/* Dependencies Widget                          */
+/* ============================================ */
+
+.pkg-dependency-table,
+.pkg-dependency-table td {
+  border: none;
+}
+
+.pkg-dependency-pool {
+  padding-left: 10px;
+}
+
+.pkg-opt-name {
+  position: absolute;
+}
+
+/* ============================================ */
+/* File List Table (edit package)               */
+/* ============================================ */
+
+/* Add left padding to first column header and cells */
+.listinfos th:first-child,
+.listinfos td:first-child {
+  padding-left: 12px;
+}
+
+/* Center action column */
+.listinfos td.action {
+  text-align: center;
+}
+
+.listinfos td.action ul.action {
+  float: none;
+  display: inline-flex;
+  justify-content: center;
+}
+
+/* ============================================ */
+/* Package List Table (main list)               */
+/* ============================================ */
+
+/*
+ * Column order in package list:
+ * 1: Package name, 2: Share, 3: Permissions, 4: Description,
+ * 5: Version, 6: Licenses, 7: OS, 8: Size, 9: Share usage, 10: Actions
+ */
+
+/* Description column - multi-line truncate with ellipsis, tooltip on hover via title attribute */
+.pkg-description {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+  line-height: 1.4;
+}
+
+/* Permissions - center */
+.listinfos td:nth-child(3),
+.listinfos th:nth-child(3) {
+  text-align: center;
+  width: 90px;
+}
+
+/* Licenses - center */
+.listinfos td:nth-child(6),
+.listinfos th:nth-child(6) {
+  text-align: center;
+  width: 80px;
+}
+
+/* OS - compact and center */
+.listinfos td:nth-child(7),
+.listinfos th:nth-child(7) {
+  text-align: center;
+  width: 50px;
+}
+
+/* Size - no wrap */
+.listinfos td:nth-child(8) {
+  white-space: nowrap;
+}
+
+/* Share usage - no wrap */
+.listinfos td:nth-child(9) {
+  white-space: nowrap;
+}

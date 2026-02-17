@@ -41,55 +41,6 @@ Descriptor Type
 }
 */
 ?>
-
-<!-- Style a modifier pour le title des boites de dialog -->
-<style>
-  [data-title]:hover:after {
-    opacity: 1;
-    transition: all 0.1s ease 0.5s;
-    visibility: visible;
-}
-[data-title]:after {
-    content: attr(data-title);
-    background-color: #00FF00;
-    color: #111;
-    font-size: 100%;
-    position: absolute;
-    padding: 1px 5px 2px 5px;
-    bottom: -1.6em;
-    left: 10%;
-    white-space: nowrap;
-    box-shadow: 1px 1px 3px #222222;
-    opacity: 0;
-    border: 1px solid #111111;
-    z-index: 99999;
-    visibility: hidden;
-}
-[data-title] {
-    position: relative;
-}
-.showText {text-decoration: none;}
-
-      .showText:hover {position: relative;}
-
-      .showText span {display: none;}
-
-      .showText:hover span {
-        border: #666 2px solid;
-        padding: 5px 20px 5px 5px;
-        display: block;
-        z-index: 1000;
-        background: #e3e3e3;
-        left: 0px;
-        margin: 15px;
-        width: 200px;
-        position: absolute;
-        top: 15px;
-        text-decoration: none;
-		border-radius:100% 50%;
-		text-align:center;
-		box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);}
-</style>
 <?php
 $namestep=_T("Kiosk Notification","pkgs");
 ?>

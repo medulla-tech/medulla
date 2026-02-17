@@ -26,38 +26,7 @@ require_once("modules/pkgs/includes/xmlrpc.php");
 require_once("modules/msc/includes/package_api.php");
 require_once("modules/msc/includes/utilities.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
-?>
-<style>
-a.info{
-    position:relative;
-    z-index:24;
-    color:#000;
-    text-decoration:none
-}
 
-a.info:hover{
-    z-index:25;
-    background-color:#FFF
-}
-
-a.info span{
-    display: none
-}
-
-a.info:hover span{
-    display:block;
-    position:absolute;
-    top:2em; left:2em; width:25em;
-    border:1px solid #000;
-    background-color:#E0FFFF;
-    color:#000;
-    text-align: justify;
-    font-weight:none;
-    padding:5px;
-}
-</style>
-
-<?php
 global $conf;
 function isExpertMode1()
 {
@@ -138,31 +107,31 @@ if($sharings['config']['centralizedmultiplesharing'] == true) {
             $occupation = number_format(($_packages['size'][$i] / $totalQuotas) * 100, 2);
 
 
-            $size = "<span style='border-bottom: 4px double blue' title='Size : ".number_format(($packageSize / 1048576), 2)." Mb&#013;"._T('Sharing disk usage', 'pkgs')." : &#013;".number_format(($usedQuotas / 1048576), 2)." Mb / ".number_format(($totalQuotas / 1048576), 2)." Mb ($percentQuotas %)&#013;"._T('Package occupation', 'pkgs')." : $occupation%'>".number_format(($packageSize / 1048576), 2)." Mb</span>";
+            $size = "<span class='pkg-size-tooltip' title='"._T('Sharing disk usage', 'pkgs').": ".number_format(($usedQuotas / 1048576), 2)." / ".number_format(($totalQuotas / 1048576), 2)." Mb ($percentQuotas %) - "._T('Package occupation', 'pkgs').": $occupation%'>".number_format(($packageSize / 1048576), 2)." Mb</span>";
         } else {
             $occupation = _T("Not limited", "pkgs");
-            $size = "<span style='border-bottom: 4px double black' title='Size : ".number_format(($packageSize / 1048576), 2)." Mb&#013;"._T('Sharing disk usage', 'pkgs')." : ".number_format(($usedQuotas / 1048576), 2)." Mb / "._T('not limited', 'pkgs')."&#013;'>".number_format(($packageSize / 1048576), 2)." Mb</span>";
+            $size = "<span class='pkg-size-tooltip' title='"._T('Sharing disk usage', 'pkgs').": "._T('not limited', 'pkgs')."'>".number_format(($packageSize / 1048576), 2)." Mb</span>";
         }
         $_sizes[] = $size;
 
         if($totalQuotas != 0) {
             if($percentQuotas < 70) {
-                $_diskUsages[] = "<span style='color:green;'>$percentQuotas %</span>";
+                $_diskUsages[] = "<span class='pkg-disk-ok'>$percentQuotas %</span>";
             } elseif($percentQuotas >= 70 && $percentQuotas < 90) {
-                $_diskUsages[] = "<span style='color:orange;'>$percentQuotas %</span>";
+                $_diskUsages[] = "<span class='pkg-disk-warning'>$percentQuotas %</span>";
             } else {
-                $_diskUsages[] = "<span style='color:red;'>$percentQuotas %</span>";
+                $_diskUsages[] = "<span class='pkg-disk-critical'>$percentQuotas %</span>";
             }
         } else {
-            $_diskUsages[] = _T("not limited", "pkgs");
+            $_diskUsages[] = _T("Not limited", "pkgs");
         }
 
         $_tmpParam = [];
         $_localisations[] = $_packages['share_name'][$i];
         $_sharing_types[] = $_packages['share_type'][$i];
-        $_descriptions[] = $_packages['conf_json'][$i]['description'];
+        $_desc = htmlspecialchars($_packages['conf_json'][$i]['description']);
+        $_descriptions[] = "<span class='pkg-description' title=\"$_desc\">$_desc</span>";
         $_versions[] = $_packages['conf_json'][$i]['version'];
-        $_licenses[] = $_packages['conf_json'][$i]['inventory']['licenses'];
         $_os[] = $_packages['conf_json'][$i]['targetos'];
 
         $_tmpParam['pid'] = base64_encode($_packages['uuid'][$i]);
@@ -173,21 +142,20 @@ if($sharings['config']['centralizedmultiplesharing'] == true) {
         // Missing list of file for each package
         switch($_packages['conf_json'][$i]['metagenerator']) {
             case "expert":
-                $_arraypackagename[] = "<img style='position:relative; top : 5px;'
+                $_arraypackagename[] = "<img class='pkg-icon'
                                           src='img/other/package.svg' width='25' height='25'/>" .
                                             "<span title='Package Expert Mode\n".$countfiles ." files : \n". $listfiles."'>".
                                                 $_packages['conf_json'][$i]['name'].
                                             "</span>" ;
                 break;
             case "standard":
-                $_arraypackagename[] = "<img style='position:relative; top : 5px;
-                                          'src='img/other/package.svg' width='25' height='25'/>".
-                                            "<span title='Package Standart Mode\n".$countfiles ." files : \n". $listfiles."'>".
+                $_arraypackagename[] = "<img class='pkg-icon' src='img/other/package.svg' width='25' height='25'/>".
+                                            "<span title='Package Standard Mode\n".$countfiles ." files : \n". $listfiles."'>".
                                                 $_packages['conf_json'][$i]['name'].
                                             "</span>"  ;
                 break;
             default: //"manual":
-                $_arraypackagename[] = "<img style='position:relative; top : 5px;'
+                $_arraypackagename[] = "<img class='pkg-icon'
                                           src='img/other/package_ro.svg' width='25' height='25'/>".
                                             "<span title='Package manual Mode\n".$countfiles ." files : \n". $listfiles."'>".
                                                 $_packages['conf_json'][$i]['name'].
@@ -206,7 +174,7 @@ if($sharings['config']['centralizedmultiplesharing'] == true) {
             $_tmpParam['licencemax'] = $_packages['conf_json'][$i]['inventory']['licenses'];
             $_urlRedirect = urlStrRedirect("pkgs/pkgs/createGroupLicence", $_params[0]);
 
-            $_tmp_licenses = '<span style="border-width:1px;border-style:dotted; border-color:black; ">' .
+            $_tmp_licenses = '<span class="pkg-licenses">' .
                 '<a href="' .
                 $_urlRedirect . '" title="Create group">' .
                 $_licensescount .
@@ -217,7 +185,7 @@ if($sharings['config']['centralizedmultiplesharing'] == true) {
                 $_tmp_licenses = '<font color="FF0000">' . $tmp_licenses . '</font>';
             }
         }
-        $_licenses[] = $_tmp_licenses;
+        $_licenses[] = $_tmp_licenses ?: '-';
         $_tmpParam['permission'] = $_packages['permission'][$i];
 
         if(!isExpertMode1()) {
@@ -289,7 +257,7 @@ if($sharings['config']['centralizedmultiplesharing'] == true) {
         $n->addExtraInfo($_versions, _T("Version", "pkgs"));
         $n->addExtraInfo($_licenses, _T("Licenses", "pkgs"));
         $n->addExtraInfo($_os, _T("Os", "pkgs"));
-        $n->addExtraInfo($_sizes, _T("Package size", "pkgs"));
+        $n->addExtraInfo($_sizes, _T("Size", "pkgs"));
         $n->addExtraInfo($_diskUsages, _T("Share usage", "pkgs"));
         $n->setItemCount($_count);
         $n->setNavBar(new AjaxNavBar($_count, $filter1));
@@ -302,7 +270,7 @@ if($sharings['config']['centralizedmultiplesharing'] == true) {
         $n->display();
     } else {
         echo '<table class="listinfos" cellspacing="0" cellpadding="5" border="1">
-<thead><tr><td style="width: ;"><span style=" padding-left: 32px;">Nom du package</span></td><td style="width: ;"><span style=" ">Localization</span></td><td style="width: ;"><span style=" ">Permissions</span></td><td style="width: ;"><span style=" ">Description</span></td><td style="width: ;"><span style=" ">Version</span></td><td style="width: ;"><span style=" ">Licences</span></td><td style="width: ;"><span style=" ">OS</span></td><td style="width: ;"><span style=" ">Taille du package</span></td><td style="width: ;"><span style=" ">Share usage</span></td><td style="text-align: center; width: ;"><span>Actions</span></td></tr></thead></table>';
+<thead><tr><td><span class="pkg-name-header">Nom du package</span></td><td>Localization</td><td>Permissions</td><td>Description</td><td>Version</td><td>Licences</td><td>OS</td><td>Taille</td><td>Share usage</td><td class="pkg-actions-header">Actions</td></tr></thead></table>';
     }
 } else {
     $params = array();
@@ -332,21 +300,21 @@ if($sharings['config']['centralizedmultiplesharing'] == true) {
         }
         switch($p['metagenerator']) {
             case "expert":
-                $arraypackagename[] = "<img style='position:relative; top : 5px;'
+                $arraypackagename[] = "<img class='pkg-icon'
                                           src='img/other/package.svg' width='25' height='25'/>" .
                                             "<span title='Package Expert Mode\n".$countfiles ." files : \n". $listfiles."'>".
                                                 $p['label'].
                                             "</span>" ;
                 break;
             case "standard":
-                $arraypackagename[] = "<img style='position:relative; top : 5px;
-                                          'src='img/other/package.svg' width='25' height='25'/>".
-                                            "<span title='Package Standart Mode\n".$countfiles ." files : \n". $listfiles."'>".
+                $arraypackagename[] = "<img class='pkg-icon'
+                                          src='img/other/package.svg' width='25' height='25'/>".
+                                            "<span title='Package Standard Mode\n".$countfiles ." files : \n". $listfiles."'>".
                                                 $p['label'].
                                             "</span>"  ;
                 break;
             default: //"manual":
-                $arraypackagename[] = "<img style='position:relative; top : 5px;'
+                $arraypackagename[] = "<img class='pkg-icon'
                                           src='img/other/package_ro.svg' width='25' height='25'/>".
                                             "<span title='Package manual Mode\n".$countfiles ." files : \n". $listfiles."'>".
                                                 $p['label'].
@@ -356,7 +324,8 @@ if($sharings['config']['centralizedmultiplesharing'] == true) {
 
         $uuid = $p['id'];
         $versions[] = $p['version'];
-        $desc[] = $p['description'];
+        $descText = htmlspecialchars($p['description']);
+        $desc[] = "<span class='pkg-description' title=\"$descText\">$descText</span>";
         $os[] = $p['targetos'];
         // #### begin licenses ####
         $tmp_licenses = '';
@@ -371,7 +340,7 @@ if($sharings['config']['centralizedmultiplesharing'] == true) {
             $param['licencemax'] = $p['licenses'];
             $urlRedirect = urlStrRedirect("pkgs/pkgs/createGroupLicence", $param);
 
-            $tmp_licenses = '<span style="border-width:1px;border-style:dotted; border-color:black; ">' .
+            $tmp_licenses = '<span class="pkg-licenses">' .
                 '<a href="' .
                 $urlRedirect . '" title="Create group">' .
                 $licensescount .
@@ -382,7 +351,7 @@ if($sharings['config']['centralizedmultiplesharing'] == true) {
                 $tmp_licenses = '<font color="FF0000">' . $tmp_licenses . '</font>';
             }
         }
-        $licenses[] = $tmp_licenses;
+        $licenses[] = $tmp_licenses ?: '-';
         // #### end licenses ####
         $size[] = prettyOctetDisplay($p['size']);
         $params[] = array( 'pid' => base64_encode($p['id']), 'packageUuid' => $p['id']);
@@ -428,7 +397,7 @@ if($sharings['config']['centralizedmultiplesharing'] == true) {
         $n->addExtraInfo($versions, _T("Version", "pkgs"));
         $n->addExtraInfo($licenses, _T("Licenses", "pkgs"));
         $n->addExtraInfo($os, _T("Os", "pkgs"));
-        $n->addExtraInfo($size, _T("Package size", "pkgs"));
+        $n->addExtraInfo($size, _T("Size", "pkgs"));
         $n->setItemCount($count);
         $n->setNavBar(new AjaxNavBar($count, $filter1));
         $n->setParamInfo($params);
@@ -440,11 +409,11 @@ if($sharings['config']['centralizedmultiplesharing'] == true) {
         $n->display();
     } else {
         echo '<table class="listinfos" cellspacing="0" cellpadding="5" border="1">
-<thead><tr><td style="width: ;"><span style=" padding-left: 32px;">Nom du package</span></td><td style="width: ;"><span style=" ">Localization</span></td><td style="width: ;"><span style=" ">Permissions</span></td><td style="width: ;"><span style=" ">Description</span></td><td style="width: ;"><span style=" ">Version</span></td><td style="width: ;"><span style=" ">Licences</span></td><td style="width: ;"><span style=" ">OS</span></td><td style="width: ;"><span style=" ">Taille du package</span></td><td style="width: ;"><span style=" ">Share usage</span></td><td style="text-align: center; width: ;"><span>Actions</span></td></tr></thead></table>';
+<thead><tr><td><span class="pkg-name-header">Nom du package</span></td><td>Localization</td><td>Permissions</td><td>Description</td><td>Version</td><td>Licences</td><td>OS</td><td>Taille</td><td>Share usage</td><td class="pkg-actions-header">Actions</td></tr></thead></table>';
     }
 }
 
-print "<br/><br/>"; // to go below the location bar : FIXME, really ugly as line height dependent
+print "<div class='pkg-list-spacer'></div>";
 
 
 ?>

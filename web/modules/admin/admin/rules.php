@@ -37,10 +37,8 @@ $p = new PageGenerator(_T("Rules List", 'admin'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
-print "<br/><br/><br/>";
 $ajax = new AjaxFilter(urlStrRedirect("admin/admin/ajaxRules"), "container", $params, 'formRunning');
 $ajax->display();
-print "<br/><br/><br/>";
 $ajax->displayDivToUpdate();
 
  ?>

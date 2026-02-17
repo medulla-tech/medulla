@@ -377,7 +377,7 @@ p {
   margin: 0;
   padding: 4px 8px 4px 0;
   list-style-type: none;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   flex: 1;
 }
 
@@ -544,7 +544,7 @@ p {
 #content {
   background-color: var(--color-bg-white);
   padding: 0px 30px 100px 15px;
-  border-top: 1px solid #d4d4d4;
+  margin-top: 10px;
 }
 
 #section {
@@ -619,14 +619,16 @@ h4 {
 /* Section titles in forms (span.section-title or span.*-title) */
 span.section-title,
 span[class$="-title"] {
-  font-size: var(--font-size-section-title, 15px);
+  font-size: 13px;
   font-weight: 600;
   color: #444050;
   padding: 8px 0 4px;
   display: block;
   border-bottom: 2px solid #444050;
-  margin-bottom: 4px;
+  margin-bottom: 12px;
+  margin-top: 8px;
   text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 /* Inside form table — pull left to cover label column */
@@ -636,10 +638,19 @@ span[class$="-title"] {
   width: calc(100% + 236px);
 }
 
-/* Legacy section-specific overrides */
+/* First section title in form — no extra top margin needed after page title */
+form > table > tbody > tr:first-child span.section-title,
+form > table > tbody > tr:first-child span[class$="-title"] {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+/* Page title */
 #section h2 {
-  font-size: 17px;
-  color: black;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--color-text-dark);
+  margin-bottom: 16px;
 }
 
 p.listInfos {
@@ -950,6 +961,7 @@ th {
   border-width: 1px 0 0 0;
   border-style: solid;
   vertical-align: center;
+  font-size: 13px;
 }
 
 td.printerName,
@@ -1463,12 +1475,12 @@ select#location.searchfieldreal.noborder {
 
 .searchbox {
   display: flex;
-  justify-content: flex-end;
   align-items: center;
+  justify-content: flex-end;
   gap: 8px;
   flex-wrap: nowrap;
   width: 100%;
-  margin: 20px 0 -25px 0;
+  margin: 20px 0 15px 0;
   padding: 0;
   background: transparent;
 }
@@ -1478,6 +1490,8 @@ select#location.searchfieldreal.noborder {
   align-items: center;
   gap: 4px;
   flex-wrap: nowrap;
+  width: fit-content;
+  max-width: 100%;
   padding: 4px 10px;
   border: 1px solid #d7dee6;
   border-radius: 9px;
@@ -1486,6 +1500,11 @@ select#location.searchfieldreal.noborder {
   transition:
     box-shadow 0.2s ease,
     border-color 0.2s ease;
+}
+
+/* Full width when there are multiple selects */
+#searchBest:has(select) {
+  width: 100%;
 }
 
 #searchBest > * {
@@ -1500,6 +1519,7 @@ select#location.searchfieldreal.noborder {
   width: auto !important;
   min-width: 0 !important;
   padding: 0;
+  flex: 1 1 auto;
 }
 
 #searchBest input.searchfieldreal {
@@ -1688,11 +1708,15 @@ select#location.searchfieldreal.noborder {
 }
 
 .loader {
-  display: inline-block;
+  display: none;
   float: none;
   position: static;
   margin: 0;
   vertical-align: middle;
+}
+
+.loader.active {
+  display: inline-block;
 }
 
 .items {
@@ -1761,7 +1785,8 @@ div.autocomplete ul li {
   background-color: var(--color-primary);
 }
 
-.listinfos thead td {
+.listinfos thead td,
+.listinfos thead th {
   font-weight: 600;
   color: var(--color-text-white);
   border: none;
@@ -1771,7 +1796,8 @@ div.autocomplete ul li {
   letter-spacing: 0.3px;
 }
 
-.listinfos thead td span {
+.listinfos thead td span,
+.listinfos thead th span {
   color: var(--color-text-white);
 }
 
@@ -1978,46 +2004,6 @@ ul.roACL {
   color: var(--color-text-medium);
 }
 
-/* ---------------------------------------- */
-/* Dashboard                               */
-/* ---------------------------------------- */
-
-.column {
-  width: 230px;
-  float: left;
-  padding: 20px 0 100px 0;
-}
-
-.portlet {
-  background-color: #fafafa;
-  padding: 0px;
-  margin: 20px 20px 10px 10px;
-  min-width: 220px;
-  border: 1px solid var(--color-border-light);
-  border-radius: 4px;
-
-  box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.05);
-}
-
-.portlet-header {
-  font-size: 13px;
-  font-weight: bold;
-  color: var(--color-text-dark);
-  padding: 10px;
-  margin: auto;
-  cursor: move;
-  background-color: #e6e6e6;
-  border-bottom: 1px solid #dadada;
-}
-
-.portlet-header .ui-icon {
-  float: right;
-}
-
-.portlet-content {
-  padding: 10px;
-}
-
 .ui-sortable-placeholder {
   border: 1px dotted #324c96;
   visibility: visible !important;
@@ -2045,16 +2031,6 @@ ul.roACL {
 .subpanel h4,
 .submod h4 {
   padding: 0;
-}
-
-.portlet .errors {
-  color: var(--color-error);
-  font-weight: bold;
-}
-
-.portlet .alert,
-.portlet .alert {
-  padding: 4px;
 }
 
 .errorTraceback pre {
@@ -2496,5 +2472,77 @@ td img[src*="img/other/"],
 .log-debug,
 .LOG_DEBUG {
   color: var(--color-text-light);
+}
+
+/* ---------------------------------------- */
+/* Empty State Box                          */
+/* ---------------------------------------- */
+
+.empty-state-box {
+  max-width: 500px;
+  margin: 40px auto;
+  padding: 24px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  text-align: center;
+}
+
+.empty-state-box-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.empty-state-box-description {
+  color: #666;
+  line-height: 1.5;
+  font-size: 13px;
+}
+
+/* ---------------------------------------- */
+/* Password Toggle (show/hide)              */
+/* ---------------------------------------- */
+
+.pw-wrap {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.pw-wrap > .pw-toggle {
+  position: absolute;
+  right: 1.6rem;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  width: 1.2rem;
+  height: 1.2rem;
+  line-height: 1;
+  z-index: 2;
+}
+
+.pw-toggle img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none;
+}
+
+.pw-feedback {
+  font-size: 0.9em;
+  margin-top: 0.25rem;
+  color: #e33;
+}
+
+.pw-wrap input.pw-error,
+.pw-wrap input.pw-error:focus {
+  border-color: #e33 !important;
+  outline: none !important;
+  box-shadow: none !important;
 }
 

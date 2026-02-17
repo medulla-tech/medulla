@@ -24,38 +24,7 @@
  */
 
 require_once("modules/xmppmaster/includes/xmlrpc.php");
-?>
-<style>
-a.info{
-    position:relative;
-    z-index:24;
-    color:#000;
-    text-decoration:none
-}
-
-a.info:hover{
-    z-index:25;
-    background-color:#FFF
-}
-
-a.info span{
-    display: none
-}
-
-a.info:hover span{
-    display:block;
-    position:absolute;
-    top:2em; left:2em; width:25em;
-    border:1px solid #000;
-    background-color:#E0FFFF;
-    color:#000;
-    text-align: justify;
-    font-weight:none;
-    padding:5px;
-}
-</style>
-
-<?php
+require_once("includes/UIComponents.php");
     global $conf;
     $maxperpage = $conf["global"]["maxperpage"];
     $filter = $_GET["filter"];
@@ -68,6 +37,14 @@ a.info:hover span{
     }
     $end = isset($_GET["end"]) ? $_GET["end"] : $maxperpage;
     $result = xmlrpc_getlistcommandforuserbyos($_SESSION['login'], '', $start, $end, $filter, $edit=1);
+
+    if ($result['len'] == 0) {
+        EmptyStateBox::show(
+            _T("No quick actions", "xmppmaster"),
+            _T("Create a quick action using the button above.", "xmppmaster")
+        );
+        return;
+    }
 
     $params = array();
     $names  = array();
@@ -103,6 +80,5 @@ a.info:hover span{
 $n->addActionItem(new ActionItem(_T("Edit a Quick Action", "xmppmaster"), "editqa", "edit", "xmppmaster", "xmppmaster", "xmppmaster"));
 $n->addActionItem(new ActionItem(_T("Share a Quick Action", "xmppmaster"), "shareqa", "groupshare", "xmppmaster", "xmppmaster", "xmppmaster"));
 $n->addActionItem(new ActionPopupItem(_T("Delete a Quick Action", "xmppmaster"), "deleteqa", "delete", "xmppmaster", "xmppmaster", "xmppmaster"));
-print "<br/><br/>";
 $n->display();
 ?>

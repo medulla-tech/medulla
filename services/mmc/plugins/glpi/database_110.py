@@ -78,6 +78,59 @@ from mmc.plugins.glpi.database_utils import (
 
 from mmc.plugins.glpi.database_utils import DbTOA  # pyflakes.ignore
 from mmc.plugins.dyngroup.config import DGConfig
+
+# GLPI 11 token decryption (xchacha20poly1305_ietf)
+# La clé doit être stockée en base64 dans saas_application.glpi_crypt_key
+_GLPI11_CRYPT_KEY = None  # Cache de la clé
+
+def _get_glpi11_crypt_key():
+    """Récupère la clé de chiffrement GLPI 11 depuis saas_application (cache)."""
+    global _GLPI11_CRYPT_KEY
+    if _GLPI11_CRYPT_KEY is not None:
+        return _GLPI11_CRYPT_KEY
+    try:
+        config = AdminDatabase().get_CONNECT_API()
+        key_b64 = config.get('glpi_crypt_key')
+        if key_b64:
+            _GLPI11_CRYPT_KEY = base64.b64decode(key_b64)
+    except Exception as e:
+        logging.getLogger().debug(f"Impossible de récupérer glpi_crypt_key: {e}")
+    return _GLPI11_CRYPT_KEY
+
+def decrypt_glpi11_token(encrypted_token: str) -> str:
+    """
+    Déchiffre un token GLPI 11 chiffré avec sodium xchacha20poly1305_ietf.
+    Si le déchiffrement échoue ou si la clé n'est pas configurée, retourne le token tel quel.
+    """
+    if not encrypted_token:
+        return encrypted_token
+
+    # Si le token ne ressemble pas à du base64 chiffré (pas de / ou = et < 50 chars), le retourner tel quel
+    if '/' not in encrypted_token and '=' not in encrypted_token and len(encrypted_token) < 50:
+        return encrypted_token
+
+    key = _get_glpi11_crypt_key()
+    if not key:
+        return encrypted_token
+
+    try:
+        from nacl.bindings import crypto_aead_xchacha20poly1305_ietf_decrypt
+
+        # Décoder base64
+        encrypted = base64.b64decode(encrypted_token)
+
+        # Séparer le nonce (24 bytes) et le ciphertext
+        NONCE_SIZE = 24  # SODIUM_CRYPTO_AEAD_XCHACHA20POLY1305_IETF_NPUBBYTES
+        nonce = encrypted[:NONCE_SIZE]
+        ciphertext = encrypted[NONCE_SIZE:]
+
+        # Déchiffrer - le nonce est aussi utilisé comme AD (additional data)
+        decrypted = crypto_aead_xchacha20poly1305_ietf_decrypt(ciphertext, nonce, nonce, key)
+        return decrypted.decode('utf-8')
+
+    except Exception as e:
+        logging.getLogger().debug(f"Échec déchiffrement token GLPI 11: {e}")
+        return encrypted_token
 from distutils.version import LooseVersion, StrictVersion
 #from mmc.plugins.xmppmaster.config import xmppMasterConfig
 
@@ -7532,7 +7585,7 @@ class Glpi110(DyngroupDatabaseHelper):
                 "firstname": safe(row.firstname),
                 "mail": safe(row.mail),
                 "phone": safe(row.phone),
-                "api_token": safe(row.api_token),
+                "api_token": decrypt_glpi11_token(safe(row.api_token)),
                 "is_activeuser": safe(row.is_activeuser),
                 "locations_id": safe(row.locations_id),
                 "profiles_id": safe(row.profiles_id),
@@ -9226,6 +9279,12 @@ and glpi_computers.id in %s group by glpi_computers.id;""" % (
             return {}
 
         result = dict(row._mapping)
+
+        # Déchiffrement des tokens GLPI 11
+        if result.get("api_token"):
+            result["api_token"] = decrypt_glpi11_token(result["api_token"])
+        if result.get("app_token"):
+            result["app_token"] = decrypt_glpi11_token(result["app_token"])
 
         # Nettoyage / formatage de la liste des entités
         liste_raw = result.get("liste_entities_user")

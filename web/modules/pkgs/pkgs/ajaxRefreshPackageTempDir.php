@@ -106,7 +106,7 @@ else {
     // If it is _first_ time we display Package API tempdir and this is empty,
     // auto-check upload button
     if ($_SESSION['pkgs-add-reloaded'][$_GET['papi']]) {
-    print "<strong style='color: red;'>" . _T("Package API temporary directory is empty", "pkgs") . "<strong>";
+    print "<strong class='pkg-error'>" . _T("Package API temporary directory is empty", "pkgs") . "</strong>";
 ?>
         <script type="text/javascript">
     var jcArray = new Array('label', 'version', 'description', 'commandcmd');

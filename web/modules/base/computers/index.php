@@ -64,7 +64,6 @@ else {
     }
     $ajax = new AjaxFilter(urlStrRedirect('base/computers/ajaxComputersList'), "container", $param);
     $ajax->display();
-    print "<br/><br/><br/>";
     $ajax->displayDivToUpdate();
 }
 ?>

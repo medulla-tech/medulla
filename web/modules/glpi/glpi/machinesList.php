@@ -36,20 +36,12 @@ $computerpresence = isset($_GET['computerpresence']) ? $_GET['computerpresence']
 
 $_SESSION['computerpresence'] = $computerpresence;
 
-echo '<div style="position: relative; z-index: 800; padding: 10px 0; margin-bottom: 20px; background: transparent; clear: both;">';
-echo '<input type="radio" ';
-if ($computerpresence == "all_computer") echo "checked";
-echo ' id="namepresence1" name="namepresence" value="all_computer"/> ';
-echo '<label for="namepresence1" style="display:initial; cursor: pointer;">'._('All computers').'</label>';
-echo '<input type="radio" ';
-if ($computerpresence == "presence") echo "checked";
-echo ' id="namepresence2" name="namepresence" value="presence"/> ';
-echo '<label for="namepresence2" style="display:initial; cursor: pointer;">'._('Online computers').'</label>';
-echo '<input type="radio" ';
-if ($computerpresence == "no_presence") echo "checked";
-echo ' id="namepresence3" name="namepresence" value="no_presence"/> ';
-echo '<label for="namepresence3" style="display:initial; cursor: pointer;">'._('Offline computers').'</label>';
-echo '</div>';
+// Presence options for select
+$presenceOptions = array(
+    'all_computer' => _T('All computers', 'glpi'),
+    'presence' => _T('Online computers', 'glpi'),
+    'no_presence' => _T('Offline computers', 'glpi')
+);
 
 
         $chaine = array(
@@ -118,28 +110,29 @@ else{
 $ajax->setElements($listWithAll);
 $ajax->setElementsVal($valuesWithAll);
 $ajax->display();
-echo '<br /><br /><br /><br />';
 $ajax->displayDivToUpdate();
+
+// Generate presence select HTML
+$presenceSelectHtml = '<span class="searchfield"><select id="computerpresence" class="searchfieldreal noborder">';
+foreach ($presenceOptions as $value => $label) {
+    $selected = ($computerpresence == $value) ? 'selected' : '';
+    $presenceSelectHtml .= '<option value="' . $value . '" ' . $selected . '>' . $label . '</option>';
+}
+$presenceSelectHtml .= '</select></span>';
 ?>
 
-
 <script type="text/javascript">
-// Fonction utilitaire : récupère un paramètre GET avec une valeur par défaut
-function getQueryParam(key, defaultValue = "") {
-    const params = new URLSearchParams(window.location.search);
-    return params.has(key) ? params.get(key) : defaultValue;
-}
+jQuery(function() {
+    // Inject presence select at the beginning of searchBest
+    var presenceSelect = '<?php echo $presenceSelectHtml; ?>';
+    jQuery('#searchBest').prepend(presenceSelect);
 
-// Gestion du changement sur les boutons radio
-jQuery('input[type=radio][name=namepresence]').change(function () {
-    const valselect = this.value;
-
-    // Utilisation de l'API URL
-    const url = new URL(window.location.href);
-    url.searchParams.set("computerpresence", valselect);
-
-    // Recharge la page avec le nouveau paramètre
-    window.location.href = url.toString();
+    // Handle presence select change
+    jQuery('#computerpresence').on('change', function() {
+        const url = new URL(window.location.href);
+        url.searchParams.set("computerpresence", this.value);
+        window.location.href = url.toString();
+    });
 });
 </script>
 

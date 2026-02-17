@@ -1,0 +1,38 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(xargs:*)",
+      "Bash(git -C /Users/xdrien/medulla/git/medulla diff --stat HEAD)",
+      "Bash(git -C /Users/xdrien/medulla/git/medulla diff HEAD -- web/graph/global.css)",
+      "Bash(perl -ni -e:*)",
+      "Bash(npx prettier:*)",
+      "Bash(grep:*)",
+      "Bash(find:*)",
+      "Bash(ls:*)",
+      "Bash(tree:*)",
+      "Bash(msgfmt:*)",
+      "Bash(comm -23:*)",
+      "Bash(comm:*)",
+      "Bash(git reset:*)",
+      "Bash(git checkout:*)",
+      "Bash(git rebase:*)",
+      "Bash(git merge:*)",
+      "Bash(git show:*)",
+      "Bash(git stash push:*)",
+      "Bash(git pull:*)",
+      "Bash(git fetch:*)",
+      "Bash(git stash:*)",
+      "Bash(git restore:*)",
+      "Bash(ssh:*)",
+      "Bash(for f in /Users/xdrien/medulla/git/medulla/web/modules/xmppmaster/xmppmaster/*.php)",
+      "Bash(do grep -l 'print \"\"<br/><br/><br/>\"\"' \"$f\")",
+      "Bash(done)",
+      "Bash(git add:*)",
+      "Bash(git log:*)",
+      "Bash(curl:*)",
+      "Bash(git ls-tree:*)",
+      "Bash(git push:*)",
+      "Bash(git cherry-pick:*)"
+    ]
+  }
+}

@@ -22,6 +22,8 @@
  * file : xmppmaster/xmppmaster/monitoring/ajaxalerts.php
  */
 
+require_once("includes/UIComponents.php");
+
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
 $filter = (isset($_GET["filter"])) ? htmlentities($_GET["filter"]) : "";
@@ -33,6 +35,14 @@ if (isset($_GET["start"])) {
 }
 
 $result = xmlrpc_get_mon_events($start, $maxperpage, $filter);
+
+if ($result['total'] == 0) {
+    EmptyStateBox::show(
+        _T("No alerts", "xmppmaster"),
+        _T("No monitoring alerts to display.", "xmppmaster")
+    );
+    return;
+}
 
 $acquitAction = new ActionPopupItem(_("Acknowledge"), "acquit", "delete", "", "xmppmaster", "xmppmaster");
 $detailAction = new ActionItem(_("Detail"), "alertsdetail", "display", "", "xmppmaster", "xmppmaster");
@@ -82,8 +92,6 @@ $n->addActionItemArray($detailActions);
 $n->addActionItemArray($acquitActions);
 $n->start = 0;
 $n->end = $result['total'];
-
-print "<br/><br/>";
 
 $n->display();
 ?>

@@ -51,7 +51,7 @@ class AntivirusPanel extends Panel
         $urlRedirect = json_encode(urlStrRedirect("base/computers/createAntivirusStaticGroup"));
 
         echo <<< ANTIVIRUS
-    <div id="antivirus-graphs"></div>
+    <div id="antivirus-graphs" style="display:flex;flex-direction:column;align-items:center;flex:1;"></div>
     <script type="text/javascript">
     var machineCount = $jsonCount,
         greenMessage = $greenMessage,
@@ -63,20 +63,22 @@ class AntivirusPanel extends Panel
         urlRedirect = $urlRedirect;
 
         var datas = [
+          {'label': '', 'value': 0, 'href': ''},
+          {'label': '', 'value': 0, 'href': ''},
           {
             'label': greenMessage.split(" %percent% ")[0],
             'value':("green" in machineCount)?machineCount["green"]:0,
             'href':urlRedirect+"&group=green",
           },
           {
-            'label': redMessage.split(" %percent% ")[0],
-            'value':("red" in machineCount)?machineCount["red"]:0,
-            'href':urlRedirect+"&group=red",
-          },
-          {
             'label': orangeMessage.split(" %percent% ")[0],
             'value':("orange" in machineCount)?machineCount["orange"]:0,
             'href':urlRedirect+"&group=orange",
+          },
+          {
+            'label': redMessage.split(" %percent% ")[0],
+            'value':("red" in machineCount)?machineCount["red"]:0,
+            'href':urlRedirect+"&group=red",
           },
           {
             'label': missingMessage.split(" %percent% ")[0],

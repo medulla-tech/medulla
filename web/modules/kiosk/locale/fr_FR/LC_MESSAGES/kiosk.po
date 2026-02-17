@@ -200,3 +200,11 @@ msgstr "Impossible de créer le profil %s"
 #: modules/kiosk/infoPackage.inc.php:30 modules/kiosk/infoPackage.inc.php:35
 msgid "kiosk"
 msgstr "kiosk"
+
+#: modules/kiosk/kiosk/ajaxProfilesList.php
+msgid "No profiles"
+msgstr "Aucun profil"
+
+#: modules/kiosk/kiosk/ajaxProfilesList.php
+msgid "Use the sidebar menu to create a new profile."
+msgstr "Utilisez le menu latéral pour créer un nouveau profil."

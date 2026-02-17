@@ -1,0 +1,448 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-23 16:58+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/infoPackage.inc.php:27
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/infoPackage.inc.php:31
+msgid "Store"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/infoPackage.inc.php:37
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/localSidebar.php:25
+msgid "Medulla Store"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/infoPackage.inc.php:41
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/deploy.php:34
+msgid "Deploy Package"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/infoPackage.inc.php:46
+msgid "Machines List"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/infoPackage.inc.php:51
+msgid "Groups List"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/infoPackage.inc.php:56
+msgid "Search Machines"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/infoPackage.inc.php:61
+msgid "Start Deploy"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/infoPackage.inc.php:66
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/localSidebar.php:26
+msgid "Update Subscription"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/index.php:29
+msgid "Software Catalog"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/index.php:42
+msgid "Software name is required"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/index.php:43
+msgid "Your name is required"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/index.php:44
+msgid "Your email is required"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/index.php:46
+msgid "Invalid email address"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/index.php:52
+msgid "Your software request has been submitted."
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/index.php:54
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/index.php:57
+msgid "Error"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/index.php:123
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/subscribe.php:115
+msgid "Search..."
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/index.php:127
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/subscribe.php:119
+msgid "Most Popular"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/index.php:128
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/subscribe.php:120
+msgid "A-Z"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/index.php:129
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/subscribe.php:121
+msgid "Most Recent"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/index.php:133
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/subscribe.php:125
+msgid "All OS"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/index.php:141
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/subscribe.php:133
+msgid "Filter"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/index.php:142
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/subscribe.php:134
+msgid "Reset"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/index.php:146
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/index.php:227
+msgid "Request Software"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/index.php:152
+msgid "Package Detail"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/index.php:153
+msgid "Deploy"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/index.php:201
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/subscribe.php:210
+msgid "Software"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/index.php:203
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/subscribe.php:212
+msgid "Vendor"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/index.php:204
+msgid "Description"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/index.php:205
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/subscribe.php:213
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/deploy.php:85
+msgid "Version"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/index.php:206
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/subscribe.php:214
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/ajaxMachinesListForDeploy.php:114
+msgid "OS"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/index.php:207
+msgid "Updated"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/index.php:218
+msgid "No software found"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/index.php:234
+msgid "Software Name"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/index.php:236
+msgid "Ex: Visual Studio Code, Slack, Zoom..."
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/index.php:239
+msgid "Operating System"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/index.php:241
+msgid "All / I don't know"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/index.php:248
+msgid "Your Name"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/index.php:252
+msgid "Your Email"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/index.php:256
+msgid "Comment (optional)"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/index.php:258
+msgid "Additional details about your request..."
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/index.php:262
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/subscribe.php:268
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/deploy.php:145
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/deploy.php:186
+msgid "Cancel"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/index.php:263
+msgid "Send Request"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/subscribe.php:29
+msgid "Subscriptions"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/subscribe.php:40
+msgid "Configuration required"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/subscribe.php:41
+msgid ""
+"Client UUID is not configured in store.ini or client not found in database."
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/subscribe.php:52
+msgid "Subscriptions saved successfully!"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/subscribe.php:52
+msgid "software selected"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/subscribe.php:54
+msgid "Error saving subscriptions"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/subscribe.php:139
+msgid "No software available for subscription."
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/subscribe.php:146
+msgid "Select All"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/subscribe.php:149
+msgid "Deselect All"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/subscribe.php:152
+msgid "Invert Selection"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/subscribe.php:156
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/deploy.php:121
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/deploy.php:162
+msgid "selected"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/subscribe.php:194
+msgid "Deployed"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/subscribe.php:196
+msgid "Pending sync"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/subscribe.php:215
+msgid "Subscribers"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/subscribe.php:216
+msgid "Status"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/subscribe.php:234
+msgid "Save Subscriptions"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/subscribe.php:253
+msgid "Disclaimer"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/subscribe.php:263
+msgid "I have read and accept the terms"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/subscribe.php:269
+msgid "Confirm"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/deploy.php:44
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/startDeploy.php:44
+msgid "No package selected"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/deploy.php:82
+msgid "Package to deploy"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/deploy.php:84
+msgid "Name"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/deploy.php:92
+msgid "Machines"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/deploy.php:96
+msgid "Groups"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/deploy.php:106
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/deploy.php:157
+msgid "Search"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/deploy.php:107
+msgid "Search machine..."
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/deploy.php:111
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/ajaxMachinesListForDeploy.php:115
+msgid "Entity"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/deploy.php:113
+msgid "All"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/deploy.php:123
+msgid "Select/Deselect all"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/deploy.php:142
+msgid "Deploy to selected machines"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/deploy.php:158
+msgid "Search group..."
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/deploy.php:164
+msgid "Select all visible"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/deploy.php:183
+msgid "Deploy to selected groups"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/deploy.php:230
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/deploy.php:276
+msgid "Loading..."
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/startDeploy.php:66
+msgid "No machines selected"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/startDeploy.php:127
+#, php-format
+msgid "Deployment started on %d machine(s)"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/startDeploy.php:131
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/startDeploy.php:195
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/startDeploy.php:254
+msgid "Deployment failed"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/startDeploy.php:144
+msgid "No groups selected"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/startDeploy.php:191
+#, php-format
+msgid "Deployment started on %d group(s)"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/startDeploy.php:209
+msgid "No group selected"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/startDeploy.php:247
+#, php-format
+msgid "Deployment started on group %s"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/startDeploy.php:261
+msgid "Invalid deployment type"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/ajaxGroupsListForDeploy.php:41
+msgid "No groups found"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/ajaxGroupsListForDeploy.php:66
+#, php-format
+msgid "Dynamic (%s)"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/ajaxGroupsListForDeploy.php:67
+msgid "Query"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/ajaxGroupsListForDeploy.php:70
+msgid "Static"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/ajaxGroupsListForDeploy.php:74
+msgid "machines"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/ajaxGroupsListForDeploy.php:88
+msgid "Group name"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/ajaxGroupsListForDeploy.php:92
+msgid "Type"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/ajaxGroupsListForDeploy.php:93
+msgid "Size"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/ajaxMachinesListForDeploy.php:67
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/ajaxMachinesListForDeploy.php:106
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/ajaxSearchMachines.php:74
+msgid "No machines found"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/ajaxMachinesListForDeploy.php:88
+msgid "Online"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/ajaxMachinesListForDeploy.php:89
+msgid "Offline"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/ajaxMachinesListForDeploy.php:111
+msgid "Computer Name"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/ajaxSearchMachines.php:34
+msgid "Enter at least 2 characters"
+msgstr ""
+
+#: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/ajaxSearchMachines.php:113
+#, php-format
+msgid "Showing %d of %d machines. Refine your search for more results."
+msgstr ""

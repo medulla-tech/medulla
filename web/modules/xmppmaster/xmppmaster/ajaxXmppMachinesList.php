@@ -21,6 +21,8 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+require_once("includes/UIComponents.php");
+
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
 $filter = $_GET["filter"];
@@ -30,6 +32,14 @@ $start = isset($_GET['start'])?$_GET['start']:0;
 $end   = (isset($_GET['end'])?$_GET['start']+$maxperpage:$maxperpage);
 
 $machines = xmlrpc_get_xmppmachines_list($start, $maxperpage, $filter, $_SESSION['computerpresence']);
+
+if ($machines['total'] == 0) {
+    EmptyStateBox::show(
+        _T("No uninventoried machines", "xmppmaster"),
+        _T("All connected machines have been inventoried.", "xmppmaster")
+    );
+    return;
+}
 
 $raw = 0;
 $params = [];

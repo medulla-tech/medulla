@@ -549,7 +549,6 @@ var interval = setInterval(barprogress,6000);
 <?php
     $ajax = new AjaxFilter("modules/imaging/manage/ajaxLogs.php", "container_logs", array(), "Logs");
     $ajax->display();
-    echo "<br/><br/><br/>";
     $ajax->displayDivToUpdate();
 } else {
     $e = new ErrorMessage(_T("Can't connect to the imaging server linked to the selected entity.", "imaging"));

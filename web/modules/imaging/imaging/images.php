@@ -183,7 +183,6 @@ function image_list($type, $title, $actions = true)
     $ajax = new AjaxFilter("modules/imaging/imaging/ajaxImages.php", "container".($actions ? 'image' : 'master'), $params, "form".($actions ? 'image' : 'master'));
     //$ajax->setRefresh(10000);
     $ajax->display();
-    echo '<br/><br/><br/>';
     $ajax->displayDivToUpdate();
 }
 

@@ -39,7 +39,6 @@ $refresh->display();
 $ajax = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxconvergence"), "container", array('login' => '', 'currenttasks' => '1', 'previous' => 'auditconvergence'), 'formRunning' );
 $ajax->setRefresh($refresh->refreshtime());
 $ajax->display();
-print "<br/><br/><br/>";
 $ajax->displayDivToUpdate();
 
 ?>

@@ -28,6 +28,7 @@ require_once('modules/glpi/includes/xmlrpc.php');
 require_once('modules/imaging/includes/xmlrpc.inc.php');
 require("modules/medulla_server/includes/profiles_xmlrpc.inc.php");
 require_once("modules/medulla_server/includes/utilities.php");
+require_once("includes/UIComponents.php");
 
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
@@ -64,9 +65,30 @@ if ($is_gp == 1) { # Profile
             $ownerlist[] = $group->owner_login;
         }
     }
-$entitiesByUser = getLocationsForUsersName($ownerlist);
+    $entitiesByUser = getLocationsForUsersName($ownerlist);
 }
 $filter = $_GET["filter"];
+
+// Empty state handling
+if ($count == 0) {
+    if (isset($_GET['favourite'])) {
+        EmptyStateBox::show(
+            _T("No favourite groups", "dyngroup"),
+            _T("Mark groups as favourite to see them here.", "dyngroup")
+        );
+    } elseif ($is_gp == 1) {
+        EmptyStateBox::show(
+            _T("No imaging groups", "dyngroup"),
+            _T("Create an imaging group to get started.", "dyngroup")
+        );
+    } else {
+        EmptyStateBox::show(
+            _T("No groups", "dyngroup"),
+            _T("Create a group to get started.", "dyngroup")
+        );
+    }
+    return;
+}
 
 $ids  = array();
 $name = array();

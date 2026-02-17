@@ -39,7 +39,7 @@ class ClientUpdatePanel extends Panel {
         if ($updates === FALSE){
 
         // Update error occured
-        printf('<center style="color:red;font-weight:bold">%s</center>', _T('An error occured while fetching updates'));
+        printf('<div class="dashboard-error-message">%s</div>', _T('An error occured while fetching updates'));
         } else {
 
             $view_updates_text = _T('View updates', 'update');
@@ -131,29 +131,12 @@ EOS;
         jQuery('#update_status').append('<ul></ul>');
         for (var i = 0; i < legend.length; i++) {
             jQuery('#update_status ul').append(
-                '<li style="color: ' + colors[i].split('-')[1]  + ';"><span style="color: #000">' + legend[i]
+                '<li style="color: ' + colors[i].split('-')[1]  + ';"><span>' + legend[i]
                 + '<a href="' + href[i] + '"><img title="' + $createGroupText +
-                '" style="height: 10px; padding-left: 3px;" src="img/other/machine_down.svg" /></a></span></li>'
+                '" src="img/other/machine_down.svg" /></a></span></li>'
             );
         }
         </script>
-        <style type="text/css">
-            #update_status ul {
-                margin: 0px;
-                padding-left: 28px;
-            }
-            #update_status li {
-                list-style: none;
-                font-size: 13px;
-            }
-            #update_status li:before {
-                content: "•";
-                font-size: 20px;
-                vertical-align: bottom;
-                line-height: 16px;
-                margin-right: 3px;
-            }
-        </style>
 CHART;
     }
 

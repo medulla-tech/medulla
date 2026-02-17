@@ -76,8 +76,7 @@ def activate():
     """
     Run some tests to ensure the module is ready to operate.
     """
-    config = MscConfig()
-    config.init("msc")
+    config = MscConfig("msc", None, "database")
     logger = logging.getLogger()
     if config.disable:
         logger.warning("Plugin msc: disabled by configuration.")
@@ -106,8 +105,7 @@ def activate():
 
 
 def activate_2():
-    conf = MscConfig()
-    conf.init("msc")
+    conf = MscConfig("msc", None, "database")
     return True
 
 

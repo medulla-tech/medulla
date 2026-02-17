@@ -20,23 +20,8 @@
  * along with MMC; If not, see <http://www.gnu.org/licenses/>.
  * file: ajaxListUsersofEntity.php
  */
-require_once("modules/xmppmaster/includes/html.inc.php");
+require_once("includes/UIComponents.php");
 require_once("modules/admin/includes/xmlrpc.php");
-?>
-<style>
-#container>form>table>thead td:first-child span {
-    display: block;
-    text-align: left;
-    padding-left: 0 !important;
-    margin-left: 0 !important;
-}
-#container>form>table>thead td:last-child span {
-        display: block;
-        text-align: right;
-        padding-right: 12px;
-}
-</style>
-<?php
 $filterRaw = isset($_GET["filter"]) ? (string)$_GET["filter"] : "";
 $filters   = [];
 if ($filterRaw !== "") {
@@ -208,13 +193,8 @@ foreach ($userDetails as $user) {
 if (count($userNames) === 0) {
     $entityName = htmlspecialchars($_GET['entityName'] ?? '', ENT_QUOTES, 'UTF-8');
 
-    $translatedTemplate = _T("This entity [%s] has no associated user.", "admin");
-
-    $translatedMessage = sprintf($translatedTemplate, $entityName);
-
-    echo sprintf(
-        '<div class="entity-warning">%s</div>',
-        $translatedMessage
+    EmptyStateBox::show(
+        sprintf(_T("This entity [%s] has no associated user.", "admin"), $entityName)
     );
 
     $f = new ValidatingForm(["action" => urlStrRedirect("admin/admin/entitiesManagement", [])]);

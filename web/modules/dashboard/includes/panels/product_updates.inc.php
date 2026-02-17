@@ -47,63 +47,17 @@ class UpdatePanel extends Panel {
         $labelRegenerate    = _T("Regenerate Agent Machine");
 
         echo <<<HTML
-        <center>
             <div id="updates_zone">
-                <button class="btnSecondary" id="fetch_updates_btn" style="margin-top: 12px; margin-bottom: 9px;">
+                <button class="btnSecondary" id="fetch_updates_btn">
                     {$btnLabel}
                 </button>
-                <button class="btnSecondary" id="restart_medulla_services" style="margin-top: 12px; margin-bottom: 9px;">
+                <button class="btnSecondary" id="restart_medulla_services">
                     {$labelRestart}
                 </button>
-                <button class="btnSecondary" id="regenerate_agent" style="margin-top: 12px; margin-bottom: 9px;">
+                <button class="btnSecondary" id="regenerate_agent">
                     {$labelRegenerate}
                 </button>
             </div>
-        </center>
-        <style>
-        .custom-loader-wrapper {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100px;
-            padding: 20px 12px 18px 12px;
-            border-radius: 8px;
-            background: #fff;
-            box-shadow: 0 2px 10px #0001;
-        }
-        .custom-spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #3498db;
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            animation: spin 1s linear infinite;
-            margin-bottom: 16px;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg);}
-            100% { transform: rotate(360deg);}
-        }
-        .custom-loader-title {
-            font-size: 1em;
-            font-weight: 700;
-            text-align: center;
-            color: #222;
-            margin-bottom: 10px;
-            margin-top: 3px;
-            letter-spacing: 0.01em;
-        }
-        .custom-loader-msg {
-            color: #666;
-            font-size: 0.98em;
-            text-align: center;
-            margin-top: 8px;
-            line-height: 1.4;
-            font-weight: 500;
-            max-width: 190px;
-        }
-        </style>
         <script>
         jQuery(function($){
             $(document).on('click', '#fetch_updates_btn', function(e){
@@ -122,7 +76,7 @@ class UpdatePanel extends Panel {
                     error: function(){
                         $('#updates_zone').html(
                             '<div class="custom-loader-wrapper">' +
-                                '<div class="custom-loader-title" style="color:#c00;">{$errorLabel}</div>' +
+                                '<div class="custom-loader-title error">{$errorLabel}</div>' +
                             '</div>'
                         );
                     }

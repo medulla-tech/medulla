@@ -72,7 +72,6 @@ function log_list() {
     $ajax = new AjaxFilter("modules/imaging/imaging/ajaxLogs.php", "container", getParams());
     //$ajax->setRefresh(10000);
     $ajax->display();
-    echo '<br/><br/><br/>';
     $ajax->displayDivToUpdate();
 }
 

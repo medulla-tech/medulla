@@ -35,11 +35,9 @@ $p->setSideMenu($sidemenu);
 $p->display();
 
 
-print "<br/><br/><br/>";
 if($agenttype && $jid){
   $ajax = new AjaxFilter(urlStrRedirect("admin/admin/ajaxpackageslist"), "container", ['jid'=>$jid]);
   $ajax->display();
-  print "<br/><br/><br/>";
   $ajax->displayDivToUpdate();
 }
 

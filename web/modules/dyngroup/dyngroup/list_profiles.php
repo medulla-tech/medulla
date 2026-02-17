@@ -39,7 +39,6 @@ if (isset($_GET['gid'])) {
 }
 $ajax = new AjaxFilter(urlStrRedirect("base/computers/ajaxListGroups"), "container", array('gid' => $gid, 'type' => 1));
 $ajax->display();
-print "<br/><br/><br/>";
 $ajax->displayDivToUpdate();
 
 ?>
