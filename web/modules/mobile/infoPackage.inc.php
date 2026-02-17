@@ -9,7 +9,7 @@ $mod->setPriority(10);
 $submod = new SubModule("mobile");
 $submod->setDescription(_T("Mobiles", "mobile"));
 $submod->setVisibility(true);
-$submod->setImg('img/mobiles/mobile_down');
+$submod->setImg('modules/mobile/graph/navbar/mobile');
 $submod->setDefaultPage("mobile/mobile/index");
 $submod->setPriority(10);
 $mod->addSubmod($submod);
