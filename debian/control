@@ -31,6 +31,7 @@ Depends: ${misc:Depends},
          mmc-web-mastering, python3-mmc-mastering,
          mmc-web-mobile, python3-mmc-mobile,
          mmc-web-security, python3-mmc-security,
+         mmc-web-store, python3-mmc-store,
          pulse-xmppmaster-agentplugins, pulse-xmpp-agent-relay,
          pulse-agent-installers, pulse2-common,
          pulse2-imaging-client | pulse2-davos-client
@@ -146,6 +147,16 @@ Description: Medulla common security database files
  organizations.
  .
  This package contains Medulla common security database files.
+
+Package: python3-pulse2-common-database-store
+Architecture: all
+Section: python
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version})
+Description: Medulla common store database files
+ Medulla is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package contains Medulla common store database files.
 
 Package: python3-pulse2-common-database
 Architecture: all
@@ -653,6 +664,25 @@ Package: mmc-web-security
 Architecture: all
 Depends: ${misc:Depends}, pulse2-common(= ${binary:Version}), mmc-web-base (>= 3.1.1-1)
 Description: Medulla security plugin for MMC web interface
+ Medulla is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package will install all the Medulla MMC agent interface plugins
+
+Package: python3-mmc-store
+Architecture: all
+Section: python
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python3-pulse2-common-database-store (= ${binary:Version})
+Description: Medulla store plugin for MMC agent
+ Medulla is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package contains the store plugin for MMC agent.
+
+Package: mmc-web-store
+Architecture: all
+Depends: ${misc:Depends}, pulse2-common(= ${binary:Version}), mmc-web-base (>= 3.1.1-1)
+Description: Medulla store plugin for MMC web interface
  Medulla is Open Source computer system management for medium and large
  organizations.
  .

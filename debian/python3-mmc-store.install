@@ -1,0 +1,3 @@
+etc/mmc/plugins/store.ini
+usr/lib/python3/*-packages/mmc/plugins/store
+usr/share/doc/pulse2/contrib/store/
