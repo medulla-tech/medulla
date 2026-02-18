@@ -79,7 +79,7 @@ if ($_SESSION["login"]=='root') {
 </div>
 
 <script>
-jQuery( "#popup" ).draggable({ containment: "#wrapper", scroll: false })
+jQuery("#popup").draggable({ containment: "window", scroll: false });
 </script>
 
 <div id="content">

@@ -1,74 +1,123 @@
 /*!
- * Bootstrap v2.2.1
- *
- * Copyright 2012 Twitter, Inc
- * Licensed under the Apache License v2.0
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Designed and built with all the love in the world @twitter by @mdo and @fat.
+ * Bootstrap Alerts - Card Style for Medulla
  */
+
+/* ========== Base Alert Styles ========== */
 .alert {
-  padding: 8px 35px 8px 14px;
-  margin:10px 0px;
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
-  background-color: #fcf8e3;
-  border: 1px solid #fbeed5;
-  -webkit-border-radius: 2px;
-  -moz-border-radius: 2px;
-  border-radius: 2px;
-  color: #c09853;
-  font-size: 12px;
+  margin: 0;
+  border-radius: 0;
+  font-size: 15px;
+  line-height: 1.6;
+  display: block;
+  text-align: center;
+  border: none;
+  position: relative;
+  overflow: visible;
+  background: white;
+  box-shadow: none;
+  padding: 20px;
+  padding-top: 150px;
+  padding-bottom: 20px;
+  font-weight: 500;
+  color: #333;
 }
+
+/* Colored header with icon */
+.alert::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 120px;
+  display: block;
+  background-size: 55px 55px;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* Alert text styles */
 .alert h1,
 .alert h2,
 .alert h3,
 .alert h4 {
-  margin: 0 0 6px;
-  font-size: 1.1em;
-  line-height: 1.4;
-  font-weight: 600;
-  color: inherit;
-}
-.alert p {
-  margin: 0 0 6px;
-  font-size: 1em;
-  line-height: 1.5;
-}
-.alert > :last-child {
-  margin-bottom: 0;
-}
-.alert .close {
-  position: relative;
-  top: -2px;
-  right: -21px;
-  line-height: 20px;
-}
-.alert-success {
-  background-color: #dff0d8;
-  border-color: #d6e9c6;
-  color: #468847;
-}
-.alert-danger,
-.alert-error {
-  /*background-color: #f2dede;*/
-  background-color: #f9efef;
-  border-color: #eed3d7;
-  color: #b94a48;
+  margin: 0 0 8px;
+  font-size: 1.2em;
+  font-weight: 700;
+  color: #333;
 }
 
-.alert-info {
-  background-color: #d9edf7;
-  border-color: #bce8f1;
-  color: #3a87ad;
+.alert p {
+  margin: 0;
+  padding: 0 25px;
 }
+
+/* Buttons inside alert - inline */
+.alert a.btn,
+.alert button,
+.alert .btn {
+  display: inline-block !important;
+  margin: 5px !important;
+  vertical-align: middle;
+}
+
+/* ========== Alert Types - Only header color differs ========== */
+
+/* Success - Green */
+.alert-success::before {
+  background-color: var(--color-accent);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z'/%3E%3C/svg%3E");
+}
+
+/* Error/Danger - Red */
+.alert-danger::before,
+.alert-error::before {
+  background-color: var(--btn-danger-bg);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2'%3E%3Cpath d='M12 2L2 22h20L12 2z'/%3E%3Cpath d='M12 9v4'/%3E%3Ccircle cx='12' cy='17' r='1'/%3E%3C/svg%3E");
+}
+
+/* Warning - Orange */
+.alert-warning::before,
+.alert:not(.alert-success):not(.alert-error):not(.alert-danger):not(.alert-info)::before {
+  background-color: var(--color-warning);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2'%3E%3Cpath d='M12 2L2 22h20L12 2z'/%3E%3Cpath d='M12 9v4'/%3E%3Ccircle cx='12' cy='17' r='1'/%3E%3C/svg%3E");
+}
+
+/* Info - Blue */
+.alert-info::before {
+  background-color: var(--color-primary);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z'/%3E%3C/svg%3E");
+}
+
+/* ========== Close Button (Fermer) - Neutral style ========== */
+.popup #__popup_container center .btn,
+.popup #__popup_container center button {
+  background: white !important;
+  color: #333 !important;
+  border: 1px solid #ccc !important;
+  border-radius: 9px;
+  padding: 10px 30px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.popup #__popup_container center .btn:hover,
+.popup #__popup_container center button:hover {
+  background: #f5f5f5 !important;
+  border-color: #999 !important;
+}
+
+/* ========== Alert Block ========== */
 .alert-block {
-  padding-top: 14px;
-  padding-bottom: 14px;
+  padding: 18px 22px;
 }
+
 .alert-block > p,
 .alert-block > ul {
   margin-bottom: 0;
 }
+
 .alert-block p + p {
-  margin-top: 5px;
+  margin-top: 8px;
 }

@@ -39,124 +39,107 @@ if(isset($_GET['cn'])) {
         $url[$k[0]] = str_replace('@@CUX_ID@@', $cux_id, $dd['urlguacamole']);
     }
 }
-?>
-    <HTML>
-        <head>
-            <title>Medulla</title>
-            <link href='/mmc/graph/master.css' rel='stylesheet' media='screen' type='text/css' />
-        </head>
-        <BODY style='background-color: #FFFFFF;'>
-        <h1>REMOTE</h1>
-            <table id="tablevnc">
-                <tr>
-                <?php
-               foreach ($url as $clef => $val) {
-                   if ($clef == "SSH") {
-                       $os_up_case = strtoupper($dd["platform"]);
-                       if (strpos($os_up_case, "WINDOW") !== false) {
-                           $src = 'img/actions/cmd.svg';
-                           $title = "CMD";
-                           $alt = "Remote cmd View";
-                       } else {
-                           $src = 'img/actions/ssh.svg';
-                           $title = "SSH";
-                           $alt = "Remote ssh View";
-                       }
-                       echo '<td align="center" id="ssh">
-                            <img src="'.$src.'"
-                            alt="'.$alt.'"
-                            style="width:70px;height:70px;">
-                            <br>
-                            <h1>'.$title.'</h1>
-                        </td>';
-                   }
-                   if ($clef == "RDP") {
-                       echo '<td align="center" id="rdp">
-                            <img src="img/actions/rdp.svg"
-                            alt="remote rdp View"
-                            style="width:70px;height:70px;">
-                            <br>
-                            <h1>RDP</h1>
-                        </td>';
-                   }
-                   if ($clef == "VNC") {
-                       echo '<td align="center" id="vnc">
-                            <img src="img/actions/vnc.svg"
-                            alt="remote vnc View"
-                            style="width:70px;height:70px;">
-                            <br>
-                            <h1>VNC</h1>
-                        </td>';
-                   }
-               }
-?>
-                </tr>
-            </table>
-<?php
-if ($dd['agenttype'] == "relayserver") {
-    printf("SERVER");
-} else {
-    printf("COMPUTER");
-}
-echo "<hr>";
-echo "<br>";
-printf("Hostname : %s<br> Platform : %s<br>architecture : %s<br>", $dd['hostname'], $dd['platform'], $dd['archi']);
-printf("<br>IP : %s/%s<br> Macadress : %s", $dd['ip_xmpp'], $dd['subnetxmpp'], $dd['macaddress']);
-?>
 
-</BODY>
-  </HTML>
-<?php
- echo "           </BODY>
-            </HTML>
-";
+$isServer = ($dd['agenttype'] == "relayserver");
 ?>
+<div class="remote-popup">
+    <h1><?php echo _T("Remote", "msc"); ?></h1>
+
+    <!-- Connection methods -->
+    <div class="remote-actions">
+        <?php foreach ($url as $clef => $val): ?>
+            <?php if ($clef == "VNC"): ?>
+                <div class="remote-item" id="vnc">
+                    <img src="img/actions/vnc.svg" alt="VNC">
+                    <span>VNC</span>
+                </div>
+            <?php endif; ?>
+            <?php if ($clef == "SSH"): ?>
+                <?php
+                $os_up_case = strtoupper($dd["platform"]);
+                $isWindows = (strpos($os_up_case, "WINDOW") !== false);
+                ?>
+                <div class="remote-item" id="ssh">
+                    <img src="<?php echo $isWindows ? 'img/actions/cmd.svg' : 'img/actions/ssh.svg'; ?>" alt="<?php echo $isWindows ? 'CMD' : 'SSH'; ?>">
+                    <span><?php echo $isWindows ? 'CMD' : 'SSH'; ?></span>
+                </div>
+            <?php endif; ?>
+            <?php if ($clef == "RDP"): ?>
+                <div class="remote-item" id="rdp">
+                    <img src="img/actions/rdp.svg" alt="RDP">
+                    <span>RDP</span>
+                </div>
+            <?php endif; ?>
+        <?php endforeach; ?>
+    </div>
+
+    <!-- Machine info -->
+    <div class="remote-machine-info">
+        <div class="info-header">
+            <?php echo $isServer ? _T("Server", "msc") : _T("Computer", "msc"); ?>
+        </div>
+        <div class="info-grid">
+            <div class="info-row">
+                <span class="info-label"><?php echo _T("Hostname", "msc"); ?></span>
+                <span class="info-value"><?php echo htmlspecialchars($dd['hostname']); ?></span>
+            </div>
+            <div class="info-row">
+                <span class="info-label"><?php echo _T("Platform", "msc"); ?></span>
+                <span class="info-value"><?php echo htmlspecialchars($dd['platform']); ?></span>
+            </div>
+            <div class="info-row">
+                <span class="info-label"><?php echo _T("Architecture", "msc"); ?></span>
+                <span class="info-value"><?php echo htmlspecialchars($dd['archi']); ?></span>
+            </div>
+            <div class="info-row">
+                <span class="info-label"><?php echo _T("IP", "msc"); ?></span>
+                <span class="info-value"><?php echo htmlspecialchars($dd['ip_xmpp'] . '/' . $dd['subnetxmpp']); ?></span>
+            </div>
+            <div class="info-row">
+                <span class="info-label"><?php echo _T("MAC Address", "msc"); ?></span>
+                <span class="info-value"><?php echo htmlspecialchars($dd['macaddress']); ?></span>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script type="text/javascript">
+var uuid = '<?php echo $_GET['objectUUID']; ?>';
+var cn = '<?php echo $_GET['cn']; ?>';
 
-var uuid = '<?php echo $_GET['objectUUID']; ?>'
-var cn = '<?php echo $_GET['cn']; ?>'
+<?php if (isset($url['SSH'])): ?>
+jQuery('#ssh').on('click', function(){
+    var ssh_url = '<?php echo $url['SSH']; ?>';
+    var ssh_cux = '<?php echo $cux['SSH']; ?>';
+    jQuery.get("modules/xmppmaster/xmppmaster/actionreversesshguacamole.php", { uuid: uuid, cn: cn, cux_id: ssh_cux, cux_type: "SSH" })
+    .done(function(data) {
+        window.open(ssh_url);
+        alert("The SSH control session opens in a new window");
+    });
+});
+<?php endif; ?>
 
-<?php
-if (isset($url['SSH'])) {
-    echo "jQuery('#ssh').on('click', function(){
-    var ssh_url = '".$url['SSH']."';
-    var ssh_cux = '".$cux['SSH']."';";
-    echo 'jQuery.get( "modules/xmppmaster/xmppmaster/actionreversesshguacamole.php", { uuid: uuid, cn: cn, cux_id: ssh_cux, cux_type: "SSH" } )
-    .done(function( data ) {
-      window.open( ssh_url )
-      alert( "The SSH control session opens in a new window" )
-    })
-});';
-};
+<?php if (isset($url['RDP'])): ?>
+jQuery('#rdp').on('click', function(){
+    var rdp_url = '<?php echo $url['RDP']; ?>';
+    var rdp_cux = '<?php echo $cux['RDP']; ?>';
+    jQuery.get("modules/xmppmaster/xmppmaster/actionreversesshguacamole.php", { uuid: uuid, cn: cn, cux_id: rdp_cux, cux_type: "RDP" })
+    .done(function(data) {
+        window.open(rdp_url);
+        alert("The RDP control session opens in a new window");
+    });
+});
+<?php endif; ?>
 
-if (isset($url['RDP'])) {
-    echo "jQuery('#rdp').on('click', function(){
-        var rdp_url = '" . $url['RDP'] ."';
-        var rdp_cux = '". $cux['RDP']."';";
-    echo '
-    jQuery.get( "modules/xmppmaster/xmppmaster/actionreversesshguacamole.php", { uuid: uuid, cn: cn, cux_id: rdp_cux, cux_type: "RDP" } )
-    .done(function( data ) {
-      window.open( rdp_url )
-      alert( "The RDP control session opens in a new window" )
-    })
-  });';
-};
-
-
-if (isset($url['VNC'])) {
-    echo "jQuery('#vnc').on('click', function(){
-        var vnc_url = '".$url['VNC']."';
-        var vnc_cux = '".$cux['VNC']."';";
-    echo '
-    jQuery.get( "modules/xmppmaster/xmppmaster/actionreversesshguacamole.php", { uuid: uuid, cn: cn, cux_id: vnc_cux, cux_type: "VNC" } )
-    .done(function( data ) {
-      window.open( vnc_url )
-      alert( "The VNC control session opens in a new window" )
-    })
-  });';
-};
-
-?>
-
+<?php if (isset($url['VNC'])): ?>
+jQuery('#vnc').on('click', function(){
+    var vnc_url = '<?php echo $url['VNC']; ?>';
+    var vnc_cux = '<?php echo $cux['VNC']; ?>';
+    jQuery.get("modules/xmppmaster/xmppmaster/actionreversesshguacamole.php", { uuid: uuid, cn: cn, cux_id: vnc_cux, cux_type: "VNC" })
+    .done(function(data) {
+        window.open(vnc_url);
+        alert("The VNC control session opens in a new window");
+    });
+});
+<?php endif; ?>
 </script>

@@ -1,0 +1,732 @@
+/*!
+ * Medulla Popups CSS
+ * Styles for all popup types: alerts, confirmations, remote, quick actions
+ */
+
+/* ============================================= */
+/* 1. BASE STYLES                                */
+/* ============================================= */
+
+.popup {
+  max-width: 90vw;
+  background: var(--color-bg-white);
+  border: none;
+  border-radius: 9px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  padding: 0;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 1001;
+  overflow: hidden;
+}
+
+.popup #__popup_container {
+  padding: 25px;
+  padding-top: 50px;
+}
+
+.overlay {
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 1000;
+  background-color: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+/* ============================================= */
+/* 2. CLOSE BUTTON                               */
+/* ============================================= */
+
+.popup > div:first-child {
+  float: none !important;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 10;
+}
+
+.popup .popup_close_btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background: transparent;
+  border-radius: 50%;
+  transition: all 0.2s;
+}
+
+.popup .popup_close_btn:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.popup .popup_close_btn img {
+  display: none;
+}
+
+.popup .popup_close_btn::after {
+  content: "\00D7";
+  color: #999;
+  font-size: 22px;
+  font-weight: normal;
+}
+
+.popup .popup_close_btn:hover::after {
+  color: #333;
+}
+
+/* Close button on colored header (confirmation, alerts) */
+.popup-close-on-color .popup_close_btn,
+.popup:has(#__popup_container > h2:first-child) .popup_close_btn,
+.popup:has(.alert) .popup_close_btn {
+  background: transparent !important;
+}
+
+.popup-close-on-color .popup_close_btn::after,
+.popup:has(#__popup_container > h2:first-child) .popup_close_btn::after,
+.popup:has(.alert) .popup_close_btn::after {
+  color: white !important;
+}
+
+.popup-close-on-color .popup_close_btn:hover,
+.popup:has(#__popup_container > h2:first-child) .popup_close_btn:hover,
+.popup:has(.alert) .popup_close_btn:hover {
+  background: rgba(255, 255, 255, 0.25) !important;
+}
+
+.popup:has(#__popup_container > h2:first-child) > div:first-child,
+.popup:has(.alert) > div:first-child {
+  z-index: 100;
+}
+
+/* ============================================= */
+/* 3. TITLES                                     */
+/* ============================================= */
+
+/* Default popup title */
+.popup h1:first-of-type {
+  margin: 0 0 20px 0;
+  padding: 0 0 12px 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-primary);
+  border-bottom: 2px solid var(--color-accent);
+}
+
+/* ============================================= */
+/* 4. BUTTONS                                    */
+/* ============================================= */
+
+.popup .btnPrimary,
+.popup .btnSecondary {
+  padding: 10px 25px;
+  border-radius: 9px;
+  font-weight: 600;
+  cursor: pointer;
+  margin: 5px;
+  transition: all 0.2s;
+}
+
+.popup .btnPrimary {
+  background: var(--color-primary);
+  color: white;
+  border: none;
+}
+
+.popup .btnPrimary:hover {
+  background: #1a4a5e;
+}
+
+.popup .btnSecondary {
+  background: white;
+  color: #333;
+  border: 1px solid #ccc;
+}
+
+.popup .btnSecondary:hover {
+  background: #f5f5f5;
+  border-color: #999;
+}
+
+/* ============================================= */
+/* 5. GREEN ICONS (common)                       */
+/* ============================================= */
+
+.popup-icon-green,
+.popup #tablevnc td img,
+.remote-popup .remote-item img,
+.quick-actions-popup .action-item img,
+.quick-actions-popup .monitoring-item img {
+  filter: brightness(0) saturate(100%) invert(62%) sepia(52%) saturate(405%) hue-rotate(43deg) brightness(95%) contrast(91%);
+  transition: all 0.2s;
+}
+
+.popup #tablevnc td:hover img,
+.remote-popup .remote-item:hover img,
+.quick-actions-popup .action-item:hover img,
+.quick-actions-popup .monitoring-item:hover img {
+  transform: scale(1.1);
+}
+
+/* ============================================= */
+/* 6. POPUP UTILITIES                            */
+/* ============================================= */
+
+.popup hr {
+  border: none;
+  border-top: 1px solid #e5e7eb;
+  margin: 15px 0;
+}
+
+.popup table {
+  border-collapse: collapse;
+}
+
+.popup table td {
+  border: none !important;
+}
+
+.popup table[style*="border"],
+.popup table[border] {
+  border: none !important;
+}
+
+/* ============================================= */
+/* 7. CONFIRMATION POPUP (with h2 title)         */
+/* ============================================= */
+
+.popup:has(#__popup_container > h2:first-child) {
+  min-width: 320px;
+  max-width: 450px;
+}
+
+.popup:has(#__popup_container > h2:first-child) #__popup_container {
+  padding: 0 !important;
+}
+
+.popup:has(#__popup_container > h2:first-child) #__popup_container h2 {
+  margin: 0;
+  padding: 25px 20px;
+  font-size: 1.1em;
+  font-weight: 600;
+  color: white;
+  text-align: center;
+  background: var(--color-primary);
+}
+
+.popup:has(#__popup_container > h2:first-child) #__popup_container form {
+  text-align: center;
+  padding: 25px 30px 30px 30px;
+}
+
+.popup:has(#__popup_container > h2:first-child) #__popup_container form p {
+  margin-bottom: 20px;
+  color: var(--color-text-medium);
+}
+
+.popup:has(#__popup_container > h2:first-child) #__popup_container form p:empty {
+  display: none;
+}
+
+.popup:has(#__popup_container > h2:first-child) .btnPrimary,
+.popup:has(#__popup_container > h2:first-child) .btnSecondary {
+  min-width: 100px;
+}
+
+/* ============================================= */
+/* 8. ALERT POPUPS (success, error, info)        */
+/* ============================================= */
+
+.popup:has(.alert) {
+  width: auto !important;
+  min-width: 380px;
+  max-width: 700px;
+}
+
+.popup:has(.alert) #__popup_container {
+  padding: 0 !important;
+}
+
+.popup:has(.alert) #__popup_container > div {
+  padding: 0 !important;
+}
+
+.popup:has(.alert) #__popup_container .alert {
+  margin: 0 !important;
+  border-radius: 0;
+  width: 100% !important;
+  box-sizing: border-box;
+}
+
+.popup:has(.alert) #__popup_container center {
+  display: block;
+  padding: 20px 25px 30px 25px;
+}
+
+/* Alert content */
+.popup:has(.alert) .alert h1 {
+  color: #333;
+  font-size: 1.4em;
+  margin: 0 0 10px 0;
+}
+
+.popup:has(.alert) .alert p {
+  margin: 0 0 20px 0;
+  padding: 0 20px;
+  color: #555;
+}
+
+/* Traceback section */
+.popup:has(.alert) .errorTraceback {
+  margin-top: 20px;
+  padding: 0 20px;
+}
+
+.popup:has(.alert) .errorTraceback h1 {
+  font-size: 1.1em;
+  color: #333;
+  margin-bottom: 15px;
+  border-bottom: 2px solid var(--color-accent);
+  padding-bottom: 8px;
+  display: inline-block;
+}
+
+.popup:has(.alert) #__popup_container pre,
+.popup:has(.alert) #__popup_container code {
+  text-align: left !important;
+  margin: 15px 20px 25px 20px;
+  padding: 15px;
+  border-radius: 8px;
+  overflow-x: auto;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* ============================================= */
+/* 9. REMOTE POPUP (VNC/CMD/RDP)                 */
+/* ============================================= */
+
+.popup:has(.remote-popup) {
+  width: auto !important;
+  min-width: 450px;
+}
+
+/* Legacy table-based remote */
+.popup #tablevnc {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.popup #tablevnc td {
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.popup #tablevnc td:hover {
+  background: #f3f4f6;
+}
+
+.popup #tablevnc td img {
+  opacity: 0.8;
+}
+
+.popup #tablevnc td:hover img {
+  opacity: 1;
+}
+
+.popup #tablevnc td h1 {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-dark);
+  margin: 8px 0 0 0;
+  padding: 0;
+  border: none;
+}
+
+/* New remote popup */
+.remote-popup .remote-actions {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  padding: 20px;
+  background: #f8fafc;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  margin-bottom: 20px;
+}
+
+.remote-popup .remote-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 15px 25px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.remote-popup .remote-item:hover {
+  background: #e5e7eb;
+}
+
+.remote-popup .remote-item img {
+  width: 70px;
+  height: 70px;
+}
+
+.remote-popup .remote-item span {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-dark);
+}
+
+/* Machine info section */
+.remote-popup .remote-machine-info {
+  background: #f8fafc;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  overflow: hidden;
+}
+
+.remote-popup .info-header {
+  background: var(--color-primary);
+  color: white;
+  padding: 8px 15px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.remote-popup .info-grid {
+  padding: 15px;
+}
+
+.remote-popup .info-row {
+  display: flex;
+  padding: 8px 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.remote-popup .info-row:last-child {
+  border-bottom: none;
+}
+
+.remote-popup .info-label {
+  width: 160px;
+  font-size: 12px;
+  color: #6b7280;
+  flex-shrink: 0;
+  padding-right: 10px;
+}
+
+.remote-popup .info-value {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-dark);
+}
+
+/* ============================================= */
+/* 10. QUICK ACTIONS POPUP                       */
+/* ============================================= */
+
+.popup:has(.quick-actions-popup) {
+  width: auto !important;
+  min-width: 580px;
+}
+
+.quick-actions-popup h3 {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-dark);
+}
+
+/* Machine info bar */
+.quick-actions-popup .machine-info {
+  display: flex;
+  gap: 0;
+  margin-bottom: 20px;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.quick-actions-popup .info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 15px;
+  background: #f8fafc;
+  border-right: 1px solid #e5e7eb;
+  flex: 1;
+}
+
+.quick-actions-popup .info-item:last-child {
+  border-right: none;
+}
+
+.quick-actions-popup .info-label {
+  font-size: 10px;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.quick-actions-popup .info-value {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-dark);
+  white-space: nowrap;
+}
+
+/* Section card (common for actions, command, monitoring) */
+.quick-actions-popup .actions-section,
+.quick-actions-popup .custom-command-section,
+.quick-actions-popup .monitoring-section {
+  background: #f8fafc;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+.quick-actions-popup .monitoring-section {
+  margin-bottom: 0;
+}
+
+/* Section headers */
+.quick-actions-popup .actions-section::before {
+  content: "Actions";
+}
+
+.quick-actions-popup .actions-section::before,
+.quick-actions-popup .custom-command-section h3,
+.quick-actions-popup .monitoring-section h3 {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 12px 0;
+}
+
+/* Actions grid */
+.quick-actions-popup .actions-grid {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.quick-actions-popup .action-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 10px;
+  min-width: 80px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+}
+
+.quick-actions-popup .action-item:hover {
+  background: #f3f4f6;
+}
+
+.quick-actions-popup .action-item img {
+  width: 50px;
+  height: 50px;
+}
+
+.quick-actions-popup .action-item > span {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-text-dark);
+}
+
+.quick-actions-popup .action-option {
+  font-size: 12px;
+  color: #374151;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.quick-actions-popup .action-option input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  cursor: pointer;
+  accent-color: var(--color-primary);
+  flex-shrink: 0;
+}
+
+/* Shutdown options */
+.quick-actions-popup .shutdown-options {
+  background: #fef3c7;
+  border: 1px solid #fcd34d;
+  border-radius: 6px;
+  padding: 12px;
+  margin-bottom: 20px;
+}
+
+.quick-actions-popup .option-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.quick-actions-popup .option-row:last-child {
+  margin-bottom: 0;
+}
+
+.quick-actions-popup .option-row label {
+  font-size: 12px;
+  color: #92400e;
+  min-width: 120px;
+}
+
+.quick-actions-popup .option-row input {
+  padding: 6px 10px;
+  border: 1px solid #fcd34d;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+/* Custom command */
+.quick-actions-popup .command-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.quick-actions-popup .command-row select {
+  flex: 1;
+  height: 38px;
+  padding: 0 35px 0 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 13px;
+  line-height: 38px;
+  background-position: right 10px center;
+}
+
+/* Monitoring grid */
+.quick-actions-popup .monitoring-grid {
+  display: flex;
+  gap: 15px;
+}
+
+.quick-actions-popup .monitoring-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.quick-actions-popup .monitoring-item:hover {
+  background: #f3f4f6;
+}
+
+.quick-actions-popup .monitoring-item img {
+  width: 40px;
+  height: 40px;
+}
+
+.quick-actions-popup .monitoring-item span {
+  font-size: 11px;
+  color: var(--color-text-medium);
+}
+
+/* ============================================= */
+/* 11. NOTIFY WIDGET                             */
+/* ============================================= */
+
+.notify-widget {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.notify-widget-icon {
+  display: none;
+}
+
+.notify-widget-content {
+  margin: 0;
+}
+
+.notify-widget-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  padding: 0 25px 30px 25px;
+}
+
+.notify-widget-actions .btn {
+  min-width: 100px;
+  padding: 10px 25px;
+  border-radius: 9px;
+}
+
+/* ============================================= */
+/* 12. MODAL POPUP (ActionAjaxPopup)             */
+/* ============================================= */
+
+.modal-popup {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--color-bg-white);
+  border-radius: 9px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  z-index: 1002;
+  min-width: 350px;
+  max-width: 90vw;
+  padding: 25px;
+}
+
+.modal-popup-message {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.modal-popup-result {
+  margin-bottom: 20px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.modal-popup-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.modal-popup-buttons button {
+  padding: 10px 25px;
+  border-radius: 9px;
+}

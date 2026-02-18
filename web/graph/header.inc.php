@@ -135,34 +135,53 @@ $root = $conf["global"]["root"];
 
             });
 
-            // Popup under mouseevent
+            // Popup centering using negative margins (compatible with draggable)
             function _defaultPlacement(evt) {
-                jQuery('#popup').css("position", "fixed");
-                jQuery('#popup').css("top", (jQuery(window).height()/2 - jQuery('#popup').height()/2) + "px");
-                jQuery('#popup').css("left", (jQuery(window).width()/2 - jQuery('#popup').width()/2) + "px");
+                var $popup = jQuery('#popup');
+                $popup.css({
+                    'top': '50%',
+                    'left': '50%',
+                    'margin-top': -($popup.outerHeight() / 2) + 'px',
+                    'margin-left': -($popup.outerWidth() / 2) + 'px'
+                });
             }
 
             function _centerPlacement(evt) {
-                jQuery('#popup').css({
-                    'width': '50%',
-                    'left': '25%',
-                    'top': '15%'
+                var $popup = jQuery('#popup');
+                $popup.css({
+                    'top': '50%',
+                    'left': '50%',
+                    'margin-top': -($popup.outerHeight() / 2) + 'px',
+                    'margin-left': -($popup.outerWidth() / 2) + 'px'
                 });
                 jQuery('#overlay').fadeIn().click(closePopup);
             }
 
             function PopupWindow(evt, url, width, callback, content) {
-                jQuery('#popup').css("width", width + "px");
+                // Only set width if specified (> 0), otherwise let CSS handle it
+                if (width > 0) {
+                    jQuery('#popup').css("width", width + "px");
+                } else {
+                    jQuery('#popup').css("width", "");
+                }
                 if (!evt)
                     evt = window.event;
+
+                // Show overlay with blur
+                jQuery('#overlay').fadeIn();
 
                 // If content is specified, we skip ajax request
                 if (content) {
                     jQuery("#__popup_container").html(content);
 
+                    // Make visible but hidden to calculate dimensions
+                    jQuery('#popup').css({'visibility': 'hidden', 'display': 'block'});
+
                     callback = callback || _defaultPlacement;
                     callback(evt);
-                    jQuery('#popup').fadeIn();
+
+                    // Now show properly
+                    jQuery('#popup').css({'visibility': 'visible', 'display': 'none'}).fadeIn();
                     return;
                 }
 
@@ -170,44 +189,48 @@ $root = $conf["global"]["root"];
                     'url': url,
                     type: 'get',
                     success: function(data) {
-                        jQuery('#popup').fadeIn();
                         jQuery("#__popup_container").html(data);
                     },
                     error: function(e) {
                         jQuery("#__popup_container").html('Could not load content, please check your network connection.');
                     },
                     complete: function() {
-                        // If height > 300, we force using center mode
+                        // Make visible but hidden to calculate dimensions
+                        jQuery('#popup').css({'visibility': 'hidden', 'display': 'block'});
+
                         if (jQuery('#popup').outerHeight() > 300 && !callback)
                             callback = _centerPlacement;
                         callback = callback || _defaultPlacement;
                         callback(evt);
+
+                        // Now show properly
+                        jQuery('#popup').css({'visibility': 'visible', 'display': 'none'}).fadeIn();
                     }
                 });
             }
 
             function showPopup(evt, url) {
-                PopupWindow(evt, url, 300);
+                PopupWindow(evt, url, 0);
             }
 
             function showPopupFav(evt, url) {
                 PopupWindow(evt, url, 200, function(evt) {
                     var left = Math.max(0, evt.clientX - 100 + jQuery(window).scrollLeft());
                     var top = Math.max(0, evt.clientY + jQuery(window).scrollTop());
-                    jQuery('#popup').css({'left': left + "px", 'top': top + "px"});
+                    jQuery('#popup').css({'left': left + "px", 'top': top + "px", 'margin-top': '0', 'margin-left': '0'});
                 });
             }
 
             function showPopupUp(evt, url) {
-                PopupWindow(evt, url, 300, function(evt) {
+                PopupWindow(evt, url, 0, function(evt) {
                     var left = Math.max(0, evt.clientX - jQuery('#popup').outerWidth() + jQuery(window).scrollLeft());
                     var top = Math.max(0, evt.clientY - jQuery('#popup').outerHeight() + jQuery(window).scrollTop());
-                    jQuery('#popup').css({'left': left + "px", 'top': top + "px"});
+                    jQuery('#popup').css({'left': left + "px", 'top': top + "px", 'margin-top': '0', 'margin-left': '0'});
                 });
             }
 
             function showPopupCenter(url) {
-                PopupWindow(null, url, 300, _centerPlacement);
+                PopupWindow(null, url, 0, _centerPlacement);
             }
 
             function displayConfirmationPopup(message, url_yes, url_no, klass) {
@@ -225,11 +248,13 @@ $root = $conf["global"]["root"];
                 message += '</div></div>';
 
                 PopupWindow(null, null, 0, function(evt) {
-
-                    jQuery('#popup').css({
-                        'width': '50%',
-                        'left': '25%',
-                        'top': '25%'
+                    var $popup = jQuery('#popup');
+                    // Reset position and center using negative margins
+                    $popup.css({
+                        'top': '50%',
+                        'left': '50%',
+                        'margin-top': -($popup.outerHeight() / 2) + 'px',
+                        'margin-left': -($popup.outerWidth() / 2) + 'px'
                     });
                     jQuery('#overlay').fadeIn().click(closePopup);
 
@@ -247,10 +272,10 @@ $root = $conf["global"]["root"];
                 message = nl2br(message);
 
                 if (!klass)
-                    klass = '';
+                    klass = 'alert-error';
                 if (!title)
                     title = '';
-                var message = '<div style="padding: 10px"><div class="alert alert-error ' + klass + '">' + message + '</div>';
+                var message = '<div style="padding: 10px"><div class="alert ' + klass + '">' + message + '</div>';
                 //message += '<div style="text-align: center"><a class="btn btn-primary" href="' + url_yes + '"><?= _('Yes') ?></a>';
 
                 message += ' <center><button class="btn" onclick="closePopup(); return false;"><?= _('Close') ?></button></center>';
@@ -258,11 +283,13 @@ $root = $conf["global"]["root"];
                 message += '</div></div>';
 
                 PopupWindow(null, null, 0, function(evt) {
-
-                    jQuery('#popup').css({
-                        'width': '50%',
-                        'left': '25%',
-                        'top':  '25%'
+                    var $popup = jQuery('#popup');
+                    // Reset position and center using negative margins
+                    $popup.css({
+                        'top': '50%',
+                        'left': '50%',
+                        'margin-top': -($popup.outerHeight() / 2) + 'px',
+                        'margin-left': -($popup.outerWidth() / 2) + 'px'
                     });
                     jQuery('#overlay').fadeIn().click(closePopup);
 
