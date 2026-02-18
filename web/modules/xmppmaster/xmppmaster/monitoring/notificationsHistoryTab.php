@@ -26,9 +26,7 @@
 //require("modules/xmppmaster/xmppmaster/localSidebarxmpp.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 
-print "<br/><br/><br/>";
 $ajax = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxalertshistory"), "container", array());
 $ajax->display();
-print "<br/><br/><br/>";
 $ajax->displayDivToUpdate();
 ?>

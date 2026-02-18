@@ -26,6 +26,9 @@
 
 require("graph/navbar.inc.php");
 require("localSidebar.php");
+?>
+<link rel="stylesheet" href="modules/pkgs/graph/css/pkgs.css" />
+<?php
 
 $p = new PageGenerator(_T("Packages list", 'pkgs'));
 $p->setSideMenu($sidemenu);
@@ -38,7 +41,3 @@ $ajax->display();
 $ajax->displayDivToUpdate();
 
 ?>
-
-<style>
-    .noborder { border:0px solid blue; }
-</style>

@@ -30,7 +30,6 @@ require("../includes/ajaxcommon.inc.php");
     $ajax = new AjaxFilter("modules/imaging/manage/ajaxMasterLevel2.php", "Level2", getParams(), "formLevel2");
     //$ajax->setRefresh(10000);
     $ajax->display();
-    echo '<br/><br/><br/>';
     $ajax->displayDivToUpdate();
 
 require("../includes/ajaxcommon_bottom.inc.php");

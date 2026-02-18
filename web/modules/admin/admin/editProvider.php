@@ -23,63 +23,8 @@
 require("localSidebar.php");
 require("graph/navbar.inc.php");
 require_once("modules/admin/includes/xmlrpc.php");
-?>
-<style>
-#Form > table{
-  width:100% !important;
-  margin:0 auto !important;
-  border-collapse:separate;
-  border-spacing:0;
-  margin-top:1.5rem !important;
-}
 
-#Form tr > td.label{
-  width:28% !important;
-  text-align:right;
-  padding-right:0;
-}
 
-#Form tr > td.label + td{
-  padding-left:3rem !important;
-  vertical-align:middle;
-}
-
-#Form tr > td.label + td span[id^="container_input_"]{
-  display:inline-block;
-  position:relative;
-  width:32rem;
-  max-width:100%;
-}
-
-#Form tr > td.label + td span[id^="container_input_"] > input[type="text"],
-#Form tr > td.label + td span[id^="container_input_"] > input[type="password"],
-#Form tr > td.label + td span[id^="container_input_"] > input:not([type]){
-  width:100%;
-  box-sizing:border-box;
-}
-
-#Form tr > td.label + td .pw-wrap{
-  position:relative; display:inline-block; width:100%;
-}
-#Form tr > td.label + td .pw-wrap > input{
-  padding-right:2.2rem;
-}
-#Form tr > td.label + td .pw-toggle{
-  position:absolute; right:.6rem; top:50%; transform:translateY(-50%);
-  width:1.1rem; height:1.1rem; border:0; background:transparent; padding:0; cursor:pointer;
-  line-height:1; z-index:2;
-}
-#Form tr > td.label + td .pw-toggle img{
-  width:100%; height:100%; display:block; pointer-events:none;
-}
-
-#Form .btn, #Form .btnPrimary,
-#Form input[type="submit"], #Form input[type="button"], #Form input[type="reset"]{
-  width:auto !important;
-}
-</style>
-
-<?php
 $safe   = fn($v) => htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8');
 $isRoot = (strcasecmp($_SESSION['login'] ?? '', 'root') === 0);
 
@@ -204,6 +149,9 @@ $submitLabel = ($mode === 'edit') ? _T("Save changes", "admin") : _T("Create pro
 
 $form = new ValidatingForm(['method' => 'POST']);
 $form->addValidateButtonWithValue($submitName, $submitLabel);
+
+// Section: General
+$form->add(new SpanElement(_T("General", "admin"), "section-title"));
 $form->push(new Table());
 
 // customer: editable only for root
@@ -228,7 +176,13 @@ if ($mode === 'edit') {
     );
 }
 
-$form->add(new TrFormElement(_T("Logo URL", "admin"),    new InputTpl('logo_url', '/^.{0,400}$/')),     ['value' => $prefill['logo_url']]);
+$form->add(new TrFormElement(_T("Logo URL", "admin"), new InputTpl('logo_url', '/^.{0,400}$/')), ['value' => $prefill['logo_url']]);
+$form->pop();
+
+// Section: OAuth/OIDC Configuration
+$form->add(new SpanElement(_T("OAuth/OIDC Configuration", "admin"), "section-title"));
+$form->push(new Table());
+
 $form->add(new TrFormElement(_T("Issuer URL", "admin"),  new InputTpl('url_provider', '/^.{1,400}$/')), ['value' => $prefill['url_provider']]);
 $form->add(new TrFormElement(_T("Client ID", "admin"),   new InputTpl('client_id', '/^.{1,400}$/')),    ['value' => $prefill['client_id']]);
 
@@ -246,11 +200,17 @@ $form->add(
     new TrFormElement(_T("Client secret", "admin"), new multifieldTpl($widgets))
 );
 
+$form->add(new TrFormElement(_T("Proxy URL", "admin"), new InputTpl('proxy_url', '/^.{0,400}$/')), ['value' => $prefill['proxy_url']]);
+$form->pop();
+
+// Section: LDAP Mapping
+$form->add(new SpanElement(_T("LDAP Mapping", "admin"), "section-title"));
+$form->push(new Table());
+
 $form->add(new TrFormElement(_T("LDAP uid", "admin"),       new InputTpl('ldap_uid', '/^.{0,64}$/')),       ['value' => $prefill['ldap_uid']]);
 $form->add(new TrFormElement(_T("LDAP givenName", "admin"), new InputTpl('ldap_givenName', '/^.{0,64}$/')), ['value' => $prefill['ldap_givenName']]);
 $form->add(new TrFormElement(_T("LDAP sn", "admin"),        new InputTpl('ldap_sn', '/^.{0,64}$/')),        ['value' => $prefill['ldap_sn']]);
 $form->add(new TrFormElement(_T("LDAP mail", "admin"),      new InputTpl('ldap_mail', '/^.{0,64}$/')),      ['value' => $prefill['ldap_mail']]);
-$form->add(new TrFormElement(_T("Proxy URL", "admin"),      new InputTpl('proxy_url', '/^.{0,400}$/')),     ['value' => $prefill['proxy_url']]);
 
 // to activate later (let commented for now):
 // $form->add(new TrFormElement(_T("Profiles order", "admin"),  new InputTpl('profiles_order', '/^.{0,400}$/')), ['value' => ($prefill['profiles_order'] ?? '')]);

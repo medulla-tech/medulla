@@ -40,7 +40,6 @@ $refresh->display();
 $ajax = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxstatusxmpp"), "container", array('login' => ''), 'formRunning'  );
 $ajax->setRefresh($refresh->refreshtime());
 $ajax->display();
-print "<br/><br/><br/>";
 $ajax->displayDivToUpdate();
 
 ?>

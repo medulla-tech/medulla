@@ -66,6 +66,15 @@ $submod->addPage($page);
 $page = new Page("auditteamconvergence", _T('XMPP My teams convergence', 'xmppmaster'));
 $submod->addPage($page);
 
+if(in_array("mobile", $_SESSION["modulesList"])){
+    $page = new Page("auditmobile", _T('Mobile Audit', 'xmppmaster'));
+    $submod->addPage($page);
+    
+    $page = new Page("ajaxauditmobile");
+    $page->setOptions(array("visible" => false, "AJAX" => true));
+    $submod->addPage($page);
+}
+
 $page = new Page("consolexmpp", _T('XMPP Console', 'xmppmaster'));
 $submod->addPage($page);
 

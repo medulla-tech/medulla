@@ -1,5 +1,11 @@
 <?php
+require("graph/navbar.inc.php");
+require("localSidebar.php");
 require_once("modules/mobile/includes/xmlrpc.php");
+
+$p = new PageGenerator(_T("Detailed Information", "mobile"));
+$p->setSideMenu($sidemenu);
+$p->display();
 
 $device_number = isset($_POST['device']) ? $_POST['device'] : (isset($_GET['device']) ? $_GET['device'] : "");
 $device_info = array();

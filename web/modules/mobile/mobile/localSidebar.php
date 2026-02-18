@@ -26,5 +26,8 @@ $sidemenu->addSideMenuItem(new SideMenuItem(_T("Add a file", 'mobile'), "mobile"
 
 // $sidemenu->addSideMenuItem(new SideMenuItem(_T("All devices glpi", 'mobile'), "mobile", "mobile", "glpiDevices"));
 
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Functions", 'mobile'), "mobile", "mobile", "functions"));
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("Messages", 'mobile'), "mobile", "mobile", "messaging"));
+
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("Push messages", 'mobile'), "mobile", "mobile", "pushMessages"));
+
  ?>

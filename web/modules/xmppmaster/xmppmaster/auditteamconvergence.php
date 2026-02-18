@@ -42,13 +42,11 @@ $p->display();
 
 $refresh = new RefreshButton();
 $refresh->display();
-print "<br/><br/><br/>";
 $ajax = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxteamconvergence"),
                                             "container", array('login' => $_SESSION['login'],
                                             'currenttasks' => '1'), 'formRunning'  );
 $ajax->setRefresh($refresh->refreshtime());
 $ajax->display();
-print "<br/><br/><br/>";
 $ajax->displayDivToUpdate();
 
 ?>

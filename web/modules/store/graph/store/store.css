@@ -1,0 +1,366 @@
+/*
+ * (c) 2024-2025 Medulla, http://www.medulla-tech.io
+ *
+ * This file is part of MMC, http://www.medulla-tech.io
+ *
+ * MMC is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * any later version.
+ *
+ * Medulla Store - CSS Styles
+ */
+
+/* ===========================================
+   Common Styles
+   =========================================== */
+
+.store-filters {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.store-filters select,
+.store-filters input,
+.store-filters input[type="text"] {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    min-width: 150px;
+}
+
+.store-filters .btn-request {
+    margin-left: auto;
+}
+
+/* ===========================================
+   Modal Styles (Software Request)
+   =========================================== */
+
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-overlay.open {
+    display: flex;
+}
+
+.modal-container {
+    background: white;
+    border-radius: 8px;
+    max-width: 500px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+.modal-header {
+    padding: 20px;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h3 {
+    margin: 0;
+    color: #24607E;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #666;
+}
+
+.modal-close:hover {
+    color: #333;
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+.modal-footer {
+    padding: 15px 20px;
+    border-top: 1px solid #ddd;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+/* ===========================================
+   Form Styles
+   =========================================== */
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: #333;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.form-group select {
+    width: 100%;
+    height: 40px;
+    padding: 0 30px 0 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    box-sizing: border-box;
+    line-height: 40px;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #8BB53C;
+    outline: none;
+}
+
+/* ===========================================
+   Subscribe Page - Client Info
+   =========================================== */
+
+.client-info {
+    background: #f8f9fa;
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.client-info .label {
+    color: #666;
+    font-size: 12px;
+}
+
+.client-info .value {
+    font-weight: 600;
+    color: #333;
+}
+
+/* ===========================================
+   Subscribe Page - Controls
+   =========================================== */
+
+.subscription-controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 4px;
+    align-items: center;
+}
+
+.subscription-controls .count {
+    margin-left: auto;
+    font-weight: 600;
+    color: #24607E;
+}
+
+.subscription-actions {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #ddd;
+}
+
+/* ===========================================
+   Deploy Page - Container & Info
+   =========================================== */
+
+.deploy-container {
+    width: 100%;
+    margin: 20px 0;
+}
+
+#machine-list-container ul.navList,
+#group-list-container ul.navList {
+    position: relative !important;
+    float: right !important;
+    text-align: right !important;
+    margin: 10px 0 !important;
+    padding: 0 !important;
+    clear: both !important;
+}
+
+.deploy-info {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border-left: 4px solid #8BB53C;
+}
+
+.deploy-info h3 {
+    margin-top: 0;
+    color: #24607E;
+}
+
+/* ===========================================
+   Deploy Page - Tabs
+   =========================================== */
+
+.deploy-tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 0;
+    border-bottom: 2px solid #ddd;
+}
+
+.deploy-tab {
+    padding: 12px 24px;
+    background: #f0f0f0;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    color: #666;
+    transition: all 0.3s;
+    border-radius: 8px 8px 0 0;
+    margin-bottom: -2px;
+}
+
+.deploy-tab:hover {
+    background: #e0e0e0;
+}
+
+.deploy-tab.active {
+    background: #fff;
+    color: #24607E;
+    border: 2px solid #ddd;
+    border-bottom: 2px solid #fff;
+}
+
+.deploy-content {
+    background: #fff;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-top: none;
+}
+
+.deploy-actions {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #ddd;
+    display: flex;
+    gap: 10px;
+}
+
+/* ===========================================
+   Deploy Page - Filters Bar
+   =========================================== */
+
+.filters-bar {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.filter-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.filter-group label {
+    font-weight: 600;
+    color: #555;
+    white-space: nowrap;
+}
+
+.filter-group select,
+.filter-group input[type="text"] {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    min-width: 150px;
+}
+
+.filter-group input[type="text"] {
+    min-width: 250px;
+}
+
+.filter-group select:focus,
+.filter-group input[type="text"]:focus {
+    border-color: #8BB53C;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(139, 181, 60, 0.2);
+}
+
+.selection-info {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.selection-info .count {
+    font-weight: 600;
+    color: #24607E;
+}
+
+.btn-select-all {
+    padding: 8px 15px;
+    background: #e9ecef;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.btn-select-all:hover {
+    background: #ddd;
+}
+
+/* ===========================================
+   Pagination NavBar
+   =========================================== */
+
+/* Add margin above the bottom navigation bar */
+.listinfos + form > .navList,
+table.listinfos + form .navList {
+    margin-top: 20px;
+}
+

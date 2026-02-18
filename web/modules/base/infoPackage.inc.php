@@ -167,6 +167,12 @@ if(in_array("xmppmaster", $_SESSION["modulesList"])) {
     $page->setFile("modules/base/logview/logsimaging.php");
     $submod->addPage($page);
 
+    if(in_array("mobile", $_SESSION["modulesList"])){
+        $page = new Page("logsmobile", _T("logs mobile", "base"));
+        $page->setFile("modules/base/logview/logsmobile.php");
+        $submod->addPage($page);
+    }
+
     $page = new Page("ajax_Data_Logs");
     $page->setFile("modules/base/logview/ajax_Data_Logs.php", array("AJAX" => true,"visible" => false));
     $submod->addPage($page);

@@ -2334,3 +2334,83 @@ msgstr "Resultado Qa en Relés"
 msgid "Reload Deploy"
 msgstr "Recargar Desplegar"
 
+
+#: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php
+msgid "No uninventoried machines"
+msgstr "Sin máquinas no inventariadas"
+
+#: modules/xmppmaster/xmppmaster/ajaxXmppMachinesList.php
+msgid "All connected machines have been inventoried."
+msgstr "Todas las máquinas conectadas han sido inventariadas."
+
+#: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php
+msgid "No alerts"
+msgstr "Sin alertas"
+
+#: modules/xmppmaster/xmppmaster/monitoring/ajaxalerts.php
+msgid "No monitoring alerts to display."
+msgstr "No hay alertas de monitoreo para mostrar."
+
+#: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php
+msgid "No quick actions"
+msgstr "Sin acciones rápidas"
+
+#: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php
+msgid "Create a quick action using the button above."
+msgstr "Cree una acción rápida usando el botón de arriba."
+
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php
+#: modules/xmppmaster/xmppmaster/ajaxstatusteamxmpp.php
+msgid "No current tasks"
+msgstr "Sin tareas actuales"
+
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php
+#: modules/xmppmaster/xmppmaster/ajaxstatusteamxmpp.php
+msgid "No deployments are in progress."
+msgstr "No hay despliegues en progreso."
+
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php
+#: modules/xmppmaster/xmppmaster/ajaxstatusteamxmpp.php
+msgid "No past tasks"
+msgstr "Sin tareas pasadas"
+
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php
+#: modules/xmppmaster/xmppmaster/ajaxstatusteamxmpp.php
+msgid "No deployments have been completed yet."
+msgstr "Aún no se han completado despliegues."
+
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php
+#: modules/xmppmaster/xmppmaster/ajaxstatusteamxmppscheduler.php
+msgid "No planned tasks"
+msgstr "Sin tareas planificadas"
+
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php
+#: modules/xmppmaster/xmppmaster/ajaxstatusteamxmppscheduler.php
+msgid "No deployments are scheduled."
+msgstr "No hay despliegues programados."
+
+#: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php
+msgid "No pending deployments"
+msgstr "Sin despliegues pendientes"
+
+#: modules/xmppmaster/xmppmaster/ajaxstatusnotlaunched.php
+msgid "No deployments are waiting for offline machines."
+msgstr "No hay despliegues esperando máquinas desconectadas."
+
+#: modules/xmppmaster/xmppmaster/ajaxconvergence.php
+#: modules/xmppmaster/xmppmaster/ajaxteamconvergence.php
+msgid "No convergences"
+msgstr "Sin convergencias"
+
+#: modules/xmppmaster/xmppmaster/ajaxconvergence.php
+#: modules/xmppmaster/xmppmaster/ajaxteamconvergence.php
+msgid "No convergence deployments to display."
+msgstr "No hay despliegues de convergencia para mostrar."
+
+#: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php
+msgid "No quick action results"
+msgstr "Sin resultados de acción rápida"
+
+#: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php
+msgid "No quick actions have been executed yet."
+msgstr "Aún no se han ejecutado acciones rápidas."

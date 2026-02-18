@@ -20,24 +20,7 @@
  * along with MMC; If not, see <http://www.gnu.org/licenses/>.
  * file: ajaxManageProviders.php
  */
-require_once("modules/xmppmaster/includes/html.inc.php");
-require_once("modules/admin/includes/xmlrpc.php");
-?>
-<style>
-#container>form>table>thead td:first-child span {
-    display: block;
-    text-align: left;
-    padding-left: 0 !important;
-    margin-left: 0 !important;
-}
-#container>form>table>thead td:last-child span {
-        display: block;
-        text-align: right;
-        padding-right: 12px;
-}
-</style>
-<?php
-require_once("modules/xmppmaster/includes/html.inc.php");
+require_once("includes/UIComponents.php");
 require_once("modules/admin/includes/xmlrpc.php");
 
 $login       = $_SESSION['login'] ?? '';
@@ -46,12 +29,11 @@ $client = $_SESSION['o']     ?? 'MMC';
 // root -> all (sees everything), otherwise filtered
 $providers = xmlrpc_get_providers($login, strcasecmp($login,'root')===0 ? 'ALL' : $client);
 if (empty($providers)) {
-    echo '<div style="width:50%;margin:0 auto;background:#e0e0e0;padding:10px;text-align:center;font-size:14px;border-radius:5px;border:1px solid #b0b0b0;">'
-       . htmlspecialchars(_T("No providers for this scope.", "admin"), ENT_QUOTES, 'UTF-8')
-       . '</div>';
+    EmptyStateBox::show(_T("No providers for this scope.", "admin"));
     $f = new ValidatingForm(["action" => urlStrRedirect("admin/admin/index", [])]);
     $f->addValidateButtonWithValue("cancel", "return");
-    $f->pop(); $f->display();
+    $f->pop();
+    $f->display();
     return;
 }
 

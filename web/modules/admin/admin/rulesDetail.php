@@ -37,10 +37,8 @@ unset($params['submod']);
 unset($params['action']);
 
 
-print "<br/><br/><br/>";
 $ajax = new AjaxFilter(urlStrRedirect("admin/admin/ajaxRulesDetail", $params));
 $ajax->display();
-print "<br/><br/><br/>";
 $ajax->displayDivToUpdate();
 
  ?>

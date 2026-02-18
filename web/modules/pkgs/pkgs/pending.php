@@ -25,6 +25,9 @@
 
 require("graph/navbar.inc.php");
 require("localSidebar.php");
+?>
+<link rel="stylesheet" href="modules/pkgs/graph/css/pkgs.css" />
+<?php
 require_once("modules/pkgs/includes/xmlrpc.php");
 $p = new PageGenerator(_T("Pending packages list", 'pkgs'));
 $p->setSideMenu($sidemenu);
@@ -52,6 +55,3 @@ $ajax = new AjaxFilter(urlStrRedirect("pkgs/pkgs/ajaxPendingPackageList"));
 $ajax->display();
 $ajax->displayDivToUpdate();
 ?>
-<style>
-    .noborder { border:0px solid blue; }
-</style>

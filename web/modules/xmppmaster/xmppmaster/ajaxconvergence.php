@@ -25,6 +25,7 @@
 require_once("modules/dyngroup/includes/xmlrpc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 require_once('modules/msc/includes/commands_xmlrpc.inc.php');
+require_once("includes/UIComponents.php");
 
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
@@ -42,6 +43,14 @@ if (isset($_GET['currenttasks']) && $_GET['currenttasks'] == '1') {
     $arraynotdeploy = xmlrpc_get_deploy_inprogress_by_team_member($_GET['login'], $LastdeployINsecond, $start, $end, $filter);
 } else {
     echo "<h2>" . _T("Past tasks (last 3 months)") ."</h2>";
+}
+
+if (!isset($arraydeploy['lentotal']) || $arraydeploy['lentotal'] == 0) {
+    EmptyStateBox::show(
+        _T("No convergences", "xmppmaster"),
+        _T("No convergence deployments to display.", "xmppmaster")
+    );
+    return;
 }
 
 $tab = xmlrpc_get_conrainte_slot_deployment_commands($arraydeploy['tabdeploy']['command']);
@@ -414,5 +423,4 @@ $n->start = 0;
 $n->end = $arraydeploy['lentotal'];
 
 $n->display();
-echo "<br>";
 ?>

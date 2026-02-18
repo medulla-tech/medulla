@@ -25,7 +25,9 @@
  */
 require("localSidebar.php");
 require("graph/navbar.inc.php");
-
+?>
+<link rel="stylesheet" href="modules/pkgs/graph/css/pkgs.css" />
+<?php
 require_once("modules/pkgs/includes/xmlrpc.php");
 require_once("modules/pkgs/includes/functions.php");
 require_once("modules/pkgs/includes/query.php");
@@ -496,7 +498,7 @@ if (isset($_POST['bconfirm'])){
             }
             else{
                 if(typeof(jQuery("#description-warning").val()) == "undefined"){
-                    jQuery("#container_input_description").prepend("<div id='description-warning' style='color:red;'><?php echo _T("Accentuated and special chars are not allowed", "pkgs");?></div>");
+                    jQuery("#container_input_description").prepend("<div id='description-warning' class='pkg-error'><?php echo _T("Accentuated and special chars are not allowed", "pkgs");?></div>");
                 }
             }
         })

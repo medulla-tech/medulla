@@ -34,18 +34,20 @@ $computerpresence = isset($_GET['computerpresence']) ? $_GET['computerpresence']
 
 $_SESSION['computerpresence'] = $computerpresence;
 
-echo '<input type="radio" ';
-if ($computerpresence == "all_computer") echo "checked";
-echo ' id="namepresence1" name="namepresence" value="all_computer"/> ';
-echo '<label for="namepresence1" style="display:initial;">'._('All computers').'</label>';
-echo '<input type="radio" ';
-if ($computerpresence == "presence") echo "checked";
-echo ' id="namepresence2" name="namepresence" value="presence"/> ';
-echo '<label for="namepresence2" style="display:initial;">'._('Online computers').'</label>';
-echo '<input type="radio" ';
-if ($computerpresence == "no_presence") echo "checked";
-echo ' id="namepresence3" name="namepresence" value="no_presence"/> ';
-echo '<label for="namepresence3" style="display:initial;">'._('Offline computers').'</label>';
+// Presence options for select
+$presenceOptions = array(
+    'all_computer' => _T('All computers', 'glpi'),
+    'presence' => _T('Online computers', 'glpi'),
+    'no_presence' => _T('Offline computers', 'glpi')
+);
+
+// Generate presence select HTML
+$presenceSelectHtml = '<span class="searchfield"><select id="computerpresence" class="searchfieldreal noborder">';
+foreach ($presenceOptions as $value => $label) {
+    $selected = ($computerpresence == $value) ? 'selected' : '';
+    $presenceSelectHtml .= '<option value="' . $value . '" ' . $selected . '>' . $label . '</option>';
+}
+$presenceSelectHtml .= '</select></span>';
 
 $ajax = new AjaxFilterParams(urlStrRedirect("base/computers/ajaxMachinesListglpi"));
 list($list, $values) = getEntitiesSelectableElements();
@@ -56,44 +58,26 @@ $valuesWithAll = array_merge([implode(',',$values)], $values);
 $ajax->setElements($listWithAll);
 $ajax->setElementsVal($valuesWithAll);
 $ajax->display();
-echo '<br /><br /><br /><br />';
 $ajax->displayDivToUpdate();
 ?>
 <script type="text/javascript">
-jQuery('#location option[value=""]').prop('selected', true);
+jQuery(document).ready(function() {
+    jQuery('#location option[value=""]').prop('selected', true);
 
-function getQuerystringDef(key, default_) {
-    if (default_==null) default_="";
-    key = key.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
-    var regex = new RegExp("[\\?&]"+key+"=([^&#]*)");
-    var qs = regex.exec(window.location.href);
+    // Inject presence select into searchbox
+    var presenceSelect = '<?php echo $presenceSelectHtml; ?>';
+    jQuery('#searchBest').prepend(presenceSelect);
 
-    if(qs == null)
-        return default_;
+    // Handle presence select change
+    jQuery('#computerpresence').on('change', function() {
+        var valselect = this.value;
+        var url = window.location.href;
+        var urlParts = url.split('?');
+        var baseUrl = urlParts[0];
+        var params = new URLSearchParams(urlParts[1] || '');
 
-    else
-        return qs[1];
-}
-//Radiobox Mode
-jQuery('input[type=radio][name=namepresence]').change(function(){
-
-    var valselect  = this.value;
-    var url = window.location.href;
-
-    if( !getQuerystringDef("computerpresence", false)){
-        var url = window.location.href + "&" + "computerpresence"  + "=" + valselect;
-        window.location = url;
-    }
-    else{
-        var array_url = url.split("?");
-        var adress = array_url[0];
-        var parameters = array_url[1];
-        var parameterlist = parameters.split("&");
-        parameterlist.pop();
-        parameterstring = parameterlist.join('&');
-        var url = adress + "?" + parameterstring + "&" + "computerpresence"  + "=" + valselect;
-        window.location = url;
-    }
-
+        params.set('computerpresence', valselect);
+        window.location = baseUrl + '?' + params.toString();
+    });
 });
 </script>

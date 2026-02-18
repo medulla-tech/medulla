@@ -31,11 +31,9 @@ $filter = (isset($_GET['filter'])) ? $_GET['filter'] : "";
 $page = new PageGenerator(_T("Ban machines on relay", "admin").' '.htmlentities($_GET['hostname']).' : '.htmlentities($_GET['jid']));
 $page->display();
 
-print "<br/><br/><br/>";
 //$ajax = new AjaxFilter(urlStrRedirect("admin/admin/ajaxban"), "container1", ['jid'=>$_GET['jid']], 'popupSearch');
 $ajax = new AjaxFilter(urlStrRedirect("admin/admin/ajaxban"), "container1", ['jid'=>$_GET['jid']]);
 $ajax->display();
-print "<br/><br/><br/>";
 $ajax->displayDivToUpdate();
 
 ?>

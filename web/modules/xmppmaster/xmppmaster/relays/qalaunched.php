@@ -75,11 +75,9 @@ else if(isset($_GET['jid'])) {
   $p->setSideMenu($sidemenu);
   $p->display();
 
-  print "<br/><br/><br/>";
-  $ajax = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxqalaunched"), "container", ['jid' => $jid]);
+    $ajax = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxqalaunched"), "container", ['jid' => $jid]);
   $ajax->display();
-  print "<br/><br/><br/>";
-  $ajax->displayDivToUpdate();
+    $ajax->displayDivToUpdate();
 }
 else{
   redirectToRelays();

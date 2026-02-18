@@ -329,6 +329,8 @@ class MobileDatabase(DatabaseHelper):
         """
         Hasher le mots de passe en md5 
         """
+        if password is None:
+            return None
         hashed_pwd = hashlib.md5(password.encode()).hexdigest().upper()
         return hashed_pwd
 
@@ -341,6 +343,11 @@ class MobileDatabase(DatabaseHelper):
             login = self.login
         if password is None:
             password = self.password
+        
+        # Check if mobile module is activated and configured
+        if not self.is_activated or password is None or login is None:
+            logging.getLogger().warning("Mobile module not activated or configured. Skipping authentication.")
+            return None
 
         hashed_pwd = self.hash_password(password)
 
@@ -378,8 +385,14 @@ class MobileDatabase(DatabaseHelper):
         Get count of HMDM Android devices for dashboard (all hmdm devices are android)
         Returns: [{'os': 'Android', 'version': 'HMDM', 'count': N}]
         """
+        # Check if mobile module is activated before attempting to authenticate
+        if not self.is_activated:
+            logging.getLogger().info("Mobile module not activated. Skipping HMDM device count.")
+            return []
+        
         auth = self.authenticate()
         if auth is None:
+            logging.getLogger().warning("Authentication to HMDM failed. Skipping device count.")
             return []
         
         url = f"{self.BASE_URL}/private/devices/search"
@@ -402,11 +415,12 @@ class MobileDatabase(DatabaseHelper):
     def getHmdmAuditLogs(self, page_size=50, page_num=1, message_filter="", user_filter=""):
         """
         Fetch audit logs from HMDM and return a normalized list.
+        Returns dict with status, data array, and totalItemsCount.
         """
         hmtoken = self.authenticate()
         if hmtoken is None:
             logging.getLogger().error("Impossible d'authentifier pour récupérer les logs d'audit.")
-            return []
+            return {"status": "ERROR", "data": [], "totalItemsCount": 0}
 
         url = f"{self.BASE_URL}/plugins/audit/private/log/search"
         headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
@@ -428,12 +442,14 @@ class MobileDatabase(DatabaseHelper):
             raw_data = resp.json()
             if raw_data is None:
                 logging.getLogger().error("The audit logs were not retrieved")
-                return []
+                return {"status": "ERROR", "data": [], "totalItemsCount": 0}
 
             logging.getLogger().info("Audit logs retrieved successfully")
 
-            #  Extract audit items
-            audit_items = raw_data.get("data", {}).get("items", [])
+            #  Extract audit items and total count
+            data_section = raw_data.get("data", {})
+            audit_items = data_section.get("items", [])
+            total_items_count = data_section.get("totalItemsCount", 0)
 
             audit_list = []
 
@@ -449,6 +465,17 @@ class MobileDatabase(DatabaseHelper):
 
                 action_code = item.get("action", "")
                 readable_action = self._convert_action(action_code)
+                
+                # Get payload details
+                payload_data = item.get("payload", "")
+                if payload_data and isinstance(payload_data, dict):
+                    # Convert dict to formatted string
+                    try:
+                        payload_str = json.dumps(payload_data, indent=2, ensure_ascii=False)
+                    except:
+                        payload_str = str(payload_data)
+                else:
+                    payload_str = str(payload_data) if payload_data else ""
 
                 audit_entry = {
                     "id": item.get("id"),
@@ -457,16 +484,17 @@ class MobileDatabase(DatabaseHelper):
                     "ip": item.get("ipAddress", ""),
                     "action": readable_action,
                     "raw_action": action_code,
-                    "message": item.get("message", "")
+                    "message": item.get("message", ""),
+                    "payload": payload_str
                 }
 
                 audit_list.append(audit_entry)
 
-            return audit_list
+            return {"status": "OK", "data": audit_list, "totalItemsCount": total_items_count}
 
         except Exception as e:
             logging.getLogger().error(f"Error fetching audit logs: {e}")
-            return []
+            return {"status": "ERROR", "data": [], "totalItemsCount": 0}
 
 
     def _convert_action(self, action):

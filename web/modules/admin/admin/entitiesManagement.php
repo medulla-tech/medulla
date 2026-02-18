@@ -31,5 +31,4 @@ $p->display();
 
 $ajax = new AjaxFilter(urlStrRedirect("admin/admin/ajaxEntitiesManagement"), "container", array('login' => $_SESSION['login']), 'formRunning');
 $ajax->display();
-print "<br/><br/><br/>";
 $ajax->displayDivToUpdate();

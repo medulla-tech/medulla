@@ -79,59 +79,6 @@ class Autocomplete extends InputTpl {
                 });
             });
         </script>
-
-        <style type="text/css">
-            .easy_suggest {
-                background-color: #e5e5e5;
-                border: 1px solid #ccc;
-                border-width: 0px 1px;
-                -moz-box-shadow: 0 2px 4px #ccc;
-                -webkit-box-shadow: 0 2px 4px #ccc;
-                box-shadow: 0 2px 4px #ccc;
-                -webkit-border-bottom-right-radius: 8px;
-                -webkit-border-bottom-left-radius: 8px;
-                -moz-border-radius-bottomright: 8px;
-                -moz-border-radius-bottomleft: 8px;
-                border-bottom-right-radius: 8px;
-                border-bottom-left-radius: 8px;
-                display: none;
-                overflow: hidden;
-                position: absolute;
-                z-index: 9999;
-            }
-
-            .easy_list {
-                list-style-type: none;
-                margin: 0px;
-                padding: 0px;
-                width: 100%;
-            }
-
-            .easy_list li {
-                border: 1px solid #ccc;
-                border-width: 0px 1px 1px 0px;
-                font-size: 12px;
-                list-style: none;
-                text-align: left;
-                width: 100%;
-            }
-
-            .easy_list li a {
-                color: #000;
-                display: block;
-                padding: 5px;
-                text-decoration: none;
-            }
-
-            .easy_list li.selected {
-                background-color: #678FD6;
-                color: #fff;
-            }
-
-            .easy_list li.selected a {
-                color: #fff;
-            }
-        </style>
         <?php
     }
 

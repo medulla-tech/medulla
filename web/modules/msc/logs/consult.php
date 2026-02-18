@@ -54,10 +54,7 @@ $params = array(
 $ajax = new AjaxFilterCommands(urlStrRedirect("msc/logs/ajaxConsultLogsFilter"), "divRunning", "commands0", $params, 'formRunning');
 $ajax->setRefresh(web_def_refresh_time());
 $ajax->display();
-print "<br/><br/><br/>";
 $ajax->displayDivToUpdate();
-
-print "<br/><br/><br/>";
 
 // Expired commands
 
@@ -73,7 +70,6 @@ $params = array(
 $ajax = new AjaxFilterCommands(urlStrRedirect("msc/logs/ajaxConsultLogsFilter"), "divExpired", "commands0", $params, 'formExpired');
 $ajax->setRefresh(web_def_refresh_time());
 $ajax->display();
-print "<br/><br/><br/>";
 $ajax->displayDivToUpdate();
 ?>
 

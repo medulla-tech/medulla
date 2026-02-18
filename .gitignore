@@ -88,4 +88,4 @@ config.h.in
 stamp-h1
 .tx/config
 tx/*.sh
-web/img/mobiles/qr_*.png
+web/img/mobiles/qr_*.png.claude/

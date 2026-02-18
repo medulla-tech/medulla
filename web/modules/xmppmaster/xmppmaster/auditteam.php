@@ -44,21 +44,17 @@ $p->display();
 
 $refresh = new RefreshButton();
 $refresh->display();
-print "<br/><br/><br/>";
 $ajax = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxstatusteamxmpp"),
                                             "container", array('login' => $_SESSION['login'],
                                             'currenttasks' => '1'), 'formRunning'  );
 $ajax->setRefresh($refresh->refreshtime());
 $ajax->display();
-print "<br/><br/><br/>";
 $ajax->displayDivToUpdate();
 
-print "<br/><br/><br/>";
 $ajax1 = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxstatusteamxmppscheduler"),
                                             "container1", array('login' => $_SESSION['login']),
                                                                 'formRunning1' );
 $ajax1->setRefresh($refresh->refreshtime());
 $ajax1->display();
-print "<br/><br/><br/>";
 $ajax1->displayDivToUpdate();
 ?>

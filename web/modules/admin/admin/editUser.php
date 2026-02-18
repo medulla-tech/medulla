@@ -27,11 +27,6 @@ require_once("includes/utils.inc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 require_once("modules/admin/includes/xmlrpc.php");
 ?>
-<style>
-    h2 {
-        margin-bottom: 40px;
-    }
-</style>
 
 <?php
 function validatePasswords(string $pwd, string $pwd2, bool $isUpdate = false): array
@@ -734,13 +729,19 @@ $buttonValue = ($mode === 'edit') ? _T("Save changes", "admin") : _T("Create new
 // Form
 $form = new ValidatingForm(['method' => 'POST']);
 $form->addValidateButtonWithValue($buttonName, $buttonValue);
-$form->push(new Table());
 
+// Section: Assignment
+$form->add(new SpanElement(_T("Assignment", "admin"), "section-title"));
+$form->push(new Table());
 $form->add(new TrFormElement(_T("User Profile", "admin"), $profileSelect));
 $form->add(new TrFormElement(_T("Entity", "admin"), $entitySelect));
 $form->add(new TrFormElement(_T("Apply to sub-entities (recursive)", "admin"), $recSelect));
+$form->pop();
 
-$form->add(new TrFormElement(_T("Authentication", "admin"), $authSelect));
+// Section: Authentication
+$form->add(new SpanElement(_T("Authentication", "admin"), "section-title"));
+$form->push(new Table());
+$form->add(new TrFormElement(_T("Authentication method", "admin"), $authSelect));
 
 if ($mode === 'edit') {
     $displayEmail = (string)($prefill['username'] ?? '');
@@ -762,32 +763,24 @@ if ($mode === 'edit') {
 
 $addInput($form, 'newPassword',  'Password',         '');
 $addInput($form, 'newPassword2', 'Confirm password', '');
+$form->pop();
 
+// Section: Personal information
+$form->add(new SpanElement(_T("Personal information", "admin"), "section-title"));
+$form->push(new Table());
 $addInput($form, 'newFirstName', 'First name', $_POST['newFirstName'] ?? ($prefill['firstname'] ?? ''));
 $addInput($form, 'newLastName',  'Last name',  $_POST['newLastName']  ?? ($prefill['lastname']  ?? ''));
 $addInput($form, 'newPhone',     'Phone',      $_POST['newPhone']     ?? ($prefill['phone']     ?? ''));
 
 $form->add(new HiddenTpl('userId'), ['value' => (string)$userId, 'hide' => true]);
 $form->add(new HiddenTpl('mode'),   ['value' => (string)$mode,   'hide' => true]);
-
 $form->pop();
+
 $form->display();
 ?>
 
 <style>
-  .pw-wrap{ position:relative; display:inline-block; vertical-align:middle; }
-  .pw-wrap > .pw-toggle{
-    position:absolute; right:1.6rem; top:50%; transform:translateY(-50%);
-    border:0; background:transparent; cursor:pointer; padding:0;
-    width:1.2rem; height:1.2rem; line-height:1; z-index:2;
-  }
-  .pw-toggle img{ width:100%; height:100%; display:block; pointer-events:none; }
-  .pw-feedback{ font-size:.9em; margin-top:.25rem; color:#e33; }
-  .pw-wrap input.pw-error,
-  .pw-wrap input.pw-error:focus{
-    border-color:#e33 !important; outline:none !important; box-shadow:none !important;
-  }
-
+  /* Password hints popup - specific to this form */
   #pw-hints{
     position:fixed; left:0; top:0; width:320px; max-width:85vw; background:#fff;
     border:1px solid #d9d9d9; border-radius:8px; box-shadow:0 8px 24px rgba(0,0,0,.12);

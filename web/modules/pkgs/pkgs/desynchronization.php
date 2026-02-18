@@ -123,10 +123,3 @@ else{
     $f->display();
   }
 }?>
-
-<style>
-.spaced h2{
-  margin-bottom:5px;
-  margin-top:5px;
-}
-</style>

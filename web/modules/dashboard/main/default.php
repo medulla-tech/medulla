@@ -25,6 +25,7 @@ require("graph/navbar.inc.php");
 require("modules/dashboard/includes/dashboard-xmlrpc.inc.php");
 
 ?>
+<link rel="stylesheet" href="modules/dashboard/graph/css/dashboard.css" type="text/css" />
 <script type="text/javascript" src="jsframework/lib/raphael/raphael-min.js"></script>
 <script type="text/javascript" src="jsframework/lib/raphael/g.raphael-min.js"></script>
 <script type="text/javascript" src="jsframework/lib/raphael/g.pie-min.js"></script>
@@ -38,59 +39,88 @@ require("modules/dashboard/includes/dashboard-xmlrpc.inc.php");
 <script src="modules/dashboard/graph/js/line.js"></script>
 <script src="modules/dashboard/graph/js/pie.js"></script>
 <script src="modules/dashboard/graph/js/bar.js"></script>
+<script src="modules/dashboard/graph/js/dashboard.js"></script>
 
 <?php
-$d = new Div(array("id" => "dashboard"));
-$d->display();
+print '<div id="dashboard-grid">';
 
 $modules = $_SESSION["modulesList"];
-$i = 1;
-$z = 1;
-// Search for panels in plugins subdirs...
-foreach(getPanels() as $panelName) {
+
+// Widget order - each widget sizes to its content
+$customPanelOrder = array(
+    'general',
+    'space',
+    'os_repartition',
+    'computersOnline',
+    'product_updates',
+    'inventory',
+    'antivirus',
+    'agents',
+    'deploymentsLaunched',
+    'successRate',
+);
+
+// Find panel files
+$availablePanels = array();
+foreach($customPanelOrder as $panelName) {
     foreach($modules as $module) {
         if (hasCorrectModuleAcl($module, false) == true) {
-            $basedir = "modules/$module/includes/panels/";
-
-            if (is_dir($basedir)) {
-                $h = opendir($basedir);
-                while (false !== ($f = readdir($h))) {
-                    if (substr($f, 0, 1) != ".") {
-                        if ($f == $panelName . ".inc.php") {
-                          $file = $basedir . $f;
-                          if(hasCorrectDashboardAcl($module, $panelName) == true)
-                          {
-                            include_once($file);
-                            if (!isset($options["enable"]))
-                                $options["enable"] = True;
-                            if (!isset($options["refresh"]))
-                                $options["refresh"] = 10;
-                            if ($options["enable"]) {
-                                if ($i % 2 == 1)
-                                    print '<div class="column" id="col'.$z++.'" style="width: 230px;">';
-                                $panel = new AjaxPage(urlStrRedirect('dashboard/main/ajaxPanels'), $options["id"], array("file" => urlencode($file)), $options["refresh"]);
-                                $panel->class = "portlet";
-                                $panel->display();
-                                if ($i % 2 == 0)
-                                    print '</div>';
-                                $i++;
-                            }
-                          }//End acl tests
-                        }
-                    }
-                }
+            $file = "modules/$module/includes/panels/$panelName.inc.php";
+            if (file_exists($file) && hasCorrectDashboardAcl($module, $panelName)) {
+                $options = array();
+                ob_start();
+                include($file);
+                ob_end_clean();
+                if (!isset($options["enable"])) $options["enable"] = True;
+                if (!isset($options["refresh"])) $options["refresh"] = 10;
+                $availablePanels[$panelName] = array(
+                    'file' => $file,
+                    'options' => $options
+                );
+                break;
             }
         }
     }
 }
 
+// Display panels
+$z = 1;
+foreach($customPanelOrder as $panelName) {
+    if (isset($availablePanels[$panelName])) {
+        $panelData = $availablePanels[$panelName];
+        $file = $panelData['file'];
+        $options = $panelData['options'];
+        if ($options["enable"]) {
+            print '<div class="dashboard-column" id="col'.$z++.'">';
+            $panel = new AjaxPage(urlStrRedirect('dashboard/main/ajaxPanels'), $options["id"], array("file" => urlencode($file)), $options["refresh"]);
+            $panel->class = "portlet";
+            $panel->display();
+            print '</div>';
+        }
+    }
+}
 
-// print final closing div
-if ($i>1 && ($i % 2 == 0))
-    print '</div>';
+print '</div>'; // Close dashboard-grid
 
-// Adding more columns (user custom) [8 for full HD resolution]
-for ($i = $z; $i<=8; $i++)
-    print '<div class="column" id="col'.$i.'"></div>';
+// Disabled widgets drawer
+$disabledText = _T("Disabled widgets", "dashboard");
+print <<<DRAWER
+<button id="disabled-widgets-btn" class="hidden">
+    <span class="btn-text">$disabledText</span>
+    <span class="btn-count">0</span>
+</button>
+
+<div id="drawer-overlay"></div>
+
+<div id="disabled-widgets-drawer">
+    <div class="drawer-header">
+        <h3>$disabledText</h3>
+        <button class="drawer-close">&times;</button>
+    </div>
+    <div class="drawer-content">
+        <div id="collapsed-widgets-section"></div>
+    </div>
+</div>
+DRAWER;
 
 ?>

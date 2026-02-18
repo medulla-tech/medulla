@@ -1,5 +1,11 @@
 <?php
+require("graph/navbar.inc.php");
+require("localSidebar.php");
 require_once("modules/mobile/includes/xmlrpc.php");
+
+$p = new PageGenerator(_T("Messages", "mobile"));
+$p->setSideMenu($sidemenu);
+$p->display();
 
 $field = isset($_POST['field']) ? $_POST['field'] : (isset($_GET['field']) ? $_GET['field'] : "all");
 $param = isset($_POST['param']) ? $_POST['param'] : (isset($_GET['param']) ? $_GET['param'] : "");
@@ -25,10 +31,7 @@ $messages = xmlrpc_get_hmdm_messages($device_number, $message_filter, $status_pa
 
 ?>
 
-<h3><?php echo _T("Messaging", "mobile"); ?></h3>
 <p><?php echo _T("Search messages and send new messages to devices", "mobile"); ?></p>
-
-
 
 <hr />
 

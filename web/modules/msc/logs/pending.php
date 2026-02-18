@@ -39,6 +39,5 @@ $params = array("type" => 1, "from" => "pending", 'divID' => 'container');
 $ajax = new AjaxFilterCommands(urlStrRedirect("msc/logs/ajaxLogsFilter"), "container", "commands", $params);
 $ajax->setRefresh(web_def_refresh_time());
 $ajax->display();
-print "<br/><br/><br/>";
 $ajax->displayDivToUpdate();
 ?>

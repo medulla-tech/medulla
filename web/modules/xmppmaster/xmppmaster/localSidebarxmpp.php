@@ -34,4 +34,8 @@ $sidemenu->addSideMenuItem(new SideMenuItem(_T("My Convergence", 'xmppmaster'), 
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("All users convergence", 'xmppmaster'), "xmppmaster", "xmppmaster", "auditconvergence"));
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("My teams convergence", 'xmppmaster'), "xmppmaster", "xmppmaster", "auditteamconvergence"));
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Quick Action results", "xmppmaster"), "xmppmaster", "xmppmaster", "ActionQuickGroup"));
+
+if(in_array("mobile", $_SESSION["modulesList"])){
+    $sidemenu->addSideMenuItem(new SideMenuItem(_T("Mobile Audit", "xmppmaster"), "xmppmaster", "xmppmaster", "auditmobile"));
+}
 ?>

@@ -132,7 +132,12 @@ class RpcProxy(RpcProxyI):
     def get_os_for_dashboard(self, ctx=None):
         entities = ctx.get_session_info()['mondict']['liste_entities_user']
         os_data = Glpi().get_os_for_dashboard(entities)
-        os_data.extend(getHmdmDevicesOsCount()) #hmdm
+        try:
+            hmdm_data = getHmdmDevicesOsCount()
+            if hmdm_data:
+                os_data.extend(hmdm_data)
+        except Exception as e:
+            logger.warning(f"Failed to get HMDM device count: {e}")
         return xmlrpcCleanup(os_data)
 
     def getMachineNumberByState(self):

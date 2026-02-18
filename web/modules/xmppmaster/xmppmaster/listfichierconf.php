@@ -28,7 +28,6 @@ require("graph/navbar.inc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 
 include_once('modules/medulla_server/includes/menu_actionaudit.php');
-echo "<br><br><br>";
 
     $uuid  = isset($_GET['objectUUID']) ? $_GET['objectUUID'] : ( isset($_POST['objectUUID']) ? $_POST['objectUUID'] : "");
     $jid  = isset($_GET['jid']) ? $_GET['jid'] : ( isset($_POST['jid']) ? $_POST['jid'] : "");

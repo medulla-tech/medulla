@@ -26,6 +26,7 @@
 require_once("modules/dyngroup/includes/xmlrpc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 require_once('modules/msc/includes/commands_xmlrpc.inc.php');
+require_once("includes/UIComponents.php");
 
 
 global $conf;
@@ -55,6 +56,14 @@ else {
 $index = 0;
 
 $arraynotdeploy = xmlrpc_get_deploy_inprogress_by_team_member($_GET['login'], $LastdeployINsecond, $start, $end, $filter);
+
+if (!isset($arraynotdeploy['total']) || $arraynotdeploy['total'] == 0) {
+    EmptyStateBox::show(
+        _T("No pending deployments", "xmppmaster"),
+        _T("No deployments are waiting for offline machines.", "xmppmaster")
+    );
+    return;
+}
 
 $notd_machinesname = [];
 $notd_packagename = [];
@@ -129,26 +138,4 @@ $m->setParamInfo($params);
 $m->start = 0;
 $m->end = $arraynotdeploy['total'];
 $m->display();
-echo '<br /><br /><br />';
 ?>
-<style>
-progress {
-  width: 100px;
-  height: 9px;
-  margin:-5px;
-  background-color: #ffffff;   /* Couleur de fond */
-  border-style: solid;   /* Style de la bordure  */
-  border-width: 1px;   /* Epaisseur de la bordure  */
-  border-color: #dddddd;   /* Couleur de la bordure  */
-  padding: 3px 3px 3px 3px;   /* Espace entre les bords et le contenu : haut droite bas gauche  */
-}
-
-progress::-webkit-progress-bar {
-    background: #f3f3f3 ;
-}
-
-progress::-webkit-progress-value {
-     Background: #ef9ea9;
-}
-
-</style>

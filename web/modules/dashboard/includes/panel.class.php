@@ -54,113 +54,83 @@ class Panel {
     }
 
     function display() {
-      echo '<style>
-.switch {
-  position: relative;
-  display: inline-block;
-  width: 30px;
-  height: 15px;
-}
-
-.switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #ccc;
-  -webkit-transition: .4s;
-  transition: .4s;
-}
-
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 13px;
-  width: 13px;
-  left: 1px;
-  bottom: 1px;
-  background-color: white;
-  -webkit-transition: .4s;
-  transition: .4s;
-}
-
-input:checked + .slider {
-  background-color: #2196F3;
-}
-
-input:focus + .slider {
-  box-shadow: 0 0 1px #2196F3;
-}
-
-input:checked + .slider:before {
-  -webkit-transform: translateX(14px);
-  -ms-transform: translateX(14px);
-  transform: translateX(14px);
-}
-
-/* Rounded sliders */
-.slider.round {
-  border-radius: 17px;
-}
-
-.slider.round:before {
-  border-radius: 50%;
-}
-</style>
-';
         //echo '<h3 class="handle">' . $this->title . '</h3>';
-        echo '<div class="portlet-header"><div class="header-title" style="display:inline">' . $this->title . '</div><div class="header-switch" style="display:inline;float:right;">
-        <label class="switch" onchange="changeSwitch(jQuery(this))">
-          <input type="checkbox" '.$this->toggled.'>
+        echo '<div class="portlet-header"><div class="header-title">' . $this->title . '</div><div class="header-switch">
+        <label class="switch">
+          <input type="checkbox" '.$this->toggled.' data-widget="'.$this->id.'">
           <span class="slider round"></span>
         </label>
         </div></div>';
-        echo '<div class="portlet-content" style="clear:both;">';
+        echo '<div class="portlet-content">';
 echo <<< JSSCRIPT
 <script>
-
-// At initialization
 jQuery(function(){
-  var selector = "#$this->id .switch input"
-  if(jQuery(selector).is(":checked"))
-  {
-    jQuery(selector).closest('.portlet').find('.portlet-content').show();
-  }
-  else {
-    jQuery(selector).closest('.portlet').find('.portlet-content').hide();
-  }
-})
+  var selector = "#$this->id .switch input";
+  var portlet = jQuery(selector).closest('.portlet');
+  var column = portlet.closest('.dashboard-column');
 
-function changeSwitch(selector)
-{
-    jQuery(selector).closest('.portlet').find('.portlet-content').toggle();
-    var id = jQuery(selector).parent().parent().parent().attr("id")
-    if(jQuery(selector).children("input").is(":checked"))
-      {
-        jQuery.ajax({
-          url: "main.php?module=dashboard&submod=main&action=ajaxSessionPanels",
-          type:'get',
-          data: {"widget":id, "toggled": 1}
-        });
-      }
+  // Initialize visibility and position
+  var collapsedSection = jQuery('#collapsed-widgets-section');
 
-    else
-    {
-      jQuery.ajax({
-        url: "main.php?module=dashboard&submod=main&action=ajaxSessionPanels",
-        type: "GET",
-        data: {"widget":id, "toggled": 0}
-      });
+  if(jQuery(selector).is(":checked")) {
+    portlet.find('.portlet-content').show();
+    portlet.removeClass('collapsed');
+    column.removeClass('collapsed-column');
+  } else {
+    portlet.find('.portlet-content').hide();
+    portlet.addClass('collapsed');
+    column.addClass('collapsed-column');
+    // Move to drawer
+    column.appendTo(collapsedSection);
+    // Update button
+    var btn = jQuery('#disabled-widgets-btn');
+    btn.removeClass('hidden');
+    btn.find('.btn-count').text(collapsedSection.find('.dashboard-column').length);
+  }
+
+  // Bind change event
+  jQuery(selector).off('change').on('change', function() {
+    var input = jQuery(this);
+    var portlet = input.closest('.portlet');
+    var column = portlet.closest('.dashboard-column');
+    var widgetId = input.data('widget');
+    var collapsedSection = jQuery('#collapsed-widgets-section');
+
+    if(input.is(":checked")) {
+      // Widget enabled - move back to grid
+      portlet.find('.portlet-content').show();
+      portlet.removeClass('collapsed');
+      column.removeClass('collapsed-column');
+      // Move to grid
+      column.appendTo(jQuery('#dashboard-grid'));
+    } else {
+      // Widget disabled - move to collapsed section
+      portlet.find('.portlet-content').hide();
+      portlet.addClass('collapsed');
+      column.addClass('collapsed-column');
+      // Move to collapsed section
+      column.appendTo(collapsedSection);
     }
-}
+
+    // Update drawer button
+    var btn = jQuery('#disabled-widgets-btn');
+    var count = collapsedSection.find('.dashboard-column').length;
+    if (count > 0) {
+      btn.removeClass('hidden');
+      btn.find('.btn-count').text(count);
+    } else {
+      btn.addClass('hidden');
+      jQuery('#disabled-widgets-drawer').removeClass('open');
+      jQuery('#drawer-overlay').removeClass('visible');
+    }
+
+    jQuery.ajax({
+      url: "main.php?module=dashboard&submod=main&action=ajaxSessionPanels",
+      type: 'get',
+      data: {"widget": widgetId, "toggled": input.is(":checked") ? 1 : 0}
+    });
+  });
+});
 </script>
 JSSCRIPT;
         echo $this->display_content();

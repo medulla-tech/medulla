@@ -58,12 +58,15 @@ class AgentsPanel extends Panel {
       lineChart("agents-graphs",{"datas":datas, "config": {"xlabel":true,"delta":"relative", "height":150,"unit":"agents"}})
     </script>
 RATE;
+// Reset array pointer to end
+end($json);
+$latest = current($json);
+$prev1 = prev($json);
+$prev2 = prev($json);
 echo '<div id="agents-legend">';
-  echo '<ul style="padding-left:15px;">';
-    echo '<li>'.end($json)['label'].' : '.current($json)['y'].' agents</li>';
-    echo '<li>'.prev($json)['label'].' : '.current($json)['y'].' agents</li>';
-    echo '<li>'.prev($json)['label'].' : '.current($json)['y'].' agents</li>';
-  echo '</ul>';
+  echo $latest['label'].': <strong>'.$latest['y'].'</strong>';
+  echo ' &nbsp;|&nbsp; '.$prev1['label'].': <strong>'.$prev1['y'].'</strong>';
+  echo ' &nbsp;|&nbsp; '.$prev2['label'].': <strong>'.$prev2['y'].'</strong>';
 echo '</div>';
   }
 }

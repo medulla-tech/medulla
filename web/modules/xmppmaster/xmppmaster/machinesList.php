@@ -47,10 +47,8 @@ echo ' id="namepresence3" name="namepresence" value="nopresence"/> ';
 echo '<label for="namepresence3" style="display:initial;">'._('Offline computers').'</label>';
 
 
-print "<br/><br/><br/>";
 $ajax = new AjaxFilter(urlStrRedirect("base/computers/ajaxXmppMachinesList"), "container", array('login' => $_SESSION['login']), 'formRunning');
 $ajax->display();
-print "<br/><br/><br/>";
 $ajax->displayDivToUpdate();
  ?>
 

@@ -31,6 +31,5 @@ foreach (array('uuid', 'hostname', 'gid', 'groupname', 'filter', 'tab', 'part') 
 $ajax = new AjaxFilter($url);
 
 $ajax->display();
-print "<br/><br/><br/>";
 $ajax->displayDivToUpdate();
 ?>

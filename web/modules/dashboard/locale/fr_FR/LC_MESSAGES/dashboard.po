@@ -270,3 +270,7 @@ msgstr "Mise à jour disponible."
 #: modules/dashboard/includes/panels/agents.inc.php:52
 msgid "Machines in Pulse from "
 msgstr "Machines dans Pulse depuis "
+
+#: modules/dashboard/main/default.php:105
+msgid "Disabled widgets"
+msgstr "Widgets désactivés"

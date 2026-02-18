@@ -25,7 +25,9 @@
  */
 require("localSidebar.php");
 require("graph/navbar.inc.php");
-
+?>
+<link rel="stylesheet" href="modules/pkgs/graph/css/pkgs.css" />
+<?php
 require_once("modules/pkgs/includes/xmlrpc.php");
 require_once("modules/pkgs/includes/functions.php");
 require_once("modules/pkgs/includes/html.inc.php");
@@ -452,38 +454,38 @@ if(isExpertMode1()) {
         $packagesInOptionAdded .= '<option title="'.$dep["name"].' v.'.$dep["version"].'" value="'.$dep["uuid"].'">'.$dep["name"].' v.'.$dep["version"].'</option>';
     }
     $f->add(new TrFormElement(_T("Dependencies", "pkgs"), new SpanElement('<div id="grouplist">
-    <table style="border: none;" cellspacing="0">
+    <table class="pkg-dependency-table" cellspacing="0">
         <tr>
-            <td style="border: none;">
+            <td>
                 <div>
                     <img src="img/other/up.svg" width="25" height="25" alt="|^" id="moveDependencyToUp" onclick="moveToUp()"/><br/>
-                    <img src="img/other/down.svg" width="25" height="25" alt="|v" id="moveDependencyToDown" onclick="moveToDown()"/></a><br/>
+                    <img src="img/other/down.svg" width="25" height="25" alt="|v" id="moveDependencyToDown" onclick="moveToDown()"/><br/>
                 </div>
             </td>
-            <td style="border: none;">
+            <td>
                 <h3>'._T('Added dependencies', 'pkgs').'</h3>
                 <div class="list">
                     <select multiple size="13" class="list" name="Dependency" id="addeddependencies">
                     '.$packagesInOptionAdded.'
                     </select>
-                    <div class="opt_name" style="position:absolute;"></div>
+                    <div class="opt_name pkg-opt-name"></div>
                 </div>
             </td>
-            <td style="border: none;">
+            <td>
                 <div>
                     <img src="img/other/right.svg" width="25" height="25" alt="-->" id="moveDependencyToRight" onclick="moveToRight()"/><br/>
-                    <img src="img/other/left.svg" width="25" height="25" alt="<--" id="moveDependencyToLeft" onclick="moveToLeft()"/></a><br/>
+                    <img src="img/other/left.svg" width="25" height="25" alt="<--" id="moveDependencyToLeft" onclick="moveToLeft()"/><br/>
                 </div>
             </td>
-            <td style="border: none;">
-                <div class="list" style="padding-left: 10px;">
+            <td>
+                <div class="list pkg-dependency-pool">
                     <h3>'._T('Available dependencies', 'pkgs').'</h3>
                     <input type="text" id="dependenciesFilter" value="" placeholder="'._T("search by name ...", "pkgs").'"><br/>
 
                     <select multiple size="13" class="list" name="members[]" id="pooldependencies">
                         '.$packagesInOptionNotAdded.'
                     </select>
-                    <div class="opt_name" style="position:absolute;"></div>
+                    <div class="opt_name pkg-opt-name"></div>
                 </div>
                 <div class="clearer"></div>
             </td>
@@ -641,7 +643,7 @@ jQuery(function(){
             }
             else{
                 if(typeof(jQuery("#description-warning").val()) == "undefined"){
-                    jQuery("#container_input_description").prepend("<div id='description-warning' style='color:red;'><?php echo _T("Accentuated and special chars are not allowed", "pkgs");?></div>");
+                    jQuery("#container_input_description").prepend("<div id='description-warning' class='pkg-error'><?php echo _T("Accentuated and special chars are not allowed", "pkgs");?></div>");
                 }
             }
         })

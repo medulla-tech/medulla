@@ -219,3 +219,11 @@ msgstr "Perfil %s añadido correctamente"
 msgid "Unable to create the profile %s"
 msgstr "No se ha podido crear el perfil %s"
 
+
+#: modules/kiosk/kiosk/ajaxProfilesList.php
+msgid "No profiles"
+msgstr "Sin perfiles"
+
+#: modules/kiosk/kiosk/ajaxProfilesList.php
+msgid "Use the sidebar menu to create a new profile."
+msgstr "Utilice el menú lateral para crear un nuevo perfil."

@@ -39,7 +39,6 @@ $refresh->display();
 $ajax = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxstatusteamxmpp"), "container", array('login' => $_SESSION['login'], 'team'=>'1'), 'formRunning'  );
 $ajax->setRefresh($refresh->refreshtime());
 $ajax->display();
-print "<br/><br/><br/>";
 $ajax->displayDivToUpdate();
 
 ?>
