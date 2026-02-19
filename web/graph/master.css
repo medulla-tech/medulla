@@ -18,30 +18,6 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-/*---
-
-Sirius Technologies // Interface serveur fichiers
-Auteur : Arteca Design inc.
-Derniere revision : 16 Juin 2004
-
-Notes:
-
-Cette page utilise un "High Pass Filter"
-
-Avec ce processus de filtration de la feuille de style importee,
-les styles seront vu que dans les fureteurs suivants :
-
-	- IE5/Mac ou ulterieur
-	- IE6/Windows ou ulterieur
-	- Netscape 6 ou ulterieur
-	- Opera 5 ou ulterieur
-	- Ou tout autre fureteur qui passe la "Section 7.1" du "W3C/CSS1 Test Suite".
-
-Pour plus d'infos visitez : http://tantek.com/CSS/Examples/highpass.html
-
------------------------------------------------ */
-
-/*@import "null?\"\{"; */
 @import "css/global.css";
 @import "css/buttons.css";
 @import "css/popups.css";

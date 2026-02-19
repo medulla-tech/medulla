@@ -122,7 +122,7 @@ textarea {
 
         <tr>
             <td class="label" width="40%" style = "text-align: right;"><br></td>
-            <td><img id="imagewait" src="graph/ajax_loading.gif" alt="" /><span><?php echo _T("Command result : ", "xmppmaster");?></span><span><? echo $command; ?></span></td>
+            <td><span id="imagewait" class="spinner"></span><span><?php echo _T("Command result : ", "xmppmaster");?></span><span><? echo $command; ?></span></td>
         </tr>
 
         <tr>
