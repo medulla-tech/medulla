@@ -36,8 +36,9 @@ if (isset($_POST["bconfirm"], $_POST["id"])) {
     $title = _T("Delete this rule?", 'glpi');
 
     $f = new PopupForm($title, 'deleteEntityRuleForm');
+    $f->setLevel('danger');
     $f->add(new HiddenTpl("id"), array("value" => $_GET['id'], "hide" => True));
-    $f->addValidateButton("bconfirm");
+    $f->addDangerButton("bconfirm");
     $f->addCancelButton("bback");
     $f->display();
 }

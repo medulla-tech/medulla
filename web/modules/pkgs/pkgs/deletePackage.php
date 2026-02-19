@@ -36,7 +36,8 @@ if(isset($_POST['bconfirm']))
   header("Location: " . urlStrRedirect("pkgs/pkgs/rulesList", array('success' => true)));;
 }
     $f = new PopupForm(_T("Delete this rule"));
-    $f->addValidateButton("bconfirm");
+    $f->setLevel('danger');
+    $f->addDangerButton("bconfirm");
     $f->addCancelButton("bback");
     $f->display();
 

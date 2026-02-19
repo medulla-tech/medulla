@@ -25,12 +25,13 @@ if (isset($_POST['bdelete'])) {
     exit;
 } else {
     $f = new PopupForm(_T("Delete Group", "mobile"));
+    $f->setLevel('danger');
     $f->addText(sprintf(_T("Are you sure you want to delete the group <b>%s</b>.", "mobile"), htmlspecialchars($group_name)));
     $hidden = new HiddenTpl("group_id");
     $f->add($hidden, array("value" => $group_id, "hide" => true));
     $hidden_name = new HiddenTpl("group_name");
     $f->add($hidden_name, array("value" => $group_name, "hide" => true));
-    $f->addValidateButton("bdelete");
+    $f->addDangerButton("bdelete");
     $f->addCancelButton("bback");
     $f->display();
 }

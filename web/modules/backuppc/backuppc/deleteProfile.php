@@ -58,11 +58,12 @@ else
         print _T('Error : Default profiles cannot be deleted','backuppc');
 
     $f = new PopupForm(_T("Delete this profile"));
+    $f->setLevel('danger');
     $hidden = new HiddenTpl("id");
     $f->add($hidden, array("value" => $id, "hide" => True));
     $hidden = new HiddenTpl("type");
     $f->add($hidden, array("value" => $type, "hide" => True));
-    $f->addValidateButton("bconfirm");
+    $f->addDangerButton("bconfirm");
     $f->addCancelButton("bback");
     $f->display();
 }

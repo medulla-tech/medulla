@@ -33,13 +33,14 @@ if (isset($_POST["bconfirm"])) {
 }
 else{
     $f = new PopupForm(sprintf(_T("Delete this Quick Action :%s"),$namecmd));
+    $f->setLevel('danger');
     $hidden = new HiddenTpl("namecmd");
     $f->add($hidden, array("value" => $namecmd, "hide" => True));
     $hidden = new HiddenTpl("os");
     $f->add($hidden, array("value" => $os, "hide" => True));
     $hidden = new HiddenTpl("user");
     $f->add($hidden, array("value" => $user, "hide" => True));
-    $f->addValidateButton("bconfirm");
+    $f->addDangerButton("bconfirm");
     $f->addCancelButton("bback");
     $f->display();
 }

@@ -76,6 +76,7 @@ $item_uuid = $_GET['itemid'];
 $label = urldecode($_GET['itemlabel']);
 
 $f = new PopupForm(sprintf(_T("Remove the boot service <b>%s</b> from the default boot menu", "imaging"), $label));
+$f->setLevel('danger');
 
 $f->push(new Table());
 
@@ -85,7 +86,7 @@ $f->add(new HiddenTpl("itemlabel"),                     array("value" => $label,
 $f->add(new HiddenTpl("itemid"),                        array("value" => $item_uuid,                     "hide" => True));
 $f->add(new HiddenTpl("default_mi_label"),              array("value" => $label,                         "hide" => True));
 
-$f->addValidateButton("bconfirm");
+$f->addDangerButton("bconfirm");
 $f->addCancelButton("bback");
 $f->display();
 

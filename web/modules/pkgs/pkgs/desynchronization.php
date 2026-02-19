@@ -52,6 +52,7 @@ else if(isset($_POST['jid']))
 else{
   if(isExpertMode()){
     $fg = new PopupForm(_T("Delete Pending", "pkgs"));
+    $fg->setLevel('danger');
     $actionsList = new SelectItem('pending-select','loadForm');
     //$actionsList->setElements([_T('Remove package '.$label.' from pending', 'pkgs'), _T('Remove specific jids from '.$label.' package pending','pkgs'), _T('Clean all pendings','pkgs')]);
     $actionsList->setElements([_T('Remove package '.$label.' from pending', 'pkgs'), _T('Remove specific jids from '.$label.' package pending','pkgs')]);
@@ -72,14 +73,16 @@ else{
 
     echo '<div id="package" class="spaced">';
     $fpackage = new PopupForm(_T('Remove package '.$label.' from pending', 'pkgs'));
-    $fpackage->addValidateButton("package");
+    $fpackage->setLevel('danger');
+    $fpackage->addDangerButton("package");
     $fpackage->addCancelButton("bback");
     $fpackage->display();
     echo '</div>';
 
     echo '<div id="jid" class="spaced">';
     $fjid = new PopupForm(_T('Remove specific jids from '.$label.' package pending', 'pkgs'));
-    $fjid->addValidateButton("jid");
+    $fjid->setLevel('danger');
+    $fjid->addDangerButton("jid");
 
     foreach($nosynchrolist as $relay){
       $fjid->add(new CheckboxTpl('relays[]', explode("@", $relay['relayserver_jid'])[0], ""), ['value'=>'value="'.$relay['relayserver_jid'].'"']);
@@ -118,7 +121,8 @@ else{
 <? }// End expert mode
   else{
     $f = new PopupForm(_T("Delete the $name from pending", 'pkgs'));
-    $f->addValidateButton("package");
+    $f->setLevel('danger');
+    $f->addDangerButton("package");
     $f->addCancelButton("bback");
     $f->display();
   }

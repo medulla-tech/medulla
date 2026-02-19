@@ -11,8 +11,8 @@
   max-width: 90vw;
   background: var(--color-bg-white);
   border: none;
-  border-radius: 9px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
   padding: 0;
   position: fixed;
   top: 50%;
@@ -58,7 +58,7 @@
   height: 24px;
   background: transparent;
   border-radius: 50%;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
 }
 
 .popup .popup_close_btn:hover {
@@ -71,13 +71,13 @@
 
 .popup .popup_close_btn::after {
   content: "\00D7";
-  color: #999;
+  color: var(--color-text-light);
   font-size: 22px;
   font-weight: normal;
 }
 
 .popup .popup_close_btn:hover::after {
-  color: #333;
+  color: var(--color-text-dark);
 }
 
 /* Close button on colored header (confirmation, alerts) */
@@ -108,11 +108,10 @@
 /* 3. TITLES                                     */
 /* ============================================= */
 
-/* Default popup title */
 .popup h1:first-of-type {
   margin: 0 0 20px 0;
   padding: 0 0 12px 0;
-  font-size: 18px;
+  font-size: var(--text-2xl);
   font-weight: 600;
   color: var(--color-primary);
   border-bottom: 2px solid var(--color-accent);
@@ -122,35 +121,12 @@
 /* 4. BUTTONS                                    */
 /* ============================================= */
 
+/* Popup-specific button spacing */
+.popup .btn,
 .popup .btnPrimary,
-.popup .btnSecondary {
-  padding: 10px 25px;
-  border-radius: 9px;
-  font-weight: 600;
-  cursor: pointer;
+.popup .btnSecondary,
+.popup .btnDanger {
   margin: 5px;
-  transition: all 0.2s;
-}
-
-.popup .btnPrimary {
-  background: var(--color-primary);
-  color: white;
-  border: none;
-}
-
-.popup .btnPrimary:hover {
-  background: #1a4a5e;
-}
-
-.popup .btnSecondary {
-  background: white;
-  color: #333;
-  border: 1px solid #ccc;
-}
-
-.popup .btnSecondary:hover {
-  background: #f5f5f5;
-  border-color: #999;
 }
 
 /* ============================================= */
@@ -163,7 +139,7 @@
 .quick-actions-popup .action-item img,
 .quick-actions-popup .monitoring-item img {
   filter: brightness(0) saturate(100%) invert(62%) sepia(52%) saturate(405%) hue-rotate(43deg) brightness(95%) contrast(91%);
-  transition: all 0.2s;
+  transition: all 0.2s ease;
 }
 
 .popup #tablevnc td:hover img,
@@ -179,8 +155,8 @@
 
 .popup hr {
   border: none;
-  border-top: 1px solid #e5e7eb;
-  margin: 15px 0;
+  border-top: 1px solid var(--gray-200);
+  margin: 16px 0;
 }
 
 .popup table {
@@ -214,7 +190,7 @@
   padding: 25px 20px;
   font-size: 1.1em;
   font-weight: 600;
-  color: white;
+  color: var(--color-text-white);
   text-align: center;
   background: var(--color-primary);
 }
@@ -233,8 +209,31 @@
   display: none;
 }
 
+.popup:has(#__popup_container > h2:first-child) #__popup_container form table {
+  width: 100%;
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+.popup:has(#__popup_container > h2:first-child) #__popup_container form table td {
+  padding: 8px 5px;
+  vertical-align: middle;
+}
+
+.popup:has(#__popup_container > h2:first-child) #__popup_container form table td:last-child {
+  width: 30px;
+  text-align: center;
+}
+
+.popup:has(#__popup_container > h2:first-child) #__popup_container form table input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
 .popup:has(#__popup_container > h2:first-child) .btnPrimary,
-.popup:has(#__popup_container > h2:first-child) .btnSecondary {
+.popup:has(#__popup_container > h2:first-child) .btnSecondary,
+.popup:has(#__popup_container > h2:first-child) .btnDanger {
   min-width: 100px;
 }
 
@@ -270,7 +269,7 @@
 
 /* Alert content */
 .popup:has(.alert) .alert h1 {
-  color: #333;
+  color: var(--color-text-dark);
   font-size: 1.4em;
   margin: 0 0 10px 0;
 }
@@ -278,7 +277,7 @@
 .popup:has(.alert) .alert p {
   margin: 0 0 20px 0;
   padding: 0 20px;
-  color: #555;
+  color: var(--color-text-medium);
 }
 
 /* Traceback section */
@@ -289,8 +288,8 @@
 
 .popup:has(.alert) .errorTraceback h1 {
   font-size: 1.1em;
-  color: #333;
-  margin-bottom: 15px;
+  color: var(--color-text-dark);
+  margin-bottom: 16px;
   border-bottom: 2px solid var(--color-accent);
   padding-bottom: 8px;
   display: inline-block;
@@ -299,12 +298,30 @@
 .popup:has(.alert) #__popup_container pre,
 .popup:has(.alert) #__popup_container code {
   text-align: left !important;
-  margin: 15px 20px 25px 20px;
-  padding: 15px;
-  border-radius: 8px;
+  margin: 16px 20px 25px 20px;
+  padding: 16px;
+  border-radius: var(--radius-lg);
   overflow-x: auto;
-  font-size: 12px;
+  font-size: var(--text-base);
   line-height: 1.5;
+}
+
+/* Traceback buttons (inside .alert) */
+.popup:has(.alert) .alert > .btn {
+  margin: 5px;
+}
+
+.popup:has(.alert) .alert > .btn:first-of-type {
+  margin-left: 20px;
+}
+
+/* Confirmation popup buttons (Yes/No - outside .alert) */
+.popup:has(.alert) #__popup_container > div > div[style*="text-align"] {
+  padding: 15px 20px 25px 20px;
+}
+
+.popup:has(.alert) #__popup_container > div > div[style*="text-align"] .btn {
+  margin: 5px;
 }
 
 /* ============================================= */
@@ -325,12 +342,12 @@
 .popup #tablevnc td {
   padding: 10px;
   cursor: pointer;
-  border-radius: 8px;
-  transition: all 0.2s;
+  border-radius: var(--radius-lg);
+  transition: all 0.2s ease;
 }
 
 .popup #tablevnc td:hover {
-  background: #f3f4f6;
+  background: var(--gray-100);
 }
 
 .popup #tablevnc td img {
@@ -342,7 +359,7 @@
 }
 
 .popup #tablevnc td h1 {
-  font-size: 13px;
+  font-size: var(--text-md);
   font-weight: 600;
   color: var(--color-text-dark);
   margin: 8px 0 0 0;
@@ -356,9 +373,9 @@
   justify-content: center;
   gap: 30px;
   padding: 20px;
-  background: #f8fafc;
-  border-radius: 8px;
-  border: 1px solid #e5e7eb;
+  background: var(--gray-50);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--gray-200);
   margin-bottom: 20px;
 }
 
@@ -367,14 +384,14 @@
   flex-direction: column;
   align-items: center;
   gap: 10px;
-  padding: 15px 25px;
-  border-radius: 8px;
+  padding: 16px 25px;
+  border-radius: var(--radius-lg);
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
 }
 
 .remote-popup .remote-item:hover {
-  background: #e5e7eb;
+  background: var(--gray-200);
 }
 
 .remote-popup .remote-item img {
@@ -383,37 +400,37 @@
 }
 
 .remote-popup .remote-item span {
-  font-size: 14px;
+  font-size: var(--text-lg);
   font-weight: 600;
   color: var(--color-text-dark);
 }
 
 /* Machine info section */
 .remote-popup .remote-machine-info {
-  background: #f8fafc;
-  border-radius: 8px;
-  border: 1px solid #e5e7eb;
+  background: var(--gray-50);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--gray-200);
   overflow: hidden;
 }
 
 .remote-popup .info-header {
   background: var(--color-primary);
-  color: white;
-  padding: 8px 15px;
-  font-size: 12px;
+  color: var(--color-text-white);
+  padding: 8px 16px;
+  font-size: var(--text-base);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .remote-popup .info-grid {
-  padding: 15px;
+  padding: 16px;
 }
 
 .remote-popup .info-row {
   display: flex;
   padding: 8px 0;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--gray-200);
 }
 
 .remote-popup .info-row:last-child {
@@ -422,14 +439,14 @@
 
 .remote-popup .info-label {
   width: 160px;
-  font-size: 12px;
-  color: #6b7280;
+  font-size: var(--text-base);
+  color: var(--gray-500);
   flex-shrink: 0;
   padding-right: 10px;
 }
 
 .remote-popup .info-value {
-  font-size: 13px;
+  font-size: var(--text-md);
   font-weight: 500;
   color: var(--color-text-dark);
 }
@@ -445,7 +462,7 @@
 
 .quick-actions-popup h3 {
   margin: 0 0 12px 0;
-  font-size: 14px;
+  font-size: var(--text-lg);
   font-weight: 600;
   color: var(--color-text-dark);
 }
@@ -455,8 +472,8 @@
   display: flex;
   gap: 0;
   margin-bottom: 20px;
-  border: 1px solid #e5e7eb;
-  border-radius: 6px;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-md);
   overflow: hidden;
 }
 
@@ -464,9 +481,9 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
-  padding: 10px 15px;
-  background: #f8fafc;
-  border-right: 1px solid #e5e7eb;
+  padding: 10px 16px;
+  background: var(--gray-50);
+  border-right: 1px solid var(--gray-200);
   flex: 1;
 }
 
@@ -475,14 +492,14 @@
 }
 
 .quick-actions-popup .info-label {
-  font-size: 10px;
-  color: #6b7280;
+  font-size: var(--text-xs);
+  color: var(--gray-500);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .quick-actions-popup .info-value {
-  font-size: 13px;
+  font-size: var(--text-md);
   font-weight: 600;
   color: var(--color-text-dark);
   white-space: nowrap;
@@ -492,10 +509,10 @@
 .quick-actions-popup .actions-section,
 .quick-actions-popup .custom-command-section,
 .quick-actions-popup .monitoring-section {
-  background: #f8fafc;
-  border-radius: 8px;
-  border: 1px solid #e5e7eb;
-  padding: 15px;
+  background: var(--gray-50);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--gray-200);
+  padding: 16px;
   margin-bottom: 20px;
 }
 
@@ -512,7 +529,7 @@
 .quick-actions-popup .custom-command-section h3,
 .quick-actions-popup .monitoring-section h3 {
   display: block;
-  font-size: 12px;
+  font-size: var(--text-base);
   font-weight: 600;
   color: var(--color-primary);
   text-transform: uppercase;
@@ -535,14 +552,14 @@
   gap: 6px;
   padding: 12px 10px;
   min-width: 80px;
-  border-radius: 8px;
+  border-radius: var(--radius-lg);
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
   text-align: center;
 }
 
 .quick-actions-popup .action-item:hover {
-  background: #f3f4f6;
+  background: var(--gray-100);
 }
 
 .quick-actions-popup .action-item img {
@@ -551,14 +568,14 @@
 }
 
 .quick-actions-popup .action-item > span {
-  font-size: 12px;
+  font-size: var(--text-base);
   font-weight: 500;
   color: var(--color-text-dark);
 }
 
 .quick-actions-popup .action-option {
-  font-size: 12px;
-  color: #374151;
+  font-size: var(--text-base);
+  color: var(--gray-700);
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -578,9 +595,9 @@
 
 /* Shutdown options */
 .quick-actions-popup .shutdown-options {
-  background: #fef3c7;
+  background: var(--color-warning-light);
   border: 1px solid #fcd34d;
-  border-radius: 6px;
+  border-radius: var(--radius-md);
   padding: 12px;
   margin-bottom: 20px;
 }
@@ -597,7 +614,7 @@
 }
 
 .quick-actions-popup .option-row label {
-  font-size: 12px;
+  font-size: var(--text-base);
   color: #92400e;
   min-width: 120px;
 }
@@ -605,8 +622,8 @@
 .quick-actions-popup .option-row input {
   padding: 6px 10px;
   border: 1px solid #fcd34d;
-  border-radius: 4px;
-  font-size: 12px;
+  border-radius: var(--radius-sm);
+  font-size: var(--text-base);
 }
 
 /* Custom command */
@@ -618,11 +635,11 @@
 
 .quick-actions-popup .command-row select {
   flex: 1;
-  height: 38px;
+  height: var(--input-height);
   padding: 0 35px 0 12px;
-  border: 1px solid #d1d5db;
-  border-radius: 4px;
-  font-size: 13px;
+  border: 1px solid var(--gray-300);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-md);
   line-height: 38px;
   background-position: right 10px center;
 }
@@ -630,7 +647,7 @@
 /* Monitoring grid */
 .quick-actions-popup .monitoring-grid {
   display: flex;
-  gap: 15px;
+  gap: 16px;
 }
 
 .quick-actions-popup .monitoring-item {
@@ -638,14 +655,14 @@
   flex-direction: column;
   align-items: center;
   gap: 6px;
-  padding: 10px 15px;
-  border-radius: 6px;
+  padding: 10px 16px;
+  border-radius: var(--radius-md);
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
 }
 
 .quick-actions-popup .monitoring-item:hover {
-  background: #f3f4f6;
+  background: var(--gray-100);
 }
 
 .quick-actions-popup .monitoring-item img {
@@ -654,7 +671,7 @@
 }
 
 .quick-actions-popup .monitoring-item span {
-  font-size: 11px;
+  font-size: var(--text-sm);
   color: var(--color-text-medium);
 }
 
@@ -687,7 +704,7 @@
 .notify-widget-actions .btn {
   min-width: 100px;
   padding: 10px 25px;
-  border-radius: 9px;
+  border-radius: var(--radius-xl);
 }
 
 /* ============================================= */
@@ -701,8 +718,8 @@
   left: 50%;
   transform: translate(-50%, -50%);
   background: var(--color-bg-white);
-  border-radius: 9px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
   z-index: 1002;
   min-width: 350px;
   max-width: 90vw;
@@ -728,7 +745,7 @@
 
 .modal-popup-buttons button {
   padding: 10px 25px;
-  border-radius: 9px;
+  border-radius: var(--radius-xl);
 }
 
 /* ---------------------------------------- */
@@ -742,10 +759,22 @@
 
 .popup-logout p {
   margin: 0 0 20px 0;
-  font-size: 14px;
+  font-size: var(--text-lg);
   color: var(--color-text-dark);
 }
 
 .popup-logout form {
   margin: 0;
+}
+
+/* ---------------------------------------- */
+/* Danger popup (delete actions)            */
+/* ---------------------------------------- */
+
+#__popup_container h2.popup-title-danger {
+  background: var(--btn-danger-bg) !important;
+}
+
+#__popup_container h2.popup-title-warning {
+  background: var(--color-warning) !important;
 }

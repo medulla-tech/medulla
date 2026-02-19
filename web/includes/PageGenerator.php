@@ -3996,6 +3996,8 @@ class ValidatingForm extends Form
  */
 class PopupForm extends Form
 {
+    protected $level = 'default';
+
     public function __construct($title, $id = 'Form')
     {
         $options = array("action" => $_SERVER["REQUEST_URI"], 'id' => $id);
@@ -4006,9 +4008,15 @@ class PopupForm extends Form
         $this->ask = "";
     }
 
+    public function setLevel($level)
+    {
+        $this->level = $level;
+    }
+
     public function begin()
     {
-        $str = "<h2>" . $this->title . "</h2>\n";
+        $levelClass = ($this->level !== 'default') ? ' popup-title-' . $this->level : '';
+        $str = "<h2 class='" . trim($levelClass) . "'>" . $this->title . "</h2>\n";
         $str .= parent::begin();
         foreach ($this->text as $text) {
             $str .= "<p>" . $text . "</p>";
@@ -4036,6 +4044,14 @@ class PopupForm extends Form
     public function addValidateButtonWithFade($name)
     {
         $this->buttons[] = $this->getButtonString($name, _("Confirm"), "btnPrimary", "onclick=\"closePopup(); return true;\"");
+    }
+
+    public function addDangerButton($name, $value = null)
+    {
+        if ($value === null) {
+            $value = _("Delete");
+        }
+        $this->buttons[] = $this->getButtonString($name, $value, "btnDanger");
     }
 
     public function addCancelButton($name)

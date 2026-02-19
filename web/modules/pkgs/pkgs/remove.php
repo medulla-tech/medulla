@@ -64,6 +64,7 @@ if (isset($_POST["bconfirm"])) {
     $from = $_GET["from"];
     $uuid =  isset($_GET["packageUuid"]) ? $_GET["packageUuid"] : base64_decode($pid);
     $f = new PopupForm(_T("Delete this package"));
+    $f->setLevel('danger');
     $hidden = new HiddenTpl("packageUuid");
     $f->add($hidden, array("value" =>$uuid, "hide" => True));
     $hidden = new HiddenTpl("p_api");
@@ -71,7 +72,7 @@ if (isset($_POST["bconfirm"])) {
     $hidden = new HiddenTpl("pid");
     $f->add($hidden, array("value" => $pid, "hide" => True));
     $f->add(new HiddenTpl("from"), array("value" => $from, "hide" => True));
-    $f->addValidateButton("bconfirm");
+    $f->addDangerButton("bconfirm");
     $f->addCancelButton("bback");
     $f->display();
 }

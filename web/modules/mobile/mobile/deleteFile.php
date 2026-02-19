@@ -68,12 +68,13 @@ if (isset($_POST['bdelete'])) {
     exit;
 } else {
     $f = new PopupForm(_T("Delete File", "mobile"));
+    $f->setLevel('danger');
     $f->addText(sprintf(_T("Are you sure you want to delete the file <b>%s</b>?", "mobile"), htmlspecialchars($name)));
     $hidden = new HiddenTpl("id");
     $f->add($hidden, array("value" => $id, "hide" => true));
     $hidden_name = new HiddenTpl("name");
     $f->add($hidden_name, array("value" => $name, "hide" => true));
-    $f->addValidateButton("bdelete");
+    $f->addDangerButton("bdelete");
     $f->addCancelButton("bback");
     $f->display();
 }

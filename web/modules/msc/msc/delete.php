@@ -55,6 +55,7 @@ if (isset($_POST["bconfirm"])) {
 
 /* Form displaying */
 $f = new PopupForm(_T('Delete this command', 'msc'), 'deletePopupForm');
+$f->setLevel('danger');
 if (isset($_GET['coh_id'])){
     $f->add(new HiddenTpl("coh_id"), array("value" => $_GET['coh_id'], "hide" => True));
 }
@@ -69,7 +70,7 @@ if (isset($_GET['from'])){
 }
 
 
-$f->addValidateButton("bconfirm");
+$f->addDangerButton("bconfirm");
 $f->addCancelButton("bback");
 $f->display();
 ?>

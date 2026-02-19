@@ -1,90 +1,114 @@
 /*!
- * Bootstrap Alerts - Card Style for Medulla
+ * Bootstrap Alerts for Medulla
  */
 
-/* ========== Base Alert Styles ========== */
+/* ========== Inline Alert Styles ========== */
 .alert {
+  padding: 8px 35px 8px 14px;
+  margin: 10px 0;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+  background-color: var(--alert-warning-bg);
+  border: 1px solid var(--alert-warning-border);
+  border-radius: var(--radius-sm);
+  color: var(--alert-warning-text);
+  font-size: var(--text-base);
+}
+
+.alert h1,
+.alert h2,
+.alert h3,
+.alert h4 {
+  margin: 0 0 6px;
+  font-size: 1.1em;
+  line-height: 1.4;
+  font-weight: 600;
+  color: inherit;
+}
+
+.alert p {
+  margin: 0 0 6px;
+  font-size: 1em;
+  line-height: 1.5;
+}
+
+.alert > :last-child {
+  margin-bottom: 0;
+}
+
+.alert-success {
+  background-color: var(--alert-success-bg);
+  border-color: var(--alert-success-border);
+  color: var(--alert-success-text);
+}
+
+.alert-danger,
+.alert-error {
+  background-color: var(--alert-error-bg);
+  border-color: var(--alert-error-border);
+  color: var(--alert-error-text);
+}
+
+.alert-warning {
+  background-color: var(--alert-warning-bg);
+  border-color: var(--alert-warning-border);
+  color: var(--alert-warning-text);
+}
+
+.alert-info {
+  background-color: var(--alert-info-bg);
+  border-color: var(--alert-info-border);
+  color: var(--alert-info-text);
+}
+
+/* ========== Popup Alert Styles ========== */
+.popup .alert {
   margin: 0;
   border-radius: 0;
-  font-size: 15px;
+  border: none;
+  font-size: var(--text-xl);
   line-height: 1.6;
   display: block;
   text-align: center;
-  border: none;
-  position: relative;
-  overflow: visible;
-  background: white;
-  box-shadow: none;
   padding: 20px;
   padding-top: 150px;
   padding-bottom: 20px;
-  font-weight: 500;
-  color: #333;
+  background: var(--color-bg-white);
+  color: var(--color-text-dark);
+  text-shadow: none;
 }
 
-/* Colored header with icon */
-.alert::before {
+.popup .alert::before {
   content: '';
+  display: block;
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
+  width: auto;
   height: 120px;
-  display: block;
   background-size: 55px 55px;
   background-repeat: no-repeat;
   background-position: center;
 }
 
-/* Alert text styles */
-.alert h1,
-.alert h2,
-.alert h3,
-.alert h4 {
-  margin: 0 0 8px;
-  font-size: 1.2em;
-  font-weight: 700;
-  color: #333;
-}
-
-.alert p {
-  margin: 0;
-  padding: 0 25px;
-}
-
-/* Buttons inside alert - inline */
-.alert a.btn,
-.alert button,
-.alert .btn {
-  display: inline-block !important;
-  margin: 5px !important;
-  vertical-align: middle;
-}
-
-/* ========== Alert Types - Only header color differs ========== */
-
-/* Success - Green */
-.alert-success::before {
+/* ========== Popup Alert Types - Colored header ========== */
+.popup .alert-success::before {
   background-color: var(--color-accent);
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z'/%3E%3C/svg%3E");
 }
 
-/* Error/Danger - Red */
-.alert-danger::before,
-.alert-error::before {
+.popup .alert-danger::before,
+.popup .alert-error::before {
   background-color: var(--btn-danger-bg);
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2'%3E%3Cpath d='M12 2L2 22h20L12 2z'/%3E%3Cpath d='M12 9v4'/%3E%3Ccircle cx='12' cy='17' r='1'/%3E%3C/svg%3E");
 }
 
-/* Warning - Orange */
-.alert-warning::before,
-.alert:not(.alert-success):not(.alert-error):not(.alert-danger):not(.alert-info)::before {
+.popup .alert-warning::before {
   background-color: var(--color-warning);
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2'%3E%3Cpath d='M12 2L2 22h20L12 2z'/%3E%3Cpath d='M12 9v4'/%3E%3Ccircle cx='12' cy='17' r='1'/%3E%3C/svg%3E");
 }
 
-/* Info - Blue */
-.alert-info::before {
+.popup .alert-info::before {
   background-color: var(--color-primary);
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z'/%3E%3C/svg%3E");
 }
@@ -92,20 +116,20 @@
 /* ========== Close Button (Fermer) - Neutral style ========== */
 .popup #__popup_container center .btn,
 .popup #__popup_container center button {
-  background: white !important;
-  color: #333 !important;
-  border: 1px solid #ccc !important;
-  border-radius: 9px;
+  background: var(--color-bg-white) !important;
+  color: var(--color-text-dark) !important;
+  border: 1px solid var(--color-border-medium) !important;
+  border-radius: var(--radius-xl);
   padding: 10px 30px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
 }
 
 .popup #__popup_container center .btn:hover,
 .popup #__popup_container center button:hover {
-  background: #f5f5f5 !important;
-  border-color: #999 !important;
+  background: var(--color-bg-light) !important;
+  border-color: var(--color-text-light) !important;
 }
 
 /* ========== Alert Block ========== */

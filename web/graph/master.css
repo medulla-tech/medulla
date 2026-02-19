@@ -42,8 +42,9 @@ Pour plus d'infos visitez : http://tantek.com/CSS/Examples/highpass.html
 ----------------------------------------------- */
 
 /*@import "null?\"\{"; */
-@import "global.css";
-@import "popups.css";
-@import "bootstrap-forms.css";
-@import "bootstrap-alerts.css";
-@import "progressbar.css";
+@import "css/global.css";
+@import "css/buttons.css";
+@import "css/popups.css";
+@import "css/bootstrap-forms.css";
+@import "css/bootstrap-alerts.css";
+@import "css/progressbar.css";

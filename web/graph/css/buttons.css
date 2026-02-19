@@ -1,0 +1,228 @@
+/*!
+ * Medulla Buttons CSS
+ * All button styles in one place
+ */
+
+/* ========== Base Button ========== */
+.btn,
+.btn-primary,
+.btn-secondary,
+.btn-danger,
+.btnPrimary,
+.btnSecondary,
+.btnDanger {
+  -webkit-appearance: none;
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-width: 100px;
+  padding: 0.625rem 1rem;
+  font: inherit;
+  font-weight: 600;
+  font-size: var(--text-base);
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+  border: 1px solid var(--color-border-medium);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-light);
+  color: var(--color-text-dark);
+  text-decoration: none;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.06s ease;
+}
+
+a.btn,
+a.btn-primary,
+a.btn-secondary,
+a.btn-danger {
+  text-decoration: none;
+}
+
+/* ========== Default Button (neutral) ========== */
+.btn {
+  background: var(--color-bg-light);
+  border-color: var(--color-border-dark);
+}
+
+.btn:hover {
+  background: var(--color-bg-gray);
+  border-color: var(--color-text-medium);
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-bg-white), 0 0 0 4px var(--color-primary);
+}
+
+.btn:disabled,
+.btn[aria-disabled="true"] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ========== Primary Button ========== */
+.btn-primary,
+.btnPrimary {
+  background: var(--color-primary);
+  color: var(--color-text-white);
+  border-color: var(--color-primary);
+}
+
+.btn-primary:hover,
+.btnPrimary:hover {
+  background: var(--color-bg-white);
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.btn-primary:active,
+.btnPrimary:active {
+  background: var(--color-primary-dark);
+  color: var(--color-text-white);
+  transform: translateY(1px);
+}
+
+/* ========== Secondary Button (outlined) ========== */
+.btn-secondary,
+.btnSecondary {
+  background: transparent;
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+  border-width: 2px;
+}
+
+.btn-secondary:hover,
+.btnSecondary:hover {
+  background: var(--color-primary);
+  color: var(--color-text-white);
+  border-color: var(--color-primary);
+}
+
+.btn-secondary:active,
+.btnSecondary:active {
+  background: var(--color-primary-dark);
+  transform: translateY(1px);
+}
+
+/* ========== Danger Button ========== */
+.btn-danger,
+.btnDanger {
+  background: var(--btn-danger-bg);
+  color: var(--color-text-white);
+  border-color: var(--btn-danger-bg);
+}
+
+.btn-danger:hover,
+.btnDanger:hover {
+  background: var(--color-bg-white);
+  color: var(--btn-danger-bg);
+  border-color: var(--btn-danger-bg);
+}
+
+.btn-danger:active,
+.btnDanger:active {
+  background: var(--btn-danger-hover);
+  color: var(--color-text-white);
+  transform: translateY(1px);
+}
+
+/* ========== Link Button ========== */
+.btn-link {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  margin: 0;
+  padding: 0;
+  min-width: auto;
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.btn-link:hover {
+  text-decoration: underline;
+  background: transparent;
+}
+
+/* ========== Size Variants ========== */
+.btn-small {
+  min-width: 80px;
+  padding: 0.4rem 0.75rem;
+  font-size: var(--text-sm);
+  border-radius: var(--radius-sm);
+}
+
+.btn-large {
+  min-width: 140px;
+  padding: 0.8rem 1.25rem;
+  font-size: var(--text-lg);
+  border-radius: var(--radius-lg);
+}
+
+/* ========== Layout Variants ========== */
+.btn-block {
+  display: block;
+  width: 100%;
+}
+
+.btn-block + .btn-block {
+  margin-top: 5px;
+}
+
+/* ========== Utility ========== */
+.btn-no-margin,
+.btn-no-marge {
+  margin: 0;
+}
+
+/* ========== Link styles for colored buttons ========== */
+a.btn {
+  color: var(--color-text-dark);
+}
+
+a.btn-primary,
+a.btnPrimary {
+  color: var(--color-text-white);
+}
+
+a.btn-primary:hover,
+a.btnPrimary:hover {
+  color: var(--color-primary);
+}
+
+a.btn-danger,
+a.btnDanger {
+  color: var(--color-text-white);
+}
+
+a.btn-danger:hover,
+a.btnDanger:hover {
+  color: var(--btn-danger-bg);
+}
+
+/* ========== Accessibility ========== */
+@media (forced-colors: active) {
+  .btn {
+    border-color: ButtonText;
+    box-shadow: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn,
+  .btn-primary,
+  .btn-secondary,
+  .btn-danger,
+  .btnPrimary,
+  .btnSecondary,
+  .btnDanger {
+    transition: none;
+  }
+}

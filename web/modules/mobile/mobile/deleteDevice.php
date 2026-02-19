@@ -40,19 +40,20 @@ if (isset($_POST['bdelete'])) {
     exit;
 } else {
     $f = new PopupForm(_T("Delete Device", "mobile"));
+    $f->setLevel('danger');
     $f->addText(sprintf(_T("Are you sure you want to delete the device <b>%s</b>?", "mobile"), htmlspecialchars($deviceNumber)));
-    
+
     $description = $device['description'] ?? '';
     if (!empty($description)) {
         $f->addText(sprintf(_T("Description: %s", "mobile"), htmlspecialchars($description)));
     }
-    
+
     $f->addText('<br><strong style="color: #d9534f;">' . _T("Warning: This action cannot be undone!", "mobile") . '</strong>');
-    
+
     $hidden = new HiddenTpl("id");
     $f->add($hidden, array("value" => $deviceId, "hide" => true));
-    
-    $f->addValidateButton("bdelete");
+
+    $f->addDangerButton("bdelete");
     $f->addCancelButton("bback");
     $f->display();
 }

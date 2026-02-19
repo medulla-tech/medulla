@@ -44,11 +44,12 @@ if (isset($_POST["bconfirm"])) {
 else{
 
     $f = new PopupForm(sprintf(_T("Are you sure to delete profile <b>%s</b> ?", "imaging"), $name));
+    $f->setLevel('danger');
 
     $hidden = new HiddenTpl("id");
     $f->add($hidden, array("value" => $id, "hide" => True));
 
-  $f->addValidateButton("bconfirm");
+  $f->addDangerButton("bconfirm");
   $f->addCancelButton("bback");
   $f->display();
 }

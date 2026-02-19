@@ -94,6 +94,7 @@ if (isset($_POST["bconfirm"])) {
 } else {
     $uuid = urldecode($_GET["objectUUID"]);
     $f = new PopupForm(_("Delete this computer"));
+    $f->setLevel('danger');
     $f->push(new Table());
 
     $tr = new TrFormElement(_("Do you want a backup to be done ?"), new CheckBoxTpl("backup"), array("value" => ''));
@@ -109,7 +110,7 @@ if (isset($_POST["bconfirm"])) {
     $hidden = new HiddenTpl("objectUUID");
     $f->add($hidden, array("value" => $uuid, "hide" => true));
     $f->pop();
-    $f->addValidateButton("bconfirm");
+    $f->addDangerButton("bconfirm");
     $f->addCancelButton("bback");
     $f->display();
 }

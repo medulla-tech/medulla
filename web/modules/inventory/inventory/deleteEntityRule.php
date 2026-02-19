@@ -32,8 +32,9 @@ if (isset($_POST["bconfirm"], $_POST["numRule"])) {
 } else {
     $title = _T("Delete this rule?", 'inventory');
     $f = new PopupForm($title, 'deleteEntityRuleForm');
+    $f->setLevel('danger');
     $f->add(new HiddenTpl("numRule"), array("value" => $_GET['numRule'], "hide" => True));
-    $f->addValidateButton("bconfirm");
+    $f->addDangerButton("bconfirm");
     $f->addCancelButton("bback");
     $f->display();
 }

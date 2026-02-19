@@ -41,9 +41,10 @@ Notes:
 
 ---*/
 
-@import '../bootstrap-buttons.css';
-@import '../bootstrap-forms.css';
-@import '../bootstrap-alerts.css';
+@import '../css/global.css';
+@import '../css/buttons.css';
+@import '../css/bootstrap-forms.css';
+@import '../css/bootstrap-alerts.css';
 
 *, *::before, *::after {
     box-sizing: border-box;

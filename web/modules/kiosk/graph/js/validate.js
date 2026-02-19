@@ -26,7 +26,7 @@ jQuery("#bvalid").click(function() {
         jQuery("#name").focus();
 
     else if(ous.length == 0)
-        alert(MSG_OU_REQUIRED);
+        alert(MSG_OU_REQUIRED, '', 'alert-warning');
     else
         sendForm();
 });

@@ -36,12 +36,13 @@ if (isset($_POST["bdeluser"])) {
     exit;
 } else {
     $f = new PopupForm(_("Delete user"));
+    $f->setLevel('danger');
     $f->addText(sprintf(_("You will delete user <b>%s</b>."),$user));
     $cb = new CheckboxTpl("delfiles", _("Delete all user's files"));
     $f->add($cb, array("value" => ""));
     $hidden = new HiddenTpl("user");
     $f->add($hidden, array("value" => $user, "hide" => True));
-    $f->addValidateButton("bdeluser");
+    $f->addDangerButton("bdeluser");
     $f->addCancelButton("bback");
     $f->display();
 }
