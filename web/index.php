@@ -218,7 +218,7 @@ if (isset($_GET["update"])) {
 
 <head>
     <title>Medulla / Management Console</title>
-    <link href="graph/login/index.css" rel="stylesheet" media="screen" type="text/css" />
+    <link href="graph/css/login.css" rel="stylesheet" media="screen" type="text/css" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <link rel="icon" href="img/common/favicon.ico" />
     <script src="jsframework/lib/jquery-3.2.1.min.js" type="text/javascript"></script>
@@ -228,14 +228,10 @@ if (isset($_GET["update"])) {
 <body onload="jQuery('#username').focus()">
 
     <div id="loginBox">
-        <div id="header">
-            <!--<div id="headerLeft"><div id="headerRight">
-            <p class="lock"></p>
-        </div></div>-->
-            <img src="img/login/medulla.svg" alt="[x]" width="153" height="50" /></a>
-        </div>
-
         <div id="interface">
+            <div id="header">
+                <img src="img/logo/medulla.svg" alt="Medulla" />
+            </div>
             <div id="content">
 
                 <?php
@@ -385,15 +381,15 @@ if (isset($_GET["update"])) {
                     <?php if (!empty($providers)): ?>
                         <form action="providers.php" method="post" id="loginFormProvider">
                             <div class="control-group provider-group">
-                                <h3><?= _("Providers"); ?></h3>
+                                <div class="divider"><span><?= _("or"); ?></span></div>
 
-                                <?php foreach ($providers as $row): 
+                                <?php foreach ($providers as $row):
                                     $providerSafe = htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8');
                                     $logoUrl = htmlspecialchars($row['logo_url'] ?: './img/login/oidc.png', ENT_QUOTES, 'UTF-8');
                                 ?>
                                     <button class="login-btn provider-btn" type="submit" name="selectedProvider" value="<?= $providerSafe ?>">
                                         <img src="<?= $logoUrl ?>" alt="<?= $providerSafe ?> Logo">
-                                        Se connecter avec <?= $providerSafe ?>
+                                        <?= sprintf(_("Sign in with %s"), $providerSafe) ?>
                                     </button>
                                 <?php endforeach; ?>
 

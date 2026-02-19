@@ -32,7 +32,7 @@ if (isset($_POST['bReset']) && isset($_POST['user'])) {
 <html>
 <head>
 	<title>Medulla</title>
-	<link href="<?php echo $root; ?>graph/login/index.css" rel="stylesheet" media="screen" type="text/css" />
+	<link href="<?php echo $root; ?>graph/css/login.css" rel="stylesheet" media="screen" type="text/css" />
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta http-equiv="imagetoolbar" content="false" />
 	<meta name="Description" content="" />

@@ -1,0 +1,357 @@
+/*
+ * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+ * (c) 2007 Mandriva, http://www.mandriva.com
+ * (c) 2016-2023 Siveo, http://www.siveo.net
+ * (c) 2024-2025 Medulla, http://www.medulla-tech.io
+ *
+ * This file is part of MMC, http://www.medulla-tech.io
+ *
+ * MMC is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * any later version.
+ *
+ * MMC is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MMC; If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Login page styles
+ */
+
+@import 'global.css';
+@import 'buttons.css';
+@import 'bootstrap-forms.css';
+@import 'bootstrap-alerts.css';
+
+/* ---------------------------------------- */
+/* Base                                     */
+/* ---------------------------------------- */
+
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: Arial, Verdana, Lucida, Geneva, Helvetica, sans-serif;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--color-text-dark);
+    background: var(--gray-100);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+a {
+    color: var(--color-primary);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+a:hover {
+    color: var(--color-primary-dark);
+}
+
+/* ---------------------------------------- */
+/* Login Box                                */
+/* ---------------------------------------- */
+
+#loginBox {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+}
+
+/* ---------------------------------------- */
+/* Header (Logo)                            */
+/* ---------------------------------------- */
+
+#header {
+    background: var(--color-primary);
+    padding: 20px 32px;
+    text-align: center;
+}
+
+#header img {
+    display: inline-block;
+    max-width: 180px;
+    height: auto;
+}
+
+/* ---------------------------------------- */
+/* Interface (Form container)               */
+/* ---------------------------------------- */
+
+#interface {
+    background: var(--color-bg-white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+}
+
+#content {
+    padding: 20px 32px 24px;
+}
+
+#login {
+    display: flex;
+    flex-direction: column;
+}
+
+/* ---------------------------------------- */
+/* Form                                     */
+/* ---------------------------------------- */
+
+.form-inline .control-group {
+    margin: 0 0 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.form-inline .control-label {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-text-dark);
+}
+
+.form-inline .controls {
+    width: 100%;
+}
+
+/* Inputs */
+.form-inline .controls input:not([type="submit"]),
+.form-inline .controls select {
+    width: 100%;
+    height: var(--input-height);
+    padding: 8px 12px;
+    border: 1px solid var(--color-border-medium);
+    border-radius: var(--radius-md);
+    background: var(--color-bg-white);
+    font-size: var(--text-md);
+    color: var(--color-text-dark);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.form-inline .controls input:not([type="submit"]):hover,
+.form-inline .controls select:hover {
+    border-color: var(--color-primary);
+}
+
+.form-inline .controls input:not([type="submit"]):focus,
+.form-inline .controls select:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(37, 96, 125, 0.15);
+    outline: none;
+}
+
+/* Select styling */
+#login select {
+    min-width: 0;
+    height: var(--input-height);
+    line-height: 1.4;
+    background-color: var(--color-bg-white);
+    color: var(--color-text-dark);
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10.59 1L6 5.58L1.41 1L0 2.41L6 8.41L12 2.41L10.59 1Z' fill='%2364748b'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 12px;
+    padding-right: 36px;
+}
+
+#login select option {
+    color: var(--color-text-dark);
+    background: var(--color-bg-white);
+}
+
+/* ---------------------------------------- */
+/* Buttons                                  */
+/* ---------------------------------------- */
+
+#login .controls .btn {
+    width: 100%;
+    height: var(--input-height);
+    margin: 0;
+    font-size: var(--text-md);
+}
+
+#login .controls .btn + .btn {
+    margin-top: 10px;
+}
+
+/* Primary button - blue background, white on hover */
+#login .controls .btn.btn-primary,
+#login .controls .btn.btnPrimary {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--color-text-white);
+}
+
+#login .controls .btn.btn-primary:hover,
+#login .controls .btn.btnPrimary:hover {
+    background: var(--color-bg-white);
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+}
+
+#login .controls .btn.btn-primary:active,
+#login .controls .btn.btnPrimary:active {
+    background: var(--gray-100);
+    border-color: var(--color-primary-dark);
+    color: var(--color-primary-dark);
+}
+
+/* ---------------------------------------- */
+/* Links                                    */
+/* ---------------------------------------- */
+
+#login p {
+    margin: 16px 0 0;
+    text-align: center;
+}
+
+#login p a {
+    color: var(--color-primary);
+    font-weight: 600;
+    font-size: var(--text-sm);
+}
+
+#login p a:hover {
+    color: var(--color-primary-dark);
+    text-decoration: underline;
+}
+
+/* ---------------------------------------- */
+/* Providers (SSO)                          */
+/* ---------------------------------------- */
+
+#loginFormProvider .provider-group {
+    margin: 16px 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Divider "or" */
+.divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 4px 0;
+}
+
+.divider::before,
+.divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid var(--color-border-light);
+}
+
+.divider span {
+    padding: 0 12px;
+    font-size: var(--text-sm);
+    color: var(--color-text-light);
+    text-transform: uppercase;
+}
+
+.provider-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 10px 16px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border-medium);
+    background: var(--color-bg-light);
+    font-size: var(--text-base);
+    font-weight: 600;
+    color: var(--color-text-dark);
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.provider-btn img {
+    height: 20px;
+    width: auto;
+}
+
+.provider-btn:hover {
+    background: var(--color-bg-white);
+    border-color: var(--color-primary);
+    transform: translateY(-1px);
+}
+
+/* ---------------------------------------- */
+/* Alert / Error message                    */
+/* ---------------------------------------- */
+
+#alert {
+    margin-bottom: 20px;
+    padding: 12px 16px;
+    color: var(--alert-error-text);
+    background: var(--alert-error-bg);
+    border: 1px solid var(--alert-error-border);
+    border-radius: var(--radius-md);
+    font-size: var(--text-base);
+}
+
+/* ---------------------------------------- */
+/* Licence badge                            */
+/* ---------------------------------------- */
+
+#licence {
+    margin: 24px auto 0;
+    font-size: var(--text-sm);
+    text-decoration: none;
+    padding: 6px 12px;
+    color: var(--color-text-white);
+    display: inline-block;
+    border-radius: var(--radius-sm);
+    background: var(--btn-danger-bg);
+}
+
+#licence a {
+    font-size: var(--text-sm);
+    color: var(--color-text-white);
+    font-weight: 600;
+}
+
+/* ---------------------------------------- */
+/* Footer (hidden)                          */
+/* ---------------------------------------- */
+
+#footer,
+#footerLeft,
+#footerRight {
+    display: none;
+}
+
+/* ---------------------------------------- */
+/* Responsive                               */
+/* ---------------------------------------- */
+
+@media (max-width: 480px) {
+    #loginBox {
+        padding: 16px;
+    }
+
+    #header {
+        padding: 20px 24px;
+    }
+
+    #content {
+        padding: 24px 20px 28px;
+    }
+}
