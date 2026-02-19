@@ -190,7 +190,8 @@ foreach ($packages as $c_package) {
 
         if($package != null) {
             $a_packages[] = $package->label;
-            $a_description[] = $package->description ;
+            $descText = htmlspecialchars($package->description);
+            $a_description[] = "<span class='pkg-description' title=\"$descText\">$descText</span>";
             $a_pversions[] = $package->version ;
             $a_pos[] = $package->targetos ;
             $a_sizes[] = prettyOctetDisplay($package->size);
@@ -327,5 +328,21 @@ $n->display();
         text-decoration: none;
         color: #FFF;
     }
-
+    /* Package name column - limit width (target only this table via row classes) */
+    tr.primary_list td:first-child,
+    tr.secondary_list td:first-child {
+        max-width: 250px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    /* Package description - truncate with tooltip */
+    .pkg-description {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 200px;
+        line-height: 1.4;
+    }
 </style>

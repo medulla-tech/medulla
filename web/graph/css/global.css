@@ -755,6 +755,17 @@ li.disableupdate a, li.disableupdateg a { background-image: url("../../img/actio
 li.deleteprofile a, li.deleteprofileg a { background-image: url("../../img/actions/deleteprofile.svg"); }
 li.infoupdate a, li.infoupdateg a { background-image: url("../../img/actions/info.svg"); }
 li.helpupdate a, li.helpupdateg a { background-image: url("../../img/actions/help.svg"); }
+
+/* Fix for infoupdate/helpupdate icons in tables */
+li.infoupdate a,
+li.helpupdate a {
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  background-position: center;
+  background-size: 20px 20px;
+}
 li.pending a, li.pendingg a { background-image: url("../../img/actions/pending.svg"); }
 li.history a, li.historyg a { background-image: url("../../img/actions/history.svg"); }
 li.manageusers a, li.manageusersg a { background-image: url("../../img/actions/usergroup.svg"); }
