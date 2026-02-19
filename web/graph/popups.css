@@ -730,3 +730,22 @@
   padding: 10px 25px;
   border-radius: 9px;
 }
+
+/* ---------------------------------------- */
+/* Logout popup                             */
+/* ---------------------------------------- */
+
+.popup-logout {
+  text-align: center;
+  padding: 20px 30px;
+}
+
+.popup-logout p {
+  margin: 0 0 20px 0;
+  font-size: 14px;
+  color: var(--color-text-dark);
+}
+
+.popup-logout form {
+  margin: 0;
+}
