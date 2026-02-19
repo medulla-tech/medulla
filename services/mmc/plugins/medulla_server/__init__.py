@@ -147,7 +147,7 @@ def create_method(m):
 class Pulse2Config(PluginConfig, Pulse2DatabaseConfig):
     location = None
 
-    def __init__(self, name="medulla_server", conffile=None, backend="database"):
+    def __init__(self, name="medulla_server", conffile=None, backend="ini"):
         if not hasattr(self, "initdone"):
             PluginConfig.__init__(self, name, conffile, backend=backend, db_table="medulla_server_conf")
             Pulse2DatabaseConfig.__init__(self)

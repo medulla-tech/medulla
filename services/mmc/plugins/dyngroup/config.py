@@ -15,7 +15,7 @@ class DGConfig(PluginConfig, DyngroupDatabaseConfig):
     check_db_enable = False
     check_db_interval = 300
 
-    def __init__(self, name, conffile=None, backend="database"):
+    def __init__(self, name, conffile=None, backend="ini"):
         if not hasattr(self, "initdone"):
             PluginConfig.__init__(self, name, conffile, backend=backend, db_table="dyngroup_conf")
             DyngroupDatabaseConfig.__init__(self)

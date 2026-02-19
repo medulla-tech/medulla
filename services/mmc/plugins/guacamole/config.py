@@ -6,7 +6,7 @@ from mmc.support.config import PluginConfig
 
 
 class guacamoleConfig(PluginConfig):
-    def __init__(self, name="guacamole", conffile=None, backend="database"):
+    def __init__(self, name="guacamole", conffile=None, backend="ini"):
         if not hasattr(self, "initdone"):
             PluginConfig.__init__(self, name, conffile, backend=backend, db_table="guacamole_conf")
             self.initdone = True

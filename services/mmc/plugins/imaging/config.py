@@ -39,7 +39,7 @@ class ImagingConfig(PluginConfig, ImagingDatabaseConfig):
     preferred_network = ""
     purge_interval = "23 0 * * 0"
 
-    def __init__(self, name="imaging", conffile=None, backend="database"):
+    def __init__(self, name="imaging", conffile=None, backend="ini"):
         if not hasattr(self, "initdone"):
             PluginConfig.__init__(self, name, conffile, backend=backend, db_table="imaging_conf")
             ImagingDatabaseConfig.__init__(self)

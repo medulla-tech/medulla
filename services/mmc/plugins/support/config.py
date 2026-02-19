@@ -12,7 +12,7 @@ from mmc.support.config import PluginConfig
 
 
 class SupportConfig(PluginConfig):
-    def __init__(self, name="support", conffile=None, backend="database"):
+    def __init__(self, name="support", conffile=None, backend="ini"):
         self.logger = logging.getLogger()
         if not hasattr(self, "initdone"):
             PluginConfig.__init__(self, name, conffile, backend=backend, db_table="support_conf")

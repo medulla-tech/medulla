@@ -136,7 +136,7 @@ class MscConfig(PluginConfig, MscDatabaseConfig):
     # Windows Update command
     wu_command = "/usr/share/medulla-update-manager/medulla-update-manager"
 
-    def __init__(self, name="msc", conffile=None, backend="database"):
+    def __init__(self, name="msc", conffile=None, backend="ini"):
         if not hasattr(self, "initdone"):
             PluginConfig.__init__(self, name, conffile, backend=backend, db_table="msc_conf")
             MscDatabaseConfig.__init__(self)

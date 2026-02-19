@@ -8,7 +8,7 @@ from pulse2.database.kiosk.config import KioskDatabaseConfig
 class KioskConfig(PluginConfig, KioskDatabaseConfig):
     """This class is called by the __init__ of the kiosk module."""
 
-    def __init__(self, name="kiosk", conffile=None, backend="database"):
+    def __init__(self, name="kiosk", conffile=None, backend="ini"):
         if not hasattr(self, "initdone"):
             PluginConfig.__init__(self, name, conffile, backend=backend, db_table="kiosk_conf")
             KioskDatabaseConfig.__init__(self)

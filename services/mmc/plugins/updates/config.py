@@ -6,7 +6,7 @@ from mmc.support.config import PluginConfig
 from pulse2.database.updates.config import UpdatesDatabaseConfig
 
 class UpdatesConfig(PluginConfig, UpdatesDatabaseConfig):
-    def __init__(self, name="updates", conffile=None, backend="database"):
+    def __init__(self, name="updates", conffile=None, backend="ini"):
         if not hasattr(self, "initdone"):
             PluginConfig.__init__(self, name, conffile, backend=backend, db_table="updates_conf")
             UpdatesDatabaseConfig.__init__(self)

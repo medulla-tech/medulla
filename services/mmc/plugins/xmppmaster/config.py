@@ -15,7 +15,7 @@ logger = logging.getLogger()
 
 
 class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
-    def __init__(self, name="xmppmaster", conffile=None, backend="database"):
+    def __init__(self, name="xmppmaster", conffile=None, backend="ini"):
         if not hasattr(self, "initdone"):
             # Initialiser avec backend database
             PluginConfig.__init__(self, name, conffile, backend=backend, db_table="xmpp_conf")

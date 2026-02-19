@@ -7,7 +7,7 @@ from pulse2.database.urbackup.config import UrbackupDatabaseConfig
 
 
 class UrbackupConfig(PluginConfig, UrbackupDatabaseConfig):
-    def __init__(self, name="urbackup", conffile=None, backend="database"):
+    def __init__(self, name="urbackup", conffile=None, backend="ini"):
         if not hasattr(self, "initdone"):
             PluginConfig.__init__(self, name, conffile, backend=backend, db_table="urbackup_conf")
             UrbackupDatabaseConfig.__init__(self)

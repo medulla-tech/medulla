@@ -28,7 +28,7 @@ class PkgsConfig(PluginConfig):
     # Appstream settings
     appstream_url = ""
 
-    def __init__(self, name="pkgs", conffile=None, backend="database"):
+    def __init__(self, name="pkgs", conffile=None, backend="ini"):
         if not hasattr(self, "initdone"):
             PluginConfig.__init__(self, name, conffile, backend=backend, db_table="pkgs_conf")
             self.initdone = True

@@ -24,7 +24,7 @@ class SecurityConfig(PluginConfig, SecurityDatabaseConfig):
     # Valid severity levels in order
     SEVERITY_LEVELS = ['None', 'Low', 'Medium', 'High', 'Critical']
 
-    def __init__(self, name='security', conffile=None, backend="database"):
+    def __init__(self, name='security', conffile=None, backend="ini"):
         if not hasattr(self, 'initdone'):
             PluginConfig.__init__(self, name, conffile, backend=backend, db_table="security_conf")
             SecurityDatabaseConfig.__init__(self)
