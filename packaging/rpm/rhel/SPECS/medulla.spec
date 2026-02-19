@@ -85,6 +85,8 @@ Requires:       mmc-web-mobile
 Requires:       python3-mmc-mobile
 Requires:       mmc-web-security
 Requires:       python3-mmc-security
+Requires:       mmc-web-store
+Requires:       python3-mmc-store
 Requires:       pulse2-common
 Requires:       pulse2-package-server
 Requires:       python3-pulse2-common-database-dyngroup
@@ -905,6 +907,23 @@ This package contains Pulse 2 common security database files
 
 #--------------------------------------------------------------------
 
+%package -n     python3-pulse2-common-database-store
+Summary:        Pulse 2 common store database files
+Group:          System/Servers
+Requires:       pulse2-common = %version-%release
+Requires:       python3-pulse2-common-database = %version-%release
+
+Obsoletes:  python-pulse2-common-database-store < 4.7.0
+Provides:   python-pulse2-common-database-store = %version-%release
+
+%description -n python3-pulse2-common-database-store
+This package contains Pulse 2 common store database files
+
+%files -n python3-pulse2-common-database-store
+%python3_sitelib/pulse2/database/store
+
+#--------------------------------------------------------------------
+
 %package -n     python3-pulse2-common-database
 Summary:        Pulse 2 common database files
 Group:          System/Servers
@@ -1464,6 +1483,38 @@ Security module for the MMC web interface
 
 %files -n mmc-web-security
 %{_datadir}/mmc/modules/security
+
+#--------------------------------------------------------------------
+
+%package -n python3-mmc-store
+Summary:    Store plugin for the MMC agent
+Group:      System/Servers
+Requires:   pulse2-common = %version-%release
+Requires:   python3-pulse2-common-database-mobile = %version-%release
+
+Obsoletes:  python-mmc-store < 4.7.0
+Provides:   python-mmc-store = %version-%release
+
+%description -n python3-mmc-store
+This package contains the store plugin for the MMC agent.
+
+%files -n python3-mmc-store
+%attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/store.ini
+%python3_sitelib/mmc/plugins/store
+%{_docdir}/pulse2/contrib/store
+
+#--------------------------------------------------------------------
+
+%package -n     mmc-web-store
+Summary:        Store module for the MMC web interface
+Group:          System/Servers
+Requires:       mmc-web-base >= %{version}
+
+%description -n mmc-web-store
+Store module for the MMC web interface
+
+%files -n mmc-web-store
+%{_datadir}/mmc/modules/store
 
 #--------------------------------------------------------------------
 

@@ -32,4 +32,4 @@ dist_pluginsconf_DATA = msc.ini glpi.ini pkgs.ini dyngroup.ini imaging.ini \
 	loadpluginlistversion.ini loadpluginschedulerlistversion.ini \
 	loadshowregistration.ini registeryagent.ini loadreconf.ini wakeonlan.ini \
 	wakeonlangroup.ini admin.ini updates.ini urbackup.ini mastering.ini mobile.ini \
-	security.ini
+	security.ini store.ini

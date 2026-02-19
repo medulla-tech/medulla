@@ -19,6 +19,10 @@
 
 -- Ajout du paramètre glpi_crypt_key pour le déchiffrement des tokens GLPI 11
 -- La clé doit être encodée en base64 (contenu de /usr/share/glpi/config/glpicrypt.key)
+
+START TRANSACTION;
+USE admin;
+
 INSERT INTO saas_application (setting_name, setting_value, setting_description)
 VALUES ('glpi_crypt_key', NULL, 'GLPI 11 sodium encryption key (base64)')
 ON DUPLICATE KEY UPDATE setting_description = VALUES(setting_description);
