@@ -411,7 +411,7 @@ $formIntent->display();
             ?>
         </select>
         <button id="modal_save" class="btnPrimary"><?php echo _T("Create", "mobile"); ?></button>
-        <button id="modal_cancel" class="btn"><?php echo _T("Cancel", "mobile"); ?></button>
+        <button id="modal_cancel" class="btn btnSecondary"><?php echo _T("Cancel", "mobile"); ?></button>
     </div>
 </div>
 

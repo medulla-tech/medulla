@@ -188,7 +188,7 @@ else if (isset($_POST['generate_report'])) {
                 $handle = fopen($filename, 'r');
                 $svg_content = fread($handle, filesize($filename));
                 fclose($handle);
-                $svg = new SpanElement(sprintf('<div align="center">%s<br /><a align="center" class="btn" href="%s">%s</a></div>',
+                $svg = new SpanElement(sprintf('<div align="center">%s<br /><a align="center" class="btn btnSecondary" href="%s">%s</a></div>',
                                        $svg_content,
                                        urlStrRedirect("report/report/get_file", array('path' => $content['png_path'])),
                                        _T('Download image', 'report')));

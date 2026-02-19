@@ -241,9 +241,9 @@ $root = $conf["global"]["root"];
                 message += '<div style="text-align: center"><a class="btn btn-primary" href="' + url_yes + '"><?= _('Yes') ?></a>';
 
                 if (url_no)
-                    message += ' <a class="btn" href="' + url_no + '"><?= _('No') ?></a>';
+                    message += ' <a class="btn btnSecondary" href="' + url_no + '"><?= _('No') ?></a>';
                 else
-                    message += ' <button class="btn" onclick="closePopup(); return false;"><?= _('No') ?></button>';
+                    message += ' <button class="btn btnSecondary" onclick="closePopup(); return false;"><?= _('No') ?></button>';
 
                 message += '</div></div>';
 
@@ -278,7 +278,7 @@ $root = $conf["global"]["root"];
                 var message = '<div style="padding: 10px"><div class="alert ' + klass + '">' + message + '</div>';
                 //message += '<div style="text-align: center"><a class="btn btn-primary" href="' + url_yes + '"><?= _('Yes') ?></a>';
 
-                message += ' <center><button class="btn" onclick="closePopup(); return false;"><?= _('Close') ?></button></center>';
+                message += ' <center><button class="btn btnSecondary" onclick="closePopup(); return false;"><?= _('Close') ?></button></center>';
 
                 message += '</div></div>';
 

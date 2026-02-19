@@ -101,7 +101,7 @@ $view = in_array($status, ['sent','invalid','mailfail'], true) ? $status : 'sent
           </div>
         <?php endif; ?>
 
-        <a class="btn" href="index.php?<?= htmlspecialchars('lang='.$lang, ENT_QUOTES, 'UTF-8') ?>">← <?= _("Back to sign-in"); ?></a>
+        <a class="btn btnSecondary" href="index.php?<?= htmlspecialchars('lang='.$lang, ENT_QUOTES, 'UTF-8') ?>">← <?= _("Back to sign-in"); ?></a>
       </div>
     </div>
   </div>

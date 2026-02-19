@@ -3464,7 +3464,7 @@ class NotifyWidget
 
     public static function end()
     {
-        $str = '<div class="notify-widget-actions"><button class="btn btn-small" onclick="closePopup()">' . _("Close") . '</button></div></div>';
+        $str = '<div class="notify-widget-actions"><button class="btn btn-small btnSecondary" onclick="closePopup()">' . _("Close") . '</button></div></div>';
         return $str;
     }
 

@@ -85,7 +85,7 @@ class ErrorHandlingItem {
             console.log(jQuery(this).text('$copied_message'));";
 
             $str .= '<a class="btn btn-danger btn-no-marge" href="#" onclick="jQuery(this).parent().find('.$selector.').toggle();">'._("Show complete trackback").'</a>';
-            $str .= '<a class="btn" href="#" onclick="'.$script.'">'._("Copy to clipboard").'</a>';
+            $str .= '<a class="btn btnSecondary" href="#" onclick="'.$script.'">'._("Copy to clipboard").'</a>';
             $str .= '<div class="errorTraceback" style="display:none;"><h1>'._("Complete Traceback").'</h1><pre>';
             $str .= gmdate("d M Y H:i:s") . "\n\n";
             $str .= "PHP XMLRPC call: " . $xmlResponse["faultString"] . "\n\n";

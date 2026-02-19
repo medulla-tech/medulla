@@ -113,23 +113,14 @@
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z'/%3E%3C/svg%3E");
 }
 
-/* ========== Close Button (Fermer) - Neutral style ========== */
+/* ========== Popup Buttons - Base styling ========== */
 .popup #__popup_container center .btn,
 .popup #__popup_container center button {
-  background: var(--color-bg-white) !important;
-  color: var(--color-text-dark) !important;
-  border: 1px solid var(--color-border-medium) !important;
   border-radius: var(--radius-xl);
   padding: 10px 30px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
-}
-
-.popup #__popup_container center .btn:hover,
-.popup #__popup_container center button:hover {
-  background: var(--color-bg-light) !important;
-  border-color: var(--color-text-light) !important;
 }
 
 /* ========== Alert Block ========== */

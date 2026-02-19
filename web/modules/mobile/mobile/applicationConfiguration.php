@@ -129,7 +129,7 @@ $form->add(new TrFormElement(_T('Select a configuration', 'mobile'), $select));
 
 $form->addValidateButton('test');
 
-$backHtml = '<a href="' . urlStrRedirect("mobile/mobile/applications") . '" class="btn" style="margin-left: 8px;">' . _T("Back to Applications", "mobile") . '</a>';
+$backHtml = '<a href="' . urlStrRedirect("mobile/mobile/applications") . '" class="btn btnSecondary" style="margin-left: 8px;">' . _T("Back to Applications", "mobile") . '</a>';
 $form->add(new TrFormElement('', new SpanElement($backHtml)));
 
 $form->display();
