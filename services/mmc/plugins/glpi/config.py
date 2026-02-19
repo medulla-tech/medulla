@@ -13,7 +13,7 @@ class GlpiConfig(PluginConfig):
         # Ensure singleton-style initialization when used with PluginConfigFactory
         if not hasattr(self, "initdone"):
             # Initialize PluginConfig using database backend and the proper table
-            PluginConfig.__init__(self, name, conffile, backend="database", db_table="glpi_conf")
+            PluginConfig.__init__(self, name, conffile, backend=backend, db_table="glpi_conf")
             self.initdone = True
 
     dbpoolrecycle = 60
