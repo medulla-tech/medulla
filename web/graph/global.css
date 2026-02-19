@@ -1820,6 +1820,13 @@ div.autocomplete ul li {
   border-bottom: none;
 }
 
+/* Larger screens: prevent text wrapping in CIBLE column */
+@media (min-width: 1400px) {
+  .listinfos tbody td:nth-child(2) {
+    white-space: nowrap;
+  }
+}
+
 form.inplaceeditor-form input[type="text"] {
   border-style: solid;
   border-width: 1px;

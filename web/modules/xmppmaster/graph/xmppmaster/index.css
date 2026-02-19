@@ -356,7 +356,7 @@ progress::-moz-progress-bar {
 }
 
 .status-group-error {
-  background-color: var(--color-error);
+  background-color: var(--btn-danger-bg);
 }
 
 .status-group-partial {
@@ -653,6 +653,14 @@ ul.rightfile.li {
 
 .text-green {
   color: var(--color-success);
+}
+
+.text-red {
+  color: var(--btn-danger-bg);
+}
+
+.text-orange {
+  color: var(--color-warning);
 }
 
 /* ---------------------------------------- */

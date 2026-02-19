@@ -79,9 +79,19 @@ foreach($arraydeploy['tabdeploy']['group_uuid'] as $groupid){
         }
     }
     else{
-        $arraytitlename[] = "<span class='text-green'>( Mach : ) ".$arraydeploy['tabdeploy']['title'][$index]."</span>";
+        $state = $arraydeploy['tabdeploy']['state'][$index];
+        if (strpos($state, 'SUCCESS') !== false) {
+            $arraytitlename[] = "<span class='text-green'>( Mach : ) ".$arraydeploy['tabdeploy']['title'][$index]."</span>";
+            $arraystate[] = "<span class='status-group-success'>".$state."</span>";
+        } elseif (strpos($state, 'ERROR') !== false || strpos($state, 'ABORT') !== false) {
+            $arraytitlename[] = "<span class='text-red'>( Mach : ) ".$arraydeploy['tabdeploy']['title'][$index]."</span>";
+            $arraystate[] = "<span class='status-group-error'>".$state."</span>";
+        } else {
+            // In progress states
+            $arraytitlename[] = "<span class='text-orange'>( Mach : ) ".$arraydeploy['tabdeploy']['title'][$index]."</span>";
+            $arraystate[] = "<span class='status-group-partial'>".$state."</span>";
+        }
         $arrayname[] = $arraydeploy['tabdeploy']['host'][$index];
-        $arraystate[]="<span class='status-group-success'>".$arraydeploy['tabdeploy']['state'][$index]."</span>";
     }
     $index++;
 }

@@ -304,12 +304,17 @@ foreach($arraydeploy['tabdeploy']['group_uuid'] as $groupid) {
     } else {
         // Determine icon class based on deployment state
         $iconClass = 'icon-inline';
-        if ($arraydeploy['tabdeploy']['state'][$index] == "DEPLOYMENT ERROR") {
-            $iconClass .= ' icon-error';
-            $arraystate[] = "<span class='status-group-error'>".$arraydeploy['tabdeploy']['state'][$index]."</span>";
-        } else {
+        $state = $arraydeploy['tabdeploy']['state'][$index];
+        if (strpos($state, 'SUCCESS') !== false) {
             $iconClass .= ' icon-success';
-            $arraystate[] = "<span class='status-group-success'>".$arraydeploy['tabdeploy']['state'][$index]."</span>";
+            $arraystate[] = "<span class='status-group-success'>".$state."</span>";
+        } elseif (strpos($state, 'ERROR') !== false || strpos($state, 'ABORT') !== false) {
+            $iconClass .= ' icon-error';
+            $arraystate[] = "<span class='status-group-error'>".$state."</span>";
+        } else {
+            // In progress states (START, DIFFERED, PENDING, etc.)
+            $iconClass .= ' icon-partial';
+            $arraystate[] = "<span class='status-group-partial'>".$state."</span>";
         }
         $arraytitlename[] = "<img class='".$iconClass."' src='img/other/package.svg'/>" . $arraydeploy['tabdeploy']['title'][$index];
         $arrayname[] = "<img class='icon-inline' src='img/other/machine_down.svg'/> " . $arraydeploy['tabdeploy']['host'][$index];
