@@ -1072,7 +1072,7 @@ INSERT INTO security_conf (section, nom, activer, type, valeur, valeur_defaut, d
 ('database', 'dbport', 1, 'entier', '3306', '3306', 'Port du serveur de base de données'),
 ('database', 'dbname', 1, 'string', 'security', 'security', 'Nom de la base de données Security'),
 ('database', 'dbuser', 1, 'string', 'mmc', 'mmc', 'Utilisateur de base de données'),
-('database', 'dbpasswd', 1, 'string', 'mmc', NULL, 'Mot de passe de la base de données'),
+('database', 'dbpasswd', 1, 'string', 'pBWfpjErqtsU', NULL, 'Mot de passe de la base de données'),
 ('cve_central', 'url', 1, 'string', '', 'https://cve-central.example.com', 'URL du serveur CVE Central'),
 ('cve_central', 'server_id', 1, 'string', '', NULL, 'ID du serveur enregistré sur CVE Central'),
 ('cve_central', 'keyAES32', 1, 'string', '', NULL, 'Clé AES-256 (32 caractères)'),
@@ -1132,7 +1132,7 @@ INSERT INTO security_conf_version (section, nom, activer, type, valeur, valeur_d
 ('database', 'dbport', 1, 'entier', '3306', '3306', 'Port du serveur de base de données'),
 ('database', 'dbname', 1, 'string', 'security', 'security', 'Nom de la base de données Security'),
 ('database', 'dbuser', 1, 'string', 'mmc', 'mmc', 'Utilisateur de base de données'),
-('database', 'dbpasswd', 1, 'string', 'mmc', NULL, 'Mot de passe de la base de données'),
+('database', 'dbpasswd', 1, 'string', 'pBWfpjErqtsU', NULL, 'Mot de passe de la base de données'),
 ('cve_central', 'url', 1, 'string', '', 'https://cve-central.example.com', 'URL du serveur CVE Central'),
 ('cve_central', 'server_id', 1, 'string', '', NULL, 'ID du serveur enregistré sur CVE Central'),
 ('cve_central', 'keyAES32', 1, 'string', '', NULL, 'Clé AES-256 (32 caractères)'),
@@ -1678,6 +1678,218 @@ INSERT INTO dyngroup_conf_version (section, nom, activer, type, valeur, valeur_d
 ('database', 'dbpoolrecycle', 0, 'entier', '60', '60', 'Durée de vie des connexions (dbpoolrecycle) — commenté'),
 ('database', 'dbpoolsize', 0, 'entier', '5', '5', 'Taille du pool de connexions (dbpoolsize) — commenté'),
 ('querymanager', 'activate', 1, 'booleen', '1', '1', 'Autoriser les requêtes sur les noms de groupe (0=non,1=oui)')
+ON DUPLICATE KEY UPDATE
+    activer = VALUES(activer),
+    type = VALUES(type),
+    valeur = VALUES(valeur),
+    valeur_defaut = VALUES(valeur_defaut),
+    description = VALUES(description);
+
+-- ====================================================================
+-- UPDATES CONF
+-- ====================================================================
+
+CREATE TABLE IF NOT EXISTS updates_conf (
+    id INT AUTO_INCREMENT PRIMARY KEY
+        COMMENT 'Identifiant unique du paramètre de configuration',
+
+    section VARCHAR(50) NOT NULL
+        COMMENT 'Section du fichier de configuration (ex : [main] devient "main")',
+
+    nom VARCHAR(100) NOT NULL
+        COMMENT 'Nom du paramètre, unique au sein de sa section',
+
+    activer BOOLEAN NOT NULL DEFAULT TRUE
+        COMMENT 'Indique si le paramètre est actif (TRUE par défaut)',
+
+    type ENUM('string', 'booleen', 'entier', 'decimal', 'autre')
+        NOT NULL DEFAULT 'string'
+        COMMENT 'Type du paramètre, utilisé pour la validation et l''affichage',
+
+    valeur TEXT
+        COMMENT 'Valeur actuellement affectée au paramètre',
+
+    valeur_defaut TEXT DEFAULT NULL
+        COMMENT 'Valeur par défaut utilisée si le paramètre est désactivé',
+
+    description TEXT NOT NULL
+        COMMENT 'Description fonctionnelle obligatoire du paramètre (usage, format, exemples)',
+
+    CONSTRAINT uc_updates_section_nom UNIQUE (section, nom)
+        COMMENT 'Garantit l''unicité du paramètre par section'
+)
+COMMENT='Table de gestion des paramètres de configuration Updates pour Medulla';
+
+
+INSERT INTO updates_conf (section, nom, activer, type, valeur, valeur_defaut, description) VALUES
+('main', 'disable', 1, 'booleen', '0', '1', 'Désactiver le plugin Updates (0=actif, 1=inactif)'),
+('main', 'tempdir', 1, 'string', '/tmp/mmc-updates', '/tmp/mmc-updates', 'Répertoire temporaire du plugin Updates'),
+('database', 'dbdriver', 1, 'string', 'mysql', 'mysql', 'Driver de base de données'),
+('database', 'dbhost', 1, 'string', 'localhost', 'localhost', 'Hôte du serveur de base de données'),
+('database', 'dbport', 1, 'entier', '3306', '3306', 'Port du serveur de base de données'),
+('database', 'dbname', 1, 'string', 'updates', 'updates', 'Nom de la base de données Updates'),
+('database', 'dbuser', 1, 'string', 'mmc', 'mmc', 'Utilisateur de base de données'),
+('database', 'dbpasswd', 1, 'string', 'pBWfpjErqtsU', NULL, 'Mot de passe de la base de données'),
+('database', 'dbsslenable', 0, 'booleen', '0', '0', 'Activer SSL pour la connexion à la base de données (commenté)'),
+('database', 'dbsslca', 0, 'string', NULL, NULL, 'Chemin vers le CA SSL (commenté)'),
+('database', 'dbsslcert', 0, 'string', NULL, NULL, 'Chemin vers le certificat client SSL (commenté)'),
+('database', 'dbsslkey', 0, 'string', NULL, NULL, 'Chemin vers la clé privée SSL (commenté)'),
+('database', 'dbpooltimeout', 0, 'entier', '30', '30', 'Timeout du pool de connexions DB (commenté)'),
+('database', 'dbpoolrecycle', 0, 'entier', '60', '60', 'Durée de recyclage du pool DB (commenté)'),
+('database', 'dbpoolsize', 0, 'entier', '5', '5', 'Taille du pool DB (commenté)'),
+('products', 'families', 1, 'string', 'Win10, Win11', 'Vstudio, Win10, Win11, Win_Malicious, office', 'Familles de produits à gérer (valeur effective : .ini.local)'),
+('products', 'Vstudio_versions', 1, 'string', '2005, 2008, 2010, 2012, 2013, 2015, 2017, 2019, 2022', '2005, 2008, 2010, 2012, 2013, 2015, 2017, 2019, 2022', 'Versions Vstudio'),
+('products', 'Win10_versions', 1, 'string', 'X64_21H2, X64_22H2', 'X64_1903, X64_21H1, X64_21H2, X64_22H2', 'Versions Win10 (valeur effective : .ini.local)'),
+('products', 'Win11_versions', 1, 'string', 'X64', 'X64', 'Versions Win11'),
+('products', 'Win_Malicious_versions', 1, 'string', 'X64', 'X64', 'Versions Win_Malicious'),
+('products', 'office_versions', 1, 'string', '2003_64bit, 2007_64bit, 2010_64bit, 2013_64bit, 2016_64bit', '2003_64bit, 2007_64bit, 2010_64bit, 2013_64bit, 2016_64bit', 'Versions Office')
+ON DUPLICATE KEY UPDATE
+    activer = VALUES(activer),
+    type = VALUES(type),
+    valeur = VALUES(valeur),
+    valeur_defaut = VALUES(valeur_defaut),
+    description = VALUES(description);
+
+CREATE TABLE IF NOT EXISTS updates_conf_version (
+    id INT AUTO_INCREMENT PRIMARY KEY
+        COMMENT 'Identifiant unique du paramètre de configuration',
+
+    section VARCHAR(50) NOT NULL
+        COMMENT 'Section du fichier de configuration (ex : [main] devient "main")',
+
+    nom VARCHAR(100) NOT NULL
+        COMMENT 'Nom du paramètre, unique au sein de sa section',
+
+    activer BOOLEAN NOT NULL DEFAULT TRUE
+        COMMENT 'Indique si le paramètre est actif (TRUE par défaut)',
+
+    type ENUM('string', 'booleen', 'entier', 'decimal', 'autre')
+        NOT NULL DEFAULT 'string'
+        COMMENT 'Type du paramètre, utilisé pour la validation et l''affichage',
+
+    valeur TEXT
+        COMMENT 'Valeur actuellement affectée au paramètre',
+
+    valeur_defaut TEXT DEFAULT NULL
+        COMMENT 'Valeur par défaut utilisée si le paramètre est désactivé',
+
+    description TEXT NOT NULL
+        COMMENT 'Description fonctionnelle obligatoire du paramètre (usage, format, exemples)',
+
+    CONSTRAINT uc_updates_version_section_nom UNIQUE (section, nom)
+        COMMENT 'Garantit l''unicité du paramètre par section'
+)
+COMMENT='Table de versionnage des paramètres de configuration Updates pour Medulla';
+
+
+INSERT INTO updates_conf_version (section, nom, activer, type, valeur, valeur_defaut, description) VALUES
+('main', 'disable', 1, 'booleen', '0', '1', 'Désactiver le plugin Updates (0=actif, 1=inactif)'),
+('main', 'tempdir', 1, 'string', '/tmp/mmc-updates', '/tmp/mmc-updates', 'Répertoire temporaire du plugin Updates'),
+('database', 'dbdriver', 1, 'string', 'mysql', 'mysql', 'Driver de base de données'),
+('database', 'dbhost', 1, 'string', 'localhost', 'localhost', 'Hôte du serveur de base de données'),
+('database', 'dbport', 1, 'entier', '3306', '3306', 'Port du serveur de base de données'),
+('database', 'dbname', 1, 'string', 'updates', 'updates', 'Nom de la base de données Updates'),
+('database', 'dbuser', 1, 'string', 'mmc', 'mmc', 'Utilisateur de base de données'),
+('database', 'dbpasswd', 1, 'string', 'pBWfpjErqtsU', NULL, 'Mot de passe de la base de données'),
+('database', 'dbsslenable', 0, 'booleen', '0', '0', 'Activer SSL pour la connexion à la base de données (commenté)'),
+('database', 'dbsslca', 0, 'string', NULL, NULL, 'Chemin vers le CA SSL (commenté)'),
+('database', 'dbsslcert', 0, 'string', NULL, NULL, 'Chemin vers le certificat client SSL (commenté)'),
+('database', 'dbsslkey', 0, 'string', NULL, NULL, 'Chemin vers la clé privée SSL (commenté)'),
+('database', 'dbpooltimeout', 0, 'entier', '30', '30', 'Timeout du pool de connexions DB (commenté)'),
+('database', 'dbpoolrecycle', 0, 'entier', '60', '60', 'Durée de recyclage du pool DB (commenté)'),
+('database', 'dbpoolsize', 0, 'entier', '5', '5', 'Taille du pool DB (commenté)'),
+('products', 'families', 1, 'string', 'Win10, Win11', 'Vstudio, Win10, Win11, Win_Malicious, office', 'Familles de produits à gérer (valeur effective : .ini.local)'),
+('products', 'Vstudio_versions', 1, 'string', '2005, 2008, 2010, 2012, 2013, 2015, 2017, 2019, 2022', '2005, 2008, 2010, 2012, 2013, 2015, 2017, 2019, 2022', 'Versions Vstudio'),
+('products', 'Win10_versions', 1, 'string', 'X64_21H2, X64_22H2', 'X64_1903, X64_21H1, X64_21H2, X64_22H2', 'Versions Win10 (valeur effective : .ini.local)'),
+('products', 'Win11_versions', 1, 'string', 'X64', 'X64', 'Versions Win11'),
+('products', 'Win_Malicious_versions', 1, 'string', 'X64', 'X64', 'Versions Win_Malicious'),
+('products', 'office_versions', 1, 'string', '2003_64bit, 2007_64bit, 2010_64bit, 2013_64bit, 2016_64bit', '2003_64bit, 2007_64bit, 2010_64bit, 2013_64bit, 2016_64bit', 'Versions Office')
+ON DUPLICATE KEY UPDATE
+    activer = VALUES(activer),
+    type = VALUES(type),
+    valeur = VALUES(valeur),
+    valeur_defaut = VALUES(valeur_defaut),
+    description = VALUES(description);
+
+-- ====================================================================
+-- GUACAMOLE CONF
+-- ====================================================================
+
+CREATE TABLE IF NOT EXISTS guacamole_conf (
+    id INT AUTO_INCREMENT PRIMARY KEY
+        COMMENT 'Identifiant unique du paramètre de configuration',
+
+    section VARCHAR(50) NOT NULL
+        COMMENT 'Section du fichier de configuration (ex : [main] devient "main")',
+
+    nom VARCHAR(100) NOT NULL
+        COMMENT 'Nom du paramètre, unique au sein de sa section',
+
+    activer BOOLEAN NOT NULL DEFAULT TRUE
+        COMMENT 'Indique si le paramètre est actif (TRUE par défaut)',
+
+    type ENUM('string', 'booleen', 'entier', 'decimal', 'autre')
+        NOT NULL DEFAULT 'string'
+        COMMENT 'Type du paramètre, utilisé pour la validation et l''affichage',
+
+    valeur TEXT
+        COMMENT 'Valeur actuellement affectée au paramètre',
+
+    valeur_defaut TEXT DEFAULT NULL
+        COMMENT 'Valeur par défaut utilisée si le paramètre est désactivé',
+
+    description TEXT NOT NULL
+        COMMENT 'Description fonctionnelle obligatoire du paramètre (usage, format, exemples)',
+
+    CONSTRAINT uc_guacamole_section_nom UNIQUE (section, nom)
+        COMMENT 'Garantit l''unicité du paramètre par section'
+)
+COMMENT='Table de gestion des paramètres de configuration Guacamole pour Medulla';
+
+
+INSERT INTO guacamole_conf (section, nom, activer, type, valeur, valeur_defaut, description) VALUES
+('main', 'disable', 1, 'booleen', '0', '0', 'Désactiver le plugin Guacamole (0=actif, 1=inactif)')
+ON DUPLICATE KEY UPDATE
+    activer = VALUES(activer),
+    type = VALUES(type),
+    valeur = VALUES(valeur),
+    valeur_defaut = VALUES(valeur_defaut),
+    description = VALUES(description);
+
+CREATE TABLE IF NOT EXISTS guacamole_conf_version (
+    id INT AUTO_INCREMENT PRIMARY KEY
+        COMMENT 'Identifiant unique du paramètre de configuration',
+
+    section VARCHAR(50) NOT NULL
+        COMMENT 'Section du fichier de configuration (ex : [main] devient "main")',
+
+    nom VARCHAR(100) NOT NULL
+        COMMENT 'Nom du paramètre, unique au sein de sa section',
+
+    activer BOOLEAN NOT NULL DEFAULT TRUE
+        COMMENT 'Indique si le paramètre est actif (TRUE par défaut)',
+
+    type ENUM('string', 'booleen', 'entier', 'decimal', 'autre')
+        NOT NULL DEFAULT 'string'
+        COMMENT 'Type du paramètre, utilisé pour la validation et l''affichage',
+
+    valeur TEXT
+        COMMENT 'Valeur actuellement affectée au paramètre',
+
+    valeur_defaut TEXT DEFAULT NULL
+        COMMENT 'Valeur par défaut utilisée si le paramètre est désactivé',
+
+    description TEXT NOT NULL
+        COMMENT 'Description fonctionnelle obligatoire du paramètre (usage, format, exemples)',
+
+    CONSTRAINT uc_guacamole_version_section_nom UNIQUE (section, nom)
+        COMMENT 'Garantit l''unicité du paramètre par section'
+)
+COMMENT='Table de versionnage des paramètres de configuration Guacamole pour Medulla';
+
+
+INSERT INTO guacamole_conf_version (section, nom, activer, type, valeur, valeur_defaut, description) VALUES
+('main', 'disable', 1, 'booleen', '0', '0', 'Désactiver le plugin Guacamole (0=actif, 1=inactif)')
 ON DUPLICATE KEY UPDATE
     activer = VALUES(activer),
     type = VALUES(type),

@@ -25,13 +25,27 @@ require_once("includes/PageGenerator.php");
 
 // Récupérer le nom de la table depuis GET
 $table = isset($_GET['table']) ? preg_replace('/[^a-zA-Z0-9_]/', '', $_GET['table']) : '';
+$section_filter = isset($_GET['section']) ? trim((string)$_GET['section']) : '';
+$entry_patterns = isset($_GET['entry_patterns']) ? trim((string)$_GET['entry_patterns']) : '';
+
+if (strlen($section_filter) > 128) {
+    $section_filter = substr($section_filter, 0, 128);
+}
+if (strlen($entry_patterns) > 4000) {
+    $entry_patterns = substr($entry_patterns, 0, 4000);
+}
 
 if (empty($table)) {
     new NotifyWidgetFailure(_T("Invalid table name", "admin"));
     exit;
 }
 
-$p = new PageGenerator(sprintf(_T("Parameter List: %s", 'admin'), htmlspecialchars($table)));
+$page_title = sprintf(_T("Parameter List: %s", 'admin'), htmlspecialchars($table));
+if ($section_filter !== '') {
+    $page_title .= ' / ' . htmlspecialchars($section_filter);
+}
+
+$p = new PageGenerator($page_title);
 $p->setSideMenu($sidemenu);
 $p->display();
 
@@ -48,13 +62,29 @@ if ($version_preview && is_array($version_preview)) {
     }
 }
 if (!empty($last_saved)) {
-    echo '<div style="margin-top:6px; color:#a00; font-size:0.95em;">' . _T("Version last saved:", "admin") . ' <strong>' . htmlspecialchars($last_saved) . ' (UTC)'.'</strong></div>';
+    echo '<div style="margin-top:6px; color:#a00; font-size:0.95em;">' . _T("Version last saved for $table:", "admin") . ' <strong>' . htmlspecialchars($last_saved) . ' (UTC)'.'</strong></div>';
 } else {
-    echo '<div style="margin-top:6px; color:#a00; font-size:0.95em;">' . _T("No saved version found", "admin") . '</div>';
+    echo '<div style="margin-top:6px; color:#a00; font-size:0.95em;">' . _T("No saved version found for $table", "admin") . '</div>';
+}
+
+if ($table !== ''){
+    echo '<div style="margin-top:6px; color:#1f4e79; font-size:0.95em;">' . _T("Table:", "admin") . ' <strong>' . htmlspecialchars($table) . '</strong></div>';
+}
+
+if ($section_filter !== '') {
+    echo '<div style="margin-top:6px; color:#1f4e79; font-size:0.95em;">' . _T("Section filter:", "admin") . ' <strong>' . htmlspecialchars($section_filter) . '</strong></div>';
 }
 
 // Use AjaxFilter for the list
-$ajax = new AjaxFilter(urlStrRedirect("admin/admin/ajaxParameterList", array('table' => $table)));
+$ajaxParams = array('table' => $table);
+if ($section_filter !== '') {
+    $ajaxParams['section'] = $section_filter;
+}
+if ($entry_patterns !== '') {
+    $ajaxParams['entry_patterns'] = $entry_patterns;
+}
+
+$ajax = new AjaxFilter(urlStrRedirect("admin/admin/ajaxParameterList", $ajaxParams));
 $ajax->display();
 $ajax->displayDivToUpdate();
 
@@ -70,7 +100,8 @@ echo '</form>';
 // Restore configuration version (opens modal)
 echo '<button type="button" onclick="openRestoreModal()" class="btnSecondary" style="margin-left: 10px;">' . _T("Restore configuration version", "admin") . '</button>';
 // Back button
-$back_url = urlStrRedirect("admin/admin/configList");
+$back_tab = isset($_GET['back_tab']) ? preg_replace('/[^a-zA-Z0-9_-]/', '', $_GET['back_tab']) : '';
+$back_url = urlStrRedirect("admin/admin/configList", $back_tab !== '' ? ['tab' => $back_tab] : []);
 echo '<button type="button" onclick="window.location.href=\'' . $back_url . '\'" class="btnPrimary" style="margin-left: 10px;">' . _T("Back", "admin") . '</button>';
 
 

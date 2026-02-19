@@ -18,6 +18,72 @@ if (!$config_data || !is_array($config_data)) {
 
 // Get filter if any
 $filter = isset($_GET['filter']) ? $_GET['filter'] : '';
+$sectionFilter = isset($_GET['section']) ? trim((string)$_GET['section']) : '';
+$entryPatternsRaw = isset($_GET['entry_patterns']) ? trim((string)$_GET['entry_patterns']) : '';
+
+$entryPatterns = [];
+if ($entryPatternsRaw !== '') {
+    $b64 = strtr($entryPatternsRaw, '-_', '+/');
+    $padLength = strlen($b64) % 4;
+    if ($padLength > 0) {
+        $b64 .= str_repeat('=', 4 - $padLength);
+    }
+
+    $decoded = base64_decode($b64, true);
+    if ($decoded === false) {
+        $decoded = base64_decode($entryPatternsRaw, true);
+    }
+
+    if ($decoded !== false) {
+        $decodedPatterns = json_decode($decoded, true);
+        if (is_array($decodedPatterns)) {
+            foreach ($decodedPatterns as $pattern) {
+                if (!is_string($pattern)) {
+                    continue;
+                }
+                $pattern = trim($pattern);
+                if ($pattern === '' || strlen($pattern) > 256) {
+                    continue;
+                }
+                if (@preg_match($pattern, '') === false) {
+                    continue;
+                }
+                $entryPatterns[] = $pattern;
+                if (count($entryPatterns) >= 40) {
+                    break;
+                }
+            }
+        }
+    }
+}
+
+if ($sectionFilter !== '') {
+    $config_data = array_filter($config_data, function ($row) use ($sectionFilter) {
+        $section = trim((string)($row['section'] ?? ''));
+        return strcasecmp($section, $sectionFilter) === 0;
+    });
+}
+
+if (!empty($entryPatterns)) {
+    $config_data = array_filter($config_data, function ($row) use ($entryPatterns, $table) {
+        $section = trim((string)($row['section'] ?? ''));
+        $name = trim((string)($row['nom'] ?? ''));
+
+        foreach ($entryPatterns as $pattern) {
+            if (preg_match($pattern, $name) === 1) {
+                return true;
+            }
+            if (preg_match($pattern, $section) === 1) {
+                return true;
+            }
+            if (preg_match($pattern, $table) === 1) {
+                return true;
+            }
+        }
+
+        return false;
+    });
+}
 
 // Filter data if needed (e.g., by section or name)
 if (!empty($filter)) {

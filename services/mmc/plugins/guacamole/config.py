@@ -6,9 +6,9 @@ from mmc.support.config import PluginConfig
 
 
 class guacamoleConfig(PluginConfig):
-    def __init__(self, name="guacamole", conffile=None):
+    def __init__(self, name="guacamole", conffile=None, backend="database"):
         if not hasattr(self, "initdone"):
-            PluginConfig.__init__(self, name, conffile)
+            PluginConfig.__init__(self, name, conffile, backend=backend, db_table="guacamole_conf")
             self.initdone = True
 
     def setDefault(self):
@@ -38,7 +38,7 @@ class guacamoleConfig(PluginConfig):
         # if not self.confOption: raise ConfigException("Conf error")
         pass
 
-    def activate():
+    def activate(self):
         # Get module config from "/etc/mmc/plugins/module_name.ini"
-        guacamoleConfig("guacamole")
+        guacamoleConfig("guacamole", None, "database")
         return True

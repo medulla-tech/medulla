@@ -5,11 +5,10 @@
 from mmc.support.config import PluginConfig
 from pulse2.database.updates.config import UpdatesDatabaseConfig
 
-
 class UpdatesConfig(PluginConfig, UpdatesDatabaseConfig):
-    def __init__(self, name="updates", conffile=None):
+    def __init__(self, name="updates", conffile=None, backend="database"):
         if not hasattr(self, "initdone"):
-            PluginConfig.__init__(self, name, conffile)
+            PluginConfig.__init__(self, name, conffile, backend=backend, db_table="updates_conf")
             UpdatesDatabaseConfig.__init__(self)
             self.initdone = True
 
@@ -20,7 +19,12 @@ class UpdatesConfig(PluginConfig, UpdatesDatabaseConfig):
 
     def readConf(self):
         PluginConfig.readConf(self)
-        UpdatesDatabaseConfig.setup(self, self.conffile)
+        if self.backend == "database":
+            # read DB settings from admin DB backend
+            self._load_db_settings_from_backend()
+        elif self.conffile and self.backend == "ini":
+            # read DB settings from INI file
+            UpdatesDatabaseConfig.setup(self, self.conffile)
         self.disable = self.getboolean("main", "disable")
         self.tempdir = self.get("main", "tempdir")
         # ...
@@ -32,5 +36,5 @@ class UpdatesConfig(PluginConfig, UpdatesDatabaseConfig):
     @staticmethod
     def activate():
         # Get module config from "/etc/mmc/plugins/updates.ini"
-        UpdatesConfig("updates")
+        UpdatesConfig("updates", None, "database")
         return True

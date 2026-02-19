@@ -34,7 +34,7 @@ def activate():
     it is ready to operate.
     """
     logger = logging.getLogger()
-    config = guacamoleConfig("guacamole")
+    config = guacamoleConfig("guacamole", None, "database")
     if config.disable:
         logger.warning("Plugin guacamole: disabled by configuration.")
         return False

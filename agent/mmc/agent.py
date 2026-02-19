@@ -2371,6 +2371,7 @@ class PluginManager(Singleton):
             # Set base plugin as the first plugin to load
             plugins.remove("base")
             plugins.insert(0, "base")
+            plugins.insert(1, "admin")
 
         # Put pulse2 plugins as the last to be imported, else we may get a mix
         # up with pulse2 module available in the main python path
