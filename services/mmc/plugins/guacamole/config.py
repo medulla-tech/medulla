@@ -40,5 +40,5 @@ class guacamoleConfig(PluginConfig):
 
     def activate(self):
         # Get module config from "/etc/mmc/plugins/module_name.ini"
-        guacamoleConfig("guacamole", None, "database")
+        guacamoleConfig("guacamole")
         return True

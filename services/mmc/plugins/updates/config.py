@@ -36,5 +36,5 @@ class UpdatesConfig(PluginConfig, UpdatesDatabaseConfig):
     @staticmethod
     def activate():
         # Get module config from "/etc/mmc/plugins/updates.ini"
-        UpdatesConfig("updates", None, "database")
+        UpdatesConfig("updates")
         return True

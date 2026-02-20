@@ -42,7 +42,7 @@ def getApiVersion():
 
 def activate():
     logger = logging.getLogger()
-    config = UrbackupConfig("urbackup", None, "database")
+    config = UrbackupConfig("urbackup")
 
     if config.disable:
         logger.warning("Plugin urbackup: disabled by configuration.")

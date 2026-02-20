@@ -60,5 +60,5 @@ class KioskConfig(PluginConfig, KioskDatabaseConfig):
 
     @staticmethod
     def activate():
-        KioskConfig("kiosk", None, "database")
+        KioskConfig("kiosk")
         return True

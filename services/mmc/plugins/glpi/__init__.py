@@ -55,7 +55,7 @@ def getApiVersion():
 
 
 def activate():
-    config = GlpiConfig("glpi", None, "database")
+    config = GlpiConfig("glpi")
     logger = logging.getLogger()
     if config.disable:
         logger.warning("Plugin glpi: disabled by configuration.")

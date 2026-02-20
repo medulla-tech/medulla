@@ -65,7 +65,7 @@ def getApiVersion():
 
 
 def activate():
-    config = Pulse2Config("medulla_server", None, "database")
+    config = Pulse2Config("medulla_server")
     logger = logging.getLogger()
     if config.disable:
         logger.warning("Plugin medulla_server: disabled by configuration.")
@@ -82,7 +82,7 @@ def activate():
 
 
 def activate_2():
-    config = Pulse2Config("medulla_server", None, "database")
+    config = Pulse2Config("medulla_server")
     try:
         ComputerLocationManager().select(config.location)
     except Exception as e:

@@ -54,7 +54,7 @@ def getApiVersion():
 def activate():
     logger = logging.getLogger()
     global config
-    config = DGConfig("dyngroup", None, "database")
+    config = DGConfig("dyngroup")
     # config.init("dyngroup")
 
     if config.disable:

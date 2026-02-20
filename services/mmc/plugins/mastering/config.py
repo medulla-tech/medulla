@@ -42,7 +42,7 @@ class MasteringConfig(PluginConfig,MasteringDatabaseConfig):
     @staticmethod
     def activate():
         # Get module config from "/etc/mmc/plugins/mastering.ini"
-        MasteringConfig("mastering", None, "database")
+        MasteringConfig("mastering")
         return True
 
 

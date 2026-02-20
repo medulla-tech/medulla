@@ -50,7 +50,7 @@ def getApiVersion():
 
 def activate():
     logger = logging.getLogger()
-    config = UpdatesConfig("updates", None, "database")
+    config = UpdatesConfig("updates")
 
     if config.disable:
         logger.warning("Plugin updates: disabled by configuration.")

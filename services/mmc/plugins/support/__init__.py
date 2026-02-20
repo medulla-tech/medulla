@@ -25,7 +25,7 @@ def getApiVersion():
 
 
 def activate():
-    config = SupportConfig(NAME, None, "database")
+    config = SupportConfig(NAME)
     if config.disabled:
         logging.getLogger().warning("Plugin Support: disabled by configuration.")
         return False

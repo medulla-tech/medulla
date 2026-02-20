@@ -68,7 +68,7 @@ def getApiVersion():
 
 def activate():
     logger = logging.getLogger()
-    config = MasteringConfig("mastering", None, "database")
+    config = MasteringConfig("mastering")
 
     if config.disable:
         logger.warning("Plugin mastering: disabled by configuration.")

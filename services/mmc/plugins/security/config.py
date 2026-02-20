@@ -249,6 +249,6 @@ class SecurityConfig(PluginConfig, SecurityDatabaseConfig):
 
     @staticmethod
     def activate():
-        SecurityConfig("security", None, "database")
+        SecurityConfig("security")
         return True
 

@@ -47,5 +47,5 @@ class UrbackupConfig(PluginConfig, UrbackupDatabaseConfig):
         If disable is set to 0 the plugin is enabled.
         """
         # Get module config from "/etc/mmc/plugins/urbackup.ini"
-        UrbackupConfig("urbackup", None, "database")
+        UrbackupConfig("urbackup")
         return True

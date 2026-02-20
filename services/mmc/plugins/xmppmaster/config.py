@@ -336,5 +336,5 @@ class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
 
     def activate():
         # Get module config from "/etc/mmc/plugins/module_name.ini"
-        xmppMasterConfig("xmppmaster", None, "database")
+        xmppMasterConfig("xmppmaster")
         return True
