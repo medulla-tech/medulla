@@ -23,6 +23,11 @@ require("modules/admin/admin/localSidebar.php");
 require_once("modules/admin/includes/xmlrpc.php");
 require_once("includes/PageGenerator.php");
 
+// Vue d'ensemble de la configuration :
+// - récupère les tables de config,
+// - classe les sections par catégories fonctionnelles,
+// - génère des liens vers parameterList.php avec contexte (filtres + onglet).
+
 $p = new PageGenerator(_T("Configuration Management", 'admin'));
 $p->setSideMenu($sidemenu);
 $p->display();
@@ -42,6 +47,9 @@ $configurationTables = array_values(array_filter(array_unique($tables), function
 }));
 sort($configurationTables, SORT_NATURAL | SORT_FLAG_CASE);
 
+// Index pré-calculé pour accélérer la phase de matching :
+// - tableSections[table] => liste des sections,
+// - tableSectionParams[table][section] => liste des noms de paramètres.
 $tableSections = [];
 $tableSectionParams = [];
 
@@ -75,6 +83,8 @@ foreach ($configurationTables as $table) {
 
 }
 
+// Taxonomie métier : chaque entrée contient des patterns regex.
+// match_on_params=true active également le matching sur le nom du paramètre (colonne `nom`).
 $categories = [
     [
         'id' => 'auth',
@@ -162,7 +172,7 @@ $categories = [
         'entries' => [
             [
                 'label' => 'Wake on Lan Port',
-                'patterns' => ['/wol/i', '/wake/i'],
+                'patterns' => ['/wakeonlan/i'],
             ],
             [
                 'label' => 'Cible (Relay ARS / sous-réseau / LAN / VLAN)',
@@ -250,7 +260,7 @@ $categories = [
             ],
             [
                 'label' => 'Pkgs',
-                'patterns' => ['/^pkgs_conf$/i', '/pkgs?/i', '/package/i'],
+                'patterns' => ['/^pkgs_conf$/i', '/pkgs?/i'],
             ],
             [
                 'label' => 'Imaging',
@@ -285,6 +295,7 @@ foreach ($categories as $index => $category) {
         . '>';
 
     foreach ($category['entries'] as $entry) {
+        // Une cible = combinaison (table, section) qui match au moins un pattern de l'entrée.
         $matchedTargets = [];
 
         foreach ($tableSections as $table => $sections) {
@@ -294,8 +305,10 @@ foreach ($categories as $index => $category) {
                     $allowParamMatch = !empty($entry['match_on_params']);
 
                     foreach ($entry['patterns'] as $pattern) {
+                        // Match de base : nom de section ou nom de table.
                         $matchesPattern = preg_match($pattern, $sectionName) === 1 || preg_match($pattern, $table) === 1;
 
+                        // Match étendu : nom de paramètre (si explicitement activé).
                         if (!$matchesPattern && $allowParamMatch && !empty($sectionParamNames)) {
                             foreach ($sectionParamNames as $paramName) {
                                 if (preg_match($pattern, $paramName) === 1) {
@@ -306,7 +319,7 @@ foreach ($categories as $index => $category) {
                         }
 
                         if ($matchesPattern) {
-                            // Skip targets that match entry['exclude'] (only affects config list display)
+                            // Exclusions locales à l'entrée (uniquement pour l'affichage de cette liste).
                             $skip = false;
                             if (!empty($entry['exclude']) && is_array($entry['exclude'])) {
                                 foreach ($entry['exclude'] as $kw) {
@@ -330,7 +343,7 @@ foreach ($categories as $index => $category) {
                             }
                             if ($skip) { 
                                 break; 
-                                } // do not add this section to this category
+                                } // ne pas ajouter cette section à cette catégorie
 
                             $matchedTargets[] = [
                                 'table' => $table,
@@ -345,7 +358,7 @@ foreach ($categories as $index => $category) {
 
             foreach ($entry['patterns'] as $pattern) {
                 if (preg_match($pattern, $table) === 1) {
-                    // Skip table-level match if excluded by category
+                    // Cas sans section : matching direct au niveau table, avec exclusions applicables.
                     $skipTable = false;
                     if (!empty($entry['exclude']) && is_array($entry['exclude'])) {
                         foreach ($entry['exclude'] as $kw) {
@@ -382,6 +395,8 @@ foreach ($categories as $index => $category) {
                 }
 
                 if (!empty($entry['patterns']) && is_array($entry['patterns'])) {
+                    // Les patterns sont encodés pour être transmis à la liste AJAX
+                    // et conserver le périmètre d'affichage côté écran de détail.
                     $patternsJson = json_encode(array_values($entry['patterns']));
                     if ($patternsJson !== false) {
                         $encodedPatterns = rtrim(strtr(base64_encode($patternsJson), '+/', '-_'), '=');
@@ -391,7 +406,7 @@ foreach ($categories as $index => $category) {
                     }
                 }
 
-                // remember originating tab so Back / browser history can restore it
+                // Mémorise l'onglet source pour restaurer l'état au retour.
                 $editParams['back_tab'] = $category['id'];
 
                 $editUrl = urlStrRedirect("admin/admin/parameterList", $editParams);

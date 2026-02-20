@@ -23,6 +23,11 @@ require("modules/admin/admin/localSidebar.php");
 require_once("modules/admin/includes/xmlrpc.php");
 require_once("includes/PageGenerator.php");
 
+// Écran principal d'une table de configuration :
+// - affiche la liste des paramètres (via AJAX),
+// - permet l'ajout,
+// - permet la sauvegarde/restauration d'une version <table>_version.
+
 // Récupérer le nom de la table depuis GET
 $table = isset($_GET['table']) ? preg_replace('/[^a-zA-Z0-9_]/', '', $_GET['table']) : '';
 $section_filter = isset($_GET['section']) ? trim((string)$_GET['section']) : '';
@@ -40,6 +45,7 @@ if (empty($table)) {
     exit;
 }
 
+// Le titre de page reflète le contexte de navigation (table + éventuel filtre de section)
 $page_title = sprintf(_T("Parameter List: %s", 'admin'), htmlspecialchars($table));
 if ($section_filter !== '') {
     $page_title .= ' / ' . htmlspecialchars($section_filter);
@@ -49,7 +55,8 @@ $p = new PageGenerator($page_title);
 $p->setSideMenu($sidemenu);
 $p->display();
 
-// Determine version table name and show last-saved timestamp (if any) — displayed under the page title
+// Détermine la table de version (<table>_version) et affiche la date de dernière sauvegarde
+// (stockée dans la ligne méta _meta/last_modified).
 $table_version_name = preg_replace('/[^a-zA-Z0-9_]/', '', $table . '_version');
 $last_saved = '';
 $version_preview = xmlrpc_get_config_data($table_version_name);
@@ -75,7 +82,8 @@ if ($section_filter !== '') {
     echo '<div style="margin-top:6px; color:#1f4e79; font-size:0.95em;">' . _T("Section filter:", "admin") . ' <strong>' . htmlspecialchars($section_filter) . '</strong></div>';
 }
 
-// Use AjaxFilter for the list
+// Paramètres conservés pour l'endpoint AJAX afin de garder le contexte de navigation
+// (filtres et onglet d'origine).
 $ajaxParams = array('table' => $table);
 if ($section_filter !== '') {
     $ajaxParams['section'] = $section_filter;
@@ -84,11 +92,16 @@ if ($entry_patterns !== '') {
     $ajaxParams['entry_patterns'] = $entry_patterns;
 }
 
+$back_tab = isset($_GET['back_tab']) ? preg_replace('/[^a-zA-Z0-9_-]/', '', $_GET['back_tab']) : '';
+if ($back_tab !== '') {
+    $ajaxParams['back_tab'] = $back_tab;
+}
+
 $ajax = new AjaxFilter(urlStrRedirect("admin/admin/ajaxParameterList", $ajaxParams));
 $ajax->display();
 $ajax->displayDivToUpdate();
 
-// Buttons: add / save version / restore / back
+// Barre d'actions : ajout, sauvegarde de version, restauration, retour
 echo '<div style="margin-top: 10px;">';
 // Add parameter
 echo '<button type="button" onclick="openModal()" class="btnPrimary">' . _T("Add Parameter", "admin") . '</button>';
@@ -100,14 +113,13 @@ echo '</form>';
 // Restore configuration version (opens modal)
 echo '<button type="button" onclick="openRestoreModal()" class="btnSecondary" style="margin-left: 10px;">' . _T("Restore configuration version", "admin") . '</button>';
 // Back button
-$back_tab = isset($_GET['back_tab']) ? preg_replace('/[^a-zA-Z0-9_-]/', '', $_GET['back_tab']) : '';
 $back_url = urlStrRedirect("admin/admin/configList", $back_tab !== '' ? ['tab' => $back_tab] : []);
 echo '<button type="button" onclick="window.location.href=\'' . $back_url . '\'" class="btnPrimary" style="margin-left: 10px;">' . _T("Back", "admin") . '</button>';
 
 
 echo '</div>';
 
-// Traiter l'ajout d'un nouveau paramètre
+// Soumission POST d'ajout : contrôle CSRF puis création d'une entrée
 if ($_POST && isset($_POST['add_param'])) {
     if (!isset($_POST['auth_token']) || $_POST['auth_token'] !== $_SESSION['auth_token']) {
         new NotifyWidgetFailure(_T("Security token validation failed", "admin"));
@@ -135,7 +147,8 @@ if ($_POST && isset($_POST['add_param'])) {
         }
     }
 }
-// Traiter la sauvegarde d'une version de configuration (copie -> <table>_version)
+// Soumission POST de sauvegarde : copie des lignes de <table> vers <table>_version.
+// Stratégie : update d'abord, puis add en fallback si l'entrée n'existe pas encore.
 if ($_POST && isset($_POST['save_version'])) {
     if (!isset($_POST['auth_token']) || $_POST['auth_token'] !== $_SESSION['auth_token']) {
         new NotifyWidgetFailure(_T("Security token validation failed", "admin"));
@@ -168,7 +181,7 @@ if ($_POST && isset($_POST['save_version'])) {
                 }
             }
 
-            // store last_modified in a special meta row
+            // Met à jour l'horodatage de sauvegarde dans une ligne méta dédiée.
             $now = gmdate('Y-m-d H:i:s');
             $meta = [
                 'section' => '_meta',
@@ -194,12 +207,12 @@ if ($_POST && isset($_POST['save_version'])) {
         }
     }
 }
-// Traiter la restauration d'une version de configuration
+// Soumission POST de restauration depuis <table>_version vers la table active.
 if ($_POST && isset($_POST['restore_version'])) {
     if (!isset($_POST['auth_token']) || $_POST['auth_token'] !== $_SESSION['auth_token']) {
         new NotifyWidgetFailure(_T("Security token validation failed", "admin"));
     } else {
-        // Use the deterministic version table name: <table>_version (do not trust client input)
+        // Utilise un nom de table version déterministe côté serveur (ne pas faire confiance au client).
         $table_version = preg_replace('/[^a-zA-Z0-9_]/', '', $table . '_version');
 
         $result = xmlrpc_restore_config_version($table, $table_version);
@@ -275,6 +288,7 @@ if ($_POST && isset($_POST['restore_version'])) {
 </div>
 
 <script>
+// Modales natives simples (pas de dépendance JS externe)
 function openModal() {
     document.getElementById('addModal').style.display = 'block';
 }

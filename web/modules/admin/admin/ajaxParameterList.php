@@ -1,6 +1,9 @@
 <?php
 require_once("modules/admin/includes/xmlrpc.php");
 
+// Endpoint AJAX de listing des paramètres pour parameterList.php.
+// Il applique les filtres de contexte, puis construit la table OptimizedListInfos.
+
 // Get table parameter
 $table = isset($_GET['table']) ? preg_replace('/[^a-zA-Z0-9_]/', '', $_GET['table']) : '';
 
@@ -20,7 +23,10 @@ if (!$config_data || !is_array($config_data)) {
 $filter = isset($_GET['filter']) ? $_GET['filter'] : '';
 $sectionFilter = isset($_GET['section']) ? trim((string)$_GET['section']) : '';
 $entryPatternsRaw = isset($_GET['entry_patterns']) ? trim((string)$_GET['entry_patterns']) : '';
+$backTab = isset($_GET['back_tab']) ? preg_replace('/[^a-zA-Z0-9_-]/', '', (string)$_GET['back_tab']) : '';
 
+// Les patterns sont transmis en base64url(JSON) depuis configList.php.
+// On décode en mode strict, puis on nettoie/valide chaque regex avant usage.
 $entryPatterns = [];
 if ($entryPatternsRaw !== '') {
     $b64 = strtr($entryPatternsRaw, '-_', '+/');
@@ -58,6 +64,7 @@ if ($entryPatternsRaw !== '') {
 }
 
 if ($sectionFilter !== '') {
+    // Filtre strict sur le nom de section (insensible à la casse).
     $config_data = array_filter($config_data, function ($row) use ($sectionFilter) {
         $section = trim((string)($row['section'] ?? ''));
         return strcasecmp($section, $sectionFilter) === 0;
@@ -65,6 +72,7 @@ if ($sectionFilter !== '') {
 }
 
 if (!empty($entryPatterns)) {
+    // Filtre fonctionnel basé sur les patterns d'entrée : nom, section ou table.
     $config_data = array_filter($config_data, function ($row) use ($entryPatterns, $table) {
         $section = trim((string)($row['section'] ?? ''));
         $name = trim((string)($row['nom'] ?? ''));
@@ -87,6 +95,7 @@ if (!empty($entryPatterns)) {
 
 // Filter data if needed (e.g., by section or name)
 if (!empty($filter)) {
+    // Filtre libre saisi par l'utilisateur (colonne section/nom).
     $config_data = array_filter($config_data, function($row) use ($filter) {
         $section = $row['section'] ?? '';
         $nom = $row['nom'] ?? '';
@@ -99,6 +108,7 @@ $actionEdit = [];
 $actionDelete = [];
 $paramsArray = [];
 
+// Prépare les colonnes + actions ligne à ligne pour le composant de liste.
 foreach ($config_data as $index => $row) {
     $id = 'config_' . $index;
     $ids[] = $id;
@@ -121,10 +131,14 @@ foreach ($config_data as $index => $row) {
     $actionEdit[] = new ActionItem(_("Edit Parameter"), "editParameter", "edit", "", "admin", "admin");
     $actionDelete[] = new ActionItem(_("Delete Parameter"), "deleteParameter", "delete", "", "admin", "admin");
 
+    // Conserve le contexte de navigation pour les écrans edit/delete.
     $paramsArray[] = [
         'table' => $table,
         'section' => $row['section'] ?? '',
         'nom' => $row['nom'] ?? '',
+        'list_section' => $sectionFilter,
+        'entry_patterns' => $entryPatternsRaw,
+        'back_tab' => $backTab,
     ];
 }
 
@@ -132,6 +146,7 @@ $n = new OptimizedListInfos($sections, _T("Section", "admin"));
 $n->setCssIds($ids);
 $n->disableFirstColumnActionLink();
 
+// Pagination/filtre via AjaxNavBar.
 $count = safeCount($sections);
 $filter = isset($_REQUEST['filter']) ? $_REQUEST['filter'] : "";
 $n->setNavBar(new AjaxNavBar($count, $filter));
