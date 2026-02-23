@@ -35,7 +35,7 @@
     $OS = strtoupper ($customqa['os']);
     $GROUP = $_GET['gid'];
     // creation quick action command
-    $COMMANDID = xmlrpc_setCommand_qa($_GET['namecmd'], $customqa['customcmd'], $_GET['user'], $_GET['gid'], $command_machine='', $customqa['os']);
+    $COMMANDID = xmlrpc_setCommand_qa($customqa['namecmd'], $customqa['customcmd'], $_GET['user'], $_GET['gid'], $command_machine='', $customqa['os']);
     // recupère toutes les machines du groupe.
     $uuid = array();
     $list = getRestrictedComputersList(0, -1, array('gid' => $_GET['gid']), False);
@@ -59,7 +59,21 @@
         $machinegroup = array();
         $machinegroup = xmlrpc_getMachinefromuuid($key);
         if (safeCount($machinegroup) != 0 ){
-                if ( strpos(strtoupper($machinegroup['platform']), $OS) !== false){
+                $PLATFORM = strtoupper($machinegroup['platform']);
+                // Normalize platform: Ubuntu, Debian, etc. are Linux variants
+                $osMatch = false;
+                if ($OS == "LINUX") {
+                    $osMatch = (strpos($PLATFORM, "LINUX") !== false
+                             || strpos($PLATFORM, "UBUNTU") !== false
+                             || strpos($PLATFORM, "DEBIAN") !== false
+                             || strpos($PLATFORM, "CENTOS") !== false
+                             || strpos($PLATFORM, "REDHAT") !== false
+                             || strpos($PLATFORM, "FEDORA") !== false
+                             || strpos($PLATFORM, "MAGEIA") !== false);
+                } else {
+                    $osMatch = (strpos($PLATFORM, $OS) !== false);
+                }
+                if ($osMatch){
                     // machine presente et os correct pour la QA
                     $machineinfos = array();
                     $result = array();
