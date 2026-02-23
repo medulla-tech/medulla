@@ -2567,17 +2567,20 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def updateName_Qa_custom_command(
-        self, session, user, osname, namecmd, customcmd, description
+        self, session, user, osname, namecmd, customcmd, description, old_namecmd=""
     ):
         """
         update updateName_Qa_custom_command
         """
+        if not old_namecmd:
+            old_namecmd = namecmd
 
         try:
             session.query(Qa_custom_command).filter(
-                Qa_custom_command.namecmd == namecmd
+                Qa_custom_command.namecmd == old_namecmd
             ).update(
                 {
+                    Qa_custom_command.namecmd: namecmd,
                     Qa_custom_command.customcmd: customcmd,
                     Qa_custom_command.description: description,
                     Qa_custom_command.os: osname,

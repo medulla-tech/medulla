@@ -662,9 +662,11 @@ class RpcProxy(RpcProxyI):
         )
 
 
-    def updateName_Qa_custom_command(self, login, osname, namecmd, customcmd, description):
+    def updateName_Qa_custom_command(self, login, osname, namecmd, customcmd, description, old_namecmd=""):
+        if not old_namecmd:
+            old_namecmd = namecmd
         return XmppMasterDatabase().updateName_Qa_custom_command(
-            login, osname, namecmd, customcmd, description
+            login, osname, namecmd, customcmd, description, old_namecmd
         )
 
 

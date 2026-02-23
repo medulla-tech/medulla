@@ -167,9 +167,9 @@ function xmlrpc_create_Qa_custom_command($login, $os, $namecmd, $customcmd, $des
     return xmlCall("xmppmaster.create_Qa_custom_command", array($login, $os, $namecmd, $customcmd, $description));
 }
 
-function xmlrpc_updateName_Qa_custom_command($login, $os, $namecmd, $customcmd, $description = '')
+function xmlrpc_updateName_Qa_custom_command($login, $os, $namecmd, $customcmd, $description = '', $old_namecmd = '')
 {
-    return xmlCall("xmppmaster.updateName_Qa_custom_command", array($login, $os, $namecmd, $customcmd, $description));
+    return xmlCall("xmppmaster.updateName_Qa_custom_command", array($login, $os, $namecmd, $customcmd, $description, $old_namecmd));
 }
 
 function xmlrpc_syncthingmachineless($grp, $cmd)

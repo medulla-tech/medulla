@@ -29,6 +29,7 @@ require("graph/navbar.inc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
     $os  = isset($_POST['os'])?$_POST['os']:(isset($_GET['os'])?$_GET['os']:'windows');
     $namecmd  = isset($_POST['namecmd'])?$_POST['namecmd']:(isset($_GET['namecmd'])?$_GET['namecmd']:'');
+    $old_namecmd  = isset($_POST['old_namecmd'])?$_POST['old_namecmd']:(isset($_GET['old_namecmd'])?$_GET['old_namecmd']:$namecmd);
     $customcmd  = isset($_POST['customcmd'])?$_POST['customcmd']:(isset($_GET['customcmd'])?$_GET['customcmd']:'');
     $description  = isset($_POST['description']) ? $_POST['description'] : (isset($_GET['description'])?$_GET['description']:'');
     $user  = isset($_POST['user'])?$_POST['user']:(isset($_GET['user'])?$_GET['user']:'');
@@ -47,7 +48,7 @@ if (isset($_POST["bcreate"])){
             header("Location: " . urlStrRedirect("xmppmaster/xmppmaster/customQA", array()));
         break;
         case 'editeqa':
-            $response = xmlrpc_updateName_Qa_custom_command($user, $os, $namecmd, $customcmd, $description);
+            $response = xmlrpc_updateName_Qa_custom_command($user, $os, $namecmd, $customcmd, $description, $old_namecmd);
             if ($response== -1) {
                 new NotifyWidgetFailure(sprintf("Error while updating a custom quick action %s",$namecmd));
             }
@@ -76,16 +77,14 @@ else{
     $oslist->setSelected($os);
 
     $f->add( new TrFormElement(_T('Operating System', 'xmppmaster'), $oslist), array());
-    if ($editcreate == 'createqa'){
-        $f->add( new TrFormElement(_T("Command name", "xmpmaster"), new InputTpl('namecmd')), array("value" => $namecmd, "required" => True));
-    }
+    $f->add( new TrFormElement(_T("Command name", "xmpmaster"), new InputTpl('namecmd')), array("value" => $namecmd, "required" => True));
     $f->add( new TrFormElement(_T("Command", "xmpmaster"), new TextareaTpl('customcmd')), array("value" => $customcmd, "required" => True));
 
     $f->add( new TrFormElement(_T("Command description", "xmpmaster"), new InputTpl('description')), array("value" => $description,"required" => True));
 
     $f->add(new HiddenTpl("user"), array("value" => $user, "hide" => True));
     if ($editcreate == 'editeqa'){
-        $f->add(new HiddenTpl("namecmd"), array("value" => $namecmd, "hide" => True));
+        $f->add(new HiddenTpl("old_namecmd"), array("value" => $old_namecmd, "hide" => True));
     }
     $f->add(new HiddenTpl("editcreate"), array("value" => $editcreate, "hide" => True));
     $f->addValidateButton("bcreate");
