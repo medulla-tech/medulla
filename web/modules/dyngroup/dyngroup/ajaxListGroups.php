@@ -150,6 +150,14 @@ $owner = $name = $type = $show = $ids = [];
 $array_action_owner = [];
 $actionxmppquickdeploy = [];
 $action_delete = [];
+$checkboxes = [];
+
+$bulkBar = new BulkSelectBar(
+    urlStrRedirect("base/computers/delete_group"),
+    $is_gp,
+    'group-select',
+    ['confirmDelete' => _T("Are you sure you want to delete these groups?", "dyngroup")]
+);
 
 foreach ($list as $group) {
     // Nettoyage des infos propriétaire
@@ -207,8 +215,10 @@ foreach ($list as $group) {
     // Suppression possible ?
     if ($groupData['is_owner'] == "1" || $_SESSION['login'] == "root") {
         $action_delete[] = $delete;
+        $checkboxes[] = BulkSelectBar::checkbox('group-select', clean_xss($group->id), clean_xss($group->name));
     } else {
         $action_delete[] = $empty;
+        $checkboxes[] = '';
     }
 
     // Déploiement rapide XMPP
@@ -236,6 +246,8 @@ $n->setItemCount($count);
 $n->setNavBar(new AjaxNavBar($count, $filter));
 $n->start = 0;
 $n->end   = $conf["global"]["maxperpage"];
+
+$n->addExtraInfoRaw($checkboxes, $bulkBar->selectAllHeader(), "30px");
 
 if (($_SESSION['login'] ?? '') === "root") {
     $n->addExtraInfo($owner, _T('Owner', 'dyngroup'));
@@ -318,3 +330,5 @@ $n->addActionItem(new ActionItem(_T("Csv export", "dyngroup"),
     "csv", "csv", "computer", "base", "computers"));
 
 $n->display();
+
+$bulkBar->display();

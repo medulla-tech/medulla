@@ -32,7 +32,97 @@ if (in_array("imaging", $_SESSION["modulesList"])) {
     // Get Current Location
     require_once('modules/imaging/includes/xmlrpc.inc.php');
 }
-$location ="";
+$location = "";
+
+// --- Bulk deletion mode (AJAX POST with gid[] array) ---
+if (isset($_POST['gid']) && is_array($_POST['gid'])) {
+    header('Content-Type: application/json');
+
+    $gids = $_POST['gid'];
+    $type = isset($_POST['type']) ? intval($_POST['type']) : 0;
+    $stype = ($type == 1) ? '_profiles' : '';
+
+    if (empty($gids)) {
+        echo json_encode(['success' => false]);
+        exit;
+    }
+
+    $successNames = [];
+    $errors = [];
+
+    foreach ($gids as $gid) {
+        $gid = clean_xss($gid);
+        $group = new Group($gid, false);
+        $groupName = $group->getName();
+
+        // Check ownership
+        if (!$group->is_owner && ($_SESSION['login'] ?? '') !== 'root') {
+            $errors[] = sprintf(_T("Permission denied for group %s", "dyngroup"), $groupName);
+            continue;
+        }
+
+        // For imaging groups, check multicast
+        if ($type == 1 && in_array("imaging", $_SESSION["modulesList"])) {
+            $location = xmlrpc_getProfileLocation($gid);
+            $objprocess = [
+                'location' => $location,
+                'process' => '/tmp/multicast.sh'
+            ];
+            if (xmlrpc_check_process_multicast($objprocess)) {
+                $errors[] = sprintf(_T("Group %s cannot be deleted: multicast deployment in progress.", "dyngroup"), $groupName);
+                continue;
+            }
+        }
+
+        $result = $group->delete();
+
+        if (!isset($result[0]) || $result[0] == 0) {
+            $errorMessage = $result[1] ?? '';
+            preg_match("/Deletion forbidden for Group:(.*?)\)/", $errorMessage, $matches);
+            if (isset($matches[1])) {
+                $msg = _T("Deletion forbidden for Group:", "dyngroup");
+                $errors[] = $msg . ' ' . trim($matches[1], " '\n\r");
+            } else {
+                $errors[] = sprintf(_T("Failed to delete group %s", "dyngroup"), $groupName);
+            }
+            continue;
+        }
+
+        // Cleanup xmppmaster data
+        if (in_array("xmppmaster", $_SESSION["modulesList"])) {
+            xmlrpc_delDeploybygroup($gid);
+            $array_command_id = get_commands_by_group($gid);
+            foreach ($array_command_id as $commandeid) {
+                delete_command($commandeid);
+            }
+        }
+
+        // For imaging groups, sync location
+        if ($type == 1 && in_array("imaging", $_SESSION["modulesList"])) {
+            if (isset($location)) {
+                xmlrpc_synchroLocation($location);
+            }
+        }
+
+        $successNames[] = $groupName;
+    }
+
+    // NotifyWidget messages
+    if (!empty($successNames)) {
+        new NotifyWidgetSuccess(sprintf(
+            _T("%d group(s) successfully deleted", "dyngroup"),
+            count($successNames)
+        ));
+    }
+    foreach ($errors as $err) {
+        new NotifyWidgetFailure($err);
+    }
+
+    echo json_encode(['success' => empty($errors), 'errors' => $errors]);
+    exit;
+}
+
+// --- Single deletion mode (popup form) ---
 $gid = quickGet('gid');
 $group = new Group($gid, False);
 $type = quickGet('type');
