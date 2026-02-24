@@ -22,6 +22,60 @@
  */
 require_once("modules/admin/includes/xmlrpc.php");
 
+// --- Bulk deletion mode (AJAX POST with gid[] array) ---
+if (isset($_POST['gid']) && is_array($_POST['gid'])) {
+    header('Content-Type: application/json');
+
+    $gids = $_POST['gid'];
+
+    if (empty($gids)) {
+        echo json_encode(['success' => false]);
+        exit;
+    }
+
+    $successCount = 0;
+    $errors = [];
+
+    foreach ($gids as $entityId) {
+        $entityId = (int)$entityId;
+
+        // Never delete root entity
+        if ($entityId === 0) {
+            continue;
+        }
+
+        $result = xmlrpc_delete_entity($entityId);
+
+        if (is_array($result) && isset($result['success']) && $result['success']) {
+            $successCount++;
+        } else {
+            $errorMsg = '';
+            if (is_array($result) && isset($result['message'])) {
+                $errorMsg = $result['message'];
+            }
+            $errors[] = sprintf(
+                _T("Failed to delete entity #%d. %s", "admin"),
+                $entityId,
+                $errorMsg
+            );
+        }
+    }
+
+    if ($successCount > 0) {
+        new NotifyWidgetSuccess(sprintf(
+            _T("%d entity(ies) successfully deleted", "admin"),
+            $successCount
+        ));
+    }
+    foreach ($errors as $err) {
+        new NotifyWidgetFailure($err);
+    }
+
+    echo json_encode(['success' => empty($errors), 'errors' => $errors]);
+    exit;
+}
+
+// --- Single deletion mode ---
 if (isset($_GET['entityId'])) {
     $entityId   = (int)$_GET['entityId'];
     $entityName = htmlspecialchars($_GET['entityName'] ?? _T("Unknown", "admin"), ENT_QUOTES, 'UTF-8');

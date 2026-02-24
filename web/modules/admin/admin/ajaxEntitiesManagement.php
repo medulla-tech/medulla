@@ -23,6 +23,7 @@
 require_once("modules/xmppmaster/includes/html.inc.php");
 require_once("modules/admin/includes/xmlrpc.php");
 require_once("modules/glpi/includes/xmlrpc.php");
+require_once("includes/UIComponents.php");
 ?>
 
 <style>
@@ -130,7 +131,22 @@ if ($facilitylevel <= 1) {
     $action_non_edit     = new EmptyActionItem1(_("Unauthorized modification"), "", "editg", "", "admin", "admin");
     $action_non_delete   = new EmptyActionItem1(_("Unauthorized deletion"), "", "deleteg", "", "admin", "admin");
 
-    $editAction = $addAction = $manageusersAction = $downloadAction = $deleteAction = $params = [];
+    // Bulk select bar
+    $deleteUrl = urlStrRedirect("admin/admin/deleteEntity");
+    $bulkBar = new BulkSelectBar($deleteUrl, '0', 'entity-select', [
+        'deleteSelected' => _T("Delete selected", "admin"),
+        'cancel'         => _T("Cancel", "admin"),
+        'selectionMode'  => _T("Selection mode", "admin"),
+        'confirmDelete'  => _T("Are you sure you want to delete these entities? All packages linked to these entities will also be deleted.", "admin"),
+        'partialErrors'  => _T("Some entities could not be deleted:", "admin"),
+        'deleteError'    => _T("An error occurred while deleting.", "admin"),
+        'yes'            => _T("Yes", "admin"),
+        'no'             => _T("No", "admin"),
+        'close'          => _T("Close", "admin"),
+        'andMore'        => _T("and %d more", "admin"),
+    ]);
+
+    $editAction = $addAction = $manageusersAction = $downloadAction = $deleteAction = $params = $checkboxes = [];
     $data = $entitiesListseach['data'];
 
     $count = isset($data['id']) ? count($data['id']) : 0;
@@ -185,6 +201,7 @@ if ($facilitylevel <= 1) {
         $manageusersAction[] = $action_manageusers;
         $downloadAction[]    = $action_download;
         $deleteAction[]      = new EmptyActionItem1(_("Unauthorized deletion"), "", "deleteg", "", "admin", "admin");
+        $checkboxes[]        = '';
 
         continue;
     }
@@ -197,6 +214,7 @@ if ($facilitylevel <= 1) {
             $manageusersAction[] = $action_manageusers;
             $downloadAction[]    = $action_download;
             $deleteAction[]      = $action_non_delete;
+            $checkboxes[]        = '';
         } else {
             // Non owner: Complete actions
             $editAction[]        = $action_edit;
@@ -204,6 +222,7 @@ if ($facilitylevel <= 1) {
             $manageusersAction[] = $action_manageusers;
             $downloadAction[]    = $action_download;
             $deleteAction[]      = $deleteToAdd;
+            $checkboxes[]        = BulkSelectBar::checkbox('entity-select', $entityIdCurrent, $entityName);
         }
     }
 
@@ -237,6 +256,7 @@ $n->addExtraInfo($displayArray, _T("Complete Name", "admin"));
 $n->addExtraInfo($data['nb_users'], _T("Users", "admin"));
 $n->addExtraInfo($data['nb_machines'], _T("Computers", "admin"));
 
+    $n->addExtraInfoRaw($checkboxes, $bulkBar->selectAllHeader(), "30px");
     $n->addActionItemArray($editAction);
     $n->addActionItemArray($addAction);
     $n->addActionItemArray($manageusersAction);
@@ -248,6 +268,7 @@ $n->addExtraInfo($data['nb_machines'], _T("Computers", "admin"));
     $n->setNavBar(new AjaxNavBar("10", $filter));
     $n->disableFirstColumnActionLink();
     $n->display();
+    $bulkBar->display();
 }
 ?>
 
