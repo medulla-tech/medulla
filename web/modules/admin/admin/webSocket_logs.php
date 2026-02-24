@@ -33,6 +33,10 @@ function getWebSocketLogSection() {
 
   $wsLogs = array();
   foreach ($config['websocket_logs'] as $server => $logs) {
+      // Skip ini comment lines parsed as keys (# or ;)
+      if (preg_match('/^[#;]/', trim($server))) {
+          continue;
+      }
       $wsLogs[$server] = array_map('trim', explode(',', $logs));
   }
 
