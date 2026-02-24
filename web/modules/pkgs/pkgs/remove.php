@@ -26,7 +26,69 @@
 require_once("modules/pkgs/includes/xmlrpc.php");
 require_once("modules/msc/includes/commands_xmlrpc.inc.php");
 
+// --- Bulk deletion mode (AJAX POST with gid[] array) ---
+if (isset($_POST['gid']) && is_array($_POST['gid'])) {
+    header('Content-Type: application/json');
 
+    $uuids = $_POST['gid'];
+
+    if (empty($uuids)) {
+        echo json_encode(['success' => false]);
+        exit;
+    }
+
+    $successCount = 0;
+    $errors = [];
+
+    foreach ($uuids as $uuid) {
+        $uuid = trim($uuid);
+        if (empty($uuid)) {
+            continue;
+        }
+
+        $ret = remove_xmpp_package($uuid);
+
+        if ($ret == "1") {
+            xmlrpc_pkgs_delete_synchro_package($uuid);
+            expire_all_package_commands($uuid);
+            $successCount++;
+
+            xmlrpc_setfrompkgslogxmpp(
+                _T("The package has been deleted.", "pkgs"),
+                "PKG",
+                '',
+                0,
+                'PackageList',
+                'Manuel',
+                '',
+                '',
+                '',
+                "session user " . $_SESSION["login"],
+                'Packaging | Remove | Package | Bulk'
+            );
+        } else {
+            $errors[] = sprintf(
+                _T("Failed to delete package %s", "pkgs"),
+                htmlspecialchars($uuid, ENT_QUOTES, 'UTF-8')
+            );
+        }
+    }
+
+    if ($successCount > 0) {
+        new NotifyWidgetSuccess(sprintf(
+            _T("%d package(s) successfully deleted", "pkgs"),
+            $successCount
+        ));
+    }
+    foreach ($errors as $err) {
+        new NotifyWidgetFailure($err);
+    }
+
+    echo json_encode(['success' => empty($errors), 'errors' => $errors]);
+    exit;
+}
+
+// --- Single deletion mode (popup form) ---
 if (isset($_POST["bconfirm"])) {
     $p_api = $_GET["p_api"];
     $pid = $_GET["pid"];

@@ -26,6 +26,7 @@ require_once("modules/pkgs/includes/xmlrpc.php");
 require_once("modules/msc/includes/package_api.php");
 require_once("modules/msc/includes/utilities.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
+require_once("includes/UIComponents.php");
 
 global $conf;
 function isExpertMode1()
@@ -75,6 +76,21 @@ if($sharings['config']['centralizedmultiplesharing'] == true) {
         ];
     }
 
+    // Bulk select bar
+    $deleteUrl = urlStrRedirect("pkgs/pkgs/delete");
+    $bulkBar = new BulkSelectBar($deleteUrl, '0', 'pkg-select', [
+        'deleteSelected' => _T("Delete selected", "pkgs"),
+        'cancel'         => _T("Cancel", "pkgs"),
+        'selectionMode'  => _T("Selection mode", "pkgs"),
+        'confirmDelete'  => _T("Are you sure you want to delete these packages?", "pkgs"),
+        'partialErrors'  => _T("Some packages could not be deleted:", "pkgs"),
+        'deleteError'    => _T("An error occurred while deleting.", "pkgs"),
+        'yes'            => _T("Yes", "pkgs"),
+        'no'             => _T("No", "pkgs"),
+        'close'          => _T("Close", "pkgs"),
+        'andMore'        => _T("and %d more", "pkgs"),
+    ]);
+
     $_params = array();
     $__arraypackagename = array();
     $_versions = array();
@@ -85,6 +101,7 @@ if($sharings['config']['centralizedmultiplesharing'] == true) {
     $_os = array();
     $_editActions = array();
     $_delActions = array();
+    $_checkboxes = array();
 
     $_packages = xmlrpc_get_all_packages($_SESSION['login'], $sharings['config']['centralizedmultiplesharing'], $start, $maxperpage, $filter);
     $_count = $_packages["total"];
@@ -188,6 +205,7 @@ if($sharings['config']['centralizedmultiplesharing'] == true) {
         $_licenses[] = $_tmp_licenses ?: '-';
         $_tmpParam['permission'] = $_packages['permission'][$i];
 
+        $_canDelete = false;
         if(!isExpertMode1()) {
             // mode standart
             // seul root peut supprimer package manuel
@@ -195,6 +213,7 @@ if($sharings['config']['centralizedmultiplesharing'] == true) {
                 $_editActions[] = $emptyAction;
                 if ($_SESSION['login'] == "root") {
                     $_delActions[] = $delAction;
+                    $_canDelete = true;
                 } else {
                     $_delActions[] = $emptyAction;
                 }
@@ -202,6 +221,7 @@ if($sharings['config']['centralizedmultiplesharing'] == true) {
                 if($_packages['permission'][$i] == 'w' || $_packages['permission'][$i] == 'rw') {
                     $_editActions[] = $editExpertAction;
                     $_delActions[] = $delAction;
+                    $_canDelete = true;
                 } else {
                     // No permission for editing/deleting
                     $_editActions[] = $emptyAction;
@@ -211,6 +231,7 @@ if($sharings['config']['centralizedmultiplesharing'] == true) {
                 if($_packages['permission'][$i] == 'w' || $_packages['permission'][$i] == 'rw') {
                     $_editActions[] = $editAction;
                     $_delActions[] = $delAction;
+                    $_canDelete = true;
                 } else {
                     // No permission for editing/deleting
                     $_editActions[] = $emptyAction;
@@ -223,7 +244,7 @@ if($sharings['config']['centralizedmultiplesharing'] == true) {
                 $_editActions[] = $emptyAction;
                 if($_packages['permission'][$i] == 'w' || $_packages['permission'][$i] == 'rw') {
                     $_delActions[] = $delAction;
-
+                    $_canDelete = true;
                 } else {
                     $_delActions[] = $emptyAction;
                 }
@@ -231,12 +252,16 @@ if($sharings['config']['centralizedmultiplesharing'] == true) {
                 if($_packages['permission'][$i] == 'w' || $_packages['permission'][$i] == 'rw') {
                     $_editActions[] = $editAction;
                     $_delActions[] = $delAction;
+                    $_canDelete = true;
                 } else {
                     $_editActions[] = $emptyAction;
                     $_delActions[] = $emptyAction;
                 }
             }
         }
+        $_checkboxes[] = $_canDelete
+            ? BulkSelectBar::checkbox('pkg-select', $_packages['uuid'][$i], $_packages['conf_json'][$i]['name'])
+            : '';
         $_params[] = $_tmpParam;
         $_detailActions[] = $detailAction;
     }
@@ -259,6 +284,7 @@ if($sharings['config']['centralizedmultiplesharing'] == true) {
         $n->addExtraInfo($_os, _T("Os", "pkgs"));
         $n->addExtraInfo($_sizes, _T("Size", "pkgs"));
         $n->addExtraInfo($_diskUsages, _T("Share usage", "pkgs"));
+        $n->addExtraInfoRaw($_checkboxes, $bulkBar->selectAllHeader(), "30px");
         $n->setItemCount($_count);
         $n->setNavBar(new AjaxNavBar($_count, $filter1));
         $n->setParamInfo($_params);
@@ -268,11 +294,27 @@ if($sharings['config']['centralizedmultiplesharing'] == true) {
         $n->start = 0;
         $n->end = $_count;
         $n->display();
+        $bulkBar->display();
     } else {
         echo '<table class="listinfos" cellspacing="0" cellpadding="5" border="1">
 <thead><tr><td><span class="pkg-name-header">Nom du package</span></td><td>Localization</td><td>Permissions</td><td>Description</td><td>Version</td><td>Licences</td><td>OS</td><td>Taille</td><td>Share usage</td><td class="pkg-actions-header">Actions</td></tr></thead></table>';
     }
 } else {
+    // Bulk select bar
+    $deleteUrl = urlStrRedirect("pkgs/pkgs/delete");
+    $bulkBar = new BulkSelectBar($deleteUrl, '0', 'pkg-select', [
+        'deleteSelected' => _T("Delete selected", "pkgs"),
+        'cancel'         => _T("Cancel", "pkgs"),
+        'selectionMode'  => _T("Selection mode", "pkgs"),
+        'confirmDelete'  => _T("Are you sure you want to delete these packages?", "pkgs"),
+        'partialErrors'  => _T("Some packages could not be deleted:", "pkgs"),
+        'deleteError'    => _T("An error occurred while deleting.", "pkgs"),
+        'yes'            => _T("Yes", "pkgs"),
+        'no'             => _T("No", "pkgs"),
+        'close'          => _T("Close", "pkgs"),
+        'andMore'        => _T("and %d more", "pkgs"),
+    ]);
+
     $params = array();
     $arraypackagename = array();
     $versions = array();
@@ -283,6 +325,7 @@ if($sharings['config']['centralizedmultiplesharing'] == true) {
     $os = array();
     $editActions = array();
     $delActions = array();
+    $checkboxes = array();
 
 
     $packages = xmlrpc_xmppGetAllPackages($filter, $start, $start + $maxperpage);
@@ -355,6 +398,7 @@ if($sharings['config']['centralizedmultiplesharing'] == true) {
         // #### end licenses ####
         $size[] = prettyOctetDisplay($p['size']);
         $params[] = array( 'pid' => base64_encode($p['id']), 'packageUuid' => $p['id']);
+        $canDelete = false;
         if(!isExpertMode1()) {
             // mode standart
             // seul root peut supprimer package manuel
@@ -362,26 +406,34 @@ if($sharings['config']['centralizedmultiplesharing'] == true) {
                 $editActions[] = $emptyAction;
                 if ($_SESSION['login'] == "root") {
                     $delActions[] = $delAction;
+                    $canDelete = true;
                 } else {
                     $delActions[] = $emptyAction;
                 }
             } elseif ($p['metagenerator'] == 'expert') {
                 $editActions[] = $editExpertAction;
                 $delActions[] = $delAction;
+                $canDelete = true;
             } else {
                 $editActions[] = $editAction;
                 $delActions[] = $delAction;
+                $canDelete = true;
             }
         } else {
             //mode expert
             if ($p['metagenerator'] == 'manual') {
                 $editActions[] = $emptyAction;
                 $delActions[] = $delAction;
+                $canDelete = true;
             } else {
                 $editActions[] = $editAction;
                 $delActions[] = $delAction;
+                $canDelete = true;
             }
         }
+        $checkboxes[] = $canDelete
+            ? BulkSelectBar::checkbox('pkg-select', $p['id'], $p['label'])
+            : '';
         $detailActions[] = $detailAction;
     }
     if($count > 0) {
@@ -398,6 +450,7 @@ if($sharings['config']['centralizedmultiplesharing'] == true) {
         $n->addExtraInfo($licenses, _T("Licenses", "pkgs"));
         $n->addExtraInfo($os, _T("Os", "pkgs"));
         $n->addExtraInfo($size, _T("Size", "pkgs"));
+        $n->addExtraInfoRaw($checkboxes, $bulkBar->selectAllHeader(), "30px");
         $n->setItemCount($count);
         $n->setNavBar(new AjaxNavBar($count, $filter1));
         $n->setParamInfo($params);
@@ -407,6 +460,7 @@ if($sharings['config']['centralizedmultiplesharing'] == true) {
         $n->start = 0;
         $n->end = $count;
         $n->display();
+        $bulkBar->display();
     } else {
         echo '<table class="listinfos" cellspacing="0" cellpadding="5" border="1">
 <thead><tr><td><span class="pkg-name-header">Nom du package</span></td><td>Localization</td><td>Permissions</td><td>Description</td><td>Version</td><td>Licences</td><td>OS</td><td>Taille</td><td>Share usage</td><td class="pkg-actions-header">Actions</td></tr></thead></table>';
