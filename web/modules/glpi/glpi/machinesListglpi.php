@@ -24,6 +24,7 @@
 require("graph/navbar.inc.php");
 require("modules/glpi/includes/html.php");
 require("modules/base/computers/localSidebar.php");
+require_once("modules/medulla_server/includes/utilities.php");
 global $conf;
 $glpidisplayname = (!empty($conf['global']['glpidisplayname'])) ? $conf['global']['glpidisplayname'] : 'glpi';
 $p = new PageGenerator(sprintf(_T("Machines List view %s", 'glpi'), $glpidisplayname));

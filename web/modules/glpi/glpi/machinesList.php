@@ -25,6 +25,7 @@
 require("graph/navbar.inc.php");
 require("modules/base/computers/localSidebar.php");
 require("modules/glpi/includes/html.php");
+require_once("modules/medulla_server/includes/utilities.php");
 global $conf;
 
 
