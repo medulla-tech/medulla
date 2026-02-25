@@ -9,7 +9,7 @@ from mmc.support.config import PluginConfig
 from pulse2.database.mastering.config import MasteringDatabaseConfig
 
 class MasteringConfig(PluginConfig,MasteringDatabaseConfig):
-    def __init__(self, name = 'mastering', conffile = None, backend = "database"):
+    def __init__(self, name = 'mastering', conffile = None, backend = "ini"):
         if not hasattr(self, 'initdone'):
             PluginConfig.__init__(self, name, conffile, backend = backend, db_table = "mastering_conf")
             MasteringDatabaseConfig.__init__(self)

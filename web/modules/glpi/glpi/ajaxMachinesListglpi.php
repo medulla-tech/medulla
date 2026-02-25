@@ -24,7 +24,6 @@
 require_once("modules/glpi/includes/xmlrpc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 require_once("modules/msc/includes/mscoptions_xmlrpc.php");
-require_once("modules/base/includes/computers_list.inc.php");
 
 global $config;
 

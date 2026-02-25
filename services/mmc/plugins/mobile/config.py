@@ -6,7 +6,7 @@ from mmc.support.config import PluginConfig
 from pulse2.database.mobile.config import MobileDatabaseConfig
 
 class MobileConfig(PluginConfig, MobileDatabaseConfig):
-    def __init__(self, name='mobile', conffile=None, backend='database'):
+    def __init__(self, name='mobile', conffile=None, backend='ini'):
         if not hasattr(self, 'initdone'):
             PluginConfig.__init__(self, name, conffile, backend=backend, db_table='mobile_conf')
             MobileDatabaseConfig.__init__(self)
@@ -39,6 +39,5 @@ class MobileConfig(PluginConfig, MobileDatabaseConfig):
 
     @staticmethod
     def activate():
-        # Initialize config using database backend by default
-        MobileConfig('mobile', None, 'database')
+        MobileConfig('mobile')
         return True

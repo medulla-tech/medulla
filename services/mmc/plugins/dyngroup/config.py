@@ -15,18 +15,23 @@ class DGConfig(PluginConfig, DyngroupDatabaseConfig):
     check_db_enable = False
     check_db_interval = 300
 
-    def __init__(self, name, conffile=None, backend="ini"):
+    def __init__(self, name="dyngroup", conffile=None, backend="ini"):
         if not hasattr(self, "initdone"):
             PluginConfig.__init__(self, name, conffile, backend=backend, db_table="dyngroup_conf")
             DyngroupDatabaseConfig.__init__(self)
-        
+            self.initdone = True
+
         if backend == "database":
             # read DB settings from admin DB backend
             self._load_db_settings_from_backend()
-        elif conffile and backend == "ini":
+        elif self.conffile and backend == "ini":
             # read DB settings from INI file
             DyngroupDatabaseConfig.setup(self, self.conffile)
         self.setup(self.conffile)
+
+    def init(self, name="dyngroup"):
+        """Backward-compatible re-initialization (Singleton)."""
+        self.__init__(name)
 
     def setup(self, conf_file):
         """
