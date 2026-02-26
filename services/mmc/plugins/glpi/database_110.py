@@ -9407,9 +9407,9 @@ where c.is_deleted=0 and c.is_template=0 %s %s
 
         query = (
         session.query(
-            func.coalesce(func.sum(case((Machine.date_mod > func.curdate() - func.interval(red, "DAY"), 1), else_=0)), 0).label("red"),
-            func.coalesce(func.sum(case(((Machine.date_mod <= func.curdate() - func.interval(red, "DAY")) &(Machine.date_mod > func.curdate() - func.interval(orange, "DAY")), 1), else_=0)), 0).label("orange"),
-            func.coalesce(func.sum(case((Machine.date_mod <= func.curdate() - func.interval(orange, "DAY"), 1),else_=0)), 0).label("green"))
+            func.coalesce(func.sum(case((Machine.date_mod < func.curdate() - func.interval(red, "DAY"), 1), else_=0)), 0).label("red"),
+            func.coalesce(func.sum(case(((Machine.date_mod >= func.curdate() - func.interval(red, "DAY")) &(Machine.date_mod < func.curdate() - func.interval(orange, "DAY")), 1), else_=0)), 0).label("orange"),
+            func.coalesce(func.sum(case((Machine.date_mod >= func.curdate() - func.interval(orange, "DAY"), 1),else_=0)), 0).label("green"))
         .filter(Machine.entities_id.in_(entities))
         )
         result = query.one()
