@@ -771,50 +771,54 @@ def run_cve_scan(scan_id: Optional[int] = None, entity_id: Optional[int] = None,
             if not cve_id_str or cve_id_str in cves_added:
                 return False  # Skip if no ID or already processed
 
-            # Handle NULL cvss_score
-            cvss_raw = cve_entry.get('cvss_score')
-            cvss_score = float(cvss_raw) if cvss_raw is not None else None
-            severity = cve_entry.get('severity', 'N/A')
-            description = cve_entry.get('description', '')
-            published_at = cve_entry.get('published_at')
-            last_modified = cve_entry.get('last_modified')
-            software_name = cve_entry.get('software_name', '')
-            software_version = cve_entry.get('software_version', '')
-            glpi_software_name = cve_entry.get('glpi_software_name', '')
-            target_platform = cve_entry.get('target_platform')
-            sources = cve_entry.get('sources', [])
-            source_urls = cve_entry.get('source_urls', {})
+            try:
+                # Handle NULL cvss_score
+                cvss_raw = cve_entry.get('cvss_score')
+                cvss_score = float(cvss_raw) if cvss_raw is not None else None
+                severity = cve_entry.get('severity', 'N/A')
+                description = cve_entry.get('description', '')
+                published_at = cve_entry.get('published_at')
+                last_modified = cve_entry.get('last_modified')
+                software_name = cve_entry.get('software_name', '')
+                software_version = cve_entry.get('software_version', '')
+                glpi_software_name = cve_entry.get('glpi_software_name', '')
+                target_platform = cve_entry.get('target_platform')
+                sources = cve_entry.get('sources', [])
+                source_urls = cve_entry.get('source_urls', {})
 
-            # Add CVE to local cache
-            cve_db_id = security_db.add_cve(
-                cve_id=cve_id_str,
-                cvss_score=cvss_score,
-                severity=severity,
-                description=description,
-                published_at=published_at,
-                last_modified=last_modified,
-                sources=sources,
-                source_urls=source_urls
-            )
-
-            # Link software to CVE
-            if software_name:
-                security_db.link_software_cve(
-                    software_name=software_name,
-                    software_version=software_version,
-                    cve_db_id=cve_db_id,
-                    glpi_software_name=glpi_software_name or None,
-                    target_platform=target_platform
+                # Add CVE to local cache
+                cve_db_id = security_db.add_cve(
+                    cve_id=cve_id_str,
+                    cvss_score=cvss_score,
+                    severity=severity,
+                    description=description,
+                    published_at=published_at,
+                    last_modified=last_modified,
+                    sources=sources,
+                    source_urls=source_urls
                 )
 
-            # Count by severity
-            sev = severity if severity in severity_counts else 'N/A'
-            severity_counts[sev] = severity_counts.get(sev, 0) + 1
-            if severity == 'Critical':
-                new_critical_cves.append(cve_id_str)
+                # Link software to CVE
+                if software_name:
+                    security_db.link_software_cve(
+                        software_name=software_name,
+                        software_version=software_version,
+                        cve_db_id=cve_db_id,
+                        glpi_software_name=glpi_software_name or None,
+                        target_platform=target_platform
+                    )
 
-            cves_added.add(cve_id_str)
-            return True
+                # Count by severity
+                sev = severity if severity in severity_counts else 'N/A'
+                severity_counts[sev] = severity_counts.get(sev, 0) + 1
+                if severity == 'Critical':
+                    new_critical_cves.append(cve_id_str)
+
+                cves_added.add(cve_id_str)
+                return True
+            except Exception as e:
+                logger.error(f"Error storing CVE {cve_id_str}: {e}")
+                return False
 
         def store_cves_from_central():
             """Fetch and store CVEs from CVE Central (called during polling)"""
@@ -866,8 +870,11 @@ def run_cve_scan(scan_id: Optional[int] = None, entity_id: Optional[int] = None,
                 """WebSocket CVE callback - store CVEs as they arrive"""
                 new_count = 0
                 for cve_entry in cves_list:
-                    if store_cve(cve_entry):
-                        new_count += 1
+                    try:
+                        if store_cve(cve_entry):
+                            new_count += 1
+                    except Exception as e:
+                        logger.error(f"Error in store_cve callback: {e}")
                 if new_count > 0:
                     logger.debug(f"{new_count} new CVEs stored (total: {len(cves_added)})")
 
