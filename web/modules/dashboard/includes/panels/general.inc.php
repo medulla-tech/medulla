@@ -96,7 +96,8 @@ class GeneralPanel extends Panel {
   {
     datas.push({"x": i, "y":parseFloat(load[i])})
   }
-  lineChart("load-graph",datas)
+  lineChart("load-graph",{"datas":datas, "config": {"unit":""}})
+
 
   var memory = $memory;
   function splitMem(valueToSplit)
