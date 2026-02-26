@@ -1893,7 +1893,8 @@ BEGIN
     DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
 
     -- Vérifier si l'entité existe
-    IF EXISTS (SELECT 1 FROM glpi_entity WHERE glpi_id = p_entity_id) THEN
+    IF EXISTS (SELECT 1 FROM xmppmaster.local_glpi_entities WHERE id = p_entity_id)
+    THEN
         -- Ouvrir le curseur
         OPEN cur;
 
@@ -1978,7 +1979,8 @@ BEGIN
           AND `enable` = 1
         ORDER BY `comment`;
     DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
-    IF EXISTS (SELECT 1 FROM glpi_entity WHERE glpi_id = p_entity_id) THEN
+    IF EXISTS (SELECT 1 FROM xmppmaster.local_glpi_entities WHERE id = p_entity_id)
+    THEN
        -- IF NOT EXISTS (
         --    SELECT 1 FROM xmppmaster.up_list_produit
         --    WHERE entity_id = p_entity_id limit 1
