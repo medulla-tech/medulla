@@ -109,7 +109,8 @@ class TextareaTpl extends AbstractTpl
             $arrParam['disabled'] = '';
         }
 
-        echo '<textarea name="' . $this->name . '" id="' . $this->name . '" rows="' . $this->rows . '" cols="' . $this->cols . '" ' . $arrParam["disabled"] . ' />';
+        $required_attr = isset($arrParam["required"]) ? ' rel="required"' : '';
+        echo '<textarea name="' . $this->name . '" id="' . $this->name . '" rows="' . $this->rows . '" cols="' . $this->cols . '" ' . $arrParam["disabled"] . $required_attr . ' />';
 
         if (isset($arrParam["value"])) {
             echo $arrParam["value"];
@@ -1432,6 +1433,9 @@ class TrFormElement extends FormElement
             print "<a href=\"#\" class=\"tooltip\">" . $this->desc . "<span>" . $this->tooltip . "</span></a>";
         } else {
             print $this->desc;
+        }
+        if (isset($arrParam["required"]) && $arrParam["required"]) {
+            print ' *';
         }
         print '</td><td>';
 

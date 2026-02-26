@@ -90,6 +90,22 @@ else{
     $f->addValidateButton("bcreate");
 
     $f->display();
+?>
+    <script>
+    jQuery("#Form").attr("onsubmit", "return validateEditQa();");
+    function validateEditQa() {
+        // Reset labels
+        jQuery("#Form .mmc-label").css("color", "");
+        // Validate without popup
+        var valid = validateForm('Form', false);
+        // Highlight labels of invalid fields in red
+        jQuery("#Form .form-error").each(function() {
+            jQuery(this).closest("tr").find(".mmc-label").css("color", "var(--color-error)");
+        });
+        return valid;
+    }
+    </script>
+<?php
 }
 
 ?>

@@ -343,7 +343,7 @@ $root = $conf["global"]["root"];
                         jQuery('#confpass').addClass('form-error');
                     }
 
-                if (err != 0)
+                if (err != 0 && errmsg)
                     alert('<?php echo _("Form cannot be submit. Input errors are highlighted in red.") ?>');
 
                 return err == 0;

@@ -149,7 +149,7 @@ body {
   color: var(--color-error);
 }
 .form-error {
-  border-color: var(--color-error-light) !important;
+  border-color: var(--color-error) !important;
 }
 a {
   color: var(--color-sidebar-text);
