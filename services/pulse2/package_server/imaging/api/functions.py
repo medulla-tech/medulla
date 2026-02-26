@@ -772,7 +772,13 @@ class Imaging(object, metaclass=SingletonN):
 
                     self.myUUIDCache.setByUuid(_id, uuid, shortname, fqdn, entity)
                     self.logger.debug("Imaging: Updating cache for %s" % (uuid))
-                    return result[1]
+                    data = {
+                        "id": _id,
+                        "entities_id":entity,
+                        "shortname":shortname,
+                        "name":shortname
+                        }
+                    return data
                 else:
                     self.logger.debug(
                         "Imaging: Unable to resolve %s neither from cache nor from database (unknown computer?)"
