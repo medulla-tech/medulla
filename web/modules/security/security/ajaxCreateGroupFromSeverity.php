@@ -47,7 +47,7 @@ if (isset($_POST['bconfirm'])) {
         // Create static group (type = 0)
         $group = new Group();
         $group->type = 0; // Static group
-        $groupId = $group->create($groupName, true); // true = visible
+        $groupId = $group->create($groupName, false); // false = not in favorites
 
         if ($groupId) {
             // Add machines to the group using miniAddMembers
