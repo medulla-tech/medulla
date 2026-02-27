@@ -255,6 +255,7 @@ if(isset($_POST['bconfirm'], $_POST['updateid'], $_POST['start_date'], $_POST['e
     exit;
 } else {
     $f = new PopupForm($formtitle);
+    $f->setPopupClass('popup-wide');
     $f->push(new Table());
 
     $hiddenpid = new HiddenTpl("updateid");

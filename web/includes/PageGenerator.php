@@ -3997,6 +3997,7 @@ class ValidatingForm extends Form
 class PopupForm extends Form
 {
     protected $level = 'default';
+    protected $popupClass = '';
 
     public function __construct($title, $id = 'Form')
     {
@@ -4013,9 +4014,17 @@ class PopupForm extends Form
         $this->level = $level;
     }
 
+    public function setPopupClass($class)
+    {
+        $this->popupClass = $class;
+    }
+
     public function begin()
     {
         $levelClass = ($this->level !== 'default') ? ' popup-title-' . $this->level : '';
+        if (!empty($this->popupClass)) {
+            $levelClass .= ' ' . $this->popupClass;
+        }
         $str = "<h2 class='" . trim($levelClass) . "'>" . $this->title . "</h2>\n";
         $str .= parent::begin();
         foreach ($this->text as $text) {

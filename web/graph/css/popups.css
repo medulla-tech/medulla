@@ -181,6 +181,13 @@
   max-width: 450px;
 }
 
+/* Wide popups: use PopupForm::setPopupClass('popup-wide') */
+.popup:has(.popup-wide) {
+  width: auto !important;
+  min-width: 550px;
+  max-width: 650px;
+}
+
 .popup:has(#__popup_container > h2:first-child) #__popup_container {
   padding: 0 !important;
 }
