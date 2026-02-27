@@ -33,6 +33,9 @@ if ($_GET['group'] == 'green') {
 elseif ($_GET['group'] == 'orange') {
     $groupname = sprintf (_T("Antivirus is not running or not up-to-date at %s", "glpi"), date("Y-m-d H:i:s"));
 }
+else if($_GET['group'] == 'missing'){
+    $groupname = sprintf (_T("No antivirus found at %s", "glpi"), date("Y-m-d H:i:s"));
+}
 else {
     $groupname = sprintf (_T("No antivirus found at %s", "glpi"), date("Y-m-d H:i:s"));
 }
