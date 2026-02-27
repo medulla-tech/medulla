@@ -123,8 +123,8 @@ class RpcProxy(RpcProxyI):
 
         # init resultarray with default datas
         # init entitiesarray with entities ids, this will be used in the "in" sql clause
-        logger.error(f"Parametres entities {entities}")
-        logger.error(f"Parametres source {source}")
+        logger.debug(f"Parametres entities {entities}")
+        logger.debug(f"Parametres source {source}")
 
         resultarray = {}
         for entity in entities:
