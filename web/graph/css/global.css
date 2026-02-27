@@ -466,6 +466,7 @@ p {
   position: absolute;
   top: -5px;
   right: 0;
+  z-index: 10;
 }
 
 .section-content > ul.action li,
@@ -545,6 +546,7 @@ form > table > tbody > tr:first-child span[class$="-title"] {
   font-weight: 600;
   color: var(--color-text-dark);
   margin-bottom: 16px;
+  width: fit-content;
 }
 
 p.listInfos {
