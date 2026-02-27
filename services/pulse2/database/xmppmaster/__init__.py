@@ -14545,72 +14545,8 @@ FROM (
         Récupère les statistiques de conformité des mises à jour Windows par entité (version SQL optimisée).
 
         Cette fonction consolide les informations de conformité des machines Windows
-        au niveau de chaque entité GLPI, en ne considérant que les mises à jour
-        activées dans la "gray list" (ou "white list") et validées.
+        au niveau de chaque entité GLPI, en utilisant la table `local_glpi_machines`.
 
-        Elle repose sur une seule requête SQL optimisée qui regroupe et agrège
-        les données nécessaires, au lieu d’exécuter plusieurs requêtes séparées.
-        Les résultats permettent d’obtenir une vue globale de la conformité par entité.
-
-        ────────────────────────────────────────────────────────────────
-        ⚙️ PRINCIPE GÉNÉRAL
-        ----------------------------------------------------------------
-        Pour chaque entité GLPI spécifiée :
-        - On recense le nombre total de machines Windows.
-        - On identifie les machines non conformes (présentes dans la vue `up_machine_activated`).
-        - On compte le nombre total de mises à jour manquantes associées à ces machines.
-
-        Ces informations sont extraites en une seule passe SQL via des agrégations
-        et jointures conditionnelles entre les tables principales :
-        - `machines` : contient les informations de base sur les ordinateurs.
-        - `glpi_entity` : associe chaque machine à son entité GLPI.
-        - `up_machine_activated` : vue recensant les mises à jour activées
-            (et validées) sur les machines.
-        - `local_glpi_filters` : permet d’appliquer des filtres supplémentaires
-            selon l’état ou le type des machines.
-
-        ────────────────────────────────────────────────────────────────
-        🧩 PHASES INTERNES DE TRAITEMENT
-        ----------------------------------------------------------------
-        1️⃣ **Préparation des filtres dynamiques**
-            - Si un objet `config` est fourni avec un attribut `filter_on`,
-            les filtres suivants peuvent être appliqués :
-                - `"entity"` : restreint la requête à certaines entités GLPI.
-                - `"state"`  : filtre selon les états des machines (via `local_glpi_filters`).
-                - `"type"`   : filtre selon les types d’ordinateurs.
-            - Ces filtres sont traduits en clauses SQL `AND ... IN (...)`
-            et insérés dans la requête finale.
-
-        2️⃣ **Filtrage des machines Windows**
-            - Seules les machines dont `platform` commence par `'Microsoft Windows'`
-            sont incluses (`m.platform LIKE 'Microsoft Windows%'`).
-            - Les machines doivent également avoir `m.agenttype = 'machine'`.
-
-        3️⃣ **Agrégation SQL unifiée**
-            - La requête principale regroupe les informations par entité (`ge.glpi_id`).
-            - Elle calcule :
-                - `totalmach`   → nombre total de machines Windows par entité.
-                - `nbmachines`  → nombre de machines non conformes (ayant des mises à jour manquantes).
-                - `nbupdates`   → nombre total de mises à jour distinctes manquantes.
-            - Les jointures avec `up_machine_activated` et `local_glpi_filters`
-            permettent d’isoler les machines non conformes et d’appliquer les filtres optionnels.
-
-        4️⃣ **Restitution des résultats**
-            - Les données agrégées sont retournées sous forme d’une liste de dictionnaires Python :
-                [
-                    {
-                        "entity": "<ID de l'entité>",
-                        "nbmachines": <nombre de machines non conformes>,
-                        "nbupdates": <nombre de mises à jour manquantes>,
-                        "totalmach": <nombre total de machines Windows>,
-                    },
-                    ...
-                ]
-            - Les entités sans non-conformité retournent `0` pour `nbmachines` et `nbupdates`.
-
-        ────────────────────────────────────────────────────────────────
-        ⚙️ PARAMÈTRES
-        ----------------------------------------------------------------
         Args:
             session (Session):
                 Session SQLAlchemy active, fournie par le décorateur `@DatabaseHelper._sessionm`.
@@ -14630,9 +14566,6 @@ FROM (
                 Ces filtres s’appliquent respectivement aux entités GLPI,
                 aux états des machines et aux types d’ordinateurs.
 
-        ────────────────────────────────────────────────────────────────
-        📤 RETOUR
-        ----------------------------------------------------------------
         Returns:
             list[dict]:
                 Liste de dictionnaires contenant les statistiques de conformité
@@ -14641,16 +14574,6 @@ FROM (
                 - `nbmachines` (int) : Nombre de machines Windows non conformes.
                 - `nbupdates` (int) : Nombre total de mises à jour manquantes.
                 - `totalmach` (int) : Nombre total de machines Windows enregistrées.
-
-        ────────────────────────────────────────────────────────────────
-        🧠 NOTES TECHNIQUES
-        ----------------------------------------------------------------
-        - Cette version réduit considérablement le nombre de requêtes SQL
-        (une seule au lieu de trois) et améliore les performances globales.
-        - Toutes les agrégations sont réalisées côté SQL, limitant les traitements Python.
-        - Les données de non-conformité proviennent de la vue `up_machine_activated`,
-        qui recense les mises à jour validées dans les listes grise et blanche.
-        - Les filtres dynamiques peuvent être combinés sans modifier la logique de base.
         """
 
         # Construction dynamique des filtres
@@ -14662,7 +14585,7 @@ FROM (
                 if not values:
                     continue
                 if key == "entity":
-                    filter_sql.append(f"ge.glpi_id IN ({','.join(map(str, values))})")
+                    filter_sql.append(f"lm.entities_id IN ({','.join(map(str, values))})")
                 elif key == "state":
                     filter_noncompliant_sql.append(f"lgf.states_id IN ({','.join(map(str, values))})")
                 elif key == "type":
@@ -14674,7 +14597,7 @@ FROM (
             "m.platform LIKE 'Microsoft Windows%'",
         ]
         if entities:
-            where_conditions.append(f"ge.glpi_id IN ({','.join(map(str, entities))})")
+            where_conditions.append(f"lm.entities_id IN ({','.join(map(str, entities))})")
         if filter_sql:
             where_conditions.extend(filter_sql)
 
@@ -14686,24 +14609,22 @@ FROM (
         # Requête SQL unifiée
         sql = f"""
             SELECT
-                ge.glpi_id AS entity_id,
+                lm.entities_id AS entity_id,
                 COUNT(DISTINCT m.id) AS totalmach,
                 COUNT(DISTINCT uma.id_machine) AS nbmachines,
                 COUNT(DISTINCT uma.update_id) AS nbupdates
             FROM
                 machines m
-                JOIN glpi_entity ge ON ge.id = m.glpi_entity_id
-                LEFT JOIN up_machine_activated uma
-                    ON uma.id_machine = m.id
-                LEFT JOIN local_glpi_filters lgf
-                    ON lgf.id = uma.glpi_id
+                JOIN xmppmaster.local_glpi_machines lm ON lm.id = m.id_glpi
+                LEFT JOIN up_machine_activated uma ON uma.id_machine = m.id
+                LEFT JOIN local_glpi_filters lgf ON lgf.id = uma.glpi_id
             WHERE
                 {' AND '.join(where_conditions)}
                 {where_noncompliant}
             GROUP BY
-                ge.glpi_id
+                lm.entities_id
             ORDER BY
-                ge.glpi_id;
+                lm.entities_id;
         """
 
         logger.debug("SQL conformité Windows : %s", sql)
@@ -14718,354 +14639,6 @@ FROM (
             })
 
         return result
-
-    # @DatabaseHelper._sessionm
-    # def get_conformity_update_by_entity(self, session, entities: list = [], config=None):
-    #     """
-    #     Récupère les statistiques de conformité des mises à jour Windows par entité.
-    #
-    #     Cette fonction analyse la conformité des machines Windows gérées par entité GLPI.
-    #     Elle regroupe et corrèle plusieurs ensembles de données SQL pour déterminer :
-    #         - le nombre total de machines Windows par entité,
-    #         - le nombre de machines non conformes (celles avec des mises à jour manquantes),
-    #         - le nombre total de mises à jour manquantes,
-    #     en ne considérant **que** les mises à jour activées dans la *gray list*.
-    #
-    #     La fonction s’appuie sur plusieurs requêtes SQL exécutées successivement :
-    #
-    #     ────────────────────────────────────────────────────────────────
-    #     🧩 PHASE 1 — Récupération des machines Windows par entité
-    #     ----------------------------------------------------------------
-    #     - Interroge la table `machines` (jointure avec `glpi_entity`) pour obtenir
-    #     la liste des machines actives dont le champ `platform` commence par
-    #     `"Microsoft Windows"`.
-    #     - Les filtres éventuels passés via `config.filter_on` sont appliqués
-    #     (par entité, état ou type).
-    #     - Les machines sont ensuite regroupées par identifiant d’entité
-    #     dans un dictionnaire Python (`machine_by_entity`).
-    #
-    #     ────────────────────────────────────────────────────────────────
-    #     🧩 PHASE 2 — Comptage global des machines Windows par entité
-    #     ----------------------------------------------------------------
-    #     - Exécute une requête d’agrégation SQL pour compter le nombre total
-    #     de machines Windows par entité (`total_machines`).
-    #     - Cette étape garantit que le nombre total de machines est calculé
-    #     même si certaines ne figurent pas dans les listes de non-conformité.
-    #
-    #     ────────────────────────────────────────────────────────────────
-    #     🧩 PHASE 3 — Analyse de la non-conformité
-    #     ----------------------------------------------------------------
-    #     - Interroge la vue `up_machine_activated`, déjà filtrée pour ne contenir
-    #     que des machines Windows (via la clause `m.platform LIKE 'Microsoft Windows%'`).
-    #     - Calcule, pour chaque entité, le nombre de machines distinctes non conformes
-    #     (`noncompliant`) et le nombre de mises à jour distinctes manquantes (`missing`).
-    #     - Les filtres `state` ou `type` provenant de `config.filter_on`
-    #     sont appliqués à cette étape.
-    #
-    #     ────────────────────────────────────────────────────────────────
-    #     🧩 PHASE 4 — Agrégation et restitution
-    #     ----------------------------------------------------------------
-    #     - Combine les résultats des trois étapes précédentes pour construire
-    #     une liste de dictionnaires structurés contenant, pour chaque entité :
-    #         {
-    #             "entity": <ID de l'entité>,
-    #             "nbmachines": <nombre de machines non conformes>,
-    #             "nbupdates": <nombre total de mises à jour manquantes>,
-    #             "totalmach": <nombre total de machines Windows>,
-    #         }
-    #     - Si une entité ne présente aucune non-conformité, les valeurs par défaut
-    #     sont `0` pour `nbmachines` et `nbupdates`.
-    #
-    #     ────────────────────────────────────────────────────────────────
-    #     ⚙️ PARAMÈTRES
-    #     ----------------------------------------------------------------
-    #     Args:
-    #         session (Session):
-    #             Session SQLAlchemy active, fournie par le décorateur `@DatabaseHelper._sessionm`.
-    #         entities (list[int]):
-    #             Liste des identifiants d’entités GLPI à analyser.
-    #         config (object, optionnel):
-    #             Objet de configuration optionnel pouvant contenir un attribut `filter_on`
-    #             (dictionnaire de filtres supplémentaires) :
-    #             - "entity" : liste des IDs d'entités à inclure
-    #             - "state"  : liste des IDs d'états de machines
-    #             - "type"   : liste des IDs de types d’ordinateurs
-    #
-    #     ────────────────────────────────────────────────────────────────
-    #     📤 RETOUR
-    #     ----------------------------------------------------------------
-    #     Returns:
-    #         list[dict]:
-    #             Liste de dictionnaires contenant les statistiques de conformité
-    #             par entité, avec les clés suivantes :
-    #             - `entity` (str) : Identifiant de l'entité GLPI.
-    #             - `nbmachines` (int) : Nombre de machines Windows non conformes.
-    #             - `nbupdates` (int) : Nombre total de mises à jour manquantes.
-    #             - `totalmach` (int) : Nombre total de machines Windows recensées.
-    #
-    #     ────────────────────────────────────────────────────────────────
-    #     🧠 NOTES
-    #     ----------------------------------------------------------------
-    #     - Seules les machines dont `platform` commence par "Microsoft Windows"
-    #     sont prises en compte dans toutes les phases.
-    #     - Les données de non-conformité reposent sur la vue SQL `up_machine_activated`,
-    #     déjà filtrée sur les machines Windows et les mises à jour validées
-    #     (dans la *gray* ou *white list*).
-    #     - L’objectif est d’obtenir une vue consolidée de la conformité des
-    #     mises à jour Windows par entité, tout en respectant les filtres GLPI.
-    # """
-    #
-    #     # Initialisation des filtres SQL
-    #     filter_on = ""
-    #     filter_on_noncompliant = ""
-    #
-    #     # Application des filtres depuis la configuration (si fournie)
-    #     if config is not None and getattr(config, "filter_on", None) is not None:
-    #         for key in config.filter_on:
-    #             if key not in ["entity", "state", "type"]:
-    #                 continue
-    #
-    #             if key == "entity":
-    #                 column = "ge.glpi_id"
-    #                 filter_on += f" AND {column} IN ({','.join(map(str, config.filter_on[key]))})"
-    #             elif key == "state":
-    #                 column = "lgf.states_id"
-    #                 filter_on_noncompliant += f" AND {column} IN ({','.join(map(str, config.filter_on[key]))})"
-    #             elif key == "type":
-    #                 column = "lgf.computertypes_id"
-    #                 filter_on_noncompliant += f" AND {column} IN ({','.join(map(str, config.filter_on[key]))})"
-    #
-    #     # ─────────────────────────────────────────────
-    #     # 1️⃣ Récupération de la liste des machines Windows par entité
-    #     # ─────────────────────────────────────────────
-    #     sql_machine_details = f"""
-    #         SELECT
-    #             m.id AS machine_id,
-    #             m.hostname,
-    #             ge.glpi_id AS entity_id
-    #         FROM
-    #             machines m
-    #             JOIN glpi_entity ge ON m.glpi_entity_id = ge.id
-    #         WHERE
-    #             m.agenttype = 'machine'
-    #             AND m.platform LIKE 'Microsoft Windows%'
-    #             {filter_on};
-    #     """
-    #     machine_details = session.execute(sql_machine_details).fetchall()
-    #
-    #     # Organisation des machines par entité
-    #     machine_by_entity = {}
-    #     for row in machine_details:
-    #         entity_id = row.entity_id
-    #         machine_by_entity.setdefault(entity_id, []).append({
-    #             "id": row.machine_id,
-    #             "hostname": row.hostname,
-    #             "valid": row.machine_id != 0,
-    #         })
-    #     logger.debug("Machines Windows par entité [%s]" % (machine_by_entity))
-    #
-    #     # ─────────────────────────────────────────────
-    #     # 2️⃣ Total de machines Windows par entité
-    #     # ─────────────────────────────────────────────
-    #     sql_total_machines = f"""
-    #         SELECT
-    #             ge.glpi_id AS id,
-    #             COUNT(m.hostname) AS totalmach
-    #         FROM
-    #             machines m
-    #             JOIN glpi_entity ge ON m.glpi_entity_id = ge.id
-    #         WHERE
-    #             m.agenttype = 'machine'
-    #             AND m.platform LIKE 'Microsoft Windows%'
-    #             {filter_on}
-    #         GROUP BY
-    #             ge.glpi_id;
-    #     """
-    #     total_machines = {
-    #         row.id: row.totalmach for row in session.execute(sql_total_machines)
-    #     }
-    #     logger.debug("Total machines Windows par entité [%s]" % (total_machines))
-    #
-    #     # ─────────────────────────────────────────────
-    #     # 3️⃣ Données de non-conformité (vue filtrée Windows)
-    #     # ─────────────────────────────────────────────
-    #     sql_noncompliant = f"""
-    #         SELECT
-    #             uma.entities_id AS id,
-    #             COUNT(DISTINCT uma.id_machine) AS noncompliant,
-    #             COUNT(DISTINCT uma.update_id) AS missing
-    #         FROM
-    #             up_machine_activated uma
-    #             JOIN local_glpi_filters lgf ON lgf.id = uma.glpi_id
-    #         WHERE
-    #             uma.entities_id IN ({",".join(map(str, entities))})
-    #             {filter_on_noncompliant}
-    #         GROUP BY
-    #             uma.entities_id;
-    #     """
-    #     noncompliant_data = {
-    #         row.id: (row.noncompliant, row.missing)
-    #         for row in session.execute(sql_noncompliant)
-    #     }
-    #
-    #     # ─────────────────────────────────────────────
-    #     # 4️⃣ Construction du résultat final
-    #     # ─────────────────────────────────────────────
-    #     result = []
-    #     for entity_id in entities:
-    #         entity_id = int(entity_id)
-    #
-    #         machines = machine_by_entity.get(entity_id, [])
-    #         noncompliant, missing = noncompliant_data.get(entity_id, (0, 0))
-    #         total = total_machines.get(entity_id, len(machines))
-    #
-    #         result.append({
-    #             "entity": str(entity_id),
-    #             "nbmachines": noncompliant,
-    #             "nbupdates": missing,
-    #             "totalmach": total,
-    #         })
-    #
-    #     return result
-
-
-
-    #
-    # @DatabaseHelper._sessionm
-    # def get_conformity_update_by_entity(self, session, entities: list = [], config=None):
-    #     """
-    #     Récupère les statistiques de conformité des mises à jour par entité.
-    #
-    #     Cette fonction calcule, pour chaque entité spécifiée, le nombre total de machines,
-    #     le nombre de machines non conformes (ayant des mises à jour manquantes)
-    #     et le nombre total de mises à jour concernées, en se basant uniquement sur les
-    #     mises à jour activées dans la "gray list".
-    #
-    #     Args:
-    #         session (Session): Session SQLAlchemy active.
-    #         entities (list): Liste des ID d'entités à analyser.
-    #         config (object, optional): Objet de configuration contenant éventuellement
-    #             un attribut `filter_on`, dictionnaire de filtres possibles :
-    #             - "entity" : liste des IDs d'entités à inclure
-    #             - "state" : liste des IDs d'états des machines
-    #             - "type" : liste des IDs de types d’ordinateurs
-    #
-    #     Returns:
-    #         list[dict]: Liste de dictionnaires contenant pour chaque entité :
-    #             - entity (str): ID de l'entité
-    #             - nbmachines (int): Nombre de machines non conformes
-    #             - nbupdates (int): Nombre de mises à jour manquantes
-    #             - totalmach (int): Nombre total de machines dans l'entité
-    #     """
-    #
-    #     # Initialisation des filtres SQL
-    #     filter_on = ""
-    #     filter_on_noncompliant = ""
-    #
-    #     # Application des filtres depuis la configuration (si fournie)
-    #     if config is not None and getattr(config, "filter_on", None) is not None:
-    #         for key in config.filter_on:
-    #             if key not in ["entity", "state", "type"]:
-    #                 continue
-    #
-    #             if key == "entity":
-    #                 column = "ge.glpi_id"
-    #                 filter_on += f" AND {column} IN ({','.join(map(str, config.filter_on[key]))})"
-    #             elif key == "state":
-    #                 column = "lgf.states_id"
-    #                 filter_on_noncompliant += f" AND {column} IN ({','.join(map(str, config.filter_on[key]))})"
-    #             elif key == "type":
-    #                 column = "lgf.computertypes_id"
-    #                 filter_on_noncompliant += f" AND {column} IN ({','.join(map(str, config.filter_on[key]))})"
-    #
-    #     # ─────────────────────────────────────────────
-    #     # 1️⃣  Récupération de la liste des machines par entité
-    #     # ─────────────────────────────────────────────
-    #     sql_machine_details = f"""
-    #         SELECT
-    #             m.id AS machine_id,
-    #             m.hostname,
-    #             ge.glpi_id AS entity_id
-    #         FROM
-    #             machines m
-    #             JOIN glpi_entity ge ON m.glpi_entity_id = ge.id
-    #         WHERE
-    #             m.agenttype = 'machine'
-    #             {filter_on};
-    #     """
-    #     machine_details = session.execute(sql_machine_details).fetchall()
-    #
-    #     # Organisation des machines par entité
-    #     machine_by_entity = {}
-    #     for row in machine_details:
-    #         entity_id = row.entity_id
-    #         machine_by_entity.setdefault(entity_id, []).append({
-    #             "id": row.machine_id,
-    #             "hostname": row.hostname,
-    #             "valid": row.machine_id != 0,
-    #         })
-    #     logger.debug("Récupération de la liste des machines par entité [%s] " % (machine_by_entity))
-    #     # ─────────────────────────────────────────────
-    #     # 2️⃣  Récupération du total de machines par entité
-    #     # ─────────────────────────────────────────────
-    #     sql_total_machines = f"""
-    #         SELECT
-    #             ge.glpi_id AS id,
-    #             COUNT(m.hostname) AS totalmach
-    #         FROM
-    #             machines m
-    #             JOIN glpi_entity ge ON m.glpi_entity_id = ge.id
-    #         WHERE
-    #             m.agenttype = 'machine'
-    #             {filter_on}
-    #         GROUP BY
-    #             ge.glpi_id;
-    #     """
-    #     total_machines = {
-    #         row.id: row.totalmach for row in session.execute(sql_total_machines)
-    #     }
-    #     logger.debug("Récupération du total de machines par entité [%s] " % (total_machines))
-    #     # ─────────────────────────────────────────────
-    #     # 3️⃣  Récupération des données de non-conformité
-    #     # ─────────────────────────────────────────────
-    #     sql_noncompliant = f"""
-    #         SELECT
-    #             uma.entities_id AS id,
-    #             COUNT(DISTINCT uma.id_machine) AS noncompliant,
-    #             COUNT(DISTINCT uma.update_id) AS missing
-    #         FROM
-    #             up_machine_activated uma
-    #             JOIN local_glpi_filters lgf ON lgf.id = uma.glpi_id
-    #         WHERE
-    #             uma.entities_id IN ({",".join(map(str, entities))})
-    #             {filter_on_noncompliant}
-    #         GROUP BY
-    #             uma.entities_id;
-    #     """
-    #     noncompliant_data = {
-    #         row.id: (row.noncompliant, row.missing)
-    #         for row in session.execute(sql_noncompliant)
-    #     }
-    #
-    #     # ─────────────────────────────────────────────
-    #     # 4️⃣  Construction du résultat final
-    #     # ─────────────────────────────────────────────
-    #     result = []
-    #     for entity_id in entities:
-    #         entity_id = int(entity_id)
-    #
-    #         machines = machine_by_entity.get(entity_id, [])
-    #         noncompliant, missing = noncompliant_data.get(entity_id, (0, 0))
-    #         total = total_machines.get(entity_id, len(machines))
-    #
-    #         result.append({
-    #             "entity": str(entity_id),
-    #             "nbmachines": noncompliant,
-    #             "nbupdates": missing,
-    #             "totalmach": total,
-    #         })
-    #
-    #     return result
 
 
     @DatabaseHelper._sessionm
