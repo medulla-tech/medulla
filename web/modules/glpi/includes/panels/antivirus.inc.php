@@ -83,7 +83,8 @@ class AntivirusPanel extends Panel
           {
             'label': missingMessage.split(" %percent% ")[0],
             'value':("missing" in machineCount)?machineCount["missing"]:0,
-            'href':"#",
+            'href':urlRedirect+"&group=missing",
+
           },
           {
             'label': '$uninventorized_text',
