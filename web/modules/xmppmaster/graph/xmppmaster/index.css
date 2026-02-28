@@ -326,6 +326,10 @@ progress::-moz-progress-bar {
   width: 120px;
 }
 
+.col-w-200 {
+  width: 200px;
+}
+
 .col-w-300 {
   width: 300px;
 }

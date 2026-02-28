@@ -855,7 +855,7 @@ if ($info['len'] != 0) {
             echo '<table class="listinfos" cellspacing="0" cellpadding="2" border="1">';
             echo "<thead>";
             echo "<tr>";
-            echo '<td class="col-w-120">';
+            echo '<td class="col-w-200">';
             echo _T("key", "xmppmaster");
             echo '</td>';
             echo '<td>';
