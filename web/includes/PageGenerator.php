@@ -1476,12 +1476,16 @@ class ListInfos extends HtmlElement
      */
     public function drawMainAction($idx)
     {
+        $titleAttr = '';
+        if (is_string($this->arrInfo[$idx]) && trim(strip_tags($this->arrInfo[$idx])) != "") {
+            $titleAttr = ' title="' . htmlspecialchars(strip_tags($this->arrInfo[$idx]), ENT_QUOTES, 'UTF-8') . '"';
+        }
         if (!empty($this->cssClass)) {
-            echo "<td class=\"" . $this->cssClass . "\">";
+            echo "<td class=\"" . $this->cssClass . "\"$titleAttr>";
         } elseif (!empty($this->mainActionClasses)) {
-            echo "<td class=\"" . $this->mainActionClasses[$idx] . "\">";
+            echo "<td class=\"" . $this->mainActionClasses[$idx] . "\"$titleAttr>";
         } else {
-            echo "<td>";
+            echo "<td$titleAttr>";
         }
         if (is_a($this->arrAction[0], 'ActionItem')) {
             $firstAction = $this->arrAction[0];
@@ -1502,16 +1506,72 @@ class ListInfos extends HtmlElement
 
     public function drawTable($navbar = 1)
 {
-    echo "<table border=\"1\" cellspacing=\"0\" cellpadding=\"5\" class=\"listinfos\">\n";
+    echo "<table border=\"1\" cellspacing=\"0\" cellpadding=\"5\" class=\"listinfos listinfos-fixed\" style=\"table-layout: fixed; width: 100%;\">\n";
     $this->drawCaption();
 
-    // En-têtes du tableau
+    // --- Calcul des largeurs proportionnelles ---
+    $minChars = 8;
+    $columns = [];
+    $fixedPixels = 0;
+    $totalWeight = 0;
+
+    // Collecter les infos de toutes les colonnes
+    foreach ($this->description as $key => $desc) {
+        $headerText = strip_tags($desc);
+        $explicitWidth = (isset($this->col_width[$key]) && !empty($this->col_width[$key])) ? $this->col_width[$key] : null;
+        $weight = max(mb_strlen($headerText), $minChars);
+        if ($explicitWidth && strpos($explicitWidth, 'px') !== false) {
+            $fixedPixels += intval($explicitWidth);
+        } elseif (!$explicitWidth) {
+            $totalWeight += $weight;
+        }
+        $columns[] = ['weight' => $weight, 'explicit_width' => $explicitWidth];
+    }
+    foreach ($this->extraColumns as $extraCol) {
+        $headerText = strip_tags($extraCol["description"]);
+        $explicitWidth = !empty($extraCol["width"]) ? $extraCol["width"] : null;
+        $weight = max(mb_strlen($headerText), $minChars);
+        if ($explicitWidth && strpos($explicitWidth, 'px') !== false) {
+            $fixedPixels += intval($explicitWidth);
+        } elseif (!$explicitWidth) {
+            $totalWeight += $weight;
+        }
+        $columns[] = ['weight' => $weight, 'explicit_width' => $explicitWidth];
+    }
+
+    // Largeur action
+    $actionWidth = 0;
+    if (safeCount($this->arrAction) != 0) {
+        $actionCount = safeCount($this->arrAction);
+        $actionWidth = ($actionCount * 32) + 25;
+        $fixedPixels += $actionWidth;
+    }
+
+    // Calculer la largeur CSS de chaque colonne
+    foreach ($columns as &$col) {
+        if ($col['explicit_width']) {
+            $col['calc_width'] = $col['explicit_width'];
+        } elseif ($totalWeight > 0) {
+            $ratio = round($col['weight'] / $totalWeight, 4);
+            if ($fixedPixels > 0) {
+                $col['calc_width'] = 'calc((100% - ' . $fixedPixels . 'px) * ' . $ratio . ')';
+            } else {
+                $col['calc_width'] = round($ratio * 100, 1) . '%';
+            }
+        } else {
+            $col['calc_width'] = 'auto';
+        }
+    }
+    unset($col);
+
+    // --- En-têtes du tableau ---
     echo "<thead><tr>";
     $first = false;
+    $colIdx = 0;
 
     // Colonnes principales (description)
     foreach ($this->description as $key => $desc) {
-        $width_styl = isset($this->col_width[$key]) ? 'width: ' . $this->col_width[$key] . ';' : '';
+        $width_styl = 'width: ' . $columns[$colIdx]['calc_width'] . ';';
         if (!$first) {
             if (!isset($this->first_elt_padding)) {
                 $this->first_elt_padding = 0;
@@ -1523,20 +1583,21 @@ class ListInfos extends HtmlElement
             $tooltipend = !empty($this->tooltip[$key]) ? "<span>" . $this->tooltip[$key] . "</span></a>" : "";
             echo "<td style=\"$width_styl\"><span>$tooltipbegin$desc$tooltipend</span></td>";
         }
+        $colIdx++;
     }
 
     // Colonnes extra (normales et brutes)
     foreach ($this->extraColumns as $extraCol) {
-        $width_styl = !empty($extraCol["width"]) ? 'width: ' . $extraCol["width"] . ';' : '';
+        $width_styl = 'width: ' . $columns[$colIdx]['calc_width'] . ';';
         $tooltipbegin = !empty($extraCol["tooltip"]) ? "<a href=\"#\" class=\"tooltip\">" : "";
         $tooltipend = !empty($extraCol["tooltip"]) ? "<span>" . $extraCol["tooltip"] . "</span></a>" : "";
         echo "<td style=\"$width_styl\"><span>$tooltipbegin" . $extraCol["description"] . "$tooltipend</span></td>";
+        $colIdx++;
     }
 
     // Colonne "Actions" si nécessaire
     if (safeCount($this->arrAction) != 0) {
-        $width_styl = !empty(end($this->col_width)) ? 'width: ' . end($this->col_width) . ';' : '';
-        echo "<td style=\"text-align: center; $width_styl\"><span>Actions</span></td>";
+        echo "<td class=\"action-header\" style=\"text-align: center; width: {$actionWidth}px;\"><span>Actions</span></td>";
     }
 
     echo "</tr></thead>";
@@ -1559,14 +1620,31 @@ class ListInfos extends HtmlElement
         if (safeCount($this->arrAction) && $this->firstColumnActionLink && !in_array($idx, $this->dissociateColumnsActionLink)) {
             $this->drawMainAction($idx);
         } else {
-            echo "<td>";
+            $titleAttr = '';
+            if (is_string($this->arrInfo[$idx]) && trim($this->arrInfo[$idx]) != "") {
+                $plainText = strip_tags($this->arrInfo[$idx]);
+                if (strlen($plainText) > 0) {
+                    $titleAttr = ' title="' . htmlspecialchars($plainText, ENT_QUOTES, 'UTF-8') . '"';
+                }
+            }
+            echo "<td$titleAttr>";
             echo $this->arrInfo[$idx];
             echo "</td>";
         }
 
         // Colonnes extra (normales et brutes)
         foreach ($this->extraColumns as $extraCol) {
-            echo "<td>";
+            $titleAttr = '';
+            if (isset($extraCol["data"][$idx]) && !$extraCol["isRaw"]) {
+                $data = $extraCol["data"][$idx];
+                if (is_string($data) && trim($data) != "") {
+                    $plainText = strip_tags($data);
+                    if (strlen($plainText) > 0) {
+                        $titleAttr = ' title="' . htmlspecialchars($plainText, ENT_QUOTES, 'UTF-8') . '"';
+                    }
+                }
+            }
+            echo "<td$titleAttr>";
             if (isset($extraCol["data"][$idx])) {
                 if ($extraCol["isRaw"]) {
                     echo $extraCol["data"][$idx]; // Affichage brut

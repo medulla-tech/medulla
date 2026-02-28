@@ -824,7 +824,7 @@ li.empty a { background-image: url("../../img/common/spacer.gif"); }
 
 #section table.listinfos {
   border: none;
-  margin: 15px 30px 15px 0px;
+  margin: 15px 0;
   border-radius: 9px;
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
@@ -850,6 +850,31 @@ li.empty a { background-image: url("../../img/common/spacer.gif"); }
 
 #section table.listinfos tbody tr.alternate {
   background-color: #f4f7f9 !important;
+}
+
+/* ===== Uniform table handling for all listinfos tables ===== */
+
+/* --- Headers and body cells: wrap text to stay readable --- */
+#section table.listinfos thead td,
+#section table.listinfos-fixed tbody td {
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+/* --- Action column: icons on one line, never wrapped --- */
+#section table.listinfos thead td.action-header,
+#section table.listinfos tbody td.action {
+  white-space: nowrap;
+  word-break: normal;
+  overflow-wrap: normal;
+}
+
+/* --- Raw listinfos tables (no table-layout: fixed) --- */
+#section table.listinfos:not(.listinfos-fixed) tbody td {
+  max-width: 400px;
+  overflow: hidden;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 #section table.membersTpl {
