@@ -1719,45 +1719,55 @@ class Glpi95(DyngroupDatabaseHelper):
                 if "red" in value:
                     query = query.filter(date_mod < state["red"])
 
-            # if 'antivirus' in filt:
-            # if filt['antivirus'] == 'green':
-            # query = query.filter(
-            # and_(
-            # FusionAntivirus.is_active == 1,
-            # FusionAntivirus.is_uptodate == 1,
-            # OS.name.ilike('%windows%'),
-            # not_(FusionAntivirus.name.in_(self.config.av_false_positive)),
-            # )
-            # )
-            # elif filt['antivirus'] == 'orange':
-            # query = query.filter(
-            # and_(
-            # OS.name.ilike('%windows%'),
-            # not_(
-            # and_(
-            # FusionAntivirus.is_active == 1,
-            # FusionAntivirus.is_uptodate == 1,
-            # ),
-            # ),
-            # not_(FusionAntivirus.name.in_(self.config.av_false_positive)),
-            # )
-            # )
-            # elif filt['antivirus'] == 'red':
-            # query = query.filter(
-            # and_(
-            # OS.name.ilike('%windows%'),
-            # or_(
-            # FusionAntivirus.is_active == None,
-            # FusionAntivirus.is_uptodate == None,
-            # and_(
-            # FusionAntivirus.name.in_(self.config.av_false_positive),
-            # not_(FusionAntivirus.computers_id.in_(
-            # self.getMachineIdsNotInAntivirusRed(ctx),
-            # )),
-            # ),
-            # ),
-            # )
-            # )
+            if "antivirus" in filt:
+                if filt["antivirus"] == "green":
+                    query = query.filter(
+                        and_(
+                            FusionAntivirus.is_active == 1,
+                            FusionAntivirus.is_uptodate == 1,
+                            not_(
+                                FusionAntivirus.name.in_(
+                                    self.config.av_false_positive)
+                            ),
+                        )
+                    )
+                elif filt["antivirus"] == "orange":
+                    query = query.filter(
+                        and_(
+                            not_(
+                                and_(
+                                    FusionAntivirus.is_active == 1,
+                                    FusionAntivirus.is_uptodate == 1,
+                                ),
+                            ),
+                            not_(
+                                FusionAntivirus.name.in_(
+                                    self.config.av_false_positive)
+                            ),
+                        )
+                    )
+                elif filt["antivirus"] == "red":
+                    query = query.filter(
+                        and_(
+                            or_(
+                                FusionAntivirus.is_active == None,
+                                FusionAntivirus.is_uptodate == None,
+                                and_(
+                                    FusionAntivirus.name.in_(
+                                        self.config.av_false_positive
+                                    ),
+                                    not_(
+                                        FusionAntivirus.computers_id.in_(
+                                            self.getMachineIdsNotInAntivirusRed(
+                                                ctx),
+                                        )
+                                    ),
+                                ),
+                            ),
+                        )
+                    )
+                elif filt["antivirus"] == "missing":
+                    query = query.filter(FusionAntivirus.id == None)
 
         if count:
             query = query.scalar()

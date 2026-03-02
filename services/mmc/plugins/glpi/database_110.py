@@ -1930,7 +1930,6 @@ class Glpi110(DyngroupDatabaseHelper):
                         and_(
                             FusionAntivirus.is_active == 1,
                             FusionAntivirus.is_uptodate == 1,
-                            OS.name.ilike("%windows%"),
                             not_(
                                 FusionAntivirus.name.in_(
                                     self.config.av_false_positive)
@@ -1940,7 +1939,6 @@ class Glpi110(DyngroupDatabaseHelper):
                 elif filt["antivirus"] == "orange":
                     query = query.filter(
                         and_(
-                            OS.name.ilike("%windows%"),
                             not_(
                                 and_(
                                     FusionAntivirus.is_active == 1,
@@ -1956,7 +1954,6 @@ class Glpi110(DyngroupDatabaseHelper):
                 elif filt["antivirus"] == "red":
                     query = query.filter(
                         and_(
-                            OS.name.ilike("%windows%"),
                             or_(
                                 FusionAntivirus.is_active == None,
                                 FusionAntivirus.is_uptodate == None,
@@ -1974,6 +1971,8 @@ class Glpi110(DyngroupDatabaseHelper):
                             ),
                         )
                     )
+                elif filt["antivirus"] == "missing":
+                    query = query.filter(FusionAntivirus.id == None)
 
         if count:
             query = query.scalar()
