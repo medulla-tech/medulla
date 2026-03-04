@@ -32,13 +32,32 @@ extract($_POST);
 $gotoreturncode = [];
 
 // Get centralize all the goto-return codes into $gotoreturncode variable
-foreach($_POST as $key => $value){
-  if(preg_match("#^gotoreturncode#", $key)){
-    $code = intval(explode('@', $key)[1]);
-    $gotoreturncode[] = ["code"=>htmlentities($code), "label"=>htmlentities($value)];
-  }
-}
+$boperators = ["==", "=", "!=",  "!", "<>", "<", "<=", ">", ">=", "IN", "OUT", "in", "out"];
 
+// hydratation : utilisation des données de $_POST pour l'hydratation.
+foreach($_POST as $key => $value){
+    if(preg_match("#^gotoreturncode#", $key)){
+        // $rawCode = "@5" or "@<=6" (extracted from gotoreturncode@5 or gotoreturncode@<=5)
+        $rawCode = explode('@', $key)[1];
+        $found=[];
+        $code = NULL;
+
+        // check on all operators
+        foreach($boperators as $op){
+            $found = [];
+            preg_match("#^".$op."#", $rawCode, $found);
+            $code = $rawCode;
+        }
+
+        // Here if $code is NULL, it means the operator has not been found, we parse the $code as usual.
+        if($code == NULL){
+            // Cette récupération marche pour des codes de type int, mais comme on inclus l'opérateur, ça ne fonctionnait pas
+            $code = intval(explode('@', $key)[1]);
+        }
+
+        $gotoreturncode[] = ["code"=>htmlentities($code), "label"=>htmlentities($value)];
+    }
+}
     $command = (isset($command)) ? base64_decode($command) : "" ;
 
         $packageList = xmpp_packages_list();
@@ -310,9 +329,39 @@ $lab =  (isset($actionlabel))? $actionlabel : uniqid();
             }
             */
             ?>
+
+             <?php
+           $gotoTitle = _T(
+"Branch if true.\n" .
+"Comparison operators:\n" .
+"n1 → branch if return code equals n1 (equivalent to ==n1 by default);\n" .
+"==n1, =n1 → branch if return code equals n1;\n" .
+"!=n1, !n1, <>n1 → branch if return code is different from n1;\n" .
+"<n1 → branch if return code is less than n1;\n" .
+">n1 → branch if return code is greater than n1;\n" .
+"<=n1 → branch if return code is less than or equal to n1;\n" .
+">=n1 → branch if return code is greater than or equal to n1;\n" .
+"\n" .
+"Interval operators:\n" .
+"INn1,n2 → branch if return code is inside the interval from n1 to n2 (inclusive);\n" .
+"OUTn1,n2 → branch if return code is outside the interval from n1 to n2;\n" .
+"\n" .
+"Notes:\n" .
+"- Interval values are separated by a comma (,).\n" .
+"- n1 and n2 can be negative numbers.\n" .
+"- IN and OUT are case-insensitive (e.g., in1,5 or out-5,5 are valid).\n" .
+"- The order of conditions is important: the first matching condition triggers the branch.\n" .
+"- If no condition matches and the return code equals 0 → branch to END_SUCCESS.\n" .
+"- If no condition matches and no automatic success applies, the sequence proceeds to the next step.\n",
+"pkgs");
+
+?>
+
+
+
         </tr>
         <tr class="toggleable">
-          <td colspan="2">
+          <td  width="100%">
             <input type="checkbox" checked onclick="if(jQuery(this).is(':checked')){
               jQuery(this).next('.add-goto').attr('disabled', false);
               jQuery(this).parent().find('.goto-on-return-section').show();
@@ -329,12 +378,12 @@ $lab =  (isset($actionlabel))? $actionlabel : uniqid();
               <?php
               if(safeCount($gotoreturncode) > 0){
                 foreach($gotoreturncode as $row){?>
-                  <div class='goto-on-return'>Return Code <input type='text' name='gotoreturncode' value='<?php echo $row['code'];?>'/> Goto Label <input type='text' name='gotolabel' value="<?php echo $row['label'];?>"/><input type='button' value='Delete' onclick='jQuery(this).parent().remove()'/></div>
+                  <div class='goto-on-return'>Return Code <input type='text' title='<?php echo htmlspecialchars($gotoTitle); ?>' name='gotoreturncode' value='<?php echo $row['code'];?>'/> Goto Label <input type='text' name='gotolabel' value="<?php echo $row['label'];?>"/><input type='button' value='Delete' onclick='jQuery(this).parent().remove()'/></div>
                 <?php }
               }
               else{
                 ?>
-                <div class='goto-on-return'>Return Code <input type='text' name='gotoreturncode' value='-1'/> Goto Label <input type='text' name='gotolabel' value="END_ERROR"/><input type='button' value='Delete' onclick='jQuery(this).parent().remove()'/></div>
+                <div class='goto-on-return'>Return Code <input type='text' title='<?php echo htmlspecialchars($gotoTitle); ?>' name='gotoreturncode' value='!=0'/> Goto Label <input type='text' name='gotolabel' value="END_ERROR"/><input type='button' value='Delete' onclick='jQuery(this).parent().remove()'/></div>
                 <?php
               }
               ?>

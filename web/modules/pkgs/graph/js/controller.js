@@ -119,7 +119,6 @@ jQuery(function(){
 
         //Get the elements of the sequence
         sequence = getSequenceFromJSON(tmp);
-
         jQuery.each(sequence, function(id,action){
             if ('command' in action){
                 if (!isBase64(action['command'])){
@@ -234,6 +233,10 @@ function moveToDown()
 // Get all the workflow elements and create a sequence
 function createSequence()
 {
+
+    // Ajout d'une liste d'opérateurs admis
+    var boperators = ["<", ">", "==", "<=",">=", "!", "!=", "=", "IN", "OUT", "in", "out"]
+
     // Create a new sequence
     var sequence = [];
     var actualSection = "Install";
@@ -254,6 +257,17 @@ function createSequence()
         gotoreturncode = [];
         jQuery.each(datas,function(idoption, actionRaw){
             tmp = {}
+            // On arrive ici à chaque fois qu'on régénère le json du workflow (dès qu'on clique sur quelque chose)
+            // Si l'option s'appelle 'gotoreturncode' et qu'on trouve un boperator, alors on enregistre la valeur, sans la parser en INT
+            if(actionRaw['name'] == 'gotoreturncode' && boperators.find(operator => actionRaw["value"].startsWith(operator))){
+                //   action["gotoreturncode@"+code] = actionRaw["value"]
+                console.log("dede dede "+ actionRaw["name"]+ " ==== " + actionRaw["value"]);
+                tmp["code"] = actionRaw['value']
+                tmp["gotoreturncode@"+actionRaw['value']] = actionRaw["value"]
+
+                gotoreturncode.push(tmp)
+                return;
+            }
 
 
             if(actionRaw['name'] == 'gotoreturncode' && !isNaN(parseInt(actionRaw['value']))){
@@ -330,7 +344,6 @@ function createSequence()
 // Get info from interface and return it as json
 function createInfo()
 {
-//     console.log("createInfo");
     var info = {};
 
     // Manage dependencies
