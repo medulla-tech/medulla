@@ -77,13 +77,13 @@ $submod->addPage($page);
 $page = new Page("alerts", _T("Alerts Panel", "dashboard"));
 $submod->addPage($page);
 
-$page = new Page("successRate", _T("Success Rate Panel", "dashboard"));
+$page = new Page("successRate_download", _T("Success Rate Panel", "dashboard"));
 $submod->addPage($page);
 
-$page = new Page("agents", _T("Agent Panel", "dashboard"));
+$page = new Page("agents_download", _T("Agent Panel", "dashboard"));
 $submod->addPage($page);
 
-$page = new Page("deploymentsLaunched", _T("Deployment Launched Panel", "dashboard"));
+$page = new Page("deploymentsLaunched_download", _T("Deployment Launched Panel", "dashboard"));
 $submod->addPage($page);
 
 $mod->addSubmod($submod);
