@@ -78,12 +78,12 @@ $excludeAction->setWidth(450);
 if ($count > 0) {
     $n = new OptimizedListInfos($hostnames, _T("Machine", "security"));
     $n->disableFirstColumnActionLink();
-    $n->addExtraInfo($riskScores, _T("Risk Score", "security"));
-    if ($showSeverity['critical']) $n->addExtraInfo($criticalCounts, _T("Critical", "security"));
-    if ($showSeverity['high']) $n->addExtraInfo($highCounts, _T("High", "security"));
-    if ($showSeverity['medium']) $n->addExtraInfo($mediumCounts, _T("Medium", "security"));
-    if ($showSeverity['low']) $n->addExtraInfo($lowCounts, _T("Low", "security"));
-    $n->addExtraInfo($totalCounts, _T("Total", "security"));
+    $n->addExtraInfoCentered($riskScores, _T("Risk Score", "security"));
+    if ($showSeverity['critical']) $n->addExtraInfoCentered($criticalCounts, _T("Critical", "security"));
+    if ($showSeverity['high']) $n->addExtraInfoCentered($highCounts, _T("High", "security"));
+    if ($showSeverity['medium']) $n->addExtraInfoCentered($mediumCounts, _T("Medium", "security"));
+    if ($showSeverity['low']) $n->addExtraInfoCentered($lowCounts, _T("Low", "security"));
+    $n->addExtraInfoCentered($totalCounts, _T("Total", "security"));
     $n->setItemCount($count);
     $n->setNavBar(new AjaxNavBar($count, $filter));
     $n->setParamInfo($params);

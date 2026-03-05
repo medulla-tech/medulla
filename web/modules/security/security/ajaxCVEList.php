@@ -96,7 +96,7 @@ if ($count > 0) {
     $n->addExtraInfo($severities, _T("Severity", "security"));
     $n->addExtraInfo($cvssScores, _T("CVSS", "security"));
     $n->addExtraInfo($softwaresList, _T("Software", "security"));
-    $n->addExtraInfo($machinesCounts, _T("Machines", "security"));
+    $n->addExtraInfoCentered($machinesCounts, _T("Machines", "security"));
     $n->addExtraInfo($descriptions, _T("Description", "security"));
     $n->setItemCount($count);
     $n->setNavBar(new AjaxNavBar($count, $filter));

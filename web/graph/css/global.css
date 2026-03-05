@@ -823,7 +823,8 @@ li.empty a { background-image: url("../../img/common/spacer.gif"); }
 }
 
 #section table.listinfos {
-  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
   margin: 15px 0;
   border-radius: 9px;
   overflow: hidden;
@@ -831,42 +832,51 @@ li.empty a { background-image: url("../../img/common/spacer.gif"); }
   border: 1px solid #e2e8f0;
 }
 
+#section table.listinfos-fixed {
+  table-layout: fixed;
+  width: 100%;
+}
+
 #section table.listinfos thead tr {
   background: var(--color-primary) !important;
 }
 
-#section table.listinfos tr.alternate {
+#section table.listinfos tbody tr.alternate {
   background: var(--color-bg-white) !important;
   transition: background-color 0.15s ease;
 }
 
-#section table.listinfos tr.alternate:nth-child(odd) {
+#section table.listinfos tbody tr.alternate:nth-child(odd) {
   background: #e8eff3 !important;
 }
 
-#section table.listinfos tr.alternate:hover {
+#section table.listinfos tbody tr.alternate:hover {
   background-color: #d0e4ed !important;
-}
-
-#section table.listinfos tbody tr.alternate {
-  background-color: #f4f7f9 !important;
 }
 
 /* ===== Uniform table handling for all listinfos tables ===== */
 
-/* --- Headers and body cells: wrap text to stay readable --- */
-#section table.listinfos thead td,
+/* --- Headers: left-aligned, wrap at spaces only, clip overflow --- */
+#section table.listinfos thead th,
+#section table.listinfos thead td {
+  word-break: normal;
+  overflow-wrap: normal;
+  overflow: hidden;
+}
+
+/* --- Body cells (fixed layout): left-aligned, wrap text, clip overflow --- */
 #section table.listinfos-fixed tbody td {
   word-break: break-word;
   overflow-wrap: break-word;
+  overflow: hidden;
 }
 
 /* --- Action column: icons on one line, never wrapped --- */
-#section table.listinfos thead td.action-header,
 #section table.listinfos tbody td.action {
   white-space: nowrap;
   word-break: normal;
   overflow-wrap: normal;
+  overflow: visible;
 }
 
 /* --- Raw listinfos tables (no table-layout: fixed) --- */
@@ -875,6 +885,33 @@ li.empty a { background-image: url("../../img/common/spacer.gif"); }
   overflow: hidden;
   word-break: break-word;
   overflow-wrap: break-word;
+}
+
+.listinfos .cell-text {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Bulk checkbox: when visible, first cell becomes flex row */
+.listinfos td.bulk-active {
+  display: flex !important;
+  align-items: center;
+}
+
+.listinfos td.bulk-active > .cell-text {
+  flex: 1;
+  min-width: 0;
+  display: block;
+  -webkit-line-clamp: unset;
+  -webkit-box-orient: unset;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 #section table.membersTpl {
@@ -1704,10 +1741,6 @@ div.autocomplete ul li {
   color: var(--color-text-light);
 }
 
-.listinfos tbody tr:hover {
-  background-color: #d8ebf3 !important;
-}
-
 .listinfos thead {
   background-color: var(--color-primary);
 }
@@ -1721,6 +1754,7 @@ div.autocomplete ul li {
   font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 0.3px;
+  text-align: left;
 }
 
 .listinfos thead td span,
@@ -1745,13 +1779,6 @@ div.autocomplete ul li {
 
 .listinfos tbody tr:last-child td {
   border-bottom: none;
-}
-
-/* Larger screens: prevent text wrapping in CIBLE column */
-@media (min-width: 1400px) {
-  .listinfos tbody td:nth-child(2) {
-    white-space: nowrap;
-  }
 }
 
 form.inplaceeditor-form input[type="text"] {
@@ -1930,10 +1957,6 @@ ul.roACL {
   margin-bottom: 0.2em;
 }
 
-.listinfos tbody > tr:hover {
-  background: #e8f4f8 !important;
-}
-
 #nbs {
   margin-left: 10px;
 }
@@ -2046,6 +2069,8 @@ td img[src*="img/other/"],
   text-align: left;
 }
 
+.listinfos th.text-center,
+.listinfos td.text-center,
 .text-center {
   text-align: center;
 }

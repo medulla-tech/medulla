@@ -71,12 +71,14 @@ class EmptyStateBox
  * Adds checkbox-based multi-selection to any ListInfos table, with a toggle icon,
  * select-all checkbox, action bar, confirmation popup, and AJAX deletion.
  *
+ * Checkboxes are created dynamically by JS and injected into the first cell of each row.
+ * No extra table column is needed.
+ *
  * Usage:
  *   $bulkBar = new BulkSelectBar($deleteUrl, $itemType, 'group-select');
  *   // In the loop:
- *   $checkboxes[] = BulkSelectBar::checkbox('group-select', $id, $name);
- *   // Before display:
- *   $n->addExtraInfoRaw($checkboxes, $bulkBar->selectAllHeader(), "30px");
+ *   $bulkBar->addItem($id, $name);   // row with checkbox
+ *   $bulkBar->addEmpty();            // row without checkbox
  *   // After $n->display():
  *   $bulkBar->display();
  */
@@ -86,6 +88,7 @@ class BulkSelectBar
     private $itemType;
     private $cssClass;
     private $i18n;
+    private $items = [];
 
     public function __construct($deleteUrl, $itemType = '0', $cssClass = 'bulk-select', $i18n = [])
     {
@@ -107,26 +110,19 @@ class BulkSelectBar
     }
 
     /**
-     * Build a checkbox HTML string for one item.
-     *
-     * @param string $cssClass CSS class for the checkbox (must match constructor $cssClass)
-     * @param string $id       Item ID (used as value)
-     * @param string $name     Item display name (stored in data-name)
-     * @return string HTML checkbox
+     * Register a row that should have a checkbox.
      */
-    public static function checkbox($cssClass, $id, $name)
+    public function addItem($id, $name)
     {
-        return '<input type="checkbox" class="' . htmlspecialchars($cssClass) . '"'
-             . ' value="' . htmlspecialchars($id) . '"'
-             . ' data-name="' . htmlspecialchars($name, ENT_QUOTES) . '">';
+        $this->items[] = ['id' => (string)$id, 'name' => (string)$name];
     }
 
     /**
-     * Returns the select-all checkbox HTML for the table header.
+     * Register a row that should NOT have a checkbox.
      */
-    public function selectAllHeader()
+    public function addEmpty()
     {
-        return '<input type="checkbox" id="' . htmlspecialchars($this->cssClass) . '-select-all">';
+        $this->items[] = null;
     }
 
     /**
@@ -140,7 +136,6 @@ class BulkSelectBar
         $btnId      = $prefix . '-bulk-btn';
         $countId    = $prefix . '-bulk-count';
         $cancelId   = $prefix . '-bulk-cancel';
-        $selectAllId = $prefix . '-select-all';
 
         // --- HTML bar ---
         echo '<div id="' . $barId . '" style="display: none; padding: 8px 12px; margin-top: 5px; background: #f5f5f5; border-radius: 4px; align-items: center; gap: 10px;">';
@@ -156,7 +151,6 @@ class BulkSelectBar
         $jsDeleteUrl   = addslashes($this->deleteUrl);
         $jsItemType    = addslashes(clean_xss($this->itemType));
         $jsCssClass    = addslashes($this->cssClass);
-        $jsSelectAllId = addslashes($selectAllId);
         $jsBarId       = addslashes($barId);
         $jsBtnId       = addslashes($btnId);
         $jsCountId     = addslashes($countId);
@@ -171,6 +165,8 @@ class BulkSelectBar
         $jsClose         = addslashes($this->i18n['close']);
         $jsAndMore       = addslashes($this->i18n['andMore']);
 
+        $jsItemsJson = addslashes(json_encode($this->items));
+
         echo <<<SCRIPT
 <script type="text/javascript">
 (function() {
@@ -180,8 +176,8 @@ class BulkSelectBar
     var deleteUrl  = '{$jsDeleteUrl}';
     var itemType   = '{$jsItemType}';
     var cssClass   = '{$jsCssClass}';
+    var items      = JSON.parse('{$jsItemsJson}');
 
-    var selectAll = document.getElementById('{$jsSelectAllId}');
     var bulkBar   = document.getElementById('{$jsBarId}');
     var bulkBtn   = document.getElementById('{$jsBtnId}');
     var bulkCount = document.getElementById('{$jsCountId}');
@@ -191,26 +187,26 @@ class BulkSelectBar
     var headerRow = table.querySelector('thead tr');
     var bodyRows  = table.querySelectorAll('tr.alternate');
 
-    // Hide checkbox column, move checkboxes inline into name cells
-    var checkHeaderCell = selectAll ? selectAll.closest('td') : null;
-    var checkColIndex = checkHeaderCell ? Array.prototype.indexOf.call(headerRow.children, checkHeaderCell) : -1;
-    if (checkHeaderCell) checkHeaderCell.style.display = 'none';
+    // Create select-all checkbox
+    var selectAll = document.createElement('input');
+    selectAll.type = 'checkbox';
+    selectAll.id = cssClass + '-select-all';
 
+    // Inject checkboxes into first cell of each body row
     for (var i = 0; i < bodyRows.length; i++) {
-        var cells = bodyRows[i].children;
-        if (checkColIndex >= 0 && cells[checkColIndex]) {
-            var checkCell = cells[checkColIndex];
-            var nameCell = cells[0];
-            var checkbox = checkCell.querySelector('.' + cssClass);
-            if (checkbox) {
-                var wrapper = document.createElement('span');
-                wrapper.className = 'bulk-check-inline';
-                wrapper.style.cssText = 'display:none; margin-right:8px; vertical-align:middle;';
-                wrapper.appendChild(checkbox);
-                nameCell.insertBefore(wrapper, nameCell.firstChild);
-            }
-            checkCell.style.display = 'none';
-        }
+        if (i >= items.length || !items[i]) continue;
+        var nameCell = bodyRows[i].children[0];
+        if (!nameCell) continue;
+        var checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.className = cssClass;
+        checkbox.value = items[i].id;
+        checkbox.setAttribute('data-name', items[i].name);
+        var wrapper = document.createElement('span');
+        wrapper.className = 'bulk-check-inline';
+        wrapper.style.cssText = 'display:none; margin-right:8px; vertical-align:middle;';
+        wrapper.appendChild(checkbox);
+        nameCell.insertBefore(wrapper, nameCell.firstChild);
     }
 
     // Toggle icon + select-all in first header cell
@@ -238,6 +234,11 @@ class BulkSelectBar
         for (var j = 0; j < inlines.length; j++) inlines[j].style.display = on ? 'inline-block' : 'none';
         toggleIcon.style.display = on ? 'none' : 'inline-block';
         bulkBar.style.display = on ? 'flex' : 'none';
+        // Toggle flex layout on first cells so checkbox stays on same line
+        for (var j = 0; j < bodyRows.length; j++) {
+            var fc = bodyRows[j].children[0];
+            if (fc) { if (on) fc.classList.add('bulk-active'); else fc.classList.remove('bulk-active'); }
+        }
         if (!on) {
             selectAll.checked = false;
             var boxes = document.querySelectorAll('.' + cssClass);

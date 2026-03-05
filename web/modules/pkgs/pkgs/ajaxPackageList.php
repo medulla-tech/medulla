@@ -149,7 +149,8 @@ if($sharings['config']['centralizedmultiplesharing'] == true) {
         $_desc = htmlspecialchars($_packages['conf_json'][$i]['description']);
         $_descriptions[] = "<span class='pkg-description' title=\"$_desc\">$_desc</span>";
         $_versions[] = $_packages['conf_json'][$i]['version'];
-        $_os[] = $_packages['conf_json'][$i]['targetos'];
+        $_rawOs = $_packages['conf_json'][$i]['targetos'];
+        $_os[] = str_replace(',', '<br>', $_rawOs);
 
         $_tmpParam['pid'] = base64_encode($_packages['uuid'][$i]);
         $_tmpParam['packageUuid'] = $_packages['uuid'][$i];
@@ -259,9 +260,11 @@ if($sharings['config']['centralizedmultiplesharing'] == true) {
                 }
             }
         }
-        $_checkboxes[] = $_canDelete
-            ? BulkSelectBar::checkbox('pkg-select', $_packages['uuid'][$i], $_packages['conf_json'][$i]['name'])
-            : '';
+        if ($_canDelete) {
+            $bulkBar->addItem($_packages['uuid'][$i], $_packages['conf_json'][$i]['name']);
+        } else {
+            $bulkBar->addEmpty();
+        }
         $_params[] = $_tmpParam;
         $_detailActions[] = $detailAction;
     }
@@ -275,16 +278,12 @@ if($sharings['config']['centralizedmultiplesharing'] == true) {
         $n = new OptimizedListInfos($_arraypackagename, _T("Package name", "pkgs"));
         $n->setCssIds($ids);
         $n->disableFirstColumnActionLink();
-        $n->addExtraInfo($_packages['share_name'], _T("Share", "pkgs"));
-        $n->addExtraInfo($_packages['permission'], _T("Permissions", "pkgs"));
-        //$n->addExtraInfo($_sharing_types, _T("Localization type", "pkgs"));
         $n->addExtraInfo($_descriptions, _T("Description", "pkgs"));
-        $n->addExtraInfo($_versions, _T("Version", "pkgs"));
-        $n->addExtraInfo($_licenses, _T("Licenses", "pkgs"));
-        $n->addExtraInfo($_os, _T("Os", "pkgs"));
-        $n->addExtraInfo($_sizes, _T("Size", "pkgs"));
-        $n->addExtraInfo($_diskUsages, _T("Share usage", "pkgs"));
-        $n->addExtraInfoRaw($_checkboxes, $bulkBar->selectAllHeader(), "30px");
+        $n->addExtraInfoCentered($_versions, _T("Version", "pkgs"), "90px");
+        $n->addExtraInfoCentered($_sizes, _T("Size", "pkgs"), "90px");
+        $n->addExtraInfoRaw($_os, _T("Os", "pkgs"), "70px");
+        $n->addExtraInfo($_packages['share_name'], _T("Share", "pkgs"), "120px");
+        $n->addExtraInfo($_licenses, _T("Licenses", "pkgs"), "90px");
         $n->setItemCount($_count);
         $n->setNavBar(new AjaxNavBar($_count, $filter1));
         $n->setParamInfo($_params);
@@ -369,7 +368,7 @@ if($sharings['config']['centralizedmultiplesharing'] == true) {
         $versions[] = $p['version'];
         $descText = htmlspecialchars($p['description']);
         $desc[] = "<span class='pkg-description' title=\"$descText\">$descText</span>";
-        $os[] = $p['targetos'];
+        $os[] = str_replace(',', '<br>', $p['targetos']);
         // #### begin licenses ####
         $tmp_licenses = '';
         if ($p['associateinventory'] == 1 && isset($p['licenses']) && !empty($p['licenses'])) {
@@ -431,9 +430,11 @@ if($sharings['config']['centralizedmultiplesharing'] == true) {
                 $canDelete = true;
             }
         }
-        $checkboxes[] = $canDelete
-            ? BulkSelectBar::checkbox('pkg-select', $p['id'], $p['label'])
-            : '';
+        if ($canDelete) {
+            $bulkBar->addItem($p['id'], $p['label']);
+        } else {
+            $bulkBar->addEmpty();
+        }
         $detailActions[] = $detailAction;
     }
     if($count > 0) {
@@ -446,11 +447,10 @@ if($sharings['config']['centralizedmultiplesharing'] == true) {
         $n->disableFirstColumnActionLink();
         $n->setCssIds($ids);
         $n->addExtraInfo($desc, _T("Description", "pkgs"));
-        $n->addExtraInfo($versions, _T("Version", "pkgs"));
-        $n->addExtraInfo($licenses, _T("Licenses", "pkgs"));
-        $n->addExtraInfo($os, _T("Os", "pkgs"));
-        $n->addExtraInfo($size, _T("Size", "pkgs"));
-        $n->addExtraInfoRaw($checkboxes, $bulkBar->selectAllHeader(), "30px");
+        $n->addExtraInfoCentered($versions, _T("Version", "pkgs"), "90px");
+        $n->addExtraInfoCentered($size, _T("Size", "pkgs"), "90px");
+        $n->addExtraInfoRaw($os, _T("Os", "pkgs"), "70px");
+        $n->addExtraInfo($licenses, _T("Licenses", "pkgs"), "90px");
         $n->setItemCount($count);
         $n->setNavBar(new AjaxNavBar($count, $filter1));
         $n->setParamInfo($params);

@@ -251,11 +251,11 @@ if ($entity == '') {
     $n = new OptimizedListInfos($machines["cn"], _T("Machine name", "updates"));
     $n->disableFirstColumnActionLink();
     $n->addExtraInfo($machines["os"], _T("Platform", "updates"));
-    $n->addExtraInfo($machines["complianceRate"], _T("Compliance rate", "updates"));
-    $n->addExtraInfo($machines["missing"], _T("Missing updates", "updates"));
-    $n->addExtraInfo($machines["inprogress"], _T("In progress", "updates"));
-    $n->addExtraInfo($machines["installed"], _T("Installed updates", "updates"));
-    $n->addExtraInfo($machines["total"], _T("Total updates", "updates"));
+    $n->addExtraInfoRaw($machines["complianceRate"], _T("Compliance rate", "updates"));
+    $n->addExtraInfoCentered($machines["missing"], _T("Missing updates", "updates"));
+    $n->addExtraInfoCentered($machines["inprogress"], _T("In progress", "updates"));
+    $n->addExtraInfoCentered($machines["installed"], _T("Installed updates", "updates"));
+    $n->addExtraInfoCentered($machines["total"], _T("Total updates", "updates"));
     $n->addActionItemArray($machines["actionDetailByMachines"]);
     $n->addActionItemArray($machines["actionPendingByMachines"]);
     $n->addActionItemArray($machines["actionDoneByMachines"]);

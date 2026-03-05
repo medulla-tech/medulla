@@ -201,7 +201,7 @@ if ($facilitylevel <= 1) {
         $manageusersAction[] = $action_manageusers;
         $downloadAction[]    = $action_download;
         $deleteAction[]      = new EmptyActionItem1(_("Unauthorized deletion"), "", "deleteg", "", "admin", "admin");
-        $checkboxes[]        = '';
+        $bulkBar->addEmpty();
 
         continue;
     }
@@ -214,7 +214,7 @@ if ($facilitylevel <= 1) {
             $manageusersAction[] = $action_manageusers;
             $downloadAction[]    = $action_download;
             $deleteAction[]      = $action_non_delete;
-            $checkboxes[]        = '';
+            $bulkBar->addEmpty();
         } else {
             // Non owner: Complete actions
             $editAction[]        = $action_edit;
@@ -222,7 +222,7 @@ if ($facilitylevel <= 1) {
             $manageusersAction[] = $action_manageusers;
             $downloadAction[]    = $action_download;
             $deleteAction[]      = $deleteToAdd;
-            $checkboxes[]        = BulkSelectBar::checkbox('entity-select', $entityIdCurrent, $entityName);
+            $bulkBar->addItem($entityIdCurrent, $entityName);
         }
     }
 
@@ -253,10 +253,9 @@ $displayArray = array_map(function ($s, $i) use ($processAll) {
 // Rendered list
 $n = new OptimizedListInfos($data['name'], _T("Name of Entity", "admin"));
 $n->addExtraInfo($displayArray, _T("Complete Name", "admin"));
-$n->addExtraInfo($data['nb_users'], _T("Users", "admin"));
-$n->addExtraInfo($data['nb_machines'], _T("Computers", "admin"));
+$n->addExtraInfoCentered($data['nb_users'], _T("Users", "admin"));
+$n->addExtraInfoCentered($data['nb_machines'], _T("Computers", "admin"));
 
-    $n->addExtraInfoRaw($checkboxes, $bulkBar->selectAllHeader(), "30px");
     $n->addActionItemArray($editAction);
     $n->addActionItemArray($addAction);
     $n->addActionItemArray($manageusersAction);

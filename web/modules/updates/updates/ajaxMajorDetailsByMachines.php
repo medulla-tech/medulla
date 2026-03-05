@@ -48,11 +48,11 @@ $typeaction= !empty($_GET['typeaction']) ? htmlentities($_GET['typeaction']) : "
 if ($typeaction ==  "windows"){
 
     $n = new ListInfos(array( $_GET['W10to10']), _T("Upgrade W10->W10", "updates"));
-    $n->addExtraInfo(array( $_GET['W10to11']), _T("Upgrade W10->W11", "updates"));
-    $n->addExtraInfo(array( $_GET['W11to11']), _T("Upgrade W11->W11", "updates"));
-    $n->addExtraInfo(array( $_GET['UPDATED']), _T("Up to date", "updates"));
-    $n->addExtraInfo(array( $_GET['nb_missing']), _T("Upgrade Not recommended", "updates"));
-    $n->addExtraInfo(array( $_GET['totalmachineentity']), _T("Total machines", "updates"));
+    $n->addExtraInfoCentered(array( $_GET['W10to11']), _T("Upgrade W10->W11", "updates"));
+    $n->addExtraInfoCentered(array( $_GET['W11to11']), _T("Upgrade W11->W11", "updates"));
+    $n->addExtraInfoCentered(array( $_GET['UPDATED']), _T("Up to date", "updates"));
+    $n->addExtraInfoCentered(array( $_GET['nb_missing']), _T("Upgrade Not recommended", "updates"));
+    $n->addExtraInfoCentered(array( $_GET['totalmachineentity']), _T("Total machines", "updates"));
     $n->setNavBar ="";
     $n->start = 0;
     $n->end =1;
@@ -78,12 +78,12 @@ if ($typeaction ==  "windows"){
 
 }else{
     $n = new ListInfos(array( $_GET['MS12toMS25']), _T("UpgradeMS12toMS25", "updates"));
-    $n->addExtraInfo(array( $_GET['MS16toMS25']), _T("Upgrade MS16toMS25", "updates"));
-    $n->addExtraInfo(array( $_GET['MS19toMS25']), _T("Upgrade MS19toMS25", "updates"));
-    $n->addExtraInfo(array( $_GET['MS25toMS25']), _T("Upgrade MS25toMS25", "updates"));
-    $n->addExtraInfo(array( $_GET['UPDATED']), _T("Up to date", "updates"));
-    $n->addExtraInfo(array( $_GET['nb_missing']), _T("Upgrade Not recommended", "updates"));
-    $n->addExtraInfo(array( $_GET['totalmachineentity']), _T("Total machines", "updates"));
+    $n->addExtraInfoCentered(array( $_GET['MS16toMS25']), _T("Upgrade MS16toMS25", "updates"));
+    $n->addExtraInfoCentered(array( $_GET['MS19toMS25']), _T("Upgrade MS19toMS25", "updates"));
+    $n->addExtraInfoCentered(array( $_GET['MS25toMS25']), _T("Upgrade MS25toMS25", "updates"));
+    $n->addExtraInfoCentered(array( $_GET['UPDATED']), _T("Up to date", "updates"));
+    $n->addExtraInfoCentered(array( $_GET['nb_missing']), _T("Upgrade Not recommended", "updates"));
+    $n->addExtraInfoCentered(array( $_GET['totalmachineentity']), _T("Total machines", "updates"));
     $n->setNavBar ="";
     $n->start = 0;
     $n->end =1;

@@ -349,8 +349,7 @@ progress::-moz-progress-bar {
   border-radius: 4px;
   display: inline-block;
   font-size: 11px;
-  white-space: nowrap;
-  min-width: 160px;
+  max-width: 100%;
   text-align: center;
   box-sizing: border-box;
 }

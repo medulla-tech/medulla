@@ -129,7 +129,7 @@ $m->setCssClass("package2");
 $m->disableFirstColumnActionLink();
 $m->addExtraInfo( $notd_machinesname, _T("Target", "xmppmaster"));
 $m->addExtraInfo( $notd_datestart, _T("Start date", "xmppmaster"));
-$m->addExtraInfo( $notd_nb_machines, _T("Total Machines", "xmppmaster"));
+$m->addExtraInfoCentered( $notd_nb_machines, _T("Total Machines", "xmppmaster"));
 $m->addExtraInfo( $notd_logins,_T("User", "xmppmaster"));
 $m->setItemCount($arraynotdeploy['total']);
 $m->setNavBar(new AjaxNavBar($arraynotdeploy['total'], $filter, "updateSearchParamformRunning_notd"));

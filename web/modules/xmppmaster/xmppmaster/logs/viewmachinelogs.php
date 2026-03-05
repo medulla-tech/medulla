@@ -494,38 +494,38 @@ if ($info['len'] != 0) {
         echo '<table class="listinfos" cellspacing="0" cellpadding="5">';
         echo "<thead>";
         echo "<tr>";
-        echo '<td class="text-center">';
+        echo '<td>';
         echo '<span>'._T("Name", "xmppmaster").'</span>';
         echo '</td>';
-        echo '<td class="text-center">';
+        echo '<td>';
         echo '<span>'._T("Software", "xmppmaster").'</span>';
         echo '</td>';
         echo '<td class="text-center">';
         echo '<span>'._T("Version", "xmppmaster").'</span>';
         echo '</td>';
-        echo '<td class="text-center">';
+        echo '<td>';
         echo '<span>'._T("Description", "xmppmaster").'</span>';
         echo '</td>';
         echo "</tr>";
         echo "</thead>";
         echo "<tbody>";
-        $infoPkg = (!empty($deploymachine) && !empty($deploymachine['package_id'])) 
+        $infoPkg = (!empty($deploymachine) && !empty($deploymachine['package_id']))
                     ? $deploymachine['package_id']
                     : pkgsGetDetails($info['objectdeploy'][0]['pathpackage']);
         if (empty($infoslist)) {
-            echo "<tr>";
-            echo '<td class="text-center">' . htmlspecialchars($infoPkg['label']) . "</td>";
-            echo '<td class="text-center">' . htmlspecialchars($infoPkg['label']) . "</td>";
+            echo "<tr class='alternate'>";
+            echo '<td>' . htmlspecialchars($infoPkg['label']) . "</td>";
+            echo '<td>' . htmlspecialchars($infoPkg['label']) . "</td>";
             echo '<td class="text-center">' . htmlspecialchars($infoPkg['version']) . "</td>";
-            echo '<td class="text-center">' . htmlspecialchars($infoPkg['description']) . "</td>";
+            echo '<td>' . htmlspecialchars($infoPkg['description']) . "</td>";
             echo "</tr>";
         } else {
             foreach ($infoslist as $inf) {
-                echo "<tr>";
-                echo '<td class="text-center">' . htmlspecialchars($inf->name) . "</td>";
-                echo '<td class="text-center">' . htmlspecialchars($inf->software) . "</td>";
+                echo "<tr class='alternate'>";
+                echo '<td>' . htmlspecialchars($inf->name) . "</td>";
+                echo '<td>' . htmlspecialchars($inf->software) . "</td>";
                 echo '<td class="text-center">' . htmlspecialchars($inf->version) . "</td>";
-                echo '<td class="text-center">' . htmlspecialchars($inf->description) . "</td>";
+                echo '<td>' . htmlspecialchars($inf->description) . "</td>";
                 echo "</tr>";
             }
         }

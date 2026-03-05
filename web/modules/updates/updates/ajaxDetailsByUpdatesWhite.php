@@ -114,9 +114,9 @@ $n = new OptimizedListInfos($titles, _T("Update name", "updates"));
 $n->disableFirstColumnActionLink();
 
 $n->addExtraInfo($complRates, _T("Compliance rate", "updates"));
-$n->addExtraInfo($machineWithUpd, _T("Machines with this update", "updates"));
-$n->addExtraInfo($machineWithoutUpd, _T("Machines asking for this update", "updates"));
-$n->addExtraInfo($total, _T("Total of machines", "updates"));
+$n->addExtraInfoCentered($machineWithUpd, _T("Machines with this update", "updates"));
+$n->addExtraInfoCentered($machineWithoutUpd, _T("Machines asking for this update", "updates"));
+$n->addExtraInfoCentered($total, _T("Total of machines", "updates"));
 
 $n->setItemCount($count_enabled_updates);
 $n->setNavBar(new AjaxNavBar($count_enabled_updates, $filter, 'updateSearchParamformWhite'));

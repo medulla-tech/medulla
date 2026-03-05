@@ -1291,6 +1291,20 @@ class ListInfos extends HtmlElement
             ];
         }
     }
+    public function addExtraInfoCentered($arrString, $description = "", $width = "", $tooltip = "")
+    {
+        if (is_array($arrString)) {
+            $this->extraColumns[] = [
+                "data" => $arrString,
+                "isRaw" => false,
+                "description" => $description,
+                "width" => $width,
+                "tooltip" => $tooltip,
+                "centered" => true
+            ];
+        }
+    }
+
     public function addExtraInfodirecthtml($arrString, $description = "", $directhtml = false, $width = "",
     $tooltip = "")
     {
@@ -1492,10 +1506,12 @@ class ListInfos extends HtmlElement
         } elseif (is_array($this->arrAction[0])) {
             $firstAction = $this->arrAction[0][$idx];
         }
+        echo '<span class="cell-text">';
         echo $firstAction->encapsulate($this->arrInfo[$idx], $this->paramInfo[$idx]);
         if (isset($this->_addInfo[$idx])) {
             print " " . $this->_addInfo[$idx];
         }
+        echo '</span>';
         echo "</td>";
     }
 
@@ -1506,63 +1522,78 @@ class ListInfos extends HtmlElement
 
     public function drawTable($navbar = 1)
 {
-    echo "<table border=\"1\" cellspacing=\"0\" cellpadding=\"5\" class=\"listinfos listinfos-fixed\" style=\"table-layout: fixed; width: 100%;\">\n";
+    // Compter le nombre total de colonnes
+    $totalCols = safeCount($this->description) + safeCount($this->extraColumns);
+    if (safeCount($this->arrAction) != 0) {
+        $totalCols++;
+    }
+
+    // ≤ 8 colonnes → table-layout: fixed avec colgroup
+    // > 8 colonnes → table-layout: auto (le navigateur distribue l'espace)
+    $useFixed = ($totalCols <= 8);
+    $tableClass = $useFixed ? "listinfos listinfos-fixed" : "listinfos";
+
+    echo "<table class=\"$tableClass\">\n";
     $this->drawCaption();
 
-    // --- Calcul des largeurs proportionnelles ---
-    $minChars = 8;
+    // --- Calcul des largeurs : px fixes pour petites colonnes, flex pour le reste ---
     $columns = [];
-    $fixedPixels = 0;
-    $totalWeight = 0;
+    $totalFixedPx = 0;
+    $totalFlexWeight = 0;
 
-    // Collecter les infos de toutes les colonnes
+    // Colonnes principales (description)
     foreach ($this->description as $key => $desc) {
-        $headerText = strip_tags($desc);
         $explicitWidth = (isset($this->col_width[$key]) && !empty($this->col_width[$key])) ? $this->col_width[$key] : null;
-        $weight = max(mb_strlen($headerText), $minChars);
         if ($explicitWidth && strpos($explicitWidth, 'px') !== false) {
-            $fixedPixels += intval($explicitWidth);
-        } elseif (!$explicitWidth) {
-            $totalWeight += $weight;
+            $px = intval($explicitWidth);
+            $columns[] = ['type' => 'fixed', 'px' => $px];
+            $totalFixedPx += $px;
+        } else {
+            $columns[] = ['type' => 'flex', 'weight' => 200];
+            $totalFlexWeight += 200;
         }
-        $columns[] = ['weight' => $weight, 'explicit_width' => $explicitWidth];
-    }
-    foreach ($this->extraColumns as $extraCol) {
-        $headerText = strip_tags($extraCol["description"]);
-        $explicitWidth = !empty($extraCol["width"]) ? $extraCol["width"] : null;
-        $weight = max(mb_strlen($headerText), $minChars);
-        if ($explicitWidth && strpos($explicitWidth, 'px') !== false) {
-            $fixedPixels += intval($explicitWidth);
-        } elseif (!$explicitWidth) {
-            $totalWeight += $weight;
-        }
-        $columns[] = ['weight' => $weight, 'explicit_width' => $explicitWidth];
     }
 
-    // Largeur action
-    $actionWidth = 0;
+    // Colonnes extra
+    foreach ($this->extraColumns as $extraCol) {
+        $explicitWidth = !empty($extraCol["width"]) ? $extraCol["width"] : null;
+        if ($explicitWidth && strpos($explicitWidth, 'px') !== false) {
+            $px = intval($explicitWidth);
+            $columns[] = ['type' => 'fixed', 'px' => $px];
+            $totalFixedPx += $px;
+        } elseif (!empty($extraCol["centered"]) && empty($explicitWidth)) {
+            $columns[] = ['type' => 'flex', 'weight' => 120];
+            $totalFlexWeight += 120;
+        } else {
+            $columns[] = ['type' => 'flex', 'weight' => 200];
+            $totalFlexWeight += 200;
+        }
+    }
+
+    // Colonne action : pixels fixes
+    $actionPx = 0;
     if (safeCount($this->arrAction) != 0) {
         $actionCount = safeCount($this->arrAction);
-        $actionWidth = ($actionCount * 32) + 25;
-        $fixedPixels += $actionWidth;
+        $actionPx = ($actionCount * 40) + 30;
+        $totalFixedPx += $actionPx;
     }
 
-    // Calculer la largeur CSS de chaque colonne
-    foreach ($columns as &$col) {
-        if ($col['explicit_width']) {
-            $col['calc_width'] = $col['explicit_width'];
-        } elseif ($totalWeight > 0) {
-            $ratio = round($col['weight'] / $totalWeight, 4);
-            if ($fixedPixels > 0) {
-                $col['calc_width'] = 'calc((100% - ' . $fixedPixels . 'px) * ' . $ratio . ')';
+    // --- <colgroup> uniquement en mode fixed ---
+    if ($useFixed) {
+        echo "<colgroup>\n";
+        foreach ($columns as $col) {
+            if ($col['type'] === 'fixed') {
+                echo "<col style=\"width: {$col['px']}px;\">\n";
             } else {
-                $col['calc_width'] = round($ratio * 100, 1) . '%';
+                $pct = round($col['weight'] / $totalFlexWeight * 100, 2);
+                echo "<col style=\"width: calc((100% - {$totalFixedPx}px) * $pct / 100);\">\n";
             }
-        } else {
-            $col['calc_width'] = 'auto';
         }
+        if ($actionPx > 0) {
+            echo "<col class=\"col-action\" style=\"width: {$actionPx}px;\">\n";
+        }
+        echo "</colgroup>\n";
     }
-    unset($col);
 
     // --- En-têtes du tableau ---
     echo "<thead><tr>";
@@ -1571,36 +1602,35 @@ class ListInfos extends HtmlElement
 
     // Colonnes principales (description)
     foreach ($this->description as $key => $desc) {
-        $width_styl = 'width: ' . $columns[$colIdx]['calc_width'] . ';';
         if (!$first) {
             if (!isset($this->first_elt_padding)) {
                 $this->first_elt_padding = 0;
             }
-            echo "<td style=\"$width_styl\"><span style=\"padding-left: " . $this->first_elt_padding . "px;\">$desc</span></td>";
+            echo "<th scope=\"col\"><span style=\"padding-left: " . $this->first_elt_padding . "px;\">$desc</span></th>";
             $first = true;
         } else {
             $tooltipbegin = !empty($this->tooltip[$key]) ? "<a href=\"#\" class=\"tooltip\">" : "";
             $tooltipend = !empty($this->tooltip[$key]) ? "<span>" . $this->tooltip[$key] . "</span></a>" : "";
-            echo "<td style=\"$width_styl\"><span>$tooltipbegin$desc$tooltipend</span></td>";
+            echo "<th scope=\"col\"><span>$tooltipbegin$desc$tooltipend</span></th>";
         }
         $colIdx++;
     }
 
-    // Colonnes extra (normales et brutes)
+    // Colonnes extra
     foreach ($this->extraColumns as $extraCol) {
-        $width_styl = 'width: ' . $columns[$colIdx]['calc_width'] . ';';
+        $centeredClass = !empty($extraCol["centered"]) ? ' class="text-center"' : '';
         $tooltipbegin = !empty($extraCol["tooltip"]) ? "<a href=\"#\" class=\"tooltip\">" : "";
         $tooltipend = !empty($extraCol["tooltip"]) ? "<span>" . $extraCol["tooltip"] . "</span></a>" : "";
-        echo "<td style=\"$width_styl\"><span>$tooltipbegin" . $extraCol["description"] . "$tooltipend</span></td>";
+        echo "<th scope=\"col\"$centeredClass><span>$tooltipbegin" . $extraCol["description"] . "$tooltipend</span></th>";
         $colIdx++;
     }
 
-    // Colonne "Actions" si nécessaire
+    // Colonne "Actions"
     if (safeCount($this->arrAction) != 0) {
-        echo "<td class=\"action-header\" style=\"text-align: center; width: {$actionWidth}px;\"><span>Actions</span></td>";
+        echo "<th scope=\"col\" class=\"text-center\">Actions</th>";
     }
 
-    echo "</tr></thead>";
+    echo "</tr></thead><tbody>";
 
     // Lignes du tableau
     for ($idx = $this->start; ($idx < safeCount($this->arrInfo)) && ($idx <= $this->end); $idx++) {
@@ -1612,7 +1642,7 @@ class ListInfos extends HtmlElement
         if (!empty($this->cssClasses[$idx])) {
             echo " class=\"" . $this->cssClasses[$idx] . "\"";
         } else {
-            echo " class=\"alternate" . (!empty($this->cssClasses[$idx]) ? " " . $this->cssClasses[$idx] : "") . "\"";
+            echo " class=\"alternate\"";
         }
         echo ">";
 
@@ -1628,7 +1658,7 @@ class ListInfos extends HtmlElement
                 }
             }
             echo "<td$titleAttr>";
-            echo $this->arrInfo[$idx];
+            echo '<span class="cell-text">' . $this->arrInfo[$idx] . '</span>';
             echo "</td>";
         }
 
@@ -1644,7 +1674,8 @@ class ListInfos extends HtmlElement
                     }
                 }
             }
-            echo "<td$titleAttr>";
+            $centeredClass = !empty($extraCol["centered"]) ? ' class="text-center"' : '';
+            echo "<td$centeredClass$titleAttr>";
             if (isset($extraCol["data"][$idx])) {
                 if ($extraCol["isRaw"]) {
                     echo $extraCol["data"][$idx]; // Affichage brut
@@ -1652,7 +1683,9 @@ class ListInfos extends HtmlElement
                     if (is_subclass_of($extraCol["data"][$idx], "HtmlContainer")) {
                         $extraCol["data"][$idx]->display();
                     } elseif (trim($extraCol["data"][$idx]) != "") {
+                        echo '<span class="cell-text">';
                         echo_obj($extraCol["data"][$idx]);
+                        echo '</span>';
                     } else {
                         echo "&nbsp;";
                     }
@@ -1665,8 +1698,8 @@ class ListInfos extends HtmlElement
 
         // Colonne "Actions" si nécessaire
         if (safeCount($this->arrAction) != 0) {
-            echo "<td class=\"action\">";
-            echo "<ul class=\"action\">";
+            echo "<td class=\"action\" style=\"text-align:center;\">";
+            echo "<ul class=\"action\" style=\"float:none;display:inline-block;\">";
             foreach ($this->arrAction as $objActionItem) {
                 if (is_a($objActionItem, 'ActionItem')) {
                     $objActionItem->display($this->arrInfo[$idx], $this->paramInfo[$idx]);
@@ -1682,7 +1715,7 @@ class ListInfos extends HtmlElement
         echo "</tr>\n";
     }
 
-    echo "</table>\n";
+    echo "</tbody></table>\n";
     $this->displayNavbar($navbar);
 }
 
@@ -1809,7 +1842,7 @@ class UserInfos extends OptimizedListInfos
     public function drawMainAction($idx)
     {
         echo "<td class=\"" . $this->css[$idx] . "\">";
-        echo $this->arrAction[0]->encapsulate($this->arrInfo[$idx], $this->paramInfo[$idx]);
+        echo '<span class="cell-text">' . $this->arrAction[0]->encapsulate($this->arrInfo[$idx], $this->paramInfo[$idx]) . '</span>';
         echo "</td>";
     }
 
