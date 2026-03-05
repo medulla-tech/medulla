@@ -10,15 +10,9 @@ $entity = (isset($_GET['entity'])) ? htmlentities($_GET["entity"]) : "";
 
 $parentEntities = [];
 $parentEntities = xmlrpc_getLocationParentPath($entity);
-
-if(!is_array($parentEntities)){
-    $parentEntities = [$parentEntities];
-}
-
-
 if(!in_array($entity, $parentEntities)){
-    // Add $entity at the beginning of the array
     array_unshift($parentEntities, $entity);
+    // $parentEntities[] = $entity;
 }
 
 $server = xmlrpc_get_server_from_parent_entities($parentEntities);

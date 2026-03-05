@@ -35,12 +35,6 @@ $entity = (isset($_GET['entity'])) ? htmlentities($_GET["entity"]) : "";
 
 $parentEntities = [];
 $parentEntities = xmlrpc_getLocationParentPath($entity);
-
-// Ensure that $parentEntities is an array
-if(!is_array(($parentEntities))){
-    $parentEntities = [$parentEntities];
-}
-
 if(!in_array($entity, $parentEntities)){
     array_unshift($parentEntities, $entity);
     // $parentEntities[] = $entity;
@@ -72,6 +66,7 @@ foreach($machines["id"] as $ids){
         "id" => $machines["id"][$i],
         "uuid" => $machines["uuid"][$i],
         "name" => $machines["name"][$i],
+        "server" => $server,
     ];
 
     $masteringActions[] = $masteringAction;

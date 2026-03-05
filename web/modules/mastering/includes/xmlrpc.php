@@ -45,5 +45,9 @@ function xmlrpc_get_server_disk($server){
 function xmlrpc_get_masters_for_entity($entity, $start=0, $limit=-1, $filter=""){
     return xmlCall("mastering.get_masters_for_entity", [$entity, $start, $limit, $filter]);
 }
+
+function xmlrpc_create_action($action, $gid, $uuid, $server, $beginDate, $endDate, $config=[], $json=""){
+    return xmlCall("mastering.create_action", [$action, $gid, $uuid, $server, $beginDate, $endDate, $config, $json]);
+}
 ?>
 

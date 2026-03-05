@@ -145,8 +145,7 @@ def get_server_from_parent_entities(entities=[]):
 
 def get_server_disk(jid):
     config = MasteringConfig("mastering")
-    
-    sessionid = name_random(8, "diskmastering_")
+
     command = f"df -h {config.master_path}"
     result = {}
 
@@ -181,4 +180,14 @@ def get_server_disk(jid):
 
 def get_masters_for_entity(entity, start=0, limit=-1, filter=""):
     result = MasteringDatabase().get_masters_for_entity(entity, start, limit, filter)
+    return result
+
+def create_action(action, gid, uuid, server, begin_date, end_date, config, workflow=""):
+
+    try:
+        workflow = json.loads(workflow)
+    except Exception as e:
+        return {"status":1, "msg":"invalid incoming datas: %s"%e}
+    server = server.replace("\/", "/")
+    result = MasteringDatabase().create_action(action, gid, uuid, server, begin_date, end_date, config, workflow)
     return result

@@ -21,7 +21,8 @@
 
 $sidemenu= new SideMenu();
 $sidemenu->setClass("mastering");
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Tests List", 'mastering'), "mastering", "mastering", "index"));
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("Action on Machine", 'mastering'), "mastering", "mastering", "index"));
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("Masters List", 'mastering'), "mastering", "mastering", "masters"));
 
 ?>
 
