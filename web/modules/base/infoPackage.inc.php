@@ -127,48 +127,48 @@ if(in_array("xmppmaster", $_SESSION["modulesList"])) {
     $submod->setDefaultPage("base/logview/index");
     $submod->setPriority(1001);
 
-    $page = new Page("index", _("logs of all the modules"));
+    $page = new Page("index", _T("All Logs", "base"));
     $page->setFile("modules/base/logview/index.php", array("expert" => true));
     $submod->addPage($page);
 
-    $page = new Page("logsinventory", _T("logs inventory", "base"));
+    $page = new Page("logsinventory", _T("Inventory Logs", "base"));
     $page->setFile("modules/base/logview/logsinventory.php");
     $submod->addPage($page);
 
-    $page = new Page("logsbackup", _T("logs backup", "base"));
+    $page = new Page("logsbackup", _T("Backup Logs", "base"));
     $page->setFile("modules/base/logview/logsbackup.php");
     $submod->addPage($page);
 
-    $page = new Page("logsdeployment", _T("logs deployment", "base"));
+    $page = new Page("logsdeployment", _T("Deployment Logs", "base"));
     $page->setFile("modules/base/logview/logsdeployment.php");
     $submod->addPage($page);
 
-    $page = new Page("logsquickaction", _T("logs quickaction", "base"));
+    $page = new Page("logsquickaction", _T("Quick Action Logs", "base"));
     $page->setFile("modules/base/logview/logsquickaction.php");
     $submod->addPage($page);
 
-    $page = new Page("logsdownload", _T("logs download", "base"));
+    $page = new Page("logsdownload", _T("Download Logs", "base"));
     $page->setFile("modules/base/logview/logsdownload.php");
     $submod->addPage($page);
 
-    $page = new Page("logskiosk", _T("logs Kiosk", "base"));
+    $page = new Page("logskiosk", _T("Kiosk Logs", "base"));
     $page->setFile("modules/base/logview/logskiosk.php");
     $submod->addPage($page);
 
-    $page = new Page("logspackaging", _T("logs packaging", "base"));
+    $page = new Page("logspackaging", _T("Packaging Logs", "base"));
     $page->setFile("modules/base/logview/logspackaging.php");
     $submod->addPage($page);
 
-    $page = new Page("logsremotedesktop", _T("logs remote desktop", "base"));
+    $page = new Page("logsremotedesktop", _T("Remote Desktop Logs", "base"));
     $page->setFile("modules/base/logview/logsremotedesktop.php");
     $submod->addPage($page);
 
-    $page = new Page("logsimaging", _T("logs Imaging", "base"));
+    $page = new Page("logsimaging", _T("Imaging Logs", "base"));
     $page->setFile("modules/base/logview/logsimaging.php");
     $submod->addPage($page);
 
     if(in_array("mobile", $_SESSION["modulesList"])){
-        $page = new Page("logsmobile", _T("logs mobile", "base"));
+        $page = new Page("logsmobile", _T("Mobile Logs", "base"));
         $page->setFile("modules/base/logview/logsmobile.php");
         $submod->addPage($page);
     }

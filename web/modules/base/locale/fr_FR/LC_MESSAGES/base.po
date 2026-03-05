@@ -991,25 +991,6 @@ msgstr "texte"
 msgid "Transfert File Logs"
 msgstr "Journal des transfert de fichiers"
 
-#: modules/base/logview/logsremotedesktop.php:140
-msgid "Remote Desktop Logs"
-msgstr "Journal de la Prise en mains à distance"
-
-#: modules/base/logview/logskiosk.php:136
-msgid "Quick Actions Logs"
-msgstr "Journal des Actions rapides"
-
-#: modules/base/logview/logspackaging.php:141
-msgid "Packaging Logs"
-msgstr "Journal des Packages"
-
-#: modules/base/logview/logsinventory.php:145
-msgid "Inventory Logs"
-msgstr "Journal de l'Inventaire"
-
-#: modules/base/logview/logsdeployment.php:136
-msgid "Deployment Logs"
-msgstr "Journal des Déploiements"
 
 #: modules/base/audit/indexall.php:30 modules/base/audit/ajaxLogFilter.php:121
 msgid "User"
@@ -1027,9 +1008,6 @@ msgstr "Nom de session"
 msgid "message"
 msgstr "message"
 
-#: modules/base/logview/logsimaging.php:158
-msgid "Imaging Logs"
-msgstr "Journal de l'imaging"
 
 #: modules/base/logview/ajax_showlog.php:69
 msgid "Connection"
@@ -2090,3 +2068,302 @@ msgstr "Retour"
 #: index.php:198
 msgid "Your session has expired due to inactivity. Please log in again."
 msgstr "Votre session a expiré en raison d'inactivité. Veuillez vous reconnecter."
+
+#: logview/*.php
+msgid "Criteria"
+msgstr "Critère"
+
+#: logview/*.php
+msgid "Search criteria"
+msgstr "Critère de recherche"
+
+#: logview/*.php
+msgid "No criteria selected"
+msgstr "Aucun critère sélectionné"
+
+#: logview/*.php
+msgid "selected"
+msgstr "sélectionné(s)"
+
+#: logview/*.php
+msgid "Start Date"
+msgstr "Date de début"
+
+#: logview/*.php
+msgid "End Date"
+msgstr "Date de fin"
+
+#: logview/index.php
+msgid "Filter by module"
+msgstr "Filtrer par module"
+
+#: logview/index.php
+msgid "Deployment"
+msgstr "Déploiement"
+
+#: logview/index.php
+msgid "Imaging"
+msgstr "Imaging"
+
+#: logview/index.php
+msgid "Packaging"
+msgstr "Paquets"
+
+#: logview/index.php
+msgid "No filter"
+msgstr "Aucun filtre"
+
+#: logview/*.php (page titles + sidebar)
+msgid "All Logs"
+msgstr "Tous les journaux"
+
+msgid "Inventory Logs"
+msgstr "Journal de l'Inventaire"
+
+msgid "Backup Logs"
+msgstr "Journal des Sauvegardes"
+
+msgid "Deployment Logs"
+msgstr "Journal des Déploiements"
+
+msgid "Quick Action Logs"
+msgstr "Journal des Actions rapides"
+
+msgid "Download Logs"
+msgstr "Journal des Téléchargements"
+
+msgid "Kiosk Logs"
+msgstr "Journal du Kiosk"
+
+msgid "Packaging Logs"
+msgstr "Journal du Packaging"
+
+msgid "Remote Desktop Logs"
+msgstr "Journal du Bureau à distance"
+
+msgid "Imaging Logs"
+msgstr "Journal de l'Imaging"
+
+msgid "Mobile Logs"
+msgstr "Journal du Mobile"
+
+#: logview/*.php (criteria)
+msgid "Backup configuration"
+msgstr "Backup configuration"
+
+msgid "Backup Image creation"
+msgstr "Backup création d'image"
+
+msgid "BackupPC"
+msgstr "BackupPC"
+
+msgid "Chat"
+msgstr "Chat"
+
+msgid "Deployment Download"
+msgstr "Déploiement téléchargement"
+
+msgid "Deployment Error"
+msgstr "Déploiement erreur"
+
+msgid "Deployment Execution"
+msgstr "Déploiement exécution"
+
+msgid "Deployment Notify"
+msgstr "Déploiement notification"
+
+msgid "Deployment Terminate"
+msgstr "Déploiement terminé"
+
+msgid "Deployment Transfert"
+msgstr "Déploiement transfert"
+
+msgid "Files"
+msgstr "Fichiers"
+
+msgid "Full backup requested"
+msgstr "Backup complet demandé"
+
+msgid "Image Deletion"
+msgstr "Suppression d'image"
+
+msgid "Image Deployment"
+msgstr "Déploiement d'image"
+
+msgid "Incremental backup requested"
+msgstr "Backup incrémental demandé"
+
+msgid "Install"
+msgstr "Installation"
+
+msgid "Inventory Deployment"
+msgstr "Inventory déploiement"
+
+msgid "Inventory Machine"
+msgstr "Inventory machine"
+
+msgid "Inventory Master"
+msgstr "Inventory master"
+
+msgid "Inventory New machine"
+msgstr "Inventory nouvelle machine"
+
+msgid "Inventory Planned"
+msgstr "Inventory planifié"
+
+msgid "Inventory Quick Action"
+msgstr "Inventory action rapide"
+
+msgid "Inventory reception"
+msgstr "Inventory réception"
+
+msgid "Inventory requested"
+msgstr "Inventory demandé"
+
+msgid "Inventory User"
+msgstr "Inventory utilisateur"
+
+msgid "Manual"
+msgstr "Manuel"
+
+msgid "Master Creation"
+msgstr "Master création"
+
+msgid "Master Deletion"
+msgstr "Master suppression"
+
+msgid "Master Deployment Multicast"
+msgstr "Master déploiement multicast"
+
+msgid "Master Edition"
+msgstr "Master édition"
+
+msgid "Menu change"
+msgstr "Changement de menu"
+
+msgid "Mobile Configuration"
+msgstr "Mobile configuration"
+
+msgid "Mobile Deployment"
+msgstr "Mobile déploiement"
+
+msgid "Mobile Device"
+msgstr "Mobile appareil"
+
+msgid "Mobile Enrollment"
+msgstr "Mobile enrôlement"
+
+msgid "Mobile Group"
+msgstr "Mobile groupe"
+
+msgid "Mobile Message"
+msgstr "Mobile message"
+
+msgid "Mobile Push Message"
+msgstr "Mobile message push"
+
+msgid "Mobile Quick Action"
+msgstr "Mobile action rapide"
+
+msgid "Mobile User"
+msgstr "Mobile utilisateur"
+
+msgid "None"
+msgstr "Aucun"
+
+msgid "Package creation"
+msgstr "Package création"
+
+msgid "Package deletion"
+msgstr "Package suppression"
+
+msgid "Package edition"
+msgstr "Package édition"
+
+msgid "Planned"
+msgstr "Planifié"
+
+msgid "Post-imaging Script Creation"
+msgstr "Création script post-imaging"
+
+msgid "Reboot sent"
+msgstr "Redémarrage envoyé"
+
+msgid "Remote desktop control request"
+msgstr "Remote desktop demande de contrôle"
+
+msgid "Remote desktop service"
+msgstr "Remote desktop service"
+
+msgid "Remove"
+msgstr "Retirer"
+
+msgid "Restore"
+msgstr "Restauration"
+
+msgid "Restore requested"
+msgstr "Restauration demandée"
+
+msgid "Reverse SSH"
+msgstr "Reverse SSH"
+
+msgid "Reverse SSH start"
+msgstr "Reverse SSH démarrage"
+
+msgid "Reverse SSH stop"
+msgstr "Reverse SSH arrêt"
+
+msgid "Shutdown sent"
+msgstr "Extinction envoyée"
+
+msgid "Transfert Files"
+msgstr "Transfert de fichiers"
+
+msgid "Update"
+msgstr "Mise à jour"
+
+msgid "WOL"
+msgstr "WOL"
+
+msgid "WOL sent"
+msgstr "WOL envoyé"
+
+#: logview/*.php (DataTables)
+msgid "Search:"
+msgstr "Rechercher :"
+
+msgid "Show _MENU_ entries"
+msgstr "Afficher _MENU_ entrées"
+
+msgid "Showing _START_ to _END_ of _TOTAL_ entries"
+msgstr "Affichage de _START_ à _END_ sur _TOTAL_ entrées"
+
+msgid "No entries"
+msgstr "Aucune entrée"
+
+msgid "filtered from _MAX_ total entries"
+msgstr "filtré sur _MAX_ entrées au total"
+
+msgid "No matching records found"
+msgstr "Aucun résultat trouvé"
+
+msgid "No data available"
+msgstr "Aucune donnée disponible"
+
+msgid "First"
+msgstr "Premier"
+
+msgid "Last"
+msgstr "Dernier"
+
+msgid "Copy"
+msgstr "Copier"
+
+msgid "Export CSV"
+msgstr "Export CSV"
+
+msgid "Export Excel"
+msgstr "Export Excel"
+
+msgid "Print"
+msgstr "Imprimer"

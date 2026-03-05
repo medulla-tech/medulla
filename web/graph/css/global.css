@@ -2418,3 +2418,154 @@ td img[src*="img/other/"],
   }
 }
 
+/* ===== DataTables overrides (module Historique) ===== */
+
+/* Column widths */
+#section table.dataTable.listinfos { table-layout: fixed; width: 100%; }
+#section table.dataTable.listinfos thead th:nth-child(1) { width: 160px; }
+#section table.dataTable.listinfos thead th:nth-child(2) { width: 120px; }
+#section table.dataTable.listinfos thead th:nth-child(3) { width: 160px; }
+
+/* Header : même style que les autres tables */
+#section table.dataTable.listinfos thead th {
+  background: var(--color-primary) !important;
+  color: var(--color-text-white) !important;
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  padding: 14px 12px;
+  border: none;
+  text-align: left;
+}
+
+/* Zebra rows : mêmes couleurs que .alternate */
+#section table.dataTable.listinfos tbody tr.odd { background: #e8eff3; }
+#section table.dataTable.listinfos tbody tr.even { background: var(--color-bg-white); }
+#section table.dataTable.listinfos tbody tr:hover { background-color: #d0e4ed !important; }
+
+/* Body cells */
+#section table.dataTable.listinfos tbody td {
+  padding: 12px 10px;
+  border-bottom: 1px solid #edf2f7;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 0;
+}
+/* Last column (text) : wrap allowed */
+#section table.dataTable.listinfos tbody td:last-child {
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+  word-break: break-word;
+}
+
+/* Pagination */
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+#section .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+  background: #edf2f7 !important;
+  color: #333 !important;
+  border-color: var(--color-primary);
+}
+#section .dataTables_wrapper .dataTables_paginate .paginate_button.current,
+#section .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+  background: var(--color-primary) !important;
+  color: white !important;
+  border-color: var(--color-primary);
+}
+
+/* Export buttons */
+.dataTables_wrapper .dt-buttons .btn {
+  background: var(--color-primary);
+  color: white;
+  border: 1px solid var(--color-primary);
+  border-radius: 6px;
+  padding: 8px 16px;
+  margin: 2px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+.dataTables_wrapper .dt-buttons .btn:hover {
+  background: var(--color-bg-white);
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+.dataTables_wrapper .dt-buttons .btn:active {
+  background: var(--color-primary-dark);
+  color: white;
+  transform: translateY(1px);
+}
+
+/* Filter bar */
+.log-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: flex-end;
+  padding: 16px 20px;
+  background: var(--color-primary);
+  border-radius: 9px;
+  margin-bottom: 15px;
+}
+.log-filters label {
+  color: white;
+  font-size: 12px;
+  text-transform: uppercase;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 4px;
+}
+.log-filter-item {
+  flex: 0 1 auto;
+}
+.log-filters select,
+.log-filters input[type="text"] {
+  padding: 6px 10px;
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 6px;
+  background: rgba(255,255,255,0.95);
+  font-size: 12px;
+  line-height: 1.4;
+  height: auto;
+  width: auto;
+  box-sizing: border-box;
+  vertical-align: baseline;
+}
+
+/* Checkbox dropdown */
+.checkbox-dropdown { position: relative; }
+.checkbox-dropdown-toggle {
+  padding: 6px 10px; border-radius: 6px; cursor: pointer;
+  background: rgba(255,255,255,0.95); border: 1px solid rgba(255,255,255,0.3);
+  font-size: 12px; min-width: 180px;
+  display: flex; align-items: center; gap: 6px;
+  line-height: 1.4; box-sizing: border-box;
+}
+.checkbox-dropdown-text { flex: 1; }
+.checkbox-dropdown-menu {
+  display: none; position: absolute; top: 100%; left: 0;
+  background: white; border: 1px solid #ddd; border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 100;
+  max-height: 250px; overflow-y: auto; min-width: 100%;
+  padding: 6px 0;
+}
+.checkbox-dropdown.open .checkbox-dropdown-menu { display: block; }
+.checkbox-dropdown-menu label {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 12px; cursor: pointer; font-size: 12px;
+  color: #333; text-transform: none; font-weight: normal;
+  margin-bottom: 0;
+}
+.checkbox-dropdown-menu label:hover { background: #f0f4f8; }
+.checkbox-dropdown-clear {
+  display: none; cursor: pointer; font-size: 11px; color: #999;
+  padding: 0; line-height: 1; flex-shrink: 0;
+}
+.checkbox-dropdown-clear:hover { color: #c00; }
+.checkbox-dropdown.has-selection .checkbox-dropdown-clear { display: inline; }
+

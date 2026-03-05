@@ -137,7 +137,7 @@ class SelectItemlabeltitle extends SelectItem {
 
 
 // ------------------------------------------------------------------------------------------------
-    $p = new PageGenerator(_("Remote Desktop Logs"));
+    $p = new PageGenerator(_T("Remote Desktop Logs","base"));
     $p->setSideMenu($sidemenu);
     $p->display();
     $filterlogs = "Remote_desktop";
@@ -149,7 +149,9 @@ class SelectItemlabeltitle extends SelectItem {
     var filterlogs = <?php echo "'$filterlogs'";?>;
 
     function encodeurl(){
-        var critere = filterlogs + "|" + jQuery('#criteriasearch option:selected').val()+ "|" + jQuery('#criteriadetail option:selected').val();
+        var selected = [];
+        jQuery('#criteria-dropdown input:checked').each(function(){ selected.push(jQuery(this).val()); });
+        var critere = filterlogs + "|" + (selected.length ? selected.join(",") : "None") + "|" + jQuery('#criteriadetail option:selected').val();
         uri = "modules/base/logview/ajax_Data_Logs.php"
         //QuickAction
         var param = {
@@ -185,22 +187,61 @@ class SelectItemlabeltitle extends SelectItem {
     }
 
     jQuery(function(){
-        jQuery("p").click(function(){
+        jQuery('.log-filters').on('change', 'select, input', function(){
             searchlogs( encodeurl());
+        });
+        jQuery('.checkbox-dropdown-toggle').on('click', function(e){
+            e.stopPropagation();
+            jQuery(this).closest('.checkbox-dropdown').toggleClass('open');
+        });
+        jQuery(document).on('click', function(){ jQuery('.checkbox-dropdown').removeClass('open'); });
+        jQuery('.checkbox-dropdown-clear').on('click', function(e){
+            e.stopPropagation();
+            var dd = jQuery(this).closest('.checkbox-dropdown');
+            dd.find('input:checked').prop('checked', false);
+            dd.find('.checkbox-dropdown-text').text('<?php echo addslashes(_T("No criteria selected", "base")); ?>');
+            dd.removeClass('has-selection');
+            searchlogs(encodeurl());
+        });
+        jQuery('.checkbox-dropdown-menu input[type="checkbox"]').on('change', function(){
+            var dd = jQuery(this).closest('.checkbox-dropdown');
+            var checked = dd.find('input:checked');
+            var text = checked.length
+                ? checked.length + ' <?php echo addslashes(_T("selected", "base")); ?>'
+                : '<?php echo addslashes(_T("No criteria selected", "base")); ?>';
+            dd.find('.checkbox-dropdown-text').text(text);
+            dd.toggleClass('has-selection', checked.length > 0);
+            searchlogs(encodeurl());
         });
     });
     function searchlogs(url){
         jQuery('#tablelog').DataTable({
                                 'retrieve': true,
+                                'createdRow': function(row) { jQuery('td', row).each(function() { this.title = this.textContent; }); },
                                 "iDisplayLength": <?php echo $maxperpage; ?>,
                                 "lengthMenu" : [[10 ,20 ,30 ,40 ,50 ,75 ,100 ], [10, 20, 30, 40, 50 ,75 ,100 ]],
                                 "dom": '<"top"lfi>rt<"bottom"Bp><"clear">',
                                 'order': [[ 0, "desc" ]],
+                            "language": {
+                                "search": "<?php echo _T('Search:', 'base'); ?>",
+                                "lengthMenu": "<?php echo _T('Show _MENU_ entries', 'base'); ?>",
+                                "info": "<?php echo _T('Showing _START_ to _END_ of _TOTAL_ entries', 'base'); ?>",
+                                "infoEmpty": "<?php echo _T('No entries', 'base'); ?>",
+                                "infoFiltered": "(<?php echo _T('filtered from _MAX_ total entries', 'base'); ?>)",
+                                "zeroRecords": "<?php echo _T('No matching records found', 'base'); ?>",
+                                "emptyTable": "<?php echo _T('No data available', 'base'); ?>",
+                                "paginate": {
+                                    "first": "<?php echo _T('First', 'base'); ?>",
+                                    "previous": "<?php echo _T('Previous', 'base'); ?>",
+                                    "next": "<?php echo _T('Next', 'base'); ?>",
+                                    "last": "<?php echo _T('Last', 'base'); ?>"
+                                }
+                            },
                                 buttons: [
-                                { extend: 'copy', className: 'btn btn-primary', text: 'Copy to clipboard' },
-                                { extend: 'csv', className: 'btn btn-primary',  text: 'Save to csv file' },
-                                { extend: 'excel', className: 'btn btn-primary',  text: 'Save to Excel file' },
-                                { extend: 'print', className: 'btn btn-primary',  text: 'Print logs' }
+                                { extend: 'copy', className: 'btn btn-primary', text: '<?php echo _T("Copy", "base"); ?>' },
+                                { extend: 'csv', className: 'btn btn-primary',  text: '<?php echo _T("Export CSV", "base"); ?>' },
+                                { extend: 'excel', className: 'btn btn-primary',  text: '<?php echo _T("Export Excel", "base"); ?>' },
+                                { extend: 'print', className: 'btn btn-primary',  text: '<?php echo _T("Print", "base"); ?>' }
                                 ]
                             } )
                             .ajax.url(
@@ -224,10 +265,10 @@ Remote_desktop | Reverse SSH stop | Remote desktop control request | ARS
 */
 
 $typecritere  =        array(
-                                        _T('Remote desktop service','logs'),
-                                        _T('Remote desktop control request','logs'),
-                                        _T('Reverse SSH','logs'),
-                                        _T('no criteria selected','logs'));
+                                        _T('Remote desktop service','base'),
+                                        _T('Remote desktop control request','base'),
+                                        _T('Reverse SSH','base'),
+                                        _T("No criteria selected", "base"));
 
 $typecritereval  =        array(
                                         'Service',
@@ -235,49 +276,45 @@ $typecritereval  =        array(
                                         'Reverse SSH',
                                         'None');
 
-$start_date =   new DateTimeTplnew('start_date', "Start Date");
-$end_date   =   new DateTimeTplnew('end_date', "End Date");
+$start_date =   new DateTimeTplnew('start_date', _T("Start Date", "base"));
+$end_date   =   new DateTimeTplnew('end_date', _T("End Date", "base"));
 
-$modules = new SelectItemlabeltitle("criteriasearch", _T('criteria','logs'), "search criteria");
-$modules->setElements($typecritere);
-$modules->setSelected("None");
-$modules->setElementsVal($typecritereval);
 ?>
 
-<style>
-
-.inline { display : inline; }
-
-}
-
-</style>
 
 
-
-<div style="overflow-x:auto;">
-    <table border="1" cellspacing="0" cellpadding="5" class="listinfos">
-        <thead>
-            <tr>
-                <th><?php echo $start_date->display(); ?></th>
-                <th><?php echo $end_date->display(); ?></th>
-                <th><?php echo $modules->display(); ?></th>
-		<th><p class="btnPrimary">Filter logs</p></th>
-            </tr>
-        </thead>
-     </table>
+<div class="log-filters">
+    <div class="log-filter-item"><?php echo $start_date->display(array('value' => date('Y-m-d 00:00:00'))); ?></div>
+    <div class="log-filter-item"><?php echo $end_date->display(array('value' => date('Y-m-d 23:59:59'))); ?></div>
+    <div class="log-filter-item">
+        <label><?php echo _T("Criteria", "base"); ?></label>
+        <div class="checkbox-dropdown" id="criteria-dropdown">
+            <div class="checkbox-dropdown-toggle">
+                <span class="checkbox-dropdown-text"><?php echo _T("No criteria selected", "base"); ?></span>
+                <span class="checkbox-dropdown-clear">&#10005;</span>
+                <span>&#9660;</span>
+            </div>
+            <div class="checkbox-dropdown-menu">
+                <?php foreach ($typecritere as $i => $label): ?>
+                    <?php if ($typecritereval[$i] !== 'None'): ?>
+                    <label>
+                        <input type="checkbox" name="criteria[]" value="<?php echo $typecritereval[$i]; ?>">
+                        <?php echo $label; ?>
+                    </label>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </div>
 </div>
 
-
-<br>
-
-<table id="tablelog" width="100%" border="1" cellspacing="0" cellpadding="1" class="listinfos">
-        <thead>
-            <tr>
-                <th style="width: 12%;"><?php echo _('date'); ?></th>
-                <th style="width: 8%;"><?php echo _('user'); ?></th>
-                <th style="width: 6%;"><?php echo _('who'); ?></th>
-                <th><?php echo _('text'); ?></th>
-            </tr>
-        </thead>
-
-    </table>
+<table id="tablelog" class="listinfos">
+    <thead>
+        <tr>
+            <th><?php echo _('date'); ?></th>
+            <th><?php echo _('user'); ?></th>
+            <th><?php echo _('who'); ?></th>
+            <th><?php echo _('text'); ?></th>
+        </tr>
+    </thead>
+</table>
