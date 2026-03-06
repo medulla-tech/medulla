@@ -230,7 +230,6 @@ foreach($arraydeploy['tabdeploy']['group_uuid'] as $groupid) {
             $progressrate = ($progressrate > 100) ? 100 : $progressrate;
         }
         $successrate = round(($deploymentsuccess / $totalmachinedeploy) * 100, 2);
-
         // Determine icon class based on status
         $iconClass = 'icon-inline';
         if ($progressrate == 0 || ($progressrate == 100 && $successrate == 0)) {
@@ -248,38 +247,6 @@ foreach($arraydeploy['tabdeploy']['group_uuid'] as $groupid) {
             $arraytitlename[] = "<img class='".$iconClass."' src='img/other/package.svg'/>" . $arraydeploy['tabdeploy']['title'][$index];
         }
 
-        switch(intval($progressrate)) {
-            case $progressrate <= 10:
-                $color = "#ff0000";
-                break;
-            case $progressrate <= 20:
-                $color = "#ff3535";
-                break;
-            case $progressrate <= 30:
-                $color = "#ff5050";
-                break;
-            case $progressrate <= 40:
-                $color = "#ff8080";
-                break;
-            case $progressrate <  50:
-                $color = "#ffA0A0";
-                break;
-            case $progressrate <=  60:
-                $color = "#c8ffc8";
-                break;
-            case $progressrate <= 70:
-                $color = "#97ff97";
-                break;
-            case $progressrate <= 80:
-                $color = "#64ff64";
-                break;
-            case $progressrate <=  90:
-                $color = "#2eff2e";
-                break;
-            case $progressrate > 90:
-                $color = "#00ff00";
-                break;
-        }
         if ($progressrate == 0) {
             $arraystate[] = "<span class='status-group-error'>".$progressrate."%"."</span>" ;
         } else {
@@ -292,7 +259,7 @@ foreach($arraydeploy['tabdeploy']['group_uuid'] as $groupid) {
                     $arraystate[] = '<span class="status-group-success">'._T('GROUP FULL SUCCESS', 'xmppmaster').'</span>';
                 }
             } else {
-                $arraystate[] = "<span style='background-color:".$color.";'>".$progressrate."%"."</span>" ;
+                $arraystate[] = "<div style='text-align:center'><span class='status-progress-pct'>".$progressrate."%</span></div>" ;
             }
         }
         //'<progress max="'.$stat['nbmachine'].'" value="'.$stat['nbdeploydone'].'" form="form-id"></progress>';
@@ -365,18 +332,31 @@ if(isset($arraynotdeploy)) {
         $reloads[] = $reloadAction;
     }
 }
+// Truncate long text columns with ellipsis + tooltip
+foreach ($arraytitlename as &$v) { $v = '<div class="cell-truncate cell-truncate-lg" title="'.htmlspecialchars(strip_tags($v)).'">'.$v.'</div>'; } unset($v);
+foreach ($arrayname as &$v) { $v = '<div class="cell-truncate cell-truncate-md" title="'.htmlspecialchars(strip_tags($v)).'">'.$v.'</div>'; } unset($v);
+foreach ($arraydeploy['tabdeploy']['login'] as &$v) { $v = '<div class="cell-truncate" title="'.htmlspecialchars($v).'">'.$v.'</div>'; } unset($v);
+
 $n = new OptimizedListInfos($arraytitlename, _T("Deployment", "xmppmaster"));
 $n->setCssClass("package");
 $n->disableFirstColumnActionLink();
 $n->addExtraInfo($arrayname, _T("Target", "xmppmaster"));
-$n->addExtraInfo($arraydeploy['tabdeploy']['start'], _T("Start date", "xmppmaster"));
-$n->addExtraInfoRaw($arraystate, _T("Progress / Status", "xmppmaster"));
-$n->addExtraInfoCentered($tolmach, _T("Total Machines", "xmppmaster"));
-$n->addExtraInfoCentered($processmachr, _T("In progress", "xmppmaster"));
-$n->addExtraInfoCentered($successmach, _T("Success", "xmppmaster"));
-$n->addExtraInfoCentered($errormach, _T("Error", "xmppmaster"));
-$n->addExtraInfoCentered($abortmachuser, _T("Aborted", "xmppmaster"));
 $n->addExtraInfo($arraydeploy['tabdeploy']['login'], _T("User", "xmppmaster"));
+$n->addExtraInfo($arraydeploy['tabdeploy']['start'], _T("Start date", "xmppmaster"));
+$n->addExtraInfoCenteredRaw($arraystate, _T("Progress / Status", "xmppmaster"));
+$n->addExtraInfoCentered($tolmach, _T("Total machines", "xmppmaster"));
+// Build status bar column
+DeployStatusBar::includeStyles();
+$statusBars = [];
+for ($i = 0; $i < count($tolmach); $i++) {
+    $total = intval($tolmach[$i]);
+    preg_match('/^(\d+)/', $processmachr[$i], $m); $ip = intval($m[1] ?? 0);
+    preg_match('/^(\d+)/', $successmach[$i], $m);   $sc = intval($m[1] ?? 0);
+    preg_match('/^(\d+)/', $errormach[$i], $m);      $er = intval($m[1] ?? 0);
+    preg_match('/^(\d+)/', $abortmachuser[$i], $m);  $ab = intval($m[1] ?? 0);
+    $statusBars[] = DeployStatusBar::render($total, $ip, $sc, $er, $ab);
+}
+$n->addExtraInfoRaw($statusBars, _T("Status", "xmppmaster"));
 //$n->setTableHeaderPadding(0);
 $n->setItemCount($arraydeploy['lentotal']);
 $n->setNavBar(new AjaxNavBar($arraydeploy['lentotal'], $filter, "updateSearchParamformRunning"));
@@ -390,5 +370,6 @@ $n->setParamInfo($params);
 $n->start = 0;
 $n->end = $arraydeploy['lentotal'];
 
+echo DeployStatusBar::legend();
 $n->display();
 ?>

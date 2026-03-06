@@ -1305,6 +1305,20 @@ class ListInfos extends HtmlElement
         }
     }
 
+    public function addExtraInfoCenteredRaw($arrString, $description = "", $width = "", $tooltip = "")
+    {
+        if (is_array($arrString)) {
+            $this->extraColumns[] = [
+                "data" => $arrString,
+                "isRaw" => true,
+                "description" => $description,
+                "width" => $width,
+                "tooltip" => $tooltip,
+                "centered" => true
+            ];
+        }
+    }
+
     public function addExtraInfodirecthtml($arrString, $description = "", $directhtml = false, $width = "",
     $tooltip = "")
     {
@@ -5212,6 +5226,62 @@ class medulla_progressbar_static extends medulla_progressbar
         parent::__construct($value, $dataValue, $title);
         // Modifie la classe CSS pour la barre de progression statique
         $this->cssClass = 'progressbarstaticvalue_med';
+    }
+}
+
+class DeployStatusBar
+{
+    /**
+     * Génère le HTML d'une barre de statut segmentée pour une ligne de déploiement.
+     *
+     * @param int $total       Nombre total de machines
+     * @param int $inProgress  Nombre en cours
+     * @param int $success     Nombre de succès
+     * @param int $error       Nombre d'erreurs
+     * @param int $aborted     Nombre d'arrêtés
+     * @return string HTML de la barre
+     */
+    public static function render($total, $inProgress, $success, $error, $aborted)
+    {
+        if ($total <= 0) {
+            return '<div class="deploy-status-bar"><div class="dsb-track"><div class="dsb-empty">–</div></div></div>';
+        }
+
+        $pctProgress = round(($inProgress / $total) * 100, 1);
+        $pctSuccess  = round(($success / $total) * 100, 1);
+        $pctError    = round(($error / $total) * 100, 1);
+        $pctAborted  = round(($aborted / $total) * 100, 1);
+
+        $segments = '';
+        if ($pctProgress > 0) $segments .= '<div class="dsb-seg dsb-progress" style="flex:'.$pctProgress.'" title="'._T("In progress","xmppmaster").': '.$inProgress.' ('.$pctProgress.'%)"><span class="dsb-label">'.$inProgress.'</span></div>';
+        if ($pctSuccess > 0)  $segments .= '<div class="dsb-seg dsb-success" style="flex:'.$pctSuccess.'" title="'._T("Success","xmppmaster").': '.$success.' ('.$pctSuccess.'%)"><span class="dsb-label">'.$success.'</span></div>';
+        if ($pctError > 0)    $segments .= '<div class="dsb-seg dsb-error" style="flex:'.$pctError.'" title="'._T("Error","xmppmaster").': '.$error.' ('.$pctError.'%)"><span class="dsb-label">'.$error.'</span></div>';
+        if ($pctAborted > 0)  $segments .= '<div class="dsb-seg dsb-aborted" style="flex:'.$pctAborted.'" title="'._T("Aborted","xmppmaster").': '.$aborted.' ('.$pctAborted.'%)"><span class="dsb-label">'.$aborted.'</span></div>';
+
+        return '<div class="deploy-status-bar"><div class="dsb-track">'.$segments.'</div></div>';
+    }
+
+    /**
+     * Génère le HTML de la légende (à afficher une seule fois au-dessus ou en-dessous du tableau).
+     *
+     * @return string HTML de la légende
+     */
+    public static function legend()
+    {
+        return '<div class="dsb-legend">'
+            . '<span class="dsb-legend-item"><span class="dsb-dot dsb-progress"></span> '._T("In progress","xmppmaster").'</span>'
+            . '<span class="dsb-legend-item"><span class="dsb-dot dsb-success"></span> '._T("Success","xmppmaster").'</span>'
+            . '<span class="dsb-legend-item"><span class="dsb-dot dsb-error"></span> '._T("Error","xmppmaster").'</span>'
+            . '<span class="dsb-legend-item"><span class="dsb-dot dsb-aborted"></span> '._T("Aborted","xmppmaster").'</span>'
+            . '</div>';
+    }
+
+    /**
+     * Inclut les styles CSS. Les styles sont désormais dans index.css du module xmppmaster.
+     * Méthode conservée pour compatibilité d'appel (no-op).
+     */
+    public static function includeStyles()
+    {
     }
 }
 ?>

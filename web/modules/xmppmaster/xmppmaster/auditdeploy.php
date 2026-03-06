@@ -36,14 +36,18 @@ $p->setSideMenu($sidemenu);
 $p->display();
 $refresh->display();
 
+echo '<div class="ajax-section">';
 $ajax = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxstatusxmpp"), "container", array('login' => '', 'currenttasks' => '1'), 'formRunning' );
 $ajax->setRefresh($refresh->refreshtime());
 $ajax->display();
 $ajax->displayDivToUpdate();
+echo '</div>';
 
+echo '<div class="ajax-section">';
 $ajax1 = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxstatusxmppscheduler"), "container1", array('login' => ''), 'formRunning1' );
 $ajax1->setRefresh($refresh->refreshtime());
 $ajax1->display();
 $ajax1->displayDivToUpdate();
+echo '</div>';
 
 ?>

@@ -39,20 +39,24 @@ if ($delete) {
     delete_command($_GET['cmd_id']);
 }
 
-$p = new PageGenerator(_T("My Tasks" . " [" . $_SESSION['login'] . "]", 'xmppmaster'));
+$p = new PageGenerator(_T("My tasks", 'xmppmaster'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
 $refresh = new RefreshButton();
 $refresh->display();
 
+echo '<div class="ajax-section">';
 $ajax = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxstatusxmpp"), "container", array('login' => $_SESSION['login'], 'currenttasks' => '1', 'previous'=>'index'), 'formRunning'  );
 $ajax->setRefresh($refresh->refreshtime());
 $ajax->display();
 $ajax->displayDivToUpdate();
+echo '</div>';
 
+echo '<div class="ajax-section">';
 $ajax1 = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxstatusxmppscheduler"), "container1", array('login' => $_SESSION['login'], 'previous'=>'index'), 'formRunning1' );
 $ajax1->setRefresh($refresh->refreshtime());
 $ajax1->display();
 $ajax1->displayDivToUpdate();
+echo '</div>';
 ?>

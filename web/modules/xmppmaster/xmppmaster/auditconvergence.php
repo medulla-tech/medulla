@@ -36,9 +36,11 @@ $p->setSideMenu($sidemenu);
 $p->display();
 $refresh->display();
 
+echo '<div class="ajax-section">';
 $ajax = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxconvergence"), "container", array('login' => '', 'currenttasks' => '1', 'previous' => 'auditconvergence'), 'formRunning' );
 $ajax->setRefresh($refresh->refreshtime());
 $ajax->display();
 $ajax->displayDivToUpdate();
+echo '</div>';
 
 ?>

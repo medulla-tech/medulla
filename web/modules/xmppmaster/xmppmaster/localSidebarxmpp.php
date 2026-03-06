@@ -24,15 +24,19 @@
 
 $sidemenu= new SideMenu();
 $sidemenu->setClass("xmppmaster");
+// Current tasks: Me → Team → All
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("My tasks", 'xmppmaster'), "xmppmaster", "xmppmaster", "index"));
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("All users tasks", 'xmppmaster'), "xmppmaster", "xmppmaster", "auditdeploy"));
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("My teams tasks", 'xmppmaster'), "xmppmaster", "xmppmaster", "auditteam"));
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("All users tasks", 'xmppmaster'), "xmppmaster", "xmppmaster", "auditdeploy"));
+// Past tasks: Me → Team → All
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("My past tasks", 'xmppmaster'), "xmppmaster", "xmppmaster", "auditmypastdeploys"));
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("My teams past tasks", 'xmppmaster'), "xmppmaster", "xmppmaster", "auditmypastdeploysteam"));
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("All users past tasks", 'xmppmaster'), "xmppmaster", "xmppmaster", "auditpastdeploys"));
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("My teams past tasks", 'xmppmaster'), "xmppmaster", "xmppmaster","auditmypastdeploysteam" ));
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("My Convergence", 'xmppmaster'), "xmppmaster", "xmppmaster","convergence" ));
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("All users convergence", 'xmppmaster'), "xmppmaster", "xmppmaster", "auditconvergence"));
+// Convergences: Me → Team → All
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("My Convergence", 'xmppmaster'), "xmppmaster", "xmppmaster", "convergence"));
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("My teams convergence", 'xmppmaster'), "xmppmaster", "xmppmaster", "auditteamconvergence"));
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("All users convergence", 'xmppmaster'), "xmppmaster", "xmppmaster", "auditconvergence"));
+// Other
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Quick Action results", "xmppmaster"), "xmppmaster", "xmppmaster", "ActionQuickGroup"));
 
 if(in_array("mobile", $_SESSION["modulesList"])){

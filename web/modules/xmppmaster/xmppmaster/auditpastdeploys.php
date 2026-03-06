@@ -37,9 +37,11 @@ $p->display();
 $refresh = new RefreshButton();
 $refresh->display();
 
+echo '<div class="ajax-section">';
 $ajax = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxstatusxmpp"), "container", array('login' => ''), 'formRunning'  );
 $ajax->setRefresh($refresh->refreshtime());
 $ajax->display();
 $ajax->displayDivToUpdate();
+echo '</div>';
 
 ?>

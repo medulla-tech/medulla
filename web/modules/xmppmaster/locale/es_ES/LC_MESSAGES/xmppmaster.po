@@ -171,6 +171,9 @@ msgstr "Progreso / Estado"
 msgid "Total Machines"
 msgstr "Total Máquinas"
 
+msgid "Total machines"
+msgstr "Total máquinas"
+
 #: modules/xmppmaster/xmppmaster/ajaxconvergence.php:395
 #: modules/xmppmaster/xmppmaster/ajaxteamconvergence.php:294
 #: modules/xmppmaster/xmppmaster/ajaxstatusteamxmpp.php:344

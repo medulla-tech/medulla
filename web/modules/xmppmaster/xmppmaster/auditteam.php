@@ -38,23 +38,27 @@ $delete = isset($_GET['postaction'])?true:false;
 if ($delete) {
     delete_command($_GET['cmd_id']);
 }
-$p = new PageGenerator(_T("My Tasks [".$_SESSION['login']."]", 'xmppmaster'));
+$p = new PageGenerator(_T("My teams tasks", 'xmppmaster'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
 $refresh = new RefreshButton();
 $refresh->display();
+echo '<div class="ajax-section">';
 $ajax = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxstatusteamxmpp"),
                                             "container", array('login' => $_SESSION['login'],
                                             'currenttasks' => '1'), 'formRunning'  );
 $ajax->setRefresh($refresh->refreshtime());
 $ajax->display();
 $ajax->displayDivToUpdate();
+echo '</div>';
 
+echo '<div class="ajax-section">';
 $ajax1 = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxstatusteamxmppscheduler"),
                                             "container1", array('login' => $_SESSION['login']),
                                                                 'formRunning1' );
 $ajax1->setRefresh($refresh->refreshtime());
 $ajax1->display();
 $ajax1->displayDivToUpdate();
+echo '</div>';
 ?>
