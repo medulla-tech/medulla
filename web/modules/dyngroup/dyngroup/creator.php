@@ -192,13 +192,13 @@ if (quickGet('add_req')) {
         // Display All categories
         $categories = getQueryGroupsForModule(quickGet('add_req'));
         // Title
-        print "<table style=\"width:700px;\" cellspacing=0 class=\"listinfos\">";
+        print "<table cellspacing=0 class=\"listinfos\">";
         // Printing category fields
         foreach ($categories as $category) {
             $cat_label = $category[0];
             $fields = $category[1];
             // Category title
-            print "<thead><tr><td style=\"text-transform:uppercase;font-size:0.9em;width:250px;\">" . _T($cat_label, "dyngroup") . "</td><td></td></tr></thead>";
+            print "<thead><tr><td style=\"text-transform:uppercase;font-size:0.9em;width:250px;\">" . _T($cat_label, "dyngroup") . "</td><td style=\"text-transform:uppercase;font-size:0.9em;\">" . _T("Description", "dyngroup") . "</td></tr></thead>";
             foreach ($fields as $field) {
                 $param_name = $field[0];
                 $description = $field[1];
@@ -218,7 +218,7 @@ if (quickGet('add_req')) {
                     if (quickGet('sub_id') != '') {
                         $url_params['sub_id'] = quickGet('sub_id');
                     }
-                    print "<tr><td style=\"padding-left:20px;\"><a href='" .
+                    print "<tr class=\"alternate\"><td style=\"padding-left:20px;\"><a href='" .
                             urlStr("base/computers/$target", $url_params) .
                             "' id='".$nameStripped . "'>" . _T($param_name, 'dyngroup') . "</a></td>" .
                             "<td>" . ($description == '' ? '' : _T($description, 'dyngroup')) . "</td>" .

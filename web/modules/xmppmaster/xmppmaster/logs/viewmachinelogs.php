@@ -29,6 +29,7 @@ require_once("modules/medulla_server/includes/utilities.php"); # for quickGet me
 require_once("modules/dyngroup/includes/utilities.php");
 include_once('modules/glpi/includes/xmlrpc.php');
 include_once('modules/pkgs/includes/xmlrpc.php');
+require_once('modules/pkgs/includes/functions.php');
 
 
 // Retrieve information deploy. For cmn_id
@@ -494,38 +495,45 @@ if ($info['len'] != 0) {
         echo '<table class="listinfos" cellspacing="0" cellpadding="5">';
         echo "<thead>";
         echo "<tr>";
-        echo '<td>';
-        echo '<span>'._T("Name", "xmppmaster").'</span>';
-        echo '</td>';
-        echo '<td>';
-        echo '<span>'._T("Software", "xmppmaster").'</span>';
-        echo '</td>';
-        echo '<td class="text-center">';
-        echo '<span>'._T("Version", "xmppmaster").'</span>';
-        echo '</td>';
-        echo '<td>';
-        echo '<span>'._T("Description", "xmppmaster").'</span>';
-        echo '</td>';
+        echo '<td><span>'._T("Name", "xmppmaster").'</span></td>';
+        echo '<td><span>'._T("Description", "xmppmaster").'</span></td>';
+        echo '<td style="text-align:center"><span>'._T("Version", "xmppmaster").'</span></td>';
+        echo '<td style="text-align:center"><span>'._T("Size", "xmppmaster").'</span></td>';
+        echo '<td style="text-align:center"><span>'._T("Associated Inventory", "xmppmaster").'</span></td>';
         echo "</tr>";
         echo "</thead>";
         echo "<tbody>";
         $infoPkg = (!empty($deploymachine) && !empty($deploymachine['package_id']))
                     ? $deploymachine['package_id']
                     : pkgsGetDetails($info['objectdeploy'][0]['pathpackage']);
+        $pkgSummary = get_package_summary($deploymachine['package_id']);
+        $associatedInventory = [];
+        foreach (['Qsoftware','Qversion','Qvendor'] as $k) {
+            if (!empty($pkgSummary[$k])) {
+                $val = $pkgSummary[$k];
+                if (is_string($val) && preg_match("/^b'(.*)'$/", trim($val), $m)) {
+                    $val = $m[1];
+                }
+                $associatedInventory[] = $val;
+            }
+        }
+        $inventoryStr = empty($associatedInventory) ? '-' : join(' / ', $associatedInventory);
         if (empty($infoslist)) {
-            echo "<tr class='alternate'>";
+            echo "<tr>";
             echo '<td>' . htmlspecialchars($infoPkg['label']) . "</td>";
-            echo '<td>' . htmlspecialchars($infoPkg['label']) . "</td>";
-            echo '<td class="text-center">' . htmlspecialchars($infoPkg['version']) . "</td>";
             echo '<td>' . htmlspecialchars($infoPkg['description']) . "</td>";
+            echo '<td style="text-align:center">' . htmlspecialchars($infoPkg['version']) . "</td>";
+            echo '<td style="text-align:center">' . formatSizeMb($pkgSummary['size']) . "</td>";
+            echo '<td style="text-align:center">' . htmlspecialchars($inventoryStr) . "</td>";
             echo "</tr>";
         } else {
             foreach ($infoslist as $inf) {
-                echo "<tr class='alternate'>";
+                echo "<tr>";
                 echo '<td>' . htmlspecialchars($inf->name) . "</td>";
-                echo '<td>' . htmlspecialchars($inf->software) . "</td>";
-                echo '<td class="text-center">' . htmlspecialchars($inf->version) . "</td>";
                 echo '<td>' . htmlspecialchars($inf->description) . "</td>";
+                echo '<td style="text-align:center">' . htmlspecialchars($inf->version) . "</td>";
+                echo '<td style="text-align:center">' . formatSizeMb($pkgSummary['size']) . "</td>";
+                echo '<td style="text-align:center">' . htmlspecialchars($inventoryStr) . "</td>";
                 echo "</tr>";
             }
         }

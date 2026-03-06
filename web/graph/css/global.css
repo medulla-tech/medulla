@@ -2418,6 +2418,12 @@ td img[src*="img/other/"],
   }
 }
 
+/* Deployment summary tables : center counters (sauf colonne graphique) */
+table.listinfos.deployment tbody td:not(:first-child),
+table.listinfos.deployment thead td:not(:first-child) { text-align: center; }
+table.listinfos.deployment tbody td { vertical-align: middle; }
+table.listinfos.deployment td.chart-holder { overflow: visible; }
+
 /* ===== DataTables overrides (module Historique) ===== */
 
 /* Column widths */

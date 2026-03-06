@@ -33,59 +33,32 @@ $p->display();
 $computerpresence = isset($_GET['computerpresence']) ? $_GET['computerpresence'] : (isset($_SESSION['computerpresence']) ? $_SESSION['computerpresence'] : "all");
 $_SESSION['computerpresence'] = $computerpresence;
 
-echo '<input type="radio" ';
-if ($computerpresence == "all") echo "checked";
-echo ' id="namepresence1" name="namepresence" value="all"/> ';
-echo '<label for="namepresence1" style="display:initial;">'._('All computers').'</label>';
-echo '<input type="radio" ';
-if ($computerpresence == "presence") echo "checked";
-echo ' id="namepresence2" name="namepresence" value="presence"/> ';
-echo '<label for="namepresence2" style="display:initial;">'._('Online computers').'</label>';
-echo '<input type="radio" ';
-if ($computerpresence == "nopresence") echo "checked";
-echo ' id="namepresence3" name="namepresence" value="nopresence"/> ';
-echo '<label for="namepresence3" style="display:initial;">'._('Offline computers').'</label>';
+$presenceOptions = array(
+    'all' => _('All computers'),
+    'presence' => _('Online computers'),
+    'nopresence' => _('Offline computers')
+);
 
+$presenceSelectHtml = '<span class="searchfield"><select id="computerpresence" class="searchfieldreal noborder">';
+foreach ($presenceOptions as $value => $label) {
+    $selected = ($computerpresence == $value) ? 'selected' : '';
+    $presenceSelectHtml .= '<option value="' . $value . '" ' . $selected . '>' . $label . '</option>';
+}
+$presenceSelectHtml .= '</select></span>';
 
 $ajax = new AjaxFilter(urlStrRedirect("base/computers/ajaxXmppMachinesList"), "container", array('login' => $_SESSION['login']), 'formRunning');
 $ajax->display();
 $ajax->displayDivToUpdate();
- ?>
+?>
 
- <script type="text/javascript">
- //jQuery('#location option[value=""]').prop('selected', true);
+<script type="text/javascript">
+jQuery(function() {
+    jQuery('#searchBest').prepend(<?php echo json_encode($presenceSelectHtml); ?>);
 
-     function getQuerystringDef(key, default_) {
-         if (default_==null) default_="";
-         key = key.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
-         var regex = new RegExp("[\\?&]"+key+"=([^&#]*)");
-         var qs = regex.exec(window.location.href);
-
-         if(qs == null)
-             return default_;
-
-         else
-             return qs[1];
-     }
-     //Radiobox Mode
-     jQuery('input[type=radio][name=namepresence]').change(function(){
-
-         var valselect  = this.value;
-         var url = window.location.href;
-
-         if( !getQuerystringDef("computerpresence", false)){
-             var url = window.location.href + "&" + "computerpresence"  + "=" + valselect;
-             window.location = url;
-         }
-         else{
-             var array_url = url.split("?");
-             var adress = array_url[0];
-             var parameters = array_url[1];
-             var parameterlist = parameters.split("&");
-             parameterlist.pop();
-             parameterstring = parameterlist.join('&');
-             var url = adress + "?" + parameterstring + "&" + "computerpresence"  + "=" + valselect;
-             window.location = url;
-         }
-     });
- </script>
+    jQuery('#computerpresence').on('change', function() {
+        var url = new URL(window.location.href);
+        url.searchParams.set("computerpresence", this.value);
+        window.location.href = url.toString();
+    });
+});
+</script>

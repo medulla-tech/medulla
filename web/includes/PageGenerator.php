@@ -1574,7 +1574,7 @@ class ListInfos extends HtmlElement
     $actionPx = 0;
     if (safeCount($this->arrAction) != 0) {
         $actionCount = safeCount($this->arrAction);
-        $actionPx = ($actionCount * 40) + 30;
+        $actionPx = ($actionCount * 36) + 16;
         $totalFixedPx += $actionPx;
     }
 
@@ -1627,7 +1627,7 @@ class ListInfos extends HtmlElement
 
     // Colonne "Actions"
     if (safeCount($this->arrAction) != 0) {
-        echo "<th scope=\"col\" class=\"text-center\">Actions</th>";
+        echo "<th scope=\"col\">Actions</th>";
     }
 
     echo "</tr></thead><tbody>";
@@ -1698,7 +1698,7 @@ class ListInfos extends HtmlElement
 
         // Colonne "Actions" si nécessaire
         if (safeCount($this->arrAction) != 0) {
-            echo "<td class=\"action\" style=\"text-align:center;\">";
+            echo "<td class=\"action\">";
             echo "<ul class=\"action\" style=\"float:none;display:inline-block;\">";
             foreach ($this->arrAction as $objActionItem) {
                 if (is_a($objActionItem, 'ActionItem')) {

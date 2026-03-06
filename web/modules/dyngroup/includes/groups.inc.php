@@ -242,32 +242,70 @@ function drawGroupList($machines, $members, $listOfMembers, $visibility, $diff, 
         }
     }
 ?>
+    <style>
+        #grouplist {
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .grouplist-flex {
+            display: flex;
+            align-items: stretch;
+            gap: 12px;
+            width: 100%;
+        }
+        .grouplist-col {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        .grouplist-col select,
+        .grouplist-col select.list {
+            width: 100% !important;
+            height: auto !important;
+            flex: 1;
+            box-sizing: border-box;
+        }
+        .grouplist-col .filter-row input {
+            width: auto !important;
+            height: auto !important;
+        }
+        .grouplist-buttons-wrapper {
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            justify-content: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+        .grouplist-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+    </style>
     <form action="<?php echo $_SERVER["REQUEST_URI"]; ?>" method="post">
-        <div style="margin-bottom:18px;">
-            <label style="margin-top: 20px;"><?php echo $label_name; ?> :
-                <input style="min-width:300px;" name="name" value="<?php echo $name ?>" type="text" />
-            </label>
-            &nbsp;&nbsp;&nbsp;
-            <div class="label-radio-row">
-                <?php echo $label_visible; ?> :
-                <label style="display: flex; align-items: center; gap:4px; margin: 0 10px 0 10px;">
-                    <input name='visible' value='show' <?php if ($visibility == 'show') echo 'checked'; ?> type='radio' />
-                    <?php echo _T('Yes', 'dyngroup') ?>
-                </label>
-                <label style="display: flex; align-items: center; gap:4px;">
-                    <input name='visible' value='hide' <?php if ($visibility != 'show') echo 'checked'; ?> type='radio' />
-                    <?php echo _T('No', 'dyngroup') ?>
-                </label>
-            </div>
-        </div>
+        <table class="mmc-form-table" style="margin-bottom:18px;">
+            <tr class="mmc-form-row">
+                <td class="mmc-label"><?php echo $label_name; ?></td>
+                <td><input name="name" value="<?php echo $name ?>" type="text" /></td>
+            </tr>
+            <tr class="mmc-form-row">
+                <td class="mmc-label"><?php echo $label_visible; ?></td>
+                <td class="radio-inline">
+                    <label><input name="visible" value="show" type="radio" <?php if ($visibility == 'show') echo 'checked'; ?>><?php echo _T('Yes', 'dyngroup') ?></label>
+                    <label><input name="visible" value="hide" type="radio" <?php if ($visibility != 'show') echo 'checked'; ?>><?php echo _T('No', 'dyngroup') ?></label>
+                </td>
+            </tr>
+        </table>
         <div id="grouplist">
             <div class="grouplist-flex grouplist-with-filter">
                 <div class="grouplist-col">
                     <div class="list-title"><?php echo  _T("All machines", "dyngroup"); ?></div>
-                    <div class="filter-row">
-                        <input name='filter' type='text' value='<?php echo  $filter ?>' placeholder="Filtrer..." />
-                        <button class="bfiltmachine" type="submit" name="bfiltmachine" tabindex="-1">
-                            <img src="img/common/icn_show.gif" alt="Filtrer" />
+                    <div class="filter-row" style="display:flex; margin-bottom:8px;">
+                        <input name='filter' type='text' value='<?php echo  $filter ?>' placeholder="Filtrer..." style="flex:1; min-width:0; width:auto !important; height:auto !important; padding:6px 10px; border:1px solid #ccc; border-radius:4px 0 0 4px; border-right:none; font-size:13px;" />
+                        <button type="submit" name="bfiltmachine" style="padding:6px 10px; border:1px solid #ccc; border-radius:0 4px 4px 0; background:#f5f5f5; cursor:pointer; display:flex; align-items:center;" tabindex="-1">
+                            <img src="img/actions/display.svg" width="18" height="18" alt="Filtrer" style="filter:brightness(0);" />
                         </button>
                     </div>
                     <select multiple size="15" class="list" name="machines[]">

@@ -76,4 +76,15 @@ function clean_json($json)
     $json= stripslashes($json);
     return $json;
 }
+function formatSizeMb($bytes) {
+    $bytes = (int)$bytes;
+    if ($bytes <= 0) {
+        return '0 Mb';
+    }
+    $mb = $bytes / 1048576;
+    if ($mb < 0.01) {
+        $mb = 0.01;
+    }
+    return number_format($mb, 2) . ' Mb';
+}
 ?>

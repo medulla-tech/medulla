@@ -30,6 +30,7 @@ require_once('modules/msc/includes/utilities.php');
 require_once("includes/xmlrpc.inc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 require_once("modules/pkgs/includes/xmlrpc.php");
+require_once("modules/pkgs/includes/functions.php");
 
 $group = null;
 if (!empty($_GET['gid'])) {
@@ -194,7 +195,7 @@ foreach ($packages as $c_package) {
             $a_description[] = "<span class='pkg-description' title=\"$descText\">$descText</span>";
             $a_pversions[] = $package->version ;
             $a_pos[] = $package->targetos ;
-            $a_sizes[] = prettyOctetDisplay($package->size);
+            $a_sizes[] = formatSizeMb($package->size);
 
             if ($group != null) {
                 $current_convergence_status = ($package != null) ? getConvergenceStatus(
@@ -260,9 +261,9 @@ foreach ($packages as $c_package) {
 
         }
         if ($type == 0) {
-            $a_css[] = 'primary_list';
+            $a_css[] = 'alternate';
         } else {
-            $a_css[] = 'secondary_list';
+            $a_css[] = 'alternate secondary_list';
         }
     }
 } // end of foreach
@@ -277,11 +278,11 @@ foreach($params as $pid_pkgs) {
     $ids_deploy[] = 'p_'.$pid_pkgs['pid'];
 }
 
-$n = new OptimizedListInfos($a_packages, _T("Package", "msc"));
+$n = new OptimizedListInfos($a_packages, _T("Package name", "pkgs"));
 $n->setcssIds($ids_deploy);
 $n->addExtraInfo($a_description, _T("Description", "msc"));
-$n->addExtraInfo($a_pversions, _T("Version", "msc"));
-$n->addExtraInfo($a_sizes, _T("Package size", "msc"));
+$n->addExtraInfoCentered($a_pversions, _T("Version", "msc"), "90px");
+$n->addExtraInfoCentered($a_sizes, _T("Size", "pkgs"), "90px");
 if ($group != null) {
     $n->addExtraInfo($a_convergence_status, _T("Convergence", "msc"));
 }

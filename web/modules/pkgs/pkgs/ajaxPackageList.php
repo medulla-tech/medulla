@@ -23,6 +23,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 require_once("modules/pkgs/includes/xmlrpc.php");
+require_once("modules/pkgs/includes/functions.php");
 require_once("modules/msc/includes/package_api.php");
 require_once("modules/msc/includes/utilities.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
@@ -124,10 +125,10 @@ if($sharings['config']['centralizedmultiplesharing'] == true) {
             $occupation = number_format(($_packages['size'][$i] / $totalQuotas) * 100, 2);
 
 
-            $size = "<span class='pkg-size-tooltip' title='"._T('Sharing disk usage', 'pkgs').": ".number_format(($usedQuotas / 1048576), 2)." / ".number_format(($totalQuotas / 1048576), 2)." Mb ($percentQuotas %) - "._T('Package occupation', 'pkgs').": $occupation%'>".number_format(($packageSize / 1048576), 2)." Mb</span>";
+            $size = "<span class='pkg-size-tooltip' title='"._T('Sharing disk usage', 'pkgs').": ".formatSizeMb($usedQuotas)." / ".formatSizeMb($totalQuotas)." ($percentQuotas %) - "._T('Package occupation', 'pkgs').": $occupation%'>".formatSizeMb($packageSize)."</span>";
         } else {
             $occupation = _T("Not limited", "pkgs");
-            $size = "<span class='pkg-size-tooltip' title='"._T('Sharing disk usage', 'pkgs').": "._T('not limited', 'pkgs')."'>".number_format(($packageSize / 1048576), 2)." Mb</span>";
+            $size = "<span class='pkg-size-tooltip' title='"._T('Sharing disk usage', 'pkgs').": "._T('not limited', 'pkgs')."'>".formatSizeMb($packageSize)."</span>";
         }
         $_sizes[] = $size;
 

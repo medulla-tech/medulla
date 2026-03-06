@@ -29,14 +29,16 @@ function chart(selector, datas) {
 
   var canvas = d3.select("#" + selector)
     .style("display", "flex")
+    .style("align-items", "center")
     .append("svg")
     .attr("width", width)
-    .attr("height", height);
+    .attr("height", height)
+    .style("overflow", "visible");
 
   var group = canvas.append("g")
     .attr("transform", "translate(" + (width) / 2 + "," + height / 2 + ")");
 
-  var dataset = d3.pie().value(d => d.value)(datas);
+  var dataset = d3.pie().sort(null).value(d => d.value)(datas);
 
   var segments = d3.arc()
     .innerRadius(innerRadius)
@@ -54,12 +56,7 @@ function chart(selector, datas) {
     .on("mouseover", function (event, d) {
       const idx = d.index;
 
-      d3.select("#" + selector).select("ul").select('.' + selector + 'Label' + idx)
-        .style("font-size", "2.3em")
-        .style("line-height", "0.5em");
-
       d3.select("#" + selector).select("ul").select('.' + selector + 'Label' + idx).select("a")
-        .style("font-size", "1.1em")
         .style("font-weight", "bold");
 
       canvas.append("g").attr("class", selector + "tooltip");
@@ -101,13 +98,7 @@ function chart(selector, datas) {
     .on("mouseout", function (event, d) {
       const idx = d.index;
 
-      d3.select("#" + selector).select("ul").select('.' + selector + 'Label' + idx)
-        .style("font-size", "2em")
-        .style("line-height", "0.5em");
-
       d3.select("#" + selector).select("ul").select('.' + selector + 'Label' + idx).select("a")
-        .style("font-size", "1em")
-        .style("line-height", "0.5em")
         .style("font-weight", "normal");
 
       canvas.select("." + selector + "tooltip").remove();
@@ -121,12 +112,17 @@ function chart(selector, datas) {
     });
 
   d3.select("#" + selector).append("ul")
+    .style("overflow", "visible")
+    .style("padding", "0")
+    .style("margin", "0")
+    .style("list-style-position", "inside")
     .selectAll("li")
     .data(dataset)
     .enter()
     .append("li")
-    .style("font-size", "2em")
-    .style("line-height", "0.5em")
+    .style("font-size", "1.2em")
+    .style("line-height", "1.2em")
+    .style("white-space", "nowrap")
     .attr("class", (d, i) => selector + 'Label' + i)
     .style("color", (d, i) => d.data.color)
     .style("display", d => d.data.value == 0 ? "none" : null)

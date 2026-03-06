@@ -1550,6 +1550,10 @@ msgstr "Reiniciar la implantación"
 msgid "Machine Name"
 msgstr "Nombre de la máquina"
 
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:731
+msgid "Progression / Status"
+msgstr "Progresión / Estado"
+
 #: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:791
 #: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:123
 msgid "Type"

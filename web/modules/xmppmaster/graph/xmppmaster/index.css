@@ -388,6 +388,29 @@ progress::-moz-progress-bar {
   color: var(--color-error);
 }
 
+/* Badges de statut — table machines (déploiement groupe) */
+.status-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 4px;
+  font-size: 0.85em;
+  font-weight: 600;
+  color: #fff;
+  text-align: center;
+  text-transform: uppercase;
+}
+.status-badge-success    { background-color: var(--color-success); }
+.status-badge-error      { background-color: var(--btn-danger-bg); }
+.status-badge-abort      { background-color: var(--color-warning); }
+.status-badge-wol1       { background-color: #1b3a4b; }
+.status-badge-wol2       { background-color: #1a5276; }
+.status-badge-wol3       { background-color: #2e86ab; }
+.status-badge-waiting    { background-color: #48b5c4; }
+.status-badge-pending    { background-color: #7678a0; }
+.status-badge-delayed    { background-color: #4a6fa5; }
+.status-badge-start      { background-color: #2196f3; }
+.status-badge-other      { background-color: #6c757d; }
+
 /* Constraint text */
 .constraint-text {
   opacity: 0.5;

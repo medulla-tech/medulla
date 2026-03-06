@@ -260,8 +260,8 @@ if ($_GET["action"] == "add") {
 
 
 $fields = array(
-    array("label", _T("Package label", "pkgs"), array("required" => true)),
-    array("version", _T("Package version", "pkgs"), array("required" => true)),
+    array("label", _T("Name", "pkgs"), array("required" => true)),
+    array("version", _T("Version", "pkgs"), array("required" => true)),
     array('description', _T("Description", "pkgs"), array()),
 );
 $cmds = array();
@@ -332,6 +332,9 @@ if(isset($getShares["config"]["centralizedmultiplesharing"]) && $getShares["conf
         $f->add(new HiddenTpl("localisation_server"), array("value" => $json['info']["localisation_server"], "hide" => true));
     }
 }
+$span = new SpanElement(_T("Package Creation", "pkgs"), "pkgs-title");
+$f->add(new TrFormElement("", $span), array());
+
 foreach ($fields as $p) {
     $f->add(
         new TrFormElement($p[1], new AsciiInputTpl($p[0])),
@@ -453,44 +456,30 @@ if(isExpertMode1()) {
     foreach($dependenciesArray as $dep) {
         $packagesInOptionAdded .= '<option title="'.$dep["name"].' v.'.$dep["version"].'" value="'.$dep["uuid"].'">'.$dep["name"].' v.'.$dep["version"].'</option>';
     }
-    $f->add(new TrFormElement(_T("Dependencies", "pkgs"), new SpanElement('<div id="grouplist">
-    <table class="pkg-dependency-table" cellspacing="0">
-        <tr>
-            <td>
-                <div>
-                    <img src="img/other/up.svg" width="25" height="25" alt="|^" id="moveDependencyToUp" onclick="moveToUp()"/><br/>
-                    <img src="img/other/down.svg" width="25" height="25" alt="|v" id="moveDependencyToDown" onclick="moveToDown()"/><br/>
-                </div>
-            </td>
-            <td>
-                <h3>'._T('Added dependencies', 'pkgs').'</h3>
-                <div class="list">
-                    <select multiple size="13" class="list" name="Dependency" id="addeddependencies">
-                    '.$packagesInOptionAdded.'
-                    </select>
-                    <div class="opt_name pkg-opt-name"></div>
-                </div>
-            </td>
-            <td>
-                <div>
-                    <img src="img/other/right.svg" width="25" height="25" alt="-->" id="moveDependencyToRight" onclick="moveToRight()"/><br/>
-                    <img src="img/other/left.svg" width="25" height="25" alt="<--" id="moveDependencyToLeft" onclick="moveToLeft()"/><br/>
-                </div>
-            </td>
-            <td>
-                <div class="list pkg-dependency-pool">
-                    <h3>'._T('Available dependencies', 'pkgs').'</h3>
-                    <input type="text" id="dependenciesFilter" value="" placeholder="'._T("search by name ...", "pkgs").'"><br/>
-
-                    <select multiple size="13" class="list" name="members[]" id="pooldependencies">
-                        '.$packagesInOptionNotAdded.'
-                    </select>
-                    <div class="opt_name pkg-opt-name"></div>
-                </div>
-                <div class="clearer"></div>
-            </td>
-        </tr>
-    </table>
+    $spanDeps = new SpanElement(_T("Dependencies", "pkgs"), "pkgs-title");
+    $f->add(new TrFormElement("", $spanDeps), array());
+    $f->add(new TrFormElement("", new SpanElement('<div id="grouplist" class="deps-widget">
+    <div class="deps-col deps-available">
+        <h3>'._T('Available dependencies', 'pkgs').'</h3>
+        <input type="text" id="dependenciesFilter" class="deps-search" value="" placeholder="'._T("search by name ...", "pkgs").'">
+        <select multiple class="deps-list" name="members[]" id="pooldependencies">
+            '.$packagesInOptionNotAdded.'
+        </select>
+    </div>
+    <div class="deps-actions">
+        <img src="img/other/right.svg" width="25" height="25" alt="-->" id="moveDependencyToRight" onclick="moveToLeft()"/>
+        <img src="img/other/left.svg" width="25" height="25" alt="<--" id="moveDependencyToLeft" onclick="moveToRight()"/>
+    </div>
+    <div class="deps-col deps-added">
+        <h3>'._T('Added dependencies', 'pkgs').'</h3>
+        <select multiple class="deps-list" name="Dependency" id="addeddependencies">
+            '.$packagesInOptionAdded.'
+        </select>
+    </div>
+    <div class="deps-order">
+        <img src="img/other/up.svg" width="25" height="25" alt="|^" id="moveDependencyToUp" onclick="moveToUp()"/>
+        <img src="img/other/down.svg" width="25" height="25" alt="|v" id="moveDependencyToDown" onclick="moveToDown()"/>
+    </div>
 </div>', "pkgs")));
 }
 

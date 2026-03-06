@@ -1580,7 +1580,11 @@ msgstr "Redémarrer le déploiement"
 
 #: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:786
 msgid "Machine Name"
-msgstr "Nom de l'ordinateur"
+msgstr "Nom de la machine"
+
+#: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:731
+msgid "Progression / Status"
+msgstr "Progression / Statut"
 
 #: modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php:791
 #: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php:123
