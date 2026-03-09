@@ -353,7 +353,6 @@ $n->addExtraInfoRaw($total_win, _T("Total machines", "updates"));
 $n->addActionItemArray($actionupdateByentity);
 $n->addActionItemArray($actiondetailsByMachs);
 $n->addActionItemArray($actionHardwareConstraintsForMajorUpdatesByEntity);
-$n->setTableHeaderPadding(12);
 $n->setItemCount($count);
 $n->setNavBar(new AjaxNavBar($count, $filter));
 $n->setParamInfo($params);

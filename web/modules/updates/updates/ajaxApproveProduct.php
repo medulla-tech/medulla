@@ -140,9 +140,8 @@ foreach ($f['name_procedure'] as $indextableau => $name) {
 
 // Construction du tableau avec ListInfos
 $n = new ListInfos($listename, _T("Product Microsoft", "updates"));
-$n->setTableHeaderPadding(16);
 
-$n->addExtraInfo($htmlelementcheck, _T("approve update", "updates"));
+$n->addExtraInfoCenteredRaw($htmlelementcheck, _T("approve update", "updates"));
 // $n->addExtraClassCssLigne(1, "highlight");
 // $n->addExtraClassCssLigne(3, "warning");
 // $n->addExtraClassCssColonne(2, "col-status");
@@ -162,5 +161,7 @@ $n->display($navbar = 0, $header = 0);
 echo '<input type="hidden" name="form_name" value="montableau">';
 echo '<input type="hidden" name="entityid" value="'.$_GET['selected_location']['uuid'].'">';
 echo '<input type="hidden" name="entityname" value="'.$_GET['selected_location']['name'].'">';
+echo '<div class="approval-form-actions">';
 echo '<input class="btnPrimary" type="submit" value="' . _T("Apply", "updates") . '">';
+echo '</div>';
 echo "\n</form>";

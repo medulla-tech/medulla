@@ -1617,10 +1617,7 @@ class ListInfos extends HtmlElement
     // Colonnes principales (description)
     foreach ($this->description as $key => $desc) {
         if (!$first) {
-            if (!isset($this->first_elt_padding)) {
-                $this->first_elt_padding = 0;
-            }
-            echo "<th scope=\"col\"><span style=\"padding-left: " . $this->first_elt_padding . "px;\">$desc</span></th>";
+            echo "<th scope=\"col\"><span>$desc</span></th>";
             $first = true;
         } else {
             $tooltipbegin = !empty($this->tooltip[$key]) ? "<a href=\"#\" class=\"tooltip\">" : "";

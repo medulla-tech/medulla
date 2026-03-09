@@ -154,7 +154,6 @@ $n->addExtraInfoCentered($totalMachine, _T("Total machines", "updates"));
 $n->setItemCount($count);
 $n->setNavBar(new AjaxNavBar($count, $filter));
 $n->setParamInfo($params);
-$n->setTableHeaderPadding(12);
 
 $n->addActionItemArray($actionHistories);
 $n->addActionItemArray($actiondetailsByMachs);
