@@ -2421,3 +2421,91 @@ msgstr "Sin resultados de acción rápida"
 #: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php
 msgid "No quick actions have been executed yet."
 msgstr "Aún no se han ejecutado acciones rápidas."
+
+#: tooltip labels (machine/relay info popups)
+msgid "Identity"
+msgstr "Identidad"
+
+msgid "Network"
+msgstr "Red"
+
+msgid "Agent"
+msgstr "Agente"
+
+msgid "Other"
+msgstr "Otro"
+
+msgid "Subnet"
+msgstr "Subred"
+
+msgid "Public IP"
+msgstr "IP pública"
+
+msgid "IP address"
+msgstr "IP XMPP"
+
+msgid "Architecture"
+msgstr "Arquitectura"
+
+msgid "Platform"
+msgstr "Sistema"
+
+msgid "Machine ID"
+msgstr "ID de máquina"
+
+msgid "Jabber ID"
+msgstr "ID Jabber"
+
+msgid "Machine UUID"
+msgstr "UUID de máquina"
+
+msgid "GLPI ID"
+msgstr "ID GLPI"
+
+msgid "Model"
+msgstr "Modelo"
+
+msgid "Manufacturer"
+msgstr "Fabricante"
+
+msgid "Agent type"
+msgstr "Tipo de agente"
+
+msgid "Usage class"
+msgstr "Clase de uso"
+
+msgid "Relay JID"
+msgstr "JID del relé"
+
+msgid "Online"
+msgstr "En línea"
+
+msgid "Reconf. requested"
+msgstr "Reconf. solicitada"
+
+msgid "Kiosk enabled"
+msgstr "Kiosk activado"
+
+msgid "Last user connected"
+msgstr "Último usuario"
+
+msgid "Short entity name"
+msgstr "Entidad (corto)"
+
+msgid "Full entity name"
+msgstr "Entidad (completo)"
+
+msgid "Entity ID"
+msgstr "ID de entidad"
+
+msgid "IP addresses"
+msgstr "Direcciones IP"
+
+msgid "Network mask"
+msgstr "Máscara de red"
+
+msgid "Broadcast address"
+msgstr "Dirección broadcast"
+
+msgid "Gateway address"
+msgstr "Dirección pasarela"

@@ -24,7 +24,7 @@
  */
 
 require_once("modules/glpi/includes/xmlrpc.php");
-require_once("modules/xmppmaster/includes/xmlrpc.php");
+require_once("modules/xmppmaster/includes/html.inc.php");
 require_once("modules/msc/includes/mscoptions_xmlrpc.php");
 
 global $config;
@@ -272,7 +272,8 @@ for ($index = 0; $index < safeCount($datas['hostname']); $index++) {
             if (!isset($datas[$field]) || in_array($field, $exclud) || $datas[$field][$index] == "" || gettype($datas[$field][$index]) == "array") {
                 continue;
             }
-            $groupRows .= "<tr class='ttabletr'><td class='ttabletd'>".$chaine[$field]."</td><td class='ttabletd'>: ".$datas[$field][$index]."</td></tr>";
+            $val = ($field === 'macaddress') ? formatMacAddress($datas[$field][$index]) : $datas[$field][$index];
+            $groupRows .= "<tr class='ttabletr'><td class='ttabletd'>".$chaine[$field]."</td><td class='ttabletd'>: ".$val."</td></tr>";
         }
         if ($groupRows !== '') {
             $chainestr .= "<tr class='ttabletr tt-section'><td class='ttabletd' colspan='2'>".$groupLabel."</td></tr>";

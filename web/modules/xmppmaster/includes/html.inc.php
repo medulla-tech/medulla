@@ -460,4 +460,12 @@ class Editor{
 
   <?php }
 }
+
+/**
+ * Format a raw MAC address (e.g. "bc24112ac8cf") with colons ("bc:24:11:2a:c8:cf").
+ */
+function formatMacAddress($mac) {
+    $mac = strtoupper(preg_replace('/[^a-fA-F0-9]/', '', $mac));
+    return (strlen($mac) === 12) ? implode(':', str_split($mac, 2)) : $mac;
+}
 ?>

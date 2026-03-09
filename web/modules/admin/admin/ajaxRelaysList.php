@@ -97,12 +97,9 @@ foreach($relays['datas']['hostname'] as $key=>$array){
     'vnctype' => (in_array("guacamole", $_SESSION["supportModList"])) ? "guacamole" : ((web_def_use_no_vnc()==1) ? "novnc" : "appletjava")
   ];
 
-  $macRaw = $relays['datas']['macaddress'][$raw];
-  $macFormatted = (strlen($macRaw) === 12) ? implode(':', str_split($macRaw, 2)) : $macRaw;
-
   $tooltipData = '<table class="ttable">'
     . '<tr><td><b>'._T("IP address", "xmppmaster").'</b></td><td> : '.htmlspecialchars($relays['datas']['ip_xmpp'][$raw]).'</td></tr>'
-    . '<tr><td><b>'._T("Mac address", "xmppmaster").'</b></td><td> : '.htmlspecialchars($macFormatted).'</td></tr>'
+    . '<tr><td><b>'._T("Mac address", "xmppmaster").'</b></td><td> : '.htmlspecialchars(formatMacAddress($relays['datas']['macaddress'][$raw])).'</td></tr>'
     . '</table>';
 
   $relays['datas']['hostname'][$raw] = '<span class="relay-clickable infomach" mydata="'.htmlentities($tooltipData).'">'.$relays['datas']['hostname'][$raw].'</span>';

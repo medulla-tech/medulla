@@ -176,7 +176,7 @@ msgstr "Progression / Statut"
 #: modules/xmppmaster/xmppmaster/ajaxstatusteamxmpp.php:343
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:335
 msgid "Total Machines"
-msgstr "Nb de machines total"
+msgstr "Total machines"
 
 msgid "Total machines"
 msgstr "Total machines"
@@ -513,7 +513,7 @@ msgstr "Nom du cluster"
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:129
 msgid "Cluster Description"
-msgstr "Description du cluster"
+msgstr "Description"
 
 #: modules/xmppmaster/xmppmaster/relays/ajaxXmppRelaysList.php:131
 msgid "Uninventoried Online"
@@ -2458,3 +2458,91 @@ msgstr "Aucun résultat d'action rapide"
 #: modules/xmppmaster/xmppmaster/ajaxGroupactionquick.php
 msgid "No quick actions have been executed yet."
 msgstr "Aucune action rapide n'a encore été exécutée."
+
+#: tooltip labels (machine/relay info popups)
+msgid "Identity"
+msgstr "Identité"
+
+msgid "Network"
+msgstr "Réseau"
+
+msgid "Agent"
+msgstr "Agent"
+
+msgid "Other"
+msgstr "Autre"
+
+msgid "Subnet"
+msgstr "Sous-réseau"
+
+msgid "Public IP"
+msgstr "IP publique"
+
+msgid "IP address"
+msgstr "IP XMPP"
+
+msgid "Architecture"
+msgstr "Architecture"
+
+msgid "Platform"
+msgstr "Système"
+
+msgid "Machine ID"
+msgstr "ID machine"
+
+msgid "Jabber ID"
+msgstr "ID Jabber"
+
+msgid "Machine UUID"
+msgstr "UUID machine"
+
+msgid "GLPI ID"
+msgstr "ID GLPI"
+
+msgid "Model"
+msgstr "Modèle"
+
+msgid "Manufacturer"
+msgstr "Fabricant"
+
+msgid "Agent type"
+msgstr "Type d'agent"
+
+msgid "Usage class"
+msgstr "Classe d'usage"
+
+msgid "Relay JID"
+msgstr "JID du relais"
+
+msgid "Online"
+msgstr "En ligne"
+
+msgid "Reconf. requested"
+msgstr "Reconf. demandée"
+
+msgid "Kiosk enabled"
+msgstr "Kiosk activé"
+
+msgid "Last user connected"
+msgstr "Dernier utilisateur"
+
+msgid "Short entity name"
+msgstr "Entité (court)"
+
+msgid "Full entity name"
+msgstr "Entité (complet)"
+
+msgid "Entity ID"
+msgstr "ID entité"
+
+msgid "IP addresses"
+msgstr "Adresses IP"
+
+msgid "Network mask"
+msgstr "Masque réseau"
+
+msgid "Broadcast address"
+msgstr "Adresse broadcast"
+
+msgid "Gateway address"
+msgstr "Adresse passerelle"

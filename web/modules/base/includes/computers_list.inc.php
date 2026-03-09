@@ -24,7 +24,7 @@
  *
  */
 
-require_once("modules/xmppmaster/includes/xmlrpc.php");
+require_once("modules/xmppmaster/includes/html.inc.php");
 require_once("includes/xmlrpc.inc.php");
 
 class EmptyActionItem1 extends ActionItem
@@ -297,7 +297,8 @@ function list_computers(
                 $groupRows = '';
                 foreach ($fields as $key => $label) {
                     if (!empty($machine[$key])) {
-                        $groupRows .= "<tr><td>$label</td><td> : " . htmlspecialchars($machine[$key]) . "</td></tr>";
+                        $val = ($key === 'macaddress') ? formatMacAddress($machine[$key]) : $machine[$key];
+                        $groupRows .= "<tr><td>$label</td><td> : " . htmlspecialchars($val) . "</td></tr>";
                     }
                 }
                 if ($groupRows !== '') {
