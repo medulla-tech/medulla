@@ -1,0 +1,105 @@
+/*
+ * jQuery UI tooltip - unified style for machine/relay info popups
+ *
+ * To rebrand: change only the variables below.
+ */
+
+:root {
+  --tt-bg: rgba(24, 55, 78, 0.92);
+  --tt-border: rgba(100, 160, 200, 0.2);
+  --tt-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.06) inset;
+  --tt-radius: 10px;
+  --tt-padding: 8px 12px;
+  --tt-font-size: 10.5px;
+  --tt-line-height: 1.25;
+  --tt-color-text: #e8edf2;
+  --tt-color-value: #f0f4f8;
+  --tt-color-label: #5fbcd3;
+  --tt-color-section: rgba(95, 188, 211, 0.6);
+  --tt-color-section-border: rgba(95, 188, 211, 0.15);
+  --tt-label-size: 10px;
+  --tt-section-size: 9px;
+  --tt-cell-padding: 1px 6px 1px 0;
+}
+
+.ui-tooltip {
+  padding: var(--tt-padding) !important;
+  max-width: 680px !important;
+  color: var(--tt-color-text) !important;
+  background: var(--tt-bg) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  box-shadow: var(--tt-shadow) !important;
+  border: 1px solid var(--tt-border) !important;
+  border-radius: var(--tt-radius) !important;
+  font-size: var(--tt-font-size) !important;
+  line-height: var(--tt-line-height) !important;
+  letter-spacing: 0.01em !important;
+}
+
+/* Table inside tooltip - supports both markup styles:
+   .ttable tr td  (admin/relay, group tooltips)
+   .ttable .ttabletr .ttabletd  (machine list tooltips) */
+
+.ttable {
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+}
+
+.ttable tr td,
+.ttable .ttabletd {
+  padding: var(--tt-cell-padding) !important;
+  background: none !important;
+  border: none !important;
+  font-size: var(--tt-font-size) !important;
+  color: var(--tt-color-text) !important;
+  vertical-align: top;
+}
+
+.ttable tr td:first-child,
+.ttable .ttabletd:first-child {
+  color: var(--tt-color-label) !important;
+  font-weight: 600;
+  white-space: nowrap;
+  padding-right: 8px !important;
+  font-size: var(--tt-label-size) !important;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.ttable tr td b,
+.ttable .ttabletd b {
+  color: var(--tt-color-label) !important;
+  font-weight: 600;
+  font-size: var(--tt-label-size) !important;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.ttable tr td:last-child,
+.ttable .ttabletd:last-child {
+  font-size: var(--tt-font-size) !important;
+  color: var(--tt-color-value) !important;
+}
+
+/* Section headers in grouped tooltips */
+.ttable tr.tt-section td,
+.ttable .ttabletr.tt-section .ttabletd {
+  padding-top: 4px !important;
+  padding-bottom: 1px !important;
+  padding-right: 0 !important;
+  font-size: var(--tt-section-size) !important;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--tt-color-section) !important;
+  border: none !important;
+  border-bottom: 1px solid var(--tt-color-section-border) !important;
+  white-space: normal;
+}
+
+.infomach {
+  border-bottom: 1px dotted var(--tt-border);
+  cursor: help;
+}

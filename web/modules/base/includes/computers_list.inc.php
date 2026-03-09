@@ -276,22 +276,33 @@ function list_computers(
         foreach ($names as $i => $info) {
             $machine = xmlrpc_getMachineByUUID($info['objectUUID']);
 
-            $fields = [
-                'hostname'      => 'Nom de machine',
-                'platform'      => 'OS',
-                'archi'         => 'Version',
-                'ip_xmpp'       => 'IP',
-                'subnetxmpp'    => 'Subnet',
-                'gateway'       => 'Passerelle',
-                'mask'          => 'Masque',
-                'macaddress'    => 'Adresse MAC',
-                'jid'           => 'JID'
+            $tooltipGroups = [
+                _T("Identity", "xmppmaster") => [
+                    'hostname'  => _T("Hostname", "xmppmaster"),
+                    'platform'  => _T("Platform", "xmppmaster"),
+                    'archi'     => _T("Architecture", "xmppmaster"),
+                    'jid'       => _T("Jabber ID", "xmppmaster"),
+                ],
+                _T("Network", "xmppmaster") => [
+                    'ip_xmpp'       => _T("IP address", "xmppmaster"),
+                    'macaddress'    => _T("Mac address", "xmppmaster"),
+                    'subnetxmpp'    => _T("Subnet", "xmppmaster"),
+                    'gateway'       => _T("Gateway address", "xmppmaster"),
+                    'mask'          => _T("Network mask", "xmppmaster"),
+                ],
             ];
 
             $tooltip = "<table class='ttable'>";
-            foreach ($fields as $key => $label) {
-                if (!empty($machine[$key])) {
-                    $tooltip .= "<tr><td>$label</td><td> : " . htmlspecialchars($machine[$key]) . "</td></tr>";
+            foreach ($tooltipGroups as $groupLabel => $fields) {
+                $groupRows = '';
+                foreach ($fields as $key => $label) {
+                    if (!empty($machine[$key])) {
+                        $groupRows .= "<tr><td>$label</td><td> : " . htmlspecialchars($machine[$key]) . "</td></tr>";
+                    }
+                }
+                if ($groupRows !== '') {
+                    $tooltip .= "<tr class='tt-section'><td colspan='2'>$groupLabel</td></tr>";
+                    $tooltip .= $groupRows;
                 }
             }
             $tooltip .= "</table>";

@@ -36,74 +36,22 @@ global $config;
 }
 </style>
 
-<style>
-
-.tooltip{   font-size:20px; }
-.ui-tooltip {
-                padding: 6px 4px 8px 4px;
-                max-width: 600px;
-                color: #ffffff;
-                background-color: #000000;
-                -moz-box-shadow: 4px 4px 10px #888;
-                -webkit-box-shadow: 4px 4px 10px #888;
-                box-shadow:4px 4px 6px #888;
-                border-radius: 15px;}
-
-.tooltip-content {
-                    padding: 2px;
-                    color: #FF00AA;
-                    max-width: 800px;}
-
-.ttabletr   {   margin:0;
-                padding:0;
-                background:none;
-                border:none;
-                border-collapse:collapse;
-                border-spacing:0;
-                background-image:none;}
-
-
-.ttabletd   {   margin:0;
-                padding:0;
-                background:none;
-                border:none;
-                border-collapse:collapse;
-                border-spacing:0;
-                background-image:none;}
-
-.ttable tr td{  margin:0;
-                padding:0;
-                background:none;
-                border:none;
-                border-collapse:collapse;
-                border-spacing:0;
-                background-image:none;
-                font-size:.9em;
-}
-</style>
 
 <script>
-
-jQuery(function()
-{
-	 jQuery( function() {
-      jQuery(".infomach").tooltip({
-      position: { my: "left+15 center", at: "right center" },
-          items: "[mydata]",
-          content: function() {
-              var element = jQuery( this );
-              if ( element.is( "[mydata]" ) ) {
-              console.log(element.attr('mydata'));
-                  var text = element.attr('mydata');
-                  return text;
-              }
-
-          }
-      });
-  } );
-
+jQuery(function() {
+    jQuery(function() {
+        jQuery(".infomach").tooltip({
+            position: { my: "left+15 center", at: "right center" },
+            items: "[mydata]",
+            content: function() {
+                var element = jQuery(this);
+                if (element.is("[mydata]")) {
+                    return element.attr("mydata");
+                }
+            }
+        });
+    });
 });
-
 </script>
 
 <?php
@@ -305,28 +253,35 @@ $orderkey = array( "glpi_owner",
 
 
 $exclud = array('glpi_location_id', 'glpi_entity_id', 'columns_name',"list_reg_columns_name" );
+
+// Tooltip fields grouped by category
+$tooltipGroups = [
+    _T("Identity", "xmppmaster") => ['hostname', 'id', 'jid', 'uuid_serial_machine', 'uuid_inventorymachine', 'platform', 'archi', 'model', 'manufacturer'],
+    _T("Network", "xmppmaster") => ['ip_xmpp', 'ippublic', 'macaddress', 'subnetxmpp', 'listipadress', 'mask', 'broadcast', 'gateway'],
+    _T("Agent", "xmppmaster") => ['agenttype', 'classutil', 'groupdeploy', 'enabled', 'need_reconf', 'kiosk_presence', 'lastuser'],
+    _T("Entity", "xmppmaster") => ['entityname', 'entitypath', 'entityid', 'locationname', 'locationpath', 'locationid'],
+    _T("Other", "xmppmaster") => ['glpi_description', 'glpi_owner', 'glpi_owner_firstname', 'glpi_owner_realname', 'ad_ou_machine', 'ad_ou_user', 'keysyncthing', 'regedit'],
+];
+
 for ($index = 0; $index < safeCount($datas['hostname']); $index++) {
     $chainestr = "<table class='ttable'>";
 
-    /*
-     *      FIXME: Do not remove, will be oised to order the entries on the menu
-            foreach($orderkey as $key_in_order){
-                $data_order=$datas[$key_in_order];
-                if(in_array($mach,$exclude ) ||  $data_order[$index] == ""){
-                    continue;
-                }
-             $chainestr .= "<tr class='ttabletr'><td class='ttabletd'>".$chaine[$key_in_order] ."</td><td class='ttabletd'>".$data_order[$index]."</td></tr>";
+    foreach ($tooltipGroups as $groupLabel => $fields) {
+        $groupRows = '';
+        foreach ($fields as $field) {
+            if (!isset($datas[$field]) || in_array($field, $exclud) || $datas[$field][$index] == "" || gettype($datas[$field][$index]) == "array") {
+                continue;
             }
-    */
-
-    foreach($datas as $mach => $value) {
-        if(in_array($mach, $exclud) ||  $value[$index] == "" || gettype($value[$index]) == "array") {
-            continue;
+            $groupRows .= "<tr class='ttabletr'><td class='ttabletd'>".$chaine[$field]."</td><td class='ttabletd'>: ".$datas[$field][$index]."</td></tr>";
         }
-        $chainestr .= "<tr class='ttabletr'><td class='ttabletd'>".$chaine[$mach] ."</td><td class='ttabletd'>: ".$value[$index]."</td></tr>";
+        if ($groupRows !== '') {
+            $chainestr .= "<tr class='ttabletr tt-section'><td class='ttabletd' colspan='2'>".$groupLabel."</td></tr>";
+            $chainestr .= $groupRows;
+        }
     }
+
     $chainestr .= "</table>";
-    $cn[] = sprintf('<span class="infomach" mydata="%s">%s</pan>', $chainestr, $datas['hostname'][$index]);
+    $cn[] = sprintf('<span class="infomach" mydata="%s">%s</span>', $chainestr, $datas['hostname'][$index]);
 }
 
 $index = 0;

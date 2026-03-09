@@ -1668,7 +1668,11 @@ class ListInfos extends HtmlElement
                     $titleAttr = ' title="' . htmlspecialchars($plainText, ENT_QUOTES, 'UTF-8') . '"';
                 }
             }
-            echo "<td$titleAttr>";
+            $classAttr = '';
+            if (!empty($this->mainActionClasses) && isset($this->mainActionClasses[$idx])) {
+                $classAttr = ' class="' . $this->mainActionClasses[$idx] . '"';
+            }
+            echo "<td$classAttr$titleAttr>";
             echo '<span class="cell-text">' . $this->arrInfo[$idx] . '</span>';
             echo "</td>";
         }

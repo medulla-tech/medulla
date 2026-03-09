@@ -24,37 +24,14 @@
  * file /modules/base/computers/ajaxComputersList.php
  */
 ?>
-<style>
-    .tooltip {
-        font-size: 20px;
-    }
-
-    .ui-tooltip {
-        padding: 6px 4px 8px 4px;
-        max-width: 600px;
-        color: #ffffff;
-        background-color: #000000;
-        box-shadow: 4px 4px 6px #888;
-        border-radius: 15px;
-    }
-
-    .ttable tr td {
-        margin-left: 10px;
-        padding: 2px;
-        background: none;
-        border: none;
-        border-collapse: collapse;
-        border-spacing: 0;
-        font-size: .9em;
-    }
-</style>
 
 <script>
     jQuery(function() {
         jQuery(".infomach").tooltip({
             position: {
-                my: "left+15 center",
-                at: "right center"
+                my: "left top",
+                at: "left bottom+10",
+                collision: "flipfit"
             },
             items: "[mydata]",
             content: function() {
