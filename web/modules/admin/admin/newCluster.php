@@ -51,14 +51,6 @@ $p = new PageGenerator(_T("New Cluster", 'admin'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
-$f = new ValidatingForm();
-$f->push(new Table());
-
-// General infos for cluster
-$f->add(new TrFormElement(_T("Cluster Name", "admin"), new InputTpl('cluster_name')), []);
-$f->add(new TrFormElement(_T("Cluster Description", "admin"), new InputTpl('cluster_description')), []);
-
-
 // Relays associated to the cluster
 $list = xmlprc_get_ars_from_cluster($id);
 $outoptions = "";
@@ -66,82 +58,70 @@ $default_list = [];
 $default_id = [];
 
 foreach($list['out_cluster'] as $outCluster){
-    $outoptions.='<li data-jid="'.$outCluster['jid'].'" data-idars="'.$outCluster['id_ars'].'" data-idcluster="'.$outCluster['id_cluster'].'" value="'.$outCluster['jid'].'">'.$outCluster['name'].'</li>';
+    $outoptions .= '<option data-jid="'.$outCluster['jid'].'" data-idars="'.$outCluster['id_ars'].'" value="'.$outCluster['id_ars'].'">'.$outCluster['name'].'</option>';
 }
 
-$f->add(new TrFormElement(_T("Cluster List", "admin"),new SpanElement('<div style="display:flex">
-<div>
-<h3>'._T('Relays <b>outside</b> the cluster', 'admin').'</h3>
-<ul id="outCluster" name="outCluster">'.$outoptions.'</ul>
-</div>
-
-<div style="width:10px;"></div>
-
-<div><h3>'._T("Relays <b>inside</b> the cluster", "admin").'</h3>
-<ul id="inCluster" name="inCluster"></ul>
-</div>
-</div>')));
-
-$hidden = new HiddenTpl('relays_id');
-$f->add($hidden, ['value'=>implode(',',$default_id), 'hide'=>true]);
-
-$hidden = new HiddenTpl('relays_list');
-$f->add($hidden, ['value'=>implode(',',$default_list), 'hide'=>true]);
-
-$f->addValidateButton("bconfirm", _T("Edit", "admin"));
-$f->display();
 ?>
-<style>
-#inCluster, #outCluster{
-  background-color: white;
-  width:250px;
-  height:200px;
-  margin-right:30px;
-  border : black, solid, 1px;
-}
+<form class="mmc-form" method="post" onsubmit="return validateForm('clusterForm');" id="clusterForm">
+<table class="mmc-form-table" cellspacing="0">
+<tr class="mmc-form-row">
+  <td class="mmc-label"><?php echo _T("Cluster Name", "admin"); ?></td>
+  <td><input class="mmc-input" type="text" name="cluster_name" value="" data-regexp="/.+/" autocomplete="off" /></td>
+</tr>
+<tr class="mmc-form-row">
+  <td class="mmc-label"><?php echo _T("Cluster Description", "admin"); ?></td>
+  <td><input class="mmc-input" type="text" name="cluster_description" value="" autocomplete="off" /></td>
+</tr>
+</table>
 
-#inCluster, #outCluster{
-  padding-left:5px;
-  padding-top:5px;
-  overflow-y: auto;
-}
+<div class="cluster-widget">
+  <div class="cluster-col">
+    <h3><?php echo _T('Relays <b>outside</b> the cluster', 'admin'); ?></h3>
+    <select multiple class="cluster-list" id="outCluster"><?php echo $outoptions; ?></select>
+  </div>
+  <div class="cluster-actions">
+    <span class="cluster-arrow-right" id="moveToInCluster"></span>
+    <span class="cluster-arrow-left" id="moveToOutCluster"></span>
+  </div>
+  <div class="cluster-col">
+    <h3><?php echo _T("Relays <b>inside</b> the cluster", "admin"); ?></h3>
+    <select multiple class="cluster-list" id="inCluster"></select>
+  </div>
+</div>
 
-#inCluster li, #outCluster li{
-  list-style-type: none;
-}
-
-#inCluster li:hover, #outCluster li:hover{
-  background-color: rgb(240,240,250);
-}
-</style>
-
+<input type="hidden" name="relays_id" value="" />
+<input type="hidden" name="relays_list" value="" />
+<input type="hidden" name="auth_token" value="<?php echo $_SESSION['auth_token']; ?>" />
+<input type="submit" name="bconfirm" value="<?php echo _T('Validate', 'admin'); ?>" class="btnPrimary" />
+</form>
+<?php
+?>
 <script>
 jQuery(function(){
-  jQuery("#outCluster li, #inCluster li").draggable({
-    connectToSortable: "#inCluster, #outCluster",
-    stop: function(){
-      cluster_list = []
-      cluster_id = []
+  function updateHiddenFields(){
+    var ids = [], jids = [];
+    jQuery("#inCluster option").each(function(){
+      ids.push(jQuery(this).val());
+      jids.push(jQuery(this).data("jid"));
+    });
+    jQuery("input[name='relays_id']").val(ids.join(','));
+    jQuery("input[name='relays_list']").val(jids.join(','));
+  }
 
-      jQuery("#inCluster li").each(function(id, relay){
-          //
-          if(typeof(jQuery(relay).attr('data-jid')) != "undefined"){
-            cluster_list.push(jQuery(relay).attr('data-jid'))
-            cluster_id.push(jQuery(relay).attr('data-idars'))
-          }
-
-      })
-
-      jQuery("input[name='relays_id']").val(cluster_id.join(','))
-      jQuery("input[name='relays_list']").val(cluster_list.join(','))
-    },
-  })
-
-  jQuery( "#outCluster, #inCluster" ).sortable({
-    revert: true
+  jQuery("#moveToInCluster").on("click", function(){
+    jQuery("#outCluster option:selected").appendTo("#inCluster");
+    updateHiddenFields();
   });
-  jQuery( "ul, li" ).disableSelection();
+
+  jQuery("#moveToOutCluster").on("click", function(){
+    jQuery("#inCluster option:selected").appendTo("#outCluster");
+    updateHiddenFields();
+  });
+
+  jQuery("#outCluster, #inCluster").on("dblclick", "option", function(){
+    var target = jQuery(this).closest("#outCluster").length ? "#inCluster" : "#outCluster";
+    jQuery(this).appendTo(target);
+    updateHiddenFields();
+  });
 });
-
-
 </script>

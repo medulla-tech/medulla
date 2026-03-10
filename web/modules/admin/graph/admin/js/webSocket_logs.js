@@ -9,8 +9,6 @@ class WebSocketClient {
     connect() {
       this.ws = new WebSocket(this.url);
       this.ws.onopen = () => {
-        console.log(`WebSocket connection established at ${this.server}`);
-        console.log(`WebSocket connection established at ${this.url}`);
         UIController.logMessage(`WebSocket ${this.server} connected.`, "server");
         UIController.sendLogSettings();
       };
@@ -44,7 +42,6 @@ class WebSocketClient {
       };
     }
     send(data) {
-      console.log(data)
       if (this.ws && this.ws.readyState === WebSocket.OPEN) {
         this.ws.send(JSON.stringify(data));
       } else {
@@ -204,10 +201,6 @@ class WebSocketClient {
     const selectedServer = serverSelect ? serverSelect.value : "";
     const wsPath = wsPaths[selectedServer] || "";
     const wsUrl = "wss://" + hostname + wsPath;
-
-    console.log("Selected Server:", selectedServer);
-    console.log("WebSocket Path:", wsPaths[selectedServer]);
-    console.log("Final WebSocket URL:", wsUrl);
 
     wsClient = new WebSocketClient(wsUrl, selectedServer);
   }

@@ -30,10 +30,17 @@ function autoIncludeCss() {
     else $module = $_GET["module"];
     if (empty($_GET["submod"])) $submod = "";
     else $submod = $_GET["submod"];
+
+    // 1) Submodule-specific: graph/{submod}/index.css (legacy)
     $css = "modules/" . $module . "/graph/" . $submod . "/index.css";
-    //if (file_exists($css) && $module != "base" && $submod != "samba") include($css);
     if (file_exists($css)) {
         include($css);
+    }
+
+    // 2) Module-wide: graph/css/index.css
+    $cssMod = "modules/" . $module . "/graph/css/index.css";
+    if (file_exists($cssMod)) {
+        include($cssMod);
     }
 }
 

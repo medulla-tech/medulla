@@ -57,7 +57,7 @@ if(isset($_POST['ban']))
 }
 
 
-$p = new PageGenerator(_T("XMPP Relays list", 'glpi'));
+$p = new PageGenerator(_T("Relays list", 'admin'));
 $p->setSideMenu($sidemenu);
 $p->display();
 

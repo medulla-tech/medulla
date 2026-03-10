@@ -62,15 +62,13 @@ if($clusters['total'] > 0){
   }
 
   echo '<div id="switchresult"></div>';
-  $n = new OptimizedListInfos( $clusters['datas']['name'], _T("Clusters", "xmppmaster"));
+  $n = new OptimizedListInfos( $clusters['datas']['name'], _T("Cluster name", "admin"));
   $n->setcssIds($ids_clusters);
-  //$n->setMainActionClasses($clusters['datas']);
   $n->disableFirstColumnActionLink();
   $n->addExtraInfo( $clusters['datas']['description'], _T("Description", "xmppmaster"));
-  $n->addExtraInfo( $clusters['datas']['nb_ars'], _T("Associated relays", "xmppmaster"));
+  $n->addExtraInfoCentered( $clusters['datas']['nb_ars'], _T("Associated relays", "admin"), "120px");
   $n->addActionItemArray($actionEditClusters);
   $n->addActionItemArray($actionDeleteClusters);
-  $n->setTableHeaderPadding(0);
   $n->setItemCount($clusters['total']);
   $n->setNavBar(new AjaxNavBar($clusters['total'], $filter, "updateSearchParamformRunning"));
 
@@ -85,20 +83,14 @@ else{
   echo '<table class="listinfos" cellspacing="0" cellpadding="5" border="1">';
   echo '<thead>';
   echo '<tr>';
-  echo '<td>Clusters Xmpp</td>';
-
-  echo '<td>Description</td>';
+  echo '<td>'._T("Cluster name", "admin").'</td>';
+  echo '<td>'._T("Description", "xmppmaster").'</td>';
+  echo '<td>'._T("Associated relays", "admin").'</td>';
   echo '</tr>';
   echo '</thead>';
   echo '</table>';
 }
 ?>
-
-<style>
-  .relay-clickable{
-    cursor: pointer;
-  }
-</style>
 
 <script>
 jQuery(".cluster-clickable").on("click", function(){

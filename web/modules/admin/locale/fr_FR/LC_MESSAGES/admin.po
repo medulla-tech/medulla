@@ -138,7 +138,7 @@ msgstr "Nom du cluster"
 
 #: modules/admin/admin/newCluster.php:59
 msgid "Cluster Description"
-msgstr "Description du cluster"
+msgstr "Description"
 
 #: modules/admin/admin/newCluster.php:72
 msgid "Cluster List"
@@ -682,6 +682,27 @@ msgstr "Action rapide"
 msgid "Manage Providers"
 msgstr "Gérer les providers"
 
+msgid "OIDC Clients"
+msgstr "Clients OIDC"
+
+msgid "Edit OIDC Client"
+msgstr "Éditer un client OIDC"
+
+msgid "New OIDC Client"
+msgstr "Nouveau client OIDC"
+
+msgid "Edit OIDC Client <span style='font-size: 16px;'>[%s]</span>"
+msgstr "Éditer le client OIDC <span style='font-size: 16px;'>[%s]</span>"
+
+msgid "No OIDC client."
+msgstr "Aucun client OIDC."
+
+msgid "Server Logs"
+msgstr "Journaux serveur"
+
+msgid "Create OIDC Client"
+msgstr "Créer le client OIDC"
+
 #: modules/admin/admin/unban.php:33
 msgid "Unban machines on relay"
 msgstr "Débannir les machines du relais"
@@ -826,11 +847,15 @@ msgstr "JID"
 
 #: modules/admin/admin/ajaxRelaysList.php:160
 msgid "Total Machines"
-msgstr "Nb de machines total"
+msgstr "Total machines"
 
 #: modules/admin/admin/ajaxRelaysList.php:161
 msgid "Uninventoried Online"
 msgstr "Non-inventoriées en ligne"
+
+#: modules/admin/admin/relaysList.php:60
+msgid "Relays list"
+msgstr "Liste des relais"
 
 #: modules/admin/admin/ajaxRelaysList.php:162
 msgid "Class Util"
@@ -870,7 +895,7 @@ msgstr "Infos règle"
 
 #: modules/admin/admin/ajaxRules.php:104
 msgid "Associated rules"
-msgstr "Règles associés"
+msgstr "Règles associées"
 
 #: modules/admin/admin/localSidebar.php:27
 msgid "List of Relays"
@@ -1084,3 +1109,12 @@ msgstr "Configuration OAuth/OIDC"
 #: modules/admin/admin/editProvider.php
 msgid "LDAP Mapping"
 msgstr "Mapping LDAP"
+
+msgid "Relay name"
+msgstr "Nom du relais"
+
+msgid "Cluster name"
+msgstr "Nom du cluster"
+
+msgid "Rules list"
+msgstr "Liste des règles"

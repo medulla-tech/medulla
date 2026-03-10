@@ -51,11 +51,7 @@ $list->addExtraInfo([$execution_date], 'Execution Date');
 $list->addExtraInfo([$name], 'Relay QA Name');
 $list->addExtraInfo([$description], 'Relay QA Description');
 $list->display();
-echo '<textarea ';
-echo 'spellcheck="false" style="';
-echo 'height:500px; width:99%; margin-left:0%; background-color:black; color:rgb(230,230,230);font-size:1.2em;';
-echo 'border-radius:15px; box-shadow: 0.5em 3px #0420263a, -0.75em 0 1em #00688054;';
-echo '">';
+echo '<textarea class="qa-result-output" spellcheck="false">';
 echo $result_str.'</textarea>';
 
 ?>

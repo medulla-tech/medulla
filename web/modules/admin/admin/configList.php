@@ -27,8 +27,6 @@ $p = new PageGenerator(_T("Configuration Management", 'admin'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
-echo '<link rel="stylesheet" href="modules/admin/graph/css/admin.css" type="text/css" media="screen" />';
-
 // Récupérer la liste des tables de configuration
 $tables = xmlrpc_get_config_tables();
 

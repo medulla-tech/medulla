@@ -2509,3 +2509,6 @@ msgstr "Dirección broadcast"
 
 msgid "Gateway address"
 msgstr "Dirección pasarela"
+
+msgid "Non-inventoried"
+msgstr "Sin inventariar"

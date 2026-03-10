@@ -65,7 +65,6 @@ if($machines_list['total'] > 0){
   $n->addExtraInfo($names, _T("Name", "admin"));
   //$n->addExtraInfo($startDates, _T("From Date", "admin"));
   //$n->addExtraInfo($reasons, _T("Reason", "admin"));
-  $n->setTableHeaderPadding(0);
   $n->setItemCount($machines_list['total']);
   $n->setNavBar(new AjaxNavBar($machines_list['total'], $filter));
 

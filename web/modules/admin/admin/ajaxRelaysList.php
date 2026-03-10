@@ -98,6 +98,8 @@ foreach($relays['datas']['hostname'] as $key=>$array){
   ];
 
   $tooltipData = '<table class="ttable">'
+    . '<tr><td><b>'._T("Description", "xmppmaster").'</b></td><td> : '.htmlspecialchars($relays['datas']['cluster_description'][$raw]).'</td></tr>'
+    . '<tr><td><b>'._T("Class Util", "xmppmaster").'</b></td><td> : '.htmlspecialchars($relays['datas']['classutil'][$raw]).'</td></tr>'
     . '<tr><td><b>'._T("IP address", "xmppmaster").'</b></td><td> : '.htmlspecialchars($relays['datas']['ip_xmpp'][$raw]).'</td></tr>'
     . '<tr><td><b>'._T("Mac address", "xmppmaster").'</b></td><td> : '.htmlspecialchars(formatMacAddress($relays['datas']['macaddress'][$raw])).'</td></tr>'
     . '</table>';
@@ -105,8 +107,6 @@ foreach($relays['datas']['hostname'] as $key=>$array){
   $relays['datas']['hostname'][$raw] = '<span class="relay-clickable infomach" mydata="'.htmlentities($tooltipData).'">'.$relays['datas']['hostname'][$raw].'</span>';
   $relays['datas']['jid'][$raw] = '<span class="relay-clickable">'.$relays['datas']['jid'][$raw].'</span>';
   $relays['datas']['cluster_name'][$raw] = '<span class="relay-clickable">'.$relays['datas']['cluster_name'][$raw].'</span>';
-  $relays['datas']['cluster_description'][$raw] = '<span class="relay-clickable">'.$relays['datas']['cluster_description'][$raw].'</span>';
-  $relays['datas']['classutil'][$raw] = '<span class="relay-clickable">'.$relays['datas']['classutil'][$raw].'</span>';
 
   if ($relays['datas']['enabled'][$raw]){
     $configActions[] =$editremoteconfiguration;
@@ -152,16 +152,14 @@ foreach($relays['datas']['jid'] as $id_relay){
   }
 
 echo '<div id="switchresult"></div>';
-$n = new OptimizedListInfos( $relays['datas']['hostname'], _T("Relays Xmpp", "admin"));
+$n = new OptimizedListInfos( $relays['datas']['hostname'], _T("Relay name", "admin"));
 $n->setcssIds($ids);
 $n->setMainActionClasses($relays['datas']['enabled_css']);
 $n->disableFirstColumnActionLink();
 $n->addExtraInfo( $relays['datas']['jid'], _T("Jid", "xmppmaster"));
 $n->addExtraInfo( $relays['datas']['cluster_name'], _T("Cluster Name", "xmppmaster"));
-$n->addExtraInfo( $relays['datas']['cluster_description'], _T("Cluster Description", "xmppmaster"));
-$n->addExtraInfoCentered( $relays['datas']['total_machines'], _T("Total Machines", "xmppmaster"));
-$n->addExtraInfoCentered( $relays['datas']['uninventoried_online'], _T("Uninventoried Online", "xmppmaster"));
-$n->addExtraInfo( $relays['datas']['classutil'], _T("Class Util", "xmppmaster"));
+$n->addExtraInfoCentered( $relays['datas']['total_machines'], _T("Total Machines", "xmppmaster"), "100px");
+$n->addExtraInfoCentered( $relays['datas']['uninventoried_online'], _T("Non-inventoried", "xmppmaster"), "120px");
 
 
 $n->setItemCount($relays['total']);
@@ -187,13 +185,11 @@ else{
   echo '<table class="listinfos" cellspacing="0" cellpadding="5" border="1">';
   echo '<thead>';
   echo '<tr>';
-  echo '<td>Relays Xmpp</td>';
-  echo '<td>Jid</td>';
-  echo '<td>Cluster Name</td>';
-  echo '<td>Cluster Description</td>';
-  echo '<td>Class Util</td>';
-  echo '<td>Mac Address</td>';
-  echo '<td>Xmpp Ip</td>';
+  echo '<td>'._T("Relay name", "admin").'</td>';
+  echo '<td>'._T("Jid", "xmppmaster").'</td>';
+  echo '<td>'._T("Cluster Name", "xmppmaster").'</td>';
+  echo '<td>'._T("Total Machines", "xmppmaster").'</td>';
+  echo '<td>'._T("Non-inventoried", "xmppmaster").'</td>';
   echo '</tr>';
   echo '</thead>';
   echo '</table>';

@@ -1,0 +1,236 @@
+.admin-config {
+    margin-bottom: 10px;
+}
+
+.admin-config-title {
+    margin-bottom: 8px;
+}
+
+.admin-config-subtitle {
+    margin-bottom: 16px;
+    color: #5f5f5f;
+}
+
+.admin-config-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.admin-config-tab {
+    border: 1px solid #d2d2d2;
+    background: #f4f4f4;
+    color: #2f2f2f;
+    border-radius: 4px;
+    padding: 6px 10px;
+    cursor: pointer;
+}
+
+.admin-config-tab:hover {
+    background: #ebebeb;
+}
+
+.admin-config-tab.is-active {
+    border-color: #5f9ea0;
+    background: #e8f5f6;
+    color: #1e5154;
+    font-weight: 600;
+}
+
+.admin-config-panel {
+    display: none;
+}
+
+.admin-config-panel.is-active {
+    display: block;
+}
+
+.admin-config-dropdown {
+    border: 1px solid #dfdfdf;
+    border-radius: 6px;
+    background: #fff;
+    margin-bottom: 10px;
+}
+
+.admin-config-dropdown > summary {
+    list-style: none;
+    cursor: pointer;
+    font-weight: 600;
+    padding: 10px 12px;
+}
+
+.admin-config-dropdown > summary::-webkit-details-marker {
+    display: none;
+}
+
+.admin-config-dropdown > summary::after {
+    content: "▾";
+    float: right;
+    color: #7a7a7a;
+}
+
+.admin-config-dropdown[open] > summary::after {
+    content: "▴";
+}
+
+.admin-config-dropdown-content {
+    border-top: 1px solid #efefef;
+    padding: 10px 12px;
+}
+
+.admin-config-expected {
+    margin: 0 0 10px 16px;
+}
+
+.admin-config-expected li {
+    margin-bottom: 4px;
+}
+
+.admin-config-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.admin-config-action {
+    margin-bottom: 4px;
+}
+
+.admin-config-placeholder {
+    color: #7a7a7a;
+    margin: 0;
+}
+
+.admin-config-uncategorized {
+    margin-top: 20px;
+    padding-top: 10px;
+    border-top: 1px solid #e5e5e5;
+}
+
+.admin-config-uncategorized h4 {
+    margin-bottom: 10px;
+}
+
+.entity-path {
+    color: #666;
+    font-style: italic;
+    margin-bottom: 10px;
+}
+
+/* ===== Rules ===== */
+
+.rule-default-row {
+    font-weight: 600;
+}
+
+/* ===== Relay list ===== */
+
+.relay-clickable,
+.clickable {
+    cursor: pointer;
+}
+
+.infomach {
+    cursor: help;
+}
+
+
+/* ===== Cluster edit dual-list widget ===== */
+
+.cluster-widget {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 10px;
+  align-items: start;
+  width: 100%;
+}
+
+.cluster-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.cluster-col h3 {
+  font-size: 13px;
+  font-weight: 600;
+  margin: 0 0 6px 0;
+}
+
+.cluster-list {
+  width: 100% !important;
+  min-width: 0 !important;
+  height: auto !important;
+  min-height: 200px;
+  border: 1px solid #ccc !important;
+  border-radius: 6px;
+  background: #fff;
+  padding: 4px !important;
+  font-size: 13px;
+}
+
+.cluster-list option {
+  padding: 6px 8px;
+  border-bottom: 1px solid #eee;
+}
+
+.cluster-list option:last-child {
+  border-bottom: none;
+}
+
+.cluster-list option:checked,
+.cluster-list option:checked:focus {
+  background: var(--color-primary) linear-gradient(0deg, var(--color-primary) 0%, var(--color-primary) 100%);
+  color: #fff !important;
+  -webkit-text-fill-color: #fff;
+}
+
+.cluster-actions {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-self: center;
+  gap: 8px;
+}
+
+.cluster-actions span {
+  display: block;
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+  background-color: #8CB63C;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  opacity: 0.7;
+}
+
+.cluster-actions span:hover {
+  opacity: 1;
+  background-color: #6a9a1e;
+}
+
+.cluster-actions .cluster-arrow-right {
+  -webkit-mask-image: url("img/other/right.svg");
+  mask-image: url("img/other/right.svg");
+}
+
+.cluster-actions .cluster-arrow-left {
+  -webkit-mask-image: url("img/other/left.svg");
+  mask-image: url("img/other/left.svg");
+}
+
+/* ===== QA result textarea ===== */
+
+.qa-result-output {
+    height: 500px;
+    width: 99%;
+    background-color: black;
+    color: rgb(230, 230, 230);
+    font-size: 1.2em;
+    border-radius: 15px;
+    box-shadow: 0.5em 3px #0420263a, -0.75em 0 1em #00688054;
+}

@@ -889,12 +889,11 @@ li.empty a { background-image: url("../../img/common/spacer.gif"); }
 
 .listinfos .cell-text {
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
-  word-break: break-word;
-  overflow-wrap: break-word;
+  word-break: break-all;
 }
 
 /* Bulk checkbox: when visible, first cell becomes flex row */
@@ -1380,15 +1379,33 @@ td.machineAction {
   height: 170px;
 }
 
-.deps-actions img {
+.deps-actions span,
+.deps-order span {
+  display: block;
+  width: 25px;
+  height: 25px;
   cursor: pointer;
-  opacity: 0.6;
+  background-color: #8CB63C;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  opacity: 0.7;
   transition: opacity 0.2s ease;
 }
 
-.deps-actions img:hover {
+.deps-actions span:hover,
+.deps-order span:hover {
   opacity: 1;
+  background-color: #6a9a1e;
 }
+
+.deps-arrow-right { -webkit-mask-image: url("../../img/other/right.svg"); mask-image: url("../../img/other/right.svg"); }
+.deps-arrow-left  { -webkit-mask-image: url("../../img/other/left.svg");  mask-image: url("../../img/other/left.svg"); }
+.deps-arrow-up    { -webkit-mask-image: url("../../img/other/up.svg");    mask-image: url("../../img/other/up.svg"); }
+.deps-arrow-down  { -webkit-mask-image: url("../../img/other/down.svg");  mask-image: url("../../img/other/down.svg"); }
 
 /* Up/down order arrows — aligned to the list */
 .deps-order {
@@ -1398,16 +1415,6 @@ td.machineAction {
   justify-content: center;
   gap: 8px;
   height: 170px;
-}
-
-.deps-order img {
-  cursor: pointer;
-  opacity: 0.6;
-  transition: opacity 0.2s ease;
-}
-
-.deps-order img:hover {
-  opacity: 1;
 }
 
 /* Form button placement */
@@ -2423,6 +2430,7 @@ table.listinfos.deployment tbody td:not(:first-child),
 table.listinfos.deployment thead td:not(:first-child) { text-align: center; }
 table.listinfos.deployment tbody td { vertical-align: middle; }
 table.listinfos.deployment td.chart-holder { overflow: visible; }
+
 
 /* ===== DataTables overrides (module Historique) ===== */
 

@@ -467,8 +467,8 @@ if(isExpertMode1()) {
         </select>
     </div>
     <div class="deps-actions">
-        <img src="img/other/right.svg" width="25" height="25" alt="-->" id="moveDependencyToRight" onclick="moveToLeft()"/>
-        <img src="img/other/left.svg" width="25" height="25" alt="<--" id="moveDependencyToLeft" onclick="moveToRight()"/>
+        <span class="deps-arrow-right" id="moveDependencyToRight" onclick="moveToLeft()"></span>
+        <span class="deps-arrow-left" id="moveDependencyToLeft" onclick="moveToRight()"></span>
     </div>
     <div class="deps-col deps-added">
         <h3>'._T('Added dependencies', 'pkgs').'</h3>
@@ -477,8 +477,8 @@ if(isExpertMode1()) {
         </select>
     </div>
     <div class="deps-order">
-        <img src="img/other/up.svg" width="25" height="25" alt="|^" id="moveDependencyToUp" onclick="moveToUp()"/>
-        <img src="img/other/down.svg" width="25" height="25" alt="|v" id="moveDependencyToDown" onclick="moveToDown()"/>
+        <span class="deps-arrow-up" id="moveDependencyToUp" onclick="moveToUp()"></span>
+        <span class="deps-arrow-down" id="moveDependencyToDown" onclick="moveToDown()"></span>
     </div>
 </div>', "pkgs")));
 }

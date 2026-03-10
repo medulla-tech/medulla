@@ -2546,3 +2546,6 @@ msgstr "Adresse broadcast"
 
 msgid "Gateway address"
 msgstr "Adresse passerelle"
+
+msgid "Non-inventoried"
+msgstr "Non-inventoriées"
