@@ -77,13 +77,8 @@ $source = isset($_GET['source']) ? $_GET['source'] : "xmppmaster";
 if ($_GET['source'] == "xmppmaster" || $_GET['source'] == "glpi" ){
 
     if ($_GET['source'] == "xmppmaster" ){
-        $p = new PageGenerator(_T("OS Upgrades", 'updates'));
-        $p->display();
-        // $statglpiversion = xmlrpc_get_os_xmpp_update_major_stats();
         $statglpiversion=xmlrpc_get_os_update_major_stats_win();
     }else{
-        $p = new PageGenerator(_T("OS Upgrades", 'updates'));
-        $p->display();
         $statglpiversion=xmlrpc_get_os_update_major_stats_win();
     };
 

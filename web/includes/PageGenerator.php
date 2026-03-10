@@ -3313,6 +3313,9 @@ class TabbedPage extends Div
 
     public function displayTitle()
     {
+        if (empty($this->title)) {
+            return "";
+        }
         return "<h2>" . $this->title . "</h2>\n";
     }
 
@@ -4861,10 +4864,10 @@ class AjaxPagebartitlletime extends AjaxPage
                 z-index: 1;
             }
             #{$this->animationContainerId} {
-                position: relative;
-                width: 60px;
-                height: 60px;
-                margin: 0 auto 10px;
+                display: inline-flex;
+                align-items: center;
+                vertical-align: middle;
+                margin-left: 10px;
             }
         </style>
         <div id="{$this->id}" class="{$this->class}"></div>
@@ -4910,11 +4913,11 @@ class AjaxPagebartitlletime extends AjaxPage
                             firstH2.append(progressHTML);
                         } else {
                             var progressHTML = `
-                                <div id="{$this->animationContainerId}" style="position: relative; width: 60px; height: 60px; margin: 0 auto 10px;">
+                                <span class="circular-progress-container" id="{$this->animationContainerId}">
                                     <div class="circular-progress" id="{$this->animationContainerId}_progress">
                                         <div class="circular-progress-text" id="{$this->animationContainerId}_text">{$this->refresh}</div>
                                     </div>
-                                </div>
+                                </span>
                             `;
                             jQuery("#{$this->id}").before(progressHTML);
                         }
