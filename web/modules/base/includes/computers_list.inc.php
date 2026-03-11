@@ -337,10 +337,17 @@ function list_computers(
         $filter = $filter['hostname'] . '##';
     }
 
+    $columnWidths = [
+        'os'          => '200px',
+        'type'        => '80px',
+        'entity'      => '120px',
+    ];
+
     $n = null;
     if ($count) {
         // print_r( $headers);
         foreach ($headers as $header) {
+            $width = $columnWidths[$header[0]] ?? null;
 
             if ($n == null) {
                 if (in_array("glpi", $_SESSION["modulesList"])) {
@@ -350,9 +357,9 @@ function list_computers(
                 }
             } else {
                 if (in_array("glpi", $_SESSION["modulesList"])) {
-                    $n->addExtraInfo($columns[$header[0]], _T($header[1], 'glpi'));
+                    $n->addExtraInfo($columns[$header[0]], _T($header[1], 'glpi'), $width);
                 } else {
-                    $n->addExtraInfo($columns[$header[0]], _($header[1]));
+                    $n->addExtraInfo($columns[$header[0]], _($header[1]), $width);
                 }
             }
         }

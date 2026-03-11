@@ -55,7 +55,7 @@
 /* Section headers */
 .ttable tr.tt-section td,
 .ttable .ttabletr.tt-section .ttabletd {
-  padding: 8px 0 4px 0 !important;
+  padding: 10px 0 3px 0 !important;
   font-size: var(--tt-font-size) !important;
   font-weight: 700;
   text-transform: uppercase;
@@ -64,6 +64,12 @@
   border: none !important;
   border-bottom: 1px solid rgba(95, 188, 211, 0.15) !important;
   white-space: normal;
+}
+
+/* Space below section border */
+.ttable tr.tt-section + tr td,
+.ttable .ttabletr.tt-section + .ttabletr .ttabletd {
+  padding-top: 6px !important;
 }
 
 .infomach {

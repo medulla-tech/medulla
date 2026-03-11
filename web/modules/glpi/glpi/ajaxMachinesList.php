@@ -361,10 +361,10 @@ if(in_array("description", $machines1["column"])) {
     $n->addExtraInfo($datas["glpi_description"], _T("Description", "glpi"));
 }
 if(in_array("os", $machines1["column"])) {
-    $n->addExtraInfo($datas["platform"], _T("Operating System", "glpi"));
+    $n->addExtraInfo($datas["platform"], _T("Operating System", "glpi"), "200px");
 }
 if(in_array("type", $machines1["column"])) {
-    $n->addExtraInfo($datas["model"], _T("Computer Type", "glpi"));
+    $n->addExtraInfo($datas["model"], _T("Computer Type", "glpi"), "80px");
 }
 if(in_array('user', $machines1["column"])) {
     $n->addExtraInfo($datas["lastuser"], _T("Last Logged User", "glpi"));
