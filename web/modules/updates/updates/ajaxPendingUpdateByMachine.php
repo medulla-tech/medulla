@@ -57,16 +57,17 @@ foreach($datas as $update) {
 
 
 echo '<div class="pending-updates-table">';
-$n = new OptimizedListInfos($titles, _T("Pending Updates", "updates"));
+$n = new OptimizedListInfos($titles, _T("Name", "updates"));
 $n->disableFirstColumnActionLink();
 $n->addExtraInfo($descriptions, _T("Description", "updates"));
-$n->addExtraInfo($kbs, _T("Kb", "updates"));
-$n->addExtraInfo($update_ids, _T("Update", "updates"));
-$n->addExtraInfo($start_dates, _T("Start Date", "updates"));
-$n->addExtraInfo($end_dates, _T("End Date", "updates"));
+$n->addExtraInfo($kbs, _T("Kb", "updates"), "100px");
+$n->addExtraInfo($update_ids, _T("Update Id", "updates"), "100px");
+$n->addExtraInfo($start_dates, _T("Started at", "updates"), "160px");
+$n->addExtraInfo($end_dates, _T("End date", "updates"), "160px");
 $n->setItemCount($count);
 $n->setNavBar(new AjaxNavBar($count, $filter));
 $n->setParamInfo($datas);
 $n->addActionItem($unselectAction);
+$n->setEmptyState(_T("No pending updates", "updates"), _T("No updates are currently pending for this machine.", "updates"));
 $n->display();
 echo '</div>';

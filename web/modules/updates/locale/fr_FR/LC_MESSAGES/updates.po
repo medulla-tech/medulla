@@ -231,6 +231,60 @@ msgstr "Produit Microsoft"
 msgid "approve update"
 msgstr "approuver mise à jour"
 
+msgid "Approve update"
+msgstr "Approuver mise à jour"
+
+msgid "End date"
+msgstr "Date de fin"
+
+msgid "Version"
+msgstr "Version"
+
+msgid "Missing"
+msgstr "Manquantes"
+
+msgid "Installed"
+msgstr "Installées"
+
+msgid "Total"
+msgstr "Total"
+
+#, php-format
+msgid "Updates history for entity %s"
+msgstr "Historique des mises à jour pour l'entité %s"
+
+#, php-format
+msgid "Updates history for update %s"
+msgstr "Historique des mises à jour pour %s"
+
+#, php-format
+msgid "Machine details for update KB%s"
+msgstr "Détails des machines pour la mise à jour KB%s"
+
+#, php-format
+msgid "Updates on Entity %s"
+msgstr "Mises à jour sur l'entité %s"
+
+#, php-format
+msgid "Updates on Group %s"
+msgstr "Mises à jour sur le groupe %s"
+
+#, php-format
+msgid "Updates on machine %s"
+msgstr "Mises à jour sur la machine %s"
+
+#, php-format
+msgid "Deploy this update on entity %s"
+msgstr "Déployer cette mise à jour sur l'entité %s"
+
+#, php-format
+msgid "Deploy this update on group %s"
+msgstr "Déployer cette mise à jour sur le groupe %s"
+
+#, php-format
+msgid "Deploy this update on machine %s"
+msgstr "Déployer cette mise à jour sur la machine %s"
+
 #: modules/updates/updates/ajaxApproveRules.php:104
 msgid "Apply"
 msgstr "Appliquer"
@@ -269,7 +323,7 @@ msgstr "Ordinateurs de l'entité %s"
 
 #: modules/updates/updates/ajaxMajorDetailsByMachines.php:143
 msgid "Machine name"
-msgstr "Nom machine"
+msgstr "Nom de la machine"
 
 #: modules/updates/updates/ajaxEntitiesList.php:151
 msgid "Missing updates"
@@ -777,3 +831,67 @@ msgstr "approuver mise à jour Microsoft"
 #, php-format
 msgid "<b>Approve</b> update %s (%s) ?"
 msgstr "<b>Approuver</b> la mise à jour %s (%s) ?"
+
+# Empty state messages
+msgid "No deployment history"
+msgstr "Aucun historique de déploiement"
+
+msgid "No update deployments have been recorded yet."
+msgstr "Aucun déploiement de mise à jour n'a encore été enregistré."
+
+msgid "No pending updates"
+msgstr "Aucune mise à jour en attente"
+
+msgid "No updates are currently pending for this machine."
+msgstr "Aucune mise à jour n'est en attente pour cette machine."
+
+msgid "No entities found"
+msgstr "Aucune entité trouvée"
+
+msgid "No entities match the current filter."
+msgstr "Aucune entité ne correspond au filtre actuel."
+
+msgid "No updates found"
+msgstr "Aucune mise à jour trouvée"
+
+msgid "No updates match the current filter."
+msgstr "Aucune mise à jour ne correspond au filtre actuel."
+
+msgid "No machines found"
+msgstr "Aucune machine trouvée"
+
+msgid "No machines are available for this deployment."
+msgstr "Aucune machine n'est disponible pour ce déploiement."
+
+msgid "No machines have this update installed."
+msgstr "Aucune machine n'a cette mise à jour installée."
+
+msgid "No machines are missing this update."
+msgstr "Aucune machine ne manque cette mise à jour."
+
+msgid "No machines match the current filter."
+msgstr "Aucune machine ne correspond au filtre actuel."
+
+msgid "No machines match the hardware constraints."
+msgstr "Aucune machine ne correspond aux contraintes matérielles."
+
+msgid "No whitelisted updates found."
+msgstr "Aucune mise à jour en liste blanche trouvée."
+
+msgid "No blacklisted updates found."
+msgstr "Aucune mise à jour en liste noire trouvée."
+
+msgid "No updates available"
+msgstr "Aucune mise à jour disponible"
+
+msgid "No updates to deploy on this machine."
+msgstr "Aucune mise à jour à déployer sur cette machine."
+
+msgid "Name"
+msgstr "Nom"
+
+msgid "Requested"
+msgstr "Demandée"
+
+msgid "Non-compliant"
+msgstr "Non conformes"

@@ -146,10 +146,10 @@ $n = new OptimizedListInfos($entityNames, _T("Entity name", "updates"));
 $n->setcssIds($ids_entity);
 $n->disableFirstColumnActionLink();
 
-$n->addExtraInfo($complRates, _T("Compliance rate", "updates"));
-$n->addExtraInfoCentered($nbupdate, _T("Missing updates", "updates"));
-$n->addExtraInfoCentered($nbMachines, _T("Non-compliant machines", "updates"));
-$n->addExtraInfoCentered($totalMachine, _T("Total machines", "updates"));
+$n->addExtraInfo($complRates, _T("Compliance rate", "updates"), "220px");
+$n->addExtraInfoCentered($nbupdate, _T("Missing", "updates"), "100px");
+$n->addExtraInfoCentered($nbMachines, _T("Non-compliant", "updates"), "120px");
+$n->addExtraInfoCentered($totalMachine, _T("Total machines", "updates"), "100px");
 
 $n->setItemCount($count);
 $n->setNavBar(new AjaxNavBar($count, $filter));
@@ -162,6 +162,7 @@ $n->addActionItemArray($actiondetailsByUpds);
 $n->addActionItemArray($actiondeploySpecifics);
 $n->start = 0;
 $n->end = $count;
+$n->setEmptyState(_T("No entities found", "updates"), _T("No entities match the current filter.", "updates"));
 echo '<div class="entity-compliance-table">';
 $n->display();
 echo '</div>';

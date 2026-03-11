@@ -81,7 +81,7 @@ foreach($white_list['updateid'] as $updateid) {
     $ids [] = 'w_'.$updateid;
 }
 
-$w = new OptimizedListInfos($titles_white, _T("Update name", "updates"));
+$w = new OptimizedListInfos($titles_white, _T("Name", "updates"));
 $w->setCssIds($ids);
 $w->disableFirstColumnActionLink();
 $w->addExtraInfo($updateids_white, _T("Update Id", "updates"));
@@ -120,4 +120,5 @@ $w->setCssCaption(
 );
 $w->addActionItemArray($whiteActions["unlist"]);
 $w->addActionItemArray($whiteActions["ban"]);
+$w->setEmptyState(_T("No updates found", "updates"), _T("No whitelisted updates found.", "updates"));
 $w->display();

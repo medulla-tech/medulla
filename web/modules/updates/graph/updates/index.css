@@ -213,3 +213,21 @@
     -webkit-line-clamp: 3;
 }
 
+/* ===== Audit updates by machine ===== */
+
+.audit-updates-table table.listinfos td .cell-text {
+    -webkit-line-clamp: 3;
+}
+
+/* ===== Details by updates ===== */
+
+.details-by-updates table.listinfos td .cell-text {
+    -webkit-line-clamp: unset;
+}
+
+/* ===== Deploy updates ===== */
+
+.deploy-updates-table table.listinfos td .cell-text {
+    -webkit-line-clamp: unset;
+}
+

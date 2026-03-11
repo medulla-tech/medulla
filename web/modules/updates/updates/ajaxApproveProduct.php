@@ -141,7 +141,7 @@ foreach ($f['name_procedure'] as $indextableau => $name) {
 // Construction du tableau avec ListInfos
 $n = new ListInfos($listename, _T("Product Microsoft", "updates"));
 
-$n->addExtraInfoCenteredRaw($htmlelementcheck, _T("approve update", "updates"));
+$n->addExtraInfoCenteredRaw($htmlelementcheck, _T("Approve update", "updates"));
 // $n->addExtraClassCssLigne(1, "highlight");
 // $n->addExtraClassCssLigne(3, "warning");
 // $n->addExtraClassCssColonne(2, "col-status");

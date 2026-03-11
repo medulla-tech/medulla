@@ -25,6 +25,7 @@
  */
 require("FormGenerator.php");
 require_once("utils.inc.php");
+require_once("UIComponents.php");
 
 
 function generateSplashScreen(
@@ -1125,6 +1126,8 @@ class ListInfos extends HtmlElement
     public $captionClass = "";
     // public $extraInfoRaw = array();
     public $extraColumns = array();
+    public $emptyTitle = "";
+    public $emptyDescription = "";
 
     /**
      * constructor
@@ -1144,6 +1147,16 @@ class ListInfos extends HtmlElement
         $this->firstColumnActionLink = true;
         $this->dissociateColumnsActionLink = [];
         $this->_addInfo = array();
+    }
+
+    /**
+     * Set message to display when the table has no data.
+     * Uses EmptyStateBox component.
+     */
+    public function setEmptyState($title, $description = '')
+    {
+        $this->emptyTitle = $title;
+        $this->emptyDescription = $description;
     }
 
 
@@ -1753,6 +1766,10 @@ class ListInfos extends HtmlElement
     {
         if (!isset($this->paramInfo)) {
             $this->paramInfo = $this->arrInfo;
+        }
+        if (safeCount($this->arrInfo) == 0 && !empty($this->emptyTitle)) {
+            EmptyStateBox::show($this->emptyTitle, $this->emptyDescription);
+            return;
         }
         if ($header == 1) {
             $this->drawHeader($navbar);

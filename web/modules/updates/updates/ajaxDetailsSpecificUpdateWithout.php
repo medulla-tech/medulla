@@ -40,7 +40,7 @@ $machines = $without_Upd["datas"];
 $total = $without_Upd["total"];
 
 echo "<h2>"._T("Machines without update", "updates")."</h2>";
-$n = new OptimizedListInfos($machines["name"], _T("Hostname", "updates"));
+$n = new OptimizedListInfos($machines["name"], _T("Machine name", "updates"));
 $n->disableFirstColumnActionLink();
 
 $n->addExtraInfo($machines["platform"], _T("Platform", "updates"));
@@ -49,5 +49,5 @@ $n->start=0;
 $n->end = $total;
 $n->setItemCount($total);
 $n->setNavBar(new AjaxNavBar($total, $filter, "updateSearchParamformWithout"));
-
+$n->setEmptyState(_T("No machines found", "updates"), _T("No machines are missing this update.", "updates"));
 $n->display();

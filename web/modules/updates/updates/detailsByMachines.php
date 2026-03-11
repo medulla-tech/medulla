@@ -63,6 +63,8 @@ foreach ($allowedSources as $source) {
 
 <?php
 
+echo '<div class="ajax-section">';
 $ajax = new AjaxFilter(urlStrRedirect("updates/updates/ajaxDetailsByMachines"), "container", $_GET);
 $ajax->display();
 $ajax->displayDivToUpdate();
+echo '</div>';

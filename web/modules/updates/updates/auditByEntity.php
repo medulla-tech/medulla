@@ -7,7 +7,7 @@ require_once("modules/updates/includes/xmlrpc.php");
 
 $completename = htmlentities($_GET['completename']) ?? '';
 
-$p = new PageGenerator(_T(sprintf("Updates history for entity %s",$completename), 'updates'));
+$p = new PageGenerator(sprintf(_T("Updates history for entity %s", 'updates'), $completename));
 $p->setSideMenu($sidemenu);
 
 $p->display();

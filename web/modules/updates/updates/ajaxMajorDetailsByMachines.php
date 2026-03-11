@@ -152,7 +152,7 @@ foreach ($statglpiversion['id_machine'] as $key => $valeur) {
     );
 
     $actionspeclistUpds[] = new ActionPopupItem(
-        _T(sprintf("Deploy this update on machine %s", $statglpiversion['machine'][$key]), "updates"),
+        sprintf(_T("Deploy this update on machine %s", "updates"), $statglpiversion['machine'][$key]),
         "deployUpdatemajor",
         "updateone",
         '',
@@ -182,9 +182,9 @@ foreach ($statglpiversion['id_machine'] as $key => $valeur) {
 
 $n = new OptimizedListInfos($statglpiversion["machine"], _T("Machine name", "updates"));
 $n->disableFirstColumnActionLink();
-$n->addExtraInfo($statglpiversion["platform"], _T("Platform", "updates"));
-$n->addExtraInfo($statglpiversion["version"], _T("version", "updates"));
-$n->addExtraInfo($statglpiversion["update"], _T("Upgrade", "updates"));
+$n->addExtraInfo($statglpiversion["platform"], _T("Platform", "updates"), "200px");
+$n->addExtraInfo($statglpiversion["version"], _T("Version", "updates"), "160px");
+$n->addExtraInfo($statglpiversion["update"], _T("Upgrade", "updates"), "160px");
 $n->addActionItemArray($actionspeclistUpds);
 $n->addActionItemArray($actiondetailsByMachslog);
 $n->start = 0;
@@ -193,6 +193,7 @@ $n->setItemCount($statglpiversion["nb_machine"]);
 // $n->setNavBar(new AjaxNavBar($statglpiversion["nb_machine"], $ctx['filter']));
 $n->setNavBar(new AjaxNavBar($statglpiversion["nb_machine"] ?? 0, $filter));
 $n->setParamInfo($params);
+$n->setEmptyState(_T("No machines found", "updates"), _T("No machines match the current filter.", "updates"));
 $n->display();
 
 ?>

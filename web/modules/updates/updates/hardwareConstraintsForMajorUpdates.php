@@ -60,13 +60,14 @@ $list_Machine_outdated_major_update = xmlrpc_get_outdated_major_os_updates_by_en
                                                                                      $start,
                                                                                      $end,
                                                                                      $filter);
-$n = new ListInfos($list_Machine_outdated_major_update['hostname'], _T("Computer", "updates"));
+$n = new ListInfos($list_Machine_outdated_major_update['hostname'], _T("Machine name", "updates"));
 $n->addExtraInfo($list_Machine_outdated_major_update['platform'], _T("Platform", "updates"));
 $n->addExtraInfo($list_Machine_outdated_major_update['oldcode'], _T("Version Code", "updates"));
 $n->addExtraInfo($list_Machine_outdated_major_update['lang_code'], _T("Language Code", "updates"));
 $n->setNavBar(new AjaxNavBar($list_Machine_outdated_major_update['nb_element'], $filter, 'search_computer'));
 $n->start = $start;
 $n->end = isset($_GET['end']) ? $_GET['end'] : $maxperpage;
+$n->setEmptyState(_T("No machines found", "updates"), _T("No machines match the hardware constraints.", "updates"));
 $n->display();
 ?>
 

@@ -896,6 +896,55 @@ li.empty a { background-image: url("../../img/common/spacer.gif"); }
   word-break: break-all;
 }
 
+/* ===== Status badges ===== */
+.status-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 4px;
+  font-size: 0.85em;
+  font-weight: 600;
+  color: #fff;
+  text-align: center;
+  text-transform: uppercase;
+}
+.status-badge-success    { background-color: var(--color-success); }
+.status-badge-error      { background-color: var(--btn-danger-bg); }
+.status-badge-abort      { background-color: var(--color-warning); }
+.status-badge-wol1       { background-color: #1b3a4b; }
+.status-badge-wol2       { background-color: #1a5276; }
+.status-badge-wol3       { background-color: #2e86ab; }
+.status-badge-waiting    { background-color: #48b5c4; }
+.status-badge-pending    { background-color: #7678a0; }
+.status-badge-delayed    { background-color: #4a6fa5; }
+.status-badge-start      { background-color: #2196f3; }
+.status-badge-other      { background-color: #6c757d; }
+
+/* Toolbar row: refresh buttons + search bar on the same line */
+.toolbar-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 20px 0;
+}
+.toolbar-row > form {
+  margin: 0 !important;
+}
+
+/* Ajax section: search bar aligned on the same line as section title */
+.ajax-section {
+  overflow: hidden;
+}
+.ajax-section > form {
+  display: none;
+  margin: 0 !important;
+  margin-bottom: -50px !important;
+  position: relative;
+  z-index: 10;
+}
+.ajax-section:has(> div:not(:empty)) > form {
+  display: block;
+}
+
 /* Bulk checkbox: when visible, first cell becomes flex row */
 .listinfos td.bulk-active {
   display: flex !important;

@@ -363,6 +363,7 @@ $n->setParamInfo($params);
 $n->start = $start;
 $n->end = $count;
 
+$n->setEmptyState(_T("No entities found", "updates"), _T("No entities match the current filter.", "updates"));
 echo '<div class="major-entities-metrics">';
 $n->display();
 echo '</div>';
