@@ -1588,7 +1588,7 @@ class ListInfos extends HtmlElement
     $actionPx = 0;
     if (safeCount($this->arrAction) != 0) {
         $actionCount = safeCount($this->arrAction);
-        $actionPx = ($actionCount * 36) + 16;
+        $actionPx = max(($actionCount * 36) + 16, 80);
         $totalFixedPx += $actionPx;
     }
 

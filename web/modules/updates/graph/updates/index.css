@@ -206,3 +206,10 @@
 .entity-compliance-table table.listinfos td .medulla-progress__track {
     margin: 0 auto;
 }
+
+/* ===== Pending updates by machine ===== */
+
+.pending-updates-table table.listinfos td .cell-text {
+    -webkit-line-clamp: 3;
+}
+
