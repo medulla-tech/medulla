@@ -26,6 +26,14 @@ $id_glpi = isset($_GET['id_glpi']) ? intval($_GET['id_glpi']) : (isset($_POST['i
 $hostname = isset($_GET['hostname']) ? $_GET['hostname'] : (isset($_POST['hostname']) ? $_POST['hostname'] : '');
 
 if (isset($_POST['bconfirm'])) {
+    // Check if a global scan is running before starting
+    $summary = xmlrpc_get_dashboard_summary('');
+    if (isset($summary['last_scan']['status']) && $summary['last_scan']['status'] === 'running') {
+        new NotifyWidgetWarning(_T("A global scan is already in progress. Please wait for it to finish.", "security"));
+        header("Location: " . urlStrRedirect("security/security/machines"));
+        exit;
+    }
+
     // Start the scan for this machine
     $result = xmlrpc_scan_machine($id_glpi);
 

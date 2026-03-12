@@ -604,4 +604,20 @@ tr.severity-na td:first-child { border-left: 3px solid #adb5bd; }
     70% { box-shadow: 0 0 0 6px rgba(40, 167, 69, 0); }
     100% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0); }
 }
+
+/* Action column: left-align and constrain width */
+#container table.listinfos th:last-child,
+#container table.listinfos td.action {
+    text-align: left;
+    width: 1%;
+    white-space: nowrap;
+}
+#container table.listinfos td.action li.empty.inactive {
+    display: none;
+}
+
+/* Allow description column to wrap */
+#container table.listinfos td:nth-last-child(3) .cell-text {
+    -webkit-line-clamp: 3;
+}
 --></style>

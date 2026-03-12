@@ -36,6 +36,10 @@ $policies = xmlrpc_get_policies();
 $minSeverity = $policies['display']['min_severity'] ?? 'None';
 $showSeverity = SeverityHelper::getVisibility($minSeverity);
 
+// Check if a global scan is running
+$summary = xmlrpc_get_dashboard_summary($location);
+$globalScanRunning = isset($summary['last_scan']['status']) && $summary['last_scan']['status'] === 'running';
+
 // Get data from backend
 $result = xmlrpc_get_machines_summary($start, $maxperpage, $filter, $location);
 $data = $result['data'];
@@ -69,8 +73,12 @@ foreach ($data as $row) {
 
 // Actions
 $detailAction = new ActionItem(_T("View CVEs", "security"), "machineDetail", "display", "", "security", "security");
-$scanAction = new ActionPopupItem(_T("Scan Machine", "security"), "ajaxScanMachine", "scan", "", "security", "security");
-$scanAction->setWidth(500);
+if ($globalScanRunning) {
+    $scanAction = new EmptyActionItem1(_T("Scan unavailable: a global scan is in progress", "security"), "ajaxScanMachine", "scang");
+} else {
+    $scanAction = new ActionPopupItem(_T("Scan Machine", "security"), "ajaxScanMachine", "scan", "", "security", "security");
+    $scanAction->setWidth(500);
+}
 $excludeAction = new ActionPopupItem(_T("Exclude from reports", "security"), "ajaxAddExclusion", "delete", "", "security", "security");
 $excludeAction->setWidth(450);
 
