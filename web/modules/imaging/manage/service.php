@@ -24,6 +24,7 @@
  */
 
 $page = "ajaxService";
+$pageTitle = _T("Manage boot services", "imaging");
 include_once('location.php');
 
 ?>

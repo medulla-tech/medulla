@@ -39,7 +39,6 @@ div.status_block {
     margin-bottom:1em;
     padding:10px;
     padding-bottom: 7px;
-    width: 90%;
 }
 
 div.status_block h3 {
@@ -69,9 +68,6 @@ div.spacer {
     margin-bottom: 20px;
 }
 
-h2.activity {
-    float: left;
-}
 
 table.listinfos img {
     vertical-align: bottom;
@@ -105,4 +101,21 @@ li.vncclient a {
 }
 textarea#postinstall_value {
     width: 500px;
+}
+
+/* Centered loader for AJAX containers */
+.loader-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 100;
+}
+.loader-container .spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid #e0e0e0;
+    border-top-color: #2295D2;
+    border-radius: 50%;
+    animation: spinner-rotate 0.8s linear infinite;
 }

@@ -24,6 +24,7 @@
  */
 
 $page = "ajaxMaster";
+$pageTitle = _T("Manage masters", "imaging");
 include_once('location.php');
 
 ?>
