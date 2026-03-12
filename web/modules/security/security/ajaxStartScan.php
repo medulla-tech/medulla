@@ -23,6 +23,14 @@
 require_once("modules/security/includes/xmlrpc.php");
 
 if (isset($_POST['bconfirm'])) {
+    // Check if a scan is already running
+    $summary = xmlrpc_get_dashboard_summary('');
+    if (isset($summary['last_scan']['status']) && $summary['last_scan']['status'] === 'running') {
+        new NotifyWidgetWarning(_T("A global scan is already in progress. Please wait for it to finish.", "security"));
+        header("Location: " . urlStrRedirect("security/security/index"));
+        exit;
+    }
+
     // Start the scan
     $scan_id = xmlrpc_create_scan();
 

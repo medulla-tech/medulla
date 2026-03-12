@@ -173,26 +173,32 @@ def get_machine_softwares_summary(id_glpi, start=0, limit=50, filter_str=''):
 
 
 def scan_machine(id_glpi):
-    """Scan a specific machine (triggers full scan)"""
-    from mmc.plugins.security.scanner import scan_single_machine
+    """Scan a specific machine asynchronously"""
+    from mmc.plugins.security.scanner import run_cve_scan, get_glpi_db_url
+    from pulse2.database.security import SecurityDatabase
+    from threading import Thread
+    from sqlalchemy import text, create_engine
+
+    id_glpi = int(id_glpi)
+
     # Get machine hostname for logging
     try:
-        from sqlalchemy import text
-        from mmc.plugins.security.scanner import get_glpi_db_url, create_engine
         engine = create_engine(get_glpi_db_url())
         with engine.connect() as conn:
-            result = conn.execute(text("SELECT name FROM glpi_computers WHERE id = :id"), {'id': int(id_glpi)})
+            result = conn.execute(text("SELECT name FROM glpi_computers WHERE id = :id"), {'id': id_glpi})
             row = result.fetchone()
             hostname = row[0] if row else f"ID:{id_glpi}"
+        engine.dispose()
     except Exception:
         hostname = f"ID:{id_glpi}"
-    logger.info(f"Starting CVE scan for machine '{hostname}' (id_glpi={id_glpi})")
-    result = scan_single_machine(int(id_glpi))
-    if result.get('success'):
-        logger.info(f"CVE scan completed for '{hostname}': {result.get('vulnerabilities_found', 0)} vulnerabilities found")
-    else:
-        logger.error(f"CVE scan failed for '{hostname}': {result.get('error', 'Unknown error')}")
-    return result
+
+    # Start scan in background thread
+    scan_id = SecurityDatabase().create_scan()
+    thread = Thread(target=run_cve_scan, args=(scan_id, None, None, id_glpi, hostname), daemon=True)
+    thread.start()
+
+    logger.info(f"Started CVE scan for machine '{hostname}' (id_glpi={id_glpi}) with scan ID: {scan_id}")
+    return scan_id
 
 
 # =============================================================================
@@ -222,7 +228,7 @@ def _create_targeted_scan(target_type, target_id):
     Returns:
         scan_id: The ID of the created scan
     """
-    from mmc.plugins.security.scanner import run_cve_scan, get_glpi_db_url
+    from mmc.plugins.security.scanner import run_cve_scan, get_glpi_db_url, get_dyngroup_db_url
     from pulse2.database.security import SecurityDatabase
     from threading import Thread
     from sqlalchemy import text, create_engine
@@ -230,16 +236,18 @@ def _create_targeted_scan(target_type, target_id):
     target_id = int(target_id)
 
     # Get target name for logging
-    queries = {
-        'entity': "SELECT name FROM glpi_entities WHERE id = :id",
-        'group': "SELECT name FROM dyngroup.Groups WHERE id = :id"
-    }
     try:
-        engine = create_engine(get_glpi_db_url())
+        if target_type == 'entity':
+            engine = create_engine(get_glpi_db_url())
+            query = "SELECT name FROM glpi_entities WHERE id = :id"
+        else:
+            engine = create_engine(get_dyngroup_db_url())
+            query = "SELECT name FROM Groups WHERE id = :id"
         with engine.connect() as conn:
-            result = conn.execute(text(queries[target_type]), {'id': target_id})
+            result = conn.execute(text(query), {'id': target_id})
             row = result.fetchone()
             target_name = row[0] if row else f"ID:{target_id}"
+        engine.dispose()
     except Exception:
         target_name = f"ID:{target_id}"
 
@@ -247,7 +255,7 @@ def _create_targeted_scan(target_type, target_id):
     scan_id = SecurityDatabase().create_scan()
     entity_id = target_id if target_type == 'entity' else None
     group_id = target_id if target_type == 'group' else None
-    thread = Thread(target=run_cve_scan, args=(scan_id, entity_id, group_id), daemon=True)
+    thread = Thread(target=run_cve_scan, args=(scan_id, entity_id, group_id, None, target_name), daemon=True)
     thread.start()
 
     logger.info(f"Started CVE scan for {target_type} '{target_name}' ({target_type}_id={target_id}) with scan ID: {scan_id}")
