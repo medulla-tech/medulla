@@ -1459,6 +1459,8 @@ Summary:    Security plugin for the MMC agent
 Group:      System/Servers
 Requires:   pulse2-common = %version-%release
 Requires:   python3-pulse2-common-database-mobile = %version-%release
+Requires:   python3-socketio
+Requires:   python3-websocket
 
 Obsoletes:  python-mmc-security < 4.7.0
 Provides:   python-mmc-security = %version-%release
