@@ -930,6 +930,8 @@ li.empty a { background-image: url("../../img/common/spacer.gif"); }
   margin: 0 !important;
 }
 
+
+
 /* Ajax section: search bar aligned on the same line as section title */
 .ajax-section {
   overflow: hidden;

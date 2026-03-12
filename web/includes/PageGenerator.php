@@ -2671,9 +2671,6 @@ class AjaxFilterLocation extends AjaxFilter
     {
         if (safeCount($elt) == 0) {
             $this->location = new NoLocationTpl($this->paramname);
-        } elseif (safeCount($elt) == 1) {
-            $loc = array_values($elt);
-            $this->location = new SingleLocationTpl($this->paramname, $loc[0]);
         } else {
             $this->location->setElements($elt);
         }

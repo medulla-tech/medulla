@@ -24,6 +24,7 @@
  */
 
 $page = "ajaxConfiguration";
+$pageTitle = _T("Imaging Configuration", "imaging");
 $params = array("module" => "imaging", "submod" => "manage", "action" => "configuration");
 include_once('location.php');
 

@@ -84,9 +84,7 @@ if ($hasImaging) {
     require("ajaxcommon_bottom.inc.php");
     exit();
 }
-echo "<br>";
-$t = new TitleElement(sprintf(_T("Imaging server of entity %s", "imaging"), $location_name), 2, ['id' => 'LocationTitleStatus']);
-$t->display();
+echo '<div style="clear:both;"></div>';
 
 $ret = xmlrpc_getLocationSynchroState($location);
 # result is an array of dicts
@@ -125,6 +123,4 @@ if (safeCount($initerror_on) > 0) {
     exit();
 }
 
-print "<table><tr><td><b>";
-print "</b></font></td><td>";
 

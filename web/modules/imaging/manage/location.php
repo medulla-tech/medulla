@@ -37,7 +37,7 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
 if(!isset($params))
     $params = array();
 
-$p = new PageGenerator();
+$p = new PageGenerator(isset($pageTitle) ? $pageTitle : '');
 $p->setSideMenu($sidemenu);
 $p->display();
 
@@ -83,7 +83,7 @@ if (displayLocalisationBar()) {
     if($location)
         $ajax->setSelected($location);
     $ajax->display();
-    $ajax->displayDivToUpdate();
+    echo '<div id="container_' . $page . '"><div class="loader-container"><div class="spinner" aria-hidden="true"></div></div></div>';
 }
 
 ?>

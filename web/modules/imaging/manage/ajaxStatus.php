@@ -544,12 +544,17 @@ var interval = setInterval(barprogress,6000);
 ?>
     <div class="spacer"></div>
 
-    <h2 class="activity"><?php echo _T('Recent activity', 'imaging') ?></h2>
+    <div class="toolbar-row">
+    <h2 style="margin: 0;"><?php echo _T('Recent activity', 'imaging') ?></h2>
 
 <?php
     $ajax = new AjaxFilter("modules/imaging/manage/ajaxLogs.php", "container_logs", array(), "Logs");
     $ajax->display();
+?>
+    </div>
+<?php
     $ajax->displayDivToUpdate();
+?><?php
 } else {
     $e = new ErrorMessage(_T("Can't connect to the imaging server linked to the selected entity.", "imaging"));
     print $e->display();

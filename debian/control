@@ -653,7 +653,7 @@ Description: Medulla mobile plugin for MMC web interface
 Package: python3-mmc-security
 Architecture: all
 Section: python
-Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python3-pulse2-common-database-security (= ${binary:Version})
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python3-pulse2-common-database-security (= ${binary:Version}), python3-socketio, python3-websocket
 Description: Medulla security plugin for MMC agent
  Medulla is Open Source computer system management for medium and large
  organizations.

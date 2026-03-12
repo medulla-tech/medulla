@@ -24,6 +24,7 @@
  */
 
 $page = "ajaxPostInstall";
+$pageTitle = _T("Post-imaging scripts", "imaging");
 include_once('location.php');
 
 ?>

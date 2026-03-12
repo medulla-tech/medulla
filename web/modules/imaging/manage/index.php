@@ -24,6 +24,7 @@
  */
 
 $page = "ajaxStatus";
+$pageTitle = _T("Imaging server status", "imaging");
 include_once('location.php');
 
 ?>
