@@ -80,7 +80,7 @@ END$$
 DELIMITER ;
 
 
-INSERT INTO `xmppmaster`.`applicationconfig` (`key`, `value`, `comment`, `context`, `module`, `enable`) VALUES ('table produits', 'up_packages_Win11_X64_25H2', 'Microsoft Windows 11 [ fin support 2027/10 ]', 'entity', 'xmppmaster/update', '0');
+INSERT INTO `xmppmaster`.`applicationconfig` (`key`, `value`, `comment`, `context`, `module`, `enable`) VALUES ('table produits', 'up_packages_Win11_X64_25H2', 'Microsoft Windows 11 [ fin support 2027/10 ]', 'entity', 'xmppmaster/update', '1');
 
 
 INSERT INTO `up_packages_major_Lang_code` VALUES
