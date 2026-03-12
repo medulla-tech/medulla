@@ -95,6 +95,20 @@ def get_glpi_db_url():
     return f"mysql+pymysql://{dbuser}:{dbpasswd}@{dbhost}:{dbport}/{dbname}"
 
 
+def get_dyngroup_db_url():
+    """Read dyngroup database configuration and return SQLAlchemy URL"""
+    config = configparser.ConfigParser()
+    config.read(['/etc/mmc/plugins/dyngroup.ini', '/etc/mmc/plugins/dyngroup.ini.local'])
+
+    dbhost = config.get('database', 'dbhost', fallback='localhost')
+    dbport = config.get('database', 'dbport', fallback='3306')
+    dbname = config.get('database', 'dbname', fallback='dyngroup')
+    dbuser = config.get('database', 'dbuser', fallback='mmc')
+    dbpasswd = config.get('database', 'dbpasswd', fallback='mmc')
+
+    return f"mysql+pymysql://{dbuser}:{dbpasswd}@{dbhost}:{dbport}/{dbname}"
+
+
 def get_unique_software_from_glpi(entity_id=None, group_id=None, machine_id=None,
                                    excluded_vendors=None, excluded_names=None):
     """
@@ -125,23 +139,40 @@ def get_unique_software_from_glpi(entity_id=None, group_id=None, machine_id=None
         where_clause = "WHERE isv.itemtype = 'Computer'"
         params = {}
 
-        if machine_id:
+        if machine_id is not None:
             where_clause += " AND c.id = :machine_id"
             params['machine_id'] = machine_id
 
-        if entity_id:
+        if entity_id is not None:
             where_clause += " AND c.entities_id = :entity_id"
             params['entity_id'] = entity_id
 
-        if group_id:
-            # Join with dyngroup tables to filter by group
-            where_clause += """ AND c.id IN (
-                SELECT CAST(SUBSTRING(dm.uuid, 5) AS UNSIGNED)
-                FROM dyngroup.Results r
-                JOIN dyngroup.Machines dm ON dm.id = r.FK_machines
-                WHERE r.FK_groups = :group_id
-            )"""
-            params['group_id'] = group_id
+        if group_id is not None:
+            # Get machine IDs from dyngroup database (separate connection)
+            try:
+                dyngroup_engine = create_engine(get_dyngroup_db_url())
+                with dyngroup_engine.connect() as dg_conn:
+                    dg_result = dg_conn.execute(text("""
+                        SELECT DISTINCT dm.uuid
+                        FROM Results r
+                        JOIN Machines dm ON dm.id = r.FK_machines
+                        WHERE r.FK_groups = :group_id
+                    """), {'group_id': group_id})
+                    machine_ids = []
+                    for row in dg_result:
+                        uuid_val = row[0]
+                        if uuid_val and uuid_val.startswith('UUID'):
+                            machine_ids.append(int(uuid_val[4:]))
+                dyngroup_engine.dispose()
+                if machine_ids:
+                    ids_str = ','.join(str(mid) for mid in machine_ids)
+                    where_clause += f" AND c.id IN ({ids_str})"
+                else:
+                    logger.warning(f"No machines found in group {group_id}")
+                    return []
+            except Exception as e:
+                logger.error(f"Error getting machines from dyngroup for group {group_id}: {e}")
+                return []
 
         query = text(f"""
             SELECT DISTINCT
@@ -659,7 +690,8 @@ class CVECentralClient:
 
 
 def run_cve_scan(scan_id: Optional[int] = None, entity_id: Optional[int] = None,
-                 group_id: Optional[int] = None, machine_id: Optional[int] = None) -> Dict[str, Any]:
+                 group_id: Optional[int] = None, machine_id: Optional[int] = None,
+                 target_name: Optional[str] = None) -> Dict[str, Any]:
     """
     Run a full CVE scan:
     1. Get unique software from GLPI (optionally filtered by entity, group or machine)
@@ -684,12 +716,15 @@ def run_cve_scan(scan_id: Optional[int] = None, entity_id: Optional[int] = None,
     setup_logger(config.log_level)
 
     filter_info = ""
-    if machine_id:
-        filter_info = f" (machine {machine_id})"
-    elif entity_id:
-        filter_info = f" (entity {entity_id})"
-    elif group_id:
-        filter_info = f" (group {group_id})"
+    if machine_id is not None:
+        name_part = f" '{target_name}'" if target_name else ""
+        filter_info = f" (machine{name_part} id={machine_id})"
+    elif entity_id is not None:
+        name_part = f" '{target_name}'" if target_name else ""
+        filter_info = f" (entity{name_part} id={entity_id})"
+    elif group_id is not None:
+        name_part = f" '{target_name}'" if target_name else ""
+        filter_info = f" (group{name_part} id={group_id})"
     logger.debug(f"CVE scan config: log_level={config.log_level}, url={config.cve_central_url}")
 
     # Ensure database is activated

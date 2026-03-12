@@ -34,15 +34,14 @@ if (isset($_POST['bconfirm'])) {
         exit;
     }
 
-    // Start the scan for this machine
-    $result = xmlrpc_scan_machine($id_glpi);
+    // Start the scan for this machine (async)
+    $scan_id = xmlrpc_scan_machine($id_glpi);
 
-    if ($result && isset($result['success']) && $result['success']) {
-        $vulns = isset($result['vulnerabilities_found']) ? $result['vulnerabilities_found'] : 0;
-        new NotifyWidgetSuccess(sprintf(_T("Scan completed for %s. %d vulnerabilities found.", "security"), htmlspecialchars($hostname), $vulns));
+    if ($scan_id) {
+        $msg = sprintf(_T("CVE scan started for '%s' (ID: %s). The scan runs in background.", "security"), htmlspecialchars($hostname), $scan_id);
+        new NotifyWidgetSuccess($msg);
     } else {
-        $error = isset($result['error']) ? $result['error'] : _T("Unknown error", "security");
-        new NotifyWidgetFailure(sprintf(_T("Failed to scan %s: %s", "security"), htmlspecialchars($hostname), htmlspecialchars($error)));
+        new NotifyWidgetFailure(sprintf(_T("Failed to start scan for %s.", "security"), htmlspecialchars($hostname)));
     }
 
     header("Location: " . urlStrRedirect("security/security/machines"));
