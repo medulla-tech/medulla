@@ -72,8 +72,7 @@ BEGIN
             aa.title LIKE '%Windows 11, version 25H2%'
             AND aa.product LIKE '%Windows 11%'
             AND aa.title NOT LIKE '%ARM64%'
-            AND aa.title NOT LIKE '%X86%'
-            AND aa.title NOT LIKE '%Dynamic%';
+            AND aa.title NOT LIKE '%X86%';
 
 END$$
 
