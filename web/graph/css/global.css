@@ -678,9 +678,7 @@ li.info a {
 li.empty a {
   padding: 3px 0px 5px 20px;
   margin: 0 0px 0 0px;
-  background-image: url("../../img/common/spacer.gif");
-  background-repeat: no-repeat;
-  background-position: left top;
+  background: none;
   line-height: 18px;
   text-decoration: none;
   color: var(--color-text-white);
@@ -805,7 +803,7 @@ li.ok a { background-image: url("../../img/other/yes.svg"); }
 li.info a { background-image: url("../../img/common/info.png"); }
 li.load a { background-image: url("../../img/common/loader_p.gif"); }
 li.wait a { background-image: url("../../img/common/todo.png"); }
-li.empty a { background-image: url("../../img/common/spacer.gif"); }
+li.empty a { background: none; }
 
 .user_container {
   padding-top: 40px;
@@ -876,6 +874,8 @@ li.empty a { background-image: url("../../img/common/spacer.gif"); }
   white-space: nowrap;
   word-break: normal;
   overflow-wrap: normal;
+
+
   overflow: visible;
 }
 

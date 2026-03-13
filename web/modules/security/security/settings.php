@@ -28,9 +28,13 @@ require("localSidebar.php");
 <link rel="stylesheet" href="modules/security/graph/security.css" type="text/css" media="screen" />
 <?php
 
+// Page title
+$p = new PageGenerator(_T("Settings", "security"));
+$p->setSideMenu($sidemenu);
+$p->display();
+
 // Create tabbed page
 $p = new TabbedPageGenerator();
-$p->setSideMenu($sidemenu);
 
 // Tab 1: Display Filters
 $p->addTab(
@@ -41,21 +45,21 @@ $p->addTab(
     array()
 );
 
-// Tab 2: Software Exclusions
-$p->addTab(
-    "tabsoftware",
-    _T("Software", "security"),
-    "",
-    "modules/security/security/settings/tabSoftware.php",
-    array()
-);
-
-// Tab 3: CVE Exclusions
+// Tab 2: CVE Exclusions
 $p->addTab(
     "tabcves",
     _T("CVEs", "security"),
     "",
     "modules/security/security/settings/tabCves.php",
+    array()
+);
+
+// Tab 3: Software Exclusions
+$p->addTab(
+    "tabsoftware",
+    _T("Software", "security"),
+    "",
+    "modules/security/security/settings/tabSoftware.php",
     array()
 );
 

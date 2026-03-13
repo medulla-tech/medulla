@@ -31,6 +31,14 @@ if ($entity_id < 0) {
 }
 
 if (isset($_POST['bconfirm'])) {
+    // Check if a global scan is running before starting
+    $summary = xmlrpc_get_dashboard_summary('');
+    if (isset($summary['last_scan']['status']) && $summary['last_scan']['status'] === 'running') {
+        new NotifyWidgetWarning(_T("A global scan is already in progress. Please wait for it to finish.", "security"));
+        header("Location: " . urlStrRedirect("security/security/entities"));
+        exit;
+    }
+
     // Start the scan for entity
     $scan_id = xmlrpc_create_scan_entity($entity_id);
 

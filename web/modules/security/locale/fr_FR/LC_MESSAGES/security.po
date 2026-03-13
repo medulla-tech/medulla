@@ -397,6 +397,18 @@ msgstr "Aucune CVE ne correspond à vos critères de filtre"
 msgid "No CVEs found for this machine"
 msgstr "Aucune CVE trouvée pour cette machine"
 
+#: modules/security/security/ajaxMachinesList.php
+msgid "Scan unavailable: a global scan is in progress"
+msgstr "Scan indisponible : un scan global est en cours"
+
+#: modules/security/security/ajaxScanMachine.php
+msgid "A global scan is already in progress. Please wait for it to finish."
+msgstr "Un scan global est déjà en cours. Veuillez attendre qu'il se termine."
+
+#: modules/security/security/index.php
+msgid "Scan in progress..."
+msgstr "Scan en cours..."
+
 #: modules/security/security/ajaxMachinesList.php:120
 msgid "No machines found"
 msgstr "Aucune machine trouvée"

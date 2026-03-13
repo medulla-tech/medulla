@@ -66,16 +66,12 @@ $display = $policies['display'] ?? array();
 $severityOptions = array('None', 'Low', 'Medium', 'High', 'Critical');
 ?>
 
-<style>
-#Form table {
-    width: 100%;
-}
-#Form tr td.label {
-    width: 200px;
-    text-align: right;
-    padding-right: 15px;
-}
-</style>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var table = document.querySelector('#Form table');
+    if (table) table.classList.add('mmc-form-table');
+});
+</script>
 
 <?php
 // Build the form using ValidatingForm
@@ -130,10 +126,11 @@ $f->pop();
 
 $f->display();
 ?>
-<hr />
+<div style="margin-top: 20px;">
 <input type="submit" name="bsave" value="<?php echo _T("Save", "security"); ?>" class="btnPrimary" form="Form" />
 <a class="btnSecondary" style="margin-left: 10px;"
    href="main.php?module=security&amp;submod=security&amp;action=ajaxResetDisplayFilters"
    onclick="PopupWindow(event, 'main.php?module=security&amp;submod=security&amp;action=ajaxResetDisplayFilters', 400); return false;">
     <?php echo _T("Reset to Defaults", "security"); ?>
 </a>
+</div>
