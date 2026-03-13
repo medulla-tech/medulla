@@ -1126,6 +1126,7 @@ class ListInfos extends HtmlElement
     public $captionClass = "";
     // public $extraInfoRaw = array();
     public $extraColumns = array();
+    public $forceFixed = false;
     public $emptyTitle = "";
     public $emptyDescription = "";
 
@@ -1557,7 +1558,7 @@ class ListInfos extends HtmlElement
 
     // ≤ 8 colonnes → table-layout: fixed avec colgroup
     // > 8 colonnes → table-layout: auto (le navigateur distribue l'espace)
-    $useFixed = ($totalCols <= 8);
+    $useFixed = $this->forceFixed || ($totalCols <= 8);
     $tableClass = $useFixed ? "listinfos listinfos-fixed" : "listinfos";
 
     echo "<table class=\"$tableClass\">\n";

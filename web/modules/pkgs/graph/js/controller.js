@@ -114,9 +114,6 @@ jQuery(function(){
         else
             jQuery('#transferfile option[value=0]').attr("selected",true);
 
-        //Set methodtransfer value with the saved value
-        jQuery('#methodetransfert option[value="'+tmp['info']['methodetransfert']+'"]').attr("selected",true);
-
         //Get the elements of the sequence
         sequence = getSequenceFromJSON(tmp);
         jQuery.each(sequence, function(id,action){

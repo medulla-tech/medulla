@@ -187,21 +187,22 @@ $page->display();
 echo '<h2 id="toggle-context" onclick="_toggle(\'#context\')">'._T("Context", "pkgs").'</h2>';
 echo '<div id="context">';
 $context = new OptimizedListInfos([$json['info']['name']], _T("Package Name", "pkgs"));
+$context->forceFixed = true;
 $context->addExtraInfo([isset($json['info']['creator']) ? $json['info']['creator'] : ''], _T("Creator", "pkgs"));
 if(isset($json['info']['editor']) && $json['info']['editor'] != "") {
     $context->addExtraInfo([$json['info']['editor']], _T("Edited By", "pkgs"));
 }
-$context->addExtraInfo([isset($json['info']['creation_date']) ? $json['info']['creation_date'] : ''], _T("Creation Date", "pkgs"));
+$context->addExtraInfo([isset($json['info']['creation_date']) ? $json['info']['creation_date'] : ''], _T("Creation Date", "pkgs"), "150px");
 if(isset($json['info']['edition_date'])) {
-    $context->addExtraInfo([$json['info']['edition_date']], _T("Last Modification Date", "pkgs"));
+    $context->addExtraInfo([$json['info']['edition_date']], _T("Last Modification Date", "pkgs"), "150px");
 }
 if(isset($json['info']['localisation_server'])) {
     $context->addExtraInfo([$json['info']['localisation_server']], _T("Sharing Location", "pkgs"));
 }
 $context->addExtraInfo([$package['id']], _T("Package Uuid", "pkgs"));
 $context->addExtraInfo([$json['info']['description']], _T("Description", "pkgs"));
-$context->addExtraInfoCentered([$json['info']['version']], _T("Version", "pkgs"), "90px");
-$context->addExtraInfoCentered([$json['info']['metagenerator']], _T("Type", "pkgs"), "90px");
+$context->addExtraInfoCentered([$json['info']['version']], _T("Version", "pkgs"), "70px");
+$context->addExtraInfoCentered([$json['info']['metagenerator']], _T("Type", "pkgs"), "70px");
 if(isset($json['info']['licenses'])) {
     $context->addExtraInfoCentered([$json['info']['licenses']], _T("Licenses", "pkgs"), "90px");
 }
@@ -211,8 +212,8 @@ echo '</div>';
 // Used for both transfer table and files table
 $totalSize = (int)$package['size'];
 
-// Transfer method table
-echo '<h2 onclick="_toggle(\'#transfer\')">'._T("Transfer Method", "pkgs").'</h2>';
+// Transfer table
+echo '<h2 onclick="_toggle(\'#transfer\')">'._T("Transfer", "pkgs").'</h2>';
 echo '<div id="transfer">';
 $transfer = new OptimizedListInfos([$json['info']['methodetransfert']], _T("Transfer method", "pkgs"));
 $transfer->addExtraInfo([prettyOctetDisplay($totalSize)], _T("Size", "pkgs"));

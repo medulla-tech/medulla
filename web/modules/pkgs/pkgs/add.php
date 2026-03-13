@@ -290,12 +290,7 @@ if (isset($_POST['bconfirm'])){
     {
 
         $f->add(new HiddenTpl('transferfile'), array("value" => true, "hide" => true));
-
-        $methodtransfer = new SelectItem('methodetransfert');
-        // Allowed methods are pullcurl, pushrsync, pullrsync, pullscp
-        $methodtransfer->setElements(['pushrsync', 'pullrsync', 'pulldirect']);
-        $methodtransfer->setElementsVal(['pushrsync', 'pullrsync', 'pulldirect']);
-        $f->add(new TrFormElement(_T('Transfer method','pkgs'),$methodtransfer,['trid'=>'trTransfermethod']),['value'=>'']);
+        $f->add(new HiddenTpl('methodetransfert'), array("value" => "pushrsync", "hide" => true));
 
 
         $bpuploaddownload = new IntegerTpl("limit_rate_ko");

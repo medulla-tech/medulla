@@ -368,18 +368,7 @@ if(isExpertMode1()) {
     //$f->add(new HiddenTpl("last_editor"), array("value" => $_SESSION['login'], "hide" => True));
     $f->add(new HiddenTpl('transferfile'), array("value" => true, "hide" => true));
 
-    if(isset($json['info']['methodetransfert'])) {
-        $setmethodetransfert = $json['info']['methodetransfert'];
-    } else {
-        $setmethodetransfert = 'pushrsync';
-    }
-    $methodtransfer = new SelectItem('methodetransfert');
-    // Allowed methods are pullcurl, pushrsync, pullrsync, pullscp
-    $methodtransfer->setElements(['pushrsync', 'pullrsync', 'pulldirect']);
-    $methodtransfer->setElementsVal(['pushrsync', 'pullrsync', 'pulldirect']);
-    $methodtransfer->setSelected($setmethodetransfert);
-
-    $f->add(new TrFormElement(_T('Transfer method', 'pkgs'), $methodtransfer, ['trid' => 'trTransfermethod']), ['value' => '']);
+    $f->add(new HiddenTpl('methodetransfert'), array("value" => "pushrsync", "hide" => true));
 
     if(isset($json['info']['limit_rate_ko'])) {
         $setlimit_rate_ko = $json['info']['limit_rate_ko'];
