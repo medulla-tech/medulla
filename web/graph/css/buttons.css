@@ -197,6 +197,16 @@ a.btnPrimary:hover {
   color: var(--color-primary);
 }
 
+a.btn-secondary,
+a.btnSecondary {
+  color: var(--color-primary);
+}
+
+a.btn-secondary:hover,
+a.btnSecondary:hover {
+  color: var(--color-text-white);
+}
+
 a.btn-danger,
 a.btnDanger {
   color: var(--color-text-white);
