@@ -353,7 +353,7 @@ foreach($datas['uuid_serial_machine'] as $uuid_machine) {
     $ids[] = 'm_'.$uuid_machine;
 }
 
-$n = new OptimizedListInfos($cn, _T("Computer Name", "glpi"));
+$n = new OptimizedListInfos($cn, _T("Computer Name", "glpi"), "", "140px");
 $n->setcssIds($ids);
 $n->setParamInfo($params); // [params]
 $n->dissociateColumnActionLink($dissociatedFirstColumns);
@@ -361,11 +361,11 @@ if(in_array("description", $machines1["column"])) {
     $n->addExtraInfo($datas["glpi_description"], _T("Description", "glpi"));
 }
 if(in_array("os", $machines1["column"])) {
-    $n->addExtraInfo($datas["platform"], _T("Operating System", "glpi"), "200px");
+    $n->addExtraInfo($datas["platform"], _T("Operating System", "glpi"));
 }
-if(in_array("type", $machines1["column"])) {
-    $n->addExtraInfo($datas["model"], _T("Computer Type", "glpi"), "80px");
-}
+// if(in_array("type", $machines1["column"])) {
+//     $n->addExtraInfo($datas["model"], _T("Computer Type", "glpi"));
+// }
 if(in_array('user', $machines1["column"])) {
     $n->addExtraInfo($datas["lastuser"], _T("Last Logged User", "glpi"));
 }

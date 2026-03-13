@@ -287,18 +287,18 @@ foreach($datas['cn'] as $cn_machine) {
     $ids[] = 'm_'.$cn_machine;
 }
 
-$n = new OptimizedListInfos($cn, _T("Computer Name", "glpi"));
+$n = new OptimizedListInfos($cn, _T("Computer Name", "glpi"), "", "140px");
 $n->setcssIds($ids);
 $n->setParamInfo($params); // [params]
 if(array_key_exists("description", $datas)) {
     $n->addExtraInfo($datas["description"], _T("Description", "glpi"));
 }
 if(array_key_exists("os", $datas)) {
-    $n->addExtraInfo($datas["os"], _T("Operating System", "glpi"), "200px");
+    $n->addExtraInfo($datas["os"], _T("Operating System", "glpi"));
 }
-if(array_key_exists("type", $datas)) {
-    $n->addExtraInfo($datas["type"], _T("Computer Type", "glpi"), "80px");
-}
+// if(array_key_exists("type", $datas)) {
+//     $n->addExtraInfo($datas["type"], _T("Computer Type", "glpi"));
+// }
 if(array_key_exists('user', $datas)) {
     $n->addExtraInfo($datas["user"], _T("Last Logged User", "glpi"));
 }
