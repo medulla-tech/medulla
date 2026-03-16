@@ -65,6 +65,6 @@ $sidemenu->addSideMenuItem(new SideMenuItem($providerLabel, "admin", "admin", "e
 
 // --------------------- WebSocket Logs ----------------
 $sidemenu->addSideMenuItem(
-    new SideMenuItem(_T("Server Logs", "admin"), "admin", "admin", "webSocket_logs")
+    new SideMenuItem(_T("Server Logs", "admin"), "admin", "admin", "websocketLogs")
 );
 ?>
