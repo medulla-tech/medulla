@@ -41,8 +41,8 @@ $page = new Page("relaysList", _T("Relays List", "glpi"));
 $page->setFile("modules/admin/admin/relaysList.php");
 $submod->addPage($page);
 
-$page = new Page("webSocket_logs", _T("webSocket Log", "glpi"));
-$page->setFile("modules/admin/admin/webSocket_logs.php");
+$page = new Page("websocketLogs", _T("Server Logs", "admin"));
+$page->setFile("modules/admin/admin/websocketLogs.php");
 $submod->addPage($page);
 
 $page = new Page("ajaxRelaysList", _T("Relays List", "glpi"));

@@ -1,5 +1,5 @@
 <?php
-/* /usr/share/mmc/modules/admin/admin/websocket_logs.php */
+/* /usr/share/mmc/modules/admin/admin/websocketLogs.php */
 require("graph/navbar.inc.php");
 require("modules/admin/admin/localSidebar.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
