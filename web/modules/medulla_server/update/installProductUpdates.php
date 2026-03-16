@@ -25,6 +25,20 @@
  */
 
 require_once("modules/medulla_server/includes/xmlrpc.inc.php");
+
+// AJAX mode: return JSON response
+if (isset($_GET['ajax']) && $_GET['ajax'] == '1') {
+    header('Content-Type: application/json');
+    $return = installProductUpdates();
+    $success = is_array($return) && isset($return['success']) && $return['success'] === true;
+    if ($success) {
+        session_destroy();
+    }
+    echo json_encode(['success' => $success]);
+    exit;
+}
+
+// Standard mode: redirect
 $return = installProductUpdates();
 
 if (is_array($return) && isset($return['success']) && $return['success'] === true) {

@@ -179,19 +179,75 @@ msgstr "Déploiements lancés depuis "
 msgid "Medulla Updates"
 msgstr "Mises à jour sur la moelle épinière"
 
-#: modules/dashboard/includes/panels/product_updates.inc.php:39
-msgid "Check updates"
-msgstr "Vérifier les mises à jour"
+#: modules/dashboard/includes/panels/product_updates.inc.php
+msgid "Update Medulla"
+msgstr "Mettre à jour Medulla"
 
-#: modules/dashboard/includes/panels/product_updates.inc.php:40
-msgid "Search for updates…"
-msgstr "Recherche de mises à jour.."
+#: modules/dashboard/includes/panels/product_updates.inc.php
+msgid "Update completed successfully!"
+msgstr "Mise à jour terminée avec succès !"
 
-#: modules/dashboard/includes/panels/product_updates.inc.php:41
-msgid "Error when retrieving updates."
-msgstr "Erreur lors de la récupération des mises à jour."
+#: modules/dashboard/includes/panels/product_updates.inc.php
+msgid "Update failed. Check the logs for details."
+msgstr "La mise à jour a échoué. Consultez les logs pour plus de détails."
 
-#: modules/dashboard/includes/panels/product_updates.inc.php:43
+#: modules/dashboard/includes/panels/product_updates.inc.php
+msgid "Update failed."
+msgstr "La mise à jour a échoué."
+
+#: modules/dashboard/includes/panels/product_updates.inc.php
+msgid "Check /var/log/medulla_update.log on the server for details."
+msgstr "Consultez /var/log/medulla_update.log sur le serveur pour plus de détails."
+
+#: modules/dashboard/includes/panels/product_updates.inc.php
+msgid "Redirecting to login page…"
+msgstr "Redirection vers la page de connexion…"
+
+#: modules/dashboard/includes/panels/product_updates.inc.php
+msgid "WARNING: BACKUP REQUIRED BEFORE UPDATE"
+msgstr "Sauvegarde requise avant mise à jour"
+
+#: modules/dashboard/includes/panels/product_updates.inc.php
+msgid "Before running this update, you must:"
+msgstr "Avant d'exécuter cette mise à jour, il vous appartient de :"
+
+#: modules/dashboard/includes/panels/product_updates.inc.php
+msgid "Create a complete backup of your data"
+msgstr "Créer une sauvegarde complète de vos données"
+
+#: modules/dashboard/includes/panels/product_updates.inc.php
+msgid "Take a system snapshot (if applicable)"
+msgstr "Effectuer un snapshot du système (si applicable)"
+
+#: modules/dashboard/includes/panels/product_updates.inc.php
+msgid "Back up configuration files"
+msgstr "Sauvegarder les fichiers de configuration"
+
+#: modules/dashboard/includes/panels/product_updates.inc.php
+msgid "Ensure you have a working restore point"
+msgstr "Vérifier que vous disposez d'un point de restauration fonctionnel"
+
+#: modules/dashboard/includes/panels/product_updates.inc.php
+msgid "This update will modify the system irreversibly"
+msgstr "Cette mise à jour modifiera le système de manière irréversible"
+
+#: modules/dashboard/includes/panels/product_updates.inc.php
+msgid "In case of failure, a restoration will be necessary"
+msgstr "En cas d'échec, une restauration sera nécessaire"
+
+#: modules/dashboard/includes/panels/product_updates.inc.php
+msgid "No automatic rollback is available"
+msgstr "Aucun retour en arrière automatique n'est disponible"
+
+#: modules/dashboard/includes/panels/product_updates.inc.php
+msgid "I accept, start the update"
+msgstr "J'accepte, lancer la mise à jour"
+
+#: modules/dashboard/includes/panels/product_updates.inc.php
+msgid "Cancel"
+msgstr "Annuler"
+
+#: modules/dashboard/includes/panels/product_updates.inc.php
 msgid "Restart Medulla Services"
 msgstr "Redémarrer les services Medulla"
 

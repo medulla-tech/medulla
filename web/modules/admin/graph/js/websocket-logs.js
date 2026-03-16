@@ -1,59 +1,5 @@
-/* /usr/share/mmc/graph/js/websocket_logs.js */
-class WebSocketClient {
-    constructor(url, server) {
-      this.url = url;
-      this.server = server;
-      this.ws = null;
-      this.connect();
-    }
-    connect() {
-      this.ws = new WebSocket(this.url);
-      this.ws.onopen = () => {
-        UIController.logMessage(`WebSocket ${this.server} connected.`, "server");
-        UIController.sendLogSettings();
-      };
-      this.ws.onmessage = (event) => {
-        try {
-          const message = JSON.parse(event.data);
-          if (message.type === 'log') {
-            if (message.data.trim() === "") {
-              UIController.logMessage("Fichier vide.", "server");
-            } else {
-              if (message.mode && message.mode === "complete") {
-                UIController.setLogContent(message.data);
-              } else {
-                UIController.logMessage(message.data, "server");
-              }
-            }
-          } else {
-            UIController.logMessage("Message inconnu: " + event.data, "server");
-          }
-        } catch (e) {
-          console.error("JSON error:", e);
-          UIController.logMessage("Non-JSON message: " + event.data, "server");
-        }
-      };
-      this.ws.onerror = (error) => {
-        console.error("WebSocket error:", error);
-        UIController.logMessage("WebSocket error.", "server");
-      };
-      this.ws.onclose = () => {
-        // console.log("WebSocket connection closed");
-      };
-    }
-    send(data) {
-      if (this.ws && this.ws.readyState === WebSocket.OPEN) {
-        this.ws.send(JSON.stringify(data));
-      } else {
-        UIController.logMessage("WebSocket disconnected.", "client");
-      }
-    }
-    close() {
-      if (this.ws) {
-        this.ws.close();
-      }
-    }
-  }
+/* /usr/share/mmc/modules/admin/graph/js/websocket-logs.js */
+/* Depends on: /mmc/jsframework/websocket-client.js (MedullaWebSocket) */
 
   class UIController {
     static init() {
@@ -200,9 +146,28 @@ class WebSocketClient {
     const serverSelect = document.getElementById("serverSelect");
     const selectedServer = serverSelect ? serverSelect.value : "";
     const wsPath = wsPaths[selectedServer] || "";
-    const wsUrl = "wss://" + hostname + wsPath;
+    const wsProto = (location.protocol === 'https:') ? 'wss://' : 'ws://';
+    const wsUrl = wsProto + hostname + wsPath;
 
-    wsClient = new WebSocketClient(wsUrl, selectedServer);
+    wsClient = new MedullaWebSocket(wsUrl, {
+      onConnect: function() {
+        UIController.logMessage("WebSocket " + selectedServer + " connected.", "server");
+        UIController.sendLogSettings();
+      },
+      onLog: function(data, mode) {
+        if (data.trim() === "") {
+          UIController.logMessage("Fichier vide.", "server");
+        } else if (mode === "complete") {
+          UIController.setLogContent(data);
+        } else {
+          UIController.logMessage(data, "server");
+        }
+      },
+      onError: function() {
+        UIController.logMessage("WebSocket error.", "server");
+      }
+    });
+    wsClient.connect();
   }
 
   document.addEventListener("DOMContentLoaded", function() {
