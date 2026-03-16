@@ -119,3 +119,7 @@ textarea#postinstall_value {
     border-radius: 50%;
     animation: spinner-rotate 0.8s linear infinite;
 }
+
+#ProductKey1, #ProductKey2, #ProductKey3, #ProductKey4, #ProductKey5 {
+    width: 80px !important;
+}
