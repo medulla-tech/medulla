@@ -224,9 +224,9 @@ if ($entity == '') {
         $machines["complianceRate"][] = $complianceRate;
         $machines["total"][] = $total;
 
-        $machines["actionDetailByMachines"][] = $actionsPerMachine[$uuid]["details"];
-        $machines["actionPendingByMachines"][] = $actionsPerMachine[$uuid]["pending"];
-        $machines["actionDoneByMachines"][] = $actionsPerMachine[$uuid]["done"];
+        $machines["actionDetailByMachines"][] = $actionsPerMachine[$uuid]["details"] ?? $detailsByMachDefault;
+        $machines["actionPendingByMachines"][] = $actionsPerMachine[$uuid]["pending"] ?? $pendingByMachDefault;
+        $machines["actionDoneByMachines"][] = $actionsPerMachine[$uuid]["done"] ?? $doneByMachDefault;
     }
 
     $params = [];
