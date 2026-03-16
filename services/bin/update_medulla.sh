@@ -1,4 +1,4 @@
-#!/bin/bash#
+#!/bin/bash
 # (c) 2026 Medulla, http://www.medulla-tech.io
 #
 # This file is part of MMC, http://www.medulla-tech.io
@@ -587,20 +587,6 @@ final_operations() {
 
     # Add any final operations needed for the migration here
 
-    ## Restart Medulla services to apply all changes
-    str="[=] Restarting Medulla services..."
-    echo "$str"
-    write_to_log "$str"
-    /usr/sbin/restart-pulse-services &> /dev/null
-    if [[ $? -ne 0 ]]; then
-        str="[x] Error restarting Medulla services."
-        echo "$str"
-        write_to_log "$str"
-    fi
-    str="[v] Medulla services restarted successfully."
-    echo "$str"
-    write_to_log "$str"
-
     ## Generate agents to ensure they are up to date
     str="[=] Generating agents..."
     echo "$str"
@@ -619,6 +605,12 @@ final_operations() {
     echo "$str"
     write_to_log "$str"
     rm -f /var/lib/mmc/.accepted_medulla_update_disclaimer
+
+    ## Restart Medulla services to apply all changes (must be last — kills the process)
+    str="[=] Restarting Medulla services..."
+    echo "$str"
+    write_to_log "$str"
+    nohup /usr/sbin/restart-pulse-services &> /dev/null &
 }
 
 

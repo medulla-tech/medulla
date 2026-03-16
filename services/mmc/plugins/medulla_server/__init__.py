@@ -324,19 +324,23 @@ class RpcProxy(RpcProxyI):
         return _getProductUpdates()
 
     def installProductUpdates(self):
-        mup_path = "/usr/share/medulla-update-manager/medulla-update-manager.py"
-        install_command = f"{mup_path} -I" # Option -i to install everything
+        install_command = "nohup /usr/sbin/update_medulla.sh --noupdate > /dev/null 2>&1 &"
 
         @deferred
         def _runInstall():
-            stdout, stderr, code = self.runinshell(install_command)
-
-            if code == 0:
-                logger.info("Commande exécutée avec succès")
-                return {"success": True, "output": stdout}
-            else:
-                logger.error(f"Échec de la commande (code {code})")
-                return {"success": False, "code": code, "stderr": stderr}
+            try:
+                subprocess.Popen(
+                    install_command,
+                    shell=True,
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL,
+                    preexec_fn=os.setsid
+                )
+                logger.info("update_medulla.sh lancé en arrière-plan")
+                return {"success": True, "output": "Update started"}
+            except Exception as e:
+                logger.error(f"Échec du lancement de update_medulla.sh: {e}")
+                return {"success": False, "code": 1, "stderr": str(e)}
 
         return _runInstall()
 

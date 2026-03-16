@@ -593,7 +593,9 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   z-index: 9999;
   display: flex;
   align-items: center;
@@ -654,4 +656,255 @@
 
 .page-overlay.hidden {
   display: none;
+}
+
+/* ---------------------------------------- */
+/* Disclaimer Overlay                       */
+/* ---------------------------------------- */
+
+.disclaimer-overlay {
+  width: 540px;
+  max-width: 90vw;
+  padding: 0;
+  overflow: hidden;
+}
+
+.disclaimer-header {
+  background: var(--color-primary, #3a8fa8);
+  color: white;
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.disclaimer-icon {
+  font-size: 20px;
+  line-height: 1;
+  opacity: 0.9;
+  color: white !important;
+}
+
+.disclaimer-title {
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.3px;
+  color: white !important;
+}
+
+.disclaimer-body {
+  padding: 20px 24px;
+}
+
+.disclaimer-intro {
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 12px 0;
+  font-size: 13px;
+}
+
+.disclaimer-checklist {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 16px 0;
+}
+
+.disclaimer-checklist li {
+  padding: 6px 0;
+  font-size: 13px;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.disclaimer-checklist .check-icon {
+  color: #16a34a;
+  font-weight: bold;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.disclaimer-warnings {
+  list-style: none;
+  padding: 12px 16px;
+  margin: 0;
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: 6px;
+  text-align: left;
+}
+
+.disclaimer-warnings li {
+  padding: 4px 0;
+  font-size: 12px;
+  color: #92400e;
+  line-height: 1.5;
+}
+
+.disclaimer-warnings li::before {
+  content: "— ";
+  color: #d97706;
+}
+
+.disclaimer-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 16px 24px;
+  border-top: 1px solid #e5e7eb;
+  background: #f9fafb;
+}
+
+.disclaimer-actions .btn-danger {
+  background: var(--color-primary, #3a8fa8);
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.disclaimer-actions .btn-danger:hover {
+  background: var(--color-primary-light, #2d7a91);
+}
+
+/* ---------------------------------------- */
+/* Update Terminal                          */
+/* ---------------------------------------- */
+
+.update-terminal-overlay {
+  width: 720px;
+  max-width: 90vw;
+  max-height: 85vh;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+.update-terminal-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.update-terminal-header .custom-spinner {
+  margin-bottom: 0;
+  width: 18px;
+  height: 18px;
+  border-width: 3px;
+  flex-shrink: 0;
+}
+
+.update-terminal-header .overlay-title {
+  margin-bottom: 0;
+}
+
+.update-terminal {
+  background: #1a1b26;
+  border-radius: 8px;
+  border: 1px solid #2a2b3d;
+  overflow: hidden;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.update-terminal-titlebar {
+  background: #2a2b3d;
+  padding: 6px 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.update-terminal-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.update-terminal-dot.red { background: #ff5f57; }
+.update-terminal-dot.yellow { background: #febc2e; }
+.update-terminal-dot.green { background: #28c840; }
+
+.update-terminal-titlebar span {
+  color: #8b8fa3;
+  font-size: 11px;
+  margin-left: 8px;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.update-terminal-body {
+  padding: 14px 16px;
+  overflow-y: auto;
+  height: 380px;
+  font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  color: #a9b1d6;
+  text-align: left;
+}
+
+.update-terminal-body p {
+  margin: 0;
+  padding: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.update-terminal-body .log-line-success {
+  color: #9ece6a;
+}
+
+.update-terminal-body .log-line-error {
+  color: #f7768e;
+}
+
+.update-terminal-body .log-line-warn {
+  color: #e0af68;
+}
+
+.update-terminal-body .log-line-info {
+  color: #7aa2f7;
+}
+
+.update-terminal-body .log-cursor {
+  display: inline-block;
+  width: 7px;
+  height: 14px;
+  background: #a9b1d6;
+  animation: terminal-blink 1s step-end infinite;
+  vertical-align: text-bottom;
+  margin-left: 2px;
+}
+
+@keyframes terminal-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.update-terminal-status {
+  margin-top: 16px;
+  text-align: center;
+}
+
+.update-terminal-status.success {
+  color: #28c840;
+  font-weight: 600;
+}
+
+.update-terminal-status.error {
+  color: #ff5f57;
+  font-weight: 600;
+}
+
+.update-terminal-status .redirect-msg {
+  color: #888;
+  font-size: 12px;
+  margin-top: 6px;
 }
