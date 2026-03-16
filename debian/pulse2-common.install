@@ -45,4 +45,6 @@ usr/sbin/medulla-generate-update-package.py
 usr/sbin/medulla-mariadb-move-update-package.py
 usr/sbin/medulla_mysql_exec_update.sh
 usr/sbin/medulla_mysql_exec_uninstall_unnecessary_update_package.sh
+usr/sbin/medulla-stats.sh
+usr/sbin/update_medulla.sh
 var/lib/pulse2/file-transfer
