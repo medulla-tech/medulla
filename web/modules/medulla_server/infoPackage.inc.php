@@ -56,11 +56,6 @@ $submod->setImg('modules/xmppmaster/img/navbar/xmppmaster');
 $submod->setDescription(_T("update", "pulse2"));
 $submod->setVisibility(False);
 
-$page = new Page("viewProductUpdates", _T("viewProductUpdates", "pulse2"));
-$page->setFile("modules/medulla_server/update/viewProductUpdates.php");
-$page->setOptions(array("visible" => False, "noHeader" => True));
-$submod->addPage($page);
-
 $page = new Page("installProductUpdates",_T('install Product Updates', 'pulse2'));
 $page->setFile("modules/medulla_server/update/installProductUpdates.php");
 $submod->addPage($page);

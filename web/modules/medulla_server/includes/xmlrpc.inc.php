@@ -31,10 +31,6 @@ function displayLocalisationBar() {
 }
 
 
-function getProductUpdates(){
-    return xmlCall("medulla_server.getProductUpdates", array());
-}
-
 function installProductUpdates(){
     return xmlCall("medulla_server.installProductUpdates", array());
 }
