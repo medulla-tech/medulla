@@ -61,7 +61,7 @@ $sidemenu->addSideMenuItem(new SideMenuItem(_T("OIDC Clients", "admin"), "admin"
 $sidemenu->addSideMenuItem(new SideMenuItem($providerLabel, "admin", "admin", "editProvider"));
 
 // Configuration
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Configuration", "admin"), "admin", "admin", "configList"));
+//$sidemenu->addSideMenuItem(new SideMenuItem(_T("Configuration", "admin"), "admin", "admin", "configList"));
 
 // --------------------- WebSocket Logs ----------------
 $sidemenu->addSideMenuItem(
