@@ -21,3 +21,4 @@ else if (isset($_GET["gid"])){
 
 $p = new PageGenerator(_T("Deploy Master Action", "mastering"));
 $p->display();
+

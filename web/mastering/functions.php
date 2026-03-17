@@ -315,3 +315,9 @@ function has_machine_criterion($id, $query){
 
     return ($datas != []) ? true : false;
 }
+
+
+function normalBoot(){
+    print("exit");
+    exit;
+}

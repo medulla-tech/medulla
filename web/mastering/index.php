@@ -85,8 +85,10 @@ foreach ($conffiles as $module => $conffile) {
             $db[$module] = new PDO($driver . ':host=' . $host . ';dbname=' . $name . ';port=' . $port . ';charset=utf8mb4', $user, $passwd, [PDO::ATTR_PERSISTENT => false]);
         } catch (Exception $e) {
             // Uncomment this line to see the error message
-            // echo $e->getMessage();
-            exit;
+            if(DEBUG){
+                echo $e->getMessage();
+            }
+            normalBoot();
         }
     }
 }
@@ -96,6 +98,9 @@ foreach ($conffiles as $module => $conffile) {
 // PARAMS
 //
 // Get the parameters sent through URL
+$mac = "";
+$srv = "";
+$uuid = "";
 $mac = (!empty($_GET['mac'])) ? htmlentities($_GET['mac'], ENT_QUOTES, 'UTF-8') : "";
 $srv = (!empty($_GET['srv'])) ? htmlentities($_GET['srv'], ENT_QUOTES, 'UTF-8') : "";
 $uuid = (!empty($_GET["uuid"])) ? strtolower(htmlentities($_GET["uuid"], ENT_QUOTES, 'UTF-8')) : "";
@@ -105,6 +110,7 @@ $uuid = (!empty($_GET["uuid"])) ? strtolower(htmlentities($_GET["uuid"], ENT_QUO
 // RELAY
 //
 // Get the relay related to the current server
+$datas = NULL;
 $q1 = $db["xmppmaster"]->prepare("SELECT jid from relayserver where ipconnection = :ip");
 $q1->execute(["ip"=>$srv]);
 $datas = $q1->fetch(\PDO::FETCH_ASSOC);
@@ -115,8 +121,7 @@ if($datas != NULL){
 }
 else{
     // No relay found for this boot : exit => normal boot
-    print("exit");
-    exit;
+    normalBoot();
 }
 
 //
@@ -124,6 +129,9 @@ else{
 //
 // Now we need to know if the machine is known in GLPI from its UUID
 $known = false;
+$computerName = "New Machine";
+
+
 if($uuid != ""){
     $q2 = $db["glpi"]->prepare("SELECT c.id, c.name from glpi_computers_pulse c where uuid=:uuid");
     $q2->execute(["uuid"=>$uuid]);
@@ -157,19 +165,19 @@ $bind3["startdate"] = $datenow;
 $bind3["enddate"] = $datenow;
 
 if($known){
-    $sql3= "SELECT 
+    $sql3= "SELECT
         actions.*,
         servers.jid
-    from actions 
-    join servers on actions.server_id=servers.id 
-    where 
-        actions.status != :status 
-        and actions.date_start <= :startdate 
-        and actions.date_end > :enddate 
+    from actions
+    join servers on actions.server_id=servers.id
+    where
+        actions.status != :status
+        and actions.date_start <= :startdate
+        and actions.date_end > :enddate
         and (actions.uuid = :uuid ";
-    
+
     $bind3["uuid"] = $uuid;
-    
+
     if($gids != []){
         $grps_str = implode(',', $gids);
         $sql3 .= " or actions.gid in (:grps)";
@@ -178,24 +186,23 @@ if($known){
     $sql3 .=") order by actions.date_start ASC";
 }
 else{
-    $sql3= "SELECT 
+    $sql3= "SELECT
         actions.*,
         servers.jid
-    from actions 
-    join servers on actions.server_id=servers.id 
-    where 
-        actions.status != :status 
-        and actions.date_start <= :startdate 
-        and actions.date_end > :enddate 
-        and actions.uuid = '' 
+    from actions
+    join servers on actions.server_id=servers.id
+    where
+        actions.status != :status
+        and actions.date_start <= :startdate
+        and actions.date_end > :enddate
+        and actions.uuid = ''
         and servers.jid = :jid";
-    
+
     $bind3["jid"] = $jid;
     $sql3 .=" order by actions.date_start ASC";
 }
 
 $q3 = $db["mastering"]->prepare($sql3);
-
 try{
     $q3->execute($bind3);
 }
@@ -203,16 +210,14 @@ catch(\PDOException $e){
     if(DEBUG){
         echo $e->getMessage();
     }
-    print("exit");
-    exit;
+    normalBoot();
 }
 
 $d3 = $q3->fetchAll(\PDO::FETCH_ASSOC);
 
 if($d3 == []){
     // Nothing to do:
-    print("exit");
-    exit;
+    normalBoot();
 }
 
 // Select first action for each kind of target
@@ -238,12 +243,11 @@ foreach($d3 as $action){
 
 
 // Select the right one. The rule order is:
-// - action on group 
+// - action on group
 // - action on machine
 // - action on server
 
 // The selected action is the first match from this rule order
-
 if($firstActionGroup != []){
     $selectedAction = $firstActionGroup;
 }
@@ -254,8 +258,7 @@ else if($firstActionServer != []){
     $selectedAction = $firstActionServer;
 }
 else{
-    print("exit");
-    exit;
+    normalBoot();
 }
 
 $iconf=json_decode($selectedAction["config"], true);
@@ -270,9 +273,11 @@ kernel \${url_path}vmlinuz \${kernel_args}
 initrd \${url_path}initrd.img
 boot ";
 
+
 $pxeLogin = "";
 $pxePassword = "";
 $selectedMenu = "ACTION";
+
 if($iconf["auth"] == true){
     $pxeLogin = $iconf["auth_login"];
     $pxePassword = $iconf["auth_password"];
@@ -320,9 +325,6 @@ $ipxe .= "choose --default continue --timeout 15000 target && goto \${target}\n"
 
 $ipxe .= ":ACTION\n";
 $ipxe .= $ipxeAction."|| exit\n";
-
-$ipxe .= ":continue\n";
-$ipxe .= "exit\n";
 
 $ipxe .=":protected\n";
 $ipxe .= "login || goto \${loaded-menu}\n";
