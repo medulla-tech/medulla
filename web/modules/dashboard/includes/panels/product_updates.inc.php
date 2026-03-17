@@ -106,12 +106,18 @@ class UpdatePanel extends Panel {
 
         $upToDateMsg = _T('System is up to date', 'dashboard');
         $updateAvailableMsg = _T('Update available', 'dashboard');
+        $minorUpdateMsg = _T('Minor update available', 'dashboard');
 
-        if ($hasUpdate && $currentVersion && $availableVersion) {
-            $updateBanner = '<div class="update-banner update-available">'
-                . '<span class="update-badge">' . $updateAvailableMsg . '</span> '
-                . '<span class="update-versions">' . $currentVersion . ' &rarr; ' . $availableVersion . '</span>'
-                . '</div>';
+        if ($hasUpdate) {
+            $isMajorUpdate = ($currentVersion && $availableVersion && $currentVersion !== $availableVersion);
+            $updateBanner = '<div class="update-banner update-available">';
+            if ($isMajorUpdate) {
+                $updateBanner .= '<span class="update-badge">' . $updateAvailableMsg . '</span> '
+                    . '<span class="update-versions">' . $currentVersion . ' &rarr; ' . $availableVersion . '</span>';
+            } else {
+                $updateBanner .= '<span class="update-badge">' . $minorUpdateMsg . '</span>';
+            }
+            $updateBanner .= '</div>';
         } elseif ($lastCheck) {
             $updateBanner = '<div class="update-banner update-ok">'
                 . '<span class="update-badge-ok">' . $upToDateMsg . '</span>'
@@ -120,10 +126,12 @@ class UpdatePanel extends Panel {
             $updateBanner = '';
         }
 
+        $updateBtnStyle = $hasUpdate ? '' : 'style="display:none"';
+
         echo <<<HTML
             <div id="updates_zone">
                 {$updateBanner}
-                <button class="btnSecondary" id="btn_update_medulla">
+                <button class="btnSecondary" id="btn_update_medulla" {$updateBtnStyle}>
                     {$labelUpdate}
                 </button>
                 <button class="btnSecondary" id="restart_medulla_services">
@@ -167,6 +175,7 @@ class UpdatePanel extends Panel {
                 <div class="page-overlay-content update-terminal-overlay">
                     <div class="update-terminal-header">
                         <div class="overlay-title">{$installing_title}</div>
+                        <button class="update-terminal-close hidden" id="btnCloseTerminal">&times;</button>
                     </div>
                     <div class="update-terminal">
                         <div class="update-terminal-body" id="updateTerminalBody">
@@ -191,6 +200,13 @@ class UpdatePanel extends Panel {
             $(document).on('click', '#btn_cancel_update', function(e){
                 e.preventDefault();
                 $('#disclaimerOverlay').addClass('hidden');
+                $('body').css('overflow', '');
+            });
+
+            // --- Close terminal overlay (after error) ---
+            $(document).on('click', '#btnCloseTerminal', function(e){
+                e.preventDefault();
+                $('#fullPageOverlay').addClass('hidden');
                 $('body').css('overflow', '');
             });
 
@@ -268,7 +284,16 @@ class UpdatePanel extends Panel {
                             {$failMsgJson} +
                             '<div class="redirect-msg">' + {$failHelpJson} + '</div>'
                         );
+                        $('#btnCloseTerminal').removeClass('hidden');
                     }
+                }
+
+                function startUpdate() {
+                    $.ajax({
+                        url: 'main.php?module=medulla_server&submod=update&action=installProductUpdates&ajax=1',
+                        dataType: 'json',
+                        timeout: 600000
+                    });
                 }
 
                 if (wsHostname && wsPath) {
@@ -279,6 +304,8 @@ class UpdatePanel extends Panel {
                     updateWs = new MedullaWebSocket(wsUrl, {
                         onConnect: function() {
                             updateWs.subscribe('medulla', 'medulla_update', 'tail1');
+                            // WS is ready, now start the update
+                            setTimeout(startUpdate, 500);
                         },
                         onLog: function(data) {
                             if (skipFirst) {
@@ -298,14 +325,9 @@ class UpdatePanel extends Panel {
                         onClose: function() {}
                     });
                     updateWs.connect();
+                } else {
+                    startUpdate();
                 }
-
-                // Start update via AJAX (fire and forget — response may never come if mmc-agent restarts)
-                $.ajax({
-                    url: 'main.php?module=medulla_server&submod=update&action=installProductUpdates&ajax=1',
-                    dataType: 'json',
-                    timeout: 600000
-                });
             });
 
             // --- Restart All Medulla Services ---

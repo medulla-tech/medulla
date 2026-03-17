@@ -818,6 +818,7 @@
   padding: 24px;
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 
 .update-terminal-header {
@@ -837,6 +838,31 @@
 
 .update-terminal-header .overlay-title {
   margin-bottom: 0;
+  flex: 1;
+}
+
+.update-terminal-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #999;
+  cursor: pointer;
+  padding: 2px 8px;
+  line-height: 1;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+}
+
+.update-terminal-close:hover {
+  background: var(--color-bg-gray, #f0f0f0);
+  color: #333;
+}
+
+.update-terminal-close.hidden {
+  display: none;
 }
 
 .update-terminal {

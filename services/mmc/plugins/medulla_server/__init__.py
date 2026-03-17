@@ -294,7 +294,7 @@ class RpcProxy(RpcProxyI):
 
 
     def installProductUpdates(self):
-        install_command = "nohup /usr/sbin/update_medulla.sh --noupdate > /dev/null 2>&1 &"
+        install_command = "nohup /usr/sbin/update_medulla.sh > /dev/null 2>&1 &"
 
         @deferred
         def _runInstall():

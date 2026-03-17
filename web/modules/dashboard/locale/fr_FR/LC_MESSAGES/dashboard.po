@@ -279,6 +279,10 @@ msgstr "Système à jour"
 msgid "Update available"
 msgstr "Mise à jour disponible"
 
+#: modules/dashboard/includes/panels/product_updates.inc.php
+msgid "Minor update available"
+msgstr "Mise à jour mineure disponible"
+
 #: modules/dashboard/includes/panels/alertsentity.inc.php:28
 msgid "Alerts by Entity"
 msgstr "Alertes par entité"

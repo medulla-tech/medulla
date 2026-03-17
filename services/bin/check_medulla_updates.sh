@@ -15,7 +15,7 @@ mysql_cmd() {
     mysql -u"${DBUSER}" -p"${DBPASS}" -h"${DBHOST}" admin -Bse "$1" 2>/dev/null
 }
 
-# Get current installed version
+# Get current Medulla version
 CURRENT_VERSION=$(cat /var/lib/mmc/version 2>/dev/null)
 if [[ -z "${CURRENT_VERSION}" ]]; then
     CURRENT_VERSION=$(dpkg-query -W -f='${Version}' pulse2-common 2>/dev/null | cut -d'g' -f1)
@@ -42,10 +42,12 @@ for pkg in $UPDATES; do
     fi
 done
 
-if [[ -n "${MEDULLA_UPDATES}" ]]; then
-    # Get the candidate version from the update script on dl server
-    # Or simply use the version from apt
-    AVAILABLE_VERSION=$(apt-cache policy pulse2-common 2>/dev/null | awk '/Candidate/ { print $2 }' | cut -d'g' -f1)
+# Get available version from apt candidate
+AVAILABLE_VERSION=$(apt-cache policy pulse2-common 2>/dev/null | awk '/Candidate/ { print $2 }' | cut -d'g' -f1)
+
+# Check for updates: either new packages available via apt, or pending migration
+# (packages already updated but /var/lib/mmc/version not yet bumped)
+if [[ -n "${MEDULLA_UPDATES}" ]] || [[ -n "${AVAILABLE_VERSION}" && "${AVAILABLE_VERSION}" != "${CURRENT_VERSION}" ]]; then
     if [[ -z "${AVAILABLE_VERSION}" ]]; then
         AVAILABLE_VERSION="unknown"
     fi
