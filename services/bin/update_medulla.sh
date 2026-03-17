@@ -502,8 +502,7 @@ update_546_to_550() {
     str="[=] Setting up new apt sources for Medulla 5.5.0..."
     echo "$str"
     write_to_log "$str"
-    #curl -fsSL https://apt.medulla-tech.io/stable.sources -o /etc/apt/sources.list.d/medulla.sources
-    curl -fsSL https://git.medulla-tech.io/integration.sources -o /etc/apt/sources.list.d/medulla.sources
+    curl -fsSL https://apt.medulla-tech.io/stable.sources -o /etc/apt/sources.list.d/medulla.sources
     if [[ $? -ne 0 ]]; then
         str="[x] Error downloading new apt sources file. Aborting."
         echo "$str"
