@@ -231,7 +231,7 @@ update_relays() {
         write_to_log "$str"
         ssh ${SSH_OPTIONS} root@${RELAY} "apt update &> /dev/null"
         if [[ $? -ne 0 ]]; then
-            str="[x] Error updating repository on relay server: ${RELAY}. Aborting."
+            str="[x] Error updating repository on relay server: ${RELAY}."
             echo "$str"
             write_to_log "$str"
         fi
@@ -243,7 +243,7 @@ update_relays() {
         fi
         ssh ${SSH_OPTIONS} root@${RELAY} "/usr/sbin/restart-pulse-services &> /dev/null"
         if [[ $? -ne 0 ]]; then
-            str="[x] Error restarting services on relay server: ${RELAY}. Aborting."
+            str="[x] Error restarting services on relay server: ${RELAY}."
             echo "$str"
             write_to_log "$str"
         fi
