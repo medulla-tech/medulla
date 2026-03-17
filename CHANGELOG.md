@@ -1,5 +1,21 @@
 # Change Log
 
+## [5.5.0](https://github.com/medulla-tech/medulla/releases/tag/5.5.0) (2026-03-17)
+- [FEATURE] New UX/UI for Medulla console
+- [FEATURE] Integrate websocket logs for server logs
+- [FEATURE] Improve OIDC authentication and profile setup
+- [FEATURE] New security module for detecting and displaying CVE vulnerabilities
+- [FEATURE] Improve how packages are recorded in database
+- [FEATURE] Multi-select and bulk delete groups, packages and entities
+- [FEATURE] Wait 30 seconds for letting the reverse ssh connection to be established before showing guacamole page
+- [FEATURE] Addition of Windows 11 25H2 in Updates database
+- [FEATURE] Remove Type column from default Computers view for better readability
+- [FEATURE] Improve update of Medulla server
+- [BUGFIX]  Fix search filter on Softwares/History tabs
+- [BUGFIX]  Fix group QA command name display and OS matching for Linux variants
+- [BUGFIX]  Fix groups creation from dashboard widgets
+- [BUGFIX]  Fix updates compliance views
+
 ## [5.4.6](https://github.com/medulla-tech/medulla/releases/tag/5.4.6) (2025-12-31)
 - [FEATURE] Add regex-based team filtering for profiles
 - [FEATURE] Add proxy support for OIDC providers
