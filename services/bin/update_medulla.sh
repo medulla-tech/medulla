@@ -160,12 +160,15 @@ setup_new_mmc_module() {
 }
 
 check_medulla_version() {
+    # Get current version from /var/lib/mmc/version
     CURRENT_VERSION=$(cat /var/lib/mmc/version 2> /dev/null)
     # If current version is empty, get the information from installed packages
     if [[ -z "${CURRENT_VERSION}" ]]; then
         CURRENT_VERSION=$(dpkg-query -W -f='${Version}' pulse2-common 2> /dev/null | cut -d'g' -f1)
         echo "${CURRENT_VERSION}" > /var/lib/mmc/version
     fi
+    # Get available version from the repository
+    AVAILABLE_VERSION=$(apt-cache policy pulse2-common | grep Candidate | awk '{print $2}' | cut -d'g' -f1)
 }
 
 update_repo_defs() {
@@ -490,13 +493,13 @@ update_545_to_546() {
     exec /tmp/update_medulla.sh "$@"
 }
 
-update_546_to_547() {
-    str="Applying Medulla config update from 5.4.6 to 5.4.7..."
+update_546_to_550() {
+    str="Applying Medulla config update from 5.4.6 to 5.5.0..."
     echo "$str"
     write_to_log "$str"
 
     ## Setup new apt sources
-    str="[=] Setting up new apt sources for Medulla 5.4.7..."
+    str="[=] Setting up new apt sources for Medulla 5.5.0..."
     echo "$str"
     write_to_log "$str"
     #curl -fsSL https://apt.medulla-tech.io/stable.sources -o /etc/apt/sources.list.d/medulla.sources
@@ -507,7 +510,7 @@ update_546_to_547() {
         write_to_log "$str"
         exit 1
     fi
-    str="[v] New apt sources for Medulla 5.4.7 setup successfully."
+    str="[v] New apt sources for Medulla 5.5.0 setup successfully."
     echo "$str"
     write_to_log "$str"
     update_repo_defs
@@ -545,7 +548,7 @@ update_546_to_547() {
         write_to_log "$str"
         exit 1
     fi
-    str="[v] Medulla MMC mocule 'security' setup and configuration applied successfully."
+    str="[v] Medulla MMC module 'security' setup and configuration applied successfully."
     echo "$str"
     write_to_log "$str"
 
@@ -569,8 +572,8 @@ update_546_to_547() {
     write_to_log "$str"
 
     update_relays
-    echo "5.4.7" > /var/lib/mmc/version
-    str="[v] Medulla config update from 5.4.6 to 5.4.7 applied successfully."
+    echo "5.5.0" > /var/lib/mmc/version
+    str="[v] Medulla config update from 5.4.6 to 5.5.0 applied successfully."
     echo "$str"
     write_to_log "$str"
     exec /tmp/update_medulla.sh "$@"
@@ -649,31 +652,49 @@ echo "$str"
 write_to_log "$str"
 case "$CURRENT_VERSION" in
     "5.2.1")
-        update_521_to_530
+        if [[ "$AVAILABLE_VERSION" > "5.2.1" ]]; then
+            update_521_to_530
+        fi
         ;;
     "5.3.0")
-        update_530_to_540
+        if [[ "$AVAILABLE_VERSION" > "5.3.0" ]]; then
+            update_530_to_540
+        fi
         ;;
     "5.4.0")
-        update_540_to_541
+        if [[ "$AVAILABLE_VERSION" > "5.4.0" ]]; then
+            update_540_to_541
+        fi
         ;;
     "5.4.1")
-        update_541_to_542
+        if [[ "$AVAILABLE_VERSION" > "5.4.1" ]]; then
+            update_541_to_542
+        fi
         ;;
     "5.4.2")
-        update_542_to_543
+        if [[ "$AVAILABLE_VERSION" > "5.4.2" ]]; then
+            update_542_to_543
+        fi
         ;;
     "5.4.3")
-        update_543_to_544
+        if [[ "$AVAILABLE_VERSION" > "5.4.3" ]]; then
+            update_543_to_544
+        fi
         ;;
     "5.4.4")
-        update_544_to_545
+        if [[ "$AVAILABLE_VERSION" > "5.4.4" ]]; then
+            update_544_to_545
+        fi
         ;;
     "5.4.5")
-        update_545_to_546
+        if [[ "$AVAILABLE_VERSION" > "5.4.5" ]]; then
+            update_545_to_546
+        fi
         ;;
     "5.4.6")
-        update_546_to_547
+        if [[ "$AVAILABLE_VERSION" > "5.4.6" ]]; then
+            update_546_to_550
+        fi
         ;;
     *)
         str="Updating minor version if needed..."
