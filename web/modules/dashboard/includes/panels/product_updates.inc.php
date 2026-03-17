@@ -24,6 +24,7 @@
  * product_updates.php
 */
 include_once("modules/dashboard/includes/panel.class.php");
+require_once("modules/admin/includes/xmlrpc.php");
 
 $options = array(
     "class"   => "UpdatePanel",
@@ -96,8 +97,32 @@ class UpdatePanel extends Panel {
         $failHelpJson = json_encode($fail_help);
         $redirectMsgJson = json_encode($redirect_msg);
 
+        // Check update availability from database
+        $updateInfo = xmlrpc_get_update_availability();
+        $hasUpdate = !empty($updateInfo['update_available']);
+        $currentVersion = isset($updateInfo['current_version']) ? htmlspecialchars($updateInfo['current_version']) : '';
+        $availableVersion = isset($updateInfo['available_version']) ? htmlspecialchars($updateInfo['available_version']) : '';
+        $lastCheck = isset($updateInfo['last_check']) ? htmlspecialchars($updateInfo['last_check']) : '';
+
+        $upToDateMsg = _T('System is up to date', 'dashboard');
+        $updateAvailableMsg = _T('Update available', 'dashboard');
+
+        if ($hasUpdate && $currentVersion && $availableVersion) {
+            $updateBanner = '<div class="update-banner update-available">'
+                . '<span class="update-badge">' . $updateAvailableMsg . '</span> '
+                . '<span class="update-versions">' . $currentVersion . ' &rarr; ' . $availableVersion . '</span>'
+                . '</div>';
+        } elseif ($lastCheck) {
+            $updateBanner = '<div class="update-banner update-ok">'
+                . '<span class="update-badge-ok">' . $upToDateMsg . '</span>'
+                . '</div>';
+        } else {
+            $updateBanner = '';
+        }
+
         echo <<<HTML
             <div id="updates_zone">
+                {$updateBanner}
                 <button class="btnSecondary" id="btn_update_medulla">
                     {$labelUpdate}
                 </button>

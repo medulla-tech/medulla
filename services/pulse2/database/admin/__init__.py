@@ -86,7 +86,7 @@ class AdminDatabase(DatabaseHelper):
 
         # Lists to exclude or include specific tables for mapping
         exclude_table = []
-        include_table = ['providers', 'magic_link']
+        include_table = ['providers', 'magic_link', 'medulla_update_availability']
 
         # Dynamically add attributes to the object for each mapped class
         for table_name, mapped_class in Base.classes.items():
@@ -828,3 +828,34 @@ class AdminDatabase(DatabaseHelper):
         except SQLAlchemyError as e:
             logger.error(f"[ConfigDB] Error restoring config version: {e}")
             return False
+
+    @DatabaseHelper._sessionm
+    def get_update_availability(self, session):
+        try:
+            result = session.query(self.Medulla_update_availability).filter(
+                self.Medulla_update_availability.id == 1
+            ).first()
+            if result:
+                return {
+                    "update_available": bool(result.update_available),
+                    "current_version": result.current_version,
+                    "available_version": result.available_version,
+                    "last_check": str(result.last_check) if result.last_check else None,
+                    "last_check_status": result.last_check_status
+                }
+            return {
+                "update_available": False,
+                "current_version": None,
+                "available_version": None,
+                "last_check": None,
+                "last_check_status": "never"
+            }
+        except Exception as e:
+            logger.error(f"Error getting update availability: {e}")
+            return {
+                "update_available": False,
+                "current_version": None,
+                "available_version": None,
+                "last_check": None,
+                "last_check_status": "error"
+            }

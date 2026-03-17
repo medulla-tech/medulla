@@ -282,6 +282,14 @@ msgstr "Tasa de éxito"
 msgid "Deployment success rates for the past 6 weeks"
 msgstr "Índices de éxito del despliegue en las últimas 6 semanas"
 
+#: modules/dashboard/includes/panels/product_updates.inc.php
+msgid "System is up to date"
+msgstr "Sistema actualizado"
+
+#: modules/dashboard/includes/panels/product_updates.inc.php
+msgid "Update available"
+msgstr "Actualización disponible"
+
 #: modules/dashboard/includes/panels/alertsentity.inc.php:28
 msgid "Alerts by Entity"
 msgstr "Alertas por entidad"

@@ -587,30 +587,27 @@ final_operations() {
 
     # Add any final operations needed for the migration here
 
-    ## Generate agents to ensure they are up to date
-    str="[=] Generating agents..."
-    echo "$str"
-    write_to_log "$str"
-    /var/lib/pulse2/clients/generate-pulse-agent.sh &> /dev/null
-    if [[ $? -ne 0 ]]; then
-        str="[x] Error generating agents."
-        echo "$str"
-        write_to_log "$str"
-    fi
-    str="[v] Agents generated successfully."
-    echo "$str"
-    write_to_log "$str"
-
     str="[v] Medulla migration completed successfully."
     echo "$str"
     write_to_log "$str"
     rm -f /var/lib/mmc/.accepted_medulla_update_disclaimer
 
-    ## Restart Medulla services to apply all changes (must be last — kills the process)
+    # Update database: mark update as done
+    NEW_VERSION=$(cat /var/lib/mmc/version 2>/dev/null)
+    mysql -u"${DBUSER}" -p"${DBPASS}" -h"${DBHOST:-localhost}" admin -e \
+        "UPDATE medulla_update_availability SET update_available=0, current_version='${NEW_VERSION}', available_version=NULL, last_check=NOW(), last_check_status='success' WHERE id=1;" 2>/dev/null
+
+    ## Restart services then generate agents (all in background, survives service restart)
     str="[=] Restarting Medulla services..."
     echo "$str"
     write_to_log "$str"
-    nohup /usr/sbin/restart-pulse-services &> /dev/null &
+
+    nohup bash -c '
+        /usr/sbin/restart-pulse-services &> /dev/null
+        sleep 30
+        /var/lib/pulse2/clients/generate-pulse-agent.sh &> /dev/null
+        echo "$(date "+%Y-%m-%d %H:%M:%S") - [v] Agents generated successfully." >> /var/log/medulla_update.log
+    ' &> /dev/null &
 }
 
 

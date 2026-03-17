@@ -331,6 +331,41 @@
   margin: 4px 0 !important;
 }
 
+.update-banner {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  text-align: center;
+  margin-bottom: 4px;
+}
+
+.update-banner.update-available {
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  color: #92400e;
+}
+
+.update-badge {
+  font-weight: 700;
+  color: #d97706;
+}
+
+.update-versions {
+  font-family: 'SF Mono', 'Consolas', monospace;
+  font-size: 12px;
+}
+
+.update-banner.update-ok {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #166534;
+}
+
+.update-badge-ok {
+  font-weight: 600;
+}
+
 /* Toggle switch in portlets */
 .portlet .switch {
   position: relative;

@@ -772,6 +772,9 @@ def delete_provider(provider_id: int) -> dict:
     except Exception as e:
         return {"ok": False, "deleted": 0, "id": 0, "error": str(e)}
 
+def get_update_availability():
+    return AdminDatabase().get_update_availability()
+
 def restart_medulla_services():
     try:
         script_path = '/usr/sbin/restart-pulse-services'
