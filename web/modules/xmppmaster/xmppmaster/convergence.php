@@ -36,15 +36,17 @@ $delete = isset($_GET['postaction'])?true:false;
 if ($delete) {
     delete_command($_GET['cmd_id']);
 }
-$p = new PageGenerator(_T("My teams convergence" . " [" .$_SESSION['login'] . "]", 'xmppmaster'));
+$p = new PageGenerator(_T("My Convergence", 'xmppmaster'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
 $refresh = new RefreshButton();
 $refresh->display();
+echo '<div class="ajax-section">';
 $ajax = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxconvergence"), "container", array('login' => $_SESSION['login'], 'currenttasks' => '1', 'previous'=>'convergence'), 'formRunning'  );
 $ajax->setRefresh($refresh->refreshtime());
 $ajax->display();
 $ajax->displayDivToUpdate();
+echo '</div>';
 
 ?>

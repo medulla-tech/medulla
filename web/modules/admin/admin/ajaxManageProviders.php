@@ -29,11 +29,7 @@ $client = $_SESSION['o']     ?? 'MMC';
 // root -> all (sees everything), otherwise filtered
 $providers = xmlrpc_get_providers($login, strcasecmp($login,'root')===0 ? 'ALL' : $client);
 if (empty($providers)) {
-    EmptyStateBox::show(_T("No providers for this scope.", "admin"));
-    $f = new ValidatingForm(["action" => urlStrRedirect("admin/admin/index", [])]);
-    $f->addValidateButtonWithValue("cancel", "return");
-    $f->pop();
-    $f->display();
+    EmptyStateBox::show(_T("No OIDC client.", "admin"));
     return;
 }
 

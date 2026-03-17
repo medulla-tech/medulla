@@ -67,7 +67,7 @@ $machines = $result["datas"];
 $count = $result["total"];
 
 echo "<h2>"._T("Machines with update", "updates")."</h2>";
-$w = new OptimizedListInfos($machines["name"], _T("Machine Name", "updates"));
+$w = new OptimizedListInfos($machines["name"], _T("Machine name", "updates"));
 $w->disableFirstColumnActionLink();
 
 $w->addExtraInfo($machines["os"], _T("Platform", "updates"));
@@ -76,5 +76,5 @@ $w->setItemCount($count);
 $w->start = 0;
 $w->end = $count;
 $w->setNavBar(new AjaxNavBar($count, $filter));
-
+$w->setEmptyState(_T("No machines found", "updates"), _T("No machines have this update installed.", "updates"));
 $w->display();

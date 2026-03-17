@@ -76,7 +76,7 @@ $ids = array(); // Initialize the array
 foreach($black_list['updateid_or_kb'] as $updateid) {
     $ids [] = 'b_'.$updateid;
 }
-$b = new OptimizedListInfos($titles_black, _T("Update name", "updates"));
+$b = new OptimizedListInfos($titles_black, _T("Name", "updates"));
 $b->setCssIds($ids);
 $b->addExtraInfo($updateids_black, _T("Update Id", "updates"));
 $b->addExtraInfo($black_list['severity'], _T("Severity", "updates"));
@@ -117,4 +117,5 @@ $b->setCssCaption(
 );
 
 $b->addActionItemArray($blackActions["unban"]);
+$b->setEmptyState(_T("No updates found", "updates"), _T("No blacklisted updates found.", "updates"));
 $b->display();

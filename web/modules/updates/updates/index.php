@@ -38,17 +38,21 @@ $p->setSideMenu($sidemenu);
 $p->display();
 
 $refresh = new RefreshButton();
-print "<br/>";
-$refresh->display();
 
 $_GET["source"] = "xmppmaster";
 
 $params = getFilteredGetParams();
 
 $ajax = new AjaxFilter(urlStrRedirect("updates/updates/ajaxEntityCompliance"), "container", $params, 'formRunning');
-
 $ajax->setRefresh($refresh->refreshtime());
+
+echo '<div class="toolbar-row">';
+echo '<div>';
+$refresh->display();
+echo '</div>';
 $ajax->display();
+echo '</div>';
+
 $ajax->displayDivToUpdate();
 //
 // generateEntityPage(_T("Entities Compliance", 'updates'),

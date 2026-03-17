@@ -376,7 +376,7 @@ msgstr "Descripción"
 
 #: modules/admin/admin/ajaxClustersList.php:71
 msgid "Associated relays"
-msgstr "Associated relays"
+msgstr "Relés asociados"
 
 #: modules/admin/admin/ajaxunban.php:62 modules/admin/admin/ajaxunban.php:87
 #: modules/admin/admin/ajaxban.php:62 modules/admin/admin/ajaxban.php:87
@@ -695,6 +695,27 @@ msgstr "Acción rápida"
 #: modules/admin/infoPackage.inc.php:231 modules/admin/infoPackage.inc.php:235
 msgid "Manage Providers"
 msgstr "Gestionar proveedores"
+
+msgid "OIDC Clients"
+msgstr "Clientes OIDC"
+
+msgid "Edit OIDC Client"
+msgstr "Editar cliente OIDC"
+
+msgid "New OIDC Client"
+msgstr "Nuevo cliente OIDC"
+
+msgid "Edit OIDC Client <span style='font-size: 16px;'>[%s]</span>"
+msgstr "Editar cliente OIDC <span style='font-size: 16px;'>[%s]</span>"
+
+msgid "No OIDC client."
+msgstr "Ningún cliente OIDC."
+
+msgid "Server Logs"
+msgstr "Registros del servidor"
+
+msgid "Create OIDC Client"
+msgstr "Crear cliente OIDC"
 
 #: modules/admin/admin/unban.php:33
 msgid "Unban machines on relay"
@@ -1130,3 +1151,12 @@ msgstr "Configuración OAuth/OIDC"
 #: modules/admin/admin/editProvider.php
 msgid "LDAP Mapping"
 msgstr "Mapeo LDAP"
+
+msgid "Relay name"
+msgstr "Nombre del relé"
+
+msgid "Cluster name"
+msgstr "Nombre del clúster"
+
+msgid "Rules list"
+msgstr "Lista de reglas"

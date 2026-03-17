@@ -349,8 +349,7 @@ progress::-moz-progress-bar {
   border-radius: 4px;
   display: inline-block;
   font-size: 11px;
-  white-space: nowrap;
-  min-width: 160px;
+  max-width: 100%;
   text-align: center;
   box-sizing: border-box;
 }
@@ -366,6 +365,40 @@ progress::-moz-progress-bar {
 .status-group-partial {
   background-color: var(--color-warning);
 }
+
+.status-progress-pct {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 700;
+  color: #4a6d8c;
+}
+
+/* Ajax section → moved to global.css */
+
+/* Cell truncation with ellipsis + tooltip */
+.cell-truncate {
+  display: block;
+  max-width: 80px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cell-truncate-lg { max-width: 250px; }
+.cell-truncate-md { max-width: 150px; }
+
+/* DeployStatusBar — barre de statut segmentée */
+.deploy-status-bar { min-width: 80px; }
+.dsb-track { display: flex; height: 20px; border-radius: 10px; overflow: hidden; background: #e6ecf3; border: 1px solid #d2dae3; }
+.dsb-seg { height: 100%; display: flex; align-items: center; justify-content: center; min-width: 22px; overflow: hidden; }
+.dsb-label { color: #fff; font-size: 11px; font-weight: 700; text-shadow: 0 1px 1px rgba(0,0,0,0.2); white-space: nowrap; }
+.dsb-progress { background: #4a90d9; }
+.dsb-success  { background: #3ca175; }
+.dsb-error    { background: #e74c3c; }
+.dsb-aborted  { background: #95a5a6; }
+.dsb-empty { width: 100%; text-align: center; color: #95a5a6; font-size: 11px; line-height: 20px; }
+.dsb-legend { display: flex; gap: 16px; font-size: 12px; color: #555; padding: 6px 0; }
+.dsb-legend-item { display: flex; align-items: center; gap: 4px; }
+.dsb-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; }
 
 .status-error {
   font-weight: bold;
@@ -388,6 +421,9 @@ progress::-moz-progress-bar {
 .text-error-inline {
   color: var(--color-error);
 }
+
+/* Badges de statut — table machines (déploiement groupe) */
+/* Status badges → moved to global.css */
 
 /* Constraint text */
 .constraint-text {

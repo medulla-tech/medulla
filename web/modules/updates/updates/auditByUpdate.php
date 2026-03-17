@@ -5,7 +5,7 @@ require("graph/navbar.inc.php");
 
 require_once("modules/updates/includes/xmlrpc.php");
 
-$p = new PageGenerator(_T(sprintf("Updates history for update %s",$completename), 'updates'));
+$p = new PageGenerator(sprintf(_T("Updates history for update %s", 'updates'), $completename));
 $p->setSideMenu($sidemenu);
 
 $p->display();

@@ -2446,3 +2446,287 @@ msgstr ""
 #: index.php:198
 msgid "Your session has expired due to inactivity. Please log in again."
 msgstr ""
+
+#: logview/*.php
+msgid "Criteria"
+msgstr ""
+
+#: logview/*.php
+msgid "Search criteria"
+msgstr ""
+
+#: logview/*.php
+msgid "No criteria selected"
+msgstr ""
+
+#: logview/*.php
+msgid "selected"
+msgstr ""
+
+#: logview/*.php
+msgid "Start Date"
+msgstr ""
+
+#: logview/*.php
+msgid "End Date"
+msgstr ""
+
+#: logview/index.php
+msgid "Filter by module"
+msgstr ""
+
+#: logview/index.php
+msgid "Deployment"
+msgstr ""
+
+#: logview/index.php
+msgid "Imaging"
+msgstr ""
+
+#: logview/index.php
+msgid "Packaging"
+msgstr ""
+
+#: logview/index.php
+msgid "No filter"
+msgstr ""
+
+#: logview/*.php (page titles + sidebar)
+msgid "All Logs"
+msgstr ""
+
+msgid "Backup Logs"
+msgstr ""
+
+msgid "Quick Action Logs"
+msgstr ""
+
+msgid "Download Logs"
+msgstr ""
+
+msgid "Kiosk Logs"
+msgstr ""
+
+msgid "Mobile Logs"
+msgstr ""
+
+#: logview/*.php (criteria)
+msgid "Backup configuration"
+msgstr ""
+
+msgid "Backup Image creation"
+msgstr ""
+
+msgid "BackupPC"
+msgstr ""
+
+msgid "Chat"
+msgstr ""
+
+msgid "Deployment Download"
+msgstr ""
+
+msgid "Deployment Error"
+msgstr ""
+
+msgid "Deployment Execution"
+msgstr ""
+
+msgid "Deployment Notify"
+msgstr ""
+
+msgid "Deployment Terminate"
+msgstr ""
+
+msgid "Deployment Transfert"
+msgstr ""
+
+msgid "Files"
+msgstr ""
+
+msgid "Full backup requested"
+msgstr ""
+
+msgid "Image Deletion"
+msgstr ""
+
+msgid "Image Deployment"
+msgstr ""
+
+msgid "Incremental backup requested"
+msgstr ""
+
+msgid "Install"
+msgstr ""
+
+msgid "Inventory Deployment"
+msgstr ""
+
+msgid "Inventory Machine"
+msgstr ""
+
+msgid "Inventory Master"
+msgstr ""
+
+msgid "Inventory New machine"
+msgstr ""
+
+msgid "Inventory Planned"
+msgstr ""
+
+msgid "Inventory Quick Action"
+msgstr ""
+
+msgid "Inventory reception"
+msgstr ""
+
+msgid "Inventory requested"
+msgstr ""
+
+msgid "Inventory User"
+msgstr ""
+
+msgid "Manual"
+msgstr ""
+
+msgid "Master Creation"
+msgstr ""
+
+msgid "Master Deletion"
+msgstr ""
+
+msgid "Master Deployment Multicast"
+msgstr ""
+
+msgid "Master Edition"
+msgstr ""
+
+msgid "Menu change"
+msgstr ""
+
+msgid "Mobile Configuration"
+msgstr ""
+
+msgid "Mobile Deployment"
+msgstr ""
+
+msgid "Mobile Device"
+msgstr ""
+
+msgid "Mobile Enrollment"
+msgstr ""
+
+msgid "Mobile Group"
+msgstr ""
+
+msgid "Mobile Message"
+msgstr ""
+
+msgid "Mobile Push Message"
+msgstr ""
+
+msgid "Mobile Quick Action"
+msgstr ""
+
+msgid "Mobile User"
+msgstr ""
+
+msgid "None"
+msgstr ""
+
+msgid "Package creation"
+msgstr ""
+
+msgid "Package deletion"
+msgstr ""
+
+msgid "Package edition"
+msgstr ""
+
+msgid "Planned"
+msgstr ""
+
+msgid "Post-imaging Script Creation"
+msgstr ""
+
+msgid "Reboot sent"
+msgstr ""
+
+msgid "Remote desktop control request"
+msgstr ""
+
+msgid "Remote desktop service"
+msgstr ""
+
+msgid "Remove"
+msgstr ""
+
+msgid "Restore"
+msgstr ""
+
+msgid "Restore requested"
+msgstr ""
+
+msgid "Reverse SSH"
+msgstr ""
+
+msgid "Reverse SSH start"
+msgstr ""
+
+msgid "Reverse SSH stop"
+msgstr ""
+
+msgid "Shutdown sent"
+msgstr ""
+
+msgid "Transfert Files"
+msgstr ""
+
+msgid "Update"
+msgstr ""
+
+msgid "WOL"
+msgstr ""
+
+msgid "WOL sent"
+msgstr ""
+
+#: logview/*.php (DataTables)
+msgid "Search:"
+msgstr ""
+
+msgid "Show _MENU_ entries"
+msgstr ""
+
+msgid "Showing _START_ to _END_ of _TOTAL_ entries"
+msgstr ""
+
+msgid "No entries"
+msgstr ""
+
+msgid "filtered from _MAX_ total entries"
+msgstr ""
+
+msgid "No matching records found"
+msgstr ""
+
+msgid "No data available"
+msgstr ""
+
+msgid "First"
+msgstr ""
+
+msgid "Last"
+msgstr ""
+
+msgid "Copy"
+msgstr ""
+
+msgid "Export CSV"
+msgstr ""
+
+msgid "Export Excel"
+msgstr ""
+
+msgid "Print"
+msgstr ""

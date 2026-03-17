@@ -76,13 +76,8 @@ $source = isset($_GET['source']) ? $_GET['source'] : "xmppmaster";
 if ($_GET['source'] == "xmppmaster" || $_GET['source'] == "glpi" ){
 
     if ($_GET['source'] == "xmppmaster" ){
-        $p = new PageGenerator(_T("OS SERVER Upgrades", 'updates'));
-        $p->display();
-        // $statglpiversion = xmlrpc_get_os_xmpp_update_major_stats();
         $statglpiversion=xmlrpc_get_os_update_major_stats_win_serv();
     }else{
-        $p = new PageGenerator(_T("OS SERVER Upgrades", 'updates'));
-        $p->display();
         $statglpiversion=xmlrpc_get_os_update_major_stats_win_serv();
     };
 
@@ -368,6 +363,7 @@ $n->setParamInfo($params);
 $n->start = $start;
 $n->end = $count;
 
+$n->setEmptyState(_T("No entities found", "updates"), _T("No entities match the current filter.", "updates"));
 echo '<div class="major-entities-metrics">';
 $n->display();
 echo '</div>';

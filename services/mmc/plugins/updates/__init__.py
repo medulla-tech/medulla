@@ -500,7 +500,7 @@ def get_conformity_update_by_machines(ids=[]):
     result = {}
     for uuid in ids["uuids"]:
         result[uuid] = {
-            "uuid": "",
+            "uuid":  uuid.replace("UUID", ""),
             "id": "",
             "missing": 0,
             "inprogress": 0,  # Ajout du champ inprogress
@@ -529,6 +529,7 @@ def get_conformity_update_by_machines(ids=[]):
 
     for uuid in installed:
         result[uuid]["installed"] = installed[uuid]["installed"]
+        result[uuid]["hostname"] = installed[uuid]["cn"]
 
     for uuid in missing:
         result[uuid]["missing"] = missing[uuid]["missing"]

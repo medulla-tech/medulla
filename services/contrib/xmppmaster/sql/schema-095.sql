@@ -3450,7 +3450,7 @@ DELIMITER ;
 --     --   - Office (2003 à 2016, 64 bits)
 --     --   - Visual Studio (2005 à 2022)
 --     --   - Windows 10 (versions 1903, 21H1, 21H2, 22H2)
---     --   - Windows 11 (versions 21H2, 22H2, 23H2, 24H2)
+--     --   - Windows 11 (versions 21H2, 22H2, 23H2, 24H2, 25H2)
 --     --   - Mises à jour de sécurité (Malicious X64)
 --     --   - Windows Server (versions 21H2 à 24H2, x64 et ARM64)
 --     --   - Anciens serveurs Windows (2012, 2016, 2019)
@@ -3497,6 +3497,7 @@ DELIMITER ;
 --     call up_init_packages_Win11_X64_22H2();
 --     call up_init_packages_Win11_X64_23H2();
 --     call up_init_packages_Win11_X64_24H2();
+--     call up_init_packages_Win11_X64_25H2();
 --
 --     -- securité mise à jour
 --     call up_init_packages_Win_Malicious_X64();

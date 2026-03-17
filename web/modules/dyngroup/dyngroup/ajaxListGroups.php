@@ -215,10 +215,10 @@ foreach ($list as $group) {
     // Suppression possible ?
     if ($groupData['is_owner'] == "1" || $_SESSION['login'] == "root") {
         $action_delete[] = $delete;
-        $checkboxes[] = BulkSelectBar::checkbox('group-select', clean_xss($group->id), clean_xss($group->name));
+        $bulkBar->addItem(clean_xss($group->id), clean_xss($group->name));
     } else {
         $action_delete[] = $empty;
-        $checkboxes[] = '';
+        $bulkBar->addEmpty();
     }
 
     // Déploiement rapide XMPP
@@ -246,8 +246,6 @@ $n->setItemCount($count);
 $n->setNavBar(new AjaxNavBar($count, $filter));
 $n->start = 0;
 $n->end   = $conf["global"]["maxperpage"];
-
-$n->addExtraInfoRaw($checkboxes, $bulkBar->selectAllHeader(), "30px");
 
 if (($_SESSION['login'] ?? '') === "root") {
     $n->addExtraInfo($owner, _T('Owner', 'dyngroup'));

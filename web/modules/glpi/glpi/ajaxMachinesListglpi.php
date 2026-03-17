@@ -23,6 +23,7 @@
 
 require_once("modules/glpi/includes/xmlrpc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
+require_once("modules/xmppmaster/includes/html.inc.php");
 require_once("modules/msc/includes/mscoptions_xmlrpc.php");
 
 global $config;
@@ -33,6 +34,24 @@ global $config;
 	cursor:pointer;
 }
 </style>
+
+<script>
+jQuery(function() {
+    jQuery(function() {
+        jQuery(".infomach").tooltip({
+            position: { my: "left+15 center", at: "right center" },
+            items: "[mydata]",
+            content: function() {
+                var element = jQuery(this);
+                if (element.is("[mydata]")) {
+                    return element.attr("mydata");
+                }
+            }
+        });
+    });
+});
+</script>
+
 <?php
 $location = (isset($_GET['location'])) ? $_GET['location'] : "";
 $filter = (isset($_GET['filter'])) ? $_GET['filter'] : "";
@@ -115,26 +134,53 @@ $raw = 0;
 // And tabs in detail page will be broken
 $cn = [];
 
+$tooltipLabels = [
+    'jid'            => _T("Jabber ID", 'xmppmaster'),
+    'platform'       => _T("Platform", 'xmppmaster'),
+    'archi'          => _T("Architecture", 'xmppmaster'),
+    'ip_xmpp'        => _T("IP address", 'xmppmaster'),
+    'ippublic'       => _T("Public IP", 'xmppmaster'),
+    'macaddress'     => _T("Mac address", 'xmppmaster'),
+    'subnetxmpp'     => _T("Subnet", 'xmppmaster'),
+    'gateway'        => _T("Gateway address", 'xmppmaster'),
+    'agenttype'      => _T("Agent type", 'xmppmaster'),
+    'classutil'      => _T("Usage class", 'xmppmaster'),
+    'groupdeploy'    => _T("Relay JID", 'xmppmaster'),
+    'need_reconf'    => _T("Reconf. requested", 'xmppmaster'),
+    'kiosk_presence' => _T("Kiosk enabled", 'xmppmaster'),
+    'lastuser'       => _T("Last user connected", 'xmppmaster'),
+    'ad_ou_machine'  => _T("AD machine OU", 'xmppmaster'),
+    'ad_ou_user'     => _T("AD user OU", 'xmppmaster'),
+    'keysyncthing'   => _T("Syncthing ID", 'xmppmaster'),
+];
+
+$tooltipGroups = [
+    _T("Identity", "xmppmaster")  => ['jid', 'platform', 'archi'],
+    _T("Network", "xmppmaster")   => ['ip_xmpp', 'ippublic', 'macaddress', 'subnetxmpp', 'gateway'],
+    _T("Agent", "xmppmaster")     => ['agenttype', 'classutil', 'groupdeploy', 'need_reconf', 'kiosk_presence', 'lastuser'],
+    _T("Other", "xmppmaster")     => ['ad_ou_machine', 'ad_ou_user', 'keysyncthing'],
+];
+
 foreach($datas['uuid'] as $uuid) {
 
     if(isset($xmppdatas['UUID'.$uuid])) {
-        $cnstr = '<span ';
-        $cnstr .= 'title="';
-        $cnstr .= "jid : \t ". $xmppdatas['UUID'.$uuid]['jid']."\n";
-        $cnstr .= "classutil : \t ". $xmppdatas['UUID'.$uuid]['classutil']."\n";
-        $cnstr .= "ad_ou_user : \t ". $xmppdatas['UUID'.$uuid]['ad_ou_user']."\n";
-        $cnstr .= "ad_ou_machine : \t ". $xmppdatas['UUID'.$uuid]['ad_ou_machine']."\n";
-        $cnstr .= "need_reconf : \t ". $xmppdatas['UUID'.$uuid]['need_reconf']."\n";
-        $cnstr .= "keysyncthing : \t ". $xmppdatas['UUID'.$uuid]['keysyncthing']."\n";
-        $cnstr .= "groupdeploy : \t ". $xmppdatas['UUID'.$uuid]['groupdeploy']."\n";
-        $cnstr .= "subnetxmpp : \t ". $xmppdatas['UUID'.$uuid]['subnetxmpp']."\n";
-        $cnstr .= "ip_xmpp : \t ". $xmppdatas['UUID'.$uuid]['ip_xmpp']."\n";
-        $cnstr .= "ippublic : \t ". $xmppdatas['UUID'.$uuid]['ippublic']."\n";
-        $cnstr .= "kiosk_presence : \t ". $xmppdatas['UUID'.$uuid]['kiosk_presence']."\n";
-        $cnstr .= "archi : \t ". $xmppdatas['UUID'.$uuid]['archi']."\n";
-        $cnstr .= '"';
-        $cnstr .= '>'.$datas['cn'][$raw].'</span>';
-        $cn[] = $cnstr;
+        $m = $xmppdatas['UUID'.$uuid];
+        $tooltip = "<table class='ttable'>";
+        foreach ($tooltipGroups as $groupLabel => $fields) {
+            $groupRows = '';
+            foreach ($fields as $field) {
+                if (!empty($m[$field])) {
+                    $val = ($field === 'macaddress') ? formatMacAddress($m[$field]) : htmlspecialchars($m[$field]);
+                    $groupRows .= "<tr class='ttabletr'><td class='ttabletd'>" . $tooltipLabels[$field] . "</td><td class='ttabletd'>: " . $val . "</td></tr>";
+                }
+            }
+            if ($groupRows !== '') {
+                $tooltip .= "<tr class='ttabletr tt-section'><td class='ttabletd' colspan='2'>" . $groupLabel . "</td></tr>";
+                $tooltip .= $groupRows;
+            }
+        }
+        $tooltip .= "</table>";
+        $cn[] = '<span class="infomach" mydata="' . htmlentities($tooltip) . '">' . htmlspecialchars($datas['cn'][$raw]) . '</span>';
     } else {
         $cn[] = $datas['cn'][$raw];
     }
@@ -241,7 +287,7 @@ foreach($datas['cn'] as $cn_machine) {
     $ids[] = 'm_'.$cn_machine;
 }
 
-$n = new OptimizedListInfos($cn, _T("Computer Name", "glpi"));
+$n = new OptimizedListInfos($cn, _T("Computer Name", "glpi"), "", "140px");
 $n->setcssIds($ids);
 $n->setParamInfo($params); // [params]
 if(array_key_exists("description", $datas)) {
@@ -250,9 +296,9 @@ if(array_key_exists("description", $datas)) {
 if(array_key_exists("os", $datas)) {
     $n->addExtraInfo($datas["os"], _T("Operating System", "glpi"));
 }
-if(array_key_exists("type", $datas)) {
-    $n->addExtraInfo($datas["type"], _T("Computer Type", "glpi"));
-}
+// if(array_key_exists("type", $datas)) {
+//     $n->addExtraInfo($datas["type"], _T("Computer Type", "glpi"));
+// }
 if(array_key_exists('user', $datas)) {
     $n->addExtraInfo($datas["user"], _T("Last Logged User", "glpi"));
 }

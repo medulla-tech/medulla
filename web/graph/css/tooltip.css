@@ -1,0 +1,78 @@
+/*
+ * jQuery UI tooltip - unified style for machine/relay info popups
+ */
+
+:root {
+  --tt-font-size: 11px;
+  --tt-color-text: #e8edf2;
+  --tt-color-label: #5fbcd3;
+  --tt-border-color: rgba(100, 160, 200, 0.2);
+}
+
+.ui-tooltip {
+  padding: 8px 12px !important;
+  max-width: 680px !important;
+  color: var(--tt-color-text) !important;
+  background: rgba(24, 55, 78, 0.92) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.06) inset !important;
+  border: 1px solid var(--tt-border-color) !important;
+  border-radius: 10px !important;
+  font-size: var(--tt-font-size) !important;
+  line-height: 1.25 !important;
+}
+
+.ttable {
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+}
+
+.ttable tr td,
+.ttable .ttabletd {
+  padding: 1px 6px 1px 0 !important;
+  background: none !important;
+  border: none !important;
+  font-size: var(--tt-font-size) !important;
+  color: var(--tt-color-text) !important;
+  vertical-align: top;
+}
+
+.ttable tr td:first-child,
+.ttable .ttabletd:first-child,
+.ttable tr td b,
+.ttable .ttabletd b {
+  color: var(--tt-color-label) !important;
+  font-weight: 600;
+  white-space: nowrap;
+  padding-right: 8px !important;
+  font-size: 10px !important;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+/* Section headers */
+.ttable tr.tt-section td,
+.ttable .ttabletr.tt-section .ttabletd {
+  padding: 10px 0 3px 0 !important;
+  font-size: var(--tt-font-size) !important;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(95, 188, 211, 0.6) !important;
+  border: none !important;
+  border-bottom: 1px solid rgba(95, 188, 211, 0.15) !important;
+  white-space: normal;
+}
+
+/* Space below section border */
+.ttable tr.tt-section + tr td,
+.ttable .ttabletr.tt-section + .ttabletr .ttabletd {
+  padding-top: 6px !important;
+}
+
+.infomach {
+  border-bottom: 1px dotted var(--tt-border-color);
+  cursor: help;
+}

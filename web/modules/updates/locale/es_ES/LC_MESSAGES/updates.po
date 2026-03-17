@@ -300,6 +300,60 @@ msgstr "Producto Microsoft"
 msgid "approve update"
 msgstr "aprobar la actualización"
 
+msgid "Approve update"
+msgstr "Aprobar actualización"
+
+msgid "End date"
+msgstr "Fecha de fin"
+
+msgid "Version"
+msgstr "Versión"
+
+msgid "Missing"
+msgstr "Pendientes"
+
+msgid "Installed"
+msgstr "Instaladas"
+
+msgid "Total"
+msgstr "Total"
+
+#, php-format
+msgid "Updates history for entity %s"
+msgstr "Historial de actualizaciones para la entidad %s"
+
+#, php-format
+msgid "Updates history for update %s"
+msgstr "Historial de actualizaciones para %s"
+
+#, php-format
+msgid "Machine details for update KB%s"
+msgstr "Detalles de máquinas para la actualización KB%s"
+
+#, php-format
+msgid "Updates on Entity %s"
+msgstr "Actualizaciones en la entidad %s"
+
+#, php-format
+msgid "Updates on Group %s"
+msgstr "Actualizaciones en el grupo %s"
+
+#, php-format
+msgid "Updates on machine %s"
+msgstr "Actualizaciones en la máquina %s"
+
+#, php-format
+msgid "Deploy this update on entity %s"
+msgstr "Desplegar esta actualización en la entidad %s"
+
+#, php-format
+msgid "Deploy this update on group %s"
+msgstr "Desplegar esta actualización en el grupo %s"
+
+#, php-format
+msgid "Deploy this update on machine %s"
+msgstr "Desplegar esta actualización en la máquina %s"
+
 #: modules/updates/updates/ajaxApproveProduct.php:165
 #: modules/updates/updates/ajaxApproveRules.php:104
 msgid "Apply"
@@ -890,4 +944,68 @@ msgstr "Aprobar actualizaciones de productos Microsoft"
 #: modules/updates/infoPackage.inc.php:319
 msgid "Choose product for entity"
 msgstr "Elegir producto para entidad"
+
+# Empty state messages
+msgid "No deployment history"
+msgstr "Sin historial de despliegue"
+
+msgid "No update deployments have been recorded yet."
+msgstr "Aún no se han registrado despliegues de actualizaciones."
+
+msgid "No pending updates"
+msgstr "Sin actualizaciones pendientes"
+
+msgid "No updates are currently pending for this machine."
+msgstr "No hay actualizaciones pendientes para esta máquina."
+
+msgid "No entities found"
+msgstr "No se encontraron entidades"
+
+msgid "No entities match the current filter."
+msgstr "Ninguna entidad coincide con el filtro actual."
+
+msgid "No updates found"
+msgstr "No se encontraron actualizaciones"
+
+msgid "No updates match the current filter."
+msgstr "Ninguna actualización coincide con el filtro actual."
+
+msgid "No machines found"
+msgstr "No se encontraron máquinas"
+
+msgid "No machines are available for this deployment."
+msgstr "No hay máquinas disponibles para este despliegue."
+
+msgid "No machines have this update installed."
+msgstr "Ninguna máquina tiene esta actualización instalada."
+
+msgid "No machines are missing this update."
+msgstr "Ninguna máquina necesita esta actualización."
+
+msgid "No machines match the current filter."
+msgstr "Ninguna máquina coincide con el filtro actual."
+
+msgid "No machines match the hardware constraints."
+msgstr "Ninguna máquina coincide con las restricciones de hardware."
+
+msgid "No whitelisted updates found."
+msgstr "No se encontraron actualizaciones en lista blanca."
+
+msgid "No blacklisted updates found."
+msgstr "No se encontraron actualizaciones en lista negra."
+
+msgid "No updates available"
+msgstr "Sin actualizaciones disponibles"
+
+msgid "No updates to deploy on this machine."
+msgstr "No hay actualizaciones para desplegar en esta máquina."
+
+msgid "Name"
+msgstr "Nombre"
+
+msgid "Requested"
+msgstr "Solicitada"
+
+msgid "Non-compliant"
+msgstr "No conformes"
 

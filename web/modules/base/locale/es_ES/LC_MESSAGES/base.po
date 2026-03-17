@@ -1205,26 +1205,6 @@ msgstr "texto"
 msgid "Transfert File Logs"
 msgstr "Registros de archivos de transferencia"
 
-#: modules/base/logview/logsremotedesktop.php:140
-msgid "Remote Desktop Logs"
-msgstr "Registros de Escritorio Remoto"
-
-#: modules/base/logview/logsquickaction.php:140
-#: modules/base/logview/logskiosk.php:136
-msgid "Quick Actions Logs"
-msgstr "Registros de acciones rápidas"
-
-#: modules/base/logview/logspackaging.php:141
-msgid "Packaging Logs"
-msgstr "Registros de envases"
-
-#: modules/base/logview/logsinventory.php:145
-msgid "Inventory Logs"
-msgstr "Registros de inventario"
-
-#: modules/base/logview/logsdeployment.php:136
-msgid "Deployment Logs"
-msgstr "Registros de implantación"
 
 #: modules/base/logview/logsdeployment.php:299
 #: modules/base/includes/auditCodes.php:45 modules/base/audit/indexbase.php:30
@@ -1243,10 +1223,6 @@ msgstr "Nombre de la sesión"
 #: modules/base/logview/logsdeployment.php:303
 msgid "message"
 msgstr "mensaje"
-
-#: modules/base/logview/logsimaging.php:158
-msgid "Imaging Logs"
-msgstr "Registros de imágenes"
 
 #: modules/base/logview/ajax_showlog.php:69
 msgid "Connection"
@@ -2344,4 +2320,303 @@ msgstr "Inicio de sesión o correo"
 #: forgotpassword.php:81
 msgid "Back"
 msgstr "Volver"
+
+#: logview/*.php
+msgid "Criteria"
+msgstr "Criterio"
+
+#: logview/*.php
+msgid "Search criteria"
+msgstr "Criterio de búsqueda"
+
+#: logview/*.php
+msgid "No criteria selected"
+msgstr "Ningún criterio seleccionado"
+
+#: logview/*.php
+msgid "selected"
+msgstr "seleccionado(s)"
+
+#: logview/*.php
+msgid "Start Date"
+msgstr "Fecha de inicio"
+
+#: logview/*.php
+msgid "End Date"
+msgstr "Fecha de fin"
+
+#: logview/index.php
+msgid "Filter by module"
+msgstr "Filtrar por módulo"
+
+#: logview/index.php
+msgid "Deployment"
+msgstr "Despliegue"
+
+#: logview/index.php
+msgid "Imaging"
+msgstr "Imagen"
+
+#: logview/index.php
+msgid "Packaging"
+msgstr "Paquetes"
+
+#: logview/index.php
+msgid "No filter"
+msgstr "Sin filtro"
+
+#: logview/*.php (page titles + sidebar)
+msgid "All Logs"
+msgstr "Todos los registros"
+
+msgid "Inventory Logs"
+msgstr "Registros de Inventario"
+
+msgid "Backup Logs"
+msgstr "Registros de Backup"
+
+msgid "Deployment Logs"
+msgstr "Registros de Despliegue"
+
+msgid "Quick Action Logs"
+msgstr "Registros de Acciones rápidas"
+
+msgid "Download Logs"
+msgstr "Registros de Descargas"
+
+msgid "Kiosk Logs"
+msgstr "Registros del Kiosk"
+
+msgid "Packaging Logs"
+msgstr "Registros de Packaging"
+
+msgid "Remote Desktop Logs"
+msgstr "Registros de Escritorio remoto"
+
+msgid "Imaging Logs"
+msgstr "Registros de Imaging"
+
+msgid "Mobile Logs"
+msgstr "Registros de Mobile"
+
+#: logview/*.php (criteria)
+msgid "Backup configuration"
+msgstr "Configuración de respaldo"
+
+msgid "Backup Image creation"
+msgstr "Creación de imagen de respaldo"
+
+msgid "BackupPC"
+msgstr "BackupPC"
+
+msgid "Chat"
+msgstr "Chat"
+
+msgid "Deployment Download"
+msgstr "Despliegue descarga"
+
+msgid "Deployment Error"
+msgstr "Despliegue error"
+
+msgid "Deployment Execution"
+msgstr "Despliegue ejecución"
+
+msgid "Deployment Notify"
+msgstr "Despliegue notificación"
+
+msgid "Deployment Terminate"
+msgstr "Despliegue terminación"
+
+msgid "Deployment Transfert"
+msgstr "Despliegue transferencia"
+
+msgid "Files"
+msgstr "Archivos"
+
+msgid "Full backup requested"
+msgstr "Respaldo completo solicitado"
+
+msgid "Image Deletion"
+msgstr "Eliminación de imagen"
+
+msgid "Image Deployment"
+msgstr "Despliegue de imagen"
+
+msgid "Incremental backup requested"
+msgstr "Respaldo incremental solicitado"
+
+msgid "Install"
+msgstr "Instalación"
+
+msgid "Inventory Deployment"
+msgstr "Inventario despliegue"
+
+msgid "Inventory Machine"
+msgstr "Inventario máquina"
+
+msgid "Inventory Master"
+msgstr "Inventario master"
+
+msgid "Inventory New machine"
+msgstr "Inventario nueva máquina"
+
+msgid "Inventory Planned"
+msgstr "Inventario planificado"
+
+msgid "Inventory Quick Action"
+msgstr "Inventario acción rápida"
+
+msgid "Inventory reception"
+msgstr "Inventario recepción"
+
+msgid "Inventory requested"
+msgstr "Inventario solicitado"
+
+msgid "Inventory User"
+msgstr "Inventario usuario"
+
+msgid "Manual"
+msgstr "Manual"
+
+msgid "Master Creation"
+msgstr "Creación de master"
+
+msgid "Master Deletion"
+msgstr "Eliminación de master"
+
+msgid "Master Deployment Multicast"
+msgstr "Despliegue master multicast"
+
+msgid "Master Edition"
+msgstr "Edición de master"
+
+msgid "Menu change"
+msgstr "Cambio de menú"
+
+msgid "Mobile Configuration"
+msgstr "Móvil configuración"
+
+msgid "Mobile Deployment"
+msgstr "Móvil despliegue"
+
+msgid "Mobile Device"
+msgstr "Móvil dispositivo"
+
+msgid "Mobile Enrollment"
+msgstr "Móvil inscripción"
+
+msgid "Mobile Group"
+msgstr "Móvil grupo"
+
+msgid "Mobile Message"
+msgstr "Móvil mensaje"
+
+msgid "Mobile Push Message"
+msgstr "Móvil mensaje push"
+
+msgid "Mobile Quick Action"
+msgstr "Móvil acción rápida"
+
+msgid "Mobile User"
+msgstr "Móvil usuario"
+
+msgid "None"
+msgstr "Ninguno"
+
+msgid "Package creation"
+msgstr "Creación de paquete"
+
+msgid "Package deletion"
+msgstr "Eliminación de paquete"
+
+msgid "Package edition"
+msgstr "Edición de paquete"
+
+msgid "Planned"
+msgstr "Planificado"
+
+msgid "Post-imaging Script Creation"
+msgstr "Creación script post-imaging"
+
+msgid "Reboot sent"
+msgstr "Reinicio enviado"
+
+msgid "Remote desktop control request"
+msgstr "Solicitud de control remoto"
+
+msgid "Remote desktop service"
+msgstr "Servicio de escritorio remoto"
+
+msgid "Remove"
+msgstr "Eliminar"
+
+msgid "Restore"
+msgstr "Restauración"
+
+msgid "Restore requested"
+msgstr "Restauración solicitada"
+
+msgid "Reverse SSH"
+msgstr "Reverse SSH"
+
+msgid "Reverse SSH start"
+msgstr "Inicio Reverse SSH"
+
+msgid "Reverse SSH stop"
+msgstr "Parada Reverse SSH"
+
+msgid "Shutdown sent"
+msgstr "Apagado enviado"
+
+msgid "Transfert Files"
+msgstr "Transferencia de archivos"
+
+msgid "Update"
+msgstr "Actualización"
+
+msgid "WOL"
+msgstr "WOL"
+
+msgid "WOL sent"
+msgstr "WOL enviado"
+
+#: logview/*.php (DataTables)
+msgid "Search:"
+msgstr "Buscar:"
+
+msgid "Show _MENU_ entries"
+msgstr "Mostrar _MENU_ entradas"
+
+msgid "Showing _START_ to _END_ of _TOTAL_ entries"
+msgstr "Mostrando _START_ a _END_ de _TOTAL_ entradas"
+
+msgid "No entries"
+msgstr "Sin entradas"
+
+msgid "filtered from _MAX_ total entries"
+msgstr "filtrado de _MAX_ entradas en total"
+
+msgid "No matching records found"
+msgstr "No se encontraron resultados"
+
+msgid "No data available"
+msgstr "No hay datos disponibles"
+
+msgid "First"
+msgstr "Primero"
+
+msgid "Last"
+msgstr "Último"
+
+msgid "Copy"
+msgstr "Copiar"
+
+msgid "Export CSV"
+msgstr "Exportar CSV"
+
+msgid "Export Excel"
+msgstr "Exportar Excel"
+
+msgid "Print"
+msgstr "Imprimir"
 

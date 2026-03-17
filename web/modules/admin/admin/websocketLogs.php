@@ -1,5 +1,5 @@
 <?php
-/* /usr/share/mmc/modules/admin/admin/websocket_logs.php */
+/* /usr/share/mmc/modules/admin/admin/websocketLogs.php */
 require("graph/navbar.inc.php");
 require("modules/admin/admin/localSidebar.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
@@ -77,8 +77,9 @@ foreach ($wsLogs as $server => $logs) {
   $wsPaths[$server] = "/wsl-" . $server . "/";
 }
 ?>
-<link rel="stylesheet" href="/mmc/modules/admin/graph/admin/webSocket_logs.css" />
-<script src="/mmc/modules/admin/graph/admin/js/webSocket_logs.js" defer></script>
+<link rel="stylesheet" href="/mmc/modules/admin/graph/css/websocket-logs.css" />
+<script src="/mmc/jsframework/websocket-client.js" defer></script>
+<script src="/mmc/modules/admin/graph/js/websocket-logs.js" defer></script>
 
 <section id="settingsPanel">
   <div class="form-group">

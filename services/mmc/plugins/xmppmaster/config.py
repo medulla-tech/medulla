@@ -77,7 +77,7 @@ class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
         # This will be used to configure the machine table from GLPI
         # the reg_key_ to show are defined  reg_key_1 reg_key_2
         # regarding the reg_key_1 et reg_key_2 defined in the inventory section
-        self.summary = ["cn", "description", "os", "type", "user", "entity"]
+        self.summary = ["cn", "description", "os", "user", "entity"]
         if self.has_option("computer_list", "summary"):
             self.summary = self.get("computer_list", "summary").split(" ")
 

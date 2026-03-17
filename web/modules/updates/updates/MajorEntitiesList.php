@@ -11,22 +11,9 @@ require_once("modules/xmppmaster/includes/html.inc.php");
 global $maxperpage;
 
 
-$p = new PageGenerator(_T("Entity Compliance", "updates"));
-$p->setSideMenu($sidemenu);
-$p->display();
-/*
-$refresh = new RefreshButton();
-print "<br/>";
-$refresh->display();
-
-$ajax = new AjaxFilter(urlStrRedirect("updates/updates/ajaxMajorEntitiesList"), "container", array('source' => 'xmppmaster'), 'formRunning');
-
-$ajax->setRefresh($refresh->refreshtime());
-$ajax->display();
-$ajax->displayDivToUpdate();*/
-
 $p = new TabbedPageGenerator();
-//$p->setSideMenu($sidemenu);
+$p->setTitle(_T("OS Upgrades", "updates"));
+$p->setSideMenu($sidemenu);
 $p->addTab("tabwin", _T("Os Windows", "updates"), "",
            "modules/updates/updates/major/osWindows.php", array());
 

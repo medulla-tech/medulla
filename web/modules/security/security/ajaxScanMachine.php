@@ -26,15 +26,22 @@ $id_glpi = isset($_GET['id_glpi']) ? intval($_GET['id_glpi']) : (isset($_POST['i
 $hostname = isset($_GET['hostname']) ? $_GET['hostname'] : (isset($_POST['hostname']) ? $_POST['hostname'] : '');
 
 if (isset($_POST['bconfirm'])) {
-    // Start the scan for this machine
-    $result = xmlrpc_scan_machine($id_glpi);
+    // Check if a global scan is running before starting
+    $summary = xmlrpc_get_dashboard_summary('');
+    if (isset($summary['last_scan']['status']) && $summary['last_scan']['status'] === 'running') {
+        new NotifyWidgetWarning(_T("A global scan is already in progress. Please wait for it to finish.", "security"));
+        header("Location: " . urlStrRedirect("security/security/machines"));
+        exit;
+    }
 
-    if ($result && isset($result['success']) && $result['success']) {
-        $vulns = isset($result['vulnerabilities_found']) ? $result['vulnerabilities_found'] : 0;
-        new NotifyWidgetSuccess(sprintf(_T("Scan completed for %s. %d vulnerabilities found.", "security"), htmlspecialchars($hostname), $vulns));
+    // Start the scan for this machine (async)
+    $scan_id = xmlrpc_scan_machine($id_glpi);
+
+    if ($scan_id) {
+        $msg = sprintf(_T("CVE scan started for '%s' (ID: %s). The scan runs in background.", "security"), htmlspecialchars($hostname), $scan_id);
+        new NotifyWidgetSuccess($msg);
     } else {
-        $error = isset($result['error']) ? $result['error'] : _T("Unknown error", "security");
-        new NotifyWidgetFailure(sprintf(_T("Failed to scan %s: %s", "security"), htmlspecialchars($hostname), htmlspecialchars($error)));
+        new NotifyWidgetFailure(sprintf(_T("Failed to start scan for %s.", "security"), htmlspecialchars($hostname)));
     }
 
     header("Location: " . urlStrRedirect("security/security/machines"));

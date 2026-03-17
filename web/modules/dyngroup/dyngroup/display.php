@@ -25,32 +25,6 @@
  */
 
 ?><style>
-    /* Style of the action bar */
-    .flex-toolbar {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        margin-bottom: 1em;
-    }
-
-    .flex-toolbar .filters,
-    .flex-toolbar .actions {
-        display: flex;
-        gap: 10px;
-        align-items: center;
-    }
-
-    .flex-toolbar .filters label {
-        display: flex;
-        align-items: center;
-        gap: 4px;
-        font-weight: normal;
-    }
-
-    .flex-toolbar .filters input[type="radio"] {
-        margin: 0;
-    }
     #loaderLocation {
         display: flex;
         align-items: center;
@@ -94,19 +68,7 @@ if (!$gid) {
 
     if ($group->type == 0) {
         $paramArray = ['id' => $gid, 'gid' => $gid, 'groupname' => $group->getName(), 'type' => $group->type];
-        echo '<div class="flex-toolbar">';
-
-        if (in_array("medulla_server", $_SESSION["modulesList"])) {
-            echo '<div class="filters">';
-            echo '<label><input type="radio" name="namepresence" value="all_computer"' . ($computerpresence == "all_computer" ? " checked" : "") . '> ' . _T('All computers', 'base') . '</label>';
-            echo '<label><input type="radio" name="namepresence" value="presence"' . ($computerpresence == "presence" ? " checked" : "") . '> ' . _T('Online computers', 'base') . '</label>';
-            echo '<label><input type="radio" name="namepresence" value="no_presence"' . ($computerpresence == "no_presence" ? " checked" : "") . '> ' . _T('Offline computers', 'base') . '</label>';
-            echo '</div>';
-        }
-
-        echo '<div class="actions">';
         display_group_actions($group, $paramArray);
-        echo '</div></div>';
 
 ?>
 <?php }
@@ -170,28 +132,29 @@ function display_group_actions($group, $paramArray)
     echo "</ul>";
 }
 ?>
-<script type="text/javascript">
-    function getQuerystringDef(key, default_) {
-        if (default_ == null) default_ = "";
-        key = key.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-        var regex = new RegExp("[\\?&]" + key + "=([^&#]*)");
-        var qs = regex.exec(window.location.href);
-        return qs == null ? default_ : qs[1];
+<?php
+if (in_array("medulla_server", $_SESSION["modulesList"])) {
+    $presenceSelectHtml = '<span class="searchfield"><select id="computerpresence" class="searchfieldreal noborder">';
+    $presenceOptions = array(
+        'all_computer' => _T('All computers', 'base'),
+        'presence' => _T('Online computers', 'base'),
+        'no_presence' => _T('Offline computers', 'base')
+    );
+    foreach ($presenceOptions as $value => $label) {
+        $selected = ($computerpresence == $value) ? 'selected' : '';
+        $presenceSelectHtml .= '<option value="' . $value . '" ' . $selected . '>' . $label . '</option>';
     }
+    $presenceSelectHtml .= '</select></span>';
+?>
+<script type="text/javascript">
+jQuery(function() {
+    jQuery('#searchBest').prepend(<?php echo json_encode($presenceSelectHtml); ?>);
 
-    jQuery('input[type=radio][name=namepresence]').change(function() {
-        var valselect = this.value;
-        var url = window.location.href;
-        if (!getQuerystringDef("computerpresence", false)) {
-            window.location = url + "&computerpresence=" + valselect;
-        } else {
-            var array_url = url.split("?");
-            var adress = array_url[0];
-            var parameters = array_url[1];
-            var parameterlist = parameters.split("&");
-            parameterlist.pop();
-            var parameterstring = parameterlist.join('&');
-            window.location = adress + "?" + parameterstring + "&computerpresence=" + valselect;
-        }
+    jQuery('#computerpresence').on('change', function() {
+        var url = new URL(window.location.href);
+        url.searchParams.set("computerpresence", this.value);
+        window.location.href = url.toString();
     });
+});
 </script>
+<?php } ?>

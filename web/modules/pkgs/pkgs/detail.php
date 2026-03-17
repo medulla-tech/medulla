@@ -187,23 +187,24 @@ $page->display();
 echo '<h2 id="toggle-context" onclick="_toggle(\'#context\')">'._T("Context", "pkgs").'</h2>';
 echo '<div id="context">';
 $context = new OptimizedListInfos([$json['info']['name']], _T("Package Name", "pkgs"));
+$context->forceFixed = true;
 $context->addExtraInfo([isset($json['info']['creator']) ? $json['info']['creator'] : ''], _T("Creator", "pkgs"));
 if(isset($json['info']['editor']) && $json['info']['editor'] != "") {
     $context->addExtraInfo([$json['info']['editor']], _T("Edited By", "pkgs"));
 }
-$context->addExtraInfo([isset($json['info']['creation_date']) ? $json['info']['creation_date'] : ''], _T("Creation Date", "pkgs"));
+$context->addExtraInfo([isset($json['info']['creation_date']) ? $json['info']['creation_date'] : ''], _T("Creation Date", "pkgs"), "150px");
 if(isset($json['info']['edition_date'])) {
-    $context->addExtraInfo([$json['info']['edition_date']], _T("Last Modification Date", "pkgs"));
+    $context->addExtraInfo([$json['info']['edition_date']], _T("Last Modification Date", "pkgs"), "150px");
 }
 if(isset($json['info']['localisation_server'])) {
     $context->addExtraInfo([$json['info']['localisation_server']], _T("Sharing Location", "pkgs"));
 }
 $context->addExtraInfo([$package['id']], _T("Package Uuid", "pkgs"));
 $context->addExtraInfo([$json['info']['description']], _T("Description", "pkgs"));
-$context->addExtraInfo([$json['info']['version']], _T("Version", "pkgs"));
-$context->addExtraInfo([$json['info']['metagenerator']], _T("Type", "pkgs"));
+$context->addExtraInfoCentered([$json['info']['version']], _T("Version", "pkgs"), "70px");
+$context->addExtraInfoCentered([$json['info']['metagenerator']], _T("Type", "pkgs"), "70px");
 if(isset($json['info']['licenses'])) {
-    $context->addExtraInfo([$json['info']['licenses']], _T("Licenses", "pkgs"));
+    $context->addExtraInfoCentered([$json['info']['licenses']], _T("Licenses", "pkgs"), "90px");
 }
 $context->setNavBar(new AjaxNavBar(0, ""));
 $context->display();
@@ -211,8 +212,8 @@ echo '</div>';
 // Used for both transfer table and files table
 $totalSize = (int)$package['size'];
 
-// Transfer method table
-echo '<h2 onclick="_toggle(\'#transfer\')">'._T("Transfer Method", "pkgs").'</h2>';
+// Transfer table
+echo '<h2 onclick="_toggle(\'#transfer\')">'._T("Transfer", "pkgs").'</h2>';
 echo '<div id="transfer">';
 $transfer = new OptimizedListInfos([$json['info']['methodetransfert']], _T("Transfer method", "pkgs"));
 $transfer->addExtraInfo([prettyOctetDisplay($totalSize)], _T("Size", "pkgs"));
@@ -230,38 +231,33 @@ echo '</div>';
 // Files table
 $filesInfos = xmlrpc_get_files_infos($package['id']);
 $fileViewerAction = new ActionPopupItem(_T("View File Content", "pkgs"), "preview", "display", "pkgs", "pkgs");
+$emptyAction = new EmptyActionItem();
 
-// Using manual table because we don't want pagination
 echo '<h2 onclick="_toggle(\'#files\')">'._T("Files", "pkgs").' - ('._T("Total", "pkgs").': '.prettyOctetDisplay($totalSize).')</h2>';
 echo '<div id="files">';
-echo '<table class="listinfos pkg-files-table" cellspacing="0" cellpadding="5" border="1">';
-echo '<thead>';
-echo '<tr>';
-echo '<th>'._T("File", "pkgs").'</th>';
-echo '<th>'._T("Size", "pkgs").'</th>';
-echo '<th>'._T("Ratio Size/Total", "pkgs").'</th>';
-echo '<th>'._T("Mime Type", "pkgs").'</th>';
-echo '<th>'._T("Action", "pkgs").'</th>';
-echo '</tr>';
-echo '</thead>';
-echo '<tbody>';
+$fileNames = [];
+$fileSizes = [];
+$fileRatios = [];
+$fileMimes = [];
+$fileParams = [];
+$fileViewActions = [];
 foreach($filesInfos['files'] as $id => $file) {
-    echo '<tr class="alternate">';
-    echo '<td>'.$file['name'].'</td>';
-    echo '<td>'.prettyOctetDisplay((int)$file['size']).'</td>';
-    echo '<td>'.round(((int)$file['size'] / $totalSize) * 100, 2).'%</td>';
-    echo '<td>'.$file["mime"][0].'</td>';
-    echo '<td class="action">';
-    if(preg_match("#text/(.*)#i", $file['mime'][0])) {
-        echo '<ul class="action">';
-        $fileViewerAction->display("", ["uuid" => $_GET['packageUuid'], "name" => $file["name"]]);
-        echo '</ul>';
-    }
-    echo '</td>';
-    echo '</tr>';
+    $fileNames[] = $file['name'];
+    $fileSizes[] = prettyOctetDisplay((int)$file['size']);
+    $fileRatios[] = round(((int)$file['size'] / $totalSize) * 100, 2).'%';
+    $fileMimes[] = $file["mime"][0];
+    $fileParams[] = ["uuid" => $_GET['packageUuid'], "name" => $file["name"]];
+    $fileViewActions[] = preg_match("#text/(.*)#i", $file['mime'][0]) ? $fileViewerAction : $emptyAction;
 }
-echo '</tbody>';
-echo '</table>';
+$filesTable = new OptimizedListInfos($fileNames, _T("File", "pkgs"), "", "250px");
+$filesTable->addExtraInfoCentered($fileSizes, _T("Size", "pkgs"), "120px");
+$filesTable->addExtraInfoCentered($fileRatios, _T("Ratio Size/Total", "pkgs"), "120px");
+$filesTable->addExtraInfoCentered($fileMimes, _T("Mime Type", "pkgs"), "150px");
+$filesTable->setParamInfo($fileParams);
+$filesTable->addActionItem($fileViewActions);
+$filesTable->disableFirstColumnActionLink();
+$filesTable->setNavBar(new AjaxNavBar(0, ""));
+$filesTable->display();
 echo '</div>';
 
 // Dependencies table
@@ -282,33 +278,24 @@ foreach($allPackagesList as $pkg) {
 }
 
 echo '<h2 onclick="_toggle(\'#dependencies\')">'._T("Dependencies", "pkgs").'</h2>';
-
 echo '<div id="dependencies">';
-// Using manual table because we don't want pagination
-echo '<table class="listinfos" cellspacing="0" cellpadding="5" border="1">';
-echo '<thead>';
-echo '<tr>';
-echo '<th>'._T("Package", "pkgs").'</th>';
-echo '<th>'._T("Uuid", "pkgs").'</th>';
-echo '<th>'._T("Action", "pkgs").'</th>';
-echo '</tr>';
-echo '</thead>';
+$depNames = [];
+$depUuids = [];
+$depParams = [];
+$depDetailActions = [];
 foreach($json['info']['Dependency'] as $dep) {
-    echo '<tr class="alternate">';
-    // To ensure we have the name we use the global list
-    echo '<td>'.$allPkgNames[$dep].'</td>';
-    echo '<td>'.$dep.'</td>';
-
-    echo '<td class="action">';
-    echo '<ul class="action">';
-    if(isset($allDependencies[$dep])) {
-        echo $detailAction->display("", ["packageUuid" => $dep]);
-    }
-    echo '</ul>';
-    echo '</td>';
-    echo '</tr>';
+    $depNames[] = $allPkgNames[$dep];
+    $depUuids[] = $dep;
+    $depParams[] = ["packageUuid" => $dep];
+    $depDetailActions[] = isset($allDependencies[$dep]) ? $detailAction : $emptyAction;
 }
-echo '</table>';
+$depsTable = new OptimizedListInfos($depNames, _T("Package", "pkgs"), "", "250px");
+$depsTable->addExtraInfoCentered($depUuids, _T("Uuid", "pkgs"), "300px");
+$depsTable->setParamInfo($depParams);
+$depsTable->addActionItem($depDetailActions);
+$depsTable->disableFirstColumnActionLink();
+$depsTable->setNavBar(new AjaxNavBar(0, ""));
+$depsTable->display();
 echo '</div>';
 $tabsnames = "";
 $tabscontents = "";

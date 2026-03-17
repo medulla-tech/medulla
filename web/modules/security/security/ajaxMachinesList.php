@@ -36,6 +36,10 @@ $policies = xmlrpc_get_policies();
 $minSeverity = $policies['display']['min_severity'] ?? 'None';
 $showSeverity = SeverityHelper::getVisibility($minSeverity);
 
+// Check if a global scan is running
+$summary = xmlrpc_get_dashboard_summary($location);
+$globalScanRunning = isset($summary['last_scan']['status']) && $summary['last_scan']['status'] === 'running';
+
 // Get data from backend
 $result = xmlrpc_get_machines_summary($start, $maxperpage, $filter, $location);
 $data = $result['data'];
@@ -69,8 +73,12 @@ foreach ($data as $row) {
 
 // Actions
 $detailAction = new ActionItem(_T("View CVEs", "security"), "machineDetail", "display", "", "security", "security");
-$scanAction = new ActionPopupItem(_T("Scan Machine", "security"), "ajaxScanMachine", "scan", "", "security", "security");
-$scanAction->setWidth(500);
+if ($globalScanRunning) {
+    $scanAction = new EmptyActionItem1(_T("Scan unavailable: a global scan is in progress", "security"), "ajaxScanMachine", "scang");
+} else {
+    $scanAction = new ActionPopupItem(_T("Scan Machine", "security"), "ajaxScanMachine", "scan", "", "security", "security");
+    $scanAction->setWidth(500);
+}
 $excludeAction = new ActionPopupItem(_T("Exclude from reports", "security"), "ajaxAddExclusion", "delete", "", "security", "security");
 $excludeAction->setWidth(450);
 
@@ -78,12 +86,12 @@ $excludeAction->setWidth(450);
 if ($count > 0) {
     $n = new OptimizedListInfos($hostnames, _T("Machine", "security"));
     $n->disableFirstColumnActionLink();
-    $n->addExtraInfo($riskScores, _T("Risk Score", "security"));
-    if ($showSeverity['critical']) $n->addExtraInfo($criticalCounts, _T("Critical", "security"));
-    if ($showSeverity['high']) $n->addExtraInfo($highCounts, _T("High", "security"));
-    if ($showSeverity['medium']) $n->addExtraInfo($mediumCounts, _T("Medium", "security"));
-    if ($showSeverity['low']) $n->addExtraInfo($lowCounts, _T("Low", "security"));
-    $n->addExtraInfo($totalCounts, _T("Total", "security"));
+    $n->addExtraInfoCentered($riskScores, _T("Risk Score", "security"));
+    if ($showSeverity['critical']) $n->addExtraInfoCentered($criticalCounts, _T("Critical", "security"));
+    if ($showSeverity['high']) $n->addExtraInfoCentered($highCounts, _T("High", "security"));
+    if ($showSeverity['medium']) $n->addExtraInfoCentered($mediumCounts, _T("Medium", "security"));
+    if ($showSeverity['low']) $n->addExtraInfoCentered($lowCounts, _T("Low", "security"));
+    $n->addExtraInfoCentered($totalCounts, _T("Total", "security"));
     $n->setItemCount($count);
     $n->setNavBar(new AjaxNavBar($count, $filter));
     $n->setParamInfo($params);

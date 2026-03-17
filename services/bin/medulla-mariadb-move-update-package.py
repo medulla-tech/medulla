@@ -160,7 +160,28 @@ class synch_packages:
 
     def del_package_pkgs(self):
         """
-        supprime completement les fichiers du package de la base
+        Supprime l'enregistrement d'un package dans la base de données `pkgs`.
+
+        Cette fonction exécute une requête SQL DELETE dans la table
+        `pkgs.packages` en utilisant l'identifiant unique du package
+        (`uidpackage`). Si le package existe, il est supprimé de la base.
+
+        Étapes :
+            1. Construction de la requête SQL DELETE.
+            2. Exécution de la requête sur la base de données.
+            3. Validation de la transaction (commit).
+            4. Journalisation du résultat de l'opération.
+
+        Attributs utilisés :
+            self.param["uidpackage"] : identifiant unique du package.
+            self.db                  : connexion active à la base de données.
+
+        Effets de bord :
+            - Suppression d'une entrée dans la table `pkgs.packages`.
+            - Écriture dans les logs (debug / error).
+
+        Gestion des erreurs :
+            Toute exception est capturée et enregistrée dans les logs.
         """
         try:
             sql = (
@@ -186,6 +207,32 @@ class synch_packages:
             )
 
     def verify_packages_install(self):
+        """
+        Vérifie que l'installation du package est correcte.
+
+        Cette fonction valide deux éléments :
+            1. La présence des fichiers du package dans le répertoire partagé.
+            2. L'enregistrement du package dans la base de données `pkgs`.
+
+        Critères de validation :
+            - Le répertoire du package existe dans `path_in_partage`.
+            - Le répertoire contient au moins trois fichiers
+            (généralement le fichier téléchargé et les fichiers JSON).
+            - Le package est présent dans la base via `check_in_base()`.
+
+        Retour :
+            bool
+                True  : le package est correctement installé.
+                False : le package est absent ou incomplet.
+
+        Attributs utilisés :
+            self.param["uidpackage"] : identifiant unique du package.
+            self.path_in_partage     : chemin vers le répertoire partagé du package.
+
+        Effets de bord :
+            - Écriture d'informations dans les logs pour le suivi du statut
+            de l'installation.
+        """
         logger.debug(f"verify packages install {self.path_in_partage}")
         if os.path.isdir(self.path_in_partage):
             ff = os.listdir(self.path_in_partage)
@@ -213,6 +260,32 @@ class synch_packages:
         return True
 
     def verify_packages_uninstall(self):
+        """
+        Vérifie que la désinstallation d'un package est complète.
+
+        La vérification porte sur deux points :
+            1. Les fichiers du package ne doivent plus exister sur le système
+            de fichiers (répertoire supprimé).
+            2. L'entrée correspondante ne doit plus exister dans la base
+            de données `pkgs`.
+
+        Étapes :
+            - Vérification de l'absence du répertoire du package.
+            - Vérification que le package n'est plus présent en base
+            via `check_in_base()`.
+
+        Retour :
+            bool
+                True  : la désinstallation est correcte et complète.
+                False : des fichiers ou une entrée en base existent encore.
+
+        Attributs utilisés :
+            self.param["uidpackage"] : identifiant unique du package.
+            self.path_in_base        : chemin du répertoire local du package.
+
+        Effets de bord :
+            - Écriture dans les logs pour indiquer l'état de la désinstallation.
+        """
         logger.debug(f"verify packages uninstall {self.path_in_partage}")
         if os.path.isdir(self.path_in_base):
             logger.error(f'the {self.param["uidpackage"]} package files still exist')
@@ -245,50 +318,140 @@ class synch_packages:
         return [f for f in os.listdir(self.dirpartageupdate) if uuid_validate(f)]
 
     def search_file_update(self):
+        """
+        Recherche l'URL de téléchargement (payloadfiles) la plus pertinente
+        pour une mise à jour Windows.
+
+        Étapes :
+        1. Recherche la mise à jour correspondant à l'UID du package.
+        2. Si trouvée, recherche les payloads associés via le champ `supersededby`.
+        3. Si plusieurs payloads existent, sélectionne celui ayant le numéro KB
+        le plus élevé (donc le plus récent) extrait depuis l'URL `payloadfiles`.
+
+        Retourne :
+            dict contenant les informations de la mise à jour et du payload trouvé.
+            Si rien n'est trouvé, retourne un dictionnaire vide.
+        """
+
+        # dictionnaire contenant les informations finales
         self.update_file_windows = {}
+
+        # -------------------------------------------------------------
+        # 1. Recherche des informations de base de la mise à jour
+        # -------------------------------------------------------------
         sql = """SELECT
-                    updateid, kb, revisionid, title, description
+                    updateid,
+                    kb,
+                    revisionid,
+                    title,
+                    description
                 FROM
                     xmppmaster.%s
                 WHERE
-                    updateid = '%s' limit 1;""" % (
+                    updateid = '%s'
+                LIMIT 1;""" % (
             self.param["nametable"],
             self.param["uidpackage"],
         )
+
         logger.debug(f"sql {sql}")
+
         cursor = self.db.cursor()
-        record = cursor.execute(sql)
-        for i in cursor.fetchall():
-            self.update_file_windows["updateid"] = i[0]
-            self.update_file_windows["kb"] = i[1]
-            self.update_file_windows["revisionid"] = i[2]
-            self.update_file_windows["title"] = i[3]
-            self.update_file_windows["description"] = i[4]
+        cursor.execute(sql)
+
+        for row in cursor.fetchall():
+            self.update_file_windows["updateid"] = row[0]
+            self.update_file_windows["kb"] = row[1]
+            self.update_file_windows["revisionid"] = row[2]
+            self.update_file_windows["title"] = row[3]
+            self.update_file_windows["description"] = row[4]
+
+        # -------------------------------------------------------------
+        # 2. Recherche du payload associé
+        # -------------------------------------------------------------
+        # On sélectionne le payload le plus récent :
+        # - extraction du numéro KB depuis l'URL payloadfiles
+        # - tri par numéro KB décroissant
+        # - LIMIT 1 pour récupérer le plus récent
+        # -------------------------------------------------------------
         if self.update_file_windows:
+
             sql = """SELECT
-                    updateid, payloadfiles, supersededby,creationdate,title_short
-                FROM
-                    xmppmaster.%s
-                WHERE
-                    payloadfiles NOT IN ('')
-                        AND supersededby LIKE "%s" limit 1;""" % (
+                        updateid,
+                        payloadfiles,
+                        supersededby,
+                        creationdate,
+                        title_short
+                    FROM
+                        xmppmaster.%s
+                    WHERE
+                        payloadfiles <> ''
+                        AND supersededby LIKE "%s"
+                    ORDER BY
+                        CAST(
+                            REPLACE(
+                                REGEXP_SUBSTR(payloadfiles, 'kb[0-9]+'),
+                                'kb',
+                                ''
+                            ) AS UNSIGNED
+                        ) DESC
+                    LIMIT 1;""" % (
                 self.param["nametable"],
                 self.update_file_windows["revisionid"],
             )
+
             logger.debug(f"sql {sql}")
-            record = cursor.execute(sql)
-            for i in cursor.fetchall():
-                self.update_file_windows["updateid_payloadfiles"] = i[0]
-                self.update_file_windows["payloadfiles"] = i[1]
-                self.update_file_windows["supersededby"] = i[2]
-                self.update_file_windows["creationdate"] = i[3]
-                self.update_file_windows["title_short"] = i[4]
-            logger.debug(f"update_file_windows complet {self.update_file_windows} ")
+
+            cursor.execute(sql)
+
+            for row in cursor.fetchall():
+                self.update_file_windows["updateid_payloadfiles"] = row[0]
+                self.update_file_windows["payloadfiles"] = row[1]
+                self.update_file_windows["supersededby"] = row[2]
+                self.update_file_windows["creationdate"] = row[3]
+                self.update_file_windows["title_short"] = row[4]
+
+            logger.debug(
+                f"update_file_windows complet {self.update_file_windows}"
+            )
+
         return self.update_file_windows
 
     def create_package_file(self):
         """
-        download file from url urlpath in directory
+        Télécharge le fichier d'une mise à jour Windows et construit le package associé.
+
+        Fonctionnement :
+        1. Vérifie si le package existe déjà dans les répertoires locaux (`path_in_base`
+        ou `path_in_partage`). Si plusieurs fichiers sont déjà présents (>=3),
+        la création du package est ignorée.
+        2. Recherche les informations de la mise à jour via `search_file_update()`,
+        notamment l'URL `payloadfiles` du fichier à télécharger.
+        3. Si une URL valide est trouvée :
+        - création du répertoire du package si nécessaire
+        - téléchargement du fichier depuis Windows Update
+        - tentative avec proxy si le téléchargement direct échoue
+        4. Enregistre le fichier téléchargé dans le répertoire du package.
+        5. Génère les fichiers de configuration nécessaires au déploiement :
+        - `conf.json`
+        - `xmppdeploy.json`
+
+        Retour :
+            bool
+                True  : package existant ou création réussie
+                False : aucune URL de mise à jour trouvée ou erreur bloquante
+
+        Attributs utilisés :
+            self.param["uidpackage"] : identifiant du package
+            self.path_in_base        : répertoire principal du package
+            self.path_in_partage     : répertoire partagé éventuel
+            self.update_file_windows : dictionnaire contenant les métadonnées
+                                    de la mise à jour (URL, KB, titre, etc.)
+
+        Effets de bord :
+            - Téléchargement d'un fichier CAB/MSU depuis Windows Update
+            - Création de fichiers dans le système de fichiers
+            - Génération de fichiers JSON de configuration pour le déploiement
         """
         if os.path.isdir(self.path_in_base):
             ff = os.listdir(self.path_in_base)
@@ -422,6 +585,41 @@ class synch_packages:
         kb,
         date_edition_windows_update,
     ):
+        """
+        Génère le fichier JSON `xmppdeploy.json` utilisé par Medulla/Pulse
+        pour déployer une mise à jour Windows.
+
+        Cette fonction construit dynamiquement la structure JSON décrivant
+        les métadonnées du package et la séquence d'exécution côté Windows.
+
+        Fonctionnement :
+            1. Détermine la commande d'installation selon le type du fichier :
+            - `.cab` : installation via DISM.
+            - outil MRT (`kb890830`) : copie dans System32.
+            - autres fichiers : exécution classique avec `Start /wait`.
+            2. Encode la commande en Base64 pour l'intégrer dans le script.
+            3. Génère le template JSON contenant :
+            - les métadonnées du package
+            - la séquence d'exécution
+            - les actions de gestion du reboot
+            - les paramètres de déploiement.
+
+        Paramètres :
+            name (str)  : nom du package.
+            id (str)    : identifiant unique du package (UUID).
+            description (str) : description du package.
+            typename (str) : type du fichier téléchargé (cab, msu, exe…).
+            namefile (str) : nom du fichier à exécuter.
+            urlpath (str) : URL d'origine du fichier Windows Update.
+            kb (str) : numéro KB de la mise à jour.
+            date_edition_windows_update (str) : date de publication de la mise à jour.
+
+        Retour :
+            str : contenu JSON complet du fichier `xmppdeploy.json`.
+
+        Effets de bord :
+            Aucun. La fonction retourne uniquement une chaîne JSON.
+        """
         now = datetime.now()
         dt_string = now.strftime("%Y-%m-%d %H:%M:%S")
         if typename == "cab":
@@ -474,10 +672,10 @@ class synch_packages:
         "win": {
             "sequence": [
                 {
-                    "action": "action_section_update", 
-                    "step": 0, 
+                    "action": "action_section_update",
+                    "step": 0,
                     "actionlabel": "upd_70a70cc9"
-                }, 
+                },
                 {
                     "typescript": "Batch",
                     "script": "%s",
@@ -537,7 +735,7 @@ class synch_packages:
                     "02d57e96": 1,
                     "wait_cc66c870": 2,
                     "REBOOTREQUIRED": 3,
-                    "notif_ee9943f2": 4,    
+                    "notif_ee9943f2": 4,
                     "END_SUCCESS": 5,
                     "END_ERROR": 6
                 }
@@ -562,6 +760,32 @@ class synch_packages:
         return template
 
     def id_partage(self):
+        """
+        Récupère ou crée l'identifiant du partage utilisé pour les packages.
+
+        Cette fonction recherche dans la table `pkgs.pkgs_shares`
+        le partage correspondant au nom défini dans `self.param["partage"]`.
+
+        Fonctionnement :
+            1. Recherche du partage existant dans la base.
+            2. Si trouvé, retourne son identifiant.
+            3. Sinon, crée un nouveau partage avec les paramètres par défaut.
+            4. Enregistre le nouvel identifiant dans `self.partage_id`.
+
+        Attributs utilisés :
+            self.param["partage"] : nom du partage.
+            self.dirpartageupdate : chemin du partage sur le serveur.
+            self.db               : connexion à la base de données.
+
+        Retour :
+            int | None
+                ID du partage si trouvé ou créé,
+                None en cas d'erreur.
+
+        Effets de bord :
+            - Peut créer une entrée dans `pkgs.pkgs_shares`.
+            - Met à jour `self.partage_id`.
+        """
         self.partage_id = None
         sql = (
             """SELECT
@@ -613,6 +837,23 @@ class synch_packages:
         return None
 
     def check_in_base(self):
+        """
+        Vérifie si un package est déjà enregistré dans la base de données.
+
+        La fonction recherche l'identifiant unique (`uuid`) du package
+        dans la table `pkgs.packages`.
+
+        Attributs utilisés :
+            self.param["uidpackage"] : identifiant unique du package.
+
+        Retour :
+            bool
+                True  : le package existe déjà en base.
+                False : le package n'est pas présent.
+
+        Effets de bord :
+            - Écriture d'informations dans les logs pour faciliter le debug.
+        """
         sql = (
             """SELECT
                 id
@@ -632,6 +873,45 @@ class synch_packages:
         return False
 
     def install_package(self):
+        """
+        Installe un package dans la base de données `pkgs`.
+
+        Cette fonction lit le fichier `conf.json` du package généré
+        et insère ses informations dans la table `pkgs.packages`.
+
+        Fonctionnement :
+            1. Vérifie si le package existe déjà via `check_in_base()`.
+            2. Récupère ou crée l'identifiant du partage avec `id_partage()`.
+            3. Détermine le répertoire contenant le package.
+            4. Charge et valide le fichier `conf.json`.
+            5. Complète les champs manquants (dates, metagenerator…).
+            6. Calcule la taille du dossier du package.
+            7. Construit la structure de données (`fiche`) contenant
+            toutes les informations nécessaires à l'installation.
+            8. Insère les données dans la table `pkgs.packages`.
+
+        Attributs utilisés :
+            self.param["uidpackage"] : identifiant unique du package.
+            self.param["partage"]    : nom du partage.
+            self.path_in_base        : répertoire local du package.
+            self.path_in_partage     : répertoire partagé du package.
+            self.db                  : connexion à la base de données.
+
+        Retour :
+            bool | None
+                False en cas d'erreur critique (ex : JSON invalide),
+                sinon la fonction termine sans retour explicite.
+
+        Effets de bord :
+            - Lecture de fichiers JSON du package.
+            - Calcul de la taille du dossier.
+            - Insertion d'une entrée dans la table `pkgs.packages`.
+            - Écriture dans les logs pour suivi et diagnostic.
+
+        Gestion des erreurs :
+            Toutes les exceptions sont capturées et enregistrées
+            dans les logs avec la trace complète.
+        """
         try:
             # search id_partage winupdates
             if self.check_in_base():
@@ -825,6 +1105,28 @@ class synch_packages:
             logger.error("\n%s" % (errorstr))
 
     def generate_conf_json(self, name, id, description, urlpath):
+        """
+        Génère le fichier JSON `conf.json` pour un package Windows.
+
+        Cette fonction crée un template JSON minimal contenant :
+            - l'URL du fichier à télécharger (`urlpath`)
+            - les informations de localisation et de partage
+            - les métadonnées du package (nom, ID, description, dates)
+            - la configuration d'inventaire et des commandes
+            - les informations de version et de reboot
+
+        Paramètres :
+            name (str)        : nom du package
+            id (str)          : identifiant unique (UUID) du package
+            description (str) : description du package
+            urlpath (str)     : URL du fichier de mise à jour Windows
+
+        Retour :
+            str : contenu JSON complet sous forme de chaîne
+
+        Effets de bord :
+            Aucun, ne fait que retourner une chaîne JSON.
+        """
         now = datetime.now()
         dt_string = now.strftime("%Y-%m-%d %H:%M:%S")
         return """{
@@ -890,6 +1192,21 @@ class synch_packages:
 
 
 def simplecommand(cmd):
+    """
+    Exécute une commande système en shell et récupère la sortie sous forme de liste de lignes.
+
+    Paramètres :
+        cmd (str) : commande shell à exécuter
+
+    Retour :
+        dict : dictionnaire contenant
+            - "code"   : code de retour du processus (0 = succès)
+            - "result" : liste des lignes de sortie (stdout + stderr)
+
+    Effets de bord :
+        - Exécute la commande dans le shell.
+        - Les erreurs sont capturées dans `result` via stderr redirigé.
+    """
     p = subprocess.Popen(
         cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
     )
@@ -900,6 +1217,21 @@ def simplecommand(cmd):
 
 
 def simplecommandstr(cmd):
+    """
+    Exécute une commande système en shell et récupère la sortie sous forme de chaîne.
+
+    Paramètres :
+    cmd (str) : commande shell à exécuter
+
+    Retour :
+    dict : dictionnaire contenant
+        - "code"   : code de retour du processus (0 = succès)
+        - "result" : sortie complète combinée stdout + stderr sous forme de chaîne
+
+    Effets de bord :
+    - Exécute la commande dans le shell.
+    - Les erreurs sont incluses dans `result`.
+    """
     p = subprocess.Popen(
         cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
     )
@@ -910,6 +1242,22 @@ def simplecommandstr(cmd):
 
 
 def uuid_validate(uuid):
+    """
+    Vérifie si une chaîne donnée est un UUID valide au format standard.
+
+    Le format attendu est : xxxxxxxx-xxxx-Mxxx-Nxxx-xxxxxxxxxxxx
+    où M = version (0-5), N = variante (8,9,a,b)
+
+    Paramètres :
+    uuid (str) : chaîne à valider
+
+    Retour :
+    bool : True si la chaîne est un UUID valide, False sinon
+
+    Exemples :
+    uuid_validate("550e8400-e29b-41d4-a716-446655440000") -> True
+    uuid_validate("invalid-uuid") -> False
+    """
     if len(uuid) != 36:
         return False
     uuid_pattern = (

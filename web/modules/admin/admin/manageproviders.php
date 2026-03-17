@@ -25,7 +25,7 @@ require("graph/navbar.inc.php");
 require("modules/admin/admin/localSidebar.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 
-$p = new PageGenerator(_T("Manage Providers", 'admin'));
+$p = new PageGenerator(_T("OIDC Clients", 'admin'));
 $p->setSideMenu($sidemenu);
 $p->display();
 

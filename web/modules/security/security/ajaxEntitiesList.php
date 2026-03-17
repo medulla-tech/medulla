@@ -36,6 +36,10 @@ $policies = xmlrpc_get_policies();
 $minSeverity = $policies['display']['min_severity'] ?? 'None';
 $showSeverity = SeverityHelper::getVisibility($minSeverity);
 
+// Check if a global scan is running
+$summary = xmlrpc_get_dashboard_summary('');
+$globalScanRunning = isset($summary['last_scan']['status']) && $summary['last_scan']['status'] === 'running';
+
 // Get data from backend (filtered by user's accessible entities)
 $result = xmlrpc_get_entities_summary($start, $maxperpage, $filter, $userEntities);
 $data = $result['data'];
@@ -70,19 +74,23 @@ foreach ($data as $row) {
 
 // Actions - view machines in this entity
 $detailAction = new ActionItem(_T("View Machines", "security"), "machines", "display", "", "security", "security");
-$scanAction = new ActionPopupItem(_T("Scan this entity", "security"), "ajaxStartScanEntity", "scan", "", "security", "security");
+if ($globalScanRunning) {
+    $scanAction = new EmptyActionItem1(_T("Scan unavailable: a global scan is in progress", "security"), "ajaxStartScanEntity", "scang");
+} else {
+    $scanAction = new ActionPopupItem(_T("Scan this entity", "security"), "ajaxStartScanEntity", "scan", "", "security", "security");
+}
 
 // Display the list
 if ($count > 0) {
     $n = new OptimizedListInfos($entityNames, _T("Entity", "security"));
     $n->disableFirstColumnActionLink();
-    $n->addExtraInfo($machinesCounts, _T("Machines", "security"));
-    $n->addExtraInfo($maxScores, _T("Max CVSS", "security"));
-    if ($showSeverity['critical']) $n->addExtraInfo($criticalCounts, _T("Critical", "security"));
-    if ($showSeverity['high']) $n->addExtraInfo($highCounts, _T("High", "security"));
-    if ($showSeverity['medium']) $n->addExtraInfo($mediumCounts, _T("Medium", "security"));
-    if ($showSeverity['low']) $n->addExtraInfo($lowCounts, _T("Low", "security"));
-    $n->addExtraInfo($totalCounts, _T("Total CVEs", "security"));
+    $n->addExtraInfoCentered($machinesCounts, _T("Machines", "security"));
+    $n->addExtraInfoCentered($maxScores, _T("Max CVSS", "security"));
+    if ($showSeverity['critical']) $n->addExtraInfoCentered($criticalCounts, _T("Critical", "security"));
+    if ($showSeverity['high']) $n->addExtraInfoCentered($highCounts, _T("High", "security"));
+    if ($showSeverity['medium']) $n->addExtraInfoCentered($mediumCounts, _T("Medium", "security"));
+    if ($showSeverity['low']) $n->addExtraInfoCentered($lowCounts, _T("Low", "security"));
+    $n->addExtraInfoCentered($totalCounts, _T("Total CVEs", "security"));
     $n->setItemCount($count);
     $n->setNavBar(new AjaxNavBar($count, $filter));
     $n->setParamInfo($params);

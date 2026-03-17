@@ -97,13 +97,16 @@ foreach($relays['datas']['hostname'] as $key=>$array){
     'vnctype' => (in_array("guacamole", $_SESSION["supportModList"])) ? "guacamole" : ((web_def_use_no_vnc()==1) ? "novnc" : "appletjava")
   ];
 
-  $relays['datas']['hostname'][$raw] = '<span class="relay-clickable">'.$relays['datas']['hostname'][$raw].'</span>';
+  $tooltipData = '<table class="ttable">'
+    . '<tr><td><b>'._T("Description", "xmppmaster").'</b></td><td> : '.htmlspecialchars($relays['datas']['cluster_description'][$raw]).'</td></tr>'
+    . '<tr><td><b>'._T("Class Util", "xmppmaster").'</b></td><td> : '.htmlspecialchars($relays['datas']['classutil'][$raw]).'</td></tr>'
+    . '<tr><td><b>'._T("IP address", "xmppmaster").'</b></td><td> : '.htmlspecialchars($relays['datas']['ip_xmpp'][$raw]).'</td></tr>'
+    . '<tr><td><b>'._T("Mac address", "xmppmaster").'</b></td><td> : '.htmlspecialchars(formatMacAddress($relays['datas']['macaddress'][$raw])).'</td></tr>'
+    . '</table>';
+
+  $relays['datas']['hostname'][$raw] = '<span class="relay-clickable infomach" mydata="'.htmlentities($tooltipData).'">'.$relays['datas']['hostname'][$raw].'</span>';
   $relays['datas']['jid'][$raw] = '<span class="relay-clickable">'.$relays['datas']['jid'][$raw].'</span>';
   $relays['datas']['cluster_name'][$raw] = '<span class="relay-clickable">'.$relays['datas']['cluster_name'][$raw].'</span>';
-  $relays['datas']['cluster_description'][$raw] = '<span class="relay-clickable">'.$relays['datas']['cluster_description'][$raw].'</span>';
-  $relays['datas']['classutil'][$raw] = '<span class="relay-clickable">'.$relays['datas']['classutil'][$raw].'</span>';
-  $relays['datas']['macaddress'][$raw] = '<span class="relay-clickable">'.$relays['datas']['macaddress'][$raw].'</span>';
-  $relays['datas']['ip_xmpp'][$raw] = '<span class="relay-clickable">'.$relays['datas']['ip_xmpp'][$raw].'</span>';
 
   if ($relays['datas']['enabled'][$raw]){
     $configActions[] =$editremoteconfiguration;
@@ -149,21 +152,16 @@ foreach($relays['datas']['jid'] as $id_relay){
   }
 
 echo '<div id="switchresult"></div>';
-$n = new OptimizedListInfos( $relays['datas']['hostname'], _T("Relays Xmpp", "admin"));
+$n = new OptimizedListInfos( $relays['datas']['hostname'], _T("Relay name", "admin"));
 $n->setcssIds($ids);
 $n->setMainActionClasses($relays['datas']['enabled_css']);
 $n->disableFirstColumnActionLink();
 $n->addExtraInfo( $relays['datas']['jid'], _T("Jid", "xmppmaster"));
 $n->addExtraInfo( $relays['datas']['cluster_name'], _T("Cluster Name", "xmppmaster"));
-$n->addExtraInfo( $relays['datas']['cluster_description'], _T("Cluster Description", "xmppmaster"));
-$n->addExtraInfo( $relays['datas']['total_machines'], _T("Total Machines", "xmppmaster"));
-$n->addExtraInfo( $relays['datas']['uninventoried_online'], _T("Uninventoried Online", "xmppmaster"));
-$n->addExtraInfo( $relays['datas']['classutil'], _T("Class Util", "xmppmaster"));
-$n->addExtraInfo( $relays['datas']['macaddress'], _T("Mac Address", "xmppmaster"));
-$n->addExtraInfo( $relays['datas']['ip_xmpp'], _T("Xmpp IP", "xmppmaster"));
+$n->addExtraInfoCentered( $relays['datas']['total_machines'], _T("Total Machines", "xmppmaster"), "100px");
+$n->addExtraInfoCentered( $relays['datas']['uninventoried_online'], _T("Non-inventoried", "xmppmaster"), "120px");
 
 
-$n->setTableHeaderPadding(0);
 $n->setItemCount($relays['total']);
 $n->setNavBar(new AjaxNavBar($relays['total'], $filter, "updateSearchParamformRunning"));
 $n->addActionItemArray($packagesAction);
@@ -187,28 +185,37 @@ else{
   echo '<table class="listinfos" cellspacing="0" cellpadding="5" border="1">';
   echo '<thead>';
   echo '<tr>';
-  echo '<td>Relays Xmpp</td>';
-  echo '<td>Jid</td>';
-  echo '<td>Cluster Name</td>';
-  echo '<td>Cluster Description</td>';
-  echo '<td>Class Util</td>';
-  echo '<td>Mac Address</td>';
-  echo '<td>Xmpp Ip</td>';
+  echo '<td>'._T("Relay name", "admin").'</td>';
+  echo '<td>'._T("Jid", "xmppmaster").'</td>';
+  echo '<td>'._T("Cluster Name", "xmppmaster").'</td>';
+  echo '<td>'._T("Total Machines", "xmppmaster").'</td>';
+  echo '<td>'._T("Non-inventoried", "xmppmaster").'</td>';
   echo '</tr>';
   echo '</thead>';
   echo '</table>';
 }
 ?>
 
-<style>
-  .relay-clickable{
-    cursor: pointer;
-  }
-</style>
-
 <script>
-jQuery(".relay-clickable").on("click", function(){
-  jQuery("#paramformRunning").val(jQuery(this).text());
-  pushSearchformRunning();
+jQuery(function() {
+    jQuery(".infomach").tooltip({
+        position: {
+            my: "left top",
+            at: "left bottom+10",
+            collision: "flipfit"
+        },
+        items: "[mydata]",
+        content: function() {
+            var element = jQuery(this);
+            if (element.is("[mydata]")) {
+                return element.attr("mydata");
+            }
+        }
+    });
+
+    jQuery(".relay-clickable").on("click", function(){
+        jQuery("#paramformRunning").val(jQuery(this).text());
+        pushSearchformRunning();
+    });
 });
 </script>

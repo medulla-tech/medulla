@@ -31,14 +31,16 @@ require_once("modules/xmppmaster/includes/html.inc.php");
 require_once("modules/medulla_server/includes/utilities.php");
 
 
-$p = new PageGenerator(_T("My past tasks", 'xmppmaster'));
+$p = new PageGenerator(_T("My teams past tasks", 'xmppmaster'));
 $p->setSideMenu($sidemenu);
 $p->display();
 $refresh = new RefreshButton();
 $refresh->display();
+echo '<div class="ajax-section">';
 $ajax = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxstatusteamxmpp"), "container", array('login' => $_SESSION['login'], 'team'=>'1'), 'formRunning'  );
 $ajax->setRefresh($refresh->refreshtime());
 $ajax->display();
 $ajax->displayDivToUpdate();
+echo '</div>';
 
 ?>

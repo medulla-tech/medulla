@@ -26,26 +26,12 @@ require_once("modules/glpi/includes/xmlrpc.php");
 require_once("includes/UIComponents.php");
 ?>
 
-<style>
-   /* Style CSS pour l'alignement des éléments dans le tableau */
-    #container>form>table>thead td:first-child span {
-        display: block;
-        text-align: left;
-        padding-left: 0 !important;
-        margin-left: 0 !important;
-    }
-    #container>form>table>thead td:last-child span {
-        display: block;
-        text-align: right;
-        padding-right: 50px;
-    }
-</style>
 
 <?php
 $u = isset($_SESSION['glpi_user']) && is_array($_SESSION['glpi_user']) ? $_SESSION['glpi_user'] : [];
 
 if (empty($u)) {
-    echo '<div style="background:#fce4e4;color:#900;padding:10px;text-align:center">'
+    echo '<div class="alert alert-error">'
        . htmlspecialchars(_T("No GLPI session found. Please sign in again.", "admin"), ENT_QUOTES, 'UTF-8')
        . '</div>';
     return;
@@ -53,7 +39,6 @@ if (empty($u)) {
 
 global $conf;
 $maxperpage = isset($conf["global"]["maxperpage"]) ? (int)$conf["global"]["maxperpage"] : 10;
-$maxperpage = 1;
 
 $filter = isset($_GET["filter"]) ? htmlentities($_GET["filter"]) : "";
 $start  = isset($_GET['start']) ? (int)$_GET['start'] : 0;
@@ -147,7 +132,18 @@ if ($facilitylevel <= 1) {
     ]);
 
     $editAction = $addAction = $manageusersAction = $downloadAction = $deleteAction = $params = $checkboxes = [];
-    $data = $entitiesListseach['data'];
+    $allData = $entitiesListseach['data'];
+    $totalCount = isset($allData['id']) ? count($allData['id']) : 0;
+
+    // Client-side pagination (backend returns all results)
+    $data = [];
+    foreach ($allData as $key => $values) {
+        if (is_array($values)) {
+            $data[$key] = array_slice($values, $start, $maxperpage);
+        } else {
+            $data[$key] = $values;
+        }
+    }
 
     $count = isset($data['id']) ? count($data['id']) : 0;
 
@@ -201,7 +197,7 @@ if ($facilitylevel <= 1) {
         $manageusersAction[] = $action_manageusers;
         $downloadAction[]    = $action_download;
         $deleteAction[]      = new EmptyActionItem1(_("Unauthorized deletion"), "", "deleteg", "", "admin", "admin");
-        $checkboxes[]        = '';
+        $bulkBar->addEmpty();
 
         continue;
     }
@@ -214,7 +210,7 @@ if ($facilitylevel <= 1) {
             $manageusersAction[] = $action_manageusers;
             $downloadAction[]    = $action_download;
             $deleteAction[]      = $action_non_delete;
-            $checkboxes[]        = '';
+            $bulkBar->addEmpty();
         } else {
             // Non owner: Complete actions
             $editAction[]        = $action_edit;
@@ -222,7 +218,7 @@ if ($facilitylevel <= 1) {
             $manageusersAction[] = $action_manageusers;
             $downloadAction[]    = $action_download;
             $deleteAction[]      = $deleteToAdd;
-            $checkboxes[]        = BulkSelectBar::checkbox('entity-select', $entityIdCurrent, $entityName);
+            $bulkBar->addItem($entityIdCurrent, $entityName);
         }
     }
 
@@ -253,19 +249,19 @@ $displayArray = array_map(function ($s, $i) use ($processAll) {
 // Rendered list
 $n = new OptimizedListInfos($data['name'], _T("Name of Entity", "admin"));
 $n->addExtraInfo($displayArray, _T("Complete Name", "admin"));
-$n->addExtraInfo($data['nb_users'], _T("Users", "admin"));
-$n->addExtraInfo($data['nb_machines'], _T("Computers", "admin"));
+$n->addExtraInfoCentered($data['nb_users'], _T("Users", "admin"));
+$n->addExtraInfoCentered($data['nb_machines'], _T("Computers", "admin"));
 
-    $n->addExtraInfoRaw($checkboxes, $bulkBar->selectAllHeader(), "30px");
     $n->addActionItemArray($editAction);
     $n->addActionItemArray($addAction);
     $n->addActionItemArray($manageusersAction);
     $n->addActionItemArray($downloadAction);
     $n->addActionItemArray($deleteAction);
     $n->setParamInfo($params);
-    $n->start = $start;
-    $n->end   = $entitiesListseach['total_count'];
-    $n->setNavBar(new AjaxNavBar("10", $filter));
+    $n->setItemCount($totalCount);
+    $n->setNavBar(new AjaxNavBar($totalCount, $filter, "updateSearchParamformRunning"));
+    $n->start = 0;
+    $n->end   = $count;
     $n->disableFirstColumnActionLink();
     $n->display();
     $bulkBar->display();

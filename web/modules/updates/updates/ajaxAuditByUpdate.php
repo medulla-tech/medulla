@@ -22,21 +22,38 @@ $detailActions = [];
 $hostnames = [];
 foreach($datas as $key=>$deploy) {
     $titles[] = $deploy["title"];
-    $states[] = $deploy["state"];
+    $rawStatus = $deploy["state"];
+    if (preg_match('#success#i', $rawStatus)) {
+        $badgeClass = 'status-badge-success';
+    } elseif (preg_match('#^abort#i', $rawStatus)) {
+        $badgeClass = 'status-badge-abort';
+    } elseif (preg_match('#^error#i', $rawStatus)) {
+        $badgeClass = 'status-badge-error';
+    } elseif (preg_match('#pending#i', $rawStatus)) {
+        $badgeClass = 'status-badge-pending';
+    } elseif (preg_match('#start#i', $rawStatus)) {
+        $badgeClass = 'status-badge-start';
+    } else {
+        $badgeClass = 'status-badge-other';
+    }
+    $states[] = '<span class="status-badge ' . $badgeClass . '">' . htmlspecialchars($rawStatus) . '</span>';
     $startcmds[] = $deploy["startcmd"];
     $hostnames[] = $deploy["hostname"];
     $detailActions[] = $detailAction;
     $datas[$key]['hostname'] = $hostname;
 }
 
-$n = new OptimizedListInfos($titles, _T("Title", "xmppmaster"));
+$n = new OptimizedListInfos($titles, _T("Name", "updates"));
 $n->disableFirstColumnActionLink();
-$n->addExtraInfo($hostnames, _T("Machine", "updates"));
-$n->addExtraInfo($startcmds, _T("Started at", "updates"));
+$n->addExtraInfo($hostnames, _T("Machine", "updates"), "180px");
+$n->addExtraInfo($startcmds, _T("Started at", "updates"), "160px");
 
-$n->addExtraInfo($states, _T("Status", "xmppmaster"));
+$n->addExtraInfoRaw($states, _T("Status", "xmppmaster"), "180px");
 $n->addActionItemArray($detailActions);
 $n->setItemCount($count);
 $n->setNavBar(new AjaxNavBar($count, $filter));
 $n->setParamInfo($datas);
+$n->setEmptyState(_T("No deployment history", "updates"), _T("No update deployments have been recorded yet.", "updates"));
+echo '<div class="audit-updates-table">';
 $n->display();
+echo '</div>';

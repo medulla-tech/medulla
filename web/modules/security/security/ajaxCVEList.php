@@ -56,11 +56,8 @@ foreach ($data as $row) {
     $cvss = floatval($row['cvss_score']);
     $cvssScores[] = number_format($cvss, 1);
 
-    // Description (truncated)
+    // Description
     $desc = $row['description'] ? $row['description'] : '';
-    if (strlen($desc) > 80) {
-        $desc = substr($desc, 0, 80) . '...';
-    }
     $descriptions[] = htmlspecialchars($desc);
 
     // Machines affected
@@ -90,14 +87,14 @@ $excludeAction->setWidth(400);
 
 // Display the list
 if ($count > 0) {
-    $n = new OptimizedListInfos($cveIds, _T("CVE ID", "security"));
+    $n = new OptimizedListInfos($cveIds, _T("CVE ID", "security"), "", '150px');
     $n->disableFirstColumnActionLink();
     $n->setCssClasses($cssClasses);
-    $n->addExtraInfo($severities, _T("Severity", "security"));
-    $n->addExtraInfo($cvssScores, _T("CVSS", "security"));
-    $n->addExtraInfo($softwaresList, _T("Software", "security"));
-    $n->addExtraInfo($machinesCounts, _T("Machines", "security"));
+    $n->addExtraInfo($severities, _T("Severity", "security"), '100px');
+    $n->addExtraInfo($cvssScores, _T("CVSS", "security"), '80px');
+    $n->addExtraInfo($softwaresList, _T("Software", "security"), '200px');
     $n->addExtraInfo($descriptions, _T("Description", "security"));
+    $n->addExtraInfoCentered($machinesCounts, _T("Machines", "security"), '80px');
     $n->setItemCount($count);
     $n->setNavBar(new AjaxNavBar($count, $filter));
     $n->setParamInfo($params);

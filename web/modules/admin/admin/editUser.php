@@ -82,7 +82,7 @@ $u = (isset($_SESSION['glpi_user']) && is_array($_SESSION['glpi_user']))
     : [];
 
 if (empty($u)) {
-    echo '<div style="background:#fce4e4;color:#900;padding:10px;text-align:center">'
+    echo '<div class="alert alert-error">'
        . htmlspecialchars(_T("No GLPI session found. Please sign in again.", "admin"), ENT_QUOTES, 'UTF-8')
        . '</div>';
     return;

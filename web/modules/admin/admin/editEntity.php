@@ -24,27 +24,10 @@ require("localSidebar.php");
 require("graph/navbar.inc.php");
 require_once("modules/admin/includes/xmlrpc.php");
 ?>
-<style>
-    #Form {
-        margin-top: 80px;
-    }
-    #Form input[type="text"] {
-        width: 250px;
-    }
-    .btnPrimary {
-        margin-top: 30px;
-        margin-left: 20px;
-    }
-    .entity-path {
-        color: #666;
-        font-style: italic;
-        margin-bottom: 10px;
-    }
-</style>
 <?php
 $u = (isset($_SESSION['glpi_user']) && is_array($_SESSION['glpi_user'])) ? $_SESSION['glpi_user'] : [];
 if (empty($u)) {
-    echo '<div style="background:#fce4e4;color:#900;padding:10px;text-align:center">'
+    echo '<div class="alert alert-error">'
        . htmlspecialchars(_T("Your GLPI session has expired. Please sign in again to continue.", "admin"), ENT_QUOTES, 'UTF-8')
        . '</div>';
     return;
@@ -165,7 +148,6 @@ $buttonValue = ($mode === 'edit') ? _T("Save Changes", "admin") : _T("Create Ent
 
 $form = new ValidatingForm(['method' => 'POST']);
 $form->addValidateButtonWithValue($buttonName, $buttonValue);
-
 $form->push(new Table());
 
 $inputEntity = new InputTpl('newEntityName', '', $editName);

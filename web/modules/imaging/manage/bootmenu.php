@@ -25,6 +25,7 @@
  */
 
 $page = "ajaxBootmenu";
+$pageTitle = _T("Default boot menu", "imaging");
 include_once('location.php');
 
 ?>

@@ -5701,8 +5701,13 @@ class XmppMasterDatabase(DatabaseHelper):
                 x.strip() for x in module.split("|") if x.strip() != "" and x != "None"
             ]
             for x in criterformodule:
-                stringsearchinmodule = "%" + x + "%"
-                logs = logs.filter(Logs.module.like(stringsearchinmodule))
+                if "," in x:
+                    or_values = [v.strip() for v in x.split(",") if v.strip() and v.strip() != "None"]
+                    if or_values:
+                        logs = logs.filter(or_(*[Logs.module.like("%" + v + "%") for v in or_values]))
+                else:
+                    stringsearchinmodule = "%" + x + "%"
+                    logs = logs.filter(Logs.module.like(stringsearchinmodule))
         if not (user == "None" or user == ""):
             logs = logs.filter(func.lower(
                 Logs.fromuser).like(func.lower(user)))

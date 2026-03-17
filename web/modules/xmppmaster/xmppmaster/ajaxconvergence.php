@@ -310,7 +310,7 @@ foreach ($arraydeploy['tabdeploy']['group_uuid'] as $index => $groupid) {
             $arraystate[] = '<span class="status-group-success">' . _T('GROUP FULL SUCCESS', 'xmppmaster') . '</span>';
         }
     } else {
-        $arraystate[] = "<span style='background-color:{$color};'>{$progressrate}%</span>";
+        $arraystate[] = "<div style='text-align:center'><span class='status-progress-pct'>{$progressrate}%</span></div>";
     }
 
     $namegrp = $groupname[$groupid] ?? _T("This group doesn't exist", "xmppmaster");
@@ -400,17 +400,30 @@ foreach ($arraytitlename as $line) {
     $newArrayTitleName[] = trim($lineWithoutDateTime);
 }
 
+// Truncate long text columns with ellipsis + tooltip
+foreach ($newArrayTitleName as &$v) { $v = '<div class="cell-truncate cell-truncate-lg" title="'.htmlspecialchars(strip_tags($v)).'">'.$v.'</div>'; } unset($v);
+foreach ($arrayname as &$v) { $v = '<div class="cell-truncate cell-truncate-md" title="'.htmlspecialchars(strip_tags($v)).'">'.$v.'</div>'; } unset($v);
+foreach ($arraydeploy['tabdeploy']['login'] as &$v) { $v = '<div class="cell-truncate" title="'.htmlspecialchars($v).'">'.$v.'</div>'; } unset($v);
+
 $n = new OptimizedListInfos($newArrayTitleName, _T("Deployment", "xmppmaster"));
 $n->setCssClass("package");
 $n->disableFirstColumnActionLink();
 $n->addExtraInfo($arrayname, _T("Target", "xmppmaster"));
-$n->addExtraInfo($arraystate, _T("Progress / Status", "xmppmaster"));
-$n->addExtraInfo($tolmach, _T("Total Machines", "xmppmaster"));
-$n->addExtraInfo($processmachr, _T("In progress", "xmppmaster"));
-$n->addExtraInfo($successmach, _T("Success", "xmppmaster"));
-$n->addExtraInfo($errormach, _T("Error", "xmppmaster"));
-$n->addExtraInfo($abortmachuser, _T("Aborted", "xmppmaster"));
 $n->addExtraInfo($arraydeploy['tabdeploy']['login'], _T("User", "xmppmaster"));
+$n->addExtraInfoCenteredRaw($arraystate, _T("Progress / Status", "xmppmaster"));
+$n->addExtraInfoCentered($tolmach, _T("Total machines", "xmppmaster"));
+// Build status bar column
+DeployStatusBar::includeStyles();
+$statusBars = [];
+for ($i = 0; $i < count($tolmach); $i++) {
+    $total = intval($tolmach[$i]);
+    preg_match('/^(\d+)/', $processmachr[$i], $m); $ip = intval($m[1] ?? 0);
+    preg_match('/^(\d+)/', $successmach[$i], $m);   $sc = intval($m[1] ?? 0);
+    preg_match('/^(\d+)/', $errormach[$i], $m);      $er = intval($m[1] ?? 0);
+    preg_match('/^(\d+)/', $abortmachuser[$i], $m);  $ab = intval($m[1] ?? 0);
+    $statusBars[] = DeployStatusBar::render($total, $ip, $sc, $er, $ab);
+}
+$n->addExtraInfoRaw($statusBars, _T("Status", "xmppmaster"));
 $n->setItemCount($arraydeploy['lentotal']);
 $n->setNavBar(new AjaxNavBar($arraydeploy['lentotal'], $filter, "updateSearchParamformRunning"));
 $n->setParamInfo($actionParams);
@@ -422,5 +435,6 @@ $n->addActionItemArray($reloads);
 $n->start = 0;
 $n->end = $arraydeploy['lentotal'];
 
+echo DeployStatusBar::legend();
 $n->display();
 ?>

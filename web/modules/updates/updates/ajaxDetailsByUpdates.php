@@ -112,13 +112,13 @@ foreach($enabled_updates_list['kb'] as $kb) {
     $i++;
 }
 
-$n = new OptimizedListInfos($titles, _T("Update name", "updates"));
+$n = new OptimizedListInfos($titles, _T("Name", "updates"));
 $n->disableFirstColumnActionLink();
 
-$n->addExtraInfo($complRates, _T("Compliance rate", "updates"));
-$n->addExtraInfo($machineWithUpd, _T("Machines with this update", "updates"));
-$n->addExtraInfo($machineWithoutUpd, _T("Machines asking for this update", "updates"));
-$n->addExtraInfo($total, _T("Total of machines", "updates"));
+$n->addExtraInfo($complRates, _T("Compliance rate", "updates"), "220px");
+$n->addExtraInfoCentered($machineWithUpd, _T("Installed", "updates"), "100px");
+$n->addExtraInfoCentered($machineWithoutUpd, _T("Requested", "updates"), "100px");
+$n->addExtraInfoCentered($total, _T("Total machines", "updates"), "100px");
 
 $n->setItemCount($count_enabled_updates);
 $n->setNavBar(new AjaxNavBar($count_enabled_updates, $filter, 'updateSearchParamform'));
@@ -127,5 +127,7 @@ $n->start = 0;
 $n->end = $count_enabled_updates;
 $n->addActionItemArray($actionHistories);
 $n->addActionItemArray($actionDetails);
-
+$n->setEmptyState(_T("No updates found", "updates"), _T("No updates match the current filter.", "updates"));
+echo '<div class="details-by-updates">';
 $n->display();
+echo '</div>';

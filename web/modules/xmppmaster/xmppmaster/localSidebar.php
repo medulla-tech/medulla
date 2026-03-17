@@ -39,9 +39,5 @@ $sidemenu->addSideMenuItem(
 );
 
 $sidemenu->addSideMenuItem(
-    new SideMenuItem(_T("Monitoring Configuration", "xmppmaster"), "xmppmaster", "xmppmaster", "monconfig")
-);
-
-$sidemenu->addSideMenuItem(
     new SideMenuItem(_T("Custom Quick Actions", "xmppmaster"), "xmppmaster", "xmppmaster", "customQA")
 );

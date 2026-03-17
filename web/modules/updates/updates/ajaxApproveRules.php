@@ -73,9 +73,8 @@ echo '<form method="post" action="" name="montableau" class="approval-form appro
 // Affichage du tableau
 
 $n = new ListInfos($f['msrcseverity'], _T("Update Severity", "updates"));
-$n->setTableHeaderPadding(0);
 $n->addExtraInfo($f['updateclassification'], _T("Update Classification", "updates"));
-$n->addExtraInfo($htmlelementcheck, _T("Automatic approval (White list)", "updates"));;
+$n->addExtraInfoCenteredRaw($htmlelementcheck, _T("Automatic approval (White list)", "updates"));
 
 $n->setParamInfo($params);
 $n->setNavBar = "";
@@ -101,7 +100,9 @@ $n->display($navbar = 0, $header = 0);
 echo '<input type="hidden" name="form_name" value="montableau">';
 echo '<input type="hidden" name="entityid" value="'.$_GET['selected_location']['uuid'].'">';
 echo '<input type="hidden" name="entityname" value="'.$_GET['selected_location']['name'].'">';
+echo '<div class="approval-form-actions">';
 echo '<input class="btnPrimary" type="submit" value="' . _T("Apply", "updates") . '">';
+echo '</div>';
 echo "\n</form>";
 
 ?>

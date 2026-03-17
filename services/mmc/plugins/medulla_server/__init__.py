@@ -293,50 +293,24 @@ class RpcProxy(RpcProxyI):
         return out.decode('utf-8').strip(), err.decode('utf-8').strip(), process.returncode
 
 
-    def getProductUpdates(self):
-        mup_path = "/usr/share/medulla-update-manager/medulla-update-manager.py"
-        install_command = f"{mup_path} --list --json"
-
-        @deferred
-        def _getProductUpdates():
-            stdout, stderr, code = self.runinshell(install_command)
-
-            logger.debug(f"Sortie standard du script enfant (stdout) :\n{stdout}")
-            logger.debug(f"Sortie erreur du script enfant (stderr) :\n{stderr}")
-
-            if code == 0:
-                # JSON extraction between markers
-                match = re.search(r"===JSON_BEGIN===(.*?)===JSON_END===", stdout, re.DOTALL)
-                if match:
-                    try:
-                        data = json.loads(match.group(1))
-                        return {"success": True, "data": data}
-                    except json.JSONDecodeError as e:
-                        logger.error(f"Erreur lors du décodage JSON : {e}")
-                        return {"success": False, "error": "invalid_json"}
-                else:
-                    logger.warning("Bloc JSON non trouvé dans la sortie")
-                    return {"success": False, "error": "no_json_found"}
-            else:
-                logger.error(f"Échec de la commande (code {code})")
-                return {"success": False, "code": code, "stderr": stderr}
-
-        return _getProductUpdates()
-
     def installProductUpdates(self):
-        mup_path = "/usr/share/medulla-update-manager/medulla-update-manager.py"
-        install_command = f"{mup_path} -I" # Option -i to install everything
+        install_command = "nohup /usr/sbin/update_medulla.sh --noupdate > /dev/null 2>&1 &"
 
         @deferred
         def _runInstall():
-            stdout, stderr, code = self.runinshell(install_command)
-
-            if code == 0:
-                logger.info("Commande exécutée avec succès")
-                return {"success": True, "output": stdout}
-            else:
-                logger.error(f"Échec de la commande (code {code})")
-                return {"success": False, "code": code, "stderr": stderr}
+            try:
+                subprocess.Popen(
+                    install_command,
+                    shell=True,
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL,
+                    preexec_fn=os.setsid
+                )
+                logger.info("update_medulla.sh lancé en arrière-plan")
+                return {"success": True, "output": "Update started"}
+            except Exception as e:
+                logger.error(f"Échec du lancement de update_medulla.sh: {e}")
+                return {"success": False, "code": 1, "stderr": str(e)}
 
         return _runInstall()
 

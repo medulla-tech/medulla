@@ -224,9 +224,9 @@ if ($entity == '') {
         $machines["complianceRate"][] = $complianceRate;
         $machines["total"][] = $total;
 
-        $machines["actionDetailByMachines"][] = $actionsPerMachine[$uuid]["details"];
-        $machines["actionPendingByMachines"][] = $actionsPerMachine[$uuid]["pending"];
-        $machines["actionDoneByMachines"][] = $actionsPerMachine[$uuid]["done"];
+        $machines["actionDetailByMachines"][] = $actionsPerMachine[$uuid]["details"] ?? $detailsByMachDefault;
+        $machines["actionPendingByMachines"][] = $actionsPerMachine[$uuid]["pending"] ?? $pendingByMachDefault;
+        $machines["actionDoneByMachines"][] = $actionsPerMachine[$uuid]["done"] ?? $doneByMachDefault;
     }
 
     $params = [];
@@ -242,20 +242,17 @@ if ($entity == '') {
     // Display group compliance, for entity, compliance_bloc == ""
     echo $compliance_bloc;
 
-    echo "<br>";
-    echo "<br>";
-
     echo '<h2>'.$tabletitle.'</h2>';
 
 
     $n = new OptimizedListInfos($machines["cn"], _T("Machine name", "updates"));
     $n->disableFirstColumnActionLink();
-    $n->addExtraInfo($machines["os"], _T("Platform", "updates"));
-    $n->addExtraInfo($machines["complianceRate"], _T("Compliance rate", "updates"));
-    $n->addExtraInfo($machines["missing"], _T("Missing updates", "updates"));
-    $n->addExtraInfo($machines["inprogress"], _T("In progress", "updates"));
-    $n->addExtraInfo($machines["installed"], _T("Installed updates", "updates"));
-    $n->addExtraInfo($machines["total"], _T("Total updates", "updates"));
+    $n->addExtraInfo($machines["os"], _T("Platform", "updates"), "200px");
+    $n->addExtraInfoRaw($machines["complianceRate"], _T("Compliance rate", "updates"), "220px");
+    $n->addExtraInfoCentered($machines["missing"], _T("Missing", "updates"), "100px");
+    $n->addExtraInfoCentered($machines["inprogress"], _T("In progress", "updates"), "100px");
+    $n->addExtraInfoCentered($machines["installed"], _T("Installed", "updates"), "100px");
+    $n->addExtraInfoCentered($machines["total"], _T("Total", "updates"), "80px");
     $n->addActionItemArray($machines["actionDetailByMachines"]);
     $n->addActionItemArray($machines["actionPendingByMachines"]);
     $n->addActionItemArray($machines["actionDoneByMachines"]);
@@ -264,6 +261,7 @@ if ($entity == '') {
     $n->setItemCount($count);
     $n->setNavBar(new AjaxNavBar($count, $ctx['filter']));
     $n->setParamInfo($params);
+    $n->setEmptyState(_T("No machines found", "updates"), _T("No machines match the current filter.", "updates"));
     $n->display();
 
     ?>

@@ -27,8 +27,6 @@ $p = new PageGenerator(_T("Configuration Management", 'admin'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
-echo '<link rel="stylesheet" href="modules/admin/graph/css/admin.css" type="text/css" media="screen" />';
-
 // Récupérer la liste des tables de configuration
 $tables = xmlrpc_get_config_tables();
 
@@ -267,15 +265,16 @@ $btn = new Button();
 echo '<div class="container-fluid admin-config">';
 echo '<h3 class="admin-config-title">Configuration globale Medulla</h3>';
 
-echo '<div class="admin-config-tabs" role="tablist" aria-label="Catégories de configuration">';
+echo '<div class="tabselector"><ul>';
 foreach ($categories as $index => $category) {
     $isActive = ($activeTab !== null) ? ($activeTab === $category['id']) : ($index === 0);
-    $activeClass = $isActive ? ' is-active' : '';
-    echo '<button type="button" class="admin-config-tab' . $activeClass . '" data-tab="' . htmlspecialchars($category['id']) . '">'
+    $liClass = $isActive ? ' class="tabactive"' : '';
+    echo '<li id="' . htmlspecialchars($category['id']) . '"' . $liClass . '>'
+        . '<a href="#" data-tab="' . htmlspecialchars($category['id']) . '">'
         . htmlspecialchars($category['label'])
-        . '</button>';
+        . '</a></li>';
 }
-echo '</div>';
+echo '</ul></div>';
 
 echo '<div class="admin-config-panels">';
 foreach ($categories as $index => $category) {
@@ -418,17 +417,18 @@ echo '</div>';
 ?>
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-    const tabs = document.querySelectorAll(".admin-config-tab");
+    const tabs = document.querySelectorAll(".tabselector li");
     const panels = document.querySelectorAll(".admin-config-panel");
 
     tabs.forEach(function (tab) {
-        tab.addEventListener("click", function () {
-            const target = tab.getAttribute("data-tab");
+        tab.querySelector("a").addEventListener("click", function (e) {
+            e.preventDefault();
+            const target = this.getAttribute("data-tab");
 
             tabs.forEach(function (item) {
-                item.classList.remove("is-active");
+                item.classList.remove("tabactive");
             });
-            tab.classList.add("is-active");
+            tab.classList.add("tabactive");
 
             panels.forEach(function (panel) {
                 const isTarget = panel.getAttribute("data-panel") === target;

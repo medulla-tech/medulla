@@ -137,15 +137,15 @@ if ($mode === 'edit' && $name !== '') {
 
 // Title
 $title = ($mode === 'edit')
-    ? sprintf(_T("Edit provider <span style='font-size: 16px;'>[%s]</span>", 'admin'), $safe($prefill['name']))
-    : _T("Add a new provider", 'admin');
+    ? sprintf(_T("Edit OIDC Client <span style='font-size: 16px;'>[%s]</span>", 'admin'), $safe($prefill['name']))
+    : _T("New OIDC Client", 'admin');
 
 $page = new PageGenerator("<h2>{$title}</h2>");
 $page->setSideMenu($sidemenu);
 $page->display();
 
 $submitName  = ($mode === 'edit') ? 'bupdate' : 'bcreate';
-$submitLabel = ($mode === 'edit') ? _T("Save changes", "admin") : _T("Create provider", "admin");
+$submitLabel = ($mode === 'edit') ? _T("Save changes", "admin") : _T("Create OIDC Client", "admin");
 
 $form = new ValidatingForm(['method' => 'POST']);
 $form->addValidateButtonWithValue($submitName, $submitLabel);

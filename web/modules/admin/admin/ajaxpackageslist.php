@@ -80,7 +80,6 @@ $n->addExtraInfo( $list['datas']['version'], _T("Version", "pkgs"));
 $n->addExtraInfo( $list['datas']['licenses'], _T("Licenses", "pkgs"));
 $n->addExtraInfo( $list['datas']['os'], _T("Os", "pkgs"));
 $n->addExtraInfo( $list['datas']['size'], _T("Package size", "pkgs"));
-$n->addExtraInfo( $list['datas']['methodtransfer'], _T("Transfer Method", "pkgs"));
 $n->setItemCount($list['total']);
 $n->setNavBar(new AjaxNavBar($list['total'], $filter));
 $n->start = 0;

@@ -134,7 +134,7 @@ foreach($grey_list['updateid'] as $updateid) {
     $ids [] = 'u_'.$updateid;
 }
 // ########## Affichage Tableau GreyList ########## //
-$g = new OptimizedListInfos($titles_grey, _T("Update name", "updates"));
+$g = new OptimizedListInfos($titles_grey, _T("Name", "updates"));
 
 $g-> setCssIds($ids);
 $g->disableFirstColumnActionLink();
@@ -162,4 +162,5 @@ $g->addActionItemArray($grayActions['approve']);
 $g->addActionItemArray($grayActions['ban']);
 $g->start = 0;
 $g->end = $count_grey;
+$g->setEmptyState(_T("No updates found", "updates"), _T("No updates match the current filter.", "updates"));
 $g->display();

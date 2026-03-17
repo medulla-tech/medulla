@@ -421,15 +421,6 @@ $page->setFile("modules/xmppmaster/xmppmaster/relays/ajaxpackageslist.php");
 $page->setOptions(array("AJAX" => true, "visible" => false));
 $submod->addPage($page);
 
-$page = new Page("monconfig", _T("Monitoring Configuration", "xmppmaster"));
-$page->setFile("modules/xmppmaster/xmppmaster/monitoring/monconfig.php");
-$submod->addPage($page);
-
-$page = new Page("ajaxmonconfig", _T("Monitoring Configuration", "xmppmaster"));
-$page->setFile("modules/xmppmaster/xmppmaster/monitoring/ajaxmonconfig.php");
-$page->setOptions(array("AJAX" => true, "visible" => false));
-$submod->addPage($page);
-
 $page = new Page("popupReloadDeploy", _T("Reload Deploy", "xmppmaster"));
 $page->setFile("modules/xmppmaster/xmppmaster/popupReloadDeploy.php");
 $page->setOptions(array("visible" => false, "noHeader" => true));

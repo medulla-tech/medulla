@@ -635,14 +635,8 @@ td.package {
 /* Package Files Table (detail page)            */
 /* ============================================ */
 
-.pkg-files-table th,
-.pkg-files-table td {
-  text-align: center;
-}
-
-/* ============================================ */
-/* Dependencies Widget                          */
-/* ============================================ */
+/* Dependencies and Files table column widths
+   are set via OptimizedListInfos constructor and addExtraInfoCentered */
 
 .pkg-dependency-table,
 .pkg-dependency-table td {

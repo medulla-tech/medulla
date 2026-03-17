@@ -86,6 +86,8 @@ $arraytitlename = array();
 $arraystate     = array();
 $params         = array();
 $logs           = array();
+$edit           = array();
+$reloads        = array();
 $startdeploy    = array();
 $endcmd         = array();
 $startcmd       = array();
@@ -141,6 +143,7 @@ $previous = isset($_GET['previous']) ? $_GET['previous'] : null;
 
 $actionParams = array();
 foreach ($arraydeploy['tabdeploy']['command'] as $index => $command_id) {
+
     $logs[] = new ActionItem(
         _("View deployment details"),
         "viewlogs",
@@ -150,12 +153,77 @@ foreach ($arraydeploy['tabdeploy']['command'] as $index => $command_id) {
         "xmppmaster"
     );
 
-    $actionParams[] = array(
-        "cmd_id"      => $command_id,
-        "gid"         => $arraydeploy['tabdeploy']['group_uuid'][$index],
-        "convergence" => '1',
-        "previous"    => $previous
+    $edit[] = new ActionItem(
+        _T("Convergence", "msc"),
+        "convergence",
+        "edit",
+        "msc",
+        "base",
+        "computers"
     );
+
+    // Title cleaning to obtain the name of the package
+    $line = $arraydeploy['tabdeploy']['title'][$index] ?? '';
+    $lineWithoutPrefix = preg_replace('/^(Uninstall )?Convergence on\s*/i', '', $line);
+    $lineWithoutTag = preg_replace('/\s*-@convergence@-\s*/i', '', $lineWithoutPrefix);
+    $lineWithoutDateTime = preg_replace('/\s*\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2}\s*/', ' ', $lineWithoutTag);
+    $titleClean = trim($lineWithoutDateTime);
+
+    // PID recovery corresponding to the title cleaned
+    $path = xmlrpc_get_pkg_path($titleClean);
+    $pid = $path ? ltrim($path, '/') : '';
+
+    $parentId = xmlrpc_get_convergence_parent_group_id($arraydeploy['tabdeploy']['group_uuid'][$index]);
+
+    // Get the status of the convergence
+    $status = xmlrpc_getConvergenceStatusByCommandId($command_id);
+    $rawStatus = $status['/package_api_get1'][$pid];
+
+    switch ($rawStatus) {
+        case 1:
+            $actionConvergenceText = _T('Active', 'msc');
+            $statusparam = 1;
+            $reloads[] = new ActionItem(
+                _("Reschedule Convergence"),
+                "rescheduleconvergence",
+                "reload",
+                "convergenceg",
+                "xmppmaster",
+                "xmppmaster"
+            );
+            break;
+        case 0:
+            $actionConvergenceText = _T('Inactive', 'msc');
+            $statusparam = 2;
+            $reloads[] = new EmptyActionItem1(
+                _("Reschedule Convergence"),
+                "rescheduleconvergence",
+                "reloadg",
+                "convergenceg",
+                "xmppmaster",
+                "xmppmaster"
+            );
+            break;
+        default:
+            $statusparam = 0;
+            $actionConvergenceText = _T('Not available', 'msc');
+            break;
+    }
+
+    $actionParams[] = array(
+        "actionconvergenceint"  => $statusparam,
+        "actionconvergence"     => $actionConvergenceText,
+        "cmd_id"                => $command_id,
+        "convergence"           => 1,
+        "editConvergence"       => $statusparam,
+        "papi"                  => '',
+        "from"                  => "base|computers|groupmsctabs|tablogs",
+        "gid"                   => $parentId,
+        "name"                  => $titleClean,
+        "pid"                   => $pid,
+        "previous"              => $previous,
+    );
+
     $machineDetails = json_decode($arraydeploy['tabdeploy']['machine_details_json'][$index], true);
     if (!empty($machineDetails)) {
         foreach ($machineDetails as $details) {
@@ -241,7 +309,7 @@ foreach ($arraydeploy['tabdeploy']['group_uuid'] as $index => $groupid) {
             $arraystate[] = '<span class="status-group-success">' . _T('GROUP FULL SUCCESS', 'xmppmaster') . '</span>';
         }
     } else {
-        $arraystate[] = "<span style='background-color:{$color};'>{$progressrate}%</span>";
+        $arraystate[] = "<div style='text-align:center'><span class='status-progress-pct'>{$progressrate}%</span></div>";
     }
     $namegrp = $groupname[$groupid] ?? _T("This group doesn't exist", "xmppmaster");
     $arrayname[] = "<span class='text-underline'><img class='icon-inline' src='img/other/machinegroup.svg'/> {$namegrp}</span>";
@@ -252,46 +320,71 @@ foreach ($arraydeploy['tabdeploy']['group_uuid'] as $index => $groupid) {
     }
 }
 
-if(isset($arraynotdeploy))
-{
-  foreach($arraynotdeploy['elements'] as $id=>$deploy)
-  {
-      $param = [
-      'cmd_id'=>$deploy['cmd_id'],
-      'login'=>$deploy['login'],
-      'gid'=>$deploy['gid'],
-      'uuid'=>$deploy['uuid_inventory']];
-      $logs[] = $logAction;
-      $params[] = $param;
+if (isset($arraynotdeploy)) {
+    foreach ($arraynotdeploy['elements'] as $id => $deploy) {
+        $param = [
+            'cmd_id' => $deploy['cmd_id'],
+            'login'  => $deploy['login'],
+            'gid'    => $deploy['gid'],
+            'uuid'   => $deploy['uuid_inventory'],
+            'convergence' => '1',
+            'previous' => $previous,
+        ];
+        $params[] = $param;
 
-      $arraytitlename[] = '<img class="icon-inline" src="img/other/package.svg"/> '.$deploy['package_name'];
+        $logs[] = new ActionItem(
+            _("View deployment details"),
+            "viewlogs",
+            "audit",
+            "",
+            "xmppmaster",
+            "xmppmaster"
+        );
 
-      $name = "";
-      if($deploy['gid'] != "")
-      {
-          $name = getInfosNameGroup($deploy['gid']);
-          $name = $name[$deploy['gid']]['name'];
-          $name = '<img class="icon-inline" src="img/other/machinegroup.svg"/> '.$name;
+        $edit[] = new ActionItem(
+            _T("Convergence", "msc"),
+            "convergence",
+            "edit",
+            "msc",
+            "base",
+            "computers"
+        );
+
+        $arraytitlename[] = '<img class="icon-inline" src="img/other/package.svg"/> ' . $deploy['package_name'];
+
+        $name = "";
+        if ($deploy['gid'] != "") {
+            $nameInfo = getInfosNameGroup($deploy['gid']);
+            $name = isset($nameInfo[$deploy['gid']]['name']) ? $nameInfo[$deploy['gid']]['name'] : $deploy['machine_name'];
+            $name = '<img class="icon-inline" src="img/other/machinegroup.svg"/> ' . $name;
+        } else {
+            $name = '<img class="icon-inline" src="img/other/machine_down.svg"/> ' . $deploy['machine_name'];
         }
+        $arrayname[] = $name;
 
-      else
-      {
-          $name = $deploy['machine_name'];
-          $name = '<img class="icon-inline" src="img/other/machine_down.svg"/> '.$name;
-      }
-      $arrayname[] = $name;
-
-      $date = (array)$deploy['date_start'];
-      $arraydeploy['tabdeploy']['start'][] = date("Y-m-d H:i:s",$date['timestamp']);
-      //TODO
-      $arraystate[] = '<span class="status-pending">Pending</span>';
-      $tolmach[] = $deploy['nb_machines'];
-      $processmachr[] = '0 (0%)';
-      $successmach[] = '0 (0%)';
-      $errormach[] = '0 (0%)';
-      $abortmachuser[] = '0 (0%)';
-      $arraydeploy['tabdeploy']['login'][] = $deploy['login'];
-  }
+        $date = (array)$deploy['date_start'];
+        $arraydeploy['tabdeploy']['start'][] = date("Y-m-d H:i:s", $date['timestamp']);
+        if ($deploy['deployment_intervals'] != "") {
+            $arraystate[] = '<span class="status-pending">Pending<br><span class="constraint-text">' . _T("Constraint: ", "xmppmaster") .
+                $deploy['deployment_intervals'] . '</span></span>';
+        } else {
+            $arraystate[] = '<span class="status-pending">Pending</span>';
+        }
+        $tolmach[] = $deploy['nb_machines'];
+        $processmachr[] = '0 (0%)';
+        $successmach[] = '0 (0%)';
+        $errormach[] = '0 (0%)';
+        $abortmachuser[] = '0 (0%)';
+        $arraydeploy['tabdeploy']['login'][] = $deploy['login'];
+        $reloads[] = new ActionItem(
+            _("Reschedule Convergence"),
+            "rescheduleconvergence",
+            "reload",
+            "",
+            "xmppmaster",
+            "xmppmaster"
+        );
+    }
 }
 
 $newArrayTitleName = array();
@@ -300,23 +393,39 @@ foreach ($arraytitlename as $line) {
     $lineWithoutDateTime = preg_replace('/\s*\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2}\s*/', ' ', $lineWithoutTag);
     $newArrayTitleName[] = trim($lineWithoutDateTime);
 }
+// Truncate long text columns with ellipsis + tooltip
+foreach ($newArrayTitleName as &$v) { $v = '<div class="cell-truncate cell-truncate-lg" title="'.htmlspecialchars(strip_tags($v)).'">'.$v.'</div>'; } unset($v);
+foreach ($arrayname as &$v) { $v = '<div class="cell-truncate cell-truncate-md" title="'.htmlspecialchars(strip_tags($v)).'">'.$v.'</div>'; } unset($v);
+foreach ($arraydeploy['tabdeploy']['login'] as &$v) { $v = '<div class="cell-truncate" title="'.htmlspecialchars($v).'">'.$v.'</div>'; } unset($v);
+
 $n = new OptimizedListInfos( $newArrayTitleName, _T("Deployment", "xmppmaster"));
 $n->setCssClass("package");
 $n->disableFirstColumnActionLink();
-$n->addExtraInfo($arrayname, _T("Target", "xmppmaster"), "150px");
-$n->addExtraInfo($arraystate, _T("Progress / Status", "xmppmaster"));
-$n->addExtraInfo($tolmach, _T("Total Machines", "xmppmaster"));
-$n->addExtraInfo($processmachr, _T("In progress", "xmppmaster"));
-$n->addExtraInfo($successmach, _T("Success", "xmppmaster"));
-$n->addExtraInfo($errormach, _T("Error", "xmppmaster"));
-$n->addExtraInfo($abortmachuser, _T("Aborted", "xmppmaster"));
+$n->addExtraInfo($arrayname, _T("Target", "xmppmaster"));
 $n->addExtraInfo($arraydeploy['tabdeploy']['login'], _T("User", "xmppmaster"));
+$n->addExtraInfoCenteredRaw($arraystate, _T("Progress / Status", "xmppmaster"));
+$n->addExtraInfoCentered($tolmach, _T("Total machines", "xmppmaster"));
+// Build status bar column
+DeployStatusBar::includeStyles();
+$statusBars = [];
+for ($i = 0; $i < count($tolmach); $i++) {
+    $total = intval($tolmach[$i]);
+    preg_match('/^(\d+)/', $processmachr[$i], $m); $ip = intval($m[1] ?? 0);
+    preg_match('/^(\d+)/', $successmach[$i], $m);   $sc = intval($m[1] ?? 0);
+    preg_match('/^(\d+)/', $errormach[$i], $m);      $er = intval($m[1] ?? 0);
+    preg_match('/^(\d+)/', $abortmachuser[$i], $m);  $ab = intval($m[1] ?? 0);
+    $statusBars[] = DeployStatusBar::render($total, $ip, $sc, $er, $ab);
+}
+$n->addExtraInfoRaw($statusBars, _T("Status", "xmppmaster"));
 $n->setItemCount($arraydeploy['lentotal']);
 $n->setNavBar(new AjaxNavBar($arraydeploy['lentotal'], $filter, "updateSearchParamformRunning"));
 $n->setParamInfo($actionParams);
 $n->addActionItemArray($logs);
+$n->addActionItemArray($edit);
+$n->addActionItemArray($reloads);
 $n->start = 0;
 $n->end = $arraydeploy['lentotal'];
 
+echo DeployStatusBar::legend();
 $n->display();
 ?>

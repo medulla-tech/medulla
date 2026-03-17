@@ -97,21 +97,21 @@ $detailAction = new ActionItem(_T("View CVEs", "security"), "machineDetail", "di
 if ($count > 0) {
     $n = new OptimizedListInfos($hostnames, _T("Machine", "security"));
     $n->disableFirstColumnActionLink();
-    $n->addExtraInfo($riskScores, _T("Risk Score", "security"));
+    $n->addExtraInfoCentered($riskScores, _T("Risk Score", "security"));
     // Only show severity columns that are >= min_severity
     if ($showCritical) {
-        $n->addExtraInfo($criticalCounts, _T("Critical", "security"));
+        $n->addExtraInfoCentered($criticalCounts, _T("Critical", "security"));
     }
     if ($showHigh) {
-        $n->addExtraInfo($highCounts, _T("High", "security"));
+        $n->addExtraInfoCentered($highCounts, _T("High", "security"));
     }
     if ($showMedium) {
-        $n->addExtraInfo($mediumCounts, _T("Medium", "security"));
+        $n->addExtraInfoCentered($mediumCounts, _T("Medium", "security"));
     }
     if ($showLow) {
-        $n->addExtraInfo($lowCounts, _T("Low", "security"));
+        $n->addExtraInfoCentered($lowCounts, _T("Low", "security"));
     }
-    $n->addExtraInfo($totalCounts, _T("Total", "security"));
+    $n->addExtraInfoCentered($totalCounts, _T("Total", "security"));
     $n->setItemCount($count);
     $n->setNavBar(new AjaxNavBar($count, $filter));
     $n->setParamInfo($params);

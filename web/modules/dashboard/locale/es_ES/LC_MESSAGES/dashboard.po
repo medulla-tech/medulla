@@ -190,19 +190,75 @@ msgstr "Despliegues lanzados desde "
 msgid "Medulla Updates"
 msgstr "Actualizaciones de la médula"
 
-#: modules/dashboard/includes/panels/product_updates.inc.php:39
-msgid "Check updates"
-msgstr "Comprobar actualizaciones"
+#: modules/dashboard/includes/panels/product_updates.inc.php
+msgid "Update Medulla"
+msgstr "Actualizar Medulla"
 
-#: modules/dashboard/includes/panels/product_updates.inc.php:40
-msgid "Search for updates…"
-msgstr "Buscar actualizaciones.."
+#: modules/dashboard/includes/panels/product_updates.inc.php
+msgid "Update completed successfully!"
+msgstr "¡Actualización completada con éxito!"
 
-#: modules/dashboard/includes/panels/product_updates.inc.php:41
-msgid "Error when retrieving updates."
-msgstr "Error al recuperar actualizaciones."
+#: modules/dashboard/includes/panels/product_updates.inc.php
+msgid "Update failed. Check the logs for details."
+msgstr "La actualización ha fallado. Consulte los registros para más detalles."
 
-#: modules/dashboard/includes/panels/product_updates.inc.php:43
+#: modules/dashboard/includes/panels/product_updates.inc.php
+msgid "Update failed."
+msgstr "La actualización ha fallado."
+
+#: modules/dashboard/includes/panels/product_updates.inc.php
+msgid "Check /var/log/medulla_update.log on the server for details."
+msgstr "Consulte /var/log/medulla_update.log en el servidor para más detalles."
+
+#: modules/dashboard/includes/panels/product_updates.inc.php
+msgid "Redirecting to login page…"
+msgstr "Redirigiendo a la página de inicio de sesión…"
+
+#: modules/dashboard/includes/panels/product_updates.inc.php
+msgid "WARNING: BACKUP REQUIRED BEFORE UPDATE"
+msgstr "Copia de seguridad necesaria antes de actualizar"
+
+#: modules/dashboard/includes/panels/product_updates.inc.php
+msgid "Before running this update, you must:"
+msgstr "Antes de ejecutar esta actualización, debe:"
+
+#: modules/dashboard/includes/panels/product_updates.inc.php
+msgid "Create a complete backup of your data"
+msgstr "Crear una copia de seguridad completa de sus datos"
+
+#: modules/dashboard/includes/panels/product_updates.inc.php
+msgid "Take a system snapshot (if applicable)"
+msgstr "Realizar una instantánea del sistema (si corresponde)"
+
+#: modules/dashboard/includes/panels/product_updates.inc.php
+msgid "Back up configuration files"
+msgstr "Hacer copia de seguridad de los archivos de configuración"
+
+#: modules/dashboard/includes/panels/product_updates.inc.php
+msgid "Ensure you have a working restore point"
+msgstr "Asegúrese de tener un punto de restauración funcional"
+
+#: modules/dashboard/includes/panels/product_updates.inc.php
+msgid "This update will modify the system irreversibly"
+msgstr "Esta actualización modificará el sistema de forma irreversible"
+
+#: modules/dashboard/includes/panels/product_updates.inc.php
+msgid "In case of failure, a restoration will be necessary"
+msgstr "En caso de fallo, será necesaria una restauración"
+
+#: modules/dashboard/includes/panels/product_updates.inc.php
+msgid "No automatic rollback is available"
+msgstr "No hay reversión automática disponible"
+
+#: modules/dashboard/includes/panels/product_updates.inc.php
+msgid "I accept, start the update"
+msgstr "Acepto, iniciar la actualización"
+
+#: modules/dashboard/includes/panels/product_updates.inc.php
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: modules/dashboard/includes/panels/product_updates.inc.php
 msgid "Restart Medulla Services"
 msgstr "Reiniciar los servicios de Médula"
 

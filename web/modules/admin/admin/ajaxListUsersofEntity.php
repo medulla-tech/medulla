@@ -22,7 +22,11 @@
  */
 require_once("includes/UIComponents.php");
 require_once("modules/admin/includes/xmlrpc.php");
+global $conf;
+$maxperpage = isset($conf["global"]["maxperpage"]) ? (int)$conf["global"]["maxperpage"] : 10;
+
 $filterRaw = isset($_GET["filter"]) ? (string)$_GET["filter"] : "";
+$start     = isset($_GET['start']) ? (int)$_GET['start'] : 0;
 $filters   = [];
 if ($filterRaw !== "") {
     $filters["q"] = $filterRaw;
@@ -190,7 +194,9 @@ foreach ($userDetails as $user) {
 }
 
 // Display
-if (count($userNames) === 0) {
+$totalCount = count($userNames);
+
+if ($totalCount === 0) {
     $entityName = htmlspecialchars($_GET['entityName'] ?? '', ENT_QUOTES, 'UTF-8');
 
     EmptyStateBox::show(
@@ -202,8 +208,26 @@ if (count($userNames) === 0) {
     $f->pop();
     $f->display();
 } else {
+    // Client-side pagination
+    $userNames             = array_slice($userNames, $start, $maxperpage);
+    $userFirstnames        = array_slice($userFirstnames, $start, $maxperpage);
+    $userLastName          = array_slice($userLastName, $start, $maxperpage);
+    $userPhones            = array_slice($userPhones, $start, $maxperpage);
+    $userStatus            = array_slice($userStatus, $start, $maxperpage);
+    $userLastLogin         = array_slice($userLastLogin, $start, $maxperpage);
+    $userProfileNames      = array_slice($userProfileNames, $start, $maxperpage);
+    $userEditActions       = array_slice($userEditActions, $start, $maxperpage);
+    $userDesactivateActions = array_slice($userDesactivateActions, $start, $maxperpage);
+    $userDeleteActions     = array_slice($userDeleteActions, $start, $maxperpage);
+    $userParams            = array_slice($userParams, $start, $maxperpage);
+
+    $count = count($userNames);
+
     $n = new OptimizedListInfos($userNames, _T("User Name", "admin"));
-    $n->setNavBar(new AjaxNavBar("10", $filterRaw));
+    $n->setNavBar(new AjaxNavBar($totalCount, $filterRaw));
+    $n->setItemCount($totalCount);
+    $n->start = 0;
+    $n->end   = $count;
     $n->disableFirstColumnActionLink();
 
     $n->addExtraInfo($userFirstnames,   _T("First name", "admin"));

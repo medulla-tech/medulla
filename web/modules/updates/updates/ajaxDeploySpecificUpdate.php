@@ -37,12 +37,12 @@ if(!empty($_GET['entity'])) {
     $entityCompleteName = htmlentities($_GET['completename']);
 
     $updates_list = xmlrpc_get_updates_by_entity($entityId, $start, $end, $filter);
-    $deployThisUpdate = new ActionPopupItem(_T(sprintf("Deploy this update on entity %s", $entityCompleteName), "updates"), "deployUpdate", "updateone", "", "updates", "updates");
+    $deployThisUpdate = new ActionPopupItem(sprintf(_T("Deploy this update on entity %s", "updates"), $entityCompleteName), "deployUpdate", "updateone", "", "updates", "updates");
 } elseif(!empty($_GET['group'])) {
     $gid = htmlentities($_GET['group']);
     $groupname = htmlentities($_GET['groupname']);
     $group = getPGobject($gid, true);
-    $deployThisUpdate = new ActionPopupItem(_T(sprintf("Deploy this update on group %s", $groupname), "updates"), "deployUpdate", "updateone", "", "updates", "updates");
+    $deployThisUpdate = new ActionPopupItem(sprintf(_T("Deploy this update on group %s", "updates"), $groupname), "deployUpdate", "updateone", "", "updates", "updates");
     $machinesListGlpi = getRestrictedComputersList(0, -1, ['gid' => $gid]);
     $machinesList = array_keys($machinesListGlpi);
     $updates_list = xmlrpc_get_updates_by_uuids($machinesList, $start, $end, $filter);
@@ -52,7 +52,7 @@ if(!empty($_GET['entity'])) {
     $machineid = (!empty($_GET['machineid'])) ? htmlentities($_GET['machineid']) : '';
     $inventoryid = (!empty($_GET['inventoryid'])) ? htmlentities($_GET['inventoryid']) : '';
     $machinename = (!empty($_GET['cn'])) ? htmlentities($_GET['cn']) : '';
-    $deployThisUpdate = new ActionPopupItem(_T(sprintf("Deploy this update on machine %s", $machinename), "updates"), "deployUpdate", "updateone", "", "updates", "updates");
+    $deployThisUpdate = new ActionPopupItem(sprintf(_T("Deploy this update on machine %s", "updates"), $machinename), "deployUpdate", "updateone", "", "updates", "updates");
     $updates_list = xmlrpc_get_updates_by_machineids([$machineid], $start, $end, $filter);
 }
 
@@ -109,9 +109,9 @@ foreach ($updates_list as $update) {
     $row++;
 }
 
-$n = new OptimizedListInfos($names_updates, _T("Update name", "updates"));
+$n = new OptimizedListInfos($names_updates, _T("Name", "updates"));
 $n->addExtraInfo($id_updates, _T("Update Id", "updates"));
-$n->addExtraInfo($severities, _T("Severity", "updates"));
+$n->addExtraInfo($severities, _T("Severity", "updates"), "120px");
 if($hostnames != []) {
     $n->addExtraInfo($hostnames, _T("Machine", "xmppmaster"));
 }
@@ -126,5 +126,7 @@ $n->setParamInfo($params);
 $n->start = 0;
 $n->end = $count;
 $n->addActionItemArray($actionspeclistUpds);
-
+$n->setEmptyState(_T("No updates available", "updates"), _T("No updates to deploy on this machine.", "updates"));
+echo '<div class="deploy-updates-table">';
 $n->display();
+echo '</div>';

@@ -28,8 +28,6 @@ $start = (!empty($_GET['start'])) ? htmlentities($_GET['start']) : 0;
 $end = (!empty($_GET['start'])) ? htmlentities($_GET['end']) : $maxperpage;
 $filter = (!empty($_GET['filter'])) ? htmlentities($_GET['filter']) : "";
 $unselectAction = new ActionPopupItem(_T("Cancel Update", "updates"), "cancelUpdate", "delete", "", "updates", "updates");
-$unselectActionEmpty = new EmptyActionItem(_T("Cancel Update", "updates"), "cancelUpdate", "delete", "", "updates", "updates");
-$unselectActions = [];
 
 // Get selected updates
 $result = xmlrpc_get_tagged_updates_by_machine($machineid, $start, $end, $filter);
@@ -53,25 +51,23 @@ foreach($datas as $update) {
     $start_dates[] = $update["start_date"];
     $end_dates[] = $update["end_date"];
     $descriptions[] = $update["description"];
-    if($update['required_deploy'] == 1) {
-        $unselectActions[] = $unselectAction;
-    } else {
-        $unselectActions[] = $unselectActionEmpty;
-    }
     $datas[$row]["id_machine"] = $machineid;
     $row++;
 }
 
 
-$n = new OptimizedListInfos($titles, _T("Pending Updates", "updates"));
+echo '<div class="pending-updates-table">';
+$n = new OptimizedListInfos($titles, _T("Name", "updates"));
 $n->disableFirstColumnActionLink();
 $n->addExtraInfo($descriptions, _T("Description", "updates"));
-$n->addExtraInfo($kbs, _T("Kb", "updates"));
-$n->addExtraInfo($update_ids, _T("Update", "updates"));
-$n->addExtraInfo($start_dates, _T("Start Date", "updates"));
-$n->addExtraInfo($end_dates, _T("End Date", "updates"));
+$n->addExtraInfo($kbs, _T("Kb", "updates"), "100px");
+$n->addExtraInfo($update_ids, _T("Update Id", "updates"), "100px");
+$n->addExtraInfo($start_dates, _T("Started at", "updates"), "160px");
+$n->addExtraInfo($end_dates, _T("End date", "updates"), "160px");
 $n->setItemCount($count);
 $n->setNavBar(new AjaxNavBar($count, $filter));
 $n->setParamInfo($datas);
-$n->addActionItemArray($unselectActions);
+$n->addActionItem($unselectAction);
+$n->setEmptyState(_T("No pending updates", "updates"), _T("No updates are currently pending for this machine.", "updates"));
 $n->display();
+echo '</div>';

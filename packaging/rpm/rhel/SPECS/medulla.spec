@@ -690,6 +690,8 @@ This package contains Pulse 2 common files like documentation.
 %{_sbindir}/medulla-generate-update-package.py
 %{_sbindir}/medulla-mariadb-move-update-package.py
 %{_sbindir}/medulla_mysql_exec_update.sh
+%{_sbindir}/medulla-stats.sh
+%{_sbindir}/update_medulla.sh
 %{_sbindir}/medulla_mysql_exec_uninstall_unnecessary_update_package.sh
 
 %_docdir/pulse2/contrib/
@@ -1459,6 +1461,8 @@ Summary:    Security plugin for the MMC agent
 Group:      System/Servers
 Requires:   pulse2-common = %version-%release
 Requires:   python3-pulse2-common-database-mobile = %version-%release
+Requires:   python3-socketio
+Requires:   python3-websocket
 
 Obsoletes:  python-mmc-security < 4.7.0
 Provides:   python-mmc-security = %version-%release

@@ -36,7 +36,7 @@ $sidemenu->addSideMenuItem(
     new SideMenuItem(_T("New Cluster", 'admin'), "admin", "admin", "newCluster")
 );
 $sidemenu->addSideMenuItem(
-    new SideMenuItem(_T("Rules","admin"), "admin", "admin", "rules")
+    new SideMenuItem(_T("Rules list","admin"), "admin", "admin", "rules")
 );
 
 //--------------------- Entity Manager ----------------
@@ -50,21 +50,21 @@ $userLabel = ($action === 'edituser')
 : _T("Add User", "admin");
 
 $providerLabel = ($action === 'editprovider')
-? (($mode === 'edit') ? _T("Edit Provider", "admin") : _T("Add Provider", "admin"))
-: _T("Add Provider", "admin");
-
-// Configuration
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Configuration", "admin"), "admin", "admin", "configList"));
+? (($mode === 'edit') ? _T("Edit OIDC Client", "admin") : _T("New OIDC Client", "admin"))
+: _T("New OIDC Client", "admin");
 
 // Side menu
 $sidemenu->addSideMenuItem(new SideMenuItem($userLabel,     "admin", "admin", "editUser"));
 
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Manage Providers", "admin"), "admin", "admin", "manageproviders"));
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("OIDC Clients", "admin"), "admin", "admin", "manageproviders"));
 
 $sidemenu->addSideMenuItem(new SideMenuItem($providerLabel, "admin", "admin", "editProvider"));
 
+// Configuration
+//$sidemenu->addSideMenuItem(new SideMenuItem(_T("Configuration", "admin"), "admin", "admin", "configList"));
+
 // --------------------- WebSocket Logs ----------------
 $sidemenu->addSideMenuItem(
-    new SideMenuItem(_T("Server Logs","admin"), "admin", "admin", "webSocket_logs")
+    new SideMenuItem(_T("Server Logs", "admin"), "admin", "admin", "websocketLogs")
 );
 ?>

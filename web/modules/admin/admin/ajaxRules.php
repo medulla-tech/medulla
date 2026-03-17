@@ -63,7 +63,6 @@ $listActions = [];
 $newActions = [];
 $params = [];
 
-$is_default = false;
 foreach($rulesList['datas']['name'] as $key=>$array){
   $params[] = [
     'id' => $rulesList['datas']['id'][$key],
@@ -72,21 +71,13 @@ foreach($rulesList['datas']['name'] as $key=>$array){
     'prev_action' => 'rules'
   ];
 
-  $color = ($is_default) ? "red" : "green";
-
-  $rulesList['datas']['id'][$key] = '<span style="color:'.$color.';" class="clickable">'.$rulesList['datas']['id'][$key].'</span>';
-  $rulesList['datas']['name'][$key] = '<span style="color:'.$color.';" class="clickable">'.$rulesList['datas']['name'][$key].'</span>';
-  $rulesList['datas']['description'][$key] = '<span style="color:'.$color.';" class="clickable">'.$rulesList['datas']['description'][$key].'</span>';
-  $rulesList['datas']['level'][$key] = '<span style="color:'.$color.';" class="clickable">'.$rulesList['datas']['level'][$key].'</span>';
-
+  $rulesList['datas']['name'][$key] = '<span class="clickable">'.$rulesList['datas']['name'][$key].'</span>';
+  $rulesList['datas']['description'][$key] = '<span class="clickable">'.$rulesList['datas']['description'][$key].'</span>';
 
   $raiseActions[] = $raiseAction;
   $lowerActions[] = $lowerAction;
   $listActions[] = $listAction;
   $newActions[] = $newAction;
-
-  if($params[$key]['name'] == 'default')
-    $is_default = true;
 }
 
 // Avoiding the CSS selector (tr id) to start with a number
@@ -100,13 +91,12 @@ if($rulesList['total'] > 0){
   $n->setcssIds($ids_clusters_rules);
   $n->disableFirstColumnActionLink();
   $n->addExtraInfo( $rulesList['datas']['description'], _T("Description", "admin"));
-  $n->addExtraInfo( $rulesList['datas']['level'], _T("Level", "admin"));
-  $n->addExtraInfo( $rulesList['datas']['count'], _T("Associated rules", "admin"));
+  $n->addExtraInfoCentered( $rulesList['datas']['level'], _T("Level", "admin"), "80px");
+  $n->addExtraInfoCentered( $rulesList['datas']['count'], _T("Associated rules", "admin"), "120px");
   $n->addActionItemArray($raiseActions);
   $n->addActionItemArray($lowerActions);
   $n->addActionItemArray($listActions);
   $n->addActionItemArray($newActions);
-  $n->setTableHeaderPadding(0);
   $n->setItemCount($rulesList['total']);
   $n->setNavBar(new AjaxNavBar($rulesList['total'], $filter, "updateSearchParamformRunning"));
 
@@ -128,12 +118,6 @@ else{
 }
 ?>
 
-<style>
-  .clickable{
-    cursor: pointer;
-  }
-</style>
-
 <script>
 jQuery(".clickable").on("click", function(){
   jQuery("#paramformRunning").val(jQuery(this).text());
@@ -143,4 +127,11 @@ jQuery(".clickable").on("click", function(){
 jQuery(".up:first").hide();
 jQuery(".down:last").hide();
 jQuery(".up:last").css("margin-right", "35px");
+
+// Highlight default rule row
+jQuery(".listinfos tbody tr").each(function(){
+  if(jQuery(this).find("td:first .clickable").text().trim() === "default"){
+    jQuery(this).addClass("rule-default-row");
+  }
+});
 </script>
