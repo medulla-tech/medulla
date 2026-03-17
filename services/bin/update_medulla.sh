@@ -187,6 +187,22 @@ update_repo_defs() {
     write_to_log "$str"
 }
 
+setup_apt_sources() {
+    str="Setting up apt sources for Medulla..."
+    echo "$str"
+    write_to_log "$str"
+    curl -fsSL https://apt.medulla-tech.io/stable.sources -o /etc/apt/sources.list.d/medulla.sources
+    if [[ $? -ne 0 ]]; then
+        str="[x] Error downloading apt sources file. Aborting."
+        echo "$str"
+        write_to_log "$str"
+        exit 1
+    fi
+    str="[v] Apt sources for Medulla set up successfully."
+    echo "$str"
+    write_to_log "$str"
+}
+
 update_medulla() {
     str="[=] Updating Medulla packages to the latest version..."
     echo "$str"
@@ -207,26 +223,27 @@ update_relays() {
     str="[=] Updating Medulla packages to the latest version on relay servers..."
     echo "$str"
     write_to_log "$str"
+    SSH_OPTIONS='-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
     RELAYS=$(mysql --defaults-group-suffix=medulla xmppmaster -Bse "SELECT nameserver FROM relayserver WHERE jid NOT LIKE 'rspulse%@pulse/%';")
     for RELAY in ${RELAYS}; do
         str=" Updating relay server: ${RELAY} ..."
         echo "$str"
         write_to_log "$str"
-        ssh root@${RELAY} "apt update &> /dev/null"
+        ssh ${SSH_OPTIONS} root@${RELAY} "apt update &> /dev/null"
         if [[ $? -ne 0 ]]; then
             str="[x] Error updating repository on relay server: ${RELAY}. Aborting."
             echo "$str"
             write_to_log "$str"
             exit 1
         fi
-        ssh root@${RELAY} "DEBIAN_FRONTEND=noninteractive apt -o Dpkg::Options::='--force-confold' --force-yes -y upgrade &> /dev/null"
+        ssh ${SSH_OPTIONS} root@${RELAY} "DEBIAN_FRONTEND=noninteractive apt -o Dpkg::Options::='--force-confold' --force-yes -y upgrade &> /dev/null"
         if [[ $? -ne 0 ]]; then
             str="[x] Error updating relay server: ${RELAY}. Aborting."
             echo "$str"
             write_to_log "$str"
             exit 1
         fi
-        ssh root@${RELAY} "/usr/sbin/restart-pulse-services &> /dev/null"
+        ssh ${SSH_OPTIONS} root@${RELAY} "/usr/sbin/restart-pulse-services &> /dev/null"
         if [[ $? -ne 0 ]]; then
             str="[x] Error restarting services on relay server: ${RELAY}. Aborting."
             echo "$str"
@@ -497,22 +514,6 @@ update_546_to_550() {
     str="Applying Medulla config update from 5.4.6 to 5.5.0..."
     echo "$str"
     write_to_log "$str"
-
-    ## Setup new apt sources
-    str="[=] Setting up new apt sources for Medulla 5.5.0..."
-    echo "$str"
-    write_to_log "$str"
-    curl -fsSL https://apt.medulla-tech.io/stable.sources -o /etc/apt/sources.list.d/medulla.sources
-    if [[ $? -ne 0 ]]; then
-        str="[x] Error downloading new apt sources file. Aborting."
-        echo "$str"
-        write_to_log "$str"
-        exit 1
-    fi
-    str="[v] New apt sources for Medulla 5.5.0 setup successfully."
-    echo "$str"
-    write_to_log "$str"
-    update_repo_defs
     update_medulla
 
     ## Setup new MMC module: security
@@ -641,6 +642,8 @@ else
     download_migration_script_and_restart
 fi
 
+# Setup apt sources for Medulla updates
+setup_apt_sources
 # Update repo definitions
 update_repo_defs
 
