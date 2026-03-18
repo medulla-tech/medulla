@@ -146,14 +146,7 @@ setup_new_mmc_module() {
     if [[ -n "${PUBLIC_IP}" ]]; then
         mysql --defaults-group-suffix=dbsetup -e "GRANT ALL PRIVILEGES ON ${module_name}.* TO '${DBUSER}'@'${PUBLIC_IP}' IDENTIFIED BY '${DBPASS}'; FLUSH PRIVILEGES;"
     fi
-    # Restart mmc-agent to apply changes
-    systemctl restart mmc-agent
-    if [[ $? -ne 0 ]]; then
-        str="[x] Error installing MMC module $module_name. Aborting."
-        echo "$str"
-        write_to_log "$str"
-        exit 1
-    fi
+    # mmc-agent will be restarted in final_operations
     str="[v] MMC module $module_name setup completed successfully."
     echo "$str"
     write_to_log "$str"
@@ -537,14 +530,7 @@ update_546_to_550() {
         write_to_log "$str"
         exit 1
     fi
-    # Restart mmc-agent to apply changes
-    systemctl restart mmc-agent
-    if [[ $? -ne 0 ]]; then
-        str="[x] Error restarting mmc-agent after configuring security module. Aborting."
-        echo "$str"
-        write_to_log "$str"
-        exit 1
-    fi
+    # mmc-agent will be restarted in final_operations
     str="[v] Medulla MMC module 'security' setup and configuration applied successfully."
     echo "$str"
     write_to_log "$str"
