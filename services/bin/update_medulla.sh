@@ -168,7 +168,7 @@ check_medulla_version() {
         echo "${CURRENT_VERSION}" > /var/lib/mmc/version
     fi
     # Get available version from the repository
-    AVAILABLE_VERSION=$(apt-cache policy pulse2-common | grep Candidate | awk '{print $2}' | cut -d'g' -f1)
+    AVAILABLE_VERSION=$(apt-cache policy pulse2-common | grep Candidat | awk '{print $2}' | cut -d'g' -f1)
 }
 
 update_repo_defs() {
