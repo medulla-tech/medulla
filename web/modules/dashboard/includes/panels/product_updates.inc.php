@@ -304,7 +304,6 @@ class UpdatePanel extends Panel {
                     updateWs = new MedullaWebSocket(wsUrl, {
                         onConnect: function() {
                             updateWs.subscribe('medulla', 'medulla_update', 'tail1');
-                            // WS is ready, now start the update
                             setTimeout(startUpdate, 500);
                         },
                         onLog: function(data) {
@@ -314,7 +313,6 @@ class UpdatePanel extends Panel {
                             }
                             addLogLine(data);
 
-                            // Detect end of update from log content
                             if (data.indexOf('migration completed successfully') !== -1) {
                                 onUpdateComplete(true);
                             } else if (data.indexOf('Aborting') !== -1) {
