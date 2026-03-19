@@ -71,7 +71,7 @@ def activate():
         logger.warning("Plugin medulla_server: disabled by configuration.")
         return False
     if not Pulse2Database().activate(config):
-        logger.warning(
+        logger.error(
             "Plugin medulla_server: an error occurred during the database initialization"
         )
         return False

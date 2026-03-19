@@ -67,7 +67,7 @@ def activate():
         return False
 
     if not KioskDatabase().activate(config):
-        logger.warning(
+        logger.error(
             "Plugin kiosk: an error occurred during the database initialization"
         )
         return False

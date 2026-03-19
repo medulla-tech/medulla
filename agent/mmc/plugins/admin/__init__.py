@@ -21,7 +21,7 @@ def activate():
         return False
 
     if not AdminDatabase().activate(config):
-        logger.warning(
+        logger.error(
             "Plugin admin: an error occurred during the database initialization"
         )
         return False

@@ -91,8 +91,8 @@ def activate():
         logger.warning("Plugin xmppmaster: disabled by configuration.")
         return False
     if not XmppMasterDatabase().activate(config):
-        logger.warning(
-            "Plugin XmppMaster: an error occurred during the database initialization"
+        logger.error(
+            "Plugin xmppmaster: an error occurred during the database initialization"
         )
         return False
     return True

@@ -24,7 +24,7 @@ def activate():
         return False
  
     if not MobileDatabase().activate(config):
-        logger.warning(
+        logger.error(
             "Plugin %s: an error occurred during the database initialization" % "mobile")
         return False
     return True

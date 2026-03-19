@@ -49,7 +49,7 @@ def activate():
         return False
 
     if not UrbackupDatabase().activate(config):
-        logger.warning(
+        logger.error(
             "Plugin urbackup: an error occurred during the database initialization"
         )
         return False

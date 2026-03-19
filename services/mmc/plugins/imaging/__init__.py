@@ -73,7 +73,7 @@ def activate():
 
     # Initialize imaging database
     if not ImagingDatabase().activate(config):
-        logger.warning(
+        logger.error(
             "Plugin imaging: an error occurred during the database initialization"
         )
         return False
