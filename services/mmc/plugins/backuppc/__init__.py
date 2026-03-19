@@ -50,7 +50,7 @@ def activate():
         logger.warning("Plugin backuppc: disabled by configuration.")
         return False
     if not BackuppcDatabase().activate(config):
-        logger.warning(
+        logger.error(
             "Plugin backuppc: an error occurred during the database initialization"
         )
         return False

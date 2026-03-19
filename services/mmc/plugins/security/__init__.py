@@ -28,7 +28,7 @@ def activate():
         logger.warning("Plugin security: disabled by configuration.")
         return False
     if not SecurityDatabase().activate(config):
-        logger.warning(
+        logger.error(
             "Plugin security: an error occurred during the database initialization")
         return False
     logger.info("Plugin security: activated successfully")

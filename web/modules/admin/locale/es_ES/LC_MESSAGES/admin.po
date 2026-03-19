@@ -1160,3 +1160,6 @@ msgstr "Nombre del clúster"
 
 msgid "Rules list"
 msgstr "Lista de reglas"
+
+msgid "Validate"
+msgstr "Validar"

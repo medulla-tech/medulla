@@ -28,7 +28,7 @@ def activate():
         logger.warning("Plugin store: disabled by configuration.")
         return False
     if not StoreDatabase().activate(config):
-        logger.warning("Plugin store: an error occurred during the database initialization")
+        logger.error("Plugin store: an error occurred during the database initialization")
         return False
     return True
 

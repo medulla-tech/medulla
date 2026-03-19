@@ -1118,3 +1118,6 @@ msgstr "Nom du cluster"
 
 msgid "Rules list"
 msgstr "Liste des règles"
+
+msgid "Validate"
+msgstr "Valider"

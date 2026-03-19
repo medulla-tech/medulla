@@ -49,7 +49,8 @@ $editremoteconfiguration = new ActionItem(_("Edit config files"),"conffile","con
 $detailactionempty = new EmptyActionItem1(_("Relay Detail"),"relaystatusdetail", "logfileg","","admin", "admin");
 $detailaction = new ActionItem(_("Relay Detail"),"relaystatusdetail", "logfile","","admin", "admin");
 
-$quickaction = new ActionPopupItem(_("Detail actions"), "detailactions", "quick", "", "admin", "admin", "", "620");
+$quickaction = new ActionPopupItem(_("Detail actions"), "detailactions", "quick", "", "admin", "admin");
+$quickaction->setWidth(800);
 $quickactionempty = new EmptyActionItem1(_("Detail actions"), "detailactions", "quickg", "", "admin", "admin");
 
 $consoleaction = new ActionPopupItem(_("Console Relay"), "consolerelay", "console", "", "admin", "admin");

@@ -75,7 +75,7 @@ def activate():
         return False
 
     if not MasteringDatabase().activate(config):
-        logger.warning("Plugin mastering: an error occurred during the database initialization")
+        logger.error("Plugin mastering: an error occurred during the database initialization")
         return False
     return True
 
