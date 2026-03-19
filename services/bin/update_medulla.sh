@@ -224,19 +224,19 @@ update_relays() {
         write_to_log "$str"
         ssh ${SSH_OPTIONS} root@${RELAY} "apt update &> /dev/null"
         if [[ $? -ne 0 ]]; then
-            str="[x] Error updating repository on relay server: ${RELAY}."
+            str="[!] Error updating repository on relay server: ${RELAY}."
             echo "$str"
             write_to_log "$str"
         fi
         ssh ${SSH_OPTIONS} root@${RELAY} "DEBIAN_FRONTEND=noninteractive apt -o Dpkg::Options::='--force-confold' --force-yes -y upgrade &> /dev/null"
         if [[ $? -ne 0 ]]; then
-            str="[x] Error updating relay server: ${RELAY}. Aborting."
+            str="[!] Error updating relay server: ${RELAY}."
             echo "$str"
             write_to_log "$str"
         fi
         ssh ${SSH_OPTIONS} root@${RELAY} "/usr/sbin/restart-pulse-services &> /dev/null"
         if [[ $? -ne 0 ]]; then
-            str="[x] Error restarting services on relay server: ${RELAY}."
+            str="[!] Error restarting services on relay server: ${RELAY}."
             echo "$str"
             write_to_log "$str"
         fi
