@@ -305,12 +305,12 @@ END$$
 DELIMITER ;
 
 
-INSERT INTO `xmppmaster`.`applicationconfig` (`key`, `value`, `comment`, `context`, `module`, `enable`) VALUES ('table produits', 'up_packages_Win11_X64_25H2', 'Microsoft Windows 11 [ fin support 2027/10 ]', 'entity', 'xmppmaster/update', '1');
+INSERT IGNORE INTO `xmppmaster`.`applicationconfig` (`key`, `value`, `comment`, `context`, `module`, `enable`) VALUES ('table produits', 'up_packages_Win11_X64_25H2', 'Microsoft Windows 11 [ fin support 2027/10 ]', 'entity', 'xmppmaster/update', '1');
 
 
-INSERT INTO `xmppmaster`.`applicationconfig` (`key`, `value`, `comment`, `context`, `module`, `enable`) VALUES ('table produits', 'up_packages_Win11_X64_26H2', 'Microsoft Windows 11 [ fin support 2027/10 ]', 'entity', 'xmppmaster/update', '0');
+INSERT IGNORE INTO `xmppmaster`.`applicationconfig` (`key`, `value`, `comment`, `context`, `module`, `enable`) VALUES ('table produits', 'up_packages_Win11_X64_26H2', 'Microsoft Windows 11 [ fin support 2027/10 ]', 'entity', 'xmppmaster/update', '0');
 
-INSERT INTO `up_packages_major_Lang_code` VALUES
+INSERT IGNORE INTO `up_packages_major_Lang_code` VALUES
 (11,'ar-SA','0401','Arabic',0,'Win11_25H2_Arabic_x64.iso','Win11upd_25H2_Arabic_x64_pbqbowfj6h9lom'),
 (11,'bg-BG','0402','Bulgarian',0,'Win11_25H2_Bulgarian_x64.iso','Win11upd_25H2_Bulgarian_x64_pbqbowfj6h9lom'),
 (11,'cs-CZ','0405','Czech',0,'Win11_25H2_Czech_x64.iso','Win11upd_25H2_Czech_x64_pbqbowfj6h9lom'),
@@ -348,7 +348,7 @@ INSERT INTO `up_packages_major_Lang_code` VALUES
 (11,'zh-TW','0404','Chinese - Traditional',0,'Win11_25H2_Chinese_Traditional_x64.iso','Win11upd_25H2_Chinese_Traditional_x64');
 
 /*
-INSERT INTO `up_packages_major_Lang_code` VALUES
+INSERT IGNORE INTO `up_packages_major_Lang_code` VALUES
 (11,'ar-SA','0401','Arabic',0,'Win11_25H2_Arabic_ARM64.iso','Win11upd_25H2_Arabic_ARM64_pbqbowfj6h'),
 (11,'bg-BG','0402','Bulgarian',0,'Win11_25H2_Bulgarian_ARM64.iso','Win11upd_25H2_Bulgarian_ARM64_pbqbow'),
 (11,'cs-CZ','0405','Czech',0,'Win11_25H2_Czech_ARM64.iso','Win11upd_25H2_Czech_ARM64_pbqbowfj6h9'),
