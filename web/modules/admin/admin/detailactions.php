@@ -25,45 +25,47 @@
 
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 
-$p = new PageGenerator(_T("Detail Actions", 'glpi'));
-$p->display();
 if(isset($_GET['jid']))
 {
   $jid = $_GET['jid'];
   $agenttype = '';
   if(isset($_GET['agenttype']))
     $agenttype= htmlentities($_GET['agenttype']);
-  echo '<table>';
-  echo '<tr>';
-    echo '<th>Reboot</th>';
-    echo '<th>Process</th>';
-    echo '<th>Disk Usage</th>';
-    echo '<th>Agent Version</th>';
-    echo '<th>Netstat</th>';
-    echo '<th>Console</th>';
-  echo '</tr>';
 
-  echo '<tr>';
-  echo '<td id="reboot" align="center"><img src="img/actions/restart.svg" height="70" width="70"></td>';
-  echo '<td id="process" align="center"><a href="'.urlStrRedirect("xmppmaster/xmppmaster/xmppMonitoring", ['jid'=>$jid, 'agenttype'=>$agenttype,'information'=>'clone_ps_aux']).'"><img src="img/actions/process.svg" height="70" width="70"></a></td>';
-  echo '<td id="diskusage" align="center"><a href="'.urlStrRedirect("xmppmaster/xmppmaster/xmppMonitoring", ['jid'=>$jid, 'agenttype'=>$agenttype,'information'=>'disk_usage']).'"><img src="img/actions/disk.svg" height="70" width="70"></a></td>';
-  echo '<td id="agentversion" align="center"><a href="'.urlStrRedirect("xmppmaster/xmppmaster/xmppMonitoring", ['jid'=>$jid, 'agenttype'=>$agenttype,'information'=>'agentinfos']).'"><img src="img/actions/info.svg" height="70" width="70"></a></td>';
-  echo '<td id="netstat" align="center"><a href="'.urlStrRedirect("xmppmaster/xmppmaster/xmppMonitoring", ['jid'=>$jid, 'agenttype'=>$agenttype,'information'=>'netstat']).'"><img src="img/actions/network.svg" height="70" width="70"></a></td>';
-  echo '<td id="console" align="center"><a href="'.urlStrRedirect("xmppmaster/xmppmaster/consolexmpp", ['jid'=>$jid, 'agenttype'=>$agenttype,'information'=>'agentinfos']).'"><img src="img/actions/console.svg" height="70" width="70"></a></td>';
-  echo '</tr>';
-  echo '</table>';
+  echo '<div class="quick-actions-popup">';
+  echo '<h1>' . _T("Detail Actions", 'glpi') . '</h1>';
+
+  // Actions section
+  echo '<div class="actions-section">';
+  echo '<div class="actions-grid">';
+  echo '<div class="action-item" id="reboot"><img src="img/actions/restart.svg" width="50" height="50"><span>'._T("Reboot", "xmppmaster").'</span></div>';
+  echo '<a class="action-item" href="'.urlStrRedirect("xmppmaster/xmppmaster/xmppMonitoring", ['jid'=>$jid, 'agenttype'=>$agenttype,'information'=>'clone_ps_aux']).'"><img src="img/actions/process.svg" width="50" height="50"><span>'._T("Process", "xmppmaster").'</span></a>';
+  echo '<a class="action-item" href="'.urlStrRedirect("xmppmaster/xmppmaster/xmppMonitoring", ['jid'=>$jid, 'agenttype'=>$agenttype,'information'=>'disk_usage']).'"><img src="img/actions/disk.svg" width="50" height="50"><span>'._T("Disk usage", "xmppmaster").'</span></a>';
+  echo '<a class="action-item" href="'.urlStrRedirect("xmppmaster/xmppmaster/xmppMonitoring", ['jid'=>$jid, 'agenttype'=>$agenttype,'information'=>'agentinfos']).'"><img src="img/actions/info.svg" width="50" height="50"><span>'._T("Agent details", "xmppmaster").'</span></a>';
+  echo '<a class="action-item" href="'.urlStrRedirect("xmppmaster/xmppmaster/xmppMonitoring", ['jid'=>$jid, 'agenttype'=>$agenttype,'information'=>'netstat']).'"><img src="img/actions/network.svg" width="50" height="50"><span>'._T("Netstat", "xmppmaster").'</span></a>';
+  echo '<a class="action-item" href="'.urlStrRedirect("xmppmaster/xmppmaster/consolexmpp", ['jid'=>$jid, 'agenttype'=>$agenttype,'information'=>'agentinfos']).'"><img src="img/actions/console.svg" width="50" height="50"><span>'._T("Console", "xmppmaster").'</span></a>';
+  echo '</div>';
+  echo '</div>';
+
+  // Custom command section
   $qalist = xmlrpc_get_qa_for_relays($_SESSION['login']);
-
+  echo '<div class="custom-command-section">';
+  echo '<h3>'._T("Custom command", "xmppmaster").'</h3>';
   echo '<form action="'.urlStrRedirect("admin/admin/qalaunched").'" method="post">';
+  echo '<div class="command-row">';
   echo '<select name="qa_relay_id">';
   foreach($qalist as $qa){
-    echo '<option value="'.$qa['id'].'" >'.$qa['description'].'</option>';
+    echo '<option value="'.$qa['id'].'" >'.htmlspecialchars($qa['description']).'</option>';
   }
   echo '</select>';
-  echo '<input type="hidden" name="jid" value="'.$jid.'"/>';
-  echo '<input type="hidden" name="launch_relay_qa" value="'.$jid.'"/>';
-  echo '<input id="buttoncmd" class="btn btn-primary" type="submit" value="Send custom command">';
+  echo '<input type="hidden" name="jid" value="'.htmlspecialchars($jid).'"/>';
+  echo '<input type="hidden" name="launch_relay_qa" value="'.htmlspecialchars($jid).'"/>';
+  echo '<input class="btnPrimary" type="submit" value="'._T("Send custom command", "xmppmaster").'">';
+  echo '</div>';
   echo '</form>';
+  echo '</div>';
+
+  echo '</div>';
 }
 
 ?>
