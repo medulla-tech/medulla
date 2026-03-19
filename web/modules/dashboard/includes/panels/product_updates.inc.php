@@ -46,7 +46,7 @@ class UpdatePanel extends Panel {
         $success_msg        = _T('Update completed successfully!', 'dashboard');
         $fail_msg           = _T('Update failed.', 'dashboard');
         $fail_help          = _T('Check /var/log/medulla_update.log on the server for details.', 'dashboard');
-        $redirect_msg       = _T('Redirecting to login page…', 'dashboard');
+        $redirect_msg       = _T('Services are restarting, redirecting in', 'dashboard');
 
         // Disclaimer
         $disclaimer_title   = _T('WARNING: BACKUP REQUIRED BEFORE UPDATE', 'dashboard');
@@ -272,13 +272,20 @@ class UpdatePanel extends Panel {
                     if (c) c.remove();
 
                     if (success) {
+                        var countdown = 25;
                         $('#updateStatus').addClass('success').html(
                             {$successMsgJson} +
-                            '<div class="redirect-msg">' + {$redirectMsgJson} + '</div>'
+                            '<div class="redirect-msg">' + {$redirectMsgJson} + ' <span id="countdown">' + countdown + '</span>s</div>'
                         );
-                        setTimeout(function() {
-                            (window.top || window).location.href = '/mmc/index.php?update=success';
-                        }, 5000);
+                        var countdownInterval = setInterval(function() {
+                            countdown--;
+                            var el = document.getElementById('countdown');
+                            if (el) el.textContent = countdown;
+                            if (countdown <= 0) {
+                                clearInterval(countdownInterval);
+                                (window.top || window).location.href = '/mmc/index.php?update=success';
+                            }
+                        }, 1000);
                     } else {
                         $('#updateStatus').addClass('error').html(
                             {$failMsgJson} +

@@ -204,6 +204,10 @@ msgid "Redirecting to login page…"
 msgstr "Redirection vers la page de connexion…"
 
 #: modules/dashboard/includes/panels/product_updates.inc.php
+msgid "Services are restarting, redirecting in"
+msgstr "Les services redémarrent, redirection dans"
+
+#: modules/dashboard/includes/panels/product_updates.inc.php
 msgid "WARNING: BACKUP REQUIRED BEFORE UPDATE"
 msgstr "Sauvegarde requise avant mise à jour"
 
