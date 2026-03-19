@@ -261,7 +261,7 @@ msgstr "Le redémarrage est terminé... reconnectez-vous dans un instant."
 
 #: modules/dashboard/includes/panels/product_updates.inc.php:47
 msgid "Regenerate Agent Machine"
-msgstr "Machine à régénérer les agents"
+msgstr "Régénérer les agents"
 
 #: modules/dashboard/includes/panels/successRate.inc.php:30
 msgid "Success Rate"

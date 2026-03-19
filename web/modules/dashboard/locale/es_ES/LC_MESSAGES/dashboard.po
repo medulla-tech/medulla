@@ -272,7 +272,7 @@ msgstr "El reinicio termina ... volver a conectar en un momento."
 
 #: modules/dashboard/includes/panels/product_updates.inc.php:47
 msgid "Regenerate Agent Machine"
-msgstr "Máquina regeneradora de agentes"
+msgstr "Regenerar los agentes"
 
 #: modules/dashboard/includes/panels/successRate.inc.php:30
 msgid "Success Rate"
