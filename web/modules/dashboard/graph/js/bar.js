@@ -21,7 +21,7 @@
 function barchart(selector, rawdatas){
   var config = {
       top: 10,
-      right: 45,
+      right: 70,
       bottom: 10,
       left: 32,
       width: 140,
