@@ -40,7 +40,7 @@ class UpdatePanel extends Panel {
         $labelRestart       = _T("Restart Medulla Services");
         $msgRestart         = _T("Restarting in progress ... You will be redirected to the connection.");
         $msgIndex           = _T("The restart ends ... reconnect in a moment.");
-        $labelRegenerate    = _T("Regenerate Agent Machine");
+        $labelRegenerate    = _T("Regenerate Agents");
 
         $installing_title   = _T('Installing updates in progress…', 'dashboard');
         $success_msg        = _T('Update completed successfully!', 'dashboard');
