@@ -554,6 +554,24 @@ update_546_to_550() {
     echo "$str"
     write_to_log "$str"
 
+    # Create cron job for checking for Medulla updates
+    str="[=] Setting up cron job for checking for Medulla updates..."
+    echo "$str"
+    write_to_log "$str"
+    # Create /etc/cron.d/check_medulla_updates
+    echo "0 3 * * * root /usr/sbin/check_medulla_updates.sh 2>&1 | tee -a /tmp/check_medulla_updates.log" > /etc/cron.d/check_medulla_updates
+    # Restart cron service to apply changes
+    systemctl restart cron
+    if [[ $? -ne 0 ]]; then
+        str="[x] Error setting up cron job for checking for Medulla updates. Aborting."
+        echo "$str"
+        write_to_log "$str"
+        exit 1
+    fi
+    str="[v] Cron job for checking for Medulla updates set up successfully."
+    echo "$str"
+    write_to_log "$str"
+
     update_relays
     echo "5.5.0" > /var/lib/mmc/version
     str="[v] Medulla config update from 5.4.6 to 5.5.0 applied successfully."
