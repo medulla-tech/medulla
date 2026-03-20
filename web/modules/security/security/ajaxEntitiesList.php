@@ -36,10 +36,6 @@ $policies = xmlrpc_get_policies();
 $minSeverity = $policies['display']['min_severity'] ?? 'None';
 $showSeverity = SeverityHelper::getVisibility($minSeverity);
 
-// Check if a global scan is running
-$summary = xmlrpc_get_dashboard_summary('');
-$globalScanRunning = isset($summary['last_scan']['status']) && $summary['last_scan']['status'] === 'running';
-
 // Get data from backend (filtered by user's accessible entities)
 $result = xmlrpc_get_entities_summary($start, $maxperpage, $filter, $userEntities);
 $data = $result['data'];
@@ -74,11 +70,6 @@ foreach ($data as $row) {
 
 // Actions - view machines in this entity
 $detailAction = new ActionItem(_T("View Machines", "security"), "machines", "display", "", "security", "security");
-if ($globalScanRunning) {
-    $scanAction = new EmptyActionItem1(_T("Scan unavailable: a global scan is in progress", "security"), "ajaxStartScanEntity", "scang");
-} else {
-    $scanAction = new ActionPopupItem(_T("Scan this entity", "security"), "ajaxStartScanEntity", "scan", "", "security", "security");
-}
 
 // Display the list
 if ($count > 0) {
@@ -95,7 +86,6 @@ if ($count > 0) {
     $n->setNavBar(new AjaxNavBar($count, $filter));
     $n->setParamInfo($params);
     $n->addActionItem($detailAction);
-    $n->addActionItem($scanAction);
     $n->start = 0;
     $n->end = $count;
     $n->display();

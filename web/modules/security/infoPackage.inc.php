@@ -142,24 +142,6 @@ $page->setFile("modules/security/security/ajaxGroupMachinesList.php");
 $page->setOptions(array("visible" => False, "noHeader" => True, "AJAX" => True));
 $submod->addPage($page);
 
-// Ajax Start Scan popup
-$page = new Page("ajaxStartScan", _T('Start Scan', 'security'));
-$page->setFile("modules/security/security/ajaxStartScan.php");
-$page->setOptions(array("visible" => False, "noHeader" => True, "AJAX" => True));
-$submod->addPage($page);
-
-// Ajax Start Scan Entity popup
-$page = new Page("ajaxStartScanEntity", _T('Scan Entity', 'security'));
-$page->setFile("modules/security/security/ajaxStartScanEntity.php");
-$page->setOptions(array("visible" => False, "noHeader" => True, "AJAX" => True));
-$submod->addPage($page);
-
-// Ajax Start Scan Group popup
-$page = new Page("ajaxStartScanGroup", _T('Scan Group', 'security'));
-$page->setFile("modules/security/security/ajaxStartScanGroup.php");
-$page->setOptions(array("visible" => False, "noHeader" => True, "AJAX" => True));
-$submod->addPage($page);
-
 // Ajax Scan Machine popup
 $page = new Page("ajaxScanMachine", _T('Scan Machine', 'security'));
 $page->setFile("modules/security/security/ajaxScanMachine.php");
