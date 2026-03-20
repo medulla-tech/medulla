@@ -36,10 +36,6 @@ $policies = xmlrpc_get_policies();
 $minSeverity = $policies['display']['min_severity'] ?? 'None';
 $showSeverity = SeverityHelper::getVisibility($minSeverity);
 
-// Check if a global scan is running
-$summary = xmlrpc_get_dashboard_summary('');
-$globalScanRunning = isset($summary['last_scan']['status']) && $summary['last_scan']['status'] === 'running';
-
 // Get data from backend (filtered by ShareGroup for this user)
 $result = xmlrpc_get_groups_summary($start, $maxperpage, $filter, $userLogin);
 $data = $result['data'];
@@ -75,11 +71,6 @@ foreach ($data as $row) {
 
 // Actions - view details for this group
 $detailAction = new ActionItem(_T("View Details", "security"), "groupDetail", "display", "", "security", "security");
-if ($globalScanRunning) {
-    $scanAction = new EmptyActionItem1(_T("Scan unavailable: a global scan is in progress", "security"), "ajaxStartScanGroup", "scang");
-} else {
-    $scanAction = new ActionPopupItem(_T("Scan this group", "security"), "ajaxStartScanGroup", "scan", "", "security", "security");
-}
 $excludeAction = new ActionPopupItem(_T("Exclude from reports", "security"), "ajaxAddExclusion", "delete", "", "security", "security");
 $excludeAction->setWidth(450);
 
@@ -99,7 +90,6 @@ if ($count > 0) {
     $n->setNavBar(new AjaxNavBar($count, $filter));
     $n->setParamInfo($params);
     $n->addActionItem($detailAction);
-    $n->addActionItem($scanAction);
     $n->addActionItem($excludeAction);
     $n->start = 0;
     $n->end = $count;

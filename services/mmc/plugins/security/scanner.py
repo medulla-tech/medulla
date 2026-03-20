@@ -1009,25 +1009,6 @@ def run_cve_scan(scan_id: Optional[int] = None, entity_id: Optional[int] = None,
         return {'scan_id': scan_id, 'status': 'failed', 'error': str(e), **stats}
 
 
-def run_scan_async():
-    """Run CVE scan in a background thread"""
-    from pulse2.database.security import SecurityDatabase
-    from mmc.plugins.security.config import SecurityConfig
-
-    # Ensure database is activated
-    security_db = SecurityDatabase()
-    if not SecurityDatabase.is_activated:
-        config = SecurityConfig("security")
-        security_db.activate(config)
-
-    scan_id = security_db.create_scan()
-    thread = Thread(target=run_cve_scan, args=(scan_id,), daemon=True)
-    thread.start()
-
-    logger.info(f"Started async CVE scan with ID: {scan_id}")
-    return scan_id
-
-
 def scan_single_machine(id_glpi: int) -> Dict[str, Any]:
     """
     Scan a single machine - scans only software installed on this machine.
