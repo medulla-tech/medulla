@@ -63,7 +63,6 @@ class SecurityConfig(PluginConfig, SecurityDatabaseConfig):
         self.cve_central_url = ''
         self.cve_central_server_id = ''
         self.cve_central_keyAES32 = ''
-        self.use_websocket = True
 
     def __getattr__(self, name):
         """Lazy load policies from DB on first access to policy attributes."""
@@ -90,8 +89,6 @@ class SecurityConfig(PluginConfig, SecurityDatabaseConfig):
             self.cve_central_url = self.safe_get("cve_central", "url", "")
             self.cve_central_server_id = self.safe_get("cve_central", "server_id", "")
             self.cve_central_keyAES32 = self.safe_get("cve_central", "keyAES32", "")
-            use_ws = self.safe_get("cve_central", "use_websocket", "true").lower()
-            self.use_websocket = use_ws in ('true', '1', 'yes', 'on')
 
         # NOTE: [display] and [exclusions] are NOT read from .ini
         # They are loaded from database via _load_db_policies()
