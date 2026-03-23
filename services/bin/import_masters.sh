@@ -37,10 +37,10 @@ import_w1125h2profrx64() {
     # Insert master record in db for Windows 11 25H2 Professionnel FR x64
     echo "Inserting Windows 11 25H2 Professionnel FR x64 master into database..."
     mysql -N -s -h ${DBHOST} -P ${DBPORT} -u${DBUSER} -p${DBPASS} imaging -e "INSERT INTO Image VALUES (1,'/var/lib/pulse2/imaging/masters/4dddf514-c4f6-11f0-ade0-bc2411916521','Master Windows 11 Pro FR','4dddf514-c4f6-11f0-ade0-bc2411916521','Windows 11 25H2 Professionnel FR x64','',9063433016,1,'2025-11-19 03:17:39',1,0,1)"
-    mysql -N -s -h ${DBHOST} -P ${DBPORT} -u${DBUSER} -p${DBPASS} imaging -e "INSERT INTO Target (id, name, uuid, raw_mode, type, is_registered_in_package_server, fk_entity, fk_menu) VALUES (1, 'Dummy', 'UUID0', 0, 1, 0, 1, 1)"
-    mysql -N -s -h ${DBHOST} -P ${DBPORT} -u${DBUSER} -p${DBPASS} imaging -e "INSERT INTO ImagingLog VALUES (1,'2025-11-19 03:17:39','unknown',1,1,6)"
-    mysql -N -s -h ${DBHOST} -P ${DBPORT} -u${DBUSER} -p${DBPASS} imaging -e "INSERT INTO ImageOnImagingServer VALUES (1,1)"
-    mysql -N -s -h ${DBHOST} -P ${DBPORT} -u${DBUSER} -p${DBPASS} imaging -e "INSERT INTO MasteredOn VALUES (1,1)"
+    mysql -N -s -h ${DBHOST} -P ${DBPORT} -u${DBUSER} -p${DBPASS} imaging -e "INSERT IGNORE INTO Target (id, name, uuid, raw_mode, type, is_registered_in_package_server, fk_entity, fk_menu) VALUES (1, 'Dummy', 'UUID0', 0, 1, 0, 1, 1)"
+    mysql -N -s -h ${DBHOST} -P ${DBPORT} -u${DBUSER} -p${DBPASS} imaging -e "INSERT IGNORE INTO ImagingLog VALUES (1,'2025-11-19 03:17:39','unknown',1,1,6)"
+    mysql -N -s -h ${DBHOST} -P ${DBPORT} -u${DBUSER} -p${DBPASS} imaging -e "INSERT IGNORE INTO ImageOnImagingServer VALUES (1,1)"
+    mysql -N -s -h ${DBHOST} -P ${DBPORT} -u${DBUSER} -p${DBPASS} imaging -e "INSERT IGNORE INTO MasteredOn VALUES (1,1)"
 
     # Download and extract master files
     echo "Downloading and extracting Windows 11 25H2 Professionnel FR x64 master..."
