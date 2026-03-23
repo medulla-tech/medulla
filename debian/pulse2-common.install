@@ -47,5 +47,6 @@ usr/sbin/medulla_mysql_exec_update.sh
 usr/sbin/medulla_mysql_exec_uninstall_unnecessary_update_package.sh
 usr/sbin/medulla-stats.sh
 usr/sbin/update_medulla.sh
+usr/sbin/import_masters.sh
 usr/sbin/check_medulla_updates.sh
 var/lib/pulse2/file-transfer
