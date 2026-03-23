@@ -530,6 +530,41 @@ update_546_to_550() {
         write_to_log "$str"
         exit 1
     fi
+    # Append the following string to /etc/mmc/plugins/glpi.ini.local profile_acl_Super-Admin and profile_acl_Admin parameters before the final / if not already present:
+    # :security#security#index:security#security#softwareDetail:security#security#machines:security#security#machineDetail:security#security#entities:security#security#groups:security#security#groupDetail:security#security#allcves:security#security#cveDetail:security#security#ajaxAddExclusion:security#security#ajaxScanMachine:security#security#ajaxStartScanEntity:security#security#ajaxStartScanGroup:security#security#settings:security#security#ajaxResetDisplayFilters:security#security#settings:security#security#deployStoreUpdate
+    # And profile_acl_Technician if not already present:
+    # :security#security#index:security#security#softwareDetail:security#security#machines:security#security#machineDetail:security#security#entities:security#security#groups:security#security#groupDetail:security#security#allcves:security#security#cveDetail:security#security#ajaxAddExclusion:security#security#ajaxScanMachine:security#security#ajaxStartScanEntity:security#security#ajaxStartScanGroup:security#security#settings:security#security#ajaxResetDisplayFilters
+    str="[=] Configuring ACLs for new Medulla MMC module 'security' in glpi.ini.local..."
+    echo "$str"
+    write_to_log "$str"
+    for profile in Super-Admin Admin; do
+        if ! grep -q "security#security#index" /etc/mmc/plugins/glpi.ini.local | grep -q "^profile_acl_$profile"; then
+            sed -i "/^profile_acl_$profile/s|\(.*\)/$|\1:security#security#index:security#security#softwareDetail:security#security#machines:security#security#machineDetail:security#security#entities:security#security#groups:security#security#groupDetail:security#security#allcves:security#security#cveDetail:security#security#ajaxAddExclusion:security#security#ajaxScanMachine:security#security#ajaxStartScanEntity:security#security#ajaxStartScanGroup:security#security#settings:security#security#ajaxResetDisplayFilters:security#security#settings:security#security#deployStoreUpdate/|" /etc/mmc/plugins/glpi.ini.local
+            if [[ $? -ne 0 ]]; then
+                str="[x] Error updating ACLs for $profile profile in glpi.ini.local. Aborting."
+                echo "$str"
+                write_to_log "$str"
+                exit 1
+            fi
+            str="[v] ACLs for $profile profile in glpi.ini.local updated successfully."
+            echo "$str"
+            write_to_log "$str"
+        fi
+    done
+    for profile in Technician; do
+        if ! grep -q "security#security#index" /etc/mmc/plugins/glpi.ini.local | grep -q "^profile_acl_$profile"; then
+            sed -i "/^profile_acl_$profile/s|\(.*\)/$|\1:security#security#index:security#security#softwareDetail:security#security#machines:security#security#machineDetail:security#security#entities:security#security#groups:security#security#groupDetail:security#security#allcves:security#security#cveDetail:security#security#ajaxAddExclusion:security#security#ajaxScanMachine:security#security#ajaxStartScanEntity:security#security#ajaxStartScanGroup:security#security#settings:security#security#ajaxResetDisplayFilters/|" /etc/mmc/plugins/glpi.ini.local
+            if [[ $? -ne 0 ]]; then
+                str="[x] Error updating ACLs for $profile profile in glpi.ini.local. Aborting."
+                echo "$str"
+                write_to_log "$str"
+                exit 1
+            fi
+            str="[v] ACLs for $profile profile in glpi.ini.local updated successfully."
+            echo "$str"
+            write_to_log "$str"
+        fi
+    done
     # mmc-agent will be restarted in final_operations
     str="[v] Medulla MMC module 'security' setup and configuration applied successfully."
     echo "$str"
