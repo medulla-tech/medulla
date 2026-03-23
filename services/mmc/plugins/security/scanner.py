@@ -270,7 +270,7 @@ class CVECentralClient:
     def scan(self, softwares: List[Dict],
              on_progress: Callable = None,
              on_cves: Callable = None,
-             timeout: int = 3600) -> Dict:
+             timeout: int = 7200) -> Dict:
         """
         Run CVE scan via WebSocket with real-time progress.
 
