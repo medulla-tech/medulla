@@ -304,6 +304,7 @@ nobase_dist_contrib_DATA = dyngroup/sql/clean-db.sql \
 	mobile/sql/schema-001.sql \
 	security/sql/schema-001.sql \
 	security/sql/schema-002.sql \
+	security/sql/schema-003.sql \
 	store/sql/schema-001.sql \
 	monit/pulse2 \
 	samba/smb.conf \

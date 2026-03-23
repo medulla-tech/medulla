@@ -395,8 +395,7 @@ def set_policy(category, key, value, user=None):
 def reset_policies(user=None):
     """Reset all policies to default values.
 
-    Deletes all existing policies and reinserts the default values
-    matching schema-001.sql.
+    Reinserts values from the policies_defaults table.
 
     Args:
         user: username making the change (optional)
