@@ -346,3 +346,9 @@ msgstr "Machines dans Pulse depuis "
 #: modules/dashboard/main/default.php:105
 msgid "Disabled widgets"
 msgstr "Widgets désactivés"
+
+msgid "Other"
+msgstr "Autres"
+
+msgid "Distribution — Top 5 OS"
+msgstr "Répartition — Top 5 OS"

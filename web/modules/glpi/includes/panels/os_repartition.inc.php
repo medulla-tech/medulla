@@ -44,6 +44,44 @@ class os_repartitionPanel extends Panel {
     $uninventorized_text = _T("Uninventoried Machines", "dashboard");
     $uninventorized = get_computer_count_for_dashboard()['total_uninventoried'];
 
+    // Sort by count descending
+    usort($pcs, function($a, $b) { return $b['count'] - $a['count']; });
+
+    // Group OS beyond top 5 into "Other" with tooltip grouped by family
+    $maxDisplay = 5;
+    if (count($pcs) > $maxDisplay) {
+        $top = array_slice($pcs, 0, $maxDisplay);
+        $rest = array_slice($pcs, $maxDisplay);
+        $otherCount = 0;
+        $families = [];
+        foreach ($rest as $r) {
+            $otherCount += $r['count'];
+            $os = $r['os'];
+            if (stripos($os, 'Windows') !== false) $family = 'Windows';
+            elseif (stripos($os, 'macOS') !== false || stripos($os, 'OS X') !== false) $family = 'macOS';
+            elseif (stripos($os, 'BSD') !== false) $family = 'BSD';
+            elseif (stripos($os, 'Android') !== false) $family = 'Android';
+            else $family = 'Linux';
+            $label = $r['version'] ? $r['os'] . ' (' . $r['version'] . ')' : $r['os'];
+            $families[$family][] = ['label' => $label, 'count' => $r['count']];
+        }
+        $tooltipHtml = '<table class="ttable">';
+        foreach ($families as $familyName => $items) {
+            $tooltipHtml .= '<tr class="ttabletr tt-section"><td class="ttabletd" colspan="2">' . htmlspecialchars($familyName) . '</td></tr>';
+            foreach ($items as $item) {
+                $tooltipHtml .= '<tr class="ttabletr"><td class="ttabletd">' . htmlspecialchars($item['label']) . '</td><td class="ttabletd">: ' . $item['count'] . '</td></tr>';
+            }
+        }
+        $tooltipHtml .= '</table>';
+        $top[] = [
+            'os' => _T('Other', 'dashboard'),
+            'version' => '',
+            'count' => $otherCount,
+            'tooltip' => $tooltipHtml
+        ];
+        $pcs = $top;
+    }
+
     $pcs = array_map(function($pcs) {
     // android hmdm devices redirect to mobile group creation
     if ($pcs['os'] === 'Android' && $pcs['version'] === 'HMDM') {
@@ -51,13 +89,17 @@ class os_repartitionPanel extends Panel {
     } else {
         $href = urlStrRedirect("base/computers/createOSStaticGroup").'&os='.$pcs['os'].'&version='.$pcs['version'];
     }
-    
-    return array(
+
+    $item = array(
         'label' => $pcs['os'],
         'value' => $pcs['count'],
         'version' => $pcs['version'],
         'href' => $href,
     );
+    if (isset($pcs['tooltip'])) {
+        $item['tooltip'] = $pcs['tooltip'];
+    }
+    return $item;
 }, $pcs);
 
   // Add the uninventorized machines to the os list
@@ -69,9 +111,11 @@ class os_repartitionPanel extends Panel {
   );
 
     $datas = json_encode($pcs);
+    $top5Label = json_encode(_T("Distribution — Top 5 OS", "dashboard"));
         echo <<< SPACE
         <div id="os-graphs"></div>
         <script type="text/javascript">
+          var pieLabelTop5 = $top5Label;
           customPie("os-graphs",$datas);
         </script>
 SPACE;
