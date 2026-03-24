@@ -207,6 +207,11 @@ $page = new Page("deleteEntity", _T('Delete Entitiy', 'admin'));
 $page->setFile("modules/admin/admin/deleteEntity.php");
 $submod->addPage($page);
 
+$page = new Page("deleteCluster", _T('Delete Cluster', 'admin'));
+$page->setFile("modules/admin/admin/deleteCluster.php");
+$page->setOptions(array("visible" => False, "noHeader" => True, "AJAX" => True));
+$submod->addPage($page);
+
 $page = new Page("listUsersofEntity", _T('List users of Entity', 'admin'));
 $page->setFile("modules/admin/admin/listUsersofEntity.php");
 $submod->addPage($page);

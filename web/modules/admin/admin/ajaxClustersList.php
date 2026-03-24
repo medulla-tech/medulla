@@ -31,7 +31,7 @@ $end   = (isset($_GET['end'])?$_GET['start']+$maxperpage:$maxperpage);
 $clusters = xmlrpc_get_clusters_list($start, $maxperpage, $filter);
 
 $editcluster = new ActionItem(_("Edit Cluster"),"editCluster","edit","", "admin", "admin");
-$deletecluster = new ActionPopupItem(_("Delete Cluster"),"delete","delete","", "admin", "admin");
+$deletecluster = new ActionPopupItem(_("Delete Cluster"),"deleteCluster","delete","", "admin", "admin");
 
 $row = 0;
 $params = [];
