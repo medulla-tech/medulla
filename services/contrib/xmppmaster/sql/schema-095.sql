@@ -1766,9 +1766,6 @@ BEGIN
                      ORDER BY revisionid DESC
                      LIMIT 1;"
                 );
-
-            ELSE
-                SET @query = "SELECT * FROM xmppmaster.update_data;";
         END CASE;
 
         PREPARE stmt FROM @query;
