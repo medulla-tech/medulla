@@ -17,7 +17,7 @@ if (isset($_POST["bconfirm"])) {
     $f = new PopupForm(_T("Delete " . $cluster_name));
     $f->setLevel('danger');
     $hidden = new HiddenTpl("id");
-    $f->add($hidden, array("value" =>$uuid, "hide" => True));
+    $f->add($hidden, array("value" => $id_cluster, "hide" => True));
     $f->addDangerButton("bconfirm");
     $f->addCancelButton("bback");
     $f->display();
