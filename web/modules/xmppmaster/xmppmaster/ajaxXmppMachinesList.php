@@ -22,6 +22,7 @@
  */
 
 require_once("includes/UIComponents.php");
+require_once("modules/xmppmaster/includes/html.inc.php");
 
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
@@ -63,30 +64,52 @@ foreach($machines['datas']['hostname'] as $key=>$array){
     'enabled_css' => $machines['datas']['enabled_css'][$raw],
     'uninventoried' => true,
     'jid'=> $machines['datas']['jid'][$raw],
-    'archi' => $machines['datas']['archi'][$raw],
-    'classutil' => $machines['datas']['classutil'][$raw],
-    'kiosk_presence' => $machines['datas']['kiosk_presence'][$raw],
-    'ad_ou_user' => $machines['datas']['ad_ou_user'][$raw],
-    'ad_ou_machine' => $machines['datas']['ad_ou_machine'][$raw],
-    'cluster_name' => $machines['datas']['cluster_name'][$raw],
-    'cluster_description' => $machines['datas']['cluster_description'][$raw],
     'macaddress'=> $machines['datas']['macaddress'][$raw],
     'ip_xmpp' => $machines['datas']['ip_xmpp'][$raw],
     'agenttype' => 'machine',
     'platform' => $machines['datas']['platform'][$raw],
     'vnctype' => (in_array("guacamole", $_SESSION["supportModList"])) ? "guacamole" : ((web_def_use_no_vnc()==1) ? "novnc" : "appletjava"),
   ];
-  $machines['datas']['hostname'][$raw] = '<span class="machine-clickable">'.$machines['datas']['hostname'][$raw].'</span>';
+  // Build tooltip grouped by category
+  $tooltipGroups = [
+      _T("Identity", "xmppmaster") => [
+          _T("Platform", "xmppmaster") => $machines['datas']['platform'][$raw],
+          _T("Architecture", "xmppmaster") => $machines['datas']['archi'][$raw],
+      ],
+      _T("Network", "xmppmaster") => [
+          _T("IP address", "xmppmaster") => $machines['datas']['ip_xmpp'][$raw],
+          _T("Mac address", "xmppmaster") => formatMacAddress($machines['datas']['macaddress'][$raw]),
+      ],
+      _T("Agent", "xmppmaster") => [
+          _T("Usage class", "xmppmaster") => $machines['datas']['classutil'][$raw],
+          _T("Kiosk enabled", "xmppmaster") => $machines['datas']['kiosk_presence'][$raw],
+          _T("Cluster", "xmppmaster") => $machines['datas']['cluster_name'][$raw],
+          _T("Description", "xmppmaster") => $machines['datas']['cluster_description'][$raw],
+      ],
+      _T("Other", "xmppmaster") => [
+          _T("AD user OU", "xmppmaster") => $machines['datas']['ad_ou_user'][$raw],
+          _T("AD machine OU", "xmppmaster") => $machines['datas']['ad_ou_machine'][$raw],
+      ],
+  ];
+  $tooltipData = '<table class="ttable">';
+  foreach ($tooltipGroups as $groupLabel => $fields) {
+      $groupRows = '';
+      foreach ($fields as $label => $val) {
+          if (!empty($val)) {
+              $groupRows .= '<tr class="ttabletr"><td class="ttabletd">'.$label.'</td><td class="ttabletd">: '.htmlspecialchars($val).'</td></tr>';
+          }
+      }
+      if ($groupRows !== '') {
+          $tooltipData .= '<tr class="ttabletr tt-section"><td class="ttabletd" colspan="2">'.$groupLabel.'</td></tr>';
+          $tooltipData .= $groupRows;
+      }
+  }
+  $tooltipData .= '</table>';
+
+  $machines['datas']['hostname'][$raw] = '<span class="infomach machine-clickable" mydata="'.htmlentities($tooltipData).'">'.$machines['datas']['hostname'][$raw].'</span>';
   $machines['datas']['jid'][$raw] = '<span class="machine-clickable">'.$machines['datas']['jid'][$raw].'</span>';
   $machines['datas']['archi'][$raw] = '<span class="machine-clickable">'.$machines['datas']['archi'][$raw].'</span>';
-  $machines['datas']['classutil'][$raw] = '<span class="machine-clickable">'.$machines['datas']['classutil'][$raw].'</span>';
-  $machines['datas']['kiosk_presence'][$raw] = '<span class="machine-clickable">'.$machines['datas']['kiosk_presence'][$raw].'</span>';
-  $machines['datas']['ad_ou_user'][$raw] = '<span class="machine-clickable">'.$machines['datas']['ad_ou_user'][$raw].'</span>';
-  $machines['datas']['ad_ou_machine'][$raw] = '<span class="machine-clickable">'.$machines['datas']['ad_ou_machine'][$raw].'</span>';
-  $machines['datas']['cluster_name'][$raw] = '<span class="machine-clickable">'.$machines['datas']['cluster_name'][$raw].'</span>';
-  $machines['datas']['cluster_description'][$raw] = '<span class="machine-clickable">'.$machines['datas']['cluster_description'][$raw].'</span>';
-  $machines['datas']['cluster_name'][$raw] = '<span class="machine-clickable">'.$machines['datas']['cluster_name'][$raw].'</span>';
-  $machines['datas']['macaddress'][$raw] = '<span class="machine-clickable">'.$machines['datas']['macaddress'][$raw].'</span>';
+  $machines['datas']['macaddress'][$raw] = '<span class="machine-clickable">'.formatMacAddress($machines['datas']['macaddress'][$raw]).'</span>';
   $machines['datas']['ip_xmpp'][$raw] = '<span class="machine-clickable">'.$machines['datas']['ip_xmpp'][$raw].'</span>';
 
 
@@ -97,26 +120,19 @@ foreach($machines['datas']['hostname'] as $key=>$array){
   }
   else{
     $configActions[] =$editremoteconfigurationempty;
-    $quickActions[] = $deployQuickxmppempty;
     $consoleActions[] = $consoleemptyaction;
     $vncActions[] = $vncemptyaction;
   }
   $raw++;
 }
 
-$n = new OptimizedListInfos( $machines['datas']['hostname'], _T("Machines Xmpp", "xmppmaster"));
+$n = new OptimizedListInfos( $machines['datas']['hostname'], _T("Computer Name", "glpi"));
 $n->setMainActionClasses($machines['datas']['enabled_css']);
 $n->disableFirstColumnActionLink();
 $n->addExtraInfo( $machines['datas']['jid'], _T("Jid", "xmppmaster"));
 $n->addExtraInfo( $machines['datas']['archi'], _T("Arch", "xmppmaster"));
-$n->addExtraInfo( $machines['datas']['classutil'], _T("Class Util", "xmppmaster"));
-$n->addExtraInfo( $machines['datas']['kiosk_presence'], _T("Kiosk presence", "xmppmaster"));
-$n->addExtraInfo( $machines['datas']['ad_ou_user'], _T("AD OU User", "xmppmaster"));
-$n->addExtraInfo( $machines['datas']['ad_ou_machine'], _T("AD OU Machine", "xmppmaster"));
-$n->addExtraInfo( $machines['datas']['cluster_name'], _T("Cluster Name", "xmppmaster"));
-$n->addExtraInfo( $machines['datas']['cluster_description'], _T("cluster_description", "xmppmaster"));
 $n->addExtraInfo( $machines['datas']['macaddress'], _T("Mac Address", "xmppmaster"));
-$n->addExtraInfo( $machines['datas']['ip_xmpp'], _T("Xmpp IP", "xmppmaster"));
+$n->addExtraInfo( $machines['datas']['ip_xmpp'], _T("IP address", "xmppmaster"));
 $n->setTableHeaderPadding(0);
 $n->setItemCount($machines['total']);
 $n->setNavBar(new AjaxNavBar($machines['total'], $filter, "updateSearchParamformRunning"));
@@ -136,8 +152,21 @@ $n->display();
   }
 </style>
 <script>
-jQuery(".machine-clickable").on("click", function(){
-  jQuery("#paramformRunning").val(jQuery(this).text());
-  updateSearchformRunning();
+jQuery(function() {
+    jQuery(".infomach").tooltip({
+        position: { my: "left+15 center", at: "right center" },
+        items: "[mydata]",
+        content: function() {
+            var element = jQuery(this);
+            if (element.is("[mydata]")) {
+                return element.attr("mydata");
+            }
+        }
+    });
+
+    jQuery(".machine-clickable").on("click", function(){
+        jQuery("#paramformRunning").val(jQuery(this).text());
+        updateSearchformRunning();
+    });
 });
 </script>

@@ -21,7 +21,7 @@
 function barchart(selector, rawdatas){
   var config = {
       top: 10,
-      right: 45,
+      right: 70,
       bottom: 10,
       left: 32,
       width: 140,
@@ -92,9 +92,10 @@ function barchart(selector, rawdatas){
       return "fill: "+color;
     })
     .attr("y", function (d,i) {
-        return i*y.bandwidth();
+        return i*y.bandwidth() + 2;
     })
-    .attr("height", y.bandwidth())
+    .attr("height", y.bandwidth() - 4)
+    .attr("rx", 3)
     .attr("width", function (d) {
         return x(d.value);
     });

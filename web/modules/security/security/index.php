@@ -103,15 +103,6 @@ $showSeverity = SeverityHelper::getVisibility($minSeverity);
 </div>
 <?php endif; ?>
 
-<!-- Start Scan Button -->
-<div class="scan-button-wrapper">
-<?php
-$scanRunning = isset($scanStatus) && $scanStatus === 'running';
-?>
-    <input type="button" class="btnPrimary" value="<?php echo $scanRunning ? _T("Scan in progress...", "security") : _T("Start CVE Scan", "security"); ?>"
-           <?php if ($scanRunning): ?>disabled style="background:#7ba7bc;color:#fff;cursor:not-allowed;border-color:#7ba7bc;"<?php else: ?>onclick="PopupWindow(event, '<?php echo urlStrRedirect("security/security/ajaxStartScan"); ?>', 500); return false;"<?php endif; ?> />
-</div>
-
 <!-- Vulnerable Software Section -->
 <h3><?php echo _T("Vulnerable Software", "security"); ?></h3>
 

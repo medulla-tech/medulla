@@ -707,6 +707,12 @@ td.package {
   width: 80px;
 }
 
+/* Package name - allow wrap on multiple lines */
+.listinfos td:first-child .cell-text {
+  -webkit-line-clamp: 3;
+  word-break: break-word;
+}
+
 /* OS - compact and center */
 .listinfos td:nth-child(7),
 .listinfos th:nth-child(7) {

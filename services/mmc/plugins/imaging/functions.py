@@ -2991,13 +2991,15 @@ class ImagingRpcProxy(RpcProxyI):
         gid = grp.getgrnam("syncthing").gr_gid
 
         # Replace chars
-        xmlWAFG = xmlWAFG.replace("&amp;", "&")
-        xmlWAFG = xmlWAFG.replace("&lt;", "<")
-        xmlWAFG = xmlWAFG.replace("&gt;", ">")
-        xmlWAFG = xmlWAFG.replace("&#x2026;", '…')
-        xmlWAFG = xmlWAFG.replace("&#xBB;", '»')
-        xmlWAFG = xmlWAFG.replace("&#xAB;", '«')
-        xmlWAFG = xmlWAFG.replace("&#x2019;", '’')
+        # It seems it's ok to keep them as they are.
+
+        # xmlWAFG = xmlWAFG.replace("&amp;", "&")
+        # xmlWAFG = xmlWAFG.replace("&lt;", "<")
+        # xmlWAFG = xmlWAFG.replace("&gt;", ">")
+        # xmlWAFG = xmlWAFG.replace("&#x2026;", '…')
+        # xmlWAFG = xmlWAFG.replace("&#xBB;", '»')
+        # xmlWAFG = xmlWAFG.replace("&#xAB;", '«')
+        # xmlWAFG = xmlWAFG.replace("&#x2019;", '’')
         if not path.exists(filexml):
             makedirs(filexml, 0o722)
 

@@ -40,13 +40,13 @@ class UpdatePanel extends Panel {
         $labelRestart       = _T("Restart Medulla Services");
         $msgRestart         = _T("Restarting in progress ... You will be redirected to the connection.");
         $msgIndex           = _T("The restart ends ... reconnect in a moment.");
-        $labelRegenerate    = _T("Regenerate Agent Machine");
+        $labelRegenerate    = _T("Regenerate Agents");
 
         $installing_title   = _T('Installing updates in progress…', 'dashboard');
         $success_msg        = _T('Update completed successfully!', 'dashboard');
         $fail_msg           = _T('Update failed.', 'dashboard');
         $fail_help          = _T('Check /var/log/medulla_update.log on the server for details.', 'dashboard');
-        $redirect_msg       = _T('Redirecting to login page…', 'dashboard');
+        $redirect_msg       = _T('Services are restarting, redirecting in', 'dashboard');
 
         // Disclaimer
         $disclaimer_title   = _T('WARNING: BACKUP REQUIRED BEFORE UPDATE', 'dashboard');
@@ -272,13 +272,20 @@ class UpdatePanel extends Panel {
                     if (c) c.remove();
 
                     if (success) {
+                        var countdown = 25;
                         $('#updateStatus').addClass('success').html(
                             {$successMsgJson} +
-                            '<div class="redirect-msg">' + {$redirectMsgJson} + '</div>'
+                            '<div class="redirect-msg">' + {$redirectMsgJson} + ' <span id="countdown">' + countdown + '</span>s</div>'
                         );
-                        setTimeout(function() {
-                            (window.top || window).location.href = '/mmc/index.php?update=success';
-                        }, 5000);
+                        var countdownInterval = setInterval(function() {
+                            countdown--;
+                            var el = document.getElementById('countdown');
+                            if (el) el.textContent = countdown;
+                            if (countdown <= 0) {
+                                clearInterval(countdownInterval);
+                                (window.top || window).location.href = '/mmc/index.php?update=success';
+                            }
+                        }, 1000);
                     } else {
                         $('#updateStatus').addClass('error').html(
                             {$failMsgJson} +

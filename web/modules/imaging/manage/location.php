@@ -87,3 +87,10 @@ if (displayLocalisationBar()) {
 }
 
 ?>
+<script>
+jQuery('#location').on('change', function() {
+    var url = new URL(window.location.href);
+    url.searchParams.set('location', this.value);
+    window.location.href = url.toString();
+});
+</script>

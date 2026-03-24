@@ -692,6 +692,8 @@ This package contains Pulse 2 common files like documentation.
 %{_sbindir}/medulla_mysql_exec_update.sh
 %{_sbindir}/medulla-stats.sh
 %{_sbindir}/update_medulla.sh
+%{_sbindir}/import_masters.sh
+%{_sbindir}/check_medulla_updates.sh
 %{_sbindir}/medulla_mysql_exec_uninstall_unnecessary_update_package.sh
 
 %_docdir/pulse2/contrib/

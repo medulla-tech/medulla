@@ -215,6 +215,10 @@ msgid "Redirecting to login page…"
 msgstr "Redirigiendo a la página de inicio de sesión…"
 
 #: modules/dashboard/includes/panels/product_updates.inc.php
+msgid "Services are restarting, redirecting in"
+msgstr "Los servicios se reinician, redirigiendo en"
+
+#: modules/dashboard/includes/panels/product_updates.inc.php
 msgid "WARNING: BACKUP REQUIRED BEFORE UPDATE"
 msgstr "Copia de seguridad necesaria antes de actualizar"
 

@@ -73,18 +73,6 @@ function xmlrpc_get_scans($start = 0, $limit = 20) {
     return xmlCall("security.get_scans", array($start, $limit));
 }
 
-function xmlrpc_create_scan() {
-    return xmlCall("security.create_scan", array());
-}
-
-function xmlrpc_create_scan_entity($entity_id) {
-    return xmlCall("security.create_scan_entity", array($entity_id));
-}
-
-function xmlrpc_create_scan_group($group_id) {
-    return xmlCall("security.create_scan_group", array($group_id));
-}
-
 // =============================================================================
 // Configuration
 // =============================================================================
