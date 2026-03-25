@@ -46,6 +46,7 @@ $packages = xmlrpc_xmppGetAllPackages($filter, $start, $end);
 $count = $packages[0];
 $packages = $packages[1];
 
+
 $empty = new EmptyActionItem();
 $assoc = new ActionItem(_T("Associate package", "pkgs"), "associate_files", "associate_files", "pkgs", "pkgs", "pkgs");
 //$assoc_list = array();

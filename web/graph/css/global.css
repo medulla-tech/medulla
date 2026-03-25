@@ -664,16 +664,7 @@ ul.action li a:hover {
   color: #95aabf;
 }
 
-li.info a {
-  padding: 3px 0px 5px 20px;
-  margin: 0 0px 0 0px;
-  background-image: url("../../img/common/info.png");
-  background-repeat: no-repeat;
-  background-position: left top;
-  line-height: 18px;
-  text-decoration: none;
-  color: var(--color-text-white);
-}
+
 
 li.empty a {
   padding: 3px 0px 5px 20px;
@@ -800,7 +791,7 @@ li.unlist a { background-image: url("../../img/actions/unlist.svg"); }
 li.up a { background-image: url("../../img/actions/up.svg"); }
 li.down a { background-image: url("../../img/actions/down.svg"); }
 li.ok a { background-image: url("../../img/other/yes.svg"); }
-li.info a { background-image: url("../../img/common/info.png"); }
+li.info a, li.infog a { background-image: url("../../img/actions/info.svg"); }
 li.load a { background-image: url("../../img/common/loader_p.gif"); }
 li.wait a { background-image: url("../../img/common/todo.png"); }
 li.empty a { background: none; }
