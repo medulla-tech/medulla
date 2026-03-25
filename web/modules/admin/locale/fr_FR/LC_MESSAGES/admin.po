@@ -1121,3 +1121,6 @@ msgstr "Liste des règles"
 
 msgid "Validate"
 msgstr "Valider"
+
+msgid "Regex rule"
+msgstr "Règle regex"
