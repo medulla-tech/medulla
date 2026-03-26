@@ -69,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_subscriptions'])
 
 // Process POST form - Manual sync
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['sync_packages'])) {
-    $result = xmlrpc_sync_packages_from_kestra();
+    $result = xmlrpc_sync_packages();
 
     if ($result && $result['success']) {
         $msg = _T('Synchronization completed!', 'store') . ' ' . $result['synced'] . '/' . $result['total_subscribed'] . ' ' . _T('packages synchronized', 'store');
@@ -267,7 +267,7 @@ if (!empty($currentSort) && $currentSort !== 'popular') $baseUrl .= "&sort=" . u
     <!-- Sync button form -->
     <form action="main.php?module=store&submod=store&action=subscribe" method="post" id="syncForm" style="display: inline-block; margin-left: 10px; vertical-align: top;">
         <input type="hidden" name="sync_packages" value="1">
-        <button type="submit" class="btn btn-default" style="padding: 6px 12px; line-height: 1.42857143;" onclick="return confirm('<?php echo _T('Synchronize packages from Kestra now?', 'store'); ?>');">
+        <button type="submit" class="btn btn-default" style="padding: 6px 12px; line-height: 1.42857143;" onclick="return confirm('<?php echo _T('Synchronize packages now?', 'store'); ?>');">
             <img src="img/common/reload.png" style="vertical-align: middle; margin-right: 5px; height: 14px; width: 14px;" alt="" />
             <?php echo _T('Sync Now', 'store'); ?>
         </button>

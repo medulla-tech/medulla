@@ -129,28 +129,49 @@ def _store_api_post(endpoint, data):
 # Exported XMLRPC functions
 # ============================================
 
+def _enrich_with_local_packages(data):
+    """Enrich software list with local package existence info from packages API"""
+    config = StoreConfig("store")
+
+    # Fetch packages list to match software names to package UUIDs
+    packages_map = {}
+    if config.packages_api_url and config.packages_api_token:
+        try:
+            pkg_list = _fetch_packages_list(config)
+            for pkg in pkg_list.get('packages', []):
+                pkg_name = pkg.get('software_name', '').lower()
+                packages_map[pkg_name] = pkg
+        except Exception:
+            pass
+
+    packages_dir = os.path.join(config.packages_path, "sharing", "global")
+    for item in data:
+        # Match with packages.json by name
+        soft_name = item.get('name', '').lower().replace(' ', '_')
+        pkg = packages_map.get(soft_name) or packages_map.get(item.get('name', '').lower())
+
+        if pkg:
+            item['package_uuid'] = pkg.get('uuid')
+            package_dir = os.path.join(packages_dir, pkg['uuid'])
+            item['package_exists'] = os.path.isdir(package_dir)
+            item['deployed_at'] = 'synced' if item['package_exists'] else None
+        else:
+            item['package_exists'] = False
+            item['deployed_at'] = None
+
+    return data
+
 def get_all_software(active_only=True, start=0, limit=0, sort="popular"):
     """Get all software from remote store API
 
     Returns:
         dict with 'total' count and 'data' list
     """
-    config = StoreConfig("store")
     result = _store_api_get('/api/softwares.php')
     if not result or not result.get('success'):
         return {'total': 0, 'data': []}
 
-    data = result.get('data', [])
-
-    # Enrich with local package existence check
-    for item in data:
-        package_uuid = item.get('package_uuid')
-        if package_uuid:
-            package_dir = os.path.join(config.packages_path, package_uuid)
-            item['package_exists'] = os.path.isdir(package_dir) or os.path.islink(package_dir)
-        else:
-            item['package_exists'] = False
-
+    data = _enrich_with_local_packages(result.get('data', []))
     return {'total': result.get('count', len(data)), 'data': data}
 
 def get_software_by_id(software_id):
@@ -200,16 +221,7 @@ def search_software(filters=None, start=0, limit=0, sort="popular"):
     if not result or not result.get('success'):
         return {'total': 0, 'data': []}
 
-    data = result.get('data', [])
-
-    # Enrich with local package existence check
-    for item in data:
-        package_uuid = item.get('package_uuid')
-        if package_uuid:
-            package_dir = os.path.join(config.packages_path, package_uuid)
-            item['package_exists'] = os.path.isdir(package_dir) or os.path.islink(package_dir)
-        else:
-            item['package_exists'] = False
+    data = _enrich_with_local_packages(result.get('data', []))
 
     return {'total': result.get('count', len(data)), 'data': data}
 
@@ -267,9 +279,9 @@ def save_subscriptions(software_ids):
 
     # Sync packages if packages_api is configured
     if config.packages_api_url and config.packages_api_token:
-        logger.info("Syncing packages from Kestra API...")
+        logger.info("Syncing packages from store...")
         try:
-            sync_result = sync_packages_from_kestra()
+            sync_result = sync_packages()
             result['sync'] = sync_result
             if not sync_result.get('success'):
                 logger.warning(f"Package sync had errors: {sync_result.get('errors')}")
@@ -287,10 +299,11 @@ def get_subscribers_for_software(software_id):
 # Package sync functions (PULL mode)
 # ============================================
 
-def sync_packages_from_kestra():
+def sync_packages():
     """
-    Sync packages from Kestra API based on current subscriptions.
-    This is PULL mode: the server fetches packages from Kestra.
+    Sync packages based on current subscriptions.
+    Fetches the catalog from store API, the packages list from packages API,
+    and downloads packages for subscribed software.
 
     Returns:
         dict with success status, synced count, and any errors
@@ -304,82 +317,90 @@ def sync_packages_from_kestra():
     if not config.packages_api_token:
         return {'success': False, 'error': 'packages_api api_token not configured in store.ini'}
 
-    # Get current subscriptions from store API
+    # 1. Get subscribed software IDs from store API
     subscribed_ids = get_client_subscriptions()
     if not subscribed_ids:
         logger.info("No subscriptions found, nothing to sync")
         return {'success': True, 'synced': 0, 'message': 'No subscriptions'}
 
-    # Get package UUIDs for subscribed software
-    subscribed_packages = StoreDatabase().get_package_uuids_for_software_ids(subscribed_ids)
-    if not subscribed_packages:
-        logger.info("No packages available for subscribed software")
-        return {'success': True, 'synced': 0, 'message': 'No packages available'}
+    # 2. Get catalog to map software_id -> software_name
+    catalog = _store_api_get('/api/softwares.php')
+    if not catalog or not catalog.get('success'):
+        return {'success': False, 'error': 'Failed to fetch catalog'}
 
-    logger.info(f"Syncing {len(subscribed_packages)} packages for {len(subscribed_ids)} subscribed software")
+    # Build name lookup: id -> name (lowercase, normalized)
+    subscribed_names = set()
+    for soft in catalog.get('data', []):
+        if soft.get('id') in subscribed_ids:
+            # Normalize name for matching with packages.json software_name
+            name = soft.get('name', '').lower().replace(' ', '_')
+            subscribed_names.add(name)
+            # Also try the raw name
+            subscribed_names.add(soft.get('name', '').lower())
 
-    # Fetch available packages from Kestra API
+    logger.info(f"Subscribed to {len(subscribed_ids)} software, matched names: {subscribed_names}")
+
+    # 3. Fetch available packages from packages API
     try:
         available_packages = _fetch_packages_list(config)
     except Exception as e:
-        logger.error(f"Failed to fetch packages list from Kestra: {e}")
+        logger.error(f"Failed to fetch packages list: {e}")
         return {'success': False, 'error': f'Failed to fetch packages list: {e}'}
 
-    # Build lookup map: uuid -> package info
-    available_map = {pkg['uuid']: pkg for pkg in available_packages.get('packages', [])}
+    # 4. Filter packages matching subscribed software
+    packages_to_sync = []
+    for pkg in available_packages.get('packages', []):
+        pkg_name = pkg.get('software_name', '').lower()
+        if pkg_name in subscribed_names:
+            packages_to_sync.append(pkg)
+
+    if not packages_to_sync:
+        logger.info("No packages available for subscribed software")
+        return {'success': True, 'synced': 0, 'message': 'No packages available'}
+
+    logger.info(f"Syncing {len(packages_to_sync)} packages")
 
     synced = 0
     errors = []
     packages_dir = config.packages_path
+    synced_uuids = set()
 
-    # Sync each subscribed package
-    for pkg_info in subscribed_packages:
-        uuid = pkg_info['package_uuid']
-        software_name = pkg_info.get('software_name', 'unknown')
-
-        if uuid not in available_map:
-            logger.warning(f"Package {uuid} ({software_name}) not available on Kestra")
-            continue
-
-        remote_pkg = available_map[uuid]
+    # 5. Download each package
+    for pkg in packages_to_sync:
+        uuid = pkg['uuid']
+        name = pkg.get('name', pkg.get('software_name', 'unknown'))
         local_path = os.path.join(packages_dir, "sharing", "global", uuid)
+        synced_uuids.add(uuid)
 
         try:
-            # Download package files
-            result = _download_package(config, remote_pkg, local_path)
+            result = _download_package(config, pkg, local_path)
             if result['success']:
-                # Verify package files exist on disk before marking as deployed
                 conf_exists = os.path.exists(os.path.join(local_path, 'conf.json'))
                 xmppdeploy_exists = os.path.exists(os.path.join(local_path, 'xmppdeploy.json'))
 
                 if conf_exists and xmppdeploy_exists:
-                    # Update deployed_at in database
-                    StoreDatabase().update_deployed_at(uuid)
                     synced += 1
-                    logger.info(f"Synced package {uuid} ({software_name})")
+                    logger.info(f"Synced package {uuid} ({name})")
                 else:
                     errors.append(f"{uuid}: Package files missing after download")
-                    logger.error(f"Package {uuid} files missing: conf.json={conf_exists}, xmppdeploy.json={xmppdeploy_exists}")
             else:
                 errors.append(f"{uuid}: {result.get('error', 'Unknown error')}")
         except Exception as e:
             errors.append(f"{uuid}: {e}")
             logger.error(f"Failed to sync package {uuid}: {e}")
 
-    # Cleanup: remove packages we're not subscribed to
-    subscribed_uuids = {pkg['package_uuid'] for pkg in subscribed_packages}
+    # 6. Cleanup unsubscribed packages
     removed = 0
     removed_packages = []
-
     try:
-        removed, removed_packages = _cleanup_unsubscribed_packages(config, subscribed_uuids)
+        removed, removed_packages = _cleanup_unsubscribed_packages(config, synced_uuids)
         if removed > 0:
             logger.info(f"Cleaned up {removed} unsubscribed packages: {removed_packages}")
     except Exception as e:
         logger.error(f"Failed to cleanup unsubscribed packages: {e}")
         errors.append(f"Cleanup failed: {e}")
 
-    # Regenerate Medulla package database if any packages were synced or removed
+    # 7. Regenerate Medulla package database
     if synced > 0 or removed > 0:
         try:
             _regenerate_packages(config)
@@ -393,13 +414,13 @@ def sync_packages_from_kestra():
         'synced': synced,
         'removed': removed,
         'removed_packages': removed_packages if removed_packages else None,
-        'total_subscribed': len(subscribed_packages),
+        'total_subscribed': len(packages_to_sync),
         'errors': errors if errors else None
     }
 
 def _fetch_packages_list(config):
     """Fetch the packages list from packages API"""
-    url = config.packages_api_url.rstrip('/') + '/api/packages'
+    url = config.packages_api_url.rstrip('/') + '/api/packages.php'
 
     headers = {'Accept': 'application/json'}
     if config.packages_api_token:
@@ -417,7 +438,7 @@ def _fetch_packages_list(config):
         return json.loads(response.read().decode('utf-8'))
 
 def _download_package(config, remote_pkg, local_path):
-    """Download all files for a package from Kestra API"""
+    """Download all files for a package from packages API"""
     logger = logging.getLogger()
 
     # Create local directory
@@ -438,7 +459,7 @@ def _download_package(config, remote_pkg, local_path):
         ssl_context.verify_mode = ssl.CERT_NONE
 
     for filename in files:
-        file_url = f"{base_url}/files/{path}/{filename}"
+        file_url = f"{base_url}/api/download.php?path={urllib.parse.quote(path + '/' + filename)}"
         local_file = os.path.join(local_path, filename)
 
         # Skip if file already exists and has content
@@ -507,8 +528,6 @@ def _cleanup_unsubscribed_packages(config, subscribed_uuids):
         # Remove unsubscribed package
         try:
             shutil.rmtree(entry_path)
-            # Clear deployed_at in database
-            StoreDatabase().clear_deployed_at(entry)
             removed += 1
             removed_packages.append(entry)
             logger.info(f"Removed unsubscribed package: {entry}")
@@ -551,16 +570,24 @@ def _regenerate_packages(config):
         raise Exception(f"Script failed with code {result.returncode}: {result.stderr}")
 
 def create_software_request(software_name, os, requester_name, requester_email, message=""):
-    """Create a new software request and trigger Kestra webhook if configured"""
-    # 1. Insert into database
-    result = StoreDatabase().create_software_request(software_name, os, requester_name, requester_email, message)
+    """Create a new software request via store API"""
+    # TODO: implement via store API when endpoint is available
+    result = _store_api_post('/api/requests.php', {
+        'software_name': software_name,
+        'os': os or '',
+        'requester_name': requester_name,
+        'requester_email': requester_email,
+        'message': message or ''
+    })
+    if not result:
+        result = {'success': False, 'error': 'Failed to contact store API'}
 
     if not result.get('success'):
         return result
 
-    # 2. Call Kestra AI webhook if enabled
+    # 2. Call AI webhook if enabled
     config = StoreConfig("store")
-    if config.packages_sync_enabled and config.ai_webhook_url:
+    if config.ai_webhook_url:
         try:
             webhook_data = {
                 'request_id': result.get('id'),
@@ -586,10 +613,10 @@ def create_software_request(software_name, os, requester_name, requester_email, 
                 ssl_context.verify_mode = ssl.CERT_NONE
 
             with urllib.request.urlopen(req, timeout=10, context=ssl_context) as response:
-                logging.getLogger().info(f"Kestra AI webhook called successfully for request {result.get('id')}")
+                logging.getLogger().info(f"AI webhook called successfully for request {result.get('id')}")
         except urllib.error.URLError as e:
-            logging.getLogger().warning(f"Kestra webhook call failed: {e}")
+            logging.getLogger().warning(f"AI webhook call failed: {e}")
         except Exception as e:
-            logging.getLogger().warning(f"Kestra webhook error: {e}")
+            logging.getLogger().warning(f"AI webhook error: {e}")
 
     return result
