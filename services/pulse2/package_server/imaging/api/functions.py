@@ -52,6 +52,7 @@ from pulse2.utils import (
 from pulse2.apis import makeURL
 from pulse2.imaging.image import Pulse2Image
 import json
+import base64
 import configparser
 
 
@@ -1759,22 +1760,71 @@ class Imaging(object, metaclass=SingletonN):
         return d
 
     def getPostInstalls(self, master_uuid, target_uuid):
+        def _success(datas=[]):
+            """Method to obtain a base64 serialized json data
+
+            @param datas: list of postinstalls
+            @type datas: list
+            @return: base64 serialized json data
+            @rtype: str"""
+            try:
+                postinstalls = json.dumps(datas)
+            except Exception as e:
+                postinstalls = "[]"
+
+            serialized = base64.b64encode(postinstalls.encode("utf-8")).decode("utf-8")
+            return serialized
+
         client = self._getXMLRPCClient()
         func = "imaging.getPostInstalls"
         args = (master_uuid, target_uuid)
         d = client.callRemote(func, *args)
+        d.addCallback(_success)
+
         return d
 
     def getPostInstall(self, postinstall_id):
+        def _success(datas=[]):
+            """Method to obtain a base64 serialized json data
+
+            @param datas: list of postinstalls
+            @type datas: list
+            @return: base64 serialized json data
+            @rtype: str"""
+            try:
+                postinstalls = json.dumps(datas)
+            except Exception as e:
+                postinstalls = "[]"
+
+            serialized = base64.b64encode(postinstalls.encode("utf-8")).decode("utf-8")
+            return serialized
+
         client = self._getXMLRPCClient()
         func = "imaging.getPostInstall"
         args = (postinstall_id,)
         d = client.callRemote(func, *args)
+        d.addCallback(_success)
         return d
 
     def getPostInstallsFromProfile(self, profile_id):
+        def _success(datas=[]):
+            """Method to obtain a base64 serialized json data
+
+            @param datas: list of postinstalls
+            @type datas: list
+            @return: base64 serialized json data
+            @rtype: str"""
+            try:
+                postinstalls = json.dumps(datas)
+            except Exception as e:
+                postinstalls = "[]"
+
+            serialized = base64.b64encode(postinstalls.encode("utf-8")).decode("utf-8")
+            return serialized
+
         client = self._getXMLRPCClient()
         func = "imaging.getPostInstallsFromProfile"
         args = (profile_id,)
         d = client.callRemote(func, *args)
+        d.addCallback(_success)
         return d
