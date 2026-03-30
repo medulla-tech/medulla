@@ -21,17 +21,12 @@ class StoreConfig(PluginConfig, StoreDatabaseConfig):
         self.tempdir = self.get("main", "tempdir")
         # Packages directory path
         self.packages_path = self.get("main", "packages_path") if self.has_option("main", "packages_path") else "/var/lib/pulse2/packages"
-        # Store API (remote catalog + subscriptions)
+        # Store API (catalog, subscriptions, packages - all in one)
         self.store_api_url = self.get("store_api", "url") if self.has_option("store_api", "url") else None
         self.store_api_token = self.get("store_api", "api_token") if self.has_option("store_api", "api_token") else None
         self.store_api_timeout = self.getint("store_api", "timeout") if self.has_option("store_api", "timeout") else 15
         self.store_api_skip_ssl = self.getboolean("store_api", "skip_ssl_verify") if self.has_option("store_api", "skip_ssl_verify") else False
         self.client_uuid = self.get("store_api", "client_uuid") if self.has_option("store_api", "client_uuid") else None
-        # Packages API (download packages)
-        self.packages_api_url = self.get("packages_api", "url") if self.has_option("packages_api", "url") else None
-        self.packages_api_token = self.get("packages_api", "api_token") if self.has_option("packages_api", "api_token") else None
-        self.packages_api_timeout = self.getint("packages_api", "timeout") if self.has_option("packages_api", "timeout") else 300
-        self.packages_api_skip_ssl = self.getboolean("packages_api", "skip_ssl_verify") if self.has_option("packages_api", "skip_ssl_verify") else False
         # Script to regenerate packages in Medulla database
         self.generate_package_script = self.get("main", "generate_package_script") if self.has_option("main", "generate_package_script") else "/usr/sbin/pulse2-generation_package.py"
 

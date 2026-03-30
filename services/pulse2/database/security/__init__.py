@@ -2458,40 +2458,31 @@ class SecurityDatabase(DatabaseHelper):
             return
 
         try:
-            # Get all active store software with their versions
-            store_sql = text("""
-                SELECT
-                    s.name,
-                    s.version as store_version,
-                    sd.package_uuid
-                FROM store.software s
-                LEFT JOIN store.software_downloads sd ON sd.software_id = s.id
-                    AND sd.status = 'success'
-                WHERE s.active = 1
-                AND s.version IS NOT NULL
-                AND s.version != ''
-            """)
-
-            store_result = session.execute(store_sql)
+            # Get all active store software via store API
+            from mmc.plugins.store import get_all_software as store_get_all_software
+            store_data = store_get_all_software()
             store_info = {}
-            for row in store_result:
-                # Store by lowercase name for case-insensitive matching
-                store_info[row.name.lower()] = {
-                    'name': row.name,
-                    'store_version': row.store_version,
-                    'store_package_uuid': row.package_uuid
-                }
+            for soft in store_data.get('data', []):
+                name = soft.get('name', '')
+                version = soft.get('version', '')
+                if name and version:
+                    store_info[name.lower()] = {
+                        'name': name,
+                        'store_version': version,
+                        'store_package_uuid': soft.get('package_uuid')
+                    }
 
             # Enrich results - match if GLPI name starts with store name
             for software in results:
                 glpi_name = software['software_name'].lower()
 
                 # Find matching store software
+                # Match if GLPI name starts with or contains store name
+                # e.g., "7-zip 23.01 (x64)" starts with "7-zip"
+                # e.g., "Mozilla Firefox (x64 fr)" contains "firefox"
                 matched_store = None
                 for store_name, store_data in store_info.items():
-                    # Match if GLPI name starts with store name
-                    # e.g., "7-zip 23.01 (x64)" starts with "7-zip"
-                    if glpi_name.startswith(store_name):
+                    if glpi_name.startswith(store_name) or store_name in glpi_name:
                         # Prefer longer matches (more specific)
                         if matched_store is None or len(store_name) > len(matched_store[0]):
                             matched_store = (store_name, store_data)
@@ -2547,9 +2538,8 @@ class SecurityDatabase(DatabaseHelper):
             # If comparison fails, assume no update (safe default)
             return False
 
-    @DatabaseHelper._sessionm
-    def get_store_software_info(self, session, software_name):
-        """Get store information for a specific software.
+    def get_store_software_info(self, software_name):
+        """Get store information for a specific software via store API.
 
         Uses partial matching: the software_name might be a GLPI name like "7-Zip 23.01 (x64)"
         while store has clean name "7-Zip". We find store software where GLPI name starts with store name.
@@ -2558,77 +2548,39 @@ class SecurityDatabase(DatabaseHelper):
             software_name: Name of the software (GLPI name or clean name)
 
         Returns:
-            dict with store info or None if not found:
-            - name, version, vendor, short_desc
-            - package_uuid, download_url
-            - has_package (bool)
+            dict with store info or None if not found
         """
         try:
-            # First try exact match
-            sql = text("""
-                SELECT
-                    s.id,
-                    s.name,
-                    s.version,
-                    s.vendor,
-                    s.short_desc,
-                    s.os,
-                    s.arch,
-                    sd.package_uuid,
-                    sd.filename,
-                    sd.medulla_path
-                FROM store.software s
-                LEFT JOIN store.software_downloads sd ON sd.software_id = s.id
-                    AND sd.status = 'success'
-                WHERE s.name = :name
-                AND s.active = 1
-                LIMIT 1
-            """)
+            from mmc.plugins.store import get_all_software as store_get_all_software
+            store_data = store_get_all_software()
+            glpi_name = software_name.lower()
 
-            result = session.execute(sql, {'name': software_name})
-            row = result.fetchone()
+            # Try exact match first, then startswith, then contains
+            matched = None
+            for soft in store_data.get('data', []):
+                store_name = soft.get('name', '').lower()
+                if not store_name:
+                    continue
+                if glpi_name == store_name:
+                    matched = soft
+                    break
+                if glpi_name.startswith(store_name) or store_name in glpi_name:
+                    if matched is None or len(store_name) > len(matched.get('name', '')):
+                        matched = soft
 
-            # If no exact match, try partial match (GLPI name starts with store name)
-            if not row:
-                sql_partial = text("""
-                    SELECT
-                        s.id,
-                        s.name,
-                        s.version,
-                        s.vendor,
-                        s.short_desc,
-                        s.os,
-                        s.arch,
-                        sd.package_uuid,
-                        sd.filename,
-                        sd.medulla_path,
-                        LENGTH(s.name) as name_len
-                    FROM store.software s
-                    LEFT JOIN store.software_downloads sd ON sd.software_id = s.id
-                        AND sd.status = 'success'
-                    WHERE LOWER(:glpi_name) LIKE CONCAT(LOWER(s.name), '%')
-                    AND s.active = 1
-                    ORDER BY name_len DESC
-                    LIMIT 1
-                """)
-                result = session.execute(sql_partial, {'glpi_name': software_name})
-                row = result.fetchone()
-
-            if not row:
+            if not matched:
                 return None
 
             return {
-                'id': row.id,
-                'name': row.name,
-                'version': row.version,
-                'vendor': row.vendor,
-                'short_desc': row.short_desc,
-                'os': row.os,
-                'arch': row.arch,
-                'package_uuid': row.package_uuid,
-                'filename': row.filename,
-                'medulla_path': row.medulla_path,
-                'has_package': row.package_uuid is not None
+                'id': matched.get('id'),
+                'name': matched.get('name'),
+                'version': matched.get('version'),
+                'vendor': matched.get('vendor'),
+                'short_desc': matched.get('short_desc'),
+                'os': matched.get('os'),
+                'arch': matched.get('arch'),
+                'package_uuid': matched.get('package_uuid'),
+                'has_package': matched.get('package_exists', False)
             }
         except Exception as e:
             logger.error(f"Error getting store software info for '{software_name}': {e}")

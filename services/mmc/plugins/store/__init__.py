@@ -41,7 +41,7 @@ def _store_api_get(endpoint, params=None):
     """Call the remote store API
 
     Args:
-        endpoint: API endpoint (e.g. '/api/softwares.php')
+        endpoint: API endpoint (e.g. '/api/v1/softwares')
         params: dict of query parameters
 
     Returns:
@@ -85,7 +85,7 @@ def _store_api_post(endpoint, data):
     """Call the remote store API with POST
 
     Args:
-        endpoint: API endpoint (e.g. '/api/subscriptions.php')
+        endpoint: API endpoint (e.g. '/api/v1/subscriptions')
         data: dict to send as JSON body
 
     Returns:
@@ -135,7 +135,7 @@ def _enrich_with_local_packages(data):
 
     # Fetch packages list to match software names to package UUIDs
     packages_map = {}
-    if config.packages_api_url and config.packages_api_token:
+    if config.store_api_url and config.store_api_token:
         try:
             pkg_list = _fetch_packages_list(config)
             for pkg in pkg_list.get('packages', []):
@@ -167,7 +167,7 @@ def get_all_software(active_only=True, start=0, limit=0, sort="popular"):
     Returns:
         dict with 'total' count and 'data' list
     """
-    result = _store_api_get('/api/softwares.php')
+    result = _store_api_get('/api/v1/softwares')
     if not result or not result.get('success'):
         return {'total': 0, 'data': []}
 
@@ -176,7 +176,7 @@ def get_all_software(active_only=True, start=0, limit=0, sort="popular"):
 
 def get_software_by_id(software_id):
     """Get software by ID from remote store API"""
-    result = _store_api_get('/api/software.php', {'id': software_id})
+    result = _store_api_get('/api/v1/softwares', {'id': software_id})
     if not result or not result.get('success'):
         return None
     return result.get('data')
@@ -186,7 +186,7 @@ def get_filters():
 
     Normalizes API response to simple string lists expected by the frontend.
     """
-    result = _store_api_get('/api/filters.php')
+    result = _store_api_get('/api/v1/filters')
     if not result or not result.get('success'):
         return {'os': [], 'vendor': [], 'track': [], 'arch': []}
 
@@ -217,7 +217,7 @@ def search_software(filters=None, start=0, limit=0, sort="popular"):
         if filters.get('track'):
             params['track'] = filters['track']
 
-    result = _store_api_get('/api/softwares.php', params)
+    result = _store_api_get('/api/v1/softwares', params)
     if not result or not result.get('success'):
         return {'total': 0, 'data': []}
 
@@ -231,7 +231,7 @@ def get_pending_requests():
 
 def get_store_stats():
     """Get store statistics from remote store API"""
-    result = _store_api_get('/api/softwares.php')
+    result = _store_api_get('/api/v1/softwares')
     if not result or not result.get('success'):
         return {'total_software': 0, 'active_software': 0, 'total_downloads': 0, 'pending_requests': 0}
     return {
@@ -252,14 +252,14 @@ def get_client_uuid():
 
 def get_client_info():
     """Return current client info from store API"""
-    result = _store_api_get('/api/client.php')
+    result = _store_api_get('/api/v1/client')
     if not result or not result.get('success'):
         return None
     return result.get('data')
 
 def get_client_subscriptions():
     """Return software IDs the client is subscribed to from store API"""
-    result = _store_api_get('/api/subscriptions.php')
+    result = _store_api_get('/api/v1/subscriptions')
     if not result or not result.get('success'):
         return []
     return result.get('data', [])
@@ -270,15 +270,15 @@ def save_subscriptions(software_ids):
     if not config.store_api_token:
         return {'success': False, 'error': 'API token not configured'}
 
-    result = _store_api_post('/api/subscriptions.php', {'software_ids': software_ids})
+    result = _store_api_post('/api/v1/subscriptions', {'software_ids': software_ids})
     if not result:
         return {'success': False, 'error': 'Failed to contact store API'}
 
     if not result.get('success'):
         return result
 
-    # Sync packages if packages_api is configured
-    if config.packages_api_url and config.packages_api_token:
+    # Sync packages if store_api is configured
+    if config.store_api_url and config.store_api_token:
         logger.info("Syncing packages from store...")
         try:
             sync_result = sync_packages()
@@ -312,10 +312,10 @@ def sync_packages():
     logger = logging.getLogger()
 
     # Validate configuration
-    if not config.packages_api_url:
-        return {'success': False, 'error': 'packages_api url not configured in store.ini'}
-    if not config.packages_api_token:
-        return {'success': False, 'error': 'packages_api api_token not configured in store.ini'}
+    if not config.store_api_url:
+        return {'success': False, 'error': 'store_api url not configured in store.ini'}
+    if not config.store_api_token:
+        return {'success': False, 'error': 'store_api api_token not configured in store.ini'}
 
     # 1. Get subscribed software IDs from store API
     subscribed_ids = get_client_subscriptions()
@@ -324,7 +324,7 @@ def sync_packages():
         return {'success': True, 'synced': 0, 'message': 'No subscriptions'}
 
     # 2. Get catalog to map software_id -> software_name
-    catalog = _store_api_get('/api/softwares.php')
+    catalog = _store_api_get('/api/v1/softwares')
     if not catalog or not catalog.get('success'):
         return {'success': False, 'error': 'Failed to fetch catalog'}
 
@@ -420,21 +420,21 @@ def sync_packages():
 
 def _fetch_packages_list(config):
     """Fetch the packages list from packages API"""
-    url = config.packages_api_url.rstrip('/') + '/api/packages.php'
+    url = config.store_api_url.rstrip('/') + '/api/v1/packages'
 
     headers = {'Accept': 'application/json'}
-    if config.packages_api_token:
-        headers['Authorization'] = f'Bearer {config.packages_api_token}'
+    if config.store_api_token:
+        headers['Authorization'] = f'Bearer {config.store_api_token}'
 
     req = urllib.request.Request(url, headers=headers, method='GET')
 
     ssl_context = None
-    if config.packages_api_skip_ssl:
+    if config.store_api_skip_ssl:
         ssl_context = ssl.create_default_context()
         ssl_context.check_hostname = False
         ssl_context.verify_mode = ssl.CERT_NONE
 
-    with urllib.request.urlopen(req, timeout=config.packages_api_timeout, context=ssl_context) as response:
+    with urllib.request.urlopen(req, timeout=config.store_api_timeout, context=ssl_context) as response:
         return json.loads(response.read().decode('utf-8'))
 
 def _download_package(config, remote_pkg, local_path):
@@ -450,16 +450,16 @@ def _download_package(config, remote_pkg, local_path):
     if not files:
         return {'success': False, 'error': 'No files in package'}
 
-    base_url = config.packages_api_url.rstrip('/')
+    base_url = config.store_api_url.rstrip('/')
 
     ssl_context = None
-    if config.packages_api_skip_ssl:
+    if config.store_api_skip_ssl:
         ssl_context = ssl.create_default_context()
         ssl_context.check_hostname = False
         ssl_context.verify_mode = ssl.CERT_NONE
 
     for filename in files:
-        file_url = f"{base_url}/api/download.php?path={urllib.parse.quote(path + '/' + filename)}"
+        file_url = f"{base_url}/api/v1/packages/download?path={urllib.parse.quote(path + '/' + filename)}"
         local_file = os.path.join(local_path, filename)
 
         # Skip if file already exists and has content
@@ -472,12 +472,12 @@ def _download_package(config, remote_pkg, local_path):
         logger.debug(f"Downloading {filename} from {file_url}")
 
         headers = {}
-        if config.packages_api_token:
-            headers['Authorization'] = f'Bearer {config.packages_api_token}'
+        if config.store_api_token:
+            headers['Authorization'] = f'Bearer {config.store_api_token}'
         req = urllib.request.Request(file_url, headers=headers, method='GET')
 
         try:
-            with urllib.request.urlopen(req, timeout=config.packages_api_timeout, context=ssl_context) as response:
+            with urllib.request.urlopen(req, timeout=config.store_api_timeout, context=ssl_context) as response:
                 with open(local_file, 'wb') as f:
                     shutil.copyfileobj(response, f)
         except urllib.error.HTTPError as e:
@@ -572,7 +572,7 @@ def _regenerate_packages(config):
 def create_software_request(software_name, os, requester_name, requester_email, message=""):
     """Create a new software request via store API"""
     # TODO: implement via store API when endpoint is available
-    result = _store_api_post('/api/requests.php', {
+    result = _store_api_post('/api/v1/requests', {
         'software_name': software_name,
         'os': os or '',
         'requester_name': requester_name,
@@ -607,7 +607,7 @@ def create_software_request(software_name, os, requester_name, requester_email, 
 
             # Create SSL context (optionally skip verification for self-signed certs)
             ssl_context = None
-            if config.packages_api_skip_ssl:
+            if config.store_api_skip_ssl:
                 ssl_context = ssl.create_default_context()
                 ssl_context.check_hostname = False
                 ssl_context.verify_mode = ssl.CERT_NONE
