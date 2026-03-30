@@ -10,6 +10,7 @@ import uuid
 import os
 import base64
 import re
+import json
 
 from pulse2.version import getVersion, getRevision  # pyflakes.ignore
 
@@ -468,75 +469,6 @@ def handlerkioskpresence(
     return datas
 
 
-def __search_software_in_glpi(
-    list_software_glpi, list_granted_packages, packageprofile
-):
-    structuredatakioskelement = {
-        "name": packageprofile[0],
-        "action": [],
-        "uuid": packageprofile[6],
-        "description": packageprofile[2],
-        "version": packageprofile[3],
-        "profile": packageprofile[1],
-    }
-    patternname = re.compile(
-        "(?i)"
-        + packageprofile[4]
-        .replace("+", "\+")
-        .replace("*", "\*")
-        .replace("(", "\(")
-        .replace(")", "\)")
-        .replace(".", "\.")
-    )
-    for soft_glpi in list_software_glpi:
-        if (
-            patternname.match(str(soft_glpi[0]))
-            or patternname.match(str(soft_glpi[1]))
-            or (soft_glpi[1] == packageprofile[4] and soft_glpi[2] == packageprofile[5])
-        ):
-            # Process with this package which is installed on the machine
-            # The package could be deleted
-            structuredatakioskelement["icon"] = "kiosk.png"
-            structuredatakioskelement["action"].append("Delete")
-            structuredatakioskelement["action"].append("Launch")
-            # verification if update
-            # compare the version
-            # TODO
-            # For now we use the package version. Later the software version will be needed into the pulse package
-            if LooseVersion(soft_glpi[2]) < LooseVersion(packageprofile[3]):
-                structuredatakioskelement["action"].append("Update")
-                logger.debug(
-                    "the software version is superior "
-                    "to that installed on the machine %s : %s < %s"
-                    % (packageprofile[0], soft_glpi[2], LooseVersion(packageprofile[3]))
-                )
-            break
-    if len(structuredatakioskelement["action"]) == 0:
-        # The package defined for this profile is absent from the machine:
-        if packageprofile[8] == "allowed":
-            structuredatakioskelement["action"].append("Install")
-        else:
-            trigger = False
-            for ack in list_granted_packages:
-                if ack["package_uuid"] == structuredatakioskelement["uuid"]:
-                    if ack["id_package_has_profil"] != packageprofile[9]:
-                        continue
-                    else:
-                        if ack["status"] == "allowed":
-                            structuredatakioskelement["action"].append("Install")
-                        elif ack["status"] == "waiting":
-                            trigger = True
-                        elif ack["status"] == "rejected":
-                            trigger = True
-                else:
-                    continue
-
-            if len(structuredatakioskelement["action"]) == 0 and trigger is False:
-                structuredatakioskelement["action"].append("Ask")
-
-    return structuredatakioskelement
-
-
 def send_message_to_machine(
     datas, jid, sessionid=None, subaction="send_message_to_jid"
 ):
@@ -672,6 +604,25 @@ def get_packages_for_machine(machine):
     Returns:
         list of the packages"""
 
+    # We have to check the packages OS from profiles list, and verify if they are compatible with the current machine
+
+
+    # Get the machine OS
+    platform = "win"
+    mach_platform = ""
+    if "platform" in machine:
+        # Because re is picky, we have to use an independant str
+        mach_platform = machine["platform"]
+        if re.match("Microsoft", mach_platform) is not None:
+            platform = "win"
+        elif re.match("Darwin", mach_platform) is not None or re.match("MacOS", mach_platform) is not None:
+            platform = "mac"
+        else:
+            platform = "linux"
+
+    #
+    # Setting up the sources datas info
+    #
     machine_entity = XmppMasterDatabase().getmachineentityfromjid(machine["jid"])
     machine_entity = (
         machine_entity.complete_name.replace(" > ", ">>")
@@ -706,66 +657,109 @@ def get_packages_for_machine(machine):
     # we find all profiles with the specified sources
     profiles = KioskDatabase().get_profiles_by_sources(sources)
 
-    # search packages for the applied profiles
-    list_profile_packages = KioskDatabase().get_profile_list_for_profiles_list(profiles)
-    if list_profile_packages is None:
+    # search packages and acknowledgements for the applied profiles
+    list_profile_packages = KioskDatabase().get_packages_for_profile_list(profiles)
+    if list_profile_packages is None or list_profile_packages == []:
         return []
+    # Define the path for the packages list. Needed to find some info from xmppdeploy.json
+    pkg_dir = os.path.join("/", "var","lib", "pulse2", "packages")
 
-    granted_packages = []
-    for element in list_profile_packages:
-        granted_packages += KioskDatabase().get_acknowledges_for_package_profile(
-            element[9], element[6], machine["lastuser"]
-        )
-    list_software_glpi = []
-    softwareonmachine = Glpi().getLastMachineInventoryPart(
-        machine["uuid_inventorymachine"],
-        "Softwares",
-        0,
-        -1,
-        "",
-        {"hide_win_updates": True, "history_delta": ""},
-    )
-    for x in softwareonmachine:
-        list_software_glpi.append([x[0][1], x[1][1], x[2][1]])
+
+    # pkg_statuses is the cleaned up list of packages associated to the profiles list.
+    #   We will determine some info from packages and machine:
+    #       such OS compatibility between package and machine,
+    #       if the uninstall section is pecified,
+    #       if the launcher command is specified ...
+    #       the rights allowed, acknowledged, rejected ....
+
+    pkg_statuses = {}
+    for pkg in list_profile_packages:
+        # get a shortcut to package uuid
+        uuid = pkg["package_uuid"]
+
+        ### Check if the packages found are OS compatible
+        depl = {}
+        pkg_path = os.path.join(pkg_dir, uuid, "xmppdeploy.json")
+        try:
+            with open(pkg_path, "r") as fb:
+                try:
+                    depl = json.load(fb)
+                except:
+                    depl = {}
+                finally:
+                    fb.close()
+        except:
+            # Can't read xmppdeploy.json : probably corrupted package : skip
+            continue
+
+        # Check if the machine OS is compatible with the package
+        if platform not in pkg["os"]:
+            continue
+
+        # Check if the uninstall section is present
+        uninstall_section_present = False
+        update_section_present = False
+        for action_name in depl["metaparameter"][platform]["label"]:
+            if action_name == action_name.startswith("upd_"):
+                uninstall_section_present = True
+            if action_name == "label_section_uninstall" or action_name.startswith("Uninst_"):
+                uninstall_section_present = True
+
+        # Check if the launcher is specified
+        launcher = ""
+        if depl["info"]["launcher"] != "":
+            launcher = depl["info"]["launcher"]
+
+        # Check if the package is installed on the machine
+        found = Glpi().find_software_info_for_machine(machine["uuid_inventorymachine"],  pkg)
+        installed = True if found != [] else False
+        # create a new entry for this package if not existing in pkg_statuses
+        if uuid not in pkg_statuses:
+            # By default set to restricted
+            pkg_statuses[uuid] = {
+                "icon": "kiosk.png",
+                "right": "restricted",
+                "launcher" : launcher,
+                "uninstall" : uninstall_section_present,
+                "update": update_section_present,
+                "installed" : installed,
+                "uuid" : uuid,
+                "version_software": pkg["version_software"],
+                "vendor": pkg["vendor"],
+                "version": pkg["version_package"],
+                "software": pkg["software"],
+                "description": pkg["description"],
+                "name":pkg["name_package"],
+                "action": []
+            }
+
+        # We will find some info from profile rights
+        if pkg["package_status"] == "allowed":
+            pkg_statuses[uuid]["right"] = "allowed"
+
+        elif pkg["package_status"] == "restricted" and pkg["status"] == "allowed":
+            pkg_statuses[uuid]["right"] = "allowed"
+
+        # We fully know the package rights and states: we can put actions on it
+        pkg_statuses[uuid]["action"] = []
+
+        if installed == False:
+            if pkg_statuses[uuid]["right"] == "allowed":
+                pkg_statuses[uuid]["action"].append("Install")
+            else:
+                pkg_statuses[uuid]["action"].append("Ask")
+        else:
+            if pkg_statuses[uuid]["launcher"] != "":
+                pkg_statuses[uuid]["action"].append("Launch")
+            if pkg_statuses[uuid]["uninstall"] is True:
+                pkg_statuses[uuid]["action"].append("Delete")
+            if pkg_statuses[uuid]["update"] is True:
+                if LooseVersion(found[0][2]) < LooseVersion(pkg["version"]):
+                    pkg_statuses[uuid]["action"].append("Update")
 
     structuredatakiosk = []
-
-    indexed = {}
-    # Create structuredatakiosk for initialization
-    for packageprofile in list_profile_packages:
-        spkg = __search_software_in_glpi(
-            list_software_glpi, granted_packages, packageprofile
-        )
-
-        if spkg["name"] not in indexed:
-            structuredatakiosk.append(spkg)
-            indexed[spkg["name"]] = {
-                "action": spkg["action"],
-                "id": len(structuredatakiosk) - 1,
-            }
-        else:
-            # ask < install < delete
-            # check if indexed has more rights than spkg
-            if (
-                "Delete" in indexed[spkg["name"]]["action"]
-                and "Delete" not in spkg["action"]
-            ):
-                # spkg["name"]][id] = id of spkg in structuredatakiosk
-                # change the action of the package stored in structuredatakiosk
-                structuredatakiosk[indexed[spkg["name"]][id]]["action"] = ["Delete"]
-                if "Launch" in indexed[spkg["name"]]["action"]:
-                    structuredatakiosk[indexed[spkg["name"]][id]]["action"].append(
-                        "Launch"
-                    )
-
-            elif (
-                "Install" in indexed[spkg["name"]] and "Ask" in indexed[spkg["action"]]
-            ):
-                continue
-    logger.debug(
-        "initialisation kiosk %s on machine %s"
-        % (structuredatakiosk, machine["hostname"])
-    )
+    for uuid in pkg_statuses:
+        structuredatakiosk.append(pkg_statuses[uuid])
 
     return structuredatakiosk
 

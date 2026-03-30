@@ -7423,6 +7423,98 @@ and glpi_computers.id in %s group by glpi_computers.id;""" % (
 
         return result
 
+    @DatabaseHelper._sessionm
+    def find_software_info_for_machine(self, session, machine_uuid, pkg):
+        """Find the if a specific software is installed on a machine.
+
+        Args:
+            session (sqlalchemy session): Session to access to the DB
+            machine_uuid (str): The UUID of the machine to check
+            pkg (dict): A dict with the software, version and vendor to check. The dict should have the shape :
+                {
+                    "software": "name of the software",
+                    "version_software": "version of the software",
+                    "vendor": "name of the vendor"
+                }
+        Returns:
+            list: A list of dict with the software, version and manufacturer found on the machine.
+            Even if in the found result there are multiple entries, what's important is if the return list is empty (not installed) or not empty (installed)."""
+
+        def escape_chars(string):
+            """Escape special characters for SQL REGEXP. The chars needs to be like \\<char> on the final request
+
+            Args:
+                string (str): The string to escape
+
+            Returns:
+                str: The escaped string suitable for SQL REGEXP.
+            """
+
+            # List of special characters to escape in SQL REGEXP
+            string = string.replace("(", "\\\\(")
+            string = string.replace(")", "\\\\)")
+            string = string.replace(".", "\\\\.")
+            string = string.replace("-", "\\\\-")
+            string = string.replace("+", "\\\\+")
+            string = string.replace("{", "\\\\{")
+            string = string.replace("}", "\\\\}")
+            string = string.replace("[", "\\\\[")
+            string = string.replace("]", "\\\\]")
+            string = string.replace("*", "\\\\*")
+            return string
+
+        filter_software = ""
+        filter_version = ""
+        filter_manufacturer = ""
+
+        # Get the special chars escaped strings for software, version and manufacturer.
+        software = escape_chars(pkg["software"])
+        version = escape_chars(pkg["version_software"])
+        manufacturer = escape_chars(pkg["vendor"])
+
+        if pkg["software"] != "":
+            filter_software = """AND s.name REGEXP "%s" """ % software
+
+        if pkg["version_software"] != "":
+            filter_version = """AND sv.name REGEXP "%s" """ % version
+
+        if pkg["vendor"] != "":
+            filter_manufacturer = """AND m.name REGEXP "%s" """ % manufacturer
+
+        sql="""SELECT
+    s.name as software,
+    sv.name as version,
+    m.name as manufacturer
+FROM
+    glpi_computers_pulse c
+INNER JOIN
+    glpi_items_softwareversions isv on isv.items_id = c.id and isv.itemtype = 'Computer'
+INNER JOIN
+    glpi_softwareversions sv on sv.id = isv.softwareversions_id
+INNER JOIN
+    glpi_softwares s on s.id = sv.softwares_id
+INNER JOIN
+    glpi_manufacturers m on m.id = s.manufacturers_id
+where concat("UUID", c.id) = "%s"
+%s
+%s
+%s
+"""%(machine_uuid, filter_software, filter_version, filter_manufacturer)
+
+        res = session.execute(sql)
+        if res == None:
+            return []
+
+        result = []
+        for element in res:
+            result.append({
+                "software": element.software,
+                "version": element.version,
+                "manufacturer": element.manufacturer
+            })
+
+        return result
+
 
 # Class for SQLalchemy mapping
 class Machine(object):
