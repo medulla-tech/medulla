@@ -27,6 +27,7 @@ class StoreConfig(PluginConfig, StoreDatabaseConfig):
         self.store_api_timeout = self.getint("store_api", "timeout") if self.has_option("store_api", "timeout") else 15
         self.store_api_skip_ssl = self.getboolean("store_api", "skip_ssl_verify") if self.has_option("store_api", "skip_ssl_verify") else False
         self.client_uuid = self.get("store_api", "client_uuid") if self.has_option("store_api", "client_uuid") else None
+        self.lang = self.get("store_api", "lang") if self.has_option("store_api", "lang") else "multi"
         # Script to regenerate packages in Medulla database
         self.generate_package_script = self.get("main", "generate_package_script") if self.has_option("main", "generate_package_script") else "/usr/sbin/pulse2-generation_package.py"
 

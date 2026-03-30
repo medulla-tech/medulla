@@ -191,6 +191,7 @@ if (!empty($currentSort) && $currentSort !== 'popular') $baseUrl .= "&sort=" . u
     $vendors = array();
     $versions = array();
     $osList = array();
+    $langsList = array();
     $popularityList = array();
     $statusList = array();
     $params = array();
@@ -198,10 +199,19 @@ if (!empty($currentSort) && $currentSort !== 'popular') $baseUrl .= "&sort=" . u
     foreach ($softwares as $soft) {
         $isSubscribed = in_array($soft['id'], $subscribedIds);
         $hasDeployed = !empty($soft['deployed_at']);
-        $checked = $isSubscribed ? 'checked' : '';
+        $softId = $soft['id'];
 
-        // Checkbox + icon + name
-        $names[] = '<input type="checkbox" class="software-checkbox" name="software_ids[]" value="' . $soft['id'] . '" ' . $checked . ' style="position:relative;top:-5px;margin-right:10px;width:18px;height:18px;cursor:pointer;"/>' .
+        // Determine languages
+        $isMultilingual = !empty($soft['is_multilingual']);
+        $softLangs = is_array($soft['languages']) ? $soft['languages'] : array_filter(explode(',', $soft['languages'] ?? 'multi'));
+        $subLangs = isset($subscribedLangs[$softId]) ? $subscribedLangs[$softId] : array();
+
+        // Build checkbox + lang selectors
+        $langLabels = array('multi' => 'Multi', 'fr_FR' => 'FR', 'en_US' => 'EN', 'es_ES' => 'ES', 'de_DE' => 'DE', 'it_IT' => 'IT');
+
+        // Simple checkbox
+        $checked = $isSubscribed ? 'checked' : '';
+        $names[] = '<input type="checkbox" class="software-checkbox" name="software_ids[]" value="' . $softId . '" ' . $checked . ' style="position:relative;top:-5px;margin-right:10px;width:18px;height:18px;cursor:pointer;"/>' .
                    "<img style='position:relative;top:5px;margin-right:5px;' src='img/other/package.svg' width='25' height='25'/> " .
                    htmlspecialchars($soft['name']);
 
@@ -240,7 +250,6 @@ if (!empty($currentSort) && $currentSort !== 'popular') $baseUrl .= "&sort=" . u
     $n->addExtraInfo($vendors, _T("Vendor", "store"));
     $n->addExtraInfo($versions, _T("Version", "store"));
     $n->addExtraInfo($osList, _T("OS", "store"));
-    $n->addExtraInfo($popularityList, _T("Subscribers", "store"));
     $n->addExtraInfo($statusList, _T("Status", "store"));
     $n->setItemCount($totalCount);
     $n->setNavBar(new SimpleNavBar($start, $start + count($softwares) - 1, $totalCount, $extraParams, $maxperpage));

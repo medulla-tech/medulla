@@ -41,7 +41,7 @@ def _store_api_get(endpoint, params=None):
     """Call the remote store API
 
     Args:
-        endpoint: API endpoint (e.g. '/api/v1/softwares')
+        endpoint: API endpoint (e.g. 'softwares')
         params: dict of query parameters
 
     Returns:
@@ -53,7 +53,7 @@ def _store_api_get(endpoint, params=None):
         return None
 
     base_url = config.store_api_url.rstrip('/')
-    url = base_url + endpoint
+    url = base_url + '/' + endpoint.lstrip('/')
 
     if params:
         query = urllib.parse.urlencode({k: v for k, v in params.items() if v is not None and v != ''})
@@ -85,7 +85,7 @@ def _store_api_post(endpoint, data):
     """Call the remote store API with POST
 
     Args:
-        endpoint: API endpoint (e.g. '/api/v1/subscriptions')
+        endpoint: API endpoint (e.g. 'subscriptions')
         data: dict to send as JSON body
 
     Returns:
@@ -97,7 +97,7 @@ def _store_api_post(endpoint, data):
         return None
 
     base_url = config.store_api_url.rstrip('/')
-    url = base_url + endpoint
+    url = base_url + '/' + endpoint.lstrip('/')
 
     body = json.dumps(data).encode('utf-8')
     headers = {
@@ -167,7 +167,7 @@ def get_all_software(active_only=True, start=0, limit=0, sort="popular"):
     Returns:
         dict with 'total' count and 'data' list
     """
-    result = _store_api_get('/api/v1/softwares')
+    result = _store_api_get('softwares')
     if not result or not result.get('success'):
         return {'total': 0, 'data': []}
 
@@ -176,7 +176,7 @@ def get_all_software(active_only=True, start=0, limit=0, sort="popular"):
 
 def get_software_by_id(software_id):
     """Get software by ID from remote store API"""
-    result = _store_api_get('/api/v1/softwares', {'id': software_id})
+    result = _store_api_get('softwares', {'id': software_id})
     if not result or not result.get('success'):
         return None
     return result.get('data')
@@ -186,7 +186,7 @@ def get_filters():
 
     Normalizes API response to simple string lists expected by the frontend.
     """
-    result = _store_api_get('/api/v1/filters')
+    result = _store_api_get('filters')
     if not result or not result.get('success'):
         return {'os': [], 'vendor': [], 'track': [], 'arch': []}
 
@@ -217,7 +217,7 @@ def search_software(filters=None, start=0, limit=0, sort="popular"):
         if filters.get('track'):
             params['track'] = filters['track']
 
-    result = _store_api_get('/api/v1/softwares', params)
+    result = _store_api_get('softwares', params)
     if not result or not result.get('success'):
         return {'total': 0, 'data': []}
 
@@ -231,7 +231,7 @@ def get_pending_requests():
 
 def get_store_stats():
     """Get store statistics from remote store API"""
-    result = _store_api_get('/api/v1/softwares')
+    result = _store_api_get('softwares')
     if not result or not result.get('success'):
         return {'total_software': 0, 'active_software': 0, 'total_downloads': 0, 'pending_requests': 0}
     return {
@@ -252,42 +252,56 @@ def get_client_uuid():
 
 def get_client_info():
     """Return current client info from store API"""
-    result = _store_api_get('/api/v1/client')
+    result = _store_api_get('client')
     if not result or not result.get('success'):
         return None
     return result.get('data')
 
 def get_client_subscriptions():
-    """Return software IDs the client is subscribed to from store API"""
-    result = _store_api_get('/api/v1/subscriptions')
+    """Return list of subscribed software IDs from store API."""
+    result = _store_api_get('subscriptions')
     if not result or not result.get('success'):
         return []
     return result.get('data', [])
 
 def save_subscriptions(software_ids):
-    """Save client subscriptions via store API"""
+    """Save client subscriptions via store API
+
+    Args:
+        software_ids: list of software IDs to subscribe to
+    """
     config = StoreConfig("store")
     if not config.store_api_token:
         return {'success': False, 'error': 'API token not configured'}
 
-    result = _store_api_post('/api/v1/subscriptions', {'software_ids': software_ids})
+    # Build subscriptions with configured langs
+    langs = [l.strip() for l in config.lang.split(',') if l.strip()] or ['multi']
+    subs = []
+    for sid in software_ids:
+        for lang in langs:
+            subs.append({'software_id': int(sid), 'lang': lang})
+    result = _store_api_post('subscriptions', {'subscriptions': subs})
     if not result:
         return {'success': False, 'error': 'Failed to contact store API'}
 
     if not result.get('success'):
         return result
 
-    # Sync packages if store_api is configured
+    # Sync packages in background thread
     if config.store_api_url and config.store_api_token:
-        logger.info("Syncing packages from store...")
-        try:
-            sync_result = sync_packages()
-            result['sync'] = sync_result
-            if not sync_result.get('success'):
-                logger.warning(f"Package sync had errors: {sync_result.get('errors')}")
-        except Exception as e:
-            logger.error(f"Package sync failed: {e}")
-            result['sync'] = {'success': False, 'error': str(e)}
+        from threading import Thread
+        def _bg_sync():
+            try:
+                logger.info("Syncing packages from store (background)...")
+                sync_result = sync_packages()
+                if sync_result.get('success'):
+                    logger.info(f"Package sync completed: {sync_result.get('synced', 0)} synced")
+                else:
+                    logger.warning(f"Package sync had errors: {sync_result.get('errors')}")
+            except Exception as e:
+                logger.error(f"Package sync failed: {e}")
+        Thread(target=_bg_sync, daemon=True).start()
+        result['sync'] = {'status': 'started', 'message': 'Package sync started in background'}
 
     return result
 
@@ -317,42 +331,68 @@ def sync_packages():
     if not config.store_api_token:
         return {'success': False, 'error': 'store_api api_token not configured in store.ini'}
 
-    # 1. Get subscribed software IDs from store API
-    subscribed_ids = get_client_subscriptions()
-    if not subscribed_ids:
+    # 1. Get subscribed software IDs
+    subs_raw = get_client_subscriptions()
+    if not subs_raw:
         logger.info("No subscriptions found, nothing to sync")
         return {'success': True, 'synced': 0, 'message': 'No subscriptions'}
 
+    # Extract IDs
+    if isinstance(subs_raw, dict) and 'data' in subs_raw:
+        subscribed_ids = subs_raw.get('data', [])
+    else:
+        subscribed_ids = subs_raw if isinstance(subs_raw, list) else []
+
+    # Get configured langs (can be comma-separated: "fr_FR,es_ES")
+    client_langs = [l.strip() for l in config.lang.split(',') if l.strip()]
+    if not client_langs:
+        client_langs = ['multi']
+
     # 2. Get catalog to map software_id -> software_name
-    catalog = _store_api_get('/api/v1/softwares')
+    catalog = _store_api_get('softwares')
     if not catalog or not catalog.get('success'):
         return {'success': False, 'error': 'Failed to fetch catalog'}
 
-    # Build name lookup: id -> name (lowercase, normalized)
+    # Build name lookup
     subscribed_names = set()
     for soft in catalog.get('data', []):
         if soft.get('id') in subscribed_ids:
-            # Normalize name for matching with packages.json software_name
-            name = soft.get('name', '').lower().replace(' ', '_')
-            subscribed_names.add(name)
-            # Also try the raw name
+            subscribed_names.add(soft.get('name', '').lower().replace(' ', '_'))
             subscribed_names.add(soft.get('name', '').lower())
 
-    logger.info(f"Subscribed to {len(subscribed_ids)} software, matched names: {subscribed_names}")
+    logger.info(f"Subscribed to {len(subscribed_ids)} software, langs={client_langs}")
 
-    # 3. Fetch available packages from packages API
+    # 3. Fetch available packages
     try:
         available_packages = _fetch_packages_list(config)
     except Exception as e:
         logger.error(f"Failed to fetch packages list: {e}")
         return {'success': False, 'error': f'Failed to fetch packages list: {e}'}
 
-    # 4. Filter packages matching subscribed software
+    # 4. Filter packages matching subscribed software AND client lang
     packages_to_sync = []
     for pkg in available_packages.get('packages', []):
         pkg_name = pkg.get('software_name', '').lower()
-        if pkg_name in subscribed_names:
+        pkg_display_name = pkg.get('name', '')
+
+        if pkg_name not in subscribed_names and pkg_name.replace('_', ' ') not in subscribed_names:
+            continue
+
+        # Check lang: accept "multi" packages always, or packages matching any configured lang
+        if 'multi' in client_langs:
             packages_to_sync.append(pkg)
+        else:
+            # Check if any configured lang appears in package name
+            lang_match = False
+            for lang in client_langs:
+                if '(' + lang + ')' in pkg_display_name or '(' + lang.replace('_', '-') + ')' in pkg_display_name:
+                    lang_match = True
+                    break
+            if lang_match:
+                packages_to_sync.append(pkg)
+            elif not any(l in pkg_display_name for l in ['(fr_FR)', '(en_US)', '(es_ES)', '(de_DE)', '(it_IT)']):
+                # Package has no lang in name: it's a multilingual package, include it
+                packages_to_sync.append(pkg)
 
     if not packages_to_sync:
         logger.info("No packages available for subscribed software")
@@ -420,7 +460,7 @@ def sync_packages():
 
 def _fetch_packages_list(config):
     """Fetch the packages list from packages API"""
-    url = config.store_api_url.rstrip('/') + '/api/v1/packages'
+    url = config.store_api_url.rstrip('/') + '/packages'
 
     headers = {'Accept': 'application/json'}
     if config.store_api_token:
@@ -459,7 +499,7 @@ def _download_package(config, remote_pkg, local_path):
         ssl_context.verify_mode = ssl.CERT_NONE
 
     for filename in files:
-        file_url = f"{base_url}/api/v1/packages/download?path={urllib.parse.quote(path + '/' + filename)}"
+        file_url = f"{base_url}/packages/download?path={urllib.parse.quote(path + '/' + filename)}"
         local_file = os.path.join(local_path, filename)
 
         # Skip if file already exists and has content
@@ -572,7 +612,7 @@ def _regenerate_packages(config):
 def create_software_request(software_name, os, requester_name, requester_email, message=""):
     """Create a new software request via store API"""
     # TODO: implement via store API when endpoint is available
-    result = _store_api_post('/api/v1/requests', {
+    result = _store_api_post('requests', {
         'software_name': software_name,
         'os': os or '',
         'requester_name': requester_name,
