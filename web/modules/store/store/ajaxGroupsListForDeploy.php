@@ -50,15 +50,14 @@ $names = [];
 $types = [];
 $counts = [];
 $paramsInfo = [];
+$groupIds = [];
 
 foreach ($list as $group) {
     $groupId = $group->id;
     $groupName = $group->getName();
 
-    // Checkbox + group name
-    $names[] = '<input type="checkbox" class="group-checkbox" name="groups[]" value="' . htmlspecialchars($groupId) . '" data-name="' . htmlspecialchars($groupName) . '" style="vertical-align:middle;margin-right:8px;"/>'
-        . '<img src="modules/base/graph/navbar/group.svg" width="18" height="18" style="vertical-align:middle;margin-right:5px;"/>'
-        . htmlspecialchars($groupName);
+    $names[] = '<strong>' . htmlspecialchars($groupName) . '</strong>';
+    $groupIds[] = $groupId;
 
     // Type (dynamic or static)
     if ($group->isDyn()) {
@@ -96,3 +95,39 @@ $n->setNavBar(new AjaxNavBar($count, $filter, "updateSearchGroupsDeploy", $maxpe
 $n->start = 0;
 $n->end = count($names);
 $n->display();
+
+// Inject checkboxes + group icon
+$groupIdsJson = json_encode($groupIds);
+echo <<<SCRIPT
+<script>
+(function() {
+    var ids = {$groupIdsJson};
+    var rows = document.querySelectorAll('#tab-groups .listinfos tbody tr.alternate, .listinfos tbody tr.alternate');
+    var injected = 0;
+    for (var i = 0; i < rows.length && injected < ids.length; i++) {
+        var cell = rows[i].children[0];
+        if (!cell) continue;
+        // Skip if already injected (avoid double injection)
+        if (cell.querySelector('.group-checkbox')) continue;
+        cell.classList.add('bulk-active');
+
+        var icon = new Image();
+        icon.src = 'img/other/machinegroup.svg';
+        icon.style.cssText = 'width:22px;height:22px;flex-shrink:0;margin:0 4px;';
+
+        var cb = document.createElement('input');
+        cb.type = 'checkbox';
+        cb.className = 'group-checkbox';
+        cb.name = 'groups[]';
+        cb.value = ids[injected];
+        cb.style.cssText = 'width:15px;height:15px;cursor:pointer;flex-shrink:0;margin:0 2px;';
+
+        var first = cell.firstChild;
+        cell.insertBefore(icon, first);
+        cell.insertBefore(cb, icon);
+        injected++;
+    }
+    if (typeof updateSelectedGroupsCount === 'function') updateSelectedGroupsCount();
+})();
+</script>
+SCRIPT;

@@ -133,28 +133,45 @@ def _enrich_with_local_packages(data):
     """Enrich software list with local package existence info from packages API"""
     config = StoreConfig("store")
 
-    # Fetch packages list to match software names to package UUIDs
-    packages_map = {}
+    def _norm(name):
+        return name.lower().strip().replace('++', 'plusplus').replace(' ', '').replace('-', '').replace('_', '')
+
+    # Fetch packages list — group by software_name (multiple packages per software)
+    packages_by_name = {}
     if config.store_api_url and config.store_api_token:
         try:
             pkg_list = _fetch_packages_list(config)
             for pkg in pkg_list.get('packages', []):
                 pkg_name = pkg.get('software_name', '').lower()
-                packages_map[pkg_name] = pkg
+                for key in [pkg_name, _norm(pkg_name)]:
+                    if key not in packages_by_name:
+                        packages_by_name[key] = []
+                    packages_by_name[key].append(pkg)
         except Exception:
             pass
 
     packages_dir = os.path.join(config.packages_path, "sharing", "global")
     for item in data:
-        # Match with packages.json by name
-        soft_name = item.get('name', '').lower().replace(' ', '_')
-        pkg = packages_map.get(soft_name) or packages_map.get(item.get('name', '').lower())
+        # Match with packages.json by name (try multiple forms)
+        soft_name = item.get('name', '').lower()
+        pkgs = packages_by_name.get(soft_name) or packages_by_name.get(soft_name.replace(' ', '_')) or packages_by_name.get(_norm(soft_name)) or []
 
-        if pkg:
-            item['package_uuid'] = pkg.get('uuid')
+        # Check if ANY package exists locally
+        found_pkg = None
+        for pkg in pkgs:
             package_dir = os.path.join(packages_dir, pkg['uuid'])
-            item['package_exists'] = os.path.isdir(package_dir)
-            item['deployed_at'] = 'synced' if item['package_exists'] else None
+            if os.path.isdir(package_dir):
+                found_pkg = pkg
+                break
+
+        if found_pkg:
+            item['package_uuid'] = found_pkg.get('uuid')
+            item['package_exists'] = True
+            item['deployed_at'] = 'synced'
+        elif pkgs:
+            item['package_uuid'] = pkgs[0].get('uuid')
+            item['package_exists'] = False
+            item['deployed_at'] = None
         else:
             item['package_exists'] = False
             item['deployed_at'] = None
@@ -334,8 +351,18 @@ def sync_packages():
     # 1. Get subscribed software IDs
     subs_raw = get_client_subscriptions()
     if not subs_raw:
-        logger.info("No subscriptions found, nothing to sync")
-        return {'success': True, 'synced': 0, 'message': 'No subscriptions'}
+        logger.info("No subscriptions found, cleaning up all store packages")
+        # No subscriptions — cleanup all store packages
+        try:
+            available_packages = _fetch_packages_list(config)
+            all_store_uuids = {pkg['uuid'] for pkg in available_packages.get('packages', [])}
+            removed, removed_packages = _cleanup_unsubscribed_packages(config, set(), all_store_uuids)
+            if removed > 0:
+                logger.info(f"Cleaned up {removed} store packages: {removed_packages}")
+                _regenerate_packages(config)
+        except Exception as e:
+            logger.error(f"Cleanup failed: {e}")
+        return {'success': True, 'synced': 0, 'removed': removed if 'removed' in dir() else 0, 'message': 'No subscriptions'}
 
     # Extract IDs
     if isinstance(subs_raw, dict) and 'data' in subs_raw:
@@ -353,12 +380,23 @@ def sync_packages():
     if not catalog or not catalog.get('success'):
         return {'success': False, 'error': 'Failed to fetch catalog'}
 
-    # Build name lookup
+    # Normalize name for matching
+    def _normalize(name):
+        n = name.lower().strip()
+        n = n.replace('++', 'plusplus').replace(' ', '').replace('-', '').replace('_', '')
+        return n
+
+    # Build name lookup — track which are multilingual
     subscribed_names = set()
+    subscribed_multilingual = set()  # normalized names of multilingual software
     for soft in catalog.get('data', []):
         if soft.get('id') in subscribed_ids:
-            subscribed_names.add(soft.get('name', '').lower().replace(' ', '_'))
-            subscribed_names.add(soft.get('name', '').lower())
+            name = soft.get('name', '')
+            subscribed_names.add(name.lower())
+            subscribed_names.add(name.lower().replace(' ', '_'))
+            subscribed_names.add(_normalize(name))
+            if soft.get('is_multilingual'):
+                subscribed_multilingual.add(_normalize(name))
 
     logger.info(f"Subscribed to {len(subscribed_ids)} software, langs={client_langs}")
 
@@ -375,14 +413,20 @@ def sync_packages():
         pkg_name = pkg.get('software_name', '').lower()
         pkg_display_name = pkg.get('name', '')
 
-        if pkg_name not in subscribed_names and pkg_name.replace('_', ' ') not in subscribed_names:
+        if pkg_name not in subscribed_names and pkg_name.replace('_', ' ') not in subscribed_names and _normalize(pkg_name) not in subscribed_names:
             continue
 
-        # Check lang: accept "multi" packages always, or packages matching any configured lang
+        # Check lang filter
+        # 1. If client wants all langs ("multi"), take everything
+        # 2. If software is multilingual in catalog, take it regardless of lang in name
+        # 3. If package name contains a configured lang, take it
+        # 4. If package name has no lang hint, it's multilingual, take it
+        pkg_normalized = _normalize(pkg_name)
         if 'multi' in client_langs:
             packages_to_sync.append(pkg)
+        elif pkg_normalized in subscribed_multilingual:
+            packages_to_sync.append(pkg)
         else:
-            # Check if any configured lang appears in package name
             lang_match = False
             for lang in client_langs:
                 if '(' + lang + ')' in pkg_display_name or '(' + lang.replace('_', '-') + ')' in pkg_display_name:
@@ -391,7 +435,6 @@ def sync_packages():
             if lang_match:
                 packages_to_sync.append(pkg)
             elif not any(l in pkg_display_name for l in ['(fr_FR)', '(en_US)', '(es_ES)', '(de_DE)', '(it_IT)']):
-                # Package has no lang in name: it's a multilingual package, include it
                 packages_to_sync.append(pkg)
 
     if not packages_to_sync:
@@ -429,11 +472,13 @@ def sync_packages():
             errors.append(f"{uuid}: {e}")
             logger.error(f"Failed to sync package {uuid}: {e}")
 
-    # 6. Cleanup unsubscribed packages
+    # 6. Cleanup: only remove store packages that are no longer subscribed
+    # Build set of ALL store package UUIDs (from packages.json)
+    all_store_uuids = {pkg['uuid'] for pkg in available_packages.get('packages', [])}
     removed = 0
     removed_packages = []
     try:
-        removed, removed_packages = _cleanup_unsubscribed_packages(config, synced_uuids)
+        removed, removed_packages = _cleanup_unsubscribed_packages(config, synced_uuids, all_store_uuids)
         if removed > 0:
             logger.info(f"Cleaned up {removed} unsubscribed packages: {removed_packages}")
     except Exception as e:
@@ -527,18 +572,20 @@ def _download_package(config, remote_pkg, local_path):
 
     return {'success': True}
 
-def _cleanup_unsubscribed_packages(config, subscribed_uuids):
+def _cleanup_unsubscribed_packages(config, subscribed_uuids, store_uuids):
     """
-    Remove packages that are not in the subscribed list.
+    Remove store packages that are no longer subscribed.
+    Only removes packages whose UUID is known to the store (in packages.json).
+    Non-store packages (created manually, from other sources) are never touched.
 
     Args:
         config: StoreConfig instance
-        subscribed_uuids: set of package UUIDs we're subscribed to
+        subscribed_uuids: set of package UUIDs currently subscribed
+        store_uuids: set of ALL package UUIDs from the store (packages.json)
 
     Returns:
         tuple: (count of removed packages, list of removed UUIDs)
     """
-    import re
     logger = logging.getLogger()
 
     packages_dir = os.path.join(config.packages_path, "sharing", "global")
@@ -546,31 +593,29 @@ def _cleanup_unsubscribed_packages(config, subscribed_uuids):
     if not os.path.isdir(packages_dir):
         return 0, []
 
-    # UUID pattern
-    uuid_pattern = re.compile(r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$')
-
     removed = 0
     removed_packages = []
 
     for entry in os.listdir(packages_dir):
         entry_path = os.path.join(packages_dir, entry)
 
-        # Only process UUID-named directories
         if not os.path.isdir(entry_path):
             continue
-        if not uuid_pattern.match(entry):
+
+        # Only touch packages that come from the store
+        if entry not in store_uuids:
             continue
 
-        # Skip if subscribed
+        # Skip if still subscribed
         if entry in subscribed_uuids:
             continue
 
-        # Remove unsubscribed package
+        # Remove unsubscribed store package
         try:
             shutil.rmtree(entry_path)
             removed += 1
             removed_packages.append(entry)
-            logger.info(f"Removed unsubscribed package: {entry}")
+            logger.info(f"Removed unsubscribed store package: {entry}")
         except Exception as e:
             logger.error(f"Failed to remove package {entry}: {e}")
 
