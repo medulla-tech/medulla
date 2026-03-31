@@ -190,6 +190,216 @@ END$$
 
 DELIMITER ;
 
+CREATE TABLE IF NOT EXISTS up_windows_kb_uninstall (
+    id INT AUTO_INCREMENT,
+
+    -- Identifiant unique de la mise a jour Windows
+    updateid VARCHAR(38) NOT NULL,
+
+    -- Nom de la machine concernée
+    hostname VARCHAR(45) NOT NULL,
+
+    -- Numéro de la KB (ex: KB1234567)
+    kb VARCHAR(45) DEFAULT '',
+
+    -- Identifiant du job (ex: GLPI, Ansible, etc.)
+    jid VARCHAR(255),
+
+    -- ID de l'entité (ex: GLPI entities_id)
+    entities_id INT DEFAULT 0,
+
+    -- Nombre de tentatives de désinstallation
+    count_uninstall INT DEFAULT 0,
+
+    -- Statut de la désinstallation (ex: "FAILED", "SUCCESS", "PENDING")
+    status VARCHAR(255),
+
+    -- Clé primaire simple
+    PRIMARY KEY (id),
+
+    -- Clé unique métier (pour éviter les doublons updateid+hostname)
+    UNIQUE KEY uniq_update_host (updateid, hostname),
+
+    -- Index pour optimiser les requêtes sur updateid et jid
+    INDEX idx_updateid (updateid),
+    INDEX idx_jid (jid)
+)
+COMMENT='Cette table permet de suivre les tentatives de desinstallation de mises a jour Windows (KB) sur les machines.
+Pour une machine donnee, une desinstallation peut echouer pour plusieurs raisons :
+- SSU : Mise a jour systeme critique (Servicing Stack), non desinstallable.
+- CUMULATIVE : Mise a jour cumulative, incluse dans une version plus recente.
+- GPO : Desinstallation bloquee par strategie de groupe.
+- WSUS : Desinstallation bloquee par gestion centralisee des mises a jour.
+- CBS_ERROR : echec technique lors de la desinstallation (erreur systeme).
+- ISO : Mise a jour integree via image ISO/upgrade systeme, non desinstallable individuellement.';
+
+
+DROP TRIGGER IF EXISTS `xmppmaster`.`up_black_list_AFTER_UPDATE`;
+
+DELIMITER $$
+USE `xmppmaster`$$
+CREATE DEFINER=`root`@`localhost` TRIGGER `xmppmaster`.`up_black_list_AFTER_UPDATE` AFTER UPDATE ON `up_black_list` FOR EACH ROW
+BEGIN
+
+
+    DELETE FROM `xmppmaster`.`up_gray_list`
+    WHERE entityid = NEW.entityid
+      AND `updateid` IN (
+            SELECT updateid_or_kb
+            FROM xmppmaster.up_black_list
+            WHERE entityid = NEW.entityid
+              AND userjid_regexp = '.*'
+              AND type_rule = 'id'
+      );
+    
+UPDATE `xmppmaster`.`up_gray_list_flop` 
+SET 
+    `updateid` = LEFT(UUID(), 8),
+    `kb` = 'bidon'
+WHERE
+    entityid = NEW.entityid
+        AND `updateid` IN (SELECT 
+            updateid_or_kb
+        FROM
+            xmppmaster.up_black_list
+        WHERE
+            entityid = NEW.entityid
+                AND userjid_regexp = '.*'
+                AND type_rule = 'id');
+
+    
+DELETE FROM `xmppmaster`.`up_gray_list` 
+WHERE
+    entityid = NEW.entityid
+    AND `kb` IN (SELECT 
+        updateid_or_kb
+    FROM
+        xmppmaster.up_black_list
+    
+    WHERE
+        entityid = NEW.entityid
+        AND userjid_regexp = '.*'
+        AND type_rule = 'kb');
+    
+UPDATE `xmppmaster`.`up_gray_list_flop` 
+SET 
+    `kb` = 'bidon'
+WHERE
+    entityid = NEW.entityid
+        AND `updateid` IN (SELECT 
+            updateid_or_kb
+        FROM
+            xmppmaster.up_black_list
+        WHERE
+            entityid = NEW.entityid
+                AND userjid_regexp = '.*'
+                AND type_rule = 'kb');
+    
+DELETE FROM `xmppmaster`.`up_gray_list_flop` 
+WHERE
+    entityid = NEW.entityid
+    AND (`kb` = 'bidon');
+      
+	DELETE u FROM xmppmaster.up_windows_kb_uninstall u 
+WHERE
+    u.entities_id = NEW.entityid
+    AND NOT EXISTS( SELECT 
+        1
+    FROM
+        xmppmaster.up_black_list b    
+    WHERE
+        b.entityid = u.entities_id
+        AND b.enable_rule = 1
+        AND b.updateid_or_kb = u.updateid
+        AND b.type_rule = 'id'
+        AND u.jid REGEXP b.userjid_regexp);
+
+END$$
+DELIMITER ;
+
+
+DROP TRIGGER IF EXISTS `xmppmaster`.`up_black_list_AFTER_INSERT`;
+
+DELIMITER $$
+USE `xmppmaster`$$
+CREATE DEFINER=`root`@`localhost` TRIGGER `xmppmaster`.`up_black_list_AFTER_INSERT` AFTER INSERT ON `up_black_list` FOR EACH ROW
+BEGIN
+
+    DELETE FROM `xmppmaster`.`up_gray_list`
+    WHERE entityid = NEW.entityid
+      AND `updateid` IN (
+            SELECT updateid_or_kb
+            FROM xmppmaster.up_black_list
+            WHERE entityid = NEW.entityid
+              AND userjid_regexp = '.*'
+              AND type_rule = 'id'
+      );
+UPDATE `xmppmaster`.`up_gray_list_flop` 
+SET 
+    `updateid` = LEFT(UUID(), 8),
+    `kb` = 'bidon'
+WHERE
+    entityid = NEW.entityid
+        AND `updateid` IN (SELECT 
+            updateid_or_kb
+        FROM
+            xmppmaster.up_black_list
+        WHERE
+            entityid = NEW.entityid
+                AND userjid_regexp = '.*'
+                AND type_rule = 'id');
+DELETE FROM `xmppmaster`.`up_gray_list` 
+WHERE
+    entityid = NEW.entityid
+    AND `kb` IN (SELECT 
+        updateid_or_kb
+    FROM
+        xmppmaster.up_black_list
+    
+    WHERE
+        entityid = NEW.entityid
+        AND userjid_regexp = '.*'
+        AND type_rule = 'kb');
+UPDATE `xmppmaster`.`up_gray_list_flop` 
+SET 
+    `kb` = 'bidon'
+WHERE
+    entityid = NEW.entityid
+        AND `updateid` IN (SELECT 
+            updateid_or_kb
+        FROM
+            xmppmaster.up_black_list
+        WHERE
+            entityid = NEW.entityid
+                AND userjid_regexp = '.*'
+                AND type_rule = 'kb');
+DELETE FROM `xmppmaster`.`up_white_list` 
+WHERE
+    entityid = NEW.entityid
+    AND (`updateid` = NEW.updateid_or_kb
+    OR `kb` = NEW.updateid_or_kb);
+DELETE FROM `xmppmaster`.`up_gray_list_flop` 
+WHERE
+    entityid = NEW.entityid
+    AND (`kb` = 'bidon');
+
+
+DELETE u FROM xmppmaster.up_windows_kb_uninstall u 
+WHERE
+    u.entities_id = NEW.entityid
+    AND NOT EXISTS( SELECT 
+        1
+    FROM
+        xmppmaster.up_black_list b
+    
+    WHERE
+        b.entityid = u.entities_id
+        AND b.enable_rule = 1
+        AND b.updateid_or_kb = u.updateid
+        AND b.type_rule = 'id'
+        AND u.jid REGEXP b.userjid_regexp);
+END$$
+DELIMITER ;
 
 -- ----------------------------------------------------------------------
 -- Database version
