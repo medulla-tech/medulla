@@ -29,6 +29,9 @@ from pulse2.database.pkgs import PkgsDatabase
 from pulse2.database.msc import MscDatabase
 
 from mmc.plugins.glpi.database import Glpi
+
+from kb_package import KBUninstallPackage
+
 import logging
 import traceback
 
@@ -295,6 +298,10 @@ def grey_update(updateid, entityid, enabled=0):
 
 
 def exclude_update(updateid, entityid):
+    # ajouter la creation du package de d"installation du package.
+    # base_winupdates = os.path.join("/", "var", "lib", "pulse2", "packages", "sharing", "winupdates")
+    # Créer ou recréer le package KB
+    # pkg = KBUninstallPackage("KB5030211", base_path="./packages", recreate=True)
     return UpdatesDatabase().exclude_update(updateid, entityid)
 
 
