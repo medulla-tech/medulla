@@ -68,41 +68,38 @@ $nbsp = ($nbs/$nbt)*100;
 $nbnsp = ($nbns/$nbt)*100;
 
 
-echo "<table class='listinfos'>";
-    echo "<thead>";
-    echo "<tr>";
-    echo '<th headers="resultnosync" colspan="1" >'._T("Relay servers not yet synchronized: ", 'pkgs').$nbns.'/'.$nbt.' ('.number_format($nbnsp, 2) .'%)</th>';
-    echo "</tr>";
-    echo "</thead>";
-    echo "<tbody>";
+echo '<div class="quick-actions-popup">';
+echo '<h1>'._T("Synchronization status", 'pkgs').'</h1>';
 
+// Progress bar
+$pct = ($nbt > 0) ? round(($nbs / $nbt) * 100) : 0;
+$barColor = ($pct == 100) ? '#8CB63C' : (($pct >= 50) ? '#f48f42' : '#e03c3c');
+echo '<div style="background:#edf2f7;border-radius:8px;height:8px;margin-bottom:20px;overflow:hidden;">';
+echo '<div style="width:'.$pct.'%;height:100%;background:'.$barColor.';border-radius:8px;transition:width 0.3s;"></div>';
+echo '</div>';
+
+// Not yet synchronized
+echo '<div class="actions-section" style="margin-bottom:12px;">';
+echo '<h3 style="margin:0 0 8px 0;font-size:13px;font-weight:600;color:'.($nbns > 0 ? '#e03c3c' : '#999').';text-transform:uppercase;letter-spacing:0.5px;">'._T("Not yet synchronized", 'pkgs').' — '.$nbns.'/'.$nbt.'</h3>';
+if ($nbns > 0) {
     foreach($listsearchnosynchro as $key=>$val){
-        echo "<tr>";
-            echo "<td>";
-            echo $val;
-            echo "</td>";
-        echo "</tr>";
+        echo '<div style="padding:4px 0;color:#333;font-size:13px;">'.htmlspecialchars($val).'</div>';
     }
-    echo "</tbody>";
-echo "</table>";
+} else {
+    echo '<div style="color:#999;font-size:13px;font-style:italic;">'._T("All servers are synchronized", 'pkgs').'</div>';
+}
+echo '</div>';
 
-
-echo "<table class='listinfos'>";
-    echo "<thead>";
-    echo "<tr>";
-    echo '<th headers="resultsync" colspan="1" >'._T("Relay servers already synchronized: ", 'pkgs').$nbs.'/'.$nbt.' ('.number_format($nbsp, 2) .'%)</th>';
-    echo "</tr>";
-    echo "</thead>";
-
-    echo "<tbody>";
+// Already synchronized
+echo '<div class="actions-section" style="margin-bottom:0;">';
+echo '<h3 style="margin:0 0 8px 0;font-size:13px;font-weight:600;color:#8CB63C;text-transform:uppercase;letter-spacing:0.5px;">'._T("Already synchronized", 'pkgs').' — '.$nbs.'/'.$nbt.'</h3>';
+if ($nbs > 0) {
     foreach($listsearchsynchro as $key=>$val){
-        echo "<tr>";
-            echo "<td>";
-            echo $val;
-            echo "</td>";
-        echo "</tr>";
+        echo '<div style="padding:4px 0;color:#333;font-size:13px;">'.htmlspecialchars($val).'</div>';
     }
-    echo "</tbody>";
-echo "</table>";
+}
+echo '</div>';
+
+echo '</div>';
 
 ?>

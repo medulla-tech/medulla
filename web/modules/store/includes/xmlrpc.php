@@ -78,7 +78,7 @@ function xmlrpc_create_software_request($software_name, $os, $requester_name, $r
 // Package sync functions
 // ============================================
 
-function xmlrpc_sync_packages_from_kestra() {
-    return xmlCall("store.sync_packages_from_kestra", array());
+function xmlrpc_sync_packages() {
+    return xmlCall("store.sync_packages", array());
 }
 ?>

@@ -348,3 +348,9 @@ msgstr "Panel de Alertas por Entidad"
 msgid "Disabled widgets"
 msgstr "Widgets desactivados"
 
+msgid "Other"
+msgstr "Otros"
+
+msgid "Distribution — Top 5 OS"
+msgstr "Distribución — Top 5 OS"
+

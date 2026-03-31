@@ -801,78 +801,14 @@ AND kiosk.profiles.active = 1
                         "startdate": startdate,
                         "enddate": enddate,
                         "status": element[8] if element[8] is not None else "",
-                        "id": element[9] if element[8] is not None else "",
+                        "id": element[9] if element[9] is not None else "",
                     }
                 )
 
         return result
 
     @DatabaseHelper._sessionm
-    def get_acknowledges_for_package_profile(
-        self, session, id_package_profil, uuid_package, user
-    ):
-        today = datetime.now()
-        query = (
-            session.query(Acknowledgements)
-            .add_column(Profile_has_package.package_uuid)
-            .filter(
-                and_(
-                    Acknowledgements.id_package_has_profil == id_package_profil,
-                    Acknowledgements.askuser == user,
-                ),
-                Acknowledgements.startdate <= today.strftime("%Y-%m-%d %H:%M:%S"),
-                or_(
-                    Acknowledgements.enddate > today.strftime("%Y-%m-%d %H:%M:%S"),
-                    Acknowledgements.enddate == None,
-                    Acknowledgements.enddate == "",
-                ),
-            )
-            .join(
-                Profile_has_package,
-                Profile_has_package.id == Acknowledgements.id_package_has_profil,
-            )
-            .all()
-        )
-
-        result = []
-
-        if query is not None:
-            for element, package_uuid in query:
-                askdate = ""
-                startdate = ""
-                enddate = ""
-                if element.askdate is not None:
-                    askdate = element.askdate.strftime("%Y-%m-%d %H:%M:%S")
-                if element.startdate is not None:
-                    startdate = element.startdate.strftime("%Y-%m-%d %H:%M:%S")
-                if element.enddate is not None:
-                    enddate = element.enddate.strftime("%Y-%m-%d %H:%M:%S")
-
-                result.append(
-                    {
-                        "askuser": (
-                            element.askuser if element.askuser is not None else ""
-                        ),
-                        "askdate": askdate,
-                        "acknowledgedbyuser": (
-                            element.acknowledgedbyuser
-                            if element.acknowledgedbyuser is not None
-                            else ""
-                        ),
-                        "startdate": startdate,
-                        "enddate": enddate,
-                        "status": element.status if element.status is not None else "",
-                        "id": element.id if element.id is not None else "",
-                        "id_package_has_profil": element.id_package_has_profil,
-                        "package_uuid": package_uuid,
-                    }
-                )
-        return result
-
-    @DatabaseHelper._sessionm
-    def update_acknowledgement(
-        self, session, id, acknowledgedbyuser, startdate, enddate, status
-    ):
+    def update_acknowledgement(self, session, id, acknowledgedbyuser, startdate, enddate, status):
         query = session.query(Acknowledgements).filter(Acknowledgements.id == id)
 
         try:
@@ -891,46 +827,82 @@ AND kiosk.profiles.active = 1
 
     @DatabaseHelper._sessionm
     def get_profiles_by_sources(self, session, sources):
-        """get the list of profiles concerned by the specified sources
-        - params: sources dict with the form {"source_name": [list of ous]}
-        """
-        profiles = []
-        for source in sources:
-            query = (
-                session.query(Profiles)
-                .join(Profile_has_ou, Profile_has_ou.profile_id == Profiles.id)
-                .filter(
-                    and_(
-                        Profiles.source == source,
-                        Profiles.active == 1,
-                        Profile_has_ou.ou.like("%s%%" % sources[source]),
-                    )
-                )
-                .group_by(Profiles.id)
-            )
-            query = query.all()
+        """Find all kiosk profiles matching the specified sources. The sources is a dict with the following form:
+        "ou_machine": "value_ou,
+        "ou_user": "value_ou",
+        "ldap": "value_ldap",
+        "group": "value_group",
+        "entity": "value_entity",
+        }
+        The sources is designed to exclude all empty values. This way we can reduce the number of criterions.
 
-            if query is not None:
-                for row in query:
-                    profiles.append(
-                        {
-                            "id": row.id,
-                            "name": row.name,
-                            "owner": row.owner,
-                            "source": row.source,
-                            "active": row.active if row.active is not None else False,
-                        }
-                    )
+        Args:
+            self (KioskDatabase): The instance of the KioskDatabase class.
+            session (sqlalchemy.orm.Session): The SQLAlchemy session to use for the database query.
+            sources (dict): A dictionary containing the sources to filter the profiles.
+
+        Returns:
+            list: A list of profiles matching the specified sources."""
+        query = session.query(Profiles)\
+            .join(Profile_has_ou, Profile_has_ou.profile_id == Profiles.id)\
+            .filter(Profiles.active == 1)
+
+        filters = []
+        for source in sources:
+            filters.append(and_(
+                Profiles.source == source,
+                Profile_has_ou.ou.like("%s%%" % sources[source]),
+            ))
+
+        query = query.filter(or_(*filters))
+        query = query.group_by(Profiles.id)
+        query = query.all()
+
+        profiles = []
+        if query is not None:
+            for row in query:
+                profiles.append(
+                    {
+                        "id": row.id,
+                        "name": row.name,
+                        "owner": row.owner,
+                        "source": row.source,
+                        "active": row.active if row.active is not None else False,
+                    }
+                )
+
         return profiles
 
     @DatabaseHelper._sessionm
-    def get_profile_list_for_profiles_list(self, session, profiles):
-        profiles_ids = [profile["id"] for profile in profiles]
-        if len(profiles_ids) == 0:
-            # return le profils par default
-            return
+    def get_packages_for_profile_list(self, session, profiles):
+        """
+        Get the packages list for all the given profiles. The packages list contains acknowledgements
 
-        profiles_ids_str = ",".join(["%s" % profile["id"] for profile in profiles])
+        Args:
+            self (KioskDatabase): Instance of KioskDatabase object.
+            session (sqlalchemy.orm.session): The sql session to execute queries.
+            profiles (list): the list of profiles contained as dict. The dict follows the db structure.
+
+        Returns:
+            list: List of packages with acknowledgements. This list is not cleaned up. So it is possible to have the same package twice, from profile A and B."""
+
+        # Determine once the ids list (the old version had to generate 3 lists for the same result)
+        c = 0
+        profiles_ids_str = ""
+        for p in profiles:
+            # Ignore empty values
+            if p["id"] is not None and p["id"] != "":
+                profiles_ids_str += "%s,"%(p["id"])
+            c += 1
+        # Cleanup the last ',' at the end of the str
+        profiles_ids_str = profiles_ids_str.strip(',')
+
+        # The counter is 0: no profile found : no need to execute the request.
+        if c == 0:
+            # return le profils par default
+            return []
+
+        # profiles_ids_str = ",".join(["%s" % profile["id"] for profile in profiles])
         sql = (
             """
             SELECT
@@ -939,28 +911,60 @@ AND kiosk.profiles.active = 1
                 kiosk.profiles.name as 'name_profile',
                 pkgs.packages.description,
                 pkgs.packages.version version_package,
+                pkgs.packages.Qvendor as vendor,
                 pkgs.packages.Qsoftware as software,
                 pkgs.packages.Qversion version_software,
                 pkgs.packages.uuid as package_uuid,
                 pkgs.packages.os,
                 kiosk.package_has_profil.package_status,
-                kiosk.package_has_profil.id as id_package_has_profil
+                kiosk.package_has_profil.id as id_package_has_profil,
+                ack.*
             FROM
                 pkgs.packages
                   inner join
                 kiosk.package_has_profil on pkgs.packages.uuid = kiosk.package_has_profil.package_uuid
                   inner join
                 kiosk.profiles on profiles.id = kiosk.package_has_profil.profil_id
+                  left join
+                kiosk.acknowledgements ack on ack.id_package_has_profil = kiosk.package_has_profil.id
             WHERE
                 kiosk.package_has_profil.profil_id in (%s)
                     """
             % profiles_ids_str
         )
+
         try:
             result = session.execute(sql)
             session.commit()
             session.flush()
-            l = [x for x in result]
+
+            if result is None:
+                return []
+
+            l = []
+            for element in result:
+                tmp = {
+                    "name_package": element[0],
+                    "name_profile": element[1],
+                    "description": element[2],
+                    "version_package": element[3],
+                    "vendor": element[4],
+                    "software": element[5],
+                    "version_software": element[6],
+                    "package_uuid": element[7],
+                    "os": element[8],
+                    "package_status": element[9],
+                    "id_package_has_profil": element[10],
+                    "ack_id": element[11] if element[11] is not None else "",
+                    "askuser": element[13] if element[13] is not None else "",
+                    "askdate": element[14].strftime("%Y-%m-%d %H:%M:%S") if element[14] is not None else "",
+                    "acknowledgedbyuser": element[15] if element[15] is not None else "",
+                    "startdate": element[16].strftime("%Y-%m-%d %H:%M:%S") if element[16] is not None else "",
+                    "enddate": element[17].strftime("%Y-%m-%d %H:%M:%S") if element[17] is not None else "",
+                    "status": element[18] if element[18] is not None else "",
+                }
+                l.append(tmp)
+            # l = [x for x in result]
             return l
         except Exception as e:
             logging.getLogger().error("get_profile_list_for_profiles_list")
