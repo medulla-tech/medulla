@@ -602,6 +602,8 @@ class synch_packages:
                 logger.error(f"we encountered the error: {str(e)}")
                 errorstr = f"{traceback.format_exc()}"
                 logger.error("\n%s" % (errorstr))
+        else:
+            logger.error(f"The file {filename} does not exist")
         return None
 
     def generate_xmppdeploy_json(
