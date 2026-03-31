@@ -132,7 +132,6 @@ if (!empty($currentFilters['search'])) $baseUrl .= "&search=" . urlencode($curre
 if (!empty($currentSort) && $currentSort !== 'popular') $baseUrl .= "&sort=" . urlencode($currentSort);
 ?>
 
-<link rel="stylesheet" href="modules/store/graph/store/store.css" type="text/css" media="screen" />
 
 <!-- Filters -->
 <form method="get" class="store-filters">

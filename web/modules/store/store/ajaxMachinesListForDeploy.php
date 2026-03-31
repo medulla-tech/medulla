@@ -48,9 +48,8 @@ $ctx['start'] = $start;
 $ctx['end'] = $end;
 $ctx['maxperpage'] = $maxperpage;
 
-if (isset($_SESSION['computerpresence']) && $_SESSION['computerpresence'] != "all_computer") {
-    $ctx['computerpresence'] = $_SESSION['computerpresence'];
-}
+// Only show online machines (can't deploy to offline)
+$ctx['computerpresence'] = 'presence';
 
 try {
     $machines = xmlrpc_xmppmaster_get_machines_list($start, $maxperpage, $ctx);
@@ -73,6 +72,8 @@ $names = [];
 $params = [];
 $osCol = [];
 $entityCol = [];
+$presenceClasses = [];
+$machineUuids = [];
 
 for ($i = 0; $i < count($datas['hostname']); $i++) {
     $hostname = $datas['hostname'][$i] ?? '';
@@ -83,13 +84,8 @@ for ($i = 0; $i < count($datas['hostname']); $i++) {
 
     if (empty($uuid)) continue;
 
-    // Presence icon
-    $statusIcon = $online
-        ? '<img src="img/other/machine_up.svg" width="20" height="20" style="vertical-align:middle;margin-right:5px;" title="' . _T('Online', 'store') . '"/>'
-        : '<img src="img/other/machine_down.svg" width="20" height="20" style="vertical-align:middle;margin-right:5px;" title="' . _T('Offline', 'store') . '"/>';
-
-    // Checkbox + icon + name
-    $names[] = '<input type="checkbox" class="machine-checkbox" name="machines[]" value="' . htmlspecialchars($uuid) . '" style="vertical-align:middle;margin-right:8px;"/>' . $statusIcon . htmlspecialchars($hostname);
+    $names[] = '<strong>' . htmlspecialchars($hostname) . '</strong>';
+    $machineUuids[] = $uuid;
 
     $params[] = [
         'objectUUID' => $uuid,
@@ -108,7 +104,7 @@ if (empty($names)) {
 }
 
 // Display with OptimizedListInfos
-$n = new OptimizedListInfos($names, _T("Computer Name", "store"));
+$n = new OptimizedListInfos($names, _T("Computer Name", "glpi"));
 $n->disableFirstColumnActionLink();
 $n->setParamInfo($params);
 $n->addExtraInfo($osCol, _T("OS", "store"));
@@ -118,3 +114,36 @@ $n->setNavBar(new AjaxNavBar($total, $filter, "updateSearchMachinesDeploy", $max
 $n->start = 0;
 $n->end = count($names);
 $n->display();
+
+// Inject checkboxes + machine icon
+$uuidsJson = json_encode($machineUuids);
+echo <<<SCRIPT
+<script>
+(function() {
+    var uuids = {$uuidsJson};
+    var rows = document.querySelectorAll('.listinfos tbody tr.alternate');
+    for (var i = 0; i < rows.length && i < uuids.length; i++) {
+        var cell = rows[i].children[0];
+        if (!cell) continue;
+        cell.classList.add('bulk-active');
+
+        var icon = new Image();
+        icon.src = 'img/other/machine_up.svg';
+        icon.style.cssText = 'width:22px;height:22px;flex-shrink:0;filter:none !important;vertical-align:middle;margin:0 4px;';
+
+        var cb = document.createElement('input');
+        cb.type = 'checkbox';
+        cb.className = 'machine-checkbox';
+        cb.name = 'machines[]';
+        cb.value = uuids[i];
+        cb.style.cssText = 'width:15px;height:15px;cursor:pointer;flex-shrink:0;vertical-align:middle;margin:0 2px;';
+
+        // Order: checkbox, icon, then existing text
+        var first = cell.firstChild;
+        cell.insertBefore(icon, first);
+        cell.insertBefore(cb, icon);
+    }
+    if (typeof updateSelectedCount === 'function') updateSelectedCount();
+})();
+</script>
+SCRIPT;

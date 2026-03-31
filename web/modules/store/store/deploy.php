@@ -27,25 +27,20 @@ require("graph/navbar.inc.php");
 require("localSidebar.php");
 require_once("modules/store/includes/xmlrpc.php");
 require_once("modules/pkgs/includes/xmlrpc.php");
-require_once("modules/glpi/includes/xmlrpc.php");
-require_once("modules/xmppmaster/includes/xmlrpc.php");
-require_once("modules/dyngroup/includes/dyngroup.php");
-
-$p = new PageGenerator(_T("Deploy Package", 'store'));
-$p->setSideMenu($sidemenu);
-$p->display();
 
 // Get package parameters
 $packageUuid = $_GET['packageUuid'] ?? '';
 $pid = $_GET['pid'] ?? '';
-$tab = $_GET['tab'] ?? 'machines';
 
 if (empty($packageUuid)) {
+    $p = new PageGenerator(_T("Deploy Package", 'store'));
+    $p->setSideMenu($sidemenu);
+    $p->display();
     new NotifyWidgetFailure(_T('No package selected', 'store'));
     return;
 }
 
-// Get package info via get_xmpp_package (like detail.php)
+// Get package info
 $packageName = '';
 $packageVersion = '';
 try {
@@ -58,256 +53,29 @@ try {
     // Package not found
 }
 
-// Get entities from machines (more reliable)
-$entities = [];
-try {
-    global $conf;
-    $ctx = ['start' => 0, 'end' => 500, 'maxperpage' => 500, 'filter' => '', 'location' => '', 'field' => '', 'contains' => ''];
-    $machines = xmlrpc_xmppmaster_get_machines_list(0, 500, $ctx);
-    if (!empty($machines['data']['entityname'])) {
-        $entities = array_unique(array_filter($machines['data']['entityname']));
-        sort($entities);
-    }
-} catch (Exception $e) {
-    // Ignore
-}
+// Page title
+$pageTitle = new PageGenerator(_T("Deploy Package", 'store'));
+$pageTitle->setSideMenu($sidemenu);
+$pageTitle->display();
+
+// Tabbed content
+$p = new TabbedPageGenerator();
+
+// Package info displayed above tabs
+$p->setDescription(
+    '<div style="background:var(--gray-50);border:1px solid var(--gray-200);border-radius:8px;padding:14px 18px;margin-bottom:15px;display:flex;align-items:center;gap:12px;">'
+    . '<img src="img/other/package.svg" width="28" height="28"/>'
+    . '<div>'
+    . '<div style="font-size:16px;font-weight:600;color:var(--color-text-dark);">' . htmlspecialchars($packageName ?: $packageUuid) . '</div>'
+    . ($packageVersion ? '<div style="margin-top:2px;"><span style="background:#e9ecef;padding:2px 10px;border-radius:4px;font-family:monospace;font-size:12px;color:var(--color-text-medium);">v' . htmlspecialchars($packageVersion) . '</span></div>' : '')
+    . '</div>'
+    . '</div>'
+);
+
+// Tabs — pass package params to each tab
+$tabParams = array('packageUuid' => $packageUuid, 'pid' => $pid, 'packageName' => $packageName, 'packageVersion' => $packageVersion);
+$p->addTab("tabmachines", _T("Machines", "store"), "", "modules/store/store/tabMachinesDeploy.php", $tabParams);
+$p->addTab("tabgroups", _T("Groups", "store"), "", "modules/store/store/tabGroupsDeploy.php", $tabParams);
+
+$p->display();
 ?>
-
-<link rel="stylesheet" href="modules/store/graph/store/store.css" type="text/css" media="screen" />
-
-<div class="deploy-container">
-    <!-- Package Info -->
-    <div class="deploy-info">
-        <h3><img src="img/other/package.svg" width="24" height="24" style="vertical-align: middle; margin-right: 10px;"/>
-            <?php echo _T('Package to deploy', 'store'); ?>
-        </h3>
-        <p><strong><?php echo _T('Name', 'store'); ?>:</strong> <?php echo htmlspecialchars($packageName ?: $packageUuid); ?></p>
-        <p><strong><?php echo _T('Version', 'store'); ?>:</strong> <?php echo htmlspecialchars($packageVersion ?: '-'); ?></p>
-    </div>
-
-    <!-- Tabs -->
-    <div class="deploy-tabs">
-        <button class="deploy-tab <?php echo $tab == 'machines' ? 'active' : ''; ?>" onclick="switchTab('machines')" data-tab="machines">
-            <img src="modules/base/graph/navbar/computer.svg" width="20" height="20" style="vertical-align: middle; margin-right: 5px;"/>
-            <?php echo _T('Machines', 'store'); ?>
-        </button>
-        <button class="deploy-tab <?php echo $tab == 'groups' ? 'active' : ''; ?>" onclick="switchTab('groups')" data-tab="groups">
-            <img src="modules/base/graph/navbar/group.svg" width="20" height="20" style="vertical-align: middle; margin-right: 5px;"/>
-            <?php echo _T('Groups', 'store'); ?>
-        </button>
-    </div>
-
-    <!-- Machines Tab -->
-    <div class="deploy-content" id="tab-machines" style="<?php echo $tab != 'machines' ? 'display:none' : ''; ?>">
-        
-        <!-- Filters bar -->
-        <div class="filters-bar">
-            <div class="filter-group">
-                <label for="search-machine"><?php echo _T('Search', 'store'); ?>:</label>
-                <input type="text" id="search-machine" placeholder="<?php echo _T('Search machine...', 'store'); ?>">
-            </div>
-            
-            <div class="filter-group">
-                <label for="filter-entity"><?php echo _T('Entity', 'store'); ?>:</label>
-                <select id="filter-entity">
-                    <option value=""><?php echo _T('All', 'store'); ?></option>
-                    <?php foreach ($entities as $entity): ?>
-                    <option value="<?php echo htmlspecialchars($entity); ?>"><?php echo htmlspecialchars($entity); ?></option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-            
-            <div class="selection-info">
-                <span class="count"><span id="selected-count">0</span> <?php echo _T('selected', 'store'); ?></span>
-                <button type="button" class="btn-select-all" onclick="toggleAllMachines()">
-                    <?php echo _T('Select/Deselect all', 'store'); ?>
-                </button>
-            </div>
-        </div>
-        
-        <form id="deploy-form-machines" method="POST" action="main.php?module=store&submod=store&action=startDeploy">
-            <input type="hidden" name="packageUuid" value="<?php echo htmlspecialchars($packageUuid); ?>">
-            <input type="hidden" name="pid" value="<?php echo htmlspecialchars($pid); ?>">
-            <input type="hidden" name="packageName" value="<?php echo htmlspecialchars($packageName); ?>">
-            <input type="hidden" name="packageVersion" value="<?php echo htmlspecialchars($packageVersion); ?>">
-            <input type="hidden" name="deployType" value="machines">
-            
-            <div id="machine-list-container">
-                <?php include('ajaxMachinesListForDeploy.php'); ?>
-            </div>
-            
-            <div class="deploy-actions">
-                <button type="submit" class="btn btn-primary" id="btn-deploy-machines" disabled>
-                    <img src="img/actions/deploy.svg" width="16" height="16" style="vertical-align: middle; margin-right: 5px;"/>
-                    <?php echo _T('Deploy to selected machines', 'store'); ?>
-                </button>
-                <a href="main.php?module=store&submod=store&action=index" class="btn btn-default">
-                    <?php echo _T('Cancel', 'store'); ?>
-                </a>
-            </div>
-        </form>
-    </div>
-
-    <!-- Groups Tab -->
-    <div class="deploy-content" id="tab-groups" style="<?php echo $tab != 'groups' ? 'display:none' : ''; ?>">
-        
-        <!-- Selection bar for groups -->
-        <div class="filters-bar">
-            <div class="filter-group">
-                <label for="search-group"><?php echo _T('Search', 'store'); ?>:</label>
-                <input type="text" id="search-group" placeholder="<?php echo _T('Search group...', 'store'); ?>">
-            </div>
-            
-            <div class="selection-info">
-                <span class="count"><span id="selected-groups-count">0</span> <?php echo _T('selected', 'store'); ?></span>
-                <button type="button" class="btn-select-all" onclick="toggleAllGroups()">
-                    <?php echo _T('Select all visible', 'store'); ?>
-                </button>
-            </div>
-        </div>
-        
-        <form id="deploy-form-groups" method="POST" action="main.php?module=store&submod=store&action=startDeploy">
-            <input type="hidden" name="packageUuid" value="<?php echo htmlspecialchars($packageUuid); ?>">
-            <input type="hidden" name="pid" value="<?php echo htmlspecialchars($pid); ?>">
-            <input type="hidden" name="packageName" value="<?php echo htmlspecialchars($packageName); ?>">
-            <input type="hidden" name="packageVersion" value="<?php echo htmlspecialchars($packageVersion); ?>">
-            <input type="hidden" name="deployType" value="groups">
-            
-            <div id="group-list-container">
-                <?php include('ajaxGroupsListForDeploy.php'); ?>
-            </div>
-            
-            <div class="deploy-actions">
-                <button type="submit" class="btn btn-primary" id="btn-deploy-groups" disabled>
-                    <img src="img/actions/deploy.svg" width="16" height="16" style="vertical-align: middle; margin-right: 5px;"/>
-                    <?php echo _T('Deploy to selected groups', 'store'); ?>
-                </button>
-                <a href="main.php?module=store&submod=store&action=index" class="btn btn-default">
-                    <?php echo _T('Cancel', 'store'); ?>
-                </a>
-            </div>
-        </form>
-    </div>
-</div>
-
-<script>
-var searchTimeout = null;
-var searchGroupsTimeout = null;
-var packageUuid = '<?php echo addslashes($packageUuid); ?>';
-var pid = '<?php echo addslashes($pid); ?>';
-
-function switchTab(tab) {
-    document.querySelectorAll('.deploy-tab').forEach(function(t) { t.classList.remove('active'); });
-    document.querySelectorAll('.deploy-content').forEach(function(c) { c.style.display = 'none'; });
-    document.querySelector('[data-tab="' + tab + '"]').classList.add('active');
-    document.getElementById('tab-' + tab).style.display = 'block';
-}
-
-// === MACHINES ===
-document.getElementById('search-machine').addEventListener('keyup', function() {
-    clearTimeout(searchTimeout);
-    searchTimeout = setTimeout(function() { updateSearchMachinesDeploy('', 0, 0); }, 500);
-});
-
-document.getElementById('filter-entity').addEventListener('change', function() {
-    updateSearchMachinesDeploy('', 0, 0);
-});
-
-// Function called by AjaxNavBar for machines pagination
-function updateSearchMachinesDeploy(filter, start, end, maxperpageElement) {
-    start = parseInt(start) || 0;
-    var searchFilter = document.getElementById('search-machine').value;
-    var location = document.getElementById('filter-entity').value;
-
-    var url = 'main.php?module=store&submod=store&action=ajaxMachinesListForDeploy';
-    url += '&packageUuid=' + encodeURIComponent(packageUuid);
-    url += '&pid=' + encodeURIComponent(pid);
-    url += '&filter=' + encodeURIComponent(searchFilter);
-    url += '&location=' + encodeURIComponent(location);
-    url += '&start=' + start;
-    url += '&end=' + (end || start + 20);
-
-    document.getElementById('machine-list-container').innerHTML = '<p style="text-align:center;padding:20px;"><i class="fa fa-spinner fa-spin"></i> <?php echo _T("Loading...", "store"); ?></p>';
-
-    jQuery.ajax({
-        url: url,
-        type: 'GET',
-        success: function(html) {
-            document.getElementById('machine-list-container').innerHTML = html;
-            updateSelectedCount();
-        },
-        error: function() {
-            document.getElementById('machine-list-container').innerHTML = '<p style="color:red;text-align:center;">Loading error</p>';
-        }
-    });
-}
-
-function toggleAllMachines() {
-    var checkboxes = document.querySelectorAll('.machine-checkbox');
-    var allChecked = Array.from(checkboxes).every(function(cb) { return cb.checked; });
-    checkboxes.forEach(function(cb) { cb.checked = !allChecked; });
-    updateSelectedCount();
-}
-
-function updateSelectedCount() {
-    var count = document.querySelectorAll('.machine-checkbox:checked').length;
-    document.getElementById('selected-count').textContent = count;
-    document.getElementById('btn-deploy-machines').disabled = (count === 0);
-}
-
-// === GROUPS ===
-document.getElementById('search-group').addEventListener('keyup', function() {
-    clearTimeout(searchGroupsTimeout);
-    searchGroupsTimeout = setTimeout(function() { updateSearchGroupsDeploy('', 0, 0); }, 500);
-});
-
-// Function called by AjaxNavBar for groups pagination
-function updateSearchGroupsDeploy(filter, start, end, maxperpageElement) {
-    start = parseInt(start) || 0;
-    var searchFilter = document.getElementById('search-group').value;
-
-    var url = 'main.php?module=store&submod=store&action=ajaxGroupsListForDeploy';
-    url += '&packageUuid=' + encodeURIComponent(packageUuid);
-    url += '&pid=' + encodeURIComponent(pid);
-    url += '&filter=' + encodeURIComponent(searchFilter);
-    url += '&start=' + start;
-    url += '&end=' + (end || start + 20);
-
-    document.getElementById('group-list-container').innerHTML = '<p style="text-align:center;padding:20px;"><i class="fa fa-spinner fa-spin"></i> <?php echo _T("Loading...", "store"); ?></p>';
-
-    jQuery.ajax({
-        url: url,
-        type: 'GET',
-        success: function(html) {
-            document.getElementById('group-list-container').innerHTML = html;
-            updateSelectedGroupsCount();
-        },
-        error: function() {
-            document.getElementById('group-list-container').innerHTML = '<p style="color:red;text-align:center;">Error</p>';
-        }
-    });
-}
-
-function toggleAllGroups() {
-    var checkboxes = document.querySelectorAll('.group-checkbox');
-    var allChecked = Array.from(checkboxes).every(function(cb) { return cb.checked; });
-    checkboxes.forEach(function(cb) { cb.checked = !allChecked; });
-    updateSelectedGroupsCount();
-}
-
-function updateSelectedGroupsCount() {
-    var count = document.querySelectorAll('.group-checkbox:checked').length;
-    document.getElementById('selected-groups-count').textContent = count;
-    document.getElementById('btn-deploy-groups').disabled = (count === 0);
-}
-
-// Event listeners
-document.addEventListener('change', function(e) {
-    if (e.target && e.target.classList.contains('machine-checkbox')) {
-        updateSelectedCount();
-    }
-    if (e.target && e.target.classList.contains('group-checkbox')) {
-        updateSelectedGroupsCount();
-    }
-});
-</script>

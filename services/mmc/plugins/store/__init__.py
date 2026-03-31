@@ -351,8 +351,18 @@ def sync_packages():
     # 1. Get subscribed software IDs
     subs_raw = get_client_subscriptions()
     if not subs_raw:
-        logger.info("No subscriptions found, nothing to sync")
-        return {'success': True, 'synced': 0, 'message': 'No subscriptions'}
+        logger.info("No subscriptions found, cleaning up all store packages")
+        # No subscriptions — cleanup all store packages
+        try:
+            available_packages = _fetch_packages_list(config)
+            all_store_uuids = {pkg['uuid'] for pkg in available_packages.get('packages', [])}
+            removed, removed_packages = _cleanup_unsubscribed_packages(config, set(), all_store_uuids)
+            if removed > 0:
+                logger.info(f"Cleaned up {removed} store packages: {removed_packages}")
+                _regenerate_packages(config)
+        except Exception as e:
+            logger.error(f"Cleanup failed: {e}")
+        return {'success': True, 'synced': 0, 'removed': removed if 'removed' in dir() else 0, 'message': 'No subscriptions'}
 
     # Extract IDs
     if isinstance(subs_raw, dict) and 'data' in subs_raw:
@@ -462,11 +472,13 @@ def sync_packages():
             errors.append(f"{uuid}: {e}")
             logger.error(f"Failed to sync package {uuid}: {e}")
 
-    # 6. Cleanup unsubscribed packages
+    # 6. Cleanup: only remove store packages that are no longer subscribed
+    # Build set of ALL store package UUIDs (from packages.json)
+    all_store_uuids = {pkg['uuid'] for pkg in available_packages.get('packages', [])}
     removed = 0
     removed_packages = []
     try:
-        removed, removed_packages = _cleanup_unsubscribed_packages(config, synced_uuids)
+        removed, removed_packages = _cleanup_unsubscribed_packages(config, synced_uuids, all_store_uuids)
         if removed > 0:
             logger.info(f"Cleaned up {removed} unsubscribed packages: {removed_packages}")
     except Exception as e:
@@ -560,18 +572,20 @@ def _download_package(config, remote_pkg, local_path):
 
     return {'success': True}
 
-def _cleanup_unsubscribed_packages(config, subscribed_uuids):
+def _cleanup_unsubscribed_packages(config, subscribed_uuids, store_uuids):
     """
-    Remove packages that are not in the subscribed list.
+    Remove store packages that are no longer subscribed.
+    Only removes packages whose UUID is known to the store (in packages.json).
+    Non-store packages (created manually, from other sources) are never touched.
 
     Args:
         config: StoreConfig instance
-        subscribed_uuids: set of package UUIDs we're subscribed to
+        subscribed_uuids: set of package UUIDs currently subscribed
+        store_uuids: set of ALL package UUIDs from the store (packages.json)
 
     Returns:
         tuple: (count of removed packages, list of removed UUIDs)
     """
-    import re
     logger = logging.getLogger()
 
     packages_dir = os.path.join(config.packages_path, "sharing", "global")
@@ -579,31 +593,29 @@ def _cleanup_unsubscribed_packages(config, subscribed_uuids):
     if not os.path.isdir(packages_dir):
         return 0, []
 
-    # UUID pattern
-    uuid_pattern = re.compile(r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$')
-
     removed = 0
     removed_packages = []
 
     for entry in os.listdir(packages_dir):
         entry_path = os.path.join(packages_dir, entry)
 
-        # Only process UUID-named directories
         if not os.path.isdir(entry_path):
             continue
-        if not uuid_pattern.match(entry):
+
+        # Only touch packages that come from the store
+        if entry not in store_uuids:
             continue
 
-        # Skip if subscribed
+        # Skip if still subscribed
         if entry in subscribed_uuids:
             continue
 
-        # Remove unsubscribed package
+        # Remove unsubscribed store package
         try:
             shutil.rmtree(entry_path)
             removed += 1
             removed_packages.append(entry)
-            logger.info(f"Removed unsubscribed package: {entry}")
+            logger.info(f"Removed unsubscribed store package: {entry}")
         except Exception as e:
             logger.error(f"Failed to remove package {entry}: {e}")
 

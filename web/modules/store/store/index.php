@@ -112,8 +112,6 @@ function getOsLabel($os) {
 }
 ?>
 
-<link rel="stylesheet" href="modules/store/graph/store/store.css" type="text/css" media="screen" />
-
 <!-- Filters -->
 <form method="get" class="store-filters">
     <input type="hidden" name="module" value="store">
