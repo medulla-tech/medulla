@@ -23,6 +23,8 @@ from json import loads as parse_json
 import subprocess
 from twisted.internet.threads import deferToThread
 
+
+
 from mmc.site import mmcconfdir
 
 from mmc.support.mmctools import (
@@ -139,6 +141,39 @@ class pkgmanage:
 
     def get_extension(self, id):
         return PkgsDatabase().get_extension(id)
+
+def create_winupdate_package(
+                                label: str,
+                                description: str,
+                                uuid: str,
+                                version: str,
+                                os: str,
+                                metagenerator: str,
+                                entity_id: str,
+                                reboot: int,
+                                inventory_associateinventory: int,
+                                inventory_licenses: str,
+                                Qvendor: str,
+                                command_command: str,
+                                edition_status: int = 1,
+                                conf_json: str = None,
+                            ):
+    return PkgsDatabase().create_winupdate_package(
+                                                    label,
+                                                    description,
+                                                    uuid,
+                                                    version,
+                                                    os,
+                                                    metagenerator,
+                                                    entity_id,
+                                                    reboot,
+                                                    inventory_associateinventory,
+                                                    inventory_licenses,
+                                                    Qvendor,
+                                                    command_command,
+                                                    edition_status,
+                                                    conf_json,
+                                                )
 
 
 def dirpackage():
@@ -639,7 +674,7 @@ def verify_package(uuidpackage):
                         if not isinstance(contentxmppdeploy["info"][x], list):
                             control["deploy_type_error_%s" % x] = (
                                 "in xmppdeploy, option %s must be 1 list of dependencies"
-                                % s
+                                % x
                             )
                             continue
                         # controle dependency exist
@@ -673,7 +708,7 @@ def verify_package(uuidpackage):
                         "methodetransfert",
                         "software",
                     ]:
-                        if not isinstance(contentxmppdeploy["info"][x], (str, unicode)):
+                        if not isinstance(contentxmppdeploy["info"][x], str):
                             control["deploy_type_error_%s" % x] = (
                                 "in xmppdeploy, section main/info/ option %s must be 1 character string."
                                 % x

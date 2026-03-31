@@ -2334,3 +2334,109 @@ class PkgsDatabase(DatabaseHelper):
         """), {"user": user})
         session.commit()
         return res.rowcount
+
+    @DatabaseHelper._sessionm
+    def create_winupdate_package(
+        self,
+        session,
+        label: str,
+        description: str,
+        uuid: str,
+        version: str,
+        os: str,
+        metagenerator: str,
+        entity_id: str,
+        reboot: int,
+        inventory_associateinventory: int,
+        inventory_licenses: str,
+        Qvendor: str,
+        command_command: str,
+        edition_status: int = 1,
+        conf_json: str = None,
+    ):
+        """
+        Insert a new Windows update package into the database if the UUID does not already exist.
+        First, it retrieves the ID of the "winupdates" share.
+
+        Args:
+            session: SQLAlchemy session
+            label: Package label
+            description: Package description
+            uuid: Unique identifier for the package
+            version: Package version
+            os: Target operating system
+            metagenerator: How the package was generated
+            entity_id: Entity ID
+            reboot: Whether a reboot is required
+            inventory_associateinventory: Inventory association flag
+            inventory_licenses: License information
+            Qvendor: Vendor query
+            command_command: Command to execute
+            edition_status: Edition status (default: 1)
+            conf_json: JSON configuration as a string
+
+        Returns:
+            The newly created package object, or None if the package already exists.
+        """
+
+        # Récupérer l'ID du partage "winupdates"
+        pkgs_share = session.execute(
+            text("SELECT id FROM pkgs.pkgs_shares WHERE name = 'winupdates'")
+        ).scalar_one_or_none()
+
+        if not pkgs_share:
+            raise ValueError("Le partage 'winupdates' n'existe pas en base de données.")
+
+        # Vérifier si le package existe déjà
+        existing_package = session.execute(
+            text("SELECT * FROM pkgs.packages WHERE uuid = :uuid"),
+            {"uuid": uuid}
+        ).fetchone()
+
+        if existing_package:
+            return None  # Le package existe déjà
+
+        # Insérer le nouveau package
+        session.execute(
+            text("""
+                INSERT INTO pkgs.packages (
+                    label, description, uuid, version, os, metagenerator, entity_id,
+                    sub_packages, reboot, inventory_associateinventory, inventory_licenses,
+                    Qvendor, command_command, pkgs_share_id, edition_status, conf_json
+                )
+                VALUES (
+                    :label, :description, :uuid, :version, :os, :metagenerator, :entity_id,
+                    :sub_packages, :reboot, :inventory_associateinventory, :inventory_licenses,
+                    :Qvendor, :command_command, :pkgs_share_id, :edition_status, :conf_json
+                )
+            """),
+            {
+                "label": label,
+                "description": description,
+                "uuid": uuid,
+                "version": version,
+                "os": os,
+                "metagenerator": metagenerator,
+                "entity_id": entity_id,
+                "sub_packages": "[]",
+                "reboot": reboot,
+                "inventory_associateinventory": inventory_associateinventory,
+                "inventory_licenses": inventory_licenses,
+                "Qvendor": Qvendor,
+                "command_command": command_command,
+                "pkgs_share_id": pkgs_share,
+                "edition_status": edition_status,
+                "conf_json": conf_json,
+            }
+        )
+
+        session.commit()
+
+        # Récupérer et retourner le package nouvellement créé
+        # Récupérer et retourner l'ID du package nouvellement créé
+        created_package_id = session.execute(
+            text("SELECT id FROM pkgs.packages WHERE uuid = :uuid"),
+            {"uuid": uuid}
+        ).scalar_one_or_none()
+
+        return created_package_id
