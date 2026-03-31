@@ -71,17 +71,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_subscriptions'])
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['sync_packages'])) {
     $result = xmlrpc_sync_packages();
 
-    if ($result && $result['success']) {
-        $msg = _T('Synchronization completed!', 'store') . ' ' . $result['synced'] . '/' . $result['total_subscribed'] . ' ' . _T('packages synchronized', 'store');
+    if ($result && ($result['success'] || !empty($result['synced']))) {
+        $synced = $result['synced'] ?? 0;
+        $total = $result['total_subscribed'] ?? '?';
+        $msg = _T('Synchronization completed!', 'store') . ' ' . $synced . '/' . $total . ' ' . _T('packages synchronized', 'store');
         new NotifyWidgetSuccess($msg);
+    } elseif ($result && isset($result['message'])) {
+        new NotifyWidgetSuccess($result['message']);
     } else {
         $error = $result['error'] ?? 'Unknown error';
-        if (!empty($result['errors'])) {
-            $error .= ' (' . implode(', ', $result['errors']) . ')';
-        }
         new NotifyWidgetFailure(_T('Synchronization failed', 'store') . ': ' . htmlspecialchars($error));
     }
-    // POST/Redirect/GET to avoid resubmission on refresh
     header("Location: " . urlStrRedirect("store/store/subscribe"));
     exit;
 }
@@ -276,8 +276,7 @@ if (!empty($currentSort) && $currentSort !== 'popular') $baseUrl .= "&sort=" . u
     <!-- Sync button form -->
     <form action="main.php?module=store&submod=store&action=subscribe" method="post" id="syncForm" style="display: inline-block; margin-left: 10px; vertical-align: top;">
         <input type="hidden" name="sync_packages" value="1">
-        <button type="submit" class="btn btn-default" style="padding: 6px 12px; line-height: 1.42857143;" onclick="return confirm('<?php echo _T('Synchronize packages now?', 'store'); ?>');">
-            <img src="img/common/reload.png" style="vertical-align: middle; margin-right: 5px; height: 14px; width: 14px;" alt="" />
+        <button type="submit" class="btnSecondary">
             <?php echo _T('Sync Now', 'store'); ?>
         </button>
     </form>
