@@ -5,7 +5,7 @@ from mmc.plugins.admin.config import AdminConfig
 from pulse2.database.admin import AdminDatabase
 from pulse2.version import getVersion, getRevision
 
-VERSION = "5.4.6"
+VERSION = "5.5.0"
 APIVERSION = "0:0:0"
 REVISION = ""
 
@@ -21,7 +21,7 @@ def activate():
         return False
 
     if not AdminDatabase().activate(config):
-        logger.warning(
+        logger.error(
             "Plugin admin: an error occurred during the database initialization"
         )
         return False

@@ -24,6 +24,7 @@
  * product_updates.php
 */
 include_once("modules/dashboard/includes/panel.class.php");
+require_once("modules/admin/includes/xmlrpc.php");
 
 $options = array(
     "class"   => "UpdatePanel",
@@ -39,13 +40,13 @@ class UpdatePanel extends Panel {
         $labelRestart       = _T("Restart Medulla Services");
         $msgRestart         = _T("Restarting in progress ... You will be redirected to the connection.");
         $msgIndex           = _T("The restart ends ... reconnect in a moment.");
-        $labelRegenerate    = _T("Regenerate Agent Machine");
+        $labelRegenerate    = _T("Regenerate Agents");
 
         $installing_title   = _T('Installing updates in progress…', 'dashboard');
         $success_msg        = _T('Update completed successfully!', 'dashboard');
         $fail_msg           = _T('Update failed.', 'dashboard');
         $fail_help          = _T('Check /var/log/medulla_update.log on the server for details.', 'dashboard');
-        $redirect_msg       = _T('Redirecting to login page…', 'dashboard');
+        $redirect_msg       = _T('Services are restarting, redirecting in', 'dashboard');
 
         // Disclaimer
         $disclaimer_title   = _T('WARNING: BACKUP REQUIRED BEFORE UPDATE', 'dashboard');
@@ -96,9 +97,41 @@ class UpdatePanel extends Panel {
         $failHelpJson = json_encode($fail_help);
         $redirectMsgJson = json_encode($redirect_msg);
 
+        // Check update availability from database
+        $updateInfo = xmlrpc_get_update_availability();
+        $hasUpdate = !empty($updateInfo['update_available']);
+        $currentVersion = isset($updateInfo['current_version']) ? htmlspecialchars($updateInfo['current_version']) : '';
+        $availableVersion = isset($updateInfo['available_version']) ? htmlspecialchars($updateInfo['available_version']) : '';
+        $lastCheck = isset($updateInfo['last_check']) ? htmlspecialchars($updateInfo['last_check']) : '';
+
+        $upToDateMsg = _T('System is up to date', 'dashboard');
+        $updateAvailableMsg = _T('Update available', 'dashboard');
+        $minorUpdateMsg = _T('Minor update available', 'dashboard');
+
+        if ($hasUpdate) {
+            $isMajorUpdate = ($currentVersion && $availableVersion && $currentVersion !== $availableVersion);
+            $updateBanner = '<div class="update-banner update-available">';
+            if ($isMajorUpdate) {
+                $updateBanner .= '<span class="update-badge">' . $updateAvailableMsg . '</span> '
+                    . '<span class="update-versions">' . $currentVersion . ' &rarr; ' . $availableVersion . '</span>';
+            } else {
+                $updateBanner .= '<span class="update-badge">' . $minorUpdateMsg . '</span>';
+            }
+            $updateBanner .= '</div>';
+        } elseif ($lastCheck) {
+            $updateBanner = '<div class="update-banner update-ok">'
+                . '<span class="update-badge-ok">' . $upToDateMsg . '</span>'
+                . '</div>';
+        } else {
+            $updateBanner = '';
+        }
+
+        $updateBtnStyle = $hasUpdate ? '' : 'style="display:none"';
+
         echo <<<HTML
             <div id="updates_zone">
-                <button class="btnSecondary" id="btn_update_medulla">
+                {$updateBanner}
+                <button class="btnSecondary" id="btn_update_medulla" {$updateBtnStyle}>
                     {$labelUpdate}
                 </button>
                 <button class="btnSecondary" id="restart_medulla_services">
@@ -142,6 +175,7 @@ class UpdatePanel extends Panel {
                 <div class="page-overlay-content update-terminal-overlay">
                     <div class="update-terminal-header">
                         <div class="overlay-title">{$installing_title}</div>
+                        <button class="update-terminal-close hidden" id="btnCloseTerminal">&times;</button>
                     </div>
                     <div class="update-terminal">
                         <div class="update-terminal-body" id="updateTerminalBody">
@@ -166,6 +200,13 @@ class UpdatePanel extends Panel {
             $(document).on('click', '#btn_cancel_update', function(e){
                 e.preventDefault();
                 $('#disclaimerOverlay').addClass('hidden');
+                $('body').css('overflow', '');
+            });
+
+            // --- Close terminal overlay (after error) ---
+            $(document).on('click', '#btnCloseTerminal', function(e){
+                e.preventDefault();
+                $('#fullPageOverlay').addClass('hidden');
                 $('body').css('overflow', '');
             });
 
@@ -231,19 +272,35 @@ class UpdatePanel extends Panel {
                     if (c) c.remove();
 
                     if (success) {
+                        var countdown = 25;
                         $('#updateStatus').addClass('success').html(
                             {$successMsgJson} +
-                            '<div class="redirect-msg">' + {$redirectMsgJson} + '</div>'
+                            '<div class="redirect-msg">' + {$redirectMsgJson} + ' <span id="countdown">' + countdown + '</span>s</div>'
                         );
-                        setTimeout(function() {
-                            (window.top || window).location.href = '/mmc/index.php?update=success';
-                        }, 5000);
+                        var countdownInterval = setInterval(function() {
+                            countdown--;
+                            var el = document.getElementById('countdown');
+                            if (el) el.textContent = countdown;
+                            if (countdown <= 0) {
+                                clearInterval(countdownInterval);
+                                (window.top || window).location.href = '/mmc/index.php?update=success';
+                            }
+                        }, 1000);
                     } else {
                         $('#updateStatus').addClass('error').html(
                             {$failMsgJson} +
                             '<div class="redirect-msg">' + {$failHelpJson} + '</div>'
                         );
+                        $('#btnCloseTerminal').removeClass('hidden');
                     }
+                }
+
+                function startUpdate() {
+                    $.ajax({
+                        url: 'main.php?module=medulla_server&submod=update&action=installProductUpdates&ajax=1',
+                        dataType: 'json',
+                        timeout: 600000
+                    });
                 }
 
                 if (wsHostname && wsPath) {
@@ -254,6 +311,7 @@ class UpdatePanel extends Panel {
                     updateWs = new MedullaWebSocket(wsUrl, {
                         onConnect: function() {
                             updateWs.subscribe('medulla', 'medulla_update', 'tail1');
+                            setTimeout(startUpdate, 500);
                         },
                         onLog: function(data) {
                             if (skipFirst) {
@@ -262,7 +320,6 @@ class UpdatePanel extends Panel {
                             }
                             addLogLine(data);
 
-                            // Detect end of update from log content
                             if (data.indexOf('migration completed successfully') !== -1) {
                                 onUpdateComplete(true);
                             } else if (data.indexOf('Aborting') !== -1) {
@@ -273,14 +330,9 @@ class UpdatePanel extends Panel {
                         onClose: function() {}
                     });
                     updateWs.connect();
+                } else {
+                    startUpdate();
                 }
-
-                // Start update via AJAX (fire and forget — response may never come if mmc-agent restarts)
-                $.ajax({
-                    url: 'main.php?module=medulla_server&submod=update&action=installProductUpdates&ajax=1',
-                    dataType: 'json',
-                    timeout: 600000
-                });
             });
 
             // --- Restart All Medulla Services ---

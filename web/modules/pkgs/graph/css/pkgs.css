@@ -572,17 +572,6 @@ li.file a {
   color: #fff;
 }
 
-li.info a {
-  padding: 0 0 5px 20px;
-  margin: 0;
-  background-image: url("../../msc/graph/images/detail.gif");
-  background-repeat: no-repeat;
-  background-position: left top;
-  line-height: 18px;
-  text-decoration: none;
-  color: #fff;
-}
-
 li.associate_files a {
   padding: 0 0 5px 20px;
   margin: 0;
@@ -705,6 +694,12 @@ td.package {
 .listinfos th:nth-child(6) {
   text-align: center;
   width: 80px;
+}
+
+/* Package name - allow wrap on multiple lines */
+.listinfos td:first-child .cell-text {
+  -webkit-line-clamp: 3;
+  word-break: break-word;
 }
 
 /* OS - compact and center */

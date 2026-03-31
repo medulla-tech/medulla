@@ -240,6 +240,11 @@ function xmlrpc_delete_provider(int $id) {
     return xmlCall("admin.delete_provider", [$id]);
 }
 
+// UPDATE AVAILABILITY
+function xmlrpc_get_update_availability() {
+    return xmlCall("admin.get_update_availability", []);
+}
+
 // CONFIG MANAGEMENT
 
 function xmlrpc_get_config_tables() {

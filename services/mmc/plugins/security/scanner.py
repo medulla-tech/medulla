@@ -15,7 +15,7 @@ import time
 import configparser
 from datetime import datetime
 from typing import Optional, Dict, List, Any, Callable
-from threading import Thread, Event
+from threading import Event
 from sqlalchemy import create_engine, text
 from Cryptodome.Cipher import AES
 from Cryptodome.Util.Padding import pad
@@ -254,326 +254,31 @@ class CVECentralClient:
         encrypted = cipher.encrypt(padded)
         return base64.b64encode(iv + encrypted).decode('utf-8')
 
-    def _get_headers(self) -> Dict[str, str]:
-        return {
-            'X-Server-ID': self.server_id,
-            'X-Auth': self._generate_auth_token(),
-            'Content-Type': 'application/json'
-        }
-
-    def submit_softwares(self, software_list: List[Dict], batch_size: int = 4000) -> Dict:
-        """Submit software list to central API in batches
-
-        Args:
-            software_list: List of software dicts with name/version
-            batch_size: Max items per request (CVE Central limit is 5000)
-        """
-        total_added = 0
-        total_received = 0
-
-        try:
-            url = f"{self.base_url}/api/softwares"
-
-            # Split into batches
-            for i in range(0, len(software_list), batch_size):
-                batch = software_list[i:i + batch_size]
-                batch_num = (i // batch_size) + 1
-                total_batches = (len(software_list) + batch_size - 1) // batch_size
-
-                logger.debug(f"Submitting batch {batch_num}/{total_batches} ({len(batch)} softwares)")
-
-                response = self.session.post(
-                    url,
-                    headers=self._get_headers(),
-                    json={'softwares': batch},
-                    timeout=120
-                )
-                response.raise_for_status()
-                result = response.json()
-
-                total_added += result.get('added', 0)
-                total_received += result.get('received', 0)
-
-            return {
-                'success': True,
-                'added': total_added,
-                'received': total_received
-            }
-        except requests.exceptions.RequestException as e:
-            logger.error(f"Error submitting software to CVE Central: {e}")
-            return {'success': False, 'error': str(e)}
-
-    def trigger_scan(self, background: bool = True, max_age_days: int = 365, min_published_year: int = 2015) -> Dict:
-        """Trigger a CVE scan on the central server
-
-        Args:
-            background: Run scan in background (non-blocking)
-            max_age_days: Only fetch CVEs modified in the last N days
-            min_published_year: Ignore CVEs published before this year
-        """
-        try:
-            url = f"{self.base_url}/api/scan"
-            params = {
-                'background': 'true' if background else 'false',
-                'max_age_days': max_age_days,
-                'min_published_year': min_published_year
-            }
-            response = self.session.post(
-                url,
-                headers=self._get_headers(),
-                params=params,
-                timeout=600 if not background else 30
-            )
-            response.raise_for_status()
-            return response.json()
-        except requests.exceptions.RequestException as e:
-            logger.error(f"Error triggering CVE scan: {e}")
-            return {'success': False, 'error': str(e)}
-
-    def get_cves(self, software_list: List[Dict], batch_size: int = 4000) -> Dict:
-        """Get CVEs for a list of software in batches.
-
-        Filtering (min_cvss, max_age_days) is managed server-side by CVE Central.
-
-        Args:
-            software_list: List of software dicts with name/version
-            batch_size: Max items per request (CVE Central limit is 5000)
-        """
-        all_cves = []
-        seen_cve_ids = set()
-
-        try:
-            url = f"{self.base_url}/api/cves"
-
-            # Split into batches
-            for i in range(0, len(software_list), batch_size):
-                batch = software_list[i:i + batch_size]
-                batch_num = (i // batch_size) + 1
-                total_batches = (len(software_list) + batch_size - 1) // batch_size
-
-                logger.debug(f"Getting CVEs batch {batch_num}/{total_batches} ({len(batch)} softwares)")
-
-                response = self.session.post(
-                    url,
-                    headers=self._get_headers(),
-                    json={'softwares': batch},
-                    timeout=120
-                )
-                response.raise_for_status()
-                result = response.json()
-
-                # Deduplicate CVEs across batches
-                for cve in result.get('cves', []):
-                    cve_id = cve.get('cve_id')
-                    if cve_id and cve_id not in seen_cve_ids:
-                        seen_cve_ids.add(cve_id)
-                        all_cves.append(cve)
-
-            return {
-                'success': True,
-                'cves': all_cves,
-                'count': len(all_cves)
-            }
-        except requests.exceptions.RequestException as e:
-            logger.error(f"Error getting CVEs from CVE Central: {e}")
-            return {'success': False, 'error': str(e)}
-
-    def get_stats(self) -> Dict:
-        """Get statistics from CVE Central"""
-        try:
-            url = f"{self.base_url}/api/stats"
-            response = self.session.get(
-                url,
-                headers=self._get_headers(),
-                timeout=30
-            )
-            response.raise_for_status()
-            return response.json()
-        except requests.exceptions.RequestException as e:
-            logger.error(f"Error getting stats from CVE Central: {e}")
-            return {'success': False, 'error': str(e)}
-
     def test_connection(self) -> bool:
-        """Test connection to CVE Central API"""
+        """Test connection to CVE Central API via health check."""
         try:
-            result = self.get_stats()
-            return 'error' not in result and 'softwares_tracked' in result
-        except:
+            url = f"{self.base_url}/up"
+            response = self.session.get(url, timeout=10)
+            if response.status_code == 200 and response.json().get('success', False):
+                return True
+            logger.warning(f"CVE Central health check failed: HTTP {response.status_code}")
+            return False
+        except Exception as e:
+            logger.warning(f"CVE Central unreachable: {e}")
             return False
 
-    def get_scan_status(self) -> Dict:
-        """Get current scan status from CVE Central"""
-        try:
-            url = f"{self.base_url}/api/scan/status"
-            response = self.session.get(
-                url,
-                headers=self._get_headers(),
-                timeout=30
-            )
-            response.raise_for_status()
-            return response.json()
-        except requests.exceptions.RequestException as e:
-            logger.error(f"Error getting scan status from CVE Central: {e}")
-            return {'running': False, 'error': str(e)}
-
-    def get_queue_status(self) -> Dict:
-        """Get current queue status from CVE Central"""
-        try:
-            url = f"{self.base_url}/api/queue/status"
-            response = self.session.get(
-                url,
-                headers=self._get_headers(),
-                timeout=30
-            )
-            response.raise_for_status()
-            return response.json()
-        except requests.exceptions.RequestException as e:
-            logger.error(f"Error getting queue status from CVE Central: {e}")
-            return {'queue': {'pending': 0}, 'error': str(e)}
-
-    def queue_submit(self, software_ids: List[int], force_rescan: bool = False) -> Dict:
-        """Submit software IDs to the scan queue
-
-        Args:
-            software_ids: List of software IDs to queue for scanning
-            force_rescan: If True, queue even if recently scanned
-
-        Returns:
-            Dict with queued/skipped/already_pending counts
-        """
-        try:
-            url = f"{self.base_url}/api/queue/submit"
-            response = self.session.post(
-                url,
-                headers=self._get_headers(),
-                json={'software_ids': software_ids, 'force_rescan': force_rescan},
-                timeout=120
-            )
-            response.raise_for_status()
-            return response.json()
-        except requests.exceptions.RequestException as e:
-            logger.error(f"Error submitting to queue: {e}")
-            return {'success': False, 'error': str(e)}
-
-    def queue_process(self, batch_size: int = 100) -> Dict:
-        """Trigger queue processing on CVE Central
-
-        Args:
-            batch_size: Number of jobs to process per batch
-
-        Returns:
-            Dict with processing status
-        """
-        try:
-            url = f"{self.base_url}/api/queue/process"
-            response = self.session.post(
-                url,
-                headers=self._get_headers(),
-                params={'batch_size': batch_size},
-                timeout=30
-            )
-            response.raise_for_status()
-            return response.json()
-        except requests.exceptions.RequestException as e:
-            logger.error(f"Error triggering queue processing: {e}")
-            return {'success': False, 'error': str(e)}
-
-    def wait_for_queue_completion(self, poll_interval: int = 10, max_wait: int = 3600,
-                                     on_progress: callable = None) -> Dict:
-        """Wait for queue processing to complete with polling
-
-        Args:
-            poll_interval: Seconds between status checks
-            max_wait: Maximum seconds to wait before timeout
-            on_progress: Optional callback(status_dict) called on each poll iteration
-                        Can be used to fetch CVEs progressively
-
-        Returns:
-            Final queue status dict
-        """
-        start_time = time.time()
-        last_done = 0
-
-        while True:
-            status = self.get_queue_status()
-            queue = status.get('queue', {})
-            scan = status.get('scan', {})
-
-            pending = queue.get('pending', 0)
-            processing = queue.get('processing', 0)
-            done = queue.get('done', 0)
-            failed = queue.get('failed', 0)
-
-            # Call progress callback if provided and new jobs completed
-            if on_progress and done > last_done:
-                try:
-                    on_progress(status)
-                except Exception as e:
-                    logger.warning(f"Progress callback error: {e}")
-                last_done = done
-
-            # Queue is complete when no pending/processing jobs
-            if pending == 0 and processing == 0 and not scan.get('running', False):
-                # Final callback
-                if on_progress:
-                    try:
-                        on_progress(status)
-                    except Exception as e:
-                        logger.warning(f"Final progress callback error: {e}")
-                return status
-
-            elapsed = time.time() - start_time
-            if elapsed >= max_wait:
-                logger.warning(f"Queue wait timeout after {elapsed:.0f}s")
-                return {'error': 'Timeout waiting for queue completion', 'partial': True, **status}
-
-            cves_found = scan.get('cves_found', 0)
-            logger.info(f"Queue processing: {pending} pending, {processing} processing, {done} done, {failed} failed, {cves_found} CVEs found...")
-
-            time.sleep(poll_interval)
-
-    def wait_for_scan_completion(self, poll_interval: int = 10, max_wait: int = 3600) -> Dict:
-        """Wait for background scan to complete with polling
-
-        Args:
-            poll_interval: Seconds between status checks
-            max_wait: Maximum seconds to wait before timeout
-
-        Returns:
-            Final scan status dict
-        """
-        start_time = time.time()
-        while True:
-            status = self.get_scan_status()
-
-            if not status.get('running', False):
-                # Scan finished (or never started)
-                return status
-
-            elapsed = time.time() - start_time
-            if elapsed >= max_wait:
-                logger.warning(f"Scan wait timeout after {elapsed:.0f}s")
-                return {'running': False, 'error': 'Timeout waiting for scan completion', 'partial': True}
-
-            progress = status.get('progress', 0)
-            total = status.get('total', 0)
-            cves_found = status.get('cves_found', 0)
-            logger.info(f"Scan in progress: {progress}/{total} software scanned, {cves_found} CVEs found...")
-
-            time.sleep(poll_interval)
-
-    def scan_via_websocket(self, softwares: List[Dict], max_age_days: int = 365,
-                           min_published_year: int = 2020,
-                           on_progress: Callable = None,
-                           on_cves: Callable = None,
-                           timeout: int = 3600) -> Dict:
+    def scan(self, softwares: List[Dict],
+             on_progress: Callable = None,
+             on_cves: Callable = None,
+             timeout: int = 7200) -> Dict:
         """
         Run CVE scan via WebSocket with real-time progress.
 
+        CVE Central stocke toutes les CVEs sans filtre.
+        Le filtrage se fait cote client a l'affichage.
+
         Args:
             softwares: List of software dicts with name/version/vendor
-            max_age_days: CVE age filter
-            min_published_year: Ignore CVEs before this year
             on_progress: Callback(progress_dict) for progress updates
             on_cves: Callback(cves_list) when CVEs are found
             timeout: Maximum seconds to wait
@@ -667,9 +372,7 @@ class CVECentralClient:
                 'server_id': self.server_id,
                 'signature': signature,
                 'timestamp': timestamp,
-                'softwares': softwares,
-                'max_age_days': max_age_days,
-                'min_published_year': min_published_year
+                'softwares': softwares
             })
 
             # Wait for completion
@@ -782,18 +485,10 @@ def run_cve_scan(scan_id: Optional[int] = None, entity_id: Optional[int] = None,
 
         logger.info(f"CVE scan: {len(softwares)} software{filter_info}")
 
-        # Step 2: Submit software to CVE Central
-        submit_result = cve_client.submit_softwares(softwares)
-        logger.debug(f"Submit result: {submit_result}")
-        if not submit_result.get('success', False):
-            logger.warning(f"Software submission failed: {submit_result.get('error')}")
+        # Pas de filtre au scan - CVE Central stocke tout
+        # Le filtrage se fait a l'affichage via should_display_cve()
 
-        # Step 3: Run CVE scan (WebSocket preferred, fallback to polling)
-        max_age_days = getattr(config, 'display_max_age_days', 0)
-        min_published_year = getattr(config, 'display_min_published_year', 2000)
-        logger.debug(f"Starting CVE scan (max_age_days={max_age_days}, min_published_year={min_published_year})")
-
-        # Prepare CVE storage tracking
+        # CVE storage tracking
         cves_added = set()
         severity_counts = {'Critical': 0, 'High': 0, 'Medium': 0, 'Low': 0, 'N/A': 0}
         new_critical_cves = []
@@ -804,46 +499,34 @@ def run_cve_scan(scan_id: Optional[int] = None, entity_id: Optional[int] = None,
 
             cve_id_str = cve_entry.get('cve_id')
             if not cve_id_str or cve_id_str in cves_added:
-                return False  # Skip if no ID or already processed
+                return False
 
             try:
-                # Handle NULL cvss_score
                 cvss_raw = cve_entry.get('cvss_score')
                 cvss_score = float(cvss_raw) if cvss_raw is not None else None
                 severity = cve_entry.get('severity', 'N/A')
-                description = cve_entry.get('description', '')
-                published_at = cve_entry.get('published_at')
-                last_modified = cve_entry.get('last_modified')
-                software_name = cve_entry.get('software_name', '')
-                software_version = cve_entry.get('software_version', '')
-                glpi_software_name = cve_entry.get('glpi_software_name', '')
-                target_platform = cve_entry.get('target_platform')
-                sources = cve_entry.get('sources', [])
-                source_urls = cve_entry.get('source_urls', {})
 
-                # Add CVE to local cache
                 cve_db_id = security_db.add_cve(
                     cve_id=cve_id_str,
                     cvss_score=cvss_score,
                     severity=severity,
-                    description=description,
-                    published_at=published_at,
-                    last_modified=last_modified,
-                    sources=sources,
-                    source_urls=source_urls
+                    description=cve_entry.get('description', ''),
+                    published_at=cve_entry.get('published_at'),
+                    last_modified=cve_entry.get('last_modified'),
+                    sources=cve_entry.get('sources', []),
+                    source_urls=cve_entry.get('source_urls', {})
                 )
 
-                # Link software to CVE
+                software_name = cve_entry.get('software_name', '')
                 if software_name:
                     security_db.link_software_cve(
                         software_name=software_name,
-                        software_version=software_version,
+                        software_version=cve_entry.get('software_version', ''),
                         cve_db_id=cve_db_id,
-                        glpi_software_name=glpi_software_name or None,
-                        target_platform=target_platform
+                        glpi_software_name=cve_entry.get('glpi_software_name') or None,
+                        target_platform=cve_entry.get('target_platform')
                     )
 
-                # Count by severity
                 sev = severity if severity in severity_counts else 'N/A'
                 severity_counts[sev] = severity_counts.get(sev, 0) + 1
                 if severity == 'Critical':
@@ -855,126 +538,46 @@ def run_cve_scan(scan_id: Optional[int] = None, entity_id: Optional[int] = None,
                 logger.error(f"Error storing CVE {cve_id_str}: {e}")
                 return False
 
-        def store_cves_from_central():
-            """Fetch and store CVEs from CVE Central (called during polling)"""
-            cve_result = cve_client.get_cves(softwares)
-            if not cve_result.get('success', False):
-                logger.warning(f"Failed to get CVEs: {cve_result.get('error')}")
-                return 0
+        # WebSocket scan (seul mode supporté)
+        if not WEBSOCKET_AVAILABLE:
+            raise Exception("python-socketio not installed. Install it: pip install python-socketio websocket-client")
 
-            new_cves = 0
-            for cve_entry in cve_result.get('cves', []):
-                if store_cve(cve_entry):
-                    new_cves += 1
+        def on_ws_progress(data):
+            phase = data.get('phase', '')
+            if phase == 'started':
+                eta = data.get('eta_display', '')
+                count = data.get('softwares_count', 0)
+                if eta:
+                    logger.info(f"Scan started: {count} softwares, ETA {eta}")
+            elif phase == 'scanning':
+                current = data.get('current', 0)
+                total = data.get('total', 0)
+                cves = data.get('cves_found', 0)
+                eta = data.get('eta_display', '')
+                elapsed = data.get('elapsed_seconds', 0)
+                elapsed_display = f"{elapsed // 60}m{elapsed % 60:02d}s" if elapsed >= 60 else f"{elapsed}s"
+                logger.info(f"Scan progress: {current}/{total} - {cves} CVEs - {elapsed_display} elapsed, ETA {eta}")
 
-            if new_cves > 0:
-                logger.info(f"Progressive fetch: {new_cves} new CVEs stored (total: {len(cves_added)})")
-            return new_cves
+        def on_ws_cves(cves_list):
+            new_count = sum(1 for cve in cves_list if store_cve(cve))
+            if new_count > 0:
+                logger.debug(f"{new_count} new CVEs stored (total: {len(cves_added)})")
 
-        def on_polling_progress(status):
-            """Callback for progressive CVE fetching during queue polling"""
-            store_cves_from_central()
+        ws_result = cve_client.scan(
+            softwares=softwares,
+            on_progress=on_ws_progress,
+            on_cves=on_ws_cves,
+            timeout=3600
+        )
 
-        # Try WebSocket first (real-time, more efficient)
-        use_websocket = WEBSOCKET_AVAILABLE and getattr(config, 'use_websocket', True)
-        ws_success = False
+        if ws_result.get('success'):
+            duration = ws_result.get('duration_display', '')
+            duration_info = f" in {duration}" if duration else ""
+            logger.info(f"Scan completed: {ws_result.get('softwares_scanned', 0)} scanned, {len(cves_added)} CVEs stored{duration_info}")
+        else:
+            error = ws_result.get('error', 'Unknown WebSocket error')
+            raise Exception(f"WebSocket scan failed: {error}")
 
-        if use_websocket:
-            logger.debug("Using WebSocket for CVE scan")
-
-            def on_ws_progress(data):
-                """WebSocket progress callback"""
-                phase = data.get('phase', '')
-                if phase == 'started':
-                    eta = data.get('eta_display', '')
-                    count = data.get('softwares_count', 0)
-                    if eta:
-                        logger.info(f"Scan started: {count} softwares, ETA {eta}")
-                elif phase == 'scanning':
-                    current = data.get('current', 0)
-                    total = data.get('total', 0)
-                    cves = data.get('cves_found', 0)
-                    eta = data.get('eta_display', '')
-                    elapsed = data.get('elapsed_seconds', 0)
-                    elapsed_display = f"{elapsed // 60}m{elapsed % 60:02d}s" if elapsed >= 60 else f"{elapsed}s"
-                    logger.info(f"Scan progress: {current}/{total} - {cves} CVEs - {elapsed_display} elapsed, ETA {eta}")
-                else:
-                    logger.debug(f"Scan phase: {phase}")
-
-            def on_ws_cves(cves_list):
-                """WebSocket CVE callback - store CVEs as they arrive"""
-                new_count = 0
-                for cve_entry in cves_list:
-                    try:
-                        if store_cve(cve_entry):
-                            new_count += 1
-                    except Exception as e:
-                        logger.error(f"Error in store_cve callback: {e}")
-                if new_count > 0:
-                    logger.debug(f"{new_count} new CVEs stored (total: {len(cves_added)})")
-
-            ws_result = cve_client.scan_via_websocket(
-                softwares=softwares,
-                max_age_days=max_age_days,
-                min_published_year=min_published_year,
-                on_progress=on_ws_progress,
-                on_cves=on_ws_cves,
-                timeout=3600
-            )
-
-            if ws_result.get('success'):
-                duration = ws_result.get('duration_display', '')
-                duration_info = f" in {duration}" if duration else ""
-                logger.info(f"Scan completed: {ws_result.get('softwares_scanned', 0)} scanned, {len(cves_added)} CVEs stored{duration_info}")
-                ws_success = True
-            elif ws_result.get('fallback'):
-                # WebSocket not available, fall through to polling
-                logger.info("WebSocket unavailable, falling back to polling")
-            else:
-                # WebSocket failed, try polling as fallback
-                logger.warning(f"WebSocket scan failed: {ws_result.get('error')}, falling back to polling")
-
-        # Polling fallback (or primary if WebSocket disabled/failed)
-        if not ws_success:
-            logger.info("Using polling for CVE scan")
-
-            # Trigger scan - CVE Central 1.1+ uses queue internally for multi-server deduplication
-            scan_result = cve_client.trigger_scan(background=True, max_age_days=max_age_days, min_published_year=min_published_year)
-
-            if scan_result.get('success'):
-                softwares_to_scan = scan_result.get('softwares_to_scan', 0) or scan_result.get('queued', 0)
-                if softwares_to_scan > 0:
-                    logger.debug(f"CVE Central scanning {softwares_to_scan} software...")
-
-                    # Check if CVE Central 1.1+ (has queue status)
-                    queue_status = cve_client.get_queue_status()
-                    if 'queue' in queue_status and 'error' not in queue_status:
-                        # Use queue polling with progressive CVE fetching
-                        logger.debug("Using queue-based polling with progressive CVE fetching (CVE Central 1.1+)")
-                        final_status = cve_client.wait_for_queue_completion(
-                            poll_interval=10, max_wait=3600, on_progress=on_polling_progress
-                        )
-                    else:
-                        # Fallback to legacy scan status polling (no progressive fetch)
-                        final_status = cve_client.wait_for_scan_completion(poll_interval=10, max_wait=3600)
-                        # Fetch all CVEs at the end for legacy mode
-                        store_cves_from_central()
-
-                    if final_status.get('error'):
-                        logger.warning(f"CVE Central scan warning: {final_status.get('error')}")
-                else:
-                    logger.debug("No software needs scanning (all recently scanned)")
-                    # Still fetch existing CVEs from cache
-                    store_cves_from_central()
-            else:
-                logger.warning(f"CVE Central scan failed: {scan_result.get('error', 'Unknown')}")
-                # Try to get cached CVEs anyway
-                store_cves_from_central()
-
-            # Final fetch to ensure we have all CVEs (in case some were missed)
-            store_cves_from_central()
-
-        # CVEs are already stored by store_cves_from_central() during polling
         stats['cves_received'] = len(cves_added)
 
         # Complete scan (machines_affected is computed globally, not per-entity)
@@ -1007,25 +610,6 @@ def run_cve_scan(scan_id: Optional[int] = None, entity_id: Optional[int] = None,
             pass
 
         return {'scan_id': scan_id, 'status': 'failed', 'error': str(e), **stats}
-
-
-def run_scan_async():
-    """Run CVE scan in a background thread"""
-    from pulse2.database.security import SecurityDatabase
-    from mmc.plugins.security.config import SecurityConfig
-
-    # Ensure database is activated
-    security_db = SecurityDatabase()
-    if not SecurityDatabase.is_activated:
-        config = SecurityConfig("security")
-        security_db.activate(config)
-
-    scan_id = security_db.create_scan()
-    thread = Thread(target=run_cve_scan, args=(scan_id,), daemon=True)
-    thread.start()
-
-    logger.info(f"Started async CVE scan with ID: {scan_id}")
-    return scan_id
 
 
 def scan_single_machine(id_glpi: int) -> Dict[str, Any]:

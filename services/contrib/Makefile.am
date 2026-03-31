@@ -35,6 +35,8 @@ nobase_dist_contrib_DATA = dyngroup/sql/clean-db.sql \
 	admin/sql/schema-005.sql \
 	admin/sql/schema-006.sql \
 	admin/sql/schema-007.sql \
+	admin/sql/schema-008.sql \
+	admin/sql/schema-009.sql \
 	dyngroup/sql/schema-001.sql \
 	dyngroup/sql/schema-002.sql \
 	dyngroup/sql/schema-003.sql \
@@ -280,6 +282,7 @@ nobase_dist_contrib_DATA = dyngroup/sql/clean-db.sql \
 	xmppmaster/sql/schema-096.sql \
 	xmppmaster/sql/schema-097.sql \
 	xmppmaster/sql/schema-098.sql \
+	xmppmaster/sql/schema-099.sql \
 	kiosk/sql/schema-001.sql \
 	kiosk/sql/schema-002.sql \
 	kiosk/sql/schema-003.sql \
@@ -304,6 +307,7 @@ nobase_dist_contrib_DATA = dyngroup/sql/clean-db.sql \
 	mobile/sql/schema-001.sql \
 	security/sql/schema-001.sql \
 	security/sql/schema-002.sql \
+	security/sql/schema-003.sql \
 	store/sql/schema-001.sql \
 	monit/pulse2 \
 	samba/smb.conf \

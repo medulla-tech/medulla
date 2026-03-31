@@ -1264,7 +1264,7 @@ def activate():
     #                    (updateAppstreamPackages,),
     #                    cron_expression='23 10 * * *')
     if not PkgsDatabase().activate(config):
-        logger.warning(
+        logger.error(
             "Plugin Pkgs: an error occurred during the database initialization"
         )
         return False

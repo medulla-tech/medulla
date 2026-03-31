@@ -215,6 +215,10 @@ msgid "Redirecting to login page…"
 msgstr "Redirigiendo a la página de inicio de sesión…"
 
 #: modules/dashboard/includes/panels/product_updates.inc.php
+msgid "Services are restarting, redirecting in"
+msgstr "Los servicios se reinician, redirigiendo en"
+
+#: modules/dashboard/includes/panels/product_updates.inc.php
 msgid "WARNING: BACKUP REQUIRED BEFORE UPDATE"
 msgstr "Copia de seguridad necesaria antes de actualizar"
 
@@ -272,7 +276,7 @@ msgstr "El reinicio termina ... volver a conectar en un momento."
 
 #: modules/dashboard/includes/panels/product_updates.inc.php:47
 msgid "Regenerate Agent Machine"
-msgstr "Máquina regeneradora de agentes"
+msgstr "Regenerar los agentes"
 
 #: modules/dashboard/includes/panels/successRate.inc.php:30
 msgid "Success Rate"
@@ -281,6 +285,18 @@ msgstr "Tasa de éxito"
 #: modules/dashboard/includes/panels/successRate.inc.php:44
 msgid "Deployment success rates for the past 6 weeks"
 msgstr "Índices de éxito del despliegue en las últimas 6 semanas"
+
+#: modules/dashboard/includes/panels/product_updates.inc.php
+msgid "System is up to date"
+msgstr "Sistema actualizado"
+
+#: modules/dashboard/includes/panels/product_updates.inc.php
+msgid "Update available"
+msgstr "Actualización disponible"
+
+#: modules/dashboard/includes/panels/product_updates.inc.php
+msgid "Minor update available"
+msgstr "Actualización menor disponible"
 
 #: modules/dashboard/includes/panels/alertsentity.inc.php:28
 msgid "Alerts by Entity"
@@ -331,4 +347,10 @@ msgstr "Panel de Alertas por Entidad"
 #: modules/dashboard/main/default.php:105
 msgid "Disabled widgets"
 msgstr "Widgets desactivados"
+
+msgid "Other"
+msgstr "Otros"
+
+msgid "Distribution — Top 5 OS"
+msgstr "Distribución — Top 5 OS"
 

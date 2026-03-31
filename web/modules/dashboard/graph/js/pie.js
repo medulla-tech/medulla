@@ -62,11 +62,22 @@ function customPie(selector, datas){
     .style("justify-content", "flex-start")
     .style("flex", "1");
 
+  // Add "Top 5" hint above pie if there are grouped items
+  var hasOtherData = datas.some(function(d) { return d.tooltip; });
+  if (hasOtherData) {
+    d3.select("#"+selector).append("div")
+      .style("font-size", "11px")
+      .style("color", "#999")
+      .style("text-align", "center")
+      .style("margin-top", "8px")
+      .text(pieLabelTop5 || "Répartition — Top 5 OS");
+  }
+
   var svgContainer = d3.select("#"+selector).append("div")
     .style("display", "flex")
     .style("justify-content", "center")
     .style("height", height + "px")
-    .style("margin-top", "20px");
+    .style("margin-top", hasOtherData ? "8px" : "20px");
 
   var canvas = svgContainer.append("svg")
     .attr("width", width)
@@ -144,9 +155,31 @@ function customPie(selector, datas){
     })
     .style("align-items", "center")
     .attr("class",function(d){return selector+'Label'+d.index})
+    .attr("data-tooltip", function(d) {
+      return d.data.tooltip || '';
+    })
+    .style("cursor", function(d) {
+      return d.data.tooltip ? "help" : "pointer";
+    })
     .html(function(d, i){
       var label = d.data.version != "" ? d.data.label+" ("+d.data.version+")" : d.data.label;
-      return '<span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:'+colors(i)+';margin-right:8px;"></span>' +
-        '<a href="'+(d.data.href || '#')+'" style="color:#333;text-decoration:none;font-size:13px;">' + label + ' : ' + d.data.value + '</a>';
+      var hasTooltip = d.data.tooltip ? true : false;
+      var style = hasTooltip ? 'color:#333;text-decoration:none;font-size:13px;border-bottom:1px dashed #999;' : 'color:#333;text-decoration:none;font-size:13px;';
+      var suffix = hasTooltip ? ' <span style="color:#999;font-size:11px;margin-left:4px;">ⓘ</span>' : '';
+      return '<span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:'+colors(i)+';margin-right:8px;flex-shrink:0;"></span>' +
+        '<a href="'+(d.data.href || '#')+'" style="'+style+'">' + label + ' : ' + d.data.value + '</a>' + suffix;
     });
+
+  // Apply jQuery UI tooltip on items with data-tooltip
+  jQuery("#"+selector+" [data-tooltip]").each(function() {
+    var tip = jQuery(this).attr("data-tooltip");
+    if (tip) {
+      jQuery(this).tooltip({
+        content: tip,
+        items: "[data-tooltip]",
+        position: { my: "left+15 center", at: "right center", collision: "flipfit" },
+        tooltipClass: "os-tooltip"
+      });
+    }
+  });
 }

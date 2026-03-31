@@ -28,7 +28,7 @@ def activate():
         logger.warning("Plugin security: disabled by configuration.")
         return False
     if not SecurityDatabase().activate(config):
-        logger.warning(
+        logger.error(
             "Plugin security: an error occurred during the database initialization")
         return False
     logger.info("Plugin security: activated successfully")
@@ -209,75 +209,6 @@ def get_scans(start=0, limit=20):
     return SecurityDatabase().get_scans(int(start), int(limit))
 
 
-def create_scan():
-    """Create a new scan and start it asynchronously"""
-    from mmc.plugins.security.scanner import run_scan_async
-    logger.info("Starting global CVE scan (all machines)")
-    scan_id = run_scan_async()
-    logger.info(f"Global CVE scan started with ID: {scan_id}")
-    return scan_id
-
-
-def _create_targeted_scan(target_type, target_id):
-    """Internal helper for creating scoped scans (entity or group).
-
-    Args:
-        target_type: 'entity' or 'group'
-        target_id: ID of the entity or group to scan
-
-    Returns:
-        scan_id: The ID of the created scan
-    """
-    from mmc.plugins.security.scanner import run_cve_scan, get_glpi_db_url, get_dyngroup_db_url
-    from pulse2.database.security import SecurityDatabase
-    from threading import Thread
-    from sqlalchemy import text, create_engine
-
-    target_id = int(target_id)
-
-    # Get target name for logging
-    try:
-        if target_type == 'entity':
-            engine = create_engine(get_glpi_db_url())
-            query = "SELECT name FROM glpi_entities WHERE id = :id"
-        else:
-            engine = create_engine(get_dyngroup_db_url())
-            query = "SELECT name FROM Groups WHERE id = :id"
-        with engine.connect() as conn:
-            result = conn.execute(text(query), {'id': target_id})
-            row = result.fetchone()
-            target_name = row[0] if row else f"ID:{target_id}"
-        engine.dispose()
-    except Exception:
-        target_name = f"ID:{target_id}"
-
-    # Start scan in background thread
-    scan_id = SecurityDatabase().create_scan()
-    entity_id = target_id if target_type == 'entity' else None
-    group_id = target_id if target_type == 'group' else None
-    thread = Thread(target=run_cve_scan, args=(scan_id, entity_id, group_id, None, target_name), daemon=True)
-    thread.start()
-
-    logger.info(f"Started CVE scan for {target_type} '{target_name}' ({target_type}_id={target_id}) with scan ID: {scan_id}")
-    return scan_id
-
-
-def create_scan_entity(entity_id):
-    """Create a new scan for a specific entity and start it asynchronously"""
-    return _create_targeted_scan('entity', entity_id)
-
-
-def create_scan_group(group_id):
-    """Create a new scan for a specific group and start it asynchronously"""
-    return _create_targeted_scan('group', group_id)
-
-
-def run_scan_sync():
-    """Run a CVE scan synchronously (blocking)"""
-    from mmc.plugins.security.scanner import run_cve_scan
-    return run_cve_scan()
-
-
 # =============================================================================
 # Configuration
 # =============================================================================
@@ -395,8 +326,7 @@ def set_policy(category, key, value, user=None):
 def reset_policies(user=None):
     """Reset all policies to default values.
 
-    Deletes all existing policies and reinserts the default values
-    matching schema-001.sql.
+    Reinserts values from the policies_defaults table.
 
     Args:
         user: username making the change (optional)

@@ -51,7 +51,8 @@ $p = new PageGenerator(_T("New Cluster", 'admin'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
-// Relays associated to the cluster
+// Relays available (no cluster yet for new cluster)
+$id = isset($_GET['id']) ? $_GET['id'] : 0;
 $list = xmlprc_get_ars_from_cluster($id);
 $outoptions = "";
 $default_list = [];

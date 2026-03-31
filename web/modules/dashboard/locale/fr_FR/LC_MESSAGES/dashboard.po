@@ -204,6 +204,10 @@ msgid "Redirecting to login page…"
 msgstr "Redirection vers la page de connexion…"
 
 #: modules/dashboard/includes/panels/product_updates.inc.php
+msgid "Services are restarting, redirecting in"
+msgstr "Les services redémarrent, redirection dans"
+
+#: modules/dashboard/includes/panels/product_updates.inc.php
 msgid "WARNING: BACKUP REQUIRED BEFORE UPDATE"
 msgstr "Sauvegarde requise avant mise à jour"
 
@@ -261,7 +265,7 @@ msgstr "Le redémarrage est terminé... reconnectez-vous dans un instant."
 
 #: modules/dashboard/includes/panels/product_updates.inc.php:47
 msgid "Regenerate Agent Machine"
-msgstr "Machine à régénérer les agents"
+msgstr "Régénérer les agents"
 
 #: modules/dashboard/includes/panels/successRate.inc.php:30
 msgid "Success Rate"
@@ -270,6 +274,18 @@ msgstr "Taux de succès"
 #: modules/dashboard/includes/panels/successRate.inc.php:44
 msgid "Deployment success rates for the past 6 weeks"
 msgstr "Taux de succès pour les 6 dernières semaines"
+
+#: modules/dashboard/includes/panels/product_updates.inc.php
+msgid "System is up to date"
+msgstr "Système à jour"
+
+#: modules/dashboard/includes/panels/product_updates.inc.php
+msgid "Update available"
+msgstr "Mise à jour disponible"
+
+#: modules/dashboard/includes/panels/product_updates.inc.php
+msgid "Minor update available"
+msgstr "Mise à jour mineure disponible"
 
 #: modules/dashboard/includes/panels/alertsentity.inc.php:28
 msgid "Alerts by Entity"
@@ -330,3 +346,9 @@ msgstr "Machines dans Pulse depuis "
 #: modules/dashboard/main/default.php:105
 msgid "Disabled widgets"
 msgstr "Widgets désactivés"
+
+msgid "Other"
+msgstr "Autres"
+
+msgid "Distribution — Top 5 OS"
+msgstr "Répartition — Top 5 OS"

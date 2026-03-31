@@ -146,14 +146,7 @@ setup_new_mmc_module() {
     if [[ -n "${PUBLIC_IP}" ]]; then
         mysql --defaults-group-suffix=dbsetup -e "GRANT ALL PRIVILEGES ON ${module_name}.* TO '${DBUSER}'@'${PUBLIC_IP}' IDENTIFIED BY '${DBPASS}'; FLUSH PRIVILEGES;"
     fi
-    # Restart mmc-agent to apply changes
-    systemctl restart mmc-agent
-    if [[ $? -ne 0 ]]; then
-        str="[x] Error installing MMC module $module_name. Aborting."
-        echo "$str"
-        write_to_log "$str"
-        exit 1
-    fi
+    # mmc-agent will be restarted in final_operations
     str="[v] MMC module $module_name setup completed successfully."
     echo "$str"
     write_to_log "$str"
@@ -168,7 +161,7 @@ check_medulla_version() {
         echo "${CURRENT_VERSION}" > /var/lib/mmc/version
     fi
     # Get available version from the repository
-    AVAILABLE_VERSION=$(apt-cache policy pulse2-common | grep Candidate | awk '{print $2}' | cut -d'g' -f1)
+    AVAILABLE_VERSION=$(apt-cache policy pulse2-common | grep Candidat | awk '{print $2}' | cut -d'g' -f1)
 }
 
 update_repo_defs() {
@@ -183,6 +176,22 @@ update_repo_defs() {
         exit 1
     fi
     str="[v] Repository definitions updated successfully."
+    echo "$str"
+    write_to_log "$str"
+}
+
+setup_apt_sources() {
+    str="Setting up apt sources for Medulla..."
+    echo "$str"
+    write_to_log "$str"
+    curl -fsSL https://apt.medulla-tech.io/stable.sources -o /etc/apt/sources.list.d/medulla.sources
+    if [[ $? -ne 0 ]]; then
+        str="[x] Error downloading apt sources file. Aborting."
+        echo "$str"
+        write_to_log "$str"
+        exit 1
+    fi
+    str="[v] Apt sources for Medulla set up successfully."
     echo "$str"
     write_to_log "$str"
 }
@@ -207,31 +216,29 @@ update_relays() {
     str="[=] Updating Medulla packages to the latest version on relay servers..."
     echo "$str"
     write_to_log "$str"
+    SSH_OPTIONS='-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
     RELAYS=$(mysql --defaults-group-suffix=medulla xmppmaster -Bse "SELECT nameserver FROM relayserver WHERE jid NOT LIKE 'rspulse%@pulse/%';")
     for RELAY in ${RELAYS}; do
         str=" Updating relay server: ${RELAY} ..."
         echo "$str"
         write_to_log "$str"
-        ssh root@${RELAY} "apt update &> /dev/null"
+        ssh ${SSH_OPTIONS} root@${RELAY} "apt update &> /dev/null"
         if [[ $? -ne 0 ]]; then
-            str="[x] Error updating repository on relay server: ${RELAY}. Aborting."
+            str="[!] Error updating repository on relay server: ${RELAY}."
             echo "$str"
             write_to_log "$str"
-            exit 1
         fi
-        ssh root@${RELAY} "DEBIAN_FRONTEND=noninteractive apt -o Dpkg::Options::='--force-confold' --force-yes -y upgrade &> /dev/null"
+        ssh ${SSH_OPTIONS} root@${RELAY} "DEBIAN_FRONTEND=noninteractive apt -o Dpkg::Options::='--force-confold' --force-yes -y upgrade &> /dev/null"
         if [[ $? -ne 0 ]]; then
-            str="[x] Error updating relay server: ${RELAY}. Aborting."
+            str="[!] Error updating relay server: ${RELAY}."
             echo "$str"
             write_to_log "$str"
-            exit 1
         fi
-        ssh root@${RELAY} "/usr/sbin/restart-pulse-services &> /dev/null"
+        ssh ${SSH_OPTIONS} root@${RELAY} "/usr/sbin/restart-pulse-services &> /dev/null"
         if [[ $? -ne 0 ]]; then
-            str="[x] Error restarting services on relay server: ${RELAY}. Aborting."
+            str="[!] Error restarting services on relay server: ${RELAY}."
             echo "$str"
             write_to_log "$str"
-            exit 1
         fi
         str="[v] Relay server ${RELAY} updated successfully."
         echo "$str"
@@ -497,23 +504,6 @@ update_546_to_550() {
     str="Applying Medulla config update from 5.4.6 to 5.5.0..."
     echo "$str"
     write_to_log "$str"
-
-    ## Setup new apt sources
-    str="[=] Setting up new apt sources for Medulla 5.5.0..."
-    echo "$str"
-    write_to_log "$str"
-    #curl -fsSL https://apt.medulla-tech.io/stable.sources -o /etc/apt/sources.list.d/medulla.sources
-    curl -fsSL https://git.medulla-tech.io/integration.sources -o /etc/apt/sources.list.d/medulla.sources
-    if [[ $? -ne 0 ]]; then
-        str="[x] Error downloading new apt sources file. Aborting."
-        echo "$str"
-        write_to_log "$str"
-        exit 1
-    fi
-    str="[v] New apt sources for Medulla 5.5.0 setup successfully."
-    echo "$str"
-    write_to_log "$str"
-    update_repo_defs
     update_medulla
 
     ## Setup new MMC module: security
@@ -540,14 +530,42 @@ update_546_to_550() {
         write_to_log "$str"
         exit 1
     fi
-    # Restart mmc-agent to apply changes
-    systemctl restart mmc-agent
-    if [[ $? -ne 0 ]]; then
-        str="[x] Error restarting mmc-agent after configuring security module. Aborting."
-        echo "$str"
-        write_to_log "$str"
-        exit 1
-    fi
+    # Append the following string to /etc/mmc/plugins/glpi.ini.local profile_acl_Super-Admin and profile_acl_Admin parameters before the final / if not already present:
+    # :security#security#index:security#security#softwareDetail:security#security#machines:security#security#machineDetail:security#security#entities:security#security#groups:security#security#groupDetail:security#security#allcves:security#security#cveDetail:security#security#ajaxAddExclusion:security#security#ajaxScanMachine:security#security#ajaxStartScanEntity:security#security#ajaxStartScanGroup:security#security#settings:security#security#ajaxResetDisplayFilters:security#security#settings:security#security#deployStoreUpdate
+    # And profile_acl_Technician if not already present:
+    # :security#security#index:security#security#softwareDetail:security#security#machines:security#security#machineDetail:security#security#entities:security#security#groups:security#security#groupDetail:security#security#allcves:security#security#cveDetail:security#security#ajaxAddExclusion:security#security#ajaxScanMachine:security#security#ajaxStartScanEntity:security#security#ajaxStartScanGroup:security#security#settings:security#security#ajaxResetDisplayFilters
+    str="[=] Configuring ACLs for new Medulla MMC module 'security' in glpi.ini.local..."
+    echo "$str"
+    write_to_log "$str"
+    for profile in Super-Admin Admin; do
+        if ! grep -q "security#security#index" /etc/mmc/plugins/glpi.ini.local | grep -q "^profile_acl_$profile"; then
+            sed -i "/^profile_acl_$profile/s|\(.*\)/$|\1:security#security#index:security#security#softwareDetail:security#security#machines:security#security#machineDetail:security#security#entities:security#security#groups:security#security#groupDetail:security#security#allcves:security#security#cveDetail:security#security#ajaxAddExclusion:security#security#ajaxScanMachine:security#security#ajaxStartScanEntity:security#security#ajaxStartScanGroup:security#security#settings:security#security#ajaxResetDisplayFilters:security#security#settings:security#security#deployStoreUpdate/|" /etc/mmc/plugins/glpi.ini.local
+            if [[ $? -ne 0 ]]; then
+                str="[x] Error updating ACLs for $profile profile in glpi.ini.local. Aborting."
+                echo "$str"
+                write_to_log "$str"
+                exit 1
+            fi
+            str="[v] ACLs for $profile profile in glpi.ini.local updated successfully."
+            echo "$str"
+            write_to_log "$str"
+        fi
+    done
+    for profile in Technician; do
+        if ! grep -q "security#security#index" /etc/mmc/plugins/glpi.ini.local | grep -q "^profile_acl_$profile"; then
+            sed -i "/^profile_acl_$profile/s|\(.*\)/$|\1:security#security#index:security#security#softwareDetail:security#security#machines:security#security#machineDetail:security#security#entities:security#security#groups:security#security#groupDetail:security#security#allcves:security#security#cveDetail:security#security#ajaxAddExclusion:security#security#ajaxScanMachine:security#security#ajaxStartScanEntity:security#security#ajaxStartScanGroup:security#security#settings:security#security#ajaxResetDisplayFilters/|" /etc/mmc/plugins/glpi.ini.local
+            if [[ $? -ne 0 ]]; then
+                str="[x] Error updating ACLs for $profile profile in glpi.ini.local. Aborting."
+                echo "$str"
+                write_to_log "$str"
+                exit 1
+            fi
+            str="[v] ACLs for $profile profile in glpi.ini.local updated successfully."
+            echo "$str"
+            write_to_log "$str"
+        fi
+    done
+    # mmc-agent will be restarted in final_operations
     str="[v] Medulla MMC module 'security' setup and configuration applied successfully."
     echo "$str"
     write_to_log "$str"
@@ -557,8 +575,7 @@ update_546_to_550() {
     echo "$str"
     write_to_log "$str"
     # Create /etc/cron.d/medulla-stats
-    echo "# Medulla stats collection - runs once a day at 2am" > /etc/cron.d/medulla-stats
-    echo "0 2 * * * root /usr/sbin/medulla-stats.sh" >> /etc/cron.d/medulla-stats
+    echo "0 4 * * * root /usr/sbin/medulla-stats.sh" > /etc/cron.d/medulla-stats
     # Restart cron service to apply changes
     systemctl restart cron
     if [[ $? -ne 0 ]]; then
@@ -568,6 +585,24 @@ update_546_to_550() {
         exit 1
     fi
     str="[v] Anon stats cron for Medulla set up successfully."
+    echo "$str"
+    write_to_log "$str"
+
+    # Create cron job for checking for Medulla updates
+    str="[=] Setting up cron job for checking for Medulla updates..."
+    echo "$str"
+    write_to_log "$str"
+    # Create /etc/cron.d/check_medulla_updates
+    echo "0 3 * * * root /usr/sbin/check_medulla_updates.sh 2>&1 | tee -a /tmp/check_medulla_updates.log" > /etc/cron.d/check_medulla_updates
+    # Restart cron service to apply changes
+    systemctl restart cron
+    if [[ $? -ne 0 ]]; then
+        str="[x] Error setting up cron job for checking for Medulla updates. Aborting."
+        echo "$str"
+        write_to_log "$str"
+        exit 1
+    fi
+    str="[v] Cron job for checking for Medulla updates set up successfully."
     echo "$str"
     write_to_log "$str"
 
@@ -590,30 +625,27 @@ final_operations() {
 
     # Add any final operations needed for the migration here
 
-    ## Generate agents to ensure they are up to date
-    str="[=] Generating agents..."
-    echo "$str"
-    write_to_log "$str"
-    /var/lib/pulse2/clients/generate-pulse-agent.sh &> /dev/null
-    if [[ $? -ne 0 ]]; then
-        str="[x] Error generating agents."
-        echo "$str"
-        write_to_log "$str"
-    fi
-    str="[v] Agents generated successfully."
-    echo "$str"
-    write_to_log "$str"
-
     str="[v] Medulla migration completed successfully."
     echo "$str"
     write_to_log "$str"
     rm -f /var/lib/mmc/.accepted_medulla_update_disclaimer
 
-    ## Restart Medulla services to apply all changes (must be last — kills the process)
+    # Update database: mark update as done
+    NEW_VERSION=$(cat /var/lib/mmc/version 2>/dev/null)
+    mysql -u"${DBUSER}" -p"${DBPASS}" -h"${DBHOST:-localhost}" admin -e \
+        "UPDATE medulla_update_availability SET update_available=0, current_version='${NEW_VERSION}', available_version=NULL, last_check=NOW(), last_check_status='success' WHERE id=1;" 2>/dev/null
+
+    ## Restart services then generate agents (all in background, survives service restart)
     str="[=] Restarting Medulla services..."
     echo "$str"
     write_to_log "$str"
-    nohup /usr/sbin/restart-pulse-services &> /dev/null &
+
+    nohup bash -c '
+        /usr/sbin/restart-pulse-services &> /dev/null
+        sleep 30
+        /var/lib/pulse2/clients/generate-pulse-agent.sh &> /dev/null
+        echo "$(date "+%Y-%m-%d %H:%M:%S") - [v] Agents generated successfully." >> /var/log/medulla_update.log
+    ' &> /dev/null &
 }
 
 
@@ -642,6 +674,8 @@ else
     download_migration_script_and_restart
 fi
 
+# Setup apt sources for Medulla updates
+setup_apt_sources
 # Update repo definitions
 update_repo_defs
 

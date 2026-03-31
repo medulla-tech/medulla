@@ -13172,31 +13172,32 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
 
         entities = "(%s)"%(",".join([str(e) for e in entities]))
 
-        sql = """select
-  coalesce(NULL, (w1/total_w1)*100, 0) as ratio1,
-  coalesce(NULL, (w2/total_w2)*100, 0) as ratio2,
-  coalesce(NULL, (w3/total_w3)*100, 0) as ratio3,
-  coalesce(NULL, (w4/total_w4)*100, 0) as ratio4,
-  coalesce(NULL, (w5/total_w5)*100, 0) as ratio5,
-  coalesce(NULL, (w6/total_w6)*100, 0) as ratio6
-from(select
-    coalesce(NULL, sum(case when state = "DEPLOYMENT SUCCESS" and startcmd >= (CURRENT_DATE() - INTERVAL 1 WEEK) then 1 else 0 end), 0) as w1,
-    coalesce(NULL, sum(case when startcmd >= (CURRENT_DATE() - INTERVAL 1 WEEK) then 1 else 0 end), 0) as total_w1,
-    coalesce(NULL, sum(case when state = "DEPLOYMENT SUCCESS" and startcmd >= (CURRENt_DATE() - INTERVAL 2 WEEK) and startcmd < (CURRENT_DATE() - INTERVAL 1 WEEK) then 1 else 0 end), 0) as w2,
-    coalesce(NULL, sum(case when startcmd >= (CURRENt_DATE() - INTERVAL 2 WEEK) and startcmd < (CURRENT_DATE() - INTERVAL 1 WEEK) then 1 else 0 end), 0) as total_w2,
-    coalesce(NULL, sum(case when state = "DEPLOYMENT SUCCESS" and startcmd >= (CURRENt_DATE() - INTERVAL 3 WEEK) and startcmd < (CURRENT_DATE() - INTERVAL 2 WEEK) then 1 else 0 end), 0) as w3,
-    coalesce(NULL, sum(case when startcmd >= (CURRENt_DATE() - INTERVAL 3 WEEK) and startcmd < (CURRENT_DATE() - INTERVAL 2 WEEK) then 1 else 0 end), 0) as total_w3,
-    coalesce(NULL, sum(case when state = "DEPLOYMENT SUCCESS" and startcmd >= (CURRENt_DATE() - INTERVAL 4 WEEK) and startcmd < (CURRENT_DATE() - INTERVAL 3 WEEK) then 1 else 0 end), 0) as w4,
-    coalesce(NULL, sum(case when startcmd >= (CURRENt_DATE() - INTERVAL 4 WEEK) and startcmd < (CURRENT_DATE() - INTERVAL 3 WEEK) then 1 else 0 end), 0) as total_w4,
-    coalesce(NULL, sum(case when state = "DEPLOYMENT SUCCESS" and startcmd >= (CURRENt_DATE() - INTERVAL 5 WEEK) and startcmd < (CURRENT_DATE() - INTERVAL 4 WEEK) then 1 else 0 end), 0) as w5,
-    coalesce(NULL, sum(case when startcmd >= (CURRENt_DATE() - INTERVAL 5 WEEK) and startcmd < (CURRENT_DATE() - INTERVAL 4 WEEK) then 1 else 0 end), 0) as total_w5,
-    coalesce(NULL, sum(case when state = "DEPLOYMENT SUCCESS" and startcmd >= (CURRENt_DATE() - INTERVAL 5 WEEK) and startcmd < (CURRENT_DATE() - INTERVAL 4 WEEK) then 1 else 0 end), 0) as w6,
-    coalesce(NULL, sum(case when startcmd >= (CURRENt_DATE() - INTERVAL 5 WEEK) and startcmd < (CURRENT_DATE() - INTERVAL 4 WEEK) then 1 else 0 end), 0) as total_w6
-  from deploy d
-  join machines m on m.jid = d.jidmachine
-  join local_glpi_filters lgf on m.uuid_inventorymachine = concat("UUID", lgf.id)
-  where lgf.entities_id in %s
-) as t;"""%entities
+        sql = """SELECT
+  COALESCE(NULL, (w1/total_w1)*100, 0) AS ratio1,
+  COALESCE(NULL, (w2/total_w2)*100, 0) AS ratio2,
+  COALESCE(NULL, (w3/total_w3)*100, 0) AS ratio3,
+  COALESCE(NULL, (w4/total_w4)*100, 0) AS ratio4,
+  COALESCE(NULL, (w5/total_w5)*100, 0) AS ratio5,
+  COALESCE(NULL, (w6/total_w6)*100, 0) AS ratio6
+FROM (SELECT
+    COALESCE(NULL, SUM(CASE WHEN state LIKE '%%SUCCESS' AND startcmd >= (CURRENT_DATE() - INTERVAL 1 WEEK) THEN 1 ELSE 0 END), 0) AS w1,
+    COALESCE(NULL, SUM(CASE WHEN startcmd >= (CURRENT_DATE() - INTERVAL 1 WEEK) THEN 1 ELSE 0 END), 0) AS total_w1,
+    COALESCE(NULL, SUM(CASE WHEN state LIKE '%%SUCCESS' AND startcmd >= (CURRENT_DATE() - INTERVAL 2 WEEK) AND startcmd < (CURRENT_DATE() - INTERVAL 1 WEEK) THEN 1 ELSE 0 END), 0) AS w2,
+    COALESCE(NULL, SUM(CASE WHEN startcmd >= (CURRENT_DATE() - INTERVAL 2 WEEK) AND startcmd < (CURRENT_DATE() - INTERVAL 1 WEEK) THEN 1 ELSE 0 END), 0) AS total_w2,
+    COALESCE(NULL, SUM(CASE WHEN state LIKE '%%SUCCESS' AND startcmd >= (CURRENT_DATE() - INTERVAL 3 WEEK) AND startcmd < (CURRENT_DATE() - INTERVAL 2 WEEK) THEN 1 ELSE 0 END), 0) AS w3,
+    COALESCE(NULL, SUM(CASE WHEN startcmd >= (CURRENT_DATE() - INTERVAL 3 WEEK) AND startcmd < (CURRENT_DATE() - INTERVAL 2 WEEK) THEN 1 ELSE 0 END), 0) AS total_w3,
+    COALESCE(NULL, SUM(CASE WHEN state LIKE '%%SUCCESS' AND startcmd >= (CURRENT_DATE() - INTERVAL 4 WEEK) AND startcmd < (CURRENT_DATE() - INTERVAL 3 WEEK) THEN 1 ELSE 0 END), 0) AS w4,
+    COALESCE(NULL, SUM(CASE WHEN startcmd >= (CURRENT_DATE() - INTERVAL 4 WEEK) AND startcmd < (CURRENT_DATE() - INTERVAL 3 WEEK) THEN 1 ELSE 0 END), 0) AS total_w4,
+    COALESCE(NULL, SUM(CASE WHEN state LIKE '%%SUCCESS' AND startcmd >= (CURRENT_DATE() - INTERVAL 5 WEEK) AND startcmd < (CURRENT_DATE() - INTERVAL 4 WEEK) THEN 1 ELSE 0 END), 0) AS w5,
+    COALESCE(NULL, SUM(CASE WHEN startcmd >= (CURRENT_DATE() - INTERVAL 5 WEEK) AND startcmd < (CURRENT_DATE() - INTERVAL 4 WEEK) THEN 1 ELSE 0 END), 0) AS total_w5,
+    COALESCE(NULL, SUM(CASE WHEN state LIKE '%%SUCCESS' AND startcmd >= (CURRENT_DATE() - INTERVAL 6 WEEK) AND startcmd < (CURRENT_DATE() - INTERVAL 5 WEEK) THEN 1 ELSE 0 END), 0) AS w6,
+    COALESCE(NULL, SUM(CASE WHEN startcmd >= (CURRENT_DATE() - INTERVAL 6 WEEK) AND startcmd < (CURRENT_DATE() - INTERVAL 5 WEEK) THEN 1 ELSE 0 END), 0) AS total_w6
+  FROM deploy d
+  JOIN machines m ON m.jid = d.jidmachine
+  JOIN local_glpi_filters lgf ON m.uuid_inventorymachine = CONCAT('UUID', lgf.id)
+  WHERE lgf.entities_id IN %s
+    AND state NOT IN ('DEPLOYMENT START', 'WAITING MACHINE ONLINE')
+) AS t;"""%entities
         query = session.execute(sql).first()
         if query is None :
             return [0, 0, 0, 0, 0, 0]

@@ -57,7 +57,7 @@ def activate():
         return False
 
     if not UpdatesDatabase().activate(config):
-        logger.warning(
+        logger.error(
             "Plugin updates: an error occurred during the database initialization"
         )
         return False

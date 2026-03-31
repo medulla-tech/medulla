@@ -71,7 +71,7 @@ def activate():
         logger.warning("Plugin medulla_server: disabled by configuration.")
         return False
     if not Pulse2Database().activate(config):
-        logger.warning(
+        logger.error(
             "Plugin medulla_server: an error occurred during the database initialization"
         )
         return False
@@ -294,17 +294,15 @@ class RpcProxy(RpcProxyI):
 
 
     def installProductUpdates(self):
-        install_command = "nohup /usr/sbin/update_medulla.sh --noupdate > /dev/null 2>&1 &"
 
         @deferred
         def _runInstall():
             try:
                 subprocess.Popen(
-                    install_command,
+                    "HOME=/root nohup /usr/sbin/update_medulla.sh > /dev/null 2>&1 &",
                     shell=True,
                     stdout=subprocess.DEVNULL,
-                    stderr=subprocess.DEVNULL,
-                    preexec_fn=os.setsid
+                    stderr=subprocess.DEVNULL
                 )
                 logger.info("update_medulla.sh lancé en arrière-plan")
                 return {"success": True, "output": "Update started"}

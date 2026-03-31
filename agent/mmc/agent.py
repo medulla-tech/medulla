@@ -80,7 +80,7 @@ sys.path.append("plugins")
 
 Fault = xmlrpc.client.Fault
 ctx = None
-VERSION = "5.4.6"
+VERSION = "5.5.0"
 
 PYTHON_VERSION = sys.version_info.major
 
@@ -814,7 +814,7 @@ sys.path.append("plugins")
 
 Fault = xmlrpc.client.Fault
 ctx = None
-VERSION = "5.4.6"
+VERSION = "5.5.0"
 
 
 class IncludeStartsWithFilter(logging.Filter):
@@ -2312,7 +2312,7 @@ class PluginManager(Singleton):
                 logger.info("Plugin %s loaded, %s" % (name, version))
             else:
                 # If we can't activate it
-                logger.warning("Plugin %s not loaded." % name)
+                logger.error("Plugin %s not loaded." % name)
                 plugin = None
         except Exception as e:
             logger.error("Error while trying to load plugin " + name)

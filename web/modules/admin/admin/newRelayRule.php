@@ -100,9 +100,7 @@ Chooses ARS based on netmask:
 255.255.255.255 -> Associates all machines having a netmask of 255.255.255.255 to the specifies relay server
 Chooses ARS based on hostname:
 ^win10.*$ -> Associates all machines having a hostname starting with win10 to the specified relay server"');
-$f->add(new TrFormElement(_T("Subject", "admin"), $regex));
-$f->add(new TrFormElement(_T("Check regex", "admin"), new TextareaTpl("subject")));
-$f->add(new TrFormElement(_T("Matching Result", "admin"), new SpanElement('<div id="temp"></div><div id="result"></div>')));
+$f->add(new TrFormElement(_T("Regex rule", "admin"), $regex));
 
 $f->addValidateButton("bconfirm", _T("Edit", "admin"), ['prev_action'=> $prev_action]);
 $f->display();

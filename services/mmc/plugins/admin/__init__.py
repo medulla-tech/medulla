@@ -57,7 +57,7 @@ def activate():
         return False
 
     if not AdminDatabase().activate(config):
-        logger.warning(
+        logger.error(
             "Plugin admin: an error occurred during the database initialization"
         )
         return False
@@ -771,6 +771,9 @@ def delete_provider(provider_id: int) -> dict:
         return db.delete_provider(pid)
     except Exception as e:
         return {"ok": False, "deleted": 0, "id": 0, "error": str(e)}
+
+def get_update_availability():
+    return AdminDatabase().get_update_availability()
 
 def restart_medulla_services():
     try:
