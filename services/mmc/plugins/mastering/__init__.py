@@ -47,6 +47,7 @@ from mmc.plugins.xmppmaster.master.lib.utils import name_random
 
 # import pour la database
 from mmc.plugins.glpi.database import Glpi
+from mmc.plugins.dyngroup.database import DyngroupDatabase
 from pulse2.database.mastering import MasteringDatabase
 
 import logging
@@ -132,7 +133,7 @@ def get_server_from_parent_entities(entities=[]):
 
     Args:
         entities (list) : The parent entities uuid order by most close to farther parent.
-    
+
     Return:
         str : the server jid associated with the entity
     """
@@ -154,21 +155,21 @@ def get_server_disk(jid):
 
     if ret["code"] != 0:
         return result
-    
+
     # the result has the shape :
     # {
-    #     "code": 0, 
+    #     "code": 0,
     #     "result": [
-    #         "Filesystem               1K-blocks     Used Available Use% Mounted on\n", 
+    #         "Filesystem               1K-blocks     Used Available Use% Mounted on\n",
     #         "/dev/mapper/ 513452376 48009912 439287048  10% /\n"
-    #     ], 
-    #     "separateurline": "\n", 
-    #     "cmd": "df /var/lib/pulse2/imaging/masters", 
+    #     ],
+    #     "separateurline": "\n",
+    #     "cmd": "df /var/lib/pulse2/imaging/masters",
     #     "timeout": 20
     # }
     # So we want to extract elements from the second line: ret["result"][1]
     # Then we split it on " ". The list is now ["/dev/mapper/", "513452376", "48009912", "439287048", " ","10%", "/\n"]
-    # So what we want are element 1 to 4 from this list, the occupied size and the 
+    # So what we want are element 1 to 4 from this list, the occupied size and the
     total, used, available, percent = [e for e in ret["result"][1].split(" ") if e != ""][1:5]
     result["total"] = total
     result["used"] = used
@@ -182,12 +183,51 @@ def get_masters_for_entity(entity, start=0, limit=-1, filter=""):
     result = MasteringDatabase().get_masters_for_entity(entity, start, limit, filter)
     return result
 
-def create_action(action, gid, uuid, server, begin_date, end_date, config, workflow=""):
+def create_action(action, gid, uuid, server, begin_date, end_date, config, workflow="", entity_id=-1):
 
     try:
         workflow = json.loads(workflow)
     except Exception as e:
         return {"status":1, "msg":"invalid incoming datas: %s"%e}
     server = server.replace("\/", "/")
-    result = MasteringDatabase().create_action(action, gid, uuid, server, begin_date, end_date, config, workflow)
+    result = MasteringDatabase().create_action(action, gid, uuid, server, begin_date, end_date, config, workflow, entity_id)
     return result
+
+
+def get_actions_for_entity(server, entity=-1, _type="all", start=0, maxperpage=-1, filter=""):
+
+    # Sanitize parameters
+    server = server.replace("\/", "/")
+
+    if isinstance(entity, str):
+        if entity.startswith("UUID"):
+            entity = entity.replace("UUID", "")
+        entity = int(entity)
+
+    actions_list = MasteringDatabase().get_actions_for_entity(server, entity, _type, start, maxperpage, filter)
+
+    # find some datas on groups and machines
+    machines = actions_list["machines"]
+    groups = actions_list["groups"]
+
+    machines_infos = Glpi().get_machines_info_from_list(machines)
+    groups_infos = DyngroupDatabase().get_groups_info_from_list(groups)
+
+    for action in actions_list["data"]:
+        action["element_id"] = 0
+        action["element_name"] = "N/P"
+        if action["uuid"] in machines_infos:
+            _uuid = action["uuid"]
+            # Append machine infos to this action
+            action["element_id"] = machines_infos[_uuid]["id"]
+            action["element_name"] = machines_infos[_uuid]["name"]
+
+        if action["gid"] in groups_infos:
+            # Append group infos to this action
+            _gid = action["gid"]
+
+            # To be coherent with machines, like this we have the same keys on groups or machines.
+            action["element_id"] = groups_infos[_gid]["id"]
+            action["element_name"] = groups_infos[_gid]["name"]
+
+    return actions_list

@@ -31,6 +31,17 @@ $page->setOptions(array("visible"=>False, "noHeader"=>True));
 $submod->addPage($page);
 
 
+$page = new Page("actionList", _T("List of Actions", "mastering"));
+$page->setFile("modules/mastering/mastering/actionList.php");
+$submod->addPage($page);
+
+
+$page = new Page("ajaxActionList", _T("List of Actions", "mastering"));
+$page->setFile("modules/mastering/mastering/ajaxActionList.php");
+$page->setOptions(array("visible"=>False, "noHeader"=>True));
+$submod->addPage($page);
+
+
 $page = new Page("masters", _T('Masters List', 'mastering'));
 $page->setFile("modules/mastering/mastering/masters.php");
 $submod->addPage($page);

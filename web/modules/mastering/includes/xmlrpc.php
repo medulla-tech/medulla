@@ -46,8 +46,12 @@ function xmlrpc_get_masters_for_entity($entity, $start=0, $limit=-1, $filter="")
     return xmlCall("mastering.get_masters_for_entity", [$entity, $start, $limit, $filter]);
 }
 
-function xmlrpc_create_action($action, $gid, $uuid, $server, $beginDate, $endDate, $config=[], $json=""){
-    return xmlCall("mastering.create_action", [$action, $gid, $uuid, $server, $beginDate, $endDate, $config, $json]);
+function xmlrpc_create_action($action, $gid, $uuid, $server, $beginDate, $endDate, $config=[], $json="", $entity_id=-1){
+    return xmlCall("mastering.create_action", [$action, $gid, $uuid, $server, $beginDate, $endDate, $config, $json, $entity_id]);
 }
-?>
 
+function xmlrpc_get_actions_for_entity($server, $entity=-1, $type="all", $start=0, $maxperpage=-1, $filter=""){
+    return xmlCall("mastering.get_actions_for_entity", [$server, $entity, $type, $start, $maxperpage, $filter]);
+}
+
+?>

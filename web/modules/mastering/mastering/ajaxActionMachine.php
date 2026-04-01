@@ -21,6 +21,12 @@
     /* align-self: auto; */
     list-style-type: none;
 }
+
+#popup-action-content li a{
+    background-color: var(--color-primary);
+    padding:10px;
+    padding-top:0px;
+}
 </style>
 
 <?php
@@ -34,7 +40,7 @@ $filter = (isset($_GET['filter'])) ? htmlentities($_GET["filter"]) : "";
 $entity = (isset($_GET['entity'])) ? htmlentities($_GET["entity"]) : "";
 
 $parentEntities = [];
-$parentEntities = xmlrpc_getLocationParentPath($entity);
+$parentEntities = (array)xmlrpc_getLocationParentPath($entity);
 if(!in_array($entity, $parentEntities)){
     array_unshift($parentEntities, $entity);
     // $parentEntities[] = $entity;
@@ -48,8 +54,11 @@ echo '</div>';
 $datas = xmlrpc_get_machines_list_for_mastering($start, $maxperpage, $entity, $filter);
 
 $masteringAction = new ActionPopupItem(_T("Create Master", "mastering"), "createMaster", "start", "createMaster", "mastering", "mastering");
+$masteringAction->setWidth(0);
 $deployAction = new ActionPopupItem(_T("Deploy Master", "mastering"), "deployMaster", "install", "deployMaster", "mastering", "mastering");
+$deployAction->setWidth(0);
 $registerAction = new ActionPopupItem(_T("Register Machine", "mastering"), "register", "package", "register", "mastering", "mastering");
+$registerAction->setWidth(0);
 
 $masteringActions = [];
 $deployActions = [];
@@ -74,7 +83,6 @@ foreach($machines["id"] as $ids){
     $i++;
 }
 $url = urlStrRedirect("mastering/mastering/createAction", ["server"=>$server, "entity"=>$entity]);
-// echo '<a href="'.$url.'" class="btnPrimary" onclick="PopupWindow(event,\''.$url.'\', 300); return false;">'._T("Action on unknown machine" ,"mastering").'</a>';
 
 echo '<div id="popup-action">';
     echo '<header>';

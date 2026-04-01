@@ -7646,6 +7646,35 @@ where concat("UUID", c.id) = "%s"
 
         return result
 
+    @DatabaseHelper._sessionm
+    def get_machines_info_from_list(self, session, uuid_list=[]):
+        """Get the machines info from a list of UUID.
+
+        Args:
+            self (Glpi100): Instance of Glpi100 object.
+            session (sqlalchemy session): Session to access to the DB
+            uuid_list (list): List of machine UUID to get the machines info.
+
+        Returns:
+            dict: A dict of machines infos. The result is returned as a dict to be able to associate into a another result easily.
+            """
+
+        query = session.query(Machine)\
+            .filter(Machine.uuid.in_(uuid_list))
+
+        data = query.all()
+        if data == None:
+            return {}
+
+        result = {}
+        for machine in data:
+            result[machine.uuid] = {
+                "id":machine.id,
+                "uuid": machine.uuid,
+                "name":machine.name,
+            }
+
+        return result
 
 # Class for SQLalchemy mapping
 class Machine(object):

@@ -1373,3 +1373,32 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         if cmd_ids:
             query = query.filter(Convergence.commandId.in_(cmd_ids))
         return [x.commandId for x in query]
+
+
+    @DatabaseHelper._sessionm
+    def get_groups_info_from_list(self, session, groups_list):
+        """
+        Get groups info (id, name) from a list of group ids
+
+        Args:
+            self (DyngroupDatabase): The instance of the DyngroupDatabase class.
+            session (sqlalchemy.orm.session.Session): The database session to use for the query.
+            groups_list (list): A list of group ids for which to retrieve information.
+
+        Returns:
+            dict: A dictionary containing group information, keyed by group id.
+
+        """
+        query = session.query(Groups).filter(Groups.id.in_(groups_list))
+        result = {}
+        data = query.all()
+
+        if data is None:
+            return {}
+
+        for group in data:
+            result[group.id] = {
+                "id": group.id,
+                "name": group.name,
+            }
+        return result

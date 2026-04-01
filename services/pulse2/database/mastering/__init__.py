@@ -4,6 +4,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 # SqlAlchemy
+
 from sqlalchemy import create_engine, MetaData, select, func, and_, desc, or_, distinct, Table
 from sqlalchemy.orm import create_session, mapper, relation
 from sqlalchemy.exc import DBAPIError
@@ -12,6 +13,7 @@ from datetime import date, datetime, timedelta
 # PULSE2 modules
 from mmc.database.database_helper import DatabaseHelper
 from pulse2.database.mastering.schema import Tests
+
 # Imported last
 import logging
 import base64
@@ -122,9 +124,9 @@ class MasteringDatabase(DatabaseHelper):
             filter_str = " AND name like \"%%%s%%\" or description like \"%%%s%%\" or uuid like \"%%%s%%\" or os like \"%%%s%%\" or creation_date like \"%%%s%%\""%(filter, filter, filter, filter, filter)
 
         sql ="""
-        SELECT 
+        SELECT
             SQL_CALC_FOUND_ROWS
-            m.* 
+            m.*
         from masters m
         join mastersEntities me on m.id = me.master_id
         where me.entity_id = %s
@@ -138,7 +140,7 @@ class MasteringDatabase(DatabaseHelper):
 
         if datas is None:
             return result
-    
+
         result["total"] = count
         for row in datas:
             result["data"]["id"].append(row[0])
@@ -155,7 +157,7 @@ class MasteringDatabase(DatabaseHelper):
 
 
     @DatabaseHelper._sessionm
-    def create_action(self, session, action, gid, uuid, server, begin_date, end_date, config, workflow):
+    def create_action(self, session, action, gid, uuid, server, begin_date, end_date, config, workflow, entity_id=-1):
         """
         Create a new action on mastering.
 
@@ -169,7 +171,7 @@ class MasteringDatabase(DatabaseHelper):
             begin_date: start date when the action is usable
             end_date: expiration date to specify when the action is no longer usable
             workflow (base64  stringified json): container of the workflow to proceed on this action
-
+            entity_id: the entity id associated to the server. -1 if no entity specified. In this case, use the entity associated to the server. This data is used to list all elements from unique entity.
         Workflow shape:
         [
             {
@@ -197,8 +199,9 @@ class MasteringDatabase(DatabaseHelper):
         """
         config_dump = json.dumps(config)
         workflow_dump = json.dumps(workflow)
-        sql = """INSERT INTO actions (server_id, gid, uuid, name, config, content, status, date_start, date_end) values(
-        (select id from servers where jid="%s"), "%s", "%s", "%s", '%s', '%s', "%s", "%s", "%s")"""%(server, gid, uuid, action, config_dump, workflow_dump, "TODO", begin_date, end_date)
+
+        sql = """INSERT INTO actions (server_id, entity_id, gid, uuid, name, config, content, status, date_start, date_end) values(
+        (select id from servers where jid="%s"), "%s", "%s", "%s", '%s', '%s', "%s", "%s", "%s")"""%(server, entity_id, gid, uuid, action, config_dump, workflow_dump, "TODO", begin_date, end_date)
 
         try:
             session.execute(sql)
@@ -210,4 +213,102 @@ class MasteringDatabase(DatabaseHelper):
         session.commit()
         session.flush()
         return {"status": 0, "msg": "success"}
-        
+
+    @DatabaseHelper._sessionm
+    def get_actions_for_entity(self, session, server, entity=-1, type="all", start=0, end=-1, filter=""):
+        """
+        Get the list of actions for an entity.
+
+        Args:
+            self (MasteringDatabase) : instance of class
+
+        """
+        try:
+            start = int(start)
+        except:
+            start = 0
+        try:
+            end = int(end)
+        except:
+            end = -1
+
+        if end == -1:
+            end = 99999
+
+        result = {
+            "total":0, "data":[]
+        }
+
+        sql = """SELECT
+    SQL_CALC_FOUND_ROWS
+    *
+FROM actions
+WHERE """
+
+        # No entity specified, case for actions on new machines. In this case we get the entity associated to the server.
+        binds = {}
+
+        # Search based on direct entity id
+        if entity == -1:
+            sql += """server_id = (SELECT id from servers where jid=:jid) """
+            binds["jid"] = server
+        # Search based on server entity id
+        else:
+            sql += "entity_id = :entity_id or server_id = (SELECT id from servers where entity_id=:entity_id1) "
+            binds["entity_id"] = entity
+            binds["entity_id1"] = entity
+
+        if filter != "":
+            sql += """AND (uuid like :filt1 or name like :filt2 or date_start like :filt3 or date_end like :filt4 or content like :filt5 or status like :filt6 or gid like :filt7) """
+            binds["filt1"] = f"%{filter}%"
+            binds["filt2"] = f"%{filter}%"
+            binds["filt3"] = f"%{filter}%"
+            binds["filt4"] = f"%{filter}%"
+            binds["filt5"] = f"%{filter}%"
+            binds["filt6"] = f"%{filter}%"
+            binds["filt7"] = f"%{filter}%"
+
+        sql += """LIMIT :start,:end"""
+
+        binds["start"] = start
+        binds["end"] = end
+
+
+
+        datas = session.execute(sql, binds).all()
+        count = session.execute("SELECT FOUND_ROWS();").scalar()
+
+        if count == 0:
+            return result
+
+        result["total"] = count
+
+        result["machines"] = []
+        result["groups"] = []
+
+        for row in datas:
+            _gid = row[3] if row[3] is not None else ""
+            _uuid = row[4] if row[4] is not None else ""
+
+            # Keep an array of all uuids and gids to retrive datas with one request.
+            if _gid != "" and _gid not in result["groups"]:
+                result["groups"].append(_gid)
+            if _uuid != "" and _uuid not in result["machines"]:
+                result["machines"].append(_uuid)
+
+            result["data"].append({
+                "id": row[0],
+                "server_id": row[1],
+                "entity_id": row[2] if row[2] is not None else -1,
+                "gid": _gid,
+                "uuid": _uuid,
+                "name": row[6] if row[6] is not None else "",
+                "config": json.loads(row[7]) if row[7] is not None else {},
+                "content": json.loads(row[8]) if row[8] is not None else {},
+                "status": row[9] if row[9] is not None else "",
+                "date_creation": str(row[10]) if row[10] is not None else "",
+                "date_start": str(row[11]) if row[11] is not None else "",
+                "date_end": str(row[12]) if row[12] is not None else "",
+            })
+
+        return result
