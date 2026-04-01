@@ -11,6 +11,7 @@ from sqlalchemy import (
     DateTime,
     Text,
     Enum,
+    UniqueConstraint,
 )  # LargeBinary
 from sqlalchemy.dialects.mysql import TINYINT
 from sqlalchemy.ext.declarative import declarative_base
