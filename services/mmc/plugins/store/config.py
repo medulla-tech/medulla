@@ -23,7 +23,7 @@ class StoreConfig(PluginConfig, StoreDatabaseConfig):
         self.packages_path = self.get("main", "packages_path") if self.has_option("main", "packages_path") else "/var/lib/pulse2/packages"
         # Store API (catalog, subscriptions, packages - all in one)
         self.store_api_url = self.get("store_api", "url") if self.has_option("store_api", "url") else None
-        self.store_api_token = self.get("store_api", "api_token") if self.has_option("store_api", "api_token") else None
+        self.store_api_keyAES32 = self.get("store_api", "keyAES32") if self.has_option("store_api", "keyAES32") else None
         self.store_api_timeout = self.getint("store_api", "timeout") if self.has_option("store_api", "timeout") else 15
         self.store_api_skip_ssl = self.getboolean("store_api", "skip_ssl_verify") if self.has_option("store_api", "skip_ssl_verify") else False
         self.client_uuid = self.get("store_api", "client_uuid") if self.has_option("store_api", "client_uuid") else None
