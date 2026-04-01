@@ -1,6 +1,6 @@
 
 --
---  (c) 2024-2025 Medulla, http://www.medulla-tech.io
+--  (c) 2024-2026 Medulla, http://www.medulla-tech.io
 --
 --
 -- This file is part of MMC, http://www.medulla-tech.io
@@ -22,14 +22,35 @@ USE mastering;
 
 START TRANSACTION;
 
-CREATE TABLE `servers` (
+drop table if exists `actions`;
+CREATE TABLE if not exists `actions` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `server_id` varchar(50) DEFAULT '' COMMENT 'if only server_id is specified means the action is an action by default',
+  `entity_id` int(11) DEFAULT -1,
+  `gid` varchar(30) DEFAULT '' COMMENT 'The group gid. If empty, the machine is not member of a group',
+  `uuid` varchar(50) DEFAULT '' COMMENT 'The Machine uuid',
+  `session_id` varchar(30) DEFAULT '' COMMENT 'Use this sessionid to find xmpp related logs and actions',
+  `name` varchar(50) NOT NULL,
+  `config` text DEFAULT '',
+  `content` text DEFAULT '' COMMENT 'Store the action to do as json',
+  `status` varchar(50) DEFAULT 'TODO',
+  `date_creation` datetime DEFAULT current_timestamp(),
+  `date_start` datetime DEFAULT current_timestamp(),
+  `date_end` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+);
+
+
+drop table if exists servers;
+CREATE TABLE if not exists `servers` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `entity_id` int(11) NOT NULL,
   `jid` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
 );
 
-CREATE TABLE `masters` (
+drop table if exists `masters`;
+CREATE TABLE if not exists `masters` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL DEFAULT '',
   `description` varchar(255) DEFAULT NULL,
@@ -43,9 +64,42 @@ CREATE TABLE `masters` (
   PRIMARY KEY (`id`)
 );
 
-CREATE TABLE `mastersEntities` (
+drop table if exists `mastersEntities`;
+CREATE TABLE if not exists `mastersEntities` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `master_id` int(11) NOT NULL,
-  `entity_id` int(11) NOT NULL
+  `entity_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+);
+
+
+DROP TABLE IF EXISTS `results`;
+CREATE TABLE if not exists`results` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `action_id` int(11) NOT NULL,
+  `session_id` varchar(30) DEFAULT '' COMMENT 'Use this sessionid to find xmpp related logs and actions',
+  `uuid` varchar(50) DEFAULT '',
+  `content` varchar(255) DEFAULT '',
+  `creation_date` datetime DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`)
+);
+
+DROP TABLE IF EXISTS `scripts`;
+CREATE TABLE if not exists`scripts` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL,
+  `content` text DEFAULT '',
+  `creation_date` datetime DEFAULT current_timestamp(),
+  `modification_date` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+);
+
+DROP TABLE IF EXISTS `scriptsEntities`;
+CREATE TABLE if not exists `scriptsEntities` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_script` int(11) NOT NULL,
+  `id_entity` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`)
 );
 
 
