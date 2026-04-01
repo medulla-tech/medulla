@@ -22,11 +22,11 @@ import logging
 import traceback
 import MySQLdb
 import base64
+import inspect
 import getpass
 import json
 from optparse import OptionParser
 import shutil
-import textwrap
 
 # from  MySQLdb import IntegrityError
 # Global Variables
@@ -878,7 +878,7 @@ class synch_packages:
         filename = f"uninstall_kb_{kb_clean}.ps1"
         filepath = os.path.join(output_dir, filename)
 
-        ps_script = textwrap.dedent(f'''\
+        ps_script = inspect.cleandoc(f'''
 param(
     [string]$KB = "{kb_clean}"
 )
