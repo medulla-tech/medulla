@@ -30,7 +30,7 @@ from pulse2.database.msc import MscDatabase
 
 from mmc.plugins.glpi.database import Glpi
 
-from kb_package import KBUninstallPackage
+from .kb_package import KBUninstallPackage
 
 import logging
 import traceback
