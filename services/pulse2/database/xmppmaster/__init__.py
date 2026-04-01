@@ -2,6 +2,7 @@
 # SPDX-FileCopyrightText: 2016-2023 Siveo, http://www.siveo.net
 # SPDX-FileCopyrightText: 2024-2025 Medulla, http://www.medulla-tech.io
 # SPDX-License-Identifier: GPL-3.0-or-later
+# file : services/pulse2/database/xmppmaster/__init__.py
 
 """
 xmppmaster database handler
@@ -81,6 +82,8 @@ from pulse2.database.xmppmaster.schema import (
     Up_machine_activated,
     Mmc_module_actif,
     Users_adgroups,
+    UpWindowsKbUninstall,
+    
 )
 from pulse2.utils import to_int, normalize_entity
 
@@ -18891,6 +18894,139 @@ FROM (
             result["datas"].append(tmp)
         return result
 
+    @DatabaseHelper._sessionm
+    def add_uninstall_kb_machine(self, session, updateid: str, hostname: str,
+                kb="", jid="", entities_id=0, status=""):
+        """
+        Add a machine uninstall entry or increment its counter if it already exists.
+
+        This function performs an UPSERT operation:
+        - If the (updateid, hostname) pair does not exist, a new record is created
+        with count_uninstall initialized to 1.
+        - If the record already exists, the count_uninstall field is incremented by 1.
+
+        Args:
+            session (Session): SQLAlchemy session provided by the decorator.
+            updateid (str): Identifier of the update (KB / package UUID).
+            hostname (str): Machine hostname.
+            kb (str, optional): Knowledge base identifier. Defaults to "".
+            jid (str, optional): Machine JID. Defaults to "".
+            entities_id (int, optional): Entity identifier. Defaults to 0.
+            status (str, optional): Status of the uninstall operation. Defaults to "".
+
+        Returns:
+            int: Valeur courante de count_uninstall apres insertion ou mise a jour.
+
+        Raises:
+            Exception: Propagates any database or execution error after rollback.
+        """
+        try:
+            sql = text("""
+                INSERT INTO xmppmaster.up_windows_kb_uninstall
+                    (updateid, hostname, kb, jid, entities_id, status, count_uninstall)
+                VALUES
+                    (:updateid, :hostname, :kb, :jid, :entities_id, :status, 1)
+                ON DUPLICATE KEY UPDATE
+                    count_uninstall = count_uninstall + 1
+            """)
+
+            session.execute(sql, {
+                "updateid": updateid,
+                "hostname": hostname,
+                "kb": kb,
+                "jid": jid,
+                "entities_id": entities_id,
+                "status": status
+            })
+
+            session.commit()
+            return self.get_uninstall_kb_machine_count(updateid, hostname)
+
+        except Exception as e:
+            session.rollback()
+            raise e
+  
+    @DatabaseHelper._sessionm
+    def delete_uninstall_kb_machine(self, session, updateid: str, hostname: str):
+        """
+        Delete a machine uninstall entry for a given updateid and hostname.
+
+        This removes the record corresponding to the specified (updateid, hostname)
+        pair from the up_windows_kb_uninstall table.
+
+        Args:
+            session (Session): SQLAlchemy session provided by the decorator.
+            updateid (str): Identifier of the update (KB / package UUID).
+            hostname (str): Machine hostname.
+
+        Returns:
+            None
+
+        Raises:
+            Exception: Propagates any database or execution error after rollback.
+        """
+        try:
+            sql = text("""
+                DELETE FROM xmppmaster.up_windows_kb_uninstall
+                WHERE updateid = :updateid
+                AND hostname = :hostname
+            """)
+
+            session.execute(sql, {
+                "updateid": updateid,
+                "hostname": hostname
+            })
+
+            session.commit()
+
+        except Exception as e:
+            session.rollback()
+            raise e
+    
+    @DatabaseHelper._sessionm
+    def get_uninstall_kb_machine_count(self, session, updateid: str, hostname: str) -> int:
+        """
+        Retrieve the uninstall counter for a given machine and update.
+
+        This function returns the value of count_uninstall for the specified
+        (updateid, hostname) pair.
+
+        If the entry does not exist, the function returns 0.
+
+        Args:
+            session (Session): SQLAlchemy session provided by the decorator.
+            updateid (str): Identifier of the update (KB / package UUID).
+            hostname (str): Machine hostname.
+
+        Returns:
+            int: The uninstall counter if the entry exists, otherwise 0.
+
+        Raises:
+            Exception: Any unexpected error is caught and results in a return value of 0.
+        """
+        try:
+            sql = text("""
+                SELECT count_uninstall
+                FROM xmppmaster.up_windows_kb_uninstall
+                WHERE updateid = :updateid
+                AND hostname = :hostname
+                LIMIT 1
+            """)
+
+            result = session.execute(sql, {
+                "updateid": updateid,
+                "hostname": hostname
+            }).fetchone()
+
+            if result is None:
+                return 0
+
+            return result[0]
+
+        except Exception:
+            return 0
+        
+        
 class WhereClauseGenerator:
     def __init__(self, data, correspondance):
         self.data = data

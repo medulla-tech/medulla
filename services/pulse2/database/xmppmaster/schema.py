@@ -11,6 +11,7 @@ from sqlalchemy import (
     DateTime,
     Text,
     Enum,
+    UniqueConstraint,
 )  # LargeBinary
 from sqlalchemy.dialects.mysql import TINYINT
 from sqlalchemy.ext.declarative import declarative_base
@@ -985,3 +986,34 @@ class Up_packages(Base):
     updateid_package = Column(String(38))
     payloadfiles = Column(String(1024),  default="")
 """
+
+
+
+# -- Cette table permet quand on deploy 1 uninstall de kb 
+# -- pour 1 machine on peut etre dans 1 cas 
+# -- ou la mise a jour ne peut pas etre deinstalle.
+# -- REASON_DETAIL:
+# --   SSU : mise à jour système critique (Servicing Stack), non désinstallable
+# --   CUMULATIVE : mise à jour cumulative, incluse dans une version plus récente
+# --   GPO : désinstallation bloquée par stratégie de groupe
+# --   WSUS : désinstallation bloquée par gestion centralisée des mises à jour
+# --   CBS_ERROR : échec technique lors de la désinstallation (erreur système)
+# --   ISO : mise à jour intégrée via image ISO / upgrade système, non désinstallable individuellement
+
+class UpWindowsKbUninstall(Base):
+    __tablename__ = "up_windows_kb_uninstall"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+
+    updateid = Column(String(38), nullable=False)
+    hostname = Column(String(45), nullable=False)
+
+    kb = Column(String(45), default="")
+    jid = Column(String(255))
+    entities_id = Column(Integer, default=0)
+    count_uninstall = Column(Integer, default=0)
+    status = Column(String(255))
+
+    __table_args__ = (
+        UniqueConstraint("updateid", "hostname", name="uniq_update_host"),
+    )

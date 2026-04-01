@@ -43,6 +43,16 @@ $page->setFile("modules/store/store/deploy.php");
 $page->setOptions(array("visible" => False, "noHeader" => False));
 $submod->addPage($page);
 
+$tab = new Page("tabmachines", _T('Machines', 'store'));
+$tab->setFile("modules/store/store/tabMachinesDeploy.php");
+$tab->setOptions(array("visible" => False, "noHeader" => True));
+$submod->addPage($tab);
+
+$tab = new Page("tabgroups", _T('Groups', 'store'));
+$tab->setFile("modules/store/store/tabGroupsDeploy.php");
+$tab->setOptions(array("visible" => False, "noHeader" => True));
+$submod->addPage($tab);
+
 $page = new Page("ajaxMachinesListForDeploy", _T('Machines List', 'store'));
 $page->setFile("modules/store/store/ajaxMachinesListForDeploy.php");
 $page->setOptions(array("visible" => False, "noHeader" => True, "AJAX" => True));

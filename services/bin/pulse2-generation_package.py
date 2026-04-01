@@ -2,6 +2,7 @@
 # -*- coding: utf-8; -*-
 # SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-3.0-or-later
+# file : services/bin/pulse2-generation_package.py
 
 import shutil
 import sys, os
@@ -132,6 +133,8 @@ def add_coloring_to_emit_ansi(fn):
 
 
 class managepackage:
+    """Manage package paths and descriptor access used during package migration."""
+
     # variable de classe
     agenttype = "relayserver"
 
@@ -239,17 +242,21 @@ class managepackage:
         """
 
         if os.path.isfile(filename):
-            with open(filename, "r") as info:
-                jsonFile = info.read()
             try:
+                with open(filename, "r") as info:
+                    jsonFile = info.read()
                 return json.loads(jsonFile)
             except Exception as e:
                 logger.error(f"We failed to decode the file {filename}")
                 logger.error(f"we encountered the error: {str(e)}")
+        else:
+            logger.error(f"The file {filename} does not exist")
         return None
 
     @staticmethod
     def getdescriptorpackagename(packagename):
+        """Return the deployment descriptor matching a package name."""
+
         for package in managepackage.listpackages():
             try:
                 outputJSONFile = managepackage.loadjsonfile(
@@ -401,6 +408,8 @@ class managepackage:
 
     @staticmethod
     def getnamepackagefromuuidpackage(uuidpackage):
+        """Return the package display name associated with a package UUID."""
+
         pathpackage = os.path.join(
             managepackage.packagedir(), uuidpackage, "xmppdeploy.json"
         )
@@ -411,17 +420,29 @@ class managepackage:
 
     @staticmethod
     def getdescriptorpackageuuid(packageuuid):
+        """Return the deployment descriptor associated with a package UUID."""
+
         jsonfile = os.path.join(
             managepackage.packagedir(), packageuuid, "xmppdeploy.json"
         )
         if os.path.isfile(jsonfile):
             try:
-                return managepackage.loadjsonfile(jsonfile)
-            except Exception:
+                outputJSONFile = managepackage.loadjsonfile(jsonfile)
+                return outputJSONFile
+            except Exception as e:
+                logger.error(
+                    "Failed to load package descriptor %s: %s" % (jsonfile, str(e))
+                )
                 return None
+        else:
+            logger.error("The %s file is missing" % jsonfile)
+            return None
+        
 
     @staticmethod
     def getpathpackage(uuidpackage):
+        """Return the filesystem path of a package from its UUID."""
+
         return os.path.join(managepackage.packagedir(), uuidpackage)
 
 

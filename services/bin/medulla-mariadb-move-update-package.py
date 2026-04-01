@@ -3,7 +3,14 @@
 # SPDX-FileCopyrightText: 2022-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-# This script is used to generate update packages in /var/lib/pulse2/packages
+"""Gere la creation, l'installation et la suppression des packages de mises a jour Windows.
+
+Ce script interroge la base xmppmaster pour retrouver les metadonnees d'une
+mise a jour Windows, telecharge le payload associe, genere les fichiers de
+package Medulla/Pulse puis enregistre ou retire le package dans la base pkgs.
+Il sert aussi a preparer les scripts de desinstallation des KB lorsque le
+package doit etre utilise pour un deploiement de suppression.
+"""
 
 from datetime import datetime
 import re
@@ -15,6 +22,7 @@ import logging
 import traceback
 import MySQLdb
 import base64
+import inspect
 import getpass
 import json
 from optparse import OptionParser
@@ -27,7 +35,11 @@ logger = logging.getLogger()
 
 
 class synch_packages:
+    """Orchestre le cycle de vie local et base de donnees d'un package update Windows."""
+
     def __init__(self, db, opts):
+        """Initialise les chemins, les parametres et l'action demandee sur le package."""
+
         self.db = db
         self.param = opts
         # logger.info("File parmetre %s" % self.param)
@@ -72,12 +84,16 @@ class synch_packages:
             self.install_full_package()
 
     def install_full_package(self):
+        """Cree le package si necessaire, le publie dans le partage puis l'enregistre en base."""
+
         if self.create_package_file():
             self.mv_base_to_partage()
             self.install_package()
         self.verify_packages_install()
 
     def uninstall_full_package(self):
+        """Supprime completement le package du disque et de la base pkgs."""
+
         # supprime de la base fichier
         self.del_package()
         # suprime le lien symbolique
@@ -87,6 +103,8 @@ class synch_packages:
         self.verify_packages_uninstall()
 
     def create_directory_in_partage(self):
+        """Cree le repertoire de partage du package s'il n'existe pas deja."""
+
         if not os.path.exists(self.path_in_partage):
             try:
                 os.makedirs(self.path_in_partage)
@@ -94,6 +112,8 @@ class synch_packages:
                 logger.error(f"{str(e)} : create_directory '{self.path_in_partage}'")
 
     def create_directory_in_base(self):
+        """Cree le repertoire local temporaire du package s'il n'existe pas deja."""
+
         if not os.path.exists(self.path_in_base):
             try:
                 os.makedirs(self.path_in_base)
@@ -101,6 +121,8 @@ class synch_packages:
                 logger.error(f"{str(e)} : create_directory '{self.path_in_base}'")
 
     def mv_base_to_partage(self):
+        """Deplace les fichiers du package depuis la base locale vers le partage publie."""
+
         # mv base vers partages
         if os.path.isdir(self.path_in_base):
             logger.debug(
@@ -119,6 +141,8 @@ class synch_packages:
             shutil.rmtree(self.path_in_base)
 
     def mv_partage_to_base(self):
+        """Retire un package du partage en le deplacant dans la zone locale de base."""
+
         # mv de partages vers base
         # mv_partage_to_base
         if os.path.isdir(self.path_in_partage):
@@ -546,6 +570,12 @@ class synch_packages:
                         self.update_file_windows["creationdate"],
                     )
                 )
+
+            # Génération du script de désinstallation
+            self.generate_uninstall_kb_ps1(
+                kb=self.update_file_windows["kb"],
+                output_dir=os.path.dirname(file_xmppdeploy_json)
+            )
         else:
             # terminer avec erreur
             logger.error(f'create package {self.param["uidpackage"]}')
@@ -572,6 +602,8 @@ class synch_packages:
                 logger.error(f"we encountered the error: {str(e)}")
                 errorstr = f"{traceback.format_exc()}"
                 logger.error("\n%s" % (errorstr))
+        else:
+            logger.error(f"The file {filename} does not exist")
         return None
 
     def generate_xmppdeploy_json(
@@ -637,127 +669,347 @@ class synch_packages:
                 namefile
             )
         cmd64 = base64.b64encode(bytes(cmd, "utf-8"))
+
+        cmduninstall = f"""powershell.exe -ExecutionPolicy Bypass -File "@@@PACKAGE_DIRECTORY_ABS_MACHINE@@@"\\uninstall_kb_{kb}.ps1"""
+        cmduninstall64 = base64.b64encode(bytes(cmduninstall, "utf-8")).decode("utf-8")
+
         template = """{
-        "info": {
-            "meta_update_kb" : "%s",
-            "meta_update_date_edition_windows_update" : "%s",
-            "urlpath" : "%s",
-            "creator": "automate_medulla",
-            "edition": "automate_medulla",
-            "creation_date": "%s",
-            "licenses": "1.0",
-            "gotoreturncode": "3010",
-            "gotolabel": "REBOOTREQUIRED",
-            "packageUuid": "%s",
-            "spooling": "ordinary",
-            "limit_rate_ko": "",
-            "version": "0.1",
-            "editor": "automate_medulla",
-            "metagenerator": "expert",
-            "targetrestart": "MA",
-            "inventory": "noforced",
-            "localisation_server": "%s",
-            "typescript": "Batch",
-            "description": "%s",
-            "previous_localisation_server": "%s",
-            "Dependency": [],
-            "name": "%s",
-            "url": "",
-            "edition_date": "%s",
-            "transferfile": true,
-            "methodetransfert": "pushrsync",
-            "software": "templated",
-            "type_section" : "update"
-        },
-        "win": {
-            "sequence": [
-                {
-                    "action": "action_section_update",
-                    "step": 0,
-                    "actionlabel": "upd_70a70cc9"
-                },
-                {
+            "info": {
+                    "meta_update_kb" : "%s",
+                    "meta_update_date_edition_windows_update" : "%s",
+                    "urlpath" : "%s",
+                    "creator": "automate_medulla",
+                    "edition": "automate_medulla",
+                    "creation_date": "%s",
+                    "licenses": "1.0",
+                    "packageUuid": "%s",
+                    "spooling": "ordinary",
+                    "limit_rate_ko": "",
+                    "version": "0.1",
+                    "editor": "automate_medulla",
+                    "metagenerator": "expert",
+                    "targetrestart": "MA",
+                    "inventory": "noforced",
+                    "localisation_server": "%s",
                     "typescript": "Batch",
-                    "script": "%s",
-                    "30@lastlines": "30@lastlines",
-                    "actionlabel": "02d57e96",
-                    "codereturn": "",
-                    "step": 1,
-                    "error": 6,
-                    "action": "actionprocessscriptfile",
-                    "timeout": "3600",
-                    "gotoreturncode@3010": "REBOOTREQUIRED"
-                },
-                {
-                    "action": "actionwaitandgoto",
-                    "step": 2,
-                    "codereturn": "",
-                    "actionlabel": "wait_cc66c870",
-                    "waiting": "1",
-                    "goto": "END_SUCCESS"
-                },
-                {
-                    "step": 3,
-                    "action": "action_comment",
-                    "actionlabel": "REBOOTREQUIRED",
-                    "comment": "The update has been installed but a reboot is required to apply it."
-                },
-                {
-                    "action": "action_notification",
-                    "step": 4,
-                    "codereturn": "",
-                    "actionlabel": "notif_ee9943f2",
-                    "titlemessage": "V2luZG93cyBVcGRhdGUgLSBSZWJvb3Q=",
-                    "sizeheader": "15",
-                    "message": "QW4gdXBkYXRlIGhhcyBiZWVuIGluc3RhbGxlZCBvbiB5b3VyIGNvbXB1dGVyIGJ5IE1lZHVsbGEuIFBsZWFzZSByZWJvb3Qgd2hlbiBwb3NzaWJsZSB0byBhcHBseSB0aGUgdXBkYXRlLg0KDQpVbmUgbWlzZSDDoCBqb3VyIGEgw6l0w6kgaW5zdGFsbMOpZSBzdXIgdm90cmUgb3JkaW5hdGV1ciBwYXIgTWVkdWxsYS4gUGVuc2V6IMOgIHJlZMOpbWFycmVyIHF1YW5kIGMnZXN0IHBvc3NpYmxlIGFmaW4gcXVlIGxhIG1pc2Ugw6Agam91ciBzb2l0IGFwcGxpcXXDqWUu",
-                    "sizemessage": "10",
-                    "textbuttonyes": "OK",
-                    "timeout": "800"
-                },
-                {
-                    "action": "actionsuccescompletedend",
-                    "step": 5,
-                    "actionlabel": "END_SUCCESS",
-                    "clear": "False",
-                    "inventory": "noforced"
-                },
-                {
-                    "action": "actionerrorcompletedend",
-                    "step": 6,
-                    "actionlabel": "END_ERROR"
-                }
-            ]
-        },
-        "metaparameter": {
-            "win": {
-                "label": {
-                    "upd_70a70cc9": 0,
-                    "02d57e96": 1,
-                    "wait_cc66c870": 2,
-                    "REBOOTREQUIRED": 3,
-                    "notif_ee9943f2": 4,
-                    "END_SUCCESS": 5,
-                    "END_ERROR": 6
-                }
+                    "description": "%s",
+                    "previous_localisation_server": "%s",
+                    "Dependency": [],
+                    "name": "%s",
+                    "url": "",
+                    "edition_date": "%s",
+                    "transferfile": true,
+                    "methodetransfert": "pushrsync",
+                    "software": "templated",
+                    "type_section" : "update",
+                    "launcher": "",
+                    "gotoreturncode": "!=0",
+                    "gotono": ""
             },
-            "os": [
-                "win"
-            ]
-        }
-    }""" % (
-            kb,
-            date_edition_windows_update,
-            urlpath,
-            dt_string,
-            id,
-            self.param["partage"],
-            description,
-            self.param["partage"],
-            name,
-            dt_string,
-            cmd64.decode("utf-8"),
-        )
+            "win": {
+                "sequence": [
+                    {
+                        "action": "action_section_update",
+                        "step": 0,
+                        "actionlabel": "label_section_update"
+                    },
+                    {
+                        "action": "actionprocessscriptfile",
+                        "step": 1,
+                        "codereturn": "",
+                        "actionlabel": "scriptfile_48160aed",
+                        "typescript": "Batch",
+                        "script": "%s",
+                        "timeout": "360",
+                        "30@lastlines": "30@lastlines",
+                        "gotoreturncode@=3010": "REBOOTREQUIRED"
+                    },
+                    {
+                        "action": "actionwaitandgoto",
+                        "step": 2,
+                        "codereturn": "",
+                        "actionlabel": "wait_ef963b4d",
+                        "waiting": "1",
+                        "goto": "END_SUCCESS"
+                    },
+                    {
+                        "step": 3,
+                        "action": "action_comment",
+                        "actionlabel": "REBOOTREQUIRED",
+                        "comment": "The update has been installed but a reboot is required to apply it."
+                    },
+                    {
+                        "action": "action_notification",
+                        "step": 4,
+                        "codereturn": "",
+                        "actionlabel": "notif_0f19ca4e",
+                        "titlemessage": "V2luZG93cyBVcGRhdGUgLSBSZWJvb3Q=",
+                        "sizeheader": "15",
+                        "message": "QW4gdXBkYXRlIGhhcyBiZWVuIGluc3RhbGxlZCBvbiB5b3VyIGNvbXB1dGVyIGJ5IE1lZHVsbGEuIFBsZWFzZSByZWJvb3Qgd2hlbiBwb3NzaWJsZSB0byBhcHBseSB0aGUgdXBkYXRlLg0KDQpVbmUgbWlzZSDDoCBqb3VyIGEgw6l0w6kgaW5zdGFsbMOpZSBzdXIgdm90cmUgb3JkaW5hdGV1ciBwYXIgTWVkdWxsYS4gUGVuc2V6IMOgIHJlZMOpbWFycmVyIHF1YW5kIGMnZXN0IHBvc3NpYmxlIGFmaW4gcXVlIGxhIG1pc2Ugw6Agam91ciBzb2l0IGFwcGxpcXXDqWUu",
+                        "sizemessage": "10",
+                        "textbuttonyes": "OK",
+                        "timeout": "800"
+                    },
+                    {
+                        "action": "action_section_uninstall",
+                        "step": 5,
+                        "actionlabel": "label_section_uninstall"
+                    },
+                    {
+                        "action": "actionwaitandgoto",
+                        "step": 6,
+                        "codereturn": "",
+                        "actionlabel": "wait_60813b17",
+                        "waiting": "1",
+                        "goto": "END_SUCCESS"
+                    },
+                    {
+                        "action": "actionprocessscriptfile",
+                        "step": 7,
+                        "codereturn": "",
+                        "actionlabel": "scriptfile_4f3139ba",
+                        "typescript": "Batch",
+                        "script": "%s",
+                        "30@lastlines": "30@lastlines",
+                        "gotoreturncode@!=0": "UNINSTALLREBOOTREQUIRED"
+                    },
+                    {
+                        "action": "actionwaitandgoto",
+                        "step": 8,
+                        "codereturn": "",
+                        "actionlabel": "wait_ad624d44",
+                        "waiting": "1",
+                        "goto": "END_SUCCESS"
+                    },
+                    {
+                        "step": 9,
+                        "action": "action_comment",
+                        "actionlabel": "UNINSTALLREBOOTREQUIRED",
+                        "comment": "The update has been ininstalled and a reboot is required to apply it."
+                    },
+                    {
+                        "action": "action_notification",
+                        "step": 10,
+                        "codereturn": "",
+                        "actionlabel": "notif_986b47ff",
+                        "titlemessage": "V2luZG93cyBVcGRhdGUgLSBSZWJvb3Q=",
+                        "sizeheader": "15",
+                        "message": "QW4gdXBkYXRlIGhhcyBiZWVuIHVuaW5zdGFsbGVkIG9uIHlvdXIgY29tcHV0ZXIgYnkgTWVkdWxsYS4gUGxlYXNlIHJlYm9vdCB3aGVuIHBvc3NpYmxlIHRvIGFwcGx5IHRoZSB1cGRhdGUu",
+                        "sizemessage": "10",
+                        "textbuttonyes": "OK",
+                        "timeout": "800"
+                    },
+                    {
+                        "step": 11,
+                        "action": "actionsuccescompletedend",
+                        "actionlabel": "END_SUCCESS",
+                        "clear": "True",
+                        "inventory": "noforced"
+                    },
+                    {
+                        "action": "actionerrorcompletedend",
+                        "step": 12,
+                        "actionlabel": "END_ERROR"
+                    }
+                ]
+            },
+            "metaparameter": {
+                "win": {
+                    "label": {
+                        "label_section_update": 0,
+                        "scriptfile_48160aed": 1,
+                        "wait_ef963b4d": 2,
+                        "REBOOTREQUIRED": 3,
+                        "notif_0f19ca4e": 4,
+                        "label_section_uninstall": 5,
+                        "wait_60813b17": 6,
+                        "scriptfile_4f3139ba": 7,
+                        "wait_ad624d44": 8,
+                        "UNINSTALLREBOOTREQUIRED": 9,
+                        "notif_986b47ff": 10,
+                        "END_SUCCESS": 11,
+                        "END_ERROR": 12
+                    }
+                },
+                "os": [
+                    "win"
+                ]
+            }
+        }""" % (
+                kb,
+                date_edition_windows_update,
+                urlpath,
+                dt_string,
+                id,
+                self.param["partage"],
+                description,
+                self.param["partage"],
+                name,
+                dt_string,
+                cmd64.decode("utf-8"),
+                cmduninstall64,
+            )
         return template
+
+    def generate_uninstall_kb_ps1(self, kb: str, output_dir: str) -> str:
+        """
+        Génère un script PowerShell `uninstall_kb.ps1` pour désinstaller une KB Windows.
+
+        Cette fonction crée un script PowerShell autonome permettant de :
+            - vérifier si une KB est installée
+            - tenter désinstallation via WUSA puis DISM
+            - analyser le type de KB (installée, intégrée, etc.)
+            - retourner un code :
+                0 = succès désinstallation
+                sinon = code erreur ou 1
+
+        Paramètres :
+            kb (str) : numéro KB (ex: "5031539" ou "KB5031539")
+            output_dir (str) : répertoire où sera généré le fichier
+
+        Retour :
+            str : chemin complet du fichier généré
+        """
+
+        import os
+
+        kb_clean = kb.upper().replace("KB", "")
+
+        filename = f"uninstall_kb_{kb_clean}.ps1"
+        filepath = os.path.join(output_dir, filename)
+
+        ps_script = inspect.cleandoc(f'''
+param(
+    [string]$KB = "{kb_clean}"
+)
+chcp 65001 > $null
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+$ErrorActionPreference = "SilentlyContinue"
+
+function Write-Log {{
+    param($msg)
+    Write-Output "[INFO] $msg"
+}}
+
+function Write-Err {{
+    param($msg)
+    Write-Output "[ERROR] $msg"
+}}
+
+$kbFull = "KB$KB"
+
+Write-Log "===== Analyse $kbFull ====="
+
+$hotfix = Get-CimInstance Win32_QuickFixEngineering | Where-Object {{
+    $_.HotFixID -eq $kbFull
+}}
+
+if ($hotfix) {{
+    Write-Log "$kbFull detectee via WMI (Get-HotFix)"
+}} else {{
+    Write-Err "$kbFull non trouvee sur le systeme"
+    exit 1
+}}
+
+Write-Log "Recherche dans DISM..."
+$dismRaw = dism /online /get-packages
+
+$dismMatch = $dismRaw | Select-String $KB -Context 2,2
+
+if ($dismMatch) {{
+    Write-Log "KB trouvee dans DISM → probablement desinstallable"
+    $inDism = $true
+
+    $packageLine = ($dismMatch | Where-Object {{$_ -match "Package Identity"}} | Select-Object -First 1)
+
+    if ($packageLine) {{
+        $packageName = ($packageLine -split ":")[1].Trim()
+        Write-Log "Package detecte : $packageName"
+    }}
+
+}} else {{
+    Write-Log "KB absente de DISM"
+    $inDism = $false
+}}
+
+if ($inDism) {{
+    $kbType = "INSTALLEE (CBS)"
+}} else {{
+    $kbType = "INTEGREE ou SUPERSEDED ou PERMANENTE"
+}}
+
+Write-Log "Type detecte : $kbType"
+
+Write-Log "Tentative desinstallation via WUSA..."
+
+$wusa = Start-Process "wusa.exe" `
+    -ArgumentList "/uninstall /kb:$KB /quiet /norestart" `
+    -Wait -PassThru
+
+if ($wusa.ExitCode -eq 0) {{
+    Write-Log "Succes WUSA"
+    exit 0
+}} else {{
+    Write-Err "WUSA echec (code $($wusa.ExitCode))"
+}}
+
+if ($inDism -and $packageName) {{
+
+    Write-Log "Tentative desinstallation via DISM..."
+
+    $dismProc = Start-Process "dism.exe" `
+        -ArgumentList "/Online /Remove-Package /PackageName:$packageName /Quiet /NoRestart" `
+        -Wait -PassThru
+
+    if ($dismProc.ExitCode -eq 0) {{
+        Write-Log "Succes DISM"
+        exit 0
+    }} else {{
+        Write-Err "DISM echec (code $($dismProc.ExitCode))"
+        exit $dismProc.ExitCode
+    }}
+}}
+
+Write-Log "===== Diagnostic final ====="
+
+if (-not $inDism) {{
+
+    Write-Err "KB non presente comme package DISM"
+
+    Write-Output @"
+RAISON PROBABLE :
+- KB integree dans l'image Windows (ISO)
+- OU KB remplacee (superseded)
+- OU composant permanent
+
+$kbFull Desinstallation impossible individuellement
+"@
+
+    exit 1
+
+}} else {{
+
+    Write-Err "KB presente mais refus de desinstallation"
+
+    Write-Output @"
+RAISON PROBABLE :
+- Package marque Permanent
+- Dependances systeme
+- SSU ou LCU critique
+
+$kbFull  Desinstallation bloquee par Windows
+"@
+
+    exit 1
+}}
+
+Write-Log "===== FIN ====="
+''')
+
+        with open(filepath, "w", encoding="utf-8-sig") as f:
+            f.write(ps_script)
+
+        return filepath
 
     def id_partage(self):
         """
