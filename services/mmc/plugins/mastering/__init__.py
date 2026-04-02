@@ -194,7 +194,7 @@ def create_action(action, gid, uuid, server, begin_date, end_date, config, workf
     return result
 
 
-def get_actions_for_entity(server, entity=-1, _type="all", start=0, maxperpage=-1, filter=""):
+def get_actions_for_entity(server, entity=-1, _type="all", uuid="", gid="", start=0, limit=-1, _filter=""):
 
     # Sanitize parameters
     server = server.replace("\/", "/")
@@ -204,7 +204,7 @@ def get_actions_for_entity(server, entity=-1, _type="all", start=0, maxperpage=-
             entity = entity.replace("UUID", "")
         entity = int(entity)
 
-    actions_list = MasteringDatabase().get_actions_for_entity(server, entity, _type, start, maxperpage, filter)
+    actions_list = MasteringDatabase().get_actions_for_entity(server, entity, _type, uuid, gid, start, limit, _filter)
 
     # find some datas on groups and machines
     machines = actions_list["machines"]
@@ -231,3 +231,8 @@ def get_actions_for_entity(server, entity=-1, _type="all", start=0, maxperpage=-
             action["element_name"] = groups_infos[_gid]["name"]
 
     return actions_list
+
+
+def get_action_results(_id, uuid, start=0, end=-1, _filter=""):
+    result = MasteringDatabase().get_action_results(_id, uuid, start, end, _filter)
+    return result

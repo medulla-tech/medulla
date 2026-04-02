@@ -53,6 +53,7 @@ echo '</div>';
 
 $datas = xmlrpc_get_machines_list_for_mastering($start, $maxperpage, $entity, $filter);
 
+$actionListAction = new ActionItem(_T("Show Actions", "mastering"), "actionList", "display", "actionList", "mastering", "mastering");
 $masteringAction = new ActionPopupItem(_T("Create Master", "mastering"), "createMaster", "start", "createMaster", "mastering", "mastering");
 $masteringAction->setWidth(0);
 $deployAction = new ActionPopupItem(_T("Deploy Master", "mastering"), "deployMaster", "install", "deployMaster", "mastering", "mastering");
@@ -60,6 +61,7 @@ $deployAction->setWidth(0);
 $registerAction = new ActionPopupItem(_T("Register Machine", "mastering"), "register", "package", "register", "mastering", "mastering");
 $registerAction->setWidth(0);
 
+$actionListActions = [];
 $masteringActions = [];
 $deployActions = [];
 // $restoreAction = 
@@ -76,8 +78,10 @@ foreach($machines["id"] as $ids){
         "uuid" => $machines["uuid"][$i],
         "name" => $machines["name"][$i],
         "server" => $server,
+        "entity" => $entity,
     ];
 
+    $actionListActions[] = $actionListAction;
     $masteringActions[] = $masteringAction;
     $deployActions[] = $deployAction;
     $i++;
@@ -99,6 +103,8 @@ echo '</div>';
 $n = new OptimizedListInfos( $machines["name"], _T("Computer", "glpi"));
 $n->setCssClass("mastering");
 $n->disableFirstColumnActionLink();
+
+$n->addActionItemArray($actionListActions);
 $n->addActionItemArray($masteringActions);
 $n->addActionItemArray($deployActions);
 $n->setParamInfo($params);
