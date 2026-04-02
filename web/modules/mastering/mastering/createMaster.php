@@ -1,22 +1,19 @@
 <?php
-$entity = "";
 $mode = "";
-$server = "";
-$uuid = "";
-$gid = "";
-if(isset($_GET["server"])){
-    $mode = "new";
-    $server = htmlentities($_GET["server"]);
-}
 
-if(isset($_GET["uuid"])){
+$server = (isset($_GET["server"])) ? htmlentities($_GET["server"]) : "";
+$entity = (isset($_GET["entity"])) ? htmlentities($_GET["entity"]) : "";
+$gid = (isset($_GET["gid"])) ? htmlentities($_GET["gid"]) : "";
+$uuid = (isset($_GET["uuid"])) ? htmlentities($_GET["uuid"]) : "";
+
+if($uuid != ""){
     $mode = "machine";
-    $uuid = htmlentities($_GET["uuid"]);
 }
-
-if (isset($_GET["gid"])){
+elseif ($gid != ""){
     $mode = "group";
-    $gid = htmlentities($_GET["gid"]);
+}
+else{
+    $mode = "new";
 }
 
 $p = new PageGenerator(_T("Create Master Action", "mastering"));

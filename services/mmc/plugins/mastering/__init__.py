@@ -236,3 +236,8 @@ def get_actions_for_entity(server, entity=-1, _type="all", uuid="", gid="", star
 def get_action_results(_id, uuid, start=0, end=-1, _filter=""):
     result = MasteringDatabase().get_action_results(_id, uuid, start, end, _filter)
     return result
+
+
+def delete_master(server, entity, masterId):
+    result = MasteringDatabase().delete_master(server, entity, masterId)
+    return result

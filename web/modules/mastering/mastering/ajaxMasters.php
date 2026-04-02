@@ -21,8 +21,13 @@ echo '<div id="size-container">Space on '.$server.'</div>';
 
 
 $shareAction = new ActionPopupItem(_T("Share Master", "mastering"), "shareMaster", "groupshare", "shareMaster", "mastering", "mastering");
+$shareAction->setWidth(0);
+
 $editAction = new ActionPopupItem(_T("Edit Master", "mastering"), "editMaster", "edit", "editMaster", "mastering", "mastering");
+$editAction->setWidth(0);
+
 $deleteAction = new ActionPopupItem(_T("Delete Master", "mastering"), "deleteMaster", "delete", "deleteMaster", "mastering", "mastering");
+$deleteAction->setWidth(0);
 
 $shareActions = [];
 $editActions = [];
@@ -43,7 +48,8 @@ foreach($masters["id"] as $id){
         "name"=>$masters["name"][$i],
         "description"=>$masters["description"][$i],
         "os"=>$masters["os"][$i],
-
+        "entity"=>$entity,
+        "server"=>$server,
     ];
     if($masters["creation_date"][$i] != ""){
         $creationDates[] = date("Y-m-d h:i:s", $masters["creation_date"][$i]->timestamp);
@@ -73,10 +79,6 @@ $n->setNavBar(new AjaxNavBar($count, $filter));
 $n->end = $count;
 $n->start = 0;
 $n->display();
-
-echo '<pre>';
-print_r($editActions);
-echo '</pre>';
 ?>
 
 <script>

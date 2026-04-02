@@ -59,6 +59,16 @@ $page->setFile("modules/mastering/mastering/ajaxMasters.php");
 $page->setOptions(array("visible"=>False, "noHeader"=>True));
 $submod->addPage($page);
 
+$page = new Page("editMaster", _T("Edit Master", "mastering"));
+$page->setFile("modules/mastering/mastering/editMaster.php");
+$page->setOptions(array("visible"=>False, "noHeader"=>True));
+$submod->addPage($page);
+
+$page = new Page("deleteMaster", _T("Delete Master", "mastering"));
+$page->setFile("modules/mastering/mastering/deleteMaster.php");
+$page->setOptions(array("visible"=>False, "noHeader"=>True));
+$submod->addPage($page);
+
 $page = new Page("ajaxServerSize", _T("Server Size", "mastering"));
 $page->setFile("modules/mastering/mastering/ajaxServerSize.php");
 $page->setOptions(array("visible"=>False, "noHeader"=>True));

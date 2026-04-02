@@ -58,4 +58,8 @@ function xmlrpc_get_actions_for_entity($server, $entity=-1, $type="all", $uuid="
 function xmlrpc_get_action_results($id, $uuid, $start=0, $end=-1, $filter=""){
     return xmlCall("mastering.get_action_results", [$id, $uuid, $start, $end, $filter]);
 }
+
+function xmlrpc_delete_master($server, $entity, $masterId){
+    return xmlCall("mastering.delete_master", [$server, $entity, $masterId]);
+}
 ?>
