@@ -200,11 +200,24 @@ class MasteringDatabase(DatabaseHelper):
         config_dump = json.dumps(config)
         workflow_dump = json.dumps(workflow)
 
-        sql = """INSERT INTO actions (server_id, entity_id, gid, uuid, name, config, content, status, date_start, date_end) values(
-        (select id from servers where jid="%s"), "%s", "%s", "%s", '%s', '%s', "%s", "%s", "%s")"""%(server, entity_id, gid, uuid, action, config_dump, workflow_dump, "TODO", begin_date, end_date)
 
+        binds = {}
+        sql = """INSERT INTO actions (server_id, entity_id, gid, uuid, name, config, content, status, date_start, date_end) values(
+    (select id from servers where jid=:jid), :entity_id, :gid, :uuid, :name, :config, :content, :status, :date_start, :date_end)"""
+        binds["jid"] = server
+        binds["entity_id"] = entity_id
+        binds["gid"] = gid
+        binds["uuid"] = uuid
+        binds["name"] = action
+        binds["config"] = config_dump
+        binds["content"] = workflow_dump
+        binds["status"] = "TODO"
+        binds["date_start"] = begin_date
+        binds["date_end"] = end_date
+
+        # Disabled for now
         try:
-            session.execute(sql)
+            session.execute(sql, binds)
         except Exception as e:
             logger.error("Failed to execute : %s <=>%s"%(sql, e))
             session.rollback()
