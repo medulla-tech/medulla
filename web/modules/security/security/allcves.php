@@ -44,7 +44,6 @@ $minSeverity = $policies['display']['min_severity'] ?? 'None';
 $showSeverity = SeverityHelper::getVisibility($minSeverity);
 ?>
 
-<link rel="stylesheet" href="modules/security/graph/security.css" type="text/css" media="screen" />
 
 <!-- Filters row: entity + severity on left, search on right -->
 <div class="filters-row">

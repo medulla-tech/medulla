@@ -76,6 +76,15 @@
   --color-info: #3b82f6;
   --color-info-light: #dbeafe;
 
+  /* ========== SEVERITY COLORS ========== */
+  --severity-critical: #dc3545;
+  --severity-high: #fd7e14;
+  --severity-medium: #ffc107;
+  --severity-medium-text: #856404;
+  --severity-low: #28a745;
+  --severity-none: #6c757d;
+  --severity-na: #adb5bd;
+
   /* ========== ALERT COLORS ========== */
   --alert-success-bg: #dff0d8;
   --alert-success-border: #d6e9c6;
@@ -149,7 +158,7 @@ body {
   color: var(--color-error);
 }
 .form-error {
-  border-color: var(--color-error) !important;
+  border-color: var(--color-error);
 }
 a {
   color: var(--color-sidebar-text);
@@ -284,13 +293,13 @@ p {
 
 #navbar ul li a {
   display: inline-block;
-  padding: 10px 10px 10px 30px !important;
+  padding: 10px 10px 10px 30px;
   text-decoration: none;
   font-size: 13px;
   font-weight: 600;
   color: var(--color-text-white);
   line-height: 1.2;
-  background-color: rgba(255, 255, 255, 0.08) !important;
+  background-color: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 9px;
   white-space: nowrap;
@@ -305,33 +314,33 @@ p {
 }
 
 #navbar ul li a:hover {
-  background-color: rgba(255, 255, 255, 0.95) !important;
+  background-color: rgba(255, 255, 255, 0.95);
   border-color: rgba(255, 255, 255, 1);
-  color: var(--color-primary) !important;
-  box-shadow: none !important;
+  color: var(--color-primary);
+  box-shadow: none;
 }
 
 #navbar ul li.active a,
 #navbar ul li a.active {
-  background-color: rgba(255, 255, 255, 0.95) !important;
+  background-color: rgba(255, 255, 255, 0.95);
   border-color: rgba(255, 255, 255, 1);
-  color: var(--color-primary) !important;
+  color: var(--color-primary);
 }
 
 #navbar ul li.active a:hover,
 #navbar ul li a.active:hover {
-  background-color: var(--color-bg-white) !important;
-  color: #1a4a5f !important;
+  background-color: var(--color-bg-white);
+  color: var(--color-primary-dark);
 }
 
 /* Navbar icon color change on hover (white -> primary blue) */
 #navbar ul li a:hover::before {
-  background-color: var(--color-primary) !important;
+  background-color: var(--color-primary);
 }
 
 #navbar ul li.active a::before,
 #navbar ul li a.active::before {
-  background-color: var(--color-primary) !important;
+  background-color: var(--color-primary);
 }
 
 /* ---------------------------------------- */
@@ -444,7 +453,7 @@ p {
 #section {
   position: relative;
   padding: 0px 0 0 0px;
-  height: auto !important;
+  height: auto;
   padding-top: 10px;
 }
 
@@ -472,8 +481,8 @@ p {
 .section-content > ul.action li,
 #section > ul.action li {
   list-style: none;
-  float: none !important;
-  margin: 0 !important;
+  float: none;
+  margin: 0;
   padding: 0;
 }
 
@@ -792,9 +801,61 @@ li.up a { background-image: url("../../img/actions/up.svg"); }
 li.down a { background-image: url("../../img/actions/down.svg"); }
 li.ok a { background-image: url("../../img/other/yes.svg"); }
 li.info a, li.infog a { background-image: url("../../img/actions/info.svg"); }
-li.load a { background-image: url("../../img/common/loader_p.gif"); }
-li.wait a { background-image: url("../../img/common/todo.png"); }
-li.empty a { background: none; }
+li.vncclient a, li.vncclientg a { background-image: url("../../img/actions/vnc.svg"); }
+
+/* ---------------------------------------- */
+/* File browser cells                      */
+/* ---------------------------------------- */
+
+td.folder {
+  padding: 0 0 0 34px;
+  background-image: url("modules/backuppc/graph/img/folder.png");
+  background-position: 7px 7px;
+  background-repeat: no-repeat;
+}
+
+td.file {
+  padding: 0 0 0 34px;
+  background-image: url("modules/backuppc/graph/img/file.png");
+  background-position: 7px 7px;
+  background-repeat: no-repeat;
+}
+
+/* ---------------------------------------- */
+/* jQuery UI Multiselect widget             */
+/* ---------------------------------------- */
+
+.ui-multiselect { padding: 2px 0 2px 4px; text-align: left; }
+.ui-multiselect span.ui-icon { float: right; }
+.ui-multiselect-single .ui-multiselect-checkboxes input { position: absolute !important; top: auto !important; left: -9999px; }
+.ui-multiselect-single .ui-multiselect-checkboxes label { padding: 5px !important; }
+
+.ui-multiselect-header { margin-bottom: 3px; padding: 3px 0 3px 4px; }
+.ui-multiselect-header ul { font-size: 0.9em; list-style: none; }
+.ui-multiselect-header ul li { float: left; padding: 0 10px 0 0; }
+.ui-multiselect-header a { text-decoration: none; }
+.ui-multiselect-header a:hover { text-decoration: underline; }
+.ui-multiselect-header span.ui-icon { float: left; }
+.ui-multiselect-header li.ui-multiselect-close { float: right; text-align: right; padding-right: 0; }
+
+.ui-multiselect-menu {
+  display: none;
+  padding: 3px;
+  position: absolute;
+  z-index: 10000;
+  text-align: left;
+  background: #fff;
+  border: 1px solid rgb(153, 153, 153);
+  opacity: 0.8;
+  border-radius: 4px;
+  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.3);
+}
+.ui-multiselect-checkboxes { position: relative; list-style: none; padding: 0 10px; margin: 2px; }
+.ui-multiselect-checkboxes label { cursor: default; display: block; border: 1px solid transparent; padding: 0; }
+.ui-multiselect-checkboxes label input { position: relative; top: 1px; left: -3px; }
+.ui-multiselect-checkboxes li { clear: both; font-size: 0.9em; padding-right: 3px; }
+.ui-multiselect-checkboxes li.ui-multiselect-optgroup-label { text-align: center; font-weight: bold; border-bottom: 1px solid; }
+.ui-multiselect-checkboxes li.ui-multiselect-optgroup-label a { display: block; padding: 3px; margin: 1px 0; text-decoration: none; }
 
 .user_container {
   padding-top: 40px;
@@ -811,6 +872,7 @@ li.empty a { background: none; }
   width: 100%;
 }
 
+/* --- Table: structure & layout --- */
 #section table.listinfos {
   border-collapse: collapse;
   border-spacing: 0;
@@ -826,58 +888,85 @@ li.empty a { background: none; }
   width: 100%;
 }
 
-#section table.listinfos thead tr {
-  background: var(--color-primary) !important;
+/* --- Table: header --- */
+.listinfos thead {
+  background-color: var(--color-primary);
 }
 
-#section table.listinfos tbody tr.alternate {
-  background: var(--color-bg-white) !important;
-  transition: background-color 0.15s ease;
-}
-
-#section table.listinfos tbody tr.alternate:nth-child(odd) {
-  background: #e8eff3 !important;
-}
-
-#section table.listinfos tbody tr.alternate:hover {
-  background-color: #d0e4ed !important;
-}
-
-/* ===== Uniform table handling for all listinfos tables ===== */
-
-/* --- Headers: left-aligned, wrap at spaces only, clip overflow --- */
-#section table.listinfos thead th,
-#section table.listinfos thead td {
+.listinfos thead td,
+.listinfos thead th {
+  font-weight: 600;
+  color: var(--color-text-white);
+  border: none;
+  padding: 14px 12px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  text-align: left;
   word-break: normal;
   overflow-wrap: normal;
   overflow: hidden;
 }
 
-/* --- Body cells (fixed layout): left-aligned, wrap text, clip overflow --- */
-#section table.listinfos-fixed tbody td {
+.listinfos thead td span,
+.listinfos thead th span {
+  color: var(--color-text-white);
+}
+
+/* --- Table: body rows --- */
+.listinfos tbody tr {
+  border: none;
+}
+
+.listinfos tbody tr.alternate {
+  background: var(--color-bg-white);
+  transition: background-color 0.15s ease;
+}
+
+.listinfos tbody tr.alternate:nth-child(odd) {
+  background: #e8eff3;
+}
+
+.listinfos tbody tr.alternate:hover {
+  background-color: #d0e4ed;
+}
+
+/* --- Table: body cells --- */
+.listinfos tbody td {
+  padding: 12px 10px;
+  border: none;
+}
+
+.listinfos tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Fixed layout: wrap text, clip overflow */
+.listinfos-fixed tbody td {
   word-break: break-word;
   overflow-wrap: break-word;
   overflow: hidden;
 }
 
-/* --- Action column: icons on one line, never wrapped --- */
-#section table.listinfos tbody td.action {
-  white-space: nowrap;
-  word-break: normal;
-  overflow-wrap: normal;
-
-
-  overflow: visible;
-}
-
-/* --- Raw listinfos tables (no table-layout: fixed) --- */
-#section table.listinfos:not(.listinfos-fixed) tbody td {
+/* Auto layout: constrain max width */
+.listinfos:not(.listinfos-fixed) tbody td {
   max-width: 400px;
   overflow: hidden;
   word-break: break-word;
   overflow-wrap: break-word;
 }
 
+/* Cells with icons: preserve left padding */
+.listinfos td.machineName,
+.listinfos td.machineNamepresente,
+.listinfos td.noMachineName,
+.listinfos td.userName,
+.listinfos td.userNameDisabled,
+.listinfos td.groupName {
+  padding-left: 37px;
+}
+
+/* --- Table: cell text truncation --- */
 .listinfos .cell-text {
   display: -webkit-box;
   -webkit-line-clamp: 1;
@@ -885,6 +974,19 @@ li.empty a { background: none; }
   overflow: hidden;
   text-overflow: ellipsis;
   word-break: break-all;
+}
+
+/* --- Table: action column --- */
+.listinfos tbody td.action {
+  white-space: nowrap;
+  word-break: normal;
+  overflow-wrap: normal;
+  overflow: visible;
+}
+
+.listinfos td.action ul.action {
+  float: none;
+  display: inline-block;
 }
 
 /* ===== Status badges ===== */
@@ -918,7 +1020,7 @@ li.empty a { background: none; }
   margin: 20px 0;
 }
 .toolbar-row > form {
-  margin: 0 !important;
+  margin: 0;
 }
 
 
@@ -929,8 +1031,8 @@ li.empty a { background: none; }
 }
 .ajax-section > form {
   display: none;
-  margin: 0 !important;
-  margin-bottom: -50px !important;
+  margin: 0;
+  margin-bottom: -50px;
   position: relative;
   z-index: 10;
 }
@@ -1323,8 +1425,8 @@ td.machineAction {
   background-color: var(--color-accent);
 }
 .mmc-form-table input[type="radio"]:focus {
-  outline: none !important;
-  box-shadow: none !important;
+  outline: none;
+  box-shadow: none;
 }
 .mmc-form-table label {
   vertical-align: middle;
@@ -1790,50 +1892,6 @@ div.autocomplete ul li {
   color: var(--color-text-light);
 }
 
-.listinfos thead {
-  background-color: var(--color-primary);
-}
-
-.listinfos thead td,
-.listinfos thead th {
-  font-weight: 600;
-  color: var(--color-text-white);
-  border: none;
-  padding: 14px 12px;
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.3px;
-  text-align: left;
-}
-
-.listinfos thead td span,
-.listinfos thead th span {
-  color: var(--color-text-white);
-}
-
-.listinfos tbody td {
-  padding: 12px 10px;
-  border: none;
-}
-
-.listinfos tbody tr {
-  border: none;
-}
-
-/* Preserve left padding for cells with icons */
-.listinfos td.machineName,
-.listinfos td.machineNamepresente,
-.listinfos td.noMachineName,
-.listinfos td.userName,
-.listinfos td.userNameDisabled,
-.listinfos td.groupName {
-  padding-left: 37px;
-}
-
-.listinfos tbody tr:last-child td {
-  border-bottom: none;
-}
-
 form.inplaceeditor-form input[type="text"] {
   border-style: solid;
   border-width: 1px;
@@ -1845,10 +1903,12 @@ form.inplaceeditor-form input[type="text"] {
 /* ---------------------------------------- */
 
 a.tooltip {
-  position: relative; /*this is the key*/
+  position: relative;
   z-index: 24;
   color: var(--color-text-black);
   text-decoration: none;
+  padding: 0;
+  border-bottom: 1px dotted var(--color-primary);
 }
 
 a.tooltip span {
@@ -1857,11 +1917,6 @@ a.tooltip span {
 
 a.tooltip:hover {
   z-index: 25;
-}
-
-a.tooltip {
-  padding: 0px;
-  border-bottom: 1px dotted #0033ff;
 }
 
 a.tooltip:hover span {
@@ -2436,9 +2491,9 @@ td img[src*="img/other/"],
 
 .pw-wrap input.pw-error,
 .pw-wrap input.pw-error:focus {
-  border-color: #e33 !important;
-  outline: none !important;
-  box-shadow: none !important;
+  border-color: var(--color-error);
+  outline: none;
+  box-shadow: none;
 }
 
 /* ---------------------------------------- */

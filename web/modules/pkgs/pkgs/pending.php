@@ -26,7 +26,6 @@
 require("graph/navbar.inc.php");
 require("localSidebar.php");
 ?>
-<link rel="stylesheet" href="modules/pkgs/graph/css/pkgs.css" />
 <?php
 require_once("modules/pkgs/includes/xmlrpc.php");
 $p = new PageGenerator(_T("Pending packages list", 'pkgs'));

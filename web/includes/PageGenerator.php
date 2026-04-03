@@ -1127,6 +1127,7 @@ class ListInfos extends HtmlElement
     // public $extraInfoRaw = array();
     public $extraColumns = array();
     public $forceFixed = false;
+    public $tableCssClass = "";
     public $emptyTitle = "";
     public $emptyDescription = "";
 
@@ -1160,6 +1161,16 @@ class ListInfos extends HtmlElement
         $this->emptyDescription = $description;
     }
 
+    /**
+     * Set a custom CSS class on the <table> element.
+     * Allows modules to target their tables in their own index.css.
+     * Example: $list->setTableCssClass('updates-approval');
+     * → <table class="listinfos listinfos-fixed updates-approval">
+     */
+    public function setTableCssClass($class)
+    {
+        $this->tableCssClass = $class;
+    }
 
     // 1. Définir le style CSS complet
     public function setCaptionText($texte)
@@ -1560,6 +1571,9 @@ class ListInfos extends HtmlElement
     // > 8 colonnes → table-layout: auto (le navigateur distribue l'espace)
     $useFixed = $this->forceFixed || ($totalCols <= 8);
     $tableClass = $useFixed ? "listinfos listinfos-fixed" : "listinfos";
+    if (!empty($this->tableCssClass)) {
+        $tableClass .= " " . htmlspecialchars($this->tableCssClass, ENT_QUOTES, 'UTF-8');
+    }
 
     echo "<table class=\"$tableClass\">\n";
     $this->drawCaption();
@@ -1728,7 +1742,7 @@ class ListInfos extends HtmlElement
         // Colonne "Actions" si nécessaire
         if (safeCount($this->arrAction) != 0) {
             echo "<td class=\"action\">";
-            echo "<ul class=\"action\" style=\"float:none;display:inline-block;\">";
+            echo "<ul class=\"action\">";
             foreach ($this->arrAction as $objActionItem) {
                 if (is_a($objActionItem, 'ActionItem')) {
                     $objActionItem->display($this->arrInfo[$idx], $this->paramInfo[$idx]);

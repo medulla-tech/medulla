@@ -114,6 +114,7 @@ if ($count == 0) {
 } else {
     // Create and display list
     $list = new OptimizedListInfos($cveIds, _T("CVE ID", "security"));
+    $list->setTableCssClass("security-table");
     $list->addExtraInfo($softwares, _T("Affected Software", "security"));
     $list->disableFirstColumnActionLink();
     $list->setItemCount($count);

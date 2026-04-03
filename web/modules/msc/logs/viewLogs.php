@@ -50,9 +50,6 @@ print '<br/><div id="breadcrumb"></div><br/>';
 // ajax refresh div according to history var
 $divName = (isset($_history) && $_history == '1') ? 'divHistory' : 'divLogs';
 
-// inject styles
-print '<link rel="stylesheet" href="modules/msc/graph/css/msc_commands.css" type="text/css" media="screen" />';
-
 $command_type = False;
 if (!empty($_GET["commands"])) {
     $command_type = $_GET['commands'];

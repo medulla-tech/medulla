@@ -25,7 +25,6 @@ require_once("modules/medulla_server/includes/utilities.php");
 require("graph/navbar.inc.php");
 require("localSidebar.php");
 ?>
-<link rel="stylesheet" href="modules/kiosk/graph/css/kiosk.css" />
 <?php
 $p = new PageGenerator(_T("List of profils",'kiosk'));
 $p->setSideMenu($sidemenu);

@@ -26,7 +26,6 @@
 require("localSidebar.php");
 require("graph/navbar.inc.php");
 ?>
-<link rel="stylesheet" href="modules/pkgs/graph/css/pkgs.css" />
 <?php
 require_once("modules/pkgs/includes/xmlrpc.php");
 require_once("modules/pkgs/includes/functions.php");

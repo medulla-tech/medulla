@@ -22,14 +22,13 @@
  * Reusable UI components for the security module.
  */
 
-require("modules/security/graph/security.css");
 require_once("includes/UIComponents.php");
 
 /**
  * Displays a styled form to add an item to an exclusion list.
  * Matches the search input style for consistency.
  *
- * CSS classes used (defined in security.css):
+ * CSS classes used (defined in graph/css/index.css, loaded by dynamicCss.php):
  * - .add-item-form
  * - .add-item-row
  * - .add-item-input

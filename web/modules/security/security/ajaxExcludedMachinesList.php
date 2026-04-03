@@ -147,6 +147,7 @@ if (empty($excludedMachines)) {
     } else {
         // Create and display list
         $list = new OptimizedListInfos($hostnames, _T("Machine", "security"));
+    $list->setTableCssClass("security-table");
         $list->addExtraInfo($osNames, _T("Operating System", "security"));
         $list->addExtraInfo($entities, _T("Entity", "security"));
         $list->disableFirstColumnActionLink();

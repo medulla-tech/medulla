@@ -74,6 +74,7 @@ $detailAction = new ActionItem(_T("View Machines", "security"), "machines", "dis
 // Display the list
 if ($count > 0) {
     $n = new OptimizedListInfos($entityNames, _T("Entity", "security"));
+    $n->setTableCssClass("security-table");
     $n->disableFirstColumnActionLink();
     $n->addExtraInfoCentered($machinesCounts, _T("Machines", "security"));
     $n->addExtraInfoCentered($maxScores, _T("Max CVSS", "security"));

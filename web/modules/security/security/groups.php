@@ -32,7 +32,6 @@ $p->display();
 $userLogin = $_SESSION['login'];
 ?>
 
-<link rel="stylesheet" href="modules/security/graph/security.css" type="text/css" media="screen" />
 
 <div class="search-wrapper" style="margin-bottom: 15px;">
 <?php

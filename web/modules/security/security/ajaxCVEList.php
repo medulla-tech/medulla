@@ -88,6 +88,7 @@ $excludeAction->setWidth(400);
 // Display the list
 if ($count > 0) {
     $n = new OptimizedListInfos($cveIds, _T("CVE ID", "security"), "", '150px');
+    $n->setTableCssClass("security-table");
     $n->disableFirstColumnActionLink();
     $n->setCssClasses($cssClasses);
     $n->addExtraInfo($severities, _T("Severity", "security"), '100px');

@@ -96,6 +96,7 @@ $detailAction = new ActionItem(_T("View CVEs", "security"), "machineDetail", "di
 // Display the list
 if ($count > 0) {
     $n = new OptimizedListInfos($hostnames, _T("Machine", "security"));
+    $n->setTableCssClass("security-table");
     $n->disableFirstColumnActionLink();
     $n->addExtraInfoCentered($riskScores, _T("Risk Score", "security"));
     // Only show severity columns that are >= min_severity

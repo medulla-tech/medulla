@@ -80,6 +80,7 @@ if ($count == 0) {
 } else {
     // Create and display list
     $list = new OptimizedListInfos($vendorNames, _T("Vendor name", "security"));
+    $list->setTableCssClass("security-table");
     $list->disableFirstColumnActionLink();
     $list->setItemCount($count);
     $list->setNavBar(new AjaxNavBar($count, $filter, "updateSearchParamcontainerExcludedVendors", $maxperpage));

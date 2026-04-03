@@ -277,6 +277,7 @@ if($sharings['config']['centralizedmultiplesharing'] == true) {
             $ids[] = 'p_'.$uuid;
         }
         $n = new OptimizedListInfos($_arraypackagename, _T("Package name", "pkgs"));
+        $n->setTableCssClass('pkgs-table');
         $n->setCssIds($ids);
         $n->disableFirstColumnActionLink();
         $n->addExtraInfo($_descriptions, _T("Description", "pkgs"));
@@ -445,6 +446,7 @@ if($sharings['config']['centralizedmultiplesharing'] == true) {
             $ids[] = 'p'.$uuid;
         }
         $n = new OptimizedListInfos($arraypackagename, _T("Package name", "pkgs"));
+        $n->setTableCssClass('pkgs-table');
         $n->disableFirstColumnActionLink();
         $n->setCssIds($ids);
         $n->addExtraInfo($desc, _T("Description", "pkgs"));

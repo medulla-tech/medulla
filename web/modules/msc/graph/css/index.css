@@ -626,3 +626,283 @@ img
 table.table-vertical td {
     color: red;
 }
+@import url("msc_tree.css");
+@import url("msc_files_list.css");
+@import url("msc_file_list_directory.css");
+@import url("msc_commands_states_list.css");
+@import url("msc_command_on_host_history.css");
+@import url("msc_states.css");
+
+.msc H2 {
+}
+
+.msc H3 {
+    margin-top:2em;
+    font-size : 1.1em;
+    border-bottom:1px solid #EA4F26;
+}
+
+H3.box-title {
+    padding:0;
+    margin:0;
+    font-weight: normal;
+    border-bottom: 0;
+}
+
+.msc .indent {
+    margin-left:2em;
+}
+
+table {
+    font-family         : Verdana, Arial, Helvetica, sans-serif;
+    font-size               : 12px;
+}
+
+table.vertical {
+}
+
+table.vertical TD {
+    border:0;
+}
+
+table.vertical TH {
+    text-align:right;
+    border:0;
+}
+
+table.form TD {
+    border: 0;
+}
+
+table.form INPUT {
+    vertical-align: middle;
+}
+
+table.form SELECT {
+    vertical-align: middle;
+}
+
+#left-panel {
+    width:20em;
+    float:left;
+    margin:0;
+    padding:0;
+}
+
+#left-panel H3 {
+    margin-top: 0;
+}
+
+#main-panel {
+    padding-left: 21em;
+}
+
+.box, #msc-tree-directory, #msc-what-is-current-directory {
+    /*background-color: #f9f3f2;*/
+    background-color: #E9EEF1;
+    /*border: 1px solid #E9EEF1;*/
+    border: 1px solid #21449C;
+    padding:1em;
+    margin:1em;
+}
+
+#msc-standard-file-list-directory-actions .box {
+    margin:0;
+}
+
+#msc-repository-actions .box {
+    margin:0;
+}
+
+#msc-repository-actions table.form td {
+    text-align: left;
+}
+
+#msc-tree-directory {
+    margin:0;
+    padding-left:1.5em;
+}
+
+#msc-standard-host-actions .box {
+    margin:0;
+    padding-left:1.5em;
+}
+
+#msc-where-I-connected {
+    float:right;
+    text-align:right;
+    font-size: x-small;
+}
+
+#msc-what-is-current-directory {
+    width:60%;
+    margin-left:auto;
+    margin-right:auto;
+    text-align:center;
+}
+
+.clear {
+    clear:both;
+}
+
+table {
+    border:0;
+}
+
+table TD {
+    border:0;
+}
+
+li.pause a {
+    padding: 3px 0px 5px 20px;
+    margin: 0 0px 0 0px;
+    background-image: url("../images/actions/pause.png");
+    background-repeat: no-repeat;
+    background-position: left top;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+}
+
+li.status a {
+    padding: 3px 0px 5px 20px;
+    margin: 0 0px 0 0px;
+    background-image: url("../images/actions/info.png");
+    background-repeat: no-repeat;
+    background-position: left top;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+}
+
+li.reschedule a {
+    padding: 3px 0px 5px 20px;
+    margin: 0 0px 0 0px;
+    background-image: url("../images/status/todo.png");
+    background-repeat: no-repeat;
+    background-position: left top;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+}
+.msc-file-list-directory {
+
+}
+
+
+table.msc-file-list-directory {
+    width           : 100%;
+    font-size       : 10px;
+    border          : 0px;
+    margin          : 0px;
+    border-collapse : collapse;
+}
+
+
+table.msc-file-list-directory TH {
+    background-color: #21449C;
+    border:0;
+    color:white;
+}
+
+table.msc-file-list-directory TD {
+    text-align: left;
+}
+
+.msc-file-list-directory TR.row-odd {
+    /*background-color: #F0F0F0;*/
+    background-color: #E9EEF1;
+}
+
+.msc-file-list-directory TR.row-even {
+    /*background-color: #F9F9F9;*/
+    background-color: #D3DCE3;
+}
+
+.msc-file-list-directory TD {
+    /*border:1px solid #FCD3C2;*/
+    border:1px solid #90A6D4;
+    border-top: 0;
+    border-bottom: 0;
+    border-collapse : collapse;
+}
+
+.msc-file-list-directory .icon-column {
+    text-align:center;
+    width:10px;
+    white-space:nowrap;
+}
+
+.msc-file-list-directory .filename-column {
+    width:100%;
+}
+.msc-file-list-directory .size-column {
+    text-align:right;
+    width:10px;
+    white-space:nowrap;
+}
+.msc-file-list-directory .date-column {
+    text-align:right;
+    width:10px;
+    white-space:nowrap;
+}
+.msc-file-list-directory .action-column {
+    text-align:center;
+    width:10px;
+    white-space:nowrap;
+}
+
+.msc-file-list-directory .select-copy-column {
+    text-align:center;
+    /*width:10px;*/
+    white-space:nowrap;
+}
+
+.msc-file-list-directory .select-execute-column {
+    text-align:center;
+    /*width:10px;*/
+    white-space:nowrap;
+}
+
+.msc-file-list-directory .right-column {
+    text-align:right;
+}
+
+.msc-file-list-directory .center-column {
+    text-align:center;
+}
+
+.msc-file-list-directory .left-column {
+    text-align:left;
+}
+#msc-tree-directory {
+
+}
+
+#msc-tree-directory A {
+  text-decoration: none;
+}
+
+#msc-tree-directory UL {
+  list-style-image : url("/mmc/modules/msc/graph/images/folder.png");
+  margin-left: 7px;
+  padding-left: 7px;
+}
+
+#msc-tree-directory UL LI.open {
+  list-style-image : url("/mmc/modules/msc/graph/images/folder_open.png");
+}
+
+#msc-tree-directory UL LI.open A {
+  font-weight: bold;
+}
+
+#msc-tree-directory UL LI.active {
+  list-style-image : url("/mmc/modules/msc/graph/images/folder_open.png");
+}
+
+#msc-tree-directory UL LI.active A {
+  font-style: italic;
+  font-weight: bold;
+}
+

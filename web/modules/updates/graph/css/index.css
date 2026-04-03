@@ -25,14 +25,14 @@
 
 /* Section headers (product families) */
 .approval-form table.listinfos .family-separator td {
-    background-color: #e6edf5;
-    color: #21425a;
+    background-color: var(--gray-100);
+    color: var(--color-primary-dark);
     font-weight: 600;
     letter-spacing: 0.04em;
     text-transform: uppercase;
     padding: 12px 16px;
-    border-top: 1px solid #cdd6df;
-    border-bottom: 1px solid #cdd6df;
+    border-top: 1px solid var(--gray-300);
+    border-bottom: 1px solid var(--gray-300);
 }
 
 .approval-form table.listinfos .family-separator td:last-child {
@@ -45,13 +45,13 @@
 }
 
 .caption-style {
-    background-color: #dfe5ec;
-    color: #203d56;
+    background-color: var(--gray-200);
+    color: var(--color-primary-dark);
     font-weight: 600;
     font-size: 15px;
     padding: 10px 16px;
     letter-spacing: 0.03em;
-    border-bottom: 1px solid #cdd6df;
+    border-bottom: 1px solid var(--gray-300);
 }
 
 /* ===== Location selector ===== */
@@ -70,7 +70,7 @@
 
 #FormLocation .locationtext {
     font-weight: 600;
-    color: #21425a;
+    color: var(--color-primary-dark);
     white-space: nowrap;
 }
 
@@ -107,7 +107,7 @@
 .updates-section .table-header__title {
     font-size: 16px;
     font-weight: 600;
-    color: #203d56;
+    color: var(--color-primary-dark);
 }
 
 .updates-section .table-header__form {

@@ -41,13 +41,13 @@
 a.info {
   position: relative;
   z-index: 24;
-  color: #000;
+  color: var(--color-text-black);
   text-decoration: none;
 }
 
 a.info:hover {
   z-index: 25;
-  background-color: #fff;
+  background-color: var(--color-text-white);
 }
 
 a.info span {
@@ -62,7 +62,7 @@ a.info:hover span {
   width: 25em;
   border: 1px solid #000;
   background-color: #E0FFFF;
-  color: #000;
+  color: var(--color-text-black);
   text-align: justify;
   font-weight: normal;
   padding: 5px;
@@ -82,11 +82,11 @@ a.info:hover span {
 }
 
 .pkg-disk-warning {
-  color: orange;
+  color: var(--color-warning);
 }
 
 .pkg-disk-critical {
-  color: red;
+  color: var(--color-error);
 }
 
 .pkg-licenses {
@@ -120,7 +120,7 @@ a.info:hover span {
 
 .actions a:hover {
   background-color: #007fff;
-  color: #fff;
+  color: var(--color-text-white);
   border: 1px solid #003eff;
 }
 
@@ -199,7 +199,7 @@ a.info:hover span {
 
 .easy_suggest {
   background-color: #e5e5e5;
-  border: 1px solid #ccc;
+  border: 1px solid var(--color-border-medium);
   border-width: 0 1px;
   box-shadow: 0 2px 4px #ccc;
   border-bottom-right-radius: 8px;
@@ -218,7 +218,7 @@ a.info:hover span {
 }
 
 .easy_list li {
-  border: 1px solid #ccc;
+  border: 1px solid var(--color-border-medium);
   border-width: 0 1px 1px 0;
   font-size: 12px;
   list-style: none;
@@ -227,7 +227,7 @@ a.info:hover span {
 }
 
 .easy_list li a {
-  color: #000;
+  color: var(--color-text-black);
   display: block;
   padding: 5px;
   text-decoration: none;
@@ -235,11 +235,11 @@ a.info:hover span {
 
 .easy_list li.selected {
   background-color: #678FD6;
-  color: #fff;
+  color: var(--color-text-white);
 }
 
 .easy_list li.selected a {
-  color: #fff;
+  color: var(--color-text-white);
 }
 
 /* ============================================ */
@@ -260,12 +260,12 @@ a.info:hover span {
 /* ============================================ */
 
 .pkg-error {
-  color: red;
+  color: var(--color-error);
   font-weight: bold;
 }
 
 .pkg-warning {
-  color: orange;
+  color: var(--color-warning);
 }
 
 /* ============================================ */
@@ -323,8 +323,8 @@ a.info:hover span {
 #current-actions {
   margin: 0;
   padding: 8px;
-  background-color: #fff;
-  border: 1px solid #ddd;
+  background-color: var(--color-text-white);
+  border: 1px solid var(--color-border-light);
   border-radius: 4px;
   min-height: 40px;
   list-style: none;
@@ -333,7 +333,7 @@ a.info:hover span {
 /* ---- Available actions (left panel) ---- */
 
 #available-actions .header {
-  background-color: #25607d;
+  background-color: var(--color-primary);
   border-radius: 4px;
   margin-bottom: 4px;
   padding: 8px 12px;
@@ -341,11 +341,11 @@ a.info:hover span {
 }
 
 #available-actions .header:hover {
-  background-color: #1d4e66;
+  background-color: var(--color-primary-dark);
 }
 
 #available-actions .header h1 {
-  color: #fff;
+  color: var(--color-text-white);
   margin: 0;
   font-size: 12px;
   font-weight: 500;
@@ -366,13 +366,13 @@ a.info:hover span {
 /* ---- Workflow actions (right panel) ---- */
 
 #current-actions .header {
-  background-color: #25607d;
+  background-color: var(--color-primary);
   border-radius: 4px 4px 0 0;
   padding: 8px 12px;
 }
 
 #current-actions .header h1 {
-  color: #fff;
+  color: var(--color-text-white);
   margin: 0;
   font-size: 12px;
   font-weight: 500;
@@ -386,7 +386,7 @@ a.info:hover span {
 
 #current-actions li .content {
   background-color: #fafafa;
-  border: 1px solid #ddd;
+  border: 1px solid var(--color-border-light);
   border-top: none;
   border-radius: 0 0 4px 4px;
   padding: 12px;
@@ -440,7 +440,7 @@ a.info:hover span {
 #current-actions li .content table select {
   width: 260px;
   padding: 6px 10px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--color-border-medium);
   border-radius: 4px;
   font-size: 12px;
   box-sizing: border-box;
@@ -449,7 +449,7 @@ a.info:hover span {
 #current-actions li .content table input[type="number"] {
   width: 60px;
   padding: 6px 10px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--color-border-medium);
   border-radius: 4px;
   font-size: 12px;
   box-sizing: border-box;
@@ -458,7 +458,7 @@ a.info:hover span {
 #current-actions li .content table textarea {
   width: 100%;
   height: 5em;
-  border: 1px solid #ccc;
+  border: 1px solid var(--color-border-medium);
   border-radius: 4px;
   padding: 8px;
   font-size: 12px;
@@ -504,7 +504,7 @@ a.info:hover span {
 .goto-on-return input[type="text"] {
   width: 120px !important;
   padding: 5px 8px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--color-border-medium);
   border-radius: 4px;
   font-size: 12px;
   box-sizing: border-box;
@@ -512,7 +512,7 @@ a.info:hover span {
 
 .goto-on-return input[type="button"] {
   padding: 4px 10px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--color-border-medium);
   border-radius: 4px;
   background: #fff;
   font-size: 11px;
@@ -569,7 +569,7 @@ li.file a {
   background-position: left top;
   line-height: 18px;
   text-decoration: none;
-  color: #fff;
+  color: var(--color-text-white);
 }
 
 li.associate_files a {
@@ -580,7 +580,7 @@ li.associate_files a {
   background-position: left top;
   line-height: 18px;
   text-decoration: none;
-  color: #fff;
+  color: var(--color-text-white);
 }
 
 /* ============================================ */
@@ -644,18 +644,16 @@ td.package {
 /* File List Table (edit package)               */
 /* ============================================ */
 
-/* Add left padding to first column header and cells */
-.listinfos th:first-child,
-.listinfos td:first-child {
+.pkgs-files-table th:first-child,
+.pkgs-files-table td:first-child {
   padding-left: 12px;
 }
 
-/* Center action column */
-.listinfos td.action {
+.pkgs-files-table td.action {
   text-align: center;
 }
 
-.listinfos td.action ul.action {
+.pkgs-files-table td.action ul.action {
   float: none;
   display: inline-flex;
   justify-content: center;
@@ -667,11 +665,10 @@ td.package {
 
 /*
  * Column order in package list:
- * 1: Package name, 2: Share, 3: Permissions, 4: Description,
- * 5: Version, 6: Licenses, 7: OS, 8: Size, 9: Share usage, 10: Actions
+ * 1: Package name, 2: Description, 3: Version, 4: Size,
+ * 5: OS, 6: Share, 7: Licenses, 8+: Actions
  */
 
-/* Description column - multi-line truncate with ellipsis, tooltip on hover via title attribute */
 .pkg-description {
   display: -webkit-box;
   -webkit-line-clamp: 3;
@@ -682,39 +679,30 @@ td.package {
   line-height: 1.4;
 }
 
-/* Permissions - center */
-.listinfos td:nth-child(3),
-.listinfos th:nth-child(3) {
-  text-align: center;
-  width: 90px;
-}
-
-/* Licenses - center */
-.listinfos td:nth-child(6),
-.listinfos th:nth-child(6) {
-  text-align: center;
-  width: 80px;
-}
-
 /* Package name - allow wrap on multiple lines */
-.listinfos td:first-child .cell-text {
+.pkgs-table td:first-child .cell-text {
   -webkit-line-clamp: 3;
   word-break: break-word;
 }
 
+/* Version, Size - center */
+.pkgs-table td:nth-child(3),
+.pkgs-table th:nth-child(3),
+.pkgs-table td:nth-child(4),
+.pkgs-table th:nth-child(4) {
+  text-align: center;
+}
+
 /* OS - compact and center */
-.listinfos td:nth-child(7),
-.listinfos th:nth-child(7) {
+.pkgs-table td:nth-child(5),
+.pkgs-table th:nth-child(5) {
   text-align: center;
   width: 50px;
 }
 
-/* Size - no wrap */
-.listinfos td:nth-child(8) {
-  white-space: nowrap;
-}
-
-/* Share usage - no wrap */
-.listinfos td:nth-child(9) {
-  white-space: nowrap;
+/* Licenses - center */
+.pkgs-table td:nth-child(7),
+.pkgs-table th:nth-child(7) {
+  text-align: center;
+  width: 80px;
 }

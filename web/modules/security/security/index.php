@@ -47,7 +47,6 @@ $minSeverity = $policies['display']['min_severity'] ?? 'None';
 $showSeverity = SeverityHelper::getVisibility($minSeverity);
 ?>
 
-<link rel="stylesheet" href="modules/security/graph/security.css" type="text/css" media="screen" />
 
 <!-- Dashboard Cards -->
 <div class="security-dashboard">

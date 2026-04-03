@@ -5,7 +5,6 @@ require_once("includes/PageGenerator.php");
 require_once("modules/pkgs/includes/xmlrpc.php");
 require_once("modules/msc/includes/utilities.php");
 ?>
-<link rel="stylesheet" href="modules/pkgs/graph/css/pkgs.css" />
 <?php
 function renderAction($sequence, $os)
 {

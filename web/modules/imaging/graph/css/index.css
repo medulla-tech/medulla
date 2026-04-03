@@ -1,0 +1,9 @@
+td.imagelogs {
+    font-family: monospace;
+    font-size: small;
+}
+
+.linenumber {
+    font-family: monospace;
+    color: gray;
+}

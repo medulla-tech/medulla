@@ -47,7 +47,6 @@ $summary = xmlrpc_get_software_cves($software_name, $software_version, 0, 1, '',
 $totalCves = $summary['total'];
 ?>
 
-<link rel="stylesheet" href="modules/security/graph/security.css" type="text/css" media="screen" />
 
 <a href="<?php echo urlStrRedirect('security/security/softwares'); ?>" class="back-link">
     &larr; <?php echo _T("Back to software list", "security"); ?>

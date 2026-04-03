@@ -58,7 +58,6 @@ elseif ($cvss >= 4.0) $cvssClass = 'cvss-medium';
 else $cvssClass = 'cvss-low';
 ?>
 
-<link rel="stylesheet" href="modules/security/graph/security.css" type="text/css" media="screen" />
 
 <a href="<?php echo urlStrRedirect('security/security/index'); ?>" class="back-link">
     &larr; <?php echo _T("Back to CVE list", "security"); ?>
