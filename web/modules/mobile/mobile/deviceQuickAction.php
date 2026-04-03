@@ -69,6 +69,9 @@ $deviceDescription = $device['description'] ?? '';
                     echo '<td>'._T("Custom command", "mobile").'</td>
                     <td>
                         <select id="select">';
+                        echo '<option value="reboot">'._T("Reboot", "mobile").'</option>';
+                        echo '<option value="lockDevice">'._T("Lock screen", "mobile").'</option>';
+                        echo '<option value="wipe">'._T("Factory reset", "mobile").'</option>';
                         echo '<option value="runApp">'._T("Run App", "mobile").'</option>';
                         echo '<option value="uninstallApp">'._T("Uninstall App", "mobile").'</option>';
                         echo '<option value="deleteFile">'._T("Delete File", "mobile").'</option>';
@@ -100,6 +103,9 @@ $deviceDescription = $device['description'] ?? '';
     
     // payload templates
     var payloadTemplates = {
+        'reboot': '',
+        'lockDevice': '',
+        'wipe': '',
         'runApp': '{\n  "pkg": "app.package.id"\n}',
         'uninstallApp': '{\n  "pkg": "app.package.id"\n}',
         'deleteFile': '{\n  "path": "/path/to/file"\n}',
