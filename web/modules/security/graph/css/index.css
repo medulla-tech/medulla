@@ -604,18 +604,12 @@ tr.severity-na td:first-child { border-left: 3px solid var(--severity-na); }
     100% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0); }
 }
 
-/* Action column: left-align and constrain width */
-.security-table th:last-child,
-.security-table td.action {
-    text-align: left;
-    width: 1%;
+/* CVE ID (first column): never break, always readable */
+.security-table td:first-child {
     white-space: nowrap;
 }
+
+/* Action column */
 .security-table td.action li.empty.inactive {
     display: none;
-}
-
-/* Allow description column to wrap */
-.security-table td:nth-last-child(3) .cell-text {
-    -webkit-line-clamp: 3;
 }

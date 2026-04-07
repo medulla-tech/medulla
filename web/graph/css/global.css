@@ -876,16 +876,12 @@ td.file {
 #section table.listinfos {
   border-collapse: collapse;
   border-spacing: 0;
+  width: 100%;
   margin: 15px 0;
   border-radius: 9px;
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  border: 1px solid #e2e8f0;
-}
-
-#section table.listinfos-fixed {
-  table-layout: fixed;
-  width: 100%;
+  border: 1px solid var(--gray-200);
 }
 
 /* --- Table: header --- */
@@ -893,8 +889,8 @@ td.file {
   background-color: var(--color-primary);
 }
 
-.listinfos thead td,
-.listinfos thead th {
+.listinfos thead th,
+.listinfos thead td {
   font-weight: 600;
   color: var(--color-text-white);
   border: none;
@@ -903,13 +899,10 @@ td.file {
   text-transform: uppercase;
   letter-spacing: 0.3px;
   text-align: left;
-  word-break: normal;
-  overflow-wrap: normal;
-  overflow: hidden;
 }
 
-.listinfos thead td span,
-.listinfos thead th span {
+.listinfos thead th span,
+.listinfos thead td span {
   color: var(--color-text-white);
 }
 
@@ -933,27 +926,12 @@ td.file {
 
 /* --- Table: body cells --- */
 .listinfos tbody td {
-  padding: 12px 10px;
+  padding: 12px;
   border: none;
 }
 
 .listinfos tbody tr:last-child td {
   border-bottom: none;
-}
-
-/* Fixed layout: wrap text, clip overflow */
-.listinfos-fixed tbody td {
-  word-break: break-word;
-  overflow-wrap: break-word;
-  overflow: hidden;
-}
-
-/* Auto layout: constrain max width */
-.listinfos:not(.listinfos-fixed) tbody td {
-  max-width: 400px;
-  overflow: hidden;
-  word-break: break-word;
-  overflow-wrap: break-word;
 }
 
 /* Cells with icons: preserve left padding */
@@ -969,19 +947,23 @@ td.file {
 /* --- Table: cell text truncation --- */
 .listinfos .cell-text {
   display: -webkit-box;
-  -webkit-line-clamp: 1;
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
-  word-break: break-all;
+  word-break: break-word;
 }
 
-/* --- Table: action column --- */
-.listinfos tbody td.action {
+/* --- Table: empty cells --- */
+.listinfos .cell-empty {
+  color: var(--color-text-muted);
+}
+
+/* --- Table: action column — shrinks to fit icons, stays right --- */
+.listinfos th.col-action,
+.listinfos td.action {
   white-space: nowrap;
-  word-break: normal;
-  overflow-wrap: normal;
-  overflow: visible;
+  width: 1%;
 }
 
 .listinfos td.action ul.action {

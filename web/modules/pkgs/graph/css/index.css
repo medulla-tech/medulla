@@ -74,7 +74,7 @@ a.info:hover span {
 
 .pkg-size-tooltip {
   cursor: help;
-  border-bottom: 1px dotted #666;
+  border-bottom: 1px dotted var(--color-text-medium);
 }
 
 .pkg-disk-ok {
@@ -104,25 +104,189 @@ a.info:hover span {
 /* Package Detail - Actions                     */
 /* ============================================ */
 
-.actions:target {
-  background-color: #ffa;
+/* ============================================ */
+/* Sequence pipeline (package detail)           */
+/* ============================================ */
+
+/* --- jQuery UI tabs override --- */
+#tabs.ui-tabs {
+  border: none;
+  background: none;
+  padding: 0;
 }
 
+#tabs .ui-tabs-nav.ui-widget-header {
+  display: flex;
+  gap: 0;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  background: none;
+  border: none;
+  border-bottom: 2px solid var(--gray-200);
+  border-radius: 0;
+}
+
+#tabs .ui-tabs-nav li.ui-state-default {
+  margin: 0 0 -2px 0;
+  padding: 0;
+  border: none;
+  background: none;
+}
+
+#tabs .ui-tabs-nav li a.ui-tabs-anchor {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 13px;
+  text-decoration: none;
+  color: var(--gray-500);
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: none;
+  float: none;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+#tabs .ui-tabs-nav li a.ui-tabs-anchor:hover {
+  color: var(--color-primary);
+  border-bottom-color: var(--gray-300);
+}
+
+#tabs .ui-tabs-nav li.ui-tabs-active a.ui-tabs-anchor {
+  color: var(--color-primary);
+  border-bottom: 2px solid var(--color-primary);
+  font-weight: 600;
+}
+
+/* --- Pipeline panel --- */
+#tabs .ui-tabs-panel {
+  padding: 24px 0 0 0;
+  border: none;
+  background: none;
+  counter-reset: pipeline-step;
+}
+
+/* --- Pipeline step --- */
 .actions {
-  margin-bottom: 5px;
-  padding: 3px;
-  border: dashed 1px rgb(100, 100, 100);
+  position: relative;
+  margin: 0;
+  padding: 16px 20px 16px 56px;
+  background: var(--gray-50);
+  border: none;
+  border-bottom: 1px solid var(--gray-200);
+  counter-increment: pipeline-step;
+  transition: background-color 0.15s ease;
 }
 
-.actions a {
-  padding: 1px;
+.actions:first-child { border-radius: 8px 8px 0 0; }
+.actions:last-child { border-radius: 0 0 8px 8px; border-bottom: none; }
+.actions:only-child { border-radius: 8px; }
+.actions:hover { background: #edf2f7; }
+
+/* Numbered step indicator */
+.actions::before {
+  content: counter(pipeline-step);
+  position: absolute;
+  left: 14px;
+  top: 16px;
+  width: 28px;
+  height: 28px;
+  background: var(--color-primary);
+  color: #fff;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.actions a:hover {
-  background-color: #007fff;
-  color: var(--color-text-white);
-  border: 1px solid #003eff;
+/* Connector between steps */
+.actions::after {
+  content: '';
+  position: absolute;
+  left: 27px;
+  top: 44px;
+  bottom: -1px;
+  width: 2px;
+  background: var(--color-primary);
+  opacity: 0.25;
 }
+
+.actions:last-child::after { display: none; }
+
+/* Step title */
+.actions h3 {
+  margin: 0 0 6px 0;
+  padding: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-primary);
+  border: none;
+  line-height: 28px;
+}
+
+/* Step details */
+.actions ul {
+  margin: 0;
+  padding: 0;
+  font-size: 12px;
+  line-height: 1.7;
+  list-style: none;
+}
+
+.actions ul li {
+  color: var(--color-text-medium);
+  padding: 1px 0 1px 16px;
+  position: relative;
+}
+
+.actions ul li::before {
+  content: '\203A';
+  position: absolute;
+  left: 4px;
+  color: var(--color-primary);
+  font-weight: 700;
+  font-size: 14px;
+}
+
+/* Empty step */
+.actions ul:empty::after {
+  content: "\2014";
+  color: var(--gray-400);
+  font-size: 12px;
+}
+
+/* Target highlight */
+.actions:target {
+  background: #fef3c7;
+}
+
+.actions:target::before {
+  background: var(--color-warning);
+}
+
+/* Flow routing links */
+.actions > a {
+  display: inline-block;
+  margin-top: 8px;
+  margin-right: 8px;
+  padding: 3px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 10px;
+  color: var(--color-primary);
+  background: rgba(37, 96, 125, 0.08);
+  transition: background 0.15s;
+}
+
+.actions > a:hover {
+  background: rgba(37, 96, 125, 0.16);
+}
+
+.actions > br { display: none; }
+
 
 /* ============================================ */
 /* Desynchronization                            */
@@ -181,7 +345,7 @@ a.info:hover span {
   padding: 5px 20px 5px 5px;
   display: block;
   z-index: 1000;
-  background: #e3e3e3;
+  background: var(--gray-200);
   left: 0;
   margin: 15px;
   width: 200px;
@@ -198,10 +362,10 @@ a.info:hover span {
 /* ============================================ */
 
 .easy_suggest {
-  background-color: #e5e5e5;
+  background-color: var(--gray-200);
   border: 1px solid var(--color-border-medium);
   border-width: 0 1px;
-  box-shadow: 0 2px 4px #ccc;
+  box-shadow: 0 2px 4px var(--color-border-medium);
   border-bottom-right-radius: 8px;
   border-bottom-left-radius: 8px;
   display: none;
@@ -315,7 +479,7 @@ a.info:hover span {
 .workflow-panel h3 {
   font-size: 13px;
   font-weight: 600;
-  color: #444;
+  color: var(--color-text-dark);
   margin: 0 0 8px 0;
 }
 
@@ -385,7 +549,7 @@ a.info:hover span {
 }
 
 #current-actions li .content {
-  background-color: #fafafa;
+  background-color: var(--gray-50);
   border: 1px solid var(--color-border-light);
   border-top: none;
   border-radius: 0 0 4px 4px;
@@ -404,7 +568,7 @@ a.info:hover span {
   padding: 6px 10px 6px 0;
   font-size: 12px;
   font-weight: 500;
-  color: #444;
+  color: var(--color-text-dark);
   text-align: left;
   vertical-align: middle;
   line-height: 1.6;
@@ -480,7 +644,7 @@ a.info:hover span {
 /* ---- Toggleable option rows ---- */
 
 #current-actions li .content table tr.toggleable {
-  border-top: 1px solid #e8e8e8;
+  border-top: 1px solid var(--gray-200);
 }
 
 #current-actions li .content table tr.toggleable td:first-child,
@@ -514,13 +678,13 @@ a.info:hover span {
   padding: 4px 10px;
   border: 1px solid var(--color-border-medium);
   border-radius: 4px;
-  background: #fff;
+  background: var(--color-bg-white);
   font-size: 11px;
   cursor: pointer;
 }
 
 .goto-on-return input[type="button"]:hover {
-  background: #f0f0f0;
+  background: var(--color-bg-gray);
 }
 
 .add-goto {
@@ -534,7 +698,7 @@ a.info:hover span {
 #available-actions + h1 {
   font-size: 13px;
   font-weight: 600;
-  color: #444;
+  color: var(--color-text-dark);
   margin: 0 0 8px 0;
 }
 

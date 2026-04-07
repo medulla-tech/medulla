@@ -95,7 +95,7 @@
 
 /* Progress bar styles */
 progress {
-  border-color: #ffffff;
+  border-color: var(--color-bg-white);
   background-color: #009ea9;
 }
 
@@ -168,9 +168,9 @@ progress::-moz-progress-bar {
 
 /* Scheduler logs styles */
 .shadow {
-  -moz-box-shadow: 4px 4px 10px #888;
-  -webkit-box-shadow: 4px 4px 10px #888;
-  box-shadow: 4px 4px 6px #888;
+  -moz-box-shadow: 4px 4px 10px var(--gray-400);
+  -webkit-box-shadow: 4px 4px 10px var(--gray-400);
+  box-shadow: 4px 4px 6px var(--gray-400);
 }
 
 .actions:target {
@@ -356,15 +356,15 @@ progress::-moz-progress-bar {
   width: 100px;
   height: 9px;
   margin: -5px;
-  background-color: #ffffff;
+  background-color: var(--color-bg-white);
   border-style: solid;
   border-width: 1px;
-  border-color: #dddddd;
+  border-color: var(--color-border-light);
   padding: 3px;
 }
 
 .status-progress::-webkit-progress-bar {
-  background: #f3f3f3;
+  background: var(--gray-100);
 }
 
 .status-progress::-webkit-progress-value {
@@ -452,7 +452,7 @@ ul.rightfile {
 }
 
 ul.rightfile.li {
-  background-color: #C0C0C0;
+  background-color: var(--gray-300);
 }
 
 .fileselect {
@@ -523,13 +523,13 @@ ul.rightfile.li {
 }
 
 .ombremultiple {
-  background-color: #ECECEC;
+  background-color: var(--gray-100);
   padding: 5px;
   box-shadow: 2px 2px 2px gray, -1px -1px 2px white;
 }
 
 .ombretable1 {
-  background-color: #ECECEC;
+  background-color: var(--gray-100);
   box-shadow: 2px 2px 2px gray, -1px -1px 2px white;
 }
 
@@ -606,7 +606,7 @@ ul.rightfile.li {
   max-height: 30px;
   columns: 5;
   background-color: rgb(221, 221, 221);
-  border: 2px solid #888;
+  border: 2px solid var(--color-border-dark);
   border-radius: 0.2em;
 }
 
@@ -710,7 +710,7 @@ ul.rightfile.li {
 .fb-notification-span {
   float: left;
   padding: 12px 12px 20px 0;
-  background-color: #d9edf7;
+  background-color: var(--color-info-light);
   width: 95%;
   height: 100%;
 }
