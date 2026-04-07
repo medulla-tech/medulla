@@ -321,6 +321,24 @@ $pagePushMessages = new Page("pushMessages", _T('Push messages', 'mobile'));
 $pagePushMessages->setFile("modules/mobile/mobile/pushMessages.php");
 $submod->addPage($pagePushMessages);
 
+################################
+# Contacts sync pages
+################################
+
+$pageContactsList = new Page("contactsList", _T('Device Contacts Sync', 'mobile'));
+$pageContactsList->setFile("modules/mobile/mobile/contactsList.php");
+$submod->addPage($pageContactsList);
+
+$pageAjaxContactsList = new Page("ajaxContactsList", _T('Contacts list view', 'mobile'));
+$pageAjaxContactsList->setFile("modules/mobile/mobile/ajaxContactsList.php");
+$pageAjaxContactsList->setOptions(array("AJAX" => true, "visible" => false));
+$submod->addPage($pageAjaxContactsList);
+
+$pageContactsConfig = new Page("contactsConfig", _T('Edit contacts sync config', 'mobile'));
+$pageContactsConfig->setFile("modules/mobile/mobile/contactsConfig.php");
+$pageContactsConfig->setOptions(array("visible" => false));
+$submod->addPage($pageContactsConfig);
+
 # send message forms (hidden pages)
 $pageNewMessage = new Page("newMessage", _T('Send new message', 'mobile'));
 $pageNewMessage->setFile("modules/mobile/mobile/newMessage.php");

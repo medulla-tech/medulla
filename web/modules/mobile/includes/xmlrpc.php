@@ -117,4 +117,10 @@ function xmlrpc_search_hmdm_app_packages($filter_text=""){
 function xmlrpc_upload_web_ui_files($uploadedFilePath = null, $uploadedFileName = null, $mimeType = null){
     return xmlCall("mobile.uploadWebUiFiles", array($uploadedFilePath, $uploadedFileName, $mimeType));
 }
+function xmlrpc_get_hmdm_contacts_config($configuration_id) {
+    return xmlCall("mobile.getHmdmContactsConfig", array($configuration_id));
+}
+function xmlrpc_save_hmdm_contacts_config($config_data) {
+    return xmlCall("mobile.saveHmdmContactsConfig", array($config_data));
+}
 ?>

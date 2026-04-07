@@ -155,3 +155,9 @@ def searchHmdmAppPackages(filter_text=""):
 
 def uploadWebUiFiles(uploaded_file_path=None, uploaded_file_name=None, mime_type=None):
     return MobileDatabase().uploadWebUiFiles(uploaded_file_path, uploaded_file_name, mime_type)
+
+def getHmdmContactsConfig(configuration_id):
+    return MobileDatabase().getHmdmContactsConfig(int(configuration_id))
+
+def saveHmdmContactsConfig(config_data):
+    return MobileDatabase().saveHmdmContactsConfig(config_data)

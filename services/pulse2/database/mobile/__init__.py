@@ -2615,4 +2615,72 @@ class MobileDatabase(DatabaseHelper):
         except Exception as e:
             action = "updating" if group_id else "creating"
             logging.getLogger().error(f"Error {action} group '{name}': {e} {group_data}")
+
+    # ------------------------------------------------------------------ #
+    # Contacts plugin                                                       #
+    # ------------------------------------------------------------------ #
+
+    def getHmdmContactsConfig(self, configuration_id: int):
+        """
+        Fetch the contacts sync config for a device configuration.
+
+        GET /rest/plugins/contacts/private/config/{configurationId}
+
+        :param configuration_id: HMDM configuration ID
+        :return: ContactsConfig dict or None on error
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Authentication failed when fetching contacts config.")
+            return None
+
+        url = f"{self.BASE_URL}/plugins/contacts/private/config/{configuration_id}"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+        try:
+            resp = requests.get(url, headers=headers)
+            resp.raise_for_status()
+            data = resp.json()
+            result = data.get("data", data)
+            if result is None:
+                # No config yet — return sensible defaults
+                return {
+                    "configurationId": configuration_id,
+                    "url": "",
+                    "login": "",
+                    "password": "",
+                    "accountType": "com.android.contacts",
+                    "syncInterval": 60,
+                    "wipeContacts": False
+                }
+            logging.getLogger().info(f"Contacts config for configuration {configuration_id} fetched.")
+            return result
+        except Exception as e:
+            logging.getLogger().error(f"Error fetching contacts config for configuration {configuration_id}: {e}")
+            return None
+
+    def saveHmdmContactsConfig(self, config_data: dict):
+        """
+        Save (create or update) the contacts sync config for a device configuration.
+
+        PUT /rest/plugins/contacts/private/config
+
+        :param config_data: dict matching ContactsConfig schema
+        :return: {"status": "OK"} on success or None on error
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Authentication failed when saving contacts config.")
+            return None
+
+        url = f"{self.BASE_URL}/plugins/contacts/private/config"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+        try:
+            logging.getLogger().info(f"Saving contacts config: {json.dumps(config_data, indent=2)}")
+            resp = requests.put(url, headers=headers, json=config_data)
+            resp.raise_for_status()
+            result = resp.json()
+            logging.getLogger().info(f"Contacts config saved successfully.")
+            return result
+        except Exception as e:
+            logging.getLogger().error(f"Error saving contacts config: {e}")
             return None
