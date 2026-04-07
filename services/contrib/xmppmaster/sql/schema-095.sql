@@ -2011,24 +2011,24 @@ DELIMITER ;
 -- =====================================================================
 -- PROCEDURE : up_regenere_list_produit_entity()
 -- Description :
---   Cette procédure régénère la table xmppmaster.up_list_produit pour une
+--   Cette procédure complète la table xmppmaster.up_list_produit pour une
 --   seule entité GLPI spécifiée par son glpi_id.
---   Elle supprime d’abord les entrées existantes pour cette entité, puis
---   recrée toutes les associations avec les produits définis dans
+--   Elle conserve les entrées existantes pour cette entité, puis ajoute
+--   uniquement les associations manquantes avec les produits définis dans
 --   xmppmaster.applicationconfig (key='table produits', context='entity').
 --
 -- Étapes principales :
 --   1. Vérification que l'entité existe dans glpi_entity.
---   2. Suppression des anciennes lignes pour cette entité dans up_list_produit.
+--   2. Parcours de la liste des produits définis dans applicationconfig.
 --   3. Parcours de la liste des produits définis dans applicationconfig.
---   4. Pour chaque produit, insertion d’une ligne (entity_id, name_procedure, enable=0)
---      pour l’entité spécifiée.
+--   4. Pour chaque produit manquant, insertion d’une ligne
+--      (entity_id, name_procedure, enable=0) pour l’entité spécifiée.
 --
 -- Paramètres :
 --   - p_entity_id (INT) : Identifiant GLPI de l’entité à régénérer.
 --
 -- Effets :
---   - Supprime toutes les entrées existantes pour l’entité spécifiée.
+--   - Conserve les entrées existantes pour l’entité spécifiée.
 --   - Ajoute de nouvelles entrées pour cette entité couvrant l’ensemble
 --     des produits définis.
 --
@@ -2056,10 +2056,11 @@ BEGIN
     -- Variables pour le curseur
     DECLARE done INT DEFAULT 0;
     DECLARE v_produit VARCHAR(1024);
+    DECLARE v_comment VARCHAR(2048);
 
     -- Déclaration du curseur
     DECLARE cur CURSOR FOR
-        SELECT `value`
+        SELECT `value`, `comment`
         FROM xmppmaster.applicationconfig
         WHERE `key` = 'table produits'
           AND `context` = 'entity';
@@ -2070,22 +2071,18 @@ BEGIN
     -- Vérifier que l'entité existe
     IF EXISTS (SELECT 1 FROM glpi_entity WHERE glpi_id = p_entity_id) THEN
 
-        -- Supprimer les anciennes lignes pour cette entité
-        DELETE FROM xmppmaster.up_list_produit
-        WHERE entity_id = p_entity_id;
-
         -- Ouvrir le curseur
         OPEN cur;
 
         read_loop: LOOP
-            FETCH cur INTO v_produit;
+            FETCH cur INTO v_produit, v_comment;
             IF done THEN
                 LEAVE read_loop;
             END IF;
 
-            -- Réinsérer les produits pour l’entité donnée
-            INSERT INTO xmppmaster.up_list_produit (entity_id, name_procedure, enable)
-            VALUES (p_entity_id, v_produit, 0);
+            -- Ajouter uniquement les produits manquants pour l’entité donnée
+            INSERT IGNORE INTO xmppmaster.up_list_produit (entity_id, name_procedure, enable, comment)
+            VALUES (p_entity_id, v_produit, 0, v_comment);
         END LOOP;
 
         CLOSE cur;
@@ -2095,91 +2092,6 @@ END$$
 DELIMITER ;
 ;
 
--- =====================================================================
--- =====================================================================
--- =====================================================================
--- PROCEDURE : regenere_liste_produits
--- =====================================================================
--- =====================================================================
--- =====================================================================
--- =====================================================================
--- PROCEDURE : up_regenere_list_produit()
--- Description :
---   Cette procédure régénère entièrement la table xmppmaster.up_list_produit.
---   Elle vide d’abord le contenu existant (TRUNCATE), puis recrée toutes les
---   associations entre les entités GLPI (glpi_entity) et les produits définis
---   dans xmppmaster.applicationconfig (key='table produits', context='entity').
---
--- Étapes principales :
---   1. Remise à zéro de la table up_list_produit (TRUNCATE).
---   2. Parcours de la liste des produits définis dans applicationconfig.
---   3. Pour chaque produit, insertion d’une ligne (entity_id, name_procedure, enable=0)
---      pour toutes les entités présentes dans glpi_entity.
---
--- Paramètres :
---   - Aucun.
---
--- Effets :
---   - Supprime toutes les entrées existantes dans xmppmaster.up_list_produit.
---   - Ajoute de nouvelles entrées pour couvrir l’ensemble des entités et produits.
---
--- Contraintes / Remarques :
---   - Le champ enable est toujours initialisé à 0 (désactivé par défaut).
---   - La procédure peut être appelée manuellement pour forcer une remise à plat
---     de la configuration produits/entités.
---   - Elle s’inspire du trigger xmppmasterglpi_entity_AFTER_INSERT mais agit
---     globalement sur toutes les entités déjà existantes.
--- =====================================================================
-USE `xmppmaster`;
-DROP procedure IF EXISTS `up_regenere_list_produit`;
-
-USE `xmppmaster`;
-DROP procedure IF EXISTS `xmppmaster`.`up_regenere_list_produit`;
-;
-
-DELIMITER $$
-USE `xmppmaster`$$
-CREATE  PROCEDURE `up_regenere_list_produit`()
-BEGIN
-
-    -- Variables pour le curseur
-    DECLARE done INT DEFAULT 0;
-    DECLARE v_produit VARCHAR(1024);
-    -- Déclaration du curseur
-    DECLARE cur CURSOR FOR
-        SELECT `value`
-        FROM xmppmaster.applicationconfig
-        WHERE `key` = 'table produits'
-          AND `context` = 'entity'
-          AND `enable` = 1;
-
-    -- Gestion fin de curseur
-    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
-
-    -- On remet à zéro la liste (doit venir après les DECLARE)
-    TRUNCATE TABLE xmppmaster.up_list_produit;
-
-    -- Ouvrir le curseur
-    OPEN cur;
-
-    read_loop: LOOP
-        FETCH cur INTO v_produit;
-        IF done THEN
-            LEAVE read_loop;
-        END IF;
-
-        -- Insérer pour chaque entité trouvée
-        INSERT INTO xmppmaster.up_list_produit (entity_id, name_procedure, enable)
-        SELECT e.glpi_id, v_produit, 0
-        FROM glpi_entity e;
-    END LOOP;
-
-    CLOSE cur;
-END$$
-
-DELIMITER ;
-;
-
 
 -- =====================================================================
 -- =====================================================================
@@ -2191,16 +2103,16 @@ DELIMITER ;
 -- =====================================================================
 -- PROCEDURE : regenere_liste_produits
 -- Description :
---   Réinitialise complètement la table xmppmaster.up_list_produit,
---   puis régénère les associations entité/produit pour chaque entité
+--   Complète la table xmppmaster.up_list_produit,
+--   puis ajoute les associations entité/produit manquantes pour chaque entité
 --   présente dans la table xmppmaster.glpi_entity.
 --
 -- Fonctionnement :
---   - Vide la table xmppmaster.up_list_produit.
+--   - Conserve les lignes existantes dans xmppmaster.up_list_produit.
 --   - Récupère la liste des produits configurés (clé 'tables produits', contexte 'entity')
 --     depuis la table xmppmaster.applicationconfig.
---   - Pour chaque entité et pour chaque produit, insère une ligne dans up_list_produit
---     avec enable = 0.
+--   - Pour chaque entité et pour chaque produit manquant, insère une ligne dans
+--     up_list_produit avec enable = 0.
 --
 -- Tables concernées :
 --   - xmppmaster.glpi_entity : source des entités.
@@ -2209,7 +2121,7 @@ DELIMITER ;
 --
 -- Remarques :
 --   - Le champ enable est toujours initialisé à 0, l’activation doit être faite manuellement.
---   - Toutes les anciennes associations sont supprimées avant reconstruction.
+--   - Les associations existantes sont conservées afin de préserver les activations.
 -- =====================================================================
 USE `xmppmaster`;
 DROP procedure IF EXISTS `up_regenere_list_produit`;
@@ -2226,9 +2138,10 @@ BEGIN
     -- Variables pour le curseur
     DECLARE done INT DEFAULT 0;
     DECLARE v_produit VARCHAR(1024);
+    DECLARE v_comment VARCHAR(2048);
     -- Déclaration du curseur
     DECLARE cur CURSOR FOR
-        SELECT `value`
+        SELECT `value`, `comment`
         FROM xmppmaster.applicationconfig
         WHERE `key` = 'table produits'
           AND `context` = 'entity';
@@ -2236,21 +2149,18 @@ BEGIN
     -- Gestion fin de curseur
     DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
 
-    -- On remet à zéro la liste (doit venir après les DECLARE)
-    TRUNCATE TABLE xmppmaster.up_list_produit;
-
     -- Ouvrir le curseur
     OPEN cur;
 
     read_loop: LOOP
-        FETCH cur INTO v_produit;
+        FETCH cur INTO v_produit, v_comment;
         IF done THEN
             LEAVE read_loop;
         END IF;
 
-        -- Insérer pour chaque entité trouvée
-        INSERT INTO xmppmaster.up_list_produit (entity_id, name_procedure, enable)
-        SELECT e.glpi_id, v_produit, 0
+        -- Insérer uniquement les associations manquantes pour chaque entité trouvée
+        INSERT IGNORE INTO xmppmaster.up_list_produit (entity_id, name_procedure, enable, comment)
+        SELECT e.glpi_id, v_produit, 0, v_comment
         FROM glpi_entity e;
     END LOOP;
 
