@@ -227,10 +227,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $app['action'] = 1;
                         $app['selected'] = true;
                     } elseif ($action === 2) {
-                        // Do not install action
                         $app['remove'] = false;
                         $app['action'] = 0;
-                        $app['selected'] = true;
+                        $app['selected'] = false;
                     }
                 }
                 
@@ -251,7 +250,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $idNameMap = array();
             foreach ($payload['applications'] as $app) {
-                $idNameMap[(string)$app['latestVersion']] = $app['name'];
+                if (isset($app['latestVersion'])) {
+                    $idNameMap[(string)$app['latestVersion']] = $app['name'];
+                }
+                if (isset($app['id'])) {
+                    $idNameMap[(string)$app['id']] = $app['name'];
+                }
             }
 
             if ($postedMainAppId !== '') {
@@ -1008,7 +1012,12 @@ if (!is_array($allApps)) {
 $selectedApps = array();
 foreach ($allApps as $app) {
     if (isset($app['selected']) && $app['selected']) {
-        $selectedApps[] = array('name' => $app['name'], 'id' => $app['id'], 'pkg' => $app['pkg']);
+        $selectedApps[] = array(
+            'name' => $app['name'],
+            'id' => $app['id'],
+            'pkg' => isset($app['pkg']) ? $app['pkg'] : '',
+            'latestVersion' => isset($app['latestVersion']) ? $app['latestVersion'] : $app['id']
+        );
     }
 }
 
@@ -1018,7 +1027,7 @@ $mainAppName = isset($config['mainApp']) ? $config['mainApp'] : '';
 $contentAppName = isset($config['contentApp']) ? $config['contentApp'] : '';
 if (empty($mainAppName) && isset($config['mainAppId'])) {
     foreach ($selectedApps as $app) {
-        if ($app['id'] == $config['mainAppId']) {
+        if ($app['latestVersion'] == $config['mainAppId'] || $app['id'] == $config['mainAppId']) {
             $mainAppName = $app['name'];
             break;
         }
@@ -1026,7 +1035,7 @@ if (empty($mainAppName) && isset($config['mainAppId'])) {
 }
 if (empty($contentAppName) && isset($config['contentAppId'])) {
     foreach ($selectedApps as $app) {
-        if ($app['id'] == $config['contentAppId']) {
+        if ($app['latestVersion'] == $config['contentAppId'] || $app['id'] == $config['contentAppId']) {
             $contentAppName = $app['name'];
             break;
         }
@@ -1893,7 +1902,7 @@ jQuery(document).ready(function() {
                         li.style.cssText = 'padding: 8px 12px; cursor: pointer; border-bottom: 1px solid #eee;';
                         li.textContent = app.name;
                         li.title = app.name;
-                        li.setAttribute('data-id', app.id);
+                        li.setAttribute('data-id', app.latestVersion !== undefined ? app.latestVersion : app.id);
                         
                         li.onmouseover = function() {
                             li.style.backgroundColor = '#f0f0f0';

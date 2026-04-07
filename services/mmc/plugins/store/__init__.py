@@ -14,6 +14,10 @@ import ssl
 import os
 import subprocess
 import shutil
+import time
+import base64
+from Cryptodome.Cipher import AES
+from Cryptodome.Util.Padding import pad
 
 VERSION = "1.0.0"
 APIVERSION = "1:0:0"
@@ -36,6 +40,18 @@ def activate():
 # ============================================
 # Store API helper
 # ============================================
+
+def _generate_auth_header(config):
+    """Generate AES-256-CBC encrypted auth header (same pattern as security module)"""
+    if not config.store_api_keyAES32 or not config.client_uuid:
+        return None
+    key = config.store_api_keyAES32.encode('utf-8')
+    plaintext = f"{config.client_uuid}:{int(time.time())}"
+    iv = os.urandom(16)
+    cipher = AES.new(key, AES.MODE_CBC, iv)
+    encrypted = cipher.encrypt(pad(plaintext.encode('utf-8'), AES.block_size))
+    signature = base64.b64encode(iv + encrypted).decode('utf-8')
+    return f'Bearer {config.client_uuid}:{signature}'
 
 def _store_api_get(endpoint, params=None):
     """Call the remote store API
@@ -61,8 +77,9 @@ def _store_api_get(endpoint, params=None):
             url += '?' + query
 
     headers = {'Accept': 'application/json'}
-    if config.store_api_token:
-        headers['Authorization'] = f'Bearer {config.store_api_token}'
+    auth = _generate_auth_header(config)
+    if auth:
+        headers['Authorization'] = auth
     req = urllib.request.Request(url, headers=headers, method='GET')
 
     ssl_context = None
@@ -104,8 +121,9 @@ def _store_api_post(endpoint, data):
         'Accept': 'application/json',
         'Content-Type': 'application/json'
     }
-    if config.store_api_token:
-        headers['Authorization'] = f'Bearer {config.store_api_token}'
+    auth = _generate_auth_header(config)
+    if auth:
+        headers['Authorization'] = auth
 
     req = urllib.request.Request(url, data=body, headers=headers, method='POST')
 
@@ -138,7 +156,7 @@ def _enrich_with_local_packages(data):
 
     # Fetch packages list — group by software_name (multiple packages per software)
     packages_by_name = {}
-    if config.store_api_url and config.store_api_token:
+    if config.store_api_url and config.store_api_keyAES32:
         try:
             pkg_list = _fetch_packages_list(config)
             for pkg in pkg_list.get('packages', []):
@@ -288,7 +306,7 @@ def save_subscriptions(software_ids):
         software_ids: list of software IDs to subscribe to
     """
     config = StoreConfig("store")
-    if not config.store_api_token:
+    if not config.store_api_keyAES32:
         return {'success': False, 'error': 'API token not configured'}
 
     # Build subscriptions with configured langs
@@ -305,7 +323,7 @@ def save_subscriptions(software_ids):
         return result
 
     # Sync packages in background thread
-    if config.store_api_url and config.store_api_token:
+    if config.store_api_url and config.store_api_keyAES32:
         from threading import Thread
         def _bg_sync():
             try:
@@ -345,7 +363,7 @@ def sync_packages():
     # Validate configuration
     if not config.store_api_url:
         return {'success': False, 'error': 'store_api url not configured in store.ini'}
-    if not config.store_api_token:
+    if not config.store_api_keyAES32:
         return {'success': False, 'error': 'store_api api_token not configured in store.ini'}
 
     # 1. Get subscribed software IDs
@@ -508,8 +526,9 @@ def _fetch_packages_list(config):
     url = config.store_api_url.rstrip('/') + '/packages'
 
     headers = {'Accept': 'application/json'}
-    if config.store_api_token:
-        headers['Authorization'] = f'Bearer {config.store_api_token}'
+    auth = _generate_auth_header(config)
+    if auth:
+        headers['Authorization'] = auth
 
     req = urllib.request.Request(url, headers=headers, method='GET')
 
@@ -557,8 +576,9 @@ def _download_package(config, remote_pkg, local_path):
         logger.debug(f"Downloading {filename} from {file_url}")
 
         headers = {}
-        if config.store_api_token:
-            headers['Authorization'] = f'Bearer {config.store_api_token}'
+        auth = _generate_auth_header(config)
+        if auth:
+            headers['Authorization'] = auth
         req = urllib.request.Request(file_url, headers=headers, method='GET')
 
         try:
