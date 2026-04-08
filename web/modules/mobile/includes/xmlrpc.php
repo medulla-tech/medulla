@@ -129,4 +129,19 @@ function xmlrpc_export_hmdm_devices($group_id = null, $configuration_id = null, 
 function xmlrpc_import_hmdm_devices($csv_content) {
     return xmlCall("mobile.importHmdmDevices", array($csv_content));
 }
+function xmlrpc_get_photos_settings() {
+    return xmlCall("mobile.getPhotosSettings", array());
+}
+function xmlrpc_save_photos_settings($settings_data) {
+    return xmlCall("mobile.savePhotosSettings", array($settings_data));
+}
+function xmlrpc_list_photos($device_number = null, $date_from = null, $date_to = null, $page_num = 0, $page_size = 50) {
+    return xmlCall("mobile.listPhotos", array($device_number, $date_from, $date_to, $page_num, $page_size));
+}
+function xmlrpc_delete_photo($photo_id) {
+    return xmlCall("mobile.deletePhoto", array($photo_id));
+}
+function xmlrpc_get_photo_file($photo_id, $is_thumb = false) {
+    return xmlCall("mobile.getPhotoFile", array($photo_id, $is_thumb));
+}
 ?>

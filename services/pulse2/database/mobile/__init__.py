@@ -2758,4 +2758,168 @@ class MobileDatabase(DatabaseHelper):
         except Exception as e:
             logging.getLogger().error(f"Error importing devices: {e}")
             return None
+
+    def getPhotosSettings(self):
+        """
+        Get photo upload settings for current customer.
+
+        GET /rest/plugins/photos/private/settings
+
+        :return: dict with settings or None on error
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Authentication failed when getting photos settings.")
+            return None
+
+        url = f"{self.BASE_URL}/plugins/photos/private/settings"
+        headers = {"Authorization": f"Bearer {hmtoken}"}
+
+        try:
+            resp = requests.get(url, headers=headers)
+            resp.raise_for_status()
+            result = resp.json()
+            if result.get("status") == "OK":
+                return result.get("data", {})
+            return None
+        except Exception as e:
+            logging.getLogger().error(f"Error getting photos settings: {e}")
+            return None
+
+    def savePhotosSettings(self, settings_data: dict):
+        """
+        Save photo upload settings.
+
+        PUT /rest/plugins/photos/private/settings
+
+        :param settings_data: dict with settings
+        :return: dict with status or None on error
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Authentication failed when saving photos settings.")
+            return None
+
+        url = f"{self.BASE_URL}/plugins/photos/private/settings"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+
+        try:
+            resp = requests.put(url, headers=headers, json=settings_data)
+            resp.raise_for_status()
+            result = resp.json()
+            logging.getLogger().info("Photos settings saved successfully")
+            return result
+        except Exception as e:
+            logging.getLogger().error(f"Error saving photos settings: {e}")
+            return None
+
+    def listPhotos(self, device_number=None, date_from=None, date_to=None, page_num=0, page_size=50):
+        """
+        List uploaded photos with filtering and pagination.
+
+        POST /rest/plugins/photos/private/list
+
+        :param device_number: filter by device (optional)
+        :param date_from: timestamp in milliseconds (optional)
+        :param date_to: timestamp in milliseconds (optional)
+        :param page_num: page number (0-indexed)
+        :param page_size: items per page
+        :return: dict with items and totalCount, or None on error
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Authentication failed when listing photos.")
+            return None
+
+        url = f"{self.BASE_URL}/plugins/photos/private/list"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+
+        payload = {
+            "pageNum": page_num,
+            "pageSize": page_size
+        }
+
+        if device_number:
+            payload["deviceNumber"] = device_number
+        if date_from:
+            payload["dateFrom"] = date_from
+        if date_to:
+            payload["dateTo"] = date_to
+
+        try:
+            resp = requests.post(url, headers=headers, json=payload)
+            resp.raise_for_status()
+            result = resp.json()
+            if result.get("status") == "OK":
+                data = result.get("data", {})
+                if "items" in data:
+                    for item in data["items"]:
+                        if "uploadTs" in item and item["uploadTs"] is not None:
+                            item["uploadTs"] = str(item["uploadTs"])
+                return data
+            return None
+        except Exception as e:
+            logging.getLogger().error(f"Error listing photos: {e}")
+            return None
+
+    def deletePhoto(self, photo_id: int):
+        """
+        Delete a photo.
+
+        DELETE /rest/plugins/photos/private/photo/{id}
+
+        :param photo_id: photo ID
+        :return: dict with status or None on error
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Authentication failed when deleting photo.")
+            return None
+
+        url = f"{self.BASE_URL}/plugins/photos/private/photo/{photo_id}"
+        headers = {"Authorization": f"Bearer {hmtoken}"}
+
+        try:
+            resp = requests.delete(url, headers=headers)
+            resp.raise_for_status()
+            result = resp.json()
+            logging.getLogger().info(f"Photo {photo_id} deleted successfully")
+            return result
+        except Exception as e:
+            logging.getLogger().error(f"Error deleting photo {photo_id}: {e}")
+            return None
+
+    def getPhotoFile(self, photo_id: int, is_thumb: bool = False):
+        """
+        Get photo file content.
+
+        GET /rest/plugins/photos/private/photo/{id}/file
+
+        :param photo_id: photo ID
+        :param is_thumb: request thumbnail instead of full image
+        :return: dict with 'content' (base64), 'contentType', or None on error
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Authentication failed when getting photo file.")
+            return None
+
+        url = f"{self.BASE_URL}/plugins/photos/private/photo/{photo_id}/file"
+        if is_thumb:
+            url += "?thumb=true"
+
+        headers = {"Authorization": f"Bearer {hmtoken}"}
+
+        try:
+            resp = requests.get(url, headers=headers)
+            resp.raise_for_status()
+            import base64
+            content_type = resp.headers.get('Content-Type', 'image/jpeg')
+            content_b64 = base64.b64encode(resp.content).decode('utf-8')
+            return {
+                'content': content_b64,
+                'contentType': content_type
+            }
+        except Exception as e:
+            logging.getLogger().error(f"Error getting photo file {photo_id}: {e}")
             return None

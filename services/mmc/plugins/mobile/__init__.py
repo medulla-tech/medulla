@@ -167,3 +167,18 @@ def exportHmdmDevices(group_id=None, configuration_id=None, filter_text=None, co
 
 def importHmdmDevices(csv_content):
     return MobileDatabase().importHmdmDevices(csv_content)
+
+def getPhotosSettings():
+    return MobileDatabase().getPhotosSettings()
+
+def savePhotosSettings(settings_data):
+    return MobileDatabase().savePhotosSettings(settings_data)
+
+def listPhotos(device_number=None, date_from=None, date_to=None, page_num=0, page_size=50):
+    return MobileDatabase().listPhotos(device_number, date_from, date_to, page_num, page_size)
+
+def deletePhoto(photo_id):
+    return MobileDatabase().deletePhoto(int(photo_id))
+
+def getPhotoFile(photo_id, is_thumb=False):
+    return MobileDatabase().getPhotoFile(int(photo_id), is_thumb)

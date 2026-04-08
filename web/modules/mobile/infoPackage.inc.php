@@ -353,6 +353,25 @@ $pageDeviceImportAction->setFile("modules/mobile/mobile/deviceImportAction.php")
 $pageDeviceImportAction->setOptions(array("visible" => false, "noHeader" => true));
 $submod->addPage($pageDeviceImportAction);
 
+$pagePhotosList = new Page("photosList", _T('Device Photos', 'mobile'));
+$pagePhotosList->setFile("modules/mobile/mobile/photosList.php");
+$submod->addPage($pagePhotosList);
+
+$pageAjaxPhotosList = new Page("ajaxPhotosList", _T('Photos list AJAX', 'mobile'));
+$pageAjaxPhotosList->setFile("modules/mobile/mobile/ajaxPhotosList.php");
+$pageAjaxPhotosList->setOptions(array("AJAX" => true, "visible" => false));
+$submod->addPage($pageAjaxPhotosList);
+
+$pageDeletePhoto = new Page("deletePhoto", _T('Delete photo', 'mobile'));
+$pageDeletePhoto->setFile("modules/mobile/mobile/deletePhoto.php");
+$pageDeletePhoto->setOptions(array("AJAX" => false, "visible" => false, "noHeader" => true));
+$submod->addPage($pageDeletePhoto);
+
+$pagePhotoFile = new Page("photoFile", _T('Photo file', 'mobile'));
+$pagePhotoFile->setFile("modules/mobile/mobile/photoFile.php");
+$pagePhotoFile->setOptions(array("visible" => false, "noHeader" => true));
+$submod->addPage($pagePhotoFile);
+
 # send message forms (hidden pages)
 $pageNewMessage = new Page("newMessage", _T('Send new message', 'mobile'));
 $pageNewMessage->setFile("modules/mobile/mobile/newMessage.php");
