@@ -2938,3 +2938,57 @@ class MobileDatabase(DatabaseHelper):
         except Exception as e:
             logging.getLogger().error(f"Error getting photo file {photo_id}: {e}")
             return None
+
+    def startRemoteControlSession(self, device_number):
+        """
+        Start a remote control session for the given device.
+
+        POST /rest/plugins/remotecontrol/private/sessions/{deviceNumber}/start
+
+        :param device_number: Device identifier
+        :return: dict with id, token, deviceNumber, status or None on error
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Authentication failed when starting remote control session.")
+            return None
+
+        url = f"{self.BASE_URL}/plugins/remotecontrol/private/sessions/{device_number}/start"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+
+        try:
+            resp = requests.post(url, headers=headers)
+            resp.raise_for_status()
+            data = resp.json()
+            if data.get("status") == "OK":
+                return self.convert_large_ints(data.get("data", {}))
+            logging.getLogger().error(f"Remote control start failed: {data}")
+            return None
+        except Exception as e:
+            logging.getLogger().error(f"Error starting remote control session for {device_number}: {e}")
+            return None
+
+    def stopRemoteControlSession(self, session_id):
+        """
+        Stop a remote control session.
+
+        POST /rest/plugins/remotecontrol/private/sessions/{sessionId}/stop
+
+        :param session_id: Session ID returned by startRemoteControlSession
+        :return: True on success, False on error
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Authentication failed when stopping remote control session.")
+            return False
+
+        url = f"{self.BASE_URL}/plugins/remotecontrol/private/sessions/{session_id}/stop"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+
+        try:
+            resp = requests.post(url, headers=headers)
+            resp.raise_for_status()
+            return True
+        except Exception as e:
+            logging.getLogger().error(f"Error stopping remote control session {session_id}: {e}")
+            return False

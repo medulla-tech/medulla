@@ -144,4 +144,10 @@ function xmlrpc_delete_photo($photo_id) {
 function xmlrpc_get_photo_file($photo_id, $is_thumb = false) {
     return xmlCall("mobile.getPhotoFile", array($photo_id, $is_thumb));
 }
+function xmlrpc_start_remote_control_session($device_number) {
+    return xmlCall("mobile.startRemoteControlSession", array($device_number));
+}
+function xmlrpc_stop_remote_control_session($session_id) {
+    return xmlCall("mobile.stopRemoteControlSession", array($session_id));
+}
 ?>

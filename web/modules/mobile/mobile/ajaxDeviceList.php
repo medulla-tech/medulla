@@ -178,6 +178,7 @@ foreach ($mobiles as $index => $mobile) {
     $actionEdit[] = new ActionItem(_T("Edit", "mobile"), "editDevice", "edit", "id", "mobile", "mobile");
     $actionQuick[] = new ActionPopupItem(_T("Quick action", "mobile"), "deviceQuickAction", "quick", "id", "mobile", "mobile", null, 620);
     $actionQr[] = new ActionPopupItem(_T("QR Code", "mobile"), "qrCode", "qrcode", "", "mobile", "mobile", null, 450);
+    $actionRemoteControl[] = new ActionPopupItem(_T("Remote Control", "mobile"), "remoteControlAction", "guaca", "device", "mobile", "mobile", null, 470);
     $actionDelete[] = new ActionPopupItem(_T("Delete", "mobile"), "deleteDevice", "delete", "id", "mobile", "mobile", null, 500);
 
     $params[] = [
@@ -208,6 +209,7 @@ $n->addExtraInfo($ip, _T("IP address", "mobile"));
 
 // Attach actions
 $n->addActionItemArray($actionQr);
+$n->addActionItemArray($actionRemoteControl);
 $n->addActionItemArray($actionQuick);
 $n->addActionItemArray($actionDetails);
 $n->addActionItemArray($actionLogs);
@@ -244,3 +246,14 @@ $n->display();
     color: #dc3545;
 }
 </style>
+
+<script>
+document.addEventListener('click', function(e) {
+    var a = e.target.closest('li.guaca a');
+    if (a && a.href && a.href.indexOf('action=remoteControlAction') !== -1) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        window.open(a.href, 'remotecontrol', 'width=470,height=860,resizable=yes,scrollbars=no');
+    }
+}, true);
+</script>

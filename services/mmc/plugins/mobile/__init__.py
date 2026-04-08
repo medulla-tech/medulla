@@ -182,3 +182,9 @@ def deletePhoto(photo_id):
 
 def getPhotoFile(photo_id, is_thumb=False):
     return MobileDatabase().getPhotoFile(int(photo_id), is_thumb)
+
+def startRemoteControlSession(device_number):
+    return MobileDatabase().startRemoteControlSession(device_number)
+
+def stopRemoteControlSession(session_id):
+    return MobileDatabase().stopRemoteControlSession(int(session_id))

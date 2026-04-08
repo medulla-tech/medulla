@@ -417,6 +417,19 @@ $pageDeviceQuickActionExec->setOptions(array("AJAX" => false, "visible" => false
 $submod->addPage($pageDeviceQuickActionExec);
 
 ################################
+# Remote Control page
+################################
+$pageRemoteControlAction = new Page("remoteControlAction", _T('Remote Control', 'mobile'));
+$pageRemoteControlAction->setFile("modules/mobile/mobile/remoteControlAction.php");
+$pageRemoteControlAction->setOptions(array("visible" => false, "noHeader" => true));
+$submod->addPage($pageRemoteControlAction);
+
+$pageRemoteControlStop = new Page("remoteControlStop", _T('Remote Control Stop', 'mobile'));
+$pageRemoteControlStop->setFile("modules/mobile/mobile/remoteControlStop.php");
+$pageRemoteControlStop->setOptions(array("visible" => false, "noHeader" => true, "AJAX" => true));
+$submod->addPage($pageRemoteControlStop);
+
+################################
 # End
 ################################
 
