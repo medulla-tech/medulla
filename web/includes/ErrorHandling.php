@@ -69,24 +69,36 @@ class ErrorHandlingItem {
             $str = '<div class="alert alert-info">';
         }
 
-        $str .= "<h1>" . $this->getMsg() . "</h1>";
+        $str .= "<h3>" . $this->getMsg() . "</h3>";
         if ($this->getAdvice())
-            $str .= "<p>" . $this->getAdvice() . "</p>";;
+            $str .= "<p>" . $this->getAdvice() . "</p>";
 
         if ($this->_showTraceBack) {
 
             $copied_message = _("Copied");
-            $selector = "jQuery(this).parent().find('.errorTraceback')";
-            $script = "var textareaToRemove = jQuery( '<textarea>' );
-            jQuery( 'body' ).append(textareaToRemove);
-            jQuery(textareaToRemove).val(jQuery(this).parent().find('pre').text()).select();
-            document.execCommand( 'copy' );
-            jQuery(textareaToRemove).remove();
-            console.log(jQuery(this).text('$copied_message'));";
+            $show_label = _("Show complete trackback");
+            $hide_label = _("Hide traceback");
 
-            $str .= '<a class="btn btn-danger btn-no-marge" href="#" onclick="jQuery(this).parent().find('.$selector.').toggle();">'._("Show complete trackback").'</a>';
-            $str .= '<a class="btn btnSecondary" href="#" onclick="'.$script.'">'._("Copy to clipboard").'</a>';
-            $str .= '<div class="errorTraceback" style="display:none;"><h1>'._("Complete Traceback").'</h1><pre>';
+            $toggle_script = "var tb = jQuery(this).closest('.alert').find('.errorTraceback');
+            var btn = jQuery(this);
+            if (tb.is(':visible')) {
+                tb.slideUp(200);
+                btn.text('$show_label');
+            } else {
+                tb.slideDown(200);
+                btn.text('$hide_label');
+            }";
+
+            $copy_script = "var tb = jQuery(this).closest('.alert').find('pre').text();
+            navigator.clipboard.writeText(tb).then(function() {
+                jQuery(event.target).text('$copied_message');
+            });";
+
+            $str .= '<div class="error-actions">';
+            $str .= '<a class="btn btn-danger" href="#" onclick="'.$toggle_script.' return false;">'.$show_label.'</a>';
+            $str .= '<a class="btn btnSecondary" href="#" onclick="'.$copy_script.' return false;">'._("Copy to clipboard").'</a>';
+            $str .= '</div>';
+            $str .= '<div class="errorTraceback" style="display:none;"><pre>';
             $str .= gmdate("d M Y H:i:s") . "\n\n";
             $str .= "PHP XMLRPC call: " . $xmlResponse["faultString"] . "\n\n";
             $str .= "Python Server traceback:\n";

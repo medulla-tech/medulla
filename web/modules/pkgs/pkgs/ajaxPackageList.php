@@ -155,6 +155,10 @@ if($sharings['config']['centralizedmultiplesharing'] == true) {
 
         $_tmpParam['pid'] = base64_encode($_packages['uuid'][$i]);
         $_tmpParam['packageUuid'] = $_packages['uuid'][$i];
+        $_tmpParam['packageName'] = $_packages['conf_json'][$i]['name'];
+        $_tmpParam['packageVersion'] = isset($_versions[$i]) ? $_versions[$i] : '';
+        $_tmpParam['packageOs'] = isset($_os[$i]) ? $_os[$i] : '';
+        $_tmpParam['packageSize'] = isset($_sizes[$i]) ? $_sizes[$i] : '';
 
         $countfiles = _T('Non precised');
         $listfiles = "";

@@ -333,7 +333,25 @@ p {
   color: var(--color-primary-dark);
 }
 
-/* Navbar icon color change on hover (white -> primary blue) */
+/* Navbar icons — base style (mask-image set per-module via inline CSS) */
+#navbar ul li a::before {
+  content: "";
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  background-color: white;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
+
+/* Navbar icon color change on hover/active (white -> primary blue) */
 #navbar ul li a:hover::before {
   background-color: var(--color-primary);
 }

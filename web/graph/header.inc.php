@@ -262,6 +262,25 @@ $root = $conf["global"]["root"];
             }
 
             // Replacement function for Javascript alert (override)
+            function showToast(message, type) {
+                var container = document.getElementById('toast-container');
+                if (!container) {
+                    container = document.createElement('div');
+                    container.id = 'toast-container';
+                    document.body.appendChild(container);
+                }
+                var toast = document.createElement('div');
+                toast.className = 'toast toast-' + type;
+                toast.innerHTML = '<span class="toast-message">' + message + '</span>'
+                    + '<button class="toast-close" onclick="this.parentElement.remove()">&times;</button>';
+                container.appendChild(toast);
+                setTimeout(function() {
+                    toast.style.opacity = '0';
+                    toast.style.transform = 'translateY(30px)';
+                    setTimeout(function() { toast.remove(); }, 400);
+                }, 5000);
+            }
+
             function alert(message, title, klass) {
 
                 function nl2br(str, is_xhtml) {
@@ -273,18 +292,30 @@ $root = $conf["global"]["root"];
 
                 if (!klass)
                     klass = 'alert-error';
+
+                // Non-error alerts → toast (unless modal- prefix to force modal)
+                if (klass === 'alert-info' || klass === 'alert-success' || klass === 'alert-warning') {
+                    var type = klass.replace('alert-', '');
+                    showToast(message, type);
+                    return;
+                }
+
+                // modal-warning, modal-info, modal-success → modal with correct style
+                if (klass.indexOf('modal-') === 0) {
+                    klass = 'alert-' + klass.replace('modal-', '');
+                }
+
+                // Errors → modal popup
                 if (!title)
                     title = '';
-                var message = '<div style="padding: 10px"><div class="alert ' + klass + '">' + message + '</div>';
-                //message += '<div style="text-align: center"><a class="btn btn-primary" href="' + url_yes + '"><?= _('Yes') ?></a>';
-
-                message += ' <center><button class="btn btnSecondary" onclick="closePopup(); return false;"><?= _('Close') ?></button></center>';
-
-                message += '</div></div>';
+                var html = '<div class="js-alert-modal ' + klass + '">';
+                html += '<div class="js-alert-content">' + message + '</div>';
+                html += '<div class="js-alert-actions"><button class="btn btnSecondary" onclick="closePopup(); return false;"><?= _('Close') ?></button></div>';
+                html += '</div>';
 
                 PopupWindow(null, null, 0, function(evt) {
                     var $popup = jQuery('#popup');
-                    // Reset position and center using negative margins
+                    $popup.find('#__popup_container').css('padding', '0');
                     $popup.css({
                         'top': '50%',
                         'left': '50%',
@@ -293,7 +324,7 @@ $root = $conf["global"]["root"];
                     });
                     jQuery('#overlay').fadeIn().click(closePopup);
 
-                }, message);
+                }, html);
             }
 
             function closePopup() {

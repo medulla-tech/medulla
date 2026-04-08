@@ -61,17 +61,24 @@
 }
 
 /* ========== Popup Alert Styles ========== */
+.popup:has(.alert),
+.popup:has(.js-alert-modal) {
+  border-left: 5px solid var(--btn-danger-bg);
+}
+
+.popup:has(.alert-success) { border-left-color: var(--color-accent); }
+.popup:has(.alert-warning) { border-left-color: var(--color-warning); }
+.popup:has(.alert-info) { border-left-color: var(--color-primary); }
+
 .popup .alert {
   margin: 0;
   border-radius: 0;
   border: none;
-  font-size: var(--text-xl);
+  font-size: var(--text-lg);
   line-height: 1.6;
   display: block;
   text-align: center;
-  padding: 20px;
-  padding-top: 150px;
-  padding-bottom: 20px;
+  padding: 50px 30px 40px;
   background: var(--color-bg-white);
   color: var(--color-text-dark);
   text-shadow: none;
@@ -80,37 +87,92 @@
 .popup .alert::before {
   content: '';
   display: block;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  width: auto;
-  height: 120px;
-  background-size: 55px 55px;
+  width: 36px;
+  height: 36px;
+  margin: 0 auto 25px;
+  background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
 }
 
-/* ========== Popup Alert Types - Colored header ========== */
+.popup .alert h3 {
+  font-size: 1.2em;
+  font-weight: 700;
+  margin: 0 0 10px;
+  color: var(--color-text-dark);
+}
+
+.popup .alert p {
+  color: var(--color-text-medium);
+  margin: 0 0 6px;
+}
+
+/* ========== Popup Alert Types - Icons ========== */
 .popup .alert-success::before {
-  background-color: var(--color-accent);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2328a745'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z'/%3E%3C/svg%3E");
 }
 
 .popup .alert-danger::before,
 .popup .alert-error::before {
-  background-color: var(--btn-danger-bg);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2'%3E%3Cpath d='M12 2L2 22h20L12 2z'/%3E%3Cpath d='M12 9v4'/%3E%3Ccircle cx='12' cy='17' r='1'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23dc3545'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z'/%3E%3C/svg%3E");
 }
 
 .popup .alert-warning::before {
-  background-color: var(--color-warning);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2'%3E%3Cpath d='M12 2L2 22h20L12 2z'/%3E%3Cpath d='M12 9v4'/%3E%3Ccircle cx='12' cy='17' r='1'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23e8a317'%3E%3Cpath d='M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z'/%3E%3C/svg%3E");
 }
 
 .popup .alert-info::before {
-  background-color: var(--color-primary);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%232c6aa0'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z'/%3E%3C/svg%3E");
+}
+
+/* ========== JS Alert Modal (from header.inc.php alert()) ========== */
+.js-alert-modal {
+  text-align: center;
+  padding: 50px 40px 20px;
+  min-width: 450px;
+  background: var(--color-bg-white);
+  border: none;
+  color: var(--color-text-dark);
+}
+
+.js-alert-modal::before {
+  content: '';
+  display: block;
+  width: 36px;
+  height: 36px;
+  margin: 0 auto 25px;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.js-alert-modal.alert-error::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23dc3545'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z'/%3E%3C/svg%3E");
+}
+
+.js-alert-modal.alert-warning::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23e8a317'%3E%3Cpath d='M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z'/%3E%3C/svg%3E");
+}
+
+.js-alert-modal.alert-info::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%232c6aa0'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z'/%3E%3C/svg%3E");
+}
+
+.js-alert-content {
+  font-size: var(--text-lg);
+  line-height: 1.6;
+  color: var(--color-text-dark);
+}
+
+.js-alert-actions {
+  padding: 25px 0 10px;
+}
+
+.js-alert-actions .btn {
+  border-radius: var(--radius-xl);
+  padding: 10px 30px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 /* ========== Popup Buttons - Base styling ========== */
