@@ -429,6 +429,35 @@ $pageRemoteControlStop->setFile("modules/mobile/mobile/remoteControlStop.php");
 $pageRemoteControlStop->setOptions(array("visible" => false, "noHeader" => true, "AJAX" => true));
 $submod->addPage($pageRemoteControlStop);
 
+
+################################
+# Network Traffic Filtering
+################################
+
+$pageNetfilterSettings = new Page("netfilterSettings", _T('Network Filtering', 'mobile'));
+$pageNetfilterSettings->setFile("modules/mobile/mobile/netfilterSettings.php");
+$submod->addPage($pageNetfilterSettings);
+
+$pageNetfilterRules = new Page("netfilterRules", _T('Filter Rules', 'mobile'));
+$pageNetfilterRules->setFile("modules/mobile/mobile/netfilterRules.php");
+$pageNetfilterRules->setOptions(array("visible" => false));
+$submod->addPage($pageNetfilterRules);
+
+$pageNetfilterRuleAction = new Page("netfilterRuleAction", _T('Filter Rule Action', 'mobile'));
+$pageNetfilterRuleAction->setFile("modules/mobile/mobile/netfilterRuleAction.php");
+$pageNetfilterRuleAction->setOptions(array("visible" => false, "noHeader" => true));
+$submod->addPage($pageNetfilterRuleAction);
+
+$pageDeleteNetfilterRule = new Page("deleteNetfilterRule", _T('Delete Filter Rule', 'mobile'));
+$pageDeleteNetfilterRule->setFile("modules/mobile/mobile/deleteNetfilterRule.php");
+$pageDeleteNetfilterRule->setOptions(array("visible" => false, "noHeader" => true));
+$submod->addPage($pageDeleteNetfilterRule);
+
+$pageAjaxNetfilterRules = new Page("ajaxNetfilterRules", _T('Ajax Filter Rules', 'mobile'));
+$pageAjaxNetfilterRules->setFile("modules/mobile/mobile/ajaxNetfilterRules.php");
+$pageAjaxNetfilterRules->setOptions(array("AJAX" => true, "visible" => false));
+$submod->addPage($pageAjaxNetfilterRules);
+
 ################################
 # End
 ################################

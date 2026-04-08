@@ -34,6 +34,8 @@ $sidemenu->addSideMenuItem(new SideMenuItem(_T("Photos", 'mobile'), "mobile", "m
 
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Device Export/Import", 'mobile'), "mobile", "mobile", "deviceExport"));
 
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("Network Filtering", 'mobile'), "mobile", "mobile", "netfilterSettings"));
+
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Push messages", 'mobile'), "mobile", "mobile", "pushMessages"));
 
  ?>

@@ -188,3 +188,21 @@ def startRemoteControlSession(device_number):
 
 def stopRemoteControlSession(session_id):
     return MobileDatabase().stopRemoteControlSession(int(session_id))
+
+def getNetfilterSettings():
+    return MobileDatabase().getNetfilterSettings()
+
+def saveNetfilterSettings(enabled, filter_mode):
+    return MobileDatabase().saveNetfilterSettings(enabled, filter_mode)
+
+def getNetfilterRules():
+    return MobileDatabase().getNetfilterRules()
+
+def addNetfilterRule(domain, rule_type):
+    return MobileDatabase().addNetfilterRule(domain, rule_type)
+
+def updateNetfilterRule(rule_id, domain, rule_type, enabled):
+    return MobileDatabase().updateNetfilterRule(int(rule_id), domain, rule_type, enabled)
+
+def deleteNetfilterRule(rule_id):
+    return MobileDatabase().deleteNetfilterRule(int(rule_id))

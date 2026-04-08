@@ -18,6 +18,7 @@ $p->display();
 
 $send_to_type = isset($_POST['send_to']) ? $_POST['send_to'] : "device";
 $message_type = isset($_POST['message_type']) ? $_POST['message_type'] : "configUpdated";
+$custom_message_type = isset($_POST['custom_message_type']) ? trim($_POST['custom_message_type']) : "";
 $payload_text = isset($_POST['payload']) ? $_POST['payload'] : "";
 $device_number = isset($_POST['device_input']) ? $_POST['device_input'] : "";
 $group_id = isset($_POST['group_input']) ? $_POST['group_input'] : "";
@@ -39,22 +40,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['test'])) {
         $errors[] = _T("Configuration is required", "mobile");
     }
     
+    if ($message_type === 'custom' && empty($custom_message_type)) {
+        $errors[] = _T("Custom message type is required", "mobile");
+    }
+
     // If no errors, send the push message
     if (empty($errors)) {
-        // Only pass the relevant ID, clear the others
         $dev_num = ($send_to_type === 'device') ? $device_number : '';
-        $grp_id = ($send_to_type === 'group') ? $group_id : '';
-        $cfg_id = ($send_to_type === 'configuration') ? $configuration_id : '';
-        
+        $grp_id  = ($send_to_type === 'group') ? $group_id : '';
+        $cfg_id  = ($send_to_type === 'configuration') ? $configuration_id : '';
+        $actual_type = ($message_type === 'custom') ? $custom_message_type : $message_type;
+
         $result = xmlrpc_send_hmdm_push_message(
             $send_to_type,
-            $message_type,
+            $actual_type,
             $payload_text,
             $dev_num,
             $grp_id,
             $cfg_id
         );
-        
+
         if ($result && isset($result['status']) && $result['status'] === 'OK') {
             new NotifyWidgetSuccess(_T("Push message sent successfully", "mobile"));
             header("Location: " . urlStrRedirect("mobile/mobile/pushMessages"));
@@ -132,11 +137,35 @@ $form->add($configRow);
 $messageTypeSelect = new SelectItem('message_type');
 $messageTypeSelect->setElements(array(
     _T('Config Updated', 'mobile'),
+    _T('Reboot', 'mobile'),
+    _T('Lock Screen', 'mobile'),
+    _T('Factory Reset', 'mobile'),
+    _T('Run App', 'mobile'),
+    _T('Uninstall App', 'mobile'),
+    _T('Delete File', 'mobile'),
+    _T('Delete Directory', 'mobile'),
+    _T('Purge Directory', 'mobile'),
+    _T('Permissive Mode', 'mobile'),
+    _T('Send Intent', 'mobile'),
+    _T('Run Command', 'mobile'),
+    _T('Exit Kiosk', 'mobile'),
+    _T('Clear Download History', 'mobile'),
+    _T('Grant Permissions', 'mobile'),
     _T('Custom', 'mobile')
 ));
-$messageTypeSelect->setElementsVal(array('configUpdated', 'custom'));
+$messageTypeSelect->setElementsVal(array(
+    'configUpdated', 'reboot', 'lockDevice', 'wipe', 'runApp',
+    'uninstallApp', 'deleteFile', 'deleteDir', 'purgeDir',
+    'permissiveMode', 'intent', 'runCommand', 'exitKiosk',
+    'clearDownloadHistory', 'grantPermissions', 'custom'
+));
 $messageTypeSelect->setSelected($message_type);
 $form->add(new TrFormElement(_T('Message Type', 'mobile'), $messageTypeSelect));
+
+$customTypeInput = new InputTpl('custom_message_type', '/.+/', $custom_message_type);
+$customTypeRow = new TrFormElement(_T('Custom Type', 'mobile'), $customTypeInput);
+$customTypeRow->setClass('row-custom-type');
+$form->add($customTypeRow);
 
 // Payload text
 $payloadArea = new TextareaTpl('payload');
@@ -152,6 +181,35 @@ $form->display();
 ?>
 
 <script type="text/javascript">
+    var payloadTemplates = {
+        'configUpdated': '',
+        'reboot': '',
+        'lockDevice': '',
+        'wipe': '',
+        'runApp': '{\n  "pkg": "app.package.id"\n}',
+        'uninstallApp': '{\n  "pkg": "app.package.id"\n}',
+        'deleteFile': '{\n  "path": "/path/to/file"\n}',
+        'deleteDir': '{\n  "path": "/path/to/dir"\n}',
+        'purgeDir': '{\n  "path": "/path/to/dir",\n  "recursive": "1"\n}',
+        'intent': '{\n  "action": "android.intent.action.VIEW",\n  "data": "https://example.com"\n}',
+        'runCommand': '{\n  "command": "shell command"\n}',
+        'grantPermissions': '{\n  "pkg": "app.package.id"\n}'
+    };
+
+    function updateMessageType(applyTemplate) {
+        var msgType = document.querySelector('select[name="message_type"]').value;
+        var customRow = document.querySelector('.row-custom-type');
+        var payloadArea = document.querySelector('textarea[name="payload"]');
+
+        if (customRow) {
+            customRow.style.display = (msgType === 'custom') ? '' : 'none';
+        }
+
+        if (applyTemplate && payloadArea) {
+            payloadArea.value = payloadTemplates[msgType] || '';
+        }
+    }
+
     // Show/hide rows based on "Send to" selection
     function updateSecondInput() {
         var sendTo = document.querySelector('select[name="send_to"]').value;
@@ -179,6 +237,12 @@ $form->display();
         if (sendToSelect) {
             sendToSelect.addEventListener('change', updateSecondInput);
             updateSecondInput();
+        }
+
+        var msgTypeSelect = document.querySelector('select[name="message_type"]');
+        if (msgTypeSelect) {
+            msgTypeSelect.addEventListener('change', function() { updateMessageType(true); });
+            updateMessageType(false);
         }
         
         // Device autocomplete

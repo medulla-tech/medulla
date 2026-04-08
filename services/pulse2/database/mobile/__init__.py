@@ -2992,3 +2992,169 @@ class MobileDatabase(DatabaseHelper):
         except Exception as e:
             logging.getLogger().error(f"Error stopping remote control session {session_id}: {e}")
             return False
+
+    def getNetfilterSettings(self):
+        """
+        Get network filtering settings for the customer.
+
+        GET /rest/plugins/netfilter/private/settings
+
+        :return: dict with enabled, filterMode, or None on error
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Authentication failed when getting netfilter settings.")
+            return None
+
+        url = f"{self.BASE_URL}/plugins/netfilter/private/settings"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+
+        try:
+            resp = requests.get(url, headers=headers)
+            resp.raise_for_status()
+            data = resp.json()
+            if data.get("status") == "OK":
+                return self.convert_large_ints(data.get("data", {}))
+            return None
+        except Exception as e:
+            logging.getLogger().error(f"Error getting netfilter settings: {e}")
+            return None
+
+    def saveNetfilterSettings(self, enabled, filter_mode):
+        """
+        Save network filtering settings.
+
+        PUT /rest/plugins/netfilter/private/settings
+
+        :param enabled: bool
+        :param filter_mode: str 'BLOCKLIST' or 'ALLOWLIST'
+        :return: True on success, False on error
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Authentication failed when saving netfilter settings.")
+            return False
+
+        url = f"{self.BASE_URL}/plugins/netfilter/private/settings"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+        payload = {"enabled": bool(enabled), "filterMode": filter_mode}
+
+        try:
+            resp = requests.put(url, headers=headers, json=payload)
+            resp.raise_for_status()
+            return True
+        except Exception as e:
+            logging.getLogger().error(f"Error saving netfilter settings: {e}")
+            return False
+
+    def getNetfilterRules(self):
+        """
+        Get all domain filter rules.
+
+        GET /rest/plugins/netfilter/private/rules
+
+        :return: list of rule dicts, or empty list on error
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Authentication failed when getting netfilter rules.")
+            return []
+
+        url = f"{self.BASE_URL}/plugins/netfilter/private/rules"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+
+        try:
+            resp = requests.get(url, headers=headers)
+            resp.raise_for_status()
+            data = resp.json()
+            if data.get("status") == "OK":
+                return self.convert_large_ints(data.get("data", []))
+            return []
+        except Exception as e:
+            logging.getLogger().error(f"Error getting netfilter rules: {e}")
+            return []
+
+    def addNetfilterRule(self, domain, rule_type):
+        """
+        Add a new domain filter rule.
+
+        POST /rest/plugins/netfilter/private/rules
+
+        :param domain: str, domain or wildcard pattern
+        :param rule_type: str 'BLOCK' or 'ALLOW'
+        :return: created rule dict or None on error
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Authentication failed when adding netfilter rule.")
+            return None
+
+        url = f"{self.BASE_URL}/plugins/netfilter/private/rules"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+        payload = {"domain": domain, "ruleType": rule_type}
+
+        try:
+            resp = requests.post(url, headers=headers, json=payload)
+            resp.raise_for_status()
+            data = resp.json()
+            if data.get("status") == "OK":
+                return self.convert_large_ints(data.get("data", {}))
+            logging.getLogger().error(f"Add netfilter rule failed: {data}")
+            return None
+        except Exception as e:
+            logging.getLogger().error(f"Error adding netfilter rule: {e}")
+            return None
+
+    def updateNetfilterRule(self, rule_id, domain, rule_type, enabled):
+        """
+        Update an existing domain filter rule.
+
+        PUT /rest/plugins/netfilter/private/rules/{id}
+
+        :param rule_id: int rule ID
+        :param domain: str
+        :param rule_type: str 'BLOCK' or 'ALLOW'
+        :param enabled: bool
+        :return: True on success, False on error
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Authentication failed when updating netfilter rule.")
+            return False
+
+        url = f"{self.BASE_URL}/plugins/netfilter/private/rules/{rule_id}"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+        payload = {"domain": domain, "ruleType": rule_type, "enabled": bool(enabled)}
+
+        try:
+            resp = requests.put(url, headers=headers, json=payload)
+            resp.raise_for_status()
+            return True
+        except Exception as e:
+            logging.getLogger().error(f"Error updating netfilter rule {rule_id}: {e}")
+            return False
+
+    def deleteNetfilterRule(self, rule_id):
+        """
+        Delete a domain filter rule permanently.
+
+        DELETE /rest/plugins/netfilter/private/rules/{id}
+
+        :param rule_id: int rule ID
+        :return: True on success, False on error
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Authentication failed when deleting netfilter rule.")
+            return False
+
+        url = f"{self.BASE_URL}/plugins/netfilter/private/rules/{rule_id}"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+
+        try:
+            resp = requests.delete(url, headers=headers)
+            resp.raise_for_status()
+            return True
+        except Exception as e:
+            logging.getLogger().error(f"Error deleting netfilter rule {rule_id}: {e}")
+            return False

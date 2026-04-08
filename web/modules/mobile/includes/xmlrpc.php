@@ -150,4 +150,22 @@ function xmlrpc_start_remote_control_session($device_number) {
 function xmlrpc_stop_remote_control_session($session_id) {
     return xmlCall("mobile.stopRemoteControlSession", array($session_id));
 }
+function xmlrpc_get_netfilter_settings() {
+    return xmlCall("mobile.getNetfilterSettings", array());
+}
+function xmlrpc_save_netfilter_settings($enabled, $filter_mode) {
+    return xmlCall("mobile.saveNetfilterSettings", array($enabled, $filter_mode));
+}
+function xmlrpc_get_netfilter_rules() {
+    return xmlCall("mobile.getNetfilterRules", array());
+}
+function xmlrpc_add_netfilter_rule($domain, $rule_type) {
+    return xmlCall("mobile.addNetfilterRule", array($domain, $rule_type));
+}
+function xmlrpc_update_netfilter_rule($rule_id, $domain, $rule_type, $enabled) {
+    return xmlCall("mobile.updateNetfilterRule", array($rule_id, $domain, $rule_type, $enabled));
+}
+function xmlrpc_delete_netfilter_rule($rule_id) {
+    return xmlCall("mobile.deleteNetfilterRule", array($rule_id));
+}
 ?>
