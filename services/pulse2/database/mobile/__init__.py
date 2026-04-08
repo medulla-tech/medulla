@@ -373,6 +373,23 @@ class MobileDatabase(DatabaseHelper):
             logging.getLogger().error(f"Erreur lors de l'authentification : {e}")
             return None
     
+    def convert_large_ints(self, obj):
+        """
+        Recursively convert large integers to strings to avoid XMLRPC serialization errors.
+        XMLRPC uses 32-bit signed integers, range: -2147483648 to 2147483647.
+        
+        :param obj: Object to process (dict, list, or primitive)
+        :return: Processed object with large ints converted to strings
+        """
+        if isinstance(obj, dict):
+            return {k: self.convert_large_ints(v) for k, v in obj.items()}
+        elif isinstance(obj, list):
+            return [self.convert_large_ints(item) for item in obj]
+        elif isinstance(obj, int):
+            if obj < -2147483648 or obj > 2147483647:
+                return str(obj)
+        return obj
+    
     def getHmdmDevices(self):
         auth = self.authenticate()
         if auth is None:
@@ -761,7 +778,9 @@ class MobileDatabase(DatabaseHelper):
             resp.raise_for_status()
             data = resp.json()
             logging.getLogger().info(f"Device detailed info fetched successfully for {device_number}.")
-            return data.get("data", {}) if isinstance(data, dict) else data
+            result = data.get("data", {}) if isinstance(data, dict) else data
+            
+            return self.convert_large_ints(result)
         except Exception as e:
             logging.getLogger().error(f"Error fetching device detailed info: {e}")
             return {}
@@ -2852,11 +2871,7 @@ class MobileDatabase(DatabaseHelper):
             result = resp.json()
             if result.get("status") == "OK":
                 data = result.get("data", {})
-                if "items" in data:
-                    for item in data["items"]:
-                        if "uploadTs" in item and item["uploadTs"] is not None:
-                            item["uploadTs"] = str(item["uploadTs"])
-                return data
+                return self.convert_large_ints(data)
             return None
         except Exception as e:
             logging.getLogger().error(f"Error listing photos: {e}")

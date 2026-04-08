@@ -16,6 +16,8 @@ if ((isset($_POST['search']) || isset($_GET['device'])) && $device_number) {
 
 ?>
 
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
 <h3><?php echo _T("Detailed Device Information", "mobile"); ?></h3>
 <p><?php echo _T("Search for a device and view its detailed information", "mobile"); ?></p>
 
@@ -64,9 +66,26 @@ if ((isset($_POST['search']) || isset($_GET['device'])) && $device_number) {
             <tr><td><?php echo _T("Kiosk mode", "mobile"); ?></td><td><?php echo htmlspecialchars($device_info['kioskMode'] ?? ''); ?></td></tr>
             <tr><td><?php echo _T("Launcher variant", "mobile"); ?></td><td><?php echo htmlspecialchars($device_info['launcherVariant'] ?? ''); ?></td></tr>
             <tr><td><?php echo _T("Default launcher", "mobile"); ?></td><td><?php echo htmlspecialchars($device_info['defaultLauncher'] ?? ''); ?></td></tr>
+            <?php 
+            $dynData = $device_info['latestDynamicData'] ?? [];
+            $hasGPS = !empty($dynData['gpsLat']) && !empty($dynData['gpsLon']);
+            if ($hasGPS): 
+            ?>
+            <tr><td colspan="2" style="background-color: #dadadaff; text-align: center; font-weight:bold;"><?php echo _T("GPS Location", "mobile"); ?></td></tr>
+            <tr><td><?php echo _T("GPS Status", "mobile"); ?></td><td><?php echo htmlspecialchars($dynData['gpsState'] ?? ''); ?></td></tr>
+            <tr><td><?php echo _T("GPS Enabled", "mobile"); ?></td><td><?php echo !empty($dynData['deviceGpsEnabled']) ? _T("yes", "mobile") : _T("no", "mobile"); ?></td></tr>
+            <tr><td><?php echo _T("Latitude", "mobile"); ?></td><td><?php echo htmlspecialchars($dynData['gpsLat']); ?></td></tr>
+            <tr><td><?php echo _T("Longitude", "mobile"); ?></td><td><?php echo htmlspecialchars($dynData['gpsLon']); ?></td></tr>
+            <tr><td><?php echo _T("Altitude (m)", "mobile"); ?></td><td><?php echo htmlspecialchars($dynData['gpsAlt'] ?? ''); ?></td></tr>
+            <tr><td><?php echo _T("Speed (m/s)", "mobile"); ?></td><td><?php echo htmlspecialchars($dynData['gpsSpeed'] ?? ''); ?></td></tr>
+            <tr><td><?php echo _T("Course (degrees)", "mobile"); ?></td><td><?php echo htmlspecialchars($dynData['gpsCourse'] ?? ''); ?></td></tr>
+            <?php endif; ?>
             <tr><td colspan="2" style="background-color: #dadadaff; text-align: center; font-weight:bold;"><?php echo _T("Installation status", "mobile"); ?></td></tr>
         </table>
-        <table cellpadding="6" cellspacing="0" style="border: 1px solid; border-collapse: collapse; width: 100%;">
+        <?php if ($hasGPS): ?>
+        <div id="map" style="width: 100%; height: 450px; margin-top: 20px; border: 1px solid #ccc;"></div>
+        <?php endif; ?>
+        <table cellpadding="6" cellspacing="0" style="border: 1px solid; border-collapse: collapse; width: 100%; margin-top: 20px;">
             <tr>
                 <th style="text-align:start;"><?php echo _T("Title", "mobile"); ?></th>
                 <th style="text-align:start;"><?php echo _T("Package ID", "mobile"); ?></th>
@@ -156,6 +175,18 @@ function pushSearch() {
     document.querySelector('form[name="searchform"]').submit();
 }
 </script>
+
+<?php if (!empty($device_info) && $hasGPS): ?>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+var map = L.map('map').setView([<?php echo $dynData['gpsLat']; ?>, <?php echo $dynData['gpsLon']; ?>], 15);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors'
+}).addTo(map);
+L.marker([<?php echo $dynData['gpsLat']; ?>, <?php echo $dynData['gpsLon']; ?>]).addTo(map)
+    .bindPopup('<?php echo htmlspecialchars($device_info['deviceNumber'] ?? ''); ?>');
+</script>
+<?php endif; ?>
 
 <?php
 
