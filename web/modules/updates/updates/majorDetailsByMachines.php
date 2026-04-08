@@ -29,8 +29,11 @@ require_once("modules/updates/includes/xmlrpc.php");
 
 unset($_GET['action']);
 
-$titre = sprintf("%s",
-_T("OS Upgrade details by Machines", 'updates'));
+$entityName = !empty($_GET['name']) ? htmlentities($_GET['name']) : "";
+$titre = _T("OS Upgrade details by Machines", 'updates');
+if ($entityName) {
+    $titre .= ' — ' . $entityName;
+}
 $p = new PageGenerator($titre);
 $p->setSideMenu($sidemenu);
 $p->display();

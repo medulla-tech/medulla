@@ -12,15 +12,13 @@
 }
 
 .approval-form-actions {
-    display: flex;
-    justify-content: center;
-    margin-left: auto;
     margin-top: 12px;
-    width: 37.5%;
+    text-align: center;
 }
 
-.approval-rules .approval-form-actions {
-    width: 23%;
+/* Last column (checkboxes): compact at the right */
+.approval-form table.listinfos th:last-child {
+    width: 200px;
 }
 
 /* Section headers (product families) */
@@ -42,6 +40,10 @@
 /* Product rows */
 .approval-form table.listinfos .family-produit td:last-child {
     text-align: center;
+}
+
+.approval-form table.listinfos .family-produit:hover td {
+    background-color: #d0e4ed;
 }
 
 .caption-style {
