@@ -72,7 +72,9 @@ foreach ($groups as $index => $group) {
         "delete",
         "",
         "mobile",
-        "mobile"
+        "mobile",
+        null,
+        500
     );
     
     $params[] = [

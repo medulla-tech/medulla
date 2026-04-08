@@ -38,7 +38,7 @@ foreach ($files as $index => $file) {
 	$externals[] = $external;
 	$variables[] = $variable;
 
-	$actionDelete[] = new ActionPopupItem(_("Delete File"), "deleteFile", "delete", "", "mobile", "mobile");
+	$actionDelete[] = new ActionPopupItem(_("Delete File"), "deleteFile", "delete", "", "mobile", "mobile", null, 500);
 	$actionEdit[] = new ActionItem(_("Edit"), "modifyFile", "edit", "id", "mobile", "mobile");
 	$actionConfig[] = new ActionItem(_("Assign Configurations"), "fileConfigurations", "config", "id", "mobile", "mobile");
 	$params[] = [

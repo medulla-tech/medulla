@@ -30,6 +30,8 @@ $sidemenu->addSideMenuItem(new SideMenuItem(_T("Messages", 'mobile'), "mobile", 
 
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Contacts sync", 'mobile'), "mobile", "mobile", "contactsList"));
 
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("Device Export/Import", 'mobile'), "mobile", "mobile", "deviceExport"));
+
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Push messages", 'mobile'), "mobile", "mobile", "pushMessages"));
 
  ?>

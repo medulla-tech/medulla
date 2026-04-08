@@ -123,4 +123,10 @@ function xmlrpc_get_hmdm_contacts_config($configuration_id) {
 function xmlrpc_save_hmdm_contacts_config($config_data) {
     return xmlCall("mobile.saveHmdmContactsConfig", array($config_data));
 }
+function xmlrpc_export_hmdm_devices($group_id = null, $configuration_id = null, $filter_text = null, $columns = null) {
+    return xmlCall("mobile.exportHmdmDevices", array($group_id, $configuration_id, $filter_text, $columns));
+}
+function xmlrpc_import_hmdm_devices($csv_content) {
+    return xmlCall("mobile.importHmdmDevices", array($csv_content));
+}
 ?>

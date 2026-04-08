@@ -10,8 +10,7 @@ if (empty($group_id)) {
     exit;
 }
 
-if (isset($_POST['bdelete'])) {
-    // Call the delete function
+if (isset($_POST['bconfirm'])) {
     $result = xmlrpc_delete_hmdm_group_by_id($group_id);
 
     if ($result && ((is_array($result) && isset($result['status']) && $result['status'] === 'OK') || $result === true)) {
@@ -24,14 +23,13 @@ if (isset($_POST['bdelete'])) {
     header("Location: " . urlStrRedirect("mobile/mobile/groups"));
     exit;
 } else {
-    $f = new PopupForm(_T("Delete Group", "mobile"));
+    $f = new PopupForm(_T("Delete this group", "mobile"));
     $f->setLevel('danger');
-    $f->addText(sprintf(_T("Are you sure you want to delete the group <b>%s</b>.", "mobile"), htmlspecialchars($group_name)));
     $hidden = new HiddenTpl("group_id");
     $f->add($hidden, array("value" => $group_id, "hide" => true));
     $hidden_name = new HiddenTpl("group_name");
     $f->add($hidden_name, array("value" => $group_name, "hide" => true));
-    $f->addDangerButton("bdelete");
+    $f->addDangerButton("bconfirm");
     $f->addCancelButton("bback");
     $f->display();
 }

@@ -36,7 +36,7 @@ foreach ($configs as $index => $cfg) {
     $actionModify[] = new ActionItem(_T("Modify", "mobile"), "configurationDetails", "edit", "id", "mobile", "mobile");
     $actionQuick[] = new ActionPopupItem(_T("Quick action", "mobile"), "configQuickAction", "quick", "config_id", "mobile", "mobile");
     $actionDuplicate[] = new ActionItem(_T("Duplicate", "mobile"), "duplicateConfiguration", "duplicatescript", "id", "mobile", "mobile");
-    $actionDelete[] = new ActionPopupItem(_T("Delete Configuration", "mobile"), "deleteConfiguration", "delete", "", "mobile", "mobile");
+    $actionDelete[] = new ActionPopupItem(_T("Delete Configuration", "mobile"), "deleteConfiguration", "delete", "", "mobile", "mobile", null, 500);
 
     $params[] = [
             'id' => $cfgId,

@@ -161,3 +161,9 @@ def getHmdmContactsConfig(configuration_id):
 
 def saveHmdmContactsConfig(config_data):
     return MobileDatabase().saveHmdmContactsConfig(config_data)
+
+def exportHmdmDevices(group_id=None, configuration_id=None, filter_text=None, columns=None):
+    return MobileDatabase().exportHmdmDevices(group_id, configuration_id, filter_text, columns)
+
+def importHmdmDevices(csv_content):
+    return MobileDatabase().importHmdmDevices(csv_content)

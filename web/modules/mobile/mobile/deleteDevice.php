@@ -27,7 +27,7 @@ if (!$device) {
 
 $deviceNumber = $device['number'] ?? _T("Unknown", "mobile");
 
-if (isset($_POST['bdelete'])) {
+if (isset($_POST['bconfirm'])) {
     $result = xmlrpc_delete_hmdm_device_by_id($deviceId);
     
     if ($result) {
@@ -39,21 +39,13 @@ if (isset($_POST['bdelete'])) {
     header("Location: " . urlStrRedirect("mobile/mobile/index"));
     exit;
 } else {
-    $f = new PopupForm(_T("Delete Device", "mobile"));
+    $f = new PopupForm(_T("Delete this device", "mobile"));
     $f->setLevel('danger');
-    $f->addText(sprintf(_T("Are you sure you want to delete the device <b>%s</b>?", "mobile"), htmlspecialchars($deviceNumber)));
-
-    $description = $device['description'] ?? '';
-    if (!empty($description)) {
-        $f->addText(sprintf(_T("Description: %s", "mobile"), htmlspecialchars($description)));
-    }
-
-    $f->addText('<br><strong style="color: #d9534f;">' . _T("Warning: This action cannot be undone!", "mobile") . '</strong>');
 
     $hidden = new HiddenTpl("id");
     $f->add($hidden, array("value" => $deviceId, "hide" => true));
 
-    $f->addDangerButton("bdelete");
+    $f->addDangerButton("bconfirm");
     $f->addCancelButton("bback");
     $f->display();
 }

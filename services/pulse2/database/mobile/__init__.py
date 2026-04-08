@@ -2684,3 +2684,78 @@ class MobileDatabase(DatabaseHelper):
         except Exception as e:
             logging.getLogger().error(f"Error saving contacts config: {e}")
             return None
+
+    def exportHmdmDevices(self, group_id=None, configuration_id=None, filter_text=None, columns=None):
+        """
+        Export devices to CSV.
+
+        POST /rest/plugins/deviceexport/private/export
+
+        :param group_id: Optional group ID filter
+        :param configuration_id: Optional configuration ID filter
+        :param filter_text: Optional text search filter
+        :param columns: List of column names to export
+        :return: CSV content as string or None on error
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Authentication failed when exporting devices.")
+            return None
+
+        url = f"{self.BASE_URL}/plugins/deviceexport/private/export"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+
+        if columns is None:
+            columns = ["description", "configuration", "imei", "phone", "groups", "custom1", "custom2", "custom3"]
+
+        payload = {
+            "groupId": group_id,
+            "configurationId": configuration_id,
+            "filter": filter_text,
+            "columns": columns
+        }
+
+        try:
+            logging.getLogger().info(f"Exporting devices with filters: {json.dumps(payload, indent=2)}")
+            resp = requests.post(url, headers=headers, json=payload)
+            resp.raise_for_status()
+            csv_content = resp.content.decode('utf-8-sig')
+            logging.getLogger().info(f"Devices exported successfully ({len(csv_content)} bytes)")
+            return csv_content
+        except Exception as e:
+            logging.getLogger().error(f"Error exporting devices: {e}")
+            return None
+
+    def importHmdmDevices(self, csv_content: str):
+        """
+        Import devices from CSV.
+
+        POST /rest/plugins/deviceexport/private/import
+
+        :param csv_content: CSV file content as string
+        :return: dict with keys: created, updated, skipped, errors or None on error
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Authentication failed when importing devices.")
+            return None
+
+        url = f"{self.BASE_URL}/plugins/deviceexport/private/import"
+        headers = {"Content-Type": "text/plain; charset=UTF-8", "Authorization": f"Bearer {hmtoken}"}
+
+        try:
+            logging.getLogger().info(f"Importing devices from CSV ({len(csv_content)} bytes)")
+            resp = requests.post(url, headers=headers, data=csv_content.encode('utf-8'))
+            resp.raise_for_status()
+            result = resp.json()
+            if result.get("status") == "OK":
+                data = result.get("data", {})
+                logging.getLogger().info(f"Devices imported: {data.get('created', 0)} created, {data.get('updated', 0)} updated, {data.get('skipped', 0)} skipped")
+                return data
+            else:
+                logging.getLogger().error(f"Import failed: {result.get('message', 'Unknown error')}")
+                return None
+        except Exception as e:
+            logging.getLogger().error(f"Error importing devices: {e}")
+            return None
+            return None

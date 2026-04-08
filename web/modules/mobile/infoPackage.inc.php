@@ -69,7 +69,7 @@ $submod->addPage($pageEditDevice);
 ################################
 $pageDeleteDevice = new Page("deleteDevice", _T('Delete Device', 'mobile'));
 $pageDeleteDevice->setFile("modules/mobile/mobile/deleteDevice.php");
-$pageDeleteDevice->setOptions(array("visible" => false));
+$pageDeleteDevice->setOptions(array("visible" => false, "noHeader" => true));
 $submod->addPage($pageDeleteDevice);
 
 ################################
@@ -218,7 +218,7 @@ $submod->addPage($pageAjaxDeviceSearch);
 
 $pageDeleteApplication = new Page("deleteApplication", _T('Delete application', 'mobile'));
 $pageDeleteApplication->setFile("modules/mobile/mobile/deleteApplication.php");
-$pageDeleteApplication->setOptions(array("AJAX" => false, "visible" => false));
+$pageDeleteApplication->setOptions(array("AJAX" => false, "visible" => false, "noHeader" => true));
 
 $submod->addPage($pageDeleteApplication);
 
@@ -229,7 +229,7 @@ $submod->addPage($pageDeleteGlpiDevice);
 
 $pageDeleteFile = new Page("deleteFile", _T('Delete file', 'mobile'));
 $pageDeleteFile->setFile("modules/mobile/mobile/deleteFile.php");
-$pageDeleteFile->setOptions(array("AJAX" => false, "visible" => false));
+$pageDeleteFile->setOptions(array("AJAX" => false, "visible" => false, "noHeader" => true));
 $submod->addPage($pageDeleteFile);
 
 ################################
@@ -251,7 +251,7 @@ $submod->addPage($pageAjaxConfigurationsList);
 
 $pageDeleteConfiguration = new Page("deleteConfiguration", _T('Delete configuration', 'mobile'));
 $pageDeleteConfiguration->setFile("modules/mobile/mobile/deleteConfiguration.php");
-$pageDeleteConfiguration->setOptions(array("AJAX" => false, "visible" => false));
+$pageDeleteConfiguration->setOptions(array("AJAX" => false, "visible" => false, "noHeader" => true));
 $submod->addPage($pageDeleteConfiguration);
 
 $pageDuplicateConfiguration = new Page("duplicateConfiguration", _T('Duplicate configuration', 'mobile'));
@@ -283,7 +283,7 @@ $submod->addPage($pageAjaxGroupList);
 
 $pageDeleteGroup = new Page("deleteGroup", _T('Delete group', 'mobile'));
 $pageDeleteGroup->setFile("modules/mobile/mobile/deleteGroup.php");
-$pageDeleteGroup->setOptions(array("AJAX" => false, "visible" => false));
+$pageDeleteGroup->setOptions(array("AJAX" => false, "visible" => false, "noHeader" => true));
 $submod->addPage($pageDeleteGroup);
 
 ################################
@@ -338,6 +338,20 @@ $pageContactsConfig = new Page("contactsConfig", _T('Edit contacts sync config',
 $pageContactsConfig->setFile("modules/mobile/mobile/contactsConfig.php");
 $pageContactsConfig->setOptions(array("visible" => false));
 $submod->addPage($pageContactsConfig);
+
+$pageDeviceExport = new Page("deviceExport", _T('Device Export/Import', 'mobile'));
+$pageDeviceExport->setFile("modules/mobile/mobile/deviceExport.php");
+$submod->addPage($pageDeviceExport);
+
+$pageDeviceExportAction = new Page("deviceExportAction", _T('Export devices action', 'mobile'));
+$pageDeviceExportAction->setFile("modules/mobile/mobile/deviceExportAction.php");
+$pageDeviceExportAction->setOptions(array("visible" => false, "noHeader" => true));
+$submod->addPage($pageDeviceExportAction);
+
+$pageDeviceImportAction = new Page("deviceImportAction", _T('Import devices action', 'mobile'));
+$pageDeviceImportAction->setFile("modules/mobile/mobile/deviceImportAction.php");
+$pageDeviceImportAction->setOptions(array("visible" => false, "noHeader" => true));
+$submod->addPage($pageDeviceImportAction);
 
 # send message forms (hidden pages)
 $pageNewMessage = new Page("newMessage", _T('Send new message', 'mobile'));

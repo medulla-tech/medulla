@@ -54,7 +54,7 @@ if (!empty($usedByConfigs) && is_array($usedByConfigs)) {
 
 allow_deletion:
 
-if (isset($_POST['bdelete'])) {
+if (isset($_POST['bconfirm'])) {
     $result = xmlrpc_delete_file_by_id($file);
     
     if (is_array($result) && $result['status'] === 'OK') {
@@ -67,14 +67,13 @@ if (isset($_POST['bdelete'])) {
     header("Location: " . urlStrRedirect("mobile/mobile/files"));
     exit;
 } else {
-    $f = new PopupForm(_T("Delete File", "mobile"));
+    $f = new PopupForm(_T("Delete this file", "mobile"));
     $f->setLevel('danger');
-    $f->addText(sprintf(_T("Are you sure you want to delete the file <b>%s</b>?", "mobile"), htmlspecialchars($name)));
     $hidden = new HiddenTpl("id");
     $f->add($hidden, array("value" => $id, "hide" => true));
     $hidden_name = new HiddenTpl("name");
     $f->add($hidden_name, array("value" => $name, "hide" => true));
-    $f->addDangerButton("bdelete");
+    $f->addDangerButton("bconfirm");
     $f->addCancelButton("bback");
     $f->display();
 }
