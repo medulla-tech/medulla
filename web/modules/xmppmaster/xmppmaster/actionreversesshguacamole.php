@@ -50,6 +50,12 @@ xmlrpc_setfromxmppmasterlogxmpp('Reverse SSH for Guacamole on machine '. $_GET['
                                 $touser =  $_GET['cn'],
                                 $fromuser = "session user ".$_SESSION["login"],
                                 'Remote_desktop | Guacamole');
-// Wait 30s for the reverse SSH connection to be established before redirecting to the Guacamole URL
-sleep(30);
+// Wait for the reverse SSH connection to be established before redirecting to the Guacamole URL
+// Use `reversessh_timeout` configuration parameter to override the wait (seconds). Default: 30, bounded 0-120.
+$delay = 30;
+if (isset($conf['guacamole']['reversessh_timeout'])) {
+    $delay = intval($conf['guacamole']['reversessh_timeout']);
+}
+$delay = max(0, min(120, $delay));
+sleep($delay);
 ?>
