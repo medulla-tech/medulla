@@ -48,11 +48,13 @@ $configName = $config['name'] ?? _T("Unknown", "mobile");
         <table style="width : 500px;">
             <tr>
             <?
+                    echo sprintf("<td id='reboot0' align='center' title='%s'><img src='img/actions/restart.svg' height='70' width='70'></td>", _T("Click here to reboot devices in this configuration", "mobile"));
                     echo sprintf("<td id='sync0' align='center' title='%s'><img src='modules/updates/graph/navbar/updates.svg' height='70' width='70'></td>", _T("Click here to update configuration", "mobile"));
                 ?>
             </tr>
                 <tr>
                 <?
+                    echo '<td id="reboot" align="center">'._T("Reboot", "mobile")."</td>";
                     echo '<td id="sync" align="center">'._T("Update Config", "mobile")."</td>";
                 ?>
             </tr>
@@ -63,12 +65,26 @@ $configName = $config['name'] ?? _T("Unknown", "mobile");
                     echo '<td>'._T("Custom command", "mobile").'</td>
                     <td>
                         <select id="select">';
+                        echo '<option value="reboot">'._T("Reboot", "mobile").'</option>';
+                        echo '<option value="lockDevice">'._T("Lock screen", "mobile").'</option>';
+                        echo '<option value="wipe">'._T("Factory reset", "mobile").'</option>';
+                        echo '<option value="runApp">'._T("Run App", "mobile").'</option>';
+                        echo '<option value="uninstallApp">'._T("Uninstall App", "mobile").'</option>';
+                        echo '<option value="deleteFile">'._T("Delete File", "mobile").'</option>';
+                        echo '<option value="deleteDir">'._T("Delete Directory", "mobile").'</option>';
+                        echo '<option value="purgeDir">'._T("Purge Directory", "mobile").'</option>';
+                        echo '<option value="permissiveMode">'._T("Permissive Mode", "mobile").'</option>';
+                        echo '<option value="intent">'._T("Send Intent", "mobile").'</option>';
+                        echo '<option value="runCommand">'._T("Run Command", "mobile").'</option>';
+                        echo '<option value="exitKiosk">'._T("Exit Kiosk", "mobile").'</option>';
+                        echo '<option value="clearDownloadHistory">'._T("Clear Download History", "mobile").'</option>';
+                        echo '<option value="grantPermissions">'._T("Grant Permissions", "mobile").'</option>';
                         echo '<option value="custom">'._T("Custom", "mobile").'</option>';
                         echo'</select>
                     </td>
                     <td><input id="buttoncmd" class="btn btn-primary" type=button value="'._T("Send custom command", "mobile").'"></td>';
                     echo '</tr>';
-                    echo '<tr id="custom-type-row">';
+                    echo '<tr id="custom-type-row" style="display: none;">';
                     echo '<td>'._T("Message type", "mobile").'</td>';
                     echo '<td colspan="2"><input type="text" id="custom-type" style="width: 100%;" placeholder="'._T("Enter custom message type", "mobile").'"></td>';
                     echo '</tr>';
@@ -80,6 +96,19 @@ $configName = $config['name'] ?? _T("Unknown", "mobile");
              ?>
     </div>
 <script type="text/javascript">
+    var payloadTemplates = {
+        'reboot': '',
+        'lockDevice': '',
+        'wipe': '',
+        'runApp': '{\n  "pkg": "app.package.id"\n}',
+        'uninstallApp': '{\n  "pkg": "app.package.id"\n}',
+        'deleteFile': '{\n  "path": "/path/to/file"\n}',
+        'deleteDir': '{\n  "path": "/path/to/dir"\n}',
+        'purgeDir': '{\n  "path": "/path/to/dir",\n  "recursive": "1"\n}',
+        'intent': '{\n  "action": "android.intent.action.VIEW",\n  "data": "https://medulla-tech.io"\n}',
+        'runCommand': '{\n  "command": "shell command"\n}',
+        'grantPermissions': '{\n  "pkg": "app.package.id"\n}'
+    };
     
     var configId = <?php echo $configId; ?>;
     
@@ -108,21 +137,46 @@ $configName = $config['name'] ?? _T("Unknown", "mobile");
     }
    
     jQuery(function() {
+        jQuery('#reboot0, #reboot').on('click', function(){
+            submitAction('reboot', 'reboot', '');
+        });
+
+            jQuery('#select').change(function() {
+                var selectedCmd = jQuery(this).val();
+
+                if (selectedCmd === 'custom') {
+                    jQuery('#custom-type-row').show();
+                } else {
+                    jQuery('#custom-type-row').hide();
+                }
+
+                if (payloadTemplates[selectedCmd]) {
+                    jQuery('#payload').val(payloadTemplates[selectedCmd]);
+                } else {
+                    jQuery('#payload').val('');
+                }
+            });
+
+            jQuery('#select').trigger('change');
+
         jQuery('#sync0, #sync').on('click', function(){
             submitAction('configUpdated', 'configUpdated', '');
         });
         
-        // custom command
         jQuery('#buttoncmd').click(function() {
-            var customType = jQuery('#custom-type').val().trim();
+                var messageType = jQuery('#select').val();
             var payload = jQuery('#payload').val();
-            
-            if (customType === '') {
-                alert('<?php echo _T("Please enter a custom message type.", "mobile"); ?>');
-                return;
+
+                if (messageType === 'custom') {
+                    var customType = jQuery('#custom-type').val().trim();
+                    if (customType === '') {
+                        alert('<?php echo _T("Please enter a custom message type.", "mobile"); ?>');
+                        return;
+                    }
+                    messageType = customType;
             }
-            
-            submitAction('custom', customType, payload);
+
+                submitAction('custom', messageType, payload);
         });
     });
 

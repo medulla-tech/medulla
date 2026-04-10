@@ -600,7 +600,7 @@ jQuery(function($) {
 
                     // Build HMDM file URL using current domain but force HTTP
                     var hostname = window.location.hostname || '';
-                    var fileUrl = hostname ? 'http://' + hostname + ':8080/hmdm/files/' + fileName : '';
+                    var fileUrl = hostname ? 'http://' + hostname + '/hmdm/files/' + fileName : '';
 
                     // Fill form fields
                     $('input[name="version"]').val(version);

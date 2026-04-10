@@ -25,14 +25,6 @@ $submod->addPage($page);
 
 
 ################################
-# add device page
-################################
-
-$pageAddDevice = new Page("addDevice", _T('Add a device', 'mobile'));
-$pageAddDevice->setFile("modules/mobile/mobile/addDevice.php");
-$submod->addPage($pageAddDevice);
-
-################################
 # manage applications page
 ################################
 
@@ -100,10 +92,6 @@ $submod->addPage($pageApplicationConfiguration);
 # add application page
 ################################
 
-$pageAddApplication = new Page("addApplication", _T('Add an application', 'mobile'));
-$pageAddApplication->setFile("modules/mobile/mobile/addApplication.php");
-$submod->addPage($pageAddApplication);
-
 ###############################
 # edit application page
 ###############################
@@ -164,10 +152,6 @@ $submod->addPage($pageAjaxUploadApk);
 $pageFiles = new Page("files", _T('Files', 'mobile'));
 $pageFiles->setFile("modules/mobile/mobile/filesList.php");
 $submod->addPage($pageFiles);
-
-$pageAddFile = new Page("addFile", _T('Add a file', 'mobile'));
-$pageAddFile->setFile("modules/mobile/mobile/addFile.php");
-$submod->addPage($pageAddFile);
 
 ################################
 # ListMobile - ajax
@@ -266,10 +250,6 @@ $submod->addPage($pageDuplicateConfiguration);
 $pageGroups = new Page("groups", _T('All groups', 'mobile'));
 $pageGroups->setFile("modules/mobile/mobile/groups.php");
 $submod->addPage($pageGroups);
-
-$pageAddGroup = new Page("addGroup", _T('Add a group', 'mobile'));
-$pageAddGroup->setFile("modules/mobile/mobile/addGroup.php");
-$submod->addPage($pageAddGroup);
 
 $pageEditGroup = new Page("editGroup", _T('Edit group', 'mobile'));
 $pageEditGroup->setFile("modules/mobile/mobile/editGroup.php");

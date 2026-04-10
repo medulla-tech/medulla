@@ -62,7 +62,9 @@ foreach ($groups as $index => $group) {
         "quick",
         "group_id",
         "mobile",
-        "mobile"
+        "mobile",
+        null,
+        620
     );
     
     // Delete action
