@@ -1240,3 +1240,7 @@ msgstr "Annuler"
 #: modules/security/security/allcves.php
 msgid "Search"
 msgstr "Recherche"
+
+#: modules/security/security/allcves.php
+msgid "Columns"
+msgstr "Colonnes"

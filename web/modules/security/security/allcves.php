@@ -88,47 +88,47 @@ $showSeverity = SeverityHelper::getVisibility($minSeverity);
     <div style="float:right"><a href="#" class="popup_close_btn" onclick="closeExportPopup(); return false;"><img src="img/common/icn_close.png" alt="[x]"/></a></div>
     <div id="__popup_container">
         <h2><?php echo _T('Export CVE IDs', 'security'); ?></h2>
-        <form onsubmit="doExport(); return false;">
-            <table style="margin: 0 auto; text-align: left;">
-                <tr>
-                    <td><label><?php echo _T('Entity', 'security'); ?> :</label></td>
-                    <td>
-                        <select id="export-entity">
-                            <?php foreach ($listWithAll as $key => $label): ?>
-                            <option value="<?php echo htmlspecialchars($valuesWithAll[$key]); ?>">
-                                <?php echo htmlspecialchars($label); ?>
-                            </option>
-                            <?php endforeach; ?>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td><label><?php echo _T('Severity', 'security'); ?> :</label></td>
-                    <td>
-                        <select id="export-severity">
-                            <option value=""><?php echo _T('All', 'security'); ?></option>
-                            <?php if ($showSeverity['critical']): ?><option value="Critical"><?php echo _T('Critical', 'security'); ?></option><?php endif; ?>
-                            <?php if ($showSeverity['high']): ?><option value="High"><?php echo _T('High', 'security'); ?></option><?php endif; ?>
-                            <?php if ($showSeverity['medium']): ?><option value="Medium"><?php echo _T('Medium', 'security'); ?></option><?php endif; ?>
-                            <?php if ($showSeverity['low']): ?><option value="Low"><?php echo _T('Low', 'security'); ?></option><?php endif; ?>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td><label><?php echo _T('Number of CVEs', 'security'); ?> :</label></td>
-                    <td>
-                        <select id="export-limit">
-                            <option value="10">10</option>
-                            <option value="20" selected>20</option>
-                            <option value="50">50</option>
-                            <option value="100">100</option>
-                            <option value="200">200</option>
-                            <option value="0"><?php echo _T('All', 'security'); ?></option>
-                        </select>
-                    </td>
-                </tr>
-            </table>
-            <div style="margin-top: 20px;">
+        <form onsubmit="doExport(); return false;" style="text-align: left; padding: 10px 30px;">
+            <div style="display: grid; grid-template-columns: auto 1fr; gap: 10px 16px; align-items: center;">
+                <label><?php echo _T('Entity', 'security'); ?> :</label>
+                <select id="export-entity">
+                    <?php foreach ($listWithAll as $key => $label): ?>
+                    <option value="<?php echo htmlspecialchars($valuesWithAll[$key]); ?>">
+                        <?php echo htmlspecialchars($label); ?>
+                    </option>
+                    <?php endforeach; ?>
+                </select>
+
+                <label><?php echo _T('Severity', 'security'); ?> :</label>
+                <select id="export-severity">
+                    <option value=""><?php echo _T('All', 'security'); ?></option>
+                    <?php if ($showSeverity['critical']): ?><option value="Critical"><?php echo _T('Critical', 'security'); ?></option><?php endif; ?>
+                    <?php if ($showSeverity['high']): ?><option value="High"><?php echo _T('High', 'security'); ?></option><?php endif; ?>
+                    <?php if ($showSeverity['medium']): ?><option value="Medium"><?php echo _T('Medium', 'security'); ?></option><?php endif; ?>
+                    <?php if ($showSeverity['low']): ?><option value="Low"><?php echo _T('Low', 'security'); ?></option><?php endif; ?>
+                </select>
+
+                <label><?php echo _T('Number of CVEs', 'security'); ?> :</label>
+                <select id="export-limit">
+                    <option value="10">10</option>
+                    <option value="20" selected>20</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                    <option value="200">200</option>
+                    <option value="0"><?php echo _T('All', 'security'); ?></option>
+                </select>
+
+                <label style="align-self: start; padding-top: 2px;"><?php echo _T('Columns', 'security'); ?> :</label>
+                <div style="display: flex; flex-wrap: wrap; gap: 4px 16px;">
+                    <label><input type="checkbox" class="export-col" value="cve_id" checked disabled> CVE ID</label>
+                    <label><input type="checkbox" class="export-col" value="severity"> <?php echo _T('Severity', 'security'); ?></label>
+                    <label><input type="checkbox" class="export-col" value="cvss_score"> CVSS</label>
+                    <label><input type="checkbox" class="export-col" value="description"> <?php echo _T('Description', 'security'); ?></label>
+                    <label><input type="checkbox" class="export-col" value="machines_affected"> <?php echo _T('Machines', 'security'); ?></label>
+                    <label><input type="checkbox" class="export-col" value="software"> <?php echo _T('Software', 'security'); ?></label>
+                </div>
+            </div>
+            <div style="margin-top: 20px; text-align: center;">
                 <button type="submit" class="btn btnPrimary"><?php echo _T('Download', 'security'); ?></button>
                 <button type="button" class="btn btnSecondary" onclick="closeExportPopup()"><?php echo _T('Cancel', 'security'); ?></button>
             </div>
@@ -182,10 +182,16 @@ function doExport() {
     var severity = document.getElementById('export-severity').value;
     var limit = document.getElementById('export-limit').value;
 
+    var columns = [];
+    jQuery('.export-col:checked').each(function() {
+        columns.push(jQuery(this).val());
+    });
+
     var url = '<?php echo urlStrRedirect("security/security/exportCves"); ?>';
     url += '&location=' + encodeURIComponent(location);
     url += '&severity=' + encodeURIComponent(severity);
     url += '&limit=' + encodeURIComponent(limit);
+    url += '&columns=' + encodeURIComponent(columns.join(','));
 
     window.location.href = url;
     closeExportPopup();
