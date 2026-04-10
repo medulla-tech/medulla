@@ -435,7 +435,7 @@ class SecurityDatabase(DatabaseHelper):
     # =========================================================================
     @DatabaseHelper._sessionm
     def get_cves(self, session, start=0, limit=50, filter_str='',
-                 severity=None, location='', sort_by='cvss_score', sort_order='desc',
+                 severity=None, exact_severity=None, location='', sort_by='cvss_score', sort_order='desc',
                  min_cvss=0.0, excluded_vendors=None, excluded_names=None, excluded_cve_ids=None,
                  excluded_machines_ids=None, excluded_groups_ids=None):
         """Get paginated list of CVEs with affected machine count
@@ -503,7 +503,9 @@ class SecurityDatabase(DatabaseHelper):
             cve_filters = []
             if min_cvss > 0:
                 cve_filters.append(f"c.cvss_score >= {min_cvss}")
-            if severity and severity in severity_order:
+            if exact_severity and exact_severity in severity_order:
+                cve_filters.append(f"c.severity = '{sql_escape(exact_severity)}'")
+            elif severity and severity in severity_order:
                 min_sev_index = severity_order.index(severity)
                 if min_sev_index > 0:
                     allowed_severities = severity_order[min_sev_index:]
