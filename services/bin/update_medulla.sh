@@ -127,13 +127,16 @@ setup_new_mmc_module() {
         write_to_log "$str"
         exit 1
     fi
-    # Import initial schema
-    mysql --defaults-group-suffix=dbsetup ${module_name} < /usr/share/doc/pulse2/contrib/${module_name}/sql/schema-001.sql
-    if [[ $? -ne 0 ]]; then
-        str="[x] Error importing database schema for MMC module $module_name. Aborting."
-        echo "$str"
-        write_to_log "$str"
-        exit 1
+    # Import initial schema if version table does not exist in the database
+    TABLE_EXISTS=$(mysql --defaults-group-suffix=dbsetup -sse "USE ${module_name}; SHOW TABLES LIKE 'version';")
+    if [[ -z "${TABLE_EXISTS}" ]]; then
+        mysql --defaults-group-suffix=dbsetup ${module_name} < /usr/share/doc/pulse2/contrib/${module_name}/sql/schema-001.sql
+        if [[ $? -ne 0 ]]; then
+            str="[x] Error importing database schema for MMC module $module_name. Aborting."
+            echo "$str"
+            write_to_log "$str"
+            exit 1
+        fi
     fi
     # Create db user and grant privileges
     mysql --defaults-group-suffix=dbsetup -e "GRANT ALL PRIVILEGES ON ${module_name}.* TO '${DBUSER}'@'localhost' IDENTIFIED BY '${DBPASS}'; FLUSH PRIVILEGES;"
