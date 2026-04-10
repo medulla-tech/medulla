@@ -43,7 +43,7 @@
 }
 
 .approval-form table.listinfos .family-produit:hover td {
-    background-color: #d0e4ed;
+    background-color: var(--color-table-hover);
 }
 
 .caption-style {
