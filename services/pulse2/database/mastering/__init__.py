@@ -19,6 +19,7 @@ import logging
 import base64
 import json
 import time
+import os
 
 logger = logging.getLogger()
 
@@ -402,10 +403,8 @@ and uuid = :uuid
             return result
 
         result["total"] = count
-        regex = re.compile("\x1b(.+)m")
 
         for row in datas:
-            # content = base64.b64encode(re.sub(regex, "", row[3]).encode()).decode()
             content = base64.b64encode(row[3].encode()).decode()
             creation_date = row[4]
             if isinstance(creation_date, datetime):
