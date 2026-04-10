@@ -1203,3 +1203,40 @@ msgstr "Réinitialiser les filtres d'affichage"
 #: modules/security/security/ajaxResetDisplayFilters.php
 msgid "Reset"
 msgstr "Réinitialiser"
+
+#: modules/security/security/allcves.php
+#: modules/security/infoPackage.inc.php
+msgid "Export CVEs"
+msgstr "Exporter les CVE"
+
+#: modules/security/security/allcves.php
+msgid "Export CSV"
+msgstr "Exporter CSV"
+
+#: modules/security/security/allcves.php
+msgid "Export CVE IDs as CSV"
+msgstr "Exporter les identifiants CVE en CSV"
+
+#: modules/security/security/allcves.php
+msgid "Export CVE IDs"
+msgstr "Exporter les identifiants CVE"
+
+#: modules/security/security/allcves.php
+msgid "Select the number of CVEs to export based on current filters."
+msgstr "Sélectionnez le nombre de CVE à exporter selon les filtres actifs."
+
+#: modules/security/security/allcves.php
+msgid "Number of CVEs"
+msgstr "Nombre de CVE"
+
+#: modules/security/security/allcves.php
+msgid "Download"
+msgstr "Télécharger"
+
+#: modules/security/security/allcves.php
+msgid "Cancel"
+msgstr "Annuler"
+
+#: modules/security/security/allcves.php
+msgid "Search"
+msgstr "Recherche"
