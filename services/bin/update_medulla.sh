@@ -578,7 +578,7 @@ update_546_to_550() {
     echo "$str"
     write_to_log "$str"
     # Create /etc/cron.d/medulla-stats
-    echo "0 4 * * * root /usr/sbin/medulla-stats.sh" > /etc/cron.d/medulla-stats
+    echo "0 4 * * * root /usr/sbin/medulla-stats.sh &> /dev/null" > /etc/cron.d/medulla-stats
     # Restart cron service to apply changes
     systemctl restart cron
     if [[ $? -ne 0 ]]; then
