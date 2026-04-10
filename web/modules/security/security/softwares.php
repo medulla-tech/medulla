@@ -38,7 +38,6 @@ $listWithAll = array_merge([_T("All my entities", "security")], $listEntities);
 $location = isset($_GET['location']) ? $_GET['location'] : (count($valuesWithAll) > 0 ? $valuesWithAll[0] : '');
 ?>
 
-<link rel="stylesheet" href="modules/security/graph/security.css" type="text/css" media="screen" />
 
 <!-- Filters row: entity on left, search on right -->
 <div class="filters-row">

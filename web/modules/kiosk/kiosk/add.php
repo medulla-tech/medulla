@@ -50,7 +50,6 @@ if($sharings['config']['centralizedmultiplesharing'] == true) {
 }
 ?>
 
-<link rel="stylesheet" href="modules/kiosk/graph/css/kiosk.css" />
 <link rel="stylesheet" href="jsframework/lib/pluginjqueryjtree/themes/default/style.min.css" />
 
 <?php $p = new PageGenerator(_T("Add New Profile", 'kiosk'));

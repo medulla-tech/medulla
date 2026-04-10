@@ -26,7 +26,6 @@
 require("localSidebar.php");
 require("graph/navbar.inc.php");
 ?>
-<link rel="stylesheet" href="modules/pkgs/graph/css/pkgs.css" />
 <?php
 require_once("modules/pkgs/includes/xmlrpc.php");
 require_once("modules/pkgs/includes/functions.php");
@@ -511,6 +510,7 @@ foreach ($package['files'] as $file) {
 
 $count = safeCount($names);
 $n = new OptimizedListInfos($names, _T('File', 'pkgs'));
+$n->setTableCssClass('pkgs-files-table');
 $n->disableFirstColumnActionLink();
 //$n->addExtraInfo($sizes, _T("Size", "pkgs"));
 $n->setCssClass('file');

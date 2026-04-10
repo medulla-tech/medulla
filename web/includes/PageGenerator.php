@@ -1127,6 +1127,7 @@ class ListInfos extends HtmlElement
     // public $extraInfoRaw = array();
     public $extraColumns = array();
     public $forceFixed = false;
+    public $tableCssClass = "";
     public $emptyTitle = "";
     public $emptyDescription = "";
 
@@ -1160,6 +1161,16 @@ class ListInfos extends HtmlElement
         $this->emptyDescription = $description;
     }
 
+    /**
+     * Set a custom CSS class on the <table> element.
+     * Allows modules to target their tables in their own index.css.
+     * Example: $list->setTableCssClass('updates-approval');
+     * → <table class="listinfos listinfos-fixed updates-approval">
+     */
+    public function setTableCssClass($class)
+    {
+        $this->tableCssClass = $class;
+    }
 
     // 1. Définir le style CSS complet
     public function setCaptionText($texte)
@@ -1550,83 +1561,20 @@ class ListInfos extends HtmlElement
 
     public function drawTable($navbar = 1)
 {
-    // Compter le nombre total de colonnes
-    $totalCols = safeCount($this->description) + safeCount($this->extraColumns);
-    if (safeCount($this->arrAction) != 0) {
-        $totalCols++;
+    // Build table class — no more fixed/auto distinction
+    $tableClass = "listinfos";
+    if (!empty($this->tableCssClass)) {
+        $tableClass .= " " . htmlspecialchars($this->tableCssClass, ENT_QUOTES, 'UTF-8');
     }
-
-    // ≤ 8 colonnes → table-layout: fixed avec colgroup
-    // > 8 colonnes → table-layout: auto (le navigateur distribue l'espace)
-    $useFixed = $this->forceFixed || ($totalCols <= 8);
-    $tableClass = $useFixed ? "listinfos listinfos-fixed" : "listinfos";
 
     echo "<table class=\"$tableClass\">\n";
     $this->drawCaption();
 
-    // --- Calcul des largeurs : px fixes pour petites colonnes, flex pour le reste ---
-    $columns = [];
-    $totalFixedPx = 0;
-    $totalFlexWeight = 0;
-
-    // Colonnes principales (description)
-    foreach ($this->description as $key => $desc) {
-        $explicitWidth = (isset($this->col_width[$key]) && !empty($this->col_width[$key])) ? $this->col_width[$key] : null;
-        if ($explicitWidth && strpos($explicitWidth, 'px') !== false) {
-            $px = intval($explicitWidth);
-            $columns[] = ['type' => 'fixed', 'px' => $px];
-            $totalFixedPx += $px;
-        } else {
-            $columns[] = ['type' => 'flex', 'weight' => 200];
-            $totalFlexWeight += 200;
-        }
-    }
-
-    // Colonnes extra
-    foreach ($this->extraColumns as $extraCol) {
-        $explicitWidth = !empty($extraCol["width"]) ? $extraCol["width"] : null;
-        if ($explicitWidth && strpos($explicitWidth, 'px') !== false) {
-            $px = intval($explicitWidth);
-            $columns[] = ['type' => 'fixed', 'px' => $px];
-            $totalFixedPx += $px;
-        } elseif (!empty($extraCol["centered"]) && empty($explicitWidth)) {
-            $columns[] = ['type' => 'flex', 'weight' => 120];
-            $totalFlexWeight += 120;
-        } else {
-            $columns[] = ['type' => 'flex', 'weight' => 200];
-            $totalFlexWeight += 200;
-        }
-    }
-
-    // Colonne action : pixels fixes
-    $actionPx = 0;
-    if (safeCount($this->arrAction) != 0) {
-        $actionCount = safeCount($this->arrAction);
-        $actionPx = max(($actionCount * 36) + 16, 80);
-        $totalFixedPx += $actionPx;
-    }
-
-    // --- <colgroup> uniquement en mode fixed ---
-    if ($useFixed) {
-        echo "<colgroup>\n";
-        foreach ($columns as $col) {
-            if ($col['type'] === 'fixed') {
-                echo "<col style=\"width: {$col['px']}px;\">\n";
-            } else {
-                $pct = round($col['weight'] / $totalFlexWeight * 100, 2);
-                echo "<col style=\"width: calc((100% - {$totalFixedPx}px) * $pct / 100);\">\n";
-            }
-        }
-        if ($actionPx > 0) {
-            echo "<col class=\"col-action\" style=\"width: {$actionPx}px;\">\n";
-        }
-        echo "</colgroup>\n";
-    }
+    // No colgroup — CSS max-width:0 handles column sizing
 
     // --- En-têtes du tableau ---
     echo "<thead><tr>";
     $first = false;
-    $colIdx = 0;
 
     // Colonnes principales (description)
     foreach ($this->description as $key => $desc) {
@@ -1638,7 +1586,6 @@ class ListInfos extends HtmlElement
             $tooltipend = !empty($this->tooltip[$key]) ? "<span>" . $this->tooltip[$key] . "</span></a>" : "";
             echo "<th scope=\"col\"><span>$tooltipbegin$desc$tooltipend</span></th>";
         }
-        $colIdx++;
     }
 
     // Colonnes extra
@@ -1647,12 +1594,11 @@ class ListInfos extends HtmlElement
         $tooltipbegin = !empty($extraCol["tooltip"]) ? "<a href=\"#\" class=\"tooltip\">" : "";
         $tooltipend = !empty($extraCol["tooltip"]) ? "<span>" . $extraCol["tooltip"] . "</span></a>" : "";
         echo "<th scope=\"col\"$centeredClass><span>$tooltipbegin" . $extraCol["description"] . "$tooltipend</span></th>";
-        $colIdx++;
     }
 
     // Colonne "Actions"
     if (safeCount($this->arrAction) != 0) {
-        echo "<th scope=\"col\">Actions</th>";
+        echo "<th scope=\"col\" class=\"col-action\">Actions</th>";
     }
 
     echo "</tr></thead><tbody>";
@@ -1712,15 +1658,20 @@ class ListInfos extends HtmlElement
                     if (is_subclass_of($extraCol["data"][$idx], "HtmlContainer")) {
                         $extraCol["data"][$idx]->display();
                     } elseif (trim($extraCol["data"][$idx]) != "") {
-                        echo '<span class="cell-text">';
-                        echo_obj($extraCol["data"][$idx]);
-                        echo '</span>';
+                        // Centered columns: no cell-text wrapper (short content, no truncation needed)
+                        if (!empty($extraCol["centered"])) {
+                            echo_obj($extraCol["data"][$idx]);
+                        } else {
+                            echo '<span class="cell-text">';
+                            echo_obj($extraCol["data"][$idx]);
+                            echo '</span>';
+                        }
                     } else {
-                        echo "&nbsp;";
+                        echo '<span class="cell-empty">-</span>';
                     }
                 }
             } else {
-                echo "&nbsp;";
+                echo '<span class="cell-empty">-</span>';
             }
             echo "</td>";
         }
@@ -1728,7 +1679,7 @@ class ListInfos extends HtmlElement
         // Colonne "Actions" si nécessaire
         if (safeCount($this->arrAction) != 0) {
             echo "<td class=\"action\">";
-            echo "<ul class=\"action\" style=\"float:none;display:inline-block;\">";
+            echo "<ul class=\"action\">";
             foreach ($this->arrAction as $objActionItem) {
                 if (is_a($objActionItem, 'ActionItem')) {
                     $objActionItem->display($this->arrInfo[$idx], $this->paramInfo[$idx]);

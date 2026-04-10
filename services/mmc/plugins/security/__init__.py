@@ -71,14 +71,21 @@ def get_cves(start=0, limit=50, filter_str='', severity=None, location='',
     from mmc.plugins.security.config import SecurityConfig
     cfg = SecurityConfig("security")
 
-    # Use min_severity from config if no explicit severity filter requested
-    effective_severity = severity if severity else cfg.display_min_severity
+    # If user selected a specific severity, use exact filter
+    # Otherwise, use min_severity from config as threshold
+    if severity:
+        exact_severity = severity
+        effective_severity = None
+    else:
+        exact_severity = None
+        effective_severity = cfg.display_min_severity
 
     result = SecurityDatabase().get_cves(
         start=int(start),
         limit=int(limit),
         filter_str=filter_str,
         severity=effective_severity,
+        exact_severity=exact_severity,
         location=location,
         sort_by=sort_by,
         sort_order=sort_order,

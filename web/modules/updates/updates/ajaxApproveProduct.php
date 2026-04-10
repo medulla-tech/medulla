@@ -165,3 +165,17 @@ echo '<div class="approval-form-actions">';
 echo '<input class="btnPrimary" type="submit" value="' . _T("Apply", "updates") . '">';
 echo '</div>';
 echo "\n</form>";
+?>
+<script>
+(function() {
+    var col = document.querySelector('.approval-form table.listinfos thead th:last-child, .approval-form table.listinfos thead td:last-child');
+    var btn = document.querySelector('.approval-form-actions');
+    if (col && btn) {
+        var r = col.getBoundingClientRect();
+        var f = btn.closest('form').getBoundingClientRect();
+        btn.style.marginLeft = (r.left - f.left) + 'px';
+        btn.style.width = r.width + 'px';
+    }
+})();
+</script>
+<?php

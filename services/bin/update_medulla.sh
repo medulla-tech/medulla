@@ -127,13 +127,16 @@ setup_new_mmc_module() {
         write_to_log "$str"
         exit 1
     fi
-    # Import initial schema
-    mysql --defaults-group-suffix=dbsetup ${module_name} < /usr/share/doc/pulse2/contrib/${module_name}/sql/schema-001.sql
-    if [[ $? -ne 0 ]]; then
-        str="[x] Error importing database schema for MMC module $module_name. Aborting."
-        echo "$str"
-        write_to_log "$str"
-        exit 1
+    # Import initial schema if version table does not exist in the database
+    TABLE_EXISTS=$(mysql --defaults-group-suffix=dbsetup -sse "USE ${module_name}; SHOW TABLES LIKE 'version';")
+    if [[ -z "${TABLE_EXISTS}" ]]; then
+        mysql --defaults-group-suffix=dbsetup ${module_name} < /usr/share/doc/pulse2/contrib/${module_name}/sql/schema-001.sql
+        if [[ $? -ne 0 ]]; then
+            str="[x] Error importing database schema for MMC module $module_name. Aborting."
+            echo "$str"
+            write_to_log "$str"
+            exit 1
+        fi
     fi
     # Create db user and grant privileges
     mysql --defaults-group-suffix=dbsetup -e "GRANT ALL PRIVILEGES ON ${module_name}.* TO '${DBUSER}'@'localhost' IDENTIFIED BY '${DBPASS}'; FLUSH PRIVILEGES;"
@@ -506,6 +509,30 @@ update_546_to_550() {
     write_to_log "$str"
     update_medulla
 
+    ## Make sure clientdbsetup section exists in /root/.my.cnf
+    if ! grep -q "\[clientdbsetup\]" /root/.my.cnf; then
+        mysqlpassword=$(crudini --get /root/.my.cnf client password)
+        if [[ $? -ne 0 ]]; then
+            str="[x] Error retrieving MySQL password from /root/.my.cnf. Aborting."
+            echo "$str"
+            write_to_log "$str"
+            exit 1
+        fi
+        crudini --set /root/.my.cnf clientdbsetup host localhost
+        crudini --set /root/.my.cnf clientdbsetup port 3306
+        crudini --set /root/.my.cnf clientdbsetup user root
+        crudini --set /root/.my.cnf clientdbsetup password "$mysqlpassword"
+        if [[ $? -ne 0 ]]; then
+            str="[x] Error adding clientdbsetup section to /root/.my.cnf. Aborting."
+            echo "$str"
+            write_to_log "$str"
+            exit 1
+        fi
+        str="[v] clientdbsetup section added to /root/.my.cnf successfully."
+        echo "$str"
+        write_to_log "$str"
+    fi
+
     ## Setup new MMC module: security
     setup_new_mmc_module "security"
     # Configure security module for CVE Central
@@ -575,7 +602,7 @@ update_546_to_550() {
     echo "$str"
     write_to_log "$str"
     # Create /etc/cron.d/medulla-stats
-    echo "0 4 * * * root /usr/sbin/medulla-stats.sh" > /etc/cron.d/medulla-stats
+    echo "0 4 * * * root /usr/sbin/medulla-stats.sh &> /dev/null" > /etc/cron.d/medulla-stats
     # Restart cron service to apply changes
     systemctl restart cron
     if [[ $? -ne 0 ]]; then

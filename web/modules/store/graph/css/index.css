@@ -16,9 +16,9 @@
    =========================================== */
 
 .store-filters {
-    background: #f8f9fa;
+    background: var(--gray-50);
     padding: 15px;
-    border-radius: 8px;
+    border-radius: var(--radius-lg);
     margin-bottom: 20px;
     display: flex;
     gap: 15px;
@@ -30,8 +30,8 @@
 .store-filters input,
 .store-filters input[type="text"] {
     padding: 8px 12px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-sm);
     min-width: 150px;
 }
 
@@ -61,8 +61,8 @@
 }
 
 .modal-container {
-    background: white;
-    border-radius: 8px;
+    background: var(--color-bg-white);
+    border-radius: var(--radius-lg);
     max-width: 500px;
     width: 90%;
     max-height: 90vh;
@@ -72,7 +72,7 @@
 
 .modal-header {
     padding: 20px;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid var(--color-border-light);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -80,7 +80,7 @@
 
 .modal-header h3 {
     margin: 0;
-    color: #24607E;
+    color: var(--color-primary);
 }
 
 .modal-close {
@@ -88,11 +88,11 @@
     border: none;
     font-size: 24px;
     cursor: pointer;
-    color: #666;
+    color: var(--color-text-medium);
 }
 
 .modal-close:hover {
-    color: #333;
+    color: var(--color-text-dark);
 }
 
 .modal-body {
@@ -101,7 +101,7 @@
 
 .modal-footer {
     padding: 15px 20px;
-    border-top: 1px solid #ddd;
+    border-top: 1px solid var(--color-border-light);
     display: flex;
     justify-content: flex-end;
     gap: 10px;
@@ -119,15 +119,15 @@
     display: block;
     margin-bottom: 5px;
     font-weight: 600;
-    color: #333;
+    color: var(--color-text-dark);
 }
 
 .form-group input,
 .form-group textarea {
     width: 100%;
     padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-sm);
     font-size: 14px;
     box-sizing: border-box;
 }
@@ -136,8 +136,8 @@
     width: 100%;
     height: 40px;
     padding: 0 30px 0 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-sm);
     font-size: 14px;
     box-sizing: border-box;
     line-height: 40px;
@@ -146,7 +146,7 @@
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
-    border-color: #8BB53C;
+    border-color: var(--color-accent);
     outline: none;
 }
 
@@ -155,9 +155,9 @@
    =========================================== */
 
 .client-info {
-    background: #f8f9fa;
+    background: var(--gray-50);
     padding: 15px 20px;
-    border-radius: 8px;
+    border-radius: var(--radius-lg);
     margin-bottom: 20px;
     display: flex;
     align-items: center;
@@ -165,13 +165,13 @@
 }
 
 .client-info .label {
-    color: #666;
+    color: var(--color-text-medium);
     font-size: 12px;
 }
 
 .client-info .value {
     font-weight: 600;
-    color: #333;
+    color: var(--color-text-dark);
 }
 
 /* ===========================================
@@ -183,21 +183,21 @@
     gap: 10px;
     margin-bottom: 15px;
     padding: 15px;
-    background: #f8f9fa;
-    border-radius: 4px;
+    background: var(--gray-50);
+    border-radius: var(--radius-sm);
     align-items: center;
 }
 
 .subscription-controls .count {
     margin-left: auto;
     font-weight: 600;
-    color: #24607E;
+    color: var(--color-primary);
 }
 
 .subscription-actions {
     margin-top: 20px;
     padding-top: 20px;
-    border-top: 1px solid #ddd;
+    border-top: 1px solid var(--color-border-light);
 }
 
 /* ===========================================
@@ -220,16 +220,16 @@
 }
 
 .deploy-info {
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    background: linear-gradient(135deg, var(--gray-50) 0%, var(--gray-100) 100%);
     padding: 20px;
-    border-radius: 8px;
+    border-radius: var(--radius-lg);
     margin-bottom: 20px;
-    border-left: 4px solid #8BB53C;
+    border-left: 4px solid var(--color-accent);
 }
 
 .deploy-info h3 {
     margin-top: 0;
-    color: #24607E;
+    color: var(--color-primary);
 }
 
 /* ===========================================
@@ -240,44 +240,44 @@
     display: flex;
     gap: 0;
     margin-bottom: 0;
-    border-bottom: 2px solid #ddd;
+    border-bottom: 2px solid var(--color-border-light);
 }
 
 .deploy-tab {
     padding: 12px 24px;
-    background: #f0f0f0;
+    background: var(--color-bg-gray);
     border: none;
     cursor: pointer;
     font-size: 14px;
     font-weight: 600;
-    color: #666;
+    color: var(--color-text-medium);
     transition: all 0.3s;
-    border-radius: 8px 8px 0 0;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
     margin-bottom: -2px;
 }
 
 .deploy-tab:hover {
-    background: #e0e0e0;
+    background: var(--gray-200);
 }
 
 .deploy-tab.active {
-    background: #fff;
-    color: #24607E;
-    border: 2px solid #ddd;
-    border-bottom: 2px solid #fff;
+    background: var(--color-bg-white);
+    color: var(--color-primary);
+    border: 2px solid var(--color-border-light);
+    border-bottom: 2px solid var(--color-bg-white);
 }
 
 .deploy-content {
-    background: #fff;
+    background: var(--color-bg-white);
     padding: 20px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--color-border-light);
     border-top: none;
 }
 
 .deploy-actions {
     margin-top: 20px;
     padding-top: 20px;
-    border-top: 1px solid #ddd;
+    border-top: 1px solid var(--color-border-light);
     display: flex;
     gap: 10px;
 }
@@ -291,8 +291,8 @@
     gap: 15px;
     margin-bottom: 15px;
     padding: 15px;
-    background: #f8f9fa;
-    border-radius: 8px;
+    background: var(--gray-50);
+    border-radius: var(--radius-lg);
     flex-wrap: wrap;
     align-items: center;
 }
@@ -305,15 +305,15 @@
 
 .filter-group label {
     font-weight: 600;
-    color: #555;
+    color: var(--color-text-medium);
     white-space: nowrap;
 }
 
 .filter-group select,
 .filter-group input[type="text"] {
     padding: 8px 12px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-sm);
     font-size: 14px;
     min-width: 150px;
 }
@@ -324,7 +324,7 @@
 
 .filter-group select:focus,
 .filter-group input[type="text"]:focus {
-    border-color: #8BB53C;
+    border-color: var(--color-accent);
     outline: none;
     box-shadow: 0 0 0 2px rgba(139, 181, 60, 0.2);
 }
@@ -338,29 +338,27 @@
 
 .selection-info .count {
     font-weight: 600;
-    color: #24607E;
+    color: var(--color-primary);
 }
 
 .btn-select-all {
     padding: 8px 15px;
-    background: #e9ecef;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    background: var(--gray-100);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-sm);
     cursor: pointer;
     font-size: 13px;
 }
 
 .btn-select-all:hover {
-    background: #ddd;
+    background: var(--gray-200);
 }
 
 /* ===========================================
    Pagination NavBar
    =========================================== */
 
-/* Add margin above the bottom navigation bar */
 .listinfos + form > .navList,
 table.listinfos + form .navList {
     margin-top: 20px;
 }
-

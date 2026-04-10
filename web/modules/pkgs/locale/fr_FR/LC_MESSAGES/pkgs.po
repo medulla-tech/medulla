@@ -1576,3 +1576,11 @@ msgstr "Le paquet"
 #: modules/pkgs/pkgs/pending.php:47
 msgid "The relays <b>"
 msgstr "Les relais <b>"
+
+#: modules/pkgs/includes/query.php
+msgid "To associate an inventory query, at least one of these fields is required:"
+msgstr "Pour associer une requête d'inventaire, au moins un de ces champs est requis :"
+
+#: modules/pkgs/includes/query.php
+msgid "or"
+msgstr "ou"

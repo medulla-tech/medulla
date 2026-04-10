@@ -2,8 +2,8 @@ h1
 {
     font-size: 14px;
     padding: 6px;
-    border: 1px dotted #FF3300;
-    background-color: #f9f3f2;
+    border: 1px dotted var(--color-error);
+    background-color: var(--color-error-light);
 }
 
 
@@ -74,12 +74,12 @@ img
 
 .background0
 {
-    background-color: #fce6e0;
+    background-color: var(--color-error-light);
 }
 
 .background1
 {
-    background-color: #dddddd;
+    background-color: var(--gray-200);
 }
 
 /* used to center all the page */
@@ -112,8 +112,8 @@ img
   you can find some data as the hostname */
 #sshd_exp_header
 {
-    background-color: #f9f3f2;
-    border: 1px solid #E9EEF1;
+    background-color: var(--color-error-light);
+    border: 1px solid var(--gray-200);
     margin: 0;
     padding: 7px;
     position: relative;
@@ -126,7 +126,7 @@ img
 {
     background-color: none;
     border: none;
-    color: #000;
+    color: var(--color-text-black);
     font-size: 18px;
     font-weight: bold;
     margin: 0;
@@ -137,8 +137,8 @@ img
 /* the directory list */
 #sshd_dir_list, #sshd_key_list
 {
-    background-color: #f9f3f2;
-    border: 1px solid #E9EEF1;
+    background-color: var(--color-error-light);
+    border: 1px solid var(--gray-200);
     float: left;
     margin: 15px 0px;
     overflow: auto;
@@ -198,8 +198,8 @@ img
    current directory */
 #sshd_cur_dir
 {
-    background-color: #f9f3f2;
-    border: 1px dotted #FF3300;
+    background-color: var(--color-error-light);
+    border: 1px dotted var(--color-error);
     margin: 15px 0 0 165px;
     padding-left: 10px;
     width: 520px;
@@ -228,7 +228,7 @@ img
    in current directory */
 #sshd_list_file
 {
-    border: 1px solid #E9EEF1;
+    border: 1px solid var(--gray-200);
     margin: 15px 0 0 165px;
     width: 530px;
 }
@@ -241,7 +241,7 @@ img
 
 #sshd_list_file table
 {
-    border : 1px solid #fff;
+    border: 1px solid var(--color-bg-white);
     font-size: 10px;
     margin: 0;
     text-align: center;
@@ -250,8 +250,8 @@ img
 
 #sshd_list_file th
 {
-    background-color: #E0E0E0;
-    border: 1px solid #fff;
+    background-color: var(--gray-200);
+    border: 1px solid var(--color-bg-white);
     color: red;
 }
 
@@ -259,7 +259,7 @@ img
 
 #sshd_list_file td
 {
-    border: 1px solid #fff;
+    border: 1px solid var(--color-bg-white);
 }
 
 #sshd_list_file input
@@ -272,8 +272,8 @@ img
  * advenced actions */
 #sshd_exp_advactions
 {
-    background-color: #fce6e0;
-    border: 1px dotted #FF3300;
+    background-color: var(--color-error-light);
+    border: 1px dotted var(--color-error);
     margin: 15px 0 0 165px;
     padding: 0px 10px;
     width: 510px;
@@ -304,16 +304,16 @@ img
 
 .sshd_info#sshd_exp_advactions
 {
-    border: 1px solid #E9EEF1;
-    border-top: 1px dashed #E9EEF1;
+    border: 1px solid var(--gray-200);
+    border-top: 1px dashed var(--gray-200);
 }
 
 /* block displaying file/dir
  * informations */
 #sshd_info
 {
-    border: 1px solid #E9EEF1;
-    border-top: 1px dashed #fff;
+    border: 1px solid var(--gray-200);
+    border-top: 1px dashed var(--color-bg-white);
     margin: -1px 0 -16px 155px;
     width: 530px;
 }
@@ -345,8 +345,8 @@ img
     float: left;
     margin-left: 350px;
     margin-top: -15px;
-    border: 1px solid #E9EEF1;
-    background-color: #FCD3C2;
+    border: 1px solid var(--gray-200);
+    background-color: var(--color-warning-light);
     padding: 2px 0;
 }
 
@@ -360,7 +360,7 @@ img
 
 #sshd_info .secu a:hover
 {
-    background-color: #fff;
+    background-color: var(--color-bg-white);
 }
 
 #sshd_info_perms .secu
@@ -381,9 +381,9 @@ img
 
 #sshd_info_perms h1
 {
-    background-color: #E0E0E0;
+    background-color: var(--gray-200);
     color: red;
-    border: 1px solid #E9EEF1;
+    border: 1px solid var(--gray-200);
     font-size: 12px;
     font-weight: normal;
     margin: 0px;
@@ -410,7 +410,7 @@ img
     list-style-type: none;
     padding-left: 5px;
     padding-bottom: 25px;
-    border-bottom: 1px solid #E9EEF1;
+    border-bottom: 1px solid var(--gray-200);
     margin: 0px;
     width: 690px;
 }
@@ -419,15 +419,15 @@ img
 {
     float: left;
     height: 21px;
-    background-color: #FCF7F5;
+    background-color: var(--gray-50);
     margin: 3px 3px 0px 3px;
-    border: 1px solid #E9EEF1;
+    border: 1px solid var(--gray-200);
 }
 
 #sshd_sys_menu ul li.selected
 {
-    border-bottom: 1px solid #FCD3C2;
-    background-color: #FCD3C2;
+    border-bottom: 1px solid var(--color-warning-light);
+    background-color: var(--color-warning-light);
 }
 
 #sshd_sys_menu a {
@@ -444,20 +444,20 @@ img
 {
     color: darkgray;
     padding-bottom: 4px;
-    border-bottom: 1px dashed #E9EEF1;
+    border-bottom: 1px dashed var(--gray-200);
 }
 
 #sshd_sys_menu a:hover
 {
     color: darkgray;
-    background-color: #FCD3C2;
+    background-color: var(--color-warning-light);
     padding-bottom: 4px;
-    border-bottom: 1px dashed #E9EEF1;
+    border-bottom: 1px dashed var(--gray-200);
 }
 
 #sshd_sys_content
 {
-    border: 1px solid #E9EEF1;
+    border: 1px solid var(--gray-200);
     padding: 0px;
     margin: -1px 0 0 0;
     width: 693px;
@@ -465,7 +465,7 @@ img
 
 #sshd_sys_content table
 {
-    border: 1px solid #fcd3c2;
+    border: 1px solid var(--color-warning-light);
     padding: 0px;
     margin: 0px;
     font-size: 10px;
@@ -476,13 +476,13 @@ img
 
 #sshd_sys_content thead, tfoot
 {
-    background-color: #fcd3c2;
+    background-color: var(--color-warning-light);
 }
 
 #sshd_sys_content td
 {
     border-width: 0px;
-    border-left: 1px solid #FCD3C2;
+    border-left: 1px solid var(--color-warning-light);
     padding-left: 1em;
     padding-right: 1em;
     text-align: left;
@@ -491,7 +491,7 @@ img
 
 #sshd_sys_content table.proc tr, table.syslog tr
 {
-    border-bottom: 1px solid #fcd3c2;
+    border-bottom: 1px solid var(--color-warning-light);
 }
 
 
@@ -507,7 +507,7 @@ img
 
 #sshd_log_content
 {
-    border: 1px solid #ff3300;
+    border: 1px solid var(--color-error);
     margin: 15px 0;
     padding: 0;
     width: 695px;
@@ -515,7 +515,7 @@ img
 
 #sshd_log_content table
 {
-    background-color: #fcd3c2;
+    background-color: var(--color-warning-light);
     font-size: 10px;
     text-align: left;
     width: 100%;
@@ -523,7 +523,7 @@ img
 
 #sshd_log_content thead, #sshd_log_content tfoot
 {
-    background-color: #E0E0E0;
+    background-color: var(--gray-200);
     color: red;
 }
 
@@ -542,8 +542,8 @@ img
 
 #sshd_log_advactions
 {
-    background-color: #fce6e0;
-    border: 1px dotted #FF3300;
+    background-color: var(--color-error-light);
+    border: 1px dotted var(--color-error);
     margin: 15px 0px;
     padding: 0px 10px;
     width: 675px;
@@ -563,8 +563,8 @@ img
 
 #msc_msg
 {
-    background-color: #f9f3f2;
-    border: 1px solid #E9EEF1;
+    background-color: var(--color-error-light);
+    border: 1px solid var(--gray-200);
     margin: 15px 0 0 165px;
     padding: 7px;
     position: relative;
@@ -573,8 +573,8 @@ img
 
 #msc_confirm
 {
-    background-color: #f9f3f2;
-    border: 1px solid #E9EEF1;
+    background-color: var(--color-error-light);
+    border: 1px solid var(--gray-200);
     margin: 5px 0;
     padding: 7px;
     position: relative;
@@ -607,8 +607,8 @@ img
 
 #exec_list
 {
-    background-color: #f9f3f2;
-    border: 1px solid #E9EEF1;
+    background-color: var(--color-error-light);
+    border: 1px solid var(--gray-200);
     margin: 1px;
     padding: 7px;
     width: 680px;
@@ -616,8 +616,8 @@ img
 
 #edit_cadre
 {
-    background-color: #f9f3f2;
-    border: 1px dotted #FF3300;
+    background-color: var(--color-error-light);
+    border: 1px dotted var(--color-error);
     margin-top: 15px;
     padding: 10px;
     width: 675px;
@@ -626,3 +626,283 @@ img
 table.table-vertical td {
     color: red;
 }
+@import url("msc_tree.css");
+@import url("msc_files_list.css");
+@import url("msc_file_list_directory.css");
+@import url("msc_commands_states_list.css");
+@import url("msc_command_on_host_history.css");
+@import url("msc_states.css");
+
+.msc H2 {
+}
+
+.msc H3 {
+    margin-top:2em;
+    font-size : 1.1em;
+    border-bottom:1px solid var(--color-error);
+}
+
+H3.box-title {
+    padding:0;
+    margin:0;
+    font-weight: normal;
+    border-bottom: 0;
+}
+
+.msc .indent {
+    margin-left:2em;
+}
+
+table {
+    font-family         : Verdana, Arial, Helvetica, sans-serif;
+    font-size               : 12px;
+}
+
+table.vertical {
+}
+
+table.vertical TD {
+    border:0;
+}
+
+table.vertical TH {
+    text-align:right;
+    border:0;
+}
+
+table.form TD {
+    border: 0;
+}
+
+table.form INPUT {
+    vertical-align: middle;
+}
+
+table.form SELECT {
+    vertical-align: middle;
+}
+
+#left-panel {
+    width:20em;
+    float:left;
+    margin:0;
+    padding:0;
+}
+
+#left-panel H3 {
+    margin-top: 0;
+}
+
+#main-panel {
+    padding-left: 21em;
+}
+
+.box, #msc-tree-directory, #msc-what-is-current-directory {
+    /*background-color: var(--color-error-light);*/
+    background-color: var(--gray-200);
+    /*border: 1px solid var(--gray-200);*/
+    border: 1px solid var(--color-primary);
+    padding:1em;
+    margin:1em;
+}
+
+#msc-standard-file-list-directory-actions .box {
+    margin:0;
+}
+
+#msc-repository-actions .box {
+    margin:0;
+}
+
+#msc-repository-actions table.form td {
+    text-align: left;
+}
+
+#msc-tree-directory {
+    margin:0;
+    padding-left:1.5em;
+}
+
+#msc-standard-host-actions .box {
+    margin:0;
+    padding-left:1.5em;
+}
+
+#msc-where-I-connected {
+    float:right;
+    text-align:right;
+    font-size: x-small;
+}
+
+#msc-what-is-current-directory {
+    width:60%;
+    margin-left:auto;
+    margin-right:auto;
+    text-align:center;
+}
+
+.clear {
+    clear:both;
+}
+
+table {
+    border:0;
+}
+
+table TD {
+    border:0;
+}
+
+li.pause a {
+    padding: 3px 0px 5px 20px;
+    margin: 0 0px 0 0px;
+    background-image: url("../images/actions/pause.png");
+    background-repeat: no-repeat;
+    background-position: left top;
+    line-height: 18px;
+    text-decoration: none;
+    color: var(--color-text-white);
+}
+
+li.status a {
+    padding: 3px 0px 5px 20px;
+    margin: 0 0px 0 0px;
+    background-image: url("../images/actions/info.png");
+    background-repeat: no-repeat;
+    background-position: left top;
+    line-height: 18px;
+    text-decoration: none;
+    color: var(--color-text-white);
+}
+
+li.reschedule a {
+    padding: 3px 0px 5px 20px;
+    margin: 0 0px 0 0px;
+    background-image: url("../images/status/todo.png");
+    background-repeat: no-repeat;
+    background-position: left top;
+    line-height: 18px;
+    text-decoration: none;
+    color: var(--color-text-white);
+}
+.msc-file-list-directory {
+
+}
+
+
+table.msc-file-list-directory {
+    width           : 100%;
+    font-size       : 10px;
+    border          : 0px;
+    margin          : 0px;
+    border-collapse : collapse;
+}
+
+
+table.msc-file-list-directory TH {
+    background-color: var(--color-primary);
+    border:0;
+    color:white;
+}
+
+table.msc-file-list-directory TD {
+    text-align: left;
+}
+
+.msc-file-list-directory TR.row-odd {
+    /*background-color: #F0F0F0;*/
+    background-color: var(--gray-200);
+}
+
+.msc-file-list-directory TR.row-even {
+    /*background-color: #F9F9F9;*/
+    background-color: var(--gray-300);
+}
+
+.msc-file-list-directory TD {
+    /*border:1px solid var(--color-warning-light);*/
+    border:1px solid var(--gray-400);
+    border-top: 0;
+    border-bottom: 0;
+    border-collapse : collapse;
+}
+
+.msc-file-list-directory .icon-column {
+    text-align:center;
+    width:10px;
+    white-space:nowrap;
+}
+
+.msc-file-list-directory .filename-column {
+    width:100%;
+}
+.msc-file-list-directory .size-column {
+    text-align:right;
+    width:10px;
+    white-space:nowrap;
+}
+.msc-file-list-directory .date-column {
+    text-align:right;
+    width:10px;
+    white-space:nowrap;
+}
+.msc-file-list-directory .action-column {
+    text-align:center;
+    width:10px;
+    white-space:nowrap;
+}
+
+.msc-file-list-directory .select-copy-column {
+    text-align:center;
+    /*width:10px;*/
+    white-space:nowrap;
+}
+
+.msc-file-list-directory .select-execute-column {
+    text-align:center;
+    /*width:10px;*/
+    white-space:nowrap;
+}
+
+.msc-file-list-directory .right-column {
+    text-align:right;
+}
+
+.msc-file-list-directory .center-column {
+    text-align:center;
+}
+
+.msc-file-list-directory .left-column {
+    text-align:left;
+}
+#msc-tree-directory {
+
+}
+
+#msc-tree-directory A {
+  text-decoration: none;
+}
+
+#msc-tree-directory UL {
+  list-style-image : url("/mmc/modules/msc/graph/images/folder.png");
+  margin-left: 7px;
+  padding-left: 7px;
+}
+
+#msc-tree-directory UL LI.open {
+  list-style-image : url("/mmc/modules/msc/graph/images/folder_open.png");
+}
+
+#msc-tree-directory UL LI.open A {
+  font-weight: bold;
+}
+
+#msc-tree-directory UL LI.active {
+  list-style-image : url("/mmc/modules/msc/graph/images/folder_open.png");
+}
+
+#msc-tree-directory UL LI.active A {
+  font-style: italic;
+  font-weight: bold;
+}
+

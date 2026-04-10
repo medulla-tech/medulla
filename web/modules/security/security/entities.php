@@ -34,7 +34,6 @@ list($listEntities, $valuesEntities) = getEntitiesSelectableElements();
 $userEntities = implode(',', $valuesEntities);
 ?>
 
-<link rel="stylesheet" href="modules/security/graph/security.css" type="text/css" media="screen" />
 
 <div class="search-wrapper" style="margin-bottom: 15px;">
 <?php

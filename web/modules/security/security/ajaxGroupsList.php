@@ -77,6 +77,7 @@ $excludeAction->setWidth(450);
 // Display the list
 if ($count > 0) {
     $n = new OptimizedListInfos($groupNames, _T("Group", "security"));
+    $n->setTableCssClass("security-table");
     $n->disableFirstColumnActionLink();
     $n->addExtraInfo($groupTypes, _T("Type", "security"));
     $n->addExtraInfoCentered($machinesCounts, _T("Machines", "security"));

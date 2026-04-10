@@ -1,0 +1,14 @@
+.label span {
+    float: right;
+    width: 250px;
+    color: grey;
+}
+
+textarea {
+  width: 260px;
+  height: 80px;
+}
+
+.btnPrimary {
+    margin: 10px 0 0 0;
+}

@@ -106,7 +106,7 @@ function addQuerySection($Form, $p) {
 <script type="text/javascript">
 
 function hideconfirm(){
-    alert ("Warning! When associating a inventory query to a package, it needs one of three minimum<br>[ Inventory Vendor , Inventory Software, Inventory Version ]<br>Input are highlighted in red");
+    alert ("<?php echo _T('To associate an inventory query, at least one of these fields is required:', 'pkgs'); ?><br><b><?php echo _T('Vendor', 'pkgs'); ?></b>, <b><?php echo _T('Software', 'pkgs'); ?></b> <?php echo _T('or', 'pkgs'); ?> <b><?php echo _T('Version', 'pkgs'); ?></b>", "", "modal-warning");
     jQuery("input[name='bconfirm']").hide();
     jQuery("#Qvendor").css("border-color", 'red');
     jQuery("#Qsoftware").css("border-color", 'red');

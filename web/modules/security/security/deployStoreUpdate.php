@@ -155,7 +155,6 @@ $location = isset($_GET['location']) ? $_GET['location'] : (count($valuesEntitie
 $machines = xmlrpc_get_machines_for_vulnerable_software($software_name, $software_version, $location);
 ?>
 
-<link rel="stylesheet" href="modules/security/graph/security.css" type="text/css" media="screen" />
 
 <style>
 .deploy-header {

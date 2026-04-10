@@ -175,6 +175,10 @@ msgstr "Copié"
 msgid "Show complete trackback"
 msgstr "Afficher la traceback complète"
 
+#: includes/ErrorHandling.php
+msgid "Hide traceback"
+msgstr "Masquer la traceback"
+
 #: includes/ErrorHandling.php:88
 msgid "Copy to clipboard"
 msgstr "Copier dans le presse-papier"

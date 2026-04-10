@@ -24,7 +24,6 @@
 
 include_once("modules/pkgs/includes/help.php");
 ?>
-<link rel="stylesheet" href="modules/pkgs/graph/css/pkgs.css" />
 <?php
 if(isset($_GET["action"]) && $_GET["action"] =="edit")
 {

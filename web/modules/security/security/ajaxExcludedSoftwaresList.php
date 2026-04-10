@@ -80,6 +80,7 @@ if ($count == 0) {
 } else {
     // Create and display list
     $list = new OptimizedListInfos($softwareNames, _T("Software name", "security"));
+    $list->setTableCssClass("security-table");
     $list->disableFirstColumnActionLink();
     $list->setItemCount($count);
     $list->setNavBar(new AjaxNavBar($count, $filter, "updateSearchParamcontainerExcludedSoftware", $maxperpage));
