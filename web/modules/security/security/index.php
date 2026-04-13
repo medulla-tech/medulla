@@ -32,12 +32,7 @@ $p->setSideMenu($sidemenu);
 $p->display();
 
 if (!$hasContract) {
-    echo '<div style="display: flex; align-items: center; justify-content: center; min-height: 60vh; margin-left: -80px;">';
-    echo '<div class="empty-state-box" style="max-width: 600px; margin: 0;">';
-    echo '<div class="empty-state-box-title">' . _T("Security module not activated", "security") . '</div>';
-    echo '<div class="empty-state-box-description">' . _T("This module requires an active support contract. Please contact your administrator to configure the service.", "security") . '</div>';
-    echo '</div>';
-    echo '</div>';
+    ContractRequiredBox::show();
     return;
 }
 

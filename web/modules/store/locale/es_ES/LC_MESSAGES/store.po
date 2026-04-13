@@ -446,11 +446,3 @@ msgstr "Introduzca al menos 2 caracteres"
 #, php-format
 msgid "Showing %d of %d machines. Refine your search for more results."
 msgstr "Mostrando %d de %d máquinas. Refine su búsqueda para obtener más resultados."
-
-#: modules/store/store/index.php
-msgid "Store module not activated"
-msgstr "Módulo Store no activado"
-
-#: modules/store/store/index.php
-msgid "This module requires an active support contract. Please contact your administrator to configure the service."
-msgstr "Este módulo requiere un contrato de soporte activo. Contacte con su administrador para configurar el servicio."

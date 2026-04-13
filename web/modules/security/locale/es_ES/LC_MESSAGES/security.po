@@ -1206,11 +1206,3 @@ msgstr "Restablecer filtros de visualización"
 #: modules/security/security/ajaxResetDisplayFilters.php
 msgid "Reset"
 msgstr "Restablecer"
-
-#: modules/security/security/index.php
-msgid "Security module not activated"
-msgstr "Módulo de seguridad no activado"
-
-#: modules/security/security/index.php
-msgid "This module requires an active support contract. Please contact your administrator to configure the service."
-msgstr "Este módulo requiere un contrato de soporte activo. Contacte con su administrador para configurar el servicio."

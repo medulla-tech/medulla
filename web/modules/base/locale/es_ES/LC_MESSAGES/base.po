@@ -2620,3 +2620,36 @@ msgstr "Exportar Excel"
 msgid "Print"
 msgstr "Imprimir"
 
+
+#: includes/UIComponents.php - ContractRequiredBox
+msgid "This feature requires an active support contract."
+msgstr "Esta funcionalidad requiere un contrato de soporte activo."
+
+#: includes/UIComponents.php - ContractRequiredBox
+msgid "This module relies on advanced processing (vulnerability analysis, data correlation, state computation) performed on Medulla servers."
+msgstr "Este módulo depende de procesamientos avanzados (análisis de vulnerabilidades, correlación de datos, cálculo de estados) realizados en los servidores Medulla."
+
+#: includes/UIComponents.php - ContractRequiredBox
+msgid "The support contract funds the infrastructure required for this processing and its operational maintenance."
+msgstr "El contrato de soporte financia la infraestructura necesaria para estos procesamientos y su mantenimiento operativo."
+
+#: includes/UIComponents.php - ContractRequiredBox
+msgid "The support contract also includes:"
+msgstr "El contrato de soporte también incluye:"
+
+#: includes/UIComponents.php - ContractRequiredBox
+msgid "Technical support and assistance"
+msgstr "Soporte técnico y asistencia"
+
+#: includes/UIComponents.php - ContractRequiredBox
+msgid "Access to new features requiring an active support contract"
+msgstr "Acceso a nuevas funcionalidades que requieren un contrato de soporte activo"
+
+#: includes/UIComponents.php - ContractRequiredBox
+msgid "Participation in the continuous improvement of the solution"
+msgstr "Participación en la mejora continua de la solución"
+
+#: includes/UIComponents.php - ContractRequiredBox
+#, php-format
+msgid "To activate these features, please subscribe to a support contract by contacting us at: %s"
+msgstr "Para activar estas funcionalidades, le invitamos a suscribir un contrato de soporte contactándonos en: %s"
