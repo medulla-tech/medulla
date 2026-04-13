@@ -31,11 +31,22 @@ global $conf;
 require("localSidebar.php");
 require("graph/navbar.inc.php");
 require_once("modules/xmppmaster/includes/html.inc.php");
+require_once("includes/UIComponents.php");
 
 
 $p = new PageGenerator(_T("Entity Compliance", "updates"));
 $p->setSideMenu($sidemenu);
 $p->display();
+
+if (!$hasData) {
+    echo '<div style="display: flex; align-items: center; justify-content: center; min-height: 60vh; margin-left: -80px;">';
+    echo '<div class="empty-state-box" style="max-width: 600px; margin: 0;">';
+    echo '<div class="empty-state-box-title">' . _T("Updates module not activated", "updates") . '</div>';
+    echo '<div class="empty-state-box-description">' . _T("This module requires an active support contract. Please contact your administrator to configure the service.", "updates") . '</div>';
+    echo '</div>';
+    echo '</div>';
+    return;
+}
 
 $refresh = new RefreshButton();
 

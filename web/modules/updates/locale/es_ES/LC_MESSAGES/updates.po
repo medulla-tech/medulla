@@ -1009,3 +1009,11 @@ msgstr "Solicitada"
 msgid "Non-compliant"
 msgstr "No conformes"
 
+
+#: modules/updates/updates/index.php
+msgid "Updates module not activated"
+msgstr "Módulo de actualizaciones no activado"
+
+#: modules/updates/updates/index.php
+msgid "This module requires an active support contract. Please contact your administrator to configure the service."
+msgstr "Este módulo requiere un contrato de soporte activo. Contacte con su administrador para configurar el servicio."
