@@ -67,6 +67,8 @@ foreach ($f['name_procedure'] as $indextableau => $name) {
         $productfamily="Win11";}
     elseif (str_starts_with($str, "Win_Malicious_")) {
         $productfamily="Win_Malicious_";}
+    elseif (str_starts_with($str, "Windows_Security_platform")) {
+        $productfamily="Windows_Security_platform";}
 
     if ($currentFamily !== $productfamily || $currentFamily == null) {
         if ($productfamily == "server"){
@@ -81,6 +83,8 @@ foreach ($f['name_procedure'] as $indextableau => $name) {
             $listename[] = _T("MICROSOFT WINDOWS 11", "updates");
         }elseif  ($productfamily == "Win_Malicious_"){
             $listename[] = _T("MALICIOUS SOFTWARE REMOVAL TOOL", "updates");
+        }elseif  ($productfamily == "Windows_Security_platform"){
+            $listename[] = _T("WINDOWS SECURITY PLATFORM", "updates");
         }
         $htmlelementcheck[] = '&nbsp;';
         $cssClasses[] = "family-separator";
@@ -92,6 +96,7 @@ foreach ($f['name_procedure'] as $indextableau => $name) {
     $str = str_replace("MSOS", _T("Microsoft Server Operating System", "updates"), $str);
     $str = str_replace("Vstudio", _T("Visual studio", "updates"), $str);
     $str = str_replace("Win_Malicious_", _T("Malicious Software Removal Tool_", "updates"), $str);
+    $str = str_replace("Windows_Security_platform", _T("Windows Security platform", "updates"), $str);
     $str = str_replace("office", "Microsoft Office", $str);
     $str = str_replace("Win10", "Windows 10", $str);
     $str = str_replace("Win11", "Windows 11", $str);
@@ -135,6 +140,8 @@ foreach ($f['name_procedure'] as $indextableau => $name) {
             $cssClasses[] ="family-produit";
         }elseif  ($productfamily == "Win_Malicious_"){
            $cssClasses[] ="family-produit";
+          }elseif  ($productfamily == "Windows_Security_platform"){
+              $cssClasses[] ="family-produit";
         }
 }
 
