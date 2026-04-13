@@ -25,10 +25,21 @@ require("localSidebar.php");
 require_once("modules/security/includes/xmlrpc.php");
 require_once("modules/security/includes/html.inc.php");
 require_once("modules/medulla_server/includes/utilities.php");
+require_once("includes/UIComponents.php");
 
 $p = new PageGenerator(_T("CVE Summary", 'security'));
 $p->setSideMenu($sidemenu);
 $p->display();
+
+if (!$hasContract) {
+    echo '<div style="display: flex; align-items: center; justify-content: center; min-height: 60vh; margin-left: -80px;">';
+    echo '<div class="empty-state-box" style="max-width: 600px; margin: 0;">';
+    echo '<div class="empty-state-box-title">' . _T("Security module not activated", "security") . '</div>';
+    echo '<div class="empty-state-box-description">' . _T("This module requires an active support contract. Please contact your administrator to configure the service.", "security") . '</div>';
+    echo '</div>';
+    echo '</div>';
+    return;
+}
 
 // Get user's accessible entities
 list($listEntities, $valuesEntities) = getEntitiesSelectableElements();

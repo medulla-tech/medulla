@@ -1244,3 +1244,11 @@ msgstr "Recherche"
 #: modules/security/security/allcves.php
 msgid "Columns"
 msgstr "Colonnes"
+
+#: modules/security/security/index.php
+msgid "Security module not activated"
+msgstr "Module sécurité non activé"
+
+#: modules/security/security/index.php
+msgid "This module requires an active support contract. Please contact your administrator to configure the service."
+msgstr "Ce module nécessite un contrat de support actif. Veuillez contacter votre administrateur pour configurer le service."
