@@ -25,10 +25,21 @@
 require("graph/navbar.inc.php");
 require("localSidebar.php");
 require_once("modules/store/includes/xmlrpc.php");
+require_once("includes/UIComponents.php");
 
 $p = new PageGenerator(_T("Software Catalog", 'store'));
 $p->setSideMenu($sidemenu);
 $p->display();
+
+if (!$hasContract) {
+    echo '<div style="display: flex; align-items: center; justify-content: center; min-height: 60vh; margin-left: -80px;">';
+    echo '<div class="empty-state-box" style="max-width: 600px; margin: 0;">';
+    echo '<div class="empty-state-box-title">' . _T("Store module not activated", "store") . '</div>';
+    echo '<div class="empty-state-box-description">' . _T("This module requires an active support contract. Please contact your administrator to configure the service.", "store") . '</div>';
+    echo '</div>';
+    echo '</div>';
+    return;
+}
 
 // Process software request (POST)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['request_software'])) {

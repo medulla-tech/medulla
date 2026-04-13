@@ -20,8 +20,14 @@
  * along with MMC; If not, see <http://www.gnu.org/licenses/>.
  *
  */
+require_once("modules/store/includes/xmlrpc.php");
+
+$hasContract = xmlrpc_get_store_config('configured');
+
 $sidemenu = new SideMenu();
 $sidemenu->setClass("store");
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Medulla Store", 'store'), "store", "store", "index"));
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Update Subscription", 'store'), "store", "store", "subscribe"));
+if ($hasContract) {
+    $sidemenu->addSideMenuItem(new SideMenuItem(_T("Update Subscription", 'store'), "store", "store", "subscribe"));
+}
 ?>
