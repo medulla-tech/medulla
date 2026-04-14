@@ -1124,3 +1124,105 @@ msgstr "Valider"
 
 msgid "Regex rule"
 msgstr "Règle regex"
+
+#: modules/admin/admin/aclFeatures.php
+msgid "ACL Management"
+msgstr "Gestion des ACL"
+
+#: modules/admin/admin/aclFeatures.php
+msgid "ACL configuration saved successfully"
+msgstr "Configuration ACL sauvegardée avec succès"
+
+#: modules/admin/admin/aclFeatures.php
+msgid "Feature"
+msgstr "Fonctionnalité"
+
+#: modules/admin/admin/aclFeatures.php
+msgid "Access"
+msgstr "Accès"
+
+#: modules/admin/admin/aclFeatures.php
+msgid "Read"
+msgstr "Lecture"
+
+#: modules/admin/admin/aclFeatures.php
+msgid "Write"
+msgstr "Écriture"
+
+#: modules/admin/admin/aclFeatures.php
+msgid "Feature definitions file not found."
+msgstr "Fichier de définition des fonctionnalités introuvable."
+
+#: modules/admin/admin/aclFeatures.php - categories
+msgid "Inventory"
+msgstr "Inventaire"
+
+#: modules/admin/admin/aclFeatures.php - categories
+msgid "Deployment"
+msgstr "Déploiement"
+
+#: modules/admin/admin/aclFeatures.php - categories
+msgid "Administration"
+msgstr "Administration"
+
+#: modules/admin/admin/aclFeatures.php - feature labels
+msgid "Dashboard - User widgets"
+msgstr "Tableau de bord - Widgets utilisateur"
+
+msgid "Dashboard - On premise Super-Admin widgets"
+msgstr "Tableau de bord - Widgets Super-Admin"
+
+msgid "Creation of static groups from dashboard widgets"
+msgstr "Création de groupes statiques depuis les widgets"
+
+msgid "Inventory of machines"
+msgstr "Inventaire des machines"
+
+msgid "Groups management"
+msgstr "Gestion des groupes"
+
+msgid "Packaging"
+msgstr "Paquets"
+
+msgid "Package deployment"
+msgstr "Déploiement de paquets"
+
+msgid "Package deployment - Admin"
+msgstr "Déploiement de paquets - Admin"
+
+msgid "Imaging"
+msgstr "Imaging"
+
+msgid "Updates"
+msgstr "Mises à jour"
+
+msgid "Admin - On premise Super-Admin server management"
+msgstr "Admin - Gestion serveur Super-Admin"
+
+msgid "Admin - On premise Admin server management"
+msgstr "Admin - Gestion serveur Admin"
+
+msgid "Admin - On premise Technician server management"
+msgstr "Admin - Gestion serveur Technicien"
+
+msgid "History - On premise"
+msgstr "Historique"
+
+msgid "Computer management"
+msgstr "Gestion des postes"
+
+msgid "Creation of static groups from deployment results"
+msgstr "Création de groupes statiques depuis les résultats de déploiement"
+
+#: modules/admin/admin/aclFeatures.php - toggle links
+msgid "all"
+msgstr "tout"
+
+msgid "no one"
+msgstr "aucun"
+
+msgid "Check all"
+msgstr "Tout cocher"
+
+msgid "Uncheck all"
+msgstr "Tout décocher"

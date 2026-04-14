@@ -268,3 +268,36 @@ function xmlrpc_delete_config_data(string $table, array $data) {
 function xmlrpc_restore_config_version(string $table, string $table_version) {
     return xmlCall("admin.restore_config_version", [$table, $table_version]);
 }
+
+// ---- ACL Feature Management ----
+function xmlrpc_get_acl_categories() {
+    return xmlCall("admin.get_acl_categories", []);
+}
+
+function xmlrpc_get_acl_profiles() {
+    return xmlCall("admin.get_acl_profiles", []);
+}
+
+function xmlrpc_add_acl_profile($profileName) {
+    return xmlCall("admin.add_acl_profile", [$profileName]);
+}
+
+function xmlrpc_delete_acl_profile($profileName) {
+    return xmlCall("admin.delete_acl_profile", [$profileName]);
+}
+
+function xmlrpc_get_acl_profile_features($profileName = null) {
+    return xmlCall("admin.get_acl_profile_features", [$profileName]);
+}
+
+function xmlrpc_set_acl_profile_features($profileName, $featuresDict) {
+    return xmlCall("admin.set_acl_profile_features", [$profileName, $featuresDict]);
+}
+
+function xmlrpc_build_acl_string_for_profile($profileName) {
+    return xmlCall("admin.build_acl_string_for_profile", [$profileName]);
+}
+
+function xmlrpc_get_acl_feature_definitions() {
+    return xmlCall("admin.get_acl_feature_definitions", []);
+}
