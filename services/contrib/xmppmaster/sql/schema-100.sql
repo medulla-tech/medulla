@@ -24,53 +24,9 @@
 -- =======================================
 
 START TRANSACTION;
-USE `xmppmaster`;
-
--- =====================================================================
--- =====================================================================
--- =====================================================================
--- PROCEDURE : up_regenere_list_produit_entity()
--- =====================================================================
--- =====================================================================
--- =====================================================================
--- =====================================================================
--- PROCEDURE : up_regenere_list_produit_entity()
--- Description :
---   Cette procedure complete la table xmppmaster.up_list_produit pour une
---   seule entite GLPI specifiee par son glpi_id.
---   Elle conserve les entrees existantes pour cette entite, puis ajoute
---   uniquement les associations manquantes avec les produits definis dans
---   xmppmaster.applicationconfig (key='table produits', context='entity').
---
--- Etapes principales :
---   1. Verification que l'entite existe dans glpi_entity.
---   2. Parcours de la liste des produits definis dans applicationconfig.
---   3. Pour chaque produit manquant, insertion d'une ligne
---      (entity_id, name_procedure, enable=0) pour l'entite specifiee.
---
--- Parametres :
---   - p_entity_id (INT) : Identifiant GLPI de l'entite a completer.
---
--- Effets :
---   - Conserve les entrees existantes pour l'entite specifiee.
---   - Ajoute de nouvelles entrees pour cette entite couvrant l'ensemble
---     des produits definis.
---
--- Contraintes / Remarques :
---   - Le champ enable est toujours initialise a 0 (desactive par defaut).
---   - Si l'entite n'existe pas dans glpi_entity, la procedure ne fait rien.
---   - Cette procedure s'inspire du trigger xmppmasterglpi_entity_AFTER_INSERT
---     mais agit uniquement sur l'entite specifiee, et non sur toutes les entites.
--- =====================================================================
-USE `xmppmaster`;
-DROP procedure IF EXISTS `up_regenere_list_produit_entity`;
-
-USE `xmppmaster`;
-DROP procedure IF EXISTS `xmppmaster`.`up_regenere_list_produit_entity`;
-;
-
 DELIMITER $$
 USE `xmppmaster`$$
+DROP PROCEDURE IF EXISTS `up_regenere_list_produit_entity`$$
 CREATE PROCEDURE `up_regenere_list_produit_entity`(
     IN p_entity_id INT
 )
@@ -116,16 +72,8 @@ BEGIN
 END$$
 
 DELIMITER ;
-;
 
--- =====================================================================
--- =====================================================================
--- =====================================================================
 -- PROCEDURE : regenere_liste_produits
--- =====================================================================
--- =====================================================================
--- =====================================================================
--- =====================================================================
 -- PROCEDURE : up_regenere_list_produit()
 -- Description :
 --   Cette procedure complete la table xmppmaster.up_list_produit,
@@ -148,16 +96,9 @@ DELIMITER ;
 --   - Le champ enable est toujours initialise a 0, l'activation doit etre faite manuellement.
 --   - Les associations existantes sont conservees afin de preserver les activations.
 --   - Cette procedure complete la configuration sans remise a zero prealable.
--- =====================================================================
-USE `xmppmaster`;
-DROP procedure IF EXISTS `up_regenere_list_produit`;
-
-USE `xmppmaster`;
-DROP procedure IF EXISTS `xmppmaster`.`up_regenere_list_produit`;
-;
-
 DELIMITER $$
 USE `xmppmaster`$$
+DROP PROCEDURE IF EXISTS `up_regenere_list_produit`$$
 CREATE PROCEDURE `up_regenere_list_produit`()
 BEGIN
 
@@ -199,7 +140,81 @@ BEGIN
 END$$
 
 DELIMITER ;
-;
+
+-- PROCEDURE : up_init_packages_Windows_Security_platform
+-- Description :
+--   Cette procedure cree une table temporaire up_packages_Windows_Security_platform
+--   filtrée pour Windows Security platform uniquement (titre et produit)
+DELIMITER $$
+USE `xmppmaster`$$
+DROP PROCEDURE IF EXISTS `up_init_packages_Windows_Security_platform`$$
+CREATE PROCEDURE `up_init_packages_Windows_Security_platform`()
+BEGIN
+DROP TABLE IF EXISTS up_packages_Windows_Security_platform;
+CREATE TABLE up_packages_Windows_Security_platform AS
+ SELECT
+    aa.updateid,
+    bb.updateid AS updateid_package,
+    aa.revisionid,
+    aa.creationdate,
+    aa.compagny,
+    aa.product,
+    aa.productfamily,
+    aa.updateclassification,
+    aa.prerequisite,
+    aa.title,
+    aa.description,
+    aa.msrcseverity,
+    aa.msrcnumber,
+    aa.kb,
+    aa.languages,
+    aa.category,
+    aa.supersededby,
+    aa.supersedes,
+    bb.payloadfiles,
+    aa.revisionnumber,
+    aa.bundledby_revision,
+    aa.isleaf,
+    aa.issoftware,
+    aa.deploymentaction,
+    aa.title_short
+FROM
+    xmppmaster.update_data aa
+        JOIN
+    xmppmaster.update_data bb ON bb.bundledby_revision = aa.revisionid
+WHERE
+		aa.product LIKE '%Windows Security platform%'
+		AND aa.title LIKE '%Windows Security platform%';
+END$$
+
+DELIMITER ;
+
+
+-- Enregistrement de la procédure dans up_list_produit
+INSERT IGNORE INTO `xmppmaster`.`up_list_produit` (`name_procedure`) VALUES ('up_init_packages_Windows_Security_platform');
+
+-- Enregistrement du produit dans applicationconfig (active par defaut)
+INSERT IGNORE INTO `xmppmaster`.`applicationconfig` (
+    `key`,
+    `value`,
+    `comment`,
+    `context`,
+    `module`,
+    `enable`
+) VALUES (
+    'table produits',
+    'up_packages_Windows_Security_platform',
+    'Windows Security platform',
+    'entity',
+    'xmppmaster/update',
+    1
+);
+
+-- Execution de la procédure centrale d'initialisation
+-- La procédure up_create_product_tables (définie dans schema-095.sql)
+-- parcourt automatiquement l'information_schema et exécute toutes les
+-- procédures commençant par up_init_packages_*, y compris la nouvelle.
+CALL `xmppmaster`.`up_create_product_tables`();
 
 -- ----------------------------------------------------------------------
 -- Database version

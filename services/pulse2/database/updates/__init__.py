@@ -129,6 +129,17 @@ class UpdatesDatabase(DatabaseHelper):
 
 
     @DatabaseHelper._sessionm
+    def has_update_data(self, session):
+        """Check if xmppmaster.update_data contains data (cron has run)."""
+        try:
+            sql = "SELECT 1 FROM xmppmaster.update_data LIMIT 1;"
+            result = session.execute(sql)
+            return len([x for x in result]) > 0
+        except Exception as e:
+            logger.error(f"Error in has_update_data: {e}")
+            return False
+
+    @DatabaseHelper._sessionm
     def test_xmppmaster(self, session):
         """
         Test function to retrieve product and title information for a specific revision ID.

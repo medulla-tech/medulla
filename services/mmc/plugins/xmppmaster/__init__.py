@@ -1680,75 +1680,103 @@ def get_agent_descriptor_base():
 
 
 def get_plugin_lists():
-    base_plugin_path = os.path.join(
-        "/", "var", "lib", "pulse2", "xmpp_baseplugin")
-    files = []
-    _files = []
-    plugins = {}
-    for _, dir, _files in os.walk(base_plugin_path):
-        if dir != "__pycache__":
-            # remove "plugin_" and ".py" from the name
-            files = [file[7:-3] for file in _files if file.endswith(".py")]
-            break
+    """This function is used to retrieve the list of plugins available in the system.
 
-    for file in files:
-        meta = {}
-
-        with open(
-            os.path.join(base_plugin_path, "plugin_%s.py" % file), "r"
-        ) as plugin_fb:
-            line = ""
-            while line.startswith("plugin = ") is False:
-                line = plugin_fb.readline()
-                line = line.split("#")[0]
-            try:
-                meta = json.loads(line.replace("plugin =", ""))
-            except Exception as error_loading:
-                logger.error(f"The file {file} is not loaded correctly")
-                logger.error(error_loading)
-                pass
-            plugins[file] = [
-                meta["VERSION"],
-                meta["TYPE"],
-                meta["VERSIONAGENT"] if "VERSIONAGENT" in meta else "0.0.0",
-            ]
-            plugin_fb.close()
-
-    base_pluginscheduler_path = os.path.join(
-        "/", "var", "lib", "pulse2", "xmpp_basepluginscheduler"
-    )
-    pluginsscheduled = {}
-    for _, dir, _files in os.walk(base_pluginscheduler_path):
-        if dir != "__pycache__":
-            # remove "plugin_" and ".py" from the name
-            files = [file[0:-3] for file in _files if file.endswith(".py")]
-            break
-
-    for file in files:
-        meta = {}
-        with open(
-            os.path.join(base_pluginscheduler_path, "%s.py" % file), "r"
-        ) as plugin_fb:
-            line = ""
-            while line.startswith("plugin = ") is False:
-                line = plugin_fb.readline()
-                line = line.split("#")[0]
-            try:
-                meta = json.loads(line.replace("plugin = ", ""))
-            except Exception as e:
-                meta = eval(line.replace("plugin = ", ""))
-
-            pluginsscheduled[file] = meta["VERSION"]
-            plugin_fb.close()
-
-    # Sorting of plugins in alphabetical order
-    sorted_base_plugins = {
-        k: plugins[k] for k in sorted(plugins, key=lambda x: (x.startswith("__"), x))
+    return:
+        dict: A dictionary containing the list of plugins available in the system. The dictionary is structured as follows:
+        {
+            "plugin": {
+                "base_path": str, # The base path of the plugin type
+                "plugins": {
+                    "plugin_name": {
+                        "file": str, # The file name of the plugin
+                        "fullpath": str, # The full path of the plugin file
+                        "VERSIONAGENT": str, # The version of the agent required by the plugin (default value is "0.0.0" if not specified in the plugin meta)
+                        # Other meta information of the plugin can be added here
+                    },
+                    ...
+                }
+            },
+            "scheduling": {
+                "base_path": str, # The base path of the scheduling plugin type
+                "plugins": {
+                    "plugin_name": {
+                        "file": str, # The file name of the plugin
+                        "fullpath": str, # The full path of the plugin file
+                        "VERSIONAGENT": str, # The version of the agent required by the plugin (default value is "0.0.0" if not specified in the plugin meta)
+                        # Other meta information of the plugin can be added here
+                    },
+                    ...
+                }
+            }
+        }
+    """
+    paths = {
+        "plugin": os.path.join("/", "var", "lib", "pulse2", "xmpp_baseplugin"),
+        "scheduling": os.path.join("/", "var", "lib", "pulse2", "xmpp_basepluginscheduler")
     }
-    sorted_pluginsscheduled = {
-        k: pluginsscheduled[k] for k in sorted(pluginsscheduled)}
 
-    return [sorted_base_plugins, sorted_pluginsscheduled, base_plugin_path]
+    result = {}
+
+    for type_plugin, base_path in paths.items():
+        offset = len(type_plugin) + 1  # to remove "{type_plugin}_" from the name
+        limit = -3
+
+        result[type_plugin] = {
+            "base_path": base_path,
+            "plugins": {} # here the meta of plugins will be stored
+        }
+        for _, dir, _files in os.walk(base_path):
+            if dir == "__pycache__":
+                continue
+
+            # Process on every plugin files in function on the plugin type
+            for file in _files:
+                # Ignore non plugin files
+                if not file.startswith(f"{type_plugin}_") and not file.endswith(".py"):
+                    continue
+                name = file[offset:limit]  # remove "{type_plugin}_" and ".py"
+                fullpath = os.path.join(base_path, file)
+
+                result[type_plugin]["plugins"][name] = {
+                    "file": file,
+                    "fullpath": fullpath,
+                    "VERSIONAGENT" : "0.0.0" # default value if not specified in the plugin meta
+                }
+
+                line = ""
+                with open(fullpath, "r") as fb:
+                    # Get the line starting with plugin =  to extract the meta of the plugin
+                    while not line.startswith("plugin = "):
+                        line = fb.readline()
+                        line = line.split("#")[0]
+                    fb.close()
+
+                # We got the line we want, now we need to parse it
+                meta = {}
+                line = line.replace("plugin = ", "").strip()
+                try:
+                    meta = json.loads(line)
+                except Exception as error_loading:
+                    logger.error(f"The file {file} is not loaded correctly : %s" % str(error_loading))
+                    try:
+                        meta = eval(line)
+                    except:
+                        meta = {}
+
+                # Aggregate the meta information of the plugin in the result.
+                for k, v in meta.items():
+                    result[type_plugin]["plugins"][name][k] = v
+            # To avoid to walk in other directories.
+            break
+
+    for type_plugin in result:
+        # Sorting of plugins in alphabetical order
+        result[type_plugin]["plugins"] = {
+            k: result[type_plugin]["plugins"][k] for k in sorted(result[type_plugin]["plugins"], key=lambda x: (x.startswith("__"), x))
+        }
+
+    return result
 
 
 def get_conf_master_agent():

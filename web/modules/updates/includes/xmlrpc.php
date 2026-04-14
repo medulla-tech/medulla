@@ -22,6 +22,11 @@
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+function xmlrpc_has_update_data()
+{
+    return xmlCall("updates.has_update_data");
+}
+
 function xmlrpc_tests()
 {
     return xmlCall("updates.tests");

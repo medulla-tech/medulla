@@ -19,6 +19,7 @@ from sqlalchemy import (
     distinct,
     not_,
     text,
+    Boolean
 )  # cast, Date, select,
 from sqlalchemy.orm import sessionmaker, load_only
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
@@ -506,12 +507,22 @@ class XmppMasterDatabase(DatabaseHelper):
                 session.rollback()
 
         try:
-            # Sélectionne les colonnes souhaitées, y compris 'comment'
+            # Ne retourner que les produits exposes par l'applicationconfig active.
             query = text("""
-                SELECT id, name_procedure, enable, comment
-                FROM xmppmaster.up_list_produit
-                WHERE entity_id = :identity
-                ORDER BY comment
+                SELECT
+                    upl.id,
+                    upl.name_procedure,
+                    upl.enable,
+                    COALESCE(ac.comment, upl.comment) AS comment
+                FROM xmppmaster.up_list_produit upl
+                INNER JOIN xmppmaster.applicationconfig ac
+                    ON ac.value = upl.name_procedure
+                WHERE upl.entity_id = :identity
+                  AND ac.`key` = 'table produits'
+                  AND ac.context = 'entity'
+                  AND ac.module = 'xmppmaster/update'
+                  AND ac.enable = 1
+                ORDER BY COALESCE(ac.comment, upl.comment)
             """)
             result = session.execute(query, {"identity": identity})
             produits = result.fetchall()

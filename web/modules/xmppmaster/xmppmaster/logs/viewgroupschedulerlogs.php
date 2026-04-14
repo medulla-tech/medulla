@@ -22,7 +22,6 @@
  *
  *  file : logs/viewgroupschedulerlogs.php
  */
-<?
 
 require_once("modules/pulse2/includes/utilities.php"); # for quickGet method
 require_once("modules/dyngroup/includes/utilities.php");

@@ -18,12 +18,18 @@
  * along with MMC; If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once("modules/security/includes/xmlrpc.php");
+
+$hasContract = xmlrpc_get_config('cve_central_configured');
+
 $sidemenu = new SideMenu();
 $sidemenu->setClass("security");
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("CVE Summary", 'security'), "security", "security", "index"));
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Results by Machine", 'security'), "security", "security", "machines"));
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Results by Entity", 'security'), "security", "security", "entities"));
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Results by Group", 'security'), "security", "security", "groups"));
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("All CVEs", 'security'), "security", "security", "allcves"));
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Settings", 'security'), "security", "security", "settings"));
+if ($hasContract) {
+    $sidemenu->addSideMenuItem(new SideMenuItem(_T("Results by Machine", 'security'), "security", "security", "machines"));
+    $sidemenu->addSideMenuItem(new SideMenuItem(_T("Results by Entity", 'security'), "security", "security", "entities"));
+    $sidemenu->addSideMenuItem(new SideMenuItem(_T("Results by Group", 'security'), "security", "security", "groups"));
+    $sidemenu->addSideMenuItem(new SideMenuItem(_T("All CVEs", 'security'), "security", "security", "allcves"));
+    $sidemenu->addSideMenuItem(new SideMenuItem(_T("Settings", 'security'), "security", "security", "settings"));
+}
 ?>

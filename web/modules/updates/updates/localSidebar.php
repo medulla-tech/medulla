@@ -19,38 +19,42 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+require_once("modules/updates/includes/xmlrpc.php");
+
+$hasData = xmlrpc_has_update_data();
+
 $sidemenu = new SideMenu();
 $sidemenu->setClass("updates");
 
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Entities Compliance", 'updates'), "updates", "updates",
                                             "index"));
 
+if ($hasData) {
+    $sidemenu->addSideMenuItem(new SideMenuItem(_T("OS Upgrades",
+                                                   'updates'),
+                                                "updates",
+                                                "updates",
+                                                "MajorEntitiesList"));
 
+    $sidemenu->addSideMenuItem(new SideMenuItem(_T("Manage Updates Lists",
+                                                   'updates'),
+                                                "updates",
+                                                "updates",
+                                                "updatesListWin"));
 
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("OS Upgrades",
-                                               'updates'),
-                                            "updates",
-                                            "updates",
-                                            "MajorEntitiesList"));
+    $sidemenu->addSideMenuItem(new SideMenuItem(_T("Automatic Approval Rules",
+                                                   'updates'),
+                                                "updates",
+                                                "updates",
+                                                "approve_rules"));
 
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Manage Updates Lists",
-                                               'updates'),
-                                            "updates",
-                                            "updates",
-                                            "updatesListWin"));
-
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Automatic Approval Rules",
-                                               'updates'),
-                                            "updates",
-                                            "updates",
-                                            "approve_rules"));
-
-$sidemenu->addSideMenuItem(
-     new SideMenuItem(_T("Microsoft Products Approval",
-                         "updates"),
-                      "updates",
-                      "updates",
-                      "approve_products"));
+    $sidemenu->addSideMenuItem(
+         new SideMenuItem(_T("Microsoft Products Approval",
+                             "updates"),
+                          "updates",
+                          "updates",
+                          "approve_products"));
+}
 
 // $sidemenu->addSideMenuItem(
 //      new SideMenuItem(_T("test os",

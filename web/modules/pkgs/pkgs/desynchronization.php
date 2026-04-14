@@ -88,39 +88,40 @@ else{
       $fjid->add(new CheckboxTpl('relays[]', explode("@", $relay['relayserver_jid'])[0], ""), ['value'=>'value="'.$relay['relayserver_jid'].'"']);
     }
 
-  $fjid->addCancelButton("bback");
-  $fjid->display();
-  echo '</div>';
-  ?>
-  <script>
-  var option = jQuery("#pending-select").val();
-  jQuery("#package").show();
-  //jQuery("#all").hide();
-  jQuery("#jid").hide();
-  jQuery("#pending-select").on('change', );
-
-  function loadForm(){
+    $fjid->addCancelButton("bback");
+    $fjid->display();
+    echo '</div>';
+    ?>
+    <script>
     var option = jQuery("#pending-select").val();
-    if(option == 'package'){
-      jQuery("#package").show();
-      //jQuery("#all").hide();
-      jQuery("#jid").hide();
+    jQuery("#package").show();
+    //jQuery("#all").hide();
+    jQuery("#jid").hide();
+    jQuery("#pending-select").on('change', loadForm);
+
+    function loadForm(){
+      var option = jQuery("#pending-select").val();
+      if(option == 'package'){
+        jQuery("#package").show();
+        //jQuery("#all").hide();
+        jQuery("#jid").hide();
+      }
+      else if(option == 'all'){
+        jQuery("#package").hide();
+        //jQuery("#all").show();
+        jQuery("#jid").hide();
+      }
+      else if(option == 'jid'){
+        jQuery("#package").hide();
+        //jQuery("#all").hide();
+        jQuery("#jid").show();
+      }
     }
-    else if(option == 'all'){
-      jQuery("#package").hide();
-      //jQuery("#all").show();
-      jQuery("#jid").hide();
-    }
-    else if(option == 'jid'){
-      jQuery("#package").hide();
-      //jQuery("#all").hide();
-      jQuery("#jid").show();
-    }
-  }
-  </script>
-<? }// End expert mode
+    </script>
+    <?php
+  } // End expert mode
   else{
-    $f = new PopupForm(_T("Delete the $name from pending", 'pkgs'));
+    $f = new PopupForm(_T("Delete the $label from pending", 'pkgs'));
     $f->setLevel('danger');
     $f->addDangerButton("package");
     $f->addCancelButton("bback");

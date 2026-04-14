@@ -368,7 +368,11 @@ class synch_packages:
                     kb,
                     revisionid,
                     title,
-                    description
+                    description,
+                    payloadfiles,
+                    supersededby,
+                    creationdate,
+                    title_short
                 FROM
                     xmppmaster.%s
                 WHERE
@@ -389,6 +393,17 @@ class synch_packages:
             self.update_file_windows["revisionid"] = row[2]
             self.update_file_windows["title"] = row[3]
             self.update_file_windows["description"] = row[4]
+            self.update_file_windows["payloadfiles"] = row[5]
+            self.update_file_windows["supersededby"] = row[6]
+            self.update_file_windows["creationdate"] = row[7]
+            self.update_file_windows["title_short"] = row[8] or row[3]
+
+        if self.update_file_windows and self.update_file_windows.get("payloadfiles"):
+            self.update_file_windows["updateid_payloadfiles"] = self.update_file_windows["updateid"]
+            logger.debug(
+                "payloadfiles direct disponible sur la ligne courante, pas de recherche par supersededby"
+            )
+            return self.update_file_windows
 
         # -------------------------------------------------------------
         # 2. Recherche du payload associé
