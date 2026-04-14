@@ -298,17 +298,14 @@ def get_profiles_in_conf(profil_user, tokenuser):
       - Super-Admin : voit tout
       - Admin       : ne voit pas Super-Admin
     """
-    cfg = ConfigParser(interpolation=None)
-    cfg.read([p for p in ('/etc/mmc/plugins/glpi.ini','/etc/mmc/plugins/glpi.ini.local') if os.path.isfile(p)], encoding='utf-8')
-    if not cfg.has_section('provisioning_glpi'):
-        return []
+    # Get profiles from DB
+    try:
+        profils = AdminDatabase().get_acl_profiles()
+    except Exception:
+        profils = []
 
-    raw = cfg.get('provisioning_glpi', 'profiles_order',
-                  fallback=cfg.get('provisioning_glpi', 'profiles_oder', fallback=''))
-    if not raw:
+    if not profils:
         return []
-
-    profils = [s.strip("'\" ") for s in re.split(r'[,\s;]+', raw) if s.strip()]
 
     client = get_glpi_client(tokenuser=tokenuser)
     try:
