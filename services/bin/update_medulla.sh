@@ -676,6 +676,20 @@ update_550_to_551() {
     echo "$str"
     write_to_log "$str"
 
+    # Remove products section from updates.ini.local
+    str="[=] Removing products section from updates.ini.local..."
+    echo "$str"
+    write_to_log "$str"
+    crudini --del /etc/mmc/plugins/updates.ini.local products
+    if [[ $? -ne 0 ]]; then
+        str="[x] Error removing products section from updates.ini.local."
+        echo "$str"
+        write_to_log "$str"
+    fi
+    str="[v] Products section removed from updates.ini.local successfully."
+    echo "$str"
+    write_to_log "$str"
+
     echo "5.5.1" > /var/lib/mmc/version
     str="[v] Medulla config update from 5.5.0 to 5.5.1 applied successfully."
     echo "$str"
