@@ -638,6 +638,44 @@ update_550_to_551() {
     echo "$str"
     write_to_log "$str"
     update_medulla
+
+    # Delete prvious update packages
+    str="[=] Deleting previous Windows update packages..."
+    echo "$str"
+    write_to_log "$str"
+    rm -rf /var/lib/pulse2/packages/sharing/winupdates/*
+    if [[ $? -ne 0 ]]; then
+        str="[x] Error deleting previous Windows update packages."
+        echo "$str"
+        write_to_log "$str"
+    fi
+    str="[v] Previous Windows update packages deleted successfully."
+    echo "$str"
+    write_to_log "$str"
+    /usr/sbin/pulse2-generation_package.py -H ${DBHOST} -P ${DBPORT} -u ${DBUSER} -p ${DBPASS} -g -m -l -r > /tmp/pulse2-generation_package.log
+    if [[ $? -ne 0 ]]; then
+        str="[x] Error updating database after update packages deletion."
+        echo "$str"
+        write_to_log "$str"
+    fi
+    str="[v] Database updated successfully after update packages deletion."
+    echo "$str"
+    write_to_log "$str"
+
+    # Regenerate Windows update database
+    str="[=] Regenerating Windows update database..."
+    echo "$str"
+    write_to_log "$str"
+    /usr/sbin/medulla-generate-winupdate-packages 2>&1 | tee -a /tmp/medulla-generate-winupdate-packages.log
+    if [[ $? -ne 0 ]]; then
+        str="[x] Error regenerating Windows update database."
+        echo "$str"
+        write_to_log "$str"
+    fi
+    str="[v] Windows update database regenerated successfully."
+    echo "$str"
+    write_to_log "$str"
+
     echo "5.5.1" > /var/lib/mmc/version
     str="[v] Medulla config update from 5.5.0 to 5.5.1 applied successfully."
     echo "$str"
