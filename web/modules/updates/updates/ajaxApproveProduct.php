@@ -38,6 +38,15 @@ $filter = (isset($_GET['filter'])) ? htmlentities($_GET['filter']) : "";
 
 $f = xmlrpc_get_approve_products($_GET['selected_location']['uuid']);
 
+if (!is_array($f) || !isset($f['name_procedure']) || !is_array($f['name_procedure'])) {
+    $f = [
+        'id' => [],
+        'name_procedure' => [],
+        'enable' => [],
+        'comment' => [],
+    ];
+}
+
 // Initialisation
 $htmlelementcheck = [];
 $params = [];
@@ -51,7 +60,16 @@ $currentFamily = null;
 foreach ($f['name_procedure'] as $indextableau => $name) {
     $id = $f['id'][$indextableau];
 
+    // La visibilité des produits est pilotée côté source par
+    // xmppmaster.applicationconfig.enable = 1.
+
+    // Les procédures d'initialisation ne sont pas des produits approuvables.
+    if (str_starts_with($name, 'up_init_packages_')) {
+        continue;
+    }
+
     $str = preg_replace('/^up_packages_/', '', $name);
+    $productfamily = null;
 
     if (str_starts_with($str, "MSO")) {
         $productfamily="server";}
@@ -70,7 +88,7 @@ foreach ($f['name_procedure'] as $indextableau => $name) {
     elseif (str_starts_with($str, "Windows_Security_platform")) {
         $productfamily="Windows_Security_platform";}
 
-    if ($currentFamily !== $productfamily || $currentFamily == null) {
+    if ($productfamily !== null && ($currentFamily !== $productfamily || $currentFamily == null)) {
         if ($productfamily == "server"){
             $listename[] = _T("MICROSOFT SERVER", "updates");
         }elseif  ($productfamily == "Vstudio"){
@@ -92,7 +110,9 @@ foreach ($f['name_procedure'] as $indextableau => $name) {
         //$cssClasses[] = "sub-section-row";
     }
 
-    $currentFamily=$productfamily;
+    if ($productfamily !== null) {
+        $currentFamily = $productfamily;
+    }
     $str = str_replace("MSOS", _T("Microsoft Server Operating System", "updates"), $str);
     $str = str_replace("Vstudio", _T("Visual studio", "updates"), $str);
     $str = str_replace("Win_Malicious_", _T("Malicious Software Removal Tool_", "updates"), $str);
@@ -142,6 +162,8 @@ foreach ($f['name_procedure'] as $indextableau => $name) {
            $cssClasses[] ="family-produit";
           }elseif  ($productfamily == "Windows_Security_platform"){
               $cssClasses[] ="family-produit";
+        } else {
+            $cssClasses[] = "family-produit";
         }
 }
 
@@ -172,3 +194,4 @@ echo '<div class="approval-form-actions">';
 echo '<input class="btnPrimary" type="submit" value="' . _T("Apply", "updates") . '">';
 echo '</div>';
 echo "\n</form>";
+?>

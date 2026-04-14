@@ -24,7 +24,9 @@
 -- =======================================
 
 START TRANSACTION;
+DELIMITER $$
 USE `xmppmaster`$$
+DROP PROCEDURE IF EXISTS `up_regenere_list_produit_entity`$$
 CREATE PROCEDURE `up_regenere_list_produit_entity`(
     IN p_entity_id INT
 )
@@ -94,7 +96,9 @@ DELIMITER ;
 --   - Le champ enable est toujours initialise a 0, l'activation doit etre faite manuellement.
 --   - Les associations existantes sont conservees afin de preserver les activations.
 --   - Cette procedure complete la configuration sans remise a zero prealable.
+DELIMITER $$
 USE `xmppmaster`$$
+DROP PROCEDURE IF EXISTS `up_regenere_list_produit`$$
 CREATE PROCEDURE `up_regenere_list_produit`()
 BEGIN
 
@@ -141,7 +145,9 @@ DELIMITER ;
 -- Description :
 --   Cette procedure cree une table temporaire up_packages_Windows_Security_platform
 --   filtrée pour Windows Security platform uniquement (titre et produit)
+DELIMITER $$
 USE `xmppmaster`$$
+DROP PROCEDURE IF EXISTS `up_init_packages_Windows_Security_platform`$$
 CREATE PROCEDURE `up_init_packages_Windows_Security_platform`()
 BEGIN
 DROP TABLE IF EXISTS up_packages_Windows_Security_platform;
