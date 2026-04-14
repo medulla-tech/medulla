@@ -387,7 +387,6 @@ update_530_to_540() {
         write_to_log "$str"
     fi
     update_medulla
-    update_relays
     echo "5.4.0" > /var/lib/mmc/version
     str="[v] Medulla config update from 5.3.0 to 5.4.0 applied successfully."
     echo "$str"
@@ -400,7 +399,6 @@ update_540_to_541() {
     echo "$str"
     write_to_log "$str"
     update_medulla
-    update_relays
     echo "5.4.1" > /var/lib/mmc/version
     str="[v] Medulla config update from 5.4.0 to 5.4.1 applied successfully."
     echo "$str"
@@ -413,7 +411,6 @@ update_541_to_542() {
     echo "$str"
     write_to_log "$str"
     update_medulla
-    update_relays
     echo "5.4.2" > /var/lib/mmc/version
     str="[v] Medulla config update from 5.4.1 to 5.4.2 applied successfully."
     echo "$str"
@@ -426,7 +423,6 @@ update_542_to_543() {
     echo "$str"
     write_to_log "$str"
     update_medulla
-    update_relays
     echo "5.4.3" > /var/lib/mmc/version
     str="[v] Medulla config update from 5.4.2 to 5.4.3 applied successfully."
     echo "$str"
@@ -467,7 +463,6 @@ update_543_to_544() {
         exit 1
     fi
     update_medulla
-    update_relays
     echo "5.4.4" > /var/lib/mmc/version
     str="[v] Medulla config update from 5.4.3 to 5.4.4 applied successfully."
     echo "$str"
@@ -482,7 +477,6 @@ update_544_to_545() {
     # Specific to SAAS, so only documented here. ACLs for OIDC
     #sed -i 's/^profile_acl_Super-Admin.*$/profile_acl_Super-Admin = :inventory#inventory#incoming:inventory#inventory#index:inventory#inventory#hardware:inventory#inventory#network:inventory#inventory#controller:inventory#inventory#drive:inventory#inventory#input:inventory#inventory#memory:inventory#inventory#monitor:inventory#inventory#port:inventory#inventory#printer:inventory#inventory#sound:inventory#inventory#storage:inventory#inventory#videocard:inventory#inventory#software:inventory#inventory#registry:inventory#inventory#view:inventory#inventory#infos:inventory#inventory#graphs:inventory#inventory#graph:inventory#inventory#csv:inventory#inventory#header:mail#domains#index:mail#domains#add:mail#domains#edit:mail#domains#members:mail#domains#delete:mail#aliases#index:mail#aliases#add:mail#aliases#edit:mail#aliases#delete:network#network#index:network#network#delete:network#network#deletehost:network#network#deleterecord:network#network#edithost:network#network#editrecord:network#network#add:network#network#edit:network#network#addhost:network#network#addrecord:network#network#zonemembers:network#network#zonerecords:network#network#subnetadd:network#network#subnetedit:network#network#subnetindex:network#network#subnetdelete:network#network#subnetaddhost:network#network#subnetedithost:network#network#subnetdeletehost:network#network#subnetmembers:network#network#services:network#network#servicelog:network#network#servicestart:network#network#servicestop:network#network#servicereload:network#network#servicerestart:samba#shares#index:samba#shares#add:samba#shares#backup:samba#shares#delete:samba#shares#details:samba#machines#index:samba#machines#edit:samba#machines#delete:samba#config#index:samba#config#restart:samba#config#reload:base#main#default:base#status#index:base#computers#index:base#computers#add:base#computers#edit:base#computers#delete:base#computers#get_file:base#computers#computersgroupcreator:base#computers#computersgroupcreatesubedit:base#computers#computersgroupcreatesubdel:base#computers#computersgroupedit:base#computers#computersgroupsubedit:base#computers#computersgroupsubdel:base#computers#tmpdisplay:base#computers#display:base#computers#edit_share:base#computers#creator_step2:base#computers#save:base#computers#save_detail:base#computers#list:base#computers#listFavourite:base#computers#delete_group:base#computers#remove_machine:base#computers#csv:base#computers#updateMachineCache:base#computers#machinesList:base#computers#ajaxMachinesList:base#computers#machinesListglpi:base#computers#ajaxMachinesListglpi:base#computers#xmppMachinesList:base#computers#ajaxXmppMachinesList:base#computers#createStaticGroup:base#computers#createAntivirusStaticGroup:base#computers#createOSStaticGroup:base#computers#createMachinesStaticGroup:base#computers#createMachinesStaticGroupdeploy:base#computers#createBackupStaticGroup:base#computers#entityList:base#computers#addEntity:base#computers#locationList:base#computers#addLocation:base#computers#entityRules:base#computers#addEntityRule:base#computers#deleteEntityRule:base#computers#moveRuleUp:base#computers#moveRuleDown:base#computers#glpitabs:base#computers#register_target:base#computers#createCustomMenuStaticGroup:base#computers#imgtabs:base#computers#bootmenu_remove:base#computers#showtarget:base#computers#showsyncstatus:base#computers#addservice:base#computers#editservice:base#computers#delservice:base#computers#addimage:base#computers#editimage:base#computers#images_delete:base#computers#multicast:base#computers#computers_list:base#computers#select_location:base#computers#remove_from_pull:base#computers#groupmsctabs:base#computers#msctabs:base#computers#download_file:base#computers#download_file_remove:base#computers#download_file_get:base#computers#vnc_client:base#computers#msctabsplay:base#computers#msctabspause:base#computers#msctabsstop:base#computers#msctabsstatus:base#computers#reschedule:base#computers#delete_command:base#computers#msctabssinglestatus:base#computers#package_detail:base#computers#start_command:base#computers#start_adv_command:base#computers#convergence:base#computers#convergenceuninstall:base#computers#start_quick_action:base#computers#packages:base#computers#statuscsv:admin#admin#entitiesManagement:admin#admin#editEntity:admin#admin#deleteEntity:admin#admin#listUsersofEntity:admin#admin#editUser:admin#admin#deleteUser:admin#admin#desactivateUser:admin#admin#downloadAgent:admin#admin#downloadAgentFile:admin#admin#manageproviders:admin#admin#editProvider:admin#admin#deleteProvider:dashboard#main#default:dashboard#main#computersOnline_dashboard:dashboard#main#successRate:dashboard#main#agents:dashboard#main#deploymentsLaunched:glpi#glpi#glpi_dashboard:glpi#glpi#antivirus_dashboard:glpi#glpi#inventory_dashboard:glpi#glpi#os_repartition_dashboard:kiosk#kiosk#index:kiosk#kiosk#add:kiosk#kiosk#edit:kiosk#kiosk#acknowledges:pkgs#pkgs#index:pkgs#pkgs#add:pkgs#pkgs#edit:pkgs#pkgs#detail:pkgs#pkgs#createGroupLicence:pkgs#pkgs#pending:pkgs#pkgs#rsync:pkgs#pkgs#desynchronization:pkgs#pkgs#delete:updates#updates#index:updates#updates#detailsByMachines:updates#updates#deployAllUpdates:updates#updates#deploySpecificUpdate:updates#updates#detailsByUpdates:updates#updates#hardwareConstraintsForMajorUpdates:updates#updates#detailsSpecificUpdate:updates#updates#MajorEntitiesList:updates#updates#ajaxMajorEntitiesList:updates#updates#ajaxMajorEntitiesListServ:updates#updates#updatesListWin:updates#updates#enableUpdate:updates#updates#disableUpdate:updates#updates#whitelistUpdate:updates#updates#blacklistUpdate:updates#updates#greylistUpdate:updates#updates#deleteRule:updates#updates#grayEnable:updates#updates#grayDisable:updates#updates#grayApprove:updates#updates#banUpdate:updates#updates#whiteUnlist:updates#updates#blackUnban:updates#updates#pendingUpdateByMachine:updates#updates#auditUpdateByMachine:updates#updates#updatesListMajorWin:updates#updates#majorDetailsByMachines:updates#updates#groupUpdateMajorEntity:updates#updates#auditByEntity:updates#updates#auditByUpdate:updates#updates#approve_rules:updates#updates#approve_products:xmppmaster#xmppmaster#index:xmppmaster#xmppmaster#auditmypastdeploys:xmppmaster#xmppmaster#auditmypastdeploysteam:xmppmaster#xmppmaster#auditteam:xmppmaster#xmppmaster#convergence:xmppmaster#xmppmaster#auditteamconvergence:xmppmaster#xmppmaster#consolexmpp:xmppmaster#xmppmaster#customQA:xmppmaster#xmppmaster#shareqa:xmppmaster#xmppmaster#machine_xmpp_detail:xmppmaster#xmppmaster#editqa:xmppmaster#xmppmaster#listconffile:xmppmaster#xmppmaster#deleteqa:xmppmaster#xmppmaster#logbymachine:xmppmaster#xmppmaster#consolecomputerxmpp:xmppmaster#xmppmaster#monitoringview:xmppmaster#xmppmaster#remoteeditorconfiguration:xmppmaster#xmppmaster#remoteeditorconfigurationlist:xmppmaster#xmppmaster#listfichierconf:xmppmaster#xmppmaster#ActionQuickconsole:xmppmaster#xmppmaster#ActionQuickGroup:xmppmaster#xmppmaster#QAcustommachgrp:xmppmaster#xmppmaster#xmppMonitoring:xmppmaster#xmppmaster#deployquick:xmppmaster#xmppmaster#deployquickgroup:xmppmaster#xmppmaster#viewlogs:xmppmaster#xmppmaster#loglistgrpmachine:xmppmaster#xmppmaster#packageslist:xmppmaster#xmppmaster#popupReloadDeploy:xmppmaster#xmppmaster#rescheduleconvergence:xmppmaster#xmppmaster#reloaddeploy:base#computers#computersgroupcreator#tabdyn:base#computers#computersgroupcreator#tabsta:base#computers#computersgroupcreator#tabfromfile:base#computers#computersgroupcreatesubedit#tabdyn:base#computers#computersgroupcreatesubedit#tabsta:base#computers#computersgroupcreatesubedit#tabfromfile:base#computers#computersgroupcreatesubdel#tabdyn:base#computers#computersgroupcreatesubdel#tabsta:base#computers#computersgroupcreatesubdel#tabfromfile:base#computers#glpitabs#tab0:base#computers#glpitabs#tab1:base#computers#glpitabs#tab2:base#computers#glpitabs#tab3:base#computers#glpitabs#tab4:base#computers#glpitabs#tab5:base#computers#glpitabs#tab6:base#computers#glpitabs#tab7:base#computers#glpitabs#tab8:base#computers#glpitabs#tab9:base#computers#imgtabs#tabbootmenu:base#computers#imgtabs#tabimages:base#computers#imgtabs#tabservices:base#computers#imgtabs#tabimlogs:base#computers#imgtabs#tabconfigure:base#computers#groupmsctabs#grouptablaunch:base#computers#groupmsctabs#grouptablogs:base#computers#msctabs#tablaunch:base#computers#msctabs#tablogs:updates#updates#MajorEntitiesList#tabwin:updates#updates#MajorEntitiesList#tabwinserv\//' /etc/mmc/plugins/glpi.ini.local
     update_medulla
-    update_relays
     echo "5.4.5" > /var/lib/mmc/version
     str="[v] Medulla config update from 5.4.4 to 5.4.5 applied successfully."
     echo "$str"
@@ -495,7 +489,6 @@ update_545_to_546() {
     echo "$str"
     write_to_log "$str"
     update_medulla
-    update_relays
     echo "5.4.6" > /var/lib/mmc/version
     str="[v] Medulla config update from 5.4.5 to 5.4.6 applied successfully."
     echo "$str"
@@ -633,7 +626,6 @@ update_546_to_550() {
     echo "$str"
     write_to_log "$str"
 
-    update_relays
     echo "5.5.0" > /var/lib/mmc/version
     str="[v] Medulla config update from 5.4.6 to 5.5.0 applied successfully."
     echo "$str"
@@ -646,7 +638,6 @@ update_550_to_551() {
     echo "$str"
     write_to_log "$str"
     update_medulla
-    update_relays
     echo "5.5.1" > /var/lib/mmc/version
     str="[v] Medulla config update from 5.5.0 to 5.5.1 applied successfully."
     echo "$str"
@@ -780,7 +771,6 @@ case "$CURRENT_VERSION" in
         echo "$str"
         write_to_log "$str"
         update_medulla
-        update_relays
         str="[!] Medulla is already at the latest version or an unsupported version is detected."
         echo "$str"
         write_to_log "$str"
