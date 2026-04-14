@@ -432,7 +432,12 @@ if (isset($_POST["bcreate"])) {
             $postedProfileName = $profileIdToName[$key] ?? (xmlrpc_get_profile_name($postedProfileId, $tokenuser) ?: '');
         }
         if ($postedProfileName !== '') {
-            $aclString = getGlpiAclForProfile($postedProfileName, $configPaths);
+            // DB-first: try feature-based ACL
+            $aclString = xmlrpc_build_acl_string_for_profile($postedProfileName);
+            // Fallback to INI-based ACL
+            if (empty($aclString)) {
+                $aclString = getGlpiAclForProfile($postedProfileName, $configPaths);
+            }
             if ($aclString !== '') {
                 $okAcl = @setAcl($postedUsername, $aclString);
                 if ($okAcl === false || $okAcl === null) {
