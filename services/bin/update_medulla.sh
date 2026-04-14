@@ -641,6 +641,19 @@ update_546_to_550() {
     exec /tmp/update_medulla.sh "$@"
 }
 
+update_550_to_551() {
+    str="Applying Medulla config update from 5.5.0 to 5.5.1..."
+    echo "$str"
+    write_to_log "$str"
+    update_medulla
+    update_relays
+    echo "5.5.1" > /var/lib/mmc/version
+    str="[v] Medulla config update from 5.5.0 to 5.5.1 applied successfully."
+    echo "$str"
+    write_to_log "$str"
+    exec /tmp/update_medulla.sh "$@"
+}
+
 # --- End of specific update functions for each version ---
 
 
@@ -755,6 +768,11 @@ case "$CURRENT_VERSION" in
     "5.4.6")
         if [[ "$AVAILABLE_VERSION" > "5.4.6" ]]; then
             update_546_to_550
+        fi
+        ;;
+    "5.5.0")
+        if [[ "$AVAILABLE_VERSION" > "5.5.0" ]]; then
+            update_550_to_551
         fi
         ;;
     *)
