@@ -66,3 +66,7 @@ forgotPassword = no
 ; cacert =
 ; Path to the file containing the local key and certificate (PEM format)
 ; localcert =
+
+;[guacamole]
+; Define a timeout for reversessh connection
+;reversessh_timeout = 30

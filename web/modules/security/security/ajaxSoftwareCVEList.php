@@ -92,6 +92,7 @@ $detailAction = new ActionItem(_T("View Details", "security"), "cveDetail", "dis
 // Display the list
 if ($count > 0) {
     $n = new OptimizedListInfos($cveIds, _T("CVE ID", "security"));
+    $n->setTableCssClass("security-table");
     $n->disableFirstColumnActionLink();
     $n->setCssClasses($cssClasses);
     $n->addExtraInfo($severities, _T("Severity", "security"));

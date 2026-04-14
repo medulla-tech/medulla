@@ -1,5 +1,17 @@
 # Change Log
 
+## [5.5.1](https://github.com/medulla-tech/medulla/releases/tag/5.5.1) (2026-04-14)
+- [FEATURE] Improve kiosk profile creation
+- [FEATURE] Uninstall an update if blacklisted
+- [FEATURE] Improve security module for displaying CVE vulnerabilities
+- [FEATURE] Improvement management of reversessh connection in remote control
+- [FEATURE] Notify user if support contract is not enabled on security and updates modules
+- [BUGFIX]  Fix sysprep generation
+- [BUGFIX]  Fixes to Medulla updates script
+- [BUGFIX]  Fix updates for Windows 11 25H2
+- [BUGFIX]  Fixes to web interface following new design
+- [BUGFIX]  Fix imaging view on entity change
+
 ## [5.5.0](https://github.com/medulla-tech/medulla/releases/tag/5.5.0) (2026-03-17)
 - [FEATURE] New UX/UI for Medulla console
 - [FEATURE] Integrate websocket logs for server logs

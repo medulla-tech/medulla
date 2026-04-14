@@ -41,7 +41,6 @@ $summary = xmlrpc_get_group_machines($group_id, 0, 1, '');
 $totalMachines = $summary['total'];
 ?>
 
-<link rel="stylesheet" href="modules/security/graph/security.css" type="text/css" media="screen" />
 
 <a href="<?php echo urlStrRedirect('security/security/groups'); ?>" class="back-link">
     &larr; <?php echo _T("Back to groups list", "security"); ?>

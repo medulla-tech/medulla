@@ -45,7 +45,6 @@ $cveSummary = xmlrpc_get_machine_cves($id_glpi, 0, 1, '', null);
 $totalCves = $cveSummary['total'];
 ?>
 
-<link rel="stylesheet" href="modules/security/graph/security.css" type="text/css" media="screen" />
 
 <a href="<?php echo urlStrRedirect('security/security/machines'); ?>" class="back-link">
     &larr; <?php echo _T("Back to machines list", "security"); ?>

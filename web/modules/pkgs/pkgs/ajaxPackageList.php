@@ -155,6 +155,10 @@ if($sharings['config']['centralizedmultiplesharing'] == true) {
 
         $_tmpParam['pid'] = base64_encode($_packages['uuid'][$i]);
         $_tmpParam['packageUuid'] = $_packages['uuid'][$i];
+        $_tmpParam['packageName'] = $_packages['conf_json'][$i]['name'];
+        $_tmpParam['packageVersion'] = isset($_versions[$i]) ? $_versions[$i] : '';
+        $_tmpParam['packageOs'] = isset($_os[$i]) ? $_os[$i] : '';
+        $_tmpParam['packageSize'] = isset($_sizes[$i]) ? $_sizes[$i] : '';
 
         $countfiles = _T('Non precised');
         $listfiles = "";
@@ -277,14 +281,15 @@ if($sharings['config']['centralizedmultiplesharing'] == true) {
             $ids[] = 'p_'.$uuid;
         }
         $n = new OptimizedListInfos($_arraypackagename, _T("Package name", "pkgs"));
+        $n->setTableCssClass('pkgs-table');
         $n->setCssIds($ids);
         $n->disableFirstColumnActionLink();
         $n->addExtraInfo($_descriptions, _T("Description", "pkgs"));
-        $n->addExtraInfoCentered($_versions, _T("Version", "pkgs"), "90px");
-        $n->addExtraInfoCentered($_sizes, _T("Size", "pkgs"), "90px");
-        $n->addExtraInfoRaw($_os, _T("Os", "pkgs"), "70px");
-        $n->addExtraInfo($_packages['share_name'], _T("Share", "pkgs"), "120px");
-        $n->addExtraInfo($_licenses, _T("Licenses", "pkgs"), "90px");
+        $n->addExtraInfoCentered($_versions, _T("Version", "pkgs"));
+        $n->addExtraInfoCentered($_sizes, _T("Size", "pkgs"));
+        $n->addExtraInfoCentered($_os, _T("Os", "pkgs"));
+        $n->addExtraInfo($_packages['share_name'], _T("Share", "pkgs"));
+        $n->addExtraInfoCentered($_licenses, _T("Licenses", "pkgs"));
         $n->setItemCount($_count);
         $n->setNavBar(new AjaxNavBar($_count, $filter1));
         $n->setParamInfo($_params);
@@ -445,13 +450,14 @@ if($sharings['config']['centralizedmultiplesharing'] == true) {
             $ids[] = 'p'.$uuid;
         }
         $n = new OptimizedListInfos($arraypackagename, _T("Package name", "pkgs"));
+        $n->setTableCssClass('pkgs-table');
         $n->disableFirstColumnActionLink();
         $n->setCssIds($ids);
         $n->addExtraInfo($desc, _T("Description", "pkgs"));
-        $n->addExtraInfoCentered($versions, _T("Version", "pkgs"), "90px");
-        $n->addExtraInfoCentered($size, _T("Size", "pkgs"), "90px");
-        $n->addExtraInfoRaw($os, _T("Os", "pkgs"), "70px");
-        $n->addExtraInfo($licenses, _T("Licenses", "pkgs"), "90px");
+        $n->addExtraInfoCentered($versions, _T("Version", "pkgs"));
+        $n->addExtraInfoCentered($size, _T("Size", "pkgs"));
+        $n->addExtraInfoCentered($os, _T("Os", "pkgs"));
+        $n->addExtraInfoCentered($licenses, _T("Licenses", "pkgs"));
         $n->setItemCount($count);
         $n->setNavBar(new AjaxNavBar($count, $filter1));
         $n->setParamInfo($params);

@@ -183,6 +183,12 @@ $page->setFile("modules/security/security/ajaxRemoveExclusion.php");
 $page->setOptions(array("visible" => False, "noHeader" => True, "AJAX" => True));
 $submod->addPage($page);
 
+// Export CVEs as CSV
+$page = new Page("exportCves", _T('Export CVEs', 'security'));
+$page->setFile("modules/security/security/exportCves.php");
+$page->setOptions(array("visible" => False, "noHeader" => True, "AJAX" => True));
+$submod->addPage($page);
+
 // Ajax Add Exclusion popup
 $page = new Page("ajaxAddExclusion", _T('Add Exclusion', 'security'));
 $page->setFile("modules/security/security/ajaxAddExclusion.php");

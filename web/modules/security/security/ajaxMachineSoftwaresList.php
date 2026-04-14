@@ -100,6 +100,7 @@ $detailAction = new ActionItem(_T("View CVEs", "security"), "softwareDetail", "d
 // Display the list
 if ($count > 0) {
     $n = new OptimizedListInfos($softwareNames, _T("Software", "security"));
+    $n->setTableCssClass("security-table");
     $n->disableFirstColumnActionLink();
     $n->addExtraInfo($versions, _T("Version", "security"));
     $n->addExtraInfoCentered($maxScores, _T("Max CVSS", "security"));

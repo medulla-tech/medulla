@@ -66,6 +66,48 @@ class EmptyStateBox
 }
 
 /**
+ * Displays a contract required message when a module needs an active support contract.
+ * Used as a full-page centered block replacing the module content.
+ *
+ * Usage:
+ *   ContractRequiredBox::show();
+ */
+class ContractRequiredBox
+{
+    public static function show()
+    {
+        echo '<div style="display: flex; align-items: center; justify-content: center; min-height: 60vh; margin-left: -80px;">';
+        echo '<div class="empty-state-box" style="max-width: 700px; margin: 0; text-align: left; padding: 40px 48px;">';
+
+        echo '<div class="empty-state-box-title" style="text-align: center; font-size: 18px; margin-bottom: 24px;">';
+        echo _T("This feature requires an active support contract.", "base");
+        echo '</div>';
+
+        echo '<div class="empty-state-box-description" style="font-size: 13.5px; line-height: 1.7;">';
+
+        echo '<p style="margin-bottom: 16px;">' . _T("This module relies on advanced processing (vulnerability analysis, data correlation, state computation) performed on Medulla servers.", "base") . '</p>';
+
+        echo '<p style="margin-bottom: 16px;">' . _T("The support contract funds the infrastructure required for this processing and its operational maintenance.", "base") . '</p>';
+
+        echo '<p style="margin-bottom: 10px;">' . _T("The support contract also includes:", "base") . '</p>';
+        echo '<ul style="margin: 0 0 20px 10px; padding-left: 16px;">';
+        echo '<li style="margin-bottom: 6px;">' . _T("Technical support and assistance", "base") . '</li>';
+        echo '<li style="margin-bottom: 6px;">' . _T("Access to new features requiring an active support contract", "base") . '</li>';
+        echo '<li style="margin-bottom: 6px;">' . _T("Participation in the continuous improvement of the solution", "base") . '</li>';
+        echo '</ul>';
+
+        echo '<p style="margin-top: 20px; padding-top: 16px; border-top: 1px solid #eee;">' . sprintf(
+            _T("To activate these features, please subscribe to a support contract by contacting us at: %s", "base"),
+            '<a href="mailto:medulla@medulla-tech.io" style="color: #3c8dbc; font-weight: 600;">medulla@medulla-tech.io</a>'
+        ) . '</p>';
+
+        echo '</div>';
+        echo '</div>';
+        echo '</div>';
+    }
+}
+
+/**
  * Reusable bulk select bar for list pages.
  *
  * Adds checkbox-based multi-selection to any ListInfos table, with a toggle icon,

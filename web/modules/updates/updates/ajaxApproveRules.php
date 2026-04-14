@@ -81,19 +81,6 @@ $n->setNavBar = "";
 $n->start = 0;
 $n->end = count($f['msrcseverity']);
 
-$converter = new ConvertCouleur();
-
-$n->setCssCaption(
-    $border = 1,
-    $bold = 0,
-    $bgColor = "lightgray",
-    $textColor = "black",
-    $padding = "10px 0",
-    $size = "20",
-    $emboss = 1,
-    $rowColor = $converter->convert("lightgray")
-);
-// Affichage du tableau
 $n->disableFirstColumnActionLink();
 $n->display($navbar = 0, $header = 0);
 // Bouton de validation
@@ -104,5 +91,16 @@ echo '<div class="approval-form-actions">';
 echo '<input class="btnPrimary" type="submit" value="' . _T("Apply", "updates") . '">';
 echo '</div>';
 echo "\n</form>";
-
 ?>
+<script>
+(function() {
+    var col = document.querySelector('.approval-form table.listinfos thead th:last-child, .approval-form table.listinfos thead td:last-child');
+    var btn = document.querySelector('.approval-form-actions');
+    if (col && btn) {
+        var r = col.getBoundingClientRect();
+        var f = btn.closest('form').getBoundingClientRect();
+        btn.style.marginLeft = (r.left - f.left) + 'px';
+        btn.style.width = r.width + 'px';
+    }
+})();
+</script>

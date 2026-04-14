@@ -5,7 +5,6 @@ require_once("includes/PageGenerator.php");
 require_once("modules/pkgs/includes/xmlrpc.php");
 require_once("modules/msc/includes/utilities.php");
 ?>
-<link rel="stylesheet" href="modules/pkgs/graph/css/pkgs.css" />
 <?php
 function renderAction($sequence, $os)
 {
@@ -216,14 +215,14 @@ $totalSize = (int)$package['size'];
 echo '<h2 onclick="_toggle(\'#transfer\')">'._T("Transfer", "pkgs").'</h2>';
 echo '<div id="transfer">';
 $transfer = new OptimizedListInfos([$json['info']['methodetransfert']], _T("Transfer method", "pkgs"));
-$transfer->addExtraInfo([prettyOctetDisplay($totalSize)], _T("Size", "pkgs"));
-$transfer->addExtraInfo([$json['info']['transferfile']], _T("Transferfile", "pkgs"));
+$transfer->addExtraInfoCentered([prettyOctetDisplay($totalSize)], _T("Size", "pkgs"));
+$transfer->addExtraInfoCentered([$json['info']['transferfile']], _T("Transferfile", "pkgs"));
 if(isset($json['info']['limit_rate_ko']) && $json['info']['limit_rate_ko'] != "") {
     $transfer->addExtraInfo([$json['info']['limit_rate_ko']], _T("bandwidth throttling (ko)", "pkgs"));
 }
 $transfer->addExtraInfo([isset($json['info']['spooling']) ? $json['info']['spooling'] : ''], _T("Spooling", "pkgs").' ('._T("Priority", "pkgs").')');
-$transfer->addExtraInfo([$json['info']['inventory']], _T("Inventory", "pkgs"));
-$transfer->addExtraInfo([$package['do_reboot']], _T("Restart", "pkgs"));
+$transfer->addExtraInfoCentered([$json['info']['inventory']], _T("Inventory", "pkgs"));
+$transfer->addExtraInfoCentered([$package['do_reboot']], _T("Restart", "pkgs"));
 $transfer->setNavBar(new AjaxNavBar(0, ""));
 $transfer->display();
 echo '</div>';
@@ -249,10 +248,10 @@ foreach($filesInfos['files'] as $id => $file) {
     $fileParams[] = ["uuid" => $_GET['packageUuid'], "name" => $file["name"]];
     $fileViewActions[] = preg_match("#text/(.*)#i", $file['mime'][0]) ? $fileViewerAction : $emptyAction;
 }
-$filesTable = new OptimizedListInfos($fileNames, _T("File", "pkgs"), "", "250px");
-$filesTable->addExtraInfoCentered($fileSizes, _T("Size", "pkgs"), "120px");
-$filesTable->addExtraInfoCentered($fileRatios, _T("Ratio Size/Total", "pkgs"), "120px");
-$filesTable->addExtraInfoCentered($fileMimes, _T("Mime Type", "pkgs"), "150px");
+$filesTable = new OptimizedListInfos($fileNames, _T("File", "pkgs"));
+$filesTable->addExtraInfoCentered($fileSizes, _T("Size", "pkgs"));
+$filesTable->addExtraInfoCentered($fileRatios, _T("Ratio Size/Total", "pkgs"));
+$filesTable->addExtraInfoCentered($fileMimes, _T("Mime Type", "pkgs"));
 $filesTable->setParamInfo($fileParams);
 $filesTable->addActionItem($fileViewActions);
 $filesTable->disableFirstColumnActionLink();
@@ -289,8 +288,8 @@ foreach($json['info']['Dependency'] as $dep) {
     $depParams[] = ["packageUuid" => $dep];
     $depDetailActions[] = isset($allDependencies[$dep]) ? $detailAction : $emptyAction;
 }
-$depsTable = new OptimizedListInfos($depNames, _T("Package", "pkgs"), "", "250px");
-$depsTable->addExtraInfoCentered($depUuids, _T("Uuid", "pkgs"), "300px");
+$depsTable = new OptimizedListInfos($depNames, _T("Package", "pkgs"));
+$depsTable->addExtraInfo($depUuids, _T("Uuid", "pkgs"));
 $depsTable->setParamInfo($depParams);
 $depsTable->addActionItem($depDetailActions);
 $depsTable->disableFirstColumnActionLink();

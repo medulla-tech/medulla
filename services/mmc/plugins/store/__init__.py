@@ -280,6 +280,18 @@ def get_store_stats():
 # XMLRPC functions for subscriptions
 # ============================================
 
+def get_store_config(key=None):
+    """Get store configuration status"""
+    config = StoreConfig("store")
+    config_dict = {
+        'store_api_url': config.store_api_url or '',
+        'client_uuid': config.client_uuid or '',
+        'configured': bool(config.store_api_url and config.store_api_keyAES32 and config.client_uuid),
+    }
+    if key:
+        return config_dict.get(key, '')
+    return config_dict
+
 def get_client_uuid():
     """Return the client UUID configured in store.ini"""
     config = StoreConfig("store")

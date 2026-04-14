@@ -122,6 +122,7 @@ if (empty($excludedGroups)) {
     } else {
         // Create and display list
         $list = new OptimizedListInfos($groupNames, _T("Group", "security"));
+    $list->setTableCssClass("security-table");
         $list->addExtraInfo($groupTypes, _T("Type", "security"));
         $list->disableFirstColumnActionLink();
         $list->setItemCount($count);
