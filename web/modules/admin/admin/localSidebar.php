@@ -63,9 +63,6 @@ $sidemenu->addSideMenuItem(new SideMenuItem($providerLabel, "admin", "admin", "e
 // Configuration
 //$sidemenu->addSideMenuItem(new SideMenuItem(_T("Configuration", "admin"), "admin", "admin", "configList"));
 
-// --------------------- ACL Management ----------------
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("ACL Management", "admin"), "admin", "admin", "aclFeatures"));
-
 // --------------------- WebSocket Logs ----------------
 $sidemenu->addSideMenuItem(
     new SideMenuItem(_T("Server Logs", "admin"), "admin", "admin", "websocketLogs")

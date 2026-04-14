@@ -938,37 +938,3 @@ def get_config_sections():
     db = AdminDatabase()
     sections = db.get_config_sections()
     return sections
-
-# ---- ACL Feature Management ----
-
-def get_acl_categories():
-    """Get all categories ordered by display_order."""
-    return AdminDatabase().get_acl_categories()
-
-def get_acl_profiles():
-    """Get all available profiles."""
-    return AdminDatabase().get_acl_profiles()
-
-def add_acl_profile(profile_name):
-    """Add a new profile."""
-    return AdminDatabase().add_acl_profile(profile_name)
-
-def delete_acl_profile(profile_name):
-    """Delete a profile and its feature selections."""
-    return AdminDatabase().delete_acl_profile(profile_name)
-
-def get_acl_feature_definitions():
-    """Get all feature definitions from the database."""
-    return AdminDatabase().get_acl_feature_definitions()
-
-def get_acl_profile_features(profile_name=None):
-    """Get feature selections for a profile (or all profiles)."""
-    return AdminDatabase().get_acl_profile_features(profile_name)
-
-def set_acl_profile_features(profile_name, features_dict):
-    """Set feature selections for a profile."""
-    return AdminDatabase().set_acl_profile_features(profile_name, features_dict)
-
-def build_acl_string_for_profile(profile_name):
-    """Build the complete ACL string for a profile from its enabled features."""
-    return AdminDatabase().build_acl_string_for_profile(profile_name)

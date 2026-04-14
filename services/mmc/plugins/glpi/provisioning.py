@@ -30,10 +30,7 @@ class GlpiProvisionerConfig(ProvisionerConfig):
                     )
                 else:
                     self.profilesAcl[option.replace(PROFILEACL, "")] = value
-        try:
-            self.profilesOrder = self.get(self.section, "profiles_order").split()
-        except:
-            self.profilesOrder = []
+        self.profilesOrder = self.get(self.section, "profiles_order").split()
 
     def setDefault(self):
         ProvisionerConfig.setDefault(self)
@@ -72,16 +69,7 @@ class GlpiProvisioner(ProvisionerI):
             "Profiles order (from ini configuration): %s" % (self.config.profilesOrder)
         )
         selected = None
-        # Try INI profiles_order first, then DB profiles
-        profiles_order = self.config.profilesOrder
-        if not profiles_order:
-            try:
-                from pulse2.database.admin import AdminDatabase
-                profiles_order = AdminDatabase().get_acl_profiles()
-            except Exception as e:
-                self.logger.debug("Could not get profiles from DB: %s" % e)
-                profiles_order = []
-        for profile in profiles_order:
+        for profile in self.config.profilesOrder:
             if profile in profiles:
                 selected = profile
                 break
@@ -89,19 +77,10 @@ class GlpiProvisioner(ProvisionerI):
             self.logger.info("User GLPI's profile can't be applied")
         else:
             self.logger.debug("Selected GLPI profile is %s" % selected)
-            # DB-first: try feature-based ACL from admin database
-            acls = None
             try:
-                from pulse2.database.admin import AdminDatabase
-                acls = AdminDatabase().build_acl_string_for_profile(selected)
-            except Exception as e:
-                self.logger.debug("ACL features DB lookup failed (fallback to INI): %s" % e)
-            # Fallback to INI-based ACL
-            if not acls:
-                try:
-                    acls = self.config.profilesAcl[selected.lower()]
-                except KeyError:
-                    acls = None
+                acls = self.config.profilesAcl[selected.lower()]
+            except KeyError:
+                acls = None
             if not acls:
                 self.logger.info("No ACL to apply for the GLPI profile %s" % selected)
             else:
