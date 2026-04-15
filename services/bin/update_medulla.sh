@@ -149,7 +149,14 @@ setup_new_mmc_module() {
     if [[ -n "${PUBLIC_IP}" ]]; then
         mysql --defaults-group-suffix=dbsetup -e "GRANT ALL PRIVILEGES ON ${module_name}.* TO '${DBUSER}'@'${PUBLIC_IP}' IDENTIFIED BY '${DBPASS}'; FLUSH PRIVILEGES;"
     fi
-    # mmc-agent will be restarted in final_operations
+    # restart mmc-agent service to apply changes
+    systemctl restart mmc-agent
+    if [[ $? -ne 0 ]]; then
+        str="[x] Error restarting mmc-agent service after setting up MMC module $module_name. Aborting."
+        echo "$str"
+        write_to_log "$str"
+        exit 1
+    fi
     str="[v] MMC module $module_name setup completed successfully."
     echo "$str"
     write_to_log "$str"
