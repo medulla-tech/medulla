@@ -46,20 +46,31 @@ function xmlrpc_get_masters_for_entity($entity, $start=0, $limit=-1, $filter="")
     return xmlCall("mastering.get_masters_for_entity", [$entity, $start, $limit, $filter]);
 }
 
-function xmlrpc_create_action($action, $gid, $uuid, $server, $beginDate, $endDate, $config=[], $json="", $entity_id=-1){
-    return xmlCall("mastering.create_action", [$action, $gid, $uuid, $server, $beginDate, $endDate, $config, $json, $entity_id]);
+function xmlrpc_create_action($action, $gid, $uuid, $target, $server, $beginDate, $endDate, $config=[], $json="", $entity_id=-1){
+    return xmlCall("mastering.create_action", [$action, $gid, $uuid, $target, $server, $beginDate, $endDate, $config, $json, $entity_id]);
 }
 
-function xmlrpc_get_actions_for_entity($server, $entity=-1, $type="all", $uuid="", $gid="", $start=0, $limit=-1, $filter=""){
-    return xmlCall("mastering.get_actions_for_entity", [$server, $entity, $type, $uuid, $gid, $start, $limit, $filter]);
+function xmlrpc_get_actions_for_entity($entity, $start=0, $limit=-1, $filter=""){
+    return xmlCall("mastering.get_actions_for_entity", [$entity, $start, $limit, $filter]);
 }
 
+function xmlrpc_get_actions_for_machine($uuid, $start=0, $maxperpage=-1, $filter=""){
+    return xmlCall("mastering.get_actions_for_machine", [$uuid, $start, $maxperpage, $filter]);
+}
 
-function xmlrpc_get_action_results($id, $uuid, $start=0, $end=-1, $filter=""){
+function xmlrpc_get_action_results($id, $uuid, $entity, $start=0, $end=-1, $filter=""){
     return xmlCall("mastering.get_action_results", [$id, $uuid, $start, $end, $filter]);
 }
 
+function xmlrpc_get_machines_action_results($id, $start=0, $maxperpage=-1, $filter=""){
+    return xmlCall("mastering.get_machines_action_results", [$id, $start, $maxperpage, $filter]);
+}
 function xmlrpc_delete_master($server, $entity, $masterId){
     return xmlCall("mastering.delete_master", [$server, $entity, $masterId]);
 }
+
+function xmlrpc_delete_action($id){
+    return xmlCall("mastering.delete_action", [$id]);
+}
+
 ?>

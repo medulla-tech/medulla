@@ -4,6 +4,7 @@ require_once("modules/mastering/includes/xmlrpc.php");
 
 global $maxperpage;
 
+
 $start = (isset($_GET["start"])) ? (int)htmlentities($_GET["start"]) : 0;
 $end = (isset($_GET["end"]) ) ? (int)htmlentities($_GET['end']) : (int)$maxperpage;
 $filter = (isset($_GET['filter'])) ? htmlentities($_GET["filter"]) : "";
@@ -24,6 +25,7 @@ $contents = [];
 $ids = [];
 $dates = [];
 
+// Remove ainsi codes from strings
 foreach($datas as $log){
     $ids[] = $log["id"];
     $content = preg_replace("#\x1b\[.{2,5}m#", "", base64_decode($log["content"]));

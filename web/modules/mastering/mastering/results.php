@@ -1,4 +1,6 @@
 <?php
+global $maxperpage;
+
 require("graph/navbar.inc.php");
 require("localSidebar.php");
 require_once("modules/mastering/includes/xmlrpc.php");
@@ -8,9 +10,12 @@ $gid = (isset($_GET["gid"])) ? htmlentities($_GET["gid"]) : "";
 $uuid = (isset($_GET["uuid"])) ? htmlentities($_GET["uuid"]) : "";
 $name = (isset($_GET["name"])) ? htmlentities($_GET["name"]) : "";
 $type = (isset($_GET["type"])) ? htmlentities($_GET["type"]) : "";
-$elementName = (isset($_GET["elementName"])) ? htmlentities($_GET["elementName"]) : "";
+$target = (isset($_GET["target"])) ? htmlentities($_GET["target"]) : "";
 $entity = (isset($_GET["entity"])) ? htmlentities($_GET["entity"]) : "";
 $server = (isset($_GET["server"])) ? htmlentities($_GET["server"]) : "";
+$start = (isset($_GET["start"])) ? htmlentities($_GET["start"]) : 0;
+$end = (isset($_GET["start"])) ? htmlentities($_GET["start"]) : $maxperpage;
+$filter=(isset($_GET["filter"])) ? htmlentities($_GET["filter"]) : "";
 
 $params = [
     "id" => $id,
@@ -18,34 +23,21 @@ $params = [
     "uuid" => $uuid,
     "name" => $name,
     "type" => $type,
-    "elementName" => $elementName,
+    "target" => $target,
     "entity" => $entity,
     "server" => $server,
+
+    "start" => $start,
+    "end" => $end,
+    "filter"=>$filter,
 ];
 
-if($type == "machine"){
-    $p = new PageGenerator(sprintf(_T("Results for action <%s> %s on machine %s", 'mastering'), $id, $name, $elementName));
-}
-else if($type == "group"){
-    $p = new PageGenerator(sprintf(_T("Results for action <%s> %s on group %s", 'mastering'), $id, $name, $elementName));
-}
-else if ($type == "new"){
-    $p = new PageGenerator(sprintf(_T("Results for action <%s> %s on new machine", 'mastering'), $id, $name));
-}
-else{
-    $p = new PageGenerator(sprintf(_T("Results for action <%s> %s", 'mastering'), $id, $name));
+$p = new PageGenerator(sprintf(_T("Results for action %s on machine %s", 'mastering'), $name, $target));
 
-}
 $p->setSideMenu($sidemenu);
 $p->display();
 
-// $entitiesList = [];
-// $entitiesIds = [];
-
-// list($entitiesList, $entitiesIds) = getEntitiesSelectableElements();
-
-
-$ajax = new AjaxFilter(urlStrRedirect("mastering/mastering/ajaxResults"), "container", $params);
+$ajax = new AjaxFilter(urlStrRedirect("mastering/mastering/ajaxResults", $params), "container");
 
 // $ajax->setElements($entitiesList);
 // $ajax->setElementsVal($entitiesIds);

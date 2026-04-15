@@ -183,61 +183,52 @@ def get_masters_for_entity(entity, start=0, limit=-1, filter=""):
     result = MasteringDatabase().get_masters_for_entity(entity, start, limit, filter)
     return result
 
-def create_action(action, gid, uuid, server, begin_date, end_date, config, workflow="", entity_id=-1):
+def create_action(action, gid, uuid, target, server, begin_date, end_date, config, workflow="", entity_id=-1):
 
     try:
         workflow = json.loads(workflow)
     except Exception as e:
         return {"status":1, "msg":"invalid incoming datas: %s"%e}
     server = server.replace("\/", "/")
-    result = MasteringDatabase().create_action(action, gid, uuid, server, begin_date, end_date, config, workflow, entity_id)
+    result = MasteringDatabase().create_action(action, gid, uuid, target, server, begin_date, end_date, config, workflow, entity_id)
     return result
 
 
-def get_actions_for_entity(server, entity=-1, _type="all", uuid="", gid="", start=0, limit=-1, _filter=""):
-
-    # Sanitize parameters
-    server = server.replace("\/", "/")
+def get_actions_for_entity(entity, start=0, limit=-1, _filter=""):
 
     if isinstance(entity, str):
         if entity.startswith("UUID"):
             entity = entity.replace("UUID", "")
         entity = int(entity)
 
-    actions_list = MasteringDatabase().get_actions_for_entity(server, entity, _type, uuid, gid, start, limit, _filter)
-
-    # find some datas on groups and machines
-    machines = actions_list["machines"]
-    groups = actions_list["groups"]
-
-    machines_infos = Glpi().get_machines_info_from_list(machines)
-    groups_infos = DyngroupDatabase().get_groups_info_from_list(groups)
-
-    for action in actions_list["data"]:
-        action["element_id"] = 0
-        action["element_name"] = "N/P"
-        if action["uuid"] in machines_infos:
-            _uuid = action["uuid"]
-            # Append machine infos to this action
-            action["element_id"] = machines_infos[_uuid]["id"]
-            action["element_name"] = machines_infos[_uuid]["name"]
-
-        if action["gid"] in groups_infos:
-            # Append group infos to this action
-            _gid = action["gid"]
-
-            # To be coherent with machines, like this we have the same keys on groups or machines.
-            action["element_id"] = groups_infos[_gid]["id"]
-            action["element_name"] = groups_infos[_gid]["name"]
+    actions_list = MasteringDatabase().get_actions_for_entity(entity, start, limit, _filter)
 
     return actions_list
 
+def get_actions_for_machine(uuid, start=0, maxperpage=-1, _filter=""):
+    actions_list = MasteringDatabase().get_actions_for_machine(uuid, start, maxperpage, _filter)
+    return actions_list
 
-def get_action_results(_id, uuid, start=0, end=-1, _filter=""):
+def get_action_results(_id, uuid, entity, start=0, end=-1, _filter=""):
+
+    # normalize the entity id
+    if isinstance(entity, str):
+        if entity.startswith("UUID"):
+            entity = entity.replace("UUID", "")
+        entity = int(entity)
+
     result = MasteringDatabase().get_action_results(_id, uuid, start, end, _filter)
+    return result
+
+def get_machines_action_results(_id, start=0, end=-1, _filter=""):
+    result = MasteringDatabase().get_machines_action_results(_id, start, end, _filter)
     return result
 
 
 def delete_master(server, entity, masterId):
     result = MasteringDatabase().delete_master(server, entity, masterId)
     return result
+
+
+def delete_action(_id):
+    return MasteringDatabase().delete_action(_id)

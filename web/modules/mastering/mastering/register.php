@@ -1,29 +1,36 @@
 <?php
-$entity = "";
-$mode = "";
-$server = "";
-$uuid = "";
-$gid = "";
+$entity = isset($_GET["entity"]) ? $_GET["entity"] : "";
+$server = isset($_GET["server"]) ? $_GET["server"] : "";
+$uuid = isset($_GET["uuid"]) ? $_GET["uuid"] : "";
+$gid = isset($_GET["gid"]) ? $_GET["gid"] : "";
+$name = isset($_GET["name"]) ? $_GET["name"] : "";
 
-if(isset($_GET["server"])){
-    $mode = "new";
-    $server = htmlentities($_GET["server"]);
-}
 
-else if(isset($_GET["uuid"])){
+if(isset($_GET["uuid"])){
     $mode = "machine";
-    $uuid = htmlentities($_GET["uuid"]);
-}
+    $p = new PageGenerator(sprintf(_T("Register Action for Machine %s on entity %s, server %s", "mastering"), $name, $entity, $server));
 
+}
 else if (isset($_GET["gid"])){
     $mode = "group";
-    $gid = htmlentities($_GET["gid"]);
+    $p = new PageGenerator(sprintf(_T("Register Action for Group %s on entity %s, server %s", "mastering"), $name, $entity, $server));
+}
+else{
+    $mode = "new";
+    $p = new PageGenerator(sprintf(_T("Register Action for New Machine on entity %s, server %s", "mastering"), $entity, $server));
 }
 
-$p = new PageGenerator(_T("Register Action", "mastering"));
 $p->display();
 
-$f = new ValidatingForm(["action"=>urlStrRedirect("mastering/mastering/addAction")]);
+$params = [
+    "name"=>$name,
+    "server"=>$server,
+    "entity"=>$entity,
+    "gid"=>$gid,
+    "uuid"=>$uuid,
+];
+
+$f = new ValidatingForm(["action"=>urlStrRedirect("mastering/mastering/addAction", $params)]);
 
 $f->push(new Table());
 // Begin date
@@ -65,8 +72,9 @@ $f->pop();
 $f->add(new HiddenTpl("add"), ["value"=>"register", "hide"=>true]);
 $f->add(new HiddenTpl("server"), ["value"=>$server, "hide"=>true]);
 $f->add(new HiddenTpl("gid"), ["value" => $gid, "hide"=>true]);
-$f->add(new HiddenTpl("targetName"), ["value" => $gid, "hide"=>true]);
+// $f->add(new HiddenTpl("targetName"), ["value" => $targetName, "hide"=>true]);
 $f->add(new HiddenTpl("uuid"), ["value" => $uuid, "hide"=>true]);
+$f->add(new HiddenTpl("entity"), ["value" => $entity, "hide"=>true]);
 $f->add(new HiddenTpl("name"), ["value"=>$name, "hide"=>true]);
 
 $f->pop();

@@ -9,7 +9,7 @@ $filter = (isset($_GET['filter'])) ? htmlentities($_GET["filter"]) : "";
 $entity = (isset($_GET['entity'])) ? htmlentities($_GET["entity"]) : "";
 
 $parentEntities = [];
-$parentEntities = xmlrpc_getLocationParentPath($entity);
+$parentEntities = (array)xmlrpc_getLocationParentPath($entity);
 if(!in_array($entity, $parentEntities)){
     array_unshift($parentEntities, $entity);
     // $parentEntities[] = $entity;

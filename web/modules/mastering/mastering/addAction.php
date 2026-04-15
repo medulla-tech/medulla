@@ -7,12 +7,16 @@ if(isset($_POST["add"], $_POST["Confirm"])){
     // meta default action (used if no workflow)
     $action = htmlentities($_POST["add"]);
     // meta target
-    $uuid = htmlentities($_POST["uuid"]);
-    $gid = htmlentities($_POST["gid"]);
-    $server = htmlentities($_POST["server"]);
+    $name = (isset($_POST["name"])) ? $_POST["name"] : "";
+    $uuid = (isset($_POST["uuid"])) ? $_POST["uuid"] : "";
+    $gid = (isset($_POST["gid"])) ? $_POST["gid"] : "";
+    $server = (isset($_POST["server"])) ? $_POST["server"] : "";
+    $entity = (isset($_POST["entity"])) ? $_POST["entity"] : "";
+
     // meta timestamp
     $beginDate = htmlentities($_POST["begin_date"]);
     $endDate = htmlentities($_POST["end_date"]);
+
     // meta config
     $auth = (isset($_POST["auth"])) ? true : false;
     $login = (isset($_POST["login"]) && $auth=true) ? htmlentities($_POST["login"]) : "";
@@ -65,6 +69,12 @@ if(isset($_POST["add"], $_POST["Confirm"])){
     // Config section
     $config = [];
 
+    $config[$action] = [];
+    if($action == "mastering"){
+        $config[$action]["name"] = $_POST["mastername"];
+        $config[$action]["description"] = $_POST["masterdescription"];
+    }
+
     $config["auth"] = $auth;
     $config["auth_login"] = $login;
     $config["auth_password"] = $password;
@@ -84,7 +94,8 @@ if(isset($_POST["add"], $_POST["Confirm"])){
         $workflow = json_encode($workflow);
     }
 
-    $ret = xmlrpc_create_action($action, $gid, $uuid, $server, $beginDate, $endDate, $config, $workflow);
+    // name is the target name, group name for group, or computer name for machine or empty for new machine.
+    $ret = xmlrpc_create_action($action, $gid, $uuid, $name, $server, $beginDate, $endDate, $config, $workflow, $entity);
 
     if($ret["status"] == 0){
         new NotifyWidgetSuccess(_T("New Action registered", "mastering"));

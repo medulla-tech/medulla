@@ -5,19 +5,25 @@ $server = (isset($_GET["server"])) ? htmlentities($_GET["server"]) : "";
 $entity = (isset($_GET["entity"])) ? htmlentities($_GET["entity"]) : "";
 $gid = (isset($_GET["gid"])) ? htmlentities($_GET["gid"]) : "";
 $uuid = (isset($_GET["uuid"])) ? htmlentities($_GET["uuid"]) : "";
+$name = (isset($_GET["name"])) ? $_GET["name"] : "";
 
 if($uuid != ""){
     $mode = "machine";
+    $p = new PageGenerator(sprintf(_T("Create Master Action for Machine %s on entity %s, server %s", "mastering"), $name, $entity, $server));
 }
 elseif ($gid != ""){
     $mode = "group";
+    $p = new PageGenerator(sprintf(_T("Create Master Action for Group %s on entity %s, server %s", "mastering"), $name, $entity, $server));
+
 }
 else{
     $mode = "new";
+    $p = new PageGenerator(sprintf(_T("Create Master Action for New Machine on entity %s, server %s", "mastering"), $entity, $server));
+
 }
 
-$p = new PageGenerator(_T("Create Master Action", "mastering"));
 $p->display();
+
 
 $f = new ValidatingForm(["action"=>urlStrRedirect("mastering/mastering/addAction")]);
 $f->push(new Table());
@@ -65,6 +71,8 @@ $f->add(new HiddenTpl("add"), ["value"=>"mastering", "hide"=>true]);
 $f->add(new HiddenTpl("server"), ["value"=>$server, "hide"=>true]);
 $f->add(new HiddenTpl("gid"), ["value"=>$gid, "hide"=>true]);
 $f->add(new HiddenTpl("uuid"), ["value"=>$uuid, "hide"=>true]);
+$f->add(new HiddenTpl("entity"), ["value"=>$entity, "hide"=>true]);
+$f->add(new HiddenTpl("name"), ["value"=>$name, "hide"=>true]);
 
 $f->pop();
 $f->addValidateButton(_T("Confirm", "mastering"));

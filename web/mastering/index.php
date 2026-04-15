@@ -160,7 +160,7 @@ $bind3 = [];
 // Get actions for the machine / group / server
 $datenow = date("Y-m-d H:i:s", time());
 
-$bind3["status"] = "DONE";
+$bind3["status"] = "TODO";
 $bind3["startdate"] = $datenow;
 $bind3["enddate"] = $datenow;
 
@@ -171,7 +171,7 @@ if($known){
     from actions
     join servers on actions.server_id=servers.id
     where
-        actions.status != :status
+        actions.status = :status
         and actions.date_start <= :startdate
         and actions.date_end > :enddate
         and (actions.uuid = :uuid ";
@@ -192,7 +192,7 @@ else{
     from actions
     join servers on actions.server_id=servers.id
     where
-        actions.status != :status
+        actions.status = :status
         and actions.date_start <= :startdate
         and actions.date_end > :enddate
         and actions.uuid = ''

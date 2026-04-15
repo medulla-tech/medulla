@@ -50,10 +50,11 @@ $server = xmlrpc_get_server_from_parent_entities($parentEntities);
 echo '<div>';
 echo '<p>'.sprintf(_T("Reference Server : %s", "mastering"), $server).'</p>';
 echo '</div>';
+$masteringAction = new ActionPopupItem(_T("Create Master", "mastering"), "createMaster", "start", "createMaster", "mastering", "mastering");
 
 $datas = xmlrpc_get_machines_list_for_mastering($start, $maxperpage, $entity, $filter);
 
-$actionListAction = new ActionItem(_T("Show Actions", "mastering"), "actionList", "display", "actionList", "mastering", "mastering");
+$actionListAction = new ActionItem(_T("Show Actions", "mastering"), "actionListMachine", "display", "actionList", "mastering", "mastering");
 $masteringAction = new ActionPopupItem(_T("Create Master", "mastering"), "createMaster", "start", "createMaster", "mastering", "mastering");
 $masteringAction->setWidth(0);
 $deployAction = new ActionPopupItem(_T("Deploy Master", "mastering"), "deployMaster", "install", "deployMaster", "mastering", "mastering");
@@ -76,7 +77,7 @@ foreach($machines["id"] as $ids){
     $params[] = [
         "id" => $machines["id"][$i],
         "uuid" => $machines["uuid"][$i],
-        "name" => $machines["name"][$i],
+        "target" => $machines["name"][$i],
         "server" => $server,
         "entity" => $entity,
     ];

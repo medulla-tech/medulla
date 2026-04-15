@@ -22,8 +22,6 @@ $entitiesIds = [];
 
 list($entitiesList, $entitiesIds) = getEntitiesSelectableElements();
 
-
-
 $ajax = new AjaxFilterLocation(urlStrRedirect("mastering/mastering/ajaxActionList"), "container", "entity");
 
 $ajax->setElements($entitiesList);
