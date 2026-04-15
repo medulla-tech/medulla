@@ -23,13 +23,13 @@ USE mastering;
 START TRANSACTION;
 
 drop table if exists `actions`;
-CREATE TABLE if not exists `actions` (
+CREATE TABLE `actions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `server_id` varchar(50) DEFAULT '' COMMENT 'if only server_id is specified means the action is an action by default',
   `entity_id` int(11) DEFAULT -1,
   `gid` varchar(30) DEFAULT '' COMMENT 'The group gid. If empty, the machine is not member of a group',
   `uuid` varchar(50) DEFAULT '' COMMENT 'The Machine uuid',
-  `session_id` varchar(30) DEFAULT '' COMMENT 'Use this sessionid to find xmpp related logs and actions',
+  `target` varchar(255) DEFAULT '',
   `name` varchar(50) NOT NULL,
   `config` text DEFAULT '',
   `content` text DEFAULT '' COMMENT 'Store the action to do as json',
@@ -87,6 +87,7 @@ CREATE TABLE if not exists`results` (
 DROP TABLE IF EXISTS `scripts`;
 CREATE TABLE if not exists`scripts` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `type` varchar(50) default "",
   `name` varchar(50) NOT NULL,
   `content` text DEFAULT '',
   `creation_date` datetime DEFAULT current_timestamp(),
