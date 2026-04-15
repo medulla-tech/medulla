@@ -112,6 +112,7 @@ if($loglist) {
 }
 
 $n = new LogListInfos($logdate, _("Date"));
+$n->setResizable();
 $n->setNavBar(new AjaxLogNavBar($nblog, $filter, $maxperpage));
 $n->setItemCount($nblog);
 $n->start = 0;

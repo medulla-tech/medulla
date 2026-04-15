@@ -281,6 +281,7 @@ if($sharings['config']['centralizedmultiplesharing'] == true) {
             $ids[] = 'p_'.$uuid;
         }
         $n = new OptimizedListInfos($_arraypackagename, _T("Package name", "pkgs"));
+        $n->setResizable();
         $n->setTableCssClass('pkgs-table');
         $n->setCssIds($ids);
         $n->disableFirstColumnActionLink();

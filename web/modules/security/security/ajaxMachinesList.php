@@ -85,6 +85,7 @@ $excludeAction->setWidth(450);
 // Display the list
 if ($count > 0) {
     $n = new OptimizedListInfos($hostnames, _T("Machine", "security"));
+    $n->setResizable();
     $n->setTableCssClass("security-table");
     $n->disableFirstColumnActionLink();
     $n->addExtraInfoCentered($riskScores, _T("Risk Score", "security"));

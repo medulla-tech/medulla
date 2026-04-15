@@ -186,24 +186,25 @@ $page->display();
 echo '<h2 id="toggle-context" onclick="_toggle(\'#context\')">'._T("Context", "pkgs").'</h2>';
 echo '<div id="context">';
 $context = new OptimizedListInfos([$json['info']['name']], _T("Package Name", "pkgs"));
+$context->setResizable();
 $context->forceFixed = true;
 $context->addExtraInfo([isset($json['info']['creator']) ? $json['info']['creator'] : ''], _T("Creator", "pkgs"));
 if(isset($json['info']['editor']) && $json['info']['editor'] != "") {
     $context->addExtraInfo([$json['info']['editor']], _T("Edited By", "pkgs"));
 }
-$context->addExtraInfo([isset($json['info']['creation_date']) ? $json['info']['creation_date'] : ''], _T("Creation Date", "pkgs"), "150px");
+$context->addExtraInfo([isset($json['info']['creation_date']) ? $json['info']['creation_date'] : ''], _T("Creation Date", "pkgs"));
 if(isset($json['info']['edition_date'])) {
-    $context->addExtraInfo([$json['info']['edition_date']], _T("Last Modification Date", "pkgs"), "150px");
+    $context->addExtraInfo([$json['info']['edition_date']], _T("Last Modification Date", "pkgs"));
 }
 if(isset($json['info']['localisation_server'])) {
     $context->addExtraInfo([$json['info']['localisation_server']], _T("Sharing Location", "pkgs"));
 }
 $context->addExtraInfo([$package['id']], _T("Package Uuid", "pkgs"));
 $context->addExtraInfo([$json['info']['description']], _T("Description", "pkgs"));
-$context->addExtraInfoCentered([$json['info']['version']], _T("Version", "pkgs"), "70px");
-$context->addExtraInfoCentered([$json['info']['metagenerator']], _T("Type", "pkgs"), "70px");
+$context->addExtraInfoCentered([$json['info']['version']], _T("Version", "pkgs"));
+$context->addExtraInfoCentered([$json['info']['metagenerator']], _T("Type", "pkgs"));
 if(isset($json['info']['licenses'])) {
-    $context->addExtraInfoCentered([$json['info']['licenses']], _T("Licenses", "pkgs"), "90px");
+    $context->addExtraInfoCentered([$json['info']['licenses']], _T("Licenses", "pkgs"));
 }
 $context->setNavBar(new AjaxNavBar(0, ""));
 $context->display();

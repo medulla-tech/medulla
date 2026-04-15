@@ -146,10 +146,10 @@ $n = new OptimizedListInfos($entityNames, _T("Entity name", "updates"));
 $n->setcssIds($ids_entity);
 $n->disableFirstColumnActionLink();
 
-$n->addExtraInfo($complRates, _T("Compliance rate", "updates"), "220px");
-$n->addExtraInfoCentered($nbupdate, _T("Missing", "updates"), "100px");
-$n->addExtraInfoCentered($nbMachines, _T("Non-compliant", "updates"), "120px");
-$n->addExtraInfoCentered($totalMachine, _T("Total machines", "updates"), "100px");
+$n->addExtraInfo($complRates, _T("Compliance rate", "updates"));
+$n->addExtraInfoCentered($nbupdate, _T("Missing", "updates"));
+$n->addExtraInfoCentered($nbMachines, _T("Non-compliant", "updates"));
+$n->addExtraInfoCentered($totalMachine, _T("Total machines", "updates"));
 
 $n->setItemCount($count);
 $n->setNavBar(new AjaxNavBar($count, $filter));
