@@ -277,7 +277,11 @@ update_521_to_530() {
     str="[v] Medulla config update from 5.2.1 to 5.3.0 applied successfully."
     echo "$str"
     write_to_log "$str"
-    exec /tmp/update_medulla.sh "$@"
+    if [[ -f /tmp/update_medulla.sh ]]; then
+        exec /tmp/update_medulla.sh "$@"
+    else
+        exec /usr/sbin/update_medulla.sh "$@"
+    fi
 }
 
 update_530_to_540() {
@@ -391,7 +395,11 @@ update_530_to_540() {
     str="[v] Medulla config update from 5.3.0 to 5.4.0 applied successfully."
     echo "$str"
     write_to_log "$str"
-    exec /tmp/update_medulla.sh "$@"
+    if [[ -f /tmp/update_medulla.sh ]]; then
+        exec /tmp/update_medulla.sh "$@"
+    else
+        exec /usr/sbin/update_medulla.sh "$@"
+    fi
 }
 
 update_540_to_541() {
@@ -403,7 +411,11 @@ update_540_to_541() {
     str="[v] Medulla config update from 5.4.0 to 5.4.1 applied successfully."
     echo "$str"
     write_to_log "$str"
-    exec /tmp/update_medulla.sh "$@"
+    if [[ -f /tmp/update_medulla.sh ]]; then
+        exec /tmp/update_medulla.sh "$@"
+    else
+        exec /usr/sbin/update_medulla.sh "$@"
+    fi
 }
 
 update_541_to_542() {
@@ -415,7 +427,11 @@ update_541_to_542() {
     str="[v] Medulla config update from 5.4.1 to 5.4.2 applied successfully."
     echo "$str"
     write_to_log "$str"
-    exec /tmp/update_medulla.sh "$@"
+    if [[ -f /tmp/update_medulla.sh ]]; then
+        exec /tmp/update_medulla.sh "$@"
+    else
+        exec /usr/sbin/update_medulla.sh "$@"
+    fi
 }
 
 update_542_to_543() {
@@ -427,7 +443,11 @@ update_542_to_543() {
     str="[v] Medulla config update from 5.4.2 to 5.4.3 applied successfully."
     echo "$str"
     write_to_log "$str"
-    exec /tmp/update_medulla.sh "$@"
+    if [[ -f /tmp/update_medulla.sh ]]; then
+        exec /tmp/update_medulla.sh "$@"
+    else
+        exec /usr/sbin/update_medulla.sh "$@"
+    fi
 }
 
 update_543_to_544() {
@@ -467,7 +487,11 @@ update_543_to_544() {
     str="[v] Medulla config update from 5.4.3 to 5.4.4 applied successfully."
     echo "$str"
     write_to_log "$str"
-    exec /tmp/update_medulla.sh "$@"
+    if [[ -f /tmp/update_medulla.sh ]]; then
+        exec /tmp/update_medulla.sh "$@"
+    else
+        exec /usr/sbin/update_medulla.sh "$@"
+    fi
 }
 
 update_544_to_545() {
@@ -481,7 +505,11 @@ update_544_to_545() {
     str="[v] Medulla config update from 5.4.4 to 5.4.5 applied successfully."
     echo "$str"
     write_to_log "$str"
-    exec /tmp/update_medulla.sh "$@"
+    if [[ -f /tmp/update_medulla.sh ]]; then
+        exec /tmp/update_medulla.sh "$@"
+    else
+        exec /usr/sbin/update_medulla.sh "$@"
+    fi
 }
 
 update_545_to_546() {
@@ -493,7 +521,11 @@ update_545_to_546() {
     str="[v] Medulla config update from 5.4.5 to 5.4.6 applied successfully."
     echo "$str"
     write_to_log "$str"
-    exec /tmp/update_medulla.sh "$@"
+    if [[ -f /tmp/update_medulla.sh ]]; then
+        exec /tmp/update_medulla.sh "$@"
+    else
+        exec /usr/sbin/update_medulla.sh "$@"
+    fi
 }
 
 update_546_to_550() {
@@ -630,7 +662,11 @@ update_546_to_550() {
     str="[v] Medulla config update from 5.4.6 to 5.5.0 applied successfully."
     echo "$str"
     write_to_log "$str"
-    exec /tmp/update_medulla.sh "$@"
+    if [[ -f /tmp/update_medulla.sh ]]; then
+        exec /tmp/update_medulla.sh "$@"
+    else
+        exec /usr/sbin/update_medulla.sh "$@"
+    fi
 }
 
 update_550_to_551() {
@@ -694,7 +730,11 @@ update_550_to_551() {
     str="[v] Medulla config update from 5.5.0 to 5.5.1 applied successfully."
     echo "$str"
     write_to_log "$str"
-    exec /tmp/update_medulla.sh "$@"
+    if [[ -f /tmp/update_medulla.sh ]]; then
+        exec /tmp/update_medulla.sh "$@"
+    else
+        exec /usr/sbin/update_medulla.sh "$@"
+    fi
 }
 
 # --- End of specific update functions for each version ---
