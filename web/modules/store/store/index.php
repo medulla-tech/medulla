@@ -25,10 +25,16 @@
 require("graph/navbar.inc.php");
 require("localSidebar.php");
 require_once("modules/store/includes/xmlrpc.php");
+require_once("includes/UIComponents.php");
 
 $p = new PageGenerator(_T("Software Catalog", 'store'));
 $p->setSideMenu($sidemenu);
 $p->display();
+
+if (!$hasContract) {
+    ContractRequiredBox::show();
+    return;
+}
 
 // Process software request (POST)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['request_software'])) {

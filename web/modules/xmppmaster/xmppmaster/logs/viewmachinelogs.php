@@ -143,7 +143,7 @@ if ($datawol['len'] != 0) {
     echo "<br>";
     echo '<h2 class="replytab" id="wol">'.$hideText.' '._T("Wake on Lan", "xmppmaster").'</h2>';
     echo "<div id='titlewol'>";
-    echo '<table class="listinfos" cellspacing="0" cellpadding="5" border="1">';
+    echo '<table class="listinfos xmpp-logs-table" cellspacing="0" cellpadding="5" border="1">';
     echo "<thead>";
     echo "<tr>";
     echo '<td>';
@@ -256,7 +256,7 @@ if (safeCount($deploymachine) != 0) {
     echo "<br>";
     echo '<h2 class="replytab" id="detailmach">'.$hideText.' '._T("Machine Details", "xmppmaster"). '</h2>';
     echo "<div id='titledetailmach'>";
-    echo '<table class="listinfos" cellspacing="0" cellpadding="5">';
+    echo '<table class="listinfos xmpp-logs-table" cellspacing="0" cellpadding="5">';
     echo "<thead>";
     echo "<tr>";
     echo '<td>';
@@ -295,7 +295,7 @@ if (safeCount($deploymachine) != 0) {
     echo "<br>";
     echo '<h2 class="replytab" id="detailpack">'.$hideText.' '._T("Package Details", "xmppmaster").'</h2>';
     echo "<div id='titledetailpack'>";
-    echo '<table class="listinfos" cellspacing="0" cellpadding="5">';
+    echo '<table class="listinfos xmpp-logs-table" cellspacing="0" cellpadding="5">';
     echo "<thead>";
     echo "<tr>";
     echo '<td>';
@@ -346,7 +346,7 @@ if (safeCount($deploymachine) != 0) {
     echo '<br>';
     echo '<h2 class="replytab" id="deployplan">'.$hideText.' '._T("Deployment plan", "xmppmaster").'</h2>';
     echo "<div id='titledeployplan'>";
-    echo '<table class="listinfos" cellspacing="0" cellpadding="5">';
+    echo '<table class="listinfos xmpp-logs-table" cellspacing="0" cellpadding="5">';
     echo "<thead>";
     echo "<tr>";
     echo '<td>';
@@ -452,7 +452,7 @@ if ($info['len'] != 0) {
             echo "<br>";
             echo '<h2 class="replytab" id="xmppinfo">'.$hideText.' '._T("XMPP Information", "xmppmaster").'</h2>';
             echo "<div id='titlexmppinfo'>";
-            echo '<table class="listinfos" cellspacing="0" cellpadding="2" border="1">';
+            echo '<table class="listinfos xmpp-logs-table" cellspacing="0" cellpadding="2" border="1">';
             echo "<thead>";
             echo "<tr>";
             echo '<td class="text-center">';
@@ -492,7 +492,7 @@ if ($info['len'] != 0) {
         echo "<br>";
         echo '<h2 class="replytab"  id="dependency">'.$hideText.' '._T("Package and Dependency", "xmppmaster").'</h2>';
         echo "<div id='titledependency'>";
-        echo '<table class="listinfos" cellspacing="0" cellpadding="5">';
+        echo '<table class="listinfos xmpp-logs-table" cellspacing="0" cellpadding="5">';
         echo "<thead>";
         echo "<tr>";
         echo '<td><span>'._T("Name", "xmppmaster").'</span></td>';
@@ -545,7 +545,7 @@ if ($info['len'] != 0) {
     echo "<br>";
     echo '<h2 class="replytab" id="phase">'.$hideText.' '._T("Deployment phases", "xmppmaster").'</h2>';
     echo "<div id='titlephase'>";
-    echo '<table class="listinfos" cellspacing="0" cellpadding="2" border="1">';
+    echo '<table class="listinfos xmpp-logs-table" cellspacing="0" cellpadding="2" border="1">';
     echo "<thead>";
     echo "<tr>";
     echo '<td class="col-w-120">';
@@ -860,7 +860,7 @@ if ($info['len'] != 0) {
             echo "<br>";
             echo '<h2 class="replytab" id="titleenv" >'.$hideText.' '._T("Environment", "xmppmaster").'</h2>';
             echo "<div id='env'>";
-            echo '<table class="listinfos" cellspacing="0" cellpadding="2" border="1">';
+            echo '<table class="listinfos xmpp-logs-table" cellspacing="0" cellpadding="2" border="1">';
             echo "<thead>";
             echo "<tr>";
             echo '<td class="col-w-200">';

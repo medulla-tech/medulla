@@ -1,6 +1,7 @@
 <?php
 /*
  * (c) 2016 Siveo, http://www.siveo.net
+ * (c) 2025-2026 medulla, http://www.medulla-tech.io
  *
  * $Id$
  *
@@ -322,16 +323,18 @@ switch($_GET['information']) {
         echo "<td>";
         echo "<Hn>"._T("Base plugins", "xmppmaster")."</Hn>";
         echo "<ul>";
-        foreach($lp[0] as $k => $v) {
+
+        foreach($lp["plugin"]["plugins"] as $k => $v) {
+
             echo "<li>";
-            if ($v[1] == "relayserver") {
+            if ($v["TYPE"] == "relayserver") {
                 echo "<span class='text-blue'>";
             }
-            echo $k." <span class='text-bold'>".$v[0]."</span><span class='text-bold'> ".$v[1]."</span>";
-            if ($v[2] != "0.0.0") {
-                echo " <span class='text-bold'>(Agent  > ".$v[2].")</span>";
+            echo $k." <span class='text-bold'>".$v["VERSION"]."</span><span class='text-bold'> ".$v["TYPE"]."</span>";
+            if ($v["VERSIONAGENT"] != "0.0.0") {
+                echo " <span class='text-bold'>(Agent  > ".$v["VERSIONAGENT"].")</span>";
             }
-            if ($v[1] == "relayserver") {
+            if ($v["TYPE"] == "relayserver") {
                 echo "</span>";
             }
             echo "</li>";
@@ -339,9 +342,9 @@ switch($_GET['information']) {
         echo "</ul>";
         echo "<Hn>"._T("Base scheduler plugins", "xmppmaster")."</Hn>";
         echo "<ul>";
-        foreach($lp[1] as $k => $v) {
+        foreach($lp["scheduling"]["plugins"] as $k => $v) {
             echo "<li>";
-            echo $k."=>". $v;
+            echo $k."=>". $v["VERSION"];
             echo "</li>";
         }
         echo "</ul>";
@@ -415,7 +418,7 @@ switch($_GET['information']) {
         echo "</tr>";
         echo "<tr>";
         echo "<td>";
-        echo (isset($lp[2])) ? $lp[2] : '';
+        echo (isset($lp["plugin"]["base_path"])) ? $lp["plugin"]["base_path"].'<br>'.$lp["scheduling"]["base_path"] : '';
         echo "</td>";
         echo "<td>";
         echo (isset($re['pathagent'])) ? $re['pathagent'] : '';

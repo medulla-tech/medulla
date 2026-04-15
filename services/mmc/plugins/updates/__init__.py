@@ -253,6 +253,9 @@ class RpcProxy(RpcProxyI):
                                                           type=type,
                                                           colonne=colonne )
 
+def has_update_data():
+    return UpdatesDatabase().has_update_data()
+
 def tests():
     return UpdatesDatabase().tests()
 

@@ -249,11 +249,11 @@
 /* ---------------------------------------- */
 
 .portlet {
-  background-color: #fff;
+  background-color: var(--color-bg-white);
   padding: 0px;
   margin: 10px;
   min-width: 220px;
-  border: 1px solid #e0e0e0;
+  border: 1px solid var(--gray-200);
   border-radius: 6px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
@@ -261,12 +261,12 @@
 .portlet-header {
   font-size: 14px;
   font-weight: 600;
-  color: #333;
+  color: var(--color-text-dark);
   padding: 12px 14px;
   margin: 0;
   cursor: move;
   background-color: transparent;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid var(--color-bg-gray);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -343,12 +343,12 @@
 .update-banner.update-available {
   background: #fffbeb;
   border: 1px solid #fde68a;
-  color: #92400e;
+  color: var(--gray-800);
 }
 
 .update-badge {
   font-weight: 700;
-  color: #d97706;
+  color: var(--color-warning);
 }
 
 .update-versions {
@@ -387,7 +387,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #ccc;
+  background-color: var(--color-border-medium);
   transition: 0.3s;
   border-radius: 20px;
 }
@@ -405,7 +405,7 @@
 }
 
 .portlet input:checked + .slider {
-  background-color: #8CB63C;
+  background-color: var(--color-accent);
 }
 
 .portlet input:checked + .slider:before {
@@ -461,19 +461,19 @@
 .general-hostname {
   font-size: 18px;
   font-weight: 600;
-  color: #333;
+  color: var(--color-text-dark);
   margin-bottom: 4px;
 }
 
 .general-os {
   font-size: 13px;
-  color: #555;
+  color: var(--color-text-medium);
   margin-bottom: 2px;
 }
 
 .general-uptime {
   font-size: 12px;
-  color: #888;
+  color: var(--color-text-light);
 }
 
 .general-section {
@@ -483,7 +483,7 @@
 .general-section-title {
   font-size: 11px;
   font-weight: 600;
-  color: #666;
+  color: var(--color-text-medium);
   text-transform: uppercase;
   margin-bottom: 8px;
   letter-spacing: 0.5px;
@@ -496,7 +496,7 @@
 .dashboard-legend {
   text-align: center;
   font-size: 10px;
-  color: #666;
+  color: var(--color-text-medium);
   margin-top: 8px;
 }
 
@@ -504,7 +504,7 @@
 #deploymentsLaunched-legend {
   text-align: center;
   font-size: 10px;
-  color: #666;
+  color: var(--color-text-medium);
   margin-top: 8px;
 }
 
@@ -549,7 +549,7 @@
 }
 
 .custom-spinner {
-  border: 4px solid #f3f3f3;
+  border: 4px solid var(--gray-100);
   border-top: 4px solid #3498db;
   border-radius: 50%;
   width: 24px;
@@ -567,18 +567,18 @@
   font-size: 1em;
   font-weight: 700;
   text-align: center;
-  color: #222;
+  color: var(--color-text-dark);
   margin-bottom: 10px;
   margin-top: 3px;
   letter-spacing: 0.01em;
 }
 
 .custom-loader-title.error {
-  color: #c00;
+  color: var(--color-error);
 }
 
 .custom-loader-msg {
-  color: #666;
+  color: var(--color-text-medium);
   font-size: 0.98em;
   text-align: center;
   margin-top: 8px;
@@ -615,7 +615,7 @@
 }
 
 #update_status li span {
-  color: #000;
+  color: var(--color-text-black);
 }
 
 /* ---------------------------------------- */
@@ -683,7 +683,7 @@
 }
 
 .overlay-message {
-  color: #666;
+  color: var(--color-text-medium);
   font-size: 14px;
   text-align: center;
   line-height: 1.5;
@@ -733,7 +733,7 @@
 
 .disclaimer-intro {
   font-weight: 600;
-  color: #333;
+  color: var(--color-text-dark);
   margin: 0 0 12px 0;
   font-size: 13px;
 }
@@ -747,14 +747,14 @@
 .disclaimer-checklist li {
   padding: 6px 0;
   font-size: 13px;
-  color: #333;
+  color: var(--color-text-dark);
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
 .disclaimer-checklist .check-icon {
-  color: #16a34a;
+  color: var(--color-success);
   font-weight: bold;
   font-size: 14px;
   flex-shrink: 0;
@@ -773,13 +773,13 @@
 .disclaimer-warnings li {
   padding: 4px 0;
   font-size: 12px;
-  color: #92400e;
+  color: var(--gray-800);
   line-height: 1.5;
 }
 
 .disclaimer-warnings li::before {
   content: "— ";
-  color: #d97706;
+  color: var(--color-warning);
 }
 
 .disclaimer-actions {
@@ -787,8 +787,8 @@
   justify-content: flex-end;
   gap: 10px;
   padding: 16px 24px;
-  border-top: 1px solid #e5e7eb;
-  background: #f9fafb;
+  border-top: 1px solid var(--gray-200);
+  background: var(--gray-50);
 }
 
 .disclaimer-actions .btn-danger {
@@ -848,7 +848,7 @@
   background: none;
   border: none;
   font-size: 24px;
-  color: #999;
+  color: var(--color-text-muted);
   cursor: pointer;
   padding: 2px 8px;
   line-height: 1;
@@ -858,7 +858,7 @@
 
 .update-terminal-close:hover {
   background: var(--color-bg-gray, #f0f0f0);
-  color: #333;
+  color: var(--color-text-dark);
 }
 
 .update-terminal-close.hidden {
@@ -965,7 +965,7 @@
 }
 
 .update-terminal-status .redirect-msg {
-  color: #888;
+  color: var(--color-text-light);
   font-size: 12px;
   margin-top: 6px;
 }

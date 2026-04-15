@@ -25,7 +25,6 @@ require("localSidebar.php");
 
 // CSS for the settings page
 ?>
-<link rel="stylesheet" href="modules/security/graph/security.css" type="text/css" media="screen" />
 <?php
 
 // Page title

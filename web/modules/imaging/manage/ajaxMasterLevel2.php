@@ -125,6 +125,4 @@ $l->start = 0;
 $l->end = $maxperpage;
 $l->display();
 ?>
-<!-- inject styles -->
-<link rel="stylesheet" href="modules/imaging/graph/css/imaging.css" type="text/css" media="screen" />
 

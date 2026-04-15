@@ -25,7 +25,7 @@ require("graph/navbar.inc.php");
 require("modules/dashboard/includes/dashboard-xmlrpc.inc.php");
 
 ?>
-<link rel="stylesheet" href="modules/dashboard/graph/css/dashboard.css" type="text/css" />
+<link rel="stylesheet" href="modules/dashboard/graph/css/index.css" type="text/css" />
 <script type="text/javascript" src="jsframework/lib/raphael/raphael-min.js"></script>
 <script type="text/javascript" src="jsframework/lib/raphael/g.raphael-min.js"></script>
 <script type="text/javascript" src="jsframework/lib/raphael/g.pie-min.js"></script>

@@ -945,6 +945,17 @@ class Up_machine_activated(Base):
     msrcseverity =Column(String(16))
     list = Column(String(5), nullable=False)
 
+class Up_action_update_packages(Base, XmppMasterDBObj):
+    # ====== Table name =========================
+    __tablename__ = "up_action_update_packages"
+    # ====== Fields =============================
+    action = Column(String(1024), nullable=False, unique=True)
+    date = Column(DateTime, nullable=False, default=datetime.datetime.now)
+    in_process = Column(TINYINT(4), nullable=False, default=0)
+    packages = Column(String(45), nullable=False, unique=True)
+    option = Column(String(45), nullable=False)
+    pid_run = Column(Integer, default=None)
+
 
 """
 This code is kept here as a comment, "if" we need to use it
@@ -1000,6 +1011,29 @@ class Up_packages(Base):
 # --   CBS_ERROR : échec technique lors de la désinstallation (erreur système)
 # --   ISO : mise à jour intégrée via image ISO / upgrade système, non désinstallable individuellement
 
+
+class Up_auto_approve_rules(Base, XmppMasterDBObj):
+    # ====== Table name =========================
+    __tablename__ = "up_auto_approve_rules"
+    # ====== Fields =============================
+    entityid = Column(Integer, nullable=False)
+    msrcseverity = Column(String(45), nullable=True, default=None)
+    updateclassification = Column(String(45), nullable=True, default=None)
+    active_rule = Column(Integer, nullable=True, default=0)
+
+    __table_args__ = (
+        UniqueConstraint(
+            "msrcseverity",
+            "updateclassification",
+            name="rule_unique",
+        ),
+        UniqueConstraint(
+            "entityid",
+            "msrcseverity",
+            "updateclassification",
+            name="uniq_entity_rule",
+        ),
+    )
 class UpWindowsKbUninstall(Base):
     __tablename__ = "up_windows_kb_uninstall"
 

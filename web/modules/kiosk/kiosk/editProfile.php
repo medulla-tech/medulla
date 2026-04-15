@@ -32,7 +32,6 @@ require("graph/navbar.inc.php");
 require("modules/kiosk/kiosk/localSidebar.php");
 ?>
 
-<link rel="stylesheet" href="modules/kiosk/graph/css/kiosk.css" />
 <link rel="stylesheet" href="jsframework/lib/pluginjqueryjtree/themes/default/style.min.css" />
 <?php
 

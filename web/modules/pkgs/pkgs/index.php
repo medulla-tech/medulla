@@ -27,7 +27,6 @@
 require("graph/navbar.inc.php");
 require("localSidebar.php");
 ?>
-<link rel="stylesheet" href="modules/pkgs/graph/css/pkgs.css" />
 <?php
 
 $p = new PageGenerator(_T("Packages list", 'pkgs'));

@@ -125,7 +125,22 @@ if (isset($_POST["bconfirm"])) {
     $pid = $_GET["pid"];
     $from = $_GET["from"];
     $uuid =  isset($_GET["packageUuid"]) ? $_GET["packageUuid"] : base64_decode($pid);
-    $f = new PopupForm(_T("Delete this package"));
+    $packageName = isset($_GET["packageName"]) ? htmlspecialchars($_GET["packageName"]) : '';
+    $packageVersion = isset($_GET["packageVersion"]) ? htmlspecialchars($_GET["packageVersion"]) : '';
+    $packageOs = isset($_GET["packageOs"]) ? htmlspecialchars($_GET["packageOs"]) : '';
+    $packageSize = isset($_GET["packageSize"]) ? strip_tags($_GET["packageSize"]) : '';
+    $f = new PopupForm(_T("Delete this package", "pkgs"));
+    if ($packageName) {
+        $info = _T("Name", "pkgs") . " : <strong>" . $packageName . "</strong>";
+        $details = [];
+        if ($packageVersion) $details[] = _T("Version", "pkgs") . " : " . $packageVersion;
+        if ($packageOs) $details[] = _T("Os", "pkgs") . " : " . $packageOs;
+        if ($packageSize) $details[] = _T("Size", "pkgs") . " : " . $packageSize;
+        if (!empty($details)) {
+            $info .= "<br>" . implode("<br>", $details);
+        }
+        $f->addText($info);
+    }
     $f->setLevel('danger');
     $hidden = new HiddenTpl("packageUuid");
     $f->add($hidden, array("value" =>$uuid, "hide" => True));

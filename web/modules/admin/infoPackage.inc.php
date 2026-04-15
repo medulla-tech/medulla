@@ -24,7 +24,7 @@
 require_once("modules/medulla_server/version.php");
 
 $mod = new Module("admin");
-$mod->setVersion("5.5.0");
+$mod->setVersion("5.5.1");
 //$mod->setRevision('');
 $mod->setDescription(_T("Admin", "admin"));
 $mod->setAPIVersion("1:0:0");
@@ -43,6 +43,10 @@ $submod->addPage($page);
 
 $page = new Page("websocketLogs", _T("Server Logs", "admin"));
 $page->setFile("modules/admin/admin/websocketLogs.php");
+$submod->addPage($page);
+
+$page = new Page("aclFeatures", _T("ACL Management", "admin"));
+$page->setFile("modules/admin/admin/aclFeatures.php");
 $submod->addPage($page);
 
 $page = new Page("ajaxRelaysList", _T("Relays List", "glpi"));
