@@ -65,10 +65,10 @@ foreach (xmlCall("base.getLdapLog",array($_SESSION['ajax']['filter'])) as $line)
     }
 }
 
-$n = new UserInfos($date,_("Date"),"1px");
-$n->addExtraInfo($connectionNumber,_("Connection"),"1px");
-$n->addExtraInfo($oparr,_("Operation"),"1px");
-$n->addExtraInfo($action,_("Actions"),"1px");
+$n = new UserInfos($date,_("Date"));
+$n->addExtraInfo($connectionNumber,_("Connection"));
+$n->addExtraInfo($oparr,_("Operation"));
+$n->addExtraInfo($action,_("Actions"));
 $n->addExtraInfo($extra,_("Extra information"));
 $n->end= 200;
 $n->first_elt_padding = 1;

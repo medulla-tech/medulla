@@ -834,39 +834,6 @@ td.package {
  */
 
 .pkg-description {
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 200px;
   line-height: 1.4;
 }
 
-/* Package name - allow wrap on multiple lines */
-.pkgs-table td:first-child .cell-text {
-  -webkit-line-clamp: 3;
-  word-break: break-word;
-}
-
-/* Version, Size - center */
-.pkgs-table td:nth-child(3),
-.pkgs-table th:nth-child(3),
-.pkgs-table td:nth-child(4),
-.pkgs-table th:nth-child(4) {
-  text-align: center;
-}
-
-/* OS - compact and center */
-.pkgs-table td:nth-child(5),
-.pkgs-table th:nth-child(5) {
-  text-align: center;
-  width: 50px;
-}
-
-/* Licenses - center */
-.pkgs-table td:nth-child(7),
-.pkgs-table th:nth-child(7) {
-  text-align: center;
-  width: 80px;
-}

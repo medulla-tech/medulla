@@ -353,7 +353,8 @@ foreach($datas['uuid_serial_machine'] as $uuid_machine) {
     $ids[] = 'm_'.$uuid_machine;
 }
 
-$n = new OptimizedListInfos($cn, _T("Computer Name", "glpi"), "", "140px");
+$n = new OptimizedListInfos($cn, _T("Computer Name", "glpi"));
+$n->setResizable();
 $n->setcssIds($ids);
 $n->setParamInfo($params); // [params]
 $n->dissociateColumnActionLink($dissociatedFirstColumns);

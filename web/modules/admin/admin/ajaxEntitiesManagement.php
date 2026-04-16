@@ -71,6 +71,7 @@ if (is_array($entitiesList) && count($entitiesList) === 0) {
 if ($facilitylevel > 0) {
     if ($facilitylevel != 3) {
         $n = new ListInfos(array(!empty($u['email']) ? $u['email'] : $u['login']), _T("User", "admin"));
+        $n->setResizable();
         $n->addExtraInfo(array(isset($u['lastname']) ? $u['lastname'] : ''), _T("real name", "admin"));                 // map -> realname
         $n->addExtraInfo(array(isset($u['firstname']) ? $u['firstname'] : ''), _T("first name", "admin"));
         $n->addExtraInfo(array($profil), _T("profil", "admin"));

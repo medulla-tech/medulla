@@ -342,6 +342,7 @@ foreach ($mergedArray as  $index=>$datacolonne) {
 }
 $count = count($complete_name_major);
 $n = new OptimizedListInfos($complete_name_major, _T("Entity name", "updates"));
+$n->setResizable();
 $n->disableFirstColumnActionLink();
 $n->addExtraInfo($comformite_name_major, _T("Compliance rate", "updates"));
 $n->addExtraInfoRaw($MS12toMS25_major, _T("Upg WS2012→2025", "updates"));

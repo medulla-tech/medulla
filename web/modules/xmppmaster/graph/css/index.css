@@ -1,18 +1,24 @@
-/* XMPP machine logs layout */
-.xmpp-logs-table {
+/* XMPP machine logs layout — override global table-layout:fixed */
+#section table.xmpp-logs-table {
     table-layout: auto;
     width: 100%;
 }
 
-.xmpp-logs-table td {
+#section .xmpp-logs-table tbody td {
     text-align: left;
     word-break: break-word;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+}
+
+#titlephase .xmpp-logs-table td:nth-child(1) {
+  white-space: nowrap;
 }
 
 #titlephase .xmpp-logs-table th:nth-child(2),
 #titlephase .xmpp-logs-table td:nth-child(2) {
-  min-width: 10ch;
-  text-align: center;
+  white-space: nowrap;
 }
 
 #titledetailmach .xmpp-logs-table td {

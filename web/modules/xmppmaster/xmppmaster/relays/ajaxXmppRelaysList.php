@@ -122,6 +122,7 @@ foreach($relays['datas']['hostname'] as $key=>$array){
 }
 echo '<div id="switchresult"></div>';
 $n = new OptimizedListInfos( $relays['datas']['hostname'], _T("Relays Xmpp", "xmppmaster"));
+$n->setResizable();
 $n->setMainActionClasses($relays['datas']['enabled_css']);
 $n->disableFirstColumnActionLink();
 $n->addExtraInfo( $relays['datas']['jid'], _T("Jid", "xmppmaster"));
