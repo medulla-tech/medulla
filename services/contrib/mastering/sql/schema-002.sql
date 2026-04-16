@@ -103,6 +103,14 @@ CREATE TABLE if not exists `scriptsEntities` (
   PRIMARY KEY (`id`)
 );
 
+drop table if exists `actionStatus`;
+create table if not exists actionStatus(
+    id int auto_increment primary key,
+    action_id int not null,
+    uuid varchar(255) not null,
+    status varchar(50) not null,
+    creation_date datetime not null default NOW()
+);
 
 UPDATE version SET Number = 2;
 COMMIT;

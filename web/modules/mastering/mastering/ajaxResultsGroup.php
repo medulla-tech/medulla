@@ -30,6 +30,7 @@ $datas = $results["data"];
 
 $contents = [];
 $uuids = [];
+$status = [];
 $session_ids = [];
 $dates = [];
 $params = [];
@@ -41,7 +42,7 @@ foreach($datas as $entry){
     // $content = preg_replace("#\x1b\[.{2,5}m#", "", base64_decode($log["content"]));
     // $contents[] = preg_replace("#\x1b\[(.+)\]#", "", $content);
     $dates[] = $entry["creation_date"];
-
+    $status[] = $entry["status"];
     $p = $entry;
 
     $p["id"] = $id;
@@ -55,6 +56,7 @@ foreach($datas as $entry){
 
 $n = new OptimizedListInfos( $uuids, _T("Machine", "mastering"));
 $n->addExtraInfo($session_ids, _T("Session", "mastering"));
+$n->addExtraInfo($status, _T("Status", "mastering"));
 $n->addExtraInfo($dates, _T("dates", "mastering"));
 $n->setItemCount($count);
 $n->setNavBar(new AjaxNavBar($count, $filter));

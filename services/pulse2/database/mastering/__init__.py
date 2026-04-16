@@ -366,32 +366,38 @@ WHERE """
             "data":[],
         }
 
-        # On register case, the action is set on new machine
-        # But the result can be associated to an inventory
-        sql = """SELECT
+        binds = {}
+        sql = """select
     SQL_CALC_FOUND_ROWS
-    *
-FROM actions
-WHERE uuid = :uuid
-        or id in (
-        select
-            distinct(action_id)
-        from
-            results
-        where
-            uuid = :uuid2) """
+    distinct(actions.id),
+    actions.server_id,
+    actions.entity_id,
+    actions.gid,
+    coalesce(results.uuid, actions.uuid) as uuid,
+    actions.target,
+    actions.name,
+    actions.config,
+    actions.content,
+    coalesce(actionStatus.status, actions.status) as status,
+    actions.date_creation,
+    actions.date_start,
+    actions.date_end
+from actions
+join results on results.action_id = actions.id
+join actionStatus on actionStatus.action_id = actions.id and actionStatus.uuid = coalesce(NULL, results.uuid, actions.uuid)
+WHERE actions.uuid = :uuid
+or results.uuid = :uuid2
+"""
 
         # No entity specified, case for actions on new machines. In this case we get the entity associated to the server.
-        binds = {
-            "uuid": uuid,
-            "uuid2": uuid,
-        }
+        binds["uuid"] = uuid
+        binds["uuid2"] = uuid
 
         if _filter != "":
             if _filter == "N/P":
-                    sql += """AND target  = '' """
+                    sql += """AND actions.target  = '' """
             else:
-                sql += """AND (uuid like :filt1 or name like :filt2 or date_start like :filt3 or date_end like :filt4 or content like :filt5 or status like :filt6 or gid like :filt7 or target like :filt8) """
+                sql += """AND (uuid like :filt1 or actions.name like :filt2 or actions.date_start like :filt3 or actions.date_end like :filt4 or actions.content like :filt5 or coalesce(actionStatus.status, actions.status) like :filt6 or actions.gid like :filt7 or actions.target like :filt8) """
                 binds["filt1"] = f"%{_filter}%"
                 binds["filt2"] = f"%{_filter}%"
                 binds["filt3"] = f"%{_filter}%"
@@ -574,22 +580,27 @@ and uuid = :uuid
 
         binds = {}
         sql = """ SELECT SQL_CALC_FOUND_ROWS
-    uuid,
-    session_id,
-    creation_date
+    results.uuid,
+    results.session_id,
+    results.creation_date,
+    coalesce(actionStatus.status, actions.status) as status
 FROM results
-WHERE action_id = :action_id """
+left join actionStatus on actionStatus.action_id = results.action_id and actionStatus.uuid = results.uuid
+join actions on actions.id = results.action_id
+WHERE results.action_id = :action_id
+"""
 
         binds["action_id"] = id
 
         if _filter != "":
-            sql += """AND (uuid like :filt1 OR creation_date like :filt2 or session_id like :filt3) """
+            sql += """AND (results.uuid like :filt1 OR results.creation_date like :filt2 or results.session_id like :filt3 or coalesce(actionStatus.status, actions.status) like :filt4) """
             binds["filt1"] = f"%{_filter}%"
             binds["filt2"] = f"%{_filter}%"
             binds["filt3"] = f"%{_filter}%"
+            binds["filt4"] = f"%{_filter}%"
 
-        sql += """GROUP BY uuid """
-        sql += """ORDER BY creation_date ASC """
+        sql += """GROUP BY results.uuid """
+        sql += """ORDER BY results.creation_date ASC """
         sql += """LIMIT :start,:end """
         binds["start"] = start
         binds["end"] = end
@@ -611,6 +622,7 @@ WHERE action_id = :action_id """
                 "uuid": uuid,
                 "session_id": row[1] if row[1] is not None else "",
                 "creation_date": creation_date if creation_date is not None else "",
+                "status": row[3] if row[3] is not None else "",
             })
 
         return result
