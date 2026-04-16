@@ -12,6 +12,7 @@ if(isset($_POST["add"], $_POST["Confirm"])){
     $gid = (isset($_POST["gid"])) ? $_POST["gid"] : "";
     $server = (isset($_POST["server"])) ? $_POST["server"] : "";
     $entity = (isset($_POST["entity"])) ? $_POST["entity"] : "";
+    $target = (isset($_POST["target"])) ? $_POST["target"] : "";
 
     // meta timestamp
     $beginDate = htmlentities($_POST["begin_date"]);
@@ -95,7 +96,7 @@ if(isset($_POST["add"], $_POST["Confirm"])){
     }
 
     // name is the target name, group name for group, or computer name for machine or empty for new machine.
-    $ret = xmlrpc_create_action($action, $gid, $uuid, $name, $server, $beginDate, $endDate, $config, $workflow, $entity);
+    $ret = xmlrpc_create_action($action, $gid, $uuid, $target, $server, $beginDate, $endDate, $config, $workflow, $entity);
 
     if($ret["status"] == 0){
         new NotifyWidgetSuccess(_T("New Action registered", "mastering"));

@@ -383,8 +383,8 @@ WHERE """
     actions.date_start,
     actions.date_end
 from actions
-join results on results.action_id = actions.id
-join actionStatus on actionStatus.action_id = actions.id and actionStatus.uuid = coalesce(NULL, results.uuid, actions.uuid)
+left join results on results.action_id = actions.id
+left join actionStatus on actionStatus.action_id = actions.id and actionStatus.uuid = coalesce(NULL, results.uuid, actions.uuid)
 WHERE actions.uuid = :uuid
 or results.uuid = :uuid2
 """

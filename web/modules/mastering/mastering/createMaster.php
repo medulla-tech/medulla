@@ -73,6 +73,7 @@ $f->add(new HiddenTpl("gid"), ["value"=>$gid, "hide"=>true]);
 $f->add(new HiddenTpl("uuid"), ["value"=>$uuid, "hide"=>true]);
 $f->add(new HiddenTpl("entity"), ["value"=>$entity, "hide"=>true]);
 $f->add(new HiddenTpl("name"), ["value"=>$name, "hide"=>true]);
+$f->add(new HiddenTpl("target"), ["value"=>$target, "hide"=>true]);
 
 $f->pop();
 $f->addValidateButton(_T("Confirm", "mastering"));
