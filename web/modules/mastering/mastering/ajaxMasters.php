@@ -41,6 +41,8 @@ $params = [];
 $i=0;
 $creationDates = [];
 
+$sizes = [];
+
 foreach($masters["id"] as $id){
     $params[] = [
         "id"=>$masters["id"][$i],
@@ -50,6 +52,7 @@ foreach($masters["id"] as $id){
         "os"=>$masters["os"][$i],
         "entity"=>$entity,
         "server"=>$server,
+        "size"=>$masters["size"][$i],
     ];
     if($masters["creation_date"][$i] != ""){
         $creationDates[] = date("Y-m-d h:i:s", $masters["creation_date"][$i]->timestamp);
@@ -60,6 +63,8 @@ foreach($masters["id"] as $id){
     $shareActions[] = $shareAction;
     $editActions[] = $editAction;
     $deleteActions[] = $deleteAction;
+
+    $sizes[] = $masters["size"][$i] / 1024 / 1024;
     $i++;
 }
 $n = new OptimizedListInfos( $masters["name"], _T("Name", "mastering"));
@@ -68,7 +73,7 @@ $n->disableFirstColumnActionLink();
 $n->addExtraInfo($masters['description'], _T("Descriptions", "mastering"));
 $n->addExtraInfo($creationDates, _T("Creation Date", "mastering"));
 $n->addExtraInfo($masters['uuid'], _T("Uuid", "mastering"));
-$n->addExtraInfo($masters['os'], _T("Os", "mastering"));
+$n->addExtraInfo($sizes, _T("Size (Mb)", "mastering"));
 
 $n->setParamInfo($params);
 $n->addActionItemArray($shareActions);

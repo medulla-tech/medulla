@@ -103,7 +103,6 @@ echo '</div>';
 
 $n = new OptimizedListInfos( $machines["name"], _T("Computer", "glpi"));
 $n->setCssClass("mastering");
-$n->disableFirstColumnActionLink();
 
 $n->addActionItemArray($actionListActions);
 $n->addActionItemArray($masteringActions);

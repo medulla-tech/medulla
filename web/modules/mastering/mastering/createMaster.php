@@ -6,20 +6,20 @@ $entity = (isset($_GET["entity"])) ? htmlentities($_GET["entity"]) : "";
 $gid = (isset($_GET["gid"])) ? htmlentities($_GET["gid"]) : "";
 $uuid = (isset($_GET["uuid"])) ? htmlentities($_GET["uuid"]) : "";
 $name = (isset($_GET["name"])) ? $_GET["name"] : "";
+$target = (isset($_GET["target"])) ? $_GET["target"] : "";
 
 if($uuid != ""){
     $mode = "machine";
-    $p = new PageGenerator(sprintf(_T("Create Master Action for Machine %s on entity %s, server %s", "mastering"), $name, $entity, $server));
+    $p = new PageGenerator(sprintf(_T("Create Master for Machine %s on entity %s, server %s", "mastering"), $target, $entity, $server));
 }
 elseif ($gid != ""){
     $mode = "group";
-    $p = new PageGenerator(sprintf(_T("Create Master Action for Group %s on entity %s, server %s", "mastering"), $name, $entity, $server));
+    $p = new PageGenerator(sprintf(_T("Create Master for Group %s on entity %s, server %s", "mastering"), $target, $entity, $server));
 
 }
 else{
     $mode = "new";
-    $p = new PageGenerator(sprintf(_T("Create Master Action for New Machine on entity %s, server %s", "mastering"), $entity, $server));
-
+    $p = new PageGenerator(sprintf(_T("Create Master for New Machine on entity %s, server %s", "mastering"), $entity, $server));
 }
 
 $p->display();
