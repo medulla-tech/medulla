@@ -397,7 +397,7 @@ or results.uuid = :uuid2
             if _filter == "N/P":
                     sql += """AND actions.target  = '' """
             else:
-                sql += """AND (uuid like :filt1 or actions.name like :filt2 or actions.date_start like :filt3 or actions.date_end like :filt4 or actions.content like :filt5 or coalesce(actionStatus.status, actions.status) like :filt6 or actions.gid like :filt7 or actions.target like :filt8) """
+                sql += """AND (actions.uuid like :filt1 or actions.name like :filt2 or actions.date_start like :filt3 or actions.date_end like :filt4 or actions.content like :filt5 or coalesce(actionStatus.status, actions.status) like :filt6 or actions.gid like :filt7 or actions.target like :filt8) """
                 binds["filt1"] = f"%{_filter}%"
                 binds["filt2"] = f"%{_filter}%"
                 binds["filt3"] = f"%{_filter}%"
