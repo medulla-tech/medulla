@@ -74,6 +74,53 @@ function xmlrpc_delete_hmdm_device_by_id($id){
 function xmlrpc_get_hmdm_audit_logs($page_size=50, $page_num=1, $message_filter="", $user_filter=""){
     return xmlCall("mobile.getHmdmAuditLogs", array($page_size, $page_num, $message_filter, $user_filter));
 }
+function xmlrpc_get_hmdm_all_users(){
+    return xmlCall("mobile.getHmdmAllUsers", array());
+}
+function xmlrpc_get_hmdm_all_roles(){
+    return xmlCall("mobile.getHmdmAllRoles", array());
+}
+function xmlrpc_get_current_hmdm_user($medulla_user = null){
+    if ($medulla_user === null && isset($_SESSION['login'])) {
+        $medulla_user = $_SESSION['login'];
+    }
+    return xmlCall("mobile.getCurrentHmdmUser", array($medulla_user));
+}
+function xmlrpc_require_configured_hmdm_account(){
+    $account_not_configured = false;
+    try {
+        $user = xmlrpc_get_current_hmdm_user();
+        if ($user === null || !isset($user['userRole'])) {
+            $account_not_configured = true;
+        }
+    } catch (Exception $e) {
+        $account_not_configured = true;
+    }
+
+    if ($account_not_configured) {
+        echo '<div class="alert alert-danger" style="margin-top:20px; padding:12px 16px;">';
+        echo _T("Your HMDM account has not been configured by the administrator. Please contact your administrator to set up your MDM access.", "mobile");
+        echo '</div>';
+        return false;
+    }
+
+    return true;
+}
+function xmlrpc_get_hmdm_all_permissions(){
+    return xmlCall("mobile.getHmdmAllPermissions", array());
+}
+function xmlrpc_create_or_update_hmdm_role($name, $description=null, $permission_ids=null, $role_id=null){
+    return xmlCall("mobile.createOrUpdateHmdmRole", array($name, $description, $permission_ids, $role_id));
+}
+function xmlrpc_delete_hmdm_role($role_id){
+    return xmlCall("mobile.deleteHmdmRole", array($role_id));
+}
+function xmlrpc_create_or_update_hmdm_user($login, $role_id, $all_devices=true, $all_configs=true, $user_id=null, $device_groups=[], $config_ids=[]){
+    return xmlCall("mobile.createOrUpdateHmdmUser", array($login, $role_id, $all_devices, $all_configs, $user_id, $device_groups, $config_ids));
+}
+function xmlrpc_delete_hmdm_user($user_id){
+    return xmlCall("mobile.deleteHmdmUser", array($user_id));
+}
 function xmlrpc_get_hmdm_detailed_info($device_number){
     return xmlCall("mobile.getHmdmDetailedInfo", array($device_number));
 }

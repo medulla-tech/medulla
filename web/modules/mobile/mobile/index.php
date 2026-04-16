@@ -7,6 +7,10 @@ $p = new PageGenerator(_T("List of all devices", 'mobile'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
+if (!xmlrpc_require_configured_hmdm_account()) {
+    return;
+}
+
 $_modal_configurations = [];
 try {
     $tmp = xmlrpc_get_hmdm_configurations();

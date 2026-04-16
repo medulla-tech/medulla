@@ -3,6 +3,14 @@ require("graph/navbar.inc.php");
 require("localSidebar.php");
 require_once("modules/mobile/includes/xmlrpc.php");
 
+$p = new PageGenerator(_T("Applications", 'mobile'));
+$p->setSideMenu($sidemenu);
+$p->display();
+
+if (!xmlrpc_require_configured_hmdm_account()) {
+    return;
+}
+
 $_app_files = [];
 try {
     $tmp = xmlrpc_get_hmdm_files();
@@ -10,10 +18,6 @@ try {
 } catch (Exception $e) {
     $_app_files = [];
 }
-
-$p = new PageGenerator(_T("Applications", 'mobile'));
-$p->setSideMenu($sidemenu);
-$p->display();
 
 echo '<button class="btn btn-small btn-primary" type="button" onclick="openAddAppModal()">'._T("Add application","mobile").'</button>';
 
@@ -289,7 +293,6 @@ function appHandleApkUpload(input) {
                 if (appName)     jQuery('#modal_app_name_app').val(appName);
                 if (serverPath)  jQuery('#modal_app_filepath').val(serverPath);
 
-                // Build HMDM file URL (HTTP, port 8080)
                 if (fileName) {
                     var fileUrl = 'http://' + window.location.hostname + '/hmdm/files/' + fileName;
                     jQuery('#modal_app_url_app').val(fileUrl);
@@ -335,7 +338,6 @@ function saveNewIcon() {
                 appLoadIcons('#modal_icon_select_app');
                 appLoadIcons('#modal_icon_select_web');
                 appLoadIcons('#modal_icon_select_intent');
-                // select the new icon in the active tab
                 var type = jQuery('#modal_app_type').val();
                 setTimeout(function() {
                     jQuery('#modal_icon_select_' + type).val(newId);

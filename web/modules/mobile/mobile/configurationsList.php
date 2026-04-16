@@ -9,6 +9,10 @@ $p = new PageGenerator(_T("Configurations", 'mobile'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
+if (!xmlrpc_require_configured_hmdm_account()) {
+    return;
+}
+
 // Display notification if redirected from save
 if (isset($_GET['saved']) && $_GET['saved'] == '1') {
     new NotifyWidgetSuccess(_T("Configuration saved successfully", "mobile"));

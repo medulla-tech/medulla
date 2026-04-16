@@ -3,6 +3,14 @@ require("graph/navbar.inc.php");
 require("localSidebar.php");
 require_once("modules/mobile/includes/xmlrpc.php");
 
+$p = new PageGenerator(_T("List of all groups", 'mobile'));
+$p->setSideMenu($sidemenu);
+$p->display();
+
+if (!xmlrpc_require_configured_hmdm_account()) {
+    return;
+}
+
 $_modal_devices = [];
 try {
     $tmp = xmlrpc_get_hmdm_devices();
@@ -12,10 +20,6 @@ try {
 } catch (Exception $e) {
     $_modal_devices = [];
 }
-
-$p = new PageGenerator(_T("List of all groups", 'mobile'));
-$p->setSideMenu($sidemenu);
-$p->display();
 
 echo '<button class="btn btn-small btn-primary" type="button" onclick="openAddGroupModal()">'._T("Add group","mobile").'</button>';
 

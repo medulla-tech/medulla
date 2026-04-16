@@ -418,6 +418,32 @@ $pageNetfilterSettings = new Page("netfilterSettings", _T('Network Filtering', '
 $pageNetfilterSettings->setFile("modules/mobile/mobile/netfilterSettings.php");
 $submod->addPage($pageNetfilterSettings);
 
+################################
+# MDM User Access Management
+################################
+
+$pageMobileUsers = new Page("mobileUsers", _T('MDM User Access', 'mobile'));
+$pageMobileUsers->setFile("modules/mobile/mobile/mobileUsers.php");
+$submod->addPage($pageMobileUsers);
+
+$pageConfigureMdmUserAjax = new Page("configureMdmUserAjax", _T('Configure MDM User', 'mobile'));
+$pageConfigureMdmUserAjax->setFile("modules/mobile/mobile/configureMdmUserAjax.php");
+$pageConfigureMdmUserAjax->setOptions(array("AJAX" => true, "visible" => false));
+$submod->addPage($pageConfigureMdmUserAjax);
+
+################################
+# MDM Roles Management
+################################
+
+$pageMobileRoles = new Page("mobileRoles", _T('MDM Roles', 'mobile'));
+$pageMobileRoles->setFile("modules/mobile/mobile/mobileRoles.php");
+$submod->addPage($pageMobileRoles);
+
+$pageConfigureMdmRoleAjax = new Page("configureMdmRoleAjax", _T('Configure MDM Role', 'mobile'));
+$pageConfigureMdmRoleAjax->setFile("modules/mobile/mobile/configureMdmRoleAjax.php");
+$pageConfigureMdmRoleAjax->setOptions(array("AJAX" => true, "visible" => false));
+$submod->addPage($pageConfigureMdmRoleAjax);
+
 $pageNetfilterRules = new Page("netfilterRules", _T('Filter Rules', 'mobile'));
 $pageNetfilterRules->setFile("modules/mobile/mobile/netfilterRules.php");
 $pageNetfilterRules->setOptions(array("visible" => false));

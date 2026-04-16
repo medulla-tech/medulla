@@ -334,12 +334,28 @@ class MobileDatabase(DatabaseHelper):
         hashed_pwd = hashlib.md5(password.encode()).hexdigest().upper()
         return hashed_pwd
 
-    def authenticate(self, login: str = None, password: str = None) -> str:
+    def get_hmdm_credentials(self, medulla_user: str = None):
+        """
+        Get HMDM credentials based on Medulla username.
+        - If medulla_user is 'root': use config credentials (admin:admin)
+        - Otherwise: use medulla_user:admin
+        Returns tuple (login, password)
+        """
+        if medulla_user == 'root' or medulla_user is None:
+            return (self.login, self.password)
+        else:
+            return (medulla_user, 'admin')
+
+    def authenticate(self, login: str = None, password: str = None, medulla_user: str = None) -> str:
         """
         Authentifie l'utilisateur auprès du service MDM en utilisant le mot de passe hashé en MD5.
         Renvoie le hmdmtoken JWT si succès, None sinon.
+
+        If medulla_user is provided, uses dynamic credentials based on Medulla username.
         """
-        if login is None:
+        if medulla_user is not None:
+            login, password = self.get_hmdm_credentials(medulla_user)
+        elif login is None:
             login = self.login
         if password is None:
             password = self.password
@@ -366,11 +382,11 @@ class MobileDatabase(DatabaseHelper):
             if not hmtoken:
                 raise Exception("Le hmdmtoken JWT est manquant dans la réponse.")
 
-            logging.getLogger().info(f"Authentification réussie ")
+            logging.getLogger().info(f"Authentification réussie pour {login}")
             return hmtoken
 
         except Exception as e:
-            logging.getLogger().error(f"Erreur lors de l'authentification : {e}")
+            logging.getLogger().error(f"Erreur lors de l'authentification pour {login}: {e}")
             return None
     
     def convert_large_ints(self, obj):
@@ -428,6 +444,293 @@ class MobileDatabase(DatabaseHelper):
         except Exception as e:
             logging.getLogger().error(f"Error getting HMDM device count: {e}")
             return []
+
+    def getHmdmAllUsers(self):
+        """
+        Get all HMDM users via GET /private/users/all.
+        Returns list of user dicts or empty list on error.
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Cannot authenticate for getHmdmAllUsers")
+            return []
+        url = f"{self.BASE_URL}/private/users/all"
+        headers = {"Authorization": f"Bearer {hmtoken}"}
+        try:
+            resp = requests.get(url, headers=headers)
+            logging.getLogger().info(f"HMDM Users API - Status: {resp.status_code}, URL: {url}")
+            resp.raise_for_status()
+            data = resp.json()
+            logging.getLogger().info(f"HMDM Users API response type: {type(data)}")
+            # Handle both list and dict responses
+            if isinstance(data, list):
+                return data
+            elif isinstance(data, dict):
+                # Try 'data' key first, then 'users', then return empty
+                users = data.get('data', data.get('users', []))
+                logging.getLogger().info(f"Extracted {len(users) if isinstance(users, list) else 0} users from dict response")
+                return users if isinstance(users, list) else []
+            return []
+        except Exception as e:
+            logging.getLogger().error(f"Error fetching HMDM users from {url}: {e}")
+            if hasattr(e, 'response') and e.response is not None:
+                logging.getLogger().error(f"Response status: {e.response.status_code}")
+                logging.getLogger().error(f"Response body: {e.response.text[:500]}")
+            return []
+
+    def getCurrentHmdmUser(self, medulla_user: str = None):
+        """
+        Get info about the currently authenticated HMDM user.
+        Returns dict with user info including role, or None on error.
+
+        @param medulla_user: Medulla username to determine HMDM credentials
+        """
+        hmtoken = self.authenticate(medulla_user=medulla_user)
+        if hmtoken is None:
+            logging.getLogger().error("Failed to authenticate when fetching current user.")
+            return None
+
+        url = f"{self.BASE_URL}/private/users/current"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+
+        try:
+            resp = requests.get(url, headers=headers)
+            resp.raise_for_status()
+            data = resp.json()
+
+            # Handle dict response with 'data' key
+            if isinstance(data, dict) and 'data' in data:
+                user_info = data['data']
+            elif isinstance(data, dict):
+                user_info = data
+            else:
+                user_info = {}
+
+            logging.getLogger().info(f"Current HMDM user: {user_info.get('login')}, role: {user_info.get('userRole', {}).get('name')}")
+            return user_info
+        except Exception as e:
+            logging.getLogger().error(f"Error fetching current HMDM user: {e}")
+            return None
+
+    def getHmdmAllRoles(self):
+        """
+        Get all HMDM roles via GET /private/users/roles.
+        Returns list of role dicts or empty list on error.
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Cannot authenticate for getHmdmAllRoles")
+            return []
+        url = f"{self.BASE_URL}/private/users/roles"
+        headers = {"Authorization": f"Bearer {hmtoken}"}
+        try:
+            resp = requests.get(url, headers=headers)
+            logging.getLogger().info(f"HMDM Roles API - Status: {resp.status_code}, URL: {url}")
+            resp.raise_for_status()
+            data = resp.json()
+            logging.getLogger().info(f"HMDM Roles API response type: {type(data)}, content: {json.dumps(data, indent=2)[:1000]}")
+            if isinstance(data, list):
+                return data
+            return data.get('data', []) if isinstance(data, dict) else []
+        except Exception as e:
+            logging.getLogger().error(f"Error fetching HMDM roles from {url}: {e}")
+            if hasattr(e, 'response') and e.response is not None:
+                logging.getLogger().error(f"Response status: {e.response.status_code}")
+                logging.getLogger().error(f"Response body: {e.response.text[:500]}")
+            return []
+
+    def getHmdmAllPermissions(self):
+        """
+        Get all HMDM permissions via GET /private/roles/permissions.
+        Returns list of permission dicts or empty list on error.
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Cannot authenticate for getHmdmAllPermissions")
+            return []
+        url = f"{self.BASE_URL}/private/roles/permissions"
+        headers = {"Authorization": f"Bearer {hmtoken}"}
+        try:
+            resp = requests.get(url, headers=headers)
+            resp.raise_for_status()
+            data = resp.json()
+            if isinstance(data, list):
+                return data
+            return data.get('data', []) if isinstance(data, dict) else []
+        except Exception as e:
+            logging.getLogger().error(f"Error fetching HMDM permissions from {url}: {e}")
+            if hasattr(e, 'response') and e.response is not None:
+                logging.getLogger().error(f"Response status: {e.response.status_code}")
+                logging.getLogger().error(f"Response body: {e.response.text[:500]}")
+            return []
+
+    def createOrUpdateHmdmRole(self, name, description=None, permission_ids=None, role_id=None):
+        """
+        Create or update an HMDM role via PUT /private/roles.
+        Returns response dict or None on error.
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Cannot authenticate for createOrUpdateHmdmRole")
+            return None
+
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+
+        permissions_value = None
+        if permission_ids:
+            permissions_value = [{"id": int(p)} for p in permission_ids if p]
+
+        url = f"{self.BASE_URL}/private/roles"
+
+        payload = {
+            "name": name,
+            "description": description or "",
+            "permissions": permissions_value or []
+        }
+
+        if role_id is not None and role_id != '' and role_id != 0:
+            payload["id"] = int(role_id)
+
+        logging.getLogger().info(f"HMDM Role {'Update' if role_id else 'Create'} - URL: {url}")
+        logging.getLogger().info(f"HMDM Role Payload: {json.dumps(payload, indent=2)}")
+
+        try:
+            resp = requests.put(url, json=payload, headers=headers)
+            resp.raise_for_status()
+            logging.getLogger().info(f"HMDM Role {'updated' if role_id else 'created'} successfully: {name}")
+            return resp.json()
+        except Exception as e:
+            logging.getLogger().error(f"Error creating/updating HMDM role '{name}': {e}")
+            if hasattr(e, 'response') and e.response is not None:
+                logging.getLogger().error(f"Response status: {e.response.status_code}")
+                logging.getLogger().error(f"Response body: {e.response.text}")
+            return None
+
+    def deleteHmdmRole(self, role_id):
+        """
+        Delete an HMDM role by ID via DELETE /private/roles/{id}.
+        Returns True on success, False on error.
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Cannot authenticate for deleteHmdmRole")
+            return False
+        url = f"{self.BASE_URL}/private/roles/{int(role_id)}"
+        headers = {"Authorization": f"Bearer {hmtoken}"}
+        try:
+            resp = requests.delete(url, headers=headers)
+            resp.raise_for_status()
+            logging.getLogger().info(f"HMDM role {role_id} deleted successfully")
+            return True
+        except Exception as e:
+            logging.getLogger().error(f"Error deleting HMDM role {role_id}: {e}")
+            if hasattr(e, 'response') and e.response is not None:
+                logging.getLogger().error(f"Response status: {e.response.status_code}")
+                logging.getLogger().error(f"Response body: {e.response.text}")
+            return False
+
+
+    def createOrUpdateHmdmUser(self, login, role_id, all_devices=True, all_configs=True, user_id=None, device_groups=None, config_ids=None):
+        """
+        Create or update an HMDM user via PUT /private/users.
+        Password is MD5-uppercase of 'admin' (same hash format as authenticate()).
+        When all_devices is False, device_groups (list of group IDs) limits visible devices.
+        When all_configs is False, config_ids (list of configuration IDs) limits visible configs.
+        Returns response dict or None on error.
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Cannot authenticate for createOrUpdateHmdmUser")
+            return None
+
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+
+        groups_value = None
+        if not all_devices and device_groups:
+            groups_value = [{"id": int(g)} for g in device_groups if g]
+
+        configs_value = None
+        if not all_configs and config_ids:
+            configs_value = [{"id": int(c)} for c in config_ids if c]
+
+        url = f"{self.BASE_URL}/private/users"
+
+        if user_id is not None and user_id != '' and user_id != 0:
+            # Fetch existing user first
+            get_url = f"{self.BASE_URL}/private/users/{int(user_id)}"
+            try:
+                get_resp = requests.get(get_url, headers=headers)
+                get_resp.raise_for_status()
+                resp_data = get_resp.json()
+
+                # Extract the data field if response is wrapped
+                if 'data' in resp_data:
+                    payload = resp_data['data']
+                else:
+                    payload = resp_data
+
+                logging.getLogger().info(f"Fetched existing user data for update")
+            except Exception as e:
+                logging.getLogger().error(f"Failed to fetch existing user {user_id}: {e}")
+                return None
+
+            # Update only the fields we want to change
+            payload["userRole"] = {"id": int(role_id)}
+            payload["allDevicesAvailable"] = bool(all_devices)
+            payload["allConfigAvailable"] = bool(all_configs)
+            payload["groups"] = groups_value
+            payload["configurations"] = configs_value
+        else:
+            # New user - build minimal payload
+            payload = {
+                "login": login,
+                "name": login,
+                "email": "",
+                "userRole": {"id": int(role_id)},
+                "allDevicesAvailable": bool(all_devices),
+                "allConfigAvailable": bool(all_configs),
+                "groups": groups_value,
+                "configurations": configs_value,
+            }
+            pw_hash = self.hash_password("admin")
+            payload["newPassword"] = pw_hash
+            payload["confirm"] = "admin"
+            payload["confirmModal"] = pw_hash
+
+        logging.getLogger().info(f"HMDM User {'Update' if user_id else 'Create'} - URL: {url}")
+        logging.getLogger().info(f"HMDM User Payload: {json.dumps(payload, indent=2)}")
+
+        try:
+            resp = requests.put(url, json=payload, headers=headers)
+            resp.raise_for_status()
+            logging.getLogger().info(f"HMDM User {'updated' if user_id else 'created'} successfully: {login}")
+            return resp.json()
+        except Exception as e:
+            logging.getLogger().error(f"Error creating/updating HMDM user '{login}': {e}")
+            if hasattr(e, 'response') and e.response is not None:
+                logging.getLogger().error(f"Response status: {e.response.status_code}")
+                logging.getLogger().error(f"Response body: {e.response.text}")
+            return None
+
+    def deleteHmdmUser(self, user_id):
+        """
+        Delete an HMDM user by ID via DELETE /private/users/other/{id}.
+        Returns True on success, False on error.
+        """
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Cannot authenticate for deleteHmdmUser")
+            return False
+        url = f"{self.BASE_URL}/private/users/other/{int(user_id)}"
+        headers = {"Authorization": f"Bearer {hmtoken}"}
+        try:
+            resp = requests.delete(url, headers=headers)
+            resp.raise_for_status()
+            logging.getLogger().info(f"HMDM user {user_id} deleted successfully")
+            return True
+        except Exception as e:
+            logging.getLogger().error(f"Error deleting HMDM user {user_id}: {e}")
+            return False
 
     def getHmdmAuditLogs(self, page_size=50, page_num=1, message_filter="", user_filter=""):
         """
@@ -923,7 +1226,7 @@ class MobileDatabase(DatabaseHelper):
             logging.getLogger().error("Impossible d'authentifier pour récupérer la liste des configurations.")
             return []
 
-        url = f"{self.BASE_URL}/private/configurations/search"
+        url = f"{self.BASE_URL}/private/configurations/list"
         headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
 
         try:

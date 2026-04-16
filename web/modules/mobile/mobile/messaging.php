@@ -7,6 +7,10 @@ $p = new PageGenerator(_T("Messages", "mobile"));
 $p->setSideMenu($sidemenu);
 $p->display();
 
+if (!xmlrpc_require_configured_hmdm_account()) {
+    return;
+}
+
 $field = isset($_POST['field']) ? $_POST['field'] : (isset($_GET['field']) ? $_GET['field'] : "all");
 $param = isset($_POST['param']) ? $_POST['param'] : (isset($_GET['param']) ? $_GET['param'] : "");
 $status_filter = isset($_POST['status']) ? $_POST['status'] : (isset($_GET['status']) ? $_GET['status'] : "all");
@@ -19,7 +23,6 @@ $message_filter = "";
 if ($field === "device") {
     $device_number = $param;
 } else {
-    // "all" and "message" both map to message text filter
     $message_filter = $param;
 }
 

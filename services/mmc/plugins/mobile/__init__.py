@@ -110,6 +110,28 @@ def assignFileToConfigurations(file_id, configuration_ids):
 def deleteConfigurationById(id):
     return MobileDatabase().deleteConfigurationById(id)
 
+def getHmdmAllUsers():
+    return MobileDatabase().getHmdmAllUsers()
+
+def getHmdmAllRoles():
+    return MobileDatabase().getHmdmAllRoles()
+def getCurrentHmdmUser(medulla_user=None):
+    return MobileDatabase().getCurrentHmdmUser(medulla_user)
+def getHmdmAllPermissions():
+    return MobileDatabase().getHmdmAllPermissions()
+
+def createOrUpdateHmdmRole(name, description=None, permission_ids=None, role_id=None):
+    return MobileDatabase().createOrUpdateHmdmRole(name, description, permission_ids, role_id)
+
+def deleteHmdmRole(role_id):
+    return MobileDatabase().deleteHmdmRole(role_id)
+
+def createOrUpdateHmdmUser(login, role_id, all_devices=True, all_configs=True, user_id=None, device_groups=None, config_ids=None):
+    return MobileDatabase().createOrUpdateHmdmUser(login, role_id, all_devices, all_configs, user_id, device_groups, config_ids)
+
+def deleteHmdmUser(user_id):
+    return MobileDatabase().deleteHmdmUser(user_id)
+
 def getHmdmAuditLogs(page_size=50, page_num=1, message_filter="", user_filter=""):
     return MobileDatabase().getHmdmAuditLogs(page_size, page_num, message_filter, user_filter)
 

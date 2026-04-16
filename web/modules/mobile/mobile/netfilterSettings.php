@@ -7,6 +7,10 @@ $p = new PageGenerator(_T("Network Traffic Filtering", "mobile"));
 $p->setSideMenu($sidemenu);
 $p->display();
 
+if (!xmlrpc_require_configured_hmdm_account()) {
+    return;
+}
+
 $settings = xmlrpc_get_netfilter_settings();
 if (!is_array($settings)) {
     $settings = ['enabled' => false, 'filterMode' => 'BLOCKLIST'];

@@ -7,6 +7,10 @@ $p = new PageGenerator(_T("Push Messages", "mobile"));
 $p->setSideMenu($sidemenu);
 $p->display();
 
+if (!xmlrpc_require_configured_hmdm_account()) {
+    return;
+}
+
 $field = isset($_POST['field']) ? $_POST['field'] : (isset($_GET['field']) ? $_GET['field'] : "all");
 $param = isset($_POST['param']) ? $_POST['param'] : (isset($_GET['param']) ? $_GET['param'] : "");
 $page_num = isset($_GET['page']) ? (int)$_GET['page'] : 1;
@@ -18,7 +22,6 @@ $message_filter = "";
 if ($field === "device") {
     $device_number = $param;
 } else {
-    // "all", "message", and "payload" map to text filter (backend handles matching)
     $message_filter = $param;
 }
 

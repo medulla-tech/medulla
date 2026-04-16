@@ -4,6 +4,14 @@ require("modules/glpi/includes/html.php");
 require("localSidebar.php");
 require_once("modules/mobile/includes/xmlrpc.php");
 
+$p = new PageGenerator(_T("Files", 'mobile'));
+$p->setSideMenu($sidemenu);
+$p->display();
+
+if (!xmlrpc_require_configured_hmdm_account()) {
+    return;
+}
+
 $_file_configurations = [];
 try {
     $tmp = xmlrpc_get_hmdm_configurations();
@@ -13,10 +21,6 @@ try {
 } catch (Exception $e) {
     $_file_configurations = [];
 }
-
-$p = new PageGenerator(_T("Files", 'mobile'));
-$p->setSideMenu($sidemenu);
-$p->display();
 
 echo '<button class="btn btn-small btn-primary" type="button" onclick="openAddFileModal()">'._T("Add file","mobile").'</button>';
 
