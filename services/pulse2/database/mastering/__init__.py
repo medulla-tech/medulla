@@ -366,16 +366,26 @@ WHERE """
             "data":[],
         }
 
+        # On register case, the action is set on new machine
+        # But the result can be associated to an inventory
         sql = """SELECT
     SQL_CALC_FOUND_ROWS
     *
 FROM actions
-WHERE """
+WHERE uuid = :uuid
+        or id in (
+        select
+            distinct(action_id)
+        from
+            results
+        where
+            uuid = :uuid2) """
 
         # No entity specified, case for actions on new machines. In this case we get the entity associated to the server.
-        binds = {}
-        sql += "uuid = :uuid "
-        binds["uuid"] = uuid
+        binds = {
+            "uuid": uuid,
+            "uuid2": uuid,
+        }
 
         if _filter != "":
             if _filter == "N/P":
