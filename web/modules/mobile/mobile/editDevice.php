@@ -94,6 +94,7 @@ if (isset($_POST['baddgroup_x'])) {
         'id' => $deviceId,
         'number' => $_POST['device_name'] ?? $device['number'],
         'description' => $_POST['description'] ?? '',
+        'imei' => $_POST['imei'] ?? '',
         'configurationId' => $_POST['configuration_id'] ?? $device['configurationId'],
         'groups' => array_keys($selected_groups)
     );
@@ -128,6 +129,8 @@ $f->push(new Table());
 $f->add(new TrFormElement(_T("Device's name", "mobile"), new InputTpl("device_name")), array("value" => $deviceName));
 
 $f->add(new TrFormElement(_T("Description", "mobile"), new TextareaTpl("description")), array("value" => $description));
+
+$f->add(new TrFormElement(_T("IMEI", "mobile"), new InputTpl("imei")), array("value" => $imei));
 
 $config_names = [];
 $config_ids = [];

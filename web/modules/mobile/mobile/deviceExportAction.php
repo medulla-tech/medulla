@@ -4,7 +4,7 @@ require_once("modules/mobile/includes/xmlrpc.php");
 $group_id = isset($_POST['group_id']) && $_POST['group_id'] !== '' ? intval($_POST['group_id']) : null;
 $configuration_id = isset($_POST['configuration_id']) && $_POST['configuration_id'] !== '' ? intval($_POST['configuration_id']) : null;
 $filter_text = isset($_POST['filter_text']) && $_POST['filter_text'] !== '' ? trim($_POST['filter_text']) : null;
-$columns = isset($_POST['columns']) && is_array($_POST['columns']) ? $_POST['columns'] : ['description', 'configuration', 'imei', 'phone', 'groups', 'custom1'];
+$columns = isset($_POST['columns']) && is_array($_POST['columns']) ? $_POST['columns'] : ['description', 'configuration', 'imei', 'phone', 'groups'];
 
 if (empty($columns)) {
     header("Location: " . urlStrRedirect("mobile/mobile/deviceExport") . "&error=no_columns");

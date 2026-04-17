@@ -20,6 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 $name    = trim($_POST['add-phone'] ?? '');
+$imei    = trim($_POST['add-imei'] ?? '');
 $desc    = trim($_POST['desc-zone'] ?? '');
 $config  = trim($_POST['configuration_id'] ?? '');
 
@@ -43,7 +44,7 @@ if (!empty($_POST['groups']) && is_array($_POST['groups'])) {
     $groups = array_map('intval', $_POST['groups']);
 }
 
-$result = xmlrpc_add_hmdm_device($name, $config, $desc, $groups, '', '');
+$result = xmlrpc_add_hmdm_device($name, $config, $desc, $groups, $imei, '');
 
 if ($result && isset($result['status']) && $result['status'] === 'OK') {
     // If groups were selected, do a follow-up update to ensure they stick

@@ -99,9 +99,6 @@ if (!xmlrpc_require_configured_hmdm_account()) {
                         <label><input type="checkbox" name="columns[]" value="imei" checked> <?php echo _T("IMEI", "mobile"); ?></label>
                         <label><input type="checkbox" name="columns[]" value="phone" checked> <?php echo _T("Phone", "mobile"); ?></label>
                         <label><input type="checkbox" name="columns[]" value="groups" checked> <?php echo _T("Groups", "mobile"); ?></label>
-                        <label><input type="checkbox" name="columns[]" value="custom1" checked> <?php echo _T("Custom 1", "mobile"); ?></label>
-                        <label><input type="checkbox" name="columns[]" value="custom2"> <?php echo _T("Custom 2", "mobile"); ?></label>
-                        <label><input type="checkbox" name="columns[]" value="custom3"> <?php echo _T("Custom 3", "mobile"); ?></label>
                         <label><input type="checkbox" name="columns[]" value="serial" checked> <?php echo _T("Serial", "mobile"); ?></label>
                     </div>
                     <div class="help-text">
@@ -129,7 +126,7 @@ if (!xmlrpc_require_configured_hmdm_account()) {
         </table>
 
         <div class="help-text">
-            <?php echo _T("Upload a CSV file exported from this page. The file must have a header row with column names. Writable columns: number, description, configuration, imei, phone, groups, custom1, custom2, custom3. Existing devices (matched by number) will be updated. New devices require a 'configuration' value.", "mobile"); ?>
+            <?php echo _T("Upload a CSV file exported from this page. The file must have a header row with column names. Writable columns: number, description, configuration, imei, phone, groups. Existing devices (matched by number) will be updated. New devices require a 'configuration' value.", "mobile"); ?>
         </div>
 
         <input type="submit" class="btnPrimary" value="<?php echo _T("Import from CSV", "mobile"); ?>" />
