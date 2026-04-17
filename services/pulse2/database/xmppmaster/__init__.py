@@ -622,7 +622,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 if entity_id is not None:
                     query += " AND entity_id = :entity_id"
                     params["entity_id"] = entity_id
-                logger.error(f"Exécutant la requête: {query} avec les paramètres: {params}")
+                logger.debug(f"Exécutant la requête: {query} avec les paramètres: {params}")
                 session.execute(text(query), params)
 
             session.commit()
