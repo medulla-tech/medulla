@@ -86,7 +86,7 @@ class AdminDatabase(DatabaseHelper):
 
         # Lists to exclude or include specific tables for mapping
         exclude_table = []
-        include_table = ['providers', 'magic_link', 'medulla_update_availability']
+        include_table = ['providers', 'magic_link', 'medulla_update_availability', 'acl_categories', 'acl_profiles', 'acl_profile_features']
 
         # Dynamically add attributes to the object for each mapped class
         for table_name, mapped_class in Base.classes.items():
@@ -859,3 +859,179 @@ class AdminDatabase(DatabaseHelper):
                 "last_check": None,
                 "last_check_status": "error"
             }
+
+    # ---- ACL FEATURE MANAGEMENT ----
+
+    @DatabaseHelper._sessionm
+    def get_acl_categories(self, session):
+        """Get all categories ordered by display_order."""
+        try:
+            sql = "SELECT category_key, label, display_order FROM acl_categories ORDER BY display_order"
+            result = session.execute(text(sql))
+            return [{"key": row[0], "label": row[1], "order": row[2]} for row in result]
+        except Exception as e:
+            logger.error(f"Error in get_acl_categories: {e}")
+            return []
+
+    @DatabaseHelper._sessionm
+    def get_acl_profiles(self, session):
+        """Get all available profiles ordered by display_order."""
+        try:
+            sql = "SELECT profile_name, display_order FROM acl_profiles ORDER BY display_order"
+            result = session.execute(text(sql))
+            return [row[0] for row in result]
+        except Exception as e:
+            logger.error(f"Error in get_acl_profiles: {e}")
+            return []
+
+    @DatabaseHelper._sessionm
+    def add_acl_profile(self, session, profile_name):
+        """Add a new profile."""
+        try:
+            max_order = session.execute(text("SELECT COALESCE(MAX(display_order), 0) FROM acl_profiles")).scalar()
+            session.execute(
+                text("INSERT IGNORE INTO acl_profiles (profile_name, display_order) VALUES (:name, :ord)"),
+                {"name": profile_name, "ord": max_order + 1}
+            )
+            session.commit()
+            return True
+        except Exception as e:
+            logger.error(f"Error in add_acl_profile: {e}")
+            session.rollback()
+            return False
+
+    @DatabaseHelper._sessionm
+    def delete_acl_profile(self, session, profile_name):
+        """Delete a profile and its feature selections."""
+        try:
+            session.execute(text("DELETE FROM acl_profile_features WHERE profile_name = :name"), {"name": profile_name})
+            session.execute(text("DELETE FROM acl_profiles WHERE profile_name = :name"), {"name": profile_name})
+            session.commit()
+            return True
+        except Exception as e:
+            logger.error(f"Error in delete_acl_profile: {e}")
+            session.rollback()
+            return False
+
+    @DatabaseHelper._sessionm
+    def get_acl_profile_features(self, session, profile_name=None):
+        """Get feature selections for a profile (or all profiles)."""
+        try:
+            sql = "SELECT profile_name, feature_key, access_level FROM acl_profile_features"
+            if profile_name:
+                sql += " WHERE profile_name = :profile"
+                result = session.execute(text(sql), {"profile": profile_name})
+            else:
+                result = session.execute(text(sql))
+            rows = []
+            for row in result:
+                rows.append({
+                    "profile_name": row[0],
+                    "feature_key": row[1],
+                    "access_level": row[2],
+                })
+            return rows
+        except Exception as e:
+            logger.error(f"Error in get_acl_profile_features: {e}")
+            return []
+
+    # Features that cannot be disabled for a given profile
+    LOCKED_FEATURES = {
+        "Super-Admin": {"acl_management": "rw"},
+    }
+
+    @DatabaseHelper._sessionm
+    def set_acl_profile_features(self, session, profile_name, features_dict):
+        """Replace all feature selections for a profile.
+        features_dict: {"feature_key": "ro"|"rw"|null}
+        null/None means disabled (row deleted).
+        """
+        try:
+            # Enforce locked features
+            locked = self.LOCKED_FEATURES.get(profile_name, {})
+            for fkey, level in locked.items():
+                features_dict[fkey] = level
+
+            session.execute(
+                text("DELETE FROM acl_profile_features WHERE profile_name = :profile"),
+                {"profile": profile_name}
+            )
+            for feature_key, access_level in features_dict.items():
+                if access_level in ("ro", "rw"):
+                    session.execute(
+                        text("INSERT INTO acl_profile_features (profile_name, feature_key, access_level) "
+                             "VALUES (:profile, :feature, :level)"),
+                        {"profile": profile_name, "feature": feature_key, "level": access_level}
+                    )
+            session.commit()
+            return True
+        except Exception as e:
+            logger.error(f"Error in set_acl_profile_features: {e}")
+            session.rollback()
+            return False
+
+    @DatabaseHelper._sessionm
+    def get_acl_feature_definitions(self, session):
+        """Get all feature definitions from the database."""
+        try:
+            sql = ("SELECT feature_key, label, description, category, superadmin_only, acl_entry, access_type "
+                   "FROM acl_feature_definitions ORDER BY id")
+            result = session.execute(text(sql))
+            # Group by feature_key
+            features = {}
+            for row in result:
+                fkey = row[0]
+                if fkey not in features:
+                    features[fkey] = {
+                        "label": row[1],
+                        "description": row[2] or "",
+                        "category": row[3],
+                        "superadmin_only": bool(row[4]),
+                        "ro": [],
+                        "rw": [],
+                    }
+                if row[6] == "ro":
+                    features[fkey]["ro"].append(row[5])
+                else:
+                    features[fkey]["rw"].append(row[5])
+            # Convert empty lists to None for consistency
+            for fdef in features.values():
+                if not fdef["ro"]:
+                    fdef["ro"] = None
+                if not fdef["rw"]:
+                    fdef["rw"] = None
+            return features
+        except Exception as e:
+            logger.error(f"Error in get_acl_feature_definitions: {e}")
+            return {}
+
+    @DatabaseHelper._sessionm
+    def build_acl_string_for_profile(self, session, profile_name):
+        """Build the ACL string for a profile from its enabled features."""
+        try:
+            features_rows = self.get_acl_profile_features(profile_name)
+            if not features_rows:
+                return ""
+
+            feature_defs = self.get_acl_feature_definitions()
+
+            acl_entries = set()
+            for row in features_rows:
+                fkey = row["feature_key"]
+                level = row["access_level"]
+                fdef = feature_defs.get(fkey)
+                if not fdef:
+                    continue
+                if fdef.get("ro"):
+                    acl_entries.update(fdef["ro"])
+                if level == "rw" and fdef.get("rw"):
+                    acl_entries.update(fdef["rw"])
+
+            if not acl_entries:
+                return ""
+
+            acl_string = ":" + ":".join(sorted(acl_entries)) + "/"
+            return acl_string
+        except Exception as e:
+            logger.error(f"Error in build_acl_string_for_profile: {e}")
+            return ""

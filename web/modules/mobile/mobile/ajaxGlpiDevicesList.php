@@ -280,6 +280,7 @@ foreach($name_list as $cn_machine) {
 }
 
 $n = new OptimizedListInfos($cn, _T("Device Name", "glpi"));
+$n->setResizable();
 $n->setcssIds($ids);
 $n->setParamInfo($params); // [params]
 if(array_key_exists("description", $datas)) {

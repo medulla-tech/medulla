@@ -64,9 +64,9 @@ foreach($datas as $key=>$deploy) {
 
 $n = new OptimizedListInfos($titles, _T("Name", "updates"));
 $n->disableFirstColumnActionLink();
-$n->addExtraInfo($startcmds, _T("Started at", "updates"), "160px");
+$n->addExtraInfo($startcmds, _T("Started at", "updates"));
 
-$n->addExtraInfoRaw($states, _T("Status", "xmppmaster"), "180px");
+$n->addExtraInfoRaw($states, _T("Status", "xmppmaster"));
 $n->addActionItemArray($detailActions);
 $n->setItemCount($count);
 $n->setNavBar(new AjaxNavBar($count, $filter));

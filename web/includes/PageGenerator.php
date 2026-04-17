@@ -1128,6 +1128,7 @@ class ListInfos extends HtmlElement
     public $extraColumns = array();
     public $forceFixed = false;
     public $tableCssClass = "";
+    public $resizable = false;
     public $emptyTitle = "";
     public $emptyDescription = "";
 
@@ -1170,6 +1171,15 @@ class ListInfos extends HtmlElement
     public function setTableCssClass($class)
     {
         $this->tableCssClass = $class;
+    }
+
+    /**
+     * Enable resizable columns on this table.
+     * Users can drag column borders to resize, widths saved in localStorage.
+     */
+    public function setResizable()
+    {
+        $this->resizable = true;
     }
 
     // 1. Définir le style CSS complet
@@ -1566,6 +1576,9 @@ class ListInfos extends HtmlElement
     if (!empty($this->tableCssClass)) {
         $tableClass .= " " . htmlspecialchars($this->tableCssClass, ENT_QUOTES, 'UTF-8');
     }
+    if (!empty($this->resizable)) {
+        $tableClass .= " table-resizable";
+    }
 
     echo "<table class=\"$tableClass\">\n";
     $this->drawCaption();
@@ -1696,6 +1709,16 @@ class ListInfos extends HtmlElement
     }
 
     echo "</tbody></table>\n";
+    if (!empty($this->resizable)) {
+        // Fix action column width, switch to fixed layout, add drag handles
+        echo '<script>(function(){var t=document.querySelector("table.table-resizable:last-of-type");if(!t)return;';
+        // Measure action column in auto mode, fix it, then switch to fixed
+        echo 'var ac=t.querySelector("thead .col-action");if(ac)ac.style.width=ac.offsetWidth+"px";';
+        echo 't.style.tableLayout="fixed";';
+        // Add drag handles
+        echo 'Array.from(t.querySelectorAll("thead th:not(.col-action)")).forEach(function(th){var h=document.createElement("div");h.className="col-resize-handle";th.appendChild(h);h.addEventListener("mousedown",function(e){e.preventDefault();var sx=e.clientX,sw=th.offsetWidth;function mv(e){th.style.width=Math.max(40,sw+(e.clientX-sx))+"px";}function up(){document.removeEventListener("mousemove",mv);document.removeEventListener("mouseup",up);}document.addEventListener("mousemove",mv);document.addEventListener("mouseup",up);});});';
+        echo '})()</script>';
+    }
     $this->displayNavbar($navbar);
 }
 

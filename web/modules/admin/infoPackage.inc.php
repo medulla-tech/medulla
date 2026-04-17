@@ -45,6 +45,10 @@ $page = new Page("websocketLogs", _T("Server Logs", "admin"));
 $page->setFile("modules/admin/admin/websocketLogs.php");
 $submod->addPage($page);
 
+$page = new Page("aclFeatures", _T("ACL Management", "admin"));
+$page->setFile("modules/admin/admin/aclFeatures.php");
+$submod->addPage($page);
+
 $page = new Page("ajaxRelaysList", _T("Relays List", "glpi"));
 $page->setFile("modules/admin/admin/ajaxRelaysList.php");
 $page->setOptions(array("AJAX" => true, "visible" => false, "noHeader" => true));

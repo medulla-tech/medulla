@@ -219,6 +219,7 @@ foreach ($cmds as $item) {
 }
 
 $n = new OptimizedListInfos($a_cmd, _T("Command", "msc"));
+$n->setResizable();
 $n->addExtraInfo($a_creator, _T("Creator", "msc"));
 //$n->addExtraInfo($a_date, _T("Creation date", "msc"));
 $n->addExtraInfo($start_dates, _T("Start date", "msc"));

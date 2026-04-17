@@ -281,8 +281,8 @@ foreach($params as $pid_pkgs) {
 $n = new OptimizedListInfos($a_packages, _T("Package name", "pkgs"));
 $n->setcssIds($ids_deploy);
 $n->addExtraInfo($a_description, _T("Description", "msc"));
-$n->addExtraInfoCentered($a_pversions, _T("Version", "msc"), "90px");
-$n->addExtraInfoCentered($a_sizes, _T("Size", "pkgs"), "90px");
+$n->addExtraInfoCentered($a_pversions, _T("Version", "msc"));
+$n->addExtraInfoCentered($a_sizes, _T("Size", "pkgs"));
 if ($group != null) {
     $n->addExtraInfo($a_convergence_status, _T("Convergence", "msc"));
 }
@@ -336,14 +336,8 @@ $n->display();
         overflow: hidden;
         text-overflow: ellipsis;
     }
-    /* Package description - truncate with tooltip */
+    /* Package description */
     .pkg-description {
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        max-width: 200px;
         line-height: 1.4;
     }
 </style>
