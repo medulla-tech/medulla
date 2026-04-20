@@ -1,0 +1,110 @@
+#!/bin/bash
+#
+# (c) 2022 Siveo, http://siveo.net
+#
+# This file is part of Medulla
+#
+# Medulla is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# Medulla is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Medulla; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+# PARAMETERS TO BE SET
+DL_URL=https://updates.medulla-tech.io
+DEST=/var/lib/pulse2/downloads/
+CONFFILE=/etc/mmc/plugins/updates.ini
+CHECKSUM_FILENAME=wsusscn2_dump.md5
+##########
+
+
+echo "$(date +\[%F\ %X\]) ##### Starting $(basename $0)"
+
+DBHOST=$(crudini --get /etc/mmc/plugins/xmppmaster.ini.local database dbhost 2> /dev/null || echo localhost)
+DBPORT=$(crudini --get /etc/mmc/plugins/xmppmaster.ini.local database dbport 2> /dev/null || echo 3306)
+DBUSER=$(crudini --get /etc/mmc/plugins/xmppmaster.ini.local database dbuser 2> /dev/null || echo mmc)
+DBPASS=$(crudini --get /etc/mmc/plugins/xmppmaster.ini.local database dbpasswd)
+KEYAES32=$(crudini --get /etc/mmc/plugins/xmppmaster.ini.local defaultconnection keyAES32)
+
+if [[ ${DL_URL} == '' ]]; then
+    echo "$(date +\[%F\ %X\]) DL_URL parameter is not set. Please set it"
+    exit 1
+fi
+
+# Get existing checksum
+CURRENT_FILE=$(find ${DEST} -name '*dumptable_update_data.sql')
+if [[ ${CURRENT_FILE} == '' ]]; then
+    CHECKSUM='localfiledoesnotexist'
+else
+    CHECKSUM=$(md5sum ${CURRENT_FILE})
+fi
+
+# Download checksum from the server if it exists
+if [[ $(curl -o /dev/null --silent -Iw '%{http_code}' ${DL_URL}/${CHECKSUM_FILENAME}) == '200' ]]; then
+    REMOTE_CHECKSUM=$(curl --silent ${DL_URL}/${CHECKSUM_FILENAME})
+    REMOTE_FILE=$(echo ${REMOTE_CHECKSUM} | awk '{ print $2 }')
+    echo "$(date +\[%F\ %X\]) Remote checksum: ${REMOTE_CHECKSUM}"
+else
+    echo "$(date +\[%F\ %X\]) Error downloading ${DL_URL}/${CHECKSUM_FILENAME}"
+    exit 1
+fi
+
+# Download file only if file has changed on the server
+if [[ $(echo ${CHECKSUM} | awk '{ print $1 }') != $(echo ${REMOTE_CHECKSUM} | awk '{ print $1 }') ]]; then
+    echo "$(date +\[%F\ %X\]) Checksum changed. Downloading ${DL_URL}/updates_protected/${REMOTE_FILE}"
+    curl --silent -C - -o ${DEST}/${REMOTE_FILE} ${DL_URL}/updates_protected/${REMOTE_FILE}?token=${KEYAES32}
+    # Make sure downloaded file checksum is the same as the one on the server before deleting old dump
+    NEWFILE_CHECKSUM=$(md5sum ${DEST}/${REMOTE_FILE})
+    if [[ $(echo ${NEWFILE_CHECKSUM} | awk '{ print $1 }') == $(echo ${REMOTE_CHECKSUM} | awk '{ print $1 }') ]]; then
+        echo "$(date +\[%F\ %X\]) ${REMOTE_FILE} downloaded successfully"
+        /bin/rm -f ${CURRENT_FILE}
+        DL_SUCCESSFUL='True'
+    else
+        echo "$(date +\[%F\ %X\]) Error downloading ${DL_URL}/updates_protected/${REMOTE_FILE}"
+        exit 1
+    fi
+else
+    echo "$(date +\[%F\ %X\]) File ${DEST}/${REMOTE_FILE} is already up to date"
+    DL_SUCCESSFUL='True'
+fi
+
+# Import dump and generate packages if new download
+if [[ ${DL_SUCCESSFUL} == 'True' ]]; then
+    echo "$(date +\[%F\ %X\]) Importing ${DEST}/${REMOTE_FILE} to base_wsusscn2 database"
+    mysql -h ${DBHOST} -P ${DBPORT} -u${DBUSER} -p${DBPASS} base_wsusscn2 < ${DEST}/${REMOTE_FILE}
+    echo "$(date +\[%F\ %X\]) Reinitialising update_data table"
+    mysql -h ${DBHOST} -P ${DBPORT} -u${DBUSER} -p${DBPASS} xmppmaster -e "call up_reinit_table_update_data()"
+    echo "$(date +\[%F\ %X\]) Creating product tables"
+    mysql -h ${DBHOST} -P ${DBPORT} -u${DBUSER} -p${DBPASS} xmppmaster -e "call up_create_product_tables()"
+    echo "$(date +\[%F\ %X\]) Deleting obsolete products"
+    mysql -h ${DBHOST} -P ${DBPORT} -u${DBUSER} -p${DBPASS} xmppmaster -e "DELETE FROM base_wsusscn2.update_data WHERE (product IN (' ; Windows XP x64 Edition' , ' ; Windows XP Embedded' , ' ; Windows XP' , ' ; Windows Vista' , ' ; Windows Embedded Standard 7' , ' ; Windows 7 ; Windows Embedded Standard 7' , ' ; Windows 7'))"
+
+    # Extract versions from ini File
+    export $(crudini --get --format=sh ${CONFFILE} products | tr -d ' ' |xargs -L1)
+    export $(crudini --get --format=sh ${CONFFILE}.local products | tr -d ' ' |xargs -L1)
+
+    # Generate packages for each of the families and versions found
+    mysql -h ${DBHOST} -P ${DBPORT} -u${DBUSER} -p${DBPASS} xmppmaster -e "UPDATE up_list_produit SET enable = 0"
+    for FAMILY in ${families//,/ }; do
+        eval FAMILY_VERSION_NAME=\$${FAMILY}_versions
+        for VERSION in ${FAMILY_VERSION_NAME//,/ }; do
+            echo "$(date +\[%F\ %X\]) Enabling ${FAMILY}_${VERSION} in table up_list_produit"
+            mysql -h ${DBHOST} -P ${DBPORT} -u${DBUSER} -p${DBPASS} xmppmaster -e "INSERT IGNORE INTO xmppmaster.up_list_produit (name_procedure, enable) VALUES ('up_packages_${FAMILY}_${VERSION}', 1) ON DUPLICATE KEY UPDATE enable = 1"
+            # The following two lines will not be needed anymore once udf is available as this will be done by the db when needed
+            #echo "$(date +\[%F\ %X\]) Generating update packages for ${FAMILY}_${VERSION}"
+            #python3 /usr/sbin/medulla-generate-update-package.py -H${DBHOST} -P${DBPORT} -u${DBUSER} -p${DBPASS} -Tup_packages_${FAMILY}_${VERSION} -o/var/lib/pulse2/packages/sharing/winupdates -d -q
+        done
+    done
+
+    echo "$(date +\[%F\ %X\]) Recreating packages database records and symlinks"
+    /usr/sbin/pulse2-generation_package.py -H${DBHOST} -P${DBPORT} -u${DBUSER} -p${DBPASS} -r -l -g
+fi
