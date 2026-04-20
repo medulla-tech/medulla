@@ -92,18 +92,31 @@ if [[ ${DL_SUCCESSFUL} == 'True' ]]; then
     export $(crudini --get --format=sh ${CONFFILE} products | tr -d ' ' |xargs -L1)
     export $(crudini --get --format=sh ${CONFFILE}.local products | tr -d ' ' |xargs -L1)
 
-    # Generate packages for each of the families and versions found
-    mysql -h ${DBHOST} -P ${DBPORT} -u${DBUSER} -p${DBPASS} xmppmaster -e "UPDATE up_list_produit SET enable = 0"
-    for FAMILY in ${families//,/ }; do
-        eval FAMILY_VERSION_NAME=\$${FAMILY}_versions
-        for VERSION in ${FAMILY_VERSION_NAME//,/ }; do
-            echo "$(date +\[%F\ %X\]) Enabling ${FAMILY}_${VERSION} in table up_list_produit"
-            mysql -h ${DBHOST} -P ${DBPORT} -u${DBUSER} -p${DBPASS} xmppmaster -e "INSERT IGNORE INTO xmppmaster.up_list_produit (name_procedure, enable) VALUES ('up_packages_${FAMILY}_${VERSION}', 1) ON DUPLICATE KEY UPDATE enable = 1"
-            # The following two lines will not be needed anymore once udf is available as this will be done by the db when needed
-            #echo "$(date +\[%F\ %X\]) Generating update packages for ${FAMILY}_${VERSION}"
-            #python3 /usr/sbin/medulla-generate-update-package.py -H${DBHOST} -P${DBPORT} -u${DBUSER} -p${DBPASS} -Tup_packages_${FAMILY}_${VERSION} -o/var/lib/pulse2/packages/sharing/winupdates -d -q
-        done
-    done
+   #
+# # Generate packages for each of the families and versions found
+#
+
+#
+# mysql -h ${DBHOST} -P ${DBPORT} -u${DBUSER} -p${DBPASS} xmppmaster -e "UPDATE up_list_produit SET enable = 0"
+#   # Bloc de code qui met à jour la table up_list_produit pour désactiver les packages
+
+#
+# for FAMILY in ${families//,/ }; do
+#   # Boucle qui itère sur chaque famille et version
+#   eval FAMILY_VERSION_NAME=\$${FAMILY}_versions
+#
+#   for VERSION in ${FAMILY_VERSION_NAME//,/ }; do
+#     # Bloc de code qui met à jour la table up_list_produit pour activer les packages correspondants
+#
+#     mysql -h ${DBHOST} -P ${DBPORT} -u${DBUSER} -p${DBPASS} xmppmaster -e "INSERT IGNORE INTO xmppmaster.up_list_produit (name_procedure, enable) VALUES ('up_packages_${FAMILY}_${VERSION}', 1) ON DUPLICATE KEY UPDATE enable = 1"
+#       # Remarque : ces deux lignes seront supprimées une fois que la fonction UDF sera disponible
+#
+#     # echo "$(date +\[%F\ %X\]) Generating update packages for ${FAMILY}_${VERSION}"
+#     # python3 /usr/sbin/medulla-generate-update-package.py -H${DBHOST} -P${DBPORT} -u${DBUSER} -p${DBPASS} -Tup_packages_${FAMILY}_${VERSION} -o/var/lib/pulse2/packages/sharing/winupdates -d -q
+#
+#   done
+#
+# done
 
     echo "$(date +\[%F\ %X\]) Recreating packages database records and symlinks"
     /usr/sbin/pulse2-generation_package.py -H${DBHOST} -P${DBPORT} -u${DBUSER} -p${DBPASS} -r -l -g
