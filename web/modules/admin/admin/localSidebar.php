@@ -27,7 +27,7 @@ $sidemenu->setClass("admin");
 
 //--------------------- Relays & Clusters ----------------
 $sidemenu->addSideMenuItem(
-    new SideMenuItem(_T("List of Relays","admin"), "admin", "admin", "relaysList")
+    new SideMenuItem(_T("List of Relays", "admin"), "admin", "admin", "relaysList")
 );
 $sidemenu->addSideMenuItem(
     new SideMenuItem(_T("Clusters List", 'admin'), "admin", "admin", "clustersList")
@@ -36,7 +36,7 @@ $sidemenu->addSideMenuItem(
     new SideMenuItem(_T("New Cluster", 'admin'), "admin", "admin", "newCluster")
 );
 $sidemenu->addSideMenuItem(
-    new SideMenuItem(_T("Rules list","admin"), "admin", "admin", "rules")
+    new SideMenuItem(_T("Rules list", "admin"), "admin", "admin", "rules")
 );
 
 //--------------------- Entity Manager ----------------
@@ -46,22 +46,15 @@ $action = strtolower($_GET['action'] ?? '');
 $mode   = (strtolower($_GET['mode'] ?? '') === 'edit') ? 'edit' : 'add';
 
 $userLabel = ($action === 'edituser')
-? (($mode === 'edit') ? _T("Edit User", "admin") : _T("Add User", "admin"))
-: _T("Add User", "admin");
-
-$providerLabel = ($action === 'editprovider')
-? (($mode === 'edit') ? _T("Edit OIDC Client", "admin") : _T("New OIDC Client", "admin"))
-: _T("New OIDC Client", "admin");
+    ? (($mode === 'edit') ? _T("Edit User", "admin") : _T("Add User", "admin"))
+    : _T("Add User", "admin");
 
 // Side menu
 $sidemenu->addSideMenuItem(new SideMenuItem($userLabel,     "admin", "admin", "editUser"));
 
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("OIDC Clients", "admin"), "admin", "admin", "manageproviders"));
-
-$sidemenu->addSideMenuItem(new SideMenuItem($providerLabel, "admin", "admin", "editProvider"));
-
 // Configuration
 //$sidemenu->addSideMenuItem(new SideMenuItem(_T("Configuration", "admin"), "admin", "admin", "configList"));
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("Authentication Configuration", "admin"), "admin", "admin", "authConfig"));
 
 // --------------------- ACL Management ----------------
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("ACL Management", "admin"), "admin", "admin", "aclFeatures"));
@@ -70,4 +63,3 @@ $sidemenu->addSideMenuItem(new SideMenuItem(_T("ACL Management", "admin"), "admi
 $sidemenu->addSideMenuItem(
     new SideMenuItem(_T("Server Logs", "admin"), "admin", "admin", "websocketLogs")
 );
-?>
