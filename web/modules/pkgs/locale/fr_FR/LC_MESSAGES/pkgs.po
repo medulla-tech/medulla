@@ -1584,3 +1584,7 @@ msgstr "Pour associer une requête d'inventaire, au moins un de ces champs est r
 #: modules/pkgs/includes/query.php
 msgid "or"
 msgstr "ou"
+
+#: modules/pkgs/pkgs/index.php
+msgid "Hide Windows Updates"
+msgstr "Masquer les MAJ Windows"
