@@ -1,6 +1,6 @@
 <?php
 /*
- * (c) 2025 Medulla, http://www.medulla-tech.io
+ * (c) 2025-2026 Medulla, http://www.medulla-tech.io
  *
  * $Id$
  *
@@ -164,7 +164,7 @@ var template = [
             '<RunSynchronous>',
                 '<RunSynchronousCommand wcm:action="add">',
                     '<Order>1</Order>',
-                    '<Path>net user Administrator /active:yes</Path>',
+                    '<Path>net user <?php echo $strin;?>LoginAdmin<?php echo $strou;?> /active:yes</Path>',
                 '</RunSynchronousCommand>',
                 '<RunSynchronousCommand wcm:action="add">',
                     '<Order>2</Order>',
@@ -1010,6 +1010,13 @@ $f->add(new SepTpl());
 //=====================
 $f->add(new TitleElement(_T("Administrator Account", "imaging")));
 $f->push(new Table());
+
+//_____________
+$f->add(
+    new TrFormElement(_T('Login', 'imaging'), new InputTplTitle('LoginAdmin', $InfoBule_LoginAdmin)),
+    array(  "required" => true,
+            "value" => (isset($parameters['LoginAdmin'])) ? $parameters['LoginAdmin'] : "Adinistrator")
+);
 
 //_____________
 $f->add(
