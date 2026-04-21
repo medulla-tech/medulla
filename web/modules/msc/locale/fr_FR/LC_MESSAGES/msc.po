@@ -2069,3 +2069,7 @@ msgstr "Désactiver"
 #: modules/msc/msc/launch.php:534
 msgid "Enable"
 msgstr "Activer"
+
+#: modules/msc/msc/launch.php
+msgid "Hide Windows Updates"
+msgstr "Masquer les MAJ Windows"

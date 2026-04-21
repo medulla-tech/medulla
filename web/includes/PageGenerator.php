@@ -512,7 +512,7 @@ class ActionAjaxPopupItem extends ActionItem
             $urlChunk = "&amp;" . $this->paramString . "=" . rawurlencode($obj);
         }
 
-        // Construit l’URL AJAX dynamique
+        // Construit l'URL AJAX dynamique
         $ajaxUrl = "main.php?module=" . $this->module;
         if (!empty($this->submod)) {
             $ajaxUrl .= "&amp;submod=" . $this->submod;
@@ -545,7 +545,7 @@ class ActionAjaxPopupItem extends ActionItem
         ob_start(); ?>
         <script type="text/javascript">
             function openAjaxPopup_<?php echo $popupId; ?>() {
-                // Supprime l’ancienne popup s’il y en a une
+                // Supprime l'ancienne popup s'il y en a une
                 jQuery('#<?php echo $popupId; ?>').remove();
 
                 // Crée la popup en jQuery
@@ -2235,12 +2235,25 @@ class AjaxPaginator extends AjaxNavBar
  */
 class AjaxFilter extends HtmlElement
 {
+    public $checkboxes = array();
+
+    /**
+     * Add a checkbox filter to the search form.
+     * When checked, &paramname=true is appended to the AJAX URL.
+     * @param Checkbox $checkbox A Checkbox object (paramname, description)
+     */
+    public function addCheckbox($checkbox)
+    {
+        $checkbox->onchange = "pushSearch" . (isset($this->formid) ? $this->formid : "") . "(); return false;";
+        $this->checkboxes[] = $checkbox;
+    }
+
     /**
      * @brief Constructeur du filtre AJAX.
      *
      * @param string $url      URL cible pour les appels AJAX
      * @param string $divid    ID de la div à mettre à jour
-     * @param array|string $params Paramètres additionnels à ajouter à l’URL
+     * @param array|string $params Paramètres additionnels à ajouter à l'URL
      * @param string $formid   Identifiant unique du formulaire
      */
     public function __construct($url, $divid = "container", $params = array(), $formid = "")
@@ -2265,7 +2278,7 @@ class AjaxFilter extends HtmlElement
             $this->params = '';
         }
 
-        // --- Ajoute les paramètres à l’URL ---
+        // --- Ajoute les paramètres à l'URL ---
         if (!empty($this->params)) {
             if (!in_array(substr($this->url, -1), ['?', '&'])) {
                 $this->url .= '&';
@@ -2328,6 +2341,7 @@ class AjaxFilter extends HtmlElement
     <div id="searchSpan<?php echo $this->formid ?>" class="searchbox">
 
         <div id="searchBest">
+            <?php foreach ($this->checkboxes as $cb) { $cb->display(); } ?>
             <input type="text"
                    class="searchfieldreal"
                    name="param"
@@ -2379,17 +2393,29 @@ clearTimers<?php echo $this->formid ?> = function() {
 /**
  * @brief Appel AJAX principal pour mise à jour du tableau.
  */
+// Collect checked checkboxes as URL params
+function getCheckboxStr<?php echo $this->formid ?>() {
+    var s = '';
+    jQuery('.checkboxsearch').each(function() {
+        if (jQuery(this).is(':checked')) {
+            s += '&' + jQuery(this).attr('id') + '=true';
+        }
+    });
+    return s;
+}
+
 updateSearch<?php echo $this->formid ?> = function() {
 
     clearTimers<?php echo $this->formid ?>();
 
     var searchValue = document.Form<?php echo $this->formid ?>.param.value;
 
-    // Construction de l’URL AJAX
+    // Construction de l'URL AJAX
     var finalUrl =
         '<?php echo rtrim($this->url, "&"); ?>'
         + '&filter='     + encodeURIComponent(searchValue)
         + '&maxperpage=' + maxperpage
+        + getCheckboxStr<?php echo $this->formid ?>()
         <?php if ($this->storedstart !== null && $this->storedend !== null) { ?>
         + '&start=<?php echo $this->storedstart ?>'
         + '&end=<?php echo $this->storedend ?>'
@@ -2429,7 +2455,8 @@ updateSearchParam<?php echo $this->formid ?> = function(filter, start, end, max)
         + '&filter='     + encodeURIComponent(filter)
         + '&start='      + start
         + '&end='        + end
-        + '&maxperpage=' + max;
+        + '&maxperpage=' + max
+        + getCheckboxStr<?php echo $this->formid ?>();
 
 
     jQuery.ajax({
@@ -2854,7 +2881,7 @@ class AjaxLocation extends AjaxFilterLocation
                     }
                 });
 
-                // Récupère l’option sélectionnée
+                // Récupère l'option sélectionnée
                 var selectedVal = jQuery("#<?php echo $this->paramname; ?>").val();
                 var strSelected = "";
 
