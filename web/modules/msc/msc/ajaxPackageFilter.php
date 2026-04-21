@@ -153,8 +153,8 @@ if (isset($_GET['uuid'])) {
         $filter['filter1'] = "win";
     }
     // Hard to tell if it is a darwin or linux from xmppmaster.machines.platform field, unless we keep track on each big OS names such as Ubuntu, Lubuntu, Debian etc...
-    else if(preg_match("#macOS#i", $platform)) {
-        $filter['filter1'] = "darwin";
+    else if(preg_match("#macOS|darwin|Mac OS#i", $platform)) {
+        $filter['filter1'] = "mac";
     }
     else if(preg_match("#Android#i", $platform)){
         $filter['filter1'] = "android";
@@ -279,6 +279,7 @@ foreach($params as $pid_pkgs) {
 }
 
 $n = new OptimizedListInfos($a_packages, _T("Package name", "pkgs"));
+$n->setResizable();
 $n->setcssIds($ids_deploy);
 $n->addExtraInfo($a_description, _T("Description", "msc"));
 $n->addExtraInfoCentered($a_pversions, _T("Version", "msc"));

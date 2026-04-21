@@ -18,6 +18,7 @@
 -- along with MMC; If not, see <http://www.gnu.org/licenses/>.
 --
 
+SET NAMES utf8mb4;
 START TRANSACTION;
 USE admin;
 
