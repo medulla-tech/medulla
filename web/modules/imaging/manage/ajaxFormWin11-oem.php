@@ -1016,7 +1016,7 @@ $f->push(new Table());
 $f->add(
     new TrFormElement(_T('Login', 'imaging'), new InputTplTitle('LoginAdmin', $InfoBule_LoginAdmin)),
     array(  "required" => true,
-            "value" => (isset($parameters['LoginAdmin'])) ? $parameters['LoginAdmin'] : "Adinistrator")
+            "value" => (isset($parameters['LoginAdmin'])) ? $parameters['LoginAdmin'] : _T("Administrator", "imaging"))
 );
 
 //_____________
