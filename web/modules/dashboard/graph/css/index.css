@@ -819,19 +819,14 @@
   margin: 0 0 16px 0;
   font-size: 13px;
   line-height: 1.5;
+  text-align: left;
 }
 
 .version-disclaimer-header {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 6px;
-}
-
-.version-disclaimer-icon {
-  font-size: 16px;
-  line-height: 1;
-  flex-shrink: 0;
+  gap: 10px;
+  margin-bottom: 8px;
 }
 
 .version-disclaimer-label {
@@ -839,47 +834,50 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
   font-size: 11px;
-  padding: 2px 8px;
+  padding: 3px 10px;
   border-radius: 4px;
-  background: rgba(255, 255, 255, 0.6);
+  color: #fff;
 }
 
 .version-disclaimer-version {
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: 12px;
-  opacity: 0.85;
+  opacity: 0.75;
   margin-left: auto;
 }
 
 .version-disclaimer-text {
   color: var(--color-text-dark);
+  font-weight: 600;
+  text-align: left;
+}
+
+.version-disclaimer-critical .version-disclaimer-text {
+  color: #991b1b;
 }
 
 .version-disclaimer-info {
   background: #eff6ff;
   border-left-color: #3b82f6;
 }
-.version-disclaimer-info .version-disclaimer-icon,
 .version-disclaimer-info .version-disclaimer-label {
-  color: #1e40af;
+  background: #3b82f6;
 }
 
 .version-disclaimer-warning {
   background: #fffbeb;
   border-left-color: #f59e0b;
 }
-.version-disclaimer-warning .version-disclaimer-icon,
 .version-disclaimer-warning .version-disclaimer-label {
-  color: #92400e;
+  background: #d97706;
 }
 
 .version-disclaimer-critical {
   background: #fef2f2;
-  border-left-color: #ef4444;
+  border-left-color: #dc2626;
 }
-.version-disclaimer-critical .version-disclaimer-icon,
 .version-disclaimer-critical .version-disclaimer-label {
-  color: #991b1b;
+  background: #dc2626;
 }
 
 /* ---------------------------------------- */
