@@ -104,6 +104,43 @@ class UpdatePanel extends Panel {
         $availableVersion = isset($updateInfo['available_version']) ? htmlspecialchars($updateInfo['available_version']) : '';
         $lastCheck = isset($updateInfo['last_check']) ? htmlspecialchars($updateInfo['last_check']) : '';
 
+        // Version-specific disclaimer (populated by check_medulla_updates.sh
+        // from https://dl.medulla-tech.io/up/versions_disclaimer.json)
+        $versionDisclaimer = '';
+        $disclaimerJson = isset($updateInfo['disclaimer_json']) ? $updateInfo['disclaimer_json'] : null;
+        $disclaimerLevel = isset($updateInfo['disclaimer_level']) ? $updateInfo['disclaimer_level'] : null;
+
+        if ($disclaimerJson) {
+            $translations = json_decode($disclaimerJson, true);
+            if (is_array($translations) && !empty($translations)) {
+                $userLang = isset($_SESSION['lang']) ? $_SESSION['lang'] : 'en_US';
+                if (isset($translations[$userLang])) {
+                    $text = $translations[$userLang];
+                } elseif (isset($translations['en_US'])) {
+                    $text = $translations['en_US'];
+                } else {
+                    $text = reset($translations);
+                }
+
+                $level = in_array($disclaimerLevel, array('info', 'warning', 'critical'), true) ? $disclaimerLevel : 'info';
+                $icons = array('info' => '&#9432;', 'warning' => '&#9888;', 'critical' => '&#9940;');
+                $labels = array(
+                    'info'     => _T('Information', 'dashboard'),
+                    'warning'  => _T('Warning', 'dashboard'),
+                    'critical' => _T('Critical', 'dashboard'),
+                );
+
+                $versionDisclaimer = '<div class="version-disclaimer version-disclaimer-' . $level . '">'
+                    . '<div class="version-disclaimer-header">'
+                    . '<span class="version-disclaimer-icon">' . $icons[$level] . '</span>'
+                    . '<span class="version-disclaimer-label">' . $labels[$level] . '</span>'
+                    . '<span class="version-disclaimer-version">' . $availableVersion . '</span>'
+                    . '</div>'
+                    . '<div class="version-disclaimer-text">' . nl2br(htmlspecialchars($text)) . '</div>'
+                    . '</div>';
+            }
+        }
+
         $upToDateMsg = _T('System is up to date', 'dashboard');
         $updateAvailableMsg = _T('Update available', 'dashboard');
         $minorUpdateMsg = _T('Minor update available', 'dashboard');
@@ -150,6 +187,7 @@ class UpdatePanel extends Panel {
                         <span class="disclaimer-title">{$disclaimer_title}</span>
                     </div>
                     <div class="disclaimer-body">
+                        {$versionDisclaimer}
                         <p class="disclaimer-intro">{$disclaimer_intro}</p>
                         <ul class="disclaimer-checklist">
                             <li><span class="check-icon">&#10003;</span> {$disclaimer_1}</li>

@@ -841,14 +841,18 @@ class AdminDatabase(DatabaseHelper):
                     "current_version": result.current_version,
                     "available_version": result.available_version,
                     "last_check": str(result.last_check) if result.last_check else None,
-                    "last_check_status": result.last_check_status
+                    "last_check_status": result.last_check_status,
+                    "disclaimer_level": getattr(result, "disclaimer_level", None),
+                    "disclaimer_json": getattr(result, "disclaimer_json", None)
                 }
             return {
                 "update_available": False,
                 "current_version": None,
                 "available_version": None,
                 "last_check": None,
-                "last_check_status": "never"
+                "last_check_status": "never",
+                "disclaimer_level": None,
+                "disclaimer_json": None
             }
         except Exception as e:
             logger.error(f"Error getting update availability: {e}")
@@ -857,7 +861,9 @@ class AdminDatabase(DatabaseHelper):
                 "current_version": None,
                 "available_version": None,
                 "last_check": None,
-                "last_check_status": "error"
+                "last_check_status": "error",
+                "disclaimer_level": None,
+                "disclaimer_json": None
             }
 
     # ---- ACL FEATURE MANAGEMENT ----
