@@ -31,7 +31,8 @@ global $conf;
 
 fetchIniFile();
 
-function affichedebugJFKJFK($a, $title = "") {
+function affichedebugJFKJFK($a, $title = "")
+{
     // Example usage
     // $data = array("key" => "value");
     // affichedebugJFKJFK($data, "Debug Title");
@@ -51,21 +52,24 @@ function affichedebugJFKJFK($a, $title = "") {
     echo "</pre>";
 }
 
-function affichefile($a){
-    echo"<h3>";
+function affichefile($a)
+{
+    echo "<h3>";
     echo $a;
-    echo"</h3>";
+    echo "</h3>";
 }
 
 // INI read + surcharge (.local)
-function ini_read_sections($file) {
+function ini_read_sections($file)
+{
     if (!is_file($file)) return [];
     $c = file_get_contents($file);
-    $c = str_replace('#',';',$c); // Commentary support '#'
+    $c = str_replace('#', ';', $c); // Commentary support '#'
     return parse_ini_string($c, true, INI_SCANNER_RAW) ?: [];
 }
 
-function ini_module($module) {
+function ini_module($module)
+{
     static $cache = [];
     if (isset($cache[$module])) return $cache[$module];
 
@@ -78,19 +82,22 @@ function ini_module($module) {
 }
 
 // Recovers a value [section][key] Since MODULE.ini (+ .local)
-function ini_value($module, $section, $key, $default = null) {
+function ini_value($module, $section, $key, $default = null)
+{
     $cfg = ini_module($module);
     return $cfg[$section][$key] ?? $default;
 }
 
-function base_get($section, $key, $default = null) {
+function base_get($section, $key, $default = null)
+{
     return ini_value('base', $section, $key, $default);
 }
 
 // PDO since module.ini [database]
-function pdo_ini($module, $section = 'database') {
+function pdo_ini($module, $section = 'database')
+{
     static $pool = [];
-    $k = $module.'|'.$section;
+    $k = $module . '|' . $section;
     if (isset($pool[$k])) return $pool[$k];
 
     $cfg = ini_module($module);
@@ -120,12 +127,14 @@ function pdo_ini($module, $section = 'database') {
     return $pool[$k] = $pdo;
 }
 
-function id_clean($val) {
+function id_clean($val)
+{
     return preg_replace('/[^a-zA-Z0-9._\- ]/', '', (string)$val);
 }
 
 // Providers (OIDC)
-function get_providers_list($client) {
+function get_providers_list($client)
+{
     $client = id_clean($client) ?: 'MMC';
     $pdo = pdo_ini('admin');
 
@@ -141,7 +150,8 @@ function get_providers_list($client) {
 }
 
 // Complete details of a provider (OIDC + mapping LDAP + ACL)
-function get_provider_details($client, $provider) {
+function get_provider_details($client, $provider)
+{
     $client   = id_clean($client) ?: 'MMC';
     $provider = id_clean($provider);
 
@@ -182,7 +192,8 @@ function get_provider_details($client, $provider) {
 }
 
 // Mapping LDAP expected by your code : ['uid','givenName','sn','mail']
-function get_ldap_mapping($providerDetails) {
+function get_ldap_mapping($providerDetails)
+{
     $m = [];
     if (!empty($providerDetails['ldap_uid']))       $m['uid']       = $providerDetails['ldap_uid'];
     if (!empty($providerDetails['ldap_givenName'])) $m['givenName'] = $providerDetails['ldap_givenName'];
@@ -192,7 +203,8 @@ function get_ldap_mapping($providerDetails) {
 }
 
 // ACL According to Roles Keycloak + profiles_order + acl_map ; fallback lmcACL
-function get_acl_string($userInfo, $providerDetails) {
+function get_acl_string($userInfo, $providerDetails)
+{
     $roles = $userInfo->realm_access->roles ?? [];
     $order = preg_split('/\s+/', trim((string)($providerDetails['profiles_order'] ?? '')), -1, PREG_SPLIT_NO_EMPTY);
     $map   = $providerDetails['acl_map'] ?? [];
@@ -207,20 +219,57 @@ function get_acl_string($userInfo, $providerDetails) {
     return (string)($providerDetails['lmcACL'] ?? '');
 }
 
-function get_token($login) {
+function get_token($login)
+{
     $pdo = pdo_ini('admin');
     $pdo->prepare("DELETE FROM magic_link WHERE login = ? AND used_at IS NULL")->execute([$login]);
 
     $token = $pdo->query("SELECT UUID()")->fetchColumn();
+    $ttlMinutes = get_magic_link_ttl_minutes();
     $pdo->prepare("
         INSERT INTO magic_link (token, login, expires_at)
-        VALUES (?, ?, NOW() + INTERVAL 5 MINUTE)
-    ")->execute([$token, $login]);
+        VALUES (?, ?, DATE_ADD(NOW(), INTERVAL ? MINUTE))
+    ")->execute([$token, $login, $ttlMinutes]);
 
     return $token;
 }
 
-function magic_link_peek(string $token): ?string {
+function get_magic_link_ttl_minutes(): int
+{
+    global $conf;
+
+    $ttl = null;
+
+    try {
+        $pdo = pdo_ini('admin');
+        $stmt = $pdo->prepare(
+            "SELECT valeur FROM mmc_conf WHERE section = ? AND nom = ? AND activer = 1 LIMIT 1"
+        );
+        $stmt->execute(['global', 'magic_link_ttl_minutes']);
+        $value = $stmt->fetchColumn();
+        if ($value !== false && is_numeric($value)) {
+            $ttl = (int)$value;
+        }
+    } catch (Throwable $e) {
+        $ttl = null;
+    }
+
+    if ($ttl === null) {
+        $ttl = (int)($conf['global']['magic_link_ttl_minutes'] ?? 5);
+    }
+
+    if ($ttl < 1) {
+        $ttl = 1;
+    }
+    if ($ttl > 120) {
+        $ttl = 120;
+    }
+
+    return $ttl;
+}
+
+function magic_link_peek(string $token): ?string
+{
     $pdo = pdo_ini('admin');
     $s = $pdo->prepare("
         SELECT login FROM magic_link
