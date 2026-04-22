@@ -368,7 +368,7 @@ if [[ ${PACKAGES_LIST} == '' ]]; then
     exit 0
 fi
 
-echo "$PACKAGES_LIST" | while IFS=" " read -r ISO_FILENAME PACKAGE_UUID; do
+echo "$PACKAGES_LIST" | while IFS=$'\t' read -r ISO_FILENAME PACKAGE_UUID; do
     # Skip the header line if it exists
     if [[ "$ISO_FILENAME" == "iso_filename" ]]; then
         continue
