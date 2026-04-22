@@ -123,7 +123,6 @@ class UpdatePanel extends Panel {
                 }
 
                 $level = in_array($disclaimerLevel, array('info', 'warning', 'critical'), true) ? $disclaimerLevel : 'info';
-                $icons = array('info' => '&#9432;', 'warning' => '&#9888;', 'critical' => '&#9940;');
                 $labels = array(
                     'info'     => _T('Information', 'dashboard'),
                     'warning'  => _T('Warning', 'dashboard'),
@@ -132,7 +131,6 @@ class UpdatePanel extends Panel {
 
                 $versionDisclaimer = '<div class="version-disclaimer version-disclaimer-' . $level . '">'
                     . '<div class="version-disclaimer-header">'
-                    . '<span class="version-disclaimer-icon">' . $icons[$level] . '</span>'
                     . '<span class="version-disclaimer-label">' . $labels[$level] . '</span>'
                     . '<span class="version-disclaimer-version">' . $availableVersion . '</span>'
                     . '</div>'
