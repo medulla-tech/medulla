@@ -675,7 +675,7 @@ class UpdatesDatabase(DatabaseHelper):
         WHERE ent_id = :ent_id
             AND old_version = '11'
             AND new_version = '11'
-            AND old_code != '25H2';
+            AND oldcode != '25H2';
         """
         rows = session.execute(sql, {"ent_id": entity_id})
         for row in rows:
