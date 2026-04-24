@@ -69,6 +69,14 @@ function validatePasswords(string $pwd, string $pwd2, bool $isUpdate = false): a
 
 
 
+if (!isset($configPaths) || !is_array($configPaths)) {
+    $configPaths = [];
+}
+
+$configPaths['GLPI_INI_PATH']       = __sysconfdir__ . '/mmc/plugins/glpi.ini';
+$configPaths['GLPI_LOCAL_INI_PATH'] = __sysconfdir__ . '/mmc/plugins/glpi.ini.local';
+
+
 $u = (isset($_SESSION['glpi_user']) && is_array($_SESSION['glpi_user']))
     ? $_SESSION['glpi_user']
     : [];
@@ -424,8 +432,7 @@ if (isset($_POST["bcreate"])) {
             $postedProfileName = $profileIdToName[$key] ?? (xmlrpc_get_profile_name($postedProfileId, $tokenuser) ?: '');
         }
         if ($postedProfileName !== '') {
-            // Build ACL from DB features
-            $aclString = xmlrpc_build_acl_string_for_profile($postedProfileName);
+            $aclString = getGlpiAclForProfile($postedProfileName, $configPaths);
             if ($aclString !== '') {
                 $okAcl = @setAcl($postedUsername, $aclString);
                 if ($okAcl === false || $okAcl === null) {
