@@ -25,12 +25,12 @@
 -- Résout l'erreur SQL 42000: COLLATION 'utf8mb4_general_ci' is not valid for CHARACTER SET 'utf8mb3'
 
 START TRANSACTION;
-DELIMITER $$
-USE `xmppmaster`$$
 
-DROP PROCEDURE IF EXISTS `up_init_packages_Win10_X64_1903`;
+USE `xmppmaster`;
 
 DELIMITER $$
+
+DROP PROCEDURE IF EXISTS `up_init_packages_Win10_X64_1903`$$
 
 CREATE PROCEDURE `up_init_packages_Win10_X64_1903`()
 BEGIN
@@ -79,11 +79,7 @@ BEGIN
             aa.title LIKE '%X64%' COLLATE utf8mb3_general_ci;
 END$$
 
-DELIMITER ;
-
-DROP PROCEDURE IF EXISTS `up_init_packages_Win10_X64_21H1`;
-
-DELIMITER $$
+DROP PROCEDURE IF EXISTS `up_init_packages_Win10_X64_21H1`$$
 
 CREATE PROCEDURE `up_init_packages_Win10_X64_21H1`()
 BEGIN
@@ -131,11 +127,7 @@ BEGIN
             aa.title LIKE '%X64%' COLLATE utf8mb3_general_ci;
 END$$
 
-DELIMITER ;
-
-DROP PROCEDURE IF EXISTS `up_init_packages_Win10_X64_21H2`;
-
-DELIMITER $$
+DROP PROCEDURE IF EXISTS `up_init_packages_Win10_X64_21H2`$$
 
 CREATE PROCEDURE `up_init_packages_Win10_X64_21H2`()
 BEGIN
@@ -184,11 +176,7 @@ BEGIN
             aa.title LIKE '%X64%' COLLATE utf8mb3_general_ci;
 END$$
 
-DELIMITER ;
-
-DROP PROCEDURE IF EXISTS `up_init_packages_Win10_X64_22H2`;
-
-DELIMITER $$
+DROP PROCEDURE IF EXISTS `up_init_packages_Win10_X64_22H2`$$
 
 CREATE PROCEDURE `up_init_packages_Win10_X64_22H2`()
 BEGIN
@@ -236,11 +224,7 @@ BEGIN
             aa.title LIKE '%X64%' COLLATE utf8mb3_general_ci;
 END$$
 
-DELIMITER ;
-
-DROP PROCEDURE IF EXISTS `xmppmaster`.`up_init_packages_Win11_X64_25H2`;
-
-DELIMITER $$
+DROP PROCEDURE IF EXISTS `xmppmaster`.`up_init_packages_Win11_X64_25H2`$$
 
 CREATE PROCEDURE `up_init_packages_Win11_X64_25H2`()
 BEGIN
@@ -285,11 +269,7 @@ BEGIN
 
 END$$
 
-DELIMITER ;
-
-DROP PROCEDURE IF EXISTS `up_init_packages_Win11_X64`;
-
-DELIMITER $$
+DROP PROCEDURE IF EXISTS `up_init_packages_Win11_X64`$$
 
 CREATE PROCEDURE `up_init_packages_Win11_X64`()
 BEGIN
@@ -343,11 +323,7 @@ BEGIN
             aa.title NOT LIKE '%X86%' COLLATE utf8mb3_general_ci;
 END$$
 
-DELIMITER ;
-
-DROP PROCEDURE IF EXISTS `up_init_packages_Win11_X64_21H2`;
-
-DELIMITER $$
+DROP PROCEDURE IF EXISTS `up_init_packages_Win11_X64_21H2`$$
 
 CREATE PROCEDURE `up_init_packages_Win11_X64_21H2`()
 BEGIN
@@ -396,11 +372,7 @@ BEGIN
             aa.title NOT LIKE '%X86%'  COLLATE utf8mb3_general_ci;
 END$$
 
-DELIMITER ;
-
-DROP PROCEDURE IF EXISTS `up_init_packages_Win11_X64_22H2`;
-
-DELIMITER $$
+DROP PROCEDURE IF EXISTS `up_init_packages_Win11_X64_22H2`$$
 
 CREATE PROCEDURE `up_init_packages_Win11_X64_22H2`()
 BEGIN
@@ -451,11 +423,7 @@ BEGIN
 
 END$$
 
-DELIMITER ;
-
-DROP PROCEDURE IF EXISTS `xmppmaster`.`up_init_packages_Win11_X64_23H2`;
-
-DELIMITER $$
+DROP PROCEDURE IF EXISTS `xmppmaster`.`up_init_packages_Win11_X64_23H2`$$
 
 CREATE PROCEDURE `up_init_packages_Win11_X64_23H2`()
 BEGIN
@@ -500,11 +468,7 @@ BEGIN
             AND aa.title NOT LIKE '%X86%' COLLATE utf8mb3_general_ci;
 END$$
 
-DELIMITER ;
-
-DROP PROCEDURE IF EXISTS `xmppmaster`.`up_init_packages_Win11_X64_26H2`;
-
-DELIMITER $$
+DROP PROCEDURE IF EXISTS `xmppmaster`.`up_init_packages_Win11_X64_26H2`$$
 
 CREATE PROCEDURE `up_init_packages_Win11_X64_26H2`()
 BEGIN
@@ -549,11 +513,7 @@ BEGIN
 
 END$$
 
-DELIMITER ;
-
-DROP PROCEDURE IF EXISTS `xmppmaster`.`up_init_packages_Win11_X64_24H2`;
-
-DELIMITER $$
+DROP PROCEDURE IF EXISTS `xmppmaster`.`up_init_packages_Win11_X64_24H2`$$
 
 CREATE PROCEDURE `up_init_packages_Win11_X64_24H2`()
 BEGIN
@@ -597,65 +557,12 @@ BEGIN
             AND aa.title NOT LIKE '%X86%' COLLATE utf8mb3_general_ci;
 
 END$$
-
-DELIMITER ;
-
-DROP PROCEDURE IF EXISTS `xmppmaster`.`up_init_packages_Win11_X64_24H2`;
-
-DELIMITER $$
-
-CREATE PROCEDURE `up_init_packages_Win11_X64_24H2`()
-BEGIN
-    -- Supprime la table si elle existe (sans SQL dynamique)
-    DROP TABLE IF EXISTS up_packages_Win11_X64_24H2;
-    -- Création de la table avec jointure pour payloadfiles et updateid_package
-    CREATE TABLE up_packages_Win11_X64_24H2 AS
-         SELECT
-            aa.updateid,
-            bb.updateid AS updateid_package,
-            aa.revisionid,
-            aa.creationdate,
-            aa.compagny,
-            aa.product,
-            aa.productfamily,
-            aa.updateclassification,
-            aa.prerequisite,
-            aa.title,
-            aa.description,
-            aa.msrcseverity,
-            aa.msrcnumber,
-            aa.kb,
-            aa.languages,
-            aa.category,
-            aa.supersededby,
-            aa.supersedes,
-            bb.payloadfiles,
-            aa.revisionnumber,
-            aa.bundledby_revision,
-            aa.isleaf,
-            aa.issoftware,
-            aa.deploymentaction,
-            aa.title_short
-         FROM
-            xmppmaster.update_data aa
-            JOIN xmppmaster.update_data bb ON bb.bundledby_revision = aa.revisionid
-         WHERE
-            aa.title LIKE '%Windows 11 Version 24H2%'
-            AND aa.product LIKE '%Windows 11%'
-            AND aa.title NOT LIKE '%ARM64%'
-            AND aa.title NOT LIKE '%X86%' COLLATE utf8mb3_general_ci;
-
-END$$
-
-DELIMITER ;
-
 
 -- Drop the existing primary key from the table `xmppmaster`.`up_packages_major_Lang_code`
 ALTER TABLE `xmppmaster`.`up_packages_major_Lang_code` 
 DROP PRIMARY KEY,
 -- Add a new composite primary key consisting of `lang_code`, `major`, and `iso_filename`
 ADD PRIMARY KEY (`lang_code`, `major`, `iso_filename`);
-
 
 --
 -- Dumping data for table `up_packages_major_Lang_code` for windows 10
@@ -697,7 +604,6 @@ INSERT IGNORE INTO up_packages_major_Lang_code (major, lang_code, num_code, coun
 ('10', 'zh-CHT', '7C04', 'Chinese - Traditional', 0, 'Win10_22H2_Chinese_Traditional_x64.iso', 'Win10upd_22H2_Chinese_Traditionalx64'),
 ('10', 'zh-CN', '0804', 'Chinese (Simplified) - China', 0, 'Win10_22H2_Chinese_Simplified_x64.iso', 'Win10upd_22H2_Chinese_Simplifiedx64_');
 
-
 --
 -- Dumping data for table `up_packages_major_Lang_code` for windows server 2025
 --
@@ -738,7 +644,6 @@ INSERT IGNORE INTO up_packages_major_Lang_code (major, lang_code, num_code, coun
 ('MSO25', 'uk-UA', '0422', 'Ukrainian', 0, 'SW_DVD9_Win_Server_STD_CORE_2025_24H2_64Bit_Ukrainian_DC_STD_MLF_X23-81892.ISO', 'MSO25upd_24H2_Ukrainian_x64_pbqbowfj'),
 ('MSO25', 'zh-CHT','7C04', 'Chinese - Traditional', 0, 'SW_DVD9_Win_Server_STD_CORE_2025_24H2_64Bit_ChnTrad_DC_STD_MLF_X23-81888.ISO', 'MSO25upd_24H2_Chinese_Traditionalx64'),
 ('MSO25', 'zh-CN', '0804', 'Chinese (Simplified) - China', 0,'SW_DVD9_Win_Server_STD_CORE_2025_24H2_64Bit_ChnSimp_DC_STD_MLF_X23-81887.ISO', 'MSO25upd_24H2_Chinese_Simplifiedx64_');
-
 
 -- Supprime les entrees Win11 24H2 remplacees par 25H2
 DELETE FROM `up_packages_major_Lang_code` WHERE major = 11 AND iso_filename LIKE '%24H2%';
@@ -787,16 +692,13 @@ UPDATE `xmppmaster`.`up_packages_major_Lang_code`
 SET `package_uuid` = LEFT(COALESCE(`package_uuid`, ''), 36)
 WHERE CHAR_LENGTH(COALESCE(`package_uuid`, '')) > 36;
 
-
-
 -- PROCEDURE : up_init_packages_Windows_Security_platform
 -- Description :
 --   Cette procedure cree une table temporaire up_packages_Windows_Security_platform
 --   filtrée pour Windows Security platform uniquement (titre et produit)
 
-DELIMITER $$
-USE `xmppmaster`$$
 DROP PROCEDURE IF EXISTS `up_init_packages_Windows_Security_platform`$$
+
 CREATE PROCEDURE `up_init_packages_Windows_Security_platform`()
 BEGIN
 DROP TABLE IF EXISTS up_packages_Windows_Security_platform;
@@ -844,9 +746,6 @@ CREATE TABLE up_packages_Windows_Security_platform AS
         );
 END$$
 
-DELIMITER ;
-
-
 -- Enregistrement de la procédure dans up_list_produit
 INSERT IGNORE INTO `xmppmaster`.`up_list_produit` (`name_procedure`) VALUES ('up_init_packages_Windows_Security_platform');
 
@@ -873,15 +772,13 @@ INSERT IGNORE INTO `xmppmaster`.`applicationconfig` (
 -- procédures commençant par up_init_packages_*, y compris la nouvelle.
 CALL `xmppmaster`.`up_create_product_tables`();
 
-
 -- PROCEDURE : up_windows_malicious_software_tool
 -- Description :
 --   Corrige les comparaisons LIKE pour eviter les erreurs de collation
 --   entre variables de procedure et colonnes de update_data.
 
-DELIMITER $$
-USE `xmppmaster`$$
 DROP PROCEDURE IF EXISTS `up_windows_malicious_software_tool`$$
+
 CREATE PROCEDURE `up_windows_malicious_software_tool`(
     IN PRODUCTtable VARCHAR(80),
     IN ARCHItable VARCHAR(20),
@@ -935,9 +832,6 @@ proc_Exit: BEGIN
     END IF;
 END$$
 
-DELIMITER ;
-
-
 -- PROCEDURE : up_init_table_major_win_complet
 -- Description :
 --   Reconstruit up_major_win puis up_machine_major_windows.
@@ -947,13 +841,11 @@ DELIMITER ;
 --   - sinon => False
 
 USE `xmppmaster`;
-DROP PROCEDURE IF EXISTS `up_init_table_major_win_complet`;
+DROP PROCEDURE IF EXISTS `up_init_table_major_win_complet`$$
 
 USE `xmppmaster`;
-DROP PROCEDURE IF EXISTS `xmppmaster`.`up_init_table_major_win_complet`;
+DROP PROCEDURE IF EXISTS `xmppmaster`.`up_init_table_major_win_complet`$$
 
-DELIMITER $$
-USE `xmppmaster`$$
 CREATE PROCEDURE `up_init_table_major_win_complet`()
 BEGIN
     START TRANSACTION;
@@ -1099,10 +991,9 @@ BEGIN
         );
 END$$
 
-DELIMITER ;
-
-
 -- Enregistrement de la version
-UPDATE version SET Number = 101;
+UPDATE version SET Number = 101$$
 
-commit;
+commit$$
+
+DELIMITER ;
