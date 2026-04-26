@@ -682,7 +682,7 @@ update_550_to_551() {
     write_to_log "$str"
     update_medulla
 
-    # Delete prvious update packages
+    # Delete previous update packages
     str="[=] Deleting previous Windows update packages..."
     echo "$str"
     write_to_log "$str"
@@ -735,6 +735,83 @@ update_550_to_551() {
 
     echo "5.5.1" > /var/lib/mmc/version
     str="[v] Medulla config update from 5.5.0 to 5.5.1 applied successfully."
+    echo "$str"
+    write_to_log "$str"
+    if [[ -f /tmp/update_medulla.sh ]]; then
+        exec /tmp/update_medulla.sh "$@"
+    else
+        exec /usr/sbin/update_medulla.sh "$@"
+    fi
+}
+
+update_551_to_552() {
+    str="Applying Medulla config update from 5.5.1 to 5.5.2..."
+    echo "$str"
+    write_to_log "$str"
+    update_medulla
+
+    # Delete --inventory-tag=* from .generation_options file but keeping all other options (if any)
+    str="[=] Removing --inventory-tag option from .generation_options file..."
+    echo "$str"
+    write_to_log "$str"
+    sed -i 's/--inventory-tag=[^ ]*//g' /var/lib/pulse2/clients/.generation_options
+    if [[ $? -ne 0 ]]; then
+        str="[x] Error removing --inventory-tag option from .generation_options file."
+        echo "$str"
+        write_to_log "$str"
+    fi
+    str="[v] --inventory-tag option removed from .generation_options file successfully."
+    echo "$str"
+    write_to_log "$str"
+
+    # Update davos_opts with locales=en_US.UTF-8 keyboard-layouts=NONE
+    str="[=] Updating davos_opts with locales=en_US.UTF-8 keyboard-layouts=NONE..."
+    echo "$str"
+    write_to_log "$str"
+    mysql --defaults-group-suffix=medulla imaging -e "UPDATE ImagingServer SET davos_opts = CONCAT(IFNULL(davos_opts, ''), ' locales=en_US.UTF-8 keyboard-layouts=NONE') WHERE davos_opts IS NULL OR davos_opts NOT LIKE '%locales=%'"
+    if [[ $? -ne 0 ]]; then
+        str="[x] Error updating davos_opts in ImagingServer table."
+        echo "$str"
+        write_to_log "$str"
+    fi
+    str="[v] davos_opts updated successfully in ImagingServer table."
+    echo "$str"
+    write_to_log "$str"
+
+    # Create cron job for checking for Medulla updates
+    str="[=] Setting up cron job for checking for Medulla updates..."
+    echo "$str"
+    write_to_log "$str"
+    # Create /etc/cron.d/check_medulla_updates
+    echo "0 3 * * * root /usr/sbin/check_medulla_updates.sh 2>&1 | tee -a /tmp/check_medulla_updates.log" > /etc/cron.d/check_medulla_updates
+    # Restart cron service to apply changes
+    systemctl restart cron
+    if [[ $? -ne 0 ]]; then
+        str="[x] Error setting up cron job for checking for Medulla updates. Aborting."
+        echo "$str"
+        write_to_log "$str"
+        exit 1
+    fi
+    str="[v] Cron job for checking for Medulla updates set up successfully."
+    echo "$str"
+    write_to_log "$str"
+
+    # Update glpi_crypt_key setting in saas_application table: set it to empty string if it's currently NULL, 
+    str="[=] Updating glpi_crypt_key in saas_application table..."
+    echo "$str"
+    write_to_log "$str"
+    mysql --defaults-group-suffix=medulla admin -e "UPDATE saas_application SET setting_value = '' WHERE setting_name = 'glpi_crypt_key' and setting_value IS NULL;"
+    if [[ $? -ne 0 ]]; then
+        str="[x] Error updating glpi_crypt_key in saas_application table."
+        echo "$str"
+        write_to_log "$str"
+    fi
+    str="[v] glpi_crypt_key updated successfully in saas_application table."
+    echo "$str"
+    write_to_log "$str"
+
+    echo "5.5.2" > /var/lib/mmc/version
+    str="[v] Medulla config update from 5.5.1 to 5.5.2 applied successfully."
     echo "$str"
     write_to_log "$str"
     if [[ -f /tmp/update_medulla.sh ]]; then
@@ -863,6 +940,11 @@ case "$CURRENT_VERSION" in
     "5.5.0")
         if [[ "$AVAILABLE_VERSION" > "5.5.0" ]]; then
             update_550_to_551
+        fi
+        ;;
+    "5.5.1")
+        if [[ "$AVAILABLE_VERSION" > "5.5.1" ]]; then
+            update_551_to_552
         fi
         ;;
     *)
