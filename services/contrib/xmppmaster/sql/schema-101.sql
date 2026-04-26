@@ -558,6 +558,8 @@ BEGIN
 
 END$$
 
+DELIMITER ;
+
 -- Drop the existing primary key from the table `xmppmaster`.`up_packages_major_Lang_code`
 ALTER TABLE `xmppmaster`.`up_packages_major_Lang_code` 
 DROP PRIMARY KEY,
@@ -697,6 +699,8 @@ WHERE CHAR_LENGTH(COALESCE(`package_uuid`, '')) > 36;
 --   Cette procedure cree une table temporaire up_packages_Windows_Security_platform
 --   filtrée pour Windows Security platform uniquement (titre et produit)
 
+DELIMITER $$
+
 DROP PROCEDURE IF EXISTS `up_init_packages_Windows_Security_platform`$$
 
 CREATE PROCEDURE `up_init_packages_Windows_Security_platform`()
@@ -746,6 +750,8 @@ CREATE TABLE up_packages_Windows_Security_platform AS
         );
 END$$
 
+DELIMITER ;
+
 -- Enregistrement de la procédure dans up_list_produit
 INSERT IGNORE INTO `xmppmaster`.`up_list_produit` (`name_procedure`) VALUES ('up_init_packages_Windows_Security_platform');
 
@@ -776,6 +782,8 @@ CALL `xmppmaster`.`up_create_product_tables`();
 -- Description :
 --   Corrige les comparaisons LIKE pour eviter les erreurs de collation
 --   entre variables de procedure et colonnes de update_data.
+
+DELIMITER $$
 
 DROP PROCEDURE IF EXISTS `up_windows_malicious_software_tool`$$
 
@@ -840,10 +848,10 @@ END$$
 --   - old_version=10 et new_version=11 et is_active=True => True
 --   - sinon => False
 
-USE `xmppmaster`;
+USE `xmppmaster`$$
 DROP PROCEDURE IF EXISTS `up_init_table_major_win_complet`$$
 
-USE `xmppmaster`;
+USE `xmppmaster`$$
 DROP PROCEDURE IF EXISTS `xmppmaster`.`up_init_table_major_win_complet`$$
 
 CREATE PROCEDURE `up_init_table_major_win_complet`()
@@ -991,9 +999,11 @@ BEGIN
         );
 END$$
 
--- Enregistrement de la version
-UPDATE version SET Number = 101$$
-
-commit$$
-
 DELIMITER ;
+
+-- Enregistrement de la version
+UPDATE version SET Number = 101;
+
+commit;
+
+
