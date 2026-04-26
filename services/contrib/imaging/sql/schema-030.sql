@@ -1,5 +1,5 @@
 --
---  (c) 2024-2025 Medulla, http://www.medulla-tech.io
+--  (c) 2024-2026 Medulla, http://www.medulla-tech.io
 --
 --
 -- This file is part of MMC, http://www.medulla-tech.io
@@ -17,16 +17,15 @@
 -- You should have received a copy of the GNU General Public License
 -- along with MMC; If not, see <http://www.gnu.org/licenses/.>
 
--- Ajout du paramètre glpi_crypt_key pour le déchiffrement des tokens GLPI 11
--- La clé doit être encodée en base64 (contenu de /usr/share/glpi/config/glpicrypt.key)
+use imaging;
+SET SESSION character_set_server=UTF8;
+SET NAMES 'utf8';
 
 START TRANSACTION;
-USE admin;
 
-INSERT INTO saas_application (setting_name, setting_value, setting_description)
-VALUES ('glpi_crypt_key', '', 'GLPI 11 sodium encryption key (base64)')
-ON DUPLICATE KEY UPDATE setting_description = VALUES(setting_description);
+-- Update the post install script for Windows 11 to include partition extension script
+UPDATE PostInstallScript SET value = "MountSystem\n\nCopySysprep windows11oem.xml\n\nCopyRunAtOnce\n\nCopyRunAtOnce ExtendOSPartition.ps1\n\nCopyAgent\n\nCopyDrivers Windows11\n" WHERE id = 20;
 
-UPDATE version SET Number = 8;
 
+UPDATE version set Number = 30;
 COMMIT;
