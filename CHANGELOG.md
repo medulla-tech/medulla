@@ -1,5 +1,15 @@
 # Change Log
 
+## [5.5.2](https://github.com/medulla-tech/medulla/releases/tag/5.5.2) (2026-04-25)
+- [FEATURE] UI: Allow resizing columns in tables
+- [FEATURE] Add a checkbox to hide windows updates from packages list
+- [FEATURE] Allow magic link TTL to be configurable
+- [FEATURE] Allow displaying a message in update widget before updating Medulla
+- [FEATURE] Generate latest FR, EN_UK and EN_US major upadate packages
+- [BUGFIX]  Fix reset of selection of products in updates module
+- [BUGFIX]  Fix administator account activation in mastering respose file
+- [BUGFIX]  Fix OS partition extension after mastering a client
+
 ## [5.5.1](https://github.com/medulla-tech/medulla/releases/tag/5.5.1) (2026-04-14)
 - [FEATURE] Improve kiosk profile creation
 - [FEATURE] Uninstall an update if blacklisted
