@@ -78,6 +78,10 @@ $ajax->displayDivToUpdate();
                     <td style="padding:6px 0;"><input type="text" id="modal_add_imei" style="width:100%; padding:5px; box-sizing:border-box;" /></td>
                 </tr>
                 <tr>
+                    <td style="padding:6px 0; font-weight:bold;"><?php echo _T("Email", "mobile"); ?></td>
+                    <td style="padding:6px 0;"><input type="text" id="modal_add_custom1" style="width:100%; padding:5px; box-sizing:border-box;" /></td>
+                </tr>
+                <tr>
                     <td style="padding:6px 0; font-weight:bold;"><?php echo _T("Configuration", "mobile"); ?> *</td>
                     <td style="padding:6px 0;">
                         <select id="modal_configuration_id" style="width:100%; padding:5px; box-sizing:border-box;">
@@ -139,6 +143,7 @@ function modalGroupRemove() {
 function openAddDeviceModal() {
     jQuery('#modal_add_phone').val('');
     jQuery('#modal_add_imei').val('');
+    jQuery('#modal_add_custom1').val('');
     jQuery('#modal_desc_zone').val('');
     jQuery('#modal_configuration_id').val('');
     jQuery('#addDeviceError').hide().text('');
@@ -162,6 +167,7 @@ jQuery('#addDeviceModal').on('click', function(e) {
 function submitAddDevice() {
     var name   = jQuery('#modal_add_phone').val().trim();
     var imei   = jQuery('#modal_add_imei').val().trim();
+    var custom1 = jQuery('#modal_add_custom1').val().trim();
     var desc   = jQuery('#modal_desc_zone').val().trim();
     var config = jQuery('#modal_configuration_id').val();
 
@@ -184,6 +190,7 @@ function submitAddDevice() {
     var postData = {
         'add-phone':        name,
         'add-imei':         imei,
+        'add-custom1':      custom1,
         'desc-zone':        desc,
         'configuration_id': config,
         'groups':           groups

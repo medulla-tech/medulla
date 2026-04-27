@@ -444,6 +444,11 @@ $pageConfigureMdmRoleAjax->setFile("modules/mobile/mobile/configureMdmRoleAjax.p
 $pageConfigureMdmRoleAjax->setOptions(array("AJAX" => true, "visible" => false));
 $submod->addPage($pageConfigureMdmRoleAjax);
 
+$pageSendEnrollmentEmailAjax = new Page("sendEnrollmentEmailAjax", _T('Send Enrollment Email', 'mobile'));
+$pageSendEnrollmentEmailAjax->setFile("modules/mobile/mobile/sendEnrollmentEmailAjax.php");
+$pageSendEnrollmentEmailAjax->setOptions(array("AJAX" => true, "visible" => false));
+$submod->addPage($pageSendEnrollmentEmailAjax);
+
 $pageNetfilterRules = new Page("netfilterRules", _T('Filter Rules', 'mobile'));
 $pageNetfilterRules->setFile("modules/mobile/mobile/netfilterRules.php");
 $pageNetfilterRules->setOptions(array("visible" => false));

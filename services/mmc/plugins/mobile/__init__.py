@@ -29,8 +29,8 @@ def activate():
         return False
     return True
 
-def addHmdmDevice(name, configuration_id, description="", groups=None, imei="", phone="", device_id=None):
-    return MobileDatabase().addHmdmDevice(name, configuration_id, description, groups, imei, phone, device_id)
+def addHmdmDevice(name, configuration_id, description="", groups=None, imei="", phone="", device_id=None, custom1=""):
+    return MobileDatabase().addHmdmDevice(name, configuration_id, description, groups, imei, phone, device_id, custom1)
 
 def updateHmdmDevice(device_data):
     return MobileDatabase().updateHmdmDevice(device_data)
@@ -43,6 +43,9 @@ def getHmdmDevicesOsCount():
 
 def getHmdmConfigurationById(id):
     return MobileDatabase().getHmdmConfigurationById(id)
+
+def getHmdmConfigQrUrl():
+    return MobileDatabase().getHmdmConfigQrUrl()
 
 def updateHmdmConfiguration(config_data):
     return MobileDatabase().updateHmdmConfiguration(config_data)

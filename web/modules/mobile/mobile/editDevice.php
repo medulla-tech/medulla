@@ -95,6 +95,7 @@ if (isset($_POST['baddgroup_x'])) {
         'number' => $_POST['device_name'] ?? $device['number'],
         'description' => $_POST['description'] ?? '',
         'imei' => $_POST['imei'] ?? '',
+        'custom1' => $_POST['custom1'] ?? '',
         'configurationId' => $_POST['configuration_id'] ?? $device['configurationId'],
         'groups' => array_keys($selected_groups)
     );
@@ -117,6 +118,7 @@ $deviceName = $device['number'] ?? '';
 $description = $device['description'] ?? '';
 $configurationId = $device['configurationId'] ?? '';
 $imei = $device['imei'] ?? '';
+$custom1 = $device['custom1'] ?? '';
 $phone = $device['phone'] ?? '';
 
 ?>
@@ -130,7 +132,9 @@ $f->add(new TrFormElement(_T("Device's name", "mobile"), new InputTpl("device_na
 
 $f->add(new TrFormElement(_T("Description", "mobile"), new TextareaTpl("description")), array("value" => $description));
 
-$f->add(new TrFormElement(_T("IMEI", "mobile"), new InputTpl("imei")), array("value" => $imei));
+$f->add(new TrFormElement(_T("IMEI", "mobile"), new InputTpl("imei", "/.*/", "")), array("value" => $imei));
+
+$f->add(new TrFormElement(_T("Email", "mobile"), new InputTpl("custom1", "/.*/", "")), array("value" => $custom1));
 
 $config_names = [];
 $config_ids = [];

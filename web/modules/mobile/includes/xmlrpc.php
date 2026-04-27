@@ -1,6 +1,6 @@
 <?php
-function xmlrpc_add_hmdm_device($name, $configuration_id, $description="", $groups=null, $imei="", $phone="", $device_id=null){
-    return xmlCall("mobile.addHmdmDevice", array($name, $configuration_id, $description, $groups, $imei, $phone, $device_id));
+function xmlrpc_add_hmdm_device($name, $configuration_id, $description="", $groups=null, $imei="", $phone="", $device_id=null, $custom1=""){
+    return xmlCall("mobile.addHmdmDevice", array($name, $configuration_id, $description, $groups, $imei, $phone, $device_id, $custom1));
 }
 function xmlrpc_update_hmdm_device($device_data){
     return xmlCall("mobile.updateHmdmDevice", array($device_data));
@@ -61,6 +61,9 @@ function xmlrpc_delete_configuration_by_id($id){
 }
 function xmlrpc_get_hmdm_configuration_by_id($id){
     return xmlCall("mobile.getHmdmConfigurationById", array($id));
+}
+function xmlrpc_get_hmdm_config_qr_url(){
+    return xmlCall("mobile.getHmdmConfigQrUrl", array());
 }
 function xmlrpc_update_hmdm_configuration($config_data){
     return xmlCall("mobile.updateHmdmConfiguration", array($config_data));

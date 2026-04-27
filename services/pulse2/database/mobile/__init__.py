@@ -173,7 +173,7 @@ class MobileDatabase(DatabaseHelper):
 
         return devices_nano
 
-    def addHmdmDevice(self, name, configuration_id, description="", groups=None, imei="", phone="", device_id=None):
+    def addHmdmDevice(self, name, configuration_id, description="", groups=None, imei="", phone="", device_id=None, custom1=""):
         """
         Create or update a device in HMDM.
         
@@ -229,6 +229,10 @@ class MobileDatabase(DatabaseHelper):
         if phone:
             device_data["phone"] = phone
             logging.getLogger().info(f"Added phone to payload: {phone}")
+
+        if custom1:
+            device_data["custom1"] = custom1
+            logging.getLogger().info(f"Added custom1 to payload: {custom1}")
 
         logging.getLogger().info(f"=== FINAL PAYLOAD ===")
         logging.getLogger().info(f"{json.dumps(device_data, indent=2)}")
@@ -298,6 +302,10 @@ class MobileDatabase(DatabaseHelper):
         phone = device_data.get('phone', current_device.get('phone'))
         if phone:
             update_payload['phone'] = phone
+
+        custom1 = device_data.get('custom1', current_device.get('custom1'))
+        if custom1:
+            update_payload['custom1'] = custom1
         
         if 'groups' in device_data:
             logger.info(f"Groups in device_data: {device_data['groups']}")
@@ -1834,7 +1842,7 @@ class MobileDatabase(DatabaseHelper):
                     "description": d.get("description", ""),
                     "statusCode": d.get("statusCode", ""),
                     "configurationId": d.get("configurationId", ""),
-                    "custom1": d.get("statusCode", ""),
+                    "custom1": d.get("custom1", ""),
                     "custom2": d.get("custom2", ""),
                     "custom3": d.get("custom3", ""),
                     "publicIp": d.get("publicIp", ""),
@@ -1968,6 +1976,16 @@ class MobileDatabase(DatabaseHelper):
         except Exception as e:
             logging.getLogger().error(f"Error fetching configuration {config_id}: {e}")
             return None
+
+    def getHmdmConfigQrUrl(self):
+        config = self.getHmdmConfigurationById(1)
+        if not config:
+            return None
+        qr_key = config.get('qrCodeKey')
+        if not qr_key:
+            logging.getLogger().error("No qrCodeKey found for configuration 1")
+            return None
+        return f"{self.BASE_URL}/public/qr/{qr_key}?create=0&useId=imei"
 
     def updateHmdmConfiguration(self, config_data: dict):
         """
