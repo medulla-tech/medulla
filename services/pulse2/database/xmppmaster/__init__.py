@@ -622,7 +622,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 if entity_id is not None:
                     query += " AND entity_id = :entity_id"
                     params["entity_id"] = entity_id
-                logger.debug(f"Exécutant la requête: {query} avec les paramètres: {params}")
+                logger.error(f"Exécutant la requête: {query} avec les paramètres: {params}")
                 session.execute(text(query), params)
 
             session.commit()
@@ -17067,6 +17067,9 @@ FROM (
             presence: si True, filtre uniquement les machines activées.
         Returns:
             dict: statistiques par entité.
+
+        """
+        try:
             results = {"entity": {}}
             presence_filter = "AND mw.enabled = 1" if presence else ""
             total_presence_filter = "AND m.enabled = 1" if presence else ""

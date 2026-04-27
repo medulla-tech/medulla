@@ -191,12 +191,20 @@ $title   = (isset($_GET['title']) ? htmlentities($_GET['title']) : "");
 $updateid   = (isset($_GET['pid']) ? htmlentities($_GET['pid']) : "");
 $message_update = "";
 $platform=(isset($_GET['platform']) ? htmlentities($_GET['platform']) : "");
-$result =  xmlrpc_get_machines_infos_generic(["id", "platform"], [$id_machine_xmpp, "%Windows%"],"",0,1);
+$cn = isset($sanitized_get['name']) ? $sanitized_get['name'] : "";
+
+$w10to10 = intval($_GET['W10to10'] ?? 0);
+$w10to11 = intval($_GET['W10to11'] ?? 0);
+$w11to11 = intval($_GET['W11to11'] ?? 0);
+$nb_machine = $w10to10 + $w10to11 + $w11to11;
+$complete_name = isset($sanitized_get['completename']) ? $sanitized_get['completename'] : "";
 
 
-$version = htmlentities($_GET['version']);
+$formtitle = sprintf("%s [%s] ", _T('Deploy Major Updates On entity', 'updates'), $complete_name);
+$message_update = ($nb_machine > 1)
+    ? sprintf(_T('%s machines to update for entity %s', 'updates'), $nb_machine, $complete_name)
+    : sprintf(_T('%s machine to update for entity %s', 'updates'), $nb_machine, $complete_name);
 
-$deployName = get_def_package_label($label,"(iso)", "-@upd@");
 $current = time();
 $start_date = date("Y-m-d H:i:s", $current);
 $_end_date = strtotime("+7day", $current);
@@ -209,81 +217,82 @@ if(isset($_POST['bconfirm'],
          $_POST['deployment_intervals'])) {
           verifyCSRFToken($_POST);
 
-$typeaction = !empty($_GET['typeaction']) ? htmlentities($_GET['typeaction']) : "windows";
-$res = xmlrpc_get_os_update_major_details($_POST['entity_id'], $typeaction);
+            $typeaction = !empty($_GET['typeaction']) ? htmlentities($_GET['typeaction']) : "windows";
+            $res = xmlrpc_get_os_update_major_details($_POST['entity_id'], $typeaction);
+            $start_date = $_POST['start_date'] ?? null;
+            $end_date = $_POST['end_date'] ?? null;
+            $deployment_intervals = $_POST['deployment_intervals'];
 
-$start_date = $_POST['start_date'] ?? null;
-$end_date = $_POST['end_date'] ?? null;
-$deployment_intervals = $_POST['deployment_intervals'];
+            if (empty($start_date)) {
+                header("location:". urlStrRedirect("updates/updates/index"));
+                new NotifyWidgetFailure(_T('Slot start date missing', 'msc'));
+                exit;
+            }
 
-if (empty($start_date)) {
-    header("location:". urlStrRedirect("updates/updates/index"));
-    new NotifyWidgetFailure(_T('Slot start date missing', 'msc'));
-    exit;
-}
+            if (empty($end_date)) {
+                header("location:". urlStrRedirect("updates/updates/index"));
+                new NotifyWidgetFailure(_T('Slot end date missing', 'msc'));
+                exit;
+            }
 
-if (empty($end_date)) {
-    header("location:". urlStrRedirect("updates/updates/index"));
-    new NotifyWidgetFailure(_T('Slot end date missing', 'msc'));
-    exit;
-}
+            $nbmachineidsuccess = 0;
+            $nbmachineidfail = 0;
 
-$nbmachineidsuccess = 0;
-$nbmachineidfail = 0;
-
-$arraymessage="";
-foreach ($res['machine'] as $indexarray => $value)
-{
-    // creation du nom du deployement
-    $segments = explode('_', $res['package_id'][$indexarray]); // on utilise pas tout le nom pour
-    $title_deployement = sprintf("%s--@upd@--%s_%s_%s_%s" ,
-                                 htmlentities($value),
-                                 htmlentities($res['update'][$indexarray]),
-                                 htmlentities($_SESSION['login']),
-                                 htmlentities($segments[2]),
-                                 htmlentities(date("Ymd")));
-    // lancement du deployement
-    $result = xmlrpc_deploy_update_major(htmlentities($res['package_id'][$indexarray]),
-                                         htmlentities($res['uuid_inventorymachine'][$indexarray]),
-                                         htmlentities($value),
-                                         htmlentities($title_deployement),
-                                         htmlentities($start_date),
-                                         htmlentities($end_date),
-                                         htmlentities($deployment_intervals),
-                                         htmlentities($_SESSION['login']));
+            $arraymessage="";
+            foreach ($res['machine'] as $indexarray => $value)
+            {
+                // creation du nom du deployement
+                $segments = explode('_', $res['package_id'][$indexarray]); // on utilise pas tout le nom pour
+                $title_deployement = sprintf("%s--@upd@--%s_%s_%s_%s" ,
+                                            htmlentities($value),
+                                            htmlentities($res['update'][$indexarray]),
+                                            htmlentities($_SESSION['login']),
+                                            htmlentities($segments[2]),
+                                            htmlentities(date("Ymd")));
+                // lancement du deployement
+                $result = xmlrpc_deploy_update_major(htmlentities($res['package_id'][$indexarray]),
+                                                    htmlentities($res['uuid_inventorymachine'][$indexarray]),
+                                                    htmlentities($value),
+                                                    htmlentities($title_deployement),
+                                                    htmlentities($start_date),
+                                                    htmlentities($end_date),
+                                                    htmlentities($deployment_intervals),
+                                                    htmlentities($_SESSION['login']));
 
 
-    if ( $result['success'] == false)
-    {
-        $nbmachineidfail+=1;
-        $mesg = (!empty($result["msg"])) ? htmlentities($result["msg"]) : "";
-        $arraymessage .= $result['msg'] . "<br> ffff <br>";
-    }else
-    {   // lancement success
-        $nbmachineidsuccess += 1;
-    };
-} // end foreach
+                if ( $result['success'] == false)
+                {
+                    $nbmachineidfail+=1;
+                    $mesg = (!empty($result["msg"])) ? htmlentities($result["msg"]) : "";
+                    $arraymessage .= htmlentities($result['msg']) . "<br>";
+                }else
+                {   // lancement success
+                    $nbmachineidsuccess += 1;
+                };
+            } // end foreach
 
-// $res['nb_machine']
-$mesg = sprintf("%d lancement deployement success<br>%d lancement deployement fail<br>",$nbmachineidsuccess,
-                        $nbmachineidfail);
-$mesg.=$arraymessage;
-//exit(0);
-    // $mesg = (!empty($result["msg"])) ? htmlentities($result["msg"]) : "";
-// $res['nb_machine']="";
+            // $res['nb_machine']
+            $mesg = sprintf("%d lancement deployement success<br>%d lancement deployement fail<br>",$nbmachineidsuccess,
+                                    $nbmachineidfail);
+            $mesg.=$arraymessage;
+            //exit(0);
+                // $mesg = (!empty($result["msg"])) ? htmlentities($result["msg"]) : "";
+            // $res['nb_machine']="";
 
-header("location:". urlStrRedirect("updates/updates/index"));
- if($nbmachineidfail == 0) {
-        new NotifyWidgetSuccess($mesg);
-    } else {
-        new NotifyWidgetFailure($mesg);
-    }
-    exit;
+            header("location:". urlStrRedirect("updates/updates/index"));
+            if($nbmachineidfail == 0) {
+                    new NotifyWidgetSuccess($mesg);
+                } else {
+                    new NotifyWidgetFailure($mesg);
+                }
+                exit;
 
 } else {
-    $f = new PopupForm($formtitle, 'Form', '480px');
-    $mach = sprintf("%s [%s %s]",$message_update, $cn, $platform);
-    $f->add(new TitleElement($mach,1));
+    // vue popup MajorEntitiesList
+    $f = new PopupForm($formtitle, 'Formupdate', '480px');
+    // $mach = sprintf("%s [%s %s]",$message_update, $cn, $platform);
+
+    $f->add(new TitleElement($message_update,1));
     $f->push(new Table());
 
     $hiddenentity_id = new HiddenTpl("entity_id");
