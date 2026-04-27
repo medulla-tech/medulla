@@ -561,9 +561,9 @@
 .quick-actions-popup .actions-section,
 .quick-actions-popup .custom-command-section,
 .quick-actions-popup .monitoring-section {
-  background: var(--color-bg-light);
+  background: var(--gray-50);
   border-radius: var(--radius-lg);
-  border: 1px solid var(--color-border-light);
+  border: 1px solid var(--gray-200);
   padding: 16px;
   margin-bottom: 20px;
 }

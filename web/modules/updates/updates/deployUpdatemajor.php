@@ -281,7 +281,7 @@ if(isset($_POST['bconfirm'],
     }
     exit;
 } else {
-    $f = new PopupForm($formtitle);
+    $f = new PopupForm($formtitle, 'Formupdate', '480px');
     $mach = sprintf("%s [%s %s]",$message_update, $cn, $platform);
     $f->add(new TitleElement($mach,1));
     $f->push(new Table());

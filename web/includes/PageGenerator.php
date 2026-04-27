@@ -512,7 +512,7 @@ class ActionAjaxPopupItem extends ActionItem
             $urlChunk = "&amp;" . $this->paramString . "=" . rawurlencode($obj);
         }
 
-        // Construit l'URL AJAX dynamique
+        // Construit l’URL AJAX dynamique
         $ajaxUrl = "main.php?module=" . $this->module;
         if (!empty($this->submod)) {
             $ajaxUrl .= "&amp;submod=" . $this->submod;
@@ -545,7 +545,7 @@ class ActionAjaxPopupItem extends ActionItem
         ob_start(); ?>
         <script type="text/javascript">
             function openAjaxPopup_<?php echo $popupId; ?>() {
-                // Supprime l'ancienne popup s'il y en a une
+                // Supprime l’ancienne popup s’il y en a une
                 jQuery('#<?php echo $popupId; ?>').remove();
 
                 // Crée la popup en jQuery
@@ -1128,7 +1128,6 @@ class ListInfos extends HtmlElement
     public $extraColumns = array();
     public $forceFixed = false;
     public $tableCssClass = "";
-    public $resizable = false;
     public $emptyTitle = "";
     public $emptyDescription = "";
 
@@ -1174,12 +1173,13 @@ class ListInfos extends HtmlElement
     }
 
     /**
-     * Enable resizable columns on this table.
-     * Users can drag column borders to resize, widths saved in localStorage.
+     * Backward-compatible API used by many modules.
+     * Table layout is now adaptive by default, so this primarily keeps
+     * legacy callers from failing at runtime.
      */
-    public function setResizable()
+    public function setResizable($resizable = true)
     {
-        $this->resizable = true;
+        $this->forceFixed = !$resizable;
     }
 
     // 1. Définir le style CSS complet
@@ -1576,9 +1576,6 @@ class ListInfos extends HtmlElement
     if (!empty($this->tableCssClass)) {
         $tableClass .= " " . htmlspecialchars($this->tableCssClass, ENT_QUOTES, 'UTF-8');
     }
-    if (!empty($this->resizable)) {
-        $tableClass .= " table-resizable";
-    }
 
     echo "<table class=\"$tableClass\">\n";
     $this->drawCaption();
@@ -1709,16 +1706,6 @@ class ListInfos extends HtmlElement
     }
 
     echo "</tbody></table>\n";
-    if (!empty($this->resizable)) {
-        // Fix action column width, switch to fixed layout, add drag handles
-        echo '<script>(function(){var t=document.querySelector("table.table-resizable:last-of-type");if(!t)return;';
-        // Measure action column in auto mode, fix it, then switch to fixed
-        echo 'var ac=t.querySelector("thead .col-action");if(ac)ac.style.width=ac.offsetWidth+"px";';
-        echo 't.style.tableLayout="fixed";';
-        // Add drag handles
-        echo 'Array.from(t.querySelectorAll("thead th:not(.col-action)")).forEach(function(th){var h=document.createElement("div");h.className="col-resize-handle";th.appendChild(h);h.addEventListener("mousedown",function(e){e.preventDefault();var sx=e.clientX,sw=th.offsetWidth;function mv(e){th.style.width=Math.max(40,sw+(e.clientX-sx))+"px";}function up(){document.removeEventListener("mousemove",mv);document.removeEventListener("mouseup",up);}document.addEventListener("mousemove",mv);document.addEventListener("mouseup",up);});});';
-        echo '})()</script>';
-    }
     $this->displayNavbar($navbar);
 }
 
@@ -2235,25 +2222,12 @@ class AjaxPaginator extends AjaxNavBar
  */
 class AjaxFilter extends HtmlElement
 {
-    public $checkboxes = array();
-
-    /**
-     * Add a checkbox filter to the search form.
-     * When checked, &paramname=true is appended to the AJAX URL.
-     * @param Checkbox $checkbox A Checkbox object (paramname, description)
-     */
-    public function addCheckbox($checkbox)
-    {
-        $checkbox->onchange = "pushSearch" . (isset($this->formid) ? $this->formid : "") . "(); return false;";
-        $this->checkboxes[] = $checkbox;
-    }
-
     /**
      * @brief Constructeur du filtre AJAX.
      *
      * @param string $url      URL cible pour les appels AJAX
      * @param string $divid    ID de la div à mettre à jour
-     * @param array|string $params Paramètres additionnels à ajouter à l'URL
+     * @param array|string $params Paramètres additionnels à ajouter à l’URL
      * @param string $formid   Identifiant unique du formulaire
      */
     public function __construct($url, $divid = "container", $params = array(), $formid = "")
@@ -2268,6 +2242,8 @@ class AjaxFilter extends HtmlElement
         $this->divid   = $divid;
         $this->formid  = $formid;
         $this->refresh = 0;
+        $this->checkbox = array();
+        $this->onchange = "pushSearch" . $this->formid . "(); return false;";
 
         // --- Convertit les paramètres en chaîne propre ---
         if (is_array($params)) {
@@ -2278,7 +2254,7 @@ class AjaxFilter extends HtmlElement
             $this->params = '';
         }
 
-        // --- Ajoute les paramètres à l'URL ---
+        // --- Ajoute les paramètres à l’URL ---
         if (!empty($this->params)) {
             if (!in_array(substr($this->url, -1), ['?', '&'])) {
                 $this->url .= '&';
@@ -2312,6 +2288,15 @@ class AjaxFilter extends HtmlElement
     }
 
     /**
+     * Ajoute une case a cocher au filtre AJAX.
+     */
+    public function addCheckbox($checkbox)
+    {
+        $checkbox->onchange = $this->onchange;
+        $this->checkbox[] = $checkbox;
+    }
+
+    /**
      * @brief Active ou désactive le refresh automatique périodique.
      *
      * @param int $refresh Délai en ms. 0 = désactivé.
@@ -2341,7 +2326,9 @@ class AjaxFilter extends HtmlElement
     <div id="searchSpan<?php echo $this->formid ?>" class="searchbox">
 
         <div id="searchBest">
-            <?php foreach ($this->checkboxes as $cb) { $cb->display(); } ?>
+            <?php foreach ($this->checkbox as $checkbox) {
+                $checkbox->display();
+            } ?>
             <input type="text"
                    class="searchfieldreal"
                    name="param"
@@ -2393,29 +2380,25 @@ clearTimers<?php echo $this->formid ?> = function() {
 /**
  * @brief Appel AJAX principal pour mise à jour du tableau.
  */
-// Collect checked checkboxes as URL params
-function getCheckboxStr<?php echo $this->formid ?>() {
-    var s = '';
-    jQuery('.checkboxsearch').each(function() {
-        if (jQuery(this).is(':checked')) {
-            s += '&' + jQuery(this).attr('id') + '=true';
-        }
-    });
-    return s;
-}
-
 updateSearch<?php echo $this->formid ?> = function() {
 
     clearTimers<?php echo $this->formid ?>();
 
     var searchValue = document.Form<?php echo $this->formid ?>.param.value;
+    var strCheckbox = "";
 
-    // Construction de l'URL AJAX
+    jQuery(".checkboxsearch").each(function() {
+        if (jQuery(this).is(":checked")) {
+            strCheckbox += '&' + jQuery(this).attr('id') + "=true";
+        }
+    });
+
+    // Construction de l’URL AJAX
     var finalUrl =
         '<?php echo rtrim($this->url, "&"); ?>'
         + '&filter='     + encodeURIComponent(searchValue)
         + '&maxperpage=' + maxperpage
-        + getCheckboxStr<?php echo $this->formid ?>()
+        + strCheckbox
         <?php if ($this->storedstart !== null && $this->storedend !== null) { ?>
         + '&start=<?php echo $this->storedstart ?>'
         + '&end=<?php echo $this->storedend ?>'
@@ -2450,13 +2433,21 @@ updateSearchParam<?php echo $this->formid ?> = function(filter, start, end, max)
 
     clearTimers<?php echo $this->formid ?>();
 
+    var strCheckbox = "";
+
+    jQuery(".checkboxsearch").each(function() {
+        if (jQuery(this).is(":checked")) {
+            strCheckbox += '&' + jQuery(this).attr('id') + "=true";
+        }
+    });
+
     var finalUrl =
         '<?php echo rtrim($this->url, "&"); ?>'
         + '&filter='     + encodeURIComponent(filter)
         + '&start='      + start
         + '&end='        + end
         + '&maxperpage=' + max
-        + getCheckboxStr<?php echo $this->formid ?>();
+        + strCheckbox;
 
 
     jQuery.ajax({
@@ -2881,7 +2872,7 @@ class AjaxLocation extends AjaxFilterLocation
                     }
                 });
 
-                // Récupère l'option sélectionnée
+                // Récupère l’option sélectionnée
                 var selectedVal = jQuery("#<?php echo $this->paramname; ?>").val();
                 var strSelected = "";
 
