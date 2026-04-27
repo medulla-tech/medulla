@@ -281,7 +281,7 @@ header("location:". urlStrRedirect("updates/updates/index"));
     exit;
 
 } else {
-    $f = new PopupForm($formtitle);
+    $f = new PopupForm($formtitle, 'Form', '480px');
     $mach = sprintf("%s [%s %s]",$message_update, $cn, $platform);
     $f->add(new TitleElement($mach,1));
     $f->push(new Table());

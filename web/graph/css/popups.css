@@ -258,6 +258,13 @@
   cursor: pointer;
 }
 
+.popup:has(#__popup_container > h2:first-child) #__popup_container form .form-input-datetime,
+.popup:has(#__popup_container > h2:first-child) #__popup_container form .mmc-input {
+  width: 170px;
+  max-width: 170px;
+  box-sizing: border-box;
+}
+
 .popup:has(#__popup_container > h2:first-child) .btnPrimary,
 .popup:has(#__popup_container > h2:first-child) .btnSecondary,
 .popup:has(#__popup_container > h2:first-child) .btnDanger {

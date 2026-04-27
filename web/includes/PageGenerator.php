@@ -4143,8 +4143,9 @@ class PopupForm extends Form
 {
     protected $level = 'default';
     protected $popupClass = '';
+    protected $width = null;
 
-    public function __construct($title, $id = 'Form')
+    public function __construct($title, $id = 'Form', $width = null)
     {
         $options = array("action" => $_SERVER["REQUEST_URI"], 'id' => $id);
         parent::__construct($options);
@@ -4152,6 +4153,7 @@ class PopupForm extends Form
         $this->title = $title;
         $this->text = array();
         $this->ask = "";
+        $this->width = $width;
     }
 
     public function setLevel($level)
@@ -4164,13 +4166,23 @@ class PopupForm extends Form
         $this->popupClass = $class;
     }
 
+    public function setWidth($width)
+    {
+        $this->width = $width;
+    }
+
     public function begin()
     {
         $levelClass = ($this->level !== 'default') ? ' popup-title-' . $this->level : '';
         if (!empty($this->popupClass)) {
             $levelClass .= ' ' . $this->popupClass;
         }
-        $str = "<h2 class='" . trim($levelClass) . "'>" . $this->title . "</h2>\n";
+        $str = '';
+        if ($this->width !== null) {
+            $w = htmlspecialchars($this->width, ENT_QUOTES);
+            $str .= '<script>jQuery(function(){ var p = jQuery("#__popup_container").closest(".popup"); if(p.length){ p.css("width","' . $w . '"); } });</script>' . "\n";
+        }
+        $str .= "<h2 class='" . trim($levelClass) . "'>" . $this->title . "</h2>\n";
         $str .= parent::begin();
         foreach ($this->text as $text) {
             $str .= "<p>" . $text . "</p>";
