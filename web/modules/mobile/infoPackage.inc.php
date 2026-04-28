@@ -147,6 +147,31 @@ $submod->addPage($pageAjaxUploadApk);
 // $submod->addPage($pageGlpiDevices);
 
 ################################
+# GLPI Phones page
+################################
+$pageGlpiPhones = new Page("glpiPhonesList", _T('Phones (GLPI inventory)', 'mobile'));
+$pageGlpiPhones->setFile("modules/mobile/mobile/glpiPhonesList.php");
+$submod->addPage($pageGlpiPhones);
+
+################################
+# GLPI Phone inventory tabs (keeps user in mobile module)
+################################
+$pageGlpiPhoneTabs = new Page("glpiPhoneTabs", _T('Phone inventory (GLPI)', 'mobile'));
+$pageGlpiPhoneTabs->setFile("modules/mobile/mobile/glpiPhoneTabs.php");
+$pageGlpiPhoneTabs->setOptions(array("visible" => false));
+$tab = new Tab("tab0", _T("Summary tab (GLPI)",        'glpi')); $pageGlpiPhoneTabs->addTab($tab);
+$tab = new Tab("tab1", _T("Hardware tab (GLPI)",        'glpi')); $pageGlpiPhoneTabs->addTab($tab);
+$tab = new Tab("tab2", _T("Connections tab (GLPI)",    'glpi')); $pageGlpiPhoneTabs->addTab($tab);
+$tab = new Tab("tab3", _T("Storage tab (GLPI)",        'glpi')); $pageGlpiPhoneTabs->addTab($tab);
+$tab = new Tab("tab4", _T("Network tab (GLPI)",        'glpi')); $pageGlpiPhoneTabs->addTab($tab);
+$tab = new Tab("tab5", _T("Softwares tab (GLPI)",      'glpi')); $pageGlpiPhoneTabs->addTab($tab);
+$tab = new Tab("tab6", _T("Administrative tab (GLPI)", 'glpi')); $pageGlpiPhoneTabs->addTab($tab);
+$tab = new Tab("tab7", _T("History tab (GLPI)",        'glpi')); $pageGlpiPhoneTabs->addTab($tab);
+$tab = new Tab("tab8", _T("Antivirus tab (GLPI)",      'glpi')); $pageGlpiPhoneTabs->addTab($tab);
+$tab = new Tab("tab9", _T("Registry tab (GLPI)",       'glpi')); $pageGlpiPhoneTabs->addTab($tab);
+$submod->addPage($pageGlpiPhoneTabs);
+
+################################
 # Files page
 ################################
 $pageFiles = new Page("files", _T('Files', 'mobile'));
