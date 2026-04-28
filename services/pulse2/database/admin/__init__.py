@@ -555,9 +555,6 @@ class AdminDatabase(DatabaseHelper):
                 session.rollback()
                 return False
 
-            # Consume the link (single use)
-            row.used_at = func.now()
-            session.flush()
             session.commit()
             return True
 
