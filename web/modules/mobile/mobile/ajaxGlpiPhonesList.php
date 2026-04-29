@@ -32,6 +32,7 @@ $location = isset($_GET['location']) ? $_GET['location'] : "";
 $filter   = isset($_GET['filter'])   ? $_GET['filter']   : "";
 $field    = isset($_GET['field'])    ? $_GET['field']     : "";
 $contains = isset($_GET['contains']) ? $_GET['contains']  : "";
+$group    = isset($_GET['group'])    ? $_GET['group']     : "";
 
 $start      = isset($_GET['start'])      ? intval($_GET['start'])      : 0;
 $maxperpage = isset($_GET['maxperpage']) ? intval($_GET['maxperpage'])  : $config['maxperpage'];
@@ -45,6 +46,7 @@ $ctx = [
     'start'       => $start,
     'end'         => $end,
     'maxperpage'  => $maxperpage,
+    'group'       => $group,
 ];
 
 $machines = xmlrpc_get_devices_list($start, $maxperpage, $ctx);

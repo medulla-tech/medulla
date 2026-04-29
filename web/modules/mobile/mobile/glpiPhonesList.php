@@ -24,11 +24,30 @@ require("localSidebar.php");
 global $conf;
 $glpidisplayname = (!empty($conf['global']['glpidisplayname'])) ? $conf['global']['glpidisplayname'] : 'GLPI';
 
-$p = new PageGenerator(sprintf(_T("Phones (%s inventory)", 'mobile'), $glpidisplayname));
+$group = isset($_GET['group']) ? $_GET['group'] : '';
+$days  = isset($_GET['days'])  ? intval($_GET['days']) : 0;
+
+if (!empty($group)) {
+    if ($group == 'green') {
+        $pageTitle = sprintf(_T("Group 'Latest inventory is less than %s days at %s' content", 'mobile'), $days, date("Y-m-d H:i:s"));
+    } else {
+        $pageTitle = sprintf(_T("Group 'Latest inventory is more than %s days at %s' content", 'mobile'), $days, date("Y-m-d H:i:s"));
+    }
+} else {
+    $pageTitle = sprintf(_T("Phones (%s inventory)", 'mobile'), $glpidisplayname);
+}
+
+$p = new PageGenerator($pageTitle);
 $p->setSideMenu($sidemenu);
 $p->display();
 
-$ajax = new AjaxFilter(urlStrRedirect("mobile/mobile/ajaxGlpiPhonesList"));
+$ajaxUrl = urlStrRedirect("mobile/mobile/ajaxGlpiPhonesList");
+if ($group) {
+    $ajaxUrl .= '&group=' . urlencode($group);
+    if ($days) $ajaxUrl .= '&days=' . $days;
+}
+
+$ajax = new AjaxFilter($ajaxUrl);
 $ajax->display();
 $ajax->displayDivToUpdate();
 ?>

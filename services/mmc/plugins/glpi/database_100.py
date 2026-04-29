@@ -6303,6 +6303,29 @@ class Glpi100(DyngroupDatabaseHelper):
         }
         return ret
 
+    @DatabaseHelper._sessionm
+    def get_phone_inventories_for_dashboard(self, session, entities: list = []) -> dict:
+        orange = self.config.orange
+        red = self.config.red
+
+        now = datetime.datetime.now()
+        orange_date = now - datetime.timedelta(days=orange)
+        red_date = now - datetime.timedelta(days=red)
+
+        phones = self.phones
+        date_mod = phones.c.date_mod
+
+        base_query = session.query(phones).filter(phones.c.entities_id.in_(entities))
+
+        green_count  = base_query.filter(date_mod > orange_date).count()
+        orange_count = base_query.filter(and_(date_mod <= orange_date, date_mod > red_date)).count()
+        red_count    = base_query.filter(date_mod <= red_date).count()
+
+        return {
+            "days": {"red": red, "orange": orange},
+            "count": {"red": int(red_count), "orange": int(orange_count), "green": int(green_count)}
+        }
+
     def getMachineNumberByState(self, ctx):
         """
         return number of machines sorted by state
@@ -9389,6 +9412,20 @@ and glpi_computers.id in %s group by glpi_computers.id;""" % (
                         query = query.filter(not_(col_map[field].contains(criterion)))
                     else:
                         query = query.filter(col_map[field].contains(criterion))
+
+        group = ctx.get("group", "")
+        if group and "date_mod" in phones_table.c.keys():
+            orange_days = int(self.config.orange)
+            red_days = int(self.config.red)
+            now = datetime.datetime.now()
+            orange_dt = now - datetime.timedelta(days=orange_days)
+            red_dt = now - datetime.timedelta(days=red_days)
+            if group == "green":
+                query = query.filter(phones_table.c.date_mod > orange_dt)
+            elif group == "orange":
+                query = query.filter(phones_table.c.date_mod <= orange_dt, phones_table.c.date_mod > red_dt)
+            elif group == "red":
+                query = query.filter(phones_table.c.date_mod <= red_dt)
 
         # Ordering
         if iddevice == "" and uuidsetup == "":
