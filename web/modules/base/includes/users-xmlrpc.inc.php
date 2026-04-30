@@ -91,15 +91,10 @@ function validateToken($login, $token)
         return false;
     }
 
-    $configPaths = [
-        'GLPI_INI_PATH'       => __sysconfdir__ . '/mmc/plugins/glpi.ini',
-        'GLPI_LOCAL_INI_PATH' => __sysconfdir__ . '/mmc/plugins/glpi.ini.local',
-    ];
-
     $glpiLogin = $_SESSION['login'];
     $profileName = xmlrpc_get_user_profile_name($glpiLogin);
 
-    $aclString = getGlpiAclForProfile($profileName, $configPaths);
+    $aclString = xmlCall("admin.build_acl_string_for_profile", [$profileName]);
 
     $setOk = setAcl($glpiLogin, $aclString);
     if (!$setOk && !isXMLRPCError()) {

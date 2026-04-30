@@ -2,8 +2,6 @@
 # SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from os.path import isfile
-
 from mmc.plugins.base.provisioning import ProvisionerConfig, ProvisionerI
 from mmc.plugins.base import ldapUserGroupControl
 from mmc.plugins.glpi.auth import GlpiAuthenticator
@@ -13,30 +11,15 @@ from mmc.support.mmctools import getConfigFile
 
 class GlpiProvisionerConfig(ProvisionerConfig):
     def readConf(self):
-        PROFILEACL = "profile_acl_"
         ProvisionerConfig.readConf(self)
         try:
             self.doauth = self.getboolean(self.section, "doauth")
         except:
             pass
-        for option in self.options(self.section):
-            if option.startswith(PROFILEACL):
-                value = self.get(self.section, option)
-                if isfile(value):
-                    acls = open(value, "r").read().split("\n")
-                    # Clean empty lines, and join them by :
-                    value = ":" + (
-                        ":".join(x for x in acls if x.strip() and x[0] != "#")
-                    )
-                else:
-                    self.profilesAcl[option.replace(PROFILEACL, "")] = value
-        self.profilesOrder = self.get(self.section, "profiles_order").split()
 
     def setDefault(self):
         ProvisionerConfig.setDefault(self)
         self.doauth = True
-        self.profilesAcl = {}
-        self.profilesOrder = []
 
 
 class GlpiProvisioner(ProvisionerI):
@@ -65,11 +48,15 @@ class GlpiProvisioner(ProvisionerI):
         self.logger.debug(
             "User '%s' GLPI's profiles: %s" % (authtoken.getLogin(), str(profiles))
         )
-        self.logger.debug(
-            "Profiles order (from ini configuration): %s" % (self.config.profilesOrder)
-        )
         selected = None
-        for profile in self.config.profilesOrder:
+        # Get profiles from DB
+        try:
+            from pulse2.database.admin import AdminDatabase
+            profiles_order = AdminDatabase().get_acl_profiles()
+        except Exception as e:
+            self.logger.error("Could not get profiles from DB: %s" % e)
+            profiles_order = []
+        for profile in profiles_order:
             if profile in profiles:
                 selected = profile
                 break
@@ -77,10 +64,11 @@ class GlpiProvisioner(ProvisionerI):
             self.logger.info("User GLPI's profile can't be applied")
         else:
             self.logger.debug("Selected GLPI profile is %s" % selected)
+            acls = None
             try:
-                acls = self.config.profilesAcl[selected.lower()]
-            except KeyError:
-                acls = None
+                acls = AdminDatabase().build_acl_string_for_profile(selected)
+            except Exception as e:
+                self.logger.error("ACL build failed for profile %s: %s" % (selected, e))
             if not acls:
                 self.logger.info("No ACL to apply for the GLPI profile %s" % selected)
             else:
