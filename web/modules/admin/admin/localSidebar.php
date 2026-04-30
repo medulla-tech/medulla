@@ -57,7 +57,7 @@ $sidemenu->addSideMenuItem(new SideMenuItem($userLabel,     "admin", "admin", "e
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Authentication Configuration", "admin"), "admin", "admin", "authConfig"));
 
 // --------------------- ACL Management ----------------
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("ACL Management", "admin"), "admin", "admin", "aclFeatures"));
+// $sidemenu->addSideMenuItem(new SideMenuItem(_T("ACL Management", "admin"), "admin", "admin", "aclFeatures"));
 
 // --------------------- WebSocket Logs ----------------
 $sidemenu->addSideMenuItem(

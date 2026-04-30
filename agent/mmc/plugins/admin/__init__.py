@@ -5,7 +5,7 @@ from mmc.plugins.admin.config import AdminConfig
 from pulse2.database.admin import AdminDatabase
 from pulse2.version import getVersion, getRevision
 
-VERSION = "5.5.1"
+VERSION = "5.5.2"
 APIVERSION = "0:0:0"
 REVISION = ""
 
