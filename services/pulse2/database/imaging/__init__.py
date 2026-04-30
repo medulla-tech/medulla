@@ -2102,6 +2102,29 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             session.add(menu)
             session.flush()
 
+        count_items = (
+        session.query(MenuItem.id)
+        .select_from(
+            self.menu_item.outerjoin(
+                self.image_in_menu, self.image_in_menu.c.fk_menuitem == self.menu_item.c.id
+            ).outerjoin(
+                self.boot_service_in_menu,
+                self.boot_service_in_menu.c.fk_menuitem == self.menu_item.c.id,
+            )
+        )
+        .filter(self.menu_item.c.fk_menu == mi.fk_menu)
+        .filter(
+            or_(
+                self.image_in_menu.c.fk_menuitem != None,
+                self.boot_service_in_menu.c.fk_menuitem != None,
+            )
+        )
+        .distinct()
+        .count())
+
+        if count_items <= 1:
+            return [False, "can't delete the last item of the menu"]
+
         session.delete(bsim)
         session.flush()
         session.delete(mi)
@@ -2596,6 +2619,32 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         s_menu_item = (
             session.query(MenuItem).filter(self.menu_item.c.id == menu_item_id).first()
         )
+
+        count_items = (
+        session.query(MenuItem.id)
+        .select_from(
+            self.menu_item.outerjoin(
+                self.image_in_menu, self.image_in_menu.c.fk_menuitem == self.menu_item.c.id
+            ).outerjoin(
+                self.boot_service_in_menu,
+                self.boot_service_in_menu.c.fk_menuitem == self.menu_item.c.id,
+            )
+        )
+        .filter(self.menu_item.c.fk_menu == s_menu_item.fk_menu)
+        .filter(
+            or_(
+                self.image_in_menu.c.fk_menuitem != None,
+                self.boot_service_in_menu.c.fk_menuitem != None,
+            )
+        )
+        .distinct()
+        .count())
+
+        if count_items <= 1:
+            return False
+
+
+
         s_image_in_menu = (
             session.query(ImageInMenu)
             .filter(self.image_in_menu.c.fk_menuitem == menu_item_id)
