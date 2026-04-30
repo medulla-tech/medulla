@@ -26,6 +26,7 @@ DEST=/var/lib/pulse2/packages/sharing/${SHARE_NAME}
 COMMAND='powershell -NoProfile -ExecutionPolicy Bypass -File ".\update_iso.ps1"'
 
 PACKAGE_DATE=$(date +'%F %X')
+LOG_FILE=/var/log/medulla/winupdatemajor.log
 
 DBHOST=$(crudini --get /etc/mmc/plugins/xmppmaster.ini.local database dbhost 2> /dev/null || echo localhost)
 DBPORT=$(crudini --get /etc/mmc/plugins/xmppmaster.ini.local database dbport 2> /dev/null || echo 3306)
@@ -35,7 +36,8 @@ KEYAES32=$(crudini --get /etc/mmc/plugins/xmppmaster.ini.local defaultconnection
 
 
 colored_echo() {
-    # Output colored lines to shell
+    # Output colored lines to shell and log file.
+    # tput is called only when stdout is a real terminal (not from cron).
     local COLOR=$1;
     if ! [[ $COLOR =~ '^[0-9]$' ]] ; then
         case $(echo $COLOR | tr '[:upper:]' '[:lower:]') in
@@ -49,9 +51,10 @@ colored_echo() {
             white|*) COLOR=7 ;; # white or invalid color
         esac
     fi
-    tput setaf $COLOR;
+    [ -t 1 ] && tput setaf $COLOR;
     echo "${@:2}";
-    tput sgr0;
+    [ -t 1 ] && tput sgr0;
+    echo "${@:2}" >> "${LOG_FILE}";
 }
 
 
@@ -70,7 +73,6 @@ check_arguments() {
     #
     # Make sure the options passed are valid
     #
-    ARGS="$@"
     for i in "$@"; do
         case $i in
             --force*)
@@ -97,12 +99,14 @@ run_checks() {
 
 find_packages_to_generate() {
     #
-    # Find the list of packages to generate
+    # Rebuild up_major_win (temp table) then return distinct (iso_filename, package_uuid) pairs.
+    # The stored procedure also feeds up_machine_major_windows (persistent table).
     #
     mysql -h ${DBHOST} -P ${DBPORT} -u${DBUSER} -p${DBPASS} xmppmaster -se "CALL up_init_table_major_win_complet();"
     local result=$(mysql -h ${DBHOST} -P ${DBPORT} -u${DBUSER} -p${DBPASS} xmppmaster \
         -se "SELECT DISTINCT iso_filename,package_uuid FROM up_major_win;")
-    echo ${result}
+    # Quote result to preserve multi-line output and avoid word splitting
+    echo "${result}"
     return 0
 }
 
@@ -110,8 +114,9 @@ check_package_exists() {
     #
     # Check if package already exists in the database
     # Parameter passed is package_uuid ($1)
+    # Prints "true" or "false" on stdout, returns 0 or 1.
     #
-    PACKAGE_UUID=$1
+    local PACKAGE_UUID=$1
 
     local result=$(mysql -h ${DBHOST} -P ${DBPORT} -u${DBUSER} -p${DBPASS} pkgs \
         -se "SELECT COUNT(*) FROM packages WHERE uuid='${PACKAGE_UUID}'")
@@ -127,22 +132,28 @@ check_package_exists() {
 
 download_ps1_script() {
     #
-    # Create powershell script to update the system
+    # Download the PowerShell script used to mount the ISO and run the upgrade.
+    # The script is common to all ISOs of the same Windows family (Win10, Win11...).
     # Parameters passed are package_uuid ($1) and iso_filename ($2)
     #
-    PACKAGE_UUID=$1
-    ISO_FILENAME=$2
-    colored_echo blue "Downloading powershell script to update the system..."
-    curl --silent -C - -o ${DEST}/${PACKAGE_UUID}/update_iso.ps1 ${DL_URL}/${ISO_FILENAME%%_*}/update_iso.ps1?token=${KEYAES32}
+    local PACKAGE_UUID=$1
+    local ISO_FILENAME=$2
+    if ! curl --silent --fail -C - -o "${DEST}/${PACKAGE_UUID}/update_iso.ps1" \
+            "${DL_URL}/${ISO_FILENAME%%_*}/update_iso.ps1?token=${KEYAES32}"; then
+        colored_echo red "$(date +\[%F\ %X\]) Failed to download update_iso.ps1 for family ${ISO_FILENAME%%_*}"
+        return 1
+    fi
 }
 
 generate_package() {
     #
-    # Create package file
+    # Generate the two package descriptor files:
+    #   xmppdeploy.json : Medulla deployment workflow (mount ISO, run upgrade, handle reboot)
+    #   conf.json       : package metadata (name, uuid, dates, target OS)
     # Parameters passed are package_uuid ($1) and iso_filename ($2)
     #
-    PACKAGE_UUID=$1
-    ISO_FILENAME=$2
+    local PACKAGE_UUID=$1
+    local ISO_FILENAME=$2
     colored_echo blue "Generating package..."
     cat <<EOF > ${DEST}/${PACKAGE_UUID}/xmppdeploy.json
 {
@@ -308,13 +319,23 @@ EOF
 
 download_iso() {
     #
-    # Download ISO file
+    # Download the Windows ISO from the Medulla update server.
+    # The ISO is stored under updates_protected/<family>/<iso_filename>.
+    # The family is derived from the ISO name (first segment before '_').
+    # Authentication is done via the AES32 token from xmppmaster.ini.local.
     # Parameters passed are package_uuid ($1) and iso_filename ($2)
     #
-    PACKAGE_UUID=$1
-    ISO_FILENAME=$2
+    local PACKAGE_UUID=$1
+    local ISO_FILENAME=$2
     colored_echo blue "Downloading ISO file ${DL_URL}/${ISO_FILENAME%%_*}/${ISO_FILENAME} to ${DEST}/${PACKAGE_UUID}/${ISO_FILENAME}..."
-    curl --silent -C - -o ${DEST}/${PACKAGE_UUID}/${ISO_FILENAME} ${DL_URL}/${ISO_FILENAME%%_*}/${ISO_FILENAME}?token=${KEYAES32}
+    if ! curl --silent --fail -C - -o ${DEST}/${PACKAGE_UUID}/${ISO_FILENAME} "${DL_URL}/${ISO_FILENAME%%_*}/${ISO_FILENAME}?token=${KEYAES32}"; then
+        colored_echo red "$(date +\[%F\ %X\]) Failed to download ISO ${ISO_FILENAME} (file not found or server error)"
+        colored_echo red "$(date +\[%F\ %X\]) To create the package manually, place the ISO file ${ISO_FILENAME} in the directory:"
+        colored_echo red "$(date +\[%F\ %X\])   /var/web0Xshare/updates/updates_protected/${ISO_FILENAME%%_*}/${ISO_FILENAME}"
+        colored_echo red "$(date +\[%F\ %X\]) Then re-run this script to generate the package."
+        rm -f ${DEST}/${PACKAGE_UUID}/${ISO_FILENAME}
+        return 1
+    fi
 }
 
 create_package_record() {
@@ -326,6 +347,17 @@ create_package_record() {
 }
 
 
+mkdir -p "$(dirname ${LOG_FILE})"
+
+# Prevent concurrent executions (e.g. launched by cron while a previous run is still active).
+# flock acquires an exclusive lock on the lock file; if already held, exits immediately.
+LOCK_FILE=/var/run/medulla-generate-winupdatemajor-packages.lock
+exec 9>"${LOCK_FILE}"
+if ! flock --nonblock 9; then
+    echo "$(date +\[%F\ %X\]) $(basename $0) is already running (lock: ${LOCK_FILE}). Exiting." | tee -a "${LOG_FILE}"
+    exit 0
+fi
+
 colored_echo blue "$(date +\[%F\ %X\]) ##### Starting $(basename $0)"
 check_arguments $@
 run_checks
@@ -336,7 +368,7 @@ if [[ ${PACKAGES_LIST} == '' ]]; then
     exit 0
 fi
 
-echo "$PACKAGES_LIST" | while IFS=" " read -r ISO_FILENAME PACKAGE_UUID; do
+echo "$PACKAGES_LIST" | while IFS=$'\t' read -r ISO_FILENAME PACKAGE_UUID; do
     # Skip the header line if it exists
     if [[ "$ISO_FILENAME" == "iso_filename" ]]; then
         continue
@@ -356,9 +388,20 @@ echo "$PACKAGES_LIST" | while IFS=" " read -r ISO_FILENAME PACKAGE_UUID; do
         colored_echo blue "$(date +\[%F\ %X\]) Creating new package with UUID ${PACKAGE_UUID}..."
         mkdir -p ${DEST}/${PACKAGE_UUID}
     fi
-    download_ps1_script ${PACKAGE_UUID} ${ISO_FILENAME}
+    colored_echo blue "$(date +\[%F\ %X\]) Downloading powershell script for ${ISO_FILENAME}..."
+    if ! download_ps1_script ${PACKAGE_UUID} ${ISO_FILENAME}; then
+        colored_echo red "$(date +\[%F\ %X\]) Skipping package ${PACKAGE_UUID} due to ps1 download failure"
+        rm -rf ${DEST}/${PACKAGE_UUID}
+        continue
+    fi
+    colored_echo blue "$(date +\[%F\ %X\]) Generating package files for ${ISO_FILENAME}..."
     generate_package ${PACKAGE_UUID} ${ISO_FILENAME}
-    download_iso ${PACKAGE_UUID} ${ISO_FILENAME}
+    colored_echo blue "$(date +\[%F\ %X\]) Downloading ISO ${ISO_FILENAME}..."
+    if ! download_iso ${PACKAGE_UUID} ${ISO_FILENAME}; then
+        colored_echo red "$(date +\[%F\ %X\]) Skipping package ${PACKAGE_UUID} due to ISO download failure"
+        rm -rf ${DEST}/${PACKAGE_UUID}
+        continue
+    fi
 done
 create_package_record
 colored_echo green "$(date +\[%F\ %X\]) ##### Finished $(basename $0)"

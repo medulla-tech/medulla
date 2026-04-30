@@ -572,6 +572,7 @@ if (!isset($_GET['badvanced']) && $_GET['uuid'] && !isset($_POST['launchAction']
     $dataparams=getFilteredGetParams();
 
     $ajax = new AjaxFilter(urlStrRedirect("base/computers/ajaxPackageFilter"), "container", $dataparams);
+    $ajax->addCheckbox(new Checkbox("hide_win_updates", _T("Hide Windows Updates", "msc")));
     $ajax->display();
     $ajax->displayDivToUpdate();
 }

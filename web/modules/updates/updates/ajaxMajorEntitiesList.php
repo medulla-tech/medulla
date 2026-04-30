@@ -196,7 +196,7 @@ $emptydeployAll = new EmptyActionItem1(_T("There are no major updates to deploy 
         "updates",    // module
         "updates" ,    // submod
         null, // tab
-        450, // largeur
+        700, // largeur
         false, // mod
         true // remplace le popup avec le result de ajax
     );
@@ -334,7 +334,6 @@ $namemachine = xmlrpc_get_machines_update_grp(
 
 $count = count($complete_name_major);
 $n = new OptimizedListInfos($complete_name_major, _T("Entity name", "updates"));
-$n->setResizable();
 $n->disableFirstColumnActionLink();
 $n->addExtraInfo($comformite_name_major, _T("Compliance rate", "updates"));
 $n->addExtraInfoRaw($win10towin10_major, _T("Upgrade W10->W10", "updates"));

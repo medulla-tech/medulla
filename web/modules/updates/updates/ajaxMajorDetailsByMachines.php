@@ -43,11 +43,11 @@ $end = (isset($_GET['end'])) ? (int)htmlentities($_GET['end']) : $start+$maxperp
 $entity = !empty($_GET['entity']) ? htmlspecialchars($_GET['entity']) : "";
 $entityName = !empty($_GET['name']) ? htmlentities($_GET['name']) : "";
 $entityCompleteName = !empty($_GET['completename']) ? htmlentities($_GET['completename']) : "";
+$source = !empty($_GET['source']) ? htmlentities($_GET['source']) : "xmppmaster";
 $typeaction= !empty($_GET['typeaction']) ? htmlentities($_GET['typeaction']) : "windows";
 
 if ($typeaction == "windows") {
     $n = new ListInfos(array($_GET['W10to10']), _T("Upgrade W10->W10", "updates"));
-    $n->setResizable();
     $n->addExtraInfoCentered(array($_GET['W10to11']), _T("Upgrade W10->W11", "updates"));
     $n->addExtraInfoCentered(array($_GET['W11to11']), _T("Upgrade W11->W11", "updates"));
     $n->addExtraInfoCentered(array($_GET['UPDATED']), _T("Up to date", "updates"));
@@ -55,7 +55,6 @@ if ($typeaction == "windows") {
     $n->addExtraInfoCentered(array($_GET['totalmachineentity']), _T("Total machines", "updates"));
 } else {
     $n = new ListInfos(array($_GET['MS12toMS25']), _T("UpgradeMS12toMS25", "updates"));
-    $n->setResizable();
     $n->addExtraInfoCentered(array($_GET['MS16toMS25']), _T("Upgrade MS16toMS25", "updates"));
     $n->addExtraInfoCentered(array($_GET['MS19toMS25']), _T("Upgrade MS19toMS25", "updates"));
     $n->addExtraInfoCentered(array($_GET['MS25toMS25']), _T("Upgrade MS25toMS25", "updates"));
@@ -69,7 +68,7 @@ $n->end = 1;
 $n->disableFirstColumnActionLink();
 $n->display($navbar = 0, $header = 0);
 
-    if ($_GET['source'] == "xmppmaster" ){
+    if ($source == "xmppmaster" ){
         // $statglpiversion = xmlrpc_get_os_xmpp_update_major_details($_GET['entity'],$filter);
         $statglpiversion = xmlrpc_get_os_update_major_details($_GET['entity'],
                                                               $typeaction,

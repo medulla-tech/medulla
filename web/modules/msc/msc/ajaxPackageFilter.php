@@ -175,6 +175,7 @@ $packages[0][2]["server"] = "localhost";
 $packages[0][2]["protocol"] = "https";
 $packages[0][2]["uuid"] = "UUID/package_api_get1";
 $packages[0][2]["port"] = 9990;
+$hideWinUpdates = isset($_GET['hide_win_updates']) && $_GET['hide_win_updates'] === 'true';
 $err = array();
 foreach ($packages as $c_package) {
     $elt_convergence_status = "";
@@ -190,6 +191,12 @@ foreach ($packages as $c_package) {
     } else {
 
         if($package != null) {
+            // Skip winupdates packages if checkbox is checked
+            $locServer = isset($c_package[0]['localisation_server']) ? $c_package[0]['localisation_server'] : '';
+            if ($hideWinUpdates && stripos($locServer, 'winupdate') !== false) {
+                $count--;
+                continue;
+            }
             $a_packages[] = $package->label;
             $descText = htmlspecialchars($package->description);
             $a_description[] = "<span class='pkg-description' title=\"$descText\">$descText</span>";

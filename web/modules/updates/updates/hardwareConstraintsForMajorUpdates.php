@@ -53,6 +53,7 @@ $p->display();
 echo '
 <form id="myForm">
     <input type="hidden" name="entityid" value="'.htmlspecialchars($entityid).'">
+    <input type="hidden" name="typeaction" value="'.htmlspecialchars($typeaction).'">
     <button class="btn btn-primary" type="submit">Creation Group</button>
 </form>';
 $list_Machine_outdated_major_update = xmlrpc_get_outdated_major_os_updates_by_entity($entityid,
@@ -73,17 +74,47 @@ $n->display();
 
 <script>
 jQuery(document).ready(function () {
+    function showResultPopup(html) {
+        if (!jQuery('#actionConfirmPopup').length) {
+            jQuery('body').append('<div id="actionConfirmPopup" class="modal-popup"></div>');
+        }
+
+        var $popup = jQuery('#actionConfirmPopup');
+        $popup.html('<div class="modal-popup-content-wrapper">' + html + '</div>').css({
+            width: '520px',
+            top: '20%',
+            left: '50%',
+            transform: 'translateX(-50%)'
+        }).fadeIn(200);
+
+        $popup.off('click').on('click', function (event) {
+            if (event.target === this) {
+                $popup.fadeOut(200);
+            }
+        });
+
+        $popup.find('.modal-popup-content-wrapper').off('click').on('click', function (event) {
+            event.stopPropagation();
+        });
+
+        jQuery('#popupClose').off('click').on('click', function () {
+            $popup.fadeOut(200);
+        });
+    }
+
     jQuery('#myForm').on('submit', function (e) {
         e.preventDefault(); // Empêche l'envoi classique
+        showResultPopup('<em>Chargement...</em>');
+
         jQuery.ajax({
             url: 'modules/updates/updates/AjaxcreateGrouplistglpiid.php',
             type: 'POST',
-            data: jQuery(this).serialize(), // Sérialise les données du formulaire
+            data: jQuery(this).serialize(),
             success: function (response) {
-                alert("Réponse du serveur : " + response);
+                showResultPopup(response);
             },
             error: function (xhr, status, error) {
-                alert("Erreur AJAX : " + error);
+                showResultPopup('<span class="text-error">Erreur AJAX : ' + error + '</span>');
             }
         });
     });

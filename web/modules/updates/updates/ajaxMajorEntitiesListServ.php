@@ -187,7 +187,6 @@ $emptydeployAll = new EmptyActionItem1(_T("There are no major updates to deploy 
                                             "",
                                             "updates",
                                             "updates");
-
     $grp = new ActionAjaxPopup(
         "CreateGroup",
         "ajaxUpdateCreateGroup", // action

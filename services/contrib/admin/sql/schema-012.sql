@@ -1,5 +1,5 @@
 --
---  (c) 2024-2025 Medulla, http://www.medulla-tech.io
+--  (c) 2024-2026 Medulla, http://www.medulla-tech.io
 --
 --
 -- This file is part of MMC, http://www.medulla-tech.io
@@ -17,16 +17,17 @@
 -- You should have received a copy of the GNU General Public License
 -- along with MMC; If not, see <http://www.gnu.org/licenses/.>
 
--- Ajout du paramètre glpi_crypt_key pour le déchiffrement des tokens GLPI 11
--- La clé doit être encodée en base64 (contenu de /usr/share/glpi/config/glpicrypt.key)
+-- Add version-specific disclaimer columns to medulla_update_availability.
+-- Populated by check_medulla_updates.sh from the remote JSON manifest
+-- published at https://dl.medulla-tech.io/up/versions_disclaimer.json
 
 START TRANSACTION;
 USE admin;
 
-INSERT INTO saas_application (setting_name, setting_value, setting_description)
-VALUES ('glpi_crypt_key', '', 'GLPI 11 sodium encryption key (base64)')
-ON DUPLICATE KEY UPDATE setting_description = VALUES(setting_description);
+ALTER TABLE medulla_update_availability
+    ADD COLUMN IF NOT EXISTS disclaimer_level VARCHAR(20) DEFAULT NULL,
+    ADD COLUMN IF NOT EXISTS disclaimer_json TEXT DEFAULT NULL;
 
-UPDATE version SET Number = 8;
+UPDATE version SET Number = 12;
 
 COMMIT;
