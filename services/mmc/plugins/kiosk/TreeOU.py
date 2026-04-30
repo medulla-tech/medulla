@@ -16,6 +16,10 @@ class TreeOU(object):
         self.parent = None
         self.level = 0
         self.path = []
+        # True only when the node corresponds to an OU explicitly authorized
+        # for the current user. Intermediate ancestors created to materialize
+        # the hierarchy stay False and are rendered as non-selectable.
+        self.selectable = False
 
     def search(self, string):
         """Search the element specified
@@ -99,18 +103,24 @@ class TreeOU(object):
         else:
             return False
 
-    def create_recursively(self, string):
+    def create_recursively(self, string, leaf_only=False):
         """
         Create recursively the TreeOU objects as child from the specified string.
 
         Params:
             string this string contains the OUs name separated by >>, like "my_first>>my_sub>>my_subsub"
+            leaf_only when True, only the leaf of the path is flagged as
+                selectable so intermediate ancestors created on the fly stay
+                non-selectable (used for the Entity source). When False
+                (default, kept for backward compat with Group/OU/LDAP sources)
+                every node touched by this call is selectable.
         """
         temp = self
 
         string = string.replace(" > ", ">>")
         elements = string.split(">>")
-        for element in elements:
+        last_index = len(elements) - 1
+        for idx, element in enumerate(elements):
             element = element.strip()
             if element:
                 if temp.search_direct_child(element):
@@ -119,6 +129,8 @@ class TreeOU(object):
                     new = TreeOU(element)
                     temp.add_child(new)
                     temp = new
+                if not leaf_only or idx == last_index:
+                    temp.selectable = True
 
     def recursive_json(self):
         """
@@ -129,7 +141,12 @@ class TreeOU(object):
         """
 
         # This is the initial structure whe want.
-        self.json = {"name": self.name, "child": [], "path": ">>".join(self.path)}
+        self.json = {
+            "name": self.name,
+            "child": [],
+            "path": ">>".join(self.path),
+            "selectable": self.selectable,
+        }
         # Check if the actual node has children
         for element in self.child:
             # If it's the case each child's dict is append
