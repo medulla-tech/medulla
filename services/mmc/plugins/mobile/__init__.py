@@ -41,6 +41,9 @@ def getHmdmDevices():
 def getHmdmDevicesOsCount():
     return MobileDatabase().getHmdmDevicesOsCount()
 
+def getHmdmOnlineCount():
+    return MobileDatabase().getHmdmOnlineCount()
+
 def getHmdmConfigurationById(id):
     return MobileDatabase().getHmdmConfigurationById(id)
 

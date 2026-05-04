@@ -65,6 +65,9 @@ function xmlrpc_get_hmdm_configuration_by_id($id){
 function xmlrpc_get_hmdm_config_qr_url(){
     return xmlCall("mobile.getHmdmConfigQrUrl", array());
 }
+function xmlrpc_get_hmdm_online_count(){
+    return xmlCall("mobile.getHmdmOnlineCount", array());
+}
 function xmlrpc_update_hmdm_configuration($config_data){
     return xmlCall("mobile.updateHmdmConfiguration", array($config_data));
 }
