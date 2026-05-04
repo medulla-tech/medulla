@@ -304,6 +304,16 @@ $pageGroupQuickActionExec->setFile("modules/mobile/mobile/groupQuickActionExec.p
 $pageGroupQuickActionExec->setOptions(array("AJAX" => false, "visible" => false));
 $submod->addPage($pageGroupQuickActionExec);
 
+$pageTempGroupAction = new Page("tempGroupAction", _T('Temp Group Action', 'mobile'));
+$pageTempGroupAction->setFile("modules/mobile/mobile/tempGroupAction.php");
+$pageTempGroupAction->setOptions(array("AJAX" => true, "visible" => false));
+$submod->addPage($pageTempGroupAction);
+
+$pageAddGroup = new Page("addGroup", _T('Save as Group', 'mobile'));
+$pageAddGroup->setFile("modules/mobile/mobile/addGroup.php");
+$pageAddGroup->setOptions(array("visible" => false));
+$submod->addPage($pageAddGroup);
+
 ################################
 # Configuration Quick Actions page
 ################################

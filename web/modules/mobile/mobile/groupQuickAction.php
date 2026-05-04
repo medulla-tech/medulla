@@ -1,29 +1,29 @@
 <?php
 require_once("modules/mobile/includes/xmlrpc.php");
 
+$deviceKeys = isset($_POST['device_keys']) && is_array($_POST['device_keys']) ? $_POST['device_keys'] : [];
 $groupId = isset($_GET['group_id']) ? intval($_GET['group_id']) : 0;
 
-if ($groupId <= 0) {
-    echo "<p style='color: red; text-align: center;'>" . _T("Invalid group ID", "mobile") . "</p>";
+if (empty($deviceKeys) && $groupId <= 0) {
+    echo "<p style='color: red; text-align: center;'>" . _T("No devices or group specified", "mobile") . "</p>";
     exit;
 }
 
-// group info
-$groups = xmlrpc_get_hmdm_groups();
-$group = null;
-foreach ($groups as $g) {
-    if (isset($g['id']) && $g['id'] == $groupId) {
-        $group = $g;
-        break;
+if (!empty($deviceKeys)) {
+    $headerText = sprintf(_T("%d device(s) selected", "mobile"), count($deviceKeys));
+    $execTarget = 'device_keys';
+} else {
+    $groups = xmlrpc_get_hmdm_groups();
+    $groupName = _T("Unknown", "mobile");
+    foreach ($groups as $g) {
+        if (isset($g['id']) && $g['id'] == $groupId) {
+            $groupName = $g['name'];
+            break;
+        }
     }
+    $headerText = _T("Group", "mobile") . ": " . htmlspecialchars($groupName);
+    $execTarget = 'group_id';
 }
-
-if (!$group) {
-    echo "<p style='color: red; text-align: center;'>" . _T("Group not found", "mobile") . "</p>";
-    exit;
-}
-
-$groupName = $group['name'] ?? _T("Unknown", "mobile");
 ?>
 <style type="text/css">
     .popup{
@@ -41,19 +41,19 @@ $groupName = $group['name'] ?? _T("Unknown", "mobile");
 </style>
 
     <div style="width : 600px;">
-        <?
+        <?php
         echo "<h1>"._T("Quick Actions", "mobile")."</h1>";
-        echo "<h2>"._T("Group", "mobile")." : ".$groupName."</h2>";
+        echo "<h2>" . $headerText . "</h2>";
         ?>
         <table style="width : 500px;">
             <tr>
-            <?
+            <?php
                     echo sprintf("<td id='reboot0' align='center' title='%s'><img src='img/actions/restart.svg' height='70' width='70'></td>", _T("Click here to reboot devices in this group", "mobile"));
                     echo sprintf("<td id='sync0' align='center' title='%s'><img src='modules/updates/graph/navbar/updates.svg' height='70' width='70'></td>", _T("Click here to update configuration", "mobile"));
                 ?>
             </tr>
                 <tr>
-                <?
+                <?php
                     echo '<td id="reboot" align="center">'._T("Reboot", "mobile")."</td>";
                     echo '<td id="sync" align="center">'._T("Update Config", "mobile")."</td>";
                 ?>
@@ -109,33 +109,54 @@ $groupName = $group['name'] ?? _T("Unknown", "mobile");
         'runCommand': '{\n  "command": "shell command"\n}',
         'grantPermissions': '{\n  "pkg": "app.package.id"\n}'
     };
-    
+
+    var execTarget = '<?php echo $execTarget; ?>';
+    var deviceKeys = <?php echo json_encode(array_values($deviceKeys)); ?>;
     var groupId = <?php echo $groupId; ?>;
-    
+
     function submitAction(action, messageType, payload) {
         var form = document.createElement('form');
         form.method = 'POST';
         form.action = '<?php echo urlStrRedirect("mobile/mobile/groupQuickActionExec"); ?>';
-        
-        var fields = {
-            'group_id': groupId,
-            'action': action,
-            'message_type': messageType,
-            'payload': payload
-        };
-        
-        for (var key in fields) {
-            var input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = key;
-            input.value = fields[key];
-            form.appendChild(input);
+
+        var actionInput = document.createElement('input');
+        actionInput.type = 'hidden';
+        actionInput.name = 'action';
+        actionInput.value = action;
+        form.appendChild(actionInput);
+
+        var msgTypeInput = document.createElement('input');
+        msgTypeInput.type = 'hidden';
+        msgTypeInput.name = 'message_type';
+        msgTypeInput.value = messageType;
+        form.appendChild(msgTypeInput);
+
+        var payloadInput = document.createElement('input');
+        payloadInput.type = 'hidden';
+        payloadInput.name = 'payload';
+        payloadInput.value = payload;
+        form.appendChild(payloadInput);
+
+        if (execTarget === 'device_keys') {
+            deviceKeys.forEach(function(k) {
+                var inp = document.createElement('input');
+                inp.type = 'hidden';
+                inp.name = 'device_keys[]';
+                inp.value = k;
+                form.appendChild(inp);
+            });
+        } else {
+            var gidInput = document.createElement('input');
+            gidInput.type = 'hidden';
+            gidInput.name = 'group_id';
+            gidInput.value = groupId;
+            form.appendChild(gidInput);
         }
-        
+
         document.body.appendChild(form);
         form.submit();
     }
-   
+
     jQuery(function() {
         jQuery('#reboot0, #reboot').on('click', function(){
             submitAction('reboot', 'reboot', '');
@@ -162,7 +183,7 @@ $groupName = $group['name'] ?? _T("Unknown", "mobile");
         jQuery('#sync0, #sync').on('click', function(){
             submitAction('configUpdated', 'configUpdated', '');
         });
-        
+
         jQuery('#buttoncmd').click(function() {
                 var messageType = jQuery('#select').val();
             var payload = jQuery('#payload').val();

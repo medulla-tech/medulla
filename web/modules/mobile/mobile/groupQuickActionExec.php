@@ -1,83 +1,90 @@
 <?php
 require_once("modules/mobile/includes/xmlrpc.php");
 
-// Get parameters
+$deviceKeys = isset($_POST['device_keys']) && is_array($_POST['device_keys']) ? $_POST['device_keys'] : [];
 $groupId = isset($_REQUEST['group_id']) ? intval($_REQUEST['group_id']) : 0;
 $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
 
-if ($groupId <= 0) {
-    new NotifyWidgetFailure(_T("Invalid group ID", "mobile"));
-    header("Location: " . urlStrRedirect("mobile/mobile/groups"));
-    exit;
-}
-
-$groups = xmlrpc_get_hmdm_groups();
-$group = null;
-foreach ($groups as $g) {
-    if (isset($g['id']) && $g['id'] == $groupId) {
-        $group = $g;
-        break;
-    }
-}
-
-if (!$group) {
-    new NotifyWidgetFailure(_T("Group not found", "mobile"));
-    header("Location: " . urlStrRedirect("mobile/mobile/groups"));
-    exit;
-}
-
-$groupName = $group['name'] ?? '';
-
-if (empty($groupName)) {
-    new NotifyWidgetFailure(_T("Group name not found", "mobile"));
-    header("Location: " . urlStrRedirect("mobile/mobile/groups"));
+if (empty($deviceKeys) && $groupId <= 0) {
+    new NotifyWidgetFailure(_T("No devices or group specified", "mobile"));
+    header("Location: " . urlStrRedirect("mobile/mobile/index"));
     exit;
 }
 
 $messageType = '';
 $payload = '';
 
-switch ($action) {
-    case 'configUpdated':
-        $messageType = 'configUpdated';
-        $payload = '';
-        break;
-        
-    case 'custom':
-        $messageType = isset($_POST['message_type']) ? $_POST['message_type'] : '';
-        $payload = isset($_POST['payload']) ? $_POST['payload'] : '';
-        
-        if (empty($messageType)) {
-            new NotifyWidgetFailure(_T("Message type is required", "mobile"));
-            header("Location: " . urlStrRedirect("mobile/mobile/groupQuickAction", array("group_id" => $groupId)));
-            exit;
-        }
-        break;
-        
-    default:
-        new NotifyWidgetFailure(_T("Unknown action", "mobile"));
-        header("Location: " . urlStrRedirect("mobile/mobile/groupQuickAction", array("group_id" => $groupId)));
+$allowedActions = ['reboot', 'configUpdated', 'lockDevice', 'wipe', 'runApp', 'uninstallApp', 'deleteFile', 'deleteDir', 'purgeDir', 'permissiveMode', 'intent', 'runCommand', 'exitKiosk', 'clearDownloadHistory', 'grantPermissions'];
+
+if (in_array($action, $allowedActions)) {
+    $messageType = $action;
+    $payload = isset($_POST['payload']) ? $_POST['payload'] : '';
+} elseif ($action === 'custom') {
+    $messageType = isset($_POST['message_type']) ? $_POST['message_type'] : '';
+    $payload = isset($_POST['payload']) ? $_POST['payload'] : '';
+    if (empty($messageType)) {
+        new NotifyWidgetFailure(_T("Message type is required", "mobile"));
+        header("Location: " . urlStrRedirect("mobile/mobile/index"));
         exit;
+    }
+} else {
+    new NotifyWidgetFailure(_T("Unknown action", "mobile"));
+    header("Location: " . urlStrRedirect("mobile/mobile/index"));
+    exit;
 }
 
-//send the push message using existing function
-$result = xmlrpc_send_hmdm_push_message(
-    'group',            // scope (always group for group quick actions)
-    $messageType,       // message type
-    $payload,           // payload
-    '',                 // device number (empty string for group scope)
-    $groupId,           // group_id
-    ''                  // configuration_id (empty string for group scope)
-);
+if (!empty($deviceKeys)) {
+    $successCount = 0;
+    $failCount = 0;
 
-// check result and redirect
-if ($result && isset($result['status']) && $result['status'] === 'OK') {
-    new NotifyWidgetSuccess(_T("Command sent successfully to group", "mobile"));
+    foreach ($deviceKeys as $key) {
+        $parts = explode('##', $key, 2);
+        $deviceNumber = $parts[0];
+
+        if (empty($deviceNumber)) {
+            $failCount++;
+            continue;
+        }
+
+        $result = xmlrpc_send_hmdm_push_message(
+            'device',
+            $messageType,
+            $payload,
+            $deviceNumber,
+            '',
+            ''
+        );
+
+        if ($result && isset($result['status']) && $result['status'] === 'OK') {
+            $successCount++;
+        } else {
+            $failCount++;
+        }
+    }
+
+    if ($successCount > 0 && $failCount === 0) {
+        new NotifyWidgetSuccess(sprintf(_T("Command sent successfully to %d device(s)", "mobile"), $successCount));
+    } elseif ($successCount > 0) {
+        new NotifyWidgetSuccess(sprintf(_T("Command sent to %d device(s), failed for %d", "mobile"), $successCount, $failCount));
+    } else {
+        new NotifyWidgetFailure(_T("Failed to send command to devices", "mobile"));
+    }
 } else {
-    new NotifyWidgetFailure(_T("Failed to send command to group", "mobile"));
+    $result = xmlrpc_send_hmdm_push_message(
+        'group',
+        $messageType,
+        $payload,
+        '',
+        $groupId,
+        ''
+    );
+
+    if ($result && isset($result['status']) && $result['status'] === 'OK') {
+        new NotifyWidgetSuccess(_T("Command sent successfully to group", "mobile"));
+    } else {
+        new NotifyWidgetFailure(_T("Failed to send command to group", "mobile"));
+    }
 }
 
 header("Location: " . urlStrRedirect("mobile/mobile/pushMessages"));
 exit;
-
-?>

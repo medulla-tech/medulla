@@ -3,7 +3,17 @@ require("graph/navbar.inc.php");
 require("localSidebar.php");
 require_once("modules/mobile/includes/xmlrpc.php");
 
-$p = new PageGenerator(_T("List of all devices", 'mobile'));
+$status = isset($_GET['status']) ? $_GET['status'] : '';
+
+if ($status === 'online') {
+    $pageTitle = sprintf(_T("Group 'Phones online at %s' content", 'mobile'), date('Y-m-d H:i:s'));
+} elseif ($status === 'offline') {
+    $pageTitle = sprintf(_T("Group 'Phones offline at %s' content", 'mobile'), date('Y-m-d H:i:s'));
+} else {
+    $pageTitle = _T("List of all devices", 'mobile');
+}
+
+$p = new PageGenerator($pageTitle);
 $p->setSideMenu($sidemenu);
 $p->display();
 
@@ -33,6 +43,40 @@ try {
 echo '<button class="btn btn-small btn-primary" onclick="PopupWindow(event, \'main.php?module=mobile&submod=mobile&action=qrCode&apk=1\', 450); return false;" type="button">'._T("HMDM APK","mobile").'</button>';
 echo ' <button class="btn btn-small btn-primary" type="button" onclick="openAddDeviceModal()">'._T("Add device","mobile").'</button>';
 
+$device_keys_json = '[]';
+$device_count = 0;
+$suggested_group_name = '';
+if ($status) {
+    $onlineCodes = ['green', 'yellow'];
+    $allDevicesForFilter = xmlrpc_get_hmdm_devices();
+    if (!is_array($allDevicesForFilter)) $allDevicesForFilter = [];
+    $filteredDeviceKeys = [];
+    foreach ($allDevicesForFilter as $d) {
+        $isOnline = in_array($d['statusCode'] ?? '', $onlineCodes);
+        if (($status === 'online') === $isOnline) {
+            $devId = $d['id'] ?? $d['deviceId'] ?? '';
+            $filteredDeviceKeys[] = $d['number'] . '##' . $devId;
+        }
+    }
+    $device_count = count($filteredDeviceKeys);
+    $device_keys_json = json_encode($filteredDeviceKeys);
+    $suggested_group_name = ($status === 'online' ? _T("Online", "mobile") : _T("Offline", "mobile")) . '_' . date('Y-m-d_His');
+}
+
+if ($status && $device_count > 0): ?>
+<ul class="action">
+    <li class="quick" title="<?php echo htmlspecialchars(_T('Quick Actions', 'mobile')); ?>">
+        <a href="#" onclick="doTempGroupAction('quickaction'); return false;" title="<?php echo htmlspecialchars(_T('Quick Actions', 'mobile')); ?>">&nbsp;</a>
+    </li>
+    <li class="add" title="<?php echo htmlspecialchars(_T('Send Message', 'mobile')); ?>">
+        <a href="#" onclick="doTempGroupAction('message'); return false;" title="<?php echo htmlspecialchars(_T('Send Message', 'mobile')); ?>">&nbsp;</a>
+    </li>
+    <li class="edit" title="<?php echo htmlspecialchars(_T('Save as Group', 'mobile')); ?>">
+        <a href="#" onclick="doTempGroupAction('savegroup'); return false;" title="<?php echo htmlspecialchars(_T('Save as Group', 'mobile')); ?>">&nbsp;</a>
+    </li>
+</ul>
+<?php endif;
+
 if (isset($_GET['error'])) {
 	switch ($_GET['error']) {
 		case 'missing_device_number':
@@ -48,7 +92,7 @@ if (isset($_GET['error'])) {
 }
 
 
-$ajax = new AjaxFilter(urlStrRedirect("mobile/mobile/ajaxDeviceList"));
+$ajax = new AjaxFilter(urlStrRedirect("mobile/mobile/ajaxDeviceList") . ($status ? '&status=' . urlencode($status) : ''));
 $ajax->display();
 echo '<div id="mobileFlash" style="display:none;margin-bottom:10px;"></div>';
 $ajax->displayDivToUpdate();
@@ -226,4 +270,52 @@ function mobileFlash(type, msg) {
         .show();
     setTimeout(function(){ jQuery('#mobileFlash').fadeOut(400); }, 4000);
 }
+
+<?php if ($status && $device_count > 0): ?>
+var filteredDeviceKeys = <?php echo $device_keys_json; ?>;
+
+function doTempGroupAction(action) {
+    if (action === 'quickaction') {
+        jQuery.ajax({
+            url: 'main.php?module=mobile&submod=mobile&action=groupQuickAction',
+            type: 'POST',
+            data: jQuery.param({ device_keys: filteredDeviceKeys }),
+            success: function(html) {
+                PopupWindow(null, null, 650, null, html);
+            },
+            error: function() {
+                mobileFlash('error', '<?php echo addslashes(_T("An error occurred. Please try again.", "mobile")); ?>');
+            }
+        });
+        return;
+    }
+
+    var form = document.createElement('form');
+    form.method = 'POST';
+    form.style.display = 'none';
+
+    filteredDeviceKeys.forEach(function(k) {
+        var input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = action === 'savegroup' ? 'devices[]' : 'device_keys[]';
+        input.value = k;
+        form.appendChild(input);
+    });
+
+    if (action === 'savegroup') {
+        form.action = 'main.php?module=mobile&submod=mobile&action=addGroup';
+        var nameInput = document.createElement('input');
+        nameInput.type = 'hidden';
+        nameInput.name = 'suggested_name';
+        nameInput.value = '<?php echo addslashes($suggested_group_name); ?>';
+        form.appendChild(nameInput);
+        document.body.appendChild(form);
+        form.submit();
+    } else if (action === 'message') {
+        form.action = 'main.php?module=mobile&submod=mobile&action=newMessage';
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
+<?php endif; ?>
 </script>

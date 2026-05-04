@@ -453,6 +453,48 @@ class MobileDatabase(DatabaseHelper):
             logging.getLogger().error(f"Error getting HMDM device count: {e}")
             return []
 
+    def getHmdmOnlineCount(self):
+        """
+        Get online/offline count of HMDM devices for dashboard.
+        online  = statusCode in (green, yellow)
+        offline = statusCode in (red, brown, grey)
+        """
+        if not self.is_activated:
+            return {"total": 0, "online": 0, "offline": 0}
+
+        auth = self.authenticate()
+        if auth is None:
+            return {"total": 0, "online": 0, "offline": 0}
+
+        url = f"{self.BASE_URL}/private/devices/search"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {auth}"}
+        total = 0
+        online = 0
+        offset = 0
+        limit = 100
+
+        try:
+            while True:
+                payload = {"limit": limit, "offset": offset}
+                resp = requests.post(url, json=payload, headers=headers)
+                resp.raise_for_status()
+                devices = resp.json().get("data", {}).get("devices", {})
+                if offset == 0:
+                    total = devices.get("totalItemsCount", 0)
+                items = devices.get("items", [])
+                if not items:
+                    break
+                for d in items:
+                    if d.get("statusCode") in ("green", "yellow"):
+                        online += 1
+                if len(items) < limit:
+                    break
+                offset += limit
+            return {"total": total, "online": online, "offline": total - online}
+        except Exception as e:
+            logging.getLogger().error(f"Error getting HMDM online count: {e}")
+            return {"total": 0, "online": 0, "offline": 0}
+
     def getHmdmAllUsers(self):
         """
         Get all HMDM users via GET /private/users/all.
@@ -2382,30 +2424,50 @@ class MobileDatabase(DatabaseHelper):
             return {"status": "ERROR", "message": str(e)}
 
     def deleteHmdmGroupById(self, group_id):
-        """
-        Delete a group from HMDM by its ID.
-
-        :param group_id: The group ID to delete.
-        :return: True if deleted, False otherwise.
-        """
         hmtoken = self.authenticate()
         if hmtoken is None:
             logging.getLogger().error("Impossible to authenticate to delete group.")
             return False
 
-        url = f"{self.BASE_URL}/private/groups/{group_id}"
+        group_id = int(group_id)
         headers = {
             "Content-Type": "application/json",
             "Authorization": f"Bearer {hmtoken}"
         }
 
+        devices = self.getHmdmDevices()
+        url_devices = f"{self.BASE_URL}/private/devices"
+
+        for device in devices:
+            device_groups = device.get('groups', [])
+            group_ids = [g.get('id') for g in device_groups if isinstance(g, dict)]
+            if group_id not in group_ids:
+                continue
+            new_groups = [g for g in device_groups if g.get('id') != group_id]
+            update_payload = {
+                "id": device['id'],
+                "number": device['number'],
+                "configurationId": device['configurationId'],
+                "groups": new_groups
+            }
+            if device.get('description'):
+                update_payload['description'] = device['description']
+            if device.get('imei'):
+                update_payload['imei'] = device['imei']
+            if device.get('phone'):
+                update_payload['phone'] = device['phone']
+            try:
+                resp = requests.put(url_devices, json=update_payload, headers=headers)
+                resp.raise_for_status()
+            except Exception as e:
+                logging.getLogger().warning(f"Could not update device {device.get('number')} during group deletion: {e}")
+
+        url = f"{self.BASE_URL}/private/groups/{group_id}"
         try:
             resp = requests.delete(url, headers=headers)
             resp.raise_for_status()
-
             logging.getLogger().info(f"Group {group_id} deleted successfully.")
             return True
-
         except Exception as e:
             logging.getLogger().error(f"Error deleting group {group_id}: {e}")
             return False

@@ -2,6 +2,7 @@
 require_once("modules/mobile/includes/xmlrpc.php");
 
 $filter = isset($_GET['filter']) ? $_GET['filter'] : '';
+$status = isset($_GET['status']) ? $_GET['status'] : '';
 
 $mobiles = xmlrpc_get_hmdm_devices();
 $configurations_data = xmlrpc_get_hmdm_configurations();
@@ -37,6 +38,14 @@ if (!empty($filter)) {
     $mobiles = array_filter($mobiles, function($mobile) use ($filter) {
         $deviceName = $mobile['number'] ?? '';
         return stripos($deviceName, $filter) !== false;
+    });
+}
+
+if (!empty($status)) {
+    $onlineCodes = ['green', 'yellow'];
+    $mobiles = array_filter($mobiles, function($mobile) use ($status, $onlineCodes) {
+        $isOnline = in_array($mobile['statusCode'] ?? '', $onlineCodes);
+        return ($status === 'online') ? $isOnline : !$isOnline;
     });
 }
 
