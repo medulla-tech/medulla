@@ -118,7 +118,7 @@ foreach ($statglpiversion['id_machine'] as $key => $valeur) {
         "updates",
         "updates",
         null,
-        320,
+        640,
         "machine"
     );
 

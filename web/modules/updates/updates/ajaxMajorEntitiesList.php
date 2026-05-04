@@ -178,7 +178,7 @@ $deployAll = new ActionPopupItem(_T("Deploy all major updates on entity", "updat
                                     "updates",
                                     "updates",
                                     null,
-                                    320,"machine");
+                                    640,"machine");
 
 $emptydeployAll = new EmptyActionItem1(_T("There are no major updates to deploy for the entity.", "updates"),
                                             "grpDeployUpdatemajor",
