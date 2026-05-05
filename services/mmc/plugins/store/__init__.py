@@ -199,15 +199,25 @@ def _enrich_with_local_packages(data):
 def get_all_software(active_only=True, start=0, limit=0, sort="popular"):
     """Get all software from remote store API
 
+    Pagination and sorting are delegated to the remote API. Pass start=0
+    and limit=0 to fetch everything (no pagination).
+
     Returns:
-        dict with 'total' count and 'data' list
+        dict with 'total' count (full table) and 'data' list (current page)
     """
-    result = _store_api_get('softwares')
+    params = {}
+    if start: params['start'] = start
+    if limit: params['limit'] = limit
+    if sort and sort != 'popular': params['sort'] = sort
+
+    result = _store_api_get('softwares', params)
     if not result or not result.get('success'):
         return {'total': 0, 'data': []}
 
     data = _enrich_with_local_packages(result.get('data', []))
-    return {'total': result.get('count', len(data)), 'data': data}
+    # Prefer 'total' (full COUNT) over 'count' (size of current page)
+    total = result.get('total', result.get('count', len(data)))
+    return {'total': total, 'data': data}
 
 def get_software_by_id(software_id):
     """Get software by ID from remote store API"""
@@ -221,9 +231,10 @@ def get_filters():
 
     Normalizes API response to simple string lists expected by the frontend.
     """
+    empty = {'os': [], 'vendor': [], 'track': [], 'arch': [], 'category': []}
     result = _store_api_get('filters')
     if not result or not result.get('success'):
-        return {'os': [], 'vendor': [], 'track': [], 'arch': []}
+        return empty
 
     data = result.get('data', {})
     filters = {}
@@ -232,13 +243,17 @@ def get_filters():
     filters['vendor'] = [item if isinstance(item, str) else str(item) for item in data.get('vendors', data.get('vendor', []))]
     filters['track'] = [item['value'] if isinstance(item, dict) else item for item in data.get('tracks', data.get('track', []))]
     filters['arch'] = [item['value'] if isinstance(item, dict) else item for item in data.get('archs', data.get('arch', []))]
+    filters['category'] = [item if isinstance(item, str) else str(item) for item in data.get('categories', data.get('category', []))]
     return filters
 
 def search_software(filters=None, start=0, limit=0, sort="popular"):
     """Search software from remote store API
 
+    Pagination and sorting are delegated to the remote API. Pass start=0
+    and limit=0 to fetch everything (no pagination).
+
     Returns:
-        dict with 'total' count and 'data' list
+        dict with 'total' count (full result set) and 'data' list (current page)
     """
     config = StoreConfig("store")
     params = {}
@@ -251,14 +266,19 @@ def search_software(filters=None, start=0, limit=0, sort="popular"):
             params['vendor'] = filters['vendor']
         if filters.get('track'):
             params['track'] = filters['track']
+        if filters.get('category'):
+            params['category'] = filters['category']
+    if start: params['start'] = start
+    if limit: params['limit'] = limit
+    if sort and sort != 'popular': params['sort'] = sort
 
     result = _store_api_get('softwares', params)
     if not result or not result.get('success'):
         return {'total': 0, 'data': []}
 
     data = _enrich_with_local_packages(result.get('data', []))
-
-    return {'total': result.get('count', len(data)), 'data': data}
+    total = result.get('total', result.get('count', len(data)))
+    return {'total': total, 'data': data}
 
 def get_pending_requests():
     """Get pending software requests - not available via API"""

@@ -73,6 +73,7 @@ $filters = xmlrpc_get_filters();
 // Get filter parameters
 $currentFilters = array();
 if (!empty($_GET['os'])) $currentFilters['os'] = $_GET['os'];
+if (!empty($_GET['category'])) $currentFilters['category'] = $_GET['category'];
 if (!empty($_GET['search'])) $currentFilters['search'] = $_GET['search'];
 $currentSort = isset($_GET['sort']) ? $_GET['sort'] : 'popular';
 
@@ -127,10 +128,13 @@ function getOsLabel($os) {
     <input type="text" name="search" placeholder="<?php echo _T('Search...', 'store'); ?>"
            value="<?php echo htmlspecialchars($currentFilters['search'] ?? ''); ?>">
 
-    <select name="sort">
-        <option value="popular" <?php echo $currentSort == 'popular' ? 'selected' : ''; ?>><?php echo _T('Most Popular', 'store'); ?></option>
-        <option value="name" <?php echo $currentSort == 'name' ? 'selected' : ''; ?>><?php echo _T('A-Z', 'store'); ?></option>
-        <option value="recent" <?php echo $currentSort == 'recent' ? 'selected' : ''; ?>><?php echo _T('Most Recent', 'store'); ?></option>
+    <select name="category">
+        <option value=""><?php echo _T('All categories', 'store'); ?></option>
+        <?php foreach ($filters['category'] ?? [] as $cat): ?>
+        <option value="<?php echo htmlspecialchars($cat); ?>" <?php echo ($currentFilters['category'] ?? '') == $cat ? 'selected' : ''; ?>>
+            <?php echo htmlspecialchars($cat); ?>
+        </option>
+        <?php endforeach; ?>
     </select>
 
     <select name="os">
@@ -140,6 +144,12 @@ function getOsLabel($os) {
             <?php echo getOsLabel($os); ?>
         </option>
         <?php endforeach; ?>
+    </select>
+
+    <select name="sort">
+        <option value="popular" <?php echo $currentSort == 'popular' ? 'selected' : ''; ?>><?php echo _T('Most Popular', 'store'); ?></option>
+        <option value="name" <?php echo $currentSort == 'name' ? 'selected' : ''; ?>><?php echo _T('A-Z', 'store'); ?></option>
+        <option value="recent" <?php echo $currentSort == 'recent' ? 'selected' : ''; ?>><?php echo _T('Most Recent', 'store'); ?></option>
     </select>
 
     <button type="submit" class="btn btn-primary btn-small"><?php echo _T('Filter', 'store'); ?></button>
@@ -161,6 +171,7 @@ $emptyAction = new EmptyActionItem();
 $names = array();
 $vendors = array();
 $descriptions = array();
+$categories = array();
 $versions = array();
 $osList = array();
 $dates = array();
@@ -175,6 +186,7 @@ foreach ($softwares as $soft) {
 
     $vendors[] = htmlspecialchars($soft['vendor'] ?? '-');
     $descriptions[] = htmlspecialchars($soft['short_desc'] ?? '-');
+    $categories[] = htmlspecialchars($soft['category'] ?? '-');
     $versions[] = !empty($soft['version']) ? $soft['version'] : '-';
     $osList[] = getOsLabel($soft['os'] ?? '');
     $dates[] = !empty($soft['last_update']) ? date('d/m/Y', strtotime($soft['last_update'])) : '-';
@@ -200,20 +212,23 @@ if ($totalCount > 0) {
     $extraParams = "";
     if (!empty($currentSort) && $currentSort !== 'popular') $extraParams .= "&amp;sort=" . urlencode($currentSort);
     if (!empty($currentFilters['os'])) $extraParams .= "&amp;os=" . urlencode($currentFilters['os']);
+    if (!empty($currentFilters['category'])) $extraParams .= "&amp;category=" . urlencode($currentFilters['category']);
     if (!empty($currentFilters['search'])) $extraParams .= "&amp;search=" . urlencode($currentFilters['search']);
 
     $n = new OptimizedListInfos($names, _T("Software", "store"));
     $n->disableFirstColumnActionLink();
-    $n->addExtraInfo($vendors, _T("Vendor", "store"));
-    $n->addExtraInfo($descriptions, _T("Description", "store"));
+    $n->addExtraInfo($categories, _T("Category", "store"));
     $n->addExtraInfo($versions, _T("Version", "store"));
     $n->addExtraInfo($osList, _T("OS", "store"));
+    $n->addExtraInfo($vendors, _T("Vendor", "store"));
+    $n->addExtraInfo($descriptions, _T("Description", "store"));
     $n->addExtraInfo($dates, _T("Updated", "store"));
     $n->setItemCount($totalCount);
     $n->setNavBar(new SimpleNavBar($start, $start + count($softwares) - 1, $totalCount, $extraParams, $maxperpage));
     $n->setParamInfo($params);
     $n->addActionItemArray($deployActions);
     $n->addActionItemArray($detailActions);
+    $n->setResizable();
     $n->start = 0;
     $n->end = count($softwares);
     $n->display();
