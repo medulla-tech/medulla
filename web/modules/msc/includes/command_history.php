@@ -86,6 +86,7 @@ class CommandOnHost {
         }
 
         $n->setParamInfo(array($params));
+        $n->setResizable();
         $n->first_elt_padding = 0;
         $n->disableFirstColumnActionLink();
         $n->addActionItem(new ActionPopupItem(_T("Start", "msc"), "msctabsplay", "start", "msc", "base", "computers"));
@@ -537,12 +538,12 @@ class CommandHistory {
 
 
         //$n = new ListInfos(array_map("_names", $values), _T('<b>Command Overview</b>', 'msc'));
-        $n = new ListInfos($phase_names, '<b>' . _T('Step', 'msc') . '</b>', '', '80px');
-        //$n->addExtraInfo(array_map("_values", $values), '', '400px');
-        $n->addExtraInfo($phase_states, 'State', '20px');
-        $n->addExtraInfo($phase_dates, 'Execution time', '120px');
+        $n = new ListInfos($phase_names, '<b>' . _T('Step', 'msc') . '</b>');
+        //$n->addExtraInfo(array_map("_values", $values), '');
+        $n->addExtraInfo($phase_states, 'State');
+        $n->addExtraInfo($phase_dates, 'Execution time');
         $n->addExtraInfo($phase_logs, 'Details');
-        $n->addExtraInfo($btn_showfull_log, '', '20px');
+        $n->addExtraInfo($btn_showfull_log, '');
         $n->setTableHeaderPadding(0);
         $n->setRowsPerPage(20);
         $n->drawTable(0);
@@ -558,7 +559,7 @@ class CommandHistory {
             array(_T('Current proxy', 'msc'), $current_proxy),
         );
         $n = new ListInfos(array_map("_names", $values), _T('<b>Command Environment</b>', 'msc'));
-        $n->addExtraInfo(array_map("_values", $values), '', '400px');
+        $n->addExtraInfo(array_map("_values", $values), '');
         $n->setTableHeaderPadding(0);
         $n->setRowsPerPage(safeCount($values));
         $n->drawTable(0);

@@ -113,10 +113,10 @@ foreach($enabled_updates_list['kb'] as $kb) {
 $n = new OptimizedListInfos($titles, _T("Name", "updates"));
 $n->disableFirstColumnActionLink();
 
-$n->addExtraInfo($complRates, _T("Compliance rate", "updates"), "220px");
-$n->addExtraInfoCentered($machineWithUpd, _T("Installed", "updates"), "100px");
-$n->addExtraInfoCentered($machineWithoutUpd, _T("Requested", "updates"), "100px");
-$n->addExtraInfoCentered($total, _T("Total machines", "updates"), "100px");
+$n->addExtraInfo($complRates, _T("Compliance rate", "updates"));
+$n->addExtraInfoCentered($machineWithUpd, _T("Installed", "updates"));
+$n->addExtraInfoCentered($machineWithoutUpd, _T("Requested", "updates"));
+$n->addExtraInfoCentered($total, _T("Total machines", "updates"));
 
 $n->setItemCount($count_enabled_updates);
 $n->setNavBar(new AjaxNavBar($count_enabled_updates, $filter, 'updateSearchParamformWhite'));

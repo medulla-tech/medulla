@@ -88,6 +88,7 @@ foreach ($providers as $p) {
 }
 
 $list = new OptimizedListInfos($clients, _T("Client", "admin"));
+$list->setResizable();
 $list->setNavBar(new AjaxNavBar("10", ''));
 $list->disableFirstColumnActionLink();
 

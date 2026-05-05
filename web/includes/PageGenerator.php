@@ -1172,6 +1172,16 @@ class ListInfos extends HtmlElement
         $this->tableCssClass = $class;
     }
 
+    /**
+     * Backward-compatible API used by many modules.
+     * Table layout is now adaptive by default, so this primarily keeps
+     * legacy callers from failing at runtime.
+     */
+    public function setResizable($resizable = true)
+    {
+        $this->forceFixed = !$resizable;
+    }
+
     // 1. Définir le style CSS complet
     public function setCaptionText($texte)
     {
@@ -2232,6 +2242,8 @@ class AjaxFilter extends HtmlElement
         $this->divid   = $divid;
         $this->formid  = $formid;
         $this->refresh = 0;
+        $this->checkbox = array();
+        $this->onchange = "pushSearch" . $this->formid . "(); return false;";
 
         // --- Convertit les paramètres en chaîne propre ---
         if (is_array($params)) {
@@ -2276,6 +2288,15 @@ class AjaxFilter extends HtmlElement
     }
 
     /**
+     * Ajoute une case a cocher au filtre AJAX.
+     */
+    public function addCheckbox($checkbox)
+    {
+        $checkbox->onchange = $this->onchange;
+        $this->checkbox[] = $checkbox;
+    }
+
+    /**
      * @brief Active ou désactive le refresh automatique périodique.
      *
      * @param int $refresh Délai en ms. 0 = désactivé.
@@ -2305,6 +2326,9 @@ class AjaxFilter extends HtmlElement
     <div id="searchSpan<?php echo $this->formid ?>" class="searchbox">
 
         <div id="searchBest">
+            <?php foreach ($this->checkbox as $checkbox) {
+                $checkbox->display();
+            } ?>
             <input type="text"
                    class="searchfieldreal"
                    name="param"
@@ -2361,12 +2385,20 @@ updateSearch<?php echo $this->formid ?> = function() {
     clearTimers<?php echo $this->formid ?>();
 
     var searchValue = document.Form<?php echo $this->formid ?>.param.value;
+    var strCheckbox = "";
+
+    jQuery(".checkboxsearch").each(function() {
+        if (jQuery(this).is(":checked")) {
+            strCheckbox += '&' + jQuery(this).attr('id') + "=true";
+        }
+    });
 
     // Construction de l’URL AJAX
     var finalUrl =
         '<?php echo rtrim($this->url, "&"); ?>'
         + '&filter='     + encodeURIComponent(searchValue)
         + '&maxperpage=' + maxperpage
+        + strCheckbox
         <?php if ($this->storedstart !== null && $this->storedend !== null) { ?>
         + '&start=<?php echo $this->storedstart ?>'
         + '&end=<?php echo $this->storedend ?>'
@@ -2401,12 +2433,21 @@ updateSearchParam<?php echo $this->formid ?> = function(filter, start, end, max)
 
     clearTimers<?php echo $this->formid ?>();
 
+    var strCheckbox = "";
+
+    jQuery(".checkboxsearch").each(function() {
+        if (jQuery(this).is(":checked")) {
+            strCheckbox += '&' + jQuery(this).attr('id') + "=true";
+        }
+    });
+
     var finalUrl =
         '<?php echo rtrim($this->url, "&"); ?>'
         + '&filter='     + encodeURIComponent(filter)
         + '&start='      + start
         + '&end='        + end
-        + '&maxperpage=' + max;
+        + '&maxperpage=' + max
+        + strCheckbox;
 
 
     jQuery.ajax({
@@ -4093,8 +4134,9 @@ class PopupForm extends Form
 {
     protected $level = 'default';
     protected $popupClass = '';
+    protected $width = null;
 
-    public function __construct($title, $id = 'Form')
+    public function __construct($title, $id = 'Form', $width = null)
     {
         $options = array("action" => $_SERVER["REQUEST_URI"], 'id' => $id);
         parent::__construct($options);
@@ -4102,6 +4144,7 @@ class PopupForm extends Form
         $this->title = $title;
         $this->text = array();
         $this->ask = "";
+        $this->width = $width;
     }
 
     public function setLevel($level)
@@ -4114,13 +4157,23 @@ class PopupForm extends Form
         $this->popupClass = $class;
     }
 
+    public function setWidth($width)
+    {
+        $this->width = $width;
+    }
+
     public function begin()
     {
         $levelClass = ($this->level !== 'default') ? ' popup-title-' . $this->level : '';
         if (!empty($this->popupClass)) {
             $levelClass .= ' ' . $this->popupClass;
         }
-        $str = "<h2 class='" . trim($levelClass) . "'>" . $this->title . "</h2>\n";
+        $str = '';
+        if ($this->width !== null) {
+            $w = htmlspecialchars($this->width, ENT_QUOTES);
+            $str .= '<script>jQuery(function(){ var p = jQuery("#__popup_container").closest(".popup"); if(p.length){ p.css("width","' . $w . '"); } });</script>' . "\n";
+        }
+        $str .= "<h2 class='" . trim($levelClass) . "'>" . $this->title . "</h2>\n";
         $str .= parent::begin();
         foreach ($this->text as $text) {
             $str .= "<p>" . $text . "</p>";

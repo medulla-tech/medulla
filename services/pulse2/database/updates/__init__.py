@@ -675,7 +675,7 @@ class UpdatesDatabase(DatabaseHelper):
         WHERE ent_id = :ent_id
             AND old_version = '11'
             AND new_version = '11'
-            AND old_code != '25H2';
+            AND UPPER(TRIM(COALESCE(oldcode, ''))) != UPPER(TRIM(COALESCE(newcode, '')));
         """
         rows = session.execute(sql, {"ent_id": entity_id})
         for row in rows:
@@ -698,7 +698,7 @@ class UpdatesDatabase(DatabaseHelper):
         WHERE ent_id = :ent_id
             AND old_version = '10'
             AND new_version = '10'
-            AND old_code != '22H2';
+            AND UPPER(TRIM(COALESCE(oldcode, ''))) != UPPER(TRIM(COALESCE(newcode, '')));
         """
         rows = session.execute(sql, {"ent_id": entity_id})
         for row in rows:
@@ -744,7 +744,7 @@ class UpdatesDatabase(DatabaseHelper):
         WHERE ent_id = :ent_id
             AND old_version = '11'
             AND new_version = '11'
-            AND old_code = '25H2';
+            AND UPPER(TRIM(COALESCE(oldcode, ''))) = UPPER(TRIM(COALESCE(newcode, '')));
         """
         rows = session.execute(sql, {"ent_id": entity_id})
         for row in rows:

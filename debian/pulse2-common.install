@@ -49,4 +49,6 @@ usr/sbin/medulla-stats.sh
 usr/sbin/update_medulla.sh
 usr/sbin/import_masters.sh
 usr/sbin/check_medulla_updates.sh
+usr/sbin/medulla-generate-winupdate-packages
+usr/sbin/medulla-generate-winupdatemajor-packages
 var/lib/pulse2/file-transfer

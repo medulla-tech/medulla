@@ -153,8 +153,8 @@ if (isset($_GET['uuid'])) {
         $filter['filter1'] = "win";
     }
     // Hard to tell if it is a darwin or linux from xmppmaster.machines.platform field, unless we keep track on each big OS names such as Ubuntu, Lubuntu, Debian etc...
-    else if(preg_match("#macOS#i", $platform)) {
-        $filter['filter1'] = "darwin";
+    else if(preg_match("#macOS|darwin|Mac OS#i", $platform)) {
+        $filter['filter1'] = "mac";
     }
     else if(preg_match("#Android#i", $platform)){
         $filter['filter1'] = "android";
@@ -175,6 +175,7 @@ $packages[0][2]["server"] = "localhost";
 $packages[0][2]["protocol"] = "https";
 $packages[0][2]["uuid"] = "UUID/package_api_get1";
 $packages[0][2]["port"] = 9990;
+$hideWinUpdates = isset($_GET['hide_win_updates']) && $_GET['hide_win_updates'] === 'true';
 $err = array();
 foreach ($packages as $c_package) {
     $elt_convergence_status = "";
@@ -190,6 +191,12 @@ foreach ($packages as $c_package) {
     } else {
 
         if($package != null) {
+            // Skip winupdates packages if checkbox is checked
+            $locServer = isset($c_package[0]['localisation_server']) ? $c_package[0]['localisation_server'] : '';
+            if ($hideWinUpdates && stripos($locServer, 'winupdate') !== false) {
+                $count--;
+                continue;
+            }
             $a_packages[] = $package->label;
             $descText = htmlspecialchars($package->description);
             $a_description[] = "<span class='pkg-description' title=\"$descText\">$descText</span>";
@@ -279,10 +286,11 @@ foreach($params as $pid_pkgs) {
 }
 
 $n = new OptimizedListInfos($a_packages, _T("Package name", "pkgs"));
+$n->setResizable();
 $n->setcssIds($ids_deploy);
 $n->addExtraInfo($a_description, _T("Description", "msc"));
-$n->addExtraInfoCentered($a_pversions, _T("Version", "msc"), "90px");
-$n->addExtraInfoCentered($a_sizes, _T("Size", "pkgs"), "90px");
+$n->addExtraInfoCentered($a_pversions, _T("Version", "msc"));
+$n->addExtraInfoCentered($a_sizes, _T("Size", "pkgs"));
 if ($group != null) {
     $n->addExtraInfo($a_convergence_status, _T("Convergence", "msc"));
 }
@@ -336,14 +344,8 @@ $n->display();
         overflow: hidden;
         text-overflow: ellipsis;
     }
-    /* Package description - truncate with tooltip */
+    /* Package description */
     .pkg-description {
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        max-width: 200px;
         line-height: 1.4;
     }
 </style>

@@ -145,6 +145,7 @@ DELIMITER ;
 -- Description :
 --   Cette procedure cree une table temporaire up_packages_Windows_Security_platform
 --   filtrée pour Windows Security platform uniquement (titre et produit)
+
 DELIMITER $$
 USE `xmppmaster`$$
 DROP PROCEDURE IF EXISTS `up_init_packages_Windows_Security_platform`$$
@@ -152,39 +153,47 @@ CREATE PROCEDURE `up_init_packages_Windows_Security_platform`()
 BEGIN
 DROP TABLE IF EXISTS up_packages_Windows_Security_platform;
 CREATE TABLE up_packages_Windows_Security_platform AS
- SELECT
-    aa.updateid,
-    bb.updateid AS updateid_package,
-    aa.revisionid,
-    aa.creationdate,
-    aa.compagny,
-    aa.product,
-    aa.productfamily,
-    aa.updateclassification,
-    aa.prerequisite,
-    aa.title,
-    aa.description,
-    aa.msrcseverity,
-    aa.msrcnumber,
-    aa.kb,
-    aa.languages,
-    aa.category,
-    aa.supersededby,
-    aa.supersedes,
-    bb.payloadfiles,
-    aa.revisionnumber,
-    aa.bundledby_revision,
-    aa.isleaf,
-    aa.issoftware,
-    aa.deploymentaction,
-    aa.title_short
-FROM
-    xmppmaster.update_data aa
-        JOIN
-    xmppmaster.update_data bb ON bb.bundledby_revision = aa.revisionid
-WHERE
-		aa.product LIKE '%Windows Security platform%'
-		AND aa.title LIKE '%Windows Security platform%';
+    SELECT
+        aa.updateid,
+        bb.updateid AS updateid_package,
+        aa.revisionid,
+        aa.creationdate,
+        aa.compagny,
+        aa.product,
+        aa.productfamily,
+        aa.updateclassification,
+        aa.prerequisite,
+        aa.title,
+        aa.description,
+        aa.msrcseverity,
+        aa.msrcnumber,
+        aa.kb,
+        aa.languages,
+        aa.category,
+        aa.supersededby,
+        aa.supersedes,
+        bb.payloadfiles,
+        aa.revisionnumber,
+        aa.bundledby_revision,
+        aa.isleaf,
+        aa.issoftware,
+        aa.deploymentaction,
+        aa.title_short
+    FROM
+        xmppmaster.update_data aa
+    JOIN
+        xmppmaster.update_data bb ON bb.bundledby_revision = aa.revisionid
+    WHERE
+        (
+            -- Cas 1 : Windows Security platform
+            (aa.product LIKE '%Windows Security platform%' AND aa.title LIKE '%Windows Security platform%')
+            OR
+            -- Cas 2 : Microsoft Defender Antivirus
+            (aa.product LIKE '%Microsoft Defender Antivirus%' AND aa.title LIKE '%Microsoft Defender Antivirus%' AND aa.updateclassification = 'Definition Updates')
+            OR
+            -- Cas 3 : System Center Endpoint Protection
+            (aa.product LIKE '%System Center Endpoint Protection%' AND aa.title LIKE '%Security Intelligence Update%' AND aa.updateclassification = 'Definition Updates')
+        );
 END$$
 
 DELIMITER ;

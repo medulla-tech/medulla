@@ -58,8 +58,9 @@ try {
         throw new Exception("Échec de la création du groupe.");
     }
 
-    // Ajout des membres
-    $membersAdded = $group->addMembers($namemachine);
+    // Ajout des membres : miniAddMembers évite le chemin addmembers_to_group
+    // qui est sensible aux écarts de casse UUID dans le cache dyngroup.
+    $membersAdded = $group->miniAddMembers($namemachine);
 
     if ($membersAdded === false) {
         throw new Exception("Échec de l'ajout des membres au groupe.");

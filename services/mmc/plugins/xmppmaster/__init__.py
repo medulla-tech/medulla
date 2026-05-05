@@ -221,22 +221,31 @@ class RpcProxy(RpcProxyI):
                                                               entity_id=entity_id)
 
 
-    def getListPackages(self,):
+    def getListPackages(self):
         resultnamepackage = []
-        FichList = [
-            f
-            for f in os.listdir("/var/lib/pulse2/packages/")
-            if os.path.isfile(
-                os.path.join("/var/lib/pulse2/packages/", f, "xmppdeploy.json")
-            )
-        ]
-        for package in FichList:
-            with open(
-                os.path.join("/var/lib/pulse2/packages/",
-                            package, "xmppdeploy.json"), "r"
-            ) as fichier:
-                session = json.load(fichier)
-                resultnamepackage.append(session["info"]["name"])
+        base_path = "/var/lib/pulse2/packages/"
+
+        for d in os.listdir(base_path):
+            package_path = os.path.join(base_path, d)
+
+            # Vérifie que c'est un dossier
+            if not os.path.isdir(package_path):
+                continue
+
+            json_path = os.path.join(package_path, "xmppdeploy.json")
+
+            # Vérifie que le fichier existe
+            if not os.path.isfile(json_path):
+                continue
+
+            # Lecture du JSON
+            try:
+                with open(json_path, "r") as fichier:
+                    session = json.load(fichier)
+                    resultnamepackage.append(session["info"]["name"])
+            except Exception as e:
+                print(f"Erreur avec {json_path}: {e}")
+
         return resultnamepackage
 
 

@@ -1,6 +1,7 @@
 <?php
 /*
  * (c) 2025 Siveo, http://www.siveo.net
+ * (c) 2025-2026 Medulla, https://www.medulla-tech.io
  *
  * $Id$
  *
@@ -88,24 +89,6 @@ var template = [
             '</UserData>',
             '<EnableFirewall><?php echo $strin; ?>EnableFirewall<?php echo $strou; ?></EnableFirewall>',
             '<UseConfigurationSet>false</UseConfigurationSet>',
-            '<RunSynchronous>',
-                '<RunSynchronousCommand wcm:action="add">',
-                    '<Order>1</Order>',
-                    '<Path>cmd.exe /c &gt;&gt;X:\\diskpart.txt (echo SELECT DISK=0&amp;echo CLEAN&amp;echo CONVERT GPT&amp;echo CREATE PARTITION EFI SIZE=300&amp;echo FORMAT QUICK FS=FAT32 LABEL=^"System^"&amp;echo CREATE PARTITION MSR SIZE=16)"</Path>',
-                '</RunSynchronousCommand>',
-                '<RunSynchronousCommand wcm:action="add">',
-                    '<Order>2</Order>',
-                    '<Path>cmd.exe /c &gt;&gt;X:\\diskpart.txt (echo CREATE PARTITION PRIMARY&amp;echo SHRINK MINIMUM=1000&amp;echo FORMAT QUICK FS=NTFS LABEL=^"Windows^"&amp;echo CREATE PARTITION PRIMARY&amp;echo FORMAT QUICK FS=NTFS LABEL=^"Recovery^")"</Path>',
-                '</RunSynchronousCommand>',
-                '<RunSynchronousCommand wcm:action="add">',
-                    '<Order>3</Order>',
-                    '<Path>cmd.exe /c &gt;&gt;X:\\diskpart.txt (echo SET ID=^"de94bba4-06d1-4d40-a16a-bfd50179d6ac^"&amp;echo GPT ATTRIBUTES=0x8000000000000001)"</Path>',
-                '</RunSynchronousCommand>',
-                '<RunSynchronousCommand wcm:action="add">',
-                    '<Order>4</Order>',
-                    '<Path>cmd.exe /c "diskpart.exe /s "X:\\diskpart.txt" &gt;&gt;"X:\\diskpart.log" || ( type "X:\\diskpart.log" &amp; echo diskpart encountered an error. &amp; pause &amp; exit /b 1 )"</Path>',
-                '</RunSynchronousCommand>',
-            '</RunSynchronous>',
         '</component>',
     '</settings>',
     '',
@@ -164,26 +147,30 @@ var template = [
             '<RunSynchronous>',
                 '<RunSynchronousCommand wcm:action="add">',
                     '<Order>1</Order>',
-                    '<Path>powershell.exe -WindowStyle Normal -NoProfile -Command "$xml = [xml]::new(); $xml.Load(\'C:\\Windows\\Panther\\unattend.xml\'); $sb = [scriptblock]::Create( $xml.unattend.Extensions.ExtractScript ); Invoke-Command -ScriptBlock $sb -ArgumentList $xml;"</Path>',
+                    '<Path>net user <?php echo $strin;?>LoginAdmin<?php echo $strou;?> /active:yes</Path>',
                 '</RunSynchronousCommand>',
                 '<RunSynchronousCommand wcm:action="add">',
                     '<Order>2</Order>',
-                    '<Path>powershell.exe -WindowStyle Normal -NoProfile -Command "Get-Content -LiteralPath \'C:\\Windows\\Setup\\Scripts\\Specialize.ps1\' -Raw | Invoke-Expression;"</Path>',
+                    '<Path>powershell.exe -WindowStyle Normal -NoProfile -Command "$xml = [xml]::new(); $xml.Load(\'C:\\Windows\\Panther\\unattend.xml\'); $sb = [scriptblock]::Create( $xml.unattend.Extensions.ExtractScript ); Invoke-Command -ScriptBlock $sb -ArgumentList $xml;"</Path>',
                 '</RunSynchronousCommand>',
                 '<RunSynchronousCommand wcm:action="add">',
                     '<Order>3</Order>',
-                    '<Path>reg.exe load "HKU\\DefaultUser" "C:\\Users\\Default\\NTUSER.DAT"</Path>',
+                    '<Path>powershell.exe -WindowStyle Normal -NoProfile -Command "Get-Content -LiteralPath \'C:\\Windows\\Setup\\Scripts\\Specialize.ps1\' -Raw | Invoke-Expression;"</Path>',
                 '</RunSynchronousCommand>',
                 '<RunSynchronousCommand wcm:action="add">',
                     '<Order>4</Order>',
-                    '<Path>powershell.exe -WindowStyle Normal -NoProfile -Command "Get-Content -LiteralPath \'C:\\Windows\\Setup\\Scripts\\DefaultUser.ps1\' -Raw | Invoke-Expression;"</Path>',
+                    '<Path>reg.exe load "HKU\\DefaultUser" "C:\\Users\\Default\\NTUSER.DAT"</Path>',
                 '</RunSynchronousCommand>',
                 '<RunSynchronousCommand wcm:action="add">',
                     '<Order>5</Order>',
-                    '<Path>reg.exe unload "HKU\\DefaultUser"</Path>',
+                    '<Path>powershell.exe -WindowStyle Normal -NoProfile -Command "Get-Content -LiteralPath \'C:\\Windows\\Setup\\Scripts\\DefaultUser.ps1\' -Raw | Invoke-Expression;"</Path>',
                 '</RunSynchronousCommand>',
                 '<RunSynchronousCommand wcm:action="add">',
                     '<Order>6</Order>',
+                    '<Path>reg.exe unload "HKU\\DefaultUser"</Path>',
+                '</RunSynchronousCommand>',
+                '<RunSynchronousCommand wcm:action="add">',
+                    '<Order>7</Order>',
                     '<Path>powershell.exe -executionpolicy bypass -File c:\\ProgramData\\SysPrep\\drivers\\install-driver-cert.ps1</Path>',
                 '</RunSynchronousCommand>',
             '</RunSynchronous>',
@@ -1006,6 +993,13 @@ $f->add(new SepTpl());
 //=====================
 $f->add(new TitleElement(_T("Administrator Account", "imaging")));
 $f->push(new Table());
+
+//_____________
+$f->add(
+    new TrFormElement(_T('Login', 'imaging'), new InputTplTitle('LoginAdmin', $InfoBule_LoginAdmin)),
+    array(  "required" => true,
+            "value" => (isset($parameters['LoginAdmin'])) ? $parameters['LoginAdmin'] : _T("Administrator", "imaging"))
+);
 
 //_____________
 $f->add(

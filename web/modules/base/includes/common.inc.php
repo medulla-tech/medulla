@@ -70,26 +70,3 @@ function parseIniSection($filePath, $section)
     return $sectionData;
 }
 
-function fetchGlpiProvisioning(array $configPaths): array {
-    $base  = parseIniSection($configPaths['GLPI_INI_PATH'],       'provisioning_glpi');
-    $local = parseIniSection($configPaths['GLPI_LOCAL_INI_PATH'], 'provisioning_glpi');
-    return array_replace($base ?: [], $local ?: []);
-}
-
-function getGlpiAclForProfile(string $profileName, array $configPaths, string $default=':base#main#default/'): string {
-    $profileName = trim($profileName ?? '');
-    if ($profileName === '') {
-        return $default;
-    }
-    $prov = fetchGlpiProvisioning($configPaths);
-
-    $key = 'profile_acl_' . preg_replace('/\s+/', '-', $profileName);
-    $val = (string)($prov[$key] ?? '');
-
-    if ($val === '') {
-        $altKey = 'profile_acl_' . str_replace(' ', '_', $profileName);
-        $val = (string)($prov[$altKey] ?? '');
-    }
-
-    return ($val !== '') ? $val : $default;
-}

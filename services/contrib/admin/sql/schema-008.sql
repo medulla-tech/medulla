@@ -24,7 +24,7 @@ START TRANSACTION;
 USE admin;
 
 INSERT INTO saas_application (setting_name, setting_value, setting_description)
-VALUES ('glpi_crypt_key', NULL, 'GLPI 11 sodium encryption key (base64)')
+VALUES ('glpi_crypt_key', '', 'GLPI 11 sodium encryption key (base64)')
 ON DUPLICATE KEY UPDATE setting_description = VALUES(setting_description);
 
 UPDATE version SET Number = 8;
