@@ -339,6 +339,9 @@ $disclaimerText = file_exists($disclaimerFile) ? nl2br(htmlspecialchars(file_get
 var disclaimerAccepted = false;
 // Initial subscribed IDs (from server)
 var initialSubscribedIds = <?php echo json_encode(array_map('intval', $subscribedIds)); ?>;
+// IDs visible on the current page only (used to merge selection across pages
+// when paginating: subscriptions from other pages must be preserved on save).
+var currentPageIds = <?php echo json_encode(array_map(function($s) { return (int) $s['id']; }, $softwares)); ?>;
 
 document.addEventListener('DOMContentLoaded', function() {
     var form = document.getElementById('subscriptionForm');
@@ -367,8 +370,15 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function updateCount() {
-        var checked = document.querySelectorAll('.software-checkbox:checked').length;
-        countEl.textContent = checked;
+        // Total = preserved-from-other-pages + checked-on-this-page
+        var checkedHere = [];
+        document.querySelectorAll('.software-checkbox:checked').forEach(function(cb) {
+            checkedHere.push(parseInt(cb.value, 10));
+        });
+        var preserved = initialSubscribedIds.filter(function(id) {
+            return currentPageIds.indexOf(id) === -1;
+        });
+        countEl.textContent = preserved.length + checkedHere.length;
         updateSaveButton();
     }
 
@@ -423,13 +433,29 @@ document.addEventListener('DOMContentLoaded', function() {
         // Clear previous hidden inputs
         hiddenContainer.innerHTML = '';
 
-        // Add hidden input for each checked checkbox
-        var checkedBoxes = document.querySelectorAll('.software-checkbox:checked');
-        checkedBoxes.forEach(function(cb) {
+        // The backend save_subscriptions() replaces the full list, so we must
+        // submit the *complete* desired set, not just what's checked on this
+        // page. Otherwise paginating then saving wipes subscriptions from
+        // other pages.
+        //
+        //   final = (initial - currentPageIds) + checkedOnThisPage
+        //
+        // i.e. preserve everything that wasn't on the current page, then add
+        // what is currently checked here.
+        var checkedHere = [];
+        document.querySelectorAll('.software-checkbox:checked').forEach(function(cb) {
+            checkedHere.push(parseInt(cb.value, 10));
+        });
+        var preserved = initialSubscribedIds.filter(function(id) {
+            return currentPageIds.indexOf(id) === -1;
+        });
+        var finalIds = preserved.concat(checkedHere);
+
+        finalIds.forEach(function(id) {
             var hidden = document.createElement('input');
             hidden.type = 'hidden';
             hidden.name = 'software_ids[]';
-            hidden.value = cb.value;
+            hidden.value = id;
             hiddenContainer.appendChild(hidden);
         });
 
