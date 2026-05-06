@@ -308,22 +308,54 @@ class GLPIClient:
         elif type == "myentities":
             endpoint = f"getMyEntities?is_recursive={str(is_recursive).lower()}"
 
-        response = requests.get(f"{self.URL_BASE}/{endpoint}", headers=headers)
-
-        if response.status_code != 200:
-            response.raise_for_status()
-
-        data = self.__clean_none_values(response.json())
-
-        if type == "users":
-            return data
-        elif type == "profiles":
-            self.profiles = data
-            return data
-        elif type == "entities":
-            return data
-        elif type == "myentities":
+        # myentities est un endpoint custom non paginé : un seul appel suffit
+        if type == "myentities":
+            response = requests.get(f"{self.URL_BASE}/{endpoint}", headers=headers)
+            if response.status_code != 200:
+                response.raise_for_status()
+            data = self.__clean_none_values(response.json())
             return data.get("myentities", [])
+
+        # Endpoints standards (User/Profile/Entity) : GLPI pagine à 20 par défaut.
+        # On boucle via le header Content-Range "start-end/total" jusqu'à tout consommer.
+        page_size = 200
+        offset = 0
+        all_items = []
+        while True:
+            sep = "&" if "?" in endpoint else "?"
+            url = f"{self.URL_BASE}/{endpoint}{sep}range={offset}-{offset + page_size - 1}"
+            response = requests.get(url, headers=headers)
+
+            # 206 Partial Content = page reçue ; 200 OK = page unique ; 416 = plus rien
+            if response.status_code == 416:
+                break
+            if response.status_code not in (200, 206):
+                response.raise_for_status()
+
+            chunk = response.json()
+            if not isinstance(chunk, list) or not chunk:
+                break
+            all_items.extend(chunk)
+
+            content_range = response.headers.get("Content-Range", "")
+            total = None
+            if "/" in content_range:
+                try:
+                    total = int(content_range.split("/", 1)[1])
+                except (ValueError, IndexError):
+                    total = None
+
+            if total is not None and len(all_items) >= total:
+                break
+            if len(chunk) < page_size:
+                break
+            offset += page_size
+
+        data = self.__clean_none_values(all_items)
+
+        if type == "profiles":
+            self.profiles = data
+        return data
 
     def get_list_users(self):
         """
