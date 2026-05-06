@@ -304,11 +304,6 @@ $pageGroupQuickActionExec->setFile("modules/mobile/mobile/groupQuickActionExec.p
 $pageGroupQuickActionExec->setOptions(array("AJAX" => false, "visible" => false));
 $submod->addPage($pageGroupQuickActionExec);
 
-$pageTempGroupAction = new Page("tempGroupAction", _T('Temp Group Action', 'mobile'));
-$pageTempGroupAction->setFile("modules/mobile/mobile/tempGroupAction.php");
-$pageTempGroupAction->setOptions(array("AJAX" => true, "visible" => false));
-$submod->addPage($pageTempGroupAction);
-
 $pageAddGroup = new Page("addGroup", _T('Save as Group', 'mobile'));
 $pageAddGroup->setFile("modules/mobile/mobile/addGroup.php");
 $pageAddGroup->setOptions(array("visible" => false));
@@ -332,9 +327,19 @@ $pageMessaging = new Page("messaging", _T('Messages', 'mobile'));
 $pageMessaging->setFile("modules/mobile/mobile/messaging.php");
 $submod->addPage($pageMessaging);
 
+$pageAjaxMessagingList = new Page("ajaxMessagingList", _T('Messages list view', 'mobile'));
+$pageAjaxMessagingList->setFile("modules/mobile/mobile/ajaxMessagingList.php");
+$pageAjaxMessagingList->setOptions(array("AJAX" => true, "visible" => false));
+$submod->addPage($pageAjaxMessagingList);
+
 $pagePushMessages = new Page("pushMessages", _T('Push messages', 'mobile'));
 $pagePushMessages->setFile("modules/mobile/mobile/pushMessages.php");
 $submod->addPage($pagePushMessages);
+
+$pageAjaxPushMessagesList = new Page("ajaxPushMessagesList", _T('Push messages list view', 'mobile'));
+$pageAjaxPushMessagesList->setFile("modules/mobile/mobile/ajaxPushMessagesList.php");
+$pageAjaxPushMessagesList->setOptions(array("AJAX" => true, "visible" => false));
+$submod->addPage($pageAjaxPushMessagesList);
 
 ################################
 # Contacts sync pages
