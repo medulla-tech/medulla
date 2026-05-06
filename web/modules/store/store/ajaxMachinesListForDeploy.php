@@ -116,12 +116,16 @@ $n->end = count($names);
 $n->display();
 
 // Inject checkboxes + machine icon
+// Note: we select *all* tbody rows (not only tr.alternate which is the zebra
+// stripe class). With the previous selector, every other row was missed and
+// the corresponding machine had no working checkbox, leading to "no machine
+// selected" even when one was visually checked.
 $uuidsJson = json_encode($machineUuids);
 echo <<<SCRIPT
 <script>
 (function() {
     var uuids = {$uuidsJson};
-    var rows = document.querySelectorAll('.listinfos tbody tr.alternate');
+    var rows = document.querySelectorAll('.listinfos tbody tr');
     for (var i = 0; i < rows.length && i < uuids.length; i++) {
         var cell = rows[i].children[0];
         if (!cell) continue;
@@ -136,6 +140,12 @@ echo <<<SCRIPT
         cb.className = 'machine-checkbox';
         cb.name = 'machines[]';
         cb.value = uuids[i];
+        // The Medulla AjaxFilter renders a search form before the deploy form,
+        // so when this row is injected via AJAX the checkbox ends up *outside*
+        // any form (browser parses nested <form>s and silently flattens them).
+        // The HTML5 'form' attribute attaches the input to the deploy form by
+        // ID, regardless of DOM parentage.
+        cb.setAttribute('form', 'deploy-form-machines');
         cb.style.cssText = 'width:15px;height:15px;cursor:pointer;flex-shrink:0;vertical-align:middle;margin:0 2px;';
 
         // Order: checkbox, icon, then existing text

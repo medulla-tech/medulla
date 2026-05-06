@@ -244,6 +244,7 @@ if ($areCommands) { // display several commands
     }
 
     $n = new OptimizedListInfos($a_cmd, _T("Command", "msc"));
+    $n->setResizable();
 
     $n->addExtraInfo($a_date, _T("Start date", "msc"));
     $n->addExtraInfo($a_enddates, _T("End date", "msc"));
@@ -391,6 +392,7 @@ if ($areCommands) { // display several commands
     }
 
     $n = new OptimizedListInfos($a_mode, _T("Mode", "msc"));
+    $n->setResizable();
     if ($uuid) {
         $n->addExtraInfo($a_client, _T("Command", "msc"));
     } else {

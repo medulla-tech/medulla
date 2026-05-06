@@ -1125,3 +1125,51 @@ msgstr ""
 #: modules/admin/infoPackage.inc.php:244
 msgid "Delete Provider"
 msgstr ""
+
+#: modules/admin/admin/localSidebar.php modules/admin/infoPackage.inc.php modules/admin/admin/authConfig.php
+msgid "Authentication Configuration"
+msgstr ""
+
+#: modules/admin/admin/authConfig.php
+msgid "Magic Link"
+msgstr ""
+
+#: modules/admin/admin/authConfig.php
+msgid "Magic Link Settings"
+msgstr ""
+
+#: modules/admin/admin/authConfig.php
+msgid "Define how long a Magic Link remains valid. Value is in minutes."
+msgstr ""
+
+#: modules/admin/admin/authConfig.php
+msgid "Expiration (minutes)"
+msgstr ""
+
+#: modules/admin/admin/authConfig.php
+msgid "Save"
+msgstr ""
+
+#: modules/admin/admin/authConfig.php
+msgid "Magic Link configuration saved"
+msgstr ""
+
+#: modules/admin/admin/authConfig.php
+msgid "Failed to save Magic Link configuration"
+msgstr ""
+
+#: modules/admin/admin/authConfig.php
+msgid "Unable to detect MMC configuration table"
+msgstr ""
+
+#: modules/admin/admin/authConfig.php
+msgid "Manage existing clients below, or create a new OIDC client."
+msgstr ""
+
+#: modules/admin/admin/authConfig.php
+msgid "Add OIDC Client"
+msgstr ""
+
+#: modules/admin/admin/authConfig.php
+msgid "Security token validation failed"
+msgstr ""

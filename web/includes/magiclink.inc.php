@@ -48,10 +48,12 @@ if ($ret) {
     $to         = $login;
     $logoUrl    = 'https://medulla-tech.io/wp-content/uploads/2022/11/medulla-logo-head.svg';
 
+    $ttlMinutes = get_magic_link_ttl_minutes();
+
     $subject    = _("Your Medulla sign-in");
     $heading    = _("Secure sign-in");
     $hello      = _("Hello,");
-    $pInline    = _("Click the button below to sign in. This link expires in") . " <strong>5&nbsp;"._("minutes")."</strong>.";
+    $pInline    = _("Click the button below to sign in. This link expires in") . " <strong>" . (int)$ttlMinutes . "&nbsp;" . _("minutes") . "</strong>.";
     $cta        = _("Open magic link");
     $altLink    = _("If the button doesn’t work, copy and paste this link:");
     $ignore     = _("If you didn’t request this, please ignore this message.");
@@ -117,7 +119,6 @@ if ($ret) {
 
     $ok     = mail($to, $subject, $html, $headers, '-f no-reply@medulla-tech.io');
     $status = $ok ? 'sent' : 'mailfail';
-
 } else {
     // Account not found
     $status = 'sent';

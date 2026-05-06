@@ -168,7 +168,7 @@ item clonezilla Restore Multicast %s
 $menuMulticastTemplateItem = "choose --default clonezilla --timeout 10000 target && goto \${target}
 :clonezilla
 set url_path http://\${next-server}/downloads/davos/
-set kernel_args boot=live config noswap edd=on nomodeset nosplash noprompt vga=788 fetch=\${url_path}fs.squashfs mac=\${mac} revorestorenfs image_uuid=%s davos_action=RESTORE_IMAGE_MULTICAST initrd=initrd.img
+set kernel_args boot=live config noswap edd=on nomodeset nosplash noprompt vga=788 fetch=\${url_path}fs.squashfs mac=\${mac} revorestorenfs image_uuid=%s davos_action=RESTORE_IMAGE_MULTICAST ##PULSE2_DAVOS_OPTS## initrd=initrd.img
 kernel \${url_path}vmlinuz \${kernel_args}
 initrd \${url_path}initrd.img
 boot || goto MENU
@@ -604,7 +604,7 @@ $item[value]
         } elseif ($item['type'] == 'image') {
             $itemValues .= ":" . str_replace(" ", "-", mb_convert_encoding($item["name"], 'UTF-8', 'UTF-8')) . "
 set url_path http://\${next-server}/downloads/davos/
-set kernel_args boot=live config noswap edd=on nomodeset nosplash noprompt vga=788 fetch=\${url_path}fs.squashfs mac=\${mac} davos_action=RESTORE_IMAGE image_uuid=$item[uuid] initrd=initrd.img
+set kernel_args boot=live config noswap edd=on nomodeset nosplash noprompt vga=788 fetch=\${url_path}fs.squashfs mac=\${mac} davos_action=RESTORE_IMAGE ##PULSE2_DAVOS_OPTS## image_uuid=$item[uuid] initrd=initrd.img
 kernel \${url_path}vmlinuz \${kernel_args}
 initrd \${url_path}initrd.img
 boot || goto MENU
@@ -613,7 +613,7 @@ boot || goto MENU
                 $encodedName = str_replace(" ", "-", mb_convert_encoding($item["name"], 'UTF-8', 'UTF-8')).'-'.$virtual['type'].'-'.str_replace(" ", "-", mb_convert_encoding($virtual["name"], 'UTF-8', 'UTF-8'));
                 $itemValues .= ":".$encodedName."
 set url_path http://\${next-server}/downloads/davos/
-set kernel_args boot=live config noswap edd=on nomodeset nosplash noprompt vga=788 fetch=\${url_path}fs.squashfs mac=\${mac} davos_action=RESTORE_IMAGE $virtual[type]=$virtual[id] image_uuid=$item[uuid] initrd=initrd.img
+set kernel_args boot=live config noswap edd=on nomodeset nosplash noprompt vga=788 fetch=\${url_path}fs.squashfs mac=\${mac} davos_action=RESTORE_IMAGE $virtual[type]=$virtual[id] ##PULSE2_DAVOS_OPTS## image_uuid=$item[uuid] initrd=initrd.img
 kernel \${url_path}vmlinuz \${kernel_args}
 initrd \${url_path}initrd.img
 boot || goto MENU
@@ -657,7 +657,7 @@ goto MENU
         $virtualLabel = $virtual["type"].'-'.str_replace(' ', '-', $virtual["name"]);
         $ipxe .=":clonezilla-".$virtualLabel."
 set url_path http://\${next-server}/downloads/davos/
-set kernel_args boot=live config noswap edd=on nomodeset nosplash noprompt vga=788 fetch=\${url_path}fs.squashfs mac=\${mac} revorestorenfs image_uuid=".$multicast_image_uuid." davos_action=RESTORE_IMAGE_MULTICAST $virtual[type]=$virtual[id] initrd=initrd.img
+set kernel_args boot=live config noswap edd=on nomodeset nosplash noprompt vga=788 fetch=\${url_path}fs.squashfs mac=\${mac} revorestorenfs image_uuid=".$multicast_image_uuid." ##PULSE2_DAVOS_OPTS## davos_action=RESTORE_IMAGE_MULTICAST $virtual[type]=$virtual[id] initrd=initrd.img
 kernel \${url_path}vmlinuz \${kernel_args}
 initrd \${url_path}initrd.img
 boot || goto MENU

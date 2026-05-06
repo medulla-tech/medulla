@@ -16,9 +16,9 @@
     text-align: center;
 }
 
-/* Last column (checkboxes): compact at the right */
+/* Last column (checkboxes) */
 .approval-form table.listinfos th:last-child {
-    width: 200px;
+    white-space: nowrap;
 }
 
 /* Section headers (product families) */
@@ -209,27 +209,4 @@
     margin: 0 auto;
 }
 
-/* ===== Pending updates by machine ===== */
-
-.pending-updates-table table.listinfos td .cell-text {
-    -webkit-line-clamp: 3;
-}
-
-/* ===== Audit updates by machine ===== */
-
-.audit-updates-table table.listinfos td .cell-text {
-    -webkit-line-clamp: 3;
-}
-
-/* ===== Details by updates ===== */
-
-.details-by-updates table.listinfos td .cell-text {
-    -webkit-line-clamp: unset;
-}
-
-/* ===== Deploy updates ===== */
-
-.deploy-updates-table table.listinfos td .cell-text {
-    -webkit-line-clamp: unset;
-}
 

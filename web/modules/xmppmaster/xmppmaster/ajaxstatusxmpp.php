@@ -338,6 +338,7 @@ foreach ($arrayname as &$v) { $v = '<div class="cell-truncate cell-truncate-md" 
 foreach ($arraydeploy['tabdeploy']['login'] as &$v) { $v = '<div class="cell-truncate" title="'.htmlspecialchars($v).'">'.$v.'</div>'; } unset($v);
 
 $n = new OptimizedListInfos($arraytitlename, _T("Deployment", "xmppmaster"));
+$n->setResizable();
 $n->setCssClass("package");
 $n->disableFirstColumnActionLink();
 $n->addExtraInfo($arrayname, _T("Target", "xmppmaster"));

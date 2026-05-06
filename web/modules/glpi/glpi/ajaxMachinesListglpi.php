@@ -287,7 +287,8 @@ foreach($datas['cn'] as $cn_machine) {
     $ids[] = 'm_'.$cn_machine;
 }
 
-$n = new OptimizedListInfos($cn, _T("Computer Name", "glpi"), "", "140px");
+$n = new OptimizedListInfos($cn, _T("Computer Name", "glpi"));
+$n->setResizable();
 $n->setcssIds($ids);
 $n->setParamInfo($params); // [params]
 if(array_key_exists("description", $datas)) {

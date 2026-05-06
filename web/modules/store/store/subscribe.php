@@ -92,6 +92,7 @@ $filters = xmlrpc_get_filters();
 // Get filter parameters
 $currentFilters = array();
 if (!empty($_GET['os'])) $currentFilters['os'] = $_GET['os'];
+if (!empty($_GET['category'])) $currentFilters['category'] = $_GET['category'];
 if (!empty($_GET['search'])) $currentFilters['search'] = $_GET['search'];
 $currentSort = isset($_GET['sort']) ? $_GET['sort'] : 'popular';
 
@@ -128,6 +129,7 @@ function getOsLabel($os) {
 // Build base URL for pagination links
 $baseUrl = "main.php?module=store&submod=store&action=subscribe";
 if (!empty($currentFilters['os'])) $baseUrl .= "&os=" . urlencode($currentFilters['os']);
+if (!empty($currentFilters['category'])) $baseUrl .= "&category=" . urlencode($currentFilters['category']);
 if (!empty($currentFilters['search'])) $baseUrl .= "&search=" . urlencode($currentFilters['search']);
 if (!empty($currentSort) && $currentSort !== 'popular') $baseUrl .= "&sort=" . urlencode($currentSort);
 ?>
@@ -142,10 +144,13 @@ if (!empty($currentSort) && $currentSort !== 'popular') $baseUrl .= "&sort=" . u
     <input type="text" name="search" placeholder="<?php echo _T('Search...', 'store'); ?>"
            value="<?php echo htmlspecialchars($currentFilters['search'] ?? ''); ?>">
 
-    <select name="sort">
-        <option value="popular" <?php echo $currentSort == 'popular' ? 'selected' : ''; ?>><?php echo _T('Most Popular', 'store'); ?></option>
-        <option value="name" <?php echo $currentSort == 'name' ? 'selected' : ''; ?>><?php echo _T('A-Z', 'store'); ?></option>
-        <option value="recent" <?php echo $currentSort == 'recent' ? 'selected' : ''; ?>><?php echo _T('Most Recent', 'store'); ?></option>
+    <select name="category">
+        <option value=""><?php echo _T('All categories', 'store'); ?></option>
+        <?php foreach ($filters['category'] ?? [] as $cat): ?>
+        <option value="<?php echo htmlspecialchars($cat); ?>" <?php echo ($currentFilters['category'] ?? '') == $cat ? 'selected' : ''; ?>>
+            <?php echo htmlspecialchars($cat); ?>
+        </option>
+        <?php endforeach; ?>
     </select>
 
     <select name="os">
@@ -155,6 +160,12 @@ if (!empty($currentSort) && $currentSort !== 'popular') $baseUrl .= "&sort=" . u
             <?php echo getOsLabel($os); ?>
         </option>
         <?php endforeach; ?>
+    </select>
+
+    <select name="sort">
+        <option value="popular" <?php echo $currentSort == 'popular' ? 'selected' : ''; ?>><?php echo _T('Most Popular', 'store'); ?></option>
+        <option value="name" <?php echo $currentSort == 'name' ? 'selected' : ''; ?>><?php echo _T('A-Z', 'store'); ?></option>
+        <option value="recent" <?php echo $currentSort == 'recent' ? 'selected' : ''; ?>><?php echo _T('Most Recent', 'store'); ?></option>
     </select>
 
     <button type="submit" class="btn btn-primary btn-small"><?php echo _T('Filter', 'store'); ?></button>
@@ -188,6 +199,8 @@ if (!empty($currentSort) && $currentSort !== 'popular') $baseUrl .= "&sort=" . u
     // Prepare data for OptimizedListInfos
     $names = array();
     $vendors = array();
+    $categoriesList = array();
+    $descriptions = array();
     $versions = array();
     $osList = array();
     $langsList = array();
@@ -215,6 +228,8 @@ if (!empty($currentSort) && $currentSort !== 'popular') $baseUrl .= "&sort=" . u
                    htmlspecialchars($soft['name']);
 
         $vendors[] = htmlspecialchars($soft['vendor'] ?? '-');
+        $categoriesList[] = htmlspecialchars($soft['category'] ?? '-');
+        $descriptions[] = htmlspecialchars($soft['short_desc'] ?? '-');
         $versions[] = !empty($soft['version']) ? '<span style="background:#e9ecef;padding:2px 8px;border-radius:4px;font-family:monospace;font-size:12px;">' . htmlspecialchars($soft['version']) . '</span>' : '-';
         $osList[] = getOsLabel($soft['os'] ?? '');
 
@@ -242,17 +257,21 @@ if (!empty($currentSort) && $currentSort !== 'popular') $baseUrl .= "&sort=" . u
     $extraParams = "";
     if (!empty($currentSort) && $currentSort !== 'popular') $extraParams .= "&amp;sort=" . urlencode($currentSort);
     if (!empty($currentFilters['os'])) $extraParams .= "&amp;os=" . urlencode($currentFilters['os']);
+    if (!empty($currentFilters['category'])) $extraParams .= "&amp;category=" . urlencode($currentFilters['category']);
     if (!empty($currentFilters['search'])) $extraParams .= "&amp;search=" . urlencode($currentFilters['search']);
 
     $n = new OptimizedListInfos($names, _T("Software", "store"));
     $n->disableFirstColumnActionLink();
-    $n->addExtraInfo($vendors, _T("Vendor", "store"));
+    $n->addExtraInfo($categoriesList, _T("Category", "store"));
     $n->addExtraInfo($versions, _T("Version", "store"));
     $n->addExtraInfo($osList, _T("OS", "store"));
+    $n->addExtraInfo($vendors, _T("Vendor", "store"));
+    $n->addExtraInfo($descriptions, _T("Description", "store"));
     $n->addExtraInfo($statusList, _T("Status", "store"));
     $n->setItemCount($totalCount);
     $n->setNavBar(new SimpleNavBar($start, $start + count($softwares) - 1, $totalCount, $extraParams, $maxperpage));
     $n->setParamInfo($params);
+    $n->setResizable();
     $n->start = 0;
     $n->end = count($softwares);
 
@@ -320,6 +339,9 @@ $disclaimerText = file_exists($disclaimerFile) ? nl2br(htmlspecialchars(file_get
 var disclaimerAccepted = false;
 // Initial subscribed IDs (from server)
 var initialSubscribedIds = <?php echo json_encode(array_map('intval', $subscribedIds)); ?>;
+// IDs visible on the current page only (used to merge selection across pages
+// when paginating: subscriptions from other pages must be preserved on save).
+var currentPageIds = <?php echo json_encode(array_map(function($s) { return (int) $s['id']; }, $softwares)); ?>;
 
 document.addEventListener('DOMContentLoaded', function() {
     var form = document.getElementById('subscriptionForm');
@@ -348,8 +370,15 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function updateCount() {
-        var checked = document.querySelectorAll('.software-checkbox:checked').length;
-        countEl.textContent = checked;
+        // Total = preserved-from-other-pages + checked-on-this-page
+        var checkedHere = [];
+        document.querySelectorAll('.software-checkbox:checked').forEach(function(cb) {
+            checkedHere.push(parseInt(cb.value, 10));
+        });
+        var preserved = initialSubscribedIds.filter(function(id) {
+            return currentPageIds.indexOf(id) === -1;
+        });
+        countEl.textContent = preserved.length + checkedHere.length;
         updateSaveButton();
     }
 
@@ -404,13 +433,29 @@ document.addEventListener('DOMContentLoaded', function() {
         // Clear previous hidden inputs
         hiddenContainer.innerHTML = '';
 
-        // Add hidden input for each checked checkbox
-        var checkedBoxes = document.querySelectorAll('.software-checkbox:checked');
-        checkedBoxes.forEach(function(cb) {
+        // The backend save_subscriptions() replaces the full list, so we must
+        // submit the *complete* desired set, not just what's checked on this
+        // page. Otherwise paginating then saving wipes subscriptions from
+        // other pages.
+        //
+        //   final = (initial - currentPageIds) + checkedOnThisPage
+        //
+        // i.e. preserve everything that wasn't on the current page, then add
+        // what is currently checked here.
+        var checkedHere = [];
+        document.querySelectorAll('.software-checkbox:checked').forEach(function(cb) {
+            checkedHere.push(parseInt(cb.value, 10));
+        });
+        var preserved = initialSubscribedIds.filter(function(id) {
+            return currentPageIds.indexOf(id) === -1;
+        });
+        var finalIds = preserved.concat(checkedHere);
+
+        finalIds.forEach(function(id) {
             var hidden = document.createElement('input');
             hidden.type = 'hidden';
             hidden.name = 'software_ids[]';
-            hidden.value = cb.value;
+            hidden.value = id;
             hiddenContainer.appendChild(hidden);
         });
 

@@ -60,7 +60,8 @@ foreach ($data as $row) {
     $listinfoParams[] = array('numRule' => $row['numRule'],'entitie' => $row['entitie']);
 }
 $cols = listInfoFriendly($data);
-$n = new OptimizedListInfos($cols['numRule'], _T('Rule', 'inventory'), '', '10px');
+$n = new OptimizedListInfos($cols['numRule'], _T('Rule', 'inventory'));
+$n->setResizable();
 $n->addExtraInfo($cols['actif'], _T('actif', 'inventory'));
 $n->addExtraInfo($cols['entitie'], _T('entitie', 'inventory'));
 $n->addExtraInfo($cols['aggregator'], _T('aggregator', 'inventory'));

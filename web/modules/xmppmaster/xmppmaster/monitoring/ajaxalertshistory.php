@@ -61,6 +61,7 @@ $params['device_firmware'] = (isset($params['device_firmware'])) ? $params['devi
 $params['rule_comment'] = (isset($params['rule_comment'])) ? $params['rule_comment'] : [];
 // Display the list
 $n = new OptimizedListInfos($params['machine_hostname'], _T("Machine name", "xmppmaster"));
+$n->setResizable();
 $n->disableFirstColumnActionLink();
 $n->setMainActionClasses($display_css);
 $n->setParamInfo($result['datas']);

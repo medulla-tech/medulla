@@ -111,7 +111,7 @@ foreach ($updates_list as $update) {
 
 $n = new OptimizedListInfos($names_updates, _T("Name", "updates"));
 $n->addExtraInfo($id_updates, _T("Update Id", "updates"));
-$n->addExtraInfo($severities, _T("Severity", "updates"), "120px");
+$n->addExtraInfo($severities, _T("Severity", "updates"));
 if($hostnames != []) {
     $n->addExtraInfo($hostnames, _T("Machine", "xmppmaster"));
 }

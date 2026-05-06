@@ -224,6 +224,7 @@ if ($totalCount === 0) {
     $count = count($userNames);
 
     $n = new OptimizedListInfos($userNames, _T("User Name", "admin"));
+    $n->setResizable();
     $n->setNavBar(new AjaxNavBar($totalCount, $filterRaw));
     $n->setItemCount($totalCount);
     $n->start = 0;

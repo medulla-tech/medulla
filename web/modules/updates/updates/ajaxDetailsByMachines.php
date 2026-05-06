@@ -246,13 +246,14 @@ if ($entity == '') {
 
 
     $n = new OptimizedListInfos($machines["cn"], _T("Machine name", "updates"));
+    $n->setResizable();
     $n->disableFirstColumnActionLink();
-    $n->addExtraInfo($machines["os"], _T("Platform", "updates"), "200px");
-    $n->addExtraInfoRaw($machines["complianceRate"], _T("Compliance rate", "updates"), "220px");
-    $n->addExtraInfoCentered($machines["missing"], _T("Missing", "updates"), "100px");
-    $n->addExtraInfoCentered($machines["inprogress"], _T("In progress", "updates"), "100px");
-    $n->addExtraInfoCentered($machines["installed"], _T("Installed", "updates"), "100px");
-    $n->addExtraInfoCentered($machines["total"], _T("Total", "updates"), "80px");
+    $n->addExtraInfo($machines["os"], _T("Platform", "updates"));
+    $n->addExtraInfoRaw($machines["complianceRate"], _T("Compliance rate", "updates"));
+    $n->addExtraInfoCentered($machines["missing"], _T("Missing", "updates"));
+    $n->addExtraInfoCentered($machines["inprogress"], _T("In progress", "updates"));
+    $n->addExtraInfoCentered($machines["installed"], _T("Installed", "updates"));
+    $n->addExtraInfoCentered($machines["total"], _T("Total", "updates"));
     $n->addActionItemArray($machines["actionDetailByMachines"]);
     $n->addActionItemArray($machines["actionPendingByMachines"]);
     $n->addActionItemArray($machines["actionDoneByMachines"]);

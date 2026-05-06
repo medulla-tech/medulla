@@ -24,7 +24,7 @@
 require_once("modules/medulla_server/version.php");
 
 $mod = new Module("admin");
-$mod->setVersion("5.5.1");
+$mod->setVersion("5.5.2");
 //$mod->setRevision('');
 $mod->setDescription(_T("Admin", "admin"));
 $mod->setAPIVersion("1:0:0");
@@ -43,6 +43,10 @@ $submod->addPage($page);
 
 $page = new Page("websocketLogs", _T("Server Logs", "admin"));
 $page->setFile("modules/admin/admin/websocketLogs.php");
+$submod->addPage($page);
+
+$page = new Page("aclFeatures", _T("ACL Management", "admin"));
+$page->setFile("modules/admin/admin/aclFeatures.php");
 $submod->addPage($page);
 
 $page = new Page("ajaxRelaysList", _T("Relays List", "glpi"));
@@ -255,6 +259,10 @@ $page = new Page("editProvider", _T('Edit Provider', 'admin'));
 $page->setFile("modules/admin/admin/editProvider.php");
 $submod->addPage($page);
 
+$page = new Page("authConfig", _T('Authentication Configuration', 'admin'));
+$page->setFile("modules/admin/admin/authConfig.php");
+$submod->addPage($page);
+
 $page = new Page("deleteProvider", _T('Delete Provider', 'admin'));
 $page->setFile("modules/admin/admin/deleteProvider.php");
 $submod->addPage($page);
@@ -265,7 +273,7 @@ $page = new Page("configList", _T("Configuration Management", "admin"));
 $page->setFile("modules/admin/admin/configList.php");
 $submod->addPage($page);
 
-$page = New Page("parameterList", _T("Parameter List", "admin"));
+$page = new Page("parameterList", _T("Parameter List", "admin"));
 $page->setFile("modules/admin/admin/parameterList.php");
 $submod->addPage($page);
 

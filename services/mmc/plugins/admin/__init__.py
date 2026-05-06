@@ -298,17 +298,14 @@ def get_profiles_in_conf(profil_user, tokenuser):
       - Super-Admin : voit tout
       - Admin       : ne voit pas Super-Admin
     """
-    cfg = ConfigParser(interpolation=None)
-    cfg.read([p for p in ('/etc/mmc/plugins/glpi.ini','/etc/mmc/plugins/glpi.ini.local') if os.path.isfile(p)], encoding='utf-8')
-    if not cfg.has_section('provisioning_glpi'):
-        return []
+    # Get profiles from DB
+    try:
+        profils = AdminDatabase().get_acl_profiles()
+    except Exception:
+        profils = []
 
-    raw = cfg.get('provisioning_glpi', 'profiles_order',
-                  fallback=cfg.get('provisioning_glpi', 'profiles_oder', fallback=''))
-    if not raw:
+    if not profils:
         return []
-
-    profils = [s.strip("'\" ") for s in re.split(r'[,\s;]+', raw) if s.strip()]
 
     client = get_glpi_client(tokenuser=tokenuser)
     try:
@@ -938,3 +935,37 @@ def get_config_sections():
     db = AdminDatabase()
     sections = db.get_config_sections()
     return sections
+
+# ---- ACL Feature Management ----
+
+def get_acl_categories():
+    """Get all categories ordered by display_order."""
+    return AdminDatabase().get_acl_categories()
+
+def get_acl_profiles():
+    """Get all available profiles."""
+    return AdminDatabase().get_acl_profiles()
+
+def add_acl_profile(profile_name):
+    """Add a new profile."""
+    return AdminDatabase().add_acl_profile(profile_name)
+
+def delete_acl_profile(profile_name):
+    """Delete a profile and its feature selections."""
+    return AdminDatabase().delete_acl_profile(profile_name)
+
+def get_acl_feature_definitions():
+    """Get all feature definitions from the database."""
+    return AdminDatabase().get_acl_feature_definitions()
+
+def get_acl_profile_features(profile_name=None):
+    """Get feature selections for a profile (or all profiles)."""
+    return AdminDatabase().get_acl_profile_features(profile_name)
+
+def set_acl_profile_features(profile_name, features_dict):
+    """Set feature selections for a profile."""
+    return AdminDatabase().set_acl_profile_features(profile_name, features_dict)
+
+def build_acl_string_for_profile(profile_name):
+    """Build the complete ACL string for a profile from its enabled features."""
+    return AdminDatabase().build_acl_string_for_profile(profile_name)

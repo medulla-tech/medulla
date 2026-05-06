@@ -63,7 +63,7 @@ foreach ($data as $row) {
 $cols = listInfoFriendly($data);
 
 
-$n = new OptimizedListInfos($cols['name'], _T('Rule name', 'glpi'), '', '10px');
+$n = new OptimizedListInfos($cols['name'], _T('Rule name', 'glpi'));
 $n->first_elt_padding = '0';
 
 $n->addActionItem(new ActionItem(_T("Edit rule", "glpi"), "addEntityRule", "edit", "rule", "base", "computers"));

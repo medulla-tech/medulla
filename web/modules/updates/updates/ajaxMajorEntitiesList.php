@@ -178,7 +178,7 @@ $deployAll = new ActionPopupItem(_T("Deploy all major updates on entity", "updat
                                     "updates",
                                     "updates",
                                     null,
-                                    320,"machine");
+                                    640,"machine");
 
 $emptydeployAll = new EmptyActionItem1(_T("There are no major updates to deploy for the entity.", "updates"),
                                             "grpDeployUpdatemajor",
@@ -196,7 +196,7 @@ $emptydeployAll = new EmptyActionItem1(_T("There are no major updates to deploy 
         "updates",    // module
         "updates" ,    // submod
         null, // tab
-        450, // largeur
+        700, // largeur
         false, // mod
         true // remplace le popup avec le result de ajax
     );

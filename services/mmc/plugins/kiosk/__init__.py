@@ -33,7 +33,6 @@ from mmc.plugins.base import (with_xmpp_context,
 from pulse2.database.kiosk import KioskDatabase
 from pulse2.database.xmppmaster import XmppMasterDatabase
 from mmc.plugins.glpi.database import Glpi
-from mmc.plugins.admin import get_list_user_token, get_entities_with_counts_root
 from distutils.version import LooseVersion, StrictVersion
 
 VERSION = "1.0.0"
@@ -113,6 +112,57 @@ class ContextMaker(ContextMakerI):
 
 
 
+def _authorized_entity_paths(login):
+    """
+    Return the set of entity paths (>>-separated) the user is allowed to set
+    on a kiosk profile. Sourced from Glpi().getUserLocations so it matches
+    exactly what get_ou_list_entity exposes in the UI.
+    """
+    locations = Glpi().getUserLocations(login) or []
+    allowed = set()
+    for loc in locations:
+        cn = getattr(loc, "completename", None) or getattr(loc, "name", "")
+        if cn:
+            # GLPI completename uses " > ", the kiosk frontend uses ">>".
+            allowed.add(str(cn).replace(" > ", ">>"))
+    return allowed
+
+
+def _filter_authorized_entity_ous(login, ous):
+    """
+    Drop any OU not present in the user's authorized GLPI locations.
+    Used as a server-side guard for source='entity', mirroring what the
+    Machines view does by only proposing authorized entities.
+    """
+    if not ous:
+        return ous
+
+    allowed = _authorized_entity_paths(login)
+
+    if isinstance(ous, str):
+        if ous.strip() == "":
+            return ous
+        if ous in allowed:
+            return ous
+        logger.warning(
+            "kiosk: rejected unauthorized entity OU for %s: %s", login, ous
+        )
+        return ""
+
+    if isinstance(ous, list):
+        filtered = [ou for ou in ous if ou in allowed]
+        rejected = [ou for ou in ous if ou not in allowed]
+        if rejected:
+            logger.warning(
+                "kiosk: rejected unauthorized entity OUs for %s: %s",
+                login,
+                rejected,
+            )
+        return filtered
+
+    return ous
+
+
 class RpcProxy(RpcProxyI):
 
     @with_optional_xmpp_context
@@ -124,6 +174,8 @@ class RpcProxy(RpcProxyI):
                        packages,
                        source,
                        ctx=None):
+        if source == "entity":
+            ous = _filter_authorized_entity_ous(login, ous)
         result = KioskDatabase().create_profile(name, login, ous, active, packages, source)
         notify_kiosks()
         return result
@@ -158,6 +210,8 @@ class RpcProxy(RpcProxyI):
 
     @with_optional_xmpp_context
     def update_profile(self, login, id, name, ous, active, packages, source, ctx=None):
+        if source == "entity":
+            ous = _filter_authorized_entity_ous(login, ous)
         result = KioskDatabase().update_profile(
             login, id, name, ous, active, packages, source
         )
@@ -181,8 +235,60 @@ def get_ou_list(source, *args, **kwargs):
         func = globals()[funcname]
         # Step 1 - Get datas
         datas = func(*args, **kwargs)
-        # Step 2 - Recreate OUs tree
+
         tree = TreeOU()
+
+        # Entity source: only show the entities the user is actually
+        # authorized on, but rebuild the hierarchy *between authorized
+        # entities only* (no synthetic ancestors). Each node displays the
+        # short name; data-root keeps the ">>"-normalized completename so
+        # the kiosk DB still receives the canonical identifier.
+        if source.lower() == "entity":
+            items = []
+            for line in datas:
+                completename = str(line)
+                if not completename:
+                    continue
+                normalized = completename.replace(" > ", ">>")
+                segments = normalized.split(">>")
+                items.append({
+                    "normalized": normalized,
+                    "segments": segments,
+                    "short": segments[-1],
+                })
+            # Shallowest first so a parent is always created before its child.
+            items.sort(key=lambda x: (len(x["segments"]), x["normalized"]))
+
+            nodes = {}  # normalized completename -> TreeOU
+            for item in items:
+                node = TreeOU(item["short"])
+                node.selectable = True
+
+                # Find the closest authorized ancestor (longest prefix that
+                # belongs to another authorized entity); fall back to root.
+                parent = tree
+                for prefix_len in range(len(item["segments"]) - 1, 0, -1):
+                    prefix = ">>".join(item["segments"][:prefix_len])
+                    if prefix in nodes:
+                        parent = nodes[prefix]
+                        break
+
+                if not parent.add_child(node):
+                    logger.warning(
+                        "kiosk: duplicate short name '%s' under same parent "
+                        "for entity '%s', skipping",
+                        item["short"], item["normalized"]
+                    )
+                    continue
+                # add_child rewrote node.path from get_path(); force the
+                # canonical completename so the frontend POSTs the right value.
+                node.path = [item["normalized"]]
+                nodes[item["normalized"]] = node
+
+            return tree.recursive_json()
+
+        # Other sources (Group, Ou Machine, Ou User, LDAP) keep the historical
+        # behaviour: rebuild the tree from the ">>"-separated paths.
         for line in datas:
             tree.create_recursively(line)
 
@@ -275,30 +381,25 @@ def get_ou_list_group(login, *args, **kwargs):
 
 def get_ou_list_entity(*args, **kwargs):
     """
-    Returns the list of GLPI entities the user has access to
+    Returns the list of GLPI entities the user has access to.
+
+    Uses Glpi().getUserLocations (SQL path) so the kiosk view shares the
+    same source of truth as the Machines view (medulla_server.getUserLocations).
     """
-    token = args[1]
-    allowed_glpi_ids = {int(x) for x in (get_list_user_token(token) or [])}
-    logger.debug(f"IDs GLPI autorisés : {allowed_glpi_ids}")
+    owner = args[0] if args else kwargs.get("owner", "")
+    if not owner:
+        logger.warning("get_ou_list_entity called without owner login")
+        return []
 
-    rule_entity = get_entities_with_counts_root('', 0, 1, list(allowed_glpi_ids))
-    data = (rule_entity or {}).get('data', {})
-    ids = data.get('id', []) or []
-    completes = data.get('completename', []) or []
-    logger.debug(f"IDs des entités GLPI : {ids}")
-    logger.debug(f"Completenames des entités GLPI : {completes}")
+    locations = Glpi().getUserLocations(owner) or []
 
-    # Build the list of all authorized entity paths
     result = []
-    for i, c in zip(ids, completes):
-        try:
-            gid = int(i)
-        except Exception:
-            continue
-        if gid in allowed_glpi_ids:
-            result.append(str(c))
+    for loc in locations:
+        completename = getattr(loc, "completename", None) or getattr(loc, "name", "")
+        if completename:
+            result.append(str(completename))
 
-    logger.debug(f"Entités GLPI retournées : {result}")
+    logger.debug(f"Entités GLPI retournées (SQL) pour {owner} : {result}")
     return result
 
 

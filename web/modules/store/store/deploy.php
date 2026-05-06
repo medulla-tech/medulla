@@ -40,7 +40,7 @@ if (empty($packageUuid)) {
     return;
 }
 
-// Get package info
+// Get package info from xmppdeploy.json (local package)
 $packageName = '';
 $packageVersion = '';
 try {
@@ -53,6 +53,42 @@ try {
     // Package not found
 }
 
+// Enrich with store metadata (category, vendor, description, os)
+// Linear scan of all software to find the one matching this package_uuid.
+// For ~50 packages it's negligible; if the catalog grows a lot, consider
+// adding a dedicated XML-RPC endpoint that resolves a package_uuid directly.
+$packageCategory = '';
+$packageVendor = '';
+$packageDescription = '';
+$packageOs = '';
+try {
+    $allSoft = xmlrpc_get_all_software(true, 0, 0, 'name');
+    if (!empty($allSoft['data'])) {
+        foreach ($allSoft['data'] as $soft) {
+            $uuids = $soft['package_uuids'] ?? '';
+            if (!empty($soft['package_uuid']) && $soft['package_uuid'] === $packageUuid
+                || (is_string($uuids) && strpos($uuids, $packageUuid) !== false)) {
+                $packageCategory = $soft['category'] ?? '';
+                $packageVendor = $soft['vendor'] ?? '';
+                $packageDescription = $soft['short_desc'] ?? '';
+                $packageOs = $soft['os'] ?? '';
+                break;
+            }
+        }
+    }
+} catch (Exception $e) {
+    // Best-effort: tolerate failure of store enrichment
+}
+
+function deployOsLabel($os) {
+    switch (strtolower($os)) {
+        case 'win': return 'Windows';
+        case 'linux': return 'Linux';
+        case 'mac': return 'macOS';
+        default: return $os ? ucfirst($os) : '';
+    }
+}
+
 // Page title
 $pageTitle = new PageGenerator(_T("Deploy Package", 'store'));
 $pageTitle->setSideMenu($sidemenu);
@@ -62,12 +98,30 @@ $pageTitle->display();
 $p = new TabbedPageGenerator();
 
 // Package info displayed above tabs
+$metaParts = array();
+if ($packageCategory) $metaParts[] = '<span>' . htmlspecialchars($packageCategory) . '</span>';
+if ($packageVendor)   $metaParts[] = '<span>' . htmlspecialchars($packageVendor) . '</span>';
+$osLbl = deployOsLabel($packageOs);
+if ($osLbl)           $metaParts[] = '<span>' . htmlspecialchars($osLbl) . '</span>';
+$metaLine = !empty($metaParts)
+    ? '<div style="margin-top:6px;font-size:12px;color:var(--color-text-medium);display:flex;flex-wrap:wrap;gap:14px;">' . implode('<span style="color:#bbb;">|</span>', $metaParts) . '</div>'
+    : '';
+
+$descLine = $packageDescription
+    ? '<div style="margin-top:4px;font-size:13px;color:var(--color-text-medium);font-style:italic;">' . htmlspecialchars($packageDescription) . '</div>'
+    : '';
+
+$versionBadge = $packageVersion
+    ? ' <span style="background:#e9ecef;padding:2px 10px;border-radius:4px;font-family:monospace;font-size:12px;color:var(--color-text-medium);vertical-align:middle;">v' . htmlspecialchars($packageVersion) . '</span>'
+    : '';
+
 $p->setDescription(
     '<div style="background:var(--gray-50);border:1px solid var(--gray-200);border-radius:8px;padding:14px 18px;margin-bottom:15px;display:flex;align-items:center;gap:12px;">'
     . '<img src="img/other/package.svg" width="28" height="28"/>'
-    . '<div>'
-    . '<div style="font-size:16px;font-weight:600;color:var(--color-text-dark);">' . htmlspecialchars($packageName ?: $packageUuid) . '</div>'
-    . ($packageVersion ? '<div style="margin-top:2px;"><span style="background:#e9ecef;padding:2px 10px;border-radius:4px;font-family:monospace;font-size:12px;color:var(--color-text-medium);">v' . htmlspecialchars($packageVersion) . '</span></div>' : '')
+    . '<div style="flex:1;">'
+    . '<div style="font-size:16px;font-weight:600;color:var(--color-text-dark);">' . htmlspecialchars($packageName ?: $packageUuid) . $versionBadge . '</div>'
+    . $metaLine
+    . $descLine
     . '</div>'
     . '</div>'
 );

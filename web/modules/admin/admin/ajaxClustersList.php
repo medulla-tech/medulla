@@ -66,7 +66,7 @@ if($clusters['total'] > 0){
   $n->setcssIds($ids_clusters);
   $n->disableFirstColumnActionLink();
   $n->addExtraInfo( $clusters['datas']['description'], _T("Description", "xmppmaster"));
-  $n->addExtraInfoCentered( $clusters['datas']['nb_ars'], _T("Associated relays", "admin"), "120px");
+  $n->addExtraInfoCentered( $clusters['datas']['nb_ars'], _T("Associated relays", "admin"));
   $n->addActionItemArray($actionEditClusters);
   $n->addActionItemArray($actionDeleteClusters);
   $n->setItemCount($clusters['total']);

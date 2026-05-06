@@ -74,6 +74,7 @@ $detailAction = new ActionItem(_T("View Machines", "security"), "machines", "dis
 // Display the list
 if ($count > 0) {
     $n = new OptimizedListInfos($entityNames, _T("Entity", "security"));
+    $n->setResizable();
     $n->setTableCssClass("security-table");
     $n->disableFirstColumnActionLink();
     $n->addExtraInfoCentered($machinesCounts, _T("Machines", "security"));

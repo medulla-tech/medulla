@@ -808,6 +808,79 @@
 }
 
 /* ---------------------------------------- */
+/* Version-specific disclaimer              */
+/* (populated from remote JSON manifest)    */
+/* ---------------------------------------- */
+
+.version-disclaimer {
+  padding: 12px 14px;
+  border-radius: 6px;
+  border-left: 4px solid;
+  margin: 0 0 16px 0;
+  font-size: 13px;
+  line-height: 1.5;
+  text-align: left;
+}
+
+.version-disclaimer-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.version-disclaimer-label {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 4px;
+  color: #fff;
+}
+
+.version-disclaimer-version {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  opacity: 0.75;
+  margin-left: auto;
+}
+
+.version-disclaimer-text {
+  color: var(--color-text-dark);
+  font-weight: 600;
+  text-align: left;
+}
+
+.version-disclaimer-critical .version-disclaimer-text {
+  color: #991b1b;
+}
+
+.version-disclaimer-info {
+  background: #eff6ff;
+  border-left-color: #3b82f6;
+}
+.version-disclaimer-info .version-disclaimer-label {
+  background: #3b82f6;
+}
+
+.version-disclaimer-warning {
+  background: #fffbeb;
+  border-left-color: #f59e0b;
+}
+.version-disclaimer-warning .version-disclaimer-label {
+  background: #d97706;
+}
+
+.version-disclaimer-critical {
+  background: #fef2f2;
+  border-left-color: #dc2626;
+}
+.version-disclaimer-critical .version-disclaimer-label {
+  background: #dc2626;
+}
+
+/* ---------------------------------------- */
 /* Update Terminal                          */
 /* ---------------------------------------- */
 

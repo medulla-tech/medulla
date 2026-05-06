@@ -91,8 +91,8 @@ if($rulesList['total'] > 0){
   $n->setcssIds($ids_clusters_rules);
   $n->disableFirstColumnActionLink();
   $n->addExtraInfo( $rulesList['datas']['description'], _T("Description", "admin"));
-  $n->addExtraInfoCentered( $rulesList['datas']['level'], _T("Level", "admin"), "80px");
-  $n->addExtraInfoCentered( $rulesList['datas']['count'], _T("Associated rules", "admin"), "120px");
+  $n->addExtraInfoCentered( $rulesList['datas']['level'], _T("Level", "admin"));
+  $n->addExtraInfoCentered( $rulesList['datas']['count'], _T("Associated rules", "admin"));
   $n->addActionItemArray($raiseActions);
   $n->addActionItemArray($lowerActions);
   $n->addActionItemArray($listActions);

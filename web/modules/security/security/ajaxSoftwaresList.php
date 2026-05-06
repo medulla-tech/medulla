@@ -101,6 +101,7 @@ $excludeAction->setWidth(400);
 // Display the list
 if ($count > 0) {
     $n = new OptimizedListInfos($softwareNames, _T("Software", "security"));
+    $n->setResizable();
     $n->setTableCssClass("security-table");
     $n->disableFirstColumnActionLink();
     $n->addExtraInfoCentered($versions, _T("Version", "security"));

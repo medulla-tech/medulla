@@ -154,13 +154,14 @@ foreach($relays['datas']['jid'] as $id_relay){
 
 echo '<div id="switchresult"></div>';
 $n = new OptimizedListInfos( $relays['datas']['hostname'], _T("Relay name", "admin"));
+$n->setResizable();
 $n->setcssIds($ids);
 $n->setMainActionClasses($relays['datas']['enabled_css']);
 $n->disableFirstColumnActionLink();
 $n->addExtraInfo( $relays['datas']['jid'], _T("Jid", "xmppmaster"));
 $n->addExtraInfo( $relays['datas']['cluster_name'], _T("Cluster Name", "xmppmaster"));
-$n->addExtraInfoCentered( $relays['datas']['total_machines'], _T("Total Machines", "xmppmaster"), "100px");
-$n->addExtraInfoCentered( $relays['datas']['uninventoried_online'], _T("Non-inventoried", "xmppmaster"), "120px");
+$n->addExtraInfoCentered( $relays['datas']['total_machines'], _T("Total Machines", "xmppmaster"));
+$n->addExtraInfoCentered( $relays['datas']['uninventoried_online'], _T("Non-inventoried", "xmppmaster"));
 
 
 $n->setItemCount($relays['total']);

@@ -43,6 +43,7 @@ $end = (isset($_GET['end'])) ? (int)htmlentities($_GET['end']) : $start+$maxperp
 $entity = !empty($_GET['entity']) ? htmlspecialchars($_GET['entity']) : "";
 $entityName = !empty($_GET['name']) ? htmlentities($_GET['name']) : "";
 $entityCompleteName = !empty($_GET['completename']) ? htmlentities($_GET['completename']) : "";
+$source = !empty($_GET['source']) ? htmlentities($_GET['source']) : "xmppmaster";
 $typeaction= !empty($_GET['typeaction']) ? htmlentities($_GET['typeaction']) : "windows";
 
 if ($typeaction == "windows") {
@@ -67,7 +68,7 @@ $n->end = 1;
 $n->disableFirstColumnActionLink();
 $n->display($navbar = 0, $header = 0);
 
-    if ($_GET['source'] == "xmppmaster" ){
+    if ($source == "xmppmaster" ){
         // $statglpiversion = xmlrpc_get_os_xmpp_update_major_details($_GET['entity'],$filter);
         $statglpiversion = xmlrpc_get_os_update_major_details($_GET['entity'],
                                                               $typeaction,
@@ -117,7 +118,7 @@ foreach ($statglpiversion['id_machine'] as $key => $valeur) {
         "updates",
         "updates",
         null,
-        320,
+        640,
         "machine"
     );
 

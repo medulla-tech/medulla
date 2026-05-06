@@ -203,6 +203,7 @@ $count = is_array($mobiles) ? count($mobiles) : 0;
 $count = count($mobiles);
 $filter = "";
 $n = new OptimizedListInfos($col1, _T("Device's name", "mobile"));
+$n->setResizable();
 
 $n->setNavBar(new AjaxNavBar($count, $filter, "updateSearchParamform".($actions?'image':'master')));
 $n->setCssIds($ids);

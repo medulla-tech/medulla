@@ -89,6 +89,7 @@ $_SESSION['backup_hosts'] = array_combine($data['hosts'], $cnames);
 $count = count($data['hosts']);
 
 $n = new OptimizedListInfos($cnames, _T("Host name", "backuppc"));
+$n->setResizable();
 $n->addExtraInfo($data['full'], _T("Full number", "backuppc"));
 $n->addExtraInfo($data['full_size'], _T("Full size (GB)", "backuppc"));
 $n->addExtraInfo($data['incr'], _T("incr. number", "backuppc"));

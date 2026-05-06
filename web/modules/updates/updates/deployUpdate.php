@@ -254,7 +254,7 @@ if(isset($_POST['bconfirm'], $_POST['updateid'], $_POST['start_date'], $_POST['e
     }
     exit;
 } else {
-    $f = new PopupForm($formtitle);
+    $f = new PopupForm($formtitle, 'Formupdate', '480px');
     $f->setPopupClass('popup-wide');
     $f->push(new Table());
 

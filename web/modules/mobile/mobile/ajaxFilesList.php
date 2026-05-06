@@ -51,6 +51,7 @@ foreach ($files as $index => $file) {
 }
 
 $n = new OptimizedListInfos($col1, _T("File", "mobile"));
+$n->setResizable();
 $n->setCssIds($ids);
 $n->disableFirstColumnActionLink();
 

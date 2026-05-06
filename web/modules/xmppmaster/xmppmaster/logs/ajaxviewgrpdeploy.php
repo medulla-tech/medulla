@@ -227,7 +227,7 @@ if (gettype($end_date) == "integer" && $timestampnow > $end_date) {
 // This command gets associated group of cmd_id
 $syncthing_enabled = ($statsyncthing['package'] == "") ? false : true;
 
-echo "<table class='listinfos' cellspacing='0' cellpadding='5' border='1'>";
+echo "<table class='listinfos deploy-info-table' cellspacing='0' cellpadding='5' border='1'>";
 echo "<thead>";
 echo "<tr>";
 echo '<td>'._T("Creation Date", "xmppmaster").'</td>';
@@ -741,6 +741,7 @@ if ($count != 0) {
             "xmppmaster"
         );
         $n = new OptimizedListInfos($info_from_machines[1], _T("Machine Name", "xmppmaster"));
+        $n->setResizable();
 
         $n->addExtraInfo($info_from_machines[7], _T("Progression / Status", "xmppmaster"));
         // $n->addExtraInfo($info_from_machines[2], _T("Description", "glpi"));

@@ -71,6 +71,7 @@ foreach($params as $elem){
 
 
 $n = new OptimizedListInfos($package_names, _T("Package Name", "kiosk"));
+$n->setResizable();
 $n->disableFirstColumnActionLink();
 $n->addExtraInfo($profile_names, _T("Profile Name", "kiosk"));
 // $n->addExtraInfo($package_uuids, _T("Package Uuids", "kiosk"));
