@@ -32,7 +32,11 @@ $p->setSideMenu($sidemenu);
 $p->display();
 
 if (!$hasContract) {
-    ContractRequiredBox::show();
+    if (in_array($contractStatusReason, array('contract_required', 'not_configured'))) {
+        ContractRequiredBox::show();
+    } else {
+        ServiceUnavailableBox::show();
+    }
     return;
 }
 
@@ -61,28 +65,28 @@ $showSeverity = SeverityHelper::getVisibility($minSeverity);
         <div class="card-label"><?php echo _T("CVEs in Database", "security"); ?></div>
     </div>
     <?php if ($showSeverity['critical']): ?>
-    <div class="security-card critical clickable" onclick="createGroupFromSeverity('Critical')" title="<?php echo _T("Click to create a group with affected machines", "security"); ?>">
-        <div class="card-value"><?php echo intval($summary['critical']); ?></div>
-        <div class="card-label"><?php echo _T("Critical", "security"); ?></div>
-    </div>
+        <div class="security-card critical clickable" onclick="createGroupFromSeverity('Critical')" title="<?php echo _T("Click to create a group with affected machines", "security"); ?>">
+            <div class="card-value"><?php echo intval($summary['critical']); ?></div>
+            <div class="card-label"><?php echo _T("Critical", "security"); ?></div>
+        </div>
     <?php endif; ?>
     <?php if ($showSeverity['high']): ?>
-    <div class="security-card high clickable" onclick="createGroupFromSeverity('High')" title="<?php echo _T("Click to create a group with affected machines", "security"); ?>">
-        <div class="card-value"><?php echo intval($summary['high']); ?></div>
-        <div class="card-label"><?php echo _T("High", "security"); ?></div>
-    </div>
+        <div class="security-card high clickable" onclick="createGroupFromSeverity('High')" title="<?php echo _T("Click to create a group with affected machines", "security"); ?>">
+            <div class="card-value"><?php echo intval($summary['high']); ?></div>
+            <div class="card-label"><?php echo _T("High", "security"); ?></div>
+        </div>
     <?php endif; ?>
     <?php if ($showSeverity['medium']): ?>
-    <div class="security-card medium clickable" onclick="createGroupFromSeverity('Medium')" title="<?php echo _T("Click to create a group with affected machines", "security"); ?>">
-        <div class="card-value"><?php echo intval($summary['medium']); ?></div>
-        <div class="card-label"><?php echo _T("Medium", "security"); ?></div>
-    </div>
+        <div class="security-card medium clickable" onclick="createGroupFromSeverity('Medium')" title="<?php echo _T("Click to create a group with affected machines", "security"); ?>">
+            <div class="card-value"><?php echo intval($summary['medium']); ?></div>
+            <div class="card-label"><?php echo _T("Medium", "security"); ?></div>
+        </div>
     <?php endif; ?>
     <?php if ($showSeverity['low']): ?>
-    <div class="security-card low clickable" onclick="createGroupFromSeverity('Low')" title="<?php echo _T("Click to create a group with affected machines", "security"); ?>">
-        <div class="card-value"><?php echo intval($summary['low']); ?></div>
-        <div class="card-label"><?php echo _T("Low", "security"); ?></div>
-    </div>
+        <div class="security-card low clickable" onclick="createGroupFromSeverity('Low')" title="<?php echo _T("Click to create a group with affected machines", "security"); ?>">
+            <div class="card-value"><?php echo intval($summary['low']); ?></div>
+            <div class="card-label"><?php echo _T("Low", "security"); ?></div>
+        </div>
     <?php endif; ?>
     <div class="security-card info clickable" onclick="goToMachines()" title="<?php echo _T("Click to view affected machines", "security"); ?>">
         <div class="card-value"><?php echo intval($summary['machines_affected']); ?></div>
@@ -92,20 +96,25 @@ $showSeverity = SeverityHelper::getVisibility($minSeverity);
 
 <!-- Last Scan Info -->
 <?php if ($summary['last_scan']): ?>
-<div class="last-scan-info">
-    <strong><?php echo _T("Last Scan", "security"); ?>:</strong>
-    <?php
-    $lastScan = $summary['last_scan'];
-    $scanDate = $lastScan['started_at'] ? date('d/m/Y H:i', strtotime($lastScan['started_at'])) : '-';
-    $scanStatus = $lastScan['status'];
-    echo sprintf(_T("Started at %s - Status: %s - %d software scanned, %d CVEs found", "security"),
-        $scanDate, $scanStatus, $lastScan['softwares_sent'], $lastScan['cves_received']);
-    ?>
-</div>
+    <div class="last-scan-info">
+        <strong><?php echo _T("Last Scan", "security"); ?>:</strong>
+        <?php
+        $lastScan = $summary['last_scan'];
+        $scanDate = $lastScan['started_at'] ? date('d/m/Y H:i', strtotime($lastScan['started_at'])) : '-';
+        $scanStatus = $lastScan['status'];
+        echo sprintf(
+            _T("Started at %s - Status: %s - %d software scanned, %d CVEs found", "security"),
+            $scanDate,
+            $scanStatus,
+            $lastScan['softwares_sent'],
+            $lastScan['cves_received']
+        );
+        ?>
+    </div>
 <?php else: ?>
-<div class="last-scan-info">
-    <strong><?php echo _T("No scan has been performed yet", "security"); ?></strong>
-</div>
+    <div class="last-scan-info">
+        <strong><?php echo _T("No scan has been performed yet", "security"); ?></strong>
+    </div>
 <?php endif; ?>
 
 <!-- Vulnerable Software Section -->
@@ -117,18 +126,18 @@ $showSeverity = SeverityHelper::getVisibility($minSeverity);
         <label for="entity-filter"><?php echo _T("Entity", "security"); ?>:</label>
         <select id="entity-filter" onchange="updateFilter()">
             <?php foreach ($listWithAll as $key => $label): ?>
-            <option value="<?php echo htmlspecialchars($valuesWithAll[$key]); ?>"
-                <?php echo ($valuesWithAll[$key] == $location) ? 'selected' : ''; ?>>
-                <?php echo htmlspecialchars($label); ?>
-            </option>
+                <option value="<?php echo htmlspecialchars($valuesWithAll[$key]); ?>"
+                    <?php echo ($valuesWithAll[$key] == $location) ? 'selected' : ''; ?>>
+                    <?php echo htmlspecialchars($label); ?>
+                </option>
             <?php endforeach; ?>
         </select>
     </div>
     <div class="search-wrapper">
-    <?php
-    $ajax = new AjaxFilter(urlStrRedirect("security/security/ajaxSoftwaresList") . "&location=" . urlencode($location));
-    $ajax->display();
-    ?>
+        <?php
+        $ajax = new AjaxFilter(urlStrRedirect("security/security/ajaxSoftwaresList") . "&location=" . urlencode($location));
+        $ajax->display();
+        ?>
     </div>
 </div>
 
@@ -137,54 +146,56 @@ $ajax->displayDivToUpdate();
 ?>
 
 <script>
-function updateFilter() {
-    var location = document.getElementById('entity-filter').value;
-    var url = '<?php echo urlStrRedirect("security/security/ajaxSoftwaresList"); ?>';
-    url += '&location=' + encodeURIComponent(location);
+    function updateFilter() {
+        var location = document.getElementById('entity-filter').value;
+        var url = '<?php echo urlStrRedirect("security/security/ajaxSoftwaresList"); ?>';
+        url += '&location=' + encodeURIComponent(location);
 
-    // Get filter value from AjaxFilter
-    var filterInput = document.querySelector('input[name="param"]');
-    if (filterInput) {
-        url += '&filter=' + encodeURIComponent(filterInput.value);
+        // Get filter value from AjaxFilter
+        var filterInput = document.querySelector('input[name="param"]');
+        if (filterInput) {
+            url += '&filter=' + encodeURIComponent(filterInput.value);
+        }
+
+        // Update the div using jQuery
+        jQuery('#container').load(url);
+
+        // Also update dashboard counters
+        updateDashboard(location);
     }
 
-    // Update the div using jQuery
-    jQuery('#container').load(url);
-
-    // Also update dashboard counters
-    updateDashboard(location);
-}
-
-function updateDashboard(location) {
-    jQuery.ajax({
-        url: '<?php echo urlStrRedirect("security/security/ajaxDashboardSummary"); ?>',
-        data: { location: location },
-        success: function(data) {
-            if (data.total_cves !== undefined) {
-                jQuery('.security-card.info:first .card-value').text(data.total_cves);
-                jQuery('.security-card.critical .card-value').text(data.critical);
-                jQuery('.security-card.high .card-value').text(data.high);
-                jQuery('.security-card.medium .card-value').text(data.medium);
-                jQuery('.security-card.low .card-value').text(data.low);
-                jQuery('.security-card.info:last .card-value').text(data.machines_affected);
+    function updateDashboard(location) {
+        jQuery.ajax({
+            url: '<?php echo urlStrRedirect("security/security/ajaxDashboardSummary"); ?>',
+            data: {
+                location: location
+            },
+            success: function(data) {
+                if (data.total_cves !== undefined) {
+                    jQuery('.security-card.info:first .card-value').text(data.total_cves);
+                    jQuery('.security-card.critical .card-value').text(data.critical);
+                    jQuery('.security-card.high .card-value').text(data.high);
+                    jQuery('.security-card.medium .card-value').text(data.medium);
+                    jQuery('.security-card.low .card-value').text(data.low);
+                    jQuery('.security-card.info:last .card-value').text(data.machines_affected);
+                }
             }
-        }
-    });
-}
+        });
+    }
 
-function createGroupFromSeverity(severity) {
-    var location = document.getElementById('entity-filter').value;
-    var url = '<?php echo urlStrRedirect("security/security/ajaxCreateGroupFromSeverity"); ?>';
-    url += '&severity=' + encodeURIComponent(severity);
-    url += '&location=' + encodeURIComponent(location);
-    PopupWindow(null, url, 300);
-}
+    function createGroupFromSeverity(severity) {
+        var location = document.getElementById('entity-filter').value;
+        var url = '<?php echo urlStrRedirect("security/security/ajaxCreateGroupFromSeverity"); ?>';
+        url += '&severity=' + encodeURIComponent(severity);
+        url += '&location=' + encodeURIComponent(location);
+        PopupWindow(null, url, 300);
+    }
 
-function goToAllCves() {
-    window.location.href = '<?php echo urlStrRedirect("security/security/allcves"); ?>';
-}
+    function goToAllCves() {
+        window.location.href = '<?php echo urlStrRedirect("security/security/allcves"); ?>';
+    }
 
-function goToMachines() {
-    window.location.href = '<?php echo urlStrRedirect("security/security/machines"); ?>';
-}
+    function goToMachines() {
+        window.location.href = '<?php echo urlStrRedirect("security/security/machines"); ?>';
+    }
 </script>
