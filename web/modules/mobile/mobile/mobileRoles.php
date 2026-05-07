@@ -49,14 +49,28 @@ try {
 
 <div id="rolesFlash" style="display:none; margin-bottom:10px;"></div>
 
+<form name="FormRoles" id="FormRoles" onsubmit="return false;" style="margin:20px 0;">
+    <div id="searchSpanRoles" class="searchbox">
+        <div id="searchBest">
+            <input type="text" class="searchfieldreal" name="param" id="paramRoles"
+                   oninput="filterRolesTable(this.value)" />
+            <button type="button" class="search-clear"
+                    onclick="document.getElementById('paramRoles').value=''; filterRolesTable('');"></button>
+            <button onclick="filterRolesTable(document.getElementById('paramRoles').value); return false;">
+                <?php echo _T('Search', 'glpi'); ?>
+            </button>
+        </div>
+        <span class="loader"></span>
+    </div>
+</form>
+
 <h3 style="margin-top:20px;"><?php echo _T("MDM Roles", "mobile"); ?>
-<button type="button" class="btnPrimary btn-small" style="margin-left:15px;" onclick="openRoleModal(0, '', '', [])"><?php echo _T("Add Role", "mobile"); ?></button>
 </h3>
 
 <?php if (empty($_hmdm_roles)): ?>
 <p style="color:#888;"><?php echo _T("No roles found.", "mobile"); ?></p>
 <?php else: ?>
-<table class="listinfos" style="width:100%;">
+<table id="roles_table" class="listinfos" style="width:100%;">
     <thead>
         <tr>
             <th><?php echo _T("Name", "mobile"); ?></th>
@@ -250,5 +264,20 @@ function rolesFlash(type, msg) {
         .show();
     setTimeout(function(){ jQuery('#rolesFlash').fadeOut(400); }, 3000);
 }
+function filterRolesTable(val) {
+    val = val.toLowerCase();
+    jQuery('#roles_table tbody tr').each(function() {
+        jQuery(this).toggle(jQuery(this).text().toLowerCase().indexOf(val) !== -1);
+    });
+}
+jQuery(function() {
+    var $h2 = jQuery('h2').first();
+    $h2.wrap('<div style="display:flex;align-items:center;justify-content:space-between;"></div>');
+    $h2.after(
+        '<span style="flex-shrink:0;margin-left:16px;">'
+        + '<button class="btnPrimary" type="button" onclick="openRoleModal(0, \'\', \'\', [])"><?php echo addslashes(_T("Add Role", "mobile")); ?></button>'
+        + '</span>'
+    );
+});
 </script>
 <?php } ?>

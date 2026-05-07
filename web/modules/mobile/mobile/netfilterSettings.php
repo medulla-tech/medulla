@@ -17,7 +17,7 @@ if (!is_array($settings)) {
 }
 
 if (isset($_POST['save'])) {
-    $enabled = isset($_POST['enabled']) && $_POST['enabled'] == '1';
+    $enabled = !empty($_POST['enabled']);
     $filter_mode = in_array($_POST['filterMode'] ?? '', ['BLOCKLIST', 'ALLOWLIST']) ? $_POST['filterMode'] : 'BLOCKLIST';
     $result = xmlrpc_save_netfilter_settings($enabled, $filter_mode);
     if ($result) {
@@ -30,33 +30,42 @@ if (isset($_POST['save'])) {
 }
 ?>
 
-<h3><?php echo _T("Network Traffic Filtering", "mobile"); ?></h3>
-<p><?php echo _T("Configure DNS-based network filtering for all devices.", "mobile"); ?></p>
+<?php
+$f = new Form();
+$f->push(new Table());
 
-<form method="post">
-    <table cellpadding="6" cellspacing="0" style="border-collapse: collapse; width: 500px; margin-top: 20px;">
-        <tr>
-            <td style="width: 200px;"><?php echo _T("Filtering enabled", "mobile"); ?></td>
-            <td>
-                <input type="hidden" name="enabled" value="0">
-                <input type="checkbox" name="enabled" value="1" <?php echo !empty($settings['enabled']) ? 'checked' : ''; ?>>
-            </td>
-        </tr>
-        <tr>
-            <td><?php echo _T("Filter mode", "mobile"); ?></td>
-            <td>
-                <select name="filterMode">
-                    <option value="BLOCKLIST" <?php echo ($settings['filterMode'] ?? '') === 'BLOCKLIST' ? 'selected' : ''; ?>><?php echo _T("Blocklist (block listed domains)", "mobile"); ?></option>
-                    <option value="ALLOWLIST" <?php echo ($settings['filterMode'] ?? '') === 'ALLOWLIST' ? 'selected' : ''; ?>><?php echo _T("Allowlist (only allow listed domains)", "mobile"); ?></option>
-                </select>
-            </td>
-        </tr>
-        <tr>
-            <td></td>
-            <td style="display:flex; gap:10px; align-items:center;">
-                <input type="submit" name="save" class="btn" value="<?php echo _T("Save", "mobile"); ?>">
-                <a href="<?php echo urlStrRedirect("mobile/mobile/netfilterRules"); ?>" class="btn"><?php echo _T("Manage rules", "mobile"); ?></a>
-            </td>
-        </tr>
-    </table>
-</form>
+$enabledCheckbox = new CheckboxTpl('enabled');
+$f->add(new TrFormElement(_T('Filtering enabled', 'mobile'), $enabledCheckbox), ['value' => !empty($settings['enabled']) ? 'checked' : '']);
+
+$filterModeSelect = new SelectItem('filterMode');
+$filterModeSelect->setElements([
+    _T('Blocklist (block listed domains)', 'mobile'),
+    _T('Allowlist (only allow listed domains)', 'mobile'),
+]);
+$filterModeSelect->setElementsVal(['BLOCKLIST', 'ALLOWLIST']);
+$filterModeSelect->setSelected($settings['filterMode'] ?? 'BLOCKLIST');
+$f->add(new TrFormElement(_T('Filter mode', 'mobile'), $filterModeSelect));
+
+$f->pop();
+$f->addValidateButtonWithValue('save', _T('Save', 'mobile'));
+$f->display();
+?>
+
+<?php
+$_url_nfr_rules = urlStrRedirect('mobile/mobile/netfilterRules');
+$_url_nfr_add   = urlStrRedirect('mobile/mobile/addNetfilterRule');
+$_lbl_manage    = addslashes(_T('Manage rules', 'mobile'));
+$_lbl_add_rule  = addslashes(_T('Add rule', 'mobile'));
+?>
+<script type="text/javascript">
+jQuery(function() {
+    var $h2 = jQuery('h2').first();
+    $h2.wrap('<div style="display:flex;align-items:center;justify-content:space-between;"></div>');
+    $h2.after(
+        '<span style="flex-shrink:0;margin-left:16px;">'
+        + '<button class="btnPrimary" type="button" onclick="location.href=\'<?php echo $_url_nfr_rules; ?>\'"><?php echo $_lbl_manage; ?></button>'
+        + ' <button class="btnPrimary" type="button" onclick="location.href=\'<?php echo $_url_nfr_add; ?>\'"><?php echo $_lbl_add_rule; ?></button>'
+        + '</span>'
+    );
+});
+</script>

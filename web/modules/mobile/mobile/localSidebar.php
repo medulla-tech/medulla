@@ -17,7 +17,8 @@ $sidemenu->addSideMenuItem(new SideMenuItem(_T("Messages", 'mobile'), "mobile", 
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Network Filtering", 'mobile'), "mobile", "mobile", "netfilterSettings"));
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Contacts sync", 'mobile'), "mobile", "mobile", "contactsList"));
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Photos", 'mobile'), "mobile", "mobile", "photosList"));
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Device Export/Import", 'mobile'), "mobile", "mobile", "deviceExport"));
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("Export Devices", 'mobile'), "mobile", "mobile", "deviceExport"));
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("Import Devices", 'mobile'), "mobile", "mobile", "deviceImport"));
 
 
 $_show_admin_menu = false;

@@ -40,9 +40,6 @@ try {
     $_modal_groups = [];
 }
 
-echo '<button class="btn btn-small btn-primary" onclick="PopupWindow(event, \'main.php?module=mobile&submod=mobile&action=qrCode&apk=1\', 450); return false;" type="button">'._T("HMDM APK","mobile").'</button>';
-echo ' <button class="btn btn-small btn-primary" type="button" onclick="openAddDeviceModal()">'._T("Add device","mobile").'</button>';
-
 $device_keys_json = '[]';
 $device_count = 0;
 $suggested_group_name = '';
@@ -318,4 +315,49 @@ function doTempGroupAction(action) {
     }
 }
 <?php endif; ?>
+</script>
+
+<script type="text/javascript">
+var _devBaseUrl = '<?php echo rtrim(urlStrRedirect("mobile/mobile/ajaxDeviceList") . ($status ? "&status=" . urlencode($status) : ""), "&"); ?>';
+
+function _devBuildUrl(filter, start, end, max) {
+    var field = jQuery('#dev_field').val() || 'all';
+    var url = _devBaseUrl
+        + '&filter=' + encodeURIComponent(filter)
+        + '&field='  + encodeURIComponent(field)
+        + '&maxperpage=' + (max || maxperpage);
+    if (start !== undefined) url += '&start=' + start + '&end=' + end;
+    return url;
+}
+
+updateSearch = function() {
+    clearTimers();
+    jQuery.ajax({ url: _devBuildUrl(document.Form.param.value), type: 'get',
+        success: function(data) { jQuery('#container').html(data); } });
+};
+updateSearchParam = function(filter, start, end, max) {
+    clearTimers();
+    jQuery.ajax({ url: _devBuildUrl(filter, start, end, max), type: 'get',
+        success: function(data) { jQuery('#container').html(data); } });
+};
+
+jQuery(function() {
+    var fieldSel = '<select id="dev_field">'
+        + '<option value="all"><?php echo addslashes(_T("All fields", "mobile")); ?></option>'
+        + '<option value="number"><?php echo addslashes(_T("Device number", "mobile")); ?></option>'
+        + '<option value="description"><?php echo addslashes(_T("Description", "mobile")); ?></option>'
+        + '<option value="imei"><?php echo addslashes(_T("IMEI", "mobile")); ?></option>'
+        + '<option value="configuration"><?php echo addslashes(_T("Configuration", "mobile")); ?></option>'
+        + '</select>';
+    jQuery('#searchBest').prepend(fieldSel);
+    jQuery('#dev_field').on('change', function() { pushSearch(); });
+    var $h2 = jQuery('h2').first();
+    $h2.wrap('<div style="display:flex;align-items:center;justify-content:space-between;"></div>');
+    $h2.after(
+        '<span style="flex-shrink:0;margin-left:16px;">'
+        + '<button class="btnPrimary" type="button" onclick="PopupWindow(event, \'main.php?module=mobile&submod=mobile&action=qrCode&apk=1\', 450); return false;"><?php echo addslashes(_T("HMDM APK","mobile")); ?></button>'
+        + ' <button class="btnPrimary" type="button" onclick="openAddDeviceModal()"><?php echo addslashes(_T("Add device","mobile")); ?></button>'
+        + '</span>'
+    );
+});
 </script>

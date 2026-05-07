@@ -51,3 +51,38 @@ $ajax = new AjaxFilter($ajaxUrl);
 $ajax->display();
 $ajax->displayDivToUpdate();
 ?>
+
+<script type="text/javascript">
+var _glpiBaseUrl = '<?php echo rtrim($ajaxUrl, "&"); ?>';
+
+function _glpiBuildUrl(filter, start, end, max) {
+    var field = jQuery('#glpi_field').val() || 'all';
+    var url = _glpiBaseUrl
+        + '&filter=' + encodeURIComponent(filter)
+        + '&field='  + encodeURIComponent(field)
+        + '&maxperpage=' + (max || maxperpage);
+    if (start !== undefined) url += '&start=' + start + '&end=' + end;
+    return url;
+}
+
+updateSearch = function() {
+    clearTimers();
+    jQuery.ajax({ url: _glpiBuildUrl(document.Form.param.value), type: 'get',
+        success: function(data) { jQuery('#container').html(data); } });
+};
+updateSearchParam = function(filter, start, end, max) {
+    clearTimers();
+    jQuery.ajax({ url: _glpiBuildUrl(filter, start, end, max), type: 'get',
+        success: function(data) { jQuery('#container').html(data); } });
+};
+
+jQuery(function() {
+    var fieldSel = '<select id="glpi_field">'
+        + '<option value="all"><?php echo addslashes(_T("All fields", "mobile")); ?></option>'
+        + '<option value="name"><?php echo addslashes(_T("Name", "mobile")); ?></option>'
+        + '<option value="manufacturer"><?php echo addslashes(_T("Manufacturer", "mobile")); ?></option>'
+        + '</select>';
+    jQuery('#searchBest').prepend(fieldSel);
+    jQuery('#glpi_field').on('change', function() { pushSearch(); });
+});
+</script>

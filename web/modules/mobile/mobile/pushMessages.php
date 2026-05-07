@@ -48,8 +48,13 @@ updateSearchParam = function(filter, start, end, max) {
 };
 
 jQuery(function() {
-    var newBtn = '<button type="button" class="btn btn-small btn-primary" style="flex-shrink:0;margin-right:auto;" onclick="location.href=\'<?php echo urlStrRedirect("mobile/mobile/newPushMessage"); ?>\'"><?php echo addslashes(_T("New push message", "mobile")); ?></button>';
-    jQuery('.searchbox').prepend(newBtn);
+    var $h2 = jQuery('h2').first();
+    $h2.wrap('<div style="display:flex;align-items:center;justify-content:space-between;"></div>');
+    $h2.after(
+        '<span style="flex-shrink:0;margin-left:16px;">'
+        + '<button type="button" class="btnPrimary" onclick="location.href=\'<?php echo urlStrRedirect("mobile/mobile/newPushMessage"); ?>\'"><?php echo addslashes(_T("New push message", "mobile")); ?></button>'
+        + '</span>'
+    );
 
     var fieldSel = '<select id="pm_field">'
         + '<option value="all"><?php echo addslashes(_T("All fields", "mobile")); ?></option>'

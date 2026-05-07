@@ -359,9 +359,13 @@ $pageContactsConfig->setFile("modules/mobile/mobile/contactsConfig.php");
 $pageContactsConfig->setOptions(array("visible" => false));
 $submod->addPage($pageContactsConfig);
 
-$pageDeviceExport = new Page("deviceExport", _T('Device Export/Import', 'mobile'));
+$pageDeviceExport = new Page("deviceExport", _T('Export Devices', 'mobile'));
 $pageDeviceExport->setFile("modules/mobile/mobile/deviceExport.php");
 $submod->addPage($pageDeviceExport);
+
+$pageDeviceImport = new Page("deviceImport", _T('Import Devices', 'mobile'));
+$pageDeviceImport->setFile("modules/mobile/mobile/deviceImport.php");
+$submod->addPage($pageDeviceImport);
 
 $pageDeviceExportAction = new Page("deviceExportAction", _T('Export devices action', 'mobile'));
 $pageDeviceExportAction->setFile("modules/mobile/mobile/deviceExportAction.php");
@@ -493,6 +497,11 @@ $pageNetfilterRules = new Page("netfilterRules", _T('Filter Rules', 'mobile'));
 $pageNetfilterRules->setFile("modules/mobile/mobile/netfilterRules.php");
 $pageNetfilterRules->setOptions(array("visible" => false));
 $submod->addPage($pageNetfilterRules);
+
+$pageAddNetfilterRule = new Page("addNetfilterRule", _T('Add Filter Rule', 'mobile'));
+$pageAddNetfilterRule->setFile("modules/mobile/mobile/addNetfilterRule.php");
+$pageAddNetfilterRule->setOptions(array("visible" => false));
+$submod->addPage($pageAddNetfilterRule);
 
 $pageNetfilterRuleAction = new Page("netfilterRuleAction", _T('Filter Rule Action', 'mobile'));
 $pageNetfilterRuleAction->setFile("modules/mobile/mobile/netfilterRuleAction.php");

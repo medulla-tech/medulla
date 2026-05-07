@@ -22,14 +22,55 @@ try {
     $_file_configurations = [];
 }
 
-echo '<button class="btn btn-small btn-primary" type="button" onclick="openAddFileModal()">'._T("Add file","mobile").'</button>';
-
 $ajax = new AjaxFilter(urlStrRedirect("mobile/mobile/ajaxFilesList"));
 $ajax->display();
 echo '<div id="mobileFlash" style="display:none;margin-bottom:10px;"></div>';
 $ajax->displayDivToUpdate();
 
 ?>
+
+<script type="text/javascript">
+var _filesBaseUrl = '<?php echo rtrim(urlStrRedirect("mobile/mobile/ajaxFilesList"), "&"); ?>';
+
+function _filesBuildUrl(filter, start, end, max) {
+    var field = jQuery('#files_field').val() || 'all';
+    var url = _filesBaseUrl
+        + '&filter=' + encodeURIComponent(filter)
+        + '&field='  + encodeURIComponent(field)
+        + '&maxperpage=' + (max || maxperpage);
+    if (start !== undefined) url += '&start=' + start + '&end=' + end;
+    return url;
+}
+
+updateSearch = function() {
+    clearTimers();
+    jQuery.ajax({ url: _filesBuildUrl(document.Form.param.value), type: 'get',
+        success: function(data) { jQuery('#container').html(data); } });
+};
+updateSearchParam = function(filter, start, end, max) {
+    clearTimers();
+    jQuery.ajax({ url: _filesBuildUrl(filter, start, end, max), type: 'get',
+        success: function(data) { jQuery('#container').html(data); } });
+};
+
+jQuery(function() {
+    var fieldSel = '<select id="files_field">'
+        + '<option value="all"><?php echo addslashes(_T("All fields", "mobile")); ?></option>'
+        + '<option value="name"><?php echo addslashes(_T("File name", "mobile")); ?></option>'
+        + '<option value="description"><?php echo addslashes(_T("Description", "mobile")); ?></option>'
+        + '<option value="path"><?php echo addslashes(_T("Path on device", "mobile")); ?></option>'
+        + '</select>';
+    jQuery('#searchBest').prepend(fieldSel);
+    jQuery('#files_field').on('change', function() { pushSearch(); });
+    var $h2 = jQuery('h2').first();
+    $h2.wrap('<div style="display:flex;align-items:center;justify-content:space-between;"></div>');
+    $h2.after(
+        '<span style="flex-shrink:0;margin-left:16px;">'
+        + '<button class="btnPrimary" type="button" onclick="openAddFileModal()"><?php echo addslashes(_T("Add file","mobile")); ?></button>'
+        + '</span>'
+    );
+});
+</script>
 
 <div id="addFileModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9999; overflow-y:auto;">
     <div style="background:#fff; width:540px; margin:60px auto 40px; border-radius:6px; overflow:hidden; box-shadow:0 8px 32px rgba(0,0,0,0.25);">

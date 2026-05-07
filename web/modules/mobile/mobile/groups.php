@@ -21,8 +21,6 @@ try {
     $_modal_devices = [];
 }
 
-echo '<button class="btn btn-small btn-primary" type="button" onclick="openAddGroupModal()">'._T("Add group","mobile").'</button>';
-
 $ajax = new AjaxFilter(urlStrRedirect("mobile/mobile/ajaxGroupList"));
 $ajax->display();
 echo '<div id="mobileFlash" style="display:none;margin-bottom:10px;"></div>';
@@ -97,6 +95,15 @@ function closeAddGroupModal() {
 }
 jQuery('#addGroupModal').on('click', function(e) {
     if (e.target.id === 'addGroupModal') closeAddGroupModal();
+});
+jQuery(function() {
+    var $h2 = jQuery('h2').first();
+    $h2.wrap('<div style="display:flex;align-items:center;justify-content:space-between;"></div>');
+    $h2.after(
+        '<span style="flex-shrink:0;margin-left:16px;">'
+        + '<button class="btnPrimary" type="button" onclick="openAddGroupModal()"><?php echo addslashes(_T("Add group","mobile")); ?></button>'
+        + '</span>'
+    );
 });
 function modalGroupDeviceAdd() {
     jQuery('#modal_group_available option:selected').each(function() {

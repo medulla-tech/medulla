@@ -2,13 +2,18 @@
 require_once("modules/mobile/includes/xmlrpc.php");
 
 $filter = isset($_GET['filter']) ? $_GET['filter'] : '';
+$field  = isset($_GET['field'])  ? trim($_GET['field'])  : 'all';
 
 $configs = xmlrpc_get_hmdm_configurations();
 if (!is_array($configs)) $configs = [];
 
 if (!empty($filter)) {
-    $configs = array_filter($configs, function($cfg) use ($filter) {
-        return stripos($cfg['name'] ?? '', $filter) !== false;
+    $configs = array_filter($configs, function($cfg) use ($filter, $field) {
+        if ($field === 'description') {
+            return stripos($cfg['description'] ?? '', $filter) !== false;
+        }
+        return stripos($cfg['name'] ?? '', $filter) !== false
+            || ($field === 'all' && stripos($cfg['description'] ?? '', $filter) !== false);
     });
 }
 

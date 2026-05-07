@@ -3,17 +3,22 @@ require_once("modules/mobile/includes/xmlrpc.php");
 
 // Get filter parameter
 $filter = isset($_GET['filter']) ? $_GET['filter'] : '';
+$field  = isset($_GET['field'])  ? trim($_GET['field'])  : 'all';
 
-// Fetch applications from HMDM via xmlrpc wrapper
 $apps = xmlrpc_get_hmdm_applications();
 
 if (!is_array($apps)) $apps = [];
 
-// Filter by application name if filter is provided
 if (!empty($filter)) {
-    $apps = array_filter($apps, function($app) use ($filter) {
-        $appName = $app['name'] ?? '';
-        return stripos($appName, $filter) !== false;
+    $apps = array_filter($apps, function($app) use ($filter, $field) {
+        if ($field === 'package') {
+            return stripos($app['pkg'] ?? '', $filter) !== false;
+        }
+        if ($field === 'version') {
+            return stripos((string)($app['version'] ?? ''), $filter) !== false;
+        }
+        return stripos($app['name'] ?? '', $filter) !== false
+            || ($field === 'all' && stripos($app['pkg'] ?? '', $filter) !== false);
     });
 }
 

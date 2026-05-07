@@ -54,12 +54,20 @@ $count    = $machines["count"];
 $datas    = $machines["data"];
 $xmppdatas = isset($machines['xmppdata']) ? $machines['xmppdata'] : [];
 
-// Client-side filter by device name when a search string is given
+// Client-side filter by device name/manufacturer when a search string is given
 if (!empty($filter) && isset($datas['name'])) {
     $filtered_indices = [];
     foreach ($datas['name'] as $idx => $name) {
         $deviceName = $name ?? (isset($datas['cn'][$idx]) ? $datas['cn'][$idx] : '');
-        if (stripos($deviceName, $filter) !== false) {
+        $mfr = isset($datas['manufacturer'][$idx]) ? $datas['manufacturer'][$idx] : '';
+        if ($field === 'name') {
+            $match = stripos($deviceName, $filter) !== false;
+        } elseif ($field === 'manufacturer') {
+            $match = stripos($mfr, $filter) !== false;
+        } else {
+            $match = stripos($deviceName, $filter) !== false || stripos($mfr, $filter) !== false;
+        }
+        if ($match) {
             $filtered_indices[] = $idx;
         }
     }

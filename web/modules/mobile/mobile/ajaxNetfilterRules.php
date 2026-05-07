@@ -2,13 +2,19 @@
 require_once("modules/mobile/includes/xmlrpc.php");
 
 $filter = isset($_GET['filter']) ? strtolower(trim($_GET['filter'])) : '';
+$field  = isset($_GET['field'])  ? trim($_GET['field'])  : 'all';
 
 $rules = xmlrpc_get_netfilter_rules();
 if (!is_array($rules)) $rules = [];
 
 if ($filter !== '') {
-    $rules = array_values(array_filter($rules, function($r) use ($filter) {
-        return strpos(strtolower($r['domain'] ?? ''), $filter) !== false;
+    $rules = array_values(array_filter($rules, function($r) use ($filter, $field) {
+        if ($field === 'type') {
+            return strpos(strtolower($r['ruleType'] ?? ''), $filter) !== false;
+        }
+        // 'all' or 'domain'
+        return strpos(strtolower($r['domain'] ?? ''), $filter) !== false
+            || ($field === 'all' && strpos(strtolower($r['ruleType'] ?? ''), $filter) !== false);
     }));
 }
 

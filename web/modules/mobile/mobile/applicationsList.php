@@ -19,14 +19,55 @@ try {
     $_app_files = [];
 }
 
-echo '<button class="btn btn-small btn-primary" type="button" onclick="openAddAppModal()">'._T("Add application","mobile").'</button>';
-
 $ajax = new AjaxFilter(urlStrRedirect("mobile/mobile/ajaxApplicationsList"));
 $ajax->display();
 echo '<div id="mobileFlash" style="display:none;margin-bottom:10px;"></div>';
 $ajax->displayDivToUpdate();
 
 ?>
+
+<script type="text/javascript">
+var _appsBaseUrl = '<?php echo rtrim(urlStrRedirect("mobile/mobile/ajaxApplicationsList"), "&"); ?>';
+
+function _appsBuildUrl(filter, start, end, max) {
+    var field = jQuery('#apps_field').val() || 'all';
+    var url = _appsBaseUrl
+        + '&filter=' + encodeURIComponent(filter)
+        + '&field='  + encodeURIComponent(field)
+        + '&maxperpage=' + (max || maxperpage);
+    if (start !== undefined) url += '&start=' + start + '&end=' + end;
+    return url;
+}
+
+updateSearch = function() {
+    clearTimers();
+    jQuery.ajax({ url: _appsBuildUrl(document.Form.param.value), type: 'get',
+        success: function(data) { jQuery('#container').html(data); } });
+};
+updateSearchParam = function(filter, start, end, max) {
+    clearTimers();
+    jQuery.ajax({ url: _appsBuildUrl(filter, start, end, max), type: 'get',
+        success: function(data) { jQuery('#container').html(data); } });
+};
+
+jQuery(function() {
+    var fieldSel = '<select id="apps_field">'
+        + '<option value="all"><?php echo addslashes(_T("All fields", "mobile")); ?></option>'
+        + '<option value="name"><?php echo addslashes(_T("Name", "mobile")); ?></option>'
+        + '<option value="package"><?php echo addslashes(_T("Package", "mobile")); ?></option>'
+        + '<option value="version"><?php echo addslashes(_T("Version", "mobile")); ?></option>'
+        + '</select>';
+    jQuery('#searchBest').prepend(fieldSel);
+    jQuery('#apps_field').on('change', function() { pushSearch(); });
+    var $h2 = jQuery('h2').first();
+    $h2.wrap('<div style="display:flex;align-items:center;justify-content:space-between;"></div>');
+    $h2.after(
+        '<span style="flex-shrink:0;margin-left:16px;">'
+        + '<button class="btnPrimary" type="button" onclick="openAddAppModal()"><?php echo addslashes(_T("Add application","mobile")); ?></button>'
+        + '</span>'
+    );
+});
+</script>
 
 <div id="addAppModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9999; overflow-y:auto;">
     <div style="background:#fff; width:640px; margin:60px auto 40px; border-radius:6px; overflow:hidden; box-shadow:0 8px 32px rgba(0,0,0,0.25);">

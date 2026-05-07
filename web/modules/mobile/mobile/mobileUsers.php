@@ -124,11 +124,26 @@ error_log("Pending users: " . json_encode($_pending));
 
 <div id="mobileUsersFlash" style="display:none; margin-bottom:10px;"></div>
 
+<form name="FormUsers" id="FormUsers" onsubmit="return false;" style="margin:20px 0;">
+    <div id="searchSpanUsers" class="searchbox">
+        <div id="searchBest">
+            <input type="text" class="searchfieldreal" name="param" id="paramUsers"
+                   oninput="filterUsersTable(this.value)" />
+            <button type="button" class="search-clear"
+                    onclick="document.getElementById('paramUsers').value=''; filterUsersTable('');"></button>
+            <button onclick="filterUsersTable(document.getElementById('paramUsers').value); return false;">
+                <?php echo _T('Search', 'glpi'); ?>
+            </button>
+        </div>
+        <span class="loader"></span>
+    </div>
+</form>
+
 <h3 style="margin-top:20px;"><?php echo _T("Configured users", "mobile"); ?></h3>
 <?php if (empty($_configured)): ?>
 <p style="color:#888;"><?php echo _T("No users configured yet.", "mobile"); ?></p>
 <?php else: ?>
-<table class="listinfos" style="width:100%;">
+<table id="users_table" class="listinfos" style="width:100%;">
     <thead>
         <tr>
             <th><?php echo _T("Medulla login", "mobile"); ?></th>
@@ -400,6 +415,14 @@ function mobileUsersFlash(type, msg) {
         .css({'background':bg,'color':color,'border':'1px solid '+border,'padding':'10px 16px','border-radius':'4px','font-weight':'500'})
         .show();
     setTimeout(function(){ jQuery('#mobileUsersFlash').fadeOut(400); }, 3000);
+}
+
+function filterUsersTable(val) {
+    val = val.toLowerCase();
+    jQuery('#users_table tbody tr').each(function() {
+        var text = jQuery(this).text().toLowerCase();
+        jQuery(this).toggle(text.indexOf(val) !== -1);
+    });
 }
 </script>
 <?php } ?>

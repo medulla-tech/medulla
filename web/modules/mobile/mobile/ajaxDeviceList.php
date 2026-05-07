@@ -2,6 +2,7 @@
 require_once("modules/mobile/includes/xmlrpc.php");
 
 $filter = isset($_GET['filter']) ? $_GET['filter'] : '';
+$field  = isset($_GET['field'])  ? trim($_GET['field'])  : 'all';
 $status = isset($_GET['status']) ? $_GET['status'] : '';
 
 $mobiles = xmlrpc_get_hmdm_devices();
@@ -35,9 +36,24 @@ foreach ($mobiles as &$m) {
 unset($m);
 
 if (!empty($filter)) {
-    $mobiles = array_filter($mobiles, function($mobile) use ($filter) {
-        $deviceName = $mobile['number'] ?? '';
-        return stripos($deviceName, $filter) !== false;
+    $mobiles = array_filter($mobiles, function($mobile) use ($filter, $field, $config_map) {
+        if ($field === 'description') {
+            return stripos($mobile['description'] ?? '', $filter) !== false;
+        }
+        if ($field === 'imei') {
+            return stripos($mobile['imei'] ?? '', $filter) !== false;
+        }
+        if ($field === 'configuration') {
+            $cfgId   = $mobile['configurationId'] ?? null;
+            $cfgName = ($cfgId && isset($config_map[$cfgId])) ? $config_map[$cfgId] : '';
+            return stripos($cfgName, $filter) !== false;
+        }
+        // 'all' or 'number'
+        return stripos($mobile['number'] ?? '', $filter) !== false
+            || ($field === 'all' && (
+                stripos($mobile['description'] ?? '', $filter) !== false
+                || stripos($mobile['imei'] ?? '', $filter) !== false
+            ));
     });
 }
 
@@ -203,7 +219,6 @@ $count = is_array($mobiles) ? count($mobiles) : 0;
 $count = count($mobiles);
 $filter = "";
 $n = new OptimizedListInfos($col1, _T("Device's name", "mobile"));
-$n->setResizable();
 
 $n->setNavBar(new AjaxNavBar($count, $filter, "updateSearchParamform".($actions?'image':'master')));
 $n->setCssIds($ids);

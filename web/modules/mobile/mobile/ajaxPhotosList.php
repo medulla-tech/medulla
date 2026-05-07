@@ -2,12 +2,34 @@
 require_once("modules/mobile/includes/xmlrpc.php");
 
 $filter = isset($_GET['filter']) ? trim($_GET['filter']) : '';
+$field  = isset($_GET['field'])  ? trim($_GET['field'])  : 'all';
 
-$result = xmlrpc_list_photos($filter, null, null, 0, 50);
+// For device field, pass filter to API; otherwise fetch all and filter in PHP
+$api_device = ($field === 'device' || $field === 'all') ? $filter : null;
+$result = xmlrpc_list_photos($api_device, null, null, 0, 50);
 
 $photos = array();
 if (is_array($result) && isset($result['items'])) {
     $photos = $result['items'];
+}
+
+// PHP-side filtering for non-device fields
+if ($filter !== '' && $field !== 'all' && $field !== 'device') {
+    $photos = array_values(array_filter($photos, function($photo) use ($filter, $field) {
+        $haystack = '';
+        if ($field === 'filename') {
+            $haystack = $photo['originalName'] ?? '';
+        } elseif ($field === 'location') {
+            $haystack = $photo['address'] ?? '';
+        }
+        return stripos($haystack, $filter) !== false;
+    }));
+} elseif ($filter !== '' && $field === 'all') {
+    $photos = array_values(array_filter($photos, function($photo) use ($filter) {
+        return stripos($photo['deviceNumber'] ?? '', $filter) !== false
+            || stripos($photo['originalName'] ?? '', $filter) !== false
+            || stripos($photo['address'] ?? '', $filter) !== false;
+    }));
 }
 
 $ids = $thumbnails = $devices = $filenames = $dates = $locations = [];
@@ -63,6 +85,7 @@ $n->disableFirstColumnActionLink();
 
 $count = safeCount($photos);
 $filter_val = isset($_REQUEST['filter']) ? $_REQUEST['filter'] : '';
+$field_val  = isset($_REQUEST['field'])  ? $_REQUEST['field']  : 'all';
 $n->setNavBar(new AjaxNavBar($count, $filter_val));
 
 $n->addExtraInfo($devices, _T("Device", "mobile"));
