@@ -522,3 +522,191 @@ En resume:
 - gray list stocke les updates detectes ;
 - gray list declenche aussi, si necessaire, la creation asynchrone du package ;
 - white list memorise les updates approuves.
+
+## 16) Tables produit: generation et regeneration
+
+Cette section decrit uniquement ce qui est necessaire pour disposer des tables produit et les regenerer correctement.
+
+### Principe
+
+- Les tables up_packages_* sont construites depuis xmppmaster.update_data.
+- xmppmaster.update_data est elle-meme reconstruite depuis base_wsusscn2.update_data.
+- La procedure centrale up_create_product_tables() appelle dynamiquement toutes les procedures up_init_packages_*. 
+
+### Prerequis indispensables
+
+1. Les donnees WSUS doivent etre presentes dans base_wsusscn2.update_data.
+2. Les procedures up_init_packages_* attendues doivent exister dans xmppmaster.
+3. Les entrees produit key='table produits' doivent exister dans xmppmaster.applicationconfig.
+4. Le script systeme /usr/sbin/medulla-generate-winupdate-packages doit pouvoir s executer sans erreur.
+
+### Generation automatique par cron
+
+Le script /usr/sbin/medulla-generate-winupdate-packages est le point d entree operationnel.
+
+Il execute la chaine suivante:
+
+1. Import du dump vers base_wsusscn2
+2. CALL xmppmaster.up_reinit_table_update_data()
+3. CALL xmppmaster.up_create_product_tables()
+
+Si l execution est interrompue avant l etape 3, les tables produit peuvent etre absentes ou perimees.
+
+### Regeneration manuelle
+
+En cas d incident ou de doute, relancer la chaine dans cet ordre:
+
+```sql
+CALL xmppmaster.up_reinit_table_update_data();
+CALL xmppmaster.up_create_product_tables();
+```
+
+### Verifications SQL recommandees
+
+Verifier les procedures de generation produit:
+
+```sql
+SHOW PROCEDURE STATUS
+WHERE Db='xmppmaster'
+  AND Name LIKE 'up_init_packages_%';
+```
+
+Verifier la presence des tables produit:
+
+```sql
+SHOW TABLES LIKE 'up_packages_%';
+```
+
+Verifier la declaration des produits dans applicationconfig:
+
+```sql
+SELECT `value`, `enable`
+FROM xmppmaster.applicationconfig
+WHERE `key`='table produits'
+ORDER BY `value`;
+```
+
+Verifier la source et la copie de travail:
+
+```sql
+SELECT COUNT(*) AS cnt_source FROM base_wsusscn2.update_data;
+SELECT COUNT(*) AS cnt_xmppmaster FROM xmppmaster.update_data;
+```
+
+### Verifications systeme (cron et logs)
+
+Controles utiles sur une infra cible:
+
+```bash
+grep -R "medulla-generate-winupdate-packages" /etc/cron.d /var/spool/cron 2>/dev/null
+tail -n 200 /tmp/medulla-generate-winupdate-packages.log
+```
+
+### Resume operationnel
+
+- Pour avoir les tables produit, il faut les procedures up_init_packages_* et la procedure centrale up_create_product_tables().
+- Pour les remettre a jour, il faut d abord regenerer xmppmaster.update_data puis relancer up_create_product_tables().
+- Le mode nominal passe par le cron via medulla-generate-winupdate-packages; en incident, la regeneration manuelle suit la meme sequence.
+
+## 17) Procedure client de verification en cas de souci
+
+Cette procedure est faite pour un client qui constate un probleme de disponibilite des produits ou de mise a jour des tables up_packages_*.
+
+### Etape 1 - Verifier que le cron est present
+
+```bash
+grep -R "medulla-generate-winupdate-packages" /etc/cron.d /var/spool/cron 2>/dev/null
+```
+
+Attendu:
+
+- une entree cron vers /usr/sbin/medulla-generate-winupdate-packages.
+
+### Etape 2 - Verifier le dernier log de traitement
+
+```bash
+tail -n 200 /tmp/medulla-generate-winupdate-packages.log
+```
+
+Attendu:
+
+- traces de l import dans base_wsusscn2 ;
+- trace de CALL up_reinit_table_update_data() ;
+- trace de CALL up_create_product_tables().
+
+### Etape 3 - Verifier la source et la copie de travail
+
+```sql
+SELECT COUNT(*) AS cnt_source FROM base_wsusscn2.update_data;
+SELECT COUNT(*) AS cnt_xmppmaster FROM xmppmaster.update_data;
+```
+
+Attendu:
+
+- cnt_source > 0 ;
+- cnt_xmppmaster > 0.
+
+### Etape 4 - Verifier les procedures de generation
+
+```sql
+SHOW PROCEDURE STATUS
+WHERE Db='xmppmaster'
+  AND Name='up_create_product_tables';
+
+SHOW PROCEDURE STATUS
+WHERE Db='xmppmaster'
+  AND Name LIKE 'up_init_packages_%';
+```
+
+Attendu:
+
+- up_create_product_tables presente ;
+- procedures up_init_packages_* presentes.
+
+### Etape 5 - Regenerer manuellement si necessaire
+
+```sql
+CALL xmppmaster.up_reinit_table_update_data();
+CALL xmppmaster.up_create_product_tables();
+```
+
+Attendu:
+
+- execution sans erreur bloquante ;
+- recreation des tables produit.
+
+### Etape 6 - Verifier les tables produit attendues
+
+```sql
+SHOW TABLES LIKE 'up_packages_%';
+```
+
+Option ciblage Win10/Win11:
+
+```sql
+SHOW TABLES LIKE 'up_packages_Win10_%';
+SHOW TABLES LIKE 'up_packages_Win11_%';
+```
+
+Attendu:
+
+- presence des tables produit necessaires au perimetre client.
+
+### Etape 7 - Verifier la declaration produit pour les entites
+
+```sql
+SELECT `key`, `value`, `context`, `module`, `enable`
+FROM xmppmaster.applicationconfig
+WHERE `key`='table produits'
+ORDER BY `value`;
+```
+
+Attendu:
+
+- les tables up_packages_* attendues sont declarees ;
+- le champ enable est coherent avec la visibilite souhaitee.
+
+### Conclusion client
+
+Si les 7 etapes sont conformes, le mecanisme de generation/regeneration des tables produit est operationnel.
+Si une etape echoue, corriger ce point puis relancer les etapes 5 a 7.
