@@ -17064,6 +17064,12 @@ FROM (
 
         Args:
             session: session SQLAlchemy.
+            entitylist (list[int|str]|None):
+                                                                Liste optionnelle d'identifiants d'entité (champ `local_glpi_entities.id` / `up_major_win.ent_id`).
+                - Chaque valeur est convertie en entier.
+                - Les valeurs invalides sont ignorées.
+                - Si `None` ou liste vide (ou après filtrage invalide), aucune restriction
+                  d'entité n'est appliquée et toutes les entités sont prises en compte.
             presence: si True, filtre uniquement les machines activées.
         Returns:
             dict: statistiques par entité.
@@ -17092,6 +17098,35 @@ FROM (
                 if entity_ids
                 else ""
             )
+
+            # Pré-initialise les entités depuis la table miroir GLPI complète,
+            # pour conserver aussi les entités sans machine.
+            entities_sql = """
+                SELECT
+                    e.id AS entity_id,
+                    e.completename AS complete_name
+                FROM xmppmaster.local_glpi_entities e
+            """
+            if entity_ids:
+                entities_sql += f" WHERE e.id IN ({','.join(str(e) for e in entity_ids)})"
+
+            for entity_row in session.execute(entities_sql).fetchall():
+                ent_name = entity_row.complete_name
+                results["entity"].setdefault(
+                    ent_name,
+                    {
+                        "entity_id": int(entity_row.entity_id),
+                        "name": ent_name,
+                        "count": 0,
+                        "W10to10": 0,
+                        "W10to11": 0,
+                        "W11to11": 0,
+                        "UPDATED": 0,
+                        "non_conforme": 0,
+                        "autre_cas": 0,
+                        "non_inventorie": 0,
+                    },
+                )
 
             # Requête pour récupérer les données brutes
             query = f"""
@@ -17195,7 +17230,7 @@ FROM (
                 # Mise à jour des résultats
                 if ent_name not in results["entity"]:
                     results["entity"][ent_name] = {
-                        "entity_id": ent_id,
+                        "entity_id": int(ent_id),
                         "name": ent_name,
                         "count": 0,
                         "W10to10": 0,
@@ -17203,8 +17238,8 @@ FROM (
                         "W11to11": 0,
                         "UPDATED": 0,
                         "non_conforme": 0,
-                        "autre_cas" : 0,
-                        "non_inventorie" : 0
+                        "autre_cas": 0,
+                        "non_inventorie": 0,
                     }
 
                 results["entity"][ent_name][category] += 1
