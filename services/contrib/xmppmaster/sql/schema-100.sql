@@ -219,11 +219,6 @@ INSERT IGNORE INTO `xmppmaster`.`applicationconfig` (
     1
 );
 
--- Execution de la procédure centrale d'initialisation
--- La procédure up_create_product_tables (définie dans schema-095.sql)
--- parcourt automatiquement l'information_schema et exécute toutes les
--- procédures commençant par up_init_packages_*, y compris la nouvelle.
-CALL `xmppmaster`.`up_create_product_tables`();
 
 -- ----------------------------------------------------------------------
 -- Database version
