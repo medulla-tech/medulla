@@ -10292,6 +10292,15 @@ class XmppMasterDatabase(DatabaseHelper):
         session.flush()
         result = {}
         if machine:
+            entity_glpi_id = None
+            if machine.glpi_entity_id is not None:
+                entity = (
+                    session.query(Glpi_entity)
+                    .filter(Glpi_entity.id == machine.glpi_entity_id)
+                    .first()
+                )
+                if entity:
+                    entity_glpi_id = entity.glpi_id
             result = {
                 "id": machine.id,
                 "jid": machine.jid,
@@ -10315,6 +10324,8 @@ class XmppMasterDatabase(DatabaseHelper):
                 "keysyncthing": machine.keysyncthing,
                 "enabled": machine.enabled,
                 "uuid_serial_machine": machine.uuid_serial_machine,
+                "glpi_entity_id": machine.glpi_entity_id,
+                "entity_id": entity_glpi_id,
             }
         return result
 
