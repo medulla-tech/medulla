@@ -2580,6 +2580,40 @@ class XmppMasterDatabase(DatabaseHelper):
             return -1
 
     @DatabaseHelper._sessionm
+    def updateMachineGlpiEntityId(self, session, machine_id, glpi_entity_id):
+        """
+        Update only the glpi_entity_id field for a machine to ensure entity coherence.
+        This is used in Case 1 registrations after successful GLPI consolidation.
+        
+        Args:
+            machine_id: The ID of the machine to update
+            glpi_entity_id: The new glpi_entity_id to set (ID from glpi_entity table)
+        
+        Returns:
+            1 if successful, -1 if error
+        """
+        try:
+            if glpi_entity_id in ["NULL", "", None]:
+                glpi_entity_id = None
+            
+            session.query(Machines).filter(Machines.id == machine_id).update(
+                {Machines.glpi_entity_id: glpi_entity_id}
+            )
+            session.commit()
+            session.flush()
+            logger.info(
+                "Updated glpi_entity_id=%s for machine id=%s"
+                % (glpi_entity_id, machine_id)
+            )
+            return 1
+        except Exception as e:
+            logger.error(
+                "updateMachineGlpiEntityId error for machine %s: %s"
+                % (machine_id, str(e))
+            )
+            return -1
+
+    @DatabaseHelper._sessionm
     def updateName_Qa_custom_command(
         self, session, user, osname, namecmd, customcmd, description, old_namecmd=""
     ):
@@ -10283,50 +10317,73 @@ class XmppMasterDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def getMachinefromjid(self, session, jid):
         """information machine"""
-        user = str(jid).split("@")[0]
-        machine = (
-            session.query(Machines).filter(
-                Machines.jid.like("%s%%" % user)).first()
-        )
-        session.commit()
-        session.flush()
         result = {}
-        if machine:
-            entity_glpi_id = None
-            if machine.glpi_entity_id is not None:
-                entity = (
-                    session.query(Glpi_entity)
-                    .filter(Glpi_entity.id == machine.glpi_entity_id)
+        try:
+            if jid is None:
+                return result
+
+            jid_str = str(jid).strip()
+            if not jid_str:
+                return result
+
+            user = jid_str.split("@")[0]
+            if not user:
+                return result
+
+            # Prefer exact JID match to avoid returning a sibling machine by prefix.
+            machine = session.query(Machines).filter(Machines.jid == jid_str).first()
+            if machine is None:
+                machine = (
+                    session.query(Machines)
+                    .filter(Machines.jid.like("%s@%%" % user))
                     .first()
                 )
-                if entity:
-                    entity_glpi_id = entity.glpi_id
-            result = {
-                "id": machine.id,
-                "jid": machine.jid,
-                "platform": machine.platform,
-                "archi": machine.archi,
-                "hostname": machine.hostname,
-                "uuid_inventorymachine": machine.uuid_inventorymachine,
-                "ip_xmpp": machine.ip_xmpp,
-                "ippublic": machine.ippublic,
-                "macaddress": machine.macaddress,
-                "subnetxmpp": machine.subnetxmpp,
-                "agenttype": machine.agenttype,
-                "classutil": machine.classutil,
-                "groupdeploy": machine.groupdeploy,
-                "urlguacamole": machine.urlguacamole,
-                "picklekeypublic": machine.picklekeypublic,
-                "ad_ou_user": machine.ad_ou_user,
-                "ad_ou_machine": machine.ad_ou_machine,
-                "kiosk_presence": machine.kiosk_presence,
-                "lastuser": machine.lastuser,
-                "keysyncthing": machine.keysyncthing,
-                "enabled": machine.enabled,
-                "uuid_serial_machine": machine.uuid_serial_machine,
-                "glpi_entity_id": machine.glpi_entity_id,
-                "entity_id": entity_glpi_id,
-            }
+
+            if machine:
+                entity_glpi_id = None
+                glpi_entity_id = getattr(machine, "glpi_entity_id", None)
+                if glpi_entity_id is not None:
+                    entity = getattr(machine, "glpi_entity", None)
+                    if entity is None:
+                        entity = (
+                            session.query(Glpi_entity)
+                            .filter(Glpi_entity.id == glpi_entity_id)
+                            .first()
+                        )
+                    if entity is not None:
+                        entity_glpi_id = entity.glpi_id
+
+                result = {
+                    "id": machine.id,
+                    "jid": machine.jid,
+                    "platform": machine.platform,
+                    "archi": machine.archi,
+                    "hostname": machine.hostname,
+                    "uuid_inventorymachine": machine.uuid_inventorymachine,
+                    "ip_xmpp": machine.ip_xmpp,
+                    "ippublic": machine.ippublic,
+                    "macaddress": machine.macaddress,
+                    "subnetxmpp": machine.subnetxmpp,
+                    "agenttype": machine.agenttype,
+                    "classutil": machine.classutil,
+                    "groupdeploy": machine.groupdeploy,
+                    "urlguacamole": machine.urlguacamole,
+                    "picklekeypublic": machine.picklekeypublic,
+                    "ad_ou_user": machine.ad_ou_user,
+                    "ad_ou_machine": machine.ad_ou_machine,
+                    "kiosk_presence": machine.kiosk_presence,
+                    "lastuser": machine.lastuser,
+                    "keysyncthing": machine.keysyncthing,
+                    "enabled": machine.enabled,
+                    "uuid_serial_machine": machine.uuid_serial_machine,
+                    "glpi_entity_id": glpi_entity_id,
+                    "entity_id": entity_glpi_id,
+                }
+            session.commit()
+            session.flush()
+        except Exception as e:
+            session.rollback()
+            logger.error("getMachinefromjid error: %s", e)
         return result
 
     @DatabaseHelper._sessionm
