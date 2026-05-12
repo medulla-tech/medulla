@@ -54,10 +54,10 @@ if ($typeaction == "windows") {
     $n->addExtraInfoCentered(array($_GET['nb_missing']), _T("Upgrade Not recommended", "updates"));
     $n->addExtraInfoCentered(array($_GET['totalmachineentity']), _T("Total machines", "updates"));
 } else {
-    $n = new ListInfos(array($_GET['MS12toMS25']), _T("Upgrade Windows Server 12 to 25", "updates"));
-    $n->addExtraInfoCentered(array($_GET['MS16toMS25']), _T("Upgrade Windows Server 16 to 25", "updates"));
-    $n->addExtraInfoCentered(array($_GET['MS19toMS25']), _T("Upgrade Windows Server 19 to 25", "updates"));
-    $n->addExtraInfoCentered(array($_GET['MS25toMS25']), _T("Upgrade to latest Windows Server 25", "updates"));
+    $n = new ListInfos(array($_GET['MS12toMS25']), _T("Upgrade Windows Server 2012 to 2025", "updates"));
+    $n->addExtraInfoCentered(array($_GET['MS16toMS25']), _T("Upgrade Windows Server 2016 to 2025", "updates"));
+    $n->addExtraInfoCentered(array($_GET['MS19toMS25']), _T("Upgrade Windows Server 2019 to 2025", "updates"));
+    $n->addExtraInfoCentered(array($_GET['MS25toMS25']), _T("Upgrade to latest Windows Server 2025", "updates"));
     $n->addExtraInfoCentered(array($_GET['UPDATED']), _T("Up to date", "updates"));
     $n->addExtraInfoCentered(array($_GET['nb_missing']), _T("Upgrade Not recommended", "updates"));
     $n->addExtraInfoCentered(array($_GET['totalmachineentity']), _T("Total machines", "updates"));
