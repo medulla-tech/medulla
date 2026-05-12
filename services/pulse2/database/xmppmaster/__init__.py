@@ -14817,7 +14817,7 @@ FROM (
         return result_data
 
     @DatabaseHelper._sessionm
-    def get_all_machines_grouped_by_os(self, session, start, end, ctx):
+    def get_all_machines_grouped_by_os(self, session, start, end, ctx, os_filter=""):
         """
         Récupère les machines du XMPPMaster, groupées par type d'OS :
         - Microsoft Windows
@@ -14825,6 +14825,11 @@ FROM (
         - Autres
 
         Filtres (ctx) et pagination inclus.
+
+        Si os_filter vaut "windows", "linux" ou "autres", la requête paginée
+        ne ramène que les machines de ce groupe : utile pour avoir des pages
+        de taille constante quand l'appelant n'affiche qu'un seul OS.
+        Les compteurs renvoyés par OS restent les totaux globaux.
         """
 
         # ───────────────────────────────
@@ -14862,7 +14867,44 @@ FROM (
         }
 
         # ───────────────────────────────
-        # 3️⃣ Requête SQL principale
+        # 3️⃣ Compte global par OS (indépendant de la pagination)
+        # ───────────────────────────────
+        linux_keywords = ["linux", "ubuntu", "debian", "centos", "redhat", "fedora", "suse"]
+        win_sql = "(LOWER(m.platform) LIKE '%windows%' OR LOWER(m.platform) LIKE '%mic%')"
+        linux_sql = "(" + " OR ".join(
+            f"LOWER(m.platform) LIKE '%{kw}%'" for kw in linux_keywords
+        ) + ")"
+
+        count_sql = f"""
+            SELECT
+                SUM(CASE WHEN {win_sql} THEN 1 ELSE 0 END) AS windows_count,
+                SUM(CASE WHEN {linux_sql} THEN 1 ELSE 0 END) AS linux_count,
+                SUM(CASE WHEN NOT {win_sql} AND NOT {linux_sql} THEN 1 ELSE 0 END) AS autres_count
+            FROM machines m
+            JOIN glpi_entity ge ON m.glpi_entity_id = ge.id
+            WHERE {where_sql}
+        """
+        counts_row = session.execute(count_sql).fetchone()
+        if counts_row:
+            result_data["windows"]["count"] = int(counts_row["windows_count"] or 0)
+            result_data["linux"]["count"]   = int(counts_row["linux_count"]   or 0)
+            result_data["autres"]["count"]  = int(counts_row["autres_count"]  or 0)
+
+        # Filtre SQL optionnel pour ne paginer que les machines d'un OS donné
+        os_sql_filter = ""
+        if os_filter == "windows":
+            os_sql_filter = win_sql
+        elif os_filter == "linux":
+            os_sql_filter = linux_sql
+        elif os_filter == "autres":
+            os_sql_filter = f"(NOT {win_sql} AND NOT {linux_sql})"
+
+        where_sql_paginated = where_sql
+        if os_sql_filter:
+            where_sql_paginated = f"{where_sql} AND {os_sql_filter}"
+
+        # ───────────────────────────────
+        # 4️⃣ Requête SQL principale
         # ───────────────────────────────
         sql_query = f"""
             SELECT
@@ -14875,7 +14917,7 @@ FROM (
                 ge.complete_name        AS entity
             FROM machines m
             JOIN glpi_entity ge ON m.glpi_entity_id = ge.id
-            WHERE {where_sql}
+            WHERE {where_sql_paginated}
             LIMIT {start}, {end}
         """
 
@@ -14883,10 +14925,8 @@ FROM (
         machines = result.fetchall()
 
         # ───────────────────────────────
-        # 4️⃣ Regroupement par OS
+        # 5️⃣ Regroupement par OS
         # ───────────────────────────────
-        linux_keywords = ["linux", "ubuntu", "debian", "centos", "redhat", "fedora", "suse"]
-
         for row in machines:
             uid = row["uuid"].replace("UUID", "") if row["uuid"] else ""
             os_value = (row["os"] or "").lower()
@@ -14908,10 +14948,9 @@ FROM (
             section["data"]["user"].append(row["user"] or "")
             section["data"]["entity"].append(row["entity"] or "")
             section["data"]["presence"].append(1)
-            section["count"] += 1
 
         # ───────────────────────────────
-        # 5️⃣ Ajout des données XMPP
+        # 6️⃣ Ajout des données XMPP
         # ───────────────────────────────
         all_uuids = (
             result_data["windows"]["data"]["uuid"]
