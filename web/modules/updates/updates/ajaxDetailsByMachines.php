@@ -107,9 +107,11 @@ if ($entity == '') {
         $inprogress = !empty($compliance_computer[$uuid]) ? $compliance_computer[$uuid]["inprogress"] : 0;
         $total = !empty($compliance_computer[$uuid]['total']) ? $compliance_computer[$uuid]['total'] : 0;
 
-        $color = colorconf($compliance);
-
-        $complRate = "<div class='progress' style='width: ".$compliance."%; background : ".$color."; font-weight: bold; color : black; text-align: right;'> ".$compliance."% </div>";
+        $texte_help = _T("%s missing updates for %s in progress updates and %s installed updates for %s in total" , "updates");
+        $complRate = (string) new medulla_progressbar_static($compliance,
+            "",
+            sprintf($texte_help, $missing, $inprogress, $installed, $total)
+        );
         $params[] = [
             "machineid" => $id_machine,
             "inventoryid" => $uuid,
