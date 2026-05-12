@@ -336,9 +336,9 @@ $count = count($complete_name_major);
 $n = new OptimizedListInfos($complete_name_major, _T("Entity name", "updates"));
 $n->disableFirstColumnActionLink();
 $n->addExtraInfo($comformite_name_major, _T("Compliance rate", "updates"));
-$n->addExtraInfoRaw($win10towin10_major, _T("Upgrade W10->W10", "updates"));
-$n->addExtraInfoRaw($win10towin11_major, _T("Upgrade W10->W11", "updates"));
-$n->addExtraInfoRaw($win11towin11_major, _T("Upgrade W11->W11", "updates"));
+$n->addExtraInfoRaw($win10towin10_major, _T("Upgrade to latest Windows 10", "updates"));
+$n->addExtraInfoRaw($win10towin11_major, _T("Upgrade Windows 10 to latest Windows 11", "updates"));
+$n->addExtraInfoRaw($win11towin11_major, _T("Upgrade to latest Windows 11", "updates"));
 
 $n->addExtraInfoRaw($updated_major, _T("Up to date", "updates"));
 // $n->addExtraInfo($missing_information_major, _T("Upgrade Not recommended", "updates"));
