@@ -332,7 +332,8 @@ foreach ($mergedArray as $datacolonne) {
     );
 }
 
-$count = count($complete_name_major);
+// $count garde sa valeur initiale (total des entités filtrées, calculé ligne 69),
+// pour que la navbar puisse calculer correctement les pages.
 $n = new OptimizedListInfos($complete_name_major, _T("Entity name", "updates"));
 $n->disableFirstColumnActionLink();
 $n->addExtraInfo($comformite_name_major, _T("Compliance rate", "updates"));
@@ -351,7 +352,9 @@ $n->addActionItemArray($actionHardwareConstraintsForMajorUpdatesByEntity);
 $n->setItemCount($count);
 $n->setNavBar(new AjaxNavBar($count, $filter));
 $n->setParamInfo($params);
-$n->start = $start;
+// arrInfo contient déjà le slice paginé : on itère depuis l'index 0,
+// $count reste le total global utilisé par la navbar.
+$n->start = 0;
 $n->end = $count;
 
 $n->setEmptyState(_T("No entities found", "updates"), _T("No entities match the current filter.", "updates"));

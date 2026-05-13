@@ -19,5 +19,19 @@ $ajax = new AjaxPagebartitlletime(urlStrRedirect("updates/updates/ajaxMajorEntit
                                   $timerefresh,
                                   "circularProgress");
 $ajax->display();
-
 ?>
+<script type="text/javascript">
+// AjaxPagebartitlletime ne définit pas updateSearchParam ; on le fait à la main pour que la pagination fonctionne.
+function updateSearchParam(filter, start, end, max) {
+    // max est l'élément DOM #maxperpage (souvent absent ici), donc on ne le transmet pas :
+    // le backend prend la valeur de $conf["global"]["maxperpage"].
+    jQuery.ajax({
+        url: '<?php echo addslashes(urlStrRedirect("updates/updates/ajaxMajorEntitiesList")); ?>',
+        type: 'get',
+        data: { source: 'xmppmaster', filter: filter, start: start, end: end },
+        success: function(data) {
+            jQuery("#EntityCompliancediv").html(data);
+        }
+    });
+}
+</script>
