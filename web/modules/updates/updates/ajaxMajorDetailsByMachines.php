@@ -47,17 +47,17 @@ $source = !empty($_GET['source']) ? htmlentities($_GET['source']) : "xmppmaster"
 $typeaction= !empty($_GET['typeaction']) ? htmlentities($_GET['typeaction']) : "windows";
 
 if ($typeaction == "windows") {
-    $n = new ListInfos(array($_GET['W10to10']), _T("Upgrade to latest Windows 10", "updates"));
-    $n->addExtraInfoCentered(array($_GET['W10to11']), _T("Upgrade Windows 10 to latest Windows 11", "updates"));
-    $n->addExtraInfoCentered(array($_GET['W11to11']), _T("Upgrade to latest Windows 11", "updates"));
+    $n = new ListInfos(array($_GET['W10to10']), _T("Upgrade to latest Win 10", "updates"));
+    $n->addExtraInfoCentered(array($_GET['W10to11']), _T("Upgrade Win 10 to latest Win 11", "updates"));
+    $n->addExtraInfoCentered(array($_GET['W11to11']), _T("Upgrade to latest Win 11", "updates"));
     $n->addExtraInfoCentered(array($_GET['UPDATED']), _T("Up to date", "updates"));
     $n->addExtraInfoCentered(array($_GET['nb_missing']), _T("Upgrade Not recommended", "updates"));
     $n->addExtraInfoCentered(array($_GET['totalmachineentity']), _T("Total machines", "updates"));
 } else {
-    $n = new ListInfos(array($_GET['MS12toMS25']), _T("Upgrade Windows Server 2012 to 2025", "updates"));
-    $n->addExtraInfoCentered(array($_GET['MS16toMS25']), _T("Upgrade Windows Server 2016 to 2025", "updates"));
-    $n->addExtraInfoCentered(array($_GET['MS19toMS25']), _T("Upgrade Windows Server 2019 to 2025", "updates"));
-    $n->addExtraInfoCentered(array($_GET['MS25toMS25']), _T("Upgrade to latest Windows Server 2025", "updates"));
+    $n = new ListInfos(array($_GET['MS12toMS25']), _T("Upgrade Win Server 2012 to 2025", "updates"));
+    $n->addExtraInfoCentered(array($_GET['MS16toMS25']), _T("Upgrade Win Server 2016 to 2025", "updates"));
+    $n->addExtraInfoCentered(array($_GET['MS19toMS25']), _T("Upgrade Win Server 2019 to 2025", "updates"));
+    $n->addExtraInfoCentered(array($_GET['MS25toMS25']), _T("Upgrade to latest Win Server 2025", "updates"));
     $n->addExtraInfoCentered(array($_GET['UPDATED']), _T("Up to date", "updates"));
     $n->addExtraInfoCentered(array($_GET['nb_missing']), _T("Upgrade Not recommended", "updates"));
     $n->addExtraInfoCentered(array($_GET['totalmachineentity']), _T("Total machines", "updates"));

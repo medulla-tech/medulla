@@ -344,10 +344,10 @@ $n = new OptimizedListInfos($complete_name_major, _T("Entity name", "updates"));
 $n->setResizable();
 $n->disableFirstColumnActionLink();
 $n->addExtraInfo($comformite_name_major, _T("Compliance rate", "updates"));
-$n->addExtraInfoRaw($MS12toMS25_major, _T("Upgrade Windows Server 2012 to 2025", "updates"));
-$n->addExtraInfoRaw($MS16toMS25_major, _T("Upgrade Windows Server 2016 to 2025", "updates"));
-$n->addExtraInfoRaw($MS19toMS25_major, _T("Upgrade Windows Server 2019 to 2025", "updates"));
-$n->addExtraInfoRaw($MS25toMS25_major, _T("Upgrade to latest Windows Server 2025", "updates"));
+$n->addExtraInfoRaw($MS12toMS25_major, _T("Upgrade Win Server 2012 to 2025", "updates"));
+$n->addExtraInfoRaw($MS16toMS25_major, _T("Upgrade Win Server 2016 to 2025", "updates"));
+$n->addExtraInfoRaw($MS19toMS25_major, _T("Upgrade Win Server 2019 to 2025", "updates"));
+$n->addExtraInfoRaw($MS25toMS25_major, _T("Upgrade to latest Win Server 2025", "updates"));
 
 $n->addExtraInfoRaw($updated_major, _T("Up to date", "updates"));
 // $n->addExtraInfo($missing_information_major, _T("Upgrade Not recommended", "updates"));
