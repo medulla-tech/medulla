@@ -37,9 +37,10 @@ $filter = (isset($_GET['filter'])) ? htmlentities($_GET['filter']) : "";
 $field = "";
 $contains = (isset($_GET['contains'])) ? htmlentities($_GET['contains']) : "";
 
-$start = (isset($_GET['start'])) ? $_GET['start'] : 0;
-$maxperpage = (isset($_GET['maxperpage'])) ? htmlentities($_GET['maxperpage']) : htmlentities($config['maxperpage']);
-$end = (isset($_GET['end'])) ? (int)htmlentities($_GET['end']) : $start+$maxperpage;
+global $maxperpage;
+$start = (isset($_GET['start']) && is_numeric($_GET['start'])) ? (int)$_GET['start'] : 0;
+$maxperpage = (isset($_GET['maxperpage']) && is_numeric($_GET['maxperpage'])) ? (int)$_GET['maxperpage'] : (int)$maxperpage;
+$end = (isset($_GET['end']) && is_numeric($_GET['end'])) ? (int)$_GET['end'] : $start + $maxperpage;
 $entity = !empty($_GET['entity']) ? htmlspecialchars($_GET['entity']) : "";
 $entityName = !empty($_GET['name']) ? htmlentities($_GET['name']) : "";
 $entityCompleteName = !empty($_GET['completename']) ? htmlentities($_GET['completename']) : "";
@@ -72,12 +73,16 @@ $n->display($navbar = 0, $header = 0);
         // $statglpiversion = xmlrpc_get_os_xmpp_update_major_details($_GET['entity'],$filter);
         $statglpiversion = xmlrpc_get_os_update_major_details($_GET['entity'],
                                                               $typeaction,
-                                                              $filter);
+                                                              $filter,
+                                                              $start,
+                                                              $maxperpage);
 
     }else{
         $statglpiversion=xmlrpc_get_os_update_major_details($_GET['entity'],
                                                             $typeaction,
-                                                            $filter );
+                                                            $filter,
+                                                            $start,
+                                                            $maxperpage);
 
     };
 
@@ -146,11 +151,13 @@ $n->addExtraInfoCentered($statglpiversion["version"], _T("Version", "updates"));
 $n->addExtraInfo($statglpiversion["update"], _T("Upgrade", "updates"));
 $n->addActionItemArray($actionspeclistUpds);
 $n->addActionItemArray($actiondetailsByMachslog);
+// arrInfo contient déjà le slice paginé (LIMIT côté SQL via xmlrpc),
+// $count reste le total global utilisé par la navbar.
+$count = $statglpiversion["nb_machine"] ?? 0;
 $n->start = 0;
-$n->end = $statglpiversion["nb_machine"];
-$n->setItemCount($statglpiversion["nb_machine"]);
-// $n->setNavBar(new AjaxNavBar($statglpiversion["nb_machine"], $ctx['filter']));
-$n->setNavBar(new AjaxNavBar($statglpiversion["nb_machine"] ?? 0, $filter));
+$n->end = $count;
+$n->setItemCount($count);
+$n->setNavBar(new AjaxNavBar($count, $filter));
 $n->setParamInfo($params);
 $n->setEmptyState(_T("No machines found", "updates"), _T("No machines match the current filter.", "updates"));
 $n->display();
