@@ -24,97 +24,96 @@
 
 require_once("modules/updates/includes/xmlrpc.php");
 
-$titreentity = _T("Entity : ", 'updates');
-$selected_location=$_GET['selected_location'];
-$completename = $selected_location['completename'];
+// Configuration des trois listes (Grey/White/Black). Centralisée pour éviter les duplications.
+$listsConfig = [
+    'grey' => [
+        'action'    => 'ajaxUpdatesListWinGray',
+        'container' => 'containerGray',
+        'formid'    => 'formGray',
+        'label'     => _T("Grey list (manual updates)", 'updates'),
+    ],
+    'white' => [
+        'action'    => 'ajaxUpdatesListWinWhite',
+        'container' => 'containerWhite',
+        'formid'    => 'formWhite',
+        'label'     => _T("White list (automatic updates)", 'updates'),
+    ],
+    'black' => [
+        'action'    => 'ajaxUpdatesListWinBlack',
+        'container' => 'containerBlack',
+        'formid'    => 'formBlack',
+        'label'     => _T("Black list (banned updates)", 'updates'),
+    ],
+];
 
-// Remplace les "+" par un espace
-$completename_cleaned = str_replace('+', ' ', $completename);
-// Remplace ">" par " → "
-$completename_cleaned = str_replace('>', ' → ', $completename_cleaned);
-// Remplace les "&nbsp;" par un espace
-$completename_cleaned = str_replace('&nbsp;', ' ', $completename_cleaned);
-// Supprime les espaces multiples
-$completename_cleaned = preg_replace('/\s+/', ' ', $completename_cleaned);
-// Supprime les espaces en début et fin de chaîne
-$completename_cleaned = trim($completename_cleaned);
-$ide =$selected_location['uuid'];
-$titreentitystr = sprintf("%s  [%s] (%s)", $titreentity , $completename_cleaned, $ide);
-echo '<div style="display: block; clear: both;">';
-echo "</div>";
-
-function updates_render_section($filter, $containerId, $titleId, $placeholder)
-{
-    if (!($filter instanceof AjaxFilter)) {
+// Mode "section" : rendu de l'AjaxFilter d'une seule liste, déclenché par un click sur l'onglet.
+$type = $_GET['type'] ?? null;
+if ($type !== null) {
+    if (!isset($listsConfig[$type])) {
         return;
     }
+    $cfg = $listsConfig[$type];
 
-    echo '<section class="updates-section">';
-    echo '<div class="table-header table-header--stacked">';
-    echo '<div class="table-header__title" id="' . htmlspecialchars($titleId, ENT_QUOTES, 'UTF-8') . '">'
-         . htmlspecialchars($placeholder, ENT_QUOTES, 'UTF-8')
-         . '</div>';
-    echo '<div class="table-header__form">';
-    $filter->display();
-    echo '</div>';
-    echo '</div>';
-    echo '<div id="' . htmlspecialchars($containerId, ENT_QUOTES, 'UTF-8') . '" class="updates-section__content"></div>';
-    echo '</section>';
+    // Les params de location sont à plat dans $_GET (jQuery a envoyé l'objet flat).
+    // On retire les clés de routing et le type avant de les passer à AjaxFilter.
+    $locationParams = $_GET;
+    unset($locationParams['type'], $locationParams['module'], $locationParams['submod'], $locationParams['action']);
+
+    $ajax = new AjaxFilter(urlStrRedirect("updates/updates/" . $cfg['action']),
+                           $cfg['container'],
+                           $locationParams,
+                           $cfg['formid']);
+    $ajax->display();
+    echo '<div id="' . htmlspecialchars($cfg['container'], ENT_QUOTES, 'UTF-8') . '"></div>';
+    return;
 }
 
-$ajaxG = new AjaxFilter(urlStrRedirect("updates/updates/ajaxUpdatesListWinGray"), "containerGray", $_GET['selected_location'], "formGray");
-updates_render_section($ajaxG, "containerGray", "updatesGrayTitle", _T("Grey list (manual updates)", 'updates'));
-
-$ajaxW = new AjaxFilter(urlStrRedirect("updates/updates/ajaxUpdatesListWinWhite"), "containerWhite", $_GET['selected_location'], "formWhite");
-updates_render_section($ajaxW, "containerWhite", "updatesWhiteTitle", _T("White list (automatic updates)", 'updates'));
-
-$ajaxB = new AjaxFilter(urlStrRedirect("updates/updates/ajaxUpdatesListWinBlack"), "containerBlack", $_GET['selected_location'], "formBlack");
-updates_render_section($ajaxB, "containerBlack", "updatesBlackTitle", _T("Black list (banned updates)", 'updates'));
-
+// Mode "shell" : on rend les onglets et un container vide, le contenu est chargé en AJAX au clic.
+$selected_location = $_GET['selected_location'] ?? [];
 ?>
+<div class="tabselector">
+    <ul>
+<?php foreach ($listsConfig as $key => $cfg): ?>
+        <li id="updatesTab_<?php echo htmlspecialchars($key, ENT_QUOTES, 'UTF-8'); ?>"<?php echo $key === 'grey' ? ' class="tabactive"' : ''; ?>>
+            <a href="#" data-list="<?php echo htmlspecialchars($key, ENT_QUOTES, 'UTF-8'); ?>">
+                <?php echo htmlspecialchars($cfg['label'], ENT_QUOTES, 'UTF-8'); ?>
+            </a>
+        </li>
+<?php endforeach; ?>
+    </ul>
+</div>
+
+<div id="updatesListContainer"></div>
+
 <script type="text/javascript">
 (function() {
-    var sections = [
-        { containerId: 'containerGray',  titleId: 'updatesGrayTitle' },
-        { containerId: 'containerWhite', titleId: 'updatesWhiteTitle' },
-        { containerId: 'containerBlack', titleId: 'updatesBlackTitle' }
-    ];
+    var locationParams = <?php echo json_encode($selected_location, JSON_UNESCAPED_SLASHES); ?>;
+    var sectionUrl = <?php echo json_encode(urlStrRedirect("updates/updates/ajaxUpdatesListWin")); ?>;
 
-    function syncTitle(section) {
-        var container = document.getElementById(section.containerId);
-        var title = document.getElementById(section.titleId);
-        if (!container || !title) {
-            return;
-        }
-        var caption = container.querySelector('caption');
-        if (caption) {
-            title.textContent = caption.textContent.trim();
-            caption.style.display = 'none';
-        }
-    }
-
-    function observeSection(section) {
-        var container = document.getElementById(section.containerId);
-        if (!container) {
-            return;
-        }
-        syncTitle(section);
-        var observer = new MutationObserver(function() {
-            syncTitle(section);
+    function loadList(type) {
+        document.querySelectorAll('.tabselector li').forEach(function(li) {
+            var link = li.querySelector('a[data-list]');
+            if (!link) { return; }
+            li.classList.toggle('tabactive', link.dataset.list === type);
         });
-        observer.observe(container, { childList: true, subtree: true });
+        var data = Object.assign({}, locationParams || {}, { type: type });
+        jQuery.ajax({
+            url: sectionUrl,
+            type: 'get',
+            data: data,
+            success: function(html) {
+                jQuery('#updatesListContainer').html(html);
+            }
+        });
     }
 
-    function init() {
-        for (var i = 0; i < sections.length; i++) {
-            observeSection(sections[i]);
-        }
-    }
+    document.querySelectorAll('.tabselector a[data-list]').forEach(function(link) {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            loadList(link.dataset.list);
+        });
+    });
 
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
-    } else {
-        init();
-    }
+    loadList('grey');
 })();
 </script>

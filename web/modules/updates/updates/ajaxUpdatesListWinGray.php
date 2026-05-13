@@ -60,23 +60,10 @@ $entityid   = (isset($_GET['uuid']) ? $_GET['uuid']  : -1 );
 // Get Datas
 $grey_list = xmlrpc_get_grey_list($start, $maxperpage, $filter, $entityid);
 
-$converter = new ConvertCouleur();
-$titretableau = _T("Grey list (manual updates)", 'updates');
-$titrenotableau=  _T("No updates are currently available in the Grey List  (manual updates) for the entity", 'updates');
-
 // $completename = $_GET['completename'];
 $completename = $_GET['altname'];
 
 $ide = $_GET['uuid'];
-if ($grey_list['nb_element_total'] == "0")
-{
-    $message_tableau= sprintf("%s",
-                                    $titrenotableau);
-} else
-{
-    $message_tableau= sprintf("%s",
-                            $titretableau);
-}
 
 // GrayList Actions
 $grayEnableAction = new ActionItem(_T("Enable for manual update", "updates"), "grayEnable", "enableupdate", "", "updates", "updates");
@@ -144,18 +131,6 @@ $g->setItemCount($count_grey);
 $g->setNavBar(new AjaxNavBar($count_grey, $filter, 'updateSearchParamformGray'));
 $g->setParamInfo($params_grey);
 
-// affichage titre tableau
-$g->setCaptionText($message_tableau);
-$g->setCssCaption(
-    $border = 1,
-    $bold = 0,
-    $bgColor = "lightgray",
-    $textColor = "black",
-    $padding = "10px 0",
-    $size = "20",
-    $emboss = 1,
-    $rowColor = $converter->convert("lightgray")
-);
 $g->addActionItemArray($grayActions['enable']);
 $g->addActionItemArray($grayActions['disable']);
 $g->addActionItemArray($grayActions['approve']);

@@ -88,34 +88,10 @@ $b->start = 0;
 $b->end = $count_black;
 $b->setParamInfo($params_black);
 
-// affichage titre tableau
-$converter = new ConvertCouleur();
-
-if ($black_list['nb_element_total'] == "0")
-{
-$titretableau = _T("No updates are currently available in the Black list (banned updates)", 'updates');
-}else{
-$titretableau = _T("Black list (banned updates)", 'updates');
-}
-
 // $completename = $_GET['completename'];
 $completename = $_GET['altname'];
 
 $ide = $_GET['uuid'];
-$b->setCaptionText(sprintf("%s",
-                           $titretableau));
-
-$b->setCssCaption(
-    $border = 1,
-    $bold = 0,
-    $bgColor = "lightgray",
-    $textColor = "black",
-    $padding = "10px 0",
-    $size = "20",
-    $emboss = 1,
-    $rowColor = $converter->convert("lightgray")
-);
-
 $b->addActionItemArray($blackActions["unban"]);
 $b->setEmptyState(_T("No updates found", "updates"), _T("No blacklisted updates found.", "updates"));
 $b->display();
