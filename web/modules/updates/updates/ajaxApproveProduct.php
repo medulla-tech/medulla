@@ -149,21 +149,21 @@ foreach ($f['name_procedure'] as $indextableau => $name) {
     $htmlelementcheck[] = $hiddenInput . $checkboxInput;
     # on definie les css appliquue au produit
     if ($productfamily == "server"){
-            $cssClasses[] ="family-produit";
+            $cssClasses[] ="family-produit alternate";
         }elseif  ($productfamily == "Vstudio"){
-            $cssClasses[] ="family-produit";
+            $cssClasses[] ="family-produit alternate";
         }elseif  ($productfamily == "office"){
-            $cssClasses[] ="family-produit";
+            $cssClasses[] ="family-produit alternate";
         }elseif  ($productfamily == "Win10"){
-            $cssClasses[] ="family-produit";
+            $cssClasses[] ="family-produit alternate";
         }elseif  ($productfamily == "Win11"){
-            $cssClasses[] ="family-produit";
+            $cssClasses[] ="family-produit alternate";
         }elseif  ($productfamily == "Win_Malicious_"){
-           $cssClasses[] ="family-produit";
+           $cssClasses[] ="family-produit alternate";
           }elseif  ($productfamily == "Windows_Security_platform"){
-              $cssClasses[] ="family-produit";
+              $cssClasses[] ="family-produit alternate";
         } else {
-            $cssClasses[] = "family-produit";
+            $cssClasses[] = "family-produit alternate";
         }
 }
 
