@@ -3541,3 +3541,180 @@ class MobileDatabase(DatabaseHelper):
         except Exception as e:
             logging.getLogger().error(f"Error deleting netfilter rule {rule_id}: {e}")
             return False
+
+    # ------------------------------------------------------------------ #
+    # Netfilter profiles                                                   #
+    # ------------------------------------------------------------------ #
+
+    @staticmethod
+    def _sanitize_profile(p):
+        """Convert fields that exceed XML-RPC 32-bit int limits to strings."""
+        if isinstance(p, dict):
+            for key in ('createdAt',):
+                if key in p and isinstance(p[key], int):
+                    p[key] = str(p[key])
+        return p
+
+    def getNetfilterProfiles(self):
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Authentication failed when listing netfilter profiles.")
+            return None
+        url = f"{self.BASE_URL}/plugins/netfilter/private/profiles"
+        headers = {"Authorization": f"Bearer {hmtoken}"}
+        try:
+            resp = requests.get(url, headers=headers)
+            resp.raise_for_status()
+            profiles = resp.json().get("data", [])
+            return [self._sanitize_profile(p) for p in profiles]
+        except Exception as e:
+            logging.getLogger().error(f"Error listing netfilter profiles: {e}")
+            return None
+
+    def createNetfilterProfile(self, name, filter_mode):
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Authentication failed when creating netfilter profile.")
+            return None
+        url = f"{self.BASE_URL}/plugins/netfilter/private/profiles"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+        try:
+            resp = requests.post(url, headers=headers, json={"name": name, "filterMode": filter_mode})
+            resp.raise_for_status()
+            data = resp.json()
+            if data.get("status") != "OK":
+                logging.getLogger().error(f"Create netfilter profile failed: {data}")
+                return None
+            return self._sanitize_profile(data.get("data") or {})
+        except Exception as e:
+            logging.getLogger().error(f"Error creating netfilter profile: {e}")
+            return None
+
+    def updateNetfilterProfile(self, profile_id, name, filter_mode, enabled):
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Authentication failed when updating netfilter profile.")
+            return False
+        url = f"{self.BASE_URL}/plugins/netfilter/private/profiles/{profile_id}"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+        try:
+            resp = requests.put(url, headers=headers, json={
+                "name": name,
+                "filterMode": filter_mode,
+                "enabled": bool(enabled),
+            })
+            resp.raise_for_status()
+            return resp.json().get("status") == "OK"
+        except Exception as e:
+            logging.getLogger().error(f"Error updating netfilter profile {profile_id}: {e}")
+            return False
+
+    def deleteNetfilterProfile(self, profile_id):
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Authentication failed when deleting netfilter profile.")
+            return False
+        url = f"{self.BASE_URL}/plugins/netfilter/private/profiles/{profile_id}"
+        headers = {"Authorization": f"Bearer {hmtoken}"}
+        try:
+            resp = requests.delete(url, headers=headers)
+            resp.raise_for_status()
+            return True
+        except Exception as e:
+            logging.getLogger().error(f"Error deleting netfilter profile {profile_id}: {e}")
+            return False
+
+    def getNetfilterProfileRules(self, profile_id):
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Authentication failed when listing profile rules.")
+            return None
+        url = f"{self.BASE_URL}/plugins/netfilter/private/profiles/{profile_id}/rules"
+        headers = {"Authorization": f"Bearer {hmtoken}"}
+        try:
+            resp = requests.get(url, headers=headers)
+            resp.raise_for_status()
+            rules = resp.json().get("data", [])
+            return [self._sanitize_profile(r) for r in rules]
+        except Exception as e:
+            logging.getLogger().error(f"Error listing rules for profile {profile_id}: {e}")
+            return None
+
+    def addNetfilterProfileRule(self, profile_id, domain, rule_type):
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Authentication failed when adding profile rule.")
+            return None
+        url = f"{self.BASE_URL}/plugins/netfilter/private/profiles/{profile_id}/rules"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {hmtoken}"}
+        try:
+            resp = requests.post(url, headers=headers, json={"domain": domain, "ruleType": rule_type})
+            resp.raise_for_status()
+            data = resp.json()
+            if data.get("status") != "OK":
+                logging.getLogger().error(f"Add profile rule failed: {data}")
+                return None
+            return self._sanitize_profile(data.get("data") or {})
+        except Exception as e:
+            logging.getLogger().error(f"Error adding rule to profile {profile_id}: {e}")
+            return None
+
+    def deleteNetfilterProfileRule(self, profile_id, rule_id):
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Authentication failed when deleting profile rule.")
+            return False
+        url = f"{self.BASE_URL}/plugins/netfilter/private/profiles/{profile_id}/rules/{rule_id}"
+        headers = {"Authorization": f"Bearer {hmtoken}"}
+        try:
+            resp = requests.delete(url, headers=headers)
+            resp.raise_for_status()
+            return True
+        except Exception as e:
+            logging.getLogger().error(f"Error deleting rule {rule_id} from profile {profile_id}: {e}")
+            return False
+
+    def getNetfilterProfileConfigs(self, profile_id):
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Authentication failed when listing profile configs.")
+            return None
+        url = f"{self.BASE_URL}/plugins/netfilter/private/profiles/{profile_id}/configs"
+        headers = {"Authorization": f"Bearer {hmtoken}"}
+        try:
+            resp = requests.get(url, headers=headers)
+            resp.raise_for_status()
+            return resp.json().get("data", [])
+        except Exception as e:
+            logging.getLogger().error(f"Error listing configs for profile {profile_id}: {e}")
+            return None
+
+    def setNetfilterProfileConfigs(self, profile_id, config_ids):
+        """Replace config assignments: add new ones, remove removed ones."""
+        hmtoken = self.authenticate()
+        if hmtoken is None:
+            logging.getLogger().error("Authentication failed when setting profile configs.")
+            return False
+
+        current = self.getNetfilterProfileConfigs(profile_id)
+        if current is None:
+            current = []
+
+        current_set = set(int(x) for x in current)
+        new_set = set(int(x) for x in config_ids)
+        to_add = new_set - current_set
+        to_remove = current_set - new_set
+
+        base = f"{self.BASE_URL}/plugins/netfilter/private/profiles/{profile_id}/configs"
+        headers = {"Authorization": f"Bearer {hmtoken}"}
+        try:
+            for cid in to_add:
+                resp = requests.post(f"{base}/{cid}", headers=headers)
+                resp.raise_for_status()
+            for cid in to_remove:
+                resp = requests.delete(f"{base}/{cid}", headers=headers)
+                resp.raise_for_status()
+            return True
+        except Exception as e:
+            logging.getLogger().error(f"Error setting configs for profile {profile_id}: {e}")
+            return False

@@ -221,4 +221,31 @@ function xmlrpc_update_netfilter_rule($rule_id, $domain, $rule_type, $enabled) {
 function xmlrpc_delete_netfilter_rule($rule_id) {
     return xmlCall("mobile.deleteNetfilterRule", array($rule_id));
 }
+function xmlrpc_get_netfilter_profiles() {
+    return xmlCall("mobile.getNetfilterProfiles", array());
+}
+function xmlrpc_create_netfilter_profile($name, $filter_mode) {
+    return xmlCall("mobile.createNetfilterProfile", array($name, $filter_mode));
+}
+function xmlrpc_update_netfilter_profile($profile_id, $name, $filter_mode, $enabled) {
+    return xmlCall("mobile.updateNetfilterProfile", array($profile_id, $name, $filter_mode, (bool)$enabled));
+}
+function xmlrpc_delete_netfilter_profile($profile_id) {
+    return xmlCall("mobile.deleteNetfilterProfile", array($profile_id));
+}
+function xmlrpc_get_netfilter_profile_rules($profile_id) {
+    return xmlCall("mobile.getNetfilterProfileRules", array($profile_id));
+}
+function xmlrpc_add_netfilter_profile_rule($profile_id, $domain, $rule_type) {
+    return xmlCall("mobile.addNetfilterProfileRule", array($profile_id, $domain, $rule_type));
+}
+function xmlrpc_delete_netfilter_profile_rule($profile_id, $rule_id) {
+    return xmlCall("mobile.deleteNetfilterProfileRule", array($profile_id, $rule_id));
+}
+function xmlrpc_get_netfilter_profile_configs($profile_id) {
+    return xmlCall("mobile.getNetfilterProfileConfigs", array($profile_id));
+}
+function xmlrpc_set_netfilter_profile_configs($profile_id, $config_ids) {
+    return xmlCall("mobile.setNetfilterProfileConfigs", array($profile_id, $config_ids));
+}
 ?>

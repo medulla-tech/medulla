@@ -234,3 +234,30 @@ def updateNetfilterRule(rule_id, domain, rule_type, enabled):
 
 def deleteNetfilterRule(rule_id):
     return MobileDatabase().deleteNetfilterRule(int(rule_id))
+
+def getNetfilterProfiles():
+    return MobileDatabase().getNetfilterProfiles()
+
+def createNetfilterProfile(name, filter_mode):
+    return MobileDatabase().createNetfilterProfile(name, filter_mode)
+
+def updateNetfilterProfile(profile_id, name, filter_mode, enabled):
+    return MobileDatabase().updateNetfilterProfile(int(profile_id), name, filter_mode, enabled)
+
+def deleteNetfilterProfile(profile_id):
+    return MobileDatabase().deleteNetfilterProfile(int(profile_id))
+
+def getNetfilterProfileRules(profile_id):
+    return MobileDatabase().getNetfilterProfileRules(int(profile_id))
+
+def addNetfilterProfileRule(profile_id, domain, rule_type):
+    return MobileDatabase().addNetfilterProfileRule(int(profile_id), domain, rule_type)
+
+def deleteNetfilterProfileRule(profile_id, rule_id):
+    return MobileDatabase().deleteNetfilterProfileRule(int(profile_id), int(rule_id))
+
+def getNetfilterProfileConfigs(profile_id):
+    return MobileDatabase().getNetfilterProfileConfigs(int(profile_id))
+
+def setNetfilterProfileConfigs(profile_id, config_ids):
+    return MobileDatabase().setNetfilterProfileConfigs(int(profile_id), config_ids)

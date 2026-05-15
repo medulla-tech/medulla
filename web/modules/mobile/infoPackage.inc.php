@@ -519,6 +519,49 @@ $pageAjaxNetfilterRules->setOptions(array("AJAX" => true, "visible" => false));
 $submod->addPage($pageAjaxNetfilterRules);
 
 ################################
+# Network Filter Profiles
+################################
+
+$pageNetfilterProfiles = new Page("netfilterProfiles", _T('Filter Profiles', 'mobile'));
+$pageNetfilterProfiles->setFile("modules/mobile/mobile/netfilterProfiles.php");
+$submod->addPage($pageNetfilterProfiles);
+
+$pageAjaxNetfilterProfileList = new Page("ajaxNetfilterProfileList", _T('Ajax Filter Profile List', 'mobile'));
+$pageAjaxNetfilterProfileList->setFile("modules/mobile/mobile/ajaxNetfilterProfileList.php");
+$pageAjaxNetfilterProfileList->setOptions(array("AJAX" => true, "visible" => false));
+$submod->addPage($pageAjaxNetfilterProfileList);
+
+$pageNetfilterProfileEdit = new Page("netfilterProfileEdit", _T('Edit Filter Profile', 'mobile'));
+$pageNetfilterProfileEdit->setFile("modules/mobile/mobile/netfilterProfileEdit.php");
+$pageNetfilterProfileEdit->setOptions(array("visible" => false));
+$submod->addPage($pageNetfilterProfileEdit);
+
+$pageDeleteNetfilterProfile = new Page("deleteNetfilterProfile", _T('Delete Filter Profile', 'mobile'));
+$pageDeleteNetfilterProfile->setFile("modules/mobile/mobile/deleteNetfilterProfile.php");
+$pageDeleteNetfilterProfile->setOptions(array("visible" => false, "noHeader" => true));
+$submod->addPage($pageDeleteNetfilterProfile);
+
+$pageNetfilterProfileToggle = new Page("netfilterProfileToggle", _T('Toggle Filter Profile', 'mobile'));
+$pageNetfilterProfileToggle->setFile("modules/mobile/mobile/netfilterProfileToggle.php");
+$pageNetfilterProfileToggle->setOptions(array("visible" => false, "noHeader" => true));
+$submod->addPage($pageNetfilterProfileToggle);
+
+$pageNetfilterProfileRules = new Page("netfilterProfileRules", _T('Profile Rules', 'mobile'));
+$pageNetfilterProfileRules->setFile("modules/mobile/mobile/netfilterProfileRules.php");
+$pageNetfilterProfileRules->setOptions(array("visible" => false));
+$submod->addPage($pageNetfilterProfileRules);
+
+$pageAddNetfilterProfileRule = new Page("addNetfilterProfileRule", _T('Add Profile Rule', 'mobile'));
+$pageAddNetfilterProfileRule->setFile("modules/mobile/mobile/addNetfilterProfileRule.php");
+$pageAddNetfilterProfileRule->setOptions(array("visible" => false));
+$submod->addPage($pageAddNetfilterProfileRule);
+
+$pageDeleteNetfilterProfileRule = new Page("deleteNetfilterProfileRule", _T('Delete Profile Rule', 'mobile'));
+$pageDeleteNetfilterProfileRule->setFile("modules/mobile/mobile/deleteNetfilterProfileRule.php");
+$pageDeleteNetfilterProfileRule->setOptions(array("visible" => false, "noHeader" => true));
+$submod->addPage($pageDeleteNetfilterProfileRule);
+
+################################
 # End
 ################################
 
