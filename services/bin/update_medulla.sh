@@ -589,16 +589,17 @@ update_546_to_550() {
         write_to_log "$str"
         exit 1
     fi
+    # Specific to SAAS. ACLs for CVEs
     # Append the following string to /etc/mmc/plugins/glpi.ini.local profile_acl_Super-Admin and profile_acl_Admin parameters before the final / if not already present:
-    # :security#security#index:security#security#softwareDetail:security#security#machines:security#security#machineDetail:security#security#entities:security#security#groups:security#security#groupDetail:security#security#allcves:security#security#cveDetail:security#security#ajaxAddExclusion:security#security#ajaxScanMachine:security#security#ajaxStartScanEntity:security#security#ajaxStartScanGroup:security#security#settings:security#security#ajaxResetDisplayFilters:security#security#settings:security#security#deployStoreUpdate
+    # :security#security#index:security#security#softwareDetail:security#security#machines:security#security#machineDetail:security#security#entities:security#security#groups:security#security#groupDetail:security#security#allcves:security#security#cveDetail:security#security#ajaxAddExclusion:security#security#ajaxScanMachine:security#security#ajaxStartScanEntity:security#security#ajaxStartScanGroup:security#security#ajaxResetDisplayFilters:security#security#deployStoreUpdate
     # And profile_acl_Technician if not already present:
-    # :security#security#index:security#security#softwareDetail:security#security#machines:security#security#machineDetail:security#security#entities:security#security#groups:security#security#groupDetail:security#security#allcves:security#security#cveDetail:security#security#ajaxAddExclusion:security#security#ajaxScanMachine:security#security#ajaxStartScanEntity:security#security#ajaxStartScanGroup:security#security#settings:security#security#ajaxResetDisplayFilters
+    # :security#security#index:security#security#softwareDetail:security#security#machines:security#security#machineDetail:security#security#entities:security#security#groups:security#security#groupDetail:security#security#allcves:security#security#cveDetail:security#security#ajaxAddExclusion:security#security#ajaxScanMachine:security#security#ajaxStartScanEntity:security#security#ajaxStartScanGroup:security#security#ajaxResetDisplayFilters
     str="[=] Configuring ACLs for new Medulla MMC module 'security' in glpi.ini.local..."
     echo "$str"
     write_to_log "$str"
     for profile in Super-Admin Admin; do
         if ! grep -q "security#security#index" /etc/mmc/plugins/glpi.ini.local | grep -q "^profile_acl_$profile"; then
-            sed -i "/^profile_acl_$profile/s|\(.*\)/$|\1:security#security#index:security#security#softwareDetail:security#security#machines:security#security#machineDetail:security#security#entities:security#security#groups:security#security#groupDetail:security#security#allcves:security#security#cveDetail:security#security#ajaxAddExclusion:security#security#ajaxScanMachine:security#security#ajaxStartScanEntity:security#security#ajaxStartScanGroup:security#security#settings:security#security#ajaxResetDisplayFilters:security#security#settings:security#security#deployStoreUpdate/|" /etc/mmc/plugins/glpi.ini.local
+            sed -i "/^profile_acl_$profile/s|\(.*\)/$|\1:security#security#index:security#security#softwareDetail:security#security#machines:security#security#machineDetail:security#security#entities:security#security#groups:security#security#groupDetail:security#security#allcves:security#security#cveDetail:security#security#ajaxAddExclusion:security#security#ajaxScanMachine:security#security#ajaxStartScanEntity:security#security#ajaxStartScanGroup:security#security#ajaxResetDisplayFilters:security#security#settings:security#security#deployStoreUpdate/|" /etc/mmc/plugins/glpi.ini.local
             if [[ $? -ne 0 ]]; then
                 str="[x] Error updating ACLs for $profile profile in glpi.ini.local. Aborting."
                 echo "$str"
@@ -821,6 +822,41 @@ update_551_to_552() {
     fi
 }
 
+update_552_to_553() {
+    str="Applying Medulla config update from 5.5.2 to 5.5.3..."
+    echo "$str"
+    write_to_log "$str"
+    update_medulla
+
+    # Reconfigure cron job for downloading Windows updates
+    str="[=] Setting up cron job for downloading Windows updates..."
+    echo "$str"
+    write_to_log "$str"
+    # Create /etc/cron.d/medulla_winupdates_dl
+    echo "30 1 * * * root /usr/sbin/medulla-generate-winupdate-packages 2>&1 | tee -a /tmp/medulla-generate-winupdate-packages.log" > /etc/cron.d/medulla_winupdates_dl
+    # Restart cron service to apply changes
+    systemctl restart cron
+    if [[ $? -ne 0 ]]; then
+        str="[x] Error setting up cron job for downloading Windows updates. Aborting."
+        echo "$str"
+        write_to_log "$str"
+        exit 1
+    fi
+    str="[v] Cron job for downloading Windows updates set up successfully."
+    echo "$str"
+    write_to_log "$str"
+
+    echo "5.5.3" > /var/lib/mmc/version
+    str="[v] Medulla config update from 5.5.2 to 5.5.3 applied successfully."
+    echo "$str"
+    write_to_log "$str"
+    if [[ -f /tmp/update_medulla.sh ]]; then
+        exec /tmp/update_medulla.sh "$@"
+    else
+        exec /usr/sbin/update_medulla.sh "$@"
+    fi
+}
+
 # --- End of specific update functions for each version ---
 
 
@@ -945,6 +981,11 @@ case "$CURRENT_VERSION" in
     "5.5.1")
         if [[ "$AVAILABLE_VERSION" > "5.5.1" ]]; then
             update_551_to_552
+        fi
+        ;;
+    "5.5.2")
+        if [[ "$AVAILABLE_VERSION" > "5.5.2" ]]; then
+            update_552_to_553
         fi
         ;;
     *)
