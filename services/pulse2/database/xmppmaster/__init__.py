@@ -17239,7 +17239,7 @@ FROM (
             query = f"""
                 SELECT
                     mw.ent_id,
-                    e.complete_name,
+                    COALESCE(e.complete_name, 'Unmapped') AS complete_name,
                     mw.hostname,
                     mw.old_version,
                     mw.new_version,
@@ -17247,7 +17247,7 @@ FROM (
                     mw.newcode,
                     mw.is_active
                 FROM xmppmaster.up_major_win mw
-                INNER JOIN xmppmaster.glpi_entity e ON e.glpi_id = mw.ent_id
+                LEFT JOIN xmppmaster.glpi_entity e ON e.glpi_id = mw.ent_id
                 WHERE mw.target_name LIKE 'Win%' AND mw.target_name NOT LIKE '%Server%'
                 {presence_filter}
                 {entity_filter}

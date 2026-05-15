@@ -3,7 +3,6 @@ import re
 
 
 def xml_fix(content):
-    tmp = re.sub("</QUERY>.*<REQUEST>", "</QUERY></REQUEST>", content)
-    tmp = re.sub("<MACADDRPXE>.*</MACADDRPXE>", "", tmp)
+    tmp = re.sub("<MACADDRPXE>.*</MACADDRPXE>", "", content)
 
     return tmp

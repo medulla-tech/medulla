@@ -941,10 +941,16 @@ class UpdatesDatabase(DatabaseHelper):
             if not result:
                 return False  # Rien trouvé → on arrête
 
-            # 2️⃣ Insertion dans la white list avec bind parameters
+            # 2️⃣ Insertion dans la white list avec bind parameters (UPSERT)
             insert_sql = """INSERT INTO xmppmaster.up_white_list
                             (updateid, entityid, kb, title, description, valided)
-                            VALUES (:updateid, :entityid, :kb, :title, :description, :valided);"""
+                            VALUES (:updateid, :entityid, :kb, :title, :description, :valided)
+                            ON DUPLICATE KEY UPDATE
+                            entityid = :entityid,
+                            kb = :kb,
+                            title = :title,
+                            description = :description,
+                            valided = :valided;"""
 
             session.execute(
                 insert_sql,
