@@ -17148,6 +17148,17 @@ FROM (
         """
           Statistiques de mise a jour Windows 10 / 11 (client uniquement).
 
+                    Important (perimetre des donnees):
+                    - Les colonnes de classification (`W10to10`, `W10to11`, `W11to11`,
+                        `UPDATED`, `non_conforme`, `autre_cas`) sont calculees a partir des
+                        lignes `up_major_win` traitees en Python.
+                    - Le champ `count` (total machines Windows par entite) est calcule via
+                        une requete SQL dediee (`total_query`) en
+                        `COUNT(DISTINCT LOWER(TRIM(mw.hostname)))`.
+                    - Le `LEFT JOIN xmppmaster.glpi_entity` dans `total_query` sert
+                        uniquement a resoudre un nom d'entite lisible (`complete_name`) et
+                        ne modifie pas la logique des autres colonnes.
+
           Regles metier de classification (par entite):
 
           1) old_version=11, new_version=11
@@ -17185,7 +17196,6 @@ FROM (
         try:
             results = {"entity": {}}
             presence_filter = "AND mw.enabled = 1" if presence else ""
-            total_presence_filter = "AND m.enabled = 1" if presence else ""
 
             entity_ids = []
             if entitylist:
@@ -17197,11 +17207,6 @@ FROM (
 
             entity_filter = (
                 f"AND mw.ent_id IN ({','.join(str(e) for e in entity_ids)})"
-                if entity_ids
-                else ""
-            )
-            total_entity_filter = (
-                f"AND e.glpi_id IN ({','.join(str(e) for e in entity_ids)})"
                 if entity_ids
                 else ""
             )
@@ -17239,7 +17244,7 @@ FROM (
             query = f"""
                 SELECT
                     mw.ent_id,
-                    COALESCE(e.complete_name, 'Unmapped') AS complete_name,
+                    COALESCE(e.complete_name, CONCAT('Entity ', mw.ent_id)) AS complete_name,
                     mw.hostname,
                     mw.old_version,
                     mw.new_version,
@@ -17351,20 +17356,23 @@ FROM (
 
                 results["entity"][ent_name][category] += 1
 
-            # Récupération du nombre total de machines Windows par entité
+            # Récupération du nombre total de machines par entité
+            # (même source que les colonnes de catégories pour garder un périmètre cohérent)
             total_query = f"""
                             SELECT
-                                e.complete_name, COUNT(*) AS count
+                                mw.ent_id,
+                                COALESCE(e.complete_name, CONCAT('Entity ', mw.ent_id)) AS complete_name,
+                                COUNT(DISTINCT LOWER(TRIM(mw.hostname))) AS count
                             FROM
-                                xmppmaster.machines m
-                                    inner JOIN
-                                xmppmaster.glpi_entity e ON e.id = m.glpi_entity_id
+                                xmppmaster.up_major_win mw
+                                    LEFT JOIN
+                                xmppmaster.glpi_entity e ON e.glpi_id = mw.ent_id
                             WHERE
-                                m.platform LIKE 'Microsoft Windows%'
-                                AND m.platform NOT LIKE '%Server%'
-                                {total_presence_filter}
-                                {total_entity_filter}
-                            GROUP BY e.complete_name;
+                                mw.target_name LIKE 'Win%'
+                                AND mw.target_name NOT LIKE '%Server%'
+                                {presence_filter}
+                                {entity_filter}
+                            GROUP BY mw.ent_id, complete_name;
             """
             for row in session.execute(total_query).fetchall():
                 ent_name = row.complete_name
@@ -17396,7 +17404,6 @@ FROM (
         except Exception as e:
             logger.error(f"Erreur stats Windows : {e}")
             logger.error(traceback.format_exc())
-            return {}
 
 
     @DatabaseHelper._sessionm
