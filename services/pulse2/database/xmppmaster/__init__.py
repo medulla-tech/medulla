@@ -18495,6 +18495,8 @@ FROM (
             Paramètres :
                 session (Session) : Objet de session SQLAlchemy pour l'interaction avec la base de données.
                 entity_id (int) : L'ID de l'entité pour filtrer les résultats.
+                    - None ou -1 : Retourne toutes les entités (wildcard).
+                    - 0 ou tout autre entier : Filtre sur l'entité spécifique (0 est une ID valide).
                 typeaction (str) : Type de machines à filtrer :
                     - "windows" : Exclut les machines dont la plateforme contient "Microsoft Windows Server".
                     - "serverwin" : Inclut uniquement les machines dont la plateforme contient "Microsoft Windows Server".
@@ -18541,7 +18543,7 @@ FROM (
             WHERE
                 (
                     :entity_id IS NULL
-                    OR CAST(:entity_id AS SIGNED) IN (0, -1)
+                    OR CAST(:entity_id AS SIGNED) = -1
                     OR ent_id = CAST(:entity_id AS SIGNED)
                 )
                 AND
