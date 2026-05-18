@@ -17162,6 +17162,7 @@ FROM (
           Regles metier de classification (par entite):
 
           1) old_version=11, new_version=11
+              - oldcode == "26H1"  => categorie "UPDATED" (version LT stab, pas de maj requise)
               - oldcode != newcode  => categorie "W11to11" (mise a jour Win11 vers Win11)
               - oldcode == newcode  => categorie "UPDATED" (machine deja a jour)
 
@@ -17175,6 +17176,9 @@ FROM (
               - oldcode == newcode  => categorie "UPDATED"
 
           4) Tous les autres cas => categorie "autre_cas"
+
+          NOTE: La règle 26H1 = UPDATED sera à réviser quand les mises à jour Windows 11
+                seront indépendantes de Windows Update (actuellement dépendant du calendrier WU).
 
           Taux de conformite (par entite):
               conformite = UPDATED / nombre_total_machines_windows_entite * 100
@@ -17330,12 +17334,19 @@ FROM (
                     else:
                         category = "non_conforme"
                 elif old_major == "11" and new_major == "11":
+                    # Traite 26H1 comme a jour : version LT stable, pas de maj requise
+                    # (ce comportement changera quand les mises a jour Win11 seront independantes de Windows Update)
+                    if oldcode == "26H1":
+                        category = "UPDATED"
                     # Exclut explicitement les machines old_version=10 du compteur W11to11.
-                    ent_target_code = entity_win11_target_code.get(ent_id, "")
-                    if oldcode == newcode or (ent_target_code and oldcode == ent_target_code):
+                    elif oldcode == newcode:
                         category = "UPDATED"
                     else:
-                        category = "W11to11"
+                        ent_target_code = entity_win11_target_code.get(ent_id, "")
+                        if ent_target_code and oldcode == ent_target_code:
+                            category = "UPDATED"
+                        else:
+                            category = "W11to11"
                 else:
                     category = "autre_cas"
 
