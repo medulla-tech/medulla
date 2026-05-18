@@ -209,4 +209,39 @@
     margin: 0 auto;
 }
 
+/* ===== Tooltip "Upgrade Not recommended" (prérequis Windows 11) =====
+   Scopé via .win11req-tt : surcharge le style générique .ttable / .tt-section
+   uniquement pour ce tooltip, sans impacter les infobulles machine ailleurs. */
+
+/* Phrase d'en-tête : ton informatif — accent cyan de la charte (pas le bleu
+   translucide de .tt-section ni du blanc criard), casse normale, " : " final.
+   Pour repasser en blanc : remplacer var(--tt-color-label) par #ffffff. */
+.ui-tooltip .win11req-tt .win11req-head .ttabletd {
+    color: var(--tt-color-label) !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    text-transform: none !important;
+    letter-spacing: normal !important;
+}
+.ui-tooltip .win11req-tt .win11req-head .ttabletd::after {
+    content: ":";
+}
+
+/* Lignes de prérequis : texte courant lisible, sans style "label"
+   (annule .ttable tr td:first-child), préfixe tiret (message informatif) */
+.ui-tooltip .win11req-tt .win11req-row .ttabletd {
+    color: var(--tt-color-text) !important;
+    font-size: var(--tt-font-size) !important;
+    font-weight: 400 !important;
+    text-transform: none !important;
+    letter-spacing: normal !important;
+    white-space: normal !important;
+    padding: 2px 0 !important;
+}
+.ui-tooltip .win11req-tt .win11req-row .ttabletd::before {
+    content: "\2013\00a0";
+    color: var(--tt-color-label);
+    opacity: 0.7;
+}
+
 

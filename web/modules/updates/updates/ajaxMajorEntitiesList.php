@@ -251,7 +251,31 @@ foreach ($mergedArray as $datacolonne) {
                                             "typeaction" => "windows"
                                            ]);
         // $namegrp = $Entitynamegrp."_hardware_requirements";
-        $missing_information_major[] = $grp->render($nb_machine_manque_info, $tabcgi, $msgtitle, "csszoomHover");
+
+        // Tooltip stylisé (pattern .infomach / .ttable, cf. tooltip.css global) :
+        // détaille les prérequis matériels Windows 11 non satisfaits par ces machines.
+        $win11Requirements = array(
+            'TPM 2.0',
+            'UEFI Secure Boot',
+            '1GHz 2-core 64-bit CPU',
+            '4GB of RAM',
+            '64GB in C:\\ partition',
+            'GPU supporting DirectX 12 and WDDM 2.0',
+            'Display of 1280 x 720 24bits',
+        );
+        $reqTooltip = '<table class="ttable win11req-tt">';
+        $reqTooltip .= '<tr class="ttabletr tt-section win11req-head"><td class="ttabletd" colspan="2">'
+            . htmlspecialchars(_T("The machine does not meet the minimum requirements for Windows 11", "updates"))
+            . '</td></tr>';
+        foreach ($win11Requirements as $req) {
+            $reqTooltip .= '<tr class="ttabletr win11req-row"><td class="ttabletd">'
+                . htmlspecialchars($req) . '</td></tr>';
+        }
+        $reqTooltip .= '</table>';
+
+        $renderedCounter = $grp->render($nb_machine_manque_info, $tabcgi, $msgtitle, "csszoomHover");
+        $missing_information_major[] = '<span class="infomach win11req-tooltip" mydata="'
+            . htmlentities($reqTooltip) . '">' . $renderedCounter . '</span>';
     } else {
         $missing_information_major[] = $nb_machine_manque_info;
     }
@@ -361,6 +385,21 @@ $n->setEmptyState(_T("No entities found", "updates"), _T("No entities match the 
 echo '<div class="major-entities-metrics">';
 $n->display();
 echo '</div>';
+
+// Active le tooltip stylisé sur le compteur "Upgrade Not recommended".
+// items:"[mydata]" + content lisant l'attribut mydata = même pattern que
+// ajaxXmppMachinesList.php / ajaxMachinesList.php (jQuery UI + tooltip.css).
+echo '<script>
+jQuery(function() {
+    if (!(jQuery.ui && jQuery.ui.tooltip)) { return; }
+    jQuery(".win11req-tooltip a").removeAttr("title");
+    jQuery(".win11req-tooltip").tooltip({
+        position: { my: "left+15 center", at: "right center" },
+        items: "[mydata]",
+        content: function() { return jQuery(this).attr("mydata"); }
+    });
+});
+</script>';
 }else{
     echo "object inexistant";
 }

@@ -1009,3 +1009,6 @@ msgstr "Solicitada"
 msgid "Non-compliant"
 msgstr "No conformes"
 
+msgid "The machine does not meet the minimum requirements for Windows 11"
+msgstr "El equipo no cumple los requisitos mínimos para Windows 11"
+
