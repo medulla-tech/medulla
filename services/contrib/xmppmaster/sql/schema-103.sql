@@ -184,7 +184,8 @@ BEGIN
         (
             TRIM(COALESCE(old_version, '')) = '11'
             AND TRIM(COALESCE(new_version, '')) = '11'
-            AND UPPER(TRIM(COALESCE(oldcode, ''))) != UPPER(TRIM(COALESCE(newcode, '')))
+            AND UPPER(TRIM(COALESCE(oldcode, ''))) != UPPER(TRIM(COALESCE(newcode, ''))) 
+            AND UPPER(TRIM(COALESCE(oldcode, ''))) != '26H1'  -- Exclusion de 26h1 tanque pas  26hx pas encore en iso
         )
         OR
         (
