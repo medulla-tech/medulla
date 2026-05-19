@@ -137,14 +137,14 @@ $complRates=array();
 $updated_major = array();
 $missing_information_major = array();
 // definition des actions
-$detailsByMach = new ActionItem(_T("Details by machines", "updates"),
+$detailsByMach = new ActionItem(_T("List of machines to be upgraded", "updates"),
                                 "majorDetailsByMachines",
                                 "auditbymachine",
                                 "",
                                 "updates",
                                 "updates");
 
-$emptydetailsByMach = new EmptyActionItem1(_T("no major updates for this entity", "updates"),
+$emptydetailsByMach = new EmptyActionItem1(_T("No major updates for this entity", "updates"),
                                             "majorDetailsByMachines",
                                             "auditbymachine",
                                             "",
@@ -156,7 +156,7 @@ $emptydetailsByMach = new EmptyActionItem1(_T("no major updates for this entity"
 
 
 
-$details_hardware_constraints_for_major_updates = new ActionItem(_T("Please do not perform the update for now, as long as certain essential hardware constraints are not met.", "updates"),
+$details_hardware_constraints_for_major_updates = new ActionItem(_T("List of machines that cannot be upgraded", "updates"),
                                 "hardwareConstraintsForMajorUpdates",
                                 "donotupdate",
                                 "",
