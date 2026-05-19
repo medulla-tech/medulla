@@ -112,7 +112,7 @@ class RpcProxy(RpcProxyI):
     @with_optional_xmpp_context
     def get_os_update_major_stats_win(self, ctx=None):
         infos = ctx.get_session_info()['mondict']
-        return XmppMasterDatabase().get_os_update_major_stats_win(infos['liste_entities_user'])
+        return XmppMasterDatabase().get_os_update_major_stats_win(entitylist=infos['liste_entities_user'])
 
     @with_optional_xmpp_context
     def get_os_update_major_stats_win_serv(self, ctx=None):
@@ -491,8 +491,8 @@ def get_machines_xmppmaster(start, end, filter=""):
     return XmppMasterDatabase().get_machines_xmppmaster(start, end, filter)
 
 
-def get_all_machines_grouped_by_os(start, end, filter=""):
-    return XmppMasterDatabase().get_all_machines_grouped_by_os(start, end, filter)
+def get_all_machines_grouped_by_os(start, end, filter="", os_filter=""):
+    return XmppMasterDatabase().get_all_machines_grouped_by_os(start, end, filter, os_filter)
 
 
 def get_machine_in_both_sources(glpi_ids):

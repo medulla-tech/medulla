@@ -1268,3 +1268,39 @@ msgstr "Marcar todo"
 
 msgid "Uncheck all"
 msgstr "Desmarcar todo"
+
+msgid "Authentication Configuration"
+msgstr "Configuración de autenticación"
+
+msgid "Magic Link"
+msgstr "Magic Link"
+
+msgid "Magic Link Settings"
+msgstr "Configuración de Magic Link"
+
+msgid "Define how long a Magic Link remains valid. Value is in minutes."
+msgstr "Define cuánto tiempo sigue siendo válido un Magic Link. El valor está en minutos."
+
+msgid "Expiration (minutes)"
+msgstr "Expiración (minutos)"
+
+msgid "Save"
+msgstr "Guardar"
+
+msgid "Magic Link configuration saved"
+msgstr "Configuración de Magic Link guardada"
+
+msgid "Failed to save Magic Link configuration"
+msgstr "Error al guardar la configuración de Magic Link"
+
+msgid "Unable to detect MMC configuration table"
+msgstr "No se puede detectar la tabla de configuración de MMC"
+
+msgid "Manage existing clients below, or create a new OIDC client."
+msgstr "Gestiona los clientes existentes abajo o crea un nuevo cliente OIDC."
+
+msgid "Add OIDC Client"
+msgstr "Añadir cliente OIDC"
+
+msgid "Security token validation failed"
+msgstr "La validación del token de seguridad falló"

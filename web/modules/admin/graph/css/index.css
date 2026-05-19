@@ -1,5 +1,33 @@
 <?php include __DIR__ . '/admin.css'; ?>
 
+.authcfg-box {
+    width: 100%;
+}
+
+.authcfg-hint {
+    background: #f5fafc;
+    border: 1px solid #d2e5ef;
+    border-left: 4px solid #2b6f8f;
+    border-radius: 4px;
+    padding: 10px 12px;
+    margin: 8px 0 16px;
+}
+
+.authcfg-hint-title {
+    margin: 0 0 4px;
+    color: #1f4e79;
+    font-weight: 600;
+}
+
+.authcfg-hint-text {
+    margin: 0;
+    color: #4f5f6e;
+}
+
+.authcfg-field {
+    margin: 12px 0 16px;
+}
+
 /* ---- ACL Features Management ---- */
 
 .acl-actions {

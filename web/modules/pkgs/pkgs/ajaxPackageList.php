@@ -108,6 +108,29 @@ if($sharings['config']['centralizedmultiplesharing'] == true) {
     $_count = $_packages["total"];
     $_packages = $_packages["datas"];
 
+    // Hide Windows Updates packages if checkbox is checked
+    $hideWinUpdates = isset($_GET['hide_win_updates']) && $_GET['hide_win_updates'] === 'true';
+    if ($hideWinUpdates && !empty($_packages['share_name'])) {
+        $indicesToRemove = [];
+        foreach ($_packages['share_name'] as $i => $shareName) {
+            if (stripos($shareName, 'winupdate') !== false) {
+                $indicesToRemove[] = $i;
+            }
+        }
+        if (!empty($indicesToRemove)) {
+            foreach ($_packages as $key => &$arr) {
+                if (is_array($arr)) {
+                    foreach ($indicesToRemove as $idx) {
+                        unset($arr[$idx]);
+                    }
+                    $arr = array_values($arr);
+                }
+            }
+            unset($arr);
+            $_count -= count($indicesToRemove);
+        }
+    }
+
     $_arraypackagename = [];
     $_localisations = [];
     $_sharing_types = [];

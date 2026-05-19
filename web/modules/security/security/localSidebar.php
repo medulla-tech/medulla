@@ -20,7 +20,9 @@
 
 require_once("modules/security/includes/xmlrpc.php");
 
-$hasContract = xmlrpc_get_config('cve_central_configured');
+$contractStatus = xmlrpc_get_contract_status();
+$hasContract = !empty($contractStatus['has_access']);
+$contractStatusReason = isset($contractStatus['reason']) ? $contractStatus['reason'] : '';
 
 $sidemenu = new SideMenu();
 $sidemenu->setClass("security");
@@ -32,4 +34,3 @@ if ($hasContract) {
     $sidemenu->addSideMenuItem(new SideMenuItem(_T("All CVEs", 'security'), "security", "security", "allcves"));
     $sidemenu->addSideMenuItem(new SideMenuItem(_T("Settings", 'security'), "security", "security", "settings"));
 }
-?>

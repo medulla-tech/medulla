@@ -1,6 +1,7 @@
 <?php
 /**
  * (c) 2015-2025 Siveo, http://siveo.net
+ * (c) 2025-2026 Medulla, https://medulla-tech.io
  *
  * $Id$
  *
@@ -353,6 +354,9 @@ function getExtension(filename){
         if(jQuery('#Location').val()=="" || jQuery('#Location').val()==".xml"){
             jQuery('#Location').focus()
         }
+        else if (jQuery('#LoginAdmin').val()==""){
+            jQuery('#LoginAdmin').focus()
+        }
         else if (jQuery('#PasswordAdmin').val()==""){
             jQuery('#PasswordAdmin').focus()
         }
@@ -431,6 +435,7 @@ jQuery(function () {
     jQuery( '#ControlPanelView' ).on('change', function () { update(); });
     jQuery( '#ControlPanelIconSize' ).on('change', function () { update(); });
     jQuery( '#DownloadButton' ).on('change', function () { update(); });
+    jQuery( '#LoginAdmin' ).on('change', function () { update(); });
     jQuery( '#PasswordAdmin' ).on('change', function () { update(); });
 	jQuery( '#Domain' ).on('change', function () { update(); });
 	jQuery( '#DomainPassword' ).on('change', function () { update(); });
@@ -514,6 +519,7 @@ function update() {
         'Group': jQuery('#Group').find('option:selected').val(),
         'Description': jQuery('#Description').val(),
         'Password': jQuery('#Password').val(),
+        'LoginAdmin': jQuery('#LoginAdmin').val(),
         'PasswordAdmin': jQuery('#PasswordAdmin').val(),
         'EnableUAC': jQuery('#EnableUAC').find('option:selected').val(),
         'Updates': jQuery('#Updates').find('option:selected').val(),
@@ -2041,6 +2047,9 @@ function update() {
 
         $InfoBule_Administrators_Account=
                         _T("Configure Administrators Account", "imaging");
+
+        $InfoBule_LoginAdmin=
+                        _T('Specifies the administrator login of the computer and whether it is hidden in the unattended installation answer file','imaging');
 
         $InfoBule_PasswordAdmin=
                         _T('Specifies the administrator password of the computer and whether it is hidden in the unattended installation answer file','imaging');

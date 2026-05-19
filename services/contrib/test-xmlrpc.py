@@ -45,6 +45,12 @@ def _cb(result):  # server do answer us
 
 
 def _eb(reason):  # can't contact scheduler
+    """
+    Fonction appelée par le serveur pour indiquer un échec de contact avec l'horloge.
+
+    :param reason: Raison de l'échec de contact (par exemple, erreur réseau)
+    :return: None
+    """
     print(f"ERROR : {reason}")
     twisted.internet.reactor.callLater(0, _end)
 

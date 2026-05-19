@@ -27,8 +27,8 @@
 
 %define use_git                1
 %define git                    SHA
-%define real_version           5.5.1
-%define mmc_version            5.5.1
+%define real_version           5.5.2
+%define mmc_version            5.5.2
 
 Summary:	Management Console
 Name:		medulla
@@ -695,6 +695,8 @@ This package contains Pulse 2 common files like documentation.
 %{_sbindir}/import_masters.sh
 %{_sbindir}/check_medulla_updates.sh
 %{_sbindir}/medulla_mysql_exec_uninstall_unnecessary_update_package.sh
+%{_sbindir}/medulla-generate-winupdate-packages
+%{_sbindir}/medulla-generate-winupdatemajor-packages
 
 %_docdir/pulse2/contrib/
 %_datadir/mmc/conf/apache/pulse.conf

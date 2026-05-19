@@ -102,7 +102,8 @@ echo <<<SCRIPT
 <script>
 (function() {
     var ids = {$groupIdsJson};
-    var rows = document.querySelectorAll('#tab-groups .listinfos tbody tr.alternate, .listinfos tbody tr.alternate');
+    // Select all rows (not just .alternate which is the zebra stripe class)
+    var rows = document.querySelectorAll('#tab-groups .listinfos tbody tr, .listinfos tbody tr');
     var injected = 0;
     for (var i = 0; i < rows.length && injected < ids.length; i++) {
         var cell = rows[i].children[0];
@@ -120,6 +121,10 @@ echo <<<SCRIPT
         cb.className = 'group-checkbox';
         cb.name = 'groups[]';
         cb.value = ids[injected];
+        // Same nested-form problem as the machines tab: the AJAX-injected row
+        // ends up outside the deploy form. The HTML5 'form' attribute pins
+        // the input to the right form regardless of DOM parentage.
+        cb.setAttribute('form', 'deploy-form-groups');
         cb.style.cssText = 'width:15px;height:15px;cursor:pointer;flex-shrink:0;margin:0 2px;';
 
         var first = cell.firstChild;

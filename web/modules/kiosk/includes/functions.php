@@ -55,12 +55,25 @@ function recursiveArrayToList(Array $array = array(), &$result, &$count)
     {
         $name = $array['name'];
 
+        // Selectable defaults to true to keep backward compat with sources that
+        // don't emit the flag. Only the Entity source sets it explicitly.
+        $selectable = !isset($array['selectable']) || $array['selectable'] === true;
+
         // Display full entity name without truncation
         // The title attribute provides tooltip for long names
         if(isset($array['name']) && $array['name'] != "")
         {
             $count +=1;
-            $result.= '<li title="'.$name.'" data-id="j1_'.$count.'" data-root="'.$array['path'].'">'.$name;
+            // Non-selectable nodes are rendered as disabled in jstree and lose
+            // their data-root so they cannot be picked up as a profile OU.
+            if ($selectable) {
+                $result.= '<li title="'.$name.'" data-id="j1_'.$count.'" data-root="'.$array['path'].'">'.$name;
+            } else {
+                // Use both the jstree HTML data attribute and the native CSS
+                // class so the node is reliably rendered as disabled regardless
+                // of how jstree parses the initial HTML.
+                $result.= '<li title="'.$name.'" data-id="j1_'.$count.'" class="jstree-disabled" data-jstree=\'{"disabled":true}\'>'.$name;
+            }
         }
         recursiveArrayToList($array['child'], $result, $count);
         $result.= '</li>';

@@ -59,6 +59,8 @@ require_once("modules/updates/includes/xmlrpc.php");
 <?php
 
 $params = getFilteredGetParams();
+// Aligne le navbar de ajaxEntitiesList sur la AjaxFilter parente (formid 'formRunning' dans index.php)
+$params['divID'] = 'formRunning';
 $ajax = new AjaxUrlDiv(urlStrRedirect("updates/updates/ajaxEntitiesList"),
                                   "entitylist",
                                   $params);

@@ -137,14 +137,14 @@ $complRates=array();
 $updated_major = array();
 $missing_information_major = array();
 // definition des actions
-$detailsByMach = new ActionItem(_T("Details by machines", "updates"),
+$detailsByMach = new ActionItem(_T("List of machines to be upgraded", "updates"),
                                 "majorDetailsByMachines",
                                 "auditbymachine",
                                 "",
                                 "updates",
                                 "updates");
 
-$emptydetailsByMach = new EmptyActionItem1(_T("no major updates for this entity", "updates"),
+$emptydetailsByMach = new EmptyActionItem1(_T("No major updates for this entity", "updates"),
                                             "majorDetailsByMachines",
                                             "auditbymachine",
                                             "",
@@ -156,7 +156,7 @@ $emptydetailsByMach = new EmptyActionItem1(_T("no major updates for this entity"
 
 
 
-$details_hardware_constraints_for_major_updates = new ActionItem(_T("Please do not perform the update for now, as long as certain essential hardware constraints are not met.", "updates"),
+$details_hardware_constraints_for_major_updates = new ActionItem(_T("List of machines that cannot be upgraded", "updates"),
                                 "hardwareConstraintsForMajorUpdates",
                                 "donotupdate",
                                 "",
@@ -179,7 +179,7 @@ $deployAll = new ActionPopupItem(_T("Deploy all major updates on entity", "updat
                                     "updates",
                                     "updates",
                                     null,
-                                    320,"machine");
+                                    640,"machine");
 
 $emptydeployAll = new EmptyActionItem1(_T("There are no major updates to deploy for the entity.", "updates"),
                                             "grpDeployUpdatemajor",
@@ -187,7 +187,6 @@ $emptydeployAll = new EmptyActionItem1(_T("There are no major updates to deploy 
                                             "",
                                             "updates",
                                             "updates");
-
     $grp = new ActionAjaxPopup(
         "CreateGroup",
         "ajaxUpdateCreateGroup", // action
@@ -340,15 +339,16 @@ foreach ($mergedArray as  $index=>$datacolonne) {
         "typeaction" => "serverwin"
     );
 }
-$count = count($complete_name_major);
+// $count garde sa valeur initiale (total des entités filtrées, calculé ligne 68),
+// pour que la navbar puisse calculer correctement les pages.
 $n = new OptimizedListInfos($complete_name_major, _T("Entity name", "updates"));
 $n->setResizable();
 $n->disableFirstColumnActionLink();
 $n->addExtraInfo($comformite_name_major, _T("Compliance rate", "updates"));
-$n->addExtraInfoRaw($MS12toMS25_major, _T("Upg WS2012→2025", "updates"));
-$n->addExtraInfoRaw($MS16toMS25_major, _T("Upg WS2016→2025", "updates"));
-$n->addExtraInfoRaw($MS19toMS25_major, _T("Upg WS2019→2025", "updates"));
-$n->addExtraInfoRaw($MS25toMS25_major, _T("Upg WS2025→24H2", "updates"));
+$n->addExtraInfoRaw($MS12toMS25_major, _T("Upgrade Win Server 2012 to 2025", "updates"));
+$n->addExtraInfoRaw($MS16toMS25_major, _T("Upgrade Win Server 2016 to 2025", "updates"));
+$n->addExtraInfoRaw($MS19toMS25_major, _T("Upgrade Win Server 2019 to 2025", "updates"));
+$n->addExtraInfoRaw($MS25toMS25_major, _T("Upgrade to latest Win Server 2025", "updates"));
 
 $n->addExtraInfoRaw($updated_major, _T("Up to date", "updates"));
 // $n->addExtraInfo($missing_information_major, _T("Upgrade Not recommended", "updates"));
@@ -361,7 +361,9 @@ $n->addActionItemArray($actionHardwareConstraintsForMajorUpdatesByEntity);
 $n->setItemCount($count);
 $n->setNavBar(new AjaxNavBar($count, $filter));
 $n->setParamInfo($params);
-$n->start = $start;
+// arrInfo contient déjà le slice paginé : on itère depuis l'index 0,
+// $count reste le total global utilisé par la navbar.
+$n->start = 0;
 $n->end = $count;
 
 $n->setEmptyState(_T("No entities found", "updates"), _T("No entities match the current filter.", "updates"));

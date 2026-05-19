@@ -900,3 +900,8 @@ msgstr ""
 #: modules/updates/infoPackage.inc.php:319
 msgid "Choose product for entity"
 msgstr ""
+
+#: modules/updates/updates/ajaxMajorDetailsByMachines.php:66
+#: modules/updates/updates/ajaxMajorEntitiesList.php:268
+msgid "The machine does not meet the minimum requirements for Windows 11"
+msgstr ""

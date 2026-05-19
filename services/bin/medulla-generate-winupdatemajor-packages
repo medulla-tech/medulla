@@ -1,0 +1,407 @@
+#!/bin/bash
+#
+# (c) 2022 Siveo, http://siveo.net
+#
+# This file is part of Medulla
+#
+# Medulla is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# Medulla is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Medulla; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+# PARAMETERS TO BE SET
+DL_URL=https://updates.medulla-tech.io/updates_protected
+SHARE_NAME=winupdatesmajor
+DEST=/var/lib/pulse2/packages/sharing/${SHARE_NAME}
+COMMAND='powershell -NoProfile -ExecutionPolicy Bypass -File ".\update_iso.ps1"'
+
+PACKAGE_DATE=$(date +'%F %X')
+LOG_FILE=/var/log/medulla/winupdatemajor.log
+
+DBHOST=$(crudini --get /etc/mmc/plugins/xmppmaster.ini.local database dbhost 2> /dev/null || echo localhost)
+DBPORT=$(crudini --get /etc/mmc/plugins/xmppmaster.ini.local database dbport 2> /dev/null || echo 3306)
+DBUSER=$(crudini --get /etc/mmc/plugins/xmppmaster.ini.local database dbuser 2> /dev/null || echo mmc)
+DBPASS=$(crudini --get /etc/mmc/plugins/xmppmaster.ini.local database dbpasswd)
+KEYAES32=$(crudini --get /etc/mmc/plugins/xmppmaster.ini.local defaultconnection keyAES32)
+
+
+colored_echo() {
+    # Output colored lines to shell and log file.
+    # tput is called only when stdout is a real terminal (not from cron).
+    local COLOR=$1;
+    if ! [[ $COLOR =~ '^[0-9]$' ]] ; then
+        case $(echo $COLOR | tr '[:upper:]' '[:lower:]') in
+            black) COLOR=0 ;;
+            red) COLOR=1 ;;
+            green) COLOR=2 ;;
+            yellow) COLOR=3 ;;
+            blue) COLOR=4 ;;
+            magenta) COLOR=5 ;;
+            cyan) COLOR=6 ;;
+            white|*) COLOR=7 ;; # white or invalid color
+        esac
+    fi
+    [ -t 1 ] && tput setaf $COLOR;
+    echo "${@:2}";
+    [ -t 1 ] && tput sgr0;
+    echo "${@:2}" >> "${LOG_FILE}";
+}
+
+
+display_usage() {
+    #
+    # Display usage message
+    #
+    echo -e "\nUsage:\n$0 [--force]\n"
+    echo -e "arguments:"
+    echo -e "\t[--force]"
+    exit 0
+}
+
+
+check_arguments() {
+    #
+    # Make sure the options passed are valid
+    #
+    for i in "$@"; do
+        case $i in
+            --force*)
+                FORCE=1
+                shift
+                ;;
+            *)
+                # unknown option
+                display_usage
+                ;;
+        esac
+    done
+}
+
+run_checks() {
+    #
+    # Check that all required parameters are set
+    #
+    if [[ ${DL_URL} == '' ]]; then
+        colored_echo red "$(date +\[%F\ %X\]) DL_URL parameter is not set. Please set it"
+        exit 1
+    fi
+}
+
+find_packages_to_generate() {
+    #
+    # Rebuild up_major_win (temp table) then return distinct (iso_filename, package_uuid) pairs.
+    # The stored procedure also feeds up_machine_major_windows (persistent table).
+    #
+    mysql -h ${DBHOST} -P ${DBPORT} -u${DBUSER} -p${DBPASS} xmppmaster -se "CALL up_init_table_major_win_complet();"
+    local result=$(mysql -h ${DBHOST} -P ${DBPORT} -u${DBUSER} -p${DBPASS} xmppmaster \
+        -se "SELECT DISTINCT iso_filename,package_uuid FROM up_major_win;")
+    # Quote result to preserve multi-line output and avoid word splitting
+    echo "${result}"
+    return 0
+}
+
+check_package_exists() {
+    #
+    # Check if package already exists in the database
+    # Parameter passed is package_uuid ($1)
+    # Prints "true" or "false" on stdout, returns 0 or 1.
+    #
+    local PACKAGE_UUID=$1
+
+    local result=$(mysql -h ${DBHOST} -P ${DBPORT} -u${DBUSER} -p${DBPASS} pkgs \
+        -se "SELECT COUNT(*) FROM packages WHERE uuid='${PACKAGE_UUID}'")
+
+    if [[ ${result} == 0 ]]; then
+        echo "false" # Return false if no record is found
+        return 1
+    else
+        echo "true"
+        return 0
+    fi
+}
+
+download_ps1_script() {
+    #
+    # Download the PowerShell script used to mount the ISO and run the upgrade.
+    # The script is common to all ISOs of the same Windows family (Win10, Win11...).
+    # Parameters passed are package_uuid ($1) and iso_filename ($2)
+    #
+    local PACKAGE_UUID=$1
+    local ISO_FILENAME=$2
+    if ! curl --silent --fail -C - -o "${DEST}/${PACKAGE_UUID}/update_iso.ps1" \
+            "${DL_URL}/${ISO_FILENAME%%_*}/update_iso.ps1?token=${KEYAES32}"; then
+        colored_echo red "$(date +\[%F\ %X\]) Failed to download update_iso.ps1 for family ${ISO_FILENAME%%_*}"
+        return 1
+    fi
+}
+
+generate_package() {
+    #
+    # Generate the two package descriptor files:
+    #   xmppdeploy.json : Medulla deployment workflow (mount ISO, run upgrade, handle reboot)
+    #   conf.json       : package metadata (name, uuid, dates, target OS)
+    # Parameters passed are package_uuid ($1) and iso_filename ($2)
+    #
+    local PACKAGE_UUID=$1
+    local ISO_FILENAME=$2
+    colored_echo blue "Generating package..."
+    cat <<EOF > ${DEST}/${PACKAGE_UUID}/xmppdeploy.json
+{
+    "info": {
+        "urlpath" : "",
+        "creator": "automate_medulla",
+        "creation_date": "$PACKAGE_DATE",
+        "licenses": "1.0",
+        "gotoreturncode": "3010",
+        "gotolabel": "REBOOTREQUIRED",
+        "packageUuid": "$PACKAGE_UUID",
+        "spooling": "ordinary",
+        "limit_rate_ko": "",
+        "version": "1.0",
+        "editor": "automate_medulla",
+        "metagenerator": "expert",
+        "targetrestart": "MA",
+        "inventory": "False",
+        "localisation_server": "$SHARE_NAME",
+        "typescript": "Batch",
+        "description": "Major update to ${ISO_FILENAME%%.*}",
+        "previous_localisation_server": "$SHARE_NAME",
+        "Dependency": [],
+        "name": "${ISO_FILENAME%%.*}",
+        "url": "",
+        "edition_date": "$PACKAGE_DATE",
+        "transferfile": true,
+        "methodetransfert": "pushrsync",
+        "software": "templated",
+        "type_section" : "update"
+    },
+    "win": {
+        "sequence": [
+            {
+                "action": "action_section_update", 
+                "step": 0, 
+                "actionlabel": "upd_70a70cc9"
+            }, 
+            {
+                "command": "$(echo $COMMAND | base64 -w0)",
+                "30@lastlines": "30@lastlines",
+                "actionlabel": "02d57e96",
+                "codereturn": "",
+                "step": 1,
+                "error": 6,
+                "action": "actionprocessscript",
+                "timeout": "3600",
+                "gotoreturncode@3010": "REBOOTREQUIRED"
+            },
+            {
+                "action": "actionwaitandgoto",
+                "step": 2,
+                "codereturn": "",
+                "actionlabel": "wait_cc66c870",
+                "waiting": "1",
+                "goto": "END_SUCCESS"
+            },
+            {
+                "step": 3,
+                "action": "action_comment",
+                "actionlabel": "REBOOTREQUIRED",
+                "comment": "The update has been installed but a reboot is required to apply it."
+            },
+            {
+                "action": "action_notification",
+                "step": 4,
+                "codereturn": "",
+                "actionlabel": "notif_ee9943f2",
+                "titlemessage": "V2luZG93cyBVcGRhdGUgLSBSZWJvb3Q=",
+                "sizeheader": "15",
+                "message": "QW4gdXBkYXRlIGhhcyBiZWVuIGluc3RhbGxlZCBvbiB5b3VyIGNvbXB1dGVyIGJ5IE1lZHVsbGEuIFBsZWFzZSByZWJvb3Qgd2hlbiBwb3NzaWJsZSB0byBhcHBseSB0aGUgdXBkYXRlLg0KDQpVbmUgbWlzZSDDoCBqb3VyIGEgw6l0w6kgaW5zdGFsbMOpZSBzdXIgdm90cmUgb3JkaW5hdGV1ciBwYXIgTWVkdWxsYS4gUGVuc2V6IMOgIHJlZMOpbWFycmVyIHF1YW5kIGMnZXN0IHBvc3NpYmxlIGFmaW4gcXVlIGxhIG1pc2Ugw6Agam91ciBzb2l0IGFwcGxpcXXDqWUu",
+                "sizemessage": "10",
+                "textbuttonyes": "OK",
+                "timeout": "800"
+            },
+            {
+                "action": "actionsuccescompletedend",
+                "step": 5,
+                "actionlabel": "END_SUCCESS",
+                "clear": "False",
+                "inventory": "noforced"
+            },
+            {
+                "action": "actionerrorcompletedend",
+                "step": 6,
+                "actionlabel": "END_ERROR"
+            }
+        ]
+    },
+    "metaparameter": {
+        "win": {
+            "label": {
+                "upd_70a70cc9": 0,
+                "02d57e96": 1,
+                "wait_cc66c870": 2,
+                "REBOOTREQUIRED": 3,
+                "notif_ee9943f2": 4,    
+                "END_SUCCESS": 5,
+                "END_ERROR": 6
+            }
+        },
+        "os": [
+            "win"
+        ]
+    }
+}
+EOF
+    
+    cat <<EOF > ${DEST}/${PACKAGE_UUID}/conf.json
+{
+    "urlpath" : "",
+    "localisation_server": "$SHARE_NAME",
+    "sub_packages": [],
+    "metagenerator": "manual",
+    "description": "Major update to ${ISO_FILENAME%%.*}",
+    "creator": "root",
+    "edition_date": "$PACKAGE_DATE",
+    "previous_localisation_server": "$SHARE_NAME",
+    "entity_id": "0",
+    "creation_date": "$PACKAGE_DATE",
+    "inventory": {
+        "associateinventory": "0",
+        "licenses": "",
+        "queries": {
+            "Qsoftware": "",
+            "Qvendor": "",
+            "boolcnd": "",
+            "Qversion": ""
+        }
+    },
+    "version": "1.0",
+    "reboot": 0,
+    "editor": "",
+    "targetos": "win",
+    "commands": {
+        "postCommandSuccess": {
+            "command": "",
+            "name": ""
+        },
+        "command": {
+            "command": "",
+            "name": ""
+        },
+        "postCommandFailure": {
+            "command": "",
+            "name": ""
+        },
+        "installInit": {
+            "command": "",
+            "name": ""
+        },
+        "preCommand": {
+            "command": "",
+            "name": ""
+        }
+    },
+    "id": "$PACKAGE_UUID",
+    "name": "${ISO_FILENAME%%.*}"
+}
+EOF
+
+}
+
+download_iso() {
+    #
+    # Download the Windows ISO from the Medulla update server.
+    # The ISO is stored under updates_protected/<family>/<iso_filename>.
+    # The family is derived from the ISO name (first segment before '_').
+    # Authentication is done via the AES32 token from xmppmaster.ini.local.
+    # Parameters passed are package_uuid ($1) and iso_filename ($2)
+    #
+    local PACKAGE_UUID=$1
+    local ISO_FILENAME=$2
+    colored_echo blue "Downloading ISO file ${DL_URL}/${ISO_FILENAME%%_*}/${ISO_FILENAME} to ${DEST}/${PACKAGE_UUID}/${ISO_FILENAME}..."
+    if ! curl --silent --fail -C - -o ${DEST}/${PACKAGE_UUID}/${ISO_FILENAME} "${DL_URL}/${ISO_FILENAME%%_*}/${ISO_FILENAME}?token=${KEYAES32}"; then
+        colored_echo red "$(date +\[%F\ %X\]) Failed to download ISO ${ISO_FILENAME} (file not found or server error)"
+        colored_echo red "$(date +\[%F\ %X\]) To create the package manually, place the ISO file ${ISO_FILENAME} in the directory:"
+        colored_echo red "$(date +\[%F\ %X\])   /var/web0Xshare/updates/updates_protected/${ISO_FILENAME%%_*}/${ISO_FILENAME}"
+        colored_echo red "$(date +\[%F\ %X\]) Then re-run this script to generate the package."
+        rm -f ${DEST}/${PACKAGE_UUID}/${ISO_FILENAME}
+        return 1
+    fi
+}
+
+create_package_record() {
+    #
+    # Create package record in the database
+    #
+    colored_echo blue "$(date +\[%F\ %X\]) Creating package record in the database..."
+    /usr/sbin/pulse2-generation_package.py -H${DBHOST} -P${DBPORT} -u${DBUSER} -p${DBPASS} -r -l -g
+}
+
+
+mkdir -p "$(dirname ${LOG_FILE})"
+
+# Prevent concurrent executions (e.g. launched by cron while a previous run is still active).
+# flock acquires an exclusive lock on the lock file; if already held, exits immediately.
+LOCK_FILE=/var/run/medulla-generate-winupdatemajor-packages.lock
+exec 9>"${LOCK_FILE}"
+if ! flock --nonblock 9; then
+    echo "$(date +\[%F\ %X\]) $(basename $0) is already running (lock: ${LOCK_FILE}). Exiting." | tee -a "${LOG_FILE}"
+    exit 0
+fi
+
+colored_echo blue "$(date +\[%F\ %X\]) ##### Starting $(basename $0)"
+check_arguments $@
+run_checks
+PACKAGES_LIST=$(find_packages_to_generate)
+# If no packages to generate, exit
+if [[ ${PACKAGES_LIST} == '' ]]; then
+    colored_echo red "$(date +\[%F\ %X\]) No packages to generate"
+    exit 0
+fi
+
+echo "$PACKAGES_LIST" | while IFS=$'\t' read -r ISO_FILENAME PACKAGE_UUID; do
+    # Skip the header line if it exists
+    if [[ "$ISO_FILENAME" == "iso_filename" ]]; then
+        continue
+    fi
+
+    # Check if the package already exists
+    a="$(check_package_exists ${PACKAGE_UUID})"
+    if [ "${a}" != "false" ] && [ "${FORCE}" == "1" ]; then
+        colored_echo blue "$(date +\[%F\ %X\]) Package already exists but forcing package re-creation..."
+        rm -rf ${DEST}/${PACKAGE_UUID}
+        colored_echo blue "$(date +\[%F\ %X\]) Creating new package with UUID ${PACKAGE_UUID}..."
+        mkdir -p ${DEST}/${PACKAGE_UUID}
+    elif [ "${a}" != "false" ]; then
+        colored_echo red "$(date +\[%F\ %X\]) Package already exists with UUID: ${PACKAGE_UUID}"
+        continue
+    else
+        colored_echo blue "$(date +\[%F\ %X\]) Creating new package with UUID ${PACKAGE_UUID}..."
+        mkdir -p ${DEST}/${PACKAGE_UUID}
+    fi
+    colored_echo blue "$(date +\[%F\ %X\]) Downloading powershell script for ${ISO_FILENAME}..."
+    if ! download_ps1_script ${PACKAGE_UUID} ${ISO_FILENAME}; then
+        colored_echo red "$(date +\[%F\ %X\]) Skipping package ${PACKAGE_UUID} due to ps1 download failure"
+        rm -rf ${DEST}/${PACKAGE_UUID}
+        continue
+    fi
+    colored_echo blue "$(date +\[%F\ %X\]) Generating package files for ${ISO_FILENAME}..."
+    generate_package ${PACKAGE_UUID} ${ISO_FILENAME}
+    colored_echo blue "$(date +\[%F\ %X\]) Downloading ISO ${ISO_FILENAME}..."
+    if ! download_iso ${PACKAGE_UUID} ${ISO_FILENAME}; then
+        colored_echo red "$(date +\[%F\ %X\]) Skipping package ${PACKAGE_UUID} due to ISO download failure"
+        rm -rf ${DEST}/${PACKAGE_UUID}
+        continue
+    fi
+done
+create_package_record
+colored_echo green "$(date +\[%F\ %X\]) ##### Finished $(basename $0)"

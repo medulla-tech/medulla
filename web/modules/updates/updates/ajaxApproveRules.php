@@ -38,6 +38,15 @@ $filter = (isset($_GET['filter'])) ? htmlentities($_GET['filter']) : "";
 // Récupération des données à afficher
 $f = xmlrpc_get_auto_approve_rules($_GET['selected_location']['uuid']);
 
+if (!is_array($f) || !isset($f['id']) || !is_array($f['id'])) {
+    $f = [
+        'id' => [],
+        'active_rule' => [],
+        'msrcseverity' => [],
+        'updateclassification' => [],
+    ];
+}
+
 // Initialisation
 $htmlelementcheck = [];
 $params = [];

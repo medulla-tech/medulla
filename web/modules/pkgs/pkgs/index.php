@@ -36,6 +36,7 @@ $p->display();
 require_once("modules/pkgs/includes/xmlrpc.php");
 
 $ajax = new AjaxFilter(urlStrRedirect("pkgs/pkgs/ajaxPackageList"));
+$ajax->addCheckbox(new Checkbox("hide_win_updates", _T("Hide Windows Updates", "pkgs")));
 $ajax->display();
 $ajax->displayDivToUpdate();
 
