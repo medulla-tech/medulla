@@ -54,8 +54,8 @@ function xmlrpc_get_store_config($key = null) {
     return xmlCall("store.get_store_config", array($key));
 }
 
-function xmlrpc_get_client_uuid() {
-    return xmlCall("store.get_client_uuid", array());
+function xmlrpc_get_auth_uuid() {
+    return xmlCall("store.get_auth_uuid", array());
 }
 
 function xmlrpc_get_client_info() {

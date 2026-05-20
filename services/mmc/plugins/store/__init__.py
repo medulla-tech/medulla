@@ -43,15 +43,15 @@ def activate():
 
 def _generate_auth_header(config):
     """Generate AES-256-CBC encrypted auth header (same pattern as security module)"""
-    if not config.store_api_keyAES32 or not config.client_uuid:
+    if not config.store_api_keyAES32:
         return None
     key = config.store_api_keyAES32.encode('utf-8')
-    plaintext = f"{config.client_uuid}:{int(time.time())}"
+    plaintext = f"{config.auth_uuid}:{int(time.time())}"
     iv = os.urandom(16)
     cipher = AES.new(key, AES.MODE_CBC, iv)
     encrypted = cipher.encrypt(pad(plaintext.encode('utf-8'), AES.block_size))
     signature = base64.b64encode(iv + encrypted).decode('utf-8')
-    return f'Bearer {config.client_uuid}:{signature}'
+    return f'Bearer {config.auth_uuid}:{signature}'
 
 def _store_api_get(endpoint, params=None):
     """Call the remote store API
@@ -305,17 +305,17 @@ def get_store_config(key=None):
     config = StoreConfig("store")
     config_dict = {
         'store_api_url': config.store_api_url or '',
-        'client_uuid': config.client_uuid or '',
-        'configured': bool(config.store_api_url and config.store_api_keyAES32 and config.client_uuid),
+        'auth_uuid': config.auth_uuid or '',
+        'configured': bool(config.store_api_url and config.store_api_keyAES32),
     }
     if key:
         return config_dict.get(key, '')
     return config_dict
 
-def get_client_uuid():
-    """Return the client UUID configured in store.ini"""
+def get_auth_uuid():
+    """Return the auth UUID derived from the AES key. Pas configuré : calculé."""
     config = StoreConfig("store")
-    return config.client_uuid or ""
+    return config.auth_uuid or ""
 
 def get_client_info():
     """Return current client info from store API"""
