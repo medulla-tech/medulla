@@ -557,7 +557,7 @@ class MobileDatabase(DatabaseHelper):
                 user_info = {}
 
             logging.getLogger().info(f"Current HMDM user: {user_info.get('login')}, role: {user_info.get('userRole', {}).get('name')}")
-            return user_info
+            return self._sanitize_for_xmlrpc(user_info)
         except Exception as e:
             logging.getLogger().error(f"Error fetching current HMDM user: {e}")
             return None
@@ -1351,9 +1351,9 @@ class MobileDatabase(DatabaseHelper):
                     'devicePath': f.get('devicePath') or f.get('device_path') or '',
                     'external': bool(f.get('external')),
                     'replaceVariables': bool(f.get('replaceVariables')),
-                    'usedByConfigurations': f.get('usedByConfigurations') if f.get('usedByConfigurations') else [],
-                    'usedByApps': used_by_apps,
-                    'usedByIcons': f.get('usedByIcons') if f.get('usedByIcons') else []
+                    'usedByConfigurations': self._sanitize_for_xmlrpc(f.get('usedByConfigurations') or []),
+                    'usedByApps': self._sanitize_for_xmlrpc(used_by_apps),
+                    'usedByIcons': self._sanitize_for_xmlrpc(f.get('usedByIcons') or [])
                 }
                 files.append(file_entry)
             return files
@@ -1772,35 +1772,78 @@ class MobileDatabase(DatabaseHelper):
             logging.getLogger().error("Could not fetch configurations list")
             return {"status": "ERROR", "message": "failed_to_fetch_configs"}
         
-        # Build the payload with all configurations
         config_url = f"{self.BASE_URL}/private/web-ui-files/configurations"
         headers = {
             "Authorization": f"Bearer {hmtoken}",
             "Content-Type": "application/json",
             "Accept": "application/json"
         }
-        
+
+        # Fetch existing assignment records using the correct path-param endpoint.
+        # Returns one entry per config; id=null means not assigned, id=N means assigned (record ID needed for unassign).
+        existing_assignments = {}  # configurationId (int) -> assignment record id
+        all_config_records = []
+        try:
+            detail_resp = requests.get(f"{config_url}/{file_id}", headers=headers)
+            logging.getLogger().info(f"File configs status: {detail_resp.status_code}, body: {detail_resp.text[:500]}")
+            if detail_resp.status_code == 200:
+                data = detail_resp.json().get('data') or []
+                # Use the response records directly as the base payload
+                seen = set()
+                for rec in data:
+                    cfg_id = rec.get('configurationId')
+                    rec_id = rec.get('id')
+                    if cfg_id is None:
+                        continue
+                    int_cfg_id = int(cfg_id)
+                    # HMDM may return duplicate entries per config; keep first non-null id
+                    if int_cfg_id in seen:
+                        continue
+                    if rec_id is not None:
+                        existing_assignments[int_cfg_id] = rec_id
+                    all_config_records.append(rec)
+                    seen.add(int_cfg_id)
+            logging.getLogger().info(f"Existing assignments for file {file_id}: {existing_assignments}")
+        except Exception as e:
+            logging.getLogger().warning(f"Could not fetch existing assignments (will use id=null): {e}")
+
         selected_ids = set(int(cid) for cid in (configuration_ids if configuration_ids else []))
         configurations_payload = []
-        
-        for cfg in all_configs:
-            cfg_id = cfg.get('id')
-            if cfg_id is None:
-                continue
-            
-            is_selected = int(cfg_id) in selected_ids
-            configurations_payload.append({
-                "id": None,
-                "customerId": 1,
-                "configurationId": int(cfg_id),
-                "configurationName": cfg.get('name', ''),
-                "fileId": int(file_id),
-                "fileName": None,
-                "upload": is_selected,
-                "remove": False,
-                "notify": is_selected,
-                "common": False
-            })
+
+        if all_config_records:
+            # Use records from GET /configurations/{file_id} — already correct structure with real IDs
+            for rec in all_config_records:
+                cfg_id = rec.get('configurationId')
+                if cfg_id is None:
+                    continue
+                int_cfg_id = int(cfg_id)
+                is_selected = int_cfg_id in selected_ids
+                rec_id = rec.get('id')  # real assignment record id (or null if never assigned)
+                entry = dict(rec)  # copy the record as-is
+                entry['upload'] = is_selected
+                entry['notify'] = rec_id is not None  # notify only when updating an existing assignment
+                configurations_payload.append(entry)
+        else:
+            # Fallback: build from all_configs list (no existing IDs available)
+            for cfg in all_configs:
+                cfg_id = cfg.get('id')
+                if cfg_id is None:
+                    continue
+                int_cfg_id = int(cfg_id)
+                is_selected = int_cfg_id in selected_ids
+                existing_id = existing_assignments.get(int_cfg_id)
+                configurations_payload.append({
+                    "id": existing_id,
+                    "customerId": 1,
+                    "configurationId": int_cfg_id,
+                    "configurationName": cfg.get('name', ''),
+                    "fileId": int(file_id),
+                    "fileName": None,
+                    "upload": is_selected,
+                    "remove": False,
+                    "notify": existing_id is not None,
+                    "common": False
+                })
         
         body = {
             "fileId": int(file_id),

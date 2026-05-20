@@ -65,12 +65,12 @@ if (isset($_POST['bconfirm'])) {
 $f = new ValidatingForm();
 $f->push(new Table());
 
-$f->add(new TrFormElement(_T("Description", "mobile"), new InputTpl("description")));
-$f->add(new TrFormElement(_T("External", "mobile"), new CheckboxTpl("external")));
 $fileNameLabel = $external ? _T("URL", "mobile") : _T("File name", "mobile");
 $f->add(new TrFormElement($fileNameLabel, new InputTpl("file_name")));
 $f->add(new TrFormElement(_T("Path on device", "mobile"), new InputTpl("path_device")));
+$f->add(new TrFormElement(_T("Description", "mobile"), new InputTpl("description")));
 $f->add(new TrFormElement(_T("Variable content", "mobile"), new CheckboxTpl("variable_content")));
+$f->add(new TrFormElement(_T("External", "mobile"), new CheckboxTpl("external")));
 
 $f->pop();
 $f->addButton("bconfirm", _T("Save", "mobile"));
@@ -86,6 +86,6 @@ jQuery(function() {
     jQuery('input[name="variable_content"]').prop('checked', <?php echo $variableContent ? 'true' : 'false'; ?>);
     
     //cancel button
-    jQuery('input[name="bconfirm"]').after('<input type="button" class="btnSecondary" value="<?php echo _T("Cancel", "mobile"); ?>" onclick="location.href=\'main.php?module=mobile&submod=mobile&action=files\';" />');
+    jQuery('input[name="bconfirm"]').after('<input type="button" class="btnSecondary" style="margin-left:8px;" value="<?php echo _T("Cancel", "mobile"); ?>" onclick="location.href=\'main.php?module=mobile&submod=mobile&action=files\';" />');
 });
 </script>

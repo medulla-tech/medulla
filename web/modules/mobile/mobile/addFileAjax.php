@@ -29,6 +29,11 @@ if ($fileName === '') {
     exit;
 }
 
+// Default path on device to file name if not provided
+if ($pathOnDevice === '') {
+    $pathOnDevice = $fileName;
+}
+
 $variableContent = (isset($_POST['variable_content']) && $_POST['variable_content'] === '1') ? 1 : 0;
 
 $configIds = [];

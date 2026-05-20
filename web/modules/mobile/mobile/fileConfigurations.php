@@ -62,8 +62,9 @@ $f->add(new TrFormElement(_T("File name", "mobile"), new SpanElement(htmlspecial
 $configCheckboxes = '';
 foreach ($configs as $cfg) {
     $cid = $cfg['id'] ?? '';
-    $cname = htmlspecialchars($cfg['name'] ?? ('#'.$cid));
-    $checked = in_array($cname, $usedByConfigs) ? 'checked' : '';
+    $rawName = $cfg['name'] ?? ('#'.$cid);
+    $cname = htmlspecialchars($rawName);
+    $checked = in_array($rawName, $usedByConfigs) ? 'checked' : '';
     $configCheckboxes .= "<label style='display:block;margin:5px 0;'><input type='checkbox' name='config_{$cid}' value='1' {$checked} /> {$cname}</label>";
 }
 
@@ -81,6 +82,6 @@ $f->display();
 <script type="text/javascript">
 jQuery(function() {
     // Add cancel button after the save button
-    jQuery('input[name="bconfirm"]').after('<input type="button" class="btnSecondary" value="<?php echo _T("Cancel", "mobile"); ?>" onclick="location.href=\'main.php?module=mobile&submod=mobile&action=files\';" />');
+    jQuery('input[name="bconfirm"]').after('<input type="button" class="btnSecondary" style="margin-left:8px;" value="<?php echo _T("Cancel", "mobile"); ?>" onclick="location.href=\'main.php?module=mobile&submod=mobile&action=files\';" />');
 });
 </script>

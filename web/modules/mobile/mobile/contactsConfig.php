@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'password'        => isset($_POST['contacts_password']) ? $_POST['contacts_password'] : '',
             'accountType'     => isset($_POST['contacts_account_type']) ? trim($_POST['contacts_account_type']) : 'com.android.contacts',
             'syncInterval'    => isset($_POST['contacts_sync_interval']) ? intval($_POST['contacts_sync_interval']) : 60,
-            'wipeContacts'    => isset($_POST['contacts_wipe']),
+            'wipeContacts'    => isset($_POST['contacts_wipe']) && $_POST['contacts_wipe'] === '1',
         );
 
 
@@ -49,7 +49,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $result = xmlrpc_save_hmdm_contacts_config($contactsData);
         if ($result !== null && isset($result['status']) && strtoupper($result['status']) === 'OK') {
-            $notifyMessage = _T("Contacts configuration saved successfully", "mobile");
+            new NotifyWidgetSuccess(_T("Contacts configuration saved successfully", "mobile"));
+            header("Location: " . urlStrRedirect("mobile/mobile/contactsList"));
+            exit;
         } else {
             $notifyError = _T("Failed to save contacts configuration", "mobile");
         }
@@ -125,15 +127,22 @@ $form->add(new TrFormElement(
     "tooltip" => _T("How often the device re-syncs, in minutes. 0 = manual only.", "mobile")
 ));
 
+$wipeEnabled = isset($contactsConfig['wipeContacts']) && $contactsConfig['wipeContacts'];
+$wipeHtml = '<label style="margin-right:16px;">'
+    . '<input type="radio" name="contacts_wipe" value="0"' . (!$wipeEnabled ? ' checked' : '') . '> '
+    . _T("Disabled", "mobile") . '</label>'
+    . '<label>'
+    . '<input type="radio" name="contacts_wipe" value="1"' . ($wipeEnabled ? ' checked' : '') . '> '
+    . _T("Enabled", "mobile") . '</label>';
+
 $form->add(new TrFormElement(
     _T("Wipe contacts before import", "mobile"),
-    new CheckboxTpl("contacts_wipe"),
-    array("tooltip" => _T("If checked, the device will wipe all existing contacts before importing from the VCF URL", "mobile"))
-), array("value" => (isset($contactsConfig['wipeContacts']) && $contactsConfig['wipeContacts']) ? 'checked' : ''));
+    new SpanElement($wipeHtml)
+));
 
 $form->pop();
 
 $form->addButton("bsave",   _T("Save", "mobile"));
-$form->addButton("bcancel", _T("Cancel", "mobile"));
+$form->addButton("bcancel", _T("Cancel", "mobile"), "btnSecondary");
 $form->display();
 ?>
