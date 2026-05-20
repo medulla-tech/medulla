@@ -108,6 +108,33 @@ class ContractRequiredBox
 }
 
 /**
+ * Displays a service unavailable message when runtime access checks fail.
+ */
+class ServiceUnavailableBox
+{
+    public static function show()
+    {
+        echo '<div style="display: flex; align-items: center; justify-content: center; min-height: 60vh; margin-left: -80px;">';
+        echo '<div class="empty-state-box" style="max-width: 700px; margin: 0; text-align: left; padding: 40px 48px;">';
+
+        echo '<div class="empty-state-box-title" style="text-align: center; font-size: 18px; margin-bottom: 24px;">';
+        echo _T("Security service is currently unavailable.", "base");
+        echo '</div>';
+
+        echo '<div class="empty-state-box-description" style="font-size: 13.5px; line-height: 1.7;">';
+        echo '<p style="margin-bottom: 16px;">' . _T("The CVE Central service could not validate access at this time.", "base") . '</p>';
+        echo '<p style="margin-bottom: 16px;">' . _T("Please verify connectivity and security module configuration, then try again.", "base") . '</p>';
+        echo '<p style="margin-top: 20px; padding-top: 16px; border-top: 1px solid #eee;">' . sprintf(
+            _T("If the problem persists, contact support at: %s", "base"),
+            '<a href="mailto:medulla@medulla-tech.io" style="color: #3c8dbc; font-weight: 600;">medulla@medulla-tech.io</a>'
+        ) . '</p>';
+        echo '</div>';
+        echo '</div>';
+        echo '</div>';
+    }
+}
+
+/**
  * Reusable bulk select bar for list pages.
  *
  * Adds checkbox-based multi-selection to any ListInfos table, with a toggle icon,
@@ -372,4 +399,3 @@ class BulkSelectBar
 SCRIPT;
     }
 }
-?>

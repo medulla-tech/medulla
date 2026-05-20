@@ -235,6 +235,60 @@ def get_config(key=None):
     return config_dict
 
 
+def get_contract_status():
+    """Return effective access status for Security module.
+
+    Reads the .ini file directly on each call so configuration changes
+    (notably the AES key) are picked up without restarting mmc-agent.
+
+    Returns:
+        dict with:
+          - configured (bool)
+          - has_access (bool)
+          - reason (str)
+    """
+    import configparser
+    from mmc.plugins.security.scanner import CVECentralClient
+
+    parser = configparser.ConfigParser()
+    parser.read(['/etc/mmc/plugins/security.ini', '/etc/mmc/plugins/security.ini.local'])
+
+    if not parser.has_section('cve_central'):
+        return {'configured': False, 'has_access': False, 'reason': 'not_configured'}
+
+    url = parser.get('cve_central', 'url', fallback='').strip()
+    server_id = parser.get('cve_central', 'server_id', fallback='').strip()
+    aes_key = parser.get('cve_central', 'keyAES32', fallback='').strip()
+
+    if not all([url, server_id, aes_key]):
+        return {'configured': False, 'has_access': False, 'reason': 'not_configured'}
+
+    try:
+        client = CVECentralClient(url, server_id, aes_key)
+        runtime_status = client.get_access_status()
+        reason = runtime_status.get('reason', 'access_denied')
+
+        # Business mapping:
+        # Treat any credential issue as a missing contract so the user is
+        # prompted to contact support rather than seeing a generic "service
+        # unavailable" message that suggests a transient outage.
+        if reason in ('unknown_server', 'decrypt_failed', 'server_mismatch'):
+            reason = 'contract_required'
+
+        return {
+            'configured': True,
+            'has_access': bool(runtime_status.get('authorized')),
+            'reason': reason
+        }
+    except Exception as e:
+        logger.warning(f"Unable to evaluate contract status: {e}")
+        return {
+            'configured': True,
+            'has_access': False,
+            'reason': 'service_unreachable'
+        }
+
+
 def get_policies():
     """Get current policies (merged from DB + ini files).
 

@@ -254,6 +254,54 @@ class CVECentralClient:
         encrypted = cipher.encrypt(padded)
         return base64.b64encode(iv + encrypted).decode('utf-8')
 
+    def get_access_status(self) -> Dict[str, Any]:
+        """Check runtime access against CVE Central access endpoint."""
+        try:
+            timestamp = str(int(time.time()))
+            signature = self._generate_auth_token()
+            url = f"{self.base_url}/access/status"
+            response = self.session.post(url, json={
+                'server_id': self.server_id,
+                'signature': signature,
+                'timestamp': timestamp
+            }, timeout=10)
+
+            if response.status_code == 200:
+                payload = response.json() if response.content else {}
+                return {
+                    'reachable': True,
+                    'authorized': True,
+                    'reason': payload.get('status', 'active')
+                }
+
+            if response.status_code == 403:
+                payload = response.json() if response.content else {}
+                return {
+                    'reachable': True,
+                    'authorized': False,
+                    'reason': payload.get('reason', 'access_denied')
+                }
+
+            if response.status_code == 404:
+                return {
+                    'reachable': True,
+                    'authorized': False,
+                    'reason': 'endpoint_unavailable'
+                }
+
+            return {
+                'reachable': True,
+                'authorized': False,
+                'reason': f'http_{response.status_code}'
+            }
+        except Exception as e:
+            logger.warning(f"CVE Central access status check failed: {e}")
+            return {
+                'reachable': False,
+                'authorized': False,
+                'reason': 'service_unreachable'
+            }
+
     def test_connection(self) -> bool:
         """Test connection to CVE Central API via health check."""
         try:
