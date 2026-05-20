@@ -111,7 +111,10 @@
   ('Technician',  'updates_ro', 'ro'),
   ('Technician',  'updates_rw', 'rw'),
   ('Super-Admin', 'admin_superadmin', 'rw'),
+  ('Super-Admin', 'admin_admin', 'rw'),
+  ('Super-Admin', 'admin_technician', 'ro'),
   ('Admin',       'admin_admin', 'rw'),
+  ('Admin',       'admin_technician', 'ro'),
   ('Technician',  'admin_technician', 'ro'),
   ('Super-Admin', 'history', 'ro'),
   ('Admin',       'history', 'ro'),
@@ -119,7 +122,9 @@
   ('Super-Admin', 'computer_management_ro', 'ro'),
   ('Super-Admin', 'computer_management_rw', 'rw'),
   ('Admin',       'computer_management_ro', 'ro'),
+  ('Admin',       'computer_management_rw', 'rw'),
   ('Technician',  'computer_management_ro', 'ro'),
+  ('Technician',  'computer_management_rw', 'rw'),
   ('Super-Admin', 'acl_management', 'rw');
 
   UPDATE version SET Number = 13;
