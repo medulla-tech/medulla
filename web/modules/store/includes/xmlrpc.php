@@ -54,6 +54,10 @@ function xmlrpc_get_store_config($key = null) {
     return xmlCall("store.get_store_config", array($key));
 }
 
+function xmlrpc_get_contract_status() {
+    return xmlCall("store.get_contract_status", array());
+}
+
 function xmlrpc_get_auth_uuid() {
     return xmlCall("store.get_auth_uuid", array());
 }

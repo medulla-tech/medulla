@@ -317,6 +317,68 @@ def get_auth_uuid():
     config = StoreConfig("store")
     return config.auth_uuid or ""
 
+def get_contract_status():
+    """Vérifie en temps réel auprès du store API que le client est autorisé.
+
+    Calque le pattern du module security (get_contract_status). Renvoie un
+    dict avec :
+      - configured (bool) : ini renseigné (URL + keyAES32)
+      - has_access (bool) : le serveur store confirme l'accès
+      - reason (str)      : 'active', 'client_inactive', 'unknown_client',
+                            'decrypt_failed', 'token_expired',
+                            'service_unreachable', 'not_configured'...
+    """
+    config = StoreConfig("store")
+
+    if not config.store_api_url or not config.store_api_keyAES32:
+        return {'configured': False, 'has_access': False, 'reason': 'not_configured'}
+
+    url = config.store_api_url.rstrip('/') + '/access/status'
+    headers = {'Accept': 'application/json'}
+    auth = _generate_auth_header(config)
+    if auth:
+        headers['Authorization'] = auth
+
+    req = urllib.request.Request(url, headers=headers, method='GET')
+
+    ssl_context = None
+    if config.store_api_skip_ssl:
+        ssl_context = ssl.create_default_context()
+        ssl_context.check_hostname = False
+        ssl_context.verify_mode = ssl.CERT_NONE
+
+    try:
+        with urllib.request.urlopen(req, timeout=config.store_api_timeout, context=ssl_context) as response:
+            payload = json.loads(response.read().decode('utf-8'))
+            return {
+                'configured': True,
+                'has_access': bool(payload.get('success')),
+                'reason': payload.get('status', 'active')
+            }
+    except urllib.error.HTTPError as e:
+        # 403 attendu quand le client n'est pas autorisé : on lit le body pour
+        # récupérer la raison fine renvoyée par l'API.
+        try:
+            payload = json.loads(e.read().decode('utf-8'))
+            return {
+                'configured': True,
+                'has_access': False,
+                'reason': payload.get('reason', f'http_{e.code}')
+            }
+        except Exception:
+            return {
+                'configured': True,
+                'has_access': False,
+                'reason': f'http_{e.code}'
+            }
+    except Exception as e:
+        logger.warning(f"Store access status check failed: {e}")
+        return {
+            'configured': True,
+            'has_access': False,
+            'reason': 'service_unreachable'
+        }
+
 def get_client_info():
     """Return current client info from store API"""
     result = _store_api_get('client')

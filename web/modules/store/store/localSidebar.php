@@ -22,7 +22,9 @@
  */
 require_once("modules/store/includes/xmlrpc.php");
 
-$hasContract = xmlrpc_get_store_config('configured');
+$contractStatus = xmlrpc_get_contract_status();
+$hasContract = !empty($contractStatus['has_access']);
+$contractStatusReason = isset($contractStatus['reason']) ? $contractStatus['reason'] : '';
 
 $sidemenu = new SideMenu();
 $sidemenu->setClass("store");
