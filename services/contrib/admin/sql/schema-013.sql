@@ -55,6 +55,17 @@
   ('store_rw', 'Store - gestion (abonner, déployer)', 'Abonnement aux logiciels|Désabonnement|Déploiement depuis le Store|Sélection
   machines/groupes', 'deployment', 0, 'store#store#startDeploy', 'rw');
 
+  -- Security > Settings tabs: 4-segment tab ACLs required by hasCorrectTabAcl()
+  -- (TabbedPageGenerator tabs are not declared in infoPackage, so they are not
+  -- auto-exempted; they must be granted explicitly on computer_management_rw).
+  INSERT INTO acl_feature_definitions (feature_key, label, description, category, superadmin_only, acl_entry, access_type) VALUES
+  ('computer_management_rw', 'Postes - gestion (VNC, suppression, scans...)', 'VNC|Suppression de machines|Configuration|Scans de sécurité|Exclusions CVE|Paramètres sécurité', 'security', 0, 'security#security#settings#tabfilters', 'rw'),
+  ('computer_management_rw', 'Postes - gestion (VNC, suppression, scans...)', 'VNC|Suppression de machines|Configuration|Scans de sécurité|Exclusions CVE|Paramètres sécurité', 'security', 0, 'security#security#settings#tabcves', 'rw'),
+  ('computer_management_rw', 'Postes - gestion (VNC, suppression, scans...)', 'VNC|Suppression de machines|Configuration|Scans de sécurité|Exclusions CVE|Paramètres sécurité', 'security', 0, 'security#security#settings#tabsoftware', 'rw'),
+  ('computer_management_rw', 'Postes - gestion (VNC, suppression, scans...)', 'VNC|Suppression de machines|Configuration|Scans de sécurité|Exclusions CVE|Paramètres sécurité', 'security', 0, 'security#security#settings#tabvendors', 'rw'),
+  ('computer_management_rw', 'Postes - gestion (VNC, suppression, scans...)', 'VNC|Suppression de machines|Configuration|Scans de sécurité|Exclusions CVE|Paramètres sécurité', 'security', 0, 'security#security#settings#tabmachines', 'rw'),
+  ('computer_management_rw', 'Postes - gestion (VNC, suppression, scans...)', 'VNC|Suppression de machines|Configuration|Scans de sécurité|Exclusions CVE|Paramètres sécurité', 'security', 0, 'security#security#settings#tabgroups', 'rw');
+
   -- Pre-assign Store features to existing profiles
   INSERT IGNORE INTO acl_profile_features (profile_name, feature_key, access_level) VALUES
   ('Super-Admin', 'dashboard_user_widgets', 'ro'),
