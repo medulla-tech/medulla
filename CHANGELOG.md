@@ -1,5 +1,13 @@
 # Change Log
 
+## [5.6.0](https://github.com/medulla-tech/medulla/releases/tag/5.6.0) (2026-05-26)
+- [FEATURE] Management of ACLs in Medulla Admin module
+- [FEATURE] Access to Medulla Store for subscribing to ready-made up-to-date packages (preview)
+- [BUGFIX]  UI improvements on Updates module
+- [BUGFIX]  Fix counters on Updates module
+- [BUGFIX]  Fix approval of updates when multiple entities are present
+- [BUGFIX]  Improve mechanism for matching between machine and entity
+
 ## [5.5.2](https://github.com/medulla-tech/medulla/releases/tag/5.5.2) (2026-04-25)
 - [FEATURE] UI: Allow resizing columns in tables
 - [FEATURE] Add a checkbox to hide windows updates from packages list

@@ -43,15 +43,15 @@ def activate():
 
 def _generate_auth_header(config):
     """Generate AES-256-CBC encrypted auth header (same pattern as security module)"""
-    if not config.store_api_keyAES32 or not config.client_uuid:
+    if not config.store_api_keyAES32:
         return None
     key = config.store_api_keyAES32.encode('utf-8')
-    plaintext = f"{config.client_uuid}:{int(time.time())}"
+    plaintext = f"{config.auth_uuid}:{int(time.time())}"
     iv = os.urandom(16)
     cipher = AES.new(key, AES.MODE_CBC, iv)
     encrypted = cipher.encrypt(pad(plaintext.encode('utf-8'), AES.block_size))
     signature = base64.b64encode(iv + encrypted).decode('utf-8')
-    return f'Bearer {config.client_uuid}:{signature}'
+    return f'Bearer {config.auth_uuid}:{signature}'
 
 def _store_api_get(endpoint, params=None):
     """Call the remote store API
@@ -305,17 +305,79 @@ def get_store_config(key=None):
     config = StoreConfig("store")
     config_dict = {
         'store_api_url': config.store_api_url or '',
-        'client_uuid': config.client_uuid or '',
-        'configured': bool(config.store_api_url and config.store_api_keyAES32 and config.client_uuid),
+        'auth_uuid': config.auth_uuid or '',
+        'configured': bool(config.store_api_url and config.store_api_keyAES32),
     }
     if key:
         return config_dict.get(key, '')
     return config_dict
 
-def get_client_uuid():
-    """Return the client UUID configured in store.ini"""
+def get_auth_uuid():
+    """Return the auth UUID derived from the AES key. Pas configuré : calculé."""
     config = StoreConfig("store")
-    return config.client_uuid or ""
+    return config.auth_uuid or ""
+
+def get_contract_status():
+    """Vérifie en temps réel auprès du store API que le client est autorisé.
+
+    Calque le pattern du module security (get_contract_status). Renvoie un
+    dict avec :
+      - configured (bool) : ini renseigné (URL + keyAES32)
+      - has_access (bool) : le serveur store confirme l'accès
+      - reason (str)      : 'active', 'client_inactive', 'unknown_client',
+                            'decrypt_failed', 'token_expired',
+                            'service_unreachable', 'not_configured'...
+    """
+    config = StoreConfig("store")
+
+    if not config.store_api_url or not config.store_api_keyAES32:
+        return {'configured': False, 'has_access': False, 'reason': 'not_configured'}
+
+    url = config.store_api_url.rstrip('/') + '/access/status'
+    headers = {'Accept': 'application/json'}
+    auth = _generate_auth_header(config)
+    if auth:
+        headers['Authorization'] = auth
+
+    req = urllib.request.Request(url, headers=headers, method='GET')
+
+    ssl_context = None
+    if config.store_api_skip_ssl:
+        ssl_context = ssl.create_default_context()
+        ssl_context.check_hostname = False
+        ssl_context.verify_mode = ssl.CERT_NONE
+
+    try:
+        with urllib.request.urlopen(req, timeout=config.store_api_timeout, context=ssl_context) as response:
+            payload = json.loads(response.read().decode('utf-8'))
+            return {
+                'configured': True,
+                'has_access': bool(payload.get('success')),
+                'reason': payload.get('status', 'active')
+            }
+    except urllib.error.HTTPError as e:
+        # 403 attendu quand le client n'est pas autorisé : on lit le body pour
+        # récupérer la raison fine renvoyée par l'API.
+        try:
+            payload = json.loads(e.read().decode('utf-8'))
+            return {
+                'configured': True,
+                'has_access': False,
+                'reason': payload.get('reason', f'http_{e.code}')
+            }
+        except Exception:
+            return {
+                'configured': True,
+                'has_access': False,
+                'reason': f'http_{e.code}'
+            }
+    except Exception as e:
+        logger.warning(f"Store access status check failed: {e}")
+        return {
+            'configured': True,
+            'has_access': False,
+            'reason': 'service_unreachable'
+        }
 
 def get_client_info():
     """Return current client info from store API"""

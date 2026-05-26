@@ -30,15 +30,14 @@ $p = new PageGenerator(_T("Subscriptions", 'store'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
-// Get client UUID and info
-$clientUuid = xmlrpc_get_client_uuid();
+// Get client info (auth_uuid est dérivé de keyAES32, plus à configurer)
 $clientInfo = xmlrpc_get_client_info();
 
 // Check if client is configured
-if (empty($clientUuid) || !$clientInfo) {
+if (!$clientInfo) {
     echo '<div class="alert alert-warning" style="padding: 20px; background: #fcf8e3; border: 1px solid #faebcc; border-radius: 4px; margin: 20px 0;">';
     echo '<strong>' . _T('Configuration required', 'store') . '</strong><br>';
-    echo _T('Client UUID is not configured in store.ini or client not found in database.', 'store');
+    echo _T('keyAES32 is not configured in store.ini or the derived client was not found in the store database.', 'store');
     echo '</div>';
     exit;
 }
