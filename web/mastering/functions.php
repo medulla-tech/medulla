@@ -316,8 +316,13 @@ function has_machine_criterion($id, $query){
     return ($datas != []) ? true : false;
 }
 
-
+/**
+ * This function print a "by default" boot menu
+ */
 function normalBoot(){
-    print("exit");
+    print("#!ipxe
+sanboot || exit
+");
     exit;
 }
+?>

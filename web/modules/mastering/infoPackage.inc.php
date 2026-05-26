@@ -143,6 +143,34 @@ $page->setFile("modules/mastering/mastering/deleteAction.php");
 $page->setOptions(array("visible"=>False, "noHeader"=>True));
 $submod->addPage($page);
 
+
+// List of configured scripts for entity
+$page = new Page("scripts", _T("List of Scripts", "mastering"));
+$page->setFile("modules/mastering/mastering/scripts.php");
+$submod->addPage($page);
+
+$page = new Page("ajaxScripts", _T("List of Scripts", "mastering"));
+$page->setFile("modules/mastering/mastering/ajaxScripts.php");
+$page->setOptions(array("visible"=>False, "noHeader"=>True));
+$submod->addPage($page);
+
+$page = new Page("deleteScript", _T("Delete Script", "mastering"));
+$page->setFile("modules/mastering/mastering/deleteScript.php");
+$page->setOptions(array("visible"=>False, "noHeader"=>True));
+$submod->addPage($page);
+
+
+// List of configured actions for entity
+$page = new Page("newScript", _T("New Script", "mastering"));
+$page->setFile("modules/mastering/mastering/newScript.php");
+$submod->addPage($page);
+
+$page = new Page("ajaxNewScript", _T("New Script", "mastering"));
+$page->setFile("modules/mastering/mastering/ajaxNewScript.php");
+$page->setOptions(array("visible"=>False, "noHeader"=>True));
+$submod->addPage($page);
+
+
 $mod->addSubmod($submod);
 
 $MMCApp =& MMCApp::getInstance();

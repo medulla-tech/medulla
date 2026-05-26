@@ -3,6 +3,8 @@ require("graph/navbar.inc.php");
 require("localSidebar.php");
 require_once("modules/mastering/includes/xmlrpc.php");
 
+global $maxperpage;
+
 $id = (isset($_GET["id"])) ? htmlentities($_GET["id"]) : "";
 $gid = (isset($_GET["gid"])) ? htmlentities($_GET["gid"]) : "";
 $uuid = (isset($_GET["uuid"])) ? htmlentities($_GET["uuid"]) : "";

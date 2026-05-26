@@ -29,7 +29,7 @@ echo '<p>'.sprintf(_T("Reference Server : %s", "mastering"), $server).'</p>';
 echo '</div>';
 
 
-$actions = xmlrpc_get_actions_for_entity($entity, $start, $maxperpage, $filter);
+$actions = (array)xmlrpc_get_actions_for_entity($entity, $start, $maxperpage, $filter);
 
 $actionResult = new ActionItem(_T("Show results", "mastering"), "results", "display", "mastering", "mastering", "mastering");
 $actionResultGroup = new ActionItem(_T("Show results", "mastering"), "resultsGroup", "display", "mastering", "mastering", "mastering");
@@ -78,6 +78,8 @@ foreach($datas as $action){
     $timeStart = strtotime($action["date_start"]);
     $timeEnd = strtotime($action["date_end"]);
     $timeNow = time();
+
+    $status = $action["status"];
 
     $actionStatuses[] = ($action["status"] == "TODO" && $timeEnd < $timeNow) ? _T("Expired","mastering") : $action["status"];
 

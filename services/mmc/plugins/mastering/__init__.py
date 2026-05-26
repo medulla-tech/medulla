@@ -232,3 +232,45 @@ def delete_master(server, entity, masterId):
 
 def delete_action(_id):
     return MasteringDatabase().delete_action(_id)
+
+def get_mastering_scripts_list(server, entity, start=0, end=-1, _filter=""):
+    """
+    Get the scripts (the postinstall script in the former imaging plugin) associated to the entity.
+
+    Args:
+        server (str): the server jid associated to the entity
+        entity (str or int): the entity id, can be a string starting with "UUID" or an integer
+        start (int): the index of the first mastering script to retrieve (for pagination)
+        end (int): the index of the last mastering script to retrieve (for pagination)
+        _filter (str): a filter string to apply to the mastering scripts (e.g., to search for specific scripts)
+
+    Returns:
+        list: a list of mastering scripts associated to the entity, each script is represented as a dictionary with its details (e.g., id, name, content, etc.)
+    """
+
+    # Normalize the entity id:
+    if isinstance(entity, str):
+        if entity.startswith("UUID"):
+            entity = entity.replace("UUID", "")
+        entity = int(entity)
+
+    return MasteringDatabase().get_mastering_scripts_list(server, entity, start, end, _filter)
+
+
+def add_mastering_script(server, entity, name, description, content):
+    # Normalize entity
+    if isinstance(entity, str):
+        if entity.startswith("UUID"):
+            entity = entity.replace("UUID", "")
+        entity = int(entity)
+
+    return MasteringDatabase().add_mastering_script(server, entity, name, description, content)
+
+def get_summary_scripts_list(entity):
+    # Normalize entity
+    if isinstance(entity, str):
+        if entity.startswith("UUID"):
+            entity = entity.replace("UUID", "")
+        entity = int(entity)
+
+    return MasteringDatabase().get_summary_scripts_list(entity)

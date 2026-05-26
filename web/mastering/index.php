@@ -165,18 +165,49 @@ $bind3["startdate"] = $datenow;
 $bind3["enddate"] = $datenow;
 
 if($known){
+    // Previous request...
+    // $sql3= "SELECT
+    //     actions.*,
+    //     servers.jid
+    // from actions
+    // join servers on actions.server_id=servers.id
+    // where
+    //     actions.status = :status
+    //     and actions.date_start <= :startdate
+    //     and actions.date_end > :enddate
+    //     and (actions.uuid = :uuid ";
+
+    // $bind3["uuid"] = $uuid;
+
+
     $sql3= "SELECT
-        actions.*,
+        distinct(actions.id),
+        actions.server_id,
+        actions.entity_id,
+        actions.gid,
+        coalesce(results.uuid, actions.uuid) as uuid,
+        actions.target,
+        actions.name,
+        actions.config,
+        actions.content,
+        coalesce(actionStatus.status, actions.status) as status,
+        actions.date_creation,
+        actions.date_start,
+        actions.date_end,
         servers.jid
     from actions
     join servers on actions.server_id=servers.id
+    left join results on results.action_id = actions.id
+    left join actionStatus on actions.id = actionStatus.action_id and actionStatus.uuid=:uuid1
     where
-        actions.status = :status
+        (coalesce(actionStatus.status, actions.status) = :status
         and actions.date_start <= :startdate
         and actions.date_end > :enddate
-        and (actions.uuid = :uuid ";
+        and actions.uuid = :uuid2 ";
 
-    $bind3["uuid"] = $uuid;
+    $bind3["uuid1"] = $uuid;
+    $bind3["uuid2"] = $uuid;
+
 
     if($gids != []){
         $grps_str = implode(',', $gids);
@@ -201,6 +232,7 @@ else{
     $bind3["jid"] = $jid;
     $sql3 .=" order by actions.date_start ASC";
 }
+
 
 $q3 = $db["mastering"]->prepare($sql3);
 try{
@@ -324,7 +356,7 @@ $ipxe .= "item protected Auth\n";
 $ipxe .= "choose --default continue --timeout 15000 target && goto \${target}\n";
 
 $ipxe .= ":ACTION\n";
-$ipxe .= $ipxeAction."|| exit\n";
+$ipxe .= $ipxeAction."|| sanboot\n";
 
 $ipxe .=":protected\n";
 $ipxe .= "login || goto \${loaded-menu}\n";
@@ -332,9 +364,8 @@ $ipxe .= "iseq \${username} $pxeLogin && iseq \${password} $pxePassword && set l
 $ipxe .= "goto \${loaded-menu}\n";
 
 $ipxe .= ":clonezilla\n";
-$ipxe .= $ipxeAction."|| exit";
+$ipxe .= $ipxeAction."|| sanboot";
 
 print($ipxe);
-
 exit;
 ?>

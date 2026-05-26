@@ -24,7 +24,7 @@ function xmlrpc_get_machines_list_for_mastering($start, $limit, $entity, $filter
 
 /**
  * Get the reference server for the specified entity
- * @param $entity (array) the parents entities we want to know its server
+ * @param $entities (array) the parents entities we want to know its server
  *
  * @return (string) : the jid of the server associated to the entity
  */
@@ -73,4 +73,17 @@ function xmlrpc_delete_action($id){
     return xmlCall("mastering.delete_action", [$id]);
 }
 
+
+function xmlrpc_get_mastering_scripts_list($server, $entity, $start=0, $end=-1, $filter=""){
+    return xmlCall("mastering.get_mastering_scripts_list", [$server, $entity, $start, $end, $filter]);
+}
+
+function xmlrpc_add_mastering_script($server, $entity, $name, $description, $content){
+    return xmlCall("mastering.add_mastering_script", [$server, $entity, $name, $description, $content]);
+}
+
+function xmlrpc_get_summary_scripts_list($entity){
+    return xmlCall("mastering.get_summary_scripts_list", [$entity]);
+
+}
 ?>

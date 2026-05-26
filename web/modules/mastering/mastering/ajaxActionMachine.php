@@ -52,7 +52,7 @@ echo '<p>'.sprintf(_T("Reference Server : %s", "mastering"), $server).'</p>';
 echo '</div>';
 $masteringAction = new ActionPopupItem(_T("Create Master", "mastering"), "createMaster", "start", "createMaster", "mastering", "mastering");
 
-$datas = xmlrpc_get_machines_list_for_mastering($start, $maxperpage, $entity, $filter);
+$datas = (array)xmlrpc_get_machines_list_for_mastering($start, $maxperpage, $entity, $filter);
 
 $actionListAction = new ActionItem(_T("Show Actions", "mastering"), "actionListMachine", "display", "actionList", "mastering", "mastering");
 $masteringAction = new ActionPopupItem(_T("Create Master", "mastering"), "createMaster", "start", "createMaster", "mastering", "mastering");
@@ -95,9 +95,9 @@ echo '<div id="popup-action">';
     echo '</header>';
 
     echo '<ul id="popup-action-content">';
-        echo $registerAction->display("register",  ["server"=>$server, "entity"=>$entity]);
-        echo $masteringAction->display("create-master",  ["server"=>$server, "entity"=>$entity]);
-        echo $deployAction->display("deploy-master",  ["server"=>$server, "entity"=>$entity]);
+        $registerAction->display("register",  ["server"=>$server, "entity"=>$entity]);
+        $masteringAction->display("create-master",  ["server"=>$server, "entity"=>$entity]);
+        $deployAction->display("deploy-master",  ["server"=>$server, "entity"=>$entity]);
     echo '</ul>';
 echo '</div>';
 

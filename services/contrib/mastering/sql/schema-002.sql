@@ -87,21 +87,15 @@ CREATE TABLE if not exists`results` (
 DROP TABLE IF EXISTS `scripts`;
 CREATE TABLE if not exists`scripts` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `type` varchar(50) default "",
+  `entity_id` int(11) NOT NULL DEFAULT 0,
   `name` varchar(50) NOT NULL,
+  `description` varchar(255) DEFAULT '',
   `content` text DEFAULT '',
   `creation_date` datetime DEFAULT current_timestamp(),
   `modification_date` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 );
 
-DROP TABLE IF EXISTS `scriptsEntities`;
-CREATE TABLE if not exists `scriptsEntities` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `id_script` int(11) NOT NULL,
-  `id_entity` varchar(50) NOT NULL,
-  PRIMARY KEY (`id`)
-);
 
 drop table if exists `actionStatus`;
 create table if not exists actionStatus(

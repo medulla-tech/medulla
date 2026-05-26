@@ -11,7 +11,7 @@ $masterId = (isset($_GET["id"])) ? htmlentities($_GET["id"]) : "";
 $masterName = (isset($_GET["name"])) ? htmlentities($_GET["name"]) : "";
 
 if(isset($_POST["bconfirm"])){
-    $result = xmlrpc_delete_master($server, $entity, $masterId);
+    $result = (array)xmlrpc_delete_master($server, $entity, $masterId);
 
 
     if(isset($result["status"]) && $result["status"] == 0){
@@ -36,3 +36,4 @@ $f->addValidateButton("bconfirm");
 $f->addOnClickButton(_T("Cancel", "admin"), urlStrRedirect("mastering/mastering/masters"));
 
 $f->display();
+?>

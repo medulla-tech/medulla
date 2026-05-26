@@ -16,7 +16,7 @@ $gid = (isset($_GET["gid"])) ? htmlentities($_GET["gid"]) : "";
 $type = (isset($_GET["type"])) ? htmlentities($_GET["type"]) : "";
 $name = (isset($_GET["name"])) ? htmlentities($_GET["name"]) : "";
 
-$results = xmlrpc_get_action_results($id, $uuid, $start, $maxperpage, $filter);
+$results = (array)xmlrpc_get_action_results($id, $uuid, $start, $maxperpage, $filter);
 
 $count = $results["total"];
 $datas = $results["data"];
@@ -40,3 +40,4 @@ $n->setNavBar(new AjaxNavBar($count, $filter));
 $n->end = $count;
 $n->start = 0;
 $n->display();
+?>

@@ -15,7 +15,7 @@ if(!in_array($entity, $parentEntities)){
     // $parentEntities[] = $entity;
 }
 
-$server = xmlrpc_get_server_from_parent_entities($parentEntities);
+$server = (string)xmlrpc_get_server_from_parent_entities($parentEntities);
 
 echo '<div id="size-container">Space on '.$server.'</div>';
 
@@ -33,7 +33,7 @@ $shareActions = [];
 $editActions = [];
 $deleteActions = [];
 
-$datas = xmlrpc_get_masters_for_entity($entity, $start, $maxperpage, $filter);
+$datas = (array)xmlrpc_get_masters_for_entity($entity, $start, $maxperpage, $filter);
 $count = $datas["total"];
 $masters = $datas["data"];
 $params = [];
@@ -103,3 +103,4 @@ loadSize = () =>{
 
 loadSize()
 </script>
+?>

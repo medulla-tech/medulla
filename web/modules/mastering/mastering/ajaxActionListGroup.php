@@ -29,15 +29,14 @@ echo '<p>'.sprintf(_T("Reference Server : %s", "mastering"), $server).'</p>';
 echo '</div>';
 
 
-$actions = xmlrpc_get_actions_for_machine($uuid, $start, $maxperpage, $filter);
+$actions = (array)xmlrpc_get_actions_for_entity($entity, $start, $maxperpage, $filter);
 
 $actionResult = new ActionItem(_T("Show results", "mastering"), "results", "display", "mastering", "mastering", "mastering");
 $actionResultGroup = new ActionItem(_T("Show results", "mastering"), "resultsGroup", "display", "mastering", "mastering", "mastering");
 $actionEdit = new ActionItem(_T("Edit Action", "mastering"), "edit", "edit", "mastering", "mastering", "index");
 $actionEditDisabled = new EmptyActionItem(_T("Edit Action", "mastering"));
 
-$actionDelete = new ActionPopupItem(_T("Delete Action", "mastering"), "deleteAction", "delete", "mastering", "mastering", "mastering");
-$actionDelete->setWidth(0);
+$actionDelete = new ActionItem(_T("Delete Action", "mastering"), "delete", "delete", "mastering", "mastering", "index");
 $actionDeleteDisabled = new EmptyActionItem(_T("Delete Action", "mastering"));
 
 $actionResults = [];
@@ -47,6 +46,7 @@ $actionDeletes = [];
 $count = $actions["total"];
 $datas = $actions["data"];
 
+$elementIds = [];
 $elementNames = [];
 $elementTypes = [];
 $elementGids = [];
@@ -60,10 +60,11 @@ $actionDateCreations = [];
 $params = [];
 
 foreach($datas as $action){
+    $elementIds[] = $action["element_id"];
 
     // Set as variable to be reusable later
-    // $elementName = ($action["element_name"] == "N/P" && $action["uuid"] == "") ? _T("New Machine", "mastering"): $action["element_name"];
-    $elementNames[] = ($action["target"] == "") ? "N/P" : $action["target"];
+    $elementName = ($action["target"] == "") ? "N/P" : $action["target"];
+    $elementNames[] = $elementName;
 
     $elementGids[] = $action["gid"];
     $elementUuids[] = $action["uuid"];
@@ -84,34 +85,32 @@ foreach($datas as $action){
     // interface actions
     //
     $actionResults[] = ($action["gid"]) != "" ? $actionResultGroup : $actionResult;
-    $actionEdits[] = ($timeEnd < $timeNow || $action["status"] != "TODO") ? $actionEditDisabled : $actionEdit;
-    $actionDeletes[] = ($timeEnd < $timeNow || $action["status"] != "TODO") ? $actionDeleteDisabled : $actionDelete;
+    $actionEdits[] = ($timeEnd < $timeNow) ? $actionEditDisabled : $actionEdit;
+    $actionDeletes[] = ($timeEnd < $timeNow) ? $actionDeleteDisabled : $actionDelete;
 
     $params[] = [
         "id" => $action["id"],
         "uuid" => $action["uuid"],
         "gid" => $action["gid"],
-        "target" => $action["target"],
+        "elementName" => $elementName,
         "name" => $action["name"],
         "type" => $type,
         "server" => $server,
         "entity" =>$entity,
-        "from" =>"actionListMachine",
     ];
 }
 
 
-$n = new OptimizedListInfos( $actionNames, _T("Action", "mastering"));
+$n = new OptimizedListInfos( $elementNames, _T("Executed On", "glpi"));
 $n->setCssClass("mastering");
 // $n->disableFirstColumnActionLink();
 $n->setParamInfo($params);
 
 $n->addExtraInfo($elementTypes,   _T("Type", "mastering"));
-$n->addExtraInfo($elementNames, _T("Target", "mastering"));
 $n->addExtraInfo($elementGids, _T("Gid", "mastering"));
 $n->addExtraInfo($elementUuids, _T("Uuid", "mastering"));
 $n->addExtraInfo($actionDateCreations, _T("Creation Date", "mastering"));
-// $n->addExtraInfo($actionNames, _T("Action", "mastering"));
+$n->addExtraInfo($actionNames, _T("Action", "mastering"));
 $n->addExtraInfo($actionDateStarts, _T("Start Date", "mastering"));
 $n->addExtraInfo($actionDateEnds, _T("End Date", "mastering"));
 $n->addExtraInfo($actionStatuses, _T("Statuses", "mastering"));

@@ -22,8 +22,7 @@ $name = (isset($_GET["name"])) ? htmlentities($_GET["name"]) : "";
 $actionResult = new ActionItem(_T("Show results", "mastering"), "results", "display", "mastering", "mastering", "mastering");
 
 
-$results = xmlrpc_get_machines_action_results($id, $start, $maxperpage, $filter);
-// $results = xmlrpc_get_action_results($id, $uuid, $start, $maxperpage, $filter);
+$results = (array)xmlrpc_get_machines_action_results($id, $start, $maxperpage, $filter);
 
 $count = $results["total"];
 $datas = $results["data"];
@@ -66,3 +65,4 @@ $n->setParamInfo($params);
 $n->end = $count;
 $n->start = 0;
 $n->display();
+?>
