@@ -117,6 +117,7 @@ foreach ($conffiles as $module => $conffile) {
 $mac = (!empty($_GET['mac'])) ? htmlentities($_GET['mac'], ENT_QUOTES, 'UTF-8') : "";
 $srv = (!empty($_GET['srv'])) ? htmlentities($_GET['srv'], ENT_QUOTES, 'UTF-8') : "";
 $uuid = (!empty($_GET["uuid"])) ? strtolower(htmlentities($_GET["uuid"], ENT_QUOTES, 'UTF-8')) : "";
+$srvuuid=(!empty($_GET["srvuuid"])) ? htmlentities($_GET['srvuuid'], ENT_QUOTES, 'UTF-8') : "";
 
 $srvHost = "";
 if (inet_pton($srv) == true) {
@@ -184,7 +185,18 @@ boot || goto MENU
 // IMAGING SERVER INFOS
 //
 // Get imaging server infos
-if ($srvHost != "" || $srv != "") {
+// Get imaging server infos
+if($srvuuid != ""){
+    $query1 = $db['imaging']->prepare("SELECT * FROM ImagingServer ims
+    join Entity e on ims.fk_entity = e.id
+    where ims.packageserver_uuid =?
+    ");
+
+    // try to find on ip or hostname, the imagingserver url can point either on ip or hostname
+    $query1->execute([$srvuuid]);
+    $ims = $query1->fetch(PDO::FETCH_ASSOC);
+}
+else if ($srvHost != "" || $srv != "") {
     // Get ImagingServer infos
     $query1 = $db['imaging']->prepare("SELECT * FROM ImagingServer ims
     join Entity e on ims.fk_entity = e.id
