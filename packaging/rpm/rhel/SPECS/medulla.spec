@@ -697,6 +697,7 @@ This package contains Pulse 2 common files like documentation.
 %{_sbindir}/medulla_mysql_exec_uninstall_unnecessary_update_package.sh
 %{_sbindir}/medulla-generate-winupdate-packages
 %{_sbindir}/medulla-generate-winupdatemajor-packages
+%{_sbindir}/generate_medulla_agent.sh
 
 %_docdir/pulse2/contrib/
 %_datadir/mmc/conf/apache/pulse.conf
