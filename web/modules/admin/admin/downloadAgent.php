@@ -24,10 +24,9 @@ require_once "modules/admin/includes/xmlrpc.php";
 
 // POST: validate and redirect to download
 if (isset($_POST["bconfirm"])) {
-    $tag = $_POST['tag'] ?? '';
-    $os  = $_POST['os'] ?? 'windows';
-
-    $dl_tag = xmlrpc_get_dl_tag($tag);
+    $tag      = $_POST['tag'] ?? '';
+    $os       = $_POST['os'] ?? 'windows';
+    $entityId = $_POST['entityId'] ?? '';
 
     // Select filename based on OS
     if ($os === 'linux') {
@@ -36,9 +35,19 @@ if (isset($_POST["bconfirm"])) {
         $filename = 'Medulla-Agent-windows-FULL-latest.exe';
     }
 
-    $fs_path = "/var/lib/pulse2/medulla_agent/$dl_tag/$filename";
+    // Root entity (id == 0) is served the global agent; any other entity
+    // only gets its own dedicated agent (no fallback).
+    $isRoot = ($entityId !== '' && (int)$entityId === 0);
 
-    if (!is_file($fs_path)) {
+    if ($isRoot) {
+        $dir = ($os === 'linux') ? '/var/lib/pulse2/clients/lin' : '/var/lib/pulse2/clients/win';
+        $fs_path = "$dir/$filename";
+    } else {
+        $dl_tag  = xmlrpc_get_dl_tag($tag);
+        $fs_path = !empty($dl_tag) ? "/var/lib/pulse2/medulla_agent/$dl_tag/$filename" : '';
+    }
+
+    if ($fs_path === '' || !is_file($fs_path)) {
         new NotifyWidgetFailure(_("Agent file not found."));
         header("Location: " . urlStrRedirect("admin/admin/entitiesManagement", []));
         exit;
@@ -50,7 +59,8 @@ if (isset($_POST["bconfirm"])) {
     // Build URLs
     $downloadUrl = urlStrRedirect("admin/admin/downloadAgentFile", [
         "tag" => $tag,
-        "os" => $os
+        "os" => $os,
+        "entityId" => $entityId
     ]);
     $redirectUrl = urlStrRedirect("admin/admin/entitiesManagement", []);
 
@@ -65,7 +75,8 @@ if (isset($_POST["bconfirm"])) {
 }
 
 // GET: display popup form
-$tag = $_GET['tag'] ?? '';
+$tag      = $_GET['tag'] ?? '';
+$entityId = $_GET['entityId'] ?? '';
 
 $f = new PopupForm(_("Download Agent"));
 $f->push(new Table());
@@ -83,6 +94,10 @@ $f->add($tr);
 // Hidden field for tag
 $hidden = new HiddenTpl("tag");
 $f->add($hidden, array("value" => $tag, "hide" => true));
+
+// Hidden field for entity id (used to detect the root entity)
+$hiddenEntity = new HiddenTpl("entityId");
+$f->add($hiddenEntity, array("value" => $entityId, "hide" => true));
 
 $f->pop();
 $f->addValidateButton("bconfirm", _("Download"));

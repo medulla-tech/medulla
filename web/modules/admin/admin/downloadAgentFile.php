@@ -22,10 +22,9 @@
  */
 require_once "modules/admin/includes/xmlrpc.php";
 
-$tag = $_GET['tag'] ?? '';
-$os  = $_GET['os'] ?? 'windows';
-
-$dl_tag = xmlrpc_get_dl_tag($tag);
+$tag      = $_GET['tag'] ?? '';
+$os       = $_GET['os'] ?? 'windows';
+$entityId = $_GET['entityId'] ?? '';
 
 // Select filename and Content-Type based on OS
 if ($os === 'linux') {
@@ -36,9 +35,19 @@ if ($os === 'linux') {
     $contentType = 'application/x-msdownload';
 }
 
-$fs_path = "/var/lib/pulse2/medulla_agent/$dl_tag/$filename";
+// Root entity (id == 0) is served the global agent; any other entity
+// only gets its own dedicated agent (no fallback).
+$isRoot = ($entityId !== '' && (int)$entityId === 0);
 
-if (!is_file($fs_path)) {
+if ($isRoot) {
+    $dir = ($os === 'linux') ? '/var/lib/pulse2/clients/lin' : '/var/lib/pulse2/clients/win';
+    $fs_path = "$dir/$filename";
+} else {
+    $dl_tag  = xmlrpc_get_dl_tag($tag);
+    $fs_path = !empty($dl_tag) ? "/var/lib/pulse2/medulla_agent/$dl_tag/$filename" : '';
+}
+
+if ($fs_path === '' || !is_file($fs_path)) {
     http_response_code(404);
     exit('Not found');
 }
