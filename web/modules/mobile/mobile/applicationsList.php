@@ -31,9 +31,11 @@ var _appsBaseUrl = '<?php echo rtrim(urlStrRedirect("mobile/mobile/ajaxApplicati
 
 function _appsBuildUrl(filter, start, end, max) {
     var field = jQuery('#apps_field').val() || 'all';
+    var showSystem = jQuery('#apps_show_system').val() || '0';
     var url = _appsBaseUrl
         + '&filter=' + encodeURIComponent(filter)
         + '&field='  + encodeURIComponent(field)
+        + '&show_system=' + showSystem
         + '&maxperpage=' + (max || maxperpage);
     if (start !== undefined) url += '&start=' + start + '&end=' + end;
     return url;
@@ -57,8 +59,13 @@ jQuery(function() {
         + '<option value="package"><?php echo addslashes(_T("Package", "mobile")); ?></option>'
         + '<option value="version"><?php echo addslashes(_T("Version", "mobile")); ?></option>'
         + '</select>';
-    jQuery('#searchBest').prepend(fieldSel);
+    var systemSel = '<select id="apps_show_system">'
+        + '<option value="0"><?php echo addslashes(_T("User apps", "mobile")); ?></option>'
+        + '<option value="1"><?php echo addslashes(_T("All apps", "mobile")); ?></option>'
+        + '</select>';
+    jQuery('#searchBest').prepend(fieldSel + systemSel);
     jQuery('#apps_field').on('change', function() { pushSearch(); });
+    jQuery('#apps_show_system').on('change', function() { pushSearch(); });
     var $h2 = jQuery('h2').first();
     $h2.wrap('<div style="display:flex;align-items:center;justify-content:space-between;"></div>');
     $h2.after(
