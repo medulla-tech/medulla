@@ -14,118 +14,134 @@ if ((isset($_POST['search']) || isset($_GET['device'])) && $device_number) {
     $device_info = xmlrpc_get_hmdm_detailed_info($device_number);
 }
 
+$dynData = isset($device_info['latestDynamicData']) ? $device_info['latestDynamicData'] : [];
+$hasGPS = !empty($dynData['gpsLat']) && !empty($dynData['gpsLon']);
 ?>
 
+<?php if ($hasGPS): ?>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-
-<h3><?php echo _T("Detailed Device Information", "mobile"); ?></h3>
-<p><?php echo _T("Search for a device and view its detailed information", "mobile"); ?></p>
+<?php endif; ?>
 
 <form method="post" name="searchform">
-    <table>
-        <tr>
-            <td>
-                <div id="searchBest" style="width:370px; position: relative; justify-self:end;">
-                    <input type="text" class="searchfieldreal" name="device" id="device" placeholder="<?php echo _T("Search device...", "mobile"); ?>" value="<?php echo htmlspecialchars($device_number); ?>" autocomplete="off">
-
-                    <button type="button" class="search-clear" onclick="document.getElementById('device').value=''; pushSearch();">
-                    </button>
-
-                    <button type="submit" name="search" value="1"><?php echo _T("Search", "mobile"); ?></button>
-                    
-                    <ul id="device-suggestions" style="position: absolute; top: 100%; left: 0; width: 100%; max-height: 200px; overflow-y: auto; background: white; border: 1px solid #ccc; list-style: none; padding: 0; margin: 5px 0 0 0; display: none; z-index: 1000;"></ul>
-                </div>
-            </td>
-        </tr>
-    </table>
+    <div class="searchbox">
+        <span class="searchfield">
+            <input type="text" class="searchfieldreal" name="device" id="device"
+                placeholder="<?php echo _T("Search device...", "mobile"); ?>"
+                value="<?php echo htmlspecialchars($device_number); ?>"
+                autocomplete="off">
+            <button type="button" class="search-clear" aria-label="<?php echo _T('Clear search', 'base'); ?>"
+                onclick="document.getElementById('device').value=''; pushSearch();"></button>
+        </span>
+        <button type="submit" name="search" value="1" class="btn btn-primary"><?php echo _T("Search", "mobile"); ?></button>
+        <ul id="device-suggestions" style="position: absolute; top: 100%; left: 0; width: 370px; max-height: 200px; overflow-y: auto; background: white; border: 1px solid #ccc; list-style: none; padding: 0; margin: 5px 0 0 0; display: none; z-index: 1000;"></ul>
+    </div>
 </form>
 
 <?php if (!empty($device_info)): ?>
-    <div id='device-info-container' style="margin-top: 20px;">
-        <table cellpadding="6" cellspacing="0" border="1" style="border-collapse: collapse; width: 100%; ">
-            <tr><td colspan="2" style="background-color: #dadadaff; text-align: center; font-weight:bold;"><?php echo _T("Detailed Device Information", "mobile"); ?></td></tr>
-            <tr><td><?php echo _T("Time", "mobile"); ?></td><td><?php echo date('Y-m-d H:i:s'); ?></td></tr>
-            <tr><td><?php echo _T("Device number", "mobile"); ?></td><td><?php echo htmlspecialchars($device_info['deviceNumber'] ?? ''); ?></td></tr>
-            <tr><td><?php echo _T("Description", "mobile"); ?></td><td><?php echo htmlspecialchars($device_info['description'] ?? ''); ?></td></tr>
-            <tr><td><?php echo _T("Groups", "mobile"); ?></td><td><?php echo !empty($device_info['groups']) ? implode(', ', $device_info['groups']) : ''; ?></td></tr>
-            <tr><td><?php echo _T("IMEI (required)", "mobile"); ?></td><td></td></tr>
-            <tr><td><?php echo _T("IMEI", "mobile"); ?></td><td><?php echo htmlspecialchars($device_info['imei'] ?? ''); ?></td></tr>
-            <tr><td><?php echo _T("Phone (required)", "mobile"); ?></td><td></td></tr>
-            <tr><td><?php echo _T("Phone", "mobile"); ?></td><td><?php echo htmlspecialchars($device_info['phone'] ?? ''); ?></td></tr>
-            <tr><td><?php echo _T("ICCID", "mobile"); ?></td><td><?php echo htmlspecialchars($device_info['iccid'] ?? ''); ?></td></tr>
-            <tr><td><?php echo _T("Serial number", "mobile"); ?></td><td><?php echo htmlspecialchars($device_info['serial'] ?? ''); ?></td></tr>
-            <tr><td><?php echo _T("CPU architecture", "mobile"); ?></td><td><?php echo htmlspecialchars($device_info['cpuArch'] ?? ''); ?></td></tr>
-            <tr><td><?php echo _T("Permission to install as device administrator", "mobile"); ?></td><td><?php echo $device_info['adminPermission'] ? _T("yes", "mobile") : _T("no", "mobile"); ?></td></tr>
-            <tr><td><?php echo _T("Permission to overlay on top of other windows", "mobile"); ?></td><td><?php echo $device_info['overlapPermission'] ? _T("yes", "mobile") : _T("no", "mobile"); ?></td></tr>
-            <tr><td><?php echo _T("Permission to access the use of history", "mobile"); ?></td><td><?php echo $device_info['historyPermission'] ? _T("yes", "mobile") : _T("no", "mobile"); ?></td></tr>
-            <tr><td><?php echo _T("Permission to access the accessibility services", "mobile"); ?></td><td><?php echo $device_info['accessibilityPermission'] ? _T("yes", "mobile") : _T("no", "mobile"); ?></td></tr>
-            <tr><td><?php echo _T("Model", "mobile"); ?></td><td><?php echo htmlspecialchars($device_info['model'] ?? ''); ?></td></tr>
-            <tr><td><?php echo _T("OS version", "mobile"); ?></td><td><?php echo htmlspecialchars($device_info['osVersion'] ?? ''); ?></td></tr>
-            <tr><td><?php echo _T("Battery charge", "mobile"); ?></td><td><?php echo htmlspecialchars($device_info['battery'] ?? ''); ?></td></tr>
-            <tr><td><?php echo _T("MDM mode", "mobile"); ?></td><td><?php echo htmlspecialchars($device_info['mdmMode'] ?? ''); ?></td></tr>
-            <tr><td><?php echo _T("Kiosk mode", "mobile"); ?></td><td><?php echo htmlspecialchars($device_info['kioskMode'] ?? ''); ?></td></tr>
-            <tr><td><?php echo _T("Launcher variant", "mobile"); ?></td><td><?php echo htmlspecialchars($device_info['launcherVariant'] ?? ''); ?></td></tr>
-            <tr><td><?php echo _T("Default launcher", "mobile"); ?></td><td><?php echo htmlspecialchars($device_info['defaultLauncher'] ?? ''); ?></td></tr>
-            <?php 
-            $dynData = $device_info['latestDynamicData'] ?? [];
-            $hasGPS = !empty($dynData['gpsLat']) && !empty($dynData['gpsLon']);
-            if ($hasGPS): 
-            ?>
-            <tr><td colspan="2" style="background-color: #dadadaff; text-align: center; font-weight:bold;"><?php echo _T("GPS Location", "mobile"); ?></td></tr>
-            <tr><td><?php echo _T("GPS Status", "mobile"); ?></td><td><?php echo htmlspecialchars($dynData['gpsState'] ?? ''); ?></td></tr>
-            <tr><td><?php echo _T("GPS Enabled", "mobile"); ?></td><td><?php echo !empty($dynData['deviceGpsEnabled']) ? _T("yes", "mobile") : _T("no", "mobile"); ?></td></tr>
-            <tr><td><?php echo _T("Latitude", "mobile"); ?></td><td><?php echo htmlspecialchars($dynData['gpsLat']); ?></td></tr>
-            <tr><td><?php echo _T("Longitude", "mobile"); ?></td><td><?php echo htmlspecialchars($dynData['gpsLon']); ?></td></tr>
-            <tr><td><?php echo _T("Altitude (m)", "mobile"); ?></td><td><?php echo htmlspecialchars($dynData['gpsAlt'] ?? ''); ?></td></tr>
-            <tr><td><?php echo _T("Speed (m/s)", "mobile"); ?></td><td><?php echo htmlspecialchars($dynData['gpsSpeed'] ?? ''); ?></td></tr>
-            <tr><td><?php echo _T("Course (degrees)", "mobile"); ?></td><td><?php echo htmlspecialchars($dynData['gpsCourse'] ?? ''); ?></td></tr>
-            <?php endif; ?>
-            <tr><td colspan="2" style="background-color: #dadadaff; text-align: center; font-weight:bold;"><?php echo _T("Installation status", "mobile"); ?></td></tr>
-        </table>
-        <?php if ($hasGPS): ?>
-        <div id="map" style="width: 100%; height: 450px; margin-top: 20px; border: 1px solid #ccc;"></div>
-        <?php endif; ?>
-        <table cellpadding="6" cellspacing="0" style="border: 1px solid; border-collapse: collapse; width: 100%; margin-top: 20px;">
-            <tr>
-                <th style="text-align:start;"><?php echo _T("Title", "mobile"); ?></th>
-                <th style="text-align:start;"><?php echo _T("Package ID", "mobile"); ?></th>
-                <th style="text-align:start;"><?php echo _T("Installed version", "mobile"); ?></th>
-                <th style="text-align:start;"><?php echo _T("Required version", "mobile"); ?></th>
-            </tr>
-            <?php foreach ($device_info['applications'] as $app): ?>
-            <tr>
-                <td><?php echo htmlspecialchars($app['applicationName']); ?></td>
-                <td><?php echo htmlspecialchars($app['applicationPkg']); ?></td>
-                <td><?php echo htmlspecialchars($app['versionInstalled']); ?></td>
-                <td><?php echo htmlspecialchars($app['versionRequired']); ?></td>
-            </tr>
-            <?php endforeach; ?>
-        </table>
-    </div>
+
+<?php
+// --- Device info table ---
+$keys = [];
+$vals = [];
+
+$keys[] = _T("Time", "mobile");                $vals[] = date('Y-m-d H:i:s');
+$keys[] = _T("Device number", "mobile");        $vals[] = htmlspecialchars($device_info['deviceNumber'] ?? '');
+$keys[] = _T("Description", "mobile");          $vals[] = htmlspecialchars($device_info['description'] ?? '');
+$keys[] = _T("Groups", "mobile");               $vals[] = !empty($device_info['groups']) ? htmlspecialchars(implode(', ', $device_info['groups'])) : '';
+$keys[] = _T("IMEI", "mobile");                 $vals[] = htmlspecialchars($device_info['imei'] ?? '');
+$keys[] = _T("Phone", "mobile");                $vals[] = htmlspecialchars($device_info['phone'] ?? '');
+$keys[] = _T("ICCID", "mobile");                $vals[] = htmlspecialchars($device_info['iccid'] ?? '');
+$keys[] = _T("Serial number", "mobile");        $vals[] = htmlspecialchars($device_info['serial'] ?? '');
+$keys[] = _T("CPU architecture", "mobile");     $vals[] = htmlspecialchars($device_info['cpuArch'] ?? '');
+$keys[] = _T("Model", "mobile");                $vals[] = htmlspecialchars($device_info['model'] ?? '');
+$keys[] = _T("OS version", "mobile");           $vals[] = htmlspecialchars($device_info['osVersion'] ?? '');
+$keys[] = _T("Battery charge", "mobile");       $vals[] = htmlspecialchars($device_info['battery'] ?? '');
+$keys[] = _T("MDM mode", "mobile");             $vals[] = htmlspecialchars($device_info['mdmMode'] ?? '');
+$keys[] = _T("Kiosk mode", "mobile");           $vals[] = htmlspecialchars($device_info['kioskMode'] ?? '');
+$keys[] = _T("Launcher variant", "mobile");     $vals[] = htmlspecialchars($device_info['launcherVariant'] ?? '');
+$keys[] = _T("Default launcher", "mobile");     $vals[] = htmlspecialchars($device_info['defaultLauncher'] ?? '');
+$keys[] = _T("Admin permission", "mobile");     $vals[] = !empty($device_info['adminPermission'])        ? _T("yes", "mobile") : _T("no", "mobile");
+$keys[] = _T("Overlay permission", "mobile");   $vals[] = !empty($device_info['overlapPermission'])      ? _T("yes", "mobile") : _T("no", "mobile");
+$keys[] = _T("History permission", "mobile");   $vals[] = !empty($device_info['historyPermission'])      ? _T("yes", "mobile") : _T("no", "mobile");
+$keys[] = _T("Accessibility permission", "mobile"); $vals[] = !empty($device_info['accessibilityPermission']) ? _T("yes", "mobile") : _T("no", "mobile");
+
+$n = new ListInfos($keys, _T("Property", "mobile"));
+$n->addExtraInfo($vals, _T("Value", "mobile"));
+$n->setRowsPerPage(count($keys));
+$n->drawTable(0);
+?>
+
+<?php if ($hasGPS): ?>
+<br/>
+<h2><?php echo _T("GPS Location", "mobile"); ?></h2>
+<?php
+$gkeys = [];
+$gvals = [];
+$gkeys[] = _T("GPS Status", "mobile");   $gvals[] = htmlspecialchars($dynData['gpsState'] ?? '');
+$gkeys[] = _T("GPS Enabled", "mobile");  $gvals[] = !empty($dynData['deviceGpsEnabled']) ? _T("yes", "mobile") : _T("no", "mobile");
+$gkeys[] = _T("Latitude", "mobile");     $gvals[] = htmlspecialchars($dynData['gpsLat']);
+$gkeys[] = _T("Longitude", "mobile");    $gvals[] = htmlspecialchars($dynData['gpsLon']);
+$gkeys[] = _T("Altitude (m)", "mobile"); $gvals[] = htmlspecialchars($dynData['gpsAlt'] ?? '');
+$gkeys[] = _T("Speed (m/s)", "mobile");  $gvals[] = htmlspecialchars($dynData['gpsSpeed'] ?? '');
+$gkeys[] = _T("Course (°)", "mobile");   $gvals[] = htmlspecialchars($dynData['gpsCourse'] ?? '');
+
+$g = new ListInfos($gkeys, _T("Property", "mobile"));
+$g->addExtraInfo($gvals, _T("Value", "mobile"));
+$g->setRowsPerPage(count($gkeys));
+$g->drawTable(0);
+?>
+<div id="map" style="width: 100%; height: 400px; margin-top: 16px;"></div>
+<?php endif; ?>
+
+<?php if (!empty($device_info['applications'])): ?>
+<br/>
+<h2><?php echo _T("Installation status", "mobile"); ?></h2>
+<?php
+$appNames    = [];
+$appPkgs     = [];
+$appInstalled = [];
+$appRequired  = [];
+
+foreach ($device_info['applications'] as $app) {
+    $appNames[]     = htmlspecialchars($app['applicationName'] ?? '');
+    $appPkgs[]      = htmlspecialchars($app['applicationPkg'] ?? '');
+    $appInstalled[] = htmlspecialchars($app['versionInstalled'] ?? '');
+    $appRequired[]  = htmlspecialchars($app['versionRequired'] ?? '');
+}
+
+$a = new OptimizedListInfos($appNames, _T("Title", "mobile"));
+$a->addExtraInfo($appPkgs,      _T("Package ID", "mobile"));
+$a->addExtraInfo($appInstalled, _T("Installed version", "mobile"));
+$a->addExtraInfo($appRequired,  _T("Required version", "mobile"));
+$a->setItemCount(count($appNames));
+$a->start = 0;
+$a->end   = count($appNames);
+$a->disableFirstColumnActionLink();
+$a->display(false, false);
+?>
+<?php endif; ?>
+
 <?php elseif (isset($_POST['search'])): ?>
-    <div class="info-box" style="margin-top: 20px;">
-        <?php echo _T("No information found for this device", "mobile"); ?>
-    </div>
+    <p><?php echo _T("No information found for this device", "mobile"); ?></p>
 <?php endif; ?>
 
 <script type="text/javascript">
-// autocomplete logic
 var autocompleteTimeout;
 
 document.getElementById('device').addEventListener('input', function(e) {
     clearTimeout(autocompleteTimeout);
     var query = e.target.value;
     var suggestionsList = document.getElementById('device-suggestions');
-    
+
     if (query.length < 1) {
         suggestionsList.style.display = 'none';
         return;
     }
-    
+
     autocompleteTimeout = setTimeout(function() {
         fetch('<?php echo urlStrRedirect("mobile/mobile/ajaxDeviceSearch"); ?>&filter=' + encodeURIComponent(query))
-            .then(response => response.json())
-            .then(data => {
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
                 suggestionsList.innerHTML = '';
                 if (Array.isArray(data) && data.length > 0) {
                     data.forEach(function(device) {
@@ -133,23 +149,15 @@ document.getElementById('device').addEventListener('input', function(e) {
                         li.style.padding = '8px 12px';
                         li.style.cursor = 'pointer';
                         li.style.borderBottom = '1px solid #eee';
-                        
                         var deviceName = device.name || '';
                         li.textContent = deviceName;
                         li.title = deviceName;
-                        
-                        li.onmouseover = function() {
-                            li.style.backgroundColor = '#f0f0f0';
-                        };
-                        li.onmouseout = function() {
-                            li.style.backgroundColor = 'white';
-                        };
-                        
+                        li.onmouseover = function() { li.style.backgroundColor = '#f0f0f0'; };
+                        li.onmouseout  = function() { li.style.backgroundColor = 'white'; };
                         li.onclick = function() {
                             document.getElementById('device').value = deviceName;
                             suggestionsList.style.display = 'none';
                         };
-                        
                         suggestionsList.appendChild(li);
                     });
                     suggestionsList.style.display = 'block';
@@ -157,14 +165,10 @@ document.getElementById('device').addEventListener('input', function(e) {
                     suggestionsList.style.display = 'none';
                 }
             })
-            .catch(error => {
-                console.error('Error:', error);
-                suggestionsList.style.display = 'none';
-            });
+            .catch(function() { suggestionsList.style.display = 'none'; });
     }, 300);
 });
 
-// Hide autocomplete
 document.addEventListener('click', function(e) {
     if (e.target.id !== 'device') {
         document.getElementById('device-suggestions').style.display = 'none';
@@ -179,14 +183,11 @@ function pushSearch() {
 <?php if (!empty($device_info) && $hasGPS): ?>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-var map = L.map('map').setView([<?php echo $dynData['gpsLat']; ?>, <?php echo $dynData['gpsLon']; ?>], 15);
+var map = L.map('map').setView([<?php echo (float)$dynData['gpsLat']; ?>, <?php echo (float)$dynData['gpsLon']; ?>], 15);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; OpenStreetMap contributors'
 }).addTo(map);
-L.marker([<?php echo $dynData['gpsLat']; ?>, <?php echo $dynData['gpsLon']; ?>]).addTo(map)
+L.marker([<?php echo (float)$dynData['gpsLat']; ?>, <?php echo (float)$dynData['gpsLon']; ?>]).addTo(map)
     .bindPopup('<?php echo htmlspecialchars($device_info['deviceNumber'] ?? ''); ?>');
 </script>
 <?php endif; ?>
-
-<?php
-
