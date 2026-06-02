@@ -27,7 +27,7 @@
   START TRANSACTION;
   USE admin;
 
-  -- Imaging | RW > Missing ACLs for imaging action in computers list
+-- Imaging | RW > Missing ACLs for imaging action in computers list
 INSERT INTO acl_feature_definitions (feature_key, label, description, category, superadmin_only, acl_entry, access_type) VALUES
 ('imaging_rw', 'Imaging complet (toutes les fonctions)', 'Masters|Services|Bootmenu|Post-install|Profils|Groupes imaging|Sysprep|Unattended', 'imaging', 0, 'base#computers#imgtabs', 'rw'),
 ('imaging_rw', 'Imaging complet (toutes les fonctions)', 'Masters|Services|Bootmenu|Post-install|Profils|Groupes imaging|Sysprep|Unattended', 'imaging', 0, 'base#computers#imgtabs#tabbootmenu', 'rw'),
@@ -39,6 +39,19 @@ INSERT INTO acl_feature_definitions (feature_key, label, description, category, 
 ('imaging_rw', 'Imaging complet (toutes les fonctions)', 'Masters|Services|Bootmenu|Post-install|Profils|Groupes imaging|Sysprep|Unattended', 'imaging', 0, 'base#computers#addimage', 'rw'),
 ('imaging_rw', 'Imaging complet (toutes les fonctions)', 'Masters|Services|Bootmenu|Post-install|Profils|Groupes imaging|Sysprep|Unattended', 'imaging', 0, 'base#computers#addservice', 'rw'),
 ('imaging_rw', 'Imaging complet (toutes les fonctions)', 'Masters|Services|Bootmenu|Post-install|Profils|Groupes imaging|Sysprep|Unattended', 'imaging', 0, 'base#computers#showtarget', 'rw');
+
+-- Imaging - On premise | RW > Missing ACLs for imaging action in computers list
+INSERT INTO acl_feature_definitions (feature_key, label, description, category, superadmin_only, acl_entry, access_type) VALUES
+('imaging_onpremise_rw', 'Imaging On-premise - gestion', 'Masters|Services|Bootmenu|Post-install|Profils|Groupes imaging|Déploiement', 'imaging', 0, 'base#computers#imgtabs', 'rw'),
+('imaging_onpremise_rw', 'Imaging On-premise - gestion', 'Masters|Services|Bootmenu|Post-install|Profils|Groupes imaging|Déploiement', 'imaging', 0, 'base#computers#imgtabs#tabbootmenu', 'rw'),
+('imaging_onpremise_rw', 'Imaging On-premise - gestion', 'Masters|Services|Bootmenu|Post-install|Profils|Groupes imaging|Déploiement', 'imaging', 0, 'base#computers#imgtabs#tabimages', 'rw'),
+('imaging_onpremise_rw', 'Imaging On-premise - gestion', 'Masters|Services|Bootmenu|Post-install|Profils|Groupes imaging|Déploiement', 'imaging', 0, 'base#computers#imgtabs#tabservices', 'rw'),
+('imaging_onpremise_rw', 'Imaging On-premise - gestion', 'Masters|Services|Bootmenu|Post-install|Profils|Groupes imaging|Déploiement', 'imaging', 0, 'base#computers#imgtabs#tabimlogs', 'rw'),
+('imaging_onpremise_rw', 'Imaging On-premise - gestion', 'Masters|Services|Bootmenu|Post-install|Profils|Groupes imaging|Déploiement', 'imaging', 0, 'base#computers#imgtabs#tabconfigure', 'rw'),
+('imaging_onpremise_rw', 'Imaging On-premise - gestion', 'Masters|Services|Bootmenu|Post-install|Profils|Groupes imaging|Déploiement', 'imaging', 0, 'base#computers#bootmenu_remove', 'rw'),
+('imaging_onpremise_rw', 'Imaging On-premise - gestion', 'Masters|Services|Bootmenu|Post-install|Profils|Groupes imaging|Déploiement', 'imaging', 0, 'base#computers#addimage', 'rw'),
+('imaging_onpremise_rw', 'Imaging On-premise - gestion', 'Masters|Services|Bootmenu|Post-install|Profils|Groupes imaging|Déploiement', 'imaging', 0, 'base#computers#addservice', 'rw'),
+('imaging_onpremise_rw', 'Imaging On-premise - gestion', 'Masters|Services|Bootmenu|Post-install|Profils|Groupes imaging|Déploiement', 'imaging', 0, 'base#computers#showtarget', 'rw');
 
 UPDATE version SET Number = 14;
 
