@@ -56,8 +56,11 @@ foreach ($data as $row) {
     $cvss = floatval($row['cvss_score']);
     $cvssScores[] = number_format($cvss, 1);
 
-    // Description
+    // Description (truncated)
     $desc = $row['description'] ? $row['description'] : '';
+    if (strlen($desc) > 100) {
+        $desc = substr($desc, 0, 100) . '...';
+    }
     $descriptions[] = htmlspecialchars($desc);
 
     // Machines affected
@@ -75,9 +78,10 @@ foreach ($data as $row) {
     // Params for actions
     $params[] = array('cve_id' => $row['cve_id']);
 
-    // CSS class
+    // CSS class : "alternate" garde le zébrage 1 ligne/2 (le rendu remplace
+    // sinon la classe "alternate" par celle-ci), "severity-*" ajoute le liseré.
     $sevClass = ($sev === 'N/A') ? 'na' : strtolower($sev);
-    $cssClasses[] = 'severity-' . $sevClass;
+    $cssClasses[] = 'severity-' . $sevClass . ' alternate';
 }
 
 // Actions
@@ -88,6 +92,7 @@ $excludeAction->setWidth(400);
 // Display the list
 if ($count > 0) {
     $n = new OptimizedListInfos($cveIds, _T("CVE ID", "security"));
+    $n->setResizable();
     $n->setTableCssClass("security-table");
     $n->disableFirstColumnActionLink();
     $n->setCssClasses($cssClasses);

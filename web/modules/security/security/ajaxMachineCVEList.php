@@ -79,8 +79,8 @@ foreach ($data as $row) {
     // Params for actions
     $params[] = array('cve_id' => $row['cve_id']);
 
-    // CSS class
-    $cssClasses[] = 'severity-' . $sevClass;
+    // CSS class : "alternate" garde le zébrage 1 ligne/2, "severity-*" le liseré.
+    $cssClasses[] = 'severity-' . $sevClass . ' alternate';
 }
 
 // Actions
@@ -89,6 +89,7 @@ $detailAction = new ActionItem(_T("View Details", "security"), "cveDetail", "dis
 // Display the list
 if ($count > 0) {
     $n = new OptimizedListInfos($cveIds, _T("CVE ID", "security"));
+    $n->setResizable();
     $n->setTableCssClass("security-table");
     $n->disableFirstColumnActionLink();
     $n->setCssClasses($cssClasses);
