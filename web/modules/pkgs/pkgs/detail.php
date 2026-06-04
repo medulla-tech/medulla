@@ -187,7 +187,6 @@ echo '<h2 id="toggle-context" onclick="_toggle(\'#context\')">'._T("Context", "p
 echo '<div id="context">';
 $context = new OptimizedListInfos([$json['info']['name']], _T("Package Name", "pkgs"));
 $context->setResizable();
-$context->forceFixed = true;
 $context->addExtraInfo([isset($json['info']['creator']) ? $json['info']['creator'] : ''], _T("Creator", "pkgs"));
 if(isset($json['info']['editor']) && $json['info']['editor'] != "") {
     $context->addExtraInfo([$json['info']['editor']], _T("Edited By", "pkgs"));

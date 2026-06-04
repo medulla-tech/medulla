@@ -1126,7 +1126,6 @@ class ListInfos extends HtmlElement
     public $captionClass = "";
     // public $extraInfoRaw = array();
     public $extraColumns = array();
-    public $forceFixed = false;
     public $tableCssClass = "";
     public $resizable = false;
     public $emptyTitle = "";
