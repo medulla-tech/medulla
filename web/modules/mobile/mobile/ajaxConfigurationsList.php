@@ -33,6 +33,7 @@ foreach ($configs as $index => $cfg) {
     $name = htmlspecialchars($cfg['name'] ?? 'Unnamed');
     $desc = htmlspecialchars($cfg['description'] ?? '-');
 
+    $detailsUrl = urlStrRedirect('mobile/mobile/configurationDetails') . '&id=' . urlencode($cfgId);
     $col1[] = "<a href='" . htmlspecialchars($detailsUrl, ENT_QUOTES, 'UTF-8') . "' class='cfglink'>{$name}</a>";
     $descriptions[] = $desc;
 

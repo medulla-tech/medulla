@@ -244,6 +244,51 @@ $form->display();
             msgTypeSelect.addEventListener('change', function() { updateMessageType(true); });
             updateMessageType(false);
         }
+
+        // Confirmation for destructive actions
+        var _destructiveTypes = ['wipe', 'reboot', 'lockDevice', 'runCommand', 'purgeDir', 'deleteDir'];
+        var _destructiveLabels = {
+            'wipe':       '<?php echo addslashes(_T('Factory Reset', 'mobile')); ?>',
+            'reboot':     '<?php echo addslashes(_T('Reboot', 'mobile')); ?>',
+            'lockDevice': '<?php echo addslashes(_T('Lock Screen', 'mobile')); ?>',
+            'runCommand': '<?php echo addslashes(_T('Run Command', 'mobile')); ?>',
+            'purgeDir':   '<?php echo addslashes(_T('Purge Directory', 'mobile')); ?>',
+            'deleteDir':  '<?php echo addslashes(_T('Delete Directory', 'mobile')); ?>'
+        };
+        var _sendBtn = document.querySelector('input[name="test"]');
+        var _sendForm = _sendBtn ? _sendBtn.closest('form') : null;
+        if (_sendBtn && _sendForm) {
+            _sendBtn.addEventListener('click', function(e) {
+                var msgType = document.querySelector('select[name="message_type"]').value;
+                if (_destructiveTypes.indexOf(msgType) !== -1) {
+                    e.preventDefault();
+                    var label = _destructiveLabels[msgType] || msgType;
+                    var capturedBtn = _sendBtn, capturedForm = _sendForm;
+                    window._mobileDestructiveAction = function() {
+                        var h = document.createElement('input');
+                        h.type = 'hidden'; h.name = 'test'; h.value = capturedBtn.value;
+                        capturedForm.appendChild(h);
+                        capturedForm.submit();
+                    };
+                    var msg = '<?php echo addslashes(_T('You are about to send:', 'mobile')); ?> <strong>' + label + '<\/strong>. <?php echo addslashes(_T('This action may be irreversible.', 'mobile')); ?>';
+                    var html = '<div style="padding:10px">'
+                             + '<div class="alert alert-warning">' + msg + '<\/div>'
+                             + '<div style="text-align:center">'
+                             + '<button class="btn btn-danger" onclick="var f=window._mobileDestructiveAction;window._mobileDestructiveAction=null;closePopup();if(f)f();">'
+                             + '<?php echo addslashes(_T('Confirm', 'mobile')); ?><\/button>'
+                             + ' <button class="btn btnSecondary" onclick="closePopup();return false;">'
+                             + '<?php echo addslashes(_T('Cancel', 'mobile')); ?><\/button>'
+                             + '<\/div><\/div>';
+                    PopupWindow(null, null, 0, function() {
+                        var $p = jQuery('#popup');
+                        $p.css({'top':'50%','left':'50%',
+                                'margin-top': -($p.outerHeight()/2)+'px',
+                                'margin-left': -($p.outerWidth()/2)+'px'});
+                        jQuery('#overlay').fadeIn().click(function() { window._mobileDestructiveAction=null; closePopup(); });
+                    }, html);
+                }
+            });
+        }
         
         // Device autocomplete
         var deviceInput = document.getElementById('device_input');

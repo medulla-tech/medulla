@@ -40,12 +40,12 @@ if (!empty($deviceKeys)) {
     }
 </style>
 
-    <div style="width : 600px;">
+    <div style="width: 100%;">
         <?php
         echo "<h1>"._T("Quick Actions", "mobile")."</h1>";
         echo "<h2>" . $headerText . "</h2>";
         ?>
-        <table style="width : 500px;">
+        <table style="width: 100%;">
             <tr>
             <?php
                     echo sprintf("<td id='reboot0' align='center' title='%s'><img src='img/actions/restart.svg' height='70' width='70'></td>", _T("Click here to reboot devices in this group", "mobile"));
@@ -95,6 +95,7 @@ if (!empty($deviceKeys)) {
                 echo "</table>";
              ?>
     </div>
+
 <script type="text/javascript">
     var payloadTemplates = {
         'reboot': '',
@@ -109,6 +110,49 @@ if (!empty($deviceKeys)) {
         'runCommand': '{\n  "command": "shell command"\n}',
         'grantPermissions': '{\n  "pkg": "app.package.id"\n}'
     };
+
+    var _destructiveTypes = ['wipe', 'reboot', 'lockDevice', 'runCommand', 'purgeDir', 'deleteDir'];
+    var _destructiveLabels = {
+        'wipe':       '<?php echo addslashes(_T("Factory Reset", "mobile")); ?>',
+        'reboot':     '<?php echo addslashes(_T("Reboot", "mobile")); ?>',
+        'lockDevice': '<?php echo addslashes(_T("Lock Screen", "mobile")); ?>',
+        'runCommand': '<?php echo addslashes(_T("Run Command", "mobile")); ?>',
+        'purgeDir':   '<?php echo addslashes(_T("Purge Directory", "mobile")); ?>',
+        'deleteDir':  '<?php echo addslashes(_T("Delete Directory", "mobile")); ?>'
+    };
+    function requireConfirm(action, messageType, payload) {
+        if (_destructiveTypes.indexOf(messageType) === -1) { submitAction(action, messageType, payload); return; }
+        var label = _destructiveLabels[messageType] || messageType;
+        window._mobileDestructiveAction = function() { submitAction(action, messageType, payload); };
+        var savedContent = jQuery('#__popup_container').html();
+        var savedWidth = jQuery('#popup').css('width');
+        window._mobileRestorePopup = function() {
+            jQuery('#popup').css('width', savedWidth);
+            jQuery('#__popup_container').html(savedContent);
+            var $p = jQuery('#popup');
+            $p.css({'visibility':'hidden','display':'block'});
+            $p.css({'top':'50%','left':'50%',
+                    'margin-top': -($p.outerHeight()/2)+'px',
+                    'margin-left': -($p.outerWidth()/2)+'px',
+                    'visibility':'visible'});
+        };
+        var msg = '<?php echo addslashes(_T("You are about to send:", "mobile")); ?> <strong>' + label + '<\/strong>. <?php echo addslashes(_T("This action may be irreversible.", "mobile")); ?>';
+        var html = '<div style="padding:10px">'
+                 + '<div class="alert alert-warning">' + msg + '<\/div>'
+                 + '<div style="text-align:center">'
+                 + '<button class="btn btn-danger" onclick="var f=window._mobileDestructiveAction;window._mobileDestructiveAction=null;window._mobileRestorePopup=null;closePopup();if(f)f();"><?php echo addslashes(_T("Confirm", "mobile")); ?><\/button>'
+                 + ' <button class="btn btnSecondary" onclick="var r=window._mobileRestorePopup;window._mobileDestructiveAction=null;window._mobileRestorePopup=null;if(r)r();return false;"><?php echo addslashes(_T("Cancel", "mobile")); ?><\/button>'
+                 + '<\/div><\/div>';
+        PopupWindow(null, null, 0, function() {
+            var $p = jQuery('#popup');
+            $p.css({'top':'50%','left':'50%',
+                    'margin-top': -($p.outerHeight()/2)+'px',
+                    'margin-left': -($p.outerWidth()/2)+'px'});
+            jQuery('#overlay').fadeIn().click(function() {
+                var r=window._mobileRestorePopup;window._mobileDestructiveAction=null;window._mobileRestorePopup=null;if(r)r();
+            });
+        }, html);
+    }
 
     var execTarget = '<?php echo $execTarget; ?>';
     var deviceKeys = <?php echo json_encode(array_values($deviceKeys)); ?>;
@@ -159,7 +203,7 @@ if (!empty($deviceKeys)) {
 
     jQuery(function() {
         jQuery('#reboot0, #reboot').on('click', function(){
-            submitAction('reboot', 'reboot', '');
+            requireConfirm('reboot', 'reboot', '');
         });
 
             jQuery('#select').change(function() {
@@ -197,7 +241,7 @@ if (!empty($deviceKeys)) {
                     messageType = customType;
             }
 
-                submitAction('custom', messageType, payload);
+                requireConfirm('custom', messageType, payload);
         });
     });
 
