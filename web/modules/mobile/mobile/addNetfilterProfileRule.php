@@ -49,7 +49,7 @@ $f = new Form();
 $f->push(new Table());
 
 $domainInput = new InputTpl('domain', '/^.+$/');
-$f->add(new TrFormElement(_T('Domain', 'mobile'), $domainInput), ['placeholder' => _T('e.g. youtube.com', 'mobile')]);
+$f->add(new TrFormElement(_T('Domain', 'mobile'), $domainInput), ['placeholder' => _T('e.g. example.com', 'mobile')]);
 
 $f->pop();
 $f->addValidateButtonWithValue('badd_rule', _T('Add rule', 'mobile'));

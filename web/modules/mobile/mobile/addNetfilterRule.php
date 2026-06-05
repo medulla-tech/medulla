@@ -26,7 +26,7 @@ $f = new Form();
 $f->push(new Table());
 
 $domainInput = new InputTpl('domain', '/^.+$/');
-$f->add(new TrFormElement(_T('Domain', 'mobile'), $domainInput), ['placeholder' => _T('e.g. youtube.com or *.tiktok.com', 'mobile')]);
+$f->add(new TrFormElement(_T('Domain', 'mobile'), $domainInput), ['placeholder' => _T('e.g. example.com or *.tiktok.com', 'mobile')]);
 
 $ruleTypeSelect = new SelectItem('rule_type');
 $ruleTypeSelect->setElements([_T('BLOCK', 'mobile'), _T('ALLOW', 'mobile')]);

@@ -11,6 +11,13 @@ if ($id <= 0) {
 }
 
 if (isset($_POST['bconfirm'])) {
+    $configs = xmlrpc_get_hmdm_configurations();
+    if (is_array($configs) && count($configs) <= 1) {
+        new NotifyWidgetFailure(_T("Cannot delete the last configuration. Duplicate it first to create a new one.", "mobile"));
+        header("Location: " . urlStrRedirect("mobile/mobile/configurations"));
+        exit;
+    }
+
     $result = xmlrpc_delete_configuration_by_id($id);
     
     if ($result) {

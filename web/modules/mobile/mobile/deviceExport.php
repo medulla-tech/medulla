@@ -21,7 +21,7 @@ if (!xmlrpc_require_configured_hmdm_account()) {
             <td class="mmc-label"><?php echo _T("Filter by group", "mobile"); ?></td>
             <td>
                 <select name="group_id">
-                    <option value="">— <?php echo _T("All groups", "mobile"); ?> —</option>
+                    <option value=""><?php echo _T("All groups", "mobile"); ?></option>
                     <?php
                     $groups = xmlrpc_get_hmdm_groups();
                     if (is_array($groups)) {
@@ -37,7 +37,7 @@ if (!xmlrpc_require_configured_hmdm_account()) {
             <td class="mmc-label"><?php echo _T("Filter by configuration", "mobile"); ?></td>
             <td>
                 <select name="configuration_id">
-                    <option value="">— <?php echo _T("All configurations", "mobile"); ?> —</option>
+                    <option value=""><?php echo _T("All configurations", "mobile"); ?></option>
                     <?php
                     $configs = xmlrpc_get_hmdm_configurations();
                     if (is_array($configs)) {
