@@ -42,7 +42,7 @@ $filter = filter_input(INPUT_GET, 'filter', FILTER_SANITIZE_STRING) ?? "";
 $entityname = filter_input(INPUT_GET, 'completename', FILTER_SANITIZE_STRING) ?? "";
 $entityid = filter_input(INPUT_GET, 'entity', FILTER_VALIDATE_INT) ?? 0;
 
-$titlepage = sprintf(_T("List of machines that should not be updated [ Entity %s ]"),
+$titlepage = sprintf(_T("List of machines that cannot be upgraded - %s"),
                      htmlspecialchars($entityname));
 
 $typeaction= !empty($_GET['typeaction']) ? htmlentities($_GET['typeaction']) : "windows";
@@ -54,7 +54,7 @@ echo '
 <form id="myForm">
     <input type="hidden" name="entityid" value="'.htmlspecialchars($entityid).'">
     <input type="hidden" name="typeaction" value="'.htmlspecialchars($typeaction).'">
-    <button class="btn btn-primary" type="submit">Creation Group</button>
+    <button class="btn btn-primary" type="submit">Create Group</button>
 </form>';
 $list_Machine_outdated_major_update = xmlrpc_get_outdated_major_os_updates_by_entity($entityid,
                                                                                      $typeaction,

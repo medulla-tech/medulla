@@ -33,9 +33,10 @@ $filter = (isset($_GET['filter'])) ? htmlentities($_GET['filter']) : "";
 $field = "";
 $contains = (isset($_GET['contains'])) ? htmlentities($_GET['contains']) : "";
 
-$start = (isset($_GET['start'])) ? $_GET['start'] : 0;
-$maxperpage = (isset($_GET['maxperpage'])) ? htmlentities($_GET['maxperpage']) : htmlentities($config['maxperpage']);
-$end = (isset($_GET['end'])) ? (int)htmlentities($_GET['end']) : $start+$maxperpage;
+global $maxperpage;
+$start = (isset($_GET['start']) && is_numeric($_GET['start'])) ? (int)$_GET['start'] : 0;
+$maxperpage = (isset($_GET['maxperpage']) && is_numeric($_GET['maxperpage'])) ? (int)$_GET['maxperpage'] : (int)$maxperpage;
+$end = (isset($_GET['end']) && is_numeric($_GET['end'])) ? (int)$_GET['end'] : $start + $maxperpage;
 $entity = !empty($_GET['entity']) ? htmlspecialchars($_GET['entity']) : "";
 $entityName = !empty($_GET['completename']) ? htmlentities($_GET['completename']) : "";
 $ctx = [];
@@ -107,9 +108,11 @@ if ($entity == '') {
         $inprogress = !empty($compliance_computer[$uuid]) ? $compliance_computer[$uuid]["inprogress"] : 0;
         $total = !empty($compliance_computer[$uuid]['total']) ? $compliance_computer[$uuid]['total'] : 0;
 
-        $color = colorconf($compliance);
-
-        $complRate = "<div class='progress' style='width: ".$compliance."%; background : ".$color."; font-weight: bold; color : black; text-align: right;'> ".$compliance."% </div>";
+        $texte_help = _T("%s missing updates for %s in progress updates and %s installed updates for %s in total" , "updates");
+        $complRate = (string) new medulla_progressbar_static($compliance,
+            "",
+            sprintf($texte_help, $missing, $inprogress, $installed, $total)
+        );
         $params[] = [
             "machineid" => $id_machine,
             "inventoryid" => $uuid,
@@ -139,7 +142,7 @@ if ($entity == '') {
     $doneByMachDefault = new ActionItem(_T("Updates History", "updates"), "auditUpdateByMachine", "history", "", "updates", "updates");
 
     // $machines = xmlrpc_get_machines_xmppmaster($start, $maxperpage, $ctx);
-    $machine_all_os = xmlrpc_get_all_machines_grouped_by_os($start, $maxperpage, $ctx);
+    $machine_all_os = xmlrpc_get_all_machines_grouped_by_os($start, $maxperpage, $ctx, "windows");
     $machines=$machine_all_os['windows'];
 
 

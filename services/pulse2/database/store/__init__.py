@@ -354,66 +354,6 @@ class StoreDatabase(DatabaseHelper):
             logging.getLogger().error(f"get_client_by_uuid error: {e}")
             return None
 
-    @DatabaseHelper._sessionm
-    def get_client_subscriptions(self, session, client_uuid):
-        """Get software IDs a client is subscribed to"""
-        try:
-            client = session.query(Client).filter(
-                Client.uuid == client_uuid,
-                Client.active == 1
-            ).first()
-            if not client:
-                return []
-
-            subscriptions = session.query(Subscription.software_id).filter(
-                Subscription.client_id == client.id
-            ).all()
-            return [s[0] for s in subscriptions]
-        except Exception as e:
-            logging.getLogger().error(f"get_client_subscriptions error: {e}")
-            return []
-
-    @DatabaseHelper._sessionm
-    def save_subscriptions(self, session, client_uuid, software_ids):
-        """Save client subscriptions (replaces existing ones)"""
-        try:
-            client = session.query(Client).filter(
-                Client.uuid == client_uuid,
-                Client.active == 1
-            ).first()
-            if not client:
-                return {'success': False, 'error': 'Client not found'}
-
-            # Delete existing subscriptions
-            session.query(Subscription).filter(
-                Subscription.client_id == client.id
-            ).delete()
-
-            # Add new subscriptions
-            for software_id in software_ids:
-                # Check that software exists and is active
-                software = session.query(Software).filter(
-                    Software.id == software_id,
-                    Software.active == 1
-                ).first()
-                if software:
-                    subscription = Subscription(
-                        client_id=client.id,
-                        software_id=software_id
-                    )
-                    session.add(subscription)
-
-            session.commit()
-
-            # Update subscribers_count for all software
-            self._update_all_subscribers_count(session)
-
-            return {'success': True, 'count': len(software_ids)}
-        except Exception as e:
-            logging.getLogger().error(f"save_subscriptions error: {e}")
-            session.rollback()
-            return {'success': False, 'error': str(e)}
-
     def _update_all_subscribers_count(self, session):
         """Update subscribers_count for all software based on current subscriptions"""
         try:

@@ -120,9 +120,9 @@ function xmlrpc_get_machines_xmppmaster($start=0, $limit=-1, $filter="")
     return xmlCall("updates.get_machines_xmppmaster", [$start, $limit, $filter]);
 }
 
-function xmlrpc_get_all_machines_grouped_by_os($start=0, $limit=-1, $filter="")
+function xmlrpc_get_all_machines_grouped_by_os($start=0, $limit=-1, $filter="", $os_filter="")
 {
-    return xmlCall("updates.get_all_machines_grouped_by_os", [$start, $limit, $filter]);
+    return xmlCall("updates.get_all_machines_grouped_by_os", [$start, $limit, $filter, $os_filter]);
 }
 
 

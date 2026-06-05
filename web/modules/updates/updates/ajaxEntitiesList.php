@@ -82,10 +82,10 @@ $entitycompliances = xmlrpc_get_conformity_update_by_entity($entities, $source);
 // Tableau pour stocker le résultat fusionné
 $merged_array = [];
 
-// Cette boucle parcourt chaque entité dans le tableau $filtered_entities.
+// Cette boucle parcourt chaque entité paginée du tableau $entities.
 // Pour chaque entité, elle extrait l'UUID, le transforme, et vérifie s'il existe une correspondance dans le tableau $entitycompliances.
 // Si une correspondance est trouvée, les données sont fusionnées. Sinon, des valeurs par défaut sont utilisées pour compléter les informations manquantes.
-foreach ($filtered_entities as $entity) {
+foreach ($entities as $entity) {
     // Extraire l'UUID et le transformer
     $uuid = $entity['uuid'];
     $transformed_uuid = intval(substr($uuid, 4));

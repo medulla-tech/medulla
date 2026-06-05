@@ -941,10 +941,16 @@ class UpdatesDatabase(DatabaseHelper):
             if not result:
                 return False  # Rien trouvé → on arrête
 
-            # 2️⃣ Insertion dans la white list avec bind parameters
+            # 2️⃣ Insertion dans la white list avec bind parameters (UPSERT)
             insert_sql = """INSERT INTO xmppmaster.up_white_list
                             (updateid, entityid, kb, title, description, valided)
-                            VALUES (:updateid, :entityid, :kb, :title, :description, :valided);"""
+                            VALUES (:updateid, :entityid, :kb, :title, :description, :valided)
+                            ON DUPLICATE KEY UPDATE
+                            entityid = VALUES(entityid),
+                            kb = VALUES(kb),
+                            title = VALUES(title),
+                            description = VALUES(description),
+                            valided = VALUES(valided);"""
 
             session.execute(
                 insert_sql,
@@ -955,6 +961,37 @@ class UpdatesDatabase(DatabaseHelper):
                     "title": result.title,
                     "description": result.description,
                     "valided": 1,
+                },
+            )
+
+            # 3️⃣ Neutralise le package avant suppression gray
+            # pour laisser les triggers flipflop/cache traiter proprement la transition.
+            neutralize_pkg_sql = """
+                UPDATE xmppmaster.up_gray_list
+                SET updateid_package = ''
+                WHERE (updateid = :updateid OR kb = :updateid)
+                AND entityid = :entityid;
+            """
+
+            session.execute(
+                neutralize_pkg_sql,
+                {
+                    "updateid": result.updateid,
+                    "entityid": result.entityid,
+                },
+            )
+
+            delete_sql = """
+                DELETE FROM xmppmaster.up_gray_list
+                WHERE (updateid = :updateid OR kb = :updateid)
+                AND entityid = :entityid;
+            """
+
+            session.execute(
+                delete_sql,
+                {
+                    "updateid": result.updateid,
+                    "entityid": result.entityid,
                 },
             )
 

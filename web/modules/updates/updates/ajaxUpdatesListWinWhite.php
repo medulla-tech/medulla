@@ -43,7 +43,8 @@ $count_white = $white_list['nb_element_total'];
 $kbs_white = [];
 $updateids_white = [];
 $titles_white = [];
-for($i = 0; $i < $count_white; $i++) {
+$count_partial = count($white_list['title']);
+for($i = 0; $i < $count_partial; $i++) {
     $tmp = [];
     $whiteActions["unlist"][] = $whiteUnlistAction;
     $whiteActions["ban"][] = $banAction;
@@ -92,32 +93,10 @@ $w->setNavBar(new AjaxNavBar($count_white, $filter, 'updateSearchParamformWhite'
 $w->start = 0;
 $w->end = $count_white;
 $w->setParamInfo($params_white);
-// affichage titre tableau
-$converter = new ConvertCouleur();
-
-if ($count_white == 0)
-{
-    $titretableau = _T("No updates are currently available in the White list (automatic updates)", 'updates');
-}else{
-    $titretableau = _T("White list (automatic updates)", 'updates');
-}
-
 // $completename = $_GET['completename'];
 $completename = $_GET['altname'];
 
 $ide = $_GET['uuid'];
-$w->setCaptionText(sprintf("%s",
-                           $titretableau));
-$w->setCssCaption(
-    $border = 1,
-    $bold = 0,
-    $bgColor = "lightgray",
-    $textColor = "black",
-    $padding = "10px 0",
-    $size = "20",
-    $emboss = 1,
-    $rowColor = $converter->convert("lightgray")
-);
 $w->addActionItemArray($whiteActions["unlist"]);
 $w->addActionItemArray($whiteActions["ban"]);
 $w->setEmptyState(_T("No updates found", "updates"), _T("No whitelisted updates found.", "updates"));

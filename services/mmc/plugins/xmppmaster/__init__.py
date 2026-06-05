@@ -1472,14 +1472,27 @@ def remotecommandshell(command, jidmachine, timeout):
 
 
 def remoteXmppMonitoring(subject, jidmachine, timeout):
+    """Send an IQ to the remote machine. The IQ asks which subject the remote agent has to monitor.
+
+    Args:
+        subject (str): The subject to monitor. It can be "cpu", "memory", "disk", "network", etc.
+        jidmachine (str): The JID of the remote machine to monitor.
+        timeout (int): The time in seconds to wait for a response from the remote machine.
+
+    Returns:
+        dict: A dictionary containing the result of the monitoring. The dictionary will have the shape:
+    """
     data = callremoteXmppMonitoring(jidmachine, subject, timeout=timeout)
     result = json.loads(data)
-    resultdata = zlib.decompress(base64.b64decode(result["result"]))
-    resultdata_str = resultdata.decode("utf-8")
-    dataresult = [x for x in resultdata_str.split("\n")]
-    result["result"] = dataresult
+    if "error" not in result:
+        # When the IQ can't be sent, there is an error status and no "result" key in result dict.
+        resultdata = zlib.decompress(base64.b64decode(result["result"]))
+        resultdata_str = resultdata.decode("utf-8")
+        dataresult = [x for x in resultdata_str.split("\n")]
+        result["result"] = dataresult
+    else:
+        result["result"] = {}
     return result
-
 
 def runXmppAsyncCommand(cmd, infomachine):
     sessionid = name_random(8, "quick_")

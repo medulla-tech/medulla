@@ -30,7 +30,7 @@ require_once("modules/updates/includes/xmlrpc.php");
 unset($_GET['action']);
 
 $entityName = !empty($_GET['name']) ? htmlentities($_GET['name']) : "";
-$titre = _T("OS Upgrade details by Machines", 'updates');
+$titre = _T("List of machines to be upgraded", 'updates');
 if ($entityName) {
     $titre .= ' — ' . $entityName;
 }

@@ -731,10 +731,10 @@ def get_packages_for_machine(machine):
         else None
     )
     OUmachine = (
-        machine["ad_ou_machine"].replace("\n", "").replace("\r", "").replace("@@", ">>")
+        machine["ad_ou_machine"].replace("\n", "").replace("\r", "").replace("@@", "/")
     )
     OUuser = (
-        machine["ad_ou_user"].replace("\n", "").replace("\r", "").replace("@@", ">>")
+        machine["ad_ou_user"].replace("\n", "").replace("\r", "").replace("@@", "/")
     )
     group = XmppMasterDatabase().get_ad_group_for_lastuser(machine["lastuser"])
     if OUmachine == "":

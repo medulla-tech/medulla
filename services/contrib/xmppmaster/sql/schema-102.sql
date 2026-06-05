@@ -17,7 +17,7 @@
 -- along with Pulse 2; if not, write to the Free Software
 -- Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 -- MA 02110-1301, USA.
--- FILE contrib/xmppmaster/sql/schema-101.sql
+-- FILE contrib/xmppmaster/sql/schema-102.sql
 -- =======================================
 -- Database xmppmaster
 -- =======================================
@@ -996,7 +996,7 @@ END$$
 DELIMITER ;
 
 -- Enregistrement de la version
-UPDATE version SET Number = 101;
+UPDATE version SET Number = 102;
 
 commit;
 

@@ -2580,6 +2580,40 @@ class XmppMasterDatabase(DatabaseHelper):
             return -1
 
     @DatabaseHelper._sessionm
+    def updateMachineGlpiEntityId(self, session, machine_id, glpi_entity_id):
+        """
+        Update only the glpi_entity_id field for a machine to ensure entity coherence.
+        This is used in Case 1 registrations after successful GLPI consolidation.
+        
+        Args:
+            machine_id: The ID of the machine to update
+            glpi_entity_id: The new glpi_entity_id to set (ID from glpi_entity table)
+        
+        Returns:
+            1 if successful, -1 if error
+        """
+        try:
+            if glpi_entity_id in ["NULL", "", None]:
+                glpi_entity_id = None
+            
+            session.query(Machines).filter(Machines.id == machine_id).update(
+                {Machines.glpi_entity_id: glpi_entity_id}
+            )
+            session.commit()
+            session.flush()
+            logger.info(
+                "Updated glpi_entity_id=%s for machine id=%s"
+                % (glpi_entity_id, machine_id)
+            )
+            return 1
+        except Exception as e:
+            logger.error(
+                "updateMachineGlpiEntityId error for machine %s: %s"
+                % (machine_id, str(e))
+            )
+            return -1
+
+    @DatabaseHelper._sessionm
     def updateName_Qa_custom_command(
         self, session, user, osname, namecmd, customcmd, description, old_namecmd=""
     ):
@@ -10283,39 +10317,73 @@ class XmppMasterDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def getMachinefromjid(self, session, jid):
         """information machine"""
-        user = str(jid).split("@")[0]
-        machine = (
-            session.query(Machines).filter(
-                Machines.jid.like("%s%%" % user)).first()
-        )
-        session.commit()
-        session.flush()
         result = {}
-        if machine:
-            result = {
-                "id": machine.id,
-                "jid": machine.jid,
-                "platform": machine.platform,
-                "archi": machine.archi,
-                "hostname": machine.hostname,
-                "uuid_inventorymachine": machine.uuid_inventorymachine,
-                "ip_xmpp": machine.ip_xmpp,
-                "ippublic": machine.ippublic,
-                "macaddress": machine.macaddress,
-                "subnetxmpp": machine.subnetxmpp,
-                "agenttype": machine.agenttype,
-                "classutil": machine.classutil,
-                "groupdeploy": machine.groupdeploy,
-                "urlguacamole": machine.urlguacamole,
-                "picklekeypublic": machine.picklekeypublic,
-                "ad_ou_user": machine.ad_ou_user,
-                "ad_ou_machine": machine.ad_ou_machine,
-                "kiosk_presence": machine.kiosk_presence,
-                "lastuser": machine.lastuser,
-                "keysyncthing": machine.keysyncthing,
-                "enabled": machine.enabled,
-                "uuid_serial_machine": machine.uuid_serial_machine,
-            }
+        try:
+            if jid is None:
+                return result
+
+            jid_str = str(jid).strip()
+            if not jid_str:
+                return result
+
+            user = jid_str.split("@")[0]
+            if not user:
+                return result
+
+            # Prefer exact JID match to avoid returning a sibling machine by prefix.
+            machine = session.query(Machines).filter(Machines.jid == jid_str).first()
+            if machine is None:
+                machine = (
+                    session.query(Machines)
+                    .filter(Machines.jid.like("%s@%%" % user))
+                    .first()
+                )
+
+            if machine:
+                entity_glpi_id = None
+                glpi_entity_id = getattr(machine, "glpi_entity_id", None)
+                if glpi_entity_id is not None:
+                    entity = getattr(machine, "glpi_entity", None)
+                    if entity is None:
+                        entity = (
+                            session.query(Glpi_entity)
+                            .filter(Glpi_entity.id == glpi_entity_id)
+                            .first()
+                        )
+                    if entity is not None:
+                        entity_glpi_id = entity.glpi_id
+
+                result = {
+                    "id": machine.id,
+                    "jid": machine.jid,
+                    "platform": machine.platform,
+                    "archi": machine.archi,
+                    "hostname": machine.hostname,
+                    "uuid_inventorymachine": machine.uuid_inventorymachine,
+                    "ip_xmpp": machine.ip_xmpp,
+                    "ippublic": machine.ippublic,
+                    "macaddress": machine.macaddress,
+                    "subnetxmpp": machine.subnetxmpp,
+                    "agenttype": machine.agenttype,
+                    "classutil": machine.classutil,
+                    "groupdeploy": machine.groupdeploy,
+                    "urlguacamole": machine.urlguacamole,
+                    "picklekeypublic": machine.picklekeypublic,
+                    "ad_ou_user": machine.ad_ou_user,
+                    "ad_ou_machine": machine.ad_ou_machine,
+                    "kiosk_presence": machine.kiosk_presence,
+                    "lastuser": machine.lastuser,
+                    "keysyncthing": machine.keysyncthing,
+                    "enabled": machine.enabled,
+                    "uuid_serial_machine": machine.uuid_serial_machine,
+                    "glpi_entity_id": glpi_entity_id,
+                    "entity_id": entity_glpi_id,
+                }
+            session.commit()
+            session.flush()
+        except Exception as e:
+            session.rollback()
+            logger.error("getMachinefromjid error: %s", e)
         return result
 
     @DatabaseHelper._sessionm
@@ -14749,7 +14817,7 @@ FROM (
         return result_data
 
     @DatabaseHelper._sessionm
-    def get_all_machines_grouped_by_os(self, session, start, end, ctx):
+    def get_all_machines_grouped_by_os(self, session, start, end, ctx, os_filter=""):
         """
         Récupère les machines du XMPPMaster, groupées par type d'OS :
         - Microsoft Windows
@@ -14757,6 +14825,11 @@ FROM (
         - Autres
 
         Filtres (ctx) et pagination inclus.
+
+        Si os_filter vaut "windows", "linux" ou "autres", la requête paginée
+        ne ramène que les machines de ce groupe : utile pour avoir des pages
+        de taille constante quand l'appelant n'affiche qu'un seul OS.
+        Les compteurs renvoyés par OS restent les totaux globaux.
         """
 
         # ───────────────────────────────
@@ -14794,7 +14867,44 @@ FROM (
         }
 
         # ───────────────────────────────
-        # 3️⃣ Requête SQL principale
+        # 3️⃣ Compte global par OS (indépendant de la pagination)
+        # ───────────────────────────────
+        linux_keywords = ["linux", "ubuntu", "debian", "centos", "redhat", "fedora", "suse"]
+        win_sql = "(LOWER(m.platform) LIKE '%windows%' OR LOWER(m.platform) LIKE '%mic%')"
+        linux_sql = "(" + " OR ".join(
+            f"LOWER(m.platform) LIKE '%{kw}%'" for kw in linux_keywords
+        ) + ")"
+
+        count_sql = f"""
+            SELECT
+                SUM(CASE WHEN {win_sql} THEN 1 ELSE 0 END) AS windows_count,
+                SUM(CASE WHEN {linux_sql} THEN 1 ELSE 0 END) AS linux_count,
+                SUM(CASE WHEN NOT {win_sql} AND NOT {linux_sql} THEN 1 ELSE 0 END) AS autres_count
+            FROM machines m
+            JOIN glpi_entity ge ON m.glpi_entity_id = ge.id
+            WHERE {where_sql}
+        """
+        counts_row = session.execute(count_sql).fetchone()
+        if counts_row:
+            result_data["windows"]["count"] = int(counts_row["windows_count"] or 0)
+            result_data["linux"]["count"]   = int(counts_row["linux_count"]   or 0)
+            result_data["autres"]["count"]  = int(counts_row["autres_count"]  or 0)
+
+        # Filtre SQL optionnel pour ne paginer que les machines d'un OS donné
+        os_sql_filter = ""
+        if os_filter == "windows":
+            os_sql_filter = win_sql
+        elif os_filter == "linux":
+            os_sql_filter = linux_sql
+        elif os_filter == "autres":
+            os_sql_filter = f"(NOT {win_sql} AND NOT {linux_sql})"
+
+        where_sql_paginated = where_sql
+        if os_sql_filter:
+            where_sql_paginated = f"{where_sql} AND {os_sql_filter}"
+
+        # ───────────────────────────────
+        # 4️⃣ Requête SQL principale
         # ───────────────────────────────
         sql_query = f"""
             SELECT
@@ -14807,7 +14917,7 @@ FROM (
                 ge.complete_name        AS entity
             FROM machines m
             JOIN glpi_entity ge ON m.glpi_entity_id = ge.id
-            WHERE {where_sql}
+            WHERE {where_sql_paginated}
             LIMIT {start}, {end}
         """
 
@@ -14815,10 +14925,8 @@ FROM (
         machines = result.fetchall()
 
         # ───────────────────────────────
-        # 4️⃣ Regroupement par OS
+        # 5️⃣ Regroupement par OS
         # ───────────────────────────────
-        linux_keywords = ["linux", "ubuntu", "debian", "centos", "redhat", "fedora", "suse"]
-
         for row in machines:
             uid = row["uuid"].replace("UUID", "") if row["uuid"] else ""
             os_value = (row["os"] or "").lower()
@@ -14840,10 +14948,9 @@ FROM (
             section["data"]["user"].append(row["user"] or "")
             section["data"]["entity"].append(row["entity"] or "")
             section["data"]["presence"].append(1)
-            section["count"] += 1
 
         # ───────────────────────────────
-        # 5️⃣ Ajout des données XMPP
+        # 6️⃣ Ajout des données XMPP
         # ───────────────────────────────
         all_uuids = (
             result_data["windows"]["data"]["uuid"]
@@ -17041,9 +17148,21 @@ FROM (
         """
           Statistiques de mise a jour Windows 10 / 11 (client uniquement).
 
+                    Important (perimetre des donnees):
+                    - Les colonnes de classification (`W10to10`, `W10to11`, `W11to11`,
+                        `UPDATED`, `non_conforme`, `autre_cas`) sont calculees a partir des
+                        lignes `up_major_win` traitees en Python.
+                    - Le champ `count` (total machines Windows par entite) est calcule via
+                        une requete SQL dediee (`total_query`) en
+                        `COUNT(DISTINCT LOWER(TRIM(mw.hostname)))`.
+                    - Le `LEFT JOIN xmppmaster.glpi_entity` dans `total_query` sert
+                        uniquement a resoudre un nom d'entite lisible (`complete_name`) et
+                        ne modifie pas la logique des autres colonnes.
+
           Regles metier de classification (par entite):
 
           1) old_version=11, new_version=11
+              - oldcode == "26H1"  => categorie "UPDATED" (version LT stab, pas de maj requise)
               - oldcode != newcode  => categorie "W11to11" (mise a jour Win11 vers Win11)
               - oldcode == newcode  => categorie "UPDATED" (machine deja a jour)
 
@@ -17058,12 +17177,21 @@ FROM (
 
           4) Tous les autres cas => categorie "autre_cas"
 
+          NOTE: La règle 26H1 = UPDATED sera à réviser quand les mises à jour Windows 11
+                seront indépendantes de Windows Update (actuellement dépendant du calendrier WU).
+
           Taux de conformite (par entite):
               conformite = UPDATED / nombre_total_machines_windows_entite * 100
               si nombre_total_machines_windows_entite == 0, conformite = 100.0
 
         Args:
             session: session SQLAlchemy.
+            entitylist (list[int|str]|None):
+                                                                Liste optionnelle d'identifiants d'entité (champ `local_glpi_entities.id` / `up_major_win.ent_id`).
+                - Chaque valeur est convertie en entier.
+                - Les valeurs invalides sont ignorées.
+                - Si `None` ou liste vide (ou après filtrage invalide), aucune restriction
+                  d'entité n'est appliquée et toutes les entités sont prises en compte.
             presence: si True, filtre uniquement les machines activées.
         Returns:
             dict: statistiques par entité.
@@ -17072,7 +17200,6 @@ FROM (
         try:
             results = {"entity": {}}
             presence_filter = "AND mw.enabled = 1" if presence else ""
-            total_presence_filter = "AND m.enabled = 1" if presence else ""
 
             entity_ids = []
             if entitylist:
@@ -17087,17 +17214,41 @@ FROM (
                 if entity_ids
                 else ""
             )
-            total_entity_filter = (
-                f"AND e.glpi_id IN ({','.join(str(e) for e in entity_ids)})"
-                if entity_ids
-                else ""
-            )
+
+            # Pré-initialise les entités depuis la table miroir GLPI complète,
+            # pour conserver aussi les entités sans machine.
+            entities_sql = """
+                SELECT
+                    e.id AS entity_id,
+                    e.completename AS complete_name
+                FROM xmppmaster.local_glpi_entities e
+            """
+            if entity_ids:
+                entities_sql += f" WHERE e.id IN ({','.join(str(e) for e in entity_ids)})"
+
+            for entity_row in session.execute(entities_sql).fetchall():
+                ent_name = entity_row.complete_name
+                results["entity"].setdefault(
+                    ent_name,
+                    {
+                        "entity_id": int(entity_row.entity_id),
+                        "name": ent_name,
+                        "count": 0,
+                        "W10to10": 0,
+                        "W10to11": 0,
+                        "W11to11": 0,
+                        "UPDATED": 0,
+                        "non_conforme": 0,
+                        "autre_cas": 0,
+                        "non_inventorie": 0,
+                    },
+                )
 
             # Requête pour récupérer les données brutes
             query = f"""
                 SELECT
                     mw.ent_id,
-                    e.complete_name,
+                    COALESCE(e.complete_name, CONCAT('Entity ', mw.ent_id)) AS complete_name,
                     mw.hostname,
                     mw.old_version,
                     mw.new_version,
@@ -17105,7 +17256,7 @@ FROM (
                     mw.newcode,
                     mw.is_active
                 FROM xmppmaster.up_major_win mw
-                INNER JOIN xmppmaster.glpi_entity e ON e.glpi_id = mw.ent_id
+                LEFT JOIN xmppmaster.glpi_entity e ON e.glpi_id = mw.ent_id
                 WHERE mw.target_name LIKE 'Win%' AND mw.target_name NOT LIKE '%Server%'
                 {presence_filter}
                 {entity_filter}
@@ -17183,19 +17334,26 @@ FROM (
                     else:
                         category = "non_conforme"
                 elif old_major == "11" and new_major == "11":
+                    # Traite 26H1 comme a jour : version LT stable, pas de maj requise
+                    # (ce comportement changera quand les mises a jour Win11 seront independantes de Windows Update)
+                    if oldcode == "26H1":
+                        category = "UPDATED"
                     # Exclut explicitement les machines old_version=10 du compteur W11to11.
-                    ent_target_code = entity_win11_target_code.get(ent_id, "")
-                    if oldcode == newcode or (ent_target_code and oldcode == ent_target_code):
+                    elif oldcode == newcode:
                         category = "UPDATED"
                     else:
-                        category = "W11to11"
+                        ent_target_code = entity_win11_target_code.get(ent_id, "")
+                        if ent_target_code and oldcode == ent_target_code:
+                            category = "UPDATED"
+                        else:
+                            category = "W11to11"
                 else:
                     category = "autre_cas"
 
                 # Mise à jour des résultats
                 if ent_name not in results["entity"]:
                     results["entity"][ent_name] = {
-                        "entity_id": ent_id,
+                        "entity_id": int(ent_id),
                         "name": ent_name,
                         "count": 0,
                         "W10to10": 0,
@@ -17203,26 +17361,29 @@ FROM (
                         "W11to11": 0,
                         "UPDATED": 0,
                         "non_conforme": 0,
-                        "autre_cas" : 0,
-                        "non_inventorie" : 0
+                        "autre_cas": 0,
+                        "non_inventorie": 0,
                     }
 
                 results["entity"][ent_name][category] += 1
 
-            # Récupération du nombre total de machines Windows par entité
+            # Récupération du nombre total de machines par entité
+            # (même source que les colonnes de catégories pour garder un périmètre cohérent)
             total_query = f"""
                             SELECT
-                                e.complete_name, COUNT(*) AS count
+                                mw.ent_id,
+                                COALESCE(e.complete_name, CONCAT('Entity ', mw.ent_id)) AS complete_name,
+                                COUNT(DISTINCT LOWER(TRIM(mw.hostname))) AS count
                             FROM
-                                xmppmaster.machines m
-                                    inner JOIN
-                                xmppmaster.glpi_entity e ON e.id = m.glpi_entity_id
+                                xmppmaster.up_major_win mw
+                                    LEFT JOIN
+                                xmppmaster.glpi_entity e ON e.glpi_id = mw.ent_id
                             WHERE
-                                m.platform LIKE 'Microsoft Windows%'
-                                AND m.platform NOT LIKE '%Server%'
-                                {total_presence_filter}
-                                {total_entity_filter}
-                            GROUP BY e.complete_name;
+                                mw.target_name LIKE 'Win%'
+                                AND mw.target_name NOT LIKE '%Server%'
+                                {presence_filter}
+                                {entity_filter}
+                            GROUP BY mw.ent_id, complete_name;
             """
             for row in session.execute(total_query).fetchall():
                 ent_name = row.complete_name
@@ -17254,7 +17415,6 @@ FROM (
         except Exception as e:
             logger.error(f"Erreur stats Windows : {e}")
             logger.error(traceback.format_exc())
-            return {}
 
 
     @DatabaseHelper._sessionm
@@ -18335,6 +18495,8 @@ FROM (
             Paramètres :
                 session (Session) : Objet de session SQLAlchemy pour l'interaction avec la base de données.
                 entity_id (int) : L'ID de l'entité pour filtrer les résultats.
+                    - None ou -1 : Retourne toutes les entités (wildcard).
+                    - 0 ou tout autre entier : Filtre sur l'entité spécifique (0 est une ID valide).
                 typeaction (str) : Type de machines à filtrer :
                     - "windows" : Exclut les machines dont la plateforme contient "Microsoft Windows Server".
                     - "serverwin" : Inclut uniquement les machines dont la plateforme contient "Microsoft Windows Server".
@@ -18381,7 +18543,7 @@ FROM (
             WHERE
                 (
                     :entity_id IS NULL
-                    OR CAST(:entity_id AS SIGNED) IN (0, -1)
+                    OR CAST(:entity_id AS SIGNED) = -1
                     OR ent_id = CAST(:entity_id AS SIGNED)
                 )
                 AND

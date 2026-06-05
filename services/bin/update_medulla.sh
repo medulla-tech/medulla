@@ -149,14 +149,6 @@ setup_new_mmc_module() {
     if [[ -n "${PUBLIC_IP}" ]]; then
         mysql --defaults-group-suffix=dbsetup -e "GRANT ALL PRIVILEGES ON ${module_name}.* TO '${DBUSER}'@'${PUBLIC_IP}' IDENTIFIED BY '${DBPASS}'; FLUSH PRIVILEGES;"
     fi
-    # restart mmc-agent service to apply changes
-    systemctl restart mmc-agent
-    if [[ $? -ne 0 ]]; then
-        str="[x] Error restarting mmc-agent service after setting up MMC module $module_name. Aborting."
-        echo "$str"
-        write_to_log "$str"
-        exit 1
-    fi
     str="[v] MMC module $module_name setup completed successfully."
     echo "$str"
     write_to_log "$str"
@@ -589,16 +581,17 @@ update_546_to_550() {
         write_to_log "$str"
         exit 1
     fi
+    # Specific to SAAS. ACLs for CVEs
     # Append the following string to /etc/mmc/plugins/glpi.ini.local profile_acl_Super-Admin and profile_acl_Admin parameters before the final / if not already present:
-    # :security#security#index:security#security#softwareDetail:security#security#machines:security#security#machineDetail:security#security#entities:security#security#groups:security#security#groupDetail:security#security#allcves:security#security#cveDetail:security#security#ajaxAddExclusion:security#security#ajaxScanMachine:security#security#ajaxStartScanEntity:security#security#ajaxStartScanGroup:security#security#settings:security#security#ajaxResetDisplayFilters:security#security#settings:security#security#deployStoreUpdate
+    # :security#security#index:security#security#softwareDetail:security#security#machines:security#security#machineDetail:security#security#entities:security#security#groups:security#security#groupDetail:security#security#allcves:security#security#cveDetail:security#security#ajaxAddExclusion:security#security#ajaxScanMachine:security#security#ajaxStartScanEntity:security#security#ajaxStartScanGroup:security#security#ajaxResetDisplayFilters:security#security#deployStoreUpdate
     # And profile_acl_Technician if not already present:
-    # :security#security#index:security#security#softwareDetail:security#security#machines:security#security#machineDetail:security#security#entities:security#security#groups:security#security#groupDetail:security#security#allcves:security#security#cveDetail:security#security#ajaxAddExclusion:security#security#ajaxScanMachine:security#security#ajaxStartScanEntity:security#security#ajaxStartScanGroup:security#security#settings:security#security#ajaxResetDisplayFilters
+    # :security#security#index:security#security#softwareDetail:security#security#machines:security#security#machineDetail:security#security#entities:security#security#groups:security#security#groupDetail:security#security#allcves:security#security#cveDetail:security#security#ajaxAddExclusion:security#security#ajaxScanMachine:security#security#ajaxStartScanEntity:security#security#ajaxStartScanGroup:security#security#ajaxResetDisplayFilters
     str="[=] Configuring ACLs for new Medulla MMC module 'security' in glpi.ini.local..."
     echo "$str"
     write_to_log "$str"
     for profile in Super-Admin Admin; do
         if ! grep -q "security#security#index" /etc/mmc/plugins/glpi.ini.local | grep -q "^profile_acl_$profile"; then
-            sed -i "/^profile_acl_$profile/s|\(.*\)/$|\1:security#security#index:security#security#softwareDetail:security#security#machines:security#security#machineDetail:security#security#entities:security#security#groups:security#security#groupDetail:security#security#allcves:security#security#cveDetail:security#security#ajaxAddExclusion:security#security#ajaxScanMachine:security#security#ajaxStartScanEntity:security#security#ajaxStartScanGroup:security#security#settings:security#security#ajaxResetDisplayFilters:security#security#settings:security#security#deployStoreUpdate/|" /etc/mmc/plugins/glpi.ini.local
+            sed -i "/^profile_acl_$profile/s|\(.*\)/$|\1:security#security#index:security#security#softwareDetail:security#security#machines:security#security#machineDetail:security#security#entities:security#security#groups:security#security#groupDetail:security#security#allcves:security#security#cveDetail:security#security#ajaxAddExclusion:security#security#ajaxScanMachine:security#security#ajaxStartScanEntity:security#security#ajaxStartScanGroup:security#security#ajaxResetDisplayFilters:security#security#settings:security#security#deployStoreUpdate/|" /etc/mmc/plugins/glpi.ini.local
             if [[ $? -ne 0 ]]; then
                 str="[x] Error updating ACLs for $profile profile in glpi.ini.local. Aborting."
                 echo "$str"
@@ -821,6 +814,113 @@ update_551_to_552() {
     fi
 }
 
+update_552_to_560() {
+    str="Applying Medulla config update from 5.5.2 to 5.6.0..."
+    echo "$str"
+    write_to_log "$str"
+    update_medulla
+
+    # Reconfigure cron job for downloading Windows updates
+    str="[=] Setting up cron job for downloading Windows updates..."
+    echo "$str"
+    write_to_log "$str"
+    # Create /etc/cron.d/medulla_winupdates_dl
+    echo "30 1 * * * root /usr/sbin/medulla-generate-winupdate-packages 2>&1 | tee -a /tmp/medulla-generate-winupdate-packages.log" > /etc/cron.d/medulla_winupdates_dl
+    # Restart cron service to apply changes
+    systemctl restart cron
+    if [[ $? -ne 0 ]]; then
+        str="[x] Error setting up cron job for downloading Windows updates. Aborting."
+        echo "$str"
+        write_to_log "$str"
+        exit 1
+    fi
+    str="[v] Cron job for downloading Windows updates set up successfully."
+    echo "$str"
+    write_to_log "$str"
+
+    ## Setup new MMC module: store
+    setup_new_mmc_module "store"
+    # Configure store module
+    crudini --set /etc/mmc/plugins/store.ini.local store_api url https://store.medulla-tech.io/api/v1
+    if [[ $? -ne 0 ]]; then
+        str="[x] Error configuring store API URL in store module. Aborting."
+        echo "$str"
+        write_to_log "$str"
+        exit 1
+    fi
+    crudini --set /etc/mmc/plugins/store.ini.local store_api keyAES32 $(crudini --get /etc/mmc/plugins/xmppmaster.ini.local defaultconnection keyAES32)
+    if [[ $? -ne 0 ]]; then
+        str="[x] Error configuring store API keyAES32 in store module. Aborting."
+        echo "$str"
+        write_to_log "$str"
+        exit 1
+    fi
+    crudini --set /etc/mmc/plugins/store.ini.local store_api lang fr_FR
+    if [[ $? -ne 0 ]]; then
+        str="[x] Error configuring store API lang in store module. Aborting."
+        echo "$str"
+        write_to_log "$str"
+        exit 1
+    fi
+    # mmc-agent will be restarted in final_operations
+    str="[v] Medulla MMC module 'store' setup and configuration applied successfully."
+    echo "$str"
+    write_to_log "$str"
+
+    # ACL management is now enabled. Remove the ACLs if they exist in /etc/mmc/plugins/glpi.ini.local
+    str="[=] Removing Technician, Admin and Super-Admin ACLs from glpi.ini.local if they exist..."
+    echo "$str"
+    write_to_log "$str"
+    # Backup glpi.ini.local before modifying it
+    cp /etc/mmc/plugins/glpi.ini.local /etc/mmc/plugins/glpi.ini.local.$(date +"%Y%m%d%H%M%S").bak
+    if [[ $? -ne 0 ]]; then
+        str="[x] Error backing up glpi.ini.local. Aborting."
+        echo "$str"
+        write_to_log "$str"
+        exit 1
+    fi
+    crudini --del /etc/mmc/plugins/glpi.ini.local provisioning_glpi profile_acl_Technician
+    if [[ $? -ne 0 ]]; then
+        str="[x] Error removing Technician ACL from glpi.ini.local."
+        echo "$str"
+        write_to_log "$str"
+    else
+        str="[v] Technician ACL removed from glpi.ini.local successfully."
+        echo "$str"
+        write_to_log "$str"
+    fi
+    crudini --del /etc/mmc/plugins/glpi.ini.local provisioning_glpi profile_acl_Admin
+    if [[ $? -ne 0 ]]; then
+        str="[x] Error removing Admin ACL from glpi.ini.local."
+        echo "$str"
+        write_to_log "$str"
+    else
+        str="[v] Admin ACL removed from glpi.ini.local successfully."
+        echo "$str"
+        write_to_log "$str"
+    fi
+    crudini --del /etc/mmc/plugins/glpi.ini.local provisioning_glpi profile_acl_Super-Admin
+    if [[ $? -ne 0 ]]; then
+        str="[x] Error removing Super-Admin ACL from glpi.ini.local."
+        echo "$str"
+        write_to_log "$str"
+    else
+        str="[v] Super-Admin ACL removed from glpi.ini.local successfully."
+        echo "$str"
+        write_to_log "$str"
+    fi
+
+    echo "5.6.0" > /var/lib/mmc/version
+    str="[v] Medulla config update from 5.5.2 to 5.6.0 applied successfully."
+    echo "$str"
+    write_to_log "$str"
+    if [[ -f /tmp/update_medulla.sh ]]; then
+        exec /tmp/update_medulla.sh "$@"
+    else
+        exec /usr/sbin/update_medulla.sh "$@"
+    fi
+}
+
 # --- End of specific update functions for each version ---
 
 
@@ -945,6 +1045,11 @@ case "$CURRENT_VERSION" in
     "5.5.1")
         if [[ "$AVAILABLE_VERSION" > "5.5.1" ]]; then
             update_551_to_552
+        fi
+        ;;
+    "5.5.2")
+        if [[ "$AVAILABLE_VERSION" > "5.5.2" ]]; then
+            update_552_to_560
         fi
         ;;
     *)
