@@ -1,5 +1,12 @@
 # Change Log
 
+## [5.6.1](https://github.com/medulla-tech/medulla/releases/tag/5.6.1) (2026-06-08)
+- [FEATURE] Allow importing of a few Linux masters in Imaging module
+- [FEATURE] Improve the detection of the imaging server associated to a machine
+- [FEATURE] Serve global agent for root entity when the entities are not managed from Medulla
+- [BUGFIX]  Fix alignment of action icons
+- [BUGFIX]  Fix pie chart for ABORT ON TIMEOUT deployment errors
+
 ## [5.6.0](https://github.com/medulla-tech/medulla/releases/tag/5.6.0) (2026-05-26)
 - [FEATURE] Management of ACLs in Medulla Admin module
 - [FEATURE] Access to Medulla Store for subscribing to ready-made up-to-date packages (preview)
