@@ -129,98 +129,169 @@ CREATE TABLE IF NOT EXISTS up_machine_update_linux (
 ) ENGINE=InnoDB;
 
 
-CREATE TABLE `up_rhel_versions` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Identifiant unique de la version RHEL',
-  `version` int(11) NOT NULL COMMENT 'Numéro de version RHEL (ex: 10, 9, 8)',
-  `name` varchar(45) DEFAULT NULL COMMENT 'Nom de code de la version RHEL (si applicable)',
-  `is_managed` tinyint(1) NOT NULL DEFAULT 0 COMMENT 'Indique si cette version est suivie / gérée par le système',
-  `is_current_stable` tinyint(1) NOT NULL DEFAULT 0 COMMENT 'Indique si cette version est actuellement la version stable officielle',
-  `is_latest_lts` tinyint(1) NOT NULL DEFAULT 0 COMMENT 'Indique si cette version est la dernière version LTS prise en compte',
-  `end_standard_support` datetime DEFAULT NULL COMMENT 'Date de fin du support de sécurité standard',
-  `end_els_support` datetime DEFAULT NULL COMMENT 'Date de fin du support de sécurité ELS (Extended Life Cycle Support)',
-  `description` varchar(255) DEFAULT NULL COMMENT 'Description ou informations complémentaires sur la version',
-  `package` varchar(36) DEFAULT NULL,
-  `packagename` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uniq_version` (`version`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='Liste des versions RHEL et état de leur support (stable, ELS)';
+
+DROP TABLE IF EXISTS up_os_versions;
+
+CREATE TABLE up_os_versions (
+    id INT NOT NULL AUTO_INCREMENT COMMENT 'Identifiant unique',
+
+    distribution VARCHAR(32) NOT NULL COMMENT 'debian, ubuntu, rhel, almalinux, rocky, suse, opensuse, fedora, mint',
+    version VARCHAR(20) NOT NULL COMMENT 'Version de la distribution',
+    name VARCHAR(64) DEFAULT NULL COMMENT 'Nom de code',
+
+    is_managed TINYINT(1) NOT NULL DEFAULT 0 COMMENT 'Version gérée par Medull',
+    is_current_stable TINYINT(1) NOT NULL DEFAULT 0 COMMENT 'Version stable actuelle',
+    is_recommended TINYINT(1) NOT NULL DEFAULT 0 COMMENT 'Version recommandée',
+
+    end_vendor_support DATETIME DEFAULT NULL COMMENT 'Fin du support standard éditeur',
+    end_extended_support DATETIME DEFAULT NULL COMMENT 'Fin du support étendu',
+
+    description VARCHAR(255) DEFAULT NULL COMMENT 'Description',
+
+    package VARCHAR(36) DEFAULT NULL,
+    packagename VARCHAR(45) DEFAULT NULL,
+
+    PRIMARY KEY (id),
+
+    UNIQUE KEY uniq_distribution_version (
+        distribution,
+        version
+    ),
+
+    KEY idx_distribution (
+        distribution
+    ),
+
+    KEY idx_distribution_stable (
+        distribution,
+        is_current_stable
+    ),
+
+    KEY idx_distribution_recommended (
+        distribution,
+        is_recommended
+    ),
+
+    KEY idx_managed (
+        is_managed
+    ),
+
+    KEY idx_vendor_support (
+        end_vendor_support
+    ),
+
+    KEY idx_extended_support (
+        end_extended_support
+    )
+
+) ENGINE=InnoDB
+DEFAULT CHARSET=utf8mb4
+COLLATE=utf8mb4_general_ci
+COMMENT='Versions des systèmes d exploitation';
 
 
-CREATE TABLE `up_debian_versions` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Identifiant unique de la version Debian',
-  `version` int(11) NOT NULL COMMENT 'Numéro de version Debian (ex: Numéro de version Debian 13, 12, 11 pour Bookworm)',
-  `name` varchar(45) NOT NULL COMMENT 'Nom de la version Debian (ex: Bookworm)',
-  `is_managed` tinyint(1) NOT NULL DEFAULT 0 COMMENT 'Indique si cette version est suivie / gérée par le système',
-  `is_current_stable` tinyint(1) NOT NULL DEFAULT 0 COMMENT 'Indique si cette version est actuellement la version stable officielle',
-  `is_latest_lts` tinyint(1) NOT NULL DEFAULT 0 COMMENT 'Indique si cette version est la dernière version LTS prise en compte',
-  `end_standard_support` datetime DEFAULT NULL COMMENT 'Date de fin du support de sécurité standard (hors LTS)',
-  `end_lts_support` datetime DEFAULT NULL COMMENT 'Date de fin du support de sécurité LTS',
-  `end_elts_support` datetime DEFAULT NULL COMMENT 'Date de fin du support de sécurité ELTS (support étendu payant)',
-  `description` varchar(100) DEFAULT NULL COMMENT 'Description ou informations complémentaires sur la version',
-  `package` varchar(36) DEFAULT NULL,
-  `packagename` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uniq_version` (`version`),
-  UNIQUE KEY `uniq_name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='Liste des versions Debian et état de leur support (stable, LTS, ELTS)';
+DELETE FROM up_os_versions;
 
-
-CREATE TABLE `up_ubuntu_versions` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Identifiant unique de la version Ubuntu',
-  `version` varchar(10) NOT NULL COMMENT 'Numéro de version Ubuntu (ex: 24.04, 22.04)',
-  `name` varchar(45) NOT NULL COMMENT 'Nom de code de la version Ubuntu (ex: Noble Numbat)',
-  `is_managed` tinyint(1) NOT NULL DEFAULT 0 COMMENT 'Indique si cette version est suivie / gérée par le système',
-  `is_current_stable` tinyint(1) NOT NULL DEFAULT 0 COMMENT 'Indique si cette version est actuellement la version stable officielle',
-  `is_latest_lts` tinyint(1) NOT NULL DEFAULT 0 COMMENT 'Indique si cette version est la dernière version LTS prise en compte',
-  `end_standard_support` datetime DEFAULT NULL COMMENT 'Date de fin du support de sécurité standard (hors LTS)',
-  `end_lts_support` datetime DEFAULT NULL COMMENT 'Date de fin du support de sécurité LTS',
-  `end_esm_support` datetime DEFAULT NULL COMMENT 'Date de fin du support de sécurité ESM (Extended Security Maintenance)',
-  `description` varchar(255) DEFAULT NULL COMMENT 'Description ou informations complémentaires sur la version',
-  `package` varchar(36) DEFAULT NULL,
-  `packagename` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uniq_version` (`version`),
-  UNIQUE KEY `uniq_name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='Liste des versions Ubuntu et état de leur support (stable, LTS, ESM)';
-
-
--- ================================================
--- Seed data: RHEL versions (imported from legacy dump)
--- ================================================
-DELETE FROM `up_rhel_versions`;
-INSERT INTO `up_rhel_versions`
-(`id`, `version`, `name`, `is_managed`, `is_current_stable`, `is_latest_lts`, `end_standard_support`, `end_els_support`, `description`, `package`, `packagename`)
+INSERT INTO up_os_versions
+(
+ distribution,
+ version,
+ name,
+ is_managed,
+ is_current_stable,
+ is_recommended,
+ end_vendor_support,
+ end_extended_support,
+ description
+)
 VALUES
-(1, 10, 'RHEL 10', 1, 1, 1, '2030-05-31 00:00:00', '2038-05-31 00:00:00', 'RHEL 10', NULL, NULL),
-(2, 9, 'RHEL 9', 1, 0, 0, '2027-05-31 00:00:00', '2035-05-31 00:00:00', 'RHEL 9', NULL, NULL),
-(3, 8, 'RHEL 8', 1, 0, 0, '2024-05-31 00:00:00', '2032-05-31 00:00:00', 'RHEL 8', NULL, NULL);
 
+/* ==========================
+   Debian
+   ========================== */
 
--- ================================================
--- Seed data: ubuntu versions (imported from legacy dump)
--- ================================================
-DELETE FROM `up_ubuntu_versions`;
-INSERT INTO `up_ubuntu_versions`
-(`id`, `version`, `name`, `is_managed`, `is_current_stable`, `is_latest_lts`, `end_standard_support`, `end_lts_support`, `end_esm_support`, `description`, `package`, `packagename`)
-VALUES
-(1, '26.04', 'Resolute Raccoon', 1, 1, 1, '2031-05-31 00:00:00', '2036-04-30 00:00:00', '2041-04-30 00:00:00', 'Version LTS actuelle', NULL, NULL),
-(2, '24.04', 'Noble Numbat', 1, 0, 0, '2029-06-30 00:00:00', '2034-04-30 00:00:00', '2039-04-30 00:00:00', 'Version LTS précédente', NULL, NULL),
-(3, '22.04', 'Jammy Jellyfish', 1, 0, 0, '2027-06-30 00:00:00', '2032-04-30 00:00:00', '2037-04-30 00:00:00', 'Version LTS encore utilisée', NULL, NULL),
-(4, '20.04', 'Focal Fossa', 0, 0, 0, '2025-05-31 00:00:00', '2030-04-30 00:00:00', '2035-04-30 00:00:00', 'Version anciennement LTS', NULL, NULL);
+('debian','13','Trixie',0,1,1,'2028-08-09','2035-06-30','Debian 13'),
+('debian','12','Bookworm',0,0,0,'2026-06-10','2033-06-30','Debian 12'),
+('debian','11','Bullseye',0,0,0,'2024-08-14','2031-06-30','Debian 11'),
+('debian','10','Buster',0,0,0,'2022-09-10','2029-06-30','Debian 10'),
+('debian','9','Stretch',0,0,0,'2020-07-18','2027-06-30','Debian 9'),
+('debian','8','Jessie',0,0,0,'2018-06-01','2025-06-30','Debian 8'),
 
+/* ==========================
+   Ubuntu
+   ========================== */
 
--- ================================================
--- Seed data: Debian versions (imported from legacy dump)
--- ================================================
-DELETE FROM `up_debian_versions`;
-INSERT INTO `up_debian_versions` VALUES
-(1,15,'Duke',0,0,0,NULL,NULL,NULL,'Nom de code annoncé, version non publiée',NULL,NULL),
-(2,14,'Forky',0,0,0,NULL,NULL,NULL,'Version testing, date de publication non définie',NULL,NULL),
-(3,13,'Trixie',1,1,0,'2028-08-09 00:00:00','2030-06-30 00:00:00','2035-06-30 00:00:00','Version stable actuelle','633eeeb2-upgradereleasedebiantotrixi','debian-upgrade-trixie'),
-(4,12,'Bookworm',1,0,0,'2026-06-10 00:00:00','2028-06-30 00:00:00','2033-06-30 00:00:00','Version oldstable actuelle',NULL,NULL),
-(5,11,'Bullseye',1,0,1,'2024-08-14 00:00:00','2026-08-31 00:00:00','2031-06-30 00:00:00','Version oldoldstable actuelle, prise en charge LTS',NULL,NULL),
-(6,10,'Buster',0,0,0,'2022-09-10 00:00:00','2024-06-30 00:00:00','2029-06-30 00:00:00','Version archivée, prise en charge étendue LTS avec rémunération de tiers',NULL,NULL),
-(7,9,'Stretch',0,0,0,'2020-07-18 00:00:00','2022-07-01 00:00:00','2027-06-30 00:00:00','Version archivée, prise en charge étendue LTS avec rémunération de tiers',NULL,NULL);
+('ubuntu','26.04','Resolute Raccoon',0,1,1,'2031-05-31','2041-04-30','Ubuntu 26.04 LTS'),
+('ubuntu','24.04','Noble Numbat',0,0,0,'2029-06-30','2039-04-30','Ubuntu 24.04 LTS'),
+('ubuntu','22.04','Jammy Jellyfish',0,0,0,'2027-06-30','2037-04-30','Ubuntu 22.04 LTS'),
+('ubuntu','20.04','Focal Fossa',0,0,0,'2025-05-31','2035-04-30','Ubuntu 20.04 LTS'),
+('ubuntu','18.04','Bionic Beaver',0,0,0,'2023-05-31','2033-04-30','Ubuntu 18.04 LTS'),
+
+/* ==========================
+   Linux Mint
+   ========================== */
+
+('mint','22.3','Zena',0,1,1,'2029-04-30',NULL,'Linux Mint 22.3'),
+('mint','22.2','Zara',0,0,0,'2029-04-30',NULL,'Linux Mint 22.2'),
+('mint','22.1','Xia',0,0,0,'2029-04-30',NULL,'Linux Mint 22.1'),
+('mint','22','Wilma',0,0,0,'2029-04-30',NULL,'Linux Mint 22'),
+('mint','21.3','Virginia',0,0,0,'2027-04-30',NULL,'Linux Mint 21.3'),
+('mint','21.2','Victoria',0,0,0,'2027-04-30',NULL,'Linux Mint 21.2'),
+('mint','21.1','Vera',0,0,0,'2027-04-30',NULL,'Linux Mint 21.1'),
+('mint','21','Vanessa',0,0,0,'2027-04-30',NULL,'Linux Mint 21'),
+
+/* ==========================
+   RHEL
+   ========================== */
+
+('rhel','10',NULL,0,1,1,'2035-05-31','2038-05-31','RHEL 10'),
+('rhel','9',NULL,0,0,0,'2032-05-31','2035-05-31','RHEL 9'),
+('rhel','8',NULL,0,0,0,'2029-05-31','2032-05-31','RHEL 8'),
+('rhel','7',NULL,0,0,0,'2024-06-30','2028-06-30','RHEL 7'),
+('rhel','6',NULL,0,0,0,'2020-11-30','2024-11-30','RHEL 6'),
+
+/* ==========================
+   AlmaLinux
+   ========================== */
+
+('almalinux','10',NULL,0,1,1,'2035-05-31','2038-05-31','AlmaLinux 10'),
+('almalinux','9',NULL,0,0,0,'2032-05-31','2035-05-31','AlmaLinux 9'),
+('almalinux','8',NULL,0,0,0,'2029-05-31','2032-05-31','AlmaLinux 8'),
+
+/* ==========================
+   Rocky Linux
+   ========================== */
+
+('rocky','10',NULL,0,1,1,'2035-05-31','2038-05-31','Rocky Linux 10'),
+('rocky','9',NULL,0,0,0,'2032-05-31','2035-05-31','Rocky Linux 9'),
+('rocky','8',NULL,0,0,0,'2029-05-31','2032-05-31','Rocky Linux 8'),
+
+/* ==========================
+   SUSE Linux Enterprise
+   ========================== */
+
+('suse','15.6','SLES 15 SP6',0,1,1,'2027-12-31','2034-12-31','SUSE Linux Enterprise Server 15 SP6'),
+('suse','15.5','SLES 15 SP5',0,0,0,'2026-12-31','2033-12-31','SUSE Linux Enterprise Server 15 SP5'),
+('suse','15.4','SLES 15 SP4',0,0,0,'2025-12-31','2032-12-31','SUSE Linux Enterprise Server 15 SP4'),
+
+/* ==========================
+   openSUSE
+   ========================== */
+
+('opensuse','15.6',NULL,0,1,1,'2026-12-31',NULL,'openSUSE Leap 15.6'),
+('opensuse','15.5',NULL,0,0,0,'2025-12-31',NULL,'openSUSE Leap 15.5'),
+('opensuse','15.4',NULL,0,0,0,'2024-12-31',NULL,'openSUSE Leap 15.4'),
+
+/* ==========================
+   Fedora
+   ========================== */
+
+('fedora','42',NULL,0,1,1,'2026-12-31',NULL,'Fedora 42'),
+('fedora','41',NULL,0,0,0,'2025-12-31',NULL,'Fedora 41'),
+('fedora','40',NULL,0,0,0,'2025-05-31',NULL,'Fedora 40'),
+('fedora','39',NULL,0,0,0,'2024-12-31',NULL,'Fedora 39'),
+('fedora','38',NULL,0,0,0,'2024-06-30',NULL,'Fedora 38');
+
 
 -- ----------------------------------------------------------------------
 -- Database version
