@@ -493,6 +493,16 @@ $pageSendEnrollmentEmailAjax->setFile("modules/mobile/mobile/sendEnrollmentEmail
 $pageSendEnrollmentEmailAjax->setOptions(array("AJAX" => true, "visible" => false));
 $submod->addPage($pageSendEnrollmentEmailAjax);
 
+$pageDeviceEnrollEmail = new Page("deviceEnrollEmail", _T('Send Enrollment Email (per device)', 'mobile'));
+$pageDeviceEnrollEmail->setFile("modules/mobile/mobile/deviceEnrollEmail.php");
+$pageDeviceEnrollEmail->setOptions(array("AJAX" => true, "visible" => false));
+$submod->addPage($pageDeviceEnrollEmail);
+
+$pageAjaxUnenrolledEmailList = new Page("ajaxUnenrolledEmailList", _T('Unenrolled devices with email', 'mobile'));
+$pageAjaxUnenrolledEmailList->setFile("modules/mobile/mobile/ajaxUnenrolledEmailList.php");
+$pageAjaxUnenrolledEmailList->setOptions(array("AJAX" => true, "visible" => false));
+$submod->addPage($pageAjaxUnenrolledEmailList);
+
 $pageNetfilterRules = new Page("netfilterRules", _T('Filter Rules', 'mobile'));
 $pageNetfilterRules->setFile("modules/mobile/mobile/netfilterRules.php");
 $pageNetfilterRules->setOptions(array("visible" => false));

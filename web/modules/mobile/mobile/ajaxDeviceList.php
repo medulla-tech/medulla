@@ -24,6 +24,7 @@ $actionEdit = [];
 $actionDetails = [];
 $actionLogs = [];
 $actionMessage = [];
+$actionEnrollEmail = [];
 $params = [];
 $sources = $ip = [];
 
@@ -201,6 +202,7 @@ foreach ($mobiles as $index => $mobile) {
     $actionLogs[] = new ActionItem(_T("Logs", "mobile"), "functions", "logfile", "device", "mobile", "mobile", "taglogs");
     $actionMessage[] = new ActionItem(_T("Message", "mobile"), "newMessage", "add", "device", "mobile", "mobile");
     $actionEdit[] = new ActionItem(_T("Edit", "mobile"), "editDevice", "edit", "id", "mobile", "mobile");
+    $actionEnrollEmail[] = new ActionItem(_T("Send enrollment email", "mobile"), "deviceEnrollEmail", "share", "id", "mobile", "mobile");
     $actionQuick[] = new ActionPopupItem(_T("Quick action", "mobile"), "deviceQuickAction", "quick", "id", "mobile", "mobile", null, 620);
     $actionQr[] = new ActionPopupItem(_T("QR Code", "mobile"), "qrCode", "qrcode", "", "mobile", "mobile", null, 450);
     $actionRemoteControl[] = new ActionPopupItem(_T("Remote Control", "mobile"), "remoteControlAction", "guaca", "device", "mobile", "mobile", null, 470);
@@ -241,6 +243,7 @@ $n->addActionItemArray($actionLogs);
 $n->addActionItemArray($actionMessage);
 $n->addActionItemArray($actionEdit);
 $n->addActionItemArray($actionDelete);
+$n->addActionItemArray($actionEnrollEmail);
 $n->setParamInfo($params);
 
 // $n->setItemCount(count($mobiles));
@@ -270,6 +273,7 @@ $n->display();
 .status-red {
     color: #dc3545;
 }
+li.share a { background-image: url("img/actions/share.svg"); }
 </style>
 
 <script>
@@ -279,6 +283,33 @@ document.addEventListener('click', function(e) {
         e.preventDefault();
         e.stopImmediatePropagation();
         window.open(a.href, 'remotecontrol', 'width=470,height=860,resizable=yes,scrollbars=no');
+    }
+}, true);
+
+document.addEventListener('click', function(e) {
+    var a = e.target.closest('li.share a');
+    if (a && a.href && a.href.indexOf('action=deviceEnrollEmail') !== -1) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        var url = a.href;
+        if (typeof window._openEnrollModal === 'function') {
+            window._openEnrollModal('<?php echo addslashes(_T("Sending enrollment email", "mobile")); ?>', 1);
+            jQuery.getJSON(url, function(resp) {
+                window._enrollModalSetProgress(1, 1);
+                var name  = resp.name  || '';
+                var email = resp.email || '<?php echo addslashes(_T("No email on file", "mobile")); ?>';
+                var color = resp.ok ? '#16a34a' : '#dc2626';
+                var label = resp.ok ? 'Sent' : 'Failed';
+                var detail = resp.ok ? '' : ' (' + (resp.error || 'failed') + ')';
+                var msg = '[' + label + '] ' + name + ' &lt;' + email + '&gt;' + detail;
+                window._enrollModalLog(color, msg);
+                window._enrollModalDone();
+            }).fail(function() {
+                window._enrollModalSetProgress(1, 1);
+                window._enrollModalLog('#dc2626', '<?php echo addslashes(_T("Network error", "mobile")); ?>');
+                window._enrollModalDone();
+            });
+        }
     }
 }, true);
 </script>

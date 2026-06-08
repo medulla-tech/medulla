@@ -96,6 +96,23 @@ $ajax->displayDivToUpdate();
 
 ?>
 
+<div id="enrollBulkModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:9999;align-items:center;justify-content:center;">
+    <div style="background:#fff;border-radius:10px;padding:30px;width:560px;max-width:95%;box-shadow:0 10px 40px rgba(0,0,0,0.3);">
+        <h3 style="margin:0 0 8px;color:#25607D;"><?php echo _T("Enrollment emails", "mobile"); ?></h3>
+        <p id="enrollBulkSummary" style="margin:0 0 20px;font-size:13px;color:#666;"></p>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+            <div style="flex:1;background:#e5e7eb;border-radius:4px;height:10px;">
+                <div id="enrollBulkBar" style="background:#25607D;height:10px;border-radius:4px;width:0%;transition:width 0.2s;"></div>
+            </div>
+            <span style="font-size:13px;white-space:nowrap;"><span id="enrollBulkCurrent">0</span> / <span id="enrollBulkTotal">0</span></span>
+        </div>
+        <div id="enrollBulkLog" style="height:200px;overflow-y:auto;border:1px solid #e5e7eb;border-radius:4px;padding:8px;font-size:12px;background:#f9fafb;"></div>
+        <div style="margin-top:20px;text-align:right;">
+            <button id="enrollBulkCloseBtn" class="btnPrimary" disabled><?php echo _T("Close", "mobile"); ?></button>
+        </div>
+    </div>
+</div>
+
 <div id="addDeviceModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9999; overflow-y:auto;">
     <div style="background:#fff; width:640px; margin:60px auto 40px; border-radius:6px; overflow:hidden; box-shadow:0 8px 32px rgba(0,0,0,0.25); position:relative;">
         <div style="background:#25607d; padding:16px 24px; display:flex; align-items:center; justify-content:space-between;">
@@ -357,7 +374,84 @@ jQuery(function() {
         '<span style="flex-shrink:0;margin-left:16px;">'
         + '<button class="btnPrimary" type="button" onclick="PopupWindow(event, \'main.php?module=mobile&submod=mobile&action=qrCode&apk=1\', 450); return false;"><?php echo addslashes(_T("HMDM APK","mobile")); ?></button>'
         + ' <button class="btnPrimary" type="button" onclick="openAddDeviceModal()"><?php echo addslashes(_T("Add device","mobile")); ?></button>'
+        + ' <button class="btnSecondary" type="button" onclick="openEnrollBulkModal()"><?php echo addslashes(_T("Send enrollment to unenrolled","mobile")); ?></button>'
         + '</span>'
     );
 });
+
+var _enrollBulkSendUrl = <?php echo json_encode(urlStrRedirect('mobile/mobile/sendEnrollmentEmailAjax')); ?>;
+var _enrollBulkListUrl = <?php echo json_encode(urlStrRedirect('mobile/mobile/ajaxUnenrolledEmailList')); ?>;
+
+function escEnrollHtml(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function _openEnrollModal(summary, total) {
+    jQuery('#enrollBulkSummary').text(summary);
+    jQuery('#enrollBulkTotal').text(total);
+    jQuery('#enrollBulkCurrent').text(0);
+    jQuery('#enrollBulkBar').css('width', '0%');
+    jQuery('#enrollBulkLog').empty();
+    jQuery('#enrollBulkCloseBtn').prop('disabled', true).off('click').on('click', function() {
+        jQuery('#enrollBulkModal').hide();
+    });
+    jQuery('#enrollBulkModal').css('display', 'flex');
+}
+window._openEnrollModal = _openEnrollModal;
+
+function _enrollModalDone() {
+    jQuery('#enrollBulkBar').css('width', '100%');
+    jQuery('#enrollBulkCloseBtn').prop('disabled', false);
+}
+window._enrollModalDone = _enrollModalDone;
+
+function _enrollModalLog(color, msg) {
+    jQuery('#enrollBulkLog').prepend('<div style="color:' + color + ';padding:2px 0;">' + msg + '</div>');
+}
+window._enrollModalLog = _enrollModalLog;
+
+function _enrollModalSetProgress(current, total) {
+    jQuery('#enrollBulkCurrent').text(current);
+    jQuery('#enrollBulkBar').css('width', Math.round((current / total) * 100) + '%');
+}
+window._enrollModalSetProgress = _enrollModalSetProgress;
+
+function _sendEnrollBulkNext(list, i) {
+    var total = list.length;
+    if (i >= total) {
+        _enrollModalDone();
+        return;
+    }
+    _enrollModalSetProgress(i + 1, total);
+    var item = list[i];
+    jQuery.post(_enrollBulkSendUrl, { email: item.email, name: item.name }, function(resp) {
+        var color = resp.ok ? '#16a34a' : '#dc2626';
+        var label = resp.ok ? 'Sent' : 'Failed';
+        var msg = '[' + label + '] ' + escEnrollHtml(item.name) + ' &lt;' + escEnrollHtml(item.email) + '&gt;' + (resp.ok ? '' : ' (' + escEnrollHtml(resp.error || 'failed') + ')');
+        _enrollModalLog(color, msg);
+        _sendEnrollBulkNext(list, i + 1);
+    }, 'json').fail(function() {
+        _enrollModalLog('#dc2626', '[Failed] ' + escEnrollHtml(item.name) + ' (network error)');
+        _sendEnrollBulkNext(list, i + 1);
+    });
+}
+
+function openEnrollBulkModal() {
+    jQuery.getJSON(_enrollBulkListUrl, function(list) {
+        var noEmail = '<?php echo addslashes(_T("No unenrolled devices with an email address found", "mobile")); ?>';
+        if (!list || list.length === 0) {
+            _openEnrollModal(noEmail, 0);
+            _enrollModalLog('#6b7280', noEmail);
+            _enrollModalDone();
+            return;
+        }
+        var summary = '<?php echo addslashes(_T("Sending enrollment QR code to", "mobile")); ?> ' + list.length + ' <?php echo addslashes(_T("device(s)", "mobile")); ?>';
+        _openEnrollModal(summary, list.length);
+        _sendEnrollBulkNext(list, 0);
+    }).fail(function() {
+        _openEnrollModal('<?php echo addslashes(_T("Failed to retrieve device list", "mobile")); ?>', 0);
+        _enrollModalLog('#dc2626', '<?php echo addslashes(_T("Network error", "mobile")); ?>');
+        _enrollModalDone();
+    });
+}
 </script>
