@@ -29,7 +29,6 @@ WHERE `status` = 'ABORT RESUMPTION ERROR'
   AND `label`  = 'abortontimeout';
 
 
-
 -- 1. Table des CVE
 CREATE TABLE IF NOT EXISTS up_cve_linux (
     id INT(11) NOT NULL AUTO_INCREMENT,
@@ -40,6 +39,7 @@ CREATE TABLE IF NOT EXISTS up_cve_linux (
     UNIQUE KEY (cve)
 ) ENGINE=InnoDB;
 
+
 -- 2. Table des packages
 CREATE TABLE IF NOT EXISTS  up_package_linux (
     id INT(11) NOT NULL AUTO_INCREMENT,
@@ -48,6 +48,7 @@ CREATE TABLE IF NOT EXISTS  up_package_linux (
     PRIMARY KEY (id),
     UNIQUE KEY (name, version)
 ) ENGINE=InnoDB;
+
 
 -- 3. Table de jointure entre CVE et packages
 CREATE TABLE IF NOT EXISTS up_package_cve_linux (
@@ -58,6 +59,7 @@ CREATE TABLE IF NOT EXISTS up_package_cve_linux (
     FOREIGN KEY (cve_id) REFERENCES up_cve_linux(id) ON DELETE CASCADE,
     INDEX idx_up_package_cve_linux_cve_package (cve_id, package_id)
 ) ENGINE=InnoDB;
+
 
 -- 4. Table des machines
 CREATE TABLE `up_machine_linux` (
@@ -111,6 +113,7 @@ CREATE TABLE `up_machine_linux` (
   KEY `idx_other_login` (`other_login`)
 ) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+
 -- 5. Table des mises à jour des machines
 CREATE TABLE IF NOT EXISTS up_machine_update_linux (
     id INT(11) NOT NULL AUTO_INCREMENT,
@@ -124,11 +127,6 @@ CREATE TABLE IF NOT EXISTS up_machine_update_linux (
     INDEX idx_up_machine_update_linux_package_machine (package_id, machine_id),
     INDEX idx_up_machine_update_linux_machine_type (machine_id, type)
 ) ENGINE=InnoDB;
-
-
-
-
-
 
 
 CREATE TABLE `up_rhel_versions` (
@@ -166,6 +164,7 @@ CREATE TABLE `up_debian_versions` (
   UNIQUE KEY `uniq_name` (`name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='Liste des versions Debian et état de leur support (stable, LTS, ELTS)';
 
+
 CREATE TABLE `up_ubuntu_versions` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Identifiant unique de la version Ubuntu',
   `version` varchar(10) NOT NULL COMMENT 'Numéro de version Ubuntu (ex: 24.04, 22.04)',
@@ -185,6 +184,43 @@ CREATE TABLE `up_ubuntu_versions` (
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='Liste des versions Ubuntu et état de leur support (stable, LTS, ESM)';
 
 
+-- ================================================
+-- Seed data: RHEL versions (imported from legacy dump)
+-- ================================================
+DELETE FROM `up_rhel_versions`;
+INSERT INTO `up_rhel_versions`
+(`id`, `version`, `name`, `is_managed`, `is_current_stable`, `is_latest_lts`, `end_standard_support`, `end_els_support`, `description`, `package`, `packagename`)
+VALUES
+(1, 10, 'RHEL 10', 1, 1, 1, '2030-05-31 00:00:00', '2038-05-31 00:00:00', 'RHEL 10', NULL, NULL),
+(2, 9, 'RHEL 9', 1, 0, 0, '2027-05-31 00:00:00', '2035-05-31 00:00:00', 'RHEL 9', NULL, NULL),
+(3, 8, 'RHEL 8', 1, 0, 0, '2024-05-31 00:00:00', '2032-05-31 00:00:00', 'RHEL 8', NULL, NULL);
+
+
+-- ================================================
+-- Seed data: ubuntu versions (imported from legacy dump)
+-- ================================================
+DELETE FROM `up_ubuntu_versions`;
+INSERT INTO `up_ubuntu_versions`
+(`id`, `version`, `name`, `is_managed`, `is_current_stable`, `is_latest_lts`, `end_standard_support`, `end_lts_support`, `end_esm_support`, `description`, `package`, `packagename`)
+VALUES
+(1, '26.04', 'Resolute Raccoon', 1, 1, 1, '2031-05-31 00:00:00', '2036-04-30 00:00:00', '2041-04-30 00:00:00', 'Version LTS actuelle', NULL, NULL),
+(2, '24.04', 'Noble Numbat', 1, 0, 0, '2029-06-30 00:00:00', '2034-04-30 00:00:00', '2039-04-30 00:00:00', 'Version LTS précédente', NULL, NULL),
+(3, '22.04', 'Jammy Jellyfish', 1, 0, 0, '2027-06-30 00:00:00', '2032-04-30 00:00:00', '2037-04-30 00:00:00', 'Version LTS encore utilisée', NULL, NULL),
+(4, '20.04', 'Focal Fossa', 0, 0, 0, '2025-05-31 00:00:00', '2030-04-30 00:00:00', '2035-04-30 00:00:00', 'Version anciennement LTS', NULL, NULL);
+
+
+-- ================================================
+-- Seed data: Debian versions (imported from legacy dump)
+-- ================================================
+DELETE FROM `up_debian_versions`;
+INSERT INTO `up_debian_versions` VALUES
+(1,15,'Duke',0,0,0,NULL,NULL,NULL,'Nom de code annoncé, version non publiée',NULL,NULL),
+(2,14,'Forky',0,0,0,NULL,NULL,NULL,'Version testing, date de publication non définie',NULL,NULL),
+(3,13,'Trixie',1,1,0,'2028-08-09 00:00:00','2030-06-30 00:00:00','2035-06-30 00:00:00','Version stable actuelle','633eeeb2-upgradereleasedebiantotrixi','debian-upgrade-trixie'),
+(4,12,'Bookworm',1,0,0,'2026-06-10 00:00:00','2028-06-30 00:00:00','2033-06-30 00:00:00','Version oldstable actuelle',NULL,NULL),
+(5,11,'Bullseye',1,0,1,'2024-08-14 00:00:00','2026-08-31 00:00:00','2031-06-30 00:00:00','Version oldoldstable actuelle, prise en charge LTS',NULL,NULL),
+(6,10,'Buster',0,0,0,'2022-09-10 00:00:00','2024-06-30 00:00:00','2029-06-30 00:00:00','Version archivée, prise en charge étendue LTS avec rémunération de tiers',NULL,NULL),
+(7,9,'Stretch',0,0,0,'2020-07-18 00:00:00','2022-07-01 00:00:00','2027-06-30 00:00:00','Version archivée, prise en charge étendue LTS avec rémunération de tiers',NULL,NULL);
 
 -- ----------------------------------------------------------------------
 -- Database version
