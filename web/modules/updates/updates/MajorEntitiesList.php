@@ -11,26 +11,31 @@ require_once("modules/xmppmaster/includes/html.inc.php");
 global $maxperpage;
 
 
-$p = new TabbedPageGenerator();
-$p->setTitle(_T("OS Upgrades", "updates"));
+$p = new PageGenerator(_T("Entity Compliance", "updates"));
 $p->setSideMenu($sidemenu);
+$p->display();
+
+
+$p = new TabbedPageGenerator();
+//$p->setTitle(_T("OS Upgrades", "updates"));
+//$p->setSideMenu($sidemenu);
 $p->addTab("tabwin", _T("Os Windows", "updates"), "",
            "modules/updates/updates/major/osWindows.php", array());
 
 $p->addTab("tabwinserv", _T("OS Windows Server", "dyngroup"), "",
            "modules/updates/updates/major/osWindowsserveur.php", array());
-/*
-$p->addTab("tabrhel", _T("OS Rhel", "dyngroup"), "",
+
+$p->addTab("tabdebian", _T("OS Debian", "dyngroup"), "",
+           "modules/updates/updates/major/Debian.php", array());
+
+$p->addTab("tabrhel", _T("OS Redhat", "dyngroup"), "",
            "modules/updates/updates/major/Redhat.php", array());
 
-$p->addTab("tabalma", _T("OS Alma", "dyngroup"), "",
+$p->addTab("tabalma", _T("OS ALMA", "dyngroup"), "",
            "modules/updates/updates/major/Alma.php", array());
 
 $p->addTab("tabcentosos", _T("OS CentOS", "dyngroup"), "",
            "modules/updates/updates/major/Centos.php", array());
-
-$p->addTab("tabdebian", _T("OS Debian", "dyngroup"), "",
-           "modules/updates/updates/major/Debian.php", array());
 
 $p->addTab("tabsuse", _T("OS Suse", "dyngroup"), "",
            "modules/updates/updates/major/Suse.php", array());
@@ -39,6 +44,9 @@ $p->addTab("tabubuntu", _T("OS Ubuntu", "dyngroup"), "",
            "modules/updates/updates/major/Ubuntu.php", array());
 
 $p->addTab("tabfedora", _T("OS Fedora", "dyngroup"), "",
-           "modules/updates/updates/major/Fedora.php", array());*/
+           "modules/updates/updates/major/Fedora.php", array());
+
+$p->addTab("tabmint", _T("OS Mint", "dyngroup"), "",
+           "modules/updates/updates/major/Mint.php", array());
 $p->display();
 ?>

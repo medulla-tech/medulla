@@ -2410,3 +2410,17 @@ def get_audit_summary_updates_by_entity(entity_uuid, start=0, limit=-1, filter="
 
 def get_audit_summary_updates_by_update(updateid, start=0, limit=-1, filter=""):
     return XmppMasterDatabase().get_audit_summary_updates_by_update(updateid, start, limit, filter)
+
+
+def get_distribution_version_compliance(
+        distributor_id,
+        entity_id,
+        start,
+        limit
+    ):
+    return XmppMasterDatabase().get_distribution_version_compliance(
+        distributor_id,
+        entity_id,
+        start,
+        limit
+    )

@@ -1203,3 +1203,10 @@ function xmlrpc_get_audit_summary_updates_by_entity($entityuuid, $start=0, $limi
 function xmlrpc_get_audit_summary_updates_by_update($updateid, $start=0, $limit=-1, $filter=""){
     return xmlCall("xmppmaster.get_audit_summary_updates_by_update", [$updateid, $start, $limit, $filter]);
 }
+
+function xmlrpc_get_distribution_version_compliance($famillydistribution,
+                                                    $entity_id=null,
+                                                    $start=null,
+                                                    $limit=null){
+    return xmlCall("xmppmaster.get_distribution_version_compliance", [$famillydistribution, $entity_id, $start, $limit]);
+}

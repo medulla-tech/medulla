@@ -38,7 +38,8 @@ from sqlalchemy import (
     distinct,
     not_,
     text,
-    Boolean
+    Boolean,
+    bindparam,
 )  # cast, Date, select,
 from sqlalchemy.orm import sessionmaker, load_only
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
@@ -19912,6 +19913,237 @@ FROM (
                 "syncthing": deploy.syncthing,
             }
             result["datas"].append(tmp)
+        return result
+
+
+    @DatabaseHelper._sessionm
+    def get_distribution_version_compliance(
+        self,
+        session,
+        distributor_id: str,
+        entity_id: Optional[Union[int, List[int]]] = None,
+        start: Optional[int] = None,
+        limit: Optional[int] = None,
+    ) -> Dict[str, Any]:
+        """
+        Calcule la conformite de version Linux par entite pour une distribution donnee.
+
+        Principe:
+        1. Selectionne une version cible depuis `up_os_versions` pour la distribution demandee
+           (priorite: version geree/stable/recommandee, puis version numerique la plus elevee).
+        2. Compare `up_machine_linux.release_version` a cette version cible.
+        3. Retourne, par entite, le nombre de machines:
+           - en retard (outdated),
+           - a jour,
+           - au-dessus de la cible (pending_support_update).
+
+        Args:
+            session: Session SQLAlchemy injectee par le decorateur.
+            distributor_id: Famille de distribution (ex: debian, ubuntu, rhel).
+            entity_id: Filtre entite (None, int, ou liste d'int).
+            start: Offset de pagination applique au resultat groupe par entite.
+            limit: Taille de page appliquee au resultat groupe par entite.
+
+        Returns:
+            dict avec:
+            - distribution: distribution normalisee,
+            - name_version: nom de la version cible,
+            - max_version: version cible,
+            - by_entity: statistiques de conformite par entite.
+        """
+        self.logger.info(f"=== Debut get_distribution_version_compliance ({distributor_id}) ===")
+        self.logger.info(
+            "get_distribution_version_compliance params: distributor_id=%r entity_id=%r start=%r limit=%r",
+            distributor_id,
+            entity_id,
+            start,
+            limit,
+        )
+
+        # Normalise la distribution d'entree (ex: alias redhat -> rhel)
+        normalized_distribution = (distributor_id or "").strip().lower()
+        distribution_aliases = {
+            "redhat": "rhel",
+        }
+        normalized_distribution = distribution_aliases.get(
+            normalized_distribution,
+            normalized_distribution,
+        )
+
+        allowed_distributions = {
+            "debian",
+            "ubuntu",
+            "mint",
+            "rhel",
+            "almalinux",
+            "centos",
+            "rocky",
+            "suse",
+            "opensuse",
+            "fedora",
+        }
+        if normalized_distribution not in allowed_distributions:
+            raise ValueError(f"Distribution non supportee: {distributor_id}")
+
+        # Diagnostic: liste des versions candidates visibles pour la distribution
+        versions_debug_query = text("""
+            SELECT id, distribution, version, name, is_managed, is_current_stable, is_recommended
+            FROM xmppmaster.up_os_versions
+            WHERE distribution = :distribution
+            ORDER BY
+                is_managed DESC,
+                is_current_stable DESC,
+                is_recommended DESC,
+                CAST(version AS DECIMAL(10, 4)) DESC,
+                id DESC
+            LIMIT 10;
+        """)
+        version_candidates = session.execute(
+            versions_debug_query,
+            {"distribution": normalized_distribution},
+        ).fetchall()
+        self.logger.info(
+            "up_os_versions candidates for %s: %s",
+            normalized_distribution,
+            [
+                {
+                    "id": r.id,
+                    "distribution": r.distribution,
+                    "version": r.version,
+                    "name": r.name,
+                    "is_managed": r.is_managed,
+                    "is_current_stable": r.is_current_stable,
+                    "is_recommended": r.is_recommended,
+                }
+                for r in version_candidates
+            ],
+        )
+
+        # Choisit la version cible qui servira de reference de conformite
+        max_version_query = text("""
+            SELECT name, version
+            FROM xmppmaster.up_os_versions
+            WHERE distribution = :distribution
+                        ORDER BY
+                                is_managed DESC,
+                                is_current_stable DESC,
+                                is_recommended DESC,
+                                CAST(version AS DECIMAL(10, 4)) DESC,
+                                id DESC
+            LIMIT 1;
+        """)
+        row = session.execute(
+            max_version_query,
+            {"distribution": normalized_distribution},
+        ).first()
+
+        if not row or row.version is None:
+            self.logger.warning(
+                "Aucune version cible trouvee dans up_os_versions pour distribution=%s",
+                normalized_distribution,
+            )
+            return {
+                "distribution": normalized_distribution,
+                "name_version": None,
+                "max_version": None,
+            }
+
+        max_version = row.version
+        name_version = row.name
+        self.logger.info(
+            "Version cible retenue pour %s: version=%r name=%r",
+            normalized_distribution,
+            max_version,
+            name_version,
+        )
+
+        # Construit le filtre SQL (distribution obligatoire, entite optionnelle)
+        where_clause = "LOWER(upl.distributor_id) = :distributor_id"
+        params = {"distributor_id": normalized_distribution, "max_version": str(max_version)}
+
+        if entity_id:
+            if isinstance(entity_id, int):
+                where_clause += " AND upl.entity_id = :entity_id"
+                params["entity_id"] = entity_id
+            elif isinstance(entity_id, list) and entity_id:
+                where_clause += " AND upl.entity_id IN :entity_ids"
+                params["entity_ids"] = tuple(entity_id)
+
+        # Agrege les statistiques par entite en comparant release_version a max_version
+        stats_query = f"""
+            SELECT
+                upl.entity_id,
+                COUNT(*) AS total_machines,
+                SUM(CASE WHEN CAST(NULLIF(upl.release_version, '') AS DECIMAL(10, 4)) < CAST(:max_version AS DECIMAL(10, 4)) THEN 1 ELSE 0 END) AS outdated_machines,
+                SUM(CASE WHEN CAST(NULLIF(upl.release_version, '') AS DECIMAL(10, 4)) = CAST(:max_version AS DECIMAL(10, 4)) THEN 1 ELSE 0 END) AS up_to_date_machines,
+                SUM(CASE WHEN CAST(NULLIF(upl.release_version, '') AS DECIMAL(10, 4)) > CAST(:max_version AS DECIMAL(10, 4)) THEN 1 ELSE 0 END) AS pending_support_update
+            FROM
+                xmppmaster.up_machine_linux upl
+            WHERE
+                {where_clause}
+            GROUP BY
+                upl.entity_id
+        """
+
+        if isinstance(limit, int) and limit > 0:
+            stats_query += " LIMIT :limit"
+            params["limit"] = limit
+        if isinstance(start, int) and start >= 0:
+            stats_query += " OFFSET :start"
+            params["start"] = start
+
+        self.logger.info(
+            "Stats query filters: where=%s params=%s",
+            where_clause,
+            params,
+        )
+
+        stats_query_text = text(stats_query)
+        # Important: permet de passer correctement une liste Python dans IN (...)
+        if "entity_ids" in params:
+            stats_query_text = stats_query_text.bindparams(
+                bindparam("entity_ids", expanding=True)
+            )
+
+        rows = session.execute(stats_query_text, params).fetchall()
+        self.logger.info(
+            "Nombre de lignes statistiques retournees: %d",
+            len(rows),
+        )
+
+        by_entity = []
+        for row in rows:
+            total = int(row.total_machines)
+            outdated = int(row.outdated_machines or 0)
+            up_to_date = int(row.up_to_date_machines or 0)
+            pending = int(row.pending_support_update or 0)
+
+            by_entity.append({
+                "entity_id": int(row.entity_id),
+                "total_machines": total,
+                "outdated_machines": outdated,
+                "up_to_date_machines": up_to_date,
+                "pending_support_update": pending,
+                "compliance_rate": round((up_to_date / total * 100), 2) if total else 0.0,
+            })
+
+        if not by_entity:
+            self.logger.warning(
+                "Aucune statistique calculee pour distribution=%s avec entity_id=%r",
+                normalized_distribution,
+                entity_id,
+            )
+        else:
+            self.logger.info("Stats by_entity: %s", by_entity)
+
+        result = {
+            "distribution": normalized_distribution,
+            "name_version": name_version,
+            "max_version": max_version,
+            "by_entity": by_entity,
+        }
+
+        self.logger.info(f"=== Fin get_distribution_version_compliance ({distributor_id}) ===")
         return result
 
     @DatabaseHelper._sessionm

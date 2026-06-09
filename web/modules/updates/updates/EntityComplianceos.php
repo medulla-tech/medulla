@@ -21,9 +21,6 @@ $p->addTab("tabwin", _T("Os Windows", "updates"), "",
 
 $p->addTab("tablinux", _T("OS Linux", "updates"), "",
      "modules/updates/updates/entity/ajaxEntityComplianceLinux.php", array());
-//
-// $p->addTab("tabdebian", _T("OS Debian", "dyngroup"), "",
-//            "modules/updates/updates/major/Debian.php", array());
 
 $p->display();
 ?>

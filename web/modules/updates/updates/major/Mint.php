@@ -13,7 +13,7 @@ $params = ["source" => "xmppmaster"];
 
 $timerefresh= 90;
 
-$ajax = new AjaxPagebartitlletime(urlStrRedirect("updates/updates/ajaxMajorEntitiesListSuse"),
+$ajax = new AjaxPagebartitlletime(urlStrRedirect("updates/updates/ajaxMajorEntitiesListMint"),
                                   "EntityCompliancediv",
                                   getFilteredGetParams(),
                                   $timerefresh,

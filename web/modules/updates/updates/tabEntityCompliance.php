@@ -35,5 +35,26 @@ $p->addTab("tabwinserv", _T("OS Windows Server", "dyngroup"), "",
 $p->addTab("tabdebian", _T("OS Debian", "dyngroup"), "",
            "modules/updates/updates/major/Debian.php", array());
 
+$p->addTab("tabrhel", _T("OS Redhat", "dyngroup"), "",
+           "modules/updates/updates/major/Redhat.php", array());
+
+$p->addTab("tabalma", _T("OS ALMA", "dyngroup"), "",
+           "modules/updates/updates/major/Alma.php", array());
+
+$p->addTab("tabcentosos", _T("OS CentOS", "dyngroup"), "",
+           "modules/updates/updates/major/Centos.php", array());
+
+$p->addTab("tabsuse", _T("OS Suse", "dyngroup"), "",
+           "modules/updates/updates/major/Suse.php", array());
+
+$p->addTab("tabubuntu", _T("OS Ubuntu", "dyngroup"), "",
+           "modules/updates/updates/major/Ubuntu.php", array());
+
+$p->addTab("tabfedora", _T("OS Fedora", "dyngroup"), "",
+           "modules/updates/updates/major/Fedora.php", array());
+
+$p->addTab("tabmint", _T("OS Mint", "dyngroup"), "",
+           "modules/updates/updates/major/Mint.php", array());
+
 $p->display();
 ?>

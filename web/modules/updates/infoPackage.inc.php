@@ -132,8 +132,6 @@ $submod->addPage($page);
 
 $page = new Page("MajorEntitiesList", _T('os updates', 'updates'));
 $page->setFile("modules/updates/updates/MajorEntitiesList.php");
-$submod->addPage($page);
-
 
 /*
 $page = new Page("testentitylist",_T("testentitylist","updates"));
@@ -167,6 +165,9 @@ $page->addTab($tab);
 $tab = new Tab("tabfedora", _T("OS Fedora", "dyngroup"));
 $page->addTab($tab);
 
+$tab = new Tab("tabmint", _T("OS Mint", "dyngroup"));
+$page->addTab($tab);
+
 $submod->addPage($page);
 
 
@@ -181,6 +182,41 @@ $submod->addPage($page);
 
 $page = new Page("ajaxMajorEntitiesListDebian", _T('Entities Major Compliance', 'updates'));
 $page->setFile("modules/updates/updates/major/ajaxMajorEntitiesListDebian.php");
+$submod->addPage($page);
+
+$page = new Page("ajaxMajorEntitiesListUbuntu", _T('Entities Major Compliance', 'updates'));
+$page->setFile("modules/updates/updates/ajaxMajorEntitiesListUbuntu.php");
+$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
+$submod->addPage($page);
+
+$page = new Page("ajaxMajorEntitiesListAlma", _T('Entities Major Compliance', 'updates'));
+$page->setFile("modules/updates/updates/ajaxMajorEntitiesListAlma.php");
+$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
+$submod->addPage($page);
+
+$page = new Page("ajaxMajorEntitiesListRedhat", _T('Entities Major Compliance', 'updates'));
+$page->setFile("modules/updates/updates/ajaxMajorEntitiesListRedhat.php");
+$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
+$submod->addPage($page);
+
+$page = new Page("ajaxMajorEntitiesListCentos", _T('Entities Major Compliance', 'updates'));
+$page->setFile("modules/updates/updates/ajaxMajorEntitiesListCentos.php");
+$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
+$submod->addPage($page);
+
+$page = new Page("ajaxMajorEntitiesListFedora", _T('Entities Major Compliance', 'updates'));
+$page->setFile("modules/updates/updates/ajaxMajorEntitiesListFedora.php");
+$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
+$submod->addPage($page);
+
+$page = new Page("ajaxMajorEntitiesListSuse", _T('Entities Major Compliance', 'updates'));
+$page->setFile("modules/updates/updates/ajaxMajorEntitiesListSuse.php");
+$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
+$submod->addPage($page);
+
+$page = new Page("ajaxMajorEntitiesListMint", _T('Entities Major Compliance', 'updates'));
+$page->setFile("modules/updates/updates/ajaxMajorEntitiesListMint.php");
+$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
 $submod->addPage($page);
 
 //---------------------------------------------------------------
@@ -202,6 +238,13 @@ $submod->addPage($page);
 
 $page = new Page("EntityComplianceos", _T("Entity Compliance operating systems", "updates"));
 $page->setFile("modules/updates/updates/EntityComplianceos.php");
+
+$tab = new Tab("tabwin", _T("oswindows", "updates"));
+$page->addTab($tab);
+
+$tab = new Tab("tablinux", _T("OS Linux", "updates"));
+$page->addTab($tab);
+
 $submod->addPage($page);
 /*
 $page = new Page("updatesListWin", _T('Manage Updates Lists', 'updates'));
