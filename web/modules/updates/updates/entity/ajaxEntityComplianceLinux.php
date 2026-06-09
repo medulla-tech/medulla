@@ -21,9 +21,8 @@
  * along with MMC; If not, see <http://www.gnu.org/licenses/>.
  * file: ajaxEntityCompliance.php
  */
-
+// to comit
 require_once("modules/updates/includes/xmlrpc.php");
-
 ?>
 
 <script type="text/javascript">
@@ -43,10 +42,11 @@ require_once("modules/updates/includes/xmlrpc.php");
 
 <?php
 
-$timerefresh= 90;
 
-$ajax = new AjaxPagebartitlletime(urlStrRedirect("updates/updates/ajaxEntitiesList"),
-                                  "entitylist",
+$timerefresh= 90;
+// print_r( getFilteredGetParams());
+$ajax = new AjaxPagebartitlletime(urlStrRedirect("updates/updates/ajaxEntitiesListlinux"),
+                                  "entitylistlinux",
                                   getFilteredGetParams(),
                                   $timerefresh,
                                   "idcircularProgress");

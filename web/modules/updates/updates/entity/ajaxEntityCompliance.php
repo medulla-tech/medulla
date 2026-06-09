@@ -22,8 +22,23 @@
  * file: ajaxEntityCompliance.php
  */
 
+// require("localSidebar.php");
+// require("graph/navbar.inc.php");
+// require_once("modules/updates/includes/xmlrpc.php");
 require_once("modules/updates/includes/xmlrpc.php");
+// echo "<br><br><br>";
 
+
+// $allowedSources = ["xmppmaster", "glpi"];
+
+// $dataSource = isset($_GET['source']) && in_array($_GET['source'], $allowedSources) ? $_GET['source'] : "xmppmaster";
+
+// foreach ($allowedSources as $source) {
+//     echo '<input type="radio" ';
+//     if ($dataSource === $source) echo "checked";
+//     echo ' id="' . $source . '" name="source" value="' . $source . '"/> ';
+//     echo '<label for="' . $source . '" style="display:initial;">' . ($source === 'xmppmaster' ? 'Medulla' : ucfirst($source)) . '</label>';
+// }
 ?>
 
 <script type="text/javascript">
@@ -43,6 +58,7 @@ require_once("modules/updates/includes/xmlrpc.php");
 
 <?php
 
+// print_r( getFilteredGetParams());
 $timerefresh= 90;
 
 $ajax = new AjaxPagebartitlletime(urlStrRedirect("updates/updates/ajaxEntitiesList"),

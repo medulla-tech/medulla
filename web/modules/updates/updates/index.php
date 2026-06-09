@@ -19,6 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ * files updates/updates/index.php
  */
 ?>
 <style>
@@ -31,38 +32,19 @@ global $conf;
 require("localSidebar.php");
 require("graph/navbar.inc.php");
 require_once("modules/xmppmaster/includes/html.inc.php");
-require_once("includes/UIComponents.php");
+// require_once("includes/UIComponents.php");
 
-
+/*
+if (!$hasData) {
+    ContractRequiredBox::show();
+    return;
+}*/
 $p = new PageGenerator(_T("Entity Compliance", "updates"));
 $p->setSideMenu($sidemenu);
 $p->display();
 
-if (!$hasData) {
-    ContractRequiredBox::show();
-    return;
-}
-
-$refresh = new RefreshButton();
-
-$_GET["source"] = "xmppmaster";
-
 $params = getFilteredGetParams();
 
-$ajax = new AjaxFilter(urlStrRedirect("updates/updates/ajaxEntityCompliance"), "container", $params, 'formRunning');
-$ajax->setRefresh($refresh->refreshtime());
-
-echo '<div class="toolbar-row">';
-echo '<div>';
-$refresh->display();
-echo '</div>';
-$ajax->display();
-echo '</div>';
-
-$ajax->displayDivToUpdate();
-//
-// generateEntityPage(_T("Entities Compliance", 'updates'),
-//                    "ajaxEntityCompliance",
-//                    $sidemenu);
-
+header("Location: " . urlStrRedirect("updates/updates/EntityComplianceos"));
+exit;
 ?>
