@@ -2654,23 +2654,28 @@ class MobileDatabase(DatabaseHelper):
             sev = -1
         payload["severity"] = sev
 
+        logging.getLogger().info(f"[getHmdmDeviceLogs] url={url} payload={payload}")
         try:
             resp = requests.post(url, json=payload, headers=headers)
+            logging.getLogger().info(f"[getHmdmDeviceLogs] HTTP {resp.status_code} body={resp.text[:500]}")
             resp.raise_for_status()
             data = resp.json()
             items = data.get("data", {}).get("items", [])
+            logging.getLogger().info(f"[getHmdmDeviceLogs] got {len(items)} items")
+            if items:
+                logging.getLogger().info(f"[getHmdmDeviceLogs] first item keys: {list(items[0].keys())}")
             result = []
             for m in items:
                 result.append({
                     "device": m.get("deviceNumber") or m.get("device"),
-                    "time": (m.get("ts") or m.get("time") or 0) // 1000,
-                    "package": m.get("package") or m.get("packageName") or "",
+                    "time": (m.get("createTime") or m.get("ts") or m.get("time") or 0) // 1000,
+                    "package": m.get("applicationPkg") or m.get("package") or m.get("packageName") or "",
                     "severity": m.get("severity"),
                     "message": m.get("message") or m.get("text") or "",
                 })
             return result
         except Exception as e:
-            logging.getLogger().error(f"Error fetching device logs: {e}")
+            logging.getLogger().error(f"[getHmdmDeviceLogs] Error: {e}")
             return []
 
     def exportHmdmDeviceLogs(self, device_number="", app_id="", severity="-1"):

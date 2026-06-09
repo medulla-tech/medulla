@@ -199,7 +199,7 @@ foreach ($mobiles as $index => $mobile) {
     $col1[] = "<a href='#' class='mobilestatus {$statut}'>{$numero}</a>";
 
     $actionDetails[] = new ActionItem(_T("Details", "mobile"), "detailedInfo", "display", "device", "mobile", "mobile");
-    $actionLogs[] = new ActionItem(_T("Logs", "mobile"), "functions", "logfile", "device", "mobile", "mobile", "taglogs");
+    $actionLogs[] = new ActionItem(_T("Logs", "mobile"), "logsmobile", "logfile", "device", "base", "logview");
     $actionMessage[] = new ActionItem(_T("Message", "mobile"), "newMessage", "add", "device", "mobile", "mobile");
     $actionEdit[] = new ActionItem(_T("Edit", "mobile"), "editDevice", "edit", "id", "mobile", "mobile");
     $actionEnrollEmail[] = new ActionItem(_T("Send enrollment email", "mobile"), "deviceEnrollEmail", "share", "id", "mobile", "mobile");

@@ -131,179 +131,146 @@ class SelectItemlabeltitle extends SelectItem {
     }
 }
 // ------------------------------------------------------------------------------------------------
-    $p = new PageGenerator(_T("Mobile Logs","base"));
+    $p = new PageGenerator(_T("Mobile Device Logs", "base"));
     $p->setSideMenu($sidemenu);
     $p->display();
 
-    $filterlogs = "mobile";
-    $headercolumn= "date@fromuser@who@text";
+    $init_device   = isset($_GET['device'])   ? htmlspecialchars(trim($_GET['device']),   ENT_QUOTES, 'UTF-8') : '';
+    $init_severity = isset($_GET['severity']) ? htmlspecialchars(trim($_GET['severity']), ENT_QUOTES, 'UTF-8') : '-1';
 
+    $start_date = new DateTimeTplnew('start_date', _T("Start Date", "base"));
+    $end_date   = new DateTimeTplnew('end_date',   _T("End Date",   "base"));
+
+    $severity_labels = [
+        '1' => _T('Error',   'base'),
+        '2' => _T('Warning', 'base'),
+        '3' => _T('Info',    'base'),
+        '4' => _T('Debug',   'base'),
+        '5' => _T('Verbose', 'base'),
+    ];
 ?>
 
 <script type="text/javascript">
+var _logTable = null;
 
-    var filterlogs = <?php echo "'$filterlogs'";?>;
+function buildLogsUrl() {
+    var severities = [];
+    jQuery('#severity-dropdown input:checked').each(function(){ severities.push(jQuery(this).val()); });
+    return 'modules/base/logview/ajax_mobile_device_logs.php'
+        + '?device='     + encodeURIComponent(jQuery('#log_device').val())
+        + '&package='    + encodeURIComponent(jQuery('#log_package').val())
+        + '&severity='   + encodeURIComponent(severities.length === 1 ? severities[0] : '-1')
+        + '&start_date=' + encodeURIComponent(jQuery('#start_date').val())
+        + '&end_date='   + encodeURIComponent(jQuery('#end_date').val())
+        + '&pagesize=<?php echo (int)$maxperpage; ?>';
+}
 
-    function encodeurl(){
-        var selected = [];
-        jQuery('#criteria-dropdown input:checked').each(function(){ selected.push(jQuery(this).val()); });
-        var critere = filterlogs + "|" + (selected.length ? selected.join(",") : "None");
-        uri = "modules/base/logview/ajax_Data_Logs.php"
-        //QuickAction
-        var param = {
-            "start_date" : jQuery('#start_date').val(),
-            "end_date"   : jQuery('#end_date').val(),
-            "type" : "",
-            "action" : "",
-            "module" : critere,
-            "user" : "",
-            "how" : "",
-            "who" : "",
-            "why" : "",
-            "headercolumn" : "<?php echo $headercolumn; ?>"
-        }
-        uri = uri +"?"+xwwwfurlenc(param)
-        return uri
+function reloadLogs() {
+    if (_logTable) {
+        _logTable.ajax.url(buildLogsUrl()).load();
     }
+}
 
-    function xwwwfurlenc(srcjson){
-        if(typeof srcjson !== "object")
-        if(typeof console !== "undefined"){
-            console.log("\"srcjson\" is not a JSON object");
-            return null;
-        }
-        u = encodeURIComponent;
-        var urljson = "";
-        var keys = Object.keys(srcjson);
-        for(var i=0; i <keys.length; i++){
-            urljson += u(keys[i]) + "=" + u(srcjson[keys[i]]);
-            if(i < (keys.length-1))urljson+="&";
-        }
-        return urljson;
-    }
+jQuery(function() {
+    jQuery('.log-filters').on('change', 'select, input[type="text"]', function() { reloadLogs(); });
 
-    jQuery(function(){
-        jQuery('.log-filters').on('change', 'select, input', function(){
-            searchlogs( encodeurl());
-        });
-        jQuery('.checkbox-dropdown-toggle').on('click', function(e){
-            e.stopPropagation();
-            jQuery(this).closest('.checkbox-dropdown').toggleClass('open');
-        });
-        jQuery(document).on('click', function(){ jQuery('.checkbox-dropdown').removeClass('open'); });
-        jQuery('.checkbox-dropdown-clear').on('click', function(e){
-            e.stopPropagation();
-            var dd = jQuery(this).closest('.checkbox-dropdown');
-            dd.find('input:checked').prop('checked', false);
-            dd.find('.checkbox-dropdown-text').text('<?php echo addslashes(_T("No criteria selected", "base")); ?>');
-            dd.removeClass('has-selection');
-            searchlogs(encodeurl());
-        });
-        jQuery('.checkbox-dropdown-menu input[type="checkbox"]').on('change', function(){
-            var dd = jQuery(this).closest('.checkbox-dropdown');
-            var checked = dd.find('input:checked');
-            var text = checked.length
-                ? checked.length + ' <?php echo addslashes(_T("selected", "base")); ?>'
-                : '<?php echo addslashes(_T("No criteria selected", "base")); ?>';
-            dd.find('.checkbox-dropdown-text').text(text);
-            dd.toggleClass('has-selection', checked.length > 0);
-            searchlogs(encodeurl());
-        });
+    jQuery('.checkbox-dropdown-toggle').on('click', function(e) {
+        e.stopPropagation();
+        jQuery(this).closest('.checkbox-dropdown').toggleClass('open');
     });
-    function searchlogs(url){
-        jQuery('#tablelog').DataTable({
+    jQuery(document).on('click', function() { jQuery('.checkbox-dropdown').removeClass('open'); });
+    jQuery('.checkbox-dropdown-clear').on('click', function(e) {
+        e.stopPropagation();
+        var dd = jQuery(this).closest('.checkbox-dropdown');
+        dd.find('input:checked').prop('checked', false);
+        dd.find('.checkbox-dropdown-text').text('<?php echo addslashes(_T("No criteria selected", "base")); ?>');
+        dd.removeClass('has-selection');
+        reloadLogs();
+    });
+    jQuery('.checkbox-dropdown-menu input[type="checkbox"]').on('change', function() {
+        var dd = jQuery(this).closest('.checkbox-dropdown');
+        var checked = dd.find('input:checked');
+        var text = checked.length
+            ? checked.length + ' <?php echo addslashes(_T("selected", "base")); ?>'
+            : '<?php echo addslashes(_T("No criteria selected", "base")); ?>';
+        dd.find('.checkbox-dropdown-text').text(text);
+        dd.toggleClass('has-selection', checked.length > 0);
+        reloadLogs();
+    });
+
+    jQuery('#log_device, #log_package').on('keypress', function(e) {
+        if (e.which === 13) reloadLogs();
+    });
+
+    _logTable = jQuery('#tablelog').DataTable({
         'retrieve': true,
-        'createdRow': function(row) { jQuery('td', row).each(function() { this.title = this.textContent; }); },
-        "iDisplayLength": <?php echo $maxperpage; ?>,
-        "lengthMenu" : [[10 ,20 ,30 ,40 ,50 ,75 ,100 ], [10, 20, 30, 40, 50 ,75 ,100 ]],
-        "dom": '<"top"lfi>rt<"bottom"Bp><"clear">',
-        'order': [[ 0, "desc" ]],
-                            "language": {
-                                "search": "<?php echo _T('Search:', 'base'); ?>",
-                                "lengthMenu": "<?php echo _T('Show _MENU_ entries', 'base'); ?>",
-                                "info": "<?php echo _T('Showing _START_ to _END_ of _TOTAL_ entries', 'base'); ?>",
-                                "infoEmpty": "<?php echo _T('No entries', 'base'); ?>",
-                                "infoFiltered": "(<?php echo _T('filtered from _MAX_ total entries', 'base'); ?>)",
-                                "zeroRecords": "<?php echo _T('No matching records found', 'base'); ?>",
-                                "emptyTable": "<?php echo _T('No data available', 'base'); ?>",
-                                "paginate": {
-                                    "first": "<?php echo _T('First', 'base'); ?>",
-                                    "previous": "<?php echo _T('Previous', 'base'); ?>",
-                                    "next": "<?php echo _T('Next', 'base'); ?>",
-                                    "last": "<?php echo _T('Last', 'base'); ?>"
-                                }
-                            },
-        buttons: [
-        { extend: 'copy', className: 'btn btn-primary', text: '<?php echo _T("Copy", "base"); ?>' },
-        { extend: 'csv', className: 'btn btn-primary',  text: '<?php echo _T("Export CSV", "base"); ?>' },
-        { extend: 'excel', className: 'btn btn-primary',  text: '<?php echo _T("Export Excel", "base"); ?>' },
-        { extend: 'print', className: 'btn btn-primary',  text: '<?php echo _T("Print", "base"); ?>' }
+        'ajax': buildLogsUrl(),
+        'columns': [
+            { 'title': '<?php echo addslashes(_T("Time",     "base")); ?>' },
+            { 'title': '<?php echo addslashes(_T("Device",   "base")); ?>' },
+            { 'title': '<?php echo addslashes(_T("Package",  "base")); ?>' },
+            { 'title': '<?php echo addslashes(_T("Severity", "base")); ?>' },
+            { 'title': '<?php echo addslashes(_T("Message",  "base")); ?>' }
+        ],
+        'createdRow': function(row) {
+            jQuery('td', row).each(function() { this.title = this.textContent; });
+        },
+        'iDisplayLength': <?php echo (int)$maxperpage; ?>,
+        'lengthMenu': [[10, 20, 30, 40, 50, 75, 100], [10, 20, 30, 40, 50, 75, 100]],
+        'dom': '<"top"lfi>rt<"bottom"Bp><"clear">',
+        'order': [[0, 'desc']],
+        'language': {
+            'search':      '<?php echo addslashes(_T("Search:", "base")); ?>',
+            'lengthMenu':  '<?php echo addslashes(_T("Show _MENU_ entries", "base")); ?>',
+            'info':        '<?php echo addslashes(_T("Showing _START_ to _END_ of _TOTAL_ entries", "base")); ?>',
+            'infoEmpty':   '<?php echo addslashes(_T("No entries", "base")); ?>',
+            'infoFiltered': '(<?php echo addslashes(_T("filtered from _MAX_ total entries", "base")); ?>)',
+            'zeroRecords': '<?php echo addslashes(_T("No matching records found", "base")); ?>',
+            'emptyTable':  '<?php echo addslashes(_T("No data available", "base")); ?>',
+            'paginate': {
+                'first':    '<?php echo addslashes(_T("First",    "base")); ?>',
+                'previous': '<?php echo addslashes(_T("Previous", "base")); ?>',
+                'next':     '<?php echo addslashes(_T("Next",     "base")); ?>',
+                'last':     '<?php echo addslashes(_T("Last",     "base")); ?>'
+            }
+        },
+        'buttons': [
+            { extend: 'copy',  className: 'btn btn-primary', text: '<?php echo addslashes(_T("Copy",         "base")); ?>' },
+            { extend: 'csv',   className: 'btn btn-primary', text: '<?php echo addslashes(_T("Export CSV",   "base")); ?>' },
+            { extend: 'excel', className: 'btn btn-primary', text: '<?php echo addslashes(_T("Export Excel", "base")); ?>' },
+            { extend: 'print', className: 'btn btn-primary', text: '<?php echo addslashes(_T("Print",        "base")); ?>' }
         ]
-    } )
-                            .ajax.url(
-                                url
-                            )
-                            .load();
-    }
-
-    jQuery(function(){
-        searchlogs("modules/base/logview/ajax_Data_Logs.php?start_date=&end_date=&type=&action=&module=<?php echo $filterlogs; ?>%7CNone&user=&how=&who=&why=&headercolumn=<?php echo $headercolumn; ?>")
-    } );
-    </script>
-
-<?php
-
-$typecritere  =        array(
-                                        _T('Mobile Device','base'),
-                                        _T('Mobile Configuration','base'),
-                                        _T('Mobile Group','base'),
-                                        _T('Mobile Quick Action','base'),
-                                        _T('Mobile Deployment','base'),
-                                        _T('Mobile Message','base'),
-                                        _T('Mobile Push Message','base'),
-                                        _T('Mobile User','base'),
-                                        _T('Mobile Enrollment','base'),
-                                        _T("No criteria selected", "base"));
-
-$typecritereval  =        array(
-                                        'Device',
-                                        'Configuration',
-                                        'Group',
-                                        'Quick Action',
-                                        'Deployment',
-                                        'Message',
-                                        'Push Message',
-                                        'User',
-                                        'Enrollment',
-                                        'None');
-
-$start_date =   new DateTimeTplnew('start_date', _T("Start Date", "base"));
-$end_date   =   new DateTimeTplnew('end_date', _T("End Date", "base"));
-
-
-
-?>
-
+    });
+});
+</script>
 
 <div class="log-filters">
     <div class="log-filter-item"><?php echo $start_date->display(array('value' => date('Y-m-d 00:00:00'))); ?></div>
     <div class="log-filter-item"><?php echo $end_date->display(array('value' => date('Y-m-d 23:59:59'))); ?></div>
     <div class="log-filter-item">
-        <label><?php echo _T("Criteria", "base"); ?></label>
-        <div class="checkbox-dropdown" id="criteria-dropdown">
+        <label><?php echo _T("Device", "base"); ?></label>
+        <input type="text" class="searchfieldreal" id="log_device"
+               value="<?php echo $init_device; ?>" />
+    </div>
+    <div class="log-filter-item">
+        <label><?php echo _T("Package", "base"); ?></label>
+        <input type="text" class="searchfieldreal" id="log_package" />
+    </div>
+    <div class="log-filter-item">
+        <label><?php echo _T("Severity", "base"); ?></label>
+        <div class="checkbox-dropdown" id="severity-dropdown">
             <div class="checkbox-dropdown-toggle">
                 <span class="checkbox-dropdown-text"><?php echo _T("No criteria selected", "base"); ?></span>
                 <span class="checkbox-dropdown-clear">&#10005;</span>
                 <span>&#9660;</span>
             </div>
             <div class="checkbox-dropdown-menu">
-                <?php foreach ($typecritere as $i => $label): ?>
-                    <?php if ($typecritereval[$i] !== 'None'): ?>
-                    <label>
-                        <input type="checkbox" name="criteria[]" value="<?php echo $typecritereval[$i]; ?>">
-                        <?php echo $label; ?>
-                    </label>
-                    <?php endif; ?>
+                <?php foreach ($severity_labels as $val => $label): ?>
+                <label>
+                    <input type="checkbox" name="severity[]" value="<?php echo $val; ?>"
+                           <?php echo ($init_severity === (string)$val) ? 'checked' : ''; ?>>
+                    <?php echo $label; ?>
+                </label>
                 <?php endforeach; ?>
             </div>
         </div>
@@ -313,10 +280,11 @@ $end_date   =   new DateTimeTplnew('end_date', _T("End Date", "base"));
 <table id="tablelog" class="listinfos">
     <thead>
         <tr>
-            <th><?php echo _('date'); ?></th>
-            <th><?php echo _('user'); ?></th>
-            <th><?php echo _('who'); ?></th>
-            <th><?php echo _('text'); ?></th>
+            <th><?php echo _T("Time",     "base"); ?></th>
+            <th><?php echo _T("Device",   "base"); ?></th>
+            <th><?php echo _T("Package",  "base"); ?></th>
+            <th><?php echo _T("Severity", "base"); ?></th>
+            <th><?php echo _T("Message",  "base"); ?></th>
         </tr>
     </thead>
 </table>
