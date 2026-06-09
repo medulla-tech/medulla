@@ -178,7 +178,8 @@ def get_unique_software_from_glpi(entity_id=None, group_id=None, machine_id=None
             SELECT DISTINCT
                 s.name as software_name,
                 sv.name as version,
-                m.name as manufacturer
+                m.name as manufacturer,
+                s.comment as comment
             FROM glpi_items_softwareversions isv
             JOIN glpi_softwareversions sv ON sv.id = isv.softwareversions_id
             JOIN glpi_softwares s ON s.id = sv.softwares_id
@@ -196,9 +197,15 @@ def get_unique_software_from_glpi(entity_id=None, group_id=None, machine_id=None
                 sw_name = row[0]
                 sw_version = row[1]
                 sw_vendor = row[2]
+                sw_comment = row[3] or ''
 
                 if not sw_name:
                     continue
+
+                # Extension de navigateur ? Détecté via le commentaire remonté
+                # par l'inventaire ("Categorie: Extension Navigateur"). Permet à
+                # CVE Central de ne pas confondre une extension avec son navigateur.
+                sw_category = 'browser extension' if 'Extension Navigateur' in sw_comment else ''
 
                 # Check exclusion vendors (exact match, case-insensitive)
                 if sw_vendor and sw_vendor.lower() in excluded_vendors_lower:
@@ -215,7 +222,8 @@ def get_unique_software_from_glpi(entity_id=None, group_id=None, machine_id=None
                 softwares.append({
                     'name': sw_name,
                     'version': sw_version or '',
-                    'vendor': sw_vendor or ''
+                    'vendor': sw_vendor or '',
+                    'category': sw_category
                 })
 
         if excluded_count > 0:
