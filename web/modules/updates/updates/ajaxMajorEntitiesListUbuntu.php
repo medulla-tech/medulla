@@ -126,10 +126,27 @@ $total_machines             = [];
 $comformite_name_major      = [];
 $display_entities           = [];
 $actionupdateByentity       = [];
+$has_deployable_updates     = false;
 $params =  array();
 
-foreach ($statversion['by_entity'] as $entityId => $ent) {
+$statversion_by_entity = $statversion['by_entity'] ?? [];
+if (empty($statversion_by_entity)) {
+    foreach ($entities as $entity) {
+        $entityId = (int) preg_replace('/^UUID/', '', $entity['uuid']);
+        $statversion_by_entity[$entityId] = [
+            'entity_id' => $entityId,
+            'outdated_machines' => 0,
+            'up_to_date_machines' => 0,
+            'pending_support_update' => 0,
+            'total_machines' => 0,
+            'compliance_rate' => 0,
+        ];
+    }
+}
+
+foreach ($statversion_by_entity as $entityId => $ent) {
     if ( $ent['outdated_machines'] > 0){
+        $has_deployable_updates = true;
         $actionupdateByentity[] = $updateAll;
     }else{
         $actionupdateByentity[] = $emptyupdateAll;
@@ -145,11 +162,15 @@ foreach ($statversion['by_entity'] as $entityId => $ent) {
         $entityName
     );
 
-    $comformite_name_major[] = (string) new medulla_progressbar_static(
-        $ent['compliance_rate'],
-        "",
-        $formattedText_help
-    );
+    if (intval($ent['total_machines']) > 0) {
+        $comformite_name_major[] = (string) new medulla_progressbar_static(
+            $ent['compliance_rate'],
+            "",
+            $formattedText_help
+        );
+    } else {
+        $comformite_name_major[] = "";
+    }
 
     $grp = new ActionAjaxPopup(
         "CreateGroup",
@@ -305,9 +326,9 @@ foreach ($statversion['by_entity'] as $entityId => $ent) {
     }
 
     $ent['entityName'] = $entityName;
-    $ent['distribution'] = $statversion['distribution'];
-    $ent['name_version'] = $statversion['name_version'];
-    $ent['max_version']  = $statversion['max_version'];
+    $ent['distribution'] = $statversion['distribution'] ?? $distribution;
+    $ent['name_version'] = $name_version;
+    $ent['max_version']  = $max_version;
     $params[] = $ent;
 }
 
@@ -328,7 +349,9 @@ $n->addExtraInfoRaw($outdated_machines, _T("Upgrade to ", "updates")." ".$strver
 $n->addExtraInfoRaw($up_to_date_machines, _T("Up to date", "updates"));
 $n->addExtraInfoRaw($pending_support_update, _T("Pending Support Update", "updates"));
 $n->addExtraInfoRaw($total_machines, _T("Total Machines", "updates")." ".$distribution);
-$n->addActionItemArray($actionupdateByentity);
+if ($has_deployable_updates) {
+    $n->addActionItemArray($actionupdateByentity);
+}
 $n->setNavBar(new AjaxNavBar($count, $filter));
 $n->display();
 
