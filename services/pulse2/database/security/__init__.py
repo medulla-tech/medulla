@@ -983,7 +983,8 @@ class SecurityDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def get_machine_softwares_summary(self, session, id_glpi, start=0, limit=50, filter_str='',
                                       min_cvss=0.0, excluded_vendors=None, excluded_names=None, excluded_cve_ids=None,
-                                      excluded_machines_ids=None, excluded_groups_ids=None):
+                                      excluded_machines_ids=None, excluded_groups_ids=None,
+                                      category_filter=''):
         """Get vulnerable software summary for a specific machine, grouped by software.
 
         Uses separate database connections:
@@ -998,7 +999,7 @@ class SecurityDatabase(DatabaseHelper):
 
             # Step 1: Get software names for this machine from GLPI
             glpi_sql = text("""
-                SELECT DISTINCT s.name as software_name
+                SELECT DISTINCT s.name as software_name, s.comment as comment
                 FROM glpi_softwares s
                 JOIN glpi_softwareversions sv ON sv.softwares_id = s.id
                 JOIN glpi_items_softwareversions isv ON isv.softwareversions_id = sv.id
@@ -1007,7 +1008,12 @@ class SecurityDatabase(DatabaseHelper):
 
             with glpi_db.db.connect() as glpi_conn:
                 glpi_result = glpi_conn.execute(glpi_sql, {'id_glpi': id_glpi})
-                software_names = set(row[0] for row in glpi_result)
+                software_names = set()
+                extension_names = set()  # logiciels typés "extension" via le commentaire
+                for row in glpi_result:
+                    software_names.add(row[0])
+                    if row[1] and 'Extension Navigateur' in row[1]:
+                        extension_names.add(row[0])
 
             if not software_names:
                 return {'total': 0, 'data': []}
@@ -1060,6 +1066,7 @@ class SecurityDatabase(DatabaseHelper):
                     software_stats[key] = {
                         'software_name': row[0],
                         'software_version': row[1],
+                        'glpi_software_name': glpi_sw_name,
                         'cve_ids': set(),
                         'severity_counts': {'Critical': 0, 'High': 0, 'Medium': 0, 'Low': 0, 'None': 0},
                         'max_cvss': 0.0
@@ -1086,8 +1093,15 @@ class SecurityDatabase(DatabaseHelper):
                     'high': stats['severity_counts']['High'],
                     'medium': stats['severity_counts']['Medium'],
                     'low': stats['severity_counts']['Low'],
-                    'max_cvss': str(round(stats['max_cvss'], 1))
+                    'max_cvss': str(round(stats['max_cvss'], 1)),
+                    'is_extension': stats['glpi_software_name'] in extension_names
                 })
+
+            # Filtre par type : extension de navigateur ou logiciel classique
+            if category_filter == 'extension':
+                data_list = [r for r in data_list if r['is_extension']]
+            elif category_filter == 'software':
+                data_list = [r for r in data_list if not r['is_extension']]
 
             data_list.sort(key=lambda x: (float(x['max_cvss']), x['total_cves']), reverse=True)
             total = len(data_list)
@@ -1325,7 +1339,8 @@ class SecurityDatabase(DatabaseHelper):
     def get_softwares_summary(self, session, start=0, limit=50, filter_str='', location='',
                               min_cvss=0.0, min_severity='None',
                               excluded_vendors=None, excluded_names=None, excluded_cve_ids=None,
-                              excluded_machines_ids=None, excluded_groups_ids=None):
+                              excluded_machines_ids=None, excluded_groups_ids=None,
+                              category_filter=''):
         """Get list of softwares with CVE counts, grouped by software name+version.
         Filtered by entity if location is provided.
         Filtered by min_cvss if > 0.
@@ -1374,6 +1389,17 @@ class SecurityDatabase(DatabaseHelper):
                 software_machine_counts = {}
                 for row in glpi_result:
                     software_machine_counts[(row[0], row[1] or '')] = row[2]
+
+                # Noms des logiciels qui sont des extensions de navigateur,
+                # détectés via le commentaire remonté par l'inventaire. Sert à
+                # typer l'affichage (extension vs logiciel) dans l'IHM sécurité.
+                extension_names = set()
+                ext_result = glpi_conn.execute(text(
+                    "SELECT DISTINCT name FROM glpi_softwares "
+                    "WHERE comment LIKE '%Extension Navigateur%'"
+                ))
+                for row in ext_result:
+                    extension_names.add(row[0])
 
             if not software_machine_counts:
                 return {'total': 0, 'data': []}
@@ -1464,10 +1490,17 @@ class SecurityDatabase(DatabaseHelper):
                     'low': stats['severity_counts']['Low'],
                     'max_cvss': str(round(stats['max_cvss'], 1)),
                     'machines_affected': stats['machines_affected'],
+                    'is_extension': stats['glpi_software_name'] in extension_names,
                     'store_version': None,
                     'store_has_update': False,
                     'store_package_uuid': None
                 })
+
+            # Filtre par type : extension de navigateur ou logiciel classique
+            if category_filter == 'extension':
+                results_list = [r for r in results_list if r['is_extension']]
+            elif category_filter == 'software':
+                results_list = [r for r in results_list if not r['is_extension']]
 
             # Sort by max_cvss DESC, total_cves DESC
             results_list.sort(key=lambda x: (float(x['max_cvss']), x['total_cves']), reverse=True)

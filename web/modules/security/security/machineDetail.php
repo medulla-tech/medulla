@@ -56,17 +56,41 @@ $totalCves = $cveSummary['total'];
     <strong><?php echo _T("Total CVEs", "security"); ?>:</strong> <?php echo $totalCves; ?>
 </div>
 
-<div class="search-wrapper">
-<?php
-// AjaxFilter for search
-$ajaxUrl = urlStrRedirect("security/security/ajaxMachineSoftwaresList")
-    . "&id_glpi=" . $id_glpi
-    . "&hostname=" . urlencode($hostname);
-$ajax = new AjaxFilter($ajaxUrl);
-$ajax->display();
-?>
+<div class="filters-row">
+    <div class="filters-left">
+        <div class="type-filter">
+            <label for="type-filter-machine"><?php echo _T("Type", "security"); ?>:</label>
+            <select id="type-filter-machine" onchange="updateMachineFilter()">
+                <option value=""><?php echo _T("All", "security"); ?></option>
+                <option value="software"><?php echo _T("Software", "security"); ?></option>
+                <option value="extension"><?php echo _T("Extension", "security"); ?></option>
+            </select>
+        </div>
+    </div>
+    <div class="search-wrapper">
+    <?php
+    // AjaxFilter for search
+    $ajaxUrl = urlStrRedirect("security/security/ajaxMachineSoftwaresList")
+        . "&id_glpi=" . $id_glpi
+        . "&hostname=" . urlencode($hostname);
+    $ajax = new AjaxFilter($ajaxUrl);
+    $ajax->display();
+    ?>
+    </div>
 </div>
 
 <?php
 $ajax->displayDivToUpdate();
 ?>
+
+<script>
+    function updateMachineFilter() {
+        var cat = document.getElementById('type-filter-machine').value;
+        var url = '<?php echo $ajaxUrl; ?>' + '&category=' + encodeURIComponent(cat);
+        var filterInput = document.querySelector('input[name="param"]');
+        if (filterInput) {
+            url += '&filter=' + encodeURIComponent(filterInput.value);
+        }
+        jQuery('#container').load(url);
+    }
+</script>

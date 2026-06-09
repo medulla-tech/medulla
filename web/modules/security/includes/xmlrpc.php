@@ -75,9 +75,9 @@ function xmlrpc_get_machine_cves($id_glpi, $start = 0, $limit = 50, $filter = ''
     return xmlCall("security.get_machine_cves", array($id_glpi, $start, $limit, $filter, $severity));
 }
 
-function xmlrpc_get_machine_softwares_summary($id_glpi, $start = 0, $limit = 50, $filter = '')
+function xmlrpc_get_machine_softwares_summary($id_glpi, $start = 0, $limit = 50, $filter = '', $category = '')
 {
-    return xmlCall("security.get_machine_softwares_summary", array($id_glpi, $start, $limit, $filter));
+    return xmlCall("security.get_machine_softwares_summary", array($id_glpi, $start, $limit, $filter, $category));
 }
 
 function xmlrpc_scan_machine($id_glpi)
@@ -167,9 +167,9 @@ function xmlrpc_remove_exclusion($cve_id)
 // =============================================================================
 // Software-centric view
 // =============================================================================
-function xmlrpc_get_softwares_summary($start = 0, $limit = 50, $filter = '', $location = '')
+function xmlrpc_get_softwares_summary($start = 0, $limit = 50, $filter = '', $location = '', $category = '')
 {
-    return xmlCall("security.get_softwares_summary", array($start, $limit, $filter, $location));
+    return xmlCall("security.get_softwares_summary", array($start, $limit, $filter, $location, $category));
 }
 
 function xmlrpc_get_software_cves(
