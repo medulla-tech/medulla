@@ -220,6 +220,14 @@ class RpcProxy(RpcProxyI):
         return XmppMasterDatabase().update_auto_approve_rules(updatesrules,
                                                               entity_id=entity_id)
 
+    @with_optional_xmpp_context
+    def get_linux_approved_releases(self, ctx=None):
+        return XmppMasterDatabase().get_linux_approved_releases(colonne=True)
+
+    @with_optional_xmpp_context
+    def update_linux_approved_releases(self, updatesreleases, ctx=None):
+        return XmppMasterDatabase().update_linux_approved_releases(updatesreleases)
+
 
     def getListPackages(self):
         resultnamepackage = []

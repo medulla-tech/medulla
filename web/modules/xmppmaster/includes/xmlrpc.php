@@ -45,6 +45,16 @@ function xmlrpc_update_auto_approve_rules($updates, $entity_id)
 {
     return xmlCall("xmppmaster.update_auto_approve_rules", array($updates, $entity_id));
 }
+
+function xmlrpc_get_linux_approved_releases()
+{
+    return xmlCall("xmppmaster.get_linux_approved_releases", array());
+}
+
+function xmlrpc_update_linux_approved_releases($updates)
+{
+    return xmlCall("xmppmaster.update_linux_approved_releases", array($updates));
+}
 //topology
 function xmlrpc_topology_pulse()
 {

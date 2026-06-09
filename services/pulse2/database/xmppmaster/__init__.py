@@ -793,6 +793,77 @@ class XmppMasterDatabase(DatabaseHelper):
             return {"success": False, "message": str(e)}
 
     @DatabaseHelper._sessionm
+    def get_linux_approved_releases(self, session, colonne=True):
+        """
+        Récupère les versions Linux gérées depuis xmppmaster.up_os_versions.
+        """
+        try:
+            query = text("""
+                SELECT id, distribution, version, name, is_current_stable, is_recommended
+                FROM xmppmaster.up_os_versions
+                WHERE is_managed = 1
+                ORDER BY distribution ASC, CAST(version AS DECIMAL(10, 4)) DESC, id DESC
+            """)
+            rows = session.execute(query).fetchall()
+
+            if colonne:
+                return {
+                    "id": [row.id or 0 for row in rows],
+                    "distribution": [row.distribution or "" for row in rows],
+                    "version": [row.version or "" for row in rows],
+                    "name": [row.name or "" for row in rows],
+                    "is_current_stable": [row.is_current_stable or 0 for row in rows],
+                    "is_recommended": [row.is_recommended or 0 for row in rows],
+                }
+
+            return [
+                {
+                    "id": row.id or 0,
+                    "distribution": row.distribution or "",
+                    "version": row.version or "",
+                    "name": row.name or "",
+                    "is_current_stable": row.is_current_stable or 0,
+                    "is_recommended": row.is_recommended or 0,
+                }
+                for row in rows
+            ]
+
+        except Exception as e:
+            logger.error(f"An error occurred while reading Linux approved releases: {str(e)}")
+            return {} if colonne else []
+
+    @DatabaseHelper._sessionm
+    def update_linux_approved_releases(self, session, updates):
+        """
+        Met à jour is_current_stable et is_recommended pour les versions Linux gérées.
+        updates: list of (id, is_current_stable, is_recommended)
+        """
+        try:
+            normalized_updates = [tuple(update) if isinstance(update, list) else update for update in updates]
+
+            for release_id, is_current_stable, is_recommended in normalized_updates:
+                query = text("""
+                    UPDATE xmppmaster.up_os_versions
+                    SET is_current_stable = :is_current_stable,
+                        is_recommended = :is_recommended
+                    WHERE id = :id AND is_managed = 1
+                """)
+                session.execute(query, {
+                    "id": int(release_id),
+                    "is_current_stable": int(is_current_stable),
+                    "is_recommended": int(is_recommended),
+                })
+
+            session.commit()
+            logger.info("Mise à jour réussie des releases Linux approuvées.")
+            return {"success": True, "message": "Update successful"}
+
+        except Exception as e:
+            session.rollback()
+            logger.error(f"An error occurred while updating Linux approved releases: {str(e)}")
+            return {"success": False, "message": str(e)}
+
+    @DatabaseHelper._sessionm
     def get_ars_for_pausing_syncthing(self, session, nbtransfert=2):
         sql = """SELECT
                     xmppmaster.syncthing_deploy_group.id,

@@ -423,6 +423,16 @@ $page->setFile("modules/updates/updates/ajaxApproveRules.php");
 $page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
 $submod->addPage($page);
 
+// choose approved Linux releases
+$page = new Page("linuxApprovedReleases", _T('Approved Linux Releases', 'updates'));
+$page->setFile("modules/updates/updates/linuxApprovedReleases.php");
+$submod->addPage($page);
+
+$page = new Page("ajaxLinuxApprovedReleases", _T("Approved Linux Releases", "updates"));
+$page->setFile("modules/updates/updates/ajaxLinuxApprovedReleases.php");
+$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
+$submod->addPage($page);
+
 /// choose produit
 $page = new Page("approve_products", _T('Approve Microsoft products updates', 'updates'));
 $page->setFile("modules/updates/updates/approve_products.php");

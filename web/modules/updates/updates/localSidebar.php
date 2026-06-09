@@ -48,6 +48,12 @@ if ($hasData) {
                                                 "updates",
                                                 "approve_rules"));
 
+    $sidemenu->addSideMenuItem(new SideMenuItem(_T("Approved Linux Releases",
+                                                   'updates'),
+                                                "updates",
+                                                "updates",
+                                                "linuxApprovedReleases"));
+
     $sidemenu->addSideMenuItem(
          new SideMenuItem(_T("Microsoft Products Approval",
                              "updates"),
