@@ -615,7 +615,10 @@ msgid "On error go to step"
 msgstr ""
 
 #: modules/pkgs/includes/actions/action_kiosknotification.php:94
-msgid "Kiosk Notification"
+msgid "Kiosk Progression"
+msgstr ""
+
+msgid "Log message"
 msgstr ""
 
 #: modules/pkgs/includes/actions/action_kiosknotification.php:100

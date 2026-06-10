@@ -921,6 +921,59 @@ update_552_to_560() {
     fi
 }
 
+update_560_to_561() {
+    str="Applying Medulla config update from 5.6.0 to 5.6.1..."
+    echo "$str"
+    write_to_log "$str"
+    update_medulla
+
+    # Add srvuuid to ipxe default boot
+    str="[=] Adding srvuuid to iPXE default boot configuration if imaging is set up..."
+    echo "$str"
+    write_to_log "$str"
+    if [[ -f /var/lib/pulse2/imaging/default.ipxe ]]; then
+        srvuuid=$(crudini --get /etc/mmc/pulse2/package-server/package-server.ini.local imaging_api uuid 2>/dev/null)
+        if [[ $? -ne 0 ]]; then
+            str="[x] Error retrieving srvuuid from package-server.ini.local. Aborting."
+            echo "$str"
+            write_to_log "$str"
+            exit 1
+        fi
+        if ! grep -q "srvuuid" /var/lib/pulse2/imaging/default.ipxe; then
+            # Replace the line starting with "chain http" with the same line but with &srvuuid=${srvuuid} before the final && exit || exit
+            # chain http://${next-server}/mmc/imaging/bootmenu.php?mac=${net0/mac}&uuid=${uuid}&srv=${next-server}&srvuuid=${srvuuid} && exit || exit
+            sed -i "s|^chain http://\(.*\)/mmc/imaging/bootmenu.php?mac=\${net0/mac}&uuid=\${uuid}&srv=\${next-server}\) && exit || exit|chain http://\1&srvuuid=${srvuuid} && exit || exit|g" /var/lib/pulse2/imaging/default.ipxe
+            if [[ $? -ne 0 ]]; then
+                str="[x] Error adding srvuuid to iPXE default boot configuration. Aborting."
+                echo "$str"
+                write_to_log "$str"
+                exit 1
+            fi
+            str="[v] srvuuid added to iPXE default boot configuration successfully."
+            echo "$str"
+            write_to_log "$str"
+        else
+            str="[v] srvuuid already present in iPXE default boot configuration. Skipping."
+            echo "$str"
+            write_to_log "$str"
+        fi
+    else
+        str="[i] iPXE default boot configuration not found. Skipping srvuuid addition."
+        echo "$str"
+        write_to_log "$str"
+    fi
+
+    echo "5.6.1" > /var/lib/mmc/version
+    str="[v] Medulla config update from 5.6.0 to 5.6.1 applied successfully."
+    echo "$str"
+    write_to_log "$str"
+    if [[ -f /tmp/update_medulla.sh ]]; then
+        exec /tmp/update_medulla.sh "$@"
+    else
+        exec /usr/sbin/update_medulla.sh "$@"
+    fi
+}
+
 # --- End of specific update functions for each version ---
 
 
@@ -1050,6 +1103,11 @@ case "$CURRENT_VERSION" in
     "5.5.2")
         if [[ "$AVAILABLE_VERSION" > "5.5.2" ]]; then
             update_552_to_560
+        fi
+        ;;
+    "5.6.0")
+        if [[ "$AVAILABLE_VERSION" > "5.6.0" ]]; then
+            update_560_to_561
         fi
         ;;
     *)
