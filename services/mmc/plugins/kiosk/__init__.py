@@ -806,6 +806,28 @@ def get_packages_for_machine(machine):
             if action_name == "label_section_uninstall" or action_name.startswith("Uninst_"):
                 uninstall_section_present = True
 
+        # An uninstall section can exist but be empty (no command / no script):
+        # the Delete button would then be a no-op. Demote it to "no uninstall"
+        # so the kiosk shows the "Installed" badge instead of a dead Delete.
+        if uninstall_section_present:
+            in_uninstall_section = False
+            uninstall_has_content = False
+            for step in depl.get(platform, {}).get("sequence", []):
+                step_action = step.get("action", "")
+                if step_action == "action_section_uninstall":
+                    in_uninstall_section = True
+                    continue
+                if step_action in ("actionsuccescompletedend", "actionerrorcompletedend"):
+                    in_uninstall_section = False
+                    continue
+                if in_uninstall_section and (
+                    str(step.get("command", "")).strip()
+                    or str(step.get("script", "")).strip()
+                ):
+                    uninstall_has_content = True
+                    break
+            uninstall_section_present = uninstall_has_content
+
         # Check if the launcher is specified
         launcher = ""
         if depl["info"]["launcher"] != "":
@@ -857,6 +879,11 @@ def get_packages_for_machine(machine):
             if pkg_statuses[uuid]["update"] is True:
                 if LooseVersion(found[0][2]) < LooseVersion(pkg["version"]):
                     pkg_statuses[uuid]["action"].append("Update")
+            # Installed but the package ships no uninstall section: nothing
+            # actionable. Emit a non-actionable "Installed" badge so the kiosk
+            # can show the package is present instead of leaving an empty card.
+            if pkg_statuses[uuid]["uninstall"] is False:
+                pkg_statuses[uuid]["action"].append("Installed")
 
     structuredatakiosk = []
     for uuid in pkg_statuses:
