@@ -116,37 +116,35 @@ CREATE TABLE `up_machine_linux` (
 
 -- 4.bis Table de politique d'auto-update Linux par entite/distribution
 -- Convention: les objets du domaine update sont prefixes par up_.
+-- 1 ligne = 1 combinaison (entity_id, distributor_id, release_version).
+-- S'applique a toutes les machines de cette entite/distribution/version.
 CREATE TABLE IF NOT EXISTS up_entity_linux_auto_update_policy (
     id INT(11) NOT NULL AUTO_INCREMENT COMMENT 'PK technique de la policy',
-    machine_id INT(11) NOT NULL COMMENT 'Reference unique vers up_machine_linux.id (1 policy = 1 machine)',
     entity_id INT(11) NOT NULL COMMENT 'Identifiant de l entite GLPI/MMC',
     distributor_id VARCHAR(64) NOT NULL COMMENT 'Distribution Linux normalisee (debian, ubuntu, rhel, ...)',
-    release_version VARCHAR(20) NOT NULL DEFAULT '' COMMENT 'Version de la machine Linux',
+    release_version VARCHAR(20) NOT NULL DEFAULT '' COMMENT 'Version de la distribution. Vide = toutes versions',
     auto_update_kernel TINYINT(1) NOT NULL DEFAULT 0 COMMENT 'Intention auto-update kernel (non propagee en require automatiquement)',
     auto_update_security TINYINT(1) NOT NULL DEFAULT 0 COMMENT 'Active la propagation vers security_require',
     auto_update_other TINYINT(1) NOT NULL DEFAULT 0 COMMENT 'Active la propagation vers other_require',
     created_at DATETIME NOT NULL DEFAULT current_timestamp() COMMENT 'Date de creation de la ligne',
     updated_at DATETIME NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp() COMMENT 'Date de derniere modification',
     PRIMARY KEY (id),
-    UNIQUE KEY uniq_machine_id (machine_id),
+    UNIQUE KEY uniq_entity_distributor_release (entity_id, distributor_id, release_version),
     KEY idx_entity_id (entity_id),
     KEY idx_distributor_id (distributor_id),
-    KEY idx_release_version (release_version),
-    CONSTRAINT fk_up_entity_linux_auto_update_policy_machine
-        FOREIGN KEY (machine_id) REFERENCES up_machine_linux(id) ON DELETE CASCADE
+    KEY idx_release_version (release_version)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
 COMMENT='Politique auto-update Linux par entite et distribution';
 
 
 -- Initialisation depuis les machines deja presentes (sans erreur sur doublons)
+-- 1 ligne par combinaison unique (entity_id, distributor_id, release_version)
 INSERT IGNORE INTO up_entity_linux_auto_update_policy (
-    machine_id,
     entity_id,
     distributor_id,
     release_version
 )
-SELECT
-    upl.id,
+SELECT DISTINCT
     upl.entity_id,
     LOWER(TRIM(upl.distributor_id)),
     COALESCE(TRIM(upl.release_version), '')
@@ -167,12 +165,10 @@ BEGIN
        AND NEW.distributor_id IS NOT NULL
        AND TRIM(NEW.distributor_id) <> '' THEN
         INSERT IGNORE INTO up_entity_linux_auto_update_policy (
-            machine_id,
             entity_id,
             distributor_id,
             release_version
         ) VALUES (
-            NEW.id,
             NEW.entity_id,
             LOWER(TRIM(NEW.distributor_id)),
             COALESCE(TRIM(NEW.release_version), '')
@@ -192,16 +188,19 @@ CREATE PROCEDURE `xmppmaster`.`up_apply_entity_linux_auto_update_policy`(
     IN p_distributor_id VARCHAR(64)
 )
 BEGIN
-    -- Applique la policy machine par machine via la correspondance 1:1 (machine_id).
+    -- Propage les flags security/other vers toutes les machines de l entite+distribution.
     -- Par choix metier, kernel_require n est pas force automatiquement ici.
     UPDATE up_machine_linux uml
-    INNER JOIN up_entity_linux_auto_update_policy p ON p.machine_id = uml.id
+    INNER JOIN up_entity_linux_auto_update_policy p
+        ON  p.entity_id = uml.entity_id
+        AND p.distributor_id = LOWER(TRIM(uml.distributor_id))
+        AND (p.release_version = '' OR p.release_version = TRIM(uml.release_version))
     SET
-        security_require = CASE
+        uml.security_require = CASE
             WHEN p.auto_update_security = 1 AND uml.security_count > 0 THEN 1
             ELSE 0
         END,
-        other_require = CASE
+        uml.other_require = CASE
             WHEN p.auto_update_other = 1 AND uml.other_count > 0 THEN 1
             ELSE 0
         END

@@ -799,18 +799,18 @@ class XmppMasterDatabase(DatabaseHelper):
         """
         try:
             query = text("""
-                SELECT id, distribution, version, name, is_current_stable, is_recommended
+                SELECT id, distributor_id, release_version, name, is_current_stable, is_recommended
                 FROM xmppmaster.up_linux_os_versions
                 WHERE is_managed = 1
-                ORDER BY distribution ASC, CAST(version AS DECIMAL(10, 4)) DESC, id DESC
+                ORDER BY distributor_id ASC, CAST(release_version AS DECIMAL(10, 4)) DESC, id DESC
             """)
             rows = session.execute(query).fetchall()
 
             if colonne:
                 return {
                     "id": [row.id or 0 for row in rows],
-                    "distribution": [row.distribution or "" for row in rows],
-                    "version": [row.version or "" for row in rows],
+                    "distribution": [row.distributor_id or "" for row in rows],
+                    "version": [row.release_version or "" for row in rows],
                     "name": [row.name or "" for row in rows],
                     "is_current_stable": [row.is_current_stable or 0 for row in rows],
                     "is_recommended": [row.is_recommended or 0 for row in rows],
@@ -819,8 +819,8 @@ class XmppMasterDatabase(DatabaseHelper):
             return [
                 {
                     "id": row.id or 0,
-                    "distribution": row.distribution or "",
-                    "version": row.version or "",
+                    "distribution": row.distributor_id or "",
+                    "version": row.release_version or "",
                     "name": row.name or "",
                     "is_current_stable": row.is_current_stable or 0,
                     "is_recommended": row.is_recommended or 0,
@@ -861,6 +861,79 @@ class XmppMasterDatabase(DatabaseHelper):
         except Exception as e:
             session.rollback()
             logger.error(f"An error occurred while updating Linux approved releases: {str(e)}")
+            return {"success": False, "message": str(e)}
+
+    @DatabaseHelper._sessionm
+    def get_linux_auto_update_policy(self, session, entity_ids):
+        """
+        Retourne les policies auto-update Linux pour une liste d'entity_ids.
+        entity_ids: liste d'entiers (ids des entites de l'utilisateur connecte).
+        """
+        try:
+            if not entity_ids:
+                return []
+            placeholders = ",".join([":eid_{}".format(i) for i in range(len(entity_ids))])
+            params = {"eid_{}".format(i): eid for i, eid in enumerate(entity_ids)}
+            query = text("""
+                SELECT
+                    p.id,
+                    p.entity_id,
+                    p.distributor_id,
+                    p.release_version,
+                    p.auto_update_kernel,
+                    p.auto_update_security,
+                    p.auto_update_other,
+                    p.updated_at
+                FROM xmppmaster.up_entity_linux_auto_update_policy p
+                WHERE p.entity_id IN ({})
+                ORDER BY p.entity_id, p.distributor_id, p.release_version
+            """.format(placeholders))
+            rows = session.execute(query, params).fetchall()
+            return [
+                {
+                    "id": row.id,
+                    "entity_id": row.entity_id,
+                    "distributor_id": row.distributor_id or "",
+                    "release_version": row.release_version or "",
+                    "auto_update_kernel": row.auto_update_kernel or 0,
+                    "auto_update_security": row.auto_update_security or 0,
+                    "auto_update_other": row.auto_update_other or 0,
+                    "updated_at": str(row.updated_at) if row.updated_at else "",
+                }
+                for row in rows
+            ]
+        except Exception as e:
+            logger.error(f"get_linux_auto_update_policy error: {str(e)}")
+            return []
+
+    @DatabaseHelper._sessionm
+    def update_linux_auto_update_policy(self, session, updates):
+        """
+        Met a jour les flags auto_update pour une liste de policy rows.
+        updates: list of {id, auto_update_kernel, auto_update_security, auto_update_other}
+        """
+        try:
+            normalized = [dict(u) if not isinstance(u, dict) else u for u in updates]
+            for u in normalized:
+                query = text("""
+                    UPDATE xmppmaster.up_entity_linux_auto_update_policy
+                    SET auto_update_kernel   = :auto_update_kernel,
+                        auto_update_security = :auto_update_security,
+                        auto_update_other    = :auto_update_other
+                    WHERE id = :id
+                """)
+                session.execute(query, {
+                    "id": int(u["id"]),
+                    "auto_update_kernel": int(u.get("auto_update_kernel", 0)),
+                    "auto_update_security": int(u.get("auto_update_security", 0)),
+                    "auto_update_other": int(u.get("auto_update_other", 0)),
+                })
+            session.commit()
+            logger.info("Mise a jour des policies auto-update Linux effectuee.")
+            return {"success": True}
+        except Exception as e:
+            session.rollback()
+            logger.error(f"update_linux_auto_update_policy error: {str(e)}")
             return {"success": False, "message": str(e)}
 
     @DatabaseHelper._sessionm
