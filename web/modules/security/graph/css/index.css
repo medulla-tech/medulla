@@ -609,7 +609,13 @@ tr.severity-na td:first-child { border-left: 3px solid var(--severity-na); }
     white-space: nowrap;
 }
 
-/* Action column */
+/* Action column : garder le slot "deploy" vide réservé (visibility au lieu de
+   display:none) pour que les icônes loupe/poubelle restent alignées d'une ligne
+   à l'autre, qu'il y ait une mise à jour store ou non. */
 .security-table td.action li.empty.inactive {
-    display: none;
+    visibility: hidden;
+}
+
+.security-table td.action li.empty.inactive a {
+    padding-left: 22px;
 }

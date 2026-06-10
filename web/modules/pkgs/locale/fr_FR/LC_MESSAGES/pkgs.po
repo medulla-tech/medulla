@@ -621,8 +621,11 @@ msgid "On error go to step"
 msgstr "Lors de l'erreur, aller à l'étape"
 
 #: modules/pkgs/includes/actions/action_kiosknotification.php:94
-msgid "Kiosk Notification"
-msgstr "Notification kiosque"
+msgid "Kiosk Progression"
+msgstr "Progression kiosque"
+
+msgid "Log message"
+msgstr "Message de log"
 
 #: modules/pkgs/includes/actions/action_kiosknotification.php:100
 msgid "Send a notification to the kiosk"

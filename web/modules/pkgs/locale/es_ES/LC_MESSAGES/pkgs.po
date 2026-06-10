@@ -604,8 +604,11 @@ msgid "On error go to step"
 msgstr "En caso de error, vaya al paso"
 
 #: modules/pkgs/includes/actions/action_kiosknotification.php:94
-msgid "Kiosk Notification"
-msgstr "Notificación del quiosco"
+msgid "Kiosk Progression"
+msgstr "Progresión del quiosco"
+
+msgid "Log message"
+msgstr "Mensaje de registro"
 
 #: modules/pkgs/includes/actions/action_kiosknotification.php:100
 msgid "Send a notification to the kiosk"

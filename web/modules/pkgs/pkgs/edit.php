@@ -399,7 +399,7 @@ if(isExpertMode1()) {
     }
     $f->add(
         new TrFormElement(_T("Launcher (kiosk)", "pkgs"), new InputTpl("launcher")),
-        ["value" => $launcher,"placeholder" => "C:\Program Files\my_app\app.exe"]
+        ["value" => htmlspecialchars($launcher, ENT_QUOTES),"placeholder" => "C:\Program Files\my_app\app.exe"]
     );
 
     // Get the sorted list of dependencies

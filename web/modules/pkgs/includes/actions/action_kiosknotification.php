@@ -42,7 +42,7 @@ Descriptor Type
 */
 ?>
 <?php
-$namestep=_T("Kiosk Notification","pkgs");
+$namestep=_T("Kiosk Progression","pkgs");
 ?>
 
 <div class="header">
@@ -64,7 +64,7 @@ $namestep=_T("Kiosk Notification","pkgs");
 
             <tr>
                 <th>
-                        <?php echo _T('Message', 'pkgs'); ?>
+                        <?php echo _T('Log message', 'pkgs'); ?>
                 </th>
                 <th>
                     <span  data-title="<?php echo _T('Define text for message to be shown in kiosk', 'pkgs'); ?>">

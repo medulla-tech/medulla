@@ -26,7 +26,7 @@ from mmc.plugins.dashboard.panel import (
     AlertsPanel,
 )
 
-VERSION = "5.6.0"
+VERSION = "5.6.1"
 APIVERSION = "0:1:0"
 REVISION = ""
 
