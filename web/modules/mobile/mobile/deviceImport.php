@@ -21,6 +21,13 @@ if (!xmlrpc_require_configured_hmdm_account()) {
                 <input type="file" name="csv_file" accept=".csv" required />
             </td>
         </tr>
+        <tr class="mmc-form-row">
+            <td class="mmc-label"><?php echo _T("Send enrollment emails", "mobile"); ?></td>
+            <td>
+                <label><input type="radio" name="send_emails" value="yes" checked /> <?php echo _T("Yes — send QR code email to new devices", "mobile"); ?></label><br>
+                <label style="margin-top:4px;display:inline-block;"><input type="radio" name="send_emails" value="no" /> <?php echo _T("No — import only", "mobile"); ?></label>
+            </td>
+        </tr>
     </table>
 
     <input type="submit" class="btnPrimary" value="<?php echo _T("Import from CSV", "mobile"); ?>" />
@@ -30,7 +37,7 @@ if (!xmlrpc_require_configured_hmdm_account()) {
     <div style="background:#fff;border-radius:10px;padding:30px;width:560px;max-width:95%;box-shadow:0 10px 40px rgba(0,0,0,0.3);">
         <h3 style="margin:0 0 8px;color:#25607D;"><?php echo _T("Sending enrollment emails", "mobile"); ?></h3>
         <p id="enrollSummary" style="margin:0 0 20px;font-size:13px;color:#666;"></p>
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+        <div id="enrollProgressBar" style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
             <div style="flex:1;background:#e5e7eb;border-radius:4px;height:10px;">
                 <div id="enrollBar" style="background:#25607D;height:10px;border-radius:4px;width:0%;transition:width 0.2s;"></div>
             </div>
@@ -38,7 +45,9 @@ if (!xmlrpc_require_configured_hmdm_account()) {
         </div>
         <div id="enrollLog" style="height:200px;overflow-y:auto;border:1px solid #e5e7eb;border-radius:4px;padding:8px;font-size:12px;background:#f9fafb;"></div>
         <div style="margin-top:20px;text-align:right;">
-            <button id="enrollCloseBtn" class="btnPrimary" disabled><?php echo _T("Close", "mobile"); ?></button>
+            <button id="enrollConfirmOk" class="btnPrimary" style="display:none;"><?php echo _T("Send", "mobile"); ?></button>
+            <button id="enrollCancelBtn" class="btn btnSecondary" style="margin-left:8px;display:none;" onclick="jQuery('#enrollModal').hide();"><?php echo _T("Cancel", "mobile"); ?></button>
+            <button id="enrollCloseBtn" class="btnPrimary" style="display:none;" disabled><?php echo _T("Close", "mobile"); ?></button>
         </div>
     </div>
 </div>
@@ -78,15 +87,29 @@ function sendEnrollmentEmail(list, i) {
     });
 }
 
-function openEnrollModal(emailList, summary) {
-    jQuery('#enrollSummary').text(summary);
-    jQuery('#enrollTotal').text(emailList.length);
-    jQuery('#enrollCurrent').text(0);
-    jQuery('#enrollBar').css('width', '0%');
+function openEnrollModal(emailList, importSummary) {
+    // Show confirm phase: display import summary + device list, wait for user to click Send
+    jQuery('#enrollSummary').text(importSummary);
+    jQuery('#enrollProgressBar').hide();
     jQuery('#enrollLog').empty();
-    jQuery('#enrollCloseBtn').prop('disabled', true);
+    for (var i = 0; i < emailList.length; i++) {
+        jQuery('#enrollLog').append('<div style="padding:2px 0;color:#374151;">' + escHtml(emailList[i].name) + ' &lt;' + escHtml(emailList[i].email) + '&gt;</div>');
+    }
+    jQuery('#enrollCloseBtn').hide();
+    jQuery('#enrollConfirmOk').show().off('click').on('click', function() {
+        // Switch to progress phase
+        jQuery('#enrollConfirmOk').hide();
+        jQuery('#enrollCancelBtn').hide();
+        jQuery('#enrollTotal').text(emailList.length);
+        jQuery('#enrollCurrent').text(0);
+        jQuery('#enrollBar').css('width', '0%');
+        jQuery('#enrollLog').empty();
+        jQuery('#enrollProgressBar').show();
+        jQuery('#enrollCloseBtn').show().prop('disabled', true);
+        sendEnrollmentEmail(emailList, 0);
+    });
+    jQuery('#enrollCancelBtn').show();
     jQuery('#enrollModal').css('display', 'flex');
-    sendEnrollmentEmail(emailList, 0);
 }
 
 function showImportError(msg) {
@@ -111,11 +134,12 @@ jQuery(document).ready(function() {
                     showImportError(resp.message || 'Import failed');
                     return;
                 }
+                var sendEmails = jQuery('input[name="send_emails"]:checked').val() === 'yes';
                 var summary = 'Import: ' + resp.created + ' created, ' + resp.updated + ' updated, ' + resp.skipped + ' skipped';
                 if (resp.errors && resp.errors.length) {
                     summary += '. Errors: ' + resp.errors.slice(0, 3).join('; ');
                 }
-                if (resp.email_list && resp.email_list.length > 0) {
+                if (sendEmails && resp.email_list && resp.email_list.length > 0) {
                     openEnrollModal(resp.email_list, summary);
                 } else {
                     window.location.href = <?php echo json_encode(urlStrRedirect('mobile/mobile/index')); ?>;

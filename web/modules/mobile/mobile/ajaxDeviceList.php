@@ -277,12 +277,37 @@ li.share a { background-image: url("img/actions/share.svg"); }
 </style>
 
 <script>
+function _escDevHtml(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function _deviceListConfirm(msg, onConfirm) {
+    var box = document.createElement('div');
+    box.id = '_dlConfirmOverlay';
+    box.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:99999;display:flex;align-items:center;justify-content:center;';
+    box.innerHTML = '<div style="background:#fff;border-radius:8px;padding:24px;max-width:420px;width:90%;box-shadow:0 8px 32px rgba(0,0,0,0.25);">'
+        + '<div class="alert alert-warning" style="margin-bottom:16px;">' + msg + '</div>'
+        + '<div style="text-align:right;">'
+        + '<button class="btn btn-danger" id="_dlConfirmOk"><?php echo addslashes(_T("Confirm", "mobile")); ?></button>'
+        + ' <button class="btn btnSecondary" id="_dlConfirmCancel"><?php echo addslashes(_T("Cancel", "mobile")); ?></button>'
+        + '</div></div>';
+    document.body.appendChild(box);
+    document.getElementById('_dlConfirmOk').onclick = function() { document.body.removeChild(box); onConfirm(); };
+    document.getElementById('_dlConfirmCancel').onclick = function() { document.body.removeChild(box); };
+}
+
 document.addEventListener('click', function(e) {
     var a = e.target.closest('li.guaca a');
     if (a && a.href && a.href.indexOf('action=remoteControlAction') !== -1) {
         e.preventDefault();
         e.stopImmediatePropagation();
-        window.open(a.href, 'remotecontrol', 'width=470,height=860,resizable=yes,scrollbars=no');
+        var href = a.href;
+        var m = href.match(/[?&]device=([^&]+)/);
+        var deviceName = m ? decodeURIComponent(m[1]) : '';
+        _deviceListConfirm(
+            '<?php echo addslashes(_T("Start remote control session for device", "mobile")); ?> <strong>' + _escDevHtml(deviceName) + '</strong>?',
+            function() { window.open(href, 'remotecontrol', 'width=470,height=860,resizable=yes,scrollbars=no'); }
+        );
     }
 }, true);
 
@@ -292,24 +317,31 @@ document.addEventListener('click', function(e) {
         e.preventDefault();
         e.stopImmediatePropagation();
         var url = a.href;
-        if (typeof window._openEnrollModal === 'function') {
-            window._openEnrollModal('<?php echo addslashes(_T("Sending enrollment email", "mobile")); ?>', 1);
-            jQuery.getJSON(url, function(resp) {
-                window._enrollModalSetProgress(1, 1);
-                var name  = resp.name  || '';
-                var email = resp.email || '<?php echo addslashes(_T("No email on file", "mobile")); ?>';
-                var color = resp.ok ? '#16a34a' : '#dc2626';
-                var label = resp.ok ? 'Sent' : 'Failed';
-                var detail = resp.ok ? '' : ' (' + (resp.error || 'failed') + ')';
-                var msg = '[' + label + '] ' + name + ' &lt;' + email + '&gt;' + detail;
-                window._enrollModalLog(color, msg);
-                window._enrollModalDone();
-            }).fail(function() {
-                window._enrollModalSetProgress(1, 1);
-                window._enrollModalLog('#dc2626', '<?php echo addslashes(_T("Network error", "mobile")); ?>');
-                window._enrollModalDone();
-            });
-        }
+        var deviceName = jQuery(a).closest('tr').find('td:first a').text().trim()
+                      || jQuery(a).closest('tr').find('td:first').text().trim();
+        _deviceListConfirm(
+            '<?php echo addslashes(_T("Send enrollment email to device", "mobile")); ?> <strong>' + _escDevHtml(deviceName) + '</strong>?',
+            function() {
+                if (typeof window._openEnrollModal === 'function') {
+                    window._openEnrollModal('<?php echo addslashes(_T("Sending enrollment email", "mobile")); ?>', 1);
+                    jQuery.getJSON(url, function(resp) {
+                        window._enrollModalSetProgress(1, 1);
+                        var name  = resp.name  || '';
+                        var email = resp.email || '<?php echo addslashes(_T("No email on file", "mobile")); ?>';
+                        var color = resp.ok ? '#16a34a' : '#dc2626';
+                        var label = resp.ok ? 'Sent' : 'Failed';
+                        var detail = resp.ok ? '' : ' (' + (resp.error || 'failed') + ')';
+                        var msg = '[' + label + '] ' + name + ' &lt;' + email + '&gt;' + detail;
+                        window._enrollModalLog(color, msg);
+                        window._enrollModalDone();
+                    }).fail(function() {
+                        window._enrollModalSetProgress(1, 1);
+                        window._enrollModalLog('#dc2626', '<?php echo addslashes(_T("Network error", "mobile")); ?>');
+                        window._enrollModalDone();
+                    });
+                }
+            }
+        );
     }
 }, true);
 </script>

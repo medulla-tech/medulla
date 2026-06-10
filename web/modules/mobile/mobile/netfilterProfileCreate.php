@@ -7,6 +7,11 @@ $p = new PageGenerator(_T("Create Filter Profile", "mobile"));
 $p->setSideMenu($sidemenu);
 $p->display();
 
+if (isset($_POST['bcancel'])) {
+    header("Location: " . urlStrRedirect("mobile/mobile/netfilterProfiles"));
+    exit;
+}
+
 if (isset($_POST['bsave'])) {
     $name        = trim($_POST['profile_name'] ?? '');
     $filter_mode = in_array($_POST['filter_mode'] ?? '', ['BLOCKLIST', 'ALLOWLIST'])

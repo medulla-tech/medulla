@@ -33,6 +33,11 @@ $originalName = $originalConfig['name'] ?? '';
 $originalDescription = $originalConfig['description'] ?? '';
 
 // Handle form submission
+if (isset($_POST['bback'])) {
+    header("Location: " . urlStrRedirect("mobile/mobile/configurations"));
+    exit;
+}
+
 if (isset($_POST['bconfirm'])) {
     $newName = isset($_POST['name']) ? trim($_POST['name']) : '';
     $newDescription = isset($_POST['description']) ? trim($_POST['description']) : '';

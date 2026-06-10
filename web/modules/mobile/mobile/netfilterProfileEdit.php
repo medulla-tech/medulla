@@ -158,6 +158,9 @@ $btn_label = $is_create ? _T("Create profile", "mobile") : _T("Save", "mobile");
 $f->addValidateButton("bsave", $btn_label);
 $f->display();
 ?>
+<input type="button" class="btnSecondary" style="margin-left:8px;" value="<?php echo _T("Cancel", "mobile"); ?>" onclick="location.href='<?php echo urlStrRedirect("mobile/mobile/netfilterProfiles"); ?>';" />
+<?php
+?>
 
 <script type="text/javascript">
 function nfpMoveRight() {

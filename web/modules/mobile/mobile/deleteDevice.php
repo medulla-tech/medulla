@@ -39,7 +39,7 @@ if (isset($_POST['bconfirm'])) {
     header("Location: " . urlStrRedirect("mobile/mobile/index"));
     exit;
 } else {
-    $f = new PopupForm(_T("Delete this device", "mobile"));
+    $f = new PopupForm(sprintf(_T("Delete device '%s'?", "mobile"), $deviceNumber));
     $f->setLevel('danger');
 
     $hidden = new HiddenTpl("id");

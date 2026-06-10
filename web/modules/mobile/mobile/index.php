@@ -100,7 +100,7 @@ $ajax->displayDivToUpdate();
     <div style="background:#fff;border-radius:10px;padding:30px;width:560px;max-width:95%;box-shadow:0 10px 40px rgba(0,0,0,0.3);">
         <h3 style="margin:0 0 8px;color:#25607D;"><?php echo _T("Enrollment emails", "mobile"); ?></h3>
         <p id="enrollBulkSummary" style="margin:0 0 20px;font-size:13px;color:#666;"></p>
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+        <div id="enrollBulkProgressBar" style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
             <div style="flex:1;background:#e5e7eb;border-radius:4px;height:10px;">
                 <div id="enrollBulkBar" style="background:#25607D;height:10px;border-radius:4px;width:0%;transition:width 0.2s;"></div>
             </div>
@@ -108,7 +108,9 @@ $ajax->displayDivToUpdate();
         </div>
         <div id="enrollBulkLog" style="height:200px;overflow-y:auto;border:1px solid #e5e7eb;border-radius:4px;padding:8px;font-size:12px;background:#f9fafb;"></div>
         <div style="margin-top:20px;text-align:right;">
-            <button id="enrollBulkCloseBtn" class="btnPrimary" disabled><?php echo _T("Close", "mobile"); ?></button>
+            <button id="enrollBulkConfirmOk" class="btnPrimary" style="display:none;"><?php echo _T("Send", "mobile"); ?></button>
+            <button id="enrollBulkCancelBtn" class="btn btnSecondary" style="margin-left:8px;display:none;" onclick="jQuery('#enrollBulkModal').hide();"><?php echo _T("Cancel", "mobile"); ?></button>
+            <button id="enrollBulkCloseBtn" class="btnPrimary" style="display:none;" disabled><?php echo _T("Close", "mobile"); ?></button>
         </div>
     </div>
 </div>
@@ -392,7 +394,10 @@ function _openEnrollModal(summary, total) {
     jQuery('#enrollBulkCurrent').text(0);
     jQuery('#enrollBulkBar').css('width', '0%');
     jQuery('#enrollBulkLog').empty();
-    jQuery('#enrollBulkCloseBtn').prop('disabled', true).off('click').on('click', function() {
+    jQuery('#enrollBulkProgressBar').show();
+    jQuery('#enrollBulkConfirmOk').hide();
+    jQuery('#enrollBulkCancelBtn').hide();
+    jQuery('#enrollBulkCloseBtn').show().prop('disabled', true).off('click').on('click', function() {
         jQuery('#enrollBulkModal').hide();
     });
     jQuery('#enrollBulkModal').css('display', 'flex');
@@ -440,14 +445,29 @@ function openEnrollBulkModal() {
     jQuery.getJSON(_enrollBulkListUrl, function(list) {
         var noEmail = '<?php echo addslashes(_T("No unenrolled devices with an email address found", "mobile")); ?>';
         if (!list || list.length === 0) {
+            // Skip confirm phase, go straight to progress with empty result
             _openEnrollModal(noEmail, 0);
             _enrollModalLog('#6b7280', noEmail);
             _enrollModalDone();
             return;
         }
-        var summary = '<?php echo addslashes(_T("Sending enrollment QR code to", "mobile")); ?> ' + list.length + ' <?php echo addslashes(_T("device(s)", "mobile")); ?>';
-        _openEnrollModal(summary, list.length);
-        _sendEnrollBulkNext(list, 0);
+        // Show confirm phase: list devices in the log, show Send/Cancel
+        jQuery('#enrollBulkSummary').text(
+            '<?php echo addslashes(_T("The following", "mobile")); ?> ' + list.length + ' <?php echo addslashes(_T("device(s) will receive an enrollment email:", "mobile")); ?>'
+        );
+        jQuery('#enrollBulkProgressBar').hide();
+        jQuery('#enrollBulkLog').empty();
+        for (var i = 0; i < list.length; i++) {
+            jQuery('#enrollBulkLog').append('<div style="padding:2px 0;color:#374151;">' + escEnrollHtml(list[i].name) + ' &lt;' + escEnrollHtml(list[i].email) + '&gt;</div>');
+        }
+        jQuery('#enrollBulkCloseBtn').hide();
+        jQuery('#enrollBulkConfirmOk').show().off('click').on('click', function() {
+            var summary = '<?php echo addslashes(_T("Sending enrollment QR code to", "mobile")); ?> ' + list.length + ' <?php echo addslashes(_T("device(s)", "mobile")); ?>';
+            _openEnrollModal(summary, list.length);
+            _sendEnrollBulkNext(list, 0);
+        });
+        jQuery('#enrollBulkCancelBtn').show();
+        jQuery('#enrollBulkModal').css('display', 'flex');
     }).fail(function() {
         _openEnrollModal('<?php echo addslashes(_T("Failed to retrieve device list", "mobile")); ?>', 0);
         _enrollModalLog('#dc2626', '<?php echo addslashes(_T("Network error", "mobile")); ?>');

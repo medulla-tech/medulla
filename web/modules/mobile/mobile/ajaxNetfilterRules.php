@@ -67,7 +67,7 @@ foreach ($rules as $index => $rule) {
         500
     );
 
-    $params[] = ['rule_id' => $ruleId];
+    $params[] = ['rule_id' => $ruleId, 'domain' => $domain];
 }
 
 $n = new OptimizedListInfos($domains, _T("Domain", "mobile"));

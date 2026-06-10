@@ -29,7 +29,7 @@ if (isset($_POST['bconfirm'])) {
     header("Location: " . urlStrRedirect("mobile/mobile/configurations"));
     exit;
 } else {
-    $f = new PopupForm(_T("Delete this configuration", "mobile"));
+    $f = new PopupForm(sprintf(_T("Delete configuration '%s'?", "mobile"), $name));
     $f->setLevel('danger');
 
     $hidden = new HiddenTpl("id");

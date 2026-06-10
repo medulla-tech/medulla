@@ -2843,7 +2843,7 @@ class MobileDatabase(DatabaseHelper):
             payload["iconId"] = icon_id
 
         # Select endpoint based on app type
-        endpoint = "web" if app_type == "web" else "android"
+        endpoint = "android" if app_type == "app" else "web"
         headers = {
             "Content-Type": "application/json",
             "Authorization": f"Bearer {hmtoken}",

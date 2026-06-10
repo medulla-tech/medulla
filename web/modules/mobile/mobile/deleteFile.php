@@ -67,7 +67,7 @@ if (isset($_POST['bconfirm'])) {
     header("Location: " . urlStrRedirect("mobile/mobile/files"));
     exit;
 } else {
-    $f = new PopupForm(_T("Delete this file", "mobile"));
+    $f = new PopupForm(sprintf(_T("Delete file '%s'?", "mobile"), htmlspecialchars($name)));
     $f->setLevel('danger');
     $hidden = new HiddenTpl("id");
     $f->add($hidden, array("value" => $id, "hide" => true));

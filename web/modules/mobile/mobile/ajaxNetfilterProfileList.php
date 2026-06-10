@@ -49,7 +49,7 @@ foreach ($profiles as $index => $profile) {
     $actionAddRule[] = new ActionItem(_T("Add rule", "mobile"), "addNetfilterProfileRule", "add", "id", "mobile", "mobile");
     $actionDelete[] = new ActionPopupItem(_T("Delete", "mobile"), "deleteNetfilterProfile", "delete", "id", "mobile", "mobile", null, 500);
 
-    $params[] = ['id' => $pid];
+    $params[] = ['id' => $pid, 'name' => $name];
 }
 
 $n = new OptimizedListInfos($names, _T("Profile name", "mobile"));

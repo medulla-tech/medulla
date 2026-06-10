@@ -27,6 +27,24 @@ $configuration_id = isset($_POST['configuration_input']) ? $_POST['configuration
 $groups = xmlrpc_get_hmdm_groups();
 $configurations = xmlrpc_get_hmdm_configurations();
 
+$cancel_target = isset($_POST['cancel_target']) ? $_POST['cancel_target'] : '';
+if (empty($cancel_target)) {
+    if (!empty($_GET['device'])) {
+        $cancel_target = 'mobile/mobile/index';
+    } elseif (!empty($_GET['group_id'])) {
+        $cancel_target = 'mobile/mobile/groups';
+    } elseif (!empty($_GET['config_id'])) {
+        $cancel_target = 'mobile/mobile/configurationsList';
+    } else {
+        $cancel_target = 'mobile/mobile/pushMessages';
+    }
+}
+
+if (isset($_POST['bback'])) {
+    header("Location: " . urlStrRedirect($cancel_target));
+    exit;
+}
+
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['test'])) {
     $errors = array();
@@ -80,6 +98,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['test'])) {
 // Build the form
 $form = new Form();
 $form->push(new Table());
+$cancelHidden = new HiddenTpl('cancel_target');
+$form->add($cancelHidden, array('value' => $cancel_target, 'hide' => true));
 
 // Send to selector
 $sendToSelect = new SelectItem('send_to');
@@ -174,6 +194,7 @@ $form->add(new TrFormElement(_T('Payload', 'mobile'), $payloadArea));
 
 // Submit button
 $form->addValidateButton('test', _T('Send', 'mobile'));
+$form->addCancelButton('bback');
 
 $form->pop();
 $form->display();

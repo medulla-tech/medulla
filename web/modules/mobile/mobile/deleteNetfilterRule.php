@@ -2,6 +2,7 @@
 require_once("modules/mobile/includes/xmlrpc.php");
 
 $rule_id = isset($_GET['rule_id']) ? intval($_GET['rule_id']) : 0;
+$domain = isset($_GET['domain']) ? htmlspecialchars($_GET['domain']) : '';
 
 if (isset($_POST['bconfirm']) && $rule_id > 0) {
     xmlrpc_delete_netfilter_rule($rule_id);
@@ -9,7 +10,9 @@ if (isset($_POST['bconfirm']) && $rule_id > 0) {
     exit;
 }
 
-$f = new PopupForm(_T("Delete this rule", "mobile"));
+$f = new PopupForm($domain !== ''
+    ? sprintf(_T("Delete rule for '%s'?", "mobile"), $domain)
+    : _T("Delete this rule", "mobile"));
 $f->setLevel('danger');
 
 $hidden = new HiddenTpl("rule_id");

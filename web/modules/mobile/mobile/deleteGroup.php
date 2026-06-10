@@ -23,7 +23,7 @@ if (isset($_POST['bconfirm'])) {
     header("Location: " . urlStrRedirect("mobile/mobile/groups"));
     exit;
 } else {
-    $f = new PopupForm(_T("Delete this group", "mobile"));
+    $f = new PopupForm(sprintf(_T("Delete group '%s'?", "mobile"), $group_name));
     $f->setLevel('danger');
     $hidden = new HiddenTpl("group_id");
     $f->add($hidden, array("value" => $group_id, "hide" => true));

@@ -142,7 +142,7 @@ $deviceDescription = $device['description'] ?? '';
                     'margin-left': -($p.outerWidth()/2)+'px',
                     'visibility':'visible'});
         };
-        var msg = '<?php echo addslashes(_T("You are about to send:", "mobile")); ?> <strong>' + label + '<\/strong>. <?php echo addslashes(_T("This action may be irreversible.", "mobile")); ?>';
+        var msg = '<?php echo addslashes(_T("You are about to send:", "mobile")); ?> <strong>' + label + '<\/strong> <?php echo addslashes(_T("to device", "mobile")); ?> <strong><?php echo addslashes(htmlspecialchars($deviceNumber, ENT_QUOTES)); ?><\/strong>. <?php echo addslashes(_T("This action may be irreversible.", "mobile")); ?>';
         var html = '<div style="padding:10px">'
                  + '<div class="alert alert-warning">' + msg + '<\/div>'
                  + '<div style="text-align:center">'
