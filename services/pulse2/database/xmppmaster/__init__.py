@@ -795,12 +795,12 @@ class XmppMasterDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def get_linux_approved_releases(self, session, colonne=True):
         """
-        Récupère les versions Linux gérées depuis xmppmaster.up_os_versions.
+        Récupère les versions Linux gérées depuis xmppmaster.up_linux_os_versions.
         """
         try:
             query = text("""
                 SELECT id, distribution, version, name, is_current_stable, is_recommended
-                FROM xmppmaster.up_os_versions
+                FROM xmppmaster.up_linux_os_versions
                 WHERE is_managed = 1
                 ORDER BY distribution ASC, CAST(version AS DECIMAL(10, 4)) DESC, id DESC
             """)
@@ -843,7 +843,7 @@ class XmppMasterDatabase(DatabaseHelper):
 
             for release_id, is_current_stable, is_recommended in normalized_updates:
                 query = text("""
-                    UPDATE xmppmaster.up_os_versions
+                    UPDATE xmppmaster.up_linux_os_versions
                     SET is_current_stable = :is_current_stable,
                         is_recommended = :is_recommended
                     WHERE id = :id AND is_managed = 1
@@ -20000,7 +20000,7 @@ FROM (
         Calcule la conformite de version Linux par entite pour une distribution donnee.
 
         Principe:
-        1. Selectionne une version cible depuis `up_os_versions` pour la distribution demandee
+        1. Selectionne une version cible depuis `up_linux_os_versions` pour la distribution demandee
            (priorite: version geree/stable/recommandee, puis version numerique la plus elevee).
         2. Compare `up_machine_linux.release_version` a cette version cible.
         3. Retourne, par entite, le nombre de machines:
@@ -20059,7 +20059,7 @@ FROM (
         # Diagnostic: liste des versions candidates visibles pour la distribution
         versions_debug_query = text("""
             SELECT id, distribution, version, name, is_managed, is_current_stable, is_recommended
-            FROM xmppmaster.up_os_versions
+            FROM xmppmaster.up_linux_os_versions
             WHERE distribution = :distribution
             ORDER BY
                 is_managed DESC,
@@ -20074,7 +20074,7 @@ FROM (
             {"distribution": normalized_distribution},
         ).fetchall()
         self.logger.info(
-            "up_os_versions candidates for %s: %s",
+            "up_linux_os_versions candidates for %s: %s",
             normalized_distribution,
             [
                 {
@@ -20093,7 +20093,7 @@ FROM (
         # Choisit la version cible qui servira de reference de conformite
         max_version_query = text("""
             SELECT name, version
-            FROM xmppmaster.up_os_versions
+            FROM xmppmaster.up_linux_os_versions
             WHERE distribution = :distribution
                         ORDER BY
                                 is_managed DESC,
@@ -20110,7 +20110,7 @@ FROM (
 
         if not row or row.version is None:
             self.logger.warning(
-                "Aucune version cible trouvee dans up_os_versions pour distribution=%s",
+                "Aucune version cible trouvee dans up_linux_os_versions pour distribution=%s",
                 normalized_distribution,
             )
             return {
