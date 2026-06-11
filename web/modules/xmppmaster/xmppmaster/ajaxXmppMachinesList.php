@@ -51,16 +51,21 @@ $consoleaction   = new ActionItem(_("xmppconsole"),"consolecomputerxmpp","consol
 $consoleemptyaction = new EmptyActionItem1(_("xmppconsole"),"consolecomputerxmpp","consoleg","computers","xmppmaster", "xmppmaster");
 $vncaction = new ActionPopupItem(_("Remote control"), "vnc_client", "guaca", "computer", "base", "computers");
 $vncemptyaction = $vncClientActiongriser = new EmptyActionItem1(_("Remote control"), "vnc_client", "guacag", "computer", "base", "computers");
+$deployquickaction = new ActionPopupItem(_("Quick action"), "deployquick", "quick", "computer", "xmppmaster", "xmppmaster");
+$deployquickaction->setWidth(600);
 
 $configActions = [];
 $consoleActions = [];
 $vncActions = [];
+$quickActions = [];
 
 foreach($machines['datas']['hostname'] as $key=>$array){
   $params[] = [
     'id' => $machines['datas']['id'][$raw],
     'hostname' => $machines['datas']['hostname'][$raw],
+        'cn' => $machines['datas']['hostname'][$raw],
     'enabled' => $machines['datas']['enabled'][$raw],
+        'presencemachinexmpp' => $machines['datas']['enabled'][$raw],
     'enabled_css' => $machines['datas']['enabled_css'][$raw],
     'uninventoried' => true,
     'jid'=> $machines['datas']['jid'][$raw],
@@ -68,6 +73,8 @@ foreach($machines['datas']['hostname'] as $key=>$array){
     'ip_xmpp' => $machines['datas']['ip_xmpp'][$raw],
     'agenttype' => 'machine',
     'platform' => $machines['datas']['platform'][$raw],
+        'os' => $machines['datas']['platform'][$raw],
+        'from' => 'xmppMachinesList',
     'vnctype' => (in_array("guacamole", $_SESSION["supportModList"])) ? "guacamole" : ((web_def_use_no_vnc()==1) ? "novnc" : "appletjava"),
   ];
   // Build tooltip grouped by category
@@ -117,11 +124,13 @@ foreach($machines['datas']['hostname'] as $key=>$array){
     $configActions[] =$editremoteconfiguration;
     $consoleActions[] = $consoleaction;
     $vncActions[] = $vncaction;
+        $quickActions[] = $deployquickaction;
   }
   else{
     $configActions[] =$editremoteconfigurationempty;
     $consoleActions[] = $consoleemptyaction;
     $vncActions[] = $vncemptyaction;
+        $quickActions[] = $deployquickaction;
   }
   $raw++;
 }
@@ -139,6 +148,7 @@ $n->setNavBar(new AjaxNavBar($machines['total'], $filter, "updateSearchParamform
 $n->addActionItemArray($vncActions);
 $n->addActionItemArray($consoleActions);
 $n->addActionItemArray($configActions);
+$n->addActionItemArray($quickActions);
 $n->setParamInfo($params);
 $n->start = 0;
 $n->end = $machines['total'];

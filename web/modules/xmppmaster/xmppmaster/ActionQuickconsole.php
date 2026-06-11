@@ -45,7 +45,14 @@ $customqa['description'] = $description;
 $customqa['namecmd'] = $namecmd;
 $result = [];
 $machinegroup = array();
-$machinegroup = xmlrpc_getMachinefromuuid($uuid);
+$machinegroup = ($uuid != '') ? xmlrpc_getMachinefromuuid($uuid) : array();
+if (safeCount($machinegroup) == 0 && $jid != '') {
+    // Fallback for uninventoried machines: resolve by JID when UUID is not available.
+    $machinegroup = xmlrpc_getMachinefromjid($jid);
+    if ($uuid == '' && isset($machinegroup['uuid_inventorymachine'])) {
+        $uuid = $machinegroup['uuid_inventorymachine'];
+    }
+}
 if (safeCount($machinegroup) != 0) {
     echo strtoupper($machinegroup['platform']);
     echo "<br>";
