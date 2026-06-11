@@ -1086,7 +1086,9 @@ class SecurityDatabase(DatabaseHelper):
             data_list = []
             for key, stats in software_stats.items():
                 data_list.append({
-                    'software_name': stats['software_name'],
+                    # Affichage : nom réel GLPI (non normalisé) pour distinguer
+                    # ex. "Microsoft Edge Update" de "Microsoft Edge".
+                    'software_name': stats['glpi_software_name'],
                     'software_version': stats['software_version'],
                     'total_cves': len(stats['cve_ids']),
                     'critical': stats['severity_counts']['Critical'],
@@ -1207,6 +1209,36 @@ class SecurityDatabase(DatabaseHelper):
             if updated:
                 session.commit()
         return existing.id
+
+    @DatabaseHelper._sessionm
+    def prune_stale_cves(self, session, glpi_names, confirmed_by_sw):
+        """Mise à jour différentielle : supprime UNIQUEMENT les CVE périmées des
+        logiciels (re)scannés, sans rien vider d'abord.
+
+        Pour chaque logiciel scanné, on garde les CVE confirmées par CVE Central
+        durant CE scan et on supprime les anciennes qui ne le sont plus. Un logiciel
+        scanné sans aucune CVE voit ses anciennes supprimées (→ 0). Appelé à la FIN
+        du scan, en cas de succès seulement : si le scan est interrompu, rien n'est
+        supprimé (aucune perte). Scopé aux noms envoyés → un scan ciblé ne touche
+        pas les logiciels des autres machines.
+
+        confirmed_by_sw : {glpi_software_name: set(cve_id_str confirmés ce scan)}.
+        """
+        if not glpi_names:
+            return 0
+        total = 0
+        for gname in glpi_names:
+            q = session.query(SoftwareCve).filter(SoftwareCve.glpi_software_name == gname)
+            confirmed = confirmed_by_sw.get(gname)
+            if confirmed:
+                # IDs internes des CVE à conserver (confirmées ce scan)
+                keep_ids = [r[0] for r in session.query(Cve.id).filter(
+                    Cve.cve_id.in_(list(confirmed))).all()]
+                if keep_ids:
+                    q = q.filter(~SoftwareCve.cve_id.in_(keep_ids))
+            total += q.delete(synchronize_session=False)
+        session.commit()
+        return total
 
     # =========================================================================
     # Scans history
@@ -1481,7 +1513,9 @@ class SecurityDatabase(DatabaseHelper):
             results_list = []
             for key, stats in software_stats.items():
                 results_list.append({
-                    'software_name': stats['software_name'],
+                    # Affichage : nom réel GLPI (non normalisé) pour distinguer
+                    # ex. "Microsoft Edge Update" de "Microsoft Edge".
+                    'software_name': stats['glpi_software_name'],
                     'software_version': stats['software_version'],
                     'total_cves': len(stats['cve_ids']),
                     'critical': stats['severity_counts']['Critical'],
