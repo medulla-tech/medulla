@@ -10,6 +10,7 @@ to find CVE vulnerabilities. CVEs are stored locally and linked to software.
 
 import logging
 from logging.handlers import RotatingFileHandler
+import re
 import requests
 import time
 import configparser
@@ -109,6 +110,19 @@ def get_dyngroup_db_url():
     return f"mysql+pymysql://{dbuser}:{dbpasswd}@{dbhost}:{dbport}/{dbname}"
 
 
+def _ecosystem_from_os(os_name):
+    """Déduit l'ecosystem OSV depuis le nom d'OS GLPI ; '' si non géré (Windows…).
+    Phase 1 : Debian (ex "Debian GNU/Linux 12 (bookworm)" -> "Debian:12"). Sert à
+    router les softs Linux vers OSV côté CVE Central (au lieu de CPE/NVD)."""
+    if not os_name:
+        return ''
+    if 'debian' in os_name.lower():
+        m = re.search(r'\b(\d+)\b', os_name)
+        if m:
+            return f"Debian:{m.group(1)}"
+    return ''
+
+
 def get_unique_software_from_glpi(entity_id=None, group_id=None, machine_id=None,
                                    excluded_vendors=None, excluded_names=None):
     """
@@ -179,12 +193,15 @@ def get_unique_software_from_glpi(entity_id=None, group_id=None, machine_id=None
                 s.name as software_name,
                 sv.name as version,
                 m.name as manufacturer,
-                s.comment as comment
+                s.comment as comment,
+                os.name as os_name
             FROM glpi_items_softwareversions isv
             JOIN glpi_softwareversions sv ON sv.id = isv.softwareversions_id
             JOIN glpi_softwares s ON s.id = sv.softwares_id
             LEFT JOIN glpi_manufacturers m ON m.id = s.manufacturers_id
             JOIN glpi_computers c ON c.id = isv.items_id
+            LEFT JOIN glpi_items_operatingsystems ios ON ios.items_id = c.id AND ios.itemtype = 'Computer'
+            LEFT JOIN glpi_operatingsystems os ON os.id = ios.operatingsystems_id
             {where_clause}
             ORDER BY s.name, sv.name
         """)
@@ -198,6 +215,7 @@ def get_unique_software_from_glpi(entity_id=None, group_id=None, machine_id=None
                 sw_version = row[1]
                 sw_vendor = row[2]
                 sw_comment = row[3] or ''
+                os_name = row[4] if len(row) > 4 else None
 
                 if not sw_name:
                     continue
@@ -223,7 +241,10 @@ def get_unique_software_from_glpi(entity_id=None, group_id=None, machine_id=None
                     'name': sw_name,
                     'version': sw_version or '',
                     'vendor': sw_vendor or '',
-                    'category': sw_category
+                    'category': sw_category,
+                    # ecosystem OSV (ex "Debian:12") pour les machines Linux ->
+                    # CVE Central détecte via OSV (par package) au lieu de CPE/NVD.
+                    'ecosystem': _ecosystem_from_os(os_name)
                 })
 
         if excluded_count > 0:
@@ -587,7 +608,8 @@ def run_cve_scan(scan_id: Optional[int] = None, entity_id: Optional[int] = None,
                         software_version=cve_entry.get('software_version', ''),
                         cve_db_id=cve_db_id,
                         glpi_software_name=cve_entry.get('glpi_software_name') or None,
-                        target_platform=cve_entry.get('target_platform')
+                        target_platform=cve_entry.get('target_platform'),
+                        source_package=cve_entry.get('source_package') or None
                     )
 
                 sev = severity if severity in severity_counts else 'N/A'
