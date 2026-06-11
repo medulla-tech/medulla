@@ -24,8 +24,8 @@ if (!xmlrpc_require_configured_hmdm_account()) {
         <tr class="mmc-form-row">
             <td class="mmc-label"><?php echo _T("Send enrollment emails", "mobile"); ?></td>
             <td>
-                <label><input type="radio" name="send_emails" value="yes" checked /> <?php echo _T("Yes — send QR code email to new devices", "mobile"); ?></label><br>
-                <label style="margin-top:4px;display:inline-block;"><input type="radio" name="send_emails" value="no" /> <?php echo _T("No — import only", "mobile"); ?></label>
+                <label><input type="radio" name="send_emails" value="yes" checked /> <?php echo _T("Yes - send QR code email to new devices", "mobile"); ?></label><br>
+                <label style="margin-top:4px;display:inline-block;"><input type="radio" name="send_emails" value="no" /> <?php echo _T("No - import only", "mobile"); ?></label>
             </td>
         </tr>
     </table>
@@ -142,7 +142,22 @@ jQuery(document).ready(function() {
                 if (sendEmails && resp.email_list && resp.email_list.length > 0) {
                     openEnrollModal(resp.email_list, summary);
                 } else {
-                    window.location.href = <?php echo json_encode(urlStrRedirect('mobile/mobile/index')); ?>;
+                    // Show summary modal without sending emails
+                    jQuery('#enrollSummary').text(summary);
+                    jQuery('#enrollProgressBar').hide();
+                    jQuery('#enrollLog').empty();
+                    if (!sendEmails && resp.email_list && resp.email_list.length > 0) {
+                        jQuery('#enrollLog').append('<div style="padding:4px 0;color:#6b7280;margin-bottom:6px;"><?php echo addslashes(_T("Email sending skipped (disabled by user).", "mobile")); ?></div>');
+                        for (var i = 0; i < resp.email_list.length; i++) {
+                            jQuery('#enrollLog').append('<div style="padding:2px 0;color:#374151;">' + escHtml(resp.email_list[i].name) + '</div>');
+                        }
+                    }
+                    jQuery('#enrollConfirmOk').hide();
+                    jQuery('#enrollCancelBtn').hide();
+                    jQuery('#enrollCloseBtn').show().prop('disabled', false).off('click').on('click', function() {
+                        window.location.href = enrollDoneUrl;
+                    });
+                    jQuery('#enrollModal').css('display', 'flex');
                 }
             },
             error: function() {

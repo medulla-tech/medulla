@@ -71,7 +71,7 @@ if (!is_array($contactsConfig)) {
     );
 }
 
-$p = new PageGenerator(sprintf(_T("Contacts sync — %s", "mobile"), htmlspecialchars($configName)));
+$p = new PageGenerator(sprintf(_T("Contacts sync - %s", "mobile"), htmlspecialchars($configName)));
 $p->setSideMenu($sidemenu);
 $p->display();
 ?>
@@ -100,7 +100,7 @@ $form->add(new TrFormElement(
     new InputTpl("contacts_login", '/^.*$/', isset($contactsConfig['login']) ? $contactsConfig['login'] : '')
 ), array(
     "value"       => isset($contactsConfig['login']) ? $contactsConfig['login'] : '',
-    "placeholder" => _T("Optional — leave empty if not required", "mobile")
+    "placeholder" => _T("Optional - leave empty if not required", "mobile")
 ));
 
 $form->add(new TrFormElement(
@@ -108,7 +108,7 @@ $form->add(new TrFormElement(
     new InputTpl("contacts_password", '/^.*$/', '')
 ), array(
     "value"       => '',
-    "placeholder" => _T("Optional — leave empty to keep existing password", "mobile")
+    "placeholder" => _T("Optional - leave empty to keep existing password", "mobile")
 ));
 
 $form->add(new TrFormElement(
@@ -116,7 +116,7 @@ $form->add(new TrFormElement(
     new InputTpl("contacts_account_type", '/^.*$/', isset($contactsConfig['accountType']) ? $contactsConfig['accountType'] : 'com.android.contacts')
 ), array(
     "value"   => isset($contactsConfig['accountType']) ? $contactsConfig['accountType'] : 'com.android.contacts',
-    "tooltip" => _T("Android contacts account type — usually com.android.contacts", "mobile")
+    "tooltip" => _T("Android contacts account type - usually com.android.contacts", "mobile")
 ));
 
 $form->add(new TrFormElement(

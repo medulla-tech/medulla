@@ -166,7 +166,7 @@ if ($values['type'] === 'app') {
     $f->add(new TrFormElement(_T("Package ID", "mobile"), new InputTpl("pkg", '/^.{0,255}$/', $values['pkg'])),
         array("value" => $values['pkg']));
 
-    $versionLabel = $values['version'] !== '' ? $values['version'] : '—';
+    $versionLabel = $values['version'] !== '' ? $values['version'] : '-';
     $f->add(new TrFormElement(_T("Version", "mobile"),
         new SpanElement('<div style="padding:5px 0;color:#555;">' . htmlspecialchars($versionLabel) . '</div>')));
 
@@ -187,7 +187,7 @@ if ($values['type'] === 'app') {
 
     if ($values['url'] !== '') {
         $apkFileName = basename(parse_url($values['url'], PHP_URL_PATH) ?? '');
-        if ($apkFileName === '') $apkFileName = '—';
+        if ($apkFileName === '') $apkFileName = '-';
         $f->add(new TrFormElement(_T("APK file", "mobile"),
             new SpanElement('<div style="padding:5px 0;color:#555;">' . htmlspecialchars($apkFileName) . '</div>')));
     }
