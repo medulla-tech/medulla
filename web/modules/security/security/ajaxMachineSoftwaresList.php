@@ -30,6 +30,7 @@ $id_glpi = isset($_GET["id_glpi"]) ? intval($_GET["id_glpi"]) : 0;
 $hostname = isset($_GET["hostname"]) ? $_GET["hostname"] : '';
 $filter = isset($_GET["filter"]) ? $_GET["filter"] : "";
 $start = isset($_GET["start"]) ? intval($_GET["start"]) : 0;
+$category = isset($_GET["category"]) ? $_GET["category"] : "";
 
 // Get policies to determine which columns to show
 $policies = xmlrpc_get_policies();
@@ -49,13 +50,14 @@ if ($id_glpi <= 0) {
 }
 
 // Get data from backend
-$result = xmlrpc_get_machine_softwares_summary($id_glpi, $start, $maxperpage, $filter);
+$result = xmlrpc_get_machine_softwares_summary($id_glpi, $start, $maxperpage, $filter, $category);
 $data = $result['data'];
 $count = $result['total'];
 
 // Prepare arrays for display
 $softwareNames = array();
 $versions = array();
+$typeLabels = array();
 $maxScores = array();
 $criticalCounts = array();
 $highCounts = array();
@@ -67,6 +69,15 @@ $params = array();
 foreach ($data as $row) {
     $softwareNames[] = $row['software_name'];
     $versions[] = $row['software_version'];
+
+    // Type : extension de navigateur ou logiciel classique
+    if (!empty($row['is_extension'])) {
+        $typeLabels[] = '<span class="badge" style="background-color:#6f42c1;color:#fff;" title="'
+            . _T("Browser extension", "security") . '">' . _T("Extension", "security") . '</span>';
+    } else {
+        $typeLabels[] = '<span class="badge" style="background-color:#6c757d;color:#fff;">'
+            . _T("Software", "security") . '</span>';
+    }
 
     // Max CVSS score with color
     $score = floatval($row['max_cvss']);
@@ -104,6 +115,7 @@ if ($count > 0) {
     $n->setTableCssClass("security-table");
     $n->disableFirstColumnActionLink();
     $n->addExtraInfo($versions, _T("Version", "security"));
+    $n->addExtraInfoCentered($typeLabels, _T("Type", "security"));
     $n->addExtraInfoCentered($maxScores, _T("Max CVSS", "security"));
     // Only show severity columns that are >= min_severity
     if ($showCritical) {

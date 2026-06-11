@@ -253,6 +253,146 @@ class RpcProxy(RpcProxyI):
                                                           type=type,
                                                           colonne=colonne )
 
+
+
+    @with_optional_xmpp_context
+    def update_machine_compliance_by_action(self,
+                                            action,
+                                            onoff,
+                                            date_start=None,
+                                            date_stop=None,
+                                            interval=None,
+                                            harduuids=None,
+                                            entity_ids=None,
+                                            distributor_ids=None,
+                                            ctx=None):
+        """
+        Met à jour la conformité des machines via une action XML-RPC, en gérant les dates de début et de fin,
+        les identifiants de machines, les entités et les distributeurs.
+
+        Comportement spécifique pour les dates :
+        - Si `date_start` est `None` ou une chaîne vide, il est défini à la date et l'heure actuelles.
+        - Si `date_stop` est `None` ou une chaîne vide, il est défini à `date_start + 2 heures`.
+        - Si `date_stop` est antérieur à `date_start`, un warning est logué et les dates sont réinitialisées :
+        - `date_start` devient la date et l'heure actuelles.
+        - `date_stop` devient `date_start + 2 heures`.
+
+        Args:
+            action (str): Type d'action à effectuer. Doit être dans la liste des actions autorisées.
+                Exemples : "require_kernel", "current_security", etc.
+            onoff (int): 0 pour désactiver, 1 pour activer.
+            date_start (str|datetime|None): Date de début au format "YYYY-MM-DD HH:MM:SS" ou objet datetime.
+                Si `None` ou chaîne vide, utilise la date et l'heure actuelles.
+            date_stop (str|datetime|None): Date de fin au format "YYYY-MM-DD HH:MM:SS" ou objet datetime.
+                Si `None` ou chaîne vide, utilise `date_start + 2 heures`.
+            interval (str|None): Intervalle de temps (ex: "2h"). Peut être `None` ou une chaîne vide.
+            harduuids (str|list|None): UUID(s) des machines concernées. Peut être une chaîne, une liste ou `None`.
+            entity_ids (int|list|None): ID(s) des entités concernées. Peut être un entier, une liste ou `None`.
+            distributor_ids (list|None): Liste des distributeurs (ex: ["debian", "redhat"]). Peut être `None`.
+            ctx (object|None): Contexte XMPP pour récupérer les informations de session.
+
+        Returns:
+            tuple: (bool, str) ou (bool, dict)
+                - En cas de succès : (True, résultat de la mise à jour).
+                - En cas d'erreur : (False, "Message d'erreur").
+        """
+        # Récupérer les infos de session
+        infos = ctx.get_session_info()['mondict'] if ctx else {}
+
+        # Remplacer les chaînes vides par None pour tous les paramètres
+        if harduuids == '':
+            harduuids = None
+        if entity_ids == '':
+            entity_ids = None
+        if distributor_ids == '':
+            distributor_ids = None
+        if date_start == '':
+            date_start = None
+        if date_stop == '':
+            date_stop = None
+        if interval == '':
+            interval = None
+
+        # Vérification de l'action
+        valid_actions = [
+            "require_kernel", "require_security", "require_other",
+            "current_kernel", "current_security", "current_other",
+            "require_all", "current_all"
+        ]
+        if action not in valid_actions:
+            return False, f"Erreur : Action invalide. Actions autorisées : {', '.join(valid_actions)}"
+
+        # Vérification de onoff (doit être 0 ou 1)
+        if onoff not in [0, 1]:
+            return False, "Erreur : 'onoff' doit être 0 ou 1."
+
+        # Gestion de date_start
+        if date_start is None:
+            date_start = datetime.now()
+
+        # Gestion de date_stop
+        if date_stop is None:
+            date_stop = date_start + timedelta(hours=2)
+
+        # Vérification de la cohérence des dates
+        if date_stop < date_start:
+            logger.warning("date_stop est avant date_start. Réinitialisation des dates.")
+            date_start = datetime.now()
+            date_stop = date_start + timedelta(hours=2)
+
+        # Vérification de entity_ids
+        if entity_ids is not None:
+            # Cas où entity_ids est un entier
+            if isinstance(entity_ids, int):
+                if entity_ids == -1:
+                    entity_ids = None
+                elif entity_ids not in infos.get('liste_entities_user', []):
+                    msgerror = f"Erreur : Privileges insuffisants pour l'utilisateur {infos.get('user_name', 'inconnu')} sur l'entité {infos.get('complet_entity_name_', 'inconnu')}"
+                    logger.error(msgerror)
+                    return False, msgerror
+            # Cas où entity_ids est une liste
+            elif isinstance(entity_ids, list):
+                # Filtrer les entités non autorisées
+                valid_entities = infos.get('liste_entities_user', [])
+                entity_ids = [eid for eid in entity_ids if eid in valid_entities]
+                if not entity_ids:
+                    msgerror = f"Erreur : Aucune entité valide pour l'utilisateur {infos.get('user_name', 'inconnu')}"
+                    logger.error(msgerror)
+                    return False, msgerror
+            else:
+                return False, "Erreur : 'entity_ids' doit être un entier, une liste d'entiers ou None."
+
+        # Vérification de harduuids (optionnel, mais doit être une liste ou None)
+        if harduuids is not None:
+            if not isinstance(harduuids, (list, str)):
+                return False, "Erreur : 'harduuids' doit être une liste, une chaîne ou None."
+            # Si harduuids est une chaîne vide, le remplacer par None
+            if isinstance(harduuids, str) and harduuids == '':
+                harduuids = None
+
+        # Vérification de distributor_ids (optionnel, mais doit être une liste ou None)
+        if distributor_ids is not None:
+            if not isinstance(distributor_ids, list):
+                return False, "Erreur : 'distributor_ids' doit être une liste ou None."
+            # Si distributor_ids est une liste vide, le remplacer par None
+            if not distributor_ids:
+                distributor_ids = None
+
+        # Vérification de l'intervalle (optionnel, mais doit être une chaîne non vide ou None)
+        if interval is not None and interval != "":
+            if not isinstance(interval, str) or not interval.strip():
+                return False, "Erreur : 'interval' doit être une chaîne non vide ou None."
+
+        # Appel de la fonction de base
+        try:
+            result = XmppMasterDatabase().update_machine_compliance_by_action(
+                action, onoff, date_start, date_stop, interval, harduuids, entity_ids, distributor_ids
+            )
+            return result
+        except Exception as e:
+            logger.error(f"Erreur lors de la mise à jour de la conformité : {str(e)}")
+            return False, f"Erreur interne : {str(e)}"
+
 def has_update_data():
     return UpdatesDatabase().has_update_data()
 
@@ -555,3 +695,68 @@ def get_conformity_update_by_machines(ids=[]):
         )
 
     return result
+
+
+def analyze_machine_compliance_distribution_linux(  entity_id,
+                                                    filter,  # filtre sur distributor_id
+                                                    start,
+                                                    limit,
+                                                    colonne):
+    # Initialiser les valeurs par défaut de start et limit à -1 si elles sont None ou des chaînes vides
+    if start is None or str(start).strip() == "":
+        startint = -1
+
+    if limit is None or str(limit).strip() == "":
+        limitint = -1
+
+
+    try:
+        startint =  int(start)
+    except (ValueError, TypeError):
+        startint = -1
+
+    try:
+        limitint =  int(limit)
+    except (ValueError, TypeError):
+        limitint = -1
+
+    return XmppMasterDatabase().analyze_machine_compliance_distribution_linux( entity_id,
+                                                                               filter,
+                                                                               startint,
+                                                                               limitint,
+                                                                               colonne)
+
+
+def get_machines_by_update_type( entity_id,
+                                 updatetype,
+                                 filter_str,
+                                 start,
+                                 limit,
+                                 colonne):
+    try:
+        start = int(start)
+        limit = int(limit)
+    except (TypeError, ValueError):
+        start = -1
+        limit = -1
+
+    return XmppMasterDatabase().get_machines_by_update_type( entity_id,
+                                                             updatetype,
+                                                             filter_str,
+                                                             start,
+                                                             limit,
+                                                             colonne)
+
+
+def analyze_machine_compliance_linux( entity_id,
+                                      filter,
+                                      start,
+                                      limit,
+                                      colonne):
+    return XmppMasterDatabase().analyze_machine_compliance_linux(entity_id,
+                                                                 filter,
+                                                                 start,
+                                                                 limit,
+                                                                 colonne)
+
+
