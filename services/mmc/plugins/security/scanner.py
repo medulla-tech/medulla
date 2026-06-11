@@ -541,6 +541,13 @@ def run_cve_scan(scan_id: Optional[int] = None, entity_id: Optional[int] = None,
 
         logger.info(f"CVE scan: {len(softwares)} software{filter_info}")
 
+        # Mise à jour différentielle (pas de "vidage") : on garde la liste des
+        # logiciels envoyés et, par logiciel, l'ensemble des CVE confirmées durant
+        # ce scan. En fin de scan (succès), on supprimera seulement les CVE périmées
+        # (cf. security_db.prune_stale_cves). Si le scan échoue, rien n'est touché.
+        glpi_names = list({sw['name'] for sw in softwares if sw.get('name')})
+        confirmed_by_sw = {}
+
         # Pas de filtre au scan - CVE Central stocke tout
         # Le filtrage se fait a l'affichage via should_display_cve()
 
@@ -615,6 +622,13 @@ def run_cve_scan(scan_id: Optional[int] = None, entity_id: Optional[int] = None,
                 logger.info(f"Scan progress: {current}/{total} - {cves} CVEs - {elapsed_display} elapsed, ETA {eta}")
 
         def on_ws_cves(cves_list):
+            # Tracer toutes les CVE renvoyées par logiciel (avant dédup) pour la
+            # mise à jour différentielle de fin de scan.
+            for cve in cves_list:
+                gname = cve.get('glpi_software_name') or cve.get('software_name')
+                cid = cve.get('cve_id')
+                if gname and cid:
+                    confirmed_by_sw.setdefault(gname, set()).add(cid)
             new_count = sum(1 for cve in cves_list if store_cve(cve))
             if new_count > 0:
                 logger.debug(f"{new_count} new CVEs stored (total: {len(cves_added)})")
@@ -635,6 +649,13 @@ def run_cve_scan(scan_id: Optional[int] = None, entity_id: Optional[int] = None,
             raise Exception(f"WebSocket scan failed: {error}")
 
         stats['cves_received'] = len(cves_added)
+
+        # Mise à jour différentielle : supprimer les CVE périmées des logiciels
+        # scannés (celles qui ne sont plus confirmées). Uniquement en cas de succès
+        # (on n'arrive ici que si le scan WebSocket a réussi) → aucune perte si plantage.
+        pruned = security_db.prune_stale_cves(glpi_names, confirmed_by_sw)
+        if pruned:
+            logger.info(f"Pruned {pruned} stale CVE links after scan")
 
         # Complete scan (machines_affected is computed globally, not per-entity)
         security_db.complete_scan(
