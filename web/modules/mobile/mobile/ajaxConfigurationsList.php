@@ -68,5 +68,6 @@ $n->setParamInfo($params);
 
 $n->start = 0;
 $n->display();
+echo '<script>(function(){var $tb=jQuery(".listinfos:last tbody");if(!$tb.children("tr").length){$tb.append("<tr><td colspan=\"20\" style=\"text-align:center;color:#888;padding:20px;font-style:italic;\">" + ' . json_encode(_T("No configurations found", "mobile")) . ' + "</td></tr>");}})();</script>';
 
 ?>

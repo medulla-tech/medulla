@@ -156,10 +156,8 @@ $f->add(new TrFormElement("", new SpanElement($depsHtml, "mobile")));
 $f->pop();
 $btn_label = $is_create ? _T("Create profile", "mobile") : _T("Save", "mobile");
 $f->addValidateButton("bsave", $btn_label);
+$f->addButton("bcancel", _T("Cancel", "mobile"), "btnSecondary", "onclick=\"location.href='" . urlStrRedirect("mobile/mobile/netfilterProfiles") . "';\"", "button");
 $f->display();
-?>
-<input type="button" class="btnSecondary" style="margin-left:8px;" value="<?php echo _T("Cancel", "mobile"); ?>" onclick="location.href='<?php echo urlStrRedirect("mobile/mobile/netfilterProfiles"); ?>';" />
-<?php
 ?>
 
 <script type="text/javascript">
