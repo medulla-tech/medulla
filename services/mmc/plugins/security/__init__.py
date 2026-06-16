@@ -160,7 +160,7 @@ def get_machine_cves(id_glpi, start=0, limit=50, filter_str='', severity=None):
     return result
 
 
-def get_machine_softwares_summary(id_glpi, start=0, limit=50, filter_str=''):
+def get_machine_softwares_summary(id_glpi, start=0, limit=50, filter_str='', category_filter=''):
     """Get vulnerable software summary for a machine, grouped by software."""
     from mmc.plugins.security.config import SecurityConfig
     cfg = SecurityConfig("security")
@@ -175,7 +175,8 @@ def get_machine_softwares_summary(id_glpi, start=0, limit=50, filter_str=''):
         excluded_names=cfg.excluded_names,
         excluded_cve_ids=cfg.excluded_cve_ids,
         excluded_machines_ids=cfg.excluded_machines_ids,
-        excluded_groups_ids=cfg.excluded_groups_ids
+        excluded_groups_ids=cfg.excluded_groups_ids,
+        category_filter=category_filter
     )
 
 
@@ -455,7 +456,7 @@ def is_excluded(cve_id):
 # =============================================================================
 # Software-centric view
 # =============================================================================
-def get_softwares_summary(start=0, limit=50, filter_str='', location=''):
+def get_softwares_summary(start=0, limit=50, filter_str='', location='', category_filter=''):
     """Get list of softwares with CVE counts, filtered by entity and policies"""
     from mmc.plugins.security.config import SecurityConfig
     cfg = SecurityConfig("security")
@@ -471,7 +472,8 @@ def get_softwares_summary(start=0, limit=50, filter_str='', location=''):
         excluded_names=cfg.excluded_names,
         excluded_cve_ids=cfg.excluded_cve_ids,
         excluded_machines_ids=cfg.excluded_machines_ids,
-        excluded_groups_ids=cfg.excluded_groups_ids
+        excluded_groups_ids=cfg.excluded_groups_ids,
+        category_filter=category_filter
     )
 
 

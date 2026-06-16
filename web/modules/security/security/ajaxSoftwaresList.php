@@ -30,6 +30,7 @@ $maxperpage = $conf["global"]["maxperpage"];
 $filter = isset($_GET["filter"]) ? $_GET["filter"] : "";
 $start = isset($_GET["start"]) ? intval($_GET["start"]) : 0;
 $location = isset($_GET["location"]) ? $_GET["location"] : "";
+$category = isset($_GET["category"]) ? $_GET["category"] : "";
 
 // Get policies to determine which columns to show
 $policies = xmlrpc_get_policies();
@@ -37,7 +38,7 @@ $minSeverity = $policies['display']['min_severity'] ?? 'None';
 $showSeverity = SeverityHelper::getVisibility($minSeverity);
 
 // Get data from backend
-$result = xmlrpc_get_softwares_summary($start, $maxperpage, $filter, $location);
+$result = xmlrpc_get_softwares_summary($start, $maxperpage, $filter, $location, $category);
 $data = $result['data'];
 $count = $result['total'];
 
@@ -51,6 +52,7 @@ $mediumCounts = array();
 $lowCounts = array();
 $totalCounts = array();
 $machinesAffected = array();
+$typeLabels = array();
 $storeStatus = array();
 $params = array();
 $deployActions = array(); // Array of deploy actions (or EmptyActionItem)
@@ -69,6 +71,15 @@ foreach ($data as $row) {
     $lowCounts[] = SecurityBadge::count($row['low'], 'low');
     $totalCounts[] = $row['total_cves'];
     $machinesAffected[] = $row['machines_affected'];
+
+    // Type : extension de navigateur ou logiciel classique
+    if (!empty($row['is_extension'])) {
+        $typeLabels[] = '<span class="badge" style="background-color:#6f42c1;color:#fff;" title="'
+            . _T("Browser extension", "security") . '">' . _T("Extension", "security") . '</span>';
+    } else {
+        $typeLabels[] = '<span class="badge" style="background-color:#6c757d;color:#fff;">'
+            . _T("Software", "security") . '</span>';
+    }
 
     // Store update status and deploy action
     if (!empty($row['store_has_update']) && $row['store_has_update']) {
@@ -105,6 +116,7 @@ if ($count > 0) {
     $n->setTableCssClass("security-table");
     $n->disableFirstColumnActionLink();
     $n->addExtraInfoCentered($versions, _T("Version", "security"));
+    $n->addExtraInfoCentered($typeLabels, _T("Type", "security"));
     $n->addExtraInfoCentered($storeStatus, _T("Store", "security"));
     $n->addExtraInfoCentered($maxScores, _T("Max CVSS", "security"));
     if ($showSeverity['critical']) $n->addExtraInfoCentered($criticalCounts, _T("Critical", "security"));

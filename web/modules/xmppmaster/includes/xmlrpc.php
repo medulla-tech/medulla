@@ -45,6 +45,26 @@ function xmlrpc_update_auto_approve_rules($updates, $entity_id)
 {
     return xmlCall("xmppmaster.update_auto_approve_rules", array($updates, $entity_id));
 }
+
+function xmlrpc_get_linux_approved_releases()
+{
+    return xmlCall("xmppmaster.get_linux_approved_releases", array());
+}
+
+function xmlrpc_update_linux_approved_releases($updates)
+{
+    return xmlCall("xmppmaster.update_linux_approved_releases", array($updates));
+}
+
+function xmlrpc_get_linux_auto_update_policy($entity_ids)
+{
+    return xmlCall("xmppmaster.get_linux_auto_update_policy", array($entity_ids));
+}
+
+function xmlrpc_update_linux_auto_update_policy($updates)
+{
+    return xmlCall("xmppmaster.update_linux_auto_update_policy", array($updates));
+}
 //topology
 function xmlrpc_topology_pulse()
 {
@@ -1202,4 +1222,11 @@ function xmlrpc_get_audit_summary_updates_by_entity($entityuuid, $start=0, $limi
 
 function xmlrpc_get_audit_summary_updates_by_update($updateid, $start=0, $limit=-1, $filter=""){
     return xmlCall("xmppmaster.get_audit_summary_updates_by_update", [$updateid, $start, $limit, $filter]);
+}
+
+function xmlrpc_get_distribution_version_compliance($famillydistribution,
+                                                    $entity_id=null,
+                                                    $start=null,
+                                                    $limit=null){
+    return xmlCall("xmppmaster.get_distribution_version_compliance", [$famillydistribution, $entity_id, $start, $limit]);
 }

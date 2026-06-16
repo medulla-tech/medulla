@@ -2,6 +2,17 @@
 
 .approval-form {
     width: 100%;
+    max-width: 100%;
+}
+
+.approval-table-scroll {
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.approval-table-scroll table.listinfos {
+    max-width: 100%;
 }
 
 .approval-form table.listinfos input[type="checkbox"] {

@@ -49,6 +49,7 @@ class SoftwareCve(Base, SecurityDBObj):
     software_name = Column(String(255), nullable=False)  # Nom normalisé (ex: "Python")
     software_version = Column(String(100), nullable=False)  # Version normalisée (ex: "3.11.9")
     glpi_software_name = Column(String(255), nullable=True)  # Nom original GLPI pour jointure
+    source_package = Column(String(255), nullable=True)  # Package source distro Linux (libfreerdp2-2 -> freerdp2), NULL pour Windows
     target_platform = Column(String(50), nullable=True)  # Platform cible du CPE (android, macos, ios, windows, etc.)
     cve_id = Column(Integer, ForeignKey('cves.id', ondelete='CASCADE'), nullable=False)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)

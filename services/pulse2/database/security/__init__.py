@@ -983,7 +983,8 @@ class SecurityDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def get_machine_softwares_summary(self, session, id_glpi, start=0, limit=50, filter_str='',
                                       min_cvss=0.0, excluded_vendors=None, excluded_names=None, excluded_cve_ids=None,
-                                      excluded_machines_ids=None, excluded_groups_ids=None):
+                                      excluded_machines_ids=None, excluded_groups_ids=None,
+                                      category_filter=''):
         """Get vulnerable software summary for a specific machine, grouped by software.
 
         Uses separate database connections:
@@ -998,7 +999,7 @@ class SecurityDatabase(DatabaseHelper):
 
             # Step 1: Get software names for this machine from GLPI
             glpi_sql = text("""
-                SELECT DISTINCT s.name as software_name
+                SELECT DISTINCT s.name as software_name, s.comment as comment
                 FROM glpi_softwares s
                 JOIN glpi_softwareversions sv ON sv.softwares_id = s.id
                 JOIN glpi_items_softwareversions isv ON isv.softwareversions_id = sv.id
@@ -1007,7 +1008,12 @@ class SecurityDatabase(DatabaseHelper):
 
             with glpi_db.db.connect() as glpi_conn:
                 glpi_result = glpi_conn.execute(glpi_sql, {'id_glpi': id_glpi})
-                software_names = set(row[0] for row in glpi_result)
+                software_names = set()
+                extension_names = set()  # logiciels typés "extension" via le commentaire
+                for row in glpi_result:
+                    software_names.add(row[0])
+                    if row[1] and 'Extension Navigateur' in row[1]:
+                        extension_names.add(row[0])
 
             if not software_names:
                 return {'total': 0, 'data': []}
@@ -1039,7 +1045,7 @@ class SecurityDatabase(DatabaseHelper):
 
             security_sql = text(f"""
                 SELECT sc.software_name, sc.software_version, sc.glpi_software_name,
-                       c.id as cve_id, c.severity, c.cvss_score
+                       c.id as cve_id, c.severity, c.cvss_score, sc.source_package
                 FROM software_cves sc
                 JOIN cves c ON c.id = sc.cve_id
                 WHERE sc.glpi_software_name IS NOT NULL
@@ -1048,18 +1054,24 @@ class SecurityDatabase(DatabaseHelper):
 
             result = session.execute(security_sql)
 
-            # Step 3: Aggregate by software
-            software_stats = {}  # (software_name, software_version) -> stats
+            # Step 3: Aggregate by software. Sur Linux, on regroupe par package
+            # source (freerdp2) plutôt que par binaire (libfreerdp2-2, libwinpr2-2,
+            # ...) → une ligne au lieu de plusieurs portant les mêmes CVE.
+            software_stats = {}  # (display_name, version) -> stats
             for row in result:
                 glpi_sw_name = row[2]
                 if glpi_sw_name not in software_names:
                     continue
 
-                key = (row[0], row[1])
+                source_pkg = row[6]
+                sw_version = row[1]
+                display_name = source_pkg or glpi_sw_name
+                key = (display_name, sw_version)
                 if key not in software_stats:
                     software_stats[key] = {
-                        'software_name': row[0],
-                        'software_version': row[1],
+                        'software_name': display_name,
+                        'software_version': sw_version,
+                        'glpi_software_name': display_name,
                         'cve_ids': set(),
                         'severity_counts': {'Critical': 0, 'High': 0, 'Medium': 0, 'Low': 0, 'None': 0},
                         'max_cvss': 0.0
@@ -1079,15 +1091,23 @@ class SecurityDatabase(DatabaseHelper):
             data_list = []
             for key, stats in software_stats.items():
                 data_list.append({
-                    'software_name': stats['software_name'],
+                    # Affichage : package source (Linux) ou nom réel GLPI (Windows).
+                    'software_name': stats['glpi_software_name'],
                     'software_version': stats['software_version'],
                     'total_cves': len(stats['cve_ids']),
                     'critical': stats['severity_counts']['Critical'],
                     'high': stats['severity_counts']['High'],
                     'medium': stats['severity_counts']['Medium'],
                     'low': stats['severity_counts']['Low'],
-                    'max_cvss': str(round(stats['max_cvss'], 1))
+                    'max_cvss': str(round(stats['max_cvss'], 1)),
+                    'is_extension': stats['glpi_software_name'] in extension_names
                 })
+
+            # Filtre par type : extension de navigateur ou logiciel classique
+            if category_filter == 'extension':
+                data_list = [r for r in data_list if r['is_extension']]
+            elif category_filter == 'software':
+                data_list = [r for r in data_list if not r['is_extension']]
 
             data_list.sort(key=lambda x: (float(x['max_cvss']), x['total_cves']), reverse=True)
             total = len(data_list)
@@ -1152,7 +1172,8 @@ class SecurityDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def link_software_cve(self, session, software_name, software_version, cve_db_id,
-                          glpi_software_name=None, target_platform=None):
+                          glpi_software_name=None, target_platform=None,
+                          source_package=None):
         """Link a software to a CVE.
 
         Args:
@@ -1161,6 +1182,7 @@ class SecurityDatabase(DatabaseHelper):
             cve_db_id: CVE database ID
             glpi_software_name: Original GLPI software name for joining with GLPI tables
             target_platform: Target platform from CPE (android, macos, ios, windows, etc.)
+            source_package: Source package for Linux distros (libfreerdp2-2 -> freerdp2), None for Windows
         """
         existing = session.query(SoftwareCve).filter(
             and_(
@@ -1175,6 +1197,7 @@ class SecurityDatabase(DatabaseHelper):
                 software_name=software_name,
                 software_version=software_version,
                 glpi_software_name=glpi_software_name,
+                source_package=source_package,
                 target_platform=target_platform,
                 cve_id=cve_db_id
             )
@@ -1187,12 +1210,45 @@ class SecurityDatabase(DatabaseHelper):
             if glpi_software_name and not existing.glpi_software_name:
                 existing.glpi_software_name = glpi_software_name
                 updated = True
+            if source_package and not existing.source_package:
+                existing.source_package = source_package
+                updated = True
             if target_platform and not existing.target_platform:
                 existing.target_platform = target_platform
                 updated = True
             if updated:
                 session.commit()
         return existing.id
+
+    @DatabaseHelper._sessionm
+    def prune_stale_cves(self, session, glpi_names, confirmed_by_sw):
+        """Mise à jour différentielle : supprime UNIQUEMENT les CVE périmées des
+        logiciels (re)scannés, sans rien vider d'abord.
+
+        Pour chaque logiciel scanné, on garde les CVE confirmées par CVE Central
+        durant CE scan et on supprime les anciennes qui ne le sont plus. Un logiciel
+        scanné sans aucune CVE voit ses anciennes supprimées (→ 0). Appelé à la FIN
+        du scan, en cas de succès seulement : si le scan est interrompu, rien n'est
+        supprimé (aucune perte). Scopé aux noms envoyés → un scan ciblé ne touche
+        pas les logiciels des autres machines.
+
+        confirmed_by_sw : {glpi_software_name: set(cve_id_str confirmés ce scan)}.
+        """
+        if not glpi_names:
+            return 0
+        total = 0
+        for gname in glpi_names:
+            q = session.query(SoftwareCve).filter(SoftwareCve.glpi_software_name == gname)
+            confirmed = confirmed_by_sw.get(gname)
+            if confirmed:
+                # IDs internes des CVE à conserver (confirmées ce scan)
+                keep_ids = [r[0] for r in session.query(Cve.id).filter(
+                    Cve.cve_id.in_(list(confirmed))).all()]
+                if keep_ids:
+                    q = q.filter(~SoftwareCve.cve_id.in_(keep_ids))
+            total += q.delete(synchronize_session=False)
+        session.commit()
+        return total
 
     # =========================================================================
     # Scans history
@@ -1325,7 +1381,8 @@ class SecurityDatabase(DatabaseHelper):
     def get_softwares_summary(self, session, start=0, limit=50, filter_str='', location='',
                               min_cvss=0.0, min_severity='None',
                               excluded_vendors=None, excluded_names=None, excluded_cve_ids=None,
-                              excluded_machines_ids=None, excluded_groups_ids=None):
+                              excluded_machines_ids=None, excluded_groups_ids=None,
+                              category_filter=''):
         """Get list of softwares with CVE counts, grouped by software name+version.
         Filtered by entity if location is provided.
         Filtered by min_cvss if > 0.
@@ -1375,6 +1432,17 @@ class SecurityDatabase(DatabaseHelper):
                 for row in glpi_result:
                     software_machine_counts[(row[0], row[1] or '')] = row[2]
 
+                # Noms des logiciels qui sont des extensions de navigateur,
+                # détectés via le commentaire remonté par l'inventaire. Sert à
+                # typer l'affichage (extension vs logiciel) dans l'IHM sécurité.
+                extension_names = set()
+                ext_result = glpi_conn.execute(text(
+                    "SELECT DISTINCT name FROM glpi_softwares "
+                    "WHERE comment LIKE '%Extension Navigateur%'"
+                ))
+                for row in ext_result:
+                    extension_names.add(row[0])
+
             if not software_machine_counts:
                 return {'total': 0, 'data': []}
 
@@ -1411,7 +1479,7 @@ class SecurityDatabase(DatabaseHelper):
 
             security_sql = text(f"""
                 SELECT sc.software_name, sc.software_version, sc.glpi_software_name,
-                       c.id as cve_id, c.severity, c.cvss_score
+                       c.id as cve_id, c.severity, c.cvss_score, sc.source_package
                 FROM software_cves sc
                 JOIN cves c ON c.id = sc.cve_id
                 WHERE sc.glpi_software_name IS NOT NULL
@@ -1420,26 +1488,37 @@ class SecurityDatabase(DatabaseHelper):
 
             result = session.execute(security_sql)
 
-            # Step 3: Aggregate CVEs by software, filtering by installed software
-            software_stats = {}  # (software_name, software_version) -> stats
+            # Step 3: Aggregate CVEs by software, filtering by installed software.
+            # Sur les distros Linux, on regroupe par package SOURCE (freerdp2) au
+            # lieu de chaque binaire (libfreerdp2-2, libwinpr2-2, ...) qui porte le
+            # même lot de CVE → l'admin voit une ligne au lieu de trois. Le nom de
+            # regroupement/affichage devient COALESCE(source_package, glpi_name) ;
+            # la jointure GLPI (machines) reste sur le binaire glpi_software_name.
+            software_stats = {}  # (display_name, version) -> stats
             for row in result:
                 glpi_sw_name = row[2]
                 sw_version = row[1] or ''
+                source_pkg = row[6]
                 glpi_key = (glpi_sw_name, sw_version)
                 if glpi_key not in software_machine_counts:
                     continue  # Software+version not installed in GLPI
 
-                key = (row[0], row[1])  # (software_name, software_version)
+                display_name = source_pkg or glpi_sw_name
+                key = (display_name, sw_version)
                 if key not in software_stats:
                     software_stats[key] = {
-                        'software_name': row[0],
-                        'software_version': row[1],
-                        'glpi_software_name': glpi_sw_name,
+                        'software_name': display_name,
+                        'software_version': sw_version,
+                        'glpi_software_name': display_name,
                         'cve_ids': set(),
                         'severity_counts': {'Critical': 0, 'High': 0, 'Medium': 0, 'Low': 0, 'None': 0},
                         'max_cvss': 0.0,
-                        'machines_affected': software_machine_counts.get(glpi_key, 0)
+                        '_machine_counts': {}  # glpi_key (binaire) -> count, pour l'union par source
                     }
+
+                # Un binaire = un comptage machines ; pour un source, on prend le
+                # max (les binaires d'un même source cohabitent sur les machines).
+                software_stats[key]['_machine_counts'][glpi_key] = software_machine_counts.get(glpi_key, 0)
 
                 cve_id = row[3]
                 if cve_id not in software_stats[key]['cve_ids']:
@@ -1454,7 +1533,10 @@ class SecurityDatabase(DatabaseHelper):
             # Step 4: Format results and paginate
             results_list = []
             for key, stats in software_stats.items():
+                machines_affected = max(stats['_machine_counts'].values()) if stats['_machine_counts'] else 0
                 results_list.append({
+                    # Affichage : package source (Linux) ou nom réel GLPI (Windows,
+                    # non normalisé, pour distinguer "Microsoft Edge Update" de "Microsoft Edge").
                     'software_name': stats['software_name'],
                     'software_version': stats['software_version'],
                     'total_cves': len(stats['cve_ids']),
@@ -1463,11 +1545,18 @@ class SecurityDatabase(DatabaseHelper):
                     'medium': stats['severity_counts']['Medium'],
                     'low': stats['severity_counts']['Low'],
                     'max_cvss': str(round(stats['max_cvss'], 1)),
-                    'machines_affected': stats['machines_affected'],
+                    'machines_affected': machines_affected,
+                    'is_extension': stats['glpi_software_name'] in extension_names,
                     'store_version': None,
                     'store_has_update': False,
                     'store_package_uuid': None
                 })
+
+            # Filtre par type : extension de navigateur ou logiciel classique
+            if category_filter == 'extension':
+                results_list = [r for r in results_list if r['is_extension']]
+            elif category_filter == 'software':
+                results_list = [r for r in results_list if not r['is_extension']]
 
             # Sort by max_cvss DESC, total_cves DESC
             results_list.sort(key=lambda x: (float(x['max_cvss']), x['total_cves']), reverse=True)
@@ -2065,8 +2154,11 @@ class SecurityDatabase(DatabaseHelper):
             dict with 'total' count and 'data' list of CVEs
         """
         try:
-            # Build WHERE clause for filters
-            where_clauses = ["sc.software_name = :sw_name", "sc.software_version = :sw_version"]
+            # Build WHERE clause for filters. Le nom reçu de l'IHM est l'identité
+            # d'affichage = COALESCE(source_package, glpi_software_name) : package
+            # source pour Linux (freerdp2 -> ses binaires), nom GLPI réel sinon.
+            where_clauses = ["COALESCE(sc.source_package, sc.glpi_software_name) = :sw_name",
+                             "sc.software_version = :sw_version"]
             params = {
                 'sw_name': software_name,
                 'sw_version': software_version,
@@ -2097,9 +2189,10 @@ class SecurityDatabase(DatabaseHelper):
             count_result = session.execute(count_sql, params)
             total = count_result.scalar() or 0
 
-            # Main query
+            # Main query. DISTINCT : un package source regroupe plusieurs binaires
+            # liant les mêmes CVE → sans lui chaque CVE apparaîtrait N fois.
             main_sql = text(f"""
-                SELECT
+                SELECT DISTINCT
                     c.id,
                     c.cve_id,
                     c.cvss_score,
@@ -2612,16 +2705,20 @@ class SecurityDatabase(DatabaseHelper):
         entity_ids = self._parse_entity_ids(session, location)
 
         try:
-            # Step 1: Get the glpi_software_name from software_cves (security DB)
-            glpi_name_sql = text("""
-                SELECT COALESCE(glpi_software_name, software_name) as glpi_name
+            # Step 1: Résoudre les noms GLPI (binaires) pour l'identité d'affichage
+            # reçue. Sur Linux, un package source (freerdp2) regroupe plusieurs
+            # binaires (libfreerdp2-2, libwinpr2-2, ...) : on veut toutes les machines
+            # ayant l'un d'eux. COALESCE(source_package, glpi_software_name) = identité
+            # affichée ; on retourne tous les glpi_software_name (binaires) du groupe.
+            glpi_names_sql = text("""
+                SELECT DISTINCT COALESCE(glpi_software_name, software_name) as glpi_name
                 FROM security.software_cves
-                WHERE software_name = :software_name
-                LIMIT 1
+                WHERE COALESCE(source_package, glpi_software_name) = :software_name
             """)
-            glpi_result = session.execute(glpi_name_sql, {'software_name': software_name})
-            glpi_row = glpi_result.fetchone()
-            glpi_software_name = glpi_row.glpi_name if glpi_row else software_name
+            glpi_rows = session.execute(glpi_names_sql, {'software_name': software_name}).fetchall()
+            glpi_software_names = [r.glpi_name for r in glpi_rows if r.glpi_name]
+            if not glpi_software_names:
+                glpi_software_names = [software_name]
 
             # Step 2: Query GLPI directly for machines with this software
             glpi_db = _get_glpi_database()
@@ -2641,8 +2738,10 @@ class SecurityDatabase(DatabaseHelper):
                 filter_str_escaped = filter_str.replace("'", "''")
                 filter_clause = f"AND c.name LIKE '%{filter_str_escaped}%'"
 
-            # Escape software name and version for SQL
-            glpi_software_name_escaped = glpi_software_name.replace("'", "''")
+            # Escape software names (binaires du groupe) and version for SQL
+            names_in = ','.join(
+                "'" + n.replace("'", "''") + "'" for n in glpi_software_names
+            )
             software_version_escaped = software_version.replace("'", "''")
 
             with glpi_db.db.connect() as glpi_conn:
@@ -2654,7 +2753,7 @@ class SecurityDatabase(DatabaseHelper):
                     JOIN glpi_softwareversions sv ON sv.id = isv.softwareversions_id
                     JOIN glpi_softwares s ON s.id = sv.softwares_id
                     WHERE c.is_deleted = 0 AND c.is_template = 0
-                    AND s.name = '{glpi_software_name_escaped}'
+                    AND s.name IN ({names_in})
                     AND sv.name = '{software_version_escaped}'
                     {entity_filter}
                     {filter_clause}
@@ -2662,25 +2761,29 @@ class SecurityDatabase(DatabaseHelper):
                 count_result = glpi_conn.execute(count_sql)
                 total = count_result.scalar() or 0
 
-                # Get machines with pagination - filter by both software name AND version
+                # Get machines with pagination - filter by both software name AND version.
+                # GROUP BY machine : une machine portant plusieurs binaires du même
+                # source (libfreerdp2-2 + libwinpr2-2) ne doit apparaître qu'une fois,
+                # pour rester cohérent avec COUNT(DISTINCT c.id).
                 main_sql = text(f"""
-                    SELECT DISTINCT
+                    SELECT
                         c.id,
                         c.name as hostname,
                         c.entities_id as entity_id,
                         e.name as entity_name,
-                        s.name as glpi_software_name,
-                        sv.name as installed_version
+                        MIN(s.name) as glpi_software_name,
+                        MIN(sv.name) as installed_version
                     FROM glpi_computers c
                     JOIN glpi_items_softwareversions isv ON isv.items_id = c.id AND isv.itemtype = 'Computer'
                     JOIN glpi_softwareversions sv ON sv.id = isv.softwareversions_id
                     JOIN glpi_softwares s ON s.id = sv.softwares_id
                     LEFT JOIN glpi_entities e ON e.id = c.entities_id
                     WHERE c.is_deleted = 0 AND c.is_template = 0
-                    AND s.name = '{glpi_software_name_escaped}'
+                    AND s.name IN ({names_in})
                     AND sv.name = '{software_version_escaped}'
                     {entity_filter}
                     {filter_clause}
+                    GROUP BY c.id, c.name, c.entities_id, e.name
                     ORDER BY c.name
                     LIMIT {limit} OFFSET {start}
                 """)

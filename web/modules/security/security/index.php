@@ -122,6 +122,7 @@ $showSeverity = SeverityHelper::getVisibility($minSeverity);
 
 <!-- Filters row: entity on left, search on right -->
 <div class="filters-row">
+    <div class="filters-left">
     <div class="entity-filter">
         <label for="entity-filter"><?php echo _T("Entity", "security"); ?>:</label>
         <select id="entity-filter" onchange="updateFilter()">
@@ -132,6 +133,15 @@ $showSeverity = SeverityHelper::getVisibility($minSeverity);
                 </option>
             <?php endforeach; ?>
         </select>
+    </div>
+    <div class="type-filter">
+        <label for="type-filter"><?php echo _T("Type", "security"); ?>:</label>
+        <select id="type-filter" onchange="updateFilter()">
+            <option value=""><?php echo _T("All", "security"); ?></option>
+            <option value="software"><?php echo _T("Software", "security"); ?></option>
+            <option value="extension"><?php echo _T("Extension", "security"); ?></option>
+        </select>
+    </div>
     </div>
     <div class="search-wrapper">
         <?php
@@ -150,6 +160,12 @@ $ajax->displayDivToUpdate();
         var location = document.getElementById('entity-filter').value;
         var url = '<?php echo urlStrRedirect("security/security/ajaxSoftwaresList"); ?>';
         url += '&location=' + encodeURIComponent(location);
+
+        // Type filter (extension / software / all)
+        var typeSelect = document.getElementById('type-filter');
+        if (typeSelect) {
+            url += '&category=' + encodeURIComponent(typeSelect.value);
+        }
 
         // Get filter value from AjaxFilter
         var filterInput = document.querySelector('input[name="param"]');

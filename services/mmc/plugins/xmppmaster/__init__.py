@@ -220,6 +220,22 @@ class RpcProxy(RpcProxyI):
         return XmppMasterDatabase().update_auto_approve_rules(updatesrules,
                                                               entity_id=entity_id)
 
+    @with_optional_xmpp_context
+    def get_linux_approved_releases(self, ctx=None):
+        return XmppMasterDatabase().get_linux_approved_releases(colonne=True)
+
+    @with_optional_xmpp_context
+    def update_linux_approved_releases(self, updatesreleases, ctx=None):
+        return XmppMasterDatabase().update_linux_approved_releases(updatesreleases)
+
+    @with_optional_xmpp_context
+    def get_linux_auto_update_policy(self, entity_ids, ctx=None):
+        return XmppMasterDatabase().get_linux_auto_update_policy(entity_ids)
+
+    @with_optional_xmpp_context
+    def update_linux_auto_update_policy(self, updates, ctx=None):
+        return XmppMasterDatabase().update_linux_auto_update_policy(updates)
+
 
     def getListPackages(self):
         resultnamepackage = []
@@ -2410,3 +2426,17 @@ def get_audit_summary_updates_by_entity(entity_uuid, start=0, limit=-1, filter="
 
 def get_audit_summary_updates_by_update(updateid, start=0, limit=-1, filter=""):
     return XmppMasterDatabase().get_audit_summary_updates_by_update(updateid, start, limit, filter)
+
+
+def get_distribution_version_compliance(
+        distributor_id,
+        entity_id,
+        start,
+        limit
+    ):
+    return XmppMasterDatabase().get_distribution_version_compliance(
+        distributor_id,
+        entity_id,
+        start,
+        limit
+    )

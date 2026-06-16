@@ -20,7 +20,9 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
+ * file : web/modules/updates/includes/xmlrpc.php
  */
+
 
 function xmlrpc_has_update_data()
 {
@@ -193,7 +195,222 @@ function xmlrpc_get_machines_update_grp($entity_id,
 {
     return xmlCall("updates.get_machines_update_grp", [$entity_id, $type, $colonne]);
 }
+// JFKJFK
+function xmlrpc_analyze_machine_compliance_linux($entity_id,
+                                                 $filter="",
+                                                 $start=-1,
+                                                 $limit=-1,
+                                                 $colonne=True)
+{
+    return xmlCall("updates.analyze_machine_compliance_linux", [$entity_id,
+                                                                $filter,
+                                                                $start,
+                                                                $limit,
+                                                                $colonne]);
+}
 
+/**
+ * Met à jour la conformité des machines via XML-RPC.
+ *
+ * @param string $action Type d'action (ex: "require_kernel", "current_all", etc.).
+ * @param int $onoff 0 ou 1 pour activer/désactiver.
+ * @param string|array|null $harduuids Liste de UUIDs ou un seul UUID (ou null).
+ * @param int|array|null $entity_ids ID d'entité ou tableau d'IDs (ou null).
+ * @param array|null $distributor_ids Tableau de distributeurs (ex: ["debian", "redhat"]) ou null.
+ * @param string|null $date_start Date de début (format valide ou null/"").
+ * @param string|null $date_stop Date de fin (format valide ou null/"").
+ * @param string|null $interval Intervalle (format valide ou null/"").
+ *
+ * @return array Résultat de l'appel XML-RPC sous la forme [bool, string].
+ *               Le booléen indique le succès (true) ou l'échec (false), et la chaîne contient le message.
+ */
+function xmlrpc_update_machine_compliance_by_action($action,
+                                                    $onoff,
+                                                    $date_start = null,
+                                                    $date_stop = null,
+                                                    $interval = null,
+                                                    $harduuids = null,
+                                                    $entity_ids = null,
+                                                    $distributor_ids = null) {
+    // Liste des actions autorisées
+    $valid_actions = [
+        "require_kernel",
+        "require_security",
+        "require_other",
+        "current_kernel",
+        "current_security",
+        "current_other",
+        "require_all",
+        "current_all"
+    ];
+
+    // Vérification de $action
+    if (!in_array($action, $valid_actions)) {
+        return [false, "Erreur : Action invalide. Les valeurs autorisées sont : " . implode(", ", $valid_actions)];
+    }
+
+    // Vérification de $onoff (doit être 0 ou 1)
+    if (!in_array($onoff, [0, 1], true)) {
+        return [false, "Erreur : 'onoff' doit être 0 ou 1."];
+    }
+
+    // Vérification de $date_start (doit être null, "", ou une date valide)
+    if ($date_start !== null && $date_start !== "") {
+        if (!is_string($date_start) || !validateDate($date_start)) {
+            return [false, "Erreur : 'date_start' doit être une date valide, null ou une chaîne vide."];
+        }
+    }
+
+    // Vérification de $date_stop (doit être null, "", ou une date valide)
+    if ($date_stop !== null && $date_stop !== "") {
+        if (!is_string($date_stop) || !validateDate($date_stop)) {
+            return [false, "Erreur : 'date_stop' doit être une date valide, null ou une chaîne vide."];
+        }
+    }
+
+    // Vérification de $interval (doit être null, "", ou une chaîne non vide)
+    if ($interval !== null && $interval !== "") {
+        if (!is_string($interval) || empty(trim($interval))) {
+            return [false, "Erreur : 'interval' doit être une chaîne non vide, null ou une chaîne vide."];
+        }
+    }
+
+    // Vérification de $harduuids (doit être null, une chaîne non vide ou un tableau de chaînes non vides)
+    if ($harduuids !== null) {
+        if (is_string($harduuids)) {
+            // Si c'est une chaîne vide, on la remplace par null
+            if (empty(trim($harduuids))) {
+                $harduuids = null;
+            }
+        } elseif (is_array($harduuids)) {
+            // Vérifier que chaque élément est une chaîne non vide
+            $valid_uuids = [];
+            foreach ($harduuids as $uuid) {
+                if (is_string($uuid) && !empty(trim($uuid))) {
+                    $valid_uuids[] = $uuid;
+                }
+            }
+            // Si aucun UUID valide, on remplace par null
+            if (empty($valid_uuids)) {
+                $harduuids = null;
+            } else {
+                $harduuids = $valid_uuids;
+            }
+        } else {
+            return [false, "Erreur : 'harduuids' doit être une chaîne, un tableau de chaînes ou null."];
+        }
+    }
+    // Vérification de $entity_ids (doit être null, un entier (y compris 0) ou un tableau d'entiers >= 0)
+    if ($entity_ids !== null) {
+        if (is_string($entity_ids) && $entity_ids === '') {
+            // Si c'est une chaîne vide, on la remplace par null
+            $entity_ids = null;
+        } elseif (is_int($entity_ids)) {
+            if ($entity_ids < 0) { // On accepte 0, mais pas les négatifs
+                return [false, "Erreur : L'ID d'entité doit être un entier positif ou nul."];
+            }
+        } elseif (is_array($entity_ids)) {
+            $valid_ids = [];
+            foreach ($entity_ids as $id) {
+                if (is_int($id) && $id >= 0) { // On accepte 0 et les positifs
+                    $valid_ids[] = $id;
+                }
+            }
+            // Si aucun ID valide, on remplace par null
+            if (empty($valid_ids)) {
+                $entity_ids = null;
+            } else {
+                $entity_ids = $valid_ids;
+            }
+        } else {
+            return [false, "Erreur : 'entity_ids' doit être un entier, un tableau d'entiers ou null."];
+        }
+    }
+    // Vérification de $distributor_ids (doit être null ou un tableau de chaînes non vides)
+    if ($distributor_ids !== null) {
+        if (is_string($distributor_ids) && $distributor_ids === '') {
+            // Si c'est une chaîne vide, on la remplace par null
+            $distributor_ids = null;
+        } elseif (is_array($distributor_ids)) {
+            $valid_distros = [];
+            foreach ($distributor_ids as $distro) {
+                if (is_string($distro) && !empty(trim($distro))) {
+                    $valid_distros[] = $distro;
+                }
+            }
+            // Si aucun distributeur valide, on remplace par null
+            if (empty($valid_distros)) {
+                $distributor_ids = null;
+            } else {
+                $distributor_ids = $valid_distros;
+            }
+        } else {
+            return [false, "Erreur : 'distributor_ids' doit être un tableau ou null."];
+        }
+    }
+
+
+    // Appel XML-RPC si tous les contrôles sont passés
+    $result = xmlCall("updates.update_machine_compliance_by_action", [
+        $action,
+        $onoff,
+        $date_start,
+        $date_stop,
+        $interval,
+        $harduuids,
+        $entity_ids,
+        $distributor_ids
+    ]);
+
+    // Vérification du résultat de l'appel XML-RPC
+    if (is_array($result) && count($result) >= 2) {
+        if ($result[0] === false) {
+            return [false, $result[1]];
+        } else {
+            return [true, $result[1]];
+        }
+    }
+    return [false, "Erreur : Réponse XML-RPC invalide."];
+}
+
+/**
+ * Valide une date au format YYYY-MM-DD HH:MM:SS.
+ *
+ * @param string $date La date à valider.
+ * @return bool True si la date est valide, false sinon.
+ */
+function validateDate($date) {
+    $d = DateTime::createFromFormat('Y-m-d H:i:s', $date);
+    return $d && $d->format('Y-m-d H:i:s') === $date;
+}
+
+function xmlrpc_analyze_machine_compliance_distribution_linux(  $entity_id,
+                                                                $filter="",
+                                                                $start=-1,
+                                                                $limit=-1,
+                                                                $colonne=True)
+{
+    return xmlCall("updates.analyze_machine_compliance_distribution_linux", [$entity_id,
+                                                                             $filter,
+                                                                             $start,
+                                                                             $limit,
+                                                                             $colonne]);
+}
+
+function xmlrpc_get_machines_by_update_type(  $entity_id,
+                                              $updatetype,
+                                              $filter="",
+                                              $start=-1,
+                                              $limit=-1,
+                                              $colonne=True)
+{
+    return xmlCall("updates.get_machines_by_update_type", [$entity_id,
+                                                           $updatetype,
+                                                           $filter,
+                                                           $start,
+                                                           $limit,
+                                                           $colonne]);
+}
 
 function xmlrpc_deploy_update_major($package_id,
                                     $uuid_inventorymachine,
