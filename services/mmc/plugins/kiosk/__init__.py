@@ -714,9 +714,14 @@ def get_packages_for_machine(machine):
     if "platform" in machine:
         # Because re is picky, we have to use an independant str
         mach_platform = machine["platform"]
-        if re.match("Microsoft", mach_platform) is not None:
+        if re.match("Microsoft", mach_platform, re.I) is not None:
             platform = "win"
-        elif re.match("Darwin", mach_platform) is not None or re.match("MacOS", mach_platform) is not None:
+        elif (
+            re.match("Darwin", mach_platform, re.I) is not None
+            or re.match("mac", mach_platform, re.I) is not None
+        ):
+            # GLPI reports macOS as "macOS 26.2" (lowercase) -> case-insensitive
+            # match, and accept the "mac"/"Mac OS X"/"Darwin" forms.
             platform = "mac"
         else:
             platform = "linux"
@@ -797,10 +802,13 @@ def get_packages_for_machine(machine):
         if platform not in pkg["os"]:
             continue
 
-        # Check if the uninstall section is present
+        # Check if the uninstall section is present.
+        # Use .get() chains: a package may lack a section for this platform
+        # (e.g. a "mac" package whose xmppdeploy.json has no "mac" metaparameter);
+        # a direct [platform] lookup would raise KeyError and wipe the whole list.
         uninstall_section_present = False
         update_section_present = False
-        for action_name in depl["metaparameter"][platform]["label"]:
+        for action_name in depl.get("metaparameter", {}).get(platform, {}).get("label", []):
             if action_name == action_name.startswith("upd_"):
                 uninstall_section_present = True
             if action_name == "label_section_uninstall" or action_name.startswith("Uninst_"):
