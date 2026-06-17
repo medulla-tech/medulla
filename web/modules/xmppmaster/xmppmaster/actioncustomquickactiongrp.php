@@ -65,6 +65,7 @@
                 if ($OS == "LINUX") {
                     $osMatch = (strpos($PLATFORM, "LINUX") !== false
                              || strpos($PLATFORM, "UBUNTU") !== false
+                             || strpos($PLATFORM, "ZORIN") !== false
                              || strpos($PLATFORM, "DEBIAN") !== false
                              || strpos($PLATFORM, "CENTOS") !== false
                              || strpos($PLATFORM, "REDHAT") !== false

@@ -130,7 +130,7 @@ $jid = $_GET['jid'] ?? '';
 
     if (strpos($os_up_case, "WINDOW") !== false) {
         $qacomand = xmlrpc_getlistcommandforuserbyos($_SESSION['login'], "windows");
-    } elseif (strpos($os_up_case, "LINUX") !== false || strpos($os_up_case, "UBUNTU") !== false) {
+    } elseif (strpos($os_up_case, "LINUX") !== false || strpos($os_up_case, "UBUNTU") !== false || strpos($os_up_case, "ZORIN") !== false) {
         $qacomand = xmlrpc_getlistcommandforuserbyos($_SESSION['login'], "linux");
     } elseif (strpos($os_up_case, "MACOS") !== false) {
         $qacomand = xmlrpc_getlistcommandforuserbyos($_SESSION['login'], "macos");
