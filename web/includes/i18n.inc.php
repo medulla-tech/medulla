@@ -90,7 +90,8 @@ if (!isset($_SESSION['lang'])) {
           If no cookie with the previously used language is found,
           auto-detect it
         */
-        $browserLanguage = explode(',',$_SERVER['HTTP_ACCEPT_LANGUAGE']);
+        $acceptLanguageHeader = $_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? '';
+        $browserLanguage = explode(',', $acceptLanguageHeader);
         $browserLanguage = strtolower(rtrim($browserLanguage[0]));
         $localeShort = getArrLocaleShort();
         $found = isset($localeShort[$browserLanguage]);
