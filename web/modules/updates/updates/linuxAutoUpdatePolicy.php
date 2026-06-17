@@ -13,10 +13,7 @@
 require("localSidebar.php");
 require("graph/navbar.inc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
-
-$p = new PageGenerator(_T("Linux Auto-Update Policy", "updates"));
-$p->setSideMenu($sidemenu);
-$p->display();
+require_once("modules/updates/includes/updates.inc.php");
 
 // Traitement du formulaire de sauvegarde
 if (
@@ -24,6 +21,8 @@ if (
     isset($_POST['form_name']) &&
     $_POST['form_name'] === 'linux_auto_update_policy'
 ) {
+    verifyCSRFToken($_POST);
+
     $kernelValues   = $_POST['auto_update_kernel']   ?? [];
     $securityValues = $_POST['auto_update_security'] ?? [];
     $otherValues    = $_POST['auto_update_other']    ?? [];
@@ -53,15 +52,18 @@ if (
         new NotifyWidgetFailure(_T("Failed to save auto-update policies.", "updates"));
     }
 
-    header("Location: " . urlStrRedirect("updates/updates/linuxAutoUpdatePolicy"));
-    exit;
+    // header("Location: " . urlStrRedirect("updates/updates/linuxAutoUpdatePolicy"));
+    // exit;
 }
 
-$ajax = new AjaxFilter(
-    urlStrRedirect("updates/updates/ajaxLinuxAutoUpdatePolicy"),
-    "linuxAutoUpdatePolicyContainer",
-    [],
-    "linuxAutoUpdatePolicyForm"
-);
-$ajax->display();
-$ajax->displayDivToUpdate();
+$selectedEntityIdRaw = $_POST['selected_location'] ?? $_GET['selected_location'] ?? null;
+$selectedEntityIdStr = is_string($selectedEntityIdRaw) ? $selectedEntityIdRaw : strval($selectedEntityIdRaw);
+$selectedEntityIdStr = preg_replace('/^UUID/i', '', $selectedEntityIdStr);
+$selectedEntityId = ($selectedEntityIdStr !== null && $selectedEntityIdStr !== '') ? (int) $selectedEntityIdStr : null;
+
+generateEntityPage(_T("Linux Auto-Update Policy", "updates"),
+                   "ajaxLinuxAutoUpdatePolicy",
+                   $sidemenu,
+                   'updates',
+                   $selectedEntityId);
+

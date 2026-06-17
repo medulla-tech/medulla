@@ -793,18 +793,52 @@ class XmppMasterDatabase(DatabaseHelper):
             return {"success": False, "message": str(e)}
 
     @DatabaseHelper._sessionm
-    def get_linux_approved_releases(self, session, colonne=True):
+    def get_linux_approved_releases(self, session, entity_id="", colonne=True):
         """
-        Récupère les versions Linux gérées depuis xmppmaster.up_linux_os_versions.
+                Récupère les versions Linux gérées depuis xmppmaster.up_linux_os_versions.
+                Si entity_id est fourni, retourne les sélections par entité.
+
+                Sémantique métier exposée:
+                - is_latest_major_version: version majeure la plus haute cible.
+                    (stockée physiquement dans la colonne SQL is_recommended)
+                - is_current_stable: conservé pour compatibilité historique.
+
+                Compatibilité API:
+                - la clé is_recommended est conservée dans la réponse comme alias de
+                    is_latest_major_version.
         """
         try:
-            query = text("""
-                SELECT id, distributor_id, release_version, name, is_current_stable, is_recommended
-                FROM xmppmaster.up_linux_os_versions
-                WHERE is_managed = 1
-                ORDER BY distributor_id ASC, CAST(release_version AS DECIMAL(10, 4)) DESC, id DESC
-            """)
-            rows = session.execute(query).fetchall()
+            if entity_id:
+                entity_id = int(entity_id)
+                self._sync_linux_approved_releases_entities(
+                    session,
+                    entity_id=entity_id,
+                    actor="system-sync"
+                )
+
+                # Récupération avec les selections de l'entité
+                query = text("""
+                    SELECT 
+                        v.id, v.distributor_id, v.release_version, v.name,
+                        COALESCE(e.is_current_stable, 0) as is_current_stable,
+                        COALESCE(e.is_recommended, 0) as is_latest_major_version,
+                        COALESCE(e.updated_by_user, '') as updated_by_user
+                    FROM xmppmaster.up_entity_linux_approved_releases e
+                    INNER JOIN xmppmaster.up_linux_os_versions v ON v.id = e.release_id
+                    WHERE e.entity_id = :entity_id
+                      AND e.is_managed = 1
+                    ORDER BY v.distributor_id ASC, CAST(v.release_version AS DECIMAL(10, 4)) DESC, v.id DESC
+                """)
+                rows = session.execute(query, {"entity_id": entity_id}).fetchall()
+            else:
+                # Récupération globale (par défaut)
+                query = text("""
+                    SELECT id, distributor_id, release_version, name, is_current_stable, is_recommended as is_latest_major_version
+                    FROM xmppmaster.up_linux_os_versions
+                    WHERE is_managed = 1
+                    ORDER BY distributor_id ASC, CAST(release_version AS DECIMAL(10, 4)) DESC, id DESC
+                """)
+                rows = session.execute(query).fetchall()
 
             if colonne:
                 return {
@@ -813,7 +847,9 @@ class XmppMasterDatabase(DatabaseHelper):
                     "version": [row.release_version or "" for row in rows],
                     "name": [row.name or "" for row in rows],
                     "is_current_stable": [row.is_current_stable or 0 for row in rows],
-                    "is_recommended": [row.is_recommended or 0 for row in rows],
+                    "is_latest_major_version": [row.is_latest_major_version or 0 for row in rows],
+                    "is_recommended": [row.is_latest_major_version or 0 for row in rows],
+                    "updated_by_user": [getattr(row, "updated_by_user", "") or "" for row in rows],
                 }
 
             return [
@@ -823,7 +859,9 @@ class XmppMasterDatabase(DatabaseHelper):
                     "version": row.release_version or "",
                     "name": row.name or "",
                     "is_current_stable": row.is_current_stable or 0,
-                    "is_recommended": row.is_recommended or 0,
+                    "is_latest_major_version": row.is_latest_major_version or 0,
+                    "is_recommended": row.is_latest_major_version or 0,
+                    "updated_by_user": getattr(row, "updated_by_user", "") or "",
                 }
                 for row in rows
             ]
@@ -832,30 +870,201 @@ class XmppMasterDatabase(DatabaseHelper):
             logger.error(f"An error occurred while reading Linux approved releases: {str(e)}")
             return {} if colonne else []
 
-    @DatabaseHelper._sessionm
-    def update_linux_approved_releases(self, session, updates):
+    def _sync_linux_approved_releases_entities(self, session, entity_id=None, actor="system-sync"):
         """
-        Met à jour is_current_stable et is_recommended pour les versions Linux gérées.
-        updates: list of (id, is_current_stable, is_recommended)
+        Synchronise la table up_entity_linux_approved_releases avec :
+        - les entites existantes dans glpi_entity,
+        - le catalogue up_linux_os_versions.
+
+        Note de sémantique:
+        - is_recommended porte la valeur métier "version majeure la plus haute cible".
+        - is_current_stable est maintenu pour compatibilité historique.
+
+        Cas couverts :
+        - creation d'une nouvelle entite (initialisation automatique des lignes),
+        - suppression d'une entite (purge des lignes orphelines),
+        - ajout/suppression de releases dans le catalogue global.
+        """
+        actor = (actor or "system-sync").strip()[:255]
+
+        try:
+            if entity_id is None:
+                # 1) Cree les lignes manquantes pour toutes les entites existantes.
+                session.execute(text("""
+                    INSERT IGNORE INTO xmppmaster.up_entity_linux_approved_releases
+                        (entity_id, release_id, is_managed, is_current_stable, is_recommended, updated_by_user)
+                    SELECT
+                        ge.glpi_id,
+                        v.id,
+                        v.is_managed,
+                        v.is_current_stable,
+                        v.is_recommended,
+                        :actor
+                    FROM xmppmaster.glpi_entity ge
+                    INNER JOIN xmppmaster.up_linux_os_versions v
+                    WHERE ge.glpi_id IS NOT NULL
+                """), {"actor": actor})
+
+                # 2) Repercute le flag is_managed du catalogue global.
+                session.execute(text("""
+                    UPDATE xmppmaster.up_entity_linux_approved_releases e
+                    INNER JOIN xmppmaster.up_linux_os_versions v ON v.id = e.release_id
+                    SET e.is_managed = v.is_managed
+                """))
+
+                # 3) Nettoie les releases supprimees du catalogue global.
+                session.execute(text("""
+                    DELETE e
+                    FROM xmppmaster.up_entity_linux_approved_releases e
+                    LEFT JOIN xmppmaster.up_linux_os_versions v ON v.id = e.release_id
+                    WHERE v.id IS NULL
+                """))
+
+                # 4) Nettoie les entites supprimees dans GLPI/MMC.
+                session.execute(text("""
+                    DELETE e
+                    FROM xmppmaster.up_entity_linux_approved_releases e
+                    LEFT JOIN xmppmaster.glpi_entity ge ON ge.glpi_id = e.entity_id
+                    WHERE ge.glpi_id IS NULL
+                """))
+                return
+
+            # Synchronisation ciblee pour une entite donnee.
+            session.execute(text("""
+                INSERT IGNORE INTO xmppmaster.up_entity_linux_approved_releases
+                    (entity_id, release_id, is_managed, is_current_stable, is_recommended, updated_by_user)
+                SELECT
+                    ge.glpi_id,
+                    v.id,
+                    v.is_managed,
+                    v.is_current_stable,
+                    v.is_recommended,
+                    :actor
+                FROM xmppmaster.glpi_entity ge
+                INNER JOIN xmppmaster.up_linux_os_versions v
+                WHERE ge.glpi_id = :entity_id
+            """), {"entity_id": int(entity_id), "actor": actor})
+
+            session.execute(text("""
+                UPDATE xmppmaster.up_entity_linux_approved_releases e
+                INNER JOIN xmppmaster.up_linux_os_versions v ON v.id = e.release_id
+                SET e.is_managed = v.is_managed
+                WHERE e.entity_id = :entity_id
+            """), {"entity_id": int(entity_id)})
+
+            session.execute(text("""
+                DELETE e
+                FROM xmppmaster.up_entity_linux_approved_releases e
+                LEFT JOIN xmppmaster.up_linux_os_versions v ON v.id = e.release_id
+                WHERE e.entity_id = :entity_id
+                  AND v.id IS NULL
+            """), {"entity_id": int(entity_id)})
+
+            # Purge globale des entites supprimees dans GLPI/MMC.
+            session.execute(text("""
+                DELETE e
+                FROM xmppmaster.up_entity_linux_approved_releases e
+                LEFT JOIN xmppmaster.glpi_entity ge ON ge.glpi_id = e.entity_id
+                WHERE ge.glpi_id IS NULL
+            """))
+        except Exception as e:
+            logger.warning(
+                "Fallback sync for Linux approved releases (glpi_entity unavailable?): %s",
+                str(e)
+            )
+
+            # Fallback legacy: synchronise seulement depuis le catalogue global.
+            if entity_id is None:
+                return
+
+            session.execute(text("""
+                INSERT IGNORE INTO xmppmaster.up_entity_linux_approved_releases
+                    (entity_id, release_id, is_managed, is_current_stable, is_recommended, updated_by_user)
+                SELECT
+                    :entity_id,
+                    v.id,
+                    v.is_managed,
+                    v.is_current_stable,
+                    v.is_recommended,
+                    :actor
+                FROM xmppmaster.up_linux_os_versions v
+            """), {"entity_id": int(entity_id), "actor": actor})
+
+            session.execute(text("""
+                UPDATE xmppmaster.up_entity_linux_approved_releases e
+                INNER JOIN xmppmaster.up_linux_os_versions v ON v.id = e.release_id
+                SET e.is_managed = v.is_managed
+                WHERE e.entity_id = :entity_id
+            """), {"entity_id": int(entity_id)})
+
+            session.execute(text("""
+                DELETE e
+                FROM xmppmaster.up_entity_linux_approved_releases e
+                LEFT JOIN xmppmaster.up_linux_os_versions v ON v.id = e.release_id
+                WHERE e.entity_id = :entity_id
+                  AND v.id IS NULL
+            """), {"entity_id": int(entity_id)})
+
+    @DatabaseHelper._sessionm
+    def update_linux_approved_releases(self, session, updates, entity_id="", updated_by_user=""):
+        """
+        Met à jour is_current_stable et le flag de version majeure cible
+        (stocké en base dans is_recommended) pour les versions Linux gérées.
+        Si entity_id est fourni, met à jour la table de jointure par entité.
+        updates: list of (id, is_current_stable, is_latest_major_version)
         """
         try:
             normalized_updates = [tuple(update) if isinstance(update, list) else update for update in updates]
 
-            for release_id, is_current_stable, is_recommended in normalized_updates:
-                query = text("""
-                    UPDATE xmppmaster.up_linux_os_versions
-                    SET is_current_stable = :is_current_stable,
-                        is_recommended = :is_recommended
-                    WHERE id = :id AND is_managed = 1
-                """)
-                session.execute(query, {
-                    "id": int(release_id),
-                    "is_current_stable": int(is_current_stable),
-                    "is_recommended": int(is_recommended),
-                })
+            if entity_id:
+                # Mise à jour par entité dans la table de jointure
+                entity_id = int(entity_id)
+                actor = (updated_by_user or "unknown").strip()[:255]
+
+                self._sync_linux_approved_releases_entities(
+                    session,
+                    entity_id=entity_id,
+                    actor=actor
+                )
+
+                for release_id, is_current_stable, is_latest_major_version in normalized_updates:
+                    # Met a jour uniquement les releases encore gerees.
+                    query = text("""
+                        UPDATE xmppmaster.up_entity_linux_approved_releases e
+                        INNER JOIN xmppmaster.up_linux_os_versions v ON v.id = e.release_id
+                        SET e.is_current_stable = :is_current_stable,
+                            e.is_recommended = :is_recommended,
+                            e.updated_by_user = :actor,
+                            e.updated_at = current_timestamp()
+                        WHERE e.entity_id = :entity_id
+                          AND e.release_id = :release_id
+                          AND e.is_managed = 1
+                          AND v.is_managed = 1
+                    """)
+                    session.execute(query, {
+                        "entity_id": entity_id,
+                        "release_id": int(release_id),
+                        "is_current_stable": int(is_current_stable),
+                        "is_recommended": int(is_latest_major_version),
+                        "actor": actor,
+                    })
+            else:
+                # Mise à jour globale (comportement par défaut)
+                for release_id, is_current_stable, is_latest_major_version in normalized_updates:
+                    query = text("""
+                        UPDATE xmppmaster.up_linux_os_versions
+                        SET is_current_stable = :is_current_stable,
+                            is_recommended = :is_recommended
+                        WHERE id = :id AND is_managed = 1
+                    """)
+                    session.execute(query, {
+                        "id": int(release_id),
+                        "is_current_stable": int(is_current_stable),
+                        "is_recommended": int(is_latest_major_version),
+                    })
 
             session.commit()
-            logger.info("Mise à jour réussie des releases Linux approuvées.")
+            logger.info(f"Mise à jour réussie des releases Linux approuvées (entity_id={entity_id}).")
             return {"success": True, "message": "Update successful"}
 
         except Exception as e:
@@ -872,6 +1081,7 @@ class XmppMasterDatabase(DatabaseHelper):
         try:
             if not entity_ids:
                 return []
+            self._sync_linux_auto_update_policy_entities(session, entity_ids)
             placeholders = ",".join([":eid_{}".format(i) for i in range(len(entity_ids))])
             params = {"eid_{}".format(i): eid for i, eid in enumerate(entity_ids)}
             query = text("""
@@ -906,6 +1116,78 @@ class XmppMasterDatabase(DatabaseHelper):
             logger.error(f"get_linux_auto_update_policy error: {str(e)}")
             return []
 
+    def _sync_linux_auto_update_policy_entities(self, session, entity_ids):
+        """
+        Garantit au minimum une ligne generique (release_version='') par distribution geree
+        pour chaque entite demandee.
+        """
+        normalized_entity_ids = []
+        for entity_id in entity_ids:
+            if entity_id is None or str(entity_id).strip() == "":
+                continue
+            normalized_entity_ids.append(int(entity_id))
+
+        for entity_id in sorted(set(normalized_entity_ids)):
+            session.execute(text("""
+                INSERT IGNORE INTO xmppmaster.up_entity_linux_auto_update_policy (
+                    entity_id,
+                    distributor_id,
+                    release_version
+                )
+                SELECT
+                    :entity_id,
+                    LOWER(TRIM(v.distributor_id)),
+                    ''
+                FROM (
+                    SELECT DISTINCT distributor_id
+                    FROM xmppmaster.up_linux_os_versions
+                    WHERE is_managed = 1
+                      AND distributor_id IS NOT NULL
+                      AND TRIM(distributor_id) <> ''
+                ) v
+            """), {
+                "entity_id": entity_id,
+            })
+
+    def _apply_linux_auto_update_policy_scope(self, session, entity_id, distributor_id):
+        """
+        Recalcule les flags *_require de up_machine_linux pour une entite+distribution.
+
+        Policy unique par entite+distribution.
+        """
+        normalized_distributor = (distributor_id or "").strip().lower()
+        if entity_id is None or normalized_distributor == "":
+            return
+
+        query = text("""
+            UPDATE xmppmaster.up_machine_linux uml
+            INNER JOIN xmppmaster.up_entity_linux_auto_update_policy p
+                ON  p.entity_id = uml.entity_id
+                AND p.distributor_id = LOWER(TRIM(uml.distributor_id))
+            SET
+                uml.kernel_require = CASE
+                    WHEN p.auto_update_kernel = 1
+                         AND uml.kernel_count > 0 THEN 1
+                    ELSE 0
+                END,
+                uml.security_require = CASE
+                    WHEN p.auto_update_security = 1
+                         AND uml.security_count > 0 THEN 1
+                    ELSE 0
+                END,
+                uml.other_require = CASE
+                    WHEN p.auto_update_other = 1
+                         AND uml.other_count > 0 THEN 1
+                    ELSE 0
+                END
+            WHERE uml.entity_id = :entity_id
+              AND LOWER(TRIM(uml.distributor_id)) = :distributor_id
+        """)
+        session.execute(query, {
+            "entity_id": int(entity_id),
+            "distributor_id": normalized_distributor,
+        })
+
     @DatabaseHelper._sessionm
     def update_linux_auto_update_policy(self, session, updates):
         """
@@ -914,7 +1196,16 @@ class XmppMasterDatabase(DatabaseHelper):
         """
         try:
             normalized = [dict(u) if not isinstance(u, dict) else u for u in updates]
+            impacted_scopes = set()
             for u in normalized:
+                policy_scope = session.execute(text("""
+                    SELECT entity_id, distributor_id
+                    FROM xmppmaster.up_entity_linux_auto_update_policy
+                    WHERE id = :id
+                """), {
+                    "id": int(u["id"]),
+                }).first()
+
                 query = text("""
                     UPDATE xmppmaster.up_entity_linux_auto_update_policy
                     SET auto_update_kernel   = :auto_update_kernel,
@@ -928,6 +1219,16 @@ class XmppMasterDatabase(DatabaseHelper):
                     "auto_update_security": int(u.get("auto_update_security", 0)),
                     "auto_update_other": int(u.get("auto_update_other", 0)),
                 })
+
+                if policy_scope is not None:
+                    impacted_scopes.add((
+                        int(policy_scope.entity_id),
+                        (policy_scope.distributor_id or "").strip().lower(),
+                    ))
+
+            for entity_id, distributor_id in impacted_scopes:
+                self._apply_linux_auto_update_policy_scope(session, entity_id, distributor_id)
+
             session.commit()
             logger.info("Mise a jour des policies auto-update Linux effectuee.")
             return {"success": True}
@@ -20108,6 +20409,8 @@ FROM (
         normalized_distribution = (distributor_id or "").strip().lower()
         distribution_aliases = {
             "redhat": "rhel",
+            "zorinos": "zorin",
+            "zorin os": "zorin",
         }
         normalized_distribution = distribution_aliases.get(
             normalized_distribution,
@@ -20117,6 +20420,7 @@ FROM (
         allowed_distributions = {
             "debian",
             "ubuntu",
+            "zorin",
             "mint",
             "rhel",
             "almalinux",
@@ -20131,14 +20435,14 @@ FROM (
 
         # Diagnostic: liste des versions candidates visibles pour la distribution
         versions_debug_query = text("""
-            SELECT id, distribution, version, name, is_managed, is_current_stable, is_recommended
+            SELECT id, distributor_id, release_version, name, is_managed, is_current_stable, is_recommended
             FROM xmppmaster.up_linux_os_versions
-            WHERE distribution = :distribution
+            WHERE distributor_id = :distribution
             ORDER BY
                 is_managed DESC,
                 is_current_stable DESC,
                 is_recommended DESC,
-                CAST(version AS DECIMAL(10, 4)) DESC,
+                CAST(release_version AS DECIMAL(10, 4)) DESC,
                 id DESC
             LIMIT 10;
         """)
@@ -20152,8 +20456,8 @@ FROM (
             [
                 {
                     "id": r.id,
-                    "distribution": r.distribution,
-                    "version": r.version,
+                    "distributor_id": r.distributor_id,
+                    "version": r.release_version,
                     "name": r.name,
                     "is_managed": r.is_managed,
                     "is_current_stable": r.is_current_stable,
@@ -20165,14 +20469,14 @@ FROM (
 
         # Choisit la version cible qui servira de reference de conformite
         max_version_query = text("""
-            SELECT name, version
+            SELECT name, release_version
             FROM xmppmaster.up_linux_os_versions
-            WHERE distribution = :distribution
+            WHERE distributor_id = :distribution
                         ORDER BY
                                 is_managed DESC,
                                 is_current_stable DESC,
                                 is_recommended DESC,
-                                CAST(version AS DECIMAL(10, 4)) DESC,
+                                CAST(release_version AS DECIMAL(10, 4)) DESC,
                                 id DESC
             LIMIT 1;
         """)
@@ -20181,7 +20485,7 @@ FROM (
             {"distribution": normalized_distribution},
         ).first()
 
-        if not row or row.version is None:
+        if not row or row.release_version is None:
             self.logger.warning(
                 "Aucune version cible trouvee dans up_linux_os_versions pour distribution=%s",
                 normalized_distribution,
@@ -20192,7 +20496,7 @@ FROM (
                 "max_version": None,
             }
 
-        max_version = row.version
+        max_version = row.release_version
         name_version = row.name
         self.logger.info(
             "Version cible retenue pour %s: version=%r name=%r",
