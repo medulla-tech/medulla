@@ -1,7 +1,7 @@
 --
 -- (c) 2026, http://www.medulla-tech.io/
 --
--- FILE contrib/xmppmaster/sql/schema-105.sql
+-- FILE contrib/xmppmaster/sql/schema-104.sql
 -- =======================================
 -- Database xmppmaster
 -- =======================================
