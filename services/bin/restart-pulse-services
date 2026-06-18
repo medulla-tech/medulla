@@ -23,7 +23,7 @@
 #
 
 # La liste des chaînes
-list_of_group_service=("allservice" "allpulse" "allsubs" "mmc" "subsdep" "subsass" "subsinv" "subslog" "subsmast" "subsmon" "subssubs" "subsupd" "subdep")
+list_of_group_service=("allservice" "allpulse" "allsubs" "mmc" "subsdep" "subsass" "subsinv" "subslog" "subsmast" "subsmon" "subssubs" "subsupd" "subreg" "subdep")
 
 # Variable pour vérifier si la chaîne est dans la liste
 found=false
@@ -36,7 +36,7 @@ function help(){
     echo "  debug : activer le mode debug (facultatif)"
     echo "  action : l'action à effectuer sur les services (start, stop, restart, status, enable, is-enabled, disable , show, show-units, is-failed , try-restart, try-reload-or-restart, clean , reset-failed)"
     echo "  services : les services à prendre en compte (allservice, allpulse, allsubs, mmc, subsdep,"
-    echo "             subsass, subsinv, subslog, subsmast, subsmon, subssubs, subsupd, subdep)"
+    echo "             subsass, subsinv, subslog, subsmast, subsmon, subssubs, subsupd, subreg, subdep)"
     echo "Si aucune action n'est spécifiée, la commande affiche le statut des services."
 }
 
@@ -218,6 +218,7 @@ declare -a substituteServiceinventory=()
 declare -a substituteServicelogger=()
 declare -a substituteServicemaster=()
 declare -a substituteServicemonitoring=()
+declare -a substituteServiceregistration=()
 declare -a substituteServicereconfigurator=()
 declare -a substituteServicesubscription=()
 
@@ -254,6 +255,13 @@ mapfile -t substituteServicemonitoring < <(systemctl list-unit-files --no-pager 
 if [ "$debug" -eq 1 ]; then
     echo "##### Service substituts de monitoring #####"
     echo "${substituteServicemonitoring[@]}"
+fi
+
+# Chargement du tableau des substituts de registration
+mapfile -t substituteServiceregistration < <(systemctl list-unit-files --no-pager --no-legend --type=service  | grep "xmpp-master-substitute" | grep  registration | awk '{print $1}' | sort | uniq)
+if [ "$debug" -eq 1 ]; then
+    echo "##### Service substituts de registration #####"
+    echo "${substituteServiceregistration[@]}"
 fi
 
 # Chargement du tableau des substituts de master
@@ -369,6 +377,8 @@ elif  echo "$*" | grep -q -i "subssubs"; then
     fusionner_tableaux SERVICE substituteServicesubscription
 elif  echo "$*" | grep -q -i "subsupd"; then
     fusionner_tableaux SERVICE substituteServiceupdates
+elif  echo "$*" | grep -q -i "subreg"; then
+    fusionner_tableaux SERVICE substituteServiceregistration
 elif  echo "$*" | grep -q -i "subdep"; then
     fusionner_tableaux SERVICE substituteServicedeploy
 # else
