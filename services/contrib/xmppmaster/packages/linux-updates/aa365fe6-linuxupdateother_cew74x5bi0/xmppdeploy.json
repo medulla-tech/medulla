@@ -1,0 +1,70 @@
+{
+    "info": {
+        "Dependency": [],
+        "editor": "root",
+        "edition_date": "2026-06-08 09:24:31",
+        "creator": "root",
+        "creation_date": "2026-06-08 09:20:47",
+        "previous_localisation_server": "global",
+        "localisation_server": "global",
+        "name": "linux_update_other",
+        "version": "1.0.0",
+        "description": "update other package",
+        "metagenerator": "expert",
+        "transferfile": true,
+        "methodetransfert": "pushrsync",
+        "limit_rate_ko": "",
+        "spooling": "ordinary",
+        "launcher": "",
+        "licenses": "1.0",
+        "packageUuid": "aa365fe6-linuxupdateother_cew74x5bi0",
+        "gotoreturncode": "!=0",
+        "gotolabel": "END_ERROR",
+        "typescript": "Batch",
+        "targetrestart": "MA",
+        "url": "",
+        "gotono": "",
+        "inventory": "noforced",
+        "auth_token": "02c4192dac614c2558fe74ddb3088187",
+        "software": "linux_update_other"
+    },
+    "linux": {
+        "sequence": [
+            {
+                "action": "actionprocessscript",
+                "step": 0,
+                "codereturn": "",
+                "actionlabel": "script_17cb07a0",
+                "command": "QEBAVVBEQVRFX0xJTlVYQEBAIHsic2VjdGlvbiI6InVwZGF0ZSIsImxpbnV4X2FjdGlvbnMiOlsib3RoZXIiXX0=",
+                "timeout": "800",
+                "10@lastlines": "10@lastlines",
+                "gotoreturncode@!=0": "END_ERROR"
+            },
+            {
+                "step": 1,
+                "action": "actionsuccescompletedend",
+                "actionlabel": "END_SUCCESS",
+                "clear": "True",
+                "inventory": "noforced"
+            },
+            {
+                "action": "actionerrorcompletedend",
+                "step": 2,
+                "actionlabel": "END_ERROR"
+            }
+        ]
+    },
+    "metaparameter": {
+        "linux": {
+            "label": {
+                "script_17cb07a0": 0,
+                "END_SUCCESS": 1,
+                "END_ERROR": 2
+            }
+        },
+        "os": [
+            "linux"
+        ],
+        "uuid": "aa365fe6-linuxupdateother_cew74x5bi0"
+    }
+}

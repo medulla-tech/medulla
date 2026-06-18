@@ -131,6 +131,27 @@ import_min223biosamd64() {
     curl -fsSL ${DL_URL}/Min223/369f382d-60ec-11f1-8288-bc241111a7ae.tar?token=${KEYAES32} | tar -xf - -C ${DEST}
 }
 
+import_zorin181corebiosamd64() {
+    existing_id=$(mysql -N -s -h ${DBHOST} -P ${DBPORT} -u${DBUSER} -p${DBPASS} imaging -e "SELECT id FROM Image WHERE uuid='a23aa027-697d-11f1-8c3e-bc24112b8ad5' LIMIT 1")
+    if [[ -n "${existing_id}" ]]; then
+        echo -e "\nZorin OS 18.1 Core BIOS AMD64 master already exists (id=${existing_id}). Skipping import."
+        return 0
+    fi
+
+    # Insert master record in db for Zorin OS 18.1 Core BIOS AMD64
+    echo -e "\nInserting Zorin OS 18.1 Core BIOS AMD64 master into database..."
+    mysql -N -s -h ${DBHOST} -P ${DBPORT} -u${DBUSER} -p${DBPASS} imaging -e "INSERT INTO Image (\`path\`, \`name\`, \`uuid\`, \`desc\`, \`size\`, \`is_master\`, \`creation_date\`, \`fk_creator\`, \`fk_state\`) VALUES ('/var/lib/pulse2/imaging/masters/a23aa027-697d-11f1-8c3e-bc24112b8ad5','Master Zorin OS 18.1 Core BIOS AMD64','a23aa027-697d-11f1-8c3e-bc24112b8ad5','Zorin OS 18.1 Core BIOS AMD64',5102177913,1,'2026-06-16 13:19:33',1,1)"
+    id_image=$(mysql -N -s -h ${DBHOST} -P ${DBPORT} -u${DBUSER} -p${DBPASS} imaging -e "SELECT id FROM Image WHERE uuid='a23aa027-697d-11f1-8c3e-bc24112b8ad5'")
+    mysql -N -s -h ${DBHOST} -P ${DBPORT} -u${DBUSER} -p${DBPASS} imaging -e "INSERT IGNORE INTO Target (id, name, uuid, raw_mode, type, is_registered_in_package_server, fk_entity, fk_menu) VALUES (1, 'Dummy', 'UUID0', 0, 1, 0, 1, 1)"
+    mysql -N -s -h ${DBHOST} -P ${DBPORT} -u${DBUSER} -p${DBPASS} imaging -e "INSERT IGNORE INTO ImagingLog VALUES (1,'2025-11-19 03:17:39','unknown',1,1,6)"
+    mysql -N -s -h ${DBHOST} -P ${DBPORT} -u${DBUSER} -p${DBPASS} imaging -e "INSERT IGNORE INTO ImageOnImagingServer VALUES (${id_image},1)"
+    mysql -N -s -h ${DBHOST} -P ${DBPORT} -u${DBUSER} -p${DBPASS} imaging -e "INSERT IGNORE INTO MasteredOn VALUES (${id_image},1)"
+
+    # Download and extract master files
+    echo "Downloading and extracting Zorin OS 18.1 Core AMD64 master..."
+    curl -fsSL ${DL_URL}/Zor181/a23aa027-697d-11f1-8c3e-bc24112b8ad5.tar?token=${KEYAES32} | tar -xf - -C ${DEST}
+}
+
 # First show disclaimer and wait for user confirmation to proceed. If user presses y we continue, else we exit.
 echo "${DISCLAIMER}"
 read -p "Acceptez-vous ces termes? (y/n) "
@@ -152,7 +173,8 @@ echo "1) Windows 11 25H2 Professionnel FR x64"
 echo "2) Ubuntu 24.04 BIOS AMD64"
 echo "3) Ubuntu 26.04 BIOS AMD64"
 echo "4) Mint 22.3 BIOS AMD64"
-read -p "Your choice (1/2/3/4): " MASTER_CHOICE
+echo "5) Zorin OS 18.1 Core BIOS AMD64"
+read -p "Your choice (1/2/3/4/5): " MASTER_CHOICE
 
 case "$MASTER_CHOICE" in
     1)
@@ -166,6 +188,9 @@ case "$MASTER_CHOICE" in
         ;;
     4)
         import_min223biosamd64
+        ;;
+    5)
+        import_zorin181corebiosamd64
         ;;
     *)
         echo "Invalid choice. Aborting."

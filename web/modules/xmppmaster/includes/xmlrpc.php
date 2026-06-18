@@ -46,14 +46,14 @@ function xmlrpc_update_auto_approve_rules($updates, $entity_id)
     return xmlCall("xmppmaster.update_auto_approve_rules", array($updates, $entity_id));
 }
 
-function xmlrpc_get_linux_approved_releases()
+function xmlrpc_get_linux_approved_releases($entity_id = "")
 {
-    return xmlCall("xmppmaster.get_linux_approved_releases", array());
+    return xmlCall("xmppmaster.get_linux_approved_releases", array($entity_id));
 }
 
-function xmlrpc_update_linux_approved_releases($updates)
+function xmlrpc_update_linux_approved_releases($updates, $entity_id = "")
 {
-    return xmlCall("xmppmaster.update_linux_approved_releases", array($updates));
+    return xmlCall("xmppmaster.update_linux_approved_releases", array($updates, $entity_id));
 }
 
 function xmlrpc_get_linux_auto_update_policy($entity_ids)

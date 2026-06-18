@@ -3,29 +3,43 @@
  * (c) 2026 Medulla, http://www.medulla-tech.io
  *
  * Affiche et permet l'edition des policies auto-update Linux
- * pour les entites de l'utilisateur connecte.
+ * pour l'entite selectionnee.
  */
 
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 
-// Recupere les entites de l'utilisateur connecte
-$_entities  = getUserLocations();
-$entity_ids = [];
-foreach ($_entities as $entity) {
-    $entity_ids[] = intval(substr($entity['uuid'], 4));
+// Récupère l'entity_id avec la même logique de fallback que ajaxLinuxApprovedReleases.php
+$selectedLocation = $_POST['selected_location'] ?? $_GET['selected_location'] ?? [];
+
+// Si selected_location est une string query, la parser
+if (is_string($selectedLocation) && !empty($selectedLocation)) {
+    parse_str($selectedLocation, $selectedLocationArray);
+    $selectedLocation = $selectedLocationArray;
 }
 
-// Index entity uuid -> nom complet pour affichage
+// Extraire l'uuid de selected_location ou via les paramètres standards
+$rawEntity = $_POST['entityid'] ?? $_GET['entityid'] ?? ($selectedLocation['uuid'] ?? ($selectedLocation['id'] ?? ''));
+
+// Si on n'a rien en entityid/selected_location, chercher en GET 'entity' (format utilisé par d'autres pages)
+if (empty($rawEntity)) {
+    $rawEntity = $_GET['entity'] ?? '';
+}
+
+// Nettoyage du préfixe UUID si présent
+$entityId = (int) preg_replace('/^UUID/i', '', (string) $rawEntity);
+
+// Récupère les policies pour cette entité seulement
+$policies = xmlrpc_get_linux_auto_update_policy([$entityId]);
+if (!is_array($policies)) {
+    $policies = [];
+}
+
+// Récupère toutes les entités pour les noms
+$_entities  = getUserLocations();
 $entity_names = [];
 foreach ($_entities as $entity) {
     $eid = intval(substr($entity['uuid'], 4));
     $entity_names[$eid] = $entity['completename'] ?? $entity['name'] ?? $eid;
-}
-
-// Recupere les policies pour ces entites
-$policies = xmlrpc_get_linux_auto_update_policy($entity_ids);
-if (!is_array($policies)) {
-    $policies = [];
 }
 
 echo '<style>
@@ -42,7 +56,7 @@ echo '<form id="linuxAutoUpdatePolicyForm" method="post" action="' .
 echo '<input type="hidden" name="form_name" value="linux_auto_update_policy">';
 
 if (empty($policies)) {
-    echo '<p>' . _T("No Linux machines found for your entities.", "updates") . '</p>';
+    echo '<p>' . _T("No auto-update policies found for this entity.", "updates") . '</p>';
 } else {
     echo '<div class="policy-table-scroll">';
     echo '<table class="listinfos" cellspacing="0">';
@@ -53,14 +67,13 @@ if (empty($policies)) {
     echo '<th style="text-align:center">' . _T("Kernel", "updates") . '</th>';
     echo '<th style="text-align:center">' . _T("Security", "updates") . '</th>';
     echo '<th style="text-align:center">' . _T("Other", "updates") . '</th>';
-    echo '<th style="text-align:center">' . _T("Last update", "updates") . '</th>';
     echo '</tr></thead>';
     echo '<tbody>';
 
     foreach ($policies as $idx => $policy) {
         $policyId       = (int) $policy['id'];
-        $entityId       = (int) $policy['entity_id'];
-        $entityName     = htmlspecialchars($entity_names[$entityId] ?? $entityId);
+        $policyEntityId = (int) $policy['entity_id'];
+        $entityName     = htmlspecialchars($entity_names[$policyEntityId] ?? $policyEntityId);
         $distribName    = htmlspecialchars(strtoupper($policy['distributor_id']));
         $releaseVer     = htmlspecialchars($policy['release_version'] !== '' ? $policy['release_version'] : _T("All versions", "updates"));
         $kernel         = (int) $policy['auto_update_kernel'];
@@ -94,8 +107,6 @@ if (empty($policies)) {
         echo "<input type=\"checkbox\" name=\"auto_update_other[{$policyId}]\" value=\"1\"" .
             ($other ? ' checked' : '') . ">";
         echo "</td>";
-
-        echo "<td style=\"text-align:center; font-size:0.85em; color:#666\">{$updatedAt}</td>";
         echo "</tr>";
     }
 

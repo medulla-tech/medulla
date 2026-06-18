@@ -117,6 +117,7 @@ for($i = 0; $i < $count_partial; $i++) {
 }
 
 // Add css ids to each tr tag in the table
+$ids = array();
 foreach($grey_list['updateid'] as $updateid) {
     $ids [] = 'u_'.$updateid;
 }

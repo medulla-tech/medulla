@@ -296,8 +296,9 @@ if (isset($_GET["update"])) {
 
                         if (!isset($_GET['lang'])) {
                             // Get browser lang
-                            $lang_1 = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
-                            $lang_2 = str_replace('-', '_', substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 5));
+                            $acceptLanguageHeader = $_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? '';
+                            $lang_1 = substr($acceptLanguageHeader, 0, 2);
+                            $lang_2 = str_replace('-', '_', substr($acceptLanguageHeader, 0, 5));
 
                             // If lang1 = en => LANG =  C
                             if ($lang_1 == 'en') {

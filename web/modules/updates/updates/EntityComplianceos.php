@@ -10,7 +10,7 @@ require_once("modules/xmppmaster/includes/html.inc.php");
 
 global $maxperpage;
 
-$p = new PageGenerator(_T("Entity Compliance Operating Systems", "updates"));
+$p = new PageGenerator(_T("Entity Compliance", "updates"));
 $p->setSideMenu($sidemenu);
 $p->display();
 

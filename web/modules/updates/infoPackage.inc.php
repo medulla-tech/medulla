@@ -150,6 +150,9 @@ $page->addTab($tab);
 $tab = new Tab("tabubuntu", _T("OS Ubuntu", "dyngroup"));
 $page->addTab($tab);
 
+$tab = new Tab("tabzorin", _T("OS Zorin", "dyngroup"));
+$page->addTab($tab);
+
 $tab = new Tab("tabalma", _T("OS ALMA", "dyngroup"));
 $page->addTab($tab);
 
@@ -186,6 +189,11 @@ $submod->addPage($page);
 
 $page = new Page("ajaxMajorEntitiesListUbuntu", _T('Entities Major Compliance', 'updates'));
 $page->setFile("modules/updates/updates/ajaxMajorEntitiesListUbuntu.php");
+$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
+$submod->addPage($page);
+
+$page = new Page("ajaxMajorEntitiesListZorin", _T('Entities Major Compliance', 'updates'));
+$page->setFile("modules/updates/updates/ajaxMajorEntitiesListZorin.php");
 $page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
 $submod->addPage($page);
 
@@ -236,7 +244,7 @@ $page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true))
 $submod->addPage($page);
 
 
-$page = new Page("EntityComplianceos", _T("Entity Compliance operating systems", "updates"));
+$page = new Page("EntityComplianceos", _T("Entity Compliance", "updates"));
 $page->setFile("modules/updates/updates/EntityComplianceos.php");
 
 $tab = new Tab("tabwin", _T("oswindows", "updates"));
@@ -396,7 +404,26 @@ $submod->addPage($page);
 $page = new Page("auditByEntity", _T('History by Entity', 'updates'));
 $page->setFile("modules/updates/updates/auditByEntity.php");
 $submod->addPage($page);
-$mod->addSubmod($submod);
+
+// --- Pages Linux Approved Releases ---
+$page = new Page("linuxApprovedReleases", _T('Approved Linux releases', 'updates'));
+$page->setFile("modules/updates/updates/linuxApprovedReleases.php");
+$submod->addPage($page);
+
+$page = new Page("ajaxLinuxApprovedReleases", _T("Approved Linux releases", "updates"));
+$page->setFile("modules/updates/updates/ajaxLinuxApprovedReleases.php");
+$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
+$submod->addPage($page);
+
+// --- Pages Linux Auto-Update Policy ---
+$page = new Page("linuxAutoUpdatePolicy", _T('Linux Auto-Update Policy', 'updates'));
+$page->setFile("modules/updates/updates/linuxAutoUpdatePolicy.php");
+$submod->addPage($page);
+
+$page = new Page("ajaxLinuxAutoUpdatePolicy", _T("Linux Auto-Update Policy", "updates"));
+$page->setFile("modules/updates/updates/ajaxLinuxAutoUpdatePolicy.php");
+$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
+$submod->addPage($page);
 
 $page = new Page("ajaxAuditByEntity", _T("History by Entity", "updates"));
 $page->setFile("modules/updates/updates/ajaxAuditByEntity.php");
@@ -406,7 +433,6 @@ $submod->addPage($page);
 $page = new Page("auditByUpdate", _T('History by Update', 'updates'));
 $page->setFile("modules/updates/updates/auditByUpdate.php");
 $submod->addPage($page);
-$mod->addSubmod($submod);
 
 $page = new Page("ajaxAuditByUpdate", _T("History by Update", "updates"));
 $page->setFile("modules/updates/updates/ajaxAuditByUpdate.php");
@@ -420,16 +446,6 @@ $submod->addPage($page);
 
 $page = new Page("ajaxApproveRules", _T("Choose update event for entity", "updates"));
 $page->setFile("modules/updates/updates/ajaxApproveRules.php");
-$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
-$submod->addPage($page);
-
-// choose approved Linux releases
-$page = new Page("linuxApprovedReleases", _T('Approved Linux Releases', 'updates'));
-$page->setFile("modules/updates/updates/linuxApprovedReleases.php");
-$submod->addPage($page);
-
-$page = new Page("ajaxLinuxApprovedReleases", _T("Approved Linux Releases", "updates"));
-$page->setFile("modules/updates/updates/ajaxLinuxApprovedReleases.php");
 $page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
 $submod->addPage($page);
 
