@@ -34,7 +34,7 @@ if (empty($cancel_target)) {
     } elseif (!empty($_GET['group_id'])) {
         $cancel_target = 'mobile/mobile/groups';
     } elseif (!empty($_GET['config_id'])) {
-        $cancel_target = 'mobile/mobile/configurationsList';
+        $cancel_target = 'mobile/mobile/configurations';
     } else {
         $cancel_target = 'mobile/mobile/pushMessages';
     }

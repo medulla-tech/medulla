@@ -6,14 +6,17 @@ require_once("modules/imaging/includes/class_form.php");
 require_once("modules/mobile/includes/xmlrpc.php");
 
 $deviceId = isset($_GET['id']) ? $_GET['id'] : '';
-$devices = xmlrpc_get_hmdm_devices();
-if (!is_array($devices)) { $devices = []; }
 
-$device = null;
-foreach ($devices as $d) {
-    if ((string)($d['id'] ?? '') === (string)$deviceId) { 
-        $device = $d; 
-        break; 
+$device = xmlrpc_get_hmdm_device_by_id($deviceId);
+if (!$device || !is_array($device)) {
+    $devices = xmlrpc_get_hmdm_devices();
+    if (!is_array($devices)) { $devices = []; }
+    $device = null;
+    foreach ($devices as $d) {
+        if ((string)($d['id'] ?? '') === (string)$deviceId) {
+            $device = $d;
+            break;
+        }
     }
 }
 

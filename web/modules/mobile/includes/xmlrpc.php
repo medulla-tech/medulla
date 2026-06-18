@@ -8,6 +8,9 @@ function xmlrpc_update_hmdm_device($device_data){
 function xmlrpc_get_hmdm_devices(){
     return xmlCall("mobile.getHmdmDevices", array());
 }
+function xmlrpc_get_hmdm_device_by_id($device_id){
+    return xmlCall("mobile.getHmdmDeviceById", array($device_id));
+}
 function xmlrpc_get_hmdm_applications(){
     return xmlCall("mobile.getHmdmApplications", array());
 }

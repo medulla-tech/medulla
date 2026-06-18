@@ -421,6 +421,45 @@ class MobileDatabase(DatabaseHelper):
             return []
         return self.getList(auth)
 
+    def getHmdmDeviceById(self, device_id):
+        """Fetch a single device by ID using GET /private/devices/{id}.
+        Returns the full device dict (including imei, custom1, etc.) or None."""
+        auth = self.authenticate()
+        if auth is None:
+            logging.getLogger().error("Cannot authenticate to fetch device by ID.")
+            return None
+        url = f"{self.BASE_URL}/private/devices/{device_id}"
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {auth}"}
+        try:
+            resp = requests.get(url, headers=headers)
+            resp.raise_for_status()
+            data = resp.json()
+            d = data.get("data", data)
+            info = d.get("info", {})
+            return {
+                "id": d.get("id", ""),
+                "number": d.get("number", ""),
+                "description": d.get("description", ""),
+                "statusCode": d.get("statusCode", ""),
+                "configurationId": d.get("configurationId", ""),
+                "custom1": d.get("custom1", ""),
+                "custom2": d.get("custom2", ""),
+                "custom3": d.get("custom3", ""),
+                "publicIp": d.get("publicIp", ""),
+                "imei": d.get("imei", ""),
+                "phone": d.get("phone", ""),
+                "serial": d.get("serial", ""),
+                "launcherVersion": d.get("launcherVersion", ""),
+                "mdmMode": d.get("mdmMode", info.get("mdmMode", "")),
+                "kioskMode": d.get("kioskMode", info.get("kioskMode", "")),
+                "androidVersion": d.get("androidVersion", ""),
+                "lastUpdate": d.get("lastUpdate", 0),
+                "groups": d.get("groups", []),
+            }
+        except Exception as e:
+            logging.getLogger().error(f"Error fetching device {device_id}: {e}")
+            return None
+
     def getHmdmDevicesOsCount(self):
         """
         Get count of HMDM Android devices for dashboard (all hmdm devices are android)

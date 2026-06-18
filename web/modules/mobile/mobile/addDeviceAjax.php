@@ -72,7 +72,7 @@ if ($result && isset($result['status']) && $result['status'] === 'OK') {
             }
         }
         if ($deviceId) {
-            xmlrpc_add_hmdm_device($name, $config, $desc, $groups, '', '', $deviceId);
+            xmlrpc_add_hmdm_device($name, $config, $desc, $groups, $imei, '', $deviceId, $custom1);
         }
     }
     echo json_encode(['status' => 'ok', 'message' => sprintf(_T("Device '%s' successfully created", "mobile"), htmlspecialchars($name))]);
