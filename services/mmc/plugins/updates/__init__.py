@@ -2,6 +2,7 @@
 # SPDX-FileCopyrightText: 2016-2023 Siveo, http://www.siveo.net
 # SPDX-FileCopyrightText: 2024-2025 Medulla, http://www.medulla-tech.io
 # SPDX-License-Identifier: GPL-3.0-or-later
+# file : services/mmc/plugins/updates/__init__.py
 
 from pulse2.version import getVersion, getRevision  # pyflakes.ignore
 
@@ -508,6 +509,39 @@ def get_os_update_major_details(entity_id,
                                                             colonne)
 
 
+def get_linux_upgrade_info(distributor_id, release_version):
+    """
+    Retourne les métadonnées d'upgrade Linux pour une version source donnée.
+
+    Exemple:
+        get_linux_upgrade_info("debian", "12")
+    """
+    # Forward XML-RPC vers la couche base xmppmaster.
+    return XmppMasterDatabase().get_linux_upgrade_info(distributor_id, release_version)
+
+
+def get_linux_upgrade_info_before_target(distributor_id, target_version):
+    """
+    Retourne les métadonnées d'upgrade de la version immédiatement inférieure à la cible.
+
+    Exemple:
+        get_linux_upgrade_info_before_target("debian", "13")
+    """
+    # Forward XML-RPC vers la couche base xmppmaster.
+    return XmppMasterDatabase().get_linux_upgrade_info_before_target(distributor_id, target_version)
+
+
+def get_linux_upgrade_candidates(distributor_id, entity_id, target_version):
+    """
+    Liste les machines candidates à un upgrade majeur Linux pour une entité.
+
+    Exemple:
+        get_linux_upgrade_candidates("debian", 42, "13")
+    """
+    # Forward XML-RPC vers la couche base xmppmaster.
+    return XmppMasterDatabase().get_linux_upgrade_candidates(distributor_id, entity_id, target_version)
+
+
 def deploy_update_major(package_id,
                         uuid_inventorymachine,
                         hostname,
@@ -517,43 +551,124 @@ def deploy_update_major(package_id,
                         deployment_intervals="",
                         userconnect="root",
                         usercreator="root",
+                        list_file="fileslistpackage",
+                        upgrade_parameters=None):
+    """
+    Lance un déploiement de mise à jour majeure sur une machine.
+    
+    Cette fonction crée une commande de déploiement MSC pour une mise à jour
+    majeure du système d'exploitation (Windows ou Linux).
+    
+    Processus :
+    -----------
+    1. Valide le format du titre de déploiement (convention de nommage)
+    2. Vérifie qu'aucun déploiement identique n'existe déjà en MSC
+    3. Vérifie qu'aucun déploiement majeur n'est déjà en cours sur cette machine
+    4. Valide que le package de déploiement existe dans la base
+    5. Crée la commande MSC avec les paramètres de planification
+    6. Enregistre la commande dans le journal de session XMPP
+    
+    Paramètres
+    ----------
+    package_id : str
+        UUID du package à déployer (ex: 'dfd3b8dc-linuxupdategenericcommand_p')
+    uuid_inventorymachine : str
+        UUID GLPI de la machine cible (commence par 'UUID')
+    hostname : str
+        Nom d'hôte de la machine (ex: 'machine01')
+    title_deployement : str, optionnel
+        Titre du déploiement (convention: "hostname--@upd@--distributor_login_timestamp")
+    start_date : str, optionnel
+        Date de début du déploiement (format: "YYYY-MM-DD HH:MM:SS")
+    end_date : str, optionnel
+        Date de fin du déploiement (format: "YYYY-MM-DD HH:MM:SS")
+    deployment_intervals : str, optionnel
+        Crénaux horaires de déploiement (ex: "12-14,20-24,0-8" en format 24h)
+    userconnect : str, optionnel
+        Utilisateur qui exécute la commande (défaut: "root")
+    usercreator : str, optionnel
+        Utilisateur qui crée la commande (défaut: "root")
+    list_file : str, optionnel
+        Liste des fichiers à traiter (défaut: "fileslistpackage")
+    upgrade_parameters : dict, optionnel
+        Paramètres supplémentaires pour Linux (target_version, target_codename, repo_profile, etc.)
+    
+    Retour
+    ------
+    dict : Dictionnaire de résultat avec les clés :
+        - success (bool) : True si le déploiement a été créé avec succès
+        - commandid (str) : ID de la commande MSC créée (ou "-1" en cas d'erreur)
+        - msg (str) : Message de statut ou description de l'erreur
+    
+    Exemples d'erreur
+    -----------------
+    - Titre de déploiement ne respectant pas la convention de nommage
+    - Déploiement identique déjà planifié en MSC
+    - Déploiement majeur déjà en cours sur la machine
+    - Package introuvable dans la base (label vide)
+    - Exceptions lors de la création de la commande MSC
+    """
 
-                        list_file="fileslistpackage"):
+    logger.info(
+        "deploy_update_major inputs: package_id=%r, uuid_inventorymachine=%r, hostname=%r, title_deployement=%r, start_date=%r, end_date=%r, deployment_intervals=%r, userconnect=%r, usercreator=%r, list_file=%r, upgrade_parameters=%r",
+        package_id,
+        uuid_inventorymachine,
+        hostname,
+        title_deployement,
+        start_date,
+        end_date,
+        deployment_intervals,
+        userconnect,
+        usercreator,
+        list_file,
+        upgrade_parameters,
+    )
+
+    # Structure de retour par défaut (déploiement déjà existant)
     result = {"success": False,
               "commandid": "-1",
-              "msg": f"Deployment not rescheduled for {package_id} is already scheduled for machine {hostname}"}
+              "msg": f"Déploiement non relancé : {package_id} est déjà planifié pour {hostname}"}
 
+    # === ÉTAPE 1 : Validation du titre de déploiement ===
+    # Extraction du titre sans le timestamp final (supprime le dernier segment séparé par _)
     try:
         title_deployementnew = title_deployement[:-
                                                  (len(title_deployement.split("_")[-1]))]
     except:
-        # le nom n'a pas la bonne convention pour les updates
-        result["msg"] = f"Naming convention for Deployment {package_id} on machine {hostname}"
+        # Le titre ne respecte pas la convention attendue
+        result["msg"] = f"Convention de nommage invalide pour {package_id} sur {hostname}"
         result["success"] = False
         return result
 
-    # on ne lance pas le deployement car il existe deja.
+    # === ÉTAPE 2 : Vérification des déploiements existants en MSC ===
+    # Évite de créer un doublon si un déploiement identique est déjà planifié
     if MscDatabase().test_msc_process(title_deployementnew):
-        logger.warning(f"Deployment not rescheduled for {package_id} is already scheduled for machine {hostname}")
-        result["msg"] = f"Deployment not rescheduled for {package_id} is already scheduled for machine {hostname}"
+        logger.warning(f"Déploiement non relancé : {package_id} est déjà planifié pour {hostname}")
+        result["msg"] = f"Déploiement non relancé : {package_id} est déjà planifié pour {hostname}"
         result["success"] = False
         return result
 
+    # === ÉTAPE 3 : Vérification des déploiements majeurs en cours ===
+    # Évite de relancer un déploiement si une mise à jour majeure est déjà en cours
     if XmppMasterDatabase().test_update_major_deployment_in_progress(title_deployementnew):
-        logger.warning(f"Deployment {package_id} exists for machine {hostname}")
-        result["msg"] = f"Deployment not rescheduled for {package_id} as it is already in progress on machine {hostname}"
+        logger.warning(f"Déploiement non relancé : {package_id} est déjà en cours sur {hostname}")
+        result["msg"] = f"Déploiement non relancé : {package_id} est déjà en cours sur {hostname}"
         result["success"] = False
         return result
 
     try:
+        # === ÉTAPE 4 : Validation du package ===
+        # Vérifie que le package existe et possède un label valide
         if title_deployement:
             pkgsinfos = PkgsDatabase().pkgs_get_infos_details(package_id)
             if not pkgsinfos or pkgsinfos.get('label') == "":
-                logger.error(f"Deployment not rescheduled for mach {hostname} because the package {package_id} does not exist")
-                result["msg"] = f"Deployment not rescheduled for mach {hostname} because the package {package_id} does not exist"
+                logger.error(f"Déploiement non relancé : package {package_id} introuvable pour {hostname}")
+                result["msg"] = f"Déploiement non relancé : package {package_id} introuvable pour {hostname}"
                 result["success"] = False
                 return result
 
+        # === ÉTAPE 5 : Création de la commande MSC ===
+        # Lance la création réelle du déploiement avec les paramètres de planification
         result = MscDatabase().deploy_package_msc(package_id,
                                                   uuid_inventorymachine,
                                                   hostname,
@@ -563,18 +678,28 @@ def deploy_update_major(package_id,
                                                   deployment_intervals=deployment_intervals,
                                                   userconnect=userconnect,
                                                   usercreator=usercreator,
-                                                  list_file=list_file)
+                                                  list_file=list_file,
+                                                  upgrade_parameters=upgrade_parameters)
+        
+        # === ÉTAPE 6 : Enregistrement du succès ===
+        # Si la création MSC a réussi, enregistre la commande dans le journal XMPP
         if result["success"]:
-            XmppMasterDatabase().addlogincommand("root",
+            # Ajoute un enregistrement de connexion pour tracer la création de la commande
+            # avec le login de l'utilisateur qui a créé le déploiement
+            XmppMasterDatabase().addlogincommand(usercreator,
                                                  result["commandid"],
                                                  "", "", "", "", "",
                                                  0, 0, 0, 0, {})
+            logger.info(f"Déploiement créé avec succès : commande {result['commandid']} pour {hostname} par {usercreator}")
 
     except Exception as e:
+        # === GESTION DES ERREURS ===
+        # Capture et enregistre toute exception lors du traitement
         logger.error("\n%s" % (traceback.format_exc()))
         result["msg"] = str(e)
         result["success"] = False
         result["commandid"] = "-1"
+    
     return result
 
 

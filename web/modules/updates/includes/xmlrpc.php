@@ -184,6 +184,36 @@ function xmlrpc_get_os_update_major_details($entity_id,
                                                             $limit]);
 }
 
+/**
+ * Retourne les infos d'upgrade Linux pour une distribution + version source.
+ * Exemple: ('debian', '12').
+ */
+function xmlrpc_get_linux_upgrade_info($distributor_id, $release_version)
+{
+    // Proxy XML-RPC: la logique SQL est côté backend updates/xmppmaster.
+    return xmlCall("updates.get_linux_upgrade_info", [$distributor_id, $release_version]);
+}
+
+/**
+ * Retourne les infos d'upgrade Linux de la version juste avant la cible.
+ * Exemple: ('debian', '13') -> infos de la release 12.
+ */
+function xmlrpc_get_linux_upgrade_info_before_target($distributor_id, $target_version)
+{
+    // Proxy XML-RPC: résout la version source depuis la version cible.
+    return xmlCall("updates.get_linux_upgrade_info_before_target", [$distributor_id, $target_version]);
+}
+
+/**
+ * Retourne les machines Linux candidates au major upgrade pour une entité.
+ * Exemple: ('debian', 42, '13').
+ */
+function xmlrpc_get_linux_upgrade_candidates($distributor_id, $entity_id, $target_version)
+{
+    // Proxy XML-RPC: la sélection des candidats est exécutée côté backend.
+    return xmlCall("updates.get_linux_upgrade_candidates", [$distributor_id, $entity_id, $target_version]);
+}
+
 function xmlrpc_get_os_xmpp_update_major_details($entity_id, $filter="",$start=0, $limit=-1, )
 {
     return xmlCall("updates.get_os_xmpp_update_major_details", [$entity_id, $filter, $start, $limit]);
@@ -195,7 +225,6 @@ function xmlrpc_get_machines_update_grp($entity_id,
 {
     return xmlCall("updates.get_machines_update_grp", [$entity_id, $type, $colonne]);
 }
-// JFKJFK
 function xmlrpc_analyze_machine_compliance_linux($entity_id,
                                                  $filter="",
                                                  $start=-1,
@@ -421,7 +450,8 @@ function xmlrpc_deploy_update_major($package_id,
                                     $deployment_intervals="",
                                     $userconnect="root",
                                     $usercreator="root",
-                                    $list_file="fileslistpackage")
+                                    $list_file="fileslistpackage",
+                                    $upgrade_parameters=null)
 {
     return xmlCall("updates.deploy_update_major", [ $package_id,
                                                     $uuid_inventorymachine,
@@ -432,5 +462,6 @@ function xmlrpc_deploy_update_major($package_id,
                                                     $deployment_intervals,
                                                     $userconnect,
                                                     $usercreator,
-                                                    $list_file]);
+                                                    $list_file,
+                                                    $upgrade_parameters]);
 }

@@ -20360,6 +20360,178 @@ FROM (
             result["datas"].append(tmp)
         return result
 
+    @DatabaseHelper._sessionm
+    def get_linux_upgrade_info(self, session, distributor_id: str, release_version: str):
+        """
+        Retourne les informations d'upgrade Linux pour une distribution et une version source.
+        """
+        normalized_distribution = (distributor_id or "").strip().lower()
+        normalized_release = str(release_version or "").strip()
+
+        if normalized_distribution == "" or normalized_release == "":
+            return False
+
+        query = text("""
+            SELECT
+                release_version,
+                package,
+                packagename,
+                parameters
+            FROM xmppmaster.up_linux_os_versions
+            WHERE LOWER(TRIM(distributor_id)) = :distribution
+              AND TRIM(COALESCE(release_version, '')) = :release_version
+            LIMIT 1
+        """)
+
+        row = session.execute(query, {
+            "distribution": normalized_distribution,
+            "release_version": normalized_release,
+        }).first()
+
+        if not row:
+            return False
+
+        parsed_parameters = {}
+        raw_parameters = row.parameters
+        if isinstance(raw_parameters, dict):
+            parsed_parameters = raw_parameters
+        elif isinstance(raw_parameters, str) and raw_parameters.strip() != "":
+            try:
+                parsed_parameters = json.loads(raw_parameters)
+                if not isinstance(parsed_parameters, dict):
+                    parsed_parameters = {}
+            except Exception:
+                parsed_parameters = {}
+
+        return {
+            "release_version": row.release_version or "",
+            "package": row.package or "",
+            "packagename": row.packagename or "",
+            "parameters": parsed_parameters,
+        }
+
+    @DatabaseHelper._sessionm
+    def get_linux_upgrade_info_before_target(self, session, distributor_id: str, target_version: str):
+        """
+        Retourne les informations d'upgrade de la version immédiatement inférieure à la cible.
+        """
+        normalized_distribution = (distributor_id or "").strip().lower()
+        normalized_target = str(target_version or "").strip()
+
+        if normalized_distribution == "" or normalized_target == "":
+            return False
+
+        try:
+            float(normalized_target)
+        except (TypeError, ValueError):
+            return False
+
+        query = text("""
+            SELECT
+                release_version,
+                package,
+                packagename,
+                parameters
+            FROM xmppmaster.up_linux_os_versions
+            WHERE LOWER(TRIM(distributor_id)) = :distribution
+              AND NULLIF(TRIM(COALESCE(release_version, '')), '') IS NOT NULL
+              AND CAST(release_version AS DECIMAL(10,4)) < CAST(:target_version AS DECIMAL(10,4))
+            ORDER BY CAST(release_version AS DECIMAL(10,4)) DESC
+            LIMIT 1
+        """)
+
+        row = session.execute(query, {
+            "distribution": normalized_distribution,
+            "target_version": normalized_target,
+        }).first()
+
+        if not row:
+            return False
+
+        parsed_parameters = {}
+        raw_parameters = row.parameters
+        if isinstance(raw_parameters, dict):
+            parsed_parameters = raw_parameters
+        elif isinstance(raw_parameters, str) and raw_parameters.strip() != "":
+            try:
+                parsed_parameters = json.loads(raw_parameters)
+                if not isinstance(parsed_parameters, dict):
+                    parsed_parameters = {}
+            except Exception:
+                parsed_parameters = {}
+
+        return {
+            "release_version": row.release_version or "",
+            "package": row.package or "",
+            "packagename": row.packagename or "",
+            "parameters": parsed_parameters,
+        }
+
+    @DatabaseHelper._sessionm
+    def get_linux_upgrade_candidates(self, session, distributor_id: str, entity_id, target_version: str):
+        """
+        Retourne les machines candidates à un upgrade majeur Linux pour une entité/distribution.
+        """
+        normalized_distribution = (distributor_id or "").strip().lower()
+        normalized_target = str(target_version or "").strip()
+
+        if normalized_distribution == "" or normalized_target == "":
+            return []
+
+        try:
+            normalized_entity_id = int(entity_id)
+            float(normalized_target)
+        except (TypeError, ValueError):
+            return []
+
+        query = text("""
+            SELECT
+                uml.harduuid,
+                uml.description,
+                uml.release_version,
+                mx.uuid_inventorymachine,
+                mx.hostname
+            FROM xmppmaster.up_machine_linux uml
+            LEFT JOIN xmppmaster.machines mx
+                ON LOWER(TRIM(COALESCE(mx.uuid_serial_machine, ''))) = LOWER(TRIM(COALESCE(uml.harduuid, '')))
+                OR LOWER(TRIM(REPLACE(COALESCE(mx.uuid_inventorymachine, ''), 'UUID', ''))) = LOWER(TRIM(COALESCE(uml.harduuid, '')))
+            WHERE LOWER(TRIM(uml.distributor_id)) = :distribution
+              AND uml.entity_id = :entity_id
+              AND NULLIF(TRIM(COALESCE(uml.release_version, '')), '') IS NOT NULL
+              AND CAST(uml.release_version AS DECIMAL(10,4)) < CAST(:target_version AS DECIMAL(10,4))
+            ORDER BY CAST(uml.release_version AS DECIMAL(10,4)) ASC, COALESCE(mx.hostname, uml.description) ASC
+        """)
+
+        rows = session.execute(query, {
+            "distribution": normalized_distribution,
+            "entity_id": normalized_entity_id,
+            "target_version": normalized_target,
+        }).fetchall()
+
+        candidates = []
+        for row in rows:
+            raw_uuid_inventory = (row.uuid_inventorymachine or "").strip()
+            raw_harduuid = (row.harduuid or "").strip()
+
+            # Le substitute attend un UUID GLPI (préfixe UUID).
+            if raw_uuid_inventory:
+                candidate_uuid = raw_uuid_inventory
+                if not candidate_uuid.startswith("UUID"):
+                    candidate_uuid = f"UUID{candidate_uuid}"
+            elif raw_harduuid:
+                candidate_uuid = f"UUID{raw_harduuid}"
+            else:
+                candidate_uuid = ""
+
+            candidates.append({
+                "harduuid": raw_harduuid,
+                "uuid_inventorymachine": candidate_uuid,
+                "hostname": (row.hostname or row.description or raw_harduuid or "").strip(),
+                "release_version": row.release_version or "",
+            })
+
+        return candidates
+
 
     @DatabaseHelper._sessionm
     def get_distribution_version_compliance(
