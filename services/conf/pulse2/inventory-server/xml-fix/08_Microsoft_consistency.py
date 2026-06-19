@@ -22,6 +22,16 @@ def xml_fix(xml):
 
                 if subelem2.tag == "SOFTWARES":
                     for subelem3 in subelem2:
+                        # Sometime filesize is a float value
+                        if subelem3.tag == "FILESIZE":
+                            tmp = subelem3.text
+                            try:
+                                tmp = float(subelem3.text.strip())
+                                tmp = int(tmp)
+                            except:
+                                tmp = 0
+                            subelem3.text = str(tmp)
+
                         if subelem3.tag == "NAME":
                             # Convert Microsoft KB updates
                             #  from: {CE2CDD62-0124-36CA-84D3-9F4DCF5C5BD9}.KB960043
