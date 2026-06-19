@@ -39,6 +39,7 @@ require_once("functions.php");
 // set DEBUG to true to display debug elements
 // set DEBUG to false to return the text file content
 header('Content-Type: text/plain; charset=UTF-8');
+
 if (!empty($_GET['debug']) && $_GET['debug'] == 1) {
     define("DEBUG", true);
 } else {
@@ -129,7 +130,7 @@ else{
 //
 // Now we need to know if the machine is known in GLPI from its UUID
 $known = false;
-$computerName = "New Machine";
+$computerName = "";
 
 
 if($uuid != ""){
@@ -161,25 +162,8 @@ $bind3 = [];
 $datenow = date("Y-m-d H:i:s", time());
 
 $bind3["status"] = "TODO";
-$bind3["startdate"] = $datenow;
-$bind3["enddate"] = $datenow;
 
 if($known){
-    // Previous request...
-    // $sql3= "SELECT
-    //     actions.*,
-    //     servers.jid
-    // from actions
-    // join servers on actions.server_id=servers.id
-    // where
-    //     actions.status = :status
-    //     and actions.date_start <= :startdate
-    //     and actions.date_end > :enddate
-    //     and (actions.uuid = :uuid ";
-
-    // $bind3["uuid"] = $uuid;
-
-
     $sql3= "SELECT
         distinct(actions.id),
         actions.server_id,
@@ -201,8 +185,8 @@ if($known){
     left join actionStatus on actions.id = actionStatus.action_id and actionStatus.uuid=:uuid1
     where
         (coalesce(actionStatus.status, actions.status) = :status
-        and actions.date_start <= :startdate
-        and actions.date_end > :enddate
+        and actions.date_start <= NOW()
+        and actions.date_end > NOW()
         and actions.uuid = :uuid2 ";
 
     $bind3["uuid1"] = $uuid;
@@ -224,8 +208,8 @@ else{
     join servers on actions.server_id=servers.id
     where
         actions.status = :status
-        and actions.date_start <= :startdate
-        and actions.date_end > :enddate
+        and actions.date_start <= NOW()
+        and actions.date_end > NOW()
         and actions.uuid = ''
         and servers.jid = :jid";
 
@@ -300,7 +284,7 @@ $domain = explode("/", explode("@", $jid)[1])[0];
 
 
 $ipxeAction = "set url_path http://\${next-server}/downloads/davos/
-set kernel_args boot=live config noswap edd=on nomodeset raid=noautodetect fetch=\${url_path}fs.squashfs davos_action=XMPP davos_sub_action=".strtoupper($selectedAction["name"])." davos_action_id=$selectedAction[id] davos_srv=\${next-server} davos_mac=\${net0/mac} davos_uuid=\${uuid} davos_xmpp_jid=$jid davos_xmpp_domain=$domain dump_path=inventories timereboot=2 initrd=initrd.img
+set kernel_args boot=live config noswap edd=on nomodeset raid=noautodetect fetch=\${url_path}fs.squashfs davos_action=XMPP davos_sub_action=".strtoupper($selectedAction["name"])." davos_action_id=$selectedAction[id] davos_srv=\${next-server} davos_mac=\${net0/mac} davos_uuid=\${uuid} davos_xmpp_jid=$jid davos_xmpp_domain=$domain davos_hostname=$computerName dump_path=inventories timereboot=2 initrd=initrd.img
 kernel \${url_path}vmlinuz \${kernel_args}
 initrd \${url_path}initrd.img
 boot ";
