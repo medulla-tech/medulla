@@ -381,8 +381,8 @@ VALUES
     Zorin OS
     ========================== */
 
-('zorin','17',1,1,'2029-06-30',NULL,'Zorin OS 17 (Ubuntu 22.04 base)','dfd3b8dc-linuxupdategenericcommand_p','linux-update-generic-command',NULL),
-('zorin','16',0,0,'2027-04-30',NULL,'Zorin OS 16 (Ubuntu 20.04 base)','dfd3b8dc-linuxupdategenericcommand_p','linux-update-generic-command',JSON_OBJECT('target_version','17','target_codename','zorin17','repo_profile','zorin17-ubuntu2204','change_ticket','MAINT-ZORIN-16-17-2026','allow_third_party_repositories',false)),
+('zorin','17',1,1,'2029-06-30',NULL,'Zorin OS 17','dfd3b8dc-linuxupdategenericcommand_p','linux-update-generic-command',NULL),
+('zorin','16',0,0,'2027-04-30',NULL,'Zorin OS 16','dfd3b8dc-linuxupdategenericcommand_p','linux-update-generic-command',JSON_OBJECT('target_version','17','target_codename','zorin17','repo_profile','zorin17-ubuntu2204','change_ticket','MAINT-ZORIN-16-17-2026','allow_third_party_repositories',false)),
 ('zorin','17.3',1,0,'2027-04-01 00:00:00',NULL,'Zorin OS 17.3','dfd3b8dc-linuxupdategenericcommand_p','linux-update-generic-command',NULL),
 ('zorin','17.2',0,0,'2027-04-01 00:00:00',NULL,'Zorin OS 17.2','dfd3b8dc-linuxupdategenericcommand_p','linux-update-generic-command',NULL),
 ('zorin','17.1',0,0,'2027-04-01 00:00:00',NULL,'Zorin OS 17.1','dfd3b8dc-linuxupdategenericcommand_p','linux-update-generic-command',NULL),
@@ -521,11 +521,11 @@ SET name = CASE
     WHEN distributor_id = 'mint' AND release_version = '22.2' THEN 'Zara'
     WHEN distributor_id = 'mint' AND release_version = '22.3' THEN 'Zena'
     -- Zorin OS releases
-    WHEN distributor_id = 'zorin' AND release_version = '16' THEN 'Ubuntu 20.04'
-    WHEN distributor_id = 'zorin' AND release_version = '17' THEN 'Ubuntu 22.04'
-    WHEN distributor_id = 'zorin' AND release_version = '17.1' THEN 'Ubuntu 22.04 SP1'
-    WHEN distributor_id = 'zorin' AND release_version = '17.2' THEN 'Ubuntu 22.04 SP2'
-    WHEN distributor_id = 'zorin' AND release_version = '17.3' THEN 'Ubuntu 22.04 SP3'
+    WHEN distributor_id = 'zorin' AND release_version = '16' THEN 'Zorin OS 16'
+    WHEN distributor_id = 'zorin' AND release_version = '17' THEN 'Zorin OS 17'
+    WHEN distributor_id = 'zorin' AND release_version = '17.1' THEN 'Zorin OS 17.1'
+    WHEN distributor_id = 'zorin' AND release_version = '17.2' THEN 'Zorin OS 17.2'
+    WHEN distributor_id = 'zorin' AND release_version = '17.3' THEN 'Zorin OS 17.3'
     WHEN distributor_id = 'zorin' AND release_version = '18' THEN 'Ubuntu 24.04'
     -- RHEL/CentOS/Rocky/AlmaLinux (version codenames)
     WHEN distributor_id = 'rhel' AND release_version = '6' THEN 'seller'
