@@ -2144,9 +2144,10 @@ class MobileDatabase(DatabaseHelper):
         # front uses s but back uses ms
         if 'applicationSettings' in config_data and isinstance(config_data['applicationSettings'], list):
             for incoming_setting in config_data['applicationSettings']:
-                if 'lastUpdate' in incoming_setting and incoming_setting['lastUpdate']:
-                    incoming_setting['lastUpdate'] = int(incoming_setting['lastUpdate'] * 1000)
-            
+                for ts_field in ('lastUpdate', 'tempId'):
+                    if incoming_setting.get(ts_field):
+                        incoming_setting[ts_field] = int(incoming_setting[ts_field] * 1000)
+
             existing['applicationSettings'] = config_data['applicationSettings']
 
         logging.getLogger().info(f"Final payload to HMDM (after merge): {json.dumps(existing, indent=2)}")
