@@ -369,6 +369,48 @@ VALUES
 
 /* ==========================
    Ubuntu
+   Ubuntu
+    Ubuntu 4.04   warty warthog
+    Ubuntu 5.04   hoary hedgehog
+    Ubuntu 5.10   breezy badger
+    Ubuntu 6.06 LTS   dapper dragon
+    Ubuntu 6.10   edgy etch
+    Ubuntu 7.04   gutsy gibbon
+    Ubuntu 7.10   gutsy gibbon
+    Ubuntu 8.04 LTS   hardy heron
+    Ubuntu 8.10   intrepid ibex
+    Ubuntu 9.04   jaunty jackalope
+    Ubuntu 9.10   karmic koala
+    Ubuntu 10.04 LTS   lucid lynx
+    Ubuntu 10.10   maverick meerkat
+    Ubuntu 11.04   natty narwhal
+    Ubuntu 11.10   oneiric ocelot
+    Ubuntu 12.04 LTS   precise pangolin
+    Ubuntu 12.10   quantal quetzal
+    Ubuntu 13.04   raring ringtail
+    Ubuntu 13.10   saucy salamander
+    Ubuntu 14.04 LTS   trusty tahr
+    Ubuntu 14.10   utopic unicorn
+    Ubuntu 15.04   vibrant vulture
+    Ubuntu 15.10   wily werewolf
+    Ubuntu 16.04 LTS   xenial xerus
+    Ubuntu 16.10   yakkety yak
+    Ubuntu 17.04   zesty zapus
+    Ubuntu 17.10   artful aardvark
+    Ubuntu 18.04 LTS   bionic beaver
+    Ubuntu 18.10   cosmic cuttlefish
+    Ubuntu 19.04   disco dingo
+    Ubuntu 19.10   eoan ermine
+    Ubuntu 20.04 LTS   focal fossa
+    Ubuntu 20.10   groovy gerbil
+    Ubuntu 21.04   hirsute hippo
+    Ubuntu 21.10   impish indri
+    Ubuntu 22.04 LTS   jammy jellyfish
+    Ubuntu 22.10   kinetic kudu
+    Ubuntu 23.04   lunar lobos
+    Ubuntu 23.10   mantic minotaur
+    Ubuntu 24.04 LTS   noble numbat
+    Ubuntu 24.10   oracular oriole
    ========================== */
 
 ('ubuntu','26.04',1,1,'2031-05-31','2041-04-30','Ubuntu 26.04 LTS','dfd3b8dc-linuxupdategenericcommand_p','linux-update-generic-command',NULL),
@@ -379,6 +421,23 @@ VALUES
 
 /* ==========================
     Zorin OS
+    Zorin OS 1   based on Ubuntu 10.04
+    Zorin OS 2   based on Ubuntu 10.10
+    Zorin OS 3   based on Ubuntu 11.04
+    Zorin OS 3.2   based on Ubuntu 11.04
+    Zorin OS 4   based on Ubuntu 11.10
+    Zorin OS 5   based on Ubuntu 12.04 LTS
+    Zorin OS 6   based on Ubuntu 12.04 LTS
+    Zorin OS 7   based on Ubuntu 14.04 LTS
+    Zorin OS 8   based on Ubuntu 14.04 LTS
+    Zorin OS 9   based on Ubuntu 16.04 LTS
+    Zorin OS 10   based on Ubuntu 16.04 LTS
+    Zorin OS 11   based on Ubuntu 17.04
+    Zorin OS 12   based on Ubuntu 17.10
+    Zorin OS 15   based on Ubuntu 18.04 LTS
+    Zorin OS 16   based on Ubuntu 20.04 LTS
+    Zorin OS 17   based on Ubuntu 22.04 LTS
+    Zorin OS 18   based on Ubuntu 24.04 LTS
     ========================== */
 
 ('zorin','17',1,1,'2029-06-30',NULL,'Zorin OS 17 (Ubuntu 22.04 base)','dfd3b8dc-linuxupdategenericcommand_p','linux-update-generic-command',NULL),
@@ -405,7 +464,14 @@ VALUES
 ('mint','21',0,0,'2027-04-30',NULL,'Linux Mint 21','dfd3b8dc-linuxupdategenericcommand_p','linux-update-generic-command',JSON_OBJECT('target_version','22.3','target_codename','wilma','repo_profile','mint22-ubuntu2404','change_ticket','MAINT-MINT-21-22-2026','allow_third_party_repositories',false)),
 
 /* ==========================
-   RHEL
+   Red Hat Enterprise Linux
+    RHEL 3       -
+    RHEL 4       -
+    RHEL 5       tetraflex
+    RHEL 6       seller
+    RHEL 7       maipo
+    RHEL 8       -
+    RHEL 9       -
    ========================== */
 
 ('rhel','10',1,1,'2035-05-31','2038-05-31','RHEL 10','dfd3b8dc-linuxupdategenericcommand_p','linux-update-generic-command',NULL),
