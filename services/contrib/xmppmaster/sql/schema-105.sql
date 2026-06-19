@@ -528,6 +528,7 @@ SET name = CASE
     WHEN distributor_id = 'zorin' AND release_version = '17.3' THEN 'Ubuntu 22.04 SP3'
     WHEN distributor_id = 'zorin' AND release_version = '18' THEN 'Ubuntu 24.04'
     -- RHEL/CentOS/Rocky/AlmaLinux (version codenames)
+    WHEN distributor_id = 'rhel' AND release_version = '6' THEN 'seller'
     WHEN distributor_id = 'rhel' AND release_version = '7' THEN 'maipo'
     WHEN distributor_id = 'rhel' AND release_version = '8' THEN 'ootpa'
     WHEN distributor_id = 'rhel' AND release_version = '9' THEN 'plow'
