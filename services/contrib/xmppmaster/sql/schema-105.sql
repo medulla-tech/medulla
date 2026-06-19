@@ -381,11 +381,11 @@ VALUES
     Zorin OS
     ========================== */
 
-('zorin','17',1,1,'2029-06-30',NULL,'Zorin OS 17','dfd3b8dc-linuxupdategenericcommand_p','linux-update-generic-command',NULL),
-('zorin','16',0,0,'2027-04-30',NULL,'Zorin OS 16','dfd3b8dc-linuxupdategenericcommand_p','linux-update-generic-command',JSON_OBJECT('target_version','17','target_codename','zorin17','repo_profile','zorin17-ubuntu2204','change_ticket','MAINT-ZORIN-16-17-2026','allow_third_party_repositories',false)),
-('zorin','17.3',1,0,'2027-04-01 00:00:00',NULL,'Zorin OS 17.3','dfd3b8dc-linuxupdategenericcommand_p','linux-update-generic-command',NULL),
-('zorin','17.2',0,0,'2027-04-01 00:00:00',NULL,'Zorin OS 17.2','dfd3b8dc-linuxupdategenericcommand_p','linux-update-generic-command',NULL),
-('zorin','17.1',0,0,'2027-04-01 00:00:00',NULL,'Zorin OS 17.1','dfd3b8dc-linuxupdategenericcommand_p','linux-update-generic-command',NULL),
+('zorin','17',1,1,'2029-06-30',NULL,'Zorin OS 17 (Ubuntu 22.04 base)','dfd3b8dc-linuxupdategenericcommand_p','linux-update-generic-command',NULL),
+('zorin','16',0,0,'2027-04-30',NULL,'Zorin OS 16 (Ubuntu 20.04 base)','dfd3b8dc-linuxupdategenericcommand_p','linux-update-generic-command',JSON_OBJECT('target_version','17','target_codename','zorin17','repo_profile','zorin17-ubuntu2204','change_ticket','MAINT-ZORIN-16-17-2026','allow_third_party_repositories',false)),
+('zorin','17.3',1,0,'2027-04-01 00:00:00',NULL,'Zorin OS 17.3 (Ubuntu 22.04 SP3 base)','dfd3b8dc-linuxupdategenericcommand_p','linux-update-generic-command',NULL),
+('zorin','17.2',0,0,'2027-04-01 00:00:00',NULL,'Zorin OS 17.2 (Ubuntu 22.04 SP2 base)','dfd3b8dc-linuxupdategenericcommand_p','linux-update-generic-command',NULL),
+('zorin','17.1',0,0,'2027-04-01 00:00:00',NULL,'Zorin OS 17.1 (Ubuntu 22.04 SP1 base)','dfd3b8dc-linuxupdategenericcommand_p','linux-update-generic-command',NULL),
 
 /* ==========================
    Linux Mint
