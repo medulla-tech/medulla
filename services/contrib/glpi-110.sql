@@ -87,8 +87,8 @@ CREATE OR REPLACE VIEW glpi_view_computers_items_printer AS
         is_dynamic
     FROM
         glpi_assets_assets_peripheralassets
-    WHERE
-        itemtype_asset = 'Printer';
+    WHERE itemtype_asset = 'Computer'
+        AND itemtype_peripheral = 'Printer';
 
 CREATE OR REPLACE VIEW glpi_view_computers_items_peripheral AS
     SELECT
@@ -99,8 +99,8 @@ CREATE OR REPLACE VIEW glpi_view_computers_items_peripheral AS
         is_dynamic
     FROM
         glpi_assets_assets_peripheralassets
-    WHERE
-        itemtype_asset = 'Peripheral';
+    WHERE itemtype_asset = 'Computer'
+        AND itemtype_peripheral = 'Peripheral';
 
 CREATE OR REPLACE VIEW glpi_view_peripherals_manufacturers AS
     SELECT
