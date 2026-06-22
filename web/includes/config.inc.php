@@ -132,6 +132,15 @@ function id_clean($val)
     return preg_replace('/[^a-zA-Z0-9._\- ]/', '', (string)$val);
 }
 
+// Returns the installation type ("onpremise" or "saas") read from mmc.ini.
+// Presence and validity are enforced at boot in modules.inc.php, so this
+// helper can be called freely without re-checking.
+function getInstallType()
+{
+    global $conf;
+    return $conf['global']['install_type'];
+}
+
 // Providers (OIDC)
 function get_providers_list($client)
 {

@@ -284,26 +284,29 @@ function xmlrpc_get_acl_profiles() {
     return xmlCall("admin.get_acl_profiles", []);
 }
 
-function xmlrpc_add_acl_profile($profileName) {
-    return xmlCall("admin.add_acl_profile", [$profileName]);
+// Note: xmlrpc_add_acl_profile() was removed. Adding a profile in the UI
+// now goes through xmlrpc_create_glpi_profile_and_register() which keeps
+// Medulla's acl_profiles and GLPI's glpi_profiles in sync.
+function xmlrpc_create_glpi_profile_and_register($profileName, $tokenuser = null) {
+    return xmlCall("admin.create_glpi_profile_and_register", [$profileName, $tokenuser]);
 }
 
-function xmlrpc_delete_acl_profile($profileName) {
-    return xmlCall("admin.delete_acl_profile", [$profileName]);
+function xmlrpc_delete_acl_profile($profileName, $tokenuser = null) {
+    return xmlCall("admin.delete_acl_profile", [$profileName, $tokenuser]);
 }
 
-function xmlrpc_get_acl_profile_features($profileName = null) {
-    return xmlCall("admin.get_acl_profile_features", [$profileName]);
+function xmlrpc_get_acl_profile_features($profileName = null, $installType = null) {
+    return xmlCall("admin.get_acl_profile_features", [$profileName, $installType]);
 }
 
-function xmlrpc_set_acl_profile_features($profileName, $featuresDict) {
-    return xmlCall("admin.set_acl_profile_features", [$profileName, $featuresDict]);
+function xmlrpc_set_acl_profile_features($profileName, $featuresDict, $installType = null) {
+    return xmlCall("admin.set_acl_profile_features", [$profileName, $featuresDict, $installType]);
 }
 
-function xmlrpc_build_acl_string_for_profile($profileName) {
-    return xmlCall("admin.build_acl_string_for_profile", [$profileName]);
+function xmlrpc_build_acl_string_for_profile($profileName, $installType = null) {
+    return xmlCall("admin.build_acl_string_for_profile", [$profileName, $installType]);
 }
 
-function xmlrpc_get_acl_feature_definitions() {
-    return xmlCall("admin.get_acl_feature_definitions", []);
+function xmlrpc_get_acl_feature_definitions($installType = null) {
+    return xmlCall("admin.get_acl_feature_definitions", [$installType]);
 }

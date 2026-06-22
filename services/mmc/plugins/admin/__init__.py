@@ -938,6 +938,47 @@ def get_config_sections():
 
 # ---- ACL Feature Management ----
 
+# Installation type ('onpremise' or 'saas') read once from /etc/mmc/mmc.ini.
+# The PHP frontend refuses to start without this setting, so on a healthy
+# stack it is guaranteed to be present. None means "could not read it"
+# (e.g. unit tests, missing file) and disables install_type-aware filtering.
+_INSTALL_TYPE_MMC_INI_PATH = "/etc/mmc/mmc.ini"
+_install_type_cache = None
+_install_type_loaded = False
+
+
+def _get_install_type():
+    """Read install_type from /etc/mmc/mmc.ini, cached for the agent's lifetime."""
+    global _install_type_cache, _install_type_loaded
+    if _install_type_loaded:
+        return _install_type_cache
+    _install_type_loaded = True
+    try:
+        from configparser import ConfigParser
+        import os
+        if not os.path.isfile(_INSTALL_TYPE_MMC_INI_PATH):
+            logger.warning("install_type: %s not found, filtering disabled", _INSTALL_TYPE_MMC_INI_PATH)
+            return None
+        cp = ConfigParser()
+        cp.read(_INSTALL_TYPE_MMC_INI_PATH)
+        value = cp.get("global", "install_type", fallback=None)
+        if value is None:
+            logger.warning("install_type missing in [global] of %s, filtering disabled",
+                           _INSTALL_TYPE_MMC_INI_PATH)
+            return None
+        value = value.strip()
+        if value not in ("onpremise", "saas"):
+            logger.warning("install_type has invalid value %r in %s, filtering disabled",
+                           value, _INSTALL_TYPE_MMC_INI_PATH)
+            return None
+        _install_type_cache = value
+        logger.info("install_type = %s (read from %s)", value, _INSTALL_TYPE_MMC_INI_PATH)
+        return value
+    except Exception as e:
+        logger.warning("install_type: could not read %s: %s", _INSTALL_TYPE_MMC_INI_PATH, e)
+        return None
+
+
 def get_acl_categories():
     """Get all categories ordered by display_order."""
     return AdminDatabase().get_acl_categories()
@@ -950,22 +991,152 @@ def add_acl_profile(profile_name):
     """Add a new profile."""
     return AdminDatabase().add_acl_profile(profile_name)
 
-def delete_acl_profile(profile_name):
-    """Delete a profile and its feature selections."""
-    return AdminDatabase().delete_acl_profile(profile_name)
+CREATE_PROFILE_TEMPLATE = "Observer"
 
-def get_acl_feature_definitions():
-    """Get all feature definitions from the database."""
-    return AdminDatabase().get_acl_feature_definitions()
+def create_glpi_profile_and_register(profile_name, tokenuser=None):
+    """Make a profile available in Medulla's ACL UI by ensuring it exists on
+    both sides:
+      1. If the profile already exists in GLPI (case/space/underscore-insensitive
+         match), it is reused as-is — no duplicate is created.
+      2. Otherwise it is cloned from the GLPI template profile
+         (CREATE_PROFILE_TEMPLATE, default 'Self-Service') so the new profile
+         starts with the template's per-resource rights instead of being empty.
+         If the template profile is missing, fall back to creating an empty
+         profile (Medulla's ACL still gates the UI, GLPI access stays minimal).
+      3. The profile is then registered in acl_profiles so it appears in the
+         ACL matrix and in the editUser select.
 
-def get_acl_profile_features(profile_name=None):
-    """Get feature selections for a profile (or all profiles)."""
-    return AdminDatabase().get_acl_profile_features(profile_name)
+    Returns: dict {ok: bool, glpi_id: int|None, created_in_glpi: bool,
+                   cloned_from: str|None, error: str|None}
+    """
+    profile_name = (profile_name or "").strip()
+    if not profile_name:
+        return {"ok": False, "error": "empty profile name"}
 
-def set_acl_profile_features(profile_name, features_dict):
-    """Set feature selections for a profile."""
-    return AdminDatabase().set_acl_profile_features(profile_name, features_dict)
+    try:
+        client = get_glpi_client(tokenuser=tokenuser)
+        if not client:
+            return {"ok": False, "error": "could not initialise GLPI client"}
 
-def build_acl_string_for_profile(profile_name):
-    """Build the complete ACL string for a profile from its enabled features."""
-    return AdminDatabase().build_acl_string_for_profile(profile_name)
+        # Normalised matching, same logic as get_profiles_in_conf
+        norm = lambda s: re.sub(r'[\s_-]+', '', s or '').lower()
+        try:
+            existing = client.get_list('profiles', False) or []
+        except Exception:
+            existing = []
+        match = next((p for p in existing if norm(p.get('name', '')) == norm(profile_name)), None)
+
+        cloned_from = None
+        glpi_id_to_rollback = None  # set only when this call created the GLPI profile
+        if match is not None:
+            glpi_id = match.get('id')
+            created_in_glpi = False
+        else:
+            template = next((p for p in existing if norm(p.get('name', '')) == norm(CREATE_PROFILE_TEMPLATE)), None)
+            if template:
+                # clone_profile rolls back its own half-created profile on failure
+                # (see agent/mmc/support/apirest/glpi/__init__.py:clone_profile)
+                glpi_id = client.clone_profile(template.get('id'), profile_name)
+                cloned_from = template.get('name')
+            else:
+                logger.warning(f"Template profile {CREATE_PROFILE_TEMPLATE!r} not found in GLPI, creating empty profile")
+                glpi_id = client.create_profile(profile_name)
+            created_in_glpi = True
+            glpi_id_to_rollback = glpi_id
+
+        try:
+            AdminDatabase().add_acl_profile(profile_name)
+        except Exception as db_err:
+            # The GLPI profile was just created by us; remove it so we don't
+            # leak an orphan when the Medulla-side registration fails.
+            if glpi_id_to_rollback is not None:
+                try:
+                    client.delete_profile(glpi_id_to_rollback)
+                except Exception as rb_err:
+                    logger.error(f"Rollback of GLPI profile id={glpi_id_to_rollback} failed: {rb_err}")
+            raise db_err
+
+        return {
+            "ok": True,
+            "glpi_id": glpi_id,
+            "created_in_glpi": created_in_glpi,
+            "cloned_from": cloned_from,
+            "error": None,
+        }
+    except Exception as e:
+        logger.error(f"create_glpi_profile_and_register failed for {profile_name!r}: {e}", exc_info=True)
+        return {"ok": False, "error": str(e)}
+
+def delete_acl_profile(profile_name, tokenuser=None):
+    """Delete a profile from Medulla AND from GLPI.
+
+    Refuses to delete a built-in profile (Super-Admin / Admin / Technician).
+    The GLPI deletion is best-effort: if it fails, the Medulla-side deletion
+    still goes through and the error is returned alongside ok=True so the UI
+    can report it (the Medulla side is the source of truth for our matrix).
+
+    Returns dict {ok: bool, deleted_in_glpi: bool, error: str|None}.
+    """
+    db = AdminDatabase()
+    if profile_name in db.PROTECTED_PROFILES:
+        return {"ok": False, "deleted_in_glpi": False, "error": "protected built-in profile"}
+
+    glpi_error = None
+    deleted_in_glpi = False
+
+    try:
+        client = get_glpi_client(tokenuser=tokenuser)
+        if client:
+            norm = lambda s: re.sub(r'[\s_-]+', '', s or '').lower()
+            try:
+                existing = client.get_list('profiles', False) or []
+            except Exception as e:
+                existing = []
+                glpi_error = f"could not list GLPI profiles: {e}"
+            match = next((p for p in existing if norm(p.get('name', '')) == norm(profile_name)), None)
+            if match is not None:
+                try:
+                    client.delete_profile(match.get('id'))
+                    deleted_in_glpi = True
+                except Exception as e:
+                    glpi_error = f"GLPI delete failed: {e}"
+    except Exception as e:
+        glpi_error = f"GLPI client error: {e}"
+
+    ok = db.delete_acl_profile(profile_name)
+    return {"ok": bool(ok), "deleted_in_glpi": deleted_in_glpi, "error": glpi_error}
+
+def get_acl_feature_definitions(install_type=None):
+    """Get all feature definitions from the database.
+
+    install_type: 'onpremise' | 'saas' | None. When provided, only features
+    whose acl_feature_definitions.install_types SET contains the value are
+    returned. None disables filtering (backwards compatible).
+    """
+    return AdminDatabase().get_acl_feature_definitions(install_type)
+
+def get_acl_profile_features(profile_name=None, install_type=None):
+    """Get feature selections for a profile (or all profiles).
+
+    install_type: 'onpremise' | 'saas' | None. When provided, only rows whose
+    install_type is 'both' or matches the value are returned.
+    """
+    return AdminDatabase().get_acl_profile_features(profile_name, install_type)
+
+def set_acl_profile_features(profile_name, features_dict, install_type=None):
+    """Set feature selections for a profile.
+
+    install_type: 'onpremise' | 'saas' | None. When provided, only rows for
+    that install_type are replaced; rows for the other type and 'both' rows
+    are left untouched. None preserves the legacy behaviour (replaces every
+    row for the profile, stored as 'both').
+    """
+    return AdminDatabase().set_acl_profile_features(profile_name, features_dict, install_type)
+
+def build_acl_string_for_profile(profile_name, install_type=None):
+    """Build the complete ACL string for a profile from its enabled features.
+
+    install_type: 'onpremise' | 'saas' | None. When provided, only entries
+    relevant to that install type contribute to the ACL string.
+    """
+    return AdminDatabase().build_acl_string_for_profile(profile_name, install_type)
