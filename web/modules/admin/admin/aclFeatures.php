@@ -30,21 +30,85 @@ $p->display();
 ?>
 <?php
 
+// Current installation type (onpremise|saas) — drives feature visibility and per-profile pre-assignments
+$installType = getInstallType();
+
+// Built-in profiles that cannot be removed (must match PROTECTED_PROFILES in
+// services/pulse2/database/admin/__init__.py — the backend enforces this too).
+$protectedProfiles = ['Super-Admin', 'Admin', 'Technician'];
+
+// Handle "add profile" / "delete profile" POST actions early so the page can
+// reload with the up-to-date profile list (Post/Redirect/Get pattern).
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_profile'])) {
+    $newName = trim((string)($_POST['profile_name'] ?? ''));
+    // Allow Unicode letters/digits (French/Spanish profile names like "Gestionnaire").
+    // The /u modifier enables UTF-8 parsing; \p{L} and \p{N} match any Unicode
+    // letter or digit.
+    if ($newName === '' || !preg_match('/^[\p{L}\p{N}_\- ]+$/u', $newName)) {
+        new NotifyWidgetFailure(_T("Invalid profile name", "admin"));
+    } else {
+        // Make the profile available on both sides (GLPI + Medulla's acl_profiles).
+        // Reuses an existing GLPI profile of the same name when one exists.
+        $res = xmlrpc_create_glpi_profile_and_register($newName);
+        if (is_array($res) && !empty($res['ok'])) {
+            if (!empty($res['created_in_glpi'])) {
+                if (!empty($res['cloned_from'])) {
+                    new NotifyWidgetSuccess(sprintf(_T("Profile '%s' created in GLPI (cloned from '%s') and added to Medulla", "admin"), $newName, $res['cloned_from']));
+                } else {
+                    new NotifyWidgetSuccess(sprintf(_T("Profile '%s' created in GLPI and added to Medulla", "admin"), $newName));
+                }
+            } else {
+                new NotifyWidgetSuccess(sprintf(_T("Existing GLPI profile '%s' linked to Medulla", "admin"), $newName));
+            }
+        } else {
+            $errMsg = (is_array($res) && !empty($res['error'])) ? $res['error'] : _T("Unknown error", "admin");
+            new NotifyWidgetFailure(sprintf(_T("Failed to add profile '%s': %s", "admin"), $newName, $errMsg));
+        }
+    }
+    header("Location: " . urlStrRedirect("admin/admin/aclFeatures"));
+    exit;
+}
+// POST (not GET) to mitigate CSRF: a malicious <img src="…?delete_profile_name=Foo">
+// would otherwise be enough to delete a profile when an admin loads the page.
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_profile_name'])) {
+    $delName = (string)$_POST['delete_profile_name'];
+    if (in_array($delName, $protectedProfiles, true)) {
+        new NotifyWidgetFailure(_T("Built-in profiles cannot be deleted", "admin"));
+    } elseif ($delName !== '') {
+        $tokenuser = (isset($_SESSION['glpi_user']) && is_array($_SESSION['glpi_user']))
+            ? ($_SESSION['glpi_user']['api_token'] ?? null) : null;
+        $res = xmlrpc_delete_acl_profile($delName, $tokenuser);
+        if (is_array($res) && !empty($res['ok'])) {
+            if (!empty($res['deleted_in_glpi'])) {
+                new NotifyWidgetSuccess(sprintf(_T("Profile '%s' deleted from Medulla and GLPI", "admin"), $delName));
+            } else {
+                $note = !empty($res['error']) ? $res['error'] : _T("not found in GLPI", "admin");
+                new NotifyWidgetSuccess(sprintf(_T("Profile '%s' removed from Medulla (GLPI: %s)", "admin"), $delName, $note));
+            }
+        } else {
+            $err = (is_array($res) && !empty($res['error'])) ? $res['error'] : _T("Unknown error", "admin");
+            new NotifyWidgetFailure(sprintf(_T("Failed to delete profile '%s': %s", "admin"), $delName, $err));
+        }
+    }
+    header("Location: " . urlStrRedirect("admin/admin/aclFeatures"));
+    exit;
+}
+
 // Profiles from database
 $profiles = xmlrpc_get_acl_profiles();
 if (empty($profiles)) {
-    $profiles = ['Super-Admin', 'Admin', 'Technician']; // fallback
+    $profiles = $protectedProfiles; // fallback
 }
 
-// Load feature definitions from database
-$featureDefs = xmlrpc_get_acl_feature_definitions();
+// Load feature definitions from database, filtered by current install type
+$featureDefs = xmlrpc_get_acl_feature_definitions($installType);
 if (empty($featureDefs) || !is_array($featureDefs)) {
     echo '<div class="alert alert-warning">' . _T("No feature definitions found in database. Please apply schema-010.sql.", "admin") . '</div>';
     return;
 }
 
-// Load current selections from DB
-$currentSelections = xmlrpc_get_acl_profile_features();
+// Load current selections from DB, filtered by current install type
+$currentSelections = xmlrpc_get_acl_profile_features(null, $installType);
 $selectionMap = [];
 if (is_array($currentSelections)) {
     foreach ($currentSelections as $row) {
@@ -70,7 +134,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_acl'])) {
         if ($profile === 'Super-Admin') {
             $featuresDict['acl_management'] = 'rw';
         }
-        xmlrpc_set_acl_profile_features($profile, $featuresDict);
+        xmlrpc_set_acl_profile_features($profile, $featuresDict, $installType);
     }
     new NotifyWidgetSuccess(_T("ACL configuration saved successfully", "admin"));
     header("Location: " . urlStrRedirect("admin/admin/aclFeatures"));
@@ -99,6 +163,7 @@ foreach ($featureDefs as $fkey => $fdef) {
 
     <div class="acl-actions">
         <button type="submit" class="btnPrimary"><?php echo _T("Save", "admin"); ?></button>
+        <button type="button" class="btnPrimary" onclick="openManageProfilesPopup(event); return false;"><?php echo _T("Manage profiles", "admin"); ?></button>
     </div>
 
     <table class="listinfos acl-table">
@@ -239,6 +304,96 @@ foreach ($featureDefs as $fkey => $fdef) {
     </div>
 </form>
 
+<!-- Manage-profiles popup content (extracted from DOM at click time) -->
+<template id="aclManageProfilesTemplate">
+    <div class="manage-profiles-popup">
+        <h1><?php echo _T("Manage profiles", "admin"); ?></h1>
+
+        <p class="manage-profiles-help">
+            <?php echo _T("Profile names must match an existing GLPI profile to take effect. Built-in profiles cannot be removed.", "admin"); ?>
+        </p>
+
+        <div class="manage-profiles-section">
+            <div class="info-header"><?php echo _T("Existing profiles", "admin"); ?></div>
+            <table class="manage-profiles-table">
+                <tbody>
+                    <?php
+                    $deleteFormAction = urlStrRedirect("admin/admin/aclFeatures");
+                    foreach ($profiles as $p):
+                        $isProtected = in_array($p, $protectedProfiles, true);
+                        $formId = 'deleteProfileForm-' . md5($p);
+                        $confirmMsg = sprintf(_T("Delete profile \"%s\" and all its ACL settings?", "admin"), $p);
+                    ?>
+                        <tr>
+                            <td class="manage-profiles-name">
+                                <?php echo htmlspecialchars($p); ?>
+                                <?php if ($isProtected): ?>
+                                    <span class="manage-profiles-tag">(<?php echo _T("built-in", "admin"); ?>)</span>
+                                <?php endif; ?>
+                            </td>
+                            <td class="manage-profiles-action">
+                                <?php if (!$isProtected): ?>
+                                    <!-- Real POST form, submitted via JS after a Medulla confirmation popup.
+                                         POST (not GET) so a malicious <img src> can't trigger the deletion. -->
+                                    <form id="<?php echo htmlspecialchars($formId, ENT_QUOTES); ?>"
+                                          method="post" action="<?php echo $deleteFormAction; ?>"
+                                          style="display:inline">
+                                        <input type="hidden" name="delete_profile_name" value="<?php echo htmlspecialchars($p, ENT_QUOTES); ?>">
+                                    </form>
+                                    <a href="#" class="btnSecondary"
+                                       onclick='displayConfirmationPopup(<?php echo json_encode($confirmMsg, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT); ?>, "javascript:document.getElementById(\"<?php echo htmlspecialchars($formId, ENT_QUOTES); ?>\").submit();void(0);"); return false;'><?php echo _T("Delete", "admin"); ?></a>
+                                <?php else: ?>
+                                    <span class="manage-profiles-dash">—</span>
+                                <?php endif; ?>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="manage-profiles-section">
+            <div class="info-header"><?php echo _T("Add a profile", "admin"); ?></div>
+            <form method="post" action="<?php echo urlStrRedirect("admin/admin/aclFeatures"); ?>" class="manage-profiles-add">
+                <input type="hidden" name="add_profile" value="1">
+                <input type="text" name="profile_name" placeholder="<?php echo _T("New profile name", "admin"); ?>"
+                       pattern="[\p{L}\p{N}_\- ]+" required>
+                <button type="submit" class="btnPrimary"><?php echo _T("Add", "admin"); ?></button>
+            </form>
+        </div>
+    </div>
+</template>
+
+<style>
+    .manage-profiles-popup { width: 100%; }
+    .manage-profiles-help { margin: 0 0 16px 0; color: var(--gray-500, #666); font-size: 0.9em; }
+    .manage-profiles-section {
+        background: var(--gray-50, #fafafa);
+        border-radius: var(--radius-lg, 8px);
+        border: 1px solid var(--gray-200, #e5e5e5);
+        overflow: hidden;
+        margin-bottom: 16px;
+    }
+    .manage-profiles-section .info-header {
+        background: var(--color-primary, #1f6e8c);
+        color: #fff;
+        padding: 8px 16px;
+        font-size: 0.95em;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    .manage-profiles-table { width: 100%; border-collapse: collapse; margin: 0; }
+    .manage-profiles-table tbody tr { border-bottom: 1px solid var(--gray-200, #e5e5e5); }
+    .manage-profiles-table tbody tr:last-child { border-bottom: none; }
+    .manage-profiles-name { padding: 10px 16px; color: var(--color-text-dark, #222); }
+    .manage-profiles-tag { color: var(--gray-500, #888); font-size: 0.85em; margin-left: 8px; }
+    .manage-profiles-action { padding: 8px 16px; text-align: right; width: 110px; }
+    .manage-profiles-dash { color: var(--gray-500, #aaa); }
+    .manage-profiles-add { display: flex; gap: 8px; padding: 14px 16px; align-items: center; }
+    .manage-profiles-add input[type="text"] { flex: 1; padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+</style>
+
 <script>
     // RW checked → auto-check RO
     document.querySelectorAll('input[data-level="rw"]').forEach(function(rwBox) {
@@ -307,6 +462,22 @@ foreach ($featureDefs as $fkey => $fdef) {
     }
 
     bindMasterCheckboxSync();
+
+    // Manage-profiles popup uses Medulla's native popup system (PopupWindow,
+    // displayConfirmationPopup, closePopup) so the style matches the rest of
+    // the app (e.g. the Remote popup in msc/vnc_guacamole.php).
+    // After an add/delete action the server redirects without a modal=open
+    // flag, so the page reloads with the modal closed and the new state
+    // (extra/missing column) visible directly in the ACL matrix.
+    function openManageProfilesPopup(evt) {
+        var tpl = document.getElementById('aclManageProfilesTemplate');
+        if (!tpl) return;
+        // <template>.content keeps the markup inert; clone it for injection
+        var content = tpl.content ? tpl.content.cloneNode(true) : tpl.cloneNode(true);
+        var wrapper = document.createElement('div');
+        wrapper.appendChild(content);
+        PopupWindow(evt || window.event, null, 560, null, wrapper.innerHTML);
+    }
 
     // Tooltip positioning with fixed position
     document.querySelectorAll('.acl-tooltip').forEach(function(el) {

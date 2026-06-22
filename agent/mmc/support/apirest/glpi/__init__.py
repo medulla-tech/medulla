@@ -646,6 +646,134 @@ class GLPIClient:
             f"[+] Entité '{name}' créée avec ID : {new_id} sous parent ID {parent_entity_id}")
         return new_id
 
+    def delete_profile(self, profile_id):
+        """
+        Deletes a GLPI profile by id. Returns True on success.
+        """
+        if not self.SESSION_TOKEN:
+            logger.error("Session non initialisée. Veuillez initialiser la session.")
+            raise Exception("Session non initialisée. Veuillez initialiser la session.")
+
+        headers = self._headers()
+        response = requests.delete(
+            f"{self.URL_BASE}/Profile/{int(profile_id)}",
+            headers=headers
+        )
+        if response.status_code > 300:
+            logger.error(f"error{response.status_code} delete profile '{response.text}'")
+            response.raise_for_status()
+        logger.info(f"[+] Profil GLPI id={profile_id} supprimé")
+        return True
+
+    def clone_profile(self, source_profile_id, new_name):
+        """
+        Clone a GLPI profile by replicating the source profile and all its
+        ProfileRight rows onto a new profile named new_name.
+
+        GLPI 10's REST API does NOT expose the native /Profile/<id>/Clone
+        endpoint (it returns ERROR_RESOURCE_NOT_FOUND_NOR_COMMONDBTM for
+        the Profile itemtype). So we replicate manually: create the new
+        profile, list the source's ProfileRight rows, then PUT each value
+        onto the matching row of the new profile.
+
+        Returns the new profile's id. Raises on failure.
+        """
+        if not self.SESSION_TOKEN:
+            logger.error("Session non initialisée. Veuillez initialiser la session.")
+            raise Exception("Session non initialisée. Veuillez initialiser la session.")
+
+        headers = self._headers()
+
+        # Inherit the source's interface (central / helpdesk)
+        r = requests.get(f"{self.URL_BASE}/Profile/{int(source_profile_id)}", headers=headers)
+        if r.status_code > 300:
+            r.raise_for_status()
+        src_interface = (r.json() or {}).get('interface') or 'central'
+
+        # Create the new profile (GLPI auto-creates a ProfileRight row per
+        # resource type, all with rights=0)
+        new_id = self.create_profile(new_name, interface=src_interface)
+
+        # List source and new profile rights. GLPI paginates these endpoints
+        # (default ~5 rows); range=0-999 covers any profile (~100-110 rows).
+        # Status 206 Partial Content is a normal pagination success.
+        def list_rights(profile_id):
+            resp = requests.get(
+                f"{self.URL_BASE}/Profile/{int(profile_id)}/ProfileRight?range=0-999",
+                headers=headers
+            )
+            if resp.status_code > 300 and resp.status_code != 206:
+                resp.raise_for_status()
+            return resp.json() or []
+
+        # Any failure during the PUT loop drops the half-cloned profile so the
+        # caller doesn't end up with an orphan in GLPI.
+        try:
+            source_rights = list_rights(source_profile_id)
+            new_by_name = {row['name']: row['id'] for row in list_rights(new_id) if row.get('name')}
+            copied = 0
+            for src in source_rights:
+                target_id = new_by_name.get(src.get('name'))
+                if target_id is None:
+                    continue
+                upd = requests.put(
+                    f"{self.URL_BASE}/ProfileRight/{int(target_id)}",
+                    headers=headers,
+                    data=json.dumps({"input": {"id": target_id, "rights": src.get('rights', 0)}})
+                )
+                if upd.status_code > 300:
+                    raise Exception(f"ProfileRight update failed for {src.get('name')!r}: HTTP {upd.status_code} {upd.text[:120]}")
+                copied += 1
+        except Exception:
+            try:
+                self.delete_profile(new_id)
+            except Exception:
+                pass
+            raise
+
+        logger.info(f"[+] Profil '{new_name}' cloné depuis profil id={source_profile_id}: {copied} droits copiés (nouveau id={new_id})")
+        return new_id
+
+    def create_profile(self, name, interface="central"):
+        """
+        Creates a GLPI profile with the given name. Returns the new profile's
+        GLPI id on success. Raises on failure.
+        """
+        if not self.SESSION_TOKEN:
+            logger.error("Session non initialisée. Veuillez initialiser la session.")
+            raise Exception("Session non initialisée. Veuillez initialiser la session.")
+
+        try:
+            headers = self._headers()
+        except Exception as e:
+            logger.error(f"Session/headers error: {e}")
+            return 0
+
+        data = {
+            "input": {
+                "name": name,
+                "interface": interface,
+            }
+        }
+
+        response = requests.post(
+            f"{self.URL_BASE}/Profile",
+            headers=headers,
+            data=json.dumps(data)
+        )
+
+        if response.status_code > 300:
+            logger.error(f"error{response.status_code} creation profile '{response.text}'")
+            response.raise_for_status()
+
+        new_id = response.json().get('id')
+        if new_id is None:
+            logger.error("[!] Échec de la création du profil — droits insuffisants ou autre erreur ?")
+            raise Exception("[!] Échec de la création du profil — droits insuffisants ou autre erreur ?")
+
+        logger.info(f"[+] Profil '{name}' créé avec ID : {new_id}")
+        return new_id
+
     # UPDATE
     def update_user(self, user_id, item_name, new_value):
         """

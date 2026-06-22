@@ -66,7 +66,8 @@ class GlpiProvisioner(ProvisionerI):
             self.logger.debug("Selected GLPI profile is %s" % selected)
             acls = None
             try:
-                acls = AdminDatabase().build_acl_string_for_profile(selected)
+                from mmc.plugins.admin import _get_install_type
+                acls = AdminDatabase().build_acl_string_for_profile(selected, _get_install_type())
             except Exception as e:
                 self.logger.error("ACL build failed for profile %s: %s" % (selected, e))
             if not acls:

@@ -94,7 +94,7 @@ function validateToken($login, $token)
     $glpiLogin = $_SESSION['login'];
     $profileName = xmlrpc_get_user_profile_name($glpiLogin);
 
-    $aclString = xmlCall("admin.build_acl_string_for_profile", [$profileName]);
+    $aclString = xmlCall("admin.build_acl_string_for_profile", [$profileName, getInstallType()]);
 
     $setOk = setAcl($glpiLogin, $aclString);
     if (!$setOk && !isXMLRPCError()) {

@@ -424,8 +424,8 @@ if (isset($_POST["bcreate"])) {
             $postedProfileName = $profileIdToName[$key] ?? (xmlrpc_get_profile_name($postedProfileId, $tokenuser) ?: '');
         }
         if ($postedProfileName !== '') {
-            // Build ACL from DB features
-            $aclString = xmlrpc_build_acl_string_for_profile($postedProfileName);
+            // Build ACL from DB features, filtered by current install type
+            $aclString = xmlrpc_build_acl_string_for_profile($postedProfileName, getInstallType());
             if ($aclString !== '') {
                 $okAcl = @setAcl($postedUsername, $aclString);
                 if ($okAcl === false || $okAcl === null) {
