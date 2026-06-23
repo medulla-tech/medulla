@@ -27,14 +27,8 @@ maxperpage = 10
 ; community can be yes or no
 community = yes
 
-; Type of installation
-; install_type can be onpremise (on-site OR dedicated single-tenant SaaS)
-;                 or saas (mutualised multi-tenant SaaS only)
-; Defaults to 'onpremise' if missing or invalid.
-; It drives the ACL system: some features are only relevant for one type, and
-; default per-profile rights can differ between onpremise and saas.
-; Changing this value requires restarting mmc-agent (the value is cached on
-; the agent side for the lifetime of the process).
+; Installation type (drives the ACL system)
+; Values: onpremise (default) | saas
 install_type = onpremise
 
 ; Declare if this installation is a demo version or not
