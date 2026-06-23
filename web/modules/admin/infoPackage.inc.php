@@ -216,6 +216,11 @@ $page->setFile("modules/admin/admin/deleteCluster.php");
 $page->setOptions(array("visible" => False, "noHeader" => True, "AJAX" => True));
 $submod->addPage($page);
 
+$page = new Page("deleteAclProfile", _T('Delete ACL Profile', 'admin'));
+$page->setFile("modules/admin/admin/deleteAclProfile.php");
+$page->setOptions(array("visible" => False, "noHeader" => True, "AJAX" => True));
+$submod->addPage($page);
+
 $page = new Page("listUsersofEntity", _T('List users of Entity', 'admin'));
 $page->setFile("modules/admin/admin/listUsersofEntity.php");
 $submod->addPage($page);
