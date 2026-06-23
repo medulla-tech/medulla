@@ -68,31 +68,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_profile'])) {
     header("Location: " . urlStrRedirect("admin/admin/aclFeatures"));
     exit;
 }
-// POST (not GET) to mitigate CSRF: a malicious <img src="…?delete_profile_name=Foo">
-// would otherwise be enough to delete a profile when an admin loads the page.
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_profile_name'])) {
-    $delName = (string)$_POST['delete_profile_name'];
-    if (in_array($delName, $protectedProfiles, true)) {
-        new NotifyWidgetFailure(_T("Built-in profiles cannot be deleted", "admin"));
-    } elseif ($delName !== '') {
-        $tokenuser = (isset($_SESSION['glpi_user']) && is_array($_SESSION['glpi_user']))
-            ? ($_SESSION['glpi_user']['api_token'] ?? null) : null;
-        $res = xmlrpc_delete_acl_profile($delName, $tokenuser);
-        if (is_array($res) && !empty($res['ok'])) {
-            if (!empty($res['deleted_in_glpi'])) {
-                new NotifyWidgetSuccess(sprintf(_T("Profile '%s' deleted from Medulla and GLPI", "admin"), $delName));
-            } else {
-                $note = !empty($res['error']) ? $res['error'] : _T("not found in GLPI", "admin");
-                new NotifyWidgetSuccess(sprintf(_T("Profile '%s' removed from Medulla (GLPI: %s)", "admin"), $delName, $note));
-            }
-        } else {
-            $err = (is_array($res) && !empty($res['error'])) ? $res['error'] : _T("Unknown error", "admin");
-            new NotifyWidgetFailure(sprintf(_T("Failed to delete profile '%s': %s", "admin"), $delName, $err));
-        }
-    }
-    header("Location: " . urlStrRedirect("admin/admin/aclFeatures"));
-    exit;
-}
+// Deletion goes through admin/admin/deleteAclProfile (PopupForm pattern,
+// declared in admin/infoPackage.inc.php) — same convention as deleteCluster,
+// deleteEntity, deleteUser, deleteProvider.
 
 // Profiles from database
 $profiles = xmlrpc_get_acl_profiles();
@@ -317,12 +295,9 @@ foreach ($featureDefs as $fkey => $fdef) {
             <div class="info-header"><?php echo _T("Existing profiles", "admin"); ?></div>
             <table class="manage-profiles-table">
                 <tbody>
-                    <?php
-                    $deleteFormAction = urlStrRedirect("admin/admin/aclFeatures");
-                    foreach ($profiles as $p):
+                    <?php foreach ($profiles as $p):
                         $isProtected = in_array($p, $protectedProfiles, true);
-                        $formId = 'deleteProfileForm-' . md5($p);
-                        $confirmMsg = sprintf(_T("Delete profile \"%s\" and all its ACL settings?", "admin"), $p);
+                        $deleteUrl = urlStr("admin/admin/deleteAclProfile", array("profile_name" => $p));
                     ?>
                         <tr>
                             <td class="manage-profiles-name">
@@ -333,15 +308,8 @@ foreach ($featureDefs as $fkey => $fdef) {
                             </td>
                             <td class="manage-profiles-action">
                                 <?php if (!$isProtected): ?>
-                                    <!-- Real POST form, submitted via JS after a Medulla confirmation popup.
-                                         POST (not GET) so a malicious <img src> can't trigger the deletion. -->
-                                    <form id="<?php echo htmlspecialchars($formId, ENT_QUOTES); ?>"
-                                          method="post" action="<?php echo $deleteFormAction; ?>"
-                                          style="display:inline">
-                                        <input type="hidden" name="delete_profile_name" value="<?php echo htmlspecialchars($p, ENT_QUOTES); ?>">
-                                    </form>
-                                    <a href="#" class="btnSecondary"
-                                       onclick='displayConfirmationPopup(<?php echo json_encode($confirmMsg, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT); ?>, "javascript:document.getElementById(\"<?php echo htmlspecialchars($formId, ENT_QUOTES); ?>\").submit();void(0);"); return false;'><?php echo _T("Delete", "admin"); ?></a>
+                                    <a href="<?php echo $deleteUrl; ?>" class="btnSecondary"
+                                       onclick="showPopup(event, '<?php echo $deleteUrl; ?>'); return false;"><?php echo _T("Delete", "admin"); ?></a>
                                 <?php else: ?>
                                     <span class="manage-profiles-dash">—</span>
                                 <?php endif; ?>
