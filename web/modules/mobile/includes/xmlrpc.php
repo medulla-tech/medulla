@@ -1,4 +1,10 @@
 <?php
+if (!defined('MMC_MOBILE_AUTO_TRACE_DONE')) {
+    define('MMC_MOBILE_AUTO_TRACE_DONE', true);
+    if (function_exists('mmc_trace_module_auto_from_include')) {
+        mmc_trace_module_auto_from_include('mobile', 'mmc_dev_trace', 'INFO', 'MOBILE');
+    }
+}
 function xmlrpc_add_hmdm_device($name, $configuration_id, $description="", $groups=null, $imei="", $phone="", $device_id=null){
     return xmlCall("mobile.addHmdmDevice", array($name, $configuration_id, $description, $groups, $imei, $phone, $device_id));
 }

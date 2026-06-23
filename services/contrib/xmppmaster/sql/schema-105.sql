@@ -1,3 +1,7 @@
+-- SPDX-FileCopyrightText: 2021 Siveo, http://www.siveo.net/
+-- SPDX-FileCopyrightText: 2024-2025 Medulla, http://www.medulla-tech.io
+-- SPDX-License-Identifier: GPL-2.0-or-later
+-- file : services/contrib/xmppmaster/sql/schema-105.sql
 --
 -- (c) 2026, http://www.medulla-tech.io/
 --
@@ -146,6 +150,7 @@ CREATE TABLE up_linux_os_versions (
     id INT NOT NULL AUTO_INCREMENT COMMENT 'Identifiant unique',
     distributor_id VARCHAR(64) NOT NULL COMMENT 'Distribution Linux normalisee (debian, ubuntu, rhel, ...)',
     release_version VARCHAR(20) NOT NULL COMMENT 'Version de la distribution',
+    target_version VARCHAR(20) NULL COMMENT 'Version cible de mise a niveau majeure',
     name VARCHAR(255) NULL COMMENT 'Nom de la release (jessie, bullseye, jammy, Wilma, etc.)',
     is_managed TINYINT(1) NOT NULL DEFAULT 1 COMMENT 'Indique si cette version est gérée/supportée',
     is_current_stable TINYINT(1) NOT NULL DEFAULT 0 COMMENT 'Compatibilite historique: non pilote par Approved Linux releases',
@@ -558,7 +563,14 @@ VALUES
 -- It will have no effect when the table is recreated but ensures compatibility on existing installations
 ALTER TABLE up_linux_os_versions 
 ADD COLUMN IF NOT EXISTS name VARCHAR(255) NULL AFTER release_version,
+ADD COLUMN IF NOT EXISTS target_version VARCHAR(20) NULL AFTER release_version,
 ADD COLUMN IF NOT EXISTS is_managed TINYINT(1) DEFAULT 1 AFTER name;
+
+-- Synchronise target_version depuis parameters.target_version quand disponible.
+UPDATE up_linux_os_versions
+SET target_version = NULLIF(JSON_UNQUOTE(JSON_EXTRACT(parameters, '$.target_version')), '')
+WHERE target_version IS NULL
+    AND parameters IS NOT NULL;
 
 -- Populate name and is_managed columns for all distributions
 UPDATE up_linux_os_versions 

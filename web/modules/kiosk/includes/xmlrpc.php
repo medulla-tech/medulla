@@ -1,4 +1,10 @@
 <?php
+if (!defined('MMC_KIOSK_AUTO_TRACE_DONE')) {
+    define('MMC_KIOSK_AUTO_TRACE_DONE', true);
+    if (function_exists('mmc_trace_module_auto_from_include')) {
+        mmc_trace_module_auto_from_include('kiosk', 'mmc_dev_trace', 'INFO', 'KIOSK');
+    }
+}
 /*
  * (c) 2016-2023 Siveo, http://www.siveo.net
  * (c) 2024-2025 Medulla, http://www.medulla-tech.io

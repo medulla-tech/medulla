@@ -1,4 +1,10 @@
 <?php
+if (!defined('MMC_STORE_AUTO_TRACE_DONE')) {
+    define('MMC_STORE_AUTO_TRACE_DONE', true);
+    if (function_exists('mmc_trace_module_auto_from_include')) {
+        mmc_trace_module_auto_from_include('store', 'mmc_dev_trace', 'INFO', 'STORE');
+    }
+}
 /*
  * (c) 2024-2025 Medulla, http://www.medulla-tech.io
  *

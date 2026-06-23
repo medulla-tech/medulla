@@ -20468,18 +20468,58 @@ FROM (
         }
 
     @DatabaseHelper._sessionm
-    def get_linux_upgrade_candidates(self, session, distributor_id: str, entity_id, target_version: str):
+    def get_linux_upgrade_candidates(self, session, distributor_id: str, entity_id, target_version: Optional[str] = None):
         """
         Retourne les machines candidates à un upgrade majeur Linux pour une entité/distribution.
+
+        Notes:
+            - target_version est optionnel (compatibilité ascendante).
+            - Si absent, la cible est résolue depuis up_linux_os_versions.target_version,
+              puis fallback JSON parameters.target_version, puis release_version.
         """
         normalized_distribution = (distributor_id or "").strip().lower()
-        normalized_target = str(target_version or "").strip()
 
-        if normalized_distribution == "" or normalized_target == "":
+        if normalized_distribution == "":
             return []
 
         try:
             normalized_entity_id = int(entity_id)
+        except (TypeError, ValueError):
+            return []
+
+        # Compatibilité: si la cible est fournie explicitement, elle reste prioritaire.
+        normalized_target = str(target_version or "").strip()
+        if normalized_target == "":
+            target_query = text("""
+                SELECT
+                    COALESCE(
+                        NULLIF(TRIM(target_version), ''),
+                        NULLIF(JSON_UNQUOTE(JSON_EXTRACT(parameters, '$.target_version')), ''),
+                        NULLIF(TRIM(release_version), '')
+                    ) AS effective_target
+                FROM xmppmaster.up_linux_os_versions
+                WHERE LOWER(TRIM(distributor_id)) = :distribution
+                ORDER BY
+                    is_recommended DESC,
+                    is_current_stable DESC,
+                    is_managed DESC,
+                    CAST(COALESCE(
+                        NULLIF(TRIM(target_version), ''),
+                        NULLIF(JSON_UNQUOTE(JSON_EXTRACT(parameters, '$.target_version')), ''),
+                        NULLIF(TRIM(release_version), '')
+                    ) AS DECIMAL(10,4)) DESC,
+                    id DESC
+                LIMIT 1
+            """)
+            target_row = session.execute(target_query, {
+                "distribution": normalized_distribution,
+            }).first()
+            normalized_target = str(target_row.effective_target or "").strip() if target_row else ""
+
+        if normalized_target == "":
+            return []
+
+        try:
             float(normalized_target)
         except (TypeError, ValueError):
             return []
@@ -20528,6 +20568,7 @@ FROM (
                 "uuid_inventorymachine": candidate_uuid,
                 "hostname": (row.hostname or row.description or raw_harduuid or "").strip(),
                 "release_version": row.release_version or "",
+                "target_version": normalized_target,
             })
 
         return candidates
@@ -20541,6 +20582,8 @@ FROM (
         entity_id: Optional[Union[int, List[int]]] = None,
         start: Optional[int] = None,
         limit: Optional[int] = None,
+        hostname_filter: Optional[str] = None,
+        end: Optional[int] = None,
     ) -> Dict[str, Any]:
         """
         Calcule la conformite de version Linux par entite pour une distribution donnee.
@@ -20560,22 +20603,38 @@ FROM (
             entity_id: Filtre entite (None, int, ou liste d'int).
             start: Offset de pagination applique au resultat groupe par entite.
             limit: Taille de page appliquee au resultat groupe par entite.
+            hostname_filter: Filtre optionnel sur le hostname machine.
+              end: Borne de fin optionnelle (exclusive). Si fournie et limit absent,
+                  la limite est calculee via end - start.
 
         Returns:
             dict avec:
             - distribution: distribution normalisee,
             - name_version: nom de la version cible,
             - max_version: version cible,
+            - target_version: alias explicite de la version cible,
             - by_entity: statistiques de conformite par entite.
         """
         self.logger.info(f"=== Debut get_distribution_version_compliance ({distributor_id}) ===")
         self.logger.info(
-            "get_distribution_version_compliance params: distributor_id=%r entity_id=%r start=%r limit=%r",
+            "get_distribution_version_compliance params: distributor_id=%r entity_id=%r start=%r limit=%r end=%r hostname_filter=%r",
             distributor_id,
             entity_id,
             start,
             limit,
+            end,
+            hostname_filter,
         )
+
+        # Fenêtrage start/end: compatibilité avec les appels orientés offset+end.
+        effective_start = start if isinstance(start, int) else None
+        effective_limit = limit if isinstance(limit, int) else None
+        if isinstance(end, int) and end >= 0 and (effective_limit is None or effective_limit <= 0):
+            if isinstance(effective_start, int) and effective_start >= 0:
+                effective_limit = max(0, end - effective_start)
+            else:
+                effective_start = 0
+                effective_limit = end
 
         # Normalise la distribution d'entree (ex: alias redhat -> rhel)
         normalized_distribution = (distributor_id or "").strip().lower()
@@ -20607,7 +20666,7 @@ FROM (
 
         # Diagnostic: liste des versions candidates visibles pour la distribution
         versions_debug_query = text("""
-            SELECT id, distributor_id, release_version, name, is_managed, is_current_stable, is_recommended
+            SELECT id, distributor_id, release_version, target_version, name, is_managed, is_current_stable, is_recommended
             FROM xmppmaster.up_linux_os_versions
             WHERE distributor_id = :distribution
             ORDER BY
@@ -20630,6 +20689,7 @@ FROM (
                     "id": r.id,
                     "distributor_id": r.distributor_id,
                     "version": r.release_version,
+                    "target_version": r.target_version,
                     "name": r.name,
                     "is_managed": r.is_managed,
                     "is_current_stable": r.is_current_stable,
@@ -20641,14 +20701,25 @@ FROM (
 
         # Choisit la version cible qui servira de reference de conformite
         max_version_query = text("""
-            SELECT name, release_version
+            SELECT
+                name,
+                release_version,
+                COALESCE(
+                    NULLIF(TRIM(target_version), ''),
+                    NULLIF(JSON_UNQUOTE(JSON_EXTRACT(parameters, '$.target_version')), ''),
+                    NULLIF(TRIM(release_version), '')
+                ) AS effective_target
             FROM xmppmaster.up_linux_os_versions
             WHERE distributor_id = :distribution
                         ORDER BY
                                 is_managed DESC,
                                 is_current_stable DESC,
                                 is_recommended DESC,
-                                CAST(release_version AS DECIMAL(10, 4)) DESC,
+                                CAST(COALESCE(
+                                    NULLIF(TRIM(target_version), ''),
+                                    NULLIF(JSON_UNQUOTE(JSON_EXTRACT(parameters, '$.target_version')), ''),
+                                    NULLIF(TRIM(release_version), '')
+                                ) AS DECIMAL(10, 4)) DESC,
                                 id DESC
             LIMIT 1;
         """)
@@ -20657,7 +20728,7 @@ FROM (
             {"distribution": normalized_distribution},
         ).first()
 
-        if not row or row.release_version is None:
+        if not row or row.effective_target is None:
             self.logger.warning(
                 "Aucune version cible trouvee dans up_linux_os_versions pour distribution=%s",
                 normalized_distribution,
@@ -20666,9 +20737,11 @@ FROM (
                 "distribution": normalized_distribution,
                 "name_version": None,
                 "max_version": None,
+                "target_version": None,
+                "by_entity": [],
             }
 
-        max_version = row.release_version
+        max_version = str(row.effective_target)
         name_version = row.name
         self.logger.info(
             "Version cible retenue pour %s: version=%r name=%r",
@@ -20681,13 +20754,33 @@ FROM (
         where_clause = "LOWER(upl.distributor_id) = :distributor_id"
         params = {"distributor_id": normalized_distribution, "max_version": str(max_version)}
 
-        if entity_id:
+        if entity_id is not None:
             if isinstance(entity_id, int):
                 where_clause += " AND upl.entity_id = :entity_id"
                 params["entity_id"] = entity_id
             elif isinstance(entity_id, list) and entity_id:
                 where_clause += " AND upl.entity_id IN :entity_ids"
                 params["entity_ids"] = tuple(entity_id)
+
+        normalized_hostname_filter = (hostname_filter or "").strip()
+        if normalized_hostname_filter != "":
+            where_clause += """
+                AND (
+                    EXISTS (
+                        SELECT 1
+                        FROM xmppmaster.machines mx
+                        WHERE
+                            (
+                                LOWER(TRIM(COALESCE(mx.uuid_serial_machine, ''))) = LOWER(TRIM(COALESCE(upl.harduuid, '')))
+                                OR LOWER(TRIM(REPLACE(COALESCE(mx.uuid_inventorymachine, ''), 'UUID', ''))) = LOWER(TRIM(COALESCE(upl.harduuid, '')))
+                            )
+                            AND LOWER(COALESCE(mx.hostname, '')) LIKE LOWER(:hostname_filter)
+                    )
+                    OR LOWER(COALESCE(upl.description, '')) LIKE LOWER(:hostname_filter)
+                    OR LOWER(COALESCE(upl.harduuid, '')) LIKE LOWER(:hostname_filter)
+                )
+            """
+            params["hostname_filter"] = f"%{normalized_hostname_filter}%"
 
         # Agrege les statistiques par entite en comparant release_version a max_version
         stats_query = f"""
@@ -20705,12 +20798,12 @@ FROM (
                 upl.entity_id
         """
 
-        if isinstance(limit, int) and limit > 0:
+        if isinstance(effective_limit, int) and effective_limit > 0:
             stats_query += " LIMIT :limit"
-            params["limit"] = limit
-        if isinstance(start, int) and start >= 0:
+            params["limit"] = effective_limit
+        if isinstance(effective_start, int) and effective_start >= 0:
             stats_query += " OFFSET :start"
-            params["start"] = start
+            params["start"] = effective_start
 
         self.logger.info(
             "Stats query filters: where=%s params=%s",
@@ -20731,6 +20824,21 @@ FROM (
             len(rows),
         )
 
+        requested_entity_ids = []
+        if isinstance(entity_id, int):
+            requested_entity_ids = [int(entity_id)]
+        elif isinstance(entity_id, list):
+            seen_entity_ids = set()
+            for raw_entity_id in entity_id:
+                try:
+                    normalized_entity_id = int(raw_entity_id)
+                except (TypeError, ValueError):
+                    continue
+                if normalized_entity_id in seen_entity_ids:
+                    continue
+                seen_entity_ids.add(normalized_entity_id)
+                requested_entity_ids.append(normalized_entity_id)
+
         by_entity = []
         for row in rows:
             total = int(row.total_machines)
@@ -20747,6 +20855,22 @@ FROM (
                 "compliance_rate": round((up_to_date / total * 100), 2) if total else 0.0,
             })
 
+        # Si une liste d'entités est demandée, on complète les entités absentes
+        # avec des compteurs à zéro pour garder un affichage homogène côté UI.
+        if requested_entity_ids:
+            by_entity_ids = {int(item["entity_id"]) for item in by_entity}
+            for requested_entity_id in requested_entity_ids:
+                if requested_entity_id in by_entity_ids:
+                    continue
+                by_entity.append({
+                    "entity_id": requested_entity_id,
+                    "total_machines": 0,
+                    "outdated_machines": 0,
+                    "up_to_date_machines": 0,
+                    "pending_support_update": 0,
+                    "compliance_rate": 0.0,
+                })
+
         if not by_entity:
             self.logger.warning(
                 "Aucune statistique calculee pour distribution=%s avec entity_id=%r",
@@ -20760,11 +20884,175 @@ FROM (
             "distribution": normalized_distribution,
             "name_version": name_version,
             "max_version": max_version,
+            "target_version": max_version,
             "by_entity": by_entity,
         }
 
         self.logger.info(f"=== Fin get_distribution_version_compliance ({distributor_id}) ===")
         return result
+
+    @DatabaseHelper._sessionm
+    def get_major_machines_by_entity(
+        self,
+        session,
+        distribution: str,
+        entity_id: int,
+        filter: str = "",
+        start: int = 0,
+        limit: int = 50,
+    ) -> Dict[str, Any]:
+        """
+        Retourne la liste paginee des machines d'une entite pour une distribution donnee,
+        avec leur version courante et leur statut de conformite vers la version majeure cible.
+
+        Args:
+            session:      Session SQLAlchemy injectee par le decorateur.
+            distribution: Famille de distribution (ex: debian, fedora, ubuntu).
+            entity_id:    Identifiant numerique de l'entite GLPI.
+            start:        Offset de pagination.
+            limit:        Nombre max de machines retournees.
+            filter:       Filtre sur le hostname (recherche insensible a la casse).
+
+        Returns:
+            dict avec:
+            - distribution: distribution normalisee,
+            - name_version: nom de la version cible,
+            - max_version:  version cible (reference),
+            - total:        nombre total de machines correspondant au filtre,
+            - machines:     liste de dicts par machine.
+        """
+        self.logger.info(
+            "get_major_machines_by_entity: distribution=%r entity_id=%r filter=%r start=%r limit=%r",
+            distribution, entity_id, filter, start, limit,
+        )
+
+        normalized_distribution = (distribution or "").strip().lower()
+        distribution_aliases = {"redhat": "rhel", "zorinos": "zorin", "zorin os": "zorin"}
+        normalized_distribution = distribution_aliases.get(normalized_distribution, normalized_distribution)
+
+        # Recupere la version cible pour cette distribution
+        row = session.execute(text("""
+            SELECT name, release_version
+            FROM xmppmaster.up_linux_os_versions
+            WHERE distributor_id = :distribution
+            ORDER BY
+                is_managed DESC,
+                is_current_stable DESC,
+                is_recommended DESC,
+                CAST(release_version AS DECIMAL(10, 4)) DESC,
+                id DESC
+            LIMIT 1
+        """), {"distribution": normalized_distribution}).first()
+
+        if not row or row.release_version is None:
+            self.logger.warning(
+                "Aucune version cible pour distribution=%s", normalized_distribution
+            )
+            return {
+                "distribution": normalized_distribution,
+                "name_version": None,
+                "max_version": None,
+                "total": 0,
+                "machines": [],
+            }
+
+        max_version = str(row.release_version)
+        name_version = row.name or ""
+
+        params = {
+            "distribution": normalized_distribution,
+            "entity_id": int(entity_id),
+            "max_version": max_version,
+            "filter": f"%{(filter or '').strip()}%",
+        }
+
+        start_value = int(start)
+        limit_value = int(limit)
+        if start_value != -1:
+            params["limit"] = limit_value
+            params["start"] = start_value
+
+        base_where = """
+            LOWER(uml.distributor_id) = :distribution
+            AND uml.entity_id = :entity_id
+            AND NULLIF(TRIM(COALESCE(uml.release_version, '')), '') IS NOT NULL
+            AND (
+                :filter = '%%'
+                OR LOWER(COALESCE(mx.hostname, '')) LIKE LOWER(:filter)
+                OR LOWER(COALESCE(uml.description, '')) LIKE LOWER(:filter)
+                OR LOWER(COALESCE(uml.harduuid, '')) LIKE LOWER(:filter)
+                OR LOWER(COALESCE(mx.uuid_inventorymachine, '')) LIKE LOWER(:filter)
+                OR LOWER(COALESCE(uml.release_version, '')) LIKE LOWER(:filter)
+                OR CAST(uml.entity_id AS CHAR) LIKE :filter
+            )
+        """
+
+        count_row = session.execute(text(f"""
+            SELECT COUNT(*) AS cnt
+            FROM xmppmaster.up_machine_linux uml
+            LEFT JOIN xmppmaster.machines mx
+                ON LOWER(TRIM(COALESCE(mx.uuid_serial_machine, ''))) = LOWER(TRIM(COALESCE(uml.harduuid, '')))
+                OR LOWER(TRIM(REPLACE(COALESCE(mx.uuid_inventorymachine, ''), 'UUID', ''))) = LOWER(TRIM(COALESCE(uml.harduuid, '')))
+            WHERE {base_where}
+        """), params).first()
+
+        total = int(count_row.cnt) if count_row else 0
+
+        data_query = f"""
+            SELECT
+                COALESCE(mx.hostname, uml.description, uml.harduuid) AS hostname,
+                uml.harduuid,
+                mx.uuid_inventorymachine,
+                uml.release_version,
+                uml.distributor_id,
+                CASE
+                    WHEN CAST(NULLIF(uml.release_version,'') AS DECIMAL(10,4)) < CAST(:max_version AS DECIMAL(10,4)) THEN 'outdated'
+                    WHEN CAST(NULLIF(uml.release_version,'') AS DECIMAL(10,4)) = CAST(:max_version AS DECIMAL(10,4)) THEN 'up_to_date'
+                    WHEN CAST(NULLIF(uml.release_version,'') AS DECIMAL(10,4)) > CAST(:max_version AS DECIMAL(10,4)) THEN 'pending'
+                    ELSE 'unknown'
+                END AS status
+            FROM xmppmaster.up_machine_linux uml
+            LEFT JOIN xmppmaster.machines mx
+                ON LOWER(TRIM(COALESCE(mx.uuid_serial_machine, ''))) = LOWER(TRIM(COALESCE(uml.harduuid, '')))
+                OR LOWER(TRIM(REPLACE(COALESCE(mx.uuid_inventorymachine, ''), 'UUID', ''))) = LOWER(TRIM(COALESCE(uml.harduuid, '')))
+            WHERE {base_where}
+            ORDER BY
+                FIELD(status, 'outdated', 'pending', 'up_to_date', 'unknown'),
+                CAST(NULLIF(uml.release_version,'') AS DECIMAL(10,4)) ASC,
+                hostname ASC
+        """
+        if start_value != -1:
+            data_query += " LIMIT :limit OFFSET :start"
+
+        rows = session.execute(text(data_query), params).fetchall()
+
+        machines = []
+        for r in rows:
+            raw_uuid = (r.uuid_inventorymachine or "").strip()
+            harduuid = (r.harduuid or "").strip()
+            if raw_uuid and not raw_uuid.startswith("UUID"):
+                raw_uuid = f"UUID{raw_uuid}"
+            elif not raw_uuid and harduuid:
+                raw_uuid = f"UUID{harduuid}"
+
+            machines.append({
+                "hostname": (r.hostname or harduuid or "").strip(),
+                "harduuid": harduuid,
+                "uuid_inventorymachine": raw_uuid,
+                "release_version": r.release_version or "",
+                "status": r.status or "unknown",
+            })
+
+        self.logger.info(
+            "get_major_machines_by_entity: total=%d returned=%d", total, len(machines)
+        )
+        return {
+            "distribution": normalized_distribution,
+            "name_version": name_version,
+            "max_version": max_version,
+            "total": total,
+            "machines": machines,
+        }
 
     @DatabaseHelper._sessionm
     def add_uninstall_kb_machine(self, session, updateid: str, hostname: str,

@@ -1,4 +1,10 @@
 <?php
+// SPDX-FileCopyrightText: 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+// SPDX-FileCopyrightText: 2007 Mandriva, http://www.mandriva.com
+// SPDX-FileCopyrightText: 2016-2023 Siveo, http://www.siveo.net
+// SPDX-FileCopyrightText: 2024-2025 Medulla, http://www.medulla-tech.io
+// SPDX-License-Identifier: GPL-3.0-or-later
+// file : web/modules/updates/updates/majorDetailsByMachines.php
 /*
  * (c) 2022 Siveo, http://www.siveo.net
  *
@@ -37,7 +43,7 @@ if ($entityName) {
 $p = new PageGenerator($titre);
 $p->setSideMenu($sidemenu);
 $p->display();
-
+echo "dede /home/jfk/git/dev/medulla/web/modules/updates/updates/majorDetailsByMachinesLinux.php";
 // $allowedSources = ["xmppmaster", "glpi"];
 // $dataSource = isset($_GET['source']) && in_array($_GET['source'], $allowedSources) ? $_GET['source'] : "xmppmaster";
 // $nameview = ($dataSource == "xmppmaster") ? "MEDULLA" : "GLPI";

@@ -531,12 +531,13 @@ def get_linux_upgrade_info_before_target(distributor_id, target_version):
     return XmppMasterDatabase().get_linux_upgrade_info_before_target(distributor_id, target_version)
 
 
-def get_linux_upgrade_candidates(distributor_id, entity_id, target_version):
+def get_linux_upgrade_candidates(distributor_id, entity_id, target_version=None):
     """
     Liste les machines candidates à un upgrade majeur Linux pour une entité.
 
     Exemple:
         get_linux_upgrade_candidates("debian", 42, "13")
+        get_linux_upgrade_candidates("debian", 42)
     """
     # Forward XML-RPC vers la couche base xmppmaster.
     return XmppMasterDatabase().get_linux_upgrade_candidates(distributor_id, entity_id, target_version)

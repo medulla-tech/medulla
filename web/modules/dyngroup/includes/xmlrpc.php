@@ -1,4 +1,10 @@
 <?php
+if (!defined('MMC_DYNGROUP_AUTO_TRACE_DONE')) {
+    define('MMC_DYNGROUP_AUTO_TRACE_DONE', true);
+    if (function_exists('mmc_trace_module_auto_from_include')) {
+        mmc_trace_module_auto_from_include('dyngroup', 'mmc_dev_trace', 'INFO', 'DYNGROUP');
+    }
+}
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2009 Mandriva, http://www.mandriva.com

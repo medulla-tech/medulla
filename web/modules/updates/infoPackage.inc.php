@@ -1,4 +1,10 @@
 <?php
+// SPDX-FileCopyrightText: 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+// SPDX-FileCopyrightText: 2007 Mandriva, http://www.mandriva.com
+// SPDX-FileCopyrightText: 2016-2023 Siveo, http://www.siveo.net
+// SPDX-FileCopyrightText: 2024-2025 Medulla, http://www.medulla-tech.io
+// SPDX-License-Identifier: GPL-3.0-or-later
+// file : web/modules/updates/infoPackage.inc.php
 /**
  * (c) 2022-2025 Siveo, http://siveo.net/
  *
@@ -176,15 +182,15 @@ $submod->addPage($page);
 
 
 $page = new Page("ajaxMajorEntitiesList", _T('Entities Major Compliance', 'updates'));
-$page->setFile("modules/updates/updates/major/ajaxMajorEntitiesList.php");
+$page->setFile("modules/updates/updates/ajaxMajorEntitiesList.php");
 $submod->addPage($page);
 
 $page = new Page("ajaxMajorEntitiesListServ", _T('Entities Major Compliance', 'updates'));
-$page->setFile("modules/updates/updates/major/ajaxMajorEntitiesListServ.php");
+$page->setFile("modules/updates/updates/ajaxMajorEntitiesListServ.php");
 $submod->addPage($page);
 
 $page = new Page("ajaxMajorEntitiesListDebian", _T('Entities Major Compliance', 'updates'));
-$page->setFile("modules/updates/updates/major/ajaxMajorEntitiesListDebian.php");
+$page->setFile("modules/updates/updates/ajaxMajorEntitiesListDebian.php");
 $submod->addPage($page);
 
 $page = new Page("ajaxMajorEntitiesListUbuntu", _T('Entities Major Compliance', 'updates'));
@@ -214,6 +220,11 @@ $submod->addPage($page);
 
 $page = new Page("ajaxMajorEntitiesListFedora", _T('Entities Major Compliance', 'updates'));
 $page->setFile("modules/updates/updates/ajaxMajorEntitiesListFedora.php");
+$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
+$submod->addPage($page);
+
+$page = new Page("ajaxMajorMachinesList", _T('Machines Major Compliance', 'updates'));
+$page->setFile("modules/updates/updates/ajaxMajorMachinesList.php");
 $page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
 $submod->addPage($page);
 
@@ -389,6 +400,15 @@ $submod->addPage($page);
 
 $page = new Page("majorDetailsByMachines", _T('Machines major update', 'updates'));
 $page->setFile("modules/updates/updates/majorDetailsByMachines.php");
+$submod->addPage($page);
+
+$page = new Page("ajaxMajorDetailsByMachinesLinux", _T("Details by Machines for Linux major update", "updates"));
+$page->setFile("modules/updates/updates/ajaxMajorDetailsByMachinesLinux.php");
+$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
+$submod->addPage($page);
+
+$page = new Page("majorDetailsByMachinesLinux", _T('Machines Linux major update', 'updates'));
+$page->setFile("modules/updates/updates/majorDetailsByMachinesLinux.php");
 $submod->addPage($page);
 
 $page = new Page("ajaxgroupUpdateMajorEntity", _T("Deployment details on group entity", "updates"));

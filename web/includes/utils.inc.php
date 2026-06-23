@@ -1,4 +1,10 @@
 <?php
+// SPDX-FileCopyrightText: 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+// SPDX-FileCopyrightText: 2007 Mandriva, http://www.mandriva.com
+// SPDX-FileCopyrightText: 2016-2023 Siveo, http://www.siveo.net
+// SPDX-FileCopyrightText: 2024-2025 Medulla, http://www.medulla-tech.io
+// SPDX-License-Identifier: GPL-3.0-or-later
+// file : web/includes/utils.inc.php
 /**
  * Mandriva Management Console (MMC)
  *
@@ -21,6 +27,419 @@
  * You should have received a copy of the GNU General Public License
  * along with MMC. If not, see <https://www.gnu.org/licenses/>.
  */
+
+if (!function_exists('mmc_is_dev_trace_enabled')) {
+    /**
+     * Returns true when development traces are enabled globally (php.ini)
+     * or explicitly for a request (?dev=1 or legacy ?dede=1).
+     */
+    function mmc_is_dev_trace_enabled()
+    {
+        $iniRawValue = get_cfg_var('medulla.dev');
+        if ($iniRawValue === false) {
+            $iniRawValue = ini_get('medulla.dev');
+        }
+        $iniValue = strtolower(trim((string) $iniRawValue));
+        $iniEnabled = in_array($iniValue, ['1', 'true', 'on', 'yes'], true);
+
+        $devValue = isset($_GET['dev']) ? strtolower(trim((string) $_GET['dev'])) : '';
+        $devEnabled = in_array($devValue, ['1', 'true', 'on', 'yes'], true);
+
+        $legacyValue = isset($_GET['dede']) ? strtolower(trim((string) $_GET['dede'])) : '';
+        $legacyEnabled = in_array($legacyValue, ['1', 'true', 'on', 'yes'], true);
+
+        return $iniEnabled || $devEnabled || $legacyEnabled;
+    }
+}
+
+if (!function_exists('mmc_render_dev_trace_window')) {
+    /**
+     * Renders one floating, closable development trace window.
+     *
+     * @param string $scope Trace scope/module label.
+     * @param string $level Trace level.
+     * @param string $message Trace message.
+     * @param array  $context Trace context information.
+     * @return void
+     */
+    function mmc_render_dev_trace_window($scope, $level, $message = '', $context = array())
+    {
+        static $traceWindowIndex = 0;
+        static $renderedTraceKeys = array();
+
+        if (!is_array($context)) {
+            $context = array();
+        }
+
+        $traceKey = isset($context['__trace_key']) ? (string) $context['__trace_key'] : null;
+        unset($context['__trace_key']);
+        if ($traceKey === null) {
+            $traceKey = isset($context['file']) ? 'file:' . (string) $context['file'] : 'trace:' . (string) $scope . ':' . (string) $message;
+        }
+        if (isset($renderedTraceKeys[$traceKey])) {
+            return;
+        }
+        $renderedTraceKeys[$traceKey] = true;
+
+        $traceWindowIndex++;
+        $scope = strtoupper((string) $scope);
+        $level = strtoupper((string) $level);
+        $message = (string) $message;
+        $scopeId = strtolower(preg_replace('/[^a-z0-9_-]+/i', '-', $scope));
+        $traceTextParts = array();
+
+        if ($message !== '') {
+            $traceTextParts[] = $message;
+        }
+        foreach ($context as $key => $value) {
+            $traceTextParts[] = sprintf('%s=%s', $key, $value);
+        }
+
+        $suffix = empty($traceTextParts) ? '' : ' | ' . implode(' | ', $traceTextParts);
+        $traceText = sprintf('DEV_ONLY [%s] [%s]%s', $scope, $level, $suffix);
+        $windowId = sprintf('mmc-dev-trace-%s-%d-%s', $scopeId, $traceWindowIndex, substr(md5($traceText), 0, 8));
+        $getBlockId = $windowId . '-get';
+        $top = 72 + (($traceWindowIndex - 1) * 190);
+
+        echo '<div id="' . htmlspecialchars($windowId, ENT_QUOTES, 'UTF-8') . '" style="position:fixed;top:' . $top . 'px;right:12px;z-index:' . (99990 + $traceWindowIndex) . ';width:min(620px,calc(100vw - 24px));max-height:180px;overflow:auto;border:1px solid #dc2626;background:#fff7ed;color:#7c2d12;margin:0;padding:0;font:12px/1.4 monospace;box-shadow:0 12px 28px rgba(0,0,0,0.28);pointer-events:auto;">';
+        echo '<div data-mmc-dev-trace-drag="1" style="display:flex;align-items:center;justify-content:space-between;gap:12px;background:#dc2626;color:#ffffff;padding:8px 10px;font:bold 12px/1.2 monospace;cursor:move;user-select:none;">';
+        echo '<span>DEV_ONLY [' . htmlspecialchars($scope, ENT_QUOTES, 'UTF-8') . ']</span>';
+        echo '<button type="button" onclick="if(event){event.stopPropagation();}var el=document.getElementById(\'' . htmlspecialchars($windowId, ENT_QUOTES, 'UTF-8') . '\');if(el){el.style.display=\'none\';}" style="border:0;background:#ffffff;color:#991b1b;width:22px;height:22px;padding:0;line-height:22px;text-align:center;font:bold 13px/1 monospace;cursor:pointer;">x</button>';
+        echo '</div>';
+        echo '<div style="padding:10px 12px;white-space:pre-wrap;word-break:break-word;">';
+        echo '<div><strong>level</strong>: ' . htmlspecialchars($level, ENT_QUOTES, 'UTF-8') . '</div>';
+        if ($message !== '') {
+            echo '<div><strong>message</strong>: ' . htmlspecialchars($message, ENT_QUOTES, 'UTF-8') . '</div>';
+        }
+        foreach ($context as $key => $value) {
+            echo '<div><strong>' . htmlspecialchars((string) $key, ENT_QUOTES, 'UTF-8') . '</strong>: ' . htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8') . '</div>';
+        }
+        echo '<button type="button" onclick="if(event){event.stopPropagation();}var el=document.getElementById(\'' . htmlspecialchars($getBlockId, ENT_QUOTES, 'UTF-8') . '\');if(el){el.style.display=(el.style.display===\'none\'?\'block\':\'none\');}" style="margin-top:8px;border:1px solid #dc2626;background:#ffffff;color:#991b1b;padding:3px 8px;font:bold 11px/1.3 monospace;cursor:pointer;">$_GET</button>';
+        echo '<pre id="' . htmlspecialchars($getBlockId, ENT_QUOTES, 'UTF-8') . '" style="display:none;margin:8px 0 0;padding:8px;background:#ffffff;color:#111827;border:1px solid #fed7aa;max-height:220px;overflow:auto;white-space:pre-wrap;word-break:break-word;">' . htmlspecialchars(print_r($_GET, true), ENT_QUOTES, 'UTF-8') . '</pre>';
+        echo '</div>';
+        echo '</div>';
+        echo '<script>(function(){var el=document.getElementById("' . addslashes($windowId) . '");if(!el){return;}var handle=el.querySelector("[data-mmc-dev-trace-drag]");if(!handle){return;}var moving=false,startX=0,startY=0,startLeft=0,startTop=0;function front(){window.mmcDevTraceZ=(window.mmcDevTraceZ||100000)+1;el.style.zIndex=window.mmcDevTraceZ;}el.addEventListener("mousedown",front);handle.addEventListener("mousedown",function(event){if(event.target&&event.target.tagName&&event.target.tagName.toLowerCase()==="button"){return;}front();moving=true;var rect=el.getBoundingClientRect();startX=event.clientX;startY=event.clientY;startLeft=rect.left;startTop=rect.top;el.style.left=startLeft+"px";el.style.top=startTop+"px";el.style.right="auto";event.preventDefault();});document.addEventListener("mousemove",function(event){if(!moving){return;}el.style.left=Math.max(0,startLeft+event.clientX-startX)+"px";el.style.top=Math.max(0,startTop+event.clientY-startY)+"px";});document.addEventListener("mouseup",function(){moving=false;});console.log("' . addslashes($traceText) . '");})();</script>';
+    }
+}
+
+if (!function_exists('mmc_dev_trace')) {
+    /**
+     * Prints a compact development trace line when dev tracing is enabled.
+     */
+    function mmc_dev_trace($level = 'INFO', $message = '', $context = array(), $scope = 'MMC')
+    {
+        if (!mmc_is_dev_trace_enabled()) {
+            return;
+        }
+
+        $allowedLevels = ['DEBUG', 'INFO', 'WARNING', 'ERROR'];
+        $forcedLevel = isset($_GET['dev_level']) ? strtoupper(trim((string) $_GET['dev_level'])) : '';
+        if ($forcedLevel === '' && isset($_GET['dede_level'])) {
+            $forcedLevel = strtoupper(trim((string) $_GET['dede_level']));
+        }
+
+        $level = strtoupper(trim((string) $level));
+        if (in_array($forcedLevel, $allowedLevels, true)) {
+            $level = $forcedLevel;
+        }
+        if (!in_array($level, $allowedLevels, true)) {
+            $level = 'INFO';
+        }
+
+        mmc_render_dev_trace_window($scope, $level, $message, $context);
+    }
+}
+
+if (!function_exists('mmc_dev_trace_error_type')) {
+    /**
+     * Returns a readable PHP error type label.
+     *
+     * @param int $errorType PHP error type constant value.
+     * @return string
+     */
+    function mmc_dev_trace_error_type($errorType)
+    {
+        $errorTypes = array(
+            E_ERROR => 'E_ERROR',
+            E_WARNING => 'E_WARNING',
+            E_PARSE => 'E_PARSE',
+            E_NOTICE => 'E_NOTICE',
+            E_CORE_ERROR => 'E_CORE_ERROR',
+            E_CORE_WARNING => 'E_CORE_WARNING',
+            E_COMPILE_ERROR => 'E_COMPILE_ERROR',
+            E_COMPILE_WARNING => 'E_COMPILE_WARNING',
+            E_USER_ERROR => 'E_USER_ERROR',
+            E_USER_WARNING => 'E_USER_WARNING',
+            E_USER_NOTICE => 'E_USER_NOTICE',
+            E_STRICT => 'E_STRICT',
+            E_RECOVERABLE_ERROR => 'E_RECOVERABLE_ERROR',
+            E_DEPRECATED => 'E_DEPRECATED',
+            E_USER_DEPRECATED => 'E_USER_DEPRECATED',
+        );
+
+        return isset($errorTypes[$errorType]) ? $errorTypes[$errorType] : 'E_UNKNOWN';
+    }
+}
+
+if (!function_exists('mmc_register_dev_error_trace')) {
+    /**
+     * Registers DEV-only PHP error tracing windows.
+     *
+     * @return void
+     */
+    function mmc_register_dev_error_trace()
+    {
+        if (!function_exists('mmc_is_dev_trace_enabled') || !mmc_is_dev_trace_enabled()) {
+            return;
+        }
+
+        if (!empty($GLOBALS['mmc_dev_error_trace_registered'])) {
+            return;
+        }
+        $GLOBALS['mmc_dev_error_trace_registered'] = true;
+
+        set_error_handler(function ($errorType, $errorMessage, $errorFile, $errorLine) {
+            if (!(error_reporting() & $errorType)) {
+                return false;
+            }
+
+            if (!function_exists('mmc_render_dev_trace_window')) {
+                return false;
+            }
+
+            $errorLabel = function_exists('mmc_dev_trace_error_type') ? mmc_dev_trace_error_type($errorType) : 'E_UNKNOWN';
+            mmc_render_dev_trace_window('DEV_ERROR', 'ERROR', $errorLabel, array(
+                '__trace_key' => 'php-error:' . $errorType . ':' . $errorFile . ':' . $errorLine . ':' . md5((string) $errorMessage),
+                'type' => $errorLabel,
+                'error' => $errorMessage,
+                'file' => $errorFile,
+                'line' => $errorLine,
+            ));
+
+            return false;
+        });
+
+        register_shutdown_function(function () {
+            $lastError = error_get_last();
+            if (!is_array($lastError)) {
+                return;
+            }
+
+            $fatalTypes = array(E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR, E_RECOVERABLE_ERROR);
+            if (!in_array($lastError['type'], $fatalTypes, true)) {
+                return;
+            }
+
+            if (!function_exists('mmc_render_dev_trace_window')) {
+                return;
+            }
+
+            $errorLabel = function_exists('mmc_dev_trace_error_type') ? mmc_dev_trace_error_type($lastError['type']) : 'E_FATAL';
+            mmc_render_dev_trace_window('DEV_ERROR', 'ERROR', $errorLabel, array(
+                '__trace_key' => 'php-fatal:' . $lastError['type'] . ':' . $lastError['file'] . ':' . $lastError['line'] . ':' . md5((string) $lastError['message']),
+                'type' => $errorLabel,
+                'error' => $lastError['message'],
+                'file' => $lastError['file'],
+                'line' => $lastError['line'],
+            ));
+        });
+    }
+}
+
+mmc_register_dev_error_trace();
+
+if (!function_exists('mmc_trace_ajax_view')) {
+    /**
+     * Trace une ligne DEV en injectant automatiquement le fichier appelant.
+     *
+     * @param string $traceFunction Nom de la fonction de trace cible.
+     * @param string $level Niveau de trace.
+     * @param string $message Message de trace.
+     * @param array  $context Contexte additionnel.
+     * @param string $scope Scope utilisé uniquement avec mmc_dev_trace.
+     * @return void
+     */
+    function mmc_trace_dev_with_caller(
+        $traceFunction = 'mmc_dev_trace',
+        $level = 'INFO',
+        $message = 'ajax-view',
+        $context = array(),
+        $scope = 'MMC'
+    ) {
+        $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
+        $callerFile = isset($trace[1]['file']) ? $trace[1]['file'] : __FILE__;
+
+        if (!is_array($context)) {
+            $context = array();
+        }
+        if (!isset($context['file'])) {
+            $context['file'] = $callerFile;
+        }
+
+        if (!is_string($traceFunction) || !function_exists($traceFunction)) {
+            return;
+        }
+
+        if ($traceFunction === 'mmc_dev_trace') {
+            $traceFunction($level, $message, $context, $scope);
+            return;
+        }
+
+        $traceFunction($level, $message, $context);
+    }
+
+    /**
+     * Trace standard ajax-view en récupérant automatiquement le fichier appelant.
+     *
+     * @param string $traceFunction Fonction de trace à appeler (ex: updates_dev_trace, mmc_dev_trace).
+     * @param string $scope Scope utilisé uniquement avec mmc_dev_trace.
+     * @return void
+     */
+    function mmc_trace_ajax_view($traceFunction = 'mmc_dev_trace', $scope = 'MMC')
+    {
+        mmc_trace_dev_with_caller($traceFunction, 'INFO', 'ajax-view', array(), $scope);
+    }
+}
+
+if (!function_exists('mmc_trace_updates')) {
+    /**
+     * Trace dédiée au module updates.
+     *
+     * Active uniquement si le mode dev est actif.
+     * Le fichier appelant est injecté automatiquement.
+     *
+     * @param string $message Message de trace.
+     * @param string $level Niveau de trace.
+     * @param array  $context Contexte additionnel.
+     * @return void
+     */
+    function mmc_trace_updates($message = 'ajax-view', $level = 'INFO', $context = array())
+    {
+        if (!function_exists('mmc_is_dev_trace_enabled') || !mmc_is_dev_trace_enabled()) {
+            return;
+        }
+
+        if (!function_exists('updates_dev_trace')) {
+            return;
+        }
+
+        mmc_trace_dev_with_caller('updates_dev_trace', $level, $message, $context, 'UPDATES');
+    }
+}
+
+if (!function_exists('mmc_trace_updates_auto_from_include')) {
+    /**
+     * Auto-trace generic helper triggered from a module include file.
+     *
+     * @param string $moduleName Module name under web/modules.
+     * @param string $traceFunction Trace function to call.
+     * @param string $level Trace level.
+     * @param string $scope Scope used only with mmc_dev_trace.
+     * @return void
+     */
+    function mmc_trace_module_auto_from_include(
+        $moduleName,
+        $traceFunction = 'mmc_dev_trace',
+        $level = 'INFO',
+        $scope = 'MMC'
+    ) {
+        if (!function_exists('mmc_is_dev_trace_enabled') || !mmc_is_dev_trace_enabled()) {
+            return;
+        }
+
+        if (!is_string($moduleName) || $moduleName === '') {
+            return;
+        }
+
+        if (!is_string($traceFunction) || !function_exists($traceFunction)) {
+            return;
+        }
+
+        $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+        $callerFile = null;
+        $moduleNeedle = '/modules/' . $moduleName . '/';
+        $moduleXmlrpc = '/modules/' . $moduleName . '/includes/xmlrpc.php';
+        $excludedCallerFiles = array(
+            '/modules/glpi/includes/publicFunc.php',
+            '/modules/xmppmaster/includes/html.inc.php',
+            '/modules/dyngroup/includes/includes.php',
+        );
+
+        foreach ($trace as $frame) {
+            if (!isset($frame['file']) || !is_string($frame['file'])) {
+                continue;
+            }
+
+            foreach ($excludedCallerFiles as $excludedCallerFile) {
+                if (strpos($frame['file'], $excludedCallerFile) !== false) {
+                    continue 2;
+                }
+            }
+
+            if (strpos($frame['file'], $moduleNeedle) === false) {
+                continue;
+            }
+
+            if (strpos($frame['file'], $moduleXmlrpc) !== false) {
+                continue;
+            }
+
+            if (substr($frame['file'], -4) === '.php' && stripos(pathinfo($frame['file'], PATHINFO_FILENAME), 'ajax') !== false) {
+                $callerFile = $frame['file'];
+                break;
+            }
+        }
+
+        if ($callerFile === null) {
+            return;
+        }
+
+        $message = 'ajax-view';
+        $baseName = pathinfo($callerFile, PATHINFO_FILENAME);
+        if ($baseName !== '') {
+            $message = strtolower(preg_replace('/([a-z0-9])([A-Z])/', '$1-$2', $baseName));
+        }
+
+        if ($traceFunction === 'mmc_dev_trace') {
+            $traceFunction($level, $message, array('file' => $callerFile), $scope);
+            return;
+        }
+
+        $traceFunction($level, $message, array('file' => $callerFile));
+    }
+
+    /**
+     * Déclenche automatiquement un trace updates depuis un include commun,
+     * sans nécessiter d'appel explicite dans chaque fichier ajax.
+     *
+     * @param string $level Niveau de trace.
+     * @return void
+     */
+    function mmc_trace_updates_auto_from_include($level = 'INFO')
+    {
+        mmc_trace_module_auto_from_include('updates', 'updates_dev_trace', $level, 'UPDATES');
+    }
+}
+
+if (!function_exists('cleanNavParams')) {
+    /**
+     * cleanNavParams - Nettoie les paramètres de navigation de $_GET.
+     *
+     * Supprime les clés techniques utilisées par la navigation MMC
+     * (module, submodule, action, tab, page) pour ne conserver que
+     * les paramètres métier utiles aux vues et appels AJAX.
+     *
+     * @param array &$get_array Tableau de paramètres, typiquement $_GET.
+     * @return void
+     */
+    function cleanNavParams(&$get_array)
+    {
+        $nav_params = ['action', 'module', 'submodule', 'tab', 'page'];
+        foreach ($nav_params as $param) {
+            unset($get_array[$param]);
+        }
+    }
+}
 
 /**
     Description : Cette fonction récupère le chemin du premier fichier logo trouvé dans un répertoire spécifique.

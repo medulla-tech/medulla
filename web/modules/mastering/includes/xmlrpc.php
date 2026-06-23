@@ -1,4 +1,10 @@
 <?php
+if (!defined('MMC_MASTERING_AUTO_TRACE_DONE')) {
+    define('MMC_MASTERING_AUTO_TRACE_DONE', true);
+    if (function_exists('mmc_trace_module_auto_from_include')) {
+        mmc_trace_module_auto_from_include('mastering', 'mmc_dev_trace', 'INFO', 'MASTERING');
+    }
+}
 
 /**
  * Get the machines list, with their id, name, and uuids. We don't want anything else

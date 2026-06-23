@@ -1,4 +1,10 @@
 <?php
+if (!defined('MMC_URBACKUP_AUTO_TRACE_DONE')) {
+    define('MMC_URBACKUP_AUTO_TRACE_DONE', true);
+    if (function_exists('mmc_trace_module_auto_from_include')) {
+        mmc_trace_module_auto_from_include('urbackup', 'mmc_dev_trace', 'INFO', 'URBACKUP');
+    }
+}
 /*
  * (c) 2022 Siveo, http://www.siveo.net/
  *

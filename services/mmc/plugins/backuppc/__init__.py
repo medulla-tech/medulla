@@ -3,6 +3,7 @@
 # SPDX-FileCopyrightText: 2007 Mandriva, http://www.mandriva.com/
 # SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-3.0-or-later
+# file : services/mmc/plugins/backuppc/__init__.py
 
 """
 Plugin to manage the interface with BackupPC
@@ -10,7 +11,6 @@ Plugin to manage the interface with BackupPC
 import logging
 
 from mmc.plugins.backuppc.config import BackuppcConfig
-from mmc.plugins.backuppc import bpc
 from pulse2.version import getVersion, getRevision  # pyflakes.ignore
 from mmc.plugins.base import ComputerI
 from mmc.plugins.base.computers import ComputerManager
@@ -24,6 +24,7 @@ APIVERSION = "4:1:3"
 
 
 logger = logging.getLogger()
+bpc = None
 
 
 # #############################################################
@@ -49,6 +50,16 @@ def activate():
     if config.disable:
         logger.warning("Plugin backuppc: disabled by configuration.")
         return False
+
+    # Lazy import to avoid hard failure at module load when dependency is missing.
+    global bpc
+    try:
+        from mmc.plugins.backuppc import bpc as backuppc_module
+        bpc = backuppc_module
+    except ModuleNotFoundError as exc:
+        logger.error("Plugin backuppc: missing dependency (%s)", exc)
+        return False
+
     if not BackuppcDatabase().activate(config):
         logger.error(
             "Plugin backuppc: an error occurred during the database initialization"

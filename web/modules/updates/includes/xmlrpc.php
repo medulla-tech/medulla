@@ -1,27 +1,57 @@
 <?php
-/**
- * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
- * (c) 2007-2009 Mandriva, http://www.mandriva.com
- * (c) 2022-2023 Siveo, http://http://www.siveo.net
- *
- * $Id$
- *
- * This file is part of Management Console (MMC).
- *
- * MMC is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * MMC is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
- * file : web/modules/updates/includes/xmlrpc.php
- */
+// SPDX-FileCopyrightText: 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+// SPDX-FileCopyrightText: 2007 Mandriva, http://www.mandriva.com
+// SPDX-FileCopyrightText: 2016-2023 Siveo, http://www.siveo.net
+// SPDX-FileCopyrightText: 2024-2025 Medulla, http://www.medulla-tech.io
+// SPDX-License-Identifier: GPL-3.0-or-later
+// file : web/modules/updates/includes/xmlrpc.php
+
+if (!function_exists('updates_is_dev_trace_enabled')) {
+    function updates_is_dev_trace_enabled()
+    {
+        if (function_exists('mmc_is_dev_trace_enabled')) {
+            return mmc_is_dev_trace_enabled();
+        }
+
+        $iniValue = strtolower(trim((string) get_cfg_var('medulla.dev'))) ?: strtolower(trim((string) ini_get('medulla.dev')));
+        $iniEnabled = in_array($iniValue, ['1', 'true', 'on', 'yes'], true);
+        
+        $getValue = isset($_GET['dev']) ? strtolower(trim((string) $_GET['dev'])) : '';
+        if ($getValue === '' && isset($_GET['dede'])) {
+            $getValue = strtolower(trim((string) $_GET['dede']));
+        }
+        $getEnabled = in_array($getValue, ['1', 'true', 'on', 'yes'], true);
+        
+        return $iniEnabled || $getEnabled;
+    }
+}
+
+if (!function_exists('updates_dev_trace')) {
+    function updates_dev_trace($level = 'INFO', $message = '', $context = array())
+    {
+        if (!updates_is_dev_trace_enabled()) {
+            return;
+        }
+
+        $allowedLevels = ['DEBUG', 'INFO', 'WARNING', 'ERROR'];
+        $level = strtoupper(trim((string) $level));
+        if (!in_array($level, $allowedLevels, true)) {
+            $level = 'INFO';
+        }
+
+        if (function_exists('mmc_render_dev_trace_window')) {
+            mmc_render_dev_trace_window('UPDATES', $level, $message, $context);
+            return;
+        }
+    }
+}
+
+if (!defined('MMC_UPDATES_AUTO_TRACE_DONE')) {
+    define('MMC_UPDATES_AUTO_TRACE_DONE', true);
+    if (function_exists('mmc_trace_updates_auto_from_include')) {
+        mmc_trace_updates_auto_from_include('INFO');
+    }
+}
 
 
 function xmlrpc_has_update_data()
@@ -206,9 +236,9 @@ function xmlrpc_get_linux_upgrade_info_before_target($distributor_id, $target_ve
 
 /**
  * Retourne les machines Linux candidates au major upgrade pour une entité.
- * Exemple: ('debian', 42, '13').
+ * Exemple: ('debian', 42, '13') ou ('debian', 42).
  */
-function xmlrpc_get_linux_upgrade_candidates($distributor_id, $entity_id, $target_version)
+function xmlrpc_get_linux_upgrade_candidates($distributor_id, $entity_id, $target_version = null)
 {
     // Proxy XML-RPC: la sélection des candidats est exécutée côté backend.
     return xmlCall("updates.get_linux_upgrade_candidates", [$distributor_id, $entity_id, $target_version]);

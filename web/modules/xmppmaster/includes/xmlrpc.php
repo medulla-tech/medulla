@@ -1,5 +1,16 @@
 <?php
-
+if (!defined('MMC_XMPPMASTER_AUTO_TRACE_DONE')) {
+    define('MMC_XMPPMASTER_AUTO_TRACE_DONE', true);
+    if (function_exists('mmc_trace_module_auto_from_include')) {
+        mmc_trace_module_auto_from_include('xmppmaster', 'mmc_dev_trace', 'INFO', 'XMPPMASTER');
+    }
+}
+// SPDX-FileCopyrightText: 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+// SPDX-FileCopyrightText: 2007 Mandriva, http://www.mandriva.com
+// SPDX-FileCopyrightText: 2016-2023 Siveo, http://www.siveo.net
+// SPDX-FileCopyrightText: 2024-2025 Medulla, http://www.medulla-tech.io
+// SPDX-License-Identifier: GPL-3.0-or-later
+// file : web/modules/xmppmaster/includes/xmlrpc.php
 /*
  * (c) 2015-2023 Siveo, http://www.siveo.net
  *
@@ -1227,6 +1238,16 @@ function xmlrpc_get_audit_summary_updates_by_update($updateid, $start=0, $limit=
 function xmlrpc_get_distribution_version_compliance($famillydistribution,
                                                     $entity_id=null,
                                                     $start=null,
-                                                    $limit=null){
-    return xmlCall("xmppmaster.get_distribution_version_compliance", [$famillydistribution, $entity_id, $start, $limit]);
+                                                    $limit=null,
+                                                    $hostname_filter=null,
+                                                    $end=null){
+    return xmlCall("xmppmaster.get_distribution_version_compliance", [$famillydistribution, $entity_id, $start, $limit, $hostname_filter, $end]);
+}
+
+function xmlrpc_get_major_machines_by_entity($distribution,
+                                              $entity_id,
+                                              $filter="",
+                                              $start=0,
+                                              $limit=50){
+    return xmlCall("xmppmaster.get_major_machines_by_entity", [$distribution, $entity_id, $filter, $start, $limit]);
 }
