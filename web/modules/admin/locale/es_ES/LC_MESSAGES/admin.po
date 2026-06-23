@@ -1304,3 +1304,64 @@ msgstr "Añadir cliente OIDC"
 
 msgid "Security token validation failed"
 msgstr "La validación del token de seguridad falló"
+
+# --- ACL feature management ---
+msgid "Manage profiles"
+msgstr "Gestionar los perfiles"
+
+msgid "Existing profiles"
+msgstr "Perfiles existentes"
+
+msgid "Add a profile"
+msgstr "Añadir un perfil"
+
+msgid "New profile name"
+msgstr "Nombre del nuevo perfil"
+
+msgid "built-in"
+msgstr "integrado"
+
+msgid "Profile names must match an existing GLPI profile to take effect. Built-in profiles cannot be removed."
+msgstr "Los nombres de perfil deben coincidir con un perfil GLPI existente para ser efectivos. Los perfiles integrados no se pueden eliminar."
+
+msgid "Check / uncheck all"
+msgstr "Marcar / desmarcar todo"
+
+msgid "Invalid profile name"
+msgstr "Nombre de perfil no válido"
+
+msgid "No feature definitions found in database. Please apply schema-010.sql."
+msgstr "No se encontraron definiciones de funciones en la base de datos. Aplique schema-010.sql."
+
+msgid "Existing GLPI profile '%s' linked to Medulla"
+msgstr "Perfil GLPI existente '%s' vinculado a Medulla"
+
+msgid "Profile '%s' created in GLPI and added to Medulla"
+msgstr "Perfil '%s' creado en GLPI y añadido a Medulla"
+
+msgid "Profile '%s' created in GLPI (cloned from '%s') and added to Medulla"
+msgstr "Perfil '%s' creado en GLPI (clonado desde '%s') y añadido a Medulla"
+
+msgid "Failed to add profile '%s': %s"
+msgstr "Error al añadir el perfil '%s': %s"
+
+msgid "Built-in profiles cannot be deleted"
+msgstr "Los perfiles integrados no se pueden eliminar"
+
+msgid "Delete profile"
+msgstr "Eliminar el perfil"
+
+msgid "All ACL settings of profile '%s' will be removed in Medulla and GLPI. This cannot be undone."
+msgstr "Todos los permisos ACL del perfil '%s' serán eliminados en Medulla y GLPI. Esta acción es irreversible."
+
+msgid "Profile '%s' deleted from Medulla and GLPI"
+msgstr "Perfil '%s' eliminado de Medulla y GLPI"
+
+msgid "Profile '%s' removed from Medulla (GLPI: %s)"
+msgstr "Perfil '%s' eliminado de Medulla (GLPI: %s)"
+
+msgid "Failed to delete profile '%s': %s"
+msgstr "Error al eliminar el perfil '%s': %s"
+
+msgid "not found in GLPI"
+msgstr "no encontrado en GLPI"
