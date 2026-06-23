@@ -938,29 +938,21 @@ def get_config_sections():
 
 # ---- ACL Feature Management ----
 
-# Installation type ('onpremise' or 'saas') read once from /etc/mmc/mmc.ini.
-# The PHP frontend refuses to start without this setting, so on a healthy
-# stack it is guaranteed to be present. None means "could not read it"
-# (e.g. unit tests, missing file) and disables install_type-aware filtering.
+# Installation type ('onpremise' or 'saas'). None disables ACL filtering.
 _INSTALL_TYPE_MMC_INI_PATH = "/etc/mmc/mmc.ini"
-_install_type_cache = None
-_install_type_loaded = False
 
 
 def _get_install_type():
-    """Read install_type from /etc/mmc/mmc.ini, cached for the agent's lifetime."""
-    global _install_type_cache, _install_type_loaded
-    if _install_type_loaded:
-        return _install_type_cache
-    _install_type_loaded = True
+    """Read install_type from mmc.ini, with mmc.ini.local taking precedence."""
     try:
         from configparser import ConfigParser
         import os
-        if not os.path.isfile(_INSTALL_TYPE_MMC_INI_PATH):
+        # read() applies files in order (.local wins) and skips missing ones
+        cp = ConfigParser()
+        read_ok = cp.read([_INSTALL_TYPE_MMC_INI_PATH, _INSTALL_TYPE_MMC_INI_PATH + ".local"])
+        if not read_ok:
             logger.warning("install_type: %s not found, filtering disabled", _INSTALL_TYPE_MMC_INI_PATH)
             return None
-        cp = ConfigParser()
-        cp.read(_INSTALL_TYPE_MMC_INI_PATH)
         value = cp.get("global", "install_type", fallback=None)
         if value is None:
             logger.warning("install_type missing in [global] of %s, filtering disabled",
@@ -971,8 +963,6 @@ def _get_install_type():
             logger.warning("install_type has invalid value %r in %s, filtering disabled",
                            value, _INSTALL_TYPE_MMC_INI_PATH)
             return None
-        _install_type_cache = value
-        logger.info("install_type = %s (read from %s)", value, _INSTALL_TYPE_MMC_INI_PATH)
         return value
     except Exception as e:
         logger.warning("install_type: could not read %s: %s", _INSTALL_TYPE_MMC_INI_PATH, e)
