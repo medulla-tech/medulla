@@ -106,6 +106,21 @@ INSERT IGNORE INTO acl_profile_features (profile_name, feature_key, access_level
 DELETE FROM acl_profile_features WHERE feature_key LIKE 'imaging_onpremise_%';
 DELETE FROM acl_feature_definitions WHERE feature_key LIKE 'imaging_onpremise_%';
 
+-- Imaging | RW > Missing ACLs for imaging action in computers list
+INSERT INTO acl_feature_definitions (feature_key, label, description, category, superadmin_only, acl_entry, access_type, install_types) VALUES
+('imaging_rw', 'Imaging complet (toutes les fonctions)', 'Masters|Services|Bootmenu|Post-install|Profils|Groupes imaging|Sysprep|Unattended', 'imaging', 0, 'base#computers#register_target', 'rw', 'onpremise');
+
+-- On-premise only ACLs
+UPDATE acl_feature_definitions set install_types = 'onpremise' WHERE feature_key = 'dashboard_superadmin_widgets';
+UPDATE acl_feature_definitions set install_types = 'onpremise' WHERE feature_key = 'inventory_machines' and acl_entry IN ('base#computers#xmppMachinesList', 'base#computers#ajaxXmppMachinesList');
+UPDATE acl_feature_definitions set install_types = 'onpremise' WHERE feature_key = 'packaging_ro' and acl_entry IN ('pkgs#pkgs#rulesList', 'pkgs#pkgs#pending');
+UPDATE acl_feature_definitions set install_types = 'onpremise' WHERE feature_key = 'packaging_rw' and acl_entry IN ('pkgs#pkgs#addRule', 'pkgs#pkgs#editRule');
+UPDATE acl_feature_definitions set install_types = 'onpremise' WHERE feature_key = 'package_deployment_admin';
+UPDATE acl_feature_definitions set install_types = 'onpremise' WHERE feature_key = 'admin_superadmin';
+UPDATE acl_feature_definitions set install_types = 'onpremise,saas' WHERE feature_key = 'admin_superadmin' and acl_entry IN ('admin#admin#editEntity', 'admin#admin#deleteEntity', 'admin#admin#manageproviders', 'admin#admin#editProvider', 'admin#admin#deleteProvider');
+UPDATE acl_feature_definitions set install_types = 'onpremise' WHERE feature_key = 'history';
+UPDATE acl_feature_definitions set install_types = 'onpremise' WHERE feature_key = 'computer_management_rw' and acl_entry IN ('security#security#settings#tabfilters', 'security#security#settings#tabcves', 'security#security#settings#tabsoftware', 'security#security#settings#tabvendors', 'security#security#settings#tabmachines', 'security#security#settings#tabgroups');
+
 UPDATE version SET Number = 15;
 
 COMMIT;
