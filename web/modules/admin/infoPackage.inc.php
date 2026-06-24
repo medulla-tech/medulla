@@ -216,9 +216,15 @@ $page->setFile("modules/admin/admin/deleteCluster.php");
 $page->setOptions(array("visible" => False, "noHeader" => True, "AJAX" => True));
 $submod->addPage($page);
 
+// Non-AJAX on purpose: AJAX pages skip the dispatcher ACL check, these must keep it.
 $page = new Page("deleteAclProfile", _T('Delete ACL Profile', 'admin'));
 $page->setFile("modules/admin/admin/deleteAclProfile.php");
-$page->setOptions(array("visible" => False, "noHeader" => True, "AJAX" => True));
+$page->setOptions(array("visible" => False, "noHeader" => True));
+$submod->addPage($page);
+
+$page = new Page("addAclProfile", _T('Add ACL Profile', 'admin'));
+$page->setFile("modules/admin/admin/addAclProfile.php");
+$page->setOptions(array("visible" => False, "noHeader" => True));
 $submod->addPage($page);
 
 $page = new Page("listUsersofEntity", _T('List users of Entity', 'admin'));
