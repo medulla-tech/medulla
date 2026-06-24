@@ -1365,3 +1365,9 @@ msgstr "Error al eliminar el perfil '%s': %s"
 
 msgid "not found in GLPI"
 msgstr "no encontrado en GLPI"
+
+msgid "Add ACL Profile"
+msgstr "Añadir un perfil ACL"
+
+msgid "Delete ACL Profile"
+msgstr "Eliminar un perfil ACL"

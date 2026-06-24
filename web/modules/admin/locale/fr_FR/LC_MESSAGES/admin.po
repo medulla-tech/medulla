@@ -1323,3 +1323,9 @@ msgstr "Échec de la suppression du profil '%s' : %s"
 
 msgid "not found in GLPI"
 msgstr "introuvable dans GLPI"
+
+msgid "Add ACL Profile"
+msgstr "Ajouter un profil ACL"
+
+msgid "Delete ACL Profile"
+msgstr "Supprimer un profil ACL"

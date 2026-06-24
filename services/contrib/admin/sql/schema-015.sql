@@ -122,6 +122,11 @@ UPDATE acl_feature_definitions set install_types = 'onpremise' WHERE feature_key
 UPDATE acl_feature_definitions set install_types = 'onpremise' WHERE feature_key = 'history';
 UPDATE acl_feature_definitions set install_types = 'onpremise' WHERE feature_key = 'computer_management_rw' and acl_entry IN ('security#security#settings', 'security#security#settings#tabfilters', 'security#security#settings#tabcves', 'security#security#settings#tabsoftware', 'security#security#settings#tabvendors', 'security#security#settings#tabmachines', 'security#security#settings#tabgroups');
 
+-- Profile add/delete management feature (onpremise only)
+INSERT INTO acl_feature_definitions (feature_key, label, description, category, superadmin_only, acl_entry, access_type, install_types) VALUES
+('acl_profiles_management', 'Gestion des profils ACL', 'Création de profils|Suppression de profils', 'admin', 1, 'admin#admin#addAclProfile', 'rw', 'onpremise'),
+('acl_profiles_management', 'Gestion des profils ACL', 'Création de profils|Suppression de profils', 'admin', 1, 'admin#admin#deleteAclProfile', 'rw', 'onpremise');
+
 UPDATE version SET Number = 15;
 
 COMMIT;

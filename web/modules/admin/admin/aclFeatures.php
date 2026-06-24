@@ -37,40 +37,7 @@ $installType = getInstallType();
 // services/pulse2/database/admin/__init__.py — the backend enforces this too).
 $protectedProfiles = ['Super-Admin', 'Admin', 'Technician'];
 
-// Handle "add profile" / "delete profile" POST actions early so the page can
-// reload with the up-to-date profile list (Post/Redirect/Get pattern).
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_profile'])) {
-    $newName = trim((string)($_POST['profile_name'] ?? ''));
-    // Allow Unicode letters/digits (French/Spanish profile names like "Gestionnaire").
-    // The /u modifier enables UTF-8 parsing; \p{L} and \p{N} match any Unicode
-    // letter or digit.
-    if ($newName === '' || !preg_match('/^[\p{L}\p{N}_\- ]+$/u', $newName)) {
-        new NotifyWidgetFailure(_T("Invalid profile name", "admin"));
-    } else {
-        // Make the profile available on both sides (GLPI + Medulla's acl_profiles).
-        // Reuses an existing GLPI profile of the same name when one exists.
-        $res = xmlrpc_create_glpi_profile_and_register($newName);
-        if (is_array($res) && !empty($res['ok'])) {
-            if (!empty($res['created_in_glpi'])) {
-                if (!empty($res['cloned_from'])) {
-                    new NotifyWidgetSuccess(sprintf(_T("Profile '%s' created in GLPI (cloned from '%s') and added to Medulla", "admin"), $newName, $res['cloned_from']));
-                } else {
-                    new NotifyWidgetSuccess(sprintf(_T("Profile '%s' created in GLPI and added to Medulla", "admin"), $newName));
-                }
-            } else {
-                new NotifyWidgetSuccess(sprintf(_T("Existing GLPI profile '%s' linked to Medulla", "admin"), $newName));
-            }
-        } else {
-            $errMsg = (is_array($res) && !empty($res['error'])) ? $res['error'] : _T("Unknown error", "admin");
-            new NotifyWidgetFailure(sprintf(_T("Failed to add profile '%s': %s", "admin"), $newName, $errMsg));
-        }
-    }
-    header("Location: " . urlStrRedirect("admin/admin/aclFeatures"));
-    exit;
-}
-// Deletion goes through admin/admin/deleteAclProfile (PopupForm pattern,
-// declared in admin/infoPackage.inc.php) — same convention as deleteCluster,
-// deleteEntity, deleteUser, deleteProvider.
+// Add/delete are separate actions (addAclProfile / deleteAclProfile).
 
 // Profiles from database
 $profiles = xmlrpc_get_acl_profiles();
@@ -108,7 +75,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_acl'])) {
             }
             // Not checked → not in dict → will be deleted
         }
-        // Force ACL Management always enabled for Super-Admin
+        // Force ACL Management always enabled for Super-Admin (anti-lockout:
+        // without it a Super-Admin could remove their own access to this page).
         if ($profile === 'Super-Admin') {
             $featuresDict['acl_management'] = 'rw';
         }
@@ -139,9 +107,16 @@ foreach ($featureDefs as $fkey => $fdef) {
 <form method="post" action="<?php echo urlStrRedirect("admin/admin/aclFeatures"); ?>">
     <input type="hidden" name="save_acl" value="1">
 
+    <?php
+    // Show "Manage profiles" only if the user has the add or delete right.
+    $canManageProfiles = hasCorrectAcl("admin", "admin", "addAclProfile")
+        || hasCorrectAcl("admin", "admin", "deleteAclProfile");
+    ?>
     <div class="acl-actions">
         <button type="submit" class="btnPrimary"><?php echo _T("Save", "admin"); ?></button>
-        <button type="button" class="btnPrimary" onclick="openManageProfilesPopup(event); return false;"><?php echo _T("Manage profiles", "admin"); ?></button>
+        <?php if ($canManageProfiles): ?>
+            <button type="button" class="btnPrimary" onclick="openManageProfilesPopup(event); return false;"><?php echo _T("Manage profiles", "admin"); ?></button>
+        <?php endif; ?>
     </div>
 
     <table class="listinfos acl-table">
@@ -322,8 +297,7 @@ foreach ($featureDefs as $fkey => $fdef) {
 
         <div class="manage-profiles-section">
             <div class="info-header"><?php echo _T("Add a profile", "admin"); ?></div>
-            <form method="post" action="<?php echo urlStrRedirect("admin/admin/aclFeatures"); ?>" class="manage-profiles-add">
-                <input type="hidden" name="add_profile" value="1">
+            <form method="post" action="<?php echo urlStrRedirect("admin/admin/addAclProfile"); ?>" class="manage-profiles-add">
                 <input type="text" name="profile_name" placeholder="<?php echo _T("New profile name", "admin"); ?>"
                        pattern="[\p{L}\p{N}_\- ]+" required>
                 <button type="submit" class="btnPrimary"><?php echo _T("Add", "admin"); ?></button>
