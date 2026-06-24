@@ -117,27 +117,30 @@ CREATE TABLE IF NOT EXISTS `up_machine_linux` (
 ) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
--- 4.bis Table de politique d'auto-update Linux par entite/distribution
+-- 4.bis Table de politique d'auto-update Linux par entite/distribution/release
 -- Convention: les objets du domaine update sont prefixes par up_.
--- 1 ligne = 1 combinaison (entity_id, distributor_id).
--- S'applique a toutes les machines de cette entite/distribution.
+-- 1 ligne = 1 combinaison (entity_id, distributor_id, release_version).
+-- release_version = '' represente la policy generique de l'entite/distribution.
 CREATE TABLE IF NOT EXISTS up_entity_linux_auto_update_policy (
     id INT(11) NOT NULL AUTO_INCREMENT COMMENT 'PK technique de la policy',
     entity_id INT(11) NOT NULL COMMENT 'Identifiant de l entite GLPI/MMC',
     distributor_id VARCHAR(64) NOT NULL COMMENT 'Distribution Linux normalisee (debian, ubuntu, rhel, ...)',
-    release_version VARCHAR(20) NOT NULL DEFAULT '' COMMENT 'Conserve pour compatibilite historique (non discriminant)',
-    auto_update_kernel TINYINT(1) NOT NULL DEFAULT 0 COMMENT 'Intention auto-update kernel (non propagee en require automatiquement)',
+    release_version VARCHAR(20) NOT NULL DEFAULT '' COMMENT 'Version de release, vide pour policy generique',
+    auto_update_kernel TINYINT(1) NOT NULL DEFAULT 0 COMMENT 'Active la propagation vers kernel_require',
     auto_update_security TINYINT(1) NOT NULL DEFAULT 0 COMMENT 'Active la propagation vers security_require',
     auto_update_other TINYINT(1) NOT NULL DEFAULT 0 COMMENT 'Active la propagation vers other_require',
     created_at DATETIME NOT NULL DEFAULT current_timestamp() COMMENT 'Date de creation de la ligne',
     updated_at DATETIME NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp() COMMENT 'Date de derniere modification',
     PRIMARY KEY (id),
-    UNIQUE KEY uniq_entity_distributor (entity_id, distributor_id),
+    UNIQUE KEY uniq_entity_distributor_release (entity_id, distributor_id, release_version),
     KEY idx_entity_id (entity_id),
     KEY idx_distributor_id (distributor_id),
     KEY idx_release_version (release_version)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
 COMMENT='Politique auto-update Linux par entite et distribution';
+
+ALTER TABLE up_entity_linux_auto_update_policy
+DROP INDEX IF EXISTS uniq_entity_distributor;
 
 
 -- ===================================================================
@@ -173,8 +176,21 @@ CREATE TABLE up_linux_os_versions (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
 COMMENT='Versions des systèmes d exploitation Linux';
 
--- Initialisation depuis les machines deja presentes (sans erreur sur doublons)
--- 1 ligne par combinaison unique (entity_id, distributor_id)
+-- Normalisation de compatibilite: 1 seule ligne par entity+distribution+release_version
+-- conserve uniquement la ligne la plus recente (id le plus eleve)
+DELETE p_old
+FROM up_entity_linux_auto_update_policy p_old
+INNER JOIN up_entity_linux_auto_update_policy p_new
+    ON p_old.entity_id = p_new.entity_id
+   AND p_old.distributor_id = p_new.distributor_id
+   AND p_old.release_version = p_new.release_version
+   AND p_old.id < p_new.id;
+
+ALTER TABLE up_entity_linux_auto_update_policy
+ADD UNIQUE KEY IF NOT EXISTS uniq_entity_distributor_release (entity_id, distributor_id, release_version);
+
+-- Initialisation generique depuis les machines deja presentes (sans erreur sur doublons)
+-- 1 ligne par combinaison unique (entity_id, distributor_id) avec release_version = ''
 INSERT IGNORE INTO up_entity_linux_auto_update_policy (
     entity_id,
     distributor_id,
@@ -188,20 +204,6 @@ FROM up_machine_linux upl
 WHERE upl.entity_id IS NOT NULL
   AND upl.distributor_id IS NOT NULL
   AND TRIM(upl.distributor_id) <> '';
-
--- Normalisation de compatibilite: 1 seule ligne par entity+distribution
--- 1) conserve uniquement la ligne la plus recente (id le plus eleve)
-DELETE p_old
-FROM up_entity_linux_auto_update_policy p_old
-INNER JOIN up_entity_linux_auto_update_policy p_new
-    ON p_old.entity_id = p_new.entity_id
-   AND p_old.distributor_id = p_new.distributor_id
-   AND p_old.id < p_new.id;
-
--- 2) force release_version a '' car non discriminante metier
-UPDATE up_entity_linux_auto_update_policy
-SET release_version = ''
-WHERE release_version <> '';
 
 -- Initialisation generique depuis les entites connues et le catalogue de distributions gerees
 -- 1 ligne par couple (entity_id, distributor_id) avec release_version = ''
@@ -265,7 +267,43 @@ END$$
 DELIMITER ;
 
 DROP TRIGGER IF EXISTS `xmppmaster`.`up_machine_linux_AFTER_INSERT`;
+DROP TRIGGER IF EXISTS `xmppmaster`.`up_machine_linux_BEFORE_INSERT`;
+DROP TRIGGER IF EXISTS `xmppmaster`.`up_machine_linux_BEFORE_UPDATE`;
 DELIMITER $$
+CREATE TRIGGER `xmppmaster`.`up_machine_linux_BEFORE_INSERT`
+BEFORE INSERT ON `xmppmaster`.`up_machine_linux`
+FOR EACH ROW
+BEGIN
+    IF COALESCE(NEW.security_curent, 0) = 1 THEN
+        SET NEW.security_require = 0;
+    END IF;
+
+    IF COALESCE(NEW.kernel_current, 0) = 1 THEN
+        SET NEW.kernel_require = 0;
+    END IF;
+
+    IF COALESCE(NEW.other_current, 0) = 1 THEN
+        SET NEW.other_require = 0;
+    END IF;
+END$$
+
+CREATE TRIGGER `xmppmaster`.`up_machine_linux_BEFORE_UPDATE`
+BEFORE UPDATE ON `xmppmaster`.`up_machine_linux`
+FOR EACH ROW
+BEGIN
+    IF COALESCE(NEW.security_curent, 0) = 1 THEN
+        SET NEW.security_require = 0;
+    END IF;
+
+    IF COALESCE(NEW.kernel_current, 0) = 1 THEN
+        SET NEW.kernel_require = 0;
+    END IF;
+
+    IF COALESCE(NEW.other_current, 0) = 1 THEN
+        SET NEW.other_require = 0;
+    END IF;
+END$$
+
 CREATE TRIGGER `xmppmaster`.`up_machine_linux_AFTER_INSERT`
 AFTER INSERT ON `xmppmaster`.`up_machine_linux`
 FOR EACH ROW
@@ -298,25 +336,35 @@ CREATE PROCEDURE `xmppmaster`.`up_apply_entity_linux_auto_update_policy`(
 )
 BEGIN
     -- Propage les flags kernel/security/other vers toutes les machines de l entite+distribution.
+    -- Priorite a la policy exacte release_version, puis fallback sur la policy generique.
     UPDATE up_machine_linux uml
-    INNER JOIN up_entity_linux_auto_update_policy p
-        ON  p.entity_id = uml.entity_id
-        AND p.distributor_id = LOWER(TRIM(uml.distributor_id))
+    LEFT JOIN up_entity_linux_auto_update_policy p_exact
+        ON  p_exact.entity_id = uml.entity_id
+        AND p_exact.distributor_id = LOWER(TRIM(uml.distributor_id))
+        AND p_exact.release_version = COALESCE(TRIM(uml.release_version), '')
+    LEFT JOIN up_entity_linux_auto_update_policy p_generic
+        ON  p_generic.entity_id = uml.entity_id
+        AND p_generic.distributor_id = LOWER(TRIM(uml.distributor_id))
+        AND p_generic.release_version = ''
     SET
         uml.kernel_require = CASE
-            WHEN p.auto_update_kernel = 1 AND uml.kernel_count > 0 THEN 1
+            WHEN COALESCE(p_exact.auto_update_kernel, p_generic.auto_update_kernel, 0) = 1
+                 AND uml.kernel_count > 0 THEN 1
             ELSE 0
         END,
         uml.security_require = CASE
-            WHEN p.auto_update_security = 1 AND uml.security_count > 0 THEN 1
+            WHEN COALESCE(p_exact.auto_update_security, p_generic.auto_update_security, 0) = 1
+                 AND uml.security_count > 0 THEN 1
             ELSE 0
         END,
         uml.other_require = CASE
-            WHEN p.auto_update_other = 1 AND uml.other_count > 0 THEN 1
+            WHEN COALESCE(p_exact.auto_update_other, p_generic.auto_update_other, 0) = 1
+                 AND uml.other_count > 0 THEN 1
             ELSE 0
         END
     WHERE uml.entity_id = p_entity_id
-      AND LOWER(TRIM(uml.distributor_id)) = LOWER(TRIM(p_distributor_id));
+      AND LOWER(TRIM(uml.distributor_id)) = LOWER(TRIM(p_distributor_id))
+      AND (p_exact.id IS NOT NULL OR p_generic.id IS NOT NULL);
 
     -- 3) Fin de traitement: la procedure n ecrit pas dans la table policy,
     --    donc aucun risque de boucle trigger/procedure.

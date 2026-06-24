@@ -56,7 +56,7 @@ if (
     // exit;
 }
 
-$selectedEntityIdRaw = $_POST['selected_location'] ?? $_GET['selected_location'] ?? null;
+$selectedEntityIdRaw = $_POST['entityid'] ?? $_GET['entityid'] ?? ($_POST['selected_location'] ?? $_GET['selected_location'] ?? null);
 $selectedEntityIdStr = is_string($selectedEntityIdRaw) ? $selectedEntityIdRaw : strval($selectedEntityIdRaw);
 $selectedEntityIdStr = preg_replace('/^UUID/i', '', $selectedEntityIdStr);
 $selectedEntityId = ($selectedEntityIdStr !== null && $selectedEntityIdStr !== '') ? (int) $selectedEntityIdStr : null;

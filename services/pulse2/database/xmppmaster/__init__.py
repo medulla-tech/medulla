@@ -1153,7 +1153,8 @@ class XmppMasterDatabase(DatabaseHelper):
         """
         Recalcule les flags *_require de up_machine_linux pour une entite+distribution.
 
-        Policy unique par entite+distribution.
+        La policy exacte entity+distribution+release_version est prioritaire
+        sur la policy generique release_version=''.
         """
         normalized_distributor = (distributor_id or "").strip().lower()
         if entity_id is None or normalized_distributor == "":
@@ -1161,22 +1162,27 @@ class XmppMasterDatabase(DatabaseHelper):
 
         query = text("""
             UPDATE xmppmaster.up_machine_linux uml
-            INNER JOIN xmppmaster.up_entity_linux_auto_update_policy p
-                ON  p.entity_id = uml.entity_id
-                AND p.distributor_id = LOWER(TRIM(uml.distributor_id))
+            LEFT JOIN xmppmaster.up_entity_linux_auto_update_policy p_exact
+                ON  p_exact.entity_id = uml.entity_id
+                AND p_exact.distributor_id = LOWER(TRIM(uml.distributor_id))
+                AND p_exact.release_version = COALESCE(TRIM(uml.release_version), '')
+            LEFT JOIN xmppmaster.up_entity_linux_auto_update_policy p_generic
+                ON  p_generic.entity_id = uml.entity_id
+                AND p_generic.distributor_id = LOWER(TRIM(uml.distributor_id))
+                AND p_generic.release_version = ''
             SET
                 uml.kernel_require = CASE
-                    WHEN p.auto_update_kernel = 1
+                    WHEN COALESCE(p_exact.auto_update_kernel, p_generic.auto_update_kernel, 0) = 1
                          AND uml.kernel_count > 0 THEN 1
                     ELSE 0
                 END,
                 uml.security_require = CASE
-                    WHEN p.auto_update_security = 1
+                    WHEN COALESCE(p_exact.auto_update_security, p_generic.auto_update_security, 0) = 1
                          AND uml.security_count > 0 THEN 1
                     ELSE 0
                 END,
                 uml.other_require = CASE
-                    WHEN p.auto_update_other = 1
+                    WHEN COALESCE(p_exact.auto_update_other, p_generic.auto_update_other, 0) = 1
                          AND uml.other_count > 0 THEN 1
                     ELSE 0
                 END
