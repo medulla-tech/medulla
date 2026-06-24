@@ -939,24 +939,16 @@ update_560_to_561() {
             write_to_log "$str"
             exit 1
         fi
-        if ! grep -q "srvuuid" /var/lib/pulse2/imaging/default.ipxe; then
-            # Replace the line starting with "chain http" with the same line but with &srvuuid=${srvuuid} before the final && exit || exit
-            # chain http://${next-server}/mmc/imaging/bootmenu.php?mac=${net0/mac}&uuid=${uuid}&srv=${next-server}&srvuuid=${srvuuid} && exit || exit
-            sed -i "s|^chain http://\(.*\)/mmc/imaging/bootmenu.php?mac=\${net0/mac}&uuid=\${uuid}&srv=\${next-server}\) && exit || exit|chain http://\1&srvuuid=${srvuuid} && exit || exit|g" /var/lib/pulse2/imaging/default.ipxe
-            if [[ $? -ne 0 ]]; then
-                str="[x] Error adding srvuuid to iPXE default boot configuration. Aborting."
-                echo "$str"
-                write_to_log "$str"
-                exit 1
-            fi
-            str="[v] srvuuid added to iPXE default boot configuration successfully."
+        sed -i "/srvuuid=/! s|\(srv=\${next-server}\)|\1\&srvuuid=$srvuuid|" /var/lib/pulse2/imaging/default.ipxe
+        if [[ $? -ne 0 ]]; then
+            str="[x] Error adding srvuuid to iPXE default boot configuration. Aborting."
             echo "$str"
             write_to_log "$str"
-        else
-            str="[v] srvuuid already present in iPXE default boot configuration. Skipping."
-            echo "$str"
-            write_to_log "$str"
+            exit 1
         fi
+        str="[v] srvuuid added to iPXE default boot configuration successfully."
+        echo "$str"
+        write_to_log "$str"
     else
         str="[i] iPXE default boot configuration not found. Skipping srvuuid addition."
         echo "$str"
@@ -965,6 +957,52 @@ update_560_to_561() {
 
     echo "5.6.1" > /var/lib/mmc/version
     str="[v] Medulla config update from 5.6.0 to 5.6.1 applied successfully."
+    echo "$str"
+    write_to_log "$str"
+    if [[ -f /tmp/update_medulla.sh ]]; then
+        exec /tmp/update_medulla.sh "$@"
+    else
+        exec /usr/sbin/update_medulla.sh "$@"
+    fi
+}
+
+update_561_to_562() {
+    str="Applying Medulla config update from 5.6.1 to 5.6.2..."
+    echo "$str"
+    write_to_log "$str"
+    update_medulla
+
+    # Configure inotify limits
+    # Add the following to /etc/sysctl.d/99-pulse.conf if not present
+    # fs.inotify.max_user_watches=524288
+    # fs.inotify.max_user_instances=1024
+    # fs.inotify.max_queued_events=32768
+    str="[=] Configuring inotify limits for Medulla..."
+    echo "$str"
+    write_to_log "$str"
+    if ! grep -q "fs.inotify.max_user_watches" /etc/sysctl.d/99-pulse.conf 2>/dev/null; then
+        echo "fs.inotify.max_user_watches=524288" >> /etc/sysctl.d/99-pulse.conf
+    fi
+    if ! grep -q "fs.inotify.max_user_instances" /etc/sysctl.d/99-pulse.conf 2>/dev/null; then
+        echo "fs.inotify.max_user_instances=1024" >> /etc/sysctl.d/99-pulse.conf
+    fi
+    if ! grep -q "fs.inotify.max_queued_events" /etc/sysctl.d/99-pulse.conf 2>/dev/null; then
+        echo "fs.inotify.max_queued_events=32768" >> /etc/sysctl.d/99-pulse.conf
+    fi
+    # Apply the new sysctl settings
+    sysctl -p /etc/sysctl.d/99-pulse.conf
+    if [[ $? -ne 0 ]]; then
+        str="[x] Error applying inotify limits sysctl settings. Aborting."
+        echo "$str"
+        write_to_log "$str"
+        exit 1
+    fi
+    str="[v] inotify limits configured and applied successfully."
+    echo "$str"
+    write_to_log "$str"
+
+    echo "5.6.2" > /var/lib/mmc/version
+    str="[v] Medulla config update from 5.6.1 to 5.6.2 applied successfully."
     echo "$str"
     write_to_log "$str"
     if [[ -f /tmp/update_medulla.sh ]]; then
@@ -1108,6 +1146,11 @@ case "$CURRENT_VERSION" in
     "5.6.0")
         if [[ "$AVAILABLE_VERSION" > "5.6.0" ]]; then
             update_560_to_561
+        fi
+        ;;
+    "5.6.1")
+        if [[ "$AVAILABLE_VERSION" > "5.6.1" ]]; then
+            update_561_to_562
         fi
         ;;
     *)

@@ -1,5 +1,12 @@
 # Change Log
 
+## [5.6.2](https://github.com/medulla-tech/medulla/releases/tag/5.6.2) (2026-06-24)
+- [FEATURE] Add browser extensions and Office add-ins in inventory
+- [FEATURE] Add ability to create user profiles on top of the 3 profiles aulready defined
+- [FEATURE] Support for different Medulla install types in ACLs management
+- [BUGFIX]  Fix inventory content when expected data is integer
+- [BUGFIX]  Fix view for GLPI 11
+
 ## [5.6.1](https://github.com/medulla-tech/medulla/releases/tag/5.6.1) (2026-06-08)
 - [FEATURE] Allow importing of a few Linux masters in Imaging module
 - [FEATURE] Improve the detection of the imaging server associated to a machine
