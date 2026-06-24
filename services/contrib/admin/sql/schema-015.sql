@@ -118,8 +118,9 @@ UPDATE acl_feature_definitions set install_types = 'onpremise' WHERE feature_key
 UPDATE acl_feature_definitions set install_types = 'onpremise' WHERE feature_key = 'package_deployment_admin';
 UPDATE acl_feature_definitions set install_types = 'onpremise' WHERE feature_key = 'admin_superadmin';
 UPDATE acl_feature_definitions set install_types = 'onpremise,saas' WHERE feature_key = 'admin_superadmin' and acl_entry IN ('admin#admin#editEntity', 'admin#admin#deleteEntity', 'admin#admin#manageproviders', 'admin#admin#editProvider', 'admin#admin#deleteProvider');
+UPDATE acl_feature_definitions set install_types = 'onpremise' WHERE feature_key = 'admin_technician' and acl_entry IN ('admin#admin#relaysList', 'admin#admin#clustersList', 'admin#admin#rules');
 UPDATE acl_feature_definitions set install_types = 'onpremise' WHERE feature_key = 'history';
-UPDATE acl_feature_definitions set install_types = 'onpremise' WHERE feature_key = 'computer_management_rw' and acl_entry IN ('security#security#settings#tabfilters', 'security#security#settings#tabcves', 'security#security#settings#tabsoftware', 'security#security#settings#tabvendors', 'security#security#settings#tabmachines', 'security#security#settings#tabgroups');
+UPDATE acl_feature_definitions set install_types = 'onpremise' WHERE feature_key = 'computer_management_rw' and acl_entry IN ('security#security#settings', 'security#security#settings#tabfilters', 'security#security#settings#tabcves', 'security#security#settings#tabsoftware', 'security#security#settings#tabvendors', 'security#security#settings#tabmachines', 'security#security#settings#tabgroups');
 
 UPDATE version SET Number = 15;
 
