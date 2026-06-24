@@ -5,28 +5,7 @@
 // SPDX-FileCopyrightText: 2024-2025 Medulla, http://www.medulla-tech.io
 // SPDX-License-Identifier: GPL-3.0-or-later
 // file : web/modules/updates/updates/ajaxMajorEntitiesListDebian.php
-/*
- * (c) 2016-2023 Siveo, http://www.siveo.net
- * (c) 2024-2025 Medulla, http://www.medulla-tech.io
- *
- * $Id$
- *
- * This file is part of MMC, http://www.medulla-tech.io
- *
- * MMC is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * any later version.
- *
- * MMC is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with MMC; If not, see <http://www.gnu.org/licenses/>.
- * file: ajaxMajorEntitiesList.php
- */
+
 
 /**
  * ------------------------------------------------------------------
@@ -48,7 +27,6 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
 global $conf;
 $maxperpage   = $conf["global"]["maxperpage"];
 
-echo "JFKkkkkkkkkkkkkkkkkkkkk";
 ?>
 
 <style>
@@ -141,6 +119,9 @@ $statversion = xmlrpc_get_distribution_version_compliance(
     (int) $maxperpage,
     $hostnameFilter
 );
+if (!is_array($statversion)) {
+    $statversion = [];
+}
 
 // Garantit l'affichage de toutes les entités de la page, même si la base
 // ne retourne aucune ligne de conformité pour certaines d'entre elles.
@@ -289,6 +270,21 @@ $comformite_name_major      = [];
 $display_entities           = [];
 $actionupdateByentity       = [];
 $actiondetailsByMachs       = [];
+$actionDeploymentHistory    = [];
+
+$deploymentHistory = new ActionItem(_T("Deployment history", "updates"),
+                                    "majorDeploymentHistoryLinux",
+                                    "history",
+                                    "",
+                                    "updates",
+                                    "updates");
+
+$emptyDeploymentHistory = new EmptyActionItem1(_T("No Linux major deployment history for this entity", "updates"),
+                                                "majorDeploymentHistoryLinux",
+                                                "historyg",
+                                                "",
+                                                "updates",
+                                                "updates");
 
 // parametre des action
 $params =  array();
@@ -302,9 +298,15 @@ foreach ($statversion['by_entity'] as $entityId => $ent) {
     }
 
 
-    $currentEntityId = isset($ent['entity_id']) ? (int) $ent['entity_id'] : 0;
-    if ($currentEntityId <= 0) {
+    $currentEntityId = isset($ent['entity_id']) ? (int) $ent['entity_id'] : -1;
+    if ($currentEntityId < 0) {
         $currentEntityId = (int) $entityId;
+    }
+
+    if (intval($ent['total_machines']) > 0) {
+        $actionDeploymentHistory[] = $deploymentHistory;
+    } else {
+        $actionDeploymentHistory[] = $emptyDeploymentHistory;
     }
 
     $entityName = $listcompletename[$currentEntityId] ?? (string) $currentEntityId;
@@ -505,15 +507,15 @@ foreach ($statversion['by_entity'] as $entityId => $ent) {
     } else {
         $total_machines[] = $ent['total_machines'];
     }
-// Paramètres transmis aux actions: assurer un entity_id valide (non 0).
-$ent['entity_id'] = $currentEntityId;
-$ent['entityName'] = $entityName;
-$ent['name'] = $entityName;
-$ent['completename'] = $entityName;
-$ent['distribution'] = $statversion['distribution'];
-$ent['name_version'] = $statversion['name_version'];
-$ent['max_version']  = $statversion['max_version'];
-$params[] = $ent;
+    // Paramètres transmis aux actions: entity_id=0 est valide pour l'entité racine.
+    $ent['entity_id'] = $currentEntityId;
+    $ent['entityName'] = $entityName;
+    $ent['name'] = $entityName;
+    $ent['completename'] = $entityName;
+    $ent['distribution'] = $statversion['distribution'];
+    $ent['name_version'] = $statversion['name_version'];
+    $ent['max_version']  = $statversion['max_version'];
+    $params[] = $ent;
 }
 // Générer la chaîne de date et heure
 $display_entities = array_values($display_entities);
@@ -524,6 +526,7 @@ $pending_support_update = array_values($pending_support_update);
 $total_machines = array_values($total_machines);
 $actionupdateByentity = array_values($actionupdateByentity);
 $actiondetailsByMachs = array_values($actiondetailsByMachs);
+$actionDeploymentHistory = array_values($actionDeploymentHistory);
 $params = array_values($params);
 
 $count = count($display_entities);
@@ -537,6 +540,7 @@ $n->addExtraInfoRaw($total_machines, _T("Total Machines", "updates")." ".$distri
 
 $n->addActionItemArray($actionupdateByentity);
 $n->addActionItemArray($actiondetailsByMachs);
+$n->addActionItemArray($actionDeploymentHistory);
 // $n->addActionItemArray($actionHardwareConstraintsForMajorUpdatesByEntity);
 $n->setTableHeaderPadding(12);
 $n->setItemCount($count);

@@ -275,6 +275,15 @@ $NoView_detail_machine_security_linux_entity = new EmptyActionItem1(_T("Details 
                                                         "auditbymachine");
 //--------------------------
 
+$action_update_history_linux_entity = new ActionItem(_T("Update history by entity",
+                                                        "updates"),
+                                                    "auditByEntity",
+                                                    "history",
+                                                    "",
+                                                    "updates",
+                                                    "updates");
+
+
 
 foreach ($_entities as $entity) {
     if (preg_match("#" . $filter . "#i", $entity['name']) || preg_match("#" . $filter . "#i", $entity['completename'])) {
@@ -331,6 +340,7 @@ $machines_up_to_date = [];
 $machines_security_not_ok = [];
 $machines_kernel_not_ok = [];
 $machines_other_not_ok = [];
+$action_update_history_linux = [];
 
 // Utiliser un compteur séquentiel pour itérer de manière cohérente sur les tableaux parallèles
 $entity_count = count($entityid);
@@ -350,7 +360,9 @@ for ($counter = 0; $counter < $entity_count; $counter++) {
      */
     $datagrp = [
         "entity_id"                   => $entityid[$ind],
+        "entity"                      => "UUID" . $entityid[$ind],
         "completename"                => $nameentitycomplete,
+        "history_type"                => "linux_updates",
         "compliance_total_percent"    => ($entitycompliances['compliance_total_percent'][$ind] ?? 0),
         "compliance_security_percent" => ($entitycompliances['compliance_security_percent'][$ind] ?? 0),
         "compliance_kernel_percent"   => ($entitycompliances['compliance_kernel_percent'][$ind] ?? 0),
@@ -363,6 +375,7 @@ for ($counter = 0; $counter < $entity_count; $counter++) {
         "total_machines"              => ($entitycompliances['total_machines'][$ind] ?? 0)
     ];
     $params[]=$datagrp;
+    $action_update_history_linux[] = $action_update_history_linux_entity;
     /*
      |--------------------------------------------------------------------------
      | PROGRESS BARS - Messages explicatifs Linux
@@ -730,6 +743,7 @@ $n->addActionItemArray($action_update_kernel_linux);
 $n->addActionItemArray($action_update_security_linux);
 $n->addActionItemArray($action_update_other_linux);
 $n->addActionItemArray($action_update_complet_linux);
+$n->addActionItemArray($action_update_history_linux);
 
 $n->addActionItemArray($vue_compliance_distri_linux_entity);
 $n->addActionItemArray($vue_detail_machine_kernel_linux_entity);

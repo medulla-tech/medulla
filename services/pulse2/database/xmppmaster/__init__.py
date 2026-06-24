@@ -20239,10 +20239,11 @@ FROM (
         return deployment_exists
 
     @DatabaseHelper._sessionm
-    def get_audit_summary_updates_by_entity(self, session, entity_uuid, start, limit, filter):
+    def get_audit_summary_updates_by_entity(self, session, entity_uuid, start, limit, filter, history_type=""):
         entity_uuid = normalize_entity(entity_uuid, defaut=-1)
         start = to_int(start, 0)
         limit = to_int(limit, -1)
+        history_type = (history_type or "").strip().lower()
         query = (
             session.query(Deploy)
             .join(Machines, Machines.jid == Deploy.jidmachine)
@@ -20255,6 +20256,15 @@ FROM (
             )
             .order_by(desc(Deploy.start))
         )
+
+        if history_type == "linux_updates":
+            query = query.filter(
+                and_(
+                    Deploy.pathpackage == "linux-update-generic-command",
+                    Deploy.title.contains("-@upd@-"),
+                    not_(Deploy.title.contains("--@upd@--")),
+                )
+            )
 
         if filter != "":
             query = query.filter(
@@ -20298,6 +20308,86 @@ FROM (
                 "syncthing": deploy.syncthing,
             }
             result["datas"].append(tmp)
+        return result
+
+    @DatabaseHelper._sessionm
+    def get_linux_major_deployment_history_by_entity(
+        self,
+        session,
+        distributor_id,
+        entity_uuid,
+        start,
+        limit,
+        filter,
+    ):
+        entity_uuid = normalize_entity(entity_uuid, defaut=-1)
+        start = to_int(start, 0)
+        limit = to_int(limit, -1)
+        normalized_distribution = (distributor_id or "").strip().lower()
+
+        if entity_uuid < 0 or normalized_distribution == "":
+            return {"count": 0, "datas": []}
+
+        title_marker = f"--@upd@--{normalized_distribution}_"
+        start_window = datetime.now() - timedelta(days=30)
+
+        query = (
+            session.query(Deploy)
+            .join(Machines, Machines.jid == Deploy.jidmachine)
+            .join(Glpi_entity, Glpi_entity.id == Machines.glpi_entity_id)
+            .filter(
+                and_(
+                    Deploy.sessionid.contains("update"),
+                    Deploy.title.contains(title_marker),
+                    Deploy.startcmd >= start_window,
+                    Glpi_entity.glpi_id == entity_uuid,
+                )
+            )
+            .order_by(desc(Deploy.startcmd), desc(Deploy.id))
+        )
+
+        if filter != "":
+            query = query.filter(
+                or_(
+                    Deploy.title.contains(filter),
+                    Deploy.state.contains(filter),
+                    Deploy.host.contains(filter),
+                    Deploy.login.contains(filter),
+                    Deploy.start.contains(filter),
+                    Deploy.startcmd.contains(filter),
+                    Deploy.endcmd.contains(filter),
+                )
+            )
+
+        count = query.count()
+        if start != 0:
+            query = query.offset(start)
+        if limit != -1:
+            query = query.limit(limit)
+
+        result = {"count": count, "datas": []}
+        for deploy in query.all():
+            result["datas"].append({
+                "id": deploy.id,
+                "title": deploy.title,
+                "jidmachine": deploy.jidmachine,
+                "jid_relay": deploy.jid_relay,
+                "pathpackage": deploy.pathpackage,
+                "state": deploy.state,
+                "sessionid": deploy.sessionid,
+                "start": datetime_handler(deploy.start),
+                "startcmd": datetime_handler(deploy.startcmd),
+                "endcmd": datetime_handler(deploy.endcmd),
+                "uuid": deploy.inventoryuuid,
+                "hostname": deploy.host,
+                "user": deploy.user,
+                "cmd_id": deploy.command,
+                "gid": deploy.group_uuid,
+                "grp_id": deploy.group_uuid,
+                "login": deploy.login,
+                "macadress": deploy.macadress,
+                "syncthing": deploy.syncthing,
+            })
         return result
 
     @DatabaseHelper._sessionm

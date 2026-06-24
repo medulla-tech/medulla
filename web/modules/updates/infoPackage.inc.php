@@ -411,6 +411,15 @@ $page = new Page("majorDetailsByMachinesLinux", _T('Machines Linux major update'
 $page->setFile("modules/updates/updates/majorDetailsByMachinesLinux.php");
 $submod->addPage($page);
 
+$page = new Page("ajaxMajorDeploymentHistoryLinux", _T("Linux major deployment history", "updates"));
+$page->setFile("modules/updates/updates/ajaxMajorDeploymentHistoryLinux.php");
+$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
+$submod->addPage($page);
+
+$page = new Page("majorDeploymentHistoryLinux", _T('Linux major deployment history', 'updates'));
+$page->setFile("modules/updates/updates/majorDeploymentHistoryLinux.php");
+$submod->addPage($page);
+
 $page = new Page("ajaxgroupUpdateMajorEntity", _T("Deployment details on group entity", "updates"));
 $page->setFile("modules/updates/updates/ajaxgroupUpdateMajorEntity.php");
 $page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));

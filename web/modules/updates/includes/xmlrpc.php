@@ -17,8 +17,8 @@ if (!function_exists('updates_is_dev_trace_enabled')) {
         $iniEnabled = in_array($iniValue, ['1', 'true', 'on', 'yes'], true);
         
         $getValue = isset($_GET['dev']) ? strtolower(trim((string) $_GET['dev'])) : '';
-        if ($getValue === '' && isset($_GET['dede'])) {
-            $getValue = strtolower(trim((string) $_GET['dede']));
+        if ($getValue === '' && isset($_GET['trace'])) {
+            $getValue = strtolower(trim((string) $_GET['trace']));
         }
         $getEnabled = in_array($getValue, ['1', 'true', 'on', 'yes'], true);
         
@@ -242,6 +242,11 @@ function xmlrpc_get_linux_upgrade_candidates($distributor_id, $entity_id, $targe
 {
     // Proxy XML-RPC: la sélection des candidats est exécutée côté backend.
     return xmlCall("updates.get_linux_upgrade_candidates", [$distributor_id, $entity_id, $target_version]);
+}
+
+function xmlrpc_get_linux_major_deployment_history_by_entity($distributor_id, $entity_id, $start = 0, $limit = -1, $filter = "")
+{
+    return xmlCall("updates.get_linux_major_deployment_history_by_entity", [$distributor_id, $entity_id, $start, $limit, $filter]);
 }
 
 function xmlrpc_get_os_xmpp_update_major_details($entity_id, $filter="",$start=0, $limit=-1, )

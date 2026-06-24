@@ -13,9 +13,10 @@ $entityuuid = (isset($_GET['entity'])) ? htmlentities($_GET['entity']) : "UUID0"
 $start = (isset($_GET['start'])) ? htmlentities($_GET['start']) : 0;
 $end = (isset($_GET['end'])) ? htmlentities($_GET['end']) : $maxperpage;
 $filter = (isset($_GET['filter'])) ? htmlentities($_GET['filter']) : "";
+$historyType = (isset($_GET['history_type'])) ? htmlentities($_GET['history_type']) : "";
 
 
-$result = xmlrpc_get_audit_summary_updates_by_entity($entityuuid, $start, $maxperpage, $filter);
+$result = xmlrpc_get_audit_summary_updates_by_entity($entityuuid, $start, $maxperpage, $filter, $historyType);
 
 $datas = $result["datas"];
 $count = $result["count"];
@@ -46,7 +47,7 @@ foreach($datas as $key=>$deploy) {
     $startcmds[] = $deploy["startcmd"];
     $hostnames[] = $deploy["hostname"];
     $detailActions[] = $detailAction;
-    $datas[$key]['hostname'] = $hostname;
+    $datas[$key]['hostname'] = $deploy["hostname"];
 }
 
 $n = new OptimizedListInfos($titles, _T("Name", "updates"));

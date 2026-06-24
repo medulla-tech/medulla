@@ -31,7 +31,7 @@
 if (!function_exists('mmc_is_dev_trace_enabled')) {
     /**
      * Returns true when development traces are enabled globally (php.ini)
-     * or explicitly for a request (?dev=1 or legacy ?dede=1).
+     * or explicitly for a request (?dev=1 or ?trace=1).
      */
     function mmc_is_dev_trace_enabled()
     {
@@ -45,10 +45,10 @@ if (!function_exists('mmc_is_dev_trace_enabled')) {
         $devValue = isset($_GET['dev']) ? strtolower(trim((string) $_GET['dev'])) : '';
         $devEnabled = in_array($devValue, ['1', 'true', 'on', 'yes'], true);
 
-        $legacyValue = isset($_GET['dede']) ? strtolower(trim((string) $_GET['dede'])) : '';
-        $legacyEnabled = in_array($legacyValue, ['1', 'true', 'on', 'yes'], true);
+        $traceValue = isset($_GET['trace']) ? strtolower(trim((string) $_GET['trace'])) : '';
+        $traceEnabled = in_array($traceValue, ['1', 'true', 'on', 'yes'], true);
 
-        return $iniEnabled || $devEnabled || $legacyEnabled;
+        return $iniEnabled || $devEnabled || $traceEnabled;
     }
 }
 
@@ -134,8 +134,8 @@ if (!function_exists('mmc_dev_trace')) {
 
         $allowedLevels = ['DEBUG', 'INFO', 'WARNING', 'ERROR'];
         $forcedLevel = isset($_GET['dev_level']) ? strtoupper(trim((string) $_GET['dev_level'])) : '';
-        if ($forcedLevel === '' && isset($_GET['dede_level'])) {
-            $forcedLevel = strtoupper(trim((string) $_GET['dede_level']));
+        if ($forcedLevel === '' && isset($_GET['trace_level'])) {
+            $forcedLevel = strtoupper(trim((string) $_GET['trace_level']));
         }
 
         $level = strtoupper(trim((string) $level));

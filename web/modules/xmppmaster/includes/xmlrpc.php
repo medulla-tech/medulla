@@ -1227,8 +1227,8 @@ function xmlrpc_cancel_update($machineid, $updateid)
     return xmlCall("xmppmaster.cancel_update", [$machineid, $updateid]);
 }
 
-function xmlrpc_get_audit_summary_updates_by_entity($entityuuid, $start=0, $limit=-1, $filter=""){
-    return xmlCall("xmppmaster.get_audit_summary_updates_by_entity", [$entityuuid, $start, $limit, $filter]);
+function xmlrpc_get_audit_summary_updates_by_entity($entityuuid, $start=0, $limit=-1, $filter="", $historyType=""){
+    return xmlCall("xmppmaster.get_audit_summary_updates_by_entity", [$entityuuid, $start, $limit, $filter, $historyType]);
 }
 
 function xmlrpc_get_audit_summary_updates_by_update($updateid, $start=0, $limit=-1, $filter=""){

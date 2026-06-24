@@ -254,6 +254,22 @@ class RpcProxy(RpcProxyI):
                                                           type=type,
                                                           colonne=colonne )
 
+    @with_optional_xmpp_context
+    def get_linux_major_deployment_history_by_entity(self,
+                                                     distributor_id,
+                                                     entity_id,
+                                                     start=0,
+                                                     limit=-1,
+                                                     filter="",
+                                                     ctx=None):
+        return XmppMasterDatabase().get_linux_major_deployment_history_by_entity(
+            distributor_id,
+            entity_id,
+            start,
+            limit,
+            filter,
+        )
+
 
 
     @with_optional_xmpp_context
@@ -541,6 +557,25 @@ def get_linux_upgrade_candidates(distributor_id, entity_id, target_version=None)
     """
     # Forward XML-RPC vers la couche base xmppmaster.
     return XmppMasterDatabase().get_linux_upgrade_candidates(distributor_id, entity_id, target_version)
+
+
+def get_linux_major_deployment_history_by_entity(distributor_id,
+                                                 entity_id,
+                                                 start=0,
+                                                 limit=-1,
+                                                 filter=""):
+    """
+    Retourne l'historique des déploiements Linux major d'une entité.
+
+    La fenêtre temporelle est limitée au dernier mois.
+    """
+    return XmppMasterDatabase().get_linux_major_deployment_history_by_entity(
+        distributor_id,
+        entity_id,
+        start,
+        limit,
+        filter,
+    )
 
 
 def deploy_update_major(package_id,
