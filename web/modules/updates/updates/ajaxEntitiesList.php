@@ -169,6 +169,7 @@ $n->addActionItemArray($actiondeploySpecifics);
 $n->start = 0;
 $n->end = $count;
 $n->setEmptyState(_T("No entities found", "updates"), _T("No entities match the current filter.", "updates"));
+(new TitleElement(_T("Windows", "updates")))->display();
 echo '<div class="entity-compliance-table">';
 $n->display();
 echo '</div>';

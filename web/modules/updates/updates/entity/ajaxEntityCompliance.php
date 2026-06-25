@@ -65,14 +65,10 @@ require_once("modules/updates/includes/xmlrpc.php");
 <?php
 
 // print_r( getFilteredGetParams());
-$timerefresh= 90;
+$ajax = new AjaxFilter(urlStrRedirect("updates/updates/ajaxEntitiesListwindows"), "container", [], 'formRunning');
 
-$ajax = new AjaxPagebartitlletime(urlStrRedirect("updates/updates/ajaxEntitiesList"),
-                                  "entitylist",
-                                  getFilteredGetParams(),
-                                  $timerefresh,
-                                  "idcircularProgress");
 $ajax->display();
+$ajax->displayDivToUpdate();
 ?>
 
 <style>

@@ -12,9 +12,5 @@ require_once("modules/glpi/includes/xmlrpc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 require_once("modules/xmppmaster/includes/html.inc.php");
 
-
-$ajax = new AjaxFilter(urlStrRedirect("updates/updates/ajaxEntitiesListlinuxfilter"), "container", [], 'formRunning');
-
-$ajax->display();
-$ajax->displayDivToUpdate();
+require_once("modules/updates/updates/ajaxEntitiesListlinuxfilter.php");
 ?>

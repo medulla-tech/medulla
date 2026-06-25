@@ -756,6 +756,7 @@ $n->setNavBar(new AjaxNavBar($count, $filter));
 $n->setParamInfo($params);
 $n->start = 0;
 $n->end = $count;
+(new TitleElement(_T("Linux", "updates")))->display();
 echo '<div class="entity-compliance-table">';
 $n->display();
 echo '</div>';
