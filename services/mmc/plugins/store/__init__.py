@@ -21,6 +21,7 @@ from Cryptodome.Util.Padding import pad
 
 VERSION = "1.0.0"
 APIVERSION = "1:0:0"
+USER_AGENT = "Medulla-Agent/%s" % VERSION
 logger = logging.getLogger()
 
 def getApiVersion():
@@ -76,7 +77,7 @@ def _store_api_get(endpoint, params=None):
         if query:
             url += '?' + query
 
-    headers = {'Accept': 'application/json'}
+    headers = {'Accept': 'application/json', 'User-Agent': USER_AGENT}
     auth = _generate_auth_header(config)
     if auth:
         headers['Authorization'] = auth
@@ -119,7 +120,8 @@ def _store_api_post(endpoint, data):
     body = json.dumps(data).encode('utf-8')
     headers = {
         'Accept': 'application/json',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'User-Agent': USER_AGENT
     }
     auth = _generate_auth_header(config)
     if auth:
@@ -334,7 +336,7 @@ def get_contract_status():
         return {'configured': False, 'has_access': False, 'reason': 'not_configured'}
 
     url = config.store_api_url.rstrip('/') + '/access/status'
-    headers = {'Accept': 'application/json'}
+    headers = {'Accept': 'application/json', 'User-Agent': USER_AGENT}
     auth = _generate_auth_header(config)
     if auth:
         headers['Authorization'] = auth
@@ -619,7 +621,7 @@ def _fetch_packages_list(config):
     """Fetch the packages list from packages API"""
     url = config.store_api_url.rstrip('/') + '/packages'
 
-    headers = {'Accept': 'application/json'}
+    headers = {'Accept': 'application/json', 'User-Agent': USER_AGENT}
     auth = _generate_auth_header(config)
     if auth:
         headers['Authorization'] = auth
