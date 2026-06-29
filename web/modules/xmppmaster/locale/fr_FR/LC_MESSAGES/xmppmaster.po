@@ -2549,3 +2549,6 @@ msgstr "Adresse passerelle"
 
 msgid "Non-inventoried"
 msgstr "Non-inventoriées"
+
+msgid "Select all users"
+msgstr "Sélectionner tous les utilisateurs"
