@@ -2512,3 +2512,6 @@ msgstr "Dirección pasarela"
 
 msgid "Non-inventoried"
 msgstr "Sin inventariar"
+
+msgid "Select all users"
+msgstr "Seleccionar todos los usuarios"

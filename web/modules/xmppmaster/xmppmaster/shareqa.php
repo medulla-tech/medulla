@@ -27,7 +27,6 @@ require("modules/base/computers/localSidebar.php");
 require("graph/navbar.inc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 require_once("modules/base/includes/users-xmlrpc.inc.php");
-require("modules/kiosk/graph/packages.css");
 
 if (isset($_POST['bcreate'])){
   $json = json_decode($_POST['jsonDatas'], true);
@@ -70,8 +69,10 @@ $users_owning_qa = xmlrpc_get_list_of_users_for_shared_qa($_GET["namecmd"]);
 $list_str = "";
 foreach($users_list[1] as $user)
 {
-  if($user['uid'] != $_SESSION['login'] && !in_array($user['uid'], $users_owning_qa))
-    $list_str .= '<li data-draggable="item" data-uuid="'.$user['uid'].'">'.$user['uid'].'</li>';
+  // XML-RPC may return uid as a stdClass wrapper (->scalar) instead of a string
+  $uid = is_object($user['uid']) ? $user['uid']->scalar : $user['uid'];
+  if($uid != $_SESSION['login'] && !in_array($uid, $users_owning_qa))
+    $list_str .= '<li data-draggable="item" data-uuid="'.htmlspecialchars($uid).'">'.htmlspecialchars($uid).'</li>';
 }
 if($_SESSION['login'] != "root" && !in_array('root', $users_owning_qa))
 {
@@ -93,7 +94,7 @@ $f->add(new SpanElement("<div class='qa-owner-box'>".$owner_str."</div>","users"
 
 $f->add(new TitleElement(_T("Select Users", "xmppmaster")));
 
-$f->add(new SpanElement('<div><input type="button" onclick="selectAllUsers()" value="Select all users"/></div><div class="qa-users-container" id="users">
+$f->add(new SpanElement('<div class="qa-toolbar"><input type="button" class="btnSecondary" onclick="selectAllUsers()" value="'._T("Select all users","xmppmaster").'"/></div><div class="qa-users-container" id="users">
     <!-- Source : https://www.sitepoint.com/accessible-drag-drop/ -->
     <div class="qa-user-column">
         <h1>'._T("Available users","xmppmaster").'</h1>
