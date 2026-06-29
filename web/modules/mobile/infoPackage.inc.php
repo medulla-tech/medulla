@@ -381,6 +381,11 @@ $pagePhotosList = new Page("photosList", _T('Device Photos', 'mobile'));
 $pagePhotosList->setFile("modules/mobile/mobile/photosList.php");
 $submod->addPage($pagePhotosList);
 
+$pagePhotosSettings = new Page("photosSettings", _T('Photos Settings', 'mobile'));
+$pagePhotosSettings->setFile("modules/mobile/mobile/photosSettings.php");
+$pagePhotosSettings->setOptions(array("visible" => false));
+$submod->addPage($pagePhotosSettings);
+
 $pageAjaxPhotosList = new Page("ajaxPhotosList", _T('Photos list AJAX', 'mobile'));
 $pageAjaxPhotosList->setFile("modules/mobile/mobile/ajaxPhotosList.php");
 $pageAjaxPhotosList->setOptions(array("AJAX" => true, "visible" => false));

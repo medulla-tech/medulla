@@ -5,7 +5,22 @@ require_once("modules/imaging/includes/class_form.php");
 require_once("modules/mobile/includes/xmlrpc.php");
 
 $notifyMessage = null;
-$notifyError = null;
+$notifyError   = null;
+
+$settings = xmlrpc_get_photos_settings();
+if (!is_array($settings)) {
+    $settings = array(
+        'transferPhotos'        => false,
+        'imagePaths'            => '/sdcard/DCIM/Camera',
+        'excludePaths'          => '',
+        'includeStandardPaths'  => true,
+        'directoryStructure'    => 'DEVICE/YEAR/MONTH/',
+        'fileNameTemplate'      => 'img_YEAR_MONTH_DAY_HOUR_MIN_SEC_NAME',
+        'removeOldFiles'        => 30,
+        'deleteImagesOnDevices' => '',
+        'imageLocation'         => true,
+    );
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['bcancel'])) {
@@ -13,39 +28,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    if (isset($_POST['bsave'])) {
-        $settingsData = array(
-            'transferPhotos'       => isset($_POST['transfer_photos']),
-            'imagePaths'           => isset($_POST['image_paths']) ? trim($_POST['image_paths']) : '',
-            'excludePaths'         => isset($_POST['exclude_paths']) ? trim($_POST['exclude_paths']) : '',
-            'includeStandardPaths' => isset($_POST['include_standard_paths']),
-            'directoryStructure'   => isset($_POST['directory_structure']) ? trim($_POST['directory_structure']) : 'DEVICE/YEAR/MONTH/',
-            'fileNameTemplate'     => isset($_POST['file_name_template']) ? trim($_POST['file_name_template']) : 'img_YEAR_MONTH_DAY_HOUR_MIN_SEC_NAME',
-            'removeOldFiles'       => isset($_POST['remove_old_files']) ? intval($_POST['remove_old_files']) : 0,
-            'imageLocation'        => isset($_POST['image_location']),
-        );
+    if (isset($_POST['bsave']) || isset($_POST['bsaveexit'])) {
+        $transferOn = (($_POST['transfer_photos'] ?? '0') === '1');
+        $settings['transferPhotos']        = $transferOn;
+        $settings['imageLocation']         = $transferOn ? (($_POST['image_location'] ?? '0') === '1') : false;
+        $settings['deleteImagesOnDevices'] = (($_POST['delete_images_on_devices'] ?? '0') === '1') ? 'always' : '';
 
-        $result = xmlrpc_save_photos_settings($settingsData);
+        $result = xmlrpc_save_photos_settings($settings);
         if ($result !== null && isset($result['status']) && strtoupper($result['status']) === 'OK') {
+            if (isset($_POST['bsaveexit'])) {
+                header("Location: " . urlStrRedirect("mobile/mobile/photosList", array("saved" => "1")));
+                exit;
+            }
             $notifyMessage = _T("Photos settings saved successfully", "mobile");
         } else {
             $notifyError = _T("Failed to save photos settings", "mobile");
         }
     }
-}
-
-$settings = xmlrpc_get_photos_settings();
-if (!is_array($settings)) {
-    $settings = array(
-        'transferPhotos'       => false,
-        'imagePaths'           => '/sdcard/DCIM/Camera',
-        'excludePaths'         => '',
-        'includeStandardPaths' => true,
-        'directoryStructure'   => 'DEVICE/YEAR/MONTH/',
-        'fileNameTemplate'     => 'img_YEAR_MONTH_DAY_HOUR_MIN_SEC_NAME',
-        'removeOldFiles'       => 30,
-        'imageLocation'        => true,
-    );
 }
 
 $p = new PageGenerator(_T("Photos Settings", "mobile"));
@@ -60,71 +59,41 @@ $p->display();
 $form = new ValidatingForm();
 $form->push(new Table());
 
-$form->add(new TrFormElement(
-    _T("Enable photo upload", "mobile"),
-    new CheckboxTpl("transfer_photos"),
-    array("tooltip" => _T("Allow devices to upload photos to the server", "mobile"))
-), array("value" => (isset($settings['transferPhotos']) && $settings['transferPhotos']) ? 'checked' : ''));
+$transferTpl = new RadioTpl("transfer_photos");
+$transferTpl->setChoices(array(_T("Enabled", "mobile"), _T("Disabled", "mobile")));
+$transferTpl->setValues(array("1", "0"));
+$transferTpl->setSelected((isset($settings['transferPhotos']) && $settings['transferPhotos']) ? '1' : '0');
+$form->add(new TrFormElement(_T("Transfer photos to server", "mobile"), $transferTpl, array('class' => 'radio-inline')));
 
-$form->add(new TrFormElement(
-    _T("Image paths", "mobile"),
-    new InputTpl("image_paths", '/^.*$/', isset($settings['imagePaths']) ? $settings['imagePaths'] : '')
-), array(
-    "value"       => isset($settings['imagePaths']) ? $settings['imagePaths'] : '',
-    "placeholder" => _T("/sdcard/DCIM/Camera,/sdcard/Pictures", "mobile"),
-    "tooltip"     => _T("Comma-separated list of directories to scan for photos on devices", "mobile")
-));
+$locationTpl = new RadioTpl("image_location");
+$locationTpl->setChoices(array(_T("Enabled", "mobile"), _T("Disabled", "mobile")));
+$locationTpl->setValues(array("1", "0"));
+$locationTpl->setSelected((isset($settings['imageLocation']) && $settings['imageLocation']) ? '1' : '0');
+$form->add(new TrFormElement(_T("Image location", "mobile"), $locationTpl, array('class' => 'radio-inline')));
 
-$form->add(new TrFormElement(
-    _T("Exclude paths", "mobile"),
-    new InputTpl("exclude_paths", '/^.*$/', isset($settings['excludePaths']) ? $settings['excludePaths'] : '')
-), array(
-    "value"       => isset($settings['excludePaths']) ? $settings['excludePaths'] : '',
-    "placeholder" => _T("/sdcard/DCIM/.thumbnails", "mobile"),
-    "tooltip"     => _T("Comma-separated list of directories to exclude", "mobile")
-));
-
-$form->add(new TrFormElement(
-    _T("Include standard paths", "mobile"),
-    new CheckboxTpl("include_standard_paths"),
-    array("tooltip" => _T("Automatically include standard Android camera paths", "mobile"))
-), array("value" => (isset($settings['includeStandardPaths']) && $settings['includeStandardPaths']) ? 'checked' : ''));
-
-$form->add(new TrFormElement(
-    _T("Directory structure", "mobile"),
-    new InputTpl("directory_structure", '/^.*$/', isset($settings['directoryStructure']) ? $settings['directoryStructure'] : '')
-), array(
-    "value"       => isset($settings['directoryStructure']) ? $settings['directoryStructure'] : '',
-    "placeholder" => _T("DEVICE/YEAR/MONTH/", "mobile"),
-    "tooltip"     => _T("Template for server directory structure. Available: DEVICE, YEAR, MONTH, DAY", "mobile")
-));
-
-$form->add(new TrFormElement(
-    _T("File name template", "mobile"),
-    new InputTpl("file_name_template", '/^.*$/', isset($settings['fileNameTemplate']) ? $settings['fileNameTemplate'] : '')
-), array(
-    "value"       => isset($settings['fileNameTemplate']) ? $settings['fileNameTemplate'] : '',
-    "placeholder" => _T("img_YEAR_MONTH_DAY_HOUR_MIN_SEC_NAME", "mobile"),
-    "tooltip"     => _T("Template for file names. Available: YEAR, MONTH, DAY, HOUR, MIN, SEC, NAME", "mobile")
-));
-
-$form->add(new TrFormElement(
-    _T("Delete photos older than (days)", "mobile"),
-    new InputTpl("remove_old_files", '/^\d+$/', isset($settings['removeOldFiles']) ? $settings['removeOldFiles'] : 0)
-), array(
-    "value"   => isset($settings['removeOldFiles']) ? $settings['removeOldFiles'] : 0,
-    "tooltip" => _T("Automatically delete photos older than this many days. 0 = never delete", "mobile")
-));
-
-$form->add(new TrFormElement(
-    _T("Store location metadata", "mobile"),
-    new CheckboxTpl("image_location"),
-    array("tooltip" => _T("Save GPS coordinates and address with photos", "mobile"))
-), array("value" => (isset($settings['imageLocation']) && $settings['imageLocation']) ? 'checked' : ''));
+$deleteTpl = new RadioTpl("delete_images_on_devices");
+$deleteTpl->setChoices(array(_T("Yes", "mobile"), _T("No", "mobile")));
+$deleteTpl->setValues(array("1", "0"));
+$deleteTpl->setSelected(!empty($settings['deleteImagesOnDevices']) ? '1' : '0');
+$form->add(new TrFormElement(_T("Delete images on devices after upload", "mobile"), $deleteTpl, array('class' => 'radio-inline')));
 
 $form->pop();
 
-$form->addButton("bsave",   _T("Save", "mobile"));
-$form->addButton("bcancel", _T("Cancel", "mobile"));
+$form->addButton("bsave",     _T("Save", "mobile"));
+$form->addButton("bsaveexit", _T("Save and exit", "mobile"));
+$form->addButton("bcancel",   _T("Cancel", "mobile"));
 $form->display();
 ?>
+
+<script type="text/javascript">
+jQuery(function() {
+    function updateLocationState() {
+        var transferOn = jQuery('input[name="transfer_photos"]:checked').val() === '1';
+        jQuery('input[name="image_location"], input[name="delete_images_on_devices"]').prop('disabled', !transferOn);
+        jQuery('input[name="image_location"], input[name="delete_images_on_devices"]').closest('tr').css('opacity', transferOn ? '' : '0.5');
+    }
+    jQuery('input[name="transfer_photos"]').on('change', updateLocationState);
+    updateLocationState();
+});
+</script>
+

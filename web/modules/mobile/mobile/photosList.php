@@ -10,6 +10,10 @@ $p->display();
 if (!xmlrpc_require_configured_hmdm_account()) {
 	return;
 }
+
+if (isset($_GET['saved']) && $_GET['saved'] == '1') {
+    new NotifyWidgetSuccess(_T("Photos settings saved successfully", "mobile"));
+}
 ?>
 
 <?php
@@ -59,5 +63,14 @@ jQuery(function() {
     jQuery('#searchBest').prepend(fieldSel);
 
     jQuery('#photos_field').on('change', function() { pushSearch(); });
+
+    var $h2 = jQuery('h2').first();
+    $h2.wrap('<div style="display:flex;align-items:center;justify-content:space-between;"></div>');
+    $h2.after(
+        '<span style="flex-shrink:0;margin-left:16px;">'
+        + '<a href="<?php echo addslashes(urlStrRedirect('mobile/mobile/photosSettings')); ?>" class="btnSecondary">'
+        + '<?php echo addslashes(_T('Settings', 'mobile')); ?>'
+        + '</a></span>'
+    );
 });
 </script>
