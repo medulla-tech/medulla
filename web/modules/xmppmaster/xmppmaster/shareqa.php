@@ -30,28 +30,47 @@ require_once("modules/base/includes/users-xmlrpc.inc.php");
 
 if (isset($_POST['bcreate'])){
   $json = json_decode($_POST['jsonDatas'], true);
-  $json["users"] = json_decode($json['users'], true);
-  if(safeCount($json['users']) != 0)
+  if (!is_array($json)) { $json = array(); }
+  // 'users' is already an array after the decode above; decode again only if it came as a JSON string
+  if (isset($json['users']) && is_string($json['users'])) {
+    $json["users"] = json_decode($json['users'], true);
+  }
+}
+// Only reconcile on a valid payload, so an empty POST never wipes every share
+if (isset($_POST['bcreate']) && isset($json['namecmd'])){
+  $self = $_SESSION['login'];
+  // Desired "shared with" set = right column, never including the owner himself
+  $desired = is_array($json['users']) ? $json['users'] : [];
+  $desired = array_values(array_filter($desired, function($u) use ($self) { return $u != $self; }));
+  // Current "shared with" set (authoritative, server-side), owner excluded
+  $current = xmlrpc_get_list_of_users_for_shared_qa($json['namecmd']);
+  if (!is_array($current)) { $current = []; }
+  $current = array_values(array_filter($current, function($u) use ($self) { return $u != $self; }));
+
+  $to_add    = array_diff($desired, $current); // newly shared
+  $to_remove = array_diff($current, $desired); // un-shared
+
+  $fail_list = [];
+  foreach($to_add as $user)
   {
-    $fail_list = [];
-    foreach($json['users'] as $user)
-    {
-      $response = xmlrpc_create_Qa_custom_command($user, $json['os'], $json['namecmd'], $json['customcmd'], $json['description'] );
-      if ($response== -1) {
-        $response = xmlrpc_updateName_Qa_custom_command($user, $json['os'], $json['namecmd'], $json['customcmd'], $json['description']);
-        if($response == -1)
-          $fail_list[] = $user;
-      }
-    }
-    if (safeCount($fail_list)){
-      new NotifyWidgetFailure("Error when sharing custom Quick Action");
-    }
-    else {
-      new NotifyWidgetSuccess(sprintf("Custom Quick Action %s shared successfully",$json['namecmd']));
+    $response = xmlrpc_create_Qa_custom_command($user, $json['os'], $json['namecmd'], $json['customcmd'], $json['description'] );
+    if ($response== -1) {
+      $response = xmlrpc_updateName_Qa_custom_command($user, $json['os'], $json['namecmd'], $json['customcmd'], $json['description']);
+      if($response == -1)
+        $fail_list[] = $user;
     }
   }
-  else {
-    new NotifyWidgetFailure(sprintf("No user selected to share the Quick Action %s",$json['namecmd']));
+  foreach($to_remove as $user)
+  {
+    // Argument order mirrors removeqa.php: (login, os, namecmd)
+    xmlrpc_delQa_custom_command($user, $json['os'], $json['namecmd']);
+  }
+
+  if (safeCount($fail_list)){
+    new NotifyWidgetFailure(sprintf(_T("Error when updating sharing of Quick Action %s","xmppmaster"), $json['namecmd']));
+  }
+  elseif (safeCount($to_add) || safeCount($to_remove)) {
+    new NotifyWidgetSuccess(sprintf(_T("Sharing of Quick Action %s updated successfully","xmppmaster"), $json['namecmd']));
   }
   //header("Location: " . urlStrRedirect("xmppmaster/xmppmaster/shareqa", array()));
 }
@@ -66,30 +85,44 @@ $users_list = get_users_detailed($errors, "", 0, $count);
 
 $users_owning_qa = xmlrpc_get_list_of_users_for_shared_qa($_GET["namecmd"]);
 
-$list_str = "";
+$self = $_SESSION['login'];
+if (!is_array($users_owning_qa)) { $users_owning_qa = []; }
+// Users the QA is currently shared with = owners minus the owner himself
+$shared_with = array_values(array_filter($users_owning_qa, function($u) use ($self) { return $u != $self; }));
+
+// Helper to render a draggable list item
+$li = function($uid) {
+  return '<li data-draggable="item" data-uuid="'.htmlspecialchars($uid).'">'.htmlspecialchars($uid).'</li>';
+};
+
+// Right column: every current share (rendered from the authoritative list so a
+// share is never dropped just because the directory didn't return that user)
+$selected_str = "";
+foreach($shared_with as $uid) {
+  $selected_str .= $li($uid);
+}
+
+// Left column: directory users not already shared with (and not the owner)
+$shown = array_merge(array($self), $shared_with);
+$available_str = "";
 foreach($users_list[1] as $user)
 {
   // XML-RPC may return uid as a stdClass wrapper (->scalar) instead of a string
   $uid = is_object($user['uid']) ? $user['uid']->scalar : $user['uid'];
-  if($uid != $_SESSION['login'] && !in_array($uid, $users_owning_qa))
-    $list_str .= '<li data-draggable="item" data-uuid="'.htmlspecialchars($uid).'">'.htmlspecialchars($uid).'</li>';
+  if (in_array($uid, $shown)) { continue; }
+  $available_str .= $li($uid);
+  $shown[] = $uid;
 }
-if($_SESSION['login'] != "root" && !in_array('root', $users_owning_qa))
-{
-  $list_str .= '<li data-draggable="item" data-uuid="root">root</li>';
+// root is not always returned by the directory search; expose it as a target
+if ($self != "root" && !in_array("root", $shown)) {
+  $available_str .= $li("root");
 }
+
 $f = new ValidatingForm(array("id" => "profile-form", "onchange"=>"generate_json()","onclick"=>"generate_json()"));
 $f->push(new Table());
 
-$f->add(new TitleElement(_T("User Already Owning Quick Action", "xmppmaster")." ".$_GET['namecmd']));
-
-$owner_str = "<ul class='qa-owner-list'>";
-foreach($users_owning_qa as $user)
-{
-  $owner_str.='<li>'.$user.'</li>';
-}
-$owner_str .= "</ul>";
-$f->add(new SpanElement("<div class='qa-owner-box'>".$owner_str."</div>","users"));
+$f->add(new TitleElement(_T("Owner", "xmppmaster")));
+$f->add(new SpanElement("<div class='qa-owner-box'><ul class='qa-owner-list'><li>".htmlspecialchars($self)."</li></ul></div>","users"));
 
 
 $f->add(new TitleElement(_T("Select Users", "xmppmaster")));
@@ -98,13 +131,12 @@ $f->add(new SpanElement('<div class="qa-toolbar"><input type="button" class="btn
     <!-- Source : https://www.sitepoint.com/accessible-drag-drop/ -->
     <div class="qa-user-column">
         <h1>'._T("Available users","xmppmaster").'</h1>
-        <ol class="qa-user-list" data-draggable="target" id="available-users">'.$list_str.'</ol>
+        <ol class="qa-user-list" data-draggable="target" id="available-users">'.$available_str.'</ol>
     </div>
 
     <div class="qa-user-column">
-        <h1>'._T("Selected users","xmppmaster").'</h1>
-        <ol class="qa-user-list" data-draggable="target" id="selected-users">
-        </ol>
+        <h1>'._T("Shared with","xmppmaster").'</h1>
+        <ol class="qa-user-list" data-draggable="target" id="selected-users">'.$selected_str.'</ol>
     </div>
 </div>',"users"));
 

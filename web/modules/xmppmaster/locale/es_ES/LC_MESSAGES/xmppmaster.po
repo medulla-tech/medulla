@@ -2515,3 +2515,15 @@ msgstr "Sin inventariar"
 
 msgid "Select all users"
 msgstr "Seleccionar todos los usuarios"
+
+msgid "Owner"
+msgstr "Propietario"
+
+msgid "Shared with"
+msgstr "Compartido con"
+
+msgid "Sharing of Quick Action %s updated successfully"
+msgstr "Uso compartido de la acción rápida %s actualizado correctamente"
+
+msgid "Error when updating sharing of Quick Action %s"
+msgstr "Error al actualizar el uso compartido de la acción rápida %s"

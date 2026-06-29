@@ -2552,3 +2552,15 @@ msgstr "Non-inventoriées"
 
 msgid "Select all users"
 msgstr "Sélectionner tous les utilisateurs"
+
+msgid "Owner"
+msgstr "Propriétaire"
+
+msgid "Shared with"
+msgstr "Partagé avec"
+
+msgid "Sharing of Quick Action %s updated successfully"
+msgstr "Partage de l'action rapide %s mis à jour avec succès"
+
+msgid "Error when updating sharing of Quick Action %s"
+msgstr "Erreur lors de la mise à jour du partage de l'action rapide %s"
