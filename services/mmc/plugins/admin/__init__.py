@@ -12,7 +12,7 @@ from pulse2.database.admin import AdminDatabase
 from pulse2.database.pkgs import PkgsDatabase
 
 from mmc.plugins.glpi import get_entities_with_counts, get_entities_with_counts_root, set_user_api_token, get_user_profile_email, get_complete_name, get_user_identifier, list_entity_ids_subtree, list_user_ids_in_subtree, list_computer_ids_in_subtree
-from mmc.support.apirest.glpi import GLPIClient
+from mmc.support.apirest.glpi import GLPIClient, GLPIClientApiV1, GLPIAPIError
 from mmc.support.apirest.glpi import verifier_parametres
 from configparser import ConfigParser
 import subprocess
@@ -67,29 +67,65 @@ def get_glpi_client(tokenuser=None, app_token=None, url_base=None):
     """
     Initializes and returns a GLPI customer with an active session.
     """
-    initparametre = AdminDatabase().get_CONNECT_API()
-    verifier_parametres(initparametre, [
-        "glpi_mmc_app_token", "glpi_url_base_api", "glpi_root_user_token"
-    ])
+    try:
+        initparametre = AdminDatabase().get_CONNECT_API()
+        verifier_parametres(initparametre, [
+            "glpi_mmc_app_token", "glpi_url_base_api", "glpi_root_user_token"
+        ])
 
-    # Choix des paramètres : valeurs fournies > valeurs en base
-    app_token = app_token if app_token else initparametre["glpi_mmc_app_token"]
-    url_base = url_base if url_base else initparametre["glpi_url_base_api"]
-    user_token = tokenuser if tokenuser else initparametre["glpi_root_user_token"]
+        # Choix des paramètres : valeurs fournies > valeurs en base
+        app_token = app_token if app_token else initparametre["glpi_mmc_app_token"]
+        url_base = url_base if url_base else initparametre["glpi_url_base_api"]
+        user_token = tokenuser if tokenuser else initparametre["glpi_root_user_token"]
 
-    client = GLPIClient(
-        app_token=app_token,
-        url_base=url_base,
-        user_token=user_token,
-    )
-    client.init_session()
+        base = (url_base or "").rstrip("/")
+        if base.endswith("/api.php/v1"):
+            attempts = [
+                (GLPIClientApiV1, base),
+                (GLPIClient, base[: -len("/api.php/v1")] + "/apirest.php"),
+            ]
+        elif base.endswith("/apirest.php"):
+            attempts = [
+                (GLPIClient, base),
+                (GLPIClientApiV1, base[: -len("/apirest.php")] + "/api.php/v1"),
+            ]
+        else:
+            attempts = [
+                (GLPIClient, base + "/apirest.php"),
+                (GLPIClientApiV1, base + "/api.php/v1"),
+            ]
 
-    # Vérifie que le client est bien initialisé et qu'une session est active
-    if not client or not hasattr(client, 'SESSION_TOKEN') or not client.SESSION_TOKEN:
+        for client_class, candidate_base in attempts:
+            try:
+                client = client_class(
+                    app_token=app_token,
+                    url_base=candidate_base,
+                    user_token=user_token,
+                )
+                client.init_session()
+
+                if hasattr(client, "SESSION_TOKEN") and client.SESSION_TOKEN:
+                    return client
+            except GLPIAPIError as e:
+                logger.error(
+                    "GLPI init failed with %s on %s: %s",
+                    client_class.__name__,
+                    candidate_base,
+                    e.feedback.to_dict(),
+                )
+            except Exception as e:
+                logger.error(
+                    "GLPI init failed with %s on %s: %s",
+                    client_class.__name__,
+                    candidate_base,
+                    e,
+                )
+
         logger.error("Session GLPI non initialisée : impossible d'obtenir un client valide")
         return None
-
-    return client
+    except Exception:
+        logger.error("Erreur get_glpi_client: %s", traceback.format_exc())
+        return None
 
 def get_CONNECT_API(tokenuser=None):
     """
