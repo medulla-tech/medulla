@@ -12,12 +12,47 @@ import re
 import string
 import traceback
 import requests
+from dataclasses import dataclass
 from typing import Optional, Union, Dict, List, Any
 
 import uuid
 import os
 
 logger = logging.getLogger()
+
+
+@dataclass(frozen=True)
+class APIErrorFeedback:
+    """Structured feedback for API errors, ready for logs or UI."""
+
+    action: str
+    method: str
+    url: str
+    status_code: int | None
+    message: str
+    details: str = ""
+    hint: str = ""
+
+    def to_dict(self) -> dict:
+        return {
+            "action": self.action,
+            "method": self.method,
+            "url": self.url,
+            "status_code": self.status_code,
+            "message": self.message,
+            "details": self.details,
+            "hint": self.hint,
+        }
+
+
+class GLPIAPIError(RuntimeError):
+    """Raised when GLPI API returns an error with structured feedback."""
+
+    def __init__(self, feedback: APIErrorFeedback):
+        self.feedback = feedback
+        super().__init__(
+            f"{feedback.action} failed: HTTP {feedback.status_code} - {feedback.message}"
+        )
 
 
 def verifier_parametres(dictctrl, cles_requises):
@@ -111,30 +146,76 @@ class GLPIClient:
         Raises:
             Exception: If session initialization fails.
         """
-        headers = {
+        base_headers = {
             "App-Token": self.APP_TOKEN,
+            "Content-Type": "application/json",
+            "Accept": "application/json",
         }
 
+        auth_headers = []
         if self.auth_method == "user_token":
-            headers["Authorization"] = f"user_token {self.USER_TOKEN}"
+            auth_headers.append({"Authorization": f"user_token {self.USER_TOKEN}"})
+            # Compatibility mode for GLPI/front proxies that do not accept
+            # the Authorization scheme but do accept User-Token.
+            auth_headers.append({"User-Token": self.USER_TOKEN})
+            auth_headers.append({"Authorization": f"Bearer {self.USER_TOKEN}"})
         elif self.auth_method == "basic":
             credentials = f"{self.LOGIN}:{self.PASSWORD}"
             encoded_credentials = base64.b64encode(
-                credentials.encode("utf-8")).decode("utf-8")
-            headers["Authorization"] = f"Basic {encoded_credentials}"
+                credentials.encode("utf-8")
+            ).decode("utf-8")
+            auth_headers.append({"Authorization": f"Basic {encoded_credentials}"})
 
-        response = requests.get(
-            f"{self.URL_BASE}/initSession", headers=headers)
+        url = f"{self.URL_BASE.rstrip('/')}/initSession"
+        last_response = None
 
-        if response.status_code == 200:
-            data = response.json()
-            self.SESSION_TOKEN = data.get('session_token')
-            if not self.SESSION_TOKEN:
-                raise Exception("Session initialization failed.")
-            print(f"Session initialized (token: {self.SESSION_TOKEN})")
-            print(json.dumps(data, indent=4))
-        else:
-            response.raise_for_status()
+        for extra_auth in auth_headers:
+            headers = base_headers.copy()
+            headers.update(extra_auth)
+            response = requests.get(url, headers=headers, timeout=20)
+            last_response = response
+
+            if response.status_code == 200:
+                data = response.json()
+                self.SESSION_TOKEN = data.get("session_token")
+                if not self.SESSION_TOKEN:
+                    raise GLPIAPIError(
+                        APIErrorFeedback(
+                            action="initSession",
+                            method="GET",
+                            url=url,
+                            status_code=200,
+                            message="session_token missing in GLPI response",
+                            details=json.dumps(data, ensure_ascii=False),
+                            hint="Vérifiez la configuration de l'API REST GLPI.",
+                        )
+                    )
+                logger.debug("GLPI session initialized")
+                return
+
+            if response.status_code in (400, 401, 403):
+                continue
+
+            break
+
+        details = ""
+        if last_response is not None:
+            try:
+                details = json.dumps(last_response.json(), ensure_ascii=False)
+            except Exception:
+                details = (last_response.text or "")[:1000]
+
+        raise GLPIAPIError(
+            APIErrorFeedback(
+                action="initSession",
+                method="GET",
+                url=url,
+                status_code=last_response.status_code if last_response is not None else None,
+                message="Unable to open GLPI API session",
+                details=details,
+                hint="Vérifiez glpi_url_base_api, glpi_mmc_app_token et glpi_root_user_token.",
+            )
+        )
 
     def kill_session(self):
         """
@@ -1486,4 +1567,85 @@ class GLPIClient:
         except Exception as e:
             logger.error(f"Erreur inattendue update user {user_id}: {e}")
             return None
+
+
+class GLPIClientApiV1(GLPIClient):
+    """Client variant for GLPI endpoints exposed under /api.php/v1."""
+
+    def init_session(self):
+        """Initialize session with api.php/v1 specific auth order."""
+        base_headers = {
+            "App-Token": self.APP_TOKEN,
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+        }
+
+        auth_headers = []
+        if self.auth_method == "user_token":
+            # Some GLPI v11 stacks prefer User-Token over Authorization.
+            auth_headers.append({"User-Token": self.USER_TOKEN})
+            auth_headers.append({"Authorization": f"user_token {self.USER_TOKEN}"})
+            auth_headers.append({"Authorization": f"Bearer {self.USER_TOKEN}"})
+        elif self.auth_method == "basic":
+            credentials = f"{self.LOGIN}:{self.PASSWORD}"
+            encoded_credentials = base64.b64encode(
+                credentials.encode("utf-8")
+            ).decode("utf-8")
+            auth_headers.append({"Authorization": f"Basic {encoded_credentials}"})
+
+        base_url = self.URL_BASE.rstrip("/")
+        if base_url.endswith("/apirest.php"):
+            base_url = base_url[: -len("/apirest.php")] + "/api.php/v1"
+
+        url = f"{base_url}/initSession"
+        last_response = None
+
+        for extra_auth in auth_headers:
+            headers = base_headers.copy()
+            headers.update(extra_auth)
+            response = requests.get(url, headers=headers, timeout=20)
+            last_response = response
+
+            if response.status_code == 200:
+                data = response.json()
+                self.SESSION_TOKEN = data.get("session_token")
+                if not self.SESSION_TOKEN:
+                    raise GLPIAPIError(
+                        APIErrorFeedback(
+                            action="initSession",
+                            method="GET",
+                            url=url,
+                            status_code=200,
+                            message="session_token missing in GLPI response",
+                            details=json.dumps(data, ensure_ascii=False),
+                            hint="Vérifiez la configuration de l'API REST GLPI.",
+                        )
+                    )
+                self.URL_BASE = base_url
+                logger.debug("GLPI v1 session initialized")
+                return
+
+            if response.status_code in (400, 401, 403):
+                continue
+
+            break
+
+        details = ""
+        if last_response is not None:
+            try:
+                details = json.dumps(last_response.json(), ensure_ascii=False)
+            except Exception:
+                details = (last_response.text or "")[:1000]
+
+        raise GLPIAPIError(
+            APIErrorFeedback(
+                action="initSession",
+                method="GET",
+                url=url,
+                status_code=last_response.status_code if last_response is not None else None,
+                message="Unable to open GLPI API session",
+                details=details,
+                hint="Vérifiez glpi_url_base_api, glpi_mmc_app_token et glpi_root_user_token.",
+            )
+        )
 
