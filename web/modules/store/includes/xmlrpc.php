@@ -89,4 +89,8 @@ function xmlrpc_create_software_request($software_name, $os, $requester_name, $r
 function xmlrpc_sync_packages() {
     return xmlCall("store.sync_packages", array());
 }
+
+function xmlrpc_sync_packages_async() {
+    return xmlCall("store.sync_packages_async", array());
+}
 ?>
