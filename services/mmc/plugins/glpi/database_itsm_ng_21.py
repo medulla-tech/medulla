@@ -42,7 +42,7 @@ from sqlalchemy import (
 
 from sqlalchemy.orm import create_session, mapper, relationship, class_mapper
 from sqlalchemy.exc import NoSuchTableError, NoInspectionAvailable
-from mmc.support.apirest.glpi import GLPIClient
+from mmc.support.apirest.glpi import GLPIClient, GLPIClientApiV1, GLPIAPIError
 
 try:
     from sqlalchemy.sql.expression import ColumnOperators
@@ -6159,12 +6159,56 @@ class Itsmng21(DyngroupDatabaseHelper):
             logger.error("\n❌ Certaines clés sont manquantes ou invalides. voir parametres saas_application")
             return None
 
-        client = GLPIClient(
-            app_token=initparametre.get('glpi_mmc_app_token'),
-            url_base=initparametre.get('glpi_url_base_api'),
-            user_token=initparametre.get('glpi_root_user_token'),
-        )
-        client.init_session()
+        base = (initparametre.get('glpi_url_base_api') or '').rstrip('/')
+        if base.endswith('/api.php/v1'):
+            attempts = [
+                (GLPIClientApiV1, base),
+                (GLPIClient, base[: -len('/api.php/v1')] + '/apirest.php'),
+            ]
+        elif base.endswith('/apirest.php'):
+            attempts = [
+                (GLPIClient, base),
+                (GLPIClientApiV1, base[: -len('/apirest.php')] + '/api.php/v1'),
+            ]
+        elif re.search(r'/api\.php/v[0-9][0-9.]*$', base):
+            logger.error(
+                "Endpoint GLPI non supporte pour les tokens legacy/v1: %s. "
+                "Configurer /api.php/v1, /apirest.php ou l'URL racine GLPI.",
+                base,
+            )
+            return None
+        else:
+            attempts = [
+                (GLPIClient, base + '/apirest.php'),
+                (GLPIClientApiV1, base + '/api.php/v1'),
+            ]
+
+        client = None
+        for client_class, candidate_base in attempts:
+            try:
+                candidate_client = client_class(
+                    app_token=initparametre.get('glpi_mmc_app_token'),
+                    url_base=candidate_base,
+                    user_token=initparametre.get('glpi_root_user_token'),
+                )
+                candidate_client.init_session()
+                if hasattr(candidate_client, 'SESSION_TOKEN') and candidate_client.SESSION_TOKEN:
+                    client = candidate_client
+                    break
+            except GLPIAPIError as e:
+                logger.error(
+                    "GLPI init failed with %s on %s: %s",
+                    client_class.__name__,
+                    candidate_base,
+                    e.feedback.to_dict(),
+                )
+            except Exception as e:
+                logger.error(
+                    "GLPI init failed with %s on %s: %s",
+                    client_class.__name__,
+                    candidate_base,
+                    e,
+                )
 
         # Vérifie que le client est bien initialisé et qu'une session est active
         if not client or not hasattr(client, 'SESSION_TOKEN') or not client.SESSION_TOKEN:
