@@ -436,6 +436,25 @@ def save_subscriptions(software_ids):
 
     return result
 
+def sync_packages_async():
+    """Lance sync_packages() dans un thread de fond et rend la main immédiatement.
+
+    Le téléchargement des paquets peut être long (plusieurs Go) : on évite ainsi
+    de bloquer la requête web. L'avancement se reflète dans le catalogue
+    (badges package_exists/deployed_at) au prochain rafraîchissement.
+    """
+    from threading import Thread
+
+    def _bg():
+        try:
+            res = sync_packages()
+            logger.info(f"Background sync done: synced={res.get('synced')}, errors={res.get('errors')}")
+        except Exception as e:
+            logger.error(f"Background sync_packages failed: {e}")
+
+    Thread(target=_bg, daemon=True).start()
+    return {'success': True, 'status': 'started'}
+
 def get_subscribers_for_software(software_id):
     """Return clients subscribed to a software - not available via client API"""
     return []
@@ -503,6 +522,7 @@ def sync_packages():
     # Build name lookup — track which are multilingual
     subscribed_names = set()
     subscribed_multilingual = set()  # normalized names of multilingual software
+    subscribed_any_lang = set()  # softs sans version dans la langue du client -> on livre la langue dispo
     for soft in catalog.get('data', []):
         if soft.get('id') in subscribed_ids:
             name = soft.get('name', '')
@@ -511,6 +531,14 @@ def sync_packages():
             subscribed_names.add(_normalize(name))
             if soft.get('is_multilingual'):
                 subscribed_multilingual.add(_normalize(name))
+            else:
+                soft_langs = soft.get('languages') or []
+                if isinstance(soft_langs, str):
+                    soft_langs = [l.strip() for l in soft_langs.split(',') if l.strip()]
+                # Aucune langue du client n'est disponible : le soft n'existe que dans
+                # sa langue native -> on la livre quand même (un abonnement doit livrer qqch).
+                if 'multi' not in client_langs and not any(cl in soft_langs for cl in client_langs):
+                    subscribed_any_lang.add(_normalize(name))
 
     logger.info(f"Subscribed to {len(subscribed_ids)} software, langs={client_langs}")
 
@@ -539,6 +567,9 @@ def sync_packages():
         if 'multi' in client_langs:
             packages_to_sync.append(pkg)
         elif pkg_normalized in subscribed_multilingual:
+            packages_to_sync.append(pkg)
+        elif pkg_normalized in subscribed_any_lang:
+            # pas de version dans la langue du client -> on prend la langue disponible
             packages_to_sync.append(pkg)
         else:
             lang_match = False
@@ -671,7 +702,7 @@ def _download_package(config, remote_pkg, local_path):
 
         logger.debug(f"Downloading {filename} from {file_url}")
 
-        headers = {}
+        headers = {'User-Agent': USER_AGENT}
         auth = _generate_auth_header(config)
         if auth:
             headers['Authorization'] = auth

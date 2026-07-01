@@ -66,17 +66,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_subscriptions'])
     exit;
 }
 
-// Process POST form - Manual sync
+// Process POST form - Manual sync (lancé en arrière-plan, rend la main tout de suite)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['sync_packages'])) {
-    $result = xmlrpc_sync_packages();
+    $result = xmlrpc_sync_packages_async();
 
-    if ($result && ($result['success'] || !empty($result['synced']))) {
-        $synced = $result['synced'] ?? 0;
-        $total = $result['total_subscribed'] ?? '?';
-        $msg = _T('Synchronization completed!', 'store') . ' ' . $synced . '/' . $total . ' ' . _T('packages synchronized', 'store');
-        new NotifyWidgetSuccess($msg);
-    } elseif ($result && isset($result['message'])) {
-        new NotifyWidgetSuccess($result['message']);
+    if ($result && $result['success']) {
+        new NotifyWidgetSuccess(_T('Synchronization started in background', 'store') . '. ' . _T('Refresh in a moment to see the status', 'store') . '.');
     } else {
         $error = $result['error'] ?? 'Unknown error';
         new NotifyWidgetFailure(_T('Synchronization failed', 'store') . ': ' . htmlspecialchars($error));
