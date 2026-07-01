@@ -89,6 +89,13 @@ def get_glpi_client(tokenuser=None, app_token=None, url_base=None):
                 (GLPIClient, base),
                 (GLPIClientApiV1, base[: -len("/apirest.php")] + "/api.php/v1"),
             ]
+        elif re.search(r"/api\.php/v[0-9][0-9.]*$", base):
+            logger.error(
+                "Endpoint GLPI non supporté pour les tokens legacy/v1: %s. "
+                "Configurer /api.php/v1, /apirest.php ou l'URL racine GLPI.",
+                base,
+            )
+            return None
         else:
             attempts = [
                 (GLPIClient, base + "/apirest.php"),

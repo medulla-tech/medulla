@@ -114,6 +114,8 @@ class GLPIClient:
     - Extract_GLPI_ERROR_Message (text) (staticmethod): Extract a readable error message.
     """
 
+    API_PATH_SUFFIX = "/apirest.php"
+
     def __init__(self, url_base, app_token, user_token=None, login=None, password=None):
         """
         Initializes the GLPI client with the necessary tokens and base URL.
@@ -125,12 +127,18 @@ class GLPIClient:
             login (str, optional): The login for basic authentication.
             password (str, optional): The password for basic authentication.
         """
-        self.URL_BASE = url_base
+        self.URL_BASE = (url_base or "").rstrip("/")
         self.APP_TOKEN = app_token
         self.USER_TOKEN = user_token
         self.LOGIN = login
         self.PASSWORD = password
         self.SESSION_TOKEN = None
+
+        if not self.URL_BASE.endswith(self.API_PATH_SUFFIX):
+            raise ValueError(
+                f"Unsupported GLPI API endpoint for {self.__class__.__name__}: "
+                f"{self.URL_BASE}. Expected endpoint ending with {self.API_PATH_SUFFIX}."
+            )
 
         if user_token:
             self.auth_method = "user_token"
@@ -1572,6 +1580,8 @@ class GLPIClient:
 class GLPIClientApiV1(GLPIClient):
     """Client variant for GLPI endpoints exposed under /api.php/v1."""
 
+    API_PATH_SUFFIX = "/api.php/v1"
+
     def init_session(self):
         """Initialize session with api.php/v1 specific auth order."""
         base_headers = {
@@ -1593,11 +1603,7 @@ class GLPIClientApiV1(GLPIClient):
             ).decode("utf-8")
             auth_headers.append({"Authorization": f"Basic {encoded_credentials}"})
 
-        base_url = self.URL_BASE.rstrip("/")
-        if base_url.endswith("/apirest.php"):
-            base_url = base_url[: -len("/apirest.php")] + "/api.php/v1"
-
-        url = f"{base_url}/initSession"
+        url = f"{self.URL_BASE.rstrip('/')}/initSession"
         last_response = None
 
         for extra_auth in auth_headers:
@@ -1621,7 +1627,6 @@ class GLPIClientApiV1(GLPIClient):
                             hint="Vérifiez la configuration de l'API REST GLPI.",
                         )
                     )
-                self.URL_BASE = base_url
                 logger.debug("GLPI v1 session initialized")
                 return
 
