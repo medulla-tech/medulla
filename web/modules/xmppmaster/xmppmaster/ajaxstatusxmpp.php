@@ -139,12 +139,13 @@ $logAction = new ActionItem(
 $previous = (isset($_GET['previous'])) ? htmlentities($_GET['previous']) : "";
 $reloadAction = new ActionPopupItem(
     _("Restart deployment"),
-    "popupReloadDeploy&previous=".$previous,
+    "popupReloadDeploy",
     "reload",
     "",
     "xmppmaster",
     "xmppmaster"
 );
+$reloadAction->staticParams = ["previous" => $previous];
 
 
 for ($i = 0;$i < safeCount($arraydeploy['tabdeploy']['start']);$i++) {

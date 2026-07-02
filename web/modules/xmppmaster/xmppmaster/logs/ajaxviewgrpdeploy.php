@@ -692,12 +692,13 @@ if ($count != 0) {
 
     $reloadAction = new ActionPopupItem(
         _("Restart deployment"),
-        "popupReloadDeploy&previous=".$_GET['previous'],
+        "popupReloadDeploy",
         "reload",
         "",
         "xmppmaster",
         "xmppmaster"
     );
+    $reloadAction->staticParams = ["previous" => $_GET['previous']];
 
     $raw = 0;
     foreach($info_from_machines[8] as $key => $value) {
