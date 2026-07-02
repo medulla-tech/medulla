@@ -20,6 +20,7 @@
 # file : /usr/sbin/medulla-stats.sh
 
 AESKEY=$(crudini --get /etc/mmc/plugins/xmppmaster.ini.local defaultconnection keyAES32 2>/dev/null)
+FQDN=$(crudini --get /etc/mmc/mmc.ini.local server_01 description 2>/dev/null)
 NB_MACH=$(mysql --defaults-group-suffix=medulla xmppmaster -Bse 'SELECT COUNT(*) FROM machines')
 NB_USERS=$(slapcat | grep "dn: uid=" | wc -l)
 NB_ENTITES=$(mysql --defaults-group-suffix=medulla xmppmaster -Bse 'SELECT COUNT(*) FROM local_glpi_entities')
@@ -28,5 +29,5 @@ VERSION=$(dpkg-query -W -f='${Version}\n' mmc-agent | grep -oE '^[0-9]+\.[0-9]+\
 
 curl -fsSL -X POST \
   -H "Content-Type: application/json" \
-  --data "{\"aeskey\":\"$AESKEY\",\"nb_mach\":\"$NB_MACH\",\"nb_users\":\"$NB_USERS\",\"nb_entites\":\"$NB_ENTITES\",\"nb_packages\":\"$NB_PACKAGES\",\"version\":\"$VERSION\"}" \
+  --data "{\"aeskey\":\"$AESKEY\",\"fqdn\":\"$FQDN\",\"nb_mach\":\"$NB_MACH\",\"nb_users\":\"$NB_USERS\",\"nb_entites\":\"$NB_ENTITES\",\"nb_packages\":\"$NB_PACKAGES\",\"version\":\"$VERSION\"}" \
   https://updates.medulla-tech.io/post_stats.php
