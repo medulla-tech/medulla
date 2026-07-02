@@ -35,7 +35,7 @@ linuxupdatespkgfiles = \
 	xmppmaster/packages/linux-updates/e05e689e-linuxupdatesecutity_ivvfn4b/conf.json \
 	xmppmaster/packages/linux-updates/e05e689e-linuxupdatesecutity_ivvfn4b/xmppdeploy.json
 
-EXTRA_DIST += $(linuxupdatespkgfiles)
+EXTRA_DIST = $(linuxupdatespkgfiles)
 
 dist_qactions_DATA = msc/qactions/001reboot.msc \
 	msc/qactions/002shutdown.msc \
