@@ -83,9 +83,10 @@ class os_repartitionPanel extends Panel {
     }
 
     $pcs = array_map(function($pcs) {
-    // android hmdm devices redirect to mobile group creation
+    // android hmdm devices redirect to mobile devices list
     if ($pcs['os'] === 'Android' && $pcs['version'] === 'HMDM') {
-        $href = urlStrRedirect("mobile/mobile/addGroup").'&autoselect=all&name=widget';
+        $href = urlStrRedirect("mobile/mobile/index");
+        $pcs['version'] = 'Mobile';
     } else {
         $href = urlStrRedirect("base/computers/createOSStaticGroup").'&os='.$pcs['os'].'&version='.$pcs['version'];
     }

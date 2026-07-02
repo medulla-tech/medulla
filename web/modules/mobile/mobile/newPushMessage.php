@@ -18,6 +18,7 @@ $p->display();
 
 $send_to_type = isset($_POST['send_to']) ? $_POST['send_to'] : "device";
 $message_type = isset($_POST['message_type']) ? $_POST['message_type'] : "configUpdated";
+$custom_message_type = isset($_POST['custom_message_type']) ? trim($_POST['custom_message_type']) : "";
 $payload_text = isset($_POST['payload']) ? $_POST['payload'] : "";
 $device_number = isset($_POST['device_input']) ? $_POST['device_input'] : "";
 $group_id = isset($_POST['group_input']) ? $_POST['group_input'] : "";
@@ -25,6 +26,24 @@ $configuration_id = isset($_POST['configuration_input']) ? $_POST['configuration
 
 $groups = xmlrpc_get_hmdm_groups();
 $configurations = xmlrpc_get_hmdm_configurations();
+
+$cancel_target = isset($_POST['cancel_target']) ? $_POST['cancel_target'] : '';
+if (empty($cancel_target)) {
+    if (!empty($_GET['device'])) {
+        $cancel_target = 'mobile/mobile/index';
+    } elseif (!empty($_GET['group_id'])) {
+        $cancel_target = 'mobile/mobile/groups';
+    } elseif (!empty($_GET['config_id'])) {
+        $cancel_target = 'mobile/mobile/configurations';
+    } else {
+        $cancel_target = 'mobile/mobile/pushMessages';
+    }
+}
+
+if (isset($_POST['bback'])) {
+    header("Location: " . urlStrRedirect($cancel_target));
+    exit;
+}
 
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['test'])) {
@@ -39,22 +58,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['test'])) {
         $errors[] = _T("Configuration is required", "mobile");
     }
     
+    if ($message_type === 'custom' && empty($custom_message_type)) {
+        $errors[] = _T("Custom message type is required", "mobile");
+    }
+
     // If no errors, send the push message
     if (empty($errors)) {
-        // Only pass the relevant ID, clear the others
         $dev_num = ($send_to_type === 'device') ? $device_number : '';
-        $grp_id = ($send_to_type === 'group') ? $group_id : '';
-        $cfg_id = ($send_to_type === 'configuration') ? $configuration_id : '';
-        
+        $grp_id  = ($send_to_type === 'group') ? $group_id : '';
+        $cfg_id  = ($send_to_type === 'configuration') ? $configuration_id : '';
+        $actual_type = ($message_type === 'custom') ? $custom_message_type : $message_type;
+
         $result = xmlrpc_send_hmdm_push_message(
             $send_to_type,
-            $message_type,
+            $actual_type,
             $payload_text,
             $dev_num,
             $grp_id,
             $cfg_id
         );
-        
+
         if ($result && isset($result['status']) && $result['status'] === 'OK') {
             new NotifyWidgetSuccess(_T("Push message sent successfully", "mobile"));
             header("Location: " . urlStrRedirect("mobile/mobile/pushMessages"));
@@ -75,6 +98,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['test'])) {
 // Build the form
 $form = new Form();
 $form->push(new Table());
+$cancelHidden = new HiddenTpl('cancel_target');
+$form->add($cancelHidden, array('value' => $cancel_target, 'hide' => true));
 
 // Send to selector
 $sendToSelect = new SelectItem('send_to');
@@ -132,11 +157,35 @@ $form->add($configRow);
 $messageTypeSelect = new SelectItem('message_type');
 $messageTypeSelect->setElements(array(
     _T('Config Updated', 'mobile'),
+    _T('Reboot', 'mobile'),
+    _T('Lock Screen', 'mobile'),
+    _T('Factory Reset', 'mobile'),
+    _T('Run App', 'mobile'),
+    _T('Uninstall App', 'mobile'),
+    _T('Delete File', 'mobile'),
+    _T('Delete Directory', 'mobile'),
+    _T('Purge Directory', 'mobile'),
+    _T('Permissive Mode', 'mobile'),
+    _T('Send Intent', 'mobile'),
+    _T('Run Command', 'mobile'),
+    _T('Exit Kiosk', 'mobile'),
+    _T('Clear Download History', 'mobile'),
+    _T('Grant Permissions', 'mobile'),
     _T('Custom', 'mobile')
 ));
-$messageTypeSelect->setElementsVal(array('configUpdated', 'custom'));
+$messageTypeSelect->setElementsVal(array(
+    'configUpdated', 'reboot', 'lockDevice', 'wipe', 'runApp',
+    'uninstallApp', 'deleteFile', 'deleteDir', 'purgeDir',
+    'permissiveMode', 'intent', 'runCommand', 'exitKiosk',
+    'clearDownloadHistory', 'grantPermissions', 'custom'
+));
 $messageTypeSelect->setSelected($message_type);
 $form->add(new TrFormElement(_T('Message Type', 'mobile'), $messageTypeSelect));
+
+$customTypeInput = new InputTpl('custom_message_type', '/.+/', $custom_message_type);
+$customTypeRow = new TrFormElement(_T('Custom Type', 'mobile'), $customTypeInput);
+$customTypeRow->setClass('row-custom-type');
+$form->add($customTypeRow);
 
 // Payload text
 $payloadArea = new TextareaTpl('payload');
@@ -145,6 +194,7 @@ $form->add(new TrFormElement(_T('Payload', 'mobile'), $payloadArea));
 
 // Submit button
 $form->addValidateButton('test', _T('Send', 'mobile'));
+$form->addCancelButton('bback');
 
 $form->pop();
 $form->display();
@@ -152,6 +202,35 @@ $form->display();
 ?>
 
 <script type="text/javascript">
+    var payloadTemplates = {
+        'configUpdated': '',
+        'reboot': '',
+        'lockDevice': '',
+        'wipe': '',
+        'runApp': '{\n  "pkg": "app.package.id"\n}',
+        'uninstallApp': '{\n  "pkg": "app.package.id"\n}',
+        'deleteFile': '{\n  "path": "/path/to/file"\n}',
+        'deleteDir': '{\n  "path": "/path/to/dir"\n}',
+        'purgeDir': '{\n  "path": "/path/to/dir",\n  "recursive": "1"\n}',
+        'intent': '{\n  "action": "android.intent.action.VIEW",\n  "data": "https://example.com"\n}',
+        'runCommand': '{\n  "command": "shell command"\n}',
+        'grantPermissions': '{\n  "pkg": "app.package.id"\n}'
+    };
+
+    function updateMessageType(applyTemplate) {
+        var msgType = document.querySelector('select[name="message_type"]').value;
+        var customRow = document.querySelector('.row-custom-type');
+        var payloadArea = document.querySelector('textarea[name="payload"]');
+
+        if (customRow) {
+            customRow.style.display = (msgType === 'custom') ? '' : 'none';
+        }
+
+        if (applyTemplate && payloadArea) {
+            payloadArea.value = payloadTemplates[msgType] || '';
+        }
+    }
+
     // Show/hide rows based on "Send to" selection
     function updateSecondInput() {
         var sendTo = document.querySelector('select[name="send_to"]').value;
@@ -179,6 +258,57 @@ $form->display();
         if (sendToSelect) {
             sendToSelect.addEventListener('change', updateSecondInput);
             updateSecondInput();
+        }
+
+        var msgTypeSelect = document.querySelector('select[name="message_type"]');
+        if (msgTypeSelect) {
+            msgTypeSelect.addEventListener('change', function() { updateMessageType(true); });
+            updateMessageType(false);
+        }
+
+        // Confirmation for destructive actions
+        var _destructiveTypes = ['wipe', 'reboot', 'lockDevice', 'runCommand', 'purgeDir', 'deleteDir'];
+        var _destructiveLabels = {
+            'wipe':       '<?php echo addslashes(_T('Factory Reset', 'mobile')); ?>',
+            'reboot':     '<?php echo addslashes(_T('Reboot', 'mobile')); ?>',
+            'lockDevice': '<?php echo addslashes(_T('Lock Screen', 'mobile')); ?>',
+            'runCommand': '<?php echo addslashes(_T('Run Command', 'mobile')); ?>',
+            'purgeDir':   '<?php echo addslashes(_T('Purge Directory', 'mobile')); ?>',
+            'deleteDir':  '<?php echo addslashes(_T('Delete Directory', 'mobile')); ?>'
+        };
+        var _sendBtn = document.querySelector('input[name="test"]');
+        var _sendForm = _sendBtn ? _sendBtn.closest('form') : null;
+        if (_sendBtn && _sendForm) {
+            _sendBtn.addEventListener('click', function(e) {
+                var msgType = document.querySelector('select[name="message_type"]').value;
+                if (_destructiveTypes.indexOf(msgType) !== -1) {
+                    e.preventDefault();
+                    var label = _destructiveLabels[msgType] || msgType;
+                    var capturedBtn = _sendBtn, capturedForm = _sendForm;
+                    window._mobileDestructiveAction = function() {
+                        var h = document.createElement('input');
+                        h.type = 'hidden'; h.name = 'test'; h.value = capturedBtn.value;
+                        capturedForm.appendChild(h);
+                        capturedForm.submit();
+                    };
+                    var msg = '<?php echo addslashes(_T('You are about to send:', 'mobile')); ?> <strong>' + label + '<\/strong>. <?php echo addslashes(_T('This action may be irreversible.', 'mobile')); ?>';
+                    var html = '<div style="padding:10px">'
+                             + '<div class="alert alert-warning">' + msg + '<\/div>'
+                             + '<div style="text-align:center">'
+                             + '<button class="btn btn-danger" onclick="var f=window._mobileDestructiveAction;window._mobileDestructiveAction=null;closePopup();if(f)f();">'
+                             + '<?php echo addslashes(_T('Confirm', 'mobile')); ?><\/button>'
+                             + ' <button class="btn btnSecondary" onclick="closePopup();return false;">'
+                             + '<?php echo addslashes(_T('Cancel', 'mobile')); ?><\/button>'
+                             + '<\/div><\/div>';
+                    PopupWindow(null, null, 0, function() {
+                        var $p = jQuery('#popup');
+                        $p.css({'top':'50%','left':'50%',
+                                'margin-top': -($p.outerHeight()/2)+'px',
+                                'margin-left': -($p.outerWidth()/2)+'px'});
+                        jQuery('#overlay').fadeIn().click(function() { window._mobileDestructiveAction=null; closePopup(); });
+                    }, html);
+                }
+            });
         }
         
         // Device autocomplete

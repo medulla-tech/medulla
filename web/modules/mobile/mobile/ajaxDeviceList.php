@@ -2,6 +2,8 @@
 require_once("modules/mobile/includes/xmlrpc.php");
 
 $filter = isset($_GET['filter']) ? $_GET['filter'] : '';
+$field  = isset($_GET['field'])  ? trim($_GET['field'])  : 'all';
+$status = isset($_GET['status']) ? $_GET['status'] : '';
 
 $mobiles = xmlrpc_get_hmdm_devices();
 $configurations_data = xmlrpc_get_hmdm_configurations();
@@ -22,6 +24,7 @@ $actionEdit = [];
 $actionDetails = [];
 $actionLogs = [];
 $actionMessage = [];
+$actionEnrollEmail = [];
 $params = [];
 $sources = $ip = [];
 
@@ -34,9 +37,32 @@ foreach ($mobiles as &$m) {
 unset($m);
 
 if (!empty($filter)) {
-    $mobiles = array_filter($mobiles, function($mobile) use ($filter) {
-        $deviceName = $mobile['number'] ?? '';
-        return stripos($deviceName, $filter) !== false;
+    $mobiles = array_filter($mobiles, function($mobile) use ($filter, $field, $config_map) {
+        if ($field === 'description') {
+            return stripos($mobile['description'] ?? '', $filter) !== false;
+        }
+        if ($field === 'imei') {
+            return stripos($mobile['imei'] ?? '', $filter) !== false;
+        }
+        if ($field === 'configuration') {
+            $cfgId   = $mobile['configurationId'] ?? null;
+            $cfgName = ($cfgId && isset($config_map[$cfgId])) ? $config_map[$cfgId] : '';
+            return stripos($cfgName, $filter) !== false;
+        }
+        // 'all' or 'number'
+        return stripos($mobile['number'] ?? '', $filter) !== false
+            || ($field === 'all' && (
+                stripos($mobile['description'] ?? '', $filter) !== false
+                || stripos($mobile['imei'] ?? '', $filter) !== false
+            ));
+    });
+}
+
+if (!empty($status)) {
+    $onlineCodes = ['green', 'yellow'];
+    $mobiles = array_filter($mobiles, function($mobile) use ($status, $onlineCodes) {
+        $isOnline = in_array($mobile['statusCode'] ?? '', $onlineCodes);
+        return ($status === 'online') ? $isOnline : !$isOnline;
     });
 }
 
@@ -173,12 +199,14 @@ foreach ($mobiles as $index => $mobile) {
     $col1[] = "<a href='#' class='mobilestatus {$statut}'>{$numero}</a>";
 
     $actionDetails[] = new ActionItem(_T("Details", "mobile"), "detailedInfo", "display", "device", "mobile", "mobile");
-    $actionLogs[] = new ActionItem(_T("Logs", "mobile"), "functions", "logfile", "device", "mobile", "mobile", "taglogs");
+    $actionLogs[] = new ActionItem(_T("Logs", "mobile"), "logsmobile", "logfile", "device", "base", "logview");
     $actionMessage[] = new ActionItem(_T("Message", "mobile"), "newMessage", "add", "device", "mobile", "mobile");
     $actionEdit[] = new ActionItem(_T("Edit", "mobile"), "editDevice", "edit", "id", "mobile", "mobile");
+    $actionEnrollEmail[] = new ActionItem(_T("Send enrollment email", "mobile"), "deviceEnrollEmail", "share", "id", "mobile", "mobile");
     $actionQuick[] = new ActionPopupItem(_T("Quick action", "mobile"), "deviceQuickAction", "quick", "id", "mobile", "mobile", null, 620);
     $actionQr[] = new ActionPopupItem(_T("QR Code", "mobile"), "qrCode", "qrcode", "", "mobile", "mobile", null, 450);
-    $actionDelete[] = new ActionPopupItem(_T("Delete", "mobile"), "deleteDevice", "delete", "id", "mobile", "mobile");
+    $actionRemoteControl[] = new ActionPopupItem(_T("Remote Control", "mobile"), "remoteControlAction", "guaca", "device", "mobile", "mobile", null, 470);
+    $actionDelete[] = new ActionPopupItem(_T("Delete", "mobile"), "deleteDevice", "delete", "id", "mobile", "mobile", null, 500);
 
     $params[] = [
         'id' => isset($mobile['id']) ? $mobile['id'] : $index,
@@ -193,7 +221,6 @@ $count = is_array($mobiles) ? count($mobiles) : 0;
 $count = count($mobiles);
 $filter = "";
 $n = new OptimizedListInfos($col1, _T("Device's name", "mobile"));
-$n->setResizable();
 
 $n->setNavBar(new AjaxNavBar($count, $filter, "updateSearchParamform".($actions?'image':'master')));
 $n->setCssIds($ids);
@@ -209,12 +236,14 @@ $n->addExtraInfo($ip, _T("IP address", "mobile"));
 
 // Attach actions
 $n->addActionItemArray($actionQr);
+$n->addActionItemArray($actionRemoteControl);
 $n->addActionItemArray($actionQuick);
 $n->addActionItemArray($actionDetails);
 $n->addActionItemArray($actionLogs);
 $n->addActionItemArray($actionMessage);
 $n->addActionItemArray($actionEdit);
 $n->addActionItemArray($actionDelete);
+$n->addActionItemArray($actionEnrollEmail);
 $n->setParamInfo($params);
 
 // $n->setItemCount(count($mobiles));
@@ -222,6 +251,7 @@ $n->start = 0;
 // $n->end = count($mobiles);
 
 $n->display();
+echo '<script>(function(){var $tb=jQuery(".listinfos:last tbody");if(!$tb.children("tr").length){$tb.append("<tr><td colspan=\"20\" style=\"text-align:center;color:#888;padding:20px;font-style:italic;\">" + ' . json_encode(_T("No devices found", "mobile")) . ' + "</td></tr>");}})();</script>';
 ?>
 
 <style>
@@ -244,4 +274,75 @@ $n->display();
 .status-red {
     color: #dc3545;
 }
+li.share a { background-image: url("img/actions/share.svg"); }
 </style>
+
+<script>
+function _escDevHtml(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function _deviceListConfirm(msg, onConfirm) {
+    var box = document.createElement('div');
+    box.id = '_dlConfirmOverlay';
+    box.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:99999;display:flex;align-items:center;justify-content:center;';
+    box.innerHTML = '<div style="background:#fff;border-radius:8px;padding:24px;max-width:420px;width:90%;box-shadow:0 8px 32px rgba(0,0,0,0.25);">'
+        + '<div class="alert alert-warning" style="margin-bottom:16px;">' + msg + '</div>'
+        + '<div style="text-align:right;">'
+        + '<button class="btn btn-danger" id="_dlConfirmOk"><?php echo addslashes(_T("Confirm", "mobile")); ?></button>'
+        + ' <button class="btn btnSecondary" id="_dlConfirmCancel"><?php echo addslashes(_T("Cancel", "mobile")); ?></button>'
+        + '</div></div>';
+    document.body.appendChild(box);
+    document.getElementById('_dlConfirmOk').onclick = function() { document.body.removeChild(box); onConfirm(); };
+    document.getElementById('_dlConfirmCancel').onclick = function() { document.body.removeChild(box); };
+}
+
+document.addEventListener('click', function(e) {
+    var a = e.target.closest('li.guaca a');
+    if (a && a.href && a.href.indexOf('action=remoteControlAction') !== -1) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        var href = a.href;
+        var m = href.match(/[?&]device=([^&]+)/);
+        var deviceName = m ? decodeURIComponent(m[1]) : '';
+        _deviceListConfirm(
+            '<?php echo addslashes(_T("Start remote control session for device", "mobile")); ?> <strong>' + _escDevHtml(deviceName) + '</strong>?',
+            function() { window.open(href, 'remotecontrol', 'width=470,height=860,resizable=yes,scrollbars=no'); }
+        );
+    }
+}, true);
+
+document.addEventListener('click', function(e) {
+    var a = e.target.closest('li.share a');
+    if (a && a.href && a.href.indexOf('action=deviceEnrollEmail') !== -1) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        var url = a.href;
+        var deviceName = jQuery(a).closest('tr').find('td:first a').text().trim()
+                      || jQuery(a).closest('tr').find('td:first').text().trim();
+        _deviceListConfirm(
+            '<?php echo addslashes(_T("Send enrollment email to device", "mobile")); ?> <strong>' + _escDevHtml(deviceName) + '</strong>?',
+            function() {
+                if (typeof window._openEnrollModal === 'function') {
+                    window._openEnrollModal('<?php echo addslashes(_T("Sending enrollment email", "mobile")); ?>', 1);
+                    jQuery.getJSON(url, function(resp) {
+                        window._enrollModalSetProgress(1, 1);
+                        var name  = resp.name  || '';
+                        var email = resp.email || '<?php echo addslashes(_T("No email on file", "mobile")); ?>';
+                        var color = resp.ok ? '#16a34a' : '#dc2626';
+                        var label = resp.ok ? 'Sent' : 'Failed';
+                        var detail = resp.ok ? '' : ' (' + (resp.error || 'failed') + ')';
+                        var msg = '[' + label + '] ' + name + ' &lt;' + email + '&gt;' + detail;
+                        window._enrollModalLog(color, msg);
+                        window._enrollModalDone();
+                    }).fail(function() {
+                        window._enrollModalSetProgress(1, 1);
+                        window._enrollModalLog('#dc2626', '<?php echo addslashes(_T("Network error", "mobile")); ?>');
+                        window._enrollModalDone();
+                    });
+                }
+            }
+        );
+    }
+}, true);
+</script>

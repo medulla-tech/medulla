@@ -9,17 +9,6 @@ $values = [
     'name' => ''
 ];
 
-// get name from url param
-if (isset($_GET['name'])) {
-    $nameParam = trim($_GET['name']);
-    // auto-generate name for widget
-    if ($nameParam === 'widget') {
-        $values['name'] = 'Android OS Widget at ' . date('Y-m-d H:i');
-    } else {
-        $values['name'] = $nameParam;
-    }
-}
-
 $allDevices = xmlrpc_get_hmdm_devices();
 if (!is_array($allDevices)) {
     $allDevices = [];
@@ -31,41 +20,36 @@ $currentNonMembers = [];
 foreach ($allDevices as $device) {
     $deviceId = $device['id'] ?? $device['deviceId'] ?? null;
     $deviceName = $device['number'];
-    
+
     if (!$deviceId) {
         continue;
     }
-    
+
     $deviceKey = $device['number'] . "##" . $deviceId;
     $currentNonMembers[$deviceKey] = $deviceName;
 }
 
 if (isset($_POST['name'])) {
     $values['name'] = trim($_POST['name']);
+} elseif (isset($_POST['suggested_name'])) {
+    $values['name'] = trim($_POST['suggested_name']);
 }
 
 if (isset($_POST['lmembers'])) {
     $currentMembers = unserialize(base64_decode($_POST['lmembers']));
-} else {
-    $currentMembers = [];
+} elseif (!empty($_POST['devices']) && is_array($_POST['devices'])) {
+    foreach ($_POST['devices'] as $key) {
+        $parts = explode('##', $key, 2);
+        $currentMembers[$key] = $parts[0];
+    }
 }
 
 if (isset($_POST['lmachines'])) {
     $currentNonMembers = unserialize(base64_decode($_POST['lmachines']));
-}
-
-// auto-select all devices on initial load
-if ($_SERVER['REQUEST_METHOD'] !== 'POST' && isset($_GET['autoselect']) && $_GET['autoselect'] === 'all') {
-    $currentMembers = [];
-    foreach ($allDevices as $device) {
-        $deviceId = $device['id'] ?? $device['deviceId'] ?? null;
-        $deviceName = $device['number'];
-        if ($deviceId) {
-            $deviceKey = $deviceName . "##" . $deviceId;
-            $currentMembers[$deviceKey] = $deviceName;
-        }
+} elseif (!empty($currentMembers)) {
+    foreach ($currentMembers as $key => $name) {
+        unset($currentNonMembers[$key]);
     }
-    $currentNonMembers = [];
 }
 
 if (isset($_POST['baddmachine_x'])) {
@@ -87,14 +71,14 @@ if (isset($_POST['baddmachine_x'])) {
 } elseif (isset($_POST['bfiltmachine'])) {
     $filter = $_POST['filter'] ?? '';
     $currentNonMembers = [];
-    
+
     if ($filter) {
         foreach ($allDevices as $device) {
             $deviceId = $device['id'] ?? $device['deviceId'] ?? null;
             if (!$deviceId) {
                 continue;
             }
-            
+
             if (stripos($device['number'], $filter) !== false) {
                 $deviceKey = $device['number'] . "##" . $deviceId;
                 if (!isset($currentMembers[$deviceKey])) {
@@ -108,7 +92,7 @@ if (isset($_POST['baddmachine_x'])) {
             if (!$deviceId) {
                 continue;
             }
-            
+
             $deviceKey = $device['number'] . "##" . $deviceId;
             if (!isset($currentMembers[$deviceKey])) {
                 $currentNonMembers[$deviceKey] = $device['number'];
@@ -118,16 +102,16 @@ if (isset($_POST['baddmachine_x'])) {
 } elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['test'])) {
     if ($values['name'] === '') {
         $errors['name'] = _T("Group name is required", "mobile");
-    } elseif (!preg_match('/^[a-zA-Z0-9\s\-_:]+$/', $values['name'])) {
+    } elseif (!preg_match('/^[a-zA-Z0-9\s\-_]+$/', $values['name'])) {
         $errors['name'] = _T("Group name contains invalid characters", "mobile");
     }
 
     if (empty($errors)) {
         $result = xmlrpc_add_hmdm_group($values['name']);
-        
+
         if ($result && is_array($result) && isset($result['status']) && $result['status'] === 'OK') {
             $groupId = null;
-            
+
             $allGroups = xmlrpc_get_hmdm_groups();
             foreach ($allGroups as $grp) {
                 if ($grp['name'] === $values['name']) {
@@ -135,30 +119,30 @@ if (isset($_POST['baddmachine_x'])) {
                     break;
                 }
             }
-            
+
             if ($groupId && !empty($currentMembers)) {
                 foreach ($allDevices as $device) {
                     $deviceId = $device['id'] ?? $device['deviceId'] ?? null;
                     $deviceName = $device['number'];
-                    
+
                     if (!$deviceId) {
                         continue;
                     }
-                    
+
                     $deviceKey = $deviceName . "##" . $deviceId;
-                    
+
                     if (isset($currentMembers[$deviceKey])) {
                         $deviceGroups = $device['groups'] ?? [];
                         $newGroupsList = [];
-                        
+
                         foreach ($deviceGroups as $grp) {
                             if (isset($grp['id'])) {
                                 $newGroupsList[] = $grp['id'];
                             }
                         }
-                        
+
                         $newGroupsList[] = $groupId;
-                        
+
                         xmlrpc_add_hmdm_device(
                             $deviceName,
                             $device['configurationId'],
@@ -171,7 +155,7 @@ if (isset($_POST['baddmachine_x'])) {
                     }
                 }
             }
-            
+
             new NotifyWidgetSuccess(sprintf(_T("Group '%s' successfully created", "mobile"), $values['name']));
             header("Location: " . urlStrRedirect("mobile/mobile/groups"));
             exit;
@@ -197,13 +181,13 @@ $p->display();
 <form action="<?php echo $_SERVER["REQUEST_URI"]; ?>" method="post">
     <input type="hidden" name="lmembers" value="<?php echo base64_encode(serialize($currentMembers)); ?>" />
     <input type="hidden" name="lmachines" value="<?php echo base64_encode(serialize($currentNonMembers)); ?>" />
-    
+
     <div style="margin-bottom:18px;">
         <label style="margin-top: 20px;"><?php echo _T("Group name", "mobile"); ?>* :
             <input style="min-width:300px;" name="name" value="<?php echo htmlspecialchars($values['name']); ?>" type="text" />
         </label>
     </div>
-    
+
     <div id="grouplist">
         <div class="grouplist-flex grouplist-with-filter">
             <div class="grouplist-col">
@@ -241,7 +225,7 @@ $p->display();
             </div>
         </div>
     </div>
-    
+
     <div style="margin-top: 20px; text-align: right;">
         <input name="test" type="submit" class="btnPrimary" value="<?php echo _T("Add", "mobile"); ?>" />
         <input type="button" class="btnSecondary" value="<?php echo _T("Cancel", "mobile"); ?>" onclick="window.location='<?php echo urlStrRedirect("mobile/mobile/groups"); ?>';" />

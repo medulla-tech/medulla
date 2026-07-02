@@ -347,7 +347,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         'applicationPkg' => $appPkg,
                         'applicationName' => $appName,
                         'applicationId' => $appId,
-                        'lastUpdate' => $lastUpdate
+                        'lastUpdate' => $lastUpdate,
+                        'tempId' => $lastUpdate + 1
                     );
                 }
             }
@@ -384,68 +385,26 @@ $p->display();
 <?php if (!empty($notifyError)) { new NotifyWidgetFailure($notifyError); } ?>
 
 <style>
-.config-tabs {
-    border-bottom: 2px solid #ddd;
-    margin-bottom: 20px;
-}
-.config-tabs ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-}
-.config-tabs li {
-    margin-right: 5px;
-}
-.config-tabs a {
-    display: block;
-    padding: 10px 20px;
-    background: #f5f5f5;
-    border: 1px solid #ddd;
-    border-bottom: none;
-    text-decoration: none;
-    color: #333;
-    border-radius: 4px 4px 0 0;
-}
-.config-tabs a.active {
-    background: #fff;
-    font-weight: bold;
-    border-bottom: 2px solid #fff;
-    margin-bottom: -2px;
-}
-.config-tabs a:hover {
-    background: #e9e9e9;
-}
-.config-tabs a.active:hover {
-    background: #fff;
-}
-.tab-content {
-    display: none;
-    padding: 20px 0;
-}
-.tab-content.active {
-    display: block;
-}
 .hidden-row {
     display: none !important;
 }
 </style>
 
-<div class="config-tabs">
+<div class="tabselector">
     <ul>
-        <li><a href="#" class="tab-link active" data-tab="common"><?php echo _T("Common settings", "mobile"); ?></a></li>
-        <li><a href="#" class="tab-link" data-tab="design"><?php echo _T("Design settings", "mobile"); ?></a></li>
-        <li><a href="#" class="tab-link" data-tab="apps"><?php echo _T("Applications", "mobile"); ?></a></li>
-        <li><a href="#" class="tab-link" data-tab="mdm"><?php echo _T("MDM Settings", "mobile"); ?></a></li>
-        <li><a href="#" class="tab-link" data-tab="appsettings"><?php echo _T("Application settings", "mobile"); ?></a></li>
-        <li><a href="#" class="tab-link" data-tab="files"><?php echo _T("Files", "mobile"); ?></a></li>
+        <li class="tabactive"><a href="#" data-tab="common"><?php echo _T("Common settings", "mobile"); ?></a></li>
+        <li><a href="#" data-tab="design"><?php echo _T("Design settings", "mobile"); ?></a></li>
+        <li><a href="#" data-tab="apps"><?php echo _T("Applications", "mobile"); ?></a></li>
+        <li><a href="#" data-tab="mdm"><?php echo _T("MDM Settings", "mobile"); ?></a></li>
+        <li><a href="#" data-tab="appsettings"><?php echo _T("Application settings", "mobile"); ?></a></li>
+        <li><a href="#" data-tab="files"><?php echo _T("Files", "mobile"); ?></a></li>
     </ul>
 </div>
 
 <?php
 $form = new Form();
 
-$form->push(new Div(array('id' => 'tab-common')));
+$form->push(new Div(array('id' => 'tab-common', 'data-panel' => 'common')));
 $form->push(new Table());
 
 $form->add(new TrFormElement(
@@ -794,7 +753,7 @@ $form->addButton('bsave', _T('Save', 'mobile'), 'btnPrimary');
 $form->addButton('bsaveexit', _T('Save and exit', 'mobile'), 'btnPrimary');
 $form->addButton('bcancel', _T('Cancel', 'mobile'), 'btnSecondary');
 
-$form->push(new Div(array('id' => 'tab-design', 'style' => 'display:none;')));
+$form->push(new Div(array('id' => 'tab-design', 'data-panel' => 'design', 'style' => 'display:none;')));
 $form->push(new Table());
 
 // DESIGN SETTINGS
@@ -892,7 +851,7 @@ $form->add(new TrFormElement(
 $form->pop(); // end Design table
 $form->pop(); // end Design div
 
-$form->push(new Div(array('id' => 'tab-apps', 'style' => 'display:none;')));
+$form->push(new Div(array('id' => 'tab-apps', 'data-panel' => 'apps', 'style' => 'display:none;')));
 
 ob_start();
 ?>
@@ -929,14 +888,14 @@ $configApps = xmlrpc_get_hmdm_configuration_applications($configId);
 if (!is_array($configApps)) { $configApps = array(); }
 ob_start();
 ?>
-<table id="tab-table-apps-results" style="width: 100%; border-collapse: collapse; border: 1px solid #ddd; margin-bottom: 12px;">
-    <thead style="background-color: #f5f5f5;">
+<table id="tab-table-apps-results" class="listinfos" style="width:100%;margin-bottom:12px;">
+    <thead>
         <tr>
-            <th style="border: 1px solid #ddd; padding: 10px; text-align: left;"><?php echo _T("Application Name", "mobile"); ?></th>
-            <th style="border: 1px solid #ddd; padding: 10px; text-align: left;"><?php echo _T("Version", "mobile"); ?></th>
-            <th style="border: 1px solid #ddd; padding: 10px; text-align: left;"><?php echo _T("Actions", "mobile"); ?></th>
-            <th style="border: 1px solid #ddd; padding: 10px; text-align: left;"><?php echo _T("Icon", "mobile"); ?></th>
-            <th style="border: 1px solid #ddd; padding: 10px; text-align: left;"><?php echo _T("Order", "mobile"); ?></th>
+            <th><?php echo _T("Application Name", "mobile"); ?></th>
+            <th><?php echo _T("Version", "mobile"); ?></th>
+            <th><?php echo _T("Actions", "mobile"); ?></th>
+            <th><?php echo _T("Icon", "mobile"); ?></th>
+            <th><?php echo _T("Order", "mobile"); ?></th>
         </tr>
     </thead>
     <tbody id="app_table_body">
@@ -959,29 +918,29 @@ ob_start();
                 $rowStyle = 'border: 1px solid #ddd;';
                 $initialDisplay = $appSelected ? 'table-row' : 'none';
         ?>
-        <tr style="<?php echo $rowStyle; ?>display: <?php echo $initialDisplay; ?>;" class="app-row" data-app-id="<?php echo htmlspecialchars($appId); ?>" data-app-name="<?php echo htmlspecialchars($appName); ?>" data-app-pkg="<?php echo htmlspecialchars($appPkg); ?>" data-is-system="<?php echo ($appSystem ? '1' : '0'); ?>">
-            <td style="border: 1px solid #ddd; padding: 10px;">
+        <tr class="app-row" data-app-id="<?php echo htmlspecialchars($appId); ?>" data-app-name="<?php echo htmlspecialchars($appName); ?>" data-app-pkg="<?php echo htmlspecialchars($appPkg); ?>" data-is-system="<?php echo ($appSystem ? '1' : '0'); ?>" style="display:<?php echo $initialDisplay; ?>;">
+            <td>
                 <strong class="app-name-text"><?php echo htmlspecialchars($appName); ?></strong>
                 <?php if ($appPkg): ?>
-                <br><small class="app-pkg-text" style="color: #666;"><?php echo htmlspecialchars($appPkg); ?></small>
+                <br><small class="app-pkg-text" style="color:#666;"><?php echo htmlspecialchars($appPkg); ?></small>
                 <?php endif; ?>
             </td>
-            <td style="border: 1px solid #ddd; padding: 10px;"><?php echo htmlspecialchars($appVersion); ?></td>
-            <td style="border: 1px solid #ddd; padding: 10px;">
-                <select name="app_action_<?php echo $idx; ?>" class="app-action-select form-control" style="width: 100%;">
+            <td><?php echo htmlspecialchars($appVersion); ?></td>
+            <td>
+                <select name="app_action_<?php echo $idx; ?>" class="app-action-select form-control" style="width:100%;">
                     <option value="1"<?php echo ($appAction === 1 ? ' selected' : ''); ?>><?php echo _T("Install", "mobile"); ?></option>
                     <option value="2"<?php echo ($appAction === 2 ? ' selected' : ''); ?>><?php echo _T("Do not install", "mobile"); ?></option>
                     <option value="0"<?php echo ($appAction === 0 ? ' selected' : ''); ?>><?php echo _T("Delete", "mobile"); ?></option>
                 </select>
             </td>
-            <td style="border: 1px solid #ddd; padding: 10px; text-align: center;">
-                <select name="app_show_icon_<?php echo $idx; ?>" class="app-icon-select form-control" style="width: 100%;<?php echo ($appAction !== 1 ? ' display: none;' : ''); ?>">
+            <td style="text-align:center;">
+                <select name="app_show_icon_<?php echo $idx; ?>" class="app-icon-select form-control" style="width:100%;<?php echo ($appAction !== 1 ? ' display:none;' : ''); ?>">
                     <option value="1"<?php echo ($appShowIcon ? ' selected' : ''); ?>><?php echo _T("Show", "mobile"); ?></option>
                     <option value="0"<?php echo (!$appShowIcon ? ' selected' : ''); ?>><?php echo _T("Hide", "mobile"); ?></option>
                 </select>
             </td>
-            <td style="border: 1px solid #ddd; padding: 10px;">
-                <input type="number" name="app_order_<?php echo $idx; ?>" class="app-order-input form-control" value="<?php echo $appOrder; ?>" style="width: 80px;<?php echo (($appAction !== 1 || !$appShowIcon) ? ' display: none;' : ''); ?>">
+            <td>
+                <input type="number" name="app_order_<?php echo $idx; ?>" class="app-order-input form-control" value="<?php echo $appOrder; ?>" style="width:80px;<?php echo (($appAction !== 1 || !$appShowIcon) ? ' display:none;' : ''); ?>">
             </td>
         </tr>
         <?php endforeach; ?>
@@ -996,7 +955,7 @@ $form->pop();
 
 $form->pop();
 
-$form->push(new Div(array('id' => 'tab-mdm', 'style' => 'display:none;')));
+$form->push(new Div(array('id' => 'tab-mdm', 'data-panel' => 'mdm', 'style' => 'display:none;')));
 $form->push(new Table());
 
 $form->add(new TrFormElement(
@@ -1232,25 +1191,25 @@ if (!empty($configId)) {
 $form->pop(); // end MDM table
 $form->pop(); // end MDM div
 
-$form->push(new Div(array('id' => 'tab-appsettings', 'style' => 'display:none;')));
+$form->push(new Div(array('id' => 'tab-appsettings', 'data-panel' => 'appsettings', 'style' => 'display:none;')));
 
 ob_start();
 ?>
-<div style="margin-bottom: 12px;">
-    <button type="button" id="open_appsetting_modal_btn" class="btn btn-primary">
-        <?php echo _T("Add Application Setting", "mobile"); ?>
-    </button>
+<div style="margin-bottom:8px; text-align:right;">
+    <button type="button" id="open_appsetting_modal_btn" class="btnPrimary"><?php echo _T("Add Application Setting", "mobile"); ?></button>
 </div>
-<?php
-$buttonHtml = ob_get_clean();
-$form->push(new Table());
-$form->add(new TrFormElementcollapse(new textTpl($buttonHtml)));
-$form->pop();
-
-ob_start();
-?>
-<div id="tab-table-appsettings-filters" class="searchbox" style="margin-bottom: 12px;">
+<div id="tab-table-appsettings-filters" class="searchbox" style="margin-bottom:12px;">
     <div id="searchBest">
+        <span class="searchfield">
+            <select id="appsetting_column_filter" name="appsetting_column_filter" class="searchfieldreal noborder">
+                <option value="all"><?php echo _T("All columns", "mobile"); ?></option>
+                <option value="pkg"><?php echo _T("Package ID", "mobile"); ?></option>
+                <option value="appname"><?php echo _T("Application Name", "mobile"); ?></option>
+                <option value="attribute"><?php echo _T("Attribute", "mobile"); ?></option>
+                <option value="value"><?php echo _T("Value", "mobile"); ?></option>
+                <option value="comment"><?php echo _T("Comment", "mobile"); ?></option>
+            </select>
+        </span>
         <span class="searchfield">
             <input type="text" id="appsetting_search_filter" name="appsetting_search_filter" class="searchfieldreal" placeholder="<?php echo _T("Search application settings", "mobile"); ?>" />
             <button type="button" class="search-clear" aria-label="<?php echo _T('Clear search', 'base'); ?>"
@@ -1262,85 +1221,83 @@ ob_start();
 </div>
 
 <!-- Modal overlay -->
-<div id="appsetting-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; overflow: auto;">
-    <div style="background: white; margin: 50px auto; padding: 20px; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 10px rgba(0,0,0,0.3);">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #ddd; padding-bottom: 10px;">
-            <h3 id="appsetting_modal_title" style="margin: 0;"><?php echo _T("Add Application Setting", "mobile"); ?></h3>
-            <button type="button" id="close_appsetting_modal_btn" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #666;">&times;</button>
+<div id="appsetting-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9999; overflow-y:auto;">
+    <div style="background:#fff; width:560px; margin:60px auto 40px; border-radius:6px; overflow:hidden; box-shadow:0 8px 32px rgba(0,0,0,0.25);">
+        <div style="background:#25607d; padding:16px 24px; display:flex; align-items:center; justify-content:space-between;">
+            <span id="appsetting_modal_title" style="color:#fff; font-size:1.15em; font-weight:600;"><?php echo _T("Add Application Setting", "mobile"); ?></span>
+            <button type="button" id="close_appsetting_modal_btn" style="background:none; border:none; color:#fff; font-size:1.3em; line-height:1; cursor:pointer; padding:0 2px; opacity:0.85;">&times;</button>
         </div>
-        <table style="width: 100%;">
-            <tr>
-                <td style="padding: 10px; width: 30%; vertical-align: top;">
-                    <label><strong><?php echo _T("Application", "mobile"); ?></strong></label>
-                </td>
-                <td style="padding: 10px;">
-                    <div style="position: relative;">
-                        <input type="text" id="appsetting_app_name" name="appsetting_app_name" class="searchfieldreal" 
-                               placeholder="<?php echo _T("Search for an application", "mobile"); ?>" style="width: 100%;" />
-                        <input type="hidden" id="appsetting_app_id" name="appsetting_app_id" />
-                        <input type="hidden" id="appsetting_app_pkg" name="appsetting_app_pkg" />
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <td style="padding: 10px; vertical-align: top;">
-                    <label><strong><?php echo _T("Attribute", "mobile"); ?></strong></label>
-                </td>
-                <td style="padding: 10px;">
-                    <input type="text" id="appsetting_name" name="appsetting_name" class="searchfieldreal" 
-                           placeholder="<?php echo _T("Attribute name", "mobile"); ?>" style="width: 100%;" />
-                </td>
-            </tr>
-            <tr>
-                <td style="padding: 10px; vertical-align: top;">
-                    <label><strong><?php echo _T("Value", "mobile"); ?></strong></label>
-                </td>
-                <td style="padding: 10px;">
-                    <textarea id="appsetting_value" name="appsetting_value" class="searchfieldreal" 
-                              placeholder="<?php echo _T("Attribute value", "mobile"); ?>" 
-                              style="width: 100%; min-height: 80px;"></textarea>
-                </td>
-            </tr>
-            <tr>
-                <td style="padding: 10px; vertical-align: top;">
-                    <label><strong><?php echo _T("Comment", "mobile"); ?></strong></label>
-                </td>
-                <td style="padding: 10px;">
-                    <input type="text" id="appsetting_comment" name="appsetting_comment" class="searchfieldreal" 
-                           placeholder="<?php echo _T("Optional comment", "mobile"); ?>" style="width: 100%;" />
-                </td>
-            </tr>
-        </table>
-        <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #ddd; text-align: right;">
-            <button type="button" id="cancel_appsetting_btn" class="btn btn-default" style="margin-right: 10px;">
-                <?php echo _T("Cancel", "mobile"); ?>
-            </button>
-            <button type="button" id="add_appsetting_btn" class="btn btn-primary">
-                <?php echo _T("Add Setting", "mobile"); ?>
-            </button>
+        <div style="padding:24px;">
+            <table style="width:100%; border-collapse:collapse;">
+                <tr>
+                    <td style="width:38%; padding:6px 0; font-weight:bold; vertical-align:top;"><?php echo _T("Application", "mobile"); ?> *</td>
+                    <td style="padding:6px 0;">
+                        <div style="position:relative;">
+                            <input type="text" id="appsetting_app_name" name="appsetting_app_name"
+                                   placeholder="<?php echo _T("Search for an application", "mobile"); ?>"
+                                   style="width:100%; padding:5px; box-sizing:border-box;" />
+                            <input type="hidden" id="appsetting_app_id" name="appsetting_app_id" />
+                            <input type="hidden" id="appsetting_app_pkg" name="appsetting_app_pkg" />
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding:6px 0; font-weight:bold;"><?php echo _T("Attribute", "mobile"); ?> *</td>
+                    <td style="padding:6px 0;">
+                        <input type="text" id="appsetting_name" name="appsetting_name"
+                               placeholder="<?php echo _T("Attribute name", "mobile"); ?>"
+                               style="width:100%; padding:5px; box-sizing:border-box;" />
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding:6px 0; font-weight:bold; vertical-align:top;"><?php echo _T("Value", "mobile"); ?></td>
+                    <td style="padding:6px 0;">
+                        <textarea id="appsetting_value" name="appsetting_value"
+                                  placeholder="<?php echo _T("Attribute value", "mobile"); ?>"
+                                  style="width:100%; padding:5px; box-sizing:border-box; min-height:80px;"></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding:6px 0; font-weight:bold;"><?php echo _T("Comment", "mobile"); ?></td>
+                    <td style="padding:6px 0;">
+                        <input type="text" id="appsetting_comment" name="appsetting_comment"
+                               placeholder="<?php echo _T("Optional comment", "mobile"); ?>"
+                               style="width:100%; padding:5px; box-sizing:border-box;" />
+                    </td>
+                </tr>
+            </table>
+            <div id="appsetting_modal_error" style="display:none; color:#c0392b; font-size:0.9em; margin-bottom:10px; padding:6px 10px; background:#fff0f0; border:1px solid #f5c6cb; border-radius:3px;"></div>
+            <div style="margin-top:20px; text-align:right;">
+                <button type="button" id="cancel_appsetting_btn" class="btnSecondary" style="margin-right:8px;"><?php echo _T("Cancel", "mobile"); ?></button>
+                <button type="button" id="add_appsetting_btn" class="btnPrimary"><?php echo _T("Add Setting", "mobile"); ?></button>
+            </div>
         </div>
     </div>
 </div>
+
 <?php
-$buttonHtml = ob_get_clean();
+$filtersHtml = ob_get_clean();
 $form->push(new Table());
-$form->add(new TrFormElementcollapse(new textTpl($buttonHtml)));
+$form->add(new TrFormElementcollapse(new textTpl($filtersHtml)));
 $form->pop();
 
 $configAppSettings = isset($config['applicationSettings']) && is_array($config['applicationSettings']) ? $config['applicationSettings'] : array();
 
 ob_start();
 ?>
-<table id="tab-table-appsettings-results" style="width: 100%; border-collapse: collapse; border: 1px solid #ddd; margin-top: 12px;">
-    <thead style="background-color: #f5f5f5;">
+<style>
+#tab-table-appsettings-results td.action ul.action { line-height: normal; }
+</style>
+<table id="tab-table-appsettings-results" class="listinfos">
+    <thead>
         <tr>
-            <th style="border: 1px solid #ddd; padding: 10px; text-align: left;"><?php echo _T("Package ID", "mobile"); ?></th>
-            <th style="border: 1px solid #ddd; padding: 10px; text-align: left;"><?php echo _T("Application Name", "mobile"); ?></th>
-            <th style="border: 1px solid #ddd; padding: 10px; text-align: left;"><?php echo _T("Attribute", "mobile"); ?></th>
-            <th style="border: 1px solid #ddd; padding: 10px; text-align: left;"><?php echo _T("Value", "mobile"); ?></th>
-            <th style="border: 1px solid #ddd; padding: 10px; text-align: left;"><?php echo _T("Comment", "mobile"); ?></th>
-            <th style="border: 1px solid #ddd; padding: 10px; text-align: left;"><?php echo _T("Creation Date", "mobile"); ?></th>
-            <th style="border: 1px solid #ddd; padding: 10px; text-align: center;"><?php echo _T("Actions", "mobile"); ?></th>
+            <th><?php echo _T("Package ID", "mobile"); ?></th>
+            <th><?php echo _T("Application Name", "mobile"); ?></th>
+            <th><?php echo _T("Attribute", "mobile"); ?></th>
+            <th><?php echo _T("Value", "mobile"); ?></th>
+            <th><?php echo _T("Comment", "mobile"); ?></th>
+            <th><?php echo _T("Creation Date", "mobile"); ?></th>
+            <th class="col-action">Actions</th>
         </tr>
     </thead>
     <tbody id="appsettings_table_body">
@@ -1351,29 +1308,27 @@ ob_start();
                 $settingValue = isset($setting['value']) ? $setting['value'] : '';
                 $settingComment = isset($setting['comment']) ? $setting['comment'] : '';
                 $lastUpdate = isset($setting['lastUpdate']) ? $setting['lastUpdate'] : 0;
-                $createDate = $lastUpdate ? date('Y-m-d H:i:s', $lastUpdate) : '';
+                $createDate = $lastUpdate ? date('d/m/Y H:i', $lastUpdate) : '';
                 $appId = isset($setting['applicationId']) ? $setting['applicationId'] : '';
         ?>
-        <tr class="appsetting-row" data-idx="<?php echo $idx; ?>" 
+        <tr class="appsetting-row" style="border: 1px solid #ddd;" data-idx="<?php echo $idx; ?>"
             data-app-id="<?php echo htmlspecialchars($appId); ?>"
             data-app-name="<?php echo htmlspecialchars($appName); ?>"
             data-app-pkg="<?php echo htmlspecialchars($appPkg); ?>"
             data-setting-name="<?php echo htmlspecialchars($settingName); ?>"
             data-setting-value="<?php echo htmlspecialchars($settingValue); ?>"
             data-setting-comment="<?php echo htmlspecialchars($settingComment); ?>">
-            <td style="border: 1px solid #ddd; padding: 10px;"><small style="color: #666;"><?php echo htmlspecialchars($appPkg); ?></small></td>
-            <td style="border: 1px solid #ddd; padding: 10px;"><strong><?php echo htmlspecialchars($appName); ?></strong></td>
-            <td style="border: 1px solid #ddd; padding: 10px;"><?php echo htmlspecialchars($settingName); ?></td>
-            <td style="border: 1px solid #ddd; padding: 10px;"><pre style="margin: 0; white-space: pre-wrap; font-size: 11px;"><?php echo htmlspecialchars($settingValue); ?></pre></td>
-            <td style="border: 1px solid #ddd; padding: 10px;"><?php echo htmlspecialchars($settingComment); ?></td>
-            <td style="border: 1px solid #ddd; padding: 10px; white-space: nowrap;"><?php echo htmlspecialchars($createDate); ?></td>
-            <td style="border: 1px solid #ddd; padding: 10px; text-align: center; white-space: nowrap;">
-                <button type="button" class="appsetting-edit-btn" data-idx="<?php echo $idx; ?>" title="<?php echo _T("Edit", "mobile"); ?>" style="background: none; border: none; padding: 0; margin: 0 5px; cursor: pointer;">
-                    <img src="img/actions/edit.svg" style="vertical-align: middle;" width="20" height="20" />
-                </button>
-                <button type="button" class="appsetting-delete-btn" data-idx="<?php echo $idx; ?>" title="<?php echo _T("Delete", "mobile"); ?>" style="background: none; border: none; padding: 0; margin: 0 5px; cursor: pointer;">
-                    <img src="img/actions/delete.svg" style="vertical-align: middle;" width="20" height="20" />
-                </button>
+            <td><small style="color:#666;"><?php echo htmlspecialchars($appPkg); ?></small></td>
+            <td><strong><?php echo htmlspecialchars($appName); ?></strong></td>
+            <td><?php echo htmlspecialchars($settingName); ?></td>
+            <td><?php echo htmlspecialchars($settingValue); ?></td>
+            <td><?php echo htmlspecialchars($settingComment); ?></td>
+            <td style="white-space:nowrap;"><?php echo htmlspecialchars($createDate); ?></td>
+            <td class="action">
+                <ul class="action">
+                    <li class="edit"><a href="#" class="appsetting-edit-btn" data-idx="<?php echo $idx; ?>" title="<?php echo _T('Edit', 'mobile'); ?>">&nbsp;</a></li>
+                    <li class="delete"><a href="#" class="appsetting-delete-btn" data-idx="<?php echo $idx; ?>" title="<?php echo _T('Delete', 'mobile'); ?>">&nbsp;</a></li>
+                </ul>
                 <input type="hidden" class="appsetting-data" name="appsetting_data_<?php echo $idx; ?>" value="<?php echo htmlspecialchars(json_encode($setting)); ?>" />
                 <input type="hidden" class="appsetting-remove-field" name="appsetting_remove_<?php echo $idx; ?>" value="0" />
             </td>
@@ -1389,12 +1344,20 @@ $form->pop();
 
 $form->pop(); // end Appsettings div
 
-$form->push(new Div(array('id' => 'tab-files', 'style' => 'display:none;')));
+$form->push(new Div(array('id' => 'tab-files', 'data-panel' => 'files', 'style' => 'display:none;')));
 
 ob_start();
 ?>
 <div id="tab-table-files-filters" class="searchbox" style="margin-bottom: 12px;">
     <div id="searchBest">
+        <span class="searchfield">
+            <select id="file_column_filter" name="file_column_filter" class="searchfieldreal noborder">
+                <option value="all"><?php echo _T("All columns", "mobile"); ?></option>
+                <option value="name"><?php echo _T("URL / Name", "mobile"); ?></option>
+                <option value="desc"><?php echo _T("Description", "mobile"); ?></option>
+                <option value="path"><?php echo _T("Path on device", "mobile"); ?></option>
+            </select>
+        </span>
         <span class="searchfield">
             <input type="text" id="file_search_filter" name="file_search_filter" class="searchfieldreal" placeholder="<?php echo _T("Search for a file", "mobile"); ?>" />
             <button type="button" class="search-clear" aria-label="<?php echo _T('Clear search', 'base'); ?>"
@@ -1416,14 +1379,14 @@ if (!is_array($allFiles)) { $allFiles = array(); }
 
 ob_start();
 ?>
-<table id="tab-table-files-results" style="width: 100%; border-collapse: collapse; border: 1px solid #ddd; margin-bottom: 12px;">
-    <thead style="background-color: #f5f5f5;">
+<table id="tab-table-files-results" class="listinfos" style="width:100%;margin-bottom:12px;">
+    <thead>
         <tr>
-            <th style="border: 1px solid #ddd; padding: 10px; text-align: left;"><?php echo _T("URL", "mobile"); ?></th>
-            <th style="border: 1px solid #ddd; padding: 10px; text-align: left;"><?php echo _T("File description", "mobile"); ?></th>
-            <th style="border: 1px solid #ddd; padding: 10px; text-align: left;"><?php echo _T("Path on device", "mobile"); ?></th>
-            <th style="border: 1px solid #ddd; padding: 10px; text-align: left;"><?php echo _T("Action", "mobile"); ?></th>
-            <th style="border: 1px solid #ddd; padding: 10px; text-align: left;"><?php echo _T("Variable", "mobile"); ?></th>
+            <th><?php echo _T("URL", "mobile"); ?></th>
+            <th><?php echo _T("File description", "mobile"); ?></th>
+            <th><?php echo _T("Path on device", "mobile"); ?></th>
+            <th><?php echo _T("Action", "mobile"); ?></th>
+            <th><?php echo _T("Variable", "mobile"); ?></th>
         </tr>
     </thead>
     <tbody id="file_table_body">
@@ -1440,7 +1403,6 @@ ob_start();
                 foreach ($configFiles as $cf) {
                     $configFileId = isset($cf['fileId']) ? $cf['fileId'] : (isset($cf['id']) ? $cf['id'] : null);
                     if ($configFileId && $configFileId == $fileId) {
-                        // File is in this config - check if it's marked for removal
                         if (isset($cf['remove']) && $cf['remove']) {
                             $fileAction = 2; // Remove
                         } else {
@@ -1449,23 +1411,19 @@ ob_start();
                         break;
                     }
                 }
-                
-                $rowStyle = 'border: 1px solid #ddd;';
         ?>
-        <tr style="<?php echo $rowStyle; ?>" class="file-row" data-file-id="<?php echo htmlspecialchars($fileId); ?>" data-file-name="<?php echo htmlspecialchars($fileName); ?>" data-file-desc="<?php echo htmlspecialchars($fileDescription); ?>" data-file-path="<?php echo htmlspecialchars($fileDevicePath); ?>">
-            <td style="border: 1px solid #ddd; padding: 10px;">
-                <strong class="file-name-text"><?php echo htmlspecialchars($fileUrl ? $fileUrl : $fileName); ?></strong>
-            </td>
-            <td style="border: 1px solid #ddd; padding: 10px;"><?php echo htmlspecialchars($fileDescription); ?></td>
-            <td style="border: 1px solid #ddd; padding: 10px;"><?php echo htmlspecialchars($fileDevicePath); ?></td>
-            <td style="border: 1px solid #ddd; padding: 10px;">
-                <select name="file_action_<?php echo $idx; ?>" class="file-action-select form-control" style="width: 100%;">
+        <tr class="file-row" style="border: 1px solid #ddd;" data-file-id="<?php echo htmlspecialchars($fileId); ?>" data-file-name="<?php echo htmlspecialchars($fileName); ?>" data-file-desc="<?php echo htmlspecialchars($fileDescription); ?>" data-file-path="<?php echo htmlspecialchars($fileDevicePath); ?>">
+            <td><strong class="file-name-text"><?php echo htmlspecialchars($fileUrl ? $fileUrl : $fileName); ?></strong></td>
+            <td><?php echo htmlspecialchars($fileDescription); ?></td>
+            <td><?php echo htmlspecialchars($fileDevicePath); ?></td>
+            <td>
+                <select name="file_action_<?php echo $idx; ?>" class="file-action-select form-control" style="width:100%;">
                     <option value="1"<?php echo ($fileAction === 1 ? ' selected' : ''); ?>><?php echo _T("Include", "mobile"); ?></option>
                     <option value="0"<?php echo ($fileAction === 0 ? ' selected' : ''); ?>><?php echo _T("Exclude", "mobile"); ?></option>
                     <option value="2"<?php echo ($fileAction === 2 ? ' selected' : ''); ?>><?php echo _T("Remove", "mobile"); ?></option>
                 </select>
             </td>
-            <td style="border: 1px solid #ddd; padding: 10px; text-align: center;">
+            <td style="text-align:center;">
                 <?php echo $fileReplaceVariables ? _T("Yes", "mobile") : _T("No", "mobile"); ?>
             </td>
         </tr>
@@ -1688,23 +1646,29 @@ jQuery(document).ready(function() {
         }
     });
 
-    jQuery('.tab-link').click(function(e) {
-        e.preventDefault();
-        var targetTab = jQuery(this).data('tab');
-        jQuery('.tab-link').removeClass('active');
-        jQuery(this).addClass('active');
-        
-        tabNames.forEach(function(name) {
-            jQuery('#tab-' + name).hide().removeClass('active-tab');
-        });
-        jQuery('#tab-' + targetTab).show().addClass('active-tab');
+    document.querySelectorAll('.tabselector li').forEach(function(tab) {
+        tab.querySelector('a').addEventListener('click', function(e) {
+            e.preventDefault();
+            var target = this.getAttribute('data-tab');
 
-        if (targetTab === 'apps') {
-            if (!$appAllRows || $appAllRows.length === 0) {
-                captureOriginalRows();
+            document.querySelectorAll('.tabselector li').forEach(function(item) {
+                item.classList.remove('tabactive');
+            });
+            tab.classList.add('tabactive');
+
+            document.querySelectorAll('[data-panel]').forEach(function(panel) {
+                var isTarget = panel.getAttribute('data-panel') === target;
+                panel.hidden = !isTarget;
+                panel.style.display = isTarget ? '' : 'none';
+            });
+
+            if (target === 'apps') {
+                if (!$appAllRows || $appAllRows.length === 0) {
+                    captureOriginalRows();
+                }
+                refreshApps();
             }
-            refreshApps();
-        }
+        });
     });
 
     jQuery(document).on('change', '.app-action-select', function() {
@@ -1822,10 +1786,18 @@ jQuery(document).ready(function() {
         var end = start + appPageSize;
         
         $appTableBody.empty();
-        for (var i = start; i < end && i < visibleRows.length; i++) {
-            var $clone = visibleRows[i].clone();
-            $clone.attr('style', 'border: 1px solid #ddd;');
-            $clone.appendTo($appTableBody);
+        if (total === 0) {
+            var colCount = jQuery('#tab-table-apps-results thead tr th').length || 5;
+            var emptyMsg = search
+                ? '<?php echo addslashes(_T("No applications match your search", "mobile")); ?>'
+                : '<?php echo addslashes(_T("No applications in this configuration", "mobile")); ?>';
+            $appTableBody.append('<tr class="empty-state-row"><td colspan="' + colCount + '" style="text-align:center;color:#888;padding:20px;font-style:italic;">' + emptyMsg + '</td></tr>');
+        } else {
+            for (var i = start; i < end && i < visibleRows.length; i++) {
+                var $clone = visibleRows[i].clone();
+                $clone.attr('style', 'border: 1px solid #ddd;');
+                $clone.appendTo($appTableBody);
+            }
         }
         updateAppsPagination(totalPages, total);
     }
@@ -1948,25 +1920,8 @@ jQuery(document).ready(function() {
     });
     
     jQuery('#close_appsetting_modal_btn, #cancel_appsetting_btn').on('click', function() {
-        jQuery('#appsetting_app_name').val('').prop('readonly', false);
-        jQuery('#appsetting_app_id').val('');
-        jQuery('#appsetting_app_pkg').val('');
-        jQuery('#appsetting_name').val('');
-        jQuery('#appsetting_value').val('');
-        jQuery('#appsetting_comment').val('');
-        appSettingSelectedApp = null;
-        
-        jQuery('#appsetting_modal_title').text('<?php echo _T("Add Application Setting", "mobile"); ?>');
-        jQuery('#add_appsetting_btn').text('<?php echo _T("Add Setting", "mobile"); ?>');
-        
-        jQuery('#appsetting-modal').removeData('editing-row');
-        jQuery('#appsetting-modal').removeData('editing-idx');
-        
-        jQuery('#appsetting-modal').fadeOut(200);
-    });
-    
-    jQuery('#appsetting-modal').on('click', function(e) {
-        if (e.target.id === 'appsetting-modal') {
+        jQuery('#appsetting-modal').fadeOut(200, function() {
+            jQuery('#appsetting_modal_error').hide().text('');
             jQuery('#appsetting_app_name').val('').prop('readonly', false);
             jQuery('#appsetting_app_id').val('');
             jQuery('#appsetting_app_pkg').val('');
@@ -1974,14 +1929,27 @@ jQuery(document).ready(function() {
             jQuery('#appsetting_value').val('');
             jQuery('#appsetting_comment').val('');
             appSettingSelectedApp = null;
-            
-            jQuery('#appsetting_modal_title').text('<?php echo _T("Add Application Setting", "mobile"); ?>');
-            jQuery('#add_appsetting_btn').text('<?php echo _T("Add Setting", "mobile"); ?>');
-            
-            jQuery('#appsetting-modal').removeData('editing-row');
-            jQuery('#appsetting-modal').removeData('editing-idx');
-            
-            jQuery('#appsetting-modal').fadeOut(200);
+            jQuery('#appsetting_modal_title').text('<?php echo addslashes(_T("Add Application Setting", "mobile")); ?>');
+            jQuery('#add_appsetting_btn').text('<?php echo addslashes(_T("Add Setting", "mobile")); ?>');
+            jQuery('#appsetting-modal').removeData('editing-row').removeData('editing-idx');
+        });
+    });
+
+    jQuery('#appsetting-modal').on('click', function(e) {
+        if (e.target.id === 'appsetting-modal') {
+            jQuery('#appsetting-modal').fadeOut(200, function() {
+                jQuery('#appsetting_modal_error').hide().text('');
+                jQuery('#appsetting_app_name').val('').prop('readonly', false);
+                jQuery('#appsetting_app_id').val('');
+                jQuery('#appsetting_app_pkg').val('');
+                jQuery('#appsetting_name').val('');
+                jQuery('#appsetting_value').val('');
+                jQuery('#appsetting_comment').val('');
+                appSettingSelectedApp = null;
+                jQuery('#appsetting_modal_title').text('<?php echo addslashes(_T("Add Application Setting", "mobile")); ?>');
+                jQuery('#add_appsetting_btn').text('<?php echo addslashes(_T("Add Setting", "mobile")); ?>');
+                jQuery('#appsetting-modal').removeData('editing-row').removeData('editing-idx');
+            });
         }
     });
     
@@ -2080,13 +2048,14 @@ jQuery(document).ready(function() {
         var settingComment = jQuery('#appsetting_comment').val().trim();
         
         if (!appId || !appName) {
-            alert('<?php echo _T("Please select an application", "mobile"); ?>');
+            jQuery('#appsetting_modal_error').text('<?php echo _T("Please select an application", "mobile"); ?>').show();
             return;
         }
         if (!settingName) {
-            alert('<?php echo _T("Please enter an attribute name", "mobile"); ?>');
+            jQuery('#appsetting_modal_error').text('<?php echo _T("Please enter an attribute name", "mobile"); ?>').show();
             return;
         }
+        jQuery('#appsetting_modal_error').hide().text('');
         
         var $modal = jQuery('#appsetting-modal');
         var $editingRow = $modal.data('editing-row');
@@ -2113,9 +2082,7 @@ jQuery(document).ready(function() {
                     var originalAppId = settingData.applicationId;
                     var idx = $editingRow.data('idx');
                     
-                    // hmdm can't change appid on existing setting
                     if (originalAppId !== parseInt(appId)) {
-                        console.log('Application changed from', originalAppId, 'to', appId, '- marking old for removal and creating new');
                         
                         var $removeField = $editingRow.find('input[name="appsetting_remove_' + idx + '"]');
                         if ($removeField.length === 0) {
@@ -2131,7 +2098,6 @@ jQuery(document).ready(function() {
                         $editingRow.attr('data-idx', newIdx);
                         $editingRow.find('.appsetting-data').remove();
                         
-                        // timestamp in seconds, backend converts to ms
                         var nowSeconds = Math.floor(Date.now() / 1000);
                         $editingRow.find('td:eq(0)').append(
                             '<input type="hidden" name="appsetting_new_appid_' + newIdx + '" value="' + appId + '">' +
@@ -2145,7 +2111,7 @@ jQuery(document).ready(function() {
                             '<input type="hidden" name="appsetting_new_lastupdate_' + newIdx + '" value="' + nowSeconds + '">'
                         );
                         
-                        var updateDate = new Date(nowSeconds * 1000).toISOString().slice(0, 19).replace('T', ' ');
+                        var updateDate = (function(ts){ var d=new Date(ts*1000); return d.getDate().toString().padStart(2,'0')+'/'+( d.getMonth()+1).toString().padStart(2,'0')+'/'+d.getFullYear()+' '+d.getHours().toString().padStart(2,'0')+':'+d.getMinutes().toString().padStart(2,'0'); })(nowSeconds);
                         $editingRow.find('td:eq(5)').text(updateDate);
                     } else {
                         settingData.name = settingName;
@@ -2155,16 +2121,13 @@ jQuery(document).ready(function() {
                         settingData.applicationName = appName;
                         settingData.applicationPkg = appPkg;
                         
-                        // save timestamp in seconds
                         var nowMs = Date.now();
                         var nowSeconds = Math.floor(nowMs / 1000);
-                        console.log('Timestamp in ms:', nowMs, 'Timestamp in seconds:', nowSeconds);
                         settingData.lastUpdate = nowSeconds;
                         var jsonData = JSON.stringify(settingData);
-                        console.log('JSON being saved:', jsonData);
                         $dataField.val(jsonData);
                         
-                        var updateDate = new Date(settingData.lastUpdate * 1000).toISOString().slice(0, 19).replace('T', ' ');
+                        var updateDate = (function(ts){ var d=new Date(ts*1000); return d.getDate().toString().padStart(2,'0')+'/'+( d.getMonth()+1).toString().padStart(2,'0')+'/'+d.getFullYear()+' '+d.getHours().toString().padStart(2,'0')+':'+d.getMinutes().toString().padStart(2,'0'); })(settingData.lastUpdate);
                         $editingRow.find('td:eq(5)').text(updateDate);
                     }
                 } catch (e) {
@@ -2182,32 +2145,31 @@ jQuery(document).ready(function() {
         } else {
             var $tbody = jQuery('#appsettings_table_body');
             var nextIdx = $tbody.find('tr').length;
-            // new setting with timestamp in seconds
             var nowSeconds = Math.floor(Date.now() / 1000);
-            var currentDate = new Date(nowSeconds * 1000).toISOString().slice(0, 19).replace('T', ' ');
+            var currentDate = (function(ts){ var d=new Date(ts*1000); return d.getDate().toString().padStart(2,'0')+'/'+( d.getMonth()+1).toString().padStart(2,'0')+'/'+d.getFullYear()+' '+d.getHours().toString().padStart(2,'0')+':'+d.getMinutes().toString().padStart(2,'0'); })(nowSeconds);
             
-            var $newRow = jQuery('<tr class="appsetting-row appsetting-new" data-idx="' + nextIdx + '">');
+            var $newRow = jQuery('<tr class="appsetting-row appsetting-new" style="border:1px solid #ddd;" data-idx="' + nextIdx + '">');
             
-            $newRow.append('<td style="border: 1px solid #ddd; padding: 10px;"><small style="color: #666;">' + appPkg + '</small>' +
+            $newRow.append('<td><small style="color:#666;">' + appPkg + '</small>' +
                 '<input type="hidden" name="appsetting_new_appid_' + nextIdx + '" value="' + appId + '">' +
                 '<input type="hidden" name="appsetting_new_appname_' + nextIdx + '" value="' + appName + '">' +
                 '<input type="hidden" name="appsetting_new_apppkg_' + nextIdx + '" value="' + appPkg + '"></td>');
-            $newRow.append('<td style="border: 1px solid #ddd; padding: 10px;"><strong>' + appName + '</strong></td>');
-            $newRow.append('<td style="border: 1px solid #ddd; padding: 10px;">' + settingName + 
+            $newRow.append('<td><strong>' + appName + '</strong></td>');
+            $newRow.append('<td>' + settingName +
                 '<input type="hidden" name="appsetting_new_name_' + nextIdx + '" value="' + settingName + '"></td>');
-            $newRow.append('<td style="border: 1px solid #ddd; padding: 10px;"><pre style="margin: 0; white-space: pre-wrap; font-size: 11px;">' + settingValue + '</pre>' +
+            $newRow.append('<td>' + settingValue +
                 '<input type="hidden" name="appsetting_new_value_' + nextIdx + '" value="' + settingValue + '"></td>');
-            $newRow.append('<td style="border: 1px solid #ddd; padding: 10px;">' + settingComment +
+            $newRow.append('<td>' + settingComment +
                 '<input type="hidden" name="appsetting_new_comment_' + nextIdx + '" value="' + settingComment + '">' +
                 '<input type="hidden" name="appsetting_new_lastupdate_' + nextIdx + '" value="' + nowSeconds + '"></td>');
-            $newRow.append('<td style="border: 1px solid #ddd; padding: 10px; white-space: nowrap;">' + currentDate + '</td>');
-            $newRow.append('<td style="border: 1px solid #ddd; padding: 10px; text-align: center; white-space: nowrap;">' +
-                '<button type="button" class="appsetting-edit-btn-new" data-idx="' + nextIdx + '" title="Edit" style="background: none; border: none; padding: 0; margin: 0 5px; cursor: pointer;">' +
-                '<img src="img/actions/edit.svg" style="vertical-align: middle;" width="20" height="20" /></button> ' +
-                '<button type="button" class="appsetting-remove-new" data-idx="' + nextIdx + '" title="Delete" style="background: none; border: none; padding: 0; margin: 0 5px; cursor: pointer;">' +
-                '<img src="img/actions/delete.svg" style="vertical-align: middle;" width="20" height="20" /></button></td>');
+            $newRow.append('<td style="white-space:nowrap;">' + currentDate + '</td>');
+            $newRow.append('<td class="action"><ul class="action">' +
+                '<li class="edit"><a href="#" class="appsetting-edit-btn-new" data-idx="' + nextIdx + '" title="<?php echo addslashes(_T('Edit', 'mobile')); ?>">&nbsp;</a></li>' +
+                '<li class="delete"><a href="#" class="appsetting-remove-new" data-idx="' + nextIdx + '" title="<?php echo addslashes(_T('Delete', 'mobile')); ?>">&nbsp;</a></li>' +
+                '</ul></td>');
             
             $tbody.append($newRow);
+            refreshAppSettings();
         }
         
         $modal.fadeOut(200, function() {
@@ -2227,21 +2189,34 @@ jQuery(document).ready(function() {
         });
     });
     
-    jQuery(document).on('click', '.appsetting-delete-btn', function() {
+    function appsettingConfirm(message, callback) {
+        var html = '<h2 class="popup-title-danger"><?php echo addslashes(_T("Confirm deletion", "mobile")); ?></h2>'
+            + '<form style="text-align:center;"><p>' + message + '</p><p>'
+            + '<button type="button" class="btnDanger" id="_appsettingConfirmOk"><?php echo addslashes(_T("Delete", "mobile")); ?></button>'
+            + ' <button type="button" class="btnSecondary" onclick="closePopup(); return false;"><?php echo addslashes(_T("Cancel", "mobile")); ?></button>'
+            + '</p></form>';
+        PopupWindow(null, null, 500, _centerPlacement, html);
+        document.getElementById('_appsettingConfirmOk').onclick = function() {
+            closePopup();
+            callback();
+        };
+    }
+
+    jQuery(document).on('click', '.appsetting-delete-btn', function(e) {
+        e.preventDefault();
         var idx = jQuery(this).data('idx');
         var $row = jQuery(this).closest('tr');
         var appName = $row.data('app-name');
         var settingName = $row.data('setting-name');
         
-        if (!confirm('<?php echo _T("Delete this setting?", "mobile"); ?>\n' + appName + ' - ' + settingName)) {
-            return;
-        }
-        
-        $row.find('.appsetting-remove-field').val('1');
-        $row.fadeOut(300);
+        appsettingConfirm(appName + ' — ' + settingName, function() {
+            $row.find('.appsetting-remove-field').val('1');
+            $row.fadeOut(300);
+        });
     });
     
-    jQuery(document).on('click', '.appsetting-edit-btn', function() {
+    jQuery(document).on('click', '.appsetting-edit-btn', function(e) {
+        e.preventDefault();
         var $row = jQuery(this).closest('tr');
         var idx = $row.data('idx');
         var appId = $row.data('app-id');
@@ -2268,7 +2243,8 @@ jQuery(document).ready(function() {
         jQuery('#appsetting-modal').fadeIn(200);
     });
     
-    jQuery(document).on('click', '.appsetting-edit-btn-new', function() {
+    jQuery(document).on('click', '.appsetting-edit-btn-new', function(e) {
+        e.preventDefault();
         var $row = jQuery(this).closest('tr');
         var idx = jQuery(this).data('idx');
         
@@ -2296,48 +2272,60 @@ jQuery(document).ready(function() {
         jQuery('#appsetting-modal').fadeIn(200);
     });
     
-    jQuery(document).on('click', '.appsetting-remove-new', function() {
+    jQuery(document).on('click', '.appsetting-remove-new', function(e) {
+        e.preventDefault();
         var $row = jQuery(this).closest('tr');
         var idx = jQuery(this).data('idx');
         var appName = $row.find('input[name="appsetting_new_appname_' + idx + '"]').val();
         var settingName = $row.find('input[name="appsetting_new_name_' + idx + '"]').val();
         
-        if (!confirm('<?php echo _T("Delete this setting?", "mobile"); ?>\n' + appName + ' - ' + settingName)) {
-            return;
-        }
-        
-        $row.remove();
+        appsettingConfirm(appName + ' — ' + settingName, function() {
+            $row.remove();
+            refreshAppSettings();
+        });
     });
 
-    jQuery('#appsetting_search_filter').on('input', function() {
-        var query = jQuery(this).val().toLowerCase();
-        var $rows = jQuery('#tab-table-appsettings-results tbody tr');
-        
+    function refreshAppSettings() {
+        var query = (jQuery('#appsetting_search_filter').val() || '').toLowerCase();
+        var column = jQuery('#appsetting_column_filter').val() || 'all';
+        var $tbody = jQuery('#tab-table-appsettings-results tbody');
+        var $rows = $tbody.find('tr.appsetting-row');
+        $tbody.find('tr.empty-state-row').remove();
         if (query === '') {
             $rows.show();
         } else {
             $rows.each(function() {
                 var $row = jQuery(this);
                 var packageId = $row.find('td:eq(0)').text().toLowerCase();
-                var appName = $row.find('td:eq(1)').text().toLowerCase();
+                var appName   = $row.find('td:eq(1)').text().toLowerCase();
                 var attribute = $row.find('td:eq(2)').text().toLowerCase();
-                var value = $row.find('td:eq(3)').text().toLowerCase();
-                var comment = $row.find('td:eq(4)').text().toLowerCase();
-                var createDate = $row.find('td:eq(5)').text().toLowerCase();
-                
-                if (packageId.indexOf(query) !== -1 || 
-                    appName.indexOf(query) !== -1 || 
-                    attribute.indexOf(query) !== -1 || 
-                    value.indexOf(query) !== -1 || 
-                    comment.indexOf(query) !== -1 ||
-                    createDate.indexOf(query) !== -1) {
-                    $row.show();
-                } else {
-                    $row.hide();
-                }
+                var value     = $row.find('td:eq(3)').text().toLowerCase();
+                var comment   = $row.find('td:eq(4)').text().toLowerCase();
+                var match = false;
+                if (column === 'all') {
+                    match = packageId.indexOf(query) !== -1 || appName.indexOf(query) !== -1 ||
+                            attribute.indexOf(query) !== -1 || value.indexOf(query) !== -1 ||
+                            comment.indexOf(query) !== -1;
+                } else if (column === 'pkg')       { match = packageId.indexOf(query) !== -1; }
+                  else if (column === 'appname')   { match = appName.indexOf(query) !== -1; }
+                  else if (column === 'attribute') { match = attribute.indexOf(query) !== -1; }
+                  else if (column === 'value')     { match = value.indexOf(query) !== -1; }
+                  else if (column === 'comment')   { match = comment.indexOf(query) !== -1; }
+                $row.toggle(match);
             });
         }
-    });
+        var visible = (query === '') ? $rows.length : $rows.filter(':visible').length;
+        if (visible === 0) {
+            var colCount = jQuery('#tab-table-appsettings-results thead tr th').length || 7;
+            var emptyMsg = query
+                ? '<?php echo addslashes(_T("No settings match your search", "mobile")); ?>'
+                : '<?php echo addslashes(_T("No application settings in this configuration", "mobile")); ?>';
+            $tbody.append('<tr class="empty-state-row"><td colspan="' + colCount + '" style="text-align:center;color:#888;padding:20px;font-style:italic;">' + emptyMsg + '</td></tr>');
+        }
+    }
+    jQuery('#appsetting_search_filter').on('input', refreshAppSettings);
+    jQuery('#appsetting_column_filter').on('change', refreshAppSettings);
+    refreshAppSettings();
 
     jQuery('input[data-color-picker="true"]').each(function() {
         var $textInput = jQuery(this);
@@ -2400,6 +2388,7 @@ jQuery(document).ready(function() {
     function renderFilesPage() {
         if (!$fileTableBody.length || !$fileAllRows) { return; }
         var search = (jQuery('#file_search_filter').val() || '').toLowerCase();
+        var fileColumn = jQuery('#file_column_filter').val() || 'all';
         
         var visibleRows = [];
         
@@ -2411,9 +2400,12 @@ jQuery(document).ready(function() {
             
             // Apply search filter
             if (search) {
-                if (fileName.indexOf(search) === -1 && fileDesc.indexOf(search) === -1 && filePath.indexOf(search) === -1) {
-                    continue;
-                }
+                var colMatch = false;
+                if (fileColumn === 'all')  { colMatch = fileName.indexOf(search) !== -1 || fileDesc.indexOf(search) !== -1 || filePath.indexOf(search) !== -1; }
+                else if (fileColumn === 'name') { colMatch = fileName.indexOf(search) !== -1; }
+                else if (fileColumn === 'desc') { colMatch = fileDesc.indexOf(search) !== -1; }
+                else if (fileColumn === 'path') { colMatch = filePath.indexOf(search) !== -1; }
+                if (!colMatch) { continue; }
             }
             
             visibleRows.push($r);
@@ -2426,10 +2418,18 @@ jQuery(document).ready(function() {
         var end = start + filePageSize;
         
         $fileTableBody.empty();
-        for (var i = start; i < end && i < visibleRows.length; i++) {
-            var $clone = visibleRows[i].clone();
-            $clone.attr('style', 'border: 1px solid #ddd;');
-            $clone.appendTo($fileTableBody);
+        if (total === 0) {
+            var colCount = jQuery('#tab-table-files-results thead tr th').length || 5;
+            var emptyMsg = search
+                ? '<?php echo addslashes(_T("No files match your search", "mobile")); ?>'
+                : '<?php echo addslashes(_T("No files in this configuration", "mobile")); ?>';
+            $fileTableBody.append('<tr class="empty-state-row"><td colspan="' + colCount + '" style="text-align:center;color:#888;padding:20px;font-style:italic;">' + emptyMsg + '</td></tr>');
+        } else {
+            for (var i = start; i < end && i < visibleRows.length; i++) {
+                var $clone = visibleRows[i].clone();
+                $clone.attr('style', 'border: 1px solid #ddd;');
+                $clone.appendTo($fileTableBody);
+            }
         }
         updateFilesPagination(totalPages, total);
     }
@@ -2441,6 +2441,7 @@ jQuery(document).ready(function() {
     }
 
     jQuery('#file_search_filter').on('input', function() { refreshFiles(); });
+    jQuery('#file_column_filter').on('change', function() { refreshFiles(); });
 
     setTimeout(function() {
         captureOriginalFileRows();

@@ -1,18 +1,15 @@
 <?php
-if (!defined('MMC_MOBILE_AUTO_TRACE_DONE')) {
-    define('MMC_MOBILE_AUTO_TRACE_DONE', true);
-    if (function_exists('mmc_trace_module_auto_from_include')) {
-        mmc_trace_module_auto_from_include('mobile', 'mmc_dev_trace', 'INFO', 'MOBILE');
-    }
-}
-function xmlrpc_add_hmdm_device($name, $configuration_id, $description="", $groups=null, $imei="", $phone="", $device_id=null){
-    return xmlCall("mobile.addHmdmDevice", array($name, $configuration_id, $description, $groups, $imei, $phone, $device_id));
+function xmlrpc_add_hmdm_device($name, $configuration_id, $description="", $groups=null, $imei="", $phone="", $device_id=null, $custom1=""){
+    return xmlCall("mobile.addHmdmDevice", array($name, $configuration_id, $description, $groups, $imei, $phone, $device_id, $custom1));
 }
 function xmlrpc_update_hmdm_device($device_data){
     return xmlCall("mobile.updateHmdmDevice", array($device_data));
 }
 function xmlrpc_get_hmdm_devices(){
     return xmlCall("mobile.getHmdmDevices", array());
+}
+function xmlrpc_get_hmdm_device_by_id($device_id){
+    return xmlCall("mobile.getHmdmDeviceById", array($device_id));
 }
 function xmlrpc_get_hmdm_applications(){
     return xmlCall("mobile.getHmdmApplications", array());
@@ -68,6 +65,12 @@ function xmlrpc_delete_configuration_by_id($id){
 function xmlrpc_get_hmdm_configuration_by_id($id){
     return xmlCall("mobile.getHmdmConfigurationById", array($id));
 }
+function xmlrpc_get_hmdm_config_qr_url(){
+    return xmlCall("mobile.getHmdmConfigQrUrl", array());
+}
+function xmlrpc_get_hmdm_online_count(){
+    return xmlCall("mobile.getHmdmOnlineCount", array());
+}
 function xmlrpc_update_hmdm_configuration($config_data){
     return xmlCall("mobile.updateHmdmConfiguration", array($config_data));
 }
@@ -79,6 +82,53 @@ function xmlrpc_delete_hmdm_device_by_id($id){
 }
 function xmlrpc_get_hmdm_audit_logs($page_size=50, $page_num=1, $message_filter="", $user_filter=""){
     return xmlCall("mobile.getHmdmAuditLogs", array($page_size, $page_num, $message_filter, $user_filter));
+}
+function xmlrpc_get_hmdm_all_users(){
+    return xmlCall("mobile.getHmdmAllUsers", array());
+}
+function xmlrpc_get_hmdm_all_roles(){
+    return xmlCall("mobile.getHmdmAllRoles", array());
+}
+function xmlrpc_get_current_hmdm_user($medulla_user = null){
+    if ($medulla_user === null && isset($_SESSION['login'])) {
+        $medulla_user = $_SESSION['login'];
+    }
+    return xmlCall("mobile.getCurrentHmdmUser", array($medulla_user));
+}
+function xmlrpc_require_configured_hmdm_account(){
+    $account_not_configured = false;
+    try {
+        $user = xmlrpc_get_current_hmdm_user();
+        if ($user === null || !isset($user['userRole'])) {
+            $account_not_configured = true;
+        }
+    } catch (Exception $e) {
+        $account_not_configured = true;
+    }
+
+    if ($account_not_configured) {
+        echo '<div class="alert alert-danger" style="margin-top:20px; padding:12px 16px;">';
+        echo _T("Your HMDM account has not been configured by the administrator. Please contact your administrator to set up your MDM access.", "mobile");
+        echo '</div>';
+        return false;
+    }
+
+    return true;
+}
+function xmlrpc_get_hmdm_all_permissions(){
+    return xmlCall("mobile.getHmdmAllPermissions", array());
+}
+function xmlrpc_create_or_update_hmdm_role($name, $description=null, $permission_ids=null, $role_id=null){
+    return xmlCall("mobile.createOrUpdateHmdmRole", array($name, $description, $permission_ids, $role_id));
+}
+function xmlrpc_delete_hmdm_role($role_id){
+    return xmlCall("mobile.deleteHmdmRole", array($role_id));
+}
+function xmlrpc_create_or_update_hmdm_user($login, $role_id, $all_devices=true, $all_configs=true, $user_id=null, $device_groups=[], $config_ids=[]){
+    return xmlCall("mobile.createOrUpdateHmdmUser", array($login, $role_id, $all_devices, $all_configs, $user_id, $device_groups, $config_ids));
+}
+function xmlrpc_delete_hmdm_user($user_id){
+    return xmlCall("mobile.deleteHmdmUser", array($user_id));
 }
 function xmlrpc_get_hmdm_detailed_info($device_number){
     return xmlCall("mobile.getHmdmDetailedInfo", array($device_number));
@@ -122,5 +172,83 @@ function xmlrpc_search_hmdm_app_packages($filter_text=""){
 }
 function xmlrpc_upload_web_ui_files($uploadedFilePath = null, $uploadedFileName = null, $mimeType = null){
     return xmlCall("mobile.uploadWebUiFiles", array($uploadedFilePath, $uploadedFileName, $mimeType));
+}
+function xmlrpc_get_hmdm_contacts_config($configuration_id) {
+    return xmlCall("mobile.getHmdmContactsConfig", array($configuration_id));
+}
+function xmlrpc_save_hmdm_contacts_config($config_data) {
+    return xmlCall("mobile.saveHmdmContactsConfig", array($config_data));
+}
+function xmlrpc_export_hmdm_devices($group_id = null, $configuration_id = null, $filter_text = null, $columns = null) {
+    return xmlCall("mobile.exportHmdmDevices", array($group_id, $configuration_id, $filter_text, $columns));
+}
+function xmlrpc_import_hmdm_devices($csv_content) {
+    return xmlCall("mobile.importHmdmDevices", array($csv_content));
+}
+function xmlrpc_get_photos_settings() {
+    return xmlCall("mobile.getPhotosSettings", array());
+}
+function xmlrpc_save_photos_settings($settings_data) {
+    return xmlCall("mobile.savePhotosSettings", array($settings_data));
+}
+function xmlrpc_list_photos($device_number = null, $date_from = null, $date_to = null, $page_num = 0, $page_size = 50) {
+    return xmlCall("mobile.listPhotos", array($device_number, $date_from, $date_to, $page_num, $page_size));
+}
+function xmlrpc_delete_photo($photo_id) {
+    return xmlCall("mobile.deletePhoto", array($photo_id));
+}
+function xmlrpc_get_photo_file($photo_id, $is_thumb = false) {
+    return xmlCall("mobile.getPhotoFile", array($photo_id, $is_thumb));
+}
+function xmlrpc_start_remote_control_session($device_number) {
+    return xmlCall("mobile.startRemoteControlSession", array($device_number));
+}
+function xmlrpc_stop_remote_control_session($session_id) {
+    return xmlCall("mobile.stopRemoteControlSession", array($session_id));
+}
+function xmlrpc_get_netfilter_settings() {
+    return xmlCall("mobile.getNetfilterSettings", array());
+}
+function xmlrpc_save_netfilter_settings($enabled, $filter_mode) {
+    return xmlCall("mobile.saveNetfilterSettings", array($enabled, $filter_mode));
+}
+function xmlrpc_get_netfilter_rules() {
+    return xmlCall("mobile.getNetfilterRules", array());
+}
+function xmlrpc_add_netfilter_rule($domain, $rule_type) {
+    return xmlCall("mobile.addNetfilterRule", array($domain, $rule_type));
+}
+function xmlrpc_update_netfilter_rule($rule_id, $domain, $rule_type, $enabled) {
+    return xmlCall("mobile.updateNetfilterRule", array($rule_id, $domain, $rule_type, $enabled));
+}
+function xmlrpc_delete_netfilter_rule($rule_id) {
+    return xmlCall("mobile.deleteNetfilterRule", array($rule_id));
+}
+function xmlrpc_get_netfilter_profiles() {
+    return xmlCall("mobile.getNetfilterProfiles", array());
+}
+function xmlrpc_create_netfilter_profile($name, $filter_mode) {
+    return xmlCall("mobile.createNetfilterProfile", array($name, $filter_mode));
+}
+function xmlrpc_update_netfilter_profile($profile_id, $name, $filter_mode, $enabled) {
+    return xmlCall("mobile.updateNetfilterProfile", array($profile_id, $name, $filter_mode, (bool)$enabled));
+}
+function xmlrpc_delete_netfilter_profile($profile_id) {
+    return xmlCall("mobile.deleteNetfilterProfile", array($profile_id));
+}
+function xmlrpc_get_netfilter_profile_rules($profile_id) {
+    return xmlCall("mobile.getNetfilterProfileRules", array($profile_id));
+}
+function xmlrpc_add_netfilter_profile_rule($profile_id, $domain, $rule_type) {
+    return xmlCall("mobile.addNetfilterProfileRule", array($profile_id, $domain, $rule_type));
+}
+function xmlrpc_delete_netfilter_profile_rule($profile_id, $rule_id) {
+    return xmlCall("mobile.deleteNetfilterProfileRule", array($profile_id, $rule_id));
+}
+function xmlrpc_get_netfilter_profile_configs($profile_id) {
+    return xmlCall("mobile.getNetfilterProfileConfigs", array($profile_id));
+}
+function xmlrpc_set_netfilter_profile_configs($profile_id, $config_ids) {
+    return xmlCall("mobile.setNetfilterProfileConfigs", array($profile_id, $config_ids));
 }
 ?>
