@@ -1012,6 +1012,23 @@ update_561_to_562() {
     fi
 }
 
+update_562_to_563() {
+    str="Applying Medulla config update from 5.6.2 to 5.6.3..."
+    echo "$str"
+    write_to_log "$str"
+    update_medulla
+
+    echo "5.6.3" > /var/lib/mmc/version
+    str="[v] Medulla config update from 5.6.2 to 5.6.3 applied successfully."
+    echo "$str"
+    write_to_log "$str"
+    if [[ -f /tmp/update_medulla.sh ]]; then
+        exec /tmp/update_medulla.sh "$@"
+    else
+        exec /usr/sbin/update_medulla.sh "$@"
+    fi
+}
+
 # --- End of specific update functions for each version ---
 
 
@@ -1151,6 +1168,11 @@ case "$CURRENT_VERSION" in
     "5.6.1")
         if [[ "$AVAILABLE_VERSION" > "5.6.1" ]]; then
             update_561_to_562
+        fi
+        ;;
+    "5.6.2")
+        if [[ "$AVAILABLE_VERSION" > "5.6.2" ]]; then
+            update_562_to_563
         fi
         ;;
     *)
