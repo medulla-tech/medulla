@@ -274,6 +274,35 @@ $page = new Page("authConfig", _T('Authentication Configuration', 'admin'));
 $page->setFile("modules/admin/admin/authConfig.php");
 $submod->addPage($page);
 
+// --------------------- ITSM Synchronisation ----------------
+$page = new Page("itsmsync", _T('ITSM Synchronisation', 'admin'));
+$page->setFile("modules/admin/admin/itsmsync.php");
+$page->setOptions(array("noACL" => true));
+$submod->addPage($page);
+
+$page = new Page("ajaxITSMSync", _T('ITSM Sync Form', 'admin'));
+$page->setFile("modules/admin/admin/ajaxITSMSync.php");
+$page->setOptions(array("AJAX" => true, "visible" => false, "noHeader" => true, "noACL" => true));
+$submod->addPage($page);
+
+$page = new Page("ajaxITSMSyncTestConnection", _T('ITSM Sync Test Connection', 'admin'));
+$page->setFile("modules/admin/admin/ajaxITSMSyncTestConnection.php");
+$page->setOptions(array("AJAX" => true, "visible" => false, "noHeader" => true, "noACL" => true));
+$submod->addPage($page);
+
+$page = new Page("itsmformsync", _T('ITSM Synchronisation Form', 'admin'));
+$page->setFile("modules/admin/admin/itsmformsync.php");
+$submod->addPage($page);
+
+$page = new Page("inventoryEntityRules", _T('Global Inventory Rules', 'admin'));
+$page->setFile("modules/admin/admin/inventoryEntityRules.php");
+$submod->addPage($page);
+
+$page = new Page("ajaxInventoryEntityRules", _T('Global Inventory Rules AJAX', 'admin'));
+$page->setFile("modules/admin/admin/ajaxInventoryEntityRules.php");
+$page->setOptions(array("AJAX" => true, "visible" => false, "noHeader" => true));
+$submod->addPage($page);
+
 $page = new Page("deleteProvider", _T('Delete Provider', 'admin'));
 $page->setFile("modules/admin/admin/deleteProvider.php");
 $submod->addPage($page);

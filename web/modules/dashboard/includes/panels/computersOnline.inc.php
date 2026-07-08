@@ -45,9 +45,12 @@ class ComputersOnlinePanel extends Panel
         $machines_offline = $counts['total_offline'];
 
         $phones = xmlrpc_get_hmdm_online_count();
-        $phones_total   = intval($phones['total']);
-        $phones_online  = intval($phones['online']);
-        $phones_offline = intval($phones['offline']);
+        if (!is_array($phones)) {
+          $phones = array();
+        }
+        $phones_total   = intval($phones['total'] ?? 0);
+        $phones_online  = intval($phones['online'] ?? 0);
+        $phones_offline = intval($phones['offline'] ?? 0);
         $hasPhones = $phones_total > 0;
 
         $online_text  = _T("Online", "dashboard")." : ";
