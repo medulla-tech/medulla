@@ -1029,6 +1029,93 @@ update_562_to_563() {
     fi
 }
 
+update_563_to_xxx() {
+    str="Applying Medulla config update from 5.6.3 to 5.6.4..."
+    echo "$str"
+    write_to_log "$str"
+
+    HMDM_HOSTNAME="${INTERNAL_FQDN}"
+    HMDM_DBHOST="localhost"
+    HMDM_DBPORT="3306"
+    HMDM_DBNAME="hmdm"
+    HMDM_DBUSER="hmdm"
+    HMDM_DBPASSWD=$(openssl rand -base64 24)
+
+    HMDM_ADMINPASSWD=$(openssl rand -base64 24)
+
+    HMDM_TURNHOST="${HMDM_HOSTNAME}"
+    HMDM_TURNPORT="3478"
+    HMDM_TURNUSER="turnuser"
+    HMDM_TURNPASSWD=$(openssl rand -base64 24)
+
+    HMDM_BUILD_DEST="/opt/HMDM_BUILD"
+    HMDM_BUILD_URL="https://dl.medulla-tech.io/dl/in/hmdm-build-5.36.2-1.tar.gz"
+
+    if [[ ! -f /var/lib/hmdm/.hmdminitialised ]]; then
+
+        apt -y install tomcat9 mariadb-client aapt wget curl openssl
+
+        mysql --defaults-group-suffix=dbsetup -e "CREATE DATABASE IF NOT EXISTS ${HMDM_DBNAME} DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+
+        mysql --defaults-group-suffix=dbsetup -e "GRANT ALL PRIVILEGES ON ${HMDM_DBNAME}.* TO '${HMDM_DBUSER}'@'localhost' IDENTIFIED BY '${HMDM_DBPASSWD}'; FLUSH PRIVILEGES;"
+        mysql --defaults-group-suffix=dbsetup -e "GRANT ALL PRIVILEGES ON ${HMDM_DBNAME}.* TO '${HMDM_DBUSER}'@'${IP_ADDRESS}' IDENTIFIED BY '${HMDM_DBPASSWD}'; FLUSH PRIVILEGES;"
+        mysql --defaults-group-suffix=dbsetup -e "GRANT ALL PRIVILEGES ON ${HMDM_DBNAME}.* TO '${HMDM_DBUSER}'@'${INTERNAL_FQDN}' IDENTIFIED BY '${HMDM_DBPASSWD}'; FLUSH PRIVILEGES;"
+
+        if [[ -n "${PUBLIC_IP}" ]]; then
+            mysql --defaults-group-suffix=dbsetup -e "GRANT ALL PRIVILEGES ON ${HMDM_DBNAME}.* TO '${HMDM_DBUSER}'@'${PUBLIC_IP}' IDENTIFIED BY '${HMDM_DBPASSWD}'; FLUSH PRIVILEGES;"
+        fi
+
+        curl -fsSL "${HMDM_BUILD_URL}" -o /tmp/hmdm-build.tar.gz
+
+        tar -xzf /tmp/hmdm-build.tar.gz -C /opt/
+
+        chmod +x "${HMDM_BUILD_DEST}/hmdm_install.sh"
+
+        (
+            cd "${HMDM_BUILD_DEST}" || exit 1
+
+            ./hmdm_install.sh \
+                --hostname "${HMDM_HOSTNAME}" \
+                --db-host "${HMDM_DBHOST}" \
+                --db-port "${HMDM_DBPORT}" \
+                --db-name "${HMDM_DBNAME}" \
+                --db-user "${HMDM_DBUSER}" \
+                --db-pass "${HMDM_DBPASSWD}" \
+                --admin-pass "${HMDM_ADMINPASSWD}" \
+                --turn-host "${HMDM_TURNHOST}" \
+                --turn-port "${HMDM_TURNPORT}" \
+                --turn-user "${HMDM_TURNUSER}" \
+                --turn-pass "${HMDM_TURNPASSWD}"
+        )
+
+        mkdir -p /var/lib/hmdm
+        touch /var/lib/hmdm/.hmdminitialised
+
+        HMDM_FLAG=$(cat /var/lib/tomcat9/work/hmdm_install_flag 2>/dev/null)
+
+        if [[ "${HMDM_FLAG}" != "OK" ]]; then
+            str="[x] HMDM installation failed."
+            echo "$str"
+            write_to_log "$str"
+            exit 1
+        fi
+    fi
+
+    update_medulla
+
+    echo "5.6.4" > /var/lib/mmc/version
+
+    str="[v] Medulla config update from 5.6.3 to 5.6.4 applied successfully."
+    echo "$str"
+    write_to_log "$str"
+
+    if [[ -f /tmp/update_medulla.sh ]]; then
+        exec /tmp/update_medulla.sh "$@"
+    else
+        exec /usr/sbin/update_medulla.sh "$@"
+    fi
+}
+
 # --- End of specific update functions for each version ---
 
 
