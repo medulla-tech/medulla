@@ -5,6 +5,17 @@ if (!defined('MMC_ADMIN_AUTO_TRACE_DONE')) {
         mmc_trace_module_auto_from_include('admin', 'mmc_dev_trace', 'INFO', 'ADMIN');
     }
 }
+
+if (!defined('MMC_ADMIN_ITSMSYNC_TRACE_DONE')) {
+    define('MMC_ADMIN_ITSMSYNC_TRACE_DONE', true);
+    if (
+        function_exists('mmc_dev_trace')
+        && isset($_GET['action'])
+        && strtolower((string) $_GET['action']) === 'itsmsync'
+    ) {
+        mmc_dev_trace('INFO', 'itsmsync-view', array('file' => 'modules/admin/admin/itsmsync.php'), 'ADMIN');
+    }
+}
 /*
  * (c) 2024-2025 Medulla, http://www.medulla-tech.io
  *
@@ -309,4 +320,144 @@ function xmlrpc_build_acl_string_for_profile($profileName, $installType = null) 
 
 function xmlrpc_get_acl_feature_definitions($installType = null) {
     return xmlCall("admin.get_acl_feature_definitions", [$installType]);
+}
+
+// ---- ITSM Synchronisation ----
+/**
+ * Get list of all ITSM clients from admin.saas_application.
+ * Returns: array(client_id => client_name, ...)
+ */
+function xmlrpc_itsmsync_get_clients()
+{
+    try {
+        $clients = xmlCall('admin.get_itsmsync_clients_ctx', array());
+        return is_array($clients) ? $clients : array();
+    } catch (Exception $e) {
+        return array();
+    }
+}
+
+/**
+ * Get configuration for specific client.
+ * Returns: array of all config parameters for client.
+ */
+function xmlrpc_itsmsync_get_client_config($client_id)
+{
+    if ($client_id === null || $client_id === '') {
+        return array();
+    }
+
+    try {
+        $config = xmlCall('admin.get_itsmsync_client_config_ctx', array($client_id));
+        return is_array($config) ? $config : array();
+    } catch (Exception $e) {
+        return array();
+    }
+}
+
+/**
+ * Save client configuration to admin.saas_application.
+ * Returns: array('success' => bool, 'error' => string)
+ */
+function xmlrpc_itsmsync_save_client_config($client_id, $config)
+{
+    if (($client_id === null || $client_id === '') || !is_array($config)) {
+        return array('success' => false, 'error' => 'Invalid parameters');
+    }
+
+    try {
+        $result = xmlCall('admin.save_itsmsync_client_config_ctx', array($client_id, $config));
+        if (is_array($result)) {
+            return $result;
+        }
+        return array('success' => false, 'error' => 'Invalid backend response');
+    } catch (Exception $e) {
+        return array('success' => false, 'error' => $e->getMessage());
+    }
+}
+
+/**
+ * Get list of Medulla entities.
+ * Returns: array(entity_id => entity_name, ...)
+ */
+function xmlrpc_itsmsync_get_entities()
+{
+    try {
+        $entities = xmlCall('admin.get_itsmsync_entities_ctx', array());
+    } catch (Exception $e) {
+        return array();
+    }
+
+    $out = array();
+    if (is_array($entities)) {
+        foreach ($entities as $entity) {
+            if (!is_array($entity) || !isset($entity['id'])) {
+                continue;
+            }
+            $id = (string) $entity['id'];
+            $name = $entity['completename'] ?? ($entity['name'] ?? $id);
+            $out[$id] = $name;
+        }
+    }
+
+    return $out;
+}
+
+/**
+ * Validate ITSM connection.
+ * Returns: array('success' => bool, 'message' => string)
+ */
+function xmlrpc_itsmsync_test_connection($itsm_type, $connection_mode, $config)
+{
+    try {
+        $result = xmlCall('admin.test_itsmsync_connection', array($itsm_type, $connection_mode, $config));
+        return is_array($result) ? $result : array('success' => false, 'message' => 'Invalid backend response');
+    } catch (Exception $e) {
+        return array('success' => false, 'message' => $e->getMessage());
+    }
+}
+
+function xmlrpc_itsmsync_get_field_definitions($itsm_type, $connection_mode, $client_id = null)
+{
+    require_once("itsmsync_config.php");
+    return itsmsync_get_field_definitions($itsm_type, $connection_mode, $client_id);
+}
+
+function xmlrpc_itsmsync_get_all_fields($itsm_type, $connection_mode, $client_id = null)
+{
+    require_once("itsmsync_config.php");
+    return itsmsync_get_all_field_definitions($itsm_type, $connection_mode, $client_id);
+}
+
+function xmlrpc_itsmsync_get_types()
+{
+    require_once("itsmsync_config.php");
+    return itsmsync_get_itsm_types();
+}
+
+function xmlrpc_itsmsync_get_modes($itsm_type)
+{
+    require_once("itsmsync_config.php");
+    return itsmsync_get_connection_modes($itsm_type);
+}
+
+// ---- Global Inventory Entity Rules (root/admin) ----
+function xmlrpc_get_inventory_entity_rules($login, $start = 0, $end = -1, $filter = "")
+{
+    return xmlCall("admin.get_inventory_entity_rules", [$login, (int) $start, (int) $end, (string) $filter]);
+}
+
+function xmlrpc_save_inventory_entity_rule($login, $rule)
+{
+    return xmlCall("admin.save_inventory_entity_rule", [$login, $rule]);
+}
+
+function xmlrpc_set_inventory_entity_rule_enabled($login, $rule_id, $enabled)
+{
+    return xmlCall("admin.set_inventory_entity_rule_enabled", [$login, (int) $rule_id, (int) $enabled]);
+}
+
+function xmlrpc_delete_inventory_entity_rule($login, $rule_id)
+{
+    return xmlCall("admin.delete_inventory_entity_rule", [$login, (int) $rule_id]);
 }
