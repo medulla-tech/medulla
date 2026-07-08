@@ -248,6 +248,42 @@ update_relays() {
     done
 }
 
+setup_mac_agent_generation_prerequisites() {
+    str="[=] Installing Mac agent generation prerequisites..."
+    echo "$str"
+    write_to_log "$str"
+
+    apt install -y build-essential autoconf libtool libxml2-dev libssl-dev libbz2-dev zlib1g-dev pkg-config git
+
+    if ! command -v xar >/dev/null 2>&1; then
+        rm -rf /tmp/xar
+        git clone https://github.com/tpoechtrager/xar.git /tmp/xar
+
+        (
+            cd /tmp/xar/xar || exit 1
+            ./autogen.sh
+            ./configure
+            make
+            make install
+        )
+    fi
+
+    if ! command -v mkbom >/dev/null 2>&1; then
+        rm -rf /tmp/bomutils
+        git clone https://github.com/hogliux/bomutils.git /tmp/bomutils
+
+        (
+            cd /tmp/bomutils || exit 1
+            make
+            make install
+        )
+    fi
+
+    str="[v] Mac agent generation prerequisites installed successfully."
+    echo "$str"
+    write_to_log "$str"
+}
+
 # --- End of common functions for Medulla updates ---
 
 
