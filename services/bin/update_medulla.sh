@@ -248,42 +248,6 @@ update_relays() {
     done
 }
 
-setup_mac_agent_generation_prerequisites() {
-    str="[=] Installing Mac agent generation prerequisites..."
-    echo "$str"
-    write_to_log "$str"
-
-    apt install -y build-essential autoconf libtool libxml2-dev libssl-dev libbz2-dev zlib1g-dev pkg-config git
-
-    if ! command -v xar >/dev/null 2>&1; then
-        rm -rf /tmp/xar
-        git clone https://github.com/tpoechtrager/xar.git /tmp/xar
-
-        (
-            cd /tmp/xar/xar || exit 1
-            ./autogen.sh
-            ./configure
-            make
-            make install
-        )
-    fi
-
-    if ! command -v mkbom >/dev/null 2>&1; then
-        rm -rf /tmp/bomutils
-        git clone https://github.com/hogliux/bomutils.git /tmp/bomutils
-
-        (
-            cd /tmp/bomutils || exit 1
-            make
-            make install
-        )
-    fi
-
-    str="[v] Mac agent generation prerequisites installed successfully."
-    echo "$str"
-    write_to_log "$str"
-}
-
 # --- End of common functions for Medulla updates ---
 
 
@@ -1066,7 +1030,7 @@ update_562_to_563() {
 }
 
 update_563_to_xxx() {
-    str="Applying Medulla config update from 5.6.3 to 5.6.4..."
+    str="Applying Medulla config update from 5.6.3 to xxx..."
     echo "$str"
     write_to_log "$str"
 
@@ -1125,7 +1089,6 @@ update_563_to_xxx() {
         )
 
         mkdir -p /var/lib/hmdm
-        touch /var/lib/hmdm/.hmdminitialised
 
         HMDM_FLAG=$(cat /var/lib/tomcat9/work/hmdm_install_flag 2>/dev/null)
 
@@ -1135,13 +1098,46 @@ update_563_to_xxx() {
             write_to_log "$str"
             exit 1
         fi
+        touch /var/lib/hmdm/.hmdminitialised
+    fi
+    str="[=] Installing Mac agent generation prerequisites..."
+    echo "$str"
+    write_to_log "$str"
+
+    apt install -y build-essential autoconf libtool libxml2-dev libssl-dev libbz2-dev zlib1g-dev pkg-config git
+
+    if ! command -v xar >/dev/null 2>&1; then
+        rm -rf /tmp/xar
+        git clone https://github.com/tpoechtrager/xar.git /tmp/xar
+
+        (
+            cd /tmp/xar/xar || exit 1
+            ./autogen.sh
+            ./configure
+            make
+            make install
+        )
     fi
 
+    if ! command -v mkbom >/dev/null 2>&1; then
+        rm -rf /tmp/bomutils
+        git clone https://github.com/hogliux/bomutils.git /tmp/bomutils
+
+        (
+            cd /tmp/bomutils || exit 1
+            make
+            make install
+        )
+    fi
+
+    str="[v] Mac agent generation prerequisites installed successfully."
+    echo "$str"
+    write_to_log "$str"
     update_medulla
 
-    echo "5.6.4" > /var/lib/mmc/version
+    echo "xxx" > /var/lib/mmc/version
 
-    str="[v] Medulla config update from 5.6.3 to 5.6.4 applied successfully."
+    str="[v] Medulla config update from 5.6.3 to xxx applied successfully."
     echo "$str"
     write_to_log "$str"
 
