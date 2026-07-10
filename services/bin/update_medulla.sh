@@ -1040,8 +1040,10 @@ update_563_to_xxx() {
     HMDM_DBNAME="hmdm"
     HMDM_DBUSER="hmdm"
     HMDM_DBPASSWD=$(openssl rand -base64 24)
+    HMDM_TOMCAT_PORT="8081"
+    HMDM_APACHE_CONF="/etc/apache2/conf-available/hmdm.conf"
 
-    HMDM_ADMINPASSWD=$(openssl rand -base64 24)
+    HMDM_ADMINPASSWD=$(crudini --get /etc/mmc/plugins/base.ini.local ldap password)
 
     HMDM_TURNHOST="${HMDM_HOSTNAME}"
     HMDM_TURNPORT="3478"
@@ -1071,35 +1073,78 @@ update_563_to_xxx() {
 
         chmod +x "${HMDM_BUILD_DEST}/hmdm_install.sh"
 
-        (
-            cd "${HMDM_BUILD_DEST}" || exit 1
+        if ! (
+             cd "${HMDM_BUILD_DEST}" || exit 1
 
-            ./hmdm_install.sh \
-                --hostname "${HMDM_HOSTNAME}" \
-                --db-host "${HMDM_DBHOST}" \
-                --db-port "${HMDM_DBPORT}" \
-                --db-name "${HMDM_DBNAME}" \
-                --db-user "${HMDM_DBUSER}" \
-                --db-pass "${HMDM_DBPASSWD}" \
-                --admin-pass "${HMDM_ADMINPASSWD}" \
-                --turn-host "${HMDM_TURNHOST}" \
-                --turn-port "${HMDM_TURNPORT}" \
-                --turn-user "${HMDM_TURNUSER}" \
-                --turn-pass "${HMDM_TURNPASSWD}"
-        )
-
-        mkdir -p /var/lib/hmdm
-
-        HMDM_FLAG=$(cat /var/lib/tomcat9/work/hmdm_install_flag 2>/dev/null)
-
-        if [[ "${HMDM_FLAG}" != "OK" ]]; then
-            str="[x] HMDM installation failed."
-            echo "$str"
-            write_to_log "$str"
-            exit 1
+             ./hmdm_install.sh \
+                 --hostname "${HMDM_HOSTNAME}" \
+                 --db-host "${HMDM_DBHOST}" \
+                 --db-port "${HMDM_DBPORT}" \
+                 --db-name "${HMDM_DBNAME}" \
+                 --db-user "${HMDM_DBUSER}" \
+                 --db-pass "${HMDM_DBPASSWD}" \
+                 --admin-pass "${HMDM_ADMINPASSWD}" \
+                 --turn-host "${HMDM_TURNHOST}" \
+                 --turn-port "${HMDM_TURNPORT}" \
+                 --turn-user "${HMDM_TURNUSER}" \
+                 --turn-pass "${HMDM_TURNPASSWD}"
+        ); then
+             str="[x] HMDM installation failed."
+             echo "$str"
+             write_to_log "$str"
+             exit 1
         fi
+        mkdir -p /var/lib/hmdm
         touch /var/lib/hmdm/.hmdminitialised
     fi
+
+    str="[=] Configuring Apache reverse proxy for HMDM..."
+    echo "$str"
+    write_to_log "$str"
+
+    if ! a2enmod proxy proxy_http; then
+        str="[x] Failed to enable Apache proxy modules."
+        echo "$str"
+        write_to_log "$str"
+        exit 1
+    fi
+    cat > "${HMDM_APACHE_CONF}" <<EOF
+<IfModule mod_proxy.c>
+    ProxyPreserveHost On
+
+    ProxyPass        /hmdm/ http://127.0.0.1:${HMDM_TOMCAT_PORT}/hmdm/
+    ProxyPassReverse /hmdm/ http://127.0.0.1:${HMDM_TOMCAT_PORT}/hmdm/
+
+    RedirectMatch 301 ^/hmdm$ /hmdm/
+
+</IfModule>
+EOF
+
+    if ! a2enconf hmdm; then
+        str="[x] Failed to enable HMDM Apache configuration."
+        echo "$str"
+        write_to_log "$str"
+        exit 1
+    fi
+
+    if ! apache2ctl configtest; then
+        str="[x] Invalid Apache configuration for HMDM."
+        echo "$str"
+        write_to_log "$str"
+        exit 1
+    fi
+
+    if ! systemctl reload apache2; then
+        str="[x] Failed to reload Apache after HMDM configuration."
+        echo "$str"
+        write_to_log "$str"
+        exit 1
+    fi
+
+    str="[v] Apache reverse proxy for HMDM configured successfully."
+    echo "$str"
+    write_to_log "$str"
+
     str="[=] Installing Mac agent generation prerequisites..."
     echo "$str"
     write_to_log "$str"
@@ -1147,6 +1192,8 @@ update_563_to_xxx() {
         exec /usr/sbin/update_medulla.sh "$@"
     fi
 }
+
+
 
 # --- End of specific update functions for each version ---
 
