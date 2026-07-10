@@ -1049,7 +1049,7 @@ update_563_to_xxx() {
     HMDM_TURNPASSWD=$(openssl rand -base64 24)
 
     HMDM_BUILD_DEST="/opt/HMDM_BUILD"
-    HMDM_BUILD_URL="https://dl.medulla-tech.io/dl/in/hmdm-build-5.36.2-1.tar.gz"
+    HMDM_BUILD_URL="https://dl.medulla-tech.io/in/hmdm-build-5.36.2-1.tar.gz"
 
     if [[ ! -f /var/lib/hmdm/.hmdminitialised ]]; then
 
