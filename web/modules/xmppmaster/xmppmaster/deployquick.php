@@ -74,9 +74,6 @@ $jid = $_GET['jid'] ?? '';
                 <div class="action-item" id="shutdown0" title="<?php echo _T("Click here to shut down the remote machine:", "xmppmaster") . " " . $cn; ?>">
                     <img src="img/actions/power.svg" alt="Shutdown">
                     <span id="shutdown"><?php echo _T("Shutdown", "xmppmaster"); ?></span>
-                    <label class="action-option" onclick="event.stopPropagation();">
-                        <input type="checkbox" id="checkboxshutdown"> <?php echo _T("options", "xmppmaster"); ?>
-                    </label>
                 </div>
                 <div class="action-item" id="reboot0" title="<?php echo _T("Click here to reboot the remote machine:", "xmppmaster") . " " . $cn; ?>">
                     <img src="img/actions/restart.svg" alt="Reboot">
@@ -106,18 +103,6 @@ $jid = $_GET['jid'] ?? '';
                     </label>
                 </div>
             <?php endif; ?>
-        </div>
-    </div>
-
-    <!-- Shutdown options (hidden by default) -->
-    <div id="shutdowninfo" class="shutdown-options" style="display: none;">
-        <div class="option-row">
-            <label><?php echo _T("Time before shutdown", "xmppmaster"); ?></label>
-            <input type="number" id="mytimeshutdown" value="60" min="0" max="120">
-        </div>
-        <div class="option-row">
-            <label><?php echo _T("Message", "xmppmaster"); ?></label>
-            <input type="text" id="msgshutdown" value="Shutdown from admin">
         </div>
     </div>
 
