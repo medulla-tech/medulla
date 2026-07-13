@@ -1,4 +1,10 @@
 <?php
+// SPDX-FileCopyrightText: 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+// SPDX-FileCopyrightText: 2007 Mandriva, http://www.mandriva.com
+// SPDX-FileCopyrightText: 2016-2023 Siveo, http://www.siveo.net
+// SPDX-FileCopyrightText: 2024-2025 Medulla, http://www.medulla-tech.io
+// SPDX-License-Identifier: GPL-3.0-or-later
+// file : web/modules/updates/updates/entity/ajaxEntityCompliance.php
 /*
  * (c) 2016-2023 Siveo, http://www.siveo.net
  * (c) 2024-2025 Medulla, http://www.medulla-tech.io
@@ -59,14 +65,10 @@ require_once("modules/updates/includes/xmlrpc.php");
 <?php
 
 // print_r( getFilteredGetParams());
-$timerefresh= 90;
+$ajax = new AjaxFilter(urlStrRedirect("updates/updates/ajaxEntitiesListwindows"), "container", [], 'formRunning');
 
-$ajax = new AjaxPagebartitlletime(urlStrRedirect("updates/updates/ajaxEntitiesList"),
-                                  "entitylist",
-                                  getFilteredGetParams(),
-                                  $timerefresh,
-                                  "idcircularProgress");
 $ajax->display();
+$ajax->displayDivToUpdate();
 ?>
 
 <style>

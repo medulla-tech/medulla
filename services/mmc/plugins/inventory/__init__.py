@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 # SPDX-FileCopyrightText: 2018-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-3.0-or-later
+# file : services/mmc/plugins/inventory/__init__.py
 
 """
 Pulse 2 MMC agent inventory plugin
@@ -16,14 +17,14 @@ from pulse2.managers.location import ComputerLocationManager
 
 import logging
 
-from mmc.plugins.inventory.config import InventoryConfig
-from pulse2.database.inventory import Inventory
-from mmc.plugins.inventory.computers import InventoryComputers
-from mmc.plugins.inventory.provisioning import InventoryProvisioner
-from mmc.plugins.inventory.locations import InventoryLocation
-from mmc.plugins.inventory.tables_def import PossibleQueries
-
 from pulse2.version import getVersion, getRevision  # pyflakes.ignore
+
+Inventory = None
+InventoryComputers = None
+InventoryProvisioner = None
+InventoryLocation = None
+PossibleQueries = None
+InventoryConfig = None
 
 APIVERSION = "0:0:0"
 
@@ -34,6 +35,32 @@ def getApiVersion():
 
 def activate():
     logger = logging.getLogger()
+
+    global Inventory
+    global InventoryComputers
+    global InventoryProvisioner
+    global InventoryLocation
+    global PossibleQueries
+    global InventoryConfig
+
+    try:
+        from mmc.plugins.inventory.config import InventoryConfig as InventoryConfigClass
+        from pulse2.database.inventory import Inventory as InventoryClass
+        from mmc.plugins.inventory.computers import InventoryComputers as InventoryComputersClass
+        from mmc.plugins.inventory.provisioning import InventoryProvisioner as InventoryProvisionerClass
+        from mmc.plugins.inventory.locations import InventoryLocation as InventoryLocationClass
+        from mmc.plugins.inventory.tables_def import PossibleQueries as PossibleQueriesClass
+    except ModuleNotFoundError as exc:
+        logger.error("Plugin inventory: missing dependency (%s)", exc)
+        return False
+
+    InventoryConfig = InventoryConfigClass
+    Inventory = InventoryClass
+    InventoryComputers = InventoryComputersClass
+    InventoryProvisioner = InventoryProvisionerClass
+    InventoryLocation = InventoryLocationClass
+    PossibleQueries = PossibleQueriesClass
+
     config = InventoryConfig()
     config.init("inventory")
     logger.debug("Inventory %s" % str(config.disable))

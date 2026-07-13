@@ -1,4 +1,10 @@
 <?php
+// SPDX-FileCopyrightText: 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+// SPDX-FileCopyrightText: 2007 Mandriva, http://www.mandriva.com
+// SPDX-FileCopyrightText: 2016-2023 Siveo, http://www.siveo.net
+// SPDX-FileCopyrightText: 2024-2025 Medulla, http://www.medulla-tech.io
+// SPDX-License-Identifier: GPL-3.0-or-later
+// file : web/modules/updates/updates/ajaxEntitiesListlinuxfilter.php
 /*
  * (c) 2016-2023 Siveo, http://www.siveo.net
  * (c) 2024-2025 Medulla, http://www.medulla-tech.io
@@ -26,6 +32,7 @@ require_once("modules/updates/includes/html.inc.php");
 require_once("modules/glpi/includes/xmlrpc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 require_once("modules/xmppmaster/includes/html.inc.php");
+
 
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
@@ -268,6 +275,15 @@ $NoView_detail_machine_security_linux_entity = new EmptyActionItem1(_T("Details 
                                                         "auditbymachine");
 //--------------------------
 
+$action_update_history_linux_entity = new ActionItem(_T("Update history by entity",
+                                                        "updates"),
+                                                    "auditByEntity",
+                                                    "history",
+                                                    "",
+                                                    "updates",
+                                                    "updates");
+
+
 
 foreach ($_entities as $entity) {
     if (preg_match("#" . $filter . "#i", $entity['name']) || preg_match("#" . $filter . "#i", $entity['completename'])) {
@@ -305,9 +321,7 @@ $params = [];
 $entityid = array_column($merged_array, 'entity');
 $nameentity = array_column($merged_array, 'completename');
 $entitycompliances = xmlrpc_analyze_machine_compliance_linux($entityid);
-echo "<pre>";
-print_r($nameentity);
-echo "</pre>";
+
 $datestring = date("Ymd_His");
 
 // Vérifier que $entitycompliances est un tableau valide
@@ -326,6 +340,7 @@ $machines_up_to_date = [];
 $machines_security_not_ok = [];
 $machines_kernel_not_ok = [];
 $machines_other_not_ok = [];
+$action_update_history_linux = [];
 
 // Utiliser un compteur séquentiel pour itérer de manière cohérente sur les tableaux parallèles
 $entity_count = count($entityid);
@@ -345,7 +360,9 @@ for ($counter = 0; $counter < $entity_count; $counter++) {
      */
     $datagrp = [
         "entity_id"                   => $entityid[$ind],
+        "entity"                      => "UUID" . $entityid[$ind],
         "completename"                => $nameentitycomplete,
+        "history_type"                => "linux_updates",
         "compliance_total_percent"    => ($entitycompliances['compliance_total_percent'][$ind] ?? 0),
         "compliance_security_percent" => ($entitycompliances['compliance_security_percent'][$ind] ?? 0),
         "compliance_kernel_percent"   => ($entitycompliances['compliance_kernel_percent'][$ind] ?? 0),
@@ -358,6 +375,7 @@ for ($counter = 0; $counter < $entity_count; $counter++) {
         "total_machines"              => ($entitycompliances['total_machines'][$ind] ?? 0)
     ];
     $params[]=$datagrp;
+    $action_update_history_linux[] = $action_update_history_linux_entity;
     /*
      |--------------------------------------------------------------------------
      | PROGRESS BARS - Messages explicatifs Linux
@@ -725,6 +743,7 @@ $n->addActionItemArray($action_update_kernel_linux);
 $n->addActionItemArray($action_update_security_linux);
 $n->addActionItemArray($action_update_other_linux);
 $n->addActionItemArray($action_update_complet_linux);
+$n->addActionItemArray($action_update_history_linux);
 
 $n->addActionItemArray($vue_compliance_distri_linux_entity);
 $n->addActionItemArray($vue_detail_machine_kernel_linux_entity);
@@ -737,6 +756,7 @@ $n->setNavBar(new AjaxNavBar($count, $filter));
 $n->setParamInfo($params);
 $n->start = 0;
 $n->end = $count;
+(new TitleElement(_T("Linux", "updates")))->display();
 echo '<div class="entity-compliance-table">';
 $n->display();
 echo '</div>';

@@ -1,4 +1,10 @@
 <?php
+// SPDX-FileCopyrightText: 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+// SPDX-FileCopyrightText: 2007 Mandriva, http://www.mandriva.com
+// SPDX-FileCopyrightText: 2016-2023 Siveo, http://www.siveo.net
+// SPDX-FileCopyrightText: 2024-2025 Medulla, http://www.medulla-tech.io
+// SPDX-License-Identifier: GPL-3.0-or-later
+// file : web/modules/updates/updates/ajaxLinuxAutoUpdatePolicy.php
 /*
  * (c) 2026 Medulla, http://www.medulla-tech.io
  *
@@ -7,6 +13,7 @@
  */
 
 require_once("modules/xmppmaster/includes/xmlrpc.php");
+
 
 // Récupère l'entity_id avec la même logique de fallback que ajaxLinuxApprovedReleases.php
 $selectedLocation = $_POST['selected_location'] ?? $_GET['selected_location'] ?? [];
@@ -54,6 +61,9 @@ echo '<div class="linux-autoupdate-policy">';
 echo '<form id="linuxAutoUpdatePolicyForm" method="post" action="' .
     urlStrRedirect("updates/updates/linuxAutoUpdatePolicy") . '">';
 echo '<input type="hidden" name="form_name" value="linux_auto_update_policy">';
+echo '<input type="hidden" name="auth_token" value="' . htmlspecialchars($_SESSION['auth_token'] ?? '', ENT_QUOTES, 'UTF-8') . '">';
+echo '<input type="hidden" name="entityid" value="' . $entityId . '">';
+echo '<input type="hidden" name="entityname" value="' . htmlspecialchars($entity_names[$entityId] ?? '', ENT_QUOTES, 'UTF-8') . '">';
 
 if (empty($policies)) {
     echo '<p>' . _T("No auto-update policies found for this entity.", "updates") . '</p>';

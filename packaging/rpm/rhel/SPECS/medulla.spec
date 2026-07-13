@@ -27,8 +27,8 @@
 
 %define use_git                1
 %define git                    SHA
-%define real_version           5.6.1
-%define mmc_version            5.6.1
+%define real_version           5.6.3
+%define mmc_version            5.6.3
 
 Summary:	Management Console
 Name:		medulla
@@ -485,6 +485,11 @@ This package contains the updates plugin for the MMC agent.
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/updates.ini
 %python3_sitelib/mmc/plugins/updates
 %python3_sitelib/pulse2/database/updates
+%{_sharedstatedir}/pulse2/packages/sharing/global/34181a66-updateslinuxkernel_i8ppnmrs
+%{_sharedstatedir}/pulse2/packages/sharing/global/aa365fe6-linuxupdateother_cew74x5bi0
+%{_sharedstatedir}/pulse2/packages/sharing/global/dfd3b8dc-linuxupdategenericcommand_p
+%{_sharedstatedir}/pulse2/packages/sharing/global/e05e689e-linuxupdatesecutity_ivvfn4b
+
 
 
 #--------------------------------------------------------------------

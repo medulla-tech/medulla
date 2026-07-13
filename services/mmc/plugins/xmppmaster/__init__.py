@@ -1,6 +1,7 @@
 # -*- coding: utf-8; -*-
 # SPDX-FileCopyrightText: 2016-2023 Siveo <support@siveo.net>
 # SPDX-License-Identifier: GPL-3.0-or-later
+# file : services/mmc/plugins/xmppmaster/__init__.py
 
 """
 Plugin to manage the interface with xmppmaster
@@ -2420,8 +2421,8 @@ def cancel_update(machineid, updateid):
     return XmppMasterDatabase().cancel_update(machineid, updateid)
 
 
-def get_audit_summary_updates_by_entity(entity_uuid, start=0, limit=-1, filter=""):
-    return XmppMasterDatabase().get_audit_summary_updates_by_entity(entity_uuid, start, limit, filter)
+def get_audit_summary_updates_by_entity(entity_uuid, start=0, limit=-1, filter="", history_type=""):
+    return XmppMasterDatabase().get_audit_summary_updates_by_entity(entity_uuid, start, limit, filter, history_type)
 
 
 def get_audit_summary_updates_by_update(updateid, start=0, limit=-1, filter=""):
@@ -2432,11 +2433,30 @@ def get_distribution_version_compliance(
         distributor_id,
         entity_id,
         start,
-        limit
+        limit,
+        hostname_filter=None,
+        end=None,
     ):
     return XmppMasterDatabase().get_distribution_version_compliance(
         distributor_id,
         entity_id,
+        start,
+        limit,
+        hostname_filter,
+        end,
+    )
+
+def get_major_machines_by_entity(
+        distribution,
+        entity_id,
+        filter="",
+        start=0,
+        limit=50
+    ):
+    return XmppMasterDatabase().get_major_machines_by_entity(
+        distribution,
+        entity_id,
+        filter,
         start,
         limit
     )

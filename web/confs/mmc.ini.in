@@ -27,6 +27,10 @@ maxperpage = 10
 ; community can be yes or no
 community = yes
 
+; Installation type (drives the ACL system)
+; Values: onpremise (default) | saas
+install_type = onpremise
+
 ; Declare if this installation is a demo version or not
 ; demo can be yes or no
 demo = no

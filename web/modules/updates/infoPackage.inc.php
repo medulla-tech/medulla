@@ -1,26 +1,11 @@
 <?php
-/**
- * (c) 2022-2025 Siveo, http://siveo.net/
- *
- * $Id$
- *
- * This file is part of Management Console (MMC).
- *
- * MMC is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * MMC is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with MMC; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * file modules/updates/infoPackage.inc.php
- */
+// SPDX-FileCopyrightText: 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+// SPDX-FileCopyrightText: 2007 Mandriva, http://www.mandriva.com
+// SPDX-FileCopyrightText: 2016-2023 Siveo, http://www.siveo.net
+// SPDX-FileCopyrightText: 2024-2025 Medulla, http://www.medulla-tech.io
+// SPDX-License-Identifier: GPL-3.0-or-later
+// file : web/modules/updates/infoPackage.inc.php
+
 
 require_once("modules/medulla_server/version.php");
 
@@ -176,15 +161,15 @@ $submod->addPage($page);
 
 
 $page = new Page("ajaxMajorEntitiesList", _T('Entities Major Compliance', 'updates'));
-$page->setFile("modules/updates/updates/major/ajaxMajorEntitiesList.php");
+$page->setFile("modules/updates/updates/ajaxMajorEntitiesList.php");
 $submod->addPage($page);
 
 $page = new Page("ajaxMajorEntitiesListServ", _T('Entities Major Compliance', 'updates'));
-$page->setFile("modules/updates/updates/major/ajaxMajorEntitiesListServ.php");
+$page->setFile("modules/updates/updates/ajaxMajorEntitiesListServ.php");
 $submod->addPage($page);
 
 $page = new Page("ajaxMajorEntitiesListDebian", _T('Entities Major Compliance', 'updates'));
-$page->setFile("modules/updates/updates/major/ajaxMajorEntitiesListDebian.php");
+$page->setFile("modules/updates/updates/ajaxMajorEntitiesListDebian.php");
 $submod->addPage($page);
 
 $page = new Page("ajaxMajorEntitiesListUbuntu", _T('Entities Major Compliance', 'updates'));
@@ -214,6 +199,11 @@ $submod->addPage($page);
 
 $page = new Page("ajaxMajorEntitiesListFedora", _T('Entities Major Compliance', 'updates'));
 $page->setFile("modules/updates/updates/ajaxMajorEntitiesListFedora.php");
+$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
+$submod->addPage($page);
+
+$page = new Page("ajaxMajorMachinesList", _T('Machines Major Compliance', 'updates'));
+$page->setFile("modules/updates/updates/ajaxMajorMachinesList.php");
 $page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
 $submod->addPage($page);
 
@@ -391,6 +381,24 @@ $page = new Page("majorDetailsByMachines", _T('Machines major update', 'updates'
 $page->setFile("modules/updates/updates/majorDetailsByMachines.php");
 $submod->addPage($page);
 
+$page = new Page("ajaxMajorDetailsByMachinesLinux", _T("Details by Machines for Linux major update", "updates"));
+$page->setFile("modules/updates/updates/ajaxMajorDetailsByMachinesLinux.php");
+$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
+$submod->addPage($page);
+
+$page = new Page("majorDetailsByMachinesLinux", _T('Machines Linux major update', 'updates'));
+$page->setFile("modules/updates/updates/majorDetailsByMachinesLinux.php");
+$submod->addPage($page);
+
+$page = new Page("ajaxMajorDeploymentHistoryLinux", _T("Linux major deployment history", "updates"));
+$page->setFile("modules/updates/updates/ajaxMajorDeploymentHistoryLinux.php");
+$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
+$submod->addPage($page);
+
+$page = new Page("majorDeploymentHistoryLinux", _T('Linux major deployment history', 'updates'));
+$page->setFile("modules/updates/updates/majorDeploymentHistoryLinux.php");
+$submod->addPage($page);
+
 $page = new Page("ajaxgroupUpdateMajorEntity", _T("Deployment details on group entity", "updates"));
 $page->setFile("modules/updates/updates/ajaxgroupUpdateMajorEntity.php");
 $page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
@@ -529,6 +537,16 @@ $page = new Page("deployUpdateLinuxType", _T('Deploy Update linux', 'updates'));
 $page->setFile("modules/updates/updates/deployUpdateLinuxType.php");
 $page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
 $submod->addPage($page);
+$page = new Page("ajaxEntitiesListwindows", _T("Entities Compliance windows", "updates"));
+$page->setFile("modules/updates/updates/ajaxEntitiesListwindows.php");
+$page->setOptions(array("AJAX" => true, "visible" => false, "noHeader" => true));
+$submod->addPage($page);
+
+$page = new Page("ajaxEntitiesListwindowsfilter", _T("Entities Compliance windows", "updates"));
+$page->setFile("modules/updates/updates/ajaxEntitiesListwindowsfilter.php");
+$page->setOptions(array("AJAX" => true, "visible" => false, "noHeader" => true));
+$submod->addPage($page);
+
 $page = new Page("ajaxEntitiesListlinux", _T("Entities Compliance linux", "updates"));
 $page->setFile("modules/updates/updates/ajaxEntitiesListlinux.php");
 $page->setOptions(array("AJAX" => true, "visible" => false, "noHeader" => true));

@@ -903,9 +903,18 @@ class AdminDatabase(DatabaseHelper):
             session.rollback()
             return False
 
+    # Built-in profiles that mirror the default GLPI profiles. They cannot
+    # be removed via the UI/API because they anchor the ACL seed and are
+    # always expected to exist by the rest of the stack.
+    PROTECTED_PROFILES = {"Super-Admin", "Admin", "Technician"}
+
     @DatabaseHelper._sessionm
     def delete_acl_profile(self, session, profile_name):
-        """Delete a profile and its feature selections."""
+        """Delete a profile and its feature selections. Refuses to delete
+        a built-in profile (Super-Admin / Admin / Technician)."""
+        if profile_name in self.PROTECTED_PROFILES:
+            logger.warning("delete_acl_profile: refusing to delete protected profile %r", profile_name)
+            return False
         try:
             session.execute(text("DELETE FROM acl_profile_features WHERE profile_name = :name"), {"name": profile_name})
             session.execute(text("DELETE FROM acl_profiles WHERE profile_name = :name"), {"name": profile_name})
@@ -917,15 +926,42 @@ class AdminDatabase(DatabaseHelper):
             return False
 
     @DatabaseHelper._sessionm
-    def get_acl_profile_features(self, session, profile_name=None):
-        """Get feature selections for a profile (or all profiles)."""
+    def get_acl_profile_features(self, session, profile_name=None, install_type=None):
+        """Get feature selections for a profile (or all profiles).
+
+        When install_type is provided, type-specific rows take precedence
+        over 'both' rows for the same (profile, feature) pair, so the UI
+        sees the effective configuration for the current installation.
+        """
         try:
-            sql = "SELECT profile_name, feature_key, access_level FROM acl_profile_features"
-            if profile_name:
-                sql += " WHERE profile_name = :profile"
-                result = session.execute(text(sql), {"profile": profile_name})
+            params = {}
+            type_filter = ""
+            if install_type:
+                type_filter = " AND install_type IN ('both', :install_type)"
+                params["install_type"] = install_type
+
+            if install_type:
+                # Coalesce: prefer the type-specific row, fall back to 'both'.
+                sql = (
+                    "SELECT profile_name, feature_key, "
+                    "  COALESCE("
+                    "    MAX(CASE WHEN install_type = :install_type THEN access_level END),"
+                    "    MAX(CASE WHEN install_type = 'both' THEN access_level END)"
+                    "  ) AS access_level "
+                    "FROM acl_profile_features "
+                    "WHERE 1=1" + type_filter
+                )
+                if profile_name:
+                    sql += " AND profile_name = :profile"
+                    params["profile"] = profile_name
+                sql += " GROUP BY profile_name, feature_key"
             else:
-                result = session.execute(text(sql))
+                sql = "SELECT profile_name, feature_key, access_level FROM acl_profile_features"
+                if profile_name:
+                    sql += " WHERE profile_name = :profile"
+                    params["profile"] = profile_name
+
+            result = session.execute(text(sql), params) if params else session.execute(text(sql))
             rows = []
             for row in result:
                 rows.append({
@@ -944,10 +980,24 @@ class AdminDatabase(DatabaseHelper):
     }
 
     @DatabaseHelper._sessionm
-    def set_acl_profile_features(self, session, profile_name, features_dict):
-        """Replace all feature selections for a profile.
+    def set_acl_profile_features(self, session, profile_name, features_dict, install_type=None):
+        """Replace feature selections for a profile.
         features_dict: {"feature_key": "ro"|"rw"|null}
-        null/None means disabled (row deleted).
+        null/None means disabled (row deleted for the current install_type).
+
+        When install_type is None, legacy behaviour: every row for the
+        profile is replaced and new rows are stored as 'both'.
+
+        When install_type is provided, the save is scoped to the current
+        install type while preserving the other type's defaults:
+          - if a 'both' row exists for a feature and the user wants a
+            different level (or none) on the current type, the 'both' row
+            is converted to the OTHER install_type, so the other type's
+            default survives the save;
+          - rows for the current install_type are replaced by what the user
+            sent, except those already expressed by a surviving 'both' row
+            (avoids row bloat);
+          - rows for the OTHER install_type are never touched.
         """
         try:
             # Enforce locked features
@@ -955,17 +1005,100 @@ class AdminDatabase(DatabaseHelper):
             for fkey, level in locked.items():
                 features_dict[fkey] = level
 
-            session.execute(
-                text("DELETE FROM acl_profile_features WHERE profile_name = :profile"),
+            if not install_type:
+                # Legacy path
+                session.execute(
+                    text("DELETE FROM acl_profile_features WHERE profile_name = :profile"),
+                    {"profile": profile_name}
+                )
+                for feature_key, access_level in features_dict.items():
+                    if access_level in ("ro", "rw"):
+                        session.execute(
+                            text("INSERT INTO acl_profile_features "
+                                 "(profile_name, feature_key, access_level, install_type) "
+                                 "VALUES (:profile, :feature, :level, 'both')"),
+                            {"profile": profile_name, "feature": feature_key, "level": access_level}
+                        )
+                session.commit()
+                return True
+
+            other_type = "saas" if install_type == "onpremise" else "onpremise"
+
+            # 0. Compute the set of features visible on the current install_type.
+            #    'both' rows for features outside this set must stay untouched:
+            #    the UI hides them, so the absence of such a feature from
+            #    features_dict cannot be interpreted as "user unchecked it".
+            visible_features = set()
+            result = session.execute(
+                text("SELECT DISTINCT feature_key FROM acl_feature_definitions "
+                     "WHERE FIND_IN_SET(:install_type, install_types) > 0"),
+                {"install_type": install_type}
+            )
+            for row in result:
+                visible_features.add(row[0])
+
+            # 1. Snapshot existing 'both' rows for this profile, but only the
+            #    ones whose feature is visible on the current install_type.
+            both_rows = {}
+            result = session.execute(
+                text("SELECT feature_key, access_level FROM acl_profile_features "
+                     "WHERE profile_name = :profile AND install_type = 'both'"),
                 {"profile": profile_name}
             )
+            for row in result:
+                if row[0] in visible_features:
+                    both_rows[row[0]] = row[1]
+
+            # 2. For each 'both' row whose level the user no longer wants on
+            #    the current install_type, convert it to the OTHER type so
+            #    the other type's default is preserved.
+            #    The DELETE-before-UPDATE guards against the (profile, feature,
+            #    other_type) row already existing — would otherwise violate
+            #    uk_profile_feature (profile_name, feature_key, install_type)
+            #    and rollback the whole save.
+            for feature_key, both_level in both_rows.items():
+                desired = features_dict.get(feature_key)  # None if user unchecked
+                if desired == both_level:
+                    continue
+                session.execute(
+                    text("DELETE FROM acl_profile_features "
+                         "WHERE profile_name = :profile AND feature_key = :feature "
+                         "AND install_type = :other_type"),
+                    {"profile": profile_name, "feature": feature_key, "other_type": other_type}
+                )
+                session.execute(
+                    text("UPDATE acl_profile_features SET install_type = :other_type "
+                         "WHERE profile_name = :profile AND feature_key = :feature "
+                         "AND install_type = 'both'"),
+                    {"profile": profile_name, "feature": feature_key, "other_type": other_type}
+                )
+
+            # 3. Reset current-type rows (will be re-inserted from features_dict)
+            session.execute(
+                text("DELETE FROM acl_profile_features "
+                     "WHERE profile_name = :profile AND install_type = :install_type"),
+                {"profile": profile_name, "install_type": install_type}
+            )
+
+            # 4. Insert rows for what the user wants on the current type,
+            #    skipping the ones already expressed by a surviving 'both' row.
             for feature_key, access_level in features_dict.items():
-                if access_level in ("ro", "rw"):
-                    session.execute(
-                        text("INSERT INTO acl_profile_features (profile_name, feature_key, access_level) "
-                             "VALUES (:profile, :feature, :level)"),
-                        {"profile": profile_name, "feature": feature_key, "level": access_level}
-                    )
+                if access_level not in ("ro", "rw"):
+                    continue
+                if both_rows.get(feature_key) == access_level:
+                    # The 'both' row was kept at step 2 and already covers it.
+                    continue
+                session.execute(
+                    text("INSERT INTO acl_profile_features "
+                         "(profile_name, feature_key, access_level, install_type) "
+                         "VALUES (:profile, :feature, :level, :install_type)"),
+                    {
+                        "profile": profile_name,
+                        "feature": feature_key,
+                        "level": access_level,
+                        "install_type": install_type,
+                    }
+                )
             session.commit()
             return True
         except Exception as e:
@@ -974,12 +1107,22 @@ class AdminDatabase(DatabaseHelper):
             return False
 
     @DatabaseHelper._sessionm
-    def get_acl_feature_definitions(self, session):
-        """Get all feature definitions from the database."""
+    def get_acl_feature_definitions(self, session, install_type=None):
+        """Get all feature definitions from the database.
+
+        When install_type is provided, only features whose install_types SET
+        contains the value are returned (e.g. on a saas instance, features
+        tagged only 'onpremise' are filtered out).
+        """
         try:
+            params = {}
+            type_filter = ""
+            if install_type:
+                type_filter = " WHERE FIND_IN_SET(:install_type, install_types) > 0"
+                params["install_type"] = install_type
             sql = ("SELECT feature_key, label, description, category, superadmin_only, acl_entry, access_type "
-                   "FROM acl_feature_definitions ORDER BY id")
-            result = session.execute(text(sql))
+                   "FROM acl_feature_definitions" + type_filter + " ORDER BY id")
+            result = session.execute(text(sql), params) if params else session.execute(text(sql))
             # Group by feature_key
             features = {}
             for row in result:
@@ -1009,14 +1152,19 @@ class AdminDatabase(DatabaseHelper):
             return {}
 
     @DatabaseHelper._sessionm
-    def build_acl_string_for_profile(self, session, profile_name):
-        """Build the ACL string for a profile from its enabled features."""
+    def build_acl_string_for_profile(self, session, profile_name, install_type=None):
+        """Build the ACL string for a profile from its enabled features.
+
+        When install_type is provided, both the pre-assignments and the
+        feature definitions are filtered so that features irrelevant to the
+        current installation type do not contribute to the ACL string.
+        """
         try:
-            features_rows = self.get_acl_profile_features(profile_name)
+            features_rows = self.get_acl_profile_features(profile_name, install_type)
             if not features_rows:
                 return ""
 
-            feature_defs = self.get_acl_feature_definitions()
+            feature_defs = self.get_acl_feature_definitions(install_type)
 
             acl_entries = set()
             for row in features_rows:

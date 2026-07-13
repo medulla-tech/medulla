@@ -24,7 +24,7 @@
 require_once("modules/medulla_server/version.php");
 
 $mod = new Module("admin");
-$mod->setVersion("5.6.1");
+$mod->setVersion("5.6.3");
 //$mod->setRevision('');
 $mod->setDescription(_T("Admin", "admin"));
 $mod->setAPIVersion("1:0:0");
@@ -214,6 +214,17 @@ $submod->addPage($page);
 $page = new Page("deleteCluster", _T('Delete Cluster', 'admin'));
 $page->setFile("modules/admin/admin/deleteCluster.php");
 $page->setOptions(array("visible" => False, "noHeader" => True, "AJAX" => True));
+$submod->addPage($page);
+
+// Non-AJAX on purpose: AJAX pages skip the dispatcher ACL check, these must keep it.
+$page = new Page("deleteAclProfile", _T('Delete ACL Profile', 'admin'));
+$page->setFile("modules/admin/admin/deleteAclProfile.php");
+$page->setOptions(array("visible" => False, "noHeader" => True));
+$submod->addPage($page);
+
+$page = new Page("addAclProfile", _T('Add ACL Profile', 'admin'));
+$page->setFile("modules/admin/admin/addAclProfile.php");
+$page->setOptions(array("visible" => False, "noHeader" => True));
 $submod->addPage($page);
 
 $page = new Page("listUsersofEntity", _T('List users of Entity', 'admin'));
