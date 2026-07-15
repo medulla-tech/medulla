@@ -27,6 +27,10 @@ require("modules/base/computers/localSidebar.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 
 $p = new PageGenerator(_T("Monitoring Alerts", 'xmppmaster'));
+// La page appartient au sous-module "xmppmaster" (décrit "Audit"), mais elle est
+// rattachée au menu Ordinateurs : on aligne l'entête de la sidebar en conséquence.
+$sidemenu->setTitle(_("Computers"));
+$sidemenu->setIcon('modules/base/graph/navbar/computer');
 $p->setSideMenu($sidemenu);
 $p->display();
 

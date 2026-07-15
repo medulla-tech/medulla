@@ -3076,6 +3076,8 @@ class SideMenu
     public $className;
     public $backgroundImage;
     public $activatedItem;
+    public $headerTitle;
+    public $headerIcon;
 
     /**
      *  SideMenu default constructor
@@ -3086,6 +3088,8 @@ class SideMenu
         $this->itemArray = array();
         $this->backgroundImage = null;
         $this->activatedItem = null;
+        $this->headerTitle = null;
+        $this->headerIcon = null;
     }
 
     /**
@@ -3111,6 +3115,24 @@ class SideMenu
     public function getClass()
     {
         return $this->className;
+    }
+
+    /**
+     * Override the sidebar header title.
+     * When not set, the current submodule description is used (default behaviour).
+     */
+    public function setTitle($title)
+    {
+        $this->headerTitle = $title;
+    }
+
+    /**
+     * Override the sidebar header icon path (without extension; ".svg" is appended).
+     * When not set, the current submodule icon is used (default behaviour).
+     */
+    public function setIcon($icon)
+    {
+        $this->headerIcon = $icon;
     }
 
     /**
@@ -3143,8 +3165,9 @@ class SideMenu
         $MMCApp = &MMCApp::getInstance();
         $mod = $MMCApp->getModule($_GET['module']);
         $submod = $mod->getSubmod($_GET['submod']);
-        $desc = $submod->getDescription();
-        $icon = $submod->_img ? $submod->_img . '.svg' : '';
+        $desc = $this->headerTitle !== null ? $this->headerTitle : $submod->getDescription();
+        $iconBase = $this->headerIcon !== null ? $this->headerIcon : $submod->_img;
+        $icon = $iconBase ? $iconBase . '.svg' : '';
 
         echo '<div class="sidebar-header">';
         if ($icon) {
