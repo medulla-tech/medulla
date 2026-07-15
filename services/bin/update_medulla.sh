@@ -990,7 +990,7 @@ update_561_to_562() {
         echo "fs.inotify.max_queued_events=32768" >> /etc/sysctl.d/99-pulse.conf
     fi
     # Apply the new sysctl settings
-    sysctl -p /etc/sysctl.d/99-pulse.conf
+    sysctl -p /etc/sysctl.d/99-pulse.conf > /dev/null 2>&1
     if [[ $? -ne 0 ]]; then
         str="[x] Error applying inotify limits sysctl settings. Aborting."
         echo "$str"
@@ -1034,6 +1034,9 @@ update_563_to_xxx() {
     echo "$str"
     write_to_log "$str"
 
+    str="[=] Installing HMDM for Medulla..."
+    echo "$str"
+    write_to_log "$str"
     HMDM_HOSTNAME="${INTERNAL_FQDN}"
     HMDM_DBHOST="localhost"
     HMDM_DBPORT="3306"
@@ -1055,7 +1058,7 @@ update_563_to_xxx() {
 
     if [[ ! -f /var/lib/hmdm/.hmdminitialised ]]; then
 
-        apt -y install tomcat9 mariadb-client aapt wget curl openssl
+        apt -y install tomcat9 mariadb-client aapt wget curl openssl > /dev/null 2>&1
 
         mysql --defaults-group-suffix=dbsetup -e "CREATE DATABASE IF NOT EXISTS ${HMDM_DBNAME} DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
 
@@ -1087,13 +1090,16 @@ update_563_to_xxx() {
                  --turn-host "${HMDM_TURNHOST}" \
                  --turn-port "${HMDM_TURNPORT}" \
                  --turn-user "${HMDM_TURNUSER}" \
-                 --turn-pass "${HMDM_TURNPASSWD}"
+                 --turn-pass "${HMDM_TURNPASSWD}" > /tmp/hmdm_install.log 2>&1
         ); then
-             str="[x] HMDM installation failed."
+             str="[x] HMDM installation failed. Check /tmp/hmdm_install.log for details."
              echo "$str"
              write_to_log "$str"
              exit 1
         fi
+        str="[v] HMDM installed successfully."
+        echo "$str"
+        write_to_log "$str"
         mkdir -p /var/lib/hmdm
         touch /var/lib/hmdm/.hmdminitialised
     fi
@@ -1149,7 +1155,7 @@ EOF
     echo "$str"
     write_to_log "$str"
 
-    apt install -y build-essential autoconf libtool libxml2-dev libssl-dev libbz2-dev zlib1g-dev pkg-config git
+    apt install -y build-essential autoconf libtool libxml2-dev libssl-dev libbz2-dev zlib1g-dev pkg-config git > /dev/null 2>&1
 
     if ! command -v xar >/dev/null 2>&1; then
         rm -rf /tmp/xar
