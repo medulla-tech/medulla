@@ -1076,30 +1076,60 @@ update_563_to_xxx() {
 
         chmod +x "${HMDM_BUILD_DEST}/hmdm_install.sh"
 
-        if ! (
-             cd "${HMDM_BUILD_DEST}" || exit 1
+        HMDM_INSTALL_RC=0
 
-             ./hmdm_install.sh \
-                 --hostname "${HMDM_HOSTNAME}" \
-                 --db-host "${HMDM_DBHOST}" \
-                 --db-port "${HMDM_DBPORT}" \
-                 --db-name "${HMDM_DBNAME}" \
-                 --db-user "${HMDM_DBUSER}" \
-                 --db-pass "${HMDM_DBPASSWD}" \
-                 --admin-pass "${HMDM_ADMINPASSWD}" \
-                 --turn-host "${HMDM_TURNHOST}" \
-                 --turn-port "${HMDM_TURNPORT}" \
-                 --turn-user "${HMDM_TURNUSER}" \
-                 --turn-pass "${HMDM_TURNPASSWD}" > /tmp/hmdm_install.log 2>&1
+        if (
+            cd "${HMDM_BUILD_DEST}" || exit 1
+
+            ./hmdm_install.sh \
+                --hostname "${HMDM_HOSTNAME}" \
+                --db-host "${HMDM_DBHOST}" \
+                --db-port "${HMDM_DBPORT}" \
+                --db-name "${HMDM_DBNAME}" \
+                --db-user "${HMDM_DBUSER}" \
+                --db-pass "${HMDM_DBPASSWD}" \
+                --admin-pass "${HMDM_ADMINPASSWD}" \
+                --turn-host "${HMDM_TURNHOST}" \
+                --turn-port "${HMDM_TURNPORT}" \
+                --turn-user "${HMDM_TURNUSER}" \
+                --turn-pass "${HMDM_TURNPASSWD}"
         ); then
-             str="[x] HMDM installation failed. Check /tmp/hmdm_install.log for details."
-             echo "$str"
-             write_to_log "$str"
-             exit 1
+            HMDM_INSTALL_RC=0
+        else
+            HMDM_INSTALL_RC=$?
         fi
+
+        if [[ ${HMDM_INSTALL_RC} -ne 0 ]]; then
+            str="[!] HMDM installer returned an error. Waiting for deployment..."
+            echo "$str"
+            write_to_log "$str"
+
+            HMDM_DEPLOY_TIMEOUT=180
+            HMDM_CHECK_INTERVAL=5
+
+            for ((i=0; i<HMDM_DEPLOY_TIMEOUT/HMDM_CHECK_INTERVAL; i++)); do
+                if curl -fsS --connect-timeout 2 --max-time 3 \
+                    "http://127.0.0.1:${HMDM_TOMCAT_PORT}/hmdm/" \
+                    >/dev/null 2>&1; then
+                    HMDM_INSTALL_RC=0
+                    break
+                fi
+
+                sleep "${HMDM_CHECK_INTERVAL}"
+            done
+        fi
+
+        if [[ ${HMDM_INSTALL_RC} -ne 0 ]]; then
+            str="[x] HMDM installation failed."
+            echo "$str"
+            write_to_log "$str"
+            exit 1
+        fi
+
         str="[v] HMDM installed successfully."
         echo "$str"
         write_to_log "$str"
+
         mkdir -p /var/lib/hmdm
         touch /var/lib/hmdm/.hmdminitialised
     fi
