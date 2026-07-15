@@ -4,7 +4,7 @@
 
 from sqlalchemy import create_engine, MetaData, func, desc, and_, or_, text
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.exc import DBAPIError
+from sqlalchemy.exc import DBAPIError, IntegrityError
 from sqlalchemy.ext.automap import automap_base
 from datetime import datetime, timedelta
 from mmc.database.database_helper import DatabaseHelper
@@ -237,6 +237,34 @@ class SecurityDatabase(DatabaseHelper):
         return name_exclusion, cve_exclusion, vendor_exclusion, machine_exclusion
 
     # =========================================================================
+    # Restriction du parc GLPI aux logiciels à CVE
+    # =========================================================================
+    def _cve_affected_glpi_names(self, session):
+        """Liste des glpi_software_name ayant au moins une CVE en base.
+
+        Sert à RESTREINDRE les requêtes sur le parc GLPI distant
+        (WHERE s.name IN (...)). Un logiciel absent de cette liste n'a aucune CVE
+        et ne peut donc jamais matcher : l'exclure évite de balayer ~1,4 M
+        d'installs distantes à chaque affichage. La liste est petite (bornée aux
+        logiciels réellement vulnérables), et c'est un SUR-ensemble sûr : les
+        filtres fins (cvss, sévérité, exclusions) restent appliqués ensuite côté
+        security + matching Python.
+        """
+        rows = session.execute(text(
+            "SELECT DISTINCT glpi_software_name FROM software_cves "
+            "WHERE glpi_software_name IS NOT NULL"
+        ))
+        return [r[0] for r in rows if r[0]]
+
+    @staticmethod
+    def _sql_in_list(values):
+        """Construit une clause IN SQL échappée : ('a','b',...) -> \"'a','b',...\".
+        Renvoie None si la liste est vide (aucune valeur)."""
+        if not values:
+            return None
+        return ','.join("'" + str(v).replace("'", "''") + "'" for v in values)
+
+    # =========================================================================
     # Tests (legacy)
     # =========================================================================
     @DatabaseHelper._sessionm
@@ -271,78 +299,20 @@ class SecurityDatabase(DatabaseHelper):
         counts = {'Critical': 0, 'High': 0, 'Medium': 0, 'Low': 0, 'None': 0}
         machines_affected = 0
 
+        def sql_escape(val):
+            return val.replace("'", "''") if val else val
+
         try:
-            # Get GLPI database connection
-            glpi_db = _get_glpi_database()
-            if not glpi_db:
-                logger.error("GLPI database not available for dashboard summary")
-                raise Exception("GLPI database not available")
+            # Stratégie : piloter par le côté CVE, qui est petit et local, plutôt
+            # que de balayer tout le parc. Les tables GLPI (glpi_*) sont sur un
+            # serveur distant (proxys FEDERATED en local) : y faire une jointure
+            # massive coûte des minutes. On procède donc en 3 temps :
+            #   1. security (local, rapide) : la petite liste des logiciels à CVE ;
+            #   2. GLPI distant (natif, via _get_glpi_database()) RESTREINT à ces
+            #      noms -> transfert minuscule ;
+            #   3. matching en Python sur ces petits ensembles.
 
-            # Step 1: Get software names installed on machines from GLPI
-            # Using GLPI connection (glpi user has access to glpi.*)
-            entity_filter_glpi = ""
-            if entity_ids:
-                entity_ids_str = ','.join(str(e) for e in entity_ids)
-                entity_filter_glpi = f"AND c.entities_id IN ({entity_ids_str})"
-
-            machine_exclusion_glpi = ""
-            if excluded_machines_ids:
-                machine_ids_str = ','.join(str(int(mid)) for mid in excluded_machines_ids)
-                machine_exclusion_glpi = f"AND c.id NOT IN ({machine_ids_str})"
-
-            # Query GLPI for machines and their software (name + version)
-            glpi_sql = text(f"""
-                SELECT DISTINCT s.name as software_name, sv.name as software_version, c.id as machine_id
-                FROM glpi_softwares s
-                JOIN glpi_softwareversions sv ON sv.softwares_id = s.id
-                JOIN glpi_items_softwareversions isv ON isv.softwareversions_id = sv.id
-                JOIN glpi_computers c ON c.id = isv.items_id
-                WHERE c.is_deleted = 0 AND c.is_template = 0
-                {entity_filter_glpi} {machine_exclusion_glpi}
-            """)
-
-            with glpi_db.db.connect() as glpi_conn:
-                glpi_result = glpi_conn.execute(glpi_sql)
-                # Build set of software (name, version) and machine IDs from GLPI
-                software_names = set()
-                machine_ids = set()
-                software_machine_map = {}  # (software_name, version) -> set of machine_ids
-
-                for row in glpi_result:
-                    sw_name = row[0]
-                    sw_version = row[1] or ''
-                    m_id = row[2]
-                    software_names.add(sw_name)
-                    machine_ids.add(m_id)
-                    key = (sw_name, sw_version)
-                    if key not in software_machine_map:
-                        software_machine_map[key] = set()
-                    software_machine_map[key].add(m_id)
-
-            if not software_names:
-                # No software found, return empty results
-                last_scan = session.query(Scan).order_by(desc(Scan.started_at)).first()
-                last_scan_info = None
-                if last_scan:
-                    last_scan_info = {
-                        'id': last_scan.id,
-                        'started_at': last_scan.started_at.isoformat() if last_scan.started_at else None,
-                        'finished_at': last_scan.finished_at.isoformat() if last_scan.finished_at else None,
-                        'status': last_scan.status,
-                        'softwares_sent': last_scan.softwares_sent,
-                        'cves_received': last_scan.cves_received,
-                        'machines_affected': last_scan.machines_affected
-                    }
-                return {
-                    'total_cves': 0, 'critical': 0, 'high': 0, 'medium': 0, 'low': 0,
-                    'machines_affected': 0, 'last_scan': last_scan_info
-                }
-
-            # Step 2: Get CVEs for these software names from Security database
-            # Build exclusion filters for security query
-            def sql_escape(val):
-                return val.replace("'", "''") if val else val
-
+            # --- Étape 1 : CVE par (nom GLPI, version) filtrées, côté security ---
             name_exclusion = ""
             if excluded_names:
                 names_escaped = ','.join(f"'{sql_escape(n)}'" for n in excluded_names)
@@ -354,8 +324,8 @@ class SecurityDatabase(DatabaseHelper):
                 cve_exclusion = f"AND c.cve_id NOT IN ({cve_ids_escaped})"
 
             cvss_filter = ""
-            if min_cvss > 0:
-                cvss_filter = f"AND c.cvss_score >= {min_cvss}"
+            if min_cvss and float(min_cvss) > 0:
+                cvss_filter = f"AND c.cvss_score >= {float(min_cvss)}"
 
             severity_filter = ""
             if min_sev_index > 0:
@@ -363,8 +333,6 @@ class SecurityDatabase(DatabaseHelper):
                 severity_list = ','.join(f"'{s}'" for s in allowed_severities)
                 severity_filter = f"AND c.severity IN ({severity_list})"
 
-            # Query security database for CVEs matching the software names
-            # Include software_version to match with GLPI versions
             security_sql = text(f"""
                 SELECT c.id, c.severity, sc.glpi_software_name, sc.software_version
                 FROM cves c
@@ -372,36 +340,62 @@ class SecurityDatabase(DatabaseHelper):
                 WHERE sc.glpi_software_name IS NOT NULL
                 {cvss_filter} {severity_filter} {name_exclusion} {cve_exclusion}
             """)
+            sec_rows = [(r[0], r[1], r[2], r[3] or '') for r in session.execute(security_sql)]
 
-            result = session.execute(security_sql)
+            # Noms GLPI distincts concernés par au moins une CVE (petite liste)
+            cve_names = sorted({gname for (_cid, _sev, gname, _sver) in sec_rows if gname})
 
-            # Step 3: Match CVEs with software installed on machines (by name AND version)
-            affected_machines = set()
-            cve_ids_by_severity = {'Critical': set(), 'High': set(), 'Medium': set(), 'Low': set(), 'None': set()}
+            if cve_names:
+                # --- Étape 2 : parc GLPI distant, RESTREINT à ces noms ---
+                glpi_db = _get_glpi_database()
+                if not glpi_db:
+                    logger.error("GLPI database not available for dashboard summary")
+                    raise Exception("GLPI database not available")
 
-            for row in result:
-                cve_id = row[0]
-                severity = row[1]
-                glpi_sw_name = row[2]
-                sw_version = row[3] or ''
+                names_in = ','.join(f"'{sql_escape(n)}'" for n in cve_names)
 
-                # Check if this software (name + version) is installed on any machine
-                key = (glpi_sw_name, sw_version)
-                if key in software_machine_map:
-                    # Vendor exclusion check (simplified - would need GLPI query for full implementation)
-                    if excluded_vendors:
-                        # Skip vendor exclusion for now - would require additional GLPI query
-                        pass
+                entity_filter_glpi = ""
+                if entity_ids:
+                    entity_ids_str = ','.join(str(int(e)) for e in entity_ids)
+                    entity_filter_glpi = f"AND c.entities_id IN ({entity_ids_str})"
 
-                    if severity in cve_ids_by_severity:
-                        cve_ids_by_severity[severity].add(cve_id)
-                    affected_machines.update(software_machine_map[key])
+                machine_exclusion_glpi = ""
+                if excluded_machines_ids:
+                    machine_ids_str = ','.join(str(int(mid)) for mid in excluded_machines_ids)
+                    machine_exclusion_glpi = f"AND c.id NOT IN ({machine_ids_str})"
 
-            # Count unique CVEs per severity
-            for severity in counts:
-                counts[severity] = len(cve_ids_by_severity[severity])
+                glpi_sql = text(f"""
+                    SELECT DISTINCT s.name AS software_name, sv.name AS software_version, c.id AS machine_id
+                    FROM glpi_softwares s
+                    JOIN glpi_softwareversions sv ON sv.softwares_id = s.id
+                    JOIN glpi_items_softwareversions isv
+                         ON isv.softwareversions_id = sv.id AND isv.itemtype = 'Computer'
+                    JOIN glpi_computers c ON c.id = isv.items_id
+                    WHERE c.is_deleted = 0 AND c.is_template = 0
+                      AND s.name IN ({names_in})
+                      {entity_filter_glpi} {machine_exclusion_glpi}
+                """)
 
-            machines_affected = len(affected_machines)
+                # (nom, version) -> ensemble des machines qui l'ont installé
+                software_machine_map = {}
+                with glpi_db.db.connect() as glpi_conn:
+                    for row in glpi_conn.execute(glpi_sql):
+                        key = (row[0], row[1] or '')
+                        software_machine_map.setdefault(key, set()).add(row[2])
+
+                # --- Étape 3 : matching (petits ensembles) ---
+                affected_machines = set()
+                cve_ids_by_severity = {sev: set() for sev in counts}
+                for (cve_id, severity, gname, sver) in sec_rows:
+                    key = (gname, sver)
+                    if key in software_machine_map:
+                        if severity in cve_ids_by_severity:
+                            cve_ids_by_severity[severity].add(cve_id)
+                        affected_machines.update(software_machine_map[key])
+
+                for severity in counts:
+                    counts[severity] = len(cve_ids_by_severity[severity])
+                machines_affected = len(affected_machines)
 
         except Exception as e:
             logger.error(f"Error in get_dashboard_summary: {e}")
@@ -457,6 +451,11 @@ class SecurityDatabase(DatabaseHelper):
                 logger.error("GLPI database not available for get_cves")
                 return {'total': 0, 'data': []}
 
+            # Restreint le scan du parc GLPI distant aux seuls logiciels à CVE.
+            cve_names_in = self._sql_in_list(self._cve_affected_glpi_names(session))
+            if not cve_names_in:
+                return {'total': 0, 'data': []}
+
             # Step 1: Get software names installed on machines from GLPI
             entity_filter_glpi = ""
             if entity_ids:
@@ -472,9 +471,10 @@ class SecurityDatabase(DatabaseHelper):
                 SELECT DISTINCT s.name as software_name, sv.name as software_version, c.id as machine_id
                 FROM glpi_softwares s
                 JOIN glpi_softwareversions sv ON sv.softwares_id = s.id
-                JOIN glpi_items_softwareversions isv ON isv.softwareversions_id = sv.id
+                JOIN glpi_items_softwareversions isv ON isv.softwareversions_id = sv.id AND isv.itemtype = 'Computer'
                 JOIN glpi_computers c ON c.id = isv.items_id
                 WHERE c.is_deleted = 0 AND c.is_template = 0
+                AND s.name IN ({cve_names_in})
                 {entity_filter_glpi} {machine_exclusion_glpi}
             """)
 
@@ -649,7 +649,7 @@ class SecurityDatabase(DatabaseHelper):
                             JOIN glpi_softwareversions sv ON sv.id = isv.softwareversions_id
                             JOIN glpi_softwares s ON s.id = sv.softwares_id
                             JOIN glpi_computers c ON c.id = isv.items_id
-                            WHERE ({where_clause})
+                            WHERE isv.itemtype = 'Computer' AND ({where_clause})
                             AND c.is_deleted = 0 AND c.is_template = 0
                             {entity_filter_glpi}
                             ORDER BY c.name, s.name, sv.name
@@ -749,30 +749,44 @@ class SecurityDatabase(DatabaseHelper):
 
             filter_clause = "WHERE " + " AND ".join(where_clauses)
 
-            # Get machines with their software names
-            glpi_sql = text(f"""
-                SELECT c.id as machine_id, c.name as hostname, s.name as software_name
-                FROM glpi_computers c
-                LEFT JOIN glpi_items_softwareversions isv ON isv.items_id = c.id
-                LEFT JOIN glpi_softwareversions sv ON sv.id = isv.softwareversions_id
-                LEFT JOIN glpi_softwares s ON s.id = sv.softwares_id
-                {filter_clause}
-            """)
+            # Parc en 2 temps pour rester rapide sur du GLPI distant. Un LEFT JOIN
+            # unique déploierait toutes les installs de chaque machine (~1,4 M lignes)
+            # avant tout filtrage -> lent. À la place :
+            #  1. la LISTE des machines (légère, ~1 ligne/machine) ;
+            #  2. uniquement les installs de logiciels À CVE, en INNER JOIN démarrant
+            #     du petit côté (s.name IN (...)) -> transfert minuscule.
+            cve_names_in = self._sql_in_list(self._cve_affected_glpi_names(session))
 
+            machines = {}  # machine_id -> {hostname, software_names}
             with glpi_db.db.connect() as glpi_conn:
-                glpi_result = glpi_conn.execute(glpi_sql)
+                # 1. Toutes les machines (même sans vulnérabilité)
+                machines_sql = text(f"""
+                    SELECT c.id as machine_id, c.name as hostname
+                    FROM glpi_computers c
+                    {filter_clause}
+                """)
+                for row in glpi_conn.execute(machines_sql):
+                    machines[row[0]] = {'hostname': row[1], 'software_names': set()}
 
-                # Build machine data with software lists
-                machines = {}  # machine_id -> {hostname, software_names}
-                for row in glpi_result:
-                    m_id = row[0]
-                    hostname = row[1]
-                    sw_name = row[2]
+                if not machines:
+                    return {'total': 0, 'data': []}
 
-                    if m_id not in machines:
-                        machines[m_id] = {'hostname': hostname, 'software_names': set()}
-                    if sw_name:
-                        machines[m_id]['software_names'].add(sw_name)
+                # 2. Installs de logiciels à CVE seulement (restreint -> rapide)
+                if cve_names_in:
+                    sw_sql = text(f"""
+                        SELECT DISTINCT c.id as machine_id, s.name as software_name
+                        FROM glpi_softwares s
+                        JOIN glpi_softwareversions sv ON sv.softwares_id = s.id
+                        JOIN glpi_items_softwareversions isv
+                             ON isv.softwareversions_id = sv.id AND isv.itemtype = 'Computer'
+                        JOIN glpi_computers c ON c.id = isv.items_id
+                        {filter_clause}
+                        AND s.name IN ({cve_names_in})
+                    """)
+                    for row in glpi_conn.execute(sw_sql):
+                        m = machines.get(row[0])
+                        if m is not None:
+                            m['software_names'].add(row[1])
 
             if not machines:
                 return {'total': 0, 'data': []}
@@ -880,12 +894,15 @@ class SecurityDatabase(DatabaseHelper):
                 return {'total': 0, 'data': []}
 
             # Step 1: Get software names for this machine from GLPI
+            # itemtype='Computer' EN PREMIER : l'index (itemtype, items_id) de
+            # glpi_items_softwareversions n'est utilisable qu'avec itemtype fourni ;
+            # sans lui, GLPI scanne toute la table (~1,5 M lignes) -> plusieurs sec.
             glpi_sql = text("""
                 SELECT DISTINCT s.name as software_name
                 FROM glpi_softwares s
                 JOIN glpi_softwareversions sv ON sv.softwares_id = s.id
                 JOIN glpi_items_softwareversions isv ON isv.softwareversions_id = sv.id
-                WHERE isv.items_id = :id_glpi
+                WHERE isv.itemtype = 'Computer' AND isv.items_id = :id_glpi
             """)
 
             with glpi_db.db.connect() as glpi_conn:
@@ -998,12 +1015,15 @@ class SecurityDatabase(DatabaseHelper):
                 return {'total': 0, 'data': []}
 
             # Step 1: Get software names for this machine from GLPI
+            # itemtype='Computer' EN PREMIER : sans lui, l'index (itemtype, items_id)
+            # de glpi_items_softwareversions n'est pas utilisable -> scan de ~1,5 M
+            # lignes sur le GLPI distant (plusieurs secondes).
             glpi_sql = text("""
                 SELECT DISTINCT s.name as software_name, s.comment as comment
                 FROM glpi_softwares s
                 JOIN glpi_softwareversions sv ON sv.softwares_id = s.id
                 JOIN glpi_items_softwareversions isv ON isv.softwareversions_id = sv.id
-                WHERE isv.items_id = :id_glpi
+                WHERE isv.itemtype = 'Computer' AND isv.items_id = :id_glpi
             """)
 
             with glpi_db.db.connect() as glpi_conn:
@@ -1167,8 +1187,17 @@ class SecurityDatabase(DatabaseHelper):
             )
             session.add(cve)
 
-        session.commit()
-        return cve.id
+        try:
+            session.commit()
+            return cve.id
+        except IntegrityError:
+            # Course entre deux appels (CVE partagée par plusieurs logiciels) : le
+            # check-then-insert ci-dessus n'est pas atomique, une CVE peut avoir ete
+            # inseree entre-temps -> collision uk_cve_id. On repart proprement et on
+            # renvoie l'id existant au lieu de perdre la CVE et son lien.
+            session.rollback()
+            existing = session.query(Cve).filter(Cve.cve_id == cve_id).first()
+            return existing.id if existing else None
 
     @DatabaseHelper._sessionm
     def link_software_cve(self, session, software_name, software_version, cve_db_id,
@@ -1398,61 +1427,18 @@ class SecurityDatabase(DatabaseHelper):
         min_sev_index = severity_order.index(min_severity) if min_severity in severity_order else 0
 
         try:
-            glpi_db = _get_glpi_database()
-            if not glpi_db:
-                logger.error("GLPI database not available for get_softwares_summary")
-                return {'total': 0, 'data': []}
+            # Même stratégie que le dashboard : piloter par le côté CVE (petit,
+            # local) et ne requêter le parc GLPI distant que RESTREINT aux logiciels
+            # réellement concernés par une CVE, au lieu d'agréger tout le parc
+            # (ce GROUP BY sur ~1,4 M installs coûtait ~20 s).
 
-            # Step 1: Get software names installed on machines from GLPI
-            entity_filter_glpi = ""
-            if entity_ids:
-                entity_ids_str = ','.join(str(e) for e in entity_ids)
-                entity_filter_glpi = f"AND c.entities_id IN ({entity_ids_str})"
-
-            machine_exclusion_glpi = ""
-            if excluded_machines_ids:
-                machine_ids_str = ','.join(str(int(mid)) for mid in excluded_machines_ids)
-                machine_exclusion_glpi = f"AND c.id NOT IN ({machine_ids_str})"
-
-            glpi_sql = text(f"""
-                SELECT s.name as software_name, sv.name as software_version, COUNT(DISTINCT c.id) as machine_count
-                FROM glpi_softwares s
-                JOIN glpi_softwareversions sv ON sv.softwares_id = s.id
-                JOIN glpi_items_softwareversions isv ON isv.softwareversions_id = sv.id
-                JOIN glpi_computers c ON c.id = isv.items_id
-                WHERE c.is_deleted = 0 AND c.is_template = 0
-                {entity_filter_glpi} {machine_exclusion_glpi}
-                GROUP BY s.name, sv.name
-            """)
-
-            with glpi_db.db.connect() as glpi_conn:
-                glpi_result = glpi_conn.execute(glpi_sql)
-                # Build map of (software_name, version) -> machine_count
-                software_machine_counts = {}
-                for row in glpi_result:
-                    software_machine_counts[(row[0], row[1] or '')] = row[2]
-
-                # Noms des logiciels qui sont des extensions de navigateur,
-                # détectés via le commentaire remonté par l'inventaire. Sert à
-                # typer l'affichage (extension vs logiciel) dans l'IHM sécurité.
-                extension_names = set()
-                ext_result = glpi_conn.execute(text(
-                    "SELECT DISTINCT name FROM glpi_softwares "
-                    "WHERE comment LIKE '%Extension Navigateur%'"
-                ))
-                for row in ext_result:
-                    extension_names.add(row[0])
-
-            if not software_machine_counts:
-                return {'total': 0, 'data': []}
-
-            # Step 2: Get CVEs from security database with filters
             def sql_escape(val):
                 return val.replace("'", "''") if val else val
 
+            # --- Étape 1 : CVE filtrées, côté security (local, rapide) ---
             cve_filters = []
-            if min_cvss > 0:
-                cve_filters.append(f"c.cvss_score >= {min_cvss}")
+            if min_cvss and float(min_cvss) > 0:
+                cve_filters.append(f"c.cvss_score >= {float(min_cvss)}")
             if min_sev_index > 0:
                 allowed_severities = severity_order[min_sev_index:]
                 severity_list = ','.join(f"'{s}'" for s in allowed_severities)
@@ -1485,8 +1471,63 @@ class SecurityDatabase(DatabaseHelper):
                 WHERE sc.glpi_software_name IS NOT NULL
                 {cve_where} {name_exclusion} {cve_exclusion} {filter_clause}
             """)
+            sec_rows = list(session.execute(security_sql))
+            if not sec_rows:
+                return {'total': 0, 'data': []}
 
-            result = session.execute(security_sql)
+            # Noms GLPI distincts concernés (petite liste) -> restreint la requête parc
+            cve_names = sorted({r[2] for r in sec_rows if r[2]})
+
+            # --- Étape 2 : parc GLPI distant, RESTREINT à ces noms ---
+            glpi_db = _get_glpi_database()
+            if not glpi_db:
+                logger.error("GLPI database not available for get_softwares_summary")
+                return {'total': 0, 'data': []}
+
+            names_in = ','.join(f"'{sql_escape(n)}'" for n in cve_names)
+
+            entity_filter_glpi = ""
+            if entity_ids:
+                entity_ids_str = ','.join(str(int(e)) for e in entity_ids)
+                entity_filter_glpi = f"AND c.entities_id IN ({entity_ids_str})"
+
+            machine_exclusion_glpi = ""
+            if excluded_machines_ids:
+                machine_ids_str = ','.join(str(int(mid)) for mid in excluded_machines_ids)
+                machine_exclusion_glpi = f"AND c.id NOT IN ({machine_ids_str})"
+
+            glpi_sql = text(f"""
+                SELECT s.name as software_name, sv.name as software_version, COUNT(DISTINCT c.id) as machine_count
+                FROM glpi_softwares s
+                JOIN glpi_softwareversions sv ON sv.softwares_id = s.id
+                JOIN glpi_items_softwareversions isv
+                     ON isv.softwareversions_id = sv.id AND isv.itemtype = 'Computer'
+                JOIN glpi_computers c ON c.id = isv.items_id
+                WHERE c.is_deleted = 0 AND c.is_template = 0
+                  AND s.name IN ({names_in})
+                  {entity_filter_glpi} {machine_exclusion_glpi}
+                GROUP BY s.name, sv.name
+            """)
+
+            software_machine_counts = {}
+            extension_names = set()
+            with glpi_db.db.connect() as glpi_conn:
+                for row in glpi_conn.execute(glpi_sql):
+                    software_machine_counts[(row[0], row[1] or '')] = row[2]
+
+                # Extensions de navigateur (restreint aux mêmes noms) pour typer
+                # l'affichage (extension vs logiciel) dans l'IHM sécurité.
+                ext_result = glpi_conn.execute(text(f"""
+                    SELECT DISTINCT name FROM glpi_softwares
+                    WHERE comment LIKE '%Extension Navigateur%' AND name IN ({names_in})
+                """))
+                for row in ext_result:
+                    extension_names.add(row[0])
+
+            if not software_machine_counts:
+                return {'total': 0, 'data': []}
+
+            result = sec_rows
 
             # Step 3: Aggregate CVEs by software, filtering by installed software.
             # Sur les distros Linux, on regroupe par package SOURCE (freerdp2) au
@@ -1666,6 +1707,11 @@ class SecurityDatabase(DatabaseHelper):
                         entities[row.entities_id]['machines_count'] = row.cnt
 
                 # Step 4: Get all (machine_id, entity_id, software_name) for these entities
+                # Restreint aux logiciels à CVE (les autres ne matchent jamais) : le
+                # comptage machines par entité vient d'une requête séparée (Step 3),
+                # donc restreindre ici ne fausse rien et évite de scanner tout le parc.
+                cve_names_in = self._sql_in_list(self._cve_affected_glpi_names(session))
+                sw_filter = f"AND s.name IN ({cve_names_in})" if cve_names_in else "AND 1=0"
                 software_sql = text(f"""
                     SELECT DISTINCT c.id as machine_id, c.entities_id, s.name as software_name
                     FROM glpi_computers c
@@ -1674,6 +1720,7 @@ class SecurityDatabase(DatabaseHelper):
                     JOIN glpi_softwares s ON s.id = sv.softwares_id
                     WHERE c.is_deleted = 0 AND c.is_template = 0
                     AND c.entities_id IN ({entity_ids_str})
+                    {sw_filter}
                     {machine_filter}
                 """)
                 software_result = glpi_conn.execute(software_sql)
@@ -1874,6 +1921,8 @@ class SecurityDatabase(DatabaseHelper):
 
             # Step 4: Get software_names per machine from GLPI
             machine_ids_str = ','.join(str(mid) for mid in all_machine_ids)
+            cve_names_in = self._sql_in_list(self._cve_affected_glpi_names(session))
+            sw_filter = f"AND s.name IN ({cve_names_in})" if cve_names_in else "AND 1=0"
             with glpi_db.db.connect() as glpi_conn:
                 software_sql = text(f"""
                     SELECT DISTINCT c.id as machine_id, s.name as software_name
@@ -1883,6 +1932,7 @@ class SecurityDatabase(DatabaseHelper):
                     JOIN glpi_softwares s ON s.id = sv.softwares_id
                     WHERE c.id IN ({machine_ids_str})
                     AND c.is_deleted = 0 AND c.is_template = 0
+                    {sw_filter}
                 """)
                 software_result = glpi_conn.execute(software_sql)
 
