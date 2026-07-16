@@ -240,6 +240,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if (isset($_POST['app_order_' . $idx])) {
                     $app['screenOrder'] = intval($_POST['app_order_' . $idx]);
                 }
+
+                if (isset($_POST['app_permissions_' . $idx])) {
+                    $permsVal = $_POST['app_permissions_' . $idx];
+                    $app['permissions'] = ($permsVal === '') ? null : $permsVal;
+                }
             }
             unset($app);
             
@@ -444,9 +449,10 @@ $permissionsTpl->setElements(array(
     _T("Auto-grant all permissions", "mobile"),
     _T("Auto-grant all, ask user for the location permission", "mobile"),
     _T("Auto-grant all, do not grant the location permission", "mobile"),
-    _T("Ask user for all permissions", "mobile")
+    _T("Ask user for all permissions", "mobile"),
+    _T("Per-app permissions (configure per app)", "mobile")
 ));
-$permissionsTpl->setElementsVal(array("GRANTALL", "ASKLOCATION", "DENYLOCATION", "ASKALL"));
+$permissionsTpl->setElementsVal(array("GRANTALL", "ASKLOCATION", "DENYLOCATION", "ASKALL", "PERAPP"));
 $permissionsTpl->setSelected(isset($config['appPermissions']) ? $config['appPermissions'] : 'GRANTALL');
 $form->add(new TrFormElement(
     _T("Permissions for other apps", "mobile"),
@@ -896,6 +902,7 @@ ob_start();
             <th><?php echo _T("Actions", "mobile"); ?></th>
             <th><?php echo _T("Icon", "mobile"); ?></th>
             <th><?php echo _T("Order", "mobile"); ?></th>
+            <th class="col-app-permissions" style="display:none;"><?php echo _T("Permissions", "mobile"); ?></th>
         </tr>
     </thead>
     <tbody id="app_table_body">
@@ -915,6 +922,7 @@ ob_start();
                 }
                 $appShowIcon = isset($app['showIcon']) ? $app['showIcon'] : true;
                 $appOrder = isset($app['screenOrder']) ? (int)$app['screenOrder'] : 0;
+                $appPermissions = isset($app['permissions']) ? $app['permissions'] : '';
                 $rowStyle = 'border: 1px solid #ddd;';
                 $initialDisplay = $appSelected ? 'table-row' : 'none';
         ?>
@@ -941,6 +949,10 @@ ob_start();
             </td>
             <td>
                 <input type="number" name="app_order_<?php echo $idx; ?>" class="app-order-input form-control" value="<?php echo $appOrder; ?>" style="width:80px;<?php echo (($appAction !== 1 || !$appShowIcon) ? ' display:none;' : ''); ?>">
+            </td>
+            <td class="col-app-permissions" style="display:none;">
+                <input type="hidden" name="app_permissions_<?php echo $idx; ?>" id="app-permissions-<?php echo $idx; ?>" value="<?php echo htmlspecialchars($appPermissions ?? '', ENT_QUOTES); ?>">
+                <button type="button" class="btn btn-default btn-sm open-permissions-popup" data-idx="<?php echo $idx; ?>" data-app-name="<?php echo htmlspecialchars($appName, ENT_QUOTES); ?>"><?php echo _T("Configure", "mobile"); ?></button>
             </td>
         </tr>
         <?php endforeach; ?>
@@ -1670,6 +1682,116 @@ jQuery(document).ready(function() {
             }
         });
     });
+
+    var ANDROID_PERMISSIONS = [
+        { name: 'android.permission.CAMERA',                     label: '<?php echo addslashes(_T("Camera", "mobile")); ?>' },
+        { name: 'android.permission.RECORD_AUDIO',               label: '<?php echo addslashes(_T("Microphone", "mobile")); ?>' },
+        { name: 'android.permission.ACCESS_FINE_LOCATION',       label: '<?php echo addslashes(_T("Location (precise)", "mobile")); ?>' },
+        { name: 'android.permission.ACCESS_COARSE_LOCATION',     label: '<?php echo addslashes(_T("Location (approximate)", "mobile")); ?>' },
+        { name: 'android.permission.ACCESS_BACKGROUND_LOCATION', label: '<?php echo addslashes(_T("Location (background)", "mobile")); ?>' },
+        { name: 'android.permission.READ_CONTACTS',              label: '<?php echo addslashes(_T("Contacts (read)", "mobile")); ?>' },
+        { name: 'android.permission.WRITE_CONTACTS',             label: '<?php echo addslashes(_T("Contacts (write)", "mobile")); ?>' },
+        { name: 'android.permission.READ_EXTERNAL_STORAGE',      label: '<?php echo addslashes(_T("Storage (read)", "mobile")); ?>' },
+        { name: 'android.permission.WRITE_EXTERNAL_STORAGE',     label: '<?php echo addslashes(_T("Storage (write)", "mobile")); ?>' },
+        { name: 'android.permission.READ_MEDIA_IMAGES',          label: '<?php echo addslashes(_T("Photos", "mobile")); ?>' },
+        { name: 'android.permission.READ_MEDIA_VIDEO',           label: '<?php echo addslashes(_T("Videos", "mobile")); ?>' },
+        { name: 'android.permission.READ_MEDIA_AUDIO',           label: '<?php echo addslashes(_T("Audio files", "mobile")); ?>' },
+        { name: 'android.permission.READ_PHONE_STATE',           label: '<?php echo addslashes(_T("Phone state", "mobile")); ?>' },
+        { name: 'android.permission.CALL_PHONE',                 label: '<?php echo addslashes(_T("Make calls", "mobile")); ?>' },
+        { name: 'android.permission.READ_CALL_LOG',              label: '<?php echo addslashes(_T("Call log (read)", "mobile")); ?>' },
+        { name: 'android.permission.SEND_SMS',                   label: '<?php echo addslashes(_T("Send SMS", "mobile")); ?>' },
+        { name: 'android.permission.RECEIVE_SMS',                label: '<?php echo addslashes(_T("Receive SMS", "mobile")); ?>' },
+        { name: 'android.permission.READ_SMS',                   label: '<?php echo addslashes(_T("Read SMS", "mobile")); ?>' },
+        { name: 'android.permission.READ_CALENDAR',              label: '<?php echo addslashes(_T("Calendar (read)", "mobile")); ?>' },
+        { name: 'android.permission.WRITE_CALENDAR',             label: '<?php echo addslashes(_T("Calendar (write)", "mobile")); ?>' },
+        { name: 'android.permission.BODY_SENSORS',               label: '<?php echo addslashes(_T("Body sensors", "mobile")); ?>' },
+        { name: 'android.permission.ACTIVITY_RECOGNITION',       label: '<?php echo addslashes(_T("Activity recognition", "mobile")); ?>' },
+        { name: 'android.permission.BLUETOOTH_SCAN',             label: '<?php echo addslashes(_T("Bluetooth (scan)", "mobile")); ?>' },
+        { name: 'android.permission.BLUETOOTH_CONNECT',          label: '<?php echo addslashes(_T("Bluetooth (connect)", "mobile")); ?>' },
+        { name: 'android.permission.POST_NOTIFICATIONS',         label: '<?php echo addslashes(_T("Notifications", "mobile")); ?>' }
+    ];
+
+    function openPermissionsPopup(idx, appName) {
+        var current = {};
+        try { current = JSON.parse(jQuery('#app-permissions-' + idx).val() || '{}'); } catch(e) {}
+
+        function buildOpts(val) {
+            var map = {
+                '':      '<?php echo addslashes(_T("Default (ask user)", "mobile")); ?>',
+                'grant': '<?php echo addslashes(_T("Grant", "mobile")); ?>',
+                'deny':  '<?php echo addslashes(_T("Deny", "mobile")); ?>'
+            };
+            return Object.keys(map).map(function(v) {
+                return '<option value="' + v + '"' + (v === val ? ' selected' : '') + '>' + map[v] + '</option>';
+            }).join('');
+        }
+
+        var rows = '';
+        ANDROID_PERMISSIONS.forEach(function(p) {
+            rows += '<tr style="border-bottom:1px solid #f0f0f0;">'
+                  + '<td style="padding:10px 0;width:60%;">' + p.label + '</td>'
+                  + '<td style="padding:10px 0;"><select class="perm-row-select form-control" data-perm="' + p.name + '">' + buildOpts(current[p.name] || '') + '</select></td>'
+                  + '</tr>';
+        });
+
+        var modal = '<div id="_perms_modal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;overflow-y:auto;">'
+            + '<div style="background:#fff;width:600px;margin:60px auto 40px;border-radius:6px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.25);">'
+            + '<div style="background:#25607d;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;">'
+            + '<span style="color:#fff;font-size:1.15em;font-weight:600;">' + appName + '</span>'
+            + '<button type="button" id="_perms_close" style="background:none;border:none;color:#fff;font-size:1.5em;line-height:1;cursor:pointer;padding:0 4px;opacity:0.85;">&times;</button>'
+            + '</div>'
+            + '<div style="padding:24px;max-height:55vh;overflow-y:auto;">'
+            + '<table style="width:100%;border-collapse:collapse;"><tbody>' + rows + '</tbody></table>'
+            + '</div>'
+            + '<div style="padding:16px 24px;border-top:1px solid #eee;text-align:right;">'
+            + '<button type="button" class="btnPrimary" id="_perms_save"><?php echo addslashes(_T("Save", "mobile")); ?></button>'
+            + ' <button type="button" class="btnSecondary" id="_perms_cancel"><?php echo addslashes(_T("Cancel", "mobile")); ?></button>'
+            + '</div></div></div>';
+
+        jQuery('body').append(modal);
+
+        jQuery('#_perms_close, #_perms_cancel').on('click', function() {
+            jQuery('#_perms_modal').remove();
+        });
+        jQuery('#_perms_modal').on('click', function(e) {
+            if (e.target.id === '_perms_modal') { jQuery('#_perms_modal').remove(); }
+        });
+
+        jQuery('#_perms_save').on('click', function() {
+            var result = {};
+            jQuery('#_perms_modal .perm-row-select').each(function() {
+                var val = jQuery(this).val();
+                if (val !== '') { result[jQuery(this).data('perm')] = val; }
+            });
+            var json = Object.keys(result).length ? JSON.stringify(result) : '';
+            jQuery('#app-permissions-' + idx).val(json);
+            if ($appAllRows) {
+                jQuery.each($appAllRows, function(i, $row) {
+                    if ($row.find('#app-permissions-' + idx).length) {
+                        $row.find('#app-permissions-' + idx).val(json);
+                    }
+                });
+            }
+            jQuery('#_perms_modal').remove();
+        });
+    }
+
+    jQuery(document).on('click', '.open-permissions-popup', function() {
+        openPermissionsPopup(jQuery(this).data('idx'), jQuery(this).data('app-name'));
+    });
+
+    function updatePerAppPermissionsColumn() {
+        var permSelect = document.querySelector('select[name="config_app_permissions"]');
+        var show = permSelect && permSelect.value === 'PERAPP';
+        document.querySelectorAll('.col-app-permissions').forEach(function(el) {
+            el.style.display = show ? '' : 'none';
+        });
+    }
+    updatePerAppPermissionsColumn();
+    var _permSelect = document.querySelector('select[name="config_app_permissions"]');
+    if (_permSelect) {
+        _permSelect.addEventListener('change', updatePerAppPermissionsColumn);
+    }
 
     jQuery(document).on('change', '.app-action-select', function() {
         var $row = jQuery(this).closest('tr');

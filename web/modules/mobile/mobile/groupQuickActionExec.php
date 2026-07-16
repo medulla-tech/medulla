@@ -14,7 +14,7 @@ if (empty($deviceKeys) && $groupId <= 0) {
 $messageType = '';
 $payload = '';
 
-$allowedActions = ['reboot', 'configUpdated', 'lockDevice', 'wipe', 'runApp', 'uninstallApp', 'deleteFile', 'deleteDir', 'purgeDir', 'permissiveMode', 'intent', 'runCommand', 'exitKiosk', 'clearDownloadHistory', 'grantPermissions'];
+$allowedActions = ['reboot', 'configUpdated', 'lockDevice', 'wipe', 'runApp', 'uninstallApp', 'deleteFile', 'deleteDir', 'purgeDir', 'permissiveMode', 'intent', 'runCommand', 'exitKiosk', 'clearDownloadHistory', 'grantPermissions', 'passwordReset'];
 
 if (in_array($action, $allowedActions)) {
     $messageType = $action;

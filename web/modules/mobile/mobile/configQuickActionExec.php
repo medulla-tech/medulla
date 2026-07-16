@@ -42,6 +42,11 @@ switch ($action) {
         $messageType = 'configUpdated';
         $payload = '';
         break;
+
+    case 'passwordReset':
+        $messageType = 'passwordReset';
+        $payload = '{"password":""}';
+        break;
         
     case 'custom':
         $messageType = isset($_POST['message_type']) ? $_POST['message_type'] : '';
