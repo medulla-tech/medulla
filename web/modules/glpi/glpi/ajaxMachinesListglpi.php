@@ -114,6 +114,7 @@ $profileAction = new ActionItem(_("Show Profile"), "computersgroupedit", "logfil
 
 $DeployQuickxmpp = new ActionPopupItem(_("Quick action"), "deployquick", "quick", "computer", "xmppmaster", "xmppmaster");
 $DeployQuickxmpp->setWidth(600);
+$DeployQuickxmppNoAction = new EmptyActionItem1(_("Quick action"), "deployquick", "quickg", "computer", "xmppmaster", "xmppmaster");
 // with check presence xmpp
 $vncClientActiongriser = new EmptyActionItem1(_("Remote control"), "vnc_client", "guacag", "computer", "base", "computers");
 
@@ -163,7 +164,11 @@ $tooltipGroups = [
 
 foreach($datas['uuid'] as $uuid) {
 
-    if(isset($xmppdatas['UUID'.$uuid])) {
+    // A GLPI computer is not necessarily managed by Medulla: without an agent
+    // known by the master, deployment actions cannot work.
+    $hasAgent = isset($xmppdatas['UUID'.$uuid]);
+
+    if($hasAgent) {
         $m = $xmppdatas['UUID'.$uuid];
         $tooltip = "<table class='ttable'>";
         foreach ($tooltipGroups as $groupLabel => $fields) {
@@ -193,8 +198,8 @@ foreach($datas['uuid'] as $uuid) {
     }
 
     if (in_array("xmppmaster", $_SESSION["supportModList"])) {
-        $actionxmppquickdeoloy[] = $DeployQuickxmpp;
-        $action_deploy_msc[] = $mscAction;
+        $actionxmppquickdeoloy[] = ($hasAgent) ? $DeployQuickxmpp : $DeployQuickxmppNoAction;
+        $action_deploy_msc[] = ($hasAgent) ? $mscAction : $mscNoAction;
         $action_logs_msc[]   = $logAction;
         $actionMonitoring[] = $monitoring;
         if ($datas['presence'][$raw]) {
@@ -233,7 +238,7 @@ foreach($datas['uuid'] as $uuid) {
         $actionVncClient[] = $vncClientAction;
     }
     $params[] = [
-        'id' => $xmppdatas['UUID'.$uuid]['id'],
+        'id' => ($hasAgent) ? $xmppdatas['UUID'.$uuid]['id'] : '',
         'objectUUID' => 'UUID'.$datas['uuid'][$raw],
         'UUID' => $datas['uuid'][$raw],
         'cn' => $datas['cn'][$raw],
