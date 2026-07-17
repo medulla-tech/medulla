@@ -245,6 +245,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $permsVal = $_POST['app_permissions_' . $idx];
                     $app['permissions'] = ($permsVal === '') ? null : $permsVal;
                 }
+
+                if (isset($_POST['app_usedversionid_' . $idx])) {
+                    $vid = intval($_POST['app_usedversionid_' . $idx]);
+                    if ($vid > 0) {
+                        $app['usedVersionId'] = $vid;
+                        $app['latestVersion'] = $vid;
+                    }
+                }
+
+                if (isset($_POST['app_skipversion_' . $idx])) {
+                    $app['skipVersion'] = (bool)intval($_POST['app_skipversion_' . $idx]);
+                }
             }
             unset($app);
             
@@ -908,17 +920,23 @@ ob_start();
     <tbody id="app_table_body">
         <?php foreach ($configApps as $idx => $app):
                 $appId = isset($app['latestVersion']) ? $app['latestVersion'] : (isset($app['id']) ? $app['id'] : '');
+                $appRealId = isset($app['id']) ? $app['id'] : '';
                 $appName = isset($app['name']) ? $app['name'] : '';
                 $appPkg = isset($app['pkg']) ? $app['pkg'] : '';
                 $appVersion = isset($app['version']) ? $app['version'] : '';
+                $appLatestVersionText = isset($app['latestVersionText']) ? $app['latestVersionText'] : $appVersion;
+                $appUsedVersionId = isset($app['usedVersionId']) ? (int)$app['usedVersionId'] : (isset($app['latestVersion']) ? (int)$app['latestVersion'] : 0);
+                $appLatestVersionId = isset($app['latestVersion']) ? (int)$app['latestVersion'] : $appUsedVersionId;
+                $appOutdated = isset($app['outdated']) && $app['outdated'];
+                $appSkipVersion = isset($app['skipVersion']) && $app['skipVersion'];
                 $appSystem = isset($app['system']) && $app['system'];
                 $appSelected = isset($app['selected']) && $app['selected'];
                 if (isset($app['remove']) && $app['remove']) {
-                    $appAction = 0; // Delete
+                    $appAction = 0;
                 } elseif (isset($app['action']) && (int)$app['action'] === 1) {
-                    $appAction = 1; // Install
+                    $appAction = 1;
                 } else {
-                    $appAction = 2; // Do not install
+                    $appAction = 2;
                 }
                 $appShowIcon = isset($app['showIcon']) ? $app['showIcon'] : true;
                 $appOrder = isset($app['screenOrder']) ? (int)$app['screenOrder'] : 0;
@@ -926,14 +944,30 @@ ob_start();
                 $rowStyle = 'border: 1px solid #ddd;';
                 $initialDisplay = $appSelected ? 'table-row' : 'none';
         ?>
-        <tr class="app-row" data-app-id="<?php echo htmlspecialchars($appId); ?>" data-app-name="<?php echo htmlspecialchars($appName); ?>" data-app-pkg="<?php echo htmlspecialchars($appPkg); ?>" data-is-system="<?php echo ($appSystem ? '1' : '0'); ?>" style="display:<?php echo $initialDisplay; ?>;">
+        <tr class="app-row"
+            data-app-id="<?php echo htmlspecialchars($appId); ?>"
+            data-app-real-id="<?php echo htmlspecialchars($appRealId); ?>"
+            data-app-name="<?php echo htmlspecialchars($appName); ?>"
+            data-app-pkg="<?php echo htmlspecialchars($appPkg); ?>"
+            data-is-system="<?php echo ($appSystem ? '1' : '0'); ?>"
+            data-idx="<?php echo $idx; ?>"
+            data-saved-version-id="<?php echo $appUsedVersionId; ?>"
+            data-saved-version-str="<?php echo htmlspecialchars($appVersion, ENT_QUOTES); ?>"
+            style="display:<?php echo $initialDisplay; ?>;">
             <td>
                 <strong class="app-name-text"><?php echo htmlspecialchars($appName); ?></strong>
                 <?php if ($appPkg): ?>
                 <br><small class="app-pkg-text" style="color:#666;"><?php echo htmlspecialchars($appPkg); ?></small>
                 <?php endif; ?>
             </td>
-            <td><?php echo htmlspecialchars($appVersion); ?></td>
+            <td>
+                <input type="hidden" name="app_usedversionid_<?php echo $idx; ?>" class="app-usedversionid" value="<?php echo $appUsedVersionId; ?>">
+                <input type="hidden" name="app_skipversion_<?php echo $idx; ?>" class="app-skipversion" value="<?php echo ($appSkipVersion ? '1' : '0'); ?>">
+                <a href="#" class="app-version-link" title="<?php echo addslashes(_T('Select version', 'mobile')); ?>"><?php echo htmlspecialchars($appVersion); ?></a>
+                <?php if ($appOutdated && $appAction === 1): ?>
+                <br><small><a href="#" class="app-upgrade-link" data-latest-id="<?php echo $appLatestVersionId; ?>" data-latest-ver="<?php echo htmlspecialchars($appLatestVersionText); ?>" style="color:#e67e22;"><?php echo _T('Update to', 'mobile'); ?> <?php echo htmlspecialchars($appLatestVersionText); ?></a></small>
+                <?php endif; ?>
+            </td>
             <td>
                 <select name="app_action_<?php echo $idx; ?>" class="app-action-select form-control" style="width:100%;">
                     <option value="1"<?php echo ($appAction === 1 ? ' selected' : ''); ?>><?php echo _T("Install", "mobile"); ?></option>
@@ -1792,6 +1826,148 @@ jQuery(document).ready(function() {
     if (_permSelect) {
         _permSelect.addEventListener('change', updatePerAppPermissionsColumn);
     }
+
+    function openVersionModal(idx, appName, appRealId, savedVersionId, savedVersionStr, appliedVersionId, skipVersion) {
+        var versionsUrl = '<?php echo urlStrRedirect("mobile/mobile/ajaxAppVersions"); ?>&app_id=' + appRealId;
+
+        jQuery.getJSON(versionsUrl, function(versions) {
+            if (!versions || !versions.length) { return; }
+
+            var options = versions.map(function(v) {
+                return '<option value="' + v.id + '"' + (v.id == appliedVersionId ? ' selected' : '') + '>' + v.version + '</option>';
+            }).join('');
+
+            var modal = '<div id="_ver_modal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;overflow-y:auto;">'
+                + '<div style="background:#fff;width:480px;margin:80px auto 40px;border-radius:6px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.25);">'
+                + '<div style="background:#25607d;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;">'
+                + '<span style="color:#fff;font-size:1.15em;font-weight:600;">' + appName + '</span>'
+                + '<button type="button" id="_ver_close" style="background:none;border:none;color:#fff;font-size:1.5em;line-height:1;cursor:pointer;padding:0 4px;opacity:0.85;">&times;</button>'
+                + '</div>'
+                + '<div style="padding:24px;">'
+                + '<table style="width:100%;border-collapse:collapse;">'
+                + '<tr style="border-bottom:1px solid #f0f0f0;"><td style="padding:10px 0;width:50%;"><?php echo addslashes(_T("Saved version", "mobile")); ?></td>'
+                + '<td style="padding:10px 0;"><strong>' + savedVersionStr + '</strong></td></tr>'
+                + '<tr style="border-bottom:1px solid #f0f0f0;"><td style="padding:10px 0;"><?php echo addslashes(_T("Version", "mobile")); ?></td>'
+                + '<td style="padding:10px 0;"><select id="_ver_select" class="form-control">' + options + '</select></td></tr>'
+                + '<tr><td style="padding:10px 0;"><?php echo addslashes(_T("Skip version check", "mobile")); ?></td>'
+                + '<td style="padding:10px 0;"><input type="checkbox" id="_ver_skip"' + (skipVersion ? ' checked' : '') + '></td></tr>'
+                + '</table>'
+                + '</div>'
+                + '<div style="padding:16px 24px;border-top:1px solid #eee;text-align:right;">'
+                + '<button type="button" class="btnPrimary" id="_ver_save"><?php echo addslashes(_T("Apply", "mobile")); ?></button>'
+                + ' <button type="button" class="btnSecondary" id="_ver_cancel"><?php echo addslashes(_T("Cancel", "mobile")); ?></button>'
+                + '</div></div></div>';
+
+            jQuery('body').append(modal);
+
+            function checkIsDowngrade(selectedId) {
+                var result = false;
+                versions.forEach(function(v) {
+                    if (v.id == selectedId && v.id != savedVersionId) {
+                        versions.forEach(function(cv) {
+                            if (cv.id == savedVersionId && cv.versionCode > v.versionCode) {
+                                result = true;
+                            }
+                        });
+                    }
+                });
+                return result;
+            }
+
+            jQuery('#_ver_select').on('change', function() {
+                if (checkIsDowngrade(parseInt(jQuery(this).val()))) {
+                    jQuery('#_ver_skip').prop('checked', true).prop('disabled', true);
+                } else {
+                    jQuery('#_ver_skip').prop('checked', false).prop('disabled', false);
+                }
+            });
+
+            jQuery('#_ver_close, #_ver_cancel').on('click', function() { jQuery('#_ver_modal').remove(); });
+            jQuery('#_ver_modal').on('click', function(e) { if (e.target.id === '_ver_modal') { jQuery('#_ver_modal').remove(); } });
+
+            jQuery('#_ver_save').on('click', function() {
+                var newId = parseInt(jQuery('#_ver_select').val());
+                var newVer = jQuery('#_ver_select option:selected').text();
+
+                var isDowngrade = checkIsDowngrade(newId);
+                var skip = isDowngrade ? 1 : (jQuery('#_ver_skip').is(':checked') ? 1 : 0);
+
+                function applyVersion() {
+                    jQuery('#_ver_modal').remove();
+                    var $row = jQuery('[data-idx="' + idx + '"]');
+                    $row.find('.app-usedversionid').val(newId);
+                    $row.find('.app-skipversion').val(skip);
+                    $row.find('.app-version-link').text(newVer);
+                    $row.find('.app-upgrade-link').closest('small').remove();
+                    if ($appAllRows) {
+                        jQuery.each($appAllRows, function(i, $r) {
+                            if ($r.attr('data-idx') == idx) {
+                                $r.find('.app-usedversionid').val(newId);
+                                $r.find('.app-skipversion').val(skip);
+                                $r.find('.app-version-link').text(newVer);
+                                $r.find('.app-upgrade-link').closest('small').remove();
+                            }
+                        });
+                    }
+                }
+
+                if (isDowngrade) {
+                    jQuery('#_ver_modal').remove();
+                    var warn = '<div id="_ver_confirm" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:10000;overflow-y:auto;">'
+                        + '<div style="background:#fff;width:440px;margin:120px auto 40px;border-radius:6px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.25);">'
+                        + '<div style="background:#c0392b;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;">'
+                        + '<span style="color:#fff;font-size:1.15em;font-weight:600;"><?php echo addslashes(_T("Confirm downgrade", "mobile")); ?></span>'
+                        + '</div>'
+                        + '<div style="padding:24px;font-size:1em;line-height:1.6;">'
+                        + '<p><?php echo addslashes(_T("Downgrading will uninstall the current version first, wiping all app data. This cannot be undone.", "mobile")); ?></p>'
+                        + '<p><strong>' + appName + '</strong> to ' + newVer + '</p>'
+                        + '</div>'
+                        + '<div style="padding:16px 24px;border-top:1px solid #eee;text-align:right;">'
+                        + '<button type="button" class="btnDanger" id="_ver_confirm_ok"><?php echo addslashes(_T("Downgrade", "mobile")); ?></button>'
+                        + ' <button type="button" class="btnSecondary" id="_ver_confirm_cancel"><?php echo addslashes(_T("Cancel", "mobile")); ?></button>'
+                        + '</div></div></div>';
+                    jQuery('body').append(warn);
+                    jQuery('#_ver_confirm_ok').on('click', function() { jQuery('#_ver_confirm').remove(); applyVersion(); });
+                    jQuery('#_ver_confirm_cancel').on('click', function() { jQuery('#_ver_confirm').remove(); });
+                } else {
+                    applyVersion();
+                }
+            });
+        });
+    }
+
+    jQuery(document).on('click', '.app-version-link', function(e) {
+        e.preventDefault();
+        var $row = jQuery(this).closest('tr');
+        var idx = $row.data('idx');
+        var appName = $row.data('appName');
+        var appRealId = $row.data('appRealId');
+        var savedVersionId = parseInt($row.data('savedVersionId'));
+        var savedVersionStr = $row.data('savedVersionStr');
+        var appliedVersionId = parseInt($row.find('.app-usedversionid').val());
+        var skipVersion = parseInt($row.find('.app-skipversion').val()) === 1;
+        openVersionModal(idx, appName, appRealId, savedVersionId, savedVersionStr, appliedVersionId, skipVersion);
+    });
+
+    jQuery(document).on('click', '.app-upgrade-link', function(e) {
+        e.preventDefault();
+        var $row = jQuery(this).closest('tr');
+        var idx = $row.data('idx');
+        var latestId = parseInt(jQuery(this).data('latestId'));
+        var latestVer = jQuery(this).data('latestVer');
+        $row.find('.app-usedversionid').val(latestId);
+        $row.find('.app-version-link').text(latestVer);
+        jQuery(this).closest('small').remove();
+        if ($appAllRows) {
+            jQuery.each($appAllRows, function(i, $r) {
+                if ($r.attr('data-idx') == idx) {
+                    $r.find('.app-usedversionid').val(latestId);
+                    $r.find('.app-version-link').text(latestVer);
+                    $r.find('.app-upgrade-link').closest('small').remove();
+                }
+            });
+        }
+    });
 
     jQuery(document).on('change', '.app-action-select', function() {
         var $row = jQuery(this).closest('tr');
