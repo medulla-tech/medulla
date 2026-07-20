@@ -46,12 +46,6 @@ CREATE TABLE IF NOT EXISTS `admin_inventory_entity_rules` (
 COMMENT='[Admin] Global inventory rules mapping TAG to GLPI entity';
 
 
---
--- Update version du schema (rejouable)
---
-UPDATE version
-SET Number = 18
-WHERE Number < 18;
 
 -- =====================================================================
 -- Custom metadata storage for inventory machines (substitute scope)
@@ -71,11 +65,11 @@ CREATE TABLE IF NOT EXISTS `substitute_inventory_metadata` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
 COMMENT='[Substitute] Custom metadata indexed by machine JID';
 
+
 --
--- Finalize version update
+-- Update version du schema (rejouable)
 --
 UPDATE version
 SET Number = 18
 WHERE Number < 18;
-
 COMMIT;
