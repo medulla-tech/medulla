@@ -317,6 +317,15 @@ $page = new Page("majorDetailsByMachines", _T('Machines major update', 'updates'
 $page->setFile("modules/updates/updates/majorDetailsByMachines.php");
 $submod->addPage($page);
 
+$page = new Page("ajaxMajorDeploymentHistoryWin", _T("Windows major deployment history", "updates"));
+$page->setFile("modules/updates/updates/ajaxMajorDeploymentHistoryWin.php");
+$page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
+$submod->addPage($page);
+
+$page = new Page("majorDeploymentHistoryWin", _T('Windows major deployment history', 'updates'));
+$page->setFile("modules/updates/updates/majorDeploymentHistoryWin.php");
+$submod->addPage($page);
+
 $page = new Page("ajaxgroupUpdateMajorEntity", _T("Deployment details on group entity", "updates"));
 $page->setFile("modules/updates/updates/ajaxgroupUpdateMajorEntity.php");
 $page->setOptions(array("visible" => false, "AJAX" => true, "noHeader" => true));
