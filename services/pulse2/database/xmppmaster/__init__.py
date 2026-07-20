@@ -20397,6 +20397,104 @@ FROM (
         return result
 
     @DatabaseHelper._sessionm
+    def get_win_major_deployment_history_by_entity(
+        self,
+        session,
+        entity_uuid,
+        start,
+        limit,
+        filter,
+    ):
+        """
+        Retourne l'historique des déploiements majeurs Windows pour une entité,
+        limité au dernier mois.
+
+        Le discriminant est la présence de ``--@upd@--W`` dans le titre du
+        déploiement, ce qui correspond aux catégories W10to10, W10to11 et
+        W11to11 générées par ``deployUpdatemajor.php``.
+
+        Args:
+            session: Session SQLAlchemy active.
+            entity_uuid (int|str): Identifiant GLPI de l'entité.
+            start (int): Offset de pagination.
+            limit (int): Nombre maximum de lignes (-1 = sans limite).
+            filter (str): Filtre textuel optionnel (titre, état, hostname, login).
+
+        Returns:
+            dict: ``{"count": int, "datas": list}``
+        """
+        entity_uuid = normalize_entity(entity_uuid, defaut=-1)
+        start = to_int(start, 0)
+        limit = to_int(limit, -1)
+
+        if entity_uuid < 0:
+            return {"count": 0, "datas": []}
+
+        # Règle métier : on identifie un déploiement majeur Windows par le
+        # marqueur "--@upd@--W" dans le titre (W10to10, W10to11, W11to11…).
+        win_marker = "--@upd@--W"
+        start_window = datetime.now() - timedelta(days=30)
+
+        query = (
+            session.query(Deploy)
+            .join(Machines, Machines.jid == Deploy.jidmachine)
+            .join(Glpi_entity, Glpi_entity.id == Machines.glpi_entity_id)
+            .filter(
+                and_(
+                    Deploy.sessionid.contains("update"),
+                    Deploy.title.contains(win_marker),
+                    Deploy.startcmd >= start_window,
+                    Glpi_entity.glpi_id == entity_uuid,
+                )
+            )
+            .order_by(desc(Deploy.startcmd), desc(Deploy.id))
+        )
+
+        if filter != "":
+            query = query.filter(
+                or_(
+                    Deploy.title.contains(filter),
+                    Deploy.state.contains(filter),
+                    Deploy.host.contains(filter),
+                    Deploy.login.contains(filter),
+                    Deploy.start.contains(filter),
+                    Deploy.startcmd.contains(filter),
+                    Deploy.endcmd.contains(filter),
+                )
+            )
+
+        count = query.count()
+        if start != 0:
+            query = query.offset(start)
+        if limit != -1:
+            query = query.limit(limit)
+
+        result = {"count": count, "datas": []}
+        for deploy in query.all():
+            result["datas"].append({
+                "id": deploy.id,
+                "title": deploy.title,
+                "jidmachine": deploy.jidmachine,
+                "jid_relay": deploy.jid_relay,
+                "pathpackage": deploy.pathpackage,
+                "state": deploy.state,
+                "sessionid": deploy.sessionid,
+                "start": datetime_handler(deploy.start),
+                "startcmd": datetime_handler(deploy.startcmd),
+                "endcmd": datetime_handler(deploy.endcmd),
+                "uuid": deploy.inventoryuuid,
+                "hostname": deploy.host,
+                "user": deploy.user,
+                "cmd_id": deploy.command,
+                "gid": deploy.group_uuid,
+                "grp_id": deploy.group_uuid,
+                "login": deploy.login,
+                "macadress": deploy.macadress,
+                "syncthing": deploy.syncthing,
+            })
+        return result
+
+    @DatabaseHelper._sessionm
     def get_audit_summary_updates_by_update(self, session, updateid, start, limit, filter):
         start = to_int(start, 0)
         limit = to_int(limit, -1)

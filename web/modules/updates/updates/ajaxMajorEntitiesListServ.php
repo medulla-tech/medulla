@@ -110,6 +110,7 @@ $params =  array();
 $actiondetailsByMachs  = array();
 $actionupdateByentity  = array();
 $actionHardwareConstraintsForMajorUpdatesByEntity  = array();
+$actionDeploymentHistory  = array();
 $complete_name_major  = array();
 $comformite_name_major  = array();
 $MS12toMS25_major = array();
@@ -121,6 +122,20 @@ $complRates=array();
 $updated_major = array();
 $missing_information_major = array();
 // definition des actions
+$deploymentHistory = new ActionItem(_T("Deployment history", "updates"),
+                                    "majorDeploymentHistoryWin",
+                                    "history",
+                                    "",
+                                    "updates",
+                                    "updates");
+
+$emptyDeploymentHistory = new EmptyActionItem1(_T("No Windows major deployment history for this entity", "updates"),
+                                                "majorDeploymentHistoryWin",
+                                                "historyg",
+                                                "",
+                                                "updates",
+                                                "updates");
+
 $detailsByMach = new ActionItem(_T("List of machines to be upgraded", "updates"),
                                 "majorDetailsByMachines",
                                 "auditbymachine",
@@ -303,6 +318,10 @@ foreach ($mergedArray as  $index=>$datacolonne) {
     ? $details_hardware_constraints_for_major_updates  // Some machines are missing info
     : $empty_hardware_constraints_for_major_updates;   // All machines are compliant
 
+    $actionDeploymentHistory[] = (intval($datacolonne['count']) > 0)
+        ? $deploymentHistory
+        : $emptyDeploymentHistory;
+
     $formattedText_help = sprintf($texte_help, $nbupdate, $datacolonne['name']);
     $comformite_name_major[]=(string) new medulla_progressbar_static($datacolonne['conformite'],
                                                                      "",
@@ -342,6 +361,7 @@ $n->addExtraInfoRaw($total_win, _T("Total machines", "updates"));
 $n->addActionItemArray($actionupdateByentity);
 $n->addActionItemArray($actiondetailsByMachs);
 $n->addActionItemArray($actionHardwareConstraintsForMajorUpdatesByEntity);
+$n->addActionItemArray($actionDeploymentHistory);
 $n->setItemCount($count);
 $n->setNavBar(new AjaxNavBar($count, $filter));
 $n->setParamInfo($params);
