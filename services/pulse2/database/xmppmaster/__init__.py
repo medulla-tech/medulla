@@ -20410,8 +20410,12 @@ FROM (
         limité au dernier mois.
 
         Le discriminant est la présence de ``--@upd@--W`` dans le titre du
-        déploiement, ce qui correspond aux catégories W10to10, W10to11 et
-        W11to11 générées par ``deployUpdatemajor.php``.
+        déploiement. Ce marqueur correspond au pattern ``W{N}to{N}`` ou
+        ``W{N}toW{N}`` (ex: W10to11, W11to11, W11to12, W12toW15…) généré
+        par ``deployUpdatemajor.php``. Toute future version Windows respectant
+        ce format sera automatiquement couverte. Le préfixe double tiret
+        ``--@upd@--`` distingue les mises à jour majeures des mises à jour
+        normales qui utilisent ``-@upd@-`` (tiret simple).
 
         Args:
             session: Session SQLAlchemy active.
@@ -20431,7 +20435,10 @@ FROM (
             return {"count": 0, "datas": []}
 
         # Règle métier : on identifie un déploiement majeur Windows par le
-        # marqueur "--@upd@--W" dans le titre (W10to10, W10to11, W11to11…).
+        # marqueur "--@upd@--W" dans le titre. Ce marqueur couvre le pattern
+        # W{N}to{N} et W{N}toW{N} (W10to11, W11to11, W11to12, W12toW15…).
+        # Le double tiret "--@upd@--" distingue les mises à jour majeures
+        # des mises à jour normales ("-@upd@-" tiret simple).
         win_marker = "--@upd@--W"
         start_window = datetime.now() - timedelta(days=30)
 
