@@ -1497,4 +1497,323 @@ class AdminDatabase(DatabaseHelper):
             return acl_string
         except Exception as e:
             logger.error(f"Error in build_acl_string_for_profile: {e}")
+
+    # =========================================================================
+    # Gestion des règles d'attribution d'entité (admin_inventory_entity_rules)
+    # =========================================================================
+    # Résolution: TAG → GLPI entity
+    # Utilisée par l'interface XMLRPC et les substituts pour les inventaires
+
+    @DatabaseHelper._sessionm
+    def resolve_inventory_entity_rule(self, session, tag_name, tag_value):
+        """
+        Résoudre une valeur TAG à une entité GLPI en utilisant les règles d'inventaire.
+        
+        Args:
+            tag_name: Type de TAG (ex: "TAG")
+            tag_value: Valeur TAG à matcher (ex: "PROD", "CLIENT-A")
+        
+        Returns:
+            dict avec entity_id et infos de règle, ou None si aucun match
+        """
+        try:
+            row = session.execute(
+                text(
+                    """
+                    SELECT id, entity_id, rule_name, priority
+                    FROM admin_inventory_entity_rules
+                    WHERE enabled = 1
+                      AND tag_name = :tag_name
+                      AND tag_value = :tag_value
+                    ORDER BY priority ASC, id ASC
+                    LIMIT 1
+                    """
+                ),
+                {"tag_name": tag_name, "tag_value": tag_value},
+            ).fetchone()
+            
+            if not row:
+                return None
+            
+            return {
+                "id": int(row[0]),
+                "entity_id": int(row[1]),
+                "rule_name": str(row[2] or ""),
+                "priority": int(row[3]),
+            }
+        except Exception as e:
+            logger.error(f"Erreur resolve_inventory_entity_rule: {str(e)}")
+            return None
+
+    @DatabaseHelper._sessionm
+    def list_inventory_entity_rules(self, session, enabled_only=False):
+        """
+        Lister les règles d'inventaire disponibles.
+        
+        Args:
+            enabled_only: Si True, retourne uniquement les règles actives
+        
+        Returns:
+            Liste de dictionnaires contenant les détails de chaque règle
+        """
+        try:
+            where_clause = "WHERE enabled = 1" if enabled_only else ""
+            rows = session.execute(
+                text(
+                    f"""
+                    SELECT id, enabled, rule_name, tag_name, tag_value, entity_id,
+                           priority, stop_on_match, comment, created_by, updated_by,
+                           created_at, updated_at
+                    FROM admin_inventory_entity_rules
+                    {where_clause}
+                    ORDER BY priority ASC, id ASC
+                    """
+                )
+            ).fetchall()
+            
+            return [
+                {
+                    "id": int(row[0]),
+                    "enabled": int(row[1]),
+                    "rule_name": str(row[2] or ""),
+                    "tag_name": str(row[3] or ""),
+                    "tag_value": str(row[4] or ""),
+                    "entity_id": int(row[5]),
+                    "priority": int(row[6]),
+                    "stop_on_match": int(row[7]),
+                    "comment": str(row[8] or ""),
+                    "created_by": str(row[9] or ""),
+                    "updated_by": str(row[10] or ""),
+                    "created_at": str(row[11]),
+                    "updated_at": str(row[12]),
+                }
+                for row in rows
+            ]
+        except Exception as e:
+            logger.error(f"Erreur list_inventory_entity_rules: {str(e)}")
+            return []
+
+    @DatabaseHelper._sessionm
+    @DatabaseHelper._sessionm
+    def set_inventory_entity_rule_enabled(self, session, rule_id, enabled, admin_user="root"):
+        """
+        Activer ou désactiver une règle d'attribution d'entité.
+        """
+        try:
+            session.execute(
+                text(
+                    """
+                    UPDATE admin_inventory_entity_rules
+                    SET enabled = :enabled,
+                        updated_by = :updated_by,
+                        updated_at = NOW()
+                    WHERE id = :rule_id
+                    """
+                ),
+                {
+                    "enabled": int(enabled),
+                    "updated_by": admin_user,
+                    "rule_id": int(rule_id),
+                },
+            )
+            session.commit()
+            return True
+        except Exception as e:
+            session.rollback()
+            logger.error(f"Erreur set_inventory_entity_rule_enabled: {str(e)}")
+            return False
+
+    @DatabaseHelper._sessionm
+    def delete_inventory_entity_rule(self, session, rule_id):
+        """
+        Supprimer une règle d'attribution d'entité.
+        """
+        try:
+            session.execute(
+                text(
+                    """
+                    DELETE FROM admin_inventory_entity_rules
+                    WHERE id = :rule_id
+                    """
+                ),
+                {"rule_id": int(rule_id)},
+            )
+            session.commit()
+            return True
+        except Exception as e:
+            session.rollback()
+            logger.error(f"Erreur delete_inventory_entity_rule: {str(e)}")
+            return False
+
+    # =========================================================================
+    # Gestion des métadonnées d'inventaire (substitute_inventory_metadata)
+    # =========================================================================
+    # Métadonnées personnalisées associées à chaque machine (JID)
+    # Utilisées par l'interface XMLRPC et les substituts
+
+    @DatabaseHelper._sessionm
+    def get_machine_metadata(self, session, jid, key_name=None):
+        """
+        Récupère les métadonnées personnalisées d'une machine.
+        
+        Si key_name est None, retourne toutes les métadonnées de la machine.
+        Sinon, retourne une paire clé/valeur spécifique ou None si non trouvée.
+        
+        Args:
+            jid: JID de la machine (ex: "laptop-001@medulla.local")
+            key_name: Clé spécifique ou None pour toutes
+        
+        Returns:
+            dict ou list de dicts, ou None/[] selon contexte
+        """
+        try:
+            if key_name:
+                # Récupère une paire spécifique
+                row = session.execute(
+                    text(
+                        """
+                        SELECT id, hostname, key_name, value, description, created_at, updated_at
+                        FROM substitute_inventory_metadata
+                        WHERE jid = :jid AND key_name = :key_name
+                        LIMIT 1
+                        """
+                    ),
+                    {"jid": jid, "key_name": key_name},
+                ).fetchone()
+                
+                if not row:
+                    return None
+                
+                return {
+                    "id": int(row[0]),
+                    "hostname": str(row[1] or ""),
+                    "key": str(row[2]),
+                    "value": str(row[3]) if row[3] is not None else None,
+                    "description": str(row[4]) if row[4] is not None else "",
+                    "created_at": str(row[5]),
+                    "updated_at": str(row[6]),
+                }
+            else:
+                # Récupère toutes les métadonnées de la machine
+                rows = session.execute(
+                    text(
+                        """
+                        SELECT id, hostname, key_name, value, description, created_at, updated_at
+                        FROM substitute_inventory_metadata
+                        WHERE jid = :jid
+                        ORDER BY key_name ASC
+                        """
+                    ),
+                    {"jid": jid},
+                ).fetchall()
+                
+                return [
+                    {
+                        "id": int(row[0]),
+                        "hostname": str(row[1] or ""),
+                        "key": str(row[2]),
+                        "value": str(row[3]) if row[3] is not None else None,
+                        "description": str(row[4]) if row[4] is not None else "",
+                        "created_at": str(row[5]),
+                        "updated_at": str(row[6]),
+                    }
+                    for row in rows
+                ]
+        except Exception as e:
+            logger.error(f"Erreur get_machine_metadata: {str(e)}")
+            return None if key_name else []
+
+    @DatabaseHelper._sessionm
+    def set_machine_metadata(self, session, jid, key_name, value, hostname="", description=None):
+        """
+        Crée ou met à jour la paire de métadonnées (jid, key_name, value).
+        
+        Utilise le pattern UPSERT sur la clé unique (jid, key_name).
+        Si la paire existe, seule la valeur et la date de mise à jour changent.
+        
+        Args:
+            jid: JID de la machine
+            key_name: Clé de métadonnée
+            value: Valeur (texte, JSON, etc.)
+            hostname: Hostname de la machine (optionnel)
+            description: Description associée à la clé (optionnelle, peut être vide)
+        
+        Returns:
+            bool: True si succès, False sinon
+        """
+        try:
+            session.execute(
+                text(
+                    """
+                                        INSERT INTO substitute_inventory_metadata (
+                                            jid, hostname, key_name, value, description, created_at, updated_at
+                                        )
+                                        VALUES (:jid, :hostname, :key_name, :value, :description, NOW(), NOW())
+                    ON DUPLICATE KEY UPDATE
+                                            hostname = VALUES(hostname),
+                                            description = VALUES(description),
+                                            value = IF(value <=> VALUES(value), value, VALUES(value)),
+                                            updated_at = IF(value <=> VALUES(value), updated_at, NOW())
+                    """
+                ),
+                                {
+                                        "jid": jid,
+                                        "hostname": hostname or "",
+                                        "key_name": key_name,
+                                        "value": value,
+                                        "description": description,
+                                },
+            )
+            session.commit()
+            return True
+        except Exception as e:
+            session.rollback()
+            logger.error(f"Erreur set_machine_metadata: {str(e)}")
+            return False
+
+    @DatabaseHelper._sessionm
+    def delete_machine_metadata(self, session, jid, key_name=None):
+        """
+        Supprime les métadonnées personnalisées d'une machine.
+        
+        Si key_name est None, supprime TOUTES les métadonnées de la machine.
+        Sinon, supprime uniquement la paire (jid, key_name).
+        
+        Args:
+            jid: JID de la machine
+            key_name: Clé spécifique ou None pour toutes
+        
+        Returns:
+            bool: True si succès, False sinon
+        """
+        try:
+            if key_name:
+                # Supprime une paire spécifique
+                session.execute(
+                    text(
+                        """
+                        DELETE FROM substitute_inventory_metadata
+                        WHERE jid = :jid AND key_name = :key_name
+                        """
+                    ),
+                    {"jid": jid, "key_name": key_name},
+                )
+            else:
+                # Supprime toutes les métadonnées de la machine
+                session.execute(
+                    text(
+                        """
+                        DELETE FROM substitute_inventory_metadata
+                        WHERE jid = :jid
+                        """
+                    ),
+                    {"jid": jid},
+                )
+            
+            session.commit()
+            return True
+        except Exception as e:
+            session.rollback()
+            logger.error(f"Erreur delete_machine_metadata: {str(e)}")
+            return False
             return ""

@@ -146,15 +146,15 @@ $formAction = urlStrRedirect('admin/admin/inventoryEntityRules');
                     $tagValue = (string)($row['tag_value'] ?? '');
                     $summary = sprintf(
                         $isEnabled
-                            ? _T('Regle active: si %s=%s, alors affecter la machine a l entite %s (priorite %s).', 'admin')
-                            : _T('Regle inactive: si %s=%s, cette affectation vers entite %s (priorite %s) ne sera pas appliquee.', 'admin'),
+                            ? _T('Active rule: if %s=%s, then assign the machine to entity %s (priority %s).', 'admin')
+                            : _T('Inactive rule: if %s=%s, this assignment to entity %s (priority %s) will not be applied.', 'admin'),
                         $tagName,
                         $tagValue,
                         (string)((int)($row['entity_id'] ?? 0)),
                         (string)((int)($row['priority'] ?? 0))
                     );
                     $xmlPreview = sprintf(
-                        "Exemple XML qui match cette regle:\n<META><%s>%s</%s></META>\n\nOu format ACCOUNTINFO:\n<ACCOUNTINFO><KEYNAME>%s</KEYNAME><KEYVALUE>%s</KEYVALUE></ACCOUNTINFO>",
+                        _T('Example XML matching this rule:' . "\n" . '<META><%s>%s</%s></META>' . "\n\n" . 'Alternative ACCOUNTINFO format:' . "\n" . '<ACCOUNTINFO><KEYNAME>%s</KEYNAME><KEYVALUE>%s</KEYVALUE></ACCOUNTINFO>', 'admin'),
                         $tagName,
                         $tagValue,
                         $tagName,
@@ -175,7 +175,7 @@ $formAction = urlStrRedirect('admin/admin/inventoryEntityRules');
                         <span
                             class="xml-hover"
                             title="<?php echo $safe($xmlPreview); ?>"
-                            aria-label="<?php echo $safe(_T('Voir un exemple XML pour cette regle', 'admin')); ?>"
+                            aria-label="<?php echo $safe(_T('View an XML example for this rule', 'admin')); ?>"
                         >&#9432; XML</span>
                     </td>
                     <td>
