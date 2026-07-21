@@ -32,7 +32,8 @@ if(isset($_POST['bconfirm'])){
   $rule_id = htmlentities($_POST['rule']);
   $order = htmlentities($_POST['rule_order']);
   // Originaly regex and subject were inverted
-  $subject = htmlentities($_POST['regex']);
+  // Field is disabled for some rules, so it isn't submitted
+  $subject = isset($_POST['regex']) ? htmlentities($_POST['regex']) : "";
 
   $result = xmlrpc_add_rule_to_relay($relay_id, $rule_id, $order, $subject);
 
@@ -91,8 +92,14 @@ if(!isset($_GET['prev_action']))
   $relays->setSelected($_GET['id']);
 $f->add(new TrFormElement(_T("Relays", "admin"), $relays));
 
+// These rules don't rely on a regex : the field is locked
+$rules_without_regex = array('subnet', 'default', 'geoposition', 'loadbalancer');
+$current_rule_name = isset($_GET['name']) ? strtolower(preg_replace('/[\s_\-]+/', '', $_GET['name'])) : '';
+$lock_regex = in_array($current_rule_name, $rules_without_regex);
+
 $regex = new InputTpl("regex");
-$regex->setAttributCustom('title="A few subject examples:
+$regex_attributes = ($lock_regex) ? 'disabled="disabled" ' : '';
+$regex->setAttributCustom($regex_attributes . 'title="A few subject examples:
 Chooses ARS based on network address:
 ^55\.33\.250\.0\/24$ -> Associates all machines which are in the 55.33.250.0/24 subnet to the specified relay server
 ^55\.171\.?[0-2]?[0-5]?[0-5].*\.0\/24$ -> Associates all machines which are in the 55.171.XXX.0/24 subnet to the specified relay server
