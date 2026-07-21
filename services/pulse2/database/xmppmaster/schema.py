@@ -1051,5 +1051,3 @@ class UpWindowsKbUninstall(Base):
     __table_args__ = (
         UniqueConstraint("updateid", "hostname", name="uniq_update_host"),
     )
-
-

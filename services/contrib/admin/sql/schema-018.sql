@@ -53,29 +53,4 @@ UPDATE version
 SET Number = 18
 WHERE Number < 18;
 
--- =====================================================================
--- Custom metadata storage for inventory machines (substitute scope)
--- =====================================================================
-CREATE TABLE IF NOT EXISTS `substitute_inventory_metadata` (
-  `id` INT AUTO_INCREMENT PRIMARY KEY,
-  `jid` VARCHAR(255) NOT NULL,
-  `hostname` VARCHAR(255) NOT NULL DEFAULT '',
-  `key_name` VARCHAR(255) NOT NULL,
-  `value` LONGTEXT,
-  `description` LONGTEXT NULL,
-  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  UNIQUE KEY `uniq_jid_key` (`jid`, `key_name`),
-  KEY `idx_jid_lookup` (`jid`),
-  KEY `idx_hostname_lookup` (`hostname`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
-COMMENT='[Substitute] Custom metadata indexed by machine JID';
-
---
--- Finalize version update
---
-UPDATE version
-SET Number = 18
-WHERE Number < 18;
-
 COMMIT;
