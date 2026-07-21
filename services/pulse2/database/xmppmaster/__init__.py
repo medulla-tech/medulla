@@ -16686,7 +16686,7 @@ FROM (
         Récupère l'historique des déploiements de mises à jour pour une machine.
 
         La requête cible les entrées de la table ``Deploy`` dont ``sessionid``
-        contient ``"update"``, jointes à ``Machines`` via le JID de la machine,
+        contient ``"update"``, rattachées à la machine via son UUID d'inventaire,
         puis ordonnées par date de début décroissante.
 
         Args:
@@ -16705,10 +16705,28 @@ FROM (
         machineid = to_int(machineid, 0)
         end = to_int(end, -1)
 
+        machine = session.query(Machines).filter(Machines.id == machineid).first()
+        if machine is None:
+            return {"count": 0, "datas": []}
+
+        identification = []
+        if machine.uuid_inventorymachine:
+            identification.append(
+                Deploy.inventoryuuid == machine.uuid_inventorymachine
+            )
+        if machine.jid:
+            # Partie locale du JID, indépendante du domaine et de la ressource
+            identification.append(
+                Deploy.jidmachine.startswith("%s@" % machine.jid.split("@")[0])
+            )
+        if not identification:
+            return {"count": 0, "datas": []}
+
         query = (
             session.query(Deploy)
-            .join(Machines, Machines.jid == Deploy.jidmachine)
-            .filter(and_(Deploy.sessionid.contains("update"), Machines.id == machineid))
+            .filter(
+                and_(Deploy.sessionid.contains("update"), or_(*identification))
+            )
             .order_by(desc(Deploy.start))
         )
 
@@ -16722,17 +16740,17 @@ FROM (
                     Deploy.endcmd.contains(filter),
                 )
             )
+
+        count = query.count()
+
         if start != 0:
             query = query.offset(start)
         if end != -1:
             query = query.limit(end)
 
-        count = query.count()
-        query = query.all()
-
         result = {"count": count, "datas": []}
 
-        for deploy in query:
+        for deploy in query.all():
             tmp = {
                 "id": deploy.id,
                 "title": deploy.title,
@@ -18980,7 +18998,14 @@ FROM (
         limit = to_int(limit, -1)
         query = (
             session.query(Deploy)
-            .join(Machines, Machines.jid == Deploy.jidmachine)
+            .join(
+                Machines,
+                and_(
+                    Machines.uuid_inventorymachine == Deploy.inventoryuuid,
+                    Machines.uuid_inventorymachine != "",
+                    Machines.uuid_inventorymachine.isnot(None),
+                ),
+            )
             .join(Glpi_entity, Glpi_entity.id == Machines.glpi_entity_id)
             .filter(
                 and_(
@@ -19001,17 +19026,16 @@ FROM (
                     Deploy.endcmd.contains(filter),
                 )
             )
+        count = query.count()
+
         if start != 0:
             query = query.offset(start)
         if limit != -1:
             query = query.limit(limit)
 
-        count = query.count()
-        query = query.all()
-
         result = {"count": count, "datas": []}
 
-        for deploy in query:
+        for deploy in query.all():
             tmp = {
                 "id": deploy.id,
                 "title": deploy.title,
