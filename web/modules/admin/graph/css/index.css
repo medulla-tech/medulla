@@ -117,3 +117,15 @@
 .acl-tooltip:hover .acl-tooltip-text {
     display: block;
 }
+
+/* ---- Relay rules : regex field locked for rules not using it ---- */
+
+.mmc-form-table input#regex:disabled {
+    color: #999;
+    background-color: #f2f2f2;
+    border-color: #ddd;
+    cursor: not-allowed;
+}
+.mmc-form-table input#regex:disabled:hover {
+    border-color: #ddd;
+}
