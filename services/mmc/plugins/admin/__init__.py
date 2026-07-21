@@ -5,37 +5,19 @@
 
 from pulse2.version import getVersion, getRevision
 
-from mmc.support.mmctools import (
-    RpcProxyI,
-    ContextMakerI,
-    EnhancedSecurityContext,
-)
-from mmc.plugins.base import with_optional_xmpp_context
-
 from mmc.plugins.admin.config import AdminConfig
-from mmc.plugins.admin.itsm_glpi_legacy_tester import GLPIApiRestLegacyConnectionTester
 
 # Import for Database
 from pulse2.database.admin import AdminDatabase
 from pulse2.database.pkgs import PkgsDatabase
 
 from mmc.plugins.glpi import get_entities_with_counts, get_entities_with_counts_root, set_user_api_token, get_user_profile_email, get_complete_name, get_user_identifier, list_entity_ids_subtree, list_user_ids_in_subtree, list_computer_ids_in_subtree
-try:
-    from mmc.support.apirest.glpi import GLPIClient, GLPIClientApiV1, GLPIAPIError
-except ImportError:
-    from mmc.support.apirest.glpi import GLPIClient
-    GLPIClientApiV1 = GLPIClient
-    try:
-        from mmc.support.apirest.glpi import GLPIAPIError
-    except ImportError:
-        class GLPIAPIError(RuntimeError):
-            pass
+from mmc.support.apirest.glpi import GLPIClient, GLPIClientApiV1, GLPIAPIError
 from mmc.support.apirest.glpi import verifier_parametres
 from configparser import ConfigParser
 import subprocess
 import traceback
 import requests
-import socket
 import logging
 import base64
 import random
@@ -50,17 +32,6 @@ VERSION = "1.0.0"
 APIVERSION = "4:1:3"
 
 logger = logging.getLogger()
-ITSM_DEV_MARKER = "ITSM_DEV_TMP_REMOVE"
-
-
-def _itsm_dev_info(message, payload=None):
-    """Temporary ITSM dev log helper. Remove all by searching ITSM_DEV_MARKER."""
-    if payload is None:
-        payload = {}
-    try:
-        logger.info("[%s] %s | %s", ITSM_DEV_MARKER, message, json.dumps(payload, default=str, ensure_ascii=True))
-    except Exception:
-        logger.info("[%s] %s | %s", ITSM_DEV_MARKER, message, payload)
 #
 # def verifier_parametres(dictctrl, cles_requises):
 #     # Vérifier chaque clé
@@ -85,261 +56,12 @@ def activate():
         logger.warning("Plugin admin: disabled by configuration.")
         return False
 
-    if AdminDatabase().activate(config) is False:
+    if not AdminDatabase().activate(config):
         logger.error(
             "Plugin admin: an error occurred during the database initialization"
         )
         return False
     return True
-
-
-class ContextMaker(ContextMakerI):
-    """Build an enhanced XML-RPC security context for admin plugin."""
-
-    def getContext(self):
-        s = EnhancedSecurityContext()
-        s.userid = self.userid
-        s.request = self.request
-        s.session = self.session
-        return s
-
-
-class RpcProxy(RpcProxyI):
-    """Context-aware XML-RPC proxy for admin plugin."""
-
-    @staticmethod
-    def _resolve_token_from_context(ctx=None, tokenuser=None):
-        if tokenuser:
-            return tokenuser
-
-        if ctx is None:
-            return None
-
-        try:
-            infos = ctx.get_session_info().get('mondict', {})
-            if isinstance(infos, dict):
-                token = infos.get('api_token') or infos.get('tokenuser') or infos.get('token')
-                if token:
-                    return token
-        except Exception:
-            pass
-
-        try:
-            session = getattr(ctx, 'session', None)
-            if isinstance(session, dict):
-                glpi_user = session.get('glpi_user', {})
-                if isinstance(glpi_user, dict):
-                    token = glpi_user.get('api_token')
-                    if token:
-                        return token
-        except Exception:
-            pass
-
-        return None
-
-    @with_optional_xmpp_context
-    def get_list_ctx(self, type, is_recursive=False, tokenuser=None, ctx=None):
-        resolved_token = self._resolve_token_from_context(ctx=ctx, tokenuser=tokenuser)
-        return get_list(type, is_recursive, resolved_token)
-
-    @with_optional_xmpp_context
-    def get_list_user_token_ctx(self, tokenuser=None, ctx=None):
-        resolved_token = self._resolve_token_from_context(ctx=ctx, tokenuser=tokenuser)
-        return get_list_user_token(resolved_token)
-
-    @with_optional_xmpp_context
-    def get_entity_info_ctx(self, entity_id, tokenuser=None, ctx=None):
-        resolved_token = self._resolve_token_from_context(ctx=ctx, tokenuser=tokenuser)
-        return get_entity_info(entity_id, resolved_token)
-
-    @with_optional_xmpp_context
-    def get_list_user_connect_ctx(self, tokenuser=None, ctx=None):
-        _itsm_dev_info("get_list_user_connect_ctx:start", {
-            "has_ctx": ctx is not None,
-            "has_token_param": bool(tokenuser),
-        })
-        # Prefer session context to avoid external GLPI HTTP dependency.
-        if ctx is not None:
-            try:
-                infos = ctx.get_session_info().get('mondict', {})
-                _itsm_dev_info("get_list_user_connect_ctx:mondict", {
-                    "mondict_keys": sorted(list(infos.keys())) if isinstance(infos, dict) else [],
-                    "entity_count": len(infos.get('liste_entities_user') or []) if isinstance(infos, dict) else 0,
-                })
-                if isinstance(infos, dict):
-                    entity_ids = infos.get('liste_entities_user') or []
-                    entities = []
-
-                    for entity_id in entity_ids:
-                        try:
-                            eid = int(entity_id)
-                        except (TypeError, ValueError):
-                            continue
-
-                        try:
-                            meta = get_complete_name(eid) or {}
-                        except Exception:
-                            meta = {}
-
-                        name = meta.get('name') or str(eid)
-                        completename = meta.get('completename') or name
-                        entities.append({
-                            'id': eid,
-                            'name': name,
-                            'completename': completename,
-                        })
-
-                    if entities:
-                        _itsm_dev_info("get_list_user_connect_ctx:return_from_ctx", {
-                            "entities_count": len(entities),
-                        })
-                        return entities
-            except Exception as e:
-                _itsm_dev_info("get_list_user_connect_ctx:ctx_error", {"error": str(e)})
-
-        resolved_token = self._resolve_token_from_context(ctx=ctx, tokenuser=tokenuser)
-        _itsm_dev_info("get_list_user_connect_ctx:fallback", {
-            "has_resolved_token": bool(resolved_token),
-        })
-        return get_list_user_connect(resolved_token)
-
-    @with_optional_xmpp_context
-    def get_itsmsync_entities_ctx(self, tokenuser=None, ctx=None):
-        if ctx is not None:
-            try:
-                infos = ctx.get_session_info().get('mondict', {})
-                entity_ids = infos.get('liste_entities_user') if isinstance(infos, dict) else []
-                entities = []
-                for entity_id in entity_ids or []:
-                    try:
-                        eid = int(entity_id)
-                    except (TypeError, ValueError):
-                        continue
-
-                    try:
-                        meta = get_complete_name(eid) or {}
-                    except Exception:
-                        meta = {}
-
-                    entities.append({
-                        'id': eid,
-                        'name': meta.get('name') or str(eid),
-                        'completename': meta.get('completename') or meta.get('name') or str(eid),
-                    })
-
-                if entities:
-                    _itsm_dev_info("get_itsmsync_entities_ctx:return_from_ctx", {
-                        "entities_count": len(entities),
-                    })
-                    return entities
-            except Exception as e:
-                _itsm_dev_info("get_itsmsync_entities_ctx:ctx_error", {"error": str(e)})
-
-        resolved_token = self._resolve_token_from_context(ctx=ctx, tokenuser=tokenuser)
-        entities = get_itsmsync_entities(resolved_token)
-        _itsm_dev_info("get_itsmsync_entities_ctx:result", {
-            "has_resolved_token": bool(resolved_token),
-            "entities_count": len(entities) if isinstance(entities, list) else 0,
-        })
-        return entities
-
-    @with_optional_xmpp_context
-    def get_itsmsync_clients_ctx(self, tokenuser=None, ctx=None):
-        _itsm_dev_info("get_itsmsync_clients_ctx:start", {
-            "has_ctx": ctx is not None,
-            "has_token_param": bool(tokenuser),
-        })
-        # First build from context to avoid external GLPI dependency.
-        if ctx is not None:
-            try:
-                infos = ctx.get_session_info().get('mondict', {})
-                _itsm_dev_info("get_itsmsync_clients_ctx:mondict", {
-                    "mondict_keys": sorted(list(infos.keys())) if isinstance(infos, dict) else [],
-                    "entity_count": len(infos.get('liste_entities_user') or []) if isinstance(infos, dict) else 0,
-                })
-                entity_ids = infos.get('liste_entities_user') if isinstance(infos, dict) else []
-                clients = {}
-                entity_meta = {}
-                for entity_id in entity_ids or []:
-                    try:
-                        eid = int(entity_id)
-                    except (TypeError, ValueError):
-                        continue
-
-                    try:
-                        meta = get_complete_name(eid) or {}
-                    except Exception:
-                        meta = {}
-
-                    key = str(eid)
-                    clients[key] = meta.get('completename') or meta.get('name') or key
-                    entity_meta[key] = meta
-
-                # Non-root users should only see their customer root entity.
-                if isinstance(infos, dict) and str(infos.get('user_name', '')).lower() != 'root' and clients:
-                    root_key = None
-                    root_rank = None
-                    for key, meta in entity_meta.items():
-                        completename = str(meta.get('completename') or clients.get(key) or key)
-                        depth = len([part for part in completename.split(' > ') if part.strip()])
-                        rank = (depth if depth > 0 else 9999, len(completename), key)
-                        if root_rank is None or rank < root_rank:
-                            root_rank = rank
-                            root_key = key
-
-                    if root_key is not None and root_key in clients:
-                        clients = {root_key: clients[root_key]}
-
-                try:
-                    names = AdminDatabase().get_itsmsync_client_name_map()
-                    if isinstance(names, dict):
-                        for key in list(clients.keys()):
-                            if key in names and names[key]:
-                                clients[key] = names[key]
-                except Exception:
-                    pass
-
-                if clients:
-                    _itsm_dev_info("get_itsmsync_clients_ctx:return_from_ctx", {
-                        "clients_count": len(clients),
-                    })
-                    return clients
-            except Exception as e:
-                _itsm_dev_info("get_itsmsync_clients_ctx:ctx_error", {"error": str(e)})
-
-        resolved_token = self._resolve_token_from_context(ctx=ctx, tokenuser=tokenuser)
-        clients = get_itsmsync_clients(resolved_token)
-        _itsm_dev_info("get_itsmsync_clients_ctx:fallback", {
-            "has_resolved_token": bool(resolved_token),
-            "clients_count": len(clients) if isinstance(clients, dict) else 0,
-        })
-        return clients
-
-    @with_optional_xmpp_context
-    def get_itsmsync_client_config_ctx(self, client_id=None, tokenuser=None, ctx=None):
-        resolved_token = self._resolve_token_from_context(ctx=ctx, tokenuser=tokenuser)
-        cfg = get_itsmsync_client_config(client_id, resolved_token)
-        _itsm_dev_info("get_itsmsync_client_config_ctx:result", {
-            "client_id": client_id,
-            "has_resolved_token": bool(resolved_token),
-            "config_keys": sorted(list(cfg.keys())) if isinstance(cfg, dict) else [],
-        })
-        return cfg
-
-    @with_optional_xmpp_context
-    def save_itsmsync_client_config_ctx(self, client_id=None, config=None, tokenuser=None, ctx=None):
-        resolved_token = self._resolve_token_from_context(ctx=ctx, tokenuser=tokenuser)
-        _itsm_dev_info("save_itsmsync_client_config_ctx:input", {
-            "client_id": client_id,
-            "has_resolved_token": bool(resolved_token),
-            "config_keys": sorted(list(config.keys())) if isinstance(config, dict) else [],
-        })
-        result = save_itsmsync_client_config(client_id, config, resolved_token)
-        _itsm_dev_info("save_itsmsync_client_config_ctx:result", {
-            "result": result,
-        })
-        return result
-
 
 def get_glpi_client(tokenuser=None, app_token=None, url_base=None):
     """
@@ -351,6 +73,7 @@ def get_glpi_client(tokenuser=None, app_token=None, url_base=None):
             "glpi_mmc_app_token", "glpi_url_base_api", "glpi_root_user_token"
         ])
 
+        # Choix des paramètres : valeurs fournies > valeurs en base
         app_token = app_token if app_token else initparametre["glpi_mmc_app_token"]
         url_base = url_base if url_base else initparametre["glpi_url_base_api"]
         user_token = tokenuser if tokenuser else initparametre["glpi_root_user_token"]
@@ -368,7 +91,7 @@ def get_glpi_client(tokenuser=None, app_token=None, url_base=None):
             ]
         elif re.search(r"/api\.php/v[0-9][0-9.]*$", base):
             logger.error(
-                "Endpoint GLPI non supporte pour les tokens legacy/v1: %s. "
+                "Endpoint GLPI non supporté pour les tokens legacy/v1: %s. "
                 "Configurer /api.php/v1, /apirest.php ou l'URL racine GLPI.",
                 base,
             )
@@ -405,7 +128,7 @@ def get_glpi_client(tokenuser=None, app_token=None, url_base=None):
                     e,
                 )
 
-        logger.error("Session GLPI non initialisee: impossible d'obtenir un client valide")
+        logger.error("Session GLPI non initialisée : impossible d'obtenir un client valide")
         return None
     except Exception:
         logger.error("Erreur get_glpi_client: %s", traceback.format_exc())
@@ -508,8 +231,6 @@ def delete_agent_dir(tag: str) -> tuple[str, bool]:
 # READ
 def get_list(type, is_recursive=False, tokenuser=None):
     client = get_glpi_client(tokenuser=tokenuser)
-    if not client:
-        return []
     results = client.get_list(type, is_recursive)
     return results
 
@@ -549,8 +270,6 @@ def get_user_info(id_user=None, id_profile=None, id_entity=None, filters=None):
 
 def get_users_count_by_entity(entity_id, tokenuser=None):
     client = get_glpi_client(tokenuser=tokenuser)
-    if not client:
-        return 0
     result = client.get_users_count_by_entity(entity_id)
     return result
 
@@ -577,30 +296,11 @@ def get_list_user_token(tokenuser=None):
         logger.error(f"Erreur lors de la récupération des entités : {e}")
         return []
 
-
-def get_list_user_connect(tokenuser=None):
-    """Retourne la liste des entités autorisées pour l'utilisateur connecté."""
-    try:
-        entities = get_list("entities", True, tokenuser=tokenuser)
-
-        if isinstance(entities, dict) and isinstance(entities.get("myentities"), list):
-            return entities["myentities"]
-
-        if isinstance(entities, list):
-            return entities
-
-        return []
-    except Exception as e:
-        logger.error(f"Erreur get_list_user_connect: {e}")
-        return []
-
 def get_entity_info(entity_id, tokenuser=None):
     """
     Récupère les informations d'une entité GLPI par son ID.
     """
     client = get_glpi_client(tokenuser=tokenuser)
-    if not client:
-        return {}
     entity_info = client.get_entity_info(entity_id)
 
     entity = entity_info if isinstance(entity_info, dict) else entity_info[0]
@@ -616,8 +316,6 @@ def get_profile_name(profile_id, tokenuser=None):
     Récupère le nom d'un profil GLPI par son ID.
     """
     client = get_glpi_client(tokenuser=tokenuser)
-    if not client:
-        return ""
     profil_name = client.get_profile_name(profile_id)
     return profil_name
 
@@ -1281,47 +979,6 @@ def get_config_sections():
     sections = db.get_config_sections()
     return sections
 
-
-def _is_root_login(login):
-    """Return True when login corresponds to the root admin account."""
-    return str(login or "").strip().lower() == "root"
-
-
-def get_inventory_entity_rules(login=None, start=0, end=-1, filter=""):
-    """Return global inventory entity mapping rules (root-only API)."""
-    if not _is_root_login(login):
-        logger.warning("get_inventory_entity_rules denied for login=%s", login)
-        return {"total": 0, "datas": []}
-    return AdminDatabase().get_inventory_entity_rules(start=start, end=end, filter_text=filter)
-
-
-def save_inventory_entity_rule(login=None, rule=None):
-    """Create or update one global inventory mapping rule (root-only API)."""
-    if not _is_root_login(login):
-        logger.warning("save_inventory_entity_rule denied for login=%s", login)
-        return {"ok": False, "error": "root privileges required"}
-    return AdminDatabase().upsert_inventory_entity_rule(rule or {})
-
-
-def set_inventory_entity_rule_enabled(login=None, rule_id=None, enabled=1):
-    """Enable or disable one global inventory mapping rule (root-only API)."""
-    if not _is_root_login(login):
-        logger.warning("set_inventory_entity_rule_enabled denied for login=%s", login)
-        return {"ok": False, "error": "root privileges required"}
-    return AdminDatabase().set_inventory_entity_rule_enabled(
-        rule_id=rule_id,
-        enabled=enabled,
-        updated_by="root",
-    )
-
-
-def delete_inventory_entity_rule(login=None, rule_id=None):
-    """Delete one global inventory mapping rule (root-only API)."""
-    if not _is_root_login(login):
-        logger.warning("delete_inventory_entity_rule denied for login=%s", login)
-        return {"ok": False, "error": "root privileges required"}
-    return AdminDatabase().delete_inventory_entity_rule(rule_id)
-
 # ---- ACL Feature Management ----
 
 # Installation type ('onpremise' or 'saas'). None disables ACL filtering.
@@ -1516,185 +1173,3 @@ def build_acl_string_for_profile(profile_name, install_type=None):
     relevant to that install type contribute to the ACL string.
     """
     return AdminDatabase().build_acl_string_for_profile(profile_name, install_type)
-
-
-def get_itsmsync_clients(tokenuser=None):
-    """Return ITSM clients derived from permitted user entities."""
-    clients = {}
-    entities = get_itsmsync_entities(tokenuser=tokenuser)
-
-    if isinstance(entities, dict):
-        entities = entities.get("myentities", [])
-
-    if isinstance(entities, list):
-        for entity in entities:
-            if not isinstance(entity, dict):
-                continue
-            entity_id = entity.get("id")
-            if entity_id is None:
-                continue
-            key = str(entity_id)
-            clients[key] = entity.get("completename") or entity.get("name") or key
-
-    try:
-        names = AdminDatabase().get_itsmsync_client_name_map()
-        if isinstance(names, dict):
-            for key in list(clients.keys()):
-                if key in names and names[key]:
-                    clients[key] = names[key]
-    except Exception as e:
-        logger.debug("admin.get_itsmsync_clients: label enrichment skipped: %s", e)
-
-    return clients
-
-
-def get_itsmsync_client_config(client_id=None, tokenuser=None):
-    """Return ITSM client configuration from admin database."""
-    logger.debug("admin.get_itsmsync_client_config called for client_id=%s", client_id)
-    if client_id in (None, ""):
-        return {}
-    return AdminDatabase().get_itsmsync_client_config(client_id)
-
-
-def save_itsmsync_client_config(client_id=None, config=None, tokenuser=None):
-    """Persist ITSM client configuration in admin database."""
-    logger.debug("admin.save_itsmsync_client_config called for client_id=%s", client_id)
-    return AdminDatabase().save_itsmsync_client_config(client_id, config)
-
-
-def get_itsmsync_entities(tokenuser=None):
-    """Return available entities for connected user context."""
-    logger.debug("admin.get_itsmsync_entities called")
-    entities = get_list_user_connect(tokenuser=tokenuser)
-    if isinstance(entities, dict) and isinstance(entities.get("myentities"), list):
-        return entities["myentities"]
-    if isinstance(entities, list):
-        return entities
-    return []
-
-
-def test_itsmsync_connection(itsm_type=None, connection_mode=None, config=None, tokenuser=None):
-    """Validate ITSM source connectivity (API/DB)."""
-    logger.debug(
-        "admin.test_itsmsync_connection called for itsm_type=%s connection_mode=%s",
-        itsm_type,
-        connection_mode,
-    )
-
-    if not itsm_type or not connection_mode:
-        return {"success": False, "message": "Invalid ITSM type or mode"}
-
-    if not isinstance(config, dict):
-        config = {}
-
-    try:
-        if connection_mode == "api":
-            url = config.get("conn.api_url") or config.get("api_url")
-            if not url:
-                return {"success": False, "message": "API URL not provided"}
-
-            auth_user = (
-                config.get("auth.app_token")
-                or config.get("auth.username")
-                or config.get("auth_user")
-            )
-            auth_pass = (
-                config.get("auth.user_token")
-                or config.get("auth.password")
-                or config.get("auth_pass")
-            )
-
-            if not auth_user or not auth_pass:
-                return {"success": False, "message": "Authentication credentials missing"}
-
-            if str(itsm_type).lower() == "glpi":
-                logger.info(
-                    "[ITSM_GLPI_LEGACY_TEST] dispatch from admin.test_itsmsync_connection url=%s",
-                    str(url),
-                )
-                tester = GLPIApiRestLegacyConnectionTester(
-                    api_url=url,
-                    app_token=auth_user,
-                    user_token=auth_pass,
-                )
-                result = tester.test()
-                logger.info(
-                    "[ITSM_GLPI_LEGACY_TEST] result success=%s message=%s",
-                    bool(result.get("success")) if isinstance(result, dict) else False,
-                    result.get("message") if isinstance(result, dict) else result,
-                )
-                return result
-
-            try:
-                session = requests.Session()
-                session.trust_env = False
-                resp = session.get(
-                    url,
-                    auth=(str(auth_user), str(auth_pass)),
-                    timeout=10,
-                    verify=False,
-                )
-            except Exception as e:
-                return {"success": False, "message": f"Connection error: {e}"}
-
-            if 200 <= resp.status_code < 300:
-                return {"success": True, "message": f"Connection successful (HTTP {resp.status_code})"}
-            if resp.status_code in (401, 403):
-                return {"success": False, "message": f"Authentication failed (HTTP {resp.status_code})"}
-            return {"success": False, "message": f"Server error (HTTP {resp.status_code})"}
-
-        if connection_mode == "db":
-            host = config.get("conn.db_host") or config.get("db_host")
-            port = config.get("conn.db_port") or config.get("db_port") or 3306
-            db_name = config.get("conn.db_name") or config.get("db_name")
-            db_user = config.get("conn.db_user") or config.get("db_user")
-
-            if not host or not db_name or not db_user:
-                return {"success": False, "message": "Database credentials incomplete"}
-
-            try:
-                with socket.create_connection((str(host), int(port)), timeout=5):
-                    pass
-                return {"success": True, "message": "Database connection successful"}
-            except Exception as e:
-                return {"success": False, "message": f"Connection failed: {e}"}
-
-        return {"success": False, "message": "Unknown connection mode"}
-    except Exception as e:
-        return {"success": False, "message": f"Error: {e}"}
-
-
-def get_itsmsync_field_definitions(itsm_type=None, connection_mode=None, client_id=None, tokenuser=None):
-    """Stub: return ITSM field definitions for a given type/mode."""
-    logger.debug(
-        "admin.get_itsmsync_field_definitions stub called for itsm_type=%s connection_mode=%s",
-        itsm_type,
-        connection_mode,
-    )
-    return []
-
-
-def get_itsmsync_all_fields(itsm_type=None, connection_mode=None, client_id=None, tokenuser=None):
-    """Stub: return grouped ITSM fields (connection/medulla/schedule)."""
-    logger.debug(
-        "admin.get_itsmsync_all_fields stub called for itsm_type=%s connection_mode=%s",
-        itsm_type,
-        connection_mode,
-    )
-    return {
-        "connection": [],
-        "medulla": [],
-        "schedule": [],
-    }
-
-
-def get_itsmsync_types(active_only=False, tokenuser=None):
-    """Stub: return available ITSM types."""
-    logger.debug("admin.get_itsmsync_types stub called")
-    return {}
-
-
-def get_itsmsync_modes(itsm_type=None, tokenuser=None):
-    """Stub: return connection modes for a given ITSM type."""
-    logger.debug("admin.get_itsmsync_modes stub called for itsm_type=%s", itsm_type)
-    return {}

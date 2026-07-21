@@ -56,11 +56,6 @@ $sidemenu->addSideMenuItem(new SideMenuItem($userLabel,     "admin", "admin", "e
 //$sidemenu->addSideMenuItem(new SideMenuItem(_T("Configuration", "admin"), "admin", "admin", "configList"));
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Authentication Configuration", "admin"), "admin", "admin", "authConfig"));
 
-// --------------------- ITSM Synchronisation ----------------
-//$sidemenu->addSideMenuItem(new SideMenuItemNoAclCheck(_T("ITSM Synchronisation", "admin"), "admin", "admin", "itsmsync"));
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("ITSM Synchronisation", "admin"), "admin", "admin", "itsmsync"));
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Global Inventory Rules", "admin"), "admin", "admin", "inventoryEntityRules"));
-
 // --------------------- ACL Management ----------------
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("ACL Management", "admin"), "admin", "admin", "aclFeatures"));
 

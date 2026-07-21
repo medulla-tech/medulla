@@ -56,7 +56,7 @@ class AdminDatabase(DatabaseHelper):
             bool: True if activation is successful, False otherwise.
         """
         if self.is_activated:
-            return True
+            return None
 
         self.config = config
 
@@ -86,40 +86,25 @@ class AdminDatabase(DatabaseHelper):
 
         # Lists to exclude or include specific tables for mapping
         exclude_table = []
-        include_table = ['providers', 'magic_link', 'medulla_update_availability', 'acl_categories', 'acl_profiles', 'acl_profile_features', 'admin_inventory_entity_rules']
-        mapped_tables = []
+        include_table = ['providers', 'magic_link', 'medulla_update_availability', 'acl_categories', 'acl_profiles', 'acl_profile_features']
 
         # Dynamically add attributes to the object for each mapped class
         for table_name, mapped_class in Base.classes.items():
             if table_name in exclude_table:
                 continue
             if table_name.startswith("saas_"):
-                logger.info(f"Mapping table by automap: {table_name.capitalize()}")
+                logger.debug(f"Mapping table by automap: {table_name.capitalize()}")
                 # Set the mapped class as an attribute of this instance
                 setattr(self, table_name.capitalize(), mapped_class)
-                mapped_tables.append(table_name)
             if table_name.endswith("_conf"):
-                logger.info(f"Mapping config table by automap: {table_name.capitalize()}")
+                logger.debug(f"Mapping config table by automap: {table_name.capitalize()}")
                 setattr(self, table_name.capitalize(), mapped_class)
-                mapped_tables.append(table_name)
             if table_name.endswith("_conf_version"):
-                logger.info(f"Mapping config version table by automap: {table_name.capitalize()}")
+                logger.debug(f"Mapping config version table by automap: {table_name.capitalize()}")
                 setattr(self, table_name.capitalize(), mapped_class)
-                mapped_tables.append(table_name)
             if table_name in include_table:
-                logger.info(f"Mapping table by automap by list include: {table_name.capitalize()}")
+                logger.debug(f"Mapping table by automap by list include: {table_name.capitalize()}")
                 setattr(self, table_name.capitalize(), mapped_class)
-                mapped_tables.append(table_name)
-
-        if mapped_tables:
-            unique_mapped = sorted(set(mapped_tables))
-            logger.info(
-                "Admin automap complete: %d table(s) mapped (%s)",
-                len(unique_mapped),
-                ", ".join(unique_mapped),
-            )
-        else:
-            logger.warning("Admin automap complete: no table matched mapping rules")
 
         if not self.initMappersCatchException():
             self.session = None
@@ -201,303 +186,6 @@ class AdminDatabase(DatabaseHelper):
             logger.error(f"An error occurred: {str(e)}")
             logger.error("\n%s", traceback.format_exc())
             return config_api
-
-    @DatabaseHelper._sessionm
-    def get_itsmsync_client_name_map(self, session):
-        """Return ITSM client display names from saas_application."""
-        try:
-            rows = (
-                session.query(self.Saas_application.setting_name, self.Saas_application.setting_value)
-                .filter(self.Saas_application.setting_name.like('itsm.%.name'))
-                .all()
-            )
-            out = {}
-            for setting_name, setting_value in rows:
-                parts = (setting_name or '').split('.')
-                if len(parts) >= 3 and parts[0] == 'itsm':
-                    out[str(parts[1])] = (setting_value or '').strip() or str(parts[1])
-            return out
-        except Exception as e:
-            logger.error("get_itsmsync_client_name_map failed: %s", e)
-            logger.error("\n%s", traceback.format_exc())
-            return {}
-
-    @DatabaseHelper._sessionm
-    def get_itsmsync_client_config(self, session, client_id):
-        """Return ITSM configuration for a specific client id."""
-        try:
-            cid = str(client_id or '').strip()
-            if not cid:
-                return {}
-
-            rows = (
-                session.query(self.Saas_application.setting_name, self.Saas_application.setting_value)
-                .filter(self.Saas_application.setting_name.like(f'itsm.{cid}.%'))
-                .all()
-            )
-
-            config = {"client_id": cid}
-            prefix = f"itsm.{cid}."
-            for setting_name, setting_value in rows:
-                if not setting_name or not setting_name.startswith(prefix):
-                    continue
-                key = setting_name[len(prefix):]
-                config[key] = setting_value
-
-            return config
-        except Exception as e:
-            logger.error("get_itsmsync_client_config failed: %s", e)
-            logger.error("\n%s", traceback.format_exc())
-            return {}
-
-    @DatabaseHelper._sessionm
-    def get_inventory_entity_rules(self, session, start=0, end=-1, filter_text=""):
-        """Return global inventory rules with optional filter and pagination."""
-        try:
-            start = max(0, int(start or 0))
-            end = int(end or -1)
-            if end == 0:
-                end = -1
-
-            filter_value = str(filter_text or "").strip()
-            where_sql = ""
-            params = {}
-            if filter_value:
-                where_sql = """
-                    WHERE (
-                        CAST(id AS CHAR) LIKE :q
-                        OR rule_name LIKE :q
-                        OR tag_name LIKE :q
-                        OR tag_value LIKE :q
-                        OR CAST(entity_id AS CHAR) LIKE :q
-                        OR CAST(priority AS CHAR) LIKE :q
-                        OR comment LIKE :q
-                    )
-                """
-                params["q"] = f"%{filter_value}%"
-
-            total_row = session.execute(
-                text(
-                    f"""
-                    SELECT COUNT(*) AS total
-                    FROM admin_inventory_entity_rules
-                    {where_sql}
-                    """
-                ),
-                params,
-            ).mappings().first()
-            total = int((total_row or {}).get("total") or 0)
-
-            limit_sql = ""
-            if end > 0:
-                limit_sql = " LIMIT :limit OFFSET :offset "
-                params["limit"] = end
-                params["offset"] = start
-
-            rows = session.execute(
-                text(
-                    f"""
-                    SELECT id, enabled, rule_name, tag_name, tag_value, entity_id,
-                           priority, stop_on_match, comment, created_by, updated_by,
-                           created_at, updated_at
-                    FROM admin_inventory_entity_rules
-                    {where_sql}
-                    ORDER BY priority ASC, id ASC
-                    {limit_sql}
-                    """
-                ),
-                params,
-            ).mappings().all()
-
-            return {
-                "total": total,
-                "datas": [dict(row) for row in rows],
-            }
-        except Exception as e:
-            logger.error("get_inventory_entity_rules failed: %s", e)
-            logger.error("\n%s", traceback.format_exc())
-            return {"total": 0, "datas": []}
-
-    @DatabaseHelper._sessionm
-    def resolve_inventory_entity_rule(self, session, tag_name, tag_value):
-        """Resolve one active rule for a given tag key/value."""
-        try:
-            row = session.execute(
-                text(
-                    """
-                    SELECT id, entity_id, rule_name, priority
-                    FROM admin_inventory_entity_rules
-                    WHERE enabled = 1
-                      AND tag_name = :tag_name
-                      AND tag_value = :tag_value
-                    ORDER BY priority ASC, id ASC
-                    LIMIT 1
-                    """
-                ),
-                {
-                    "tag_name": str(tag_name or "TAG"),
-                    "tag_value": str(tag_value or ""),
-                },
-            ).mappings().first()
-            return dict(row) if row else None
-        except Exception as e:
-            logger.error("resolve_inventory_entity_rule failed: %s", e)
-            logger.error("\n%s", traceback.format_exc())
-            return None
-
-    @DatabaseHelper._sessionm
-    def upsert_inventory_entity_rule(self, session, rule):
-        """Create or update one global inventory rule in admin schema."""
-        try:
-            data = dict(rule or {})
-            rule_id = int(data.get("id") or 0)
-            payload = {
-                "enabled": int(data.get("enabled", 1)),
-                "rule_name": str(data.get("rule_name") or ""),
-                "tag_name": str(data.get("tag_name") or "TAG"),
-                "tag_value": str(data.get("tag_value") or "").strip(),
-                "entity_id": int(data.get("entity_id") or 0),
-                "priority": int(data.get("priority") or 100),
-                "stop_on_match": int(data.get("stop_on_match", 1)),
-                "comment": str(data.get("comment") or ""),
-                "updated_by": str(data.get("updated_by") or "root"),
-                "created_by": str(data.get("created_by") or data.get("updated_by") or "root"),
-            }
-
-            if not payload["tag_value"]:
-                return {"ok": False, "error": "tag_value is required"}
-
-            if rule_id > 0:
-                session.execute(
-                    text(
-                        """
-                        UPDATE admin_inventory_entity_rules
-                        SET enabled = :enabled,
-                            rule_name = :rule_name,
-                            tag_name = :tag_name,
-                            tag_value = :tag_value,
-                            entity_id = :entity_id,
-                            priority = :priority,
-                            stop_on_match = :stop_on_match,
-                            comment = :comment,
-                            updated_by = :updated_by,
-                            updated_at = NOW()
-                        WHERE id = :id
-                        """
-                    ),
-                    {**payload, "id": rule_id},
-                )
-            else:
-                session.execute(
-                    text(
-                        """
-                        INSERT INTO admin_inventory_entity_rules
-                          (enabled, rule_name, tag_name, tag_value, entity_id, priority,
-                           stop_on_match, comment, created_by, updated_by, created_at, updated_at)
-                        VALUES
-                          (:enabled, :rule_name, :tag_name, :tag_value, :entity_id, :priority,
-                           :stop_on_match, :comment, :created_by, :updated_by, NOW(), NOW())
-                        ON DUPLICATE KEY UPDATE
-                          enabled = VALUES(enabled),
-                          rule_name = VALUES(rule_name),
-                          entity_id = VALUES(entity_id),
-                          stop_on_match = VALUES(stop_on_match),
-                          comment = VALUES(comment),
-                          updated_by = VALUES(updated_by),
-                          updated_at = NOW()
-                        """
-                    ),
-                    payload,
-                )
-
-            session.commit()
-            return {"ok": True}
-        except Exception as e:
-            session.rollback()
-            logger.error("upsert_inventory_entity_rule failed: %s", e)
-            logger.error("\n%s", traceback.format_exc())
-            return {"ok": False, "error": str(e)}
-
-    @DatabaseHelper._sessionm
-    def set_inventory_entity_rule_enabled(self, session, rule_id, enabled, updated_by="root"):
-        """Enable or disable one global inventory entity rule."""
-        try:
-            session.execute(
-                text(
-                    """
-                    UPDATE admin_inventory_entity_rules
-                    SET enabled = :enabled,
-                        updated_by = :updated_by,
-                        updated_at = NOW()
-                    WHERE id = :id
-                    """
-                ),
-                {
-                    "id": int(rule_id),
-                    "enabled": int(enabled),
-                    "updated_by": str(updated_by or "root"),
-                },
-            )
-            session.commit()
-            return {"ok": True}
-        except Exception as e:
-            session.rollback()
-            logger.error("set_inventory_entity_rule_enabled failed: %s", e)
-            logger.error("\n%s", traceback.format_exc())
-            return {"ok": False, "error": str(e)}
-
-    @DatabaseHelper._sessionm
-    def delete_inventory_entity_rule(self, session, rule_id):
-        """Delete one global inventory entity rule by id."""
-        try:
-            session.execute(
-                text("DELETE FROM admin_inventory_entity_rules WHERE id = :id"),
-                {"id": int(rule_id)},
-            )
-            session.commit()
-            return {"ok": True}
-        except Exception as e:
-            session.rollback()
-            logger.error("delete_inventory_entity_rule failed: %s", e)
-            logger.error("\n%s", traceback.format_exc())
-            return {"ok": False, "error": str(e)}
-
-    @DatabaseHelper._sessionm
-    def save_itsmsync_client_config(self, session, client_id, config):
-        """Upsert ITSM configuration for a specific client id."""
-        try:
-            cid = str(client_id or '').strip()
-            if not cid or not isinstance(config, dict):
-                return {"success": False, "error": "Invalid parameters"}
-
-            for field_name, field_value in config.items():
-                key = str(field_name or '').strip()
-                if not key:
-                    continue
-
-                setting_name = f"itsm.{cid}.{key}"
-                row = (
-                    session.query(self.Saas_application)
-                    .filter(self.Saas_application.setting_name == setting_name)
-                    .first()
-                )
-
-                if row is None:
-                    row = self.Saas_application(
-                        setting_name=setting_name,
-                        setting_value='' if field_value is None else str(field_value),
-                    )
-                    session.add(row)
-                else:
-                    row.setting_value = '' if field_value is None else str(field_value)
-
-            session.flush()
-            session.commit()
-            return {"success": True}
-        except Exception as e:
-            logger.error("save_itsmsync_client_config failed: %s", e)
-            logger.error("\n%s", traceback.format_exc())
-            return {"success": False, "error": str(e)}
 
     @DatabaseHelper._sessionm
     def create_entity_under_custom_parent(self, session, entity_id, name, tag_value, stripe_tag=None):
