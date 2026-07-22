@@ -21,34 +21,6 @@ USE `xmppmaster`;
 ALTER TABLE `xmppmaster`.`deploy`
     CHANGE COLUMN `result` `result` MEDIUMTEXT NULL DEFAULT NULL;
 
--- =====================================================================
--- 2. Correctif : propagation de entityid dans pending_events
--- =====================================================================
--- Contexte du bug :
---   La table `pending_events` a ete creee en schema-094 via `LIKE up_white_list`,
---   a une epoque ou `up_white_list` n'avait pas encore la colonne `entityid`.
---   Schema-095 a ajoute `entityid NOT NULL` a `up_white_list` mais pas a
---   `pending_events`. Resultat :
---     1. Le trigger `up_gray_list_AFTER_INSERT` inserait dans `pending_events`
---        sans `entityid`.
---     2. La procedure `up_event_move_to_white_list` inserait dans `up_white_list`
---        sans `entityid` -> INSERT IGNORE echouait silencieusement (NOT NULL).
---     3. Les packages restaient bloques dans `pending_events` et ne passaient
---        jamais en liste blanche via ce chemin.
---
---   Le second chemin (trigger `up_auto_approve_rules_AFTER_UPDATE` ->
---   `move_update_to_white_list(entityid)`) fonctionnait correctement, ce qui
---   donnait l'impression que le mecanisme global marchait.
---
--- Corrections :
---   1. ALTER TABLE `pending_events` : ajout de la colonne `entityid` et de
---      l'index unique `(updateid, entityid)`.
---   2. Trigger `up_gray_list_AFTER_INSERT` : passage de `NEW.entityid` dans
---      l'INSERT vers `pending_events`.
---   3. Procedure `up_event_move_to_white_list` : lecture de `entityid` depuis
---      le curseur, propagation a `up_white_list`, et filtrage par `entityid`
---      dans les DELETE de `up_gray_list` et `pending_events`.
-
 -- 2a. Ajout de entityid dans pending_events
 ALTER TABLE `xmppmaster`.`pending_events`
     ADD COLUMN IF NOT EXISTS `entityid` INT(11) NOT NULL AFTER `updateid`;
