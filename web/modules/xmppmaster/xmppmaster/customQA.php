@@ -36,6 +36,10 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
 
     $ajax = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxFiltercustom"));
     $p = new PageGenerator(sprintf (_T("Quick action list for user %s", 'xmppmaster'),$_SESSION['login']));
+    // La page appartient au sous-module "xmppmaster" (décrit "Audit"), mais elle est
+    // rattachée au menu Ordinateurs : on aligne l'entête de la sidebar en conséquence.
+    $sidemenu->setTitle(_("Computers"));
+    $sidemenu->setIcon('modules/base/graph/navbar/computer');
     $p->setSideMenu($sidemenu);
     $p->display();
 

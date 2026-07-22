@@ -66,12 +66,7 @@ $lab = "END_SUCCESS";
              }
              echo '<td width="16%">
                  <input type="checkbox" '.$optChecked.'
-                     onclick="if(jQuery(this).is(\':checked\')){
-                                 jQuery(this).closest(\'td\').next().find(\'select\').prop(\'disabled\',false);
-                             }
-                             else{
-                                 jQuery(this).closest(\'td\').next().find(\'select\').prop(\'disabled\',true);
-			     }" />'._T("Delete package","pkgs").'
+                     onclick="jQuery(this).closest(\'td\').next().find(\'select\').val(jQuery(this).is(\':checked\') ? \'True\' : \'False\');" />'._T("Delete package","pkgs").'
              </td>';
 
             if(isset($clear) && $clear == "True")
@@ -106,12 +101,7 @@ $lab = "END_SUCCESS";
 
              echo '<td width="16%">
                  <input type="checkbox" '.$optChecked.'
-                     onclick="if(jQuery(this).is(\':checked\')){
-                                 jQuery(this).closest(\'td\').next().find(\'select\').prop(\'disabled\',false);
-                             }
-                             else{
-                                 jQuery(this).closest(\'td\').next().find(\'select\').prop(\'disabled\',true);
-                             }" />'._T("Inventory","pkgs").'
+                     onclick="var s=jQuery(this).closest(\'td\').next().find(\'select\'); if(jQuery(this).is(\':checked\')){ if(s.val()==\'False\') s.val(\'noforced\'); } else { s.val(\'False\'); }" />'._T("Inventory","pkgs").'
              </td>';
 
             if(!isset($inventory)){ $inventory = "False"; }

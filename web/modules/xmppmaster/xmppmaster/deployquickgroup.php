@@ -76,9 +76,6 @@ $nbr_absent = $count - $nbr_presense;
             <div class="action-item" id="shutdown0" title="<?php echo _T("Shutdown all online machines", "xmppmaster"); ?>">
                 <img src="img/actions/power.svg" alt="Shutdown">
                 <span id="shutdown"><?php echo _T("Shutdown", "xmppmaster"); ?></span>
-                <label class="action-option" onclick="event.stopPropagation();">
-                    <input type="checkbox" id="checkboxshutdown"> <?php echo _T("options", "xmppmaster"); ?>
-                </label>
             </div>
             <div class="action-item" id="reboot0" title="<?php echo _T("Reboot all online machines", "xmppmaster"); ?>">
                 <img src="img/actions/restart.svg" alt="Reboot">
@@ -102,18 +99,6 @@ $nbr_absent = $count - $nbr_presense;
         </div>
     </div>
     <?php endif; ?>
-
-    <!-- Shutdown options (hidden by default) -->
-    <div id="shutdowninfo" class="shutdown-options" style="display: none;">
-        <div class="option-row">
-            <label><?php echo _T("Time before shutdown", "xmppmaster"); ?></label>
-            <input type="number" id="mytimeshutdown" value="60" min="0" max="120">
-        </div>
-        <div class="option-row">
-            <label><?php echo _T("Message", "xmppmaster"); ?></label>
-            <input type="text" id="msgshutdown" value="Shutdown from admin">
-        </div>
-    </div>
 
     <!-- WOL for offline machines -->
     <?php if ($nbr_absent > 0): ?>

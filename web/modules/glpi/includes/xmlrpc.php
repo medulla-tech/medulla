@@ -1,4 +1,10 @@
 <?php
+if (!defined('MMC_GLPI_AUTO_TRACE_DONE')) {
+    define('MMC_GLPI_AUTO_TRACE_DONE', true);
+    if (function_exists('mmc_trace_module_auto_from_include')) {
+        mmc_trace_module_auto_from_include('glpi', 'mmc_dev_trace', 'INFO', 'GLPI');
+    }
+}
 /*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007 Mandriva, http://www.mandriva.com
@@ -259,5 +265,9 @@ function xmlrpc_get_antiviruses_for_dashboard(){
  */
 function xmlrpc_get_inventories_for_dashboard(){
     return XmlCall("glpi.get_inventories_for_dashboard");
+}
+
+function xmlrpc_get_phone_inventories_for_dashboard(){
+    return XmlCall("glpi.get_phone_inventories_for_dashboard");
 }
 ?>

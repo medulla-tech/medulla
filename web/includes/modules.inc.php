@@ -121,6 +121,13 @@ function fetchIniFile() {
     if (!isset($conf["global"]["community"])) {
         $conf["global"]["community"] = True;
     }
+    // install_type drives ACL filtering. Default to 'onpremise' so an
+    // upgraded mmc.ini without the new line keeps working, and XMLRPC/CLI
+    // consumers of this bootstrap don't get killed by a bad config value.
+    if (!isset($conf["global"]["install_type"])
+        || !in_array($conf["global"]["install_type"], array("onpremise", "saas"), true)) {
+        $conf["global"]["install_type"] = "onpremise";
+    }
     if (!isset($conf["global"]["demo"])) {
         $conf["global"]["demo"] = False;
     }

@@ -1,0 +1,70 @@
+{
+    "info": {
+        "Dependency": [],
+        "editor": "root",
+        "edition_date": "2026-06-08 09:23:40",
+        "creator": "root",
+        "creation_date": "2026-06-08 09:16:14",
+        "previous_localisation_server": "global",
+        "localisation_server": "global",
+        "name": "linux_updates_kernel",
+        "version": "1.0.1",
+        "description": "update kernel package",
+        "metagenerator": "expert",
+        "transferfile": true,
+        "methodetransfert": "pushrsync",
+        "limit_rate_ko": "",
+        "spooling": "ordinary",
+        "launcher": "",
+        "licenses": "1.0",
+        "packageUuid": "34181a66-updateslinuxkernel_i8ppnmrs",
+        "gotoreturncode": "!=0",
+        "gotolabel": "END_ERROR",
+        "typescript": "Batch",
+        "targetrestart": "MA",
+        "url": "",
+        "gotono": "",
+        "inventory": "noforced",
+        "auth_token": "02c4192dac614c2558fe74ddb3088187",
+        "software": "linux_updates_kernel"
+    },
+    "linux": {
+        "sequence": [
+            {
+                "action": "actionprocessscript",
+                "step": 0,
+                "codereturn": "",
+                "actionlabel": "script_3d9274d4",
+                "command": "QEBAVVBEQVRFX0xJTlVYQEBAIHsic2VjdGlvbiI6InVwZGF0ZSIsImxpbnV4X2FjdGlvbnMiOlsia2VybmVsIl19",
+                "timeout": "800",
+                "10@lastlines": "10@lastlines",
+                "gotoreturncode@!=0": "END_ERROR"
+            },
+            {
+                "step": 1,
+                "action": "actionsuccescompletedend",
+                "actionlabel": "END_SUCCESS",
+                "clear": "True",
+                "inventory": "noforced"
+            },
+            {
+                "action": "actionerrorcompletedend",
+                "step": 2,
+                "actionlabel": "END_ERROR"
+            }
+        ]
+    },
+    "metaparameter": {
+        "linux": {
+            "label": {
+                "script_3d9274d4": 0,
+                "END_SUCCESS": 1,
+                "END_ERROR": 2
+            }
+        },
+        "os": [
+            "linux"
+        ],
+        "uuid": "34181a66-updateslinuxkernel_i8ppnmrs"
+    }
+}

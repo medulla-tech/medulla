@@ -25,14 +25,6 @@ $submod->addPage($page);
 
 
 ################################
-# add device page
-################################
-
-$pageAddDevice = new Page("addDevice", _T('Add a device', 'mobile'));
-$pageAddDevice->setFile("modules/mobile/mobile/addDevice.php");
-$submod->addPage($pageAddDevice);
-
-################################
 # manage applications page
 ################################
 
@@ -69,7 +61,7 @@ $submod->addPage($pageEditDevice);
 ################################
 $pageDeleteDevice = new Page("deleteDevice", _T('Delete Device', 'mobile'));
 $pageDeleteDevice->setFile("modules/mobile/mobile/deleteDevice.php");
-$pageDeleteDevice->setOptions(array("visible" => false));
+$pageDeleteDevice->setOptions(array("visible" => false, "noHeader" => true));
 $submod->addPage($pageDeleteDevice);
 
 ################################
@@ -99,10 +91,6 @@ $submod->addPage($pageApplicationConfiguration);
 ################################
 # add application page
 ################################
-
-$pageAddApplication = new Page("addApplication", _T('Add an application', 'mobile'));
-$pageAddApplication->setFile("modules/mobile/mobile/addApplication.php");
-$submod->addPage($pageAddApplication);
 
 ###############################
 # edit application page
@@ -159,15 +147,36 @@ $submod->addPage($pageAjaxUploadApk);
 // $submod->addPage($pageGlpiDevices);
 
 ################################
+# GLPI Phones page
+################################
+$pageGlpiPhones = new Page("glpiPhonesList", _T('Phones (GLPI inventory)', 'mobile'));
+$pageGlpiPhones->setFile("modules/mobile/mobile/glpiPhonesList.php");
+$submod->addPage($pageGlpiPhones);
+
+################################
+# GLPI Phone inventory tabs (keeps user in mobile module)
+################################
+$pageGlpiPhoneTabs = new Page("glpiPhoneTabs", _T('Phone inventory (GLPI)', 'mobile'));
+$pageGlpiPhoneTabs->setFile("modules/mobile/mobile/glpiPhoneTabs.php");
+$pageGlpiPhoneTabs->setOptions(array("visible" => false));
+$tab = new Tab("tab0", _T("Summary tab (GLPI)",        'glpi')); $pageGlpiPhoneTabs->addTab($tab);
+$tab = new Tab("tab1", _T("Hardware tab (GLPI)",        'glpi')); $pageGlpiPhoneTabs->addTab($tab);
+$tab = new Tab("tab2", _T("Connections tab (GLPI)",    'glpi')); $pageGlpiPhoneTabs->addTab($tab);
+$tab = new Tab("tab3", _T("Storage tab (GLPI)",        'glpi')); $pageGlpiPhoneTabs->addTab($tab);
+$tab = new Tab("tab4", _T("Network tab (GLPI)",        'glpi')); $pageGlpiPhoneTabs->addTab($tab);
+$tab = new Tab("tab5", _T("Softwares tab (GLPI)",      'glpi')); $pageGlpiPhoneTabs->addTab($tab);
+$tab = new Tab("tab6", _T("Administrative tab (GLPI)", 'glpi')); $pageGlpiPhoneTabs->addTab($tab);
+$tab = new Tab("tab7", _T("History tab (GLPI)",        'glpi')); $pageGlpiPhoneTabs->addTab($tab);
+$tab = new Tab("tab8", _T("Antivirus tab (GLPI)",      'glpi')); $pageGlpiPhoneTabs->addTab($tab);
+$tab = new Tab("tab9", _T("Registry tab (GLPI)",       'glpi')); $pageGlpiPhoneTabs->addTab($tab);
+$submod->addPage($pageGlpiPhoneTabs);
+
+################################
 # Files page
 ################################
 $pageFiles = new Page("files", _T('Files', 'mobile'));
 $pageFiles->setFile("modules/mobile/mobile/filesList.php");
 $submod->addPage($pageFiles);
-
-$pageAddFile = new Page("addFile", _T('Add a file', 'mobile'));
-$pageAddFile->setFile("modules/mobile/mobile/addFile.php");
-$submod->addPage($pageAddFile);
 
 ################################
 # ListMobile - ajax
@@ -218,7 +227,7 @@ $submod->addPage($pageAjaxDeviceSearch);
 
 $pageDeleteApplication = new Page("deleteApplication", _T('Delete application', 'mobile'));
 $pageDeleteApplication->setFile("modules/mobile/mobile/deleteApplication.php");
-$pageDeleteApplication->setOptions(array("AJAX" => false, "visible" => false));
+$pageDeleteApplication->setOptions(array("AJAX" => false, "visible" => false, "noHeader" => true));
 
 $submod->addPage($pageDeleteApplication);
 
@@ -229,7 +238,7 @@ $submod->addPage($pageDeleteGlpiDevice);
 
 $pageDeleteFile = new Page("deleteFile", _T('Delete file', 'mobile'));
 $pageDeleteFile->setFile("modules/mobile/mobile/deleteFile.php");
-$pageDeleteFile->setOptions(array("AJAX" => false, "visible" => false));
+$pageDeleteFile->setOptions(array("AJAX" => false, "visible" => false, "noHeader" => true));
 $submod->addPage($pageDeleteFile);
 
 ################################
@@ -251,7 +260,7 @@ $submod->addPage($pageAjaxConfigurationsList);
 
 $pageDeleteConfiguration = new Page("deleteConfiguration", _T('Delete configuration', 'mobile'));
 $pageDeleteConfiguration->setFile("modules/mobile/mobile/deleteConfiguration.php");
-$pageDeleteConfiguration->setOptions(array("AJAX" => false, "visible" => false));
+$pageDeleteConfiguration->setOptions(array("AJAX" => false, "visible" => false, "noHeader" => true));
 $submod->addPage($pageDeleteConfiguration);
 
 $pageDuplicateConfiguration = new Page("duplicateConfiguration", _T('Duplicate configuration', 'mobile'));
@@ -267,10 +276,6 @@ $pageGroups = new Page("groups", _T('All groups', 'mobile'));
 $pageGroups->setFile("modules/mobile/mobile/groups.php");
 $submod->addPage($pageGroups);
 
-$pageAddGroup = new Page("addGroup", _T('Add a group', 'mobile'));
-$pageAddGroup->setFile("modules/mobile/mobile/addGroup.php");
-$submod->addPage($pageAddGroup);
-
 $pageEditGroup = new Page("editGroup", _T('Edit group', 'mobile'));
 $pageEditGroup->setFile("modules/mobile/mobile/editGroup.php");
 $pageEditGroup->setOptions(array("visible" => false));
@@ -283,7 +288,7 @@ $submod->addPage($pageAjaxGroupList);
 
 $pageDeleteGroup = new Page("deleteGroup", _T('Delete group', 'mobile'));
 $pageDeleteGroup->setFile("modules/mobile/mobile/deleteGroup.php");
-$pageDeleteGroup->setOptions(array("AJAX" => false, "visible" => false));
+$pageDeleteGroup->setOptions(array("AJAX" => false, "visible" => false, "noHeader" => true));
 $submod->addPage($pageDeleteGroup);
 
 ################################
@@ -298,6 +303,11 @@ $pageGroupQuickActionExec = new Page("groupQuickActionExec", _T('Group Quick Act
 $pageGroupQuickActionExec->setFile("modules/mobile/mobile/groupQuickActionExec.php");
 $pageGroupQuickActionExec->setOptions(array("AJAX" => false, "visible" => false));
 $submod->addPage($pageGroupQuickActionExec);
+
+$pageAddGroup = new Page("addGroup", _T('Save as Group', 'mobile'));
+$pageAddGroup->setFile("modules/mobile/mobile/addGroup.php");
+$pageAddGroup->setOptions(array("visible" => false));
+$submod->addPage($pageAddGroup);
 
 ################################
 # Configuration Quick Actions page
@@ -317,9 +327,79 @@ $pageMessaging = new Page("messaging", _T('Messages', 'mobile'));
 $pageMessaging->setFile("modules/mobile/mobile/messaging.php");
 $submod->addPage($pageMessaging);
 
+$pageAjaxMessagingList = new Page("ajaxMessagingList", _T('Messages list view', 'mobile'));
+$pageAjaxMessagingList->setFile("modules/mobile/mobile/ajaxMessagingList.php");
+$pageAjaxMessagingList->setOptions(array("AJAX" => true, "visible" => false));
+$submod->addPage($pageAjaxMessagingList);
+
 $pagePushMessages = new Page("pushMessages", _T('Push messages', 'mobile'));
 $pagePushMessages->setFile("modules/mobile/mobile/pushMessages.php");
 $submod->addPage($pagePushMessages);
+
+$pageAjaxPushMessagesList = new Page("ajaxPushMessagesList", _T('Push messages list view', 'mobile'));
+$pageAjaxPushMessagesList->setFile("modules/mobile/mobile/ajaxPushMessagesList.php");
+$pageAjaxPushMessagesList->setOptions(array("AJAX" => true, "visible" => false));
+$submod->addPage($pageAjaxPushMessagesList);
+
+################################
+# Contacts sync pages
+################################
+
+$pageContactsList = new Page("contactsList", _T('Device Contacts Sync', 'mobile'));
+$pageContactsList->setFile("modules/mobile/mobile/contactsList.php");
+$submod->addPage($pageContactsList);
+
+$pageAjaxContactsList = new Page("ajaxContactsList", _T('Contacts list view', 'mobile'));
+$pageAjaxContactsList->setFile("modules/mobile/mobile/ajaxContactsList.php");
+$pageAjaxContactsList->setOptions(array("AJAX" => true, "visible" => false));
+$submod->addPage($pageAjaxContactsList);
+
+$pageContactsConfig = new Page("contactsConfig", _T('Edit contacts sync config', 'mobile'));
+$pageContactsConfig->setFile("modules/mobile/mobile/contactsConfig.php");
+$pageContactsConfig->setOptions(array("visible" => false));
+$submod->addPage($pageContactsConfig);
+
+$pageDeviceExport = new Page("deviceExport", _T('Export Devices', 'mobile'));
+$pageDeviceExport->setFile("modules/mobile/mobile/deviceExport.php");
+$submod->addPage($pageDeviceExport);
+
+$pageDeviceImport = new Page("deviceImport", _T('Import Devices', 'mobile'));
+$pageDeviceImport->setFile("modules/mobile/mobile/deviceImport.php");
+$submod->addPage($pageDeviceImport);
+
+$pageDeviceExportAction = new Page("deviceExportAction", _T('Export devices action', 'mobile'));
+$pageDeviceExportAction->setFile("modules/mobile/mobile/deviceExportAction.php");
+$pageDeviceExportAction->setOptions(array("visible" => false, "noHeader" => true));
+$submod->addPage($pageDeviceExportAction);
+
+$pageDeviceImportAction = new Page("deviceImportAction", _T('Import devices action', 'mobile'));
+$pageDeviceImportAction->setFile("modules/mobile/mobile/deviceImportAction.php");
+$pageDeviceImportAction->setOptions(array("visible" => false, "noHeader" => true));
+$submod->addPage($pageDeviceImportAction);
+
+$pagePhotosList = new Page("photosList", _T('Device Photos', 'mobile'));
+$pagePhotosList->setFile("modules/mobile/mobile/photosList.php");
+$submod->addPage($pagePhotosList);
+
+$pagePhotosSettings = new Page("photosSettings", _T('Photos Settings', 'mobile'));
+$pagePhotosSettings->setFile("modules/mobile/mobile/photosSettings.php");
+$pagePhotosSettings->setOptions(array("visible" => false));
+$submod->addPage($pagePhotosSettings);
+
+$pageAjaxPhotosList = new Page("ajaxPhotosList", _T('Photos list AJAX', 'mobile'));
+$pageAjaxPhotosList->setFile("modules/mobile/mobile/ajaxPhotosList.php");
+$pageAjaxPhotosList->setOptions(array("AJAX" => true, "visible" => false));
+$submod->addPage($pageAjaxPhotosList);
+
+$pageDeletePhoto = new Page("deletePhoto", _T('Delete photo', 'mobile'));
+$pageDeletePhoto->setFile("modules/mobile/mobile/deletePhoto.php");
+$pageDeletePhoto->setOptions(array("AJAX" => false, "visible" => false, "noHeader" => true));
+$submod->addPage($pageDeletePhoto);
+
+$pagePhotoFile = new Page("photoFile", _T('Photo file', 'mobile'));
+$pagePhotoFile->setFile("modules/mobile/mobile/photoFile.php");
+$pagePhotoFile->setOptions(array("visible" => false, "noHeader" => true));
+$submod->addPage($pagePhotoFile);
 
 # send message forms (hidden pages)
 $pageNewMessage = new Page("newMessage", _T('Send new message', 'mobile'));
@@ -364,6 +444,137 @@ $pageDeviceQuickActionExec = new Page("deviceQuickActionExec", _T('Device Quick 
 $pageDeviceQuickActionExec->setFile("modules/mobile/mobile/deviceQuickActionExec.php");
 $pageDeviceQuickActionExec->setOptions(array("AJAX" => false, "visible" => false));
 $submod->addPage($pageDeviceQuickActionExec);
+
+################################
+# Remote Control page
+################################
+$pageRemoteControlAction = new Page("remoteControlAction", _T('Remote Control', 'mobile'));
+$pageRemoteControlAction->setFile("modules/mobile/mobile/remoteControlAction.php");
+$pageRemoteControlAction->setOptions(array("visible" => false, "noHeader" => true));
+$submod->addPage($pageRemoteControlAction);
+
+$pageRemoteControlStop = new Page("remoteControlStop", _T('Remote Control Stop', 'mobile'));
+$pageRemoteControlStop->setFile("modules/mobile/mobile/remoteControlStop.php");
+$pageRemoteControlStop->setOptions(array("visible" => false, "noHeader" => true, "AJAX" => true));
+$submod->addPage($pageRemoteControlStop);
+
+
+################################
+# Network Traffic Filtering
+################################
+
+$pageNetfilterSettings = new Page("netfilterSettings", _T('Network Filtering', 'mobile'));
+$pageNetfilterSettings->setFile("modules/mobile/mobile/netfilterSettings.php");
+$submod->addPage($pageNetfilterSettings);
+
+################################
+# MDM User Access Management
+################################
+
+$pageMobileUsers = new Page("mobileUsers", _T('MDM User Access', 'mobile'));
+$pageMobileUsers->setFile("modules/mobile/mobile/mobileUsers.php");
+$submod->addPage($pageMobileUsers);
+
+$pageConfigureMdmUserAjax = new Page("configureMdmUserAjax", _T('Configure MDM User', 'mobile'));
+$pageConfigureMdmUserAjax->setFile("modules/mobile/mobile/configureMdmUserAjax.php");
+$pageConfigureMdmUserAjax->setOptions(array("AJAX" => true, "visible" => false));
+$submod->addPage($pageConfigureMdmUserAjax);
+
+################################
+# MDM Roles Management
+################################
+
+$pageMobileRoles = new Page("mobileRoles", _T('MDM Roles', 'mobile'));
+$pageMobileRoles->setFile("modules/mobile/mobile/mobileRoles.php");
+$submod->addPage($pageMobileRoles);
+
+$pageConfigureMdmRoleAjax = new Page("configureMdmRoleAjax", _T('Configure MDM Role', 'mobile'));
+$pageConfigureMdmRoleAjax->setFile("modules/mobile/mobile/configureMdmRoleAjax.php");
+$pageConfigureMdmRoleAjax->setOptions(array("AJAX" => true, "visible" => false));
+$submod->addPage($pageConfigureMdmRoleAjax);
+
+$pageSendEnrollmentEmailAjax = new Page("sendEnrollmentEmailAjax", _T('Send Enrollment Email', 'mobile'));
+$pageSendEnrollmentEmailAjax->setFile("modules/mobile/mobile/sendEnrollmentEmailAjax.php");
+$pageSendEnrollmentEmailAjax->setOptions(array("AJAX" => true, "visible" => false));
+$submod->addPage($pageSendEnrollmentEmailAjax);
+
+$pageDeviceEnrollEmail = new Page("deviceEnrollEmail", _T('Send Enrollment Email (per device)', 'mobile'));
+$pageDeviceEnrollEmail->setFile("modules/mobile/mobile/deviceEnrollEmail.php");
+$pageDeviceEnrollEmail->setOptions(array("AJAX" => true, "visible" => false));
+$submod->addPage($pageDeviceEnrollEmail);
+
+$pageAjaxUnenrolledEmailList = new Page("ajaxUnenrolledEmailList", _T('Unenrolled devices with email', 'mobile'));
+$pageAjaxUnenrolledEmailList->setFile("modules/mobile/mobile/ajaxUnenrolledEmailList.php");
+$pageAjaxUnenrolledEmailList->setOptions(array("AJAX" => true, "visible" => false));
+$submod->addPage($pageAjaxUnenrolledEmailList);
+
+$pageNetfilterRules = new Page("netfilterRules", _T('Filter Rules', 'mobile'));
+$pageNetfilterRules->setFile("modules/mobile/mobile/netfilterRules.php");
+$pageNetfilterRules->setOptions(array("visible" => false));
+$submod->addPage($pageNetfilterRules);
+
+$pageAddNetfilterRule = new Page("addNetfilterRule", _T('Add Filter Rule', 'mobile'));
+$pageAddNetfilterRule->setFile("modules/mobile/mobile/addNetfilterRule.php");
+$pageAddNetfilterRule->setOptions(array("visible" => false));
+$submod->addPage($pageAddNetfilterRule);
+
+$pageNetfilterRuleAction = new Page("netfilterRuleAction", _T('Filter Rule Action', 'mobile'));
+$pageNetfilterRuleAction->setFile("modules/mobile/mobile/netfilterRuleAction.php");
+$pageNetfilterRuleAction->setOptions(array("visible" => false, "noHeader" => true));
+$submod->addPage($pageNetfilterRuleAction);
+
+$pageDeleteNetfilterRule = new Page("deleteNetfilterRule", _T('Delete Filter Rule', 'mobile'));
+$pageDeleteNetfilterRule->setFile("modules/mobile/mobile/deleteNetfilterRule.php");
+$pageDeleteNetfilterRule->setOptions(array("visible" => false, "noHeader" => true));
+$submod->addPage($pageDeleteNetfilterRule);
+
+$pageAjaxNetfilterRules = new Page("ajaxNetfilterRules", _T('Ajax Filter Rules', 'mobile'));
+$pageAjaxNetfilterRules->setFile("modules/mobile/mobile/ajaxNetfilterRules.php");
+$pageAjaxNetfilterRules->setOptions(array("AJAX" => true, "visible" => false));
+$submod->addPage($pageAjaxNetfilterRules);
+
+################################
+# Network Filter Profiles
+################################
+
+$pageNetfilterProfiles = new Page("netfilterProfiles", _T('Filter Profiles', 'mobile'));
+$pageNetfilterProfiles->setFile("modules/mobile/mobile/netfilterProfiles.php");
+$submod->addPage($pageNetfilterProfiles);
+
+$pageAjaxNetfilterProfileList = new Page("ajaxNetfilterProfileList", _T('Ajax Filter Profile List', 'mobile'));
+$pageAjaxNetfilterProfileList->setFile("modules/mobile/mobile/ajaxNetfilterProfileList.php");
+$pageAjaxNetfilterProfileList->setOptions(array("AJAX" => true, "visible" => false));
+$submod->addPage($pageAjaxNetfilterProfileList);
+
+$pageNetfilterProfileEdit = new Page("netfilterProfileEdit", _T('Edit Filter Profile', 'mobile'));
+$pageNetfilterProfileEdit->setFile("modules/mobile/mobile/netfilterProfileEdit.php");
+$pageNetfilterProfileEdit->setOptions(array("visible" => false));
+$submod->addPage($pageNetfilterProfileEdit);
+
+$pageDeleteNetfilterProfile = new Page("deleteNetfilterProfile", _T('Delete Filter Profile', 'mobile'));
+$pageDeleteNetfilterProfile->setFile("modules/mobile/mobile/deleteNetfilterProfile.php");
+$pageDeleteNetfilterProfile->setOptions(array("visible" => false, "noHeader" => true));
+$submod->addPage($pageDeleteNetfilterProfile);
+
+$pageNetfilterProfileToggle = new Page("netfilterProfileToggle", _T('Toggle Filter Profile', 'mobile'));
+$pageNetfilterProfileToggle->setFile("modules/mobile/mobile/netfilterProfileToggle.php");
+$pageNetfilterProfileToggle->setOptions(array("visible" => false, "noHeader" => true));
+$submod->addPage($pageNetfilterProfileToggle);
+
+$pageNetfilterProfileRules = new Page("netfilterProfileRules", _T('Profile Rules', 'mobile'));
+$pageNetfilterProfileRules->setFile("modules/mobile/mobile/netfilterProfileRules.php");
+$pageNetfilterProfileRules->setOptions(array("visible" => false));
+$submod->addPage($pageNetfilterProfileRules);
+
+$pageAddNetfilterProfileRule = new Page("addNetfilterProfileRule", _T('Add Profile Rule', 'mobile'));
+$pageAddNetfilterProfileRule->setFile("modules/mobile/mobile/addNetfilterProfileRule.php");
+$pageAddNetfilterProfileRule->setOptions(array("visible" => false));
+$submod->addPage($pageAddNetfilterProfileRule);
+
+$pageDeleteNetfilterProfileRule = new Page("deleteNetfilterProfileRule", _T('Delete Profile Rule', 'mobile'));
+$pageDeleteNetfilterProfileRule->setFile("modules/mobile/mobile/deleteNetfilterProfileRule.php");
+$pageDeleteNetfilterProfileRule->setOptions(array("visible" => false, "noHeader" => true));
+$submod->addPage($pageDeleteNetfilterProfileRule);
 
 ################################
 # End

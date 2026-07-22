@@ -257,11 +257,6 @@ foreach ($arraydeploy['tabdeploy']['group_uuid'] as $index => $groupid) {
     if (!empty($machineDetails)) {
         foreach ($machineDetails as $details) {
             $state = $details['state'] ?? 'Unknown';
-            if ($state === "DEPLOYMENT DIFFERED" || strpos($state, "DEPLOYMENT START") !== false) {
-                if ((strtotime($arraydeploy['tabdeploy']['endcmd'][$index]) - time()) < 0) {
-                    echo "Error for host {$details['host']}: DEPLOY ERROR TIMEOUT\n";
-                }
-            }
             if (strpos($state, "ABORT") !== false) {
                 $aborted++;
             } elseif (strpos($state, "SUCCESS") !== false) {

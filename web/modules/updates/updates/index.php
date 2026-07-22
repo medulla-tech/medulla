@@ -28,7 +28,7 @@
 
 <?php
 global $conf;
-//Entities Compliance
+// OS Upgrades compliance entry page
 require("localSidebar.php");
 require("graph/navbar.inc.php");
 require_once("modules/xmppmaster/includes/html.inc.php");
@@ -39,7 +39,7 @@ if (!$hasData) {
     ContractRequiredBox::show();
     return;
 }*/
-$p = new PageGenerator(_T("Entity Compliance", "updates"));
+$p = new PageGenerator(_T("OS Upgrades - Compliance Status", "updates"));
 $p->setSideMenu($sidemenu);
 $p->display();
 

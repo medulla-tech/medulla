@@ -1,4 +1,7 @@
 <?php
+if (!function_exists('_T')) {
+    function _T($str, $domain = '') { return $str; }
+}
 // Ensure session and core XML-RPC helpers are loaded (same pattern as other ajax endpoints)
 // Resolve web root reliably and include required helpers in correct order
 $WEBROOT = realpath(__DIR__ . '/../../../');

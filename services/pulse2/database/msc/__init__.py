@@ -11,6 +11,7 @@ Provides access to MSC database
 # standard modules
 import time
 import re
+import json
 import traceback
 # SqlAlchemy
 from sqlalchemy import (
@@ -3818,7 +3819,8 @@ class MscDatabase(DatabaseHelper):
                             deploy_package_msc="",
                             userconnect="root",
                             usercreator="root",
-                            list_file="fileslistpackage"):
+                            list_file="fileslistpackage",
+                            upgrade_parameters=None):
         try:
             if isinstance(uuid_inventorymachine, int):
                 uuid_inventorymachine = str(uuid_inventorymachine)
@@ -3844,14 +3846,48 @@ class MscDatabase(DatabaseHelper):
             if start_date == end_date:
                 end_date = start_date + timedelta(hours=1)
 
-            section = '"section":"update"'
+            # Le champ msc.commands.parameters doit contenir un JSON complet.
+            # Respecte la section transmise en upgrade_parameters (important pour upgrade majeur: section=upgrade)
+            section_payload = {"section": "update"}  # défaut classique
+
+            # Vérifie si upgrade_parameters contient déjà une clé section
+            # (cas upgrade majeur depuis PHP: section=upgrade transmise)
+            if isinstance(upgrade_parameters, str) and upgrade_parameters.strip() != "":
+                try:
+                    parsed_test = json.loads(upgrade_parameters)
+                    if isinstance(parsed_test, dict) and "section" in parsed_test:
+                        # Utilise la section de upgrade_parameters (ex: "upgrade")
+                        section_payload["section"] = str(parsed_test["section"]).strip().lower()
+                except Exception:
+                    pass
+            elif isinstance(upgrade_parameters, dict) and upgrade_parameters and "section" in upgrade_parameters:
+                section_payload["section"] = str(upgrade_parameters["section"]).strip().lower()
+
+            # Ajoute les paramètres d'upgrade Linux lorsqu'ils sont disponibles.
+            if isinstance(upgrade_parameters, str) and upgrade_parameters.strip() != "":
+                try:
+                    parsed_upgrade_parameters = json.loads(upgrade_parameters)
+                except Exception:
+                    parsed_upgrade_parameters = None
+                if isinstance(parsed_upgrade_parameters, dict) and parsed_upgrade_parameters:
+                    # Fusionne upgrade_parameters pour préserver toutes les clés (y compris section)
+                    for key, value in parsed_upgrade_parameters.items():
+                        if key != "section":  # section est déjà gérée au-dessus
+                            section_payload[key] = value
+            elif isinstance(upgrade_parameters, dict) and upgrade_parameters:
+                # Fusionne upgrade_parameters pour préserver toutes les clés
+                for key, value in upgrade_parameters.items():
+                    if key != "section":  # section est déjà gérée au-dessus
+                        section_payload[key] = value
+
+            section = json.dumps(section_payload, ensure_ascii=False, separators=(",", ":"))
 
 
             # creation d'un object command
             command = MscDatabase().createcommanddirectxmpp(
                         package_id,
                         "",
-                        section, #parameters
+                        section, # parameters JSON (section + upgradeparameter)
                         files, # list file
                         "enable",
                         "enable",

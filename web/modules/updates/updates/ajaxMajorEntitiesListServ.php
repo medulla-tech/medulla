@@ -1,30 +1,14 @@
 <?php
-/**
- * (c) 2022-2024 Siveo, http://siveo.net/
- *
- * $Id$
- *
- * This file is part of Management Console (MMC).
- *
- * MMC is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * MMC is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with MMC; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- *
- * file modules/updates/updates/ajaxMajorEntitiesList.php
- */
+// SPDX-FileCopyrightText: 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+// SPDX-FileCopyrightText: 2007 Mandriva, http://www.mandriva.com
+// SPDX-FileCopyrightText: 2016-2023 Siveo, http://www.siveo.net
+// SPDX-FileCopyrightText: 2024-2025 Medulla, http://www.medulla-tech.io
+// SPDX-License-Identifier: GPL-3.0-or-later
+// file : web/modules/updates/updates/ajaxMajorEntitiesListServ.php
 require_once("modules/updates/includes/xmlrpc.php");
 require_once("modules/glpi/includes/xmlrpc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
+
 // ini_set('display_errors', 1);
 // ini_set('display_startup_errors', 1);
 // error_reporting(E_ALL);
@@ -126,6 +110,7 @@ $params =  array();
 $actiondetailsByMachs  = array();
 $actionupdateByentity  = array();
 $actionHardwareConstraintsForMajorUpdatesByEntity  = array();
+$actionDeploymentHistory  = array();
 $complete_name_major  = array();
 $comformite_name_major  = array();
 $MS12toMS25_major = array();
@@ -137,6 +122,20 @@ $complRates=array();
 $updated_major = array();
 $missing_information_major = array();
 // definition des actions
+$deploymentHistory = new ActionItem(_T("Deployment history", "updates"),
+                                    "majorDeploymentHistoryWin",
+                                    "history",
+                                    "",
+                                    "updates",
+                                    "updates");
+
+$emptyDeploymentHistory = new EmptyActionItem1(_T("No Windows major deployment history for this entity", "updates"),
+                                                "majorDeploymentHistoryWin",
+                                                "historyg",
+                                                "",
+                                                "updates",
+                                                "updates");
+
 $detailsByMach = new ActionItem(_T("List of machines to be upgraded", "updates"),
                                 "majorDetailsByMachines",
                                 "auditbymachine",
@@ -319,6 +318,10 @@ foreach ($mergedArray as  $index=>$datacolonne) {
     ? $details_hardware_constraints_for_major_updates  // Some machines are missing info
     : $empty_hardware_constraints_for_major_updates;   // All machines are compliant
 
+    $actionDeploymentHistory[] = (intval($datacolonne['count']) > 0)
+        ? $deploymentHistory
+        : $emptyDeploymentHistory;
+
     $formattedText_help = sprintf($texte_help, $nbupdate, $datacolonne['name']);
     $comformite_name_major[]=(string) new medulla_progressbar_static($datacolonne['conformite'],
                                                                      "",
@@ -358,6 +361,7 @@ $n->addExtraInfoRaw($total_win, _T("Total machines", "updates"));
 $n->addActionItemArray($actionupdateByentity);
 $n->addActionItemArray($actiondetailsByMachs);
 $n->addActionItemArray($actionHardwareConstraintsForMajorUpdatesByEntity);
+$n->addActionItemArray($actionDeploymentHistory);
 $n->setItemCount($count);
 $n->setNavBar(new AjaxNavBar($count, $filter));
 $n->setParamInfo($params);

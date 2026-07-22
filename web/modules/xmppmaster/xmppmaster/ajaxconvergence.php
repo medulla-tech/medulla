@@ -252,7 +252,6 @@ foreach ($arraydeploy['tabdeploy']['group_uuid'] as $index => $groupid) {
             if ($state === "DEPLOYMENT DIFFERED" || strpos($state, "DEPLOYMENT START") !== false) {
                 if ((strtotime($arraydeploy['tabdeploy']['endcmd'][$index]) - time()) < 0) {
                     $error = true;
-                    echo "Erreur pour le host {$host}: DEPLOY ERROR TIMEOUT\n";
                 }
             }
 

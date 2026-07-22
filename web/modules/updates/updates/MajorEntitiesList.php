@@ -11,7 +11,7 @@ require_once("modules/xmppmaster/includes/html.inc.php");
 global $maxperpage;
 
 
-$p = new PageGenerator(_T("Entity Compliance", "updates"));
+$p = new PageGenerator(_T("OS Upgrades - Compliance Status", "updates"));
 $p->setSideMenu($sidemenu);
 $p->display();
 
@@ -42,6 +42,9 @@ $p->addTab("tabsuse", _T("OS Suse", "dyngroup"), "",
 
 $p->addTab("tabubuntu", _T("OS Ubuntu", "dyngroup"), "",
            "modules/updates/updates/major/Ubuntu.php", array());
+
+$p->addTab("tabzorin", _T("OS Zorin", "dyngroup"), "",
+           "modules/updates/updates/major/Zorin.php", array());
 
 $p->addTab("tabfedora", _T("OS Fedora", "dyngroup"), "",
            "modules/updates/updates/major/Fedora.php", array());

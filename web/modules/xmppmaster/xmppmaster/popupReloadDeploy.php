@@ -5,11 +5,6 @@ if (isset($_POST["bconfirm"])) {
     exit;
 }
 
-unset($_GET['action']);
-unset($_GET['submod']);
-unset($_GET['module']);
-unset($_GET['mod']);
-
 if(isset($_GET['hostname'])){
   $f = new PopupForm(_T("Reload ".htmlentities($_GET['title'])." on machine ".htmlentities($_GET['hostname']),"xmppmaster"), 'popupReloadDeploy');
 }
@@ -19,10 +14,14 @@ if(isset($_GET['cn'])){
 else{
   $f = new PopupForm(_T("Reload the deployment","xmppmaster"), 'popupReloadDeploy');
 }
+// Keep module/submod/action in $_GET so the Confirm button passes its ACL
+// check; just don't forward them (nor cn/hostname, added below) as hidden fields.
+$skipHidden = array("module", "submod", "action", "mod", "cn", "hostname");
 foreach($_GET as $key=>$value){
-  if($key != "cn" || $key != "hostname"){
-      $f->add(new HiddenTpl($key), array("value" => $value, "hide" => True));
+  if(in_array($key, $skipHidden)){
+      continue;
   }
+  $f->add(new HiddenTpl($key), array("value" => $value, "hide" => True));
 }
 
 if (isset($_GET['hostname'])){
@@ -35,11 +34,12 @@ else if (isset($_GET['cn'])){
 $f->add(new HiddenTpl("login"), array("value" => $_SESSION['login'], "hide" => True));
 
 $force = new TrFormElement(_T("Force re-deployment during initial validity period", "xmppmaster"), new CheckboxTpl("force"));
+$reschedule = new TrFormElement(_T("Rechedule deployment between now and 1 day", "xmppmaster"), new CheckboxTpl("reschedule"));
 
+$f->push(new Table());
 $f->add($force, ["value"=>""]);
-$date = $_GET['startcmd'];
-$reschedule = new TrFormElement('<br>'._T("Rechedule deployment between now and 1 day", "xmppmaster"), new CheckboxTpl("reschedule"));
 $f->add($reschedule, ["value"=>""]);
+$f->pop();
 
 $f->addValidateButton("bconfirm");
 $f->addCancelButton("bback");

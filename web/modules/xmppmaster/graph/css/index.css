@@ -603,30 +603,115 @@ ul.rightfile.li {
 /* Share QA page styles                     */
 /* ---------------------------------------- */
 
-.qa-owner-list {
-  margin-top: 0;
-  margin-bottom: 0;
-}
-
+/* Box listing the users already owning the QA */
 .qa-owner-box {
-  max-height: 30px;
-  columns: 5;
-  background-color: rgb(221, 221, 221);
-  border: 2px solid var(--color-border-dark);
-  border-radius: 0.2em;
+  padding: 8px 12px;
+  background: var(--color-bg-white, #fff);
+  border: 1px solid var(--color-border-light, #ddd);
+  border-radius: 4px;
 }
 
+.qa-owner-list {
+  margin: 0;
+  padding-left: 0;
+  list-style: none;
+  columns: 5;
+}
+
+/* "Select all users" toolbar (button uses the global .btnSecondary class) */
+.qa-toolbar {
+  margin: 4px 0 0 0;
+}
+
+/* Two-column drag & drop layout (available / selected users) */
 .qa-users-container {
-  display: inline-flex;
+  display: flex;
+  align-items: stretch;
+  gap: 20px;
   width: 100%;
+  margin: 15px 0;
 }
 
 .qa-user-column {
-  width: 100%;
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
 }
 
-.qa-user-list {
-  width: 95%;
+/* Column titles */
+.qa-user-column h1 {
+  color: var(--color-header-bg, #444050);
+  font-size: var(--font-size-lg, 15px);
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  padding: 0;
+  border: none;
+}
+
+/* Draggable targets (user lists) */
+.qa-user-list[data-draggable="target"] {
+  list-style-type: none;
+  width: 100%;
+  flex: 1 1 auto;
+  min-height: 340px;
+  overflow-y: auto;
+  margin: 0;
+  padding: 8px;
+  border: 1px solid var(--color-border-light, #ddd);
+  border-radius: 4px;
+  background: var(--color-bg-white, #fff);
+  box-sizing: border-box;
+}
+
+/* Drop target active state */
+.qa-user-list[data-draggable="target"][aria-dropeffect="move"] {
+  border-color: var(--color-primary, #25607d);
+}
+
+/* Drop target focus and dragover state */
+.qa-user-list[data-draggable="target"][aria-dropeffect="move"]:focus,
+.qa-user-list[data-draggable="target"][aria-dropeffect="move"].dragover {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(37, 96, 125, 0.15);
+}
+
+/* Draggable items */
+.qa-user-list [data-draggable="item"] {
+  display: block;
+  list-style-type: none;
+  margin: 0 0 2px 0;
+  padding: 6px 10px;
+  border-radius: 3px;
+  background: transparent;
+  border-bottom: 1px solid var(--color-bg-gray, #eee);
+  line-height: 1.4;
+  font-size: var(--font-size-base, 12px);
+  cursor: grab;
+  transition: background-color 0.15s ease;
+}
+
+.qa-user-list [data-draggable="item"]:last-child {
+  border-bottom: none;
+}
+
+.qa-user-list [data-draggable="item"]:hover {
+  background: rgba(37, 96, 125, 0.06);
+}
+
+/* Items focus state */
+.qa-user-list [data-draggable="item"]:focus {
+  outline: none;
+  background: rgba(37, 96, 125, 0.1);
+}
+
+/* Items grabbed state */
+.qa-user-list [data-draggable="item"][aria-grabbed="true"] {
+  background: var(--color-primary, #25607d);
+  color: var(--color-text-white, #fff);
+  border-radius: 3px;
+  border-bottom-color: transparent;
+  cursor: grabbing;
 }
 
 /* File browser remote styles */

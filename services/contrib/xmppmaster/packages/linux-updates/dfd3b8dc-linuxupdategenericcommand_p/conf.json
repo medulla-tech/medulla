@@ -1,0 +1,49 @@
+{
+    "sub_packages": [],
+    "description": "Package de commande Linux generique sans dependance distribution pour security kernel et other@@generique ne pas afficher@@",
+    "entity_id": "0",
+    "id": "dfd3b8dc-linuxupdategenericcommand_p",
+    "localisation_server": "global",
+    "previous_localisation_server": "global",
+    "creator": "root",
+    "creation_date": "2026-06-05 15:50:40",
+    "editor": "root",
+    "edition_date": "2026-06-09 09:49:45",
+    "commands": {
+        "postCommandSuccess": {
+            "command": "",
+            "name": ""
+        },
+        "installInit": {
+            "command": "",
+            "name": ""
+        },
+        "postCommandFailure": {
+            "command": "",
+            "name": ""
+        },
+        "command": {
+            "command": "",
+            "name": ""
+        },
+        "preCommand": {
+            "command": "",
+            "name": ""
+        }
+    },
+    "name": "linux-update-generic-command",
+    "targetos": "linux",
+    "reboot": 0,
+    "version": "1.0.0",
+    "metagenerator": "expert",
+    "inventory": {
+        "associateinventory": "0",
+        "licenses": "1.0",
+        "queries": {
+            "Qversion": "",
+            "Qvendor": "",
+            "boolcnd": "",
+            "Qsoftware": ""
+        }
+    }
+}

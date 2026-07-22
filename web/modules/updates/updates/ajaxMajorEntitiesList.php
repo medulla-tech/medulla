@@ -1,4 +1,10 @@
 <?php
+// SPDX-FileCopyrightText: 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+// SPDX-FileCopyrightText: 2007 Mandriva, http://www.mandriva.com
+// SPDX-FileCopyrightText: 2016-2023 Siveo, http://www.siveo.net
+// SPDX-FileCopyrightText: 2024-2025 Medulla, http://www.medulla-tech.io
+// SPDX-License-Identifier: GPL-3.0-or-later
+// file : web/modules/updates/updates/ajaxMajorEntitiesList.php
 /*
  * (c) 2016-2023 Siveo, http://www.siveo.net
  * (c) 2024-2025 Medulla, http://www.medulla-tech.io
@@ -29,7 +35,6 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
 // ini_set('display_startup_errors', 1);
 // error_reporting(E_ALL);
 global $conf;
-
 ?>
 
 <style>
@@ -136,6 +141,7 @@ $params = array();
 $actiondetailsByMachs = array();
 $actionupdateByentity = array();
 $actionHardwareConstraintsForMajorUpdatesByEntity = array();
+$actionDeploymentHistory = array();
 $complete_name_major = array();
 $comformite_name_major = array();
 $win10towin10_major = array();
@@ -145,6 +151,20 @@ $total_win = array();
 $updated_major = array();
 $missing_information_major = array();
 // definition des actions
+$deploymentHistory = new ActionItem(_T("Deployment history", "updates"),
+                                    "majorDeploymentHistoryWin",
+                                    "history",
+                                    "",
+                                    "updates",
+                                    "updates");
+
+$emptyDeploymentHistory = new EmptyActionItem1(_T("No Windows major deployment history for this entity", "updates"),
+                                                "majorDeploymentHistoryWin",
+                                                "historyg",
+                                                "",
+                                                "updates",
+                                                "updates");
+
 $detailsByMach = new ActionItem(_T("List of machines to be upgraded", "updates"),
                                 "majorDetailsByMachines",
                                 "auditbymachine",
@@ -336,6 +356,10 @@ foreach ($mergedArray as $datacolonne) {
     ? $details_hardware_constraints_for_major_updates  // Some machines are missing info
     : $empty_hardware_constraints_for_major_updates;   // All machines are compliant
 
+    $actionDeploymentHistory[] = (intval($datacolonne['count']) > 0)
+        ? $deploymentHistory
+        : $emptyDeploymentHistory;
+
     $formattedText_help = sprintf($texte_help, $nbupdate, $datacolonne['name']);
     $comformite_name_major[] = (string) new medulla_progressbar_static($datacolonne['conformite'],
                                                                         "",
@@ -373,6 +397,7 @@ $n->addExtraInfoRaw($total_win, _T("Total machines", "updates"));
 $n->addActionItemArray($actionupdateByentity);
 $n->addActionItemArray($actiondetailsByMachs);
 $n->addActionItemArray($actionHardwareConstraintsForMajorUpdatesByEntity);
+$n->addActionItemArray($actionDeploymentHistory);
 $n->setItemCount($count);
 $n->setNavBar(new AjaxNavBar($count, $filter));
 $n->setParamInfo($params);

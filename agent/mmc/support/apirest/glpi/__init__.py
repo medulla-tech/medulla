@@ -12,12 +12,47 @@ import re
 import string
 import traceback
 import requests
+from dataclasses import dataclass
 from typing import Optional, Union, Dict, List, Any
 
 import uuid
 import os
 
 logger = logging.getLogger()
+
+
+@dataclass(frozen=True)
+class APIErrorFeedback:
+    """Structured feedback for API errors, ready for logs or UI."""
+
+    action: str
+    method: str
+    url: str
+    status_code: int | None
+    message: str
+    details: str = ""
+    hint: str = ""
+
+    def to_dict(self) -> dict:
+        return {
+            "action": self.action,
+            "method": self.method,
+            "url": self.url,
+            "status_code": self.status_code,
+            "message": self.message,
+            "details": self.details,
+            "hint": self.hint,
+        }
+
+
+class GLPIAPIError(RuntimeError):
+    """Raised when GLPI API returns an error with structured feedback."""
+
+    def __init__(self, feedback: APIErrorFeedback):
+        self.feedback = feedback
+        super().__init__(
+            f"{feedback.action} failed: HTTP {feedback.status_code} - {feedback.message}"
+        )
 
 
 def verifier_parametres(dictctrl, cles_requises):
@@ -79,6 +114,8 @@ class GLPIClient:
     - Extract_GLPI_ERROR_Message (text) (staticmethod): Extract a readable error message.
     """
 
+    API_PATH_SUFFIX = "/apirest.php"
+
     def __init__(self, url_base, app_token, user_token=None, login=None, password=None):
         """
         Initializes the GLPI client with the necessary tokens and base URL.
@@ -90,12 +127,18 @@ class GLPIClient:
             login (str, optional): The login for basic authentication.
             password (str, optional): The password for basic authentication.
         """
-        self.URL_BASE = url_base
+        self.URL_BASE = (url_base or "").rstrip("/")
         self.APP_TOKEN = app_token
         self.USER_TOKEN = user_token
         self.LOGIN = login
         self.PASSWORD = password
         self.SESSION_TOKEN = None
+
+        if not self.URL_BASE.endswith(self.API_PATH_SUFFIX):
+            raise ValueError(
+                f"Unsupported GLPI API endpoint for {self.__class__.__name__}: "
+                f"{self.URL_BASE}. Expected endpoint ending with {self.API_PATH_SUFFIX}."
+            )
 
         if user_token:
             self.auth_method = "user_token"
@@ -111,30 +154,76 @@ class GLPIClient:
         Raises:
             Exception: If session initialization fails.
         """
-        headers = {
+        base_headers = {
             "App-Token": self.APP_TOKEN,
+            "Content-Type": "application/json",
+            "Accept": "application/json",
         }
 
+        auth_headers = []
         if self.auth_method == "user_token":
-            headers["Authorization"] = f"user_token {self.USER_TOKEN}"
+            auth_headers.append({"Authorization": f"user_token {self.USER_TOKEN}"})
+            # Compatibility mode for GLPI/front proxies that do not accept
+            # the Authorization scheme but do accept User-Token.
+            auth_headers.append({"User-Token": self.USER_TOKEN})
+            auth_headers.append({"Authorization": f"Bearer {self.USER_TOKEN}"})
         elif self.auth_method == "basic":
             credentials = f"{self.LOGIN}:{self.PASSWORD}"
             encoded_credentials = base64.b64encode(
-                credentials.encode("utf-8")).decode("utf-8")
-            headers["Authorization"] = f"Basic {encoded_credentials}"
+                credentials.encode("utf-8")
+            ).decode("utf-8")
+            auth_headers.append({"Authorization": f"Basic {encoded_credentials}"})
 
-        response = requests.get(
-            f"{self.URL_BASE}/initSession", headers=headers)
+        url = f"{self.URL_BASE.rstrip('/')}/initSession"
+        last_response = None
 
-        if response.status_code == 200:
-            data = response.json()
-            self.SESSION_TOKEN = data.get('session_token')
-            if not self.SESSION_TOKEN:
-                raise Exception("Session initialization failed.")
-            print(f"Session initialized (token: {self.SESSION_TOKEN})")
-            print(json.dumps(data, indent=4))
-        else:
-            response.raise_for_status()
+        for extra_auth in auth_headers:
+            headers = base_headers.copy()
+            headers.update(extra_auth)
+            response = requests.get(url, headers=headers, timeout=20)
+            last_response = response
+
+            if response.status_code == 200:
+                data = response.json()
+                self.SESSION_TOKEN = data.get("session_token")
+                if not self.SESSION_TOKEN:
+                    raise GLPIAPIError(
+                        APIErrorFeedback(
+                            action="initSession",
+                            method="GET",
+                            url=url,
+                            status_code=200,
+                            message="session_token missing in GLPI response",
+                            details=json.dumps(data, ensure_ascii=False),
+                            hint="Vérifiez la configuration de l'API REST GLPI.",
+                        )
+                    )
+                logger.debug("GLPI session initialized")
+                return
+
+            if response.status_code in (400, 401, 403):
+                continue
+
+            break
+
+        details = ""
+        if last_response is not None:
+            try:
+                details = json.dumps(last_response.json(), ensure_ascii=False)
+            except Exception:
+                details = (last_response.text or "")[:1000]
+
+        raise GLPIAPIError(
+            APIErrorFeedback(
+                action="initSession",
+                method="GET",
+                url=url,
+                status_code=last_response.status_code if last_response is not None else None,
+                message="Unable to open GLPI API session",
+                details=details,
+                hint="Vérifiez glpi_url_base_api, glpi_mmc_app_token et glpi_root_user_token.",
+            )
+        )
 
     def kill_session(self):
         """
@@ -644,6 +733,134 @@ class GLPIClient:
 
         logger.info(
             f"[+] Entité '{name}' créée avec ID : {new_id} sous parent ID {parent_entity_id}")
+        return new_id
+
+    def delete_profile(self, profile_id):
+        """
+        Deletes a GLPI profile by id. Returns True on success.
+        """
+        if not self.SESSION_TOKEN:
+            logger.error("Session non initialisée. Veuillez initialiser la session.")
+            raise Exception("Session non initialisée. Veuillez initialiser la session.")
+
+        headers = self._headers()
+        response = requests.delete(
+            f"{self.URL_BASE}/Profile/{int(profile_id)}",
+            headers=headers
+        )
+        if response.status_code > 300:
+            logger.error(f"error{response.status_code} delete profile '{response.text}'")
+            response.raise_for_status()
+        logger.info(f"[+] Profil GLPI id={profile_id} supprimé")
+        return True
+
+    def clone_profile(self, source_profile_id, new_name):
+        """
+        Clone a GLPI profile by replicating the source profile and all its
+        ProfileRight rows onto a new profile named new_name.
+
+        GLPI 10's REST API does NOT expose the native /Profile/<id>/Clone
+        endpoint (it returns ERROR_RESOURCE_NOT_FOUND_NOR_COMMONDBTM for
+        the Profile itemtype). So we replicate manually: create the new
+        profile, list the source's ProfileRight rows, then PUT each value
+        onto the matching row of the new profile.
+
+        Returns the new profile's id. Raises on failure.
+        """
+        if not self.SESSION_TOKEN:
+            logger.error("Session non initialisée. Veuillez initialiser la session.")
+            raise Exception("Session non initialisée. Veuillez initialiser la session.")
+
+        headers = self._headers()
+
+        # Inherit the source's interface (central / helpdesk)
+        r = requests.get(f"{self.URL_BASE}/Profile/{int(source_profile_id)}", headers=headers)
+        if r.status_code > 300:
+            r.raise_for_status()
+        src_interface = (r.json() or {}).get('interface') or 'central'
+
+        # Create the new profile (GLPI auto-creates a ProfileRight row per
+        # resource type, all with rights=0)
+        new_id = self.create_profile(new_name, interface=src_interface)
+
+        # List source and new profile rights. GLPI paginates these endpoints
+        # (default ~5 rows); range=0-999 covers any profile (~100-110 rows).
+        # Status 206 Partial Content is a normal pagination success.
+        def list_rights(profile_id):
+            resp = requests.get(
+                f"{self.URL_BASE}/Profile/{int(profile_id)}/ProfileRight?range=0-999",
+                headers=headers
+            )
+            if resp.status_code > 300 and resp.status_code != 206:
+                resp.raise_for_status()
+            return resp.json() or []
+
+        # Any failure during the PUT loop drops the half-cloned profile so the
+        # caller doesn't end up with an orphan in GLPI.
+        try:
+            source_rights = list_rights(source_profile_id)
+            new_by_name = {row['name']: row['id'] for row in list_rights(new_id) if row.get('name')}
+            copied = 0
+            for src in source_rights:
+                target_id = new_by_name.get(src.get('name'))
+                if target_id is None:
+                    continue
+                upd = requests.put(
+                    f"{self.URL_BASE}/ProfileRight/{int(target_id)}",
+                    headers=headers,
+                    data=json.dumps({"input": {"id": target_id, "rights": src.get('rights', 0)}})
+                )
+                if upd.status_code > 300:
+                    raise Exception(f"ProfileRight update failed for {src.get('name')!r}: HTTP {upd.status_code} {upd.text[:120]}")
+                copied += 1
+        except Exception:
+            try:
+                self.delete_profile(new_id)
+            except Exception:
+                pass
+            raise
+
+        logger.info(f"[+] Profil '{new_name}' cloné depuis profil id={source_profile_id}: {copied} droits copiés (nouveau id={new_id})")
+        return new_id
+
+    def create_profile(self, name, interface="central"):
+        """
+        Creates a GLPI profile with the given name. Returns the new profile's
+        GLPI id on success. Raises on failure.
+        """
+        if not self.SESSION_TOKEN:
+            logger.error("Session non initialisée. Veuillez initialiser la session.")
+            raise Exception("Session non initialisée. Veuillez initialiser la session.")
+
+        try:
+            headers = self._headers()
+        except Exception as e:
+            logger.error(f"Session/headers error: {e}")
+            return 0
+
+        data = {
+            "input": {
+                "name": name,
+                "interface": interface,
+            }
+        }
+
+        response = requests.post(
+            f"{self.URL_BASE}/Profile",
+            headers=headers,
+            data=json.dumps(data)
+        )
+
+        if response.status_code > 300:
+            logger.error(f"error{response.status_code} creation profile '{response.text}'")
+            response.raise_for_status()
+
+        new_id = response.json().get('id')
+        if new_id is None:
+            logger.error("[!] Échec de la création du profil — droits insuffisants ou autre erreur ?")
+            raise Exception("[!] Échec de la création du profil — droits insuffisants ou autre erreur ?")
+
+        logger.info(f"[+] Profil '{name}' créé avec ID : {new_id}")
         return new_id
 
     # UPDATE
@@ -1358,4 +1575,82 @@ class GLPIClient:
         except Exception as e:
             logger.error(f"Erreur inattendue update user {user_id}: {e}")
             return None
+
+
+class GLPIClientApiV1(GLPIClient):
+    """Client variant for GLPI endpoints exposed under /api.php/v1."""
+
+    API_PATH_SUFFIX = "/api.php/v1"
+
+    def init_session(self):
+        """Initialize session with api.php/v1 specific auth order."""
+        base_headers = {
+            "App-Token": self.APP_TOKEN,
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+        }
+
+        auth_headers = []
+        if self.auth_method == "user_token":
+            # Some GLPI v11 stacks prefer User-Token over Authorization.
+            auth_headers.append({"User-Token": self.USER_TOKEN})
+            auth_headers.append({"Authorization": f"user_token {self.USER_TOKEN}"})
+            auth_headers.append({"Authorization": f"Bearer {self.USER_TOKEN}"})
+        elif self.auth_method == "basic":
+            credentials = f"{self.LOGIN}:{self.PASSWORD}"
+            encoded_credentials = base64.b64encode(
+                credentials.encode("utf-8")
+            ).decode("utf-8")
+            auth_headers.append({"Authorization": f"Basic {encoded_credentials}"})
+
+        url = f"{self.URL_BASE.rstrip('/')}/initSession"
+        last_response = None
+
+        for extra_auth in auth_headers:
+            headers = base_headers.copy()
+            headers.update(extra_auth)
+            response = requests.get(url, headers=headers, timeout=20)
+            last_response = response
+
+            if response.status_code == 200:
+                data = response.json()
+                self.SESSION_TOKEN = data.get("session_token")
+                if not self.SESSION_TOKEN:
+                    raise GLPIAPIError(
+                        APIErrorFeedback(
+                            action="initSession",
+                            method="GET",
+                            url=url,
+                            status_code=200,
+                            message="session_token missing in GLPI response",
+                            details=json.dumps(data, ensure_ascii=False),
+                            hint="Vérifiez la configuration de l'API REST GLPI.",
+                        )
+                    )
+                logger.debug("GLPI v1 session initialized")
+                return
+
+            if response.status_code in (400, 401, 403):
+                continue
+
+            break
+
+        details = ""
+        if last_response is not None:
+            try:
+                details = json.dumps(last_response.json(), ensure_ascii=False)
+            except Exception:
+                details = (last_response.text or "")[:1000]
+
+        raise GLPIAPIError(
+            APIErrorFeedback(
+                action="initSession",
+                method="GET",
+                url=url,
+                status_code=last_response.status_code if last_response is not None else None,
+                message="Unable to open GLPI API session",
+                details=details,
+                hint="Vérifiez glpi_url_base_api, glpi_mmc_app_token et glpi_root_user_token.",
+            )
+        )
 

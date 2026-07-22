@@ -1934,9 +1934,9 @@ def save_xmpp_json(folder, json_content):
     if "linux" in structpackage:
         listos.append("linux")
         structpackage["metaparameter"]["linux"] = {}
-    if "darwin" in structpackage:
-        listos.append("darwin")
-        structpackage["metaparameter"]["darwin"] = {}
+    if "mac" in structpackage:
+        listos.append("mac")
+        structpackage["metaparameter"]["mac"] = {}
     if "win" in structpackage:
         listos.append("win")
         structpackage["metaparameter"]["win"] = {}

@@ -1,26 +1,11 @@
 <?php
-/*
- * (c) 2016-2023 Siveo, http://www.siveo.net
- * (c) 2024-2025 Medulla, http://www.medulla-tech.io
- *
- * $Id$
- *
- * This file is part of MMC, http://www.medulla-tech.io
- *
- * MMC is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * any later version.
- *
- * MMC is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with MMC; If not, see <http://www.gnu.org/licenses/>.
- * file: ajaxMajorEntitiesList.php
- */
+// SPDX-FileCopyrightText: 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+// SPDX-FileCopyrightText: 2007 Mandriva, http://www.mandriva.com
+// SPDX-FileCopyrightText: 2016-2023 Siveo, http://www.siveo.net
+// SPDX-FileCopyrightText: 2024-2025 Medulla, http://www.medulla-tech.io
+// SPDX-License-Identifier: GPL-3.0-or-later
+// file : web/modules/updates/updates/ajaxMajorEntitiesListDebian.php
+
 
 /**
  * ------------------------------------------------------------------
@@ -41,6 +26,7 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
 
 global $conf;
 $maxperpage   = $conf["global"]["maxperpage"];
+
 ?>
 
 <style>
@@ -74,6 +60,7 @@ $distribution = "debian"; // Distribution analysée
  * Paramètres de pagination et de filtrage
  */
 $filter = isset($_GET['filter']) ? $_GET['filter'] : "";
+$hostnameFilter = isset($_GET['hostname_filter']) ? trim((string) $_GET['hostname_filter']) : "";
 $start  = isset($_GET['start'])  ? (int) $_GET['start'] : 0;
 $end    = $start + $maxperpage;
 $source = isset($_GET['source']) ? $_GET['source'] : "";
@@ -113,6 +100,13 @@ foreach ($_entities as $entity) {
  */
 $entities = array_slice($filtered_entities, $start, $maxperpage, false);
 
+updates_dev_trace("INFO", "Entities loaded", array(
+    "distribution" => $distribution,
+    "filtered_count" => count($filtered_entities),
+    "page_count" => count($entities),
+    "entity_ids" => implode(",", array_slice($listentity, 0, 5))
+));
+
 /**
  * ------------------------------------------------------------------
  * RÉCUPÉRATION DES STATISTIQUES DE CONFORMITÉ
@@ -122,8 +116,55 @@ $statversion = xmlrpc_get_distribution_version_compliance(
     $distribution,
     $listentity,
     $start,
-    (int) $maxperpage
+    (int) $maxperpage,
+    $hostnameFilter
 );
+if (!is_array($statversion)) {
+    $statversion = [];
+}
+
+// Garantit l'affichage de toutes les entités de la page, même si la base
+// ne retourne aucune ligne de conformité pour certaines d'entre elles.
+$statsByEntityId = [];
+foreach (($statversion['by_entity'] ?? []) as $statRow) {
+    $rowEntityId = isset($statRow['entity_id']) ? (int) $statRow['entity_id'] : 0;
+    if ($rowEntityId >= 0) {
+        $statsByEntityId[$rowEntityId] = $statRow;
+    }
+}
+
+$normalizedByEntity = [];
+foreach ($entities as $entity) {
+    $entityId = (int) preg_replace('/^UUID/', '', ($entity['uuid'] ?? '0'));
+    if ($entityId < 0) {
+        continue;
+    }
+
+    if (isset($statsByEntityId[$entityId])) {
+        $row = $statsByEntityId[$entityId];
+        $row['entity_id'] = $entityId;
+        $normalizedByEntity[] = $row;
+        continue;
+    }
+
+    $normalizedByEntity[] = [
+        'entity_id' => $entityId,
+        'total_machines' => 0,
+        'outdated_machines' => 0,
+        'up_to_date_machines' => 0,
+        'pending_support_update' => 0,
+        'compliance_rate' => 0,
+    ];
+}
+
+$statversion['by_entity'] = $normalizedByEntity;
+
+updates_dev_trace("INFO", "Stats returned from RPC", array(
+    "total_outdated" => $statversion['total_outdated'] ?? 'MISSING',
+    "by_entity_count" => count($statversion['by_entity'] ?? []),
+    "has_by_entity" => isset($statversion['by_entity']) ? 'YES' : 'NO',
+    "statversion_keys" => implode(",", array_keys($statversion ?? []))
+));
 
 /**
  * Informations de version
@@ -199,6 +240,20 @@ $emptyupdateAll = new EmptyActionItem1(_T("There are no major updates to deploy 
                                         "updates",
                                         "updates");
 
+$detailsByMach = new ActionItem(_T("List of machines to be upgraded", "updates"),
+                                "majorDetailsByMachinesLinux",
+                                "auditbymachine",
+                                "",
+                                "updates",
+                                "updates");
+
+$emptydetailsByMach = new EmptyActionItem1(_T("No major updates for this entity", "updates"),
+                                            "majorDetailsByMachinesLinux",
+                                            "auditbymachine",
+                                            "",
+                                            "updates",
+                                            "updates");
+
 
 
 /**
@@ -214,19 +269,47 @@ $list_name_entity           = [];
 $comformite_name_major      = [];
 $display_entities           = [];
 $actionupdateByentity       = [];
+$actiondetailsByMachs       = [];
+$actionDeploymentHistory    = [];
+
+$deploymentHistory = new ActionItem(_T("Deployment history", "updates"),
+                                    "majorDeploymentHistoryLinux",
+                                    "history",
+                                    "",
+                                    "updates",
+                                    "updates");
+
+$emptyDeploymentHistory = new EmptyActionItem1(_T("No Linux major deployment history for this entity", "updates"),
+                                                "majorDeploymentHistoryLinux",
+                                                "historyg",
+                                                "",
+                                                "updates",
+                                                "updates");
 
 // parametre des action
 $params =  array();
 foreach ($statversion['by_entity'] as $entityId => $ent) {
     if ( $ent['outdated_machines'] > 0){
         $actionupdateByentity[] = $updateAll;
+        $actiondetailsByMachs[] = $detailsByMach;
     }else{
         $actionupdateByentity[] = $emptyupdateAll;
+        $actiondetailsByMachs[] = $emptydetailsByMach;
     }
 
 
-    $id         = $ent['entity_id'];
-    $entityName = $listcompletename[$id] ?? (string) $id;
+    $currentEntityId = isset($ent['entity_id']) ? (int) $ent['entity_id'] : -1;
+    if ($currentEntityId < 0) {
+        $currentEntityId = (int) $entityId;
+    }
+
+    if (intval($ent['total_machines']) > 0) {
+        $actionDeploymentHistory[] = $deploymentHistory;
+    } else {
+        $actionDeploymentHistory[] = $emptyDeploymentHistory;
+    }
+
+    $entityName = $listcompletename[$currentEntityId] ?? (string) $currentEntityId;
     $display_entities[] = $entityName;
 
     // Texte d’aide pour la barre de conformité
@@ -424,12 +507,15 @@ foreach ($statversion['by_entity'] as $entityId => $ent) {
     } else {
         $total_machines[] = $ent['total_machines'];
     }
-// $ent['entityId'] = $entityId;;
-$ent['entityName'] = $entityName;
-$ent['distribution'] = $statversion['distribution'];
-$ent['name_version'] = $statversion['name_version'];
-$ent['max_version']  = $statversion['max_version'];
-$params[] = $ent;
+    // Paramètres transmis aux actions: entity_id=0 est valide pour l'entité racine.
+    $ent['entity_id'] = $currentEntityId;
+    $ent['entityName'] = $entityName;
+    $ent['name'] = $entityName;
+    $ent['completename'] = $entityName;
+    $ent['distribution'] = $statversion['distribution'];
+    $ent['name_version'] = $statversion['name_version'];
+    $ent['max_version']  = $statversion['max_version'];
+    $params[] = $ent;
 }
 // Générer la chaîne de date et heure
 $display_entities = array_values($display_entities);
@@ -439,6 +525,8 @@ $up_to_date_machines = array_values($up_to_date_machines);
 $pending_support_update = array_values($pending_support_update);
 $total_machines = array_values($total_machines);
 $actionupdateByentity = array_values($actionupdateByentity);
+$actiondetailsByMachs = array_values($actiondetailsByMachs);
+$actionDeploymentHistory = array_values($actionDeploymentHistory);
 $params = array_values($params);
 
 $count = count($display_entities);
@@ -451,7 +539,8 @@ $n->addExtraInfoRaw($pending_support_update, _T("Pending Support Update", "updat
 $n->addExtraInfoRaw($total_machines, _T("Total Machines", "updates")." ".$distribution);
 
 $n->addActionItemArray($actionupdateByentity);
-// $n->addActionItemArray($actiondetailsByMachs);
+$n->addActionItemArray($actiondetailsByMachs);
+$n->addActionItemArray($actionDeploymentHistory);
 // $n->addActionItemArray($actionHardwareConstraintsForMajorUpdatesByEntity);
 $n->setTableHeaderPadding(12);
 $n->setItemCount($count);

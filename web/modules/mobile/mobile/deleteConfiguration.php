@@ -10,7 +10,14 @@ if ($id <= 0) {
     exit;
 }
 
-if (isset($_POST['bdelete'])) {
+if (isset($_POST['bconfirm'])) {
+    $configs = xmlrpc_get_hmdm_configurations();
+    if (is_array($configs) && count($configs) <= 1) {
+        new NotifyWidgetFailure(_T("Cannot delete the last configuration. Duplicate it first to create a new one.", "mobile"));
+        header("Location: " . urlStrRedirect("mobile/mobile/configurations"));
+        exit;
+    }
+
     $result = xmlrpc_delete_configuration_by_id($id);
     
     if ($result) {
@@ -22,10 +29,8 @@ if (isset($_POST['bdelete'])) {
     header("Location: " . urlStrRedirect("mobile/mobile/configurations"));
     exit;
 } else {
-    $f = new PopupForm(_T("Delete Configuration", "mobile"));
+    $f = new PopupForm(sprintf(_T("Delete configuration '%s'?", "mobile"), $name));
     $f->setLevel('danger');
-    $f->addText(sprintf(_T("Are you sure you want to delete the configuration <b>%s</b>?", "mobile"), htmlspecialchars($name)));
-    $f->addText('<br><strong style="color: #d9534f;">' . _T("Warning: This action cannot be undone!", "mobile") . '</strong>');
 
     $hidden = new HiddenTpl("id");
     $f->add($hidden, array("value" => $id, "hide" => true));
@@ -33,7 +38,7 @@ if (isset($_POST['bdelete'])) {
     $hidden_name = new HiddenTpl("name");
     $f->add($hidden_name, array("value" => $name, "hide" => true));
 
-    $f->addDangerButton("bdelete");
+    $f->addDangerButton("bconfirm");
     $f->addCancelButton("bback");
     $f->display();
 }

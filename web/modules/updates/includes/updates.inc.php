@@ -28,10 +28,15 @@ require_once("modules/updates/includes/xmlrpc.php");
  * un sélecteur dynamique (AjaxLocation) pour mettre à jour le contenu en fonction
  * de l'entité sélectionnée.
  *
- * @param string $pageTitle        Titre de la page.
- * @param string $ajaxDestination  Nom de la destination AJAX (ex: "listEntities").
- * @param string $module           Nom du module GLPI (par défaut "updates").
- * @param mixed  $sideMenu         Référence vers le menu latéral à afficher.
+ * @param string $pageTitle         Titre de la page.
+ * @param string $ajaxDestination   Nom de la destination AJAX (ex: "listEntities").
+ * @param mixed  $sideMenuparam     Référence vers le menu latéral à afficher.
+ * @param string $module            Nom du module MMC (par défaut "updates").
+ * @param mixed  $selectedEntityId  Identifiant d'entité à forcer en sélection.
+ *                                  - Optionnel.
+ *                                  - Si défini, il est prioritaire sur $_POST['entityid'] et $_GET['entityid'].
+ *                                  - Valeurs acceptées: entier, chaîne numérique, ou chaîne préfixée par "UUID".
+ *                                  - Si absent ou invalide, la sélection revient au comportement par défaut.
  *
  * @return void
  */
@@ -40,7 +45,8 @@ require_once("modules/updates/includes/xmlrpc.php");
 function generateEntityPage(string $pageTitle,
                             string $ajaxDestination,
                             $sideMenuparam = null,
-                            string $module = 'updates')
+                            string $module = 'updates',
+                            $selectedEntityId = null)
 {
     if ($pageTitle != ""){
         $p = new PageGenerator($pageTitle);
@@ -62,6 +68,8 @@ function generateEntityPage(string $pageTitle,
     $completename = [];   // Liste des noms complets d'entités
     $selectedEntityIndex = 0; // Index par défaut
 
+    $currentEntityId = $selectedEntityId ?? ($_POST['entityid'] ?? $_GET['entityid'] ?? null);
+
     foreach ($_entities as $value) {
         $uuidNumber = str_replace('UUID', '', $value['uuid']);
 
@@ -78,7 +86,6 @@ function generateEntityPage(string $pageTitle,
         $parametresCGI[] = http_build_query($newElement);
 
         // Détermination de l'entité sélectionnée
-        $currentEntityId = $_POST['entityid'] ?? $_GET['entityid'] ?? null;
         if ($currentEntityId && $uuidNumber == $currentEntityId) {
             $selectedEntityIndex = count($parametresCGI) - 1;
         }

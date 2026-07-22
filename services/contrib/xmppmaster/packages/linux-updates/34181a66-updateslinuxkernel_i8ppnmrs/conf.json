@@ -1,0 +1,49 @@
+{
+    "sub_packages": [],
+    "description": "update kernel package",
+    "entity_id": "0",
+    "id": "34181a66-updateslinuxkernel_i8ppnmrs",
+    "localisation_server": "global",
+    "previous_localisation_server": "global",
+    "creator": "root",
+    "creation_date": "2026-06-08 09:16:14",
+    "editor": "root",
+    "edition_date": "2026-06-08 09:23:40",
+    "commands": {
+        "postCommandSuccess": {
+            "command": "",
+            "name": ""
+        },
+        "installInit": {
+            "command": "",
+            "name": ""
+        },
+        "postCommandFailure": {
+            "command": "",
+            "name": ""
+        },
+        "command": {
+            "command": "",
+            "name": ""
+        },
+        "preCommand": {
+            "command": "",
+            "name": ""
+        }
+    },
+    "name": "linux_updates_kernel",
+    "targetos": "linux",
+    "reboot": 0,
+    "version": "1.0.1",
+    "metagenerator": "expert",
+    "inventory": {
+        "associateinventory": "0",
+        "licenses": "1.0",
+        "queries": {
+            "Qversion": "",
+            "Qvendor": "",
+            "boolcnd": "",
+            "Qsoftware": ""
+        }
+    }
+}

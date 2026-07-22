@@ -13,34 +13,52 @@
 require("localSidebar.php");
 require("graph/navbar.inc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
-
-$p = new PageGenerator(_T("Approved Linux releases", "updates"));
-$p->setSideMenu($sidemenu);
-$p->display();
+require_once("modules/updates/includes/updates.inc.php");
 
 if (
     $_SERVER['REQUEST_METHOD'] === 'POST' &&
     isset($_POST['form_name']) &&
     $_POST['form_name'] === 'linux_approved_releases'
 ) {
-    $stableValues = $_POST['is_current_stable'] ?? [];
-    $recommendedValues = $_POST['is_recommended'] ?? [];
+    verifyCSRFToken($_POST);
+
+    // $stableValues = $_POST['is_current_stable'] ?? []; // Colonne conservee pour reprise si besoin.
+    $latestMajorVersionValues = $_POST['is_latest_major_version'] ?? ($_POST['is_recommended'] ?? []);
+    $entityIdRaw = $_POST['entityid'] ?? ($_GET['entity'] ?? null);
+    $entityIdStr = is_string($entityIdRaw) ? $entityIdRaw : strval($entityIdRaw);
+    $entityIdStr = preg_replace('/^UUID/i', '', $entityIdStr);
+    $entityId = ($entityIdStr !== null && $entityIdStr !== '') ? (int) $entityIdStr : null;
+
+    if ($entityId === null) {
+        new NotifyWidgetFailure(_T("Missing entity selection.", "updates"));
+        header("Location: " . urlStrRedirect("updates/updates/linuxApprovedReleases"));
+        exit;
+    }
+
+    $currentReleases = xmlrpc_get_linux_approved_releases($entityId);
+    $currentStableByReleaseId = [];
+    if (is_array($currentReleases) && isset($currentReleases['id']) && is_array($currentReleases['id'])) {
+        foreach ($currentReleases['id'] as $index => $releaseId) {
+            $currentStableByReleaseId[(int) $releaseId] = (int) ($currentReleases['is_current_stable'][$index] ?? 0);
+        }
+    }
 
     $releaseIds = array_unique(array_merge(
-        array_keys($stableValues),
-        array_keys($recommendedValues)
+        // array_keys($stableValues),
+        array_keys($latestMajorVersionValues)
     ));
 
     $updates = [];
     foreach ($releaseIds as $releaseId) {
+        $releaseIdInt = (int) $releaseId;
         $updates[] = [
-            (int) $releaseId,
-            isset($stableValues[$releaseId]) ? (int) $stableValues[$releaseId] : 0,
-            isset($recommendedValues[$releaseId]) ? (int) $recommendedValues[$releaseId] : 0,
+            $releaseIdInt,
+            $currentStableByReleaseId[$releaseIdInt] ?? 0,
+            isset($latestMajorVersionValues[$releaseId]) ? (int) $latestMajorVersionValues[$releaseId] : 0,
         ];
     }
 
-    $result = xmlrpc_update_linux_approved_releases($updates);
+    $result = xmlrpc_update_linux_approved_releases($updates, $entityId);
     $success = ($result === true) || (is_array($result) && !empty($result['success']));
 
     if ($success) {
@@ -49,17 +67,17 @@ if (
         new NotifyWidgetFailure(_T("Failed to update Linux releases.", "updates"));
     }
 
-    header("Location: " . urlStrRedirect("updates/updates/linuxApprovedReleases"));
-    exit;
+   // header("Location: " . urlStrRedirect("updates/updates/linuxApprovedReleases?entityid=" . $entityId));
+   // exit;
 }
 
-$ajax = new AjaxFilter(
-    urlStrRedirect("updates/updates/ajaxLinuxApprovedReleases"),
-    "linuxApprovedReleasesContainer",
-    [],
-    "linuxApprovedReleasesForm"
-);
-$ajax->display();
-$ajax->displayDivToUpdate();
-
+$selectedEntityIdRaw = $_POST['entityid'] ?? $_GET['entityid'] ?? null;
+$selectedEntityIdStr = is_string($selectedEntityIdRaw) ? $selectedEntityIdRaw : strval($selectedEntityIdRaw);
+$selectedEntityIdStr = preg_replace('/^UUID/i', '', $selectedEntityIdStr);
+$selectedEntityId = ($selectedEntityIdStr !== null && $selectedEntityIdStr !== '') ? (int) $selectedEntityIdStr : null;
+generateEntityPage(_T("Approved Linux releases", "updates"),
+                   "ajaxLinuxApprovedReleases",
+                   $sidemenu,
+                   'updates',
+                   $selectedEntityId);
 ?>

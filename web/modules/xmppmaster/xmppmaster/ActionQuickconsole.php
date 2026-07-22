@@ -58,7 +58,7 @@ if (safeCount($machinegroup) != 0) {
     echo "<br>";
     echo $os;
     // Mapping des distributions Linux
-    $linuxDistros = ['ubuntu', 'debian', 'centos', 'redhat', 'fedora', 'rocky', 'alma', 'suse', 'mint'];
+    $linuxDistros = ['ubuntu', 'debian', 'centos', 'redhat', 'fedora', 'rocky', 'alma', 'suse', 'mint', 'zorin'];
     $platformLower = strtolower($machinegroup['platform']);
 
     $isLinuxMatch = (strtolower($os) === 'linux' &&
