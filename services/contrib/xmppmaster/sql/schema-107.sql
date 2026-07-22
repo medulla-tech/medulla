@@ -7,6 +7,7 @@
 -- =======================================
 -- 1. Elargissement de deploy.result : TEXT -> MEDIUMTEXT
 -- 2. Correctif : propagation de entityid dans pending_events
+-- 3. Correctif : modification du delai de l'event ev_process_pending_events pour eviter les conflits de traitement
 --
 
 START TRANSACTION;
@@ -200,6 +201,16 @@ BEGIN
     CLOSE cur;
 END$$
 DELIMITER ;
+
+
+-- 3. Change event schedule to every 5 minutes instead of every 1 minute to allow previous event to finish before next one starts
+DROP EVENT IF EXISTS xmppmaster.ev_process_pending_events;
+CREATE EVENT IF NOT EXISTS xmppmaster.ev_process_pending_events
+ON SCHEDULE EVERY 5 MINUTE
+DO
+    CALL xmppmaster.up_event_move_to_white_list();
+
+
 
 -- ----------------------------------------------------------------------
 -- Database version
