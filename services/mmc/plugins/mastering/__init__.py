@@ -217,7 +217,7 @@ def get_action_results(_id, uuid, entity, start=0, end=-1, _filter=""):
             entity = entity.replace("UUID", "")
         entity = int(entity)
 
-    result = MasteringDatabase().get_action_results(_id, uuid, start, end, _filter)
+    result = MasteringDatabase().get_action_results(_id, uuid, entity, start, end, _filter)
     return result
 
 def get_machines_action_results(_id, start=0, end=-1, _filter=""):
@@ -226,12 +226,37 @@ def get_machines_action_results(_id, start=0, end=-1, _filter=""):
 
 
 def delete_master(server, entity, masterId):
+    if is_master_used(masterId):
+        return {"status": 1, "msg": "Master is currently used in an action and cannot be deleted."}
     result = MasteringDatabase().delete_master(server, entity, masterId)
     return result
 
+def edit_master_infos(uuid, name, description=""):
+    result = MasteringDatabase().edit_master_infos(uuid, name, description)
+    return result
 
 def delete_action(_id):
     return MasteringDatabase().delete_action(_id)
+
+def delete_script(_id):
+    if is_script_used(_id):
+        return {"status": 1, "msg": "Script is currently used in an action and cannot be deleted."}
+    else:
+        return MasteringDatabase().delete_script(_id)
+
+def is_script_used(_id:int)->bool:
+    """Check if a mastering script is used in any action. If it is used, it cannot be deleted."""
+    result = MasteringDatabase().is_script_used(_id)
+    return result
+
+def is_master_used(_id):
+    """Check if a mastering script is used in any action. If it is used, it cannot be deleted."""
+    result = MasteringDatabase().is_master_used(_id)
+    return result
+
+def get_action_status(_id):
+    # TODO
+    pass
 
 def get_mastering_scripts_list(server, entity, start=0, end=-1, _filter=""):
     """
@@ -254,17 +279,80 @@ def get_mastering_scripts_list(server, entity, start=0, end=-1, _filter=""):
             entity = entity.replace("UUID", "")
         entity = int(entity)
 
-    return MasteringDatabase().get_mastering_scripts_list(server, entity, start, end, _filter)
+    scripts_list = MasteringDatabase().get_mastering_scripts_list(server, entity, start, end, _filter)
+    for script in scripts_list["data"]:
+        try:
+            script["used"] = is_script_used(script["id"])
+        except:
+            script["used"] = False
+    return scripts_list
+
+def get_script_from_payload(payload={}):
+    """
+    Get the script content from the payload. The payload is a dictionary that may contain the script content.
+
+    Args:
+        payload (dict): a dictionary containing the script content, typically with a key "content" that holds the script as a string
+
+    Returns:
+        str: the script content extracted from the payload, or an empty string if not found
+    """
+    if isinstance(payload, dict) and "type" in payload:
+        _type = payload["type"]
+        if "get_%s_script_from_payload"%_type in globals():
+            fnc = globals()["get_%s_script_from_payload"%_type]
+
+            return fnc(payload)
+    return ""
+
+def get_bash_script_from_payload(payload={}):
+    """
+    Get the bash script content from the payload. The payload is a dictionary that may contain the bash script content.
+
+    Args:
+        payload (dict): a dictionary containing the bash script content, typically with a key "bash_script" that holds the script as a string
+
+    Returns:
+        str: the bash script content extracted from the payload, or an empty string if not found
+    """
+    if isinstance(payload, dict) and "bash_script" in payload:
+        return payload["bash_script"]
+    return ""
+
+def get_sysprep_script_from_payload(payload={}):
+    """
+    Get the sysprep script content from the payload. The payload is a dictionary that may contain the sysprep script content.
+
+    Args:
+        payload (dict): a dictionary containing the sysprep script content, typically with a key "sysprep_script" that holds the script as a string
+
+    Returns:
+        str: the sysprep script content extracted from the payload, or an empty string if not found
+    """
+    if isinstance(payload, dict) and "sysprep_script" in payload:
+        return payload["sysprep_script"]
+    return ""
 
 
-def add_mastering_script(server, entity, name, description, content):
+def add_mastering_script(server, entity, name, description, content, _type="bash", payload={}):
     # Normalize entity
     if isinstance(entity, str):
         if entity.startswith("UUID"):
             entity = entity.replace("UUID", "")
         entity = int(entity)
 
-    return MasteringDatabase().add_mastering_script(server, entity, name, description, content)
+    return MasteringDatabase().add_mastering_script(server, entity, name, description, content, _type, payload)
+
+
+def edit_mastering_script(server, entity, _id, name, description, content, _type="bash", payload={}):
+    # Normalize entity
+    if isinstance(entity, str):
+        if entity.startswith("UUID"):
+            entity = entity.replace("UUID", "")
+        entity = int(entity)
+
+    return MasteringDatabase().edit_mastering_script(server, entity, _id, name, description, content, _type, payload)
+
 
 def get_summary_scripts_list(entity):
     # Normalize entity
@@ -274,3 +362,17 @@ def get_summary_scripts_list(entity):
         entity = int(entity)
 
     return MasteringDatabase().get_summary_scripts_list(entity)
+
+def get_mastering_script(entity, _id):
+    # Normalize entity
+    if isinstance(entity, str):
+        if entity.startswith("UUID"):
+            entity = entity.replace("UUID", "")
+        entity = int(entity)
+
+    try:
+        _id = int(_id)
+    except:
+        _id=0
+
+    return MasteringDatabase().get_mastering_script(entity, _id)

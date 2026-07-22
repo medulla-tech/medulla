@@ -17,9 +17,14 @@ from pulse2.database.mastering.schema import Tests
 # Imported last
 import logging
 import base64
+import zlib
 import json
 import time
 import os
+
+from mmc.plugins.xmppmaster.master.lib.utils import name_random
+from mmc.plugins.xmppmaster.master.agentmaster import send_message_json
+
 logger = logging.getLogger()
 
 class MasteringDatabase(DatabaseHelper):
@@ -285,8 +290,21 @@ class MasteringDatabase(DatabaseHelper):
 
         sql = """SELECT
     SQL_CALC_FOUND_ROWS
-    *
+    actions.id,
+    actions.server_id,
+    actions.entity_id,
+    actions.gid,
+    actions.uuid,
+    actions.target,
+    actions.name,
+    actions.config,
+    actions.content,
+    (coalesce(actionStatus.status, actions.status)) as status,
+    actions.date_creation,
+    actions.date_start,
+    actions.date_end
 FROM actions
+left join actionStatus on actionStatus.action_id = actions.id and actionStatus.uuid = actions.uuid
 WHERE """
 
         # No entity specified, case for actions on new machines. In this case we get the entity associated to the server.
@@ -446,7 +464,7 @@ or results.uuid = :uuid2
         return result
 
     @DatabaseHelper._sessionm
-    def get_action_results(self, session, _id, uuid, start=0, end=-1, _filter=""):
+    def get_action_results(self, session, _id, uuid, entity, start=0, end=-1, _filter=""):
         """Get the list of results for a specific action. The results are selected based on action_id and the machine uuid because an action can be used for a group.
 
         Args:
@@ -465,7 +483,7 @@ or results.uuid = :uuid2
 
         try:
             end = int(end)
-        except:
+        except Exception as e:
             end = -1
 
         if end == -1:
@@ -492,7 +510,7 @@ and uuid = :uuid
             binds["filt1"] = f"%{_filter}%"
             binds["filt2"] = f"%{_filter}%"
 
-        sql += """ORDER BY creation_date ASC """
+        sql += """ORDER BY creation_date DESC """
 
         sql += """LIMIT :start,:end """
         binds["start"] = start
@@ -642,10 +660,24 @@ WHERE results.action_id = :action_id
             A dict with status and message of the operation.
         """
 
+        if self.is_master_used(masterId):
+            return {"status": 1, "msg": "Master is used in an action, cannot delete it"}
+
         if isinstance(entity, str):
             if entity.startswith("UUID"):
                 entity = entity.replace("UUID", "")
             entity = int(entity)
+
+        # Retrieve master information
+        sql = """select * from masters where id = :master_id"""
+        binds = {"master_id": masterId}
+        master = session.execute(sql, binds).first()
+        if master is None:
+            return {"status": 1, "msg": "Master not found"}
+
+        name = master[1]
+        uuid = master[3]
+        path = master[4]
 
         # Delete the association between master and entity
         sql = """DELETE FROM mastersEntities where master_id = :master_id and entity_id = :entity_id"""
@@ -662,31 +694,35 @@ WHERE results.action_id = :action_id
         session.flush()
 
         # Now we have to check if there is no more association for this master
-        sql = """select count(masters.uuid) as nb, masters.* from mastersEntities join masters on masters.id = mastersEntities.master_id where id = :master_id"""
+        sql = """select
+    count(mastersEntities.master_id) as nb
+from mastersEntities
+where master_id = :master_id"""
         binds = {
             "master_id": masterId,
         }
         datas = session.execute(sql, binds).all()
-
-        if datas is None:
-            return {"status": 1, "msg": "Master not found"}
-
-        master = datas[0]
-        count = master[0]
-        name = master[3]
-        path = master[5]
+        count = datas[0][0]
 
         if count > 0:
             # There is still an association for this master, we don't delete the file
             return {"status": 0, "msg": "Master %s unlinked from entity"%name}
 
         # Delete the master from file system
-        if path is not None and path != "":
-            try:
-                os.remove(path)
-            except Exception as e:
-                logger.error("Failed to delete master file : %s <=>%s"%(path, e))
-                return {"status": 1, "msg": "Failed to delete master file"}
+        sessionid = name_random(8, "mastering_")
+        datasend = {
+            "action": "resultdiskmastering",
+            "sessionid": sessionid,
+            "data": {
+                "subaction": "delete_master",
+                "uuid": uuid,
+                "path": path
+            },
+            "ret": 0,
+            "base64": False,
+        }
+
+        send_message_json(server, datasend)
 
         sql = """DELETE FROM masters where id = :master_id"""
         binds = {
@@ -701,6 +737,24 @@ WHERE results.action_id = :action_id
         session.commit()
         session.flush()
         return {"status": 0, "msg": "Master %s deleted"%name}
+
+    @DatabaseHelper._sessionm
+    def edit_master_infos(self, session, uuid, name, description = ""):
+        sql = """update masters set name=:name, description=:description, modification_date=NOW() where uuid=:uuid"""
+        binds = {
+            "name":name,
+            "description": description,
+            "uuid":uuid
+        }
+
+        try:
+            session.execute(sql, binds)
+        except Exception as e:
+            session.rollback()
+            return {"status": 1, "msg": "Master not updated"%name}
+        session.commit()
+        session.flush()
+        return {"status": 0, "msg": "Master %s updated"%name}
 
 
     @DatabaseHelper._sessionm
@@ -748,6 +802,123 @@ WHERE results.action_id = :action_id
         else:
             return {"status": 0, "msg": "Action archived"}
 
+
+    @DatabaseHelper._sessionm
+    def delete_script(self, session, _id):
+        """
+        Delete a mastering script. This function deletes the script from the database.
+
+        Args:
+            self (MasteringDatabase) : instance of class
+            session (sqlalchemy.session) : session to access to the database. Generated by decorator
+            _id: the script id to delete.
+        Return:
+            A dict with status and message of the operation.
+        """
+        if self.is_script_used(_id):
+            return {"status": 1, "msg": "Script is used in an action, cannot delete it"}
+
+        sql = """DELETE FROM scripts where id = :script_id"""
+        binds = {
+            "script_id": _id,
+        }
+
+        try:
+            session.execute(sql, binds)
+        except Exception as e:
+            session.rollback()
+            logger.error("Failed to delete script : %s <=>%s"%(_id, e))
+            return {"status": 1, "msg": "Failed to delete script"}
+
+        session.commit()
+        session.flush()
+        return {"status": 0, "msg": "Script deleted"}
+
+    @DatabaseHelper._sessionm
+    def is_script_used(self, session, _id):
+        """Extract datas from actions.content json and check if the specified script is used.
+        In this case check if the action is currently running or in pending.
+
+        Args:
+            self (MasteringDatabase) : instance of class
+            session (sqlalchemy.session) : session to access to the database. Generated by decorator
+            _id: the script id to check.
+
+        Return:
+            bool: True if the script is used in an action, False otherwise.
+        """
+
+        sql = """select
+    count(a.id)
+from actions a
+left join actionStatus acs on a.id = acs.action_id
+where  EXISTS (
+    select 1 from JSON_TABLE(a.content, '$[*]'
+    COLUMNS (
+        t varchar(255) PATH '$.type',
+        i int PATH '$.name'
+    )) as jt
+    where jt.t = 'script' and jt.i = :script_id
+)
+and (coalesce(acs.status, a.status) != :status
+and a.date_start <= NOW()
+and a.date_end > NOW())"""
+
+        binds = {
+            "script_id": _id,
+            "status": "DONE"
+        }
+
+        try:
+            count = session.execute(sql, binds).scalar()
+        except Exception as e:
+            logger.error("Failed to check if script is used : %s <=>%s"%(_id, e))
+            return False
+
+        return count > 0
+
+    @DatabaseHelper._sessionm
+    def is_master_used(self, session, _id):
+        """Check if the specified master is used in an action.
+
+        Args:
+            self (MasteringDatabase) : instance of class
+            session (sqlalchemy.session) : session to access to the database. Generated by decorator
+            _id: the master id to check.
+        Return:
+            bool: True if the master is used in an action, False otherwise.
+            """
+
+        sql = """select
+    count(a.id)
+from actions a
+left join actionStatus acs on a.id = acs.action_id
+where  EXISTS (
+    select 1 from JSON_TABLE(a.content, '$[*]'
+    COLUMNS (
+        t varchar(255) PATH '$.type',
+        n int PATH '$.name',
+        u varchar(255) PATH '$.uuid'
+    )) as jt
+    where jt.t = 'action' and jt.u = (select uuid from masters where id = :master_id)
+)
+and (coalesce(acs.status, a.status) != :status
+and a.date_start <= NOW()
+and a.date_end > NOW())"""
+
+        binds = {
+            "master_id": _id,
+            "status": "DONE"
+        }
+
+        try:
+            count = session.execute(sql, binds).scalar()
+        except Exception as e:
+            logger.error("Failed to check if master is used : %s <=>%s"%(_id, e))
+            return False
+
+        return count > 0
+
     @DatabaseHelper._sessionm
     def get_mastering_scripts_list(self, session, server, entity, start, end, _filter):
         """Get the list of mastering scripts for a specific server and entity. This is used to get the list of scripts to display in the mastering workflow creation form.
@@ -770,6 +941,7 @@ WHERE results.action_id = :action_id
                     {
                         "id": master id,
                         "name": master name,
+                        "type": type of script,
                         "description": master description,
                         "content": master uuid,
                         "creation_date": master creation date,
@@ -810,7 +982,9 @@ WHERE results.action_id = :action_id
         sql = """SELECT SQL_CALC_FOUND_ROWS
     id,
     name,
+    type,
     description,
+    payload,
     creation_date,
     modification_date
 FROM scripts
@@ -838,16 +1012,26 @@ WHERE entity_id = :entity """
             return result
 
         for row in datas:
-            creation_date = row[3]
+            scriptName=""
+            payload = zlib.decompress(base64.b64decode(row.payload)).decode("utf-8")
+            try:
+                payload = json.loads(payload)
+                scriptName = payload["script"]
+            except:
+                pass
+
+            creation_date = row.creation_date
             if isinstance(creation_date, datetime):
                 creation_date = creation_date.strftime("%Y-%m-%d %H:%M:%S")
-            modification_date = row[4]
+            modification_date = row.modification_date
             if isinstance(modification_date, datetime):
                 modification_date = modification_date.strftime("%Y-%m-%d %H:%M:%S")
             result["data"].append({
-                "id": row[0],
-                "name": row[1] if row[1] is not None else "",
-                "description": row[2] if row[2] is not None else "",
+                "id": row.id,
+                "name": row.name if row.name is not None else "",
+                "type": row.type,
+                "script": scriptName,
+                "description": row.description if row.description is not None else "",
                 "creation_date": creation_date if creation_date is not None else "",
                 "modification_date": modification_date if modification_date is not None else "",
             })
@@ -855,7 +1039,7 @@ WHERE entity_id = :entity """
         return result
 
     @DatabaseHelper._sessionm
-    def add_mastering_script(self, session, server, entity, name, description, content):
+    def add_mastering_script(self, session, server:str, entity:int, name:str, description:str, content:str, _type:str="bash", payload:dict={}):
         """Add a mastering script on specific entity. The scripts are replacing the postinstall scripts in the former imaging plugin.
 
         Args:
@@ -866,16 +1050,22 @@ WHERE entity_id = :entity """
             name (str): the script name. This is used to identify the script.
             description (str): the script description. This is used to describe the script.
             content (str base64): the script content. This is used to store the script content.
+            _type (str, optionnal): the type of script added
+            payload (dict): The content of the payload to save
 
         Return:
             A dict with status and message of the operation."""
 
-        sql = """INSERT INTO scripts (entity_id, name, description, content) VALUES (:entity_id, :name, :description, :content)"""
+        dpayload = base64.b64encode(zlib.compress(json.dumps(payload).encode("utf-8"))).decode("utf-8")
+
+        sql = """INSERT INTO scripts (entity_id, name, description, content, type, payload) VALUES (:entity_id, :name, :description, :content, :type, :payload)"""
         binds = {
             "entity_id": entity,
             "name": name,
             "description": description,
-            "content": content,
+            "content": base64.b64encode(zlib.compress(content.encode("utf-8"))).decode("utf-8"),
+            "type":_type,
+            "payload":dpayload
         }
 
         try:
@@ -886,6 +1076,49 @@ WHERE entity_id = :entity """
             return {"status": 1, "msg": "Failed to add script"}
         session.commit()
         return {"status": 0, "msg": "Script added successfully."}
+
+
+    @DatabaseHelper._sessionm
+    def edit_mastering_script(self, session, server:str, entity:int, _id:int, name:str, description:str, content:str, _type:str="bash", payload:dict={}):
+        """edit a mastering script on specific entity. The scripts are replacing the postinstall scripts in the former imaging plugin.
+
+        Args:
+            self (MasteringDatabase) : instance of class
+            session (sqlalchemy.session) : session to access to the database. Generated by decorator
+            server (str): the server jid to associate the script with. Not used for now, but can be usefull in the future.
+            entity (int) : the entity id to associate the script with. This is used to associate the script with a specific entity.
+            _id (int): the script id we want to edit.
+            name (str): the script name. This is used to identify the script.
+            description (str): the script description. This is used to describe the script.
+            content (str base64): the script content. This is used to store the script content.
+            _type (str, optionnal): the type of script added
+            payload (dict): The content of the payload to save
+
+        Return:
+            A dict with status and message of the operation."""
+
+        dpayload = base64.b64encode(zlib.compress(json.dumps(payload).encode("utf-8"))).decode("utf-8")
+
+        sql = """UPDATE scripts set name=:name, description=:description, content=:content, payload=:payload, modification_date=NOW() WHERE entity_id=:entity_id and id=:id"""
+        binds = {
+            "entity_id": entity,
+            "id":_id,
+            "name": name,
+            "description": description,
+            "content": base64.b64encode(zlib.compress(content.encode("utf-8"))).decode("utf-8"),
+            "payload":dpayload
+        }
+
+        try:
+            session.execute(sql, binds)
+        except Exception as e:
+            session.rollback()
+            logger.error("Failed to edit mastering script : %s <=>%s"%(name, e))
+            return {"status": 1, "msg": "Failed to edit script"}
+        session.commit()
+        return {"status": 0, "msg": "Script edited successfully."}
+
+
 
 
     @DatabaseHelper._sessionm
@@ -920,4 +1153,45 @@ WHERE entity_id = :entity """
                 "description": row[2] if row[2] is not None else "",
             })
 
+        return result
+
+    @DatabaseHelper._sessionm
+    def get_mastering_script(self, session, entity_id, _id):
+        """
+        Get all datas from scripts based on the resource ID.
+
+        Args:
+            self (MasteringDatabase): Object Instance
+            session (sqlalchemy session): DB session
+            entity (int): the entity id to ensure the user doesn't try to access to another resource
+        Returns:
+            dict resource datas"""
+
+        sql = """SELECT * FROM scripts WHERE entity_id = :entity_id and id = :id """
+        binds = {
+            "entity_id": entity_id,
+            "id":_id
+        }
+        datas = session.execute(sql, binds).first()
+
+        result = {}
+        if datas is None:
+            return result
+
+
+        result["id"] = datas.id
+        result["entity_id"] = datas.entity_id
+        result["type"] = datas.type
+        result["name"] = datas.name
+        result["description"] = datas.description
+        try:
+            content = zlib.decompress(base64.b64decode(datas.content)).decode("utf-8")
+            result["content"] = content
+        except:
+            result["content"] = datas.content
+        try:
+            payload = zlib.decompress(base64.b64decode(datas.payload)).decode("utf-8")
+            result["payload"] = json.loads(payload)
+        except:
+            result["payload"] = payload
         return result

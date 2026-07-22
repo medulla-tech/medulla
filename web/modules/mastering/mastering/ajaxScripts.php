@@ -35,7 +35,8 @@ $descriptions = [];
 $contents = [];
 $creationDates = [];
 $modificationDates = [];
-
+$scriptNames = [];
+$scriptTypes = [];
 $editActions = [];
 $deleteActions = [];
 
@@ -46,6 +47,8 @@ foreach($scripts as $script){
     $descriptions[] = $script["description"];
     $creationDates[] = $script["creation_date"];
     $modificationDates[] = $script["modification_date"];
+    $scriptNames[] = $script["script"];
+    $scriptTypes[] = $script["type"];
 
     $editActions[] = $actionEdit;
     $deleteActions[] = $actionDelete;
@@ -54,6 +57,7 @@ foreach($scripts as $script){
         "id"=>$script["id"],
         "entity" => $entity,
         "name" => $script["name"],
+        "server" => $server
     ];
 }
 
@@ -62,7 +66,9 @@ $n->setCssClass("mastering");
 // $n->disableFirstColumnActionLink();
 $n->setParamInfo($params);
 
-$n->addExtraInfo($descriptions,   _T("Description", "mastering"));
+$n->addExtraInfo($descriptions, _T("Description", "mastering"));
+$n->addExtraInfo($scriptNames, _T("Script", "mastering"));
+$n->addExtraInfo($scriptTypes, _T("Type", "mastering"));
 $n->addExtraInfo($creationDates, _T("Creation Date", "mastering"));
 $n->addExtraInfo($modificationDates, _T("Last Modification Date", "mastering"));
 

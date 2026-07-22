@@ -1,5 +1,6 @@
 <?php
 
+require_once("modules/mastering/includes/class_form.php");
 require_once("modules/mastering/includes/xmlrpc.php");
 global $maxperpage;
 
@@ -17,25 +18,45 @@ if(!in_array($entity, $parentEntities)){
     array_unshift($parentEntities, $entity);
 }
 
+
 $server = xmlrpc_get_server_from_parent_entities($parentEntities);
 echo '<div>';
 echo '<p>'.sprintf(_T("Reference Server : %s", "mastering"), $server).'</p>';
 echo '</div>';
 
-$f = new ValidatingForm();
-$f->push(new Table());
 
-// Step title
-// $f->add(new TrFormElement("", $span));
-// $f->add(new TrFormElement(_T("Package source", "pkgs"), $r), array());
-$f->add(new TrFormElement("Name", new InputTpl("name"), ["value"=>"name"]));
-$f->add(new TrFormElement("Description", new InputTpl("description"), ["value"=>"description"]));
-$f->add(new TrFormElement("Content", new TextareaTpl("content"), []));
-$f->add(new HiddenTpl("server"), ["value"=>$server, "hide"=>true]);
-$f->add(new HiddenTpl("entity"), ["value"=>$entity, "hide"=>true]);
+// Push datas into $_SESSION["parameters"] array to retrieve them in the loaded form
+if(empty($_SESSION["parameters"] )){
+    $_SESSION["parameters"] = [];
+}
 
+$_SESSION["parameters"]["entity"] = $entity;
+$_SESSION["parameters"]["server"] = $server;
 
-$f->pop();
-$f->addValidateButton(_T("Confirm", "mastering"));
-$f->display();
+$selectType = new AjaxSelectItem('scriptType');
+
+// List of different kinds of scripts availables
+$list=[
+    'Sysprep Windows 10',
+    'Sysprep Windows 10 OEM',
+    'Sysprep Windows 11',
+    'Sysprep Windows 11 OEM',
+    'Bash',
+    'Preseed',
+];
+
+$list_val=[
+    'modules/mastering/mastering/ajaxFormWin10-uefi.php',
+    'modules/mastering/mastering/ajaxFormWin10-oem.php',
+    'modules/mastering/mastering/ajaxFormWin11-uefi.php', // Using a new file for Windows 11 UEFI to be able to switch easily with the old one if needed
+    'modules/mastering/mastering/ajaxFormWin11-oem.php',
+    'modules/mastering/mastering/ajaxFormBash.php',
+    'modules/mastering/mastering/ajaxFormPreseed.php',
+];
+
+$selectType->setElements($list);
+$selectType->setElementsVal($list_val);
+
+$selectType->display();
+
 ?>

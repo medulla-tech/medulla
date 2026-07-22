@@ -63,8 +63,7 @@ foreach($datas as $action){
     $elementIds[] = $action["element_id"];
 
     // Set as variable to be reusable later
-    $elementName = ($action["target"] == "") ? "N/P" : $action["target"];
-    $elementNames[] = $elementName;
+    $elementNames[] = ($action["target"] == "") ? "N/P" : $action["target"];
 
     $elementGids[] = $action["gid"];
     $elementUuids[] = $action["uuid"];

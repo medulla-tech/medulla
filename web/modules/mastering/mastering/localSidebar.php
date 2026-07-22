@@ -1,6 +1,6 @@
 <?
 /**
- * (c) 2020 Siveo, http://siveo.net
+ * (c) 2026 Medulla, http://medulla-tech.io
  *
  * This file is part of Management Console (MMC).
  *

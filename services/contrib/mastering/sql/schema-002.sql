@@ -22,6 +22,8 @@ USE mastering;
 
 START TRANSACTION;
 
+-- This table is in the center of mastering module.
+-- Each action asked for a machine a new machine or a group is stored in this table
 drop table if exists `actions`;
 CREATE TABLE `actions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -40,7 +42,7 @@ CREATE TABLE `actions` (
   PRIMARY KEY (`id`)
 );
 
-
+-- This table is used to configure which entity has to be mapped to which relayserver
 drop table if exists servers;
 CREATE TABLE if not exists `servers` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -49,6 +51,8 @@ CREATE TABLE if not exists `servers` (
   PRIMARY KEY (`id`)
 );
 
+
+-- Store the master info.
 drop table if exists `masters`;
 CREATE TABLE if not exists `masters` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -64,6 +68,7 @@ CREATE TABLE if not exists `masters` (
   PRIMARY KEY (`id`)
 );
 
+-- Keep a track of associations between masters and entities.
 drop table if exists `mastersEntities`;
 CREATE TABLE if not exists `mastersEntities` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -72,7 +77,7 @@ CREATE TABLE if not exists `mastersEntities` (
   PRIMARY KEY (`id`)
 );
 
-
+-- On each action the davos logs are stored here
 DROP TABLE IF EXISTS `results`;
 CREATE TABLE if not exists`results` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -84,19 +89,25 @@ CREATE TABLE if not exists`results` (
   PRIMARY KEY (`id`)
 );
 
+-- This table replace the postinstall scripts. Now the table is called script because you can
+-- run bash script
+-- launch scripts before or after mastering / restoring
 DROP TABLE IF EXISTS `scripts`;
 CREATE TABLE if not exists`scripts` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `entity_id` int(11) NOT NULL DEFAULT 0,
+  `type` varchar(50) DEFAULT 'bash',
   `name` varchar(50) NOT NULL,
   `description` varchar(255) DEFAULT '',
   `content` text DEFAULT '',
+  `payload` text DEFAULT '',
   `creation_date` datetime DEFAULT current_timestamp(),
   `modification_date` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 );
 
-
+-- An action can be reserved for a unique machine or a group of machines.
+-- This table stores the status of an action launched on a specific machine
 drop table if exists `actionStatus`;
 create table if not exists actionStatus(
     id int auto_increment primary key,

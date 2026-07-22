@@ -40,7 +40,7 @@ $params = [];
 
 $i=0;
 $creationDates = [];
-
+$modificationDates = [];
 $sizes = [];
 
 foreach($masters["id"] as $id){
@@ -60,6 +60,13 @@ foreach($masters["id"] as $id){
     else{
         $creationDates[] = "";
     }
+
+    if($masters["modification_date"][$i] != ""){
+        $modificationDates[] = date("Y-m-d h:i:s", $masters["modification_date"][$i]->timestamp);
+    }
+    else{
+        $modificationDates[] = "";
+    }
     $shareActions[] = $shareAction;
     $editActions[] = $editAction;
     $deleteActions[] = $deleteAction;
@@ -72,6 +79,7 @@ $n->setCssClass("masters");
 $n->disableFirstColumnActionLink();
 $n->addExtraInfo($masters['description'], _T("Descriptions", "mastering"));
 $n->addExtraInfo($creationDates, _T("Creation Date", "mastering"));
+$n->addExtraInfo($modificationDates, _T("Modification Date", "mastering"));
 $n->addExtraInfo($masters['uuid'], _T("Uuid", "mastering"));
 $n->addExtraInfo($sizes, _T("Size (Mb)", "mastering"));
 
@@ -103,4 +111,3 @@ loadSize = () =>{
 
 loadSize()
 </script>
-?>

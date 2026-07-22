@@ -170,6 +170,41 @@ $page->setFile("modules/mastering/mastering/ajaxNewScript.php");
 $page->setOptions(array("visible"=>False, "noHeader"=>True));
 $submod->addPage($page);
 
+$page = new Page("ajaxFormBash", _T("New Bash Script", "mastering"));
+$page->setFile("modules/mastering/mastering/ajaxFormBash.php");
+$page->setOptions(array("visible"=>False, "noHeader"=>True));
+$submod->addPage($page);
+
+$page = new Page("ajaxFormWin10-oem", _T("New Bash Script", "mastering"));
+$page->setFile("modules/mastering/mastering/ajaxFormWin10-oem.php");
+$page->setOptions(array("visible"=>False, "noHeader"=>True));
+$submod->addPage($page);
+
+$page = new Page("ajaxFormWin10-uefi", _T("New Bash Script", "mastering"));
+$page->setFile("modules/mastering/mastering/ajaxFormWin10-uefi.php");
+$page->setOptions(array("visible"=>False, "noHeader"=>True));
+$submod->addPage($page);
+
+$page = new Page("ajaxFormWin11-oem", _T("New Bash Script", "mastering"));
+$page->setFile("modules/mastering/mastering/ajaxFormWin11-oem.php");
+$page->setOptions(array("visible"=>False, "noHeader"=>True));
+$submod->addPage($page);
+
+$page = new Page("ajaxFormWin11-uefi", _T("New Bash Script", "mastering"));
+$page->setFile("modules/mastering/mastering/ajaxFormWin11-uefi.php");
+$page->setOptions(array("visible"=>False, "noHeader"=>True));
+$submod->addPage($page);
+
+
+// List of configured actions for entity
+$page = new Page("editScript", _T("Edit Script", "mastering"));
+$page->setFile("modules/mastering/mastering/editScript.php");
+$submod->addPage($page);
+
+$page = new Page("ajaxEditScript", _T("Edit Script", "mastering"));
+$page->setFile("modules/mastering/mastering/ajaxEditScript.php");
+$page->setOptions(array("visible"=>False, "noHeader"=>True));
+$submod->addPage($page);
 
 $mod->addSubmod($submod);
 

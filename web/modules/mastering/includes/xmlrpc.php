@@ -65,7 +65,7 @@ function xmlrpc_get_actions_for_machine($uuid, $start=0, $maxperpage=-1, $filter
 }
 
 function xmlrpc_get_action_results($id, $uuid, $entity, $start=0, $end=-1, $filter=""){
-    return xmlCall("mastering.get_action_results", [$id, $uuid, $start, $end, $filter]);
+    return xmlCall("mastering.get_action_results", [$id, $uuid, $entity, $start, $end, $filter]);
 }
 
 function xmlrpc_get_machines_action_results($id, $start=0, $maxperpage=-1, $filter=""){
@@ -79,17 +79,31 @@ function xmlrpc_delete_action($id){
     return xmlCall("mastering.delete_action", [$id]);
 }
 
+function xmlrpc_delete_script($id){
+    return xmlCall("mastering.delete_script", [$id]);
+}
 
 function xmlrpc_get_mastering_scripts_list($server, $entity, $start=0, $end=-1, $filter=""){
     return xmlCall("mastering.get_mastering_scripts_list", [$server, $entity, $start, $end, $filter]);
 }
 
-function xmlrpc_add_mastering_script($server, $entity, $name, $description, $content){
-    return xmlCall("mastering.add_mastering_script", [$server, $entity, $name, $description, $content]);
+function xmlrpc_add_mastering_script($server, $entity, $name, $description, $content, $type, $payload=[]){
+    return xmlCall("mastering.add_mastering_script", [$server, $entity, $name, $description, $content, $type, $payload]);
 }
 
+function xmlrpc_edit_mastering_script($server, $entity, $id, $name, $description, $content, $type, $payload=[]){
+    return xmlCall("mastering.edit_mastering_script", [$server, $entity, $id, $name, $description, $content, $type, $payload]);
+}
 function xmlrpc_get_summary_scripts_list($entity){
     return xmlCall("mastering.get_summary_scripts_list", [$entity]);
 
+}
+
+function xmlrpc_get_mastering_script($uuid, $id){
+    return xmlCall("mastering.get_mastering_script", [$uuid, $id]);
+}
+
+function xmlrpc_edit_master_infos($uuid, $name, $description=""){
+    return xmlCall("mastering.edit_master_infos", [$uuid, $name, $description]);
 }
 ?>

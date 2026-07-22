@@ -4,10 +4,6 @@ require_once("modules/mastering/includes/xmlrpc.php");
 
 global $maxperpage;
 
-// echo '<pre>';
-// print_r($_GET);
-// echo '</pre>';
-
 $start = (isset($_GET["start"])) ? (int)htmlentities($_GET["start"]) : 0;
 $end = (isset($_GET["end"]) ) ? (int)htmlentities($_GET['end']) : (int)$maxperpage;
 $filter = (isset($_GET['filter'])) ? htmlentities($_GET["filter"]) : "";
