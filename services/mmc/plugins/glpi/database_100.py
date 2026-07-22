@@ -41,16 +41,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import create_session, mapper, relationship, class_mapper
 from sqlalchemy.exc import NoSuchTableError, NoInspectionAvailable
-try:
-    from mmc.support.apirest.glpi import GLPIClient, GLPIClientApiV1, GLPIAPIError
-except ImportError:
-    from mmc.support.apirest.glpi import GLPIClient
-    GLPIClientApiV1 = GLPIClient
-    try:
-        from mmc.support.apirest.glpi import GLPIAPIError
-    except ImportError:
-        class GLPIAPIError(RuntimeError):
-            pass
+from mmc.support.apirest.glpi import GLPIClient, GLPIClientApiV1, GLPIAPIError
 
 try:
     from sqlalchemy.sql.expression import ColumnOperators
