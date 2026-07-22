@@ -1591,3 +1591,8 @@ msgstr "ou"
 #: modules/pkgs/pkgs/index.php
 msgid "Hide Windows Updates"
 msgstr "Masquer les MAJ Windows"
+
+#. Badge on a disabled workflow action, %s is an operating system list
+#: modules/pkgs/pkgs/addXMPP.php
+msgid "%s only"
+msgstr "%s uniquement"
