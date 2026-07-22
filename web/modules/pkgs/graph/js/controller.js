@@ -61,7 +61,7 @@ function addslashes(string) {
 jQuery(function(){
     var os = createInfo()
     jQuery.each(actionsList, function(id, actionName){
-        jQuery("#available-actions").append(jQuery(document.createElement("li")).load("/mmc/modules/pkgs/includes/actions/"+actionName+".php", {os : os['targetos']}));
+        jQuery("#available-actions").append(jQuery(document.createElement("li")).attr("data-action", actionName).load("/mmc/modules/pkgs/includes/actions/"+actionName+".php", {os : os['targetos']}));
     });
 })
 
@@ -94,6 +94,47 @@ jQuery( function() {
     });
     jQuery( "ul, li" ).disableSelection();
 } );
+
+
+/**
+ *
+ * ENABLE / DISABLE ACTIONS ACCORDING TO THE SELECTED OS
+ * The actions are kept visible so the user knows they exist, but the ones
+ * which are not supported by the selected os cannot be dragged anymore.
+ * @see actionsOs in class.js
+ *
+ */
+function updateActionsAvailability()
+{
+    var os = jQuery("#targetos").val();
+
+    // no os selector on the page : leave every action enabled
+    if(typeof(os) == "undefined")
+        return;
+
+    jQuery("#available-actions > li").each(function(){
+        var li = jQuery(this);
+        var supported = actionsOs[li.attr("data-action")];
+        // an action absent from actionsOs is available on every os
+        var available = !supported || jQuery.inArray(os, supported) != -1;
+
+        li.toggleClass("action-unavailable", !available);
+        // badge telling which os the action is available on, ex: "Windows only".
+        // The os labels are read back from the targetos select so they stay
+        // translated and in sync with the form.
+        li.attr("data-os-badge", available ? null : actionOsOnlyMsg.replace("%s",
+            jQuery.map(supported, function(o){
+                return jQuery("#targetos option[value='" + o + "']").text();
+            }).join(" / ")));
+        li.draggable(available ? "enable" : "disable");
+    });
+}
+
+// must run after the draggable initialization above
+jQuery(function(){
+    updateActionsAvailability();
+    jQuery("#targetos").on("change", updateActionsAvailability);
+});
 
 
 /**

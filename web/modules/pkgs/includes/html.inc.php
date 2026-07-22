@@ -85,7 +85,7 @@ class MultiFileTpl extends AbstractTpl
                             }
                             if(data.commandcmd.search(".deb") != -1 || data.commandcmd.search(".rpm") != -1)
                             {
-                              jQuery("#targetos").val("linux");
+                              jQuery("#targetos").val("linux").trigger("change");
                             }
                             jQuery(\'.qq-upload-file\').each(function() {
                                 googleFileName = jQuery(this).text();

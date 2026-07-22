@@ -305,20 +305,26 @@ a.info:hover span {
   position: relative;
 }
 
+/* same look as the jQuery UI tooltips used across the product,
+   @see graph/css/tooltip.css for the --tt-* variables */
 [data-title]:after {
   content: attr(data-title);
-  background-color: #00FF00;
-  color: #111;
-  font-size: 100%;
   position: absolute;
-  padding: 1px 5px 2px 5px;
-  bottom: -1.6em;
+  top: 100%;
   left: 10%;
-  white-space: nowrap;
-  box-shadow: 1px 1px 3px #222;
-  opacity: 0;
-  border: 1px solid #111;
+  margin-top: 4px;
   z-index: 99999;
+  padding: 6px 10px;
+  background: var(--tt-color-bg);
+  color: var(--tt-color-text);
+  border: 1px solid var(--tt-border-color);
+  border-radius: 8px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  font-size: var(--tt-font-size);
+  font-weight: 400;
+  line-height: 1.25;
+  white-space: nowrap;
+  opacity: 0;
   visibility: hidden;
 }
 
@@ -525,6 +531,49 @@ a.info:hover span {
 
 #available-actions li:hover {
   cursor: move;
+}
+
+/* Action not supported by the selected operating system. jQuery UI 1.12 only
+   adds .ui-draggable-disabled, which carries no styling, so the whole
+   disabled look is done here. */
+#available-actions li.action-unavailable {
+  position: relative;
+}
+
+/* outlined instead of filled, so it clearly reads as "not usable" without
+   turning the row into a dull grey block */
+#available-actions li.action-unavailable .header,
+#available-actions li.action-unavailable .header:hover {
+  background-color: var(--color-bg-light);
+  border: 1px dashed var(--color-border-medium);
+  padding: 7px 11px; /* compensates the 1px border, keeps rows aligned */
+}
+
+#available-actions li.action-unavailable .header h1 {
+  color: var(--color-text-light);
+}
+
+#available-actions li.action-unavailable:hover {
+  cursor: not-allowed;
+}
+
+/* badge telling which os the action is actually available on
+   @see updateActionsAvailability() in controller.js */
+#available-actions li.action-unavailable::after {
+  content: attr(data-os-badge);
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  padding: 1px 7px;
+  border-radius: 10px;
+  background-color: var(--color-bg-gray);
+  color: var(--color-text-medium);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+  pointer-events: none; /* keeps the title tooltip reachable */
 }
 
 /* ---- Workflow actions (right panel) ---- */
