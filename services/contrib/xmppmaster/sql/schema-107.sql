@@ -1,34 +1,38 @@
---
--- (c) 2026, http://www.medulla-tech.io/
+-- SPDX-FileCopyrightText: 2024-2025 Medulla, http://www.medulla-tech.io
+-- SPDX-License-Identifier: GPL-2.0-or-later
 --
 -- FILE contrib/xmppmaster/sql/schema-107.sql
+--
 -- =======================================
 -- Database xmppmaster
 -- =======================================
--- Elargissement de deploy.result : TEXT -> MEDIUMTEXT
+-- Renommage du Label LaunchDaemon macOS
 --
 
 START TRANSACTION;
 
 USE `xmppmaster`;
 
--- Le recap JSON depasse ~65000 caracteres (limite TEXT) sur les paquets a
--- nombreuses dependances : tronque -> JSON invalide -> faux "PARTIAL SUCCESS".
-ALTER TABLE `xmppmaster`.`deploy`
-    CHANGE COLUMN `result` `result` MEDIUMTEXT NULL DEFAULT NULL;
+-- Restart Mac via /usr/local/bin/medulla-restart (et pas un bare launchctl kickstart)
+-- car kickstart ne tue pas les enfants agentxmpp.py du launcher : ils survivent en
+-- orphelins et se battent pour la session XMPP -> loop / "Agent installed is different".
+-- medulla-restart fait killall -9 Python avant kickstart pour eviter ce cas.
+UPDATE qa_custom_command
+SET customcmd = '/usr/local/bin/medulla-restart',
+    namecmd = 'Restart Medulla Agent service',
+    description = 'Restart Medulla Agent macos service'
+WHERE os = 'macos'
+  AND namecmd = 'Restart Pulse Agent service';
 
+-- Migration des chemins de log macOS : ancien chemin Pulse vers le nouveau /var/log/medulla/
+-- Touche "Download agent log to file-transfer folder" + "Show last 100 lines of agent logs".
+UPDATE qa_custom_command
+SET customcmd = REPLACE(customcmd,
+                        '/Library/Application Support/Pulse/var/log/xmpp-agent-machine.log',
+                        '/var/log/medulla/medulla-agent.log')
+WHERE os = 'macos'
+  AND customcmd LIKE '%/Library/Application Support/Pulse/var/log/xmpp-agent-machine.log%';
 
--- Change event schedule to every 5 minutes instead of every 1 minute to allow previous event to finish before next one starts
-DROP EVENT IF EXISTS xmppmaster.ev_process_pending_events;
-CREATE EVENT IF NOT EXISTS xmppmaster.ev_process_pending_events
-ON SCHEDULE EVERY 5 MINUTE
-DO
-    CALL xmppmaster.up_event_move_to_white_list();
-
-
--- ----------------------------------------------------------------------
--- Database version
--- ----------------------------------------------------------------------
 UPDATE version SET Number = 107;
 
-COMMIT;
+commit;
