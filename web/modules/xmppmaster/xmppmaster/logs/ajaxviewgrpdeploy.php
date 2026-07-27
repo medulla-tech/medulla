@@ -701,6 +701,8 @@ if ($count != 0) {
     $reloadAction->staticParams = ["previous" => $_GET['previous']];
 
     $raw = 0;
+    $actionsLog = [];
+    $actionsReload = [];
     foreach($info_from_machines[8] as $key => $value) {
         $info_from_machines[2][$raw] = '<span class="machine-inventory">'.$info_from_machines[2][$raw].'</span>';
         $info_from_machines[3][$raw] = '<span class="machine-inventory">'.$info_from_machines[3][$raw].'</span>';
