@@ -8500,12 +8500,12 @@ class Glpi110(DyngroupDatabaseHelper):
             .add_column(self.glpi_computertypes.c.name.label("type"))
             .add_column(Machine.contact.label("contact"))
             .add_column(self.entities.c.name.label("entity"))
-            .join(self.os)
-            .join(
+            .outerjoin(self.os)
+            .outerjoin(
                 self.glpi_computertypes,
                 Machine.computertypes_id == self.glpi_computertypes.c.id,
             )
-            .join(Entities, Entities.id == Machine.entities_id)
+            .outerjoin(Entities, Entities.id == Machine.entities_id)
             .filter(Machine.id.in_(strlistuuid))
         )
 
