@@ -77,15 +77,32 @@ class MultiFileTpl extends AbstractTpl
                             var googleFileName = \'\';
                             jQuery(\'#version\').val(data.version);
                             jQuery(\'#commandcmd\').val(data.commandcmd);
+
+                            // Preselect target OS from file extension (mac/win/linux).
+                            if (data.suggestedOs) {
+                                jQuery("#targetos").val(data.suggestedOs).trigger("change");
+                            } else if (data.commandcmd.search(".deb") != -1 || data.commandcmd.search(".rpm") != -1) {
+                                jQuery("#targetos").val("linux").trigger("change");
+                            }
+
+                            // For single-line native commands (macOS pkg/dmg), use "Run Command"
+                            // (actionprocessscript) instead of "Run Script" (actionprocessscriptfile).
+                            // Both decode base64 server-side; the pipeline normalizes CRLF -> LF
+                            // for unix targets before persistence and again on agent decode.
+                            var useCommand = (data.suggestedAction === "command");
+                            var actionFile = useCommand
+                                ? "/mmc/modules/pkgs/includes/actions/actionprocessscript.php"
+                                : "/mmc/modules/pkgs/includes/actions/actionprocessscriptfile.php";
+                            var actionPayload = useCommand
+                                ? {"command": btoa(unescape(encodeURIComponent(data.commandcmd)))}
+                                : {"script": data.commandcmd, "typescript": "Batch"};
+                            var fieldName = useCommand ? "command" : "script";
+
                             if(document.getElementById("autocmd")){
-                              jQuery(\'#autocmd\').find("[name=\'script\']").val(data.commandcmd);
+                              jQuery("#autocmd").find("[name=\'" + fieldName + "\']").val(data.commandcmd);
                             }
                             else{
-                              jQuery("#current-actions").prepend(jQuery(document.createElement("li")).prop("id","autocmd").load("/mmc/modules/pkgs/includes/actions/actionprocessscriptfile.php",{"script":data.commandcmd,"typescript":"Batch"}));
-                            }
-                            if(data.commandcmd.search(".deb") != -1 || data.commandcmd.search(".rpm") != -1)
-                            {
-                              jQuery("#targetos").val("linux").trigger("change");
+                              jQuery("#current-actions").prepend(jQuery(document.createElement("li")).prop("id","autocmd").load(actionFile, actionPayload));
                             }
                             jQuery(\'.qq-upload-file\').each(function() {
                                 googleFileName = jQuery(this).text();

@@ -17,7 +17,7 @@ import re
 import hashlib
 from contextlib import closing
 from configparser import ConfigParser
-from base64 import b64encode
+from base64 import b64encode, b64decode
 from time import time
 from json import loads as parse_json
 import subprocess
@@ -1137,11 +1137,37 @@ def pkgs_getTemporaryFiles():
     return ret
 
 
+_EXT_OS_ACTION = {
+    # Windows
+    ".exe": ("win", "script"),
+    ".msi": ("win", "script"),
+    ".msu": ("win", "script"),
+    ".msp": ("win", "script"),
+    ".bat": ("win", "script"),
+    ".reg": ("win", "script"),
+    # Linux
+    ".deb": ("linux", "script"),
+    ".rpm": ("linux", "script"),
+    ".sh":  ("linux", "script"),
+    # macOS: single-line commands, run via native shell (no base64 round-trip).
+    ".pkg": ("mac", "command"),
+    ".dmg": ("mac", "command"),
+}
+
+
+def _suggestOsAndAction(filename):
+    """Return (targetos, action) suggested for an uploaded file, or (None, None)."""
+    ext = os.path.splitext(filename)[1].lower()
+    return _EXT_OS_ACTION.get(ext, (None, None))
+
+
 def getTemporaryFileSuggestedCommand1(tempdir, size_max=524288000):
     tmp_input_dir = os.path.join("/", "var", "lib", "pulse2", "package-server-tmpdir")
     retresult = {
         "version": "0.1",
         "commandcmd": [],
+        "suggestedOs": None,
+        "suggestedAction": None,
     }
     base_dir = os.path.join(tmp_input_dir, tempdir)
     if not os.path.isdir(base_dir):
@@ -1163,6 +1189,10 @@ def getTemporaryFileSuggestedCommand1(tempdir, size_max=524288000):
             for f in os.listdir(base_dir):
                 fileadd = os.path.join(base_dir, f)
                 if os.path.isfile(fileadd):
+                    tos, taction = _suggestOsAndAction(f)
+                    if tos is not None:
+                        retresult["suggestedOs"] = tos
+                        retresult["suggestedAction"] = taction
                     # Use the old system
                     try:
                         challenger = getCommand(fileadd)
@@ -1994,6 +2024,34 @@ def _stepforalias(alias, dictstepseq):
     return None
 
 
+def _normalizeLfInSequences(content):
+    """Force LF-only line endings in base64-encoded scripts/commands.
+    HTML form textareas post scripts with CRLF, which bash on macOS/Linux
+    refuses (breaks with exit code 126). Windows tolerates LF just fine, so
+    we normalize everywhere for a single consistent pipeline."""
+    # (action, base64 field name) that we know decode base64 server-side.
+    b64_fields = {
+        "actionprocessscriptfile": "script",
+        "actionprocessscript": "command",
+    }
+    for os_key in ("mac", "linux", "win"):
+        seq = content.get(os_key, {}).get("sequence", [])
+        for step in seq:
+            field = b64_fields.get(step.get("action"))
+            if not field:
+                continue
+            payload_b64 = step.get(field)
+            if not payload_b64:
+                continue
+            try:
+                raw = b64decode(payload_b64)
+                fixed = raw.replace(b"\r\n", b"\n")
+                if fixed != raw:
+                    step[field] = b64encode(fixed).decode()
+            except Exception:
+                pass
+
+
 def _save_xmpp_json(folder, json_content):
     """
     Save the xmpp json package into new package
@@ -2010,6 +2068,8 @@ def _save_xmpp_json(folder, json_content):
         content = json.loads(json_content)
     except ValueError:
         return False
+
+    _normalizeLfInSequences(content)
 
     if not os.path.exists(folder):
         os.mkdir(folder, 0o755)
@@ -2331,6 +2391,30 @@ esac""" % (
     def getShCommand(self):
         return './"%s"' % basename(self.file)
 
+    def getPkgCommand(self):
+        """Command for Apple Installer .pkg files (macOS)."""
+        return 'installer -pkg "%s" -target /' % basename(self.file)
+
+    def getDmgCommand(self):
+        """Command for Apple .dmg disk images (macOS).
+        Mounts the image, runs the .pkg inside or copies the .app to
+        /Applications, then unmounts.
+        """
+        return """set -e
+MNT=$(mktemp -d)
+hdiutil attach -nobrowse -mountpoint "$MNT" "%s"
+PKG=$(find "$MNT" -maxdepth 1 -name '*.pkg' -print -quit)
+APP=$(find "$MNT" -maxdepth 1 -name '*.app' -print -quit)
+if [ -n "$PKG" ]; then
+    installer -pkg "$PKG" -target /
+elif [ -n "$APP" ]; then
+    cp -R "$APP" /Applications/
+else
+    hdiutil detach "$MNT"
+    echo "No .pkg or .app found in DMG"; exit 1
+fi
+hdiutil detach "$MNT" """ % basename(self.file)
+
     def getCommand(self):
         self.logger.debug("Parsing %s:" % self.file)
 
@@ -2423,6 +2507,12 @@ esac""" % (
         elif self.file.endswith(".rpm"):
             self.logger.debug("rpm file detected")
             return self.getRpmCommand()
+        elif self.file.endswith(".pkg"):
+            self.logger.debug("Apple pkg file detected")
+            return self.getPkgCommand()
+        elif self.file.endswith(".dmg"):
+            self.logger.debug("Apple dmg file detected")
+            return self.getDmgCommand()
         else:
             return self.logger.info(
                 "I don't know what to do with %s (%s)"
