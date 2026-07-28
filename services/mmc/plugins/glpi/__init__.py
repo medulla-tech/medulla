@@ -130,7 +130,10 @@ class RpcProxy(RpcProxyI):
 
     @with_optional_xmpp_context
     def get_os_for_dashboard(self, ctx=None):
-        entities = ctx.get_session_info()['mondict']['liste_entities_user']
+        infos = ctx.get_session_info()['mondict']
+        entities = []
+        if "liste_entities_user" in infos:
+            entities = infos['liste_entities_user']
         os_data = Glpi().get_os_for_dashboard(entities)
         try:
             hmdm_data = getHmdmDevicesOsCount()
@@ -177,17 +180,26 @@ class RpcProxy(RpcProxyI):
 
     @with_optional_xmpp_context
     def get_antiviruses_for_dashboard(self, ctx=None):
-        entities = ctx.get_session_info()['mondict']['liste_entities_user']
+        infos = ctx.get_session_info()['mondict']
+        entities = []
+        if "liste_entities_user" in infos:
+            entities = infos['liste_entities_user']
         return xmlrpcCleanup(Glpi().get_antiviruses_for_dashboard(entities))
 
     @with_optional_xmpp_context
     def get_inventories_for_dashboard(self, ctx=None):
-        entities = ctx.get_session_info()['mondict']['liste_entities_user']
+        infos = ctx.get_session_info()['mondict']
+        entities = []
+        if "liste_entities_user" in infos:
+            entities = infos['liste_entities_user']
         return xmlrpcCleanup(Glpi().get_inventories_for_dashboard(entities))
 
     @with_optional_xmpp_context
     def get_phone_inventories_for_dashboard(self, ctx=None):
-        entities = ctx.get_session_info()['mondict']['liste_entities_user']
+        infos = ctx.get_session_info()['mondict']
+        entities = []
+        if "liste_entities_user" in infos:
+            entities = infos['liste_entities_user']
         return xmlrpcCleanup(Glpi().get_phone_inventories_for_dashboard(entities))
 
 def getLicensesComputer(vendor, software, version):

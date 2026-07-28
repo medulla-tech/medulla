@@ -11179,6 +11179,20 @@ class XmppMasterDatabase(DatabaseHelper):
 
         Return dict containing the machines counts
         """
+        ret = {
+            "total": 0,
+            "total_offline": 0,
+            "offline_uninventoried": 0,
+            "offline_inventoried": 0,
+            "total_online": 0,
+            "online_uninventoried": 0,
+            "online_inventoried": 0,
+            "total_uninventoried": 0,
+            "total_inventoried": 0,
+        }
+
+        if entities == []:
+            return ret
 
         # Convert the list of int to a list of str, to be able to join them
         entities = "(%s)"%(','.join([str(e) for e in entities]))
@@ -13723,6 +13737,9 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             (list) list of float corresponding to the success ratio for the six last weeks
         """
 
+        if entities == []:
+            return [0, 0, 0, 0, 0, 0]
+
         entities = "(%s)"%(",".join([str(e) for e in entities]))
 
         sql = """SELECT
@@ -14384,6 +14401,9 @@ FROM (SELECT
         Returns: list of deployments
         """
 
+        if entities == []:
+            return [0, 0, 0, 0, 0, 0]
+
         entities = "(%s)"%(",".join([str(e) for e in entities]))
 
         sql = """select
@@ -14425,6 +14445,10 @@ where lgf.entities_id in %s"""%entities
         Returns:
             (list) List of counts for the last six months, ordered by older to newer (element[0] = month 6 and element[5] = month 1)
         """
+
+        if entity == []:
+            return [0, 0, 0, 0, 0, 0]
+
         entities = "(%s)"%(','.join([str(e) for e in entity]))
         e0 = date.today()
         b0 = e0.replace(day=1)
