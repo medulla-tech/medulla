@@ -146,18 +146,28 @@ if ($mode === 'edit') {
         $prefill['profile_name'] = $u['profile_name'] ?? $prefill['profile_name'];
     } else {
         try {
-            $info = xmlrpc_get_user_info($userId, $_GET['profile_id']);
-            if (is_array($info)) {
-                $prefill['username']     = $info['login']      ?? $prefill['username'];
+            // get_user_info() renvoie les clés profiles_id / entity_id / name / realname
+            // (et non profile_id / entities_id / login). De plus, un filtre profile_id
+            // qui ne correspond pas au lien réel de l'utilisateur renvoie {} : on retente
+            // alors sans filtre pour récupérer le profil le plus pertinent de l'user cible.
+            $reqProfile = (isset($_GET['profile_id']) && $_GET['profile_id'] !== '') ? (int)$_GET['profile_id'] : null;
+            $info = xmlrpc_get_user_info($userId, $reqProfile);
+            if (!is_array($info) || empty($info)) {
+                $info = xmlrpc_get_user_info($userId);
+            }
+            if (is_array($info) && !empty($info)) {
+                $prefill['username']     = $info['name']       ?? ($info['login'] ?? $prefill['username']);
                 $prefill['firstname']    = $info['firstname']  ?? $prefill['firstname'];
-                $prefill['lastname']     = $info['lastname']   ?? ($info['realname'] ?? $prefill['lastname']);
+                $prefill['lastname']     = $info['realname']   ?? ($info['lastname'] ?? $prefill['lastname']);
                 $prefill['email']        = $info['email']      ?? $prefill['email'];
                 $prefill['phone']        = $info['phone']      ?? $prefill['phone'];
-                $prefill['profile_id']   = isset($info['profile_id']) ? (int)$info['profile_id'] : $prefill['profile_id'];
+                if (isset($info['profiles_id']) && $info['profiles_id'] !== '') {
+                    $prefill['profile_id'] = (int)$info['profiles_id'];
+                }
                 $prefill['profile_name'] = $_GET['profil_name'] ?? ($info['profile_name'] ?? $prefill['profile_name']);
 
-                if (isset($info['entities_id']) && $info['entities_id'] !== '') {
-                    $prefill['entities_id'] = (int)$info['entities_id'];
+                if (isset($info['entity_id']) && $info['entity_id'] !== '') {
+                    $prefill['entities_id'] = (int)$info['entity_id'];
                 }
             }
         } catch (Throwable $e) {
@@ -243,7 +253,7 @@ if (isset($_POST['profiles_id']) && $_POST['profiles_id'] !== '') {
     $defaultProfileId = (string)$prefill['profile_id'];
 } elseif (!empty($prefill['profile_name']) && isset($profileNameToId[$prefill['profile_name']])) {
     $defaultProfileId = (string)$profileNameToId[$prefill['profile_name']];
-} elseif (!empty($u['profile_id'])) { // fallback session
+} elseif ($isSelfEdit && !empty($u['profile_id'])) { // self-edit uniquement : ne jamais retomber sur le profil de l'admin connecté quand on édite un autre user
     $defaultProfileId = (string)$u['profile_id'];
 } elseif (!empty($profileIdToName)) {
     $defaultProfileId = array_key_first($profileIdToName);
@@ -485,14 +495,19 @@ if (isset($_POST["bupdate"])) {
     $origFirstName  = (string)($prefill['firstname'] ?? '');
     $origLastName   = (string)($prefill['lastname']  ?? '');
     $origPhone      = (string)($prefill['phone']     ?? '');
+    // Profil/entité "d'origine" = ceux de l'utilisateur CIBLE uniquement.
+    // On ne retombe jamais sur $u (l'admin connecté) hors self-edit, sinon
+    // attribuer à la cible le même profil que l'admin (ex: Super-Admin) serait
+    // vu comme "aucun changement" et ne serait jamais appliqué. Inconnu => null
+    // => toute valeur postée est considérée comme un changement et appliquée.
     $origProfileId  = !empty($prefill['profile_id'])
         ? (int)$prefill['profile_id']
-        : (!empty($prefill['profile_name']) && isset($profileNameToId[$prefill['profile_name']])
+        : ((!empty($prefill['profile_name']) && isset($profileNameToId[$prefill['profile_name']]))
             ? (int)$profileNameToId[$prefill['profile_name']]
-            : (!empty($u['profile_id']) ? (int)$u['profile_id'] : null));
+            : ($isSelfEdit && !empty($u['profile_id']) ? (int)$u['profile_id'] : null));
     $origEntityId = isset($prefill['entities_id'])
-    ? (int)$prefill['entities_id']
-    : (isset($u['entities_id']) ? (int)$u['entities_id'] : null);
+        ? (int)$prefill['entities_id']
+        : ($isSelfEdit && isset($u['entities_id']) ? (int)$u['entities_id'] : null);
     $origRecursive  = isset($prefill['is_recursive']) ? (int)$prefill['is_recursive']
                     : (isset($_GET['is_recursive']) ? (int)($_GET['is_recursive'] === '1') : null);
 
@@ -643,6 +658,23 @@ if (isset($_POST["bupdate"])) {
         if ($pwdChanged) {
             $res = @changeUserAttributes($uidForAttrs, 'userPassword', $pwd);
             if ($res === false || $res === null) { $ldapOk = false; $ldapErrors[] = 'userPassword'; }
+        }
+
+        // MMC ACL : quand le profil change, on reconstruit et repose le lmcACL
+        // dans le LDAP local (comme le fait la création). Sans ça, GLPI a le bon
+        // profil mais Medulla lit un lmcACL périmé => "Vous n'avez pas les droits".
+        if ($profileChanged) {
+            $newProfileName = $profileIdToName[(string)$postedProfileId]
+                ?? (xmlrpc_get_profile_name($postedProfileId, $tokenuser) ?: '');
+            if ($newProfileName !== '') {
+                $aclString = xmlrpc_build_acl_string_for_profile($newProfileName, getInstallType());
+                if ($aclString !== '') {
+                    $resAcl = @setAcl($uidForAttrs, $aclString);
+                    if ($resAcl === false || $resAcl === null) { $ldapOk = false; $ldapErrors[] = 'lmcACL'; }
+                } else {
+                    error_log('[editUser] empty ACL string for profile ' . $newProfileName);
+                }
+            }
         }
 
         if (!$ldapOk) {

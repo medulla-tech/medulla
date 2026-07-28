@@ -256,7 +256,12 @@ class ExternalLdapProvisioner(ProvisionerI):
                 )
             if isinstance(givenName, bytes):
                 givenName = givenName.decode("utf-8")
-            l.addUser(uid, authtoken.getPassword(), givenName, sn)
+            res = l.addUser(uid, authtoken.getPassword(), givenName, sn)
+            # addUser renvoie {"success": False} sans créer l'entrée : ne pas masquer l'échec
+            if isinstance(res, dict) and not res.get("success", True):
+                self.logger.error(
+                    f"Failed to create local LDAP user {uid}: {res.get('message')}"
+                )
         if self.config.profileAttr and self.config.profilesAcl:
             # Set or update the user right
             try:
