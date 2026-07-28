@@ -28,11 +28,17 @@ if (isset($_POST["bconfirm"])) {
     $os       = $_POST['os'] ?? 'windows';
     $entityId = $_POST['entityId'] ?? '';
 
-    // Select filename based on OS
+    // Select filename and root directory based on OS. macOS is Apple
+    // Silicon only for now (Intel .pkg exists but is not yet tested).
     if ($os === 'linux') {
         $filename = 'Medulla-Agent-linux-MINIMAL-latest.sh';
+        $osDir = 'lin';
+    } elseif ($os === 'mac') {
+        $filename = 'Medulla-Agent-mac-arm64-latest.pkg';
+        $osDir = 'mac';
     } else {
         $filename = 'Medulla-Agent-windows-FULL-latest.exe';
+        $osDir = 'win';
     }
 
     // Root entity (id == 0) is served the global agent; any other entity
@@ -40,8 +46,7 @@ if (isset($_POST["bconfirm"])) {
     $isRoot = ($entityId !== '' && (int)$entityId === 0);
 
     if ($isRoot) {
-        $dir = ($os === 'linux') ? '/var/lib/pulse2/clients/lin' : '/var/lib/pulse2/clients/win';
-        $fs_path = "$dir/$filename";
+        $fs_path = "/var/lib/pulse2/clients/$osDir/$filename";
     } else {
         $dl_tag  = xmlrpc_get_dl_tag($tag);
         $fs_path = !empty($dl_tag) ? "/var/lib/pulse2/medulla_agent/$dl_tag/$filename" : '';
@@ -83,8 +88,8 @@ $f->push(new Table());
 
 // Radio button for OS selection
 $osRadio = new RadioTpl("os");
-$osRadio->setChoices([_("Windows"), _("Linux")]);
-$osRadio->setValues(["windows", "linux"]);
+$osRadio->setChoices([_("Windows"), _("Linux"), _("macOS")]);
+$osRadio->setValues(["windows", "linux", "mac"]);
 $osRadio->setSelected("windows");
 
 $tr = new TrFormElement(_("Select the operating system:"), $osRadio);
