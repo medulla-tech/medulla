@@ -196,7 +196,7 @@ class GlpiProvisioner(ProvisionerI):
             if isinstance(password, bytes):
                 password = password.decode("utf-8", "ignore")
 
-            client.create_user(
+            user_id = client.create_user(
                 identifier=login,
                 firstname=_first("givenName"),
                 lastname=_first("sn"),
@@ -207,6 +207,17 @@ class GlpiProvisioner(ProvisionerI):
             self.logger.info(
                 "GLPI user '%s' created (root entity, Self-Service profile)" % login
             )
+
+            # Génère et pose un api_token pour le nouvel utilisateur
+            # (même logique que admin.create_user)
+            try:
+                api_token = client.generate_token()
+                Glpi().set_user_api_token(int(user_id), api_token)
+                self.logger.info("GLPI api_token set for user '%s'" % login)
+            except Exception as e:
+                self.logger.error(
+                    "GLPI api_token generation failed for user '%s': %s" % (login, e)
+                )
             return True
         except Exception as e:
             self.logger.exception(e)
