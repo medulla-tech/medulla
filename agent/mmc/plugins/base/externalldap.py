@@ -256,7 +256,10 @@ class ExternalLdapProvisioner(ProvisionerI):
                 )
             if isinstance(givenName, bytes):
                 givenName = givenName.decode("utf-8")
-            res = l.addUser(uid, authtoken.getPassword(), givenName, sn)
+            # pas de home (createHomeDir=False) ni de check d'existence (ownHomeDir=True)
+            res = l.addUser(
+                uid, authtoken.getPassword(), givenName, sn, None, False, True
+            )
             # addUser renvoie {"success": False} sans créer l'entrée : ne pas masquer l'échec
             if isinstance(res, dict) and not res.get("success", True):
                 self.logger.error(
