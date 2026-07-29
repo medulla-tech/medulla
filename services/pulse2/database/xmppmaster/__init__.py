@@ -9594,15 +9594,21 @@ class XmppMasterDatabase(DatabaseHelper):
         if not user:
             logger.error("SetPresenceMachine jid error : %s" % jid)
             return False
+        # Fallback JID: on macOS DB hostname (ComputerName) differs from the
+        # JID prefix (platform.node()), so hostname LIKE alone never matched.
+        bare_jid = str(jid).split("/", 1)[0]
         try:
             sql = """UPDATE
                         `xmppmaster`.`machines`
                     SET
                         `xmppmaster`.`machines`.`enabled` = '%s'
                     WHERE
-                        `xmppmaster`.`machines`.hostname like '%s' limit 1;""" % (
+                        (`xmppmaster`.`machines`.`hostname` LIKE '%s'
+                         OR `xmppmaster`.`machines`.`jid` LIKE '%s/%%')
+                    LIMIT 1;""" % (
                 presence,
                 user,
+                bare_jid,
             )
             session.execute(sql)
             session.commit()
