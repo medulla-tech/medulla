@@ -73,14 +73,14 @@ UPDATES=$(LANG=C apt-get -s dist-upgrade 2>/dev/null | awk '/^Inst/ { print $2 }
 MEDULLA_UPDATES=""
 for pkg in $UPDATES; do
     # Check if package comes from medulla repository
-    repo_check=$(apt-cache policy "$pkg" 2>/dev/null | awk '/Candidate:/,/\*\*\*/' | grep -i medulla)
+    repo_check=$(LC_ALL=C apt-cache policy "$pkg" 2>/dev/null | awk '/Candidate:/,/\*\*\*/' | grep -i medulla)
     if [[ -n "$repo_check" ]]; then
         MEDULLA_UPDATES="${MEDULLA_UPDATES} ${pkg}"
     fi
 done
 
 # Get available version from apt candidate
-AVAILABLE_VERSION=$(apt-cache policy pulse2-common 2>/dev/null | awk '/Candidate/ { print $2 }' | cut -d'g' -f1)
+AVAILABLE_VERSION=$(LC_ALL=C apt-cache policy pulse2-common 2>/dev/null | awk '/Candidate/ { print $2 }' | cut -d'g' -f1)
 
 # Check for updates: either new packages available via apt, or pending migration
 # (packages already updated but /var/lib/mmc/version not yet bumped)
