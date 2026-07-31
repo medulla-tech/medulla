@@ -990,7 +990,7 @@ update_561_to_562() {
         echo "fs.inotify.max_queued_events=32768" >> /etc/sysctl.d/99-pulse.conf
     fi
     # Apply the new sysctl settings
-    sysctl -p /etc/sysctl.d/99-pulse.conf
+    sysctl -p /etc/sysctl.d/99-pulse.conf > /dev/null 2>&1
     if [[ $? -ne 0 ]]; then
         str="[x] Error applying inotify limits sysctl settings. Aborting."
         echo "$str"
@@ -1028,6 +1028,208 @@ update_562_to_563() {
         exec /usr/sbin/update_medulla.sh "$@"
     fi
 }
+
+update_563_to_xxx() {
+    str="Applying Medulla config update from 5.6.3 to xxx..."
+    echo "$str"
+    write_to_log "$str"
+
+    str="[=] Installing HMDM for Medulla..."
+    echo "$str"
+    write_to_log "$str"
+    HMDM_HOSTNAME="${INTERNAL_FQDN}"
+    HMDM_DBHOST="localhost"
+    HMDM_DBPORT="3306"
+    HMDM_DBNAME="hmdm"
+    HMDM_DBUSER="hmdm"
+    HMDM_DBPASSWD=$(openssl rand -base64 24)
+    HMDM_TOMCAT_PORT="8081"
+    HMDM_APACHE_CONF="/etc/apache2/conf-available/hmdm.conf"
+
+    HMDM_ADMINPASSWD=$(crudini --get /etc/mmc/plugins/base.ini.local ldap password)
+
+    HMDM_TURNHOST="${HMDM_HOSTNAME}"
+    HMDM_TURNPORT="3478"
+    HMDM_TURNUSER="turnuser"
+    HMDM_TURNPASSWD=$(openssl rand -base64 24)
+
+    HMDM_BUILD_DEST="/opt/HMDM_BUILD"
+    HMDM_BUILD_URL="https://dl.medulla-tech.io/in/hmdm-build-5.36.2-1.tar.gz"
+
+    if [[ ! -f /var/lib/hmdm/.hmdminitialised ]]; then
+
+        apt -y install tomcat9 mariadb-client aapt wget curl openssl > /dev/null 2>&1
+
+        mysql --defaults-group-suffix=dbsetup -e "CREATE DATABASE IF NOT EXISTS ${HMDM_DBNAME} DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+
+        mysql --defaults-group-suffix=dbsetup -e "GRANT ALL PRIVILEGES ON ${HMDM_DBNAME}.* TO '${HMDM_DBUSER}'@'localhost' IDENTIFIED BY '${HMDM_DBPASSWD}'; FLUSH PRIVILEGES;"
+        mysql --defaults-group-suffix=dbsetup -e "GRANT ALL PRIVILEGES ON ${HMDM_DBNAME}.* TO '${HMDM_DBUSER}'@'${IP_ADDRESS}' IDENTIFIED BY '${HMDM_DBPASSWD}'; FLUSH PRIVILEGES;"
+        mysql --defaults-group-suffix=dbsetup -e "GRANT ALL PRIVILEGES ON ${HMDM_DBNAME}.* TO '${HMDM_DBUSER}'@'${INTERNAL_FQDN}' IDENTIFIED BY '${HMDM_DBPASSWD}'; FLUSH PRIVILEGES;"
+
+        if [[ -n "${PUBLIC_IP}" ]]; then
+            mysql --defaults-group-suffix=dbsetup -e "GRANT ALL PRIVILEGES ON ${HMDM_DBNAME}.* TO '${HMDM_DBUSER}'@'${PUBLIC_IP}' IDENTIFIED BY '${HMDM_DBPASSWD}'; FLUSH PRIVILEGES;"
+        fi
+
+        curl -fsSL "${HMDM_BUILD_URL}" -o /tmp/hmdm-build.tar.gz
+
+        tar -xzf /tmp/hmdm-build.tar.gz -C /opt/
+
+        chmod +x "${HMDM_BUILD_DEST}/hmdm_install.sh"
+
+        HMDM_INSTALL_RC=0
+
+        if (
+            cd "${HMDM_BUILD_DEST}" || exit 1
+
+            ./hmdm_install.sh \
+                --hostname "${HMDM_HOSTNAME}" \
+                --db-host "${HMDM_DBHOST}" \
+                --db-port "${HMDM_DBPORT}" \
+                --db-name "${HMDM_DBNAME}" \
+                --db-user "${HMDM_DBUSER}" \
+                --db-pass "${HMDM_DBPASSWD}" \
+                --admin-pass "${HMDM_ADMINPASSWD}" \
+                --turn-host "${HMDM_TURNHOST}" \
+                --turn-port "${HMDM_TURNPORT}" \
+                --turn-user "${HMDM_TURNUSER}" \
+                --turn-pass "${HMDM_TURNPASSWD}"
+        ); then
+            HMDM_INSTALL_RC=0
+        else
+            HMDM_INSTALL_RC=$?
+        fi
+
+        if [[ ${HMDM_INSTALL_RC} -ne 0 ]]; then
+            str="[!] HMDM installer returned an error. Waiting for deployment..."
+            echo "$str"
+            write_to_log "$str"
+
+            HMDM_DEPLOY_TIMEOUT=180
+            HMDM_CHECK_INTERVAL=5
+
+            for ((i=0; i<HMDM_DEPLOY_TIMEOUT/HMDM_CHECK_INTERVAL; i++)); do
+                if curl -fsS --connect-timeout 2 --max-time 3 \
+                    "http://127.0.0.1:${HMDM_TOMCAT_PORT}/hmdm/" \
+                    >/dev/null 2>&1; then
+                    HMDM_INSTALL_RC=0
+                    break
+                fi
+
+                sleep "${HMDM_CHECK_INTERVAL}"
+            done
+        fi
+
+        if [[ ${HMDM_INSTALL_RC} -ne 0 ]]; then
+            str="[x] HMDM installation failed."
+            echo "$str"
+            write_to_log "$str"
+            exit 1
+        fi
+
+        str="[v] HMDM installed successfully."
+        echo "$str"
+        write_to_log "$str"
+
+        mkdir -p /var/lib/hmdm
+        touch /var/lib/hmdm/.hmdminitialised
+    fi
+
+    str="[=] Configuring Apache reverse proxy for HMDM..."
+    echo "$str"
+    write_to_log "$str"
+
+    if ! a2enmod proxy proxy_http; then
+        str="[x] Failed to enable Apache proxy modules."
+        echo "$str"
+        write_to_log "$str"
+        exit 1
+    fi
+    cat > "${HMDM_APACHE_CONF}" <<EOF
+<IfModule mod_proxy.c>
+    ProxyPreserveHost On
+
+    ProxyPass        /hmdm/ http://127.0.0.1:${HMDM_TOMCAT_PORT}/hmdm/
+    ProxyPassReverse /hmdm/ http://127.0.0.1:${HMDM_TOMCAT_PORT}/hmdm/
+
+    RedirectMatch 301 ^/hmdm$ /hmdm/
+
+</IfModule>
+EOF
+
+    if ! a2enconf hmdm; then
+        str="[x] Failed to enable HMDM Apache configuration."
+        echo "$str"
+        write_to_log "$str"
+        exit 1
+    fi
+
+    if ! apache2ctl configtest; then
+        str="[x] Invalid Apache configuration for HMDM."
+        echo "$str"
+        write_to_log "$str"
+        exit 1
+    fi
+
+    if ! systemctl reload apache2; then
+        str="[x] Failed to reload Apache after HMDM configuration."
+        echo "$str"
+        write_to_log "$str"
+        exit 1
+    fi
+
+    str="[v] Apache reverse proxy for HMDM configured successfully."
+    echo "$str"
+    write_to_log "$str"
+
+    str="[=] Installing Mac agent generation prerequisites..."
+    echo "$str"
+    write_to_log "$str"
+
+    apt install -y build-essential autoconf libtool libxml2-dev libssl-dev libbz2-dev zlib1g-dev pkg-config git > /dev/null 2>&1
+
+    if ! command -v xar >/dev/null 2>&1; then
+        rm -rf /tmp/xar
+        git clone https://github.com/tpoechtrager/xar.git /tmp/xar
+
+        (
+            cd /tmp/xar/xar || exit 1
+            ./autogen.sh
+            ./configure
+            make
+            make install
+        )
+    fi
+
+    if ! command -v mkbom >/dev/null 2>&1; then
+        rm -rf /tmp/bomutils
+        git clone https://github.com/hogliux/bomutils.git /tmp/bomutils
+
+        (
+            cd /tmp/bomutils || exit 1
+            make
+            make install
+        )
+    fi
+
+    str="[v] Mac agent generation prerequisites installed successfully."
+    echo "$str"
+    write_to_log "$str"
+    update_medulla
+
+    echo "xxx" > /var/lib/mmc/version
+
+    str="[v] Medulla config update from 5.6.3 to xxx applied successfully."
+    echo "$str"
+    write_to_log "$str"
+
+    if [[ -f /tmp/update_medulla.sh ]]; then
+        exec /tmp/update_medulla.sh "$@"
+    else
+        exec /usr/sbin/update_medulla.sh "$@"
+    fi
+}
+
+
 
 # --- End of specific update functions for each version ---
 
