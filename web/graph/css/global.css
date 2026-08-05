@@ -2535,7 +2535,7 @@ td img[src*="img/other/"],
 
 .empty-state-box {
   max-width: 500px;
-  margin: 40px auto;
+  margin: 10vh auto 40px;
   padding: 24px;
   background: #fff;
   border-radius: 12px;

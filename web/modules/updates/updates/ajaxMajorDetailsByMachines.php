@@ -62,20 +62,22 @@ if ($nbMissing > 0) {
 }
 
 if ($typeaction == "windows") {
-    $n = new ListInfos(array($_GET['W10to10']), _T("Upgrade to latest Win 10", "updates"));
-    $n->addExtraInfoCentered(array($_GET['W10to11']), _T("Upgrade Win 10 to latest Win 11", "updates"));
-    $n->addExtraInfoCentered(array($_GET['W11to11']), _T("Upgrade to latest Win 11", "updates"));
-    $n->addExtraInfoCentered(array($_GET['UPDATED']), _T("Up to date", "updates"));
-    $n->addExtraInfoCenteredRaw(array($nbMissingCell), _T("Upgrade Not recommended", "updates"));
-    $n->addExtraInfoCentered(array($_GET['totalmachineentity']), _T("Total machines", "updates"));
+    $n = new ListInfos(array($_GET['W10to10']), _T("Win 10 → 10", "updates"), "", "", _T("Windows 10 machines that must first be upgraded to the latest Windows 10 version.", "updates"));
+    $n->setTableCssClass("major-summary");
+    $n->addExtraInfoCentered(array($_GET['W10to11']), _T("Win 10 → 11", "updates"), "", _T("Windows 10 machines already up to date, eligible for the upgrade to Windows 11.", "updates"));
+    $n->addExtraInfoCentered(array($_GET['W11to11']), _T("Win 11 → 11", "updates"), "", _T("Windows 11 machines that must be upgraded to the latest Windows 11 version.", "updates"));
+    $n->addExtraInfoCentered(array($_GET['UPDATED']), _T("Up to date", "updates"), "", _T("Machines already running the latest version of their operating system.", "updates"));
+    $n->addExtraInfoCenteredRaw(array($nbMissingCell), _T("Upgrade Not recommended", "updates"), "", _T("Machines that do not meet the hardware requirements for the target version.", "updates"));
+    $n->addExtraInfoCentered(array($_GET['totalmachineentity']), _T("Total machines", "updates"), "", _T("Total number of machines attached to this entity.", "updates"));
 } else {
-    $n = new ListInfos(array($_GET['MS12toMS25']), _T("Upgrade Win Server 2012 to 2025", "updates"));
-    $n->addExtraInfoCentered(array($_GET['MS16toMS25']), _T("Upgrade Win Server 2016 to 2025", "updates"));
-    $n->addExtraInfoCentered(array($_GET['MS19toMS25']), _T("Upgrade Win Server 2019 to 2025", "updates"));
-    $n->addExtraInfoCentered(array($_GET['MS25toMS25']), _T("Upgrade to latest Win Server 2025", "updates"));
-    $n->addExtraInfoCentered(array($_GET['UPDATED']), _T("Up to date", "updates"));
-    $n->addExtraInfoCentered(array($_GET['nb_missing']), _T("Upgrade Not recommended", "updates"));
-    $n->addExtraInfoCentered(array($_GET['totalmachineentity']), _T("Total machines", "updates"));
+    $n = new ListInfos(array($_GET['MS12toMS25']), _T("2012 → 2025", "updates"), "", "", _T("Windows Server 2012 machines to upgrade to Windows Server 2025.", "updates"));
+    $n->setTableCssClass("major-summary");
+    $n->addExtraInfoCentered(array($_GET['MS16toMS25']), _T("2016 → 2025", "updates"), "", _T("Windows Server 2016 machines to upgrade to Windows Server 2025.", "updates"));
+    $n->addExtraInfoCentered(array($_GET['MS19toMS25']), _T("2019 → 2025", "updates"), "", _T("Windows Server 2019 machines to upgrade to Windows Server 2025.", "updates"));
+    $n->addExtraInfoCentered(array($_GET['MS25toMS25']), _T("2025 → 2025", "updates"), "", _T("Windows Server 2025 machines to upgrade to the latest available version.", "updates"));
+    $n->addExtraInfoCentered(array($_GET['UPDATED']), _T("Up to date", "updates"), "", _T("Machines already running the latest version of their operating system.", "updates"));
+    $n->addExtraInfoCentered(array($_GET['nb_missing']), _T("Upgrade Not recommended", "updates"), "", _T("Machines that do not meet the hardware requirements for the target version.", "updates"));
+    $n->addExtraInfoCentered(array($_GET['totalmachineentity']), _T("Total machines", "updates"), "", _T("Total number of machines attached to this entity.", "updates"));
 }
 $n->setNavBar = "";
 $n->start = 0;

@@ -453,7 +453,7 @@ if(isset($_POST['bconfirm'],
 
     if(!empty($result["success"]) && $result["success"] == 1) {
         $mesg = sprintf("%s %s done",
-                        _T("Deployment major update Linux","msc"),
+                        _T("Deployment major update Linux","updates"),
                         $title_deployement);
         new NotifyWidgetSuccess($mesg);
         header("location:". urlStrRedirect("updates/updates/index"));
@@ -467,10 +467,10 @@ if(isset($_POST['bconfirm'],
     // Le titre doit donc rester générique: passage vers la release supérieure.
     $is_group_context = ($entity_id !== "" && $id_machine_xmpp === "" && $id_machine_glpi === "");
     if ($is_group_context) {
-        $mach = sprintf(_T("Linux major upgrades to next release [%s]", "msc"), $cn);
+        $mach = sprintf(_T("Linux major upgrades to next release [%s]", "updates"), $cn);
     } else {
         $display_release = ($effective_release_version !== "") ? $effective_release_version : $release_version;
-        $mach = sprintf(_T("Linux major upgrade: %s %s [%s]", "msc"), $distributor_id, $display_release, $cn);
+        $mach = sprintf(_T("Linux major upgrade: %s %s [%s]", "updates"), $distributor_id, $display_release, $cn);
     }
     $f->add(new TitleElement($mach, 1));
     $f->push(new Table());

@@ -206,11 +206,21 @@
     margin-top: 16px;
 }
 
-/* En-tetes porteurs d'une infobulle : .infomach (tooltip.css) souligne en
-   rgba(100,160,200,.2), invisible sur le fond fonce du thead. On reprend la
-   couleur du texte de l'en-tete pour que l'affordance reste perceptible. */
-.entity-compliance-table table.listinfos thead th .column-tooltip {
-    border-bottom: 1px dotted currentColor;
+/* Tableaux de synthese (une ligne de compteurs) : contrairement aux listes,
+   leur premiere colonne porte un nombre et non un libelle. Le framework aligne
+   cette colonne a gauche par principe, on la centre comme les autres. */
+table.listinfos.major-summary thead th,
+table.listinfos.major-summary tbody td {
+    text-align: center;
+}
+
+/* En-tetes porteurs d'une infobulle.
+   Pas de soulignement : .infomach (tooltip.css) en pose un, mais quand presque
+   toutes les colonnes sont documentees il ne distingue plus rien et se coupe en
+   deux sur les en-tetes qui passent a la ligne. Seul le curseur d'aide signale
+   l'infobulle. */
+table.listinfos thead th .column-tooltip {
+    border-bottom: none;
     cursor: help;
 }
 

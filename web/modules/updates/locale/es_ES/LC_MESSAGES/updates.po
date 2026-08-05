@@ -315,8 +315,6 @@ msgstr "Pendientes"
 msgid "Installed"
 msgstr "Instaladas"
 
-msgid "Total"
-msgstr "Total"
 
 #, php-format
 msgid "Updates history for entity %s"
@@ -1193,3 +1191,207 @@ msgstr "Programar la actualización de aplicaciones y bibliotecas de %s en la en
 
 msgid "%s: %s"
 msgstr "%s: %s"
+
+msgid "OS Upgrades - Compliance Status"
+msgstr "Actualizaciones de versión - Estado de conformidad"
+
+
+
+
+
+
+
+
+msgid "Share of machines already running the latest version of their operating system."
+msgstr "Proporción de máquinas que ya ejecutan la última versión de su sistema operativo."
+
+msgid "Windows 10 machines that must first be upgraded to the latest Windows 10 version."
+msgstr "Máquinas Windows 10 que primero deben actualizarse a la última versión de Windows 10."
+
+msgid "Windows 10 machines already up to date, eligible for the upgrade to Windows 11."
+msgstr "Máquinas Windows 10 ya actualizadas, aptas para la actualización a Windows 11."
+
+msgid "Windows 11 machines that must be upgraded to the latest Windows 11 version."
+msgstr "Máquinas Windows 11 que deben actualizarse a la última versión de Windows 11."
+
+msgid "Machines already running the latest version of their operating system."
+msgstr "Máquinas que ya ejecutan la última versión de su sistema operativo."
+
+msgid "Machines that do not meet the hardware requirements for the target version."
+msgstr "Máquinas que no cumplen los requisitos de hardware de la versión de destino."
+
+# Onglets de montee de version par distribution
+msgid "Machines with %s version pending support update"
+msgstr "Máquinas cuya versión de %s está pendiente de soporte"
+
+msgid "Total %s machines in entity"
+msgstr "Número total de máquinas %s en la entidad"
+
+msgid "Upgrade to %s"
+msgstr "Actualización a %s"
+
+msgid "Share of %s machines already running the target version."
+msgstr "Proporción de máquinas %s que ya ejecutan la versión de destino."
+
+msgid "Machines running a version older than %s."
+msgstr "Máquinas que ejecutan una versión anterior a %s."
+
+msgid "Machines already running %s."
+msgstr "Máquinas que ya ejecutan %s."
+
+msgid "Machines running a version newer than %s, not managed yet."
+msgstr "Máquinas que ejecutan una versión posterior a %s, aún no soportada."
+
+msgid "Total number of %s machines attached to this entity."
+msgstr "Número total de máquinas %s asociadas a esta entidad."
+
+msgid "No distribution specified."
+msgstr "Ninguna distribución especificada."
+
+msgid "Windows Server 2012 machines to upgrade to Windows Server 2025."
+msgstr "Máquinas Windows Server 2012 que migrar a Windows Server 2025."
+
+msgid "Windows Server 2016 machines to upgrade to Windows Server 2025."
+msgstr "Máquinas Windows Server 2016 que migrar a Windows Server 2025."
+
+msgid "Windows Server 2019 machines to upgrade to Windows Server 2025."
+msgstr "Máquinas Windows Server 2019 que migrar a Windows Server 2025."
+
+msgid "Windows Server 2025 machines to upgrade to the latest available version."
+msgstr "Máquinas Windows Server 2025 que actualizar a la última versión disponible."
+
+msgid "Pending Support Update"
+msgstr "Pendiente de soporte"
+
+# Montees de version : actions et infobulles
+msgid "List of machines to be upgraded"
+msgstr "Lista de máquinas por migrar"
+
+msgid "List of machines that cannot be upgraded"
+msgstr "Lista de máquinas que no pueden migrar"
+
+msgid "No major updates for this entity"
+msgstr "Ninguna actualización mayor para esta entidad"
+
+msgid "Deployment history"
+msgstr "Historial de despliegues"
+
+msgid "No Windows major deployment history for this entity"
+msgstr "Ningún historial de actualización mayor de Windows para esta entidad"
+
+msgid "No Linux major deployment history for this entity"
+msgstr "Ningún historial de actualización mayor de Linux para esta entidad"
+
+msgid "Do you want to create the group?"
+msgstr "¿Desea crear el grupo?"
+
+msgid "Create group:"
+msgstr "Crear el grupo:"
+
+msgid "All machines"
+msgstr "Todas las máquinas"
+
+msgid "Outdated machines"
+msgstr "Máquinas no actualizadas"
+
+msgid "Up to date machines"
+msgstr "Máquinas actualizadas"
+
+msgid "These machines are up to date"
+msgstr "Estas máquinas están actualizadas"
+
+msgid "All machines are up to date with version"
+msgstr "Todas las máquinas están actualizadas en la versión"
+
+msgid "These machines need a Windows 10 update"
+msgstr "Estas máquinas necesitan una actualización de Windows 10"
+
+msgid "These machines need a Windows 11 update"
+msgstr "Estas máquinas necesitan una actualización de Windows 11"
+
+msgid "These machines need a Windows 10 to Windows 11 update"
+msgstr "Estas máquinas necesitan migrar de Windows 10 a Windows 11"
+
+msgid "These machines need a Windows SERVER 25 update"
+msgstr "Estas máquinas necesitan una actualización de Windows Server 2025"
+
+msgid "These machines need a Windows SERVER 25 24H2 update"
+msgstr "Estas máquinas necesitan una actualización de Windows Server 2025 24H2"
+
+msgid "These machines do not meet the hardware requirements for upgrading to a newer Windows release."
+msgstr "Estas máquinas no cumplen los requisitos de hardware para migrar a una versión más reciente de Windows."
+
+# Detail des machines a faire migrer
+msgid "List of machines to be upgraded (%s)"
+msgstr "Lista de máquinas por migrar (%s)"
+
+msgid "Machines to be upgraded"
+msgstr "Máquinas por migrar"
+
+msgid "Distribution"
+msgstr "Distribución"
+
+msgid "Latest %s version"
+msgstr "Última versión de %s"
+
+msgid "Current version"
+msgstr "Versión actual"
+
+msgid "Target version"
+msgstr "Versión de destino"
+
+msgid "Unknown machine"
+msgstr "Máquina desconocida"
+
+msgid "Upgrade unavailable"
+msgstr "Actualización no disponible"
+
+msgid "No Linux machines match the current filter."
+msgstr "Ninguna máquina Linux coincide con el filtro actual."
+
+msgid "Missing parameters to load Linux major upgrade details."
+msgstr "Faltan parámetros para cargar el detalle de las actualizaciones mayores de Linux."
+
+msgid "Details by Machines (%s)"
+msgstr "Detalles por máquinas (%s)"
+
+# Montees de version majeures Linux
+msgid "Linux major upgrades to next release [%s]"
+msgstr "Actualización mayor de Linux a la siguiente versión [%s]"
+
+msgid "Linux major upgrade: %s %s [%s]"
+msgstr "Actualización mayor de Linux: %s %s [%s]"
+
+msgid "Deployment major update Linux"
+msgstr "Despliegue de actualización mayor de Linux"
+
+# Historique des montees de version
+msgid "Linux major deployment history (%s)"
+msgstr "Historial de actualizaciones mayores de Linux (%s)"
+
+msgid "Windows major deployment history"
+msgstr "Historial de actualizaciones mayores de Windows"
+
+msgid "Past Linux major deployments (last month)"
+msgstr "Actualizaciones mayores de Linux pasadas (último mes)"
+
+msgid "Past Windows major deployments (last month)"
+msgstr "Actualizaciones mayores de Windows pasadas (último mes)"
+
+msgid "No Linux major deployments have been recorded for this entity in the last month."
+msgstr "No se ha registrado ninguna actualización mayor de Linux para esta entidad en el último mes."
+
+msgid "No Windows major deployments have been recorded for this entity in the last month."
+msgstr "No se ha registrado ninguna actualización mayor de Windows para esta entidad en el último mes."
+
+msgid "Missing entity for Linux major deployment history."
+msgstr "Falta la entidad para el historial de actualizaciones mayores de Linux."
+
+msgid "Missing entity for Windows major deployment history."
+msgstr "Falta la entidad para el historial de actualizaciones mayores de Windows."
+
+msgid "Deployment"
+msgstr "Despliegue"
+
+msgid "User"
+msgstr "Usuario"

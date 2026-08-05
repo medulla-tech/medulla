@@ -1696,17 +1696,14 @@ jQuery(function() {
 
     // --- En-têtes du tableau ---
     echo "<thead><tr>";
-    $first = false;
 
     // Colonnes principales (description)
     foreach ($this->description as $key => $desc) {
-        if (!$first) {
-            echo "<th scope=\"col\"><span>$desc</span></th>";
-            $first = true;
-        } else {
-            $header = $this->renderHeaderTooltip($desc, $this->tooltip[$key] ?? "");
-            echo "<th scope=\"col\"><span>$header</span></th>";
-        }
+        // La premiere colonne rend elle aussi son infobulle : le 5e parametre
+        // du constructeur ListInfos la portait deja, mais elle etait ignoree
+        // ici — le mecanisme etait donc inatteignable.
+        $header = $this->renderHeaderTooltip($desc, $this->tooltip[$key] ?? "");
+        echo "<th scope=\"col\"><span>$header</span></th>";
     }
 
     // Colonnes extra
