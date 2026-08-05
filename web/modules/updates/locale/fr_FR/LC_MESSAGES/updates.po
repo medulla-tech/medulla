@@ -76,8 +76,6 @@ msgid "Updates History"
 msgstr "Historique des mises à jour"
 
 #: modules/updates/infoPackage.inc.php:137
-msgid "Entity Compliance"
-msgstr "Conformité des entités"
 
 #: modules/updates/updates/ajaxUpdatesListWinWhite.php:84
 msgid "Update name"
@@ -354,7 +352,7 @@ msgstr ""
 
 #: modules/updates/infoPackage.inc.php:152
 msgid "Manage Updates Lists"
-msgstr "Gérer les listes de mises à jour"
+msgstr "Listes de mises à jour"
 
 #: modules/updates/updates/ajaxMajorEntitiesList.php:118
 msgid "Details by machines"
@@ -556,8 +554,6 @@ msgid "<b>Disable</b> update %s (%s) ?"
 msgstr "<b>Désacriver</b> la mise à jour %s (%s) ?"
 
 #: modules/updates/infoPackage.inc.php:305
-msgid "Automatic approval rules"
-msgstr "Règles de validation automatique"
 
 #: modules/updates/updates/approve_rules.php:50
 msgid "Rules updated successfully."
@@ -576,8 +572,6 @@ msgid "Details by Machines"
 msgstr "Détails par machines"
 
 #: modules/updates/updates/approve_products.php:47
-msgid "Activate Microsoft product update."
-msgstr "Activer mise à jour de produit Microsoft."
 
 #: modules/updates/infoPackage.inc.php:42
 msgid "Entities Compliance"
@@ -593,7 +587,7 @@ msgstr "Règles de validation automatique"
 
 #: modules/updates/updates/localSidebar.php:49
 msgid "Microsoft Products Approval"
-msgstr "Validation de produits Microsoft"
+msgstr "Produits Microsoft suivis"
 
 #, php-format
 msgid "The update %s (%s) has been approved."
@@ -1079,7 +1073,7 @@ msgid "%s: %s"
 msgstr "%s : %s"
 
 msgid "OS Upgrades - Compliance Status"
-msgstr "Montées de version - État de conformité"
+msgstr "Mises à jour majeures - État de conformité"
 
 msgid "Share of machines already running the latest version of their operating system."
 msgstr "Proportion de machines exécutant déjà la dernière version de leur système d'exploitation."
@@ -1281,3 +1275,43 @@ msgstr "Validation automatique"
 
 msgid "Updates matching a checked rule are moved to the white list and deployed automatically."
 msgstr "Les mises à jour correspondant à une règle cochée passent en liste blanche et sont déployées automatiquement."
+
+# Ecrans Linux : versions approuvees et politique d'auto-update
+msgid "Approved Linux Releases"
+msgstr "Versions Linux suivies"
+
+msgid "Linux Auto-Update Policy"
+msgstr "Mises à jour automatiques Linux"
+
+msgid "Latest major version"
+msgstr "Dernière version majeure"
+
+msgid "Updates enabled"
+msgstr "Mises à jour activées"
+
+msgid "All versions"
+msgstr "Toutes les versions"
+
+msgid "Entity"
+msgstr "Entité"
+
+msgid "Save"
+msgstr "Enregistrer"
+
+msgid "Missing entity selection."
+msgstr "Aucune entité sélectionnée."
+
+msgid "Linux releases updated successfully."
+msgstr "Versions Linux mises à jour."
+
+msgid "Failed to update Linux releases."
+msgstr "Échec de la mise à jour des versions Linux."
+
+msgid "Auto-update policies saved."
+msgstr "Politiques de mise à jour automatique enregistrées."
+
+msgid "Failed to save auto-update policies."
+msgstr "Échec de l'enregistrement des politiques de mise à jour automatique."
+
+msgid "No auto-update policies found for this entity."
+msgstr "Aucune politique de mise à jour automatique pour cette entité."

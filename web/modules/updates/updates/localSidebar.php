@@ -36,6 +36,15 @@ if ($hasData) {
                                                 "updates",
                                                 "MajorEntitiesList"));
 
+    // Configuration Windows, dans l'ordre du flux : declarer les produits
+    // suivis, arbitrer ce qui remonte, puis automatiser.
+    $sidemenu->addSideMenuItem(
+         new SideMenuItem(_T("Microsoft Products Approval",
+                             "updates"),
+                          "updates",
+                          "updates",
+                          "approve_products"));
+
     $sidemenu->addSideMenuItem(new SideMenuItem(_T("Manage Updates Lists",
                                                    'updates'),
                                                 "updates",
@@ -48,6 +57,7 @@ if ($hasData) {
                                                 "updates",
                                                 "approve_rules"));
 
+    // Configuration Linux
     $sidemenu->addSideMenuItem(new SideMenuItem(_T("Approved Linux Releases",
                                                    'updates'),
                                                 "updates",
@@ -59,13 +69,6 @@ if ($hasData) {
                                                 "updates",
                                                 "updates",
                                                 "linuxAutoUpdatePolicy"));
-
-    $sidemenu->addSideMenuItem(
-         new SideMenuItem(_T("Microsoft Products Approval",
-                             "updates"),
-                          "updates",
-                          "updates",
-                          "approve_products"));
 }
 
 // $sidemenu->addSideMenuItem(

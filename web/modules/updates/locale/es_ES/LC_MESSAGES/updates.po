@@ -99,8 +99,6 @@ msgstr "Actualizaciones Historia"
 #: modules/updates/updates/index.php:35
 #: modules/updates/updates/MajorEntitiesList.php:17
 #: modules/updates/infoPackage.inc.php:137
-msgid "Entity Compliance"
-msgstr "Cumplimiento de las entidades"
 
 #: modules/updates/updates/ajaxDeploySpecificUpdate.php:112
 #: modules/updates/updates/ajaxDetailsByUpdatesWhite.php:113
@@ -441,7 +439,7 @@ msgstr "Actualmente no hay actualizaciones disponibles en la Lista negra (actual
 #: modules/updates/infoPackage.inc.php:147
 #: modules/updates/infoPackage.inc.php:152
 msgid "Manage Updates Lists"
-msgstr "Gestionar listas de actualizaciones"
+msgstr "Listas de actualizaciones"
 
 #: modules/updates/updates/ajaxEntitiesList.php:46
 #: modules/updates/updates/ajaxMajorEntitiesList.php:118
@@ -669,8 +667,6 @@ msgstr "<b>Desactivar</b> actualización %s (%s) ?"
 
 #: modules/updates/updates/approve_rules.php:29
 #: modules/updates/infoPackage.inc.php:305
-msgid "Automatic approval rules"
-msgstr "Normas de aprobación automática"
 
 #: modules/updates/updates/approve_rules.php:50
 msgid "Rules updated successfully."
@@ -692,8 +688,6 @@ msgid "Details by Machines"
 msgstr "Detalles por máquinas"
 
 #: modules/updates/updates/approve_products.php:47
-msgid "Activate Microsoft product update."
-msgstr "Activar la actualización de productos de Microsoft."
 
 #: modules/updates/updates/localSidebar.php:25
 #: modules/updates/infoPackage.inc.php:39
@@ -714,7 +708,7 @@ msgstr "Normas de aprobación automática"
 
 #: modules/updates/updates/localSidebar.php:49
 msgid "Microsoft Products Approval"
-msgstr "Aprobación de productos Microsoft"
+msgstr "Productos Microsoft supervisados"
 
 #: modules/updates/updates/grayApprove.php:31
 #, php-format
@@ -1193,7 +1187,7 @@ msgid "%s: %s"
 msgstr "%s: %s"
 
 msgid "OS Upgrades - Compliance Status"
-msgstr "Actualizaciones de versión - Estado de conformidad"
+msgstr "Actualizaciones mayores - Estado de conformidad"
 
 
 
@@ -1402,3 +1396,43 @@ msgstr "Validación automática"
 
 msgid "Updates matching a checked rule are moved to the white list and deployed automatically."
 msgstr "Las actualizaciones que coinciden con una regla marcada pasan a la lista blanca y se despliegan automáticamente."
+
+# Ecrans Linux : versions approuvees et politique d'auto-update
+msgid "Approved Linux Releases"
+msgstr "Versiones Linux supervisadas"
+
+msgid "Linux Auto-Update Policy"
+msgstr "Actualizaciones automáticas Linux"
+
+msgid "Latest major version"
+msgstr "Última versión mayor"
+
+msgid "Updates enabled"
+msgstr "Actualizaciones activadas"
+
+msgid "All versions"
+msgstr "Todas las versiones"
+
+msgid "Entity"
+msgstr "Entidad"
+
+msgid "Save"
+msgstr "Guardar"
+
+msgid "Missing entity selection."
+msgstr "Ninguna entidad seleccionada."
+
+msgid "Linux releases updated successfully."
+msgstr "Versiones Linux actualizadas."
+
+msgid "Failed to update Linux releases."
+msgstr "Error al actualizar las versiones Linux."
+
+msgid "Auto-update policies saved."
+msgstr "Políticas de actualización automática guardadas."
+
+msgid "Failed to save auto-update policies."
+msgstr "Error al guardar las políticas de actualización automática."
+
+msgid "No auto-update policies found for this entity."
+msgstr "Ninguna política de actualización automática para esta entidad."

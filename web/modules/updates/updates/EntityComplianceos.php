@@ -13,7 +13,7 @@ global $maxperpage;
 // Page atteinte par redirection depuis "index" : force l'entree de menu active.
 $sidemenu->forceActiveItem("index");
 
-$p = new PageGenerator(_T("Entity Compliance", "updates"));
+$p = new PageGenerator(_T("Entities Compliance", "updates"));
 $p->setSideMenu($sidemenu);
 $p->display();
 
