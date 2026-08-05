@@ -339,6 +339,7 @@ nobase_dist_contrib_DATA = dyngroup/sql/clean-db.sql \
 	pkgs/sql/schema-010.sql \
 	updates/sql/schema-001.sql \
 	urbackup/sql/schema-001.sql \
+	urbackup/sql/schema-002.sql \
 	mastering/sql/schema-001.sql \
 	mobile/sql/schema-001.sql \
 	security/sql/schema-001.sql \

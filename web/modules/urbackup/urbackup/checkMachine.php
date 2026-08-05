@@ -31,98 +31,33 @@ $p = new PageGenerator(_T("Assign profile to computer ".$clientname, 'urbackup')
 $p->setSideMenu($sidemenu);
 $p->display();
 
-$clientAndGroupsAll = xmlrpc_get_clients();
 
-$clients = $clientAndGroupsAll["navitems"]["clients"];
-$groups = $clientAndGroupsAll["navitems"]["groups"];
 
-$ini_array = parse_ini_file("/etc/mmc/plugins/urbackup.ini");
-$ini_array_local = parse_ini_file("/etc/mmc/plugins/urbackup.ini.local");
-$username_urbackup = isset($ini_array_local["usernameapi"]) ? $ini_array_local["usernameapi"] : $ini_array["usernameapi"];
-$password_urbackup = isset($ini_array_local["passwordapi"]) ? $ini_array_local["passwordapi"] : $ini_array["passwordapi"];
-$url_urbackup = isset($ini_array_local["url"]) ? $ini_array_local["url"] : $ini_array["url"];
+$computerName = (isset($_GET["cn"])) ? htmlentities($_GET["cn"]) : "";
+$computerJid = (isset($_GET["jid"])) ? htmlentities($_GET["jid"]) : "";
+$entityName = (isset($_GET["entity"])) ? htmlentities($_GET["entity"]): "";
+$entityId = (isset($_GET["entityid"])) ? htmlentities($_GET["entityid"]) : 0;
 
-$id = "";
-$auth = "";
-$groupid = "";
-$groupname = "";
+// This function register automatically the machine into a profile assotiated to its entity
+$result = xmlrpc_update_profile_machine($entityId, $entityName, $computerJid, $computerName);
 
-$clientExist = "";
-$name_user = "";
-
-if (count($clients) != 0)
-{
-    foreach ($clients as $client)
-    {
-        $clientExist = "false";
-        $clientHaveProfile = "false";
-
-        if ($client["name"] == $clientname)
-        {
-            $id = $client["id"];
-            $client_info = xmlrpc_get_auth_client($id);
-            $auth = $client_info["value"];
-            $groupid = $client["group"];
-            $groupname = $client["groupname"];
-
-            $clientExist = "true";
-            
-            if ($groupname != "")
-                $clientHaveProfile = "true";
-        }
-    }
+// Error
+if ($result["status"] != 0) {
+    new NotifyWidgetFailure(sprintf(_T("Error while assigning profile to computer %s: %s", 'urbackup'), $computerName, $result["message"]));
 }
 
-?>
-<br>
-<?php
+$params = [
+    "clientid" => (isset($result["data"]["clientid"])) ? $result["data"]["clientid"] : 0,
+    "clientname" => (isset($computerName)) ? $computerName : "",
+    "groupid" => (isset($result["data"]["profile_id"])) ? $result["data"]["profile_id"] : 0,
+    "jidmachine" => (isset($computerJid)) ? $computerJid : "",
+    "groupname" => (isset($entityName)) ? $entityName : "",
+    "groupuuid" => (isset($result["data"]["profile_uuid"])) ? $result["data"]["profile_uuid"] : "",
+    "authkey" => (isset($result["data"]["authkey"])) ? $result["data"]["authkey"] : ""
+];
 
-if ($clientExist = "false") 
-{
-    $createClient = xmlrpc_add_client($clientname);
+$url = urlStrRedirect("urbackup/urbackup/list_backups", $params);
 
-    if ($createClient["added_new_client"] == 1)
-    {
-        $id = $createClient["new_clientid"];
-        $groupid = "";
-        $groupname = "";
-        $auth = $createClient["new_authkey"];
-    }
-}
-
-if ($groupname == "")
-{
-    $insertClientDatabase = xmlrpc_insertNewClient($id, $auth);
-
-    ?>
-    <form name="form" action="main.php?module=urbackup&amp;submod=urbackup&amp;action=add_member_togroup_aftercheck&amp;clientid=<?php echo $id; ?>&amp;clientname=<?php echo $clientname; ?>&amp;auth=<?php echo $auth; ?>&amp;groupid=<?php echo $group['id']; ?>&amp;groupname=<?php echo $group['name']; ?>&amp;jidmachine=<?php echo $jidMachine; ?>" method="post">
-        <div>
-            <h3><?php echo _T("Computer name", "urbackup"); ?></h3>
-            <br>
-            <p style="font-weight: bold;"><?php echo "    ".$clientname; ?></p>
-            <br>
-        </div>
-        <div>
-            <h3><?php echo _T("Choose profile to computer", "urbackup"); ?></h3>
-            <select name="group" id="group">
-                <?php
-                foreach($groups as $group)
-                {
-                    if ($group['name'] != "")
-                        echo '<option value="'.$group['id'].'">'.$group['name'].'</option>';
-                }
-                ?>
-            </select>
-            <input type="submit" value="Add <?php echo $clientname; ?> on profile">
-        </div>
-    </form>
-    <?php
-}
-else
-{
-    //User exist and have a profile
-    $url = 'main.php?module=urbackup&submod=urbackup&action=list_backups&clientid='.$id.'&clientname='.$clientname.'&groupid='.$groupid.'&groupname='.$groupname.'&jidmachine='.$jidMachine;
-    header("Location: ".$url);
-}
-
+//User exist and have a profile
+header("Location: ".$url);
 ?>

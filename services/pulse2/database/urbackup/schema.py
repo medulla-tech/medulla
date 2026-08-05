@@ -36,3 +36,25 @@ class Tests(Base, UrbackupDBObj):
     # Notice that each column is also a normal Python instance attribute.
     name = Column(String(50))
     message = Column(String(255))
+
+
+class Profiles(Base, UrbackupDBObj):
+    __tablename__ = "profiles"
+
+    entity_id = Column(Integer)
+    profile_uuid = Column(String(255))
+    profile_name = Column(String(255))
+
+class MachinesProfiles(Base, UrbackupDBObj):
+    __tablename__ =  "machines_profiles"
+
+    machine_jid = Column(String(255))
+    profile_id = Column(Integer)
+
+class ClientState(Base):
+    __tablename__ = "client_state"
+
+    client_id = Column(Integer, primary_key=True)
+    client_jid = Column(String(255))
+    state = Column(Integer, default=1)
+    authkey = Column(String(255))

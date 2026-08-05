@@ -31,7 +31,16 @@ class UrbackupConfig(PluginConfig, UrbackupDatabaseConfig):
         # ...
         self.urbackup_url = self.get("urbackup", "url")
         self.urbackup_username = self.get("urbackup", "username")
+        self.urbackup_username_api = self.get("urbackup", "usernameapi")
         self.urbackup_password = self.get("urbackup", "password")
+        self.urbackup_password_api = self.get("urbackup", "passwordapi")
+
+        self.urbackup_server_settings_db = ""
+        if self.has_option("urbackup", "urbackup_server_settings_db"):
+            self.urbackup_server_settings_db = self.get("urbackup", "urbackup_server_settings_db")
+        self.urbackup_server_db = ""
+        if self.has_option("urbackup", "urbackup_server_db"):
+            self.urbackup_server_db = self.get("urbackup", "urbackup_server_db")
 
     def check(self):
         """

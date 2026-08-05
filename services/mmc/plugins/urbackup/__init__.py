@@ -5,10 +5,13 @@
 import logging
 import base64
 import json
+import uuid
 import configparser
 
 from pulse2.version import getVersion, getRevision  # pyflakes.ignore
 from pulse2.database.urbackup import UrbackupDatabase
+from pulse2.database.urbackup import UrbackupSettingsDb
+from pulse2.database.urbackup import UrbackupDb
 
 from mmc.support.config import PluginConfig, PluginConfigFactory
 from mmc.plugins.urbackup.config import UrbackupConfig
@@ -107,7 +110,7 @@ def login():
     """
     api = UrApiWrapper()
     logged = api.login()
-    logged = api.response(logged)
+    # logged = api.response(logged)
 
     if "content" in logged and "session" in logged["content"]:
         return logged["content"]["session"]
@@ -241,7 +244,7 @@ def get_client_status(client_id):
 
 
 
-def insertNewClient(client_id, authkey):
+def insertNewClient(client_id, machine_jid, authkey):
     """
     Insert new client in database
 
@@ -251,7 +254,7 @@ def insertNewClient(client_id, authkey):
     Returns:
         True or False
     """
-    return UrbackupDatabase().insertNewClient(client_id, authkey)
+    return UrbackupDatabase().insertNewClient(client_id, machine_jid, authkey)
 
 
 def enable_client_database(client_id):
@@ -318,8 +321,8 @@ def get_logs():
         If no logs are available, it returns the "No DATA" string.
     """
     api = UrApiWrapper()
-    _logs = api.get_logs()
-    logs = api.response(_logs)
+    logs = api.get_logs()
+    # logs = api.response(_logs)
     if "content" in logs:
         return logs["content"]
 
@@ -342,7 +345,7 @@ def add_client(client_name):
     """
     api = UrApiWrapper()
     newclient = api.add_client(client_name)
-    newclient = api.response(newclient)
+    # newclient = api.response(newclient)
     if "content" in newclient:
         return newclient["content"]
 
@@ -359,7 +362,7 @@ def get_stats():
     """
     api = UrApiWrapper()
     stats = api.get_stats()
-    stats = api.response(stats)
+    # stats = api.response(stats)
     if "content" in stats:
         return stats["content"]
 
@@ -378,7 +381,7 @@ def add_group(groupname):
     """
     api = UrApiWrapper()
     newgroup = api.add_group(groupname)
-    newgroup = api.response(newgroup)
+    # newgroup = api.response(newgroup)
     if "content" in newgroup and newgroup["content"].get("add_ok"):
         content = newgroup["content"]
         return {
@@ -400,7 +403,7 @@ def remove_group(groupid):
     """
     api = UrApiWrapper()
     removegroup = api.remove_group(groupid)
-    removegroup = api.response(removegroup)
+    # removegroup = api.response(removegroup)
     if "content" in removegroup:
         return removegroup["content"]
 
@@ -416,7 +419,7 @@ def get_settings_general():
     """
     api = UrApiWrapper()
     settings = api.get_settings_general()
-    settings = api.response(settings)
+    # settings = api.response(settings)
     if "content" in settings:
         return settings["content"]
 
@@ -435,7 +438,7 @@ def save_settings(clientid, name_data, value_data):
     """
     api = UrApiWrapper()
     settings = api.save_settings(clientid, name_data, value_data)
-    settings = api.response(settings)
+    # settings = api.response(settings)
     if "content" in settings:
         return settings["content"]
 
@@ -454,7 +457,7 @@ def get_settings_clientsettings(id_client):
     """
     api = UrApiWrapper()
     settings = api.get_settings_clientsettings(id_client)
-    settings = api.response(settings)
+    # settings = api.response(settings)
     if "content" in settings:
         return settings["content"]
 
@@ -470,7 +473,8 @@ def get_settings_clients():
     """
     api = UrApiWrapper()
     list_clients = api.get_settings_clients()
-    list_clients = api.response(list_clients)
+    # list_clients = api.response(list_clients)
+
     if "content" in list_clients:
         return list_clients["content"]
 
@@ -486,7 +490,7 @@ def get_auth_client(clientid):
     """
     api = UrApiWrapper()
     setting_client = api.get_settings_client(clientid)
-    setting_client = api.response(setting_client)
+    # setting_client = api.response(setting_client)
     if "content" in setting_client:
         return setting_client["content"]["settings"]["internet_authkey"]
 
@@ -502,7 +506,7 @@ def get_backups_all_client():
     """
     api = UrApiWrapper()
     backups = api.get_backups("0")
-    backups = api.response(backups)
+    # backups = api.response(backups)
     if "content" in backups:
         return backups["content"]
 
@@ -521,7 +525,7 @@ def get_backup_files(client_id, backup_id, path):
     """
     api = UrApiWrapper()
     files = api.get_backup_files(client_id, backup_id, path)
-    files = api.response(files)
+    # files = api.response(files)
     if "content" in files:
         return files["content"]
 
@@ -540,7 +544,7 @@ def delete_backup(client_id, backup_id):
     """
     api = UrApiWrapper()
     delete = api.delete_backup(client_id, backup_id)
-    delete = api.response(delete)
+    # delete = api.response(delete)
     if "content" in delete:
         return delete["content"]
 
@@ -559,7 +563,7 @@ def client_download_backup_file(clientid, backupid, path, filter_path):
     """
     api = UrApiWrapper()
     download = api.client_download_backup_file(clientid, backupid, path, filter_path)
-    download = api.response(download)
+    # download = api.response(download)
     if "content" in download:
         return download["content"]
 
@@ -580,7 +584,7 @@ def client_download_backup_file_shahash(clientid, backupid, path, shahash, filte
     download = api.client_download_backup_file_shahash(
         clientid, backupid, path, shahash, filter_path
     )
-    download = api.response(download)
+    # download = api.response(download)
     if "content" in download:
         return download["content"]
 
@@ -596,7 +600,7 @@ def get_status():
     """
     api = UrApiWrapper()
     status = api.get_status()
-    status = api.response(status)
+    # status = api.response(status)
     if "content" in status:
         return status["content"]
 
@@ -612,7 +616,7 @@ def get_progress():
     """
     api = UrApiWrapper()
     progress = api.get_progress()
-    progress = api.response(progress)
+    # progress = api.response(progress)
     if "content" in progress:
         return progress["content"]
 
@@ -631,7 +635,7 @@ def get_status_client(clientname):
     """
     api = UrApiWrapper()
     status = api.get_status()
-    status = api.response(status)
+    # status = api.response(status)
 
     for client in status["status"]:
         if client["name"] == clientname:
@@ -652,7 +656,7 @@ def create_backup_incremental_file(client_id):
     """
     api = UrApiWrapper()
     backup = api.create_backup("incr_file", client_id)
-    backup = api.response(backup)
+    # backup = api.response(backup)
 
     if "content" in backup:
         return backup["content"]
@@ -672,10 +676,172 @@ def create_backup_full_file(client_id):
     """
     api = UrApiWrapper()
     backup = api.create_backup("full_file", client_id)
-    backup = api.response(backup)
+    # backup = api.response(backup)
 
     if "content" in backup:
         return backup["content"]
 
     return "No DATA full backup file"
+
+
+def update_profile_machine(entityId, entityName, computerJid, computerName):
+    """
+    Update the profile and machine association in the database and urbackup server.
+    Consolidates the profile and machine information, ensuring that the machine is correctly associated with the specified profile.
+
+    args:
+        entityId (str): The unique identifier for the profile entity.
+        entityName (str): The name of the profile entity.
+        computerJid (str): The JID (Jabber ID) of the computer/machine to be associated with the profile.
+        computerName (str): The name of the computer/machine to be associated with the profile.
+
+    Returns:
+        dict: Status of the update operation, including success or failure message.
+    """
+
+
+    #
+    # profile exists in db ?
+    #
+    #   yes : nothing to do
+    #   no : create profile in db
+    #   finally: get the profile info
+    #
+    # Check if the entity is stored in profiles table
+    profile_db = UrbackupDatabase().get_profile(entityId)
+
+    # Need to create a profile
+    if profile_db == {}:
+        # Ensure unique uuid for the profile
+        # urbackup.profiles.profile_uuid. This uuid will be used as profile name on urbackup api
+        entity_id = entityId
+        profile_uuid = f"{entityName}{uuid.uuid4()}"
+        profile_name = entityName
+        profile_db = UrbackupDatabase().add_profile(entity_id, profile_uuid, profile_name)
+
+    # Here it's not normal to have an empty profile,
+    # Something went wrong here.
+    if profile_db == {}:
+        return {"status": 1, "msg": "Impossible to create profile %s"%profile_name}
+
+    #
+    # machine associated to any profile ?
+    #   yes : get the association info
+    #       machine associated to the right profile ?
+    #           yes : nothing to do
+    #           no : update the machine profile association in db
+    #   no : nothing to do
+    #   finally : get the association info
+    #
+    # Now we need to add the machine tho this profile
+    # Check if the machine is in the profile
+    profile_id = profile_db["id"]
+    machine_jid = computerJid
+    association_machine_profile = UrbackupDatabase().get_machine_profile(machine_jid)
+
+    if association_machine_profile != {}:
+        if association_machine_profile["profile_id"] != profile_id:
+            # The machine is associated to another profile, we need to update the association in the database
+            # First we need to remove the association in the database
+            if UrbackupDatabase().update_association_machine_profile(association_machine_profile["id"], profile_id) is True:
+                association_machine_profile = UrbackupDatabase().get_machine_profile(machine_jid)
+            else:
+                return {"status": 1, "msg": "Impossible to update machine %s to profile %s"%(computerName, entityName)}
+    else:
+        # The machine is not associated to any profile, we need to add the association in the database
+        association_machine_profile = UrbackupDatabase().add_machine_to_profile(profile_id, machine_jid)
+
+        if association_machine_profile == {}:
+            return {"status": 1, "msg": "Impossible to add machine %s to profile %s"%(computerName, entityName)}
+
+
+    #
+    # profile exists in urbackup ?
+    #   yes : nothing to do
+    #   no : create profile in urbackup
+    #   finally : get the profile info
+    #
+
+    group = UrbackupSettingsDb().get_group_by_name(profile_db["profile_uuid"])
+    if group == {}:
+        group_added = add_group(profile_db["profile_uuid"])
+
+    # Second try: if this time the group is still not in urbackup, we have a problem with the urbackup api
+    group = UrbackupSettingsDb().get_group_by_name(profile_db["profile_uuid"])
+    if group == {}:
+        return {"status":1, "msg":"Impossible to add urbackup-api group %s"%(profile_db["profile_name"])}
+
+    #
+    # machine exists in urbackup ?
+    #   yes : nothing to do
+    #   no : add the machine in urbackup
+    #   finally : get the machine info
+    #
+    client = UrbackupDb().get_client_by_name(computerName)
+    if client == {}:
+        add_client(computerName)
+
+    client = UrbackupDb().get_client_by_name(computerName)
+    if client == {}:
+        return {"status":1, "msg":"Impossible to add urbackup-api client %s"%(computerName)}
+
+
+    #
+    # machine associated to the right profile in urbackup ?
+    #   yes : nothing to do
+    #   no : update the machine profile association in urbackup
+    #
+    UrbackupDb().update_client_group(client["id"], group["id"])
+    ret = UrbackupSettingsDb().update_client_group(client["id"], group["id"])
+    if ret is False:
+        return {"status":1, "msg":"Impossible to update urbackup-api client %s to group %s"%(computerName, profile_db["profile_name"])}
+
+    # Get client authkey
+    auth = UrbackupSettingsDb().get_setting("internet_authkey", client["id"])
+
+    state = UrbackupDatabase().update_client_state(client["id"], machine_jid, auth, state=1)
+    if state == {}:
+        return {"status":1, "msg":"Impossible to update client %s state"%(computerName)}
+
+    return {"status":0, "msg":"", "data": {
+        "clientid":client["id"],
+        "authkey":auth,
+        "profile_id":profile_id,
+        "profile_name":profile_db["profile_name"],
+        "profile_uuid":profile_db["profile_uuid"],
+        }
+    }
+
+
+def get_backups_for_client(clientid):
+    """
+    Get backups for one client
+
+    Args:
+        Client id
+    Returns:
+        Array of backups for one client
+    """
+    result = {
+        "backup": {},
+        "state": {},
+    }
+
+    api = UrApiWrapper()
+    response = api.get_backups(clientid)
+
+
+    if "content" not in response or "clients" not in response["content"]:
+        return {}
+
+    backups = response["content"]["clients"]
+    # if {'clients': [{'id': 1, 'lastbackup': 1785846086, 'name': 'kno-w11-1'}]}
+
+    if len(backups) > 0:
+        backups[0]["lastbackup"] = str(backups[0]["lastbackup"])
+        result["backup"] = backups[0]
+
+    state = UrbackupDatabase().get_client_state(clientid)
+    result["state"] = state
+    return result
 

@@ -5,13 +5,14 @@ import json
 import requests
 from requests.structures import CaseInsensitiveDict
 from mmc.plugins.urbackup import config
+import logging
 
 try:
     from urllib import urlencode
 except BaseException:
     from urllib.parse import urlencode
 
-
+logger = logging.getLogger()
 class UrApiWrapper:
     """
     Wrapper for UrBackup API.
@@ -56,22 +57,61 @@ class UrApiWrapper:
     headers = {}
     verify = False
     allow_redirects = True
+    instance = None
+
+    def __new__(cls, *args, **kwargs):
+        """Instanciate the object UrApiWrapper as singleton.
+
+        You can call api = UrApiWrapper()
+        api2 = UrApiWrapper()
+        api3 = UrApiWrapper()
+
+        api, api2, api3 are sharing the same unique object.
+        """
+
+        if cls.instance is None:
+            cls.instance = object.__new__(cls, *args, **kwargs)
+
+        return cls.instance
 
     def __init__(self):
         """
         Initialize UrApiWrapper with configuration from UrbackupConfig.
         """
-        _config = config.UrbackupConfig()
-        self.url = _config.urbackup_url
-        self.user_login = _config.urbackup_username
-        self.password = _config.urbackup_password
-        self.ses = ""  # sessionid
+        self._config = config.UrbackupConfig()
+        self.url = self._config.urbackup_url
+        self.user_login = self._config.urbackup_username
+        self.password = self._config.urbackup_password
 
         self.headers = CaseInsensitiveDict()
         self.headers["Accept"] = "application/json"
         self.headers["Content-Type"] = "application/x-www-form-urlencoded"
         self.verify = False
         self.allow_redirects = True
+
+    @staticmethod
+    def session(fnc):
+        """Decorator for all the methods in need of authentication.
+        This method reset the session token only if needed: when the current session token
+        doesn't work."""
+
+        def wrapper(self, *args, **kwargs):
+            # Call the login method with the session tokent as parameter
+            log = self.login()
+
+            # If the login call failed there will be an "error" key. In this case, we reset the token
+            # then recall the login method.
+            # To avoid recursive call, the login method doesn't call itself to do this.
+            if "content" in log and "error" in log["content"]:
+                # restart the session
+                self.ses = ""
+                log = self.login()
+
+            # call the original method
+            return fnc(self, *args, **kwargs)
+
+        # return the decorated method
+        return wrapper
 
     def set_header(self, key, value):
         """
@@ -114,7 +154,19 @@ class UrApiWrapper:
                 allow_redirects=self.allow_redirects,
             )
 
-        return response
+        content = {}
+        try:
+            # Use native method to convert the content result
+            content = response.json()
+        except:
+            pass
+
+        # Return the http result as json, the mmc will transform these "row" datas.
+        return {
+            "status_code": response.status_code,
+            "headers": response.headers,
+            "content": content,
+        }
 
     def login(self, lang="en"):
         """
@@ -124,25 +176,30 @@ class UrApiWrapper:
             lang (str): Language for the login (default is "en").
 
         Returns:
-            Response: HTTP response object.
+            Response: JSON object.
         """
         params = {
             "username": self.user_login,
             "password": self.password,
             "plainpw": 1,
             "lang": lang,
+            # if self.ses is "", a new session will be regenerated
+            # if self.ses is valid token, no "session" key will be provided in the result
+            # if self.ses is invalid token, an error key will be provided in the result
+            "ses": self.ses
         }
         response = self.request("login", params)
 
-        try:
-            result = json.loads(response.text)
-            if "session" in result:
-                self.ses = result["session"]
-        except BaseException:
-            pass
+        # Check if the error key is present in the result.
+        # If credentials are wrong, the result can provide a token key, and an error in the same time
+        if "content" in response and "error" in response["content"]:
+            self.ses = ""
+        elif "content" in response and "session" in response["content"] :
+            self.ses = response["content"]["session"]
 
         return response
 
+    @session
     def get_session(self):
         """
         Get the current session ID.
@@ -150,32 +207,9 @@ class UrApiWrapper:
         Returns:
             str: Session ID.
         """
-        self.login()
-        session = self.ses
-        return session
+        return self.ses
 
-    @staticmethod
-    def response(resp):
-        """
-        Parse and return a standardized response.
-
-        Args:
-            resp (Response): HTTP response object.
-
-        Returns:
-            dict: Standardized response containing status code, headers, and content.
-        """
-        try:
-            resp_json = json.loads(resp.text)
-        except BaseException:
-            resp_json = resp.text
-
-        return {
-            "status_code": resp.status_code,
-            "headers": resp.headers,
-            "content": resp_json,
-        }
-
+    @session
     def get_logs(self, clientid=0):
         """
         Get live logs for a client.
@@ -186,12 +220,11 @@ class UrApiWrapper:
         Returns:
             Response: HTTP response object.
         """
-        self.login()
         params = {"clientid": clientid, "lastid": 0, "ses": self.ses}
         response = self.request("livelog", params)
-
         return response
 
+    @session
     def add_client(self, clientname):
         """
         Add a new client to UrBackup.
@@ -202,12 +235,12 @@ class UrApiWrapper:
         Returns:
             Response: HTTP response object.
         """
-        self.login()
         params = {"clientname": clientname, "ses": self.ses}
         response = self.request("add_client", params)
 
         return response
 
+    @session
     def get_stats(self):
         """
         Get server usage statistics.
@@ -215,12 +248,12 @@ class UrApiWrapper:
         Returns:
             Response: HTTP response object.
         """
-        self.login()
         params = {"ses": self.ses}
         response = self.request("usage", params)
 
         return response
 
+    @session
     def add_group(self, groupname):
         """
         Add a new group to UrBackup.
@@ -231,12 +264,12 @@ class UrApiWrapper:
         Returns:
             Response: HTTP response object.
         """
-        self.login()
         params = {"sa": "groupadd", "name": groupname, "ses": self.ses}
         response = self.request("settings", params)
 
         return response
 
+    @session
     def remove_group(self, groupid):
         """
         Remove a group from UrBackup.
@@ -247,12 +280,12 @@ class UrApiWrapper:
         Returns:
             Response: HTTP response object.
         """
-        self.login()
         params = {"sa": "groupremove", "id": groupid, "ses": self.ses}
         response = self.request("settings", params)
 
         return response
 
+    @session
     def get_settings_general(self):
         """
         Get general settings.
@@ -260,12 +293,12 @@ class UrApiWrapper:
         Returns:
             Response: HTTP response object.
         """
-        self.login()
         params = {"sa": "general", "ses": self.ses}
         response = self.request("settings", params)
 
         return response
 
+    @session
     def save_settings(self, clientid, name_data, value_data):
         """
         Save client settings.
@@ -278,7 +311,6 @@ class UrApiWrapper:
         Returns:
             Response: HTTP response object.
         """
-        self.login()
         params = {
             "sa": "clientsettings_save",
             "t_clientid": clientid,
@@ -290,6 +322,7 @@ class UrApiWrapper:
 
         return response
 
+    @session
     def get_settings_clientsettings(self, id_client):
         """
         Get client-specific settings.
@@ -300,12 +333,12 @@ class UrApiWrapper:
         Returns:
             Response: HTTP response object.
         """
-        self.login()
         params = {"sa": "clientsettings", "t_clientid": id_client, "ses": self.ses}
         response = self.request("settings", params)
 
         return response
 
+    @session
     def get_settings_clients(self):
         """
         Get a list of clients.
@@ -313,12 +346,12 @@ class UrApiWrapper:
         Returns:
             Response: HTTP response object.
         """
-        self.login()
         params = {"sa": "listusers", "ses": self.ses}
         response = self.request("settings", params)
 
         return response
-    
+
+    @session
     def get_settings_client(self, id_client):
         """
         Get settings for one client with id client
@@ -326,12 +359,12 @@ class UrApiWrapper:
         Returns:
             Response: HTTP response object.
         """
-        self.login()
         params = {"sa": "clientsettings", "t_clientid": id_client, "ses": self.ses}
         response = self.request("settings", params)
 
         return response
 
+    @session
     def get_backups(self, client_id):
         """
         Get a list of backups for a client.
@@ -342,12 +375,12 @@ class UrApiWrapper:
         Returns:
             Response: HTTP response object.
         """
-        self.login()
         params = {"clientid": client_id, "ses": self.ses}
         response = self.request("backups", params)
 
         return response
 
+    @session
     def delete_backup(self, client_id, backup_id):
         """
         Delete a specific backup.
@@ -359,7 +392,6 @@ class UrApiWrapper:
         Returns:
             Response: HTTP response object.
         """
-        self.login()
         params = {
             "sa": "backups",
             "clientid": client_id,
@@ -370,6 +402,7 @@ class UrApiWrapper:
 
         return response
 
+    @session
     def get_backup_files(self, client_id, backup_id, path):
         """
         Get files from a backup.
@@ -382,7 +415,6 @@ class UrApiWrapper:
         Returns:
             Response: HTTP response object.
         """
-        self.login()
         params = {
             "sa": "files",
             "clientid": client_id,
@@ -394,6 +426,7 @@ class UrApiWrapper:
 
         return response
 
+    @session
     def client_download_backup_file(self, client_id, backup_id, path, filter_path):
         """
         Download a specific file from a backup.
@@ -407,7 +440,6 @@ class UrApiWrapper:
         Returns:
             Response: HTTP response object.
         """
-        self.login()
         params = {
             "sa": "clientdl",
             "clientid": client_id,
@@ -420,6 +452,7 @@ class UrApiWrapper:
 
         return response
 
+    @session
     def client_download_backup_file_shahash(self, client_id, backup_id, path, shahash, filter_path):
         """
         Download a file by SHA hash from a backup.
@@ -434,7 +467,6 @@ class UrApiWrapper:
         Returns:
             Response: HTTP response object.
         """
-        self.login()
         params = {
             "sa": "clientdl",
             "clientid": client_id,
@@ -448,6 +480,7 @@ class UrApiWrapper:
 
         return response
 
+    @session
     def get_progress(self):
         """
         Get the progress of ongoing operations.
@@ -455,12 +488,12 @@ class UrApiWrapper:
         Returns:
             Response: HTTP response object.
         """
-        self.login()
         params = {"ses": self.ses}
         response = self.request("progress", params)
 
         return response
 
+    @session
     def get_status(self):
         """
         Get the status of the UrBackup server.
@@ -468,12 +501,12 @@ class UrApiWrapper:
         Returns:
             Response: HTTP response object.
         """
-        self.login()
         params = {"ses": self.ses}
         response = self.request("status", params)
 
         return response
 
+    @session
     def create_backup(self, type_backup, client_id):
         """
         Start a new backup operation.
@@ -485,7 +518,6 @@ class UrApiWrapper:
         Returns:
             Response: HTTP response object.
         """
-        self.login()
         params = {"start_type": type_backup, "start_client": client_id, "ses": self.ses}
         response = self.request("start_backup", params)
 

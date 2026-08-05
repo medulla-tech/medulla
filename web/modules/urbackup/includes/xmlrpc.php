@@ -89,7 +89,7 @@ function xmlrpc_get_client_status($client_id){
 
 function xmlrpc_insertNewClient($client_id, $authkey){
     // Database request to insert new client
-    return xmlCall("urbackup.insertNewClient", [$client_id, $authkey]);
+    return xmlCall("urbackup.insertNewClient", [$client_id, $machine_jid, $authkey]);
 }
 
 function xmlrpc_getComputersEnableValue($jid){
@@ -175,5 +175,9 @@ function xmlrpc_create_backup_full_file($client_id){
 function xmlrpc_get_status_client($clientname){
     // Return status
     return xmlCall("urbackup.get_status_client", [$clientname]);
+}
+
+function xmlrpc_update_profile_machine($entityId, $entityName, $computerJid,$computerName){
+    return xmlCall("urbackup.update_profile_machine", [$entityId, $entityName, $computerJid, $computerName]);
 }
 ?>
