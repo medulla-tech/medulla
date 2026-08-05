@@ -18200,7 +18200,7 @@ FROM (
 
 
         # Vérification des paramètres obligatoires
-        value_permise = ["security", "kernel", "other", "all"]
+        value_permise = ["security", "kernel", "other", "all", "any"]
         if entity_id in [-1, None] or str(entity_id).strip() == "":
             logger.debug("Paramètres obligatoires manquants : entity_id=%s", entity_id)
             return {}
@@ -18220,6 +18220,11 @@ FROM (
             count_condition = "up.other_count > 0"
         elif updatetype == "all":
             count_condition = "up.total_count > 0"
+        elif updatetype == "any":
+            # Toutes les machines Linux de l'entite, y compris celles a jour :
+            # vue de detail, ou l'on veut voir l'etat de chaque machine et pas
+            # seulement celles qui ont des mises a jour en attente.
+            count_condition = "1 = 1"
         else:
             logger.debug("Type de mise à jour invalide : %s", updatetype)
             return {}

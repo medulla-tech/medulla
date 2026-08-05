@@ -61,6 +61,9 @@ $_entities = getUserLocations();
 
 <?php
 
+    /**
+     * @param string $question Question deja traduite (cf. question_custom_colonne)
+     */
     function createLinuxGroupPopup(string $question, int $width = 450)
     {
         return new ActionAjaxPopup(
@@ -68,7 +71,7 @@ $_entities = getUserLocations();
             "ajaxUpdateCreateGroup",  // Méthode AJAX appelée
             "btnCreateGroup",         // ID bouton
             '',
-            _T($question, "updates"), // Question personnalisée
+            $question,                // Question personnalisée
             "updates",                // Module
             "updates",                // Sous-module
             null,                     // Onglet
@@ -78,40 +81,48 @@ $_entities = getUserLocations();
         );
     }
 
+/**
+ * Question de confirmation affichee avant la creation d'un groupe dynamique.
+ *
+ * Le nom de l'entite passe par un %s de sprintf : interpole directement dans la
+ * chaine, il ferait partie du msgid recherche par gettext, qui differerait pour
+ * chaque entite et ne serait donc jamais traduit.
+ */
 function question_custom_colonne($colonne, $nameentitycomplete){
     switch ($colonne) {
 
     case "total_machines":
-        $question = "Do you want to create a group containing<br> all Linux machines of entity {$nameentitycomplete}?";
+        $question = _T("Do you want to create a group containing<br> all Linux machines of entity %s?", "updates");
         $largeur=500;
         break;
 
     case "machines_not_up_to_date":
-        $question = "Do you want to create a group of Linux machines with pending updates<br> for entity {$nameentitycomplete}?";
+        $question = _T("Do you want to create a group of Linux machines with pending updates<br> for entity %s?", "updates");
         $largeur=500;
         break;
 
     case "machines_security_not_ok":
-        $question = "Do you want to create a group of Linux machines missing security updates<br> for entity {$nameentitycomplete}?";
+        $question = _T("Do you want to create a group of Linux machines missing security updates<br> for entity %s?", "updates");
         $largeur=500;
         break;
 
     case "machines_kernel_not_ok":
-        $question = "Do you want to create a group of Linux machines with outdated kernels<br> for entity {$nameentitycomplete}?";
+        $question = _T("Do you want to create a group of Linux machines with outdated kernels<br> for entity %s?", "updates");
         $largeur=500;
         break;
 
     case "machines_other_not_ok":
-        $question = "Do you want to create a group of Linux machines with other pending updates<br> for entity {$nameentitycomplete}?";
+        $question = _T("Do you want to create a group of Linux machines with other pending updates<br> for entity %s?", "updates");
         $largeur=500;
         break;
 
     default:
-        $question = "Do you want to create this Linux group<br>for entity {$nameentitycomplete}?";
+        $question = _T("Do you want to create this Linux group<br>for entity %s?", "updates");
         $largeur=500;
     }
-    return array($question, $largeur);
+    return array(sprintf($question, $nameentitycomplete), $largeur);
 }
+
 
 
 
@@ -140,7 +151,7 @@ $action_Update_complete_all_Linux_on_entity = new ActionPopupItem( _T("Update co
                                                             "updates",
                                                             "updates",
                                                             null,
-                                                            320,
+                                                            640,
                                                             "action_update_all_linux_entity");
 
 $action_no_Update_complete_all_Linux_on_entity = new EmptyActionItem1(
@@ -155,7 +166,7 @@ $action_update_kernel_all_linux_entity = new ActionPopupItem( _T("Update all Lin
                                                             "updates",
                                                             "updates",
                                                             null,
-                                                            320,
+                                                            640,
                                                             "action_update_kernel_all_linux_entity");
 
 // // Affiche le lien dans un <li> avec la popup titre "Mettre à jour tous les kernels Linux de l'entité" // titre affiché
@@ -176,7 +187,7 @@ $action_Update_complete_all_Linux_on_entity = new ActionPopupItem( _T("Update co
                                                             "updates",
                                                             "updates",
                                                             null,
-                                                            320,
+                                                            640,
                                                             "action_update_kernel_all_linux_entity");
 
 $action_no_Update_complete_all_Linux_on_entity = new EmptyActionItem1(
@@ -192,7 +203,7 @@ $action_update_security_all_linux_entity = new ActionPopupItem(_T("Update all Li
                                                             "updates",
                                                             "updates",
                                                             null,
-                                                            320,
+                                                            640,
                                                             "action_update_security_all_linux_entity");
 
 
@@ -209,7 +220,7 @@ $action_update_other_all_linux_entity = new ActionPopupItem(_T("Update all other
                                                             "updates",
                                                             "updates",
                                                             null,
-                                                            320,
+                                                            640,
                                                             "action_update_other_all_linux_entity");
 
 
@@ -342,11 +353,27 @@ $machines_kernel_not_ok = [];
 $machines_other_not_ok = [];
 $action_update_history_linux = [];
 
-// Utiliser un compteur séquentiel pour itérer de manière cohérente sur les tableaux parallèles
+/*
+ * Correspondance entity_id -> position dans le resultat de conformite.
+ *
+ * analyze_machine_compliance_linux fait un GROUP BY entity_id : le resultat ne
+ * contient que les entites ayant au moins une machine dans up_machine_linux,
+ * triees par entity_id. Indexer ces colonnes par la position de l'entite dans
+ * $entityid (ordre de getUserLocations) decale toutes les valeurs des qu'une
+ * entite de la liste n'a aucune machine Linux, et affiche les chiffres en face
+ * de la mauvaise entite.
+ */
+$positionParEntite = [];
+foreach (($entitycompliances['entity_id'] ?? []) as $position => $entiteRetournee) {
+    $positionParEntite[(int) $entiteRetournee] = $position;
+}
+
 $entity_count = count($entityid);
 for ($counter = 0; $counter < $entity_count; $counter++) {
-    $ind = $counter;
     $val = $entityid[$counter];
+    // -1 : entite absente du resultat (aucune machine Linux) -> compteurs a 0
+    // via les ?? 0 qui accompagnent chaque acces a $entitycompliances.
+    $ind = $positionParEntite[(int) $val] ?? -1;
 
     // Nom complet de l'entité courante
     $nameentitycomplete = $nameentity[$counter];
@@ -359,8 +386,8 @@ for ($counter = 0; $counter < $entity_count; $counter++) {
      *  - la reconstruction du contexte (entité + type Linux)
      */
     $datagrp = [
-        "entity_id"                   => $entityid[$ind],
-        "entity"                      => "UUID" . $entityid[$ind],
+        "entity_id"                   => $val,
+        "entity"                      => "UUID" . $val,
         "completename"                => $nameentitycomplete,
         "history_type"                => "linux_updates",
         "compliance_total_percent"    => ($entitycompliances['compliance_total_percent'][$ind] ?? 0),
@@ -378,8 +405,12 @@ for ($counter = 0; $counter < $entity_count; $counter++) {
     $action_update_history_linux[] = $action_update_history_linux_entity;
     /*
      |--------------------------------------------------------------------------
-     | PROGRESS BARS - Messages explicatifs Linux
+     | PROGRESS BAR - Conformite globale Linux
      |--------------------------------------------------------------------------
+     | Seul le taux global est represente sous forme de barre. Les dimensions
+     | securite / noyau / autres sont affichees en nombre de machines concernees
+     | (colonnes machines_*_not_ok) : les pourcentages correspondants s'en
+     | deduisent (100 - not_ok * 100 / total_machines) et faisaient donc doublon.
      */
 
     $complRatestotal[] = (string) new medulla_progressbar_static(
@@ -388,30 +419,41 @@ for ($counter = 0; $counter < $entity_count; $counter++) {
         "Overall Linux compliance rate for entity {$nameentitycomplete}.\nPercentage of machines fully up to date."
     );
 
-    $complSecurity[] = (string) new medulla_progressbar_static(
-        ($entitycompliances['compliance_security_percent'][$ind] ?? 0),
-        "",
-        "Linux security update compliance for entity {$nameentitycomplete}.\nMachines without pending security patches."
-    );
-
-    $complkernel[] = (string) new medulla_progressbar_static(
-        ($entitycompliances['compliance_kernel_percent'][$ind] ?? 0),
-        "",
-        "Linux kernel compliance for entity {$nameentitycomplete}.\nMachines running an up-to-date kernel version."
-    );
-
-    $complother[] = (string) new medulla_progressbar_static(
-        ($entitycompliances['compliance_other_percent'][$ind] ?? 0),
-        "",
-        "Other Linux updates compliance for entity {$nameentitycomplete}.\nCovers non-security and non-kernel packages."
-    );
-
     /*
      |--------------------------------------------------------------------------
      | TOTAL MACHINES LINUX
      |--------------------------------------------------------------------------
      | Représente le nombre total de machines Linux rattachées à l'entité.
      */
+
+    /*
+     * Vues de consultation : actives des que l'entite possede des machines
+     * Linux, independamment du nombre de mises a jour en attente. Consulter
+     * n'est pas deployer — griser ces vues quand l'entite est conforme
+     * empecherait de verifier quelles machines la composent. Meme regle que
+     * l'onglet Windows, ou les details par machine sont toujours accessibles.
+     */
+    if (intval(($entitycompliances['total_machines'][$ind] ?? 0)) > 0) {
+        $vue_compliance_distri_linux_entity[] = new ActionItem(_T("Linux distributions", "updates"),
+                                                        "View_compliance_distri_linux_entity",
+                                                        "auditbyupdate",
+                                                        "",
+                                                        "updates",
+                                                        "updates");
+        $vue_detail_machine_kernel_linux_entity[] = new ActionItem(_T("Machines to update", "updates"),
+                                                        "View_detail_machine_kernel_linux_entity",
+                                                        "auditbymachine",
+                                                        "",
+                                                        "updates",
+                                                        "updates");
+    } else {
+        $vue_compliance_distri_linux_entity[] = new EmptyActionItem1(_T("Linux distributions", "updates"),
+                                                        "View_compliance_distri_linux_entity",
+                                                        "auditbyupdate");
+        $vue_detail_machine_kernel_linux_entity[] = new EmptyActionItem1(_T("Machines to update", "updates"),
+                                                        "View_detail_machine_kernel_linux_entity",
+                                                        "auditbymachine");
+    }
 
     if (intval(($entitycompliances['total_machines'][$ind] ?? 0)) > 0) {
 
@@ -450,20 +492,13 @@ for ($counter = 0; $counter < $entity_count; $counter++) {
      */
 
     if (intval(($entitycompliances['machines_not_up_to_date'][$ind] ?? 0)) > 0) {
-        $vue_compliance_distri_linux_entity[]= new ActionItem(_T("Distibution Linux on entity $nameentitycomplete",
-                                                         "updates"),
-                                                        "View_compliance_distri_linux_entity",
-                                                        "auditbymachine",
-                                                        "",
-                                                        "updates",
-                                                        "updates");
-        $action_update_complet_linux[]=new ActionPopupItem( _T("Update complete all Linux on entity $nameentitycomplete", "updates"),
+        $action_update_complet_linux[]=new ActionPopupItem( _T("Full update", "updates"),
                                                             "deployUpdateLinuxType",
-                                                            "updateone", "",
+                                                            "updateall", "",
                                                             "updates",
                                                             "updates",
                                                             null,
-                                                            320,
+                                                            640,
                                                             "action_update_all_linux_entity");
 
         $msgtitle = _T(
@@ -491,15 +526,11 @@ for ($counter = 0; $counter < $entity_count; $counter++) {
         );
 
     } else {
-        $vue_compliance_distri_linux_entity[]= new EmptyActionItem1(_T("Distibution Linux on entity $nameentitycomplete",
-                                                                "updates"),
-                                                                    "View_compliance_distri_linux_entity",
-                                                                    "auditbymachine");
         $machines_not_up_to_date[] = ($entitycompliances['machines_not_up_to_date'][$ind] ?? 0);
         $action_update_complet_linux[]=new EmptyActionItem1(
-                                                            _T("Update complete all Linux on entity $nameentitycomplete", "updates"),
+                                                            _T("Full update", "updates"),
                                                             "deployUpdateLinuxType",
-                                                            "updateoneg"
+                                                            "updateallg"
                                                         );
     }
     /*
@@ -545,16 +576,15 @@ for ($counter = 0; $counter < $entity_count; $counter++) {
      */
 
     if (intval(($entitycompliances['machines_security_not_ok'][$ind] ?? 0)) > 0) {
-        $action_update_security_linux[]= new ActionPopupItem(_T("Update all Linux security on entity $nameentitycomplete", "updates"),
+        $action_update_security_linux[]= new ActionPopupItem(_T("Update security", "updates"),
                                                             "deployUpdateLinuxType",
-                                                            "updateone", "",
+                                                            "updatesecurity", "",
                                                             "updates",
                                                             "updates",
                                                             null,
-                                                            320,
+                                                            640,
                                                             "action_update_security_all_linux_entity");
-        $vue_detail_machine_security_linux_entity[]=new ActionItem(_T("Details Machine security update on entity $nameentitycomplete",
-                                                               "updates"),
+        $vue_detail_machine_security_linux_entity[]=new ActionItem(_T("Machines with security to update", "updates"),
                                                         "View_detail_machine_security_linux_entity",
                                                         "auditbymachine",
                                                         "",
@@ -587,13 +617,12 @@ for ($counter = 0; $counter < $entity_count; $counter++) {
 
     } else {
 
-        $action_update_security_linux[]= new EmptyActionItem1( _T("Update all Linux security on entity $nameentitycomplete", "updates"),
+        $action_update_security_linux[]= new EmptyActionItem1( _T("Update security", "updates"),
                                                                 "deployUpdateLinuxType",
-                                                                "updateoneg"
+                                                                "updatesecurityg"
                                                             );
         $machines_security_not_ok[] = ($entitycompliances['machines_security_not_ok'][$ind] ?? 0);
-        $vue_detail_machine_security_linux_entity[]=new EmptyActionItem1(_T("Details Machine security update on entity $nameentitycomplete",
-                                                                       "updates"),
+        $vue_detail_machine_security_linux_entity[]=new EmptyActionItem1(_T("Machines with security to update", "updates"),
                                                         "View_detail_machine_security_linux_entity",
                                                         "auditbymachine");
     }
@@ -606,20 +635,13 @@ for ($counter = 0; $counter < $entity_count; $counter++) {
      */
 
     if (intval(($entitycompliances['machines_kernel_not_ok'][$ind] ?? 0)) > 0) {
-        $vue_detail_machine_kernel_linux_entity[]=new ActionItem(_T("Details Machine update on entity $nameentitycomplete",
-                                                             "updates"),
-                                                        "View_detail_machine_kernel_linux_entity",
-                                                        "auditbymachine",
-                                                        "",
-                                                        "updates",
-                                                        "updates");
-        $action_update_kernel_linux[]= new ActionPopupItem( _T("Update all Linux kernel on entity $nameentitycomplete", "updates"),
+        $action_update_kernel_linux[]= new ActionPopupItem( _T("Update kernel", "updates"),
                                                             "deployUpdateLinuxType",
-                                                            "updateone", "",
+                                                            "updatekernel", "",
                                                             "updates",
                                                             "updates",
                                                             null,
-                                                            320,
+                                                            640,
                                                             "action_update_kernel_all_linux_entity");
         $msgtitle = _T(
             "Linux machines in entity {$nameentitycomplete} running an outdated kernel version.\n"
@@ -648,14 +670,10 @@ for ($counter = 0; $counter < $entity_count; $counter++) {
 
     } else {
         $action_update_kernel_linux[]=new EmptyActionItem1(
-                                                            _T("Update all Linux kernel on entity $nameentitycomplete", "updates"),
+                                                            _T("Update kernel", "updates"),
                                                             "deployUpdateLinuxType",
-                                                            "updateoneg"
+                                                            "updatekernelg"
                                                         );
-        $vue_detail_machine_kernel_linux_entity[]=new EmptyActionItem1(_T("Details Machine kernel update $nameentitycomplete",
-                                                                     "updates"),
-                                                            "View_detail_machine_kernel_linux_entity",
-                                                            "auditbymachine");
         $machines_kernel_not_ok[] = ($entitycompliances['machines_kernel_not_ok'][$ind] ?? 0);
     }
 
@@ -676,13 +694,13 @@ for ($counter = 0; $counter < $entity_count; $counter++) {
                                                         "",
                                                         "updates",
                                                         "updates");
-        $action_update_other_linux[]= new ActionPopupItem(_T("Update all other Linux packages on entity $nameentitycomplete", "updates"),
+        $action_update_other_linux[]= new ActionPopupItem(_T("Update other packages", "updates"),
                                                             "deployUpdateLinuxType",
-                                                            "updateone", "",
+                                                            "package", "",
                                                             "updates",
                                                             "updates",
                                                             null,
-                                                            320,
+                                                            640,
                                                             "action_update_other_all_linux_entity");
 
         $msgtitle = _T(
@@ -712,12 +730,11 @@ for ($counter = 0; $counter < $entity_count; $counter++) {
 
     } else {
         $action_update_other_linux[]= new EmptyActionItem1(
-                                        _T("Update all other Linux packages on entity $nameentitycomplete", "updates"),
+                                        _T("Update other packages", "updates"),
                                         "deployUpdateLinuxType",
-                                        "updateoneg"
+                                        "packageg"
                                     );
-        $vue_detail_machine_other_linux_entity[]= new EmptyActionItem1(_T("Details machines all other Update Linux packages on entity $nameentitycomplete",
-                                                                    "updates"),
+        $vue_detail_machine_other_linux_entity[]= new EmptyActionItem1(_T("Machines with other packages to update", "updates"),
                                                         "View_detail_machine_other_linux_entity",
                                                         "auditbymachine");
         $machines_other_not_ok[] = ($entitycompliances['machines_other_not_ok'][$ind] ?? 0);
@@ -728,27 +745,63 @@ for ($counter = 0; $counter < $entity_count; $counter++) {
 $n = new OptimizedListInfos($nameentity, _T("Entity name", "updates"));
 $n->setcssIds($nameentity); // id name pour selection permet des selection css
 $n->disableFirstColumnActionLink();
-$n->addExtraInfoRaw($total_machines,_T("Total update machines", "updates"));
-$n->addExtraInfo($complRatestotal, _T("compliance total", "updates"));
-$n->addExtraInfo($complSecurity,_T("compliance security", "updates"));
-$n->addExtraInfo($complkernel,_T("compliance kernel", "updates"));
-$n->addExtraInfo($complother,_T("compliance other", "updates"));
-$n->addExtraInfoRaw($machines_not_up_to_date, _T("not_up_to_date", "updates"));
-$n->addExtraInfoRaw($machines_up_to_date, _T("up_to_date", "updates"));
-$n->addExtraInfoRaw($machines_security_not_ok, _T("security_not_ok", "updates"));
-$n->addExtraInfoRaw($machines_kernel_not_ok, _T("kernel_not_ok", "updates"));
-$n->addExtraInfoRaw($machines_other_not_ok, _T("other_not_ok", "updates"));
+// Les compteurs contiennent du HTML (liens de creation de groupe dynamique
+// generes par createLinuxGroupPopup) : la variante Raw est obligatoire, sinon
+// le markup est echappe et affiche tel quel.
+$n->addExtraInfo(
+    $complRatestotal,
+    _T("Compliance rate", "updates"),
+    "",
+    _T("Share of Linux machines with no pending update at all.", "updates")
+);
+$n->addExtraInfoCenteredRaw(
+    $machines_security_not_ok,
+    _T("Security", "updates"),
+    "",
+    _T("Number of machines with at least one pending security update.", "updates")
+);
+$n->addExtraInfoCenteredRaw(
+    $machines_kernel_not_ok,
+    _T("Kernel", "updates"),
+    "",
+    _T("Number of machines with at least one pending kernel update.", "updates")
+);
+$n->addExtraInfoCenteredRaw(
+    $machines_other_not_ok,
+    _T("Other", "updates"),
+    "",
+    _T("Number of machines with at least one pending update other than security or kernel.", "updates")
+);
+$n->addExtraInfoCenteredRaw(
+    $machines_not_up_to_date,
+    _T("Non-compliant", "updates"),
+    "",
+    _T("Number of machines with at least one pending update, all categories included.", "updates")
+);
+$n->addExtraInfoCenteredRaw(
+    $total_machines,
+    _T("Total machines", "updates"),
+    "",
+    _T("Total number of Linux machines attached to this entity that reported a scan.", "updates")
+);
 
-$n->addActionItemArray($action_update_kernel_linux);
+/*
+ * Ordre des actions : d'abord les deploiements, dans le meme ordre que les
+ * colonnes du tableau (Securite, Noyau, Autres, puis la mise a jour complete
+ * qui correspond a la colonne "Non conformes"), ensuite les vues de
+ * consultation, et l'historique en dernier.
+ */
 $n->addActionItemArray($action_update_security_linux);
+$n->addActionItemArray($action_update_kernel_linux);
 $n->addActionItemArray($action_update_other_linux);
 $n->addActionItemArray($action_update_complet_linux);
-$n->addActionItemArray($action_update_history_linux);
 
 $n->addActionItemArray($vue_compliance_distri_linux_entity);
 $n->addActionItemArray($vue_detail_machine_kernel_linux_entity);
 // $n->addActionItemArray($vue_detail_machine_other_linux_entity);
 // $n->addActionItemArray($vue_detail_machine_security_linux_entity);
+
+$n->addActionItemArray($action_update_history_linux);
 
 $n->setItemCount($count);
 $n->setNavBar(new AjaxNavBar($count, $filter));
@@ -756,10 +809,10 @@ $n->setNavBar(new AjaxNavBar($count, $filter));
 $n->setParamInfo($params);
 $n->start = 0;
 $n->end = $count;
-(new TitleElement(_T("Linux", "updates")))->display();
 echo '<div class="entity-compliance-table">';
 $n->display();
 echo '</div>';
+
 /*
 echo "<pre>";
 print_r($entitycompliances);

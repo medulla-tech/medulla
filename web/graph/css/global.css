@@ -784,6 +784,8 @@ li.ban a, li.bang a { background-image: url("../../img/actions/ban.svg"); }
 li.unban a, li.unbang a { background-image: url("../../img/actions/unban.svg"); }
 li.donotupdate a, li.donotupdateg a { background-image: url("../../img/actions/donotupdate.svg"); }
 li.updateall a, li.updateallg a { background-image: url("../../img/actions/updateall.svg"); }
+li.updatekernel a, li.updatekernelg a { background-image: url("../../img/actions/updatekernel.svg"); }
+li.updatesecurity a, li.updatesecurityg a { background-image: url("../../img/actions/updatesecurity.svg"); }
 li.updateone a, li.updateoneg a { background-image: url("../../img/actions/updateone.svg"); }
 li.enableupdate a, li.enableupdateg a { background-image: url("../../img/actions/enable.svg"); }
 li.disableupdate a, li.disableupdateg a { background-image: url("../../img/actions/disable.svg"); }
@@ -1130,8 +1132,10 @@ td.file {
 }
 .ajax-section > form {
   display: none;
-  margin: 0;
-  margin-bottom: -50px;
+  /* !important requis : AjaxFilter rend son <form> avec style="margin:20px 0;"
+     en inline (PageGenerator.php), qui l'emporterait sinon sur ces marges. */
+  margin: 0 !important;
+  margin-bottom: -50px !important;
   position: relative;
   z-index: 10;
 }
@@ -2206,6 +2210,7 @@ li.quickg a, li.guacag a, li.displayg a, li.displaygroupg a,
 li.logfileg a, li.packageg a, li.reconfiguregroupg a, li.stopg a,
 li.reloadg a, li.scang a, li.bang a, li.unbang a,
 li.donotupdateg a, li.updateallg a, li.updateoneg a,
+li.updatekernelg a, li.updatesecurityg a,
 li.enableupdateg a, li.disableupdateg a, li.deleteprofileg a,
 li.infoupdateg a, li.helpupdateg a, li.pendingg a, li.historyg a,
 li.manageusersg a, li.editg a, li.deleteg a, li.downloadg a {
@@ -2221,6 +2226,7 @@ li.quickg a:hover, li.guacag a:hover, li.displayg a:hover, li.displaygroupg a:ho
 li.logfileg a:hover, li.packageg a:hover, li.reconfiguregroupg a:hover, li.stopg a:hover,
 li.reloadg a:hover, li.scang a:hover, li.bang a:hover, li.unbang a:hover,
 li.donotupdateg a:hover, li.updateallg a:hover, li.updateoneg a:hover,
+li.updatekernelg a:hover, li.updatesecurityg a:hover,
 li.enableupdateg a:hover, li.disableupdateg a:hover, li.deleteprofileg a:hover,
 li.infoupdateg a:hover, li.helpupdateg a:hover, li.pendingg a:hover, li.historyg a:hover,
 li.manageusersg a:hover, li.editg a:hover, li.deleteg a:hover, li.downloadg a:hover {

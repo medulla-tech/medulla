@@ -1012,3 +1012,184 @@ msgstr "No conformes"
 msgid "The machine does not meet the minimum requirements for Windows 11"
 msgstr "El equipo no cumple los requisitos mínimos para Windows 11"
 
+
+# Conformidad de las entidades - pestana Linux
+msgid "Security"
+msgstr "Seguridad"
+
+msgid "Kernel"
+msgstr "Núcleo"
+
+msgid "Other"
+msgstr "Otras"
+
+msgid "Share of Linux machines with no pending update at all."
+msgstr "Proporción de máquinas Linux sin ninguna actualización pendiente."
+
+msgid "Number of machines with at least one pending security update."
+msgstr "Número de máquinas con al menos una actualización de seguridad pendiente."
+
+msgid "Number of machines with at least one pending kernel update."
+msgstr "Número de máquinas con al menos una actualización del núcleo pendiente."
+
+msgid "Number of machines with at least one pending update other than security or kernel."
+msgstr "Número de máquinas con al menos una actualización pendiente distinta de seguridad o núcleo."
+
+msgid "Number of machines with at least one pending update, all categories included."
+msgstr "Número de máquinas con al menos una actualización pendiente, todas las categorías incluidas."
+
+msgid "Total number of Linux machines attached to this entity that reported a scan."
+msgstr "Número total de máquinas Linux asociadas a esta entidad que han enviado un análisis."
+
+# Conformidad de las entidades - pestana Windows
+msgid "Share of machines with no missing update, out of all machines in the entity."
+msgstr "Proporción de máquinas sin actualizaciones pendientes, sobre el total de máquinas de la entidad."
+
+msgid "Number of distinct updates missing across the machines of the entity."
+msgstr "Número de actualizaciones distintas que faltan en el conjunto de máquinas de la entidad."
+
+msgid "Number of machines with at least one missing update."
+msgstr "Número de máquinas con al menos una actualización pendiente."
+
+msgid "Total number of machines attached to this entity."
+msgstr "Número total de máquinas asociadas a esta entidad."
+
+
+# Acciones de la tabla de conformidad Linux
+msgid "Update security"
+msgstr "Actualizar la seguridad"
+
+msgid "Update kernel"
+msgstr "Actualizar el núcleo"
+
+msgid "Update other packages"
+msgstr "Actualizar los demás paquetes"
+
+msgid "Full update"
+msgstr "Actualización completa"
+
+msgid "Linux distributions"
+msgstr "Distribuciones Linux"
+
+msgid "Machines to update"
+msgstr "Máquinas por actualizar"
+
+msgid "Machines with kernel to update"
+msgstr "Máquinas con el núcleo por actualizar"
+
+msgid "Machines with security to update"
+msgstr "Máquinas con la seguridad por actualizar"
+
+msgid "Machines with other packages to update"
+msgstr "Máquinas con otros paquetes por actualizar"
+
+# Detalle de las maquinas Linux de una entidad
+msgid "Linux machines of entity %s"
+msgstr "Máquinas Linux de la entidad %s"
+
+msgid "Operating system"
+msgstr "Sistema operativo"
+
+msgid "No Linux machine found"
+msgstr "Ninguna máquina Linux"
+
+msgid "No Linux machine has reported a scan for this entity yet."
+msgstr "Ninguna máquina Linux de esta entidad ha enviado todavía un análisis."
+
+msgid "No update pending"
+msgstr "Ninguna actualización pendiente"
+
+msgid "No kernel update pending"
+msgstr "Ninguna actualización del núcleo pendiente"
+
+msgid "No security update pending"
+msgstr "Ninguna actualización de seguridad pendiente"
+
+msgid "No other update pending"
+msgstr "Ninguna otra actualización pendiente"
+
+# Preguntas de creacion de grupo (popups Linux)
+msgid "Do you want to create a group containing<br> all Linux machines of entity %s?"
+msgstr "¿Desea crear un grupo que contenga<br> todas las máquinas Linux de la entidad %s?"
+
+msgid "Do you want to create a group of Linux machines with pending updates<br> for entity %s?"
+msgstr "¿Desea crear un grupo de máquinas Linux con actualizaciones pendientes<br> para la entidad %s?"
+
+msgid "Do you want to create a group of Linux machines missing security updates<br> for entity %s?"
+msgstr "¿Desea crear un grupo de máquinas Linux a las que les faltan actualizaciones de seguridad<br> para la entidad %s?"
+
+msgid "Do you want to create a group of Linux machines with outdated kernels<br> for entity %s?"
+msgstr "¿Desea crear un grupo de máquinas Linux con el núcleo desactualizado<br> para la entidad %s?"
+
+msgid "Do you want to create a group of Linux machines with other pending updates<br> for entity %s?"
+msgstr "¿Desea crear un grupo de máquinas Linux con otras actualizaciones pendientes<br> para la entidad %s?"
+
+msgid "Do you want to create this Linux group<br>for entity %s?"
+msgstr "¿Desea crear este grupo Linux<br>para la entidad %s?"
+
+msgid "Do you want to create a group containing<br> %1$s machines of entity %2$s?"
+msgstr "¿Desea crear un grupo que contenga<br> las máquinas %1$s de la entidad %2$s?"
+
+msgid "Do you want to create a group of %1$s machines with pending updates<br> for entity %2$s?"
+msgstr "¿Desea crear un grupo de máquinas %1$s con actualizaciones pendientes<br> para la entidad %2$s?"
+
+msgid "Do you want to create a group of %1$s machines missing security updates<br> for entity %2$s?"
+msgstr "¿Desea crear un grupo de máquinas %1$s a las que les faltan actualizaciones de seguridad<br> para la entidad %2$s?"
+
+msgid "Do you want to create a group of %1$s machines with outdated kernels<br> for entity %2$s?"
+msgstr "¿Desea crear un grupo de máquinas %1$s con el núcleo desactualizado<br> para la entidad %2$s?"
+
+msgid "Do you want to create a group of %1$s machines with other pending updates<br> for entity %2$s?"
+msgstr "¿Desea crear un grupo de máquinas %1$s con otras actualizaciones pendientes<br> para la entidad %2$s?"
+
+msgid "Do you want to create this %1$s group<br>for entity %2$s?"
+msgstr "¿Desea crear este grupo %1$s<br>para la entidad %2$s?"
+
+msgid "This machine has no pending update."
+msgstr "Esta máquina no tiene ninguna actualización pendiente."
+
+msgid "This machine has %s pending update(s)."
+msgstr "Esta máquina tiene %s actualización(es) pendiente(s)."
+
+msgid "Green when the machine has no pending update."
+msgstr "Verde cuando la máquina no tiene ninguna actualización pendiente."
+
+msgid "Windows computers from entity %s"
+msgstr "Ordenadores Windows de la entidad %s"
+
+msgid "Windows computers from group %s"
+msgstr "Ordenadores Windows del grupo %s"
+
+msgid "Linux computers from entity %s"
+msgstr "Ordenadores Linux de la entidad %s"
+
+# Titulos de los formularios de programacion
+msgid "Schedule kernel updates for all Linux systems in the entity"
+msgstr "Programar la actualización del núcleo en todos los sistemas Linux de la entidad"
+
+msgid "Schedule application updates for all Linux systems in the entity"
+msgstr "Programar la actualización de las aplicaciones en todos los sistemas Linux de la entidad"
+
+msgid "Schedule security updates for all Linux systems in the entity"
+msgstr "Programar las actualizaciones de seguridad en todos los sistemas Linux de la entidad"
+
+msgid "Schedule all updates for all Linux systems in the entity"
+msgstr "Programar todas las actualizaciones en todos los sistemas Linux de la entidad"
+
+msgid "Schedule complete update for %s in the entity"
+msgstr "Programar la actualización completa de %s en la entidad"
+
+msgid "Schedule kernel update for %s in the entity"
+msgstr "Programar la actualización del núcleo de %s en la entidad"
+
+msgid "Schedule security update for %s in the entity"
+msgstr "Programar la actualización de seguridad de %s en la entidad"
+
+msgid "Schedule application update for %s in the entity"
+msgstr "Programar la actualización de las aplicaciones de %s en la entidad"
+
+msgid "Schedule application and library updates for %s in the entity"
+msgstr "Programar la actualización de aplicaciones y bibliotecas de %s en la entidad"
+
+msgid "%s: %s"
+msgstr "%s: %s"

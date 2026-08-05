@@ -199,6 +199,32 @@
 
 /* ===== Entity compliance ===== */
 
+/* La barre de recherche est remontee sur la ligne du compteur via .ajax-section
+   (margin-bottom: -50px). Sans titre de section a cette hauteur, le tableau
+   remonte trop et vient coller a la barre : on lui redonne de l'air. */
+.entity-compliance-table {
+    margin-top: 16px;
+}
+
+/* En-tetes porteurs d'une infobulle : .infomach (tooltip.css) souligne en
+   rgba(100,160,200,.2), invisible sur le fond fonce du thead. On reprend la
+   couleur du texte de l'en-tete pour que l'affordance reste perceptible. */
+.entity-compliance-table table.listinfos thead th .column-tooltip {
+    border-bottom: 1px dotted currentColor;
+    cursor: help;
+}
+
+/* Contenu de l'infobulle : phrase explicative, donc registre "valeur" du
+   tooltip machine (blanc, casse normale) et non "libelle" (bleu, capitales).
+   La bulle etant rendue hors du thead, seule la casse est a neutraliser. */
+.column-tooltip__text {
+    max-width: 320px;
+    text-transform: none;
+    letter-spacing: normal;
+    white-space: normal;
+    line-height: 1.35;
+}
+
 .entity-compliance-table table.listinfos {
     width: 100%;
     margin: 0;

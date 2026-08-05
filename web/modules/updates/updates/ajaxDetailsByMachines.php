@@ -112,13 +112,13 @@ if ($entity == '') {
         $machines["complianceRate"][] = ($missing == 0) && ($installed == 0) ? "-" : $complRate;
     }
     $count = getRestrictedComputersListLen($ctx, true);
-    $tabletitle = sprintf(_T("Computers from group %s", "updates"), $groupname);
+    $tabletitle = sprintf(_T("Windows computers from group %s", "updates"), $groupname);
 
 } else {
     $typeOfDetail = "entitie";
     $filterOn = array('entity' => $entity);
 
-    $tabletitle = sprintf(_T("Computers from entity %s", "updates"), $entityName);
+    $tabletitle = sprintf(_T("Windows computers from entity %s", "updates"), $entityName);
     // No usage
     $match = (int)str_replace('UUID', '', $entity);
 

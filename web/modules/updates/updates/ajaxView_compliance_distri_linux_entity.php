@@ -194,7 +194,7 @@ $action_no_update_other_all_linux_entity = new EmptyActionItem1(
             "ajaxUpdateCreateGroup",  // Méthode AJAX appelée
             "btnCreateGroup",         // ID bouton
             '',
-            _T($question, "updates"), // Question personnalisée
+            $question,                // Question personnalisée (deja traduite)
             "updates",                // Module
             "updates",                // Sous-module
             null,                     // Onglet
@@ -207,35 +207,35 @@ $action_no_update_other_all_linux_entity = new EmptyActionItem1(
         switch ($colonne) {
 
         case "total_machines":
-            $question = "Do you want to create a group containing<br> {$distribution} machines of entity {$nameentitycomplete}?";
+            $question = _T("Do you want to create a group containing<br> %1$s machines of entity %2$s?", "updates");
             $largeur=500;
             break;
 
         case "machines_not_up_to_date":
-            $question = "Do you want to create a group of {$distribution} machines with pending updates<br> for entity {$nameentitycomplete}?";
+            $question = _T("Do you want to create a group of %1$s machines with pending updates<br> for entity %2$s?", "updates");
             $largeur=500;
             break;
 
         case "machines_security_not_ok":
-            $question = "Do you want to create a group of {$distribution} machines missing security updates<br> for entity {$nameentitycomplete}?";
+            $question = _T("Do you want to create a group of %1$s machines missing security updates<br> for entity %2$s?", "updates");
             $largeur=500;
             break;
 
         case "machines_kernel_not_ok":
-            $question = "Do you want to create a group of {$distribution} machines with outdated kernels<br> for entity {$nameentitycomplete}?";
+            $question = _T("Do you want to create a group of %1$s machines with outdated kernels<br> for entity %2$s?", "updates");
             $largeur=500;
             break;
 
         case "machines_other_not_ok":
-            $question = "Do you want to create a group of {$distribution} machines with other pending updates<br> for entity {$nameentitycomplete}?";
+            $question = _T("Do you want to create a group of %1$s machines with other pending updates<br> for entity %2$s?", "updates");
             $largeur=500;
             break;
 
         default:
-            $question = "Do you want to create this {$distribution} group<br>for entity {$nameentitycomplete}?";
+            $question = _T("Do you want to create this %1$s group<br>for entity %2$s?", "updates");
             $largeur=500;
         }
-        return array($question, $largeur);
+        return array(sprintf($question, $distribution, $nameentitycomplete), $largeur);
     }
 
 

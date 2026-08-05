@@ -62,7 +62,9 @@ $completename=$_GET['completename'];
 
 
 $entity_id = isset($_GET['entity_id']) ? intval($_GET['entity_id'], 10) : -1;
-$updatetype="all";
+// "any" : toutes les machines Linux de l'entite, y compris celles a jour.
+// Cette vue sert a consulter l'etat du parc, pas seulement ce qui reste a faire.
+$updatetype="any";
 $maxperpage = $conf["global"]["maxperpage"];
 $filter  = isset($_GET['filter']) ? htmlentities($_GET['filter']) : "";
 $start = isset($_GET['start']) ? htmlentities($_GET['start']) : 0;
@@ -91,63 +93,16 @@ echo "</pre>";*/
 
 $count = $machines['total_rows'];
 
-// compliance
-   $k = new ListInfos(array($count), _T("Tatal linux", "updates"));
-   $compliance_total_percent_bar = (string) new medulla_progressbar_static(
-        $compliance_total_percent,
-        "",
-        "Overall Linux compliance rate for entity {$completename}.\nPercentage of machines fully up to date."
-    );
-    $k->addExtraInfo(array( $compliance_total_percent_bar),
-                       _T("compliance total", "updates"));
-
-
-    $compliance_security_percent_bar = (string) new medulla_progressbar_static(
-        $compliance_security_percent,
-        "",
-        "Linux security update compliance for entity {$completename}.\nMachines without pending security patches."
-    );
-
-    $k->addExtraInfo(array($compliance_security_percent_bar),
-                     _T("compliance secutity", "updates"));
-
-
-    $compliance_kernel_percent_bar = (string) new medulla_progressbar_static(
-        $compliance_kernel_percent,
-        "",
-        "Linux kernel compliance for entity {$completename}.\nMachines running an up-to-date kernel version."
-    );
-
-    $k->addExtraInfo(array( $compliance_kernel_percent_bar),
-                     _T("compliance kernel", "updates"));
-
-    $compliance_other_percent_bar = (string) new medulla_progressbar_static(
-        $compliance_other_percent,
-        "",
-        "Other Linux updates compliance for entity {$completename}.\nCovers non-security and non-kernel packages."
-    );
-    $k->addExtraInfo(array( $compliance_other_percent_bar),
-                     _T("compliance other", "updates"));
-
-    $converter = new ConvertCouleur();
-
-    $k->setCaptionText(sprintf("%s %s",
-                            _T("Detail Machine Linux on Entity ", 'updates'),
-                                $_GET['completename']));
-
-    $k->setCssCaption(  $border = 1,
-                        $bold = 0,
-                        $bgColor = "lightgray",
-                        $textColor = "black",
-                        $padding = "10px 0",
-                        $size = "20",
-                        $emboss = 1,
-                        $rowColor = $converter->convert("lightgray"));
-    $k->disableFirstColumnActionLink();
-    $k->display($navbar = 0, $header = 0);
+/*
+ * Pas de bandeau de synthese de l'entite ici : total et taux global sont deja
+ * affiches sur la ligne de l'entite dans "Conformite des entites", d'ou l'on
+ * arrive, et le nom de l'entite est porte par le titre de page. Cet ecran est
+ * dedie au detail machine par machine.
+ */
 
 
 $actions_update_complete_machines = $actions_update_kernel_machines = $actions_update_secutity_machines = $actions_update_other_machines = array();
+$machineComplianceBars = array();
 $params=[];
 
 foreach($machines['hostname'] as $index => $valeur ){
@@ -172,6 +127,22 @@ foreach($machines['hostname'] as $index => $valeur ){
 
     $hostname= $param['hostname'];
     $params[]=$param;
+
+    /*
+     * Conformite de la machine. Binaire par construction : up_machine_linux ne
+     * stocke que le nombre de mises a jour EN ATTENTE, jamais le nombre
+     * d'installees — aucun ratio n'est donc calculable. La barre sert de repere
+     * visuel (verte = rien en attente), le detail par categorie est dans les
+     * colonnes Securite / Noyau / Autres.
+     */
+    $machineIsCompliant = intval($param['total_count']) === 0;
+    $machineComplianceBars[] = (string) new medulla_progressbar_static(
+        $machineIsCompliant ? 100 : 0,
+        "",
+        $machineIsCompliant
+            ? _T("This machine has no pending update.", "updates")
+            : sprintf(_T("This machine has %s pending update(s).", "updates"), intval($param['total_count']))
+    );
     /*
 
       $compliance_total_percent_bar = (string) new medulla_progressbar_static(
@@ -184,77 +155,87 @@ foreach($machines['hostname'] as $index => $valeur ){
 
     $intValue = intval($param['total_count']);
     if ($intValue > 0) {
-        $actions_update_complete_machines[]= new ActionPopupItem( _T("Update complete machine linux [$hostname] on entity [$completename]", "updates"),
+        $actions_update_complete_machines[]= new ActionPopupItem( _T("Full update", "updates"),
                                                                 "deployUpdateLinuxType",
-                                                                "updateone", "",
+                                                                "updateall", "",
                                                                 "updates",
                                                                 "updates",
                                                                 null,
-                                                                320,
+                                                                640,
                                                                 "actions_update_complete_machine");
     } else {
-          $actions_update_complete_machines[] = new EmptyActionItem1( _T("No update complete on the Linux machine [$hostname] of the entity [$completename]", "updates"),
+          $actions_update_complete_machines[] = new EmptyActionItem1( _T("No update pending", "updates"),
                                                             "deployUpdateLinuxType",
-                                                            "updateoneg", "", "updates", "updates");
+                                                            "updateallg", "", "updates", "updates");
     }
 
     $intValue = intval($param['kernel_count']);
     if ($intValue > 0) {
-        $actions_update_kernel_machines[]= new ActionPopupItem( _T("Update kernel machine linux [$hostname] on entity [$completename]", "updates"),
+        $actions_update_kernel_machines[]= new ActionPopupItem( _T("Update kernel", "updates"),
                                                                 "deployUpdateLinuxType",
-                                                                "updateone", "",
+                                                                "updatekernel", "",
                                                                 "updates",
                                                                 "updates",
                                                                 null,
-                                                                320,
+                                                                640,
                                                                 "actions_update_kernel_machine");
     } else {
-          $actions_update_kernel_machines[] = new EmptyActionItem1(_T("No update type kernel on the Linux machine [$hostname] of the entity [$completename]", "updates"),
+          $actions_update_kernel_machines[] = new EmptyActionItem1(_T("No kernel update pending", "updates"),
                                                             "deployUpdateLinuxType",
-                                                            "updateoneg", "", "updates", "updates");
+                                                            "updatekernelg", "", "updates", "updates");
     }
 
     $intValue = intval($param['security_count']);
     if ($intValue > 0) {
-        $actions_update_secutity_machines[]= new ActionPopupItem( _T("Update security machine linux [$hostname] on entity [$completename]", "updates"),
+        $actions_update_secutity_machines[]= new ActionPopupItem( _T("Update security", "updates"),
                                                                 "deployUpdateLinuxType",
-                                                                "updateone", "",
+                                                                "updatesecurity", "",
                                                                 "updates",
                                                                 "updates",
                                                                 null,
-                                                                320,
+                                                                640,
                                                                 "actions_update_secutity_machine");
     } else {
-          $actions_update_secutity_machines[] = new EmptyActionItem1(_T("No update type security on the Linux machine [$hostname] of the entity [$completename]", "updates"),
+          $actions_update_secutity_machines[] = new EmptyActionItem1(_T("No security update pending", "updates"),
                                                             "deployUpdateLinuxType",
-                                                            "updateoneg", "", "updates", "updates");
+                                                            "updatesecurityg", "", "updates", "updates");
     }
 
     $intValue = intval($param['other_count']);
     if ($intValue > 0) {
-        $actions_update_other_machines[]= new ActionPopupItem( _T("Update other machine linux [$hostname] on entity [$completename]", "updates"),
+        $actions_update_other_machines[]= new ActionPopupItem( _T("Update other packages", "updates"),
                                                                 "deployUpdateLinuxType",
-                                                                "updateone", "",
+                                                                "package", "",
                                                                 "updates",
                                                                 "updates",
                                                                 null,
-                                                                320,
+                                                                640,
                                                                 "actions_update_other_machine");
     }
     else {
-          $actions_update_other_machines[] = new EmptyActionItem1(_T("No update type security on the Linux machine [$hostname] of the entity [$completename]", "updates"),
+          $actions_update_other_machines[] = new EmptyActionItem1(_T("No other update pending", "updates"),
                                                             "deployUpdateLinuxType",
-                                                            "updateoneg", "", "updates", "updates");
+                                                            "packageg", "", "updates", "updates");
     }
 
 
 }// end params
 
 
-    $n = new OptimizedListInfos($machines['hostname'], _T("Hostname", "updates"));
+    // Titre de section : meme rendu que l'onglet Windows (<h2> au-dessus du
+    // tableau), sur lequel vient se poser la barre de recherche (.ajax-section).
+    echo '<h2>' . sprintf(_T("Linux computers from entity %s", "updates"),
+                          htmlspecialchars($completename, ENT_QUOTES, 'UTF-8')) . '</h2>';
+
+    $n = new OptimizedListInfos($machines['hostname'], _T("Machine name", "updates"));
 
     $n->addExtraInfo($machines['platform'],
                        _T("Platform", "updates"));
+
+    $n->addExtraInfoRaw($machineComplianceBars,
+                       _T("Compliance rate", "updates"),
+                       "",
+                       _T("Green when the machine has no pending update.", "updates"));
 
     $n->addExtraInfo($machines['security_count'],
                        _T("Security", "updates"));
@@ -263,11 +244,11 @@ foreach($machines['hostname'] as $index => $valeur ){
                        _T("Kernel", "updates"));
 
     $n->addExtraInfo($machines['other_count'],
-                       _T("other", "updates"));
+                       _T("Other", "updates"));
 
 
     $n->addExtraInfo($machines['total_count'],
-                       _T("total", "updates"));
+                       _T("Total", "updates"));
     $n->setcssIds("linux");
 
     $n->addActionItemArray($actions_update_complete_machines);
@@ -275,6 +256,7 @@ foreach($machines['hostname'] as $index => $valeur ){
     $n->addActionItemArray($actions_update_secutity_machines);
     $n->addActionItemArray($actions_update_other_machines);
 
+    $n->setResizable();
     $n->setTableHeaderPadding(10);
     $n->start = 0;
     $n->end = $count;
@@ -283,7 +265,9 @@ foreach($machines['hostname'] as $index => $valeur ){
     $n->disableFirstColumnActionLink();
     $n->setNavBar(new AjaxNavBar($count, $filter));
     $n->setParamInfo($params);
-    $n->display($navbar = 0, $header =5);
+    $n->setEmptyState(_T("No Linux machine found", "updates"),
+                      _T("No Linux machine has reported a scan for this entity yet.", "updates"));
+    $n->display();
 
  //     echo "<pre>";
  // print_r($params);
