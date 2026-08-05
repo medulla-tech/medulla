@@ -1295,8 +1295,6 @@ msgstr "Toutes les versions"
 msgid "Entity"
 msgstr "Entité"
 
-msgid "Save"
-msgstr "Enregistrer"
 
 msgid "Missing entity selection."
 msgstr "Aucune entité sélectionnée."
@@ -1315,3 +1313,12 @@ msgstr "Échec de l'enregistrement des politiques de mise à jour automatique."
 
 msgid "No auto-update policies found for this entity."
 msgstr "Aucune politique de mise à jour automatique pour cette entité."
+
+msgid "Enable automatic deployment of kernel updates for this distribution."
+msgstr "Déploie automatiquement les mises à jour du noyau pour cette distribution."
+
+msgid "Enable automatic deployment of security updates for this distribution."
+msgstr "Déploie automatiquement les mises à jour de sécurité pour cette distribution."
+
+msgid "Enable automatic deployment of updates other than kernel and security."
+msgstr "Déploie automatiquement les mises à jour autres que noyau et sécurité."

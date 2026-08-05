@@ -28,9 +28,19 @@
     cursor: pointer;
 }
 
-.approval-form-actions {
-    margin-top: 12px;
-    text-align: center;
+/* Boutons de validation des formulaires du module : alignes a droite, fin du
+   formulaire. .form-actions vient de bootstrap-forms.css et pose un fond gris. */
+.linux-autoupdate-policy table.listinfos {
+    width: 100%;
+}
+
+.approval-form-actions,
+.linux-autoupdate-policy .form-actions {
+    background: none;
+    border-top: none;
+    padding: 0;
+    margin: 16px 0 0;
+    text-align: right;
 }
 
 /* Last column (checkboxes) */
