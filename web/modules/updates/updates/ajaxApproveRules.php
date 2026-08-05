@@ -90,7 +90,21 @@ echo '<form method="post" action="" name="montableau" class="approval-form appro
 
 $n = new ListInfos($f['msrcseverity'], _T("Update Severity", "updates"));
 $n->addExtraInfo($f['updateclassification'], _T("Update Classification", "updates"));
-$n->addExtraInfoCenteredRaw($htmlelementcheck, _T("Automatic approval (White list)", "updates"));
+/*
+ * En-tete court, la precision "liste blanche" passant en infobulle. La case
+ * "tout cocher" est concatenee au libelle : celui-ci est injecte tel quel dans
+ * le <th>, le framework n'ayant pas de mecanisme dedie pour cela.
+ */
+// Pas de title sur la case : etant a l'interieur du libelle, elle herite deja
+// de l'infobulle de colonne, et les deux bulles se superposaient au survol.
+$checkAllHeader = _T("Automatic approval", "updates")
+    . ' <input type="checkbox" id="approvalCheckAll">';
+$n->addExtraInfoCenteredRaw(
+    $htmlelementcheck,
+    $checkAllHeader,
+    "",
+    _T("Updates matching a checked rule are moved to the white list and deployed automatically.", "updates")
+);
 
 $n->setParamInfo($params);
 $n->setNavBar = "";
@@ -118,5 +132,30 @@ echo "\n</form>";
         btn.style.marginLeft = (r.left - f.left) + 'px';
         btn.style.width = r.width + 'px';
     }
+
+    /* Case d'en-tete : coche ou decoche les regles d'un seul geste.
+       Les cases de lignes sont accompagnees d'un input hidden de meme nom
+       (valeur 0) : on ne cible donc que les checkbox. */
+    var master = document.getElementById('approvalCheckAll');
+    if (!master) { return; }
+
+    var boxes = Array.prototype.slice.call(
+        document.querySelectorAll('.approval-form table.listinfos tbody input[type=checkbox][name^="check["]')
+    );
+    if (!boxes.length) { return; }
+
+    // Refelete l'etat courant : cochee si toutes le sont, indeterminee si une partie.
+    function refreshMaster() {
+        var checked = boxes.filter(function(b) { return b.checked; }).length;
+        master.checked = (checked === boxes.length);
+        master.indeterminate = (checked > 0 && checked < boxes.length);
+    }
+
+    master.addEventListener('click', function() {
+        boxes.forEach(function(b) { b.checked = master.checked; });
+        master.indeterminate = false;
+    });
+    boxes.forEach(function(b) { b.addEventListener('change', refreshMaster); });
+    refreshMaster();
 })();
 </script>

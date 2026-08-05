@@ -1395,3 +1395,10 @@ msgstr "Despliegue"
 
 msgid "User"
 msgstr "Usuario"
+
+
+msgid "Automatic approval"
+msgstr "Validación automática"
+
+msgid "Updates matching a checked rule are moved to the white list and deployed automatically."
+msgstr "Las actualizaciones que coinciden con una regla marcada pasan a la lista blanca y se despliegan automáticamente."

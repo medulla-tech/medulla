@@ -22,6 +22,14 @@
     cursor: pointer;
 }
 
+/* Case "tout cocher" de l'en-tete : alignee sur le milieu du libelle et non sur
+   sa baseline, qui la remontait au-dessus du texte. */
+.approval-form table.listinfos thead input[type="checkbox"] {
+    vertical-align: middle;
+    margin: 0 0 2px 8px;
+    cursor: pointer;
+}
+
 .approval-form-actions {
     margin-top: 12px;
     text-align: center;

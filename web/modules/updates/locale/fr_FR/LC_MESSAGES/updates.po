@@ -1274,3 +1274,10 @@ msgstr "Déploiement"
 
 msgid "User"
 msgstr "Utilisateur"
+
+
+msgid "Automatic approval"
+msgstr "Validation automatique"
+
+msgid "Updates matching a checked rule are moved to the white list and deployed automatically."
+msgstr "Les mises à jour correspondant à une règle cochée passent en liste blanche et sont déployées automatiquement."
