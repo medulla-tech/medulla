@@ -383,14 +383,9 @@ foreach ($mergedArray as $datacolonne) {
 // $count garde sa valeur initiale (total des entités filtrées, calculé ligne 69),
 // pour que la navbar puisse calculer correctement les pages.
 $n = new OptimizedListInfos($complete_name_major, _T("Entity name", "updates"));
-// Colonnes redimensionnables, comme les autres listes du module.
 $n->setResizable();
 $n->disableFirstColumnActionLink();
-/*
- * En-tetes abreges : les libelles complets (une phrase chacun) elargissaient le
- * tableau au point de le rendre illisible. Le sens exact est porte par
- * l'infobulle (4e parametre), affichee au survol de l'en-tete.
- */
+// En-tetes abreges, le sens complet etant porte par l'infobulle.
 $n->addExtraInfo(
     $comformite_name_major,
     _T("Compliance rate", "updates"),

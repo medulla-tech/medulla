@@ -90,13 +90,6 @@ echo '<form method="post" action="" name="montableau" class="approval-form appro
 
 $n = new ListInfos($f['msrcseverity'], _T("Update Severity", "updates"));
 $n->addExtraInfo($f['updateclassification'], _T("Update Classification", "updates"));
-/*
- * En-tete court, la precision "liste blanche" passant en infobulle. La case
- * "tout cocher" est concatenee au libelle : celui-ci est injecte tel quel dans
- * le <th>, le framework n'ayant pas de mecanisme dedie pour cela.
- */
-// Pas de title sur la case : etant a l'interieur du libelle, elle herite deja
-// de l'infobulle de colonne, et les deux bulles se superposaient au survol.
 $checkAllHeader = _T("Automatic approval", "updates")
     . ' <input type="checkbox" id="approvalCheckAll">';
 $n->addExtraInfoCenteredRaw(
@@ -133,9 +126,7 @@ echo "\n</form>";
         btn.style.width = r.width + 'px';
     }
 
-    /* Case d'en-tete : coche ou decoche les regles d'un seul geste.
-       Les cases de lignes sont accompagnees d'un input hidden de meme nom
-       (valeur 0) : on ne cible donc que les checkbox. */
+    /* Ne cibler que les checkbox : chaque ligne a aussi un input hidden de meme nom. */
     var master = document.getElementById('approvalCheckAll');
     if (!master) { return; }
 
@@ -144,7 +135,6 @@ echo "\n</form>";
     );
     if (!boxes.length) { return; }
 
-    // Refelete l'etat courant : cochee si toutes le sont, indeterminee si une partie.
     function refreshMaster() {
         var checked = boxes.filter(function(b) { return b.checked; }).length;
         master.checked = (checked === boxes.length);

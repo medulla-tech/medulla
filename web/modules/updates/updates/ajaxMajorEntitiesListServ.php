@@ -347,10 +347,7 @@ foreach ($mergedArray as  $index=>$datacolonne) {
 $n = new OptimizedListInfos($complete_name_major, _T("Entity name", "updates"));
 $n->setResizable();
 $n->disableFirstColumnActionLink();
-/*
- * En-tetes abreges + infobulle, comme l'onglet Windows : les libelles complets
- * ("Upgrade Win Server 2012 to 2025") elargissaient trop le tableau.
- */
+// En-tetes abreges, le sens complet etant porte par l'infobulle.
 $n->addExtraInfo(
     $comformite_name_major,
     _T("Compliance rate", "updates"),

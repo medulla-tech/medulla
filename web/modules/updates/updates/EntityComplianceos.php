@@ -10,8 +10,7 @@ require_once("modules/xmppmaster/includes/html.inc.php");
 
 global $maxperpage;
 
-// Cette page est atteinte via une redirection depuis l'action "index" : sans ce
-// forcage, aucune entree du menu lateral ne correspond a l'action courante.
+// Page atteinte par redirection depuis "index" : force l'entree de menu active.
 $sidemenu->forceActiveItem("index");
 
 $p = new PageGenerator(_T("Entity Compliance", "updates"));

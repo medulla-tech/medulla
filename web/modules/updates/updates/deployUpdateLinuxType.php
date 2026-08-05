@@ -337,14 +337,7 @@ $distribution= $request->string('distribution','');
 
 ?>
 <?php
-/*
- * Le style de la popup est celui du produit (popups.css) : pas de <style>
- * inline ici. Le bloc precedent forcait des couleurs en dur (#25607d,
- * #e6ecf3), annulait le padding de .popup et contenait une accolade
- * surnumeraire qui invalidait la suite de la feuille. La barre de titre
- * qu'il stylait etait par ailleurs une div vide : le switch ci-dessous ne
- * fait que calculer $formtitle, affiche ensuite par PopupForm.
- */
+// Le style de la popup vient de popups.css : pas de <style> inline ici.
     switch($mod){
         // Mise à jour du noyau pour tous les systèmes Linux de l'entité
         // Schedule kernel updates for all Linux systems in the entity
@@ -420,9 +413,7 @@ $distribution= $request->string('distribution','');
         break;
     }
 
-        // Titre passe nu a PopupForm, qui l'habille lui-meme d'un <h2> : y
-        // injecter un <h1> imbriquait deux titres (HTML invalide) et produisait
-        // un bandeau vide au-dessus. Meme traitement que deployUpdate.php.
+        // Titre passe nu : PopupForm l'habille lui-meme d'un <h2>.
         $completenameForm = $request->e('completename', '');
         if ($completenameForm !== '') {
             $formtitle = sprintf(_T("%s: %s", "updates"), $formtitle, $completenameForm);

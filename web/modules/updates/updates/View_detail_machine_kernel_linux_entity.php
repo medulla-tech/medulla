@@ -25,18 +25,13 @@ require("graph/navbar.inc.php");
 require_once("modules/xmppmaster/includes/html.inc.php");
 
 
-// Cette page est atteinte depuis la conformite des entites : sans ce forcage,
-// aucune entree du menu lateral ne correspond a l'action courante.
+// Page atteinte depuis la conformite : force l'entree de menu active.
 $sidemenu->forceActiveItem("index");
 
-// Meme structure que l'onglet Windows (detailsByMachines.php) : titre de page
-// generique, le nom de l'entite etant porte par le titre de section du tableau.
 $p = new PageGenerator(_T("Details by Machines", "updates"));
 $p->setSideMenu($sidemenu);
 $p->display();
 
-// .ajax-section : la barre de recherche vient se poser sur le titre de section
-// <h2> rendu par la vue AJAX, comme sur detailsByMachines.php.
 echo '<div class="ajax-section">';
 $ajax = new AjaxFilter(urlStrRedirect("updates/updates/ajaxView_detail_machine_kernel_linux_entity"), "container", getFilteredGetParams(), 'formRunning');
 

@@ -62,8 +62,7 @@ $completename=$_GET['completename'];
 
 
 $entity_id = isset($_GET['entity_id']) ? intval($_GET['entity_id'], 10) : -1;
-// "any" : toutes les machines Linux de l'entite, y compris celles a jour.
-// Cette vue sert a consulter l'etat du parc, pas seulement ce qui reste a faire.
+// "any" : toutes les machines de l'entite, y compris celles a jour.
 $updatetype="any";
 $maxperpage = $conf["global"]["maxperpage"];
 $filter  = isset($_GET['filter']) ? htmlentities($_GET['filter']) : "";
@@ -93,13 +92,6 @@ echo "</pre>";*/
 
 $count = $machines['total_rows'];
 
-/*
- * Pas de bandeau de synthese de l'entite ici : total et taux global sont deja
- * affiches sur la ligne de l'entite dans "Conformite des entites", d'ou l'on
- * arrive, et le nom de l'entite est porte par le titre de page. Cet ecran est
- * dedie au detail machine par machine.
- */
-
 
 $actions_update_complete_machines = $actions_update_kernel_machines = $actions_update_secutity_machines = $actions_update_other_machines = array();
 $machineComplianceBars = array();
@@ -128,13 +120,8 @@ foreach($machines['hostname'] as $index => $valeur ){
     $hostname= $param['hostname'];
     $params[]=$param;
 
-    /*
-     * Conformite de la machine. Binaire par construction : up_machine_linux ne
-     * stocke que le nombre de mises a jour EN ATTENTE, jamais le nombre
-     * d'installees — aucun ratio n'est donc calculable. La barre sert de repere
-     * visuel (verte = rien en attente), le detail par categorie est dans les
-     * colonnes Securite / Noyau / Autres.
-     */
+    // Binaire : up_machine_linux ne stocke que les mises a jour en attente,
+    // aucun ratio n'est calculable.
     $machineIsCompliant = intval($param['total_count']) === 0;
     $machineComplianceBars[] = (string) new medulla_progressbar_static(
         $machineIsCompliant ? 100 : 0,
@@ -222,8 +209,6 @@ foreach($machines['hostname'] as $index => $valeur ){
 }// end params
 
 
-    // Titre de section : meme rendu que l'onglet Windows (<h2> au-dessus du
-    // tableau), sur lequel vient se poser la barre de recherche (.ajax-section).
     echo '<h2>' . sprintf(_T("Linux computers from entity %s", "updates"),
                           htmlspecialchars($completename, ENT_QUOTES, 'UTF-8')) . '</h2>';
 

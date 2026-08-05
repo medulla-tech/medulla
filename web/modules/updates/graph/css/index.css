@@ -22,8 +22,6 @@
     cursor: pointer;
 }
 
-/* Case "tout cocher" de l'en-tete : alignee sur le milieu du libelle et non sur
-   sa baseline, qui la remontait au-dessus du texte. */
 .approval-form table.listinfos thead input[type="checkbox"] {
     vertical-align: middle;
     margin: 0 0 2px 8px;
@@ -207,34 +205,24 @@
 
 /* ===== Entity compliance ===== */
 
-/* La barre de recherche est remontee sur la ligne du compteur via .ajax-section
-   (margin-bottom: -50px). Sans titre de section a cette hauteur, le tableau
-   remonte trop et vient coller a la barre : on lui redonne de l'air. */
+/* Air sous la barre de recherche, remontee par .ajax-section. */
 .entity-compliance-table {
     margin-top: 16px;
 }
 
-/* Tableaux de synthese (une ligne de compteurs) : contrairement aux listes,
-   leur premiere colonne porte un nombre et non un libelle. Le framework aligne
-   cette colonne a gauche par principe, on la centre comme les autres. */
+/* Tableaux de synthese : la premiere colonne porte un nombre, pas un libelle. */
 table.listinfos.major-summary thead th,
 table.listinfos.major-summary tbody td {
     text-align: center;
 }
 
-/* En-tetes porteurs d'une infobulle.
-   Pas de soulignement : .infomach (tooltip.css) en pose un, mais quand presque
-   toutes les colonnes sont documentees il ne distingue plus rien et se coupe en
-   deux sur les en-tetes qui passent a la ligne. Seul le curseur d'aide signale
-   l'infobulle. */
+/* En-tetes a infobulle : pas de soulignement, seul le curseur signale. */
 table.listinfos thead th .column-tooltip {
     border-bottom: none;
     cursor: help;
 }
 
-/* Contenu de l'infobulle : phrase explicative, donc registre "valeur" du
-   tooltip machine (blanc, casse normale) et non "libelle" (bleu, capitales).
-   La bulle etant rendue hors du thead, seule la casse est a neutraliser. */
+/* Infobulle : registre "valeur" (blanc, casse normale), pas "libelle". */
 .column-tooltip__text {
     max-width: 320px;
     text-transform: none;

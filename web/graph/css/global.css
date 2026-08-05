@@ -1132,8 +1132,7 @@ td.file {
 }
 .ajax-section > form {
   display: none;
-  /* !important requis : AjaxFilter rend son <form> avec style="margin:20px 0;"
-     en inline (PageGenerator.php), qui l'emporterait sinon sur ces marges. */
+  /* !important : AjaxFilter pose un style="margin" inline sur son <form>. */
   margin: 0 !important;
   margin-bottom: -50px !important;
   position: relative;

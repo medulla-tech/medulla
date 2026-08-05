@@ -649,16 +649,8 @@ class ActionAjaxPopup extends ActionItem
         $titleAttr = ' title="' . htmlspecialchars($title, ENT_QUOTES, 'UTF-8') . '"';
         $allClasses = trim($this->classCss . ' ' . $hoverClass);
 
-        /*
-         * Les arguments sont d'abord serialises en litteraux JavaScript par
-         * json_encode, puis l'ensemble est echappe pour l'attribut HTML.
-         *
-         * Concatener les valeurs entre apostrophes ne fonctionne pas : le
-         * parseur HTML decode les entites AVANT que le JS soit interprete, donc
-         * une apostrophe dans le message (frequent des que la chaine est
-         * traduite : "l'entite") ressort telle quelle et referme la chaine
-         * JavaScript -> SyntaxError, et le lien devient inoperant.
-         */
+        // json_encode obligatoire : une apostrophe dans le message casserait
+        // la chaine JS (le HTML decode les entites avant interpretation du JS).
         $onclickArgs = implode(', ', [
             json_encode($this->_confirmMessage, JSON_UNESCAPED_UNICODE),
             json_encode($targetUrl, JSON_UNESCAPED_SLASHES),
@@ -686,7 +678,6 @@ class ActionAjaxPopup extends ActionItem
     {
         ?>
         <script type="text/javascript">
-        // Libelles traduits cote PHP : le JS ne peut pas appeler _T().
         var ActionAjaxPopup_i18n = {
             yes:     <?php echo json_encode(_T("Yes", "base")); ?>,
             no:      <?php echo json_encode(_T("No", "base")); ?>,
@@ -694,10 +685,7 @@ class ActionAjaxPopup extends ActionItem
             loading: <?php echo json_encode(_T("Loading...", "base")); ?>
         };
 
-        /**
-         * Affiche le voile assombri derriere la popup, comme les autres popups
-         * du produit (cf. .overlay dans popups.css). Un clic sur le voile ferme.
-         */
+        /** Affiche le voile (.overlay) derriere la popup ; clic = fermeture. */
         function ActionAjaxPopup_showOverlay($popup) {
             var $overlay = jQuery('#actionConfirmOverlay');
             if (!$overlay.length) {
@@ -757,8 +745,6 @@ class ActionAjaxPopup extends ActionItem
                 jQuery('body').append('<div id="actionConfirmPopup" class="modal-popup"></div>');
             }
             var $popup = jQuery('#actionConfirmPopup');
-            // Classes .btn : sans elles les boutons prennent le rendu natif du
-            // navigateur et detonnent avec le reste des popups du produit.
             var html = '<div class="modal-popup-message">' + message + '</div>' +
                        '<div class="modal-popup-buttons">' +
                        '<button id="popupYes" class="btn btn-primary">' + ActionAjaxPopup_i18n.yes + '</button>' +
@@ -1616,20 +1602,9 @@ class ListInfos extends HtmlElement
 
 
     /**
-     * Rend un libellé d'en-tête de colonne accompagné de son infobulle.
-     *
-     * Reprend le pattern .infomach / mydata + jQuery UI de tooltip.css, utilisé
-     * pour les infobulles machine : fond bleu translucide, soulignement
-     * pointillé et curseur d'aide. L'ancien rendu (<a class="tooltip">) était le
-     * seul de ce type dans le produit et héritait du text-transform du thead,
-     * ce qui affichait l'infobulle en capitales dans un encadré blanc.
-     *
-     * Le contenu n'est volontairement pas échappé : certains appelants y
+     * Rend un libellé d'en-tête accompagné de son infobulle (pattern .infomach
+     * de tooltip.css). Le contenu n'est pas échappé : certains appelants y
      * passent du HTML (cf. imaging/bootmenu.php).
-     *
-     * @param string $label   Libellé de la colonne (déjà prêt à l'affichage)
-     * @param string $tooltip Texte ou HTML de l'infobulle, vide si aucune
-     * @return string Le libellé, enrichi si une infobulle est fournie
      */
     protected function renderHeaderTooltip($label, $tooltip)
     {
@@ -1647,12 +1622,7 @@ class ListInfos extends HtmlElement
             . '</span>';
     }
 
-    /**
-     * Active les infobulles d'en-tête rendues par renderHeaderTooltip().
-     *
-     * Émis une seule fois par requête : plusieurs tableaux peuvent coexister
-     * sur une page, le sélecteur est global et l'initialisation idempotente.
-     */
+    /** Active les infobulles d'en-tête. Émis une seule fois par requête. */
     protected function drawHeaderTooltipScript()
     {
         static $scriptEmitted = false;
@@ -1699,9 +1669,7 @@ jQuery(function() {
 
     // Colonnes principales (description)
     foreach ($this->description as $key => $desc) {
-        // La premiere colonne rend elle aussi son infobulle : le 5e parametre
-        // du constructeur ListInfos la portait deja, mais elle etait ignoree
-        // ici — le mecanisme etait donc inatteignable.
+        // La premiere colonne rend aussi son infobulle (5e param du constructeur).
         $header = $this->renderHeaderTooltip($desc, $this->tooltip[$key] ?? "");
         echo "<th scope=\"col\"><span>$header</span></th>";
     }

@@ -61,9 +61,6 @@ $_entities = getUserLocations();
 
 <?php
 
-    /**
-     * @param string $question Question deja traduite (cf. question_custom_colonne)
-     */
     function createLinuxGroupPopup(string $question, int $width = 450)
     {
         return new ActionAjaxPopup(
@@ -81,13 +78,8 @@ $_entities = getUserLocations();
         );
     }
 
-/**
- * Question de confirmation affichee avant la creation d'un groupe dynamique.
- *
- * Le nom de l'entite passe par un %s de sprintf : interpole directement dans la
- * chaine, il ferait partie du msgid recherche par gettext, qui differerait pour
- * chaque entite et ne serait donc jamais traduit.
- */
+// %s + sprintf : interpoler le nom d'entite dans le msgid le rendrait
+// intraduisible (un msgid different par entite).
 function question_custom_colonne($colonne, $nameentitycomplete){
     switch ($colonne) {
 
@@ -353,16 +345,8 @@ $machines_kernel_not_ok = [];
 $machines_other_not_ok = [];
 $action_update_history_linux = [];
 
-/*
- * Correspondance entity_id -> position dans le resultat de conformite.
- *
- * analyze_machine_compliance_linux fait un GROUP BY entity_id : le resultat ne
- * contient que les entites ayant au moins une machine dans up_machine_linux,
- * triees par entity_id. Indexer ces colonnes par la position de l'entite dans
- * $entityid (ordre de getUserLocations) decale toutes les valeurs des qu'une
- * entite de la liste n'a aucune machine Linux, et affiche les chiffres en face
- * de la mauvaise entite.
- */
+// Indexation par entity_id : le GROUP BY ne renvoie que les entites ayant des
+// machines Linux, indexer par position decalerait les valeurs.
 $positionParEntite = [];
 foreach (($entitycompliances['entity_id'] ?? []) as $position => $entiteRetournee) {
     $positionParEntite[(int) $entiteRetournee] = $position;
@@ -371,8 +355,7 @@ foreach (($entitycompliances['entity_id'] ?? []) as $position => $entiteRetourne
 $entity_count = count($entityid);
 for ($counter = 0; $counter < $entity_count; $counter++) {
     $val = $entityid[$counter];
-    // -1 : entite absente du resultat (aucune machine Linux) -> compteurs a 0
-    // via les ?? 0 qui accompagnent chaque acces a $entitycompliances.
+    // -1 : entite sans machine Linux -> compteurs a 0 via les ?? 0.
     $ind = $positionParEntite[(int) $val] ?? -1;
 
     // Nom complet de l'entité courante
@@ -426,13 +409,8 @@ for ($counter = 0; $counter < $entity_count; $counter++) {
      | Représente le nombre total de machines Linux rattachées à l'entité.
      */
 
-    /*
-     * Vues de consultation : actives des que l'entite possede des machines
-     * Linux, independamment du nombre de mises a jour en attente. Consulter
-     * n'est pas deployer — griser ces vues quand l'entite est conforme
-     * empecherait de verifier quelles machines la composent. Meme regle que
-     * l'onglet Windows, ou les details par machine sont toujours accessibles.
-     */
+    // Vues de consultation : actives des qu'il y a des machines, comme cote
+    // Windows. Seuls les deploiements sont conditionnes aux compteurs.
     if (intval(($entitycompliances['total_machines'][$ind] ?? 0)) > 0) {
         $vue_compliance_distri_linux_entity[] = new ActionItem(_T("Linux distributions", "updates"),
                                                         "View_compliance_distri_linux_entity",
@@ -745,9 +723,7 @@ for ($counter = 0; $counter < $entity_count; $counter++) {
 $n = new OptimizedListInfos($nameentity, _T("Entity name", "updates"));
 $n->setcssIds($nameentity); // id name pour selection permet des selection css
 $n->disableFirstColumnActionLink();
-// Les compteurs contiennent du HTML (liens de creation de groupe dynamique
-// generes par createLinuxGroupPopup) : la variante Raw est obligatoire, sinon
-// le markup est echappe et affiche tel quel.
+// Variante Raw obligatoire : les compteurs contiennent des liens HTML.
 $n->addExtraInfo(
     $complRatestotal,
     _T("Compliance rate", "updates"),
@@ -785,12 +761,7 @@ $n->addExtraInfoCenteredRaw(
     _T("Total number of Linux machines attached to this entity that reported a scan.", "updates")
 );
 
-/*
- * Ordre des actions : d'abord les deploiements, dans le meme ordre que les
- * colonnes du tableau (Securite, Noyau, Autres, puis la mise a jour complete
- * qui correspond a la colonne "Non conformes"), ensuite les vues de
- * consultation, et l'historique en dernier.
- */
+// Ordre : deploiements (comme les colonnes), puis consultation, puis historique.
 $n->addActionItemArray($action_update_security_linux);
 $n->addActionItemArray($action_update_kernel_linux);
 $n->addActionItemArray($action_update_other_linux);
