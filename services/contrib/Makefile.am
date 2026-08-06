@@ -319,6 +319,8 @@ nobase_dist_contrib_DATA = dyngroup/sql/clean-db.sql \
 	xmppmaster/sql/schema-106.sql \
 	xmppmaster/sql/schema-107.sql \
 	xmppmaster/sql/schema-108.sql \
+	xmppmaster/sql/schema-109.sql \
+	xmppmaster/sql/schema-110.sql \
 	kiosk/sql/schema-001.sql \
 	kiosk/sql/schema-002.sql \
 	kiosk/sql/schema-003.sql \
@@ -340,6 +342,7 @@ nobase_dist_contrib_DATA = dyngroup/sql/clean-db.sql \
 	updates/sql/schema-001.sql \
 	urbackup/sql/schema-001.sql \
 	mastering/sql/schema-001.sql \
+	mastering/sql/schema-002.sql \
 	mobile/sql/schema-001.sql \
 	security/sql/schema-001.sql \
 	security/sql/schema-002.sql \
