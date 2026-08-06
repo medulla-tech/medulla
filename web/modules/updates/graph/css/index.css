@@ -64,6 +64,10 @@
     text-align: center;
 }
 
+.approval-form table.listinfos .family-separator input[type="checkbox"] {
+    vertical-align: middle;
+}
+
 /* Product rows */
 .approval-form table.listinfos .family-produit td:last-child {
     text-align: center;

@@ -1449,3 +1449,6 @@ msgstr "Ninguna máquina por migrar"
 
 msgid "All machines in this entity are up to date or cannot be upgraded."
 msgstr "Todas las máquinas de esta entidad están actualizadas o no pueden migrarse."
+
+msgid "Approve every update of this family"
+msgstr "Aprobar todas las actualizaciones de esta familia"
