@@ -1322,3 +1322,9 @@ msgstr "Déploie automatiquement les mises à jour de sécurité pour cette dist
 
 msgid "Enable automatic deployment of updates other than kernel and security."
 msgstr "Déploie automatiquement les mises à jour autres que noyau et sécurité."
+
+msgid "No machine to upgrade"
+msgstr "Aucune machine à faire migrer"
+
+msgid "All machines in this entity are up to date or cannot be upgraded."
+msgstr "Toutes les machines de cette entité sont à jour ou ne peuvent pas être mises à niveau."

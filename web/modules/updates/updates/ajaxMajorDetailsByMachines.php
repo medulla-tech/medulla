@@ -32,58 +32,7 @@ $entityCompleteName = !empty($_GET['completename']) ? htmlentities($_GET['comple
 $source = !empty($_GET['source']) ? htmlentities($_GET['source']) : "xmppmaster";
 $typeaction= !empty($_GET['typeaction']) ? htmlentities($_GET['typeaction']) : "windows";
 
-// Compteur "Mise à jour non conseillée" : on enveloppe la valeur dans le
-// tooltip stylisé (pattern .infomach / .ttable, cf. tooltip.css global) qui
-// liste les prérequis matériels Windows 11 non satisfaits par ces machines.
-$nbMissing = (isset($_GET['nb_missing']) && is_numeric($_GET['nb_missing'])) ? (int)$_GET['nb_missing'] : 0;
-if ($nbMissing > 0) {
-    $win11Requirements = array(
-        'TPM 2.0',
-        'UEFI Secure Boot',
-        '1GHz 2-core 64-bit CPU',
-        '4GB of RAM',
-        '64GB in C:\\ partition',
-        'GPU supporting DirectX 12 and WDDM 2.0',
-        'Display of 1280 x 720 24bits',
-    );
-    $reqTooltip = '<table class="ttable win11req-tt">';
-    $reqTooltip .= '<tr class="ttabletr tt-section win11req-head"><td class="ttabletd" colspan="2">'
-        . htmlspecialchars(_T("The machine does not meet the minimum requirements for Windows 11", "updates"))
-        . '</td></tr>';
-    foreach ($win11Requirements as $req) {
-        $reqTooltip .= '<tr class="ttabletr win11req-row"><td class="ttabletd">'
-            . htmlspecialchars($req) . '</td></tr>';
-    }
-    $reqTooltip .= '</table>';
-    $nbMissingCell = '<span class="infomach win11req-tooltip" mydata="'
-        . htmlentities($reqTooltip) . '">' . $nbMissing . '</span>';
-} else {
-    $nbMissingCell = (string)$nbMissing;
-}
 
-if ($typeaction == "windows") {
-    $n = new ListInfos(array($_GET['W10to10']), _T("Win 10 → 10", "updates"), "", "", _T("Windows 10 machines that must first be upgraded to the latest Windows 10 version.", "updates"));
-    $n->setTableCssClass("major-summary");
-    $n->addExtraInfoCentered(array($_GET['W10to11']), _T("Win 10 → 11", "updates"), "", _T("Windows 10 machines already up to date, eligible for the upgrade to Windows 11.", "updates"));
-    $n->addExtraInfoCentered(array($_GET['W11to11']), _T("Win 11 → 11", "updates"), "", _T("Windows 11 machines that must be upgraded to the latest Windows 11 version.", "updates"));
-    $n->addExtraInfoCentered(array($_GET['UPDATED']), _T("Up to date", "updates"), "", _T("Machines already running the latest version of their operating system.", "updates"));
-    $n->addExtraInfoCenteredRaw(array($nbMissingCell), _T("Upgrade Not recommended", "updates"), "", _T("Machines that do not meet the hardware requirements for the target version.", "updates"));
-    $n->addExtraInfoCentered(array($_GET['totalmachineentity']), _T("Total machines", "updates"), "", _T("Total number of machines attached to this entity.", "updates"));
-} else {
-    $n = new ListInfos(array($_GET['MS12toMS25']), _T("2012 → 2025", "updates"), "", "", _T("Windows Server 2012 machines to upgrade to Windows Server 2025.", "updates"));
-    $n->setTableCssClass("major-summary");
-    $n->addExtraInfoCentered(array($_GET['MS16toMS25']), _T("2016 → 2025", "updates"), "", _T("Windows Server 2016 machines to upgrade to Windows Server 2025.", "updates"));
-    $n->addExtraInfoCentered(array($_GET['MS19toMS25']), _T("2019 → 2025", "updates"), "", _T("Windows Server 2019 machines to upgrade to Windows Server 2025.", "updates"));
-    $n->addExtraInfoCentered(array($_GET['MS25toMS25']), _T("2025 → 2025", "updates"), "", _T("Windows Server 2025 machines to upgrade to the latest available version.", "updates"));
-    $n->addExtraInfoCentered(array($_GET['UPDATED']), _T("Up to date", "updates"), "", _T("Machines already running the latest version of their operating system.", "updates"));
-    $n->addExtraInfoCentered(array($_GET['nb_missing']), _T("Upgrade Not recommended", "updates"), "", _T("Machines that do not meet the hardware requirements for the target version.", "updates"));
-    $n->addExtraInfoCentered(array($_GET['totalmachineentity']), _T("Total machines", "updates"), "", _T("Total number of machines attached to this entity.", "updates"));
-}
-$n->setNavBar = "";
-$n->start = 0;
-$n->end = 1;
-$n->disableFirstColumnActionLink();
-$n->display($navbar = 0, $header = 0);
 
     if ($source == "xmppmaster" ){
         // $statglpiversion = xmlrpc_get_os_xmpp_update_major_details($_GET['entity'],$filter);
@@ -175,21 +124,11 @@ $n->end = $count;
 $n->setItemCount($count);
 $n->setNavBar(new AjaxNavBar($count, $filter));
 $n->setParamInfo($params);
-$n->setEmptyState(_T("No machines found", "updates"), _T("No machines match the current filter.", "updates"));
+$n->setEmptyState(
+    _T("No machine to upgrade", "updates"),
+    _T("All machines in this entity are up to date or cannot be upgraded.", "updates")
+);
 $n->display();
 
-// Active le tooltip stylisé sur le compteur "Upgrade Not recommended" du
-// tableau récapitulatif (jQuery UI + tooltip.css, même pattern que
-// ajaxXmppMachinesList.php). items:"[mydata]" lit l'attribut mydata.
-echo '<script>
-jQuery(function() {
-    if (!(jQuery.ui && jQuery.ui.tooltip)) { return; }
-    jQuery(".win11req-tooltip").tooltip({
-        position: { my: "left+15 center", at: "right center" },
-        items: "[mydata]",
-        content: function() { return jQuery(this).attr("mydata"); }
-    });
-});
-</script>';
 
 ?>
