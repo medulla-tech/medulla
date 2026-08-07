@@ -38,7 +38,7 @@ if(isset($_POST['bconfirm'])) {
     header('location: '.urlStrRedirect("updates/updates/updatesListWin", getFilteredGetParams()));
     exit;
 } else {
-    $f = new PopupForm(sprintf(_T("<b>Disable</b> update %s (%s) ?", "update"), $title, $id));
+    $f = new PopupForm(sprintf(_T("<b>Disable</b> update %s (%s) ?", "updates"), $title, $id));
     $hidden = new HiddenTpl("updateid");
     $f->add($hidden, array("value" =>$id, "hide" => true));
     $f->add(new HiddenTpl("from"), array("value" => $from, "hide" => true));

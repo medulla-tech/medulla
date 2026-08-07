@@ -90,7 +90,14 @@ echo '<form method="post" action="" name="montableau" class="approval-form appro
 
 $n = new ListInfos($f['msrcseverity'], _T("Update Severity", "updates"));
 $n->addExtraInfo($f['updateclassification'], _T("Update Classification", "updates"));
-$n->addExtraInfoCenteredRaw($htmlelementcheck, _T("Automatic approval (White list)", "updates"));
+$checkAllHeader = _T("Automatic approval", "updates")
+    . ' <input type="checkbox" id="approvalCheckAll">';
+$n->addExtraInfoCenteredRaw(
+    $htmlelementcheck,
+    $checkAllHeader,
+    "",
+    _T("Updates matching a checked rule are moved to the white list and deployed automatically.", "updates")
+);
 
 $n->setParamInfo($params);
 $n->setNavBar = "";
@@ -110,13 +117,26 @@ echo "\n</form>";
 ?>
 <script>
 (function() {
-    var col = document.querySelector('.approval-form table.listinfos thead th:last-child, .approval-form table.listinfos thead td:last-child');
-    var btn = document.querySelector('.approval-form-actions');
-    if (col && btn) {
-        var r = col.getBoundingClientRect();
-        var f = btn.closest('form').getBoundingClientRect();
-        btn.style.marginLeft = (r.left - f.left) + 'px';
-        btn.style.width = r.width + 'px';
+    /* Ne cibler que les checkbox : chaque ligne a aussi un input hidden de meme nom. */
+    var master = document.getElementById('approvalCheckAll');
+    if (!master) { return; }
+
+    var boxes = Array.prototype.slice.call(
+        document.querySelectorAll('.approval-form table.listinfos tbody input[type=checkbox][name^="check["]')
+    );
+    if (!boxes.length) { return; }
+
+    function refreshMaster() {
+        var checked = boxes.filter(function(b) { return b.checked; }).length;
+        master.checked = (checked === boxes.length);
+        master.indeterminate = (checked > 0 && checked < boxes.length);
     }
+
+    master.addEventListener('click', function() {
+        boxes.forEach(function(b) { b.checked = master.checked; });
+        master.indeterminate = false;
+    });
+    boxes.forEach(function(b) { b.addEventListener('change', refreshMaster); });
+    refreshMaster();
 })();
 </script>

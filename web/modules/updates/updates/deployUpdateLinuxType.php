@@ -336,124 +336,89 @@ $harduuid= $request->string('harduuid','');
 $distribution= $request->string('distribution','');
 
 ?>
-<style>
- /* on modifie popup */
-
-    #popup {
-        margin: 0 0 0 0; /* margin-top: 0, margin-right: 0, margin-bottom: 5px, margin-left: 0 */
-        padding: 0 0 0 0;
-         border-top-left-radius: 10px;
-    }
-    /* on laise au popup-content de definir pading et margin */
-
-    /* Barre de titre en haut */
-    #popup-title-bar {
-        width: 100%;           /* prend toute la largeur du container */
-        background-color: #25607d; /* couleur de fond */
-        color: #fff;           /* texte blanc */
-        padding: 10px 10px 10px 0; /* padding-top: 0, padding-right: 10px, padding-bottom: 10px, padding-left: 0 */
-        box-sizing: border-box;
-        font-weight: bold;
-        font-size: 16px;
-        text-align: center;    /* texte centré */
-        border-top-left-radius: 10px;   /* Arrondi coin supérieur gauche */
-        border-top-right-radius: 10px;  /* Arrondi coin supérieur droit */
-    }
-    }
-    /* on rajoute 1 div pour le contenant */
-   #popup-content {
-    padding-right: 10px; /* Laisse 10px d'espace à droite */
-    background-color: #e6ecf3;
-}
-    #new_contenue{
-    padding: 10px; /* Laisse 10px d'espace à droite */
-    background-color: #e6ecf3;
-}
-
-</style>
-<div id="popup-content">
-    <div id="popup-title-bar">
-    <?php
+<?php
+// Le style de la popup vient de popups.css : pas de <style> inline ici.
     switch($mod){
         // Mise à jour du noyau pour tous les systèmes Linux de l'entité
         // Schedule kernel updates for all Linux systems in the entity
         case "action_update_kernel_all_linux_entity":
-            $formtitle = _T("Schedule kernel updates for all Linux systems in the entity", "update");
+            $formtitle = _T("Schedule kernel updates for all Linux systems in the entity", "updates");
         break;
 
         // Mise à jour des applications pour tous les systèmes Linux de l'entité
         // Schedule application updates for all Linux systems in the entity
         case "action_update_other_all_linux_entity":
-            $formtitle = _T("Schedule application updates for all Linux systems in the entity", "update");
+            $formtitle = _T("Schedule application updates for all Linux systems in the entity", "updates");
         break;
 
         // Mise à jour de sécurité pour tous les systèmes Linux de l'entité
         // Schedule security updates for all Linux systems in the entity
         case "action_update_security_all_linux_entity":
-            $formtitle = _T("Schedule security updates for all Linux systems in the entity", "update");
+            $formtitle = _T("Schedule security updates for all Linux systems in the entity", "updates");
         break;
 
         // Mise à jour complète pour tous les systèmes Linux de l'entité
         // Schedule all updates for all Linux systems in the entity
         case "action_update_all_linux_entity":
         case "action_update_complete_all_linux_entity":
-            $formtitle = _T("Schedule all updates for all Linux systems in the entity", "update");
+            $formtitle = _T("Schedule all updates for all Linux systems in the entity", "updates");
         break;
 
         // Mise à jour complète pour une machine spécifique dans l'entité
         // Schedule complete update for a specific machine in the entity
         case "actions_update_complete_machine":
-            $formtitle = _T("Schedule complete update for $hostname in the entity", "update");
+            $formtitle = sprintf(_T("Schedule complete update for %s in the entity", "updates"), $hostname);
         break;
 
         // Mise à jour du noyau pour une machine spécifique dans l'entité
         // Schedule kernel update for a specific machine in the entity
         case "actions_update_kernel_machine":
-            $formtitle = _T("Schedule kernel update for $hostname in the entity", "update");
+            $formtitle = sprintf(_T("Schedule kernel update for %s in the entity", "updates"), $hostname);
         break;
 
         // Mise à jour de sécurité pour une machine spécifique dans l'entité
         // Schedule security update for a specific machine in the entity
         case "actions_update_secutity_machine":
-            $formtitle = _T("Schedule security update for $hostname in the entity", "update");
+            $formtitle = sprintf(_T("Schedule security update for %s in the entity", "updates"), $hostname);
         break;
 
         // Mise à jour des applications pour une machine spécifique dans l'entité
         // Schedule application update for a specific machine in the entity
         case "actions_update_other_machine":
-            $formtitle = _T("Schedule application update for $hostname in the entity", "update");
+            $formtitle = sprintf(_T("Schedule application update for %s in the entity", "updates"), $hostname);
         break;
 
         // Mise à jour complète pour une distribution spécifique dans l'entité
         // Schedule complete update for a specific distribution in the entity
         case "action_Update_distribution_not_up_to_date_on_entity":
-            $formtitle = _T("Schedule complete update for $distribution in the entity", "update");
+            $formtitle = sprintf(_T("Schedule complete update for %s in the entity", "updates"), $distribution);
         break;
 
         // Mise à jour du noyau pour une distribution spécifique dans l'entité
         // Schedule kernel update for a specific distribution in the entity
         case "action_update_kernel_distribution_linux_entity":
-            $formtitle = _T("Schedule kernel update for $distribution in the entity", "update");
+            $formtitle = sprintf(_T("Schedule kernel update for %s in the entity", "updates"), $distribution);
         break;
 
         // Mise à jour des applications et bibliothèques pour une distribution spécifique dans l'entité
         // Schedule application and library updates for a specific distribution in the entity
         case "action_update_other_distribution_linux_entity":
-            $formtitle = _T("Schedule application and library updates for $distribution in the entity", "update");
+            $formtitle = sprintf(_T("Schedule application and library updates for %s in the entity", "updates"), $distribution);
         break;
 
         // Mise à jour de sécurité pour une distribution spécifique dans l'entité
         // Schedule security update for a specific distribution in the entity
         case "action_update_security_distribution_linux_entity":
-            $formtitle = _T("Schedule security update for $distribution in the entity", "update");
+            $formtitle = sprintf(_T("Schedule security update for %s in the entity", "updates"), $distribution);
         break;
     }
 
-        // affiche title
-        $formtitle=sprintf("<h1>%s : [%s]</h1>", $formtitle, $request->e('completename',''));
+        // Titre passe nu : PopupForm l'habille lui-meme d'un <h2>.
+        $completenameForm = $request->e('completename', '');
+        if ($completenameForm !== '') {
+            $formtitle = sprintf(_T("%s: %s", "updates"), $formtitle, $completenameForm);
+        }
     ?>
-    </div>
-      <div id="new_contenue">
 <?php
 
 $current = time();
@@ -706,5 +671,3 @@ $request->dump();
 }
 
 ?>
-    </div>
-</div>

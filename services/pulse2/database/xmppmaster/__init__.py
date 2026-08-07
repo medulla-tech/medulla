@@ -9594,15 +9594,21 @@ class XmppMasterDatabase(DatabaseHelper):
         if not user:
             logger.error("SetPresenceMachine jid error : %s" % jid)
             return False
+        # Fallback JID: on macOS DB hostname (ComputerName) differs from the
+        # JID prefix (platform.node()), so hostname LIKE alone never matched.
+        bare_jid = str(jid).split("/", 1)[0]
         try:
             sql = """UPDATE
                         `xmppmaster`.`machines`
                     SET
                         `xmppmaster`.`machines`.`enabled` = '%s'
                     WHERE
-                        `xmppmaster`.`machines`.hostname like '%s' limit 1;""" % (
+                        (`xmppmaster`.`machines`.`hostname` LIKE '%s'
+                         OR `xmppmaster`.`machines`.`jid` LIKE '%s/%%')
+                    LIMIT 1;""" % (
                 presence,
                 user,
+                bare_jid,
             )
             session.execute(sql)
             session.commit()
@@ -11179,6 +11185,20 @@ class XmppMasterDatabase(DatabaseHelper):
 
         Return dict containing the machines counts
         """
+        ret = {
+            "total": 0,
+            "total_offline": 0,
+            "offline_uninventoried": 0,
+            "offline_inventoried": 0,
+            "total_online": 0,
+            "online_uninventoried": 0,
+            "online_inventoried": 0,
+            "total_uninventoried": 0,
+            "total_inventoried": 0,
+        }
+
+        if entities == []:
+            return ret
 
         # Convert the list of int to a list of str, to be able to join them
         entities = "(%s)"%(','.join([str(e) for e in entities]))
@@ -13723,6 +13743,9 @@ mon_rules_no_success_binding_cmd = @mon_rules_no_success_binding_cmd@ -->
             (list) list of float corresponding to the success ratio for the six last weeks
         """
 
+        if entities == []:
+            return [0, 0, 0, 0, 0, 0]
+
         entities = "(%s)"%(",".join([str(e) for e in entities]))
 
         sql = """SELECT
@@ -14384,6 +14407,9 @@ FROM (SELECT
         Returns: list of deployments
         """
 
+        if entities == []:
+            return [0, 0, 0, 0, 0, 0]
+
         entities = "(%s)"%(",".join([str(e) for e in entities]))
 
         sql = """select
@@ -14425,33 +14451,11 @@ where lgf.entities_id in %s"""%entities
         Returns:
             (list) List of counts for the last six months, ordered by older to newer (element[0] = month 6 and element[5] = month 1)
         """
+
+        if entity == []:
+            return [0, 0, 0, 0, 0, 0]
+
         entities = "(%s)"%(','.join([str(e) for e in entity]))
-        e0 = date.today()
-        b0 = e0.replace(day=1)
-        e1 = b0 - timedelta(days=1)
-        b1 = e1.replace(day=1)
-        e2 = b1- timedelta(days=1)
-        b2 = e2.replace(day=1)
-        e3 = b2 - timedelta(days=1)
-        b3 = e3.replace(day=1)
-        e4 = b3 - timedelta(days=1)
-        b4 = e4.replace(day=1)
-        e5 = b4 - timedelta(days=1)
-        b5 = e5.replace(day=1)
-        bind = {
-            "e0" : e0,
-            "b0" : b0,
-            "e1" : e1,
-            "b1" : b1,
-            "e2" : e2,
-            "b2" : b2,
-            "e3" : e3,
-            "b3" : b3,
-            "e4" : e4,
-            "b4" : b4,
-            "e5" : e5,
-            "b5" : b5,
-        }
 
         sql = """SELECT
     SUM(month6) AS total_month6,
@@ -14460,25 +14464,9 @@ where lgf.entities_id in %s"""%entities
     SUM(month3) AS total_month3,
     SUM(month2) AS total_month2,
     SUM(month1) AS total_month1
-FROM (
-    SELECT
-        um.jid,
-        (case when um.date >= :b0 AND um.date <= :e0 then 1 else 0 end) AS month1,
-        (case when um.date >= :b1 AND um.date <= :e1 then 1 else 0 end) AS month2,
-        (case when um.date >= :b2 AND um.date <= :e2 then 1 else 0 end) AS month3,
-        (case when um.date >= :b3 AND um.date <= :e3 then 1 else 0 end) AS month4,
-        (case when um.date >= :b4 AND um.date <= :e4 then 1 else 0 end) AS month5,
-        (case when um.date >= :b5 AND um.date <= :e5 then 1 else 0 end) AS month6
-    FROM uptime_machine um
-    JOIN machines m ON um.jid = m.jid
-    JOIN local_glpi_machines lgm on m.uuid_inventorymachine = concat("UUID", lgm.id)
-    JOIN local_glpi_entities lge on lgm.entities_id = lge.id
-    WHERE    m.agenttype = 'machine'
-         AND lge.id IN %s
-    GROUP BY um.jid
-) AS t;"""%entities
+FROM uptime_machine_summary where entity_id in %s"""%entities
 
-        query = session.execute(sql, bind).first()
+        query = session.execute(sql).first()
         if query is None :
             return [0, 0, 0, 0, 0, 0]
 
@@ -17157,7 +17145,7 @@ FROM (
         Récupère l'historique des déploiements de mises à jour pour une machine.
 
         La requête cible les entrées de la table ``Deploy`` dont ``sessionid``
-        contient ``"update"``, jointes à ``Machines`` via le JID de la machine,
+        contient ``"update"``, rattachées à la machine via son UUID d'inventaire,
         puis ordonnées par date de début décroissante.
 
         Args:
@@ -17176,10 +17164,28 @@ FROM (
         machineid = to_int(machineid, 0)
         end = to_int(end, -1)
 
+        machine = session.query(Machines).filter(Machines.id == machineid).first()
+        if machine is None:
+            return {"count": 0, "datas": []}
+
+        identification = []
+        if machine.uuid_inventorymachine:
+            identification.append(
+                Deploy.inventoryuuid == machine.uuid_inventorymachine
+            )
+        if machine.jid:
+            # Partie locale du JID, indépendante du domaine et de la ressource
+            identification.append(
+                Deploy.jidmachine.startswith("%s@" % machine.jid.split("@")[0])
+            )
+        if not identification:
+            return {"count": 0, "datas": []}
+
         query = (
             session.query(Deploy)
-            .join(Machines, Machines.jid == Deploy.jidmachine)
-            .filter(and_(Deploy.sessionid.contains("update"), Machines.id == machineid))
+            .filter(
+                and_(Deploy.sessionid.contains("update"), or_(*identification))
+            )
             .order_by(desc(Deploy.start))
         )
 
@@ -17193,17 +17199,17 @@ FROM (
                     Deploy.endcmd.contains(filter),
                 )
             )
+
+        count = query.count()
+
         if start != 0:
             query = query.offset(start)
         if end != -1:
             query = query.limit(end)
 
-        count = query.count()
-        query = query.all()
-
         result = {"count": count, "datas": []}
 
-        for deploy in query:
+        for deploy in query.all():
             tmp = {
                 "id": deploy.id,
                 "title": deploy.title,
@@ -18152,7 +18158,7 @@ FROM (
 
 
         # Vérification des paramètres obligatoires
-        value_permise = ["security", "kernel", "other", "all"]
+        value_permise = ["security", "kernel", "other", "all", "any"]
         if entity_id in [-1, None] or str(entity_id).strip() == "":
             logger.debug("Paramètres obligatoires manquants : entity_id=%s", entity_id)
             return {}
@@ -18172,6 +18178,11 @@ FROM (
             count_condition = "up.other_count > 0"
         elif updatetype == "all":
             count_condition = "up.total_count > 0"
+        elif updatetype == "any":
+            # Toutes les machines Linux de l'entite, y compris celles a jour :
+            # vue de detail, ou l'on veut voir l'etat de chaque machine et pas
+            # seulement celles qui ont des mises a jour en attente.
+            count_condition = "1 = 1"
         else:
             logger.debug("Type de mise à jour invalide : %s", updatetype)
             return {}
@@ -20252,7 +20263,14 @@ FROM (
         history_type = (history_type or "").strip().lower()
         query = (
             session.query(Deploy)
-            .join(Machines, Machines.jid == Deploy.jidmachine)
+            .join(
+                Machines,
+                and_(
+                    Machines.uuid_inventorymachine == Deploy.inventoryuuid,
+                    Machines.uuid_inventorymachine != "",
+                    Machines.uuid_inventorymachine.isnot(None),
+                ),
+            )
             .join(Glpi_entity, Glpi_entity.id == Machines.glpi_entity_id)
             .filter(
                 and_(
@@ -20282,17 +20300,16 @@ FROM (
                     Deploy.endcmd.contains(filter),
                 )
             )
+        count = query.count()
+
         if start != 0:
             query = query.offset(start)
         if limit != -1:
             query = query.limit(limit)
 
-        count = query.count()
-        query = query.all()
-
         result = {"count": count, "datas": []}
 
-        for deploy in query:
+        for deploy in query.all():
             tmp = {
                 "id": deploy.id,
                 "title": deploy.title,
@@ -20345,6 +20362,111 @@ FROM (
                 and_(
                     Deploy.sessionid.contains("update"),
                     Deploy.title.contains(title_marker),
+                    Deploy.startcmd >= start_window,
+                    Glpi_entity.glpi_id == entity_uuid,
+                )
+            )
+            .order_by(desc(Deploy.startcmd), desc(Deploy.id))
+        )
+
+        if filter != "":
+            query = query.filter(
+                or_(
+                    Deploy.title.contains(filter),
+                    Deploy.state.contains(filter),
+                    Deploy.host.contains(filter),
+                    Deploy.login.contains(filter),
+                    Deploy.start.contains(filter),
+                    Deploy.startcmd.contains(filter),
+                    Deploy.endcmd.contains(filter),
+                )
+            )
+
+        count = query.count()
+        if start != 0:
+            query = query.offset(start)
+        if limit != -1:
+            query = query.limit(limit)
+
+        result = {"count": count, "datas": []}
+        for deploy in query.all():
+            result["datas"].append({
+                "id": deploy.id,
+                "title": deploy.title,
+                "jidmachine": deploy.jidmachine,
+                "jid_relay": deploy.jid_relay,
+                "pathpackage": deploy.pathpackage,
+                "state": deploy.state,
+                "sessionid": deploy.sessionid,
+                "start": datetime_handler(deploy.start),
+                "startcmd": datetime_handler(deploy.startcmd),
+                "endcmd": datetime_handler(deploy.endcmd),
+                "uuid": deploy.inventoryuuid,
+                "hostname": deploy.host,
+                "user": deploy.user,
+                "cmd_id": deploy.command,
+                "gid": deploy.group_uuid,
+                "grp_id": deploy.group_uuid,
+                "login": deploy.login,
+                "macadress": deploy.macadress,
+                "syncthing": deploy.syncthing,
+            })
+        return result
+
+    @DatabaseHelper._sessionm
+    def get_win_major_deployment_history_by_entity(
+        self,
+        session,
+        entity_uuid,
+        start,
+        limit,
+        filter,
+    ):
+        """
+        Retourne l'historique des déploiements majeurs Windows pour une entité,
+        limité au dernier mois.
+
+        Le discriminant est la présence de ``--@upd@--W`` dans le titre du
+        déploiement. Ce marqueur correspond au pattern ``W{N}to{N}`` ou
+        ``W{N}toW{N}`` (ex: W10to11, W11to11, W11to12, W12toW15…) généré
+        par ``deployUpdatemajor.php``. Toute future version Windows respectant
+        ce format sera automatiquement couverte. Le préfixe double tiret
+        ``--@upd@--`` distingue les mises à jour majeures des mises à jour
+        normales qui utilisent ``-@upd@-`` (tiret simple).
+
+        Args:
+            session: Session SQLAlchemy active.
+            entity_uuid (int|str): Identifiant GLPI de l'entité.
+            start (int): Offset de pagination.
+            limit (int): Nombre maximum de lignes (-1 = sans limite).
+            filter (str): Filtre textuel optionnel (titre, état, hostname, login).
+
+        Returns:
+            dict: ``{"count": int, "datas": list}``
+        """
+        entity_uuid = normalize_entity(entity_uuid, defaut=-1)
+        start = to_int(start, 0)
+        limit = to_int(limit, -1)
+
+        if entity_uuid < 0:
+            return {"count": 0, "datas": []}
+
+        # Règle métier : on identifie un déploiement majeur Windows par le
+        # marqueur "--@upd@--W" dans le titre. Ce marqueur couvre le pattern
+        # W{N}to{N} et W{N}toW{N} (W10to11, W11to11, W11to12, W12toW15…).
+        # Le double tiret "--@upd@--" distingue les mises à jour majeures
+        # des mises à jour normales ("-@upd@-" tiret simple).
+        win_marker = "--@upd@--W"
+        start_window = datetime.now() - timedelta(days=30)
+
+        query = (
+            session.query(Deploy)
+            .join(Machines, Machines.jid == Deploy.jidmachine)
+            .join(Glpi_entity, Glpi_entity.id == Machines.glpi_entity_id)
+            .filter(
+                and_(
+                    Deploy.sessionid.contains("update"),
+                    Deploy.title.contains(win_marker),
                     Deploy.startcmd >= start_window,
                     Glpi_entity.glpi_id == entity_uuid,
                 )

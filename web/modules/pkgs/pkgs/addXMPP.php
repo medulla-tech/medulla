@@ -54,5 +54,9 @@ $f->add(new TrFormElement("",new SpanElement('<div class="workflow-section">
 
 ?>
 
+<script type="text/javascript">
+    // %s is replaced by the operating system list, ex: "Windows only"
+    var actionOsOnlyMsg = "<?php echo _T('%s only', 'pkgs'); ?>";
+</script>
 <script src="modules/pkgs/graph/js/class.js"></script>
 <script src="modules/pkgs/graph/js/controller.js"></script>

@@ -8,12 +8,12 @@ if (!defined('MMC_MASTERING_AUTO_TRACE_DONE')) {
 
 /**
  * Get the machines list, with their id, name, and uuids. We don't want anything else
- * 
+ *
  * @param $start (int) : offset where we start the selection
  * @param $limit (int) : set a limit to the selection to fit with the number of displayed elements
  * @param $entity (str) : specify the entity selected with shape "UUID1"
  * @param $filter (str) : specify a filter (will be on name) if we want to find easily a machine
- * 
+ *
  * @return (array) : the result is an array containing: [
  *  "total" => 3,
  *      "data"=>[
@@ -30,8 +30,8 @@ function xmlrpc_get_machines_list_for_mastering($start, $limit, $entity, $filter
 
 /**
  * Get the reference server for the specified entity
- * @param $entity (array) the parents entities we want to know its server
- * 
+ * @param $entities (array) the parents entities we want to know its server
+ *
  * @return (string) : the jid of the server associated to the entity
  */
 function xmlrpc_get_server_from_parent_entities($entities=[]){
@@ -40,7 +40,7 @@ function xmlrpc_get_server_from_parent_entities($entities=[]){
 
 /**
  * Get the disk size and occupation for the specified server
- * 
+ *
  * @param $server (str) : jid of the server
  * @return (array): the datas we want
  */
@@ -51,5 +51,59 @@ function xmlrpc_get_server_disk($server){
 function xmlrpc_get_masters_for_entity($entity, $start=0, $limit=-1, $filter=""){
     return xmlCall("mastering.get_masters_for_entity", [$entity, $start, $limit, $filter]);
 }
-?>
 
+function xmlrpc_create_action($action, $gid, $uuid, $target, $server, $beginDate, $endDate, $config=[], $json="", $entity_id=-1){
+    return xmlCall("mastering.create_action", [$action, $gid, $uuid, $target, $server, $beginDate, $endDate, $config, $json, $entity_id]);
+}
+
+function xmlrpc_get_actions_for_entity($entity, $start=0, $limit=-1, $filter=""){
+    return xmlCall("mastering.get_actions_for_entity", [$entity, $start, $limit, $filter]);
+}
+
+function xmlrpc_get_actions_for_machine($uuid, $start=0, $maxperpage=-1, $filter=""){
+    return xmlCall("mastering.get_actions_for_machine", [$uuid, $start, $maxperpage, $filter]);
+}
+
+function xmlrpc_get_action_results($id, $uuid, $entity, $start=0, $end=-1, $filter=""){
+    return xmlCall("mastering.get_action_results", [$id, $uuid, $entity, $start, $end, $filter]);
+}
+
+function xmlrpc_get_machines_action_results($id, $start=0, $maxperpage=-1, $filter=""){
+    return xmlCall("mastering.get_machines_action_results", [$id, $start, $maxperpage, $filter]);
+}
+function xmlrpc_delete_master($server, $entity, $masterId){
+    return xmlCall("mastering.delete_master", [$server, $entity, $masterId]);
+}
+
+function xmlrpc_delete_action($id){
+    return xmlCall("mastering.delete_action", [$id]);
+}
+
+function xmlrpc_delete_script($id){
+    return xmlCall("mastering.delete_script", [$id]);
+}
+
+function xmlrpc_get_mastering_scripts_list($server, $entity, $start=0, $end=-1, $filter=""){
+    return xmlCall("mastering.get_mastering_scripts_list", [$server, $entity, $start, $end, $filter]);
+}
+
+function xmlrpc_add_mastering_script($server, $entity, $name, $description, $content, $type, $payload=[]){
+    return xmlCall("mastering.add_mastering_script", [$server, $entity, $name, $description, $content, $type, $payload]);
+}
+
+function xmlrpc_edit_mastering_script($server, $entity, $id, $name, $description, $content, $type, $payload=[]){
+    return xmlCall("mastering.edit_mastering_script", [$server, $entity, $id, $name, $description, $content, $type, $payload]);
+}
+function xmlrpc_get_summary_scripts_list($entity){
+    return xmlCall("mastering.get_summary_scripts_list", [$entity]);
+
+}
+
+function xmlrpc_get_mastering_script($uuid, $id){
+    return xmlCall("mastering.get_mastering_script", [$uuid, $id]);
+}
+
+function xmlrpc_edit_master_infos($uuid, $name, $description=""){
+    return xmlCall("mastering.edit_master_infos", [$uuid, $name, $description]);
+}
+?>

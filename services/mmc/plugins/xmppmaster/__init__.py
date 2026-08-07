@@ -576,7 +576,10 @@ class RpcProxy(RpcProxyI):
 
         Return dict containing the machines counts.
         """
-        entities = ctx.get_session_info()['mondict']['liste_entities_user']
+        entities = []
+        infos=ctx.get_session_info()['mondict']
+        if 'liste_entities_user' in infos:
+            entities = infos['liste_entities_user']
         return xmlrpcCleanup(XmppMasterDatabase().get_computer_count_for_dashboard(entities))
 
     @with_optional_xmpp_context
@@ -601,27 +604,39 @@ class RpcProxy(RpcProxyI):
                 ]
             }
             """
-        entities = ctx.get_session_info()['mondict']['liste_entities_user']
+        infos=ctx.get_session_info()['mondict']
+        entities = []
+        if 'liste_entities_user' in infos:
+            entities = infos['liste_entities_user']
 
         result = XmppMasterDatabase().get_mon_events(start, maxperpage, filter, entities)
         return result
 
     @with_optional_xmpp_context
     def get_count_success_rate_for_dashboard(self, ctx=None):
-        entities = ctx.get_session_info()['mondict']['liste_entities_user']
+        infos=ctx.get_session_info()['mondict']
+        entities = []
+        if 'liste_entities_user' in infos:
+            entities = infos['liste_entities_user']
 
         result = XmppMasterDatabase().get_count_success_rate_for_dashboard(entities)
         return result
 
     @with_optional_xmpp_context
     def get_count_total_deploy_for_dashboard(self, ctx=None):
-        entities = ctx.get_session_info()['mondict']['liste_entities_user']
+        infos=ctx.get_session_info()['mondict']
+        entities = []
+        if 'liste_entities_user' in infos:
+            entities = infos['liste_entities_user']
         result = XmppMasterDatabase().get_count_total_deploy_for_dashboard(entities)
         return result
 
     @with_optional_xmpp_context
     def get_count_agent_for_dashboard(self, ctx=None):
-        entities = ctx.get_session_info()['mondict']['liste_entities_user']
+        infos=ctx.get_session_info()['mondict']
+        entities = []
+        if 'liste_entities_user' in infos:
+            entities = infos['liste_entities_user']
         result = XmppMasterDatabase().get_count_agent_for_dashboard(entities)
         return result
 

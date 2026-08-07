@@ -41,7 +41,7 @@ require_once("includes/utils.inc.php");
 
 $entityName = !empty($_GET['name']) ? htmlentities($_GET['name']) : "";
 $distribution = !empty($_GET['distribution']) ? htmlentities($_GET['distribution']) : "linux";
-$title = sprintf(_T("List of machines to be upgraded (%s)", "updates"), ucfirst($distribution));
+$title = sprintf(_T("Details by Machines (%s)", "updates"), ucfirst($distribution));
 if ($entityName) {
     $title .= ' - ' . $entityName;
 }

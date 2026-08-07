@@ -76,8 +76,6 @@ msgid "Updates History"
 msgstr "Historique des mises à jour"
 
 #: modules/updates/infoPackage.inc.php:137
-msgid "Entity Compliance"
-msgstr "Conformité des entités"
 
 #: modules/updates/updates/ajaxUpdatesListWinWhite.php:84
 msgid "Update name"
@@ -246,8 +244,6 @@ msgstr "Manquantes"
 msgid "Installed"
 msgstr "Installées"
 
-msgid "Total"
-msgstr "Total"
 
 #, php-format
 msgid "Updates history for entity %s"
@@ -356,7 +352,7 @@ msgstr ""
 
 #: modules/updates/infoPackage.inc.php:152
 msgid "Manage Updates Lists"
-msgstr "Gérer les listes de mises à jour"
+msgstr "Listes de mises à jour"
 
 #: modules/updates/updates/ajaxMajorEntitiesList.php:118
 msgid "Details by machines"
@@ -558,8 +554,6 @@ msgid "<b>Disable</b> update %s (%s) ?"
 msgstr "<b>Désacriver</b> la mise à jour %s (%s) ?"
 
 #: modules/updates/infoPackage.inc.php:305
-msgid "Automatic approval rules"
-msgstr "Règles de validation automatique"
 
 #: modules/updates/updates/approve_rules.php:50
 msgid "Rules updated successfully."
@@ -578,8 +572,6 @@ msgid "Details by Machines"
 msgstr "Détails par machines"
 
 #: modules/updates/updates/approve_products.php:47
-msgid "Activate Microsoft product update."
-msgstr "Activer mise à jour de produit Microsoft."
 
 #: modules/updates/infoPackage.inc.php:42
 msgid "Entities Compliance"
@@ -595,7 +587,7 @@ msgstr "Règles de validation automatique"
 
 #: modules/updates/updates/localSidebar.php:49
 msgid "Microsoft Products Approval"
-msgstr "Validation de produits Microsoft"
+msgstr "Produits Microsoft suivis"
 
 #, php-format
 msgid "The update %s (%s) has been approved."
@@ -678,7 +670,7 @@ msgstr "Mise à jour W11->W11"
 
 #: modules/updates/updates/ajaxMajorDetailsByMachines.php:50
 msgid "Up to date"
-msgstr "A jour"
+msgstr "À jour"
 
 #: modules/updates/updates/ajaxMajorDetailsByMachines.php:51
 msgid "Upgrade Not recommended"
@@ -898,3 +890,444 @@ msgstr "Non conformes"
 
 msgid "The machine does not meet the minimum requirements for Windows 11"
 msgstr "La machine ne répond pas aux prérequis minimum pour Windows 11"
+
+# Conformite des entites - onglet Linux
+msgid "Security"
+msgstr "Sécurité"
+
+msgid "Kernel"
+msgstr "Noyau"
+
+msgid "Other"
+msgstr "Autres"
+
+msgid "Share of Linux machines with no pending update at all."
+msgstr "Proportion de machines Linux n'ayant aucune mise à jour en attente."
+
+msgid "Number of machines with at least one pending security update."
+msgstr "Nombre de machines ayant au moins une mise à jour de sécurité en attente."
+
+msgid "Number of machines with at least one pending kernel update."
+msgstr "Nombre de machines ayant au moins une mise à jour du noyau en attente."
+
+msgid "Number of machines with at least one pending update other than security or kernel."
+msgstr "Nombre de machines ayant au moins une mise à jour en attente autre que sécurité ou noyau."
+
+msgid "Number of machines with at least one pending update, all categories included."
+msgstr "Nombre de machines ayant au moins une mise à jour en attente, toutes catégories confondues."
+
+msgid "Total number of Linux machines attached to this entity that reported a scan."
+msgstr "Nombre total de machines Linux rattachées à cette entité ayant remonté une analyse."
+
+# Conformite des entites - onglet Windows
+msgid "Share of machines with no missing update, out of all machines in the entity."
+msgstr "Proportion de machines sans mise à jour manquante, sur l'ensemble des machines de l'entité."
+
+msgid "Number of distinct updates missing across the machines of the entity."
+msgstr "Nombre de mises à jour distinctes manquantes sur l'ensemble des machines de l'entité."
+
+msgid "Number of machines with at least one missing update."
+msgstr "Nombre de machines ayant au moins une mise à jour manquante."
+
+msgid "Total number of machines attached to this entity."
+msgstr "Nombre total de machines rattachées à cette entité."
+
+
+# Actions du tableau de conformite Linux
+msgid "Update security"
+msgstr "Mettre à jour la sécurité"
+
+msgid "Update kernel"
+msgstr "Mettre à jour le noyau"
+
+msgid "Update other packages"
+msgstr "Mettre à jour les autres paquets"
+
+msgid "Full update"
+msgstr "Mise à jour complète"
+
+msgid "Linux distributions"
+msgstr "Distributions Linux"
+
+msgid "Machines to update"
+msgstr "Machines à mettre à jour"
+
+msgid "Machines with kernel to update"
+msgstr "Machines dont le noyau est à mettre à jour"
+
+msgid "Machines with security to update"
+msgstr "Machines dont la sécurité est à mettre à jour"
+
+msgid "Machines with other packages to update"
+msgstr "Machines ayant d'autres paquets à mettre à jour"
+
+# Detail des machines Linux d'une entite
+msgid "Linux machines of entity %s"
+msgstr "Machines Linux de l'entité %s"
+
+msgid "Operating system"
+msgstr "Système d'exploitation"
+
+msgid "No Linux machine found"
+msgstr "Aucune machine Linux"
+
+msgid "No Linux machine has reported a scan for this entity yet."
+msgstr "Aucune machine Linux de cette entité n'a encore remonté d'analyse."
+
+msgid "No update pending"
+msgstr "Aucune mise à jour en attente"
+
+msgid "No kernel update pending"
+msgstr "Aucune mise à jour du noyau en attente"
+
+msgid "No security update pending"
+msgstr "Aucune mise à jour de sécurité en attente"
+
+msgid "No other update pending"
+msgstr "Aucune autre mise à jour en attente"
+
+# Questions de creation de groupe (popups Linux)
+msgid "Do you want to create a group containing<br> all Linux machines of entity %s?"
+msgstr "Voulez-vous créer un groupe contenant<br> toutes les machines Linux de l'entité %s ?"
+
+msgid "Do you want to create a group of Linux machines with pending updates<br> for entity %s?"
+msgstr "Voulez-vous créer un groupe des machines Linux ayant des mises à jour en attente<br> pour l'entité %s ?"
+
+msgid "Do you want to create a group of Linux machines missing security updates<br> for entity %s?"
+msgstr "Voulez-vous créer un groupe des machines Linux auxquelles il manque des mises à jour de sécurité<br> pour l'entité %s ?"
+
+msgid "Do you want to create a group of Linux machines with outdated kernels<br> for entity %s?"
+msgstr "Voulez-vous créer un groupe des machines Linux dont le noyau n'est pas à jour<br> pour l'entité %s ?"
+
+msgid "Do you want to create a group of Linux machines with other pending updates<br> for entity %s?"
+msgstr "Voulez-vous créer un groupe des machines Linux ayant d'autres mises à jour en attente<br> pour l'entité %s ?"
+
+msgid "Do you want to create this Linux group<br>for entity %s?"
+msgstr "Voulez-vous créer ce groupe Linux<br>pour l'entité %s ?"
+
+msgid "Do you want to create a group containing<br> %1$s machines of entity %2$s?"
+msgstr "Voulez-vous créer un groupe contenant<br> les machines %1$s de l'entité %2$s ?"
+
+msgid "Do you want to create a group of %1$s machines with pending updates<br> for entity %2$s?"
+msgstr "Voulez-vous créer un groupe des machines %1$s ayant des mises à jour en attente<br> pour l'entité %2$s ?"
+
+msgid "Do you want to create a group of %1$s machines missing security updates<br> for entity %2$s?"
+msgstr "Voulez-vous créer un groupe des machines %1$s auxquelles il manque des mises à jour de sécurité<br> pour l'entité %2$s ?"
+
+msgid "Do you want to create a group of %1$s machines with outdated kernels<br> for entity %2$s?"
+msgstr "Voulez-vous créer un groupe des machines %1$s dont le noyau n'est pas à jour<br> pour l'entité %2$s ?"
+
+msgid "Do you want to create a group of %1$s machines with other pending updates<br> for entity %2$s?"
+msgstr "Voulez-vous créer un groupe des machines %1$s ayant d'autres mises à jour en attente<br> pour l'entité %2$s ?"
+
+msgid "Do you want to create this %1$s group<br>for entity %2$s?"
+msgstr "Voulez-vous créer ce groupe %1$s<br>pour l'entité %2$s ?"
+
+msgid "This machine has no pending update."
+msgstr "Cette machine n'a aucune mise à jour en attente."
+
+msgid "This machine has %s pending update(s)."
+msgstr "Cette machine a %s mise(s) à jour en attente."
+
+msgid "Green when the machine has no pending update."
+msgstr "Verte lorsque la machine n'a aucune mise à jour en attente."
+
+msgid "Windows computers from entity %s"
+msgstr "Ordinateurs Windows de l'entité %s"
+
+msgid "Windows computers from group %s"
+msgstr "Ordinateurs Windows du groupe %s"
+
+msgid "Linux computers from entity %s"
+msgstr "Ordinateurs Linux de l'entité %s"
+
+# Titres des formulaires de planification
+msgid "Schedule kernel updates for all Linux systems in the entity"
+msgstr "Planifier la mise à jour du noyau sur tous les systèmes Linux de l'entité"
+
+msgid "Schedule application updates for all Linux systems in the entity"
+msgstr "Planifier la mise à jour des applications sur tous les systèmes Linux de l'entité"
+
+msgid "Schedule security updates for all Linux systems in the entity"
+msgstr "Planifier les mises à jour de sécurité sur tous les systèmes Linux de l'entité"
+
+msgid "Schedule all updates for all Linux systems in the entity"
+msgstr "Planifier toutes les mises à jour sur tous les systèmes Linux de l'entité"
+
+msgid "Schedule complete update for %s in the entity"
+msgstr "Planifier la mise à jour complète de %s dans l'entité"
+
+msgid "Schedule kernel update for %s in the entity"
+msgstr "Planifier la mise à jour du noyau de %s dans l'entité"
+
+msgid "Schedule security update for %s in the entity"
+msgstr "Planifier la mise à jour de sécurité de %s dans l'entité"
+
+msgid "Schedule application update for %s in the entity"
+msgstr "Planifier la mise à jour des applications de %s dans l'entité"
+
+msgid "Schedule application and library updates for %s in the entity"
+msgstr "Planifier la mise à jour des applications et bibliothèques de %s dans l'entité"
+
+msgid "%s: %s"
+msgstr "%s : %s"
+
+msgid "OS Upgrades - Compliance Status"
+msgstr "Mises à jour majeures - État de conformité"
+
+msgid "Share of machines already running the latest version of their operating system."
+msgstr "Proportion de machines exécutant déjà la dernière version de leur système d'exploitation."
+
+msgid "Windows 10 machines that must first be upgraded to the latest Windows 10 version."
+msgstr "Machines Windows 10 devant d'abord être mises à niveau vers la dernière version de Windows 10."
+
+msgid "Windows 10 machines already up to date, eligible for the upgrade to Windows 11."
+msgstr "Machines Windows 10 déjà à jour, éligibles à la montée vers Windows 11."
+
+msgid "Windows 11 machines that must be upgraded to the latest Windows 11 version."
+msgstr "Machines Windows 11 devant être mises à niveau vers la dernière version de Windows 11."
+
+msgid "Machines already running the latest version of their operating system."
+msgstr "Machines exécutant déjà la dernière version de leur système d'exploitation."
+
+msgid "Machines that do not meet the hardware requirements for the target version."
+msgstr "Machines ne satisfaisant pas aux prérequis matériels de la version cible."
+
+# Onglets de montee de version par distribution
+msgid "Machines with %s version pending support update"
+msgstr "Machines dont la version de %s est en attente de prise en charge"
+
+msgid "Total %s machines in entity"
+msgstr "Nombre total de machines %s dans l'entité"
+
+msgid "Upgrade to %s"
+msgstr "Montée vers %s"
+
+msgid "Share of %s machines already running the target version."
+msgstr "Proportion de machines %s exécutant déjà la version cible."
+
+msgid "Machines running a version older than %s."
+msgstr "Machines exécutant une version antérieure à %s."
+
+msgid "Machines already running %s."
+msgstr "Machines exécutant déjà %s."
+
+msgid "Machines running a version newer than %s, not managed yet."
+msgstr "Machines exécutant une version postérieure à %s, pas encore prise en charge."
+
+msgid "Total number of %s machines attached to this entity."
+msgstr "Nombre total de machines %s rattachées à cette entité."
+
+msgid "No distribution specified."
+msgstr "Aucune distribution spécifiée."
+
+msgid "Windows Server 2012 machines to upgrade to Windows Server 2025."
+msgstr "Machines Windows Server 2012 à faire migrer vers Windows Server 2025."
+
+msgid "Windows Server 2016 machines to upgrade to Windows Server 2025."
+msgstr "Machines Windows Server 2016 à faire migrer vers Windows Server 2025."
+
+msgid "Windows Server 2019 machines to upgrade to Windows Server 2025."
+msgstr "Machines Windows Server 2019 à faire migrer vers Windows Server 2025."
+
+msgid "Windows Server 2025 machines to upgrade to the latest available version."
+msgstr "Machines Windows Server 2025 à mettre à niveau vers la dernière version disponible."
+
+msgid "Pending Support Update"
+msgstr "En attente de prise en charge"
+
+# Montees de version : actions et infobulles
+msgid "List of machines to be upgraded"
+msgstr "Liste des machines à faire migrer"
+
+msgid "List of machines that cannot be upgraded"
+msgstr "Liste des machines ne pouvant pas migrer"
+
+msgid "No major updates for this entity"
+msgstr "Aucune montée de version pour cette entité"
+
+msgid "Deployment history"
+msgstr "Historique des déploiements"
+
+msgid "No Windows major deployment history for this entity"
+msgstr "Aucun historique de montée de version Windows pour cette entité"
+
+msgid "No Linux major deployment history for this entity"
+msgstr "Aucun historique de montée de version Linux pour cette entité"
+
+msgid "Do you want to create the group?"
+msgstr "Voulez-vous créer le groupe ?"
+
+msgid "Create group:"
+msgstr "Créer le groupe :"
+
+msgid "All machines"
+msgstr "Toutes les machines"
+
+msgid "Outdated machines"
+msgstr "Machines non à jour"
+
+msgid "Up to date machines"
+msgstr "Machines à jour"
+
+msgid "These machines are up to date"
+msgstr "Ces machines sont à jour"
+
+msgid "All machines are up to date with version"
+msgstr "Toutes les machines sont à jour en version"
+
+msgid "These machines need a Windows 10 update"
+msgstr "Ces machines nécessitent une mise à niveau Windows 10"
+
+msgid "These machines need a Windows 11 update"
+msgstr "Ces machines nécessitent une mise à niveau Windows 11"
+
+msgid "These machines need a Windows 10 to Windows 11 update"
+msgstr "Ces machines nécessitent une migration de Windows 10 vers Windows 11"
+
+msgid "These machines need a Windows SERVER 25 update"
+msgstr "Ces machines nécessitent une mise à niveau Windows Server 2025"
+
+msgid "These machines need a Windows SERVER 25 24H2 update"
+msgstr "Ces machines nécessitent une mise à niveau Windows Server 2025 24H2"
+
+msgid "These machines do not meet the hardware requirements for upgrading to a newer Windows release."
+msgstr "Ces machines ne satisfont pas aux prérequis matériels pour migrer vers une version plus récente de Windows."
+
+# Detail des machines a faire migrer
+msgid "List of machines to be upgraded (%s)"
+msgstr "Liste des machines à faire migrer (%s)"
+
+msgid "Machines to be upgraded"
+msgstr "Machines à faire migrer"
+
+msgid "Distribution"
+msgstr "Distribution"
+
+msgid "Latest %s version"
+msgstr "Dernière version de %s"
+
+msgid "Current version"
+msgstr "Version actuelle"
+
+msgid "Target version"
+msgstr "Version cible"
+
+msgid "Unknown machine"
+msgstr "Machine inconnue"
+
+msgid "Upgrade unavailable"
+msgstr "Montée de version indisponible"
+
+msgid "No Linux machines match the current filter."
+msgstr "Aucune machine Linux ne correspond au filtre actuel."
+
+msgid "Missing parameters to load Linux major upgrade details."
+msgstr "Paramètres manquants pour charger le détail des montées de version Linux."
+
+msgid "Details by Machines (%s)"
+msgstr "Détails par machines (%s)"
+
+# Montees de version majeures Linux
+msgid "Linux major upgrades to next release [%s]"
+msgstr "Montée de version Linux vers la prochaine release [%s]"
+
+msgid "Linux major upgrade: %s %s [%s]"
+msgstr "Montée de version Linux : %s %s [%s]"
+
+msgid "Deployment major update Linux"
+msgstr "Déploiement de montée de version Linux"
+
+# Historique des montees de version
+msgid "Linux major deployment history (%s)"
+msgstr "Historique des montées de version Linux (%s)"
+
+msgid "Windows major deployment history"
+msgstr "Historique des montées de version Windows"
+
+msgid "Past Linux major deployments (last month)"
+msgstr "Montées de version Linux passées (dernier mois)"
+
+msgid "Past Windows major deployments (last month)"
+msgstr "Montées de version Windows passées (dernier mois)"
+
+msgid "No Linux major deployments have been recorded for this entity in the last month."
+msgstr "Aucune montée de version Linux n'a été enregistrée pour cette entité au cours du dernier mois."
+
+msgid "No Windows major deployments have been recorded for this entity in the last month."
+msgstr "Aucune montée de version Windows n'a été enregistrée pour cette entité au cours du dernier mois."
+
+msgid "Missing entity for Linux major deployment history."
+msgstr "Entité manquante pour l'historique des montées de version Linux."
+
+msgid "Missing entity for Windows major deployment history."
+msgstr "Entité manquante pour l'historique des montées de version Windows."
+
+msgid "Deployment"
+msgstr "Déploiement"
+
+msgid "User"
+msgstr "Utilisateur"
+
+
+msgid "Automatic approval"
+msgstr "Validation automatique"
+
+msgid "Updates matching a checked rule are moved to the white list and deployed automatically."
+msgstr "Les mises à jour correspondant à une règle cochée passent en liste blanche et sont déployées automatiquement."
+
+# Ecrans Linux : versions approuvees et politique d'auto-update
+msgid "Approved Linux Releases"
+msgstr "Versions Linux suivies"
+
+msgid "Linux Auto-Update Policy"
+msgstr "Mises à jour automatiques Linux"
+
+msgid "Latest major version"
+msgstr "Dernière version majeure"
+
+msgid "Updates enabled"
+msgstr "Mises à jour activées"
+
+msgid "All versions"
+msgstr "Toutes les versions"
+
+msgid "Entity"
+msgstr "Entité"
+
+
+msgid "Missing entity selection."
+msgstr "Aucune entité sélectionnée."
+
+msgid "Linux releases updated successfully."
+msgstr "Versions Linux mises à jour."
+
+msgid "Failed to update Linux releases."
+msgstr "Échec de la mise à jour des versions Linux."
+
+msgid "Auto-update policies saved."
+msgstr "Politiques de mise à jour automatique enregistrées."
+
+msgid "Failed to save auto-update policies."
+msgstr "Échec de l'enregistrement des politiques de mise à jour automatique."
+
+msgid "No auto-update policies found for this entity."
+msgstr "Aucune politique de mise à jour automatique pour cette entité."
+
+msgid "Enable automatic deployment of kernel updates for this distribution."
+msgstr "Déploie automatiquement les mises à jour du noyau pour cette distribution."
+
+msgid "Enable automatic deployment of security updates for this distribution."
+msgstr "Déploie automatiquement les mises à jour de sécurité pour cette distribution."
+
+msgid "Enable automatic deployment of updates other than kernel and security."
+msgstr "Déploie automatiquement les mises à jour autres que noyau et sécurité."
+
+msgid "No machine to upgrade"
+msgstr "Aucune machine à faire migrer"
+
+msgid "All machines in this entity are up to date or cannot be upgraded."
+msgstr "Toutes les machines de cette entité sont à jour ou ne peuvent pas être mises à niveau."
+
+msgid "Approve every update of this family"
+msgstr "Approuver toutes les mises à jour de cette famille"

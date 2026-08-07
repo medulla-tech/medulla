@@ -44,5 +44,3 @@ class MasteringConfig(PluginConfig,MasteringDatabaseConfig):
         # Get module config from "/etc/mmc/plugins/mastering.ini"
         MasteringConfig("mastering")
         return True
-
-

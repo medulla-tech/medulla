@@ -114,7 +114,7 @@ jQuery('#ssh').on('click', function(){
     jQuery.get("modules/xmppmaster/xmppmaster/actionreversesshguacamole.php", { uuid: uuid, cn: cn, cux_id: ssh_cux, cux_type: "SSH" })
     .done(function(data) {
         window.open(ssh_url);
-        alert("The SSH control session opens in a new window");
+        alert("The SSH control session opens in a new window", "", "alert-info");
     });
 });
 <?php endif; ?>
@@ -126,7 +126,7 @@ jQuery('#rdp').on('click', function(){
     jQuery.get("modules/xmppmaster/xmppmaster/actionreversesshguacamole.php", { uuid: uuid, cn: cn, cux_id: rdp_cux, cux_type: "RDP" })
     .done(function(data) {
         window.open(rdp_url);
-        alert("The RDP control session opens in a new window");
+        alert("The RDP control session opens in a new window", "", "alert-info");
     });
 });
 <?php endif; ?>
@@ -138,7 +138,7 @@ jQuery('#vnc').on('click', function(){
     jQuery.get("modules/xmppmaster/xmppmaster/actionreversesshguacamole.php", { uuid: uuid, cn: cn, cux_id: vnc_cux, cux_type: "VNC" })
     .done(function(data) {
         window.open(vnc_url);
-        alert("The VNC control session opens in a new window");
+        alert("The VNC control session opens in a new window", "", "alert-info");
     });
 });
 <?php endif; ?>

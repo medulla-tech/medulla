@@ -475,7 +475,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
 
             # Get machines to possibly delete
             to_delete = [
-                x.id
+                x.uuid
                 for x in session.query(Machines)
                 .select_from(self.machines.join(resultTable))
                 .filter(resultTable.c.FK_groups == id)
@@ -554,36 +554,68 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
 
     @DatabaseHelper._sessionm
     def addMissingMachines(self, session, machines):
+        if not machines:
+            return True
+
+        existing = [
+            m.uuid
+            for m in session.query(Machines.uuid)
+            .filter(Machines.uuid.in_(list(machines.keys())))
+            .all()
+        ]
+
         tmp = []
         for uuid in machines:
+            if uuid in existing:
+                continue
             machine = Machines()
             machine.uuid = uuid
             machine.name = machines[uuid]["hostname"]
             tmp.append(machine)
+
+        if not tmp:
+            return True
+
         try:
             session.add_all(tmp)
             session.flush()
             session.commit()
             return True
-        except:
+        except Exception as e:
+            session.rollback()
+            self.logger.error("addMissingMachines failed: %s" % str(e))
             return False
 
     @DatabaseHelper._sessionm
     def associateMachinesToGroup(self, session, id, machines):
         query = session.query(Machines.id).filter(Machines.uuid.in_(machines)).all()
 
+        already_linked = [
+            r.FK_machines
+            for r in session.query(Results.FK_machines).filter_by(FK_groups=id).all()
+        ]
+
         results = []
         for element in query:
+            if element.id in already_linked:
+                continue
+            already_linked.append(element.id)
             tmp = Results()
             tmp.FK_groups = id
             tmp.FK_machines = element.id
             results.append(tmp)
+
+        if not results:
+            return True
+
         try:
             session.add_all(results)
             session.flush()
             session.commit()
             return True
-        except:
+        except Exception as e:
+            session.rollback()
+            self.logger.error("associateMachinesToGroup failed: %s" % str(e))
             return False
 
     def setname_group(self, ctx, id, name):
@@ -1373,3 +1405,32 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         if cmd_ids:
             query = query.filter(Convergence.commandId.in_(cmd_ids))
         return [x.commandId for x in query]
+
+
+    @DatabaseHelper._sessionm
+    def get_groups_info_from_list(self, session, groups_list):
+        """
+        Get groups info (id, name) from a list of group ids
+
+        Args:
+            self (DyngroupDatabase): The instance of the DyngroupDatabase class.
+            session (sqlalchemy.orm.session.Session): The database session to use for the query.
+            groups_list (list): A list of group ids for which to retrieve information.
+
+        Returns:
+            dict: A dictionary containing group information, keyed by group id.
+
+        """
+        query = session.query(Groups).filter(Groups.id.in_(groups_list))
+        result = {}
+        data = query.all()
+
+        if data is None:
+            return {}
+
+        for group in data:
+            result[group.id] = {
+                "id": group.id,
+                "name": group.name,
+            }
+        return result

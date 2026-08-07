@@ -124,6 +124,7 @@ $a_convergence_action = array();
 $a_packages = array();
 $a_description = array();
 $a_pversions = array();
+$a_pos = array();
 $a_sizes = array();
 $a_css = array();
 $params = array();
@@ -201,7 +202,7 @@ foreach ($packages as $c_package) {
             $descText = htmlspecialchars($package->description);
             $a_description[] = "<span class='pkg-description' title=\"$descText\">$descText</span>";
             $a_pversions[] = $package->version ;
-            $a_pos[] = $package->targetos ;
+            $a_pos[] = str_replace(',', '<br>', $package->targetos);
             $a_sizes[] = formatSizeMb($package->size);
 
             if ($group != null) {
@@ -291,6 +292,7 @@ $n->setcssIds($ids_deploy);
 $n->addExtraInfo($a_description, _T("Description", "msc"));
 $n->addExtraInfoCentered($a_pversions, _T("Version", "msc"));
 $n->addExtraInfoCentered($a_sizes, _T("Size", "pkgs"));
+$n->addExtraInfoCentered($a_pos, _T("Os", "pkgs"));
 if ($group != null) {
     $n->addExtraInfo($a_convergence_status, _T("Convergence", "msc"));
 }

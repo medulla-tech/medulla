@@ -53,9 +53,17 @@ echo '<style>
 .linux-autoupdate-policy { box-sizing: border-box; width: 100%; display: block; }
 .linux-autoupdate-policy .policy-table-scroll { overflow-x: auto; padding: 0 12px 12px 0; }
 .linux-autoupdate-policy table.listinfos { width: 100%; }
-.linux-autoupdate-policy .form-actions { clear: both; display: block; padding: 12px 0; }
 .linux-autoupdate-policy .form-actions input[type="submit"] { margin-right: 8px; }
 </style>';
+
+function policyHeader(string $label, string $tooltip): string
+{
+    $content = '<div class="column-tooltip__text">'
+        . htmlspecialchars($tooltip, ENT_QUOTES, 'UTF-8') . '</div>';
+    return '<span class="infomach column-tooltip" mydata="'
+        . htmlentities($content, ENT_QUOTES, 'UTF-8') . '">'
+        . htmlspecialchars($label, ENT_QUOTES, 'UTF-8') . '</span>';
+}
 
 echo '<div class="linux-autoupdate-policy">';
 echo '<form id="linuxAutoUpdatePolicyForm" method="post" action="' .
@@ -74,9 +82,18 @@ if (empty($policies)) {
     echo '<th>' . _T("Entity", "updates") . '</th>';
     echo '<th>' . _T("Distribution", "updates") . '</th>';
     echo '<th>' . _T("Version", "updates") . '</th>';
-    echo '<th style="text-align:center">' . _T("Kernel", "updates") . '</th>';
-    echo '<th style="text-align:center">' . _T("Security", "updates") . '</th>';
-    echo '<th style="text-align:center">' . _T("Other", "updates") . '</th>';
+    echo '<th style="text-align:center">'
+    . policyHeader(_T("Kernel", "updates"), _T("Enable automatic deployment of kernel updates for this distribution.", "updates"))
+    . ' <input type="checkbox" class="policy-check-all" data-target="auto_update_kernel">'
+    . '</th>';
+    echo '<th style="text-align:center">'
+    . policyHeader(_T("Security", "updates"), _T("Enable automatic deployment of security updates for this distribution.", "updates"))
+    . ' <input type="checkbox" class="policy-check-all" data-target="auto_update_security">'
+    . '</th>';
+    echo '<th style="text-align:center">'
+    . policyHeader(_T("Other", "updates"), _T("Enable automatic deployment of updates other than kernel and security.", "updates"))
+    . ' <input type="checkbox" class="policy-check-all" data-target="auto_update_other">'
+    . '</th>';
     echo '</tr></thead>';
     echo '<tbody>';
 
@@ -90,9 +107,7 @@ if (empty($policies)) {
         $security       = (int) $policy['auto_update_security'];
         $other          = (int) $policy['auto_update_other'];
         $updatedAt      = htmlspecialchars($policy['updated_at'] ?? '');
-        $rowClass       = ($idx % 2 === 0) ? 'even' : 'odd';
-
-        echo "<tr class=\"{$rowClass}\">";
+        echo '<tr class="alternate">';
         echo "<td>{$entityName}</td>";
         echo "<td>{$distribName}</td>";
         echo "<td>{$releaseVer}</td>";
@@ -124,9 +139,36 @@ if (empty($policies)) {
     echo '</div>';
 
     echo '<div class="form-actions">';
-    echo '<input type="submit" class="btnPrimary" value="' . _T("Save", "updates") . '">';
+    echo '<input type="submit" class="btnPrimary" value="' . _T("Apply", "updates") . '">';
     echo '</div>';
 }
+echo '<script>
+jQuery(function() {
+    if (jQuery.ui && jQuery.ui.tooltip) {
+        jQuery(".linux-autoupdate-policy .column-tooltip").tooltip({
+            position: { my: "center top+8", at: "center bottom", collision: "flipfit flipfit" },
+            items: "[mydata]",
+            content: function() { return jQuery(this).attr("mydata"); }
+        });
+    }
+    jQuery(".policy-check-all").each(function() {
+        var master = jQuery(this);
+        var boxes = jQuery("input[type=checkbox][name^=\'" + master.data("target") + "[\']");
+        function refresh() {
+            var n = boxes.filter(":checked").length;
+            master.prop("checked", n === boxes.length);
+            master.prop("indeterminate", n > 0 && n < boxes.length);
+        }
+        master.on("click", function() {
+            boxes.prop("checked", master.prop("checked"));
+            master.prop("indeterminate", false);
+        });
+        boxes.on("change", refresh);
+        refresh();
+    });
+});
+</script>';
+
 
 echo '</form>';
 echo '</div>';

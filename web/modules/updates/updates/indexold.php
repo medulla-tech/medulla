@@ -34,7 +34,7 @@ require_once("modules/xmppmaster/includes/html.inc.php");
 require_once("includes/UIComponents.php");
 
 
-$p = new PageGenerator(_T("Entity Compliance", "updates"));
+$p = new PageGenerator(_T("Entities Compliance", "updates"));
 $p->setSideMenu($sidemenu);
 $p->display();
 

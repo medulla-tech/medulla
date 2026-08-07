@@ -643,17 +643,23 @@ class ActionAjaxPopup extends ActionItem
             $targetUrl .= "&tab=" . $this->tab;
         }
         $targetUrl .= $decodedUrlChunk;
-        $targetUrlJs = htmlspecialchars($targetUrl, ENT_QUOTES, 'UTF-8');
-        $confirmMessageJs = htmlspecialchars($this->_confirmMessage, ENT_QUOTES, 'UTF-8');
-
         if (empty($title)) {
             $title = $text;
         }
         $titleAttr = ' title="' . htmlspecialchars($title, ENT_QUOTES, 'UTF-8') . '"';
         $allClasses = trim($this->classCss . ' ' . $hoverClass);
 
+        // json_encode obligatoire : une apostrophe dans le message casserait
+        // la chaine JS (le HTML decode les entites avant interpretation du JS).
+        $onclickArgs = implode(', ', [
+            json_encode($this->_confirmMessage, JSON_UNESCAPED_UNICODE),
+            json_encode($targetUrl, JSON_UNESCAPED_SLASHES),
+            (int) $this->_width,
+            $this->_replaceContent ? 'true' : 'false',
+        ]);
+
         $html = '<a href="#" class="' . $allClasses . '"' . $titleAttr . '
-                    onclick="return ActionAjaxPopup_showPopup(\'' . $confirmMessageJs . '\', \'' . $targetUrlJs . '\', ' . $this->_width . ', ' . ($this->_replaceContent ? 'true' : 'false') . ');">'
+                    onclick="return ActionAjaxPopup_showPopup(' . htmlspecialchars($onclickArgs, ENT_QUOTES, 'UTF-8') . ');">'
                     . htmlspecialchars($text, ENT_QUOTES, 'UTF-8') .
                 '</a>';
 
@@ -672,6 +678,31 @@ class ActionAjaxPopup extends ActionItem
     {
         ?>
         <script type="text/javascript">
+        var ActionAjaxPopup_i18n = {
+            yes:     <?php echo json_encode(_T("Yes", "base")); ?>,
+            no:      <?php echo json_encode(_T("No", "base")); ?>,
+            close:   <?php echo json_encode(_T("Close", "base")); ?>,
+            loading: <?php echo json_encode(_T("Loading...", "base")); ?>
+        };
+
+        /** Affiche le voile (.overlay) derriere la popup ; clic = fermeture. */
+        function ActionAjaxPopup_showOverlay($popup) {
+            var $overlay = jQuery('#actionConfirmOverlay');
+            if (!$overlay.length) {
+                $overlay = jQuery('<div id="actionConfirmOverlay" class="overlay"></div>').appendTo('body');
+            }
+            $overlay.off('click').on('click', function() {
+                ActionAjaxPopup_hide($popup);
+            });
+            $overlay.show();
+        }
+
+        /** Ferme la popup et son voile. */
+        function ActionAjaxPopup_hide($popup) {
+            jQuery('#actionConfirmOverlay').hide();
+            $popup.fadeOut(200);
+        }
+
         function ActionAjaxPopup_showPopup(message, targetUrl, width, replaceContent) {
             // Si pas de message de confirmation, on fait un autoload dans la popup
             if (message === '') {
@@ -679,7 +710,7 @@ class ActionAjaxPopup extends ActionItem
                     jQuery('body').append('<div id="actionConfirmPopup" class="modal-popup"></div>');
                 }
                 var $popup = jQuery('#actionConfirmPopup');
-                $popup.html('<em>Chargement...</em>').css({
+                $popup.html('<em>' + ActionAjaxPopup_i18n.loading + '</em>').css({
                     width: width + 'px',
                     top: '20%',
                     left: '50%',
@@ -697,9 +728,9 @@ class ActionAjaxPopup extends ActionItem
                             // Affiche le résultat dans la popup (comportement par défaut)
                             $popup.html(data);
                         }
-                        $popup.append('<div class="modal-popup-buttons mt-10"><button id="popupClose">Fermer</button></div>');
+                        $popup.append('<div class="modal-popup-buttons mt-10"><button id="popupClose" class="btn btn-secondary">' + ActionAjaxPopup_i18n.close + '</button></div>');
                         jQuery('#popupClose').on('click', function() {
-                            $popup.fadeOut(200);
+                            ActionAjaxPopup_hide($popup);
                         });
                     },
                     error: function(xhr) {
@@ -716,11 +747,12 @@ class ActionAjaxPopup extends ActionItem
             var $popup = jQuery('#actionConfirmPopup');
             var html = '<div class="modal-popup-message">' + message + '</div>' +
                        '<div class="modal-popup-buttons">' +
-                       '<button id="popupYes">Oui</button>' +
-                       '<button id="popupNo">Non</button>' +
+                       '<button id="popupYes" class="btn btn-primary">' + ActionAjaxPopup_i18n.yes + '</button>' +
+                       '<button id="popupNo" class="btn btn-secondary">' + ActionAjaxPopup_i18n.no + '</button>' +
                        '</div>' +
                        '<div id="popupResult" class="mt-10 d-none"></div>';
             $popup.html(html);
+            ActionAjaxPopup_showOverlay($popup);
             $popup.css({
                 width: width + 'px',
                 top: '20%',
@@ -729,11 +761,11 @@ class ActionAjaxPopup extends ActionItem
             }).fadeIn(200);
 
             jQuery('#popupNo').on('click', function() {
-                $popup.fadeOut(200);
+                ActionAjaxPopup_hide($popup);
             });
 
             jQuery('#popupYes').on('click', function() {
-                jQuery('#popupResult').html('<em>Chargement...</em>').show();
+                jQuery('#popupResult').html('<em>' + ActionAjaxPopup_i18n.loading + '</em>').show();
                 jQuery.ajax({
                     url: targetUrl,
                     type: 'GET',
@@ -746,9 +778,9 @@ class ActionAjaxPopup extends ActionItem
                             jQuery('#popupResult').html(data).show();
                         }
                         if (!jQuery('#popupClose').length) {
-                            $popup.append('<div class="modal-popup-buttons mt-10"><button id="popupClose">Fermer</button></div>');
+                            $popup.append('<div class="modal-popup-buttons mt-10"><button id="popupClose" class="btn btn-secondary">' + ActionAjaxPopup_i18n.close + '</button></div>');
                             jQuery('#popupClose').on('click', function() {
-                                $popup.fadeOut(200);
+                                ActionAjaxPopup_hide($popup);
                             });
                         }
                     },
@@ -1113,6 +1145,7 @@ class ListInfos extends HtmlElement
     public $description; /*     * < list of description (not an obligation) */
     public $col_width; /*     * < Contains the columns width */
     public $tooltip; /*     * < Contains the tooltip for column label */
+    protected $hasHeaderTooltip = false; /*     * < Au moins une infobulle d'en-tête rendue */
     public $captionText = ""; // Texte de la légende
     public $captionBorder = 0; // Bordure de la légende (0 par défaut)
     public $captionBold = 1; // Texte en gras (1 par défaut)
@@ -1568,6 +1601,53 @@ class ListInfos extends HtmlElement
 
 
 
+    /**
+     * Rend un libellé d'en-tête accompagné de son infobulle (pattern .infomach
+     * de tooltip.css). Le contenu n'est pas échappé : certains appelants y
+     * passent du HTML (cf. imaging/bootmenu.php).
+     */
+    protected function renderHeaderTooltip($label, $tooltip)
+    {
+        if (empty($tooltip)) {
+            return $label;
+        }
+
+        $this->hasHeaderTooltip = true;
+
+        $content = '<div class="column-tooltip__text">' . $tooltip . '</div>';
+
+        return '<span class="infomach column-tooltip" mydata="'
+            . htmlentities($content, ENT_QUOTES, 'UTF-8') . '">'
+            . $label
+            . '</span>';
+    }
+
+    /** Active les infobulles d'en-tête. Émis une seule fois par requête. */
+    protected function drawHeaderTooltipScript()
+    {
+        static $scriptEmitted = false;
+
+        if (!$this->hasHeaderTooltip || $scriptEmitted) {
+            return;
+        }
+        $scriptEmitted = true;
+
+        echo '<script>
+jQuery(function() {
+    if (!(jQuery.ui && jQuery.ui.tooltip)) { return; }
+    jQuery("table.listinfos thead .column-tooltip").tooltip({
+        position: {
+            my: "center top+8",
+            at: "center bottom",
+            collision: "flipfit flipfit"
+        },
+        items: "[mydata]",
+        content: function() { return jQuery(this).attr("mydata"); }
+    });
+});
+</script>' . "\n";
+    }
+
     public function drawTable($navbar = 1)
 {
     // Build table class — no more fixed/auto distinction
@@ -1586,26 +1666,19 @@ class ListInfos extends HtmlElement
 
     // --- En-têtes du tableau ---
     echo "<thead><tr>";
-    $first = false;
 
     // Colonnes principales (description)
     foreach ($this->description as $key => $desc) {
-        if (!$first) {
-            echo "<th scope=\"col\"><span>$desc</span></th>";
-            $first = true;
-        } else {
-            $tooltipbegin = !empty($this->tooltip[$key]) ? "<a href=\"#\" class=\"tooltip\">" : "";
-            $tooltipend = !empty($this->tooltip[$key]) ? "<span>" . $this->tooltip[$key] . "</span></a>" : "";
-            echo "<th scope=\"col\"><span>$tooltipbegin$desc$tooltipend</span></th>";
-        }
+        // La premiere colonne rend aussi son infobulle (5e param du constructeur).
+        $header = $this->renderHeaderTooltip($desc, $this->tooltip[$key] ?? "");
+        echo "<th scope=\"col\"><span>$header</span></th>";
     }
 
     // Colonnes extra
     foreach ($this->extraColumns as $extraCol) {
         $centeredClass = !empty($extraCol["centered"]) ? ' class="text-center"' : '';
-        $tooltipbegin = !empty($extraCol["tooltip"]) ? "<a href=\"#\" class=\"tooltip\">" : "";
-        $tooltipend = !empty($extraCol["tooltip"]) ? "<span>" . $extraCol["tooltip"] . "</span></a>" : "";
-        echo "<th scope=\"col\"$centeredClass><span>$tooltipbegin" . $extraCol["description"] . "$tooltipend</span></th>";
+        $header = $this->renderHeaderTooltip($extraCol["description"], $extraCol["tooltip"] ?? "");
+        echo "<th scope=\"col\"$centeredClass><span>$header</span></th>";
     }
 
     // Colonne "Actions"
@@ -1708,6 +1781,7 @@ class ListInfos extends HtmlElement
     }
 
     echo "</tbody></table>\n";
+    $this->drawHeaderTooltipScript();
     if (!empty($this->resizable)) {
         // Fix action column width, switch to fixed layout, add drag handles
         echo '<script>(function(){var t=document.querySelector("table.table-resizable:last-of-type");if(!t)return;';
@@ -3076,6 +3150,8 @@ class SideMenu
     public $className;
     public $backgroundImage;
     public $activatedItem;
+    public $headerTitle;
+    public $headerIcon;
 
     /**
      *  SideMenu default constructor
@@ -3086,6 +3162,8 @@ class SideMenu
         $this->itemArray = array();
         $this->backgroundImage = null;
         $this->activatedItem = null;
+        $this->headerTitle = null;
+        $this->headerIcon = null;
     }
 
     /**
@@ -3111,6 +3189,24 @@ class SideMenu
     public function getClass()
     {
         return $this->className;
+    }
+
+    /**
+     * Override the sidebar header title.
+     * When not set, the current submodule description is used (default behaviour).
+     */
+    public function setTitle($title)
+    {
+        $this->headerTitle = $title;
+    }
+
+    /**
+     * Override the sidebar header icon path (without extension; ".svg" is appended).
+     * When not set, the current submodule icon is used (default behaviour).
+     */
+    public function setIcon($icon)
+    {
+        $this->headerIcon = $icon;
     }
 
     /**
@@ -3143,8 +3239,9 @@ class SideMenu
         $MMCApp = &MMCApp::getInstance();
         $mod = $MMCApp->getModule($_GET['module']);
         $submod = $mod->getSubmod($_GET['submod']);
-        $desc = $submod->getDescription();
-        $icon = $submod->_img ? $submod->_img . '.svg' : '';
+        $desc = $this->headerTitle !== null ? $this->headerTitle : $submod->getDescription();
+        $iconBase = $this->headerIcon !== null ? $this->headerIcon : $submod->_img;
+        $icon = $iconBase ? $iconBase . '.svg' : '';
 
         echo '<div class="sidebar-header">';
         if ($icon) {

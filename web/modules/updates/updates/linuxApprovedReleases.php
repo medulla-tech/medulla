@@ -75,7 +75,7 @@ $selectedEntityIdRaw = $_POST['entityid'] ?? $_GET['entityid'] ?? null;
 $selectedEntityIdStr = is_string($selectedEntityIdRaw) ? $selectedEntityIdRaw : strval($selectedEntityIdRaw);
 $selectedEntityIdStr = preg_replace('/^UUID/i', '', $selectedEntityIdStr);
 $selectedEntityId = ($selectedEntityIdStr !== null && $selectedEntityIdStr !== '') ? (int) $selectedEntityIdStr : null;
-generateEntityPage(_T("Approved Linux releases", "updates"),
+generateEntityPage(_T("Approved Linux Releases", "updates"),
                    "ajaxLinuxApprovedReleases",
                    $sidemenu,
                    'updates',

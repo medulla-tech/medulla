@@ -25,16 +25,18 @@ require("graph/navbar.inc.php");
 require_once("modules/xmppmaster/includes/html.inc.php");
 
 
-$p = new PageGenerator(_T("Entity Compliance", "updates"));
+// Page atteinte depuis la conformite : force l'entree de menu active.
+$sidemenu->forceActiveItem("index");
+
+$p = new PageGenerator(_T("Details by Machines", "updates"));
 $p->setSideMenu($sidemenu);
 $p->display();
 
-echo "View_detail_machine_kernel_linux_entity";
-
-
+echo '<div class="ajax-section">';
 $ajax = new AjaxFilter(urlStrRedirect("updates/updates/ajaxView_detail_machine_kernel_linux_entity"), "container", getFilteredGetParams(), 'formRunning');
 
 $ajax->display();
 $ajax->displayDivToUpdate();
+echo '</div>';
 
 ?>
