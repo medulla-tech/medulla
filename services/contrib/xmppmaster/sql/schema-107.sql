@@ -583,6 +583,29 @@ ON DUPLICATE KEY UPDATE
     parameters           = COALESCE(VALUES(parameters), parameters);
 
 -- ----------------------------------------------------------------------
+-- Releases Linux approuvees par entite
+-- ----------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `up_entity_linux_approved_releases` (
+    `id`                INT(11)      NOT NULL AUTO_INCREMENT,
+    `entity_id`         INT(11)      NOT NULL COMMENT 'Identifiant de l entite GLPI/MMC',
+    `release_id`        INT(11)      NOT NULL COMMENT 'Reference vers up_linux_os_versions.id',
+    `is_managed`        TINYINT(1)   NOT NULL DEFAULT 1 COMMENT 'Snapshot du flag is_managed depuis la table generale',
+    `is_current_stable` TINYINT(1)   NOT NULL DEFAULT 0 COMMENT 'Compatibilite historique: non pilote par Approved Linux releases',
+    `is_recommended`    TINYINT(1)   NOT NULL DEFAULT 0 COMMENT 'Version majeure la plus haute cible pour la mise a jour',
+    `updated_by_user`   VARCHAR(255) DEFAULT NULL COMMENT 'Dernier utilisateur ayant modifie la ligne',
+    `created_at`        DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at`        DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uniq_entity_release` (`entity_id`, `release_id`),
+    KEY `idx_entity_id` (`entity_id`),
+    KEY `idx_release_id` (`release_id`),
+    KEY `idx_entity_managed` (`entity_id`, `is_managed`),
+    CONSTRAINT `fk_up_entity_linux_approved_release` FOREIGN KEY (`release_id`)
+        REFERENCES `up_linux_os_versions` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
+  COMMENT='Gestion des releases Linux approuvees par entite';
+
+-- ----------------------------------------------------------------------
 -- Clarification des commentaires metier (base actuelle)
 -- ----------------------------------------------------------------------
 ALTER TABLE up_entity_linux_approved_releases
