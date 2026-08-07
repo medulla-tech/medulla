@@ -451,18 +451,18 @@ if(isset($_POST['bconfirm'],
 
     $mesg = (!empty($result["msg"])) ? htmlentities($result["msg"]) : "";
 
+    header("location:". urlStrRedirect("updates/updates/index"));
     if(!empty($result["success"]) && $result["success"] == 1) {
         $mesg = sprintf("%s %s done",
                         _T("Deployment major update Linux","updates"),
                         $title_deployement);
         new NotifyWidgetSuccess($mesg);
-        header("location:". urlStrRedirect("updates/updates/index"));
     } else {
         new NotifyWidgetFailure($mesg);
     }
     exit;
 } else {
-    $f = new PopupForm($formtitle);
+    $f = new PopupForm("");
     // En mode groupe, le panel peut contenir des versions source mixtes (10/11/12...).
     // Le titre doit donc rester générique: passage vers la release supérieure.
     $is_group_context = ($entity_id !== "" && $id_machine_xmpp === "" && $id_machine_glpi === "");
