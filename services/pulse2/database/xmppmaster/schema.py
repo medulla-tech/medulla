@@ -334,6 +334,7 @@ class RelayServer(Base, XmppMasterDBObj):
     moderelayserver = Column(String(7))
     keysyncthing = Column(String(70), default="")
     syncthing_port = Column(Integer, default=23000)
+    websocket_url = Column(String(255), nullable=True)
 
 
 class Regles(Base, XmppMasterDBObj):

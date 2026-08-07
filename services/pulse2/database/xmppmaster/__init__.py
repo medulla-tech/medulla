@@ -5982,6 +5982,7 @@ class XmppMasterDatabase(DatabaseHelper):
         moderelayserver="static",
         keysyncthing="",
         syncthing_port=23000,
+        websocket_url="",
     ):
         sql = (
             "SELECT count(*) as nb FROM xmppmaster.relayserver where `relayserver`.`nameserver`='%s';"
@@ -6013,6 +6014,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 new_relayserver.moderelayserver = moderelayserver
                 new_relayserver.keysyncthing = keysyncthing
                 new_relayserver.syncthing_port = syncthing_port
+                new_relayserver.websocket_url = websocket_url
                 session.add(new_relayserver)
                 session.commit()
                 session.flush()
@@ -11013,6 +11015,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     relayserver.urlguacamole,
                     0,
                     relayserver.syncthing_port,
+                    relayserver.websocket_url or "",
                 ]
             }
             # search for clusters where ARS is
@@ -11052,6 +11055,7 @@ class XmppMasterDatabase(DatabaseHelper):
                                 0,
                                 m.keysyncthing,
                                 m.syncthing_port,
+                                m.websocket_url or "",
                             ]
                             for m in ars
                         }
@@ -11065,6 +11069,7 @@ class XmppMasterDatabase(DatabaseHelper):
                                 0,
                                 "",
                                 0,
+                                "",
                             ]
                             for m in ars
                         }
