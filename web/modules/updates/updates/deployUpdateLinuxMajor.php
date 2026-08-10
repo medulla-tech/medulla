@@ -272,7 +272,7 @@ if(isset($_POST['bconfirm'],
     header("location:". urlStrRedirect("updates/updates/index"));
     if(!empty($result["success"]) && $result["success"] == 1) {
         $mesg = sprintf("%s %s done",
-                        _T("Deployment major update ","msc"),
+                        _T("Deployment major update ","updates"),
                         $title_deployement);
         new NotifyWidgetSuccess($mesg);
     } else {
@@ -281,7 +281,7 @@ if(isset($_POST['bconfirm'],
     }
     exit;
 } else {
-    $f = new PopupForm($formtitle);
+    $f = new PopupForm("");
     $mach = sprintf("%s [%s %s]",$message_update, $cn, $platform);
     $f->add(new TitleElement($mach,1));
     $f->push(new Table());

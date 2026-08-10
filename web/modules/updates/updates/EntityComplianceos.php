@@ -10,16 +10,19 @@ require_once("modules/xmppmaster/includes/html.inc.php");
 
 global $maxperpage;
 
-$p = new PageGenerator(_T("Entity Compliance", "updates"));
+// Page atteinte par redirection depuis "index" : force l'entree de menu active.
+$sidemenu->forceActiveItem("index");
+
+$p = new PageGenerator(_T("Entities Compliance", "updates"));
 $p->setSideMenu($sidemenu);
 $p->display();
 
 
 $p = new TabbedPageGenerator();
-$p->addTab("tabwin", _T("Os Windows", "updates"), "",
+$p->addTab("tabwin", _T("Windows", "updates"), "",
            "modules/updates/updates/entity/ajaxEntityCompliance.php", array());
 
-$p->addTab("tablinux", _T("OS Linux", "updates"), "",
+$p->addTab("tablinux", _T("Linux", "updates"), "",
      "modules/updates/updates/entity/ajaxEntityComplianceLinux.php", array());
 
 $p->display();

@@ -36,14 +36,13 @@ require_once("modules/updates/includes/xmlrpc.php");
 unset($_GET['action']);
 
 $entityName = !empty($_GET['name']) ? htmlentities($_GET['name']) : "";
-$titre = _T("List of machines to be upgraded", 'updates');
+$titre = _T("Details by Machines", 'updates');
 if ($entityName) {
     $titre .= ' — ' . $entityName;
 }
 $p = new PageGenerator($titre);
 $p->setSideMenu($sidemenu);
 $p->display();
-echo "dede /home/jfk/git/dev/medulla/web/modules/updates/updates/majorDetailsByMachinesLinux.php";
 // $allowedSources = ["xmppmaster", "glpi"];
 // $dataSource = isset($_GET['source']) && in_array($_GET['source'], $allowedSources) ? $_GET['source'] : "xmppmaster";
 // $nameview = ($dataSource == "xmppmaster") ? "MEDULLA" : "GLPI";

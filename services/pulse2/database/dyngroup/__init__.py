@@ -385,19 +385,31 @@ class DyngroupDatabase(DatabaseHelper):
         """
         logging.getLogger().info("Removing all groups associated to machine %s." % uuid)
         session = create_session()
-        # First get machine id
-        mid = session.query(Machines.id).filter_by(uuid=uuid).scalar()
-        if not mid:
+        # First get machine ids
+        mids = [x[0] for x in session.query(Machines.id).filter_by(uuid=uuid).all()]
+        if not mids:
             logging.getLogger().info(
                 "Machine not found in dyngroup database, skipping."
             )
             return False
 
+        if len(mids) > 1:
+            logging.getLogger().warning(
+                "Duplicated entries in dyngroup Machines for %s: %s"
+                % (uuid, str(mids))
+            )
+
         # Deleting all entries in Results and ProfileResults
         try:
-            session.query(Results).filter_by(FK_machines=mid).delete()
-            session.query(ProfilesResults).filter_by(FK_machines=mid).delete()
-            session.query(Machines).filter_by(id=mid).delete()
+            session.query(Results).filter(Results.FK_machines.in_(mids)).delete(
+                synchronize_session=False
+            )
+            session.query(ProfilesResults).filter(
+                ProfilesResults.FK_machines.in_(mids)
+            ).delete(synchronize_session=False)
+            session.query(Machines).filter(Machines.id.in_(mids)).delete(
+                synchronize_session=False
+            )
         except Exception as e:
             logging.getLogger().error(
                 "Cannot delete machine %s from associated groups." % uuid

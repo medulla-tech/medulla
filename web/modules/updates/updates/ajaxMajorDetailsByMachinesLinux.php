@@ -82,6 +82,7 @@ $totalFiltered = count($filteredCandidates);
 $pagedCandidates = array_slice($filteredCandidates, $start, $maxperpage);
 
 $n = new ListInfos(array($totalFiltered), _T("Machines to be upgraded", "updates"));
+    $n->setTableCssClass("major-summary");
 $n->addExtraInfo(array($distribution), _T("Distribution", "updates"));
 $n->addExtraInfo(array($resolvedTargetVersion), sprintf(_T("Latest %s version", "updates"), ucfirst($distribution)));
 $n->setNavBar("");
@@ -98,7 +99,7 @@ $upgradeAction = new ActionPopupItem(
     "updates",
     "updates",
     null,
-    320,
+    640,
     "machine"
 );
 

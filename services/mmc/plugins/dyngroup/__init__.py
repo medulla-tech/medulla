@@ -359,7 +359,7 @@ class RpcProxy(RpcProxyI):
 
         unregistered_machines = {}
 
-        for uuid in uuids:
+        for uuid in unregistered_uuids:
             unregistered_machines[uuid] = uuids[uuid]
 
         DyngroupDatabase().addMissingMachines(unregistered_machines)

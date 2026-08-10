@@ -2653,3 +2653,6 @@ msgstr "Participación en la mejora continua de la solución"
 #, php-format
 msgid "To activate these features, please subscribe to a support contract by contacting us at: %s"
 msgstr "Para activar estas funcionalidades, le invitamos a suscribir un contrato de soporte contactándonos en: %s"
+
+msgid "Loading..."
+msgstr "Cargando..."

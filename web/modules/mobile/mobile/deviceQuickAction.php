@@ -54,12 +54,14 @@ $deviceDescription = $device['description'] ?? '';
             <?
                     echo sprintf("<td id='reboot0' align='center' title='%s'><img src='img/actions/restart.svg' height='70' width='70'></td>", _T("Click here to reboot this device", "mobile"));
                     echo sprintf("<td id='sync0' align='center' title='%s'><img src='modules/updates/graph/navbar/updates.svg' height='70' width='70'></td>", _T("Click here to update configuration", "mobile"));
+                    echo sprintf("<td id='reset-password0' align='center' title='%s'><img src='img/actions/key.svg' height='70' width='70'></td>", _T("Click here to reset password on this device", "mobile"));
                 ?>
             </tr>
                 <tr>
                 <?
                     echo '<td id="reboot" align="center">'._T("Reboot", "mobile")."</td>";
                     echo '<td id="sync" align="center">'._T("Update Config", "mobile")."</td>";
+                    echo '<td id="reset-password" align="center">'._T("Reset Password", "mobile")."</td>";
                 ?>
             </tr>
             </table>
@@ -83,6 +85,7 @@ $deviceDescription = $device['description'] ?? '';
                         echo '<option value="exitKiosk">'._T("Exit Kiosk", "mobile").'</option>';
                         echo '<option value="clearDownloadHistory">'._T("Clear Download History", "mobile").'</option>';
                         echo '<option value="grantPermissions">'._T("Grant Permissions", "mobile").'</option>';
+                        echo '<option value="passwordReset">'._T("Reset Password", "mobile").'</option>';
                         echo '<option value="custom">'._T("Custom", "mobile").'</option>';
                         echo'</select>
                     </td>
@@ -114,17 +117,19 @@ $deviceDescription = $device['description'] ?? '';
         'purgeDir': '{\n  "path": "/path/to/dir",\n  "recursive": "1"\n}',
         'intent': '{\n  "action": "android.intent.action.VIEW",\n  "data": "https://medulla-tech.io"\n}',
         'runCommand': '{\n  "command": "shell command"\n}',
-        'grantPermissions': '{\n  "pkg": "app.package.id"\n}'
+        'grantPermissions': '{\n  "pkg": "app.package.id"\n}',
+        'passwordReset': '{\n  "password": ""\n}'
     };
 
-    var _destructiveTypes = ['wipe', 'reboot', 'lockDevice', 'runCommand', 'purgeDir', 'deleteDir'];
+    var _destructiveTypes = ['wipe', 'reboot', 'lockDevice', 'runCommand', 'purgeDir', 'deleteDir', 'passwordReset'];
     var _destructiveLabels = {
-        'wipe':       '<?php echo addslashes(_T("Factory Reset", "mobile")); ?>',
-        'reboot':     '<?php echo addslashes(_T("Reboot", "mobile")); ?>',
-        'lockDevice': '<?php echo addslashes(_T("Lock Screen", "mobile")); ?>',
-        'runCommand': '<?php echo addslashes(_T("Run Command", "mobile")); ?>',
-        'purgeDir':   '<?php echo addslashes(_T("Purge Directory", "mobile")); ?>',
-        'deleteDir':  '<?php echo addslashes(_T("Delete Directory", "mobile")); ?>'
+        'wipe':          '<?php echo addslashes(_T("Factory Reset", "mobile")); ?>',
+        'reboot':        '<?php echo addslashes(_T("Reboot", "mobile")); ?>',
+        'lockDevice':    '<?php echo addslashes(_T("Lock Screen", "mobile")); ?>',
+        'runCommand':    '<?php echo addslashes(_T("Run Command", "mobile")); ?>',
+        'purgeDir':      '<?php echo addslashes(_T("Purge Directory", "mobile")); ?>',
+        'deleteDir':     '<?php echo addslashes(_T("Delete Directory", "mobile")); ?>',
+        'passwordReset': '<?php echo addslashes(_T("Reset Password", "mobile")); ?>'
     };
     function requireConfirm(action, messageType, payload) {
         if (_destructiveTypes.indexOf(messageType) === -1) { submitAction(action, messageType, payload); return; }
@@ -207,6 +212,10 @@ $deviceDescription = $device['description'] ?? '';
         
         jQuery('#reboot0, #reboot').on('click', function(){
             requireConfirm('reboot', 'reboot', '');
+        });
+
+        jQuery('#reset-password0, #reset-password').on('click', function(){
+            requireConfirm('passwordReset', 'passwordReset', '{"password":""}');
         });
         
         jQuery('#sync0, #sync').on('click', function(){

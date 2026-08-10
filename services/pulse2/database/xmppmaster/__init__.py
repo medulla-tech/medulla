@@ -14456,32 +14456,6 @@ where lgf.entities_id in %s"""%entities
             return [0, 0, 0, 0, 0, 0]
 
         entities = "(%s)"%(','.join([str(e) for e in entity]))
-        e0 = date.today()
-        b0 = e0.replace(day=1)
-        e1 = b0 - timedelta(days=1)
-        b1 = e1.replace(day=1)
-        e2 = b1- timedelta(days=1)
-        b2 = e2.replace(day=1)
-        e3 = b2 - timedelta(days=1)
-        b3 = e3.replace(day=1)
-        e4 = b3 - timedelta(days=1)
-        b4 = e4.replace(day=1)
-        e5 = b4 - timedelta(days=1)
-        b5 = e5.replace(day=1)
-        bind = {
-            "e0" : e0,
-            "b0" : b0,
-            "e1" : e1,
-            "b1" : b1,
-            "e2" : e2,
-            "b2" : b2,
-            "e3" : e3,
-            "b3" : b3,
-            "e4" : e4,
-            "b4" : b4,
-            "e5" : e5,
-            "b5" : b5,
-        }
 
         sql = """SELECT
     SUM(month6) AS total_month6,
@@ -14490,25 +14464,9 @@ where lgf.entities_id in %s"""%entities
     SUM(month3) AS total_month3,
     SUM(month2) AS total_month2,
     SUM(month1) AS total_month1
-FROM (
-    SELECT
-        um.jid,
-        (case when um.date >= :b0 AND um.date <= :e0 then 1 else 0 end) AS month1,
-        (case when um.date >= :b1 AND um.date <= :e1 then 1 else 0 end) AS month2,
-        (case when um.date >= :b2 AND um.date <= :e2 then 1 else 0 end) AS month3,
-        (case when um.date >= :b3 AND um.date <= :e3 then 1 else 0 end) AS month4,
-        (case when um.date >= :b4 AND um.date <= :e4 then 1 else 0 end) AS month5,
-        (case when um.date >= :b5 AND um.date <= :e5 then 1 else 0 end) AS month6
-    FROM uptime_machine um
-    JOIN machines m ON um.jid = m.jid
-    JOIN local_glpi_machines lgm on m.uuid_inventorymachine = concat("UUID", lgm.id)
-    JOIN local_glpi_entities lge on lgm.entities_id = lge.id
-    WHERE    m.agenttype = 'machine'
-         AND lge.id IN %s
-    GROUP BY um.jid
-) AS t;"""%entities
+FROM uptime_machine_summary where entity_id in %s"""%entities
 
-        query = session.execute(sql, bind).first()
+        query = session.execute(sql).first()
         if query is None :
             return [0, 0, 0, 0, 0, 0]
 
@@ -18200,7 +18158,7 @@ FROM (
 
 
         # Vérification des paramètres obligatoires
-        value_permise = ["security", "kernel", "other", "all"]
+        value_permise = ["security", "kernel", "other", "all", "any"]
         if entity_id in [-1, None] or str(entity_id).strip() == "":
             logger.debug("Paramètres obligatoires manquants : entity_id=%s", entity_id)
             return {}
@@ -18220,6 +18178,11 @@ FROM (
             count_condition = "up.other_count > 0"
         elif updatetype == "all":
             count_condition = "up.total_count > 0"
+        elif updatetype == "any":
+            # Toutes les machines Linux de l'entite, y compris celles a jour :
+            # vue de detail, ou l'on veut voir l'etat de chaque machine et pas
+            # seulement celles qui ont des mises a jour en attente.
+            count_condition = "1 = 1"
         else:
             logger.debug("Type de mise à jour invalide : %s", updatetype)
             return {}

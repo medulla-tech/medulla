@@ -25,7 +25,7 @@ require("graph/navbar.inc.php");
 require_once("modules/xmppmaster/includes/html.inc.php");
 
 
-$p = new PageGenerator(_T("Entity Compliance", "updates"));
+$p = new PageGenerator(_T("Entities Compliance", "updates"));
 $p->setSideMenu($sidemenu);
 $p->display();
 
