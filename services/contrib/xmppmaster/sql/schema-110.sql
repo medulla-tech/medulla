@@ -124,11 +124,6 @@ END;
 DELIMITER ;
 
 
-
--- First call  of the procedure
-call refresh_uptime_machine_summary();
-
-
 UPDATE version SET Number = 110;
 
 
