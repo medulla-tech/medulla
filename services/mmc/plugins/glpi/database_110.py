@@ -131,7 +131,7 @@ def decrypt_glpi11_token(encrypted_token: str) -> str:
     except Exception as e:
         logging.getLogger().debug(f"Échec déchiffrement token GLPI 11: {e}")
         return encrypted_token
-from packaging.version import LegacyVersion as LooseVersion, StrictVersion
+from packaging.version import Version
 #from mmc.plugins.xmppmaster.config import xmppMasterConfig
 
 from pulse2.database.xmppmaster import XmppMasterDatabase
@@ -187,9 +187,9 @@ class Glpi110(DyngroupDatabaseHelper):
                 .values()
             )[0].replace(" ", "")
 
-        if LooseVersion(self._glpi_version) >= LooseVersion("11.0") and LooseVersion(
+        if Version(self._glpi_version) >= Version("11.0") and Version(
             self._glpi_version
-        ) <= LooseVersion("11.0.99"):
+        ) <= Version("11.0.99"):
             logging.getLogger().debug("GLPI version %s found !" % self._glpi_version)
             return True
         else:

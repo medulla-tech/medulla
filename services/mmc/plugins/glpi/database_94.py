@@ -64,7 +64,7 @@ from mmc.plugins.glpi.database_utils import (
 )
 from mmc.plugins.glpi.database_utils import DbTOA  # pyflakes.ignore
 from mmc.plugins.dyngroup.config import DGConfig
-from packaging.version import LegacyVersion as LooseVersion
+from packaging.version import Version
 #from mmc.plugins.xmppmaster.config import xmppMasterConfig
 
 from pulse2.database.xmppmaster import XmppMasterDatabase
@@ -118,9 +118,9 @@ class Glpi94(DyngroupDatabaseHelper):
             logging.getLogger().error("We are searching for GLPI 9.4.")
             return False
 
-        if LooseVersion(self._glpi_version) >= LooseVersion("9.4") and LooseVersion(
+        if Version(self._glpi_version) >= Version("9.4") and Version(
             self._glpi_version
-        ) <= LooseVersion("9.4.6"):
+        ) <= Version("9.4.6"):
             logging.getLogger().debug("GLPI version %s found." % self._glpi_version)
             return True
         else:
