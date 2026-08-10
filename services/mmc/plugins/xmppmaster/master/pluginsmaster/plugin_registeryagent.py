@@ -1320,7 +1320,7 @@ def read_conf_remote_registeryagent(xmppobject):
             "loadshowregistration",
         ]
         xmppobject.check_uuidinventory = False
-        blacklisted_mac_addresses = "00\:00\:00\:00\:00\:00"
+        blacklisted_mac_addresses = r"00\:00\:00\:00\:00\:00"
         xmppobject.registeryagent_showinfomachine = []
     else:
         Config = configparser.ConfigParser()
@@ -1370,7 +1370,7 @@ def read_conf_remote_registeryagent(xmppobject):
                 "parameters", "blacklisted_mac_addresses"
             )
         else:
-            blacklisted_mac_addresses = "00\:00\:00\:00\:00\:00"
+            blacklisted_mac_addresses = r"00\:00\:00\:00\:00\:00"
 
         if Config.has_section("parameters"):
             if Config.has_option("parameters", "showinfomachine"):

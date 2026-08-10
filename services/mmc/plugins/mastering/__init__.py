@@ -189,7 +189,7 @@ def create_action(action, gid, uuid, target, server, begin_date, end_date, confi
         workflow = json.loads(workflow)
     except Exception as e:
         return {"status":1, "msg":"invalid incoming datas: %s"%e}
-    server = server.replace("\/", "/")
+    server = server.replace(r"\/", "/")
     result = MasteringDatabase().create_action(action, gid, uuid, target, server, begin_date, end_date, config, workflow, entity_id)
     return result
 

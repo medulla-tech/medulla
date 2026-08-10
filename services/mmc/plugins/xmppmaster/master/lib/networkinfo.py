@@ -166,7 +166,7 @@ class networkagentinfo:
         elif system == "systemd":
             # p = subprocess.Popen('systemctl status network | grep -i "dhclient\["',
             p = subprocess.Popen(
-                'journalctl | grep "dhclient\["',
+                r'journalctl | grep "dhclient\["',
                 shell=True,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,

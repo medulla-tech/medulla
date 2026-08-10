@@ -2106,7 +2106,7 @@ class Glpi110(DyngroupDatabaseHelper):
             # in case the glpi database is in latin1, don't forget dyngroup is in utf8
             # => need to convert what comes from the dyngroup database
             query[3] = self.encode(query[3])
-            r1 = re.compile("\*")
+            r1 = re.compile(r"\*")
             like = False
             if type(query[3]) == list:
                 q3 = []

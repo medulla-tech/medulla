@@ -336,7 +336,7 @@ class QueryManager(Singleton):
             return None
 
     def parse(self, query):
-        p1 = re.compile("\|\|")
+        p1 = re.compile(r"\|\|")
         p2 = re.compile("::")
         p3 = re.compile("==")
         p4 = re.compile(", ")

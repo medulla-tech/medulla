@@ -1169,10 +1169,10 @@ class LdapUserGroupControl:
         """
         entry = copy.deepcopy(entry)
         for attribute, value in list(default.items()):
-            if s := re.search("^\[(.*)\]", value):
+            if s := re.search(r"^\[(.*)\]", value):
                 modifiers = s.groups()[0]
                 # Remove modifiers from the string
-                value = re.sub("^\[.*\]", "", value)
+                value = re.sub(r"^\[.*\]", "", value)
             else:
                 modifiers = ""
             # Interpolate value
@@ -1892,7 +1892,7 @@ class LdapUserGroupControl:
     def delGroup(self, group):
         """
         Remove a group
-        /!\ baseGroupsDN based on INI file
+        /!\\ baseGroupsDN based on INI file
 
         @param group: group name (not full LDAP path)
         @type group: str
@@ -3169,8 +3169,8 @@ class LogView:
             self.pattern = pattern
         else:
             self.pattern = {
-                "slapd-syslog": "^(?P<b>[A-z]{3}) *(?P<d>[0-9]+) (?P<H>[0-9]{2}):(?P<M>[0-9]{2}):(?P<S>[0-9]{2}) .* conn=(?P<conn>[0-9]+)\ (?P<opfd>op|fd)=(?P<opfdnum>[0-9]+) (?P<op>[A-Za-z]+) (?P<extra>.*)$",
-                "fds-accesslog": "^\[(?P<d>[0-9]{2})/(?P<b>[A-z]{3})/(?P<y>[0-9]{4}):(?P<H>[0-9]{2}):(?P<M>[0-9]{2}):(?P<S>[0-9]{2}) .*\] conn=(?P<conn>[0-9]+)\ (?P<opfd>op|fd)=(?P<opfdnum>[0-9]+) (?P<op>[A-Za-z]+)(?P<extra> .*|)$",
+                "slapd-syslog": r"^(?P<b>[A-z]{3}) *(?P<d>[0-9]+) (?P<H>[0-9]{2}):(?P<M>[0-9]{2}):(?P<S>[0-9]{2}) .* conn=(?P<conn>[0-9]+)\ (?P<opfd>op|fd)=(?P<opfdnum>[0-9]+) (?P<op>[A-Za-z]+) (?P<extra>.*)$",
+                "fds-accesslog": r"^\[(?P<d>[0-9]{2})/(?P<b>[A-z]{3})/(?P<y>[0-9]{4}):(?P<H>[0-9]{2}):(?P<M>[0-9]{2}):(?P<S>[0-9]{2}) .*\] conn=(?P<conn>[0-9]+)\ (?P<opfd>op|fd)=(?P<opfdnum>[0-9]+) (?P<op>[A-Za-z]+)(?P<extra> .*|)$",
             }
 
     def isLogViewEnabled(self):

@@ -651,7 +651,7 @@ class RpcProxy(RpcProxyI):
                     cache["M%s" % (c["uuid"])] = c["target"]
             # treat c['title'] to remove the date when possible
             # "Bundle (1) - 2009/12/14 10:22:24" => "Bundle (1)"
-            date_re = re.compile(" - \d\d\d\d/\d\d/\d\d \d\d:\d\d:\d\d")
+            date_re = re.compile(r" - \d\d\d\d/\d\d/\d\d \d\d:\d\d:\d\d")
             c["title"] = date_re.sub("", c["title"])
             ret.append(c)
         return xmlrpcCleanup((size, ret))

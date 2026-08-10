@@ -1373,7 +1373,7 @@ class Converter:
 
     @staticmethod
     def obj_to_str(obj):
-        """Transform conventionnals objects to string object
+        r"""Transform conventionnals objects to string object
         Params:
             obj: the input object can be :
                 - a list,
@@ -1431,7 +1431,7 @@ class Converter:
 
     @staticmethod
     def obj_to_bytes(obj):
-        """Convert conventionnals objects to bytes field
+        r"""Convert conventionnals objects to bytes field
         Params:
             obj: the object we want to convert to bytes field. The object could be
                 - a list

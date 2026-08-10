@@ -536,7 +536,7 @@ class MscDatabase(msc.MscDatabase):
         )
 
         # run a built-in script
-        p1 = re.compile("^\/scripts\/")
+        p1 = re.compile(r"^\/scripts\/")
         if p1.match(cmd):
             files.append(cmd)
 

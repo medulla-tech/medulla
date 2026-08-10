@@ -15,22 +15,22 @@ from xml.dom import minidom
 
 p1 = re.compile(" ")
 p2 = re.compile(",")
-p3 = re.compile("((?:AND|OR|NOT|ET|OU|NON)\([^\)\(]*\))", re.I)
-p4 = re.compile("^[^\(\)]*(?=\()")
-p5 = re.compile("^\(")
-p6 = re.compile("\)$")
-p7 = re.compile("\(")
-p8 = re.compile("\)")
-p9 = re.compile("^<BEID:(\d+)>$")
-p10 = re.compile("(?<!^)((?:AND|OR|ET|OU)\((?P<val>[^\)\(,]*)\))", re.I)
-p11 = re.compile("\n")
+p3 = re.compile(r"((?:AND|OR|NOT|ET|OU|NON)\([^\)\(]*\))", re.I)
+p4 = re.compile(r"^[^\(\)]*(?=\()")
+p5 = re.compile(r"^\(")
+p6 = re.compile(r"\)$")
+p7 = re.compile(r"\(")
+p8 = re.compile(r"\)")
+p9 = re.compile(r"^<BEID:(\d+)>$")
+p10 = re.compile(r"(?<!^)((?:AND|OR|ET|OU)\((?P<val>[^\)\(,]*)\))", re.I)
+p11 = re.compile(r"\n")
 
 
-s2x1 = re.compile("(AND|ET)\(", re.I)
-s2x2 = re.compile("(OR|OU)\(", re.I)
-s2x3 = re.compile("(NOT|NON)\(", re.I)
+s2x1 = re.compile(r"(AND|ET)\(", re.I)
+s2x2 = re.compile(r"(OR|OU)\(", re.I)
+s2x3 = re.compile(r"(NOT|NON)\(", re.I)
 s2x4 = re.compile(",")
-s2x5 = re.compile("\)")
+s2x5 = re.compile(r"\)")
 s2x6 = re.compile("</p>$")
 
 Set = set
@@ -52,7 +52,7 @@ class BoolRequest(object):
         # remove ' ' for an easier parsing
         str = p1.sub("", str)
         # remove useless AND or OR
-        str = p10.sub("\g<val>", str)
+        str = p10.sub(r"\g<val>", str)
         # remove userless \n
         str = p11.sub("", str)
         return str

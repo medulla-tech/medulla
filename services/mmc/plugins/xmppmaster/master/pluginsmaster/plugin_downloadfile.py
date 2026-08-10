@@ -28,7 +28,7 @@ plugin = {"VERSION": "1.4", "NAME": "downloadfile", "TYPE": "master"}
 
 
 def create_path(type="windows", host="", ipordomain="", path=""):
-    """
+    r"""
     warning you must enter a raw string for parameter path
     eg ( a= create_path(host="pulse", ipordomain="192.168.56.103", path=r"C:\Program Files (x86)\Pulse\var\tmp\packages\a170890e-d060-11e7-ade3-0800278dc04d")
     """

@@ -221,8 +221,8 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         ie : you will see only the group you can have access!
         """
         group = self.__getGroupInSessionFirstStep(ctx, session, ro)
-        if re.search("\*", name):
-            name = re.sub("\*", "%", name)
+        if re.search(r"\*", name):
+            name = re.sub(r"\*", "%", name)
             group = group.filter(self.groups.c.name.like(name))
         else:
             group = group.filter(self.groups.c.name == name).first()

@@ -181,7 +181,7 @@ def isFqdn(hostname):
     # in NT4 netbios name).
     ret = False
     if re.compile(
-        "^([a-zA-Z0-9][a-zA-Z0-9-_]*[a-zA-Z0-9]\.){1,10}[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]$"
+        r"^([a-zA-Z0-9][a-zA-Z0-9-_]*[a-zA-Z0-9]\.){1,10}[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]$"
     ).search(hostname):
         ret = True
     return ret
