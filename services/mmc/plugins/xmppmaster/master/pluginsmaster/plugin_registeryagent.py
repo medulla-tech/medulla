@@ -7,7 +7,7 @@ from manageRSAsigned import MsgsignedRSA
 from sleekxmpp import jid
 from mmc.plugins.xmppmaster.master.lib.utils import getRandomName
 import re
-from packaging.version import LegacyVersion as LooseVersion
+from packaging.version import Version
 import configparser
 
 ## this import will be used later
@@ -1176,12 +1176,12 @@ def __search_software_in_glpi(list_software_glpi, packageprofile, structuredatak
             # TODO
             # For now we use the package version.
             # Later the software version will be needed into the pulse package
-            if LooseVersion(soft_glpi[2]) < LooseVersion(packageprofile[3]):
+            if Version(soft_glpi[2]) < Version(packageprofile[3]):
                 structuredatakioskelement["action"].append("Update")
                 logger.debug(
                     "The software version is superior "
                     "to that installed on the machine %s : %s < %s"
-                    % (packageprofile[0], soft_glpi[2], LooseVersion(packageprofile[3]))
+                    % (packageprofile[0], soft_glpi[2], Version(packageprofile[3]))
                 )
             break
     if not structuredatakioskelement["action"]:
