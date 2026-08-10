@@ -22,8 +22,8 @@ use xmppmaster;
 
 -- Add inventory_id column into machines table
 -- This column simplifies the joins based on uuid_inventorymachine
-ALTER TABLE machines ADD COLUMN inventory_id INT GENERATED ALWAYS AS ( CAST(REPLACE(uuid_inventorymachine,'UUID','') AS UNSIGNED) ) STORED;
-CREATE INDEX idx_inventory_id on machines (inventory_id);
+ALTER TABLE machines ADD COLUMN IF NOT EXISTS inventory_id INT GENERATED ALWAYS AS ( CAST(REPLACE(uuid_inventorymachine,'UUID','') AS UNSIGNED) ) STORED;
+CREATE INDEX IF NOT EXISTS idx_inventory_id on machines (inventory_id);
 
 
 
