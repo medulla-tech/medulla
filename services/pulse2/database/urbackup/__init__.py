@@ -400,6 +400,19 @@ class UrbackupDatabase(DatabaseHelper):
             logging.getLogger().error(str(e))
             return {}
 
+    @DatabaseHelper._sessionm
+    def get_group_info(self, session, entityid):
+        query = session.query(Profiles).filter(Profiles.entity_id == entityid).first()
+
+        if query == None:
+            return {}
+
+        return {
+            "id":query.id,
+            "entity_id":query.entity_id,
+            "profile_uuid":query.profile_uuid,
+            "profile_name":query.profile_name
+        }
 
 
     # =====================================================================
@@ -556,3 +569,48 @@ class UrbackupDb(SqliteHelper):
         except Exception as e:
             logger.error(str(e))
             return False
+
+    @SqliteHelper.session
+    def get_backups_for_client(self, session, clientid, start=0, end=-1, filter=""):
+
+        sql = "SELECT * FROM backups WHERE clientid = ? limit ?, ?"
+        sql2 = "select count(*) from backups where clientid = ?"
+        try:
+            query = session.execute(sql, (clientid, start, end)).fetchall()
+        except Exception as e:
+            logger.error(str(e))
+            return []
+
+        count = 0
+        try:
+            count = session.execute(sql2, (clientid)).fetchone()[0]
+        except Exception as e:
+            logger.error(str(e))
+
+        result = []
+
+        for row in query:
+            result.append({
+                "id": row[0],
+                "clientid": row[1],
+                "backuptime": row[2],
+                "incremental": row[3],
+                "path": row[4],
+                "complete": row[5],
+                "running": row[6],
+                "size_bytes": row[7],
+                "done": row[8],
+                "archived": row[9],
+                "archive_timeout": row[10],
+                "size_calculated": row[11],
+                "resumed": row[12],
+                "indexing_time_ms": row[13],
+                "tgroup": row[14],
+                "synctime": row[15],
+                "delete_pending": row[16]
+            })
+
+        return {
+            "total": count,
+            "data": result
+        }

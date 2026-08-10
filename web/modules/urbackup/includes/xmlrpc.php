@@ -127,9 +127,14 @@ function xmlrpc_delete_backup($clientid, $backupid){
     return xmlCall("urbackup.delete_backup", [$clientid, $backupid]);
 }
 
-function xmlrpc_get_backups_for_client($client_id){
+function xmlrpc_get_backup_state_for_client($client_id){
     // Return backups of one clients with date last backup
-    return xmlCall("urbackup.get_backups_for_client", [$client_id]);
+    return xmlCall("urbackup.get_backup_state_for_client", [$client_id]);
+}
+
+function xmlrpc_get_backups_for_client($client_id, $start, $end, $filter){
+    // Return backups of one clients with date last backup
+    return xmlCall("urbackup.get_backups_for_client", [$client_id, $start, $end, $filter]);
 }
 
 function xmlrpc_get_backup_files($client_id, $backup_id, $path){
@@ -179,5 +184,9 @@ function xmlrpc_get_status_client($clientname){
 
 function xmlrpc_update_profile_machine($entityId, $entityName, $computerJid,$computerName){
     return xmlCall("urbackup.update_profile_machine", [$entityId, $entityName, $computerJid, $computerName]);
+}
+
+function xmlrpc_get_group_info($entityid){
+    return xmlCall("urbackup.get_group_info", [$entityid]);
 }
 ?>

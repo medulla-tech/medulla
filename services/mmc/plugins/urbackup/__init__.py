@@ -813,7 +813,7 @@ def update_profile_machine(entityId, entityName, computerJid, computerName):
     }
 
 
-def get_backups_for_client(clientid):
+def get_backup_state_for_client(clientid):
     """
     Get backups for one client
 
@@ -830,7 +830,6 @@ def get_backups_for_client(clientid):
     api = UrApiWrapper()
     response = api.get_backups(clientid)
 
-
     if "content" not in response or "clients" not in response["content"]:
         return {}
 
@@ -845,3 +844,37 @@ def get_backups_for_client(clientid):
     result["state"] = state
     return result
 
+def get_backups_for_client(clientid, start, end, filter=""):
+    """
+    Get backups for one client
+
+    Args:
+        Client id,
+        start : begin offset,
+        end : end offset,
+        filter : filter criteria
+    Returns:
+        Array of backups for one client
+    """
+    return UrbackupDb().get_backups_for_client(clientid, start, end, filter)
+
+
+def get_group_info(entityid):
+    if entityid is None or entityid == "":
+        return {}
+
+    if isinstance(entityid, str):
+        try:
+            entityid = int(entityid.replace("UUID", ""))
+        except:
+            return {}
+
+    groupdb = UrbackupDatabase().get_group_info(entityid)
+    if groupdb != {}:
+        api = UrbackupSettingsDb().get_group_by_name(groupdb["profile_uuid"])
+
+        if api != {}:
+            groupdb["api_id"] = api["id"]
+
+
+    return groupdb

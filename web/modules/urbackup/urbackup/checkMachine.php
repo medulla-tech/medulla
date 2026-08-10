@@ -24,8 +24,7 @@ require("graph/navbar.inc.php");
 require("localSidebar.php");
 require_once("modules/urbackup/includes/xmlrpc.php");
 
-$clientname = htmlspecialchars($_GET["cn"]);
-$jidMachine = htmlspecialchars($_GET["jid"]);
+$clientname = isset($_GET["cn"]) ? htmlspecialchars($_GET["cn"]) : "";
 
 $p = new PageGenerator(_T("Assign profile to computer ".$clientname, 'urbackup'));
 $p->setSideMenu($sidemenu);
@@ -33,28 +32,35 @@ $p->display();
 
 
 
-$computerName = (isset($_GET["cn"])) ? htmlentities($_GET["cn"]) : "";
 $computerJid = (isset($_GET["jid"])) ? htmlentities($_GET["jid"]) : "";
 $entityName = (isset($_GET["entity"])) ? htmlentities($_GET["entity"]): "";
 $entityId = (isset($_GET["entityid"])) ? htmlentities($_GET["entityid"]) : 0;
 
 // This function register automatically the machine into a profile assotiated to its entity
-$result = xmlrpc_update_profile_machine($entityId, $entityName, $computerJid, $computerName);
+$result = xmlrpc_update_profile_machine($entityId, $entityName, $computerJid, $clientname);
 
+$params = [];
 // Error
 if ($result["status"] != 0) {
-    new NotifyWidgetFailure(sprintf(_T("Error while assigning profile to computer %s: %s", 'urbackup'), $computerName, $result["message"]));
+    new NotifyWidgetFailure(sprintf(_T("Error while assigning profile to computer %s: %s", 'urbackup'), $clientname, $result["message"]));
+    $url = urlStrRedirect("urbackup/urbackup/list_backups");
+    header("Location: ".$url);
+    exit;
 }
+
 
 $params = [
     "clientid" => (isset($result["data"]["clientid"])) ? $result["data"]["clientid"] : 0,
-    "clientname" => (isset($computerName)) ? $computerName : "",
+    "clientname" => $clientname,
     "groupid" => (isset($result["data"]["profile_id"])) ? $result["data"]["profile_id"] : 0,
     "jidmachine" => (isset($computerJid)) ? $computerJid : "",
     "groupname" => (isset($entityName)) ? $entityName : "",
     "groupuuid" => (isset($result["data"]["profile_uuid"])) ? $result["data"]["profile_uuid"] : "",
     "authkey" => (isset($result["data"]["authkey"])) ? $result["data"]["authkey"] : ""
 ];
+
+$enable_client = xmlrpc_enable_client($computerJid, $params["clientid"], $params["authkey"]);
+
 
 $url = urlStrRedirect("urbackup/urbackup/list_backups", $params);
 

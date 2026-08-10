@@ -142,7 +142,7 @@ $stats = xmlrpc_get_stats();
 <script>
     jQuery(document).ready(function($) {
         setInterval(function() {
-            $("#progressBackups").load("index.php");
+            $("#progressBackups").load("modules/urbackup/urbackup/index.php");
         }, 10000);
     });
 
