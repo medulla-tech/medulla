@@ -66,7 +66,6 @@ import sys
 
 import random
 
-# import posix_ipc
 import socket
 import ssl
 import gzip
