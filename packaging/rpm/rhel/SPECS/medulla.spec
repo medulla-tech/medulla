@@ -1028,7 +1028,6 @@ Requires(pre): python3-mmc-base
 Requires:   python3-mmc-base
 Requires:   ajax-php-file-manager
 Requires:   python3-memory-profiler
-Requires:   python3-posix-ipc
 Requires:   python3.11-pyyaml
 Requires:   python3.11-incremental
 Requires:   python3.11-typing-extensions
