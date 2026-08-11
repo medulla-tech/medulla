@@ -10,7 +10,7 @@ Pulse2 database handler
 
 # SqlAlchemy
 from sqlalchemy import create_engine, MetaData, Table, Column, Text
-from sqlalchemy.orm import create_session, mapper
+from sqlalchemy.orm import registry, Session, sessionmaker
 from sqlalchemy.sql import and_
 from sqlalchemy.exc import DBAPIError
 from sqlalchemy.ext.automap import automap_base
@@ -52,8 +52,12 @@ class Pulse2Database(DyngroupDatabaseHelper):
         )
         self.metadata = MetaData(self.db)
 
+        self.mapper_registry = registry()
+
+        self.session_factory = sessionmaker(bind=self.db, expire_on_commit=False)
+
         Base = automap_base()
-        Base.prepare(self.db, reflect=True)
+        Base.prepare(autoload_with=self.db)
 
         # Only federated tables (beginning by local_) are automatically mapped
         # If needed, excludes tables from this list
@@ -68,8 +72,8 @@ class Pulse2Database(DyngroupDatabaseHelper):
         if not self.initMappersCatchException():
             self.session = None
             return False
-        self.metadata.create_all()
-        self.session = create_session()
+        self.metadata.create_all(bind=self.db)
+        self.session = self.session_factory()
         self.is_activated = True
         self.logger.debug(
             "Pulse2 database connected (version:%s)"
@@ -88,12 +92,12 @@ class Pulse2Database(DyngroupDatabaseHelper):
             self.metadata,
             Column("entity_uuid", Text, primary_key=True),
             Column("package_server_uuid", Text, primary_key=True),
-            autoload=True,
+            autoload_with=self.db,
         )
-        mapper(PackageServerEntity, self.packageServerEntity)
+        self.mapper_registry.map_imperatively(PackageServerEntity, self.packageServerEntity)
 
         # version
-        self.version = Table("Version", self.metadata, autoload=True)
+        self.version = Table("Version", self.metadata, autoload_with=self.db)
 
     def getDbConnection(self):
         NB_DB_CONN_TRY = 2
@@ -122,7 +126,7 @@ class Pulse2Database(DyngroupDatabaseHelper):
         @returns: the PackageServerEntity that correspond to the given ps_uuid
         @rtype: the PackageServerEntity object
         """
-        session = create_session()
+        session = self.session_factory()
         ret = (
             session.query(PackageServerEntity)
             .filter(self.packageServerEntity.c.package_server_uuid == ps_uuid)
@@ -139,7 +143,7 @@ class Pulse2Database(DyngroupDatabaseHelper):
         @returns: the PackageServerEntities that correspond to the given e_uuid
         @rtype: a list of PackageServerEntity object
         """
-        session = create_session()
+        session = self.session_factory()
         ret = (
             session.query(PackageServerEntity)
             .filter(self.packageServerEntity.c.entity_uuid == e_uuid)
@@ -149,7 +153,7 @@ class Pulse2Database(DyngroupDatabaseHelper):
         return ret
 
     def getPackageServerEntityByEntities(self, e_uuids):
-        session = create_session()
+        session = self.session_factory()
         ret1 = (
             session.query(PackageServerEntity)
             .add_column(self.packageServerEntity.c.entity_uuid)
@@ -175,7 +179,7 @@ class Pulse2Database(DyngroupDatabaseHelper):
         @returns: the PackageServerEntity that correspond to the given ps_uuid and e_uuid
         @rtype: the PackageServerEntity object
         """
-        session = create_session()
+        session = self.session_factory()
         ret = (
             session.query(PackageServerEntity)
             .filter(
@@ -200,7 +204,7 @@ class Pulse2Database(DyngroupDatabaseHelper):
         @returns: the PackageServerEntity that correspond to the given ps_uuid and e_uuid
         @rtype: the PackageServerEntity object
         """
-        session = create_session()
+        session = self.session_factory()
         pse = PackageServerEntity()
         pse.package_server_uuid = ps_uuid
         pse.entity_uuid = e_uuid
@@ -217,7 +221,7 @@ class Pulse2Database(DyngroupDatabaseHelper):
         @return: True if success
         @rtype: bool
         """
-        session = create_session()
+        session = self.session_factory()
         pse = (
             session.query(PackageServerEntity)
             .filter(self.packageServerEntity.c.entity_uuid == e_uuid)

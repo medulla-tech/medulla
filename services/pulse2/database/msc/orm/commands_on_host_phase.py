@@ -4,16 +4,26 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import logging
-from sqlalchemy.orm import create_session
+from sqlalchemy.orm import sessionmaker
 
 
 class CommandsOnHostPhase(object):
     def flush(self):
         """Handle SQL flushing"""
-        session = create_session()
-        session.add(self)
-        session.flush()
-        session.close()
+        # Get session from parent module's session factory
+        from pulse2.database.msc import MscDatabase
+        msc_db = MscDatabase()
+        if msc_db.is_activated:
+            session_factory = sessionmaker(bind=msc_db.engine_mscmmaster_base, expire_on_commit=False)
+            session = session_factory()
+            try:
+                session.add(self)
+                session.flush()
+            finally:
+                session.close()
+        else:
+            # Database not initialized
+            pass
 
     def is_ready(self):
         return self.is_state("ready")

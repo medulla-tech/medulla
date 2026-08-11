@@ -11,7 +11,7 @@ Client to connect to the scheduler XMLRPC api from the msc mmc plugin.
 import twisted.web.xmlrpc
 import twisted.internet.defer
 
-from sqlalchemy.orm import create_session
+from sqlalchemy.orm import Session, sessionmaker
 import logging
 import re
 
@@ -61,7 +61,7 @@ def start_all_commands(scheduler):
 
 def start_these_commands(scheduler, commands):
     database = MscDatabase()
-    session = create_session()
+    session = self.session_factory()
     coh_query = session.query(CommandsOnHost).filter(
         database.commands_on_host.c.fk_commands.in_(commands)
     )
@@ -210,7 +210,7 @@ def stopCommand(scheduler, command_id):
         # FIXME: handle error
         return False
 
-    session = create_session()
+    session = self.session_factory()
     ret = (
         session.query(CommandsOnHost, Target)
         .filter(CommandsOnHost.id == command_id)
@@ -285,7 +285,7 @@ def startCommand(scheduler, command_id):
         # FIXME: handle error
         return False
 
-    session = create_session()
+    session = self.session_factory()
     ret = (
         session.query(CommandsOnHost, Target)
         .filter(CommandsOnHost.id == command_id)

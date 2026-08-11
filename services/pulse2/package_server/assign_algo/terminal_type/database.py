@@ -10,13 +10,13 @@ NB_DB_CONN_TRY = 2
 
 class PluginInventoryAADatabase(Inventory):
     def getMachineType(self, uuid):
-        session = create_session()
+        session = self.session_factory()
         ret = self.__getMachineType(uuid, session)
         session.close()
         return ret
 
     def getMachinesType(self, uuids):
-        session = create_session()
+        session = self.session_factory()
         ret = []
         for uuid in uuids:
             ret.append(self.__getMachineType(uuid, session))
@@ -43,7 +43,7 @@ class PluginInventoryAADatabase(Inventory):
         return query.Value
 
     def buildPopulateCacheQuery(self):
-        session = create_session()
+        session = self.session_factory()
         result = (
             session.query(self.klass["Registry"])
             .add_column(self.machine.c.Name)

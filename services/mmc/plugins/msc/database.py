@@ -18,7 +18,7 @@ import logging
 
 # SqlAlchemy
 from sqlalchemy import and_, not_
-from sqlalchemy.orm import create_session
+from sqlalchemy.orm import Session, sessionmaker
 
 # MMC modules
 from mmc.plugins.base.computers import ComputerManager
@@ -298,7 +298,7 @@ class MscDatabase(msc.MscDatabase):
                 # Maybe could be done in prepareTarget
                 targetsdata[i] = self.blacklistTargetHostname(targetsdata[i])
                 targets_to_insert.append((targetsdata[i], targets[i][1], ""))
-            session = create_session()
+            session = self.session_factory()
             session.begin()
             cmd = self.createCommand(
                 session,

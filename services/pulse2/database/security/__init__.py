@@ -95,6 +95,10 @@ class SecurityDatabase(DatabaseHelper):
             return False
         self.metadata = MetaData(self.db)
 
+        self.mapper_registry = registry()
+
+        self.session_factory = sessionmaker(bind=self.db, expire_on_commit=False)
+
         # Import schema Base and bind it to the engine
         from pulse2.database.security.schema import Base as SchemaBase
         SchemaBase.metadata.bind = self.db
@@ -102,7 +106,7 @@ class SecurityDatabase(DatabaseHelper):
         if not self.initMappersCatchException():
             self.session = None
             return False
-        self.metadata.create_all()
+        self.metadata.create_all(bind=self.db)
         SecurityDatabase.is_activated = True
         return True
 

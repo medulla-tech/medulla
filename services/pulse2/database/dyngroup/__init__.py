@@ -22,7 +22,7 @@ from sqlalchemy import (
     bindparam,
     or_,
 )
-from sqlalchemy.orm import create_session, mapper, relation
+from sqlalchemy.orm import registry, relationship, Session, sessionmaker
 from sqlalchemy.exc import DBAPIError
 from sqlalchemy.ext.automap import automap_base
 
@@ -58,8 +58,12 @@ class DyngroupDatabase(DatabaseHelper):
             )
             self.metadata = MetaData(self.db)
 
+            self.mapper_registry = registry()
+
+            self.session_factory = sessionmaker(bind=self.db, expire_on_commit=False)
+
             Base = automap_base()
-            Base.prepare(self.db, reflect=True)
+            Base.prepare(autoload_with=self.db)
 
             # Only federated tables (beginning by local_) are automatically mapped
             # If needed, excludes tables from this list
@@ -74,8 +78,8 @@ class DyngroupDatabase(DatabaseHelper):
             if not self.initMappersCatchException():
                 self.session = None
                 return self.is_activated
-            self.metadata.create_all()
-            self.session = create_session()
+            self.metadata.create_all(bind=self.db)
+            self.session = self.session_factory()
             self.is_activated = True
             version = self.version.select().execute().fetchone()[0]
             self.logger.debug("Dyngroup database connected (version:%s)" % version)
@@ -88,21 +92,21 @@ class DyngroupDatabase(DatabaseHelper):
         """
 
         # types
-        self.shareGroupType = Table("ShareGroupType", self.metadata, autoload=True)
-        mapper(ShareGroupType, self.shareGroupType)
-        self.groupType = Table("GroupType", self.metadata, autoload=True)
-        mapper(GroupType, self.groupType)
-        self.userType = Table("UsersType", self.metadata, autoload=True)
-        mapper(UsersType, self.userType)
+        self.shareGroupType = Table("ShareGroupType", self.metadata, autoload_with=self.db)
+        self.mapper_registry.map_imperatively(ShareGroupType, self.shareGroupType)
+        self.groupType = Table("GroupType", self.metadata, autoload_with=self.db)
+        self.mapper_registry.map_imperatively(GroupType, self.groupType)
+        self.userType = Table("UsersType", self.metadata, autoload_with=self.db)
+        self.mapper_registry.map_imperatively(UsersType, self.userType)
 
         # Users
         self.users = Table(
             "Users",
             self.metadata,
             Column("type", Integer, ForeignKey("UsersType.id")),
-            autoload=True,
+            autoload_with=self.db,
         )
-        mapper(Users, self.users)
+        self.mapper_registry.map_imperatively(Users, self.users)
 
         # Groups
         self.groups = Table(
@@ -111,13 +115,13 @@ class DyngroupDatabase(DatabaseHelper):
             Column("FK_users", Integer, ForeignKey("Users.id")),
             Column("type", Integer, ForeignKey("GroupType.id")),
             Column("parent_id", Integer, ForeignKey("Groups.id")),
-            autoload=True,
+            autoload_with=self.db,
         )
-        mapper(
+        self.mapper_registry.map_imperatively(
             Groups,
             self.groups,
             properties={
-                "results": relation(Results),
+                "results": relationship(Results),
             },
         )
 
@@ -127,9 +131,9 @@ class DyngroupDatabase(DatabaseHelper):
             self.metadata,
             Column("deployGroupId", Integer, ForeignKey("Groups.id")),
             Column("doneGroupId", Integer, ForeignKey("Groups.id")),
-            autoload=True,
+            autoload_with=self.db,
         )
-        mapper(Convergence, self.convergence)
+        self.mapper_registry.map_imperatively(Convergence, self.convergence)
 
         # ShareGroup
         self.shareGroup = Table(
@@ -138,9 +142,9 @@ class DyngroupDatabase(DatabaseHelper):
             Column("FK_groups", Integer, ForeignKey("Groups.id")),
             Column("FK_users", Integer, ForeignKey("Users.id")),
             Column("type", Integer, ForeignKey("ShareGroupType.id")),
-            autoload=True,
+            autoload_with=self.db,
         )
-        mapper(ShareGroup, self.shareGroup)
+        self.mapper_registry.map_imperatively(ShareGroup, self.shareGroup)
 
         # Results
         self.results = Table(
@@ -148,9 +152,9 @@ class DyngroupDatabase(DatabaseHelper):
             self.metadata,
             Column("FK_groups", Integer, ForeignKey("Groups.id")),
             Column("FK_machines", Integer, ForeignKey("Machines.id")),
-            autoload=True,
+            autoload_with=self.db,
         )
-        mapper(Results, self.results)
+        self.mapper_registry.map_imperatively(Results, self.results)
 
         # ProfilesResults
         self.profilesResults = Table(
@@ -159,38 +163,38 @@ class DyngroupDatabase(DatabaseHelper):
             Column("FK_groups", Integer, ForeignKey("Groups.id")),
             Column("FK_machines", Integer, ForeignKey("Machines.id"), primary_key=True),
         )
-        mapper(ProfilesResults, self.profilesResults)
+        self.mapper_registry.map_imperatively(ProfilesResults, self.profilesResults)
 
         # ProfilesPackages
         self.profilesPackages = Table(
             "ProfilesPackages",
             self.metadata,
             Column("FK_groups", Integer, ForeignKey("Groups.id"), primary_key=True),
-            autoload=True,
+            autoload_with=self.db,
         )
-        mapper(ProfilesPackages, self.profilesPackages)
+        self.mapper_registry.map_imperatively(ProfilesPackages, self.profilesPackages)
 
         # ProfilesData
         self.profilesData = Table(
             "ProfilesData",
             self.metadata,
             Column("FK_groups", Integer, ForeignKey("Groups.id"), primary_key=True),
-            autoload=True,
+            autoload_with=self.db,
         )
-        mapper(ProfilesData, self.profilesData)
+        self.mapper_registry.map_imperatively(ProfilesData, self.profilesData)
 
         # Machines
-        self.machines = Table("Machines", self.metadata, autoload=True)
-        mapper(
+        self.machines = Table("Machines", self.metadata, autoload_with=self.db)
+        self.mapper_registry.map_imperatively(
             Machines,
             self.machines,
             properties={
-                "results": relation(Results),
+                "results": relationship(Results),
             },
         )
 
         # version
-        self.version = Table("version", self.metadata, autoload=True)
+        self.version = Table("version", self.metadata, autoload_with=self.db)
 
     def getDbConnection(self):
         NB_DB_CONN_TRY = 2
@@ -215,7 +219,7 @@ class DyngroupDatabase(DatabaseHelper):
         """
         get a user from his id
         """
-        session = create_session()
+        session = self.session_factory()
         user = session.query(Users).get(id)
         session.close()
         return user
@@ -224,7 +228,7 @@ class DyngroupDatabase(DatabaseHelper):
         """
         try to get a user, and create it if he does not exits
         """
-        session = create_session()
+        session = self.session_factory()
         if user_id is None:
             user_id = ctx.userid
         user = self.__getUser(user_id, t)
@@ -242,7 +246,7 @@ class DyngroupDatabase(DatabaseHelper):
         get a user from his login and type
         """
         if not session:
-            session = create_session()
+            session = self.session_factory()
         user = (
             session.query(Users)
             .filter(self.users.c.login == login)
@@ -256,7 +260,7 @@ class DyngroupDatabase(DatabaseHelper):
         get several users from their logins and type (the type is the same for all)
         """
         if not session:
-            session = create_session()
+            session = self.session_factory()
         users = session.query(Users)
         if t is None:
             users = users.filter(self.users.c.login.in_(logins))
@@ -271,7 +275,7 @@ class DyngroupDatabase(DatabaseHelper):
         get all users that share a group defined by its id
         """
         if not session:
-            session = create_session()
+            session = self.session_factory()
         users = (
             session.query(Users)
             .select_from(self.users.join(self.shareGroup).join(self.groups))
@@ -284,7 +288,7 @@ class DyngroupDatabase(DatabaseHelper):
         """
         get the type of a user defined by his id
         """
-        session = create_session()
+        session = self.session_factory()
         s = session.query(UsersType).filter(self.userType.c.id == id).first()
         session.close()
         return s
@@ -297,7 +301,7 @@ class DyngroupDatabase(DatabaseHelper):
         get one machine profile
         the machine is defined by its UUID
         """
-        session = create_session()
+        session = self.session_factory()
         profile = (
             session.query(ProfilesResults)
             .select_from(self.profilesResults.join(self.machines))
@@ -313,7 +317,7 @@ class DyngroupDatabase(DatabaseHelper):
         """
         get a machine defined by its UUID
         """
-        _session = session or create_session()
+        _session = session or self.session_factory()
         machine = _session.query(Machines).filter(self.machines.c.uuid == uuid).first()
         if session is None:
             _session.close()
@@ -323,7 +327,7 @@ class DyngroupDatabase(DatabaseHelper):
         """
         get a machine defined by its UUID if it exists, else create it
         """
-        _session = session or create_session()
+        _session = session or self.session_factory()
         machine = self.__getMachine(uuid, _session)
         if not machine:
             machine = Machines()
@@ -384,7 +388,7 @@ class DyngroupDatabase(DatabaseHelper):
         to the machine
         """
         logging.getLogger().info("Removing all groups associated to machine %s." % uuid)
-        session = create_session()
+        session = self.session_factory()
         # First get machine ids
         mids = [x[0] for x in session.query(Machines.id).filter_by(uuid=uuid).all()]
         if not mids:
@@ -424,7 +428,7 @@ class DyngroupDatabase(DatabaseHelper):
         """
         get all the existing machines UUIDs
         """
-        session = create_session()
+        session = self.session_factory()
         ret = {}
         for m in session.query(Machines):
             ret[m.uuid] = m.name
@@ -448,7 +452,7 @@ class DyngroupDatabase(DatabaseHelper):
 
     def getInfosNameGroup(self, arrayuuidgroup):
         arrayuuidgroup = list({x for x in arrayuuidgroup if x != ""})
-        session = create_session()
+        session = self.session_factory()
         result = {}
         ret = (
             session.query(Groups.id, Groups.type, Groups.name)
@@ -479,7 +483,7 @@ class DyngroupDatabase(DatabaseHelper):
         Example: {'272': 'Parent name', '274': 'Group name'}
         """
         arrayuuidgroup = list({x for x in arrayuuidgroup if x})
-        session = create_session()
+        session = self.session_factory()
 
         groups = session.query(Groups).filter(Groups.id.in_(arrayuuidgroup)).all()
 
@@ -514,7 +518,7 @@ class DyngroupDatabase(DatabaseHelper):
         """
         Get a profile given it's name and it's imaging server's uuid
         """
-        session = create_session()
+        session = self.session_factory()
         q = session.query(Groups).select_from(
             self.groups.join(self.groupType).join(self.profilesData)
         )
@@ -532,7 +536,7 @@ class DyngroupDatabase(DatabaseHelper):
         """
         Get a profile given it's uuid
         """
-        session = create_session()
+        session = self.session_factory()
         # WARNING we have to pass to uuid for groups and profiles!)
         q = (
             session.query(Groups)
@@ -544,7 +548,7 @@ class DyngroupDatabase(DatabaseHelper):
         return q
 
     def arePartOfAProfile(self, ctx, uuids):
-        session = create_session()
+        session = self.session_factory()
         query = (
             session.query(Machines)
             .add_entity(Groups)
@@ -570,7 +574,7 @@ class DyngroupDatabase(DatabaseHelper):
         """
         Get a computer's profile given the computer uuid
         """
-        session = create_session()
+        session = self.session_factory()
         q = session.query(Groups).select_from(
             self.machines.join(self.profilesResults)
             .join(self.groups)
@@ -586,7 +590,7 @@ class DyngroupDatabase(DatabaseHelper):
         """
         Get all computers that are in a profile
         """
-        session = create_session()
+        session = self.session_factory()
         q = session.query(Machines).select_from(
             self.groups.join(self.profilesResults)
             .join(self.machines)
@@ -602,7 +606,7 @@ class DyngroupDatabase(DatabaseHelper):
         """
         link the profile to an imaging server
         """
-        session = create_session()
+        session = self.session_factory()
         pdata = (
             session.query(ProfilesData)
             .filter(self.profilesData.c.FK_groups == gid)
@@ -621,7 +625,7 @@ class DyngroupDatabase(DatabaseHelper):
         """
         get the imaging server linked to a profile
         """
-        session = create_session()
+        session = self.session_factory()
         pdata = (
             session.query(ProfilesData)
             .filter(self.profilesData.c.FK_groups == gid)
@@ -636,7 +640,7 @@ class DyngroupDatabase(DatabaseHelper):
         """
         link the profile to an entity
         """
-        session = create_session()
+        session = self.session_factory()
         pdata = (
             session.query(ProfilesData)
             .filter(self.profilesData.c.FK_groups == gid)
@@ -655,7 +659,7 @@ class DyngroupDatabase(DatabaseHelper):
         """
         get the entity linked to a profile
         """
-        session = create_session()
+        session = self.session_factory()
         pdata = (
             session.query(ProfilesData)
             .filter(self.profilesData.c.FK_groups == gid)
@@ -673,7 +677,7 @@ class DyngroupDatabase(DatabaseHelper):
         """
         create a share (betwen a group and a user)
         """
-        session = create_session()
+        session = self.session_factory()
         share = ShareGroup()
         share.FK_groups = group_id
         share.FK_users = user_id
@@ -688,7 +692,7 @@ class DyngroupDatabase(DatabaseHelper):
         """
         modify a share (betwen a group and a user)
         """
-        session = create_session()
+        session = self.session_factory()
         share = self.getShareGroup(group_id, user_id)
         share.display_in_menu = visibility
         session.add(share)
@@ -700,7 +704,7 @@ class DyngroupDatabase(DatabaseHelper):
         """
         delete all the shares for a group (betwen a group and several users)
         """
-        _session = session or create_session()
+        _session = session or self.session_factory()
         users = self.__getUsersInGroup(group_id, _session)
         for user in users:
             self.__deleteShare(group_id, user.id, _session)
@@ -711,7 +715,7 @@ class DyngroupDatabase(DatabaseHelper):
         """
         delete a share (betwen a group and a user)
         """
-        _session = session or create_session()
+        _session = session or self.session_factory()
         shares = (
             _session.query(ShareGroup)
             .filter(self.shareGroup.c.FK_users == user_id)
@@ -743,7 +747,7 @@ class DyngroupDatabase(DatabaseHelper):
         """
         get the share item betwen the group and the user (if it exists)
         """
-        _session = session or create_session()
+        _session = session or self.session_factory()
         share = (
             _session.query(ShareGroup)
             .filter(self.shareGroup.c.FK_users == user_id)
@@ -759,7 +763,7 @@ class DyngroupDatabase(DatabaseHelper):
         get a share type (can be 0:View or 1:Edit)
         the share is defined by its id
         """
-        session = create_session()
+        session = self.session_factory()
         s = session.query(ShareGroupType).filter(self.shareGroupType.c.id == id).first()
         session.close()
         return s
@@ -769,7 +773,7 @@ class DyngroupDatabase(DatabaseHelper):
         get all the share object linked to a group
         identified by the group id
         """
-        session = create_session()
+        session = self.session_factory()
         ret = session.query(ShareGroup).filter(self.shareGroup.c.FK_groups == id).all()
         session.close()
         return [x.toH() for x in ret]
@@ -778,7 +782,7 @@ class DyngroupDatabase(DatabaseHelper):
         """
         tell if a users can edit a group (based on the share type)
         """
-        session = create_session()
+        session = self.session_factory()
         ret = (
             session.query(ShareGroup)
             .filter(
@@ -799,7 +803,7 @@ class DyngroupDatabase(DatabaseHelper):
         create an entry in the result table
         (link betwen group and machine)
         """
-        session = create_session()
+        session = self.session_factory()
         result = Results()
         result.FK_groups = group_id
         result.FK_machines = machine_id
@@ -814,7 +818,7 @@ class DyngroupDatabase(DatabaseHelper):
         if the machine is not linked to any other group, it's removed
         """
         if not session:
-            session = create_session()
+            session = self.session_factory()
         results = (
             session.query(Results)
             .filter(self.results.c.FK_machines == machine_id)
@@ -847,7 +851,7 @@ class DyngroupDatabase(DatabaseHelper):
         """
         get the nomenclature of a group type (ie group or profile) depending on the group type id
         """
-        session = create_session()
+        session = self.session_factory()
         s = session.query(GroupType).filter(self.groupType.c.id == id).first()
         session.close()
         return s
@@ -902,7 +906,7 @@ class DyngroupDatabase(DatabaseHelper):
         @param computers: list of dicts with {'uuid':uuid, 'hostname':name}
         @type computers: list
         """
-        session = create_session()
+        session = self.session_factory()
 
         # transform to dictionnary on format {"uuid": "hostname",}
         comp_dict = dict([(c["uuid"], c["hostname"]) for c in computers])
@@ -977,7 +981,7 @@ class DyngroupDatabase(DatabaseHelper):
         Params:
             computers: dict of all the computers we want add to the group
             groupid: int corresponds to the id of the group newly created"""
-        session = create_session()
+        session = self.session_factory()
 
         # transform to dictionnary on format {"uuid": "hostname",}
         for computer in computers:

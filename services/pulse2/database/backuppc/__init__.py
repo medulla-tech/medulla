@@ -58,10 +58,14 @@ class BackuppcDatabase(DatabaseHelper):
         if not self.db_check():
             return False
         self.metadata = MetaData(self.db)
+
+        self.mapper_registry = registry()
+
+        self.session_factory = sessionmaker(bind=self.db, expire_on_commit=False)
         if not self.initMappersCatchException():
             self.session = None
             return False
-        self.metadata.create_all()
+        self.metadata.create_all(bind=self.db)
         self.is_activated = True
         self.logger.debug(
             "BackupPC database connected (version:%s)" % (self.db_version)

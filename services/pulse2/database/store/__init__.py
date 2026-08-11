@@ -2,7 +2,7 @@
 # SPDX-FileCopyrightText: 2024-2025 Medulla, http://www.medulla-tech.io
 # SPDX-License-Identifier: GPL-3.0-or-later
 from sqlalchemy import create_engine, MetaData, select, func, and_, desc, or_, distinct
-from sqlalchemy.orm import create_session, mapper, relation
+from sqlalchemy.orm import registry, relationship, Session, sessionmaker
 from sqlalchemy.exc import DBAPIError
 from datetime import date, datetime, timedelta
 from mmc.database.database_helper import DatabaseHelper
@@ -32,10 +32,14 @@ class StoreDatabase(DatabaseHelper):
         if not self.db_check():
             return False
         self.metadata = MetaData(self.db)
+
+        self.mapper_registry = registry()
+
+        self.session_factory = sessionmaker(bind=self.db, expire_on_commit=False)
         if not self.initMappersCatchException():
             self.session = None
             return False
-        self.metadata.create_all()
+        self.metadata.create_all(bind=self.db)
         self.is_activated = True
         result = self.db.execute("SELECT * FROM store.version limit 1;")
         re = [element.Number for element in result]

@@ -36,7 +36,7 @@ from sqlalchemy import (
     ForeignKeyConstraint,
     not_,
 )
-from sqlalchemy.orm import create_session, mapper, relation, load_only
+from sqlalchemy.orm import registry, relationship, Session, sessionmaker, load_only
 from sqlalchemy.sql.expression import alias as sa_exp_alias
 from sqlalchemy.exc import InvalidRequestError
 from sqlalchemy.ext.automap import automap_base
@@ -88,8 +88,12 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         )
         self.metadata = MetaData(self.db)
 
+        self.mapper_registry = registry()
+
+        self.session_factory = sessionmaker(bind=self.db, expire_on_commit=False)
+
         Base = automap_base()
-        Base.prepare(self.db, reflect=True)
+        Base.prepare(autoload_with=self.db)
 
         # Only federated tables (beginning by local_) are automatically mapped
         # If needed, excludes tables from this list
@@ -103,7 +107,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
         if not self.initMappersCatchException():
             return False
-        self.metadata.create_all()
+        self.metadata.create_all(bind=self.db)
         self.r_nomenclatures = {}
         self.nomenclatures = {
             "ImagingLogState": ImagingLogState,
@@ -140,7 +144,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         }
 
     def loadLanguage(self):
-        session = create_session()
+        session = self.session_factory()
         self.languages = {}
         self.r_languages = {}
         for i in session.query(Language).all():
@@ -149,7 +153,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.close()
 
     def loadImagingServerLanguage(self):
-        session = create_session()
+        session = self.session_factory()
         self.imagingServer_lang = {}
         self.imagingServer_entity = {}
         for i in (
@@ -173,86 +177,86 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         """
         Initialize all SQLalchemy mappers needed for the imaging database
         """
-        self.version = Table("version", self.metadata, autoload=True)
+        self.version = Table("version", self.metadata, autoload_with=self.db)
 
         self.initTables()
-        mapper(BootService, self.boot_service)
-        mapper(BootServiceInMenu, self.boot_service_in_menu)
-        mapper(BootServiceOnImagingServer, self.boot_service_on_imaging_server)
-        mapper(
+        self.mapper_registry.map_imperatively(BootService, self.boot_service)
+        self.mapper_registry.map_imperatively(BootServiceInMenu, self.boot_service_in_menu)
+        self.mapper_registry.map_imperatively(BootServiceOnImagingServer, self.boot_service_on_imaging_server)
+        self.mapper_registry.map_imperatively(
             ComputerDisk,
             self.computer_disk,
             properties={
-                "partitions": relation(ComputerPartition, cascade="all,delete-orphan")
+                "partitions": relationship(ComputerPartition, cascade="all,delete-orphan")
             },
         )
-        mapper(ComputerPartition, self.computer_partition)
-        mapper(Entity, self.entity)
-        mapper(Image, self.image)
-        mapper(ImageState, self.image_state)
-        mapper(ImageInMenu, self.image_in_menu)
-        mapper(ImageOnImagingServer, self.image_on_imaging_server)
-        mapper(ImagingServer, self.imaging_server)
-        mapper(Internationalization, self.internationalization)
-        mapper(Language, self.language)
-        mapper(ImagingLog, self.imaging_log)
-        mapper(ImagingLogState, self.imaging_log_state)
-        mapper(MasteredOn, self.mastered_on)
-        # , properties = { 'default_item':relation(MenuItem), 'default_item_WOL':relation(MenuItem) } )
-        mapper(Menu, self.menu)
-        # , properties = { 'menu' : relation(Menu) })
-        mapper(MenuItem, self.menu_item)
-        mapper(Partition, self.partition)
-        mapper(PostInstallScript, self.post_install_script)
-        mapper(PostInstallScriptInImage, self.post_install_script_in_image)
-        mapper(
+        self.mapper_registry.map_imperatively(ComputerPartition, self.computer_partition)
+        self.mapper_registry.map_imperatively(Entity, self.entity)
+        self.mapper_registry.map_imperatively(Image, self.image)
+        self.mapper_registry.map_imperatively(ImageState, self.image_state)
+        self.mapper_registry.map_imperatively(ImageInMenu, self.image_in_menu)
+        self.mapper_registry.map_imperatively(ImageOnImagingServer, self.image_on_imaging_server)
+        self.mapper_registry.map_imperatively(ImagingServer, self.imaging_server)
+        self.mapper_registry.map_imperatively(Internationalization, self.internationalization)
+        self.mapper_registry.map_imperatively(Language, self.language)
+        self.mapper_registry.map_imperatively(ImagingLog, self.imaging_log)
+        self.mapper_registry.map_imperatively(ImagingLogState, self.imaging_log_state)
+        self.mapper_registry.map_imperatively(MasteredOn, self.mastered_on)
+        # , properties = { 'default_item':relationship(MenuItem), 'default_item_WOL':relationship(MenuItem) } )
+        self.mapper_registry.map_imperatively(Menu, self.menu)
+        # , properties = { 'menu' : relationship(Menu) })
+        self.mapper_registry.map_imperatively(MenuItem, self.menu_item)
+        self.mapper_registry.map_imperatively(Partition, self.partition)
+        self.mapper_registry.map_imperatively(PostInstallScript, self.post_install_script)
+        self.mapper_registry.map_imperatively(PostInstallScriptInImage, self.post_install_script_in_image)
+        self.mapper_registry.map_imperatively(
             PostInstallScriptOnImagingServer, self.post_install_script_on_imaging_server
         )
-        mapper(SynchroState, self.synchro_state)
-        mapper(
+        self.mapper_registry.map_imperatively(SynchroState, self.synchro_state)
+        self.mapper_registry.map_imperatively(
             Target,
             self.target,
-            properties={"disks": relation(ComputerDisk, cascade="all,delete-orphan")},
+            properties={"disks": relationship(ComputerDisk, cascade="all,delete-orphan")},
         )
-        mapper(TargetType, self.target_type)
-        mapper(User, self.user)
-        mapper(Multicast, self.multicast)
-        mapper(Profile, self.profile)
-        mapper(PostInstallInMenu, self.postinstall_in_menu)
-        mapper(PostInstallInProfile, self.postinstall_in_profile)
-        mapper(ProfileInMenu, self.profile_in_menu)
+        self.mapper_registry.map_imperatively(TargetType, self.target_type)
+        self.mapper_registry.map_imperatively(User, self.user)
+        self.mapper_registry.map_imperatively(Multicast, self.multicast)
+        self.mapper_registry.map_imperatively(Profile, self.profile)
+        self.mapper_registry.map_imperatively(PostInstallInMenu, self.postinstall_in_menu)
+        self.mapper_registry.map_imperatively(PostInstallInProfile, self.postinstall_in_profile)
+        self.mapper_registry.map_imperatively(ProfileInMenu, self.profile_in_menu)
 
     def initTables(self):
         """
         Initialize all SQLalchemy tables
         """
-        self.boot_service = Table("BootService", self.metadata, autoload=True)
+        self.boot_service = Table("BootService", self.metadata, autoload_with=self.db)
 
-        self.entity = Table("Entity", self.metadata, autoload=True)
+        self.entity = Table("Entity", self.metadata, autoload_with=self.db)
 
-        self.language = Table("Language", self.metadata, autoload=True)
+        self.language = Table("Language", self.metadata, autoload_with=self.db)
 
-        self.imaging_log_state = Table("ImagingLogState", self.metadata, autoload=True)
+        self.imaging_log_state = Table("ImagingLogState", self.metadata, autoload_with=self.db)
 
-        self.synchro_state = Table("SynchroState", self.metadata, autoload=True)
+        self.synchro_state = Table("SynchroState", self.metadata, autoload_with=self.db)
 
         self.post_install_script = Table(
-            "PostInstallScript", self.metadata, autoload=True
+            "PostInstallScript", self.metadata, autoload_with=self.db
         )
 
-        self.target_type = Table("TargetType", self.metadata, autoload=True)
+        self.target_type = Table("TargetType", self.metadata, autoload_with=self.db)
 
-        self.user = Table("User", self.metadata, autoload=True)
+        self.user = Table("User", self.metadata, autoload_with=self.db)
 
         self.image = Table(
             "Image",
             self.metadata,
             Column("fk_creator", Integer, ForeignKey("User.id")),
             Column("fk_state", Integer, ForeignKey("ImageState.id")),
-            autoload=True,
+            autoload_with=self.db,
         )
 
-        self.image_state = Table("ImageState", self.metadata, autoload=True)
+        self.image_state = Table("ImageState", self.metadata, autoload_with=self.db)
 
         self.imaging_server = Table(
             "ImagingServer",
@@ -260,7 +264,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             Column("fk_entity", Integer, ForeignKey("Entity.id")),
             Column("fk_default_menu", Integer, ForeignKey("Menu.id")),
             Column("fk_language", Integer, ForeignKey("Language.id")),
-            autoload=True,
+            autoload_with=self.db,
         )
 
         self.internationalization = Table(
@@ -313,7 +317,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             "MenuItem",
             self.metadata,
             Column("fk_menu", Integer, ForeignKey("Menu.id")),
-            autoload=True,
+            autoload_with=self.db,
             extend_existing=True,
         )
 
@@ -321,7 +325,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             "Partitions",
             self.metadata,
             Column("fk_image", Integer, ForeignKey("Image.id")),
-            autoload=True,
+            autoload_with=self.db,
         )
 
         self.boot_service_in_menu = Table(
@@ -334,7 +338,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 primary_key=True,
             ),
             Column("fk_menuitem", Integer, ForeignKey("MenuItem.id"), primary_key=True),
-            autoload=True,
+            autoload_with=self.db,
         )
 
         self.boot_service_on_imaging_server = Table(
@@ -350,7 +354,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             # cant declare it implicit as a FK else it make circular
             # dependencies
             Column("fk_imaging_server", Integer, primary_key=True),
-            autoload=True,
+            autoload_with=self.db,
         )
 
         self.image_in_menu = Table(
@@ -358,7 +362,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             self.metadata,
             Column("fk_image", Integer, ForeignKey("Image.id"), primary_key=True),
             Column("fk_menuitem", Integer, ForeignKey("MenuItem.id"), primary_key=True),
-            autoload=True,
+            autoload_with=self.db,
         )
 
         self.image_on_imaging_server = Table(
@@ -371,7 +375,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 ForeignKey("ImagingServer.id"),
                 primary_key=True,
             ),
-            autoload=True,
+            autoload_with=self.db,
         )
 
         self.target = Table(
@@ -379,13 +383,13 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             self.metadata,
             Column("fk_entity", Integer, ForeignKey("Entity.id")),
             Column("fk_menu", Integer, ForeignKey("Menu.id")),
-            autoload=True,
+            autoload_with=self.db,
         )
 
-        self.computer_disk = Table("ComputerDisk", self.metadata, autoload=True)
+        self.computer_disk = Table("ComputerDisk", self.metadata, autoload_with=self.db)
 
         self.computer_partition = Table(
-            "ComputerPartition", self.metadata, autoload=True
+            "ComputerPartition", self.metadata, autoload_with=self.db
         )
 
         self.imaging_log = Table(
@@ -393,7 +397,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             self.metadata,
             Column("fk_imaging_log_state", Integer, ForeignKey("ImagingLogState.id")),
             Column("fk_target", Integer, ForeignKey("Target.id")),
-            autoload=True,
+            autoload_with=self.db,
         )
 
         self.mastered_on = Table(
@@ -403,7 +407,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             Column(
                 "fk_imaging_log", Integer, ForeignKey("ImagingLog.id"), primary_key=True
             ),
-            autoload=True,
+            autoload_with=self.db,
         )
 
         self.post_install_script_in_image = Table(
@@ -416,7 +420,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 ForeignKey("PostInstallScript.id"),
                 primary_key=True,
             ),
-            autoload=True,
+            autoload_with=self.db,
         )
 
         self.post_install_script_on_imaging_server = Table(
@@ -431,7 +435,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 ForeignKey("PostInstallScript.id"),
                 primary_key=True,
             ),
-            autoload=True,
+            autoload_with=self.db,
         )
 
         self.multicast = Table(
@@ -441,7 +445,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             Column("target_uuid", Text, nullable=False),
             Column("image_uuid", Text, nullable=False),
             Column("image_name", Text, nullable=False),
-            autoload=True,
+            autoload_with=self.db,
         )
 
         self.profile = Table(
@@ -451,7 +455,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             Column("fk_imagingserver", Integer),
             Column("name", Text, nullable=False),
             Column("description", Text, nullable=True, default=""),
-            autoload=True,
+            autoload_with=self.db,
         )
 
         self.profile_in_menu = Table(
@@ -459,7 +463,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             self.metadata,
             Column("fk_profile", Integer, ForeignKey("Profile.id"), primary_key=True),
             Column("fk_menuitem", Integer, primary_key=True),
-            autoload=True,
+            autoload_with=self.db,
         )
 
         self.postinstall_in_menu = Table(
@@ -467,7 +471,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             self.metadata,
             Column("fk_post_install_script", Integer, primary_key=True),
             Column("fk_menuitem", Integer, primary_key=True),
-            autoload=True,
+            autoload_with=self.db,
         )
 
         self.postinstall_in_profile = Table(
@@ -476,11 +480,11 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             Column("fk_profile", Integer, ForeignKey("Profile.id"), primary_key=True),
             Column("fk_post_install_script", Integer, primary_key=True),
             Column("order", Integer, nullable=False, default=0),
-            autoload=True,
+            autoload_with=self.db,
         )
 
     def __loadNomenclatureTables(self):
-        session = create_session()
+        session = self.session_factory()
         for i in self.nomenclatures:
             n = session.query(self.nomenclatures[i]).all()
             self.nomenclatures[i] = {}
@@ -551,7 +555,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return self.version.select().execute().fetchone()[0]
 
     def getAllKnownLanguages(self):
-        session = create_session()
+        session = self.session_factory()
         l = session.query(Language).all()
         session.close()
         return l
@@ -559,7 +563,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     ###########################################################
 
     def getAllRegisteredComputers(self):
-        session = create_session()
+        session = self.session_factory()
         ret = (
             session.query(Target.uuid)
             .filter(Target.type.in_([P2IT.COMPUTER, P2IT.COMPUTER_IN_PROFILE]))
@@ -569,7 +573,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return [m[0] for m in ret]
 
     def getRegisteredComputersForEntity(self, loc_uuid):
-        session = create_session()
+        session = self.session_factory()
         ret = (
             session.query(Target.uuid)
             .select_from(
@@ -589,7 +593,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return [m[0] for m in ret]
 
     def getTargetsEntity(self, uuids):
-        session = create_session()
+        session = self.session_factory()
         e = (
             session.query(Entity)
             .add_entity(Target)
@@ -605,13 +609,13 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return e
 
     def getAllLocation(self):
-        session = create_session()
+        session = self.session_factory()
         query = session.query(ImagingServer).all()
         session.close()
         return [m for m in query]
 
     def getTargetPackageServer(self, target_id):
-        session = create_session()
+        session = self.session_factory()
         # Run the following query: SELECT ImagingServer.url from ImagingServer
         # INNER JOIN Target ON Target.fk_entity = ImagingServer.fk_entity WHERE
         # Target.uuid=target_id;
@@ -639,7 +643,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             return q
 
     def getTargetsById(self, ids):
-        session = create_session()
+        session = self.session_factory()
         n = session.query(Target).filter(self.target.c.id.in_(ids)).all()
         session.close()
         return n
@@ -648,7 +652,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         need_to_close_session = False
         if session is None:
             need_to_close_session = True
-            session = create_session()
+            session = self.session_factory()
         n = session.query(Target).filter(self.target.c.uuid.in_(ids)).all()
         if need_to_close_session:
             session.close()
@@ -683,7 +687,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         )
 
     def getTargetsMenuTID(self, target_id):
-        session = create_session()
+        session = self.session_factory()
         q = self.__getTargetsMenuQuery(session)
         # there should always be only one!
         q = q.filter(self.target.c.id == target_id).first()
@@ -698,7 +702,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         need_to_close_session = False
         if session is None:
             need_to_close_session = True
-            session = create_session()
+            session = self.session_factory()
         q = self.__getTargetsMenuQuery(session)
         # there should always be only one!
         q = q.filter(self.target.c.uuid == target_id).first()
@@ -714,7 +718,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         need_to_close_session = False
         if session is None:
             need_to_close_session = True
-            session = create_session()
+            session = self.session_factory()
         lang = self.__getLocLanguage(session, location.uuid)
         q = (
             session.query(Menu)
@@ -740,7 +744,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return q[0]
 
     def getEntitiesImagingServer(self, entities_uuid, is_associated):
-        session = create_session()
+        session = self.session_factory()
         q = session.query(ImagingServer).add_column(self.entity.c.uuid)
         q = q.select_from(
             self.imaging_server.join(
@@ -767,7 +771,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         need_to_close_session = False
         if session is None:
             need_to_close_session = True
-            session = create_session()
+            session = self.session_factory()
         imaging_server = self.getImagingServerByEntityUUID(loc_id, session)
         if isinstance(imaging_server, list) and len(imaging_server) == 0:
             raise NoImagingServerError()
@@ -807,7 +811,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         need_to_close_session = False
         if session is None:
             need_to_close_session = True
-            session = create_session()
+            session = self.session_factory()
         q = (
             session.query(Menu)
             .add_column(self.internationalization.c.label)
@@ -952,7 +956,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     ):
         session_need_close = False
         if session is None:
-            session = create_session()
+            session = self.session_factory()
             session_need_close = True
 
         mi_ids = (
@@ -1073,7 +1077,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return q
 
     def getLastMenuItemOrder(self, menu_id):
-        session = create_session()
+        session = self.session_factory()
         # q = session.query(MenuItem).filter(self.menu_item.c.fk_menu == menu_id).max(self.menu_item.c.order)
         q = session.query(func.max(self.menu_item.c.order)).filter(
             self.menu_item.c.fk_menu == menu_id
@@ -1085,7 +1089,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return ret[0]
 
     def countMenuContentFast(self, menu_id):  # get P2IM.ALL and empty filter
-        session = create_session()
+        session = self.session_factory()
         q = session.query(MenuItem).filter(self.menu_item.c.fk_menu == menu_id).count()
         session.close()
         return q
@@ -1094,7 +1098,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         if _type == P2IM.ALL and filter == "":
             return self.countMenuContentFast(menu_id)
 
-        session = create_session()
+        session = self.session_factory()
         q = 0
         if _type == P2IM.ALL or _type == P2IM.BOOTSERVICE:
             q1 = (
@@ -1156,7 +1160,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return n
 
     def getImagingLogs4Location(self, location_uuid, start, end, filter):
-        session = create_session()
+        session = self.session_factory()
         n = self.__ImagingLogs4Location(session, location_uuid, filter)
         n = n.order_by(desc(self.imaging_log.c.id))
         if end != -1:
@@ -1168,7 +1172,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return n
 
     def countImagingLogs4Location(self, location_uuid, filter):
-        session = create_session()
+        session = self.session_factory()
         n = self.__ImagingLogs4Location(session, location_uuid, filter)
         n = n.count()
         session.close()
@@ -1207,7 +1211,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return q
 
     def getImagingLogsOnTargetByIdAndType(self, target_id, _type, start, end, filter):
-        session = create_session()
+        session = self.session_factory()
         q = self.__ImagingLogsOnTargetByIdAndType(session, target_id, _type, filter)
         q = q.order_by(desc(self.imaging_log.c.id))
         if end != -1:
@@ -1219,7 +1223,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return q
 
     def countImagingLogsOnTargetByIdAndType(self, target_id, _type, filter):
-        session = create_session()
+        session = self.session_factory()
         q = self.__ImagingLogsOnTargetByIdAndType(session, target_id, _type, filter)
         q = q.count()
         session.close()
@@ -1237,7 +1241,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return lang
 
     def getLocLanguage(self, loc_id):
-        session = create_session()
+        session = self.session_factory()
         ret = self.__getLocLanguage(session, loc_id)
         session.close()
         return ret
@@ -1442,7 +1446,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return q
 
     def createBootServiceFromPostInstall(self, script_id):
-        session = create_session()
+        session = self.session_factory()
 
         # Check if Boot service already exists
         if (
@@ -1518,7 +1522,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return q
 
     def getPossibleBootServices(self, target_uuid, start, end, filter):
-        session = create_session()
+        session = self.session_factory()
         menu = self.getTargetsMenuTUUID(target_uuid)
         q1 = self.__PossibleBootServices(session, target_uuid, filter)
         q1 = q1.group_by(self.boot_service.c.id)
@@ -1550,7 +1554,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return q
 
     def getEntityBootServices(self, loc_id, start, end, filter):
-        session = create_session()
+        session = self.session_factory()
         menu = self.getEntityDefaultMenu(loc_id)
         q1 = self.__EntityBootServices(session, loc_id, filter)
         q1 = q1.group_by(self.boot_service.c.id)
@@ -1566,7 +1570,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return q
 
     def countPossibleBootServices(self, target_uuid, filter):
-        session = create_session()
+        session = self.session_factory()
 
         # With last param of self.__PossibleBootServices set to True,
         # we get number of PossibleBootServices
@@ -1575,7 +1579,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return q
 
     def countEntityBootServices(self, loc_id, filter):
-        session = create_session()
+        session = self.session_factory()
 
         # With last param of self.__EntityBootServices set to True,
         # we get number of EntityBootServices
@@ -1670,7 +1674,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             session.flush()
 
     def getDefaultMenuItemOrder(self, id):
-        session = create_session()
+        session = self.session_factory()
         mis = session.query(MenuItem).select_from(self.menu_item)
         mis = mis.filter(self.menu_item.c.id == id)
         return mis.all()
@@ -1699,7 +1703,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     ):
         session_need_close = False
         if session is None:
-            session = create_session()
+            session = self.session_factory()
             session_need_close = True
 
         menu = self.getTargetsMenuTUUID(profile_uuid, session)
@@ -1719,7 +1723,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     def computerChangeDefaultMenuItem(
         self, imaging_server_uuid, computer_uuid, item_number
     ):
-        session = create_session()
+        session = self.session_factory()
 
         profile = ComputerProfileManager().getComputersProfile(computer_uuid)
         menu = self.getTargetsMenuTUUID(computer_uuid, session)
@@ -1826,14 +1830,14 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return None
 
     def addServiceToTarget(self, bs_uuid, target_uuid, params):
-        session = create_session()
+        session = self.session_factory()
         menu = self.getTargetsMenuTUUID(target_uuid, session)
         ret = self.__addService(session, bs_uuid, menu, params)
         session.close()
         return ret
 
     def addServiceToEntity(self, bs_uuid, loc_id, params):
-        session = create_session()
+        session = self.session_factory()
         menu = self.getEntityDefaultMenu(loc_id, session)
         ret = self.__addService(session, bs_uuid, menu, params)
         session.close()
@@ -1875,7 +1879,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return None
 
     def editServiceToTarget(self, bs_uuid, target_uuid, target_type, params):
-        session = create_session()
+        session = self.session_factory()
         menu = self.getTargetsMenuTUUID(target_uuid, session)
         mi = self.__getServiceMenuItem(session, bs_uuid, target_uuid)
         if target_type == P2IT.PROFILE:
@@ -1888,7 +1892,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return ret
 
     def removeService(self, bs_uuid, loc_id, params):
-        session = create_session()
+        session = self.session_factory()
 
         # Update PostInstallScript table and remove fk link to BootService
         # table
@@ -1928,7 +1932,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         )
 
     def editServiceToEntity(self, mi_uuid, loc_id, params):
-        session = create_session()
+        session = self.session_factory()
         if self.isLocalBootService(mi_uuid, session):
             # we can change the title/desc/...
             bs = session.query(BootService).select_form(
@@ -1960,7 +1964,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return mi.first()
 
     def delServiceToTarget(self, bs_uuid, target_uuid):
-        session = create_session()
+        session = self.session_factory()
         mi = session.query(MenuItem).select_from(
             self.menu_item.join(
                 self.boot_service_in_menu,
@@ -2034,7 +2038,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     def delServiceToEntity(self, bs_uuid, loc_id):
         # FIXME : fk_default_menu has moved
         # FIXME : explicit joins, check why !
-        session = create_session()
+        session = self.session_factory()
         mi = session.query(MenuItem).select_from(
             self.menu_item.join(
                 self.boot_service_in_menu,
@@ -2137,7 +2141,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session_need_close = False
         if session is None:
             session_need_close = True
-            session = create_session()
+            session = self.session_factory()
         ims = (
             session.query(ImagingServer)
             .select_from(
@@ -2276,7 +2280,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     def getPossibleImagesOrMaster(
         self, target_uuid, target_type, is_master, start, end, filt
     ):
-        session = create_session()
+        session = self.session_factory()
         menu = self.getTargetsMenuTUUID(target_uuid)
         q1 = self.__PossibleImages(session, target_uuid, is_master, filt)
         q1 = q1.group_by(self.image.c.id)
@@ -2325,7 +2329,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return q
 
     def canRemoveFromMenu(self, image_uuid):
-        session = create_session()
+        session = self.session_factory()
         mis = session.query(MenuItem).select_from(
             self.menu_item.join(
                 self.image_in_menu,
@@ -2376,7 +2380,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return False
 
     def imagingServerImageDelete(self, image_uuid):
-        session = create_session()
+        session = self.session_factory()
         image_id = uuid2id(image_uuid)
 
         if self.__image_has_dependencies(session, image_id):
@@ -2462,7 +2466,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return [True, msg]
 
     def countPossibleImagesOrMaster(self, target_uuid, _type, filt):
-        session = create_session()
+        session = self.session_factory()
         q = self.__PossibleImages(session, target_uuid, _type, filt)
         q = q.count()
         session.close()
@@ -2479,7 +2483,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         )
 
     def getComputerWithImageInEntity(self, uuidimagingServer):
-        session = create_session()
+        session = self.session_factory()
         q = session.query(
             self.target.c.uuid.label("Computer"),
             self.target.c.name.label("ComputerName"),
@@ -2532,7 +2536,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return q1
 
     def getEntityMasters(self, loc_id, start, end, filt):
-        session = create_session()
+        session = self.session_factory()
         menu = self.getEntityDefaultMenu(loc_id)
         if menu is None:
             raise "%s:Entity does not have a default menu" % (
@@ -2552,7 +2556,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return q
 
     def getEntityMastersByUUID(self, loc_id, uuids):
-        session = create_session()
+        session = self.session_factory()
         ret = {}
         q1 = self.__EntityImages(session, loc_id, "")
         q1 = q1.filter(self.image.c.id.in_([uuid2id(u) for u in uuids])).all()
@@ -2606,7 +2610,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         )
 
     def countEntityMasters(self, loc_id, filter):
-        session = create_session()
+        session = self.session_factory()
         q = self.__EntityImages(session, loc_id, filter)
         q = q.count()
         session.close()
@@ -2675,7 +2679,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return {"menuitem": mi.id, "image": iim.fk_image}
 
     def addImageToTarget(self, item_uuid, target_uuid, params):
-        session = create_session()
+        session = self.session_factory()
         menu = self.getTargetsMenuTUUID(target_uuid, session)
         ret = self.__addImage(session, item_uuid, menu, params)
         session.close()
@@ -2690,7 +2694,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         @rtype: bool
         """
 
-        session = create_session()
+        session = self.session_factory()
         # check no image with the same uuid exists
         c = session.query(Image).filter(self.image.c.uuid == params["uuid"]).count()
         if c != 0:
@@ -2772,7 +2776,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return True
 
     def logClientAction(self, loc_uuid, item_uuid, log):
-        session = create_session()
+        session = self.session_factory()
         imaging_log = ImagingLog()
         imaging_log.timestamp = datetime.datetime.fromtimestamp(
             time.mktime(time.localtime())
@@ -2802,13 +2806,13 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         """
         Queries to remove an image from default boot menu
         """
-        session = create_session()
+        session = self.session_factory()
         ret = self.__delImage(session, menu_item_id)
         session.close()
         return ret
 
     def addImageToEntity(self, item_uuid, loc_id, params):
-        session = create_session()
+        session = self.session_factory()
         menu = self.getEntityDefaultMenu(loc_id, session)
         ret = self.__addImage(session, item_uuid, menu, params)
         session.close()
@@ -2867,7 +2871,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return mi
 
     def editImageToTarget(self, item_uuid, target_uuid, target_type, params):
-        session = create_session()
+        session = self.session_factory()
         menu = self.getTargetsMenuTUUID(target_uuid, session)
         mi = self.__getImageMenuItem(session, item_uuid, target_uuid)
         if target_type == P2IT.PROFILE:
@@ -2880,7 +2884,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return ret
 
     def editImageToEntity(self, item_uuid, loc_id, params):
-        session = create_session()
+        session = self.session_factory()
         menu = self.getEntityDefaultMenu(loc_id, session)
         mi = self.__getImageMenuItem4Entity(session, item_uuid, loc_id)
         ret = self.__editImage(session, item_uuid, menu, mi, params)
@@ -2925,7 +2929,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         )
 
     def isImageInMenu(self, item_uuid, target_uuid=None, target_type=None):
-        session = create_session()
+        session = self.session_factory()
         q = self.__queryImageInMenu(session)
         if target_uuid is not None:
             q = q.filter(
@@ -2941,7 +2945,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return q > 0
 
     def areImagesUsed(self, images):
-        session = create_session()
+        session = self.session_factory()
         ret = {}
         for item_uuid, target_uuid, target_type in images:
             # check in targets
@@ -2972,7 +2976,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return ret
 
     def isServiceUsed(self, bs_uuid):
-        session = create_session()
+        session = self.session_factory()
         # Check in Targets
         q = session.query(Target)
         q = q.select_from(
@@ -3041,7 +3045,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return ret
 
     def editImage(self, item_uuid, params):
-        session = create_session()
+        session = self.session_factory()
         im = session.query(Image).filter(self.image.c.id == uuid2id(item_uuid)).first()
         if im is None:
             raise "%s:Cant find the image you are trying to edit." % (P2ERR.ERR_DEFAULT)
@@ -3121,7 +3125,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return im.id
 
     def delImageToTarget(self, item_uuid, target_uuid):
-        session = create_session()
+        session = self.session_factory()
         mi = session.query(MenuItem).select_from(
             self.menu_item.join(
                 self.image_in_menu,
@@ -3189,7 +3193,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         Unregister targets from DB
         @return list of uuid image directories to delete from imaging server
         """
-        session = create_session()
+        session = self.session_factory()
         if not isinstance(targets_uuid, list):
             targets_uuid = [targets_uuid]
 
@@ -3440,7 +3444,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return q
 
     def getTargetOwnImages(self, target_uuid, target_type):
-        session = create_session()
+        session = self.session_factory()
         if target_type == P2IT.ALL_COMPUTERS:
             filt1 = and_(
                 self.target.c.uuid == target_uuid,
@@ -3471,7 +3475,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return q
 
     def getTargetImages(self, target_uuid, target_type, start=0, end=-1, filt=""):
-        session = create_session()
+        session = self.session_factory()
         if target_type == P2IT.ALL_COMPUTERS:
             filt1 = and_(
                 self.target.c.uuid == target_uuid,
@@ -3582,7 +3586,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return ret1
 
     def countTargetImages(self, target_uuid, target_type, filter):
-        session = create_session()
+        session = self.session_factory()
         q1 = (
             session.query(Image)
             .select_from(
@@ -3623,7 +3627,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return ret
 
     def getTargetImage(self, uuid, target_type, image_uuid):
-        session = create_session()
+        session = self.session_factory()
         q1 = (
             session.query(Image)
             .add_entity(MenuItem)
@@ -3734,7 +3738,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session_need_to_close = False
         if session is None:
             session_need_to_close = True
-            session = create_session()
+            session = self.session_factory()
 
         mi = session.query(MenuItem).add_entity(Entity)
         mi = mi.select_from(
@@ -3915,7 +3919,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     ##################################
     # ImagingServer
     def getEntityStatus(self, location):
-        session = create_session()
+        session = self.session_factory()
         q = (
             session.query(Target)
             .add_entity(Image)
@@ -3972,7 +3976,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return {"total": len(im_total), "rescue": len(im_rescue), "master": im_master}
 
     def countImagingServerByPackageServerUUID(self, uuid):
-        session = create_session()
+        session = self.session_factory()
         q = (
             session.query(ImagingServer)
             .filter(self.imaging_server.c.packageserver_uuid == uuid)
@@ -3985,7 +3989,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session_need_to_close = False
         if session is None:
             session_need_to_close = True
-            session = create_session()
+            session = self.session_factory()
         q = (
             session.query(Image)
             .add_entity(ImagingServer)
@@ -4004,7 +4008,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session_need_to_close = False
         if session is None:
             session_need_to_close = True
-            session = create_session()
+            session = self.session_factory()
         q = (
             session.query(ImagingServer)
             .select_from(
@@ -4022,7 +4026,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session_need_to_close = False
         if session is None:
             session_need_to_close = True
-            session = create_session()
+            session = self.session_factory()
         q = (
             session.query(ImagingServer)
             .filter(self.imaging_server.c.id == uuid2id(uuid))
@@ -4036,7 +4040,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session_need_to_close = False
         if session is None:
             session_need_to_close = True
-            session = create_session()
+            session = self.session_factory()
         q = (
             session.query(Entity)
             .select_from(self.imaging_server.join(self.entity))
@@ -4073,7 +4077,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session_need_to_close = False
         if session is None:
             session_need_to_close = True
-            session = create_session()
+            session = self.session_factory()
         q = (
             session.query(ImagingServer)
             .select_from(self.imaging_server.join(self.entity))
@@ -4107,7 +4111,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return q
 
     def getImagingServerByPackageServerUUID(self, uuid, with_entity=False):
-        session = create_session()
+        session = self.session_factory()
         q = session.query(ImagingServer)
         if with_entity:
             q = q.add_entity(Entity).select_from(self.imaging_server.join(self.entity))
@@ -4116,7 +4120,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return q
 
     def registerImagingServer(self, name, url, uuid):
-        session = create_session()
+        session = self.session_factory()
         ims = ImagingServer()
         ims.name = name
         ims.url = url
@@ -4134,7 +4138,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return ims.id
 
     def updateImagingServer(self, uuid, params={}):
-        session = create_session()
+        session = self.session_factory()
         ims = self.getImagingServerByUUID(uuid, session)
         need_to_be_save = False
         for param in params:
@@ -4156,7 +4160,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session_need_to_close = False
         if session is None:
             session_need_to_close = True
-            session = create_session()
+            session = self.session_factory()
         ret = session.query(Entity).filter(self.entity.c.uuid == loc_id).first()
         if session_need_to_close:
             session.close()
@@ -4172,14 +4176,14 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session_need_to_close = False
         if session is None:
             session_need_to_close = True
-            session = create_session()
+            session = self.session_factory()
         q = session.query(Menu).filter(self.menu.c.id == uuid2id(menu_uuid)).first()
         if session_need_to_close:
             session.close()
         return q
 
     def modifyMenus(self, menus_id, params):
-        session = create_session()
+        session = self.session_factory()
         menus = self.getMenusByID(menus_id, session)
         for m in menus:
             for p in [
@@ -4204,7 +4208,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session_need_to_close = False
         if session is None:
             session_need_to_close = True
-            session = create_session()
+            session = self.session_factory()
         menu = self.getMenuByUUID(menu_uuid, session)
         need_to_be_save = False
         # FIXME: could be factorized
@@ -4455,7 +4459,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         server doesn't exist in database or has not been associated to an
         entity.
         """
-        session = create_session()
+        session = self.session_factory()
         entity = (
             session.query(Entity)
             .select_from(
@@ -4500,7 +4504,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         """
         Attach the entity loc_id, name loc_name, to the imaging server is_uuid
         """
-        session = create_session()
+        session = self.session_factory()
 
         # checks if IS already exists
         imaging_server = self.getImagingServerByUUID(is_uuid, session)
@@ -4548,7 +4552,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         @return: True if success
         @rtype: bool
         """
-        session = create_session()
+        session = self.session_factory()
 
         # checks if IS already exists
         imaging_server = self.getImagingServerByUUID(is_uuid, session)
@@ -4573,7 +4577,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         @return: @return: list of imaging server associated
         @rtype: list
         """
-        session = create_session()
+        session = self.session_factory()
         q = session.query(ImagingServer).filter(self.imaging_server.c.associated == 1)
         q = q.all()
         session.close()
@@ -4607,7 +4611,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return q
 
     def getAllNonLinkedImagingServer(self, start, end, filter):
-        session = create_session()
+        session = self.session_factory()
         q = self.__AllNonLinkedImagingServer(session, filter)
         if end != -1:
             q = q.offset(int(start)).limit(int(end) - int(start))
@@ -4617,14 +4621,14 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return q
 
     def countAllNonLinkedImagingServer(self, filter):
-        session = create_session()
+        session = self.session_factory()
         q = self.__AllNonLinkedImagingServer(session, filter)
         q = q.count()
         session.close()
         return q
 
     def doesLocationHasImagingServer(self, loc_id):
-        session = create_session()
+        session = self.session_factory()
         q = (
             session.query(ImagingServer)
             .select_from(self.imaging_server.join(self.entity))
@@ -4635,7 +4639,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return q != 0
 
     def checkLanguage(self, location, language):
-        session = create_session()
+        session = self.session_factory()
         imaging_server = self.getImagingServerByEntityUUID(location, session)
         lang = (
             session.query(Language)
@@ -4652,7 +4656,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     # REGISTRATION
     def setTargetRegisteredInPackageServer(self, uuid, target_type):
-        session = create_session()
+        session = self.session_factory()
 
         if target_type == P2IT.ALL_COMPUTERS:
             filt = self.target.c.type.in_([P2IT.COMPUTER, P2IT.COMPUTER_IN_PROFILE])
@@ -4679,7 +4683,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session_need_to_close = False
         if session is None:
             session_need_to_close = True
-            session = create_session()
+            session = self.session_factory()
 
         ret = False
         if target_type == P2IT.ALL_COMPUTERS:
@@ -4719,7 +4723,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session_need_to_close = False
         if session is None:
             session_need_to_close = True
-            session = create_session()
+            session = self.session_factory()
 
         if target_type == P2IT.ALL_COMPUTERS:
             filt = self.target.c.type.in_([P2IT.COMPUTER, P2IT.COMPUTER_IN_PROFILE])
@@ -4785,7 +4789,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session_need_to_close = False
         if session is None:
             session_need_to_close = True
-            session = create_session()
+            session = self.session_factory()
 
         filt = None
         if isinstance(uuid, list):
@@ -4803,7 +4807,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session_need_to_close = False
         if session is None:
             session_need_to_close = True
-            session = create_session()
+            session = self.session_factory()
 
         if target_type == P2IT.ALL_COMPUTERS:
             filter_type = self.target.c.type.in_(
@@ -4849,7 +4853,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session_need_to_close = False
         if session is None:
             session_need_to_close = True
-            session = create_session()
+            session = self.session_factory()
 
         q = session.query(Target).add_entity(SynchroState)
         q = q.select_from(self.target.join(self.menu).join(self.synchro_state))
@@ -4863,7 +4867,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session_need_to_close = False
         if session is None:
             session_need_to_close = True
-            session = create_session()
+            session = self.session_factory()
 
         q = session.query(Target.uuid)
         q = q.select_from(
@@ -4888,7 +4892,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return [z[0] for z in q]
 
     def getCustomMenuCount(self, location):
-        session = create_session()
+        session = self.session_factory()
         ret = (
             session.query(func.count(Menu.id))
             .select_from(
@@ -4901,7 +4905,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return ret.scalar()
 
     def getCustomMenuCountdashboard(self, location):
-        session = create_session()
+        session = self.session_factory()
         ret = session.query(func.count(distinct(self.target.c.uuid))).filter(
             and_(
                 self.target.c.fk_entity == fromUUID(location),
@@ -4912,7 +4916,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return ret.scalar()
 
     def getCustomMenubylocation(self, location):
-        session = create_session()
+        session = self.session_factory()
         ret = (
             session.query(
                 self.target.c.uuid, self.target.c.name, self.target.c.nic_uuid
@@ -4940,7 +4944,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return q1
 
     def getMenubylocation(self, location):
-        session = create_session()
+        session = self.session_factory()
         ret = (
             session.query(self.target.c.uuid)
             .select_from(
@@ -4985,7 +4989,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return q
 
     def getTargetsSynchroState(self, uuids, target_type):
-        session = create_session()
+        session = self.session_factory()
         q = self.__getSynchroStates(uuids, target_type, session)
         session.close()
         if q:
@@ -4993,7 +4997,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return None
 
     def getTargetsCustomMenuFlag(self, uuids, target_type):
-        session = create_session()
+        session = self.session_factory()
         q = self.__getSynchroStates(uuids, target_type, session)
         session.close()
         if q:
@@ -5004,7 +5008,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return None
 
     def setComputerCustomMenuFlag(self, uuids, value):
-        session = create_session()
+        session = self.session_factory()
         q = self.__getSynchroStates(uuids, P2IT.ALL_COMPUTERS, session)
         if q:
             q[0][1].custom_menu = value
@@ -5019,7 +5023,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         @param uuid the Entity uuid
         """
 
-        session = create_session()
+        session = self.session_factory()
 
         # check if the entity menu as to be synced, by looking at its imaging
         # server menu status
@@ -5078,7 +5082,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return crypt.crypt(password, passphrase)
 
     def getPXELogin(self, location_uuid):
-        session = create_session()
+        session = self.session_factory()
         login = (
             session.query(Entity.pxe_login)
             .filter(Entity.uuid == location_uuid)
@@ -5088,7 +5092,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return login
 
     def getPXEPasswordHash(self, location_uuid):
-        session = create_session()
+        session = self.session_factory()
         password = (
             session.query(Entity.pxe_password)
             .filter(Entity.uuid == location_uuid)
@@ -5098,7 +5102,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return password
 
     def setLocationPXEParams(self, uuid, params):
-        session = create_session()
+        session = self.session_factory()
         try:
             location = session.query(Entity).filter(Entity.uuid == uuid).one()
             if "pxe_login" in params:
@@ -5124,7 +5128,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             return False
 
     def getClonezillaSaverParams(self, location_uuid):
-        session = create_session()
+        session = self.session_factory()
         saver_params = (
             session.query(Entity.clonezilla_saver_params)
             .filter(Entity.uuid == location_uuid)
@@ -5134,7 +5138,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return saver_params
 
     def getClonezillaRestorerParams(self, location_uuid):
-        session = create_session()
+        session = self.session_factory()
         restorer_params = (
             session.query(Entity.clonezilla_restorer_params)
             .filter(Entity.uuid == location_uuid)
@@ -5144,7 +5148,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return restorer_params
 
     def setLocationClonezillaParams(self, uuid, params):
-        session = create_session()
+        session = self.session_factory()
         try:
             location = session.query(Entity).filter(Entity.uuid == uuid).one()
             if "clonezilla_saver_params" in params:
@@ -5163,7 +5167,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     def setLocationSynchroState(self, uuid, state):
         self.logger.debug(">>> setLocationSynchroState %s %s" % (uuid, str(state)))
-        session = create_session()
+        session = self.session_factory()
         q2 = session.query(SynchroState).add_entity(Menu)
         q2 = q2.select_from(
             self.synchro_state.join(self.menu)
@@ -5188,7 +5192,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return True
 
     def changeTargetsSynchroState(self, uuids, target_type, state):
-        session = create_session()
+        session = self.session_factory()
         synchro_states = self.__getSynchroStates(uuids, target_type, session)
         for synchro_state, menu in synchro_states:
             menu.fk_synchrostate = state
@@ -5199,7 +5203,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     # MENUS
     def delProfileMenuTarget(self, uuids):
-        session = create_session()
+        session = self.session_factory()
         targets = session.query(Target).add_entity(Menu)
         targets = targets.select_from(
             self.target.join(self.menu, self.target.c.fk_menu == self.menu.c.id)
@@ -5218,7 +5222,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return True
 
     def delProfileComputerMenuItem(self, uuids):
-        session = create_session()
+        session = self.session_factory()
 
         mis = (
             session.query(MenuItem)
@@ -5263,7 +5267,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         @param uuids: list of UUIDs of removed computers
         @type uuids: list
         """
-        session = create_session()
+        session = self.session_factory()
 
         menus = []
         for uuid in uuids:
@@ -5357,7 +5361,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     def delComputersFromProfile(self, profile_UUID, computers):
         # we put the profile's mi before the computer's mi
-        session = create_session()
+        session = self.session_factory()
         computers_UUID = [c["uuid"] for c in list(computers.values())]
         # copy the profile part of the menu in their own menu
         pmenu = self.getTargetMenu(profile_UUID, P2IT.PROFILE, session)
@@ -5449,7 +5453,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return True
 
     def delProfile(self, profile_UUID):
-        session = create_session()
+        session = self.session_factory()
         # remove all the possible menuitem that only depend on this profile
         pmis = self.__getAllProfileMenuItem(profile_UUID, session)
         profile, menu = (
@@ -5509,7 +5513,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return True
 
     def setProfileMenuTarget(self, uuids, profile_uuid, params):
-        session = create_session()
+        session = self.session_factory()
         menu = self.getTargetMenu(profile_uuid, P2IT.PROFILE, session)
         cache_location_id = {}
         locations = ComputerLocationManager().getMachinesLocations(uuids)
@@ -5556,7 +5560,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return [True]
 
     def putComputersInProfile(self, profile_UUID, computers):
-        session = create_session()
+        session = self.session_factory()
         menu = self.getTargetMenu(profile_UUID, P2IT.PROFILE, session)
         imaging_server = ComputerProfileManager().getProfileImagingServerUUID(
             profile_UUID
@@ -5583,7 +5587,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return True
 
     def setMyMenuTarget(self, uuid, params, _type):
-        session = create_session()
+        session = self.session_factory()
         menu = self.getTargetMenu(uuid, _type, session)
         location_id = None
         p_id = None
@@ -5677,7 +5681,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     def getProfileLocation(self, uuid):
         """get Location of given Profile"""
-        session = create_session()
+        session = self.session_factory()
         q = session.query(Entity)
         q = q.join(Target).filter(Target.uuid == uuid)
         q = q.first()
@@ -5687,7 +5691,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return q.uuid
 
     def getMyMenuTarget(self, uuid, type):
-        session = create_session()
+        session = self.session_factory()
         muuid = False
         orig_target = None
         if type == P2IT.COMPUTER:
@@ -5738,7 +5742,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session_need_to_close = False
         if session is None:
             session_need_to_close = True
-            session = create_session()
+            session = self.session_factory()
 
         q = session.query(PostInstallScript).add_entity(
             PostInstallScriptOnImagingServer
@@ -5852,7 +5856,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return ret
 
     def getAllTargetPostInstallScript(self, target_uuid, start, end, filter):
-        session = create_session()
+        session = self.session_factory()
         loc = (
             session.query(Entity)
             .select_from(self.entity.join(self.target))
@@ -5864,7 +5868,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return self.getAllPostInstallScripts(location, start, end, filter)
 
     def countAllTargetPostInstallScript(self, target_uuid, filter):
-        session = create_session()
+        session = self.session_factory()
         loc = (
             session.query(Entity)
             .select_from(self.entity.join(self.target))
@@ -5876,7 +5880,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return self.countAllPostInstallScripts(location, filter)
 
     def getAllPostInstallScripts(self, location, start, end, filter):
-        session = create_session()
+        session = self.session_factory()
         q = self.__AllPostInstallScripts(session, location, filter)
         if end != -1:
             q = q.offset(int(start)).limit(int(end) - int(start))
@@ -5887,7 +5891,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return q
 
     def countAllPostInstallScripts(self, location, filter):
-        session = create_session()
+        session = self.session_factory()
         q = self.__AllPostInstallScripts(session, location, filter, True)
         q = q.count()
         session.close()
@@ -5904,7 +5908,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         @return: list of Computer UUID
         @rtype: list
         """
-        session = create_session()
+        session = self.session_factory()
         query = session.query(PostInstallScriptInImage).filter(
             PostInstallScriptInImage.fk_post_install_script == fromUUID(pis_uuid)
         )
@@ -5925,7 +5929,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session_need_to_close = False
         if session is None:
             session_need_to_close = True
-            session = create_session()
+            session = self.session_factory()
         lang = 1
         if location_id is not None:
             lang = self.__getLocLanguage(session, location_id)
@@ -5970,7 +5974,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return q[0]
 
     def delPostInstallScript(self, pis_uuid):
-        session = create_session()
+        session = self.session_factory()
         # delete the post install script
         pis = self.getPostInstallScript(pis_uuid, session)
         if not pis.is_local:
@@ -5998,7 +6002,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session_need_to_close = False
         if session is None:
             session_need_to_close = True
-            session = create_session()
+            session = self.session_factory()
         lang = 1
         if location_id is not None:
             lang = self.__getLocLanguage(session, location_id)
@@ -6040,7 +6044,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return q
 
     def editPostInstallScript(self, pis_uuid, params):
-        session = create_session()
+        session = self.session_factory()
         pis = self.getPostInstallScript(pis_uuid, session)
         need_to_be_save = False
         if pis.default_name != params["default_name"]:
@@ -6062,7 +6066,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return True
 
     def addPostInstallScript(self, loc_id, params):
-        session = create_session()
+        session = self.session_factory()
         pis = PostInstallScript()
         pis.default_name = params["default_name"]
         pis.fk_name = 1
@@ -6082,7 +6086,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return True
 
     def getLocationImagingServerByServerUUID(self, imaging_server_uuid):
-        session = create_session()
+        session = self.session_factory()
         ims, entity = (
             session.query(ImagingServer, Entity)
             .join(Entity, Entity.id == ImagingServer.fk_entity)
@@ -6110,7 +6114,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 else "UUID%s" % computer_uuid
             )
 
-        session = create_session()
+        session = self.session_factory()
         session.begin()
 
         locationId, locationServerImaging = self.getLocationImagingServerByServerUUID(
@@ -6185,7 +6189,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         """
         if not isUUID(computer_uuid):
             raise TypeError("Bad computer UUID: %s" % computer_uuid)
-        session = create_session()
+        session = self.session_factory()
         try:
             target = session.query(Target).filter_by(uuid=computer_uuid).one()
         except InvalidRequestError:
@@ -6235,7 +6239,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         @returns: return all the computers that already have an imaging menu
         @rtype: list
         """
-        session = create_session()
+        session = self.session_factory()
         targets = session.query(Target).select_from(
             self.target.join(self.menu, self.target.c.fk_menu == self.menu.c.id)
         )
@@ -6262,7 +6266,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         @returns: return all the computers from the computer_UUID list that already have an imaging menu
         @rtype: list
         """
-        session = create_session()
+        session = self.session_factory()
         targets = (
             session.query(Target)
             .select_from(
@@ -6281,7 +6285,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return ret
 
     def getImageIDFromImageUUID(self, image_uuid):
-        session = create_session()
+        session = self.session_factory()
         img = session.query(Image).filter(self.image.c.uuid == image_uuid).first()
         session.close()
         if img:
@@ -6292,7 +6296,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return id2uuid(self.getImageIDFromImageUUID(image_uuid))
 
     def add_multicast(self, parameters):
-        session = create_session()
+        session = self.session_factory()
 
         multicast = Multicast()
         multicast.location = parameters["location"]
@@ -6306,7 +6310,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     def remove_multicast(self, parameters):
 
-        session = create_session()
+        session = self.session_factory()
 
         session.query(Multicast).filter(
             and_(
@@ -6319,7 +6323,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.close()
 
     def set_diskless_infos(self, location, config):
-        session = create_session()
+        session = self.session_factory()
         entity = session.query(Entity).filter(Entity.uuid == location).one()
 
         if entity is not None:

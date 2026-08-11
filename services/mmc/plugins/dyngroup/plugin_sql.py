@@ -7,7 +7,7 @@ Mapping between SA and SQL ?
 """
 
 from sqlalchemy import create_engine, Table, MetaData
-from sqlalchemy.orm import create_session, mapper
+from sqlalchemy.orm import registry, sessionmaker
 
 
 class SqlPlugin:
@@ -18,10 +18,12 @@ class SqlPlugin:
     def __init__(self, conf):
         self.config = conf
         self.db = create_engine(self.makeConnectionPath())
-        self.metadata = MetaData(self.db)
+        self.metadata = MetaData()
+        self.mapper_registry = registry()
         self.initMappers()
-        self.metadata.create_all()
-        self.session = create_session()
+        self.metadata.create_all(bind=self.db)
+        self.session_factory = sessionmaker(bind=self.db, expire_on_commit=False)
+        self.session = self.session_factory()
 
     def makeConnectionPath(self):
         """
@@ -46,8 +48,8 @@ class SqlPlugin:
         """
         Initialize all SQLalchemy mappers needed for the dyngroups database
         """
-        self.sqlDatumSave = Table("SqlDatumSave", self.metadata, autoload=True)
-        mapper(SqlDatumSave, self.sqlDatumSave)
+        self.sqlDatumSave = Table("SqlDatumSave", self.metadata, autoload_with=self.db)
+        self.mapper_registry.map_imperatively(SqlDatumSave, self.sqlDatumSave)
 
     def hasValue(self, key, user=None):
         datum = (

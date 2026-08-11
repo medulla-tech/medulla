@@ -7,7 +7,7 @@ from packaging.version import Version
 from sqlalchemy import __version__
 
 MIN_VERSION = "0.6.3"  # Debian Squeeze version
-MAX_VERSION = "1.4.46"  # Debian Bookworm version
+MAX_VERSION = "2.0.46"  # SQLAlchemy 2.0 compatible
 CUR_VERSION = __version__
 
 

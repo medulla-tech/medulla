@@ -1,6 +1,6 @@
 # -*- coding: utf-8; -*-
 from sqlalchemy import create_engine, MetaData, select, func, and_, desc, or_, distinct, Table, DateTime, Text
-from sqlalchemy.orm import create_session, mapper, relation
+from sqlalchemy.orm import registry, relationship, Session, sessionmaker
 from sqlalchemy.exc import DBAPIError
 from sqlalchemy import update
 
@@ -82,6 +82,10 @@ class MobileDatabase(DatabaseHelper):
         try:
             # Prepare metadata and automap base for SQLAlchemy
             self.metadata = MetaData(self.db)
+
+            self.mapper_registry = registry()
+
+            self.session_factory = sessionmaker(bind=self.db, expire_on_commit=False)
             automap = automap_base(metadata=self.metadata)
             automap.prepare(self.db, reflect=True)
             logger.info(f"Tables mappées automatiquement : {list(automap.classes.keys())}")

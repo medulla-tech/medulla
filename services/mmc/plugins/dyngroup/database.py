@@ -12,7 +12,7 @@ import logging
 # SqlAlchemy
 from sqlalchemy import and_, or_, asc, select
 from sqlalchemy.orm import aliased
-from sqlalchemy.orm import create_session
+from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 
 # MMC modules
@@ -70,7 +70,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         return the join and the filter part to build the query
         """
         if not session:
-            session = create_session()
+            session = self.session_factory()
         select_from = self.machines.join(self.results).join(self.groups)
         (join_tables, filter_on) = self.__permissions_query(ctx, session)
         if join_tables == None:
@@ -83,7 +83,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         the group is defined by its id
         """
         if not session:
-            session = create_session()
+            session = self.session_factory()
         select_from, filter_on = self.__getMachinesFirstStep(ctx, session)
         if filter_on == None:
             filter_on = and_(self.groups.c.id == gid)
@@ -97,7 +97,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         the group is defined by its name
         """
         if not session:
-            session = create_session()
+            session = self.session_factory()
         select_from, filter_on = self.__getMachinesFirstStep(ctx, session)
         if filter_on == None:
             filter_on = and_(self.groups.c.name == groupname)
@@ -112,7 +112,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         # often used with visibility = 0 as it's not at the same place that
         # the share is created and that the visibility is set
         group = self.get_group(ctx, id)
-        session = create_session()
+        session = self.session_factory()
         for login, t in shares:
             user_id = self.__getOrCreateUser(ctx, login, t)
             self.__createShare(group.id, user_id, visibility)
@@ -129,7 +129,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         see the group in the left menu
         """
         group = self.get_group(ctx, id)
-        session = create_session()
+        session = self.session_factory()
         user_id = self.__getOrCreateUser(ctx, login, type)
         self.__changeShare(group.id, user_id, visibility)
         session.close()
@@ -141,7 +141,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         and the users defined in shares (login and type)
         """
         group = self.get_group(ctx, id)
-        session = create_session()
+        session = self.session_factory()
         for login, t in shares:
             user = self.__getUser(login, t, session)
             if user:
@@ -160,7 +160,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         defined by it's id
         """
         if not session:
-            session = create_session()
+            session = self.session_factory()
         machines = self.__getMachines(ctx, group_id, session)
         for machine in machines:
             self.__deleteResult(group_id, machine.id, session)
@@ -310,7 +310,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         - Ajoute le login et l'id du propriétaire (owner_login / owner_id)
         Retourne une liste d'objets Groups (compatibles avec g.toH()).
         """
-        session = create_session()
+        session = self.session_factory()
         groups = self.__allgroups_query(ctx, params, session, type)
         groups = groups.order_by(self.groups.c.name)
 
@@ -355,7 +355,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         flags can be canShow, dynamic, static, type (0 = group, 1 = profile)
         and filters can be filter (on the group name with wildcards) and name (on the group name without wildcards)
         """
-        session = create_session()
+        session = self.session_factory()
         groups = self.__allgroups_query(ctx, params, session, type)
         ret = groups.count()
         session.close()
@@ -387,7 +387,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
     def get_group_owner(self, ctx, id):
         group = self.get_group(ctx, id)
         if group:
-            session = create_session()
+            session = self.session_factory()
             user = (
                 session.query(Users)
                 .select_from(self.users.join(self.groups))
@@ -521,7 +521,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         user_id = self.__getOrCreateUser(ctx)
         root_id = self.__getOrCreateUser(root_context)
 
-        session = create_session()
+        session = self.session_factory()
         group = Groups()
         group.name = name.encode("utf-8")
         group.FK_users = user_id
@@ -623,7 +623,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         set a new name to the group defined by it's id
         only if the ctx user have the good permissions on it
         """
-        session = create_session()
+        session = self.session_factory()
         group = (
             self.__get_group_permissions_request(ctx, session)
             .filter(self.groups.c.id == id)
@@ -644,7 +644,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         """
         user_id = self.__getOrCreateUser(ctx)
 
-        session = create_session()
+        session = self.session_factory()
         s = self.__getShareGroupInSession(id, user_id, session)
         s.display_in_menu = visibility
         session.add(s)
@@ -664,7 +664,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         set a request to a group (defined by it's id)
         if the group is associated to machines, they are updated (to follow the new request)
         """
-        session = create_session()
+        session = self.session_factory()
         group = (
             self.__get_group_permissions_request(ctx, session)
             .filter(self.groups.c.id == gid)
@@ -698,7 +698,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         """
         set a boolean equation to a group (defined by its id)
         """
-        session = create_session()
+        session = self.session_factory()
         group = (
             self.__get_group_permissions_request(ctx, session)
             .filter(self.groups.c.id == id)
@@ -725,7 +725,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         set the visibility flag to true for the current user (ctx)
         """
         user_id = self.__getOrCreateUser(ctx)
-        session = create_session()
+        session = self.session_factory()
         s = self.__getShareGroupInSession(id, user_id, session)
         s.display_in_menu = 1
         session.add(s)
@@ -738,7 +738,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         set the visibility flag to false for the current user (ctx)
         """
         user_id = self.__getOrCreateUser(ctx)
-        session = create_session()
+        session = self.session_factory()
         s = self.__getShareGroupInSession(id, user_id, session)
         # FIXME: Root user cannot change group shortcut status
         # (hide or visible) if he's not creator of this group
@@ -762,7 +762,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         """
         tell if a group (defined by it's id) is a dynamic group or a static one
         """
-        session = create_session()
+        session = self.session_factory()
         group = self.__getGroupInSession(ctx, session, id)
         q = None
         try:
@@ -776,7 +776,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         """
         tell if a group (defined by it's id) is a request or a result
         """
-        session = create_session()
+        session = self.session_factory()
         group = self.__getGroupInSession(ctx, session, id)
         q = None
         try:
@@ -793,7 +793,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         tell if an entry in the database is a group or a profile
         (as the 2 are stocked in the same table)
         """
-        session = create_session()
+        session = self.session_factory()
         g = self.__getGroupInSession(ctx, session, id)
         session.close()
         if g:
@@ -839,7 +839,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         select_from and filter_on query parts
         """
         if not session:
-            session = create_session()
+            session = self.session_factory()
         select_from = self.groups
         join_tables, filter_on = self.__permissions_query(ctx, session)
         if join_tables != None:
@@ -871,7 +871,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         """
         if group == None:
             return []
-        session = create_session()
+        session = self.session_factory()
         if self.isrequest_group(ctx, group.id):
             ret = self.__request(
                 ctx, group.query, group.bool, 0, -1, "", queryManager, session
@@ -891,7 +891,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         """
         handler for request taking the group as param (not the query and the boolean)
         """
-        session = create_session()
+        session = self.session_factory()
         group = self.__getGroupInSession(ctx, session, id)
         return self.__request(
             ctx, group.query, group.bool, start, end, filter, queryManager, session
@@ -901,7 +901,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         """
         get the list of machines of the group (defined by it's name)
         """
-        session = create_session()
+        session = self.session_factory()
         group = self.__getGroupByNameInSession(ctx, session, name, False)
         content = self.__getContent(ctx, group, queryManager)
         return content
@@ -913,7 +913,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         resolve a request (query to mmc.plugins.dyngroup.replyToQuery)
         """
         if not session:
-            session = create_session()
+            session = self.session_factory()
         query = queryManager.getQueryTree(query, bool)
         result = mmc.plugins.dyngroup.replyToQuery(ctx, query, bool, start, end, True)
         if isinstance(result, dict):
@@ -925,7 +925,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         """
         count the number of result for the group defined by it's id
         """
-        session = create_session()
+        session = self.session_factory()
         group = self.__getGroupInSession(ctx, session, id)
         query = queryManager.getQueryTree(group.query, group.bool)
         result = mmc.plugins.dyngroup.replyToQueryLen(ctx, query, group.bool)
@@ -937,7 +937,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         get the list of machines of the group (defined by it's id)
         the result can be only a list of ids (if justId is True) or the machines
         """
-        session = create_session()
+        session = self.session_factory()
         result = self.__result_group_query(ctx, session, id, filter)
         if int(start) != 0 or int(end) != -1:
             result = result.offset(int(start)).limit(int(end) - int(start))
@@ -952,7 +952,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         """
         count the number of result for the group defined by it's id
         """
-        session = create_session()
+        session = self.session_factory()
         result = self.__result_group_query(ctx, session, id, filter)
         ret = result.count()
         session.close()
@@ -964,7 +964,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         """
         connection = self.getDbConnection()
         trans = connection.begin()
-        session = create_session()
+        session = self.session_factory()
         group = self.__getGroupInSession(ctx, session, id, False)
         is_profile = self.isprofile(ctx, id)
         filt = {}
@@ -995,7 +995,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         """
         Add member computers specified by a uuids list to a group.
         """
-        session = create_session()
+        session = self.session_factory()
         group = self.__getGroupInSession(ctx, session, id, False)
         session.close()
         connection = self.getDbConnection()
@@ -1020,7 +1020,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
             id: int corresponds to the newly created group id
             uuids: dict of all the machines we want to add into the group
         """
-        session = create_session()
+        session = self.session_factory()
         session.close()
         connection = self.getDbConnection()
         trans = connection.begin()

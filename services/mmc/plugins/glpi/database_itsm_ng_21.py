@@ -40,7 +40,7 @@ from sqlalchemy import (
     case,
 )
 
-from sqlalchemy.orm import create_session, mapper, relationship, class_mapper
+from sqlalchemy.orm import registry, relationship, Session, sessionmaker, class_mapper
 from sqlalchemy.exc import NoSuchTableError, NoInspectionAvailable
 from mmc.support.apirest.glpi import GLPIClient, GLPIClientApiV1, GLPIAPIError
 
@@ -180,10 +180,12 @@ class Itsmng21(DyngroupDatabaseHelper):
         except:
             return False
 
-        self.metadata = MetaData(self.db)
+        self.metadata = MetaData()
+        self.mapper_registry = registry()
+        self.session_factory = sessionmaker(bind=self.db, expire_on_commit=False)
         self.initMappers()
         self.logger.info("Itsm-ng is in version %s" % (self.glpi_version))
-        self.metadata.create_all()
+        self.metadata.create_all(bind=self.db)
         self.is_activated = True
         self.logger.debug("Itsm-ng finish activation")
 
@@ -203,7 +205,7 @@ class Itsmng21(DyngroupDatabaseHelper):
         """
 
         Base = automap_base()
-        Base.prepare(self.db, reflect=True)
+        Base.prepare(autoload_with=self.db)
 
         # Only federated tables (beginning by local_) are automatically mapped
         # If needed, excludes tables from this list
@@ -228,10 +230,10 @@ class Itsmng21(DyngroupDatabaseHelper):
             "glpi_computermodels",
             "glpi_networks",
         ):
-            setattr(self, i, Table(i, self.metadata, autoload=True))
+            setattr(self, i, Table(i, self.metadata, autoload_with=self.db))
             j = self.getTableName(i)
             exec("class %s(DbTOA): pass" % j)
-            mapper(eval(j), getattr(self, i))
+            self.mapper_registry.map_imperatively(eval(j), getattr(self, i))
             self.klass[i] = eval(j)
 
         # declare all the glpi_device* and glpi_computer_device*
@@ -254,10 +256,10 @@ class Itsmng21(DyngroupDatabaseHelper):
             "devicesoundcards",
         )
         for i in self.devices:
-            setattr(self, i, Table("glpi_%s" % i, self.metadata, autoload=True))
+            setattr(self, i, Table("glpi_%s" % i, self.metadata, autoload_with=self.db))
             j = self.getTableName(i)
             exec("class %s(DbTOA): pass" % j)
-            mapper(eval(j), getattr(self, i))
+            self.mapper_registry.map_imperatively(eval(j), getattr(self, i))
             self.klass[i] = eval(j)
 
             setattr(
@@ -268,95 +270,95 @@ class Itsmng21(DyngroupDatabaseHelper):
                     self.metadata,
                     Column("items_id", Integer, ForeignKey("glpi_computers_pulse.id")),
                     Column("%s_id" % i, Integer, ForeignKey("glpi_%s.id" % i)),
-                    autoload=True,
+                    autoload_with=self.db,
                 ),
             )
             j = self.getTableName("computers_%s" % i)
             exec("class %s(DbTOA): pass" % j)
-            mapper(eval(j), getattr(self, "computers_%s" % i))
+            self.mapper_registry.map_imperatively(eval(j), getattr(self, "computers_%s" % i))
             self.klass["computers_%s" % i] = eval(j)
 
         # entity
-        self.entities = Table("glpi_entities", self.metadata, autoload=True)
-        mapper(Entities, self.entities)
+        self.entities = Table("glpi_entities", self.metadata, autoload_with=self.db)
+        self.mapper_registry.map_imperatively(Entities, self.entities)
 
         # rules
-        self.rules = Table("glpi_rules", self.metadata, autoload=True)
-        mapper(Rule, self.rules)
+        self.rules = Table("glpi_rules", self.metadata, autoload_with=self.db)
+        self.mapper_registry.map_imperatively(Rule, self.rules)
 
-        self.rule_criterias = Table("glpi_rulecriterias", self.metadata, autoload=True)
-        mapper(RuleCriterion, self.rule_criterias)
+        self.rule_criterias = Table("glpi_rulecriterias", self.metadata, autoload_with=self.db)
+        self.mapper_registry.map_imperatively(RuleCriterion, self.rule_criterias)
 
-        self.rule_actions = Table("glpi_ruleactions", self.metadata, autoload=True)
-        mapper(RuleAction, self.rule_actions)
+        self.rule_actions = Table("glpi_ruleactions", self.metadata, autoload_with=self.db)
+        self.mapper_registry.map_imperatively(RuleAction, self.rule_actions)
 
         # location
-        self.locations = Table("glpi_locations", self.metadata, autoload=True)
-        mapper(Locations, self.locations)
+        self.locations = Table("glpi_locations", self.metadata, autoload_with=self.db)
+        self.mapper_registry.map_imperatively(Locations, self.locations)
 
         # logs
         self.logs = Table(
             "glpi_logs",
             self.metadata,
             Column("items_id", Integer, ForeignKey("glpi_computers_pulse.id")),
-            autoload=True,
+            autoload_with=self.db,
         )
-        mapper(Logs, self.logs)
+        self.mapper_registry.map_imperatively(Logs, self.logs)
 
         # processor
-        self.processor = Table("glpi_deviceprocessors", self.metadata, autoload=True)
-        mapper(Processor, self.processor)
+        self.processor = Table("glpi_deviceprocessors", self.metadata, autoload_with=self.db)
+        self.mapper_registry.map_imperatively(Processor, self.processor)
 
         self.computerProcessor = Table(
             "glpi_items_deviceprocessors",
             self.metadata,
             Column("items_id", Integer, ForeignKey("glpi_computers_pulse.id")),
             Column("deviceprocessors_id", Integer, ForeignKey("glpi_deviceprocessors.id")),
-            autoload=True,
+            autoload_with=self.db,
         )
-        mapper(ComputerProcessor, self.computerProcessor)
+        self.mapper_registry.map_imperatively(ComputerProcessor, self.computerProcessor)
 
         # memory
         self.memory = Table(
             "glpi_devicememories",
             self.metadata,
             Column("devicememorytypes_id", Integer, ForeignKey("glpi_devicememorytypes.id")),
-            autoload=True,
+            autoload_with=self.db,
         )
-        mapper(Memory, self.memory)
+        self.mapper_registry.map_imperatively(Memory, self.memory)
 
-        self.memoryType = Table("glpi_devicememorytypes", self.metadata, autoload=True)
-        mapper(MemoryType, self.memoryType)
+        self.memoryType = Table("glpi_devicememorytypes", self.metadata, autoload_with=self.db)
+        self.mapper_registry.map_imperatively(MemoryType, self.memoryType)
 
         self.computerMemory = Table(
             "glpi_items_devicememories",
             self.metadata,
             Column("items_id", Integer, ForeignKey("glpi_computers_pulse.id")),
             Column("devicememories_id", Integer, ForeignKey("glpi_devicememories.id")),
-            autoload=True,
+            autoload_with=self.db,
         )
-        mapper(ComputerMemory, self.computerMemory)
+        self.mapper_registry.map_imperatively(ComputerMemory, self.computerMemory)
 
         # interfaces types
-        self.interfaceType = Table("glpi_interfacetypes", self.metadata, autoload=True)
+        self.interfaceType = Table("glpi_interfacetypes", self.metadata, autoload_with=self.db)
 
         # os
-        self.os = Table("glpi_operatingsystems", self.metadata, autoload=True)
-        mapper(OS, self.os)
+        self.os = Table("glpi_operatingsystems", self.metadata, autoload_with=self.db)
+        self.mapper_registry.map_imperatively(OS, self.os)
 
         self.os_sp = Table(
-            "glpi_operatingsystemservicepacks", self.metadata, autoload=True
+            "glpi_operatingsystemservicepacks", self.metadata, autoload_with=self.db
         )
-        mapper(OsSp, self.os_sp)
+        self.mapper_registry.map_imperatively(OsSp, self.os_sp)
 
         self.os_arch = Table(
-            "glpi_operatingsystemarchitectures", self.metadata, autoload=True
+            "glpi_operatingsystemarchitectures", self.metadata, autoload_with=self.db
         )
-        mapper(OsArch, self.os_arch)
+        self.mapper_registry.map_imperatively(OsArch, self.os_arch)
 
         # domain
-        self.domain = Table("glpi_domains", self.metadata, autoload=True)
-        mapper(Domain, self.domain)
+        self.domain = Table("glpi_domains", self.metadata, autoload_with=self.db)
+        self.mapper_registry.map_imperatively(Domain, self.domain)
 
         # glpi_infocoms
         self.infocoms = Table(
@@ -364,23 +366,23 @@ class Itsmng21(DyngroupDatabaseHelper):
             self.metadata,
             Column("suppliers_id", Integer, ForeignKey("glpi_suppliers.id")),
             Column("items_id", Integer, ForeignKey("glpi_computers_pulse.id")),
-            autoload=True,
+            autoload_with=self.db,
         )
-        mapper(Infocoms, self.infocoms)
+        self.mapper_registry.map_imperatively(Infocoms, self.infocoms)
 
         # glpi_suppliers
-        self.suppliers = Table("glpi_suppliers", self.metadata, autoload=True)
-        mapper(Suppliers, self.suppliers)
+        self.suppliers = Table("glpi_suppliers", self.metadata, autoload_with=self.db)
+        self.mapper_registry.map_imperatively(Suppliers, self.suppliers)
 
         # glpi_filesystems
-        self.diskfs = Table("glpi_filesystems", self.metadata, autoload=True)
-        mapper(DiskFs, self.diskfs)
+        self.diskfs = Table("glpi_filesystems", self.metadata, autoload_with=self.db)
+        self.mapper_registry.map_imperatively(DiskFs, self.diskfs)
 
         # glpi_operatingsystemversions
         self.os_version = Table(
-            "glpi_operatingsystemversions", self.metadata, autoload=True
+            "glpi_operatingsystemversions", self.metadata, autoload_with=self.db
         )
-        mapper(OsVersion, self.os_version)
+        self.mapper_registry.map_imperatively(OsVersion, self.os_version)
 
         # Fusion Inventory tables
         self.fusionantivirus = None
@@ -390,9 +392,9 @@ class Itsmng21(DyngroupDatabaseHelper):
                 self.metadata,
                 Column("computers_id", Integer, ForeignKey("glpi_computers_pulse.id")),
                 Column("manufacturers_id", Integer, ForeignKey("glpi_manufacturers.id")),
-                autoload=True,
+                autoload_with=self.db,
             )
-            mapper(FusionAntivirus, self.fusionantivirus)
+            self.mapper_registry.map_imperatively(FusionAntivirus, self.fusionantivirus)
             self.logger.debug("... Success !!")
         except:
             self.logger.warning("Impossible to map glpi_computerantiviruses")
@@ -405,9 +407,9 @@ class Itsmng21(DyngroupDatabaseHelper):
                 "glpi_plugin_fusioninventory_locks",
                 self.metadata,
                 Column("items_id", Integer, ForeignKey("glpi_computers_pulse.id")),
-                autoload=True,
+                autoload_with=self.db,
             )
-            mapper(FusionLocks, self.fusionlocks)
+            self.mapper_registry.map_imperatively(FusionLocks, self.fusionlocks)
         except:
             logging.getLogger().warning("Impossible to map glpi_plugin_fusioninventory_locks")
 
@@ -418,9 +420,9 @@ class Itsmng21(DyngroupDatabaseHelper):
                 "glpi_plugin_fusioninventory_agents",
                 self.metadata,
                 Column("computers_id", Integer, ForeignKey("glpi_computers_pulse.id")),
-                autoload=True,
+                autoload_with=self.db,
             )
-            mapper(FusionAgents, self.fusionagents)
+            self.mapper_registry.map_imperatively(FusionAgents, self.fusionagents)
         except:
             self.logger.warning("Impossible to map glpi_plugin_fusioninventory_agents")
 
@@ -434,9 +436,9 @@ class Itsmng21(DyngroupDatabaseHelper):
                         "entities_id", Integer, ForeignKey(
                             "glpi_computers_pulse.id")
                     ),
-                    autoload=True,
+                    autoload_with=self.db,
                 )
-                mapper(FusionAgents, self.fusionagents)
+                self.mapper_registry.map_imperatively(FusionAgents, self.fusionagents)
             except:
                 self.logger.warning("Impossible to map glpi_agents")
 
@@ -447,9 +449,9 @@ class Itsmng21(DyngroupDatabaseHelper):
             self.metadata,
             Column("items_id", Integer, ForeignKey("glpi_computers_pulse.id")),
             Column("filesystems_id", Integer, ForeignKey("glpi_filesystems.id")),
-            autoload=True,
+            autoload_with=self.db,
         )
-        mapper(Disk, self.disk)
+        self.mapper_registry.map_imperatively(Disk, self.disk)
 
         #####################################
         # Network tables
@@ -457,28 +459,28 @@ class Itsmng21(DyngroupDatabaseHelper):
 
         # TODO Are these table needed (inherit of previous glpi database*py files) ?
         self.networkinterfaces = Table(
-            "glpi_networkinterfaces", self.metadata, autoload=True
+            "glpi_networkinterfaces", self.metadata, autoload_with=self.db
         )
-        mapper(NetworkInterfaces, self.networkinterfaces)
+        self.mapper_registry.map_imperatively(NetworkInterfaces, self.networkinterfaces)
 
-        self.net = Table("glpi_networks", self.metadata, autoload=True)
-        mapper(Net, self.net)
+        self.net = Table("glpi_networks", self.metadata, autoload_with=self.db)
+        self.mapper_registry.map_imperatively(Net, self.net)
 
         # New network tables
-        self.ipnetworks = Table("glpi_ipnetworks", self.metadata, autoload=True)
-        mapper(IPNetworks, self.ipnetworks)
+        self.ipnetworks = Table("glpi_ipnetworks", self.metadata, autoload_with=self.db)
+        self.mapper_registry.map_imperatively(IPNetworks, self.ipnetworks)
 
         self.ipaddresses_ipnetworks = Table(
             "glpi_ipaddresses_ipnetworks",
             self.metadata,
             Column("ipaddresses_id", Integer, ForeignKey("glpi_ipaddresses.id")),
             Column("ipnetworks_id", Integer, ForeignKey("glpi_networks.id")),
-            autoload=True,
+            autoload_with=self.db,
         )
-        mapper(IPAddresses_IPNetworks, self.ipaddresses_ipnetworks)
+        self.mapper_registry.map_imperatively(IPAddresses_IPNetworks, self.ipaddresses_ipnetworks)
 
-        self.ipaddresses = Table("glpi_ipaddresses", self.metadata, autoload=True)
-        mapper(
+        self.ipaddresses = Table("glpi_ipaddresses", self.metadata, autoload_with=self.db)
+        self.mapper_registry.map_imperatively(
             IPAddresses,
             self.ipaddresses,
             properties={
@@ -497,8 +499,8 @@ class Itsmng21(DyngroupDatabaseHelper):
             },
         )
 
-        self.networknames = Table("glpi_networknames", self.metadata, autoload=True)
-        mapper(
+        self.networknames = Table("glpi_networknames", self.metadata, autoload_with=self.db)
+        self.mapper_registry.map_imperatively(
             NetworkNames,
             self.networknames,
             properties={
@@ -516,8 +518,8 @@ class Itsmng21(DyngroupDatabaseHelper):
             },
         )
 
-        self.networkports = Table("glpi_networkports", self.metadata, autoload=True)
-        mapper(
+        self.networkports = Table("glpi_networkports", self.metadata, autoload_with=self.db)
+        self.mapper_registry.map_imperatively(
             NetworkPorts,
             self.networkports,
             properties={
@@ -561,9 +563,9 @@ class Itsmng21(DyngroupDatabaseHelper):
             Column("states_id", Integer, ForeignKey("glpi_states.id"), nullable=False),
             Column("comment", String(255), nullable=False),
             Column("date_mod", Date, nullable=False),
-            autoload=True,
+            autoload_with=self.db,
         )
-        mapper(
+        self.mapper_registry.map_imperatively(
             Machine,
             self.machine,
             properties={
@@ -583,8 +585,8 @@ class Itsmng21(DyngroupDatabaseHelper):
         )
 
         # states
-        self.state = Table("glpi_states", self.metadata, autoload=True)
-        mapper(State, self.state)
+        self.state = Table("glpi_states", self.metadata, autoload_with=self.db)
+        self.mapper_registry.map_imperatively(State, self.state)
         # profile
         self.profile = Table(
             "glpi_profiles",
@@ -592,7 +594,7 @@ class Itsmng21(DyngroupDatabaseHelper):
             Column("id", Integer, primary_key=True),
             Column("name", String(255), nullable=False),
         )
-        mapper(Profile, self.profile)
+        self.mapper_registry.map_imperatively(Profile, self.profile)
 
         # user
         self.user = Table(
@@ -608,7 +610,7 @@ class Itsmng21(DyngroupDatabaseHelper):
             Column("is_deleted", Integer, nullable=False),
             Column("is_active", Integer, nullable=False),
         )
-        mapper(User, self.user)
+        self.mapper_registry.map_imperatively(User, self.user)
 
         # userprofile
         self.userprofile = Table(
@@ -621,20 +623,20 @@ class Itsmng21(DyngroupDatabaseHelper):
             Column("is_dynamic", Integer),
             Column("is_recursive", Integer),
         )
-        mapper(UserProfile, self.userprofile)
+        self.mapper_registry.map_imperatively(UserProfile, self.userprofile)
 
         # glpi_manufacturers
-        self.manufacturers = Table("glpi_manufacturers", self.metadata, autoload=True)
-        mapper(Manufacturers, self.manufacturers)
+        self.manufacturers = Table("glpi_manufacturers", self.metadata, autoload_with=self.db)
+        self.mapper_registry.map_imperatively(Manufacturers, self.manufacturers)
 
         # software
         self.software = Table(
             "glpi_softwares",
             self.metadata,
             Column("manufacturers_id", Integer, ForeignKey("glpi_manufacturers.id")),
-            autoload=True,
+            autoload_with=self.db,
         )
-        mapper(Software, self.software)
+        self.mapper_registry.map_imperatively(Software, self.software)
 
         # glpi_inst_software
         self.inst_software = Table(
@@ -642,35 +644,35 @@ class Itsmng21(DyngroupDatabaseHelper):
             self.metadata,
             Column("items_id", Integer, ForeignKey("glpi_computers_pulse.id")),
             Column("softwareversions_id", Integer, ForeignKey("glpi_softwareversions.id")),
-            autoload=True,
+            autoload_with=self.db,
         )
-        mapper(InstSoftware, self.inst_software)
+        self.mapper_registry.map_imperatively(InstSoftware, self.inst_software)
 
         # glpi_licenses
         self.licenses = Table(
             "glpi_softwarelicenses",
             self.metadata,
             Column("softwares_id", Integer, ForeignKey("glpi_softwares.id")),
-            autoload=True,
+            autoload_with=self.db,
         )
-        mapper(Licenses, self.licenses)
+        self.mapper_registry.map_imperatively(Licenses, self.licenses)
 
         # glpi_softwareversions
         self.softwareversions = Table(
             "glpi_softwareversions",
             self.metadata,
             Column("softwares_id", Integer, ForeignKey("glpi_softwares.id")),
-            autoload=True,
+            autoload_with=self.db,
         )
-        mapper(SoftwareVersion, self.softwareversions)
+        self.mapper_registry.map_imperatively(SoftwareVersion, self.softwareversions)
 
         # model
-        self.model = Table("glpi_computermodels", self.metadata, autoload=True)
-        mapper(Model, self.model)
+        self.model = Table("glpi_computermodels", self.metadata, autoload_with=self.db)
+        self.mapper_registry.map_imperatively(Model, self.model)
 
         # group
-        self.group = Table("glpi_groups", self.metadata, autoload=True)
-        mapper(Group, self.group)
+        self.group = Table("glpi_groups", self.metadata, autoload_with=self.db)
+        self.mapper_registry.map_imperatively(Group, self.group)
 
         # collects
         self.collects = None
@@ -679,9 +681,9 @@ class Itsmng21(DyngroupDatabaseHelper):
                 "glpi_plugin_fusioninventory_collects",
                 self.metadata,
                 Column("entities_id", Integer, ForeignKey("glpi_entities.id")),
-                autoload=True,
+                autoload_with=self.db,
             )
-            mapper(Collects, self.collects)
+            self.mapper_registry.map_imperatively(Collects, self.collects)
 
         except :
             self.logger.warning("Impossible to map glpi_plugin_fusioninventory_collects")
@@ -691,9 +693,9 @@ class Itsmng21(DyngroupDatabaseHelper):
                 self.collects = Table(
                     "glpi_plugin_glpiinventory_collects",
                     self.metadata,
-                    autoload=True,
+                    autoload_with=self.db,
                 )
-                mapper(Collects, self.collects)
+                self.mapper_registry.map_imperatively(Collects, self.collects)
             except:
                 self.logger.warning("Impossible to map glpi_plugin_glpiinventory_collects")
 
@@ -705,9 +707,9 @@ class Itsmng21(DyngroupDatabaseHelper):
                     "glpi_plugin_fusioninventory_collects_registries",
                     self.metadata,
                     Column("plugin_fusioninventory_collects_id", Integer, ForeignKey("glpi_plugin_fusioninventory_collects.id")),
-                    autoload=True,
+                    autoload_with=self.db,
                 )
-                mapper(Registries, self.registries)
+                self.mapper_registry.map_imperatively(Registries, self.registries)
 
             except :
                 logging.getLogger().warning("Impossible to map glpi_plugin_fusioninventory_collects_registries")
@@ -717,9 +719,9 @@ class Itsmng21(DyngroupDatabaseHelper):
                     self.registries = Table(
                         "glpi_plugin_glpiinventory_collects_registries",
                         self.metadata,
-                        autoload=True,
+                        autoload_with=self.db,
                     )
-                    mapper(Registries, self.registries)
+                    self.mapper_registry.map_imperatively(Registries, self.registries)
                 except:
                     logging.getLogger().warning("Impossible to map glpi_plugin_glpiinventory_collects_registries")
 
@@ -732,7 +734,7 @@ class Itsmng21(DyngroupDatabaseHelper):
                     self.metadata,
                     Column("computers_id", Integer, ForeignKey("glpi_computers_pulse.id")),
                     Column("plugin_fusioninventory_collects_registries_id", Integer, ForeignKey("glpi_plugin_fusioninventory_collects_registries.id")),
-                    autoload=True,
+                    autoload_with=self.db,
                 )
             except :
                 logging.getLogger().warning("Impossible to map glpi_plugin_fusioninventory_collects_registries_contents")
@@ -743,9 +745,9 @@ class Itsmng21(DyngroupDatabaseHelper):
                     self.metadata,
                     Column("computers_id", Integer, ForeignKey("glpi_computers_pulse.id")),
                     Column("plugin_glpiinventory_collects_registries_id",Integer,ForeignKey("glpi_plugin_glpiinventory_collects_registries.id")),
-                    autoload=True,
+                    autoload_with=self.db,
                 )
-                mapper(RegContents, self.regcontents)
+                self.mapper_registry.map_imperatively(RegContents, self.regcontents)
             except:
                 logging.getLogger().warning("Impossible to map glpi_plugin_glpiinventory_collects_registries_contents")
 
@@ -754,9 +756,9 @@ class Itsmng21(DyngroupDatabaseHelper):
             "glpi_computers_items",
             self.metadata,
             Column("computers_id", Integer, ForeignKey( "glpi_computers_pulse.id")),
-            autoload=True,
+            autoload_with=self.db,
         )
-        mapper(Computersitems, self.computersitems)
+        self.mapper_registry.map_imperatively(Computersitems, self.computersitems)
 
         # use view glpi_view_computers_items_printer
         self.view_computers_items_printer = Table(
@@ -765,9 +767,9 @@ class Itsmng21(DyngroupDatabaseHelper):
             Column("id", Integer, primary_key=True),
             Column("items_id", Integer, ForeignKey("glpi_printers.id")),
             Column("computers_id", Integer, ForeignKey("glpi_computers_pulse.id")),
-            autoload=True,
+            autoload_with=self.db,
         )
-        mapper(Computersviewitemsprinter, self.view_computers_items_printer)
+        self.mapper_registry.map_imperatively(Computersviewitemsprinter, self.view_computers_items_printer)
 
         self.view_computers_items_peripheral = Table(
             "glpi_view_computers_items_peripheral",
@@ -775,34 +777,34 @@ class Itsmng21(DyngroupDatabaseHelper):
             Column("id", Integer, primary_key=True),
             Column("items_id", Integer, ForeignKey("glpi_peripherals.id")),
             Column("computers_id", Integer, ForeignKey("glpi_computers_pulse.id")),
-            autoload=True,
+            autoload_with=self.db,
         )
-        mapper(Computersviewitemsperipheral, self.view_computers_items_peripheral)
+        self.mapper_registry.map_imperatively(Computersviewitemsperipheral, self.view_computers_items_peripheral)
 
         self.glpi_view_peripherals_manufacturers = Table(
             "glpi_view_peripherals_manufacturers",
             self.metadata,
             Column("id", Integer, primary_key=True),
             Column("items_id", Integer, ForeignKey("glpi_peripherals.manufacturers_id")),
-            autoload=True,
+            autoload_with=self.db,
         )
-        mapper(Peripheralsmanufacturers, self.glpi_view_peripherals_manufacturers)
+        self.mapper_registry.map_imperatively(Peripheralsmanufacturers, self.glpi_view_peripherals_manufacturers)
 
         # Monitors items
-        self.monitors = Table("glpi_monitors", self.metadata, autoload=True)
-        mapper(Monitors, self.monitors)
+        self.monitors = Table("glpi_monitors", self.metadata, autoload_with=self.db)
+        self.mapper_registry.map_imperatively(Monitors, self.monitors)
 
         # Phones items
-        self.phones = Table("glpi_phones", self.metadata, autoload=True)
-        mapper(Phones, self.phones)
+        self.phones = Table("glpi_phones", self.metadata, autoload_with=self.db)
+        self.mapper_registry.map_imperatively(Phones, self.phones)
 
         # Printers items
-        self.printers = Table("glpi_printers", self.metadata, autoload=True)
-        mapper(Printers, self.printers)
+        self.printers = Table("glpi_printers", self.metadata, autoload_with=self.db)
+        self.mapper_registry.map_imperatively(Printers, self.printers)
 
         # Peripherals items
-        self.peripherals = Table("glpi_peripherals", self.metadata, autoload=True)
-        mapper(Peripherals, self.peripherals)
+        self.peripherals = Table("glpi_peripherals", self.metadata, autoload_with=self.db)
+        self.mapper_registry.map_imperatively(Peripherals, self.peripherals)
 
     # internal query generators
     def __filter_on(self, query):
@@ -1427,14 +1429,14 @@ class Itsmng21(DyngroupDatabaseHelper):
         return result
 
     def __getRestrictedComputersListQuery(
-        self, ctx, filt=None, session=create_session(), displayList=False, count=False
+        self, ctx, filt=None, session=self.session_factory(), displayList=False, count=False
     ):
         """
         Get the sqlalchemy query to get a list of computers with some filters
         If displayList is True, we are displaying computers list
         """
         if session == None:
-            session = create_session()
+            session = self.session_factory()
 
         query = (count and session.query(func.count(Machine.id))) or session.query(
             Machine
@@ -2103,7 +2105,7 @@ class Itsmng21(DyngroupDatabaseHelper):
         """
         Return number of computers by state
         """
-        session = create_session()
+        session = self.session_factory()
         now = datetime.datetime.now()
         states = {
             "orange": now - datetime.timedelta(orange),
@@ -2152,7 +2154,7 @@ class Itsmng21(DyngroupDatabaseHelper):
         """
         Get the size of the computer list that match filters parameters
         """
-        session = create_session()
+        session = self.session_factory()
 
         displayList = None
 
@@ -2193,7 +2195,7 @@ class Itsmng21(DyngroupDatabaseHelper):
         ):
             # recherche entity parent.
             entitylist = self.getEntitiesParentsAsList([filt["fk_entity"]])
-            session = create_session()
+            session = self.session_factory()
             entitylist.append(filt["fk_entity"])
             q = (
                 session.query(
@@ -2233,7 +2235,7 @@ class Itsmng21(DyngroupDatabaseHelper):
         @param displayList: if True, we are displaying Computers list main page
         @type displayList: None or bool
         """
-        session = create_session()
+        session = self.session_factory()
         ret = {}
 
         # If we are displaying Computers list main page, set displayList to True
@@ -2285,7 +2287,7 @@ class Itsmng21(DyngroupDatabaseHelper):
                 {'uuid':'uuid2', 'hostname':'machine2'}
             ]
         """
-        session = create_session()
+        session = self.session_factory()
         query = session.query(Machine.id, Machine.name).all()
         session.close()
         return [
@@ -2294,7 +2296,7 @@ class Itsmng21(DyngroupDatabaseHelper):
         ]
 
     def getTotalComputerCount(self):
-        session = create_session()
+        session = self.session_factory()
         query = session.query(Machine)
         query = self.__filter_on(query)
         c = query.count()
@@ -2325,7 +2327,7 @@ class Itsmng21(DyngroupDatabaseHelper):
         """
         Get the machine that as this UUID
         """
-        session = create_session()
+        session = self.session_factory()
         ret = session.query(Machine).filter(
             self.machine.c.id == int(str(uuid).replace("UUID", ""))
         )
@@ -2589,7 +2591,7 @@ class Itsmng21(DyngroupDatabaseHelper):
         """
 
         ret = None, None, None
-        session = create_session()
+        session = self.session_factory()
         query = session.query(User).select_from(self.user.join(self.machine))
         query = query.filter(self.machine.c.id == machine.id).first()
         if query is not None:
@@ -2602,7 +2604,7 @@ class Itsmng21(DyngroupDatabaseHelper):
         """
         @return: Return the first user GLPI profile as a string, or None
         """
-        session = create_session()
+        session = self.session_factory()
         qprofile = (
             session.query(Profile)
             .select_from(self.profile.join(self.userprofile).join(self.user))
@@ -2620,7 +2622,7 @@ class Itsmng21(DyngroupDatabaseHelper):
         """
         @return: Return all user GLPI profiles as a list of string, or None
         """
-        session = create_session()
+        session = self.session_factory()
         profiles = (
             session.query(Profile)
             .select_from(self.profile.join(self.userprofile).join(self.user))
@@ -2657,7 +2659,7 @@ class Itsmng21(DyngroupDatabaseHelper):
         @return: Return one user GLPI entities as a list of string, or None
         TODO : check it is still used!
         """
-        session = create_session()
+        session = self.session_factory()
         qentities = (
             session.query(Entities)
             .select_from(self.entities.join(self.userprofile).join(self.user))
@@ -2685,7 +2687,7 @@ class Itsmng21(DyngroupDatabaseHelper):
             # check if user is linked to the root entity
             # (which is not declared explicitly in glpi...
             # we have to emulate it...)
-            session = create_session()
+            session = self.session_factory()
             entids = (
                 session.query(UserProfile)
                 .select_from(self.userprofile.join(self.user).join(self.profile))
@@ -2728,7 +2730,7 @@ class Itsmng21(DyngroupDatabaseHelper):
 
     def __get_all_locations(self):
         ret = []
-        session = create_session()
+        session = self.session_factory()
         q = (
             session.query(Entities)
             .group_by(self.entities.c.completename)
@@ -2744,7 +2746,7 @@ class Itsmng21(DyngroupDatabaseHelper):
         """
         Recursive function used by getUserLocations to get entities tree if needed
         """
-        session = create_session()
+        session = self.session_factory()
         children = (
             session.query(Entities)
             .filter(self.entities.c.entities_id == child.id)
@@ -2775,7 +2777,7 @@ class Itsmng21(DyngroupDatabaseHelper):
             >>> getLocationsListsimple(["UUID123", {"id": "UUID456"}])
             # Renvoie les entités avec les IDs 123 et 456.
         """
-        session = create_session()
+        session = self.session_factory()
 
         # Normalise chaque UUID de la liste (gère chaînes, dictionnaires et listes)
         normalized_uuids = normalize_entity_list(uuids, -1)
@@ -2807,7 +2809,7 @@ class Itsmng21(DyngroupDatabaseHelper):
             >>> getLocation("UUID123")
             # Renvoie l'entité avec l'ID 123.
         """
-        session = create_session()
+        session = self.session_factory()
 
         # Normalise l'UUID pour extraire un entier valide
         normalized_uuid = normalize_entity(uuid, -1)
@@ -2859,13 +2861,13 @@ class Itsmng21(DyngroupDatabaseHelper):
         """
         Returns the total count of entities
         """
-        session = create_session()
+        session = self.session_factory()
         ret = session.query(Entities).count()
         session.close()
         return ret
 
     def getMachinesLocations(self, machine_uuids):
-        session = create_session()
+        session = self.session_factory()
         q = (
             session.query(
                 Entities.id,
@@ -2903,7 +2905,7 @@ class Itsmng21(DyngroupDatabaseHelper):
             inloc = []
             for location in locations:
                 inloc.append(location.name)
-            session = create_session()
+            session = self.session_factory()
             q = (
                 session.query(User)
                 .select_from(self.user.join(self.userprofile).join(self.entities))
@@ -2923,7 +2925,7 @@ class Itsmng21(DyngroupDatabaseHelper):
         """
         Get all computers in that location
         """
-        session = create_session()
+        session = self.session_factory()
         query = (
             session.query(Machine)
             .select_from(self.machine.join(self.entities))
@@ -2943,7 +2945,7 @@ class Itsmng21(DyngroupDatabaseHelper):
 
     def getLocationsFromPathString(self, location_path):
         """ """
-        session = create_session()
+        session = self.session_factory()
         ens = []
         for loc_path in location_path:
             loc_path = " > ".join(loc_path)
@@ -2960,7 +2962,7 @@ class Itsmng21(DyngroupDatabaseHelper):
         return ens
 
     def getLocationParentPath(self, loc_uuid):
-        session = create_session()
+        session = self.session_factory()
         path = []
         en_id = fromUUID(loc_uuid)
         en = session.query(Entities).filter(self.entities.c.id == en_id).first()
@@ -2993,7 +2995,7 @@ class Itsmng21(DyngroupDatabaseHelper):
             return ()
 
         ret = None
-        session = create_session()
+        session = self.session_factory()
 
         query = (
             session.query(RegContents)
@@ -3025,7 +3027,7 @@ class Itsmng21(DyngroupDatabaseHelper):
         if not self.displayLocalisationBar:
             return True
 
-        session = create_session()
+        session = self.session_factory()
         # get the number of computers the user have access to
         query = session.query(Machine)
         if ctx.userid == "root":
@@ -3072,7 +3074,7 @@ class Itsmng21(DyngroupDatabaseHelper):
 
     # for inventory purpose (use the same API than OCSinventory to keep the same GUI)
     def getLastMachineInventoryFull(self, uuid):
-        session = create_session()
+        session = self.session_factory()
         # there is glpi_entreprise missing
         query = self.filterOnUUID(
             session.query(Machine)
@@ -3549,7 +3551,7 @@ class Itsmng21(DyngroupDatabaseHelper):
         self.logger.debug("%s: Set %s as new value for %s" %
                           (uuid, value, name))
         try:
-            session = create_session()
+            session = self.session_factory()
 
             # Get SQL field who will be updated
             table, field = self.__getTableAndFieldFromName(name)
@@ -4154,7 +4156,7 @@ class Itsmng21(DyngroupDatabaseHelper):
 
         uuids = list(uuids_set)
 
-        session = create_session()
+        session = self.session_factory()
 
         query = (
             session.query(Machine)
@@ -4226,7 +4228,7 @@ class Itsmng21(DyngroupDatabaseHelper):
     ):
         # Mutable dict options used as default argument to a method or function
         options = options or {}
-        session = create_session()
+        session = self.session_factory()
 
         ret = None
         if hasattr(self, "getLastMachine%sPart" % part):
@@ -4374,7 +4376,7 @@ class Itsmng21(DyngroupDatabaseHelper):
         @rtype: int
         """
         ret = None
-        session = create_session()
+        session = self.session_factory()
         query = session.query(OS).filter(self.os.c.name == unknownOsString)
         result = query.first()
         if result is not None:
@@ -4395,7 +4397,7 @@ class Itsmng21(DyngroupDatabaseHelper):
         @return: True or False if machine has a known OS
         @rtype: boolean
         """
-        session = create_session()
+        session = self.session_factory()
         # In GLPI, unknown OS id is 0
         # PXE Inventory create a new one with name: "Unknown operating system (PXE network boot inventory)"
         unknown_os_ids = [0]
@@ -4420,7 +4422,7 @@ class Itsmng21(DyngroupDatabaseHelper):
         """
         @return: all os defined in the GLPI database
         """
-        session = create_session()
+        session = self.session_factory()
         query = session.query(OS).select_from(self.os.join(self.machine))
         query = self.__filter_on(
             query.filter(self.machine.c.is_deleted == 0).filter(
@@ -4439,7 +4441,7 @@ class Itsmng21(DyngroupDatabaseHelper):
         @return: all machines that have this os
         """
         # TODO use the ctx...
-        session = create_session()
+        session = self.session_factory()
         query = (
             session.query(Machine)
             .select_from(self.machine.join(self.os))
@@ -4509,7 +4511,7 @@ class Itsmng21(DyngroupDatabaseHelper):
         """
         @return: all entities defined in the GLPI database
         """
-        session = create_session()
+        session = self.session_factory()
         query = session.query(Entities)
         if filter != "":
             query = query.filter(self.entities.c.name.like("%" + filt + "%"))
@@ -4529,7 +4531,7 @@ class Itsmng21(DyngroupDatabaseHelper):
         @return: all machines that are in this entity
         """
         # TODO use the ctx...
-        session = create_session()
+        session = self.session_factory()
         query = (
             session.query(Machine)
             .select_from(self.machine.join(self.entities))
@@ -4554,7 +4556,7 @@ class Itsmng21(DyngroupDatabaseHelper):
         return my_parents_ids
 
     def getEntitiesParentsAsDict(self, lids):
-        session = create_session()
+        session = self.session_factory()
         if type(lids) != list and type(lids) != tuple:
             lids = lids
         query = session.query(Entities).all()
@@ -4832,7 +4834,7 @@ class Itsmng21(DyngroupDatabaseHelper):
         """
         @return: all hostnames defined in the GLPI database
         """
-        session = create_session()
+        session = self.session_factory()
         query = session.query(Machine)
         query = query.filter(self.machine.c.is_deleted == 0).filter(
             self.machine.c.is_template == 0
@@ -4850,7 +4852,7 @@ class Itsmng21(DyngroupDatabaseHelper):
         @return: all machines that have this hostname
         """
         # TODO use the ctx...
-        session = create_session()
+        session = self.session_factory()
         query = session.query(Machine)
         query = query.filter(self.machine.c.is_deleted == 0).filter(
             self.machine.c.is_template == 0
@@ -4866,7 +4868,7 @@ class Itsmng21(DyngroupDatabaseHelper):
         """
         @return: all hostnames defined in the GLPI database
         """
-        session = create_session()
+        session = self.session_factory()
         query = session.query(Machine)
         query = query.filter(self.machine.c.is_deleted == 0).filter(
             self.machine.c.is_template == 0
@@ -4884,7 +4886,7 @@ class Itsmng21(DyngroupDatabaseHelper):
         @return: all machines that have this contact
         """
         # TODO use the ctx...
-        session = create_session()
+        session = self.session_factory()
         query = session.query(Machine)
         query = query.filter(self.machine.c.is_deleted == 0).filter(
             self.machine.c.is_template == 0
@@ -4900,7 +4902,7 @@ class Itsmng21(DyngroupDatabaseHelper):
         """
         @return: all hostnames defined in the GLPI database
         """
-        session = create_session()
+        session = self.session_factory()
         query = session.query(Machine)
         query = query.filter(self.machine.c.is_deleted == 0).filter(
             self.machine.c.is_template == 0
@@ -4918,7 +4920,7 @@ class Itsmng21(DyngroupDatabaseHelper):
         @return: all machines that have this contact number
         """
         # TODO use the ctx...
-        session = create_session()
+        session = self.session_factory()
         query = session.query(Machine)
         query = query.filter(self.machine.c.is_deleted == 0).filter(
             self.machine.c.is_template == 0
@@ -4934,7 +4936,7 @@ class Itsmng21(DyngroupDatabaseHelper):
         """
         @return: all hostnames defined in the GLPI database
         """
-        session = create_session()
+        session = self.session_factory()
         query = session.query(Machine)
         query = query.filter(self.machine.c.is_deleted == 0).filter(
             self.machine.c.is_template == 0
@@ -4952,7 +4954,7 @@ class Itsmng21(DyngroupDatabaseHelper):
         @return: all machines that have this contact number
         """
         # TODO use the ctx...
-        session = create_session()
+        session = self.session_factory()
         query = session.query(Machine)
         query = query.filter(self.machine.c.is_deleted == 0).filter(
             self.machine.c.is_template == 0
@@ -4966,7 +4968,7 @@ class Itsmng21(DyngroupDatabaseHelper):
 
     def getAllModels(self, ctx, filt=""):
         """@return: all machine models defined in the GLPI database"""
-        session = create_session()
+        session = self.session_factory()
         query = session.query(Model).select_from(self.model.join(self.machine))
         query = self.__filter_on(
             query.filter(self.machine.c.is_deleted == 0).filter(
@@ -4982,7 +4984,7 @@ class Itsmng21(DyngroupDatabaseHelper):
 
     def getAllManufacturers(self, ctx, filt=""):
         """@return: all machine manufacturers defined in the GLPI database"""
-        session = create_session()
+        session = self.session_factory()
         query = session.query(Manufacturers).select_from(
             self.manufacturers.join(self.machine)
         )
@@ -5026,7 +5028,7 @@ class Itsmng21(DyngroupDatabaseHelper):
 
     def getAllStates(self, ctx, filt=""):
         """@return: all machine models defined in the GLPI database"""
-        session = create_session()
+        session = self.session_factory()
         query = session.query(State).select_from(self.state.join(self.machine))
         query = self.__filter_on(
             query.filter(self.machine.c.is_deleted == 0).filter(
@@ -5042,7 +5044,7 @@ class Itsmng21(DyngroupDatabaseHelper):
 
     def getAllTypes(self, ctx, filt=""):
         """@return: all machine types defined in the GLPI database"""
-        session = create_session()
+        session = self.session_factory()
         query = session.query(self.klass["glpi_computertypes"]).select_from(
             self.glpi_computertypes.join(self.machine)
         )
@@ -5065,7 +5067,7 @@ class Itsmng21(DyngroupDatabaseHelper):
 
     def getMachineByModel(self, ctx, filt):
         """@return: all machines that have this model"""
-        session = create_session()
+        session = self.session_factory()
         query = session.query(Machine).select_from(self.machine.join(self.model))
         query = query.filter(self.machine.c.is_deleted == 0).filter(
             self.machine.c.is_template == 0
@@ -5079,7 +5081,7 @@ class Itsmng21(DyngroupDatabaseHelper):
 
     def getAllOwnerMachine(self, ctx, filt=""):
         """@return: all owner defined in the GLPI database"""
-        session = create_session()
+        session = self.session_factory()
         query = session.query(User).select_from(self.manufacturers.join(self.machine))
         query = self.__filter_on(
             query.filter(self.machine.c.is_deleted == 0).filter(
@@ -5097,7 +5099,7 @@ class Itsmng21(DyngroupDatabaseHelper):
         """
         @return: all LoggedUser defined in the GLPI database
         """
-        session = create_session()
+        session = self.session_factory()
         query = session.query(Machine)
         query = query.filter(self.machine.c.is_deleted == 0).filter(
             self.machine.c.is_template == 0
@@ -5141,7 +5143,7 @@ class Itsmng21(DyngroupDatabaseHelper):
 
     def getMachineByInventoryNumber(self, ctx, filt):
         """@return: all machines that have this type"""
-        session = create_session()
+        session = self.session_factory()
         query = session.query(Machine).select_from(self.machine)
         query = query.filter(self.machine.c.is_deleted == 0).filter(
             self.machine.c.is_template == 0
@@ -5155,7 +5157,7 @@ class Itsmng21(DyngroupDatabaseHelper):
 
     def getMachineByManufacturer(self, ctx, filt):
         """@return: all machines that have this manufacturer"""
-        session = create_session()
+        session = self.session_factory()
         query = session.query(Manufacturers).select_from(
             self.machine.join(self.manufacturers)
         )
@@ -5171,7 +5173,7 @@ class Itsmng21(DyngroupDatabaseHelper):
 
     def getMachineByState(self, ctx, filt, count=0):
         """@return: all machines that have this state"""
-        session = create_session()
+        session = self.session_factory()
         if int(count) == 1:
             query = session.query(func.count(Machine)).select_from(
                 self.machine.join(self.state)
@@ -5198,7 +5200,7 @@ class Itsmng21(DyngroupDatabaseHelper):
         """@return: all hostnames defined in the GLPI database"""
         if not hasattr(ctx, "locationsid"):
             complete_ctx(ctx)
-        session = create_session()
+        session = self.session_factory()
         query = session.query(Locations).select_from(self.locations.join(self.machine))
         query = self.__filter_on(
             query.filter(self.machine.c.is_deleted == 0).filter(
@@ -5226,7 +5228,7 @@ class Itsmng21(DyngroupDatabaseHelper):
         """@return: all hostnames defined in the GLPI database"""
         if not hasattr(ctx, "locationsid"):
             complete_ctx(ctx)
-        session = create_session()
+        session = self.session_factory()
         query = session.query(Locations)
         if filter != "":
             query = query.filter(self.locations.c.completename.like("%" + filt + "%"))
@@ -5241,7 +5243,7 @@ class Itsmng21(DyngroupDatabaseHelper):
         @return: list Register key name
         """
         ret = None
-        session = create_session()
+        session = self.session_factory()
         query = session.query(Registries.name)
         query = self.__filter_on_entity(query, ctx)
         if filter != "":
@@ -5261,7 +5263,7 @@ class Itsmng21(DyngroupDatabaseHelper):
         if self.regcontents is None:
             return []
 
-        session = create_session()
+        session = self.session_factory()
         query = session.query(distinct(RegContents.value))
         query = self.__filter_on_entity(query, ctx)
         query = query.filter(self.registries.c.key.like("%" + keyregister + "%"))
@@ -5271,7 +5273,7 @@ class Itsmng21(DyngroupDatabaseHelper):
 
     def getMachineByLocation(self, ctx, filt):
         """@return: all machines that have this contact number"""
-        session = create_session()
+        session = self.session_factory()
         query = session.query(Machine).select_from(self.machine.join(self.locations))
         query = query.filter(self.machine.c.is_deleted == 0).filter(
             self.machine.c.is_template == 0
@@ -5285,7 +5287,7 @@ class Itsmng21(DyngroupDatabaseHelper):
 
     def getAllOsSps(self, ctx, filt=""):
         """@return: all hostnames defined in the GLPI database"""
-        session = create_session()
+        session = self.session_factory()
         query = session.query(OsSp).select_from(self.os_sp.join(self.machine))
         query = self.__filter_on(
             query.filter(self.machine.c.is_deleted == 0).filter(
@@ -5301,7 +5303,7 @@ class Itsmng21(DyngroupDatabaseHelper):
 
     def getMachineByOsSp(self, ctx, filt):
         """@return: all machines that have this contact number"""
-        session = create_session()
+        session = self.session_factory()
         query = session.query(Machine).select_from(self.machine.join(self.os_sp))
         query = query.filter(self.machine.c.is_deleted == 0).filter(
             self.machine.c.is_template == 0
@@ -5317,7 +5319,7 @@ class Itsmng21(DyngroupDatabaseHelper):
         """@return: all hostnames defined in the GLPI database"""
         if not hasattr(ctx, "locationsid"):
             complete_ctx(ctx)
-        session = create_session()
+        session = self.session_factory()
         query = session.query(Group).select_from(self.group.join(self.machine))
         query = self.__filter_on(
             query.filter(self.machine.c.is_deleted == 0).filter(
@@ -5346,7 +5348,7 @@ class Itsmng21(DyngroupDatabaseHelper):
 
     def getMachineByGroup(self, ctx, filt):  # Entity!
         """@return: all machines that have this contact number"""
-        session = create_session()
+        session = self.session_factory()
         query = session.query(Machine).select_from(self.machine.join(self.group))
         query = query.filter(self.machine.c.is_deleted == 0).filter(
             self.machine.c.is_template == 0
@@ -5361,7 +5363,7 @@ class Itsmng21(DyngroupDatabaseHelper):
 
     def getAllNetworks(self, ctx, filt=""):
         """@return: all hostnames defined in the GLPI database"""
-        session = create_session()
+        session = self.session_factory()
         query = session.query(Net).select_from(self.net.join(self.machine))
         query = self.__filter_on(
             query.filter(self.machine.c.is_deleted == 0).filter(
@@ -5377,7 +5379,7 @@ class Itsmng21(DyngroupDatabaseHelper):
 
     def getMachineByNetwork(self, ctx, filt):
         """@return: all machines that have this contact number"""
-        session = create_session()
+        session = self.session_factory()
         query = session.query(Machine).select_from(self.machine.join(self.net))
         query = query.filter(self.machine.c.is_deleted == 0).filter(
             self.machine.c.is_template == 0
@@ -5491,21 +5493,21 @@ class Itsmng21(DyngroupDatabaseHelper):
 
     def getMachineBySerial(self, serial):
         """@return: all computers that have this mac address"""
-        session = create_session()
+        session = self.session_factory()
         ret = session.query(Machine).filter(Machine.serial.like(serial)).first()
         session.close()
         return self._machineobject(ret)
 
     def getMachineByUuidSetup(self, uuidsetupmachine):
         """@return: all computers that have this uuid setup machine"""
-        session = create_session()
+        session = self.session_factory()
         ret = session.query(Machine).filter(and_(Machine.uuid.like(uuidsetupmachine), Machine.is_deleted == 0, Machine.is_template == 0)).first()
         session.close()
         return self._machineobject(ret)
 
     def getMachineByMacAddress(self, ctx, filt):
         """@return: all computers that have this mac address"""
-        session = create_session()
+        session = self.session_factory()
         query = session.query(Machine).join(
             NetworkPorts,
             and_(
@@ -5559,7 +5561,7 @@ class Itsmng21(DyngroupDatabaseHelper):
 
     def getMachineByOsVersion(self, ctx, filt):
         """@return: all machines that have this os version"""
-        session = create_session()
+        session = self.session_factory()
         query = session.query(Machine).select_from(self.machine.join(self.os_version))
         query = query.filter(self.machine.c.is_deleted == 0).filter(self.machine.c.is_template == 0)
         query = self.__filter_on(query)
@@ -5571,7 +5573,7 @@ class Itsmng21(DyngroupDatabaseHelper):
 
     def getMachineByArchitecure(self, ctx, filt):
         """@return: all machines that have this architecture"""
-        session = create_session()
+        session = self.session_factory()
         query = session.query(Machine).select_from(self.machine.join(self.os_arch))
         query = query.filter(self.machine.c.is_deleted == 0).filter(self.machine.c.is_template == 0)
         query = self.__filter_on(query)
@@ -5581,7 +5583,7 @@ class Itsmng21(DyngroupDatabaseHelper):
         session.close()
 
     def getMachineByPrinter(self, ctx, filt):
-        session = create_session()
+        session = self.session_factory()
         query = (
             session.query(Machine)
             .select_from(self.machine.join(self.computersitems))
@@ -5597,7 +5599,7 @@ class Itsmng21(DyngroupDatabaseHelper):
         session.close()
 
     def getMachineByPrinterserial(self, ctx, filt):
-        session = create_session()
+        session = self.session_factory()
         query = (
             session.query(Machine)
             .distinct(Machine.id)
@@ -5627,7 +5629,7 @@ class Itsmng21(DyngroupDatabaseHelper):
         session.close()
 
     def getMachineByPeripheral(self, ctx, filt):
-        session = create_session()
+        session = self.session_factory()
         query = (
             session.query(Machine)
             .distinct(Machine.id)
@@ -5666,7 +5668,7 @@ class Itsmng21(DyngroupDatabaseHelper):
         return self.get_machines_list(0, 0, {"idmachine": glpi_uuid})
 
     def getMachineByPeripheralserial(self, ctx, filt):
-        session = create_session()
+        session = self.session_factory()
         query = (
             session.query(Machine)
             .distinct(Machine.id)
@@ -5698,7 +5700,7 @@ class Itsmng21(DyngroupDatabaseHelper):
     def getComputersOS(self, uuids):
         if isinstance(uuids, str):
             uuids = [uuids]
-        session = create_session()
+        session = self.session_factory()
         query = (
             session.query(Machine)
             .add_column(self.os.c.name)
@@ -5717,7 +5719,7 @@ class Itsmng21(DyngroupDatabaseHelper):
         return res
 
     def getComputersCountByOS(self, osname):
-        session = create_session()
+        session = self.session_factory()
         query = session.query(func.count(Machine.id)).select_from(
             self.machine.join(self.os)
         )
@@ -5803,7 +5805,7 @@ class Itsmng21(DyngroupDatabaseHelper):
                                 result.append(d)
             return result
 
-        session = create_session()
+        session = self.session_factory()
         query = self.filterOnUUID(session.query(Machine), uuids)
         ret = {}
         for machine in query:
@@ -5826,7 +5828,7 @@ class Itsmng21(DyngroupDatabaseHelper):
         """
         Get several machines mac addresses
         """
-        session = create_session()
+        session = self.session_factory()
         query = self.filterOnUUID(session.query(Machine), uuids)
         ret = {}
         for machine in query:
@@ -5924,7 +5926,7 @@ class Itsmng21(DyngroupDatabaseHelper):
         complete_ctx(ctx)
         filt = {"ctxlocation": ctx.locations}
 
-        session = create_session()
+        session = self.session_factory()
         now = datetime.datetime.now()
         orange = now - datetime.timedelta(orange)
         red = now - datetime.timedelta(red)
@@ -6029,7 +6031,7 @@ class Itsmng21(DyngroupDatabaseHelper):
             * orange: Antivirus not running or not up-to-date
             * red: No antivirus or unknown status
         """
-        session = create_session()
+        session = self.session_factory()
 
         __computersListQ = self.__getRestrictedComputersListQuery
 
@@ -6062,7 +6064,7 @@ class Itsmng21(DyngroupDatabaseHelper):
         """
         return ids list of machines who are not in antivirus red status
         """
-        session = create_session()
+        session = self.session_factory()
         __computersListQ = self.__getRestrictedComputersListQuery
 
         complete_ctx(ctx)
@@ -6079,7 +6081,7 @@ class Itsmng21(DyngroupDatabaseHelper):
         ]
 
     def getMachineListByAntivirusState(self, ctx, groupName):
-        session = create_session()
+        session = self.session_factory()
 
         __computersListQ = self.__getRestrictedComputersListQuery
 
@@ -6107,7 +6109,7 @@ class Itsmng21(DyngroupDatabaseHelper):
         """
         Get an ip address when a mac address is given
         """
-        session = create_session()
+        session = self.session_factory()
         query = session.query(NetworkPorts).filter(NetworkPorts.mac == mac)
         # Get first IP address found
         ret = query.first().networknames.ipaddresses[0]
@@ -6125,7 +6127,7 @@ class Itsmng21(DyngroupDatabaseHelper):
         """
         Get a machine domain name
         """
-        session = create_session()
+        session = self.session_factory()
         machine = self.filterOnUUID(session.query(Machine), uuid).first()
         domain = ""
         if machine.domains is not None:
@@ -6891,7 +6893,7 @@ class Itsmng21(DyngroupDatabaseHelper):
 
     def getAllOsVersions(self, ctx, filt=""):
         """@return: all os versions defined in the GLPI database"""
-        session = create_session()
+        session = self.session_factory()
         query = session.query(OsVersion)
         if filter != "":
             query = query.filter(OsVersion.name.like("%" + filt + "%"))
@@ -6901,7 +6903,7 @@ class Itsmng21(DyngroupDatabaseHelper):
 
     def getAllArchitectures(self, ctx, filt=""):
         """@return: all hostnames defined in the GLPI database"""
-        session = create_session()
+        session = self.session_factory()
         query = session.query(OsArch)
         if filter != "":
             query = query.filter(OsArch.name.like("%" + filt + "%"))
@@ -6911,7 +6913,7 @@ class Itsmng21(DyngroupDatabaseHelper):
 
     def getAllNamePrinters(self, ctx, filt=""):
         """@return: all printer name in the GLPI database"""
-        session = create_session()
+        session = self.session_factory()
         query = session.query(Printers)
         if filter != "":
             query = query.filter(Printers.name.like("%" + filt + "%"))
@@ -6921,7 +6923,7 @@ class Itsmng21(DyngroupDatabaseHelper):
 
     def getAllSerialPrinters(self, ctx, filt=""):
         """@return: all printer serial in the GLPI database"""
-        session = create_session()
+        session = self.session_factory()
         query = session.query(Printers)
         if filter != "":
             query = query.filter(Printers.serial.like("%" + filt + "%"))

@@ -78,8 +78,12 @@ class AdminDatabase(DatabaseHelper):
         try:
             # Prepare metadata and automap base for SQLAlchemy
             self.metadata = MetaData(self.db)
+
+            self.mapper_registry = registry()
+
+            self.session_factory = sessionmaker(bind=self.db, expire_on_commit=False)
             Base = automap_base()
-            Base.prepare(self.db, reflect=True)
+            Base.prepare(autoload_with=self.db)
         except Exception as e:
             logger.error(f"Failed to prepare automap base: {e}")
             return False
@@ -111,7 +115,7 @@ class AdminDatabase(DatabaseHelper):
             return False
 
         # Create all tables defined in metadata
-        self.metadata.create_all()
+        self.metadata.create_all(bind=self.db)
         self.is_activated = True
 
         # Execute a sample query to check the database connection

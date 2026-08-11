@@ -30,7 +30,7 @@ from sqlalchemy import (
     not_,
     distinct,
 )
-from sqlalchemy.orm import create_session, mapper
+from sqlalchemy.orm import registry, Session, sessionmaker
 from lxml import etree
 
 # standard modules
@@ -94,9 +94,13 @@ class Inventory(DyngroupDatabaseHelper):
             echo=False,
         )
         self.metadata = MetaData(self.db)
+
+        self.mapper_registry = registry()
+
+        self.session_factory = sessionmaker(bind=self.db, expire_on_commit=False)
         if not self.initMappersCatchException():
             return False
-        self.metadata.create_all()
+        self.metadata.create_all(bind=self.db)
         self.is_activated = True
         self.dbversion = self.getInventoryDatabaseVersion()
         self.logger.debug("Inventory finish activation")
@@ -108,10 +112,10 @@ class Inventory(DyngroupDatabaseHelper):
         """
         self.table = {}
         self.klass = {}
-        self.version = Table("Version", self.metadata, autoload=True)
-        self.machine = Table("Machine", self.metadata, autoload=True)
-        self.inventory = Table("Inventory", self.metadata, autoload=True)
-        self.user = Table("User", self.metadata, autoload=True)
+        self.version = Table("Version", self.metadata, autoload_with=self.db)
+        self.machine = Table("Machine", self.metadata, autoload_with=self.db)
+        self.inventory = Table("Inventory", self.metadata, autoload_with=self.db)
+        self.user = Table("User", self.metadata, autoload_with=self.db)
         self.userentities = Table(
             "UserEntities",
             self.metadata,
@@ -125,12 +129,12 @@ class Inventory(DyngroupDatabaseHelper):
             Column("fk_Entity", Integer, ForeignKey("Entity.id"), primary_key=True),
         )
         # Add inventory tables for Search field (used in __filterQuery)
-        self.hardware = Table("Hardware", self.metadata, autoload=True)
-        self.bios = Table("Bios", self.metadata, autoload=True)
-        self.software = Table("Software", self.metadata, autoload=True)
-        self.network = Table("Network", self.metadata, autoload=True)
-        self.controller = Table("Controller", self.metadata, autoload=True)
-        self.registry = Table("Registry", self.metadata, autoload=True)
+        self.hardware = Table("Hardware", self.metadata, autoload_with=self.db)
+        self.bios = Table("Bios", self.metadata, autoload_with=self.db)
+        self.software = Table("Software", self.metadata, autoload_with=self.db)
+        self.network = Table("Network", self.metadata, autoload_with=self.db)
+        self.controller = Table("Controller", self.metadata, autoload_with=self.db)
+        self.registry = Table("Registry", self.metadata, autoload_with=self.db)
 
         noms = self.config.getInventoryNoms()
 
@@ -140,18 +144,18 @@ class Inventory(DyngroupDatabaseHelper):
         self.table["Hardware"] = self.hardware
         self.klass["Hardware"] = Hardware
 
-        mapper(Hardware, self.hardware)
+        self.mapper_registry.map_imperatively(Hardware, self.hardware)
 
         for item in self.config.getInventoryParts():
             # Declare the SQL table
-            self.table[item] = Table(item, self.metadata, autoload=True)
+            self.table[item] = Table(item, self.metadata, autoload_with=self.db)
             # Create the class that will be mapped
             # This will create the Bios, BootDisk, etc. classes
             # Inherit from DBObj only for __str__ method (debugging purpose)
             exec("class %s(DbObject, DBObj): pass" % item)
             self.klass[item] = eval(item)
             # Map the python class to the SQL table
-            mapper(self.klass[item], self.table[item])
+            self.mapper_registry.map_imperatively(self.klass[item], self.table[item])
 
             # Declare the has* SQL table
             hasitem = "has" + item
@@ -167,7 +171,7 @@ class Inventory(DyngroupDatabaseHelper):
             if item in noms:
                 for nom in noms[item]:
                     nomitem = "nom" + item + nom
-                    self.table[nomitem] = Table(nomitem, self.metadata, autoload=True)
+                    self.table[nomitem] = Table(nomitem, self.metadata, autoload_with=self.db)
                     # add the needed column in hasTable
                     has_columns.append(
                         Column(
@@ -182,7 +186,7 @@ class Inventory(DyngroupDatabaseHelper):
                     exec("class %s(object): pass" % nomitem)
                     self.klass[nomitem] = eval(nomitem)
                     # Map the python class to the SQL table
-                    mapper(eval(nomitem), self.table[nomitem])
+                    self.mapper_registry.map_imperatively(eval(nomitem), self.table[nomitem])
 
             self.table[hasitem] = Table(hasitem, self.metadata, *has_columns)
 
@@ -191,7 +195,7 @@ class Inventory(DyngroupDatabaseHelper):
             exec("class %s(object): pass" % hasitem)
             self.klass[hasitem] = eval(hasitem)
             # Map the python class to the SQL table
-            mapper(eval(hasitem), self.table[hasitem])
+            self.mapper_registry.map_imperatively(eval(hasitem), self.table[hasitem])
 
         # hasInventory don't exists, so we pass by hasNetwork and use the inventory field
         # which mean you have to take care, you can have more than one hasNetwork by Inventory!
@@ -200,11 +204,11 @@ class Inventory(DyngroupDatabaseHelper):
         self.klass["hasInventory"] = self.klass["hasNetwork"]
 
         try:
-            mapper(Machine, self.machine)
-            mapper(InventoryTable, self.inventory)
-            mapper(UserTable, self.user)
-            mapper(UserEntitiesTable, self.userentities)
-            mapper(RightUserEntitiesTable, self.rightuserentities)
+            self.mapper_registry.map_imperatively(Machine, self.machine)
+            self.mapper_registry.map_imperatively(InventoryTable, self.inventory)
+            self.mapper_registry.map_imperatively(UserTable, self.user)
+            self.mapper_registry.map_imperatively(UserEntitiesTable, self.userentities)
+            self.mapper_registry.map_imperatively(RightUserEntitiesTable, self.rightuserentities)
         except BaseException:
             pass
 
@@ -227,7 +231,7 @@ class Inventory(DyngroupDatabaseHelper):
         @return: Return True if the machine exists in the inventory DB
         @rtype: bool
         """
-        session = create_session()
+        session = self.session_factory()
         result = (
             session.query(Machine).filter(self.machine.c.id == fromUUID(uuid)).all()
         )
@@ -245,7 +249,7 @@ class Inventory(DyngroupDatabaseHelper):
         @return: Return True if the machine exists according to its MAC Address
         @rtype: bool
         """
-        session = create_session()
+        session = self.session_factory()
         q = session.query(self.klass["hasNetwork"])
         q = q.select_from(
             self.table["hasNetwork"]
@@ -278,7 +282,7 @@ class Inventory(DyngroupDatabaseHelper):
     def __machinesOnlyQuery(self, ctx, pattern=None, session=None, count=False):
         self.complete_ctx(ctx)
         if not session:
-            session = create_session()
+            session = self.session_factory()
 
         # doing dyngroups stuff
         join_query, query_filter = self.filter(
@@ -524,7 +528,7 @@ class Inventory(DyngroupDatabaseHelper):
         return query
 
     def getUUIDByMachineName(self, ctx, name):
-        session = create_session()
+        session = self.session_factory()
         query = session.query(Machine).filter(self.machine.c.Name == name)
         result = query.all()
         if len(result) == 1:
@@ -535,7 +539,7 @@ class Inventory(DyngroupDatabaseHelper):
         session.close()
 
     def getTotalComputerCount(self):
-        session = create_session()
+        session = self.session_factory()
         c = session.query(Machine).count()
         session.close()
         return c
@@ -544,7 +548,7 @@ class Inventory(DyngroupDatabaseHelper):
         """
         Return all available machines
         """
-        session = create_session()
+        session = self.session_factory()
         query = self.__machinesOnlyQuery(ctx, pattern, session)
 
         # Disable ORDERBY machine name
@@ -578,7 +582,7 @@ class Inventory(DyngroupDatabaseHelper):
         """
         Return the number of available machines
         """
-        session = create_session()
+        session = self.session_factory()
         ret = self.__machinesOnlyQuery(ctx, pattern, session, True)
         session.close()
         return ret
@@ -923,7 +927,7 @@ class Inventory(DyngroupDatabaseHelper):
             else:
                 filters.append(getattr(partKlass, field) == value)
 
-        session = create_session()
+        session = self.session_factory()
         query = (
             session.query(Machine)
             .add_column(func.max(haspartTable.c.inventory).label("inventoryid"))
@@ -957,7 +961,7 @@ class Inventory(DyngroupDatabaseHelper):
         Return a list of machine that correspond to the table.field = value
         """
         ret = []
-        session = create_session()
+        session = self.session_factory()
         partKlass = self.klass[table]
         partTable = self.table[table]
         haspartTable = self.table["has" + table]
@@ -1008,7 +1012,7 @@ class Inventory(DyngroupDatabaseHelper):
         """
         if isinstance(uuids, str):
             uuids = [uuids]
-        session = create_session()
+        session = self.session_factory()
         q = (
             session.query(Machine)
             .add_column(self.table["Hardware"].c.OperatingSystem)
@@ -1125,7 +1129,7 @@ class Inventory(DyngroupDatabaseHelper):
         return every possible values for a field in a table
         """
         ret = []
-        session = create_session()
+        session = self.session_factory()
         if table == "Machine":
             partKlass = Machine
         else:
@@ -1148,7 +1152,7 @@ class Inventory(DyngroupDatabaseHelper):
         return every possible values for a field in a table where the field is like fuzzy_value
         """
         ret = []
-        session = create_session()
+        session = self.session_factory()
         if table == "Machine":
             partKlass = Machine
         else:
@@ -1177,7 +1181,7 @@ class Inventory(DyngroupDatabaseHelper):
             partKlass = Machine
         else:
             partKlass = self.klass[table]
-        session = create_session()
+        session = self.session_factory()
         result = self.__getValuesWhereQuery(table, field1, value1, field2, session)
         result = result.filter(
             getattr(partKlass, field2).like("%" + fuzzy_value + "%")
@@ -1194,7 +1198,7 @@ class Inventory(DyngroupDatabaseHelper):
         return every possible values for a field (field2) in a table, where field1 = value1
         """
         ret = []
-        session = create_session()
+        session = self.session_factory()
         result = self.__getValuesWhereQuery(
             table, field1, value1, field2, session
         ).limit(MAX_REQ_NUM)
@@ -1207,7 +1211,7 @@ class Inventory(DyngroupDatabaseHelper):
 
     def __getValuesWhereQuery(self, table, field1, value1, field2, session=None):
         if session is None:
-            session = create_session()
+            session = self.session_factory()
         if table == "Machine":
             partKlass = Machine
             partTable = self.machine
@@ -1300,7 +1304,7 @@ class Inventory(DyngroupDatabaseHelper):
         AVG_BASE = 10
 
         machine_id = fromUUID(machine_uuid)
-        session = create_session()
+        session = self.session_factory()
 
         query = session.query(Hardware)
         query = query.select_from(
@@ -1326,7 +1330,7 @@ class Inventory(DyngroupDatabaseHelper):
             return max(owners, key=owners.get)
 
     def countLastMachineInventoryPart(self, ctx, part, params):
-        session = create_session()
+        session = self.session_factory()
         result, grp_by = self.__lastMachineInventoryPartQuery(
             session, ctx, part, params
         )
@@ -1554,7 +1558,7 @@ class Inventory(DyngroupDatabaseHelper):
         @type: list
         """
         ret = []
-        session = create_session()
+        session = self.session_factory()
         partTable = self.table[part]
         result, grp_by = self.__lastMachineInventoryPartQuery(
             session, ctx, part, params
@@ -1776,7 +1780,7 @@ class Inventory(DyngroupDatabaseHelper):
         sessionCreator = False
         if session is None:
             sessionCreator = True
-            session = create_session()
+            session = self.session_factory()
         klass = self.klass[tableName]
         table = self.table[tableName]
 
@@ -1797,7 +1801,7 @@ class Inventory(DyngroupDatabaseHelper):
         sessionCreator = False
         if session is None:
             sessionCreator = True
-            session = create_session()
+            session = self.session_factory()
         klass = self.klass[tableName]
         table = self.table[tableName]
 
@@ -1830,7 +1834,7 @@ class Inventory(DyngroupDatabaseHelper):
 
         assert isUUID(location_uuid)
 
-        session = create_session()
+        session = self.session_factory()
         m = Machine()
         m.Name = name
         session.add(m)
@@ -1897,7 +1901,7 @@ class Inventory(DyngroupDatabaseHelper):
 
     def delMachine(self, uuid):
         uuid = fromUUID(uuid)
-        session = create_session()
+        session = self.session_factory()
         connection = self.getDbConnection()
         trans = connection.begin()
 
@@ -1950,7 +1954,7 @@ class Inventory(DyngroupDatabaseHelper):
 
         """
         uuid = fromUUID(uuid)
-        session = create_session()
+        session = self.session_factory()
         connection = self.getDbConnection()
         trans = connection.begin()
 
@@ -1971,7 +1975,7 @@ class Inventory(DyngroupDatabaseHelper):
     # User management method
 
     def createUserEntities(self, username, idEntitie):
-        session = create_session()
+        session = self.session_factory()
         # Start transaction
         session.begin()
         # Create or get user if no exist
@@ -2016,7 +2020,7 @@ class Inventory(DyngroupDatabaseHelper):
             def __init__(self):
                 self.id = 1
 
-        session = create_session()
+        session = self.session_factory()
         # Start transaction
         session.begin()
         # Create/get user
@@ -2074,7 +2078,7 @@ class Inventory(DyngroupDatabaseHelper):
         self.addProfileUserEntity(userid)
 
     def addProfileUserEntity(self, userid):
-        session = create_session()
+        session = self.session_factory()
         try:
             u = session.query(UserTable).filter_by(uid=userid).one()
             id = u.id
@@ -2101,7 +2105,7 @@ class Inventory(DyngroupDatabaseHelper):
         Create a new entity under parent entity
         If parent_name is False the parent will be the root entity
         """
-        session = create_session()
+        session = self.session_factory()
         try:
             e = session.query(self.klass["Entity"]).filter_by(Label=name).one()
         except Exception:
@@ -2128,7 +2132,7 @@ class Inventory(DyngroupDatabaseHelper):
         Create a new location under parent entity
         If parent_name is False the parent will be the root entity
         """
-        session = create_session()
+        session = self.session_factory()
         e = self.klass["Entity"]()
         e.Label = name
         e.parentId = parent_name
@@ -2144,7 +2148,7 @@ class Inventory(DyngroupDatabaseHelper):
         return True
 
     def getLocationsForUser(self, username):
-        session = create_session()
+        session = self.session_factory()
         try:
             u = session.query(UserTable).filter_by(uid=username).one()
         except Exception:
@@ -2160,7 +2164,7 @@ class Inventory(DyngroupDatabaseHelper):
         return ret
 
     def delUserEntitiesbyfkEntity(self, fk_entity):
-        session = create_session()
+        session = self.session_factory()
         for ue in session.query(RightUserEntitiesTable).filter_by(fk_Entity=fk_entity):
             session.delete(ue)
         session.flush()
@@ -2170,7 +2174,7 @@ class Inventory(DyngroupDatabaseHelper):
         session.close()
 
     def delUserEntitiesbyfkUser(self, fk_user):
-        session = create_session()
+        session = self.session_factory()
         for ue in session.query(RightUserEntitiesTable).filter_by(fk_User=fk_user):
             session.delete(ue)
         session.flush()
@@ -2180,7 +2184,7 @@ class Inventory(DyngroupDatabaseHelper):
         session.close()
 
     def delUserEntitiesbyUseruid(self, user):
-        session = create_session()
+        session = self.session_factory()
         try:
             u = session.query(UserTable).filter_by(uid=user).one()
             userid = u.id
@@ -2196,7 +2200,7 @@ class Inventory(DyngroupDatabaseHelper):
 
     def delUser(self, uidUser):
         fkuser = -1
-        session = create_session()
+        session = self.session_factory()
         try:
             u = session.query(UserTable).filter_by(uid=uidUser).one()
             fkuser = u.id
@@ -2213,7 +2217,7 @@ class Inventory(DyngroupDatabaseHelper):
         """
         machine name is synchronised with hardware's host
         """
-        session = create_session()
+        session = self.session_factory()
         query = session.query(Machine)
         query = query.select_from(
             self.machine.join(
@@ -2236,7 +2240,7 @@ class Inventory(DyngroupDatabaseHelper):
             )
         )
         ret = query.all()
-        session1 = create_session()
+        session1 = self.session_factory()
         query1 = session1.query(Hardware)
         query1 = query1.select_from(
             self.hardware.join(
@@ -2265,7 +2269,7 @@ class Inventory(DyngroupDatabaseHelper):
         session.close()
 
     def deleteEntities(self, id, Label, parentId):
-        session = create_session()
+        session = self.session_factory()
         session.query(self.klass["Entity"]).filter_by(id=id).delete()
         f = session.query(self.klass["Entity"]).filter_by(parentId=id).all()
         for i in f:
@@ -2278,7 +2282,7 @@ class Inventory(DyngroupDatabaseHelper):
         """
         update Label entity
         """
-        session = create_session()
+        session = self.session_factory()
         try:
             e = session.query(self.klass["Entity"]).filter_by(id=id).one()
             e.Label = name
@@ -2299,7 +2303,7 @@ class Inventory(DyngroupDatabaseHelper):
         """
         if params is None:
             params = {"min": 0, "filters": ""}
-        session = create_session()
+        session = self.session_factory()
         val = session.query(self.klass["Entity"]).order_by(self.table["Entity"].c.id)
         maxi = 0
         tab = []
@@ -2651,7 +2655,7 @@ class Inventory(DyngroupDatabaseHelper):
         """
         Returns true if the given location exists in database
         """
-        session = create_session()
+        session = self.session_factory()
         ret = True
         try:
             session.query(self.klass["Entity"]).filter_by(Label=location).one()
@@ -3003,7 +3007,7 @@ class Inventory(DyngroupDatabaseHelper):
                     ret.extend(__addChildren(session, entity.id, level))
             return ret
 
-        session = create_session()
+        session = self.session_factory()
         ret = []
         if userid != "root":
             q = (
@@ -3036,7 +3040,7 @@ class Inventory(DyngroupDatabaseHelper):
         """
         Return the locations in which the computers are
         """
-        session = create_session()
+        session = self.session_factory()
         q = (
             session.query(self.klass["Entity"])
             .add_column(self.machine.c.id)
@@ -3058,7 +3062,7 @@ class Inventory(DyngroupDatabaseHelper):
         return ret
 
     def getLocationsCount(self):
-        session = create_session()
+        session = self.session_factory()
         count = session.query(self.klass["Entity"]).count()
         session.close()
         return count
@@ -3067,7 +3071,7 @@ class Inventory(DyngroupDatabaseHelper):
         """
         Returns the root location
         """
-        session = create_session()
+        session = self.session_factory()
         q = session.query(self.klass["Entity"]).filter(self.table["Entity"].c.id == 1)
         session.close()
         en = q.first()
@@ -3079,7 +3083,7 @@ class Inventory(DyngroupDatabaseHelper):
         @param: list of entites names
         @return: list of entities UUIDs
         """
-        session = create_session()
+        session = self.session_factory()
         ens = []
         for name in location_paths:
             try:
@@ -3097,7 +3101,7 @@ class Inventory(DyngroupDatabaseHelper):
 
     def getLocationParentPath(self, loc_uuid):
         """ """
-        session = create_session()
+        session = self.session_factory()
         path = []
         en_id = fromUUID(loc_uuid)
         en = (
@@ -3120,7 +3124,7 @@ class Inventory(DyngroupDatabaseHelper):
 
     def getLocationName(self, loc_uuid):
         """Return the name of the location"""
-        session = create_session()
+        session = self.session_factory()
         en_id = fromUUID(loc_uuid)
         en = (
             session.query(self.klass["Entity"])
@@ -3142,7 +3146,7 @@ class Inventory(DyngroupDatabaseHelper):
             inloc = []
             for location in locations:
                 inloc.append(location.id)
-            session = create_session()
+            session = self.session_factory()
             q = (
                 session.query(UserTable)
                 .select_from(self.user.join(self.userentities))
@@ -3197,7 +3201,7 @@ class Inventory(DyngroupDatabaseHelper):
         @rtype: [(String, Date, boolean), ...]
         @return: a tuple with last inventories since n days with their machines
         """
-        session = create_session()
+        session = self.session_factory()
         min = int(min)
         max = int(max)
 
@@ -3228,7 +3232,7 @@ class Inventory(DyngroupDatabaseHelper):
         """
         Return the number of inventories for the parameters given
         """
-        session = create_session()
+        session = self.session_factory()
         results = self.__getInventoryHistory(session, days, only_new, pattern)
         return results.count()
 
@@ -3284,7 +3288,7 @@ class Inventory(DyngroupDatabaseHelper):
         else:
             max = 10
 
-        session = create_session()
+        session = self.session_factory()
         results = (
             session.query(self.klass["Inventory"])
             .select_from(
@@ -3319,7 +3323,7 @@ class Inventory(DyngroupDatabaseHelper):
             uuid = params["uuid"]
             machineId = fromUUID(uuid)
 
-        session = create_session()
+        session = self.session_factory()
         count = (
             session.query(self.klass["Inventory"])
             .select_from(
@@ -3370,7 +3374,7 @@ class Inventory(DyngroupDatabaseHelper):
         current_date = strftime("%Y-%m-%d")
         current_time = strftime("%H:%M:%S")
 
-        session = create_session()
+        session = self.session_factory()
 
         # First, get the Date and the Time of the current_inventory
         try:
@@ -3496,7 +3500,7 @@ class Inventory(DyngroupDatabaseHelper):
         """
         Return number of computers by state
         """
-        session = create_session()
+        session = self.session_factory()
         now = datetime.datetime.now()
         orange = now - datetime.timedelta(orange)
         red = now - datetime.timedelta(red)
@@ -3571,7 +3575,7 @@ class Inventory(DyngroupDatabaseHelper):
 
         (red, orange) = self.getLastInventoryThresholds()
 
-        session = create_session()
+        session = self.session_factory()
         now = datetime.datetime.now()
         orange = now - datetime.timedelta(orange)
         red = now - datetime.timedelta(red)
@@ -3697,7 +3701,7 @@ class Inventory(DyngroupDatabaseHelper):
         @type machine_uuid: str
 
         """
-        session = create_session()
+        session = self.session_factory()
 
         machine_id = fromUUID(machine_uuid)
 
@@ -3937,7 +3941,7 @@ class InventoryCreator(Inventory):
             dates = date.split(" ")
         date = dates
 
-        session = create_session()
+        session = self.session_factory()
         session.begin()
         try:
             machine_mac, machine_uuid, machine_name = self.getMachineByInventory(

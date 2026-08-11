@@ -25,7 +25,7 @@ from sqlalchemy import (
     text,
     bindparam,
 )
-from sqlalchemy.orm import create_session, mapper
+from sqlalchemy.orm import registry, Session, sessionmaker
 from sqlalchemy.exc import NoSuchTableError, SQLAlchemyError
 from sqlalchemy.ext.automap import automap_base
 import pprint
@@ -109,8 +109,12 @@ class PkgsDatabase(DatabaseHelper):
             return False
         self.metadata = MetaData(self.db)
 
+        self.mapper_registry = registry()
+
+        self.session_factory = sessionmaker(bind=self.db, expire_on_commit=False)
+
         Base = automap_base()
-        Base.prepare(self.db, reflect=True)
+        Base.prepare(autoload_with=self.db)
 
         # Only federated tables (beginning by local_) are automatically mapped
         # If needed, excludes tables from this list
@@ -126,9 +130,9 @@ class PkgsDatabase(DatabaseHelper):
             return False
         if not self.initMappersCatchException():
             return False
-        self.metadata.create_all()
+        self.metadata.create_all(bind=self.db)
         # FIXME: should be removed
-        self.session = create_session()
+        self.session = self.session_factory()
         self.is_activated = True
         self.logger.debug("Pkgs database connected")
         return True
@@ -139,46 +143,46 @@ class PkgsDatabase(DatabaseHelper):
         """
         try:
             # packages
-            self.package = Table("packages", self.metadata, autoload=True)
+            self.package = Table("packages", self.metadata, autoload_with=self.db)
 
             # extensions
-            self.extensions = Table("extensions", self.metadata, autoload=True)
+            self.extensions = Table("extensions", self.metadata, autoload_with=self.db)
 
             # Dependencies
-            self.dependencies = Table("dependencies", self.metadata, autoload=True)
+            self.dependencies = Table("dependencies", self.metadata, autoload_with=self.db)
 
             # Syncthingsync
-            self.syncthingsync = Table("syncthingsync", self.metadata, autoload=True)
+            self.syncthingsync = Table("syncthingsync", self.metadata, autoload_with=self.db)
             # package_pending_exclusions
             self.package_pending_exclusions = Table(
-                "package_pending_exclusions", self.metadata, autoload=True
+                "package_pending_exclusions", self.metadata, autoload_with=self.db
             )
             # pkgs_shares_ars_web
             self.pkgs_shares_ars_web = Table(
-                "pkgs_shares_ars_web", self.metadata, autoload=True
+                "pkgs_shares_ars_web", self.metadata, autoload_with=self.db
             )
 
             # pkgs_shares_ars
             self.pkgs_shares_ars = Table(
-                "pkgs_shares_ars", self.metadata, autoload=True
+                "pkgs_shares_ars", self.metadata, autoload_with=self.db
             )
 
             # pkgs_shares
-            self.pkgs_shares = Table("pkgs_shares", self.metadata, autoload=True)
+            self.pkgs_shares = Table("pkgs_shares", self.metadata, autoload_with=self.db)
 
             # pkgs_rules_algos
             self.pkgs_rules_algos = Table(
-                "pkgs_rules_algos", self.metadata, autoload=True
+                "pkgs_rules_algos", self.metadata, autoload_with=self.db
             )
 
             # pkgs_rules_global
             self.pkgs_rules_global = Table(
-                "pkgs_rules_global", self.metadata, autoload=True
+                "pkgs_rules_global", self.metadata, autoload_with=self.db
             )
 
             # pkgs_rules_local
             self.pkgs_rules_local = Table(
-                "pkgs_rules_local", self.metadata, autoload=True
+                "pkgs_rules_local", self.metadata, autoload_with=self.db
             )
         except NoSuchTableError as e:
             self.logger.error(
@@ -192,17 +196,17 @@ class PkgsDatabase(DatabaseHelper):
         """
         Initialize all SQLalchemy mappers needed for the Pkgs database
         """
-        mapper(Packages, self.package)
-        mapper(Extensions, self.extensions)
-        mapper(Dependencies, self.dependencies)
-        mapper(Syncthingsync, self.syncthingsync)
-        mapper(Package_pending_exclusions, self.package_pending_exclusions)
-        mapper(Pkgs_shares, self.pkgs_shares)
-        mapper(Pkgs_shares_ars, self.pkgs_shares_ars)
-        mapper(Pkgs_shares_ars_web, self.pkgs_shares_ars_web)
-        mapper(Pkgs_rules_algos, self.pkgs_rules_algos)
-        mapper(Pkgs_rules_global, self.pkgs_rules_global)
-        mapper(Pkgs_rules_local, self.pkgs_rules_local)
+        self.mapper_registry.map_imperatively(Packages, self.package)
+        self.mapper_registry.map_imperatively(Extensions, self.extensions)
+        self.mapper_registry.map_imperatively(Dependencies, self.dependencies)
+        self.mapper_registry.map_imperatively(Syncthingsync, self.syncthingsync)
+        self.mapper_registry.map_imperatively(Package_pending_exclusions, self.package_pending_exclusions)
+        self.mapper_registry.map_imperatively(Pkgs_shares, self.pkgs_shares)
+        self.mapper_registry.map_imperatively(Pkgs_shares_ars, self.pkgs_shares_ars)
+        self.mapper_registry.map_imperatively(Pkgs_shares_ars_web, self.pkgs_shares_ars_web)
+        self.mapper_registry.map_imperatively(Pkgs_rules_algos, self.pkgs_rules_algos)
+        self.mapper_registry.map_imperatively(Pkgs_rules_global, self.pkgs_rules_global)
+        self.mapper_registry.map_imperatively(Pkgs_rules_local, self.pkgs_rules_local)
 
     ####################################
 

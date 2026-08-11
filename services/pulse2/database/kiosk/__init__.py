@@ -65,8 +65,12 @@ class KioskDatabase(DatabaseHelper):
             return False
         self.metadata = MetaData(self.db)
 
+        self.mapper_registry = registry()
+
+        self.session_factory = sessionmaker(bind=self.db, expire_on_commit=False)
+
         Base = automap_base()
-        Base.prepare(self.db, reflect=True)
+        Base.prepare(autoload_with=self.db)
 
         # Only federated tables (beginning by local_) are automatically mapped
         # If needed, excludes tables from this list
@@ -81,7 +85,7 @@ class KioskDatabase(DatabaseHelper):
         if not self.initMappersCatchException():
             self.session = None
             return False
-        self.metadata.create_all()
+        self.metadata.create_all(bind=self.db)
         self.is_activated = True
         result = self.db.execute("SELECT * FROM kiosk.version limit 1;")
         re = [element.Number for element in result]

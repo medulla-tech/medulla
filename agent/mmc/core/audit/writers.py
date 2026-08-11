@@ -17,7 +17,7 @@ import pwd
 import threading
 
 # SqlAlchemy
-from sqlalchemy.orm import create_session, mapper, relation
+from sqlalchemy.orm import registry, relationship
 from sqlalchemy import (
     Table,
     Column,
@@ -83,12 +83,12 @@ class AuditWriterDB(Singleton, AuditWriterI):
         if self.config.auditdbdriver == "mysql":
             dburl += "?charset=utf8&use_unicode=0"
             dboptions = {"pool_recycle": 3600, "convert_unicode": True}
-        db = create_engine(dburl, **dboptions)
+        self.db = create_engine(dburl, **dboptions)
 
         self.metadata = MetaData()
-        self.metadata.bind = db
+        self.mapper_registry = registry()
         self._initTableVersion()
-        mapper(Version, self.version_table)
+        self.mapper_registry.map_imperatively(Version, self.version_table)
 
     def init(self, driver, user, passwd, host, port, name):
         """
@@ -632,26 +632,26 @@ class AuditWriterDB(Singleton, AuditWriterI):
         """
         Init all mappers for audit database version 2
         """
-        mapper(Event, self.event_table)
-        mapper(Module, self.module_table)
-        mapper(Source, self.source_table)
-        mapper(Initiator, self.initiator_table)
-        mapper(Type, self.type_table)
-        mapper(Object, self.object_table)
-        mapper(Object_Log, self.object_log_table)
-        mapper(Current_Value, self.current_value_table)
-        mapper(Previous_Value, self.previous_value_table)
-        mapper(
+        self.mapper_registry.map_imperatively(Event, self.event_table)
+        self.mapper_registry.map_imperatively(Module, self.module_table)
+        self.mapper_registry.map_imperatively(Source, self.source_table)
+        self.mapper_registry.map_imperatively(Initiator, self.initiator_table)
+        self.mapper_registry.map_imperatively(Type, self.type_table)
+        self.mapper_registry.map_imperatively(Object, self.object_table)
+        self.mapper_registry.map_imperatively(Object_Log, self.object_log_table)
+        self.mapper_registry.map_imperatively(Current_Value, self.current_value_table)
+        self.mapper_registry.map_imperatively(Previous_Value, self.previous_value_table)
+        self.mapper_registry.map_imperatively(
             Record,
             self.record_table,
             properties={
-                "param_log": relation(Parameters, backref="parameters"),
-                "obj_log": relation(
+                "param_log": relationship(Parameters, backref="parameters"),
+                "obj_log": relationship(
                     Object, secondary=self.object_log_table, lazy=False
                 ),
             },
         )
-        mapper(Parameters, self.param_table)
+        self.mapper_registry.map_imperatively(Parameters, self.param_table)
 
     # The SA mapper for PostgreSQL is the same than MySQL
     _initMapperspostgresV2 = _initMappersmysqlV2
