@@ -234,15 +234,25 @@ if ($entity == '') {
     echo '<h2>'.$tabletitle.'</h2>';
 
 
-    $n = new OptimizedListInfos($machines["cn"], _T("Machine name", "updates"));
+    $n = new OptimizedListInfos($machines["cn"],
+        _T("Machine name", "updates"),
+        "",
+        "",
+        _T("Hostname reported by the Medulla agent.", "updates"));
     $n->setResizable();
     $n->disableFirstColumnActionLink();
-    $n->addExtraInfo($machines["os"], _T("Platform", "updates"));
-    $n->addExtraInfoRaw($machines["complianceRate"], _T("Compliance rate", "updates"));
-    $n->addExtraInfoCentered($machines["missing"], _T("Missing", "updates"));
-    $n->addExtraInfoCentered($machines["inprogress"], _T("In progress", "updates"));
-    $n->addExtraInfoCentered($machines["installed"], _T("Installed", "updates"));
-    $n->addExtraInfoCentered($machines["total"], _T("Total", "updates"));
+    $n->addExtraInfo($machines["os"], _T("Platform", "updates"), "",
+        _T("Operating system version detected on the machine.", "updates"));
+    $n->addExtraInfoRaw($machines["complianceRate"], _T("Compliance rate", "updates"), "",
+        _T("Share of approved updates already installed on this machine.", "updates"));
+    $n->addExtraInfoCentered($machines["missing"], _T("Missing", "updates"), "",
+        _T("Number of approved updates not yet installed on this machine.", "updates"));
+    $n->addExtraInfoCentered($machines["inprogress"], _T("In progress", "updates"), "",
+        _T("Number of updates currently being deployed on this machine.", "updates"));
+    $n->addExtraInfoCentered($machines["installed"], _T("Installed", "updates"), "",
+        _T("Number of approved updates already installed on this machine.", "updates"));
+    $n->addExtraInfoCentered($machines["total"], _T("Total", "updates"), "",
+        _T("Total number of approved updates targeting this machine.", "updates"));
     $n->addActionItemArray($machines["actionDetailByMachines"]);
     $n->addActionItemArray($machines["actionPendingByMachines"]);
     $n->addActionItemArray($machines["actionDoneByMachines"]);
