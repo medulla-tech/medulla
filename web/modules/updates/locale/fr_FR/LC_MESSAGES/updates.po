@@ -1367,3 +1367,174 @@ msgstr "Nombre de mises à jour approuvées déjà installées sur cette machine
 
 msgid "Total number of approved updates targeting this machine."
 msgstr "Nombre total de mises à jour approuvées ciblant cette machine."
+
+msgid "Linux updates history for entity %s"
+msgstr "Historique des mises à jour Linux pour l'entité %s"
+
+msgid "%s machine to update for entity %s"
+msgstr "%s machine à mettre à jour pour l'entité %s"
+
+msgid "%s machines to update for entity %s"
+msgstr "%s machines à mettre à jour pour l'entité %s"
+
+msgid "%s missing updates for %s in progress updates and %s installed updates for %s in total"
+msgstr "%s mises à jour manquantes, %s en cours et %s installées sur %s au total"
+
+msgid "Approved Linux releases"
+msgstr "Versions Linux approuvées"
+
+msgid "Automatic approval rules"
+msgstr "Règles de validation automatique"
+
+msgid "Compliance All Linux Upgrades on Entity "
+msgstr "Conformité de toutes les mises à jour Linux sur l'entité "
+
+msgid "Create GRP update"
+msgstr "Créer un groupe de mise à jour"
+
+msgid "Deploy Major linux Updates On entity"
+msgstr "Déployer les mises à jour majeures Linux sur l'entité"
+
+msgid "Deploy Update linux"
+msgstr "Déployer une mise à jour Linux"
+
+msgid "Details Machine kernel update"
+msgstr "Détail des machines : mise à jour du noyau"
+
+msgid "Details Machine security update on entity"
+msgstr "Détail des machines : mise à jour de sécurité sur l'entité"
+
+msgid "Details by Machines for Linux major update"
+msgstr "Détail par machines des mises à jour majeures Linux"
+
+msgid "Details machines all other Update Linux packages on entity"
+msgstr "Détail des machines : autres paquets Linux à mettre à jour sur l'entité"
+
+msgid "Distibution Linux on entity"
+msgstr "Distribution Linux sur l'entité"
+
+msgid "Distribution linux"
+msgstr "Distribution Linux"
+
+msgid "Distribution linux update on entity"
+msgstr "Mise à jour de la distribution Linux sur l'entité"
+
+msgid "Entities Compliance Windows"
+msgstr "Conformité des entités Windows"
+
+msgid "Entities Compliance windows"
+msgstr "Conformité des entités Windows"
+
+msgid "Entities Compliance linux"
+msgstr "Conformité des entités Linux"
+
+msgid "Entity Compliance"
+msgstr "Conformité de l'entité"
+
+msgid "Linux major deployment history"
+msgstr "Historique des déploiements majeurs Linux"
+
+msgid "Machines Linux major update"
+msgstr "Machines : mise à jour majeure Linux"
+
+msgid "Machines Major Compliance"
+msgstr "Conformité des machines aux mises à jour majeures"
+
+msgid "Machines — OS Upgrade to %s"
+msgstr "Machines — montée de version vers %s"
+
+msgid "Major Compliance entity"
+msgstr "Conformité de l'entité aux mises à jour majeures"
+
+msgid "No entity name matches your search."
+msgstr "Aucun nom d'entité ne correspond à votre recherche."
+
+msgid "No machines found for this entity and distribution."
+msgstr "Aucune machine trouvée pour cette entité et cette distribution."
+
+msgid "OS Linux"
+msgstr "OS Linux"
+
+msgid "Outdated"
+msgstr "Obsolète"
+
+msgid "Pending"
+msgstr "En attente"
+
+msgid "Total"
+msgstr "Total"
+
+msgid "Unknown"
+msgstr "Inconnu"
+
+msgid "Update %s kernel on entity [%s]"
+msgstr "Mettre à jour le noyau %s sur l'entité [%s]"
+
+msgid "Update %s other packages on entity [%s]"
+msgstr "Mettre à jour les autres paquets %s sur l'entité [%s]"
+
+msgid "Update %s security on entity [%s]"
+msgstr "Mettre à jour la sécurité %s sur l'entité [%s]"
+
+msgid "Update complete %s \non entity [%s]"
+msgstr "Mise à jour complète %s \nsur l'entité [%s]"
+
+msgid "Update all Linux kernel on entity"
+msgstr "Mettre à jour tous les noyaux Linux de l'entité"
+
+msgid "Update all Linux security on entity"
+msgstr "Mettre à jour toute la sécurité Linux de l'entité"
+
+msgid "Update all other Linux packages on entity"
+msgstr "Mettre à jour tous les autres paquets Linux de l'entité"
+
+msgid "Update complete all Linux on entity"
+msgstr "Mise à jour complète de tous les Linux de l'entité"
+
+msgid "Update history by entity"
+msgstr "Historique des mises à jour par entité"
+
+msgid "compliance<br>kernel"
+msgstr "conformité<br>noyau"
+
+msgid "compliance<br>other"
+msgstr "conformité<br>autres"
+
+msgid "compliance<br>security"
+msgstr "conformité<br>sécurité"
+
+msgid "compliance<br>secutity"
+msgstr "conformité<br>sécurité"
+
+msgid "compliance<br>total"
+msgstr "conformité<br>totale"
+
+msgid "kernel<br>not ok"
+msgstr "noyau<br>non conforme"
+
+msgid "other<br>not ok"
+msgstr "autres<br>non conformes"
+
+msgid "security<br>not ok"
+msgstr "sécurité<br>non conforme"
+
+msgid "not<br>up to date"
+msgstr "non<br>à jour"
+
+msgid "up to date"
+msgstr "à jour"
+
+msgid "up to_date"
+msgstr "à jour"
+
+msgid "Total<br>machine"
+msgstr "Total<br>machine"
+
+msgid "Total<br>machines"
+msgstr "Total<br>machines"
+
+msgid "machine security update linux"
+msgstr "Mise à jour de sécurité Linux de la machine"
+
+msgid "Windows updates history for entity %s"
+msgstr "Historique des mises à jour Windows pour l'entité %s"

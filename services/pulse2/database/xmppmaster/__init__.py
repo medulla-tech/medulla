@@ -20289,6 +20289,8 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
                     not_(Deploy.title.contains("--@upd@--")),
                 )
             )
+        elif history_type == "windows_updates":
+            query = query.filter(not_(Deploy.pathpackage.startswith("linux")))
 
         if filter != "":
             query = query.filter(
