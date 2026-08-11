@@ -131,7 +131,7 @@ def decrypt_glpi11_token(encrypted_token: str) -> str:
     except Exception as e:
         logging.getLogger().debug(f"Échec déchiffrement token GLPI 11: {e}")
         return encrypted_token
-from packaging.version import LegacyVersion as LooseVersion, StrictVersion
+from distutils.version import LooseVersion, StrictVersion
 #from mmc.plugins.xmppmaster.config import xmppMasterConfig
 
 from pulse2.database.xmppmaster import XmppMasterDatabase

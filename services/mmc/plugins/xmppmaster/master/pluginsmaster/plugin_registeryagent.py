@@ -7,7 +7,7 @@ from manageRSAsigned import MsgsignedRSA
 from sleekxmpp import jid
 from mmc.plugins.xmppmaster.master.lib.utils import getRandomName
 import re
-from packaging.version import LegacyVersion as LooseVersion
+from distutils.version import LooseVersion
 import configparser
 
 ## this import will be used later

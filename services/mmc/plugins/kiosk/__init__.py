@@ -33,7 +33,7 @@ from mmc.plugins.base import (with_xmpp_context,
 from pulse2.database.kiosk import KioskDatabase
 from pulse2.database.xmppmaster import XmppMasterDatabase
 from mmc.plugins.glpi.database import Glpi
-from packaging.version import LegacyVersion as LooseVersion, StrictVersion
+from distutils.version import LooseVersion, StrictVersion
 
 VERSION = "1.0.0"
 APIVERSION = "4:1:3"

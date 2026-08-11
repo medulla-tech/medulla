@@ -74,7 +74,7 @@ from mmc.plugins.glpi.database_utils import (
 )
 from mmc.plugins.glpi.database_utils import DbTOA  # pyflakes.ignore
 from mmc.plugins.dyngroup.config import DGConfig
-from packaging.version import LegacyVersion as LooseVersion, StrictVersion
+from distutils.version import LooseVersion, StrictVersion
 #from mmc.plugins.xmppmaster.config import xmppMasterConfig
 
 from pulse2.database.xmppmaster import XmppMasterDatabase
