@@ -1331,3 +1331,21 @@ msgstr "Toutes les machines de cette entité sont à jour ou ne peuvent pas êtr
 
 msgid "Approve every update of this family"
 msgstr "Approuver toutes les mises à jour de cette famille"
+
+msgid "Hostname reported by the Medulla agent."
+msgstr "Nom d'hôte remonté par l'agent Medulla."
+
+msgid "Distribution and version detected on the machine."
+msgstr "Distribution et version détectées sur la machine."
+
+msgid "Number of pending security updates on this machine."
+msgstr "Nombre de mises à jour de sécurité en attente sur cette machine."
+
+msgid "Number of pending kernel updates on this machine."
+msgstr "Nombre de mises à jour du noyau en attente sur cette machine."
+
+msgid "Number of pending updates other than security or kernel on this machine."
+msgstr "Nombre de mises à jour en attente autres que sécurité ou noyau sur cette machine."
+
+msgid "Total number of pending updates on this machine, all categories included."
+msgstr "Nombre total de mises à jour en attente sur cette machine, toutes catégories confondues."

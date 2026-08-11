@@ -1452,3 +1452,21 @@ msgstr "Todas las máquinas de esta entidad están actualizadas o no pueden migr
 
 msgid "Approve every update of this family"
 msgstr "Aprobar todas las actualizaciones de esta familia"
+
+msgid "Hostname reported by the Medulla agent."
+msgstr "Nombre de host informado por el agente Medulla."
+
+msgid "Distribution and version detected on the machine."
+msgstr "Distribución y versión detectadas en la máquina."
+
+msgid "Number of pending security updates on this machine."
+msgstr "Número de actualizaciones de seguridad pendientes en esta máquina."
+
+msgid "Number of pending kernel updates on this machine."
+msgstr "Número de actualizaciones del núcleo pendientes en esta máquina."
+
+msgid "Number of pending updates other than security or kernel on this machine."
+msgstr "Número de actualizaciones pendientes distintas de seguridad o núcleo en esta máquina."
+
+msgid "Total number of pending updates on this machine, all categories included."
+msgstr "Número total de actualizaciones pendientes en esta máquina, todas las categorías incluidas."
