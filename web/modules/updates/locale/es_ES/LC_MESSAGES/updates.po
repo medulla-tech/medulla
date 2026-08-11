@@ -1470,3 +1470,21 @@ msgstr "Número de actualizaciones pendientes distintas de seguridad o núcleo e
 
 msgid "Total number of pending updates on this machine, all categories included."
 msgstr "Número total de actualizaciones pendientes en esta máquina, todas las categorías incluidas."
+
+msgid "Operating system version detected on the machine."
+msgstr "Versión del sistema operativo detectada en la máquina."
+
+msgid "Share of approved updates already installed on this machine."
+msgstr "Proporción de actualizaciones aprobadas ya instaladas en esta máquina."
+
+msgid "Number of approved updates not yet installed on this machine."
+msgstr "Número de actualizaciones aprobadas aún no instaladas en esta máquina."
+
+msgid "Number of updates currently being deployed on this machine."
+msgstr "Número de actualizaciones en curso de despliegue en esta máquina."
+
+msgid "Number of approved updates already installed on this machine."
+msgstr "Número de actualizaciones aprobadas ya instaladas en esta máquina."
+
+msgid "Total number of approved updates targeting this machine."
+msgstr "Número total de actualizaciones aprobadas dirigidas a esta máquina."
