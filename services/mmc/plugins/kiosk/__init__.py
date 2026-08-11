@@ -33,7 +33,7 @@ from mmc.plugins.base import (with_xmpp_context,
 from pulse2.database.kiosk import KioskDatabase
 from pulse2.database.xmppmaster import XmppMasterDatabase
 from mmc.plugins.glpi.database import Glpi
-from packaging.version import Version
+from packaging.version import LegacyVersion as LooseVersion, StrictVersion
 
 VERSION = "1.0.0"
 APIVERSION = "4:1:3"
@@ -885,7 +885,7 @@ def get_packages_for_machine(machine):
             if pkg_statuses[uuid]["uninstall"] is True:
                 pkg_statuses[uuid]["action"].append("Delete")
             if pkg_statuses[uuid]["update"] is True:
-                if Version(found[0][2]) < Version(pkg["version"]):
+                if LooseVersion(found[0][2]) < LooseVersion(pkg["version"]):
                     pkg_statuses[uuid]["action"].append("Update")
             # Installed but the package ships no uninstall section: nothing
             # actionable. Emit a non-actionable "Installed" badge so the kiosk

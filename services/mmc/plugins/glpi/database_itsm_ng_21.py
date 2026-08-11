@@ -78,7 +78,7 @@ from mmc.plugins.glpi.database_utils import (
 )
 from mmc.plugins.glpi.database_utils import DbTOA  # pyflakes.ignore
 from mmc.plugins.dyngroup.config import DGConfig
-from packaging.version import Version
+from packaging.version import LegacyVersion as LooseVersion, StrictVersion
 #from mmc.plugins.xmppmaster.config import xmppMasterConfig
 
 from pulse2.database.xmppmaster import XmppMasterDatabase
@@ -129,7 +129,7 @@ class Itsmng21(DyngroupDatabaseHelper):
         except:
             return False
 
-        if Version(self._itsm_ng_version) >= Version("2.1.0") and Version(self._itsm_ng_version) <= Version("2.1.99"):
+        if LooseVersion(self._itsm_ng_version) >= LooseVersion("2.1.0") and LooseVersion(self._itsm_ng_version) <= LooseVersion("2.1.99"):
             logging.getLogger().debug("ITSM-NG version %s found !" % self._itsm_ng_version)
             return True
         else:
