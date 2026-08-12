@@ -96,7 +96,7 @@ install: build
 	cp  $(DESTDIR)/etc/mmc/apache/mmc.conf $(DESTDIR)/etc/apache2/conf-available/
 	# Workaround install issue
 	mkdir -p $(DESTDIR)/usr/lib/python3/dist-packages/
-	mv -f $(DESTDIR)/usr/lib/python3.11/site-packages/* $(DESTDIR)/usr/lib/python3/dist-packages/
+	PYTHON_SITE=$$(find $(DESTDIR)/usr/lib -maxdepth 2 -type d -path "*/python3.*/site-packages" | head -1); if [ -n "$$PYTHON_SITE" ]; then mv -f $$PYTHON_SITE/* $(DESTDIR)/usr/lib/python3/dist-packages/; fi
 	# Manually copy custom SQL views into /usr/share/doc/pulse2/
 	cp services/contrib/glpi-*.sql  $(DESTDIR)/usr/share/doc/pulse2/contrib/
 
@@ -126,7 +126,7 @@ binary-arch: build install
 	# Must be writable by web-server
 	dh_install --sourcedir=$(DESTDIR) --fail-missing
 	# This directory must be writable for www-data (first run)
-	chown www-data:root debian/python3-mmc-support/etc/mmc/plugins/support
+	# chown www-data:root debian/python3-mmc-support/etc/mmc/plugins/support
 	chmod 750 debian/python3-mmc-support/etc/mmc/plugins/support
 	dh_fixperms -Xetc/mmc \
                     -Xusr/share/doc/pulse2/contrib/ \
