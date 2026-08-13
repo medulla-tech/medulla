@@ -1452,3 +1452,210 @@ msgstr "Todas las máquinas de esta entidad están actualizadas o no pueden migr
 
 msgid "Approve every update of this family"
 msgstr "Aprobar todas las actualizaciones de esta familia"
+
+msgid "Hostname reported by the Medulla agent."
+msgstr "Nombre de host informado por el agente Medulla."
+
+msgid "Distribution and version detected on the machine."
+msgstr "Distribución y versión detectadas en la máquina."
+
+msgid "Number of pending security updates on this machine."
+msgstr "Número de actualizaciones de seguridad pendientes en esta máquina."
+
+msgid "Number of pending kernel updates on this machine."
+msgstr "Número de actualizaciones del núcleo pendientes en esta máquina."
+
+msgid "Number of pending updates other than security or kernel on this machine."
+msgstr "Número de actualizaciones pendientes distintas de seguridad o núcleo en esta máquina."
+
+msgid "Total number of pending updates on this machine, all categories included."
+msgstr "Número total de actualizaciones pendientes en esta máquina, todas las categorías incluidas."
+
+msgid "Operating system version detected on the machine."
+msgstr "Versión del sistema operativo detectada en la máquina."
+
+msgid "Share of approved updates already installed on this machine."
+msgstr "Proporción de actualizaciones aprobadas ya instaladas en esta máquina."
+
+msgid "Number of approved updates not yet installed on this machine."
+msgstr "Número de actualizaciones aprobadas aún no instaladas en esta máquina."
+
+msgid "Number of updates currently being deployed on this machine."
+msgstr "Número de actualizaciones en curso de despliegue en esta máquina."
+
+msgid "Number of approved updates already installed on this machine."
+msgstr "Número de actualizaciones aprobadas ya instaladas en esta máquina."
+
+msgid "Total number of approved updates targeting this machine."
+msgstr "Número total de actualizaciones aprobadas dirigidas a esta máquina."
+
+msgid "Linux updates history for entity %s"
+msgstr "Historial de actualizaciones Linux para la entidad %s"
+
+msgid "%s machine to update for entity %s"
+msgstr "%s máquina por actualizar para la entidad %s"
+
+msgid "%s machines to update for entity %s"
+msgstr "%s máquinas por actualizar para la entidad %s"
+
+msgid "%s missing updates for %s in progress updates and %s installed updates for %s in total"
+msgstr "%s actualizaciones faltantes, %s en curso y %s instaladas de %s en total"
+
+msgid "Approved Linux releases"
+msgstr "Versiones Linux aprobadas"
+
+msgid "Automatic approval rules"
+msgstr "Reglas de aprobación automática"
+
+msgid "Compliance All Linux Upgrades on Entity "
+msgstr "Conformidad de todas las actualizaciones Linux en la entidad "
+
+msgid "Create GRP update"
+msgstr "Crear un grupo de actualización"
+
+msgid "Deploy Major linux Updates On entity"
+msgstr "Desplegar las actualizaciones mayores de Linux en la entidad"
+
+msgid "Deploy Update linux"
+msgstr "Desplegar una actualización Linux"
+
+msgid "Details Machine kernel update"
+msgstr "Detalle de las máquinas: actualización del núcleo"
+
+msgid "Details Machine security update on entity"
+msgstr "Detalle de las máquinas: actualización de seguridad en la entidad"
+
+msgid "Details by Machines for Linux major update"
+msgstr "Detalle por máquinas de las actualizaciones mayores de Linux"
+
+msgid "Details machines all other Update Linux packages on entity"
+msgstr "Detalle de las máquinas: otros paquetes Linux por actualizar en la entidad"
+
+msgid "Distibution Linux on entity"
+msgstr "Distribución Linux en la entidad"
+
+msgid "Distribution linux"
+msgstr "Distribución Linux"
+
+msgid "Distribution linux update on entity"
+msgstr "Actualización de la distribución Linux en la entidad"
+
+msgid "Entities Compliance Windows"
+msgstr "Conformidad de las entidades Windows"
+
+msgid "Entities Compliance windows"
+msgstr "Conformidad de las entidades Windows"
+
+msgid "Entities Compliance linux"
+msgstr "Conformidad de las entidades Linux"
+
+msgid "Entity Compliance"
+msgstr "Conformidad de la entidad"
+
+msgid "Linux major deployment history"
+msgstr "Historial de despliegues mayores de Linux"
+
+msgid "Machines Linux major update"
+msgstr "Máquinas: actualización mayor de Linux"
+
+msgid "Machines Major Compliance"
+msgstr "Conformidad de las máquinas con las actualizaciones mayores"
+
+msgid "Machines — OS Upgrade to %s"
+msgstr "Máquinas — actualización del SO a %s"
+
+msgid "Major Compliance entity"
+msgstr "Conformidad de la entidad con las actualizaciones mayores"
+
+msgid "No entity name matches your search."
+msgstr "Ningún nombre de entidad coincide con su búsqueda."
+
+msgid "No machines found for this entity and distribution."
+msgstr "No se encontró ninguna máquina para esta entidad y distribución."
+
+msgid "OS Linux"
+msgstr "SO Linux"
+
+msgid "Outdated"
+msgstr "Obsoleto"
+
+msgid "Pending"
+msgstr "Pendiente"
+
+msgid "Total"
+msgstr "Total"
+
+msgid "Unknown"
+msgstr "Desconocido"
+
+msgid "Update %s kernel on entity [%s]"
+msgstr "Actualizar el núcleo %s en la entidad [%s]"
+
+msgid "Update %s other packages on entity [%s]"
+msgstr "Actualizar los demás paquetes %s en la entidad [%s]"
+
+msgid "Update %s security on entity [%s]"
+msgstr "Actualizar la seguridad %s en la entidad [%s]"
+
+msgid "Update complete %s \non entity [%s]"
+msgstr "Actualización completa %s \nen la entidad [%s]"
+
+msgid "Update all Linux kernel on entity"
+msgstr "Actualizar todos los núcleos Linux de la entidad"
+
+msgid "Update all Linux security on entity"
+msgstr "Actualizar toda la seguridad Linux de la entidad"
+
+msgid "Update all other Linux packages on entity"
+msgstr "Actualizar todos los demás paquetes Linux de la entidad"
+
+msgid "Update complete all Linux on entity"
+msgstr "Actualización completa de todos los Linux de la entidad"
+
+msgid "Update history by entity"
+msgstr "Historial de actualizaciones por entidad"
+
+msgid "compliance<br>kernel"
+msgstr "conformidad<br>núcleo"
+
+msgid "compliance<br>other"
+msgstr "conformidad<br>otros"
+
+msgid "compliance<br>security"
+msgstr "conformidad<br>seguridad"
+
+msgid "compliance<br>secutity"
+msgstr "conformidad<br>seguridad"
+
+msgid "compliance<br>total"
+msgstr "conformidad<br>total"
+
+msgid "kernel<br>not ok"
+msgstr "núcleo<br>no conforme"
+
+msgid "other<br>not ok"
+msgstr "otros<br>no conformes"
+
+msgid "security<br>not ok"
+msgstr "seguridad<br>no conforme"
+
+msgid "not<br>up to date"
+msgstr "no<br>actualizado"
+
+msgid "up to date"
+msgstr "actualizado"
+
+msgid "up to_date"
+msgstr "actualizado"
+
+msgid "Total<br>machine"
+msgstr "Total<br>máquina"
+
+msgid "Total<br>machines"
+msgstr "Total<br>máquinas"
+
+msgid "machine security update linux"
+msgstr "Actualización de seguridad Linux de la máquina"
+
+msgid "Windows updates history for entity %s"
+msgstr "Historial de actualizaciones Windows para la entidad %s"

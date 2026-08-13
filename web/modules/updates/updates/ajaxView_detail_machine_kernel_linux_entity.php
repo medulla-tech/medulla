@@ -212,28 +212,41 @@ foreach($machines['hostname'] as $index => $valeur ){
     echo '<h2>' . sprintf(_T("Linux computers from entity %s", "updates"),
                           htmlspecialchars($completename, ENT_QUOTES, 'UTF-8')) . '</h2>';
 
-    $n = new OptimizedListInfos($machines['hostname'], _T("Machine name", "updates"));
+    $n = new OptimizedListInfos($machines['hostname'],
+                       _T("Machine name", "updates"),
+                       "",
+                       "",
+                       _T("Hostname reported by the Medulla agent.", "updates"));
 
     $n->addExtraInfo($machines['platform'],
-                       _T("Platform", "updates"));
+                       _T("Platform", "updates"),
+                       "",
+                       _T("Distribution and version detected on the machine.", "updates"));
 
     $n->addExtraInfoRaw($machineComplianceBars,
                        _T("Compliance rate", "updates"),
                        "",
                        _T("Green when the machine has no pending update.", "updates"));
 
-    $n->addExtraInfo($machines['security_count'],
-                       _T("Security", "updates"));
+    $n->addExtraInfoCentered($machines['security_count'],
+                       _T("Security", "updates"),
+                       "",
+                       _T("Number of pending security updates on this machine.", "updates"));
 
-    $n->addExtraInfo($machines['kernel_count'],
-                       _T("Kernel", "updates"));
+    $n->addExtraInfoCentered($machines['kernel_count'],
+                       _T("Kernel", "updates"),
+                       "",
+                       _T("Number of pending kernel updates on this machine.", "updates"));
 
-    $n->addExtraInfo($machines['other_count'],
-                       _T("Other", "updates"));
+    $n->addExtraInfoCentered($machines['other_count'],
+                       _T("Other", "updates"),
+                       "",
+                       _T("Number of pending updates other than security or kernel on this machine.", "updates"));
 
-
-    $n->addExtraInfo($machines['total_count'],
-                       _T("Total", "updates"));
+    $n->addExtraInfoCentered($machines['total_count'],
+                       _T("Total", "updates"),
+                       "",
+                       _T("Total number of pending updates on this machine, all categories included.", "updates"));
     $n->setcssIds("linux");
 
     $n->addActionItemArray($actions_update_complete_machines);
