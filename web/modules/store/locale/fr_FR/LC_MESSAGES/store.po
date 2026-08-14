@@ -446,3 +446,27 @@ msgstr "Saisir au moins 2 caractères"
 #, php-format
 msgid "Showing %d of %d machines. Refine your search for more results."
 msgstr "Affichage de %d de %d machines. Affinez votre recherche pour obtenir plus de résultats."
+
+msgid "My Subscriptions"
+msgstr "Mes abonnements"
+
+msgid "Subscribe"
+msgstr "Souscrire"
+
+msgid "My Software"
+msgstr "Mes logiciels"
+
+msgid "Catalog"
+msgstr "Catalogue"
+
+msgid "Choose the operating system to deploy"
+msgstr "Choisir le système d’exploitation à déployer"
+
+msgid "Unsubscribe"
+msgstr "Se désabonner"
+
+msgid "Unsubscribe from this software?"
+msgstr "Se désabonner de ce logiciel ?"
+
+msgid "Unsubscribed."
+msgstr "Désabonné."

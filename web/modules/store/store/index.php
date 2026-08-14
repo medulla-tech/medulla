@@ -1,6 +1,6 @@
 <?php
 /*
- * (c) 2024-2025 Medulla, http://www.medulla-tech.io
+ * (c) 2024-2026 Medulla, http://www.medulla-tech.io
  *
  * $Id$
  *
@@ -19,15 +19,16 @@
  * You should have received a copy of the GNU General Public License
  * along with MMC; If not, see <http://www.gnu.org/licenses/>.
  *
- * Medulla Store - Software catalog
+ * Store - page "Mes logiciels" (liste : ajaxSubscribeList.php).
  */
 
 require("graph/navbar.inc.php");
 require("localSidebar.php");
 require_once("modules/store/includes/xmlrpc.php");
+require_once("modules/store/includes/storeui.inc.php");
 require_once("includes/UIComponents.php");
 
-$p = new PageGenerator(_T("Software Catalog", 'store'));
+$p = new PageGenerator(_T("My Software", 'store'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
@@ -36,7 +37,6 @@ if (!$hasContract) {
     return;
 }
 
-// Process software request (POST)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['request_software'])) {
     $software_name = trim($_POST['software_name'] ?? '');
     $os = trim($_POST['os'] ?? '');
@@ -62,73 +62,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['request_software'])) 
     } else {
         new NotifyWidgetFailure(_T('Error', 'store') . ': ' . implode(', ', $errors));
     }
-    // POST/Redirect/GET to avoid resubmission on refresh
     header("Location: " . urlStrRedirect("store/store/index"));
     exit;
 }
 
-// Get available filters
 $filters = xmlrpc_get_filters();
-
-// Get filter parameters
 $currentFilters = array();
 if (!empty($_GET['os'])) $currentFilters['os'] = $_GET['os'];
 if (!empty($_GET['category'])) $currentFilters['category'] = $_GET['category'];
 if (!empty($_GET['search'])) $currentFilters['search'] = $_GET['search'];
-$currentSort = isset($_GET['sort']) ? $_GET['sort'] : 'popular';
 
-// Pagination parameters
 global $conf;
 $maxperpage = isset($conf["global"]["maxperpage"]) ? $conf["global"]["maxperpage"] : 10;
-$start = isset($_GET['start']) ? intval($_GET['start']) : 0;
-
-// Get client subscriptions
-$subscriptions = xmlrpc_get_client_subscriptions();
-
-// Get active software (sorting is handled by Python backend)
-if (!empty($currentFilters)) {
-    $result = xmlrpc_search_software($currentFilters, 0, 0, $currentSort);
-} else {
-    $result = xmlrpc_get_all_software(true, 0, 0, $currentSort);
-}
-
-$allSoftwares = isset($result['data']) ? $result['data'] : array();
-
-// Filter to keep only subscribed AND deployed software that exists locally
-$filteredSoftwares = array();
-foreach ($allSoftwares as $soft) {
-    if (in_array($soft['id'], $subscriptions) && !empty($soft['deployed_at']) && !empty($soft['package_exists'])) {
-        $filteredSoftwares[] = $soft;
-    }
-}
-
-// Note: Sorting is handled by Python backend, filtered items preserve backend order
-
-// Apply pagination on filtered results
-$totalCount = count($filteredSoftwares);
-$softwares = array_slice($filteredSoftwares, $start, $maxperpage);
-
-// Helper for OS labels
-function getOsLabel($os) {
-    switch(strtolower($os)) {
-        case 'win': return 'Windows';
-        case 'linux': return 'Linux';
-        case 'mac': return 'macOS';
-        default: return ucfirst($os);
-    }
-}
 ?>
 
 <!-- Filters -->
-<form method="get" class="store-filters">
-    <input type="hidden" name="module" value="store">
-    <input type="hidden" name="submod" value="store">
-    <input type="hidden" name="action" value="index">
-
+<form name="storeFilterForm" id="storeFilterForm" class="store-filters" onsubmit="storeReload(0); return false;">
     <input type="text" name="search" placeholder="<?php echo _T('Search...', 'store'); ?>"
-           value="<?php echo htmlspecialchars($currentFilters['search'] ?? ''); ?>">
+           value="<?php echo htmlspecialchars($currentFilters['search'] ?? ''); ?>" onkeyup="storeDebounce()">
 
-    <select name="category">
+    <select name="category" onchange="storeReload(0)">
         <option value=""><?php echo _T('All categories', 'store'); ?></option>
         <?php foreach ($filters['category'] ?? [] as $cat): ?>
         <option value="<?php echo htmlspecialchars($cat); ?>" <?php echo ($currentFilters['category'] ?? '') == $cat ? 'selected' : ''; ?>>
@@ -137,23 +90,17 @@ function getOsLabel($os) {
         <?php endforeach; ?>
     </select>
 
-    <select name="os">
+    <select name="os" onchange="storeReload(0)">
         <option value=""><?php echo _T('All OS', 'store'); ?></option>
         <?php foreach ($filters['os'] ?? [] as $os): ?>
         <option value="<?php echo htmlspecialchars($os); ?>" <?php echo ($currentFilters['os'] ?? '') == $os ? 'selected' : ''; ?>>
-            <?php echo getOsLabel($os); ?>
+            <?php echo store_os_label($os); ?>
         </option>
         <?php endforeach; ?>
     </select>
 
-    <select name="sort">
-        <option value="popular" <?php echo $currentSort == 'popular' ? 'selected' : ''; ?>><?php echo _T('Most Popular', 'store'); ?></option>
-        <option value="name" <?php echo $currentSort == 'name' ? 'selected' : ''; ?>><?php echo _T('A-Z', 'store'); ?></option>
-        <option value="recent" <?php echo $currentSort == 'recent' ? 'selected' : ''; ?>><?php echo _T('Most Recent', 'store'); ?></option>
-    </select>
 
-    <button type="submit" class="btn btn-primary btn-small"><?php echo _T('Filter', 'store'); ?></button>
-    <a href="main.php?module=store&submod=store&action=index" class="btn btn-default btn-small"><?php echo _T('Reset', 'store'); ?></a>
+    <a href="#" onclick="storeResetFilters(); return false;" class="btn btn-default btn-small"><?php echo _T('Reset', 'store'); ?></a>
 
     <button type="button" class="btn btn-default btn-small btn-request" onclick="openRequestModal()">
         <img src="img/actions/add.svg" style="vertical-align: middle; margin-right: 5px; width: 16px; height: 16px;" />
@@ -161,83 +108,8 @@ function getOsLabel($os) {
     </button>
 </form>
 
-<?php
-// Define actions
-$detailAction = new ActionItem(_T("Package Detail", "pkgs"), "detail", "display", "", "pkgs", "pkgs");
-$deployAction = new ActionItem(_T("Deploy", "store"), "deploy", "install", "", "store", "store");
-$emptyAction = new EmptyActionItem();
-
-// Prepare data for the list
-$names = array();
-$vendors = array();
-$descriptions = array();
-$categories = array();
-$versions = array();
-$osList = array();
-$dates = array();
-$params = array();
-$detailActions = array();
-$deployActions = array();
-
-foreach ($softwares as $soft) {
-    // Name with package icon
-    $names[] = "<img style='position:relative; top: 5px;' src='img/other/package.svg' width='25' height='25'/> " .
-               htmlspecialchars($soft['name']);
-
-    $vendors[] = htmlspecialchars($soft['vendor'] ?? '-');
-    $descriptions[] = htmlspecialchars($soft['short_desc'] ?? '-');
-    $categories[] = htmlspecialchars($soft['category'] ?? '-');
-    $versions[] = !empty($soft['version']) ? $soft['version'] : '-';
-    $osList[] = getOsLabel($soft['os'] ?? '');
-    $dates[] = !empty($soft['last_update']) ? date('d/m/Y', strtotime($soft['last_update'])) : '-';
-
-    // Action parameters - use package_uuid to redirect to pkgs
-    $uuid = $soft['package_uuid'] ?? null;
-    if (!empty($uuid)) {
-        $params[] = array(
-            'pid' => base64_encode($uuid),
-            'packageUuid' => $uuid
-        );
-        $detailActions[] = $detailAction;
-        $deployActions[] = $deployAction;
-    } else {
-        $params[] = array();
-        $detailActions[] = $emptyAction;
-        $deployActions[] = $emptyAction;
-    }
-}
-
-if ($totalCount > 0) {
-    // Build extra params for pagination links
-    $extraParams = "";
-    if (!empty($currentSort) && $currentSort !== 'popular') $extraParams .= "&amp;sort=" . urlencode($currentSort);
-    if (!empty($currentFilters['os'])) $extraParams .= "&amp;os=" . urlencode($currentFilters['os']);
-    if (!empty($currentFilters['category'])) $extraParams .= "&amp;category=" . urlencode($currentFilters['category']);
-    if (!empty($currentFilters['search'])) $extraParams .= "&amp;search=" . urlencode($currentFilters['search']);
-
-    $n = new OptimizedListInfos($names, _T("Software", "store"));
-    $n->disableFirstColumnActionLink();
-    $n->addExtraInfo($categories, _T("Category", "store"));
-    $n->addExtraInfo($versions, _T("Version", "store"));
-    $n->addExtraInfo($osList, _T("OS", "store"));
-    $n->addExtraInfo($vendors, _T("Vendor", "store"));
-    $n->addExtraInfo($descriptions, _T("Description", "store"));
-    $n->addExtraInfo($dates, _T("Updated", "store"));
-    $n->setItemCount($totalCount);
-    $n->setNavBar(new SimpleNavBar($start, $start + count($softwares) - 1, $totalCount, $extraParams, $maxperpage));
-    $n->setParamInfo($params);
-    $n->addActionItemArray($deployActions);
-    $n->addActionItemArray($detailActions);
-    $n->setResizable();
-    $n->start = 0;
-    $n->end = count($softwares);
-    $n->display();
-} else {
-    echo '<div style="text-align: center; padding: 40px; color: #888;">';
-    echo '<p>' . _T('No software found', 'store') . '</p>';
-    echo '</div>';
-}
-?>
+<input type="hidden" id="maxperpage" value="<?php echo $maxperpage; ?>">
+<div id="storeList"></div>
 
 <!-- Software request modal -->
 <div class="modal-overlay" id="requestModal">
@@ -286,25 +158,54 @@ if ($totalCount > 0) {
 </div>
 
 <script>
+function storeCollectParams() {
+    var f = document.forms['storeFilterForm'];
+    var p = ['module=store', 'submod=store', 'action=ajaxSubscribeList'];
+    if (f.search.value)   p.push('search='   + encodeURIComponent(f.search.value));
+    if (f.category.value) p.push('category=' + encodeURIComponent(f.category.value));
+    if (f.os.value)       p.push('os='       + encodeURIComponent(f.os.value));
+    return p;
+}
+function storeReload(start, end) {
+    var max = parseInt(document.getElementById('maxperpage').value) || 10;
+    start = parseInt(start) || 0;
+    end = parseInt(end);
+    if (isNaN(end)) end = start + max - 1;
+    var p = storeCollectParams();
+    p.push('start=' + start);
+    p.push('end=' + end);
+    p.push('maxperpage=' + max);
+    jQuery.get('main.php?' + p.join('&'), function (data) {
+        jQuery('#storeList').html(data);
+    });
+}
+function storeReloadParam(filter, start, end) {
+    storeReload(start, end);
+}
+var storeSearchTimer = null;
+function storeDebounce() {
+    clearTimeout(storeSearchTimer);
+    var v = document.forms['storeFilterForm'].search.value;
+    if (v.length > 0 && v.length < 3) return;
+    storeSearchTimer = setTimeout(function () { storeReload(0); }, 300);
+}
+function storeResetFilters() {
+    var f = document.forms['storeFilterForm'];
+    f.search.value = ''; f.category.value = ''; f.os.value = '';
+    storeReload(0);
+}
+jQuery(function () { storeReload(0); });
+
 function openRequestModal() {
     document.getElementById('requestModal').classList.add('open');
 }
-
 function closeRequestModal() {
     document.getElementById('requestModal').classList.remove('open');
 }
-
-// Close modal on overlay click
-document.getElementById('requestModal').addEventListener('click', function(e) {
-    if (e.target === this) {
-        closeRequestModal();
-    }
+document.getElementById('requestModal').addEventListener('click', function (e) {
+    if (e.target === this) { closeRequestModal(); }
 });
-
-// Close with Escape key
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') {
-        closeRequestModal();
-    }
+document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') { closeRequestModal(); }
 });
 </script>
