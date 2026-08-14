@@ -42,9 +42,9 @@ function xmlrpc_get_session(){
     return xmlCall("urbackup.get_ses", []);
 }
 
-function xmlrpc_get_logs(){
+function xmlrpc_get_logs_for_entity($entity, $start=0, $end=-1, $filter=""){
     // Return logs for all user
-    return xmlCall("urbackup.get_logs", []);
+    return xmlCall("urbackup.get_logs_for_entity", [$entity, $start, $end, $filter]);
 }
 
 function xmlrpc_add_client($clientname){

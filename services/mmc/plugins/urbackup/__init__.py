@@ -312,7 +312,7 @@ def get_ses():
     return session
 
 
-def get_logs():
+def get_logs_for_entity(entity, start=0, limit=-1, filter=""):
     """
     Get the logs of the server
 
@@ -320,13 +320,29 @@ def get_logs():
         It returns the server logs.
         If no logs are available, it returns the "No DATA" string.
     """
-    api = UrApiWrapper()
-    logs = api.get_logs()
-    # logs = api.response(_logs)
-    if "content" in logs:
-        return logs["content"]
+    entity = _entity
+    if isinstance(entity, str):
+        _entity = entity.replace("UUID", "")
 
-    return "No DATA in logs"
+    try:
+        _entity = int(_entity)
+    except:
+        pass
+
+    client_ids = UrbackupDatabase().get_client_ids_from_entity(_entity)
+
+    # Update all logs for found clients
+    api = UrApiWrapper()
+    for client_id in client_ids:
+        _logs = api.get_logs(client_id)
+        logs = _logs["content"] if "content" in _logs else []
+
+        if "logdata" in logs:
+            UrbackupDatabase().update_logs(client_id, logs["logdata"])
+
+
+    result = UrbackupDatabase().get_logs_for_entity(_entity, start, limit, filter)
+    return result
 
 
 def add_client(client_name):
@@ -607,6 +623,23 @@ def get_status():
     return "No DATA status"
 
 
+
+def recursive_str_to_int(data):
+    if isinstance(data, int):
+        data = str(data)
+        return data
+
+    if isinstance(data, dict):
+        for key, value in data.items():
+            data[key] = recursive_str_to_int(value)
+    elif isinstance(data, list):
+        for index, item in enumerate(data):
+            data[index] = recursive_str_to_int(item)
+
+    return data
+
+
+
 def get_progress():
     """
     Get progress for every backups
@@ -617,8 +650,9 @@ def get_progress():
     api = UrApiWrapper()
     progress = api.get_progress()
     # progress = api.response(progress)
+
     if "content" in progress:
-        return progress["content"]
+        return recursive_str_to_int(progress["content"])
 
     return "No DATA progress"
 

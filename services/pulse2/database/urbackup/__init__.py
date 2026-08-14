@@ -28,7 +28,8 @@ from mmc.database.database_helper import DatabaseHelper
 from pulse2.database.urbackup.schema import (
     Profiles,
     MachinesProfiles,
-    ClientState
+    ClientState,
+    Logs,
 )
 
 # Imported last
@@ -226,6 +227,96 @@ class UrbackupDatabase(DatabaseHelper):
             return False
 
     @DatabaseHelper._sessionm
+    def get_client_ids_from_entity(self, session, entity_id):
+
+        query = session.query(ClientState.client_id).join(MachinesProfiles, ClientState.client_jid == MachinesProfiles.machine_jid).join(Profiles, MachinesProfiles.profile_id == Profiles.id).filter(Profiles.entity_id == entity_id).distinct().all()
+
+        if query is None:
+            return []
+
+        return [elem.client_id for elem in query]
+
+    @DatabaseHelper._sessionm
+    def update_logs(self, session, client_id, logs):
+        ids = []
+        ids_to_add = []
+        for log in logs:
+            ids.append(log["id"])
+
+        # Copy the list of ids into ids_to_add. Later we will remove the matches
+        ids_to_add = list(ids)
+
+        # Got the existing logs
+        query = session.query(Logs.id).filter(Logs.id.in_(ids))
+        if query is not None:
+            for row in query:
+                if row.id in ids_to_add:
+                    ids_to_add.remove(row.id)
+
+        for log in logs:
+            if log["id"] in ids_to_add:
+                tmp = Logs()
+                tmp.client_id = client_id
+                tmp.id = log["id"]
+                tmp.loglevel = log["loglevel"]
+                tmp.msg = log["msg"]
+                tmp.time = log["time"]
+
+                try:
+                    session.add(tmp)
+                    session.commit()
+                    session.flush()
+                except Exception as e:
+                    logging.getLogger().error(str(e))
+                    continue
+        return ids_to_add
+
+    @DatabaseHelper._sessionm
+    def get_logs_for_entity(self, session, entity, start=0, limit=-1, filter=""):
+        try:
+            start = int(start)
+        except:
+            start = 0
+
+        try:
+            limit = int(limit)
+        except:
+            limit = -1
+
+        query = session.query(Logs)\
+            .join(ClientState, Logs.client_id == ClientState.client_id)\
+            .join(MachinesProfiles, ClientState.client_jid == MachinesProfiles.machine_jid)\
+            .join(Profiles, MachinesProfiles.profile_id == Profiles.id).filter(and_(Profiles.entity_id == entity))\
+            .order_by(Logs.time.desc())
+
+        if filter != "":
+            query = query.filter(and_(Logs.msg.like(f"%{filter}%")))
+
+        count = query.count()
+        query = query.offset(start)
+
+        if limit != -1:
+            query = query.limit(limit)
+
+
+        datas = query.all()
+
+        result = {"total": count, "data": []}
+        if datas is None:
+            return result
+
+        for data in datas:
+            result["data"].append({
+                "id": data.id,
+                "client_id": data.client_id,
+                "loglevel": data.loglevel,
+                "msg": data.msg,
+                "time": data.time
+            })
+
+        return result
+
+    @DatabaseHelper._sessionm
     def getAllLogs(self, session):
         try:
             #allLogs = {
@@ -249,10 +340,6 @@ class UrbackupDatabase(DatabaseHelper):
                     for list_Logs in resultquery
                 ]
 
-            #if resultquery:
-            #    for list_Logs in resultquery:
-            #        allLogs["msg"].append(list_Logs.msg)
-            #        allLogs["time"].append(list_Logs.time)
 
         except Exception as e:
             logging.getLogger().error(str(e))
@@ -427,8 +514,6 @@ class UrbackupDatabase(DatabaseHelper):
 
     #    return lines
 
-
-
 class SqliteHelper:
     instance = None
     config = None
@@ -515,7 +600,6 @@ class UrbackupSettingsDb(SqliteHelper):
         return query[0]
 
 
-
 class UrbackupDb(SqliteHelper):
     @SqliteHelper.session
     def get_client_by_name(self, session, name:str=""):
@@ -559,7 +643,6 @@ class UrbackupDb(SqliteHelper):
         }
         return result
 
-
     @SqliteHelper.session
     def update_client_group(self, session, client_id, group_id):
         sql = "UPDATE clients SET groupid = ? WHERE id = ?"
@@ -571,9 +654,39 @@ class UrbackupDb(SqliteHelper):
             return False
 
     @SqliteHelper.session
+    def get_progress_by_group(self, session, group_id):
+
+        # TODO: progress request executed by api to get the progress.
+        # Need to adapt it for a group / entity
+        sql = f"""SELECT * FROM (
+	SELECT a.id AS backupid, clientid, name, strftime('%y-%m-%d %h:%i:%s', a.backuptime) AS backuptime, backuptime AS bt,
+	 incremental, (strftime('%s',running)-strftime('%s',a.backuptime)) AS duration, size_bytes, 0 AS image, 0 AS del, size_calculated, resumed, 0 AS restore, '' AS details
+	FROM backups a INNER JOIN clients b ON a.clientid=b.id
+	 WHERE complete=1
+	UNION ALL
+	SELECT c.id AS backupid, clientid, name, strftime('%y-%m-%d %h:%i:%s', c.backuptime) AS backuptime, backuptime AS bt,
+	incremental, (strftime('%s',running)-strftime('%s',c.backuptime)) AS duration, (size_bytes+IFNULL(0,(
+	SELECT SUM(size_bytes) FROM backup_images INNER JOIN (SELECT * FROM assoc_images WHERE img_id=c.id) ON assoc_id=id
+	)) ) AS size_bytes, 1 AS image, 0 AS del, 1 as size_calculated, 0 AS resumed, 0 AS restore, letter AS details
+	FROM backup_images c INNER JOIN clients d ON c.clientid=d.id
+	WHERE complete=1 AND letter!='SYSVOL' AND letter!='ESP'
+	UNION ALL
+	SELECT e.backupid AS backupid, clientid, name, strftime('%y-%m-%d %h:%i:%s', e.created) AS backuptime, e.created AS bt,
+	incremental, (strftime('%s',stoptime)-strftime('%s',e.created)) AS duration, delsize AS size_bytes, image, 1 AS del, 1 AS size_calculated, 0 AS resumed, 0 AS restore, '' AS details
+	FROM del_stats e INNER JOIN clients f ON e.clientid=f.id
+	WHERE 1=1
+	UNION ALL
+	SELECT g.id AS backupid, clientid, name, strftime('%y-%m-%d %h:%i:%s', g.created) AS backuptime, g.created as bt,
+	0 AS incremental, (strftime('%s',g.finished)-strftime('%s',g.created)) AS duration, -1 AS size_bytes, image, 0 AS del, 0 AS size_calculated, 0 AS resumed, 1 AS restore,
+		(CASE WHEN image=1 THEN letter ELSE path END) AS details
+	FROM restores g INNER JOIN clients h ON g.clientid=h.id
+	WHERE done=1) ORDER BY bt DESC"""
+
+
+    @SqliteHelper.session
     def get_backups_for_client(self, session, clientid, start=0, end=-1, filter=""):
 
-        sql = "SELECT * FROM backups WHERE clientid = ? limit ?, ?"
+        sql = "SELECT * FROM backups WHERE clientid = ? order by backuptime desc limit ?, ?"
         sql2 = "select count(*) from backups where clientid = ?"
         try:
             query = session.execute(sql, (clientid, start, end)).fetchall()

@@ -20,6 +20,13 @@ create table if not exists machines_profiles(
 alter table client_state change state state int not null default 0;
 alter table client_state add column client_jid varchar(255) not null after client_id;
 
+alter table all_logs add column loglevel int not null default -1 after id;
+alter table all_logs change `time` `time` int not null;
+alter table all_logs add column client_id int not null after id;
+
+create or replace index idx_msg on all_logs(msg);
+create or replace index idx_client_id on all_logs(client_id);
+create or replace index idx_time on all_logs(`time`);
 
 UPDATE version set Number = 2;
 

@@ -29,6 +29,7 @@ $p = new PageGenerator(_T("Profiles", 'urbackup'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
+
 // Actions list for entity
 $entitiesList = [];
 $entitiesIds = [];

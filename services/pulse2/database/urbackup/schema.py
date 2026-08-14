@@ -58,3 +58,12 @@ class ClientState(Base):
     client_jid = Column(String(255))
     state = Column(Integer, default=1)
     authkey = Column(String(255))
+
+
+class Logs(Base, UrbackupDBObj):
+    __tablename__ = "all_logs"
+
+    loglevel = Column(Integer, default=-1, nullable=False)
+    client_id = Column(Integer, ForeignKey("client_state.client_id"), nullable=False)
+    msg = Column(String(255), nullable=False)
+    time = Column(Integer, nullable=False)

@@ -9,8 +9,9 @@ function secs2date($secs,$date)
         $s=$secs-2147472000;
         $date->add(new DateInterval('PT'.$s.'S'));
     }
-    else
+    else{
         $date->setTimestamp($secs);
+    }
 }
 
 function formatBytes($bytes, $precision = 2) 

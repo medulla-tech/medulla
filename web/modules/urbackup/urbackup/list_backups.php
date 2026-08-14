@@ -25,6 +25,7 @@ require("localSidebar.php");
 require_once("modules/urbackup/includes/xmlrpc.php");
 require_once("modules/urbackup/includes/functions.inc.php");
 
+
 $clientname = (isset($_GET["clientname"])) ? htmlentities($_GET['clientname']) : "";
 $p = new PageGenerator(_T("Backups List ".$clientname, 'urbackup'));
 $p->setSideMenu($sidemenu);

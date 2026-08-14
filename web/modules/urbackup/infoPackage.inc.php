@@ -39,6 +39,11 @@ $page = new Page("index", _T('Review', 'urbackup'));
 $page->setFile("modules/urbackup/urbackup/index.php");
 $submod->addPage($page);
 
+$page = new Page("ajaxReview", _T('Review', 'urbackup'));
+$page->setFile("modules/urbackup/urbackup/ajaxReview.php");
+$page->setOptions(array("visible"=>False, "noHeader"=>True));
+$submod->addPage($page);
+
 $page = new Page("list_backups", _T('List Backups by Client', 'urbackup'));
 $page->setFile("modules/urbackup/urbackup/list_backups.php");
 $submod->addPage($page);
@@ -125,6 +130,12 @@ $submod->addPage($page);
 
 $page = new Page("logs", _T('Logs', 'urbackup'));
 $page->setFile("modules/urbackup/urbackup/logs.php");
+$submod->addPage($page);
+
+$page = new Page("ajaxLogs", _T('Logs', 'urbackup'));
+$page->setFile("modules/urbackup/urbackup/ajaxLogs.php");
+$page->setOptions(array("visible"=>False, "noHeader"=>True));
+
 $submod->addPage($page);
 
 $mod->addSubmod($submod);
