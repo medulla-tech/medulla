@@ -37,17 +37,27 @@ if ($search !== '') $currentFilters['search'] = $search;
 if (!empty($_GET['os'])) $currentFilters['os'] = $_GET['os'];
 if (!empty($_GET['category'])) $currentFilters['category'] = $_GET['category'];
 
-if (!empty($currentFilters)) {
-    $result = xmlrpc_search_software($currentFilters, 0, 0, $currentSort);
-} else {
-    $result = xmlrpc_get_all_software(true, 0, 0, $currentSort);
-}
-$allBuilds = isset($result['data']) ? $result['data'] : array();
+// Catalogue complet : chaque produit porte TOUS ses builds (tous OS). Souscrire
+// = souscrire au logiciel entier, pas au seul OS filtre.
+$fullResult = xmlrpc_get_all_software(true, 0, 0, $currentSort);
+$allBuilds = isset($fullResult['data']) ? $fullResult['data'] : array();
 
 $subscriptions = xmlrpc_get_client_subscriptions();
 $subscribedIds = is_array($subscriptions) ? $subscriptions : array();
 
 $products = store_group_by_product($allBuilds, $subscribedIds);
+
+// Les filtres ne font que choisir les produits VISIBLES ; leurs build_ids/badges
+// restent complets. On garde le produit des qu'un de ses builds matche le filtre.
+if (!empty($currentFilters)) {
+    $matchResult = xmlrpc_search_software($currentFilters, 0, 0, $currentSort);
+    $matchBuilds = isset($matchResult['data']) ? $matchResult['data'] : array();
+    $matchNames = array();
+    foreach ($matchBuilds as $b) { $matchNames[$b['name']] = true; }
+    $products = array_values(array_filter($products, function ($p) use ($matchNames) {
+        return isset($matchNames[$p['name']]);
+    }));
+}
 $catalogOs = store_catalog_os($products);
 
 $totalCount = count($products);

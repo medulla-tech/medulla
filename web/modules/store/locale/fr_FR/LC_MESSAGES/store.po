@@ -107,6 +107,9 @@ msgstr "Les plus récents"
 msgid "All OS"
 msgstr "Tous les systèmes d'exploitation"
 
+msgid "All categories"
+msgstr "Toutes les catégories"
+
 #: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/index.php:141
 #: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/subscribe.php:133
 msgid "Filter"
