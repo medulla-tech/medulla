@@ -73,5 +73,5 @@ class BasePluginConfig(
         self.authmethod = "baseldap"
         self.provmethod = None
         self.computersmethod = "none"
-        self.passwordscheme = "ssha"
+        self.passwordscheme = "passmod"
         self.auditmethod = "none"

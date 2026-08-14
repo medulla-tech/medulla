@@ -5073,14 +5073,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.close()
         return ret
 
-    def __sha512_crypt_password(self, password):
-        if not password:
-            return ""
-        import crypt
-
-        passphrase = "$6$DzmCpUs3$"
-        return crypt.crypt(password, passphrase)
-
     def getPXELogin(self, location_uuid):
         session = self.session_factory()
         login = (
@@ -5108,7 +5100,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             if "pxe_login" in params:
                 location.pxe_login = params["pxe_login"]
             if "pxe_password" in params:
-                # location.pxe_password = self.__sha512_crypt_password(params['pxe_password'])
                 location.pxe_password = params["pxe_password"]
             if "pxe_keymap" in params:
                 location.pxe_keymap = params["pxe_keymap"]

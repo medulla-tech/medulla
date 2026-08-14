@@ -48,7 +48,6 @@ from uuid import uuid1
 import shelve
 import ldap
 import ldif
-import crypt
 import base64
 import random
 import string
@@ -979,8 +978,6 @@ class LdapUserGroupControl:
         if isinstance(password, xmlrpc.client.Binary):
             password = str(password)
         salt = self._getSalt(scheme)
-        if scheme == "crypt":
-            return "{crypt}" + crypt.crypt(password, salt)
         ctx = _digest(password)
         ctx.update(salt)
         return "{SSHA}" + base64.encodestring(ctx.digest() + salt)

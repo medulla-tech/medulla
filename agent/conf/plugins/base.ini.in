@@ -68,7 +68,6 @@ logfile = /var/log/ldap.log
 # authorizedHomeDir = /home, /home2, /mnt/depot/newhome
 
 # LDAP user password scheme to use
-# Possible values are "ssha", "crypt" and "passmod"
 # "passmod" uses the LDAP Password Modify Extended Operations to change
 # password. The password encryption is done by the LDAP server.
 passwordscheme = passmod

@@ -264,40 +264,6 @@ class PXEImagingApi(PXEMethodParser):
         inventory = boot_inv.dumpOCS(hostname, "root")
         return self.send_inventory(inventory, hostname)
 
-    @assign(0xAF)
-    def clientAuth(self, mac, password):
-        """
-        Authentification on PXE console.
-
-        @param mac: MAC address
-        @type mac: str
-
-        @param password: prompted password on PXE
-        @type password: str
-
-        @return: "ok" if correct, otherwise "ko"
-        @rtype: str
-        """
-
-        def __sha512_crypt_password(password):
-            if not password:
-                return ""
-            import crypt
-
-            passphrase = "$6$DzmCpUs3$"
-            return crypt.crypt(password, passphrase)
-
-        self.api.logClientAction(
-            mac, LOG_LEVEL.INFO, LOG_STATE.IDENTITY, "menu identification request"
-        )
-
-        if __sha512_crypt_password(password) == P2PServerCP().pxe_password:
-            logging.getLogger().debug("PXE Proxy: client authentification OK")
-            return succeed("ok")
-        else:
-            logging.getLogger().warn("PXE Proxy: client authentification FAILED")
-            return succeed("ko")
-
     def ip_adressexml(self, file_content):
         root = ET.fromstring(file_content)
         for child in root:
