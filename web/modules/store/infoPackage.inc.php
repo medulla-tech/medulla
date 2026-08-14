@@ -1,6 +1,6 @@
 <?php
 /*
- * (c) 2024-2025 Medulla, http://www.medulla-tech.io
+ * (c) 2024-2026 Medulla, http://www.medulla-tech.io
  *
  * $Id$
  *
@@ -34,8 +34,13 @@ $submod->setImg('modules/store/graph/navbar/store');
 $submod->setDefaultPage("store/store/index");
 $submod->setPriority(3000);
 
-$page = new Page("index", _T('Medulla Store', 'store'));
+$page = new Page("index", _T('My Software', 'store'));
 $page->setFile("modules/store/store/index.php");
+$submod->addPage($page);
+
+$page = new Page("unsubscribe");
+$page->setFile("modules/store/store/unsubscribe.php");
+$page->setOptions(array("visible" => False, "noHeader" => True));
 $submod->addPage($page);
 
 $page = new Page("deploy", _T('Deploy Package', 'store'));
@@ -73,7 +78,7 @@ $page->setFile("modules/store/store/startDeploy.php");
 $page->setOptions(array("visible" => False, "noHeader" => True));
 $submod->addPage($page);
 
-$page = new Page("subscribe", _T('Update Subscription', 'store'));
+$page = new Page("subscribe", _T('Catalog', 'store'));
 $page->setFile("modules/store/store/subscribe.php");
 $submod->addPage($page);
 
