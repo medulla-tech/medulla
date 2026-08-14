@@ -10,7 +10,8 @@
 
 import logging
 import pulse2.utils
-import imp
+import importlib.util
+import sys
 import os
 
 
@@ -83,8 +84,14 @@ class IntAssignAlgoManager(pulse2.utils.Singleton):
             else:
                 searchpath = os.path.dirname(__file__)
             logging.getLogger().debug("Algo search path: %s" % searchpath)
-            f, p, d = imp.find_module(assign_algo, [searchpath])
-            mod = imp.load_module("MyAssignAlgo", f, p, d)
+            algo_path = os.path.join(searchpath, f"{assign_algo}.py")
+            spec = importlib.util.spec_from_file_location(
+                "MyAssignAlgo", algo_path
+            )
+            if spec and spec.loader:
+                mod = importlib.util.module_from_spec(spec)
+                sys.modules["MyAssignAlgo"] = mod
+                spec.loader.exec_module(mod)
             ret = self.getClassInModule(mod)
         except Exception as e:
             logging.getLogger().debug(e)

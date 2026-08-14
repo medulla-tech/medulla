@@ -7,7 +7,8 @@ Module to link entities to users depending on their profile.
 """
 
 import os.path
-import imp
+import sys
+import importlib.util
 
 from mmc.plugins.base.provisioning import ProvisionerConfig, ProvisionerI
 from pulse2.database.inventory import Inventory
@@ -92,8 +93,14 @@ class InventoryProvisioner(ProvisionerI):
                             os.path.dirname(__file__), "provisioning_plugins"
                         )
                         try:
-                            f, p, d = imp.find_module(plugin, [searchpath])
-                            mod = imp.load_module(plugin, f, p, d)
+                            plugin_path = os.path.join(searchpath, f"{plugin}.py")
+                            spec = importlib.util.spec_from_file_location(
+                                plugin, plugin_path
+                            )
+                            if spec and spec.loader:
+                                mod = importlib.util.module_from_spec(spec)
+                                sys.modules[plugin] = mod
+                                spec.loader.exec_module(mod)
                             klass = mod.PluginEntities
                             found = klass().get(authtoken)
                             if found:

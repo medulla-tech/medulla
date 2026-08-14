@@ -33,7 +33,7 @@ import urllib.request, urllib.parse, urllib.error
 import uuid
 import time
 from datetime import datetime
-import imp
+import importlib.util
 import requests
 from Cryptodome import Random
 from Cryptodome.Cipher import AES
@@ -205,17 +205,14 @@ def loadModule(filename):
         sys.path.append(searchPath)
         sys.path.append(os.path.normpath(searchPath + "/../"))
     moduleName, ext = os.path.splitext(file)
-    fp, pathName, description = imp.find_module(
+    spec = importlib.util.spec_from_file_location(
         moduleName,
-        [
-            searchPath,
-        ],
+        filename,
     )
-    try:
-        module = imp.load_module(moduleName, fp, pathName, description)
-    finally:
-        if fp:
-            fp.close()
+    if spec and spec.loader:
+        module = importlib.util.module_from_spec(spec)
+        sys.modules[moduleName] = module
+        spec.loader.exec_module(module)
     return module
 
 

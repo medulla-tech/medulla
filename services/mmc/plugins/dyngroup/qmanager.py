@@ -12,7 +12,8 @@ import logging
 import glob
 import os
 import re
-import imp
+import sys
+import importlib.util
 from .bool_equations import BoolRequest
 from mmc.plugins.base.computers import ComputerManager
 import traceback
@@ -64,11 +65,16 @@ class QueryManager(Singleton):
                 os.path.join("plugins/", plugin, "querymanager", "__init__.py")
             ):
                 self.logger.debug("QueryManager is trying to load plugin " + plugin)
-                f, p, d = imp.find_module(
-                    "querymanager", [os.path.join("plugins/", plugin)]
+                plugin_path = os.path.join("plugins/", plugin, "querymanager", "__init__.py")
+                module_name = plugin + "_querymanager"
+                spec = importlib.util.spec_from_file_location(
+                    module_name, plugin_path
                 )
                 try:
-                    mod = imp.load_module(plugin + "_querymanager", f, p, d)
+                    if spec and spec.loader:
+                        mod = importlib.util.module_from_spec(spec)
+                        sys.modules[module_name] = mod
+                        spec.loader.exec_module(mod)
                     func = getattr(mod, "activate")
                     if func():
                         ret[plugin] = mod

@@ -17,7 +17,7 @@ import re
 import signal
 import os
 import sys
-import imp
+import importlib.util
 import traceback
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from socketserver import ThreadingMixIn, ForkingMixIn
@@ -336,7 +336,11 @@ class InventoryFix:
                     mod_name = filename
                     py_mod = fnc = None
                     try:
-                        py_mod = imp.load_source(mod_name, pathname)
+                        spec = importlib.util.spec_from_file_location(mod_name, pathname)
+                        if spec and spec.loader:
+                            py_mod = importlib.util.module_from_spec(spec)
+                            sys.modules[mod_name] = py_mod
+                            spec.loader.exec_module(py_mod)
 
                     except ImportError:
                         self.logger.warn("Cannot load fixing script '%s'" % filename)
