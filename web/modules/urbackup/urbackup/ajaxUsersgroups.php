@@ -1,8 +1,25 @@
-
-
-
-
 <?php
+/*
+ * (c) 2026 Medulla, http://medulla-tech.io
+ *
+ * $Id$
+ *
+ * This file is part of Pulse.
+ *
+ * MMC is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * MMC is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MMC; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ */
 require_once("modules/urbackup/includes/xmlrpc.php");
 
 
@@ -29,13 +46,10 @@ $groupapiid=(isset($group["api_id"])) ? htmlentities($group["api_id"]) : 0;
 
         <tr>
             <td style='padding-left: 5px;'>
-                <a title=<?php echo _T("Browse", 'urbackup'); ?> href="main.php?module=urbackup&amp;submod=urbackup&amp;action=list_computers_ongroup&amp;groupuuid=<?php echo $groupuuid;?>&amp;groupid=<?php echo $groupapiid; ?>&amp;groupname=<?php echo $groupname; ?>"><?php echo $groupname; ?></a>
+                <a title=<?php echo _T("Browse", 'urbackup'); ?> href="main.php?module=urbackup&amp;submod=urbackup&amp;action=edit_group_settings&amp;groupid=<?php echo $groupapiid; ?>&amp;groupname=<?php echo $groupname; ?>"><?php echo $groupname; ?></a>
             </td>
             <td>
             <ul class="action">
-                <li class="display">
-                    <a title=<?php echo _T("Browse", 'urbackup'); ?> href="main.php?module=urbackup&amp;submod=urbackup&amp;action=list_computers_ongroup&amp;groupuuid=<?php echo $groupuuid;?>&amp;groupid=<?php echo $groupapiid; ?>&amp;groupname=<?php echo $groupname; ?>">&nbsp;</a>
-                </li>
                 <li class="edit">
                     <a title=<?php echo _T("Edit", 'urbackup'); ?> href="main.php?module=urbackup&amp;submod=urbackup&amp;action=edit_group_settings&amp;groupid=<?php echo $groupapiid; ?>&amp;groupname=<?php echo $groupname; ?>">&nbsp;</a>
                 </li>

@@ -1,6 +1,6 @@
 <?php
 /*
- * (c) 2022 Siveo, http://www.siveo.net/
+ * (c) 2026 Medulla, http://medulla-tech.io
  *
  * $Id$
  *
