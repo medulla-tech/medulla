@@ -320,7 +320,7 @@ def get_logs_for_entity(entity, start=0, limit=-1, filter=""):
         It returns the server logs.
         If no logs are available, it returns the "No DATA" string.
     """
-    entity = _entity
+    _entity = entity
     if isinstance(entity, str):
         _entity = entity.replace("UUID", "")
 
