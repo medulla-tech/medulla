@@ -44,6 +44,8 @@ $profiles = xmlrpc_get_acl_profiles();
 if (empty($profiles)) {
     $profiles = $protectedProfiles; // fallback
 }
+// Position used as checkbox field name: PHP mangles spaces/dots in $_POST keys.
+$profiles = array_values($profiles);
 
 // Load feature definitions from database, filtered by current install type
 $featureDefs = xmlrpc_get_acl_feature_definitions($installType);
@@ -63,11 +65,11 @@ if (is_array($currentSelections)) {
 
 // Handle POST (save)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_acl'])) {
-    foreach ($profiles as $profile) {
+    foreach ($profiles as $pIdx => $profile) {
         $featuresDict = [];
         foreach ($featureDefs as $fkey => $fdef) {
-            $rwField = 'acl_' . $profile . '_' . $fkey . '_rw';
-            $roField = 'acl_' . $profile . '_' . $fkey . '_ro';
+            $rwField = 'acl_' . $pIdx . '_' . $fkey . '_rw';
+            $roField = 'acl_' . $pIdx . '_' . $fkey . '_ro';
             if (isset($_POST[$rwField])) {
                 $featuresDict[$fkey] = 'rw';
             } elseif (isset($_POST[$roField])) {
@@ -140,14 +142,14 @@ foreach ($featureDefs as $fkey => $fdef) {
                     <td colspan="2" class="acl-td-category">
                         <?php echo htmlspecialchars($catLabel); ?>
                     </td>
-                    <?php foreach ($profiles as $profile): ?>
+                    <?php foreach ($profiles as $pIdx => $profile): ?>
                         <td class="acl-td-center">
                             <input type="checkbox"
                                 data-master="1"
                                 data-category="<?php echo $cat; ?>"
-                                data-profile="<?php echo $profile; ?>"
+                                data-profile="<?php echo $pIdx; ?>"
                                 title="<?php echo _T("Check / uncheck all", "admin"); ?>"
-                                onchange="toggleCategory('<?php echo $cat; ?>', '<?php echo $profile; ?>', this.checked);">
+                                onchange="toggleCategory('<?php echo $cat; ?>', '<?php echo $pIdx; ?>', this.checked);">
                         </td>
                     <?php endforeach; ?>
                 </tr>
@@ -180,8 +182,8 @@ foreach ($featureDefs as $fkey => $fdef) {
                                 <?php endif; ?>
                             </td>
                             <td class="acl-td-access"><?php echo _T("Read", "admin"); ?></td>
-                            <?php foreach ($profiles as $profile):
-                                $fieldName = 'acl_' . $profile . '_' . $fkey . '_ro';
+                            <?php foreach ($profiles as $pIdx => $profile):
+                                $fieldName = 'acl_' . $pIdx . '_' . $fkey . '_ro';
                                 $current = $selectionMap[$profile][$fkey] ?? null;
                                 $checked = ($current === 'ro' || $current === 'rw') ? ' checked' : '';
                                 $disabled = ($isSuperadminOnly && $profile !== 'Super-Admin') ? ' disabled' : '';
@@ -189,7 +191,7 @@ foreach ($featureDefs as $fkey => $fdef) {
                                 <td class="acl-td-center">
                                     <?php if (!$isSuperadminOnly || $profile === 'Super-Admin'): ?>
                                         <input type="checkbox" name="<?php echo $fieldName; ?>" value="1" <?php echo $checked . $disabled; ?>
-                                            data-profile="<?php echo $profile; ?>" data-feature="<?php echo $fkey; ?>" data-level="ro" data-category="<?php echo $cat; ?>">
+                                            data-profile="<?php echo $pIdx; ?>" data-feature="<?php echo $fkey; ?>" data-level="ro" data-category="<?php echo $cat; ?>">
                                     <?php else: ?>
                                         <span class="acl-td-disabled">—</span>
                                     <?php endif; ?>
@@ -221,8 +223,8 @@ foreach ($featureDefs as $fkey => $fdef) {
                                     <?php endif; ?>
                                 </td>
                                 <td class="acl-td-access"><?php echo _T("Write", "admin"); ?></td>
-                                <?php foreach ($profiles as $profile):
-                                    $fieldName = 'acl_' . $profile . '_' . $fkey . '_rw';
+                                <?php foreach ($profiles as $pIdx => $profile):
+                                    $fieldName = 'acl_' . $pIdx . '_' . $fkey . '_rw';
                                     $current = $selectionMap[$profile][$fkey] ?? null;
                                     $checked = ($current === 'rw') ? ' checked' : '';
                                     $lockedThis = ($isLocked && $profile === 'Super-Admin');
@@ -238,7 +240,7 @@ foreach ($featureDefs as $fkey => $fdef) {
                                                 <input type="hidden" name="<?php echo $fieldName; ?>" value="1">
                                             <?php endif; ?>
                                             <input type="checkbox" name="<?php echo $fieldName; ?>" value="1" <?php echo $checked . $disabled; ?>
-                                                data-profile="<?php echo $profile; ?>" data-feature="<?php echo $fkey; ?>" data-level="rw" data-category="<?php echo $cat; ?>">
+                                                data-profile="<?php echo $pIdx; ?>" data-feature="<?php echo $fkey; ?>" data-level="rw" data-category="<?php echo $cat; ?>">
                                         <?php else: ?>
                                             <span class="acl-td-disabled">—</span>
                                         <?php endif; ?>
