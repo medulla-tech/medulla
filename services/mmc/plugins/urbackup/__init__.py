@@ -417,11 +417,15 @@ def remove_group(groupid):
     Returns:
         All Settings of server
     """
+    group = UrbackupSettingsDb().get_group_by_id(groupid)
+
     api = UrApiWrapper()
     removegroup = api.remove_group(groupid)
     # removegroup = api.response(removegroup)
     if "content" in removegroup:
-        return removegroup["content"]
+        urbackupDatabase().remove_group(group["name"])
+        return recursive_str_to_int(removegroup["content"])
+
 
     return "No DATA in newclient"
 
@@ -912,3 +916,6 @@ def get_group_info(entityid):
 
 
     return groupdb
+
+def get_setting(key=""):
+    return UrbackupSettingsDb().get_setting(key)

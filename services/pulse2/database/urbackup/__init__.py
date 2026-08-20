@@ -13,9 +13,11 @@ from sqlalchemy import (
     or_,
     distinct,
     Table,
+    inspect,
+    text,
 )
 import sqlite3
-from sqlalchemy.orm import create_session, mapper, relation
+from sqlalchemy.orm import create_session, mapper, relation, sessionmaker
 from sqlalchemy.exc import DBAPIError
 from sqlalchemy import update
 from sqlalchemy.ext.automap import automap_base
@@ -84,6 +86,7 @@ class UrbackupDatabase(DatabaseHelper):
 
         UrbackupSettingsDb().activate(self.config.urbackup_server_settings_db)
         UrbackupDb().activate(self.config.urbackup_server_db)
+        UrbackupFileDb().activate(self.config.urbackup_server_file_db)
         return True
 
     def initMappers(self):
@@ -228,6 +231,20 @@ class UrbackupDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def get_client_ids_from_entity(self, session, entity_id):
+        query = session.query(Profiles).filter(Profiles.entity_id == entity_id).first()
+
+        """
+        machines_profiles.machine_jid
+        profiles.entity_id
+        client_state.client_jid
+        client_state.client_id
+
+
+        select distinct cs.client_id
+        from client_state cs
+        join machines_profiles mp on cs.client_jid = mp.machine_jid
+        join profiles p on mp.profile_id = p.id where p.entity_id = :entity_id
+        """
 
         query = session.query(ClientState.client_id).join(MachinesProfiles, ClientState.client_jid == MachinesProfiles.machine_jid).join(Profiles, MachinesProfiles.profile_id == Profiles.id).filter(Profiles.entity_id == entity_id).distinct().all()
 
@@ -235,6 +252,7 @@ class UrbackupDatabase(DatabaseHelper):
             return []
 
         return [elem.client_id for elem in query]
+
 
     @DatabaseHelper._sessionm
     def update_logs(self, session, client_id, logs):
@@ -340,6 +358,10 @@ class UrbackupDatabase(DatabaseHelper):
                     for list_Logs in resultquery
                 ]
 
+            #if resultquery:
+            #    for list_Logs in resultquery:
+            #        allLogs["msg"].append(list_Logs.msg)
+            #        allLogs["time"].append(list_Logs.time)
 
         except Exception as e:
             logging.getLogger().error(str(e))
@@ -501,6 +523,26 @@ class UrbackupDatabase(DatabaseHelper):
             "profile_name":query.profile_name
         }
 
+    @DatabaseHelper._sessionm
+    def remove_group(self, session, groupuuid):
+        query = session.query(Profiles)\
+            .filter(Profiles.profile_uuid == groupuuid).delete()
+
+        if query is None:
+            return False
+
+        group = {
+            "id":group.id,
+            "entity": group.entity_id,
+            "uuid":group.profile_uuid,
+            "name": group.profile_name,
+        }
+
+        query = session.query(MachinesProfiles)\
+            .filter()
+        session.commit()
+        session.flush()
+
 
     # =====================================================================
     # urbackup FUNCTIONS
@@ -514,10 +556,13 @@ class UrbackupDatabase(DatabaseHelper):
 
     #    return lines
 
+
 class SqliteHelper:
     instance = None
     config = None
     is_activated = False
+    excluded = []
+    included = []
 
     def __new__(cls):
         if cls.instance is None:
@@ -528,23 +573,44 @@ class SqliteHelper:
         if self.is_activated:
             return True
         self.config = config
-        self.engine = sqlite3.connect(self.config, check_same_thread=False)
+        self.engine = create_engine(f"sqlite:////{config}", connect_args={'check_same_thread':False})
+
+        # _tables = [table for table in inspect(self.engine).get_table_names() if table not in self.excluded]
+        # for element in self.included:
+        #     if element not in _tables:
+        #         _tables.append(element)
+
+        # self.base = automap_base()
+        # self.base.prepare(autoload_with=self.engine, reflection_options={"only": _tables})
+
+        # for name, table in self.base.classes.items():
+        #     setattr(self, name.capitalize(), table)
+
+        self.metadata = MetaData(self.engine)
+        self.metadata.create_all(self.engine)
+        self.Base = automap_base()
+        self.Base.prepare(self.engine)
+        self.init_mapper()
+        self.session_factory = sessionmaker(bind=self.engine)
         self.is_activated = True
 
         return self.is_activated
+
+    def init_mapper(self):
+        pass
 
     @staticmethod
     def session(fnc):
         def wrapper(self, *args, **kwargs):
 
-            session = self.engine.cursor()
+            session = self.session_factory()
             try:
                 result = fnc(self, session, *args, **kwargs)
-                self.engine.commit()
+                session.commit()
                 return result
             except Exception as e:
                 logging.getLogger().error(str(e))
-                self.engine.rollback()
+                session.rollback()
                 raise
             finally:
                 session.close()
@@ -553,43 +619,71 @@ class SqliteHelper:
 
 class UrbackupSettingsDb(SqliteHelper):
 
+    def init_mapper(self):
+        self.Settings = Table("settings", self.metadata, autoload=True)
+        self.Si_client_groups = Table("si_client_groups", self.metadata, autoload=True)
+
+
     @SqliteHelper.session
     def get_group_by_name(self, session, group_name:str=""):
         if group_name == "":
             return {}
 
-        sql = "SELECT * FROM si_client_groups WHERE name = ?"
-        try:
-            query = session.execute(sql, (group_name,)).fetchone()
-        except Exception as e:
-            logger.error(str(e))
-            return {}
+        query = session.query(self.Si_client_groups)\
+            .filter(self.Si_client_groups.c.name == group_name)
+
+        query = query.first()
 
         if query is None:
             return {}
 
         result = {
-            "id" : query[0],
-            "name" : query[1],
+            "id" : query.id,
+            "name" : query.name,
+        }
+        return result
+
+    @SqliteHelper.session
+    def get_group_by_id(self, session, id):
+        query = sesison.query(self.Si_client_groups)\
+            .filter(self.Si_client_groups.c.id == id).first()
+        if query is None:
+            return {}
+        result = {
+            "id": query.id,
+            "name": query.name
         }
         return result
 
     @SqliteHelper.session
     def update_client_group(self, session, client_id, group_id):
-        sql = """UPDATE settings SET value = ? WHERE key=? AND clientid = ?"""
+        sql = "update settings set value = :groupid where clientid = :clientid"
+        bind = {
+            "groupid":group_id,
+            "clientid":client_id
+        }
         try:
-            session.execute(sql, (group_id, "group_id", client_id))
+            session.execute(text(sql), bind)
+            session.commit()
+            session.flush()
             return True
         except Exception as e:
-            logger.error(str(e))
+            logger.error(e)
+            session.rollback()
             return False
+
 
 
     @SqliteHelper.session
     def get_setting(self, session, key:str, client_id:int) -> None|str:
-        sql = """SELECT value FROM settings WHERE key=? AND clientid = ?"""
+
+        sql = """SELECT value FROM settings WHERE key=:key AND clientid = :clientid"""
+        bind = {
+            "key": key,
+            "clientid": client_id
+        }
         try:
-            query = session.execute(sql, (key, client_id)).fetchone()
+            query = session.execute(text(sql), bind).fetchone()
         except Exception as e:
             logger.error(str(e))
             return None
@@ -600,18 +694,25 @@ class UrbackupSettingsDb(SqliteHelper):
         return query[0]
 
 
+
 class UrbackupDb(SqliteHelper):
+
+    def init_mapper(self):
+        self.Clients = Table("clients", self.metadata, autoload=True)
+
     @SqliteHelper.session
     def get_client_by_name(self, session, name:str=""):
         if name == "":
             return {}
 
-
-        sql = "SELECT * FROM clients WHERE name = ?"
         try:
-            query = session.execute(sql, (name,)).fetchone()
+            sql = """SELECT * from clients where name = :name"""
+            bind = {"name":name}
+            query = session.execute(text(sql), bind).first()
         except Exception as e:
+            logger.error(3)
             logger.error(str(e))
+            logger.error(4)
             return {}
 
         if query is None:
@@ -644,20 +745,7 @@ class UrbackupDb(SqliteHelper):
         return result
 
     @SqliteHelper.session
-    def update_client_group(self, session, client_id, group_id):
-        sql = "UPDATE clients SET groupid = ? WHERE id = ?"
-        try:
-            session.execute(sql, (group_id, client_id))
-            return True
-        except Exception as e:
-            logger.error(str(e))
-            return False
-
-    @SqliteHelper.session
     def get_progress_by_group(self, session, group_id):
-
-        # TODO: progress request executed by api to get the progress.
-        # Need to adapt it for a group / entity
         sql = f"""SELECT * FROM (
 	SELECT a.id AS backupid, clientid, name, strftime('%y-%m-%d %h:%i:%s', a.backuptime) AS backuptime, backuptime AS bt,
 	 incremental, (strftime('%s',running)-strftime('%s',a.backuptime)) AS duration, size_bytes, 0 AS image, 0 AS del, size_calculated, resumed, 0 AS restore, '' AS details
@@ -682,21 +770,29 @@ class UrbackupDb(SqliteHelper):
 	FROM restores g INNER JOIN clients h ON g.clientid=h.id
 	WHERE done=1) ORDER BY bt DESC"""
 
-
     @SqliteHelper.session
     def get_backups_for_client(self, session, clientid, start=0, end=-1, filter=""):
 
-        sql = "SELECT * FROM backups WHERE clientid = ? order by backuptime desc limit ?, ?"
-        sql2 = "select count(*) from backups where clientid = ?"
+        sql = "SELECT * FROM backups WHERE clientid = clientid order by backuptime desc limit :start, :offset"
+        bind = {
+            "clientid":clientid,
+            "start":start,
+            "offset": end
+        }
+
+        sql2 = "select count(*) from backups where clientid = :clientid"
+        bind2 = {
+            "clientid":clientid
+        }
         try:
-            query = session.execute(sql, (clientid, start, end)).fetchall()
+            query = session.execute(text(sql), bind).fetchall()
         except Exception as e:
             logger.error(str(e))
             return []
 
         count = 0
         try:
-            count = session.execute(sql2, (clientid)).fetchone()[0]
+            count = session.execute(text(sql2), bind2).fetchone()[0]
         except Exception as e:
             logger.error(str(e))
 
@@ -727,3 +823,41 @@ class UrbackupDb(SqliteHelper):
             "total": count,
             "data": result
         }
+
+    @SqliteHelper.session
+    def update_client_group(self, session, client_id, group_id):
+        sql = """UPDATE clients set groupid = :groupid where id = :clientid"""
+        bind = {
+            "groupid":group_id,
+            "clientid":client_id
+        }
+        try:
+            session.execute(text(sql), bind)
+            session.commit()
+            session.flush()
+            return True
+        except Exception as e:
+            logger.error(e)
+            session.rollback()
+            return False
+
+
+class UrbackupFileDb(SqliteHelper):
+    pass
+    # def __init__(self):
+    #     """Create an unique instance of BackupServer object."""
+    #     super().__init__()
+    #     if self.is_activated is False:
+    #         self.activate()
+
+    # def activate(self):
+    #     """Activation and mapping for the sqlite db wanted"""
+    #     super().activate()
+    #     self.metadata.create_all(bind=self.engine)
+    #     self.metadata.reflect(bind=self.engine)
+    #     excludes = []
+    #     for element in self.metadata.tables:
+    #         if element in excludes:
+    #             continue
+    #         setattr(self, element.capitalize(), self.metadata.tables[element])
+    #     self.is_activated = True

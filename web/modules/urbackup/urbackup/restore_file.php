@@ -30,29 +30,32 @@ $p->display();
 
 $client_id = htmlspecialchars($_GET["clientid"]);
 $backup_id = htmlspecialchars($_GET["backupid"]);
-$volume_name = htmlspecialchars($_GET["volumename"]);
+$volume_name = htmlspecialchars($_GET["name"]);
 $shahash = htmlspecialchars($_GET["shahash"]);
-$path = htmlspecialchars($_GET["beforepath"]);
-$filename = htmlspecialchars($_GET["filename"]);
-?>
-<br>
-<?php
+$path = dirname(htmlspecialchars($_GET["forward"]));
+$filename = htmlspecialchars($_GET["name"]);
+
+$params = $_GET;
+$params["action"] = "all_files_backup";
+$params["forward"] = $path;
+
 if ($shahash == "")
 {
     $client_restore_file = xmlrpc_client_download_backup_file($client_id, $backup_id, $path, $filename);
     if ($client_restore_file["ok"] == "true")
-        $url = 'main.php?module=urbackup&submod=urbackup&action=all_files_backup&clientid='.$client_id.'&backupid='.$backup_id.'&volumename='.$path.'&restore=ok';
+        $params['restore'] = 'ok';
     else
-        $url = 'main.php?module=urbackup&submod=urbackup&action=all_files_backup&clientid='.$client_id.'&backupid='.$backup_id.'&volumename='.$path.'&restore=ko';
+        $params['restore'] = 'ko';
 }
 else
 {
     $client_restore_file_shahash = xmlrpc_client_download_backup_file_shahash($client_id, $backup_id, $path, $shahash, $filename);
     if ($client_restore_file_shahash["ok"] == "true")
-        $url = 'main.php?module=urbackup&submod=urbackup&action=all_files_backup&clientid='.$client_id.'&backupid='.$backup_id.'&volumename='.$path.'&restore=ok';
+        $params['restore'] = 'ok';
     else
-        $url = 'main.php?module=urbackup&submod=urbackup&action=all_files_backup&clientid='.$client_id.'&backupid='.$backup_id.'&volumename='.$path.'&restore=ko';
+        $params['restore'] = 'ko';
 }
+$url = 'main.php?'.http_build_query($params);
 
 header("Location: ".$url);
 ?>

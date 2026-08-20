@@ -42,6 +42,10 @@ class UrbackupConfig(PluginConfig, UrbackupDatabaseConfig):
         if self.has_option("urbackup", "urbackup_server_db"):
             self.urbackup_server_db = self.get("urbackup", "urbackup_server_db")
 
+        self.urbackup_server_file_db = ""
+        if self.has_option("urbackup", "urbackup_server_file_db"):
+            self.urbackup_server_file_db = self.get("urbackup", "urbackup_server_file_db")
+
     def check(self):
         """
         Does nothing yet

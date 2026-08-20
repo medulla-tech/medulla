@@ -2787,3 +2787,26 @@ table.listinfos.deployment td.chart-holder { overflow: visible; }
 .checkbox-dropdown-clear:hover { color: #c00; }
 .checkbox-dropdown.has-selection .checkbox-dropdown-clear { display: inline; }
 
+.icon-folder {
+    padding: 5px 5px  5px 30px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/actions/folderexplorer.svg");
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-size: 25px 25px;
+    line-height: 18px;
+    text-decoration: none;
+
+}
+
+.icon-unlist {
+    padding: 5px 0px  5px 22px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/actions/unlist.svg");
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-size: 25px 25px;
+    line-height: 18px;
+    text-decoration: none;
+    /* color: #FFF; */
+}

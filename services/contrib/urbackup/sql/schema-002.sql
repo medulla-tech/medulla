@@ -28,6 +28,11 @@ create or replace index idx_msg on all_logs(msg);
 create or replace index idx_client_id on all_logs(client_id);
 create or replace index idx_time on all_logs(`time`);
 
+alter table machines_profiles
+    add constraint fk_profiles_machines_profile
+    FOREIGN KEY (`profile_id`)
+    REFERENCES profiles(id) on delete cascade;
+
 UPDATE version set Number = 2;
 
 COMMIT;

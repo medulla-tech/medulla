@@ -2475,3 +2475,6 @@ def get_major_machines_by_entity(
         start,
         limit
     )
+
+def get_machines_summary_list(filter=""):
+    return XmppMasterDatabase().get_machines_summary_list(filter="")

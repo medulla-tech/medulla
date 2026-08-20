@@ -1251,3 +1251,7 @@ function xmlrpc_get_major_machines_by_entity($distribution,
                                               $limit=50){
     return xmlCall("xmppmaster.get_major_machines_by_entity", [$distribution, $entity_id, $filter, $start, $limit]);
 }
+
+function xmlrpc_get_machines_summary_list($filter=""){
+    return xmlCall("xmppmaster.get_machines_summary_list", [$filter]);
+}

@@ -21418,8 +21418,24 @@ FROM uptime_machine_summary where entity_id in %s"""%entities
 
         except Exception:
             return 0
-        
-        
+
+    @DatabaseHelper._sessionm
+    def get_machines_summary_list(self, session, filter=""):
+        sql = """SELECT jid, hostname from machines WHERE agenttype = 'machine'"""
+        if filter != "":
+            sql += " AND hostname like '%%%s%%' "%filter
+
+        sql += " ORDER BY hostname asc"
+        query = session.execute(sql)
+        datas = query.all()
+
+        result = []
+        for machine in datas:
+            result.append({"jid":machine[0], "hostname": machine[1]})
+
+        return result
+
+
 class WhereClauseGenerator:
     def __init__(self, data, correspondance):
         self.data = data

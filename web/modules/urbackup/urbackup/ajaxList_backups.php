@@ -194,9 +194,12 @@ foreach($backups as $backup){
 
     $deleteActions[] = $deleteAction;
     $displayActions[] = $displayAction;
+    $base_path = $backup["path"];
 
     $tmp = $params;
     $tmp["backupid"]=$backup["id"];
+    $tmp["basename"]=implode('/', [$clientname, trim($base_path, '/')]);
+    $tmp["forward"] = "";
     $_params[] = $tmp;
 }
 
@@ -206,7 +209,7 @@ $n = new OptimizedListInfos( $ids, _T("Ids", "urbackup"));
 $n->disableFirstColumnActionLink();
 $n->addExtraInfo($types, _T("Type", 'urbackup'));
 $n->addExtraInfo($archived, _T("Archived ?", 'urbackup'));
-$n->addExtraInfo($times, _T("Time", 'urbackup'));
+$n->addExtraInfo($times, _T("Date", 'urbackup'));
 $n->addExtraInfo($sizes, _T("Size", 'urbackup'));
 $n->setParamInfo($_params);
 $n->addActionItemArray($displayActions);

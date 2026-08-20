@@ -69,7 +69,7 @@ $files_size = 0;
     }
     ?>
         <tr>
-            <td style='padding-left: 5px;'>All computers</td>
+            <td style='padding-left: 5px;'><?php echo _T("All computers", "urbackup");?></td>
             <td><?php echo $files_size; ?></td>
         </tr>
     </tbody>
@@ -87,7 +87,7 @@ foreach($array_progress as $progress)
 
     if (!empty($progress))
     {
-        echo '<h2>'._T("Progress", 'urackup').'</h2>';
+        echo '<h2>'._T("Progress", 'urbackup').'</h2>';
         echo '<br>';
         if(empty($progress["eta_ms"])){
             continue;
@@ -100,7 +100,6 @@ foreach($array_progress as $progress)
             $eta = "0";
         }
 
-        
         $progresss = $progress['pcdone'];
 
         if ($progresss == "100")
@@ -207,7 +206,7 @@ foreach($array_progress as $progress)
           <th> <?php echo _T("Id", 'urbackup'); ?> </th>
           <th> <?php echo _T("Name", 'urbackup'); ?> </th>
           <th> <?php echo _T("Date of backup", 'urbackup'); ?> </th>
-          <th> <?php echo _T("Status", 'urbackup'); ?> </th>
+          <th> <?php echo _T("Type of backup", 'urbackup'); ?> </th>
           <th> <?php echo _T("Details", 'urbackup'); ?> </th>
           <th> <?php echo _T("Duration H:M:S", 'urbackup'); ?> </th>
           <th> <?php echo _T("Size", 'urbackup'); ?> </th>
@@ -286,7 +285,7 @@ foreach ($array as $review) {
     $duration = $duration*10;
 
     $seconds = round($duration);
- 
+
     $output_duration = sprintf('%02d:%02d:%02d', ($seconds/ 3600),($seconds/ 60 % 60), $seconds% 60);
 ?>
         <tr>
