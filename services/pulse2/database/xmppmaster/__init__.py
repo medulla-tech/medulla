@@ -6023,10 +6023,12 @@ class XmppMasterDatabase(DatabaseHelper):
         else:
             try:
                 sql = (
-                    "UPDATE `xmppmaster`.`relayserver`\
-                        SET `enabled`=%s, `classutil`='%s'\
-                      WHERE `xmppmaster`.`relayserver`.`nameserver`='%s';"
-                    % (enabled, classutil, nameserver)
+                    "UPDATE `xmppmaster`.`relayserver`"
+                    " SET `enabled`=%s, `classutil`='%s', `websocket_url`=%s"
+                    " WHERE `xmppmaster`.`relayserver`.`nameserver`='%s';"
+                    % (enabled, classutil,
+                       ("'%s'" % websocket_url.replace("'", "''")) if websocket_url else "NULL",
+                       nameserver)
                 )
                 session.execute(sql)
                 session.commit()
