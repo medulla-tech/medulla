@@ -350,6 +350,7 @@ $ITSM_MEDULLA_CONFIG = array(
         'label' => _T('Target Entity', 'admin'),
         'type' => 'select',
         'required' => true,
+        'default' => 'medulla',
         'description' => _T('Root Medulla entity for sync', 'admin'),
     ),
     array(

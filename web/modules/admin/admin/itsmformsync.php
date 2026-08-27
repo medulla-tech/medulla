@@ -94,6 +94,24 @@ if ($client_id === '' || !isset($clients[$client_id])) {
     exit;
 }
 
+$target_entities = xmlrpc_itsmsync_get_entities();
+if (is_array($target_entities) && isset($target_entities['myentities'])) {
+    $target_entities = $target_entities['myentities'];
+}
+if (!is_array($target_entities)) {
+    $target_entities = array();
+}
+$target_entities_by_id = array();
+foreach ($target_entities as $entity) {
+    if (!is_array($entity) || !isset($entity['id'])) {
+        continue;
+    }
+    $target_entities_by_id[(string) $entity['id']] = $entity['completename'] ?? ($entity['name'] ?? (string) $entity['id']);
+}
+if (empty($target_entities_by_id)) {
+    $target_entities_by_id = $clients;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['bconfirm'])) {
     verifyCSRFToken($_POST);
 
@@ -263,6 +281,19 @@ if (!is_array($client_config)) {
     $client_config = array();
 }
 
+$target_entity_id = '';
+foreach ($target_entities_by_id as $entity_id => $entity_name) {
+    $entity_label = strtolower(trim((string) $entity_name));
+    if ($entity_label === 'medulla' || strpos($entity_label, ' > medulla') !== false) {
+        $target_entity_id = (string) $entity_id;
+        break;
+    }
+}
+if ($target_entity_id === '' && !empty($target_entities_by_id)) {
+    $entity_ids = array_keys($target_entities_by_id);
+    $target_entity_id = (string) $entity_ids[0];
+}
+
 // Normalize DB keys so form fields always reload regardless of legacy/canonical storage format.
 $config_key_aliases = array(
     'client_name' => array('client_name', 'name'),
@@ -296,6 +327,10 @@ foreach ($config_key_aliases as $target_key => $candidate_keys) {
             break;
         }
     }
+}
+
+if (!isset($client_config['target_entity']) || $client_config['target_entity'] === '') {
+    $client_config['target_entity'] = $target_entity_id;
 }
 
 // UI only: expose retry delay in minutes, with fallback from old seconds-based values.
@@ -363,6 +398,20 @@ $p->display();
                 <div class="itsmsync-field full-width">
                     <label><?php echo _T("Client Name", "admin"); ?></label>
                     <input type="text" class="inputText" name="client_name" value="<?php echo htmlspecialchars($client_config['client_name'] ?? ($clients[$client_id] ?? $client_id)); ?>" />
+                </div>
+            </div>
+
+            <div class="itsmsync-form-row">
+                <div class="itsmsync-field full-width">
+                    <label><?php echo _T("Target Root Entity", "admin"); ?> <span class="required">*</span></label>
+                    <select name="target_entity" class="inputText" required>
+                        <?php foreach ($target_entities_by_id as $entity_id => $entity_name): ?>
+                            <option value="<?php echo htmlspecialchars((string) $entity_id); ?>" <?php echo ((string) ($client_config['target_entity'] ?? '') === (string) $entity_id) ? 'selected' : ''; ?>>
+                                <?php echo htmlspecialchars((string) $entity_name); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                    <span class="help-text"><?php echo _T("The default Medulla root entity is selected automatically; use it as the KNO synchronization target.", "admin"); ?></span>
                 </div>
             </div>
         </fieldset>
