@@ -222,6 +222,15 @@ def reconcile_client(
     config_version = str(config.get("config_version") or config.get("sync.config_version") or "")
     result = ReconcileResult()
 
+    # The admin config key can be a bare number (``itsm.0.*``); prefer a readable
+    # label for the root entity while keeping ``client_id`` as the mapping scope.
+    root_name = str(
+        config.get("client_name")
+        or config.get("name")
+        or config.get("target.entity")
+        or client_id
+    ).strip() or client_id
+
     source_entities = list(snapshot.entities or [])
     if not source_entities:
         logger.info("Client %s: no source entity to reconcile", client_id)
@@ -245,14 +254,14 @@ def reconcile_client(
                 if root_map and root_map.get("target_glpi_id")
                 else None
             )
-            root_completename = f"{MEDULLA_ROOT_NAME}/{client_id}"
+            root_completename = f"{MEDULLA_ROOT_NAME}/{root_name}"
             if not root_local_id or not writer.entity_exists(root_local_id):
-                root_local_id = writer.find_by_parent_name(MEDULLA_ROOT_ID, client_id)
+                root_local_id = writer.find_by_parent_name(MEDULLA_ROOT_ID, root_name)
             if root_local_id is None:
                 root_local_id = writer._alloc_id()
                 result.created += 1
             writer.upsert_entity(
-                root_local_id, client_id, MEDULLA_ROOT_ID, root_completename, 2
+                root_local_id, root_name, MEDULLA_ROOT_ID, root_completename, 2
             )
             local_by_source: dict[str, int] = {"0": root_local_id}
             path_by_local: dict[int, tuple[str, int]] = {
