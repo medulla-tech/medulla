@@ -2,8 +2,6 @@
 /*
  * (c) 2024-2026 Medulla, http://www.medulla-tech.io
  *
- * $Id$
- *
  * This file is part of MMC, http://www.medulla-tech.io
  *
  * MMC is free software; you can redistribute it and/or modify
@@ -19,17 +17,22 @@
  * You should have received a copy of the GNU General Public License
  * along with MMC; If not, see <http://www.gnu.org/licenses/>.
  *
+ * Store - desabonnement rapide d'un logiciel (retire ses builds des souscriptions).
  */
+
 require_once("modules/store/includes/xmlrpc.php");
 
-$contractStatus = xmlrpc_get_contract_status();
-$hasContract = !empty($contractStatus['has_access']);
-$contractStatusReason = isset($contractStatus['reason']) ? $contractStatus['reason'] : '';
-
-$sidemenu = new SideMenu();
-$sidemenu->setClass("store");
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("My Software", 'store'), "store", "store", "index"));
-if ($hasContract) {
-    $sidemenu->addSideMenuItem(new SideMenuItem(_T("Catalog", 'store'), "store", "store", "subscribe"));
+$ids = array_filter(array_map('intval', explode(',', $_GET['ids'] ?? '')));
+if (!empty($ids)) {
+    $subs = xmlrpc_get_client_subscriptions();
+    $subs = is_array($subs) ? array_map('intval', $subs) : array();
+    $result = xmlrpc_save_subscriptions(array_values(array_diff($subs, $ids)));
+    if ($result && $result['success']) {
+        new NotifyWidgetSuccess(_T('Unsubscribed.', 'store'));
+    } else {
+        new NotifyWidgetFailure(_T('Error', 'store') . ': ' . htmlspecialchars($result['error'] ?? 'Unknown error'));
+    }
 }
-?>
+
+header("Location: " . urlStrRedirect("store/store/index"));
+exit;

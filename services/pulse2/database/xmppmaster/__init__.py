@@ -8871,6 +8871,19 @@ class XmppMasterDatabase(DatabaseHelper):
                     else:
                         recherchefild = _likecriterium(
                             ctx["field"], ctx["filter"])
+        # Filtre optionnel par famille d'OS (opt-in : seuls les appelants qui le passent sont impactes)
+        if "osfamily" in ctx and str(ctx["osfamily"]).strip() != "":
+            osfam = str(ctx["osfamily"]).strip().lower()
+            if osfam in ("win", "windows"):
+                recherchefild += " AND mach.platform LIKE '%Windows%'"
+            elif osfam in ("mac", "macos", "darwin"):
+                recherchefild += " AND (mach.platform LIKE '%Mac%' OR mach.platform LIKE '%Darwin%')"
+            elif osfam == "linux":
+                recherchefild += (
+                    " AND mach.platform NOT LIKE '%Windows%'"
+                    " AND mach.platform NOT LIKE '%Mac%'"
+                    " AND mach.platform NOT LIKE '%Darwin%'"
+                )
         r = re.compile(r"reg_key_.*")
         regs = list(filter(r.search, self.config.summary))
         list_reg_columns_name = [

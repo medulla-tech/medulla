@@ -107,6 +107,9 @@ msgstr "Les plus récents"
 msgid "All OS"
 msgstr "Tous les systèmes d'exploitation"
 
+msgid "All categories"
+msgstr "Toutes les catégories"
+
 #: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/index.php:141
 #: /Users/xdrien/medulla/GIT/medulla/web/modules/store/store/subscribe.php:133
 msgid "Filter"
@@ -446,3 +449,27 @@ msgstr "Saisir au moins 2 caractères"
 #, php-format
 msgid "Showing %d of %d machines. Refine your search for more results."
 msgstr "Affichage de %d de %d machines. Affinez votre recherche pour obtenir plus de résultats."
+
+msgid "My Subscriptions"
+msgstr "Mes abonnements"
+
+msgid "Subscribe"
+msgstr "Souscrire"
+
+msgid "My Software"
+msgstr "Mes logiciels"
+
+msgid "Catalog"
+msgstr "Catalogue"
+
+msgid "Choose the operating system to deploy"
+msgstr "Choisir le système d’exploitation à déployer"
+
+msgid "Unsubscribe"
+msgstr "Se désabonner"
+
+msgid "Unsubscribe from this software?"
+msgstr "Se désabonner de ce logiciel ?"
+
+msgid "Unsubscribed."
+msgstr "Désabonné."
