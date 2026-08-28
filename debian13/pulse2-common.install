@@ -3,7 +3,6 @@ usr/share/doc/pulse2/contrib/samba
 usr/share/doc/pulse2/contrib/test-xmlrpc.examples
 usr/share/doc/pulse2/contrib/test-xmlrpc.php
 usr/share/doc/pulse2/contrib/test-xmlrpc.py
-usr/share/doc/pulse2/contrib/update
 usr/share/doc/medulla/dev
 usr/share/doc/medulla/examples
 usr/share/doc/medulla/install
@@ -18,7 +17,6 @@ usr/share/doc/pulse2/contrib/test-xmlrpc.examples
 usr/share/doc/pulse2/contrib/test-xmlrpc.py
 usr/share/doc/pulse2/contrib/backuppc
 usr/share/doc/pulse2/contrib/urbackup
-usr/share/doc/pulse2/contrib/update
 usr/share/doc/pulse2/contrib/imaging-server
 usr/share/doc/pulse2/contrib/dyngroup
 usr/share/doc/pulse2/contrib/kiosk

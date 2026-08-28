@@ -204,14 +204,6 @@ nobase_dist_contrib_DATA = dyngroup/sql/clean-db.sql \
 	backuppc/sql/schema-005.sql \
 	backuppc/sql/schema-006.sql \
 	backuppc/sql/schema-007.sql \
-	update/sql/README \
-	update/sql/schema-001.sql \
-	update/sql/schema-002.sql \
-	update/sql/schema-003.sql \
-	update/sql/schema-004.sql \
-	update/sql/schema-005.sql \
-	update/sql/schema-006.sql \
-	update/sql/schema-007.sql \
 	xmppmaster/sql/schema-001.sql \
 	xmppmaster/sql/schema-002.sql \
 	xmppmaster/sql/schema-003.sql \
