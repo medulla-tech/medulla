@@ -5,6 +5,14 @@
 -- ------------------------------------------------------
 -- Server version	10.11.18-MariaDB-0+deb12u1
 
+SET FOREIGN_KEY_CHECKS=0;
+
+--
+-- Database version tracking (Medulla schema-migration framework)
+--
+
+DROP TABLE IF EXISTS `version`;
+CREATE TABLE `version` (`Number` int(11) NOT NULL);
 
 --
 -- Table structure for table `glpi_agents`
@@ -1287,51 +1295,6 @@ CREATE TABLE `glpi_computers_items` (
   KEY `is_deleted` (`is_deleted`),
   KEY `is_dynamic` (`is_dynamic`)
 ) ENGINE=InnoDB AUTO_INCREMENT=50 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
-
---
--- Temporary table structure for view `glpi_computers_pulse`
---
-
-DROP TABLE IF EXISTS `glpi_computers_pulse`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8mb4;
- NULL AS `id`,
- NULL AS `entities_id`,
- NULL AS `name`,
- NULL AS `serial`,
- NULL AS `otherserial`,
- NULL AS `contact`,
- NULL AS `contact_num`,
- NULL AS `users_id_tech`,
- NULL AS `groups_id_tech`,
- NULL AS `comment`,
- NULL AS `date_mod`,
- NULL AS `autoupdatesystems_id`,
- NULL AS `locations_id`,
- NULL AS `networks_id`,
- NULL AS `computermodels_id`,
- NULL AS `computertypes_id`,
- NULL AS `is_template`,
- NULL AS `template_name`,
- NULL AS `manufacturers_id`,
- NULL AS `is_deleted`,
- NULL AS `is_dynamic`,
- NULL AS `users_id`,
- NULL AS `groups_id`,
- NULL AS `states_id`,
- NULL AS `ticket_tco`,
- NULL AS `uuid`,
- NULL AS `date_creation`,
- NULL AS `is_recursive`,
- NULL AS `domains_id`,
- NULL AS `operatingsystems_id`,
- NULL AS `operatingsystemversions_id`,
- NULL AS `operatingsystemservicepacks_id`,
- NULL AS `operatingsystemarchitectures_id`,
- NULL AS `license_number`,
- NULL AS `licenseid`,
- NULL AS `operatingsystemkernelversions_id` */;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Table structure for table `glpi_computertypes`
@@ -10463,48 +10426,6 @@ CREATE TABLE `glpi_usertitles` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 --
--- Temporary table structure for view `glpi_view_computers_items_peripheral`
---
-
-DROP TABLE IF EXISTS `glpi_view_computers_items_peripheral`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8mb4;
- NULL AS `id`,
- NULL AS `items_id`,
- NULL AS `computers_id`,
- NULL AS `is_deleted`,
- NULL AS `is_dynamic` */;
-SET character_set_client = @saved_cs_client;
-
---
--- Temporary table structure for view `glpi_view_computers_items_printer`
---
-
-DROP TABLE IF EXISTS `glpi_view_computers_items_printer`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8mb4;
- NULL AS `id`,
- NULL AS `items_id`,
- NULL AS `computers_id`,
- NULL AS `is_deleted`,
- NULL AS `is_dynamic` */;
-SET character_set_client = @saved_cs_client;
-
---
--- Temporary table structure for view `glpi_view_peripherals_manufacturers`
---
-
-DROP TABLE IF EXISTS `glpi_view_peripherals_manufacturers`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8mb4;
- NULL AS `id`,
- NULL AS `name`,
- NULL AS `comment`,
- NULL AS `date_mod`,
- NULL AS `date_creation` */;
-SET character_set_client = @saved_cs_client;
-
---
 -- Table structure for table `glpi_virtualmachinestates`
 --
 
@@ -10701,3 +10622,4 @@ WHERE `u`.`name` = 'itsmlocal-system'
 
 -- Dump completed on 2026-08-26 11:40:01
 INSERT INTO `version` VALUES (1);
+SET FOREIGN_KEY_CHECKS=1;

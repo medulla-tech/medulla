@@ -16,7 +16,7 @@
 # along with this software.  If not, see <http://www.gnu.org/licenses/>.
 
 systemddir = $(localstatedir)/lib/systemd/system
-systemdfiles = mmc-agent.service
+systemdfiles = mmc-agent.service itsmlocal-sync.service
 
 dist_systemd_DATA = $(systemdfiles)
 

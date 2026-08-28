@@ -31,6 +31,6 @@ dist_sbin_SCRIPTS = pulse2-package-server pulse2-package-server-register-imaging
 	medulla_mysql_exec_update.sh medulla_mysql_exec_uninstall_unnecessary_update_package.sh \
 	medulla-stats.sh update_medulla.sh check_medulla_updates.sh import_masters.sh \
 	medulla-generate-winupdate-packages medulla-generate-winupdatemajor-packages \
-	generate_medulla_agent.sh
+	generate_medulla_agent.sh itsmlocal-sync
 
 dist_bin_SCRIPTS = pulse2-uuid-resolver pulse2-backup-handler pulse2-synch-masters

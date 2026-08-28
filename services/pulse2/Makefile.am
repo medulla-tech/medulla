@@ -41,6 +41,7 @@ pythonmodules = apis apis.clients database database.admin database.dyngroup \
 	database.pkgs database.pkgs.orm \
 	database.updates database.mastering database.mobile database.security \
 	database.store \
+	itsmlocal_sync \
 	dlp dlp.api dlp.tests \
 	cm cm.tests tests
 
