@@ -18,6 +18,7 @@ from sqlalchemy import create_engine, text
 
 import pulse2.itsmlocal_sync.glpi_adapter  # noqa: F401 - registers GLPI adapter
 from pulse2.itsmlocal_sync.adapters import adapter_names, get_adapter
+from pulse2.itsmlocal_sync.reconcile import reconcile_client
 
 LOGGER = logging.getLogger("itsmlocal-sync")
 STOP_REQUESTED = False
@@ -54,6 +55,14 @@ def parse_args(argv):
         "--once",
         action="store_true",
         help="run one scheduler cycle and exit",
+    )
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help=(
+            "for each active client, open the ITSM source and log the snapshot "
+            "(entities/users/profiles/scopes) without writing to itsmlocal"
+        ),
     )
     parser.add_argument(
         "--workers",
@@ -125,19 +134,46 @@ def activate_database(config_file):
 def validate_target_database(database):
     """Check that the itsmlocal target database is reachable."""
     with database.connect() as connection:
-        row = connection.execute(
-            text(
-                """
+        row = (
+            connection.execute(
+                text(
+                    """
                 SELECT DATABASE() AS database_name,
                        COUNT(*) AS table_count
                 FROM information_schema.tables
                 WHERE table_schema = DATABASE()
                 """
+                )
             )
-        ).mappings().first()
+            .mappings()
+            .first()
+        )
     return {
         "database_name": (row or {}).get("database_name") or "",
         "table_count": int((row or {}).get("table_count") or 0),
+    }
+
+
+def validate_admin_database(database):
+    """Check that the admin database is reachable and contains ITSM settings."""
+    with database.connect() as connection:
+        row = (
+            connection.execute(
+                text(
+                    """
+                SELECT DATABASE() AS database_name,
+                       COUNT(*) AS itsm_setting_count
+                FROM saas_application
+                WHERE setting_name LIKE 'itsm.%.%'
+                """
+                )
+            )
+            .mappings()
+            .first()
+        )
+    return {
+        "database_name": (row or {}).get("database_name") or "",
+        "itsm_setting_count": int((row or {}).get("itsm_setting_count") or 0),
     }
 
 
@@ -170,8 +206,16 @@ def is_client_enabled(config):
     return str(config.get("enabled", "0")).strip() == "1"
 
 
-def prepare_client_adapter(client_id, config, target_database):
-    """Prepare the source adapter for a client without writing any data."""
+def prepare_client_adapter(
+    client_id, config, target_database, admin_database=None, dry_run=False
+):
+    """Prepare the source adapter for a client and reconcile its entities.
+
+    The adapter always connects to the ITSM source and fetches the snapshot so
+    the API calls and their results are visible. When ``dry_run`` is set, the
+    snapshot is only logged and nothing is written to ``itsmlocal``. Otherwise
+    the snapshot entities are grafted under the client root in ``itsmlocal``.
+    """
     adapter_name = config.get("itsm_type") or config.get("type") or "glpi"
     LOGGER.info(
         "Client %s scheduled: type=%s mode=%s cron=%s retry_delay=%s",
@@ -194,10 +238,40 @@ def prepare_client_adapter(client_id, config, target_database):
     # itsmlocal later without changing the scheduler contract.
     if target_database is None:
         raise RuntimeError("missing itsmlocal target database")
+
+    adapter.check_connection()
+
+    snapshot = adapter.fetch_snapshot()
+    LOGGER.info(
+        "Client %s snapshot: entities=%d users=%d profiles=%d scopes=%d%s",
+        client_id,
+        len(snapshot.entities),
+        len(snapshot.users),
+        len(snapshot.profiles),
+        len(snapshot.user_scopes),
+        " (dry-run, no write to itsmlocal)" if dry_run else "",
+    )
+    for entity in snapshot.entities:
+        LOGGER.debug("Client %s entity: %s", client_id, entity)
+    for profile in snapshot.profiles:
+        LOGGER.debug("Client %s profile: %s", client_id, profile)
+
+    if not dry_run:
+        if admin_database is None:
+            raise RuntimeError("missing admin database for reconciliation")
+        reconcile_client(
+            client_id,
+            snapshot,
+            target_database,
+            admin_database,
+            config,
+            LOGGER,
+        )
+
     return client_id
 
 
-def run_cycle(admin_database, target_database, max_workers=4):
+def run_cycle(admin_database, target_database, max_workers=4, dry_run=False):
     """Run one non-destructive scheduler cycle."""
     clients = load_itsm_sync_clients(admin_database)
     active_clients = {
@@ -220,6 +294,8 @@ def run_cycle(admin_database, target_database, max_workers=4):
                 client_id,
                 config,
                 target_database,
+                admin_database,
+                dry_run,
             ): client_id
             for client_id, config in sorted(active_clients.items())
         }
@@ -253,19 +329,43 @@ def main(argv=None):
     if args.workers < 1:
         raise ValueError("--workers must be greater than zero")
 
-    admin_database = activate_database(args.config)
-    target_database = activate_database(args.itsmlocal_config)
-    target_info = validate_target_database(target_database)
-    LOGGER.info("itsmlocal-sync service started")
+    try:
+        admin_database = activate_database(args.config)
+        admin_info = validate_admin_database(admin_database)
+    except Exception:
+        LOGGER.exception("admin database startup check failed")
+        return 1
+
+    try:
+        target_database = activate_database(args.itsmlocal_config)
+        target_info = validate_target_database(target_database)
+    except Exception:
+        LOGGER.exception("itsmlocal target database startup check failed")
+        return 1
+
+    LOGGER.info(
+        "admin database ready: name=%s itsm_settings=%s",
+        admin_info["database_name"],
+        admin_info["itsm_setting_count"],
+    )
     LOGGER.info(
         "itsmlocal target database ready: name=%s tables=%s",
         target_info["database_name"],
         target_info["table_count"],
     )
+    LOGGER.info("itsmlocal-sync service started")
+
+    if args.dry_run:
+        LOGGER.info("itsmlocal-sync dry-run mode: no data will be written")
 
     while not STOP_REQUESTED:
         try:
-            run_cycle(admin_database, target_database, max_workers=args.workers)
+            run_cycle(
+                admin_database,
+                target_database,
+                max_workers=args.workers,
+                dry_run=args.dry_run,
+            )
         except Exception:
             LOGGER.exception("itsmlocal-sync cycle failed")
             if args.once:
