@@ -10622,4 +10622,21 @@ WHERE `u`.`name` = 'itsmlocal-system'
 
 -- Dump completed on 2026-08-26 11:40:01
 INSERT INTO `version` VALUES (1);
+
+--
+-- Views (Pulse/Medulla inventory helpers, recreated from the GLPI source)
+--
+
+CREATE OR REPLACE SQL SECURITY INVOKER VIEW `glpi_computers_pulse` AS
+select `computers`.`id` AS `id`,`computers`.`entities_id` AS `entities_id`,`computers`.`name` AS `name`,`computers`.`serial` AS `serial`,`computers`.`otherserial` AS `otherserial`,`computers`.`contact` AS `contact`,`computers`.`contact_num` AS `contact_num`,`computers`.`users_id_tech` AS `users_id_tech`,`computers`.`groups_id_tech` AS `groups_id_tech`,`computers`.`comment` AS `comment`,`computers`.`date_mod` AS `date_mod`,`computers`.`autoupdatesystems_id` AS `autoupdatesystems_id`,`computers`.`locations_id` AS `locations_id`,`computers`.`networks_id` AS `networks_id`,`computers`.`computermodels_id` AS `computermodels_id`,`computers`.`computertypes_id` AS `computertypes_id`,`computers`.`is_template` AS `is_template`,`computers`.`template_name` AS `template_name`,`computers`.`manufacturers_id` AS `manufacturers_id`,`computers`.`is_deleted` AS `is_deleted`,`computers`.`is_dynamic` AS `is_dynamic`,`computers`.`users_id` AS `users_id`,`computers`.`groups_id` AS `groups_id`,`computers`.`states_id` AS `states_id`,`computers`.`ticket_tco` AS `ticket_tco`,`computers`.`uuid` AS `uuid`,`computers`.`date_creation` AS `date_creation`,`computers`.`is_recursive` AS `is_recursive`,`ti`.`domains_id` AS `domains_id`,`os`.`operatingsystems_id` AS `operatingsystems_id`,`os`.`operatingsystemversions_id` AS `operatingsystemversions_id`,`os`.`operatingsystemservicepacks_id` AS `operatingsystemservicepacks_id`,`os`.`operatingsystemarchitectures_id` AS `operatingsystemarchitectures_id`,`os`.`license_number` AS `license_number`,`os`.`licenseid` AS `licenseid`,`os`.`operatingsystemkernelversions_id` AS `operatingsystemkernelversions_id` from ((`glpi_computers` `computers` left join (select distinct `glpi_domains_items`.`id` AS `id`,`glpi_domains_items`.`items_id` AS `items_id`,`glpi_domains_items`.`domains_id` AS `domains_id` from `glpi_domains_items` group by `glpi_domains_items`.`items_id`) `ti` on(`ti`.`items_id` = `computers`.`id`)) left join (select distinct `glpi_items_operatingsystems`.`items_id` AS `items_id`,`glpi_items_operatingsystems`.`id` AS `id`,`glpi_items_operatingsystems`.`operatingsystems_id` AS `operatingsystems_id`,`glpi_items_operatingsystems`.`licenseid` AS `licenseid`,`glpi_items_operatingsystems`.`operatingsystemkernelversions_id` AS `operatingsystemkernelversions_id`,`glpi_items_operatingsystems`.`operatingsystemservicepacks_id` AS `operatingsystemservicepacks_id`,`glpi_items_operatingsystems`.`operatingsystemarchitectures_id` AS `operatingsystemarchitectures_id`,`glpi_items_operatingsystems`.`license_number` AS `license_number`,`glpi_items_operatingsystems`.`operatingsystemversions_id` AS `operatingsystemversions_id` from `glpi_items_operatingsystems` group by `glpi_items_operatingsystems`.`items_id`) `os` on(`computers`.`id` = `os`.`items_id`));
+
+CREATE OR REPLACE SQL SECURITY INVOKER VIEW `glpi_view_computers_items_peripheral` AS
+select `glpi_computers_items`.`id` AS `id`,`glpi_computers_items`.`items_id` AS `items_id`,`glpi_computers_items`.`computers_id` AS `computers_id`,`glpi_computers_items`.`is_deleted` AS `is_deleted`,`glpi_computers_items`.`is_dynamic` AS `is_dynamic` from `glpi_computers_items` where `glpi_computers_items`.`itemtype` = 'Peripheral';
+
+CREATE OR REPLACE SQL SECURITY INVOKER VIEW `glpi_view_computers_items_printer` AS
+select `glpi_computers_items`.`id` AS `id`,`glpi_computers_items`.`items_id` AS `items_id`,`glpi_computers_items`.`computers_id` AS `computers_id`,`glpi_computers_items`.`is_deleted` AS `is_deleted`,`glpi_computers_items`.`is_dynamic` AS `is_dynamic` from `glpi_computers_items` where `glpi_computers_items`.`itemtype` = 'Printer';
+
+CREATE OR REPLACE SQL SECURITY INVOKER VIEW `glpi_view_peripherals_manufacturers` AS
+select `glpi_manufacturers`.`id` AS `id`,`glpi_manufacturers`.`name` AS `name`,`glpi_manufacturers`.`comment` AS `comment`,`glpi_manufacturers`.`date_mod` AS `date_mod`,`glpi_manufacturers`.`date_creation` AS `date_creation` from `glpi_manufacturers`;
+
 SET FOREIGN_KEY_CHECKS=1;
