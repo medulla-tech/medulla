@@ -22,6 +22,7 @@ from sqlalchemy import text
 MEDULLA_ROOT_ID = 0
 MEDULLA_ROOT_NAME = "Medulla"
 ALLOC_LOCK = "itsmlocal_entity_alloc"
+CLIENT_ROOT_KEY = "__client_root__"
 
 
 @dataclass
@@ -44,15 +45,6 @@ def _is_source_root(entity: dict[str, Any]) -> bool:
     source_id = str(entity.get("source_id") or "")
     parent_id = str(entity.get("source_parent_id") or "0")
     return source_id in ("", "0") or parent_id == source_id
-
-
-def _path_segments(path: str) -> list[str]:
-    return [segment for segment in str(path or "").split("/") if segment]
-
-
-def _sorted_by_depth(entities: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    """Order entities so a parent is always processed before its children."""
-    return sorted(entities, key=lambda row: len(_path_segments(row.get("path"))))
 
 
 class _EntityWriter:
@@ -248,7 +240,9 @@ def reconcile_client(
             writer = _EntityWriter(connection, client_id, config_version, logger)
 
             # 1. Client root entity, grafted right under the Medulla root.
-            root_map = mapping.get("0")
+            #    Scoped under the reserved mapping key ``__client_root__`` so it
+            #    never collides with a real source entity id.
+            root_map = mapping.get(CLIENT_ROOT_KEY)
             root_local_id = (
                 int(root_map["target_glpi_id"])
                 if root_map and root_map.get("target_glpi_id")
@@ -263,63 +257,79 @@ def reconcile_client(
             writer.upsert_entity(
                 root_local_id, root_name, MEDULLA_ROOT_ID, root_completename, 2
             )
-            local_by_source: dict[str, int] = {"0": root_local_id}
+            local_by_source: dict[str, int] = {}
             path_by_local: dict[int, tuple[str, int]] = {
                 root_local_id: (root_completename, 2)
             }
             pending_mappings: list[tuple[str, str, str, int]] = [
-                ("0", "/", root_completename, root_local_id)
+                (CLIENT_ROOT_KEY, "/", root_completename, root_local_id)
             ]
 
-            # 2. Every source sub-entity, parents first.
-            for entity in _sorted_by_depth(source_entities):
-                source_id = str(entity.get("source_id") or "")
-                if _is_source_root(entity):
-                    continue
+            # 2. Every source entity. The source tree root is grafted too (it
+            #    becomes a child of the client root). GLPI ``completename`` uses
+            #    a display separator, so order the tree by parent links instead:
+            #    keep resolving entities whose parent is already known.
+            remaining = list(source_entities)
+            while remaining:
+                progressed = False
+                still_pending = []
+                for entity in remaining:
+                    source_id = str(entity.get("source_id") or "")
+                    if _is_source_root(entity):
+                        parent_local_id = root_local_id
+                    else:
+                        parent_source_id = str(entity.get("source_parent_id") or "0")
+                        parent_local_id = local_by_source.get(parent_source_id)
+                    if parent_local_id is None:
+                        still_pending.append(entity)
+                        continue
 
-                parent_source_id = str(entity.get("source_parent_id") or "0")
-                parent_local_id = local_by_source.get(parent_source_id)
-                if parent_local_id is None:
-                    result.ignored += 1
-                    message = (
-                        f"entity {source_id} ignored: parent {parent_source_id} "
-                        f"not reconciled"
+                    name = str(entity.get("name") or f"entity-{source_id}")
+                    parent_completename, parent_level = path_by_local[parent_local_id]
+                    completename = f"{parent_completename}/{name}"
+                    level = parent_level + 1
+
+                    existing = mapping.get(source_id)
+                    local_id = (
+                        int(existing["target_glpi_id"])
+                        if existing and existing.get("target_glpi_id")
+                        else None
                     )
-                    result.errors.append(message)
-                    logger.warning("Client %s: %s", client_id, message)
-                    continue
+                    is_update = bool(local_id and writer.entity_exists(local_id))
+                    if not is_update:
+                        local_id = writer.find_by_parent_name(parent_local_id, name)
+                        is_update = local_id is not None
+                    if local_id is None:
+                        local_id = writer._alloc_id()
 
-                name = str(entity.get("name") or f"entity-{source_id}")
-                parent_completename, parent_level = path_by_local[parent_local_id]
-                completename = f"{parent_completename}/{name}"
-                level = parent_level + 1
+                    writer.upsert_entity(
+                        local_id, name, parent_local_id, completename, level
+                    )
+                    local_by_source[source_id] = local_id
+                    path_by_local[local_id] = (completename, level)
+                    pending_mappings.append(
+                        (
+                            source_id,
+                            str(entity.get("path") or name),
+                            completename,
+                            local_id,
+                        )
+                    )
+                    result.updated += 1 if is_update else 0
+                    result.created += 0 if is_update else 1
+                    progressed = True
 
-                existing = mapping.get(source_id)
-                local_id = (
-                    int(existing["target_glpi_id"])
-                    if existing and existing.get("target_glpi_id")
-                    else None
-                )
-                is_update = bool(local_id and writer.entity_exists(local_id))
-                if not is_update:
-                    local_id = writer.find_by_parent_name(parent_local_id, name)
-                    is_update = local_id is not None
-                if local_id is None:
-                    local_id = writer._alloc_id()
-
-                writer.upsert_entity(
-                    local_id, name, parent_local_id, completename, level
-                )
-                local_by_source[source_id] = local_id
-                path_by_local[local_id] = (completename, level)
-                pending_mappings.append(
-                    (source_id, str(entity.get("path") or name), completename, local_id)
-                )
-
-                if is_update:
-                    result.updated += 1
-                else:
-                    result.created += 1
+                remaining = still_pending
+                if not progressed:
+                    for entity in remaining:
+                        result.ignored += 1
+                        message = (
+                            f"entity {entity.get('source_id')} ignored: parent "
+                            f"{entity.get('source_parent_id')} not reconciled"
+                        )
+                        result.errors.append(message)
+                        logger.warning("Client %s: %s", client_id, message)
+                    break
         finally:
             connection.execute(
                 text("SELECT RELEASE_LOCK(:name)"), {"name": ALLOC_LOCK}
