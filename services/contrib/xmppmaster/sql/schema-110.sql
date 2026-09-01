@@ -6,14 +6,6 @@
 -- =======================================
 -- Database xmppmaster
 -- =======================================
--- Ajout de la table reset_machine : file d'attente de reinitialisation
--- forcee de la base agent sur les machines problematiques.
---
--- Usage : l'administrateur inscrit un JID dans cette table.
--- Le plugin_resetagent (master substitut) detecte la machine quand elle
--- passe en ligne, envoie l'ordre de reset, puis supprime la ligne.
--- Les machines hors ligne sont conservees avec un compteur de tentatives.
---
 
 
 start transaction;

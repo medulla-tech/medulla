@@ -6,29 +6,33 @@
 -- =======================================
 -- Database xmppmaster
 -- =======================================
--- Ajout de la table reset_machine : file d'attente de reinitialisation
--- forcee de la base agent sur les machines problematiques.
---
--- Usage : l'administrateur inscrit un JID dans cette table.
--- Le plugin_resetagent (master substitut) detecte la machine quand elle
--- passe en ligne, envoie l'ordre de reset, puis supprime la ligne.
--- Les machines hors ligne sont conservees avec un compteur de tentatives.
+-- Renommage du Label LaunchDaemon macOS
 --
 
 START TRANSACTION;
 
 USE `xmppmaster`;
 
-CREATE TABLE IF NOT EXISTS `reset_machine` (
-    `id`           INT(11)      NOT NULL AUTO_INCREMENT,
-    `jid`          VARCHAR(255) NOT NULL,
-    `reason`       VARCHAR(255) NOT NULL DEFAULT '',
-    `date_request` DATETIME     DEFAULT CURRENT_TIMESTAMP,
-    `nb_attempt`   INT(11)      NOT NULL DEFAULT 0,
-    PRIMARY KEY (`id`),
-    UNIQUE KEY `uniq_jid` (`jid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+-- Restart Mac via /usr/local/bin/medulla-restart (et pas un bare launchctl kickstart)
+-- car kickstart ne tue pas les enfants agentxmpp.py du launcher : ils survivent en
+-- orphelins et se battent pour la session XMPP -> loop / "Agent installed is different".
+-- medulla-restart fait killall -9 Python avant kickstart pour eviter ce cas.
+UPDATE qa_custom_command
+SET customcmd = '/usr/local/bin/medulla-restart',
+    namecmd = 'Restart Medulla Agent service',
+    description = 'Restart Medulla Agent macos service'
+WHERE os = 'macos'
+  AND namecmd = 'Restart Pulse Agent service';
+
+-- Migration des chemins de log macOS : ancien chemin Pulse vers le nouveau /var/log/medulla/
+-- Touche "Download agent log to file-transfer folder" + "Show last 100 lines of agent logs".
+UPDATE qa_custom_command
+SET customcmd = REPLACE(customcmd,
+                        '/Library/Application Support/Pulse/var/log/xmpp-agent-machine.log',
+                        '/var/log/medulla/medulla-agent.log')
+WHERE os = 'macos'
+  AND customcmd LIKE '%/Library/Application Support/Pulse/var/log/xmpp-agent-machine.log%';
 
 UPDATE version SET Number = 109;
 
-COMMIT;
+commit;
