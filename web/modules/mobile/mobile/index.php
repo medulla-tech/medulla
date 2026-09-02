@@ -253,7 +253,8 @@ function submitAddDevice() {
         'add-custom1':      custom1,
         'desc-zone':        desc,
         'configuration_id': config,
-        'groups':           groups
+        'groups':           groups,
+        'auth_token':       '<?php echo htmlspecialchars($_SESSION['auth_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>'
     };
 
     jQuery.ajax({

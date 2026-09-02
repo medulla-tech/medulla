@@ -44,6 +44,8 @@ if (isset($_POST['bback'])) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['test'])) {
+    verifyCSRFToken($_POST);
+
     $errors = array();
     
     if (empty($message_text)) {

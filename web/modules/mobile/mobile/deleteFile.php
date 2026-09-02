@@ -55,6 +55,8 @@ if (!empty($usedByConfigs) && is_array($usedByConfigs)) {
 allow_deletion:
 
 if (isset($_POST['bconfirm'])) {
+    verifyCSRFToken($_POST);
+
     $result = xmlrpc_delete_file_by_id($file);
     
     if (is_array($result) && $result['status'] === 'OK') {

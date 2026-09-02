@@ -185,6 +185,12 @@ if (!empty($deviceKeys)) {
         payloadInput.value = payload;
         form.appendChild(payloadInput);
 
+        var authTokenInput = document.createElement('input');
+        authTokenInput.type = 'hidden';
+        authTokenInput.name = 'auth_token';
+        authTokenInput.value = '<?php echo htmlspecialchars($_SESSION['auth_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>';
+        form.appendChild(authTokenInput);
+
         if (execTarget === 'device_keys') {
             deviceKeys.forEach(function(k) {
                 var inp = document.createElement('input');

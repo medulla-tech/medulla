@@ -32,6 +32,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (isset($_POST['bsave'])) {
+        verifyCSRFToken($_POST);
+
         $contactsData = array(
             'configurationId' => $configId,
             'url'             => isset($_POST['contacts_url']) ? trim($_POST['contacts_url']) : '',

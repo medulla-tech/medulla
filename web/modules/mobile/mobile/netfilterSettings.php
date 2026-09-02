@@ -17,6 +17,8 @@ if (!is_array($settings)) {
 }
 
 if (isset($_POST['save'])) {
+    verifyCSRFToken($_POST);
+
     $enabled = !empty($_POST['enabled']);
     $filter_mode = in_array($_POST['filterMode'] ?? '', ['BLOCKLIST', 'ALLOWLIST']) ? $_POST['filterMode'] : 'BLOCKLIST';
     $result = xmlrpc_save_netfilter_settings($enabled, $filter_mode);

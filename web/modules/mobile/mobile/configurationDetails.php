@@ -22,6 +22,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
     if (isset($_POST['bsave']) || isset($_POST['bsaveexit'])) {
+        verifyCSRFToken($_POST);
+
         $payload = array(
             'id' => intval($configId)
         );

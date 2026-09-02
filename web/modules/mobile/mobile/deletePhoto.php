@@ -10,6 +10,8 @@ if ($photoId <= 0) {
 }
 
 if (isset($_POST['bconfirm'])) {
+    verifyCSRFToken($_POST);
+
     $result = xmlrpc_delete_photo($photoId);
 
     if ($result && isset($result['status']) && strtoupper($result['status']) === 'OK') {

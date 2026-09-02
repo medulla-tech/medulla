@@ -378,7 +378,7 @@ function saveNewIcon() {
         method: 'POST',
         dataType: 'json',
         global: false,
-        data: { name: name, fileId: fileId, fileName: fileName },
+        data: { name: name, fileId: fileId, fileName: fileName, auth_token: '<?php echo htmlspecialchars($_SESSION['auth_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>' },
         success: function(resp) {
             if (resp.success) {
                 closeNewIconModal();
@@ -438,7 +438,7 @@ function submitAddApp() {
     jQuery.ajax({
         url: 'modules/mobile/mobile/addApplicationAjax.php',
         method: 'POST',
-        data: data,
+        data: Object.assign(data, {auth_token: '<?php echo htmlspecialchars($_SESSION['auth_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>'}),
         dataType: 'json',
         success: function(resp) {
             if (resp.status === 'ok') {

@@ -8,6 +8,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_FILES['csv_file'])) {
     exit;
 }
 
+verifyCSRFToken($_POST);
+
 $upload_error = $_FILES['csv_file']['error'];
 if ($upload_error !== UPLOAD_ERR_OK) {
     echo json_encode(['status' => 'error', 'message' => 'File upload failed']);

@@ -32,6 +32,8 @@ $configs = xmlrpc_get_hmdm_configurations();
 if (!is_array($configs)) { $configs = []; }
 
 if (isset($_POST['bconfirm'])) {
+    verifyCSRFToken($_POST);
+
     // Collect selected configuration IDs
     $selectedConfigIds = [];
     foreach ($configs as $cfg) {
