@@ -26,6 +26,11 @@
 
 require("config.inc.php");
 require("../modules/base/includes/edit.inc.php");
+ini_set('session.cookie_httponly', 1);
+ini_set('session.cookie_samesite', 'Lax');
+if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') {
+    ini_set('session.cookie_secure', 1);
+}
 session_name("PULSESESSION");
 session_start();
 

@@ -27,6 +27,11 @@
  * this file provide session registration
  */
 if(session_status() != PHP_SESSION_ACTIVE){
+    ini_set('session.cookie_httponly', 1);
+    ini_set('session.cookie_samesite', 'Lax');
+    if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') {
+        ini_set('session.cookie_secure', 1);
+    }
     session_cache_expire (30);
     session_name("PULSESESSION");
     session_start();
