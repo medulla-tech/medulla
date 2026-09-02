@@ -6,6 +6,8 @@ $rule_id    = isset($_GET['rule_id'])    ? intval($_GET['rule_id'])    : 0;
 $domain     = isset($_GET['domain'])     ? htmlspecialchars($_GET['domain'])     : '';
 
 if (isset($_POST['bconfirm']) && $profile_id > 0 && $rule_id > 0) {
+    verifyCSRFToken($_POST);
+
     xmlrpc_delete_netfilter_profile_rule($profile_id, $rule_id);
     header('Location: ' . urlStrRedirect("mobile/mobile/netfilterProfileRules") . "&id=" . $profile_id);
     exit;

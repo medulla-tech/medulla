@@ -93,6 +93,8 @@ if (isset($_POST['baddgroup_x'])) {
         }
     }
 } elseif (isset($_POST['bconfirm'])) {
+    verifyCSRFToken($_POST);
+
     $updateData = array(
         'id' => $deviceId,
         'number' => $_POST['device_name'] ?? $device['number'],

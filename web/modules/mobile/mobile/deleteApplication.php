@@ -11,6 +11,8 @@ if ($id <= 0) {
 }
 
 if (isset($_POST['bconfirm'])) {
+    verifyCSRFToken($_POST);
+
     $result = xmlrpc_delete_application_by_id($id);
 
     if (is_array($result) && !$result['error']) {

@@ -63,6 +63,8 @@ $values = [
 
 // POST handler (update)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['bconfirm'])) {
+    verifyCSRFToken($_POST);
+
     $values['type'] = trim($_POST['type'] ?? '');
     $values['name'] = trim($_POST['name'] ?? '');
     $values['pkg'] = trim($_POST['pkg'] ?? '');

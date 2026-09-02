@@ -11,6 +11,8 @@ if ($id <= 0) {
 }
 
 if (isset($_POST['bconfirm'])) {
+    verifyCSRFToken($_POST);
+
     $configs = xmlrpc_get_hmdm_configurations();
     if (is_array($configs) && count($configs) <= 1) {
         new NotifyWidgetFailure(_T("Cannot delete the last configuration. Duplicate it first to create a new one.", "mobile"));

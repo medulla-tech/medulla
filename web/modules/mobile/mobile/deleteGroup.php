@@ -11,6 +11,8 @@ if (empty($group_id)) {
 }
 
 if (isset($_POST['bconfirm'])) {
+    verifyCSRFToken($_POST);
+
     $result = xmlrpc_delete_hmdm_group_by_id($group_id);
 
     if ($result && ((is_array($result) && isset($result['status']) && $result['status'] === 'OK') || $result === true)) {

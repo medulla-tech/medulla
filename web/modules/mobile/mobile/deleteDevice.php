@@ -28,6 +28,8 @@ if (!$device) {
 $deviceNumber = $device['number'] ?? _T("Unknown", "mobile");
 
 if (isset($_POST['bconfirm'])) {
+    verifyCSRFToken($_POST);
+
     $result = xmlrpc_delete_hmdm_device_by_id($deviceId);
     
     if ($result) {

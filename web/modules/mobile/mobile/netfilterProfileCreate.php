@@ -13,6 +13,8 @@ if (isset($_POST['bcancel'])) {
 }
 
 if (isset($_POST['bsave'])) {
+    verifyCSRFToken($_POST);
+
     $name        = trim($_POST['profile_name'] ?? '');
     $filter_mode = in_array($_POST['filter_mode'] ?? '', ['BLOCKLIST', 'ALLOWLIST'])
                    ? $_POST['filter_mode'] : 'BLOCKLIST';

@@ -7,6 +7,8 @@ $profile_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 $is_create  = ($profile_id === 0);
 
 if (isset($_POST['bsave'])) {
+    verifyCSRFToken($_POST);
+
     $name        = trim($_POST['profile_name'] ?? '');
     $filter_mode = in_array($_POST['filter_mode'] ?? '', ['BLOCKLIST', 'ALLOWLIST'])
                    ? $_POST['filter_mode'] : 'BLOCKLIST';
