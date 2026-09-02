@@ -29,6 +29,7 @@ require_once("modules/xmppmaster/includes/html.inc.php");
 
 
 if(isset($_POST['bconfirm'])){
+  verifyCSRFToken($_POST);
 
   $cluster_name = $_POST['cluster_name'];
   $cluster_description = $_POST['cluster_description'];
