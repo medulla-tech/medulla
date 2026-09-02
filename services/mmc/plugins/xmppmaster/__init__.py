@@ -1769,9 +1769,9 @@ def get_plugin_lists():
                 line = ""
                 with open(fullpath, "r") as fb:
                     # Get the line starting with plugin =  to extract the meta of the plugin
-                    while not line.startswith("plugin = "):
-                        line = fb.readline()
-                        line = line.split("#")[0]
+                    while _line := fb.readline():
+                        if isinstance(_line, str) and line.startswith("plugin = "):
+                            line = _line.split("#")[0]
                     fb.close()
 
                 # We got the line we want, now we need to parse it
