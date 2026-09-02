@@ -26,6 +26,11 @@
 
 ob_start();
 session_name("PULSESESSION");
+ini_set('session.cookie_httponly', 1);
+ini_set('session.cookie_samesite', 'Lax');
+if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') {
+    ini_set('session.cookie_secure', 1);
+}
 session_start();
 
 if (isset($_SESSION['sessiontimeout']) || isset($_SESSION['expire'])) {
@@ -89,6 +94,11 @@ if (isset($_GET['token'])) {
     session_destroy();
     session_name("PULSESESSION");
     session_id($sessionid);
+    ini_set('session.cookie_httponly', 1);
+    ini_set('session.cookie_samesite', 'Lax');
+    if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') {
+        ini_set('session.cookie_secure', 1);
+    }
     session_start();
 
     $_SESSION["timezone_offset"]                = $_POST["timezone_offset"] ?? "";
@@ -142,6 +152,11 @@ if (isset($_POST["bConnect"]) || isset($_POST["bMagicLink"])) {
     session_destroy();
     session_id($sessionid);
     session_name("PULSESESSION");
+    ini_set('session.cookie_httponly', 1);
+    ini_set('session.cookie_samesite', 'Lax');
+    if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') {
+        ini_set('session.cookie_secure', 1);
+    }
     session_start();
 
     $_SESSION["timezone_offset"]                = $_POST["timezone_offset"] ?? "";
