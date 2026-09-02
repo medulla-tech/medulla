@@ -33,6 +33,7 @@ $description = htmlentities($_GET['description']);
 
 
 if(isset($_POST['bconfirm'])){
+  verifyCSRFToken($_POST);
   $cluster_id = htmlentities($_POST['cluster_id']);
   $cluster_name = htmlentities($_POST['cluster_name']);
   $cluster_description = htmlentities($_POST['cluster_description']);
