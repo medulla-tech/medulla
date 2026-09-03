@@ -41,6 +41,8 @@ if (isset($groupname) && $groupname != '') {
         if (!isset($_FILES['importfile']) || empty($_FILES['importfile']['tmp_name']) || !file_exists($_FILES['importfile']['tmp_name'])) {
             new NotifyWidgetFailure(_T("Error: Unloaded file or invalid temporary path."));
         } else {
+            verifyCSRFToken($_POST);
+
             $group = new Group();
             $group->create($groupname, ($visibility == 'visible'));
             $content = file($_FILES['importfile']['tmp_name'], FILE_SKIP_EMPTY_LINES|FILE_IGNORE_NEW_LINES);

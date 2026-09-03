@@ -38,6 +38,8 @@ $location = "";
 if (isset($_POST['gid']) && is_array($_POST['gid'])) {
     header('Content-Type: application/json');
 
+    verifyCSRFToken($_POST);
+
     $gids = $_POST['gid'];
     $type = isset($_POST['type']) ? intval($_POST['type']) : 0;
     $stype = ($type == 1) ? '_profiles' : '';
@@ -162,6 +164,8 @@ if ($type == 1) { // Imaging group
     }
 
 if (quickGet('valid')) {
+    verifyCSRFToken($_POST);
+
     $result = $group->delete();
     if (!isset($result[0]) || $result[0] ==0) {
         $errorMessage = $result[1];
@@ -213,6 +217,7 @@ if (quickGet('valid')) {
 <h2><?php echo $title ?></h2>
 
 <form action="<?php echo urlStr("base/computers/delete_group", array('gid' => $gid, 'type' => $type)) ?>" method="post">
+<input type="hidden" name="auth_token" value="<?php echo htmlspecialchars($_SESSION['auth_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
     <p>
 
 <?php
