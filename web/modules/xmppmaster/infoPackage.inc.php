@@ -176,6 +176,10 @@ $submod->addPage($page);
 $page = new Page("remoteeditorconfigurationlist", _T('Remote edit configuration file', 'xmppmaster'));
 $submod->addPage($page);
 
+$page = new Page("remoteeditorconfigurationrelay", _T('Remote edit relay configuration file', 'xmppmaster'));
+$page->setFile("modules/xmppmaster/xmppmaster/remoteeditorconfigurationlist.php");
+$submod->addPage($page);
+
 $page = new Page("listfichierconf", _T('List config files', 'xmppmaster'));
 $submod->addPage($page);
 

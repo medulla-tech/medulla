@@ -28,6 +28,7 @@ DELETE FROM acl_feature_definitions
                      'store#store#unsubscribe',
                      'xmppmaster#xmppmaster#shareqa',
                      'xmppmaster#xmppmaster#xmppMonitoring',
+                     'xmppmaster#xmppmaster#remoteeditorconfigurationrelay',
                      'admin#admin#websocketLogs');
 
 DELETE FROM acl_feature_definitions
@@ -41,6 +42,7 @@ INSERT INTO acl_feature_definitions (feature_key, label, description, category, 
 ('package_deployment_rw', 'Déploiement - actions (lancer, planifier, convergence...)', 'Lancement de déploiements|Commandes avancées|Convergence|Wake-on-LAN|Console XMPP|Quick Actions', 'deployment', 0, 'xmppmaster#xmppmaster#shareqa', 'rw', 'onpremise,saas'),
 ('computer_management_ro', 'Postes - consultation (monitoring, CVE, sécurité...)', 'Monitoring|CVE par machine/entité/groupe|Détails logiciels|Vulnérabilités', 'security', 0, 'xmppmaster#xmppmaster#xmppMonitoring', 'ro', 'onpremise,saas'),
 ('admin_technician', 'Consultation infrastructure (relais, clusters...)', 'Relais|Paquets|Règles|Clusters|Entités|Téléchargement agent', 'admin', 0, 'admin#admin#websocketLogs', 'ro', 'onpremise'),
+('admin_superadmin', 'Infrastructure serveur (relais, clusters, règles...)', 'Relais|Clusters|Règles de routage|Entités|Providers OIDC|Mises à jour serveur|Régénération agent', 'admin', 1, 'xmppmaster#xmppmaster#remoteeditorconfigurationrelay', 'rw', 'onpremise'),
 ('config_files_rw', 'Édition des fichiers de configuration sur un poste', 'Liste des fichiers de configuration|Éditeur distant|Enregistrement sur le poste', 'inventory', 0, 'xmppmaster#xmppmaster#listfichierconf', 'rw', 'onpremise,saas'),
 ('config_files_rw', 'Édition des fichiers de configuration sur un poste', 'Liste des fichiers de configuration|Éditeur distant|Enregistrement sur le poste', 'inventory', 0, 'xmppmaster#xmppmaster#remoteeditorconfigurationlist', 'rw', 'onpremise,saas'),
 ('config_files_rw', 'Édition des fichiers de configuration sur un poste', 'Liste des fichiers de configuration|Éditeur distant|Enregistrement sur le poste', 'inventory', 0, 'xmppmaster#xmppmaster#remoteeditorconfiguration', 'rw', 'onpremise,saas');
