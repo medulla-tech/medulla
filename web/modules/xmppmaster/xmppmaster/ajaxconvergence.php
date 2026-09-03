@@ -163,7 +163,10 @@ foreach ($arraydeploy['tabdeploy']['command'] as $index => $command_id) {
                 "reload",
                 "convergenceg",
                 "xmppmaster",
-                "xmppmaster"
+                "xmppmaster",
+                null,
+                false,
+                array("auth_token" => $_SESSION['auth_token'] ?? '')
             );
             break;
         case 0:
@@ -175,7 +178,10 @@ foreach ($arraydeploy['tabdeploy']['command'] as $index => $command_id) {
                 "reloadg",
                 "convergenceg",
                 "xmppmaster",
-                "xmppmaster"
+                "xmppmaster",
+                null,
+                false,
+                array("auth_token" => $_SESSION['auth_token'] ?? '')
             );
             break;
         default:
@@ -386,7 +392,10 @@ if (isset($arraynotdeploy)) {
             "reload",
             "",
             "xmppmaster",
-            "xmppmaster"
+            "xmppmaster",
+            null,
+            false,
+            array("auth_token" => $_SESSION['auth_token'] ?? '')
         );
         $reloads[] = $reloadAction;
     }

@@ -233,6 +233,7 @@ jQuery('#select').on('change', function() {
 <?php endif; ?>
 
 var uuid = <?php echo json_encode($_GET); ?>;
+uuid.auth_token = <?php echo json_encode($_SESSION['auth_token'] ?? ''); ?>;
 
 <?php if ($presencemachinexmpp): ?>
 jQuery('#clone_ps_aux, #clone_ps_aux0').click(function() {

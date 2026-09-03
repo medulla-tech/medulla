@@ -1,5 +1,7 @@
 <?php
 
+verifyCSRFToken($_GET);
+
 // Check if convergence is defined and is worth 1
 if (isset($_GET['convergence']) && $_GET['convergence'] == 1) {
     $cmd_id = $_GET['cmd_id'];

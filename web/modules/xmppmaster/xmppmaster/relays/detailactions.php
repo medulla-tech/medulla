@@ -70,6 +70,7 @@ if(isset($_GET['jid']))
 
 <script>
 var datas = <? echo json_encode($_GET); ?>;
+datas.auth_token = <? echo json_encode($_SESSION['auth_token'] ?? ''); ?>;
 jQuery('#reboot').on('click', function(){
 
     jQuery.get( "modules/xmppmaster/xmppmaster/actionrestart.php", datas )

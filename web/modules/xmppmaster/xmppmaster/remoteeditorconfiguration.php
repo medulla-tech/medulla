@@ -196,7 +196,8 @@ include_once('modules/medulla_server/includes/menu_actionaudit.php');
                         "file" : "<? echo $name; ?>",
                         "action" : 'save',
                         "machine" : "<? echo $ma['jid']; ?>",
-                        'content' : jQuery('#resultat').val()
+                        'content' : jQuery('#resultat').val(),
+                        'auth_token' : <? echo json_encode($_SESSION['auth_token'] ?? ''); ?>
                     },
                     function(data) {
                         //jQuery('#resultat').val(data['result']);
