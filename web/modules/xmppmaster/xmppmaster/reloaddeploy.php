@@ -10,6 +10,8 @@ echo '</pre>';*/
     // appelle la procedure stockee pour relancer les deployements.
     extract($_GET);
 
+    verifyCSRFToken($_GET);
+
     if (isset($gr_cmd_id)){ $cmd_id=$gr_cmd_id;}else{unset($sessionid);}
 
 

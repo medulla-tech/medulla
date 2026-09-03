@@ -29,12 +29,15 @@ require_once("../../../includes/i18n.inc.php");
 require_once("../../../includes/acl.inc.php");
 require_once("../../../includes/session.inc.php");
 require_once("../../../includes/PageGenerator.php");
+require_once("../../../includes/utils.inc.php");
 
 require_once('../includes/xmlrpc.php');
 
 require_once("../../medulla_server/includes/locations_xmlrpc.inc.php");
 
 
+
+verifyCSRFToken($_GET);
 
 switch($_GET['action']){
     case "deployquick":
