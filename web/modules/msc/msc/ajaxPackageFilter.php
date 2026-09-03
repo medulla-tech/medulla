@@ -309,11 +309,11 @@ $presencemachinexmpp = (isset($_GET['uuid'])) ? xmlrpc_getPresenceuuid($_GET['uu
 
 if(!in_array("xmppmaster", $_SESSION["modulesList"])) {
     $n->addActionItem(new ActionItem(_T("Advanced launch", "msc"), "start_adv_command", "advanced", "msc", "base", "computers"));
-    $n->addActionItem(new ActionItem(_T("Direct launch", "msc"), "start_command", "start", "msc", "base", "computers"));
+    $n->addActionItem(new ActionItem(_T("Direct launch", "msc"), "start_command", "start", "msc", "base", "computers", null, false, array("auth_token" => $_SESSION['auth_token'] ?? '')));
 } else {
     $n->addActionItem(new ActionItem(_T("Advanced launch", "msc"), "start_adv_command", "advanced", "msc", "base", "computers"));
     if ($presencemachinexmpp || isset($_GET['gid'])) {
-        $n->addActionItem(new ActionItem(_T("Direct launch", "msc"), "start_command", "start", "msc", "base", "computers"));
+        $n->addActionItem(new ActionItem(_T("Direct launch", "msc"), "start_command", "start", "msc", "base", "computers", null, false, array("auth_token" => $_SESSION['auth_token'] ?? '')));
     }
 }
 
