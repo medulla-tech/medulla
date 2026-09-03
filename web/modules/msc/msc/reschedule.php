@@ -26,6 +26,8 @@ require_once('modules/msc/includes/commands_xmlrpc.inc.php');
 require_once("modules/msc/includes/mscoptions_xmlrpc.php");
 
 if (isset($_POST["bconfirm"])) {
+    verifyCSRFToken($_POST);
+
     //
     $cmd_id = $_POST['cmd_id'];
     $start_date = $_POST['start_date'];
