@@ -26,6 +26,8 @@ require('modules/msc/includes/scheduler_xmlrpc.php');
 require('modules/msc/includes/commands_xmlrpc.inc.php');
 
 if (isset($_POST["bconfirm"])) {
+    verifyCSRFToken($_POST);
+
     /* Form handling */
     $from = $_POST['from'];
     $path =  explode('|', $from);

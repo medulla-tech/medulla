@@ -39,7 +39,7 @@ if (isset($_POST["bconfirm"])) {
     if (isset($tab)) {
         $url['tab'] = $tab;
     }
-
+    verifyCSRFToken($_POST);
     if (strlen($_POST['bundle_id'])) {
         $bundle_id = $_POST['bundle_id'];
         if (strlen($_POST['gid'])) {
