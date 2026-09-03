@@ -28,6 +28,8 @@ $machine = quickGet('hostname');
 $uuid = quickGet('objectUUID');
 
 if (quickGet('valid')) {
+    verifyCSRFToken($_POST);
+
     if (in_array("imaging", $_SESSION["modulesList"])) {
         require_once('modules/imaging/includes/xmlrpc.inc.php');
         if (xmlrpc_isProfileRegistered($gid)) {
@@ -49,6 +51,7 @@ if (quickGet('valid')) {
 ?>
 
 <form action="<?php echo urlStr("base/computers/remove_machine", array('gid' => $gid, 'hostname' => $machine, 'objectUUID' => $uuid)) ?>" method="post">
+<input type="hidden" name="auth_token" value="<?php echo htmlspecialchars($_SESSION['auth_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
     <p>
 <?php
 printf(_T("You will remove computer <b>%s</b> from group <b>%s</b>.", "dyngroup"), $machine, $group->getName());

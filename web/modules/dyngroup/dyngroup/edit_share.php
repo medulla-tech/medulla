@@ -64,6 +64,8 @@ if (isset($_POST["bdeluser_x"])) {
         }
     }
 } elseif (isset($_POST["bconfirm"])) {
+    verifyCSRFToken($_POST);
+
     $listOfCurMembers = $group->shareWith();
     if (!$listOfCurMembers) {
         $listOfCurMembers = array();
