@@ -19,6 +19,7 @@ $params = [
     "target" =>$target,
 ];
 if($_POST["bconfirm"]){
+    verifyCSRFToken($_POST);
 
     $ret = xmlrpc_delete_script($id);
     if($ret["status"] == 0){

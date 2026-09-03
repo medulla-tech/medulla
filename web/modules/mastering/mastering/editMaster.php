@@ -12,6 +12,8 @@ $target = (isset($_GET["target"])) ? $_GET["target"] : "";
 $description = (isset($_GET["description"])) ? $_GET["description"] : "";
 
 if($_POST != []){
+    verifyCSRFToken($_POST);
+
     if(isset($_POST["uuid"], $_POST["name"], $_POST["description"])){
 
         $tmpUuid = $_POST["uuid"];
