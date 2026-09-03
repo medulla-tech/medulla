@@ -35,6 +35,8 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
     $user  = isset($_POST['user'])?$_POST['user']:(isset($_GET['user'])?$_GET['user']:'');
     $editcreate = isset($_POST['editcreate'])?$_POST['editcreate']:(isset($_GET['editcreate'])?$_GET['editcreate']:'createqa');
 if (isset($_POST["bcreate"])){
+    verifyCSRFToken($_POST);
+
     //creation ou update
     switch($editcreate){
         case 'createqa':
