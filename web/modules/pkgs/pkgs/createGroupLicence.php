@@ -31,6 +31,8 @@ require_once("modules/base/includes/computers.inc.php");
 require_once("modules/pkgs/includes/xmlrpc.php");
 
 
+verifyCSRFToken($_GET);
+
 $vendor=$_GET['vendor'];
 $software=$_GET['software'];
 $version=$_GET['version'];

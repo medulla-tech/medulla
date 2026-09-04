@@ -21,6 +21,8 @@
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+verifyCSRFToken($_POST);
+
 // Get method name and params
 $method_name = $_POST['method_name'];
 $params = $_POST['params'];

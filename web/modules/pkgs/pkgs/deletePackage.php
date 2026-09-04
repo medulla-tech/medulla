@@ -29,6 +29,8 @@ require_once("modules/pkgs/includes/xmlrpc.php");
 
 if(isset($_POST['bconfirm']))
 {
+  verifyCSRFToken($_POST);
+
   $id = (int)$_GET['id'];
 
   $result = delete_extension($id);
