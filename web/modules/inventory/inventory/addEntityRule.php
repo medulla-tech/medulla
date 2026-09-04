@@ -58,6 +58,8 @@ if (isset($_GET["filter"]) && $_GET["filter"])
 
 // Receiving form data
 if (isset($_POST['bconfirm'])){
+    verifyCSRFToken($_POST);
+
     if (!isset($_GET['numRule'])){
 
         addEntityRule($_POST);

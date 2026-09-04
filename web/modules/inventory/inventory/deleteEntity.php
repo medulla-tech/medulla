@@ -32,6 +32,8 @@ $NAME = $_GET['Label'];
 $PARENTID = intval(@max($_GET['parentId'],$_POST['parentId']));
 
 if (isset($_POST['bconfirm'])){
+    verifyCSRFToken($_POST);
+
     $cfg = array(
         'name' => $_POST['name'],
         'id'  =>  $_POST['id'],
