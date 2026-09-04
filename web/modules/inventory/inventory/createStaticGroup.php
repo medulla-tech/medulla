@@ -26,6 +26,8 @@ require_once("modules/dyngroup/includes/dyngroup.php"); # for Group Class
 require_once("modules/inventory/includes/xmlrpc.php");
 require_once("modules/dyngroup/includes/xmlrpc.php");
 
+verifyCSRFToken($_GET);
+
 if ($_GET['group'] == 'green') {
     $groupname = sprintf (_T("Latest inventory is less than %s days at %s", "inventory"), $_GET['days'], date("Y-m-d H:i:s"));
 }
