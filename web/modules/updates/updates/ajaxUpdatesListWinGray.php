@@ -52,8 +52,8 @@ $completename = $_GET['altname'];
 $ide = $_GET['uuid'];
 
 // GrayList Actions
-$grayEnableAction = new ActionItem(_T("Enable for manual update", "updates"), "grayEnable", "enableupdate", "", "updates", "updates");
-$grayEnableEmptyAction = new EmptyActionItem1(_("Enable for manual update"), "grayEnable", "enableupdateg", "", "updates", "updates");
+$grayEnableAction = new ActionItem(_T("Enable for manual update", "updates"), "grayEnable", "enableupdate", "", "updates", "updates", null, false, array("auth_token" => $_SESSION['auth_token'] ?? ''));
+$grayEnableEmptyAction = new EmptyActionItem1(_("Enable for manual update"), "grayEnable", "enableupdateg", "", "updates", "updates", null, false, array("auth_token" => $_SESSION['auth_token'] ?? ''));
 $grayDisableAction = new ActionPopupItem(_T("Disable for manual update", "updates"), "grayDisable", "disableupdate", "updates", "updates");
 $grayDisableEmptyAction = new EmptyActionItem1(_T("Disable for manual update", "updates"), "grayDisable", "disableupdateg", "", "updates", "updates");
 $grayApproveAction = new ActionPopupItem(_T("Approve for automatic update", "updates"), "grayApprove", "approveupdate", "updates", "updates");

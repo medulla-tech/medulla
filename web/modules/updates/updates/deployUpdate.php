@@ -220,6 +220,7 @@ if(!empty($_GET["entity"])) {
 }
 
 if(isset($_POST['bconfirm'], $_POST['updateid'], $_POST['start_date'], $_POST['end_date'], $_POST['deployment_intervals'])) {
+    verifyCSRFToken($_POST);
 
     $updateid = htmlentities($_POST['updateid']);
     $startdate = htmlentities($_POST['start_date']);

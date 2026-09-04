@@ -28,6 +28,8 @@ $identity = isset($_GET['entityid']) ? $_GET['entityid'] : -1;
 
 if(isset($_POST['bconfirm'])){
     $updateid = $_GET['updateid'];
+    verifyCSRFToken($_POST);
+
     $retour = xmlrpc_grey_update($updateid, $identity);
     // Si retour est True, cela signifie que le packet a bien change de liste
     if($retour == True){

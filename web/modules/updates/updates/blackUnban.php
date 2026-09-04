@@ -22,6 +22,9 @@
  */
 
 require_once("modules/updates/includes/xmlrpc.php");
+
+verifyCSRFToken($_GET);
+
 $updateid = htmlentities($_GET['updateid']);
 $id = htmlentities($_GET['id']);
 $title = htmlentities($_GET['title']);

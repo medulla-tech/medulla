@@ -26,6 +26,8 @@ $updateid = htmlentities($_GET['updateid']);
 $title = htmlentities($_GET['title']);
 
 if(isset($_POST['bconfirm'])){
+    verifyCSRFToken($_POST);
+
     $result = xmlrpc_approve_update($updateid, $_GET['entityid']);
     if($result){
         $str = sprintf(_T("The update %s (%s) has been approved.", "updates"), $title, $updateid);

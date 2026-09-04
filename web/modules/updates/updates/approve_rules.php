@@ -36,6 +36,8 @@ if (
     isset($_POST['form_name']) &&
     $_POST['form_name'] === 'montableau'
 ) {
+    verifyCSRFToken($_POST);
+
     $submittedCheckValues = $_POST['check'] ?? []; // Valeurs cochées ou non
 
     $result = [];
