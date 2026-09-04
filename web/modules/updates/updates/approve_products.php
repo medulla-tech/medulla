@@ -20,6 +20,32 @@
  * You should have received a copy of the GNU General Public License
  * along with MMC; If not, see <http://www.gnu.org/licenses/>.
  */
+// modules/admin/admin/manage_entity.php
+require("localSidebar.php");
+require("graph/navbar.inc.php");
+require_once("modules/admin/includes/xmlrpc.php");
+require_once("modules/xmppmaster/includes/xmlrpc.php");
+require_once("modules/medulla_server/includes/xmlrpc.inc.php");
+require_once("modules/updates/includes/updates.inc.php");
+// Traitement du formulaire
+if (
+    $_SERVER['REQUEST_METHOD'] === 'POST' &&
+    isset($_POST['form_name']) &&
+    $_POST['form_name'] === 'montableau'&& isset($_POST['entityid'])
+) {
+    verifyCSRFToken($_POST);
+
+    $submittedCheckValues = $_POST['check'] ?? []; // Valeurs cochées ou non
+    $result = [];
+    foreach ($submittedCheckValues as $key => $value) {
+        $result[] = [$key, $value]; // Clé = ID de la règle
+    }
+    // Mise à jour de la table avec les données reçues
+    xmlrpc_update_approve_products($result, $_POST['entityid']);
+}
+generateEntityPage(_T("Microsoft Products Approval", 'updates'),
+                            "ajaxApproveProduct",
+                            $sidemenu);
 
 // Page fusionnee dans "products", onglet Windows.
 header("Location: " . urlStrRedirect("updates/updates/products&tab=tabwin"));

@@ -19,7 +19,7 @@ $entityid   = (isset($_GET['uuid']) ? $_GET['uuid']  : -1 );
 $black_list = xmlrpc_get_black_list( $start, $maxperpage, $filter, $entityid);
 
 // BlackList Actions
-$blackUnbanAction = new ActionItem(_T("Unban update", "updates"), "blackUnban", "unlist", "", "updates", "updates");
+$blackUnbanAction = new ActionItem(_T("Unban update", "updates"), "blackUnban", "unlist", "", "updates", "updates", null, false, array("auth_token" => $_SESSION['auth_token'] ?? ''));
 $blackActions = ["unban" => []];
 
 $params_black = [];
