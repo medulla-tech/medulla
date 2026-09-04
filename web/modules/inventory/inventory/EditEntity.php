@@ -30,6 +30,8 @@ $ID = intval(@max($_GET['id'],$_POST['id']));
 $NAME = $_GET['Label'];
 //traitement si confirm
 if (isset($_POST['bconfirm'])){
+    verifyCSRFToken($_POST);
+
     $cfg = array(
         'name' => $_POST['name'],
         'id'  =>  $_POST['id'],
