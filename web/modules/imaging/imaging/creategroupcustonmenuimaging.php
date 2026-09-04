@@ -29,6 +29,8 @@ require_once("modules/medulla_server/includes/locations_xmlrpc.inc.php");
 require_once("modules/base/includes/computers.inc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 
+verifyCSRFToken($_GET);
+
 $requestedlocation = $_GET['location'];
 
 $gg = xmlrpc_getCustomMenubylocation($requestedlocation);

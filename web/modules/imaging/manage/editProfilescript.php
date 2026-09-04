@@ -40,6 +40,8 @@ $p->display();
 // Here the associations are sent after edit
 if(!empty($_POST)){
     if(!empty($_POST['edit'])){
+        verifyCSRFToken($_POST);
+
         $profileId = htmlentities($_POST["profileId"]);
         $location = htmlentities($_POST['location']);
         $name = htmlentities($_POST['name']);
