@@ -69,6 +69,8 @@ switch($_GET["action"]) {
 $redirect = false;
 // if data is sent
 if ($_POST) {
+    verifyCSRFToken($_POST);
+
     $uid = $FH->getPostValue('uid');
     /* Check sent data */
     $ret = callPluginFunction("verifInfo", array($FH, $mode));
