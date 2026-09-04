@@ -130,6 +130,8 @@ if(safeCount($_POST) == 0) {
     $f->pop();
     $f->display();
 } else {
+    verifyCSRFToken($_POST);
+
     $is_image = True;
     if ($item['boot_service']) {
         $bs_uuid = $item['boot_service']['imaging_uuid'];

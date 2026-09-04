@@ -23,11 +23,14 @@
     require("../../../includes/config.inc.php");
     require("../../../includes/session.inc.php");
     require("../../../includes/PageGenerator.php");
+    require("../../../includes/utils.inc.php");
     require("../includes/includes.php");
     require("../includes/xmlrpc.inc.php");
     require("../includes/logs.inc.php");
   ?>
 <?php
+verifyCSRFToken($_POST);
+
 $content = $_POST['data'];
 $title = $_POST['title'];
 

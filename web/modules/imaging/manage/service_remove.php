@@ -32,6 +32,8 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
 $location = getCurrentLocation();
 
 if (isset($_POST["bconfirm"])) {
+    verifyCSRFToken($_POST);
+
     $params = getParams();
 
     $item_uuid = $_POST['itemid'];

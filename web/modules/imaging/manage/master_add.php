@@ -33,6 +33,8 @@ $params = getParams();
 $location = getCurrentLocation();
 
 if (isset($_POST["bconfirm"])) {
+    verifyCSRFToken($_POST);
+
     $item_uuid = $_POST['itemid'];
     $label = urldecode($_POST['itemlabel']);
 

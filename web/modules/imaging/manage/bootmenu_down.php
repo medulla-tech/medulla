@@ -25,6 +25,9 @@
 require_once('modules/imaging/includes/includes.php');
 require_once('modules/imaging/includes/xmlrpc.inc.php');
 require_once("modules/xmppmaster/includes/xmlrpc.php");
+
+verifyCSRFToken($_GET);
+
 $params = getParams();
 $location = getCurrentLocation();
 $item_uuid = $_GET['itemid'];
