@@ -28,6 +28,8 @@ require_once('modules/imaging/includes/includes.php');
 require_once('modules/imaging/includes/xmlrpc.inc.php');
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 if (isset($_POST["bconfirm"])) {
+    verifyCSRFToken($_POST);
+
     // id of the script
     $itemlabel= $_POST['itemlabel'];
     $script_id = $_POST['itemid'];

@@ -65,6 +65,8 @@ $p->display();
 
 // form has been posted
 if (safeCount($_POST) > 0) {
+    verifyCSRFToken($_POST);
+
     // get the script values
     $script_id = $_GET["itemid"];
     $script_name = trim($_POST["postinstall_name"]);

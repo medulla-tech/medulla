@@ -92,6 +92,8 @@ else{
         if(safeCount($_POST) == 0) {
             $p = new PageGenerator(_T("Clone master : ", "imaging").$label);
         }else{
+            verifyCSRFToken($_POST);
+
             $_SESSION['processclone']=$process1;
             xmlrpc_startProcessClone($_POST);
             header("Location: " . urlStrRedirect("imaging/manage/synchromaster",$process1));
