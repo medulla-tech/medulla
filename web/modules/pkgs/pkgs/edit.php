@@ -53,6 +53,7 @@ $package = array();
  * File Upload
  */
 if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
+    verifyCSRFToken($_POST);
 
     $p_api_id = $_POST['p_api'];
     $need_assign = false;

@@ -30,6 +30,8 @@ require_once("modules/msc/includes/commands_xmlrpc.inc.php");
 if (isset($_POST['gid']) && is_array($_POST['gid'])) {
     header('Content-Type: application/json');
 
+    verifyCSRFToken($_POST);
+
     $uuids = $_POST['gid'];
 
     if (empty($uuids)) {
