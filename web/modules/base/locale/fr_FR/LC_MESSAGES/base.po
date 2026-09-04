@@ -813,7 +813,7 @@ msgstr "Editer la règle"
 
 #: modules/admin/admin/ajaxListUsersofEntity.php:107
 msgid "Enabled"
-msgstr "Activ"
+msgstr "Activé"
 
 #: modules/admin/admin/ajaxListUsersofEntity.php:107
 msgid "Disabled"
