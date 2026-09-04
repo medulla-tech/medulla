@@ -27,6 +27,8 @@ $updateid = (!empty($_GET['update_id'])) ? htmlentities($_GET['update_id']) : ""
 
 if(!empty($_POST['bcancelupdate'])) {
 
+    verifyCSRFToken($_POST);
+
     $result = xmlrpc_cancel_update($idmachine, $updateid);
     $result = true;
     if($result) {

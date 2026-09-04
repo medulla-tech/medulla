@@ -26,6 +26,8 @@ $id = htmlentities($_GET['updateid']);
 $title = htmlentities($_GET['title']);
 
 if(isset($_POST['bconfirm'])){
+    verifyCSRFToken($_POST);
+
     $result = xmlrpc_exclude_update($id, $_GET['entityid']);
     if($result){
         $str = sprintf(_T("The package %s (%s) has been banned.", "updates"), $title, $id);

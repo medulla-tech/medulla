@@ -27,6 +27,8 @@ $title = htmlentities($_GET['title']);
 
 $identity = isset($_GET['entityid']) ? $_GET['entityid'] : -1;
 if(isset($_POST['bconfirm'])) {
+    verifyCSRFToken($_POST);
+
     $result = xmlrpc_grey_update($id,$identity, 0 );
     if($result) {
         $str = sprintf(_T("The update %s (%s) has been disabled.", "updates"), $title, $id);
