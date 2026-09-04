@@ -32,6 +32,8 @@ $p->display();
 
 if(isset($_POST['bconfirm']))
 {
+  verifyCSRFToken($_POST);
+
   foreach($_POST as $key=>$value)
   {
     if($key != 'rule_order')

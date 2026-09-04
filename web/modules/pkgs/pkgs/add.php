@@ -42,6 +42,8 @@ $p->display();
 $_SESSION['pkgs-add-reloaded'] = array();
 function isExpertMode1(){return 1;}
 if (isset($_POST['bconfirm'])){
+    verifyCSRFToken($_POST);
+
     //$p_api_id = $_POST['p_api'];
     $random_dir = isset($_SESSION['random_dir'])?$_SESSION['random_dir'] : "";
     $need_assign = True;
