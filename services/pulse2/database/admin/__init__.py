@@ -3,25 +3,25 @@
 # SPDX-FileCopyrightText: 2024-2025 Medulla, http://www.medulla-tech.io
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-import traceback
+import json
+import logging
 import os
+import re
+import traceback
 
-# SqlAlchemy
-from sqlalchemy import create_engine, MetaData, Table, select, func, text, inspect
-from sqlalchemy.exc import DBAPIError, SQLAlchemyError
-from sqlalchemy.ext.automap import automap_base
-
+# Imported last
+from typing import Any, Dict, List
 
 # PULSE2 modules
 from mmc.database.database_helper import DatabaseHelper
 
-# Imported last
-from typing import List, Dict, Any
-import logging
-import json
-import re
+# SqlAlchemy
+from sqlalchemy import MetaData, Table, create_engine, func, inspect, select, text
+from sqlalchemy.exc import DBAPIError, SQLAlchemyError
+from sqlalchemy.ext.automap import automap_base
 
 logger = logging.getLogger()
+
 
 class AdminDatabase(DatabaseHelper):
     """
@@ -86,7 +86,15 @@ class AdminDatabase(DatabaseHelper):
 
         # Lists to exclude or include specific tables for mapping
         exclude_table = []
-        include_table = ['providers', 'magic_link', 'medulla_update_availability', 'acl_categories', 'acl_profiles', 'acl_profile_features', 'admin_inventory_entity_rules']
+        include_table = [
+            "providers",
+            "magic_link",
+            "medulla_update_availability",
+            "acl_categories",
+            "acl_profiles",
+            "acl_profile_features",
+            "admin_inventory_entity_rules",
+        ]
         mapped_tables = []
 
         # Dynamically add attributes to the object for each mapped class
@@ -99,15 +107,21 @@ class AdminDatabase(DatabaseHelper):
                 setattr(self, table_name.capitalize(), mapped_class)
                 mapped_tables.append(table_name)
             if table_name.endswith("_conf"):
-                logger.info(f"Mapping config table by automap: {table_name.capitalize()}")
+                logger.info(
+                    f"Mapping config table by automap: {table_name.capitalize()}"
+                )
                 setattr(self, table_name.capitalize(), mapped_class)
                 mapped_tables.append(table_name)
             if table_name.endswith("_conf_version"):
-                logger.info(f"Mapping config version table by automap: {table_name.capitalize()}")
+                logger.info(
+                    f"Mapping config version table by automap: {table_name.capitalize()}"
+                )
                 setattr(self, table_name.capitalize(), mapped_class)
                 mapped_tables.append(table_name)
             if table_name in include_table:
-                logger.info(f"Mapping table by automap by list include: {table_name.capitalize()}")
+                logger.info(
+                    f"Mapping table by automap by list include: {table_name.capitalize()}"
+                )
                 setattr(self, table_name.capitalize(), mapped_class)
                 mapped_tables.append(table_name)
 
@@ -195,27 +209,44 @@ class AdminDatabase(DatabaseHelper):
 
             # Construct the configuration dictionary
             for param_connect in api_admin:
-                config_api[param_connect.setting_name] = param_connect.setting_value.strip()
+                config_api[param_connect.setting_name] = (
+                    param_connect.setting_value.strip()
+                )
             return config_api
         except Exception as e:
-            logger.error(f"An error occurred: {str(e)}")
+            logger.error(f"An error occurred: {e!s}")
             logger.error("\n%s", traceback.format_exc())
             return config_api
 
     @DatabaseHelper._sessionm
     def get_itsmsync_client_name_map(self, session):
-        """Return ITSM client display names from saas_application."""
+        """Return every configured ITSM client id and its display name.
+
+        The client id is the stable configuration scope. It must not depend on
+        an entity id, which is allocated later during ITSMLocal consolidation.
+        """
         try:
             rows = (
-                session.query(self.Saas_application.setting_name, self.Saas_application.setting_value)
-                .filter(self.Saas_application.setting_name.like('itsm.%.name'))
+                session.query(
+                    self.Saas_application.setting_name,
+                    self.Saas_application.setting_value,
+                )
+                .filter(self.Saas_application.setting_name.like("itsm.%.%"))
                 .all()
             )
             out = {}
             for setting_name, setting_value in rows:
-                parts = (setting_name or '').split('.')
-                if len(parts) >= 3 and parts[0] == 'itsm':
-                    out[str(parts[1])] = (setting_value or '').strip() or str(parts[1])
+                parts = (setting_name or "").split(".")
+                if len(parts) < 3 or parts[0] != "itsm" or not parts[1]:
+                    continue
+
+                client_id = str(parts[1])
+                out.setdefault(client_id, client_id)
+                if (
+                    parts[2] in ("name", "client_name")
+                    and (setting_value or "").strip()
+                ):
+                    out[client_id] = (setting_value or "").strip()
             return out
         except Exception as e:
             logger.error("get_itsmsync_client_name_map failed: %s", e)
@@ -226,13 +257,16 @@ class AdminDatabase(DatabaseHelper):
     def get_itsmsync_client_config(self, session, client_id):
         """Return ITSM configuration for a specific client id."""
         try:
-            cid = str(client_id or '').strip()
+            cid = str(client_id or "").strip()
             if not cid:
                 return {}
 
             rows = (
-                session.query(self.Saas_application.setting_name, self.Saas_application.setting_value)
-                .filter(self.Saas_application.setting_name.like(f'itsm.{cid}.%'))
+                session.query(
+                    self.Saas_application.setting_name,
+                    self.Saas_application.setting_value,
+                )
+                .filter(self.Saas_application.setting_name.like(f"itsm.{cid}.%"))
                 .all()
             )
 
@@ -241,7 +275,7 @@ class AdminDatabase(DatabaseHelper):
             for setting_name, setting_value in rows:
                 if not setting_name or not setting_name.startswith(prefix):
                     continue
-                key = setting_name[len(prefix):]
+                key = setting_name[len(prefix) :]
                 config[key] = setting_value
 
             return config
@@ -276,16 +310,20 @@ class AdminDatabase(DatabaseHelper):
                 """
                 params["q"] = f"%{filter_value}%"
 
-            total_row = session.execute(
-                text(
-                    f"""
+            total_row = (
+                session.execute(
+                    text(
+                        f"""
                     SELECT COUNT(*) AS total
                     FROM admin_inventory_entity_rules
                     {where_sql}
                     """
-                ),
-                params,
-            ).mappings().first()
+                    ),
+                    params,
+                )
+                .mappings()
+                .first()
+            )
             total = int((total_row or {}).get("total") or 0)
 
             limit_sql = ""
@@ -294,9 +332,10 @@ class AdminDatabase(DatabaseHelper):
                 params["limit"] = end
                 params["offset"] = start
 
-            rows = session.execute(
-                text(
-                    f"""
+            rows = (
+                session.execute(
+                    text(
+                        f"""
                     SELECT id, enabled, rule_name, tag_name, tag_value, entity_id,
                            priority, stop_on_match, comment, created_by, updated_by,
                            created_at, updated_at
@@ -305,9 +344,12 @@ class AdminDatabase(DatabaseHelper):
                     ORDER BY priority ASC, id ASC
                     {limit_sql}
                     """
-                ),
-                params,
-            ).mappings().all()
+                    ),
+                    params,
+                )
+                .mappings()
+                .all()
+            )
 
             return {
                 "total": total,
@@ -322,9 +364,10 @@ class AdminDatabase(DatabaseHelper):
     def resolve_inventory_entity_rule(self, session, tag_name, tag_value):
         """Resolve one active rule for a given tag key/value."""
         try:
-            row = session.execute(
-                text(
-                    """
+            row = (
+                session.execute(
+                    text(
+                        """
                     SELECT id, entity_id, rule_name, priority
                     FROM admin_inventory_entity_rules
                     WHERE enabled = 1
@@ -333,12 +376,15 @@ class AdminDatabase(DatabaseHelper):
                     ORDER BY priority ASC, id ASC
                     LIMIT 1
                     """
-                ),
-                {
-                    "tag_name": str(tag_name or "TAG"),
-                    "tag_value": str(tag_value or ""),
-                },
-            ).mappings().first()
+                    ),
+                    {
+                        "tag_name": str(tag_name or "TAG"),
+                        "tag_value": str(tag_value or ""),
+                    },
+                )
+                .mappings()
+                .first()
+            )
             return dict(row) if row else None
         except Exception as e:
             logger.error("resolve_inventory_entity_rule failed: %s", e)
@@ -361,7 +407,9 @@ class AdminDatabase(DatabaseHelper):
                 "stop_on_match": int(data.get("stop_on_match", 1)),
                 "comment": str(data.get("comment") or ""),
                 "updated_by": str(data.get("updated_by") or "root"),
-                "created_by": str(data.get("created_by") or data.get("updated_by") or "root"),
+                "created_by": str(
+                    data.get("created_by") or data.get("updated_by") or "root"
+                ),
             }
 
             if not payload["tag_value"]:
@@ -419,7 +467,9 @@ class AdminDatabase(DatabaseHelper):
             return {"ok": False, "error": str(e)}
 
     @DatabaseHelper._sessionm
-    def set_inventory_entity_rule_enabled(self, session, rule_id, enabled, updated_by="root"):
+    def set_inventory_entity_rule_enabled(
+        self, session, rule_id, enabled, updated_by="root"
+    ):
         """Enable or disable one global inventory entity rule."""
         try:
             session.execute(
@@ -466,12 +516,12 @@ class AdminDatabase(DatabaseHelper):
     def save_itsmsync_client_config(self, session, client_id, config):
         """Upsert ITSM configuration for a specific client id."""
         try:
-            cid = str(client_id or '').strip()
+            cid = str(client_id or "").strip()
             if not cid or not isinstance(config, dict):
                 return {"success": False, "error": "Invalid parameters"}
 
             for field_name, field_value in config.items():
-                key = str(field_name or '').strip()
+                key = str(field_name or "").strip()
                 if not key:
                     continue
 
@@ -485,11 +535,11 @@ class AdminDatabase(DatabaseHelper):
                 if row is None:
                     row = self.Saas_application(
                         setting_name=setting_name,
-                        setting_value='' if field_value is None else str(field_value),
+                        setting_value="" if field_value is None else str(field_value),
                     )
                     session.add(row)
                 else:
-                    row.setting_value = '' if field_value is None else str(field_value)
+                    row.setting_value = "" if field_value is None else str(field_value)
 
             session.flush()
             session.commit()
@@ -500,7 +550,9 @@ class AdminDatabase(DatabaseHelper):
             return {"success": False, "error": str(e)}
 
     @DatabaseHelper._sessionm
-    def create_entity_under_custom_parent(self, session, entity_id, name, tag_value, stripe_tag=None):
+    def create_entity_under_custom_parent(
+        self, session, entity_id, name, tag_value, stripe_tag=None
+    ):
         """
         Inserts a new entity into the saas_organisations table
         after creation in GLPI, using the UUID/tag generated on the Python side.
@@ -567,7 +619,11 @@ class AdminDatabase(DatabaseHelper):
         Returns:
             Bool: True if updated, False otherwise
         """
-        org = session.query(self.Saas_organisations).filter_by(entity_id=str(entity_id)).first()
+        org = (
+            session.query(self.Saas_organisations)
+            .filter_by(entity_id=str(entity_id))
+            .first()
+        )
         if not org:
             return False
 
@@ -595,7 +651,7 @@ class AdminDatabase(DatabaseHelper):
     # ---- PROVIDER MANAGEMENT ----
     # READ
     @DatabaseHelper._sessionm
-    def get_providers_all(self, session) -> List[Dict[str, Any]]:
+    def get_providers_all(self, session) -> list[dict[str, Any]]:
         stmt = select(
             self.Providers.id,
             self.Providers.client_name,
@@ -615,69 +671,78 @@ class AdminDatabase(DatabaseHelper):
         ).order_by(self.Providers.client_name, self.Providers.name)
 
         rows = session.execute(stmt).mappings().all()
-        out: List[Dict[str, Any]] = []
+        out: list[dict[str, Any]] = []
         for r in rows:
-            out.append({
-                "id":             int(r["id"] or 0),
-                "client_name":    r["client_name"]    or "",
-                "name":           r["name"]           or "",
-                "logo_url":       r["logo_url"]       or "",
-                "url_provider":   r["url_provider"]   or "",
-                "client_id":      r["client_id"]      or "",
-                "client_secret":  r["client_secret"]  or "",
-                "lmc_acl":        r["lmc_acl"]        or "",
-                "ldap_uid":       r["ldap_uid"]       or "",
-                "ldap_givenName": r["ldap_givenName"] or "",
-                "ldap_sn":        r["ldap_sn"]        or "",
-                "ldap_mail":      r["ldap_mail"]      or "",
-                "profiles_order": r["profiles_order"] or "",
-                "acls_json":      r["acls_json"]      or "",
-                "proxy_url":      r["proxy_url"]      or "",
-            })
+            out.append(
+                {
+                    "id": int(r["id"] or 0),
+                    "client_name": r["client_name"] or "",
+                    "name": r["name"] or "",
+                    "logo_url": r["logo_url"] or "",
+                    "url_provider": r["url_provider"] or "",
+                    "client_id": r["client_id"] or "",
+                    "client_secret": r["client_secret"] or "",
+                    "lmc_acl": r["lmc_acl"] or "",
+                    "ldap_uid": r["ldap_uid"] or "",
+                    "ldap_givenName": r["ldap_givenName"] or "",
+                    "ldap_sn": r["ldap_sn"] or "",
+                    "ldap_mail": r["ldap_mail"] or "",
+                    "profiles_order": r["profiles_order"] or "",
+                    "acls_json": r["acls_json"] or "",
+                    "proxy_url": r["proxy_url"] or "",
+                }
+            )
         return out
 
     @DatabaseHelper._sessionm
-    def get_providers_by_client(self, session, client_name: str) -> List[Dict[str, Any]]:
+    def get_providers_by_client(
+        self, session, client_name: str
+    ) -> list[dict[str, Any]]:
         client = (client_name or "MMC").strip()
-        stmt = select(
-            self.Providers.id,
-            self.Providers.client_name,
-            self.Providers.name,
-            self.Providers.logo_url,
-            self.Providers.url_provider,
-            self.Providers.client_id,
-            self.Providers.client_secret,
-            self.Providers.lmc_acl,
-            self.Providers.ldap_uid,
-            self.Providers.ldap_givenName,
-            self.Providers.ldap_sn,
-            self.Providers.ldap_mail,
-            self.Providers.profiles_order,
-            self.Providers.acls_json,
-            self.Providers.proxy_url,
-        ).where(self.Providers.client_name == client
-        ).order_by(self.Providers.name)
+        stmt = (
+            select(
+                self.Providers.id,
+                self.Providers.client_name,
+                self.Providers.name,
+                self.Providers.logo_url,
+                self.Providers.url_provider,
+                self.Providers.client_id,
+                self.Providers.client_secret,
+                self.Providers.lmc_acl,
+                self.Providers.ldap_uid,
+                self.Providers.ldap_givenName,
+                self.Providers.ldap_sn,
+                self.Providers.ldap_mail,
+                self.Providers.profiles_order,
+                self.Providers.acls_json,
+                self.Providers.proxy_url,
+            )
+            .where(self.Providers.client_name == client)
+            .order_by(self.Providers.name)
+        )
 
         rows = session.execute(stmt).mappings().all()
-        out: List[Dict[str, Any]] = []
+        out: list[dict[str, Any]] = []
         for r in rows:
-            out.append({
-                "id":             int(r["id"] or 0),
-                "client_name":    r["client_name"]    or "",
-                "name":           r["name"]           or "",
-                "logo_url":       r["logo_url"]       or "",
-                "url_provider":   r["url_provider"]   or "",
-                "client_id":      r["client_id"]      or "",
-                "client_secret":  r["client_secret"]  or "",
-                "lmc_acl":        r["lmc_acl"]        or "",
-                "ldap_uid":       r["ldap_uid"]       or "",
-                "ldap_givenName": r["ldap_givenName"] or "",
-                "ldap_sn":        r["ldap_sn"]        or "",
-                "ldap_mail":      r["ldap_mail"]      or "",
-                "profiles_order": r["profiles_order"] or "",
-                "acls_json":      r["acls_json"]      or "",
-                "proxy_url":      r["proxy_url"]      or "",
-            })
+            out.append(
+                {
+                    "id": int(r["id"] or 0),
+                    "client_name": r["client_name"] or "",
+                    "name": r["name"] or "",
+                    "logo_url": r["logo_url"] or "",
+                    "url_provider": r["url_provider"] or "",
+                    "client_id": r["client_id"] or "",
+                    "client_secret": r["client_secret"] or "",
+                    "lmc_acl": r["lmc_acl"] or "",
+                    "ldap_uid": r["ldap_uid"] or "",
+                    "ldap_givenName": r["ldap_givenName"] or "",
+                    "ldap_sn": r["ldap_sn"] or "",
+                    "ldap_mail": r["ldap_mail"] or "",
+                    "profiles_order": r["profiles_order"] or "",
+                    "acls_json": r["acls_json"] or "",
+                    "proxy_url": r["proxy_url"] or "",
+                }
+            )
         return out
 
     # CREATE
@@ -685,23 +750,31 @@ class AdminDatabase(DatabaseHelper):
     def create_provider(self, session, payload: dict) -> dict:
         norm = lambda s: (s or "").strip()
 
-        client_name   = norm(payload.get("client_name"))
-        name          = norm(payload.get("name"))
-        url_provider  = norm(payload.get("url_provider"))
-        client_id     = norm(payload.get("client_id"))
+        client_name = norm(payload.get("client_name"))
+        name = norm(payload.get("name"))
+        url_provider = norm(payload.get("url_provider"))
+        client_id = norm(payload.get("client_id"))
         client_secret = payload.get("client_secret")
 
         if not all([client_name, name, url_provider, client_id, client_secret]):
-            return {"ok": False, "error": "Missing required fields (client_name, name, url_provider, client_id, client_secret)."}
+            return {
+                "ok": False,
+                "error": "Missing required fields (client_name, name, url_provider, client_id, client_secret).",
+            }
 
         exists = session.execute(
-            select(self.Providers.id).where(
-                (self.Providers.client_name == client_name) &
-                (self.Providers.name == name)
-            ).limit(1)
+            select(self.Providers.id)
+            .where(
+                (self.Providers.client_name == client_name)
+                & (self.Providers.name == name)
+            )
+            .limit(1)
         ).first()
         if exists:
-            return {"ok": False, "error": f"Provider '{name}' already exists for client '{client_name}'."}
+            return {
+                "ok": False,
+                "error": f"Provider '{name}' already exists for client '{client_name}'.",
+            }
 
         # Flexible acls_json
         acls_json = payload.get("acls_json")
@@ -717,14 +790,14 @@ class AdminDatabase(DatabaseHelper):
 
         # We don't set lmc_acl here to let the default SQL value play if there is nothing
         data = {
-            "client_name":   client_name,
-            "name":          name,
-            "logo_url":      norm(payload.get("logo_url")) or None,
-            "url_provider":  url_provider,
-            "client_id":     client_id,
+            "client_name": client_name,
+            "name": name,
+            "logo_url": norm(payload.get("logo_url")) or None,
+            "url_provider": url_provider,
+            "client_id": client_id,
             "client_secret": str(client_secret),
             "profiles_order": norm(payload.get("profiles_order")) or None,
-            "acls_json":     acls_json,
+            "acls_json": acls_json,
         }
 
         v_acl = norm(payload.get("lmc_acl"))
@@ -760,15 +833,17 @@ class AdminDatabase(DatabaseHelper):
         if "client_name" in payload:
             new_cn = norm(payload["client_name"])
             if new_cn:  # if provided and not empty, process it
-                if len(new_cn) > 64 or not re.match(r'^[A-Za-z0-9._\- ]+$', new_cn):
+                if len(new_cn) > 64 or not re.match(r"^[A-Za-z0-9._\- ]+$", new_cn):
                     return {"ok": False, "error": "Invalid client_name"}
                 # uniqueness (client_name, name)
                 conflict = session.execute(
-                    select(self.Providers.id).where(
-                        (self.Providers.client_name == new_cn) &
-                        (self.Providers.name == row.name) &
-                        (self.Providers.id != row.id)
-                    ).limit(1)
+                    select(self.Providers.id)
+                    .where(
+                        (self.Providers.client_name == new_cn)
+                        & (self.Providers.name == row.name)
+                        & (self.Providers.id != row.id)
+                    )
+                    .limit(1)
                 ).first()
                 if conflict:
                     return {"ok": False, "error": "(client_name, name) already exists"}
@@ -777,10 +852,18 @@ class AdminDatabase(DatabaseHelper):
         if "name" in payload:
             payload.pop("name", None)
 
-        nullable = {"logo_url", "lmc_acl", "ldap_uid", "ldap_givenName",
-                    "ldap_sn", "ldap_mail", "profiles_order", "proxy_url"}
+        nullable = {
+            "logo_url",
+            "lmc_acl",
+            "ldap_uid",
+            "ldap_givenName",
+            "ldap_sn",
+            "ldap_mail",
+            "profiles_order",
+            "proxy_url",
+        }
 
-        for key in list(nullable):
+        for key in nullable:
             if key in payload:
                 v = norm(payload[key])
                 setattr(row, key, None if v == "" else v)
@@ -812,7 +895,7 @@ class AdminDatabase(DatabaseHelper):
 
     # DELETE
     @DatabaseHelper._sessionm
-    def delete_provider(self, session, provider_id: int) -> Dict[str, object]:
+    def delete_provider(self, session, provider_id: int) -> dict[str, object]:
         """
         Delete a provider by ID
         """
@@ -835,9 +918,11 @@ class AdminDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def get_root_token(self, session):
-        token = (session.query(self.Saas_application.setting_value)
-            .filter(self.Saas_application.setting_name == 'glpi_root_user_token')
-            .scalar())
+        token = (
+            session.query(self.Saas_application.setting_value)
+            .filter(self.Saas_application.setting_name == "glpi_root_user_token")
+            .scalar()
+        )
 
         return token
 
@@ -877,7 +962,7 @@ class AdminDatabase(DatabaseHelper):
     ############### CONFIG #########################
 
     @DatabaseHelper._sessionm
-    def get_config_tables (self, session) -> List[str]:
+    def get_config_tables(self, session) -> list[str]:
         """Get all *_conf tables in the admin databse"""
         try:
             inspector = inspect(self.db)
@@ -889,16 +974,13 @@ class AdminDatabase(DatabaseHelper):
             return []
 
     @DatabaseHelper._sessionm
-    def get_config_sections(self, session, table_name: str) -> List[str]:
+    def get_config_sections(self, session, table_name: str) -> list[str]:
         """Get distinct sections from a *_conf table."""
         try:
             cls_name = table_name.capitalize()
             Conf = getattr(self, cls_name)
             rows = (
-                session.query(Conf.section)
-                .filter(Conf.activer == 1)
-                .distinct()
-                .all()
+                session.query(Conf.section).filter(Conf.activer == 1).distinct().all()
             )
             return [row[0] or "" for row in rows]
         except SQLAlchemyError as e:
@@ -952,17 +1034,14 @@ class AdminDatabase(DatabaseHelper):
         try:
             cls_name = table_name.capitalize()
             Conf = getattr(self, cls_name)
-            rows = (
-                session.query(
-                    Conf.section,
-                    Conf.nom,
-                    Conf.valeur,
-                    Conf.valeur_defaut,
-                    Conf.description,
-                    Conf.activer,
-                )
-                .all()
-            )
+            rows = session.query(
+                Conf.section,
+                Conf.nom,
+                Conf.valeur,
+                Conf.valeur_defaut,
+                Conf.description,
+                Conf.activer,
+            ).all()
             # Convert SQLAlchemy Row objects to native Python dicts for XML-RPC serialization
             return [
                 {
@@ -978,7 +1057,7 @@ class AdminDatabase(DatabaseHelper):
         except SQLAlchemyError as e:
             logger.error(f"[ConfigDB] Error reading data: {e}")
             return []
-        
+
     @DatabaseHelper._sessionm
     def update_config_data(self, session, table_name: str, data: dict) -> bool:
         """Update a configuration in a *_conf table."""
@@ -998,9 +1077,17 @@ class AdminDatabase(DatabaseHelper):
                     .first()
                 )
             else:
-                logger.warning("[ConfigDB] update_config_data: missing keys table=%s data=%s", table_name, data)
+                logger.warning(
+                    "[ConfigDB] update_config_data: missing keys table=%s data=%s",
+                    table_name,
+                    data,
+                )
             if not row:
-                logger.warning("[ConfigDB] update_config_data: row not found for table=%s data=%s", table_name, data)
+                logger.warning(
+                    "[ConfigDB] update_config_data: row not found for table=%s data=%s",
+                    table_name,
+                    data,
+                )
                 return False
 
             if "valeur" in data:
@@ -1013,7 +1100,11 @@ class AdminDatabase(DatabaseHelper):
                 row.activer = int(data["activer"])
             session.flush()
             session.commit()
-            logger.debug("[ConfigDB] update_config_data: updated table=%s id=%s", table_name, getattr(row, "id", None))
+            logger.debug(
+                "[ConfigDB] update_config_data: updated table=%s id=%s",
+                table_name,
+                getattr(row, "id", None),
+            )
             return True
         except SQLAlchemyError as e:
             logger.error(f"[ConfigDB] Error updating data: {e}")
@@ -1028,7 +1119,11 @@ class AdminDatabase(DatabaseHelper):
             section = (data.get("section") or "").strip()
             nom = (data.get("nom") or "").strip()
             if not section or not nom:
-                logger.warning("[ConfigDB] add_config_data: missing keys table=%s data=%s", table_name, data)
+                logger.warning(
+                    "[ConfigDB] add_config_data: missing keys table=%s data=%s",
+                    table_name,
+                    data,
+                )
                 return False
 
             existing = (
@@ -1040,7 +1135,12 @@ class AdminDatabase(DatabaseHelper):
                 .first()
             )
             if existing:
-                logger.warning("[ConfigDB] add_config_data: config already exists for table=%s section=%s nom=%s", table_name, section, nom)
+                logger.warning(
+                    "[ConfigDB] add_config_data: config already exists for table=%s section=%s nom=%s",
+                    table_name,
+                    section,
+                    nom,
+                )
                 return False
 
             new_row = Conf(
@@ -1054,12 +1154,16 @@ class AdminDatabase(DatabaseHelper):
             session.add(new_row)
             session.flush()
             session.commit()
-            logger.debug("[ConfigDB] add_config_data: added table=%s section=%s nom=%s", table_name, section, nom)
+            logger.debug(
+                "[ConfigDB] add_config_data: added table=%s section=%s nom=%s",
+                table_name,
+                section,
+                nom,
+            )
             return True
         except SQLAlchemyError as e:
             logger.error(f"[ConfigDB] Error adding data: {e}")
             return False
-        
 
     @DatabaseHelper._sessionm
     def delete_config_data(self, session, table_name: str, data: dict) -> bool:
@@ -1080,36 +1184,54 @@ class AdminDatabase(DatabaseHelper):
                     .first()
                 )
             else:
-                logger.warning("[ConfigDB] delete_config_data: missing keys table=%s data=%s", table_name, data)
+                logger.warning(
+                    "[ConfigDB] delete_config_data: missing keys table=%s data=%s",
+                    table_name,
+                    data,
+                )
                 return False
             if not row:
-                logger.warning("[ConfigDB] delete_config_data: row not found for table=%s data=%s", table_name, data)
+                logger.warning(
+                    "[ConfigDB] delete_config_data: row not found for table=%s data=%s",
+                    table_name,
+                    data,
+                )
                 return False
 
             session.delete(row)
             session.flush()
             session.commit()
-            logger.debug("[ConfigDB] delete_config_data: deleted table=%s section=%s nom=%s", table_name, section, nom)
+            logger.debug(
+                "[ConfigDB] delete_config_data: deleted table=%s section=%s nom=%s",
+                table_name,
+                section,
+                nom,
+            )
             return True
         except SQLAlchemyError as e:
             logger.error(f"[ConfigDB] Error deleting data: {e}")
             return False
 
     @DatabaseHelper._sessionm
-    def restore_config_version(self, session, table_name: str, table_version_name: str) -> bool:
+    def restore_config_version(
+        self, session, table_name: str, table_version_name: str
+    ) -> bool:
         """Restore a previous version of a configuration from a *_conf_history table."""
         try:
-            cls_name = table_version_name.capitalize() 
+            cls_name = table_version_name.capitalize()
             Version = getattr(self, cls_name)
             # Récupérer toutes les données de la table de version
             versions = session.query(Version).all()
             if not versions:
-                logger.warning("[ConfigDB] restore_config_version: no versions found for table=%s", table_version_name)
+                logger.warning(
+                    "[ConfigDB] restore_config_version: no versions found for table=%s",
+                    table_version_name,
+                )
                 return False
 
             # Obtenir la classe de la table de conf
             Conf = getattr(self, table_name.capitalize())
-            
+
             # Pour chaque entrée dans la table de version, mettre à jour la table de conf correspondante
             for version in versions:
                 row = (
@@ -1121,7 +1243,12 @@ class AdminDatabase(DatabaseHelper):
                     .first()
                 )
                 if not row:
-                    logger.warning("[ConfigDB] restore_config_version: config row not found for table=%s section=%s nom=%s", table_name, version.section, version.nom)
+                    logger.warning(
+                        "[ConfigDB] restore_config_version: config row not found for table=%s section=%s nom=%s",
+                        table_name,
+                        version.section,
+                        version.nom,
+                    )
                     continue  # Passer à la suivante si la ligne n'existe pas
 
                 # Remplacer les valeurs
@@ -1129,10 +1256,14 @@ class AdminDatabase(DatabaseHelper):
                 row.valeur_defaut = version.valeur_defaut
                 row.description = version.description
                 row.activer = version.activer
-            
+
             session.flush()
             session.commit()
-            logger.info("[ConfigDB] restore_config_version: restored all data from %s to %s", table_version_name, table_name)
+            logger.info(
+                "[ConfigDB] restore_config_version: restored all data from %s to %s",
+                table_version_name,
+                table_name,
+            )
             return True
         except SQLAlchemyError as e:
             logger.error(f"[ConfigDB] Error restoring config version: {e}")
@@ -1141,9 +1272,11 @@ class AdminDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def get_update_availability(self, session):
         try:
-            result = session.query(self.Medulla_update_availability).filter(
-                self.Medulla_update_availability.id == 1
-            ).first()
+            result = (
+                session.query(self.Medulla_update_availability)
+                .filter(self.Medulla_update_availability.id == 1)
+                .first()
+            )
             if result:
                 return {
                     "update_available": bool(result.update_available),
@@ -1152,7 +1285,7 @@ class AdminDatabase(DatabaseHelper):
                     "last_check": str(result.last_check) if result.last_check else None,
                     "last_check_status": result.last_check_status,
                     "disclaimer_level": getattr(result, "disclaimer_level", None),
-                    "disclaimer_json": getattr(result, "disclaimer_json", None)
+                    "disclaimer_json": getattr(result, "disclaimer_json", None),
                 }
             return {
                 "update_available": False,
@@ -1161,7 +1294,7 @@ class AdminDatabase(DatabaseHelper):
                 "last_check": None,
                 "last_check_status": "never",
                 "disclaimer_level": None,
-                "disclaimer_json": None
+                "disclaimer_json": None,
             }
         except Exception as e:
             logger.error(f"Error getting update availability: {e}")
@@ -1172,7 +1305,7 @@ class AdminDatabase(DatabaseHelper):
                 "last_check": None,
                 "last_check_status": "error",
                 "disclaimer_level": None,
-                "disclaimer_json": None
+                "disclaimer_json": None,
             }
 
     # ---- ACL FEATURE MANAGEMENT ----
@@ -1203,10 +1336,14 @@ class AdminDatabase(DatabaseHelper):
     def add_acl_profile(self, session, profile_name):
         """Add a new profile."""
         try:
-            max_order = session.execute(text("SELECT COALESCE(MAX(display_order), 0) FROM acl_profiles")).scalar()
+            max_order = session.execute(
+                text("SELECT COALESCE(MAX(display_order), 0) FROM acl_profiles")
+            ).scalar()
             session.execute(
-                text("INSERT IGNORE INTO acl_profiles (profile_name, display_order) VALUES (:name, :ord)"),
-                {"name": profile_name, "ord": max_order + 1}
+                text(
+                    "INSERT IGNORE INTO acl_profiles (profile_name, display_order) VALUES (:name, :ord)"
+                ),
+                {"name": profile_name, "ord": max_order + 1},
             )
             session.commit()
             return True
@@ -1225,11 +1362,20 @@ class AdminDatabase(DatabaseHelper):
         """Delete a profile and its feature selections. Refuses to delete
         a built-in profile (Super-Admin / Admin / Technician)."""
         if profile_name in self.PROTECTED_PROFILES:
-            logger.warning("delete_acl_profile: refusing to delete protected profile %r", profile_name)
+            logger.warning(
+                "delete_acl_profile: refusing to delete protected profile %r",
+                profile_name,
+            )
             return False
         try:
-            session.execute(text("DELETE FROM acl_profile_features WHERE profile_name = :name"), {"name": profile_name})
-            session.execute(text("DELETE FROM acl_profiles WHERE profile_name = :name"), {"name": profile_name})
+            session.execute(
+                text("DELETE FROM acl_profile_features WHERE profile_name = :name"),
+                {"name": profile_name},
+            )
+            session.execute(
+                text("DELETE FROM acl_profiles WHERE profile_name = :name"),
+                {"name": profile_name},
+            )
             session.commit()
             return True
         except Exception as e:
@@ -1273,14 +1419,20 @@ class AdminDatabase(DatabaseHelper):
                     sql += " WHERE profile_name = :profile"
                     params["profile"] = profile_name
 
-            result = session.execute(text(sql), params) if params else session.execute(text(sql))
+            result = (
+                session.execute(text(sql), params)
+                if params
+                else session.execute(text(sql))
+            )
             rows = []
             for row in result:
-                rows.append({
-                    "profile_name": row[0],
-                    "feature_key": row[1],
-                    "access_level": row[2],
-                })
+                rows.append(
+                    {
+                        "profile_name": row[0],
+                        "feature_key": row[1],
+                        "access_level": row[2],
+                    }
+                )
             return rows
         except Exception as e:
             logger.error(f"Error in get_acl_profile_features: {e}")
@@ -1292,7 +1444,9 @@ class AdminDatabase(DatabaseHelper):
     }
 
     @DatabaseHelper._sessionm
-    def set_acl_profile_features(self, session, profile_name, features_dict, install_type=None):
+    def set_acl_profile_features(
+        self, session, profile_name, features_dict, install_type=None
+    ):
         """Replace feature selections for a profile.
         features_dict: {"feature_key": "ro"|"rw"|null}
         null/None means disabled (row deleted for the current install_type).
@@ -1320,16 +1474,24 @@ class AdminDatabase(DatabaseHelper):
             if not install_type:
                 # Legacy path
                 session.execute(
-                    text("DELETE FROM acl_profile_features WHERE profile_name = :profile"),
-                    {"profile": profile_name}
+                    text(
+                        "DELETE FROM acl_profile_features WHERE profile_name = :profile"
+                    ),
+                    {"profile": profile_name},
                 )
                 for feature_key, access_level in features_dict.items():
                     if access_level in ("ro", "rw"):
                         session.execute(
-                            text("INSERT INTO acl_profile_features "
-                                 "(profile_name, feature_key, access_level, install_type) "
-                                 "VALUES (:profile, :feature, :level, 'both')"),
-                            {"profile": profile_name, "feature": feature_key, "level": access_level}
+                            text(
+                                "INSERT INTO acl_profile_features "
+                                "(profile_name, feature_key, access_level, install_type) "
+                                "VALUES (:profile, :feature, :level, 'both')"
+                            ),
+                            {
+                                "profile": profile_name,
+                                "feature": feature_key,
+                                "level": access_level,
+                            },
                         )
                 session.commit()
                 return True
@@ -1342,9 +1504,11 @@ class AdminDatabase(DatabaseHelper):
             #    features_dict cannot be interpreted as "user unchecked it".
             visible_features = set()
             result = session.execute(
-                text("SELECT DISTINCT feature_key FROM acl_feature_definitions "
-                     "WHERE FIND_IN_SET(:install_type, install_types) > 0"),
-                {"install_type": install_type}
+                text(
+                    "SELECT DISTINCT feature_key FROM acl_feature_definitions "
+                    "WHERE FIND_IN_SET(:install_type, install_types) > 0"
+                ),
+                {"install_type": install_type},
             )
             for row in result:
                 visible_features.add(row[0])
@@ -1353,9 +1517,11 @@ class AdminDatabase(DatabaseHelper):
             #    ones whose feature is visible on the current install_type.
             both_rows = {}
             result = session.execute(
-                text("SELECT feature_key, access_level FROM acl_profile_features "
-                     "WHERE profile_name = :profile AND install_type = 'both'"),
-                {"profile": profile_name}
+                text(
+                    "SELECT feature_key, access_level FROM acl_profile_features "
+                    "WHERE profile_name = :profile AND install_type = 'both'"
+                ),
+                {"profile": profile_name},
             )
             for row in result:
                 if row[0] in visible_features:
@@ -1373,23 +1539,37 @@ class AdminDatabase(DatabaseHelper):
                 if desired == both_level:
                     continue
                 session.execute(
-                    text("DELETE FROM acl_profile_features "
-                         "WHERE profile_name = :profile AND feature_key = :feature "
-                         "AND install_type = :other_type"),
-                    {"profile": profile_name, "feature": feature_key, "other_type": other_type}
+                    text(
+                        "DELETE FROM acl_profile_features "
+                        "WHERE profile_name = :profile AND feature_key = :feature "
+                        "AND install_type = :other_type"
+                    ),
+                    {
+                        "profile": profile_name,
+                        "feature": feature_key,
+                        "other_type": other_type,
+                    },
                 )
                 session.execute(
-                    text("UPDATE acl_profile_features SET install_type = :other_type "
-                         "WHERE profile_name = :profile AND feature_key = :feature "
-                         "AND install_type = 'both'"),
-                    {"profile": profile_name, "feature": feature_key, "other_type": other_type}
+                    text(
+                        "UPDATE acl_profile_features SET install_type = :other_type "
+                        "WHERE profile_name = :profile AND feature_key = :feature "
+                        "AND install_type = 'both'"
+                    ),
+                    {
+                        "profile": profile_name,
+                        "feature": feature_key,
+                        "other_type": other_type,
+                    },
                 )
 
             # 3. Reset current-type rows (will be re-inserted from features_dict)
             session.execute(
-                text("DELETE FROM acl_profile_features "
-                     "WHERE profile_name = :profile AND install_type = :install_type"),
-                {"profile": profile_name, "install_type": install_type}
+                text(
+                    "DELETE FROM acl_profile_features "
+                    "WHERE profile_name = :profile AND install_type = :install_type"
+                ),
+                {"profile": profile_name, "install_type": install_type},
             )
 
             # 4. Insert rows for what the user wants on the current type,
@@ -1401,15 +1581,17 @@ class AdminDatabase(DatabaseHelper):
                     # The 'both' row was kept at step 2 and already covers it.
                     continue
                 session.execute(
-                    text("INSERT INTO acl_profile_features "
-                         "(profile_name, feature_key, access_level, install_type) "
-                         "VALUES (:profile, :feature, :level, :install_type)"),
+                    text(
+                        "INSERT INTO acl_profile_features "
+                        "(profile_name, feature_key, access_level, install_type) "
+                        "VALUES (:profile, :feature, :level, :install_type)"
+                    ),
                     {
                         "profile": profile_name,
                         "feature": feature_key,
                         "level": access_level,
                         "install_type": install_type,
-                    }
+                    },
                 )
             session.commit()
             return True
@@ -1432,9 +1614,15 @@ class AdminDatabase(DatabaseHelper):
             if install_type:
                 type_filter = " WHERE FIND_IN_SET(:install_type, install_types) > 0"
                 params["install_type"] = install_type
-            sql = ("SELECT feature_key, label, description, category, superadmin_only, acl_entry, access_type "
-                   "FROM acl_feature_definitions" + type_filter + " ORDER BY id")
-            result = session.execute(text(sql), params) if params else session.execute(text(sql))
+            sql = (
+                "SELECT feature_key, label, description, category, superadmin_only, acl_entry, access_type "
+                "FROM acl_feature_definitions" + type_filter + " ORDER BY id"
+            )
+            result = (
+                session.execute(text(sql), params)
+                if params
+                else session.execute(text(sql))
+            )
             # Group by feature_key
             features = {}
             for row in result:
@@ -1508,11 +1696,11 @@ class AdminDatabase(DatabaseHelper):
     def resolve_inventory_entity_rule(self, session, tag_name, tag_value):
         """
         Résoudre une valeur TAG à une entité GLPI en utilisant les règles d'inventaire.
-        
+
         Args:
             tag_name: Type de TAG (ex: "TAG")
             tag_value: Valeur TAG à matcher (ex: "PROD", "CLIENT-A")
-        
+
         Returns:
             dict avec entity_id et infos de règle, ou None si aucun match
         """
@@ -1531,10 +1719,10 @@ class AdminDatabase(DatabaseHelper):
                 ),
                 {"tag_name": tag_name, "tag_value": tag_value},
             ).fetchone()
-            
+
             if not row:
                 return None
-            
+
             return {
                 "id": int(row[0]),
                 "entity_id": int(row[1]),
@@ -1542,17 +1730,17 @@ class AdminDatabase(DatabaseHelper):
                 "priority": int(row[3]),
             }
         except Exception as e:
-            logger.error(f"Erreur resolve_inventory_entity_rule: {str(e)}")
+            logger.error(f"Erreur resolve_inventory_entity_rule: {e!s}")
             return None
 
     @DatabaseHelper._sessionm
     def list_inventory_entity_rules(self, session, enabled_only=False):
         """
         Lister les règles d'inventaire disponibles.
-        
+
         Args:
             enabled_only: Si True, retourne uniquement les règles actives
-        
+
         Returns:
             Liste de dictionnaires contenant les détails de chaque règle
         """
@@ -1570,7 +1758,7 @@ class AdminDatabase(DatabaseHelper):
                     """
                 )
             ).fetchall()
-            
+
             return [
                 {
                     "id": int(row[0]),
@@ -1590,12 +1778,14 @@ class AdminDatabase(DatabaseHelper):
                 for row in rows
             ]
         except Exception as e:
-            logger.error(f"Erreur list_inventory_entity_rules: {str(e)}")
+            logger.error(f"Erreur list_inventory_entity_rules: {e!s}")
             return []
 
     @DatabaseHelper._sessionm
     @DatabaseHelper._sessionm
-    def set_inventory_entity_rule_enabled(self, session, rule_id, enabled, admin_user="root"):
+    def set_inventory_entity_rule_enabled(
+        self, session, rule_id, enabled, admin_user="root"
+    ):
         """
         Activer ou désactiver une règle d'attribution d'entité.
         """
@@ -1620,7 +1810,7 @@ class AdminDatabase(DatabaseHelper):
             return True
         except Exception as e:
             session.rollback()
-            logger.error(f"Erreur set_inventory_entity_rule_enabled: {str(e)}")
+            logger.error(f"Erreur set_inventory_entity_rule_enabled: {e!s}")
             return False
 
     @DatabaseHelper._sessionm
@@ -1642,7 +1832,7 @@ class AdminDatabase(DatabaseHelper):
             return True
         except Exception as e:
             session.rollback()
-            logger.error(f"Erreur delete_inventory_entity_rule: {str(e)}")
+            logger.error(f"Erreur delete_inventory_entity_rule: {e!s}")
             return False
 
     # =========================================================================
@@ -1655,14 +1845,14 @@ class AdminDatabase(DatabaseHelper):
     def get_machine_metadata(self, session, jid, key_name=None):
         """
         Récupère les métadonnées personnalisées d'une machine.
-        
+
         Si key_name est None, retourne toutes les métadonnées de la machine.
         Sinon, retourne une paire clé/valeur spécifique ou None si non trouvée.
-        
+
         Args:
             jid: JID de la machine (ex: "laptop-001@medulla.local")
             key_name: Clé spécifique ou None pour toutes
-        
+
         Returns:
             dict ou list de dicts, ou None/[] selon contexte
         """
@@ -1680,10 +1870,10 @@ class AdminDatabase(DatabaseHelper):
                     ),
                     {"jid": jid, "key_name": key_name},
                 ).fetchone()
-                
+
                 if not row:
                     return None
-                
+
                 return {
                     "id": int(row[0]),
                     "hostname": str(row[1] or ""),
@@ -1706,7 +1896,7 @@ class AdminDatabase(DatabaseHelper):
                     ),
                     {"jid": jid},
                 ).fetchall()
-                
+
                 return [
                     {
                         "id": int(row[0]),
@@ -1720,24 +1910,26 @@ class AdminDatabase(DatabaseHelper):
                     for row in rows
                 ]
         except Exception as e:
-            logger.error(f"Erreur get_machine_metadata: {str(e)}")
+            logger.error(f"Erreur get_machine_metadata: {e!s}")
             return None if key_name else []
 
     @DatabaseHelper._sessionm
-    def set_machine_metadata(self, session, jid, key_name, value, hostname="", description=None):
+    def set_machine_metadata(
+        self, session, jid, key_name, value, hostname="", description=None
+    ):
         """
         Crée ou met à jour la paire de métadonnées (jid, key_name, value).
-        
+
         Utilise le pattern UPSERT sur la clé unique (jid, key_name).
         Si la paire existe, seule la valeur et la date de mise à jour changent.
-        
+
         Args:
             jid: JID de la machine
             key_name: Clé de métadonnée
             value: Valeur (texte, JSON, etc.)
             hostname: Hostname de la machine (optionnel)
             description: Description associée à la clé (optionnelle, peut être vide)
-        
+
         Returns:
             bool: True si succès, False sinon
         """
@@ -1756,33 +1948,33 @@ class AdminDatabase(DatabaseHelper):
                                             updated_at = IF(value <=> VALUES(value), updated_at, NOW())
                     """
                 ),
-                                {
-                                        "jid": jid,
-                                        "hostname": hostname or "",
-                                        "key_name": key_name,
-                                        "value": value,
-                                        "description": description,
-                                },
+                {
+                    "jid": jid,
+                    "hostname": hostname or "",
+                    "key_name": key_name,
+                    "value": value,
+                    "description": description,
+                },
             )
             session.commit()
             return True
         except Exception as e:
             session.rollback()
-            logger.error(f"Erreur set_machine_metadata: {str(e)}")
+            logger.error(f"Erreur set_machine_metadata: {e!s}")
             return False
 
     @DatabaseHelper._sessionm
     def delete_machine_metadata(self, session, jid, key_name=None):
         """
         Supprime les métadonnées personnalisées d'une machine.
-        
+
         Si key_name est None, supprime TOUTES les métadonnées de la machine.
         Sinon, supprime uniquement la paire (jid, key_name).
-        
+
         Args:
             jid: JID de la machine
             key_name: Clé spécifique ou None pour toutes
-        
+
         Returns:
             bool: True si succès, False sinon
         """
@@ -1809,11 +2001,11 @@ class AdminDatabase(DatabaseHelper):
                     ),
                     {"jid": jid},
                 )
-            
+
             session.commit()
             return True
         except Exception as e:
             session.rollback()
-            logger.error(f"Erreur delete_machine_metadata: {str(e)}")
+            logger.error(f"Erreur delete_machine_metadata: {e!s}")
             return False
             return ""

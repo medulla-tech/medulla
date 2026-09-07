@@ -17,6 +17,11 @@ def getApiVersion():
     return APIVERSION
 
 
+def getVersion():
+    """Return the plugin version required by the MMC plugin loader."""
+    return VERSION
+
+
 def activate():
     """Activate itsmlocal when explicitly enabled in its configuration."""
     config = ItsmlocalConfig("itsmlocal")

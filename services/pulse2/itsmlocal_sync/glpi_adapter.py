@@ -4,6 +4,7 @@
 
 """Read-only GLPI REST adapter for itsmlocal-sync."""
 
+import time
 from collections.abc import Iterable
 from typing import Any
 
@@ -49,6 +50,22 @@ class GLPIAdapter(ItsmAdapter):
             "Accept": "application/json",
         }
 
+    def _do_get(
+        self, url: str, headers: dict[str, str], label: str = ""
+    ) -> requests.Response:
+        """Run a GET request and log it (method, URL, status, latency)."""
+        started = time.monotonic()
+        response = requests.get(url, headers=headers, timeout=self.timeout)
+        self.logger.debug(
+            "GLPI %s GET %s -> %s (%.0f ms)%s",
+            self.client_id,
+            url,
+            response.status_code,
+            (time.monotonic() - started) * 1000,
+            f" [{label}]" if label else "",
+        )
+        return response
+
     def _get_paginated(
         self, endpoint: str, page_size: int = 200
     ) -> list[dict[str, Any]]:
@@ -58,7 +75,7 @@ class GLPIAdapter(ItsmAdapter):
         while True:
             separator = "&" if "?" in endpoint else "?"
             url = f"{self.base_url}/{endpoint}{separator}range={offset}-{offset + page_size - 1}"
-            response = requests.get(url, headers=self._headers(), timeout=self.timeout)
+            response = self._do_get(url, self._headers(), label=endpoint)
             if response.status_code == 416:
                 break
             response.raise_for_status()
@@ -66,6 +83,15 @@ class GLPIAdapter(ItsmAdapter):
             if not isinstance(chunk, list) or not chunk:
                 break
             items.extend(chunk)
+            self.logger.debug(
+                "GLPI %s %s: page %s-%s +%d (running total %d)",
+                self.client_id,
+                endpoint,
+                offset,
+                offset + page_size - 1,
+                len(chunk),
+                len(items),
+            )
             content_range = response.headers.get("Content-Range", "")
             total = None
             if "/" in content_range:
@@ -101,15 +127,21 @@ class GLPIAdapter(ItsmAdapter):
         for auth_headers in headers_variants:
             headers = dict(base_headers)
             headers.update(auth_headers)
-            response = requests.get(
+            scheme = next(iter(auth_headers))
+            response = self._do_get(
                 f"{self.base_url}/initSession",
-                headers=headers,
-                timeout=self.timeout,
+                headers,
+                label=f"initSession/{scheme}",
             )
             last_response = response
             if response.status_code == 200:
                 self.session_token = response.json().get("session_token")
                 if self.session_token:
+                    self.logger.info(
+                        "GLPI %s: session opened (auth scheme %s)",
+                        self.client_id,
+                        scheme,
+                    )
                     return
             if response.status_code not in (400, 401, 403):
                 break
@@ -126,58 +158,82 @@ class GLPIAdapter(ItsmAdapter):
         if not self.session_token:
             return
         try:
-            requests.get(
+            self._do_get(
                 f"{self.base_url}/killSession",
-                headers=self._headers(),
-                timeout=self.timeout,
+                self._headers(),
+                label="killSession",
             )
         finally:
             self.session_token = None
 
+    def check_connection(self) -> None:
+        """Validate GLPI API access without fetching business objects."""
+        self.init_session()
+        try:
+            self.logger.info(
+                "GLPI %s source connection ready: endpoint=%s",
+                self.client_id,
+                self.base_url,
+            )
+        finally:
+            self.kill_session()
+
     @staticmethod
-    def _normalize_entity(row: dict[str, Any]) -> dict[str, Any]:
+    def _str_id(value: Any, default: str = "") -> str:
+        """Stringify a GLPI id, keeping ``0`` (the root entity id) intact."""
+        if value is None or value == "":
+            return default
+        return str(value)
+
+    @classmethod
+    def _normalize_entity(cls, row: dict[str, Any]) -> dict[str, Any]:
         """Normalize a GLPI entity row."""
         return {
-            "source_id": str(row.get("id") or ""),
-            "source_parent_id": str(row.get("entities_id") or "0"),
+            "source_id": cls._str_id(row.get("id")),
+            "source_parent_id": cls._str_id(row.get("entities_id"), "0"),
             "name": row.get("name") or "",
             "path": row.get("completename") or row.get("name") or "",
             "source_updated_at": row.get("date_mod") or "",
         }
 
-    @staticmethod
-    def _normalize_profile(row: dict[str, Any]) -> dict[str, Any]:
+    @classmethod
+    def _normalize_profile(cls, row: dict[str, Any]) -> dict[str, Any]:
         """Normalize a GLPI profile row."""
         return {
-            "source_id": str(row.get("id") or ""),
+            "source_id": cls._str_id(row.get("id")),
             "name": row.get("name") or "",
             "source_updated_at": row.get("date_mod") or "",
         }
 
-    @staticmethod
-    def _normalize_user(row: dict[str, Any]) -> dict[str, Any]:
+    @classmethod
+    def _normalize_user(cls, row: dict[str, Any]) -> dict[str, Any]:
         """Normalize a GLPI user row."""
         return {
-            "source_id": str(row.get("id") or ""),
+            "source_id": cls._str_id(row.get("id")),
             "login": row.get("name") or "",
+            "email": row.get("email") or "",
             "firstname": row.get("firstname") or "",
             "lastname": row.get("realname") or "",
             "is_active": int(row.get("is_active") or 0),
-            "default_entity_id": str(row.get("entities_id") or "0"),
-            "default_profile_id": str(row.get("profiles_id") or "0"),
+            "default_entity_id": cls._str_id(row.get("entities_id"), "0"),
+            "default_profile_id": cls._str_id(row.get("profiles_id"), "0"),
             "source_updated_at": row.get("date_mod") or "",
         }
 
     def _get_user_scopes(self, user_ids: Iterable[str]) -> list[dict[str, Any]]:
         """Fetch user/profile/entity associations for selected users."""
         scopes: list[dict[str, Any]] = []
+        user_ids = [uid for uid in user_ids if uid]
+        self.logger.debug(
+            "GLPI %s: fetching Profile_User for %d user(s)",
+            self.client_id,
+            len(user_ids),
+        )
         for user_id in user_ids:
-            if not user_id:
-                continue
-            response = requests.get(
+            response = self._do_get(
                 f"{self.base_url}/User/{user_id}/Profile_User",
-                headers=self._headers(),
-                timeout=self.timeout,
+                self._headers(),
+                label="Profile_User",
             )
             if response.status_code == 404:
                 continue
@@ -203,6 +259,7 @@ class GLPIAdapter(ItsmAdapter):
 
     def fetch_snapshot(self) -> ItsmSnapshot:
         """Fetch and normalize GLPI entities, users, profiles and scopes."""
+        started = time.monotonic()
         self.init_session()
         try:
             entities = [
@@ -213,6 +270,16 @@ class GLPIAdapter(ItsmAdapter):
                 self._normalize_profile(row) for row in self._get_paginated("Profile")
             ]
             user_scopes = self._get_user_scopes(user["source_id"] for user in users)
+            self.logger.info(
+                "GLPI %s snapshot: %d entities, %d users, %d profiles, "
+                "%d user scopes (%.1fs)",
+                self.client_id,
+                len(entities),
+                len(users),
+                len(profiles),
+                len(user_scopes),
+                time.monotonic() - started,
+            )
             return ItsmSnapshot(
                 entities=entities,
                 users=users,

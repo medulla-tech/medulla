@@ -88,13 +88,8 @@ $form = new FormGenerator();
             
             <div class="itsmsync-form-row">
                 <div class="itsmsync-field">
-                    <label><?php echo _T("Entity ID", "admin"); ?></label>
+                    <label><?php echo _T("ITSMLocal Client Root", "admin"); ?></label>
                     <input type="text" class="inputText" value="<?php echo htmlspecialchars($client_id); ?>" disabled />
-                </div>
-                
-                <div class="itsmsync-field">
-                    <label><?php echo _T("Boot Client Entity", "admin"); ?></label>
-                    <input type="text" class="inputText" value="<?php echo htmlspecialchars($boot_entity_name); ?>" disabled />
                 </div>
             </div>
 

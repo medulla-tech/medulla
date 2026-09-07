@@ -3,48 +3,63 @@
 # SPDX-FileCopyrightText: 2024-2025 Medulla, http://www.medulla-tech.io
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from pulse2.version import getVersion, getRevision
-
-from mmc.support.mmctools import (
-    RpcProxyI,
-    ContextMakerI,
-    EnhancedSecurityContext,
-)
-from mmc.plugins.base import with_optional_xmpp_context
-
 from mmc.plugins.admin.config import AdminConfig
 from mmc.plugins.admin.itsm_glpi_legacy_tester import GLPIApiRestLegacyConnectionTester
+from mmc.plugins.base import with_optional_xmpp_context
+from mmc.plugins.glpi import (
+    get_complete_name,
+    get_entities_with_counts,
+    get_entities_with_counts_root,
+    get_user_identifier,
+    get_user_profile_email,
+    list_computer_ids_in_subtree,
+    list_entity_ids_subtree,
+    list_user_ids_in_subtree,
+    set_user_api_token,
+)
+from mmc.plugins.itsmlocal.config import ItsmlocalConfig
+from mmc.support.mmctools import (
+    ContextMakerI,
+    EnhancedSecurityContext,
+    RpcProxyI,
+)
 
 # Import for Database
 from pulse2.database.admin import AdminDatabase
+from pulse2.database.itsmlocal import ItsmlocalDatabase
 from pulse2.database.pkgs import PkgsDatabase
+from pulse2.version import getRevision, getVersion
 
-from mmc.plugins.glpi import get_entities_with_counts, get_entities_with_counts_root, set_user_api_token, get_user_profile_email, get_complete_name, get_user_identifier, list_entity_ids_subtree, list_user_ids_in_subtree, list_computer_ids_in_subtree
 try:
-    from mmc.support.apirest.glpi import GLPIClient, GLPIClientApiV1, GLPIAPIError
+    from mmc.support.apirest.glpi import GLPIAPIError, GLPIClient, GLPIClientApiV1
 except ImportError:
     from mmc.support.apirest.glpi import GLPIClient
+
     GLPIClientApiV1 = GLPIClient
     try:
         from mmc.support.apirest.glpi import GLPIAPIError
     except ImportError:
+
         class GLPIAPIError(RuntimeError):
             pass
-from mmc.support.apirest.glpi import verifier_parametres
-from configparser import ConfigParser
+
+
+import base64
+import json
+import logging
+import os
+import random
+import re
+import shutil
+import socket
+import string
 import subprocess
 import traceback
-import requests
-import socket
-import logging
-import base64
-import random
-import shutil
-import string
-import json
 import uuid
-import os
-import re
+from configparser import ConfigParser
+
+import requests
+from mmc.support.apirest.glpi import verifier_parametres
 
 VERSION = "1.0.0"
 APIVERSION = "4:1:3"
@@ -58,9 +73,16 @@ def _itsm_dev_info(message, payload=None):
     if payload is None:
         payload = {}
     try:
-        logger.info("[%s] %s | %s", ITSM_DEV_MARKER, message, json.dumps(payload, default=str, ensure_ascii=True))
+        logger.info(
+            "[%s] %s | %s",
+            ITSM_DEV_MARKER,
+            message,
+            json.dumps(payload, default=str, ensure_ascii=True),
+        )
     except Exception:
         logger.info("[%s] %s | %s", ITSM_DEV_MARKER, message, payload)
+
+
 #
 # def verifier_parametres(dictctrl, cles_requises):
 #     # Vérifier chaque clé
@@ -76,6 +98,7 @@ def _itsm_dev_info(message, payload=None):
 # #############################################################
 def getApiVersion():
     return APIVERSION
+
 
 def activate():
     logger = logging.getLogger()
@@ -116,20 +139,24 @@ class RpcProxy(RpcProxyI):
             return None
 
         try:
-            infos = ctx.get_session_info().get('mondict', {})
+            infos = ctx.get_session_info().get("mondict", {})
             if isinstance(infos, dict):
-                token = infos.get('api_token') or infos.get('tokenuser') or infos.get('token')
+                token = (
+                    infos.get("api_token")
+                    or infos.get("tokenuser")
+                    or infos.get("token")
+                )
                 if token:
                     return token
         except Exception:
             pass
 
         try:
-            session = getattr(ctx, 'session', None)
+            session = getattr(ctx, "session", None)
             if isinstance(session, dict):
-                glpi_user = session.get('glpi_user', {})
+                glpi_user = session.get("glpi_user", {})
                 if isinstance(glpi_user, dict):
-                    token = glpi_user.get('api_token')
+                    token = glpi_user.get("api_token")
                     if token:
                         return token
         except Exception:
@@ -154,20 +181,30 @@ class RpcProxy(RpcProxyI):
 
     @with_optional_xmpp_context
     def get_list_user_connect_ctx(self, tokenuser=None, ctx=None):
-        _itsm_dev_info("get_list_user_connect_ctx:start", {
-            "has_ctx": ctx is not None,
-            "has_token_param": bool(tokenuser),
-        })
+        _itsm_dev_info(
+            "get_list_user_connect_ctx:start",
+            {
+                "has_ctx": ctx is not None,
+                "has_token_param": bool(tokenuser),
+            },
+        )
         # Prefer session context to avoid external GLPI HTTP dependency.
         if ctx is not None:
             try:
-                infos = ctx.get_session_info().get('mondict', {})
-                _itsm_dev_info("get_list_user_connect_ctx:mondict", {
-                    "mondict_keys": sorted(list(infos.keys())) if isinstance(infos, dict) else [],
-                    "entity_count": len(infos.get('liste_entities_user') or []) if isinstance(infos, dict) else 0,
-                })
+                infos = ctx.get_session_info().get("mondict", {})
+                _itsm_dev_info(
+                    "get_list_user_connect_ctx:mondict",
+                    {
+                        "mondict_keys": sorted(list(infos.keys()))
+                        if isinstance(infos, dict)
+                        else [],
+                        "entity_count": len(infos.get("liste_entities_user") or [])
+                        if isinstance(infos, dict)
+                        else 0,
+                    },
+                )
                 if isinstance(infos, dict):
-                    entity_ids = infos.get('liste_entities_user') or []
+                    entity_ids = infos.get("liste_entities_user") or []
                     entities = []
 
                     for entity_id in entity_ids:
@@ -181,34 +218,44 @@ class RpcProxy(RpcProxyI):
                         except Exception:
                             meta = {}
 
-                        name = meta.get('name') or str(eid)
-                        completename = meta.get('completename') or name
-                        entities.append({
-                            'id': eid,
-                            'name': name,
-                            'completename': completename,
-                        })
+                        name = meta.get("name") or str(eid)
+                        completename = meta.get("completename") or name
+                        entities.append(
+                            {
+                                "id": eid,
+                                "name": name,
+                                "completename": completename,
+                            }
+                        )
 
                     if entities:
-                        _itsm_dev_info("get_list_user_connect_ctx:return_from_ctx", {
-                            "entities_count": len(entities),
-                        })
+                        _itsm_dev_info(
+                            "get_list_user_connect_ctx:return_from_ctx",
+                            {
+                                "entities_count": len(entities),
+                            },
+                        )
                         return entities
             except Exception as e:
                 _itsm_dev_info("get_list_user_connect_ctx:ctx_error", {"error": str(e)})
 
         resolved_token = self._resolve_token_from_context(ctx=ctx, tokenuser=tokenuser)
-        _itsm_dev_info("get_list_user_connect_ctx:fallback", {
-            "has_resolved_token": bool(resolved_token),
-        })
+        _itsm_dev_info(
+            "get_list_user_connect_ctx:fallback",
+            {
+                "has_resolved_token": bool(resolved_token),
+            },
+        )
         return get_list_user_connect(resolved_token)
 
     @with_optional_xmpp_context
     def get_itsmsync_entities_ctx(self, tokenuser=None, ctx=None):
         if ctx is not None:
             try:
-                infos = ctx.get_session_info().get('mondict', {})
-                entity_ids = infos.get('liste_entities_user') if isinstance(infos, dict) else []
+                infos = ctx.get_session_info().get("mondict", {})
+                entity_ids = (
+                    infos.get("liste_entities_user") if isinstance(infos, dict) else []
+                )
                 entities = []
                 for entity_id in entity_ids or []:
                     try:
@@ -221,124 +268,152 @@ class RpcProxy(RpcProxyI):
                     except Exception:
                         meta = {}
 
-                    entities.append({
-                        'id': eid,
-                        'name': meta.get('name') or str(eid),
-                        'completename': meta.get('completename') or meta.get('name') or str(eid),
-                    })
+                    entities.append(
+                        {
+                            "id": eid,
+                            "name": meta.get("name") or str(eid),
+                            "completename": meta.get("completename")
+                            or meta.get("name")
+                            or str(eid),
+                        }
+                    )
 
                 if entities:
-                    _itsm_dev_info("get_itsmsync_entities_ctx:return_from_ctx", {
-                        "entities_count": len(entities),
-                    })
+                    _itsm_dev_info(
+                        "get_itsmsync_entities_ctx:return_from_ctx",
+                        {
+                            "entities_count": len(entities),
+                        },
+                    )
                     return entities
             except Exception as e:
                 _itsm_dev_info("get_itsmsync_entities_ctx:ctx_error", {"error": str(e)})
 
         resolved_token = self._resolve_token_from_context(ctx=ctx, tokenuser=tokenuser)
         entities = get_itsmsync_entities(resolved_token)
-        _itsm_dev_info("get_itsmsync_entities_ctx:result", {
-            "has_resolved_token": bool(resolved_token),
-            "entities_count": len(entities) if isinstance(entities, list) else 0,
-        })
+        _itsm_dev_info(
+            "get_itsmsync_entities_ctx:result",
+            {
+                "has_resolved_token": bool(resolved_token),
+                "entities_count": len(entities) if isinstance(entities, list) else 0,
+            },
+        )
         return entities
 
     @with_optional_xmpp_context
     def get_itsmsync_clients_ctx(self, tokenuser=None, ctx=None):
-        _itsm_dev_info("get_itsmsync_clients_ctx:start", {
-            "has_ctx": ctx is not None,
-            "has_token_param": bool(tokenuser),
-        })
-        # First build from context to avoid external GLPI dependency.
+        """Return configured ITSM clients; session entities are not clients."""
+        _itsm_dev_info(
+            "get_itsmsync_clients_ctx:start",
+            {
+                "has_ctx": ctx is not None,
+                "has_token_param": bool(tokenuser),
+            },
+        )
+        # A client exists only when its ``itsm.<client_id>.*`` configuration
+        # exists. Do not mix ordinary GLPI entities into this selector.
         if ctx is not None:
             try:
-                infos = ctx.get_session_info().get('mondict', {})
-                _itsm_dev_info("get_itsmsync_clients_ctx:mondict", {
-                    "mondict_keys": sorted(list(infos.keys())) if isinstance(infos, dict) else [],
-                    "entity_count": len(infos.get('liste_entities_user') or []) if isinstance(infos, dict) else 0,
-                })
-                entity_ids = infos.get('liste_entities_user') if isinstance(infos, dict) else []
-                clients = {}
-                entity_meta = {}
-                for entity_id in entity_ids or []:
-                    try:
-                        eid = int(entity_id)
-                    except (TypeError, ValueError):
-                        continue
-
-                    try:
-                        meta = get_complete_name(eid) or {}
-                    except Exception:
-                        meta = {}
-
-                    key = str(eid)
-                    clients[key] = meta.get('completename') or meta.get('name') or key
-                    entity_meta[key] = meta
-
-                # Non-root users should only see their customer root entity.
-                if isinstance(infos, dict) and str(infos.get('user_name', '')).lower() != 'root' and clients:
-                    root_key = None
-                    root_rank = None
-                    for key, meta in entity_meta.items():
-                        completename = str(meta.get('completename') or clients.get(key) or key)
-                        depth = len([part for part in completename.split(' > ') if part.strip()])
-                        rank = (depth if depth > 0 else 9999, len(completename), key)
-                        if root_rank is None or rank < root_rank:
-                            root_rank = rank
-                            root_key = key
-
-                    if root_key is not None and root_key in clients:
-                        clients = {root_key: clients[root_key]}
-
-                try:
-                    names = AdminDatabase().get_itsmsync_client_name_map()
-                    if isinstance(names, dict):
-                        for key in list(clients.keys()):
-                            if key in names and names[key]:
-                                clients[key] = names[key]
-                except Exception:
-                    pass
-
-                if clients:
-                    _itsm_dev_info("get_itsmsync_clients_ctx:return_from_ctx", {
-                        "clients_count": len(clients),
-                    })
-                    return clients
+                infos = ctx.get_session_info().get("mondict", {})
+                _itsm_dev_info(
+                    "get_itsmsync_clients_ctx:mondict",
+                    {
+                        "mondict_keys": sorted(list(infos.keys()))
+                        if isinstance(infos, dict)
+                        else [],
+                        "entity_count": len(infos.get("liste_entities_user") or [])
+                        if isinstance(infos, dict)
+                        else 0,
+                    },
+                )
+                if (
+                    isinstance(infos, dict)
+                    and str(infos.get("user_name", "")).lower() == "root"
+                ):
+                    clients = AdminDatabase().get_itsmsync_client_name_map()
+                    _itsm_dev_info(
+                        "get_itsmsync_clients_ctx:return_from_ctx",
+                        {
+                            "clients_count": len(clients)
+                            if isinstance(clients, dict)
+                            else 0,
+                        },
+                    )
+                    return clients if isinstance(clients, dict) else {}
             except Exception as e:
                 _itsm_dev_info("get_itsmsync_clients_ctx:ctx_error", {"error": str(e)})
 
         resolved_token = self._resolve_token_from_context(ctx=ctx, tokenuser=tokenuser)
         clients = get_itsmsync_clients(resolved_token)
-        _itsm_dev_info("get_itsmsync_clients_ctx:fallback", {
-            "has_resolved_token": bool(resolved_token),
-            "clients_count": len(clients) if isinstance(clients, dict) else 0,
-        })
+        _itsm_dev_info(
+            "get_itsmsync_clients_ctx:fallback",
+            {
+                "has_resolved_token": bool(resolved_token),
+                "clients_count": len(clients) if isinstance(clients, dict) else 0,
+            },
+        )
         return clients
 
     @with_optional_xmpp_context
     def get_itsmsync_client_config_ctx(self, client_id=None, tokenuser=None, ctx=None):
         resolved_token = self._resolve_token_from_context(ctx=ctx, tokenuser=tokenuser)
         cfg = get_itsmsync_client_config(client_id, resolved_token)
-        _itsm_dev_info("get_itsmsync_client_config_ctx:result", {
-            "client_id": client_id,
-            "has_resolved_token": bool(resolved_token),
-            "config_keys": sorted(list(cfg.keys())) if isinstance(cfg, dict) else [],
-        })
+        _itsm_dev_info(
+            "get_itsmsync_client_config_ctx:result",
+            {
+                "client_id": client_id,
+                "has_resolved_token": bool(resolved_token),
+                "config_keys": sorted(list(cfg.keys()))
+                if isinstance(cfg, dict)
+                else [],
+            },
+        )
         return cfg
 
     @with_optional_xmpp_context
-    def save_itsmsync_client_config_ctx(self, client_id=None, config=None, tokenuser=None, ctx=None):
+    def save_itsmsync_client_config_ctx(
+        self, client_id=None, config=None, tokenuser=None, ctx=None
+    ):
         resolved_token = self._resolve_token_from_context(ctx=ctx, tokenuser=tokenuser)
-        _itsm_dev_info("save_itsmsync_client_config_ctx:input", {
-            "client_id": client_id,
-            "has_resolved_token": bool(resolved_token),
-            "config_keys": sorted(list(config.keys())) if isinstance(config, dict) else [],
-        })
+        _itsm_dev_info(
+            "save_itsmsync_client_config_ctx:input",
+            {
+                "client_id": client_id,
+                "has_resolved_token": bool(resolved_token),
+                "config_keys": sorted(list(config.keys()))
+                if isinstance(config, dict)
+                else [],
+            },
+        )
         result = save_itsmsync_client_config(client_id, config, resolved_token)
-        _itsm_dev_info("save_itsmsync_client_config_ctx:result", {
-            "result": result,
-        })
+        _itsm_dev_info(
+            "save_itsmsync_client_config_ctx:result",
+            {
+                "result": result,
+            },
+        )
         return result
+
+    @with_optional_xmpp_context
+    def create_itsmsync_client_root_ctx(
+        self, client_name=None, tokenuser=None, ctx=None
+    ):
+        """Create the local Medulla child entity for a new ITSM client."""
+        return create_itsmsync_client_root(client_name)
+
+    @with_optional_xmpp_context
+    def archive_itsmsync_client_ctx(self, client_id=None, tokenuser=None, ctx=None):
+        """Disable one ITSM client without deleting its local GLPI data."""
+        if ctx is None:
+            return {"success": False, "error": "platform admin context is required"}
+        try:
+            session_info = ctx.get_session_info()
+            user_name = str(session_info.get("mondict", {}).get("user_name", ""))
+        except Exception:
+            return {"success": False, "error": "platform admin context is invalid"}
+        if user_name.lower() != "root":
+            return {"success": False, "error": "platform admin access is required"}
+        return archive_itsmsync_client(client_id)
 
 
 def get_glpi_client(tokenuser=None, app_token=None, url_base=None):
@@ -347,9 +422,10 @@ def get_glpi_client(tokenuser=None, app_token=None, url_base=None):
     """
     try:
         initparametre = AdminDatabase().get_CONNECT_API()
-        verifier_parametres(initparametre, [
-            "glpi_mmc_app_token", "glpi_url_base_api", "glpi_root_user_token"
-        ])
+        verifier_parametres(
+            initparametre,
+            ["glpi_mmc_app_token", "glpi_url_base_api", "glpi_root_user_token"],
+        )
 
         app_token = app_token if app_token else initparametre["glpi_mmc_app_token"]
         url_base = url_base if url_base else initparametre["glpi_url_base_api"]
@@ -405,11 +481,14 @@ def get_glpi_client(tokenuser=None, app_token=None, url_base=None):
                     e,
                 )
 
-        logger.error("Session GLPI non initialisee: impossible d'obtenir un client valide")
+        logger.error(
+            "Session GLPI non initialisee: impossible d'obtenir un client valide"
+        )
         return None
     except Exception:
         logger.error("Erreur get_glpi_client: %s", traceback.format_exc())
         return None
+
 
 def get_CONNECT_API(tokenuser=None):
     """
@@ -430,23 +509,23 @@ def get_CONNECT_API(tokenuser=None):
 
         # Récupération de la liste des profils
         get_profiles_info = client.get_list("profiles", is_recursive=True)
-        profilslist = [{"id": x["id"], "name": x["name"]}
-                       for x in get_profiles_info]
+        profilslist = [{"id": x["id"], "name": x["name"]} for x in get_profiles_info]
         logger.info("Liste des profils récupérée avec succès.")
 
         # Mise à jour du résultat
-        out_result = {
-            "get_user_info": get_user_info,
-            "get_list_profiles": profilslist
-        }
+        out_result = {"get_user_info": get_user_info, "get_list_profiles": profilslist}
 
         # Fermeture propre de la session
         client.kill_session()
 
-    except Exception as e:
-        logger.error("Erreur lors de la récupération des informations : %s", traceback.format_exc())
+    except Exception:
+        logger.error(
+            "Erreur lors de la récupération des informations : %s",
+            traceback.format_exc(),
+        )
 
     return out_result
+
 
 def create_share_dir(tag: str, mode: int = 0o755) -> tuple[str, bool]:
     """
@@ -469,6 +548,7 @@ def create_share_dir(tag: str, mode: int = 0o755) -> tuple[str, bool]:
 
     return target, not existed
 
+
 def delete_share_dir(tag: str) -> tuple[str, bool]:
     """Supprime récursivement /var/lib/pulse2/packages/sharing/<tag>."""
     BASE_SHARE = "/var/lib/pulse2/packages/sharing"
@@ -486,6 +566,7 @@ def delete_share_dir(tag: str) -> tuple[str, bool]:
 
     shutil.rmtree(target)
     return target, True
+
 
 def delete_agent_dir(tag: str) -> tuple[str, bool]:
     """Supprime le repertoire de l'agent /var/lib/pulse2/medulla_agent/<dl_tag>."""
@@ -505,6 +586,7 @@ def delete_agent_dir(tag: str) -> tuple[str, bool]:
     shutil.rmtree(target)
     return target, True
 
+
 # READ
 def get_list(type, is_recursive=False, tokenuser=None):
     client = get_glpi_client(tokenuser=tokenuser)
@@ -513,23 +595,27 @@ def get_list(type, is_recursive=False, tokenuser=None):
     results = client.get_list(type, is_recursive)
     return results
 
+
 def get_list_entity_users(tokenuser=None):
     client = get_glpi_client(tokenuser=tokenuser)
-    users=[]
+    users = []
     users = client.get_list_users()
     entity_data = client.get_list_entities()
 
     for user in users:
         entity_id = user.get("entities_id")
         if entity_id is not None:
-            user.update({
-                "entity_name": entity_data[entity_id].get("name"),
-                "entity_completename": entity_data[entity_id].get("completename"),
-                "entity_date_mod": entity_data[entity_id].get("date_mod"),
-                "entity_level": entity_data[entity_id].get("level")
-            })
+            user.update(
+                {
+                    "entity_name": entity_data[entity_id].get("name"),
+                    "entity_completename": entity_data[entity_id].get("completename"),
+                    "entity_date_mod": entity_data[entity_id].get("date_mod"),
+                    "entity_level": entity_data[entity_id].get("level"),
+                }
+            )
 
     return users
+
 
 def get_user_info(id_user=None, id_profile=None, id_entity=None, filters=None):
     """
@@ -541,11 +627,12 @@ def get_user_info(id_user=None, id_profile=None, id_entity=None, filters=None):
         id_user=id_user,
         id_profile=id_profile,
         id_entity=id_entity,
-        filters=filters or {}
+        filters=filters or {},
     )
     if not user:
         return {}
     return user
+
 
 def get_users_count_by_entity(entity_id, tokenuser=None):
     client = get_glpi_client(tokenuser=tokenuser)
@@ -553,6 +640,7 @@ def get_users_count_by_entity(entity_id, tokenuser=None):
         return 0
     result = client.get_users_count_by_entity(entity_id)
     return result
+
 
 def get_list_user_token(tokenuser=None):
     """
@@ -569,7 +657,7 @@ def get_list_user_token(tokenuser=None):
         if not listid:
             logger.warning("Aucune entité trouvée pour cet utilisateur")
             return []
-        result = [x['id'] for x in listid if 'id' in x]
+        result = [x["id"] for x in listid if "id" in x]
         logger.debug(f"IDs des entités récupérées : {result}")
         return result
 
@@ -594,6 +682,7 @@ def get_list_user_connect(tokenuser=None):
         logger.error(f"Erreur get_list_user_connect: {e}")
         return []
 
+
 def get_entity_info(entity_id, tokenuser=None):
     """
     Récupère les informations d'une entité GLPI par son ID.
@@ -608,8 +697,9 @@ def get_entity_info(entity_id, tokenuser=None):
         "id": entity.get("id"),
         "name": entity.get("name"),
         "entities_id": entity.get("entities_id"),
-        "completename": entity.get("completename")
+        "completename": entity.get("completename"),
     }
+
 
 def get_profile_name(profile_id, tokenuser=None):
     """
@@ -621,10 +711,12 @@ def get_profile_name(profile_id, tokenuser=None):
     profil_name = client.get_profile_name(profile_id)
     return profil_name
 
+
 def get_dl_tag(tag):
     dl_tag = AdminDatabase().get_dl_tag(tag)
 
     return dl_tag
+
 
 def get_dl_tag_by_entity_id(entity_id):
     """
@@ -635,6 +727,7 @@ def get_dl_tag_by_entity_id(entity_id):
     dl_tag = AdminDatabase().get_dl_tag(tag)
 
     return dl_tag
+
 
 def get_profiles_in_conf(profil_user, tokenuser):
     """
@@ -654,30 +747,32 @@ def get_profiles_in_conf(profil_user, tokenuser):
 
     client = get_glpi_client(tokenuser=tokenuser)
     try:
-        glpi = client.get_list('profiles', False) or []
+        glpi = client.get_list("profiles", False) or []
     except Exception:
         glpi = []
 
-    norm = lambda s: re.sub(r'[\s_-]+', '', s or '').lower()
-    index = {norm(p.get('name','')): p.get('id') for p in glpi}
+    norm = lambda s: re.sub(r"[\s_-]+", "", s or "").lower()
+    index = {norm(p.get("name", "")): p.get("id") for p in glpi}
 
-    result = [{'name': n, 'id': index.get(norm(n))} for n in profils]
+    result = [{"name": n, "id": index.get(norm(n))} for n in profils]
 
     # --- Filtrage selon le profil appelant ---
-    caller = norm(profil_user) if profil_user else ''
-    if caller == 'admin':
-        result = [r for r in result if norm(r['name']) not in ('superadmin',)]
+    caller = norm(profil_user) if profil_user else ""
+    if caller == "admin":
+        result = [r for r in result if norm(r["name"]) not in ("superadmin",)]
 
-    missing = [d['name'] for d in result if d['id'] is None]
+    missing = [d["name"] for d in result if d["id"] is None]
     if missing:
         logging.getLogger().warning("Profils absents côté GLPI: %s", missing)
 
     return result
 
+
 def get_root_token():
     db = AdminDatabase()
     token = db.get_root_token()
     return token
+
 
 def run_generate_medulla_agent_async(tag):
     """
@@ -685,7 +780,7 @@ def run_generate_medulla_agent_async(tag):
     Retourne le PID si démarré, sinon None.
     """
     script_path = "/usr/sbin/generate_medulla_agent.sh"
-    if not tag or not re.match(r'^[A-Za-z0-9._:-]+$', tag):
+    if not tag or not re.match(r"^[A-Za-z0-9._:-]+$", tag):
         return None
     if not (os.path.exists(script_path) and os.access(script_path, os.X_OK)):
         return None
@@ -703,19 +798,21 @@ def run_generate_medulla_agent_async(tag):
         return proc.pid
     except Exception:
         return None
+
+
 # CREATE
 def create_user(
-        identifier,     # login (email)
-        lastname        = None,
-        firstname       = None,
-        password        = None,
-        phone           = None,
-        id_entity       = None,
-        id_profile      = None,
-        is_recursive    = False,
-        caller_profile  = None,
-        tokenuser       = None
-    ):
+    identifier,  # login (email)
+    lastname=None,
+    firstname=None,
+    password=None,
+    phone=None,
+    id_entity=None,
+    id_profile=None,
+    is_recursive=False,
+    caller_profile=None,
+    tokenuser=None,
+):
     try:
         caller = (caller_profile or "").lower()
         if caller == "admin":
@@ -729,25 +826,25 @@ def create_user(
 
         client = get_glpi_client(tokenuser=token_to_use)
         id_user = client.create_user(
-            identifier      = identifier,
-            lastname        = lastname,
-            firstname       = firstname,
-            password        = password,
-            phone           = phone,
-            id_entity       = id_entity,
-            id_profile      = id_profile,
-            is_recursive    = is_recursive
+            identifier=identifier,
+            lastname=lastname,
+            firstname=firstname,
+            password=password,
+            phone=phone,
+            id_entity=id_entity,
+            id_profile=id_profile,
+            is_recursive=is_recursive,
         )
 
         api_token = client.generate_token()
         set_user_api_token(int(id_user), api_token)
 
         # Creation of the sharing rule for the user who has just been created
-        final_entity_id = int(id_entity) if id_entity not in (None, '', 0) else 0
+        final_entity_id = int(id_entity) if id_entity not in (None, "", 0) else 0
 
         entity_info = get_entity_info(final_entity_id)
-        entity_name             = entity_info.get('name')
-        entity_completename     = entity_info.get('completename')
+        entity_name = entity_info.get("name")
+        entity_completename = entity_info.get("completename")
 
         pkdb = PkgsDatabase()
 
@@ -755,11 +852,13 @@ def create_user(
             share_row = pkdb.find_global_share()
         else:
             entity_info = get_entity_info(final_entity_id) or {}
-            entity_name = entity_info.get('name')
-            entity_completename = entity_info.get('completename')
-            share_row = pkdb.find_share_by_entity_names(entity_name, entity_completename)
+            entity_name = entity_info.get("name")
+            entity_completename = entity_info.get("completename")
+            share_row = pkdb.find_share_by_entity_names(
+                entity_name, entity_completename
+            )
 
-        id_shares = share_row.get('id') if share_row else None
+        id_shares = share_row.get("id") if share_row else None
 
         if id_shares:
             pkdb.add_pkgs_rules_local(identifier, id_shares)
@@ -771,7 +870,10 @@ def create_user(
         nice = client.extract_glpi_error_message(raw) or raw
         return {"ok": False, "error": nice}
 
-def create_entity_under_custom_parent(parent_entity_id, display_name, user, stripe_tag=None, tokenuser=None):
+
+def create_entity_under_custom_parent(
+    parent_entity_id, display_name, user, stripe_tag=None, tokenuser=None
+):
     """
     Crée l’entité GLPI, le dossier /sharing/<dl_tag>, puis pkgs_shares + règles.
     Si `stripe_tag` est fourni, il est stocké dans saas_organisations.stripe_tag.
@@ -782,7 +884,9 @@ def create_entity_under_custom_parent(parent_entity_id, display_name, user, stri
 
         # Création de l’entité GLPI
         tag_uuid = str(uuid.uuid4())
-        entity_id = client.create_entity_under_custom_parent(parent_entity_id, display_name, tag_uuid)
+        entity_id = client.create_entity_under_custom_parent(
+            parent_entity_id, display_name, tag_uuid
+        )
 
         # Création dans saas_organisations
         AdminDatabase().create_entity_under_custom_parent(
@@ -794,10 +898,10 @@ def create_entity_under_custom_parent(parent_entity_id, display_name, user, stri
 
         # Récup méta (nom + nom complet + tag GLPI) et dl_tag interne
         meta = get_complete_name(entity_id) or {}
-        name          = meta.get("name", display_name)
+        name = meta.get("name", display_name)
         complete_name = meta.get("completename", display_name)
-        tag           = meta.get("tag")
-        dl_tag        = AdminDatabase().get_dl_tag(tag)
+        tag = meta.get("tag")
+        dl_tag = AdminDatabase().get_dl_tag(tag)
 
         # Création du dossier /sharing/<dl_tag>
         share_path, _ = create_share_dir(dl_tag)
@@ -812,22 +916,27 @@ def create_entity_under_custom_parent(parent_entity_id, display_name, user, stri
         # Generation Agent
         agent = run_generate_medulla_agent_async(tag)
 
-        logger.debug(f"Creation Successful: entity_id={entity_id} share_id={share_id} path={share_path}")
+        logger.debug(
+            f"Creation Successful: entity_id={entity_id} share_id={share_id} path={share_path}"
+        )
 
         return entity_id
     except Exception as e:
         logger.error(f"Failed to create Entity : {e}")
         return False
 
-def create_organization(parent_entity_id,
-                        name_new_entity,
-                        name_user,
-                        pwd,
-                        profiles_id,
-                        tag_value,
-                        realname="",
-                        firstname="",
-                        tokenuser=None):
+
+def create_organization(
+    parent_entity_id,
+    name_new_entity,
+    name_user,
+    pwd,
+    profiles_id,
+    tag_value,
+    realname="",
+    firstname="",
+    tokenuser=None,
+):
     """
     Crée une nouvelle organisation (entité GLPI) sous un parent donné,
     ainsi qu'un utilisateur associé avec un profil défini.
@@ -851,7 +960,7 @@ def create_organization(parent_entity_id,
             entities_id=id_create_new_entity,
             realname=realname,
             firstname=firstname,
-            profiles_id=profiles_id
+            profiles_id=profiles_id,
         )
         logger.info(f"Nouvel utilisateur créé avec l'ID : {id_new_user}")
 
@@ -868,12 +977,15 @@ def create_organization(parent_entity_id,
 
         return [id_create_new_entity, id_new_user, profiles_id, result]
 
-    except Exception as e:
-        logger.error("Erreur lors de la création de l'organisation : %s", traceback.format_exc())
+    except Exception:
+        logger.error(
+            "Erreur lors de la création de l'organisation : %s", traceback.format_exc()
+        )
         return []
     finally:
         if client:
             client.kill_session()
+
 
 # UPDATE
 def update_user(user_id, item_name, new_value, tokenuser=None):
@@ -881,9 +993,11 @@ def update_user(user_id, item_name, new_value, tokenuser=None):
     result = client.update_user(user_id, item_name, new_value)
     return result
 
+
 def set_user_email(user_id, email, tokenuser=None):
     client = get_glpi_client(tokenuser=tokenuser)
     return client.set_user_email(user_id, email)
+
 
 def update_entity(entity_id, field_name, new_name, parent_id, tokenuser=None):
     """
@@ -910,9 +1024,13 @@ def update_entity(entity_id, field_name, new_name, parent_id, tokenuser=None):
 
         # Màj pkgs_shares via dl_tag
         if dl_tag:
-            PkgsDatabase().update_pkgs_shares_names_by_dl_tag(dl_tag, new_name, complete_name)
+            PkgsDatabase().update_pkgs_shares_names_by_dl_tag(
+                dl_tag, new_name, complete_name
+            )
         else:
-            logger.debug(f"Skipped pkgs_shares update: no dl_tag for entity_id={entity_id}")
+            logger.debug(
+                f"Skipped pkgs_shares update: no dl_tag for entity_id={entity_id}"
+            )
 
         logger.debug(f"Update Successful: entity_id={entity_id} new_name={new_name}")
         return ok
@@ -920,6 +1038,7 @@ def update_entity(entity_id, field_name, new_name, parent_id, tokenuser=None):
     except Exception as e:
         logger.error(f"Failed to update Entity: {e!r}")
         return False
+
 
 def switch_user_profile(
     user_id: int,
@@ -944,8 +1063,8 @@ def switch_user_profile(
     # Update of sharing ID for this user
     identifier = get_user_identifier(user_id)
     entity_info = get_entity_info(entities_id) or {}
-    entity_name             = entity_info.get('name')
-    entity_completename     = entity_info.get('completename')
+    entity_name = entity_info.get("name")
+    entity_completename = entity_info.get("completename")
 
     pkdb = PkgsDatabase()
 
@@ -954,7 +1073,7 @@ def switch_user_profile(
     else:
         share_row = pkdb.find_share_by_entity_names(entity_name, entity_completename)
 
-    id_shares = share_row.get('id') if share_row else None
+    id_shares = share_row.get("id") if share_row else None
 
     if id_shares:
         pkgs_rules = pkdb.update_pkgs_rules_local(identifier, id_shares)
@@ -966,9 +1085,13 @@ def switch_user_profile(
         is_recursive=int(is_recursive),
     )
 
+
 def switch_user_entity(user_id: int, new_entity_id: int, tokenuser=None) -> dict:
     client = get_glpi_client(tokenuser=tokenuser)
-    return client.switch_user_entity(user_id=int(user_id), new_entity_id=int(new_entity_id), tokenuser=tokenuser)
+    return client.switch_user_entity(
+        user_id=int(user_id), new_entity_id=int(new_entity_id), tokenuser=tokenuser
+    )
+
 
 # DELETE
 def delete_and_purge_user(user_id):
@@ -986,6 +1109,7 @@ def delete_and_purge_user(user_id):
         raw = str(e)
         nice = client.extract_glpi_error_message(raw) or raw
         return {"ok": False, "error": nice}
+
 
 def delete_entity(entity_id: int, tokenuser=None):
     """
@@ -1006,10 +1130,16 @@ def delete_entity(entity_id: int, tokenuser=None):
 
         # Suppression pkgs_shares + rules_local via dl_tag
         if dl_tag:
-            share_id = PkgsDatabase().get_pkgs_share_id_by_dl_tag(dl_tag) if hasattr(PkgsDatabase, "get_pkgs_share_id_by_dl_tag") else None
+            share_id = (
+                PkgsDatabase().get_pkgs_share_id_by_dl_tag(dl_tag)
+                if hasattr(PkgsDatabase, "get_pkgs_share_id_by_dl_tag")
+                else None
+            )
             if share_id is None:
                 meta = get_complete_name(entity_id) or {}
-                share = PkgsDatabase().find_share_by_entity_names(meta.get("name",""), meta.get("completename",""))
+                share = PkgsDatabase().find_share_by_entity_names(
+                    meta.get("name", ""), meta.get("completename", "")
+                )
                 share_id = share["id"] if share else None
 
             if share_id is not None:
@@ -1031,10 +1161,12 @@ def delete_entity(entity_id: int, tokenuser=None):
         logger.error(f"Failed to delete Entity: {e!r}")
         return {"success": False, "message": str(e)}
 
+
 def delete_user_profile_on_entity(user_id, profile_id, entities_id, tokenuser=None):
     client = get_glpi_client(tokenuser=tokenuser)
     result = client.delete_user_profile_on_entity(user_id, profile_id, entities_id)
     return result
+
 
 def toggle_user_active(user_id, caller, tokenuser=None):
     if caller.lower() == "admin":
@@ -1050,6 +1182,7 @@ def toggle_user_active(user_id, caller, tokenuser=None):
     result = client.toggle_user_active(user_id)
     return result
 
+
 # STATS
 def get_counts_by_entity(entities):
     """
@@ -1060,18 +1193,21 @@ def get_counts_by_entity(entities):
     listid = []
     for t in entities:
         if isinstance(t, dict):
-            listid.append(t['id'])
+            listid.append(t["id"])
         else:
             listid.append(t)
 
     result = get_entities_with_counts(entities=listid)
     return result
 
+
 def get_counts_by_entity_root(filter, start, end, entities=None):
     """
     Récupère les statistiques des entités GLPI (machines, utilisateurs, IDs).
     """
-    result  = get_entities_with_counts_root(filter=filter, start=start, end=end, entities=entities)
+    result = get_entities_with_counts_root(
+        filter=filter, start=start, end=end, entities=entities
+    )
     return result
 
 
@@ -1080,10 +1216,15 @@ def get_counts_by_entity_root(filter, start, end, entities=None):
 def get_providers(login: str, client: str | None = None) -> list[dict]:
     try:
         db = AdminDatabase()
-        return db.get_providers_all() if (login or "").strip() == "root" else db.get_providers_by_client((client or "MMC").strip())
+        return (
+            db.get_providers_all()
+            if (login or "").strip() == "root"
+            else db.get_providers_by_client((client or "MMC").strip())
+        )
     except Exception as e:
         logger.error(f"Erreur lors de la récupération des fournisseurs : {e}")
         return []
+
 
 # CREATE
 def create_provider(data: dict) -> dict:
@@ -1094,6 +1235,7 @@ def create_provider(data: dict) -> dict:
         logger.error(f"Erreur lors de la création du fournisseur : {e}")
         return {"ok": False, "error": str(e)}
 
+
 # UPDATE
 def update_provider(data: dict) -> dict:
     try:
@@ -1102,6 +1244,7 @@ def update_provider(data: dict) -> dict:
     except Exception as e:
         logger.error(f"Erreur lors de la mise à jour du fournisseur : {e}")
         return {"ok": False, "error": str(e)}
+
 
 # DELETE
 def delete_provider(provider_id: int) -> dict:
@@ -1114,12 +1257,14 @@ def delete_provider(provider_id: int) -> dict:
     except Exception as e:
         return {"ok": False, "deleted": 0, "id": 0, "error": str(e)}
 
+
 def get_update_availability():
     return AdminDatabase().get_update_availability()
 
+
 def restart_medulla_services():
     try:
-        script_path = '/usr/sbin/restart-pulse-services'
+        script_path = "/usr/sbin/restart-pulse-services"
 
         proc = subprocess.Popen(
             [script_path],
@@ -1134,11 +1279,10 @@ def restart_medulla_services():
     except Exception:
         return None
 
+
 def regenerate_agent():
     try:
-        cmd = (
-            "/var/lib/pulse2/clients/generate-pulse-agent.sh"
-        )
+        cmd = "/var/lib/pulse2/clients/generate-pulse-agent.sh"
         proc = subprocess.Popen(
             ["/bin/bash", "-lc", cmd],
             stdin=subprocess.DEVNULL,
@@ -1153,15 +1297,18 @@ def regenerate_agent():
         logging.exception("regenerate_agent failed")
         return None
 
+
 def validateToken(uid, token):
     db = AdminDatabase()
     return db.validateToken(uid, token)
+
 
 # CRM
 def get_id_entity(stripe_tag):
     id_entity = AdminDatabase().get_id_entity(stripe_tag)
 
     return id_entity
+
 
 def check_subscribe(id_entity: int) -> dict:
     ents = list_entity_ids_subtree(id_entity)
@@ -1190,10 +1337,11 @@ def check_subscribe(id_entity: int) -> dict:
 
     return {
         "root_entity_id": int(id_entity),
-        "entities":  {"ids": entity_ids, "total": total_entities},
-        "users":     {"ids": user_ids,   "total": total_users},
+        "entities": {"ids": entity_ids, "total": total_entities},
+        "users": {"ids": user_ids, "total": total_users},
         "computers": {"ids": computer_ids, "total": total_computers},
     }
+
 
 def deactivate_users_if_needed(user_ids: list[int], tokenuser=None) -> dict:
     out = {"changed": [], "already": [], "errors": []}
@@ -1208,6 +1356,7 @@ def deactivate_users_if_needed(user_ids: list[int], tokenuser=None) -> dict:
         else:
             out["errors"].append(uid)
     return out
+
 
 def activate_users_if_needed(user_ids: list[int], tokenuser=None) -> dict:
     """
@@ -1230,15 +1379,18 @@ def activate_users_if_needed(user_ids: list[int], tokenuser=None) -> dict:
             out["errors"].append(uid)
     return out
 
+
 def get_config_tables():
     db = AdminDatabase()
     tables = db.get_config_tables()
     return tables
 
+
 def get_config_data(table: str):
     db = AdminDatabase()
     data = db.get_config_data(table)
     return data
+
 
 def update_config_data(table: str, data: dict) -> bool:
     try:
@@ -1249,6 +1401,7 @@ def update_config_data(table: str, data: dict) -> bool:
         logger.error("update_config_data failed: %s", e)
         return False
 
+
 def add_config_data(table: str, data: dict) -> bool:
     try:
         logger.info("add_config_data: table=%s data=%s", table, data)
@@ -1257,6 +1410,7 @@ def add_config_data(table: str, data: dict) -> bool:
     except Exception as e:
         logger.error("add_config_data failed: %s", e)
         return False
+
 
 def delete_config_data(table: str, data: dict) -> bool:
     try:
@@ -1267,6 +1421,7 @@ def delete_config_data(table: str, data: dict) -> bool:
         logger.error("delete_config_data failed: %s", e)
         return False
 
+
 def restore_config_version(table: str, table_version: str) -> bool:
     try:
         logger.info("restore_config_version: table=%s version=%s", table, table_version)
@@ -1275,6 +1430,7 @@ def restore_config_version(table: str, table_version: str) -> bool:
     except Exception as e:
         logger.error("restore_config_version failed: %s", e)
         return False
+
 
 def get_config_sections():
     db = AdminDatabase()
@@ -1292,7 +1448,9 @@ def get_inventory_entity_rules(login=None, start=0, end=-1, filter=""):
     if not _is_root_login(login):
         logger.warning("get_inventory_entity_rules denied for login=%s", login)
         return {"total": 0, "datas": []}
-    return AdminDatabase().get_inventory_entity_rules(start=start, end=end, filter_text=filter)
+    return AdminDatabase().get_inventory_entity_rules(
+        start=start, end=end, filter_text=filter
+    )
 
 
 def save_inventory_entity_rule(login=None, rule=None):
@@ -1322,6 +1480,7 @@ def delete_inventory_entity_rule(login=None, rule_id=None):
         return {"ok": False, "error": "root privileges required"}
     return AdminDatabase().delete_inventory_entity_rule(rule_id)
 
+
 # ---- ACL Feature Management ----
 
 # Installation type ('onpremise' or 'saas'). None disables ACL filtering.
@@ -1331,27 +1490,40 @@ _INSTALL_TYPE_MMC_INI_PATH = "/etc/mmc/mmc.ini"
 def _get_install_type():
     """Read install_type from mmc.ini, with mmc.ini.local taking precedence."""
     try:
-        from configparser import ConfigParser
         import os
+        from configparser import ConfigParser
+
         # read() applies files in order (.local wins) and skips missing ones
         cp = ConfigParser()
-        read_ok = cp.read([_INSTALL_TYPE_MMC_INI_PATH, _INSTALL_TYPE_MMC_INI_PATH + ".local"])
+        read_ok = cp.read(
+            [_INSTALL_TYPE_MMC_INI_PATH, _INSTALL_TYPE_MMC_INI_PATH + ".local"]
+        )
         if not read_ok:
-            logger.warning("install_type: %s not found, filtering disabled", _INSTALL_TYPE_MMC_INI_PATH)
+            logger.warning(
+                "install_type: %s not found, filtering disabled",
+                _INSTALL_TYPE_MMC_INI_PATH,
+            )
             return None
         value = cp.get("global", "install_type", fallback=None)
         if value is None:
-            logger.warning("install_type missing in [global] of %s, filtering disabled",
-                           _INSTALL_TYPE_MMC_INI_PATH)
+            logger.warning(
+                "install_type missing in [global] of %s, filtering disabled",
+                _INSTALL_TYPE_MMC_INI_PATH,
+            )
             return None
         value = value.strip()
         if value not in ("onpremise", "saas"):
-            logger.warning("install_type has invalid value %r in %s, filtering disabled",
-                           value, _INSTALL_TYPE_MMC_INI_PATH)
+            logger.warning(
+                "install_type has invalid value %r in %s, filtering disabled",
+                value,
+                _INSTALL_TYPE_MMC_INI_PATH,
+            )
             return None
         return value
     except Exception as e:
-        logger.warning("install_type: could not read %s: %s", _INSTALL_TYPE_MMC_INI_PATH, e)
+        logger.warning(
+            "install_type: could not read %s: %s", _INSTALL_TYPE_MMC_INI_PATH, e
+        )
         return None
 
 
@@ -1359,15 +1531,19 @@ def get_acl_categories():
     """Get all categories ordered by display_order."""
     return AdminDatabase().get_acl_categories()
 
+
 def get_acl_profiles():
     """Get all available profiles."""
     return AdminDatabase().get_acl_profiles()
+
 
 def add_acl_profile(profile_name):
     """Add a new profile."""
     return AdminDatabase().add_acl_profile(profile_name)
 
+
 CREATE_PROFILE_TEMPLATE = "Observer"
+
 
 def create_glpi_profile_and_register(profile_name, tokenuser=None):
     """Make a profile available in Medulla's ACL UI by ensuring it exists on
@@ -1395,27 +1571,38 @@ def create_glpi_profile_and_register(profile_name, tokenuser=None):
             return {"ok": False, "error": "could not initialise GLPI client"}
 
         # Normalised matching, same logic as get_profiles_in_conf
-        norm = lambda s: re.sub(r'[\s_-]+', '', s or '').lower()
+        norm = lambda s: re.sub(r"[\s_-]+", "", s or "").lower()
         try:
-            existing = client.get_list('profiles', False) or []
+            existing = client.get_list("profiles", False) or []
         except Exception:
             existing = []
-        match = next((p for p in existing if norm(p.get('name', '')) == norm(profile_name)), None)
+        match = next(
+            (p for p in existing if norm(p.get("name", "")) == norm(profile_name)), None
+        )
 
         cloned_from = None
         glpi_id_to_rollback = None  # set only when this call created the GLPI profile
         if match is not None:
-            glpi_id = match.get('id')
+            glpi_id = match.get("id")
             created_in_glpi = False
         else:
-            template = next((p for p in existing if norm(p.get('name', '')) == norm(CREATE_PROFILE_TEMPLATE)), None)
+            template = next(
+                (
+                    p
+                    for p in existing
+                    if norm(p.get("name", "")) == norm(CREATE_PROFILE_TEMPLATE)
+                ),
+                None,
+            )
             if template:
                 # clone_profile rolls back its own half-created profile on failure
                 # (see agent/mmc/support/apirest/glpi/__init__.py:clone_profile)
-                glpi_id = client.clone_profile(template.get('id'), profile_name)
-                cloned_from = template.get('name')
+                glpi_id = client.clone_profile(template.get("id"), profile_name)
+                cloned_from = template.get("name")
             else:
-                logger.warning(f"Template profile {CREATE_PROFILE_TEMPLATE!r} not found in GLPI, creating empty profile")
+                logger.warning(
+                    f"Template profile {CREATE_PROFILE_TEMPLATE!r} not found in GLPI, creating empty profile"
+                )
                 glpi_id = client.create_profile(profile_name)
             created_in_glpi = True
             glpi_id_to_rollback = glpi_id
@@ -1429,7 +1616,9 @@ def create_glpi_profile_and_register(profile_name, tokenuser=None):
                 try:
                     client.delete_profile(glpi_id_to_rollback)
                 except Exception as rb_err:
-                    logger.error(f"Rollback of GLPI profile id={glpi_id_to_rollback} failed: {rb_err}")
+                    logger.error(
+                        f"Rollback of GLPI profile id={glpi_id_to_rollback} failed: {rb_err}"
+                    )
             raise db_err
 
         return {
@@ -1440,8 +1629,12 @@ def create_glpi_profile_and_register(profile_name, tokenuser=None):
             "error": None,
         }
     except Exception as e:
-        logger.error(f"create_glpi_profile_and_register failed for {profile_name!r}: {e}", exc_info=True)
+        logger.error(
+            f"create_glpi_profile_and_register failed for {profile_name!r}: {e}",
+            exc_info=True,
+        )
         return {"ok": False, "error": str(e)}
+
 
 def delete_acl_profile(profile_name, tokenuser=None):
     """Delete a profile from Medulla AND from GLPI.
@@ -1455,7 +1648,11 @@ def delete_acl_profile(profile_name, tokenuser=None):
     """
     db = AdminDatabase()
     if profile_name in db.PROTECTED_PROFILES:
-        return {"ok": False, "deleted_in_glpi": False, "error": "protected built-in profile"}
+        return {
+            "ok": False,
+            "deleted_in_glpi": False,
+            "error": "protected built-in profile",
+        }
 
     glpi_error = None
     deleted_in_glpi = False
@@ -1463,16 +1660,19 @@ def delete_acl_profile(profile_name, tokenuser=None):
     try:
         client = get_glpi_client(tokenuser=tokenuser)
         if client:
-            norm = lambda s: re.sub(r'[\s_-]+', '', s or '').lower()
+            norm = lambda s: re.sub(r"[\s_-]+", "", s or "").lower()
             try:
-                existing = client.get_list('profiles', False) or []
+                existing = client.get_list("profiles", False) or []
             except Exception as e:
                 existing = []
                 glpi_error = f"could not list GLPI profiles: {e}"
-            match = next((p for p in existing if norm(p.get('name', '')) == norm(profile_name)), None)
+            match = next(
+                (p for p in existing if norm(p.get("name", "")) == norm(profile_name)),
+                None,
+            )
             if match is not None:
                 try:
-                    client.delete_profile(match.get('id'))
+                    client.delete_profile(match.get("id"))
                     deleted_in_glpi = True
                 except Exception as e:
                     glpi_error = f"GLPI delete failed: {e}"
@@ -1481,6 +1681,7 @@ def delete_acl_profile(profile_name, tokenuser=None):
 
     ok = db.delete_acl_profile(profile_name)
     return {"ok": bool(ok), "deleted_in_glpi": deleted_in_glpi, "error": glpi_error}
+
 
 def get_acl_feature_definitions(install_type=None):
     """Get all feature definitions from the database.
@@ -1491,6 +1692,7 @@ def get_acl_feature_definitions(install_type=None):
     """
     return AdminDatabase().get_acl_feature_definitions(install_type)
 
+
 def get_acl_profile_features(profile_name=None, install_type=None):
     """Get feature selections for a profile (or all profiles).
 
@@ -1498,6 +1700,7 @@ def get_acl_profile_features(profile_name=None, install_type=None):
     install_type is 'both' or matches the value are returned.
     """
     return AdminDatabase().get_acl_profile_features(profile_name, install_type)
+
 
 def set_acl_profile_features(profile_name, features_dict, install_type=None):
     """Set feature selections for a profile.
@@ -1507,7 +1710,10 @@ def set_acl_profile_features(profile_name, features_dict, install_type=None):
     are left untouched. None preserves the legacy behaviour (replaces every
     row for the profile, stored as 'both').
     """
-    return AdminDatabase().set_acl_profile_features(profile_name, features_dict, install_type)
+    return AdminDatabase().set_acl_profile_features(
+        profile_name, features_dict, install_type
+    )
+
 
 def build_acl_string_for_profile(profile_name, install_type=None):
     """Build the complete ACL string for a profile from its enabled features.
@@ -1519,33 +1725,13 @@ def build_acl_string_for_profile(profile_name, install_type=None):
 
 
 def get_itsmsync_clients(tokenuser=None):
-    """Return ITSM clients derived from permitted user entities."""
-    clients = {}
-    entities = get_itsmsync_entities(tokenuser=tokenuser)
-
-    if isinstance(entities, dict):
-        entities = entities.get("myentities", [])
-
-    if isinstance(entities, list):
-        for entity in entities:
-            if not isinstance(entity, dict):
-                continue
-            entity_id = entity.get("id")
-            if entity_id is None:
-                continue
-            key = str(entity_id)
-            clients[key] = entity.get("completename") or entity.get("name") or key
-
+    """Return configured ITSM clients and their display names."""
     try:
         names = AdminDatabase().get_itsmsync_client_name_map()
-        if isinstance(names, dict):
-            for key in list(clients.keys()):
-                if key in names and names[key]:
-                    clients[key] = names[key]
-    except Exception as e:
-        logger.debug("admin.get_itsmsync_clients: label enrichment skipped: %s", e)
-
-    return clients
+        return names if isinstance(names, dict) else {}
+    except Exception as exc:
+        logger.debug("admin.get_itsmsync_clients: name map unavailable: %s", exc)
+        return {}
 
 
 def get_itsmsync_client_config(client_id=None, tokenuser=None):
@@ -1562,6 +1748,65 @@ def save_itsmsync_client_config(client_id=None, config=None, tokenuser=None):
     return AdminDatabase().save_itsmsync_client_config(client_id, config)
 
 
+def create_itsmsync_client_root(client_name=None):
+    """Create the idempotent ITSMLocal root for one ITSM client."""
+    try:
+        config = ItsmlocalConfig("itsmlocal")
+        if config.disable:
+            return {"success": False, "error": "ITSMLocal plugin is disabled"}
+        database = ItsmlocalDatabase()
+        if not database.activate(config):
+            return {"success": False, "error": "ITSMLocal database is unavailable"}
+        entity_id = database.create_client_root(client_name)
+        return {"success": True, "entity_id": entity_id}
+    except (TypeError, ValueError) as exc:
+        return {"success": False, "error": str(exc)}
+    except Exception as exc:
+        logger.exception("create_itsmsync_client_root failed")
+        return {"success": False, "error": str(exc)}
+
+
+def archive_itsmsync_client(client_id=None):
+    """Archive a client by stopping sync and disabling its ITSMLocal users.
+
+    Client entities are intentionally retained because ITSMLocal/GLPI has no
+    entity active flag. The platform can therefore preserve its audit trail
+    without leaving client users able to access the retained subtree.
+    """
+    client_id = str(client_id or "").strip()
+    if not client_id:
+        return {"success": False, "error": "client id is required"}
+
+    admin_database = AdminDatabase()
+    config = admin_database.get_itsmsync_client_config(client_id)
+    client_name = str(config.get("name") or config.get("client_name") or "").strip()
+    if not client_name:
+        return {"success": False, "error": "client configuration does not exist"}
+
+    # A deleted client must never be scheduled again, even if ITSMLocal is unavailable.
+    config_result = admin_database.save_itsmsync_client_config(
+        client_id, {"enabled": "0", "lifecycle.status": "archived"}
+    )
+    if not config_result.get("success"):
+        return config_result
+
+    try:
+        config = ItsmlocalConfig("itsmlocal")
+        if config.disable:
+            return {"success": False, "error": "ITSMLocal plugin is disabled"}
+        database = ItsmlocalDatabase()
+        if not database.activate(config):
+            return {"success": False, "error": "ITSMLocal database is unavailable"}
+        result = database.disable_client_root_users(client_name)
+        result["success"] = True
+        return result
+    except (TypeError, ValueError) as exc:
+        return {"success": False, "error": str(exc)}
+    except Exception as exc:
+        logger.exception("archive_itsmsync_client failed")
+        return {"success": False, "error": str(exc)}
+
+
 def get_itsmsync_entities(tokenuser=None):
     """Return available entities for connected user context."""
     logger.debug("admin.get_itsmsync_entities called")
@@ -1573,7 +1818,9 @@ def get_itsmsync_entities(tokenuser=None):
     return []
 
 
-def test_itsmsync_connection(itsm_type=None, connection_mode=None, config=None, tokenuser=None):
+def test_itsmsync_connection(
+    itsm_type=None, connection_mode=None, config=None, tokenuser=None
+):
     """Validate ITSM source connectivity (API/DB)."""
     logger.debug(
         "admin.test_itsmsync_connection called for itsm_type=%s connection_mode=%s",
@@ -1605,7 +1852,10 @@ def test_itsmsync_connection(itsm_type=None, connection_mode=None, config=None, 
             )
 
             if not auth_user or not auth_pass:
-                return {"success": False, "message": "Authentication credentials missing"}
+                return {
+                    "success": False,
+                    "message": "Authentication credentials missing",
+                }
 
             if str(itsm_type).lower() == "glpi":
                 logger.info(
@@ -1638,10 +1888,19 @@ def test_itsmsync_connection(itsm_type=None, connection_mode=None, config=None, 
                 return {"success": False, "message": f"Connection error: {e}"}
 
             if 200 <= resp.status_code < 300:
-                return {"success": True, "message": f"Connection successful (HTTP {resp.status_code})"}
+                return {
+                    "success": True,
+                    "message": f"Connection successful (HTTP {resp.status_code})",
+                }
             if resp.status_code in (401, 403):
-                return {"success": False, "message": f"Authentication failed (HTTP {resp.status_code})"}
-            return {"success": False, "message": f"Server error (HTTP {resp.status_code})"}
+                return {
+                    "success": False,
+                    "message": f"Authentication failed (HTTP {resp.status_code})",
+                }
+            return {
+                "success": False,
+                "message": f"Server error (HTTP {resp.status_code})",
+            }
 
         if connection_mode == "db":
             host = config.get("conn.db_host") or config.get("db_host")
@@ -1664,7 +1923,9 @@ def test_itsmsync_connection(itsm_type=None, connection_mode=None, config=None, 
         return {"success": False, "message": f"Error: {e}"}
 
 
-def get_itsmsync_field_definitions(itsm_type=None, connection_mode=None, client_id=None, tokenuser=None):
+def get_itsmsync_field_definitions(
+    itsm_type=None, connection_mode=None, client_id=None, tokenuser=None
+):
     """Stub: return ITSM field definitions for a given type/mode."""
     logger.debug(
         "admin.get_itsmsync_field_definitions stub called for itsm_type=%s connection_mode=%s",
@@ -1674,7 +1935,9 @@ def get_itsmsync_field_definitions(itsm_type=None, connection_mode=None, client_
     return []
 
 
-def get_itsmsync_all_fields(itsm_type=None, connection_mode=None, client_id=None, tokenuser=None):
+def get_itsmsync_all_fields(
+    itsm_type=None, connection_mode=None, client_id=None, tokenuser=None
+):
     """Stub: return grouped ITSM fields (connection/medulla/schedule)."""
     logger.debug(
         "admin.get_itsmsync_all_fields stub called for itsm_type=%s connection_mode=%s",

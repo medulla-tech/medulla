@@ -28,6 +28,10 @@ class ItsmAdapter:
         self.config = config
         self.logger = logger
 
+    def check_connection(self) -> None:
+        """Validate access to the configured ITSM source."""
+        return
+
     def fetch_snapshot(self) -> ItsmSnapshot:
         """Return normalized entities, users, profiles and user scopes."""
         raise NotImplementedError()

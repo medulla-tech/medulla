@@ -285,6 +285,11 @@ $page->setFile("modules/admin/admin/ajaxITSMSync.php");
 $page->setOptions(array("AJAX" => true, "visible" => false, "noHeader" => true, "noACL" => true));
 $submod->addPage($page);
 
+$page = new Page("ajaxITSMSyncClients", _T('ITSM Clients', 'admin'));
+$page->setFile("modules/admin/admin/ajaxITSMSyncClients.php");
+$page->setOptions(array("AJAX" => true, "visible" => false, "noHeader" => true));
+$submod->addPage($page);
+
 $page = new Page("ajaxITSMSyncTestConnection", _T('ITSM Sync Test Connection', 'admin'));
 $page->setFile("modules/admin/admin/ajaxITSMSyncTestConnection.php");
 $page->setOptions(array("AJAX" => true, "visible" => false, "noHeader" => true, "noACL" => true));
@@ -292,6 +297,11 @@ $submod->addPage($page);
 
 $page = new Page("itsmformsync", _T('ITSM Synchronisation Form', 'admin'));
 $page->setFile("modules/admin/admin/itsmformsync.php");
+$submod->addPage($page);
+
+$page = new Page("itsmsyncArchiveClient", _T('Archive ITSM Client', 'admin'));
+$page->setFile("modules/admin/admin/itsmsyncArchiveClient.php");
+$page->setOptions(array("visible" => false));
 $submod->addPage($page);
 
 $page = new Page("inventoryEntityRules", _T('Global Inventory Rules', 'admin'));

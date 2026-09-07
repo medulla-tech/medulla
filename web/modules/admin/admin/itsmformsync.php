@@ -65,14 +65,14 @@ function itsmsync_connection_is_validated($source)
 }
 
 $client_id = '';
-if (isset($_POST['entiteid']) && $_POST['entiteid'] !== '') {
-    $client_id = (string) $_POST['entiteid'];
-} elseif (isset($_GET['entiteid']) && $_GET['entiteid'] !== '') {
-    $client_id = (string) $_GET['entiteid'];
-} elseif (isset($_POST['client_id']) && $_POST['client_id'] !== '') {
+if (isset($_POST['client_id']) && $_POST['client_id'] !== '') {
     $client_id = (string) $_POST['client_id'];
 } elseif (isset($_GET['client_id']) && $_GET['client_id'] !== '') {
     $client_id = (string) $_GET['client_id'];
+} elseif (isset($_POST['entiteid']) && $_POST['entiteid'] !== '') {
+    $client_id = (string) $_POST['entiteid'];
+} elseif (isset($_GET['entiteid']) && $_GET['entiteid'] !== '') {
+    $client_id = (string) $_GET['entiteid'];
 }
 
 $name_entity_boot_client = '';
@@ -88,7 +88,9 @@ foreach (array('dev', 'trace', 'dev_level', 'trace_level') as $param_name) {
 }
 
 $clients = xmlrpc_itsmsync_get_clients();
-if ($client_id === '' || !isset($clients[$client_id])) {
+$is_root_user = (strtolower((string) ($_SESSION['login'] ?? '')) === 'root');
+$is_valid_client_id = preg_match('/^[A-Za-z0-9][A-Za-z0-9_-]{0,49}$/', $client_id);
+if ($client_id === '' || !$is_valid_client_id || (!$is_root_user && !isset($clients[$client_id]))) {
     new NotifyWidgetFailure(_T("Invalid client", "admin"));
     header('Location: ' . urlStrRedirect('admin/admin/itsmsync', $dev_params));
     exit;
@@ -126,8 +128,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['bconfirm'])) {
         new NotifyWidgetFailure(_T("Selected ITSM type is not enabled.", "admin"));
         $redirect_params = array_merge(
             array(
-                'entiteid' => $client_id,
-                'nameentitybootclient' => ($name_entity_boot_client !== '') ? $name_entity_boot_client : $clients[$client_id],
+                'client_id' => $client_id,
+                'nameentitybootclient' => ($name_entity_boot_client !== '') ? $name_entity_boot_client : ($clients[$client_id] ?? $client_id),
             ),
             $dev_params
         );
@@ -266,8 +268,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['bconfirm'])) {
 
     $redirect_params = array_merge(
         array(
-            'entiteid' => $client_id,
-            'nameentitybootclient' => ($name_entity_boot_client !== '') ? $name_entity_boot_client : $clients[$client_id],
+            'client_id' => $client_id,
+            'nameentitybootclient' => ($name_entity_boot_client !== '') ? $name_entity_boot_client : ($clients[$client_id] ?? $client_id),
         ),
         $dev_params
     );
@@ -275,7 +277,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['bconfirm'])) {
     exit;
 }
 
-$display_entity_name = ($name_entity_boot_client !== '') ? $name_entity_boot_client : $clients[$client_id];
+$display_entity_name = ($name_entity_boot_client !== '') ? $name_entity_boot_client : ($clients[$client_id] ?? $client_id);
 $client_config = xmlrpc_itsmsync_get_client_config($client_id);
 if (!is_array($client_config)) {
     $client_config = array();
@@ -373,8 +375,8 @@ $p->display();
 ?>
 
 <div class="itsmsync-page-form">
-    <form method="post" id="form_itsmsync_config" action="<?php echo urlStrRedirect('admin/admin/itsmformsync', array_merge(array('entiteid' => $client_id, 'nameentitybootclient' => $display_entity_name), $dev_params)); ?>">
-        <input type="hidden" name="entiteid" value="<?php echo htmlspecialchars($client_id); ?>" />
+    <form method="post" id="form_itsmsync_config" action="<?php echo urlStrRedirect('admin/admin/itsmformsync', array_merge(array('client_id' => $client_id, 'nameentitybootclient' => $display_entity_name), $dev_params)); ?>">
+        <input type="hidden" name="client_id" value="<?php echo htmlspecialchars($client_id); ?>" />
         <input type="hidden" name="nameentitybootclient" value="<?php echo htmlspecialchars($display_entity_name); ?>" />
         <input type="hidden" id="enabled_hidden" name="enabled" value="<?php echo $is_connection_validated ? '1' : '0'; ?>" />
         <input type="hidden" name="auth_token" value="<?php echo htmlspecialchars($_SESSION['auth_token'] ?? ''); ?>" />
@@ -383,37 +385,13 @@ $p->display();
             <legend><?php echo _T("Client Information", "admin"); ?></legend>
 
             <div class="itsmsync-form-row">
-                <div class="itsmsync-field">
-                    <label><?php echo _T("Entity ID", "admin"); ?></label>
-                    <input type="text" class="inputText" value="<?php echo htmlspecialchars($client_id); ?>" disabled />
-                </div>
-
-                <div class="itsmsync-field">
-                    <label><?php echo _T("Boot Client Entity", "admin"); ?></label>
-                    <input type="text" class="inputText" value="<?php echo htmlspecialchars($display_entity_name); ?>" disabled />
-                </div>
-            </div>
-
-            <div class="itsmsync-form-row">
                 <div class="itsmsync-field full-width">
                     <label><?php echo _T("Client Name", "admin"); ?></label>
-                    <input type="text" class="inputText" name="client_name" value="<?php echo htmlspecialchars($client_config['client_name'] ?? ($clients[$client_id] ?? $client_id)); ?>" />
+                    <input type="text" class="inputText" value="<?php echo htmlspecialchars($display_entity_name); ?>" disabled />
+                    <input type="hidden" name="client_name" value="<?php echo htmlspecialchars($display_entity_name); ?>" />
                 </div>
             </div>
 
-            <div class="itsmsync-form-row">
-                <div class="itsmsync-field full-width">
-                    <label><?php echo _T("Target Root Entity", "admin"); ?> <span class="required">*</span></label>
-                    <select name="target_entity" class="inputText" required>
-                        <?php foreach ($target_entities_by_id as $entity_id => $entity_name): ?>
-                            <option value="<?php echo htmlspecialchars((string) $entity_id); ?>" <?php echo ((string) ($client_config['target_entity'] ?? '') === (string) $entity_id) ? 'selected' : ''; ?>>
-                                <?php echo htmlspecialchars((string) $entity_name); ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                    <span class="help-text"><?php echo _T("The default Medulla root entity is selected automatically; use it as the KNO synchronization target.", "admin"); ?></span>
-                </div>
-            </div>
         </fieldset>
 
         <fieldset class="itsmsync-fieldset">

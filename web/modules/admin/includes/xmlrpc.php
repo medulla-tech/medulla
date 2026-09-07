@@ -377,6 +377,38 @@ function xmlrpc_itsmsync_save_client_config($client_id, $config)
 }
 
 /**
+ * Create the ITSMLocal root entity for one new client.
+ * Returns: array('success' => bool, 'entity_id' => int, 'error' => string)
+ */
+function xmlrpc_itsmsync_create_client_root($client_name)
+{
+    try {
+        $result = xmlCall('admin.create_itsmsync_client_root_ctx', array($client_name));
+        return is_array($result) ? $result : array('success' => false, 'error' => 'Invalid backend response');
+    } catch (Exception $e) {
+        return array('success' => false, 'error' => $e->getMessage());
+    }
+}
+
+/**
+ * Archive one ITSMLocal client while retaining its entities and data.
+ * Returns: array('success' => bool, 'entity_id' => int, 'disabled_users' => int, 'error' => string)
+ */
+function xmlrpc_itsmsync_archive_client($client_id)
+{
+    if ($client_id === null || $client_id === '') {
+        return array('success' => false, 'error' => 'Invalid client id');
+    }
+
+    try {
+        $result = xmlCall('admin.archive_itsmsync_client_ctx', array($client_id));
+        return is_array($result) ? $result : array('success' => false, 'error' => 'Invalid backend response');
+    } catch (Exception $e) {
+        return array('success' => false, 'error' => $e->getMessage());
+    }
+}
+
+/**
  * Get list of Medulla entities.
  * Returns: array(entity_id => entity_name, ...)
  */

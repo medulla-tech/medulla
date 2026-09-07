@@ -9,12 +9,15 @@ grafts the client organisation (entities) underneath it. The source ids are
 never reused locally: every source entity gets a stable local id, recorded in
 ``admin.saas_itsm_entity_mapping`` (unique on ``client_id`` + ``source_id``).
 
-Only entities are handled here; users and profiles are a later step.
+Users receive distinct technical local logins scoped by ``client_id`` and
+source user id. Their profile/entity assignments are written only when their
+source entities are mapped inside the same client tree.
 """
 
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from hashlib import sha256
 from typing import Any
 
 from sqlalchemy import text
@@ -23,6 +26,32 @@ MEDULLA_ROOT_ID = 0
 MEDULLA_ROOT_NAME = "Medulla"
 ALLOC_LOCK = "itsmlocal_entity_alloc"
 CLIENT_ROOT_KEY = "__client_root__"
+LOCAL_LOGIN_PREFIX = "medulla__"
+LOCAL_PROFILE_FALLBACK = "Self-Service"
+# Business rule: a source ITSM profile can grant at most the Medulla client
+# administrator role. The ITSMLocal platform Super-Admin role is reserved for
+# the platform administrator and is never assigned by client synchronisation.
+LOCAL_CLIENT_PROFILE_NAMES = frozenset(
+    {
+        "Self-Service",
+        "Observer",
+        "Admin",
+        "Hotliner",
+        "Technician",
+        "Supervisor",
+        "Read-Only",
+    }
+)
+LOCAL_PROFILE_REMAP = {
+    "super-admin": "Admin",
+    "super admin": "Admin",
+    "super-administrateur": "Admin",
+    "super administrateur": "Admin",
+    "self service": "Self-Service",
+    "demandeur": "Self-Service",
+    "read only": "Read-Only",
+    "lecture seule": "Read-Only",
+}
 
 
 @dataclass
@@ -170,6 +199,219 @@ def _save_mapping(
     )
 
 
+def _load_user_mapping(admin_connection, client_id: str) -> dict[str, dict[str, Any]]:
+    """Return source-user mappings scoped to one ITSM client."""
+    rows = admin_connection.execute(
+        text(
+            """
+            SELECT `source_user_id`, `target_user_id`, `target_login`
+            FROM `saas_itsm_user_mapping`
+            WHERE `client_id` = :client_id
+            """
+        ),
+        {"client_id": client_id},
+    ).mappings()
+    return {str(row["source_user_id"]): dict(row) for row in rows}
+
+
+def _load_profile_mapping(admin_connection, client_id: str) -> dict[str, str]:
+    """Return enabled Medulla-owned profile exceptions for one client.
+
+    The source profile ID, rather than its mutable label, identifies an
+    exception. Invalid targets are ignored so configuration cannot grant a
+    platform-only role.
+    """
+    rows = admin_connection.execute(
+        text(
+            """
+            SELECT `source_profile_id`, `target_profile_name`
+            FROM `saas_itsm_profile_mapping`
+            WHERE `client_id` = :client_id AND `enabled` = 1
+            """
+        ),
+        {"client_id": client_id},
+    ).mappings()
+    return {
+        str(row["source_profile_id"]): str(row["target_profile_name"])
+        for row in rows
+        if str(row["target_profile_name"]) in LOCAL_CLIENT_PROFILE_NAMES
+    }
+
+
+def _save_user_mapping(
+    admin_connection,
+    client_id: str,
+    user: dict[str, Any],
+    target_user_id: int,
+    target_login: str,
+) -> None:
+    """Upsert one source-user to ITSMLocal mapping scoped by client id."""
+    admin_connection.execute(
+        text(
+            """
+            INSERT INTO `saas_itsm_user_mapping`
+                (`client_id`, `source_user_id`, `source_login`, `source_email`,
+                 `target_user_id`, `target_login`, `source_updated_at`, `last_seen_at`)
+            VALUES
+                (:client_id, :source_user_id, :source_login, :source_email,
+                 :target_user_id, :target_login, :source_updated_at, NOW())
+            ON DUPLICATE KEY UPDATE
+                `source_login` = VALUES(`source_login`),
+                `source_email` = VALUES(`source_email`),
+                `target_user_id` = VALUES(`target_user_id`),
+                `target_login` = VALUES(`target_login`),
+                `source_updated_at` = VALUES(`source_updated_at`),
+                `last_seen_at` = NOW()
+            """
+        ),
+        {
+            "client_id": client_id,
+            "source_user_id": str(user.get("source_id") or ""),
+            "source_login": str(user.get("login") or "")[:255],
+            "source_email": str(user.get("email") or "")[:255],
+            "target_user_id": target_user_id,
+            "target_login": target_login,
+            "source_updated_at": str(user.get("source_updated_at") or "")[:50],
+        },
+    )
+
+
+def _local_login(client_id: str, source_user_id: str) -> str:
+    """Return a collision-free technical login for one client source user."""
+    digest = sha256(f"{client_id}:{source_user_id}".encode()).hexdigest()
+    return f"{LOCAL_LOGIN_PREFIX}{digest}"
+
+
+def _local_profile_name(
+    source_name: str,
+    source_profile_id: str = "",
+    overrides: dict[str, str] | None = None,
+) -> str:
+    """Map a source profile to the bounded Medulla client profile set.
+
+    A Medulla-owned exception keyed by source profile ID takes precedence when
+    its target belongs to the allowed client set. Otherwise ``Super-Admin`` is
+    mapped to ``Admin`` and unknown profiles receive the least privileged local
+    profile rather than creating a profile or granting an implicit elevated role.
+    """
+    override = (overrides or {}).get(str(source_profile_id))
+    if override in LOCAL_CLIENT_PROFILE_NAMES:
+        return override
+    source_name = str(source_name or "").strip()
+    normalized_name = source_name.lower()
+    if normalized_name in LOCAL_PROFILE_REMAP:
+        return LOCAL_PROFILE_REMAP[normalized_name]
+    if source_name in LOCAL_CLIENT_PROFILE_NAMES:
+        return source_name
+    return LOCAL_PROFILE_FALLBACK
+
+
+def _local_profile_ids(connection) -> dict[str, int]:
+    """Return the IDs of the predefined ITSMLocal client profiles."""
+    rows = connection.execute(
+        text("SELECT `id`, `name` FROM `glpi_profiles`")
+    ).mappings()
+    return {
+        str(row["name"]): int(row["id"])
+        for row in rows
+        if str(row["name"]) in LOCAL_CLIENT_PROFILE_NAMES
+    }
+
+
+def _upsert_user(
+    connection,
+    user: dict[str, Any],
+    local_login: str,
+    default_entity_id: int,
+    default_profile_id: int,
+    mapped_user_id: int | None,
+) -> tuple[int, bool]:
+    """Create or update one technical ITSMLocal user without a password."""
+    user_id = mapped_user_id
+    if user_id:
+        exists = connection.execute(
+            text("SELECT 1 FROM `glpi_users` WHERE `id` = :id"), {"id": user_id}
+        ).first()
+        if not exists:
+            user_id = None
+    if not user_id:
+        user_id = connection.execute(
+            text(
+                "SELECT `id` FROM `glpi_users` WHERE `name` = :name "
+                "AND `authtype` = 0 AND `auths_id` = 0"
+            ),
+            {"name": local_login},
+        ).scalar()
+    is_update = user_id is not None
+    values = {
+        "name": local_login,
+        "firstname": str(user.get("firstname") or "")[:255],
+        "realname": str(user.get("lastname") or "")[:255],
+        "is_active": 1 if int(user.get("is_active") or 0) else 0,
+        "profiles_id": default_profile_id,
+        "entities_id": default_entity_id,
+    }
+    if is_update:
+        values["id"] = int(user_id)
+        connection.execute(
+            text(
+                "UPDATE `glpi_users` SET `firstname` = :firstname, "
+                "`realname` = :realname, `is_active` = :is_active, "
+                "`profiles_id` = :profiles_id, `entities_id` = :entities_id, "
+                "`date_mod` = NOW() WHERE `id` = :id"
+            ),
+            values,
+        )
+        return int(user_id), True
+
+    result = connection.execute(
+        text(
+            "INSERT INTO `glpi_users` "
+            "(`name`, `password`, `firstname`, `realname`, `is_active`, "
+            "`profiles_id`, `entities_id`, `date_mod`, `date_creation`) "
+            "VALUES (:name, NULL, :firstname, :realname, :is_active, "
+            ":profiles_id, :entities_id, NOW(), NOW())"
+        ),
+        values,
+    )
+    return int(result.lastrowid), False
+
+
+def _replace_user_scopes(
+    connection, user_id: int, scopes: list[dict[str, int]]
+) -> None:
+    """Replace only profile assignments owned by the synchronized user."""
+    connection.execute(
+        text("DELETE FROM `glpi_profiles_users` WHERE `users_id` = :user_id"),
+        {"user_id": user_id},
+    )
+    for scope in scopes:
+        connection.execute(
+            text(
+                "INSERT INTO `glpi_profiles_users` "
+                "(`users_id`, `profiles_id`, `entities_id`, `is_recursive`, "
+                "`is_dynamic`, `is_default_profile`) "
+                "VALUES (:user_id, :profile_id, :entity_id, :is_recursive, 0, :is_default)"
+            ),
+            {"user_id": user_id, **scope},
+        )
+
+
+def _upsert_user_email(connection, user_id: int, email: str) -> None:
+    """Store a source email on its local technical user when one is supplied."""
+    email = email.strip()[:255]
+    if not email:
+        return
+    connection.execute(
+        text(
+            "INSERT INTO `glpi_useremails` (`users_id`, `email`, `is_default`, `is_dynamic`) "
+            "VALUES (:user_id, :email, 1, 0) "
+            "ON DUPLICATE KEY UPDATE `is_default` = 1, `is_dynamic` = 0"
+        ),
+        {"user_id": user_id, "email": email},
+    )
+
+
 def _write_sync_log(
     admin_engine, client_id: str, config_version: str, result: ReconcileResult
 ) -> None:
@@ -211,17 +453,22 @@ def reconcile_client(
 ) -> ReconcileResult:
     """Graft ``snapshot.entities`` under the client root inside ``itsmlocal``."""
     config = config or {}
-    config_version = str(config.get("config_version") or config.get("sync.config_version") or "")
+    config_version = str(
+        config.get("config_version") or config.get("sync.config_version") or ""
+    )
     result = ReconcileResult()
 
     # The admin config key can be a bare number (``itsm.0.*``); prefer a readable
     # label for the root entity while keeping ``client_id`` as the mapping scope.
-    root_name = str(
-        config.get("client_name")
-        or config.get("name")
-        or config.get("target.entity")
+    root_name = (
+        str(
+            config.get("client_name")
+            or config.get("name")
+            or config.get("target.entity")
+            or client_id
+        ).strip()
         or client_id
-    ).strip() or client_id
+    )
 
     source_entities = list(snapshot.entities or [])
     if not source_entities:
@@ -231,11 +478,11 @@ def reconcile_client(
 
     with admin_engine.connect() as admin_connection:
         mapping = _load_mapping(admin_connection, client_id)
+        user_mapping = _load_user_mapping(admin_connection, client_id)
+        profile_mapping = _load_profile_mapping(admin_connection, client_id)
 
     with target_engine.begin() as connection:
-        connection.execute(
-            text("SELECT GET_LOCK(:name, 30)"), {"name": ALLOC_LOCK}
-        )
+        connection.execute(text("SELECT GET_LOCK(:name, 30)"), {"name": ALLOC_LOCK})
         try:
             writer = _EntityWriter(connection, client_id, config_version, logger)
 
@@ -330,10 +577,121 @@ def reconcile_client(
                         result.errors.append(message)
                         logger.warning("Client %s: %s", client_id, message)
                     break
+
+            # 3. Source users are separate local accounts, scoped by client and
+            # source ID. A missing entity mapping rejects the user: it never
+            # falls back to the global entity or to the client root.
+            profile_names_by_source_id = {
+                str(profile.get("source_id") or ""): str(profile.get("name") or "")
+                for profile in snapshot.profiles or []
+            }
+            profile_ids_by_name = _local_profile_ids(connection)
+            fallback_profile_id = profile_ids_by_name.get(LOCAL_PROFILE_FALLBACK)
+            if fallback_profile_id is None:
+                raise RuntimeError("ITSMLocal Self-Service profile is missing")
+
+            scopes_by_user: dict[str, list[dict[str, Any]]] = {}
+            for scope in snapshot.user_scopes or []:
+                scopes_by_user.setdefault(
+                    str(scope.get("source_user_id") or ""), []
+                ).append(scope)
+            pending_user_mappings: list[tuple[dict[str, Any], int, str]] = []
+
+            for user in snapshot.users or []:
+                source_user_id = str(user.get("source_id") or "")
+                if not source_user_id:
+                    result.ignored += 1
+                    result.errors.append("user ignored: missing source id")
+                    continue
+
+                default_entity_id = local_by_source.get(
+                    str(user.get("default_entity_id") or "")
+                )
+                if default_entity_id is None:
+                    result.ignored += 1
+                    message = (
+                        f"user {source_user_id} ignored: default entity "
+                        f"{user.get('default_entity_id')} is not mapped"
+                    )
+                    result.errors.append(message)
+                    logger.warning("Client %s: %s", client_id, message)
+                    continue
+                default_profile_name = _local_profile_name(
+                    profile_names_by_source_id.get(
+                        str(user.get("default_profile_id") or ""), ""
+                    ),
+                    str(user.get("default_profile_id") or ""),
+                    profile_mapping,
+                )
+                default_profile_id = profile_ids_by_name.get(
+                    default_profile_name, fallback_profile_id
+                )
+                local_login = _local_login(client_id, source_user_id)
+                existing_user = user_mapping.get(source_user_id) or {}
+                user_id, is_update = _upsert_user(
+                    connection,
+                    user,
+                    local_login,
+                    default_entity_id,
+                    default_profile_id,
+                    existing_user.get("target_user_id"),
+                )
+
+                local_scopes: list[dict[str, int]] = []
+                seen_scopes: set[tuple[int, int]] = set()
+                for scope in scopes_by_user.get(source_user_id, []):
+                    entity_id = local_by_source.get(
+                        str(scope.get("source_entity_id") or "")
+                    )
+                    if entity_id is None:
+                        result.ignored += 1
+                        message = (
+                            f"user {source_user_id} scope ignored: entity "
+                            f"{scope.get('source_entity_id')} is not mapped"
+                        )
+                        result.errors.append(message)
+                        logger.warning("Client %s: %s", client_id, message)
+                        continue
+                    profile_name = _local_profile_name(
+                        profile_names_by_source_id.get(
+                            str(scope.get("source_profile_id") or ""), ""
+                        ),
+                        str(scope.get("source_profile_id") or ""),
+                        profile_mapping,
+                    )
+                    profile_id = profile_ids_by_name.get(
+                        profile_name, fallback_profile_id
+                    )
+                    scope_key = (profile_id, entity_id)
+                    if scope_key in seen_scopes:
+                        continue
+                    seen_scopes.add(scope_key)
+                    local_scopes.append(
+                        {
+                            "profile_id": profile_id,
+                            "entity_id": entity_id,
+                            "is_recursive": 1
+                            if int(scope.get("is_recursive") or 0)
+                            else 0,
+                            "is_default": 1 if int(scope.get("is_default") or 0) else 0,
+                        }
+                    )
+                if not local_scopes:
+                    local_scopes.append(
+                        {
+                            "profile_id": default_profile_id,
+                            "entity_id": default_entity_id,
+                            "is_recursive": 0,
+                            "is_default": 1,
+                        }
+                    )
+                _replace_user_scopes(connection, user_id, local_scopes)
+                _upsert_user_email(connection, user_id, str(user.get("email") or ""))
+                pending_user_mappings.append((user, user_id, local_login))
+                result.updated += 1 if is_update else 0
+                result.created += 0 if is_update else 1
         finally:
-            connection.execute(
-                text("SELECT RELEASE_LOCK(:name)"), {"name": ALLOC_LOCK}
-            )
+            connection.execute(text("SELECT RELEASE_LOCK(:name)"), {"name": ALLOC_LOCK})
 
     # 3. Persist the reconciliation mapping in the admin database.
     with admin_engine.begin() as admin_connection:
@@ -346,6 +704,10 @@ def reconcile_client(
                 target_path,
                 target_glpi_id,
                 config_version,
+            )
+        for user, target_user_id, target_login in pending_user_mappings:
+            _save_user_mapping(
+                admin_connection, client_id, user, target_user_id, target_login
             )
 
     logger.info(

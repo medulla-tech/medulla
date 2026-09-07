@@ -29,10 +29,11 @@ require_once("includes/PageGenerator.php");
 // Get clients list
 $clients = xmlrpc_itsmsync_get_clients();
 $selected_client = '';
-if (isset($_GET['entiteid']) && $_GET['entiteid'] !== '') {
-    $selected_client = (string) $_GET['entiteid'];
-} elseif (isset($_GET['client_id']) && $_GET['client_id'] !== '') {
+if (isset($_GET['client_id']) && $_GET['client_id'] !== '') {
     $selected_client = (string) $_GET['client_id'];
+} elseif (isset($_GET['entiteid']) && $_GET['entiteid'] !== '') {
+    // Compatibility with the former entity-based URL.
+    $selected_client = (string) $_GET['entiteid'];
 }
 $is_root_user = (strtolower((string)($_SESSION['login'] ?? '')) === 'root');
 $dev_params = array();
@@ -42,35 +43,43 @@ foreach (array('dev', 'trace', 'dev_level', 'trace_level') as $param_name) {
     }
 }
 
-if ($is_root_user && isset($_POST['bconfirm'])) {
+if ($is_root_user && isset($_POST['bcreateclient'])) {
     verifyCSRFToken($_POST);
 
-    $posted_client_id = isset($_POST['entiteid']) ? (string)$_POST['entiteid'] : '';
-    $redirect_params = $_POST;
-    unset($redirect_params['bconfirm']);
-    unset($redirect_params['module']);
-    unset($redirect_params['submod']);
-    unset($redirect_params['action']);
-    unset($redirect_params['client_id']);
-    unset($redirect_params['entiteid']);
-    unset($redirect_params['nameentitybootclient']);
-    unset($redirect_params['old_client_id']);
-    unset($redirect_params['auth_token']);
-    unset($redirect_params['csrf']);
-    unset($redirect_params['csrf_token']);
-
-    if ($posted_client_id !== '' && isset($clients[$posted_client_id])) {
-        $redirect_params['entiteid'] = $posted_client_id;
-        $redirect_params['nameentitybootclient'] = $clients[$posted_client_id];
+    $client_name = trim((string) ($_POST['new_client_name'] ?? ''));
+    $client_id = strtolower(preg_replace('/[^A-Za-z0-9]+/', '-', $client_name));
+    $client_id = trim($client_id, '-');
+    if ($client_id === '' || strlen($client_id) > 50) {
+        new NotifyWidgetFailure(_T('Provide a client name containing letters or numbers.', 'admin'));
+        header('Location: ' . urlStrRedirect('admin/admin/itsmsync', $dev_params));
+        exit;
     }
-
-    header('Location: ' . urlStrRedirect('admin/admin/itsmformsync', $redirect_params));
+    $result = xmlrpc_itsmsync_save_client_config($client_id, array(
+        'name' => $client_name,
+    ));
+    if (!is_array($result) || empty($result['success'])) {
+        $error_message = is_array($result) && !empty($result['error']) ? $result['error'] : _T('Unknown error', 'admin');
+        new NotifyWidgetFailure(sprintf(_T('Failed to create client: %s', 'admin'), htmlspecialchars($error_message)));
+        header('Location: ' . urlStrRedirect('admin/admin/itsmsync', $dev_params));
+        exit;
+    }
+    $root_result = xmlrpc_itsmsync_create_client_root($client_name);
+    if (!is_array($root_result) || empty($root_result['success'])) {
+        $error_message = is_array($root_result) && !empty($root_result['error']) ? $root_result['error'] : _T('Unknown error', 'admin');
+        new NotifyWidgetFailure(sprintf(_T('Client created but ITSMLocal root failed: %s', 'admin'), htmlspecialchars($error_message)));
+        header('Location: ' . urlStrRedirect('admin/admin/itsmsync', $dev_params));
+        exit;
+    }
+    header('Location: ' . urlStrRedirect('admin/admin/itsmformsync', array_merge(array(
+        'client_id' => $client_id,
+        'nameentitybootclient' => $client_name,
+    ), $dev_params)));
     exit;
 }
 
 // Pivot behavior:
 // - non-root: force redirect to its allowed boot client/entity using GET params
-// - root: keep manual selector
+// - root: render the complete client list
 if (!$is_root_user && is_array($clients) && !empty($clients)) {
     $allowed_client_ids = array_keys($clients);
     $boot_client_id = (string)$allowed_client_ids[0];
@@ -83,7 +92,7 @@ if (!$is_root_user && is_array($clients) && !empty($clients)) {
 if ($selected_client !== '' && isset($clients[$selected_client])) {
     $redirect_params = array_merge(
         array(
-            'entiteid' => $selected_client,
+            'client_id' => $selected_client,
             'nameentitybootclient' => $clients[$selected_client],
         ),
         $dev_params
@@ -102,31 +111,26 @@ $p->display();
 
 ?>
 
-    <?php if ($is_root_user): ?>
-    <!-- <div class="admin-itsmsync-selector-native"> -->
-        <?php
-        $form = new ValidatingForm(array('method' => 'POST'));
-        $form->push(new Table());
+<?php if ($is_root_user): ?>
+    <fieldset class="itsmsync-fieldset">
+        <legend><?php echo _T('Create client', 'admin'); ?></legend>
+        <form method="post" action="<?php echo urlStrRedirect('admin/admin/itsmsync', $dev_params); ?>">
+            <input type="hidden" name="auth_token" value="<?php echo htmlspecialchars($_SESSION['auth_token'] ?? ''); ?>" />
+            <label for="itsmsync-new-client-name"><?php echo _T('Client Name', 'admin'); ?></label>
+            <input id="itsmsync-new-client-name" type="text" name="new_client_name" class="inputText" required pattern="[^/&lt;&gt;]{1,255}" />
+            <input type="submit" name="bcreateclient" value="<?php echo _T('Create client', 'admin'); ?>" />
+        </form>
+    </fieldset>
 
-        $client_select = new SelectItem('entiteid');
-        $client_select->setElements(array_values($clients));
-        $client_select->setElementsVal(array_keys($clients));
-        if ($selected_client !== '' && isset($clients[$selected_client])) {
-            $client_select->setSelected($selected_client);
-        }
-
-        $form->add(new TrFormElement(_T('Select Client', 'admin'), $client_select));
-        $form->add(new HiddenTpl('module'), array('value' => 'admin', 'hide' => true));
-        $form->add(new HiddenTpl('submod'), array('value' => 'admin', 'hide' => true));
-        $form->add(new HiddenTpl('action'), array('value' => 'itsmsync', 'hide' => true));
-        foreach ($dev_params as $param_name => $param_value) {
-            $form->add(new HiddenTpl($param_name), array('value' => (string)$param_value, 'hide' => true));
-        }
-        $form->addValidateButton('bconfirm', _T('Open synchronisation form', 'admin'));
-        $form->pop();
-        $form->display();
-        ?>
-    <?php endif; ?>
+    <?php
+    $ajax = new AjaxFilter(
+        urlStrRedirect('admin/admin/ajaxITSMSyncClients', $dev_params),
+        'itsmsync-clients'
+    );
+    $ajax->display();
+    $ajax->displayDivToUpdate();
+    ?>
+<?php endif; ?>
 
 <?php
 
