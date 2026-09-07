@@ -1,5 +1,21 @@
 # Change Log
 
+## [5.6.4](https://github.com/medulla-tech/medulla/releases/tag/5.6.4) (2026-09-03)
+- [FEATURE] Improve security module queries
+- [FEATURE] Force a reset of the agent files from remoteagent base
+- [FEATURE] Add OS column to the deployment package list
+- [FEATURE] Lock regex field for default, subnet, geoposition and load balancer rules
+- [FEATURE] Store redesign for OS-filtered deployment
+- [BUGFIX]  Fix to reboot and shutdown quick actions
+- [BUGFIX]  Grey out deploy actions on agentless clients
+- [BUGFIX]  Fix updates history matching on clients
+- [BUGFIX]  Fixes to updates list management and rules
+- [BUGFIX]  Fix external LDAP authentication where GLPI is not connected to external LDAP
+- [BUGFIX]  Fix calculation of MD5 checksums on agent files
+- [BUGFIX]  Fix next popup style and change remote alert to info notification
+- [BUGFIX]  Add ACLs for config file editing, store tabs, server logs, QA sharing and monitoring
+- [BUGFIX]  Fix saving the ACLs when profile names have spaces
+
 ## [5.6.3](https://github.com/medulla-tech/medulla/releases/tag/5.6.3) (2026-07-02)
 - [FEATURE] Full support for GLPI 11
 - [FEATURE] Move remote desktop acl to own section
